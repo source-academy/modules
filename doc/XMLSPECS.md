@@ -363,7 +363,10 @@ The missionType attribute was previously used by source-academy2, but is unused 
 ### Example
 ```xml
 <DEPLOYMENT interpreter="2">
-  <EXTERNAL>...</EXTERNAL>
+  <EXTERNAL name="CURVES">
+      <SYMBOL>draw_points_on</SYMBOL>
+      <SYMBOL>draw_connected</SYMBOL>
+  </EXTERNAL>
   <GLOBAL>...</GLOBAL>
   <GLOBAL>...</GLOBAL>
   <GLOBAL>...</GLOBAL>
@@ -394,7 +397,10 @@ Examples include show from the runes library, draw_connected from curves, or pla
 ### Example
 ```xml
 <GRADERDEPLOYMENT interpreter="2">
-  <EXTERNAL name="...">...</EXTERNAL>
+  <EXTERNAL name="CURVES">
+      <SYMBOL>draw_points_on</SYMBOL>
+      <SYMBOL>draw_connected</SYMBOL>
+  </EXTERNAL>
   <GLOBAL>...</GLOBAL>
   <GLOBAL>...</GLOBAL>
   <GLOBAL>...</GLOBAL>
@@ -402,7 +408,7 @@ Examples include show from the runes library, draw_connected from curves, or pla
 ```
 
 ## EXTERNAL
-Represents an external library to be exposed to the student. Optional.
+Represents an external library to be exposed to the student. Optional. Can have many.
 
 ### Attributes
 | attributes | details |
