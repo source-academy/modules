@@ -10,11 +10,13 @@ Each element is marked as `required` or `optional`. A `required` element is comp
 
 You may assume that each element must be unique (i.e. only one exists per parent), unless specified as "can have many".
 
-## Changes from Source Academy 18/19
+## Source Academy 1920 Changes from Source Academy 18/19
 - Removed GRADER
 - Added PREPEND, POSTPEND, TESTCASES
 - Client-side autograding will be in the form of PREPEND + STUDENT + PUBLIC
 - Server-side autograding will be in the form of PREPEND + STUDENT + POSTPEND + PUBLIC/PRIVATE
+- Deprecaded EXTERNAL in DEPLOYMENT and GRADERDEPLOYMENT, use IMPORT instead
+- Added IMPORT in DEPLOYMENT and GRADERDEPLOYMENT
 
 ## Contents
 - [TASK](#task)
@@ -407,13 +409,13 @@ Examples include show from the runes library, draw_connected from curves, or pla
 </GRADERDEPLOYMENT>
 ```
 
-## EXTERNAL
-Represents an external library to be exposed to the student. Optional. Can have many.
+## EXTERNAL (deprecated; use IMPORT instead)
+Represents an "external" library to be exposed to the student. Optional.
 
 ### Attributes
 | attributes | details |
 | --- | --- |
-| name | Name of the external library. Can be "NONE", "TWO_DIM_RUNES", "THREE_DIM_RUNES", "CURVES", or "SOUND".
+| name | Name of the "external" library. Can be "NONE", "TWO_DIM_RUNES", "THREE_DIM_RUNES", "CURVES", or "SOUND".
 
 ### Children
 [SYMBOL](#symbol)
@@ -421,10 +423,28 @@ Represents an external library to be exposed to the student. Optional. Can have 
 ### Example
 ```xml
 <EXTERNAL name="TWO_DIM_RUNES">
-  <SYMBOL>...</SYMBOL>
-  <SYMBOL>...</SYMBOL>
-  <SYMBOL>...</SYMBOL>
+  <SYMBOL>beside</SYMBOL>
+  <SYMBOL>make_cross</SYMBOL>
 </EXTERNAL>
+```
+
+## IMPORT
+Represents a library to be exposed to the student. Optional. Can have many.
+
+### Attributes
+| attributes | details |
+| --- | --- |
+| module | Path of the library, relative to `https://github.com/source-academy/assessments/tree/master/lib/`.
+
+### Children
+[SYMBOL](#symbol)
+
+### Example
+```xml
+<IMPORT module="cs1101s_1920/two_dim_runes">
+  <SYMBOL>beside</SYMBOL>
+  <SYMBOL>make_cross</SYMBOL>
+</IMPORT>
 ```
 
 ## SYMBOL
@@ -437,9 +457,8 @@ Text representing a valid javascript identifier name for the symbol.
 
 ### Example
 ```xml
-<SYMBOL>show</SYMBOL>
-<SYMBOL>clear</SYMBOL>
-<SYMBOL>flip_horiz</SYMBOL>
+<SYMBOL>beside</SYMBOL>
+<SYMBOL>make_cross</SYMBOL>
 ```
 
 ## GLOBAL
@@ -455,8 +474,8 @@ You may also use this to override some property of the window, perhaps originati
 ### Example
 ```xml
 <GLOBAL>
-  <IDENTIFIER>...</IDENTIFIER>
-  <VALUE>...</VALUE>
+  <IDENTIFIER>student_names</IDENTIFIER>
+  <VALUE>list("Alpha Centauri", "007", "Gilgamesh");</VALUE>
 </GLOBAL>
 ```
 
@@ -468,18 +487,18 @@ Text representing a valid javascript identifier name for the GLOBAL variable.
 
 ### Example
 ```xml
-<IDENTIFIER>pair</IDENTIFIERS>
+<IDENTIFIER>student_names</IDENTIFIER>
 ```
 
 ## VALUE
 Represents the javascript value of a GLOBAL variable. Required.
 
 ### Value
-Text representing a valid javascript program to be eval'd. The return value of this evaluation is then taking to be the value of the GLOBAL variable.
+Text representing a valid JavaScript program to be eval'd. The return value of this evaluation is then taking to be the value of the GLOBAL variable.
 
 ### Example
 ```xml
-<VALUE>(x, xs) => [x, xs];</VALUE>
+<VALUE>list("Alpha Centauri", "007", "Gilgamesh");</VALUE>
 ```
 
 ## Example Assessments XML
@@ -617,6 +636,10 @@ show(heart_bb);
             <SYMBOL>show</SYMBOL>
             <SYMBOL>heart_bb</SYMBOL>
           </EXTERNAL>
+          <IMPORT module="cs1101s_1920/two_dim_runes">
+            <SYMBOL>beside</SYMBOL>
+            <SYMBOL>make_cross</SYMBOL>
+          </IMPORT>
         </DEPLOYMENT>
       </PROBLEM>
 
