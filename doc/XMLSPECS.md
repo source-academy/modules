@@ -15,7 +15,7 @@ You may assume that each element must be unique (i.e. only one exists per parent
 - Added PREPEND, POSTPEND, TESTCASES
 - Client-side autograding will be in the form of PREPEND + STUDENT + PUBLIC
 - Server-side autograding will be in the form of PREPEND + STUDENT + POSTPEND + PUBLIC/PRIVATE
-- Deprecaded EXTERNAL in DEPLOYMENT and GRADERDEPLOYMENT, use IMPORT instead
+- Deprecated EXTERNAL in DEPLOYMENT and GRADERDEPLOYMENT, use IMPORT instead
 - Added IMPORT in DEPLOYMENT and GRADERDEPLOYMENT
 
 ## Contents
@@ -35,7 +35,9 @@ You may assume that each element must be unique (i.e. only one exists per parent
                 - [SOLUTION](#solution)    
             - [CHOICE](#choice)  
     - [DEPLOYMENT](#deployment) / [GRADERDEPLOYMENT](#graderdeployment)
-        - [EXTERNAL](#external)
+        - [IMPORT](#import) 
+          - [SYMBOL](#symbol)
+        - [EXTERNAL](#external) (deprecated)
           - [SYMBOL](#symbol)
         - [GLOBAL](#global)
             - [IDENTIFIER](#identifier)
@@ -360,18 +362,23 @@ The missionType attribute was previously used by source-academy2, but is unused 
 | interpreter | The source chapter to use.
 
 ### Children
-[EXTERNAL](#external), [GLOBAL](#global)
+[IMPORT](#import), [EXTERNAL](#external) (deprecated), [GLOBAL](#global)
 
 ### Example
 ```xml
 <DEPLOYMENT interpreter="2">
+  <IMPORT module="cs1101s_1920/two_dim_runes">
+      <SYMBOL>beside</SYMBOL>
+      <SYMBOL>make_cross</SYMBOL>
+  </IMPORT>
   <EXTERNAL name="CURVES">
       <SYMBOL>draw_points_on</SYMBOL>
       <SYMBOL>draw_connected</SYMBOL>
   </EXTERNAL>
-  <GLOBAL>...</GLOBAL>
-  <GLOBAL>...</GLOBAL>
-  <GLOBAL>...</GLOBAL>
+  <GLOBAL>
+      <IDENTIFIER>student_names</IDENTIFIER>
+      <VALUE>list("Alpha Centauri", "007", "Gilgamesh");</VALUE>
+  </GLOBAL>
 </DEPLOYMENT>
 ```
 
@@ -384,9 +391,9 @@ If the PROBLEM has a child GRADERDEPLOYMENT, use that
 Otherwise, if the PROBLEM has a child DEPLOYMENT, use that
 Otherwise, if the TASK has a child GRADERDEPLOYMENT, use that
 Otherwise, use the DEPLOYMENT which is a child of the TASK
-This element is useful for assessments that utilise external libraries which use browser based APIs such as WebGL or HTML5 Audio. Since the grader runs on a node environment, these APIs are not available to the grader. Hence, it may be useful to 'overwrite' these functions with mock node-friendly alternative functions.
+This element is useful for assessments that utilise imported modules which use browser based APIs such as WebGL or HTML5 Audio. Since the grader runs on a node environment, these APIs are not available to the grader. Hence, it may be useful to 'overwrite' these functions with mock node-friendly alternative functions.
 
-Examples include show from the runes library, draw_connected from curves, or play from the sound library.
+Examples include `show` from the runes module, `draw_connected` from the curves module, or `play` from the sound module.
 
 ### Attributes
 | attributes | details |
@@ -394,38 +401,19 @@ Examples include show from the runes library, draw_connected from curves, or pla
 | interpreter | The source chapter to use.
 
 ### Children
-[EXTERNAL](#external), [GLOBAL](#global)
+[IMPORT](#import), [EXTERNAL](#external, deprecated), [GLOBAL](#global)
 
 ### Example
 ```xml
 <GRADERDEPLOYMENT interpreter="2">
-  <EXTERNAL name="CURVES">
-      <SYMBOL>draw_points_on</SYMBOL>
-      <SYMBOL>draw_connected</SYMBOL>
-  </EXTERNAL>
+  <IMPORT module="cs1101s_1920/two_dim_runes">
+      <SYMBOL>beside</SYMBOL>
+      <SYMBOL>make_cross</SYMBOL>
+  </IMPORT>
   <GLOBAL>...</GLOBAL>
   <GLOBAL>...</GLOBAL>
   <GLOBAL>...</GLOBAL>
 </GRADERDEPLOYMENT>
-```
-
-## EXTERNAL (deprecated; use IMPORT instead)
-Represents an "external" library to be exposed to the student. Optional.
-
-### Attributes
-| attributes | details |
-| --- | --- |
-| name | Name of the "external" library. Can be "NONE", "TWO_DIM_RUNES", "THREE_DIM_RUNES", "CURVES", or "SOUND".
-
-### Children
-[SYMBOL](#symbol)
-
-### Example
-```xml
-<EXTERNAL name="TWO_DIM_RUNES">
-  <SYMBOL>beside</SYMBOL>
-  <SYMBOL>make_cross</SYMBOL>
-</EXTERNAL>
 ```
 
 ## IMPORT
@@ -447,13 +435,32 @@ Represents a library to be exposed to the student. Optional. Can have many.
 </IMPORT>
 ```
 
-## SYMBOL
-Represents an identifier from the [EXTERNAL](#external) library or [GLOBAL](#global) variables to be exposed through the source interpreter. Put simply, this declares a variable in the source context that points to an identically named variable in the window namespace. Optional. Can have many.
+## EXTERNAL (deprecated; use IMPORT instead)
+Represents an "external" library to be exposed to the student. Optional.
 
-The identifier exposed by the source interpreter will take the same name as the identifier it points to in the EXTERNAL library. For example, the function show in source will execute the function show in the specified EXTERNAL library.
+### Attributes
+| attributes | details |
+| --- | --- |
+| name | Name of the "external" library. Can be "NONE", "TWO_DIM_RUNES", "THREE_DIM_RUNES", "CURVES", or "SOUND".
+
+### Children
+[SYMBOL](#symbol)
+
+### Example
+```xml
+<EXTERNAL name="TWO_DIM_RUNES">
+  <SYMBOL>beside</SYMBOL>
+  <SYMBOL>make_cross</SYMBOL>
+</EXTERNAL>
+```
+
+## SYMBOL
+Represents an identifier from the [IMPORT](#import)ed module, or [EXTERNAL](#external) library (deprecated) or [GLOBAL](#global) variables to be exposed through the Source implementation. Put simply, this declares a variable in the source context that points to an identically named variable in the window namespace. Optional. Can have many.
+
+The identifier exposed by the source interpreter will take the same name as the identifier it points to in the IMPORTed module. For example, the function `show` in Source will execute the function `show` in the specified IMPORTed module.
 
 ### Value
-Text representing a valid javascript identifier name for the symbol.
+Text representing a valid JavaScript identifier name for the symbol.
 
 ### Example
 ```xml
@@ -464,9 +471,9 @@ Text representing a valid javascript identifier name for the symbol.
 ## GLOBAL
 Represents a variable to be dumped into the window namespace. Optional. Can have many.
 
-This is useful to define functions or constants for the student's use, which are not provided by external libraries. For example, you may wish to expose a variable containing a list of names for the student to sort through in sorting missions.
+This is useful to define functions or constants for the student's use, which are not provided by imported modules. For example, you may wish to expose a variable containing a list of names for the student to sort through in sorting missions.
 
-You may also use this to override some property of the window, perhaps originating from an EXTERNAL library.
+You may also use this to override some property of the window, perhaps originating from an IMPORTed module.
 
 ### Children
 [IDENTIFIER](#identifier), [VALUE](#value)
@@ -531,11 +538,11 @@ This mission consists of **four tasks**.
 1. A simple PROBLEM that uses the default DEPLOYMENT and GRADERDEPLOYMENT
    for its GRADER programs (source 1).
 2. A sorting PROBLEM that uses it's own DEPLOYMENT AND GRADERDEPLOYMENT.
-   Here, GLOBALs and EXTERNAL are used to pre-define lists for the students
+   Here, GLOBALs and IMPORT are used to pre-define lists for the students
    as well as the grader to test the functions with.
 3. An MCQ question.
-4. A question which makes use of an EXTERNAL library, TWO_DIM_RUNES. The
-   functions from the library TWO_DIM_RUNES are exposed to the source
+4. A question which makes use of an imported module, `cs1101s_1920/two_dim_runes`.
+   The functions from the module are exposed to the Source
    interpreter's global namespace according to what is specified in the
    SYMBOL elements.
   </TEXT>
@@ -594,15 +601,15 @@ sort(numbers); // should be [1, 3, 5, 7]
           </TESTCASES>
         </SNIPPET>
         <DEPLOYMENT interpreter="2">
-          <EXTERNAL name="NONE">
-            <SYMBOL>numbers</SYMBOL>
+          <IMPORT module="cs1101s_1920/two_dim_runes">
+            <SYMBOL>show</SYMBOL>
           </EXTERNAL>
         </DEPLOYMENT>
         <GRADERDEPLOYMENT interpreter="2">
-          <EXTERNAL name="NONE">
-            <SYMBOL>numbers</SYMBOL>
-            <SYMBOL>bigNumbers</SYMBOL>
-          </EXTERNAL>
+          <GLOBAL>
+	    <IDENTIFIER>show</IDENTIFIER>
+	      <VALUE>x => x;</VALUE>
+	  </GLOBAL>
         </GRADERDEPLOYMENT>
       </PROBLEM>
 
@@ -632,14 +639,14 @@ show(heart_bb);
           </TEMPLATE>
         </SNIPPET>
         <DEPLOYMENT interpreter="1">
-          <EXTERNAL name="TWO_DIM_RUNES">
-            <SYMBOL>show</SYMBOL>
-            <SYMBOL>heart_bb</SYMBOL>
-          </EXTERNAL>
           <IMPORT module="cs1101s_1920/two_dim_runes">
             <SYMBOL>beside</SYMBOL>
             <SYMBOL>make_cross</SYMBOL>
           </IMPORT>
+          <EXTERNAL name="TWO_DIM_RUNES">
+            <SYMBOL>show</SYMBOL>
+            <SYMBOL>heart_bb</SYMBOL>
+          </EXTERNAL>
         </DEPLOYMENT>
       </PROBLEM>
 
