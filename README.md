@@ -6,6 +6,7 @@ See wiki for details: https://github.com/source-academy/modules/wiki
 ### License
 
 [![Apache 2][apache2-image]][apache2]
+
 All JavaScript programs in this repository are licensed under the 
 [Apache License 2.0][apache2].
 
