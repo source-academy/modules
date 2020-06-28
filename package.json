@@ -1,0 +1,25 @@
+{
+  "name": "modules",
+  "version": "1.0.0",
+  "description": "This repository will contain publicly available modules and their documentation, starting in 2020.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anthony-halim/modules.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anthony-halim/modules/issues"
+  },
+  "homepage": "https://github.com/anthony-halim/modules#readme",
+  "dependencies": {
+    "phaser": "^3.23.0"
+  }
+}
