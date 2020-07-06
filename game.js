@@ -283,9 +283,12 @@
     at_update: at_update
   };
 
-  const final_functions = Object.keys(functions).map((fn) => {
-    return !Phaser || !scene ? null_fn : fn;
+  let final_functions = {}
+  
+  Object.entries(functions).map(([key, value])=>{
+    final_functions[key] = !Phaser || !scene ? null_fn : fn;
   });
 
   return final_functions;
+
 };
