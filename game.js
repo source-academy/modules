@@ -87,7 +87,7 @@
 
   function add_to_scene(obj) {
     if (obj && is_any_type(obj, obj_types)) {
-      scene.add(obj);
+      scene.add.existing(obj);
     } else {
       throw console.error(`${obj} is not of type ${obj_types}`);
     }
