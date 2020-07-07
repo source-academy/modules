@@ -17,7 +17,7 @@
     container_type,
   ];
 
-  let preload_map = {}
+  let preload_map = {};
   function get_preload_map() {
     return preload_map;
   }
@@ -251,9 +251,6 @@
     set_flip: set_flip,
     add_listener: add_listener,
     add_tween: add_tween,
-    at_preload: at_preload,
-    at_create: at_create,
-    at_update: at_update,
     get_preload_map: get_preload_map
   };
 
