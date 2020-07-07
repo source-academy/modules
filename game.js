@@ -1,8 +1,8 @@
 (_params) => {
   const Phaser = _params.phaser;
   const scene = _params.scene;
-  const preload_map = _.params.preload_map;
-  const preloader = _.params.preloader;
+  const preload_map = _params.preload_map;
+  const preloader = _params.preloader;
 
   const type_key = "type";
 
