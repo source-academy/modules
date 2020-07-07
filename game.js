@@ -1,6 +1,7 @@
 (_params) => {
   const Phaser = _params.phaser;
   const scene = _params.scene;
+  const preload_map = _.params.preload_map;
 
   const type_key = "type";
 
@@ -16,11 +17,6 @@
     ellipse_type,
     container_type,
   ];
-
-  let preload_map = {};
-  function get_preload_map() {
-    return preload_map;
-  }
 
   const null_str = "";
   const null_fn = () => {};
@@ -251,7 +247,6 @@
     set_flip: set_flip,
     add_listener: add_listener,
     add_tween: add_tween,
-    get_preload_map: get_preload_map
   };
 
   let final_functions = {};
