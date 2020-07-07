@@ -261,4 +261,4 @@
   });
 
   return final_functions;
-};
+}
