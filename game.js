@@ -56,6 +56,22 @@
     return remote_path + asset_key;
   }
 
+  function get_screen_width() {
+    return 1920;
+  }
+
+  function get_screen_height() {
+    return 1080;
+  }
+
+  function get_screen_display_width() {
+    return scene.scale.displaySize.width;
+  }
+
+  function get_screen_display_height() {
+    return scene.scale.displaySize.height;
+  }
+
   ///////////////////////////
   //          LOAD         //
   ///////////////////////////
@@ -242,6 +258,10 @@
 
   const functions = {
     prepend_remote_url: prepend_remote_url,
+    get_screen_width: get_screen_width,
+    get_screen_height: get_screen_height,
+    get_screen_display_width: get_screen_display_width,
+    get_screen_display_height: get_screen_display_height,
     load_image: load_image,
     load_sound: load_sound,
     add: add,
