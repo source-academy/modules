@@ -56,6 +56,107 @@
     return remote_path + asset_key;
   }
 
+  ///////////////////////////
+  //        CONFIG         //
+  ///////////////////////////
+
+  function create_config(lst) {
+    const config = {};
+    map((xs) => {
+      if (!is_pair(xs)) {
+        throw_error(`xs is not pair!`);
+      }
+      config[head(xs)] = tail(xs);
+    }, lst);
+    return config;
+  }
+
+  function create_text_config(
+    font_family = "Courier",
+    font_size = "16px",
+    color = "#fff",
+    stroke = "#fff",
+    stroke_thickness = "0",
+    align = "left"
+  ) {
+    const lst = list(
+      ["fontFamily", font_family],
+      ["fontSize", font_size],
+      ["color", color],
+      ["stroke", stroke],
+      ["strokeThickness", stroke_thickness],
+      ["align", align]
+    );
+    return create_config(lst);
+  }
+
+  function create_interactive_config(
+    draggable = false,
+    use_hand_cursor = false,
+    pixel_perfect = false,
+    alpha_tolerance = 1
+  ) {
+    const lst = list(
+      ["draggable", draggable],
+      ["useHandCursor", use_hand_cursor],
+      ["pixelPerfect", pixel_perfect],
+      ["alphaTolerance", alpha_tolerance]
+    );
+    return create_config(lst);
+  }
+
+  function create_sound_config(
+    mute = false,
+    volume = 1,
+    rate = 1,
+    detune = 0,
+    seek = 0,
+    loop = false,
+    delay = 0
+  ) {
+    const lst = list(
+      ["mute", mute],
+      ["volume", volume],
+      ["rate", rate],
+      ["detune", detune],
+      ["seek", seek],
+      ["loop", loop],
+      ["delay", delay]
+    );
+    return create_config(lst);
+  }
+
+  function create_tween_config(
+    duration = 1000,
+    ease = "Power0",
+    on_complete = null_fn,
+    repeat = 0,
+    repeat_delay = 0,
+    on_repeat = null_fn,
+    yoyo = false,
+    loop = 0,
+    loop_delay = 0,
+    on_loop = null_fn
+  ) {
+    const lst = list(
+      ["duration", duration],
+      ["ease", ease],
+      ["onComplete", on_complete],
+      ["repeat", repeat],
+      ["repeatDelay", repeat_delay],
+      ["onRepeat", on_repeat],
+      ["yoyo", yoyo],
+      ["loop", loop],
+      ["loopDelay", loop_delay],
+      ["onLoop", on_loop]
+    );
+    return create_config(lst);
+  }
+
+  ///////////////////////////
+  //        SCREEN         //
+  ///////////////////////////
+
   function get_screen_width() {
     return 1920;
   }
@@ -117,8 +218,8 @@
   //         TEXT          //
   ///////////////////////////
 
-  function create_text(x, y, text, style = {}) {
-    const txt = new Phaser.GameObjects.Text(scene, x, y, text, style);
+  function create_text(x, y, text, config = {}) {
+    const txt = new Phaser.GameObjects.Text(scene, x, y, text, config);
     return set_type(txt, text_type);
   }
 
@@ -197,9 +298,9 @@
     }
   }
 
-  function set_interactive(obj, shape = {}) {
+  function set_interactive(obj, config = {}) {
     if (obj && is_any_type(obj, obj_types)) {
-      return obj.setInteractive(shape);
+      return obj.setInteractive(config);
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
     }
@@ -245,11 +346,11 @@
     }
   }
 
-  async function add_tween(obj, tween_prop = {}) {
+  async function add_tween(obj, config = {}) {
     if (obj && is_any_type(obj, obj_types)) {
       return scene.tweens.add({
         targets: obj,
-        ...tween_prop,
+        ...config,
       });
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
@@ -257,30 +358,35 @@
   }
 
   const functions = {
-    prepend_remote_url: prepend_remote_url,
+    add: add,
+    add_listener: add_listener,
+    add_to_container: add_to_container,
+    add_tween: add_tween,
+    create_config: create_config,
+    create_container: create_container,
+    create_ellipse: create_ellipse,
+    create_image: create_image,
+    create_interactive_config: create_interactive_config,
+    create_rect: create_rect,
+    create_text: create_text,
+    create_text_config: create_text_config,
+    create_tween_config: create_tween_config,
+    create_sound_config: create_sound_config,
     get_screen_width: get_screen_width,
     get_screen_height: get_screen_height,
     get_screen_display_width: get_screen_display_width,
     get_screen_display_height: get_screen_display_height,
     load_image: load_image,
     load_sound: load_sound,
-    add: add,
     play_sound: play_sound,
-    create_image: create_image,
-    create_text: create_text,
-    create_rect: create_rect,
-    create_ellipse: create_ellipse,
-    create_container: create_container,
-    add_to_container: add_to_container,
-    set_display_size: set_display_size,
+    prepend_remote_url: prepend_remote_url,
     set_alpha: set_alpha,
+    set_display_size: set_display_size,
+    set_flip: set_flip,
     set_interactive: set_interactive,
     set_origin: set_origin,
-    set_scale: set_scale,
     set_rotation: set_rotation,
-    set_flip: set_flip,
-    add_listener: add_listener,
-    add_tween: add_tween,
+    set_scale: set_scale,
   };
 
   let final_functions = {};
