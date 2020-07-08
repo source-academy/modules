@@ -72,7 +72,7 @@
   //          ADD          //
   ///////////////////////////
 
-  function add_to_scene(obj) {
+  function add(obj) {
     if (obj && is_any_type(obj, obj_types)) {
       scene.add.existing(obj);
     } else {
@@ -84,7 +84,7 @@
   //         SOUND         //
   ///////////////////////////
 
-  function play_sound(key, config) {
+  function play_sound(key, config = {}) {
     scene.sound.play(key, config);
   }
 
@@ -101,7 +101,7 @@
   //         TEXT          //
   ///////////////////////////
 
-  function create_text(x, y, text, style) {
+  function create_text(x, y, text, style = {}) {
     const txt = new Phaser.GameObjects.Text(scene, x, y, text, style);
     return set_type(txt, text_type);
   }
@@ -181,7 +181,7 @@
     }
   }
 
-  function set_interactive(obj, shape) {
+  function set_interactive(obj, shape = {}) {
     if (obj && is_any_type(obj, obj_types)) {
       return obj.setInteractive(shape);
     } else {
@@ -244,7 +244,7 @@
     prepend_remote_url: prepend_remote_url,
     load_image: load_image,
     load_sound: load_sound,
-    add: add_to_scene,
+    add: add,
     play_sound: play_sound,
     create_image: create_image,
     create_text: create_text,
