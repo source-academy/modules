@@ -16,6 +16,9 @@
   const preload_image_map = _params.preloadImageMap;
   const preload_sound_map = _params.preloadSoundMap;
   const remote_path = _params.remotePath;
+  const screen_size = _params.screenSize;
+  const layer_manager = _params.layerManager;
+  const layer_types = _params.layerTypes;
 
   const type_key = "type";
 
@@ -279,7 +282,7 @@
    * @return {number} screen width
    */
   function get_screen_width() {
-    return 1920;
+    return screen_size.x;
   }
 
   /**
@@ -288,7 +291,7 @@
    * @return {number} screen height
    */
   function get_screen_height() {
-    return 1080;
+    return screen_size.y;
   }
 
   /**
@@ -347,7 +350,7 @@
    */
   function add(obj) {
     if (obj && is_any_type(obj, obj_types)) {
-      scene.add.existing(obj);
+      layer_manager.addToLayer(layer_types.Objects, this.uiContainer);
       return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
