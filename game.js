@@ -350,7 +350,7 @@
    */
   function add(obj) {
     if (obj && is_any_type(obj, obj_types)) {
-      layer_manager.addToLayer(layer_types.Objects, this.uiContainer);
+      layer_manager.addToLayer(layer_types.Objects, obj);
       return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
