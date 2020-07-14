@@ -381,31 +381,6 @@
   }
 
   ///////////////////////////
-  //      ACHIEVEMENT      //
-  ///////////////////////////
-
-  /**
-   * Create an achievement using the key associated with the achievement.
-   * The achievement key can be obtained from the achievement menu or
-   * collectible menu, after attaining the achievement.
-   * 
-   * Valid achievement will have an on-hover VERIFIED tag to distinguish
-   * it from images created by create_image.
-   * 
-   * @param {number} x x position of the image. 0 is at the left side
-   * @param {number} y y position of the image. 0 is at the top side
-   * @param {string} achievement_key key for achievement 
-   * @returns {Phaser.GameObject.Container} achievement game object
-   */
-  function create_achievement(x, y, achievement_key) {
-    const found = available_achievements.find(achievement_key);
-    if (found) {
-      const sprite = create_image(x, y, prepend_remote_url(achievement_key));
-      return set_type(verify(sprite), achievement_key);
-    }
-  }
-
-  ///////////////////////////
   //         IMAGE         //
   ///////////////////////////
 
@@ -427,6 +402,32 @@
     } else {
       throw_error(`${asset_key} is not associated with any image`);
     }
+  }
+
+  ///////////////////////////
+  //      ACHIEVEMENT      //
+  ///////////////////////////
+
+  /**
+   * Create an achievement using the key associated with the achievement.
+   * The achievement key can be obtained from the achievement menu or
+   * collectible menu, after attaining the achievement.
+   *
+   * Valid achievement will have an on-hover VERIFIED tag to distinguish
+   * it from images created by create_image.
+   *
+   * @param {number} x x position of the image. 0 is at the left side
+   * @param {number} y y position of the image. 0 is at the top side
+   * @param {string} achievement_key key for achievement
+   * @returns {Phaser.GameObject.Container} achievement game object
+   */
+  function create_achievement(x, y, achievement_key) {
+    const found = available_achievements.find(achievement_key);
+    if (found) {
+      const sprite = create_image(x, y, prepend_remote_url(achievement_key));
+      return set_type(verify(sprite), achievement_key);
+    }
+    return create_image(x, y, null_str);
   }
 
   ///////////////////////////
@@ -760,4 +761,4 @@
   });
 
   return final_functions;
-};
+}
