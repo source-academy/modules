@@ -19,6 +19,8 @@
   const screen_size = _params.screenSize;
   const layer_manager = _params.layerManager;
   const layer_types = _params.layerTypes;
+  const verify = _params.verify;
+  const available_achievements = _params.achievements;
 
   const type_key = "type";
 
@@ -27,12 +29,14 @@
   const rect_type = "rect";
   const ellipse_type = "ellipse";
   const container_type = "container";
+  const achievement_type = "achievement";
   const obj_types = [
     image_type,
     text_type,
     rect_type,
     ellipse_type,
     container_type,
+    achievement_type,
   ];
 
   const null_str = "";
@@ -377,6 +381,31 @@
   }
 
   ///////////////////////////
+  //      ACHIEVEMENT      //
+  ///////////////////////////
+
+  /**
+   * Create an achievement using the key associated with the achievement.
+   * The achievement key can be obtained from the achievement menu or
+   * collectible menu, after attaining the achievement.
+   * 
+   * Valid achievement will have an on-hover VERIFIED tag to distinguish
+   * it from images created by create_image.
+   * 
+   * @param {number} x x position of the image. 0 is at the left side
+   * @param {number} y y position of the image. 0 is at the top side
+   * @param {string} achievement_key key for achievement 
+   * @returns {Phaser.GameObject.Container} achievement game object
+   */
+  function create_achievement(x, y, achievement_key) {
+    const found = available_achievements.find(achievement_key);
+    if (found) {
+      const sprite = create_image(x, y, prepend_remote_url(achievement_key));
+      return set_type(verify(sprite), achievement_key);
+    }
+  }
+
+  ///////////////////////////
   //         IMAGE         //
   ///////////////////////////
 
@@ -696,6 +725,7 @@
     add_listener: add_listener,
     add_to_container: add_to_container,
     add_tween: add_tween,
+    create_achievement: create_achievement,
     create_config: create_config,
     create_container: create_container,
     create_ellipse: create_ellipse,
@@ -730,4 +760,4 @@
   });
 
   return final_functions;
-}
+};
