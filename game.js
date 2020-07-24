@@ -121,6 +121,7 @@
    * @returns {config} config object
    */
   function create_config(lst) {
+    display(lst);
     const config = {};
     map((xs) => {
       if (!is_pair(xs)) {
@@ -128,6 +129,8 @@
       }
       config[head(xs)] = tail(xs);
     }, lst);
+    display(config);
+
     return config;
   }
 
@@ -306,6 +309,8 @@
     // Convert from list to array
     const anim_frames_arr = [];
     map((xs) => anim_frames_arr.push(xs), anim_frames);
+
+    display(anim_frames_arr);
 
     const lst = list(
       ["key", anims_key],
