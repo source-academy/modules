@@ -27,7 +27,6 @@
   const ellipse_type = "ellipse";
   const container_type = "container";
   const award_type = "achievement";
-  const anims_type = "anims";
   const obj_types = [
     image_type,
     text_type,
@@ -456,7 +455,7 @@
    * NOTE: Anims DO NOT need to be added into the scene to be used.
    * It is automatically added to the scene when it is created.
    *
-   * WIll return the animation object if the animation key is valid
+   * WIll return boolean if the animation key is valid
    * (key is specified within the anim_config); false if the key
    * is already in use.
    *
@@ -467,7 +466,7 @@
     if (typeof anims === "boolean") {
       return anims;
     } else {
-      return set_type(anims, anims_type);
+      return true;
     }
   }
 
