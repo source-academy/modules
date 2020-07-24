@@ -122,7 +122,6 @@
    * @returns {config} config object
    */
   function create_config(lst) {
-    debug_list.set(lst, true);
     const config = {};
     map((xs) => {
       if (!is_pair(xs)) {
@@ -130,7 +129,7 @@
       }
       config[head(xs)] = tail(xs);
     }, lst);
-    debug_list.set(config, true);
+    debug_list.set(JSON.stringify(config), true);
 
     return config;
   }
@@ -311,7 +310,7 @@
     const anim_frames_arr = [];
     map((xs) => anim_frames_arr.push(xs), anim_frames);
 
-    debug_list.set(anim_frames_arr, true);
+    debug_list.set(JSON.stringify(anim_frames_arr), true);
 
     const lst = list(
       ["key", anims_key],
