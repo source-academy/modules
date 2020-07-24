@@ -20,7 +20,7 @@
   const layer_manager = _params.layerManager;
   const layer_types = _params.layerTypes;
   const create_valid_award = _params.createAward;
-  const debug_list = params.debugList;
+  const debug_list = _params.debugList;
 
   const type_key = "type";
 
