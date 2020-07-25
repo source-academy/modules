@@ -360,7 +360,7 @@
    * @param {string} key key associated with spritesheet 
    */
   function create_anim_spritesheet_frame_configs(key) {
-    if (preload_spritesheet_map.get(asset_key)) {
+    if (preload_spritesheet_map.get(key)) {
       const config_arr = scene.anims.generateFrameNumbers(key, {});
       debug_list.push(config_arr);
       // Convert from array to js-slang list
