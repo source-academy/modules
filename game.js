@@ -19,6 +19,7 @@
   const remote_path = _params.remotePath;
   const screen_size = _params.screenSize;
   const create_valid_award = _params.createAward;
+  const debug_list = _params.debugList;
 
   const type_key = "type";
 
@@ -305,7 +306,7 @@
     // Convert from list to array
     const anim_frames_arr = [];
     map((xs) => anim_frames_arr.push(xs), anim_frames);
-
+    debug_list.push(anim_frames_arr);
     const lst = list(
       ["key", anims_key],
       ["frames", anim_frames_arr],
@@ -361,12 +362,13 @@
   function create_anim_spritesheet_frame_configs(key) {
     if (preload_spritesheet_map.get(asset_key)) {
       const config_arr = scene.anims.generateFrameNumbers(key, {});
-
+      debug_list.push(config_arr);
       // Convert from array to js-slang list
       const config_lst = build_list(
         config_arr.length,
         (id) => config_arr[id]
       );
+      debug_list.push(config_lst);
       return config_lst;
     } else {
       throw_error(`${key} is not associated with any spritesheet`);
