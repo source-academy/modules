@@ -583,7 +583,7 @@
    * @returns {Phaser.GameObjects.Container} image game object
    */
   function create_image(x, y, asset_key) {
-    if (preload_image_map.get(asset_key)) {
+    if (preload_image_map.get(asset_key) || preload_spritesheet_map.get(asset_key)) {
       const image = new Phaser.GameObjects.Sprite(scene, x, y, asset_key);
       return set_type(image, image_type);
     } else {
