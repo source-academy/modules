@@ -364,7 +364,7 @@
 
       // Convert from array to js-slang list
       const config_lst = build_list(
-        array_length(config_arr),
+        config_arr.length,
         (id) => config_arr[id]
       );
       return config_lst;
