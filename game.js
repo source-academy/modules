@@ -38,7 +38,7 @@
   ];
 
   const null_str = "";
-  const null_fn = () => {};
+  const null_fn = (a, b) => {};
 
   ///////////////////////////
   //        PRIVATE        //
