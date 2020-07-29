@@ -20,14 +20,18 @@
   const screen_size = _params.screenSize;
   const create_valid_award = _params.createAward;
 
-  const type_key = "type";
+  // Listener Types
+  const input_plugin_type = "input_plugin";
+  const keyboard_key_type = "keyboard_key";
+  const listener_types = [input_plugin_type, keyboard_key_type];
 
+  // Object types
   const image_type = "image";
   const text_type = "text";
   const rect_type = "rect";
   const ellipse_type = "ellipse";
   const container_type = "container";
-  const award_type = "achievement";
+  const award_type = "award";
   const obj_types = [
     image_type,
     text_type,
@@ -38,26 +42,32 @@
   ];
 
   const null_str = "";
-  const null_fn = (a, b) => {};
+  const null_fn = () => {};
 
   ///////////////////////////
   //        PRIVATE        //
   ///////////////////////////
 
+  function get_obj(obj) {
+    return obj[1];
+  }
+
   /**
    * Checks whether the given game object is of the enquired type.
-   * @param {Phaser.GameObjects.Container} obj the game object
+   * If the given obj is undefined, will also return false.
+   *
+   * @param {Phaser.GameObjects.GameObject} obj the game object
    * @param {string} type enquired type
    * @returns {boolean}
    */
   function is_type(obj, type) {
-    return obj.data.get(type_key) === type;
+    return obj && obj[0] === type && obj[1];
   }
 
   /**
    * Checks whether the given game object is any of the enquired types
    *
-   * @param {Phaser.GameObjects.Container} obj the game object
+   * @param {Phaser.GameObjects.GameObject} obj the game object
    * @param {string[]} types enquired types
    * @returns {boolean}
    */
@@ -69,17 +79,15 @@
   }
 
   /**
-   * Set a game object to the given type. Overwrites previous type, if any.
+   * Set a game object to the given type.
    * Mutates the object.
    *
-   * @param {Phaser.GameObjects.Container} obj the game object
+   * @param {Phaser.GameObjects.GameObject} obj the game object
    * @param {string} type type to set
-   * @returns {Phaser.GameObjects.Container} object itself
+   * @returns {Phaser.GameObjects.GameObject} object itself
    */
   function set_type(obj, type) {
-    obj.setDataEnabled();
-    obj.data.set(type_key, type);
-    return obj;
+    return [type, obj];
   }
 
   /**
@@ -357,6 +365,7 @@
    * a spritesheet.
    *  
    * @param {string} key key associated with spritesheet 
+   * @returns {list of configs}
    */
   function create_anim_spritesheet_frame_configs(key) {
     if (preload_spritesheet_map.get(key)) {
@@ -481,14 +490,14 @@
   ///////////////////////////
 
   /**
-   * Add the object to the scene. Only object added to the scene
+   * Add the object to the scene. Only objects added to the scene
    * will appear.
    *
-   * @param {Phaser.GameObjects.Container} obj game object to be added
+   * @param {Phaser.GameObjects.GameObject} obj game object to be added
    */
   function add(obj) {
-    if (obj && is_any_type(obj, obj_types)) {
-      scene.add.existing(obj);
+    if (is_any_type(obj, obj_types)) {
+      scene.add.existing(get_obj(obj));
       return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
@@ -525,19 +534,16 @@
    * NOTE: Anims DO NOT need to be added into the scene to be used.
    * It is automatically added to the scene when it is created.
    *
-   * WIll return boolean if the animation key is valid
+   * WIll return true if the animation key is valid
    * (key is specified within the anim_config); false if the key
    * is already in use.
    *
    * @param {config} anim_config
+   * @returns {boolean} true if animation is successfully created, false otherwise
    */
   function create_anim(anim_config) {
     const anims = scene.anims.create(anim_config);
-    if (typeof anims === "boolean") {
-      return anims;
-    } else {
-      return true;
-    }
+    return typeof anims !== "boolean";
   }
 
   /**
@@ -547,8 +553,9 @@
    * @param {string} anims_key key associated with an animation
    */
   function play_anim_on_image(image, anims_key) {
-    if (image && is_type(image, image_type)) {
-      return image.play(anims_key);
+    if (is_type(image, image_type)) {
+      get_obj(image).play(anims_key);
+      return image;
     } else {
       throw_error(`${image} is not of type ${image_type}`);
     }
@@ -567,7 +574,7 @@
    * @param {number} x x position of the image. 0 is at the left side
    * @param {number} y y position of the image. 0 is at the top side
    * @param {string} asset_key key to loaded image
-   * @returns {Phaser.GameObjects.Container} image game object
+   * @returns {Phaser.GameObjects.Sprite} image game object
    */
   function create_image(x, y, asset_key) {
     if (
@@ -599,7 +606,7 @@
    * @param {number} x x position of the image. 0 is at the left side
    * @param {number} y y position of the image. 0 is at the top side
    * @param {string} award_key key for award
-   * @returns {Phaser.GameObject.Container} award game object
+   * @returns {Phaser.GameObject.Sprite} award game object
    */
   function create_award(x, y, award_key) {
     return set_type(create_valid_award(x, y, award_key), award_type);
@@ -618,7 +625,7 @@
    * @param {number} y y position of the text
    * @param {string} text text to be shown
    * @param {config} config text configuration to be used
-   * @returns {Phaser.GameObjects.Container} text game object
+   * @returns {Phaser.GameObjects.Text} text game object
    */
   function create_text(x, y, text, config = {}) {
     const txt = new Phaser.GameObjects.Text(scene, x, y, text, config);
@@ -640,7 +647,7 @@
    * @param {number} height height of rectangle
    * @param {number} fill colour fill, in hext e.g 0xffffff
    * @param {number} alpha value between 0 and 1 to denote alpha
-   * @returns {Phaser.GameObjects.Container} rectangle object
+   * @returns {Phaser.GameObjects.Rectangle} rectangle object
    */
   function create_rect(x, y, width, height, fill = 0, alpha = 1) {
     const rect = new Phaser.GameObjects.Rectangle(
@@ -668,7 +675,7 @@
    * @param {number} height height of ellipse
    * @param {number} fill colour fill, in hext e.g 0xffffff
    * @param {number} alpha value between 0 and 1 to denote alpha
-   * @returns {Phaser.GameObjects.Container} ellipse object
+   * @returns {Phaser.GameObjects.Ellipse} ellipse object
    */
   function create_ellipse(x, y, width, height, fill = 0, alpha = 1) {
     const ellipse = new Phaser.GameObjects.Ellipse(
@@ -714,15 +721,14 @@
    * Add the given game object to the container.
    * Mutates the container.
    *
-   * @param {Phaser.GameObject.GameObject} container container object
+   * @param {Phaser.GameObject.Container} container container object
    * @param {Phaser.GameObject.GameObject} objs game object to add to the container
-   * @returns {Phaser.GameObject.GameObject} container object
+   * @returns {Phaser.GameObject.Container} container object
    */
   function add_to_container(container, obj) {
-    const correct_types =
-      is_type(container, container_type) && is_any_types(obj, obj_types);
-    if (container && obj && correct_types) {
-      return container.add(obj);
+    if (is_type(container, container_type) && is_any_types(obj, obj_types)) {
+      get_obj(container).add(get_obj(obj));
+      return container;
     } else {
       throw_error(
         `${obj} is not of type ${obj_types} or ${container} is not of type ${container_type}`
@@ -738,14 +744,15 @@
    * Set the display size of the object.
    * Mutate the object.
    *
-   * @param {Phaser.GameObjects.Container} obj object to be set
+   * @param {Phaser.GameObjects.GameObject} obj object to be set
    * @param {number} x new display width size
    * @param {number} y new display height size
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * @returns {Phaser.GameObjects.GameObject} game object itself
    */
   function set_display_size(obj, x, y) {
-    if (obj && is_any_type(obj, obj_types)) {
-      return obj.setDisplaySize(x, y);
+    if (is_any_type(obj, obj_types)) {
+      get_obj(obj).setDisplaySize(x, y);
+      return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
     }
@@ -755,13 +762,14 @@
    * Set the alpha of the object.
    * Mutate the object.
    *
-   * @param {Phaser.GameObjects.Container} obj object to be set
+   * @param {Phaser.GameObjects.GameObject} obj object to be set
    * @param {number} alpha new alpha
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * @returns {Phaser.GameObjects.GameObject} game object itself
    */
   function set_alpha(obj, alpha) {
-    if (obj && is_any_type(obj, obj_types)) {
-      return obj.setAlpha(alpha);
+    if (is_any_type(obj, obj_types)) {
+      get_obj(obj).setAlpha(alpha);
+      return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
     }
@@ -774,13 +782,14 @@
    * Rectangle and Ellipse are not able to receive configs, only boolean
    * i.e. set_interactive(rect, true); set_interactive(ellipse, false)
    *
-   * @param {Phaser.GameObjects.Container} obj object to be set
+   * @param {Phaser.GameObjects.GameObject} obj object to be set
    * @param {config} config interactive config to be used
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * @returns {Phaser.GameObjects.GameObject} game object itself
    */
   function set_interactive(obj, config = {}) {
-    if (obj && is_any_type(obj, obj_types)) {
-      return obj.setInteractive(config);
+    if (is_any_type(obj, obj_types)) {
+      get_obj(obj).setInteractive(config);
+      return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
     }
@@ -791,14 +800,15 @@
    * In other words, the anchor of the object.
    * Mutate the object.
    *
-   * @param {Phaser.GameObjects.Container} obj object to be set
+   * @param {Phaser.GameObjects.GameObject} obj object to be set
    * @param {number} x new anchor x coordinate, between value 0 to 1.
    * @param {number} y new anchor y coordinate, between value 0 to 1.
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * @returns {Phaser.GameObjects.GameObject} game object itself
    */
   function set_origin(obj, x, y) {
-    if (obj && is_any_type(obj, obj_types)) {
-      return obj.setOrigin(x, y);
+    if (is_any_type(obj, obj_types)) {
+      get_obj(obj).setOrigin(x, y);
+      return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
     }
@@ -808,14 +818,15 @@
    * Set the scale of the object.
    * Mutate the object.
    *
-   * @param {Phaser.GameObjects.Container} obj object to be set
+   * @param {Phaser.GameObjects.GameObject} obj object to be set
    * @param {number} x new x scale
    * @param {number} y new y scale
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * @returns {Phaser.GameObjects.GameObject} game object itself
    */
   function set_scale(obj, x, y) {
-    if (obj && is_any_type(obj, obj_types)) {
-      return obj.setScale(x, y);
+    if (is_any_type(obj, obj_types)) {
+      get_obj(obj).setScale(x, y);
+      return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
     }
@@ -825,13 +836,14 @@
    * Set the rotation of the object.
    * Mutate the object.
    *
-   * @param {Phaser.GameObjects.Container} obj object to be set
+   * @param {Phaser.GameObjects.GameObject} obj object to be set
    * @param {number} rad the rotation, in radians
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * @returns {Phaser.GameObjects.GameObject} game object itself
    */
   function set_rotation(obj, rad) {
-    if (obj && is_any_type(obj, obj_types)) {
-      return obj.setRotation(rad);
+    if (is_any_type(obj, obj_types)) {
+      get_obj(obj).setRotation(rad);
+      return obj;
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
     }
@@ -841,14 +853,61 @@
    * Sets the horizontal and flipped state of the object.
    * Mutate the object.
    *
-   * @param {Phaser.GameObjects.Container} obj game object itself
+   * @param {Phaser.GameObjects.GameObject} obj game object itself
    * @param {boolean} x to flip in the horizontal state
    * @param {boolean} y to flip in the vertical state
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * @returns {Phaser.GameObjects.GameObject} game object itself
    */
   function set_flip(obj, x, y) {
-    if (obj && is_any_type(obj, obj_types)) {
-      return obj.setFlip(x, y);
+    if (is_any_type(obj, obj_types)) {
+      get_obj(obj).setFlip(x, y);
+      return obj;
+    } else {
+      throw_error(`${obj} is not of type ${obj_types}`);
+    }
+  }
+
+  /**
+   * Create a tween to the object and plays it.
+   * Mutate the object.
+   *
+   * @param {Phaser.GameObjects.GameObject} obj object to be added to
+   * @param {config} config tween config
+   * @returns {Phaser.GameObjects.GameObject} game object itself
+   */
+  async function add_tween(obj, config = {}) {
+    if (is_any_type(obj, obj_types)) {
+      scene.tweens.add({
+        targets: get_obj(obj),
+        ...config,
+      });
+      return obj;
+    } else {
+      throw_error(`${obj} is not of type ${obj_types}`);
+    }
+  }
+
+  ///////////////////////////
+  //       LISTENER        //
+  ///////////////////////////
+
+  /**
+   * Attach a listener to the object. The callback will be executed
+   * when the event is emitted.
+   * Mutate the object.
+   *
+   * For all available events, see:
+   * https://photonstorm.github.io/phaser3-docs/Phaser.Input.Events.html
+   *
+   * @param {Phaser.GameObjects.Container} obj object to be added to
+   * @param {string} event the event name
+   * @param {Function} callback listener function, executed on event
+   * @returns {Phaser.Input.InputPlugin} listener
+   */
+  function add_listener(obj, event, callback) {
+    if (is_any_type(obj, obj_types)) {
+      const listener = get_obj(obj).addListener(event, callback);
+      return set_type(listener, input_plugin_type);
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
     }
@@ -862,43 +921,37 @@
    * For all available events, see:
    * https://photonstorm.github.io/phaser3-docs/Phaser.Input.Events.html
    *
-   * @param {Phaser.GameObjects.Container} obj object to be added to
-   * @param {string} event the event name
-   * @param {Function} callback listener function
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * For list of keycodes, see:
+   * https://github.com/photonstorm/phaser/blob/v3.22.0/src/input/keyboard/keys/KeyCodes.js
+   *
+   * @param {string | number} key keyboard key
+   * @param {string} event
+   * @param {Function} callback listener function, executed on event
+   * @returns {Phaser.Input.Keyboard.Key} listener
    */
-  function add_listener(obj, event, callback) {
-    if (obj && is_any_type(obj, obj_types)) {
-      obj.addListener(event, callback);
-      return obj;
-    } else {
-      throw_error(`${obj} is not of type ${obj_types}`);
-    }
+  function add_keyboard_listener(key, event, callback) {
+    const key_obj = scene.input.keyboard.addKey(key);
+    const keyboard_listener = key_obj.addListener(event, callback);
+    return set_type(keyboard_listener, keyboard_key_type);
   }
 
   /**
-   * Create a tween to the object and plays it.
-   * Mutate the object.
+   * Deactivate and remove listener.
    *
-   * @param {Phaser.GameObjects.Container} obj object to be added to
-   * @param {config} config tween config
-   * @returns {Phaser.GameObjects.Container} game object itself
+   * @param {Phaser.Input.InputPlugin | Phaser.Input.Keyboard.Key} listener
    */
-  async function add_tween(obj, config = {}) {
-    if (obj && is_any_type(obj, obj_types)) {
-      scene.tweens.add({
-        targets: obj,
-        ...config,
-      });
-      return obj;
-    } else {
-      throw_error(`${obj} is not of type ${obj_types}`);
+  function remove_listener(listener) {
+    if (is_any_type(listener, listener_types)) {
+      get_obj(listener).removeAllListeners();
+      return true;
     }
+    return false;
   }
 
   const functions = {
     add: add,
     add_listener: add_listener,
+    add_keyboard_listener: add_keyboard_listener,
     add_to_container: add_to_container,
     add_tween: add_tween,
     create_anim: create_anim,
@@ -927,6 +980,7 @@
     play_anim_on_image: play_anim_on_image,
     play_sound: play_sound,
     prepend_remote_url: prepend_remote_url,
+    remove_listener: remove_listener,
     set_alpha: set_alpha,
     set_display_size: set_display_size,
     set_flip: set_flip,
