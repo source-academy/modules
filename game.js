@@ -815,6 +815,25 @@
   }
 
   /**
+   * Set the position of the game object
+   * Mutate the object
+   *
+   * @param {Phaser.GameObjects.Container} obj object to be set
+   * @param {number} x new x position
+   * @param {number} y new y position
+   * @returns {Phaser.GameObjects.Container} game object itself
+   */
+  function set_position(obj, x, y) {
+    if (obj && is_any_type(obj, obj_types)) {
+      obj.x = x;
+      obj.y = y;
+      return obj;
+    } else {
+      throw_error(`${obj} is not of type ${obj_types}`);
+    }
+  }
+
+  /**
    * Set the scale of the object.
    * Mutate the object.
    *
@@ -986,6 +1005,7 @@
     set_flip: set_flip,
     set_interactive: set_interactive,
     set_origin: set_origin,
+    set_position: set_position,
     set_rotation: set_rotation,
     set_scale: set_scale,
   };
