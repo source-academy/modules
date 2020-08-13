@@ -749,6 +749,7 @@
    */
   function destroy_obj(obj) {
     if (is_any_type(obj, obj_types)) {
+      console.log("Destroying:", obj);
       get(obj).destroy();
     } else {
       throw_error(`${obj} is not of type ${obj_types}`);
