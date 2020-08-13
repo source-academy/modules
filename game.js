@@ -747,7 +747,7 @@
    * 
    * @param {Phaser.GameObjects.GameObject} obj game object itself 
    */
-  function destroy(obj) {
+  function destroy_obj(obj) {
     if (is_any_type(obj, obj_types)) {
       get(obj).destroy();
     } else {
@@ -1003,7 +1003,7 @@
     create_tween_config: create_tween_config,
     create_sound_config: create_sound_config,
     create_spritesheet_config: create_spritesheet_config,
-    destroy: destroy,
+    destroy_obj: destroy_obj,
     get_screen_width: get_screen_width,
     get_screen_height: get_screen_height,
     get_screen_display_width: get_screen_display_width,
