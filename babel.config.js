@@ -1,5 +1,13 @@
 module.exports = {
   /**
+   * - **script** - Parse the file using the ECMAScript Script grammar. No import/export statements allowed, and files are not in strict mode.
+   * - **module** - Parse the file using the ECMAScript Module grammar. Files are automatically strict, and import/export statements are allowed.
+   * - **unambiguous** - Consider the file a "module" if import/export statements are present, or else consider it a "script".
+   * @see https://babeljs.io/docs/en/options#sourcetype
+   * @type {"script" | "module" | "unambiguous"}
+   */
+  sourceType: "script",
+  /**
    * Highlight tokens in code snippets in Babel's error messages to make them easier to read.
    * @see https://babeljs.io/docs/en/options#highlightcode
    * @see https://babeljs.io/docs/en/babel-parser#options

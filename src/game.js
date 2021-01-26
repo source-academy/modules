@@ -10,7 +10,7 @@
  * Author: Anthony Halim, Chong Sia Tiffany
  */
 
-(_params) => {
+(_, _params) => {
   const Phaser = _params.phaser;
   const scene = _params.scene;
   const preload_image_map = _params.preloadImageMap;
