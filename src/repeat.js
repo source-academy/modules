@@ -1,4 +1,4 @@
-(_, _params) => {
+(_params) => {
   function repeat(f, n) {
     return n === 0 ? (x) => x : (x) => f(repeat(f, n - 1)(x));
   }

@@ -3,7 +3,7 @@
 
 // Authors: Joel Lee, Martin Henz
 
-(_, _params) => {
+(_params) => {
   /**
    * returns an empty binary tree, represented by the empty list null
    * @return {binarytree} empty binary tree

@@ -19,10 +19,9 @@
  *  return moduleLib({ ... }, React)
  * }
  *
- * @param {React} React -
  * @param {Object<string, any>} _params -
  */
-(React, _params) => {
+(_params) => {
   return {
     /**
      * For functions that source academy cadets will be interacting with
@@ -54,7 +53,7 @@
          *
          * @param {Object<string, any>} props
          */
-        component: (props) => {
+        component: (React) => (props) => {
           return (
             <div>
               <h1>{props.counter}</h1>
