@@ -43,17 +43,18 @@
          * rendered.
          *
          * @param {Result} result
+         * @returns {boolean}
          */
-        shouldRender: (result) => {},
+        toSpawn: (result) => (context) => true,
 
         /**
-         * (????) => React JSX (To be transpiled by babel in Github Actions)
+         * (DebuggerContext) => React JSX (To be transpiled by babel in Github Actions)
          * This function will be called to render the module component in the
          * sideContentTabs on cadet-frontend
          *
          * @param {Object<string, any>} props
          */
-        component: (React) => (props) => {
+        body: (React) => (props) => {
           return (
             <div>
               <h1>{props.counter}</h1>
@@ -61,6 +62,22 @@
             </div>
           );
         },
+
+        /**
+         * A string that will appear as the tooltip.
+         *
+         * @type {String}
+         */
+        label: "Test Component",
+
+        /**
+         * BlueprintJS IconName element, used to render the icon which will be \
+         * displayed over the SideContent panel.
+         * @see https://blueprintjs.com/docs/#icons
+         *
+         * @type {String}
+         */
+        iconName: "mugshot",
       },
     ],
   };
