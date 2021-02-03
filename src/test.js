@@ -42,10 +42,10 @@
          * This function will be called to determine if the component will be
          * rendered.
          *
-         * @param {Result} result
+         * @param {DebuggerContext} context
          * @returns {boolean}
          */
-        toSpawn: (result) => (context) => true,
+        toSpawn: (context) => true,
 
         /**
          * (DebuggerContext) => React JSX (To be transpiled by babel in Github Actions)
