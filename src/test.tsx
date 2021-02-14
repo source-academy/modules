@@ -22,7 +22,7 @@
  *
  * @param {Object<string, any>} _params -
  */
-(_params) => {
+(_params: any) => {
   return {
     /**
      * For functions that source academy cadets will be interacting with
@@ -58,11 +58,10 @@
          *
          * @param {Object<string, any>} props
          */
-        body: (React) => (props) => {
+        body: (React: any) => (props: any) => {
           return (
             <div>
-              <h1>{props.counter}</h1>
-              <button>Click Me!</button>
+              <p>Sample text</p>
             </div>
           );
         },
