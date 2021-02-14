@@ -1,7 +1,8 @@
 /**
  * Test library to demonstrate the use of new flexible modules feature.
  *
- * Author: Loh Xian Ze, Bryan
+ * @author Loh Xian Ze, Bryan
+ * @author Marcus Tang Xin Kye
  */
 
 /**
@@ -41,11 +42,14 @@
          * (result) => boolean
          * This function will be called to determine if the component will be
          * rendered.
+         * Currently spawns when the result in the REPL is "test"
          *
          * @param {DebuggerContext} context
          * @returns {boolean}
          */
-        toSpawn: (context) => true,
+        toSpawn: (context) => {
+          return context.result.value === "test";
+        },
 
         /**
          * (DebuggerContext) => React JSX (To be transpiled by babel in Github Actions)
