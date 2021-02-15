@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "module:add": "node ./templates/generate.js",
-    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/babel --extensions \".ts,.tsx\" src --out-dir build"
+    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/babel --extensions \".ts,.tsx\" src --out-dir build",
+    "start": "npx http-server --cors=* -c-1 -p 1337 ./build"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
