@@ -12,6 +12,7 @@ See wiki for details: https://github.com/source-academy/modules/wiki
 2. Clone this repository and navigate to it using "cd" in your command line or shell tool.
 3. Run `yarn install` to install dependencies.
 4. Run `yarn run build` to transpile the modules javascript files from lib into build.
+5. Run `yarn serve` to start the http-server on http://localhost:8022
 
 ## License
 
