@@ -5,15 +5,22 @@
   "license": "Apache-2.0",
   "scripts": {
     "module:add": "node ./templates/generate.js",
+    "build:webpack": "webpack --config webpack.config.js",
+    "build:rollup": "./node_modules/.bin/tsc && rollup --config rollup.config.js",
+    "build:module": "rollup --format iife -d build",
     "build": "./node_modules/.bin/tsc && ./node_modules/.bin/babel --extensions \".ts,.tsx\" src --out-dir build",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build"
   },
   "devDependencies": {
+    "@types/react": "^17.0.2",
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-typescript": "^7.12.16",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "@rollup/plugin-typescript": "^8.2.0",
     "@types/node": "^14.14.27",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
@@ -23,12 +30,22 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4",
     "generate-template-files": "^3.0.0",
     "http-server": "^0.12.3",
     "prettier": "^2.2.1",
+    "rollup": "^2.39.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-filesize": "^9.1.0",
     "typescript": "^4.1.5"
   },
   "dependencies": {
-    "eslint-plugin-react-hooks": "^4"
+    "dayjs": "^1.10.4",
+    "lodash": "^4.17.20",
+    "react": "^17.0.1"
+  },
+  "peerDependencies": {
+    "tslib": "^2.1.0"
   }
 }

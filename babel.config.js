@@ -6,7 +6,7 @@ module.exports = {
    * @see https://babeljs.io/docs/en/options#sourcetype
    * @type {"script" | "module" | "unambiguous"}
    */
-  sourceType: "script",
+  sourceType: "module",
   /**
    * Highlight tokens in code snippets in Babel's error messages to make them easier to read.
    * @see https://babeljs.io/docs/en/options#highlightcode
