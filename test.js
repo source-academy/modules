@@ -1,0 +1,1 @@
+_params=>{return{functions:{make_empty_array:()=>[],array_append:(arr1,arr2)=>[...arr1,...arr2]},sideContents:[{toSpawn:context=>{return context.result.value==="test"},body:React=>props=>{return React.createElement("div",null,React.createElement("p",null,"Sample text"))},label:"Test Component",iconName:"mugshot"}]}};
