@@ -48,7 +48,7 @@
          * @returns {boolean}
          */
         toSpawn: (context) => {
-          return context.result.value === "test";
+          return context.result.value === 'test';
         },
 
         /**
@@ -71,7 +71,7 @@
          *
          * @type {String}
          */
-        label: "Test Component",
+        label: 'Test Component',
 
         /**
          * BlueprintJS IconName element, used to render the icon which will be \
@@ -80,7 +80,7 @@
          *
          * @type {String}
          */
-        iconName: "mugshot",
+        iconName: 'mugshot',
       },
     ],
   };
