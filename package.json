@@ -6,6 +6,7 @@
   "scripts": {
     "module:add": "node ./templates/generate.js",
     "lint": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src",
+    "lint:fix": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src --fix",
     "build:webpack": "webpack --config webpack.config.js",
     "build:rollup": "./node_modules/.bin/tsc && rollup --config rollup.config.js",
     "build:module": "rollup --format iife -d build",
