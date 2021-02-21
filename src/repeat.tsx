@@ -13,9 +13,9 @@
 
   return {
     functions: {
-      repeat: repeat,
-      twice: twice,
-      thrice: thrice,
+      repeat,
+      twice,
+      thrice,
     },
     sideContents: [],
   };
