@@ -1,13 +1,13 @@
-(_params) => {
-  function repeat(f, n) {
-    return n === 0 ? (x) => x : (x) => f(repeat(f, n - 1)(x));
+(_params: any) => {
+  function repeat(f: Function, n: any) {
+    return n === 0 ? (x: any) => x : (x: any) => f(repeat(f, n - 1)(x));
   }
 
-  function twice(f) {
+  function twice(f: any) {
     return repeat(f, 2);
   }
 
-  function thrice(f) {
+  function thrice(f: any) {
     return repeat(f, 3);
   }
 

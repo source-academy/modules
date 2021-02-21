@@ -3,11 +3,13 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: ['airbnb', 'prettier'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'eslint-config-prettier'],
+  extends: ['airbnb', 'prettier'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -15,9 +17,13 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['react'],
+  plugins: ['react', 'eslint-config-prettier'],
   rules: {
     'linebreak-style': 'off',
     'prettier/prettier': ['error'],
+    'no-unused-expressions': 'off',
+    'no-unused-vars': 'off',
+    'react/jsx-filename-extension': 'off',
+    'no-use-before-define': 'off',
   },
 };

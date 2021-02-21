@@ -22,66 +22,60 @@
  *
  * @param {Object<string, any>} _params -
  */
-(_params: any) => {
-  return {
-    /**
-     * For functions that source academy cadets will be interacting with
-     * in the IDE.
-     */
-    functions: {
-      make_empty_array: () => [],
-      array_append: (arr1, arr2) => [...arr1, ...arr2],
+(_params: any) => ({
+  /**
+   * For functions that source academy cadets will be interacting with
+   * in the IDE.
+   */
+  functions: {
+    make_empty_array: () => [],
+    array_append: (arr1, arr2) => [...arr1, ...arr2],
+  },
+
+  /**
+   * For generating the side content tabs on cadet-frontend.
+   */
+  sideContents: [
+    {
+      /**
+       * (result) => boolean
+       * This function will be called to determine if the component will be
+       * rendered.
+       * Currently spawns when the result in the REPL is "test"
+       *
+       * @param {DebuggerContext} context
+       * @returns {boolean}
+       */
+      toSpawn: (context) => context.result.value === 'test',
+
+      /**
+       * (DebuggerContext) => React JSX (To be transpiled by babel in Github Actions)
+       * This function will be called to render the module component in the
+       * sideContentTabs on cadet-frontend
+       *
+       * @param {Object<string, any>} props
+       */
+      body: (React: any) => (props: any) => (
+        <div>
+          <p>Sample text</p>
+        </div>
+      ),
+
+      /**
+       * A string that will appear as the tooltip.
+       *
+       * @type {String}
+       */
+      label: 'Test Component',
+
+      /**
+       * BlueprintJS IconName element, used to render the icon which will be \
+       * displayed over the SideContent panel.
+       * @see https://blueprintjs.com/docs/#icons
+       *
+       * @type {String}
+       */
+      iconName: 'mugshot',
     },
-
-    /**
-     * For generating the side content tabs on cadet-frontend.
-     */
-    sideContents: [
-      {
-        /**
-         * (result) => boolean
-         * This function will be called to determine if the component will be
-         * rendered.
-         * Currently spawns when the result in the REPL is "test"
-         *
-         * @param {DebuggerContext} context
-         * @returns {boolean}
-         */
-        toSpawn: (context) => {
-          return context.result.value === 'test';
-        },
-
-        /**
-         * (DebuggerContext) => React JSX (To be transpiled by babel in Github Actions)
-         * This function will be called to render the module component in the
-         * sideContentTabs on cadet-frontend
-         *
-         * @param {Object<string, any>} props
-         */
-        body: (React: any) => (props: any) => {
-          return (
-            <div>
-              <p>Sample text</p>
-            </div>
-          );
-        },
-
-        /**
-         * A string that will appear as the tooltip.
-         *
-         * @type {String}
-         */
-        label: 'Test Component',
-
-        /**
-         * BlueprintJS IconName element, used to render the icon which will be \
-         * displayed over the SideContent panel.
-         * @see https://blueprintjs.com/docs/#icons
-         *
-         * @type {String}
-         */
-        iconName: 'mugshot',
-      },
-    ],
-  };
-};
+  ],
+});
