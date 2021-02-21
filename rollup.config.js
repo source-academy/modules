@@ -7,7 +7,13 @@ import copy from 'rollup-plugin-copy';
 
 import modules from './modules.json';
 
+const suppressedWarnings = ['MISSING_NAME_OPTION_FOR_IIFE_EXPORT'];
+
 const defaultConfigurations = {
+  onwarn(warning, warn) {
+    if (suppressedWarnings.includes(warning.code)) return;
+    warn(warning);
+  },
   plugins: [
     typescript(),
     babel({
@@ -19,14 +25,17 @@ const defaultConfigurations = {
     commonJS({
       include: 'node_modules/**',
     }),
-    filesize(),
+    filesize({
+      showMinifiedSize: false,
+      showGzippedSize: false,
+    }),
     copy({
       targets: [{ src: './modules.json', dest: './build' }],
     }),
   ],
 };
 
-const _packages = Object.keys(modules);
+const modulePackages = Object.keys(modules);
 
 const buildPackages = (name) => ({
   ...defaultConfigurations,
@@ -37,13 +46,13 @@ const buildPackages = (name) => ({
   },
 });
 
-let _contents = [];
-_packages
-  .map((_package) => modules[_package].contents)
+let moduleContents = [];
+modulePackages
+  .map((modulePackage) => modules[modulePackage].contents)
   .forEach((__contents) =>
-    __contents.forEach((__content) => _contents.push(__content))
+    Array.prototype.push.apply(moduleContents, __contents)
   );
-_contents = [...new Set(_contents)];
+moduleContents = [...new Set(moduleContents)];
 
 const buildContents = (name) => ({
   ...defaultConfigurations,
@@ -58,7 +67,16 @@ const buildContents = (name) => ({
   external: ['react'],
 });
 
+// eslint-disable-next-line no-console
+console.log('Building modules with side contents:');
+modulePackages.forEach((modulePackage) => {
+  // eslint-disable-next-line no-console
+  console.log(
+    `Module: ${modulePackage}, Side-Contents:  ${modules[modulePackage].contents}`
+  );
+});
+
 export default [
-  ..._packages.map(buildPackages),
-  ..._contents.map(buildContents),
+  ...modulePackages.map(buildPackages),
+  ...moduleContents.map(buildContents),
 ];
