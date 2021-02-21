@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from 'react';
 
 type Props = {
   children?: never;
@@ -6,7 +6,7 @@ type Props = {
 };
 
 const SideContent: React.FC<Props> = (props) => {
-  return <div></div>;
+  return <div />;
 };
 
 export const toSpawn = (context: any): boolean => true;

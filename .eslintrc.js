@@ -8,8 +8,8 @@ module.exports = {
     SharedArrayBuffer: 'readonly',
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'eslint-config-prettier'],
-  extends: ['airbnb', 'prettier'],
+  plugins: ['react', '@typescript-eslint', 'eslint-plugin-prettier'],
+  extends: ['airbnb', 'eslint-config-prettier'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -17,7 +17,6 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['react', 'eslint-config-prettier'],
   rules: {
     'linebreak-style': 'off',
     'prettier/prettier': ['error'],
@@ -25,5 +24,15 @@ module.exports = {
     'no-unused-vars': 'off',
     'react/jsx-filename-extension': 'off',
     'no-use-before-define': 'off',
+    'arrow-body-style': 'off',
+    'import/extensions': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        moduleDirectory: ['node_modules', 'src/'],
+      },
+    },
   },
 };

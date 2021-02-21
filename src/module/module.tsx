@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
-import SideContent, { toSpawn as toSpawnFunction } from "./SideContent";
+import SideContent, { toSpawn as toSpawnFunction } from './SideContent';
 
 type __Params = {};
 
@@ -14,8 +14,8 @@ export default function (__params: __Params) {
       {
         toSpawn: toSpawnFunction,
         body: SideContent,
-        label: "Test Component",
-        iconName: "mugshot",
+        label: 'Test Component',
+        iconName: 'mugshot',
       },
     ],
   };
