@@ -12,7 +12,7 @@ function thrice(f: any) {
   return repeat(f, 3);
 }
 
-export default function (_params: __Params) {
+export default function (__params: __Params) {
   return {
     repeat,
     twice,

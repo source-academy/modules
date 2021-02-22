@@ -31,6 +31,8 @@
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
+    /* Configure ts compiler to recgonised global type declarations for CSS files */
+    "typeRoots": ["./node_modules/@types", "./src/typings"]
   },
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
   "include": ["src/**/*"],

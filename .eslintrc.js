@@ -26,6 +26,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'arrow-body-style': 'off',
     'import/extensions': 'off',
+    camelcase: 'off',
   },
   settings: {
     'import/resolver': {

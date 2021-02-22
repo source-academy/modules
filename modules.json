@@ -1,5 +1,1 @@
-{
-  "repeat": {
-    "contents": ["Repeat"]
-  }
-}
+{ "repeat": { "contents": ["Repeat"] }, "time": { "contents": ["Time"] } }

@@ -1,5 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import babel from '@rollup/plugin-babel';
+import css from 'rollup-plugin-import-css';
 import resolve from '@rollup/plugin-node-resolve';
 import commonJS from 'rollup-plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
@@ -21,6 +22,7 @@ const defaultConfigurations = {
       extensions: ['.ts', '.tsx'],
       include: ['src/**/*'],
     }),
+    css(),
     resolve(),
     commonJS({
       include: 'node_modules/**',
