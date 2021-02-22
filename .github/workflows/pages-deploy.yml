@@ -9,10 +9,24 @@ jobs:
   deploy:
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      
+      - name: Install Dependencies 📦
+        run: |
+          yarn --frozen-lockfile
+          
+      - name: Build Modules 🔧
+        run: |
+          yarn run build
 
-      - name: Deploy
+      - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          publish_dir: ./build # The folder the action should deploy.
