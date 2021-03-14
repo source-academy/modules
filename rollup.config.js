@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import typescript from '@rollup/plugin-typescript';
 import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
@@ -39,9 +40,9 @@ const modulePackages = Object.keys(modules);
 
 const buildPackages = (name) => ({
   ...defaultConfigurations,
-  input: `./src/packages/${name}/index.ts`,
+  input: `./src/bundles/${name}/index.ts`,
   output: {
-    file: `./build/packages/${name}.js`,
+    file: `./build/bundles/${name}.js`,
     format: 'iife',
   },
 });
@@ -56,9 +57,9 @@ moduleContents = [...new Set(moduleContents)];
 
 const buildContents = (name) => ({
   ...defaultConfigurations,
-  input: `./src/contents/${name}/index.tsx`,
+  input: `./src/tabs/${name}/index.tsx`,
   output: {
-    file: `./build/contents/${name}.js`,
+    file: `./build/tabs/${name}.js`,
     format: 'iife',
     globals: {
       react: 'React',
@@ -68,11 +69,13 @@ const buildContents = (name) => ({
 });
 
 // eslint-disable-next-line no-console
-console.log('Building modules with side contents:');
+console.log(chalk.blueBright('Building modules with tabs:'));
 modulePackages.forEach((modulePackage) => {
   // eslint-disable-next-line no-console
   console.log(
-    `Module: ${modulePackage}, Side-Contents:  ${modules[modulePackage].contents}`
+    chalk.green(`Module ${modulePackage}`),
+    'with',
+    chalk.yellow(`tabs ${modules[modulePackage].contents}`)
   );
 });
 

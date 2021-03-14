@@ -26,6 +26,10 @@ module.exports = {
     'no-use-before-define': 'off',
     'arrow-body-style': 'off',
     'import/extensions': 'off',
+    camelcase: 'off',
+    'func-names': 'off',
+    'no-underscore-dangle': 'off',
+    'no-plusplus': 'off',
   },
   settings: {
     'import/resolver': {
