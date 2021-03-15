@@ -36,9 +36,9 @@ const defaultConfigurations = {
   ],
 };
 
-const modulePackages = Object.keys(modules);
+const moduleBundles = Object.keys(modules);
 
-const buildPackages = (name) => ({
+const buildBundles = (name) => ({
   ...defaultConfigurations,
   input: `./src/bundles/${name}/index.ts`,
   output: {
@@ -47,15 +47,14 @@ const buildPackages = (name) => ({
   },
 });
 
-let moduleContents = [];
-modulePackages
-  .map((modulePackage) => modules[modulePackage].contents)
-  .forEach((__contents) =>
-    Array.prototype.push.apply(moduleContents, __contents)
-  );
-moduleContents = [...new Set(moduleContents)];
+let moduleTabs = [];
+moduleBundles
+  .map((modulePackage) => modules[modulePackage].tabs)
+  .forEach((__tabs) => Array.prototype.push.apply(moduleTabs, __tabs));
 
-const buildContents = (name) => ({
+moduleTabs = [...new Set(moduleTabs)];
+
+const buildTabs = (name) => ({
   ...defaultConfigurations,
   input: `./src/tabs/${name}/index.tsx`,
   output: {
@@ -70,16 +69,16 @@ const buildContents = (name) => ({
 
 // eslint-disable-next-line no-console
 console.log(chalk.blueBright('Building modules with tabs:'));
-modulePackages.forEach((modulePackage) => {
+moduleBundles.forEach((modulePackage) => {
   // eslint-disable-next-line no-console
   console.log(
     chalk.green(`Module ${modulePackage}`),
     'with',
-    chalk.yellow(`tabs ${modules[modulePackage].contents}`)
+    chalk.yellow(`tabs ${modules[modulePackage].tabs}`)
   );
 });
 
 export default [
-  ...modulePackages.map(buildPackages),
-  ...moduleContents.map(buildContents),
+  ...moduleBundles.map(buildBundles),
+  ...moduleTabs.map(buildTabs),
 ];

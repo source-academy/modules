@@ -1,1 +1,6 @@
-{"repeat":{"tabs":["Repeat"]},"pix_n_flix":{"contents":[]}}
+{
+    "repeat": {
+    "bundle": "repeat", 
+    "tabs":["Repeat"]
+    }
+}
