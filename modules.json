@@ -1,5 +1,12 @@
 {
     "repeat": {
-    "tabs":["Repeat"]
+      "tabs": [
+        "Repeat"
+      ]
+    },
+    "share": {
+      "tabs": [
+        "Share"
+      ]
     }
-}
+  }
