@@ -1,32 +1,22 @@
+import __Params from '../../typings/__Params';
+
 /**
- * Test library to demonstrate the use of new flexible modules feature.
- *
- * @author Loh Xian Ze, Bryan
- * @author Marcus Tang Xin Kye
+ * <Brief description of the module>
+ * @author <Author Name>
+ * @author <Author Name>
  */
 
 /**
- * The code in this page will be transpiled by babel into ES5 Javascript syntax
- * which will be located in the build folder. Js-slang library will import the
- * individual module files as a string.
+ * Increment a number by a value of 1.
+ * @param x the number to be incremented
+ * @returns the incremented value of the number
  */
-(_params: any) => {
+function sample_function(x: number) {
+  return x + 1;
+}
+
+export default function (_params: __Params) {
   return {
-    /**
-     * For functions that source academy cadets will be interacting with
-     * in the IDE.
-     */
-    functions: {
-      make_empty_array: () => [],
-      array_append: (arr1, arr2) => [...arr1, ...arr2],
-    },
-
-    /**
-     * For generating the side content tabs on cadet-frontend.
-     * Leave it as a blank array if not in use.
-     *
-     * Use file with extension.tsx if side content tabs in use
-     */
-    sideContents: [],
+    sample_function,
   };
-};
+}
