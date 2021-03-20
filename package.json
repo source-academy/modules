@@ -4,7 +4,7 @@
   "repository": "https://github.com/source-academy/modules.git",
   "license": "Apache-2.0",
   "scripts": {
-    "module:add": "node ./templates/generate.js",
+    "module": "node ./templates/app.js",
     "lint": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src",
     "lint:fix": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src --fix",
     "build": "yarn lint && ./node_modules/.bin/tsc && rollup --config rollup.config.js",
