@@ -1,1 +1,12 @@
+<<<<<<< HEAD
 {"repeat":{"tabs":["Repeat"]}}
+=======
+{
+  "repeat": {
+    "tabs": ["Repeat"]
+  },
+  "pix_n_flix": {
+    "tabs": ["Pixnflix"]
+  }
+}
+>>>>>>> 9c5d71c (Add Pixnflix tab to pix_n_flix module)

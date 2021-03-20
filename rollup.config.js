@@ -62,9 +62,10 @@ const buildTabs = (name) => ({
     format: 'iife',
     globals: {
       react: 'React',
+      'react-dom': 'ReactDom',
     },
   },
-  external: ['react'],
+  external: ['react', 'react-dom'],
 });
 
 // eslint-disable-next-line no-console
