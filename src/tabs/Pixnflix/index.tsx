@@ -9,7 +9,9 @@ type Props = {
 type State = {};
 
 class Repeat extends React.Component<Props, State> {
-  private $video: HTMLElement | null = null;
+  private $video: HTMLVideoElement | null = null;
+
+  private $canvas: HTMLCanvasElement | null = null;
 
   constructor(props: any) {
     super(props);
@@ -17,39 +19,39 @@ class Repeat extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    const video: any = document.querySelector('#video');
-    if (video == null) throw new Error();
-    if (navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          video.srcObject = stream;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.log('Something went wrong!');
-        });
-    }
-    /* eslint-disable */
-    console.log('$video');
-    console.log(this.$video);
-    console.log('video');
-    console.log(video);
-    if (this.props.debuggerContext.result.value) {
-      console.log(this.props.debuggerContext.result.value);
-      console.log(
-        eval(
-          this.props.debuggerContext.result.value(video, 'nothing', 'nothing')
-        )
+    if (this.$video && this.$canvas) {
+      // eslint-disable-next-line react/destructuring-assignment
+      this.props.debuggerContext.result.value(
+        this.$video,
+        this.$canvas,
+        this.printError
       );
     }
   }
+
+  public printError = (err: any, isSlangErr: boolean) => {};
 
   public render() {
     return (
       <div>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <video autoPlay id='video' ref={(r) => (this.$video = r)} />
+        <video
+          ref={(r) => {
+            this.$video = r;
+          }}
+          autoPlay
+          id='livefeed'
+          width={400}
+          height={300}
+          style={{ display: 'none' }}
+        />
+        <canvas
+          ref={(r) => {
+            this.$canvas = r;
+          }}
+          width={400}
+          height={300}
+        />
       </div>
     );
   }
@@ -58,6 +60,6 @@ class Repeat extends React.Component<Props, State> {
 export default {
   toSpawn: () => true,
   body: (debuggerContext: any) => <Repeat debuggerContext={debuggerContext} />,
-  label: 'Repeat Test Tab',
-  iconName: 'build',
+  label: 'PixNFlix Live Feed',
+  iconName: 'mobile-video',
 };
