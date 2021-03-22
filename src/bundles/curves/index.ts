@@ -38,7 +38,7 @@ class Point{
 }
 
 var cubeRotation = 0 //Used for testing
-function generateCurve(scaleMode, drawMode, numPoints, func, space, isFullView): void {
+function generateCurve(scaleMode: string, drawMode: string, numPoints: number, func: Function, space: string, isFullView: boolean): void {
   const viewport_size: number = 600
   const frame = open_pixmap('frame', viewport_size, viewport_size, true); // TODO: replace this
   var curvePosArray: number[] = []
@@ -222,9 +222,10 @@ function generateCurve(scaleMode, drawMode, numPoints, func, space, isFullView):
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_connected(num) {
-  return curve => 
-	generateCurve('none', 'lines', num, curve, '2D', false)
+function draw_connected(num: number): Function {
+  return function(func: Function) { 
+	  generateCurve('none', 'lines', num, func, '2D', false)
+  }
 }
 
 /**
@@ -241,8 +242,8 @@ function draw_connected(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_connected_full_view(num) {
-  return function(func) {
+function draw_connected_full_view(num: number): Function {
+  return function(func: Function) {
     return generateCurve('stretch', 'lines', num, func, '2D', true)
   }
 }
@@ -260,8 +261,8 @@ function draw_connected_full_view(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_connected_full_view_proportional(num) {
-  return function(func) {
+function draw_connected_full_view_proportional(num: number): Function {
+  return function(func: Function) {
     return generateCurve('fit', 'lines', num, func, '2D', true)
   }
 }
@@ -279,9 +280,10 @@ function draw_connected_full_view_proportional(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_points_on(num) {
-  return curve => 
-	generateCurve('none', 'points', num, curve, '2D', false)
+function draw_points_on(num: number): Function {
+  return function(func: Function) {
+	  generateCurve('none', 'points', num, func, '2D', false)
+  }
 }
 
 /**
@@ -297,8 +299,8 @@ function draw_points_on(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_points_full_view_proportional(num) {
-  return function(func) {
+function draw_points_full_view_proportional(num: number): Function {
+  return function(func: Function) {
     return generateCurve('fit', 'points', num, func, '2D', true)
   }
 }
@@ -316,8 +318,8 @@ function draw_points_full_view_proportional(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_connected(num) {
-  return function(func) {
+function draw_3D_connected(num: number): Function {
+  return function(func: Function) {
     return generateCurve('none', 'lines', num, func, '3D', false)
     //requestAnimationFrame(generateCurve)
   }
@@ -337,8 +339,8 @@ function draw_3D_connected(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_connected_full_view(num) {
-  return function(func) {
+function draw_3D_connected_full_view(num: number): Function {
+  return function(func: Function) {
     return generateCurve('stretch', 'lines', num, func, '3D', false)
   }
 }
@@ -356,8 +358,8 @@ function draw_3D_connected_full_view(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_connected_full_view_proportional(num) {
-  return function(func) {
+function draw_3D_connected_full_view_proportional(num: number): Function {
+  return function(func: Function) {
     return generateCurve('fit', 'lines', num, func, '3D', false)
   }
 }
@@ -375,8 +377,8 @@ function draw_3D_connected_full_view_proportional(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_points_on(num) {
-  return function(func) {
+function draw_3D_points_on(num: number): Function {
+  return function(func: Function) {
     return generateCurve('none', 'points', num, func, '3D', false)
   }
 }
@@ -394,8 +396,8 @@ function draw_3D_points_on(num) {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_points_full_view_proportional(num) {
-  return function(func) {
+function draw_3D_points_full_view_proportional(num: number): Function {
+  return function(func: Function) {
     return generateCurve('fit', 'points', num, func, '3D', false)
   }
 }
@@ -406,7 +408,7 @@ function draw_3D_points_full_view_proportional(num) {
  * @param {Number} y - y-coordinate of new point
  * @returns {Point} with x and y as coordinates
  */
-function make_point(x, y) {
+function make_point(x: number, y: number) {
   return new Point(x, y, 0, 0, 0, 0)
 }
 
@@ -506,9 +508,4 @@ function g_of(pt) {
  */
 function b_of(pt) {
   return pt.getColor()[2] * 255;
-}
-
-export default function (_params: __Params) {
-  return {
-  };
 }
