@@ -60,7 +60,7 @@ function generateCurve(scaleMode: string, drawMode: string, numPoints: number, f
   var min_z = Infinity
   var max_z = -Infinity
 
-  function evaluator(num, func) {
+  function evaluator(num: number, func: Function): void {
     curveObject = {
       drawCube:[],
       color: [],
@@ -423,7 +423,7 @@ function make_point(x: number, y: number): Point {
  * @param {Number} z - z-coordinate of new point
  * @returns {Point} with x, y and z as coordinates
  */
-function make_3D_point(x, y, z) {
+function make_3D_point(x: number, y: number, z: number): Point {
   return new Point(x, y, z, 0, 0, 0)
 }
 
@@ -439,7 +439,7 @@ function make_3D_point(x, y, z) {
  * @param {Number} b - blue component of new point
  * @returns {Point} with x and y as coordinates, and r, g and b as RGB values
  */
-function make_color_point(x, y, r, g, b){
+function make_color_point(x: number, y: number, r: number, g: number, b: number): Point {
   return new Point(x, y, 0, r/255, g/255, b/255)
 }
 
@@ -456,7 +456,7 @@ function make_color_point(x, y, r, g, b){
  * @param {Number} b - blue component of new point
  * @returns {Point} with x, y and z as coordinates, and r, g and b as RGB values
  */
-function make_3D_color_point(x, y, z, r, g, b){
+function make_3D_color_point(x: number, y: number, z: number, r: number, g: number, b: number): Point {
   return new Point(x, y, z, r/255, g/255, b/255)
 }
 
@@ -465,7 +465,7 @@ function make_3D_color_point(x, y, z, r, g, b){
  * @param {Point} p - given point
  * @returns {Number} x-coordinate of the Point
  */
-function x_of(pt) {
+function x_of(pt: Point): number {
   return pt.getX();
 }
 
@@ -474,7 +474,7 @@ function x_of(pt) {
  * @param {Point} p - given point
  * @returns {Number} y-coordinate of the Point
  */
-function y_of(pt) {
+function y_of(pt: Point): number {
   return pt.getY();
 }
 
@@ -483,7 +483,7 @@ function y_of(pt) {
  * @param {Point} p - given point
  * @returns {Number} z-coordinate of the Point
  */
-function z_of(pt) {
+function z_of(pt: Point): number {
   return pt.getZ();
 }
 
@@ -492,7 +492,7 @@ function z_of(pt) {
  * @param {Point} p - given point
  * @returns {Number} Red component of the Point
  */
-function r_of(pt) {
+function r_of(pt: Point): number {
   return pt.getColor()[0] * 255;
 }
 
@@ -501,7 +501,7 @@ function r_of(pt) {
  * @param {Point} p - given point
  * @returns {Number} Green component of the Point
  */
-function g_of(pt) {
+function g_of(pt: Point): number {
   return pt.getColor()[1] * 255;
 }
 
@@ -510,6 +510,31 @@ function g_of(pt) {
  * @param {Point} p - given point
  * @returns {Number} Blue component of the Point
  */
-function b_of(pt) {
+function b_of(pt: Point): number {
   return pt.getColor()[2] * 255;
+}
+
+export default function (_params: __Params) {
+  return {
+    make_point,
+    make_3D_point,
+    make_color_point,
+    make_3D_color_point,
+    draw_connected,
+    draw_connected_full_view,
+    draw_connected_full_view_proportional,
+    draw_points_on,
+    draw_points_full_view_proportional,
+    draw_3D_connected,
+    draw_3D_connected_full_view,
+    draw_3D_connected_full_view_proportional,
+    draw_3D_points_on,
+    draw_3D_points_full_view_proportional,
+    x_of,
+    y_of,
+    z_of,
+    r_of,
+    g_of,
+    b_of,
+  };
 }
