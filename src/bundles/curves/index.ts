@@ -1,5 +1,5 @@
 import __Params from '../../typings/__Params';
-import { mat4 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 
 /**
  * <Brief description of the module>
@@ -40,13 +40,18 @@ class Point{
 var cubeRotation = 0 //Used for testing
 function generateCurve(scaleMode, drawMode, numPoints, func, space, isFullView): void {
   const viewport_size: number = 600
-  const frame: Frame = open_pixmap('frame', viewport_size, viewport_size, true);
+  const frame = open_pixmap('frame', viewport_size, viewport_size, true); // TODO: replace this
   var curvePosArray: number[] = []
   var curveColorArray: number[] = []
   var drawCubeArray: number[] = []
   var transMat = mat4.create()
   var projMat = mat4.create()
-  var curveObject = {}
+  type curveObject = {
+    drawCube: number[],
+    color: number[],
+    curvePos: number[]
+  }
+  var curveObject = {} as curveObject
   // initialize the min/max to extreme values
   var min_x = Infinity
   var max_x = -Infinity
@@ -56,7 +61,7 @@ function generateCurve(scaleMode, drawMode, numPoints, func, space, isFullView):
   var max_z = -Infinity
 
   function evaluator(num, func) {
-    curveObject = {}
+    curveObject = {} as curveObject
     curvePosArray = []
     curveColorArray = []
     for (var i = 0; i <= num; i += 1) {
@@ -189,7 +194,7 @@ function generateCurve(scaleMode, drawMode, numPoints, func, space, isFullView):
     mat4.perspective(projMat, fieldOfView, aspect, zNear, zFar);
   }
 
-  clear_viewport()
+  clear_viewport() // TODO: replace
   gl.uniformMatrix4fv(u_projectionMatrix, false, projMat)
   gl.uniformMatrix4fv(u_transformMatrix, false, transMat)
   curveObject.curvePos = curvePosArray
@@ -203,6 +208,5 @@ function generateCurve(scaleMode, drawMode, numPoints, func, space, isFullView):
 
 export default function (_params: __Params) {
   return {
-    sample_function,
   };
 }
