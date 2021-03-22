@@ -29,3 +29,4 @@ class Point{
     }
 }
 export type curveFunction = (x: number) => Point;
+export type renderFunction = (func: curveFunction) => void;
