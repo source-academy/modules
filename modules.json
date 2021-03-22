@@ -1,1 +1,12 @@
-{"repeat":{"tabs":["Repeat"]}, "pix_n_flix":{"tabs":["Pixnflix"]}}
+{
+  "repeat": {
+    "tabs": [
+      "Repeat"
+    ]
+  },
+  "pix_n_flix": {
+    "tabs": [
+      "Pixnflix"
+    ]
+  }
+}

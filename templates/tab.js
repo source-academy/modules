@@ -5,28 +5,13 @@ const utilities = require('./utilities');
 const modules = require('./module');
 const manifest = require('../modules.json');
 
-const existingTabs = Object.keys(manifest).reduce((accumulator, current) => {
-  return accumulator.concat(manifest[current].tabs);
-}, []);
+const existingTabs = Object.keys(manifest).reduce(
+  (accumulator, current) => accumulator.concat(manifest[current].tabs),
+  []
+);
 
-async function addNew() {
-  const moduleName = await askModuleName();
-  const tabName = await askTabName();
-
-  // Copy module tab template into correct destination and show success message
-  const tabDestination = `${paths.root}/src/tabs/${tabName}`;
-  await fs.mkdir(tabDestination, { recursive: true });
-  await fs.copyFile(paths.tabTemplate, `${tabDestination}/index.tsx`);
-  await fs.writeFile(
-    paths.manifest,
-    JSON.stringify({
-      ...manifest,
-      [moduleName]: { tabs: [...manifest[moduleName].tabs, tabName] },
-    })
-  );
-  print.success(
-    `Tab ${tabName} for module ${moduleName} created at ${tabDestination}.`
-  );
+function check(tabName) {
+  return existingTabs.includes(tabName);
 }
 
 async function askModuleName() {
@@ -53,8 +38,28 @@ async function askTabName() {
   return name;
 }
 
-function check(tabName) {
-  return existingTabs.includes(tabName);
+async function addNew() {
+  const moduleName = await askModuleName();
+  const tabName = await askTabName();
+
+  // Copy module tab template into correct destination and show success message
+  const tabDestination = `${paths.root}/src/tabs/${tabName}`;
+  await fs.mkdir(tabDestination, { recursive: true });
+  await fs.copyFile(paths.tabTemplate, `${tabDestination}/index.tsx`);
+  await fs.writeFile(
+    paths.manifest,
+    JSON.stringify(
+      {
+        ...manifest,
+        [moduleName]: { tabs: [...manifest[moduleName].tabs, tabName] },
+      },
+      null,
+      2
+    )
+  );
+  print.success(
+    `Tab ${tabName} for module ${moduleName} created at ${tabDestination}.`
+  );
 }
 
 module.exports = {

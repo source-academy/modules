@@ -4,18 +4,8 @@ const print = require('./print');
 const utilities = require('./utilities');
 const manifest = require('../modules.json');
 
-async function addNew() {
-  const moduleName = await askModuleName();
-  const bundleDestination = `${paths.root}/src/bundles/${moduleName}`;
-  await fs.mkdir(bundleDestination, { recursive: true });
-  await fs.copyFile(paths.bundleTemplate, `${bundleDestination}/index.ts`);
-  await fs.writeFile(
-    paths.manifest,
-    JSON.stringify({ ...manifest, [moduleName]: { tabs: [] } })
-  );
-  print.success(
-    `Bundle for module ${moduleName} created at ${bundleDestination}.`
-  );
+function check(moduleName) {
+  return Object.keys(manifest).includes(moduleName);
 }
 
 async function askModuleName() {
@@ -33,8 +23,18 @@ async function askModuleName() {
   return name;
 }
 
-function check(moduleName) {
-  return Object.keys(manifest).includes(moduleName);
+async function addNew() {
+  const moduleName = await askModuleName();
+  const bundleDestination = `${paths.root}/src/bundles/${moduleName}`;
+  await fs.mkdir(bundleDestination, { recursive: true });
+  await fs.copyFile(paths.bundleTemplate, `${bundleDestination}/index.ts`);
+  await fs.writeFile(
+    paths.manifest,
+    JSON.stringify({ ...manifest, [moduleName]: { tabs: [] } }, null, 2)
+  );
+  print.success(
+    `Bundle for module ${moduleName} created at ${bundleDestination}.`
+  );
 }
 
 module.exports = {
