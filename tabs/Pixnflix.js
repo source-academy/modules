@@ -34,7 +34,7 @@
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    var Repeat=function(_super){__extends(Repeat,_super);function Repeat(){return _super!==null&&_super.apply(this,arguments)||this}Repeat.prototype.render=function(){return React__default['default'].createElement("div",null,"This is spawned from the repeat package")};return Repeat}(React__default['default'].PureComponent);var index = {toSpawn:function(){return true},body:function(debuggerContext){return React__default['default'].createElement(Repeat,{debuggerContext:debuggerContext})},label:"Repeat Test Tab",iconName:"build"};
+    var Repeat=function(_super){__extends(Repeat,_super);function Repeat(props){var _this=_super.call(this,props)||this;_this.$video=null;_this.$canvas=null;_this.printError=function(err,isSlangErr){};_this.state={};return _this}Repeat.prototype.componentDidMount=function(){if(this.$video&&this.$canvas){this.props.debuggerContext.result.value(this.$video,this.$canvas,this.printError);}};Repeat.prototype.render=function(){var _this=this;return React__default['default'].createElement("div",null,React__default['default'].createElement("video",{ref:function(r){_this.$video=r;},autoPlay:true,id:"livefeed",width:400,height:300,style:{display:"none"}}),React__default['default'].createElement("canvas",{ref:function(r){_this.$canvas=r;},width:400,height:300}))};return Repeat}(React__default['default'].Component);var index = {toSpawn:function(){return true},body:function(debuggerContext){return React__default['default'].createElement(Repeat,{debuggerContext:debuggerContext})},label:"PixNFlix Live Feed",iconName:"mobile-video"};
 
     return index;
 
