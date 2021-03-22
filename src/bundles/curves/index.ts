@@ -1,5 +1,6 @@
 import __Params from '../../typings/__Params';
 import { mat4, vec3 } from 'gl-matrix';
+import { CurveObject } from './types';
 
 /**
  * <Brief description of the module>
@@ -46,12 +47,11 @@ function generateCurve(scaleMode: string, drawMode: string, numPoints: number, f
   var drawCubeArray: number[] = []
   var transMat = mat4.create()
   var projMat = mat4.create()
-  type curveObject = {
-    drawCube: number[],
-    color: number[],
-    curvePos: number[]
+  var curveObject:CurveObject = {
+    drawCube:[],
+    color: [],
+    curvePos: []
   }
-  var curveObject = {} as curveObject
   // initialize the min/max to extreme values
   var min_x = Infinity
   var max_x = -Infinity
@@ -61,7 +61,11 @@ function generateCurve(scaleMode: string, drawMode: string, numPoints: number, f
   var max_z = -Infinity
 
   function evaluator(num, func) {
-    curveObject = {} as curveObject
+    curveObject = {
+      drawCube:[],
+      color: [],
+      curvePos: []
+    }
     curvePosArray = []
     curveColorArray = []
     for (var i = 0; i <= num; i += 1) {
@@ -408,7 +412,7 @@ function draw_3D_points_full_view_proportional(num: number): Function {
  * @param {Number} y - y-coordinate of new point
  * @returns {Point} with x and y as coordinates
  */
-function make_point(x: number, y: number) {
+function make_point(x: number, y: number): Point {
   return new Point(x, y, 0, 0, 0, 0)
 }
 
