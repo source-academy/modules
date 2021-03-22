@@ -543,7 +543,7 @@ function translate_curve(x0: number, y0: number, z0: number): curveTransformer {
 
 // ROTATE-AROUND-ORIGIN is of type (JS-Num --> Curve-Transform)
 
-function rotate_around_origin(theta1, theta2, theta3) {
+function rotate_around_origin(theta1: number, theta2: number, theta3: number): curveTransformer {
   if (theta3 == undefined && theta1 != undefined && theta2 != undefined) {
     // 2 args
     throw new Error('Expected 1 or 3 arguments, but received 2')
@@ -551,8 +551,8 @@ function rotate_around_origin(theta1, theta2, theta3) {
     // 1 args
     var cth = Math.cos(theta1)
     var sth = Math.sin(theta1)
-    return function(curve) {
-      var transformation = c => (function(t) {
+    return function(curve: curveFunction) {
+      var transformation = (c: curveFunction) => (function(t: number) {
         var ct = c(t)
         var x = x_of(ct)
         var y = y_of(ct)
@@ -568,8 +568,8 @@ function rotate_around_origin(theta1, theta2, theta3) {
     var sthy = Math.sin(theta2)
     var cthz = Math.cos(theta3)
     var sthz = Math.sin(theta3)
-    return function(curve) {
-      var transformation = c => (function(t) {
+    return function(curve: curveFunction) {
+      var transformation = (c: curveFunction) => (function(t: number) {
         var ct = c(t)
         var coord = [x_of(ct), y_of(ct), z_of(ct)]
         var mat = [
@@ -589,9 +589,9 @@ function rotate_around_origin(theta1, theta2, theta3) {
   }
 }
 
-function scale_curve(a1, b1, c1) {
+function scale_curve(a1: number, b1: number, c1: number): curveTransformer {
   return function(curve) {
-    var transformation = c => (function(t) {
+    var transformation = (c: curveFunction) => (function(t: number) {
       var ct = c(t)
       a1 = a1 == undefined ? 1 : a1
       b1 = b1 == undefined ? 1 : b1
@@ -602,7 +602,7 @@ function scale_curve(a1, b1, c1) {
   }
 }
 
-function scale_proportional(s) {
+function scale_proportional(s: number): curveTransformer {
   return scale_curve(s, s, s)
 }
 
@@ -613,12 +613,12 @@ function scale_proportional(s) {
 // its endpoint on the x axis, then scaling it to put the endpoint at (1,0).
 // Behavior is unspecified on closed curves (with start-point = end-point).
 
-function put_in_standard_position(curve) {
+function put_in_standard_position(curve: curveFunction): curveFunction {
   var start_point = curve(0)
-  var curve_started_at_origin = translate_curve(-x_of(start_point), -y_of(start_point))(curve)
+  var curve_started_at_origin = translate_curve(-x_of(start_point), -y_of(start_point), 0)(curve)
   var new_end_point = curve_started_at_origin(1)
   var theta = Math.atan2(y_of(new_end_point), x_of(new_end_point))
-  var curve_ended_at_x_axis = rotate_around_origin(-theta)(curve_started_at_origin)
+  var curve_ended_at_x_axis = rotate_around_origin(0, 0, -theta)(curve_started_at_origin)
   var end_point_on_x_axis = x_of(curve_ended_at_x_axis(1))
   return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis)
 }
@@ -627,14 +627,14 @@ function put_in_standard_position(curve) {
 
 // CONNECT-RIGIDLY makes a curve consisting of curve1 followed by curve2.
 
-function connect_rigidly(curve1, curve2) {
+function connect_rigidly(curve1: curveFunction, curve2: curveFunction): curveFunction {
   return t => t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1)
 }
 
 // CONNECT-ENDS makes a curve consisting of curve1 followed by
 // a copy of curve2 starting at the end of curve1
 
-function connect_ends(curve1, curve2) {
+function connect_ends(curve1: curveFunction, curve2: curveFunction): curveFunction {
   var start_point_of_curve2 = curve2(0)
   var end_point_of_curve1 = curve1(1)
   return connect_rigidly(
