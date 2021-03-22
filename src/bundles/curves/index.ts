@@ -1,6 +1,6 @@
 import __Params from '../../typings/__Params';
 import { mat4, vec3 } from 'gl-matrix';
-import { CurveObject, curveFunction, renderFunction } from './types';
+import { CurveObject, curveFunction, renderFunction, curveTransformer } from './types';
 
 /**
  * <Brief description of the module>
@@ -520,21 +520,21 @@ function b_of(pt: Point): number {
 
 // SOME CURVE-TRANSFORMS
 
-function invert(curve) {
-  return t => curve(1 - t)
+function invert(curve: curveFunction): curveFunction {
+  return (t: number) => curve(1 - t)
 }
 
 // CONSTRUCTORS OF CURVE-TRANSFORMS
 
 // TRANSLATE is of type (JS-Num, JS-Num --> Curve-Transform)
 
-function translate_curve(x0, y0, z0) {
-  return function(curve) {
-    var transformation = c => (function(t) {
+function translate_curve(x0: number, y0: number, z0: number): curveTransformer {
+  return function(curve: curveFunction) {
+    var transformation = (c: curveFunction) => (function(t: number) {
       x0 = x0 == undefined ? 0 : x0
       y0 = y0 == undefined ? 0 : y0
       z0 = z0 == undefined ? 0 : z0
-      var ct = c(t)
+      var ct: Point = c(t)
       return make_3D_color_point(x0 + x_of(ct), y0 + y_of(ct), z0 + z_of(ct), r_of(ct), g_of(ct), b_of(ct))
     })
     return transformation(curve)
