@@ -9,7 +9,8 @@
     "lint": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src",
     "lint:fix": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src --fix",
     "build": "yarn lint && ./node_modules/.bin/tsc && rollup --config rollup.config.js",
-    "serve": "http-server --cors=* -c-1 -p 8022 ./build"
+    "serve": "http-server --cors=* -c-1 -p 8022 ./build",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.10",
@@ -34,7 +35,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "generate-template-files": "^3.0.0",
     "http-server": "^0.12.3",
-    "husky": "4",
+    "husky": "5",
     "prettier": "^2.2.1",
     "rollup": "^2.41.2",
     "rollup-plugin-babel": "^4.4.0",
@@ -52,13 +53,5 @@
   },
   "peerDependencies": {
     "tslib": "^2.1.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn build",
-      "post-checkout": "yarnhook",
-      "post-merge": "yarnhook",
-      "post-rewrite": "yarnhook"
-    }
   }
 }
