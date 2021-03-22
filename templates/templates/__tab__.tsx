@@ -25,7 +25,14 @@ type State = {
 /**
  * The main React Component of the Tab.
  */
-class Repeat extends React.PureComponent<Props> {
+class Repeat extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      counter: 0,
+    };
+  }
+
   public render() {
     return <div>This is spawned from the repeat package</div>;
   }

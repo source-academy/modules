@@ -21,7 +21,7 @@ class Repeat extends React.Component<Props, State> {
   public componentDidMount() {
     if (this.$video && this.$canvas) {
       // eslint-disable-next-line react/destructuring-assignment
-      this.props.debuggerContext.result.value(
+      this.props.debuggerContext.result.value.init(
         this.$video,
         this.$canvas,
         this.printError
@@ -29,7 +29,7 @@ class Repeat extends React.Component<Props, State> {
     }
   }
 
-  public printError = (err: any, isSlangErr: boolean) => {};
+  public printError = () => {};
 
   public render() {
     return (
