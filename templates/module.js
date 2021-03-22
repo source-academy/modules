@@ -6,9 +6,9 @@ const manifest = require('../modules.json');
 
 async function addNew() {
   const moduleName = await askModuleName();
-  const bundleDestination = `${paths.root}\\src\\bundles\\${moduleName}`;
+  const bundleDestination = `${paths.root}/src/bundles/${moduleName}`;
   await fs.mkdir(bundleDestination, { recursive: true });
-  await fs.copyFile(paths.bundleTemplate, `${bundleDestination}\\index.ts`);
+  await fs.copyFile(paths.bundleTemplate, `${bundleDestination}/index.ts`);
   await fs.writeFile(
     paths.manifest,
     JSON.stringify({ ...manifest, [moduleName]: { tabs: [] } })

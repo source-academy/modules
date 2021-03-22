@@ -14,9 +14,9 @@ async function addNew() {
   const tabName = await askTabName();
 
   // Copy module tab template into correct destination and show success message
-  const tabDestination = `${paths.root}\\src\\tabs\\${tabName}`;
+  const tabDestination = `${paths.root}/src/tabs/${tabName}`;
   await fs.mkdir(tabDestination, { recursive: true });
-  await fs.copyFile(paths.tabTemplate, `${tabDestination}\\index.tsx`);
+  await fs.copyFile(paths.tabTemplate, `${tabDestination}/index.tsx`);
   await fs.writeFile(
     paths.manifest,
     JSON.stringify({
