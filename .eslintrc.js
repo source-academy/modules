@@ -20,16 +20,26 @@ module.exports = {
   rules: {
     'linebreak-style': 'off',
     'prettier/prettier': ['error'],
-    'no-unused-expressions': 'off',
-    'no-unused-vars': 'off',
-    'react/jsx-filename-extension': 'off',
-    'no-use-before-define': 'off',
-    'arrow-body-style': 'off',
-    'import/extensions': 'off',
+    // Off camelcase linting to support source bundle functions which are in snake case
     camelcase: 'off',
-    'func-names': 'off',
-    'no-underscore-dangle': 'off',
-    'no-plusplus': 'off',
+    // Modify airbnb import/extensions to not include ts and tsx
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    // Mandating prop-types is unnecessary since we are using typescript
+    'react/prop-types': 'off',
+    // Allow jsx inside .tsx files
+    'react/jsx-filename-extension': [2, { extensions: ['.jsx', '.tsx'] }],
+    // @see https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-use-before-define.md#how-to-use
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': ['error'],
   },
   settings: {
     'import/resolver': {
