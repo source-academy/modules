@@ -5,9 +5,9 @@ type Props = {
   className?: string;
 };
 
-const index: React.FC<Props> = (props) => {
-  return <div>This is spawned from the share package</div>;
-};
+const index: React.FC<Props> = (props) => (
+  <div>This is spawned from the share package {props.children}</div>
+);
 
 export default {
   toSpawn: () => true,

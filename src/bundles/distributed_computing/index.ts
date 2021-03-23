@@ -1,5 +1,3 @@
-import __Params from '../../typings/__Params';
-
 function share(f: Function) {
   return f;
 }
@@ -9,14 +7,16 @@ function then(promise: any, f: Function) {
 }
 
 function connect(s: string) {
+  console.log(s);
   return 'Connection successful';
 }
 
 function disconnect(s: string) {
+  console.log(s);
   return 'Disconnected';
 }
 
-export default function (_params: __Params) {
+export default function distributed_computing() {
   return {
     share,
     then,
