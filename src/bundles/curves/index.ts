@@ -1,9 +1,9 @@
 import { mat4, vec3 } from 'gl-matrix';
 import {
   CurveObject,
-  curveFunction,
-  renderFunction,
-  curveTransformer,
+  CurveFunction,
+  RenderFunction,
+  CurveTransformer,
   Point
 } from './types';
 
@@ -27,7 +27,6 @@ function generateCurve(
   isFullView: boolean
 ): void {
   const viewport_size: number = 600;
-  const frame = open_pixmap('frame', viewport_size, viewport_size, true); // TODO: replace this
   let curvePosArray: number[] = [];
   let curveColorArray: number[] = [];
   const drawCubeArray: number[] = [];
@@ -93,7 +92,10 @@ function generateCurve(
 
   // box generation
   if (space == '3D') {
-    drawCubeArray.push(-1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1
+    drawCubeArray.push(-1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1,
+      1, 1, -1, 1, -1, -1, -1, -1, -1, 1, -1, -1,
+      1, -1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1,
+      -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1
     );
   } else {
     min_z = max_z = 0;
@@ -210,7 +212,7 @@ function generateCurve(
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_connected(num: number): renderFunction {
+function draw_connected(num: number): RenderFunction {
   return function (func: (x: number) => Point) {
     generateCurve('none', 'lines', num, func, '2D', false);
   };
@@ -230,8 +232,8 @@ function draw_connected(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_connected_full_view(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_connected_full_view(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     return generateCurve('stretch', 'lines', num, func, '2D', true);
   };
 }
@@ -249,8 +251,8 @@ function draw_connected_full_view(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_connected_full_view_proportional(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_connected_full_view_proportional(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     return generateCurve('fit', 'lines', num, func, '2D', true);
   };
 }
@@ -268,8 +270,8 @@ function draw_connected_full_view_proportional(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_points_on(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_points_on(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     generateCurve('none', 'points', num, func, '2D', false);
   };
 }
@@ -287,8 +289,8 @@ function draw_points_on(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_points_full_view_proportional(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_points_full_view_proportional(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     return generateCurve('fit', 'points', num, func, '2D', true);
   };
 }
@@ -306,8 +308,8 @@ function draw_points_full_view_proportional(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_connected(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_3D_connected(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     return generateCurve('none', 'lines', num, func, '3D', false);
     // requestAnimationFrame(generateCurve)
   };
@@ -327,8 +329,8 @@ function draw_3D_connected(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_connected_full_view(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_3D_connected_full_view(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     return generateCurve('stretch', 'lines', num, func, '3D', false);
   };
 }
@@ -346,8 +348,8 @@ function draw_3D_connected_full_view(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_connected_full_view_proportional(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_3D_connected_full_view_proportional(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     return generateCurve('fit', 'lines', num, func, '3D', false);
   };
 }
@@ -365,8 +367,8 @@ function draw_3D_connected_full_view_proportional(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_points_on(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_3D_points_on(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     return generateCurve('none', 'points', num, func, '3D', false);
   };
 }
@@ -384,8 +386,8 @@ function draw_3D_points_on(num: number): renderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return {function} function of type Curve → Drawing
  */
-function draw_3D_points_full_view_proportional(num: number): renderFunction {
-  return function (func: curveFunction) {
+function draw_3D_points_full_view_proportional(num: number): RenderFunction {
+  return function (func: CurveFunction) {
     return generateCurve('fit', 'points', num, func, '3D', false);
   };
 }
@@ -498,21 +500,37 @@ function b_of(pt: Point): number {
   return pt.color[2] * 255;
 }
 
-// Curve-Transform = (Curve --> Curve)
-
-// SOME CURVE-TRANSFORMS
-
-function invert(curve: curveFunction): curveFunction {
+/**
+ * this function is a Curve transformation: a function from a
+ * Curve to a Curve. The points of the result Curve are
+ * the same points as the points of the original Curve, but
+ * in reverse: The result Curve applied to 0 is the original Curve
+ * applied to 1 and vice versa.
+ * 
+ * @param {CurveFunction} original - original Curve
+ * @returns {CurveFunction} result Curve
+ */
+function invert(curve: CurveFunction): CurveFunction {
   return (t: number) => curve(1 - t);
 }
 
-// CONSTRUCTORS OF CURVE-TRANSFORMS
-
-// TRANSLATE is of type (JS-Num, JS-Num --> Curve-Transform)
-
-function translate_curve(x0: number, y0: number, z0: number): curveTransformer {
-  return function (curve: curveFunction) {
-    const transformation = (c: curveFunction) =>
+/**
+ * this function returns a Curve transformation: 
+ * It takes an x-value x0, a y-value y0 and a z-value z0, 
+ * each with default value of 0, as arguments 
+ * and returns a Curve transformation that
+ * takes a Curve as argument and returns
+ * a new Curve, by translating the original by x0 in x-direction, 
+ * y0 in y-direction and z0 in z-direction.
+ * 
+ * @param {number} x0 - (Optional) x-value
+ * @param {number} y0 - (Optional) y-value
+ * @param {number} z0 - (Optional) z-value
+ * @returns {CurveTransformer} Curve transformation
+ */
+function translate_curve(x0: number, y0: number, z0: number): CurveTransformer {
+  return function (curve: CurveFunction) {
+    const transformation = (c: CurveFunction) =>
       function (t: number) {
         x0 = x0 == undefined ? 0 : x0;
         y0 = y0 == undefined ? 0 : y0;
@@ -531,13 +549,25 @@ function translate_curve(x0: number, y0: number, z0: number): curveTransformer {
   };
 }
 
-// ROTATE-AROUND-ORIGIN is of type (JS-Num --> Curve-Transform)
-
+/**
+ * this function 
+ * takes either 1 or 3 angles, a, b and c in radians as parameter and 
+ * returns a Curve transformation: 
+ * a function that takes a Curve as argument and returns
+ * a new Curve, which is the original Curve rotated by the given angle
+ * around the z-axis (1 parameter) in counter-clockwise direction, or 
+ * the original Curve rotated extrinsically with Euler angles (a, b, c) 
+ * about x, y, and z axes (3 parameters).
+ * @param {number} a - given angle
+ * @param {number} b - (Optional) given angle
+ * @param {number} c - (Optional) given angle
+ * @returns {CurveTransformer} function that takes a Curve and returns a Curve
+ */
 function rotate_around_origin(
   theta1: number,
   theta2: number,
   theta3: number
-): curveTransformer {
+): CurveTransformer {
   if (theta3 == undefined && theta1 != undefined && theta2 != undefined) {
     // 2 args
     throw new Error('Expected 1 or 3 arguments, but received 2');
@@ -549,8 +579,8 @@ function rotate_around_origin(
     // 1 args
     const cth = Math.cos(theta1);
     const sth = Math.sin(theta1);
-    return function (curve: curveFunction) {
-      const transformation = (c: curveFunction) =>
+    return function (curve: CurveFunction) {
+      const transformation = (c: CurveFunction) =>
         function (t: number) {
           const ct = c(t);
           const x = x_of(ct);
@@ -574,8 +604,8 @@ function rotate_around_origin(
     const sthy = Math.sin(theta2);
     const cthz = Math.cos(theta3);
     const sthz = Math.sin(theta3);
-    return function (curve: curveFunction) {
-      const transformation = (c: curveFunction) =>
+    return function (curve: CurveFunction) {
+      const transformation = (c: CurveFunction) =>
         function (t: number) {
           const ct = c(t);
           const coord = [x_of(ct), y_of(ct), z_of(ct)];
@@ -607,9 +637,21 @@ function rotate_around_origin(
   }
 }
 
-function scale_curve(a1: number, b1: number, c1: number): curveTransformer {
+/**
+ * this function takes scaling factors <CODE>a</CODE>, <CODE>b</CODE> 
+ * and <CODE>c</CODE>, each with default value of 1, as arguments and 
+ * returns a Curve transformation that 
+ * scales a given Curve by <CODE>a</CODE> in x-direction, <CODE>b</CODE> 
+ * in y-direction and <CODE>c</CODE> in z-direction.
+ * 
+ * @param {number} a - (Optional) scaling factor in x-direction
+ * @param {number} b - (Optional) scaling factor in y-direction
+ * @param {number} c - (Optional) scaling factor in z-direction
+ * @returns {CurveTransformer} function that takes a Curve and returns a Curve
+ */
+function scale_curve(a1: number, b1: number, c1: number): CurveTransformer {
   return function (curve) {
-    const transformation = (c: curveFunction) =>
+    const transformation = (c: CurveFunction) =>
       function (t: number) {
         const ct = c(t);
         a1 = a1 == undefined ? 1 : a1;
@@ -628,53 +670,82 @@ function scale_curve(a1: number, b1: number, c1: number): curveTransformer {
   };
 }
 
-function scale_proportional(s: number): curveTransformer {
+/**
+ * this function takes a scaling factor s argument and returns a
+ * Curve transformation that
+ * scales a given Curve by s in x, y and z direction.
+ * 
+ * @param {number} s - scaling factor
+ * @returns {CurveTransformer} function that takes a Curve and returns a Curve
+ */
+function scale_proportional(s: number): CurveTransformer {
   return scale_curve(s, s, s);
 }
 
-// PUT-IN-STANDARD-POSITION is a Curve-Transform.
-// A curve is in "standard position" if it starts at (0,0) ends at (1,0).
-// A curve is PUT-IN-STANDARD-POSITION by rigidly translating it so its
-// start point is at the origin, then rotating it about the origin to put
-// its endpoint on the x axis, then scaling it to put the endpoint at (1,0).
-// Behavior is unspecified on closed curves (with start-point = end-point).
-
-function put_in_standard_position(curve: curveFunction): curveFunction {
+/**
+ * this function is a Curve transformation: It
+ * takes a Curve as argument and returns
+ * a new Curve, as follows.
+ * A Curve is in <EM>standard position</EM> if it starts at (0,0) ends at (1,0).
+ * This function puts the given Curve in standard position by 
+ * rigidly translating it so its
+ * start Point is at the origin (0,0), then rotating it about the origin to put
+ * its endpoint on the x axis, then scaling it to put the endpoint at (1,0).
+ * Behavior is unspecified on closed Curves where start-point equal end-point.
+ * 
+ * @param {CurveFunction} curve - given Curve
+ * @returns {CurveFunction} result Curve
+ */
+function put_in_standard_position(curve: CurveFunction): CurveFunction {
   const start_point = curve(0);
-  const curve_started_at_origin = translate_curve(
-    -x_of(start_point),
-    -y_of(start_point),
-    0
-  )(curve);
+  const curve_started_at_origin = translate_curve(-x_of(start_point), -y_of(start_point), 0)(curve);
   const new_end_point = curve_started_at_origin(1);
   const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
-  const curve_ended_at_x_axis = rotate_around_origin(
-    0,
-    0,
-    -theta
-  )(curve_started_at_origin);
+  const curve_ended_at_x_axis = rotate_around_origin(0, 0, -theta)(curve_started_at_origin);
   const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
   return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
 }
 
-// Binary-transform = (Curve,Curve --> Curve)
-
-// CONNECT-RIGIDLY makes a curve consisting of curve1 followed by curve2.
-
+/**
+ * this function is a binary Curve operator: It
+ * takes two Curves as arguments and returns
+ * a new Curve. The two Curves are combined
+ * by using the full first Curve for the first portion
+ * of the result and by using the full second Curve for the 
+ * second portion of the result.
+ * The second Curve is not changed, and therefore
+ * there might be a big jump in the middle of the
+ * result Curve.
+ * @param {CurveFunction} curve1 - first Curve
+ * @param {CurveFunction} curve2 - second Curve
+ * @returns {CurveFunction} result Curve
+ */
 function connect_rigidly(
-  curve1: curveFunction,
-  curve2: curveFunction
-): curveFunction {
+  curve1: CurveFunction,
+  curve2: CurveFunction
+): CurveFunction {
   return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
 }
 
-// CONNECT-ENDS makes a curve consisting of curve1 followed by
-// a copy of curve2 starting at the end of curve1
-
+/**
+ * this function is a binary Curve operator: It
+ * takes two Curves as arguments and returns
+ * a new Curve. The two Curves are combined
+ * by using the full first Curve for the first portion
+ * of the result and by using the full second Curve for the second
+ * portion of the result.
+ * The second Curve is translated such that its point
+ * at fraction 0 is the same as the Point of the first
+ * Curve at fraction 1.
+ * 
+ * @param {CurveFunction} curve1 - first Curve
+ * @param {CurveFunction} curve2 - second Curve
+ * @returns {CurveFunction} result Curve
+ */
 function connect_ends(
-  curve1: curveFunction,
-  curve2: curveFunction
-): curveFunction {
+  curve1: CurveFunction,
+  curve2: CurveFunction
+): CurveFunction {
   const start_point_of_curve2 = curve2(0);
   const end_point_of_curve1 = curve1(1);
   return connect_rigidly(
