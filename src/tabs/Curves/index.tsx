@@ -24,6 +24,7 @@ class Canvas extends React.Component<Props, State> {
     this.state = {};
   }
 
+  // TODO: Currently not using any error logger to stop the rendering of canvas
   public componentDidMount() {
     if (this.$canvas) {
       // eslint-disable-next-line react/destructuring-assignment
@@ -31,17 +32,13 @@ class Canvas extends React.Component<Props, State> {
     }
   }
 
-  // public printError = () => { };
-
   public render() {
     return (
       <div>
-        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <canvas
           ref={(r) => {
             this.$canvas = r;
           }}
-          // id='glCanvas'
           width={400}
           height={400}
         />
@@ -51,30 +48,8 @@ class Canvas extends React.Component<Props, State> {
 }
 
 export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn: () => true,
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
+  toSpawn: () => true, // TODO: Always set to true as for now, but may want to disable it when ShapeDrawn is not returned
   body: (context: any) => <Canvas context={context} />,
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
   label: 'Curves Canvas',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
-  iconName: 'media',
+  iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options
 };

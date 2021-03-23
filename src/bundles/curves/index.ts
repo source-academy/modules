@@ -28,10 +28,10 @@ import generateCurve from './webGL_Curves';
  * displays it graphically, in a window, instead of textually.
  * The parts between (0,0) and (1,1) of the resulting Drawing
  * are shown in the window.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_connected(num: number): RenderFunction {
   /* eslint-disable no-unused-vars */
@@ -48,10 +48,10 @@ function draw_connected(num: number): RenderFunction {
  * The Drawing is stretched or shrunk
  * to show the full curve
  * and maximize its width and height, with some padding.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_connected_full_view(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -66,10 +66,10 @@ function draw_connected_full_view(num: number): RenderFunction {
  * displays it graphically, in a window, instead of textually.
  * The Drawing is scaled proportionally to show the full curve
  * and maximize its size, with some padding.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_connected_full_view_proportional(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -84,10 +84,10 @@ function draw_connected_full_view_proportional(num: number): RenderFunction {
  * displays it graphically, in a window, instead of textually.
  * The parts between (0,0) and (1,1) of the resulting Drawing
  * are shown in the window.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_points_on(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -102,10 +102,10 @@ function draw_points_on(num: number): RenderFunction {
  * displays it graphically, in a window, instead of textually.
  * The Drawing is scaled proportionally with its size maximized
  * to fit entirely inside the window, with some padding.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_points_full_view_proportional(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -120,10 +120,10 @@ function draw_points_full_view_proportional(num: number): RenderFunction {
  * displays it graphically, in a window, instead of textually.
  * The parts between (0,0,0) and (1,1,1) of the resulting
  * Drawing are shown within the unit cube.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_3D_connected(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -139,10 +139,10 @@ function draw_3D_connected(num: number): RenderFunction {
  * The Drawing is stretched or shrunk
  * to show the full curve
  * and maximize its width and height within the cube.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_3D_connected_full_view(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -157,10 +157,10 @@ function draw_3D_connected_full_view(num: number): RenderFunction {
  * displays it graphically, in a window, instead of textually.
  * The Drawing is scaled proportionally with its size maximized
  * to fit entirely inside the cube.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_3D_connected_full_view_proportional(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -175,10 +175,10 @@ function draw_3D_connected_full_view_proportional(num: number): RenderFunction {
  * displays it graphically, in a window, instead of textually.
  * The parts between (0,0,0) and (1,1,1) of the resulting
  * Drawing are shown within the unit cube.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_3D_points_on(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -193,10 +193,10 @@ function draw_3D_points_on(num: number): RenderFunction {
  * displays it graphically, in a window, instead of textually.
  * The Drawing is scaled proportionally with its size maximized
  * to fit entirely inside the cube.
- * @param {Number} num - determines the number of points to be
+ * @param {number} num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
- * @return {function} function of type Curve → Drawing
+ * @return {RenderFunction} function of type Curve → Drawing
  */
 function draw_3D_points_full_view_proportional(num: number): RenderFunction {
   return (func: CurveFunction) =>
@@ -205,8 +205,8 @@ function draw_3D_points_full_view_proportional(num: number): RenderFunction {
 
 /**
  * makes a Point with given x and y coordinates
- * @param {Number} x - x-coordinate of new point
- * @param {Number} y - y-coordinate of new point
+ * @param {number} x - x-coordinate of new point
+ * @param {number} y - y-coordinate of new point
  * @returns {Point} with x and y as coordinates
  */
 function make_point(x: number, y: number): Point {
@@ -215,9 +215,9 @@ function make_point(x: number, y: number): Point {
 
 /**
  * makes a 3D Point with given x, y and z coordinates
- * @param {Number} x - x-coordinate of new point
- * @param {Number} y - y-coordinate of new point
- * @param {Number} z - z-coordinate of new point
+ * @param {number} x - x-coordinate of new point
+ * @param {number} y - y-coordinate of new point
+ * @param {number} z - z-coordinate of new point
  * @returns {Point} with x, y and z as coordinates
  */
 function make_3D_point(x: number, y: number, z: number): Point {
@@ -229,11 +229,11 @@ function make_3D_point(x: number, y: number, z: number): Point {
  * and RGB values ranging from 0 to 255.
  * Any input lower than 0 for RGB will be rounded up to 0,
  * and any input higher than 255 will be rounded down to 255.
- * @param {Number} x - x-coordinate of new point
- * @param {Number} y - y-coordinate of new point
- * @param {Number} r - red component of new point
- * @param {Number} g - green component of new point
- * @param {Number} b - blue component of new point
+ * @param {number} x - x-coordinate of new point
+ * @param {number} y - y-coordinate of new point
+ * @param {number} r - red component of new point
+ * @param {number} g - green component of new point
+ * @param {number} b - blue component of new point
  * @returns {Point} with x and y as coordinates, and r, g and b as RGB values
  */
 function make_color_point(
@@ -251,12 +251,12 @@ function make_color_point(
  * and RGB values ranging from 0 to 255.
  * Any input lower than 0 for RGB will be rounded up to 0,
  * and any input higher than 255 will be rounded down to 255.
- * @param {Number} x - x-coordinate of new point
- * @param {Number} y - y-coordinate of new point
- * @param {Number} z - z-coordinate of new point
- * @param {Number} r - red component of new point
- * @param {Number} g - green component of new point
- * @param {Number} b - blue component of new point
+ * @param {number} x - x-coordinate of new point
+ * @param {number} y - y-coordinate of new point
+ * @param {number} z - z-coordinate of new point
+ * @param {number} r - red component of new point
+ * @param {number} g - green component of new point
+ * @param {number} b - blue component of new point
  * @returns {Point} with x, y and z as coordinates, and r, g and b as RGB values
  */
 function make_3D_color_point(
@@ -273,7 +273,7 @@ function make_3D_color_point(
 /**
  * retrieves the x-coordinate of a given Point
  * @param {Point} p - given point
- * @returns {Number} x-coordinate of the Point
+ * @returns {number} x-coordinate of the Point
  */
 function x_of(pt: Point): number {
   return pt.x;
@@ -282,7 +282,7 @@ function x_of(pt: Point): number {
 /**
  * retrieves the y-coordinate of a given Point
  * @param {Point} p - given point
- * @returns {Number} y-coordinate of the Point
+ * @returns {number} y-coordinate of the Point
  */
 function y_of(pt: Point): number {
   return pt.y;
@@ -291,7 +291,7 @@ function y_of(pt: Point): number {
 /**
  * retrieves the z-coordinate of a given Point
  * @param {Point} p - given point
- * @returns {Number} z-coordinate of the Point
+ * @returns {number} z-coordinate of the Point
  */
 function z_of(pt: Point): number {
   return pt.z;
@@ -300,7 +300,7 @@ function z_of(pt: Point): number {
 /**
  * retrieves the red component of a given Point
  * @param {Point} p - given point
- * @returns {Number} Red component of the Point
+ * @returns {number} Red component of the Point
  */
 function r_of(pt: Point): number {
   return pt.color[0] * 255;
@@ -309,7 +309,7 @@ function r_of(pt: Point): number {
 /**
  * retrieves the green component of a given Point
  * @param {Point} p - given point
- * @returns {Number} Green component of the Point
+ * @returns {number} Green component of the Point
  */
 function g_of(pt: Point): number {
   return pt.color[1] * 255;
@@ -318,7 +318,7 @@ function g_of(pt: Point): number {
 /**
  * retrieves the blue component of a given Point
  * @param {Point} p - given point
- * @returns {Number} Blue component of the Point
+ * @returns {number} Blue component of the Point
  */
 function b_of(pt: Point): number {
   return pt.color[2] * 255;

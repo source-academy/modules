@@ -1,9 +1,4 @@
 /* eslint-disable no-unused-vars */
-export type CurveObject = {
-  drawCube: number[];
-  color: number[];
-  curvePos: number[];
-};
 export type Point = {
   x: number;
   y: number;
@@ -16,5 +11,6 @@ export type RenderFunction = (func: CurveFunction) => void;
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction */
 export type CurveTransformer = (c: CurveFunction) => CurveFunction;
 export type ShapeDrawn = {
+  toReplString: () => string;
   init: (canvas: HTMLCanvasElement | null) => void;
 };

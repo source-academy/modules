@@ -1,5 +1,5 @@
 import { mat4, vec3 } from 'gl-matrix';
-import { CurveObject, ShapeDrawn, Point } from './types';
+import { ShapeDrawn, Point } from './types';
 
 let canvasElement: HTMLCanvasElement | null;
 let renderingContext: WebGLRenderingContext | null | undefined;
@@ -129,7 +129,6 @@ function drawCurve(gl: WebGLRenderingContext, buffers, programInfo, num) {
       0,
       0
     );
-    // gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
 
     const colors: number[] = [];
     for (let i = 0; i < 16; i += 1) {
@@ -189,11 +188,6 @@ export default function generateCurve(
   const drawCubeArray: number[] = [];
   const transMat = mat4.create();
   const projMat = mat4.create();
-  let curveObject: CurveObject = {
-    drawCube: [],
-    color: [],
-    curvePos: [],
-  };
   // initialize the min/max to extreme values
   let min_x = Infinity;
   let max_x = -Infinity;
@@ -203,11 +197,6 @@ export default function generateCurve(
   let max_z = -Infinity;
 
   function evaluator(num: number, cFunc: Function): void {
-    curveObject = {
-      drawCube: [],
-      color: [],
-      curvePos: [],
-    };
     curvePosArray = [];
     curveColorArray = [];
     for (let i = 0; i <= num; i += 1) {
@@ -215,8 +204,11 @@ export default function generateCurve(
       const x = point.x * 2 - 1;
       const y = point.y * 2 - 1;
       const z = point.z * 2 - 1;
-      /* eslint-disable no-unused-expressions */
-      space === '2D' ? curvePosArray.push(x, y) : curvePosArray.push(x, y, z);
+      if (space === '2D') {
+        curvePosArray.push(x, y);
+      } else {
+        curvePosArray.push(x, y, z);
+      }
       const color_r = point.color[0];
       const color_g = point.color[1];
       const color_b = point.color[2];
@@ -246,57 +238,13 @@ export default function generateCurve(
   }
 
   // box generation
-  /* eslint-disable no-unused-vars */
   if (space === '3D') {
+    /* eslint-disable prettier/prettier */
     drawCubeArray.push(
-      -1,
-      1,
-      1,
-      -1,
-      -1,
-      1,
-      -1,
-      -1,
-      -1,
-      -1,
-      1,
-      -1,
-      1,
-      1,
-      -1,
-      1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      1,
-      -1,
-      -1,
-      1,
-      -1,
-      1,
-      -1,
-      -1,
-      1,
-      1,
-      -1,
-      1,
-      1,
-      1,
-      1,
-      -1,
-      1,
-      1,
-      -1,
-      1,
-      -1,
-      1,
-      1,
-      -1,
-      1,
-      1,
-      1
+      -1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1,
+      1, 1, -1, 1, -1, -1, -1, -1, -1, 1, -1, -1,
+      1, -1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 
+      -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1
     );
   } else {
     min_z = 0;
@@ -373,7 +321,6 @@ export default function generateCurve(
   if (space === '3D') {
     const scale = Math.sqrt(1 / 3.1);
     mat4.scale(transMat, transMat, vec3.fromValues(scale, scale, scale));
-    curveObject.drawCube = drawCubeArray;
     mat4.translate(transMat, transMat, [0, 0, -5]);
     mat4.rotate(transMat, transMat, -(Math.PI / 2), [1, 0, 0]); // axis to rotate around X
     mat4.rotate(transMat, transMat, -0.5, [0, 0, 1]); // axis to rotate around Z
@@ -386,11 +333,8 @@ export default function generateCurve(
     mat4.perspective(projMat, fieldOfView, aspect, zNear, zFar);
   }
 
-  curveObject.curvePos = curvePosArray;
-  curveObject.color = curveColorArray;
-  curveObject.drawCube = drawCubeArray;
-
   return {
+    toReplString: () => '<ShapeDrawn>',
     init: (canvas) => {
       canvasElement = canvas;
       renderingContext = canvasElement?.getContext('webgl');
