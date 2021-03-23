@@ -3,9 +3,10 @@ import { ShapeDrawn, Point } from './types';
 
 let canvasElement: HTMLCanvasElement | null;
 let renderingContext: WebGLRenderingContext | null | undefined;
+let cubeRotation: number = 0; // Used for 3D curves rendering rotation
 
 // Vertex shader program
-const vsS = `
+const vsS: string = `
 attribute vec4 aFragColor;
 attribute vec4 aVertexPosition;
 uniform mat4 uModelViewMatrix;
@@ -19,7 +20,7 @@ void main() {
 }`;
 
 // Fragment shader program
-const fsS = `
+const fsS: string = `
 varying lowp vec4 aColor;
 precision mediump float;
 void main() {
@@ -30,106 +31,79 @@ void main() {
 // Module's Private Functions
 // =============================================================================
 
-function loadShader(gl, type, source) {
+/* eslint-disable prettier/prettier */
+function loadShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader {
   const shader = gl.createShader(type);
+  if (!shader) {
+    throw new Error('WebGLShader not available.');
+  }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    // alert(
-    //   `An error occurred compiling the shaders: ${gl.getShaderInfoLog(shader)}`
-    // );
-    gl.deleteShader(shader);
-    return null;
-  }
-
   return shader;
 }
 
-function initShaderProgram(gl, vsSource, fsSource) {
+/* eslint-disable prettier/prettier */
+function initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string): WebGLProgram {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
   const shaderProgram = gl.createProgram();
+  if (!shaderProgram) {
+    throw new Error('Unable to initialize the shader program.');
+  }
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
   gl.linkProgram(shaderProgram);
-
-  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    // alert(
-    //   `Unable to initialize the shader program: ${gl.getProgramInfoLog(
-    //     shaderProgram
-    //   )}`
-    // );
-    return null;
-  }
-
   return shaderProgram;
 }
 
-let cubeRotation = 0; // Used for testing
-function drawCurve(gl: WebGLRenderingContext, buffers, programInfo, num) {
-  gl.clearColor(0.8, 0.8, 0.8, 1.0); // Clear to black, fully opaque
+/** main function that draws the given ShapeDrawn on the rendered canvas.
+ * However, WebGL only supports 16bits buffer, i.e. the no. of points in the 
+ * buffer must be lower than 65535. This limitation can potentially be 
+ * solved using a for loop to slice the array and draw multiple times.
+ */
+/* eslint-disable prettier/prettier */
+function drawCurve(
+  gl: WebGLRenderingContext,
+  buffers: any,
+  programInfo: any,
+  num: number,
+  drawMode: string,
+  space: string
+): void {
+  const itemSize = space === '3D' ? 3 : 2;
+  gl.clearColor(1, 1, 1, 1); // Clear to white, fully opaque
   gl.clearDepth(1.0); // Clear everything
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
   gl.depthFunc(gl.LEQUAL); // Near things obscure far things
-  // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  /* eslint-disable */
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   const transMat = mat4.create();
   const projMat = mat4.create();
 
-  const padding = Math.sqrt(1 / 3.1);
-  mat4.scale(transMat, transMat, vec3.fromValues(padding, padding, padding));
-  mat4.translate(transMat, transMat, [0, 0, -5]);
-  mat4.rotate(transMat, transMat, -(Math.PI / 2), [1, 0, 0]); // axis to rotate around X (static)
-  mat4.rotate(transMat, transMat, cubeRotation, [0, 0, 1]); // axis to rotate around Z (dynamic)
+  if (space === '3D') {
+    const padding = Math.sqrt(1 / 3.1);
+    mat4.scale(transMat, transMat, vec3.fromValues(padding, padding, padding));
+    mat4.translate(transMat, transMat, [0, 0, -5]);
+    mat4.rotate(transMat, transMat, -(Math.PI / 2), [1, 0, 0]); // axis to rotate around X (static)
+    mat4.rotate(transMat, transMat, cubeRotation, [0, 0, 1]); // axis to rotate around Z (dynamic)
 
-  const scale = buffers.aspects.scale === 0 ? 1 : buffers.aspects.scale;
-  const { center } = buffers.aspects;
-  mat4.scale(
-    transMat,
-    transMat,
-    vec3.fromValues(2 / scale, 2 / scale, 2 / scale)
-  );
-  mat4.translate(
-    transMat,
-    transMat,
-    vec3.fromValues(-center[0], -center[1], -center[2])
-  );
-
-  const fieldOfView = (45 * Math.PI) / 180;
-  const aspect = gl.canvas.width / gl.canvas.height;
-  const zNear = 0;
-  const zFar = 50.0;
-  mat4.perspective(projMat, fieldOfView, aspect, zNear, zFar);
-
-  if (!gl) {
-    throw new Error('Canvas component not activated!');
+    const fieldOfView = (45 * Math.PI) / 180;
+    const aspect = gl.canvas.width / gl.canvas.height;
+    const zNear = 0;
+    const zFar = 50.0;
+    mat4.perspective(projMat, fieldOfView, aspect, zNear, zFar);
   }
+
   gl.useProgram(programInfo.program);
-  gl.uniformMatrix4fv(
-    programInfo.uniformLocations.projectionMatrix,
-    false,
-    projMat
-  );
-  gl.uniformMatrix4fv(
-    programInfo.uniformLocations.modelViewMatrix,
-    false,
-    transMat
-  );
+  gl.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projMat);
+  gl.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, transMat);
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
-  // eslint-disable-next-line
-    { // Draw Cube
+  
+  if (space ==='3D') { // Draw Cube
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.cubeBuffer);
-    gl.vertexAttribPointer(
-      programInfo.attribLocations.vertexPosition,
-      3,
-      gl.FLOAT,
-      false,
-      0,
-      0
-    );
-
+    gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, 3, gl.FLOAT, false, 0, 0);  
     const colors: number[] = [];
     for (let i = 0; i < 16; i += 1) {
       colors.push(0.6, 0.6, 0.6, 1);
@@ -137,41 +111,24 @@ function drawCurve(gl: WebGLRenderingContext, buffers, programInfo, num) {
     const colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    gl.vertexAttribPointer(
-      programInfo.attribLocations.fragmentColor,
-      4,
-      gl.FLOAT,
-      false,
-      0,
-      0
-    );
+    gl.vertexAttribPointer(programInfo.attribLocations.fragmentColor, 4, gl.FLOAT, false, 0, 0);
     gl.drawArrays(gl.LINE_STRIP, 0, 16);
   }
-  // eslint-disable-next-line
-    { // Draw Curve
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.curveBuffer);
-    gl.vertexAttribPointer(
-      programInfo.attribLocations.vertexPosition,
-      3,
-      gl.FLOAT,
-      false,
-      0,
-      0
-    );
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.curveColorBuffer);
-    gl.vertexAttribPointer(
-      programInfo.attribLocations.fragmentColor,
-      4,
-      gl.FLOAT,
-      false,
-      0,
-      0
-    );
+  // Draw Curve
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.curveBuffer);
+  gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, itemSize, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.curveColorBuffer);
+  gl.vertexAttribPointer(programInfo.attribLocations.fragmentColor, 4, gl.FLOAT, false, 0, 0);
+  if (drawMode === 'lines') {
     gl.drawArrays(gl.LINE_STRIP, 0, num + 1);
+  } else {
+    gl.drawArrays(gl.POINTS, 0, num + 1);
   }
 
-  cubeRotation += 0.005;
-  window.requestAnimationFrame(() => drawCurve(gl, buffers, programInfo, num));
+  if (space ==='3D') {
+    cubeRotation += 0.005;
+    window.requestAnimationFrame(() => drawCurve(gl, buffers, programInfo, num, drawMode, space));
+  }
 }
 
 /* eslint-disable no-unused-vars */
@@ -186,8 +143,6 @@ export default function generateCurve(
   let curvePosArray: number[] = [];
   let curveColorArray: number[] = [];
   const drawCubeArray: number[] = [];
-  const transMat = mat4.create();
-  const projMat = mat4.create();
   // initialize the min/max to extreme values
   let min_x = Infinity;
   let max_x = -Infinity;
@@ -318,21 +273,6 @@ export default function generateCurve(
     }
   }
 
-  if (space === '3D') {
-    const scale = Math.sqrt(1 / 3.1);
-    mat4.scale(transMat, transMat, vec3.fromValues(scale, scale, scale));
-    mat4.translate(transMat, transMat, [0, 0, -5]);
-    mat4.rotate(transMat, transMat, -(Math.PI / 2), [1, 0, 0]); // axis to rotate around X
-    mat4.rotate(transMat, transMat, -0.5, [0, 0, 1]); // axis to rotate around Z
-    cubeRotation += 0.1 * Math.PI;
-
-    const fieldOfView = (45 * Math.PI) / 180;
-    const aspect = 400 / 400; // Width and height of the canvas
-    const zNear = 0;
-    const zFar = 50.0;
-    mat4.perspective(projMat, fieldOfView, aspect, zNear, zFar);
-  }
-
   return {
     toReplString: () => '<ShapeDrawn>',
     init: (canvas) => {
@@ -399,12 +339,11 @@ export default function generateCurve(
         curveBuffer,
         curveColorBuffer,
         aspects: {
-          center: [0, 0, 0],
           scale: Math.max(max_x - min_x, max_y - min_y, max_z - min_z),
         },
       };
 
-      drawCurve(renderingContext, buffers, programInfo, numPoints); // drawCurve(gl, drawMode, curveObject, space);
+      drawCurve(renderingContext, buffers, programInfo, numPoints, drawMode, space);
     },
   };
 }

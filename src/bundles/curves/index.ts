@@ -35,7 +35,7 @@ import generateCurve from './webGL_Curves';
  */
 function draw_connected(num: number): RenderFunction {
   /* eslint-disable no-unused-vars */
-  return (func: (t: number) => Point) =>
+  return (func: CurveFunction) =>
     generateCurve('none', 'lines', num, func, '2D', false);
 }
 
