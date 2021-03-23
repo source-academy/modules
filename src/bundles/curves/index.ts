@@ -4,57 +4,18 @@ import {
   curveFunction,
   renderFunction,
   curveTransformer,
+  Point
 } from './types';
 
 /**
  * <Brief description of the module>
- * @author <Author Name>
- * @author <Author Name>
+ * @author Lee Zheng Han
+ * @author Ng Yong Xiang
  */
 
 // =============================================================================
 // Module's Private Functions
 // =============================================================================
-
-class Point {
-  x: number;
-
-  y: number;
-
-  z: number;
-
-  color: number[];
-
-  constructor(
-    x: number,
-    y: number,
-    z: number,
-    r: number,
-    g: number,
-    b: number
-  ) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.color = [r, g, b, 1];
-  }
-
-  getColor(): number[] {
-    return this.color;
-  }
-
-  getX(): number {
-    return this.x;
-  }
-
-  getY(): number {
-    return this.y;
-  }
-
-  getZ(): number {
-    return this.z;
-  }
-}
 
 let cubeRotation = 0; // Used for testing
 function generateCurve(
@@ -132,55 +93,7 @@ function generateCurve(
 
   // box generation
   if (space == '3D') {
-    drawCubeArray.push(
-      -1,
-      1,
-      1,
-      -1,
-      -1,
-      1,
-      -1,
-      -1,
-      -1,
-      -1,
-      1,
-      -1,
-      1,
-      1,
-      -1,
-      1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      1,
-      -1,
-      -1,
-      1,
-      -1,
-      1,
-      -1,
-      -1,
-      1,
-      1,
-      -1,
-      1,
-      1,
-      1,
-      1,
-      -1,
-      1,
-      1,
-      -1,
-      1,
-      -1,
-      1,
-      1,
-      -1,
-      1,
-      1,
-      1
+    drawCubeArray.push(-1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1
     );
   } else {
     min_z = max_z = 0;
@@ -484,7 +397,7 @@ function draw_3D_points_full_view_proportional(num: number): renderFunction {
  * @returns {Point} with x and y as coordinates
  */
 function make_point(x: number, y: number): Point {
-  return new Point(x, y, 0, 0, 0, 0);
+  return { x: x, y: y, z: 0, color: [0, 0, 0, 1] };
 }
 
 /**
@@ -495,7 +408,7 @@ function make_point(x: number, y: number): Point {
  * @returns {Point} with x, y and z as coordinates
  */
 function make_3D_point(x: number, y: number, z: number): Point {
-  return new Point(x, y, z, 0, 0, 0);
+  return { x: x, y: y, z: z, color: [0, 0, 0, 1] };
 }
 
 /**
@@ -510,14 +423,8 @@ function make_3D_point(x: number, y: number, z: number): Point {
  * @param {Number} b - blue component of new point
  * @returns {Point} with x and y as coordinates, and r, g and b as RGB values
  */
-function make_color_point(
-  x: number,
-  y: number,
-  r: number,
-  g: number,
-  b: number
-): Point {
-  return new Point(x, y, 0, r / 255, g / 255, b / 255);
+function make_color_point(x: number, y: number, r: number, g: number, b: number): Point {
+  return { x: x, y: y, z: 0, color: [r / 255, g / 255, b / 255, 1] };
 }
 
 /**
@@ -533,15 +440,8 @@ function make_color_point(
  * @param {Number} b - blue component of new point
  * @returns {Point} with x, y and z as coordinates, and r, g and b as RGB values
  */
-function make_3D_color_point(
-  x: number,
-  y: number,
-  z: number,
-  r: number,
-  g: number,
-  b: number
-): Point {
-  return new Point(x, y, z, r / 255, g / 255, b / 255);
+function make_3D_color_point(x: number, y: number, z: number, r: number, g: number, b: number): Point {
+  return { x: x, y: y, z: z, color: [r / 255, g / 255, b / 255, 1] };
 }
 
 /**
@@ -550,7 +450,7 @@ function make_3D_color_point(
  * @returns {Number} x-coordinate of the Point
  */
 function x_of(pt: Point): number {
-  return pt.getX();
+  return pt.x;
 }
 
 /**
@@ -559,7 +459,7 @@ function x_of(pt: Point): number {
  * @returns {Number} y-coordinate of the Point
  */
 function y_of(pt: Point): number {
-  return pt.getY();
+  return pt.y;
 }
 
 /**
@@ -568,7 +468,7 @@ function y_of(pt: Point): number {
  * @returns {Number} z-coordinate of the Point
  */
 function z_of(pt: Point): number {
-  return pt.getZ();
+  return pt.z;
 }
 
 /**
@@ -577,7 +477,7 @@ function z_of(pt: Point): number {
  * @returns {Number} Red component of the Point
  */
 function r_of(pt: Point): number {
-  return pt.getColor()[0] * 255;
+  return pt.color[0] * 255;
 }
 
 /**
@@ -586,7 +486,7 @@ function r_of(pt: Point): number {
  * @returns {Number} Green component of the Point
  */
 function g_of(pt: Point): number {
-  return pt.getColor()[1] * 255;
+  return pt.color[1] * 255;
 }
 
 /**
@@ -595,7 +495,7 @@ function g_of(pt: Point): number {
  * @returns {Number} Blue component of the Point
  */
 function b_of(pt: Point): number {
-  return pt.getColor()[2] * 255;
+  return pt.color[2] * 255;
 }
 
 // Curve-Transform = (Curve --> Curve)
