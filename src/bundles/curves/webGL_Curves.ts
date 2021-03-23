@@ -212,15 +212,15 @@ export default function generateCurve(
     curveColorArray = [];
     for (let i = 0; i <= num; i += 1) {
       const point = cFunc(i / num);
-      const x = point.getX() * 2 - 1;
-      const y = point.getY() * 2 - 1;
-      const z = point.getZ() * 2 - 1;
+      const x = point.x * 2 - 1;
+      const y = point.y * 2 - 1;
+      const z = point.z * 2 - 1;
       /* eslint-disable no-unused-expressions */
       space === '2D' ? curvePosArray.push(x, y) : curvePosArray.push(x, y, z);
-      const color_r = point.getColor()[0];
-      const color_g = point.getColor()[1];
-      const color_b = point.getColor()[2];
-      const color_a = point.getColor()[3];
+      const color_r = point.color[0];
+      const color_g = point.color[1];
+      const color_b = point.color[2];
+      const color_a = point.color[3];
       curveColorArray.push(color_r, color_g, color_b, color_a);
       min_x = Math.min(min_x, x);
       max_x = Math.max(max_x, x);
@@ -455,7 +455,7 @@ export default function generateCurve(
         curveBuffer,
         curveColorBuffer,
         aspects: {
-          center: [0.5, 0.5, 0.5],
+          center: [0, 0, 0],
           scale: Math.max(max_x - min_x, max_y - min_y, max_z - min_z),
         },
       };
