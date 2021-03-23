@@ -2,11 +2,9 @@ import {
   CurveFunction,
   RenderFunction,
   CurveTransformer,
-  Point
+  Point,
 } from './types';
-import {
-  generateCurve
-} from './webGL_Curves';
+import generateCurve from './webGL_Curves';
 
 /**
  * Bundle for Source Academy Curves module
@@ -36,9 +34,9 @@ import {
  * @return {function} function of type Curve → Drawing
  */
 function draw_connected(num: number): RenderFunction {
-  return function (func: (x: number) => Point) {
+  /* eslint-disable no-unused-vars */
+  return (func: (t: number) => Point) =>
     generateCurve('none', 'lines', num, func, '2D', false);
-  };
 }
 
 /**
@@ -56,9 +54,8 @@ function draw_connected(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_connected_full_view(num: number): RenderFunction {
-  return function (func: CurveFunction) {
-    return generateCurve('stretch', 'lines', num, func, '2D', true);
-  };
+  return (func: CurveFunction) =>
+    generateCurve('stretch', 'lines', num, func, '2D', true);
 }
 
 /**
@@ -75,9 +72,8 @@ function draw_connected_full_view(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_connected_full_view_proportional(num: number): RenderFunction {
-  return function (func: CurveFunction) {
-    return generateCurve('fit', 'lines', num, func, '2D', true);
-  };
+  return (func: CurveFunction) =>
+    generateCurve('fit', 'lines', num, func, '2D', true);
 }
 
 /**
@@ -94,9 +90,8 @@ function draw_connected_full_view_proportional(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_points_on(num: number): RenderFunction {
-  return function (func: CurveFunction) {
+  return (func: CurveFunction) =>
     generateCurve('none', 'points', num, func, '2D', false);
-  };
 }
 
 /**
@@ -113,9 +108,8 @@ function draw_points_on(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_points_full_view_proportional(num: number): RenderFunction {
-  return function (func: CurveFunction) {
-    return generateCurve('fit', 'points', num, func, '2D', true);
-  };
+  return (func: CurveFunction) =>
+    generateCurve('fit', 'points', num, func, '2D', true);
 }
 
 /**
@@ -132,10 +126,8 @@ function draw_points_full_view_proportional(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_3D_connected(num: number): RenderFunction {
-  return function (func: CurveFunction) {
-    return generateCurve('none', 'lines', num, func, '3D', false);
-    // requestAnimationFrame(generateCurve)
-  };
+  return (func: CurveFunction) =>
+    generateCurve('none', 'lines', num, func, '3D', false);
 }
 
 /**
@@ -153,9 +145,8 @@ function draw_3D_connected(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_3D_connected_full_view(num: number): RenderFunction {
-  return function (func: CurveFunction) {
-    return generateCurve('stretch', 'lines', num, func, '3D', false);
-  };
+  return (func: CurveFunction) =>
+    generateCurve('stretch', 'lines', num, func, '3D', false);
 }
 
 /**
@@ -172,9 +163,8 @@ function draw_3D_connected_full_view(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_3D_connected_full_view_proportional(num: number): RenderFunction {
-  return function (func: CurveFunction) {
-    return generateCurve('fit', 'lines', num, func, '3D', false);
-  };
+  return (func: CurveFunction) =>
+    generateCurve('fit', 'lines', num, func, '3D', false);
 }
 
 /**
@@ -191,9 +181,8 @@ function draw_3D_connected_full_view_proportional(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_3D_points_on(num: number): RenderFunction {
-  return function (func: CurveFunction) {
-    return generateCurve('none', 'points', num, func, '3D', false);
-  };
+  return (func: CurveFunction) =>
+    generateCurve('none', 'points', num, func, '3D', false);
 }
 
 /**
@@ -210,9 +199,8 @@ function draw_3D_points_on(num: number): RenderFunction {
  * @return {function} function of type Curve → Drawing
  */
 function draw_3D_points_full_view_proportional(num: number): RenderFunction {
-  return function (func: CurveFunction) {
-    return generateCurve('fit', 'points', num, func, '3D', false);
-  };
+  return (func: CurveFunction) =>
+    generateCurve('fit', 'points', num, func, '3D', false);
 }
 
 /**
@@ -222,7 +210,7 @@ function draw_3D_points_full_view_proportional(num: number): RenderFunction {
  * @returns {Point} with x and y as coordinates
  */
 function make_point(x: number, y: number): Point {
-  return { x: x, y: y, z: 0, color: [0, 0, 0, 1] };
+  return { x, y, z: 0, color: [0, 0, 0, 1] };
 }
 
 /**
@@ -233,7 +221,7 @@ function make_point(x: number, y: number): Point {
  * @returns {Point} with x, y and z as coordinates
  */
 function make_3D_point(x: number, y: number, z: number): Point {
-  return { x: x, y: y, z: z, color: [0, 0, 0, 1] };
+  return { x, y, z, color: [0, 0, 0, 1] };
 }
 
 /**
@@ -248,8 +236,14 @@ function make_3D_point(x: number, y: number, z: number): Point {
  * @param {Number} b - blue component of new point
  * @returns {Point} with x and y as coordinates, and r, g and b as RGB values
  */
-function make_color_point(x: number, y: number, r: number, g: number, b: number): Point {
-  return { x: x, y: y, z: 0, color: [r / 255, g / 255, b / 255, 1] };
+function make_color_point(
+  x: number,
+  y: number,
+  r: number,
+  g: number,
+  b: number
+): Point {
+  return { x, y, z: 0, color: [r / 255, g / 255, b / 255, 1] };
 }
 
 /**
@@ -265,8 +259,15 @@ function make_color_point(x: number, y: number, r: number, g: number, b: number)
  * @param {Number} b - blue component of new point
  * @returns {Point} with x, y and z as coordinates, and r, g and b as RGB values
  */
-function make_3D_color_point(x: number, y: number, z: number, r: number, g: number, b: number): Point {
-  return { x: x, y: y, z: z, color: [r / 255, g / 255, b / 255, 1] };
+function make_3D_color_point(
+  x: number,
+  y: number,
+  z: number,
+  r: number,
+  g: number,
+  b: number
+): Point {
+  return { x, y, z, color: [r / 255, g / 255, b / 255, 1] };
 }
 
 /**
@@ -329,7 +330,7 @@ function b_of(pt: Point): number {
  * the same points as the points of the original Curve, but
  * in reverse: The result Curve applied to 0 is the original Curve
  * applied to 1 and vice versa.
- * 
+ *
  * @param {CurveFunction} original - original Curve
  * @returns {CurveFunction} result Curve
  */
@@ -338,48 +339,48 @@ function invert(curve: CurveFunction): CurveFunction {
 }
 
 /**
- * this function returns a Curve transformation: 
- * It takes an x-value x0, a y-value y0 and a z-value z0, 
- * each with default value of 0, as arguments 
+ * this function returns a Curve transformation:
+ * It takes an x-value x0, a y-value y0 and a z-value z0,
+ * each with default value of 0, as arguments
  * and returns a Curve transformation that
  * takes a Curve as argument and returns
- * a new Curve, by translating the original by x0 in x-direction, 
+ * a new Curve, by translating the original by x0 in x-direction,
  * y0 in y-direction and z0 in z-direction.
- * 
+ *
  * @param {number} x0 - (Optional) x-value
  * @param {number} y0 - (Optional) y-value
  * @param {number} z0 - (Optional) z-value
  * @returns {CurveTransformer} Curve transformation
  */
 function translate_curve(x0: number, y0: number, z0: number): CurveTransformer {
-  return function (curve: CurveFunction) {
-    const transformation = (c: CurveFunction) =>
-      function (t: number) {
-        x0 = x0 == undefined ? 0 : x0;
-        y0 = y0 == undefined ? 0 : y0;
-        z0 = z0 == undefined ? 0 : z0;
-        const ct: Point = c(t);
-        return make_3D_color_point(
-          x0 + x_of(ct),
-          y0 + y_of(ct),
-          z0 + z_of(ct),
-          r_of(ct),
-          g_of(ct),
-          b_of(ct)
-        );
-      };
+  return (curve: CurveFunction) => {
+    const transformation = (c: CurveFunction) => (t: number) => {
+      /* eslint-disable no-param-reassign */
+      x0 = x0 === undefined ? 0 : x0;
+      y0 = y0 === undefined ? 0 : y0;
+      z0 = z0 === undefined ? 0 : z0;
+      const ct: Point = c(t);
+      return make_3D_color_point(
+        x0 + x_of(ct),
+        y0 + y_of(ct),
+        z0 + z_of(ct),
+        r_of(ct),
+        g_of(ct),
+        b_of(ct)
+      );
+    };
     return transformation(curve);
   };
 }
 
 /**
- * this function 
- * takes either 1 or 3 angles, a, b and c in radians as parameter and 
- * returns a Curve transformation: 
+ * this function
+ * takes either 1 or 3 angles, a, b and c in radians as parameter and
+ * returns a Curve transformation:
  * a function that takes a Curve as argument and returns
  * a new Curve, which is the original Curve rotated by the given angle
- * around the z-axis (1 parameter) in counter-clockwise direction, or 
- * the original Curve rotated extrinsically with Euler angles (a, b, c) 
+ * around the z-axis (1 parameter) in counter-clockwise direction, or
+ * the original Curve rotated extrinsically with Euler angles (a, b, c)
  * about x, y, and z axes (3 parameters).
  * @param {number} a - given angle
  * @param {number} b - (Optional) given angle
@@ -391,33 +392,32 @@ function rotate_around_origin(
   theta2: number,
   theta3: number
 ): CurveTransformer {
-  if (theta3 == undefined && theta1 != undefined && theta2 != undefined) {
+  if (theta3 === undefined && theta1 !== undefined && theta2 !== undefined) {
     // 2 args
     throw new Error('Expected 1 or 3 arguments, but received 2');
   } else if (
-    theta1 != undefined &&
-    theta2 == undefined &&
-    theta3 == undefined
+    theta1 !== undefined &&
+    theta2 === undefined &&
+    theta3 === undefined
   ) {
     // 1 args
     const cth = Math.cos(theta1);
     const sth = Math.sin(theta1);
-    return function (curve: CurveFunction) {
-      const transformation = (c: CurveFunction) =>
-        function (t: number) {
-          const ct = c(t);
-          const x = x_of(ct);
-          const y = y_of(ct);
-          const z = z_of(ct);
-          return make_3D_color_point(
-            cth * x - sth * y,
-            sth * x + cth * y,
-            z,
-            r_of(ct),
-            g_of(ct),
-            b_of(ct)
-          );
-        };
+    return (curve: CurveFunction) => {
+      const transformation = (c: CurveFunction) => (t: number) => {
+        const ct = c(t);
+        const x = x_of(ct);
+        const y = y_of(ct);
+        const z = z_of(ct);
+        return make_3D_color_point(
+          cth * x - sth * y,
+          sth * x + cth * y,
+          z,
+          r_of(ct),
+          g_of(ct),
+          b_of(ct)
+        );
+      };
       return transformation(curve);
     };
   } else {
@@ -427,68 +427,67 @@ function rotate_around_origin(
     const sthy = Math.sin(theta2);
     const cthz = Math.cos(theta3);
     const sthz = Math.sin(theta3);
-    return function (curve: CurveFunction) {
-      const transformation = (c: CurveFunction) =>
-        function (t: number) {
-          const ct = c(t);
-          const coord = [x_of(ct), y_of(ct), z_of(ct)];
-          const mat = [
-            [
-              cthz * cthy,
-              cthz * sthy * sthx - sthz * cthx,
-              cthz * sthy * cthx + sthz * sthx,
-            ],
-            [
-              sthz * cthy,
-              sthz * sthy * sthx + cthz * cthx,
-              sthz * sthy * cthx - cthz * sthx,
-            ],
-            [-sthy, cthy * sthx, cthy * cthx],
-          ];
-          let xf = 0;
-          let yf = 0;
-          let zf = 0;
-          for (let i = 0; i < 3; i++) {
-            xf += mat[0][i] * coord[i];
-            yf += mat[1][i] * coord[i];
-            zf += mat[2][i] * coord[i];
-          }
-          return make_3D_color_point(xf, yf, zf, r_of(ct), g_of(ct), b_of(ct));
-        };
+    return (curve: CurveFunction) => {
+      const transformation = (c: CurveFunction) => (t: number) => {
+        const ct = c(t);
+        const coord = [x_of(ct), y_of(ct), z_of(ct)];
+        const mat = [
+          [
+            cthz * cthy,
+            cthz * sthy * sthx - sthz * cthx,
+            cthz * sthy * cthx + sthz * sthx,
+          ],
+          [
+            sthz * cthy,
+            sthz * sthy * sthx + cthz * cthx,
+            sthz * sthy * cthx - cthz * sthx,
+          ],
+          [-sthy, cthy * sthx, cthy * cthx],
+        ];
+        let xf = 0;
+        let yf = 0;
+        let zf = 0;
+        for (let i = 0; i < 3; i += 1) {
+          xf += mat[0][i] * coord[i];
+          yf += mat[1][i] * coord[i];
+          zf += mat[2][i] * coord[i];
+        }
+        return make_3D_color_point(xf, yf, zf, r_of(ct), g_of(ct), b_of(ct));
+      };
       return transformation(curve);
     };
   }
 }
 
 /**
- * this function takes scaling factors <CODE>a</CODE>, <CODE>b</CODE> 
- * and <CODE>c</CODE>, each with default value of 1, as arguments and 
- * returns a Curve transformation that 
- * scales a given Curve by <CODE>a</CODE> in x-direction, <CODE>b</CODE> 
+ * this function takes scaling factors <CODE>a</CODE>, <CODE>b</CODE>
+ * and <CODE>c</CODE>, each with default value of 1, as arguments and
+ * returns a Curve transformation that
+ * scales a given Curve by <CODE>a</CODE> in x-direction, <CODE>b</CODE>
  * in y-direction and <CODE>c</CODE> in z-direction.
- * 
+ *
  * @param {number} a - (Optional) scaling factor in x-direction
  * @param {number} b - (Optional) scaling factor in y-direction
  * @param {number} c - (Optional) scaling factor in z-direction
  * @returns {CurveTransformer} function that takes a Curve and returns a Curve
  */
 function scale_curve(a1: number, b1: number, c1: number): CurveTransformer {
-  return function (curve) {
-    const transformation = (c: CurveFunction) =>
-      function (t: number) {
-        const ct = c(t);
-        a1 = a1 == undefined ? 1 : a1;
-        b1 = b1 == undefined ? 1 : b1;
-        c1 = c1 == undefined ? 1 : c1;
-        return make_3D_color_point(
-          a1 * x_of(ct),
-          b1 * y_of(ct),
-          c1 * z_of(ct),
-          r_of(ct),
-          g_of(ct),
-          b_of(ct)
-        );
-      };
+  return (curve) => {
+    const transformation = (c: CurveFunction) => (t: number) => {
+      const ct = c(t);
+      /* eslint-disable no-param-reassign */
+      a1 = a1 === undefined ? 1 : a1;
+      b1 = b1 === undefined ? 1 : b1;
+      c1 = c1 === undefined ? 1 : c1;
+      return make_3D_color_point(
+        a1 * x_of(ct),
+        b1 * y_of(ct),
+        c1 * z_of(ct),
+        r_of(ct),
+        g_of(ct),
+        b_of(ct)
+      );
+    };
     return transformation(curve);
   };
 }
@@ -497,7 +496,7 @@ function scale_curve(a1: number, b1: number, c1: number): CurveTransformer {
  * this function takes a scaling factor s argument and returns a
  * Curve transformation that
  * scales a given Curve by s in x, y and z direction.
- * 
+ *
  * @param {number} s - scaling factor
  * @returns {CurveTransformer} function that takes a Curve and returns a Curve
  */
@@ -510,21 +509,29 @@ function scale_proportional(s: number): CurveTransformer {
  * takes a Curve as argument and returns
  * a new Curve, as follows.
  * A Curve is in <EM>standard position</EM> if it starts at (0,0) ends at (1,0).
- * This function puts the given Curve in standard position by 
+ * This function puts the given Curve in standard position by
  * rigidly translating it so its
  * start Point is at the origin (0,0), then rotating it about the origin to put
  * its endpoint on the x axis, then scaling it to put the endpoint at (1,0).
  * Behavior is unspecified on closed Curves where start-point equal end-point.
- * 
+ *
  * @param {CurveFunction} curve - given Curve
  * @returns {CurveFunction} result Curve
  */
 function put_in_standard_position(curve: CurveFunction): CurveFunction {
   const start_point = curve(0);
-  const curve_started_at_origin = translate_curve(-x_of(start_point), -y_of(start_point), 0)(curve);
+  const curve_started_at_origin = translate_curve(
+    -x_of(start_point),
+    -y_of(start_point),
+    0
+  )(curve);
   const new_end_point = curve_started_at_origin(1);
   const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
-  const curve_ended_at_x_axis = rotate_around_origin(0, 0, -theta)(curve_started_at_origin);
+  const curve_ended_at_x_axis = rotate_around_origin(
+    0,
+    0,
+    -theta
+  )(curve_started_at_origin);
   const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
   return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
 }
@@ -534,7 +541,7 @@ function put_in_standard_position(curve: CurveFunction): CurveFunction {
  * takes two Curves as arguments and returns
  * a new Curve. The two Curves are combined
  * by using the full first Curve for the first portion
- * of the result and by using the full second Curve for the 
+ * of the result and by using the full second Curve for the
  * second portion of the result.
  * The second Curve is not changed, and therefore
  * there might be a big jump in the middle of the
@@ -560,7 +567,7 @@ function connect_rigidly(
  * The second Curve is translated such that its point
  * at fraction 0 is the same as the Point of the first
  * Curve at fraction 1.
- * 
+ *
  * @param {CurveFunction} curve1 - first Curve
  * @param {CurveFunction} curve2 - second Curve
  * @returns {CurveFunction} result Curve
@@ -581,7 +588,7 @@ function connect_ends(
   );
 }
 
-export default function curve() {
+export default function curves() {
   return {
     make_point,
     make_3D_point,

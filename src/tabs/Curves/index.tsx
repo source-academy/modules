@@ -45,7 +45,6 @@ class Canvas extends React.Component<Props, State> {
           width={400}
           height={400}
         />
-
       </div>
     );
   }
