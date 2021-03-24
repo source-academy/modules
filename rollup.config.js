@@ -5,6 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonJS from 'rollup-plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
 import copy from 'rollup-plugin-copy';
+import json from '@rollup/plugin-json';
 
 import modules from './modules.json';
 
@@ -16,6 +17,7 @@ const defaultConfigurations = {
     warn(warning);
   },
   plugins: [
+    json(),
     typescript(),
     babel({
       babelHelpers: 'bundled',
