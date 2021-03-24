@@ -22,7 +22,18 @@ const defaultConfigurations = {
       extensions: ['.ts', '.tsx'],
       include: ['src/**/*'],
     }),
-    resolve(),
+    resolve({
+      // Source Academy's modules run in a browser environment. This setting when
+      // set to false can cause problems with some imported packages that depend
+      // on this setting to compile properly.
+      // @see https://github.com/rollup/plugins/tree/master/packages/node-resolve#browser
+      browser: true,
+      // If true, the plugin will prefer built-in modules (e.g. fs, path).
+      // The broswer's environment (jsdom), unlike node environment, does not
+      // have built-in modules such as fs or path.
+      // @see https://github.com/rollup/plugins/tree/master/packages/node-resolve#preferbuiltins
+      preferBuiltins: false,
+    }),
     commonJS({
       include: 'node_modules/**',
     }),
