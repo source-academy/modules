@@ -24,7 +24,13 @@ const defaultConfigurations = {
       extensions: ['.ts', '.tsx'],
       include: ['src/**/*'],
     }),
-    resolve(),
+    resolve({
+      // some package.json files have a "browser" field which specifies
+      // alternative files to load for people bundling for the browser. If
+      // that's you, either use this option or add "browser" to the
+      // "mainfields" option, otherwise pkg.browser will be ignored
+      browser: true, // Default: false
+    }),
     commonJS({
       include: 'node_modules/**',
     }),
