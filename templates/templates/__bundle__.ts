@@ -1,4 +1,6 @@
-import __Params from '../../typings/__Params';
+// Un-comment the next line if your bundle requires the use of variables
+// declared in cadet-frontend or js-slang.
+// import __Params from '../../typings/__Params';
 
 /**
  * <Brief description of the module>
@@ -15,8 +17,9 @@ function sample_function(x: number) {
   return x + 1;
 }
 
-export default function (_params: __Params) {
-  return {
-    sample_function,
-  };
-}
+// Un-comment the next line if your bundle requires the use of variables
+// declared in cadet-frontend or js-slang.
+// export default (_params: __Params) => ({
+export default () => ({
+  sample_function,
+});
