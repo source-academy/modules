@@ -34,7 +34,10 @@ class Repeat extends React.Component<Props, State> {
   }
 
   public render() {
-    return <div>This is spawned from the repeat package</div>;
+    const { counter } = this.state;
+    return (
+      <div>This is spawned from the repeat package. Counter is {counter}</div>
+    );
   }
 }
 

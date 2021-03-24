@@ -24,7 +24,7 @@ function success(...args) {
 }
 
 async function askQuestion(question) {
-  return new Promise((resolve, _) => {
+  return new Promise((resolve) => {
     rl.question(chalk.blueBright(`${question}\n`), resolve);
   });
 }

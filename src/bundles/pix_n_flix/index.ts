@@ -153,7 +153,7 @@ function draw(timestamp: number): void {
 function startVideo(): void {
   if (videoIsPlaying) return;
   videoIsPlaying = true;
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 }
 
@@ -254,12 +254,10 @@ function install_filter(_filter: Filter): void {
   filter = _filter;
 }
 
-export default function pix_n_flix() {
-  return {
-    init,
-    install_filter,
-    copy_image,
-    video_height,
-    video_width,
-  };
-}
+export default () => ({
+  init,
+  install_filter,
+  copy_image,
+  video_height,
+  video_width,
+});
