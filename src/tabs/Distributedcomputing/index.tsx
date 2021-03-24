@@ -31,6 +31,10 @@ class Distributedcomputing extends React.Component<Props> {
         console.error('Error adding document: ', error);
       });
   }
+
+  public render() {
+    return <div>This is spawned from the Distributedcomputing tab.</div>;
+  }
 }
 export default {
   toSpawn: () => true,

@@ -1,3 +1,6 @@
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 function share(f: Function) {
   return f;
 }
@@ -16,7 +19,16 @@ function disconnect(s: string) {
   return 'Disconnected';
 }
 
-function init() {}
+function init() {
+  firebase.initializeApp({
+    apiKey: 'dummy',
+    authDomain: 'distributed-computing-478ce.firebaseapp.com',
+    projectId: 'distributed-computing-478ce',
+    storageBucket: 'distributed-computing-478ce.appspot.com',
+    messagingSenderId: 'dummy',
+    appId: 'dummy',
+  });
+}
 
 export default function distributed_computing() {
   return {
