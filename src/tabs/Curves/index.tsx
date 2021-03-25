@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShapeDrawn } from '../../bundles/curves/types';
 
 /**
  * Currently used for rendering HTML canvas element for curves.
@@ -24,7 +25,6 @@ class Canvas extends React.Component<Props, State> {
     this.state = {};
   }
 
-  // TODO: Currently not using any error logger to stop the rendering of canvas
   public componentDidMount() {
     if (this.$canvas) {
       // eslint-disable-next-line react/destructuring-assignment
@@ -34,13 +34,19 @@ class Canvas extends React.Component<Props, State> {
 
   public render() {
     return (
-      <div>
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
         <canvas
           ref={(r) => {
             this.$canvas = r;
           }}
-          width={400}
-          height={400}
+          width={500}
+          height={500}
         />
       </div>
     );
@@ -48,7 +54,16 @@ class Canvas extends React.Component<Props, State> {
 }
 
 export default {
-  toSpawn: () => true, // TODO: Always set to true as for now, but may want to disable it when ShapeDrawn is not returned
+  toSpawn: (context: any) => {
+    function isValidFunction(value: any): value is ShapeDrawn {
+      try {
+        return value instanceof Object && value.init instanceof Function;
+      } catch (e) {
+        return false;
+      }
+    }
+    return isValidFunction(context.result.value);
+  },
   body: (context: any) => <Canvas context={context} />,
   label: 'Curves Canvas',
   iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options
