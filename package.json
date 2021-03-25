@@ -47,6 +47,7 @@
     "yarnhook": "^0.5.1"
   },
   "dependencies": {
+    "@blueprintjs/core": "^3.42.0",
     "chalk": "^4.1.0",
     "dayjs": "^1.10.4",
     "lodash": "^4.17.21",
