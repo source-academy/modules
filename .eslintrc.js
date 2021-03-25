@@ -60,6 +60,20 @@ module.exports = {
             format: ['camelCase', 'snake_case'],
           },
         ],
+        // turn on errors for missing imports
+        // @see https://www.npmjs.com/package/eslint-import-resolver-typescript
+        'import/no-unresolved': 'error',
+      },
+      settings: {
+        'import/parsers': {
+          '@typescript-eslint/parser': ['.ts', '.tsx'],
+        },
+        'import/resolver': {
+          typescript: {
+            // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+            alwaysTryTypes: true,
+          },
+        },
       },
     },
   ],
