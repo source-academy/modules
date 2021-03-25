@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const paths = require('./paths');
 const print = require('./print');
 const utilities = require('./utilities');
-const manifest = require('../modules.json');
+const manifest = require('../../modules.json');
 
 function check(moduleName) {
   return Object.keys(manifest).includes(moduleName);

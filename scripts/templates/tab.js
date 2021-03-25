@@ -3,7 +3,7 @@ const paths = require('./paths');
 const print = require('./print');
 const utilities = require('./utilities');
 const modules = require('./module');
-const manifest = require('../modules.json');
+const manifest = require('../../modules.json');
 
 const existingTabs = Object.keys(manifest).reduce(
   (accumulator, current) => accumulator.concat(manifest[current].tabs),
