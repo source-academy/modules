@@ -34,7 +34,7 @@ import generateCurve from './webGL_curves';
  * @return function of type Curve → Drawing
  */
 function draw_connected(num: number): RenderFunction {
-  /* eslint-disable no-unused-vars */
+  // eslint-disable-next-line no-unused-vars
   return (func) => generateCurve('none', 'lines', num, func, '2D', false);
 }
 
@@ -86,6 +86,7 @@ function draw_connected_full_view_proportional(num: number): RenderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
+// eslint-disable-next-line no-unused-vars
 function draw_points_on(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '2D', false);
 }
@@ -103,6 +104,7 @@ function draw_points_on(num: number): RenderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
+// eslint-disable-next-line no-unused-vars
 function draw_points_full_view_proportional(num: number): RenderFunction {
   return (func) => generateCurve('fit', 'points', num, func, '2D', true);
 }
@@ -172,6 +174,7 @@ function draw_3D_connected_full_view_proportional(num: number): RenderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
+// eslint-disable-next-line no-unused-vars
 function draw_3D_points_on(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '3D', false);
 }
@@ -189,6 +192,7 @@ function draw_3D_points_on(num: number): RenderFunction {
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
+// eslint-disable-next-line no-unused-vars
 function draw_3D_points_full_view_proportional(num: number): RenderFunction {
   return (func) => generateCurve('fit', 'points', num, func, '3D', false);
 }
