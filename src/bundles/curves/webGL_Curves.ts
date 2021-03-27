@@ -16,6 +16,7 @@ uniform mat4 uProjectionMatrix;
 varying lowp vec4 aColor;
 
 void main() {
+    gl_PointSize = 2.0;
     aColor = aFragColor;
     gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
 }`;
