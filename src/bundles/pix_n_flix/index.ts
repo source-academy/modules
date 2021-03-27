@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 import {
   CanvasElement,
   VideoElement,
@@ -17,8 +15,8 @@ import {
  */
 
 // Global Variables
-const WIDTH: number = 400;
-const HEIGHT: number = 300;
+let WIDTH: number = 400;
+let HEIGHT: number = 300;
 
 let videoElement: VideoElement;
 let canvasElement: CanvasElement;
@@ -32,7 +30,7 @@ let filter: Filter = copy_image;
 
 let videoIsPlaying: boolean = false;
 
-const FPS: number = 10;
+let FPS: number = 10;
 let requestId: number;
 let startTime: number;
 
@@ -159,6 +157,15 @@ function startVideo(): void {
   requestId = window.requestAnimationFrame(draw);
 }
 
+// stops the loop that is drawing on frame
+function stopVideo(): void {
+  if (!videoIsPlaying) {
+    return;
+  }
+  videoIsPlaying = false;
+  window.cancelAnimationFrame(requestId);
+}
+
 function loadMedia(): void {
   if (!navigator.mediaDevices.getUserMedia) {
     const errMsg = 'The browser you are using does not support getUserMedia';
@@ -185,6 +192,100 @@ function loadMedia(): void {
   startVideo();
 }
 
+// just draws once on frame and stops video
+function snapPicture(): void {
+  drawFrame();
+  stopVideo();
+}
+
+// update fps
+function updateFPS(fps: number): void {
+  // prevent too big of an increase
+  if (fps < 2 || fps > 30) {
+    return;
+  }
+
+  const status = videoIsPlaying;
+  stopVideo();
+
+  FPS = fps;
+  setupData();
+
+  if (!status) {
+    setTimeout(() => snapPicture(), 50);
+    return;
+  }
+
+  startVideo();
+}
+
+// update the frame dimensions
+function updateDimensions(w: number, h: number): void {
+  if ((w === WIDTH && h === HEIGHT) || w > 500 || h > 500) {
+    return;
+  }
+
+  const status = videoIsPlaying;
+  stopVideo();
+
+  WIDTH = w;
+  HEIGHT = h;
+
+  videoElement.width = w;
+  videoElement.height = h;
+  canvasElement.width = w;
+  canvasElement.height = h;
+
+  setupData();
+
+  if (!status) {
+    setTimeout(() => snapPicture(), 50);
+    return;
+  }
+
+  startVideo();
+}
+
+let queue: Function = () => {};
+
+// adds function to the queue
+function enqueue(funcToAdd: Function) {
+  const funcToRunFirst: Function = queue;
+  queue = () => {
+    funcToRunFirst();
+    funcToAdd();
+  };
+}
+
+// used to initialise the video library
+function init(
+  video: VideoElement,
+  canvas: CanvasElement,
+  _errorLogger: ErrorLogger
+): void {
+  videoElement = video;
+  canvasElement = canvas;
+  errorLogger = _errorLogger;
+  const context = canvasElement.getContext('2d');
+  if (context == null) throw new Error('Canvas context should not be null.');
+  canvasRenderingContext = context;
+
+  setupData();
+  loadMedia();
+  queue();
+}
+
+// destructor that does necessary cleanup
+function deinit(): void {
+  const stream = videoElement.srcObject;
+  if (!stream) {
+    return;
+  }
+  stream.getTracks().forEach((track) => {
+    track.stop();
+  });
+}
+
 // =============================================================================
 // Module's Exposed Functions
 // =============================================================================
@@ -192,21 +293,14 @@ function loadMedia(): void {
 /**
  * Initialize the PixNFlix live feed with default globals
  */
-function init(): Video {
+function start(): Video {
   return {
-    toReplString: () => '[Pix N Flix]: Video { ... }',
-    init: (video, canvas, _errorLogger) => {
-      videoElement = video;
-      canvasElement = canvas;
-      errorLogger = _errorLogger;
-      const context = canvasElement.getContext('2d');
-      if (context == null)
-        throw new Error('Canvas context should not be null.');
-      canvasRenderingContext = context;
-
-      setupData();
-      loadMedia();
-    },
+    toReplString: () => '[Pix N Flix]',
+    init,
+    deinit,
+    snapPicture,
+    updateFPS,
+    updateDimensions,
   };
 }
 
@@ -261,9 +355,13 @@ function alpha_of(px: Pixel): number {
  */
 function set_rgba(px: Pixel, r: number, g: number, b: number, a: number): void {
   // assigns the r,g,b values to this px
+  // eslint-disable-next-line no-param-reassign
   px[0] = r;
+  // eslint-disable-next-line no-param-reassign
   px[1] = g;
+  // eslint-disable-next-line no-param-reassign
   px[2] = b;
+  // eslint-disable-next-line no-param-reassign
   px[3] = a;
 }
 
@@ -294,6 +392,7 @@ function video_width(): number {
 function copy_image(src: Pixels, dest: Pixels): void {
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
+      // eslint-disable-next-line no-param-reassign
       dest[i][j] = src[i][j];
     }
   }
@@ -334,8 +433,16 @@ function compose_filter(filter1: Filter, filter2: Filter): Filter {
   };
 }
 
+/**
+ * Takes a snapshot of image after a set delay
+ * @param delayInMs - Delay before a snapshot is taken
+ */
+function snapshot(delayInMs: number): void {
+  enqueue(() => setTimeout(stopVideo, delayInMs));
+}
+
 export default () => ({
-  init,
+  start,
   red_of,
   blue_of,
   green_of,
@@ -347,4 +454,5 @@ export default () => ({
   install_filter,
   reset_filter,
   compose_filter,
+  snapshot,
 });

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 export type VideoElement = HTMLVideoElement & { srcObject?: MediaStream };
 export type CanvasElement = HTMLCanvasElement;
 export type ErrorLogger = (
@@ -12,6 +11,10 @@ export type Video = {
     canvas: CanvasElement,
     errorLogger: ErrorLogger
   ) => void;
+  deinit: () => void;
+  snapPicture: () => void;
+  updateFPS: (fps: number) => void;
+  updateDimensions: (width: number, height: number) => void;
 };
 export type Pixel = number[];
 export type Pixels = Pixel[][];
