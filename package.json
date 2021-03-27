@@ -4,6 +4,16 @@
   "version": "1.0.0",
   "repository": "https://github.com/source-academy/modules.git",
   "license": "Apache-2.0",
+  "scripts-info": {
+    "module": "Add a new bundle or tab",
+    "lint": "Check code for errors",
+    "lint:fix": "Automatically fix lint errors",
+    "build": "Transpile modules' files from src folder to build folder",
+    "serve": "Start the http-server to serve .js files in build folder",
+    "prepare": "Enable git hooks",
+    "test": "Run unit tests",
+    "test:watch": "Watch files for changes and rerun tests related to changed files"
+  },
   "scripts": {
     "module": "node ./templates/app.js",
     "lint": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src",
