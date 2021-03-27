@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 import {
   CanvasElement,
   VideoElement,
@@ -209,6 +211,63 @@ function init(): Video {
 }
 
 /**
+ * Returns the red component of a given Pixel <CODE>px</CODE>
+ * @param px - given Pixel
+ * @returns the red component as a number between 0 and 255
+ */
+function red_of(px: Pixel): number {
+  // returns the red value of px respectively
+  return px[0];
+}
+
+/**
+ * Returns the green component of a given Pixel <CODE>px</CODE>
+ * @param px - given Pixel
+ * @returns the green component as a number between 0 and 255
+ */
+function green_of(px: Pixel): number {
+  // returns the green value of px respectively
+  return px[1];
+}
+
+/**
+ * Returns the blue component of a given Pixel <CODE>px</CODE>
+ * @param px - given Pixel
+ * @returns the blue component as a number between 0 and 255
+ */
+function blue_of(px: Pixel): number {
+  // returns the blue value of px respectively
+  return px[2];
+}
+
+/**
+ * Returns the alpha component of a given Pixel <CODE>px</CODE>
+ * @param px - given Pixel
+ * @returns the alpha component as a number between 0 and 255
+ */
+function alpha_of(px: Pixel): number {
+  // returns the alpha value of px respectively
+  return px[3];
+}
+
+/**
+ * Assigns the red, green, blue and alpha components of a pixel
+ * <CODE>px</CODE> to given values
+ * @param px - given Pixel
+ * @param r - the red component as a number between 0 and 255
+ * @param g - the green component as a number between 0 and 255
+ * @param b - the blue component as a number between 0 and 255
+ * @param a - the alpha component as a number between 0 and 255
+ */
+function set_rgba(px: Pixel, r: number, g: number, b: number, a: number): void {
+  // assigns the r,g,b values to this px
+  px[0] = r;
+  px[1] = g;
+  px[2] = b;
+  px[3] = a;
+}
+
+/**
  * Returns the current height of the output video display in
  * pixels, i.e. the number of pixels in vertical direction
  * @returns height of output display (in pixels)
@@ -235,7 +294,6 @@ function video_width(): number {
 function copy_image(src: Pixels, dest: Pixels): void {
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
-      // eslint-disable-next-line no-param-reassign
       dest[i][j] = src[i][j];
     }
   }
@@ -254,10 +312,39 @@ function install_filter(_filter: Filter): void {
   filter = _filter;
 }
 
+/**
+ * Resets any filter applied on the video
+ */
+function reset_filter(): void {
+  install_filter(copy_image);
+}
+
+/**
+ * Returns a new filter that is the result of applying both
+ * filter1 and filter2 together
+ * @param filter1 - the first filter
+ * @param filter2 - the second filter
+ * @returns Filter after applying filter1 and filter2
+ */
+function compose_filter(filter1: Filter, filter2: Filter): Filter {
+  return (src, dest) => {
+    filter1(src, dest);
+    copy_image(dest, src);
+    filter2(src, dest);
+  };
+}
+
 export default () => ({
   init,
-  install_filter,
-  copy_image,
+  red_of,
+  blue_of,
+  green_of,
+  alpha_of,
+  set_rgba,
   video_height,
   video_width,
+  copy_image,
+  install_filter,
+  reset_filter,
+  compose_filter,
 });
