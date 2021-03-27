@@ -1,4 +1,5 @@
 import React from 'react';
+import { ErrorLogger } from '../../bundles/pix_n_flix/types';
 
 type Props = {
   children?: never;
@@ -8,28 +9,48 @@ type Props = {
 
 type State = {};
 
+export type PixNFlix = {
+  toReplString: () => string;
+  init: (
+    video: HTMLVideoElement | null,
+    canvas: HTMLCanvasElement | null,
+    errorLogger: ErrorLogger
+  ) => void;
+  deinit: () => void;
+  snapPicture: () => void;
+  updateFPS: (fps: number) => void;
+  updateDimensions: (width: number, height: number) => void;
+};
+
 class Repeat extends React.Component<Props, State> {
   private $video: HTMLVideoElement | null = null;
 
   private $canvas: HTMLCanvasElement | null = null;
 
+  private pixNFlix: PixNFlix;
+
   constructor(props: any) {
     super(props);
     this.state = {};
+    const { debuggerContext } = this.props;
+    this.pixNFlix = debuggerContext.result.value;
   }
 
   public componentDidMount() {
     if (this.$video && this.$canvas) {
-      // eslint-disable-next-line react/destructuring-assignment
-      this.props.debuggerContext.result.value.init(
-        this.$video,
-        this.$canvas,
-        this.printError
-      );
+      const { debuggerContext } = this.props;
+      this.pixNFlix = debuggerContext.result.value;
+      this.pixNFlix.init(this.$video, this.$canvas, this.printError);
     }
+    window.addEventListener('beforeunload', this.pixNFlix.deinit);
   }
 
-  public printError = () => {};
+  public componentWillUnmount() {
+    this.pixNFlix.deinit();
+    window.removeEventListener('beforeunload', this.pixNFlix.deinit);
+  }
+
+  public printError: ErrorLogger = () => {};
 
   public render() {
     return (
