@@ -4,19 +4,38 @@
  * @author Tang Xin Kye, Marcus
  */
 
-// eslint-disable-next-line no-underscore-dangle
-function repeat(f: Function, n: any) {
+/**
+ * Repeats function n times
+ *
+ * @param f - function to be repeated
+ * @param n - number of times to be repeated
+ * @return a function repeated n times
+ */
+function repeat(f: Function, n: any): Function {
   return n === 0 ? (x: any) => x : (x: any) => f(repeat(f, n - 1)(x));
 }
 
-function twice(f: any) {
+/**
+ * Repeats function twice
+ *
+ * @param f - function to be repeated
+ * @return a function repeated twice
+ */
+function twice(f: Function): Function {
   return repeat(f, 2);
 }
 
-function thrice(f: any) {
+/**
+ * Repeats function thrice
+ *
+ * @param f - function to be repeated
+ * @return a function repeated thrice
+ */
+function thrice(f: Function): Function {
   return repeat(f, 3);
 }
 
+// exported functions from the bundle
 export default () => ({
   repeat,
   twice,
