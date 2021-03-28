@@ -49,12 +49,17 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.42.0",
+    "@react-three/drei": "^3.11.2",
+    "@storybook/addon-knobs": "^6.1.21",
+    "@types/three": "^0.126.2",
     "chalk": "^4.1.0",
     "dayjs": "^1.10.4",
     "gl-matrix": "^3.3.0",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-three-fiber": "^5.3.22",
+    "three": "^0.126.1"
   },
   "peerDependencies": {
     "tslib": "^2.1.0"

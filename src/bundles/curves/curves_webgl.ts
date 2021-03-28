@@ -16,9 +16,9 @@ uniform mat4 uProjectionMatrix;
 varying lowp vec4 aColor;
 
 void main() {
-    gl_PointSize = 2.0;
-    aColor = aFragColor;
-    gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+  gl_PointSize = 2.0;
+  aColor = aFragColor;
+  gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
 }`;
 
 // Fragment shader program
@@ -26,15 +26,16 @@ const fsS: string = `
 varying lowp vec4 aColor;
 precision mediump float;
 void main() {
-    gl_FragColor = aColor;
+  gl_FragColor = aColor;
 }`;
 
 // =============================================================================
-// Module's Private Functions
+// Module's Private Functions (WebGL)
 //
 // This file contains all the private functions used by the Curves module for
 // rendering curves. For documentation/tutorials on WebGL API, see
-// https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API.
+// https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API. For private
+// functions dealing with ThreeJS Canvas, see './curves_threefiber.ts'.
 // =============================================================================
 
 /**

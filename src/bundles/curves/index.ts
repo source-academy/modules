@@ -5,7 +5,7 @@ import {
   CurveTransformer,
   Point,
 } from './types';
-import generateCurve from './webGL_Curves';
+import generateCurve from './curves_webgl';
 
 /**
  * Bundle for Source Academy Curves module
@@ -18,7 +18,7 @@ import generateCurve from './webGL_Curves';
 //
 // This file only includes the implementation and documentation of exposed
 // functions of the module. For private functions dealing with the browser's
-// graphics library context, see './webGL_curves.ts'.
+// graphics library context, see './curves_webgl.ts'.
 // =============================================================================
 
 /**
