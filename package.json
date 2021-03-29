@@ -51,6 +51,7 @@
     "@blueprintjs/core": "^3.42.0",
     "@react-three/drei": "^3.11.2",
     "@storybook/addon-knobs": "^6.1.21",
+    "@types/debounce": "^1.2.0",
     "@types/three": "^0.126.2",
     "chalk": "^4.1.0",
     "dayjs": "^1.10.4",

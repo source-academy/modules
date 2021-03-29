@@ -31,6 +31,8 @@
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
+    /* Temporarily added to avoid library checks for ThreeJS. */
+    "skipLibCheck": true
   },
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
   "include": ["src/**/*", "templates/templates/**/*"],
