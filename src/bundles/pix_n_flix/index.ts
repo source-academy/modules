@@ -6,6 +6,9 @@ import {
   Pixel,
   Pixels,
   Filter,
+  DEFAULT_WIDTH,
+  DEFAULT_HEIGHT,
+  DEFAULT_FPS,
 } from './types';
 
 /**
@@ -15,8 +18,8 @@ import {
  */
 
 // Global Variables
-let WIDTH: number = 400;
-let HEIGHT: number = 300;
+let WIDTH: number = DEFAULT_WIDTH;
+let HEIGHT: number = DEFAULT_HEIGHT;
 
 let videoElement: VideoElement;
 let canvasElement: CanvasElement;
@@ -30,7 +33,7 @@ let filter: Filter = copy_image;
 
 let videoIsPlaying: boolean = false;
 
-let FPS: number = 10;
+let FPS: number = DEFAULT_FPS;
 let requestId: number;
 let startTime: number;
 
@@ -298,6 +301,7 @@ function start(): Video {
     toReplString: () => '[Pix N Flix]',
     init,
     deinit,
+    startVideo,
     snapPicture,
     updateFPS,
     updateDimensions,

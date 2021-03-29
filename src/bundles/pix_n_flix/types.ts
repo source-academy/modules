@@ -12,6 +12,7 @@ export type Video = {
     errorLogger: ErrorLogger
   ) => void;
   deinit: () => void;
+  startVideo: () => void;
   snapPicture: () => void;
   updateFPS: (fps: number) => void;
   updateDimensions: (width: number, height: number) => void;
@@ -19,3 +20,7 @@ export type Video = {
 export type Pixel = number[];
 export type Pixels = Pixel[][];
 export type Filter = (src: Pixels, dest: Pixels) => void;
+
+export const DEFAULT_WIDTH: number = 400;
+export const DEFAULT_HEIGHT: number = 300;
+export const DEFAULT_FPS: number = 10;
