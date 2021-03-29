@@ -49,6 +49,8 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.42.0",
+    "@blueprintjs/icons": "^3.26.0",
+    "@blueprintjs/popover2": "^0.4.0",
     "chalk": "^4.1.0",
     "dayjs": "^1.10.4",
     "gl-matrix": "^3.3.0",
