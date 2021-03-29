@@ -16,9 +16,9 @@ uniform mat4 uProjectionMatrix;
 varying lowp vec4 aColor;
 
 void main() {
-    gl_PointSize = 2.0;
-    aColor = aFragColor;
-    gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+  gl_PointSize = 2.0;
+  aColor = aFragColor;
+  gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
 }`;
 
 // Fragment shader program
@@ -26,7 +26,7 @@ const fsS: string = `
 varying lowp vec4 aColor;
 precision mediump float;
 void main() {
-    gl_FragColor = aColor;
+  gl_FragColor = aColor;
 }`;
 
 // =============================================================================
@@ -39,6 +39,7 @@ void main() {
 
 /**
  * gets shader based on given shader program code.
+ *
  * @param gl - WebGL's rendering context
  * @param type - constant describing the type of shader to load
  * @param source - source code of the shader
@@ -60,6 +61,7 @@ function loadShader(
 
 /**
  * initializes the shader program used by WebGL.
+ *
  * @param gl - WebGL's rendering context
  * @param vsSource - vertex shader program code
  * @param fsSource - fragment shader program code

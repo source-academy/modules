@@ -5,7 +5,7 @@ import {
   CurveTransformer,
   Point,
 } from './types';
-import generateCurve from './webGL_Curves';
+import generateCurve from './curves_webgl';
 
 /**
  * Bundle for Source Academy Curves module
@@ -18,36 +18,33 @@ import generateCurve from './webGL_Curves';
 //
 // This file only includes the implementation and documentation of exposed
 // functions of the module. For private functions dealing with the browser's
-// graphics library context, see './webGL_curves.ts'.
+// graphics library context, see './curves_webgl.ts'.
 // =============================================================================
 
 /**
- * returns a function that turns a given Curve into a Drawing,
- * by sampling the Curve at <CODE>num</CODE> sample points
- * and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The parts between (0,0) and (1,1) of the resulting Drawing
- * are shown in the window.
+ * returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at <CODE>num</CODE> sample points and connecting each pair with a line.
+ * When a program evaluates to a Drawing, the Source system displays it
+ * graphically, in a window, instead of textually. The parts between (0,0) and
+ * (1,1) of the resulting Drawing are shown in the window.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
 function draw_connected(num: number): RenderFunction {
-  // eslint-disable-next-line no-unused-vars
   return (func) => generateCurve('none', 'lines', num, func, '2D', false);
 }
 
 /**
- * returns a function that turns a given Curve into a Drawing,
- * by sampling the Curve at <CODE>num</CODE> sample points
- * and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The Drawing is stretched or shrunk
- * to show the full curve
- * and maximize its width and height, with some padding.
+ * returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at <CODE>num</CODE> sample points and connecting each pair with a line.
+ * When a program evaluates to a Drawing, the Source system displays it
+ * graphically, in a window, instead of textually. The Drawing is stretched or
+ * shrunk to show the full curve and maximize its width and height, with some
+ * padding.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
@@ -58,13 +55,13 @@ function draw_connected_full_view(num: number): RenderFunction {
 }
 
 /**
- * returns a function that turns a given Curve into a Drawing,
- * by sampling the Curve at <CODE>num</CODE> sample points
- * and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The Drawing is scaled proportionally to show the full curve
- * and maximize its size, with some padding.
+ * returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at <CODE>num</CODE> sample points and connecting each pair with a line.
+ * When a program evaluates to a Drawing, the Source system displays it
+ * graphically, in a window, instead of textually. The Drawing is scaled
+ * proportionally to show the full curve and maximize its size, with some
+ * padding.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
@@ -75,49 +72,46 @@ function draw_connected_full_view_proportional(num: number): RenderFunction {
 }
 
 /**
- * returns a function that turns a given Curve into a Drawing,
- * by sampling the Curve at <CODE>num</CODE> sample points.
- * The Drawing consists of isolated points, and does not connect them.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The parts between (0,0) and (1,1) of the resulting Drawing
- * are shown in the window.
+ * returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at <CODE>num</CODE> sample points. The Drawing consists of isolated
+ * points, and does not connect them. When a program evaluates to a Drawing,
+ * the Source system displays it graphically, in a window, instead of textually.
+ * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the
+ * window.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function draw_points_on(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '2D', false);
 }
 
 /**
- * returns a function that turns a given Curve into a Drawing,
- * by sampling the Curve at <CODE>num</CODE> sample points.
- * The Drawing consists of isolated points, and does not connect them.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The Drawing is scaled proportionally with its size maximized
- * to fit entirely inside the window, with some padding.
+ * returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at <CODE>num</CODE> sample points. The Drawing consists of isolated
+ * points, and does not connect them. When a program evaluates to a Drawing, the
+ * Source system displays it graphically, in a window, instead of textually. The
+ * Drawing is scaled proportionally with its size maximized to fit entirely
+ * inside the window, with some padding.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function draw_points_full_view_proportional(num: number): RenderFunction {
   return (func) => generateCurve('fit', 'points', num, func, '2D', true);
 }
 
 /**
- * returns a function that turns a given 3D Curve into a Drawing,
- * by sampling the 3D Curve at <CODE>num</CODE> sample points
- * and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The parts between (0,0,0) and (1,1,1) of the resulting
- * Drawing are shown within the unit cube.
+ * returns a function that turns a given 3D Curve into a Drawing, by sampling
+ * the 3D Curve at <CODE>num</CODE> sample points and connecting each pair with
+ * a line. When a program evaluates to a Drawing, the Source system displays it
+ * graphically, in a window, instead of textually. The parts between (0,0,0) and
+ * (1,1,1) of the resulting Drawing are shown within the unit cube.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
@@ -128,14 +122,13 @@ function draw_3D_connected(num: number): RenderFunction {
 }
 
 /**
- * returns a function that turns a given 3D Curve into a Drawing,
- * by sampling the 3D Curve at <CODE>num</CODE> sample points
- * and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The Drawing is stretched or shrunk
- * to show the full curve
- * and maximize its width and height within the cube.
+ * returns a function that turns a given 3D Curve into a Drawing, by sampling
+ * the 3D Curve at <CODE>num</CODE> sample points and connecting each pair with
+ * a line. When a program evaluates to a Drawing, the Source system displays it
+ * graphically, in a window, instead of textually. The Drawing is stretched or
+ * shrunk to show the full curve and maximize its width and height within the
+ * cube.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
@@ -146,13 +139,12 @@ function draw_3D_connected_full_view(num: number): RenderFunction {
 }
 
 /**
- * returns a function that turns a given 3D Curve into a Drawing,
- * by sampling the 3D Curve at <CODE>num</CODE> sample points
- * and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The Drawing is scaled proportionally with its size maximized
- * to fit entirely inside the cube.
+ * returns a function that turns a given 3D Curve into a Drawing, by sampling
+ * the 3D Curve at <CODE>num</CODE> sample points and connecting each pair with
+ * a line. When a program evaluates to a Drawing, the Source system displays it
+ * graphically, in a window, instead of textually. The Drawing is scaled
+ * proportionally with its size maximized to fit entirely inside the cube.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
@@ -163,43 +155,42 @@ function draw_3D_connected_full_view_proportional(num: number): RenderFunction {
 }
 
 /**
- * returns a function that turns a given 3D Curve into a Drawing,
- * by sampling the 3D Curve at <CODE>num</CODE> sample points.
- * The Drawing consists of isolated points, and does not connect them.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The parts between (0,0,0) and (1,1,1) of the resulting
- * Drawing are shown within the unit cube.
+ * returns a function that turns a given 3D Curve into a Drawing, by sampling
+ * the 3D Curve at <CODE>num</CODE> sample points. The Drawing consists of
+ * isolated points, and does not connect them. When a program evaluates to a
+ * Drawing, the Source system displays it graphically, in a window, instead of
+ * textually. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are
+ * shown within the unit cube.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function draw_3D_points_on(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '3D', false);
 }
 
 /**
- * returns a function that turns a given 3D Curve into a Drawing,
- * by sampling the 3D Curve at <CODE>num</CODE> sample points.
- * The Drawing consists of isolated points, and does not connect them.
- * When a program evaluates to a Drawing, the Source system
- * displays it graphically, in a window, instead of textually.
- * The Drawing is scaled proportionally with its size maximized
- * to fit entirely inside the cube.
+ * returns a function that turns a given 3D Curve into a Drawing, by sampling
+ * the 3D Curve at <CODE>num</CODE> sample points. The Drawing consists of
+ * isolated points, and does not connect them. When a program evaluates to a
+ * Drawing, the Source system displays it graphically, in a window, instead of
+ * textually. The Drawing is scaled proportionally with its size maximized to
+ * fit entirely inside the cube.
+ *
  * @param num - determines the number of points to be
  * sampled. Including 0 and 1,
  * there are <CODE>num + 1</CODE> evenly spaced sample points.
  * @return function of type Curve → Drawing
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function draw_3D_points_full_view_proportional(num: number): RenderFunction {
   return (func) => generateCurve('fit', 'points', num, func, '3D', false);
 }
 
 /**
- * makes a Point with given x and y coordinates
+ * makes a Point with given x and y coordinates.
+ *
  * @param x - x-coordinate of new point
  * @param y - y-coordinate of new point
  * @returns with x and y as coordinates
@@ -209,7 +200,8 @@ function make_point(x: number, y: number): Point {
 }
 
 /**
- * makes a 3D Point with given x, y and z coordinates
+ * makes a 3D Point with given x, y and z coordinates.
+ *
  * @param x - x-coordinate of new point
  * @param y - y-coordinate of new point
  * @param z - z-coordinate of new point
@@ -220,10 +212,10 @@ function make_3D_point(x: number, y: number, z: number): Point {
 }
 
 /**
- * makes a color Point with given x and y coordinates,
- * and RGB values ranging from 0 to 255.
- * Any input lower than 0 for RGB will be rounded up to 0,
- * and any input higher than 255 will be rounded down to 255.
+ * makes a color Point with given x and y coordinates, and RGB values ranging
+ * from 0 to 255. Any input lower than 0 for RGB will be rounded up to 0, and
+ * any input higher than 255 will be rounded down to 255.
+ *
  * @param x - x-coordinate of new point
  * @param y - y-coordinate of new point
  * @param r - red component of new point
@@ -242,10 +234,10 @@ function make_color_point(
 }
 
 /**
- * makes a 3D color Point with given x, y and z coordinates,
- * and RGB values ranging from 0 to 255.
- * Any input lower than 0 for RGB will be rounded up to 0,
- * and any input higher than 255 will be rounded down to 255.
+ * makes a 3D color Point with given x, y and z coordinates, and RGB values
+ * ranging from 0 to 255. Any input lower than 0 for RGB will be rounded up to
+ * 0, and any input higher than 255 will be rounded down to 255.
+ *
  * @param x - x-coordinate of new point
  * @param y - y-coordinate of new point
  * @param z - z-coordinate of new point
@@ -266,7 +258,8 @@ function make_3D_color_point(
 }
 
 /**
- * retrieves the x-coordinate of a given Point
+ * retrieves the x-coordinate of a given Point.
+ *
  * @param p - given point
  * @returns x-coordinate of the Point
  */
@@ -275,7 +268,8 @@ function x_of(pt: Point): number {
 }
 
 /**
- * retrieves the y-coordinate of a given Point
+ * retrieves the y-coordinate of a given Point.
+ *
  * @param p - given point
  * @returns y-coordinate of the Point
  */
@@ -284,7 +278,8 @@ function y_of(pt: Point): number {
 }
 
 /**
- * retrieves the z-coordinate of a given Point
+ * retrieves the z-coordinate of a given Point.
+ *
  * @param p - given point
  * @returns z-coordinate of the Point
  */
@@ -293,7 +288,8 @@ function z_of(pt: Point): number {
 }
 
 /**
- * retrieves the red component of a given Point
+ * retrieves the red component of a given Point.
+ *
  * @param p - given point
  * @returns Red component of the Point
  */
@@ -302,7 +298,8 @@ function r_of(pt: Point): number {
 }
 
 /**
- * retrieves the green component of a given Point
+ * retrieves the green component of a given Point.
+ *
  * @param p - given point
  * @returns Green component of the Point
  */
@@ -311,7 +308,8 @@ function g_of(pt: Point): number {
 }
 
 /**
- * retrieves the blue component of a given Point
+ * retrieves the blue component of a given Point.
+ *
  * @param p - given point
  * @returns Blue component of the Point
  */
@@ -320,11 +318,10 @@ function b_of(pt: Point): number {
 }
 
 /**
- * this function is a Curve transformation: a function from a
- * Curve to a Curve. The points of the result Curve are
- * the same points as the points of the original Curve, but
- * in reverse: The result Curve applied to 0 is the original Curve
- * applied to 1 and vice versa.
+ * this function is a Curve transformation: a function from a Curve to a Curve.
+ * The points of the result Curve are the same points as the points of the
+ * original Curve, but in reverse: The result Curve applied to 0 is the original
+ * Curve applied to 1 and vice versa.
  *
  * @param original - original Curve
  * @returns result Curve
@@ -334,13 +331,11 @@ function invert(curve: CurveFunction): CurveFunction {
 }
 
 /**
- * this function returns a Curve transformation:
- * It takes an x-value x0, a y-value y0 and a z-value z0,
- * each with default value of 0, as arguments
- * and returns a Curve transformation that
- * takes a Curve as argument and returns
- * a new Curve, by translating the original by x0 in x-direction,
- * y0 in y-direction and z0 in z-direction.
+ * this function returns a Curve transformation: It takes an x-value x0, a
+ * y-value y0 and a z-value z0, each with default value of 0, as arguments and
+ * returns a Curve transformation that takes a Curve as argument and returns a
+ * new Curve, by translating the original by x0 in x-direction, y0 in
+ * y-direction and z0 in z-direction.
  *
  * @param x0 - (Optional) x-value
  * @param y0 - (Optional) y-value
@@ -349,16 +344,15 @@ function invert(curve: CurveFunction): CurveFunction {
  */
 function translate(x0: number, y0: number, z0: number): CurveTransformer {
   return (curve: CurveFunction) => {
-    const transformation = (c: CurveFunction) => (t: number) => {
-      /* eslint-disable no-param-reassign */
-      x0 = x0 === undefined ? 0 : x0;
-      y0 = y0 === undefined ? 0 : y0;
-      z0 = z0 === undefined ? 0 : z0;
-      const ct: Point = c(t);
+    const transformation = (cf: CurveFunction) => (t: number) => {
+      const a = x0 === undefined ? 0 : x0;
+      const b = y0 === undefined ? 0 : y0;
+      const c = z0 === undefined ? 0 : z0;
+      const ct: Point = cf(t);
       return make_3D_color_point(
-        x0 + x_of(ct),
-        y0 + y_of(ct),
-        z0 + z_of(ct),
+        a + x_of(ct),
+        b + y_of(ct),
+        c + z_of(ct),
         r_of(ct),
         g_of(ct),
         b_of(ct)
@@ -369,14 +363,13 @@ function translate(x0: number, y0: number, z0: number): CurveTransformer {
 }
 
 /**
- * this function
- * takes either 1 or 3 angles, a, b and c in radians as parameter and
- * returns a Curve transformation:
- * a function that takes a Curve as argument and returns
- * a new Curve, which is the original Curve rotated by the given angle
- * around the z-axis (1 parameter) in counter-clockwise direction, or
- * the original Curve rotated extrinsically with Euler angles (a, b, c)
- * about x, y, and z axes (3 parameters).
+ * this function takes either 1 or 3 angles, a, b and c in radians as parameter
+ * and returns a Curve transformation: a function that takes a Curve as argument
+ * and returns a new Curve, which is the original Curve rotated by the given
+ * angle around the z-axis (1 parameter) in counter-clockwise direction, or the
+ * original Curve rotated extrinsically with Euler angles (a, b, c) about x, y,
+ * and z axes (3 parameters).
+ *
  * @param a - given angle
  * @param b - (Optional) given angle
  * @param c - (Optional) given angle
@@ -455,25 +448,23 @@ function rotate_around_origin(
 }
 
 /**
- * this function takes scaling factors <CODE>a</CODE>, <CODE>b</CODE>
- * and <CODE>c</CODE>, each with default value of 1, as arguments and
- * returns a Curve transformation that
- * scales a given Curve by <CODE>a</CODE> in x-direction, <CODE>b</CODE>
- * in y-direction and <CODE>c</CODE> in z-direction.
+ * this function takes scaling factors <CODE>a</CODE>, <CODE>b</CODE> and
+ * <CODE>c</CODE>, each with default value of 1, as arguments and returns a
+ * Curve transformation that scales a given Curve by <CODE>a</CODE> in
+ * x-direction, <CODE>b</CODE> in y-direction and <CODE>c</CODE> in z-direction.
  *
  * @param a - (Optional) scaling factor in x-direction
  * @param b - (Optional) scaling factor in y-direction
  * @param c - (Optional) scaling factor in z-direction
  * @returns function that takes a Curve and returns a Curve
  */
-function scale_axis(a1: number, b1: number, c1: number): CurveTransformer {
+function scale(a: number, b: number, c: number): CurveTransformer {
   return (curve) => {
-    const transformation = (c: CurveFunction) => (t: number) => {
-      const ct = c(t);
-      /* eslint-disable no-param-reassign */
-      a1 = a1 === undefined ? 1 : a1;
-      b1 = b1 === undefined ? 1 : b1;
-      c1 = c1 === undefined ? 1 : c1;
+    const transformation = (cf: CurveFunction) => (t: number) => {
+      const ct = cf(t);
+      const a1 = a === undefined ? 1 : a;
+      const b1 = b === undefined ? 1 : b;
+      const c1 = c === undefined ? 1 : c;
       return make_3D_color_point(
         a1 * x_of(ct),
         b1 * y_of(ct),
@@ -488,27 +479,24 @@ function scale_axis(a1: number, b1: number, c1: number): CurveTransformer {
 }
 
 /**
- * this function takes a scaling factor s argument and returns a
- * Curve transformation that
- * scales a given Curve by s in x, y and z direction.
+ * this function takes a scaling factor s argument and returns a Curve
+ * transformation that scales a given Curve by s in x, y and z direction.
  *
  * @param s - scaling factor
  * @returns function that takes a Curve and returns a Curve
  */
-function scale(s: number): CurveTransformer {
-  return scale_axis(s, s, s);
+function scale_proportional(s: number): CurveTransformer {
+  return scale(s, s, s);
 }
 
 /**
- * this function is a Curve transformation: It
- * takes a Curve as argument and returns
- * a new Curve, as follows.
- * A Curve is in <EM>standard position</EM> if it starts at (0,0) ends at (1,0).
- * This function puts the given Curve in standard position by
- * rigidly translating it so its
- * start Point is at the origin (0,0), then rotating it about the origin to put
- * its endpoint on the x axis, then scaling it to put the endpoint at (1,0).
- * Behavior is unspecified on closed Curves where start-point equal end-point.
+ * this function is a Curve transformation: It takes a Curve as argument and
+ * returns a new Curve, as follows. A Curve is in <EM>standard position</EM> if
+ * it starts at (0,0) ends at (1,0). This function puts the given Curve in
+ * standard position by rigidly translating it so its start Point is at the
+ * origin (0,0), then rotating it about the origin to put its endpoint on the
+ * x axis, then scaling it to put the endpoint at (1,0). Behavior is unspecified
+ * on closed Curves where start-point equal end-point.
  *
  * @param curve - given Curve
  * @returns result Curve
@@ -528,19 +516,16 @@ function put_in_standard_position(curve: CurveFunction): CurveFunction {
     -theta
   )(curve_started_at_origin);
   const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
-  return scale(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
+  return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
 }
 
 /**
- * this function is a binary Curve operator: It
- * takes two Curves as arguments and returns
- * a new Curve. The two Curves are combined
- * by using the full first Curve for the first portion
- * of the result and by using the full second Curve for the
- * second portion of the result.
- * The second Curve is not changed, and therefore
- * there might be a big jump in the middle of the
- * result Curve.
+ * this function is a binary Curve operator: It takes two Curves as arguments
+ * and returns a new Curve. The two Curves are combined by using the full first
+ * Curve for the first portion of the result and by using the full second Curve
+ * for the second portion of the result. The second Curve is not changed, and
+ * therefore there might be a big jump in the middle of the result Curve.
+ *
  * @param curve1 - first Curve
  * @param curve2 - second Curve
  * @returns result Curve
@@ -553,15 +538,12 @@ function connect_rigidly(
 }
 
 /**
- * this function is a binary Curve operator: It
- * takes two Curves as arguments and returns
- * a new Curve. The two Curves are combined
- * by using the full first Curve for the first portion
- * of the result and by using the full second Curve for the second
- * portion of the result.
- * The second Curve is translated such that its point
- * at fraction 0 is the same as the Point of the first
- * Curve at fraction 1.
+ * this function is a binary Curve operator: It takes two Curves as arguments
+ * and returns a new Curve. The two Curves are combined by using the full first
+ * Curve for the first portion of the result and by using the full second Curve
+ * for the second portion of the result. The second Curve is translated such
+ * that its point at fraction 0 is the same as the Point of the first Curve at
+ * fraction 1.
  *
  * @param curve1 - first Curve
  * @param curve2 - second Curve
@@ -664,8 +646,8 @@ export default function curves() {
     connect_ends,
     put_in_standard_position,
     translate,
+    scale_proportional,
     scale,
-    scale_axis,
     rotate_around_origin,
     arc,
     invert,
