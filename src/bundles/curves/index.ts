@@ -347,7 +347,7 @@ function invert(curve: CurveFunction): CurveFunction {
  * @param z0 - (Optional) z-value
  * @returns Curve transformation
  */
-function translate_curve(x0: number, y0: number, z0: number): CurveTransformer {
+function translate(x0: number, y0: number, z0: number): CurveTransformer {
   return (curve: CurveFunction) => {
     const transformation = (c: CurveFunction) => (t: number) => {
       /* eslint-disable no-param-reassign */
@@ -466,7 +466,7 @@ function rotate_around_origin(
  * @param c - (Optional) scaling factor in z-direction
  * @returns function that takes a Curve and returns a Curve
  */
-function scale_curve(a1: number, b1: number, c1: number): CurveTransformer {
+function scale_axis(a1: number, b1: number, c1: number): CurveTransformer {
   return (curve) => {
     const transformation = (c: CurveFunction) => (t: number) => {
       const ct = c(t);
@@ -495,8 +495,8 @@ function scale_curve(a1: number, b1: number, c1: number): CurveTransformer {
  * @param s - scaling factor
  * @returns function that takes a Curve and returns a Curve
  */
-function scale_proportional(s: number): CurveTransformer {
-  return scale_curve(s, s, s);
+function scale(s: number): CurveTransformer {
+  return scale_axis(s, s, s);
 }
 
 /**
@@ -515,7 +515,7 @@ function scale_proportional(s: number): CurveTransformer {
  */
 function put_in_standard_position(curve: CurveFunction): CurveFunction {
   const start_point = curve(0);
-  const curve_started_at_origin = translate_curve(
+  const curve_started_at_origin = translate(
     -x_of(start_point),
     -y_of(start_point),
     0
@@ -528,7 +528,7 @@ function put_in_standard_position(curve: CurveFunction): CurveFunction {
     -theta
   )(curve_started_at_origin);
   const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
-  return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
+  return scale(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
 }
 
 /**
@@ -575,7 +575,7 @@ function connect_ends(
   const end_point_of_curve1 = curve1(1);
   return connect_rigidly(
     curve1,
-    translate_curve(
+    translate(
       x_of(end_point_of_curve1) - x_of(start_point_of_curve2),
       y_of(end_point_of_curve1) - y_of(start_point_of_curve2),
       z_of(end_point_of_curve1) - z_of(start_point_of_curve2)
@@ -608,9 +608,9 @@ export default function curves() {
     connect_rigidly,
     connect_ends,
     put_in_standard_position,
-    translate_curve,
-    scale_proportional,
-    scale_curve,
+    translate,
+    scale,
+    scale_axis,
     rotate_around_origin,
     invert,
   };
