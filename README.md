@@ -1,6 +1,6 @@
 # Modules
 
-This repository will contain publicly available modules and their documentation, starting in 2020.
+This repository will contain publicly available modules and their documentation, starting in 2021.
 
 See wiki for details: https://github.com/source-academy/modules/wiki
 
