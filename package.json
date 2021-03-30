@@ -18,9 +18,13 @@
     "module": "node ./scripts/templates/app.js",
     "lint": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src",
     "lint:fix": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src --fix",
+<<<<<<< HEAD
     "build": "yarn lint && yarn build:docs && yarn build:modules",
     "build:modules": "./node_modules/.bin/tsc && rollup --config rollup.config.js",
     "build:docs": "node ./scripts/docs/index.js",
+=======
+     "build": "yarn lint && ./node_modules/.bin/tsc && rollup --config rollup.config.js",
+>>>>>>> 7563fff (setup)
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "prepare": "husky install",
     "test": "jest --verbose",
