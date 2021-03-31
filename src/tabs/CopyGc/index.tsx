@@ -1,5 +1,4 @@
 import React from 'react';
-import copy_gc from '../../bundles/copy_gc';
 
 type Props = {
   children?: never;
@@ -17,44 +16,97 @@ class CopyGC extends React.Component<Props, State> {
 
   componentDidMount() {
     const { debuggerContext } = this.props;
-    console.log('the copying garbage ', copy_gc().get_memory_size);
     console.log(debuggerContext);
   }
 
   private showMemorySize = () => {
-    const memorySize = copy_gc().get_memory_size();
-    console.log('show memory size ', memorySize);
+    const { debuggerContext } = this.props;
+    const memorySize = debuggerContext.result.value.get_memory_size();
     return <span>{memorySize}</span>;
   };
 
+  private showToSpace = () => {
+    const { debuggerContext } = this.props;
+    const toSpace = debuggerContext.result.value.get_to_space();
+    return <span>{toSpace}</span>;
+  };
+
+  private showFromSpace = () => {
+    const { debuggerContext } = this.props;
+    const fromSpace = debuggerContext.result.value.get_from_space();
+    return <span>{fromSpace}</span>;
+  };
+
+  private showMemoryHeap = () => {
+    const { debuggerContext } = this.props;
+    const memoryHeap = debuggerContext.result.value.get_memory_heap();
+    return memoryHeap;
+  };
+
   public render() {
+    const memoryHeap = this.showMemoryHeap();
     return (
       <div>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <div>
           <p>This is for explanation</p>
           <p>
-            Memory size: <this.showMemorySize />
+            Memory size: <this.showMemorySize /> | To Space:{' '}
+            <this.showToSpace /> | From Space: <this.showFromSpace />
           </p>
-          <p>Tospace: {copy_gc().TO_SPACE}</p>
-          <p>from space: {copy_gc().FROM_SPACE}</p>
+          <p> Step: 1 </p>
         </div>
         <div>
           <div>
-            <p>this is from space</p>
+            <h3>From Space</h3>
             <div>
-              <p>memory space</p>
-              <canvas
-                width={10}
-                height={10}
-                style={{ backgroundColor: 'lightblue' }}
-              />
+              {memoryHeap
+                ? memoryHeap.map((item, index) => (
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <span style={{ width: 30 }}>{index}</span>
+                      {item
+                        ? item.map(() => (
+                            <div>
+                              <canvas
+                                width={10}
+                                height={10}
+                                style={{
+                                  backgroundColor: 'lightblue',
+                                  margin: 2,
+                                }}
+                              />
+                            </div>
+                          ))
+                        : false}
+                    </div>
+                  ))
+                : false}
             </div>
           </div>
           <div>
-            <p>this is to space</p>
+            <h3>To Space</h3>
             <div>
-              <p>memory space</p>
+              {memoryHeap
+                ? memoryHeap.map((item, index) => (
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <span style={{ width: 30 }}>{index}</span>
+                      {item
+                        ? item.map(() => (
+                            <div>
+                              <canvas
+                                width={10}
+                                height={10}
+                                style={{
+                                  backgroundColor: 'lightblue',
+                                  margin: 2,
+                                }}
+                              />
+                            </div>
+                          ))
+                        : false}
+                    </div>
+                  ))
+                : false}
             </div>
           </div>
         </div>
