@@ -10,27 +10,31 @@ See wiki for details: https://github.com/source-academy/modules/wiki
 
 1. Install a stable version of [NodeJS](https://nodejs.org/en/). The active LTS or current version should work fine.
 2. Install a stable version of [Yarn](https://yarnpkg.com/).
+
 ```
 $ npm install -g yarn
 ```
+
 3. Clone this repository and navigate to it in your command line or shell tool.
+
 ```
 $ git clone https://github.com/source-academy/modules.git
 $ cd modules
 ```
+
 4. Run `yarn install` to install dependencies.
 
 ### Serving the Modules' JavaScript Files
 
 1. Run `yarn run build` to transpile the modules' files from `src` folder into `build` folder.
-2. Run `yarn serve` to start the http-server on http://localhost:8022 to serve the `.js` files in `build` folder.
+2. Run `yarn serve` to start the http-server on http://localhost:8022 to serve all files in the `build` folder with the same directory structure.
 
 ### Using with Cadet Frontend
 
 1. Follow the [setup](https://github.com/source-academy/cadet-frontend#getting-started) instructions on Cadet Frontend.
-2. When [setting up](https://github.com/source-academy/cadet-frontend#getting-started) the backend configuration of Cadet Frontend, ensure that `REACT_APP_MODULE_BACKEND_URL=http://localhost:8022` from the subsection above. 
-3. Ensure that you are serving the modules' javascript files in a local server. Refer to the subsection above for instructions. 
-4. [Start up](https://github.com/source-academy/cadet-frontend#getting-started) the Cadet Frontend local development server to use the served modules. 
+2. When [setting up](https://github.com/source-academy/cadet-frontend#getting-started) the backend configuration of Cadet Frontend, ensure that `REACT_APP_MODULE_BACKEND_URL=http://localhost:8022` from the subsection above.
+3. Ensure that you are serving the modules' javascript files in a local server. Refer to the subsection above for instructions.
+4. [Start up](https://github.com/source-academy/cadet-frontend#getting-started) the Cadet Frontend local development server to use the served modules.
 
 ## License
 

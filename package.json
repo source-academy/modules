@@ -9,7 +9,7 @@
     "lint": "Check code for errors",
     "lint:fix": "Automatically fix lint errors",
     "build": "Transpile modules' files from src folder to build folder",
-    "serve": "Start the http-server to serve .js files in build folder",
+    "serve": "Start the http-server to serve all files in the build folder with the same directory structure",
     "prepare": "Enable git hooks",
     "test": "Run unit tests",
     "test:watch": "Watch files for changes and rerun tests related to changed files"
@@ -79,8 +79,9 @@
   },
   "jest": {
     "roots": [
-      "src/bundles",
-      "src/tabs"
+      "<rootDir>/src/bundles",
+      "<rootDir>/src/tabs",
+      "<rootDir>/templates"
     ]
   }
 }
