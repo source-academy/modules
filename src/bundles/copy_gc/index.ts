@@ -10,19 +10,15 @@ let MEMORY_SIZE: number = -99;
 let TO_SPACE: number;
 let FROM_SPACE: number;
 let memory: Memory;
-let memoryHeaps: Memory[];
+// eslint-disable-next-line prefer-const
+let memoryHeaps: Memory[] = [];
+let memoryMatrix: number[][];
 let tags: Tag[];
 let typeTag: string[];
+// eslint-disable-next-line prefer-const
+let flips: number[] = [];
 
-function initialise_memory(memorySize: number): void {
-  MEMORY_SIZE = memorySize;
-  COLUMN = 32;
-  ROW = MEMORY_SIZE / COLUMN;
-  ROW /= 2;
-  console.log('updating memory size ', MEMORY_SIZE);
-}
-
-function initialise_tag(allTag: Tag[], types: string[]): void {
+function initialise_tag(allTag: number[], types: string[]): void {
   tags = allTag;
   typeTag = types;
 }
@@ -33,31 +29,55 @@ function update(toSpace: number, fromSpace: number): void {
   console.log('updating space size ', TO_SPACE, ' ', FROM_SPACE);
 }
 
-function updateMemoryHeap(): void {
-  memoryHeaps = [[2, 4, 5, 2, 8, 9]];
+function updateMemoryHeap(newHeap: Memory): void {
+  console.log(
+    'new memory heap ',
+    newHeap.length,
+    ' previously size: ',
+    memoryHeaps.length
+  );
+  memoryHeaps.push(newHeap);
+  console.log('after adding heap ', memoryHeaps.length);
+}
+
+function updateFlip(): void {
+  flips.push(memoryHeaps.length - 1);
 }
 
 function generateMemory(): void {
-  memoryHeaps = [];
+  memoryMatrix = [];
   for (let i = 0; i < ROW; i += 1) {
     memory = [];
     for (let j = 0; j < COLUMN; j += 1) {
       // eslint-disable-next-line no-param-reassign
-      console.log('before pushing ', memory);
-      memory.push(i + j);
-      console.log('after pushing ', memory);
+      memory.push(i * COLUMN + j);
     }
-    console.log('tryiing to pushing ', memory);
-    memoryHeaps.push(memory);
+    memoryMatrix.push(memory);
   }
+}
+
+function initialise_memory(memorySize: number): void {
+  MEMORY_SIZE = memorySize;
+  COLUMN = 32;
+  ROW = MEMORY_SIZE / COLUMN;
+  generateMemory();
+  console.log('updating memory size ', MEMORY_SIZE);
 }
 
 function get_memory_size(): number {
   return MEMORY_SIZE;
 }
 
-function get_to_space(): number {
-  return TO_SPACE;
+function get_tags(): Tag[] {
+  return tags;
+}
+
+function get_flips(): number[] {
+  return flips;
+}
+
+function get_types(): String[] {
+  return typeTag;
 }
 
 function get_from_space(): number {
@@ -68,6 +88,22 @@ function get_memory_heap(): MemoryHeaps {
   return memoryHeaps;
 }
 
+function get_memory_matrix(): MemoryHeaps {
+  return memoryMatrix;
+}
+
+function get_to_space(): number {
+  return TO_SPACE;
+}
+
+function get_column_size(): number {
+  return COLUMN;
+}
+
+function get_row_size(): number {
+  return ROW;
+}
+
 function init() {
   return {
     toReplString: () => '<REDACTED>',
@@ -75,6 +111,12 @@ function init() {
     get_from_space,
     get_to_space,
     get_memory_heap,
+    get_tags,
+    get_types,
+    get_column_size,
+    get_row_size,
+    get_memory_matrix,
+    get_flips,
   };
 }
 
@@ -92,5 +134,32 @@ export default function copy_gc() {
     update,
     updateMemoryHeap,
     generateMemory,
+    updateFlip,
   };
 }
+
+/*
+import { 
+    copy_gc, 
+    update, 
+    initialise_memory, 
+    init, 
+    updateMemoryHeap,
+    initialise_tag,
+    updateFlip
+} from "copy_gc"; 
+
+initialise_memory(200);
+update(0, 28);
+updateMemoryHeap([20,53,65,13]);
+updateFlip();
+updateMemoryHeap([20,5,65,23]);
+updateMemoryHeap([2,523,15,143]);
+updateMemoryHeap([20,53,65,23]);
+updateFlip();
+updateMemoryHeap([2,523,15,143]);
+updateMemoryHeap([20,5,65,23]);
+initialise_tag([53,23], ['hallo', 'int']);
+
+init();
+*/
