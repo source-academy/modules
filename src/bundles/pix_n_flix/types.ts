@@ -4,13 +4,14 @@ export type ErrorLogger = (
   error: string | string[],
   isSlangError?: boolean
 ) => void;
+export type Queue = () => void;
 export type Video = {
   toReplString: () => string;
   init: (
     video: VideoElement,
     canvas: CanvasElement,
     errorLogger: ErrorLogger
-  ) => void;
+  ) => number[];
   deinit: () => void;
   startVideo: () => void;
   snapPicture: () => void;
@@ -20,7 +21,3 @@ export type Video = {
 export type Pixel = number[];
 export type Pixels = Pixel[][];
 export type Filter = (src: Pixels, dest: Pixels) => void;
-
-export const DEFAULT_WIDTH: number = 400;
-export const DEFAULT_HEIGHT: number = 300;
-export const DEFAULT_FPS: number = 10;

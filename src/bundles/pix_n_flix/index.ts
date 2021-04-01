@@ -6,10 +6,20 @@ import {
   Pixel,
   Pixels,
   Filter,
+  Queue,
+} from './types';
+
+import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
   DEFAULT_FPS,
-} from './types';
+  MAX_HEIGHT,
+  MIN_HEIGHT,
+  MAX_WIDTH,
+  MIN_WIDTH,
+  MAX_FPS,
+  MIN_FPS,
+} from './constants';
 
 /**
  * Bundle for Source Academy PixNFlix module
@@ -203,8 +213,8 @@ function snapPicture(): void {
 
 // update fps
 function updateFPS(fps: number): void {
-  // prevent too big of an increase
-  if (fps < 2 || fps > 30) {
+  // ignore if invalid inputs
+  if (fps < MIN_FPS || fps > MAX_FPS) {
     return;
   }
 
@@ -224,7 +234,14 @@ function updateFPS(fps: number): void {
 
 // update the frame dimensions
 function updateDimensions(w: number, h: number): void {
-  if ((w === WIDTH && h === HEIGHT) || w > 500 || h > 500) {
+  // ignore if no change or bad inputs
+  if (
+    (w === WIDTH && h === HEIGHT) ||
+    w > MAX_WIDTH ||
+    w < MIN_WIDTH ||
+    h > MAX_HEIGHT ||
+    h < MIN_HEIGHT
+  ) {
     return;
   }
 
@@ -249,11 +266,11 @@ function updateDimensions(w: number, h: number): void {
   startVideo();
 }
 
-let queue: Function = () => {};
+let queue: Queue = () => {};
 
 // adds function to the queue
-function enqueue(funcToAdd: Function) {
-  const funcToRunFirst: Function = queue;
+function enqueue(funcToAdd: Queue): void {
+  const funcToRunFirst: Queue = queue;
   queue = () => {
     funcToRunFirst();
     funcToAdd();
@@ -261,11 +278,12 @@ function enqueue(funcToAdd: Function) {
 }
 
 // used to initialise the video library
+// returns an array of Video's properties, [height, width, fps]
 function init(
   video: VideoElement,
   canvas: CanvasElement,
   _errorLogger: ErrorLogger
-): void {
+): number[] {
   videoElement = video;
   canvasElement = canvas;
   errorLogger = _errorLogger;
@@ -276,6 +294,7 @@ function init(
   setupData();
   loadMedia();
   queue();
+  return [HEIGHT, WIDTH, FPS];
 }
 
 // destructor that does necessary cleanup
@@ -309,7 +328,8 @@ function start(): Video {
 }
 
 /**
- * Returns the red component of a given Pixel <CODE>px</CODE>
+ * Returns the red component of a given Pixel
+ *
  * @param px - given Pixel
  * @returns the red component as a number between 0 and 255
  */
@@ -319,7 +339,8 @@ function red_of(px: Pixel): number {
 }
 
 /**
- * Returns the green component of a given Pixel <CODE>px</CODE>
+ * Returns the green component of a given Pixel
+ *
  * @param px - given Pixel
  * @returns the green component as a number between 0 and 255
  */
@@ -329,7 +350,8 @@ function green_of(px: Pixel): number {
 }
 
 /**
- * Returns the blue component of a given Pixel <CODE>px</CODE>
+ * Returns the blue component of a given Pixel
+ *
  * @param px - given Pixel
  * @returns the blue component as a number between 0 and 255
  */
@@ -339,7 +361,8 @@ function blue_of(px: Pixel): number {
 }
 
 /**
- * Returns the alpha component of a given Pixel <CODE>px</CODE>
+ * Returns the alpha component of a given Pixel
+ *
  * @param px - given Pixel
  * @returns the alpha component as a number between 0 and 255
  */
@@ -350,7 +373,8 @@ function alpha_of(px: Pixel): number {
 
 /**
  * Assigns the red, green, blue and alpha components of a pixel
- * <CODE>px</CODE> to given values
+ * to given values
+ *
  * @param px - given Pixel
  * @param r - the red component as a number between 0 and 255
  * @param g - the green component as a number between 0 and 255
@@ -372,6 +396,7 @@ function set_rgba(px: Pixel, r: number, g: number, b: number, a: number): void {
 /**
  * Returns the current height of the output video display in
  * pixels, i.e. the number of pixels in vertical direction
+ *
  * @returns height of output display (in pixels)
  */
 function video_height(): number {
@@ -381,6 +406,7 @@ function video_height(): number {
 /**
  * Returns the current width of the output video display in
  * pixels, i.e. the number of pixels in horizontal direction
+ *
  * @returns width of output display (in pixels)
  */
 function video_width(): number {
@@ -390,6 +416,7 @@ function video_width(): number {
 /**
  * The default filter that just copies the input 2D
  * grid to output
+ *
  * @param src - 2D input src of pixels
  * @param dest - 2D output src of pixels
  */
@@ -405,10 +432,12 @@ function copy_image(src: Pixels, dest: Pixels): void {
 /**
  * Installs a given filter to be used to transform
  * the images that the camera captures into images
- * displayed on the screen. A filter is a function
- * that is applied to two two-dimensional arrays
- * of Pixels: the source image and the destination
- * image.
+ * displayed on the screen.
+ *
+ * A filter is a function that is applied to two
+ * two-dimensional arrays of Pixels:
+ * the source image and the destination image.
+ *
  * @param filter - the filter to be installed
  */
 function install_filter(_filter: Filter): void {
@@ -425,6 +454,7 @@ function reset_filter(): void {
 /**
  * Returns a new filter that is the result of applying both
  * filter1 and filter2 together
+ *
  * @param filter1 - the first filter
  * @param filter2 - the second filter
  * @returns Filter after applying filter1 and filter2
@@ -439,10 +469,33 @@ function compose_filter(filter1: Filter, filter2: Filter): Filter {
 
 /**
  * Takes a snapshot of image after a set delay
- * @param delayInMs - Delay before a snapshot is taken
+ *
+ * @param delay - Delay in ms before a snapshot is taken
  */
-function snapshot(delayInMs: number): void {
-  enqueue(() => setTimeout(stopVideo, delayInMs));
+function snapshot(delay: number): void {
+  // prevent negative delays
+  enqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
+}
+
+/**
+ * Sets height of video frame
+ * Note: Only accepts height and width within the range of 1 and 500
+ *
+ * @param height - Height of video (Default value of 400)
+ * @param width - Width of video (Default value of 300)
+ */
+function set_dimensions(height: number, width: number): void {
+  enqueue(() => updateDimensions(height, width));
+}
+
+/**
+ * Sets frames per second (FPS) of the video
+ * Note: Only accepts FPS values within the range of 2 to 30
+ *
+ * @param fps - FPS of video (Default value of 10)
+ */
+function set_fps(fps: number): void {
+  enqueue(() => updateFPS(fps));
 }
 
 export default () => ({
@@ -459,4 +512,6 @@ export default () => ({
   reset_filter,
   compose_filter,
   snapshot,
+  set_dimensions,
+  set_fps,
 });

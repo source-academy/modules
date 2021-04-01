@@ -1,12 +1,18 @@
 import React from 'react';
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { ErrorLogger } from '../../bundles/pix_n_flix/types';
 import {
-  ErrorLogger,
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
   DEFAULT_FPS,
-} from '../../bundles/pix_n_flix/types';
+  MAX_HEIGHT,
+  MIN_HEIGHT,
+  MAX_WIDTH,
+  MIN_WIDTH,
+  MAX_FPS,
+  MIN_FPS,
+} from '../../bundles/pix_n_flix/constants';
 
 type Props = {
   children?: never;
@@ -29,7 +35,7 @@ type PixNFlix = {
     video: HTMLVideoElement | null,
     canvas: HTMLCanvasElement | null,
     errorLogger: ErrorLogger
-  ) => void;
+  ) => number[];
   deinit: () => void;
   startVideo: () => void;
   snapPicture: () => void;
@@ -44,7 +50,7 @@ class Repeat extends React.Component<Props, State> {
 
   private pixNFlix: PixNFlix;
 
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       width: DEFAULT_WIDTH,
@@ -70,7 +76,18 @@ class Repeat extends React.Component<Props, State> {
     if (this.$video && this.$canvas) {
       const { debuggerContext } = this.props;
       this.pixNFlix = debuggerContext.result.value;
-      this.pixNFlix.init(this.$video, this.$canvas, this.printError);
+      // get the properties of the video in an array
+      // [height, width, FPS]
+      const videoProperties: number[] = this.pixNFlix.init(
+        this.$video,
+        this.$canvas,
+        this.printError
+      );
+      this.setState({
+        height: videoProperties[0],
+        width: videoProperties[1],
+        FPS: videoProperties[2],
+      });
     }
   };
 
@@ -87,7 +104,7 @@ class Repeat extends React.Component<Props, State> {
   };
 
   public handleWidthChange = (n: number) => {
-    if (n > 0 && n <= 500) {
+    if (n >= MIN_WIDTH && n <= MAX_WIDTH) {
       this.setState((prevState) => ({
         width: n,
         height: prevState.height,
@@ -98,7 +115,7 @@ class Repeat extends React.Component<Props, State> {
   };
 
   public handleHeightChange = (m: number) => {
-    if (m > 0 && m <= 500) {
+    if (m >= MIN_HEIGHT && m <= MIN_WIDTH) {
       this.setState((prevState) => ({
         width: prevState.width,
         height: m,
@@ -109,8 +126,7 @@ class Repeat extends React.Component<Props, State> {
   };
 
   public handleFPSChange = (m: number) => {
-    // these magic numbers are based off video library
-    if (m > 2 && m < 30) {
+    if (m >= MIN_FPS && m <= MAX_FPS) {
       this.setState({
         FPS: m,
       });
@@ -187,7 +203,8 @@ class Repeat extends React.Component<Props, State> {
                 minorStepSize={1}
                 stepSize={10}
                 majorStepSize={100}
-                max={500}
+                max={MAX_WIDTH}
+                min={MIN_WIDTH}
               />
               {/* </Tooltip2> */}
             </div>
@@ -201,7 +218,8 @@ class Repeat extends React.Component<Props, State> {
                 minorStepSize={1}
                 stepSize={10}
                 majorStepSize={100}
-                max={500}
+                max={MAX_HEIGHT}
+                min={MIN_HEIGHT}
               />
               {/* </Tooltip2> */}
             </div>
@@ -215,8 +233,8 @@ class Repeat extends React.Component<Props, State> {
                 minorStepSize={null}
                 stepSize={1}
                 majorStepSize={null}
-                max={30}
-                min={2}
+                max={MAX_FPS}
+                min={MIN_FPS}
               />
               {/* </Tooltip2> */}
             </div>
@@ -230,16 +248,16 @@ class Repeat extends React.Component<Props, State> {
             }}
             autoPlay
             id='livefeed'
-            width={400}
-            height={300}
+            width={DEFAULT_WIDTH}
+            height={DEFAULT_HEIGHT}
             style={{ display: 'none' }}
           />
           <canvas
             ref={(r) => {
               this.$canvas = r;
             }}
-            width={400}
-            height={300}
+            width={DEFAULT_WIDTH}
+            height={DEFAULT_HEIGHT}
           />
           <br />
           <p style={{ fontFamily: 'courier' }}>
