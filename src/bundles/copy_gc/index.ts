@@ -12,7 +12,8 @@ let FROM_SPACE: number;
 let memory: Memory;
 // eslint-disable-next-line prefer-const
 let memoryHeaps: Memory[] = [];
-let memoryMatrix: number[][];
+let toMemoryMatrix: number[][];
+let fromMemoryMatrix: number[][];
 let tags: Tag[];
 let typeTag: string[];
 // eslint-disable-next-line prefer-const
@@ -29,15 +30,11 @@ function update(toSpace: number, fromSpace: number): void {
   console.log('updating space size ', TO_SPACE, ' ', FROM_SPACE);
 }
 
-function updateMemoryHeap(newHeap: Memory): void {
-  console.log(
-    'new memory heap ',
-    newHeap.length,
-    ' previously size: ',
-    memoryHeaps.length
-  );
-  memoryHeaps.push(newHeap);
-  console.log('after adding heap ', memoryHeaps.length);
+function updateMemoryHeap(newHeap: number[]): void {
+  if (newHeap) {
+    console.log('add new ', memoryHeaps.length, ' -- ', newHeap);
+    memoryHeaps.push(newHeap);
+  }
 }
 
 function updateFlip(): void {
@@ -45,14 +42,24 @@ function updateFlip(): void {
 }
 
 function generateMemory(): void {
-  memoryMatrix = [];
-  for (let i = 0; i < ROW; i += 1) {
+  toMemoryMatrix = [];
+  for (let i = 0; i < ROW / 2; i += 1) {
     memory = [];
-    for (let j = 0; j < COLUMN; j += 1) {
+    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
       // eslint-disable-next-line no-param-reassign
       memory.push(i * COLUMN + j);
     }
-    memoryMatrix.push(memory);
+    toMemoryMatrix.push(memory);
+  }
+
+  fromMemoryMatrix = [];
+  for (let i = ROW / 2; i < ROW; i += 1) {
+    memory = [];
+    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
+      // eslint-disable-next-line no-param-reassign
+      memory.push(i * COLUMN + j);
+    }
+    fromMemoryMatrix.push(memory);
   }
 }
 
@@ -88,8 +95,12 @@ function get_memory_heap(): MemoryHeaps {
   return memoryHeaps;
 }
 
-function get_memory_matrix(): MemoryHeaps {
-  return memoryMatrix;
+function get_to_memory_matrix(): MemoryHeaps {
+  return toMemoryMatrix;
+}
+
+function get_from_memory_matrix(): MemoryHeaps {
+  return fromMemoryMatrix;
 }
 
 function get_to_space(): number {
@@ -115,7 +126,8 @@ function init() {
     get_types,
     get_column_size,
     get_row_size,
-    get_memory_matrix,
+    get_from_memory_matrix,
+    get_to_memory_matrix,
     get_flips,
   };
 }

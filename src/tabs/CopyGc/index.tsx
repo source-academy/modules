@@ -19,15 +19,19 @@ type State = {
   memoryHeap: number[][];
   flips: number[];
   functionLength: number;
-  memoryMatrix: number[][];
+  toMemoryMatrix: number[][];
+  fromMemoryMatrix: number[][];
+  content: number;
 };
 
 class CopyGC extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
+
     this.state = {
-      value: 1,
+      value: 0,
       memorySize: 0,
+      // eslint-disable-next-line react/no-unused-state
       functionLength: 0,
       toSpace: 0,
       fromSpace: 0,
@@ -36,8 +40,11 @@ class CopyGC extends React.Component<Props, State> {
       tags: [],
       heap: [],
       memoryHeap: [],
+      // eslint-disable-next-line react/no-unused-state
       flips: [0],
-      memoryMatrix: [],
+      toMemoryMatrix: [],
+      fromMemoryMatrix: [],
+      content: -1,
     };
   }
 
@@ -57,7 +64,8 @@ class CopyGC extends React.Component<Props, State> {
     const memoryHeap = functions.get_memory_heap();
     // eslint-disable-next-line react/destructuring-assignment
     const heap = memoryHeap[this.state.value];
-    const memoryMatrix = functions.get_memory_matrix();
+    const toMemoryMatrix = functions.get_to_memory_matrix();
+    const fromMemoryMatrix = functions.get_from_memory_matrix();
     const functionLength = memoryHeap.length;
     const flips = functions.get_flips();
 
@@ -75,7 +83,8 @@ class CopyGC extends React.Component<Props, State> {
         heap,
         memoryHeap,
         functionLength,
-        memoryMatrix,
+        toMemoryMatrix,
+        fromMemoryMatrix,
         flips,
       };
     });
@@ -83,29 +92,39 @@ class CopyGC extends React.Component<Props, State> {
 
   // eslint-disable-next-line arrow-body-style
   private sliderShift = (newValue: number) => {
-    let { functionLength } = this.state;
-    functionLength = this.getlengthFunction();
-    if (newValue < functionLength) {
-      const { memoryHeap } = this.state;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-      this.setState((state: State) => {
-        return {
-          value: newValue,
-          heap: memoryHeap[newValue],
-        };
-      });
-    }
+    const { memoryHeap } = this.state;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
+    this.setState((state: State) => {
+      return {
+        value: newValue,
+        heap: memoryHeap[newValue],
+      };
+    });
+  };
+
+  // eslint-disable-next-line arrow-body-style
+  private changeContent = (index: number) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    const newContent = this.state.heap[index];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
+    this.setState((state: State) => {
+      return {
+        content: newContent,
+      };
+    });
   };
 
   private getlengthFunction = () => {
     const { debuggerContext } = this.props;
-    const memoryHeap = debuggerContext.result.value.get_memory_heap();
+    const memoryHeap = debuggerContext.result.value
+      ? debuggerContext.result.value.get_memory_heap()
+      : [];
     return memoryHeap.length;
   };
 
   private isTag = (tag) => {
     const { tags } = this.state;
-    return tags.includes(tag);
+    return tags ? tags.includes(tag) : false;
   };
 
   private getMemoryColor = (rowNumber, columnNumber) => {
@@ -130,7 +149,8 @@ class CopyGC extends React.Component<Props, State> {
   };
 
   public render() {
-    const { memoryMatrix } = this.state;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { toMemoryMatrix, fromMemoryMatrix } = this.state;
     const { state } = this;
     const lengthOfFunction = this.getlengthFunction();
     return (
@@ -142,25 +162,26 @@ class CopyGC extends React.Component<Props, State> {
             Memory size: {state.memorySize} | To Space: {state.toSpace} | From
             Space: {state.fromSpace}
           </p>
+          <p>The content: {state.content}</p>
+          <p>The heap: {state.memoryHeap.lastIndexOf(state.heap)}</p>
           <p>{lengthOfFunction}</p>
-          <p>{state.flips}</p>
           <div style={{ padding: 5 }}>
             <Slider
-              disabled={false}
+              disabled={lengthOfFunction <= 1}
               min={0}
-              max={lengthOfFunction - 1}
+              max={lengthOfFunction > 0 ? lengthOfFunction - 1 : 0}
               onChange={this.sliderShift}
               value={state.value <= 30 ? state.value : 0}
-              labelValues={state.flips}
+              // labelValues={state.flips}
             />
           </div>
         </div>
         <div>
           <div>
-            <h3>From Space</h3>
+            <h3>To Space</h3>
             <div>
-              {memoryMatrix
-                ? memoryMatrix.map((item, row) => (
+              {toMemoryMatrix && toMemoryMatrix.length > 0
+                ? toMemoryMatrix.map((item, row) => (
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <span style={{ width: 30 }}>
                         {
@@ -168,12 +189,16 @@ class CopyGC extends React.Component<Props, State> {
                           row * this.state.column
                         }
                       </span>
-                      {item
+                      {item && item.length > 0
                         ? // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
                           item.map((content, column) => {
                             const color = this.getMemoryColor(row, column);
                             return (
-                              <div style={{ width: 14, height: 15 }}>
+                              // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+                              <div
+                                style={{ width: 14, height: 15 }}
+                                // onMouseOver={() => this.changeContent(content)}
+                              >
                                 <canvas
                                   width={10}
                                   height={10}
@@ -192,25 +217,38 @@ class CopyGC extends React.Component<Props, State> {
             </div>
           </div>
           <div>
-            <h3>To Space</h3>
+            <h3>From Space</h3>
             <div>
-              {memoryMatrix
-                ? memoryMatrix.map((item, index) => (
+              {fromMemoryMatrix && fromMemoryMatrix.length > 0
+                ? fromMemoryMatrix.map((item, row) => (
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
-                      <span style={{ width: 30 }}>{index}</span>
-                      {item
-                        ? item.map(() => (
-                            <div>
-                              <canvas
-                                width={10}
-                                height={10}
-                                style={{
-                                  backgroundColor: 'lightblue',
-                                  margin: 2,
-                                }}
-                              />
-                            </div>
-                          ))
+                      <span style={{ width: 30 }}>
+                        {
+                          // eslint-disable-next-line react/destructuring-assignment
+                          row * this.state.column + state.memorySize / 2
+                        }
+                      </span>
+                      {item && item.length > 0
+                        ? // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
+                          item.map((content, column) => {
+                            const color = this.getMemoryColor(row, column);
+                            return (
+                              // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+                              <div
+                                style={{ width: 14, height: 15 }}
+                                // onMouseOver={() => this.changeContent(content)}
+                              >
+                                <canvas
+                                  width={10}
+                                  height={10}
+                                  style={{
+                                    backgroundColor: color,
+                                    // margin: 2,
+                                  }}
+                                />
+                              </div>
+                            );
+                          })
                         : false}
                     </div>
                   ))
