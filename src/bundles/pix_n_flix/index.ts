@@ -481,11 +481,11 @@ function snapshot(delay: number): void {
  * Sets height of video frame
  * Note: Only accepts height and width within the range of 1 and 500
  *
- * @param height - Height of video (Default value of 400)
  * @param width - Width of video (Default value of 300)
+ * @param height - Height of video (Default value of 400)
  */
-function set_dimensions(height: number, width: number): void {
-  enqueue(() => updateDimensions(height, width));
+function set_dimensions(width: number, height: number): void {
+  enqueue(() => updateDimensions(width, height));
 }
 
 /**

@@ -29,7 +29,7 @@ type State = {
   mode: SideContentVideoDisplayMode;
 };
 
-type PixNFlix = {
+type Video = {
   toReplString: () => string;
   init: (
     video: HTMLVideoElement | null,
@@ -43,12 +43,12 @@ type PixNFlix = {
   updateDimensions: (width: number, height: number) => void;
 };
 
-class Repeat extends React.Component<Props, State> {
+class PixNFlix extends React.Component<Props, State> {
   private $video: HTMLVideoElement | null = null;
 
   private $canvas: HTMLCanvasElement | null = null;
 
-  private pixNFlix: PixNFlix;
+  private pixNFlix: Video;
 
   constructor(props: Props) {
     super(props);
@@ -103,39 +103,33 @@ class Repeat extends React.Component<Props, State> {
     this.pixNFlix.snapPicture();
   };
 
-  public handleWidthChange = (n: number) => {
-    if (n >= MIN_WIDTH && n <= MAX_WIDTH) {
-      this.setState((prevState) => ({
-        width: n,
-        height: prevState.height,
-      }));
-      const { height } = this.state;
-      this.handleUpdateDimensions(n, height);
-    }
+  public handleWidthChange = (width: number) => {
+    const { height } = this.state;
+    this.handleUpdateDimensions(width, height);
   };
 
-  public handleHeightChange = (m: number) => {
-    if (m >= MIN_HEIGHT && m <= MIN_WIDTH) {
-      this.setState((prevState) => ({
-        width: prevState.width,
-        height: m,
-      }));
-      const { width } = this.state;
-      this.handleUpdateDimensions(width, m);
-    }
+  public handleHeightChange = (height: number) => {
+    const { width } = this.state;
+    this.handleUpdateDimensions(width, height);
   };
 
-  public handleFPSChange = (m: number) => {
-    if (m >= MIN_FPS && m <= MAX_FPS) {
+  public handleFPSChange = (fps: number) => {
+    if (fps >= MIN_FPS && fps <= MAX_FPS) {
       this.setState({
-        FPS: m,
+        FPS: fps,
       });
-      this.pixNFlix.updateFPS(m);
+      this.pixNFlix.updateFPS(fps);
     }
   };
 
-  public handleUpdateDimensions = (n: number, m: number) => {
-    this.pixNFlix.updateDimensions(n, m);
+  public handleUpdateDimensions = (w: number, h: number) => {
+    if (w >= MIN_WIDTH && w <= MAX_WIDTH && h >= MIN_HEIGHT && h <= MIN_WIDTH) {
+      this.setState({
+        width: w,
+        height: h,
+      });
+      this.pixNFlix.updateDimensions(w, h);
+    }
   };
 
   public printError: ErrorLogger = () => {};
@@ -272,7 +266,9 @@ class Repeat extends React.Component<Props, State> {
 
 export default {
   toSpawn: () => true,
-  body: (debuggerContext: any) => <Repeat debuggerContext={debuggerContext} />,
+  body: (debuggerContext: any) => (
+    <PixNFlix debuggerContext={debuggerContext} />
+  ),
   label: 'PixNFlix Live Feed',
   iconName: 'mobile-video',
 };
