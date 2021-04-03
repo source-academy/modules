@@ -1,0 +1,370 @@
+{
+	"id": 0,
+	"name": "Source Academy Modules",
+	"kind": 0,
+	"flags": {},
+	"children": [
+		{
+			"id": 12,
+			"name": "BINARYTREES",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"comment": {
+				"shortText": "BINARYTREES provide functions for binary trees, as covered the textbook\n[Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)](https://sicp.comp.nus.edu.sg/)\nin [section 2.3.3 Example: Representing Sets](https://sicp.comp.nus.edu.sg/chapters/37).\nClick on a name on the left to see how they are defined and used."
+			},
+			"originalName": "binary_tree/functions",
+			"children": [
+				{
+					"id": 13,
+					"name": "make_empty_tree",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "binary_tree/functions.ts",
+							"line": 19,
+							"character": 31
+						}
+					],
+					"signatures": [
+						{
+							"id": 14,
+							"name": "make_empty_tree",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns an empty binary tree, represented by the empty list null",
+								"returns": "An empty binary tree\n",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n```typescript\ndisplay(make_empty_tree()); // Shows \"[]\" in the REPL\n```"
+									}
+								]
+							},
+							"type": {
+								"type": "reference",
+								"name": "BinaryTree"
+							}
+						}
+					]
+				},
+				{
+					"id": 15,
+					"name": "make_tree",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "binary_tree/functions.ts",
+							"line": 35,
+							"character": 25
+						}
+					],
+					"signatures": [
+						{
+							"id": 16,
+							"name": "make_tree",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a binary tree node composed of the specified left subtree, value and right subtree.",
+								"returns": "A binary tree\n",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n```typescript\nconst tree = make_tree(1, make_empty_tree(), make_empty_tree());\ndisplay(tree); // Shows \"[null, 1, null]\" in the REPL\n```"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 17,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Value to be stored in the node"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "any"
+									}
+								},
+								{
+									"id": 18,
+									"name": "left",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Left subtree of the node"
+									},
+									"type": {
+										"type": "reference",
+										"name": "BinaryTree"
+									}
+								},
+								{
+									"id": 19,
+									"name": "right",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Right subtree of the node"
+									},
+									"type": {
+										"type": "reference",
+										"name": "BinaryTree"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "BinaryTree"
+							}
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						13,
+						15
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "binary_tree/functions.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 1,
+			"name": "REPEAT",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"comment": {
+				"shortText": "This is the official documentation for the Repeat module."
+			},
+			"originalName": "repeat/functions",
+			"children": [
+				{
+					"id": 2,
+					"name": "repeat",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "repeat/functions.ts",
+							"line": 18,
+							"character": 22
+						}
+					],
+					"signatures": [
+						{
+							"id": 3,
+							"name": "repeat",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a new function which when applied to an argument, has the same effect\nas applying the specified function to the same argument n times.",
+								"returns": "the new function that has the same effect as func repeated n times\n",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n```typescript\nconst plusFour = repeat(x => x + 2);\nplusFour(0); // Returns 4\n```"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 4,
+									"name": "func",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the function to be repeated"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Function"
+									}
+								},
+								{
+									"id": 5,
+									"name": "n",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the number of times to repeat the function"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Function"
+							}
+						}
+					]
+				},
+				{
+					"id": 9,
+					"name": "thrice",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "repeat/functions.ts",
+							"line": 48,
+							"character": 22
+						}
+					],
+					"signatures": [
+						{
+							"id": 10,
+							"name": "thrice",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a new function which when applied to an argument, has the same effect\nas applying the specified function to the same argument 3 times.",
+								"returns": "the new function that has the same effect as `(x => func(func(func(x))))`\n",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n```typescript\nconst plusNine = thrice(x => x + 3);\nplusNine(0); // Returns 9\n```"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 11,
+									"name": "func",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the function to be repeated"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Function"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Function"
+							}
+						}
+					]
+				},
+				{
+					"id": 6,
+					"name": "twice",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "repeat/functions.ts",
+							"line": 33,
+							"character": 21
+						}
+					],
+					"signatures": [
+						{
+							"id": 7,
+							"name": "twice",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a new function which when applied to an argument, has the same effect\nas applying the specified function to the same argument 2 times.",
+								"returns": "the new function that has the same effect as `(x => func(func(x)))`\n",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n```typescript\nconst plusTwo = twice(x => x + 1);\nplusTwo(2); // Returns 4\n```"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 8,
+									"name": "func",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the function to be repeated"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Function"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Function"
+							}
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						2,
+						9,
+						6
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "repeat/functions.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		}
+	],
+	"groups": [
+		{
+			"title": "Modules",
+			"kind": 1,
+			"children": [
+				12,
+				1
+			]
+		}
+	]
+}

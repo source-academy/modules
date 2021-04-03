@@ -13,9 +13,9 @@
         globalThis.process = { env:env };
     })();
 
-    function repeat(func,n){return n===0?function(x){return x}:function(x){return func(repeat(func,n-1)(x))}}function twice(func){return repeat(func,2)}function thrice(func){return repeat(func,3)}
+    function make_empty_tree(){return null}function make_tree(value,left,right){return [left,value,right]}
 
-    var index = (function(){return {repeat:repeat,twice:twice,thrice:thrice}});
+    var index = (function(){return {make_empty_tree:make_empty_tree,make_tree:make_tree}});
 
     return index;
 
