@@ -565,36 +565,33 @@ function connect_ends(
   );
 }
 
-// SOME CURVES
-
 /**
- * this function is a curve: a function from a fraction t to a point.
- * The points lie on the unit circle. They start at Point (1,0)
- * when t is 0. When t is 0.25, they reach Point (0,1), when t is 0.5,
- * they reach Point (-1, 0), etc.
+ * this function is a curve: a function from a fraction t to a point. The points
+ * lie on the unit circle. They start at Point (1,0) when t is 0. When t is
+ * 0.25, they reach Point (0,1), when t is 0.5, they reach Point (-1, 0), etc.
  *
  * @param t - fraction between 0 and 1
- * @returns Point in the circle at t
+ * @returns Point on the circle at t
  */
 function unit_circle(t: number): Point {
   return make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
 }
 
 /**
- * this function is a curve: a function from a fraction t to a point.
- * The x-coordinate at franction t is t, and the y-coordinate is 0.
+ * this function is a curve: a function from a fraction t to a point. The
+ * x-coordinate at franction t is t, and the y-coordinate is 0.
  *
  * @param t - fraction between 0 and 1
- * @returns Point in the line at t
+ * @returns Point on the line at t
  */
 function unit_line(t: number): Point {
   return make_point(t, 0);
 }
 
 /**
- * this function is a Curve generator: it takes a number and
- * returns a horizontal curve. The number is a y-coordinate,
- * and the Curve generates only points with the given y-coordinate.
+ * this function is a Curve generator: it takes a number and returns a
+ * horizontal curve. The number is a y-coordinate, and the Curve generates only
+ * points with the given y-coordinate.
  *
  * @param t - fraction between 0 and 1
  * @returns horizontal Curve
@@ -605,10 +602,10 @@ function unit_line_at(t: number): CurveFunction {
 
 // made available for Mission 6
 /**
- * this function is a curve: a function from a fraction t to a point.
- * The points lie on the right half of the unit circle. They start at
- * Point (0,1) when t is 0. When t is 0.5, they reach Point (1,0),
- * when t is 1, they reach Point (0, -1).
+ * this function is a curve: a function from a fraction t to a point. The points
+ * lie on the right half of the unit circle. They start at Point (0,1) when t is
+ * 0. When t is 0.5, they reach Point (1,0), when t is 1, they reach Point
+ * (0, -1).
  *
  * @param t - fraction between 0 and 1
  * @returns Point in the arc at t
