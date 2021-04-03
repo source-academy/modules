@@ -37,6 +37,10 @@ function updateMemoryHeap(newHeap: number[]): void {
   }
 }
 
+function allHeap(newHeap: number[][]): void {
+  memoryHeaps = newHeap;
+}
+
 function updateFlip(): void {
   flips.push(memoryHeaps.length - 1);
 }
@@ -147,6 +151,7 @@ export default function copy_gc() {
     updateMemoryHeap,
     generateMemory,
     updateFlip,
+    allHeap,
   };
 }
 
