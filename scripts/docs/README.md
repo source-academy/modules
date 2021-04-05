@@ -6,8 +6,8 @@ Source is a family of languages, designed for the textbook [Structure and Interp
 
 The Source Academy comes with the following external libraries:
 
-- [BINARYTREES](http://localhost:8022/documentation/modules/binary_tree.html)
-- [REPEAT](http://localhost:8022/documentation/modules/repeat.html)
+- [BINARYTREES](https://source-academy.github.io/modules/documentation/modules/binarytrees.html)
+- [REPEAT](https://source-academy.github.io/modules/documentation/modules/repeat.html)
 
 ## Style Guide
 
