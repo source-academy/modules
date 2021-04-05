@@ -17,7 +17,7 @@ type Props = {
 
 type State = {};
 
-class Canvas extends React.Component<Props, State> {
+class WebGLCanvas extends React.Component<Props, State> {
   private $canvas: HTMLCanvasElement | null = null;
 
   constructor(props) {
@@ -64,7 +64,7 @@ export default {
     }
     return isValidFunction(context.result.value);
   },
-  body: (context: any) => <Canvas context={context} />,
+  body: (context: any) => <WebGLCanvas context={context} />,
   label: 'Curves Canvas',
   iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options
 };
