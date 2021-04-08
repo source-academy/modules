@@ -39,6 +39,7 @@ class CopyGC extends React.Component<Props, State> {
       toSpace: 0,
       fromSpace: 0,
       column: 0,
+      // eslint-disable-next-line react/no-unused-state
       row: 0,
       tags: [],
       heap: [],
@@ -169,28 +170,44 @@ class CopyGC extends React.Component<Props, State> {
     return tags ? tags.includes(tag) : false;
   };
 
-  private getMemoryColor = (rowNumber, columnNumber, indexValue) => {
-    const { firstChild } = this.state;
-    const { lastChild } = this.state;
+  private getMemoryColor = (indexValue) => {
     const { heap } = this.state;
-    const size1 = heap[firstChild + SIZE_SLOT];
-    const size2 = heap[lastChild + SIZE_SLOT];
-    // const { fromSpace, toSpace } = this.state;
     // eslint-disable-next-line react/destructuring-assignment
     const value = heap ? heap[indexValue] : 0;
     let color = '';
 
-    if (indexValue >= firstChild && indexValue <= firstChild + size1) {
-      color = 'red';
-    } else if (indexValue >= lastChild && indexValue <= lastChild + size2) {
-      color = 'yellow';
-    } else if (!value) {
+    if (!value) {
       color = '#707070';
     } else if (this.isTag(value)) {
       // is a tag
       color = 'salmon';
     } else {
       color = 'lightblue';
+    }
+
+    return color;
+  };
+
+  private getBackgroundColor = (indexValue) => {
+    const { firstChild } = this.state;
+    const { lastChild } = this.state;
+    const { heap } = this.state;
+    const size1 = heap[firstChild + SIZE_SLOT];
+    const size2 = heap[lastChild + SIZE_SLOT];
+    const { command } = this.state;
+    let color = '';
+    console.log('background color ', firstChild, firstChild + size1);
+    if (command === 'flip') {
+      if (indexValue === firstChild) {
+        color = '#42a870';
+      }
+      if (indexValue === lastChild) {
+        color = '#f0d60e';
+      }
+    } else if (indexValue >= firstChild && indexValue <= firstChild + size1) {
+      color = '#42a870'; // green
+    } else if (indexValue >= lastChild && indexValue <= lastChild + size2) {
+      color = '#f0d60e'; // yellow
     }
 
     return color;
@@ -207,10 +224,7 @@ class CopyGC extends React.Component<Props, State> {
         <div>
           <p>This is for explanation</p>
           <h3>{state.command}</h3>
-          <p>
-            Memory size: {state.memorySize} | To Space: {state.toSpace} | From
-            Space: {state.fromSpace}
-          </p>
+          <p>Memory size: {state.memorySize}</p>
           <p>{lengthOfFunction}</p>
           <div style={{ padding: 5 }}>
             <Slider
@@ -239,15 +253,12 @@ class CopyGC extends React.Component<Props, State> {
                       {item && item.length > 0
                         ? // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
                           item.map((content, column) => {
-                            const color = this.getMemoryColor(
-                              row + state.row / 2,
-                              column,
-                              content
-                            );
+                            const color = this.getMemoryColor(content);
+                            const bgColor = this.getBackgroundColor(content);
                             return (
                               // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
                               <div
-                                style={{ width: 14 }}
+                                style={{ width: 14, backgroundColor: bgColor }}
                                 // onMouseOver={() => this.changeContent(content)}
                               >
                                 <canvas
@@ -259,12 +270,6 @@ class CopyGC extends React.Component<Props, State> {
                                   }}
                                   // onClick={() => this.updateChild(content)}
                                 />
-                                <span>
-                                  {state.firstChild === content ? '^' : ''}
-                                </span>
-                                <span>
-                                  {state.lastChild === content ? '*' : ''}
-                                </span>
                               </div>
                             );
                           })
@@ -289,15 +294,12 @@ class CopyGC extends React.Component<Props, State> {
                       {item && item.length > 0
                         ? // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
                           item.map((content, column) => {
-                            const color = this.getMemoryColor(
-                              row,
-                              column,
-                              content
-                            );
+                            const color = this.getMemoryColor(content);
+                            const bgColor = this.getBackgroundColor(content);
                             return (
                               // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
                               <div
-                                style={{ width: 14, height: 15 }}
+                                style={{ width: 14, backgroundColor: bgColor }}
                                 // onMouseOver={() => this.changeContent(content)}
                               >
                                 <canvas
@@ -308,12 +310,6 @@ class CopyGC extends React.Component<Props, State> {
                                     // margin: 2,
                                   }}
                                 />
-                                <span>
-                                  {state.firstChild === content ? '^' : ''}
-                                </span>
-                                <span>
-                                  {state.lastChild === content ? '*' : ''}
-                                </span>
                               </div>
                             );
                           })

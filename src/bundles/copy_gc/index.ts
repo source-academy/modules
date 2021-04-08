@@ -87,7 +87,7 @@ function generateMemory(): void {
   commandHeap.push(obj);
 }
 
-function initialise_memory(memorySize: number): void {
+function initialize_memory(memorySize: number): void {
   MEMORY_SIZE = memorySize;
   ROW = MEMORY_SIZE / COLUMN;
   generateMemory();
@@ -262,7 +262,7 @@ export default function copy_gc() {
   return {
     init,
     // initialisation
-    initialise_memory,
+    initialize_memory,
     initialise_tag,
     updateMemoryHeap,
     generateMemory,
