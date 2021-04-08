@@ -1086,6 +1086,7 @@
     react-popper "^2.2.4"
     tslib "~1.13.0"
 
+<<<<<<< HEAD
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -1094,6 +1095,8 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+=======
+>>>>>>> 6cc2516 (add copy func)
 "@eslint/eslintrc@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.0.tgz#99cc0a0584d72f1df38b900fb062ba995f395547"
@@ -1402,9 +1405,15 @@
     read-package-json-fast "^2.0.1"
 
 "@popperjs/core@^2.5.4":
+<<<<<<< HEAD
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.9.1.tgz#7f554e7368c9ab679a11f4a042ca17149d70cf12"
   integrity sha512-DvJbbn3dUgMxDnJLH+RZQPnXak1h4ZVYQ7CWiFWjQwBFkVajT4rfw2PdpHLTSTwxrYfnoEXkuBiwkDm6tPMQeA==
+=======
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.9.2.tgz#adea7b6953cbb34651766b0548468e743c6a2353"
+  integrity sha512-VZMYa7+fXHdwIq1TDhSXoVmSPEGM/aa+6Aiq3nVVJ9bXr24zScr+NlKFKC3iPljA7ho/GAZr+d2jOf5GIRC30Q==
+>>>>>>> 6cc2516 (add copy func)
 
 "@rollup/plugin-babel@^5.3.0":
   version "5.3.0"

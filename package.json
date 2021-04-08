@@ -19,12 +19,16 @@
     "lint": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src",
     "lint:fix": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src --fix",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "build": "yarn lint && yarn build:docs && yarn build:modules",
     "build:modules": "./node_modules/.bin/tsc && rollup --config rollup.config.js",
     "build:docs": "node ./scripts/docs/index.js",
 =======
      "build": "yarn lint && ./node_modules/.bin/tsc && rollup --config rollup.config.js",
 >>>>>>> 7563fff (setup)
+=======
+    "build": "yarn lint && ./node_modules/.bin/tsc && rollup --config rollup.config.js",
+>>>>>>> 6cc2516 (add copy func)
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "prepare": "husky install",
     "test": "jest --verbose",
@@ -72,7 +76,10 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.42.0",
+<<<<<<< HEAD
     "@blueprintjs/icons": "^3.26.0",
+=======
+>>>>>>> 6cc2516 (add copy func)
     "@blueprintjs/popover2": "^0.4.0",
     "chalk": "^4.1.0",
     "dayjs": "^1.10.4",
