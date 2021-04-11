@@ -1,7 +1,5 @@
 import React from 'react';
-import { Slider, Icon } from '@blueprintjs/core';
-import { THEME_COLOR } from './style';
-import { COMMAND } from '../../bundles/copy_gc/types';
+import { Slider } from '@blueprintjs/core';
 
 type Props = {
   children?: never;
@@ -13,7 +11,6 @@ type State = {
   value: number;
   memorySize: number;
   toSpace: number;
-  fromSpace: number;
   column: number;
   row: number;
   tags: number[];
@@ -23,12 +20,12 @@ type State = {
   flips: number[];
   functionLength: number;
   toMemoryMatrix: number[][];
-  fromMemoryMatrix: number[][];
   firstChild: number;
   lastChild: number;
 };
 
-class CopyGC extends React.Component<Props, State> {
+const SIZE_SLOT = 1;
+class MarkSweep extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
 
@@ -37,9 +34,8 @@ class CopyGC extends React.Component<Props, State> {
       memorySize: 0,
       // eslint-disable-next-line react/no-unused-state
       functionLength: 0,
-      toSpace: 0,
       // eslint-disable-next-line react/no-unused-state
-      fromSpace: 0,
+      toSpace: 0,
       column: 0,
       // eslint-disable-next-line react/no-unused-state
       row: 0,
@@ -49,7 +45,6 @@ class CopyGC extends React.Component<Props, State> {
       // eslint-disable-next-line react/no-unused-state
       flips: [0],
       toMemoryMatrix: [],
-      fromMemoryMatrix: [],
       firstChild: -1,
       lastChild: -1,
       command: '',
@@ -70,7 +65,6 @@ class CopyGC extends React.Component<Props, State> {
     const commandHeap = functions.get_command();
     let heap = [];
     let toSpace = -1;
-    let fromSpace = -1;
     let command = '';
     let firstChild = -1;
     let lastChild = -1;
@@ -79,14 +73,12 @@ class CopyGC extends React.Component<Props, State> {
       const currentHeap = commandHeap[0];
       heap = currentHeap.heap;
       toSpace = currentHeap.to;
-      fromSpace = currentHeap.from;
       command = currentHeap.type;
       firstChild = currentHeap.left;
       lastChild = currentHeap.right;
     }
 
     const toMemoryMatrix = functions.get_to_memory_matrix();
-    const fromMemoryMatrix = functions.get_from_memory_matrix();
     const functionLength = commandHeap.length;
     const flips = functions.get_flips();
 
@@ -95,14 +87,12 @@ class CopyGC extends React.Component<Props, State> {
       return {
         memorySize,
         toSpace,
-        fromSpace,
         column,
         row,
         tags,
         heap,
         functionLength,
         toMemoryMatrix,
-        fromMemoryMatrix,
         flips,
         commandHeap,
         command,
@@ -120,48 +110,10 @@ class CopyGC extends React.Component<Props, State> {
       return {
         value: newValue,
         heap: commandHeap[newValue].heap,
-        fromSpace: commandHeap[newValue].from,
         toSpace: commandHeap[newValue].to,
         command: commandHeap[newValue].type,
         firstChild: commandHeap[newValue].left,
         lastChild: commandHeap[newValue].right,
-      };
-    });
-  };
-
-  private handlePlus = () => {
-    let { value } = this.state;
-    const lengthOfFunction = this.getlengthFunction();
-    const { commandHeap } = this.state;
-    if (value < lengthOfFunction - 1) value += 1;
-    // eslint-disable-next-line arrow-body-style
-    this.setState(() => {
-      return {
-        value,
-        heap: commandHeap[value].heap,
-        fromSpace: commandHeap[value].from,
-        toSpace: commandHeap[value].to,
-        command: commandHeap[value].type,
-        firstChild: commandHeap[value].left,
-        lastChild: commandHeap[value].right,
-      };
-    });
-  };
-
-  private handleMinus = () => {
-    let { value } = this.state;
-    const { commandHeap } = this.state;
-    if (value > 0) value -= 1;
-    // eslint-disable-next-line arrow-body-style
-    this.setState(() => {
-      return {
-        value,
-        heap: commandHeap[value].heap,
-        fromSpace: commandHeap[value].from,
-        toSpace: commandHeap[value].to,
-        command: commandHeap[value].type,
-        firstChild: commandHeap[value].left,
-        lastChild: commandHeap[value].right,
       };
     });
   };
@@ -216,12 +168,12 @@ class CopyGC extends React.Component<Props, State> {
     let color = '';
 
     if (!value) {
-      color = THEME_COLOR.GREY;
+      color = '#707070';
     } else if (this.isTag(value)) {
       // is a tag
-      color = THEME_COLOR.PINK;
+      color = 'salmon';
     } else {
-      color = THEME_COLOR.BLUE;
+      color = 'lightblue';
     }
 
     return color;
@@ -230,90 +182,41 @@ class CopyGC extends React.Component<Props, State> {
   private getBackgroundColor = (indexValue) => {
     const { firstChild } = this.state;
     const { lastChild } = this.state;
-    const { commandHeap, value } = this.state;
-
-    const size1 = commandHeap[value].sizeLeft;
-    const size2 = commandHeap[value].sizeRight;
+    const { heap } = this.state;
+    const size1 = heap[firstChild + SIZE_SLOT];
+    const size2 = heap[lastChild + SIZE_SLOT];
     const { command } = this.state;
     let color = '';
     console.log('background color ', firstChild, firstChild + size1);
-    if (command === COMMAND.FLIP) {
+    if (command === 'flip') {
       if (indexValue === firstChild) {
-        color = THEME_COLOR.GREEN;
+        color = '#42a870';
       }
       if (indexValue === lastChild) {
-        color = THEME_COLOR.YELLOW;
+        color = '#f0d60e';
       }
-    } else if (indexValue >= firstChild && indexValue < firstChild + size1) {
-      color = THEME_COLOR.GREEN; // green
-    } else if (indexValue >= lastChild && indexValue < lastChild + size2) {
-      color = THEME_COLOR.YELLOW; // yellow
+    } else if (indexValue >= firstChild && indexValue <= firstChild + size1) {
+      color = '#42a870'; // green
+    } else if (indexValue >= lastChild && indexValue <= lastChild + size2) {
+      color = '#f0d60e'; // yellow
     }
 
     return color;
   };
 
-  // eslint-disable-next-line arrow-body-style
-  private renderLabel = (val: number) => {
-    const { flips } = this.state;
-    return flips.includes(val) ? `^` : `${val}`;
-  };
-
   public render() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { toMemoryMatrix, fromMemoryMatrix } = this.state;
+    const { toMemoryMatrix } = this.state;
     const { state } = this;
     const lengthOfFunction = this.getlengthFunction();
     return (
       <div>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <div>
-          <p>
-            This is a visualiser for copying garbage collector. Check the guide
-            here*.
-          </p>
+          <p>This is for explanation</p>
           <h3>{state.command}</h3>
-          {state.command === COMMAND.SCAN ? (
-            <p>
-              Scanning node at {state.commandHeap[state.value].left} for
-              children node from {state.commandHeap[state.value].scan} to{' '}
-              {state.commandHeap[state.value].free}
-            </p>
-          ) : (
-            <p> Some explanation needed </p>
-          )}
-          <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
-            <div style={{ flex: 1 }}>
-              <canvas
-                width={10}
-                height={10}
-                style={{
-                  backgroundColor: THEME_COLOR.GREEN,
-                }}
-              />
-              <span> current green</span>
-            </div>
-            <div style={{ flex: 1 }}>
-              <canvas
-                width={10}
-                height={10}
-                style={{
-                  backgroundColor: THEME_COLOR.YELLOW,
-                }}
-              />
-              <span> current yellow</span>
-            </div>
-          </div>
-          <br />
-          <p>
-            Current step:
-            {'   '}
-            <Icon icon='remove' onClick={this.handleMinus} />
-            {'   '}
-            {state.value}
-            {'   '}
-            <Icon icon='add' onClick={this.handlePlus} />
-          </p>
+          <p>Memory size: {state.memorySize}</p>
+          <p>{lengthOfFunction}</p>
           <div style={{ padding: 5 }}>
             <Slider
               disabled={lengthOfFunction <= 1}
@@ -322,13 +225,11 @@ class CopyGC extends React.Component<Props, State> {
               onChange={this.sliderShift}
               value={state.value <= lengthOfFunction ? state.value : 0}
               labelValues={state.flips}
-              labelRenderer={this.renderLabel}
             />
           </div>
         </div>
         <div>
           <div>
-            <h3>{state.toSpace === 0 ? 'To Space' : 'From Space'}</h3>
             <div>
               {toMemoryMatrix && toMemoryMatrix.length > 0
                 ? toMemoryMatrix.map((item, row) => (
@@ -368,78 +269,6 @@ class CopyGC extends React.Component<Props, State> {
                 : false}
             </div>
           </div>
-          <div>
-            <h3>{state.toSpace > 0 ? 'To Space' : 'From Space'}</h3>
-            <div>
-              {fromMemoryMatrix && fromMemoryMatrix.length > 0
-                ? fromMemoryMatrix.map((item, row) => (
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                      <span style={{ width: 30 }}>
-                        {
-                          // eslint-disable-next-line react/destructuring-assignment
-                          row * this.state.column + state.memorySize / 2
-                        }
-                      </span>
-                      {item && item.length > 0
-                        ? // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-                          item.map((content, column) => {
-                            const color = this.getMemoryColor(content);
-                            const bgColor = this.getBackgroundColor(content);
-                            return (
-                              // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-                              <div
-                                style={{ width: 14, backgroundColor: bgColor }}
-                                // onMouseOver={() => this.changeContent(content)}
-                              >
-                                <canvas
-                                  width={10}
-                                  height={10}
-                                  style={{
-                                    backgroundColor: color,
-                                    // margin: 2,
-                                  }}
-                                />
-                              </div>
-                            );
-                          })
-                        : false}
-                    </div>
-                  ))
-                : false}
-            </div>
-          </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
-          <div style={{ flex: 1 }}>
-            <canvas
-              width={10}
-              height={10}
-              style={{
-                backgroundColor: THEME_COLOR.BLUE,
-              }}
-            />
-            <span> defined</span>
-          </div>
-          <div style={{ flex: 1 }}>
-            <canvas
-              width={10}
-              height={10}
-              style={{
-                backgroundColor: THEME_COLOR.PINK,
-              }}
-            />
-            <span> tag</span>
-          </div>
-          <div style={{ flex: 1 }}>
-            <canvas
-              width={10}
-              height={10}
-              style={{
-                backgroundColor: THEME_COLOR.GREY,
-              }}
-            />
-            <span> empty or undefined</span>
-          </div>
         </div>
       </div>
     );
@@ -448,7 +277,9 @@ class CopyGC extends React.Component<Props, State> {
 
 export default {
   toSpawn: () => true,
-  body: (debuggerContext: any) => <CopyGC debuggerContext={debuggerContext} />,
-  label: 'Copying Garbage Collector',
+  body: (debuggerContext: any) => (
+    <MarkSweep debuggerContext={debuggerContext} />
+  ),
+  label: 'Mark Sweep Garbage Collector',
   iconName: 'build',
 };

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-use-before-define
-import { MemoryHeaps, Memory, Tag, COMMAND } from './types';
+import { MemoryHeaps, Memory, Tag } from './types';
 
 // exported functions
 
@@ -56,23 +56,13 @@ function updateFlip(): void {
 
 function generateMemory(): void {
   toMemoryMatrix = [];
-  for (let i = 0; i < ROW / 2; i += 1) {
-    memory = [];
-    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE / 2; j += 1) {
-      // eslint-disable-next-line no-param-reassign
-      memory.push(i * COLUMN + j);
-    }
-    toMemoryMatrix.push(memory);
-  }
-
-  fromMemoryMatrix = [];
-  for (let i = ROW / 2; i < ROW; i += 1) {
+  for (let i = 0; i < ROW; i += 1) {
     memory = [];
     for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
       // eslint-disable-next-line no-param-reassign
       memory.push(i * COLUMN + j);
     }
-    fromMemoryMatrix.push(memory);
+    toMemoryMatrix.push(memory);
   }
 
   const obj = {
@@ -82,61 +72,24 @@ function generateMemory(): void {
     heap: [],
     left: -1,
     right: -1,
-    sizeLeft: 0,
-    sizeRight: 0,
   };
 
   commandHeap.push(obj);
 }
 
-function resetToSpace(toSpace, heap): any {
-  // eslint-disable-next-line prefer-const
-  let newHeap: any[] = [];
-  if (toSpace > 0) {
-    for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
-      newHeap.push(heap[i]);
-    }
-    for (let i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
-      newHeap.push(0);
-    }
-  } else {
-    // to space between 0...M/2
-    for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
-      newHeap.push(0);
-    }
-    for (let i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
-      newHeap.push(heap[i]);
-    }
-  }
-  return newHeap;
-}
-
 function initialize_memory(memorySize: number): void {
   MEMORY_SIZE = memorySize;
   ROW = MEMORY_SIZE / COLUMN;
-  TO_SPACE = 0;
-  FROM_SPACE = MEMORY_SIZE / 2;
   generateMemory();
   console.log('updating memory size ', MEMORY_SIZE);
 }
 
-function newCommand(
-  type,
-  toSpace,
-  fromSpace,
-  left,
-  right,
-  sizeLeft,
-  sizeRight,
-  heap
-): void {
+function newCommand(type, toSpace, fromSpace, left, right, heap): void {
   const newType = type;
   const newToSpace = toSpace;
   const newFromSpace = fromSpace;
   const newLeft = left;
   const newRight = right;
-  const newSizeLeft = sizeLeft;
-  const newSizeRight = sizeRight;
   memory = [];
   for (let j = 0; j < heap.length; j += 1) {
     // eslint-disable-next-line no-param-reassign
@@ -150,8 +103,6 @@ function newCommand(
     heap: memory,
     left: newLeft,
     right: newRight,
-    sizeLeft: newSizeLeft,
-    sizeRight: newSizeRight,
   };
 
   commandHeap.push(obj);
@@ -161,33 +112,16 @@ function newCopy(left, right, heap): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
-  const newSizeLeft = heap[left + SIZE_SLOT];
-  const newSizeRight = heap[right + SIZE_SLOT];
 
-  newCommand(
-    COMMAND.COPY,
-    toSpace,
-    fromSpace,
-    left,
-    right,
-    newSizeLeft,
-    newSizeRight,
-    heap
-  );
+  newCommand('Copy', toSpace, fromSpace, left, right, heap);
 }
 
-function newFlip(left, heap): void {
+function newFlip(left, right, heap): void {
   const { length } = commandHeap;
   const fromSpace = commandHeap[length - 1].to;
   const toSpace = commandHeap[length - 1].from;
-  const newSizeLeft = heap[left + SIZE_SLOT];
 
-  newCommand(COMMAND.FLIP, toSpace, fromSpace, left, -1, newSizeLeft, 0, heap);
-  updateFlip();
-}
-
-function startFlip(toSpace, fromSpace, heap): void {
-  newCommand('Start of Cheneys', toSpace, fromSpace, -1, -1, 0, 0, heap);
+  newCommand('Flip', toSpace, fromSpace, left, right, heap);
   updateFlip();
 }
 
@@ -195,16 +129,16 @@ function newPush(left, right, heap): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
-  newCommand(COMMAND.PUSH, toSpace, fromSpace, left, right, 1, 1, heap);
+  newCommand('Push OS', toSpace, fromSpace, left, right, heap);
 }
 
-function newPop(res, left, right, heap): void {
+function newPop(res, left, heap): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
-  const comment: String = `${COMMAND.POP} OS (RES = ${newRes} )`;
-  newCommand(comment, toSpace, fromSpace, left, right, 1, 1, heap);
+  const comment: String = `Pop OS (RES = ${newRes} )`;
+  newCommand(comment, toSpace, fromSpace, left, -1, heap);
 }
 
 function newAssign(res, left, heap): void {
@@ -212,47 +146,15 @@ function newAssign(res, left, heap): void {
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
-  const comment = `${COMMAND.ASSIGN} memory [${left}] with ${newRes} `;
-  newCommand(comment, toSpace, fromSpace, left, -1, 1, 1, heap);
+  const comment = `Assign [${left}] = ${newRes} )`;
+  newCommand(comment, toSpace, fromSpace, left, -1, heap);
 }
 
-function newNew(left, heap): void {
+function newNew(left, right, heap): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
-  const newSizeLeft = heap[left + SIZE_SLOT];
-  newCommand(COMMAND.NEW, toSpace, fromSpace, left, -1, newSizeLeft, 0, heap);
-}
-
-function scanFlip(left, right, scan, free, heap): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
-  memory = [];
-  for (let j = 0; j < heap.length; j += 1) {
-    // eslint-disable-next-line no-param-reassign
-    memory.push(heap[j]);
-  }
-
-  const newLeft = left;
-  const newRight = right;
-  const newScan = scan;
-  const newFree = free;
-
-  const obj = {
-    type: COMMAND.SCAN,
-    to: toSpace,
-    from: fromSpace,
-    heap: memory,
-    left: newLeft,
-    right: newRight,
-    sizeLeft: 1,
-    sizeRight: 1,
-    scan: newScan,
-    free: newFree,
-  };
-
-  commandHeap.push(obj);
+  newCommand('New', toSpace, fromSpace, left, right, heap);
 }
 
 function updateSlotSegment(
@@ -346,7 +248,7 @@ function init() {
   };
 }
 
-export default function copy_gc() {
+export default function mark_sweep() {
   return {
     init,
     // initialisation
@@ -356,7 +258,6 @@ export default function copy_gc() {
     generateMemory,
     allHeap,
     updateSlotSegment,
-    resetToSpace,
     newCommand,
     newCopy,
     newFlip,
@@ -364,8 +265,6 @@ export default function copy_gc() {
     newPop,
     newAssign,
     newNew,
-    scanFlip,
-    startFlip,
   };
 }
 

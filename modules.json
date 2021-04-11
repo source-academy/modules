@@ -21,6 +21,11 @@
     "tabs": [
       "Curves"
     ]
+  },
+  "mark_sweep": {
+    "tabs": [
+      "MarkSweep"
+    ]
   }
   
 }
