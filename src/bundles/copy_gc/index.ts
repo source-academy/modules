@@ -84,6 +84,9 @@ function generateMemory(): void {
     right: -1,
     sizeLeft: 0,
     sizeRight: 0,
+    desc: 'Memory initially empty.',
+    leftDesc: '',
+    rightDesc: '',
   };
 
   commandHeap.push(obj);
@@ -128,7 +131,10 @@ function newCommand(
   right,
   sizeLeft,
   sizeRight,
-  heap
+  heap,
+  description,
+  firstDesc,
+  lastDesc
 ): void {
   const newType = type;
   const newToSpace = toSpace;
@@ -137,6 +143,10 @@ function newCommand(
   const newRight = right;
   const newSizeLeft = sizeLeft;
   const newSizeRight = sizeRight;
+  const newDesc = description;
+  const newFirstDesc = firstDesc;
+  const newLastDesc = lastDesc;
+
   memory = [];
   for (let j = 0; j < heap.length; j += 1) {
     // eslint-disable-next-line no-param-reassign
@@ -152,6 +162,9 @@ function newCommand(
     right: newRight,
     sizeLeft: newSizeLeft,
     sizeRight: newSizeRight,
+    desc: newDesc,
+    leftDesc: newFirstDesc,
+    rightDesc: newLastDesc,
   };
 
   commandHeap.push(obj);
@@ -163,7 +176,7 @@ function newCopy(left, right, heap): void {
   const fromSpace = commandHeap[length - 1].from;
   const newSizeLeft = heap[left + SIZE_SLOT];
   const newSizeRight = heap[right + SIZE_SLOT];
-
+  const desc = `Copying node ${left} to ${right}`;
   newCommand(
     COMMAND.COPY,
     toSpace,
@@ -172,7 +185,10 @@ function newCopy(left, right, heap): void {
     right,
     newSizeLeft,
     newSizeRight,
-    heap
+    heap,
+    desc,
+    'index',
+    'free'
   );
 }
 
@@ -181,13 +197,38 @@ function newFlip(left, heap): void {
   const fromSpace = commandHeap[length - 1].to;
   const toSpace = commandHeap[length - 1].from;
   const newSizeLeft = heap[left + SIZE_SLOT];
-
-  newCommand(COMMAND.FLIP, toSpace, fromSpace, left, -1, newSizeLeft, 0, heap);
+  const desc = 'Flip finished';
+  newCommand(
+    COMMAND.FLIP,
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    newSizeLeft,
+    0,
+    heap,
+    desc,
+    'free',
+    ''
+  );
   updateFlip();
 }
 
 function startFlip(toSpace, fromSpace, heap): void {
-  newCommand('Start of Cheneys', toSpace, fromSpace, -1, -1, 0, 0, heap);
+  const desc = 'Memory is exhausted. Start stop and copy garbage collector.';
+  newCommand(
+    'Start of Cheneys',
+    toSpace,
+    fromSpace,
+    -1,
+    -1,
+    0,
+    0,
+    heap,
+    desc,
+    '',
+    ''
+  );
   updateFlip();
 }
 
@@ -195,7 +236,20 @@ function newPush(left, right, heap): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
-  newCommand(COMMAND.PUSH, toSpace, fromSpace, left, right, 1, 1, heap);
+  const desc = `Push OS update memory ${left} and ${right}.`;
+  newCommand(
+    COMMAND.PUSH,
+    toSpace,
+    fromSpace,
+    left,
+    right,
+    1,
+    1,
+    heap,
+    desc,
+    'last child address slot',
+    'new child pushed'
+  );
 }
 
 function newPop(res, left, right, heap): void {
@@ -203,8 +257,20 @@ function newPop(res, left, right, heap): void {
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
-  const comment: String = `${COMMAND.POP} OS (RES = ${newRes} )`;
-  newCommand(comment, toSpace, fromSpace, left, right, 1, 1, heap);
+  const desc = `Pop OS from memory ${right}, with value ${newRes}.`;
+  newCommand(
+    COMMAND.POP,
+    toSpace,
+    fromSpace,
+    left,
+    right,
+    1,
+    1,
+    heap,
+    desc,
+    'popped memory',
+    'last child address slot'
+  );
 }
 
 function newAssign(res, left, heap): void {
@@ -212,8 +278,20 @@ function newAssign(res, left, heap): void {
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
-  const comment = `${COMMAND.ASSIGN} memory [${left}] with ${newRes} `;
-  newCommand(comment, toSpace, fromSpace, left, -1, 1, 1, heap);
+  const desc = `Assign memory [${left}] with ${newRes}.`;
+  newCommand(
+    COMMAND.ASSIGN,
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    1,
+    1,
+    heap,
+    desc,
+    'assigned memory',
+    ''
+  );
 }
 
 function newNew(left, heap): void {
@@ -221,7 +299,20 @@ function newNew(left, heap): void {
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newSizeLeft = heap[left + SIZE_SLOT];
-  newCommand(COMMAND.NEW, toSpace, fromSpace, left, -1, newSizeLeft, 0, heap);
+  const desc = `New node starts in [${left}].`;
+  newCommand(
+    COMMAND.NEW,
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    newSizeLeft,
+    0,
+    heap,
+    desc,
+    'new memory allocated',
+    ''
+  );
 }
 
 function scanFlip(left, right, scan, free, heap): void {
@@ -238,6 +329,7 @@ function scanFlip(left, right, scan, free, heap): void {
   const newRight = right;
   const newScan = scan;
   const newFree = free;
+  const newDesc = `Scanning node at ${left} for children node from ${scan} to ${free}`;
 
   const obj = {
     type: COMMAND.SCAN,
@@ -250,6 +342,9 @@ function scanFlip(left, right, scan, free, heap): void {
     sizeRight: 1,
     scan: newScan,
     free: newFree,
+    desc: newDesc,
+    leftDesc: 'scan',
+    rightDesc: 'free',
   };
 
   commandHeap.push(obj);

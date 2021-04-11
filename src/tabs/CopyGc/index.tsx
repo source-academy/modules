@@ -26,6 +26,9 @@ type State = {
   fromMemoryMatrix: number[][];
   firstChild: number;
   lastChild: number;
+  description: String;
+  leftDesc: String;
+  rightDesc: String;
 };
 
 class CopyGC extends React.Component<Props, State> {
@@ -53,6 +56,9 @@ class CopyGC extends React.Component<Props, State> {
       firstChild: -1,
       lastChild: -1,
       command: '',
+      description: '',
+      rightDesc: '',
+      leftDesc: '',
     };
   }
 
@@ -74,7 +80,9 @@ class CopyGC extends React.Component<Props, State> {
     let command = '';
     let firstChild = -1;
     let lastChild = -1;
-
+    let description = '';
+    let leftDesc = '';
+    let rightDesc = '';
     if (commandHeap[0]) {
       const currentHeap = commandHeap[0];
       heap = currentHeap.heap;
@@ -83,6 +91,9 @@ class CopyGC extends React.Component<Props, State> {
       command = currentHeap.type;
       firstChild = currentHeap.left;
       lastChild = currentHeap.right;
+      description = currentHeap.desc;
+      leftDesc = currentHeap.leftDesc;
+      rightDesc = currentHeap.rightDesc;
     }
 
     const toMemoryMatrix = functions.get_to_memory_matrix();
@@ -108,6 +119,9 @@ class CopyGC extends React.Component<Props, State> {
         command,
         firstChild,
         lastChild,
+        description,
+        leftDesc,
+        rightDesc,
       };
     });
   };
@@ -125,6 +139,9 @@ class CopyGC extends React.Component<Props, State> {
         command: commandHeap[newValue].type,
         firstChild: commandHeap[newValue].left,
         lastChild: commandHeap[newValue].right,
+        description: commandHeap[newValue].desc,
+        leftDesc: commandHeap[newValue].leftDesc,
+        rightDesc: commandHeap[newValue].rightDesc,
       };
     });
   };
@@ -144,6 +161,9 @@ class CopyGC extends React.Component<Props, State> {
         command: commandHeap[value].type,
         firstChild: commandHeap[value].left,
         lastChild: commandHeap[value].right,
+        description: commandHeap[value].desc,
+        leftDesc: commandHeap[value].leftDesc,
+        rightDesc: commandHeap[value].rightDesc,
       };
     });
   };
@@ -162,6 +182,9 @@ class CopyGC extends React.Component<Props, State> {
         command: commandHeap[value].type,
         firstChild: commandHeap[value].left,
         lastChild: commandHeap[value].right,
+        description: commandHeap[value].desc,
+        leftDesc: commandHeap[value].leftDesc,
+        rightDesc: commandHeap[value].rightDesc,
       };
     });
   };
@@ -273,15 +296,7 @@ class CopyGC extends React.Component<Props, State> {
             here*.
           </p>
           <h3>{state.command}</h3>
-          {state.command === COMMAND.SCAN ? (
-            <p>
-              Scanning node at {state.commandHeap[state.value].left} for
-              children node from {state.commandHeap[state.value].scan} to{' '}
-              {state.commandHeap[state.value].free}
-            </p>
-          ) : (
-            <p> Some explanation needed </p>
-          )}
+          <p> {state.description} </p>
           <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
             <div style={{ flex: 1 }}>
               <canvas
@@ -291,18 +306,22 @@ class CopyGC extends React.Component<Props, State> {
                   backgroundColor: THEME_COLOR.GREEN,
                 }}
               />
-              <span> current green</span>
+              <span> {state.leftDesc} </span>
             </div>
-            <div style={{ flex: 1 }}>
-              <canvas
-                width={10}
-                height={10}
-                style={{
-                  backgroundColor: THEME_COLOR.YELLOW,
-                }}
-              />
-              <span> current yellow</span>
-            </div>
+            {state.rightDesc ? (
+              <div style={{ flex: 1 }}>
+                <canvas
+                  width={10}
+                  height={10}
+                  style={{
+                    backgroundColor: THEME_COLOR.YELLOW,
+                  }}
+                />
+                <span> {state.rightDesc} </span>
+              </div>
+            ) : (
+              false
+            )}
           </div>
           <br />
           <p>
@@ -450,5 +469,5 @@ export default {
   toSpawn: () => true,
   body: (debuggerContext: any) => <CopyGC debuggerContext={debuggerContext} />,
   label: 'Copying Garbage Collector',
-  iconName: 'build',
+  iconName: 'duplicate',
 };
