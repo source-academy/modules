@@ -1,11 +1,12 @@
 // eslint-disable-next-line no-use-before-define
-import { MemoryHeaps, Memory, Tag } from './types';
+import { MemoryHeaps, Memory, Tag, COMMAND } from './types';
 
 // exported functions
 
 // Global Variables
 let ROW: number = 10;
 const COLUMN: number = 32;
+let NODE_SIZE: number = 0;
 let MEMORY_SIZE: number = -99;
 let TO_SPACE: number;
 let FROM_SPACE: number;
@@ -26,6 +27,62 @@ let TAG_SLOT: number = 0;
 let SIZE_SLOT: number = 1;
 let FIRST_CHILD_SLOT: number = 2;
 let LAST_CHILD_SLOT: number = 3;
+let MARKED: number = 1;
+let UNMARKED: number = 0;
+
+function generateMemory(): void {
+  toMemoryMatrix = [];
+  for (let i = 0; i < ROW; i += 1) {
+    memory = [];
+    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
+      // eslint-disable-next-line no-param-reassign
+      memory.push(i * COLUMN + j);
+    }
+    toMemoryMatrix.push(memory);
+  }
+
+  fromMemoryMatrix = [];
+  for (let i = ROW / 2; i < ROW; i += 1) {
+    memory = [];
+    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
+      // eslint-disable-next-line no-param-reassign
+      memory.push(i * COLUMN + j);
+    }
+    fromMemoryMatrix.push(memory);
+  }
+
+  const obj = {
+    type: 'init',
+    to: TO_SPACE,
+    from: FROM_SPACE,
+    heap: [],
+    left: -1,
+    right: -1,
+    sizeLeft: 0,
+    sizeRight: 0,
+    desc: 'Memory initially empty.',
+    leftDesc: '',
+    rightDesc: '',
+  };
+
+  commandHeap.push(obj);
+}
+
+function initialize_memory(
+  memorySize: number,
+  nodeSize,
+  marked,
+  unmarked
+): void {
+  MEMORY_SIZE = memorySize;
+  NODE_SIZE = nodeSize;
+  const excess = MEMORY_SIZE % NODE_SIZE;
+  MEMORY_SIZE -= excess;
+  ROW = MEMORY_SIZE / COLUMN;
+  MARKED = marked;
+  UNMARKED = unmarked;
+  generateMemory();
+}
 
 function initialise_tag(allTag: number[], types: string[]): void {
   tags = allTag;
@@ -54,46 +111,63 @@ function updateFlip(): void {
   flips.push(commandHeap.length - 1);
 }
 
-function generateMemory(): void {
-  toMemoryMatrix = [];
-  for (let i = 0; i < ROW; i += 1) {
-    memory = [];
-    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
-      // eslint-disable-next-line no-param-reassign
-      memory.push(i * COLUMN + j);
+function resetToSpace(toSpace, heap): any {
+  // eslint-disable-next-line prefer-const
+  let newHeap: any[] = [];
+  if (toSpace > 0) {
+    for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
+      newHeap.push(heap[i]);
     }
-    toMemoryMatrix.push(memory);
+    for (let i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
+      newHeap.push(0);
+    }
+  } else {
+    // to space between 0...M/2
+    for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
+      newHeap.push(0);
+    }
+    for (let i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
+      newHeap.push(heap[i]);
+    }
   }
-
-  const obj = {
-    type: 'init',
-    to: TO_SPACE,
-    from: FROM_SPACE,
-    heap: [],
-    left: -1,
-    right: -1,
-  };
-
-  commandHeap.push(obj);
+  return newHeap;
 }
 
-function initialize_memory(memorySize: number): void {
-  MEMORY_SIZE = memorySize;
-  ROW = MEMORY_SIZE / COLUMN;
-  generateMemory();
-  console.log('updating memory size ', MEMORY_SIZE);
-}
-
-function newCommand(type, toSpace, fromSpace, left, right, heap): void {
+function newCommand(
+  type,
+  toSpace,
+  fromSpace,
+  left,
+  right,
+  sizeLeft,
+  sizeRight,
+  heap,
+  description,
+  firstDesc,
+  lastDesc,
+  queue = []
+): void {
   const newType = type;
   const newToSpace = toSpace;
   const newFromSpace = fromSpace;
   const newLeft = left;
   const newRight = right;
+  const newSizeLeft = sizeLeft;
+  const newSizeRight = sizeRight;
+  const newDesc = description;
+  const newFirstDesc = firstDesc;
+  const newLastDesc = lastDesc;
+
   memory = [];
   for (let j = 0; j < heap.length; j += 1) {
     // eslint-disable-next-line no-param-reassign
     memory.push(heap[j]);
+  }
+  // eslint-disable-next-line prefer-const
+  let newQueue: number[] = [];
+  for (let j = 0; j < queue.length; j += 1) {
+    // eslint-disable-next-line no-param-reassign
+    newQueue.push(queue[j]);
   }
 
   const obj = {
@@ -103,42 +177,99 @@ function newCommand(type, toSpace, fromSpace, left, right, heap): void {
     heap: memory,
     left: newLeft,
     right: newRight,
+    sizeLeft: newSizeLeft,
+    sizeRight: newSizeRight,
+    desc: newDesc,
+    leftDesc: newFirstDesc,
+    rightDesc: newLastDesc,
+    queue: newQueue,
   };
 
   commandHeap.push(obj);
 }
 
-function newCopy(left, right, heap): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
-
-  newCommand('Copy', toSpace, fromSpace, left, right, heap);
+function newMark(left, heap, queue): void {
+  const toSpace = 0;
+  const fromSpace = 0;
+  const newSizeLeft = NODE_SIZE;
+  const newSizeRight = NODE_SIZE;
+  const desc = `Marking node ${left} to be live memory`;
+  newCommand(
+    'MARK',
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    newSizeLeft,
+    newSizeRight,
+    heap,
+    desc,
+    'marked node',
+    '',
+    queue
+  );
 }
 
-function newFlip(left, right, heap): void {
-  const { length } = commandHeap;
-  const fromSpace = commandHeap[length - 1].to;
-  const toSpace = commandHeap[length - 1].from;
-
-  newCommand('Flip', toSpace, fromSpace, left, right, heap);
-  updateFlip();
+function newSweep(left, heap): void {
+  const toSpace = 0;
+  const fromSpace = 0;
+  const newSizeLeft = NODE_SIZE;
+  const newSizeRight = NODE_SIZE;
+  const desc = `Freeing node ${left}`;
+  newCommand(
+    'SWEEP',
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    newSizeLeft,
+    newSizeRight,
+    heap,
+    desc,
+    'freed node',
+    ''
+  );
 }
 
 function newPush(left, right, heap): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
-  newCommand('Push OS', toSpace, fromSpace, left, right, heap);
+  const desc = `Push OS update memory ${left} and ${right}.`;
+  newCommand(
+    COMMAND.PUSH,
+    toSpace,
+    fromSpace,
+    left,
+    right,
+    1,
+    1,
+    heap,
+    desc,
+    'last child address slot',
+    'new child pushed'
+  );
 }
 
-function newPop(res, left, heap): void {
+function newPop(res, left, right, heap): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
-  const comment: String = `Pop OS (RES = ${newRes} )`;
-  newCommand(comment, toSpace, fromSpace, left, -1, heap);
+  const desc = `Pop OS from memory ${right}, with value ${newRes}.`;
+  newCommand(
+    COMMAND.POP,
+    toSpace,
+    fromSpace,
+    left,
+    right,
+    1,
+    1,
+    heap,
+    desc,
+    'popped memory',
+    'last child address slot'
+  );
 }
 
 function newAssign(res, left, heap): void {
@@ -146,15 +277,62 @@ function newAssign(res, left, heap): void {
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
-  const comment = `Assign [${left}] = ${newRes} )`;
-  newCommand(comment, toSpace, fromSpace, left, -1, heap);
+  const desc = `Assign memory [${left}] with ${newRes}.`;
+  newCommand(
+    COMMAND.ASSIGN,
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    1,
+    1,
+    heap,
+    desc,
+    'assigned memory',
+    ''
+  );
 }
 
-function newNew(left, right, heap): void {
+function newNew(left, heap): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
-  newCommand('New', toSpace, fromSpace, left, right, heap);
+  const newSizeLeft = NODE_SIZE;
+  const desc = `New node starts in [${left}].`;
+  newCommand(
+    COMMAND.NEW,
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    newSizeLeft,
+    0,
+    heap,
+    desc,
+    'new memory allocated',
+    ''
+  );
+}
+
+function newGC(heap): void {
+  const { length } = commandHeap;
+  const toSpace = commandHeap[length - 1].to;
+  const fromSpace = commandHeap[length - 1].from;
+  const desc = `Memory exhausted, start Mark and Sweep Algorithm`;
+  newCommand(
+    'Mark and Sweep Start',
+    toSpace,
+    fromSpace,
+    -1,
+    -1,
+    0,
+    0,
+    heap,
+    desc,
+    '',
+    ''
+  );
+  updateFlip();
 }
 
 function updateSlotSegment(
@@ -229,6 +407,14 @@ function get_row_size(): number {
   return ROW;
 }
 
+function get_unmarked(): number {
+  return UNMARKED;
+}
+
+function get_marked(): number {
+  return MARKED;
+}
+
 function init() {
   return {
     toReplString: () => '<REDACTED>',
@@ -245,10 +431,12 @@ function init() {
     get_flips,
     get_slots,
     get_command,
+    get_unmarked,
+    get_marked,
   };
 }
 
-export default function mark_sweep() {
+export default function copy_gc() {
   return {
     init,
     // initialisation
@@ -258,13 +446,15 @@ export default function mark_sweep() {
     generateMemory,
     allHeap,
     updateSlotSegment,
+    resetToSpace,
     newCommand,
-    newCopy,
-    newFlip,
+    newMark,
     newPush,
     newPop,
     newAssign,
     newNew,
+    newGC,
+    newSweep,
   };
 }
 

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Slider } from '@blueprintjs/core';
+import { Slider, Icon } from '@blueprintjs/core';
+import { THEME_COLOR } from './style';
+// import { COMMAND } from '../../bundles/mark_sweep/types';
 
 type Props = {
   children?: never;
@@ -22,15 +24,22 @@ type State = {
   toMemoryMatrix: number[][];
   firstChild: number;
   lastChild: number;
+  description: String;
+  leftDesc: String;
+  rightDesc: String;
+  unmarked: number;
+  marked: number;
+  queue: number[];
 };
 
-const SIZE_SLOT = 1;
+const MARK_SLOT = 1;
 class MarkSweep extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
 
     this.state = {
       value: 0,
+      // eslint-disable-next-line react/no-unused-state
       memorySize: 0,
       // eslint-disable-next-line react/no-unused-state
       functionLength: 0,
@@ -46,8 +55,15 @@ class MarkSweep extends React.Component<Props, State> {
       flips: [0],
       toMemoryMatrix: [],
       firstChild: -1,
+      // eslint-disable-next-line react/no-unused-state
       lastChild: -1,
       command: '',
+      description: '',
+      rightDesc: '',
+      leftDesc: '',
+      unmarked: 0,
+      marked: 1,
+      queue: [],
     };
   }
 
@@ -63,12 +79,17 @@ class MarkSweep extends React.Component<Props, State> {
     const row = functions.get_row_size();
     const tags = functions.get_tags();
     const commandHeap = functions.get_command();
+    const unmarked = functions.get_unmarked();
+    const marked = functions.get_marked();
     let heap = [];
     let toSpace = -1;
     let command = '';
     let firstChild = -1;
     let lastChild = -1;
-
+    let description = '';
+    let leftDesc = '';
+    let rightDesc = '';
+    let queue = [];
     if (commandHeap[0]) {
       const currentHeap = commandHeap[0];
       heap = currentHeap.heap;
@@ -76,6 +97,10 @@ class MarkSweep extends React.Component<Props, State> {
       command = currentHeap.type;
       firstChild = currentHeap.left;
       lastChild = currentHeap.right;
+      description = currentHeap.desc;
+      leftDesc = currentHeap.leftDesc;
+      rightDesc = currentHeap.rightDesc;
+      queue = currentHeap.queue;
     }
 
     const toMemoryMatrix = functions.get_to_memory_matrix();
@@ -98,6 +123,53 @@ class MarkSweep extends React.Component<Props, State> {
         command,
         firstChild,
         lastChild,
+        description,
+        leftDesc,
+        rightDesc,
+        unmarked,
+        marked,
+        queue,
+      };
+    });
+  };
+
+  private handlePlus = () => {
+    let { value } = this.state;
+    const lengthOfFunction = this.getlengthFunction();
+    const { commandHeap } = this.state;
+    if (value < lengthOfFunction - 1) value += 1;
+    // eslint-disable-next-line arrow-body-style
+    this.setState(() => {
+      return {
+        value,
+        heap: commandHeap[value].heap,
+        command: commandHeap[value].type,
+        firstChild: commandHeap[value].left,
+        lastChild: commandHeap[value].right,
+        description: commandHeap[value].desc,
+        leftDesc: commandHeap[value].leftDesc,
+        rightDesc: commandHeap[value].rightDesc,
+        queue: commandHeap[value].queue,
+      };
+    });
+  };
+
+  private handleMinus = () => {
+    let { value } = this.state;
+    const { commandHeap } = this.state;
+    if (value > 0) value -= 1;
+    // eslint-disable-next-line arrow-body-style
+    this.setState(() => {
+      return {
+        value,
+        heap: commandHeap[value].heap,
+        command: commandHeap[value].type,
+        firstChild: commandHeap[value].left,
+        lastChild: commandHeap[value].right,
+        description: commandHeap[value].desc,
+        leftDesc: commandHeap[value].leftDesc,
+        rightDesc: commandHeap[value].rightDesc,
+        queue: commandHeap[value].queue,
       };
     });
   };
@@ -114,6 +186,10 @@ class MarkSweep extends React.Component<Props, State> {
         command: commandHeap[newValue].type,
         firstChild: commandHeap[newValue].left,
         lastChild: commandHeap[newValue].right,
+        description: commandHeap[newValue].desc,
+        leftDesc: commandHeap[newValue].leftDesc,
+        rightDesc: commandHeap[newValue].rightDesc,
+        queue: commandHeap[newValue].queue,
       };
     });
   };
@@ -162,18 +238,24 @@ class MarkSweep extends React.Component<Props, State> {
   };
 
   private getMemoryColor = (indexValue) => {
-    const { heap } = this.state;
+    const { heap, marked, unmarked } = this.state;
     // eslint-disable-next-line react/destructuring-assignment
     const value = heap ? heap[indexValue] : 0;
     let color = '';
 
-    if (!value) {
-      color = '#707070';
+    if (this.isTag(heap[indexValue - MARK_SLOT])) {
+      if (value === marked) {
+        color = 'red';
+      } else if (value === unmarked) {
+        color = 'black';
+      }
+    } else if (!value) {
+      color = THEME_COLOR.GREY;
     } else if (this.isTag(value)) {
       // is a tag
-      color = 'salmon';
+      color = THEME_COLOR.PINK;
     } else {
-      color = 'lightblue';
+      color = THEME_COLOR.BLUE;
     }
 
     return color;
@@ -181,27 +263,22 @@ class MarkSweep extends React.Component<Props, State> {
 
   private getBackgroundColor = (indexValue) => {
     const { firstChild } = this.state;
-    const { lastChild } = this.state;
-    const { heap } = this.state;
-    const size1 = heap[firstChild + SIZE_SLOT];
-    const size2 = heap[lastChild + SIZE_SLOT];
-    const { command } = this.state;
+    const { commandHeap, value } = this.state;
+
+    const size1 = commandHeap[value].sizeLeft;
     let color = '';
     console.log('background color ', firstChild, firstChild + size1);
-    if (command === 'flip') {
-      if (indexValue === firstChild) {
-        color = '#42a870';
-      }
-      if (indexValue === lastChild) {
-        color = '#f0d60e';
-      }
-    } else if (indexValue >= firstChild && indexValue <= firstChild + size1) {
-      color = '#42a870'; // green
-    } else if (indexValue >= lastChild && indexValue <= lastChild + size2) {
-      color = '#f0d60e'; // yellow
+    if (indexValue >= firstChild && indexValue < firstChild + size1) {
+      color = THEME_COLOR.GREEN; // green
     }
 
     return color;
+  };
+
+  // eslint-disable-next-line arrow-body-style
+  private renderLabel = (val: number) => {
+    const { flips } = this.state;
+    return flips.includes(val) ? `^` : `${val}`;
   };
 
   public render() {
@@ -213,10 +290,48 @@ class MarkSweep extends React.Component<Props, State> {
       <div>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <div>
-          <p>This is for explanation</p>
+          <p>
+            This is a visualiser for mark and sweep garbage collector. Check the
+            guide here*.
+          </p>
           <h3>{state.command}</h3>
-          <p>Memory size: {state.memorySize}</p>
-          <p>{lengthOfFunction}</p>
+          <p> {state.description} </p>
+          <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+            <div style={{ flex: 1 }}>
+              <canvas
+                width={10}
+                height={10}
+                style={{
+                  backgroundColor: THEME_COLOR.GREEN,
+                }}
+              />
+              <span> {state.leftDesc} </span>
+            </div>
+            {state.rightDesc ? (
+              <div style={{ flex: 1 }}>
+                <canvas
+                  width={10}
+                  height={10}
+                  style={{
+                    backgroundColor: THEME_COLOR.YELLOW,
+                  }}
+                />
+                <span> {state.rightDesc} </span>
+              </div>
+            ) : (
+              false
+            )}
+          </div>
+          <br />
+          <p>
+            Current step:
+            {'   '}
+            <Icon icon='remove' onClick={this.handleMinus} />
+            {'   '}
+            {state.value}
+            {'   '}
+            <Icon icon='add' onClick={this.handlePlus} />
+          </p>
           <div style={{ padding: 5 }}>
             <Slider
               disabled={lengthOfFunction <= 1}
@@ -225,6 +340,7 @@ class MarkSweep extends React.Component<Props, State> {
               onChange={this.sliderShift}
               value={state.value <= lengthOfFunction ? state.value : 0}
               labelValues={state.flips}
+              labelRenderer={this.renderLabel}
             />
           </div>
         </div>
@@ -268,6 +384,55 @@ class MarkSweep extends React.Component<Props, State> {
                   ))
                 : false}
             </div>
+            <div>
+              {state.queue && state.queue.length ? (
+                <div>
+                  <br />
+                  <span> Queue: [</span>
+                  {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
+                    state.queue.map((child) => {
+                      return <span style={{ fontSize: 10 }}> {child}, </span>;
+                    })
+                  }
+                  <span> ] </span>
+                </div>
+              ) : (
+                false
+              )}
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+            <div style={{ flex: 1 }}>
+              <canvas
+                width={10}
+                height={10}
+                style={{
+                  backgroundColor: THEME_COLOR.BLUE,
+                }}
+              />
+              <span> defined</span>
+            </div>
+            <div style={{ flex: 1 }}>
+              <canvas
+                width={10}
+                height={10}
+                style={{
+                  backgroundColor: THEME_COLOR.PINK,
+                }}
+              />
+              <span> tag</span>
+            </div>
+            <div style={{ flex: 1 }}>
+              <canvas
+                width={10}
+                height={10}
+                style={{
+                  backgroundColor: THEME_COLOR.GREY,
+                }}
+              />
+              <span> empty or undefined</span>
+            </div>
           </div>
         </div>
       </div>
@@ -281,5 +446,5 @@ export default {
     <MarkSweep debuggerContext={debuggerContext} />
   ),
   label: 'Mark Sweep Garbage Collector',
-  iconName: 'build',
+  iconName: 'heat-grid',
 };
