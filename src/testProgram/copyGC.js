@@ -1,11 +1,18 @@
 import { 
-    copy_gc, 
     init,
-    initialise_memory,
-    allHeap,
+    initialize_memory,
     initialise_tag,
-    update
+    newCopy,
+    newFlip,
+    newPush,
+    newPop,
+    newAssign,
+    newNew,
+    scanFlip,
+    startFlip,
+    resetToSpace
 } from "copy_gc"; 
+
 
 /* 
 Virtual machine for language Source §1-
@@ -838,8 +845,7 @@ function initialize_machine(heapsize) {
     RUNNING = true;
     STATE = NORMAL;
     PC = 0;
-    update(TO_SPACE, FROM_SPACE);
-    initialise_memory(heapsize);
+    initialize_memory(heapsize);
     initialise_tag([NUMBER_TAG, BOOL_TAG, UNDEFINED_TAG, OS_TAG, CLOSURE_TAG, RTS_FRAME_TAG, ENV_TAG],
         ["NUMBER", "BOOL", "UNDEFINED", "OS", "CLOSURE", "RTS_FRAME", "ENV"]);
 }
@@ -864,7 +870,9 @@ function copy(idx) {
         RES = HEAP[idx + FORWARDING_ADDRESS];
     } else {
         R = FREE;
+        
         move(idx, FREE);
+        newCopy(idx, FREE, HEAP);
         FREE = FREE + HEAP[idx + SIZE_SLOT];
         HEAP[idx + FORWARDING_ADDRESS] = R;
         RES = R;
@@ -872,18 +880,11 @@ function copy(idx) {
     // display("Free is " + stringify(FREE));
 }
 
-let ALLHEAP = [];
-let ALLHEAPINDEX = 0;
-function updateMemoryHeap() {
-    ALLHEAP[ALLHEAPINDEX] = HEAP;
-    let TEMP = ALLHEAPINDEX;
-    ALLHEAPINDEX = TEMP+1;
-}
-
 function flip() {
     display("flipping!");
     // show_heap("before");
     //show_registers("before");
+    startFlip(TO_SPACE, FROM_SPACE, HEAP);
     K = TO_SPACE;
     TO_SPACE = FROM_SPACE;
     FROM_SPACE = K;
@@ -900,8 +901,9 @@ function flip() {
         copy(RTS[O]); RTS[O] = RES;
     }
     I = TO_SPACE;
-    // show_heap("Medium");
+
     while (I < FREE) {
+        scanFlip(I, FREE, HEAP[I + HEAP[I + FIRST_CHILD_SLOT]], HEAP[I + HEAP[I + LAST_CHILD_SLOT]], HEAP);
         for (O = HEAP[I + FIRST_CHILD_SLOT]; O <= HEAP[I + LAST_CHILD_SLOT]; O = O + 1) {
             // display("I is " + stringify(I));
             // display("O is " + stringify(O));
@@ -911,7 +913,10 @@ function flip() {
         I = I + HEAP[I + SIZE_SLOT];
     }
     display("Flip finished!");
-    updateMemoryHeap();
+    
+    newFlip(FREE, HEAP);
+    HEAP = resetToSpace(FROM_SPACE, HEAP);
+    
 }
 
 // NEW expects tag in A and size in B
@@ -929,6 +934,7 @@ function NEW() {
 	} else {}
     HEAP[FREE + TAG_SLOT] = J;
     HEAP[FREE + SIZE_SLOT] = Q;
+    newNew(FREE, HEAP);
     RES = FREE;
     FREE = FREE + Q;
 }
@@ -1040,6 +1046,7 @@ function PUSH_OS() {
     B = B + 1; 
     HEAP[OS + LAST_CHILD_SLOT] = B; // update address of current top of OS
     HEAP[OS + B] = A;
+    newPush(OS + LAST_CHILD_SLOT, OS+B, HEAP);
 }
 
 // POP puts the top-most value into RES
@@ -1048,6 +1055,7 @@ function POP_OS() {
     B = HEAP[OS + LAST_CHILD_SLOT]; // address of current top of OS
     HEAP[OS + LAST_CHILD_SLOT] = B - 1; // update address of current top of OS
     RES = HEAP[OS + B];
+    newPop(RES, OS+B, OS+LAST_CHILD_SLOT, HEAP);
 }
 
 // closure nodes layout
@@ -1377,7 +1385,10 @@ M[POP] = () =>     { POP_OS();
 M[ASSIGN] = () =>  { POP_OS();
                      HEAP[ENV + HEAP[ENV + FIRST_CHILD_SLOT] 
                               + P[PC + 1]] = RES;
+                    newAssign(RES, ENV + HEAP[ENV + FIRST_CHILD_SLOT] 
+                              + P[PC + 1], HEAP);
                      PC = PC + 2;
+                    
                    };
                    
 M[JOF] = () =>     { POP_OS();
@@ -1477,7 +1488,7 @@ function run() {
 }
 
 initialize_machine(240);
-
+//updateMemoryHeap([1,3,4,5,64,3,5]);
 
 P = parse_and_compile("         \
 function factorial(n) {         \
@@ -1487,5 +1498,5 @@ function factorial(n) {         \
 factorial(3);                   ");
 run();
 
-allHeap(ALLHEAP);
+//updateMemoryHeap([1,2,3,4,2,4,NUMBER_TAG,5]);
 init();
