@@ -21,12 +21,10 @@ export type CurveTransformer = (c: CurveFunction) => CurveFunction;
 export type ShapeDrawn = {
   /** String to be printed in the REPL. */
   toReplString: () => string;
-  /** A series of actions to perform to draw on the given canvas. */
+  /** A series of actions to perform as initialization of the curve on the given canvas. */
   init: (canvas: HTMLCanvasElement) => void;
   /** Redraws the canvas with the given rotation angle. */
   redraw: (angle: number) => void;
-  /** Resumes automated rotation starting from the given angle. */
-  resume: (angle: number) => void;
 };
 export type ProgramInfo = {
   program: WebGLProgram;

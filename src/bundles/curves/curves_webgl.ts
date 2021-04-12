@@ -6,7 +6,6 @@ let canvasElement: HTMLCanvasElement | null;
 let renderingContext: WebGLRenderingContext | null;
 let programs: ProgramInfo;
 let buffersInfo: BufferInfo;
-let isRotating: boolean;
 
 // Vertex shader program
 const vsS: string = `
@@ -40,7 +39,7 @@ void main() {
 // =============================================================================
 
 /**
- * gets shader based on given shader program code.
+ * Gets shader based on given shader program code.
  *
  * @param gl - WebGL's rendering context
  * @param type - constant describing the type of shader to load
@@ -62,7 +61,7 @@ function loadShader(
 }
 
 /**
- * initializes the shader program used by WebGL.
+ * Initializes the shader program used by WebGL.
  *
  * @param gl - WebGL's rendering context
  * @param vsSource - vertex shader program code
@@ -87,7 +86,7 @@ function initShaderProgram(
 }
 
 /**
- * main function that draws the given ShapeDrawn on the rendered canvas.
+ * Main function that draws the given ShapeDrawn on the rendered canvas.
  * However, WebGL only supports 16bits buffer, i.e. the no. of points in the
  * buffer must be lower than 65535. This limitation can potentially be
  * solved using a for loop to slice the array and draw multiple times.
@@ -186,16 +185,10 @@ function drawCurve(
   } else {
     gl.drawArrays(gl.POINTS, 0, num + 1);
   }
-
-  if (space === '3D' && isRotating) {
-    window.requestAnimationFrame(() =>
-      drawCurve(gl, buffers, programInfo, num, drawMode, space, angle + 0.005)
-    );
-  }
 }
 
 /**
- * this function deals with manual scaling of the curve based on the specified
+ * This function deals with manual scaling of the curve based on the specified
  * mode, to fit in-place with the cube structure (used by 3D rendering) generated
  * at standard position. It returns a ShapeDrawn object that the Curves tab's
  * component captures, whereby its init function is called to render the curve.
@@ -411,38 +404,11 @@ export default function generateCurve(
         curveBuffer,
         curveColorBuffer,
       };
-
-      isRotating = true;
-      drawCurve(
-        renderingContext,
-        buffersInfo,
-        programs,
-        numPoints,
-        drawMode,
-        space,
-        0
-      );
     },
     redraw: (angle) => {
       if (!renderingContext) {
         return;
       }
-      isRotating = false;
-      drawCurve(
-        renderingContext,
-        buffersInfo,
-        programs,
-        numPoints,
-        drawMode,
-        space,
-        angle
-      );
-    },
-    resume: (angle) => {
-      if (!renderingContext) {
-        return;
-      }
-      isRotating = true;
       drawCurve(
         renderingContext,
         buffersInfo,

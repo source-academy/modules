@@ -18,6 +18,7 @@ type Props = {
 
 type State = {
   rotationAngle: number;
+  isRotating: boolean;
 };
 
 /* eslint-disable react/destructuring-assignment */
@@ -28,12 +29,14 @@ class WebGLCanvas extends React.Component<Props, State> {
     super(props);
     this.state = {
       rotationAngle: 0,
+      isRotating: true,
     };
   }
 
   public componentDidMount() {
     if (this.$canvas) {
       this.props.context.result.value.init(this.$canvas);
+      this.autoRotate();
     }
   }
 
@@ -44,21 +47,50 @@ class WebGLCanvas extends React.Component<Props, State> {
    * @param newValue new rotation angle
    */
   private onChangeHandler = (newValue: number) => {
-    if (this.$canvas) {
-      this.props.context.result.value.redraw(newValue);
-    }
-    this.setState((prevState) => ({
-      ...prevState,
-      rotationAngle: newValue,
-    }));
+    this.setState(
+      (prevState) => ({
+        ...prevState,
+        rotationAngle: newValue,
+        isRotating: false,
+      }),
+      () => {
+        if (this.$canvas) {
+          this.props.context.result.value.redraw(newValue);
+        }
+      }
+    );
   };
 
   /**
    * Event handler for play button. Starts automated rotation when called.
    */
   private onClickHandler = () => {
-    if (this.$canvas) {
-      this.props.context.result.value.resume(this.state.rotationAngle);
+    if (this.$canvas && !this.state.isRotating) {
+      this.setState(
+        (prevState) => ({
+          ...prevState,
+          isRotating: true,
+        }),
+        () => {
+          this.autoRotate();
+        }
+      );
+    }
+  };
+
+  private autoRotate = () => {
+    if (this.$canvas && this.state.isRotating) {
+      const temp = this.state.rotationAngle;
+      this.setState(
+        (prevState) => ({
+          ...prevState,
+          rotationAngle: temp >= 2 * Math.PI ? 0 : temp + 0.005,
+        }),
+        () => {
+          this.props.context.result.value.redraw(this.state.rotationAngle);
+          window.requestAnimationFrame(this.autoRotate);
+        }
+      );
     }
   };
 
