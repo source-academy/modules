@@ -8,7 +8,7 @@
 import { BinaryTree } from './types';
 
 /**
- * Returns an empty binary tree, represented by the empty list null
+ * Returns an empty binary tree, represented by the empty list null.
  * @example
  * ```typescript
  * display(make_empty_tree()); // Shows "[]" in the REPL

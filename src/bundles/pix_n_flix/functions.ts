@@ -1,3 +1,21 @@
+/**
+ * The PIXNFLIX library allows us to process still images and video. Each Image is a
+ * two-dimensional array of Pixels, and a Pixel consists of red, blue and green color
+ * values, each ranging from 0 and 255. To access these color values of a Pixel, we
+ * provide the functions red_of, blue_of and green_of.
+ *
+ * A central element of PIXNFLIX is the notion of a Filter, a function that is applied
+ * to two images: the source Image and the destination Image. We can install a given
+ * Filter to be used to transform the Images that the camera captures into images
+ * displayed on the output screen by using the function install_filter. The output
+ * screen is shown in the Source Academy in the tab with the "Video Display" icon (camera).
+ *
+ * The size of the output screen can be changed by the user. To access the current size of the
+ * output screen, we provide the functions video_height and video_width.
+ *
+ * @module PIXNFLIX
+ */
+
 import {
   CanvasElement,
   VideoElement,
@@ -171,8 +189,11 @@ function startVideo(): void {
   requestId = window.requestAnimationFrame(draw);
 }
 
-/** @hidden */
-// stops the loop that is drawing on frame
+/**
+ * Stops the loop that is drawing on frame.
+ *
+ * @hidden
+ */
 function stopVideo(): void {
   if (!videoIsPlaying) {
     return;
@@ -208,8 +229,11 @@ function loadMedia(): void {
   startVideo();
 }
 
-/** @hidden */
-// just draws once on frame and stops video
+/**
+ * Just draws once on frame and stops video.
+ *
+ * @hidden
+ */
 function snapPicture(): void {
   drawFrame();
   stopVideo();
@@ -237,8 +261,11 @@ function updateFPS(fps: number): void {
   startVideo();
 }
 
-/** @hidden */
-// update the frame dimensions
+/**
+ * Update the frame dimensions.
+ *
+ * @hidden
+ */
 function updateDimensions(w: number, h: number): void {
   // ignore if no change or bad inputs
   if (
@@ -284,9 +311,9 @@ function enqueue(funcToAdd: Queue): void {
 }
 
 /**
- * Used to initialise the video library
- * returns an array of Video's properties, [height, width, fps]
+ * Used to initialise the video library.
  *
+ * @returns an array of Video's properties, [height, width, fps]
  * @hidden
  */
 function init(
@@ -307,7 +334,11 @@ function init(
   return [HEIGHT, WIDTH, FPS];
 }
 
-// destructor that does necessary cleanup
+/**
+ * Destructor that does necessary cleanup.
+ *
+ * @hidden
+ */
 function deinit(): void {
   const stream = videoElement.srcObject;
   if (!stream) {
@@ -323,15 +354,7 @@ function deinit(): void {
 // =============================================================================
 
 /**
- * BINARYTREES provide functions for binary trees, as covered the textbook
- * [Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)](https://sicp.comp.nus.edu.sg/)
- * in [section 2.3.3 Example: Representing Sets](https://sicp.comp.nus.edu.sg/chapters/37).
- * Click on a name on the left to see how they are defined and used.
- * @module BINARYTREES
- */
-
-/**
- * Initialize the PixNFlix live feed with default globals
+ * Initialize the PixNFlix live feed with default globals.
  */
 export function start(): Video {
   return {
@@ -346,7 +369,7 @@ export function start(): Video {
 }
 
 /**
- * Returns the red component of a given Pixel
+ * Returns the red component of a given Pixel.
  *
  * @param px - given Pixel
  * @returns the red component as a number between 0 and 255
@@ -357,7 +380,7 @@ export function red_of(px: Pixel): number {
 }
 
 /**
- * Returns the green component of a given Pixel
+ * Returns the green component of a given Pixel.
  *
  * @param px - given Pixel
  * @returns the green component as a number between 0 and 255
@@ -368,7 +391,7 @@ export function green_of(px: Pixel): number {
 }
 
 /**
- * Returns the blue component of a given Pixel
+ * Returns the blue component of a given Pixel.
  *
  * @param px - given Pixel
  * @returns the blue component as a number between 0 and 255
@@ -379,7 +402,7 @@ export function blue_of(px: Pixel): number {
 }
 
 /**
- * Returns the alpha component of a given Pixel
+ * Returns the alpha component of a given Pixel.
  *
  * @param px - given Pixel
  * @returns the alpha component as a number between 0 and 255
@@ -391,7 +414,7 @@ export function alpha_of(px: Pixel): number {
 
 /**
  * Assigns the red, green, blue and alpha components of a pixel
- * to given values
+ * to given values.
  *
  * @param px - given Pixel
  * @param r - the red component as a number between 0 and 255
@@ -419,7 +442,7 @@ export function set_rgba(
 
 /**
  * Returns the current height of the output video display in
- * pixels, i.e. the number of pixels in vertical direction
+ * pixels, i.e. the number of pixels in vertical direction.
  *
  * @returns height of output display (in pixels)
  */
@@ -429,9 +452,9 @@ export function video_height(): number {
 
 /**
  * Returns the current width of the output video display in
- * pixels, i.e. the number of pixels in horizontal direction
+ * pixels, i.e. the number of pixels in horizontal direction.
  *
- * @returns width of output display (in pixels)
+ * @returns Width of output display (in pixels)
  */
 export function video_width(): number {
   return WIDTH;
@@ -439,10 +462,10 @@ export function video_width(): number {
 
 /**
  * The default filter that just copies the input 2D
- * grid to output
+ * grid to output.
  *
- * @param src - 2D input src of pixels
- * @param dest - 2D output src of pixels
+ * @param src 2D input src of pixels
+ * @param dest 2D output src of pixels
  */
 export function copy_image(src: Pixels, dest: Pixels): void {
   for (let i = 0; i < HEIGHT; i += 1) {
@@ -462,14 +485,14 @@ export function copy_image(src: Pixels, dest: Pixels): void {
  * two-dimensional arrays of Pixels:
  * the source image and the destination image.
  *
- * @param filter - the filter to be installed
+ * @param filter - Filter to be installed
  */
 export function install_filter(_filter: Filter): void {
   filter = _filter;
 }
 
 /**
- * Resets any filter applied on the video
+ * Resets any filter applied on the video.
  */
 export function reset_filter(): void {
   install_filter(copy_image);
@@ -477,10 +500,10 @@ export function reset_filter(): void {
 
 /**
  * Returns a new filter that is the result of applying both
- * filter1 and filter2 together
+ * filter1 and filter2 together.
  *
- * @param filter1 - the first filter
- * @param filter2 - the second filter
+ * @param filter1 First filter
+ * @param filter2 Second filter
  * @returns Filter after applying filter1 and filter2
  */
 export function compose_filter(filter1: Filter, filter2: Filter): Filter {
@@ -492,9 +515,9 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 }
 
 /**
- * Takes a snapshot of image after a set delay
+ * Takes a snapshot of image after a set delay.
  *
- * @param delay - Delay in ms before a snapshot is taken
+ * @param delay Delay in ms before a snapshot is taken
  */
 export function snapshot(delay: number): void {
   // prevent negative delays
@@ -502,21 +525,21 @@ export function snapshot(delay: number): void {
 }
 
 /**
- * Sets height of video frame
- * Note: Only accepts height and width within the range of 1 and 500
+ * Sets height of video frame.
+ * Note: Only accepts height and width within the range of 1 and 500.
  *
- * @param width - Width of video (Default value of 300)
- * @param height - Height of video (Default value of 400)
+ * @param width Width of video (Default value of 300)
+ * @param height Height of video (Default value of 400)
  */
 export function set_dimensions(width: number, height: number): void {
   enqueue(() => updateDimensions(width, height));
 }
 
 /**
- * Sets frames per second (FPS) of the video
- * Note: Only accepts FPS values within the range of 2 to 30
+ * Sets frames per second (FPS) of the video.
+ * Note: Only accepts FPS values within the range of 2 to 30.
  *
- * @param fps - FPS of video (Default value of 10)
+ * @param fps FPS of video (Default value of 10)
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
