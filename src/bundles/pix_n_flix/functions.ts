@@ -63,7 +63,6 @@ let startTime: number;
 // Module's Private Functions
 // =============================================================================
 
-/** @hidden */
 function setupData(): void {
   for (let i = 0; i < WIDTH; i += 1) {
     pixels[i] = [];
@@ -71,7 +70,6 @@ function setupData(): void {
   }
 }
 
-/** @hidden */
 function isPixelFilled(pixel: Pixel): boolean {
   let ok = true;
   for (let i = 0; i < 4; i += 1) {
@@ -86,7 +84,6 @@ function isPixelFilled(pixel: Pixel): boolean {
   return ok;
 }
 
-/** @hidden */
 function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   let ok: boolean = true;
 
@@ -116,7 +113,6 @@ function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   }
 }
 
-/** @hidden */
 function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
@@ -132,7 +128,6 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
   }
 }
 
-/** @hidden */
 function drawFrame(): void {
   canvasRenderingContext.drawImage(videoElement, 0, 0, WIDTH, HEIGHT);
   const pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
@@ -167,7 +162,6 @@ function drawFrame(): void {
   canvasRenderingContext.putImageData(pixelObj, 0, 0);
 }
 
-/** @hidden */
 function draw(timestamp: number): void {
   // eslint-disable-next-line no-unused-vars
   requestId = window.requestAnimationFrame(draw);
@@ -181,7 +175,6 @@ function draw(timestamp: number): void {
   }
 }
 
-/** @hidden */
 function startVideo(): void {
   if (videoIsPlaying) return;
   videoIsPlaying = true;
@@ -189,11 +182,7 @@ function startVideo(): void {
   requestId = window.requestAnimationFrame(draw);
 }
 
-/**
- * Stops the loop that is drawing on frame.
- *
- * @hidden
- */
+// Stops the loop that is drawing on frame.
 function stopVideo(): void {
   if (!videoIsPlaying) {
     return;
@@ -202,7 +191,6 @@ function stopVideo(): void {
   window.cancelAnimationFrame(requestId);
 }
 
-/** @hidden */
 function loadMedia(): void {
   if (!navigator.mediaDevices.getUserMedia) {
     const errMsg = 'The browser you are using does not support getUserMedia';
@@ -229,17 +217,12 @@ function loadMedia(): void {
   startVideo();
 }
 
-/**
- * Just draws once on frame and stops video.
- *
- * @hidden
- */
+// Just draws once on frame and stops video.
 function snapPicture(): void {
   drawFrame();
   stopVideo();
 }
 
-/** @hidden */
 // update fps
 function updateFPS(fps: number): void {
   // ignore if invalid inputs
@@ -261,11 +244,7 @@ function updateFPS(fps: number): void {
   startVideo();
 }
 
-/**
- * Update the frame dimensions.
- *
- * @hidden
- */
+// Update the frame dimensions.
 function updateDimensions(w: number, h: number): void {
   // ignore if no change or bad inputs
   if (
@@ -314,7 +293,6 @@ function enqueue(funcToAdd: Queue): void {
  * Used to initialise the video library.
  *
  * @returns an array of Video's properties, [height, width, fps]
- * @hidden
  */
 function init(
   video: VideoElement,
@@ -487,8 +465,8 @@ export function copy_image(src: Pixels, dest: Pixels): void {
  *
  * @param filter - Filter to be installed
  */
-export function install_filter(_filter: Filter): void {
-  filter = _filter;
+export function install_filter(newFilter: Filter): void {
+  filter = newFilter;
 }
 
 /**
