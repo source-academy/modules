@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BINARYTREES | Source Academy Modules</title>
+	<title>pix_n_flix | Source Academy Modules</title>
 	<meta name="description" content="Documentation for Source Academy Modules">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">:root {
@@ -2705,10 +2705,49 @@ img {
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-function tsd-parent-kind-module">
-			<a href="binarytrees.html#make_empty_tree" class="tsd-kind-icon">make_<wbr>empty_<wbr>tree</a>
+			<a href="pix_n_flix.html#alpha_of" class="tsd-kind-icon">alpha_<wbr>of</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-module">
-			<a href="binarytrees.html#make_tree" class="tsd-kind-icon">make_<wbr>tree</a>
+			<a href="pix_n_flix.html#blue_of" class="tsd-kind-icon">blue_<wbr>of</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#compose_filter" class="tsd-kind-icon">compose_<wbr>filter</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#copy_image" class="tsd-kind-icon">copy_<wbr>image</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#green_of" class="tsd-kind-icon">green_<wbr>of</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#install_filter" class="tsd-kind-icon">install_<wbr>filter</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#red_of" class="tsd-kind-icon">red_<wbr>of</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#reset_filter" class="tsd-kind-icon">reset_<wbr>filter</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#set_dimensions" class="tsd-kind-icon">set_<wbr>dimensions</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#set_fps" class="tsd-kind-icon">set_<wbr>fps</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#set_rgba" class="tsd-kind-icon">set_<wbr>rgba</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#snapshot" class="tsd-kind-icon">snapshot</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#start" class="tsd-kind-icon">start</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#video_height" class="tsd-kind-icon">video_<wbr>height</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="pix_n_flix.html#video_width" class="tsd-kind-icon">video_<wbr>width</a>
 		</li>
 	</ul>
 </nav>
@@ -2717,11 +2756,18 @@ img {
 		<section class="tsd-panel tsd-comment">
 			<div class="tsd-comment tsd-typography">
 				<div class="lead">
-					<p>BINARYTREES provide functions for binary trees, as covered the textbook
-						<a href="https://sicp.comp.nus.edu.sg/">Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)</a>
-						in <a href="https://sicp.comp.nus.edu.sg/chapters/37">section 2.3.3 Example: Representing Sets</a>.
-					Click on a name on the left to see how they are defined and used.</p>
+					<p>The pix_n_flix library allows us to process still images and video. Each Image is a
+						two-dimensional array of Pixels, and a Pixel consists of red, blue and green color
+						values, each ranging from 0 and 255. To access these color values of a Pixel, we
+					provide the functions red_of, blue_of and green_of.</p>
 				</div>
+				<p>A central element of pix_n_flix is the notion of a Filter, a function that is applied
+					to two images: the source Image and the destination Image. We can install a given
+					Filter to be used to transform the Images that the camera captures into images
+					displayed on the output screen by using the function install_filter. The output
+				screen is shown in the Source Academy in the tab with the &quot;Video Display&quot; icon (camera).</p>
+				<p>The size of the output screen can be changed by the user. To access the current size of the
+				output screen, we provide the functions video_height and video_width.</p>
 			</div>
 		</section>
 		<section class="tsd-panel-group tsd-index-group">
@@ -2731,8 +2777,21 @@ img {
 					<section class="tsd-index-section ">
 						<h3>Functions</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-function tsd-parent-kind-module"><a href="binarytrees.html#make_empty_tree" class="tsd-kind-icon">make_<wbr>empty_<wbr>tree</a></li>
-							<li class="tsd-kind-function tsd-parent-kind-module"><a href="binarytrees.html#make_tree" class="tsd-kind-icon">make_<wbr>tree</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#alpha_of" class="tsd-kind-icon">alpha_<wbr>of</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#blue_of" class="tsd-kind-icon">blue_<wbr>of</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#compose_filter" class="tsd-kind-icon">compose_<wbr>filter</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#copy_image" class="tsd-kind-icon">copy_<wbr>image</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#green_of" class="tsd-kind-icon">green_<wbr>of</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#install_filter" class="tsd-kind-icon">install_<wbr>filter</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#red_of" class="tsd-kind-icon">red_<wbr>of</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#reset_filter" class="tsd-kind-icon">reset_<wbr>filter</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#set_dimensions" class="tsd-kind-icon">set_<wbr>dimensions</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#set_fps" class="tsd-kind-icon">set_<wbr>fps</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#set_rgba" class="tsd-kind-icon">set_<wbr>rgba</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#snapshot" class="tsd-kind-icon">snapshot</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#start" class="tsd-kind-icon">start</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#video_height" class="tsd-kind-icon">video_<wbr>height</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="pix_n_flix.html#video_width" class="tsd-kind-icon">video_<wbr>width</a></li>
 						</ul>
 					</section>
 				</div>
@@ -2741,82 +2800,489 @@ img {
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Functions</h2>
 			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-				<a name="make_empty_tree" class="tsd-anchor"></a>
-				<h3>make_<wbr>empty_<wbr>tree</h3>
+				<a name="alpha_of" class="tsd-anchor"></a>
+				<h3>alpha_<wbr>of</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">make_<wbr>empty_<wbr>tree<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BinaryTree</span></li>
+					<li class="tsd-signature tsd-kind-icon">alpha_<wbr>of<span class="tsd-signature-symbol">(</span>pixel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pixel</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/source-academy/modules/blob/9ffd1f3/src/bundles/binary_tree/functions.ts#L19">binary_tree/functions.ts:19</a></li>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L410">pix_n_flix/functions.ts:410</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Returns an empty binary tree, represented by the empty list null</p>
+								<p>Returns the alpha component of a given Pixel.</p>
 							</div>
-							<dl class="tsd-comment-tags">
-								<dt>example</dt>
-								<dd><pre><code class="language-typescript"><span style="color: #795E26">display</span><span style="color: #000000">(</span><span style="color: #795E26">make_empty_tree</span><span style="color: #000000">()); </span><span style="color: #008000">// Shows &quot;[]&quot; in the REPL</span>
-</code></pre>
-								</dd>
-							</dl>
-						</div>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">BinaryTree</span></h4>
-						<p>An empty binary tree</p>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-				<a name="make_tree" class="tsd-anchor"></a>
-				<h3>make_<wbr>tree</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">make_<wbr>tree<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, left<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BinaryTree</span>, right<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BinaryTree</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BinaryTree</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/source-academy/modules/blob/9ffd1f3/src/bundles/binary_tree/functions.ts#L35">binary_tree/functions.ts:35</a></li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Returns a binary tree node composed of the specified left subtree, value and right subtree.</p>
-							</div>
-							<dl class="tsd-comment-tags">
-								<dt>example</dt>
-								<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #795E26">make_tree</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #795E26">make_empty_tree</span><span style="color: #000000">(), </span><span style="color: #795E26">make_empty_tree</span><span style="color: #000000">());</span>
-<span style="color: #795E26">display</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">); </span><span style="color: #008000">// Shows &quot;[null, 1, null]&quot; in the REPL</span>
-</code></pre>
-								</dd>
-							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>value: <span class="tsd-signature-type">any</span></h5>
+								<h5>pixel: <span class="tsd-signature-type">Pixel</span></h5>
 								<div class="tsd-comment tsd-typography">
-									<p>Value to be stored in the node</p>
-								</div>
-							</li>
-							<li>
-								<h5>left: <span class="tsd-signature-type">BinaryTree</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Left subtree of the node</p>
-								</div>
-							</li>
-							<li>
-								<h5>right: <span class="tsd-signature-type">BinaryTree</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Right subtree of the node</p>
+									<p>Given Pixel</p>
 								</div>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">BinaryTree</span></h4>
-						<p>A binary tree</p>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The alpha component as a number between 0 and 255</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="blue_of" class="tsd-anchor"></a>
+				<h3>blue_<wbr>of</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">blue_<wbr>of<span class="tsd-signature-symbol">(</span>pixel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pixel</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L399">pix_n_flix/functions.ts:399</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the blue component of a given Pixel.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>pixel: <span class="tsd-signature-type">Pixel</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Given Pixel</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The blue component as a number between 0 and 255</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="compose_filter" class="tsd-anchor"></a>
+				<h3>compose_<wbr>filter</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">compose_<wbr>filter<span class="tsd-signature-symbol">(</span>filter1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Filter</span>, filter2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Filter</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Filter</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L509">pix_n_flix/functions.ts:509</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a new filter that is the result of applying both
+								filter1 and filter2 together.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>filter1: <span class="tsd-signature-type">Filter</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>First filter</p>
+								</div>
+							</li>
+							<li>
+								<h5>filter2: <span class="tsd-signature-type">Filter</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Second filter</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Filter</span></h4>
+						<p>Filter after applying filter1 and filter2</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="copy_image" class="tsd-anchor"></a>
+				<h3>copy_<wbr>image</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">copy_<wbr>image<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pixels</span>, dest<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pixels</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L470">pix_n_flix/functions.ts:470</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The default filter that just copies the input 2D
+								grid to output.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>src: <span class="tsd-signature-type">Pixels</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>2D input src of pixels</p>
+								</div>
+							</li>
+							<li>
+								<h5>dest: <span class="tsd-signature-type">Pixels</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>2D output src of pixels</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="green_of" class="tsd-anchor"></a>
+				<h3>green_<wbr>of</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">green_<wbr>of<span class="tsd-signature-symbol">(</span>pixel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pixel</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L388">pix_n_flix/functions.ts:388</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the green component of a given Pixel.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>pixel: <span class="tsd-signature-type">Pixel</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Given Pixel</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The green component as a number between 0 and 255</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="install_filter" class="tsd-anchor"></a>
+				<h3>install_<wbr>filter</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">install_<wbr>filter<span class="tsd-signature-symbol">(</span>_filter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Filter</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L490">pix_n_flix/functions.ts:490</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Installs a given filter to be used to transform
+									the images that the camera captures into images
+								displayed on the screen.</p>
+							</div>
+							<p>A filter is a function that is applied to two
+								two-dimensional arrays of Pixels:
+							the source image and the destination image.</p>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>_filter: <span class="tsd-signature-type">Filter</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="red_of" class="tsd-anchor"></a>
+				<h3>red_<wbr>of</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">red_<wbr>of<span class="tsd-signature-symbol">(</span>pixel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pixel</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L377">pix_n_flix/functions.ts:377</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the red component of a given Pixel.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>pixel: <span class="tsd-signature-type">Pixel</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Given Pixel</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The red component as a number between 0 and 255</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="reset_filter" class="tsd-anchor"></a>
+				<h3>reset_<wbr>filter</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">reset_<wbr>filter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L497">pix_n_flix/functions.ts:497</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Resets any filter applied on the video.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="set_dimensions" class="tsd-anchor"></a>
+				<h3>set_<wbr>dimensions</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">set_<wbr>dimensions<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L534">pix_n_flix/functions.ts:534</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Sets height of video frame.
+								Note: Only accepts height and width within the range of 1 and 500.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>width: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Width of video (Default value of 300)</p>
+								</div>
+							</li>
+							<li>
+								<h5>height: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Height of video (Default value of 400)</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="set_fps" class="tsd-anchor"></a>
+				<h3>set_<wbr>fps</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">set_<wbr>fps<span class="tsd-signature-symbol">(</span>fps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L544">pix_n_flix/functions.ts:544</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Sets frames per second (FPS) of the video.
+								Note: Only accepts FPS values within the range of 2 to 30.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>fps: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>FPS of video (Default value of 10)</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="set_rgba" class="tsd-anchor"></a>
+				<h3>set_<wbr>rgba</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">set_<wbr>rgba<span class="tsd-signature-symbol">(</span>pixel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pixel</span>, r<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, g<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L425">pix_n_flix/functions.ts:425</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Assigns the red, green, blue and alpha components of a pixel
+								to given values.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>pixel: <span class="tsd-signature-type">Pixel</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Given Pixel</p>
+								</div>
+							</li>
+							<li>
+								<h5>r: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The red component as a number between 0 and 255</p>
+								</div>
+							</li>
+							<li>
+								<h5>g: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The green component as a number between 0 and 255</p>
+								</div>
+							</li>
+							<li>
+								<h5>b: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The blue component as a number between 0 and 255</p>
+								</div>
+							</li>
+							<li>
+								<h5>a: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The alpha component as a number between 0 and 255</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="snapshot" class="tsd-anchor"></a>
+				<h3>snapshot</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">snapshot<span class="tsd-signature-symbol">(</span>delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L522">pix_n_flix/functions.ts:522</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Takes a snapshot of image after a set delay.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>delay: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Delay in ms before a snapshot is taken</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="start" class="tsd-anchor"></a>
+				<h3>start</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Video</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L359">pix_n_flix/functions.ts:359</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Initialize the PixNFlix live feed with default globals.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Video</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="video_height" class="tsd-anchor"></a>
+				<h3>video_<wbr>height</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">video_<wbr>height<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L449">pix_n_flix/functions.ts:449</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the current height of the output video display in
+								pixels, i.e. the number of pixels in vertical direction.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>height of output display (in pixels)</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="video_width" class="tsd-anchor"></a>
+				<h3>video_<wbr>width</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">video_<wbr>width<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/source-academy/modules/blob/76bdb69/src/bundles/pix_n_flix/functions.ts#L459">pix_n_flix/functions.ts:459</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the current width of the output video display in
+								pixels, i.e. the number of pixels in horizontal direction.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>Width of output display (in pixels)</p>
 					</li>
 				</ul>
 			</section>

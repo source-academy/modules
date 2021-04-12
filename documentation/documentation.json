@@ -5,18 +5,18 @@
 	"flags": {},
 	"children": [
 		{
-			"id": 12,
-			"name": "BINARYTREES",
+			"id": 61,
+			"name": "binary_trees",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
 			"comment": {
-				"shortText": "BINARYTREES provide functions for binary trees, as covered the textbook\n[Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)](https://sicp.comp.nus.edu.sg/)\nin [section 2.3.3 Example: Representing Sets](https://sicp.comp.nus.edu.sg/chapters/37).\nClick on a name on the left to see how they are defined and used."
+				"shortText": "binary_trees provide functions for binary trees, as covered the textbook\n[Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)](https://sicp.comp.nus.edu.sg/)\nin [section 2.3.3 Example: Representing Sets](https://sicp.comp.nus.edu.sg/chapters/37).\nClick on a name on the left to see how they are defined and used."
 			},
 			"originalName": "binary_tree/functions",
 			"children": [
 				{
-					"id": 13,
+					"id": 62,
 					"name": "make_empty_tree",
 					"kind": 64,
 					"kindString": "Function",
@@ -30,7 +30,7 @@
 					],
 					"signatures": [
 						{
-							"id": 14,
+							"id": 63,
 							"name": "make_empty_tree",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -53,7 +53,7 @@
 					]
 				},
 				{
-					"id": 15,
+					"id": 64,
 					"name": "make_tree",
 					"kind": 64,
 					"kindString": "Function",
@@ -67,7 +67,7 @@
 					],
 					"signatures": [
 						{
-							"id": 16,
+							"id": 65,
 							"name": "make_tree",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -84,7 +84,7 @@
 							},
 							"parameters": [
 								{
-									"id": 17,
+									"id": 66,
 									"name": "value",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -98,7 +98,7 @@
 									}
 								},
 								{
-									"id": 18,
+									"id": 67,
 									"name": "left",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -112,7 +112,7 @@
 									}
 								},
 								{
-									"id": 19,
+									"id": 68,
 									"name": "right",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -139,8 +139,8 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						13,
-						15
+						62,
+						64
 					]
 				}
 			],
@@ -153,13 +153,786 @@
 			]
 		},
 		{
-			"id": 1,
-			"name": "REPEAT",
+			"id": 12,
+			"name": "pix_n_flix",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
 			"comment": {
-				"shortText": "This is the official documentation for the Repeat module."
+				"shortText": "The pix_n_flix library allows us to process still images and video. Each Image is a\ntwo-dimensional array of Pixels, and a Pixel consists of red, blue and green color\nvalues, each ranging from 0 and 255. To access these color values of a Pixel, we\nprovide the functions red_of, blue_of and green_of.",
+				"text": "A central element of pix_n_flix is the notion of a Filter, a function that is applied\nto two images: the source Image and the destination Image. We can install a given\nFilter to be used to transform the Images that the camera captures into images\ndisplayed on the output screen by using the function install_filter. The output\nscreen is shown in the Source Academy in the tab with the \"Video Display\" icon (camera).\n\nThe size of the output screen can be changed by the user. To access the current size of the\noutput screen, we provide the functions video_height and video_width.\n"
+			},
+			"originalName": "pix_n_flix/functions",
+			"children": [
+				{
+					"id": 24,
+					"name": "alpha_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 410,
+							"character": 24
+						}
+					],
+					"signatures": [
+						{
+							"id": 25,
+							"name": "alpha_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns the alpha component of a given Pixel.",
+								"returns": "The alpha component as a number between 0 and 255\n"
+							},
+							"parameters": [
+								{
+									"id": 26,
+									"name": "pixel",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Given Pixel"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Pixel"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 21,
+					"name": "blue_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 399,
+							"character": 23
+						}
+					],
+					"signatures": [
+						{
+							"id": 22,
+							"name": "blue_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns the blue component of a given Pixel.",
+								"returns": "The blue component as a number between 0 and 255\n"
+							},
+							"parameters": [
+								{
+									"id": 23,
+									"name": "pixel",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Given Pixel"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Pixel"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 47,
+					"name": "compose_filter",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 509,
+							"character": 30
+						}
+					],
+					"signatures": [
+						{
+							"id": 48,
+							"name": "compose_filter",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a new filter that is the result of applying both\nfilter1 and filter2 together.",
+								"returns": "Filter after applying filter1 and filter2\n"
+							},
+							"parameters": [
+								{
+									"id": 49,
+									"name": "filter1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "First filter"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Filter"
+									}
+								},
+								{
+									"id": 50,
+									"name": "filter2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Second filter"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Filter"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Filter"
+							}
+						}
+					]
+				},
+				{
+					"id": 38,
+					"name": "copy_image",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 470,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 39,
+							"name": "copy_image",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "The default filter that just copies the input 2D\ngrid to output."
+							},
+							"parameters": [
+								{
+									"id": 40,
+									"name": "src",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "2D input src of pixels"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Pixels"
+									}
+								},
+								{
+									"id": 41,
+									"name": "dest",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "2D output src of pixels\n"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Pixels"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 18,
+					"name": "green_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 388,
+							"character": 24
+						}
+					],
+					"signatures": [
+						{
+							"id": 19,
+							"name": "green_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns the green component of a given Pixel.",
+								"returns": "The green component as a number between 0 and 255\n"
+							},
+							"parameters": [
+								{
+									"id": 20,
+									"name": "pixel",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Given Pixel"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Pixel"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 42,
+					"name": "install_filter",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 490,
+							"character": 30
+						}
+					],
+					"signatures": [
+						{
+							"id": 43,
+							"name": "install_filter",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Installs a given filter to be used to transform\nthe images that the camera captures into images\ndisplayed on the screen.",
+								"text": "A filter is a function that is applied to two\ntwo-dimensional arrays of Pixels:\nthe source image and the destination image.\n"
+							},
+							"parameters": [
+								{
+									"id": 44,
+									"name": "_filter",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Filter"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 15,
+					"name": "red_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 377,
+							"character": 22
+						}
+					],
+					"signatures": [
+						{
+							"id": 16,
+							"name": "red_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns the red component of a given Pixel.",
+								"returns": "The red component as a number between 0 and 255\n"
+							},
+							"parameters": [
+								{
+									"id": 17,
+									"name": "pixel",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Given Pixel"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Pixel"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 45,
+					"name": "reset_filter",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 497,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 46,
+							"name": "reset_filter",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Resets any filter applied on the video."
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 54,
+					"name": "set_dimensions",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 534,
+							"character": 30
+						}
+					],
+					"signatures": [
+						{
+							"id": 55,
+							"name": "set_dimensions",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Sets height of video frame.\nNote: Only accepts height and width within the range of 1 and 500."
+							},
+							"parameters": [
+								{
+									"id": 56,
+									"name": "width",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Width of video (Default value of 300)"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 57,
+									"name": "height",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Height of video (Default value of 400)\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 58,
+					"name": "set_fps",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 544,
+							"character": 23
+						}
+					],
+					"signatures": [
+						{
+							"id": 59,
+							"name": "set_fps",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Sets frames per second (FPS) of the video.\nNote: Only accepts FPS values within the range of 2 to 30."
+							},
+							"parameters": [
+								{
+									"id": 60,
+									"name": "fps",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "FPS of video (Default value of 10)\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 27,
+					"name": "set_rgba",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 425,
+							"character": 24
+						}
+					],
+					"signatures": [
+						{
+							"id": 28,
+							"name": "set_rgba",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Assigns the red, green, blue and alpha components of a pixel\nto given values."
+							},
+							"parameters": [
+								{
+									"id": 29,
+									"name": "pixel",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Given Pixel"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Pixel"
+									}
+								},
+								{
+									"id": 30,
+									"name": "r",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The red component as a number between 0 and 255"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 31,
+									"name": "g",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The green component as a number between 0 and 255"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 32,
+									"name": "b",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The blue component as a number between 0 and 255"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 33,
+									"name": "a",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The alpha component as a number between 0 and 255\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 51,
+					"name": "snapshot",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 522,
+							"character": 24
+						}
+					],
+					"signatures": [
+						{
+							"id": 52,
+							"name": "snapshot",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Takes a snapshot of image after a set delay."
+							},
+							"parameters": [
+								{
+									"id": 53,
+									"name": "delay",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Delay in ms before a snapshot is taken\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 13,
+					"name": "start",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 359,
+							"character": 21
+						}
+					],
+					"signatures": [
+						{
+							"id": 14,
+							"name": "start",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Initialize the PixNFlix live feed with default globals."
+							},
+							"type": {
+								"type": "reference",
+								"name": "Video"
+							}
+						}
+					]
+				},
+				{
+					"id": 34,
+					"name": "video_height",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 449,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 35,
+							"name": "video_height",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns the current height of the output video display in\npixels, i.e. the number of pixels in vertical direction.",
+								"returns": "height of output display (in pixels)\n"
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 36,
+					"name": "video_width",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 459,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 37,
+							"name": "video_width",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns the current width of the output video display in\npixels, i.e. the number of pixels in horizontal direction.",
+								"returns": "Width of output display (in pixels)\n"
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						24,
+						21,
+						47,
+						38,
+						18,
+						42,
+						15,
+						45,
+						54,
+						58,
+						27,
+						51,
+						13,
+						34,
+						36
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "pix_n_flix/functions.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 1,
+			"name": "repeat",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"comment": {
+				"shortText": "This is the official documentation for the repeat module."
 			},
 			"originalName": "repeat/functions",
 			"children": [
@@ -362,6 +1135,7 @@
 			"title": "Modules",
 			"kind": 1,
 			"children": [
+				61,
 				12,
 				1
 			]
