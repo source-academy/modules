@@ -1,10 +1,10 @@
 /**
- * The PIXNFLIX library allows us to process still images and video. Each Image is a
+ * The pix_n_flix library allows us to process still images and video. Each Image is a
  * two-dimensional array of Pixels, and a Pixel consists of red, blue and green color
  * values, each ranging from 0 and 255. To access these color values of a Pixel, we
  * provide the functions red_of, blue_of and green_of.
  *
- * A central element of PIXNFLIX is the notion of a Filter, a function that is applied
+ * A central element of pix_n_flix is the notion of a Filter, a function that is applied
  * to two images: the source Image and the destination Image. We can install a given
  * Filter to be used to transform the Images that the camera captures into images
  * displayed on the output screen by using the function install_filter. The output
@@ -13,7 +13,7 @@
  * The size of the output screen can be changed by the user. To access the current size of the
  * output screen, we provide the functions video_height and video_width.
  *
- * @module PIXNFLIX
+ * @module pix_n_flix
  */
 
 import {
@@ -371,73 +371,73 @@ export function start(): Video {
 /**
  * Returns the red component of a given Pixel.
  *
- * @param px - given Pixel
- * @returns the red component as a number between 0 and 255
+ * @param pixel Given Pixel
+ * @returns The red component as a number between 0 and 255
  */
-export function red_of(px: Pixel): number {
-  // returns the red value of px respectively
-  return px[0];
+export function red_of(pixel: Pixel): number {
+  // returns the red value of pixel respectively
+  return pixel[0];
 }
 
 /**
  * Returns the green component of a given Pixel.
  *
- * @param px - given Pixel
- * @returns the green component as a number between 0 and 255
+ * @param pixel Given Pixel
+ * @returns The green component as a number between 0 and 255
  */
-export function green_of(px: Pixel): number {
-  // returns the green value of px respectively
-  return px[1];
+export function green_of(pixel: Pixel): number {
+  // returns the green value of pixel respectively
+  return pixel[1];
 }
 
 /**
  * Returns the blue component of a given Pixel.
  *
- * @param px - given Pixel
- * @returns the blue component as a number between 0 and 255
+ * @param pixel Given Pixel
+ * @returns The blue component as a number between 0 and 255
  */
-export function blue_of(px: Pixel): number {
-  // returns the blue value of px respectively
-  return px[2];
+export function blue_of(pixel: Pixel): number {
+  // returns the blue value of pixel respectively
+  return pixel[2];
 }
 
 /**
  * Returns the alpha component of a given Pixel.
  *
- * @param px - given Pixel
- * @returns the alpha component as a number between 0 and 255
+ * @param pixel Given Pixel
+ * @returns The alpha component as a number between 0 and 255
  */
-export function alpha_of(px: Pixel): number {
-  // returns the alpha value of px respectively
-  return px[3];
+export function alpha_of(pixel: Pixel): number {
+  // returns the alpha value of pixel respectively
+  return pixel[3];
 }
 
 /**
  * Assigns the red, green, blue and alpha components of a pixel
  * to given values.
  *
- * @param px - given Pixel
- * @param r - the red component as a number between 0 and 255
- * @param g - the green component as a number between 0 and 255
- * @param b - the blue component as a number between 0 and 255
- * @param a - the alpha component as a number between 0 and 255
+ * @param pixel Given Pixel
+ * @param r The red component as a number between 0 and 255
+ * @param g The green component as a number between 0 and 255
+ * @param b The blue component as a number between 0 and 255
+ * @param a The alpha component as a number between 0 and 255
  */
 export function set_rgba(
-  px: Pixel,
+  pixel: Pixel,
   r: number,
   g: number,
   b: number,
   a: number
 ): void {
-  // assigns the r,g,b values to this px
+  // assigns the r,g,b values to this pixel
   // eslint-disable-next-line no-param-reassign
-  px[0] = r;
+  pixel[0] = r;
   // eslint-disable-next-line no-param-reassign
-  px[1] = g;
+  pixel[1] = g;
   // eslint-disable-next-line no-param-reassign
-  px[2] = b;
+  pixel[2] = b;
   // eslint-disable-next-line no-param-reassign
-  px[3] = a;
+  pixel[3] = a;
 }
 
 /**

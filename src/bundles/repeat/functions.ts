@@ -1,6 +1,6 @@
 /**
- * This is the official documentation for the Repeat module.
- * @module REPEAT
+ * This is the official documentation for the repeat module.
+ * @module repeat
  */
 
 /**

@@ -17,7 +17,7 @@ import {
 } from './functions';
 
 /**
- * Bundle for Source Academy PixNFlix module
+ * Bundle for Source Academy pix_n_flix module
  * @author Loh Xian Ze, Bryan
  * @author Tang Xin Kye, Marcus
  */
