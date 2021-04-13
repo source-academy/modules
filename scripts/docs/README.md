@@ -9,6 +9,7 @@ The Source Academy comes with the following external libraries:
 - [binary_trees](https://source-academy.github.io/modules/documentation/modules/binarytrees.html)
 - [repeat](https://source-academy.github.io/modules/documentation/modules/repeat.html)
 - [pix_n_flix](https://source-academy.github.io/modules/documentation/modules/pixnflix.html)
+- [curves](https://source-academy.github.io/modules/documentation/modules/curves.html)
 
 ## Style Guide
 
