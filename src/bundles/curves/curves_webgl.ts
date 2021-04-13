@@ -4,7 +4,8 @@ import { ShapeDrawn, CurveFunction, ProgramInfo, BufferInfo } from './types';
 
 let canvasElement: HTMLCanvasElement | null;
 let renderingContext: WebGLRenderingContext | null;
-let cubeRotation: number = 0; // Used for 3D curves rendering rotation
+let programs: ProgramInfo;
+let buffersInfo: BufferInfo;
 
 // Vertex shader program
 const vsS: string = `
@@ -38,7 +39,7 @@ void main() {
 // =============================================================================
 
 /**
- * gets shader based on given shader program code.
+ * Gets shader based on given shader program code.
  *
  * @param gl - WebGL's rendering context
  * @param type - constant describing the type of shader to load
@@ -60,7 +61,7 @@ function loadShader(
 }
 
 /**
- * initializes the shader program used by WebGL.
+ * Initializes the shader program used by WebGL.
  *
  * @param gl - WebGL's rendering context
  * @param vsSource - vertex shader program code
@@ -85,7 +86,7 @@ function initShaderProgram(
 }
 
 /**
- * main function that draws the given ShapeDrawn on the rendered canvas.
+ * Main function that draws the given ShapeDrawn on the rendered canvas.
  * However, WebGL only supports 16bits buffer, i.e. the no. of points in the
  * buffer must be lower than 65535. This limitation can potentially be
  * solved using a for loop to slice the array and draw multiple times.
@@ -96,6 +97,7 @@ function initShaderProgram(
  * @param num - num + 1 vertices to be drawn
  * @param drawMode - mode of drawing between points of the curve
  * @param space - visualization method used to render curve
+ * @param angle - angle of view
  */
 function drawCurve(
   gl: WebGLRenderingContext,
@@ -103,7 +105,8 @@ function drawCurve(
   programInfo: ProgramInfo,
   num: number,
   drawMode: 'lines' | 'points',
-  space: '2D' | '3D'
+  space: '2D' | '3D',
+  angle: number
 ): void {
   const itemSize = space === '3D' ? 3 : 2;
   gl.clearColor(1, 1, 1, 1); // Clear to white, fully opaque
@@ -121,7 +124,7 @@ function drawCurve(
     mat4.scale(transMat, transMat, vec3.fromValues(padding, padding, padding));
     mat4.translate(transMat, transMat, [0, 0, -5]);
     mat4.rotate(transMat, transMat, -(Math.PI / 2), [1, 0, 0]); // axis to rotate around X (static)
-    mat4.rotate(transMat, transMat, cubeRotation, [0, 0, 1]); // axis to rotate around Z (dynamic)
+    mat4.rotate(transMat, transMat, angle, [0, 0, 1]); // axis to rotate around Z (dynamic)
 
     const fieldOfView = (45 * Math.PI) / 180;
     const aspect = gl.canvas.width / gl.canvas.height;
@@ -182,17 +185,10 @@ function drawCurve(
   } else {
     gl.drawArrays(gl.POINTS, 0, num + 1);
   }
-
-  if (space === '3D') {
-    cubeRotation += 0.005;
-    window.requestAnimationFrame(() =>
-      drawCurve(gl, buffers, programInfo, num, drawMode, space)
-    );
-  }
 }
 
 /**
- * this function deals with manual scaling of the curve based on the specified
+ * This function deals with manual scaling of the curve based on the specified
  * mode, to fit in-place with the cube structure (used by 3D rendering) generated
  * at standard position. It returns a ShapeDrawn object that the Curves tab's
  * component captures, whereby its init function is called to render the curve.
@@ -380,7 +376,7 @@ export default function generateCurve(
       );
 
       const shaderProgram = initShaderProgram(renderingContext, vsS, fsS);
-      const programInfo = {
+      programs = {
         program: shaderProgram,
         attribLocations: {
           vertexPosition: renderingContext.getAttribLocation(
@@ -403,19 +399,24 @@ export default function generateCurve(
           ),
         },
       };
-      const buffers = {
+      buffersInfo = {
         cubeBuffer,
         curveBuffer,
         curveColorBuffer,
       };
-
+    },
+    redraw: (angle) => {
+      if (!renderingContext) {
+        return;
+      }
       drawCurve(
         renderingContext,
-        buffers,
-        programInfo,
+        buffersInfo,
+        programs,
         numPoints,
         drawMode,
-        space
+        space,
+        angle
       );
     },
   };

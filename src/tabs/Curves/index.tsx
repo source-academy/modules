@@ -1,3 +1,4 @@
+import { Button, Icon, Slider } from '@blueprintjs/core';
 import React from 'react';
 import { ShapeDrawn } from '../../bundles/curves/types';
 
@@ -15,22 +16,83 @@ type Props = {
   context?: any;
 };
 
-type State = {};
+type State = {
+  rotationAngle: number;
+  isRotating: boolean;
+};
 
+/* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<Props, State> {
   private $canvas: HTMLCanvasElement | null = null;
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      rotationAngle: 0,
+      isRotating: true,
+    };
   }
 
   public componentDidMount() {
     if (this.$canvas) {
-      // eslint-disable-next-line react/destructuring-assignment
       this.props.context.result.value.init(this.$canvas);
+      this.autoRotate();
     }
   }
+
+  /**
+   * Event handler for slider component. Updates the canvas for any change in
+   * rotation.
+   *
+   * @param newValue new rotation angle
+   */
+  private onChangeHandler = (newValue: number) => {
+    this.setState(
+      (prevState) => ({
+        ...prevState,
+        rotationAngle: newValue,
+        isRotating: false,
+      }),
+      () => {
+        if (this.$canvas) {
+          this.props.context.result.value.redraw(newValue);
+        }
+      }
+    );
+  };
+
+  /**
+   * Event handler for play button. Starts automated rotation when called.
+   */
+  private onClickHandler = () => {
+    if (this.$canvas && !this.state.isRotating) {
+      this.setState(
+        (prevState) => ({
+          ...prevState,
+          isRotating: true,
+        }),
+        () => {
+          this.autoRotate();
+        }
+      );
+    }
+  };
+
+  private autoRotate = () => {
+    if (this.$canvas && this.state.isRotating) {
+      const temp = this.state.rotationAngle;
+      this.setState(
+        (prevState) => ({
+          ...prevState,
+          rotationAngle: temp >= 2 * Math.PI ? 0 : temp + 0.005,
+        }),
+        () => {
+          this.props.context.result.value.redraw(this.state.rotationAngle);
+          window.requestAnimationFrame(this.autoRotate);
+        }
+      );
+    }
+  };
 
   public render() {
     return (
@@ -38,6 +100,9 @@ class WebGLCanvas extends React.Component<Props, State> {
         style={{
           width: '100%',
           display: 'flex',
+          paddingLeft: '20px',
+          paddingRight: '20px',
+          flexDirection: 'column',
           justifyContent: 'center',
         }}
       >
@@ -48,6 +113,33 @@ class WebGLCanvas extends React.Component<Props, State> {
           width={500}
           height={500}
         />
+        <div
+          style={{
+            display: 'flex',
+            padding: '10px',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Slider
+            value={this.state.rotationAngle}
+            stepSize={0.01}
+            labelValues={[0, 2 * Math.PI]}
+            labelRenderer={false}
+            min={0}
+            max={2 * Math.PI}
+            onChange={this.onChangeHandler}
+          />
+          <Button
+            style={{
+              marginLeft: '20px',
+            }}
+            onClick={this.onClickHandler}
+          >
+            <Icon icon='play' />
+          </Button>
+        </div>
       </div>
     );
   }
