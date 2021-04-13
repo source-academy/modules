@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
   CurveFunction,
   RenderFunction,
@@ -35,10 +36,8 @@ import generateCurve from './curves_webgl';
  * Examples of drawer functions are `draw_points_on` and `draw_connected`.
  *
  * @module curves
- * @version 1.0.0
  * @author Lee Zheng Han
  * @author Ng Yong Xiang
- * @see
  */
 
 /**
@@ -575,14 +574,14 @@ export function connect_ends(
   curve1: CurveFunction,
   curve2: CurveFunction
 ): CurveFunction {
-  const start_point_of_curve2 = curve2(0);
-  const end_point_of_curve1 = curve1(1);
+  const startPointOfCurve2 = curve2(0);
+  const endPointOfCurve1 = curve1(1);
   return connect_rigidly(
     curve1,
     translate(
-      x_of(end_point_of_curve1) - x_of(start_point_of_curve2),
-      y_of(end_point_of_curve1) - y_of(start_point_of_curve2),
-      z_of(end_point_of_curve1) - z_of(start_point_of_curve2)
+      x_of(endPointOfCurve1) - x_of(startPointOfCurve2),
+      y_of(endPointOfCurve1) - y_of(startPointOfCurve2),
+      z_of(endPointOfCurve1) - z_of(startPointOfCurve2)
     )(curve2)
   );
 }
