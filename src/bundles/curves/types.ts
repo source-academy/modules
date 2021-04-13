@@ -21,8 +21,11 @@ export type CurveTransformer = (c: CurveFunction) => CurveFunction;
 export type ShapeDrawn = {
   /** String to be printed in the REPL. */
   toReplString: () => string;
-  /** A series of actions to perform as initialization of the curve on the given canvas. */
-  init: (canvas: HTMLCanvasElement) => void;
+  /**
+   * A series of actions to perform as initialization of the curve on the given
+   * canvas. Return a boolean indicating whether the rendering function is in 3D.
+   */
+  init: (canvas: HTMLCanvasElement) => boolean;
   /** Redraws the canvas with the given rotation angle. */
   redraw: (angle: number) => void;
 };
