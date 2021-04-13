@@ -102,6 +102,9 @@ class WebGLCanvas extends React.Component<Props, State> {
     }
   };
 
+  /**
+   * Environment where `requestAnimationFrame` is called.
+   */
   private autoRotate = () => {
     if (this.$canvas && this.state.isRotating) {
       const temp = this.state.rotationAngle;
