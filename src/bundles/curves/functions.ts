@@ -1,26 +1,11 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import {
-  CurveFunction,
-  RenderFunction,
-  CurveTransformer,
-  Point,
-} from './types';
-import generateCurve from './curves_webgl';
-
-// =============================================================================
-// Module's Exposed Functions
-//
-// This file only includes the implementation and documentation of exposed
-// functions of the module. For private functions dealing with the browser's
-// graphics library context, see './curves_webgl.ts'.
-// =============================================================================
-
 /**
  * The curves library provides functions for drawing "curves", i.e a sequence of
- * points that may/may not be connected by lines. A point is defined by its co-
- * ordinates (x, y and z), and the color assigned to it (r, g, and b). A few
- * constructors for points is given, together with the corresponding selectors
- * for querying the coordinates and color components mentioned above.
+ * points that may/may not be connected by lines.
+ *
+ * A point is defined by its coordinates (x, y and z), and the color assigned to
+ * it (r, g, and b). A few constructors for points is given, together with the
+ * corresponding selectors for querying the coordinates and color components
+ * mentioned above.
  *
  * Naturally, the central element of the library is the definition of Curve, a
  * unary function which takes a Number argument within the unit interval `[0,1]`
@@ -40,6 +25,23 @@ import generateCurve from './curves_webgl';
  * @author Ng Yong Xiang
  */
 
+/* eslint-disable @typescript-eslint/naming-convention */
+import {
+  CurveFunction,
+  RenderFunction,
+  CurveTransformer,
+  Point,
+} from './types';
+import generateCurve from './curves_webgl';
+
+// =============================================================================
+// Module's Exposed Functions
+//
+// This file only includes the implementation and documentation of exposed
+// functions of the module. For private functions dealing with the browser's
+// graphics library context, see './curves_webgl.ts'.
+// =============================================================================
+
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points and connecting each pair with a line.
@@ -47,9 +49,10 @@ import generateCurve from './curves_webgl';
  * graphically, in a window, instead of textually. The parts between (0,0) and
  * (1,1) of the resulting Drawing are shown in the window.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_connected(100)(t => make_point(t, t));
  */
 export function draw_connected(num: number): RenderFunction {
   return (func) => generateCurve('none', 'lines', num, func, '2D', false);
@@ -63,9 +66,10 @@ export function draw_connected(num: number): RenderFunction {
  * shrunk to show the full curve and maximize its width and height, with some
  * padding.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_connected_full_view(100)(t => make_point(t, t));
  */
 export function draw_connected_full_view(num: number): RenderFunction {
   return (func) => generateCurve('stretch', 'lines', num, func, '2D', true);
@@ -79,9 +83,10 @@ export function draw_connected_full_view(num: number): RenderFunction {
  * proportionally to show the full curve and maximize its size, with some
  * padding.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_connected_full_view_proportional(100)(t => make_point(t, t));
  */
 export function draw_connected_full_view_proportional(
   num: number
@@ -97,9 +102,10 @@ export function draw_connected_full_view_proportional(
  * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the
  * window.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1,there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1,there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_points_on(100)(t => make_point(t, t));
  */
 export function draw_points_on(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '2D', false);
@@ -113,9 +119,10 @@ export function draw_points_on(num: number): RenderFunction {
  * Drawing is scaled proportionally with its size maximized to fit entirely
  * inside the window, with some padding.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_points_full_view_proportional(100)(t => make_point(t, t));
  */
 export function draw_points_full_view_proportional(
   num: number
@@ -130,9 +137,10 @@ export function draw_points_full_view_proportional(
  * graphically, in a window, instead of textually. The parts between (0,0,0) and
  * (1,1,1) of the resulting Drawing are shown within the unit cube.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_3D_connected(100)(t => make_3D_point(t, t, t));
  */
 export function draw_3D_connected(num: number): RenderFunction {
   return (func) => generateCurve('none', 'lines', num, func, '3D', false);
@@ -146,9 +154,10 @@ export function draw_3D_connected(num: number): RenderFunction {
  * shrunk to show the full curve and maximize its width and height within the
  * cube.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
  */
 export function draw_3D_connected_full_view(num: number): RenderFunction {
   return (func) => generateCurve('stretch', 'lines', num, func, '3D', false);
@@ -161,9 +170,10 @@ export function draw_3D_connected_full_view(num: number): RenderFunction {
  * graphically, in a window, instead of textually. The Drawing is scaled
  * proportionally with its size maximized to fit entirely inside the cube.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
  */
 export function draw_3D_connected_full_view_proportional(
   num: number
@@ -179,9 +189,10 @@ export function draw_3D_connected_full_view_proportional(
  * textually. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are
  * shown within the unit cube.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_3D_points_on(100)(t => make_3D_point(t, t, t));
  */
 export function draw_3D_points_on(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '3D', false);
@@ -195,9 +206,10 @@ export function draw_3D_points_on(num: number): RenderFunction {
  * textually. The Drawing is scaled proportionally with its size maximized to
  * fit entirely inside the cube.
  *
- * @param num - determines the number of points,lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points.
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
+ * @example draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
  */
 export function draw_3D_points_full_view_proportional(
   num: number
@@ -208,9 +220,10 @@ export function draw_3D_points_full_view_proportional(
 /**
  * Makes a Point with given x and y coordinates.
  *
- * @param x - x-coordinate of new point
- * @param y - y-coordinate of new point
+ * @param x x-coordinate of new point
+ * @param y y-coordinate of new point
  * @returns with x and y as coordinates
+ * @example const point = make_point(0.5, 0.5);
  */
 export function make_point(x: number, y: number): Point {
   return { x, y, z: 0, color: [0, 0, 0, 1] };
@@ -219,10 +232,11 @@ export function make_point(x: number, y: number): Point {
 /**
  * Makes a 3D Point with given x, y and z coordinates.
  *
- * @param x - x-coordinate of new point
- * @param y - y-coordinate of new point
- * @param z - z-coordinate of new point
+ * @param x x-coordinate of new point
+ * @param y y-coordinate of new point
+ * @param z z-coordinate of new point
  * @returns with x, y and z as coordinates
+ * @example const point = make_3D_point(0.5, 0.5, 0.5);
  */
 export function make_3D_point(x: number, y: number, z: number): Point {
   return { x, y, z, color: [0, 0, 0, 1] };
@@ -233,12 +247,13 @@ export function make_3D_point(x: number, y: number, z: number): Point {
  * from 0 to 255. Any input lower than 0 for RGB will be rounded up to 0, and
  * any input higher than 255 will be rounded down to 255.
  *
- * @param x - x-coordinate of new point
- * @param y - y-coordinate of new point
- * @param r - red component of new point
- * @param g - green component of new point
- * @param b - blue component of new point
+ * @param x x-coordinate of new point
+ * @param y y-coordinate of new point
+ * @param r red component of new point
+ * @param g green component of new point
+ * @param b blue component of new point
  * @returns with x and y as coordinates, and r, g and b as RGB values
+ * @example const redPoint = make_color_point(0.5, 0.5, 255, 0, 0);
  */
 export function make_color_point(
   x: number,
@@ -255,13 +270,14 @@ export function make_color_point(
  * ranging from 0 to 255. Any input lower than 0 for RGB will be rounded up to
  * 0, and any input higher than 255 will be rounded down to 255.
  *
- * @param x - x-coordinate of new point
- * @param y - y-coordinate of new point
- * @param z - z-coordinate of new point
- * @param r - red component of new point
- * @param g - green component of new point
- * @param b - blue component of new point
+ * @param x x-coordinate of new point
+ * @param y y-coordinate of new point
+ * @param z z-coordinate of new point
+ * @param r red component of new point
+ * @param g green component of new point
+ * @param b blue component of new point
  * @returns with x, y and z as coordinates, and r, g and b as RGB values
+ * @example const redPoint = make_color_point(0.5, 0.5, 0.5, 255, 0, 0);
  */
 export function make_3D_color_point(
   x: number,
@@ -277,8 +293,10 @@ export function make_3D_color_point(
 /**
  * Retrieves the x-coordinate of a given Point.
  *
- * @param p - given point
+ * @param p given point
  * @returns x-coordinate of the Point
+ * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * x_of(point); // Returns 1
  */
 export function x_of(pt: Point): number {
   return pt.x;
@@ -287,8 +305,10 @@ export function x_of(pt: Point): number {
 /**
  * Retrieves the y-coordinate of a given Point.
  *
- * @param p - given point
+ * @param p given point
  * @returns y-coordinate of the Point
+ * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * y_of(point); // Returns 2
  */
 export function y_of(pt: Point): number {
   return pt.y;
@@ -297,8 +317,10 @@ export function y_of(pt: Point): number {
 /**
  * Retrieves the z-coordinate of a given Point.
  *
- * @param p - given point
+ * @param p given point
  * @returns z-coordinate of the Point
+ * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * z_of(point); // Returns 3
  */
 export function z_of(pt: Point): number {
   return pt.z;
@@ -307,8 +329,10 @@ export function z_of(pt: Point): number {
 /**
  * Retrieves the red component of a given Point.
  *
- * @param p - given point
+ * @param p given point
  * @returns Red component of the Point
+ * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * r_of(point); // Returns 50
  */
 export function r_of(pt: Point): number {
   return pt.color[0] * 255;
@@ -317,8 +341,10 @@ export function r_of(pt: Point): number {
 /**
  * Retrieves the green component of a given Point.
  *
- * @param p - given point
+ * @param p given point
  * @returns Green component of the Point
+ * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * g_of(point); // Returns 100
  */
 export function g_of(pt: Point): number {
   return pt.color[1] * 255;
@@ -327,8 +353,10 @@ export function g_of(pt: Point): number {
 /**
  * Retrieves the blue component of a given Point.
  *
- * @param p - given point
+ * @param p given point
  * @returns Blue component of the Point
+ * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * b_of(point); // Returns 150
  */
 export function b_of(pt: Point): number {
   return pt.color[2] * 255;
@@ -340,7 +368,7 @@ export function b_of(pt: Point): number {
  * original Curve, but in reverse: The result Curve applied to 0 is the original
  * Curve applied to 1 and vice versa.
  *
- * @param original - original Curve
+ * @param original original Curve
  * @returns result Curve
  */
 export function invert(curve: CurveFunction): CurveFunction {
@@ -354,9 +382,9 @@ export function invert(curve: CurveFunction): CurveFunction {
  * new Curve, by translating the original by x0 in x-direction, y0 in
  * y-direction and z0 in z-direction.
  *
- * @param x0 - (Optional) x-value
- * @param y0 - (Optional) y-value
- * @param z0 - (Optional) z-value
+ * @param x0 (Optional) x-value
+ * @param y0 (Optional) y-value
+ * @param z0 (Optional) z-value
  * @returns Curve transformation
  */
 export function translate(
@@ -391,9 +419,9 @@ export function translate(
  * original Curve rotated extrinsically with Euler angles (a, b, c) about x, y,
  * and z axes (3 parameters).
  *
- * @param a - given angle
- * @param b - (Optional) given angle
- * @param c - (Optional) given angle
+ * @param a given angle
+ * @param b (Optional) given angle
+ * @param c (Optional) given angle
  * @returns function that takes a Curve and returns a Curve
  */
 export function rotate_around_origin(
@@ -474,9 +502,9 @@ export function rotate_around_origin(
  * Curve transformation that scales a given Curve by `a` in
  * x-direction, `b` in y-direction and `c` in z-direction.
  *
- * @param a - (Optional) scaling factor in x-direction
- * @param b - (Optional) scaling factor in y-direction
- * @param c - (Optional) scaling factor in z-direction
+ * @param a (Optional) scaling factor in x-direction
+ * @param b (Optional) scaling factor in y-direction
+ * @param c (Optional) scaling factor in z-direction
  * @returns function that takes a Curve and returns a Curve
  */
 export function scale(a: number, b: number, c: number): CurveTransformer {
@@ -503,7 +531,7 @@ export function scale(a: number, b: number, c: number): CurveTransformer {
  * This function takes a scaling factor s argument and returns a Curve
  * transformation that scales a given Curve by s in x, y and z direction.
  *
- * @param s - scaling factor
+ * @param s scaling factor
  * @returns function that takes a Curve and returns a Curve
  */
 export function scale_proportional(s: number): CurveTransformer {
@@ -519,7 +547,7 @@ export function scale_proportional(s: number): CurveTransformer {
  * x axis, then scaling it to put the endpoint at (1,0). Behavior is unspecified
  * on closed Curves where start-point equal end-point.
  *
- * @param curve - given Curve
+ * @param curve given Curve
  * @returns result Curve
  */
 export function put_in_standard_position(curve: CurveFunction): CurveFunction {
@@ -547,8 +575,8 @@ export function put_in_standard_position(curve: CurveFunction): CurveFunction {
  * for the second portion of the result. The second Curve is not changed, and
  * therefore there might be a big jump in the middle of the result Curve.
  *
- * @param curve1 - first Curve
- * @param curve2 - second Curve
+ * @param curve1 first Curve
+ * @param curve2 second Curve
  * @returns result Curve
  */
 export function connect_rigidly(
@@ -566,8 +594,8 @@ export function connect_rigidly(
  * that its point at fraction 0 is the same as the Point of the first Curve at
  * fraction 1.
  *
- * @param curve1 - first Curve
- * @param curve2 - second Curve
+ * @param curve1 first Curve
+ * @param curve2 second Curve
  * @returns result Curve
  */
 export function connect_ends(
@@ -591,7 +619,7 @@ export function connect_ends(
  * lie on the unit circle. They start at Point (1,0) when t is 0. When t is
  * 0.25, they reach Point (0,1), when t is 0.5, they reach Point (-1, 0), etc.
  *
- * @param t - fraction between 0 and 1
+ * @param t fraction between 0 and 1
  * @returns Point on the circle at t
  */
 export function unit_circle(t: number): Point {
@@ -602,7 +630,7 @@ export function unit_circle(t: number): Point {
  * This function is a curve: a function from a fraction t to a point. The
  * x-coordinate at franction t is t, and the y-coordinate is 0.
  *
- * @param t - fraction between 0 and 1
+ * @param t fraction between 0 and 1
  * @returns Point on the line at t
  */
 export function unit_line(t: number): Point {
@@ -614,7 +642,7 @@ export function unit_line(t: number): Point {
  * horizontal curve. The number is a y-coordinate, and the Curve generates only
  * points with the given y-coordinate.
  *
- * @param t - fraction between 0 and 1
+ * @param t fraction between 0 and 1
  * @returns horizontal Curve
  */
 export function unit_line_at(t: number): CurveFunction {
@@ -627,7 +655,7 @@ export function unit_line_at(t: number): CurveFunction {
  * 0. When t is 0.5, they reach Point (1,0), when t is 1, they reach Point
  * (0, -1).
  *
- * @param t - fraction between 0 and 1
+ * @param t fraction between 0 and 1
  * @returns Point in the arc at t
  */
 export function arc(t: number): Point {
