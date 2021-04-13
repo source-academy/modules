@@ -2,7 +2,7 @@
 import { mat4, vec3 } from 'gl-matrix';
 import { ShapeDrawn, CurveFunction, ProgramInfo, BufferInfo } from './types';
 
-let canvasElement: HTMLCanvasElement | null;
+let canvasElement: HTMLCanvasElement;
 let renderingContext: WebGLRenderingContext | null;
 let programs: ProgramInfo;
 let buffersInfo: BufferInfo;

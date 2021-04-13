@@ -86,7 +86,7 @@ class WebGLCanvas extends React.Component<Props, State> {
   };
 
   /**
-   * Event handler for play button. Starts automated rotation when called.
+   * Event handler for play button. Starts automated rotation by calling `autoRotate()`.
    */
   private onClickHandler = () => {
     if (this.$canvas && !this.state.isRotating) {
@@ -107,11 +107,13 @@ class WebGLCanvas extends React.Component<Props, State> {
    */
   private autoRotate = () => {
     if (this.$canvas && this.state.isRotating) {
-      const temp = this.state.rotationAngle;
       this.setState(
         (prevState) => ({
           ...prevState,
-          rotationAngle: temp >= 2 * Math.PI ? 0 : temp + 0.005,
+          rotationAngle:
+            prevState.rotationAngle >= 2 * Math.PI
+              ? 0
+              : prevState.rotationAngle + 0.005,
         }),
         () => {
           this.props.context.result.value.redraw(this.state.rotationAngle);
