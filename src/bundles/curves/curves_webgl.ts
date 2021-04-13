@@ -2,7 +2,7 @@
 import { mat4, vec3 } from 'gl-matrix';
 import { ShapeDrawn, CurveFunction, ProgramInfo, BufferInfo } from './types';
 
-let canvasElement: HTMLCanvasElement | null;
+let canvasElement: HTMLCanvasElement;
 let renderingContext: WebGLRenderingContext | null;
 let programs: ProgramInfo;
 let buffersInfo: BufferInfo;
@@ -346,7 +346,7 @@ export default function generateCurve(
       canvasElement = canvas;
       renderingContext = canvasElement.getContext('webgl');
       if (!renderingContext) {
-        return;
+        throw new Error('Rendering context cannot be null.');
       }
       const cubeBuffer = renderingContext.createBuffer();
       renderingContext.bindBuffer(renderingContext.ARRAY_BUFFER, cubeBuffer);
@@ -404,6 +404,7 @@ export default function generateCurve(
         curveBuffer,
         curveColorBuffer,
       };
+      return space === '3D';
     },
     redraw: (angle) => {
       if (!renderingContext) {

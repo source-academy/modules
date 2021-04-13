@@ -19,6 +19,7 @@ type Props = {
 type State = {
   rotationAngle: number;
   isRotating: boolean;
+  is3D: boolean;
 };
 
 /* eslint-disable react/destructuring-assignment */
@@ -30,13 +31,36 @@ class WebGLCanvas extends React.Component<Props, State> {
     this.state = {
       rotationAngle: 0,
       isRotating: true,
+      is3D: false,
     };
   }
 
+  /**
+   * This function decides whether the rendered curve is in 3D and setState accordingly.
+   */
   public componentDidMount() {
     if (this.$canvas) {
-      this.props.context.result.value.init(this.$canvas);
-      this.autoRotate();
+      if (this.props.context.result.value.init(this.$canvas)) {
+        this.setState(
+          (prevState) => ({
+            ...prevState,
+            is3D: true,
+          }),
+          () => {
+            this.autoRotate();
+          }
+        );
+      } else {
+        this.setState(
+          (prevState) => ({
+            ...prevState,
+            is3D: false,
+          }),
+          () => {
+            this.props.context.result.value.redraw(this.state.rotationAngle);
+          }
+        );
+      }
     }
   }
 
@@ -62,7 +86,7 @@ class WebGLCanvas extends React.Component<Props, State> {
   };
 
   /**
-   * Event handler for play button. Starts automated rotation when called.
+   * Event handler for play button. Starts automated rotation by calling `autoRotate()`.
    */
   private onClickHandler = () => {
     if (this.$canvas && !this.state.isRotating) {
@@ -78,13 +102,18 @@ class WebGLCanvas extends React.Component<Props, State> {
     }
   };
 
+  /**
+   * Environment where `requestAnimationFrame` is called.
+   */
   private autoRotate = () => {
     if (this.$canvas && this.state.isRotating) {
-      const temp = this.state.rotationAngle;
       this.setState(
         (prevState) => ({
           ...prevState,
-          rotationAngle: temp >= 2 * Math.PI ? 0 : temp + 0.005,
+          rotationAngle:
+            prevState.rotationAngle >= 2 * Math.PI
+              ? 0
+              : prevState.rotationAngle + 0.005,
         }),
         () => {
           this.props.context.result.value.redraw(this.state.rotationAngle);
@@ -127,6 +156,7 @@ class WebGLCanvas extends React.Component<Props, State> {
             stepSize={0.01}
             labelValues={[0, 2 * Math.PI]}
             labelRenderer={false}
+            disabled={!this.state.is3D}
             min={0}
             max={2 * Math.PI}
             onChange={this.onChangeHandler}
@@ -135,6 +165,7 @@ class WebGLCanvas extends React.Component<Props, State> {
             style={{
               marginLeft: '20px',
             }}
+            disabled={!this.state.is3D}
             onClick={this.onClickHandler}
           >
             <Icon icon='play' />
