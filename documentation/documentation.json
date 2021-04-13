@@ -5,7 +5,7 @@
 	"flags": {},
 	"children": [
 		{
-			"id": 61,
+			"id": 178,
 			"name": "binary_trees",
 			"kind": 1,
 			"kindString": "Module",
@@ -16,7 +16,7 @@
 			"originalName": "binary_tree/functions",
 			"children": [
 				{
-					"id": 62,
+					"id": 179,
 					"name": "make_empty_tree",
 					"kind": 64,
 					"kindString": "Function",
@@ -30,7 +30,7 @@
 					],
 					"signatures": [
 						{
-							"id": 63,
+							"id": 180,
 							"name": "make_empty_tree",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -53,7 +53,7 @@
 					]
 				},
 				{
-					"id": 64,
+					"id": 181,
 					"name": "make_tree",
 					"kind": 64,
 					"kindString": "Function",
@@ -67,7 +67,7 @@
 					],
 					"signatures": [
 						{
-							"id": 65,
+							"id": 182,
 							"name": "make_tree",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -84,7 +84,7 @@
 							},
 							"parameters": [
 								{
-									"id": 66,
+									"id": 183,
 									"name": "value",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -98,7 +98,7 @@
 									}
 								},
 								{
-									"id": 67,
+									"id": 184,
 									"name": "left",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -112,7 +112,7 @@
 									}
 								},
 								{
-									"id": 68,
+									"id": 185,
 									"name": "right",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -139,14 +139,1959 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						62,
-						64
+						179,
+						181
 					]
 				}
 			],
 			"sources": [
 				{
 					"fileName": "binary_tree/functions.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 61,
+			"name": "curves",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"comment": {
+				"shortText": "The curves library provides functions for drawing \"curves\", i.e a sequence of\npoints that may/may not be connected by lines.",
+				"text": "A point is defined by its coordinates (x, y and z), and the color assigned to\nit (r, g, and b). A few constructors for points is given, together with the\ncorresponding selectors for querying the coordinates and color components\nmentioned above.\n\nNaturally, the central element of the library is the definition of Curve, a\nunary function which takes a Number argument within the unit interval `[0,1]`\nand returns a point. If `C` is a Curve, then the starting point of the curve\nis always `C(0)`, and the ending point is always `C(1)`.\n\nA Curve transformation is a function that takes a Curve as argument and\nreturns a Curve. Examples of Curve transformations are `scale` and `translate`.\n\nFinally, a Curve drawer is function that takes a Number argument and returns\na function that takes in a Curve and visualises it in the output screen is\nshown in the Source Academy in the tab with the \"Curves Canvas\" icon (image).\nExamples of drawer functions are `draw_points_on` and `draw_connected`.\n",
+				"tags": [
+					{
+						"tag": "author",
+						"text": "Lee Zheng Han"
+					},
+					{
+						"tag": "author",
+						"text": "Ng Yong Xiang\n"
+					}
+				]
+			},
+			"originalName": "curves/functions",
+			"children": [
+				{
+					"id": 175,
+					"name": "arc",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 661,
+							"character": 19
+						}
+					],
+					"signatures": [
+						{
+							"id": 176,
+							"name": "arc",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function is a curve: a function from a fraction t to a point. The points\nlie on the right half of the unit circle. They start at Point (0,1) when t is\n0. When t is 0.5, they reach Point (1,0), when t is 1, they reach Point\n(0, -1).",
+								"returns": "Point in the arc at t\n"
+							},
+							"parameters": [
+								{
+									"id": 177,
+									"name": "t",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "fraction between 0 and 1"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 131,
+					"name": "b_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 361,
+							"character": 20
+						}
+					],
+					"signatures": [
+						{
+							"id": 132,
+							"name": "b_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Retrieves the blue component of a given Point.",
+								"returns": "Blue component of the Point",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\nb_of(point); // Returns 150\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 133,
+									"name": "pt",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Point"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 162,
+					"name": "connect_ends",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 601,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 163,
+							"name": "connect_ends",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function is a binary Curve operator: It takes two Curves as arguments\nand returns a new Curve. The two Curves are combined by using the full first\nCurve for the first portion of the result and by using the full second Curve\nfor the second portion of the result. The second Curve is translated such\nthat its point at fraction 0 is the same as the Point of the first Curve at\nfraction 1.",
+								"returns": "result Curve\n"
+							},
+							"parameters": [
+								{
+									"id": 164,
+									"name": "curve1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "first Curve"
+									},
+									"type": {
+										"type": "reference",
+										"name": "CurveFunction"
+									}
+								},
+								{
+									"id": 165,
+									"name": "curve2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "second Curve"
+									},
+									"type": {
+										"type": "reference",
+										"name": "CurveFunction"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 158,
+					"name": "connect_rigidly",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 582,
+							"character": 31
+						}
+					],
+					"signatures": [
+						{
+							"id": 159,
+							"name": "connect_rigidly",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function is a binary Curve operator: It takes two Curves as arguments\nand returns a new Curve. The two Curves are combined by using the full first\nCurve for the first portion of the result and by using the full second Curve\nfor the second portion of the result. The second Curve is not changed, and\ntherefore there might be a big jump in the middle of the result Curve.",
+								"returns": "result Curve\n"
+							},
+							"parameters": [
+								{
+									"id": 160,
+									"name": "curve1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "first Curve"
+									},
+									"type": {
+										"type": "reference",
+										"name": "CurveFunction"
+									}
+								},
+								{
+									"id": 161,
+									"name": "curve2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "second Curve"
+									},
+									"type": {
+										"type": "reference",
+										"name": "CurveFunction"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 77,
+					"name": "draw_3D_connected",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 145,
+							"character": 33
+						}
+					],
+					"signatures": [
+						{
+							"id": 78,
+							"name": "draw_3D_connected",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at `num` sample points and connecting each pair with\na line. When a program evaluates to a Drawing, the Source system displays it\ngraphically, in a window, instead of textually. The parts between (0,0,0) and\n(1,1,1) of the resulting Drawing are shown within the unit cube.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_3D_connected(100)(t => make_3D_point(t, t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 79,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 80,
+					"name": "draw_3D_connected_full_view",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 162,
+							"character": 43
+						}
+					],
+					"signatures": [
+						{
+							"id": 81,
+							"name": "draw_3D_connected_full_view",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at `num` sample points and connecting each pair with\na line. When a program evaluates to a Drawing, the Source system displays it\ngraphically, in a window, instead of textually. The Drawing is stretched or\nshrunk to show the full curve and maximize its width and height within the\ncube.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 82,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 83,
+					"name": "draw_3D_connected_full_view_proportional",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 178,
+							"character": 56
+						}
+					],
+					"signatures": [
+						{
+							"id": 84,
+							"name": "draw_3D_connected_full_view_proportional",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at `num` sample points and connecting each pair with\na line. When a program evaluates to a Drawing, the Source system displays it\ngraphically, in a window, instead of textually. The Drawing is scaled\nproportionally with its size maximized to fit entirely inside the cube.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 85,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 89,
+					"name": "draw_3D_points_full_view_proportional",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 214,
+							"character": 53
+						}
+					],
+					"signatures": [
+						{
+							"id": 90,
+							"name": "draw_3D_points_full_view_proportional",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at `num` sample points. The Drawing consists of\nisolated points, and does not connect them. When a program evaluates to a\nDrawing, the Source system displays it graphically, in a window, instead of\ntextually. The Drawing is scaled proportionally with its size maximized to\nfit entirely inside the cube.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 91,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 86,
+					"name": "draw_3D_points_on",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 197,
+							"character": 33
+						}
+					],
+					"signatures": [
+						{
+							"id": 87,
+							"name": "draw_3D_points_on",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at `num` sample points. The Drawing consists of\nisolated points, and does not connect them. When a program evaluates to a\nDrawing, the Source system displays it graphically, in a window, instead of\ntextually. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are\nshown within the unit cube.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_3D_points_on(100)(t => make_3D_point(t, t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 88,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 62,
+					"name": "draw_connected",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 57,
+							"character": 30
+						}
+					],
+					"signatures": [
+						{
+							"id": 63,
+							"name": "draw_connected",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at `num` sample points and connecting each pair with a line.\nWhen a program evaluates to a Drawing, the Source system displays it\ngraphically, in a window, instead of textually. The parts between (0,0) and\n(1,1) of the resulting Drawing are shown in the window.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_connected(100)(t => make_point(t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 64,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 65,
+					"name": "draw_connected_full_view",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 74,
+							"character": 40
+						}
+					],
+					"signatures": [
+						{
+							"id": 66,
+							"name": "draw_connected_full_view",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at `num` sample points and connecting each pair with a line.\nWhen a program evaluates to a Drawing, the Source system displays it\ngraphically, in a window, instead of textually. The Drawing is stretched or\nshrunk to show the full curve and maximize its width and height, with some\npadding.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_connected_full_view(100)(t => make_point(t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 67,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 68,
+					"name": "draw_connected_full_view_proportional",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 91,
+							"character": 53
+						}
+					],
+					"signatures": [
+						{
+							"id": 69,
+							"name": "draw_connected_full_view_proportional",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at `num` sample points and connecting each pair with a line.\nWhen a program evaluates to a Drawing, the Source system displays it\ngraphically, in a window, instead of textually. The Drawing is scaled\nproportionally to show the full curve and maximize its size, with some\npadding.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_connected_full_view_proportional(100)(t => make_point(t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 70,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 74,
+					"name": "draw_points_full_view_proportional",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 127,
+							"character": 50
+						}
+					],
+					"signatures": [
+						{
+							"id": 75,
+							"name": "draw_points_full_view_proportional",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at `num` sample points. The Drawing consists of isolated\npoints, and does not connect them. When a program evaluates to a Drawing, the\nSource system displays it graphically, in a window, instead of textually. The\nDrawing is scaled proportionally with its size maximized to fit entirely\ninside the window, with some padding.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_points_full_view_proportional(100)(t => make_point(t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 76,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1, there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 71,
+					"name": "draw_points_on",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 110,
+							"character": 30
+						}
+					],
+					"signatures": [
+						{
+							"id": 72,
+							"name": "draw_points_on",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at `num` sample points. The Drawing consists of isolated\npoints, and does not connect them. When a program evaluates to a Drawing,\nthe Source system displays it graphically, in a window, instead of textually.\nThe parts between (0,0) and (1,1) of the resulting Drawing are shown in the\nwindow.",
+								"returns": "function of type Curve → Drawing",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "draw_points_on(100)(t => make_point(t, t));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 73,
+									"name": "num",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "determines the number of points, lower than 65535, to be sampled.\nIncluding 0 and 1,there are `num + 1` evenly spaced sample points"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "RenderFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 128,
+					"name": "g_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 349,
+							"character": 20
+						}
+					],
+					"signatures": [
+						{
+							"id": 129,
+							"name": "g_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Retrieves the green component of a given Point.",
+								"returns": "Green component of the Point",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\ng_of(point); // Returns 100\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 130,
+									"name": "pt",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Point"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 134,
+					"name": "invert",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 374,
+							"character": 22
+						}
+					],
+					"signatures": [
+						{
+							"id": 135,
+							"name": "invert",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function is a Curve transformation: a function from a Curve to a Curve.\nThe points of the result Curve are the same points as the points of the\noriginal Curve, but in reverse: The result Curve applied to 0 is the original\nCurve applied to 1 and vice versa.",
+								"returns": "result Curve\n"
+							},
+							"parameters": [
+								{
+									"id": 136,
+									"name": "curve",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "CurveFunction"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 108,
+					"name": "make_3D_color_point",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 282,
+							"character": 35
+						}
+					],
+					"signatures": [
+						{
+							"id": 109,
+							"name": "make_3D_color_point",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a 3D color Point with given x, y and z coordinates, and RGB values\nranging from 0 to 255. Any input lower than 0 for RGB will be rounded up to\n0, and any input higher than 255 will be rounded down to 255.",
+								"returns": "with x, y and z as coordinates, and r, g and b as RGB values",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const redPoint = make_color_point(0.5, 0.5, 0.5, 255, 0, 0);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 110,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 111,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 112,
+									"name": "z",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "z-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 113,
+									"name": "r",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "red component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 114,
+									"name": "g",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "green component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 115,
+									"name": "b",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "blue component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 96,
+					"name": "make_3D_point",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 241,
+							"character": 29
+						}
+					],
+					"signatures": [
+						{
+							"id": 97,
+							"name": "make_3D_point",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a 3D Point with given x, y and z coordinates.",
+								"returns": "with x, y and z as coordinates",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const point = make_3D_point(0.5, 0.5, 0.5);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 98,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 99,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 100,
+									"name": "z",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "z-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 101,
+					"name": "make_color_point",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 258,
+							"character": 32
+						}
+					],
+					"signatures": [
+						{
+							"id": 102,
+							"name": "make_color_point",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a color Point with given x and y coordinates, and RGB values ranging\nfrom 0 to 255. Any input lower than 0 for RGB will be rounded up to 0, and\nany input higher than 255 will be rounded down to 255.",
+								"returns": "with x and y as coordinates, and r, g and b as RGB values",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const redPoint = make_color_point(0.5, 0.5, 255, 0, 0);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 103,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 104,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 105,
+									"name": "r",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "red component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 106,
+									"name": "g",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "green component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 107,
+									"name": "b",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "blue component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 92,
+					"name": "make_point",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 228,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 93,
+							"name": "make_point",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a Point with given x and y coordinates.",
+								"returns": "with x and y as coordinates",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const point = make_point(0.5, 0.5);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 94,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 95,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 155,
+					"name": "put_in_standard_position",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 553,
+							"character": 40
+						}
+					],
+					"signatures": [
+						{
+							"id": 156,
+							"name": "put_in_standard_position",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function is a Curve transformation: It takes a Curve as argument and\nreturns a new Curve, as follows. A Curve is in standard position if it\nstarts at (0,0) ends at (1,0). This function puts the given Curve in\nstandard position by rigidly translating it so its start Point is at the\norigin (0,0), then rotating it about the origin to put its endpoint on the\nx axis, then scaling it to put the endpoint at (1,0). Behavior is unspecified\non closed Curves where start-point equal end-point.",
+								"returns": "result Curve\n"
+							},
+							"parameters": [
+								{
+									"id": 157,
+									"name": "curve",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "given Curve"
+									},
+									"type": {
+										"type": "reference",
+										"name": "CurveFunction"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 125,
+					"name": "r_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 337,
+							"character": 20
+						}
+					],
+					"signatures": [
+						{
+							"id": 126,
+							"name": "r_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Retrieves the red component of a given Point.",
+								"returns": "Red component of the Point",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\nr_of(point); // Returns 50\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 127,
+									"name": "pt",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Point"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 142,
+					"name": "rotate_around_origin",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 427,
+							"character": 36
+						}
+					],
+					"signatures": [
+						{
+							"id": 143,
+							"name": "rotate_around_origin",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function takes either 1 or 3 angles, a, b and c in radians as parameter\nand returns a Curve transformation: a function that takes a Curve as argument\nand returns a new Curve, which is the original Curve rotated by the given\nangle around the z-axis (1 parameter) in counter-clockwise direction, or the\noriginal Curve rotated extrinsically with Euler angles (a, b, c) about x, y,\nand z axes (3 parameters).",
+								"returns": "function that takes a Curve and returns a Curve\n"
+							},
+							"parameters": [
+								{
+									"id": 144,
+									"name": "theta1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 145,
+									"name": "theta2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 146,
+									"name": "theta3",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveTransformer"
+							}
+						}
+					]
+				},
+				{
+					"id": 147,
+					"name": "scale",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 510,
+							"character": 21
+						}
+					],
+					"signatures": [
+						{
+							"id": 148,
+							"name": "scale",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function takes scaling factors `a`, `b` and\n`c`, each with default value of 1, as arguments and returns a\nCurve transformation that scales a given Curve by `a` in\nx-direction, `b` in y-direction and `c` in z-direction.",
+								"returns": "function that takes a Curve and returns a Curve\n"
+							},
+							"parameters": [
+								{
+									"id": 149,
+									"name": "a",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "(Optional) scaling factor in x-direction"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 150,
+									"name": "b",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "(Optional) scaling factor in y-direction"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 151,
+									"name": "c",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "(Optional) scaling factor in z-direction"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveTransformer"
+							}
+						}
+					]
+				},
+				{
+					"id": 152,
+					"name": "scale_proportional",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 537,
+							"character": 34
+						}
+					],
+					"signatures": [
+						{
+							"id": 153,
+							"name": "scale_proportional",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function takes a scaling factor s argument and returns a Curve\ntransformation that scales a given Curve by s in x, y and z direction.",
+								"returns": "function that takes a Curve and returns a Curve\n"
+							},
+							"parameters": [
+								{
+									"id": 154,
+									"name": "s",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "scaling factor"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveTransformer"
+							}
+						}
+					]
+				},
+				{
+					"id": 137,
+					"name": "translate",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 390,
+							"character": 25
+						}
+					],
+					"signatures": [
+						{
+							"id": 138,
+							"name": "translate",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function returns a Curve transformation: It takes an x-value x0, a\ny-value y0 and a z-value z0, each with default value of 0, as arguments and\nreturns a Curve transformation that takes a Curve as argument and returns a\nnew Curve, by translating the original by x0 in x-direction, y0 in\ny-direction and z0 in z-direction.",
+								"returns": "Curve transformation\n"
+							},
+							"parameters": [
+								{
+									"id": 139,
+									"name": "x0",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "(Optional) x-value"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 140,
+									"name": "y0",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "(Optional) y-value"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 141,
+									"name": "z0",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "(Optional) z-value"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveTransformer"
+							}
+						}
+					]
+				},
+				{
+					"id": 166,
+					"name": "unit_circle",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 625,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 167,
+							"name": "unit_circle",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function is a curve: a function from a fraction t to a point. The points\nlie on the unit circle. They start at Point (1,0) when t is 0. When t is\n0.25, they reach Point (0,1), when t is 0.5, they reach Point (-1, 0), etc.",
+								"returns": "Point on the circle at t\n"
+							},
+							"parameters": [
+								{
+									"id": 168,
+									"name": "t",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "fraction between 0 and 1"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 169,
+					"name": "unit_line",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 636,
+							"character": 25
+						}
+					],
+					"signatures": [
+						{
+							"id": 170,
+							"name": "unit_line",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function is a curve: a function from a fraction t to a point. The\nx-coordinate at franction t is t, and the y-coordinate is 0.",
+								"returns": "Point on the line at t\n"
+							},
+							"parameters": [
+								{
+									"id": 171,
+									"name": "t",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "fraction between 0 and 1"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 172,
+					"name": "unit_line_at",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 648,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 173,
+							"name": "unit_line_at",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "This function is a Curve generator: it takes a number and returns a\nhorizontal curve. The number is a y-coordinate, and the Curve generates only\npoints with the given y-coordinate.",
+								"returns": "horizontal Curve\n"
+							},
+							"parameters": [
+								{
+									"id": 174,
+									"name": "t",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "fraction between 0 and 1"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "CurveFunction"
+							}
+						}
+					]
+				},
+				{
+					"id": 116,
+					"name": "x_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 301,
+							"character": 20
+						}
+					],
+					"signatures": [
+						{
+							"id": 117,
+							"name": "x_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Retrieves the x-coordinate of a given Point.",
+								"returns": "x-coordinate of the Point",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\nx_of(point); // Returns 1\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 118,
+									"name": "pt",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Point"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 119,
+					"name": "y_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 313,
+							"character": 20
+						}
+					],
+					"signatures": [
+						{
+							"id": 120,
+							"name": "y_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Retrieves the y-coordinate of a given Point.",
+								"returns": "y-coordinate of the Point",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\ny_of(point); // Returns 2\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 121,
+									"name": "pt",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Point"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 122,
+					"name": "z_of",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 325,
+							"character": 20
+						}
+					],
+					"signatures": [
+						{
+							"id": 123,
+							"name": "z_of",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Retrieves the z-coordinate of a given Point.",
+								"returns": "z-coordinate of the Point",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\nz_of(point); // Returns 3\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 124,
+									"name": "pt",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Point"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						175,
+						131,
+						162,
+						158,
+						77,
+						80,
+						83,
+						89,
+						86,
+						62,
+						65,
+						68,
+						74,
+						71,
+						128,
+						134,
+						108,
+						96,
+						101,
+						92,
+						155,
+						125,
+						142,
+						147,
+						152,
+						137,
+						166,
+						169,
+						172,
+						116,
+						119,
+						122
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "curves/functions.ts",
 					"line": 1,
 					"character": 0
 				}
@@ -1135,6 +3080,7 @@
 			"title": "Modules",
 			"kind": 1,
 			"children": [
+				178,
 				61,
 				12,
 				1
