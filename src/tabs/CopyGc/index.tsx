@@ -63,10 +63,10 @@ class CopyGC extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.initialise_state();
+    this.initialize_state();
   }
 
-  private initialise_state = () => {
+  private initialize_state = () => {
     const { debuggerContext } = this.props;
     const functions = debuggerContext.result.value;
     const memorySize = functions.get_memory_size();
@@ -189,36 +189,6 @@ class CopyGC extends React.Component<Props, State> {
     });
   };
 
-  // eslint-disable-next-line arrow-body-style
-  private updateChild = (index: number) => {
-    // eslint-disable-next-line react/destructuring-assignment
-    const value = this.state.heap ? this.state.heap[index] : 0;
-
-    if (this.isTag(value)) {
-      const FIRST_CHILD_SLOT = 2;
-      const LAST_CHILD_SLOT = 3;
-      // eslint-disable-next-line react/destructuring-assignment
-      const firstChild = this.state.heap[index + FIRST_CHILD_SLOT];
-      // eslint-disable-next-line react/destructuring-assignment
-      const lastChild = this.state.heap[index + LAST_CHILD_SLOT];
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-      this.setState((state: State) => {
-        return {
-          firstChild,
-          lastChild,
-        };
-      });
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-      this.setState((state: State) => {
-        return {
-          firstChild: -1,
-          lastChild: -1,
-        };
-      });
-    }
-  };
-
   private getlengthFunction = () => {
     const { debuggerContext } = this.props;
     const commandHeap = debuggerContext.result.value
@@ -236,9 +206,16 @@ class CopyGC extends React.Component<Props, State> {
     const { heap } = this.state;
     // eslint-disable-next-line react/destructuring-assignment
     const value = heap ? heap[indexValue] : 0;
+    const { debuggerContext } = this.props;
+    const roots = debuggerContext.result.value
+      ? debuggerContext.result.value.get_roots()
+      : [];
+
     let color = '';
 
-    if (!value) {
+    if (roots.includes(indexValue)) {
+      color = 'magenta';
+    } else if (!value) {
       color = THEME_COLOR.GREY;
     } else if (this.isTag(value)) {
       // is a tag
@@ -298,16 +275,20 @@ class CopyGC extends React.Component<Props, State> {
           <h3>{state.command}</h3>
           <p> {state.description} </p>
           <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
-            <div style={{ flex: 1 }}>
-              <canvas
-                width={10}
-                height={10}
-                style={{
-                  backgroundColor: THEME_COLOR.GREEN,
-                }}
-              />
-              <span> {state.leftDesc} </span>
-            </div>
+            {state.leftDesc ? (
+              <div style={{ flex: 1 }}>
+                <canvas
+                  width={10}
+                  height={10}
+                  style={{
+                    backgroundColor: THEME_COLOR.GREEN,
+                  }}
+                />
+                <span> {state.leftDesc} </span>
+              </div>
+            ) : (
+              false
+            )}
             {state.rightDesc ? (
               <div style={{ flex: 1 }}>
                 <canvas

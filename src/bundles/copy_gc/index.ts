@@ -26,8 +26,9 @@ let TAG_SLOT: number = 0;
 let SIZE_SLOT: number = 1;
 let FIRST_CHILD_SLOT: number = 2;
 let LAST_CHILD_SLOT: number = 3;
+let ROOTS: any[] = [];
 
-function initialise_tag(allTag: number[], types: string[]): void {
+function initialize_tag(allTag: number[], types: string[]): void {
   tags = allTag;
   typeTag = types;
 }
@@ -92,10 +93,10 @@ function generateMemory(): void {
   commandHeap.push(obj);
 }
 
-function resetToSpace(toSpace, heap): any {
+function resetFromSpace(fromSpace, heap): any {
   // eslint-disable-next-line prefer-const
   let newHeap: any[] = [];
-  if (toSpace > 0) {
+  if (fromSpace > 0) {
     for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
       newHeap.push(heap[i]);
     }
@@ -192,10 +193,10 @@ function newCopy(left, right, heap): void {
   );
 }
 
-function newFlip(left, heap): void {
+function endFlip(left, heap): void {
   const { length } = commandHeap;
-  const fromSpace = commandHeap[length - 1].to;
-  const toSpace = commandHeap[length - 1].from;
+  const fromSpace = commandHeap[length - 1].from;
+  const toSpace = commandHeap[length - 1].to;
   const newSizeLeft = heap[left + SIZE_SLOT];
   const desc = 'Flip finished';
   newCommand(
@@ -212,6 +213,16 @@ function newFlip(left, heap): void {
     ''
   );
   updateFlip();
+}
+
+function updateRoots(array): void {
+  for (let i = 0; i < array.length; i += 1) {
+    ROOTS.push(array[i]);
+  }
+}
+
+function resetRoots(): void {
+  ROOTS = [];
 }
 
 function startFlip(toSpace, fromSpace, heap): void {
@@ -270,6 +281,27 @@ function newPop(res, left, right, heap): void {
     desc,
     'popped memory',
     'last child address slot'
+  );
+}
+
+function showRoots(left, heap): void {
+  const { length } = commandHeap;
+  const toSpace = commandHeap[length - 1].to;
+  const fromSpace = commandHeap[length - 1].from;
+  const newSizeLeft = heap[left + SIZE_SLOT];
+  const desc = `Roots: node ${left}`;
+  newCommand(
+    'Showing Roots',
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    newSizeLeft,
+    0,
+    heap,
+    desc,
+    'roots',
+    ''
   );
 }
 
@@ -406,6 +438,10 @@ function get_from_memory_matrix(): MemoryHeaps {
   return fromMemoryMatrix;
 }
 
+function get_roots(): number[] {
+  return ROOTS;
+}
+
 function get_slots(): number[] {
   return [TAG_SLOT, SIZE_SLOT, FIRST_CHILD_SLOT, LAST_CHILD_SLOT];
 }
@@ -438,6 +474,7 @@ function init() {
     get_flips,
     get_slots,
     get_command,
+    get_roots,
   };
 }
 
@@ -446,21 +483,24 @@ export default function copy_gc() {
     init,
     // initialisation
     initialize_memory,
-    initialise_tag,
+    initialize_tag,
     updateMemoryHeap,
     generateMemory,
     allHeap,
     updateSlotSegment,
-    resetToSpace,
+    resetFromSpace,
     newCommand,
     newCopy,
-    newFlip,
+    endFlip,
     newPush,
     newPop,
     newAssign,
     newNew,
     scanFlip,
     startFlip,
+    updateRoots,
+    resetRoots,
+    showRoots,
   };
 }
 
@@ -468,14 +508,14 @@ export default function copy_gc() {
 import { 
     copy_gc, 
     update, 
-    initialise_memory, 
+    initialize_memory, 
     init, 
     updateMemoryHeap,
-    initialise_tag,
+    initialize_tag,
     updateFlip
 } from "copy_gc"; 
 
-initialise_memory(200);
+initialize_memory(200);
 update(0, 28);
 updateMemoryHeap([20,53,65,13]);
 updateFlip();
@@ -485,7 +525,7 @@ updateMemoryHeap([20,53,65,23]);
 updateFlip();
 updateMemoryHeap([2,523,15,143]);
 updateMemoryHeap([20,5,65,23]);
-initialise_tag([53,23], ['hallo', 'int']);
+initialize_tag([53,23], ['hallo', 'int']);
 
 init();
 

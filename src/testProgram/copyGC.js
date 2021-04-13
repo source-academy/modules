@@ -1,7 +1,7 @@
 import { 
     init,
     initialize_memory,
-    initialise_tag,
+    initialize_tag,
     newCopy,
     newFlip,
     newPush,
@@ -846,7 +846,7 @@ function initialize_machine(heapsize) {
     STATE = NORMAL;
     PC = 0;
     initialize_memory(heapsize);
-    initialise_tag([NUMBER_TAG, BOOL_TAG, UNDEFINED_TAG, OS_TAG, CLOSURE_TAG, RTS_FRAME_TAG, ENV_TAG],
+    initialize_tag([NUMBER_TAG, BOOL_TAG, UNDEFINED_TAG, OS_TAG, CLOSURE_TAG, RTS_FRAME_TAG, ENV_TAG],
         ["NUMBER", "BOOL", "UNDEFINED", "OS", "CLOSURE", "RTS_FRAME", "ENV"]);
 }
 

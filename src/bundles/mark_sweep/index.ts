@@ -9,7 +9,6 @@ const COLUMN: number = 32;
 let NODE_SIZE: number = 0;
 let MEMORY_SIZE: number = -99;
 let TO_SPACE: number;
-let FROM_SPACE: number;
 let memory: Memory;
 // eslint-disable-next-line prefer-const
 let memoryHeaps: Memory[] = [];
@@ -18,7 +17,6 @@ let commandHeap: any[] = [];
 // eslint-disable-next-line prefer-const
 let operationHeaps: string[] = [];
 let toMemoryMatrix: number[][];
-let fromMemoryMatrix: number[][];
 let tags: Tag[];
 let typeTag: string[];
 // eslint-disable-next-line prefer-const
@@ -29,6 +27,7 @@ let FIRST_CHILD_SLOT: number = 2;
 let LAST_CHILD_SLOT: number = 3;
 let MARKED: number = 1;
 let UNMARKED: number = 0;
+const ROOTS: any[] = [];
 
 function generateMemory(): void {
   toMemoryMatrix = [];
@@ -41,20 +40,10 @@ function generateMemory(): void {
     toMemoryMatrix.push(memory);
   }
 
-  fromMemoryMatrix = [];
-  for (let i = ROW / 2; i < ROW; i += 1) {
-    memory = [];
-    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
-      // eslint-disable-next-line no-param-reassign
-      memory.push(i * COLUMN + j);
-    }
-    fromMemoryMatrix.push(memory);
-  }
-
   const obj = {
     type: 'init',
     to: TO_SPACE,
-    from: FROM_SPACE,
+    from: -1,
     heap: [],
     left: -1,
     right: -1,
@@ -66,6 +55,12 @@ function generateMemory(): void {
   };
 
   commandHeap.push(obj);
+}
+
+function updateRoots(array): void {
+  for (let i = 0; i < array.length; i += 1) {
+    ROOTS.push(array[i]);
+  }
 }
 
 function initialize_memory(
@@ -84,7 +79,7 @@ function initialize_memory(
   generateMemory();
 }
 
-function initialise_tag(allTag: number[], types: string[]): void {
+function initialize_tag(allTag: number[], types: string[]): void {
   tags = allTag;
   typeTag = types;
 }
@@ -188,33 +183,10 @@ function newCommand(
   commandHeap.push(obj);
 }
 
-function newMark(left, heap, queue): void {
-  const toSpace = 0;
-  const fromSpace = 0;
-  const newSizeLeft = NODE_SIZE;
-  const newSizeRight = NODE_SIZE;
-  const desc = `Marking node ${left} to be live memory`;
-  newCommand(
-    'MARK',
-    toSpace,
-    fromSpace,
-    left,
-    -1,
-    newSizeLeft,
-    newSizeRight,
-    heap,
-    desc,
-    'marked node',
-    '',
-    queue
-  );
-}
-
 function newSweep(left, heap): void {
   const toSpace = 0;
   const fromSpace = 0;
   const newSizeLeft = NODE_SIZE;
-  const newSizeRight = NODE_SIZE;
   const desc = `Freeing node ${left}`;
   newCommand(
     'SWEEP',
@@ -223,10 +195,70 @@ function newSweep(left, heap): void {
     left,
     -1,
     newSizeLeft,
-    newSizeRight,
+    0,
     heap,
     desc,
     'freed node',
+    ''
+  );
+}
+
+function newMark(left, heap, queue): void {
+  const toSpace = 0;
+  const fromSpace = 0;
+  const newSizeLeft = NODE_SIZE;
+  const desc = `Marking node ${left} to be live memory`;
+  newCommand(
+    'MARK',
+    toSpace,
+    fromSpace,
+    left,
+    -1,
+    newSizeLeft,
+    0,
+    heap,
+    desc,
+    'marked node',
+    '',
+    queue
+  );
+}
+
+function showRoots(left, right, heap): void {
+  const toSpace = 0;
+  const fromSpace = 0;
+  const newSizeLeft = NODE_SIZE;
+  const desc = `Roots are node ${left} and ${right}`;
+  newCommand(
+    'Showing Roots',
+    toSpace,
+    fromSpace,
+    left,
+    right,
+    newSizeLeft,
+    NODE_SIZE,
+    heap,
+    desc,
+    'roots',
+    'roots'
+  );
+}
+
+function newUpdateSweep(right, heap): void {
+  const toSpace = 0;
+  const fromSpace = 0;
+  const desc = `Set node ${right} to freelist`;
+  newCommand(
+    'SWEEP RESET',
+    toSpace,
+    fromSpace,
+    -1,
+    right,
+    0,
+    NODE_SIZE,
+    heap,
+    desc,
+    'free node',
     ''
   );
 }
@@ -335,6 +367,27 @@ function newGC(heap): void {
   updateFlip();
 }
 
+function endGC(heap): void {
+  const { length } = commandHeap;
+  const toSpace = commandHeap[length - 1].to;
+  const fromSpace = commandHeap[length - 1].from;
+  const desc = `Result of free memory`;
+  newCommand(
+    'End of Garbage Collector',
+    toSpace,
+    fromSpace,
+    -1,
+    -1,
+    0,
+    0,
+    heap,
+    desc,
+    '',
+    ''
+  );
+  updateFlip();
+}
+
 function updateSlotSegment(
   tag: number,
   size: number,
@@ -375,10 +428,6 @@ function get_types(): String[] {
   return typeTag;
 }
 
-function get_from_space(): number {
-  return FROM_SPACE;
-}
-
 function get_memory_heap(): MemoryHeaps {
   return memoryHeaps;
 }
@@ -387,8 +436,8 @@ function get_to_memory_matrix(): MemoryHeaps {
   return toMemoryMatrix;
 }
 
-function get_from_memory_matrix(): MemoryHeaps {
-  return fromMemoryMatrix;
+function get_roots(): any[] {
+  return ROOTS;
 }
 
 function get_slots(): number[] {
@@ -417,31 +466,30 @@ function get_marked(): number {
 
 function init() {
   return {
-    toReplString: () => '<REDACTED>',
+    toReplString: () => '<GC REDACTED>',
     get_memory_size,
-    get_from_space,
     get_to_space,
     get_memory_heap,
     get_tags,
     get_types,
     get_column_size,
     get_row_size,
-    get_from_memory_matrix,
     get_to_memory_matrix,
     get_flips,
     get_slots,
     get_command,
     get_unmarked,
     get_marked,
+    get_roots,
   };
 }
 
-export default function copy_gc() {
+export default function mark_sweep() {
   return {
     init,
     // initialisation
     initialize_memory,
-    initialise_tag,
+    initialize_tag,
     updateMemoryHeap,
     generateMemory,
     allHeap,
@@ -455,39 +503,9 @@ export default function copy_gc() {
     newNew,
     newGC,
     newSweep,
+    updateRoots,
+    newUpdateSweep,
+    showRoots,
+    endGC,
   };
 }
-
-/*
-import { 
-    copy_gc, 
-    update, 
-    initialise_memory, 
-    init, 
-    updateMemoryHeap,
-    initialise_tag,
-    updateFlip
-} from "copy_gc"; 
-
-initialise_memory(200);
-update(0, 28);
-updateMemoryHeap([20,53,65,13]);
-updateFlip();
-updateMemoryHeap([20,5,65,23]);
-updateMemoryHeap([2,523,15,143]);
-updateMemoryHeap([20,53,65,23]);
-updateFlip();
-updateMemoryHeap([2,523,15,143]);
-updateMemoryHeap([20,5,65,23]);
-initialise_tag([53,23], ['hallo', 'int']);
-
-init();
-
-
-// general node layout
-const TAG_SLOT = 0;
-const SIZE_SLOT = 1;
-const FIRST_CHILD_SLOT = 2;
-const LAST_CHILD_SLOT = 3;
-
-*/

@@ -68,10 +68,10 @@ class MarkSweep extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.initialise_state();
+    this.initialize_state();
   }
 
-  private initialise_state = () => {
+  private initialize_state = () => {
     const { debuggerContext } = this.props;
     const functions = debuggerContext.result.value;
     const memorySize = functions.get_memory_size();
@@ -194,36 +194,6 @@ class MarkSweep extends React.Component<Props, State> {
     });
   };
 
-  // eslint-disable-next-line arrow-body-style
-  private updateChild = (index: number) => {
-    // eslint-disable-next-line react/destructuring-assignment
-    const value = this.state.heap ? this.state.heap[index] : 0;
-
-    if (this.isTag(value)) {
-      const FIRST_CHILD_SLOT = 2;
-      const LAST_CHILD_SLOT = 3;
-      // eslint-disable-next-line react/destructuring-assignment
-      const firstChild = this.state.heap[index + FIRST_CHILD_SLOT];
-      // eslint-disable-next-line react/destructuring-assignment
-      const lastChild = this.state.heap[index + LAST_CHILD_SLOT];
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-      this.setState((state: State) => {
-        return {
-          firstChild,
-          lastChild,
-        };
-      });
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-      this.setState((state: State) => {
-        return {
-          firstChild: -1,
-          lastChild: -1,
-        };
-      });
-    }
-  };
-
   private getlengthFunction = () => {
     const { debuggerContext } = this.props;
     const commandHeap = debuggerContext.result.value
@@ -239,11 +209,17 @@ class MarkSweep extends React.Component<Props, State> {
 
   private getMemoryColor = (indexValue) => {
     const { heap, marked, unmarked } = this.state;
+    const { debuggerContext } = this.props;
+    const roots = debuggerContext.result.value
+      ? debuggerContext.result.value.get_roots()
+      : [];
     // eslint-disable-next-line react/destructuring-assignment
     const value = heap ? heap[indexValue] : 0;
     let color = '';
 
-    if (this.isTag(heap[indexValue - MARK_SLOT])) {
+    if (roots.includes(indexValue)) {
+      color = 'magenta';
+    } else if (this.isTag(heap[indexValue - MARK_SLOT])) {
       if (value === marked) {
         color = 'red';
       } else if (value === unmarked) {
@@ -263,13 +239,18 @@ class MarkSweep extends React.Component<Props, State> {
 
   private getBackgroundColor = (indexValue) => {
     const { firstChild } = this.state;
+    const { lastChild } = this.state;
     const { commandHeap, value } = this.state;
 
     const size1 = commandHeap[value].sizeLeft;
+    const size2 = commandHeap[value].sizeRight;
     let color = '';
     console.log('background color ', firstChild, firstChild + size1);
+
     if (indexValue >= firstChild && indexValue < firstChild + size1) {
       color = THEME_COLOR.GREEN; // green
+    } else if (indexValue >= lastChild && indexValue < lastChild + size2) {
+      color = THEME_COLOR.YELLOW; // yellow
     }
 
     return color;
@@ -297,16 +278,20 @@ class MarkSweep extends React.Component<Props, State> {
           <h3>{state.command}</h3>
           <p> {state.description} </p>
           <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
-            <div style={{ flex: 1 }}>
-              <canvas
-                width={10}
-                height={10}
-                style={{
-                  backgroundColor: THEME_COLOR.GREEN,
-                }}
-              />
-              <span> {state.leftDesc} </span>
-            </div>
+            {state.leftDesc ? (
+              <div style={{ flex: 1 }}>
+                <canvas
+                  width={10}
+                  height={10}
+                  style={{
+                    backgroundColor: THEME_COLOR.GREEN,
+                  }}
+                />
+                <span> {state.leftDesc} </span>
+              </div>
+            ) : (
+              false
+            )}
             {state.rightDesc ? (
               <div style={{ flex: 1 }}>
                 <canvas
@@ -432,6 +417,31 @@ class MarkSweep extends React.Component<Props, State> {
                 }}
               />
               <span> empty or undefined</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+            <div style={{ flex: 1 }}>
+              <span> MARK_SLOT: </span>
+            </div>
+            <div style={{ flex: 1 }}>
+              <canvas
+                width={10}
+                height={10}
+                style={{
+                  backgroundColor: 'red',
+                }}
+              />
+              <span> marked</span>
+            </div>
+            <div style={{ flex: 1 }}>
+              <canvas
+                width={10}
+                height={10}
+                style={{
+                  backgroundColor: 'black',
+                }}
+              />
+              <span> unmarked</span>
             </div>
           </div>
         </div>

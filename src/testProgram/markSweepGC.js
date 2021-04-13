@@ -1,5 +1,5 @@
 import {init, initialize_memory, newAssign,
-    newPush, newPop, newNew, initialise_tag, newGC, newMark, newSweep
+    newPush, newPop, newNew, initialize_tag, newGC, newMark, newSweep
 } from 'mark_sweep';
 /* 
 Virtual machine for language Source §1-
@@ -835,7 +835,7 @@ function initialize_machine(heapsize) {
         
         // MODULE: create heap with size: heapsize, and fixed node size: NODE_SIZE, trim out the remaining unusable cells
         initialize_memory(heapsize, NODE_SIZE, MARKED, UNMARKED);
-        initialise_tag([NUMBER_TAG, BOOL_TAG, UNDEFINED_TAG, OS_TAG, CLOSURE_TAG, RTS_FRAME_TAG, ENV_TAG],
+        initialize_tag([NUMBER_TAG, BOOL_TAG, UNDEFINED_TAG, OS_TAG, CLOSURE_TAG, RTS_FRAME_TAG, ENV_TAG],
         ["NUMBER", "BOOL", "UNDEFINED", "OS", "CLOSURE", "RTS_FRAME", "ENV"]);
         HEAP = [];
         HEAP_SIZE = heapsize;
