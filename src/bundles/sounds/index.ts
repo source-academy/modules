@@ -41,26 +41,6 @@ const biquad_b2 : number = biquad_b0;
  * @author Samyukta Sounderraman
  */
 
-let currentOutput: number[];
-
-function save(): void {
-  // eslint-disable-next-line no-console
-  console.log('updateSrc called');
-  const riffwave = new RIFFWAVE(currentOutput);
-  // eslint-disable-next-line no-console
-  console.log(currentOutput);
-  riffwave.header.sampleRate = FS;
-  riffwave.header.numChannels = 1;
-  riffwave.header.bitsPerSample = 16;
-  riffwave.Make(currentOutput);
-  // eslint-disable-next-line no-console
-  console.log(riffwave.dataURI);
-  const thePlayer = <HTMLMediaElement>(
-    document.getElementById('sound-tab-player')
-  );
-  thePlayer.src = riffwave.dataURI;
-}
-
 // ---------------------------------------------
 // Low-level sound support
 // ---------------------------------------------
@@ -240,7 +220,7 @@ function play(sound: Sound): Sound {
 
     // eslint-disable-next-line no-console
     console.log(channel);
-    currentOutput = [];
+    const currentOutput: number[] = []; 
     for (let i = 0; i < channel.length; i += 1) {
       currentOutput[i] = channel[i];
     }
@@ -834,5 +814,4 @@ export default () => ({
   piano,
   trombone,
   violin,
-  save,
 });
