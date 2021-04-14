@@ -209,29 +209,6 @@ function play(sound: Sound): Sound {
     );
     const channel = theBuffer.getChannelData(0);
 
-    /* Code for implementation based on oversampling.
-    // Oversample at specified rate
-    let data = discretize(get_wave(sound), get_duration(sound), oversample_factor);
-
-    // Filter out high frequencies. also smoothens out any sudden cutouts
-    for (let i = 0; i < biquad_filter_count; i++) {
-      data = biquad_lowpass(data);
-    }
-
-    // Resample back to original sampling rate
-    data = downsample(data, oversample_factor);
-    
-    // Copy data back from discretized data. Due to rounding, channel.length <= data.length
-    for (let i = 0; i < channel.length; i++) {
-      channel[i] = data[i];
-    }
-
-    // A Catch-all hard-clip if too far beyond the expected range of [-1, 1]
-    for (let i = 0; i < channel.length; i++) {
-      channel[i] = channel[i] > 2 ? 2 : channel[i] < -2 ? -2 : channel[i];
-    }
-    */
-
     let temp: number;
     let prev_value = 0;
 
@@ -239,13 +216,14 @@ function play(sound: Sound): Sound {
     for (let i = 0; i < channel.length; i += 1) {
       temp = wave(i / FS);
       // clip amplitude
-      if (temp > 2) {
-        channel[i] = 2;
-      } else if (temp < -2) {
-        channel[i] = -2;
+      // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
+	  if (temp > 1) {
+		channel[i] = 1;
+	  } else if (temp < -1) {
+		channel[i] = -1;
       } else {
-        channel[i] = temp;
-      }
+		channel[i] = temp;
+	  }
 
       // smoothen out sudden cut-outs
       if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
@@ -254,6 +232,11 @@ function play(sound: Sound): Sound {
 
       prev_value = channel[i];
     }
+	
+	// quantize
+    for (let i = 0; i < channel.length; i += 1) {
+        channel[i] = Math.floor(channel[i] * 32767.999);
+    }
 
     // eslint-disable-next-line no-console
     console.log(channel);
@@ -261,14 +244,24 @@ function play(sound: Sound): Sound {
     for (let i = 0; i < channel.length; i += 1) {
       currentOutput[i] = channel[i];
     }
+	const riffwave = new RIFFWAVE([]);
+    riffwave.header.sampleRate = FS;
+    riffwave.header.numChannels = 1;
+    riffwave.header.bitsPerSample = 16;
+    riffwave.Make(currentOutput);
+    const audio = new Audio(riffwave.dataURI);
+        
+    const source2 = audioplayer.createMediaElementSource(audio);
+    const webplayer = <HTMLAudioElement>document.getElementById("sound-tab-player");
+
+    webplayer.src = riffwave.dataURI;
+    source2.connect(audioplayer.destination);
+
     // Connect data to output destination
-    const source = audioplayer.createBufferSource();
-    source.buffer = theBuffer;
-    source.connect(audioplayer.destination);
     isPlaying = true;
-    source.start();
-    source.onended = () => {
-      source.disconnect(audioplayer.destination);
+    audio.play();
+    audio.onended = () => {
+      source2.disconnect(audioplayer.destination);
       isPlaying = false;
     };
 
