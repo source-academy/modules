@@ -7,6 +7,8 @@ import {
   get_duration,
   is_sound,
   squash,
+  pan,
+  pan_mod,
   // Play-related
   play,
   play_concurrently,
@@ -50,6 +52,8 @@ export default function sounds() {
     get_duration,
     is_sound,
     squash,
+    pan,
+    pan_mod,
     // Play-related
     play,
     play_concurrently,
