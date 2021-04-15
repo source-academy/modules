@@ -26,6 +26,11 @@
     "tabs": [
       "Sounds"
     ]
+  },
+  "stereo_sounds": {
+    "tabs": [
+      "StereoSounds"
+    ]
   }
   
 }
