@@ -4,7 +4,7 @@ export type EmptyList = null;
 export type NonEmptyList = Pair<any, any>;
 export type List = EmptyList | NonEmptyList;
 export type Wave = (...t: any) => number;
-export type Sound = Pair<Wave, number>;
+export type Sound = Pair<Pair<Wave, Wave>, number>;
 export type SoundProducer = (...t: any) => Sound;
 export type SoundTransformer = (s: Sound) => Sound;
 export type AudioElement = HTMLAudioElement;

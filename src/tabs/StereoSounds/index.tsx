@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, jsx-a11y/media-has-caption */
+import { FILE_UPLOAD_INPUT_CUSTOM_TEXT } from '@blueprintjs/core/lib/esm/common/classes';
 import React from 'react';
-import { AudioPlayed } from '../../bundles/sounds/types';
-// import sounds from '../../bundles/sounds';
+import { AudioPlayed } from '../../bundles/stereo_sounds/types';
 
 /**
  * Tab for Source Academy Sounds Module
@@ -26,7 +26,7 @@ type State = {};
 /**
  * The main React Component of the Tab.
  */
-class Sounds extends React.Component<Props, State> {
+class StereoSounds extends React.Component<Props, State> {
   private $audio: HTMLAudioElement | null = null;
 
   constructor(props) {
@@ -86,12 +86,12 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <Sounds context={context} />,
+  body: (context: any) => <StereoSounds context={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
    */
-  label: 'Sounds',
+  label: 'Stereo Sounds',
 
   /**
    * BlueprintJS IconName element's name, used to render the icon which will be
