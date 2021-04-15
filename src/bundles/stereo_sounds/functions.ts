@@ -536,11 +536,21 @@ export function play_concurrently(sound: Sound): void {
 }
 
 /**
+ * Stops all currently playing sounds.
+ */
+export function stop(): void {
+  audioplayer.close();
+  isPlaying = false;
+}
+
+// Stereo only functions
+
+/**
  * Centers a Sound by averaging its left and right channels,
  * resulting in an effectively mono sound.
  *
  * @param sound the sound to be squashed
- * @returns a new sound with the left and right channels averaged
+ * @return a new sound with the left and right channels averaged
  */
 export function squash(sound: Sound): Sound {
   const left = get_left_wave(sound);
@@ -549,11 +559,62 @@ export function squash(sound: Sound): Sound {
 }
 
 /**
- * Stops all currently playing sounds.
+ * Returns a Sound Transformer that pans a sound based on the pan amount.
+ * The input sound is first squashed to mono.
+ * An amount of `-1` is a hard left pan, `0` is balanced, `1` is hard right pan.
+ *
+ * @param amount the pan amount, from -1 to 1
+ * @return a Sound Transformer that pans a Sound
  */
-export function stop(): void {
-  audioplayer.close();
-  isPlaying = false;
+export function pan(amount: number): SoundTransformer {
+  return (sound) => {
+    if (amount > 1) {
+      // eslint-disable-next-line no-param-reassign
+      amount = 1;
+    }
+    if (amount < -1) {
+      // eslint-disable-next-line no-param-reassign
+      amount = -1;
+    }
+    // eslint-disable-next-line no-param-reassign
+    sound = squash(sound);
+    return make_stereo_sound(
+      (t) => ((1 - amount) / 2) * get_left_wave(sound)(t),
+      (t) => (1 + amount / 2) * get_right_wave(sound)(t),
+      get_duration(sound)
+    );
+  };
+}
+
+/**
+ * Returns a Sound Transformer that uses a Sound to pan another Sound.
+ * The modulator is treated as a mono sound and its output is used to pan
+ * an input Sound.
+ * `-1` is a hard left pan, `0` is balanced, `1` is hard right pan.
+ *
+ * @param modulator the Sound used to modulate the pan of another sound
+ * @return a Sound Transformer that pans a Sound
+ */
+export function pan_mod(modulator: Sound): SoundTransformer {
+  const amount = (t: number) => {
+    let output = get_left_wave(modulator)(t) + get_right_wave(modulator)(t);
+    if (output > 1) {
+      output = 1;
+    }
+    if (output < -1) {
+      output = -1;
+    }
+    return output;
+  };
+  return (sound) => {
+    // eslint-disable-next-line no-param-reassign
+    sound = squash(sound);
+    return make_stereo_sound(
+      (t) => ((1 - amount(t)) / 2) * get_left_wave(sound)(t),
+      (t) => (1 + amount(t) / 2) * get_right_wave(sound)(t),
+      get_duration(sound)
+    );
+  };
 }
 
 // Primitive sounds
