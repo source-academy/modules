@@ -1,12 +1,14 @@
 # Source Modules
 
-This repository contains publicly availble _Source_ modules and their documentation. 
+![License](https://img.shields.io/badge/License-Apache%202.0-brightgreen) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/source-academy/modules/github%20pages?label=Build)
+
+This repository contains publicly availble Source Modules and their documentation. 
 
 Try out Source Academy [here](https://source-academy.github.io/). 
 
-See the Source modules [wiki](https://github.com/source-academy/modules/wiki) for more details.
+See the Source Modules [wiki](https://github.com/source-academy/modules/wiki) for more details.
 
-Check out the _Source_ modules generated API documentation [here](https://source-academy.github.io/modules/documentation).
+Check out the Source Modules generated API documentation [here](https://source-academy.github.io/modules/documentation).
 
 ## Aims
 
