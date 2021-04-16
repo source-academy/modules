@@ -1,40 +1,84 @@
-# Modules
+# Source Modules
 
-This repository will contain publicly available modules and their documentation, starting in 2021.
+This repository contains publicly availble _Source_ modules and their documentation. 
 
-See wiki for details: https://github.com/source-academy/modules/wiki
+Try out Source Academy [here](https://source-academy.github.io/). 
+
+See the Source modules [wiki](https://github.com/source-academy/modules/wiki) for more details.
+
+Check out the _Source_ modules generated API documentation [here](https://source-academy.github.io/modules/documentation).
+
+## Aims
+
+1. Decouple _Source_ modules from the frontend and backend of Source Academy, as well as the implementation of _Source_ language, enhancing the flexibility of _Source_ modules.
+2. Optionally render interactive user interfaces for students to use with Source Academy to enhance their learning experience.
+3. Allow ease of collaboration and promotes contribution to the modules ecosystem without a steep learning curve. 
+
+## Terminologies
+
+| **Term**   | **Description**                                                    |
+| ---------- | ------------------------------------------------------------------ |
+| **Module** | A set of **one** bundle _with the same name_ and **some/no** tabs. |
+| **Bundle** | The suite of functions that are provided by the module.            |
+| **Tab**    | A user interface used by the module.                               |
 
 ## Getting Started
 
-### Clone, Install Dependencies and Compile modules
+### Set Up
 
-1. Install a stable version of [NodeJS](https://nodejs.org/en/). The active LTS or current version should work fine.
-2. Install a stable version of [Yarn](https://yarnpkg.com/).
+The following set of instructions explain how to clone and set up a copy of the Source Modules code repository on your local development machine. Following the steps below will create a  `modules` directory in your local development machine and install the necessary dependencies of the project. 
 
+You will need to have a stable version of [NodeJS](https://nodejs.org/en/) on your local development machine. We recommend using the latest LTS version. You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)_ or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects. 
+
+You will also need to have a package manager for your project. We recommend using a stable version of [Yarn](https://yarnpkg.com/) as the repository pipelines are using the Yarn package manager as well. To install the Yarn package manager through [NPM](https://www.npmjs.com/), you can run the following command.
 ```
-$ npm install -g yarn
-```
-
-3. Clone this repository and navigate to it in your command line or shell tool.
-
-```
-$ git clone https://github.com/source-academy/modules.git
-$ cd modules
+npm install -g yarn
 ```
 
-4. Run `yarn install` to install dependencies.
+Clone the repository on your local development machine and navigate to it using your favourite command line or shell tool.
+```
+git clone https://github.com/source-academy/modules.git
+cd modules
+```
 
-### Serving the Modules' JavaScript Files
+Install all the dependencies of the project into `node_modules` in the root folder of your project directory. 
+```
+yarn install
+```
 
-1. Run `yarn run build` to transpile the modules' files from `src` folder into `build` folder.
-2. Run `yarn serve` to start the http-server on http://localhost:8022 to serve all files in the `build` folder with the same directory structure.
+### Serve Source Modules
 
-### Using with Cadet Frontend
+The following set of instructions explain how to transpile and serve the Source Modules from your local development machine's code repository. Following the steps below will transpile all the modules in your project directory into JavaScript files located in the `build` folder. Thereafter, you will serve all the contents of the build folder in a server on your local development machine. 
 
-1. Follow the [setup](https://github.com/source-academy/cadet-frontend#getting-started) instructions on Cadet Frontend.
-2. When [setting up](https://github.com/source-academy/cadet-frontend#getting-started) the backend configuration of Cadet Frontend, ensure that `REACT_APP_MODULE_BACKEND_URL=http://localhost:8022` from the subsection above.
-3. Ensure that you are serving the modules' javascript files in a local server. Refer to the subsection above for instructions.
-4. [Start up](https://github.com/source-academy/cadet-frontend#getting-started) the Cadet Frontend local development server to use the served modules.
+To transpile the Source modules' files from `src` into JavaScript files in `build`, run the following command.
+```
+yarn run build
+```
+
+To start the server that serves all the contents of the `build` folder in the root directory of the project, run the following command. By default, running this command serves the contents of the `build` folder on http://localhost:8022.
+```
+yarn run serve
+```
+
+### Development with Frontend `cadet-frontend`
+
+The following set of instructions explain how to use a local copy of the Source Academy [frontend](https://github.com/source-academy/cadet-frontend) with a local copy of the Source Modules code repository. Following the steps below will configure the environment of the Source Academy frontend to use your locally served `Source` modules instead of the publicly available ones. Doing this will allow you to develop and modify modules without affecting the currently publicly available ones. 
+
+You will need to already have a local instance of Source Academy frontend set up. If you do not, you can follow the instructions [here](https://github.com/source-academy/cadet-frontend#getting-started) to setup an instance of Source Academy frontend on your local development machine. 
+
+Ensure that the environment variable `REACT_APP_MODULE_BACKEND_URL` in the `.env` file of the Source Academy frontend is configured to the URL of the Source Modules' server that you are trying to retrieve _Source_ modules from. At the same time, make sure that the server providing the `Source` modules is running. By default, the local server started by running `yarn run serve` is on http://localhost:8022. The publicly available _Source_ modules is currently located at https://github.com/source-academy/modules. 
+
+Upon starting the local instance of Source Academy frontend, the Source Academy playground will be connected to the Source Modules code repository. 
+
+### Development with Source Implementation `js-slang`
+
+The following set of instructions explain how to use a local copy of the Source language [implementation](https://github.com/source-academy/js-slang) with a local copy of the Source Modules code repository and Source Academy frontend. Following the steps below will allow you to work on your local `js-slang` code repository and use it with the Source Modules project and Source Academy frontend. 
+
+You will need to already have a local instance of the Source implementations set up. If you do not, you can follow the instructions [here](https://github.com/source-academy/js-slang#usage) to setup an instance of the Source implementations on your local development machine. 
+
+Follow the instructions highlighted [here](https://github.com/source-academy/js-slang#usage) to build and link your local instance of Source implementations with your local instance of the Source Academy frontend. 
+
+Follow the instructions to setup the Source Modules code repository with Source Academy frontend highlighted in the above section as per normal to use your local `js-slang` with your local `cadet-frontend` and Source Modules code repository. 
 
 ## License
 
