@@ -183,7 +183,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 661,
+							"line": 721,
 							"character": 19
 						}
 					],
@@ -230,7 +230,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 361,
+							"line": 421,
 							"character": 20
 						}
 					],
@@ -247,7 +247,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\nb_of(point); // Returns 150\n"
+										"text": "\n```\nconst point = make_color_point(1, 2, 3, 50, 100, 150);\nb_of(point); // Returns 150\n```\n"
 									}
 								]
 							},
@@ -280,7 +280,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 601,
+							"line": 661,
 							"character": 28
 						}
 					],
@@ -341,7 +341,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 582,
+							"line": 642,
 							"character": 31
 						}
 					],
@@ -402,7 +402,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 145,
+							"line": 163,
 							"character": 33
 						}
 					],
@@ -419,7 +419,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_3D_connected(100)(t => make_3D_point(t, t, t));\n"
+										"text": "\n```\ndraw_3D_connected(100)(t => make_3D_point(t, t, t));\n```\n"
 									}
 								]
 							},
@@ -455,7 +455,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 162,
+							"line": 183,
 							"character": 43
 						}
 					],
@@ -472,7 +472,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));\n"
+										"text": "\n```\ndraw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));\n```\n"
 									}
 								]
 							},
@@ -508,7 +508,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 178,
+							"line": 202,
 							"character": 56
 						}
 					],
@@ -525,7 +525,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));\n"
+										"text": "\n```\ndraw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));\n```\n"
 									}
 								]
 							},
@@ -561,7 +561,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 214,
+							"line": 244,
 							"character": 53
 						}
 					],
@@ -578,7 +578,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));\n"
+										"text": "\n```\ndraw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));\n```\n"
 									}
 								]
 							},
@@ -614,7 +614,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 197,
+							"line": 224,
 							"character": 33
 						}
 					],
@@ -631,7 +631,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_3D_points_on(100)(t => make_3D_point(t, t, t));\n"
+										"text": "\n```\ndraw_3D_points_on(100)(t => make_3D_point(t, t, t));\n```\n"
 									}
 								]
 							},
@@ -667,7 +667,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 57,
+							"line": 60,
 							"character": 30
 						}
 					],
@@ -684,7 +684,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_connected(100)(t => make_point(t, t));\n"
+										"text": "\n```\ndraw_connected(100)(t => make_point(t, t));\n```\n"
 									}
 								]
 							},
@@ -720,7 +720,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 74,
+							"line": 80,
 							"character": 40
 						}
 					],
@@ -737,7 +737,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_connected_full_view(100)(t => make_point(t, t));\n"
+										"text": "\n```\ndraw_connected_full_view(100)(t => make_point(t, t));\n```\n"
 									}
 								]
 							},
@@ -773,7 +773,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 91,
+							"line": 100,
 							"character": 53
 						}
 					],
@@ -790,7 +790,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_connected_full_view_proportional(100)(t => make_point(t, t));\n"
+										"text": "\n```\ndraw_connected_full_view_proportional(100)(t => make_point(t, t));\n```\n"
 									}
 								]
 							},
@@ -826,7 +826,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 127,
+							"line": 142,
 							"character": 50
 						}
 					],
@@ -843,7 +843,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_points_full_view_proportional(100)(t => make_point(t, t));\n"
+										"text": "\n```\ndraw_points_full_view_proportional(100)(t => make_point(t, t));\n```\n"
 									}
 								]
 							},
@@ -879,7 +879,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 110,
+							"line": 122,
 							"character": 30
 						}
 					],
@@ -896,7 +896,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "draw_points_on(100)(t => make_point(t, t));\n"
+										"text": "\n```\ndraw_points_on(100)(t => make_point(t, t));\n```\n"
 									}
 								]
 							},
@@ -932,7 +932,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 349,
+							"line": 406,
 							"character": 20
 						}
 					],
@@ -949,7 +949,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\ng_of(point); // Returns 100\n"
+										"text": "\n```\nconst point = make_color_point(1, 2, 3, 50, 100, 150);\ng_of(point); // Returns 100\n```\n"
 									}
 								]
 							},
@@ -982,7 +982,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 374,
+							"line": 434,
 							"character": 22
 						}
 					],
@@ -1026,7 +1026,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 282,
+							"line": 324,
 							"character": 35
 						}
 					],
@@ -1043,7 +1043,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const redPoint = make_color_point(0.5, 0.5, 0.5, 255, 0, 0);\n"
+										"text": "\n```\nconst redPoint = make_color_point(0.5, 0.5, 0.5, 255, 0, 0);\n```\n"
 									}
 								]
 							},
@@ -1149,7 +1149,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 241,
+							"line": 277,
 							"character": 29
 						}
 					],
@@ -1166,7 +1166,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const point = make_3D_point(0.5, 0.5, 0.5);\n"
+										"text": "\n```\nconst point = make_3D_point(0.5, 0.5, 0.5);\n```\n"
 									}
 								]
 							},
@@ -1230,7 +1230,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 258,
+							"line": 297,
 							"character": 32
 						}
 					],
@@ -1247,7 +1247,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const redPoint = make_color_point(0.5, 0.5, 255, 0, 0);\n"
+										"text": "\n```\nconst redPoint = make_color_point(0.5, 0.5, 255, 0, 0);\n```\n"
 									}
 								]
 							},
@@ -1339,7 +1339,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 228,
+							"line": 261,
 							"character": 26
 						}
 					],
@@ -1356,7 +1356,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const point = make_point(0.5, 0.5);\n"
+										"text": "\n```\nconst point = make_point(0.5, 0.5);\n```\n"
 									}
 								]
 							},
@@ -1406,7 +1406,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 553,
+							"line": 613,
 							"character": 40
 						}
 					],
@@ -1453,7 +1453,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 337,
+							"line": 391,
 							"character": 20
 						}
 					],
@@ -1470,7 +1470,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\nr_of(point); // Returns 50\n"
+										"text": "\n```\nconst point = make_color_point(1, 2, 3, 50, 100, 150);\nr_of(point); // Returns 50\n```\n"
 									}
 								]
 							},
@@ -1503,7 +1503,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 427,
+							"line": 487,
 							"character": 36
 						}
 					],
@@ -1569,7 +1569,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 510,
+							"line": 570,
 							"character": 21
 						}
 					],
@@ -1644,7 +1644,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 537,
+							"line": 597,
 							"character": 34
 						}
 					],
@@ -1691,7 +1691,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 390,
+							"line": 450,
 							"character": 25
 						}
 					],
@@ -1766,7 +1766,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 625,
+							"line": 685,
 							"character": 27
 						}
 					],
@@ -1813,7 +1813,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 636,
+							"line": 696,
 							"character": 25
 						}
 					],
@@ -1860,7 +1860,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 648,
+							"line": 708,
 							"character": 28
 						}
 					],
@@ -1907,7 +1907,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 301,
+							"line": 346,
 							"character": 20
 						}
 					],
@@ -1924,7 +1924,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\nx_of(point); // Returns 1\n"
+										"text": "\n```\nconst point = make_color_point(1, 2, 3, 50, 100, 150);\nx_of(point); // Returns 1\n```\n"
 									}
 								]
 							},
@@ -1957,7 +1957,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 313,
+							"line": 361,
 							"character": 20
 						}
 					],
@@ -1974,7 +1974,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\ny_of(point); // Returns 2\n"
+										"text": "\n```\nconst point = make_color_point(1, 2, 3, 50, 100, 150);\ny_of(point); // Returns 2\n```\n"
 									}
 								]
 							},
@@ -2007,7 +2007,7 @@
 					"sources": [
 						{
 							"fileName": "curves/functions.ts",
-							"line": 325,
+							"line": 376,
 							"character": 20
 						}
 					],
@@ -2024,7 +2024,7 @@
 								"tags": [
 									{
 										"tag": "example",
-										"text": "const point = make_color_point(1, 2, 3, 50, 100, 150);\nz_of(point); // Returns 3\n"
+										"text": "\n```\nconst point = make_color_point(1, 2, 3, 50, 100, 150);\nz_of(point); // Returns 3\n```\n"
 									}
 								]
 							},
