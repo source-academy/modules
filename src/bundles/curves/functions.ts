@@ -52,7 +52,10 @@ import generateCurve from './curves_webgl';
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_connected(100)(t => make_point(t, t));
+ * @example
+ * ```
+ * draw_connected(100)(t => make_point(t, t));
+ * ```
  */
 export function draw_connected(num: number): RenderFunction {
   return (func) => generateCurve('none', 'lines', num, func, '2D', false);
@@ -69,7 +72,10 @@ export function draw_connected(num: number): RenderFunction {
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_connected_full_view(100)(t => make_point(t, t));
+ * @example
+ * ```
+ * draw_connected_full_view(100)(t => make_point(t, t));
+ * ```
  */
 export function draw_connected_full_view(num: number): RenderFunction {
   return (func) => generateCurve('stretch', 'lines', num, func, '2D', true);
@@ -86,7 +92,10 @@ export function draw_connected_full_view(num: number): RenderFunction {
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_connected_full_view_proportional(100)(t => make_point(t, t));
+ * @example
+ * ```
+ * draw_connected_full_view_proportional(100)(t => make_point(t, t));
+ * ```
  */
 export function draw_connected_full_view_proportional(
   num: number
@@ -105,7 +114,10 @@ export function draw_connected_full_view_proportional(
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1,there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_points_on(100)(t => make_point(t, t));
+ * @example
+ * ```
+ * draw_points_on(100)(t => make_point(t, t));
+ * ```
  */
 export function draw_points_on(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '2D', false);
@@ -122,7 +134,10 @@ export function draw_points_on(num: number): RenderFunction {
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_points_full_view_proportional(100)(t => make_point(t, t));
+ * @example
+ * ```
+ * draw_points_full_view_proportional(100)(t => make_point(t, t));
+ * ```
  */
 export function draw_points_full_view_proportional(
   num: number
@@ -140,7 +155,10 @@ export function draw_points_full_view_proportional(
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_3D_connected(100)(t => make_3D_point(t, t, t));
+ * @example
+ * ```
+ * draw_3D_connected(100)(t => make_3D_point(t, t, t));
+ * ```
  */
 export function draw_3D_connected(num: number): RenderFunction {
   return (func) => generateCurve('none', 'lines', num, func, '3D', false);
@@ -157,7 +175,10 @@ export function draw_3D_connected(num: number): RenderFunction {
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
+ * @example
+ * ```
+ * draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
+ * ```
  */
 export function draw_3D_connected_full_view(num: number): RenderFunction {
   return (func) => generateCurve('stretch', 'lines', num, func, '3D', false);
@@ -173,7 +194,10 @@ export function draw_3D_connected_full_view(num: number): RenderFunction {
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
+ * @example
+ * ```
+ * draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
+ * ```
  */
 export function draw_3D_connected_full_view_proportional(
   num: number
@@ -192,7 +216,10 @@ export function draw_3D_connected_full_view_proportional(
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_3D_points_on(100)(t => make_3D_point(t, t, t));
+ * @example
+ * ```
+ * draw_3D_points_on(100)(t => make_3D_point(t, t, t));
+ * ```
  */
 export function draw_3D_points_on(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '3D', false);
@@ -209,7 +236,10 @@ export function draw_3D_points_on(num: number): RenderFunction {
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
- * @example draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
+ * @example
+ * ```
+ * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
+ * ```
  */
 export function draw_3D_points_full_view_proportional(
   num: number
@@ -223,7 +253,10 @@ export function draw_3D_points_full_view_proportional(
  * @param x x-coordinate of new point
  * @param y y-coordinate of new point
  * @returns with x and y as coordinates
- * @example const point = make_point(0.5, 0.5);
+ * @example
+ * ```
+ * const point = make_point(0.5, 0.5);
+ * ```
  */
 export function make_point(x: number, y: number): Point {
   return { x, y, z: 0, color: [0, 0, 0, 1] };
@@ -236,7 +269,10 @@ export function make_point(x: number, y: number): Point {
  * @param y y-coordinate of new point
  * @param z z-coordinate of new point
  * @returns with x, y and z as coordinates
- * @example const point = make_3D_point(0.5, 0.5, 0.5);
+ * @example
+ * ```
+ * const point = make_3D_point(0.5, 0.5, 0.5);
+ * ```
  */
 export function make_3D_point(x: number, y: number, z: number): Point {
   return { x, y, z, color: [0, 0, 0, 1] };
@@ -253,7 +289,10 @@ export function make_3D_point(x: number, y: number, z: number): Point {
  * @param g green component of new point
  * @param b blue component of new point
  * @returns with x and y as coordinates, and r, g and b as RGB values
- * @example const redPoint = make_color_point(0.5, 0.5, 255, 0, 0);
+ * @example
+ * ```
+ * const redPoint = make_color_point(0.5, 0.5, 255, 0, 0);
+ * ```
  */
 export function make_color_point(
   x: number,
@@ -277,7 +316,10 @@ export function make_color_point(
  * @param g green component of new point
  * @param b blue component of new point
  * @returns with x, y and z as coordinates, and r, g and b as RGB values
- * @example const redPoint = make_color_point(0.5, 0.5, 0.5, 255, 0, 0);
+ * @example
+ * ```
+ * const redPoint = make_color_point(0.5, 0.5, 0.5, 255, 0, 0);
+ * ```
  */
 export function make_3D_color_point(
   x: number,
@@ -295,8 +337,11 @@ export function make_3D_color_point(
  *
  * @param p given point
  * @returns x-coordinate of the Point
- * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * @example
+ * ```
+ * const point = make_color_point(1, 2, 3, 50, 100, 150);
  * x_of(point); // Returns 1
+ * ```
  */
 export function x_of(pt: Point): number {
   return pt.x;
@@ -307,8 +352,11 @@ export function x_of(pt: Point): number {
  *
  * @param p given point
  * @returns y-coordinate of the Point
- * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * @example
+ * ```
+ * const point = make_color_point(1, 2, 3, 50, 100, 150);
  * y_of(point); // Returns 2
+ * ```
  */
 export function y_of(pt: Point): number {
   return pt.y;
@@ -319,8 +367,11 @@ export function y_of(pt: Point): number {
  *
  * @param p given point
  * @returns z-coordinate of the Point
- * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * @example
+ * ```
+ * const point = make_color_point(1, 2, 3, 50, 100, 150);
  * z_of(point); // Returns 3
+ * ```
  */
 export function z_of(pt: Point): number {
   return pt.z;
@@ -331,8 +382,11 @@ export function z_of(pt: Point): number {
  *
  * @param p given point
  * @returns Red component of the Point
- * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * @example
+ * ```
+ * const point = make_color_point(1, 2, 3, 50, 100, 150);
  * r_of(point); // Returns 50
+ * ```
  */
 export function r_of(pt: Point): number {
   return pt.color[0] * 255;
@@ -343,8 +397,11 @@ export function r_of(pt: Point): number {
  *
  * @param p given point
  * @returns Green component of the Point
- * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * @example
+ * ```
+ * const point = make_color_point(1, 2, 3, 50, 100, 150);
  * g_of(point); // Returns 100
+ * ```
  */
 export function g_of(pt: Point): number {
   return pt.color[1] * 255;
@@ -355,8 +412,11 @@ export function g_of(pt: Point): number {
  *
  * @param p given point
  * @returns Blue component of the Point
- * @example const point = make_color_point(1, 2, 3, 50, 100, 150);
+ * @example
+ * ```
+ * const point = make_color_point(1, 2, 3, 50, 100, 150);
  * b_of(point); // Returns 150
+ * ```
  */
 export function b_of(pt: Point): number {
   return pt.color[2] * 255;

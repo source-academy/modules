@@ -17,8 +17,22 @@ type Props = {
 };
 
 type State = {
+  /**
+   * Slider component reflects this value. This value is also passed in as
+   * argument to render curves.
+   */
   rotationAngle: number;
+  /**
+   * Set to true by default. Slider updates this value to false when interacted
+   * with. Recursive `autoRotate()` checks for this value to decide whether to
+   * stop recursion. Button checks for this value to decide whether clicking the
+   * button takes effect, for countering spam-clicking.
+   */
   isRotating: boolean;
+  /**
+   * Set to false by default. Slider and button checks for this value to decide
+   * whether to be disabled.
+   */
   is3D: boolean;
 };
 
@@ -36,7 +50,8 @@ class WebGLCanvas extends React.Component<Props, State> {
   }
 
   /**
-   * This function decides whether the rendered curve is in 3D and setState accordingly.
+   * This function decides whether the rendered curve is in 3D and setState
+   * accordingly.
    */
   public componentDidMount() {
     if (this.$canvas) {
@@ -86,7 +101,8 @@ class WebGLCanvas extends React.Component<Props, State> {
   };
 
   /**
-   * Event handler for play button. Starts automated rotation by calling `autoRotate()`.
+   * Event handler for play button. Starts automated rotation by calling
+   * `autoRotate()`.
    */
   private onClickHandler = () => {
     if (this.$canvas && !this.state.isRotating) {
