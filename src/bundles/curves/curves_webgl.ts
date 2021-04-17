@@ -128,7 +128,7 @@ function drawCurve(
 
     const fieldOfView = (45 * Math.PI) / 180;
     const aspect = gl.canvas.width / gl.canvas.height;
-    const zNear = 0;
+    const zNear = 0.01; // Must not be zero, depth testing loses precision proportional to log(zFar / zNear)
     const zFar = 50.0;
     mat4.perspective(projMat, fieldOfView, aspect, zNear, zFar);
   }
