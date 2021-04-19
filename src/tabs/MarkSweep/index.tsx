@@ -1,7 +1,6 @@
 import React from 'react';
 import { Slider, Icon } from '@blueprintjs/core';
 import { THEME_COLOR } from './style';
-// import { COMMAND } from '../../bundles/mark_sweep/types';
 
 type Props = {
   children?: never;
@@ -11,17 +10,13 @@ type Props = {
 
 type State = {
   value: number;
-  memorySize: number;
-  toSpace: number;
   column: number;
-  row: number;
   tags: number[];
   heap: number[];
   commandHeap: any[];
   command: String;
   flips: number[];
-  functionLength: number;
-  toMemoryMatrix: number[][];
+  memoryMatrix: number[][];
   firstChild: number;
   lastChild: number;
   description: String;
@@ -40,23 +35,13 @@ class MarkSweep extends React.Component<Props, State> {
 
     this.state = {
       value: 0,
-      // eslint-disable-next-line react/no-unused-state
-      memorySize: 0,
-      // eslint-disable-next-line react/no-unused-state
-      functionLength: 0,
-      // eslint-disable-next-line react/no-unused-state
-      toSpace: 0,
       column: 0,
-      // eslint-disable-next-line react/no-unused-state
-      row: 0,
       tags: [],
       heap: [],
       commandHeap: [],
-      // eslint-disable-next-line react/no-unused-state
       flips: [0],
-      toMemoryMatrix: [],
+      memoryMatrix: [],
       firstChild: -1,
-      // eslint-disable-next-line react/no-unused-state
       lastChild: -1,
       command: '',
       description: '',
@@ -83,15 +68,12 @@ class MarkSweep extends React.Component<Props, State> {
   private initialize_state = () => {
     const { debuggerContext } = this.props;
     const functions = debuggerContext.result.value;
-    const memorySize = functions.get_memory_size();
     const column = functions.get_column_size();
-    const row = functions.get_row_size();
     const tags = functions.get_tags();
     const commandHeap = functions.get_command();
     const unmarked = functions.get_unmarked();
     const marked = functions.get_marked();
     let heap = [];
-    let toSpace = -1;
     let command = '';
     let firstChild = -1;
     let lastChild = -1;
@@ -102,7 +84,6 @@ class MarkSweep extends React.Component<Props, State> {
     if (commandHeap[0]) {
       const currentHeap = commandHeap[0];
       heap = currentHeap.heap;
-      toSpace = currentHeap.to;
       command = currentHeap.type;
       firstChild = currentHeap.left;
       lastChild = currentHeap.right;
@@ -112,45 +93,36 @@ class MarkSweep extends React.Component<Props, State> {
       queue = currentHeap.queue;
     }
 
-    const toMemoryMatrix = functions.get_to_memory_matrix();
-    const functionLength = commandHeap.length;
+    const memoryMatrix = functions.get_memory_matrix();
     const flips = functions.get_flips();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-    this.setState((state: State) => {
-      return {
-        memorySize,
-        toSpace,
-        column,
-        row,
-        tags,
-        heap,
-        functionLength,
-        toMemoryMatrix,
-        flips,
-        commandHeap,
-        command,
-        firstChild,
-        lastChild,
-        description,
-        leftDesc,
-        rightDesc,
-        unmarked,
-        marked,
-        queue,
-        running: true,
-      };
-    });
+    this.setState(() => ({
+      column,
+      tags,
+      heap,
+      memoryMatrix,
+      flips,
+      commandHeap,
+      command,
+      firstChild,
+      lastChild,
+      description,
+      leftDesc,
+      rightDesc,
+      unmarked,
+      marked,
+      queue,
+      running: true,
+    }));
   };
 
   private handlePlus = () => {
     let { value } = this.state;
     const lengthOfFunction = this.getlengthFunction();
-    const { commandHeap } = this.state;
     if (value < lengthOfFunction - 1) {
       value += 1;
-      // eslint-disable-next-line arrow-body-style
       this.setState(() => {
+        const { commandHeap } = this.state;
         return {
           value,
           heap: commandHeap[value].heap,
@@ -168,11 +140,10 @@ class MarkSweep extends React.Component<Props, State> {
 
   private handleMinus = () => {
     let { value } = this.state;
-    const { commandHeap } = this.state;
     if (value > 0) {
       value -= 1;
-      // eslint-disable-next-line arrow-body-style
       this.setState(() => {
+        const { commandHeap } = this.state;
         return {
           value,
           heap: commandHeap[value].heap,
@@ -188,15 +159,12 @@ class MarkSweep extends React.Component<Props, State> {
     }
   };
 
-  // eslint-disable-next-line arrow-body-style
   private sliderShift = (newValue: number) => {
-    const { commandHeap } = this.state;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-    this.setState((state: State) => {
+    this.setState(() => {
+      const { commandHeap } = this.state;
       return {
         value: newValue,
         heap: commandHeap[newValue].heap,
-        toSpace: commandHeap[newValue].to,
         command: commandHeap[newValue].type,
         firstChild: commandHeap[newValue].left,
         lastChild: commandHeap[newValue].right,
@@ -228,7 +196,6 @@ class MarkSweep extends React.Component<Props, State> {
     const roots = debuggerContext.result.value
       ? debuggerContext.result.value.get_roots()
       : [];
-    // eslint-disable-next-line react/destructuring-assignment
     const value = heap ? heap[indexValue] : 0;
     let color = '';
 
@@ -263,35 +230,31 @@ class MarkSweep extends React.Component<Props, State> {
     const size1 = commandHeap[value].sizeLeft;
     const size2 = commandHeap[value].sizeRight;
     let color = '';
-    console.log('background color ', firstChild, firstChild + size1);
 
     if (command === 'Showing Roots' && roots.includes(indexValue)) {
       color = THEME_COLOR.GREEN;
     } else if (indexValue >= firstChild && indexValue < firstChild + size1) {
-      color = THEME_COLOR.GREEN; // green
+      color = THEME_COLOR.GREEN;
     } else if (indexValue >= lastChild && indexValue < lastChild + size2) {
-      color = THEME_COLOR.YELLOW; // yellow
+      color = THEME_COLOR.YELLOW;
     }
 
     return color;
   };
 
-  // eslint-disable-next-line arrow-body-style
   private renderLabel = (val: number) => {
     const { flips } = this.state;
     return flips.includes(val) ? `^` : `${val}`;
   };
 
   public render() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { state } = this;
 
     if (state.running) {
-      const { toMemoryMatrix } = this.state;
+      const { memoryMatrix } = this.state;
       const lengthOfFunction = this.getlengthFunction();
       return (
         <div>
-          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
           <div>
             <p>
               This is a visualiser for mark and sweep garbage collector. Check
@@ -302,7 +265,7 @@ class MarkSweep extends React.Component<Props, State> {
             <div
               style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
             >
-              {state.leftDesc ? (
+              {state.leftDesc && (
                 <div style={{ flex: 1 }}>
                   <canvas
                     width={10}
@@ -313,8 +276,6 @@ class MarkSweep extends React.Component<Props, State> {
                   />
                   <span> {state.leftDesc} </span>
                 </div>
-              ) : (
-                false
               )}
               {state.rightDesc ? (
                 <div style={{ flex: 1 }}>
@@ -356,60 +317,46 @@ class MarkSweep extends React.Component<Props, State> {
           <div>
             <div>
               <div>
-                {toMemoryMatrix && toMemoryMatrix.length > 0
-                  ? toMemoryMatrix.map((item, row) => (
-                      <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <span style={{ width: 30 }}>
-                          {
-                            // eslint-disable-next-line react/destructuring-assignment
-                            row * this.state.column
-                          }
-                        </span>
-                        {item && item.length > 0
-                          ? // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-                            item.map((content, column) => {
-                              const color = this.getMemoryColor(content);
-                              const bgColor = this.getBackgroundColor(content);
-                              return (
-                                // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-                                <div
-                                  style={{
-                                    width: 14,
-                                    backgroundColor: bgColor,
-                                  }}
-                                >
-                                  <canvas
-                                    width={10}
-                                    height={10}
-                                    style={{
-                                      backgroundColor: color,
-                                      // margin: 2,
-                                    }}
-                                    // onClick={() => this.updateChild(content)}
-                                  />
-                                </div>
-                              );
-                            })
-                          : false}
-                      </div>
-                    ))
-                  : false}
+                {memoryMatrix &&
+                  memoryMatrix.length > 0 &&
+                  memoryMatrix.map((item, row) => (
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <span style={{ width: 30 }}> {row * state.column} </span>
+                      {item &&
+                        item.length > 0 &&
+                        item.map((content) => {
+                          const color = this.getMemoryColor(content);
+                          const bgColor = this.getBackgroundColor(content);
+                          return (
+                            <div
+                              style={{
+                                width: 14,
+                                backgroundColor: bgColor,
+                              }}
+                            >
+                              <canvas
+                                width={10}
+                                height={10}
+                                style={{
+                                  backgroundColor: color,
+                                }}
+                              />
+                            </div>
+                          );
+                        })}
+                    </div>
+                  ))}
               </div>
               <div>
-                {state.queue && state.queue.length ? (
+                {state.queue && state.queue.length && (
                   <div>
                     <br />
                     <span> Queue: [</span>
-                    {
-                      // eslint-disable-next-line @typescript-eslint/no-unused-vars, arrow-body-style
-                      state.queue.map((child) => {
-                        return <span style={{ fontSize: 10 }}> {child}, </span>;
-                      })
-                    }
+                    {state.queue.map((child) => (
+                      <span style={{ fontSize: 10 }}> {child}, </span>
+                    ))}
                     <span> ] </span>
                   </div>
-                ) : (
-                  false
                 )}
               </div>
             </div>
