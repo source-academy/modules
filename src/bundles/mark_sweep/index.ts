@@ -27,7 +27,7 @@ let FIRST_CHILD_SLOT: number = 2;
 let LAST_CHILD_SLOT: number = 3;
 let MARKED: number = 1;
 let UNMARKED: number = 0;
-const ROOTS: any[] = [];
+let ROOTS: any[] = [];
 
 function generateMemory(): void {
   toMemoryMatrix = [];
@@ -224,24 +224,36 @@ function newMark(left, heap, queue): void {
   );
 }
 
-function showRoots(left, right, heap): void {
+function addRoots(arr): void {
+  for (let i = 0; i < arr.length; i += 1) {
+    ROOTS.push(arr[i]);
+  }
+}
+
+function showRoot(heap): void {
   const toSpace = 0;
   const fromSpace = 0;
-  const newSizeLeft = NODE_SIZE;
-  const desc = `Roots are node ${left} and ${right}`;
+  const desc = `All root nodes are marked`;
   newCommand(
-    'Showing Roots',
+    'Marked Roots',
     toSpace,
     fromSpace,
-    left,
-    right,
-    newSizeLeft,
-    NODE_SIZE,
+    -1,
+    -1,
+    0,
+    0,
     heap,
     desc,
-    'roots',
-    'roots'
+    '',
+    ''
   );
+}
+
+function showRoots(heap): void {
+  for (let i = 0; i < ROOTS.length; i += 1) {
+    showRoot(heap);
+  }
+  ROOTS = [];
 }
 
 function newUpdateSweep(right, heap): void {
@@ -288,7 +300,7 @@ function newPop(res, left, right, heap): void {
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
-  const desc = `Pop OS from memory ${right}, with value ${newRes}.`;
+  const desc = `Pop OS from memory ${left}, with value ${newRes}.`;
   newCommand(
     COMMAND.POP,
     toSpace,
@@ -507,5 +519,7 @@ export default function mark_sweep() {
     newUpdateSweep,
     showRoots,
     endGC,
+    addRoots,
+    showRoot,
   };
 }

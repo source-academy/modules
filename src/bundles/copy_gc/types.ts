@@ -13,3 +13,19 @@ export const COMMAND = {
   NEW: 'New',
   SCAN: 'Scan',
 };
+
+export type CommandHeapObject = {
+  type: String;
+  to: number;
+  from: number;
+  heap: number[];
+  left: number;
+  right: number;
+  sizeLeft: number;
+  sizeRight: number;
+  desc: String;
+  scan: number;
+  leftDesc: String;
+  rightDesc: String;
+  free: number;
+};

@@ -1,7 +1,4 @@
-// eslint-disable-next-line no-use-before-define
-import { MemoryHeaps, Memory, Tag, COMMAND } from './types';
-
-// exported functions
+import { MemoryHeaps, Memory, Tag, COMMAND, CommandHeapObject } from './types';
 
 // Global Variables
 let ROW: number = 10;
@@ -10,41 +7,22 @@ let MEMORY_SIZE: number = -99;
 let TO_SPACE: number;
 let FROM_SPACE: number;
 let memory: Memory;
-// eslint-disable-next-line prefer-const
 let memoryHeaps: Memory[] = [];
-// eslint-disable-next-line prefer-const
-let commandHeap: any[] = [];
-// eslint-disable-next-line prefer-const
-let operationHeaps: string[] = [];
+const commandHeap: CommandHeapObject[] = [];
 let toMemoryMatrix: number[][];
 let fromMemoryMatrix: number[][];
 let tags: Tag[];
 let typeTag: string[];
-// eslint-disable-next-line prefer-const
-let flips: number[] = [];
+const flips: number[] = [];
 let TAG_SLOT: number = 0;
 let SIZE_SLOT: number = 1;
 let FIRST_CHILD_SLOT: number = 2;
 let LAST_CHILD_SLOT: number = 3;
-let ROOTS: any[] = [];
+let ROOTS: number[] = [];
 
 function initialize_tag(allTag: number[], types: string[]): void {
   tags = allTag;
   typeTag = types;
-}
-
-function updateMemoryHeap(ops: string, newHeap: number[]): void {
-  if (newHeap) {
-    memory = [];
-    for (let j = 0; j < newHeap.length; j += 1) {
-      // eslint-disable-next-line no-param-reassign
-      memory.push(newHeap[j]);
-    }
-    console.log('add new ', memoryHeaps.length, ' -- ', newHeap);
-    memoryHeaps.push(memory);
-    operationHeaps.push(ops);
-    // heapStates.push(memoryHeaps);
-  }
 }
 
 function allHeap(newHeap: number[][]): void {
@@ -60,7 +38,6 @@ function generateMemory(): void {
   for (let i = 0; i < ROW / 2; i += 1) {
     memory = [];
     for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE / 2; j += 1) {
-      // eslint-disable-next-line no-param-reassign
       memory.push(i * COLUMN + j);
     }
     toMemoryMatrix.push(memory);
@@ -70,13 +47,12 @@ function generateMemory(): void {
   for (let i = ROW / 2; i < ROW; i += 1) {
     memory = [];
     for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
-      // eslint-disable-next-line no-param-reassign
       memory.push(i * COLUMN + j);
     }
     fromMemoryMatrix.push(memory);
   }
 
-  const obj = {
+  const obj: CommandHeapObject = {
     type: 'init',
     to: TO_SPACE,
     from: FROM_SPACE,
@@ -88,14 +64,15 @@ function generateMemory(): void {
     desc: 'Memory initially empty.',
     leftDesc: '',
     rightDesc: '',
+    scan: -1,
+    free: -1,
   };
 
   commandHeap.push(obj);
 }
 
-function resetFromSpace(fromSpace, heap): any {
-  // eslint-disable-next-line prefer-const
-  let newHeap: any[] = [];
+function resetFromSpace(fromSpace, heap): number[] {
+  const newHeap: number[] = [];
   if (fromSpace > 0) {
     for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
       newHeap.push(heap[i]);
@@ -121,7 +98,6 @@ function initialize_memory(memorySize: number): void {
   TO_SPACE = 0;
   FROM_SPACE = MEMORY_SIZE / 2;
   generateMemory();
-  console.log('updating memory size ', MEMORY_SIZE);
 }
 
 function newCommand(
@@ -150,11 +126,10 @@ function newCommand(
 
   memory = [];
   for (let j = 0; j < heap.length; j += 1) {
-    // eslint-disable-next-line no-param-reassign
     memory.push(heap[j]);
   }
 
-  const obj = {
+  const obj: CommandHeapObject = {
     type: newType,
     to: newToSpace,
     from: newFromSpace,
@@ -166,6 +141,8 @@ function newCommand(
     desc: newDesc,
     leftDesc: newFirstDesc,
     rightDesc: newLastDesc,
+    scan: -1,
+    free: -1,
   };
 
   commandHeap.push(obj);
@@ -268,7 +245,7 @@ function newPop(res, left, right, heap): void {
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
-  const desc = `Pop OS from memory ${right}, with value ${newRes}.`;
+  const desc = `Pop OS from memory ${left}, with value ${newRes}.`;
   newCommand(
     COMMAND.POP,
     toSpace,
@@ -281,6 +258,25 @@ function newPop(res, left, right, heap): void {
     desc,
     'popped memory',
     'last child address slot'
+  );
+}
+
+function doneShowRoot(heap): void {
+  const toSpace = 0;
+  const fromSpace = 0;
+  const desc = `All root nodes are copied`;
+  newCommand(
+    'Copied Roots',
+    toSpace,
+    fromSpace,
+    -1,
+    -1,
+    0,
+    0,
+    heap,
+    desc,
+    '',
+    ''
   );
 }
 
@@ -353,7 +349,6 @@ function scanFlip(left, right, scan, free, heap): void {
   const fromSpace = commandHeap[length - 1].from;
   memory = [];
   for (let j = 0; j < heap.length; j += 1) {
-    // eslint-disable-next-line no-param-reassign
     memory.push(heap[j]);
   }
 
@@ -361,9 +356,18 @@ function scanFlip(left, right, scan, free, heap): void {
   const newRight = right;
   const newScan = scan;
   const newFree = free;
-  const newDesc = `Scanning node at ${left} for children node from ${scan} to ${free}`;
+  let newDesc = `Scanning node at ${left} for children node ${scan} and ${free}`;
+  if (scan) {
+    if (free) {
+      newDesc = `Scanning node at ${left} for children node ${scan} and ${free}`;
+    } else {
+      newDesc = `Scanning node at ${left} for children node ${scan}`;
+    }
+  } else if (free) {
+    newDesc = `Scanning node at ${left} for children node ${free}`;
+  }
 
-  const obj = {
+  const obj: CommandHeapObject = {
     type: COMMAND.SCAN,
     to: toSpace,
     from: fromSpace,
@@ -410,7 +414,7 @@ function get_tags(): Tag[] {
   return tags;
 }
 
-function get_command(): any[] {
+function get_command(): CommandHeapObject[] {
   return commandHeap;
 }
 
@@ -484,7 +488,6 @@ export default function copy_gc() {
     // initialisation
     initialize_memory,
     initialize_tag,
-    updateMemoryHeap,
     generateMemory,
     allHeap,
     updateSlotSegment,
@@ -501,39 +504,6 @@ export default function copy_gc() {
     updateRoots,
     resetRoots,
     showRoots,
+    doneShowRoot,
   };
 }
-
-/*
-import { 
-    copy_gc, 
-    update, 
-    initialize_memory, 
-    init, 
-    updateMemoryHeap,
-    initialize_tag,
-    updateFlip
-} from "copy_gc"; 
-
-initialize_memory(200);
-update(0, 28);
-updateMemoryHeap([20,53,65,13]);
-updateFlip();
-updateMemoryHeap([20,5,65,23]);
-updateMemoryHeap([2,523,15,143]);
-updateMemoryHeap([20,53,65,23]);
-updateFlip();
-updateMemoryHeap([2,523,15,143]);
-updateMemoryHeap([20,5,65,23]);
-initialize_tag([53,23], ['hallo', 'int']);
-
-init();
-
-
-// general node layout
-const TAG_SLOT = 0;
-const SIZE_SLOT = 1;
-const FIRST_CHILD_SLOT = 2;
-const LAST_CHILD_SLOT = 3;
-
-*/
