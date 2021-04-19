@@ -82,6 +82,10 @@ Follow the instructions highlighted [here](https://github.com/source-academy/js-
 
 Follow the instructions to setup the Source Modules code repository with Source Academy frontend highlighted in the above section as per normal to use your local `js-slang` with your local `cadet-frontend` and Source Modules code repository. 
 
+### Development Guide
+
+Please refer to the Source Modules Development Guide located in the Source Modules Wiki [here](https://github.com/source-academy/modules/wiki/Development-Guide) for more information regarding how to create your own Source Module including its own bundle and tab. 
+
 ## License
 
 [![Apache 2][apache2-image]][apache2]
