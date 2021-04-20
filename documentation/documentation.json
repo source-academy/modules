@@ -5,7 +5,7 @@
 	"flags": {},
 	"children": [
 		{
-			"id": 178,
+			"id": 61,
 			"name": "binary_trees",
 			"kind": 1,
 			"kindString": "Module",
@@ -16,7 +16,7 @@
 			"originalName": "binary_tree/functions",
 			"children": [
 				{
-					"id": 179,
+					"id": 62,
 					"name": "make_empty_tree",
 					"kind": 64,
 					"kindString": "Function",
@@ -30,7 +30,7 @@
 					],
 					"signatures": [
 						{
-							"id": 180,
+							"id": 63,
 							"name": "make_empty_tree",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -53,7 +53,7 @@
 					]
 				},
 				{
-					"id": 181,
+					"id": 64,
 					"name": "make_tree",
 					"kind": 64,
 					"kindString": "Function",
@@ -67,7 +67,7 @@
 					],
 					"signatures": [
 						{
-							"id": 182,
+							"id": 65,
 							"name": "make_tree",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -84,7 +84,7 @@
 							},
 							"parameters": [
 								{
-									"id": 183,
+									"id": 66,
 									"name": "value",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -98,7 +98,7 @@
 									}
 								},
 								{
-									"id": 184,
+									"id": 67,
 									"name": "left",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -112,7 +112,7 @@
 									}
 								},
 								{
-									"id": 185,
+									"id": 68,
 									"name": "right",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -139,8 +139,8 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						179,
-						181
+						62,
+						64
 					]
 				}
 			],
@@ -153,7 +153,7 @@
 			]
 		},
 		{
-			"id": 61,
+			"id": 69,
 			"name": "curves",
 			"kind": 1,
 			"kindString": "Module",
@@ -175,7 +175,7 @@
 			"originalName": "curves/functions",
 			"children": [
 				{
-					"id": 175,
+					"id": 183,
 					"name": "arc",
 					"kind": 64,
 					"kindString": "Function",
@@ -189,7 +189,7 @@
 					],
 					"signatures": [
 						{
-							"id": 176,
+							"id": 184,
 							"name": "arc",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -200,7 +200,7 @@
 							},
 							"parameters": [
 								{
-									"id": 177,
+									"id": 185,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -222,7 +222,7 @@
 					]
 				},
 				{
-					"id": 131,
+					"id": 139,
 					"name": "b_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -236,7 +236,7 @@
 					],
 					"signatures": [
 						{
-							"id": 132,
+							"id": 140,
 							"name": "b_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -253,7 +253,7 @@
 							},
 							"parameters": [
 								{
-									"id": 133,
+									"id": 141,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -272,7 +272,7 @@
 					]
 				},
 				{
-					"id": 162,
+					"id": 170,
 					"name": "connect_ends",
 					"kind": 64,
 					"kindString": "Function",
@@ -286,7 +286,7 @@
 					],
 					"signatures": [
 						{
-							"id": 163,
+							"id": 171,
 							"name": "connect_ends",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -297,7 +297,7 @@
 							},
 							"parameters": [
 								{
-									"id": 164,
+									"id": 172,
 									"name": "curve1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -311,7 +311,7 @@
 									}
 								},
 								{
-									"id": 165,
+									"id": 173,
 									"name": "curve2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -333,7 +333,7 @@
 					]
 				},
 				{
-					"id": 158,
+					"id": 166,
 					"name": "connect_rigidly",
 					"kind": 64,
 					"kindString": "Function",
@@ -347,7 +347,7 @@
 					],
 					"signatures": [
 						{
-							"id": 159,
+							"id": 167,
 							"name": "connect_rigidly",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -358,7 +358,7 @@
 							},
 							"parameters": [
 								{
-									"id": 160,
+									"id": 168,
 									"name": "curve1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -372,7 +372,7 @@
 									}
 								},
 								{
-									"id": 161,
+									"id": 169,
 									"name": "curve2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -394,7 +394,7 @@
 					]
 				},
 				{
-					"id": 77,
+					"id": 85,
 					"name": "draw_3D_connected",
 					"kind": 64,
 					"kindString": "Function",
@@ -408,7 +408,7 @@
 					],
 					"signatures": [
 						{
-							"id": 78,
+							"id": 86,
 							"name": "draw_3D_connected",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -425,7 +425,7 @@
 							},
 							"parameters": [
 								{
-									"id": 79,
+									"id": 87,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -447,7 +447,7 @@
 					]
 				},
 				{
-					"id": 80,
+					"id": 88,
 					"name": "draw_3D_connected_full_view",
 					"kind": 64,
 					"kindString": "Function",
@@ -461,7 +461,7 @@
 					],
 					"signatures": [
 						{
-							"id": 81,
+							"id": 89,
 							"name": "draw_3D_connected_full_view",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -478,7 +478,7 @@
 							},
 							"parameters": [
 								{
-									"id": 82,
+									"id": 90,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -500,7 +500,7 @@
 					]
 				},
 				{
-					"id": 83,
+					"id": 91,
 					"name": "draw_3D_connected_full_view_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -514,7 +514,7 @@
 					],
 					"signatures": [
 						{
-							"id": 84,
+							"id": 92,
 							"name": "draw_3D_connected_full_view_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -531,7 +531,7 @@
 							},
 							"parameters": [
 								{
-									"id": 85,
+									"id": 93,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -553,7 +553,7 @@
 					]
 				},
 				{
-					"id": 89,
+					"id": 97,
 					"name": "draw_3D_points_full_view_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -567,7 +567,7 @@
 					],
 					"signatures": [
 						{
-							"id": 90,
+							"id": 98,
 							"name": "draw_3D_points_full_view_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -584,7 +584,7 @@
 							},
 							"parameters": [
 								{
-									"id": 91,
+									"id": 99,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -606,7 +606,7 @@
 					]
 				},
 				{
-					"id": 86,
+					"id": 94,
 					"name": "draw_3D_points_on",
 					"kind": 64,
 					"kindString": "Function",
@@ -620,7 +620,7 @@
 					],
 					"signatures": [
 						{
-							"id": 87,
+							"id": 95,
 							"name": "draw_3D_points_on",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -637,7 +637,7 @@
 							},
 							"parameters": [
 								{
-									"id": 88,
+									"id": 96,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -659,7 +659,7 @@
 					]
 				},
 				{
-					"id": 62,
+					"id": 70,
 					"name": "draw_connected",
 					"kind": 64,
 					"kindString": "Function",
@@ -673,7 +673,7 @@
 					],
 					"signatures": [
 						{
-							"id": 63,
+							"id": 71,
 							"name": "draw_connected",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -690,7 +690,7 @@
 							},
 							"parameters": [
 								{
-									"id": 64,
+									"id": 72,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -712,7 +712,7 @@
 					]
 				},
 				{
-					"id": 65,
+					"id": 73,
 					"name": "draw_connected_full_view",
 					"kind": 64,
 					"kindString": "Function",
@@ -726,7 +726,7 @@
 					],
 					"signatures": [
 						{
-							"id": 66,
+							"id": 74,
 							"name": "draw_connected_full_view",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -743,7 +743,7 @@
 							},
 							"parameters": [
 								{
-									"id": 67,
+									"id": 75,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -765,7 +765,7 @@
 					]
 				},
 				{
-					"id": 68,
+					"id": 76,
 					"name": "draw_connected_full_view_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -779,7 +779,7 @@
 					],
 					"signatures": [
 						{
-							"id": 69,
+							"id": 77,
 							"name": "draw_connected_full_view_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -796,7 +796,7 @@
 							},
 							"parameters": [
 								{
-									"id": 70,
+									"id": 78,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -818,7 +818,7 @@
 					]
 				},
 				{
-					"id": 74,
+					"id": 82,
 					"name": "draw_points_full_view_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -832,7 +832,7 @@
 					],
 					"signatures": [
 						{
-							"id": 75,
+							"id": 83,
 							"name": "draw_points_full_view_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -849,7 +849,7 @@
 							},
 							"parameters": [
 								{
-									"id": 76,
+									"id": 84,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -871,7 +871,7 @@
 					]
 				},
 				{
-					"id": 71,
+					"id": 79,
 					"name": "draw_points_on",
 					"kind": 64,
 					"kindString": "Function",
@@ -885,7 +885,7 @@
 					],
 					"signatures": [
 						{
-							"id": 72,
+							"id": 80,
 							"name": "draw_points_on",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -902,7 +902,7 @@
 							},
 							"parameters": [
 								{
-									"id": 73,
+									"id": 81,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -924,7 +924,7 @@
 					]
 				},
 				{
-					"id": 128,
+					"id": 136,
 					"name": "g_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -938,7 +938,7 @@
 					],
 					"signatures": [
 						{
-							"id": 129,
+							"id": 137,
 							"name": "g_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -955,7 +955,7 @@
 							},
 							"parameters": [
 								{
-									"id": 130,
+									"id": 138,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -974,7 +974,7 @@
 					]
 				},
 				{
-					"id": 134,
+					"id": 142,
 					"name": "invert",
 					"kind": 64,
 					"kindString": "Function",
@@ -988,7 +988,7 @@
 					],
 					"signatures": [
 						{
-							"id": 135,
+							"id": 143,
 							"name": "invert",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -999,7 +999,7 @@
 							},
 							"parameters": [
 								{
-									"id": 136,
+									"id": 144,
 									"name": "curve",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1018,7 +1018,7 @@
 					]
 				},
 				{
-					"id": 108,
+					"id": 116,
 					"name": "make_3D_color_point",
 					"kind": 64,
 					"kindString": "Function",
@@ -1032,7 +1032,7 @@
 					],
 					"signatures": [
 						{
-							"id": 109,
+							"id": 117,
 							"name": "make_3D_color_point",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1049,7 +1049,7 @@
 							},
 							"parameters": [
 								{
-									"id": 110,
+									"id": 118,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1063,7 +1063,7 @@
 									}
 								},
 								{
-									"id": 111,
+									"id": 119,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1077,13 +1077,203 @@
 									}
 								},
 								{
-									"id": 112,
+									"id": 120,
 									"name": "z",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
 										"text": "z-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 121,
+									"name": "r",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "red component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 122,
+									"name": "g",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "green component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 123,
+									"name": "b",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "blue component of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 104,
+					"name": "make_3D_point",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 277,
+							"character": 29
+						}
+					],
+					"signatures": [
+						{
+							"id": 105,
+							"name": "make_3D_point",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a 3D Point with given x, y and z coordinates.",
+								"returns": "with x, y and z as coordinates",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n```\nconst point = make_3D_point(0.5, 0.5, 0.5);\n```\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 106,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 107,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 108,
+									"name": "z",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "z-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Point"
+							}
+						}
+					]
+				},
+				{
+					"id": 109,
+					"name": "make_color_point",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "curves/functions.ts",
+							"line": 297,
+							"character": 32
+						}
+					],
+					"signatures": [
+						{
+							"id": 110,
+							"name": "make_color_point",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a color Point with given x and y coordinates, and RGB values ranging\nfrom 0 to 255. Any input lower than 0 for RGB will be rounded up to 0, and\nany input higher than 255 will be rounded down to 255.",
+								"returns": "with x and y as coordinates, and r, g and b as RGB values",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n```\nconst redPoint = make_color_point(0.5, 0.5, 255, 0, 0);\n```\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 111,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x-coordinate of new point"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 112,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y-coordinate of new point"
 									},
 									"type": {
 										"type": "intrinsic",
@@ -1141,197 +1331,7 @@
 					]
 				},
 				{
-					"id": 96,
-					"name": "make_3D_point",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "curves/functions.ts",
-							"line": 277,
-							"character": 29
-						}
-					],
-					"signatures": [
-						{
-							"id": 97,
-							"name": "make_3D_point",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Makes a 3D Point with given x, y and z coordinates.",
-								"returns": "with x, y and z as coordinates",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "\n```\nconst point = make_3D_point(0.5, 0.5, 0.5);\n```\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 98,
-									"name": "x",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "x-coordinate of new point"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 99,
-									"name": "y",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "y-coordinate of new point"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 100,
-									"name": "z",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "z-coordinate of new point"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Point"
-							}
-						}
-					]
-				},
-				{
-					"id": 101,
-					"name": "make_color_point",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "curves/functions.ts",
-							"line": 297,
-							"character": 32
-						}
-					],
-					"signatures": [
-						{
-							"id": 102,
-							"name": "make_color_point",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Makes a color Point with given x and y coordinates, and RGB values ranging\nfrom 0 to 255. Any input lower than 0 for RGB will be rounded up to 0, and\nany input higher than 255 will be rounded down to 255.",
-								"returns": "with x and y as coordinates, and r, g and b as RGB values",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "\n```\nconst redPoint = make_color_point(0.5, 0.5, 255, 0, 0);\n```\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 103,
-									"name": "x",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "x-coordinate of new point"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 104,
-									"name": "y",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "y-coordinate of new point"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 105,
-									"name": "r",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "red component of new point"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 106,
-									"name": "g",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "green component of new point"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 107,
-									"name": "b",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "blue component of new point"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Point"
-							}
-						}
-					]
-				},
-				{
-					"id": 92,
+					"id": 100,
 					"name": "make_point",
 					"kind": 64,
 					"kindString": "Function",
@@ -1345,7 +1345,7 @@
 					],
 					"signatures": [
 						{
-							"id": 93,
+							"id": 101,
 							"name": "make_point",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1362,7 +1362,7 @@
 							},
 							"parameters": [
 								{
-									"id": 94,
+									"id": 102,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1376,7 +1376,7 @@
 									}
 								},
 								{
-									"id": 95,
+									"id": 103,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1398,7 +1398,7 @@
 					]
 				},
 				{
-					"id": 155,
+					"id": 163,
 					"name": "put_in_standard_position",
 					"kind": 64,
 					"kindString": "Function",
@@ -1412,7 +1412,7 @@
 					],
 					"signatures": [
 						{
-							"id": 156,
+							"id": 164,
 							"name": "put_in_standard_position",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1423,7 +1423,7 @@
 							},
 							"parameters": [
 								{
-									"id": 157,
+									"id": 165,
 									"name": "curve",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1445,7 +1445,7 @@
 					]
 				},
 				{
-					"id": 125,
+					"id": 133,
 					"name": "r_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -1459,7 +1459,7 @@
 					],
 					"signatures": [
 						{
-							"id": 126,
+							"id": 134,
 							"name": "r_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1476,7 +1476,7 @@
 							},
 							"parameters": [
 								{
-									"id": 127,
+									"id": 135,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1495,7 +1495,7 @@
 					]
 				},
 				{
-					"id": 142,
+					"id": 150,
 					"name": "rotate_around_origin",
 					"kind": 64,
 					"kindString": "Function",
@@ -1509,7 +1509,7 @@
 					],
 					"signatures": [
 						{
-							"id": 143,
+							"id": 151,
 							"name": "rotate_around_origin",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1520,7 +1520,7 @@
 							},
 							"parameters": [
 								{
-									"id": 144,
+									"id": 152,
 									"name": "theta1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1531,7 +1531,7 @@
 									}
 								},
 								{
-									"id": 145,
+									"id": 153,
 									"name": "theta2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1542,7 +1542,7 @@
 									}
 								},
 								{
-									"id": 146,
+									"id": 154,
 									"name": "theta3",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1561,7 +1561,7 @@
 					]
 				},
 				{
-					"id": 147,
+					"id": 155,
 					"name": "scale",
 					"kind": 64,
 					"kindString": "Function",
@@ -1575,7 +1575,7 @@
 					],
 					"signatures": [
 						{
-							"id": 148,
+							"id": 156,
 							"name": "scale",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1586,7 +1586,7 @@
 							},
 							"parameters": [
 								{
-									"id": 149,
+									"id": 157,
 									"name": "a",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1600,7 +1600,7 @@
 									}
 								},
 								{
-									"id": 150,
+									"id": 158,
 									"name": "b",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1614,7 +1614,7 @@
 									}
 								},
 								{
-									"id": 151,
+									"id": 159,
 									"name": "c",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1636,7 +1636,7 @@
 					]
 				},
 				{
-					"id": 152,
+					"id": 160,
 					"name": "scale_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -1650,7 +1650,7 @@
 					],
 					"signatures": [
 						{
-							"id": 153,
+							"id": 161,
 							"name": "scale_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1661,7 +1661,7 @@
 							},
 							"parameters": [
 								{
-									"id": 154,
+									"id": 162,
 									"name": "s",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1683,7 +1683,7 @@
 					]
 				},
 				{
-					"id": 137,
+					"id": 145,
 					"name": "translate",
 					"kind": 64,
 					"kindString": "Function",
@@ -1697,7 +1697,7 @@
 					],
 					"signatures": [
 						{
-							"id": 138,
+							"id": 146,
 							"name": "translate",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1708,7 +1708,7 @@
 							},
 							"parameters": [
 								{
-									"id": 139,
+									"id": 147,
 									"name": "x0",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1722,7 +1722,7 @@
 									}
 								},
 								{
-									"id": 140,
+									"id": 148,
 									"name": "y0",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1736,7 +1736,7 @@
 									}
 								},
 								{
-									"id": 141,
+									"id": 149,
 									"name": "z0",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1758,7 +1758,7 @@
 					]
 				},
 				{
-					"id": 166,
+					"id": 174,
 					"name": "unit_circle",
 					"kind": 64,
 					"kindString": "Function",
@@ -1772,7 +1772,7 @@
 					],
 					"signatures": [
 						{
-							"id": 167,
+							"id": 175,
 							"name": "unit_circle",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1783,7 +1783,7 @@
 							},
 							"parameters": [
 								{
-									"id": 168,
+									"id": 176,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1805,7 +1805,7 @@
 					]
 				},
 				{
-					"id": 169,
+					"id": 177,
 					"name": "unit_line",
 					"kind": 64,
 					"kindString": "Function",
@@ -1819,7 +1819,7 @@
 					],
 					"signatures": [
 						{
-							"id": 170,
+							"id": 178,
 							"name": "unit_line",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1830,7 +1830,7 @@
 							},
 							"parameters": [
 								{
-									"id": 171,
+									"id": 179,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1852,7 +1852,7 @@
 					]
 				},
 				{
-					"id": 172,
+					"id": 180,
 					"name": "unit_line_at",
 					"kind": 64,
 					"kindString": "Function",
@@ -1866,7 +1866,7 @@
 					],
 					"signatures": [
 						{
-							"id": 173,
+							"id": 181,
 							"name": "unit_line_at",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1877,7 +1877,7 @@
 							},
 							"parameters": [
 								{
-									"id": 174,
+									"id": 182,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1899,7 +1899,7 @@
 					]
 				},
 				{
-					"id": 116,
+					"id": 124,
 					"name": "x_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -1913,7 +1913,7 @@
 					],
 					"signatures": [
 						{
-							"id": 117,
+							"id": 125,
 							"name": "x_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1930,7 +1930,7 @@
 							},
 							"parameters": [
 								{
-									"id": 118,
+									"id": 126,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1949,7 +1949,7 @@
 					]
 				},
 				{
-					"id": 119,
+					"id": 127,
 					"name": "y_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -1963,7 +1963,7 @@
 					],
 					"signatures": [
 						{
-							"id": 120,
+							"id": 128,
 							"name": "y_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1980,7 +1980,7 @@
 							},
 							"parameters": [
 								{
-									"id": 121,
+									"id": 129,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1999,7 +1999,7 @@
 					]
 				},
 				{
-					"id": 122,
+					"id": 130,
 					"name": "z_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -2013,7 +2013,7 @@
 					],
 					"signatures": [
 						{
-							"id": 123,
+							"id": 131,
 							"name": "z_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2030,7 +2030,7 @@
 							},
 							"parameters": [
 								{
-									"id": 124,
+									"id": 132,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2054,38 +2054,38 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						175,
-						131,
-						162,
-						158,
-						77,
-						80,
-						83,
-						89,
-						86,
-						62,
-						65,
-						68,
-						74,
-						71,
-						128,
-						134,
-						108,
-						96,
-						101,
-						92,
-						155,
-						125,
-						142,
-						147,
-						152,
-						137,
+						183,
+						139,
+						170,
 						166,
-						169,
-						172,
+						85,
+						88,
+						91,
+						97,
+						94,
+						70,
+						73,
+						76,
+						82,
+						79,
+						136,
+						142,
 						116,
-						119,
-						122
+						104,
+						109,
+						100,
+						163,
+						133,
+						150,
+						155,
+						160,
+						145,
+						174,
+						177,
+						180,
+						124,
+						127,
+						130
 					]
 				}
 			],
@@ -3080,8 +3080,8 @@
 			"title": "Modules",
 			"kind": 1,
 			"children": [
-				178,
 				61,
+				69,
 				12,
 				1
 			]

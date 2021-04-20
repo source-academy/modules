@@ -9,12 +9,23 @@
       "Pixnflix"
     ]
   },
+  "binary_tree": {
+    "tabs": []
+  },
+  "copy_gc": {
+    "tabs": [
+      "CopyGc"
+    ]
+  },
   "curves": {
     "tabs": [
       "Curves"
     ]
   },
-  "binary_tree": {
-    "tabs": []
+  "mark_sweep": {
+    "tabs": [
+      "MarkSweep"
+    ]
   }
+  
 }
