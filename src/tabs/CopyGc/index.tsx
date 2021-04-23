@@ -195,16 +195,10 @@ class CopyGC extends React.Component<Props, State> {
   private getMemoryColor = (indexValue) => {
     const { heap } = this.state;
     const value = heap ? heap[indexValue] : 0;
-    const { debuggerContext } = this.props;
-    const roots = debuggerContext.result.value
-      ? debuggerContext.result.value.get_roots()
-      : [];
 
     let color = '';
 
-    if (roots.includes(indexValue)) {
-      color = 'magenta';
-    } else if (!value) {
+    if (!value) {
       color = ThemeColor.GREY;
     } else if (this.isTag(value)) {
       color = ThemeColor.PINK;

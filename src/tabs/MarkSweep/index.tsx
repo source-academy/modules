@@ -1,6 +1,10 @@
 import React from 'react';
 import { Slider, Icon } from '@blueprintjs/core';
+<<<<<<< HEAD
 import { ThemeColor } from './style';
+=======
+import { THEME_COLOR } from './style';
+>>>>>>> e6625e2e5b72989fb98314caadfd8cc1269187a9
 
 type Props = {
   children?: never;
