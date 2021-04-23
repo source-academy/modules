@@ -1,10 +1,6 @@
 import React from 'react';
 import { Slider, Icon } from '@blueprintjs/core';
-<<<<<<< HEAD
 import { ThemeColor } from './style';
-=======
-import { THEME_COLOR } from './style';
->>>>>>> e6625e2e5b72989fb98314caadfd8cc1269187a9
 
 type Props = {
   children?: never;
@@ -262,7 +258,11 @@ class MarkSweep extends React.Component<Props, State> {
           <div>
             <p>
               This is a visualiser for mark and sweep garbage collector. Check
-              the guide here*.
+              the guide{' '}
+              <a href='https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide'>
+                here
+              </a>
+              .
             </p>
             <h3>{state.command}</h3>
             <p> {state.description} </p>
@@ -434,7 +434,11 @@ class MarkSweep extends React.Component<Props, State> {
       <div>
         <p>
           This is a visualiser for mark and sweep garbage collector. Check the
-          guide here*.
+          guide{' '}
+          <a href='https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide'>
+            here
+          </a>
+          .
         </p>
         <p> Calls the function init() at the end of your code to start. </p>
       </div>

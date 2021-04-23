@@ -249,7 +249,11 @@ class CopyGC extends React.Component<Props, State> {
           <div>
             <p>
               This is a visualiser for stop and copy garbage collector. Check
-              the guide here*.
+              the guide{' '}
+              <a href='https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide'>
+                here
+              </a>
+              .
             </p>
             <h3>{state.command}</h3>
             <p> {state.description} </p>
@@ -419,7 +423,11 @@ class CopyGC extends React.Component<Props, State> {
       <div>
         <p>
           This is a visualiser for stop and copy garbage collector. Check the
-          guide here*.
+          guide{' '}
+          <a href='https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide'>
+            here
+          </a>
+          .
         </p>
         <p> Calls the function init() at the end of your code to start. </p>
       </div>
