@@ -31,7 +31,7 @@ function generateMemory(): void {
   }
 
   const obj: CommandHeapObject = {
-    type: 'init',
+    type: COMMAND.INIT,
     heap: [],
     left: -1,
     right: -1,
@@ -130,14 +130,24 @@ function newCommand(
 function newSweep(left, heap): void {
   const newSizeLeft = NODE_SIZE;
   const desc = `Freeing node ${left}`;
-  newCommand('SWEEP', left, -1, newSizeLeft, 0, heap, desc, 'freed node', '');
+  newCommand(
+    COMMAND.SWEEP,
+    left,
+    -1,
+    newSizeLeft,
+    0,
+    heap,
+    desc,
+    'freed node',
+    ''
+  );
 }
 
 function newMark(left, heap, queue): void {
   const newSizeLeft = NODE_SIZE;
   const desc = `Marking node ${left} to be live memory`;
   newCommand(
-    'MARK',
+    COMMAND.MARK,
     left,
     -1,
     newSizeLeft,
@@ -158,7 +168,7 @@ function addRoots(arr): void {
 
 function showRoot(heap): void {
   const desc = `All root nodes are marked`;
-  newCommand('Marked Roots', -1, -1, 0, 0, heap, desc, '', '');
+  newCommand(COMMAND.SHOW_MARKED, -1, -1, 0, 0, heap, desc, '', '');
 }
 
 function showRoots(heap): void {
@@ -171,7 +181,7 @@ function showRoots(heap): void {
 function newUpdateSweep(right, heap): void {
   const desc = `Set node ${right} to freelist`;
   newCommand(
-    'SWEEP RESET',
+    COMMAND.RESET,
     -1,
     right,
     0,
@@ -238,13 +248,13 @@ function newNew(left, heap): void {
 
 function newGC(heap): void {
   const desc = `Memory exhausted, start Mark and Sweep Algorithm`;
-  newCommand('Mark and Sweep Start', -1, -1, 0, 0, heap, desc, '', '');
+  newCommand(COMMAND.START, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
 }
 
 function endGC(heap): void {
   const desc = `Result of free memory`;
-  newCommand('End of Garbage Collector', -1, -1, 0, 0, heap, desc, '', '');
+  newCommand(COMMAND.END, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
 }
 

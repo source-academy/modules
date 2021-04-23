@@ -1,6 +1,6 @@
 import React from 'react';
 import { Slider, Icon } from '@blueprintjs/core';
-import { THEME_COLOR } from './style';
+import { ThemeColor } from './style';
 import { COMMAND } from '../../bundles/copy_gc/types';
 
 type Props = {
@@ -205,11 +205,11 @@ class CopyGC extends React.Component<Props, State> {
     if (roots.includes(indexValue)) {
       color = 'magenta';
     } else if (!value) {
-      color = THEME_COLOR.GREY;
+      color = ThemeColor.GREY;
     } else if (this.isTag(value)) {
-      color = THEME_COLOR.PINK;
+      color = ThemeColor.PINK;
     } else {
-      color = THEME_COLOR.BLUE;
+      color = ThemeColor.BLUE;
     }
 
     return color;
@@ -226,15 +226,15 @@ class CopyGC extends React.Component<Props, State> {
     let color = '';
     if (command === COMMAND.FLIP) {
       if (indexValue === firstChild) {
-        color = THEME_COLOR.GREEN;
+        color = ThemeColor.GREEN;
       }
       if (indexValue === lastChild) {
-        color = THEME_COLOR.YELLOW;
+        color = ThemeColor.YELLOW;
       }
     } else if (indexValue >= firstChild && indexValue < firstChild + size1) {
-      color = THEME_COLOR.GREEN;
+      color = ThemeColor.GREEN;
     } else if (indexValue >= lastChild && indexValue < lastChild + size2) {
-      color = THEME_COLOR.YELLOW;
+      color = ThemeColor.YELLOW;
     }
 
     return color;
@@ -268,7 +268,7 @@ class CopyGC extends React.Component<Props, State> {
                     width={10}
                     height={10}
                     style={{
-                      backgroundColor: THEME_COLOR.GREEN,
+                      backgroundColor: ThemeColor.GREEN,
                     }}
                   />
                   <span> {state.leftDesc} </span>
@@ -282,7 +282,7 @@ class CopyGC extends React.Component<Props, State> {
                     width={10}
                     height={10}
                     style={{
-                      backgroundColor: THEME_COLOR.YELLOW,
+                      backgroundColor: ThemeColor.YELLOW,
                     }}
                   />
                   <span> {state.rightDesc} </span>
@@ -391,7 +391,7 @@ class CopyGC extends React.Component<Props, State> {
                 width={10}
                 height={10}
                 style={{
-                  backgroundColor: THEME_COLOR.BLUE,
+                  backgroundColor: ThemeColor.BLUE,
                 }}
               />
               <span> defined</span>
@@ -401,7 +401,7 @@ class CopyGC extends React.Component<Props, State> {
                 width={10}
                 height={10}
                 style={{
-                  backgroundColor: THEME_COLOR.PINK,
+                  backgroundColor: ThemeColor.PINK,
                 }}
               />
               <span> tag</span>
@@ -411,7 +411,7 @@ class CopyGC extends React.Component<Props, State> {
                 width={10}
                 height={10}
                 style={{
-                  backgroundColor: THEME_COLOR.GREY,
+                  backgroundColor: ThemeColor.GREY,
                 }}
               />
               <span> empty or undefined</span>

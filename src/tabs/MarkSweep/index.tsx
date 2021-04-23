@@ -1,6 +1,6 @@
 import React from 'react';
 import { Slider, Icon } from '@blueprintjs/core';
-import { THEME_COLOR } from './style';
+import { ThemeColor } from './style';
 
 type Props = {
   children?: never;
@@ -203,17 +203,17 @@ class MarkSweep extends React.Component<Props, State> {
       color = 'magenta';
     } else if (this.isTag(heap[indexValue - MARK_SLOT])) {
       if (value === marked) {
-        color = 'red';
+        color = ThemeColor.RED;
       } else if (value === unmarked) {
-        color = 'black';
+        color = ThemeColor.BLACK;
       }
     } else if (!value) {
-      color = THEME_COLOR.GREY;
+      color = ThemeColor.GREY;
     } else if (this.isTag(value)) {
       // is a tag
-      color = THEME_COLOR.PINK;
+      color = ThemeColor.PINK;
     } else {
-      color = THEME_COLOR.BLUE;
+      color = ThemeColor.BLUE;
     }
 
     return color;
@@ -232,11 +232,11 @@ class MarkSweep extends React.Component<Props, State> {
     let color = '';
 
     if (command === 'Showing Roots' && roots.includes(indexValue)) {
-      color = THEME_COLOR.GREEN;
+      color = ThemeColor.GREEN;
     } else if (indexValue >= firstChild && indexValue < firstChild + size1) {
-      color = THEME_COLOR.GREEN;
+      color = ThemeColor.GREEN;
     } else if (indexValue >= lastChild && indexValue < lastChild + size2) {
-      color = THEME_COLOR.YELLOW;
+      color = ThemeColor.YELLOW;
     }
 
     return color;
@@ -271,7 +271,7 @@ class MarkSweep extends React.Component<Props, State> {
                     width={10}
                     height={10}
                     style={{
-                      backgroundColor: THEME_COLOR.GREEN,
+                      backgroundColor: ThemeColor.GREEN,
                     }}
                   />
                   <span> {state.leftDesc} </span>
@@ -283,7 +283,7 @@ class MarkSweep extends React.Component<Props, State> {
                     width={10}
                     height={10}
                     style={{
-                      backgroundColor: THEME_COLOR.YELLOW,
+                      backgroundColor: ThemeColor.YELLOW,
                     }}
                   />
                   <span> {state.rightDesc} </span>
@@ -368,7 +368,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: THEME_COLOR.BLUE,
+                    backgroundColor: ThemeColor.BLUE,
                   }}
                 />
                 <span> defined</span>
@@ -378,7 +378,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: THEME_COLOR.PINK,
+                    backgroundColor: ThemeColor.PINK,
                   }}
                 />
                 <span> tag</span>
@@ -388,7 +388,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: THEME_COLOR.GREY,
+                    backgroundColor: ThemeColor.GREY,
                   }}
                 />
                 <span> empty or undefined</span>
