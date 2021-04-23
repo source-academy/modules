@@ -53,7 +53,7 @@ function generateMemory(): void {
   }
 
   const obj: CommandHeapObject = {
-    type: 'init',
+    type: COMMAND.INIT,
     to: TO_SPACE,
     from: FROM_SPACE,
     heap: [],

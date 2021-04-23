@@ -4,15 +4,16 @@ export type Tag = number;
 
 // command type
 
-export const COMMAND = {
-  FLIP: 'Flip',
-  PUSH: 'Push',
-  POP: 'Pop',
-  COPY: 'Copy',
-  ASSIGN: 'Assign',
-  NEW: 'New',
-  SCAN: 'Scan',
-};
+export enum COMMAND {
+  FLIP = 'Flip',
+  PUSH = 'Push',
+  POP = 'Pop',
+  COPY = 'Copy',
+  ASSIGN = 'Assign',
+  NEW = 'New',
+  SCAN = 'Scan',
+  INIT = 'Initialize Memory',
+}
 
 export type CommandHeapObject = {
   type: String;
