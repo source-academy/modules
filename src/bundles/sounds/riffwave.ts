@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-shadow, @typescript-eslint/naming-convention, no-var, vars-on-top, no-bitwise, no-plusplus, eqeqeq, func-names, object-shorthand, prefer-template, import/prefer-default-export */
 /*
  * RIFFWAVE.js v0.03 - Audio encoder for HTML5 <audio> elements.
  * Copyleft 2011 by Pedro Ladaria <pedro.ladaria at Gmail dot com>

@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/naming-convention, no-else-return, prefer-template, no-param-reassign, no-plusplus, operator-assignment, no-lonely-if */
 /* prettier-ignore */
 // list.js: Supporting lists in the Scheme style, using pairs made
 //          up of two-element JavaScript array (vector)
