@@ -26,6 +26,16 @@
     "tabs": [
       "MarkSweep"
     ]
+  },
+  "sounds": {
+    "tabs": [
+      "Sounds"
+    ]
+  },
+  "stereo_sounds": {
+    "tabs": [
+      "StereoSounds"
+    ]
   }
   
 }
