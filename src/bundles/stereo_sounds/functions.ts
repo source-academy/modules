@@ -580,7 +580,7 @@ export function pan(amount: number): SoundTransformer {
     sound = squash(sound);
     return make_stereo_sound(
       (t) => ((1 - amount) / 2) * get_left_wave(sound)(t),
-      (t) => (1 + amount / 2) * get_right_wave(sound)(t),
+      (t) => ((1 + amount) / 2) * get_right_wave(sound)(t),
       get_duration(sound)
     );
   };
@@ -611,7 +611,7 @@ export function pan_mod(modulator: Sound): SoundTransformer {
     sound = squash(sound);
     return make_stereo_sound(
       (t) => ((1 - amount(t)) / 2) * get_left_wave(sound)(t),
-      (t) => (1 + amount(t) / 2) * get_right_wave(sound)(t),
+      (t) => ((1 + amount(t)) / 2) * get_right_wave(sound)(t),
       get_duration(sound)
     );
   };
