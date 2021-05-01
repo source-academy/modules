@@ -6,10 +6,12 @@ Source is a family of languages, designed for the textbook [Structure and Interp
 
 The Source Academy comes with the following external libraries:
 
-- [binary_trees](https://source-academy.github.io/modules/documentation/modules/binary_trees.html)
-- [repeat](https://source-academy.github.io/modules/documentation/modules/repeat.html)
+- [binary_tree](https://source-academy.github.io/modules/documentation/modules/binary_tree.html)
+- [curve](https://source-academy.github.io/modules/documentation/modules/curve.html)
 - [pix_n_flix](https://source-academy.github.io/modules/documentation/modules/pix_n_flix.html)
-- [curves](https://source-academy.github.io/modules/documentation/modules/curves.html)
+- [repeat](https://source-academy.github.io/modules/documentation/modules/repeat.html)
+- [sound](https://source-academy.github.io/modules/documentation/modules/sound.html)
+- [stereo_sound](https://source-academy.github.io/modules/documentation/modules/stereo_sound.html)
 
 ## Style Guide
 

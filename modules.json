@@ -17,9 +17,9 @@
       "CopyGc"
     ]
   },
-  "curves": {
+  "curve": {
     "tabs": [
-      "Curves"
+      "Curve"
     ]
   },
   "mark_sweep": {
@@ -27,15 +27,15 @@
       "MarkSweep"
     ]
   },
-  "sounds": {
+  "sound": {
     "tabs": [
-      "Sounds"
+      "Sound"
     ]
   },
-  "stereo_sounds": {
+  "stereo_sound": {
     "tabs": [
-      "StereoSounds"
+      "StereoSound"
     ]
   }
-  
+
 }

@@ -1,6 +1,6 @@
 import { Button, Icon, Slider } from '@blueprintjs/core';
 import React from 'react';
-import { ShapeDrawn } from '../../bundles/curves/types';
+import { ShapeDrawn } from '../../bundles/curve/types';
 
 /**
  * Currently used for rendering HTML canvas element for curves.
