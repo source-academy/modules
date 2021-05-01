@@ -1,9 +1,9 @@
 /**
- * binary_trees provide functions for binary trees, as covered the textbook
+ * The `binary_tree` Source Module provides functions for the interaction with binary trees, as covered the textbook
  * [Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)](https://sicp.comp.nus.edu.sg/)
  * in [section 2.3.3 Example: Representing Sets](https://sicp.comp.nus.edu.sg/chapters/37).
  * Click on a name on the left to see how they are defined and used.
- * @module binary_trees
+ * @module binary_tree
  */
 import { BinaryTree } from './types';
 
