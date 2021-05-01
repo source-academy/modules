@@ -154,7 +154,7 @@
 		},
 		{
 			"id": 69,
-			"name": "curves",
+			"name": "curve",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
@@ -172,7 +172,7 @@
 					}
 				]
 			},
-			"originalName": "curves/functions",
+			"originalName": "curve/functions",
 			"children": [
 				{
 					"id": 183,
@@ -182,7 +182,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 721,
 							"character": 19
 						}
@@ -229,7 +229,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 421,
 							"character": 20
 						}
@@ -279,7 +279,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 661,
 							"character": 28
 						}
@@ -340,7 +340,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 642,
 							"character": 31
 						}
@@ -401,7 +401,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 163,
 							"character": 33
 						}
@@ -454,7 +454,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 183,
 							"character": 43
 						}
@@ -507,7 +507,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 202,
 							"character": 56
 						}
@@ -560,7 +560,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 244,
 							"character": 53
 						}
@@ -613,7 +613,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 224,
 							"character": 33
 						}
@@ -666,7 +666,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 60,
 							"character": 30
 						}
@@ -719,7 +719,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 80,
 							"character": 40
 						}
@@ -772,7 +772,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 100,
 							"character": 53
 						}
@@ -825,7 +825,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 142,
 							"character": 50
 						}
@@ -878,7 +878,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 122,
 							"character": 30
 						}
@@ -931,7 +931,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 406,
 							"character": 20
 						}
@@ -981,7 +981,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 434,
 							"character": 22
 						}
@@ -1025,7 +1025,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 324,
 							"character": 35
 						}
@@ -1148,7 +1148,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 277,
 							"character": 29
 						}
@@ -1229,7 +1229,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 297,
 							"character": 32
 						}
@@ -1338,7 +1338,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 261,
 							"character": 26
 						}
@@ -1405,7 +1405,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 613,
 							"character": 40
 						}
@@ -1452,7 +1452,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 391,
 							"character": 20
 						}
@@ -1502,7 +1502,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 487,
 							"character": 36
 						}
@@ -1568,7 +1568,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 570,
 							"character": 21
 						}
@@ -1643,7 +1643,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 597,
 							"character": 34
 						}
@@ -1690,7 +1690,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 450,
 							"character": 25
 						}
@@ -1765,7 +1765,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 685,
 							"character": 27
 						}
@@ -1812,7 +1812,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 696,
 							"character": 25
 						}
@@ -1859,7 +1859,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 708,
 							"character": 28
 						}
@@ -1906,7 +1906,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 346,
 							"character": 20
 						}
@@ -1956,7 +1956,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 361,
 							"character": 20
 						}
@@ -2006,7 +2006,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "curves/functions.ts",
+							"fileName": "curve/functions.ts",
 							"line": 376,
 							"character": 20
 						}
@@ -2091,7 +2091,7 @@
 			],
 			"sources": [
 				{
-					"fileName": "curves/functions.ts",
+					"fileName": "curve/functions.ts",
 					"line": 1,
 					"character": 0
 				}
@@ -3076,10 +3076,25 @@
 		},
 		{
 			"id": 186,
-			"name": "sounds/functions",
+			"name": "sound",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
+			"comment": {
+				"shortText": "The sounds library provides functions for constructing and playing sounds.",
+				"text": "A wave is a function that takes in a number `t` and returns\na number representing the amplitude at time `t`.\nThe amplitude should fall within the range of [-1, 1].\n\nA Sound is a pair(wave, duration) where duration is the length of the sound in seconds.\nThe constructor make_sound and accessors get_wave and get_duration are provided.\n\nSound Discipline:\nFor all sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:\n`(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.\n\nTwo functions which combine Sounds, `consecutively` and `simultaneously` are given.\nAdditionally, we provide sound transformation functions `adsr` and `phase_mod`\nwhich take in a Sound and return a Sound.\n\nFinally, the provided `play` function takes in a Sound and plays it using your\ncomputer's sound system.\n",
+				"tags": [
+					{
+						"tag": "author",
+						"text": "Koh Shang Hui"
+					},
+					{
+						"tag": "author",
+						"text": "Samyukta Sounderraman\n"
+					}
+				]
+			},
+			"originalName": "sound/functions",
 			"children": [
 				{
 					"id": 251,
@@ -3089,7 +3104,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 634,
 							"character": 20
 						}
@@ -3184,7 +3199,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 832,
 							"character": 20
 						}
@@ -3251,7 +3266,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 854,
 							"character": 21
 						}
@@ -3318,7 +3333,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 579,
 							"character": 29
 						}
@@ -3371,7 +3386,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 284,
 							"character": 28
 						}
@@ -3424,7 +3439,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 273,
 							"character": 24
 						}
@@ -3477,7 +3492,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 163,
 							"character": 27
 						}
@@ -3508,7 +3523,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 295,
 							"character": 24
 						}
@@ -3561,7 +3576,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 818,
 							"character": 40
 						}
@@ -3611,7 +3626,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 747,
 							"character": 40
 						}
@@ -3661,7 +3676,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 262,
 							"character": 26
 						}
@@ -3728,7 +3743,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 806,
 							"character": 38
 						}
@@ -3781,7 +3796,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 472,
 							"character": 27
 						}
@@ -3834,7 +3849,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 722,
 							"character": 25
 						}
@@ -3915,7 +3930,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 871,
 							"character": 21
 						}
@@ -3982,7 +3997,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 311,
 							"character": 20
 						}
@@ -4035,7 +4050,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 397,
 							"character": 33
 						}
@@ -4087,7 +4102,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 186,
 							"character": 22
 						}
@@ -4129,7 +4144,7 @@
 									"flags": {},
 									"sources": [
 										{
-											"fileName": "sounds/functions.ts",
+											"fileName": "sound/functions.ts",
 											"line": 186,
 											"character": 39
 										}
@@ -4151,7 +4166,7 @@
 													"flags": {},
 													"sources": [
 														{
-															"fileName": "sounds/functions.ts",
+															"fileName": "sound/functions.ts",
 															"line": 186,
 															"character": 45
 														}
@@ -4186,7 +4201,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 219,
 							"character": 26
 						}
@@ -4242,7 +4257,7 @@
 									"flags": {},
 									"sources": [
 										{
-											"fileName": "sounds/functions.ts",
+											"fileName": "sound/functions.ts",
 											"line": 219,
 											"character": 61
 										}
@@ -4273,7 +4288,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 553,
 							"character": 30
 						}
@@ -4340,7 +4355,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 483,
 							"character": 29
 						}
@@ -4393,7 +4408,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 599,
 							"character": 30
 						}
@@ -4446,7 +4461,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 495,
 							"character": 26
 						}
@@ -4513,7 +4528,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 507,
 							"character": 28
 						}
@@ -4577,7 +4592,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 685,
 							"character": 29
 						}
@@ -4672,7 +4687,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 458,
 							"character": 20
 						}
@@ -4702,7 +4717,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 529,
 							"character": 30
 						}
@@ -4769,7 +4784,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 888,
 							"character": 24
 						}
@@ -4836,7 +4851,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sounds/functions.ts",
+							"fileName": "sound/functions.ts",
 							"line": 905,
 							"character": 22
 						}
@@ -4935,7 +4950,7 @@
 			],
 			"sources": [
 				{
-					"fileName": "sounds/functions.ts",
+					"fileName": "sound/functions.ts",
 					"line": 1,
 					"character": 0
 				}
@@ -4943,10 +4958,25 @@
 		},
 		{
 			"id": 297,
-			"name": "stereo_sounds/functions",
+			"name": "stereo_sound",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
+			"comment": {
+				"shortText": "The stereo sounds library build on the sounds library by accommodating stereo sounds.\nWithin this library, all sounds are represented in stereo, with two waves, left and right.",
+				"text": "A Stereo Sound is a `pair(pair(left_wave, right_wave), duration)` where duration is the length of the sound in seconds.\nThe constructor `make_stereo_sound` and accessors `get_left_wave`, `get_right_wave`, and `get_duration` are provided.\nThe `make_sound` constructor from sounds is syntatic sugar for `make_stereo_sounds` with equal waves.\n",
+				"tags": [
+					{
+						"tag": "author",
+						"text": "Koh Shang Hui"
+					},
+					{
+						"tag": "author",
+						"text": "Samyukta Sounderraman\n"
+					}
+				]
+			},
+			"originalName": "stereo_sound/functions",
 			"children": [
 				{
 					"id": 379,
@@ -4956,7 +4986,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 802,
 							"character": 20
 						}
@@ -5051,7 +5081,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 1010,
 							"character": 20
 						}
@@ -5118,7 +5148,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 1032,
 							"character": 21
 						}
@@ -5185,7 +5215,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 736,
 							"character": 29
 						}
@@ -5238,7 +5268,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 314,
 							"character": 28
 						}
@@ -5291,7 +5321,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 292,
 							"character": 29
 						}
@@ -5344,7 +5374,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 303,
 							"character": 30
 						}
@@ -5397,7 +5427,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 152,
 							"character": 27
 						}
@@ -5428,7 +5458,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 325,
 							"character": 24
 						}
@@ -5481,7 +5511,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 996,
 							"character": 40
 						}
@@ -5531,7 +5561,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 925,
 							"character": 40
 						}
@@ -5581,7 +5611,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 277,
 							"character": 26
 						}
@@ -5648,7 +5678,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 252,
 							"character": 33
 						}
@@ -5729,7 +5759,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 984,
 							"character": 38
 						}
@@ -5782,7 +5812,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 629,
 							"character": 27
 						}
@@ -5835,7 +5865,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 569,
 							"character": 19
 						}
@@ -5882,7 +5912,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 598,
 							"character": 23
 						}
@@ -5929,7 +5959,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 895,
 							"character": 25
 						}
@@ -6010,7 +6040,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 1049,
 							"character": 21
 						}
@@ -6077,7 +6107,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 342,
 							"character": 20
 						}
@@ -6130,7 +6160,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 452,
 							"character": 33
 						}
@@ -6182,7 +6212,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 175,
 							"character": 22
 						}
@@ -6224,7 +6254,7 @@
 									"flags": {},
 									"sources": [
 										{
-											"fileName": "stereo_sounds/functions.ts",
+											"fileName": "stereo_sound/functions.ts",
 											"line": 175,
 											"character": 39
 										}
@@ -6246,7 +6276,7 @@
 													"flags": {},
 													"sources": [
 														{
-															"fileName": "stereo_sounds/functions.ts",
+															"fileName": "stereo_sound/functions.ts",
 															"line": 175,
 															"character": 45
 														}
@@ -6281,7 +6311,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 208,
 							"character": 26
 						}
@@ -6337,7 +6367,7 @@
 									"flags": {},
 									"sources": [
 										{
-											"fileName": "stereo_sounds/functions.ts",
+											"fileName": "stereo_sound/functions.ts",
 											"line": 208,
 											"character": 61
 										}
@@ -6368,7 +6398,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 710,
 							"character": 30
 						}
@@ -6435,7 +6465,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 640,
 							"character": 29
 						}
@@ -6488,7 +6518,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 759,
 							"character": 30
 						}
@@ -6541,7 +6571,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 652,
 							"character": 26
 						}
@@ -6608,7 +6638,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 664,
 							"character": 28
 						}
@@ -6672,7 +6702,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 555,
 							"character": 22
 						}
@@ -6719,7 +6749,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 858,
 							"character": 29
 						}
@@ -6814,7 +6844,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 541,
 							"character": 20
 						}
@@ -6844,7 +6874,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 686,
 							"character": 30
 						}
@@ -6911,7 +6941,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 1066,
 							"character": 24
 						}
@@ -6978,7 +7008,7 @@
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "stereo_sounds/functions.ts",
+							"fileName": "stereo_sound/functions.ts",
 							"line": 1083,
 							"character": 22
 						}
@@ -7082,7 +7112,7 @@
 			],
 			"sources": [
 				{
-					"fileName": "stereo_sounds/functions.ts",
+					"fileName": "stereo_sound/functions.ts",
 					"line": 1,
 					"character": 0
 				}
