@@ -20,7 +20,7 @@
  * shown in the Source Academy in the tab with the "Curves Canvas" icon (image).
  * Examples of drawer functions are `draw_points_on` and `draw_connected`.
  *
- * @module curves
+ * @module curve
  * @author Lee Zheng Han
  * @author Ng Yong Xiang
  */

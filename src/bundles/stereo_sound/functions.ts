@@ -1,3 +1,17 @@
+/**
+ *
+ * The stereo sounds library build on the sounds library by accommodating stereo sounds.
+ * Within this library, all sounds are represented in stereo, with two waves, left and right.
+ *
+ * A Stereo Sound is a `pair(pair(left_wave, right_wave), duration)` where duration is the length of the sound in seconds.
+ * The constructor `make_stereo_sound` and accessors `get_left_wave`, `get_right_wave`, and `get_duration` are provided.
+ * The `make_sound` constructor from sounds is syntatic sugar for `make_stereo_sounds` with equal waves.
+ *
+ * @module stereo_sound
+ * @author Koh Shang Hui
+ * @author Samyukta Sounderraman
+ */
+
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars */
 import {
   Wave,
@@ -19,37 +33,12 @@ import {
 } from './list';
 import { RIFFWAVE } from './riffwave';
 
-/**
- * The sounds library provides functions for constructing and playing sounds.
- *
- * A wave is a function that takes in a number `t` and returns
- * a number representing the amplitude at time `t`.
- * The amplitude should fall within the range of [-1, 1].
- *
- * A Sound is a pair(wave, duration) where duration is the length of the sound in seconds.
- * The constructor make_sound and accessors get_wave and get_duration are provided.
- *
- * Sound Discipline:
- * For all sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:
- * `(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.
- *
- * Two functions which combine Sounds, `consecutively` and `simultaneously` are given.
- * Additionally, we provide sound transformation functions `adsr` and `phase_mod`
- * which take in a Sound and return a Sound.
- *
- * Finally, the provided `play` function takes in a Sound and plays it using your
- * computer's sound system.
- *
- * @module sounds
- * @author Koh Shang Hui
- * @author Samyukta Sounderraman
- */
-
 // Global Constants and Variables
-let audioElement: HTMLAudioElement;
+
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
 
+let audioElement: HTMLAudioElement;
 // Singular audio context for all playback functions
 let audioplayer: AudioContext;
 
@@ -125,7 +114,7 @@ function play_recording_signal() {
   play(sine_sound(1200, recording_signal_duration_ms / 1000));
 }
 
-function process(data) {
+function process(data: any[] | undefined) {
   const audioContext = new AudioContext();
   const blob = new Blob(data);
 
@@ -249,6 +238,32 @@ export function record_for(duration: number, buffer: number): () => Sound {
 // Core functions
 
 /**
+ * Makes a Stereo Sound with given wave function and duration.
+ * The wave function is a function: number -> number
+ * that takes in a non-negative input time and returns an amplitude
+ * between -1 and 1.
+ *
+ * @param left_wave wave function of the left channel of the sound
+ * @param right_wave wave function of the right channel of the sound
+ * @param duration duration of the sound
+ * @return resulting stereo sound
+ * @example const s = make_stereo_sound(t => Math_sin(2 * Math_PI * 440 * t), t => Math_sin(2 * Math_PI * 300 * t), 5);
+ */
+export function make_stereo_sound(
+  left_wave: Wave,
+  right_wave: Wave,
+  duration: number
+): Sound {
+  return pair(
+    pair(
+      (t: number) => (t >= duration ? 0 : left_wave(t)),
+      (t: number) => (t >= duration ? 0 : right_wave(t))
+    ),
+    duration
+  );
+}
+
+/**
  * Makes a Sound with given wave function and duration.
  * The wave function is a function: number -> number
  * that takes in a non-negative input time and returns an amplitude
@@ -260,18 +275,33 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
-  return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
+  return make_stereo_sound(
+    (t) => 0.5 * wave(t),
+    (t) => 0.5 * wave(t),
+    duration
+  );
 }
 
 /**
- * Accesses the wave function of a given Sound.
+ * Accesses the left wave function of a given Sound.
  *
  * @param sound given Sound
  * @return the wave function of the Sound
  * @example get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
  */
-export function get_wave(sound: Sound): Wave {
-  return head(sound);
+export function get_left_wave(sound: Sound): Wave {
+  return head(head(sound));
+}
+
+/**
+ * Accesses the left wave function of a given Sound.
+ *
+ * @param sound given Sound
+ * @return the wave function of the Sound
+ * @example get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
+ */
+export function get_right_wave(sound: Sound): Wave {
+  return tail(head(sound));
 }
 
 /**
@@ -295,7 +325,8 @@ export function get_duration(sound: Sound): number {
 export function is_sound(x: any): boolean {
   return (
     is_pair(x) &&
-    typeof get_wave(x) === 'function' &&
+    typeof get_left_wave(x) === 'function' &&
+    typeof get_right_wave(x) === 'function' &&
     typeof get_duration(x) === 'number'
   );
 }
@@ -315,7 +346,7 @@ export function play(sound: Sound): AudioPlayed {
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
     throw new Error('play: audio system still playing previous sound');
-  } else if (get_duration(sound) <= 0) {
+  } else if (get_duration(sound) < 0) {
     throw new Error('play: duration of sound is negative');
   } else {
     // Instantiate audio context if it has not been instantiated.
@@ -323,32 +354,56 @@ export function play(sound: Sound): AudioPlayed {
       init_audioCtx();
     }
 
-    // Create mono buffer
     const channel: number[] = [];
     const len = Math.ceil(FS * get_duration(sound));
 
-    let temp: number;
-    let prev_value = 0;
+    let Ltemp: number;
+    let Rtemp: number;
+    let Lprev_value = 0;
+    let Rprev_value = 0;
 
-    const wave = get_wave(sound);
+    const left_wave = get_left_wave(sound);
+    const right_wave = get_right_wave(sound);
     for (let i = 0; i < len; i += 1) {
-      temp = wave(i / FS);
+      Ltemp = left_wave(i / FS);
       // clip amplitude
-      // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
-      if (temp > 1) {
-        channel[i] = 1;
-      } else if (temp < -1) {
-        channel[i] = -1;
+      if (Ltemp > 1) {
+        channel[2 * i] = 1;
+      } else if (Ltemp < -1) {
+        channel[2 * i] = -1;
       } else {
-        channel[i] = temp;
+        channel[2 * i] = Ltemp;
       }
 
       // smoothen out sudden cut-outs
-      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
+      if (
+        channel[2 * i] === 0 &&
+        Math.abs(channel[2 * i] - Lprev_value) > 0.01
+      ) {
+        channel[2 * i] = Lprev_value * 0.999;
       }
 
-      prev_value = channel[i];
+      Lprev_value = channel[2 * i];
+
+      Rtemp = right_wave(i / FS);
+      // clip amplitude
+      if (Rtemp > 1) {
+        channel[2 * i + 1] = 1;
+      } else if (Rtemp < -1) {
+        channel[2 * i + 1] = -1;
+      } else {
+        channel[2 * i + 1] = Rtemp;
+      }
+
+      // smoothen out sudden cut-outs
+      if (
+        channel[2 * i + 1] === 0 &&
+        Math.abs(channel[2 * i] - Rprev_value) > 0.01
+      ) {
+        channel[2 * i + 1] = Rprev_value * 0.999;
+      }
+
+      Rprev_value = channel[2 * i + 1];
     }
 
     // quantize
@@ -358,7 +413,7 @@ export function play(sound: Sound): AudioPlayed {
 
     const riffwave = new RIFFWAVE([]);
     riffwave.header.sampleRate = FS;
-    riffwave.header.numChannels = 1;
+    riffwave.header.numChannels = 2;
     riffwave.header.bitsPerSample = 16;
     riffwave.Make(channel);
     const audio = new Audio(riffwave.dataURI);
@@ -408,27 +463,23 @@ export function play_concurrently(sound: Sound): void {
       init_audioCtx();
     }
 
-    // Create mono buffer
-    const theBuffer = audioplayer.createBuffer(
-      1,
-      Math.ceil(FS * get_duration(sound)),
-      FS
-    );
-    const channel = theBuffer.getChannelData(0);
+    const channel: number[] = Array[2 * Math.ceil(FS * get_duration(sound))];
 
-    let temp: number;
+    let Ltemp: number;
+    let Rtemp: number;
     let prev_value = 0;
 
-    const wave = get_wave(sound);
-    for (let i = 0; i < channel.length; i += 1) {
-      temp = wave(i / FS);
+    const left_wave = get_left_wave(sound);
+
+    for (let i = 0; i < channel.length; i += 2) {
+      Ltemp = left_wave(i / FS);
       // clip amplitude
-      if (temp > 1) {
+      if (Ltemp > 1) {
         channel[i] = 1;
-      } else if (temp < -1) {
+      } else if (Ltemp < -1) {
         channel[i] = -1;
       } else {
-        channel[i] = temp;
+        channel[i] = Ltemp;
       }
 
       // smoothen out sudden cut-outs
@@ -439,14 +490,46 @@ export function play_concurrently(sound: Sound): void {
       prev_value = channel[i];
     }
 
+    prev_value = 0;
+    const right_wave = get_right_wave(sound);
+    for (let i = 1; i < channel.length; i += 2) {
+      Rtemp = right_wave(i / FS);
+      // clip amplitude
+      if (Rtemp > 1) {
+        channel[i] = 1;
+      } else if (Rtemp < -1) {
+        channel[i] = -1;
+      } else {
+        channel[i] = Rtemp;
+      }
+
+      // smoothen out sudden cut-outs
+      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+        channel[i] = prev_value * 0.999;
+      }
+
+      prev_value = channel[i];
+    }
+
+    // quantize
+    for (let i = 0; i < channel.length; i += 1) {
+      channel[i] = Math.floor(channel[i] * 32767.999);
+    }
+
+    const riffwave = new RIFFWAVE([]);
+    riffwave.header.sampleRate = FS;
+    riffwave.header.numChannels = 2;
+    riffwave.header.bitsPerSample = 16;
+    riffwave.Make(channel);
+    const audio = new Audio(riffwave.dataURI);
+    const source2 = audioplayer.createMediaElementSource(audio);
+    source2.connect(audioplayer.destination);
+
     // Connect data to output destination
-    const source = audioplayer.createBufferSource();
-    source.buffer = theBuffer;
-    source.connect(audioplayer.destination);
+    audio.play();
     isPlaying = true;
-    source.start();
-    source.onended = () => {
-      source.disconnect(audioplayer.destination);
+    audio.onended = () => {
+      source2.disconnect(audioplayer.destination);
       isPlaying = false;
     };
   }
@@ -458,6 +541,80 @@ export function play_concurrently(sound: Sound): void {
 export function stop(): void {
   audioplayer.close();
   isPlaying = false;
+}
+
+// Stereo only functions
+
+/**
+ * Centers a Sound by averaging its left and right channels,
+ * resulting in an effectively mono sound.
+ *
+ * @param sound the sound to be squashed
+ * @return a new sound with the left and right channels averaged
+ */
+export function squash(sound: Sound): Sound {
+  const left = get_left_wave(sound);
+  const right = get_right_wave(sound);
+  return make_sound((t) => 0.5 * (left(t) + right(t)), get_duration(sound));
+}
+
+/**
+ * Returns a Sound Transformer that pans a sound based on the pan amount.
+ * The input sound is first squashed to mono.
+ * An amount of `-1` is a hard left pan, `0` is balanced, `1` is hard right pan.
+ *
+ * @param amount the pan amount, from -1 to 1
+ * @return a Sound Transformer that pans a Sound
+ */
+export function pan(amount: number): SoundTransformer {
+  return (sound) => {
+    if (amount > 1) {
+      // eslint-disable-next-line no-param-reassign
+      amount = 1;
+    }
+    if (amount < -1) {
+      // eslint-disable-next-line no-param-reassign
+      amount = -1;
+    }
+    // eslint-disable-next-line no-param-reassign
+    sound = squash(sound);
+    return make_stereo_sound(
+      (t) => ((1 - amount) / 2) * get_left_wave(sound)(t),
+      (t) => ((1 + amount) / 2) * get_right_wave(sound)(t),
+      get_duration(sound)
+    );
+  };
+}
+
+/**
+ * Returns a Sound Transformer that uses a Sound to pan another Sound.
+ * The modulator is treated as a mono sound and its output is used to pan
+ * an input Sound.
+ * `-1` is a hard left pan, `0` is balanced, `1` is hard right pan.
+ *
+ * @param modulator the Sound used to modulate the pan of another sound
+ * @return a Sound Transformer that pans a Sound
+ */
+export function pan_mod(modulator: Sound): SoundTransformer {
+  const amount = (t: number) => {
+    let output = get_left_wave(modulator)(t) + get_right_wave(modulator)(t);
+    if (output > 1) {
+      output = 1;
+    }
+    if (output < -1) {
+      output = -1;
+    }
+    return output;
+  };
+  return (sound) => {
+    // eslint-disable-next-line no-param-reassign
+    sound = squash(sound);
+    return make_stereo_sound(
+      (t) => ((1 - amount(t)) / 2) * get_left_wave(sound)(t),
+      (t) => ((1 + amount(t)) / 2) * get_right_wave(sound)(t),
+      get_duration(sound)
+    );
+  };
 }
 
 // Primitive sounds
@@ -577,15 +734,18 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
  */
 export function consecutively(list_of_sounds: List): Sound {
-  function consec_two(ss1: Sound, ss2: Sound) {
-    const wave1 = get_wave(ss1);
-    const wave2 = get_wave(ss2);
-    const dur1 = get_duration(ss1);
-    const dur2 = get_duration(ss2);
-    const new_wave = (t: number) => (t < dur1 ? wave1(t) : wave2(t - dur1));
-    return make_sound(new_wave, dur1 + dur2);
+  function stereo_cons_two(sound1: Sound, sound2: Sound) {
+    const Lwave1 = get_left_wave(sound1);
+    const Rwave1 = get_right_wave(sound1);
+    const Lwave2 = get_left_wave(sound2);
+    const Rwave2 = get_right_wave(sound2);
+    const dur1 = get_duration(sound1);
+    const dur2 = get_duration(sound2);
+    const new_left = (t: number) => (t < dur1 ? Lwave1(t) : Lwave2(t - dur1));
+    const new_right = (t: number) => (t < dur1 ? Rwave1(t) : Rwave2(t - dur1));
+    return make_stereo_sound(new_left, new_right, dur1 + dur2);
   }
-  return accumulate(consec_two, silence_sound(0), list_of_sounds);
+  return accumulate(stereo_cons_two, silence_sound(0), list_of_sounds);
 }
 
 /**
@@ -597,23 +757,31 @@ export function consecutively(list_of_sounds: List): Sound {
  * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))
  */
 export function simultaneously(list_of_sounds: List): Sound {
-  function simul_two(ss1: Sound, ss2: Sound) {
-    const wave1 = get_wave(ss1);
-    const wave2 = get_wave(ss2);
-    const dur1 = get_duration(ss1);
-    const dur2 = get_duration(ss2);
-    // new_wave assumes sound discipline (ie, wave(t) = 0 after t > dur)
-    const new_wave = (t: number) => wave1(t) + wave2(t);
-    // new_dur is higher of the two dur
+  function stereo_simul_two(sound1: Sound, sound2: Sound) {
+    const Lwave1 = get_left_wave(sound1);
+    const Rwave1 = get_right_wave(sound1);
+    const Lwave2 = get_left_wave(sound2);
+    const Rwave2 = get_right_wave(sound2);
+    const dur1 = get_duration(sound1);
+    const dur2 = get_duration(sound2);
+    const new_left = (t: number) => Lwave1(t) + Lwave2(t);
+    const new_right = (t: number) => Rwave1(t) + Rwave2(t);
     const new_dur = dur1 < dur2 ? dur2 : dur1;
-    return make_sound(new_wave, new_dur);
+    return make_stereo_sound(new_left, new_right, new_dur);
   }
 
-  const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
-  const normalised_wave = (t: number) =>
-    head(mushed_sounds)(t) / length(list_of_sounds);
-  const highest_duration = tail(mushed_sounds);
-  return make_sound(normalised_wave, highest_duration);
+  const unnormed = accumulate(
+    stereo_simul_two,
+    silence_sound(0),
+    list_of_sounds
+  );
+  const sounds_length = length(list_of_sounds);
+  const normalised_left = (t: number) =>
+    head(head(unnormed))(t) / sounds_length;
+  const normalised_right = (t: number) =>
+    tail(head(unnormed))(t) / sounds_length;
+  const highest_duration = tail(unnormed);
+  return make_stereo_sound(normalised_left, normalised_right, highest_duration);
 }
 
 /**
@@ -638,31 +806,36 @@ export function adsr(
   release_ratio: number
 ): SoundTransformer {
   return (sound) => {
-    const wave = get_wave(sound);
+    const Lwave = get_left_wave(sound);
+    const Rwave = get_right_wave(sound);
     const duration = get_duration(sound);
     const attack_time = duration * attack_ratio;
     const decay_time = duration * decay_ratio;
     const release_time = duration * release_ratio;
-    return make_sound((x) => {
-      if (x < attack_time) {
-        return wave(x) * (x / attack_time);
-      }
-      if (x < attack_time + decay_time) {
+
+    function adsrHelper(wave: Wave) {
+      return (x: number) => {
+        if (x < attack_time) {
+          return wave(x) * (x / attack_time);
+        }
+        if (x < attack_time + decay_time) {
+          return (
+            ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) +
+              sustain_level) *
+            wave(x)
+          );
+        }
+        if (x < duration - release_time) {
+          return wave(x) * sustain_level;
+        }
         return (
-          ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) +
-            sustain_level) *
-          wave(x)
+          wave(x) *
+          sustain_level *
+          linear_decay(release_time)(x - (duration - release_time))
         );
-      }
-      if (x < duration - release_time) {
-        return wave(x) * sustain_level;
-      }
-      return (
-        wave(x) *
-        sustain_level *
-        linear_decay(release_time)(x - (duration - release_time))
-      );
-    }, duration);
+      };
+    }
+    return make_stereo_sound(adsrHelper(Lwave), adsrHelper(Rwave), duration);
   };
 }
 
@@ -725,8 +898,13 @@ export function phase_mod(
   amount: number
 ): SoundTransformer {
   return (modulator: Sound) =>
-    make_sound(
-      (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
+    make_stereo_sound(
+      (t) =>
+        Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
+      (t) =>
+        Math.sin(
+          2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)
+        ),
       duration
     );
 }

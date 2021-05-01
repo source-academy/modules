@@ -1,6 +1,6 @@
 import { Button, Icon, Slider } from '@blueprintjs/core';
 import React from 'react';
-import { ShapeDrawn } from '../../bundles/curves/types';
+import { ShapeDrawn } from '../../bundles/curve/types';
 
 /**
  * Currently used for rendering HTML canvas element for curves.
@@ -204,6 +204,6 @@ export default {
     return isValidFunction(context.result.value);
   },
   body: (context: any) => <WebGLCanvas context={context} />,
-  label: 'Curves Canvas',
+  label: 'Curve Canvas',
   iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options
 };
