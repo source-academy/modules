@@ -204,6 +204,6 @@ export default {
     return isValidFunction(context.result.value);
   },
   body: (context: any) => <WebGLCanvas context={context} />,
-  label: 'Curves Canvas',
+  label: 'Curve Canvas',
   iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options
 };
