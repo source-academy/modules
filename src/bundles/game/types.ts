@@ -1,110 +1,31 @@
-/* eslint-disable */
+import * as Phaser from 'phaser';
 
-export declare namespace Phaser {
-    class Scene {
-        /**
-         * 
-         * @param config Scene specific configuration settings.
-         */
-        constructor(config: string);
-    }
+export type ObjectConfig = { [attr: string]: any };
 
-    namespace Input {
-        namespace Keyboard {
-            class Key {}
-        }
-        class InputPlugin{
-            /**
-             * 
-             * @param scene A reference to the Scene that this Input Plugin is responsible for.
-             */
-            constructor(scene: Phaser.Scene);
-        }
-    }
+export type GameElement = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;
 
-    namespace GameObjects {
-        class GameObject {
-            /**
-             * 
-             * @param scene The Scene to which this Game Object belongs.
-             * @param type A textual representation of the type of Game Object, i.e. `sprite`.
-             */
-            constructor(scene: Phaser.Scene, type: string);
-        }
+export type GameShape =
+  | Phaser.GameObjects.Rectangle
+  | Phaser.GameObjects.Ellipse;
 
-        class Sprite extends Phaser.GameObjects.GameObject {
-            /**
-             * 
-             * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
-             * @param x The horizontal position of this Game Object in the world.
-             * @param y The vertical position of this Game Object in the world.
-             * @param texture The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-             * @param frame An optional frame from the Texture this Game Object is rendering with.
-             */
-            constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number);
-        }
+export type GameObject = GameElement | GameShape;
 
-        class Text extends Phaser.GameObjects.GameObject {
-            /**
-             * 
-             * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
-             * @param x The horizontal position of this Game Object in the world.
-             * @param y The vertical position of this Game Object in the world.
-             * @param text The text this Text object will display.
-             * @param style The text style configuration object.
-             */
-            constructor(scene: Phaser.Scene, x: number, y: number, text: string | string[], style: Config);
+export type Container = Phaser.GameObjects.Container;
 
-        }
-        class Container extends Phaser.GameObjects.GameObject {
-            /**
-             * 
-             * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
-             * @param x The horizontal position of this Game Object in the world. Default 0.
-             * @param y The vertical position of this Game Object in the world. Default 0.
-             * @param children An optional array of Game Objects to add to this Container.
-             */
-            constructor(scene: Phaser.Scene, x?: number, y?: number, children?: Phaser.GameObjects.GameObject[]);
-        }
+export type InputObject = Phaser.Input.InputPlugin | Phaser.Input.Keyboard.Key;
 
-        class Shape extends Phaser.GameObjects.GameObject {
-            /**
-             * 
-             * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
-             * @param type The internal type of the Shape.
-             * @param data The data of the source shape geometry, if any.
-             */
-            constructor(scene: Phaser.Scene, type?: string, data?: any);
-        }
+export type TypedGameObject = [
+  type: string,
+  object: GameObject | InputObject | Container
+];
 
-        class Rectangle extends Phaser.GameObjects.Shape {
-            /**
-             * 
-             * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
-             * @param x The horizontal position of this Game Object in the world.
-             * @param y The vertical position of this Game Object in the world.
-             * @param width The width of the rectangle. Default 128.
-             * @param height The height of the rectangle. Default 128.
-             * @param fillColor The color the rectangle will be filled with, i.e. 0xff0000 for red.
-             * @param fillAlpha The alpha the rectangle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
-             */
-            constructor(scene: Phaser.Scene, x: number, y: number, width?: number, height?: number, fillColor?: number, fillAlpha?: number);
-        }
-
-        class Ellipse extends Phaser.GameObjects.Shape {
-            /**
-             * 
-             * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
-             * @param x The horizontal position of this Game Object in the world. Default 0.
-             * @param y The vertical position of this Game Object in the world. Default 0.
-             * @param width The width of the ellipse. An ellipse with equal width and height renders as a circle. Default 128.
-             * @param height The height of the ellipse. An ellipse with equal width and height renders as a circle. Default 128.
-             * @param fillColor The color the ellipse will be filled with, i.e. 0xff0000 for red.
-             * @param fillAlpha The alpha the ellipse will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
-             */
-            constructor(scene: Phaser.Scene, x?: number, y?: number, width?: number, height?: number, fillColor?: number, fillAlpha?: number);
-        }
-    }
-}
-
-export type Config = { [attr: string] : any };
+export type GameParams = {
+  scene: Phaser.Scene;
+  phaser: any;
+  preloadImageMap: Map<string, string>;
+  preloadSoundMap: Map<string, string>;
+  preloadSpritesheetMap: Map<string, [string, object]>;
+  remotePath: string;
+  screenSize: { x: number; y: number };
+  createAward: (x: number, y: number, key: string) => Phaser.GameObjects.Sprite;
+};
