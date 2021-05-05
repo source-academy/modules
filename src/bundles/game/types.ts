@@ -2,22 +2,26 @@ import * as Phaser from 'phaser';
 
 export type ObjectConfig = { [attr: string]: any };
 
-export type GameElement = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;
+export type RawGameElement =
+  | Phaser.GameObjects.Sprite
+  | Phaser.GameObjects.Text;
 
-export type GameShape =
+export type RawGameShape =
   | Phaser.GameObjects.Rectangle
   | Phaser.GameObjects.Ellipse;
 
-export type GameObject = GameElement | GameShape;
+export type RawGameObject = RawGameElement | RawGameShape;
 
-export type Container = Phaser.GameObjects.Container;
+export type RawContainer = Phaser.GameObjects.Container;
 
-export type InputObject = Phaser.Input.InputPlugin | Phaser.Input.Keyboard.Key;
+export type RawInputObject =
+  | Phaser.Input.InputPlugin
+  | Phaser.Input.Keyboard.Key;
 
-export type TypedGameObject = [
-  type: string,
-  object: GameObject | InputObject | Container
-];
+export type GameObject = {
+  type: string;
+  object: RawGameObject | RawInputObject | RawContainer;
+};
 
 export type GameParams = {
   scene: Phaser.Scene;

@@ -1,13 +1,3 @@
-import {
-  ObjectConfig,
-  GameObject,
-  TypedGameObject,
-  GameParams,
-  InputObject,
-  Container,
-  GameElement,
-} from './types';
-
 /**
  * Game library that translates Phaser 3 API into Source.
  *
@@ -17,10 +7,24 @@ import {
  * For Phaser 3 API Documentation, check:
  * https://photonstorm.github.io/phaser3-docs/
  *
- * Author: Anthony Halim, Chong Sia Tiffany, Chi Xu, Gokul Rajiv
+ * @module game
+ * @author Anthony Halim
+ * @author Chi Xu
+ * @author Chong Sia Tiffany
+ * @author Gokul Rajiv
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars, consistent-return */
+import {
+  GameObject,
+  GameParams,
+  ObjectConfig,
+  RawContainer,
+  RawGameElement,
+  RawGameObject,
+  RawInputObject,
+} from './types';
+
 export default function gameFuncs(_params: GameParams) {
   const {
     scene,
@@ -33,73 +37,77 @@ export default function gameFuncs(_params: GameParams) {
     createAward,
   } = _params;
 
-  // Listener Types
-  const imputPlugin = 'input_plugin';
-  const keyboardKeyType = 'keyboard_key';
-  const listenerTypes = [imputPlugin, keyboardKeyType];
+  // Listener ObjectTypes
+  enum ListenerTypes {
+    InputPlugin = 'input_plugin',
+    KeyboardKeyType = 'keyboard_key',
+  }
 
-  // Object types
-  const imageType = 'image';
-  const textType = 'text';
-  const rectType = 'rect';
-  const ellipseType = 'ellipse';
-  const containerType = 'container';
-  const awardType = 'award';
-  const objTypes = [
-    imageType,
-    textType,
-    rectType,
-    ellipseType,
-    containerType,
-    awardType,
-  ];
+  const ListnerTypes = Object.values(ListenerTypes);
 
-  // const nullStr = '';
+  // Object ObjectTypes
+  enum ObjectTypes {
+    ImageType = 'image',
+    TextType = 'text',
+    RectType = 'rect',
+    EllipseType = 'ellipse',
+    ContainerType = 'container',
+    AwardType = 'award',
+  }
+
+  const ObjTypes = Object.values(ObjectTypes);
+
   const nullFn = () => {};
 
-  // export default () => ({
-  //   create_text_config,
-  // });
+  // =============================================================================
+  // Module's Private Functions
+  // =============================================================================
 
-  // PRIVATE
-
-  function get_obj(obj: TypedGameObject): GameObject | InputObject | Container {
-    return obj[1];
+  /** @hidden */
+  function get_obj(
+    obj: GameObject
+  ): RawGameObject | RawInputObject | RawContainer {
+    return obj.object;
   }
 
-  function get_game_obj(obj: TypedGameObject): GameObject {
-    return obj[1] as GameObject;
+  /** @hidden */
+  function get_game_obj(obj: GameObject): RawGameObject | RawContainer {
+    return obj.object as RawGameObject | RawContainer;
   }
 
-  function get_input_obj(obj: TypedGameObject): InputObject {
-    return obj[1] as InputObject;
+  /** @hidden */
+  function get_input_obj(obj: GameObject): RawInputObject {
+    return obj.object as RawInputObject;
   }
 
-  function get_container(obj: TypedGameObject): Container {
-    return obj[1] as Container;
+  /** @hidden */
+  function get_container(obj: GameObject): RawContainer {
+    return obj.object as RawContainer;
   }
 
   /**
    * Checks whether the given game object is of the enquired type.
    * If the given obj is undefined, will also return false.
    *
-   * @param {TypedGameObject} obj the game object
-   * @param {string} type enquired type
-   * @returns {boolean}
+   * @param obj the game object
+   * @param type enquired type
+   * @returns if game object is of enquired type
+   * @hidden
    */
-  function is_type(obj: TypedGameObject, type: string): boolean {
-    return obj !== undefined && obj[0] === type && obj[1] !== undefined;
+  function is_type(obj: GameObject, type: string): boolean {
+    return obj !== undefined && obj.type === type && obj.object !== undefined;
   }
 
   /**
-   * Checks whether the given game object is any of the enquired types
+   * Checks whether the given game object is any of the enquired ObjectTypes
    *
-   * @param {TypedGameObject} obj the game object
-   * @param {string[]} types enquired types
-   * @returns {boolean}
+   * @param obj the game object
+   * @param ObjectTypes enquired ObjectTypes
+   * @returns if game object is of any of the enquired ObjectTypes
+   * @hidden
    */
-  function is_any_type(obj: TypedGameObject, types: string[]): boolean {
-    /* eslint-disable no-plusplus */
+  function is_any_type(obj: GameObject, types: string[]): boolean {
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < types.length; ++i) {
       if (is_type(obj, types[i])) return true;
     }
@@ -110,71 +118,40 @@ export default function gameFuncs(_params: GameParams) {
    * Set a game object to the given type.
    * Mutates the object.
    *
-   * @param {GameObject | InputObject | Container} obj the game object
-   * @param {string} type type to set
-   * @returns {TypedGameObject} object itself
+   * @param object the game object
+   * @param type type to set
+   * @returns typed game object
+   * @hidden
    */
   function set_type(
-    obj: GameObject | InputObject | Container,
+    object: RawGameObject | RawInputObject | RawContainer,
     type: string
-  ): TypedGameObject {
-    return [type, obj];
+  ): GameObject {
+    return { type, object };
   }
 
   /**
    * Throw a console error, including the function caller name.
    *
    * @param {string} message error message
+   * @hidden
    */
   function throw_error(message: string) {
     // eslint-disable-next-line no-console, no-caller, @typescript-eslint/no-throw-literal, no-restricted-properties
     throw console.error(`${arguments.callee.caller.name}: ${message}`);
   }
 
-  function head(lst: any[]) {
-    return lst[0];
-  }
-
-  function tail(lst: any[]) {
-    return lst[1];
-  }
-
-  function map(f: any, lst: any[]) {
-    return lst.map(f);
-  }
-
-  function is_pair(lst: any[]) {
-    return Array.isArray(lst) && lst.length === 2;
-  }
-  /**
-   * Transforms the given list into config object. The list follows
-   * the format of list([key1, value1], [key2, value2]).
-   *
-   * e.g list(["alpha", 0], ["duration", 1000])
-   *
-   * @param {any[]]} lst the list to be turned into config object.
-   * @returns {ObjectConfig} config object
-   */
-  function create_config(lst: any[]): ObjectConfig {
-    const config = {};
-
-    map((xs: any) => {
-      if (!is_pair(xs)) {
-        throw_error(`xs is not pair!`);
-      }
-      config[head(xs)] = tail(xs);
-    }, lst);
-
-    return config;
-  }
+  // =============================================================================
+  // Module's Exposed Functions
+  // =============================================================================
 
   // HELPER
 
   /**
    * Prepend the given asset key with the remote path (S3 path).
    *
-   * @param {string} asset_key
-   * @returns {string} prepended path
+   * @param asset_key
+   * @returns prepended path
    */
   function prepend_remote_url(asset_key: string): string {
     return remotePath + asset_key;
@@ -189,15 +166,15 @@ export default function gameFuncs(_params: GameParams) {
    * align: must be either 'left', 'right', 'center', or 'justify'
    *
    * For more details about text config, see:
-   * https://photonstorm.github.io/phaser3-docs/Phaser.Types.GameObjects.Text.html#.TextStyle
+   * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.GameObjects.Text.html#.TextStyle
    *
-   * @param {string} font_family font to be used
-   * @param {string} font_size size of font, must be appended with 'px' e.g. '16px'
-   * @param {string} color colour of font, in hex e.g. '#fff'
-   * @param {string} stroke colour of stroke, in hex e.g. '#fff'
-   * @param {number} stroke_thickness thickness of stroke
-   * @param {string} align text alignment
-   * @returns {ObjectConfig} text config
+   * @param font_family font to be used
+   * @param font_size size of font, must be appended with 'px' e.g. '16px'
+   * @param color colour of font, in hex e.g. '#fff'
+   * @param stroke colour of stroke, in hex e.g. '#fff'
+   * @param stroke_thickness thickness of stroke
+   * @param align text alignment
+   * @returns text config
    */
   function create_text_config(
     font_family: string = 'Courier',
@@ -207,28 +184,27 @@ export default function gameFuncs(_params: GameParams) {
     stroke_thickness: number = 0,
     align: string = 'left'
   ): ObjectConfig {
-    const lst = [
-      ['fontFamily', font_family],
-      ['fontSize', font_size],
-      ['color', color],
-      ['stroke', stroke],
-      ['strokeThickness', stroke_thickness],
-      ['align', align],
-    ];
-    return create_config(lst);
+    return {
+      fontFamily: font_family,
+      fontSize: font_size,
+      color,
+      stroke,
+      strokeThickness: stroke_thickness,
+      align,
+    };
   }
 
   /**
    * Create interactive config object, can be used to configure interactive settings.
    *
    * For more details about interactive config object, see:
-   * https://photonstorm.github.io/phaser3-docs/Phaser.Types.Input.html#.InputConfiguration
+   * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Input.html#.InputConfiguration
    *
-   * @param {boolean} draggable object will be set draggable
-   * @param {boolean} use_hand_cursor if true, pointer will be set to 'pointer' when a pointer is over it
-   * @param {boolean} pixel_perfect pixel perfect function will be set for the hit area. Only works for texture based object
-   * @param {number} alpha_tolerance if pixel_perfect is set, this is the alpha tolerance threshold value used in the callback
-   * @returns {ObjectConfig} interactive config
+   * @param draggable object will be set draggable
+   * @param use_hand_cursor if true, pointer will be set to 'pointer' when a pointer is over it
+   * @param pixel_perfect pixel perfect function will be set for the hit area. Only works for texture based object
+   * @param alpha_tolerance if pixel_perfect is set, this is the alpha tolerance threshold value used in the callback
+   * @returns interactive config
    */
   function create_interactive_config(
     draggable: boolean = false,
@@ -236,29 +212,28 @@ export default function gameFuncs(_params: GameParams) {
     pixel_perfect: boolean = false,
     alpha_tolerance: number = 1
   ): ObjectConfig {
-    const lst = [
-      ['draggable', draggable],
-      ['useHandCursor', use_hand_cursor],
-      ['pixelPerfect', pixel_perfect],
-      ['alphaTolerance', alpha_tolerance],
-    ];
-    return create_config(lst);
+    return {
+      draggable,
+      useHandCursor: use_hand_cursor,
+      pixelPerfect: pixel_perfect,
+      alphaTolerance: alpha_tolerance,
+    };
   }
 
   /**
    * Create sound config object, can be used to configure sound settings.
    *
    * For more details about sound config object, see:
-   * https://photonstorm.github.io/phaser3-docs/Phaser.Types.Sound.html#.SoundConfig
+   * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Sound.html#.SoundConfig
    *
-   * @param {boolean} mute whether the sound should be muted or not
-   * @param {number} volume value between 0(silence) and 1(full volume)
-   * @param {number} rate the speed at which the sound is played
-   * @param {number} detune detuning of the sound, in cents
-   * @param {number} seek position of playback for the sound, in seconds
-   * @param {boolean} loop whether or not the sound should loop
-   * @param {number} delay time, in seconds, that elapse before the sound actually starts
-   * @returns {ObjectConfig} sound config
+   * @param mute whether the sound should be muted or not
+   * @param volume value between 0(silence) and 1(full volume)
+   * @param rate the speed at which the sound is played
+   * @param detune detuning of the sound, in cents
+   * @param seek position of playback for the sound, in seconds
+   * @param loop whether or not the sound should loop
+   * @param delay time, in seconds, that elapse before the sound actually starts
+   * @returns sound config
    */
   function create_sound_config(
     mute: boolean = false,
@@ -269,35 +244,34 @@ export default function gameFuncs(_params: GameParams) {
     loop: boolean = false,
     delay: number = 0
   ): ObjectConfig {
-    const lst = [
-      ['mute', mute],
-      ['volume', volume],
-      ['rate', rate],
-      ['detune', detune],
-      ['seek', seek],
-      ['loop', loop],
-      ['delay', delay],
-    ];
-    return create_config(lst);
+    return {
+      mute,
+      volume,
+      rate,
+      detune,
+      seek,
+      loop,
+      delay,
+    };
   }
 
   /**
    * Create tween config object, can be used to configure tween settings.
    *
    * For more details about tween config object, see:
-   * https://photonstorm.github.io/phaser3-docs/Phaser.Types.Tweens.html#.TweenBuilderConfig
+   * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Tweens.html#.TweenBuilderConfig
    *
-   * @param {string} target_prop target to tween, e.g. x, y, alpha
-   * @param {string | number} target_value the property value to tween to
-   * @param {number} delay time in ms/frames before tween will start
-   * @param {number} duration duration of tween in ms/frames, exclude yoyos or repeats
-   * @param {Function | string} ease ease function to use, e.g. 'Power0', 'Power1', 'Power2'
-   * @param {Function} on_complete function to execute when tween completes
-   * @param {boolean} yoyo if set to true, once tween complete, reverses the values incrementally to get back to the starting tween values
-   * @param {number} loop number of times the tween should loop, or -1 to loop indefinitely
-   * @param {number} loop_delay The time the tween will pause before starting either a yoyo or returning to the start for a repeat
-   * @param {Function} on_loop function to execute each time the tween loops
-   * @returns {ObjectConfig} tween config
+   * @param target_prop target to tween, e.g. x, y, alpha
+   * @param target_value the property value to tween to
+   * @param delay time in ms/frames before tween will start
+   * @param duration duration of tween in ms/frames, exclude yoyos or repeats
+   * @param ease ease function to use, e.g. 'Power0', 'Power1', 'Power2'
+   * @param on_complete function to execute when tween completes
+   * @param yoyo if set to true, once tween complete, reverses the values incrementally to get back to the starting tween values
+   * @param loop number of times the tween should loop, or -1 to loop indefinitely
+   * @param loop_delay The time the tween will pause before starting either a yoyo or returning to the start for a repeat
+   * @param on_loop function to execute each time the tween loops
+   * @returns tween config
    */
   function create_tween_config(
     target_prop: string = 'x',
@@ -311,36 +285,35 @@ export default function gameFuncs(_params: GameParams) {
     loop_delay: number = 0,
     on_loop: Function = nullFn
   ): ObjectConfig {
-    const lst = [
-      [target_prop, target_value],
-      ['delay', delay],
-      ['duration', duration],
-      ['ease', ease],
-      ['onComplete', on_complete],
-      ['yoyo', yoyo],
-      ['loop', loop],
-      ['loopDelay', loop_delay],
-      ['onLoop', on_loop],
-    ];
-    return create_config(lst);
+    return {
+      target_prop: target_value,
+      delay,
+      duration,
+      ease,
+      onComplete: on_complete,
+      yoyo,
+      loop,
+      loopDelay: loop_delay,
+      onLoop: on_loop,
+    };
   }
 
   /**
    * Create anims config, can be used to configure anims
    *
    * For more details about the config object, see:
-   * https://photonstorm.github.io/phaser3-docs/Phaser.Types.Animations.html#.Animation
+   * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Animations.html#.Animation
    *
-   * @param {string} anims_key key that the animation will be associated with
-   * @param {ObjectConfig[]} anim_frames data used to generate the frames for animation
-   * @param {number} frame_rate frame rate of playback in frames per second
-   * @param {number} duration how long the animation should play in seconds.
-   *                     If null, will be derived from frame_rate
-   * @param {number} repeat number of times to repeat the animation, -1 for infinity
-   * @param {boolean} yoyo should the animation yoyo (reverse back down to the start)
-   * @param {boolean} show_on_start should the sprite be visible when the anims start?
-   * @param {boolean} hide_on_complete should the sprite be not visible when the anims finish?
-   * @returns {ObjectConfig} anim config
+   * @param anims_key key that the animation will be associated with
+   * @param anim_frames data used to generate the frames for animation
+   * @param frame_rate frame rate of playback in frames per second
+   * @param duration how long the animation should play in seconds.
+   *                 If null, will be derived from frame_rate
+   * @param repeat number of times to repeat the animation, -1 for infinity
+   * @param yoyo should the animation yoyo (reverse back down to the start)
+   * @param show_on_start should the sprite be visible when the anims start?
+   * @param hide_on_complete should the sprite be not visible when the anims finish?
+   * @returns animation config
    */
   function create_anim_config(
     anims_key: string,
@@ -352,17 +325,16 @@ export default function gameFuncs(_params: GameParams) {
     show_on_start: boolean = true,
     hide_on_complete: boolean = false
   ): ObjectConfig {
-    const lst = [
-      ['key', anims_key],
-      ['frames', anim_frames],
-      ['frameRate', frame_rate],
-      ['duration', duration],
-      ['repeat', repeat],
-      ['yoyo', yoyo],
-      ['showOnStart', show_on_start],
-      ['hideOnComplete', hide_on_complete],
-    ];
-    return create_config(lst);
+    return {
+      key: anims_key,
+      frames: anim_frames,
+      frameRate: frame_rate,
+      duration,
+      repeat,
+      yoyo,
+      showOnStart: show_on_start,
+      hideOnComplete: hide_on_complete,
+    };
   }
 
   /**
@@ -373,43 +345,42 @@ export default function gameFuncs(_params: GameParams) {
    * To make frame_config from spritesheet based on its frames,
    * use create_anim_spritesheet_frame_configs instead.
    *
-   * @param {string} key key that is associated with the sprite at this frame
-   * @param {string | number} frame either index or string, of the frame
-   * @param {number} duration duration, in ms, of this frame of the animation
-   * @param {boolean} visible should the parent object be visible during this frame?
-   * @returns {ObjectConfig} anim frame config
+   * @param key key that is associated with the sprite at this frame
+   * @param duration duration, in ms, of this frame of the animation
+   * @param visible should the parent object be visible during this frame?
+   * @returns animation frame config
    */
   function create_anim_frame_config(
     key: string,
     duration: number = 0,
     visible: boolean = true
   ): ObjectConfig {
-    const lst = [
-      ['key', key],
-      ['duration', duration],
-      ['visible', visible],
-    ];
-    return create_config(lst);
+    return {
+      key,
+      duration,
+      visible,
+    };
   }
 
   /**
-   * Create list of animation frame config, can be used directly as part of 
+   * Create list of animation frame config, can be used directly as part of
    * anim_config's `frames` parameter.
-   * 
-   * This function will generate list of frame configs based on the 
+   *
+   * This function will generate list of frame configs based on the
    * spritesheet_config attached to the associated spritesheet.
-
-    * This function requires that the given key is a spritesheet key
-    * i.e. a key associated with loaded spritesheet, loaded in using
-    * load_spritesheet function.
-    * 
-    * Will return empty frame configs if key is not associated with
-    * a spritesheet.
-    *  
-    * @param {string} key key associated with spritesheet 
-    * @returns {ObjectConfig[]}
-    */
-  function create_anim_spritesheet_frame_configs(key: string): any {
+   * This function requires that the given key is a spritesheet key
+   * i.e. a key associated with loaded spritesheet, loaded in using
+   * load_spritesheet function.
+   *
+   * Will return empty frame configs if key is not associated with
+   * a spritesheet.
+   *
+   * @param key key associated with spritesheet
+   * @returns animation frame configs
+   */
+  function create_anim_spritesheet_frame_configs(
+    key: string
+  ): ObjectConfig[] | undefined {
     if (preloadSpritesheetMap.get(key)) {
       const configArr = scene.anims.generateFrameNumbers(key, {});
       return configArr;
@@ -421,12 +392,12 @@ export default function gameFuncs(_params: GameParams) {
    * Create spritesheet config, can be used to configure the frames within the
    * spritesheet. Can be used as config at load_spritesheet.
    *
-   * @param {number} frame_width width of frame in pixels
-   * @param {number} frame_height height of frame in pixels
-   * @param {number} start_frame first frame to start parsing from
-   * @param {number} margin margin in the image; this is the space around the edge of the frames
-   * @param {number} spacing the spacing between each frame in the image
-   * @returns {ObjectConfig} spritesheet config
+   * @param frame_width width of frame in pixels
+   * @param frame_height height of frame in pixels
+   * @param start_frame first frame to start parsing from
+   * @param margin margin in the image; this is the space around the edge of the frames
+   * @param spacing the spacing between each frame in the image
+   * @returns spritesheet config
    */
   function create_spritesheet_config(
     frame_width: number,
@@ -435,14 +406,13 @@ export default function gameFuncs(_params: GameParams) {
     margin: number = 0,
     spacing: number = 0
   ): ObjectConfig {
-    const lst = [
-      ['frameWidth', frame_width],
-      ['frameHeight', frame_height],
-      ['startFrame', start_frame],
-      ['margin', margin],
-      ['spacing', spacing],
-    ];
-    return create_config(lst);
+    return {
+      frameWidth: frame_width,
+      frameHeight: frame_height,
+      startFrame: start_frame,
+      margin,
+      spacing,
+    };
   }
 
   // SCREEN
@@ -450,7 +420,7 @@ export default function gameFuncs(_params: GameParams) {
   /**
    * Get in-game screen width.
    *s
-   * @return {number} screen width
+   * @return screen width
    */
   function get_screen_width(): number {
     return screenSize.x;
@@ -459,7 +429,7 @@ export default function gameFuncs(_params: GameParams) {
   /**
    * Get in-game screen height.
    *
-   * @return {number} screen height
+   * @return screen height
    */
   function get_screen_height(): number {
     return screenSize.y;
@@ -468,7 +438,7 @@ export default function gameFuncs(_params: GameParams) {
   /**
    * Get game screen display width (accounting window size).
    *
-   * @return {number} screen display width
+   * @return screen display width
    */
   function get_screen_display_width(): number {
     return scene.scale.displaySize.width;
@@ -477,7 +447,7 @@ export default function gameFuncs(_params: GameParams) {
   /**
    * Get game screen display height (accounting window size).
    *
-   * @return {number} screen display height
+   * @return screen display height
    */
   function get_screen_display_height(): number {
     return scene.scale.displaySize.height;
@@ -489,8 +459,8 @@ export default function gameFuncs(_params: GameParams) {
    * Load the image asset into the scene for use. All images
    * must be loaded before used in create_image.
    *
-   * @param {string} key key to be associated with the image
-   * @param {string} url path to the image
+   * @param key key to be associated with the image
+   * @param url path to the image
    */
   function load_image(key: string, url: string) {
     preloadImageMap.set(key, url);
@@ -500,8 +470,8 @@ export default function gameFuncs(_params: GameParams) {
    * Load the sound asset into the scene for use. All sound
    * must be loaded before used in play_sound.
    *
-   * @param {string} key key to be associated with the sound
-   * @param {string} url path to the sound
+   * @param key key to be associated with the sound
+   * @param url path to the sound
    */
   function load_sound(key: string, url: string) {
     preloadSoundMap.set(key, url);
@@ -511,9 +481,9 @@ export default function gameFuncs(_params: GameParams) {
    * Load the spritesheet into the scene for use. All spritesheet must
    * be loaded before used in create_image.
    *
-   * @param {string} key key associated with the spritesheet
-   * @param {string} url path to the sound
-   * @param {ObjectConfig} spritesheet_config config to determines frames within the spritesheet
+   * @param key key associated with the spritesheet
+   * @param url path to the sound
+   * @param spritesheet_config config to determines frames within the spritesheet
    */
   function load_spritesheet(
     key: string,
@@ -529,14 +499,14 @@ export default function gameFuncs(_params: GameParams) {
    * Add the object to the scene. Only objects added to the scene
    * will appear.
    *
-   * @param {TypedGameObject} obj game object to be added
+   * @param obj game object to be added
    */
-  function add(obj: TypedGameObject): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
-      scene.add.existing(get_obj(obj) as Phaser.GameObjects.GameObject);
+  function add(obj: GameObject): GameObject | undefined {
+    if (is_any_type(obj, ObjTypes)) {
+      scene.add.existing(get_game_obj(obj));
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   // SOUND
@@ -545,8 +515,8 @@ export default function gameFuncs(_params: GameParams) {
    * Play the sound associated with the key.
    * Throws error if key is non-existent.
    *
-   * @param {string} key key to the sound to be played
-   * @param {ObjectConfig} config sound config to be used
+   * @param key key to the sound to be played
+   * @param config sound config to be used
    */
   function play_sound(key: string, config: ObjectConfig = {}): void {
     if (preloadSoundMap.get(key)) {
@@ -565,12 +535,12 @@ export default function gameFuncs(_params: GameParams) {
    * NOTE: Anims DO NOT need to be added into the scene to be used.
    * It is automatically added to the scene when it is created.
    *
-   * WIll return true if the animation key is valid
+   * Will return true if the animation key is valid
    * (key is specified within the anim_config); false if the key
    * is already in use.
    *
-   * @param {ObjectConfig} anim_config
-   * @returns {boolean} true if animation is successfully created, false otherwise
+   * @param anim_config
+   * @returns true if animation is successfully created, false otherwise
    */
   function create_anim(anim_config: ObjectConfig): boolean {
     const anims = scene.anims.create(anim_config);
@@ -578,20 +548,20 @@ export default function gameFuncs(_params: GameParams) {
   }
 
   /**
-   * Start playing the given animation on image game object. TODO
+   * Start playing the given animation on image game object.
    *
-   * @param {TypedGameObject} image image game object
-   * @param {string} anims_key key associated with an animation
+   * @param image image game object
+   * @param anims_key key associated with an animation
    */
   function play_anim_on_image(
-    image: TypedGameObject,
+    image: GameObject,
     anims_key: string
-  ): TypedGameObject | undefined {
-    if (is_type(image, imageType)) {
+  ): GameObject | undefined {
+    if (is_type(image, ObjectTypes.ImageType)) {
       (get_obj(image) as Phaser.GameObjects.Sprite).play(anims_key);
       return image;
     }
-    throw_error(`${image} is not of type ${imageType}`);
+    throw_error(`${image} is not of type ${ObjectTypes.ImageType}`);
   }
 
   // IMAGE
@@ -602,23 +572,22 @@ export default function gameFuncs(_params: GameParams) {
    *
    * 0, 0 is located at the top, left hand side.
    *
-   * @param {number} x x position of the image. 0 is at the left side
-   * @param {number} y y position of the image. 0 is at the top side
-   * @param {string} asset_key key to loaded image
-   * @returns {TypedGameObject} image game object
+   * @param x x position of the image. 0 is at the left side
+   * @param y y position of the image. 0 is at the top side
+   * @param asset_key key to loaded image
+   * @returns image game object
    */
-  // TODO
   function create_image(
     x: number,
     y: number,
     asset_key: string
-  ): TypedGameObject | undefined {
+  ): GameObject | undefined {
     if (
       preloadImageMap.get(asset_key) ||
       preloadSpritesheetMap.get(asset_key)
     ) {
       const image = new Phaser.GameObjects.Sprite(scene, x, y, asset_key);
-      return set_type(image, imageType);
+      return set_type(image, ObjectTypes.ImageType);
     }
     throw_error(`${asset_key} is not associated with any image`);
   }
@@ -636,17 +605,13 @@ export default function gameFuncs(_params: GameParams) {
    * If student does not possess the award, this function will
    * return a untagged, default image.
    *
-   * @param {number} x x position of the image. 0 is at the left side
-   * @param {number} y y position of the image. 0 is at the top side
-   * @param {string} award_key key for award
-   * @returns {TypedGameObject} award game object
+   * @param x x position of the image. 0 is at the left side
+   * @param y y position of the image. 0 is at the top side
+   * @param award_key key for award
+   * @returns award game object
    */
-  function create_award(
-    x: number,
-    y: number,
-    award_key: string
-  ): TypedGameObject {
-    return set_type(createAward(x, y, award_key), awardType);
+  function create_award(x: number, y: number, award_key: string): GameObject {
+    return set_type(createAward(x, y, award_key), ObjectTypes.AwardType);
   }
 
   // TEXT
@@ -656,20 +621,20 @@ export default function gameFuncs(_params: GameParams) {
    *
    * 0, 0 is located at the top, left hand side.
    *
-   * @param {number} x x position of the text
-   * @param {number} y y position of the text
-   * @param {string} text text to be shown
-   * @param {ObjectConfig} config text configuration to be used
-   * @returns {TypedGameObject} text game object
+   * @param x x position of the text
+   * @param y y position of the text
+   * @param text text to be shown
+   * @param config text configuration to be used
+   * @returns text game object
    */
   function create_text(
     x: number,
     y: number,
     text: string,
     config: ObjectConfig = {}
-  ): TypedGameObject {
+  ): GameObject {
     const txt = new Phaser.GameObjects.Text(scene, x, y, text, config);
-    return set_type(txt, textType);
+    return set_type(txt, ObjectTypes.TextType);
   }
 
   // RECTANGLE
@@ -679,13 +644,13 @@ export default function gameFuncs(_params: GameParams) {
    *
    * 0, 0 is located at the top, left hand side.
    *
-   * @param {number} x x coordinate of the top, left corner posiiton
-   * @param {number} y y coordinate of the top, left corner position
-   * @param {number} width width of rectangle
-   * @param {number} height height of rectangle
-   * @param {number} fill colour fill, in hext e.g 0xffffff
-   * @param {number} alpha value between 0 and 1 to denote alpha
-   * @returns {TypedGameObject} rectangle object
+   * @param x x coordinate of the top, left corner posiiton
+   * @param y y coordinate of the top, left corner position
+   * @param width width of rectangle
+   * @param height height of rectangle
+   * @param fill colour fill, in hext e.g 0xffffff
+   * @param alpha value between 0 and 1 to denote alpha
+   * @returns rectangle object
    */
   function create_rect(
     x: number,
@@ -694,7 +659,7 @@ export default function gameFuncs(_params: GameParams) {
     height: number,
     fill: number = 0,
     alpha: number = 1
-  ): TypedGameObject {
+  ): GameObject {
     const rect = new Phaser.GameObjects.Rectangle(
       scene,
       x,
@@ -704,7 +669,7 @@ export default function gameFuncs(_params: GameParams) {
       fill,
       alpha
     );
-    return set_type(rect, rectType);
+    return set_type(rect, ObjectTypes.RectType);
   }
 
   // ELLIPSE
@@ -712,13 +677,13 @@ export default function gameFuncs(_params: GameParams) {
   /**
    * Create an ellipse object.
    *
-   * @param {number} x x coordinate of the centre of ellipse
-   * @param {number} y y coordinate of the centre of ellipse
-   * @param {number} width width of ellipse
-   * @param {number} height height of ellipse
-   * @param {number} fill colour fill, in hext e.g 0xffffff
-   * @param {number} alpha value between 0 and 1 to denote alpha
-   * @returns {TypedGameObject} ellipse object
+   * @param x x coordinate of the centre of ellipse
+   * @param y y coordinate of the centre of ellipse
+   * @param width width of ellipse
+   * @param height height of ellipse
+   * @param fill colour fill, in hext e.g 0xffffff
+   * @param alpha value between 0 and 1 to denote alpha
+   * @returns ellipse object
    */
   function create_ellipse(
     x: number,
@@ -727,7 +692,7 @@ export default function gameFuncs(_params: GameParams) {
     height: number,
     fill: number = 0,
     alpha: number = 1
-  ): TypedGameObject {
+  ): GameObject {
     const ellipse = new Phaser.GameObjects.Ellipse(
       scene,
       x,
@@ -737,7 +702,7 @@ export default function gameFuncs(_params: GameParams) {
       fill,
       alpha
     );
-    return set_type(ellipse, ellipseType);
+    return set_type(ellipse, ObjectTypes.EllipseType);
   }
 
   // CONTAINER
@@ -756,35 +721,36 @@ export default function gameFuncs(_params: GameParams) {
    * For more details about container object, see:
    * https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Container.html
    *
-   * @param {number} x x position of the container
-   * @param {number} y y position of the container
-   * @returns {TypedGameObject} container object
+   * @param x x position of the container
+   * @param y y position of the container
+   * @returns container object
    */
-  function create_container(x: number, y: number): TypedGameObject {
+  function create_container(x: number, y: number): GameObject {
     const cont = new Phaser.GameObjects.Container(scene, x, y);
-    return set_type(cont, containerType);
+    return set_type(cont, ObjectTypes.ContainerType);
   }
 
   /**
    * Add the given game object to the container.
    * Mutates the container.
    *
-   * @param {TypedGameObject} container container object
-   * @param {GameObject} obj game object to add to the container
-   * @returns {TypedGameObject | undefined} container object
+   * @param container container object
+   * @param obj game object to add to the container
+   * @returns container object
    */
   function add_to_container(
-    container: TypedGameObject,
-    obj: TypedGameObject
-  ): TypedGameObject | undefined {
-    if (is_type(container, containerType) && is_any_type(obj, objTypes)) {
-      (get_obj(container) as Phaser.GameObjects.Container).add(
-        get_obj(obj) as Phaser.GameObjects.GameObject
-      );
+    container: GameObject,
+    obj: GameObject
+  ): GameObject | undefined {
+    if (
+      is_type(container, ObjectTypes.ContainerType) &&
+      is_any_type(obj, ObjTypes)
+    ) {
+      get_container(container).add(get_game_obj(obj));
       return container;
     }
     throw_error(
-      `${obj} is not of type ${objTypes} or ${container} is not of type ${containerType}`
+      `${obj} is not of type ${ObjTypes} or ${container} is not of type ${ObjectTypes.ContainerType}`
     );
   }
 
@@ -795,13 +761,13 @@ export default function gameFuncs(_params: GameParams) {
    * is removed from the scene, and all of its listeners
    * is also removed.
    *
-   * @param {TypedGameObject} obj game object itself
+   * @param obj game object itself
    */
-  function destroy_obj(obj: TypedGameObject) {
-    if (is_any_type(obj, objTypes)) {
-      get_obj(obj).destroy();
+  function destroy_obj(obj: GameObject) {
+    if (is_any_type(obj, ObjTypes)) {
+      get_game_obj(obj).destroy();
     } else {
-      throw_error(`${obj} is not of type ${objTypes}`);
+      throw_error(`${obj} is not of type ${ObjTypes}`);
     }
   }
 
@@ -809,40 +775,37 @@ export default function gameFuncs(_params: GameParams) {
    * Set the display size of the object.
    * Mutate the object.
    *
-   * @param {TypedGameObject} obj object to be set
-   * @param {number} x new display width size
-   * @param {number} y new display height size
-   * @returns {TypedGameObject | undefined} game object itself
+   * @param obj object to be set
+   * @param x new display width size
+   * @param y new display height size
+   * @returns game object itself
    */
   function set_display_size(
-    obj: TypedGameObject,
+    obj: GameObject,
     x: number,
     y: number
-  ): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
+  ): GameObject | undefined {
+    if (is_any_type(obj, ObjTypes)) {
       get_game_obj(obj).setDisplaySize(x, y);
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   /**
    * Set the alpha of the object.
    * Mutate the object.
    *
-   * @param {TypedGameObject} obj object to be set
-   * @param {number} alpha new alpha
-   * @returns {TypedGameObject | undefined} game object itself
+   * @param obj object to be set
+   * @param alpha new alpha
+   * @returns game object itself
    */
-  function set_alpha(
-    obj: TypedGameObject,
-    alpha: number
-  ): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
+  function set_alpha(obj: GameObject, alpha: number): GameObject | undefined {
+    if (is_any_type(obj, ObjTypes)) {
       get_game_obj(obj).setAlpha(alpha);
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   /**
@@ -852,19 +815,19 @@ export default function gameFuncs(_params: GameParams) {
    * Rectangle and Ellipse are not able to receive configs, only boolean
    * i.e. set_interactive(rect, true); set_interactive(ellipse, false)
    *
-   * @param {TypedGameObject} obj object to be set
-   * @param {ObjectConfig} config interactive config to be used
-   * @returns {TypedGameObject | undefined} game object itself
+   * @param obj object to be set
+   * @param config interactive config to be used
+   * @returns game object itself
    */
   function set_interactive(
-    obj: TypedGameObject,
+    obj: GameObject,
     config: ObjectConfig = {}
-  ): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
+  ): GameObject | undefined {
+    if (is_any_type(obj, ObjTypes)) {
       get_game_obj(obj).setInteractive(config);
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   /**
@@ -872,125 +835,123 @@ export default function gameFuncs(_params: GameParams) {
    * In other words, the anchor of the object.
    * Mutate the object.
    *
-   * @param {TypedGameObject} obj object to be set
-   * @param {number} x new anchor x coordinate, between value 0 to 1.
-   * @param {number} y new anchor y coordinate, between value 0 to 1.
-   * @returns {TypedGameObject | undefined} game object itself
+   * @param obj object to be set
+   * @param x new anchor x coordinate, between value 0 to 1.
+   * @param y new anchor y coordinate, between value 0 to 1.
+   * @returns game object itself
    */
   function set_origin(
-    obj: TypedGameObject,
+    obj: GameObject,
     x: number,
     y: number
-  ): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
-      get_game_obj(obj).setOrigin(x, y);
+  ): GameObject | undefined {
+    if (is_any_type(obj, ObjTypes)) {
+      (get_game_obj(obj) as RawGameObject).setOrigin(x, y);
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   /**
    * Set the position of the game object
    * Mutate the object
    *
-   * @param {TypedGameObject} obj object to be set
-   * @param {number} x new x position
-   * @param {number} y new y position
-   * @returns {TypedGameObject | undefined} game object itself
+   * @param obj object to be set
+   * @param x new x position
+   * @param y new y position
+   * @returns game object itself
    */
   function set_position(
-    obj: TypedGameObject,
+    obj: GameObject,
     x: number,
     y: number
-  ): TypedGameObject | undefined {
-    if (obj && is_any_type(obj, objTypes)) {
-      get_container(obj).setPosition(x, y);
+  ): GameObject | undefined {
+    if (obj && is_any_type(obj, ObjTypes)) {
+      get_game_obj(obj).setPosition(x, y);
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   /**
    * Set the scale of the object.
    * Mutate the object.
    *
-   * @param {TypedGameObject} obj object to be set
-   * @param {number} x new x scale
-   * @param {number} y new y scale
-   * @returns {TypedGameObject | undefined} game object itself
+   * @param obj object to be set
+   * @param x new x scale
+   * @param y new y scale
+   * @returns game object itself
    */
   function set_scale(
-    obj: TypedGameObject,
+    obj: GameObject,
     x: number,
     y: number
-  ): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
+  ): GameObject | undefined {
+    if (is_any_type(obj, ObjTypes)) {
       get_game_obj(obj).setScale(x, y);
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   /**
    * Set the rotation of the object.
    * Mutate the object.
    *
-   * @param {TypedGameObject} obj object to be set
-   * @param {number} rad the rotation, in radians
-   * @returns {TypedGameObject | undefined} game object itself
+   * @param obj object to be set
+   * @param rad the rotation, in radians
+   * @returns game object itself
    */
-  function set_rotation(
-    obj: TypedGameObject,
-    rad: number
-  ): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
+  function set_rotation(obj: GameObject, rad: number): GameObject | undefined {
+    if (is_any_type(obj, ObjTypes)) {
       get_game_obj(obj).setRotation(rad);
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   /**
    * Sets the horizontal and flipped state of the object.
    * Mutate the object.
    *
-   * @param {TypedGameObject} obj game object itself
-   * @param {boolean} x to flip in the horizontal state
-   * @param {boolean} y to flip in the vertical state
-   * @returns {TypedGameObject | undefined} game object itself
+   * @param obj game object itself
+   * @param x to flip in the horizontal state
+   * @param y to flip in the vertical state
+   * @returns game object itself
    */
   function set_flip(
-    obj: TypedGameObject,
+    obj: GameObject,
     x: boolean,
     y: boolean
-  ): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
-      (get_obj(obj) as GameElement).setFlip(x, y);
+  ): GameObject | undefined {
+    const GameElementType = [ObjectTypes.ImageType, ObjectTypes.TextType];
+    if (is_any_type(obj, GameElementType)) {
+      (get_obj(obj) as RawGameElement).setFlip(x, y);
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${GameElementType}`);
   }
 
   /**
-   * Create a tween to the object and plays it.
+   * Creates a tween to the object and plays it.
    * Mutate the object.
    *
-   * @param {TypedGameObject} obj object to be added to
-   * @param {ObjectConfig} config tween config
-   * @returns {Promise<TypedGameObject | undefined>} game object itself
+   * @param obj object to be added to
+   * @param config tween config
+   * @returns game object itself
    */
   async function add_tween(
-    obj: TypedGameObject,
+    obj: GameObject,
     config: ObjectConfig = {}
-  ): Promise<TypedGameObject | undefined> {
-    if (is_any_type(obj, objTypes)) {
+  ): Promise<GameObject | undefined> {
+    if (is_any_type(obj, ObjTypes)) {
       scene.tweens.add({
-        targets: get_obj(obj),
+        targets: get_game_obj(obj),
         ...config,
       });
       return obj;
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   // LISTENER
@@ -1003,21 +964,21 @@ export default function gameFuncs(_params: GameParams) {
    * For all available events, see:
    * https://photonstorm.github.io/phaser3-docs/Phaser.Input.Events.html
    *
-   * @param {TypedGameObject} obj object to be added to
-   * @param {string} event the event name
-   * @param {Function} callback listener function, executed on event
-   * @returns {TypedGameObject | undefined} listener
+   * @param obj object to be added to
+   * @param event the event name
+   * @param callback listener function, executed on event
+   * @returns listener game object
    */
   function add_listener(
-    obj: TypedGameObject,
+    obj: GameObject,
     event: string,
     callback: Function
-  ): TypedGameObject | undefined {
-    if (is_any_type(obj, objTypes)) {
-      const listener = get_obj(obj).addListener(event, callback);
-      return set_type(listener, imputPlugin);
+  ): GameObject | undefined {
+    if (is_any_type(obj, ObjTypes)) {
+      const listener = get_game_obj(obj).addListener(event, callback);
+      return set_type(listener, ListenerTypes.InputPlugin);
     }
-    throw_error(`${obj} is not of type ${objTypes}`);
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 
   /**
@@ -1031,29 +992,29 @@ export default function gameFuncs(_params: GameParams) {
    * For list of keycodes, see:
    * https://github.com/photonstorm/phaser/blob/v3.22.0/src/input/keyboard/keys/KeyCodes.js
    *
-   * @param {string | number} key keyboard key
-   * @param {string} event
-   * @param {Function} callback listener function, executed on event
-   * @returns {TypedGameObject} listener
+   * @param key keyboard key to trigger listener
+   * @param event the event name
+   * @param callback listener function, executed on event
+   * @returns listener game object
    */
   function add_keyboard_listener(
     key: string | number,
     event: string,
     callback: Function
-  ): TypedGameObject {
+  ): GameObject {
     const keyObj = scene.input.keyboard.addKey(key);
     const keyboardListener = keyObj.addListener(event, callback);
-    return set_type(keyboardListener, keyboardKeyType);
+    return set_type(keyboardListener, ListenerTypes.KeyboardKeyType);
   }
 
   /**
    * Deactivate and remove listener.
    *
-   * @param {TypedGameObject} listener
-   * @returns {boolean} if successful
+   * @param listener
+   * @returns if successful
    */
-  function remove_listener(listener: TypedGameObject): boolean {
-    if (is_any_type(listener, listenerTypes)) {
+  function remove_listener(listener: GameObject): boolean {
+    if (is_any_type(listener, ListnerTypes)) {
       get_input_obj(listener).removeAllListeners();
       return true;
     }
@@ -1071,7 +1032,6 @@ export default function gameFuncs(_params: GameParams) {
     create_anim_frame_config,
     create_anim_spritesheet_frame_configs,
     create_award,
-    create_config,
     create_container,
     create_ellipse,
     create_image,
@@ -1104,12 +1064,12 @@ export default function gameFuncs(_params: GameParams) {
     set_scale,
   };
 
-  // const finalFunctions = {};
+  const finalFunctions = {};
 
-  // Object.entries(functions).map(([key, fn]) => {
-  //   finalFunctions[key] = !Phaser || !scene ? nullFn : fn;
-  // });
+  // eslint-disable-next-line array-callback-return
+  Object.entries(functions).map(([key, fn]) => {
+    finalFunctions[key] = !scene ? nullFn : fn;
+  });
 
-  // return finalFunctions;
-  return functions;
+  return finalFunctions;
 }
