@@ -20,7 +20,7 @@ export type RawInputObject =
 
 export type GameObject = {
   type: string;
-  object: RawGameObject | RawInputObject | RawContainer;
+  object: RawGameObject | RawInputObject | RawContainer | undefined;
 };
 
 export type GameParams = {
