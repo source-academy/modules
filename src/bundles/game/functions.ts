@@ -17,16 +17,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, consistent-return, @typescript-eslint/no-shadow */
 import {
   GameObject,
-  GameParams,
   ObjectConfig,
   RawContainer,
   RawGameElement,
   RawGameObject,
   RawInputObject,
+  __Params,
 } from './types';
 
 /** @hidden */
-export default function gameFuncs(_params: GameParams) {
+export default function gameFuncs(_params: __Params) {
   const {
     scene,
     phaser,
@@ -36,7 +36,7 @@ export default function gameFuncs(_params: GameParams) {
     remotePath,
     screenSize,
     createAward,
-  } = _params;
+  } = _params.game;
 
   // Listener ObjectTypes
   enum ListenerTypes {

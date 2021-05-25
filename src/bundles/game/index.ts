@@ -1,4 +1,4 @@
-import { GameParams } from './types';
+import { __Params } from './types';
 import gameFuncs from './functions';
 
-export default (_params: GameParams) => gameFuncs(_params);
+export default (_params: __Params) => gameFuncs(_params);
