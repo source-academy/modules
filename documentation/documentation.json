@@ -2098,6 +2098,3242 @@
 			]
 		},
 		{
+			"id": 425,
+			"name": "game",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"comment": {
+				"shortText": "Game library that translates Phaser 3 API into Source.",
+				"text": "More in-depth explanation of the Phaser 3 API can be found at\nPhaser 3 documentation itself.\n\nFor Phaser 3 API Documentation, check:\nhttps://photonstorm.github.io/phaser3-docs/\n",
+				"tags": [
+					{
+						"tag": "author",
+						"text": "Anthony Halim"
+					},
+					{
+						"tag": "author",
+						"text": "Chi Xu"
+					},
+					{
+						"tag": "author",
+						"text": "Chong Sia Tiffany"
+					},
+					{
+						"tag": "author",
+						"text": "Gokul Rajiv\n"
+					}
+				]
+			},
+			"originalName": "game/functions",
+			"children": [
+				{
+					"id": 515,
+					"name": "add",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 969,
+							"character": 19
+						}
+					],
+					"signatures": [
+						{
+							"id": 516,
+							"name": "add",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Add the object to the scene. Only objects added to the scene\nwill appear."
+							},
+							"parameters": [
+								{
+									"id": 517,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "game object to be added\n"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 618,
+					"name": "add_keyboard_listener",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1374,
+							"character": 37
+						}
+					],
+					"signatures": [
+						{
+							"id": 619,
+							"name": "add_keyboard_listener",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Attach a listener to the object. The callback will be executed\nwhen the event is emitted.\nMutate the object.",
+								"text": "For all available events, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Input.Events.html\n\nFor list of keycodes, see:\nhttps://github.com/photonstorm/phaser/blob/v3.22.0/src/input/keyboard/keys/KeyCodes.js\n",
+								"returns": "listener game object\n"
+							},
+							"parameters": [
+								{
+									"id": 620,
+									"name": "key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "keyboard key to trigger listener"
+									},
+									"type": {
+										"type": "union",
+										"types": [
+											{
+												"type": "intrinsic",
+												"name": "string"
+											},
+											{
+												"type": "intrinsic",
+												"name": "number"
+											}
+										]
+									}
+								},
+								{
+									"id": 621,
+									"name": "event",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the event name"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 622,
+									"name": "callback",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "listener function, executed on event"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Function"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "GameObject"
+							}
+						}
+					]
+				},
+				{
+					"id": 613,
+					"name": "add_listener",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1350,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 614,
+							"name": "add_listener",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Attach a listener to the object. The callback will be executed\nwhen the event is emitted.\nMutate the object.",
+								"text": "For all available events, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Input.Events.html\n",
+								"returns": "listener game object\n"
+							},
+							"parameters": [
+								{
+									"id": 615,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be added to"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 616,
+									"name": "event",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the event name"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 617,
+									"name": "callback",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "listener function, executed on event"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Function"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 565,
+					"name": "add_to_container",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1168,
+							"character": 32
+						}
+					],
+					"signatures": [
+						{
+							"id": 566,
+							"name": "add_to_container",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Add the given game object to the container.\nMutates the container.",
+								"returns": "container object\n"
+							},
+							"parameters": [
+								{
+									"id": 567,
+									"name": "container",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "container object"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 568,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "game object to add to the container"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 609,
+					"name": "add_tween",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1328,
+							"character": 31
+						}
+					],
+					"signatures": [
+						{
+							"id": 610,
+							"name": "add_tween",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Creates a tween to the object and plays it.\nMutate the object.",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 611,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be added to"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 612,
+									"name": "config",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "tween config"
+									},
+									"type": {
+										"type": "reference",
+										"name": "ObjectConfig"
+									},
+									"defaultValue": "..."
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "union",
+										"types": [
+											{
+												"type": "reference",
+												"name": "GameObject"
+											},
+											{
+												"type": "intrinsic",
+												"name": "undefined"
+											}
+										]
+									}
+								],
+								"name": "Promise"
+							}
+						}
+					]
+				},
+				{
+					"id": 522,
+					"name": "create_anim",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1000,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 523,
+							"name": "create_anim",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create a new animation and add it to the available animations.\nAnimations are global i.e. once created, it can be used anytime, anywhere.",
+								"text": "NOTE: Anims DO NOT need to be added into the scene to be used.\nIt is automatically added to the scene when it is created.\n\nWill return true if the animation key is valid\n(key is specified within the anim_config); false if the key\nis already in use.\n",
+								"returns": "true if animation is successfully created, false otherwise\n"
+							},
+							"parameters": [
+								{
+									"id": 524,
+									"name": "anim_config",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {},
+									"type": {
+										"type": "reference",
+										"name": "ObjectConfig"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						}
+					]
+				},
+				{
+					"id": 468,
+					"name": "create_anim_config",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 810,
+							"character": 34
+						}
+					],
+					"signatures": [
+						{
+							"id": 469,
+							"name": "create_anim_config",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create anims config, can be used to configure anims",
+								"text": "For more details about the config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Animations.html#.Animation\n",
+								"returns": "animation config\n"
+							},
+							"parameters": [
+								{
+									"id": 470,
+									"name": "anims_key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key that the animation will be associated with"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 471,
+									"name": "anim_frames",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "data used to generate the frames for animation"
+									},
+									"type": {
+										"type": "array",
+										"elementType": {
+											"type": "reference",
+											"name": "ObjectConfig"
+										}
+									}
+								},
+								{
+									"id": 472,
+									"name": "frame_rate",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "frame rate of playback in frames per second"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "24"
+								},
+								{
+									"id": 473,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "how long the animation should play in seconds.\n                If null, will be derived from frame_rate"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "any"
+									},
+									"defaultValue": "null"
+								},
+								{
+									"id": 474,
+									"name": "repeat",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "number of times to repeat the animation, -1 for infinity"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "-1"
+								},
+								{
+									"id": 475,
+									"name": "yoyo",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "should the animation yoyo (reverse back down to the start)"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "false"
+								},
+								{
+									"id": 476,
+									"name": "show_on_start",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "should the sprite be visible when the anims start?"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "true"
+								},
+								{
+									"id": 477,
+									"name": "hide_on_complete",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "should the sprite be not visible when the anims finish?"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "false"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "ObjectConfig"
+							}
+						}
+					]
+				},
+				{
+					"id": 478,
+					"name": "create_anim_frame_config",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 836,
+							"character": 40
+						}
+					],
+					"signatures": [
+						{
+							"id": 479,
+							"name": "create_anim_frame_config",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create animation frame config, can be used to configure a specific frame\nwithin an animation.",
+								"text": "The key should refer to an image that is already loaded.\nTo make frame_config from spritesheet based on its frames,\nuse create_anim_spritesheet_frame_configs instead.\n",
+								"returns": "animation frame config\n"
+							},
+							"parameters": [
+								{
+									"id": 480,
+									"name": "key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key that is associated with the sprite at this frame"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 481,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "duration, in ms, of this frame of the animation"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 482,
+									"name": "visible",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "should the parent object be visible during this frame?"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "true"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "ObjectConfig"
+							}
+						}
+					]
+				},
+				{
+					"id": 483,
+					"name": "create_anim_spritesheet_frame_configs",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 860,
+							"character": 53
+						}
+					],
+					"signatures": [
+						{
+							"id": 484,
+							"name": "create_anim_spritesheet_frame_configs",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create list of animation frame config, can be used directly as part of\nanim_config's `frames` parameter.",
+								"text": "This function will generate list of frame configs based on the\nspritesheet_config attached to the associated spritesheet.\nThis function requires that the given key is a spritesheet key\ni.e. a key associated with loaded spritesheet, loaded in using\nload_spritesheet function.\n\nWill return empty frame configs if key is not associated with\na spritesheet.\n",
+								"returns": "animation frame configs\n"
+							},
+							"parameters": [
+								{
+									"id": 485,
+									"name": "key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key associated with spritesheet"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "array",
+										"elementType": {
+											"type": "reference",
+											"name": "ObjectConfig"
+										}
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 534,
+					"name": "create_award",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1056,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 535,
+							"name": "create_award",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create an award using the key associated with the award.\nThe award key can be obtained from the Awards Hall or\nAwards menu, after attaining the award.",
+								"text": "Valid award will have an on-hover VERIFIED tag to distinguish\nit from images created by create_image.\n\nIf student does not possess the award, this function will\nreturn a untagged, default image.\n",
+								"returns": "award game object\n"
+							},
+							"parameters": [
+								{
+									"id": 536,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x position of the image. 0 is at the left side"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 537,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y position of the image. 0 is at the top side"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 538,
+									"name": "award_key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key for award"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "GameObject"
+							}
+						}
+					]
+				},
+				{
+					"id": 561,
+					"name": "create_container",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1156,
+							"character": 32
+						}
+					],
+					"signatures": [
+						{
+							"id": 562,
+							"name": "create_container",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create a container object. Container is able to contain any other game object,\nand the positions of contained game object will be relative to the container.",
+								"text": "Rendering the container as visible or invisible will also affect the contained\ngame object.\n\nContainer can also contain another container.\n\n0, 0 is located at the top, left hand side.\n\nFor more details about container object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Container.html\n",
+								"returns": "container object\n"
+							},
+							"parameters": [
+								{
+									"id": 563,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x position of the container"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 564,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y position of the container"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "GameObject"
+							}
+						}
+					]
+				},
+				{
+					"id": 553,
+					"name": "create_ellipse",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1125,
+							"character": 30
+						}
+					],
+					"signatures": [
+						{
+							"id": 554,
+							"name": "create_ellipse",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create an ellipse object.",
+								"returns": "ellipse object\n"
+							},
+							"parameters": [
+								{
+									"id": 555,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x coordinate of the centre of ellipse"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 556,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y coordinate of the centre of ellipse"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 557,
+									"name": "width",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "width of ellipse"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 558,
+									"name": "height",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "height of ellipse"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 559,
+									"name": "fill",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "colour fill, in hext e.g 0xffffff"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 560,
+									"name": "alpha",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "value between 0 and 1 to denote alpha"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "1"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "GameObject"
+							}
+						}
+					]
+				},
+				{
+					"id": 529,
+					"name": "create_image",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1030,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 530,
+							"name": "create_image",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create an image using the key associated with a loaded image.\nIf key is not associated with any loaded image, throws error.",
+								"text": "0, 0 is located at the top, left hand side.\n",
+								"returns": "image game object\n"
+							},
+							"parameters": [
+								{
+									"id": 531,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x position of the image. 0 is at the left side"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 532,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y position of the image. 0 is at the top side"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 533,
+									"name": "asset_key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key to loaded image"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 441,
+					"name": "create_interactive_config",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 724,
+							"character": 41
+						}
+					],
+					"signatures": [
+						{
+							"id": 442,
+							"name": "create_interactive_config",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create interactive config object, can be used to configure interactive settings.",
+								"text": "For more details about interactive config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Input.html#.InputConfiguration\n",
+								"returns": "interactive config\n"
+							},
+							"parameters": [
+								{
+									"id": 443,
+									"name": "draggable",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object will be set draggable"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "false"
+								},
+								{
+									"id": 444,
+									"name": "use_hand_cursor",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "if true, pointer will be set to 'pointer' when a pointer is over it"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "false"
+								},
+								{
+									"id": 445,
+									"name": "pixel_perfect",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "pixel perfect function will be set for the hit area. Only works for texture based object"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "false"
+								},
+								{
+									"id": 446,
+									"name": "alpha_tolerance",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "if pixel_perfect is set, this is the alpha tolerance threshold value used in the callback"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "1"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "ObjectConfig"
+							}
+						}
+					]
+				},
+				{
+					"id": 545,
+					"name": "create_rect",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1101,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 546,
+							"name": "create_rect",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create a rectangle object.",
+								"text": "0, 0 is located at the top, left hand side.\n",
+								"returns": "rectangle object\n"
+							},
+							"parameters": [
+								{
+									"id": 547,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x coordinate of the top, left corner posiiton"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 548,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y coordinate of the top, left corner position"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 549,
+									"name": "width",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "width of rectangle"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 550,
+									"name": "height",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "height of rectangle"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 551,
+									"name": "fill",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "colour fill, in hext e.g 0xffffff"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 552,
+									"name": "alpha",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "value between 0 and 1 to denote alpha"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "1"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "GameObject"
+							}
+						}
+					]
+				},
+				{
+					"id": 447,
+					"name": "create_sound_config",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 748,
+							"character": 35
+						}
+					],
+					"signatures": [
+						{
+							"id": 448,
+							"name": "create_sound_config",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create sound config object, can be used to configure sound settings.",
+								"text": "For more details about sound config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Sound.html#.SoundConfig\n",
+								"returns": "sound config\n"
+							},
+							"parameters": [
+								{
+									"id": 449,
+									"name": "mute",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "whether the sound should be muted or not"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "false"
+								},
+								{
+									"id": 450,
+									"name": "volume",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "value between 0(silence) and 1(full volume)"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "1"
+								},
+								{
+									"id": 451,
+									"name": "rate",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the speed at which the sound is played"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "1"
+								},
+								{
+									"id": 452,
+									"name": "detune",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "detuning of the sound, in cents"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 453,
+									"name": "seek",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "position of playback for the sound, in seconds"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 454,
+									"name": "loop",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "whether or not the sound should loop"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "false"
+								},
+								{
+									"id": 455,
+									"name": "delay",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "time, in seconds, that elapse before the sound actually starts"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "ObjectConfig"
+							}
+						}
+					]
+				},
+				{
+					"id": 486,
+					"name": "create_spritesheet_config",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 877,
+							"character": 41
+						}
+					],
+					"signatures": [
+						{
+							"id": 487,
+							"name": "create_spritesheet_config",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create spritesheet config, can be used to configure the frames within the\nspritesheet. Can be used as config at load_spritesheet.",
+								"returns": "spritesheet config\n"
+							},
+							"parameters": [
+								{
+									"id": 488,
+									"name": "frame_width",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "width of frame in pixels"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 489,
+									"name": "frame_height",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "height of frame in pixels"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 490,
+									"name": "start_frame",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "first frame to start parsing from"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 491,
+									"name": "margin",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "margin in the image; this is the space around the edge of the frames"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 492,
+									"name": "spacing",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the spacing between each frame in the image"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "ObjectConfig"
+							}
+						}
+					]
+				},
+				{
+					"id": 539,
+					"name": "create_text",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1077,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 540,
+							"name": "create_text",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create a text object.",
+								"text": "0, 0 is located at the top, left hand side.\n",
+								"returns": "text game object\n"
+							},
+							"parameters": [
+								{
+									"id": 541,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "x position of the text"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 542,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "y position of the text"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 543,
+									"name": "text",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "text to be shown"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 544,
+									"name": "config",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "text configuration to be used"
+									},
+									"type": {
+										"type": "reference",
+										"name": "ObjectConfig"
+									},
+									"defaultValue": "..."
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "GameObject"
+							}
+						}
+					]
+				},
+				{
+					"id": 433,
+					"name": "create_text_config",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 701,
+							"character": 34
+						}
+					],
+					"signatures": [
+						{
+							"id": 434,
+							"name": "create_text_config",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create text config object, can be used to stylise text object.",
+								"text": "font_family: for available font_family, see:\nhttps://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names\n\nalign: must be either 'left', 'right', 'center', or 'justify'\n\nFor more details about text config, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.GameObjects.Text.html#.TextStyle\n",
+								"returns": "text config\n"
+							},
+							"parameters": [
+								{
+									"id": 435,
+									"name": "font_family",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "font to be used"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									},
+									"defaultValue": "'Courier'"
+								},
+								{
+									"id": 436,
+									"name": "font_size",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "size of font, must be appended with 'px' e.g. '16px'"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									},
+									"defaultValue": "'16px'"
+								},
+								{
+									"id": 437,
+									"name": "color",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "colour of font, in hex e.g. '#fff'"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									},
+									"defaultValue": "'#fff'"
+								},
+								{
+									"id": 438,
+									"name": "stroke",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "colour of stroke, in hex e.g. '#fff'"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									},
+									"defaultValue": "'#fff'"
+								},
+								{
+									"id": 439,
+									"name": "stroke_thickness",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "thickness of stroke"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 440,
+									"name": "align",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "text alignment"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									},
+									"defaultValue": "'left'"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "ObjectConfig"
+							}
+						}
+					]
+				},
+				{
+					"id": 456,
+					"name": "create_tween_config",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 778,
+							"character": 35
+						}
+					],
+					"signatures": [
+						{
+							"id": 457,
+							"name": "create_tween_config",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Create tween config object, can be used to configure tween settings.",
+								"text": "For more details about tween config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Tweens.html#.TweenBuilderConfig\n",
+								"returns": "tween config\n"
+							},
+							"parameters": [
+								{
+									"id": 458,
+									"name": "target_prop",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "target to tween, e.g. x, y, alpha"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									},
+									"defaultValue": "'x'"
+								},
+								{
+									"id": 459,
+									"name": "target_value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the property value to tween to"
+									},
+									"type": {
+										"type": "union",
+										"types": [
+											{
+												"type": "intrinsic",
+												"name": "string"
+											},
+											{
+												"type": "intrinsic",
+												"name": "number"
+											}
+										]
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 460,
+									"name": "delay",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "time in ms/frames before tween will start"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 461,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "duration of tween in ms/frames, exclude yoyos or repeats"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "1000"
+								},
+								{
+									"id": 462,
+									"name": "ease",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "ease function to use, e.g. 'Power0', 'Power1', 'Power2'"
+									},
+									"type": {
+										"type": "union",
+										"types": [
+											{
+												"type": "reference",
+												"name": "Function"
+											},
+											{
+												"type": "intrinsic",
+												"name": "string"
+											}
+										]
+									},
+									"defaultValue": "'Power0'"
+								},
+								{
+									"id": 463,
+									"name": "on_complete",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "function to execute when tween completes"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Function"
+									}
+								},
+								{
+									"id": 464,
+									"name": "yoyo",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "if set to true, once tween complete, reverses the values incrementally to get back to the starting tween values"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									},
+									"defaultValue": "false"
+								},
+								{
+									"id": 465,
+									"name": "loop",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "number of times the tween should loop, or -1 to loop indefinitely"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 466,
+									"name": "loop_delay",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The time the tween will pause before starting either a yoyo or returning to the start for a repeat"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0"
+								},
+								{
+									"id": 467,
+									"name": "on_loop",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "function to execute each time the tween loops"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Function"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "ObjectConfig"
+							}
+						}
+					]
+				},
+				{
+					"id": 569,
+					"name": "destroy_obj",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1184,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 570,
+							"name": "destroy_obj",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Destroy the given game object. Destroyed game object\nis removed from the scene, and all of its listeners\nis also removed."
+							},
+							"parameters": [
+								{
+									"id": 571,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "game object itself\n"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 499,
+					"name": "get_screen_display_height",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 921,
+							"character": 41
+						}
+					],
+					"signatures": [
+						{
+							"id": 500,
+							"name": "get_screen_display_height",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Get game screen display height (accounting window size).",
+								"returns": "screen display height\n"
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 497,
+					"name": "get_screen_display_width",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 912,
+							"character": 40
+						}
+					],
+					"signatures": [
+						{
+							"id": 498,
+							"name": "get_screen_display_width",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Get game screen display width (accounting window size).",
+								"returns": "screen display width\n"
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 495,
+					"name": "get_screen_height",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 903,
+							"character": 33
+						}
+					],
+					"signatures": [
+						{
+							"id": 496,
+							"name": "get_screen_height",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Get in-game screen height.",
+								"returns": "screen height\n"
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 493,
+					"name": "get_screen_width",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 894,
+							"character": 32
+						}
+					],
+					"signatures": [
+						{
+							"id": 494,
+							"name": "get_screen_width",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Get in-game screen width.",
+								"returns": "screen width\n"
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 501,
+					"name": "load_image",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 934,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 502,
+							"name": "load_image",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Load the image asset into the scene for use. All images\nmust be loaded before used in create_image."
+							},
+							"parameters": [
+								{
+									"id": 503,
+									"name": "key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key to be associated with the image"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 504,
+									"name": "url",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "path to the image\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 505,
+					"name": "load_sound",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 943,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 506,
+							"name": "load_sound",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Load the sound asset into the scene for use. All sound\nmust be loaded before used in play_sound."
+							},
+							"parameters": [
+								{
+									"id": 507,
+									"name": "key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key to be associated with the sound"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 508,
+									"name": "url",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "path to the sound\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 509,
+					"name": "load_spritesheet",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 953,
+							"character": 32
+						}
+					],
+					"signatures": [
+						{
+							"id": 510,
+							"name": "load_spritesheet",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Load the spritesheet into the scene for use. All spritesheet must\nbe loaded before used in create_image."
+							},
+							"parameters": [
+								{
+									"id": 511,
+									"name": "key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key associated with the spritesheet"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 512,
+									"name": "url",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "path to the sound"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 513,
+									"name": "spritesheet_config",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "config to determines frames within the spritesheet\n"
+									},
+									"type": {
+										"type": "reference",
+										"name": "ObjectConfig"
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 514,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {}
+								}
+							}
+						}
+					]
+				},
+				{
+					"id": 525,
+					"name": "play_anim_on_image",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1010,
+							"character": 34
+						}
+					],
+					"signatures": [
+						{
+							"id": 526,
+							"name": "play_anim_on_image",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Start playing the given animation on image game object."
+							},
+							"parameters": [
+								{
+									"id": 527,
+									"name": "image",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "image game object"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 528,
+									"name": "anims_key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key associated with an animation\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 518,
+					"name": "play_sound",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 982,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 519,
+							"name": "play_sound",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Play the sound associated with the key.\nThrows error if key is non-existent."
+							},
+							"parameters": [
+								{
+									"id": 520,
+									"name": "key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "key to the sound to be played"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 521,
+									"name": "config",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "sound config to be used\n"
+									},
+									"type": {
+										"type": "reference",
+										"name": "ObjectConfig"
+									},
+									"defaultValue": "..."
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 430,
+					"name": "prepend_remote_url",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 678,
+							"character": 34
+						}
+					],
+					"signatures": [
+						{
+							"id": 431,
+							"name": "prepend_remote_url",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Prepend the given asset key with the remote path (S3 path).",
+								"returns": "prepended path\n"
+							},
+							"parameters": [
+								{
+									"id": 432,
+									"name": "asset_key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					]
+				},
+				{
+					"id": 623,
+					"name": "remove_listener",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1388,
+							"character": 31
+						}
+					],
+					"signatures": [
+						{
+							"id": 624,
+							"name": "remove_listener",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Deactivate and remove listener.",
+								"returns": "if successful\n"
+							},
+							"parameters": [
+								{
+									"id": 625,
+									"name": "listener",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						}
+					]
+				},
+				{
+					"id": 577,
+					"name": "set_alpha",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1211,
+							"character": 25
+						}
+					],
+					"signatures": [
+						{
+							"id": 578,
+							"name": "set_alpha",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Set the alpha of the object.\nMutate the object.",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 579,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be set"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 580,
+									"name": "alpha",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new alpha"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 572,
+					"name": "set_display_size",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1195,
+							"character": 32
+						}
+					],
+					"signatures": [
+						{
+							"id": 573,
+							"name": "set_display_size",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Set the display size of the object.\nMutate the object.",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 574,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be set"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 575,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new display width size"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 576,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new display height size"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 604,
+					"name": "set_flip",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1312,
+							"character": 24
+						}
+					],
+					"signatures": [
+						{
+							"id": 605,
+							"name": "set_flip",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Sets the horizontal and flipped state of the object.\nMutate the object.",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 606,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "game object itself"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 607,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "to flip in the horizontal state"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									}
+								},
+								{
+									"id": 608,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "to flip in the vertical state"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 581,
+					"name": "set_interactive",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1229,
+							"character": 31
+						}
+					],
+					"signatures": [
+						{
+							"id": 582,
+							"name": "set_interactive",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Set the interactivity of the object.\nMutate the object.",
+								"text": "Rectangle and Ellipse are not able to receive configs, only boolean\ni.e. set_interactive(rect, true); set_interactive(ellipse, false)\n",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 583,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be set"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 584,
+									"name": "config",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "interactive config to be used"
+									},
+									"type": {
+										"type": "reference",
+										"name": "ObjectConfig"
+									},
+									"defaultValue": "..."
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 585,
+					"name": "set_origin",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1246,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 586,
+							"name": "set_origin",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Set the origin in which all position related will be relative to.\nIn other words, the anchor of the object.\nMutate the object.",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 587,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be set"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 588,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new anchor x coordinate, between value 0 to 1."
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 589,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new anchor y coordinate, between value 0 to 1."
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 590,
+					"name": "set_position",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1263,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 591,
+							"name": "set_position",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Set the position of the game object\nMutate the object",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 592,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be set"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 593,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new x position"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 594,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new y position"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 600,
+					"name": "set_rotation",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1296,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 601,
+							"name": "set_rotation",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Set the rotation of the object.\nMutate the object.",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 602,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be set"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 603,
+									"name": "rad",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the rotation, in radians"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": 595,
+					"name": "set_scale",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "game/functions.ts",
+							"line": 1280,
+							"character": 25
+						}
+					],
+					"signatures": [
+						{
+							"id": 596,
+							"name": "set_scale",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Set the scale of the object.\nMutate the object.",
+								"returns": "game object itself\n"
+							},
+							"parameters": [
+								{
+									"id": 597,
+									"name": "obj",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "object to be set"
+									},
+									"type": {
+										"type": "reference",
+										"name": "GameObject"
+									}
+								},
+								{
+									"id": 598,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new x scale"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 599,
+									"name": "y",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "new y scale"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"name": "GameObject"
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						515,
+						618,
+						613,
+						565,
+						609,
+						522,
+						468,
+						478,
+						483,
+						534,
+						561,
+						553,
+						529,
+						441,
+						545,
+						447,
+						486,
+						539,
+						433,
+						456,
+						569,
+						499,
+						497,
+						495,
+						493,
+						501,
+						505,
+						509,
+						525,
+						518,
+						430,
+						623,
+						577,
+						572,
+						604,
+						581,
+						585,
+						590,
+						600,
+						595
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "game/functions.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
 			"id": 12,
 			"name": "pix_n_flix",
 			"kind": 1,
@@ -7126,6 +10362,7 @@
 			"children": [
 				61,
 				69,
+				425,
 				12,
 				1,
 				186,
