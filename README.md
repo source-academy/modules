@@ -4,7 +4,7 @@
 
 This repository contains publicly availble Source Modules and their documentation. 
 
-Try out Source Academy [here](https://source-academy.github.io/). 
+Try out Source Academy [here](https://sourceacademy.org). 
 
 See the Source Modules [wiki](https://github.com/source-academy/modules/wiki) for more details.
 
