@@ -1,4 +1,5 @@
 /**
+ *
  * The module `curve` provides functions for drawing *curves*, i.e. collections
  *  of *points*.
  *
