@@ -51,12 +51,12 @@
                     {{#with model}}{{> breadcrumb}}{{/with}}
                 </ul>
             {{/if}}
-            {{#ifCond model.name "!==" "Source Academy Modules" }}
+           {{#ifCond model.kindString "===" "Module" }}
             <h1>{{#compact}}
                 {{#ifCond model.kindString "!==" "Project" }}
                     {{model.kindString}}&nbsp;
                 {{/ifCond}}
-                {{model.name}}
+                <TT>{{model.name}}</TT>
                 {{#if model.typeParameters}}
                     &lt;
                     {{#each model.typeParameters}}
@@ -66,7 +66,7 @@
                     &gt;
                 {{/if}}
             {{/compact}}</h1>
-            {{/ifCond}}
+           {{/ifCond}}
         </div>
     </div>
 </header>
