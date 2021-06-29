@@ -1861,9 +1861,9 @@ dl.tsd-comment-tags p {
 }
 
 .tsd-panel.tsd-comment .lead {
-  font-size: 1.1em;
+  font-size: 1.2em;
   line-height: 1.333em;
-  margin-bottom: 2em;
+  margin-bottom: 1.5em;
 }
 .tsd-panel.tsd-comment .lead:last-child {
   margin-bottom: 0;
