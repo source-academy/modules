@@ -30,7 +30,6 @@ export type __Params = {
 
 export type GameParams = {
   scene: Phaser.Scene;
-  phaser: any;
   preloadImageMap: Map<string, string>;
   preloadSoundMap: Map<string, string>;
   preloadSpritesheetMap: Map<string, [string, object]>;
