@@ -2709,26 +2709,20 @@ img {
 <div class="container container-main">
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
-			<a href="#source" id="source" style="color: inherit; text-decoration: none;">
-				<h1>Source</h1>
+			<a href="#overview" id="overview" style="color: inherit; text-decoration: none;">
+				<h1>Overview</h1>
 			</a>
-			<p>Source is a family of languages, designed for the textbook <a href="https://source-academy.github.io/sicp/">Structure and Interpretation of Computer Programs, JavaScript Adaptation</a> (SICP JS). The languages are called Source §1, Source §2, Source §3 and Source §4, corresponding to the respective chapters 1, 2, 3 and 4 of the textbook. Each previous Source language is a sublanguage of the next, and all Source languages are sublanguages of JavaScript. (Chapter 5 does not require any features beyond Source §4.) This webpage contains the description of the Source languages and the libraries they come with.</p>
-			<a href="#external-libraries" id="external-libraries" style="color: inherit; text-decoration: none;">
-				<h2>External Libraries</h2>
-			</a>
-			<p>The Source Academy comes with the following external libraries:</p>
-			<ul>
-				<li><a href="https://source-academy.github.io/modules/documentation/modules/binary_tree.html">binary_tree</a></li>
-				<li><a href="https://source-academy.github.io/modules/documentation/modules/curve.html">curve</a></li>
-				<li><a href="https://source-academy.github.io/modules/documentation/modules/pix_n_flix.html">pix_n_flix</a></li>
-				<li><a href="https://source-academy.github.io/modules/documentation/modules/repeat.html">repeat</a></li>
-				<li><a href="https://source-academy.github.io/modules/documentation/modules/sound.html">sound</a></li>
-				<li><a href="https://source-academy.github.io/modules/documentation/modules/stereo_sound.html">stereo_sound</a></li>
-			</ul>
-			<a href="#style-guide" id="style-guide" style="color: inherit; text-decoration: none;">
-				<h2>Style Guide</h2>
-			</a>
-			<p>The <a href="https://source-academy.github.io/source/source_styleguide.pdf">Source Style Guide</a> gives general recommendations on how to write your programs so that they are readable by the members of our learning community.</p>
+			<p>The Source Academy allows programmers to import functions and constants from a module, using JavaScript&#39;s <code>import</code> directive. For example, the programmer may decide to import the function <code>thrice</code> from the module <code>repeat</code> by starting the program with</p>
+			<pre><code><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">thrice</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;repeat&quot;</span><span style="color: #000000">;</span>
+</code></pre>
+			<p>When evaluating such a directive, the Source Academy looks for a module with the matching name, here <code>repeat</code> in a preconfigured modules site. The Source Academy at <a href="https:sourceacademy.org">https://sourceacademy.org</a> uses the modules site <a href="https://source-academy.github.io/modules">https://source-academy.github.io/modules</a>.</p>
+			<p>After importing functions or constants from a module, they can be used as usual.</p>
+			<pre><code><span style="color: #795E26">thrice</span><span style="color: #000000">(</span><span style="color: #001080">display</span><span style="color: #000000">)(</span><span style="color: #098658">8</span><span style="color: #000000">); </span><span style="color: #008000">// displays 8 three times</span>
+</code></pre>
+			<p>if <code>thrice</code> is declared in the module <code>repeat</code> as follows:</p>
+			<pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">thrice</span><span style="color: #000000"> = </span><span style="color: #001080">f</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">x</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #795E26">f</span><span style="color: #000000">(</span><span style="color: #795E26">f</span><span style="color: #000000">(</span><span style="color: #795E26">f</span><span style="color: #000000">(</span><span style="color: #001080">x</span><span style="color: #000000">)));</span>
+</code></pre>
+			<p>Below is the list of modules available at the modules site <a href="https://source-academy.github.io/modules">https://source-academy.github.io/modules</a></p>
 		</div>
 		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
 		<section class="tsd-panel-group tsd-index-group">
