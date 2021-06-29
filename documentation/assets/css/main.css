@@ -1760,9 +1760,7 @@ html.default.has-menu .col-content {
 }
 
 .tsd-breadcrumb {
-  margin: 0;
-  padding: 0;
-  color: var(--color-text-aside);
+    display: none;
 }
 .tsd-breadcrumb a {
   color: var(--color-text-aside);

@@ -58,7 +58,7 @@
 					<a href="curve.html">curve</a>
 				</li>
 			</ul>
-			<h1>Module curve</h1>
+			<h1>Module <TT>curve</TT></h1>
 		</div>
 	</div>
 </header>
@@ -68,24 +68,25 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The curves library provides functions for drawing &quot;curves&quot;, i.e a sequence of
-						points that may/may not be connected by lines.</p>
+						<p>The module <code>curve</code> provides functions for drawing <em>curves</em>, i.e. collections of
+						<em>points</em>.</p>
 					</div>
-					<p>A point is defined by its coordinates (x, y and z), and the color assigned to
+					<p>A <em>point</em> is defined by its coordinates (x, y and z), and the color assigned to
 						it (r, g, and b). A few constructors for points is given, for example
 						<code>make_color_point</code>. Selectors allow access to the coordinates and color
 					components, for example <code>x_of</code>.</p>
-					<p>The central element of the library is the definition of Curve, a
-						unary function which takes a Number argument within the unit interval <code>[0,1]</code>
-						and returns a point. If <code>C</code> is a Curve, then the starting point of the curve
+					<p>A <em>curve</em> is a
+						unary function which takes a number argument within the unit interval <code>[0,1]</code>
+						and returns a point. If <code>C</code> is a curve, then the starting point of the curve
 					is always <code>C(0)</code>, and the ending point is always <code>C(1)</code>.</p>
-					<p>A Curve transformation is a function that takes a Curve as argument and
-					returns a Curve. Examples of Curve transformations are <code>scale</code> and <code>translate</code>.</p>
-					<p>Finally, a Curve drawer is function that takes a Number argument and returns
-						a function that takes in a Curve and visualises it in the output screen is
+					<p>A <em>curve transformation</em> is a function that takes a curve as argument and
+					returns a curve. Examples of curve transformations are <code>scale</code> and <code>translate</code>.</p>
+					<p>A <em>curve drawer</em> is function that takes a number argument and returns
+						a function that takes a curve as argument and visualises it in the output screen is
 						shown in the Source Academy in the tab with the &quot;Curves Canvas&quot; icon (image).
-					Examples of drawer functions are <code>draw_points_on</code> and <code>draw_connected</code>.</p>
-					<p><a href="https://share.sourceacademy.org/unitcircle">Example:</a></p>
+						The following <a href="https://share.sourceacademy.org/unitcircle">example</a> uses
+						the curve drawer <code>draw_connected_full_view</code> to display a curve called
+					<code>unit_circle</code>.</p>
 					<pre><code><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">make_point</span><span style="color: #000000">, </span><span style="color: #001080">draw_connected_full_view</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;curve&quot;</span><span style="color: #000000">;</span>
 <span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">unit_circle</span><span style="color: #000000">(</span><span style="color: #001080">t</span><span style="color: #000000">) {</span>
 <span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #795E26">make_point</span><span style="color: #000000">(</span><span style="color: #795E26">math_sin</span><span style="color: #000000">(</span><span style="color: #098658">2</span><span style="color: #000000"> * </span><span style="color: #001080">math_PI</span><span style="color: #000000"> * </span><span style="color: #001080">t</span><span style="color: #000000">),</span>
@@ -160,7 +161,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L732">curve/functions.ts:732</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L732">curve/functions.ts:732</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -195,7 +196,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L432">curve/functions.ts:432</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L432">curve/functions.ts:432</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -231,7 +232,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L672">curve/functions.ts:672</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L672">curve/functions.ts:672</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -274,7 +275,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L653">curve/functions.ts:653</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L653">curve/functions.ts:653</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -316,7 +317,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L174">curve/functions.ts:174</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L174">curve/functions.ts:174</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -359,7 +360,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L194">curve/functions.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L194">curve/functions.ts:194</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -403,7 +404,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L213">curve/functions.ts:213</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L213">curve/functions.ts:213</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -446,7 +447,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L255">curve/functions.ts:255</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L255">curve/functions.ts:255</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -490,7 +491,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L235">curve/functions.ts:235</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L235">curve/functions.ts:235</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -534,7 +535,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L71">curve/functions.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L71">curve/functions.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -577,7 +578,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L91">curve/functions.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L91">curve/functions.ts:91</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -621,7 +622,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L111">curve/functions.ts:111</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L111">curve/functions.ts:111</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -665,7 +666,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L153">curve/functions.ts:153</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L153">curve/functions.ts:153</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -709,7 +710,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L133">curve/functions.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L133">curve/functions.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -753,7 +754,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L417">curve/functions.ts:417</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L417">curve/functions.ts:417</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -789,7 +790,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L445">curve/functions.ts:445</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L445">curve/functions.ts:445</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -821,7 +822,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L335">curve/functions.ts:335</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L335">curve/functions.ts:335</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -891,7 +892,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L288">curve/functions.ts:288</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L288">curve/functions.ts:288</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -941,7 +942,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L308">curve/functions.ts:308</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L308">curve/functions.ts:308</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1005,7 +1006,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L272">curve/functions.ts:272</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L272">curve/functions.ts:272</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1049,7 +1050,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L624">curve/functions.ts:624</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L624">curve/functions.ts:624</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1087,7 +1088,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L402">curve/functions.ts:402</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L402">curve/functions.ts:402</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1123,7 +1124,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L498">curve/functions.ts:498</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L498">curve/functions.ts:498</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1163,7 +1164,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L581">curve/functions.ts:581</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L581">curve/functions.ts:581</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1210,7 +1211,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L608">curve/functions.ts:608</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L608">curve/functions.ts:608</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1243,7 +1244,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L461">curve/functions.ts:461</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L461">curve/functions.ts:461</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1291,7 +1292,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L696">curve/functions.ts:696</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L696">curve/functions.ts:696</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1325,7 +1326,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L707">curve/functions.ts:707</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L707">curve/functions.ts:707</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1358,7 +1359,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L719">curve/functions.ts:719</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L719">curve/functions.ts:719</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1392,7 +1393,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L357">curve/functions.ts:357</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L357">curve/functions.ts:357</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1428,7 +1429,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L372">curve/functions.ts:372</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L372">curve/functions.ts:372</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1464,7 +1465,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/923f8e1/src/bundles/curve/functions.ts#L387">curve/functions.ts:387</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/6403655/src/bundles/curve/functions.ts#L387">curve/functions.ts:387</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
