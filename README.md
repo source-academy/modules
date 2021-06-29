@@ -1,15 +1,15 @@
-# Source Modules
+# Modules
 
 ![License](https://img.shields.io/badge/License-Apache%202.0-brightgreen) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/source-academy/modules/github%20pages?label=Build)
 
-This repository contains the default modules of the Source Academy and their documentation, deployed to the [default module site](https://source-academy.github.io/modules).
+This repository contains the default modules of the Source Academy and their documentation, deployed to the default module site at https://source-academy.github.io/modules.
 The [Source Academy](https://sourceacademy.org) and [Source Academy @ NUS](https://sourceacademy.nus.edu.sg) are configured to access the default module site when evaluating `import` directives.
 
-Check out the Source Modules generated API documentation [here](https://source-academy.github.io/modules/documentation).
+[Documentation of Source Academy modules](https://source-academy.github.io/modules/documentation).
 
-## Information for module developers
+## Information for Module Developers
 
-See the Source Modules [wiki](https://github.com/source-academy/modules/wiki) for more details.
+See the modules [wiki](https://github.com/source-academy/modules/wiki) for more details.
 
 ### Terminology
 
@@ -21,7 +21,7 @@ See the Source Modules [wiki](https://github.com/source-academy/modules/wiki) fo
 
 ### Getting Started
 
-The following set of instructions explain how to clone and set up a copy of the Source Modules code repository on your local development machine. Following the steps below will create a  `modules` directory in your local development machine and install the necessary dependencies of the project. 
+The following set of instructions explain how to clone and set up a copy of the `modules` code repository on your local development machine. Following the steps below will create a  `modules` directory in your local development machine and install the necessary dependencies of the project. 
 
 You will need to have a stable version of [NodeJS](https://nodejs.org/en/) on your local development machine. We recommend using the latest LTS version. You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)_ or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects. 
 
@@ -41,11 +41,11 @@ Install all the dependencies of the project into `node_modules` in the root fold
 yarn install
 ```
 
-### Serve Source Modules
+### Serve Modules
 
-The following set of instructions explain how to transpile and serve the Source Modules from your local development machine's code repository. Following the steps below will transpile all the modules in your project directory into JavaScript files located in the `build` folder. Thereafter, you will serve all the contents of the build folder in a server on your local development machine. 
+The following set of instructions explain how to transpile and serve the modules from your local development machine's code repository. Following the steps below will transpile all the modules in your project directory into JavaScript files located in the `build` folder. Thereafter, you will serve all the contents of the build folder in a server on your local development machine. 
 
-To transpile the Source modules' files from `src` into JavaScript files in `build`, run the following command.
+To transpile the modules' files from `src` into JavaScript files in `build`, run the following command.
 ```
 yarn run build
 ```
@@ -57,27 +57,17 @@ yarn run serve
 
 ### Development with Source Academy `frontend`
 
-The following set of instructions explain how to use a local copy of the Source Academy [frontend](https://github.com/source-academy/frontend) with a local copy of the Source Modules code repository. Following the steps below will configure the environment of the Source Academy frontend to use your locally served `Source` modules instead of the publicly available ones. Doing this will allow you to develop and modify modules without affecting the currently publicly available ones. 
+The following set of instructions explains how to use a local copy of the Source Academy [frontend](https://github.com/source-academy/frontend) with a local copy of the modules code repository. Following the steps below will configure the environment of the Source Academy frontend to use your locally served modules instead of the publicly available ones. Doing this will allow you to develop and modify modules without affecting the currently publicly available ones. 
 
 You will need to already have a local instance of Source Academy frontend set up. If you do not, you can follow the instructions [here](https://github.com/source-academy/frontend#getting-started) to setup an instance of Source Academy frontend on your local development machine. 
 
-Ensure that the environment variable `REACT_APP_MODULE_BACKEND_URL` in the `.env` file of the Source Academy frontend is configured to the URL of the Source Modules' server that you are trying to retrieve _Source_ modules from. At the same time, make sure that the server providing the `Source` modules is running. By default, the local server started by running `yarn run serve` is on http://localhost:8022. The publicly available _Source_ modules is currently located at https://github.com/source-academy/modules. 
+Ensure that the environment variable `REACT_APP_MODULE_BACKEND_URL` in the `.env` file of the Source Academy frontend is configured to the URL of the module site that you are trying to retrieve modules from. At the same time, make sure that the server hosting the modules site is running. By default, the local server started by running `yarn run serve` is on http://localhost:8022. The default modules are implemented in the repository https://github.com/source-academy/modules and deployed to the modules site https://source-academy.github.io/modules.
 
-Upon starting the local instance of Source Academy frontend, the Source Academy playground will be connected to the Source Modules code repository. 
-
-### Development with Source Implementation `js-slang`
-
-The following set of instructions explain how to use a local copy of the Source language [implementation](https://github.com/source-academy/js-slang) with a local copy of the Source Modules code repository and Source Academy frontend. Following the steps below will allow you to work on your local `js-slang` code repository and use it with the Source Modules project and Source Academy frontend. 
-
-You will need to already have a local instance of the Source implementations set up. If you do not, you can follow the instructions [here](https://github.com/source-academy/js-slang#usage) to setup an instance of the Source implementations on your local development machine. 
-
-Follow the instructions highlighted [here](https://github.com/source-academy/js-slang#usage) to build and link your local instance of Source implementations with your local instance of the Source Academy frontend. 
-
-Follow the instructions to setup the Source Modules code repository with Source Academy frontend highlighted in the above section as per normal to use your local `js-slang` with your local `frontend` and Source Modules code repository. 
+Upon starting the local instance of Source Academy frontend, the Source Academy will connect to the configured modules site.
 
 ### Development Guide
 
-Please refer to the Source Modules Development Guide located in the Source Modules Wiki [here](https://github.com/source-academy/modules/wiki/Development-Guide) for more information regarding how to create your own Source Module including its own bundle and tab. 
+Please refer to the Modules Development Guide located in the modules wiki [here](https://github.com/source-academy/modules/wiki/Development-Guide) for more information regarding how to create your own module including its own bundle and tab. 
 
 ## License
 
