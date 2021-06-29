@@ -2,21 +2,16 @@
 
 ![License](https://img.shields.io/badge/License-Apache%202.0-brightgreen) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/source-academy/modules/github%20pages?label=Build)
 
-This repository contains publicly availble Source Modules and their documentation. 
-
-Try out Source Academy [here](https://sourceacademy.org). 
-
-See the Source Modules [wiki](https://github.com/source-academy/modules/wiki) for more details.
+This repository contains the default modules of the Source Academy and their documentation, deployed to the [default module site](https://source-academy.github.io/modules).
+The [Source Academy](https://sourceacademy.org) and [Source Academy @ NUS](https://sourceacademy.nus.edu.sg) are configured to access the default module site when evaluating `import` directives.
 
 Check out the Source Modules generated API documentation [here](https://source-academy.github.io/modules/documentation).
 
-## Aims
+## Information for module developers
 
-1. Decouple _Source_ modules from the frontend and backend of Source Academy, as well as the implementation of _Source_ language, enhancing the flexibility of _Source_ modules.
-2. Optionally render interactive user interfaces for students to use with Source Academy to enhance their learning experience.
-3. Allow ease of collaboration and promotes contribution to the modules ecosystem without a steep learning curve. 
+See the Source Modules [wiki](https://github.com/source-academy/modules/wiki) for more details.
 
-## Terminologies
+### Terminology
 
 | **Term**   | **Description**                                                    |
 | ---------- | ------------------------------------------------------------------ |
@@ -24,9 +19,7 @@ Check out the Source Modules generated API documentation [here](https://source-a
 | **Bundle** | The suite of functions that are provided by the module.            |
 | **Tab**    | A user interface used by the module.                               |
 
-## Getting Started
-
-### Set Up
+### Getting Started
 
 The following set of instructions explain how to clone and set up a copy of the Source Modules code repository on your local development machine. Following the steps below will create a  `modules` directory in your local development machine and install the necessary dependencies of the project. 
 
