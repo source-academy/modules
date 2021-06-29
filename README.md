@@ -62,11 +62,11 @@ To start the server that serves all the contents of the `build` folder in the ro
 yarn run serve
 ```
 
-### Development with Frontend `cadet-frontend`
+### Development with Source Academy `frontend`
 
-The following set of instructions explain how to use a local copy of the Source Academy [frontend](https://github.com/source-academy/cadet-frontend) with a local copy of the Source Modules code repository. Following the steps below will configure the environment of the Source Academy frontend to use your locally served `Source` modules instead of the publicly available ones. Doing this will allow you to develop and modify modules without affecting the currently publicly available ones. 
+The following set of instructions explain how to use a local copy of the Source Academy [frontend](https://github.com/source-academy/frontend) with a local copy of the Source Modules code repository. Following the steps below will configure the environment of the Source Academy frontend to use your locally served `Source` modules instead of the publicly available ones. Doing this will allow you to develop and modify modules without affecting the currently publicly available ones. 
 
-You will need to already have a local instance of Source Academy frontend set up. If you do not, you can follow the instructions [here](https://github.com/source-academy/cadet-frontend#getting-started) to setup an instance of Source Academy frontend on your local development machine. 
+You will need to already have a local instance of Source Academy frontend set up. If you do not, you can follow the instructions [here](https://github.com/source-academy/frontend#getting-started) to setup an instance of Source Academy frontend on your local development machine. 
 
 Ensure that the environment variable `REACT_APP_MODULE_BACKEND_URL` in the `.env` file of the Source Academy frontend is configured to the URL of the Source Modules' server that you are trying to retrieve _Source_ modules from. At the same time, make sure that the server providing the `Source` modules is running. By default, the local server started by running `yarn run serve` is on http://localhost:8022. The publicly available _Source_ modules is currently located at https://github.com/source-academy/modules. 
 
@@ -80,7 +80,7 @@ You will need to already have a local instance of the Source implementations set
 
 Follow the instructions highlighted [here](https://github.com/source-academy/js-slang#usage) to build and link your local instance of Source implementations with your local instance of the Source Academy frontend. 
 
-Follow the instructions to setup the Source Modules code repository with Source Academy frontend highlighted in the above section as per normal to use your local `js-slang` with your local `cadet-frontend` and Source Modules code repository. 
+Follow the instructions to setup the Source Modules code repository with Source Academy frontend highlighted in the above section as per normal to use your local `js-slang` with your local `frontend` and Source Modules code repository. 
 
 ### Development Guide
 
