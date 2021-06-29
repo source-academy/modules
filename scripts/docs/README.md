@@ -4,7 +4,8 @@ The Source Academy allows programmers to import functions and constants from a m
 ```
 import { thrice } from "repeat";
 ```
-When evaluating such a directive, the Source Academy looks for a module with the matching name, here `repeat` in a preconfigured modules site. The Source Academy at [https://sourceacademy.org](https:sourceacademy.org) uses the modules site [https://source-academy.github.io/modules](https://source-academy.github.io/modules).
+
+When evaluating such a directive, the Source Academy looks for a module with the matching name, here `repeat`, in a preconfigured modules site. The Source Academy at [https://sourceacademy.org] uses the default modules site (located at [https://source-academy.github.io/modules]).
 
 After importing functions or constants from a module, they can be used as usual.
 ```
@@ -14,4 +15,5 @@ if `thrice` is declared in the module `repeat` as follows:
 ```
 const thrice = f => x => f(f(f(x)));
 ```
-Below is the list of modules available at the modules site [https://source-academy.github.io/modules](https://source-academy.github.io/modules)
+Below is the list of modules available at the default modules site.
+
