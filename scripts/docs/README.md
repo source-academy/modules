@@ -1,18 +1,17 @@
-# Source
+# Overview
 
-Source is a family of languages, designed for the textbook [Structure and Interpretation of Computer Programs, JavaScript Adaptation](https://source-academy.github.io/sicp/) (SICP JS). The languages are called Source §1, Source §2, Source §3 and Source §4, corresponding to the respective chapters 1, 2, 3 and 4 of the textbook. Each previous Source language is a sublanguage of the next, and all Source languages are sublanguages of JavaScript. (Chapter 5 does not require any features beyond Source §4.) This webpage contains the description of the Source languages and the libraries they come with.
+The Source Academy allows programmers to import functions and constants from a module, using JavaScript's `import` directive. For example, the programmer may decide to import the function `thrice` from the module `repeat` by starting the program with
+```
+import { thrice } from "repeat";
+```
+When evaluating such a directive, the Source Academy looks for a module with the matching name, here `repeat` in a preconfigured modules site. The Source Academy at [https://sourceacademy.org](https:sourceacademy.org) uses the modules site [https://source-academy.github.io/modules](https://source-academy.github.io/modules).
 
-## External Libraries
-
-The Source Academy comes with the following external libraries:
-
-- [binary_tree](https://source-academy.github.io/modules/documentation/modules/binary_tree.html)
-- [curve](https://source-academy.github.io/modules/documentation/modules/curve.html)
-- [pix_n_flix](https://source-academy.github.io/modules/documentation/modules/pix_n_flix.html)
-- [repeat](https://source-academy.github.io/modules/documentation/modules/repeat.html)
-- [sound](https://source-academy.github.io/modules/documentation/modules/sound.html)
-- [stereo_sound](https://source-academy.github.io/modules/documentation/modules/stereo_sound.html)
-
-## Style Guide
-
-The [Source Style Guide](https://source-academy.github.io/source/source_styleguide.pdf) gives general recommendations on how to write your programs so that they are readable by the members of our learning community.
+After importing functions or constants from a module, they can be used as usual.
+```
+thrice(display)(8); // displays 8 three times
+```
+if `thrice` is declared in the module `repeat` as follows:
+```
+const thrice = f => x => f(f(f(x)));
+```
+Below is the list of modules available at the modules site [https://source-academy.github.io/modules](https://source-academy.github.io/modules)
