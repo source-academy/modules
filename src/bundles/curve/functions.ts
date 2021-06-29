@@ -1,7 +1,5 @@
 /**
- *
- * The module `curve` provides functions for drawing *curves*, i.e. collections
- *  of *points*.
+ * drawing *curves*, i.e. collections of *points*, on a canvas in a tools tab
  *
  * A *point* is defined by its coordinates (x, y and z), and the color assigned to
  * it (r, g, and b). A few constructors for points is given, for example
