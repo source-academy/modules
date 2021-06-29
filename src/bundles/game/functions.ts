@@ -29,7 +29,6 @@ import {
 export default function gameFuncs(_params: __Params) {
   const {
     scene,
-    phaser,
     preloadImageMap,
     preloadSoundMap,
     preloadSpritesheetMap,
