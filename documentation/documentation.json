@@ -160,7 +160,7 @@
 			"flags": {},
 			"comment": {
 				"shortText": "The curves library provides functions for drawing \"curves\", i.e a sequence of\npoints that may/may not be connected by lines.",
-				"text": "A point is defined by its coordinates (x, y and z), and the color assigned to\nit (r, g, and b). A few constructors for points is given, together with the\ncorresponding selectors for querying the coordinates and color components\nmentioned above.\n\nNaturally, the central element of the library is the definition of Curve, a\nunary function which takes a Number argument within the unit interval `[0,1]`\nand returns a point. If `C` is a Curve, then the starting point of the curve\nis always `C(0)`, and the ending point is always `C(1)`.\n\nA Curve transformation is a function that takes a Curve as argument and\nreturns a Curve. Examples of Curve transformations are `scale` and `translate`.\n\nFinally, a Curve drawer is function that takes a Number argument and returns\na function that takes in a Curve and visualises it in the output screen is\nshown in the Source Academy in the tab with the \"Curves Canvas\" icon (image).\nExamples of drawer functions are `draw_points_on` and `draw_connected`.\n",
+				"text": "A point is defined by its coordinates (x, y and z), and the color assigned to\nit (r, g, and b). A few constructors for points is given, for example\n`make_color_point`. Selectors allow access to the coordinates and color\ncomponents, for example `x_of`.\n\nThe central element of the library is the definition of Curve, a\nunary function which takes a Number argument within the unit interval `[0,1]`\nand returns a point. If `C` is a Curve, then the starting point of the curve\nis always `C(0)`, and the ending point is always `C(1)`.\n\nA Curve transformation is a function that takes a Curve as argument and\nreturns a Curve. Examples of Curve transformations are `scale` and `translate`.\n\nFinally, a Curve drawer is function that takes a Number argument and returns\na function that takes in a Curve and visualises it in the output screen is\nshown in the Source Academy in the tab with the \"Curves Canvas\" icon (image).\nExamples of drawer functions are `draw_points_on` and `draw_connected`.\n\n[Example:](https://share.sourceacademy.org/unitcircle)\n```\nimport { make_point, draw_connected_full_view } from \"curve\";\nfunction unit_circle(t) {\n  return make_point(math_sin(2 * math_PI * t),\n                    math_cos(2 * math_PI * t));\n}\ndraw_connected_full_view(100)(unit_circle);\n```\ndraws a full circle in the display tab.\n",
 				"tags": [
 					{
 						"tag": "author",
@@ -183,7 +183,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 721,
+							"line": 732,
 							"character": 19
 						}
 					],
@@ -230,7 +230,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 421,
+							"line": 432,
 							"character": 20
 						}
 					],
@@ -280,7 +280,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 661,
+							"line": 672,
 							"character": 28
 						}
 					],
@@ -341,7 +341,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 642,
+							"line": 653,
 							"character": 31
 						}
 					],
@@ -402,7 +402,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 163,
+							"line": 174,
 							"character": 33
 						}
 					],
@@ -455,7 +455,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 183,
+							"line": 194,
 							"character": 43
 						}
 					],
@@ -508,7 +508,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 202,
+							"line": 213,
 							"character": 56
 						}
 					],
@@ -561,7 +561,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 244,
+							"line": 255,
 							"character": 53
 						}
 					],
@@ -614,7 +614,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 224,
+							"line": 235,
 							"character": 33
 						}
 					],
@@ -667,7 +667,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 60,
+							"line": 71,
 							"character": 30
 						}
 					],
@@ -720,7 +720,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 80,
+							"line": 91,
 							"character": 40
 						}
 					],
@@ -773,7 +773,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 100,
+							"line": 111,
 							"character": 53
 						}
 					],
@@ -826,7 +826,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 142,
+							"line": 153,
 							"character": 50
 						}
 					],
@@ -879,7 +879,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 122,
+							"line": 133,
 							"character": 30
 						}
 					],
@@ -932,7 +932,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 406,
+							"line": 417,
 							"character": 20
 						}
 					],
@@ -982,7 +982,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 434,
+							"line": 445,
 							"character": 22
 						}
 					],
@@ -1026,7 +1026,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 324,
+							"line": 335,
 							"character": 35
 						}
 					],
@@ -1149,7 +1149,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 277,
+							"line": 288,
 							"character": 29
 						}
 					],
@@ -1230,7 +1230,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 297,
+							"line": 308,
 							"character": 32
 						}
 					],
@@ -1339,7 +1339,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 261,
+							"line": 272,
 							"character": 26
 						}
 					],
@@ -1406,7 +1406,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 613,
+							"line": 624,
 							"character": 40
 						}
 					],
@@ -1453,7 +1453,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 391,
+							"line": 402,
 							"character": 20
 						}
 					],
@@ -1503,7 +1503,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 487,
+							"line": 498,
 							"character": 36
 						}
 					],
@@ -1569,7 +1569,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 570,
+							"line": 581,
 							"character": 21
 						}
 					],
@@ -1644,7 +1644,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 597,
+							"line": 608,
 							"character": 34
 						}
 					],
@@ -1691,7 +1691,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 450,
+							"line": 461,
 							"character": 25
 						}
 					],
@@ -1766,7 +1766,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 685,
+							"line": 696,
 							"character": 27
 						}
 					],
@@ -1813,7 +1813,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 696,
+							"line": 707,
 							"character": 25
 						}
 					],
@@ -1860,7 +1860,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 708,
+							"line": 719,
 							"character": 28
 						}
 					],
@@ -1907,7 +1907,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 346,
+							"line": 357,
 							"character": 20
 						}
 					],
@@ -1957,7 +1957,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 361,
+							"line": 372,
 							"character": 20
 						}
 					],
@@ -2007,7 +2007,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 376,
+							"line": 387,
 							"character": 20
 						}
 					],
