@@ -3,11 +3,11 @@
  * points that may/may not be connected by lines.
  *
  * A point is defined by its coordinates (x, y and z), and the color assigned to
- * it (r, g, and b). A few constructors for points is given, together with the
- * corresponding selectors for querying the coordinates and color components
- * mentioned above.
+ * it (r, g, and b). A few constructors for points is given, for example
+ * `make_color_point`. Selectors allow access to the coordinates and color
+ * components, for example `x_of`.
  *
- * Naturally, the central element of the library is the definition of Curve, a
+ * The central element of the library is the definition of Curve, a
  * unary function which takes a Number argument within the unit interval `[0,1]`
  * and returns a point. If `C` is a Curve, then the starting point of the curve
  * is always `C(0)`, and the ending point is always `C(1)`.
@@ -19,6 +19,17 @@
  * a function that takes in a Curve and visualises it in the output screen is
  * shown in the Source Academy in the tab with the "Curves Canvas" icon (image).
  * Examples of drawer functions are `draw_points_on` and `draw_connected`.
+ *
+ * [Example:](https://share.sourceacademy.org/unitcircle)
+ * ```
+ * import { make_point, draw_connected_full_view } from "curve";
+ * function unit_circle(t) {
+ *   return make_point(math_sin(2 * math_PI * t),
+ *                     math_cos(2 * math_PI * t));
+ * }
+ * draw_connected_full_view(100)(unit_circle);
+ * ```
+ * draws a full circle in the display tab.
  *
  * @module curve
  * @author Lee Zheng Han

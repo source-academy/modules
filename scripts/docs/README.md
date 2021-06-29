@@ -15,5 +15,6 @@ if `thrice` is declared in the module `repeat` as follows:
 ```
 const thrice = f => x => f(f(f(x)));
 ```
-Below is the list of modules available at the default modules site.
+[List of modules](modules.html) available at the default modules site.
+
 

@@ -11,7 +11,7 @@ async function main() {
     entryPoints: Object.keys(modules).map(
       (bundle) => `${paths.root}/src/bundles/${bundle}/functions.ts`
     ),
-    theme: 'minimal',
+    theme: 'typedoc-modules-theme',
     readme: `${paths.root}/scripts/docs/README.md`,
     excludeInternal: true,
     categorizeByGroup: true,

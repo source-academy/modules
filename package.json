@@ -79,7 +79,8 @@
     "lodash": "^4.17.21",
     "phaser": "^3.54.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "typedoc-default-themes": "^0.12.10"
   },
   "peerDependencies": {
     "tslib": "^2.1.0"
