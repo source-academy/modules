@@ -159,7 +159,7 @@
 			"kindString": "Module",
 			"flags": {},
 			"comment": {
-				"shortText": "The module `curve` provides functions for drawing *curves*, i.e. collections of\n*points*.",
+				"shortText": "The module `curve` provides functions for drawing *curves*, i.e. collections\n of *points*.",
 				"text": "A *point* is defined by its coordinates (x, y and z), and the color assigned to\nit (r, g, and b). A few constructors for points is given, for example\n`make_color_point`. Selectors allow access to the coordinates and color\ncomponents, for example `x_of`.\n\nA *curve* is a\nunary function which takes a number argument within the unit interval `[0,1]`\nand returns a point. If `C` is a curve, then the starting point of the curve\nis always `C(0)`, and the ending point is always `C(1)`.\n\nA *curve transformation* is a function that takes a curve as argument and\nreturns a curve. Examples of curve transformations are `scale` and `translate`.\n\nA *curve drawer* is function that takes a number argument and returns\na function that takes a curve as argument and visualises it in the output screen is\nshown in the Source Academy in the tab with the \"Curves Canvas\" icon (image).\nThe following [example](https://share.sourceacademy.org/unitcircle) uses\nthe curve drawer `draw_connected_full_view` to display a curve called\n`unit_circle`.\n```\nimport { make_point, draw_connected_full_view } from \"curve\";\nfunction unit_circle(t) {\n  return make_point(math_sin(2 * math_PI * t),\n                    math_cos(2 * math_PI * t));\n}\ndraw_connected_full_view(100)(unit_circle);\n```\ndraws a full circle in the display tab.\n",
 				"tags": [
 					{
