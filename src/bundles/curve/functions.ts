@@ -7,7 +7,7 @@
  * `make_color_point`. Selectors allow access to the coordinates and color
  * components, for example `x_of`.
  *
- * A *curve* is a 
+ * A *curve* is a
  * unary function which takes a number argument within the unit interval `[0,1]`
  * and returns a point. If `C` is a curve, then the starting point of the curve
  * is always `C(0)`, and the ending point is always `C(1)`.
