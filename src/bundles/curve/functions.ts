@@ -75,9 +75,9 @@ export function draw_connected(num: number): RenderFunction {
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points and connecting each pair with a line.
  * When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The Drawing is stretched or
- * shrunk to show the full curve and maximize its width and height, with some
- * padding.
+ * graphically, in a window, instead of textually. The Drawing is translated and
+ * stretched/shrunk to show the full curve and maximize its width and height, with
+ * some padding.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -95,9 +95,9 @@ export function draw_connected_full_view(num: number): RenderFunction {
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points and connecting each pair with a line.
  * When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The Drawing is scaled
- * proportionally to show the full curve and maximize its size, with some
- * padding.
+ * graphically, in a window, instead of textually. The Drawing is translated
+ * and scaled proportionally to show the full curve and maximize its size, with
+ * some padding.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -126,10 +126,10 @@ export function draw_connected_full_view_proportional(
  * @return function of type Curve → Drawing
  * @example
  * ```
- * draw_points_on(100)(t => make_point(t, t));
+ * draw_points(100)(t => make_point(t, t));
  * ```
  */
-export function draw_points_on(num: number): RenderFunction {
+export function draw_points(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '2D', false);
 }
 
@@ -138,8 +138,28 @@ export function draw_points_on(num: number): RenderFunction {
  * Curve at `num` sample points. The Drawing consists of isolated
  * points, and does not connect them. When a program evaluates to a Drawing, the
  * Source system displays it graphically, in a window, instead of textually. The
- * Drawing is scaled proportionally with its size maximized to fit entirely
- * inside the window, with some padding.
+ * Drawing is translated and stretched/shrunk to show the full curve and maximize
+ * its width and height, with some padding.
+ *
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @return function of type Curve → Drawing
+ * @example
+ * ```
+ * draw_points_full_view(100)(t => make_point(t, t));
+ * ```
+ */
+export function draw_points_full_view(num: number): RenderFunction {
+  return (func) => generateCurve('stretch', 'points', num, func, '2D', true);
+}
+
+/**
+ * Returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at `num` sample points. The Drawing consists of isolated
+ * points, and does not connect them. When a program evaluates to a Drawing, the
+ * Source system displays it graphically, in a window, instead of textually. The
+ * Drawing is translated and scaled proportionally with its size maximized to fit
+ * entirely inside the window, with some padding.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -178,9 +198,9 @@ export function draw_3D_connected(num: number): RenderFunction {
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
  * the 3D Curve at `num` sample points and connecting each pair with
  * a line. When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The Drawing is stretched or
- * shrunk to show the full curve and maximize its width and height within the
- * cube.
+ * graphically, in a window, instead of textually. The Drawing is translated and
+ * stretched/shrunk to show the full curve and maximize its width and height within
+ * the cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -198,15 +218,15 @@ export function draw_3D_connected_full_view(num: number): RenderFunction {
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
  * the 3D Curve at `num` sample points and connecting each pair with
  * a line. When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The Drawing is scaled
- * proportionally with its size maximized to fit entirely inside the cube.
+ * graphically, in a window, instead of textually. The Drawing is translated and
+ * scaled proportionally with its size maximized to fit entirely inside the cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
  * @example
  * ```
- * draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
+ * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
  * ```
  */
 export function draw_3D_connected_full_view_proportional(
@@ -228,10 +248,10 @@ export function draw_3D_connected_full_view_proportional(
  * @return function of type Curve → Drawing
  * @example
  * ```
- * draw_3D_points_on(100)(t => make_3D_point(t, t, t));
+ * draw_3D_points(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export function draw_3D_points_on(num: number): RenderFunction {
+export function draw_3D_points(num: number): RenderFunction {
   return (func) => generateCurve('none', 'points', num, func, '3D', false);
 }
 
@@ -240,15 +260,35 @@ export function draw_3D_points_on(num: number): RenderFunction {
  * the 3D Curve at `num` sample points. The Drawing consists of
  * isolated points, and does not connect them. When a program evaluates to a
  * Drawing, the Source system displays it graphically, in a window, instead of
- * textually. The Drawing is scaled proportionally with its size maximized to
- * fit entirely inside the cube.
+ * textually. The Drawing is translated and stretched/shrunk to maximize its
+ * size to fit entirely inside the cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
  * @example
  * ```
- * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
+ * draw_3D_points_full_view(100)(t => make_3D_point(t, t, t));
+ * ```
+ */
+export function draw_3D_points_full_view(num: number): RenderFunction {
+  return (func) => generateCurve('stretch', 'points', num, func, '3D', false);
+}
+
+/**
+ * Returns a function that turns a given 3D Curve into a Drawing, by sampling
+ * the 3D Curve at `num` sample points. The Drawing consists of
+ * isolated points, and does not connect them. When a program evaluates to a
+ * Drawing, the Source system displays it graphically, in a window, instead of
+ * textually. The Drawing is translated and scaled proportionally with its size
+ * maximized to fit entirely inside the cube.
+ *
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @return function of type Curve → Drawing
+ * @example
+ * ```
+ * draw_3D_points_full_view_proportional(100)(t => make_3D_point(t, t, t));
  * ```
  */
 export function draw_3D_points_full_view_proportional(
