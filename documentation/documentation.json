@@ -183,7 +183,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 732,
+							"line": 733,
 							"character": 19
 						}
 					],
@@ -230,7 +230,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 432,
+							"line": 433,
 							"character": 20
 						}
 					],
@@ -280,7 +280,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 672,
+							"line": 673,
 							"character": 28
 						}
 					],
@@ -341,7 +341,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 653,
+							"line": 654,
 							"character": 31
 						}
 					],
@@ -402,7 +402,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 174,
+							"line": 175,
 							"character": 33
 						}
 					],
@@ -455,7 +455,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 194,
+							"line": 195,
 							"character": 43
 						}
 					],
@@ -508,7 +508,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 213,
+							"line": 214,
 							"character": 56
 						}
 					],
@@ -561,7 +561,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 255,
+							"line": 256,
 							"character": 53
 						}
 					],
@@ -614,7 +614,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 235,
+							"line": 236,
 							"character": 33
 						}
 					],
@@ -667,7 +667,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 71,
+							"line": 72,
 							"character": 30
 						}
 					],
@@ -720,7 +720,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 91,
+							"line": 92,
 							"character": 40
 						}
 					],
@@ -773,7 +773,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 111,
+							"line": 112,
 							"character": 53
 						}
 					],
@@ -826,7 +826,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 153,
+							"line": 154,
 							"character": 50
 						}
 					],
@@ -879,7 +879,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 133,
+							"line": 134,
 							"character": 30
 						}
 					],
@@ -932,7 +932,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 417,
+							"line": 418,
 							"character": 20
 						}
 					],
@@ -982,7 +982,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 445,
+							"line": 446,
 							"character": 22
 						}
 					],
@@ -1026,7 +1026,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 335,
+							"line": 336,
 							"character": 35
 						}
 					],
@@ -1149,7 +1149,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 288,
+							"line": 289,
 							"character": 29
 						}
 					],
@@ -1230,7 +1230,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 308,
+							"line": 309,
 							"character": 32
 						}
 					],
@@ -1339,7 +1339,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 272,
+							"line": 273,
 							"character": 26
 						}
 					],
@@ -1406,7 +1406,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 624,
+							"line": 625,
 							"character": 40
 						}
 					],
@@ -1453,7 +1453,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 402,
+							"line": 403,
 							"character": 20
 						}
 					],
@@ -1503,7 +1503,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 498,
+							"line": 499,
 							"character": 36
 						}
 					],
@@ -1569,7 +1569,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 581,
+							"line": 582,
 							"character": 21
 						}
 					],
@@ -1644,7 +1644,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 608,
+							"line": 609,
 							"character": 34
 						}
 					],
@@ -1691,7 +1691,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 461,
+							"line": 462,
 							"character": 25
 						}
 					],
@@ -1766,7 +1766,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 696,
+							"line": 697,
 							"character": 27
 						}
 					],
@@ -1813,7 +1813,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 707,
+							"line": 708,
 							"character": 25
 						}
 					],
@@ -1860,7 +1860,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 719,
+							"line": 720,
 							"character": 28
 						}
 					],
@@ -1907,7 +1907,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 357,
+							"line": 358,
 							"character": 20
 						}
 					],
@@ -1957,7 +1957,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 372,
+							"line": 373,
 							"character": 20
 						}
 					],
@@ -2007,7 +2007,7 @@
 					"sources": [
 						{
 							"fileName": "curve/functions.ts",
-							"line": 387,
+							"line": 388,
 							"character": 20
 						}
 					],
