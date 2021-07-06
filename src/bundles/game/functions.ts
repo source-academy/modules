@@ -35,7 +35,7 @@ export default function gameFuncs(_params: __Params) {
     remotePath,
     screenSize,
     createAward,
-  } = _params.game;
+  } = _params.game || {};
 
   // Listener ObjectTypes
   enum ListenerTypes {
@@ -58,6 +58,9 @@ export default function gameFuncs(_params: __Params) {
   const ObjTypes = Object.values(ObjectTypes);
 
   const nullFn = () => {};
+
+  const infoFn = () =>
+    `Info: You cannot run imported game functions outside of the preload(), create() and update() functions.`;
 
   // =============================================================================
   // Module's Private Functions
@@ -655,7 +658,7 @@ export default function gameFuncs(_params: __Params) {
 
   // eslint-disable-next-line array-callback-return
   Object.entries(functions).map(([key, fn]) => {
-    finalFunctions[key] = !scene ? nullFn : fn;
+    finalFunctions[key] = !scene ? infoFn : fn;
   });
 
   return finalFunctions;
