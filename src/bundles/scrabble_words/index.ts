@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { scrabble_words_array, scrabble_words_list } from './words';
+import { scrabble_words_array, scrabble_words_list } from './functions';
 
 /**
  * Scrabble words for Source Academy
