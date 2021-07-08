@@ -1,8 +1,8 @@
 /**
- * The `scrabble_words` Source Module provides the allowable
+ * The `scrabble` Source Module provides the allowable
  * words in Scrabble in a list and in an array, according to
  * https://github.com/benjamincrom/scrabble/blob/master/scrabble/dictionary.json
- * @module scrabble_words
+ * @module scrabble
  */
 
 import { List } from './types';
@@ -10,11 +10,11 @@ import { List } from './types';
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars */
 
 /**
- * `scrabble_words_array` is an array of strings, each representing
+ * `scrabble_array` is an array of strings, each representing
  * an allowed word in Scrabble.
  */
 
-export const scrabble_words_array = [
+export const scrabble_array = [
   'aa',
   'aah',
   'aahed',
@@ -172837,16 +172837,16 @@ export const scrabble_words_array = [
   'zyzzyva',
 ];
 
-const len = scrabble_words_array.length;
+const len = scrabble_array.length;
 let current_list: List = null;
 
 for (let i = len - 1; i >= 0; i -= 1) {
-  current_list = [scrabble_words_array[i], current_list];
+  current_list = [scrabble_array[i], current_list];
 }
 
 /**
- * `scrabble_words_list` is a list of strings, each representing
+ * `scrabble_list` is a list of strings, each representing
  * an allowed word in Scrabble.
  */
 
-export const scrabble_words_list = current_list;
+export const scrabble_list = current_list;
