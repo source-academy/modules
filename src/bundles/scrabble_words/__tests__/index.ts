@@ -1,4 +1,4 @@
-import { scrabble_words_array, scrabble_words_list } from '../words';
+import { scrabble_words_array, scrabble_words_list } from '../functions';
 
 function list_ref(list, n) {
   return n === 0 ? list[0] : list_ref(list[1], n - 1);
