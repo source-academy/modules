@@ -2,19 +2,18 @@ import { array_length } from "sicp";
 
 
 /**
- * The `binary_tree` Source Module provides functions for the interaction with binary trees, as covered the textbook
- * [Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)](https://sicp.comp.nus.edu.sg/)
- * in [section 2.3.3 Example: Representing Sets](https://sicp.comp.nus.edu.sg/chapters/37).
- * Click on a name on the left to see how they are defined and used.
- * @module binary_tree
+ * The `scrabble_words` Source Module provides the allowable
+ * words in Scrabble in a list and in an array, according to
+ * https://github.com/benjamincrom/scrabble/blob/master/scrabble/dictionary.json
+ * @module scrabble_words
  */
 
 /**
- * `scrabble_words` is a list of strings, each representing
- * an allowed string in Scrabble.
+ * `scrabble_words_array` is an array of strings, each representing
+ * an allowed word in Scrabble.
  */
 
-export 
+export
 const scrabble_words_array =
 [   "aa",
     "aah",
@@ -172844,5 +172843,10 @@ let current_list = null;
 for (let i = len - 1; i >= 0; i = i - 1) {
     current_list = [scrabble_words_array[i], current_list];
 }
+
+/**
+ * `scrabble_words_list` is a list of strings, each representing
+ * an allowed word in Scrabble.
+ */
 
 export const scrabble_words_list = current_list;
