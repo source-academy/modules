@@ -6420,31 +6420,31 @@
 		},
 		{
 			"id": 192,
-			"name": "scrabble_words",
+			"name": "scrabble",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
 			"comment": {
-				"shortText": "The `scrabble_words` Source Module provides the allowable\nwords in Scrabble in a list and in an array, according to\nhttps://github.com/benjamincrom/scrabble/blob/master/scrabble/dictionary.json"
+				"shortText": "The `scrabble` Source Module provides the allowable\nwords in Scrabble in a list and in an array, according to\nhttps://github.com/benjamincrom/scrabble/blob/master/scrabble/dictionary.json"
 			},
-			"originalName": "scrabble_words/functions",
+			"originalName": "scrabble/functions",
 			"children": [
 				{
 					"id": 193,
-					"name": "scrabble_words_array",
+					"name": "scrabble_array",
 					"kind": 32,
 					"kindString": "Variable",
 					"flags": {
 						"isConst": true
 					},
 					"comment": {
-						"shortText": "`scrabble_words_array` is an array of strings, each representing\nan allowed word in Scrabble."
+						"shortText": "`scrabble_array` is an array of strings, each representing\nan allowed word in Scrabble."
 					},
 					"sources": [
 						{
-							"fileName": "scrabble_words/functions.ts",
+							"fileName": "scrabble/functions.ts",
 							"line": 17,
-							"character": 33
+							"character": 27
 						}
 					],
 					"type": {
@@ -6458,20 +6458,20 @@
 				},
 				{
 					"id": 194,
-					"name": "scrabble_words_list",
+					"name": "scrabble_list",
 					"kind": 32,
 					"kindString": "Variable",
 					"flags": {
 						"isConst": true
 					},
 					"comment": {
-						"shortText": "`scrabble_words_list` is a list of strings, each representing\nan allowed word in Scrabble."
+						"shortText": "`scrabble_list` is a list of strings, each representing\nan allowed word in Scrabble."
 					},
 					"sources": [
 						{
-							"fileName": "scrabble_words/functions.ts",
+							"fileName": "scrabble/functions.ts",
 							"line": 172852,
-							"character": 32
+							"character": 26
 						}
 					],
 					"type": {
@@ -6493,7 +6493,7 @@
 			],
 			"sources": [
 				{
-					"fileName": "scrabble_words/functions.ts",
+					"fileName": "scrabble/functions.ts",
 					"line": 1,
 					"character": 0
 				}
