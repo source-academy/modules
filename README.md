@@ -71,10 +71,7 @@ Please refer to the Modules Development Guide located in the modules wiki [here]
 
 ## License
 
-[![Apache 2][apache2-image]][apache2]
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+All sources in this repository are licensed under the [Apache License Version 2][apache2].
 
-All JavaScript programs in this repository are licensed under the
-[Apache License 2.0][apache2].
-
-[apache2]: https://www.apache.org/licenses/LICENSE-2.0
-[apache2-image]: https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Apache_Software_Foundation_Logo_%282016%29.svg/200px-Apache_Software_Foundation_Logo_%282016%29.svg.png
+[apache2]: https://www.apache.org/licenses/LICENSE-2.0.txt
