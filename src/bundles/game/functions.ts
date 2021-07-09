@@ -35,7 +35,7 @@ export default function gameFuncs(_params: __Params) {
     remotePath,
     screenSize,
     createAward,
-  } = _params.game;
+  } = _params.game || {};
 
   // Listener ObjectTypes
   enum ListenerTypes {
