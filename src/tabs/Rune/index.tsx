@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import { drawRune } from '../../bundles/runes/runes_webgl';
-import { Rune } from '../../bundles/runes/types';
+import { drawRune } from '../../bundles/rune/runes_webgl';
+import { Rune } from '../../bundles/rune/types';
 
 /**
  * TODO: This tab is for displaying of Drawing of Runes
