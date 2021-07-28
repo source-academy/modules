@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import { drawAnaglyph, drawRune } from '../../bundles/rune/runes_webgl';
+import {
+  drawAnaglyph,
+  drawHollusion,
+  drawRune,
+} from '../../bundles/rune/runes_webgl';
 import { Rune } from '../../bundles/rune/types';
 
 /**
@@ -51,6 +55,8 @@ class WebGLCanvas extends React.Component<Props, State> {
       } = this.props;
       if (value.drawMethod === 'anaglyph') {
         drawAnaglyph(this.$canvas, value);
+      } else if (value.drawMethod === 'hollusion') {
+        drawHollusion(this.$canvas, value);
       } else {
         drawRune(this.$canvas, value);
       }

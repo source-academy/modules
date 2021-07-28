@@ -546,6 +546,15 @@ export function show(rune: Rune): Rune {
   return rune;
 }
 
+/**
+ * turns a given Rune into an Anaglyph
+ * @param {Rune} rune - given Rune
+ * @return {Picture}
+ * If the result of evaluating a program is an Anaglyph,
+ * the REPL displays it graphically, using anaglyph
+ * technology, instead of textually. Use your 3D-glasses
+ * to view the Anaglyph.
+ */
 export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('show', rune);
   const analyphRune = copyRune(rune);
@@ -553,95 +562,17 @@ export function anaglyph(rune: Rune): Rune {
   return analyphRune;
 }
 
-// TODO: hollusion / anaglyph
-
-// /**
-//  * turns a given Rune into an Anaglyph
-//  * @param {Rune} rune - given Rune
-//  * @return {Picture}
-//  * If the result of evaluating a program is an Anaglyph,
-//  * the REPL displays it graphically, using anaglyph
-//  * technology, instead of textually. Use your 3D-glasses
-//  * to view the Anaglyph.
-//  */
-// export function anaglyph(rune) {
-//   throwIfNotRune('anaglyph', rune);
-//   const frame = open_pixmap('frame', runeViewportSize, runeViewportSize, true);
-//   clear_viewport();
-//   clearAnaglyphFramebuffer();
-//   const flattenedRuneList = generateFlattenedRuneList(rune);
-//   drawWithWebGL(flattenedRuneList, drawAnaglyph);
-//   copy_viewport(gl.canvas, frame);
-//   // eslint-disable-next-line new-cap
-//   return new shapeDrawn(frame);
-// }
-
-// /* // to view documentation, put two * in this line
-//  * // currently, this function is not documented;
-//  * // animation not working
-//  * turns a given Rune into Hollusion
-//  * @param {Rune} rune - given Rune
-//  * @return {Picture}
-//  * If the result of evaluating a program is a Hollusion,
-//  * the REPL displays it graphically, using hollusion
-//  * technology, instead of textually.
-//  */
-// export function hollusion(rune, numIn) {
-//   clear_viewport();
-//   const num = numIn > 5 ? numIn : 5;
-//   const flattenedRuneList = generateFlattenedRuneList(rune);
-//   const frameList = [];
-//   for (let j = 0; j < num; j += 1) {
-//     const frame = open_pixmap(
-//       `frame${j}`,
-//       runeViewportSize,
-//       runeViewportSize,
-//       false
-//     );
-//     for (let i = 0; i < flattenedRuneList.length; i += 1) {
-//       const { newRune } = flattenedRuneList[i];
-//       const { instanceArray } = flattenedRuneList[i];
-//       const cameraMatrix = mat4.create();
-//       mat4.lookAt(
-//         cameraMatrix,
-//         vec3.fromValues(
-//           -halfEyeDistance + (j / (num - 1)) * 2 * halfEyeDistance,
-//           0,
-//           0
-//         ),
-//         vec3.fromValues(0, 0, -0.4),
-//         vec3.fromValues(0, 1, 0)
-//       );
-//       draw3D(
-//         newRune.first,
-//         newRune.count,
-//         instanceArray,
-//         cameraMatrix,
-//         [1, 1, 1, 1],
-//         null
-//       );
-//     }
-//     gl.finish();
-//     copy_viewport(gl.canvas, frame);
-//     frameList.push(frame);
-//     clear_viewport();
-//   }
-//   for (let i = frameList.length - 2; i > 0; i -= 1) {
-//     frameList.push(frameList[i]);
-//   }
-//   const outframe = open_pixmap(
-//     'frame',
-//     runeViewportSize,
-//     runeViewportSize,
-//     true
-//   );
-//   function animate() {
-//     const frame = frameList.shift();
-//     copy_viewport(frame, outframe);
-//     frameList.push(frame);
-//     hollusionTimeout = setTimeout(animate, 500 / num);
-//   }
-//   animate();
-//   // eslint-disable-next-line new-cap
-//   return new shapeDrawn(outframe);
-// }
+/**
+ * turns a given Rune into Hollusion
+ * @param {Rune} rune - given Rune
+ * @return {Picture}
+ * If the result of evaluating a program is a Hollusion,
+ * the REPL displays it graphically, using hollusion
+ * technology, instead of textually.
+ */
+export function hollusion(rune: Rune): Rune {
+  throwIfNotRune('show', rune);
+  const hollusionRune = copyRune(rune);
+  hollusionRune.drawMethod = 'hollusion';
+  return hollusionRune;
+}

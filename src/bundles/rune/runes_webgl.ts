@@ -303,8 +303,7 @@ export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
   // prepare the default zero point of the model
   mat4.translate(cameraMatrix, cameraMatrix, [-0.0, 0.0, -3]);
 
-  // color filter set to [0,0,0,0]
-  // v_color = u_colorFilter * v_color + 1.0 - u_colorFilter
+  // color filter set to [1,1,1,1] for transparent filter
   drawRunesToFrameBuffer(
     gl,
     runes,
@@ -317,11 +316,9 @@ export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
 export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   throwIfNotRune('drawRune', rune);
   const gl = getWebGlFromCanvas(canvas);
-  let runes = flattenRune(rune);
-  const leftBuffer = initFramebufferObject(gl);
-  const rightBuffer = initFramebufferObject(gl);
 
   // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
+  let runes = flattenRune(rune);
   runes = flattenRune(white(square)).concat(runes);
 
   // calculate the left and right camera matrices
@@ -347,7 +344,9 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
     -3.0,
   ]);
 
-  // draw to the respective buffers
+  // left/right eye images are drawn into respective framebuffers
+  const leftBuffer = initFramebufferObject(gl);
+  const rightBuffer = initFramebufferObject(gl);
   drawRunesToFrameBuffer(
     gl,
     runes,
@@ -363,9 +362,9 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
     rightBuffer.framebuffer
   );
 
-  // combine buffers to screen
+  // prepare to draw to screen by setting framebuffer to null
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-  // prepare the combine shader program
+  // prepare the shader program to combine the left/right eye images
   const shaderProgram = initShaderProgram(
     gl,
     combineVertexShader,
@@ -379,8 +378,6 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
     'a_position'
   );
 
-  // disableInstanceAttribs();
-
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, leftBuffer.texture);
   gl.uniform1i(cyanuPt, 0);
@@ -389,7 +386,7 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   gl.bindTexture(gl.TEXTURE_2D, rightBuffer.texture);
   gl.uniform1i(reduPt, 1);
 
-  // draw a square
+  // draw a square, which will allow the texture to be used
   // load position buffer
   const positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -397,4 +394,47 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vertexPositionPointer);
   gl.drawArrays(gl.TRIANGLES, 0, 6);
+}
+
+export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
+  throwIfNotRune('drawRune', rune);
+  const gl = getWebGlFromCanvas(canvas);
+
+  // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
+  const runes = flattenRune(rune);
+
+  // the browser will call this render function repeatedly for updating the webgl
+  function render(timeInMs: number) {
+    // prepare camera projection array
+    const cameraMatrix = mat4.create();
+    const fieldOfView = (45 * Math.PI) / 180; // in radians
+    const aspect = 1; // width/height
+    const zNear = 0.1;
+    const zFar = 100.0;
+    mat4.perspective(cameraMatrix, fieldOfView, aspect, zNear, zFar);
+
+    // let the object shift in the x direction
+    const xshiftMax = 0.5;
+    const period = 2000;
+    let xshift = timeInMs % period;
+    if (xshift > period / 2) {
+      xshift = period - xshift;
+    }
+    xshift = 2 * xshiftMax * (xshift / period);
+    mat4.translate(cameraMatrix, cameraMatrix, [
+      xshift - xshiftMax / 2,
+      0.0,
+      -3,
+    ]);
+
+    drawRunesToFrameBuffer(
+      gl,
+      runes,
+      cameraMatrix,
+      new Float32Array([1, 1, 1, 1]),
+      null
+    );
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
 }

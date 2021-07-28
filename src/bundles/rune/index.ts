@@ -1,7 +1,3 @@
-// Un-comment the next line if your bundle requires the use of variables
-// declared in cadet-frontend or js-slang.
-// import __Params from '../../typings/__Params';
-
 import {
   square,
   blank,
@@ -46,6 +42,7 @@ import {
   white,
   show,
   anaglyph,
+  hollusion,
 } from './functions';
 
 /**
@@ -101,4 +98,5 @@ export default () => ({
 
   show,
   anaglyph,
+  hollusion,
 });
