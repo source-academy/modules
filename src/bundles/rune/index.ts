@@ -45,6 +45,7 @@ import {
   black,
   white,
   show,
+  anaglyph,
 } from './functions';
 
 /**
@@ -99,4 +100,5 @@ export default () => ({
   white,
 
   show,
+  anaglyph,
 });

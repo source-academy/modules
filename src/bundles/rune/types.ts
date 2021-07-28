@@ -9,8 +9,14 @@ import { mat4 } from 'gl-matrix';
  */
 export type Rune = {
   toReplString: () => string;
+  drawMethod: string;
   vertices: Float32Array;
   colors: Float32Array | null;
   transformMatrix: mat4;
   subRunes: Rune[];
+};
+
+export type FrameBufferWithTexture = {
+  framebuffer: WebGLFramebuffer;
+  texture: WebGLTexture;
 };

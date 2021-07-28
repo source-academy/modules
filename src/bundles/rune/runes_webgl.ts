@@ -3,29 +3,56 @@
  */
 
 import { mat4 } from 'gl-matrix';
-import { Rune } from './types';
+import { FrameBufferWithTexture, Rune } from './types';
 import { flattenRune, throwIfNotRune } from './runes_ops';
+import { square, white } from './functions';
 
 // =============================================================================
 // Private functions
 // =============================================================================
 
-const vertexShader2D = `
+const normalVertexShader = `
 attribute vec4 aVertexPosition;
 uniform vec4 uVertexColor;
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
+uniform vec4 uColorFilter;
+
 varying lowp vec4 vColor;
 void main(void) {
   gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
   vColor = uVertexColor;
+  vColor = uColorFilter * vColor + 1.0 - uColorFilter;
+  vColor.a = 1.0;
 }
 `;
 
-const fragmentShader2D = `
+const normalFragmentShader = `
 varying lowp vec4 vColor;
 void main(void) {
   gl_FragColor = vColor;
+}
+`;
+
+const combineVertexShader = `
+attribute vec4 a_position;
+varying highp vec2 v_texturePosition;
+void main() {
+    gl_Position = a_position;
+    v_texturePosition.x = (a_position.x + 1.0) / 2.0;
+    v_texturePosition.y = (a_position.y + 1.0) / 2.0;
+}
+`;
+
+const combineFragmentShader = `
+precision mediump float;
+uniform sampler2D u_sampler_red;
+uniform sampler2D u_sampler_cyan;
+varying highp vec2 v_texturePosition;
+void main() {
+    gl_FragColor = texture2D(u_sampler_red, v_texturePosition)
+            + texture2D(u_sampler_cyan, v_texturePosition) - 1.0;
+    gl_FragColor.a = 1.0;
 }
 `;
 
@@ -78,13 +105,11 @@ function initShaderProgram(
 }
 
 /**
- * Draws the list of runes with the prepared WebGLRenderingContext, with each rune overlapping each other.
- *
- * @param gl a prepared WebGLRenderingContext with shader program linked
- * @param runes a list of rune (Rune[]) to be drawn sequentially
+ * get a WebGLRenderingContext from Canvas input
+ * @param canvas WebGLRenderingContext
+ * @returns
  */
-function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
-  // step 1: initiate the WebGLRenderingContext
+function getWebGlFromCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
   const gl: WebGLRenderingContext | null = canvas.getContext('webgl');
   if (!gl) {
     throw Error('Unable to initialize WebGL.');
@@ -94,9 +119,30 @@ function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
   gl.depthFunc(gl.LEQUAL); // Near things obscure far things
   // eslint-disable-next-line no-bitwise
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
+  return gl;
+}
 
+/**
+ * Draws the list of runes with the prepared WebGLRenderingContext, with each rune overlapping each other onto a given framebuffer. if the framebuffer is null, draw to the default canvas.
+ *
+ * @param gl a prepared WebGLRenderingContext with shader program linked
+ * @param runes a list of rune (Rune[]) to be drawn sequentially
+ */
+function drawRunesToFrameBuffer(
+  gl: WebGLRenderingContext,
+  runes: Rune[],
+  cameraMatrix: mat4,
+  colorFilter: Float32Array,
+  framebuffer: WebGLFramebuffer | null = null
+) {
+  // step 1: initiate the WebGLRenderingContext
+  gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
   // step 2: initiate the shaderProgram
-  const shaderProgram = initShaderProgram(gl, vertexShader2D, fragmentShader2D);
+  const shaderProgram = initShaderProgram(
+    gl,
+    normalVertexShader,
+    normalFragmentShader
+  );
   gl.useProgram(shaderProgram);
   if (gl === null) {
     throw Error('Rendering Context not initialized for drawRune.');
@@ -111,7 +157,10 @@ function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
     shaderProgram,
     'uVertexColor'
   );
-
+  const vertexColorFilterPt = gl.getUniformLocation(
+    shaderProgram,
+    'uColorFilter'
+  );
   const projectionMatrixPointer = gl.getUniformLocation(
     shaderProgram,
     'uProjectionMatrix'
@@ -121,18 +170,11 @@ function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
     'uModelViewMatrix'
   );
 
-  // prepare camera projection array
-  const projectionMatrix = mat4.create();
-  const fieldOfView = (45 * Math.PI) / 180; // in radians
-  const aspect = 1; // width/height
-  const zNear = 0.1;
-  const zFar = 100.0;
-  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-  // prepare the default zero point of the model
-  mat4.translate(projectionMatrix, projectionMatrix, [-0.0, 0.0, -3.0]);
+  // load camera
+  gl.uniformMatrix4fv(projectionMatrixPointer, false, cameraMatrix);
 
-  // load matrices
-  gl.uniformMatrix4fv(projectionMatrixPointer, false, projectionMatrix);
+  // load colorfilter
+  gl.uniform4fv(vertexColorFilterPt, colorFilter);
 
   // 3. draw each Rune using the shader program
   runes.forEach((rune: Rune) => {
@@ -159,6 +201,83 @@ function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
   });
 }
 
+function initFramebufferObject(
+  gl: WebGLRenderingContext
+): FrameBufferWithTexture {
+  // create a framebuffer object
+  const framebuffer = gl.createFramebuffer();
+  if (!framebuffer) {
+    throw Error('Failed to create frame buffer object');
+  }
+
+  // create a texture object and set its size and parameters
+  const texture = gl.createTexture();
+  if (!texture) {
+    throw Error('Failed to create texture object');
+  }
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.drawingBufferWidth,
+    gl.drawingBufferHeight,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    null
+  );
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+  // create a renderbuffer for depth buffer
+  const depthBuffer = gl.createRenderbuffer();
+  if (!depthBuffer) {
+    throw Error('Failed to create renderbuffer object');
+  }
+
+  // bind renderbuffer object to target and set size
+  gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+  gl.renderbufferStorage(
+    gl.RENDERBUFFER,
+    gl.DEPTH_COMPONENT16,
+    gl.drawingBufferWidth,
+    gl.drawingBufferHeight
+  );
+
+  // set the texture object to the framebuffer object
+  gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer); // bind to target
+  gl.framebufferTexture2D(
+    gl.FRAMEBUFFER,
+    gl.COLOR_ATTACHMENT0,
+    gl.TEXTURE_2D,
+    texture,
+    0
+  );
+  // set the renderbuffer object to the framebuffer object
+  gl.framebufferRenderbuffer(
+    gl.FRAMEBUFFER,
+    gl.DEPTH_ATTACHMENT,
+    gl.RENDERBUFFER,
+    depthBuffer
+  );
+
+  // check whether the framebuffer is configured correctly
+  const e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+  if (gl.FRAMEBUFFER_COMPLETE !== e) {
+    throw Error(`Frame buffer object is incomplete:${e.toString()}`);
+  }
+
+  // Unbind the buffer object
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.bindTexture(gl.TEXTURE_2D, null);
+  gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+
+  return {
+    framebuffer,
+    texture,
+  };
+}
+
 // =============================================================================
 // Exposed functions
 // =============================================================================
@@ -171,24 +290,111 @@ function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
  */
 export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
   throwIfNotRune('drawRune', rune);
+  const gl = getWebGlFromCanvas(canvas);
   const runes = flattenRune(rune);
-  drawRunes(canvas, runes);
+
+  // prepare camera projection array
+  const cameraMatrix = mat4.create();
+  const fieldOfView = (45 * Math.PI) / 180; // in radians
+  const aspect = 1; // width/height
+  const zNear = 0.1;
+  const zFar = 100.0;
+  mat4.perspective(cameraMatrix, fieldOfView, aspect, zNear, zFar);
+  // prepare the default zero point of the model
+  mat4.translate(cameraMatrix, cameraMatrix, [-0.0, 0.0, -3]);
+
+  // color filter set to [0,0,0,0]
+  // v_color = u_colorFilter * v_color + 1.0 - u_colorFilter
+  drawRunesToFrameBuffer(
+    gl,
+    runes,
+    cameraMatrix,
+    new Float32Array([1, 1, 1, 1]),
+    null
+  );
 }
 
-/**
- * create a separate canvas from the tab for webgl to work on. it could be used to create framebuffer.
- * before the canvas element is attached to the document, it is hidden.
- * @param horiz horizontal size of the canvas, unit: pixel
- * @param vert verticle size of the canvas, unit: pixel
- * @param antiAlias antialiasing level, default:4
- * @returns HTMLCanvasElement
- */
-export function openPixmap(horiz, vert, antiAlias = 4) {
-  const newCanvas = document.createElement('canvas');
-  // scale up the actual size for antiAliasing
-  newCanvas.width = horiz * antiAlias;
-  newCanvas.height = vert * antiAlias;
-  newCanvas.style.width = `${horiz}px`;
-  newCanvas.style.height = `${vert}px`;
-  return newCanvas;
+export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
+  throwIfNotRune('drawRune', rune);
+  const gl = getWebGlFromCanvas(canvas);
+  let runes = flattenRune(rune);
+  const leftBuffer = initFramebufferObject(gl);
+  const rightBuffer = initFramebufferObject(gl);
+
+  // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
+  runes = flattenRune(white(square)).concat(runes);
+
+  // calculate the left and right camera matrices
+  const halfEyeDistance = 0.03;
+  const fieldOfView = (45 * Math.PI) / 180; // in radians
+  const aspect = 1; // width/height
+  const zNear = 0.1;
+  const zFar = 100.0;
+  const leftCameraMatrix = mat4.create();
+  mat4.perspective(leftCameraMatrix, fieldOfView, aspect, zNear, zFar);
+  // prepare the default zero point of the model
+  mat4.translate(leftCameraMatrix, leftCameraMatrix, [
+    -halfEyeDistance,
+    0.0,
+    -3.0,
+  ]);
+  const rightCameraMatrix = mat4.create();
+  mat4.perspective(rightCameraMatrix, fieldOfView, aspect, zNear, zFar);
+  // prepare the default zero point of the model
+  mat4.translate(rightCameraMatrix, rightCameraMatrix, [
+    halfEyeDistance,
+    0.0,
+    -3.0,
+  ]);
+
+  // draw to the respective buffers
+  drawRunesToFrameBuffer(
+    gl,
+    runes,
+    leftCameraMatrix,
+    new Float32Array([1, 0, 0, 1]),
+    leftBuffer.framebuffer
+  );
+  drawRunesToFrameBuffer(
+    gl,
+    runes,
+    rightCameraMatrix,
+    new Float32Array([0, 1, 1, 1]),
+    rightBuffer.framebuffer
+  );
+
+  // combine buffers to screen
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  // prepare the combine shader program
+  const shaderProgram = initShaderProgram(
+    gl,
+    combineVertexShader,
+    combineFragmentShader
+  );
+  gl.useProgram(shaderProgram);
+  const reduPt = gl.getUniformLocation(shaderProgram, 'u_sampler_red');
+  const cyanuPt = gl.getUniformLocation(shaderProgram, 'u_sampler_cyan');
+  const vertexPositionPointer = gl.getAttribLocation(
+    shaderProgram,
+    'a_position'
+  );
+
+  // disableInstanceAttribs();
+
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, leftBuffer.texture);
+  gl.uniform1i(cyanuPt, 0);
+
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, rightBuffer.texture);
+  gl.uniform1i(reduPt, 1);
+
+  // draw a square
+  // load position buffer
+  const positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW);
+  gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vertexPositionPointer);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
 }

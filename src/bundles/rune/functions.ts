@@ -22,6 +22,7 @@ import {
   addColorFromHex,
   colorPalette,
   hexToColor,
+  copyRune,
 } from './runes_ops';
 
 // =============================================================================
@@ -543,6 +544,13 @@ export function white(rune) {
 export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
   return rune;
+}
+
+export function anaglyph(rune: Rune): Rune {
+  throwIfNotRune('show', rune);
+  const analyphRune = copyRune(rune);
+  analyphRune.drawMethod = 'anaglyph';
+  return analyphRune;
 }
 
 // TODO: hollusion / anaglyph

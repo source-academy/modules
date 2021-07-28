@@ -11,6 +11,7 @@ import { Rune } from './types';
 export function getEmptyRune(): Rune {
   return {
     toReplString: () => '<RUNE>',
+    drawMethod: 'normal',
     vertices: new Float32Array(),
     colors: null,
     transformMatrix: mat4.create(),
@@ -34,7 +35,7 @@ export function throwIfNotRune(name, ...runes) {
   });
 }
 
-function copyRune(rune: Rune): Rune {
+export function copyRune(rune: Rune): Rune {
   const newRune = getEmptyRune();
   newRune.vertices = rune.vertices;
   newRune.colors = rune.colors;
