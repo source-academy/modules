@@ -330,11 +330,7 @@ export function repeat_pattern(n, pattern, initial) {
 // =============================================================================
 
 /**
- * makes a 3D-Rune from two given Runes by
- * overlaying the first with the second
- * such that the first one occupies frac
- * portion of the depth of the 3D result
- * and the second the rest
+ * the depth range of the z-axis of a rune is (-1,1), this function gives a fraction of the depth range to rune 1 and the rest to rune 2.
  * @param {number} frac - fraction between 0 and 1
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
@@ -343,22 +339,25 @@ export function repeat_pattern(n, pattern, initial) {
 export function overlay_frac(frac, rune1, rune2) {
   throwIfNotRune('overlay_frac', rune1);
   throwIfNotRune('overlay_frac', rune2);
+  if (!(frac > 0 && frac < 1)) {
+    throw Error('overlay_frac can only take fraction in (0,1).');
+  }
 
   const front = getEmptyRune();
   front.subRunes.push(rune1);
   const frontMat = front.transformMatrix;
   // z: scale by frac
+  mat4.translate(frontMat, frontMat, vec3.fromValues(0, 0, 1));
   mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, frac));
+  mat4.translate(frontMat, frontMat, vec3.fromValues(0, 0, -1));
 
   const back = getEmptyRune();
   back.subRunes.push(rune2);
   const backMat = back.transformMatrix;
-  // z: scale by (1-frac), translate by -frac
-  mat4.scale(
-    backMat,
-    mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -frac)),
-    vec3.fromValues(1, 1, 1 - frac)
-  );
+  // z: scale by frac
+  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -1));
+  mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - frac));
+  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, 1));
 
   const combined = getEmptyRune();
   combined.subRunes = [front, back]; // render front first to avoid redrawing
@@ -366,10 +365,7 @@ export function overlay_frac(frac, rune1, rune2) {
 }
 
 /**
- * makes a 3D-Rune from two given Runes by
- * overlaying the first with the second, each
- * occupying equal parts of the depth of the
- * result
+ * the depth range of the z-axis of a rune is (-1,1), this function maps the depth range of rune1 and rune 2 to (-1,0) and (0,1) respectively.
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune

@@ -5,7 +5,7 @@
 import { mat4 } from 'gl-matrix';
 import { FrameBufferWithTexture, Rune } from './types';
 import { flattenRune, throwIfNotRune } from './runes_ops';
-import { square, white } from './functions';
+import { blank, overlay_frac, scale, square, white } from './functions';
 
 // =============================================================================
 // Private functions
@@ -295,13 +295,13 @@ export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
 
   // prepare camera projection array
   const cameraMatrix = mat4.create();
-  const fieldOfView = (45 * Math.PI) / 180; // in radians
+  const fieldOfView = (90 * Math.PI) / 180; // in radians
   const aspect = 1; // width/height
   const zNear = 0.1;
   const zFar = 100.0;
   mat4.perspective(cameraMatrix, fieldOfView, aspect, zNear, zFar);
   // prepare the default zero point of the model
-  mat4.translate(cameraMatrix, cameraMatrix, [-0.0, 0.0, -3]);
+  mat4.translate(cameraMatrix, cameraMatrix, [-0.0, 0.0, -1]);
 
   // color filter set to [1,1,1,1] for transparent filter
   drawRunesToFrameBuffer(
@@ -319,11 +319,13 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
 
   // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
   let runes = flattenRune(rune);
-  runes = flattenRune(white(square)).concat(runes);
+  runes = flattenRune(
+    white(overlay_frac(0.999999999, blank, scale(2.2, square)))
+  ).concat(runes);
 
   // calculate the left and right camera matrices
   const halfEyeDistance = 0.03;
-  const fieldOfView = (45 * Math.PI) / 180; // in radians
+  const fieldOfView = (90 * Math.PI) / 180; // in radians
   const aspect = 1; // width/height
   const zNear = 0.1;
   const zFar = 100.0;
@@ -333,7 +335,7 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   mat4.translate(leftCameraMatrix, leftCameraMatrix, [
     -halfEyeDistance,
     0.0,
-    -3.0,
+    -1.0,
   ]);
   const rightCameraMatrix = mat4.create();
   mat4.perspective(rightCameraMatrix, fieldOfView, aspect, zNear, zFar);
@@ -341,7 +343,7 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   mat4.translate(rightCameraMatrix, rightCameraMatrix, [
     halfEyeDistance,
     0.0,
-    -3.0,
+    -1.0,
   ]);
 
   // left/right eye images are drawn into respective framebuffers
@@ -405,16 +407,19 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
 
   // the browser will call this render function repeatedly for updating the webgl
   function render(timeInMs: number) {
+    gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
+    // eslint-disable-next-line no-bitwise
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
     // prepare camera projection array
     const cameraMatrix = mat4.create();
-    const fieldOfView = (45 * Math.PI) / 180; // in radians
+    const fieldOfView = (90 * Math.PI) / 180; // in radians
     const aspect = 1; // width/height
     const zNear = 0.1;
     const zFar = 100.0;
     mat4.perspective(cameraMatrix, fieldOfView, aspect, zNear, zFar);
 
     // let the object shift in the x direction
-    const xshiftMax = 0.5;
+    const xshiftMax = 0.03;
     const period = 2000;
     let xshift = timeInMs % period;
     if (xshift > period / 2) {
@@ -424,7 +429,7 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
     mat4.translate(cameraMatrix, cameraMatrix, [
       xshift - xshiftMax / 2,
       0.0,
-      -3,
+      -1,
     ]);
 
     drawRunesToFrameBuffer(
