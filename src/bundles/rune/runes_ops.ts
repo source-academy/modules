@@ -214,7 +214,7 @@ export const getNova: () => Rune = () => {
 export const getCircle: () => Rune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
-  const circleDiv = 30;
+  const circleDiv = 60;
   for (let i = 0; i < circleDiv; i += 1) {
     const angle1 = ((2 * Math.PI) / circleDiv) * i;
     const angle2 = ((2 * Math.PI) / circleDiv) * (i + 1);
