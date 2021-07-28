@@ -19,6 +19,9 @@ import {
   getRibbon,
   throwIfNotRune,
   getEmptyRune,
+  addColorFromHex,
+  colorPalette,
+  hexToColor,
 } from './runes_ops';
 
 // =============================================================================
@@ -319,6 +322,158 @@ export function repeat_pattern(n, pattern, initial) {
     return initial;
   }
   return pattern(repeat_pattern(n - 1, pattern, initial));
+}
+
+// =============================================================================
+// Color functions
+// =============================================================================
+
+/**
+ * adds color to rune by specifying
+ * the red, green, blue (RGB) value, ranging from 0.0 to 1.0.
+ * RGB is additive: if all values are 1, the color is white,
+ * and if all values are 0, the color is black.
+ * @param {Rune} rune - the rune to add color to
+ * @param {number} r - red value (0.0-1.0)
+ * @param {number} g - green value (0.0-1.0)
+ * @param {number} b - blue value (0.0-1.0)
+ * @returns {Rune} the colored Rune
+ */
+export function color(rune: Rune, r, g, b): Rune {
+  throwIfNotRune('color', rune);
+  const wrapper = getEmptyRune();
+  wrapper.subRunes.push(rune);
+  const colorVector = [r, g, b, 1];
+  wrapper.colors = new Float32Array(colorVector);
+  return wrapper;
+}
+
+/**
+ * Gives random color to the given rune.
+ * The color is chosen randomly from the following nine
+ * colors: red, pink, purple, indigo, blue, green, yellow, orange, brown
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function random_color(rune) {
+  throwIfNotRune('random_color', rune);
+  const wrapper = getEmptyRune();
+  wrapper.subRunes.push(rune);
+  const randomColor = hexToColor(
+    colorPalette[Math.floor(Math.random() * colorPalette.length)]
+  );
+  wrapper.colors = new Float32Array(randomColor);
+  return wrapper;
+}
+
+/**
+ * colors the given rune red.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function red(rune) {
+  throwIfNotRune('red', rune);
+  return addColorFromHex(rune, '#F44336');
+}
+
+/**
+ * colors the given rune pink.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function pink(rune) {
+  throwIfNotRune('pink', rune);
+  return addColorFromHex(rune, '#E91E63');
+}
+
+/**
+ * colors the given rune purple.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function purple(rune) {
+  throwIfNotRune('purple', rune);
+  return addColorFromHex(rune, '#AA00FF');
+}
+
+/**
+ * colors the given rune indigo.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function indigo(rune) {
+  throwIfNotRune('indigo', rune);
+  return addColorFromHex(rune, '#3F51B5');
+}
+
+/**
+ * colors the given rune blue.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function blue(rune) {
+  throwIfNotRune('blue', rune);
+  return addColorFromHex(rune, '#2196F3');
+}
+
+/**
+ * colors the given rune green.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function green(rune) {
+  throwIfNotRune('green', rune);
+  return addColorFromHex(rune, '#4CAF50');
+}
+
+/**
+ * colors the given rune yellow.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function yellow(rune) {
+  throwIfNotRune('yellow', rune);
+  return addColorFromHex(rune, '#FFEB3B');
+}
+
+/**
+ * colors the given rune orange.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function orange(rune) {
+  throwIfNotRune('orange', rune);
+  return addColorFromHex(rune, '#FF9800');
+}
+
+/**
+ * colors the given rune brown.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function brown(rune) {
+  throwIfNotRune('brown', rune);
+  return addColorFromHex(rune, '#795548');
+}
+
+/**
+ * colors the given rune black.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function black(rune) {
+  throwIfNotRune('black', rune);
+  return addColorFromHex(rune, '#000000');
+}
+
+/**
+ * colors the given rune white.
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
+ */
+export function white(rune) {
+  throwIfNotRune('white', rune);
+  return addColorFromHex(rune, '#FFFFFF');
 }
 
 // =============================================================================

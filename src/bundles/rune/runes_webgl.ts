@@ -12,13 +12,13 @@ import { Rune } from './types';
 
 const vertexShader2D = `
 attribute vec4 aVertexPosition;
-attribute vec4 aVertexColor;
+uniform vec4 uVertexColor;
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
 varying lowp vec4 vColor;
 void main(void) {
   gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-  vColor = aVertexColor;
+  vColor = uVertexColor;
 }
 `;
 
@@ -78,13 +78,13 @@ function initShaderProgram(
 }
 
 /**
- * prepares the canvas for drawing by extracting the WebGLRenderingContext and compile the program.
- * @param canvas - HTML Canvas element to prepare for drawing
- * @return WebGLRenderingContext | null
+ * Draws the list of runes with the prepared WebGLRenderingContext, with each rune overlapping each other.
+ *
+ * @param gl a prepared WebGLRenderingContext with shader program linked
+ * @param runes a list of rune (Rune[]) to be drawn sequentially
  */
-function prepareCanvas(
-  canvas: HTMLCanvasElement
-): WebGLRenderingContext | null {
+function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
+  // step 1: initiate the WebGLRenderingContext
   const gl: WebGLRenderingContext | null = canvas.getContext('webgl');
   if (!gl) {
     throw Error('Unable to initialize WebGL.');
@@ -95,31 +95,21 @@ function prepareCanvas(
   // eslint-disable-next-line no-bitwise
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
 
+  // step 2: initiate the shaderProgram
   const shaderProgram = initShaderProgram(gl, vertexShader2D, fragmentShader2D);
   gl.useProgram(shaderProgram);
-  return gl;
-}
-
-/**
- * Draws the list of runes with the prepared WebGLRenderingContext, with each rune overlapping each other.
- *
- * @param gl a prepared WebGLRenderingContext with shader program linked
- * @param runes a list of rune (Rune[]) to be drawn sequentially
- */
-function drawRunes(gl: WebGLRenderingContext | null, runes: Rune[]) {
   if (gl === null) {
     throw Error('Rendering Context not initialized for drawRune.');
   }
-  const shaderProgram = gl.getParameter(gl.CURRENT_PROGRAM);
 
-  // fetch datalink from program
+  // create pointers to the data-entries of the shader program
   const vertexPositionPointer = gl.getAttribLocation(
     shaderProgram,
     'aVertexPosition'
   );
-  const vertexColorPointer = gl.getAttribLocation(
+  const vertexColorPointer = gl.getUniformLocation(
     shaderProgram,
-    'aVertexColor'
+    'uVertexColor'
   );
 
   const projectionMatrixPointer = gl.getUniformLocation(
@@ -131,24 +121,16 @@ function drawRunes(gl: WebGLRenderingContext | null, runes: Rune[]) {
     'uModelViewMatrix'
   );
 
+  // draw each Rune using the shader program
   runes.forEach((rune: Rune) => {
     // create position, color and index buffers
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, rune.vertices, gl.STATIC_DRAW);
 
-    const colorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, rune.colors, gl.STATIC_DRAW);
-
-    const indices = Array.from(Array(rune.vertices.length / 4).keys()); // [0,1,2,3, ..., len(ver)/4]
-    const indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(
-      gl.ELEMENT_ARRAY_BUFFER,
-      new Uint16Array(indices),
-      gl.STATIC_DRAW
-    );
+    // const colorBuffer = gl.createBuffer();
+    // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    // gl.bufferData(gl.ARRAY_BUFFER, rune.colors, gl.STATIC_DRAW);
 
     // prepare the default zero point of the model
     const modelViewMatrix = mat4.create();
@@ -163,9 +145,14 @@ function drawRunes(gl: WebGLRenderingContext | null, runes: Rune[]) {
     gl.enableVertexAttribArray(vertexPositionPointer);
 
     // load color buffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    gl.vertexAttribPointer(vertexColorPointer, 4, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vertexColorPointer);
+    // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    // gl.vertexAttribPointer(vertexColorPointer, 4, gl.FLOAT, false, 0, 0);
+    // gl.enableVertexAttribArray(vertexColorPointer);
+    if (rune.colors != null) {
+      gl.uniform4fv(vertexColorPointer, rune.colors);
+    } else {
+      gl.uniform4fv(vertexColorPointer, new Float32Array([0, 0, 0, 1]));
+    }
 
     // prepare camera projection array
     const projectionMatrix = mat4.create();
@@ -179,12 +166,9 @@ function drawRunes(gl: WebGLRenderingContext | null, runes: Rune[]) {
     gl.uniformMatrix4fv(projectionMatrixPointer, false, projectionMatrix);
     gl.uniformMatrix4fv(modelViewMatrixPointer, false, modelViewMatrix);
 
-    // use index buffer to draw
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    // draw
     const vertexCount = rune.vertices.length / 4;
-    const type = gl.UNSIGNED_SHORT;
-    const offset = 0;
-    gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
+    gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
   });
 }
 
@@ -201,7 +185,6 @@ function drawRunes(gl: WebGLRenderingContext | null, runes: Rune[]) {
 // eslint-disable-next-line import/prefer-default-export
 export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
   throwIfNotRune('drawRune', rune);
-  const gl = prepareCanvas(canvas);
   const runes = flattenRune(rune);
-  drawRunes(gl, runes);
+  drawRunes(canvas, runes);
 }

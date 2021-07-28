@@ -4,11 +4,15 @@
 import { mat4 } from 'gl-matrix';
 import { Rune } from './types';
 
+// =============================================================================
+// Utility Functions
+// =============================================================================
+
 export function getEmptyRune(): Rune {
   return {
     toReplString: () => '<RUNE>',
     vertices: new Float32Array(),
-    colors: new Float32Array(),
+    colors: null,
     transformMatrix: mat4.create(),
     subRunes: [],
   };
@@ -34,8 +38,7 @@ function copyRune(rune: Rune): Rune {
   const newRune = getEmptyRune();
   newRune.vertices = rune.vertices;
   newRune.colors = rune.colors;
-  newRune.transformMatrix = mat4.create();
-  mat4.copy(newRune.transformMatrix, rune.transformMatrix);
+  newRune.transformMatrix = mat4.clone(rune.transformMatrix);
   newRune.subRunes = rune.subRunes;
   return newRune;
 }
@@ -62,13 +65,22 @@ export function flattenRune(rune: Rune): Rune[] {
         runeToExpand.transformMatrix,
         subRuneCopy.transformMatrix
       );
+      if (runeToExpand.colors !== null) {
+        subRuneCopy.colors = runeToExpand.colors;
+      }
       runeTodoList.push(subRuneCopy);
     });
     runeToExpand.subRunes = [];
-    runeList.push(runeToExpand);
+    if (runeToExpand.vertices.length > 0) {
+      runeList.push(runeToExpand);
+    }
   }
   return runeList;
 }
+
+// =============================================================================
+// Basic Runes
+// =============================================================================
 
 /**
  * primitive Rune in the rune of a full square
@@ -84,9 +96,8 @@ export const getSquare: () => Rune = () => {
   vertexList.push(-1, 1, 0, 1);
   vertexList.push(1, 1, 0, 1);
 
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
+
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
   rune.colors = new Float32Array(colorList);
@@ -126,9 +137,7 @@ export const getRcross: () => Rune = () => {
   vertexList.push(1, -1, 0, 1);
   vertexList.push(0.5, -0.5, 0, 1);
 
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
 
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
@@ -147,9 +156,7 @@ export const getSail: () => Rune = () => {
   vertexList.push(0, -1, 0, 1);
   vertexList.push(0, 1, 0, 1);
 
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
 
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
@@ -168,9 +175,8 @@ export const getCorner: () => Rune = () => {
   vertexList.push(1, 1, 0, 1);
   vertexList.push(0, 1, 0, 1);
 
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
+
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
   rune.colors = new Float32Array(colorList);
@@ -193,9 +199,8 @@ export const getNova: () => Rune = () => {
   vertexList.push(0, 0.5, 0, 1);
   vertexList.push(1, 0, 0, 1);
 
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
+
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
   rune.colors = new Float32Array(colorList);
@@ -216,9 +221,8 @@ export const getCircle: () => Rune = () => {
     vertexList.push(Math.cos(angle2), Math.sin(angle2), 0, 1);
     vertexList.push(0, 0, 0, 1);
   }
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
+
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
   rune.colors = new Float32Array(colorList);
@@ -278,9 +282,8 @@ export const getHeart: () => Rune = () => {
     vertexList.push(0, -1, 0, 1);
   }
 
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
+
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
   rune.colors = new Float32Array(colorList);
@@ -313,9 +316,8 @@ export const getPentagram: () => Rune = () => {
     vertexList.push(...vertices[(i + 2) % 5]);
   }
 
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
+
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
   rune.colors = new Float32Array(colorList);
@@ -355,11 +357,48 @@ export const getRibbon: () => Rune = () => {
     vertexList.push(...vertices[i + 2]);
   }
 
-  for (let i = 0; i < vertexList.length; i += 1) {
-    colorList.push(0, 0, 0, 1);
-  }
+  colorList.push(0, 0, 0, 1);
+
   const rune: Rune = getEmptyRune();
   rune.vertices = new Float32Array(vertexList);
   rune.colors = new Float32Array(colorList);
   return rune;
 };
+
+// =============================================================================
+// Coloring Functions
+// =============================================================================
+// black and white not included because they are boring colors
+// colorPalette is used in generateFlattenedRuneList to generate a random color
+export const colorPalette = [
+  '#F44336',
+  '#E91E63',
+  '#AA00FF',
+  '#3F51B5',
+  '#2196F3',
+  '#4CAF50',
+  '#FFEB3B',
+  '#FF9800',
+  '#795548',
+];
+
+export function hexToColor(hex): number[] {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (result === null || result.length < 4) {
+    return [0, 0, 0];
+  }
+  return [
+    parseInt(result[1], 16) / 255,
+    parseInt(result[2], 16) / 255,
+    parseInt(result[3], 16) / 255,
+    1,
+  ];
+}
+
+export function addColorFromHex(rune, hex) {
+  throwIfNotRune('addColorFromHex', rune);
+  const wrapper = getEmptyRune();
+  wrapper.subRunes.push(rune);
+  wrapper.colors = new Float32Array(hexToColor(hex));
+  return wrapper;
+}
