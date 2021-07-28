@@ -1,11 +1,11 @@
 # Development journal for rune module
 ## Todos:
-- colors
 - 3D drawing
 - animate
 ## Future directions:
-- improve efficiency by compress representation using index/programInfo
+- improve efficiency by compress representation using index/programInfo/gl.TRIANGLE_FAN etc.
 - improve efficiency by using texture cache
+- improve efficiency by instance drawing, however, please keep it KISS
 
 ## Work Log
 ### 25 Jul 2021

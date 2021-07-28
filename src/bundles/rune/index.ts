@@ -29,6 +29,8 @@ import {
   flip_horiz,
   make_cross,
   repeat_pattern,
+  overlay_frac,
+  overlay,
   color,
   random_color,
   red,
@@ -78,6 +80,9 @@ export default () => ({
   flip_horiz,
   make_cross,
   repeat_pattern,
+
+  overlay_frac,
+  overlay,
 
   color,
   random_color,

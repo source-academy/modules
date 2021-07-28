@@ -77,7 +77,7 @@ export const pentagram: Rune = getPentagram();
 export const ribbon: Rune = getRibbon();
 
 // =============================================================================
-// Transformation functions
+// XY-axis Transformation functions
 // =============================================================================
 
 /**
@@ -325,6 +325,61 @@ export function repeat_pattern(n, pattern, initial) {
 }
 
 // =============================================================================
+// Z-axis Transformation functions
+// =============================================================================
+
+/**
+ * makes a 3D-Rune from two given Runes by
+ * overlaying the first with the second
+ * such that the first one occupies frac
+ * portion of the depth of the 3D result
+ * and the second the rest
+ * @param {number} frac - fraction between 0 and 1
+ * @param {Rune} rune1 - given Rune
+ * @param {Rune} rune2 - given Rune
+ * @return {Rune} resulting Rune
+ */
+export function overlay_frac(frac, rune1, rune2) {
+  throwIfNotRune('overlay_frac', rune1);
+  throwIfNotRune('overlay_frac', rune2);
+
+  const front = getEmptyRune();
+  front.subRunes.push(rune1);
+  const frontMat = front.transformMatrix;
+  // z: scale by frac
+  mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, frac));
+
+  const back = getEmptyRune();
+  back.subRunes.push(rune2);
+  const backMat = back.transformMatrix;
+  // z: scale by (1-frac), translate by -frac
+  mat4.scale(
+    backMat,
+    mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -frac)),
+    vec3.fromValues(1, 1, 1 - frac)
+  );
+
+  const combined = getEmptyRune();
+  combined.subRunes = [front, back]; // render front first to avoid redrawing
+  return combined;
+}
+
+/**
+ * makes a 3D-Rune from two given Runes by
+ * overlaying the first with the second, each
+ * occupying equal parts of the depth of the
+ * result
+ * @param {Rune} rune1 - given Rune
+ * @param {Rune} rune2 - given Rune
+ * @return {Rune} resulting Rune
+ */
+export function overlay(rune1, rune2) {
+  throwIfNotRune('overlay', rune1);
+  throwIfNotRune('overlay', rune2);
+  return overlay_frac(0.5, rune1, rune2);
+}
+
+// =============================================================================
 // Color functions
 // =============================================================================
 
@@ -489,3 +544,96 @@ export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
   return rune;
 }
+
+// TODO: hollusion / anaglyph
+
+// /**
+//  * turns a given Rune into an Anaglyph
+//  * @param {Rune} rune - given Rune
+//  * @return {Picture}
+//  * If the result of evaluating a program is an Anaglyph,
+//  * the REPL displays it graphically, using anaglyph
+//  * technology, instead of textually. Use your 3D-glasses
+//  * to view the Anaglyph.
+//  */
+// export function anaglyph(rune) {
+//   throwIfNotRune('anaglyph', rune);
+//   const frame = open_pixmap('frame', runeViewportSize, runeViewportSize, true);
+//   clear_viewport();
+//   clearAnaglyphFramebuffer();
+//   const flattenedRuneList = generateFlattenedRuneList(rune);
+//   drawWithWebGL(flattenedRuneList, drawAnaglyph);
+//   copy_viewport(gl.canvas, frame);
+//   // eslint-disable-next-line new-cap
+//   return new shapeDrawn(frame);
+// }
+
+// /* // to view documentation, put two * in this line
+//  * // currently, this function is not documented;
+//  * // animation not working
+//  * turns a given Rune into Hollusion
+//  * @param {Rune} rune - given Rune
+//  * @return {Picture}
+//  * If the result of evaluating a program is a Hollusion,
+//  * the REPL displays it graphically, using hollusion
+//  * technology, instead of textually.
+//  */
+// export function hollusion(rune, numIn) {
+//   clear_viewport();
+//   const num = numIn > 5 ? numIn : 5;
+//   const flattenedRuneList = generateFlattenedRuneList(rune);
+//   const frameList = [];
+//   for (let j = 0; j < num; j += 1) {
+//     const frame = open_pixmap(
+//       `frame${j}`,
+//       runeViewportSize,
+//       runeViewportSize,
+//       false
+//     );
+//     for (let i = 0; i < flattenedRuneList.length; i += 1) {
+//       const { newRune } = flattenedRuneList[i];
+//       const { instanceArray } = flattenedRuneList[i];
+//       const cameraMatrix = mat4.create();
+//       mat4.lookAt(
+//         cameraMatrix,
+//         vec3.fromValues(
+//           -halfEyeDistance + (j / (num - 1)) * 2 * halfEyeDistance,
+//           0,
+//           0
+//         ),
+//         vec3.fromValues(0, 0, -0.4),
+//         vec3.fromValues(0, 1, 0)
+//       );
+//       draw3D(
+//         newRune.first,
+//         newRune.count,
+//         instanceArray,
+//         cameraMatrix,
+//         [1, 1, 1, 1],
+//         null
+//       );
+//     }
+//     gl.finish();
+//     copy_viewport(gl.canvas, frame);
+//     frameList.push(frame);
+//     clear_viewport();
+//   }
+//   for (let i = frameList.length - 2; i > 0; i -= 1) {
+//     frameList.push(frameList[i]);
+//   }
+//   const outframe = open_pixmap(
+//     'frame',
+//     runeViewportSize,
+//     runeViewportSize,
+//     true
+//   );
+//   function animate() {
+//     const frame = frameList.shift();
+//     copy_viewport(frame, outframe);
+//     frameList.push(frame);
+//     hollusionTimeout = setTimeout(animate, 500 / num);
+//   }
+//   animate();
+//   // eslint-disable-next-line new-cap
+//   return new shapeDrawn(outframe);
+// }

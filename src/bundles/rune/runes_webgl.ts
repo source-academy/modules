@@ -3,8 +3,8 @@
  */
 
 import { mat4 } from 'gl-matrix';
-import { flattenRune, throwIfNotRune } from './runes_ops';
 import { Rune } from './types';
+import { flattenRune, throwIfNotRune } from './runes_ops';
 
 // =============================================================================
 // Private functions
@@ -121,50 +121,37 @@ function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
     'uModelViewMatrix'
   );
 
-  // draw each Rune using the shader program
+  // prepare camera projection array
+  const projectionMatrix = mat4.create();
+  const fieldOfView = (45 * Math.PI) / 180; // in radians
+  const aspect = 1; // width/height
+  const zNear = 0.1;
+  const zFar = 100.0;
+  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+  // prepare the default zero point of the model
+  mat4.translate(projectionMatrix, projectionMatrix, [-0.0, 0.0, -3.0]);
+
+  // load matrices
+  gl.uniformMatrix4fv(projectionMatrixPointer, false, projectionMatrix);
+
+  // 3. draw each Rune using the shader program
   runes.forEach((rune: Rune) => {
-    // create position, color and index buffers
+    // load position buffer
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, rune.vertices, gl.STATIC_DRAW);
-
-    // const colorBuffer = gl.createBuffer();
-    // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    // gl.bufferData(gl.ARRAY_BUFFER, rune.colors, gl.STATIC_DRAW);
-
-    // prepare the default zero point of the model
-    const modelViewMatrix = mat4.create();
-    mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -3.0]);
-
-    // transform the model
-    mat4.multiply(modelViewMatrix, modelViewMatrix, rune.transformMatrix);
-
-    // load position buffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vertexPositionPointer);
 
-    // load color buffer
-    // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    // gl.vertexAttribPointer(vertexColorPointer, 4, gl.FLOAT, false, 0, 0);
-    // gl.enableVertexAttribArray(vertexColorPointer);
+    // load color
     if (rune.colors != null) {
       gl.uniform4fv(vertexColorPointer, rune.colors);
     } else {
       gl.uniform4fv(vertexColorPointer, new Float32Array([0, 0, 0, 1]));
     }
 
-    // prepare camera projection array
-    const projectionMatrix = mat4.create();
-    const fieldOfView = (45 * Math.PI) / 180; // in radians
-    const aspect = 1; // width/height
-    const zNear = 0.1;
-    const zFar = 100.0;
-    mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-
-    // load matrices
-    gl.uniformMatrix4fv(projectionMatrixPointer, false, projectionMatrix);
-    gl.uniformMatrix4fv(modelViewMatrixPointer, false, modelViewMatrix);
+    // load transformation matrix
+    gl.uniformMatrix4fv(modelViewMatrixPointer, false, rune.transformMatrix);
 
     // draw
     const vertexCount = rune.vertices.length / 4;
@@ -182,9 +169,26 @@ function drawRunes(canvas: HTMLCanvasElement, runes: Rune[]) {
  * @param canvas HTMLCanvasElement element in the tab
  * @param rune the Rune to be drawn
  */
-// eslint-disable-next-line import/prefer-default-export
 export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
   throwIfNotRune('drawRune', rune);
   const runes = flattenRune(rune);
   drawRunes(canvas, runes);
+}
+
+/**
+ * create a separate canvas from the tab for webgl to work on. it could be used to create framebuffer.
+ * before the canvas element is attached to the document, it is hidden.
+ * @param horiz horizontal size of the canvas, unit: pixel
+ * @param vert verticle size of the canvas, unit: pixel
+ * @param antiAlias antialiasing level, default:4
+ * @returns HTMLCanvasElement
+ */
+export function openPixmap(horiz, vert, antiAlias = 4) {
+  const newCanvas = document.createElement('canvas');
+  // scale up the actual size for antiAliasing
+  newCanvas.width = horiz * antiAlias;
+  newCanvas.height = vert * antiAlias;
+  newCanvas.style.width = `${horiz}px`;
+  newCanvas.style.height = `${vert}px`;
+  return newCanvas;
 }
