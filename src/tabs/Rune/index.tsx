@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import {
   drawAnaglyph,
@@ -8,8 +7,8 @@ import {
 import { Rune } from '../../bundles/rune/types';
 
 /**
- * TODO: This tab is for displaying of Drawing of Runes
- * @Hou Ruomu
+ * tab for displaying runes
+ * @author Hou Ruomu
  */
 
 /**
@@ -40,11 +39,7 @@ class WebGLCanvas extends React.Component<Props, State> {
 
   /**
    * This function is called when the tab is created.
-   * This is the Entrypoint for the tab.
-   * ---------------
-   * Developer's Notes:
-   * - Access the result from the REPL console using
-   * this.props.context.result.value
+   * This is the entrypoint for the tab.
    */
   public componentDidMount() {
     if (this.$canvas) {
@@ -99,7 +94,6 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   toSpawn: (context: any) => {
     function isValidFunction(value: any): value is Rune {
       try {

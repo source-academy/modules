@@ -201,6 +201,11 @@ function drawRunesToFrameBuffer(
   });
 }
 
+/**
+ * creates a framebuffer
+ * @param gl WebGLRenderingContext
+ * @returns FrameBufferWithTexture
+ */
 function initFramebufferObject(
   gl: WebGLRenderingContext
 ): FrameBufferWithTexture {
@@ -313,6 +318,14 @@ export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
   );
 }
 
+/**
+ * Draw the rune in the tab, including all the sub runes in anaglyph mode.
+ * It first renders two frames with respective colorfilters and cameras for the left and right
+ * eye, and then combine the two frames in the canvas.
+ *
+ * @param canvas HTMLCanvasElement element in the tab
+ * @param rune the Rune to be drawn
+ */
 export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   throwIfNotRune('drawRune', rune);
   const gl = getWebGlFromCanvas(canvas);
@@ -398,18 +411,24 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
 
+/**
+ * Draw the rune in the tab, including all the sub runes with hollusion effect.
+ * It varies the camera position with time, and the runes are drawn with this animated
+ * camera to create a 3D effect.
+ * @param canvas HTMLCanvasElement element in the tab
+ * @param rune the Rune to be drawn
+ */
 export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
   throwIfNotRune('drawRune', rune);
   const gl = getWebGlFromCanvas(canvas);
-
-  // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
   const runes = flattenRune(rune);
 
-  // the browser will call this render function repeatedly for updating the webgl
+  // the browser will call this render function repeatedly for updating the canvas
   function render(timeInMs: number) {
     gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
     // eslint-disable-next-line no-bitwise
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
+
     // prepare camera projection array
     const cameraMatrix = mat4.create();
     const fieldOfView = (90 * Math.PI) / 180; // in radians
@@ -419,6 +438,7 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
     mat4.perspective(cameraMatrix, fieldOfView, aspect, zNear, zFar);
 
     // let the object shift in the x direction
+    // the following calculation will let x oscillate in (-xshiftMax, xshiftMax) with time
     const xshiftMax = 0.03;
     const period = 2000;
     let xshift = timeInMs % period;

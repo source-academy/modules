@@ -21,3 +21,4 @@
 - 9:00am - 9:40am : check webgl ANGLE instance drawing, decide to postpone it, because 1. it is not KISS; 2. it may not significant improve the performance; 3. it can be implemented orthorgonally with the current implementation
 - 9:40am - 10:20am : implemented the color library
 - 10:20am - 16:40pm : implement anaglyph and hollusion animation
+- 16:40pm - 17:00pm : touch up the documentation and comments

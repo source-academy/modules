@@ -543,13 +543,10 @@ export function show(rune: Rune): Rune {
 }
 
 /**
- * turns a given Rune into an Anaglyph
+ * render the given Rune in an Anaglyph. Use your 3D-glasses
+ * to view the Anaglyph.
  * @param {Rune} rune - given Rune
  * @return {Picture}
- * If the result of evaluating a program is an Anaglyph,
- * the REPL displays it graphically, using anaglyph
- * technology, instead of textually. Use your 3D-glasses
- * to view the Anaglyph.
  */
 export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('show', rune);
@@ -559,12 +556,9 @@ export function anaglyph(rune: Rune): Rune {
 }
 
 /**
- * turns a given Rune into Hollusion
+ * render the given Rune in an Anaglyph.
  * @param {Rune} rune - given Rune
  * @return {Picture}
- * If the result of evaluating a program is a Hollusion,
- * the REPL displays it graphically, using hollusion
- * technology, instead of textually.
  */
 export function hollusion(rune: Rune): Rune {
   throwIfNotRune('show', rune);
