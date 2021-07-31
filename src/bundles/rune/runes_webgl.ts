@@ -19,32 +19,46 @@ uniform mat4 uProjectionMatrix;
 uniform vec4 uColorFilter;
 
 varying lowp vec4 vColor;
+varying highp vec2 vTexturePosition;
 void main(void) {
   gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
   vColor = uVertexColor;
   vColor = uColorFilter * vColor + 1.0 - uColorFilter;
   vColor.a = 1.0;
+
+  // texture position is in [0,1], vertex position is in [-1,1]
+  vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;
+  vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;
 }
 `;
 
 const normalFragmentShader = `
+uniform bool uRenderWithTexture;
+uniform sampler2D uTexture;
+
 varying lowp vec4 vColor;
+varying highp vec2 vTexturePosition;
 void main(void) {
-  gl_FragColor = vColor;
+  if (uRenderWithTexture){
+    gl_FragColor = texture2D(uTexture, vTexturePosition);
+  } else {
+    gl_FragColor = vColor;
+  }
 }
 `;
 
-const combineVertexShader = `
+const anaglyphVertexShader = `
 attribute vec4 a_position;
 varying highp vec2 v_texturePosition;
 void main() {
     gl_Position = a_position;
+    // texture position is in [0,1], vertex position is in [-1,1]
     v_texturePosition.x = (a_position.x + 1.0) / 2.0;
     v_texturePosition.y = (a_position.y + 1.0) / 2.0;
 }
 `;
 
-const combineFragmentShader = `
+const anaglyphFragmentShader = `
 precision mediump float;
 uniform sampler2D u_sampler_red;
 uniform sampler2D u_sampler_cyan;
@@ -76,6 +90,11 @@ function loadShader(
   }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
+  const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+  if (!compiled) {
+    const compilationLog = gl.getShaderInfoLog(shader);
+    throw Error(`Shader compilation failed: ${compilationLog}`);
+  }
   return shader;
 }
 
@@ -120,6 +139,73 @@ function getWebGlFromCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
   // eslint-disable-next-line no-bitwise
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
   return gl;
+}
+
+/**
+ * Credit to: https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_textures_in_WebGL
+ * Initialize a texture and load an image.
+ * When the image finished loading copy it into the texture.
+ */
+function loadTexture(
+  gl: WebGLRenderingContext,
+  image: HTMLImageElement
+): WebGLTexture | null {
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  function isPowerOf2(value) {
+    // eslint-disable-next-line no-bitwise
+    return (value & (value - 1)) === 0;
+  }
+  // Because images have to be downloaded over the internet
+  // they might take a moment until they are ready.
+  // Until then put a single pixel in the texture so we can
+  // use it immediately. When the image has finished downloading
+  // we'll update the texture with the contents of the image.
+  const level = 0;
+  const internalFormat = gl.RGBA;
+  const width = 1;
+  const height = 1;
+  const border = 0;
+  const srcFormat = gl.RGBA;
+  const srcType = gl.UNSIGNED_BYTE;
+  const pixel = new Uint8Array([0, 0, 255, 255]); // opaque blue
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    level,
+    internalFormat,
+    width,
+    height,
+    border,
+    srcFormat,
+    srcType,
+    pixel
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    level,
+    internalFormat,
+    srcFormat,
+    srcType,
+    image
+  );
+
+  // WebGL1 has different requirements for power of 2 images
+  // vs non power of 2 images so check if the image is a
+  // power of 2 in both dimensions.
+  if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+    // Yes, it's a power of 2. Generate mips.
+    gl.generateMipmap(gl.TEXTURE_2D);
+  } else {
+    // No, it's not a power of 2. Turn off mips and set
+    // wrapping to clamp to edge
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  }
+
+  return texture;
 }
 
 /**
@@ -169,6 +255,11 @@ function drawRunesToFrameBuffer(
     shaderProgram,
     'uModelViewMatrix'
   );
+  const textureSwitchPointer = gl.getUniformLocation(
+    shaderProgram,
+    'uRenderWithTexture'
+  );
+  const texturePointer = gl.getUniformLocation(shaderProgram, 'uTexture');
 
   // load camera
   gl.uniformMatrix4fv(projectionMatrixPointer, false, cameraMatrix);
@@ -185,11 +276,20 @@ function drawRunesToFrameBuffer(
     gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vertexPositionPointer);
 
-    // load color
-    if (rune.colors != null) {
-      gl.uniform4fv(vertexColorPointer, rune.colors);
+    // load color/texture
+    if (rune.texture === null) {
+      if (rune.colors != null) {
+        gl.uniform4fv(vertexColorPointer, rune.colors);
+      } else {
+        gl.uniform4fv(vertexColorPointer, new Float32Array([0, 0, 0, 1]));
+      }
+      gl.uniform1i(textureSwitchPointer, 0);
     } else {
-      gl.uniform4fv(vertexColorPointer, new Float32Array([0, 0, 0, 1]));
+      const texture = loadTexture(gl, rune.texture);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.uniform1i(texturePointer, 0);
+      gl.uniform1i(textureSwitchPointer, 1);
     }
 
     // load transformation matrix
@@ -380,8 +480,8 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   // prepare the shader program to combine the left/right eye images
   const shaderProgram = initShaderProgram(
     gl,
-    combineVertexShader,
-    combineFragmentShader
+    anaglyphVertexShader,
+    anaglyphFragmentShader
   );
   gl.useProgram(shaderProgram);
   const reduPt = gl.getUniformLocation(shaderProgram, 'u_sampler_red');

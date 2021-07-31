@@ -14,6 +14,7 @@ export type Rune = {
   colors: Float32Array | null;
   transformMatrix: mat4;
   subRunes: Rune[];
+  texture: HTMLImageElement | null;
 };
 
 export type FrameBufferWithTexture = {

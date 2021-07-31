@@ -16,6 +16,7 @@ export function getEmptyRune(): Rune {
     colors: null,
     transformMatrix: mat4.create(),
     subRunes: [],
+    texture: null,
   };
 }
 
@@ -43,6 +44,7 @@ export function copyRune(rune: Rune): Rune {
   newRune.colors = rune.colors;
   newRune.transformMatrix = mat4.clone(rune.transformMatrix);
   newRune.subRunes = rune.subRunes;
+  newRune.texture = rune.texture;
   return newRune;
 }
 

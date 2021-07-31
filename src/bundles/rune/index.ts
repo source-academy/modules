@@ -9,6 +9,7 @@ import {
   heart,
   pentagram,
   ribbon,
+  get_image_rune,
   scale_independent,
   scale,
   translate,
@@ -61,6 +62,8 @@ export default () => ({
   heart,
   pentagram,
   ribbon,
+
+  get_image_rune,
 
   scale_independent,
   scale,

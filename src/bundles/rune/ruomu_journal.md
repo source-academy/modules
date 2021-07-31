@@ -22,3 +22,6 @@
 - 9:40am - 10:20am : implemented the color library
 - 10:20am - 16:40pm : implement anaglyph and hollusion animation
 - 16:40pm - 17:00pm : touch up the documentation and comments
+
+### 31 Jul 2021
+- 11:00am - 13:15pm : implementing the image rune feature

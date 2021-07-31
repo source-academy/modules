@@ -78,6 +78,17 @@ export const pentagram: Rune = getPentagram();
 export const ribbon: Rune = getRibbon();
 
 // =============================================================================
+// Textured Runes
+// =============================================================================
+export function get_image_rune(imageUrl: string): Rune {
+  const rune = getSquare();
+  rune.texture = new Image();
+  rune.texture.crossOrigin = 'anonymous';
+  rune.texture.src = imageUrl;
+  return rune;
+}
+
+// =============================================================================
 // XY-axis Transformation functions
 // =============================================================================
 
