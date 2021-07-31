@@ -162,6 +162,10 @@ export function stack_frac(frac, rune1, rune2) {
   throwIfNotRune('stack_frac', rune1);
   throwIfNotRune('stack_frac', rune2);
 
+  if (!(frac > 0 && frac < 1)) {
+    throw Error('stack_frac can only take fraction in (0,1).');
+  }
+
   const upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1));
   const lower = translate(0, frac, scale_independent(1, 1 - frac, rune2));
   const combined = getEmptyRune();
@@ -248,6 +252,10 @@ export function turn_upside_down(rune) {
 export function beside_frac(frac, rune1, rune2) {
   throwIfNotRune('beside_frac', rune1);
   throwIfNotRune('beside_frac', rune2);
+
+  if (!(frac > 0 && frac < 1)) {
+    throw Error('beside_frac can only take fraction in (0,1).');
+  }
 
   const left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1));
   const right = translate(frac, 0, scale_independent(1 - frac, 1, rune2));
