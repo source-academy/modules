@@ -52,8 +52,10 @@ class WebGLCanvas extends React.Component<Props, State> {
         drawAnaglyph(this.$canvas, value);
       } else if (value.drawMethod === 'hollusion') {
         drawHollusion(this.$canvas, value);
-      } else {
+      } else if (value.drawMethod === 'normal') {
         drawRune(this.$canvas, value);
+      } else {
+        throw Error(`Unexpected Drawing Method ${value.drawMethod}`);
       }
     }
   }
@@ -97,7 +99,7 @@ export default {
   toSpawn: (context: any) => {
     function isValidFunction(value: any): value is Rune {
       try {
-        return value.toReplString() === '<RUNE>';
+        return value.toReplString() === '<RUNE>' && value.drawMethod !== '';
       } catch (e) {
         return false;
       }

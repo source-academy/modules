@@ -4,7 +4,7 @@
 
 import { mat4 } from 'gl-matrix';
 import { FrameBufferWithTexture, Rune } from './types';
-import { flattenRune, throwIfNotRune } from './runes_ops';
+import { flattenRune } from './runes_ops';
 import { blank, overlay_frac, scale, square, white } from './functions';
 
 // =============================================================================
@@ -294,7 +294,6 @@ function initFramebufferObject(
  * @param rune the Rune to be drawn
  */
 export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
-  throwIfNotRune('drawRune', rune);
   const gl = getWebGlFromCanvas(canvas);
   const runes = flattenRune(rune);
 
@@ -327,7 +326,6 @@ export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
  * @param rune the Rune to be drawn
  */
 export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
-  throwIfNotRune('drawRune', rune);
   const gl = getWebGlFromCanvas(canvas);
 
   // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
@@ -419,7 +417,6 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
  * @param rune the Rune to be drawn
  */
 export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
-  throwIfNotRune('drawRune', rune);
   const gl = getWebGlFromCanvas(canvas);
   const runes = flattenRune(rune);
 

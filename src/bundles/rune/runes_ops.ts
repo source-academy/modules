@@ -11,7 +11,7 @@ import { Rune } from './types';
 export function getEmptyRune(): Rune {
   return {
     toReplString: () => '<RUNE>',
-    drawMethod: 'normal',
+    drawMethod: '',
     vertices: new Float32Array(),
     colors: null,
     transformMatrix: mat4.create(),
@@ -20,10 +20,12 @@ export function getEmptyRune(): Rune {
 }
 
 export function isRune(rune) {
+  // rune should not have a drawMethod
   return (
     rune !== undefined &&
     rune.toReplString instanceof Function &&
-    rune.toReplString() === '<RUNE>'
+    rune.toReplString() === '<RUNE>' &&
+    rune.drawMethod === ''
   );
 }
 
@@ -45,13 +47,12 @@ export function copyRune(rune: Rune): Rune {
 }
 
 /**
- *
+ * flatten the subrunes to return a list of runes
  * @param rune - the rune to be flattened
  * @return type Rune[], a list of runes
  */
 export function flattenRune(rune: Rune): Rune[] {
   if (rune === undefined) {
-    // TODO: remove this
     return [];
   }
   const runeList: Rune[] = [];

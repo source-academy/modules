@@ -533,20 +533,23 @@ export function white(rune) {
 // =============================================================================
 
 /**
- * Show the rune on the tab.
+ * Show the rune on the tab using the basic drawing.
  *
  * @param rune a Rune to be drawn
+ * @return {Rune} with drawing method set to normal
  */
 export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
-  return rune;
+  const normalRune = copyRune(rune);
+  normalRune.drawMethod = 'normal';
+  return normalRune;
 }
 
 /**
  * render the given Rune in an Anaglyph. Use your 3D-glasses
  * to view the Anaglyph.
  * @param {Rune} rune - given Rune
- * @return {Picture}
+ * @return {Rune} with drawing method set to anaglyph
  */
 export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('show', rune);
@@ -558,7 +561,7 @@ export function anaglyph(rune: Rune): Rune {
 /**
  * render the given Rune in an Anaglyph.
  * @param {Rune} rune - given Rune
- * @return {Picture}
+ * @return {Rune} with drawing method set to hollusion
  */
 export function hollusion(rune: Rune): Rune {
   throwIfNotRune('show', rune);
