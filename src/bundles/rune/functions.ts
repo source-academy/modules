@@ -366,17 +366,14 @@ export function overlay_frac(frac, rune1, rune2) {
   front.subRunes.push(rune1);
   const frontMat = front.transformMatrix;
   // z: scale by frac
-  mat4.translate(frontMat, frontMat, vec3.fromValues(0, 0, 1));
   mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, frac));
-  mat4.translate(frontMat, frontMat, vec3.fromValues(0, 0, -1));
 
   const back = getEmptyRune();
   back.subRunes.push(rune2);
   const backMat = back.transformMatrix;
-  // z: scale by frac
-  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -1));
+  // need to apply transformation in backwards order!
+  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, frac));
   mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - frac));
-  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, 1));
 
   const combined = getEmptyRune();
   combined.subRunes = [front, back]; // render front first to avoid redrawing

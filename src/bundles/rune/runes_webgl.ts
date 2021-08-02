@@ -2,7 +2,7 @@
  * This file contains the module's private functions that handles various webgl operations.
  */
 
-import { mat4 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 import { FrameBufferWithTexture, Rune } from './types';
 import { flattenRune } from './runes_ops';
 import { blank, overlay_frac, scale, square, white } from './functions';
@@ -23,6 +23,7 @@ varying lowp float colorFactor;
 void main(void) {
   vec4 imagePosition = uModelViewMatrix * aVertexPosition;
   gl_Position = uProjectionMatrix * imagePosition;
+  gl_Position.z = imagePosition.z; // hack for zbuffer when camera matrix is not perspective
   vColor = uVertexColor;
 
   // texture position is in [0,1], vertex position is in [-1,1]
@@ -232,7 +233,8 @@ function drawRunesToFrameBuffer(
   runes: Rune[],
   cameraMatrix: mat4,
   colorFilter: Float32Array,
-  framebuffer: WebGLFramebuffer | null = null
+  framebuffer: WebGLFramebuffer | null = null,
+  depthSwitch: boolean = false
 ) {
   // step 1: initiate the WebGLRenderingContext
   gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
@@ -272,7 +274,18 @@ function drawRunesToFrameBuffer(
     shaderProgram,
     'uRenderWithTexture'
   );
+  const depthSwitchPointer = gl.getUniformLocation(
+    shaderProgram,
+    'uRenderWithDepthColor'
+  );
   const texturePointer = gl.getUniformLocation(shaderProgram, 'uTexture');
+
+  // load depth
+  if (depthSwitch) {
+    gl.uniform1i(depthSwitchPointer, 1);
+  } else {
+    gl.uniform1i(depthSwitchPointer, 0);
+  }
 
   // load camera
   gl.uniformMatrix4fv(projectionMatrixPointer, false, cameraMatrix);
@@ -412,13 +425,6 @@ export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
 
   // prepare camera projection array
   const cameraMatrix = mat4.create();
-  const fieldOfView = (90 * Math.PI) / 180; // in radians
-  const aspect = 1; // width/height
-  const zNear = 0.1;
-  const zFar = 100.0;
-  mat4.perspective(cameraMatrix, fieldOfView, aspect, zNear, zFar);
-  // prepare the default zero point of the model
-  mat4.translate(cameraMatrix, cameraMatrix, [-0.0, 0.0, -1]);
 
   // color filter set to [1,1,1,1] for transparent filter
   drawRunesToFrameBuffer(
@@ -426,7 +432,8 @@ export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
     runes,
     cameraMatrix,
     new Float32Array([1, 1, 1, 1]),
-    null
+    null,
+    true
   );
 }
 
@@ -449,26 +456,20 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
 
   // calculate the left and right camera matrices
   const halfEyeDistance = 0.03;
-  const fieldOfView = (90 * Math.PI) / 180; // in radians
-  const aspect = 1; // width/height
-  const zNear = 0.1;
-  const zFar = 100.0;
   const leftCameraMatrix = mat4.create();
-  mat4.perspective(leftCameraMatrix, fieldOfView, aspect, zNear, zFar);
-  // prepare the default zero point of the model
-  mat4.translate(leftCameraMatrix, leftCameraMatrix, [
-    -halfEyeDistance,
-    0.0,
-    -1.0,
-  ]);
+  mat4.lookAt(
+    leftCameraMatrix,
+    vec3.fromValues(-halfEyeDistance, 0, 0),
+    vec3.fromValues(0, 0, 1),
+    vec3.fromValues(0, 1, 0)
+  );
   const rightCameraMatrix = mat4.create();
-  mat4.perspective(rightCameraMatrix, fieldOfView, aspect, zNear, zFar);
-  // prepare the default zero point of the model
-  mat4.translate(rightCameraMatrix, rightCameraMatrix, [
-    halfEyeDistance,
-    0.0,
-    -1.0,
-  ]);
+  mat4.lookAt(
+    rightCameraMatrix,
+    vec3.fromValues(halfEyeDistance, 0, 0),
+    vec3.fromValues(0, 0, 1),
+    vec3.fromValues(0, 1, 0)
+  );
 
   // left/right eye images are drawn into respective framebuffers
   const leftBuffer = initFramebufferObject(gl);
@@ -478,14 +479,16 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
     runes,
     leftCameraMatrix,
     new Float32Array([1, 0, 0, 1]),
-    leftBuffer.framebuffer
+    leftBuffer.framebuffer,
+    true
   );
   drawRunesToFrameBuffer(
     gl,
     runes,
     rightCameraMatrix,
     new Float32Array([0, 1, 1, 1]),
-    rightBuffer.framebuffer
+    rightBuffer.framebuffer,
+    true
   );
 
   // prepare to draw to screen by setting framebuffer to null
@@ -506,11 +509,11 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
 
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, leftBuffer.texture);
-  gl.uniform1i(cyanuPt, 0);
+  gl.uniform1i(reduPt, 0);
 
   gl.activeTexture(gl.TEXTURE1);
   gl.bindTexture(gl.TEXTURE_2D, rightBuffer.texture);
-  gl.uniform1i(reduPt, 1);
+  gl.uniform1i(cyanuPt, 1);
 
   // draw a square, which will allow the texture to be used
   // load position buffer
@@ -541,12 +544,6 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
 
     // prepare camera projection array
     const cameraMatrix = mat4.create();
-    const fieldOfView = (90 * Math.PI) / 180; // in radians
-    const aspect = 1; // width/height
-    const zNear = 0.1;
-    const zFar = 100.0;
-    mat4.perspective(cameraMatrix, fieldOfView, aspect, zNear, zFar);
-
     // let the object shift in the x direction
     // the following calculation will let x oscillate in (-xshiftMax, xshiftMax) with time
     const xshiftMax = 0.03;
@@ -556,18 +553,20 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
       xshift = period - xshift;
     }
     xshift = 2 * xshiftMax * (xshift / period);
-    mat4.translate(cameraMatrix, cameraMatrix, [
-      xshift - xshiftMax / 2,
-      0.0,
-      -1,
-    ]);
+    mat4.lookAt(
+      cameraMatrix,
+      vec3.fromValues(xshift, 0, 0),
+      vec3.fromValues(0, 0, 1),
+      vec3.fromValues(0, 1, 0)
+    );
 
     drawRunesToFrameBuffer(
       gl,
       runes,
       cameraMatrix,
       new Float32Array([1, 1, 1, 1]),
-      null
+      null,
+      true
     );
     requestAnimationFrame(render);
   }
