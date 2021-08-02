@@ -16,25 +16,31 @@ attribute vec4 aVertexPosition;
 uniform vec4 uVertexColor;
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
-uniform vec4 uColorFilter;
 
 varying lowp vec4 vColor;
 varying highp vec2 vTexturePosition;
+varying lowp float colorFactor;
 void main(void) {
-  gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+  vec4 imagePosition = uModelViewMatrix * aVertexPosition;
+  gl_Position = uProjectionMatrix * imagePosition;
   vColor = uVertexColor;
-  vColor = uColorFilter * vColor + 1.0 - uColorFilter;
-  vColor.a = 1.0;
 
   // texture position is in [0,1], vertex position is in [-1,1]
   vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;
   vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;
+
+  colorFactor = imagePosition.z;
 }
 `;
 
 const normalFragmentShader = `
+precision mediump float;
 uniform bool uRenderWithTexture;
+uniform bool uRenderWithDepthColor;
 uniform sampler2D uTexture;
+varying lowp float colorFactor;
+uniform vec4 uColorFilter;
+
 
 varying lowp vec4 vColor;
 varying highp vec2 vTexturePosition;
@@ -44,10 +50,17 @@ void main(void) {
   } else {
     gl_FragColor = vColor;
   }
+  if (uRenderWithDepthColor){
+    gl_FragColor += colorFactor * (1.0 - gl_FragColor);
+    gl_FragColor.a = 1.0;
+  }
+  gl_FragColor = uColorFilter * gl_FragColor + 1.0 - uColorFilter;
+  gl_FragColor.a = 1.0;
 }
 `;
 
 const anaglyphVertexShader = `
+precision mediump float;
 attribute vec4 a_position;
 varying highp vec2 v_texturePosition;
 void main() {

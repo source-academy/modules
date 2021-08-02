@@ -25,3 +25,7 @@
 
 ### 31 Jul 2021
 - 11:00am - 13:15pm : implementing the image rune feature
+
+### 2 Aug 2021
+- 12:00pm - 1:00pm : meeting
+
