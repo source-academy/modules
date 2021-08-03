@@ -49,5 +49,10 @@
     "tabs": [
       "Rune"
     ]
+  },
+  "sound_matrix": {
+    "tabs": [
+      "SoundMatrix"
+    ]
   }
 }
