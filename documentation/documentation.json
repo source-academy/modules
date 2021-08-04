@@ -2675,7 +2675,7 @@
 							"flags": {},
 							"comment": {
 								"shortText": "Create anims config, can be used to configure anims",
-								"text": "For more details about the config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Animations.html#.Animation\n",
+								"text": "For more details about the config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Types.Animations.html#.Animation\n",
 								"returns": "animation config\n"
 							},
 							"parameters": [
@@ -3310,7 +3310,7 @@
 							"flags": {},
 							"comment": {
 								"shortText": "Create interactive config object, can be used to configure interactive settings.",
-								"text": "For more details about interactive config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Input.html#.InputConfiguration\n",
+								"text": "For more details about interactive config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Types.Input.html#.InputConfiguration\n",
 								"returns": "interactive config\n"
 							},
 							"parameters": [
@@ -3524,7 +3524,7 @@
 							"flags": {},
 							"comment": {
 								"shortText": "Create sound config object, can be used to configure sound settings.",
-								"text": "For more details about sound config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Sound.html#.SoundConfig\n",
+								"text": "For more details about sound config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Types.Sound.html#.SoundConfig\n",
 								"returns": "sound config\n"
 							},
 							"parameters": [
@@ -3860,7 +3860,7 @@
 							"flags": {},
 							"comment": {
 								"shortText": "Create text config object, can be used to stylise text object.",
-								"text": "font_family: for available font_family, see:\nhttps://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names\n\nalign: must be either 'left', 'right', 'center', or 'justify'\n\nFor more details about text config, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.GameObjects.Text.html#.TextStyle\n",
+								"text": "font_family: for available font_family, see:\nhttps://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names\n\nalign: must be either 'left', 'right', 'center', or 'justify'\n\nFor more details about text config, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Types.GameObjects.Text.html#.TextStyle\n",
 								"returns": "text config\n"
 							},
 							"parameters": [
@@ -3984,7 +3984,7 @@
 							"flags": {},
 							"comment": {
 								"shortText": "Create tween config object, can be used to configure tween settings.",
-								"text": "For more details about tween config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Tweens.html#.TweenBuilderConfig\n",
+								"text": "For more details about tween config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Types.Tweens.html#.TweenBuilderConfig\n",
 								"returns": "tween config\n"
 							},
 							"parameters": [
