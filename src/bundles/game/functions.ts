@@ -216,7 +216,7 @@ export default function gameFuncs(_params: __Params) {
     on_loop: Function = nullFn
   ): ObjectConfig {
     return {
-      target_prop: target_value,
+      [target_prop]: target_value,
       delay,
       duration,
       ease,
@@ -687,7 +687,7 @@ export function prepend_remote_url(asset_key: string): string {
  * align: must be either 'left', 'right', 'center', or 'justify'
  *
  * For more details about text config, see:
- * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.GameObjects.Text.html#.TextStyle
+ * https://photonstorm.github.io/phaser3-docs/Phaser.Types.GameObjects.Text.html#.TextStyle
  *
  * @param font_family font to be used
  * @param font_size size of font, must be appended with 'px' e.g. '16px'
@@ -712,7 +712,7 @@ export function create_text_config(
  * Create interactive config object, can be used to configure interactive settings.
  *
  * For more details about interactive config object, see:
- * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Input.html#.InputConfiguration
+ * https://photonstorm.github.io/phaser3-docs/Phaser.Types.Input.html#.InputConfiguration
  *
  * @param draggable object will be set draggable
  * @param use_hand_cursor if true, pointer will be set to 'pointer' when a pointer is over it
@@ -733,7 +733,7 @@ export function create_interactive_config(
  * Create sound config object, can be used to configure sound settings.
  *
  * For more details about sound config object, see:
- * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Sound.html#.SoundConfig
+ * https://photonstorm.github.io/phaser3-docs/Phaser.Types.Sound.html#.SoundConfig
  *
  * @param mute whether the sound should be muted or not
  * @param volume value between 0(silence) and 1(full volume)
@@ -760,7 +760,7 @@ export function create_sound_config(
  * Create tween config object, can be used to configure tween settings.
  *
  * For more details about tween config object, see:
- * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Tweens.html#.TweenBuilderConfig
+ * https://photonstorm.github.io/phaser3-docs/Phaser.Types.Tweens.html#.TweenBuilderConfig
  *
  * @param target_prop target to tween, e.g. x, y, alpha
  * @param target_value the property value to tween to
@@ -793,7 +793,7 @@ export function create_tween_config(
  * Create anims config, can be used to configure anims
  *
  * For more details about the config object, see:
- * https://photonstorm.github.io/phaser3-docs/Phaser.ObjectTypes.Animations.html#.Animation
+ * https://photonstorm.github.io/phaser3-docs/Phaser.Types.Animations.html#.Animation
  *
  * @param anims_key key that the animation will be associated with
  * @param anim_frames data used to generate the frames for animation
