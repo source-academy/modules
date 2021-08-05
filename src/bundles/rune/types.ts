@@ -15,6 +15,7 @@ export type Rune = {
   transformMatrix: mat4;
   subRunes: Rune[];
   texture: HTMLImageElement | null;
+  hollusionDistance: number;
 };
 
 export type FrameBufferWithTexture = {

@@ -546,17 +546,17 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
     const cameraMatrix = mat4.create();
     // let the object shift in the x direction
     // the following calculation will let x oscillate in (-xshiftMax, xshiftMax) with time
-    const xshiftMax = 0.03;
+    const xshiftMax = runes[0].hollusionDistance;
     const period = 2000;
     let xshift = timeInMs % period;
     if (xshift > period / 2) {
       xshift = period - xshift;
     }
-    xshift = 2 * xshiftMax * (xshift / period);
+    xshift = xshiftMax * (2 * ((2 * xshift) / period) - 1);
     mat4.lookAt(
       cameraMatrix,
       vec3.fromValues(xshift, 0, 0),
-      vec3.fromValues(0, 0, 1),
+      vec3.fromValues(0, 0, 0.5),
       vec3.fromValues(0, 1, 0)
     );
 

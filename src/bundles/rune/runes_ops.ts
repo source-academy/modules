@@ -17,6 +17,7 @@ export function getEmptyRune(): Rune {
     transformMatrix: mat4.create(),
     subRunes: [],
     texture: null,
+    hollusionDistance: 0.1,
   };
 }
 
@@ -45,6 +46,7 @@ export function copyRune(rune: Rune): Rune {
   newRune.transformMatrix = mat4.clone(rune.transformMatrix);
   newRune.subRunes = rune.subRunes;
   newRune.texture = rune.texture;
+  newRune.hollusionDistance = rune.hollusionDistance;
   return newRune;
 }
 
@@ -69,6 +71,7 @@ export function flattenRune(rune: Rune): Rune[] {
         runeToExpand.transformMatrix,
         subRuneCopy.transformMatrix
       );
+      subRuneCopy.hollusionDistance = runeToExpand.hollusionDistance;
       if (runeToExpand.colors !== null) {
         subRuneCopy.colors = runeToExpand.colors;
       }

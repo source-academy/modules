@@ -80,7 +80,13 @@ export const ribbon: Rune = getRibbon();
 // =============================================================================
 // Textured Runes
 // =============================================================================
-export function get_image_rune(imageUrl: string): Rune {
+/**
+ * create a rune using the image provided in the url
+ * @param imageUrl a URL to the image that is used to create the rune.
+ * note that the url must be from a domain that allows CORS.
+ * @returns Rune - a rune created using the image.
+ */
+export function from_url(imageUrl: string): Rune {
   const rune = getSquare();
   rune.texture = new Image();
   rune.texture.crossOrigin = 'anonymous';
@@ -551,7 +557,7 @@ export function white(rune) {
 /**
  * Show the rune on the tab using the basic drawing.
  *
- * @param rune a Rune to be drawn
+ * @param rune - Rune to render
  * @return {Rune} with drawing method set to normal
  */
 export function show(rune: Rune): Rune {
@@ -564,24 +570,36 @@ export function show(rune: Rune): Rune {
 /**
  * render the given Rune in an Anaglyph. Use your 3D-glasses
  * to view the Anaglyph.
- * @param {Rune} rune - given Rune
+ * @param {Rune} rune - Rune to render
  * @return {Rune} with drawing method set to anaglyph
  */
 export function anaglyph(rune: Rune): Rune {
-  throwIfNotRune('show', rune);
+  throwIfNotRune('anaglyph', rune);
   const analyphRune = copyRune(rune);
   analyphRune.drawMethod = 'anaglyph';
   return analyphRune;
 }
 
 /**
- * render the given Rune in an Anaglyph.
- * @param {Rune} rune - given Rune
+ * render the given Rune with hollusion, with adjustable magnitude.
+ * @param {Rune} rune - Rune to render
+ * @param {number} magnitude - (optional) the magnitude of hollusion
+ * @return {Rune} with drawing method set to hollusion
+ */
+export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
+  throwIfNotRune('hollusion_magnitude', rune);
+  const hollusionRune = copyRune(rune);
+  hollusionRune.drawMethod = 'hollusion';
+  hollusionRune.hollusionDistance = magnitude;
+  return hollusionRune;
+}
+
+/**
+ * render the given Rune with hollusion, with default magnitude 0.1.
+ * @param {Rune} rune - Rune to render
  * @return {Rune} with drawing method set to hollusion
  */
 export function hollusion(rune: Rune): Rune {
-  throwIfNotRune('show', rune);
-  const hollusionRune = copyRune(rune);
-  hollusionRune.drawMethod = 'hollusion';
-  return hollusionRune;
+  throwIfNotRune('hollusion', rune);
+  return hollusion_magnitude(rune, 0.1);
 }

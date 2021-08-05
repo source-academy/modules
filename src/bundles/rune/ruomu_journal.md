@@ -29,3 +29,5 @@
 ### 2 Aug 2021
 - 12:00pm - 1:00pm : meeting
 
+### 5 Aug 2021
+- 14:30pm - 15:10pm : fix bugs
