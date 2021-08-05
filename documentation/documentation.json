@@ -6431,7 +6431,7 @@
 			"originalName": "rune/functions",
 			"children": [
 				{
-					"id": 763,
+					"id": 767,
 					"name": "blank",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6455,7 +6455,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 768,
+					"id": 772,
 					"name": "circle",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6479,7 +6479,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 766,
+					"id": 770,
 					"name": "corner",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6503,7 +6503,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 769,
+					"id": 773,
 					"name": "heart",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6527,7 +6527,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 767,
+					"id": 771,
 					"name": "nova",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6551,7 +6551,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 770,
+					"id": 774,
 					"name": "pentagram",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6575,7 +6575,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 764,
+					"id": 768,
 					"name": "rcross",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6599,7 +6599,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 771,
+					"id": 775,
 					"name": "ribbon",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6623,7 +6623,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 765,
+					"id": 769,
 					"name": "sail",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6647,7 +6647,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 762,
+					"id": 766,
 					"name": "square",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6679,7 +6679,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 570,
+							"line": 576,
 							"character": 24
 						}
 					],
@@ -6702,7 +6702,7 @@
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "given Rune"
+										"text": "Rune to render"
 									},
 									"type": {
 										"type": "reference",
@@ -6726,7 +6726,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 287,
+							"line": 293,
 							"character": 22
 						}
 					],
@@ -6787,7 +6787,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 263,
+							"line": 269,
 							"character": 27
 						}
 					],
@@ -6862,7 +6862,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 532,
+							"line": 538,
 							"character": 21
 						}
 					],
@@ -6909,7 +6909,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 482,
+							"line": 488,
 							"character": 20
 						}
 					],
@@ -6956,7 +6956,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 522,
+							"line": 528,
 							"character": 21
 						}
 					],
@@ -7003,7 +7003,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 410,
+							"line": 416,
 							"character": 21
 						}
 					],
@@ -7092,7 +7092,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 312,
+							"line": 318,
 							"character": 26
 						}
 					],
@@ -7139,7 +7139,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 300,
+							"line": 306,
 							"character": 25
 						}
 					],
@@ -7179,24 +7179,28 @@
 				},
 				{
 					"id": 636,
-					"name": "get_image_rune",
+					"name": "from_url",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 83,
-							"character": 30
+							"line": 89,
+							"character": 24
 						}
 					],
 					"signatures": [
 						{
 							"id": 637,
-							"name": "get_image_rune",
+							"name": "from_url",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "create a rune using the image provided in the url",
+								"returns": "Rune - a rune created using the image.\n"
+							},
 							"parameters": [
 								{
 									"id": 638,
@@ -7204,6 +7208,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "a URL to the image that is used to create the rune.\nnote that the url must be from a domain that allows CORS."
+									},
 									"type": {
 										"type": "intrinsic",
 										"name": "string"
@@ -7226,7 +7233,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 492,
+							"line": 498,
 							"character": 21
 						}
 					],
@@ -7265,7 +7272,7 @@
 					]
 				},
 				{
-					"id": 759,
+					"id": 763,
 					"name": "hollusion",
 					"kind": 64,
 					"kindString": "Function",
@@ -7273,19 +7280,66 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 582,
+							"line": 602,
 							"character": 25
 						}
 					],
 					"signatures": [
 						{
-							"id": 760,
+							"id": 764,
 							"name": "hollusion",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "render the given Rune in an Anaglyph.",
+								"shortText": "render the given Rune with hollusion, with default magnitude 0.1.",
+								"returns": "with drawing method set to hollusion\n"
+							},
+							"parameters": [
+								{
+									"id": 765,
+									"name": "rune",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "Rune to render"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Rune"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Rune"
+							}
+						}
+					]
+				},
+				{
+					"id": 759,
+					"name": "hollusion_magnitude",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "rune/functions.ts",
+							"line": 589,
+							"character": 35
+						}
+					],
+					"signatures": [
+						{
+							"id": 760,
+							"name": "hollusion_magnitude",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "render the given Rune with hollusion, with adjustable magnitude.",
 								"returns": "with drawing method set to hollusion\n"
 							},
 							"parameters": [
@@ -7296,12 +7350,27 @@
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "given Rune"
+										"text": "Rune to render"
 									},
 									"type": {
 										"type": "reference",
 										"name": "Rune"
 									}
+								},
+								{
+									"id": 762,
+									"name": "magnitude",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "(optional) the magnitude of hollusion"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									},
+									"defaultValue": "0.1"
 								}
 							],
 							"type": {
@@ -7320,7 +7389,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 472,
+							"line": 478,
 							"character": 22
 						}
 					],
@@ -7367,7 +7436,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 324,
+							"line": 330,
 							"character": 26
 						}
 					],
@@ -7414,7 +7483,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 512,
+							"line": 518,
 							"character": 22
 						}
 					],
@@ -7461,7 +7530,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 389,
+							"line": 395,
 							"character": 23
 						}
 					],
@@ -7522,7 +7591,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 358,
+							"line": 364,
 							"character": 28
 						}
 					],
@@ -7597,7 +7666,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 452,
+							"line": 458,
 							"character": 20
 						}
 					],
@@ -7644,7 +7713,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 462,
+							"line": 468,
 							"character": 22
 						}
 					],
@@ -7691,7 +7760,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 236,
+							"line": 242,
 							"character": 33
 						}
 					],
@@ -7738,7 +7807,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 224,
+							"line": 230,
 							"character": 34
 						}
 					],
@@ -7785,7 +7854,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 426,
+							"line": 432,
 							"character": 28
 						}
 					],
@@ -7832,7 +7901,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 442,
+							"line": 448,
 							"character": 19
 						}
 					],
@@ -7879,7 +7948,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 340,
+							"line": 346,
 							"character": 30
 						}
 					],
@@ -7951,7 +8020,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 151,
+							"line": 157,
 							"character": 22
 						}
 					],
@@ -8012,7 +8081,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 119,
+							"line": 125,
 							"character": 21
 						}
 					],
@@ -8073,7 +8142,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 102,
+							"line": 108,
 							"character": 33
 						}
 					],
@@ -8148,7 +8217,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 557,
+							"line": 563,
 							"character": 20
 						}
 					],
@@ -8171,7 +8240,7 @@
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "a Rune to be drawn"
+										"text": "Rune to render"
 									},
 									"type": {
 										"type": "reference",
@@ -8195,7 +8264,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 196,
+							"line": 202,
 							"character": 21
 						}
 					],
@@ -8256,7 +8325,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 172,
+							"line": 178,
 							"character": 26
 						}
 					],
@@ -8331,7 +8400,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 209,
+							"line": 215,
 							"character": 22
 						}
 					],
@@ -8392,7 +8461,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 131,
+							"line": 137,
 							"character": 25
 						}
 					],
@@ -8467,7 +8536,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 247,
+							"line": 253,
 							"character": 32
 						}
 					],
@@ -8514,7 +8583,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 542,
+							"line": 548,
 							"character": 21
 						}
 					],
@@ -8561,7 +8630,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 502,
+							"line": 508,
 							"character": 22
 						}
 					],
@@ -8605,16 +8674,16 @@
 					"title": "Variables",
 					"kind": 32,
 					"children": [
-						763,
-						768,
-						766,
-						769,
 						767,
+						772,
 						770,
-						764,
+						773,
 						771,
-						765,
-						762
+						774,
+						768,
+						775,
+						769,
+						766
 					]
 				},
 				{
@@ -8632,6 +8701,7 @@
 						688,
 						636,
 						735,
+						763,
 						759,
 						729,
 						694,
