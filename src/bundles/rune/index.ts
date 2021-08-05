@@ -9,7 +9,7 @@ import {
   heart,
   pentagram,
   ribbon,
-  get_image_rune,
+  from_url,
   scale_independent,
   scale,
   translate,
@@ -43,6 +43,7 @@ import {
   white,
   show,
   anaglyph,
+  hollusion_magnitude,
   hollusion,
 } from './functions';
 
@@ -63,7 +64,7 @@ export default () => ({
   pentagram,
   ribbon,
 
-  get_image_rune,
+  from_url,
 
   scale_independent,
   scale,
@@ -101,5 +102,6 @@ export default () => ({
 
   show,
   anaglyph,
+  hollusion_magnitude,
   hollusion,
 });
