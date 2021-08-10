@@ -148,7 +148,7 @@ export default function gameFuncs(_params: __Params) {
   // HELPER
 
   function prepend_remote_url(asset_key: string): string {
-    return remotePath + asset_key;
+    return remotePath(asset_key);
   }
 
   function create_text_config(

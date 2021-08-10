@@ -33,7 +33,7 @@ export type GameParams = {
   preloadImageMap: Map<string, string>;
   preloadSoundMap: Map<string, string>;
   preloadSpritesheetMap: Map<string, [string, object]>;
-  remotePath: string;
+  remotePath: (path: string) => string;
   screenSize: { x: number; y: number };
   createAward: (x: number, y: number, key: string) => Phaser.GameObjects.Sprite;
 };
