@@ -6679,7 +6679,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 576,
+							"line": 577,
 							"character": 24
 						}
 					],
@@ -7280,7 +7280,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 602,
+							"line": 605,
 							"character": 25
 						}
 					],
@@ -7327,7 +7327,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 589,
+							"line": 591,
 							"character": 35
 						}
 					],
