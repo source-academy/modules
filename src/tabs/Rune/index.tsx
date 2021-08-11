@@ -99,7 +99,9 @@ export default {
   toSpawn: (context: any) => {
     function isValidFunction(value: any): value is Rune {
       try {
-        return value.toReplString() === '<RUNE>' && value.drawMethod !== '';
+        return (
+          value.toReplString() === '<RENDERING>' && value.drawMethod !== ''
+        );
       } catch (e) {
         return false;
       }
