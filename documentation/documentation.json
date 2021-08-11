@@ -6420,12 +6420,12 @@
 		},
 		{
 			"id": 635,
-			"name": "runes",
+			"name": "rune",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
 			"comment": {
-				"shortText": "RUNES provide functions for drawing runes.",
+				"shortText": "The module `rune` provides functions for drawing runes.",
 				"text": "A *Rune* is defined by its vertices (x,y,z,t), the colors on its vertices (r,g,b,a), a transformation matrix for rendering the Rune and a (could be empty) list of its sub-Runes."
 			},
 			"originalName": "rune/functions",
