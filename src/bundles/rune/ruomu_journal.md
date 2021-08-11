@@ -31,3 +31,6 @@
 
 ### 5 Aug 2021
 - 14:30pm - 15:10pm : fix bugs
+
+### 
+- 12:30pm - 1:00pm : working on #88

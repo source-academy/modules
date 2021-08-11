@@ -564,6 +564,7 @@ export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
   const normalRune = copyRune(rune);
   normalRune.drawMethod = 'normal';
+  normalRune.toReplString = () => '<RENDERING>';
   return normalRune;
 }
 
@@ -577,6 +578,7 @@ export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('anaglyph', rune);
   const analyphRune = copyRune(rune);
   analyphRune.drawMethod = 'anaglyph';
+  analyphRune.toReplString = () => '<RENDERING>';
   return analyphRune;
 }
 
@@ -591,6 +593,7 @@ export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
   const hollusionRune = copyRune(rune);
   hollusionRune.drawMethod = 'hollusion';
   hollusionRune.hollusionDistance = magnitude;
+  hollusionRune.toReplString = () => '<RENDERING>';
   return hollusionRune;
 }
 
