@@ -34,3 +34,6 @@
 
 ### 
 - 12:30pm - 1:00pm : working on #88
+
+### 17 Aug 2021
+- 18:00pm - 18:30pm : working on beside_frac and stack_frac definition
