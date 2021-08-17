@@ -82,9 +82,9 @@ export const ribbon: Rune = getRibbon();
 // =============================================================================
 /**
  * create a rune using the image provided in the url
- * @param imageUrl a URL to the image that is used to create the rune.
+ * @param {string} imageUrl a URL to the image that is used to create the rune.
  * note that the url must be from a domain that allows CORS.
- * @returns Rune - a rune created using the image.
+ * @returns {Rune} a rune created using the image.
  */
 export function from_url(imageUrl: string): Rune {
   const rune = getSquare();
@@ -126,7 +126,7 @@ export function scale_independent(
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting scaled Rune
  */
-export function scale(ratio, rune) {
+export function scale(ratio: number, rune: Rune): Rune {
   throwIfNotRune('scale', rune);
   return scale_independent(ratio, ratio, rune);
 }
@@ -138,7 +138,7 @@ export function scale(ratio, rune) {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting translated Rune
  */
-export function translate(x, y, rune) {
+export function translate(x: number, y: number, rune: Rune): Rune {
   throwIfNotRune('translate', rune);
   const translateVec = vec3.fromValues(x, -y, 0);
   const translateMat = mat4.create();
@@ -158,7 +158,7 @@ export function translate(x, y, rune) {
  * @param {Rune} rune - given Rune
  * @return {Rune} rotated Rune
  */
-export function rotate(rad, rune) {
+export function rotate(rad: number, rune: Rune): Rune {
   throwIfNotRune('rotate', rune);
   const rotateMat = mat4.create();
   mat4.rotateZ(rotateMat, rotateMat, rad);
@@ -203,7 +203,7 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
  */
-export function stack(rune1, rune2) {
+export function stack(rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('stack', rune2);
   throwIfNotRune('stack', rune1);
   return stack_frac(1 / 2, rune1, rune2);
@@ -216,7 +216,7 @@ export function stack(rune1, rune2) {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
  */
-export function stackn(n, rune) {
+export function stackn(n: number, rune: Rune): Rune {
   throwIfNotRune('stackn', rune);
   if (n === 1) {
     return rune;
@@ -231,7 +231,7 @@ export function stackn(n, rune) {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
  */
-export function quarter_turn_right(rune) {
+export function quarter_turn_right(rune: Rune): Rune {
   throwIfNotRune('quarter_turn_right', rune);
   return rotate(-Math.PI / 2, rune);
 }
@@ -243,7 +243,7 @@ export function quarter_turn_right(rune) {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
  */
-export function quarter_turn_left(rune) {
+export function quarter_turn_left(rune: Rune): Rune {
   throwIfNotRune('quarter_turn_left', rune);
   return rotate(Math.PI / 2, rune);
 }
@@ -254,7 +254,7 @@ export function quarter_turn_left(rune) {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
  */
-export function turn_upside_down(rune) {
+export function turn_upside_down(rune: Rune): Rune {
   throwIfNotRune('turn_upside_down', rune);
   return rotate(Math.PI, rune);
 }
@@ -294,7 +294,7 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
  */
-export function beside(rune1, rune2) {
+export function beside(rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('beside', rune1);
   throwIfNotRune('beside', rune2);
   return beside_frac(1 / 2, rune1, rune2);
@@ -307,7 +307,7 @@ export function beside(rune1, rune2) {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
  */
-export function flip_vert(rune) {
+export function flip_vert(rune: Rune): Rune {
   throwIfNotRune('flip_vert', rune);
   return scale_independent(1, -1, rune);
 }
@@ -319,7 +319,7 @@ export function flip_vert(rune) {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
  */
-export function flip_horiz(rune) {
+export function flip_horiz(rune: Rune): Rune {
   throwIfNotRune('flip_horiz', rune);
   return scale_independent(-1, 1, rune);
 }
@@ -331,7 +331,7 @@ export function flip_horiz(rune) {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
  */
-export function make_cross(rune) {
+export function make_cross(rune: Rune): Rune {
   throwIfNotRune('make_cross', rune);
   return stack(
     beside(quarter_turn_right(rune), rotate(Math.PI, rune)),
@@ -342,12 +342,16 @@ export function make_cross(rune) {
 /**
  * applies a given function n times to an initial value
  * @param {number} n - a non-negative integer
- * @param {function} f - unary function from t to t
- * @param {t} initial - argument
- * @return {t} - result of n times application of
- *               f to rune: f(f(...f(f(rune))...))
+ * @param {function} pattern - unary function from Rune to Rune
+ * @param {Rune} initial - the initial Rune
+ * @return {Rune} - result of n times application of
+ *               pattern to initial: pattern(pattern(...pattern(pattern(initial))...))
  */
-export function repeat_pattern(n, pattern, initial) {
+export function repeat_pattern(
+  n: number,
+  pattern: (a: Rune) => Rune,
+  initial: Rune
+): Rune {
   if (n === 0) {
     return initial;
   }
@@ -359,7 +363,7 @@ export function repeat_pattern(n, pattern, initial) {
 // =============================================================================
 
 /**
- * the depth range of the z-axis of a rune is [-1,1], this function gives a fraction of the depth range to rune 1 and the rest to rune 2.
+ * the depth range of the z-axis of a rune is [-1,1], this function gives a fraction of the depth range to rune1 and the rest to rune2.
  * @param {number} frac - fraction between 0 and 1 (inclusive)
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
@@ -391,12 +395,12 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 }
 
 /**
- * the depth range of the z-axis of a rune is (-1,1), this function maps the depth range of rune1 and rune 2 to (-1,0) and (0,1) respectively.
+ * the depth range of the z-axis of a rune is [-1,1], this function maps the depth range of rune1 and rune2 to [-1,0] and [0,1] respectively.
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
  */
-export function overlay(rune1, rune2) {
+export function overlay(rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('overlay', rune1);
   throwIfNotRune('overlay', rune2);
   return overlay_frac(0.5, rune1, rune2);
@@ -412,12 +416,12 @@ export function overlay(rune1, rune2) {
  * RGB is additive: if all values are 1, the color is white,
  * and if all values are 0, the color is black.
  * @param {Rune} rune - the rune to add color to
- * @param {number} r - red value (0.0-1.0)
- * @param {number} g - green value (0.0-1.0)
- * @param {number} b - blue value (0.0-1.0)
+ * @param {number} r - red value [0.0-1.0]
+ * @param {number} g - green value [0.0-1.0]
+ * @param {number} b - blue value [0.0-1.0]
  * @returns {Rune} the colored Rune
  */
-export function color(rune: Rune, r, g, b): Rune {
+export function color(rune: Rune, r: number, g: number, b: number): Rune {
   throwIfNotRune('color', rune);
   const wrapper = getEmptyRune();
   wrapper.subRunes.push(rune);
@@ -433,7 +437,7 @@ export function color(rune: Rune, r, g, b): Rune {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function random_color(rune) {
+export function random_color(rune: Rune): Rune {
   throwIfNotRune('random_color', rune);
   const wrapper = getEmptyRune();
   wrapper.subRunes.push(rune);
@@ -449,7 +453,7 @@ export function random_color(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function red(rune) {
+export function red(rune: Rune): Rune {
   throwIfNotRune('red', rune);
   return addColorFromHex(rune, '#F44336');
 }
@@ -459,7 +463,7 @@ export function red(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function pink(rune) {
+export function pink(rune: Rune): Rune {
   throwIfNotRune('pink', rune);
   return addColorFromHex(rune, '#E91E63');
 }
@@ -469,7 +473,7 @@ export function pink(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function purple(rune) {
+export function purple(rune: Rune): Rune {
   throwIfNotRune('purple', rune);
   return addColorFromHex(rune, '#AA00FF');
 }
@@ -479,7 +483,7 @@ export function purple(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function indigo(rune) {
+export function indigo(rune: Rune): Rune {
   throwIfNotRune('indigo', rune);
   return addColorFromHex(rune, '#3F51B5');
 }
@@ -489,7 +493,7 @@ export function indigo(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function blue(rune) {
+export function blue(rune: Rune): Rune {
   throwIfNotRune('blue', rune);
   return addColorFromHex(rune, '#2196F3');
 }
@@ -499,7 +503,7 @@ export function blue(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function green(rune) {
+export function green(rune: Rune): Rune {
   throwIfNotRune('green', rune);
   return addColorFromHex(rune, '#4CAF50');
 }
@@ -509,7 +513,7 @@ export function green(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function yellow(rune) {
+export function yellow(rune: Rune): Rune {
   throwIfNotRune('yellow', rune);
   return addColorFromHex(rune, '#FFEB3B');
 }
@@ -519,7 +523,7 @@ export function yellow(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function orange(rune) {
+export function orange(rune: Rune): Rune {
   throwIfNotRune('orange', rune);
   return addColorFromHex(rune, '#FF9800');
 }
@@ -529,7 +533,7 @@ export function orange(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function brown(rune) {
+export function brown(rune: Rune): Rune {
   throwIfNotRune('brown', rune);
   return addColorFromHex(rune, '#795548');
 }
@@ -539,7 +543,7 @@ export function brown(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function black(rune) {
+export function black(rune: Rune): Rune {
   throwIfNotRune('black', rune);
   return addColorFromHex(rune, '#000000');
 }
@@ -549,7 +553,7 @@ export function black(rune) {
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
  */
-export function white(rune) {
+export function white(rune: Rune): Rune {
   throwIfNotRune('white', rune);
   return addColorFromHex(rune, '#FFFFFF');
 }
