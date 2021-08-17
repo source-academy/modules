@@ -6431,7 +6431,7 @@
 			"originalName": "rune/functions",
 			"children": [
 				{
-					"id": 767,
+					"id": 770,
 					"name": "blank",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6455,7 +6455,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 772,
+					"id": 775,
 					"name": "circle",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6479,7 +6479,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 770,
+					"id": 773,
 					"name": "corner",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6503,7 +6503,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 773,
+					"id": 776,
 					"name": "heart",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6527,7 +6527,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 771,
+					"id": 774,
 					"name": "nova",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6551,7 +6551,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 774,
+					"id": 777,
 					"name": "pentagram",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6575,7 +6575,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 768,
+					"id": 771,
 					"name": "rcross",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6599,7 +6599,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 775,
+					"id": 778,
 					"name": "ribbon",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6623,7 +6623,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 769,
+					"id": 772,
 					"name": "sail",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6647,7 +6647,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 766,
+					"id": 769,
 					"name": "square",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6671,7 +6671,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 756,
+					"id": 759,
 					"name": "anaglyph",
 					"kind": 64,
 					"kindString": "Function",
@@ -6679,13 +6679,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 581,
+							"line": 585,
 							"character": 24
 						}
 					],
 					"signatures": [
 						{
-							"id": 757,
+							"id": 760,
 							"name": "anaglyph",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -6696,7 +6696,7 @@
 							},
 							"parameters": [
 								{
-									"id": 758,
+									"id": 761,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -6752,8 +6752,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								},
 								{
@@ -6766,8 +6766,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -6854,7 +6854,7 @@
 					]
 				},
 				{
-					"id": 747,
+					"id": 750,
 					"name": "black",
 					"kind": 64,
 					"kindString": "Function",
@@ -6862,19 +6862,113 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 542,
+							"line": 546,
 							"character": 21
 						}
 					],
 					"signatures": [
 						{
-							"id": 748,
+							"id": 751,
 							"name": "black",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
 								"shortText": "colors the given rune black.",
+								"returns": "the colored Rune\n"
+							},
+							"parameters": [
+								{
+									"id": 752,
+									"name": "rune",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the rune to color"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Rune"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Rune"
+							}
+						}
+					]
+				},
+				{
+					"id": 735,
+					"name": "blue",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "rune/functions.ts",
+							"line": 496,
+							"character": 20
+						}
+					],
+					"signatures": [
+						{
+							"id": 736,
+							"name": "blue",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "colors the given rune blue.",
+								"returns": "the colored Rune\n"
+							},
+							"parameters": [
+								{
+									"id": 737,
+									"name": "rune",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the rune to color"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Rune"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Rune"
+							}
+						}
+					]
+				},
+				{
+					"id": 747,
+					"name": "brown",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "rune/functions.ts",
+							"line": 536,
+							"character": 21
+						}
+					],
+					"signatures": [
+						{
+							"id": 748,
+							"name": "brown",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "colors the given rune brown.",
 								"returns": "the colored Rune\n"
 							},
 							"parameters": [
@@ -6888,8 +6982,8 @@
 										"text": "the rune to color"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -6901,101 +6995,7 @@
 					]
 				},
 				{
-					"id": 732,
-					"name": "blue",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "rune/functions.ts",
-							"line": 492,
-							"character": 20
-						}
-					],
-					"signatures": [
-						{
-							"id": 733,
-							"name": "blue",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "colors the given rune blue.",
-								"returns": "the colored Rune\n"
-							},
-							"parameters": [
-								{
-									"id": 734,
-									"name": "rune",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the rune to color"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "any"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Rune"
-							}
-						}
-					]
-				},
-				{
-					"id": 744,
-					"name": "brown",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "rune/functions.ts",
-							"line": 532,
-							"character": 21
-						}
-					],
-					"signatures": [
-						{
-							"id": 745,
-							"name": "brown",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "colors the given rune brown.",
-								"returns": "the colored Rune\n"
-							},
-							"parameters": [
-								{
-									"id": 746,
-									"name": "rune",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the rune to color"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "any"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Rune"
-							}
-						}
-					]
-				},
-				{
-					"id": 711,
+					"id": 714,
 					"name": "color",
 					"kind": 64,
 					"kindString": "Function",
@@ -7003,13 +7003,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 420,
+							"line": 424,
 							"character": 21
 						}
 					],
 					"signatures": [
 						{
-							"id": 712,
+							"id": 715,
 							"name": "color",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7020,7 +7020,7 @@
 							},
 							"parameters": [
 								{
-									"id": 713,
+									"id": 716,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7034,45 +7034,45 @@
 									}
 								},
 								{
-									"id": 714,
+									"id": 717,
 									"name": "r",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "red value (0.0-1.0)"
+										"text": "red value [0.0-1.0]"
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
-									"id": 715,
+									"id": 718,
 									"name": "g",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "green value (0.0-1.0)"
+										"text": "green value [0.0-1.0]"
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
-									"id": 716,
+									"id": 719,
 									"name": "b",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "blue value (0.0-1.0)"
+										"text": "blue value [0.0-1.0]"
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								}
 							],
@@ -7118,8 +7118,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7165,8 +7165,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7199,7 +7199,7 @@
 							"flags": {},
 							"comment": {
 								"shortText": "create a rune using the image provided in the url",
-								"returns": "Rune - a rune created using the image.\n"
+								"returns": "a rune created using the image.\n"
 							},
 							"parameters": [
 								{
@@ -7225,7 +7225,7 @@
 					]
 				},
 				{
-					"id": 735,
+					"id": 738,
 					"name": "green",
 					"kind": 64,
 					"kindString": "Function",
@@ -7233,13 +7233,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 502,
+							"line": 506,
 							"character": 21
 						}
 					],
 					"signatures": [
 						{
-							"id": 736,
+							"id": 739,
 							"name": "green",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7250,7 +7250,7 @@
 							},
 							"parameters": [
 								{
-									"id": 737,
+									"id": 740,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7259,8 +7259,8 @@
 										"text": "the rune to color"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7272,7 +7272,7 @@
 					]
 				},
 				{
-					"id": 763,
+					"id": 766,
 					"name": "hollusion",
 					"kind": 64,
 					"kindString": "Function",
@@ -7280,13 +7280,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 609,
+							"line": 613,
 							"character": 25
 						}
 					],
 					"signatures": [
 						{
-							"id": 764,
+							"id": 767,
 							"name": "hollusion",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7297,7 +7297,7 @@
 							},
 							"parameters": [
 								{
-									"id": 765,
+									"id": 768,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7319,7 +7319,7 @@
 					]
 				},
 				{
-					"id": 759,
+					"id": 762,
 					"name": "hollusion_magnitude",
 					"kind": 64,
 					"kindString": "Function",
@@ -7327,13 +7327,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 595,
+							"line": 599,
 							"character": 35
 						}
 					],
 					"signatures": [
 						{
-							"id": 760,
+							"id": 763,
 							"name": "hollusion_magnitude",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7344,7 +7344,7 @@
 							},
 							"parameters": [
 								{
-									"id": 761,
+									"id": 764,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7358,7 +7358,7 @@
 									}
 								},
 								{
-									"id": 762,
+									"id": 765,
 									"name": "magnitude",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7381,7 +7381,7 @@
 					]
 				},
 				{
-					"id": 729,
+					"id": 732,
 					"name": "indigo",
 					"kind": 64,
 					"kindString": "Function",
@@ -7389,13 +7389,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 482,
+							"line": 486,
 							"character": 22
 						}
 					],
 					"signatures": [
 						{
-							"id": 730,
+							"id": 733,
 							"name": "indigo",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7406,7 +7406,7 @@
 							},
 							"parameters": [
 								{
-									"id": 731,
+									"id": 734,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7415,8 +7415,8 @@
 										"text": "the rune to color"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7462,8 +7462,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7475,7 +7475,7 @@
 					]
 				},
 				{
-					"id": 741,
+					"id": 744,
 					"name": "orange",
 					"kind": 64,
 					"kindString": "Function",
@@ -7483,13 +7483,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 522,
+							"line": 526,
 							"character": 22
 						}
 					],
 					"signatures": [
 						{
-							"id": 742,
+							"id": 745,
 							"name": "orange",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7500,7 +7500,7 @@
 							},
 							"parameters": [
 								{
-									"id": 743,
+									"id": 746,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7509,8 +7509,8 @@
 										"text": "the rune to color"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7522,7 +7522,7 @@
 					]
 				},
 				{
-					"id": 707,
+					"id": 710,
 					"name": "overlay",
 					"kind": 64,
 					"kindString": "Function",
@@ -7530,24 +7530,24 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 399,
+							"line": 403,
 							"character": 23
 						}
 					],
 					"signatures": [
 						{
-							"id": 708,
+							"id": 711,
 							"name": "overlay",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "the depth range of the z-axis of a rune is (-1,1), this function maps the depth range of rune1 and rune 2 to (-1,0) and (0,1) respectively.",
+								"shortText": "the depth range of the z-axis of a rune is [-1,1], this function maps the depth range of rune1 and rune2 to [-1,0] and [0,1] respectively.",
 								"returns": "resulting Rune\n"
 							},
 							"parameters": [
 								{
-									"id": 709,
+									"id": 712,
 									"name": "rune1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7556,12 +7556,12 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								},
 								{
-									"id": 710,
+									"id": 713,
 									"name": "rune2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7570,8 +7570,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7583,7 +7583,7 @@
 					]
 				},
 				{
-					"id": 702,
+					"id": 705,
 					"name": "overlay_frac",
 					"kind": 64,
 					"kindString": "Function",
@@ -7591,24 +7591,24 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 368,
+							"line": 372,
 							"character": 28
 						}
 					],
 					"signatures": [
 						{
-							"id": 703,
+							"id": 706,
 							"name": "overlay_frac",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "the depth range of the z-axis of a rune is [-1,1], this function gives a fraction of the depth range to rune 1 and the rest to rune 2.",
+								"shortText": "the depth range of the z-axis of a rune is [-1,1], this function gives a fraction of the depth range to rune1 and the rest to rune2.",
 								"returns": "resulting Rune\n"
 							},
 							"parameters": [
 								{
-									"id": 704,
+									"id": 707,
 									"name": "frac",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7622,7 +7622,7 @@
 									}
 								},
 								{
-									"id": 705,
+									"id": 708,
 									"name": "rune1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7636,7 +7636,7 @@
 									}
 								},
 								{
-									"id": 706,
+									"id": 709,
 									"name": "rune2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7658,7 +7658,7 @@
 					]
 				},
 				{
-					"id": 723,
+					"id": 726,
 					"name": "pink",
 					"kind": 64,
 					"kindString": "Function",
@@ -7666,66 +7666,19 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 462,
+							"line": 466,
 							"character": 20
 						}
 					],
 					"signatures": [
 						{
-							"id": 724,
+							"id": 727,
 							"name": "pink",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
 								"shortText": "colors the given rune pink.",
-								"returns": "the colored Rune\n"
-							},
-							"parameters": [
-								{
-									"id": 725,
-									"name": "rune",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the rune to color"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "any"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Rune"
-							}
-						}
-					]
-				},
-				{
-					"id": 726,
-					"name": "purple",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "rune/functions.ts",
-							"line": 472,
-							"character": 22
-						}
-					],
-					"signatures": [
-						{
-							"id": 727,
-							"name": "purple",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "colors the given rune purple.",
 								"returns": "the colored Rune\n"
 							},
 							"parameters": [
@@ -7739,8 +7692,55 @@
 										"text": "the rune to color"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Rune"
+							}
+						}
+					]
+				},
+				{
+					"id": 729,
+					"name": "purple",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "rune/functions.ts",
+							"line": 476,
+							"character": 22
+						}
+					],
+					"signatures": [
+						{
+							"id": 730,
+							"name": "purple",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "colors the given rune purple.",
+								"returns": "the colored Rune\n"
+							},
+							"parameters": [
+								{
+									"id": 731,
+									"name": "rune",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the rune to color"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7786,8 +7786,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7833,55 +7833,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Rune"
-							}
-						}
-					]
-				},
-				{
-					"id": 717,
-					"name": "random_color",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "rune/functions.ts",
-							"line": 436,
-							"character": 28
-						}
-					],
-					"signatures": [
-						{
-							"id": 718,
-							"name": "random_color",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Gives random color to the given rune.\nThe color is chosen randomly from the following nine\ncolors: red, pink, purple, indigo, blue, green, yellow, orange, brown",
-								"returns": "the colored Rune\n"
-							},
-							"parameters": [
-								{
-									"id": 719,
-									"name": "rune",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the rune to color"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7894,26 +7847,26 @@
 				},
 				{
 					"id": 720,
-					"name": "red",
+					"name": "random_color",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 452,
-							"character": 19
+							"line": 440,
+							"character": 28
 						}
 					],
 					"signatures": [
 						{
 							"id": 721,
-							"name": "red",
+							"name": "random_color",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "colors the given rune red.",
+								"shortText": "Gives random color to the given rune.\nThe color is chosen randomly from the following nine\ncolors: red, pink, purple, indigo, blue, green, yellow, orange, brown",
 								"returns": "the colored Rune\n"
 							},
 							"parameters": [
@@ -7927,8 +7880,55 @@
 										"text": "the rune to color"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Rune"
+							}
+						}
+					]
+				},
+				{
+					"id": 723,
+					"name": "red",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "rune/functions.ts",
+							"line": 456,
+							"character": 19
+						}
+					],
+					"signatures": [
+						{
+							"id": 724,
+							"name": "red",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "colors the given rune red.",
+								"returns": "the colored Rune\n"
+							},
+							"parameters": [
+								{
+									"id": 725,
+									"name": "rune",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the rune to color"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7961,7 +7961,7 @@
 							"flags": {},
 							"comment": {
 								"shortText": "applies a given function n times to an initial value",
-								"returns": "- result of n times application of\n              f to rune: f(f(...f(f(rune))...))\n"
+								"returns": "- result of n times application of\n              pattern to initial: pattern(pattern(...pattern(pattern(initial))...))\n"
 							},
 							"parameters": [
 								{
@@ -7975,7 +7975,7 @@
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -7984,29 +7984,71 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "unary function from Rune to Rune"
+									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reflection",
+										"declaration": {
+											"id": 701,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"sources": [
+												{
+													"fileName": "rune/functions.ts",
+													"line": 352,
+													"character": 10
+												}
+											],
+											"signatures": [
+												{
+													"id": 702,
+													"name": "__type",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 703,
+															"name": "a",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "reference",
+																"name": "Rune"
+															}
+														}
+													],
+													"type": {
+														"type": "reference",
+														"name": "Rune"
+													}
+												}
+											]
+										}
 									}
 								},
 								{
-									"id": 701,
+									"id": 704,
 									"name": "initial",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "argument"
+										"text": "the initial Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
 							"type": {
-								"type": "intrinsic",
-								"name": "any"
+								"type": "reference",
+								"name": "Rune"
 							}
 						}
 					]
@@ -8047,7 +8089,7 @@
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -8060,8 +8102,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8108,7 +8150,7 @@
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -8121,8 +8163,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8209,7 +8251,7 @@
 					]
 				},
 				{
-					"id": 753,
+					"id": 756,
 					"name": "show",
 					"kind": 64,
 					"kindString": "Function",
@@ -8217,13 +8259,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 567,
+							"line": 571,
 							"character": 20
 						}
 					],
 					"signatures": [
 						{
-							"id": 754,
+							"id": 757,
 							"name": "show",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8234,7 +8276,7 @@
 							},
 							"parameters": [
 								{
-									"id": 755,
+									"id": 758,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8290,8 +8332,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								},
 								{
@@ -8304,8 +8346,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8427,7 +8469,7 @@
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -8440,14 +8482,14 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
 							"type": {
-								"type": "intrinsic",
-								"name": "any"
+								"type": "reference",
+								"name": "Rune"
 							}
 						}
 					]
@@ -8488,7 +8530,7 @@
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -8502,7 +8544,7 @@
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -8515,8 +8557,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8562,8 +8604,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8575,7 +8617,7 @@
 					]
 				},
 				{
-					"id": 750,
+					"id": 753,
 					"name": "white",
 					"kind": 64,
 					"kindString": "Function",
@@ -8583,13 +8625,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 552,
+							"line": 556,
 							"character": 21
 						}
 					],
 					"signatures": [
 						{
-							"id": 751,
+							"id": 754,
 							"name": "white",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8600,7 +8642,7 @@
 							},
 							"parameters": [
 								{
-									"id": 752,
+									"id": 755,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8609,8 +8651,8 @@
 										"text": "the rune to color"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8622,7 +8664,7 @@
 					]
 				},
 				{
-					"id": 738,
+					"id": 741,
 					"name": "yellow",
 					"kind": 64,
 					"kindString": "Function",
@@ -8630,13 +8672,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 512,
+							"line": 516,
 							"character": 22
 						}
 					],
 					"signatures": [
 						{
-							"id": 739,
+							"id": 742,
 							"name": "yellow",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8647,7 +8689,7 @@
 							},
 							"parameters": [
 								{
-									"id": 740,
+									"id": 743,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8656,8 +8698,8 @@
 										"text": "the rune to color"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8674,58 +8716,58 @@
 					"title": "Variables",
 					"kind": 32,
 					"children": [
-						767,
-						772,
 						770,
-						773,
-						771,
-						774,
-						768,
 						775,
-						769,
-						766
+						773,
+						776,
+						774,
+						777,
+						771,
+						778,
+						772,
+						769
 					]
 				},
 				{
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						756,
+						759,
 						684,
 						679,
+						750,
+						735,
 						747,
-						732,
-						744,
-						711,
+						714,
 						691,
 						688,
 						636,
-						735,
-						763,
-						759,
-						729,
+						738,
+						766,
+						762,
+						732,
 						694,
-						741,
-						707,
-						702,
-						723,
+						744,
+						710,
+						705,
 						726,
+						729,
 						673,
 						670,
-						717,
 						720,
+						723,
 						697,
 						653,
 						644,
 						639,
-						753,
+						756,
 						662,
 						657,
 						666,
 						648,
 						676,
-						750,
-						738
+						753,
+						741
 					]
 				}
 			],
