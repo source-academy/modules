@@ -37,3 +37,4 @@
 
 ### 17 Aug 2021
 - 18:00pm - 18:30pm : working on beside_frac and stack_frac definition
+- 18:30pm - 19:00pm : fix the documentation of types #86
