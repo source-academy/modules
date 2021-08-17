@@ -6679,7 +6679,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 577,
+							"line": 581,
 							"character": 24
 						}
 					],
@@ -6726,7 +6726,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 293,
+							"line": 297,
 							"character": 22
 						}
 					],
@@ -6787,7 +6787,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 269,
+							"line": 273,
 							"character": 27
 						}
 					],
@@ -6810,11 +6810,11 @@
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "fraction between 0 and 1"
+										"text": "fraction between 0 and 1 (inclusive)"
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -6827,8 +6827,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								},
 								{
@@ -6841,8 +6841,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -6862,7 +6862,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 538,
+							"line": 542,
 							"character": 21
 						}
 					],
@@ -6909,7 +6909,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 488,
+							"line": 492,
 							"character": 20
 						}
 					],
@@ -6956,7 +6956,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 528,
+							"line": 532,
 							"character": 21
 						}
 					],
@@ -7003,7 +7003,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 416,
+							"line": 420,
 							"character": 21
 						}
 					],
@@ -7092,7 +7092,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 318,
+							"line": 322,
 							"character": 26
 						}
 					],
@@ -7139,7 +7139,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 306,
+							"line": 310,
 							"character": 25
 						}
 					],
@@ -7233,7 +7233,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 498,
+							"line": 502,
 							"character": 21
 						}
 					],
@@ -7280,7 +7280,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 605,
+							"line": 609,
 							"character": 25
 						}
 					],
@@ -7327,7 +7327,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 591,
+							"line": 595,
 							"character": 35
 						}
 					],
@@ -7389,7 +7389,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 478,
+							"line": 482,
 							"character": 22
 						}
 					],
@@ -7436,7 +7436,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 330,
+							"line": 334,
 							"character": 26
 						}
 					],
@@ -7483,7 +7483,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 518,
+							"line": 522,
 							"character": 22
 						}
 					],
@@ -7530,7 +7530,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 395,
+							"line": 399,
 							"character": 23
 						}
 					],
@@ -7591,7 +7591,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 364,
+							"line": 368,
 							"character": 28
 						}
 					],
@@ -7603,7 +7603,7 @@
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "the depth range of the z-axis of a rune is (-1,1), this function gives a fraction of the depth range to rune 1 and the rest to rune 2.",
+								"shortText": "the depth range of the z-axis of a rune is [-1,1], this function gives a fraction of the depth range to rune 1 and the rest to rune 2.",
 								"returns": "resulting Rune\n"
 							},
 							"parameters": [
@@ -7614,11 +7614,11 @@
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "fraction between 0 and 1"
+										"text": "fraction between 0 and 1 (inclusive)"
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -7631,8 +7631,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								},
 								{
@@ -7645,8 +7645,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -7666,7 +7666,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 458,
+							"line": 462,
 							"character": 20
 						}
 					],
@@ -7713,7 +7713,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 468,
+							"line": 472,
 							"character": 22
 						}
 					],
@@ -7760,7 +7760,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 242,
+							"line": 246,
 							"character": 33
 						}
 					],
@@ -7807,7 +7807,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 230,
+							"line": 234,
 							"character": 34
 						}
 					],
@@ -7854,7 +7854,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 432,
+							"line": 436,
 							"character": 28
 						}
 					],
@@ -7901,7 +7901,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 448,
+							"line": 452,
 							"character": 19
 						}
 					],
@@ -7948,7 +7948,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 346,
+							"line": 350,
 							"character": 30
 						}
 					],
@@ -8020,7 +8020,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 157,
+							"line": 161,
 							"character": 22
 						}
 					],
@@ -8081,7 +8081,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 125,
+							"line": 129,
 							"character": 21
 						}
 					],
@@ -8169,7 +8169,7 @@
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -8183,7 +8183,7 @@
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -8196,8 +8196,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8217,7 +8217,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 563,
+							"line": 567,
 							"character": 20
 						}
 					],
@@ -8264,7 +8264,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 202,
+							"line": 206,
 							"character": 21
 						}
 					],
@@ -8325,7 +8325,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 178,
+							"line": 182,
 							"character": 26
 						}
 					],
@@ -8348,11 +8348,11 @@
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "fraction between 0 and 1"
+										"text": "fraction between 0 and 1 (inclusive)"
 									},
 									"type": {
 										"type": "intrinsic",
-										"name": "any"
+										"name": "number"
 									}
 								},
 								{
@@ -8365,8 +8365,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								},
 								{
@@ -8379,8 +8379,8 @@
 										"text": "given Rune"
 									},
 									"type": {
-										"type": "intrinsic",
-										"name": "any"
+										"type": "reference",
+										"name": "Rune"
 									}
 								}
 							],
@@ -8400,7 +8400,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 215,
+							"line": 219,
 							"character": 22
 						}
 					],
@@ -8461,7 +8461,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 137,
+							"line": 141,
 							"character": 25
 						}
 					],
@@ -8536,7 +8536,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 253,
+							"line": 257,
 							"character": 32
 						}
 					],
@@ -8583,7 +8583,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 548,
+							"line": 552,
 							"character": 21
 						}
 					],
@@ -8630,7 +8630,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 508,
+							"line": 512,
 							"character": 22
 						}
 					],
