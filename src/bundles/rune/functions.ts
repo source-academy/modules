@@ -105,7 +105,11 @@ export function from_url(imageUrl: string): Rune {
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting scaled Rune
  */
-export function scale_independent(ratio_x, ratio_y, rune) {
+export function scale_independent(
+  ratio_x: number,
+  ratio_y: number,
+  rune: Rune
+): Rune {
   throwIfNotRune('scale_independent', rune);
   const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
   const scaleMat = mat4.create();
@@ -170,17 +174,17 @@ export function rotate(rad, rune) {
  * such that the first one occupies frac
  * portion of the height of the result and
  * the second the rest
- * @param {number} frac - fraction between 0 and 1
+ * @param {number} frac - fraction between 0 and 1 (inclusive)
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
  */
-export function stack_frac(frac, rune1, rune2) {
+export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('stack_frac', rune1);
   throwIfNotRune('stack_frac', rune2);
 
-  if (!(frac > 0 && frac < 1)) {
-    throw Error('stack_frac can only take fraction in (0,1).');
+  if (!(frac >= 0 && frac <= 1)) {
+    throw Error('stack_frac can only take fraction in [0,1].');
   }
 
   const upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1));
@@ -261,17 +265,17 @@ export function turn_upside_down(rune) {
  * such that the first one occupies frac
  * portion of the width of the result and
  * the second the rest
- * @param {number} frac - fraction between 0 and 1
+ * @param {number} frac - fraction between 0 and 1 (inclusive)
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
  */
-export function beside_frac(frac, rune1, rune2) {
+export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('beside_frac', rune1);
   throwIfNotRune('beside_frac', rune2);
 
-  if (!(frac > 0 && frac < 1)) {
-    throw Error('beside_frac can only take fraction in (0,1).');
+  if (!(frac >= 0 && frac <= 1)) {
+    throw Error('beside_frac can only take fraction in [0,1].');
   }
 
   const left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1));
@@ -355,17 +359,17 @@ export function repeat_pattern(n, pattern, initial) {
 // =============================================================================
 
 /**
- * the depth range of the z-axis of a rune is (-1,1), this function gives a fraction of the depth range to rune 1 and the rest to rune 2.
- * @param {number} frac - fraction between 0 and 1
+ * the depth range of the z-axis of a rune is [-1,1], this function gives a fraction of the depth range to rune 1 and the rest to rune 2.
+ * @param {number} frac - fraction between 0 and 1 (inclusive)
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
  */
-export function overlay_frac(frac, rune1, rune2) {
+export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('overlay_frac', rune1);
   throwIfNotRune('overlay_frac', rune2);
-  if (!(frac > 0 && frac < 1)) {
-    throw Error('overlay_frac can only take fraction in (0,1).');
+  if (!(frac >= 0 && frac <= 1)) {
+    throw Error('overlay_frac can only take fraction in [0,1].');
   }
 
   const front = getEmptyRune();
