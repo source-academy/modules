@@ -365,7 +365,7 @@ export function repeat_pattern(n, pattern, initial) {
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
  */
-export function overlay_frac(frac, rune1, rune2) {
+export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('overlay_frac', rune1);
   throwIfNotRune('overlay_frac', rune2);
   if (!(frac >= 0 && frac <= 1)) {
