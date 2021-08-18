@@ -172,6 +172,25 @@ export const getSail: () => Rune = () => {
 };
 
 /**
+ * primitive Rune in the rune of a triangle
+ * */
+export const getTriangle: () => Rune = () => {
+  const vertexList: number[] = [];
+  const colorList: number[] = [];
+
+  vertexList.push(1, -1, 0, 1);
+  vertexList.push(0, -1, 0, 1);
+  vertexList.push(0, 1, 0, 1);
+
+  colorList.push(0, 0, 0, 1);
+
+  const rune: Rune = getEmptyRune();
+  rune.vertices = new Float32Array(vertexList);
+  rune.colors = new Float32Array(colorList);
+  return rune;
+};
+
+/**
  * primitive Rune with black triangle,
  * filling upper right corner
  * */

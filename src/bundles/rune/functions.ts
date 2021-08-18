@@ -11,6 +11,7 @@ import {
   getBlank,
   getRcross,
   getSail,
+  getTriangle,
   getCorner,
   getNova,
   getCircle,
@@ -48,6 +49,10 @@ export const rcross: Rune = getRcross();
  * Rune with the shape of a sail
  */
 export const sail: Rune = getSail();
+/**
+ * Rune with the shape of a triangle
+ */
+export const triangle: Rune = getTriangle();
 /**
  * Rune with black triangle,
  * filling upper right corner
