@@ -6703,7 +6703,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 590,
+							"line": 591,
 							"character": 24
 						}
 					],
@@ -6886,7 +6886,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 551,
+							"line": 552,
 							"character": 21
 						}
 					],
@@ -6933,7 +6933,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 501,
+							"line": 502,
 							"character": 20
 						}
 					],
@@ -6980,7 +6980,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 541,
+							"line": 542,
 							"character": 21
 						}
 					],
@@ -7027,7 +7027,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 429,
+							"line": 430,
 							"character": 21
 						}
 					],
@@ -7257,7 +7257,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 511,
+							"line": 512,
 							"character": 21
 						}
 					],
@@ -7304,7 +7304,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 618,
+							"line": 619,
 							"character": 25
 						}
 					],
@@ -7351,7 +7351,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 604,
+							"line": 605,
 							"character": 35
 						}
 					],
@@ -7413,7 +7413,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 491,
+							"line": 492,
 							"character": 22
 						}
 					],
@@ -7507,7 +7507,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 531,
+							"line": 532,
 							"character": 22
 						}
 					],
@@ -7554,7 +7554,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 408,
+							"line": 409,
 							"character": 23
 						}
 					],
@@ -7566,7 +7566,7 @@
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "the depth range of the z-axis of a rune is [-1,1], this function maps the depth range of rune1 and rune2 to [-1,0] and [0,1] respectively.",
+								"shortText": "the depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.",
 								"returns": "resulting Rune\n"
 							},
 							"parameters": [
@@ -7627,7 +7627,7 @@
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "the depth range of the z-axis of a rune is [-1,1], this function gives a fraction of the depth range to rune1 and the rest to rune2.",
+								"shortText": "the depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.",
 								"returns": "resulting Rune\n"
 							},
 							"parameters": [
@@ -7690,7 +7690,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 471,
+							"line": 472,
 							"character": 20
 						}
 					],
@@ -7737,7 +7737,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 481,
+							"line": 482,
 							"character": 22
 						}
 					],
@@ -7878,7 +7878,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 445,
+							"line": 446,
 							"character": 28
 						}
 					],
@@ -7925,7 +7925,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 461,
+							"line": 462,
 							"character": 19
 						}
 					],
@@ -8283,7 +8283,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 576,
+							"line": 577,
 							"character": 20
 						}
 					],
@@ -8649,7 +8649,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 561,
+							"line": 562,
 							"character": 21
 						}
 					],
@@ -8696,7 +8696,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 521,
+							"line": 522,
 							"character": 22
 						}
 					],
