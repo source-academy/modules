@@ -16,21 +16,20 @@ attribute vec4 aVertexPosition;
 uniform vec4 uVertexColor;
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
+uniform mat4 uCameraMatrix;
 
 varying lowp vec4 vColor;
 varying highp vec2 vTexturePosition;
 varying lowp float colorFactor;
 void main(void) {
-  vec4 imagePosition = uModelViewMatrix * aVertexPosition;
-  gl_Position = uProjectionMatrix * imagePosition;
-  gl_Position.z = imagePosition.z; // hack for zbuffer when camera matrix is not perspective
+  gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
   vColor = uVertexColor;
 
   // texture position is in [0,1], vertex position is in [-1,1]
   vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;
   vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;
 
-  colorFactor = imagePosition.z;
+  colorFactor = gl_Position.z;
 }
 `;
 
@@ -52,7 +51,7 @@ void main(void) {
     gl_FragColor = vColor;
   }
   if (uRenderWithDepthColor){
-    gl_FragColor += colorFactor * (1.0 - gl_FragColor);
+    gl_FragColor += (colorFactor + 0.5) * (1.0 - gl_FragColor);
     gl_FragColor.a = 1.0;
   }
   gl_FragColor = uColorFilter * gl_FragColor + 1.0 - uColorFilter;
@@ -149,7 +148,7 @@ function getWebGlFromCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
   }
   gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
-  gl.depthFunc(gl.LEQUAL); // Near things obscure far things
+  gl.depthFunc(gl.LESS); // Near things obscure far things (this is default setting can omit)
   // eslint-disable-next-line no-bitwise
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
   return gl;
@@ -266,6 +265,10 @@ function drawRunesToFrameBuffer(
     shaderProgram,
     'uProjectionMatrix'
   );
+  const cameraMatrixPointer = gl.getUniformLocation(
+    shaderProgram,
+    'uCameraMatrix'
+  );
   const modelViewMatrixPointer = gl.getUniformLocation(
     shaderProgram,
     'uModelViewMatrix'
@@ -287,8 +290,11 @@ function drawRunesToFrameBuffer(
     gl.uniform1i(depthSwitchPointer, 0);
   }
 
-  // load camera
-  gl.uniformMatrix4fv(projectionMatrixPointer, false, cameraMatrix);
+  // load projection and camera
+  const orthoCam = mat4.create();
+  mat4.ortho(orthoCam, -1, 1, -1, 1, -0.5, 1.5);
+  gl.uniformMatrix4fv(projectionMatrixPointer, false, orthoCam);
+  gl.uniformMatrix4fv(cameraMatrixPointer, false, cameraMatrix);
 
   // load colorfilter
   gl.uniform4fv(vertexColorFilterPt, colorFilter);
@@ -460,14 +466,14 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   mat4.lookAt(
     leftCameraMatrix,
     vec3.fromValues(-halfEyeDistance, 0, 0),
-    vec3.fromValues(0, 0, 1),
+    vec3.fromValues(0, 0, -0.4),
     vec3.fromValues(0, 1, 0)
   );
   const rightCameraMatrix = mat4.create();
   mat4.lookAt(
     rightCameraMatrix,
     vec3.fromValues(halfEyeDistance, 0, 0),
-    vec3.fromValues(0, 0, 1),
+    vec3.fromValues(0, 0, -0.4),
     vec3.fromValues(0, 1, 0)
   );
 
@@ -509,11 +515,11 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
 
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, leftBuffer.texture);
-  gl.uniform1i(reduPt, 0);
+  gl.uniform1i(cyanuPt, 0);
 
   gl.activeTexture(gl.TEXTURE1);
   gl.bindTexture(gl.TEXTURE_2D, rightBuffer.texture);
-  gl.uniform1i(cyanuPt, 1);
+  gl.uniform1i(reduPt, 1);
 
   // draw a square, which will allow the texture to be used
   // load position buffer
@@ -537,7 +543,13 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
   const runes = flattenRune(rune);
 
   // the browser will call this render function repeatedly for updating the canvas
+  let lastTime = 0;
   function render(timeInMs: number) {
+    requestAnimationFrame(render);
+    if (timeInMs - lastTime < 40) {
+      return;
+    }
+    lastTime = timeInMs;
     gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
     // eslint-disable-next-line no-bitwise
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
@@ -556,7 +568,7 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
     mat4.lookAt(
       cameraMatrix,
       vec3.fromValues(xshift, 0, 0),
-      vec3.fromValues(0, 0, 0.5),
+      vec3.fromValues(0, 0, -0.4),
       vec3.fromValues(0, 1, 0)
     );
 
@@ -568,7 +580,6 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
       null,
       true
     );
-    requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
 }

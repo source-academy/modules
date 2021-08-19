@@ -41,3 +41,6 @@
 
 ### 18 Aug 2021
 - 21:50pm - 22:20pm : fix sail/triangle
+
+### 19 Aug 2021
+- 21:10pm - 23:20pm : fix the anaglyph/hollusion inverted problem #93, and improves CPU consumption of animation by limiting the framerate.
