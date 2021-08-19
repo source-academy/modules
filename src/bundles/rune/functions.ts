@@ -368,13 +368,14 @@ export function repeat_pattern(
 // =============================================================================
 
 /**
- * the depth range of the z-axis of a rune is [-1,1], this function gives a fraction of the depth range to rune1 and the rest to rune2.
+ * the depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.
  * @param {number} frac - fraction between 0 and 1 (inclusive)
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
  */
 export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
+  // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation. The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
   throwIfNotRune('overlay_frac', rune1);
   throwIfNotRune('overlay_frac', rune2);
   if (!(frac >= 0 && frac <= 1)) {
@@ -391,7 +392,7 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   back.subRunes.push(rune2);
   const backMat = back.transformMatrix;
   // need to apply transformation in backwards order!
-  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, frac));
+  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -frac));
   mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - frac));
 
   const combined = getEmptyRune();
@@ -400,7 +401,7 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 }
 
 /**
- * the depth range of the z-axis of a rune is [-1,1], this function maps the depth range of rune1 and rune2 to [-1,0] and [0,1] respectively.
+ * the depth range of the z-axis of a rune is [0,1], this function maps the depth range of rune1 and rune2 to [0,0.5] and [0.5,1] respectively.
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
