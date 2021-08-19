@@ -16,14 +16,13 @@ attribute vec4 aVertexPosition;
 uniform vec4 uVertexColor;
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
+uniform mat4 uCameraMatrix;
 
 varying lowp vec4 vColor;
 varying highp vec2 vTexturePosition;
 varying lowp float colorFactor;
 void main(void) {
-  vec4 imagePosition = uModelViewMatrix * aVertexPosition;
-  gl_Position = uProjectionMatrix * imagePosition;
-  // gl_Position.z = imagePosition.z; // hack for zbuffer when camera matrix is not perspective
+  gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
   vColor = uVertexColor;
 
   // texture position is in [0,1], vertex position is in [-1,1]
@@ -266,6 +265,10 @@ function drawRunesToFrameBuffer(
     shaderProgram,
     'uProjectionMatrix'
   );
+  const cameraMatrixPointer = gl.getUniformLocation(
+    shaderProgram,
+    'uCameraMatrix'
+  );
   const modelViewMatrixPointer = gl.getUniformLocation(
     shaderProgram,
     'uModelViewMatrix'
@@ -287,11 +290,11 @@ function drawRunesToFrameBuffer(
     gl.uniform1i(depthSwitchPointer, 0);
   }
 
-  // load camera
+  // load projection and camera
   const orthoCam = mat4.create();
   mat4.ortho(orthoCam, -1, 1, -1, 1, -0.5, 1.5);
-  mat4.mul(cameraMatrix, orthoCam, cameraMatrix);
-  gl.uniformMatrix4fv(projectionMatrixPointer, false, cameraMatrix);
+  gl.uniformMatrix4fv(projectionMatrixPointer, false, orthoCam);
+  gl.uniformMatrix4fv(cameraMatrixPointer, false, cameraMatrix);
 
   // load colorfilter
   gl.uniform4fv(vertexColorFilterPt, colorFilter);
