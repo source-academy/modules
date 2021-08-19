@@ -401,7 +401,7 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 }
 
 /**
- * the depth range of the z-axis of a rune is [0,1], this function maps the depth range of rune1 and rune2 to [0,0.5] and [0.5,1] respectively.
+ * the depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
