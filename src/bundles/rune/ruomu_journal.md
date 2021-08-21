@@ -44,3 +44,6 @@
 
 ### 19 Aug 2021
 - 21:10pm - 23:20pm : fix the anaglyph/hollusion inverted problem #93, and improves CPU consumption of animation by limiting the framerate.
+
+### 21 Aug 2021
+- 18:00pm - 21:00pm : fix the memory leak / high memomry consumption by hollusion #95
