@@ -78,6 +78,7 @@ class WebGLCanvas extends React.Component<Props, State> {
         }}
       >
         <canvas
+          id='runesCanvas'
           ref={(r) => {
             this.$canvas = r;
           }}

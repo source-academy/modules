@@ -83,6 +83,27 @@ void main() {
 }
 `;
 
+const copyVertexShader = `
+precision mediump float;
+attribute vec4 a_position;
+varying highp vec2 v_texturePosition;
+void main() {
+    gl_Position = a_position;
+    // texture position is in [0,1], vertex position is in [-1,1]
+    v_texturePosition.x = (a_position.x + 1.0) / 2.0;
+    v_texturePosition.y = (a_position.y + 1.0) / 2.0;
+}
+`;
+
+const copyFragmentShader = `
+precision mediump float;
+uniform sampler2D uTexture;
+varying highp vec2 v_texturePosition;
+void main() {
+    gl_FragColor = texture2D(uTexture, v_texturePosition);
+}
+`;
+
 // The following 2 functions loadShader and initShaderProgram are copied from the curve library, 26 Jul 2021 with no change. This unfortunately violated DIY priciple but I have no choice as those functions are not exported.
 /**
  * Gets shader based on given shader program code.
@@ -419,6 +440,14 @@ function initFramebufferObject(
 // Exposed functions
 // =============================================================================
 
+function stopAnimation(canvas: HTMLCanvasElement) {
+  if (canvas.hasAttribute('animRequestID')) {
+    const nodeMap = canvas.attributes;
+    const idAttr = nodeMap.getNamedItem('animRequestID');
+    const id = parseInt(idAttr?.value as string, 10);
+    window.cancelAnimationFrame(id);
+  }
+}
 /**
  * Draw the rune in the tab, including all the sub runes.
  *
@@ -427,6 +456,7 @@ function initFramebufferObject(
  */
 export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
   const gl = getWebGlFromCanvas(canvas);
+  stopAnimation(canvas);
   const runes = flattenRune(rune);
 
   // prepare camera projection array
@@ -453,6 +483,7 @@ export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
  */
 export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   const gl = getWebGlFromCanvas(canvas);
+  stopAnimation(canvas);
 
   // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
   let runes = flattenRune(rune);
@@ -540,27 +571,25 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
  */
 export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
   const gl = getWebGlFromCanvas(canvas);
-  const runes = flattenRune(rune);
+  stopAnimation(canvas);
+  let runes = flattenRune(rune);
+  runes = flattenRune(
+    white(overlay_frac(0.999999999, blank, scale(5, square)))
+  ).concat(runes);
 
-  // the browser will call this render function repeatedly for updating the canvas
-  let lastTime = 0;
-  function render(timeInMs: number) {
-    requestAnimationFrame(render);
-    if (timeInMs - lastTime < 40) {
-      return;
-    }
-    lastTime = timeInMs;
-    gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
-    // eslint-disable-next-line no-bitwise
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
+  // first render all the frames into a framebuffer
+  const xshiftMax = runes[0].hollusionDistance;
+  const period = 2000; // animations loops every 2 seconds
+  const frameCount = 50; // in total 50 frames, gives rise to 25 fps
+  const frameBuffer: FrameBufferWithTexture[] = [];
 
+  function renderFrame(framePos: number): FrameBufferWithTexture {
+    const fb = initFramebufferObject(gl);
     // prepare camera projection array
     const cameraMatrix = mat4.create();
     // let the object shift in the x direction
     // the following calculation will let x oscillate in (-xshiftMax, xshiftMax) with time
-    const xshiftMax = runes[0].hollusionDistance;
-    const period = 2000;
-    let xshift = timeInMs % period;
+    let xshift = (framePos * (period / frameCount)) % period;
     if (xshift > period / 2) {
       xshift = period - xshift;
     }
@@ -577,9 +606,58 @@ export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
       runes,
       cameraMatrix,
       new Float32Array([1, 1, 1, 1]),
-      null,
+      fb.framebuffer,
       true
     );
+    return fb;
+  }
+
+  for (let i = 0; i < frameCount; i += 1) {
+    frameBuffer.push(renderFrame(i));
+  }
+
+  // Then, draw a frame from framebuffer for each update
+  const copyShaderProgram = initShaderProgram(
+    gl,
+    copyVertexShader,
+    copyFragmentShader
+  );
+  gl.useProgram(copyShaderProgram);
+  const texturePt = gl.getUniformLocation(copyShaderProgram, 'uTexture');
+  const vertexPositionPointer = gl.getAttribLocation(
+    copyShaderProgram,
+    'a_position'
+  );
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  const positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW);
+  gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vertexPositionPointer);
+
+  let lastTime = 0;
+  function render(timeInMs: number) {
+    if (!canvas.isEqualNode(document.getElementById('runesCanvas'))) {
+      return;
+    }
+    const id = requestAnimationFrame(render);
+    canvas.setAttribute('animRequestID', `${id}`);
+    if (timeInMs - lastTime < period / frameCount) {
+      return;
+    }
+    lastTime = timeInMs;
+
+    const framePos = Math.floor(timeInMs / (period / frameCount)) % frameCount;
+    const fbObject = frameBuffer[framePos];
+    gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
+    // eslint-disable-next-line no-bitwise
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, fbObject.texture);
+    gl.uniform1i(texturePt, 0);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
   requestAnimationFrame(render);
 }
