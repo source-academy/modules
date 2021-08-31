@@ -487,14 +487,14 @@ export function invert(curve: CurveFunction): CurveFunction {
 
 /**
  * This function returns a Curve transformation: It takes an x-value x0, a
- * y-value y0 and a z-value z0, each with default value of 0, as arguments and
+ * y-value y0 and a z-value z0, as arguments and
  * returns a Curve transformation that takes a Curve as argument and returns a
  * new Curve, by translating the original by x0 in x-direction, y0 in
  * y-direction and z0 in z-direction.
  *
- * @param x0 (Optional) x-value
- * @param y0 (Optional) y-value
- * @param z0 (Optional) z-value
+ * @param x0 x-value
+ * @param y0 y-value
+ * @param z0 z-value
  * @returns Curve transformation
  */
 export function translate(
@@ -522,16 +522,15 @@ export function translate(
 }
 
 /**
- * This function takes either 1 or 3 angles, a, b and c in radians as parameter
+ * This function takes 3 angles, a, b and c in radians as parameter
  * and returns a Curve transformation: a function that takes a Curve as argument
- * and returns a new Curve, which is the original Curve rotated by the given
- * angle around the z-axis (1 parameter) in counter-clockwise direction, or the
- * original Curve rotated extrinsically with Euler angles (a, b, c) about x, y,
- * and z axes (3 parameters).
+ * and returns a new Curve, which is the original Curve rotated
+ * extrinsically with Euler angles (a, b, c) about x, y,
+ * and z axes.
  *
  * @param a given angle
- * @param b (Optional) given angle
- * @param c (Optional) given angle
+ * @param b given angle
+ * @param c given angle
  * @returns function that takes a Curve and returns a Curve
  */
 export function rotate_around_origin(
@@ -608,13 +607,13 @@ export function rotate_around_origin(
 
 /**
  * This function takes scaling factors `a`, `b` and
- * `c`, each with default value of 1, as arguments and returns a
+ * `c`, as arguments and returns a
  * Curve transformation that scales a given Curve by `a` in
  * x-direction, `b` in y-direction and `c` in z-direction.
  *
- * @param a (Optional) scaling factor in x-direction
- * @param b (Optional) scaling factor in y-direction
- * @param c (Optional) scaling factor in z-direction
+ * @param a scaling factor in x-direction
+ * @param b scaling factor in y-direction
+ * @param c scaling factor in z-direction
  * @returns function that takes a Curve and returns a Curve
  */
 export function scale(a: number, b: number, c: number): CurveTransformer {
