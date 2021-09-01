@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { mat4, vec3 } from 'gl-matrix';
-import { ShapeDrawn, CurveFunction, ProgramInfo, BufferInfo } from './types';
+import { ShapeDrawn, Curve, ProgramInfo, BufferInfo } from './types';
 
 let canvasElement: HTMLCanvasElement;
 let renderingContext: WebGLRenderingContext | null;
@@ -205,7 +205,7 @@ export default function generateCurve(
   scaleMode: 'none' | 'stretch' | 'fit',
   drawMode: 'lines' | 'points',
   numPoints: number,
-  func: CurveFunction,
+  func: Curve,
   space: '2D' | '3D',
   isFullView: boolean
 ): ShapeDrawn {
