@@ -381,19 +381,32 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   if (!(frac >= 0 && frac <= 1)) {
     throw Error('overlay_frac can only take fraction in [0,1].');
   }
+  // by definition, when frac == 0 or 1, the back rune will overlap with the front rune.
+  // however, this would cause graphical glitch because overlapping is physically impossible
+  // we hack this problem by clipping the frac input from [0,1] to [1E-6, 1-1E-6]
+  // this should not be graphically noticable
+  let useFrac = frac;
+  const minFrac = 0.000001;
+  const maxFrac = 1 - minFrac;
+  if (useFrac < minFrac) {
+    useFrac = minFrac;
+  }
+  if (useFrac > maxFrac) {
+    useFrac = maxFrac;
+  }
 
   const front = getEmptyRune();
   front.subRunes.push(rune1);
   const frontMat = front.transformMatrix;
   // z: scale by frac
-  mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, frac));
+  mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, useFrac));
 
   const back = getEmptyRune();
   back.subRunes.push(rune2);
   const backMat = back.transformMatrix;
   // need to apply transformation in backwards order!
-  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -frac));
-  mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - frac));
+  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -useFrac));
+  mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - useFrac));
 
   const combined = getEmptyRune();
   combined.subRunes = [front, back]; // render front first to avoid redrawing
