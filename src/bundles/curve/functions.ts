@@ -36,12 +36,7 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  CurveFunction,
-  RenderFunction,
-  CurveTransformer,
-  Point,
-} from './types';
+import { Curve, RenderFunction, CurveTransformer, Point } from './types';
 import generateCurve from './curves_webgl';
 
 // =============================================================================
@@ -481,7 +476,7 @@ export function b_of(pt: Point): number {
  * @param original original Curve
  * @returns result Curve
  */
-export function invert(curve: CurveFunction): CurveFunction {
+export function invert(curve: Curve): Curve {
   return (t: number) => curve(1 - t);
 }
 
@@ -502,8 +497,8 @@ export function translate(
   y0: number,
   z0: number
 ): CurveTransformer {
-  return (curve: CurveFunction) => {
-    const transformation = (cf: CurveFunction) => (t: number) => {
+  return (curve: Curve) => {
+    const transformation = (cf: Curve) => (t: number) => {
       const a = x0 === undefined ? 0 : x0;
       const b = y0 === undefined ? 0 : y0;
       const c = z0 === undefined ? 0 : z0;
@@ -549,8 +544,8 @@ export function rotate_around_origin(
     // 1 args
     const cth = Math.cos(theta1);
     const sth = Math.sin(theta1);
-    return (curve: CurveFunction) => {
-      const transformation = (c: CurveFunction) => (t: number) => {
+    return (curve: Curve) => {
+      const transformation = (c: Curve) => (t: number) => {
         const ct = c(t);
         const x = x_of(ct);
         const y = y_of(ct);
@@ -573,8 +568,8 @@ export function rotate_around_origin(
     const sthy = Math.sin(theta2);
     const cthz = Math.cos(theta3);
     const sthz = Math.sin(theta3);
-    return (curve: CurveFunction) => {
-      const transformation = (c: CurveFunction) => (t: number) => {
+    return (curve: Curve) => {
+      const transformation = (c: Curve) => (t: number) => {
         const ct = c(t);
         const coord = [x_of(ct), y_of(ct), z_of(ct)];
         const mat = [
@@ -618,7 +613,7 @@ export function rotate_around_origin(
  */
 export function scale(a: number, b: number, c: number): CurveTransformer {
   return (curve) => {
-    const transformation = (cf: CurveFunction) => (t: number) => {
+    const transformation = (cf: Curve) => (t: number) => {
       const ct = cf(t);
       const a1 = a === undefined ? 1 : a;
       const b1 = b === undefined ? 1 : b;
@@ -659,7 +654,7 @@ export function scale_proportional(s: number): CurveTransformer {
  * @param curve given Curve
  * @returns result Curve
  */
-export function put_in_standard_position(curve: CurveFunction): CurveFunction {
+export function put_in_standard_position(curve: Curve): Curve {
   const start_point = curve(0);
   const curve_started_at_origin = translate(
     -x_of(start_point),
@@ -688,10 +683,7 @@ export function put_in_standard_position(curve: CurveFunction): CurveFunction {
  * @param curve2 second Curve
  * @returns result Curve
  */
-export function connect_rigidly(
-  curve1: CurveFunction,
-  curve2: CurveFunction
-): CurveFunction {
+export function connect_rigidly(curve1: Curve, curve2: Curve): Curve {
   return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
 }
 
@@ -707,10 +699,7 @@ export function connect_rigidly(
  * @param curve2 second Curve
  * @returns result Curve
  */
-export function connect_ends(
-  curve1: CurveFunction,
-  curve2: CurveFunction
-): CurveFunction {
+export function connect_ends(curve1: Curve, curve2: Curve): Curve {
   const startPointOfCurve2 = curve2(0);
   const endPointOfCurve1 = curve1(1);
   return connect_rigidly(
@@ -754,7 +743,7 @@ export function unit_line(t: number): Point {
  * @param t fraction between 0 and 1
  * @returns horizontal Curve
  */
-export function unit_line_at(t: number): CurveFunction {
+export function unit_line_at(t: number): Curve {
   return (a: number): Point => make_point(a, t);
 }
 
