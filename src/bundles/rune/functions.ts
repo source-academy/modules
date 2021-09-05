@@ -159,7 +159,7 @@ export function translate(x: number, y: number, rune: Rune): Rune {
  * given in radians, in anti-clockwise direction.
  * Note that parts of the Rune
  * may be cropped as a result.
- * @param {number} rad - fraction between 0 and 1
+ * @param {number} rad - angle in radians
  * @param {Rune} rune - given Rune
  * @return {Rune} rotated Rune
  */
