@@ -315,7 +315,7 @@ export function play(sound: Sound): AudioPlayed {
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
     throw new Error('play: audio system still playing previous sound');
-  } else if (get_duration(sound) <= 0) {
+  } else if (get_duration(sound) < 0) {
     throw new Error('play: duration of sound is negative');
   } else {
     // Instantiate audio context if it has not been instantiated.
