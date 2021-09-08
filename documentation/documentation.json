@@ -6703,7 +6703,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 591,
+							"line": 604,
 							"character": 24
 						}
 					],
@@ -6886,7 +6886,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 552,
+							"line": 565,
 							"character": 21
 						}
 					],
@@ -6933,7 +6933,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 502,
+							"line": 515,
 							"character": 20
 						}
 					],
@@ -6980,7 +6980,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 542,
+							"line": 555,
 							"character": 21
 						}
 					],
@@ -7027,7 +7027,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 430,
+							"line": 443,
 							"character": 21
 						}
 					],
@@ -7257,7 +7257,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 512,
+							"line": 525,
 							"character": 21
 						}
 					],
@@ -7304,7 +7304,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 619,
+							"line": 632,
 							"character": 25
 						}
 					],
@@ -7351,7 +7351,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 605,
+							"line": 618,
 							"character": 35
 						}
 					],
@@ -7413,7 +7413,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 492,
+							"line": 505,
 							"character": 22
 						}
 					],
@@ -7507,7 +7507,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 532,
+							"line": 545,
 							"character": 22
 						}
 					],
@@ -7554,7 +7554,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 409,
+							"line": 422,
 							"character": 23
 						}
 					],
@@ -7690,7 +7690,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 472,
+							"line": 485,
 							"character": 20
 						}
 					],
@@ -7737,7 +7737,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 482,
+							"line": 495,
 							"character": 22
 						}
 					],
@@ -7878,7 +7878,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 446,
+							"line": 459,
 							"character": 28
 						}
 					],
@@ -7925,7 +7925,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 462,
+							"line": 475,
 							"character": 19
 						}
 					],
@@ -8109,7 +8109,7 @@
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "fraction between 0 and 1"
+										"text": "angle in radians"
 									},
 									"type": {
 										"type": "intrinsic",
@@ -8283,7 +8283,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 577,
+							"line": 590,
 							"character": 20
 						}
 					],
@@ -8649,7 +8649,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 562,
+							"line": 575,
 							"character": 21
 						}
 					],
@@ -8696,7 +8696,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 522,
+							"line": 535,
 							"character": 22
 						}
 					],
