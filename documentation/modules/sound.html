@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>sounds/functions | Source Academy Modules</title>
+	<title>sound | Source Academy Modules</title>
 	<meta name="description" content="Documentation for Source Academy Modules">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,16 +55,44 @@
 					<a href="../modules.html">Source Academy Modules</a>
 				</li>
 				<li>
-					<a href="sounds_functions.html">sounds/functions</a>
+					<a href="sound.html">sound</a>
 				</li>
 			</ul>
-			<h1>Module <TT>sounds/functions</TT></h1>
+			<h1>Module <TT>sound</TT></h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The sounds library provides functions for constructing and playing sounds.</p>
+					</div>
+					<p>A wave is a function that takes in a number <code>t</code> and returns
+						a number representing the amplitude at time <code>t</code>.
+					The amplitude should fall within the range of [-1, 1].</p>
+					<p>A Sound is a pair(wave, duration) where duration is the length of the sound in seconds.
+					The constructor make_sound and accessors get_wave and get_duration are provided.</p>
+					<p>Sound Discipline:
+						For all sounds, the wave function applied to and time <code>t</code> beyond its duration returns 0, that is:
+					<code>(get_wave(sound))(get_duration(sound) + x) === 0</code> for any x &gt;= 0.</p>
+					<p>Two functions which combine Sounds, <code>consecutively</code> and <code>simultaneously</code> are given.
+						Additionally, we provide sound transformation functions <code>adsr</code> and <code>phase_mod</code>
+					which take in a Sound and return a Sound.</p>
+					<p>Finally, the provided <code>play</code> function takes in a Sound and plays it using your
+					computer&#39;s sound system.</p>
+					<dl class="tsd-comment-tags">
+						<dt>author</dt>
+						<dd><p>Koh Shang Hui</p>
+						</dd>
+						<dt>author</dt>
+						<dd><p>Samyukta Sounderraman</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -72,35 +100,35 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#adsr" class="tsd-kind-icon">adsr</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#bell" class="tsd-kind-icon">bell</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#cello" class="tsd-kind-icon">cello</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#consecutively" class="tsd-kind-icon">consecutively</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#get_duration" class="tsd-kind-icon">get_<wbr>duration</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#get_wave" class="tsd-kind-icon">get_<wbr>wave</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#init_record" class="tsd-kind-icon">init_<wbr>record</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#is_sound" class="tsd-kind-icon">is_<wbr>sound</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#letter_name_to_frequency" class="tsd-kind-icon">letter_<wbr>name_<wbr>to_<wbr>frequency</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#letter_name_to_midi_note" class="tsd-kind-icon">letter_<wbr>name_<wbr>to_<wbr>midi_<wbr>note</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#make_sound" class="tsd-kind-icon">make_<wbr>sound</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#midi_note_to_frequency" class="tsd-kind-icon">midi_<wbr>note_<wbr>to_<wbr>frequency</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#noise_sound" class="tsd-kind-icon">noise_<wbr>sound</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#phase_mod" class="tsd-kind-icon">phase_<wbr>mod</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#piano" class="tsd-kind-icon">piano</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#play" class="tsd-kind-icon">play</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#play_concurrently" class="tsd-kind-icon">play_<wbr>concurrently</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#record" class="tsd-kind-icon">record</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#record_for" class="tsd-kind-icon">record_<wbr>for</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#sawtooth_sound" class="tsd-kind-icon">sawtooth_<wbr>sound</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#silence_sound" class="tsd-kind-icon">silence_<wbr>sound</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#simultaneously" class="tsd-kind-icon">simultaneously</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#sine_sound" class="tsd-kind-icon">sine_<wbr>sound</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#square_sound" class="tsd-kind-icon">square_<wbr>sound</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#stacking_adsr" class="tsd-kind-icon">stacking_<wbr>adsr</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#stop" class="tsd-kind-icon">stop</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#triangle_sound" class="tsd-kind-icon">triangle_<wbr>sound</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#trombone" class="tsd-kind-icon">trombone</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sounds_functions.html#violin" class="tsd-kind-icon">violin</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#adsr" class="tsd-kind-icon">adsr</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#bell" class="tsd-kind-icon">bell</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#cello" class="tsd-kind-icon">cello</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#consecutively" class="tsd-kind-icon">consecutively</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#get_duration" class="tsd-kind-icon">get_<wbr>duration</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#get_wave" class="tsd-kind-icon">get_<wbr>wave</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#init_record" class="tsd-kind-icon">init_<wbr>record</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#is_sound" class="tsd-kind-icon">is_<wbr>sound</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#letter_name_to_frequency" class="tsd-kind-icon">letter_<wbr>name_<wbr>to_<wbr>frequency</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#letter_name_to_midi_note" class="tsd-kind-icon">letter_<wbr>name_<wbr>to_<wbr>midi_<wbr>note</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#make_sound" class="tsd-kind-icon">make_<wbr>sound</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#midi_note_to_frequency" class="tsd-kind-icon">midi_<wbr>note_<wbr>to_<wbr>frequency</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#noise_sound" class="tsd-kind-icon">noise_<wbr>sound</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#phase_mod" class="tsd-kind-icon">phase_<wbr>mod</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#piano" class="tsd-kind-icon">piano</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#play" class="tsd-kind-icon">play</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#play_concurrently" class="tsd-kind-icon">play_<wbr>concurrently</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#record" class="tsd-kind-icon">record</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#record_for" class="tsd-kind-icon">record_<wbr>for</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#sawtooth_sound" class="tsd-kind-icon">sawtooth_<wbr>sound</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#silence_sound" class="tsd-kind-icon">silence_<wbr>sound</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#simultaneously" class="tsd-kind-icon">simultaneously</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#sine_sound" class="tsd-kind-icon">sine_<wbr>sound</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#square_sound" class="tsd-kind-icon">square_<wbr>sound</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#stacking_adsr" class="tsd-kind-icon">stacking_<wbr>adsr</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#stop" class="tsd-kind-icon">stop</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#triangle_sound" class="tsd-kind-icon">triangle_<wbr>sound</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#trombone" class="tsd-kind-icon">trombone</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="sound.html#violin" class="tsd-kind-icon">violin</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,7 +146,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L634">sounds/functions.ts:634</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L634">sound/functions.ts:634</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -179,7 +207,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L832">sounds/functions.ts:832</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L832">sound/functions.ts:832</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -223,7 +251,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L854">sounds/functions.ts:854</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L854">sound/functions.ts:854</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -267,7 +295,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L579">sounds/functions.ts:579</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L579">sound/functions.ts:579</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -307,7 +335,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L284">sounds/functions.ts:284</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L284">sound/functions.ts:284</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -344,7 +372,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L273">sounds/functions.ts:273</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L273">sound/functions.ts:273</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -381,7 +409,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L163">sounds/functions.ts:163</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L163">sound/functions.ts:163</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -405,7 +433,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L295">sounds/functions.ts:295</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L295">sound/functions.ts:295</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -442,7 +470,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L818">sounds/functions.ts:818</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L818">sound/functions.ts:818</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -476,7 +504,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L747">sounds/functions.ts:747</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L747">sound/functions.ts:747</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -514,7 +542,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L262">sounds/functions.ts:262</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L262">sound/functions.ts:262</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -560,7 +588,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L806">sounds/functions.ts:806</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L806">sound/functions.ts:806</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -597,7 +625,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L472">sounds/functions.ts:472</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L472">sound/functions.ts:472</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -634,7 +662,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L722">sounds/functions.ts:722</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L722">sound/functions.ts:722</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -688,7 +716,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L871">sounds/functions.ts:871</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L871">sound/functions.ts:871</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -732,7 +760,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L311">sounds/functions.ts:311</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L311">sound/functions.ts:311</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -770,7 +798,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L397">sounds/functions.ts:397</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L397">sound/functions.ts:397</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -807,7 +835,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L186">sounds/functions.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L186">sound/functions.ts:186</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -874,7 +902,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L219">sounds/functions.ts:219</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L219">sound/functions.ts:219</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -931,7 +959,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L553">sounds/functions.ts:553</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L553">sound/functions.ts:553</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -974,7 +1002,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L483">sounds/functions.ts:483</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L483">sound/functions.ts:483</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1011,7 +1039,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L599">sounds/functions.ts:599</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L599">sound/functions.ts:599</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1049,7 +1077,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L495">sounds/functions.ts:495</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L495">sound/functions.ts:495</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1092,7 +1120,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L507">sounds/functions.ts:507</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L507">sound/functions.ts:507</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1132,7 +1160,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L685">sounds/functions.ts:685</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L685">sound/functions.ts:685</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1194,7 +1222,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L458">sounds/functions.ts:458</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L458">sound/functions.ts:458</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1216,7 +1244,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L529">sounds/functions.ts:529</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L529">sound/functions.ts:529</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1259,7 +1287,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L888">sounds/functions.ts:888</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L888">sound/functions.ts:888</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1303,7 +1331,7 @@ play(promise());</CODE></PRE></p>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sounds/functions.ts#L905">sounds/functions.ts:905</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/10169c6/src/bundles/sound/functions.ts#L905">sound/functions.ts:905</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1366,13 +1394,13 @@ play(promise());</CODE></PRE></p>
 					<li class=" tsd-kind-module">
 						<a href="scrabble.html">scrabble</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="sound.html">sound</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="sound_matrix_functions.html">sound_<wbr>matrix/functions</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="sounds_functions.html">sounds/functions</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -1383,91 +1411,91 @@ play(promise());</CODE></PRE></p>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#adsr" class="tsd-kind-icon">adsr</a>
+						<a href="sound.html#adsr" class="tsd-kind-icon">adsr</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#bell" class="tsd-kind-icon">bell</a>
+						<a href="sound.html#bell" class="tsd-kind-icon">bell</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#cello" class="tsd-kind-icon">cello</a>
+						<a href="sound.html#cello" class="tsd-kind-icon">cello</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#consecutively" class="tsd-kind-icon">consecutively</a>
+						<a href="sound.html#consecutively" class="tsd-kind-icon">consecutively</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#get_duration" class="tsd-kind-icon">get_<wbr>duration</a>
+						<a href="sound.html#get_duration" class="tsd-kind-icon">get_<wbr>duration</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#get_wave" class="tsd-kind-icon">get_<wbr>wave</a>
+						<a href="sound.html#get_wave" class="tsd-kind-icon">get_<wbr>wave</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#init_record" class="tsd-kind-icon">init_<wbr>record</a>
+						<a href="sound.html#init_record" class="tsd-kind-icon">init_<wbr>record</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#is_sound" class="tsd-kind-icon">is_<wbr>sound</a>
+						<a href="sound.html#is_sound" class="tsd-kind-icon">is_<wbr>sound</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#letter_name_to_frequency" class="tsd-kind-icon">letter_<wbr>name_<wbr>to_<wbr>frequency</a>
+						<a href="sound.html#letter_name_to_frequency" class="tsd-kind-icon">letter_<wbr>name_<wbr>to_<wbr>frequency</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#letter_name_to_midi_note" class="tsd-kind-icon">letter_<wbr>name_<wbr>to_<wbr>midi_<wbr>note</a>
+						<a href="sound.html#letter_name_to_midi_note" class="tsd-kind-icon">letter_<wbr>name_<wbr>to_<wbr>midi_<wbr>note</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#make_sound" class="tsd-kind-icon">make_<wbr>sound</a>
+						<a href="sound.html#make_sound" class="tsd-kind-icon">make_<wbr>sound</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#midi_note_to_frequency" class="tsd-kind-icon">midi_<wbr>note_<wbr>to_<wbr>frequency</a>
+						<a href="sound.html#midi_note_to_frequency" class="tsd-kind-icon">midi_<wbr>note_<wbr>to_<wbr>frequency</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#noise_sound" class="tsd-kind-icon">noise_<wbr>sound</a>
+						<a href="sound.html#noise_sound" class="tsd-kind-icon">noise_<wbr>sound</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#phase_mod" class="tsd-kind-icon">phase_<wbr>mod</a>
+						<a href="sound.html#phase_mod" class="tsd-kind-icon">phase_<wbr>mod</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#piano" class="tsd-kind-icon">piano</a>
+						<a href="sound.html#piano" class="tsd-kind-icon">piano</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#play" class="tsd-kind-icon">play</a>
+						<a href="sound.html#play" class="tsd-kind-icon">play</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#play_concurrently" class="tsd-kind-icon">play_<wbr>concurrently</a>
+						<a href="sound.html#play_concurrently" class="tsd-kind-icon">play_<wbr>concurrently</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#record" class="tsd-kind-icon">record</a>
+						<a href="sound.html#record" class="tsd-kind-icon">record</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#record_for" class="tsd-kind-icon">record_<wbr>for</a>
+						<a href="sound.html#record_for" class="tsd-kind-icon">record_<wbr>for</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#sawtooth_sound" class="tsd-kind-icon">sawtooth_<wbr>sound</a>
+						<a href="sound.html#sawtooth_sound" class="tsd-kind-icon">sawtooth_<wbr>sound</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#silence_sound" class="tsd-kind-icon">silence_<wbr>sound</a>
+						<a href="sound.html#silence_sound" class="tsd-kind-icon">silence_<wbr>sound</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#simultaneously" class="tsd-kind-icon">simultaneously</a>
+						<a href="sound.html#simultaneously" class="tsd-kind-icon">simultaneously</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#sine_sound" class="tsd-kind-icon">sine_<wbr>sound</a>
+						<a href="sound.html#sine_sound" class="tsd-kind-icon">sine_<wbr>sound</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#square_sound" class="tsd-kind-icon">square_<wbr>sound</a>
+						<a href="sound.html#square_sound" class="tsd-kind-icon">square_<wbr>sound</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#stacking_adsr" class="tsd-kind-icon">stacking_<wbr>adsr</a>
+						<a href="sound.html#stacking_adsr" class="tsd-kind-icon">stacking_<wbr>adsr</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#stop" class="tsd-kind-icon">stop</a>
+						<a href="sound.html#stop" class="tsd-kind-icon">stop</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#triangle_sound" class="tsd-kind-icon">triangle_<wbr>sound</a>
+						<a href="sound.html#triangle_sound" class="tsd-kind-icon">triangle_<wbr>sound</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#trombone" class="tsd-kind-icon">trombone</a>
+						<a href="sound.html#trombone" class="tsd-kind-icon">trombone</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="sounds_functions.html#violin" class="tsd-kind-icon">violin</a>
+						<a href="sound.html#violin" class="tsd-kind-icon">violin</a>
 					</li>
 				</ul>
 			</nav>
