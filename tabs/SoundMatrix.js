@@ -76,6 +76,91 @@
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     }
 
+    function unwrapExports (x) {
+    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+    }
+
+    function createCommonjsModule(fn, module) {
+    	return module = { exports: {} }, fn(module, module.exports), module.exports;
+    }
+
+    var classnames$1 = createCommonjsModule(function (module) {
+    /*!
+      Copyright (c) 2018 Jed Watson.
+      Licensed under the MIT License (MIT), see
+      http://jedwatson.github.io/classnames
+    */
+    /* global define */
+
+    (function () {
+
+    	var hasOwn = {}.hasOwnProperty;
+
+    	function classNames() {
+    		var classes = [];
+
+    		for (var i = 0; i < arguments.length; i++) {
+    			var arg = arguments[i];
+    			if (!arg) continue;
+
+    			var argType = typeof arg;
+
+    			if (argType === 'string' || argType === 'number') {
+    				classes.push(arg);
+    			} else if (Array.isArray(arg)) {
+    				if (arg.length) {
+    					var inner = classNames.apply(null, arg);
+    					if (inner) {
+    						classes.push(inner);
+    					}
+    				}
+    			} else if (argType === 'object') {
+    				if (arg.toString === Object.prototype.toString) {
+    					for (var key in arg) {
+    						if (hasOwn.call(arg, key) && arg[key]) {
+    							classes.push(key);
+    						}
+    					}
+    				} else {
+    					classes.push(arg.toString());
+    				}
+    			}
+    		}
+
+    		return classes.join(' ');
+    	}
+
+    	if (module.exports) {
+    		classNames.default = classNames;
+    		module.exports = classNames;
+    	} else {
+    		window.classNames = classNames;
+    	}
+    }());
+    });
+
+    /*
+     * Copyright 2018 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /** Alignment along the horizontal axis. */
+    var Alignment = {
+        CENTER: "center",
+        LEFT: "left",
+        RIGHT: "right",
+    };
+
     /*
      * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
      *
@@ -106,21 +191,41 @@
     var NS = process.env.BLUEPRINT_NAMESPACE || process.env.REACT_APP_BLUEPRINT_NAMESPACE || "bp3";
     // modifiers
     var ACTIVE = NS + "-active";
+    var ALIGN_LEFT = NS + "-align-left";
+    var ALIGN_RIGHT = NS + "-align-right";
+    var DARK = NS + "-dark";
     var DISABLED = NS + "-disabled";
-    var VERTICAL = NS + "-vertical";
+    var FILL = NS + "-fill";
+    var LARGE = NS + "-large";
+    var LOADING = NS + "-loading";
+    var MINIMAL = NS + "-minimal";
+    var OUTLINED = NS + "-outlined";
+    var SMALL = NS + "-small";
     intentClass(Intent.PRIMARY);
     intentClass(Intent.SUCCESS);
     intentClass(Intent.WARNING);
     intentClass(Intent.DANGER);
-    var SLIDER = NS + "-slider";
-    var SLIDER_AXIS = SLIDER + "-axis";
-    var SLIDER_HANDLE = SLIDER + "-handle";
-    var SLIDER_LABEL = SLIDER + "-label";
-    var SLIDER_TRACK = SLIDER + "-track";
-    var SLIDER_PROGRESS = SLIDER + "-progress";
-    var START = NS + "-start";
-    var END = NS + "-end";
+    var BUTTON = NS + "-button";
+    var BUTTON_GROUP = BUTTON + "-group";
+    var BUTTON_SPINNER = BUTTON + "-spinner";
+    var BUTTON_TEXT = BUTTON + "-text";
+    var SPINNER = NS + "-spinner";
+    var SPINNER_ANIMATION = SPINNER + "-animation";
+    var SPINNER_HEAD = SPINNER + "-head";
+    var SPINNER_NO_SPIN = NS + "-no-spin";
+    var SPINNER_TRACK$1 = SPINNER + "-track";
     var ICON = NS + "-icon";
+    /** Return CSS class for alignment. */
+    function alignmentClass(alignment) {
+        switch (alignment) {
+            case Alignment.LEFT:
+                return ALIGN_LEFT;
+            case Alignment.RIGHT:
+                return ALIGN_RIGHT;
+            default:
+                return undefined;
+        }
+    }
     function iconClass(iconName) {
         if (iconName == null) {
             return undefined;
@@ -132,62 +237,6 @@
             return undefined;
         }
         return NS + "-intent-" + intent.toLowerCase();
-    }
-
-    /*
-     * Copyright 2017 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    /* eslint-enable deprecation/deprecation */
-    /**
-     * Returns true if the arrays are equal. Elements will be shallowly compared by
-     * default, or they will be compared using the custom `compare` function if one
-     * is provided.
-     */
-    function arraysEqual(arrA, arrB, compare) {
-        if (compare === void 0) { compare = function (a, b) { return a === b; }; }
-        // treat `null` and `undefined` as the same
-        if (arrA == null && arrB == null) {
-            return true;
-        }
-        else if (arrA == null || arrB == null || arrA.length !== arrB.length) {
-            return false;
-        }
-        else {
-            return arrA.every(function (a, i) { return compare(a, arrB[i]); });
-        }
-    }
-
-    /*
-     * Copyright 2020 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    /** Returns whether the value is a function. Acts as a type guard. */
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    function isFunction(value) {
-        return typeof value === "function";
     }
 
     /*
@@ -207,24 +256,11 @@
      */
     var ns = "[Blueprint]";
     var CLAMP_MIN_MAX = ns + " clamp: max cannot be less than min";
-    var SLIDER_ZERO_STEP = ns + " <Slider> stepSize must be greater than zero.";
-    var SLIDER_ZERO_LABEL_STEP = ns + " <Slider> labelStepSize must be greater than zero.";
-    var MULTISLIDER_INVALID_CHILD = ns + " <MultiSlider> children must be <SliderHandle>s or <SliderTrackStop>s";
-    var MULTISLIDER_WARN_LABEL_STEP_SIZE_LABEL_VALUES_MUTEX = ns +
-        " <MultiSlider> labelStepSize and labelValues prop are mutually exclusive, with labelStepSize taking priority.";
+    var SPINNER_WARN_CLASSES_SIZE = ns + " <Spinner> Classes.SMALL/LARGE are ignored if size prop is set.";
 
     /** Returns whether `process.env.NODE_ENV` exists and equals `env`. */
     function isNodeEnv(env) {
         return typeof process !== "undefined" && process.env && process.env.NODE_ENV === env;
-    }
-    /**
-     * Returns true if the two numbers are within the given tolerance of each other.
-     * This is useful to correct for floating point precision issues, less useful
-     * for integers.
-     */
-    function approxEqual(a, b, tolerance) {
-        if (tolerance === void 0) { tolerance = 0.00001; }
-        return Math.abs(a - b) <= tolerance;
     }
     /**
      * Clamps the given number between min and max values. Returns value if within
@@ -239,36 +275,66 @@
         }
         return Math.min(Math.max(val, min), max);
     }
-    /** Returns the number of decimal places in the given number. */
-    function countDecimalPlaces(num) {
-        if (!isFinite(num)) {
-            return 0;
-        }
-        var e = 1;
-        var p = 0;
-        while (Math.round(num * e) / e !== num) {
-            e *= 10;
-            p++;
-        }
-        return p;
-    }
 
     /**
-     * Returns true if the given JSX element matches the given component type.
-     *
-     * NOTE: This function only checks equality of `displayName` for performance and
-     * to tolerate multiple minor versions of a component being included in one
-     * application bundle.
-     *
-     * @param element JSX element in question
-     * @param ComponentType desired component type of element
+     * Returns true if `node` is null/undefined, false, empty string, or an array
+     * composed of those. If `node` is an array, only one level of the array is
+     * checked, for performance reasons.
      */
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    function isElementOfType(element, ComponentType) {
-        return (element != null &&
-            element.type != null &&
-            element.type.displayName != null &&
-            element.type.displayName === ComponentType.displayName);
+    function isReactNodeEmpty(node, skipArray) {
+        if (skipArray === void 0) { skipArray = false; }
+        return (node == null ||
+            node === "" ||
+            node === false ||
+            (!skipArray &&
+                Array.isArray(node) &&
+                // only recurse one level through arrays, for performance
+                (node.length === 0 || node.every(function (n) { return isReactNodeEmpty(n, true); }))));
+    }
+
+    /*
+     * Copyright 2020 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function isRefObject(value) {
+        return value != null && typeof value !== "function";
+    }
+    function isRefCallback(value) {
+        return typeof value === "function";
+    }
+    /**
+     * Assign the given ref to a target, either a React ref object or a callback which takes the ref as its first argument.
+     */
+    function setRef(refTarget, ref) {
+        if (isRefObject(refTarget)) {
+            refTarget.current = ref;
+        }
+        else if (isRefCallback(refTarget)) {
+            refTarget(ref);
+        }
+    }
+    /**
+     * Creates a ref handler which assigns the ref returned by React for a mounted component to a field on the target object.
+     * The target object is usually a component class.
+     *
+     * If provided, it will also update the given `refProp` with the value of the ref.
+     */
+    function refHandler(refTargetParent, refTargetKey, refProp) {
+        return function (ref) {
+            refTargetParent[refTargetKey] = ref;
+            setRef(refProp, ref);
+        };
     }
 
     /**
@@ -359,19 +425,68 @@
     }(React.PureComponent));
 
     var DISPLAYNAME_PREFIX = "Blueprint3";
-
-    function unwrapExports (x) {
-    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+    /** A collection of curated prop keys used across our Components which are not valid HTMLElement props. */
+    var INVALID_PROPS = [
+        "active",
+        "alignText",
+        "asyncControl",
+        "containerRef",
+        "current",
+        "elementRef",
+        "fill",
+        "icon",
+        "inputRef",
+        "intent",
+        "inline",
+        "large",
+        "loading",
+        "leftElement",
+        "leftIcon",
+        "minimal",
+        "onRemove",
+        "outlined",
+        "panel",
+        "panelClassName",
+        "popoverProps",
+        "rightElement",
+        "rightIcon",
+        "round",
+        "small",
+        "text",
+    ];
+    /**
+     * Typically applied to HTMLElements to filter out disallowed props. When applied to a Component,
+     * can filter props from being passed down to the children. Can also filter by a combined list of
+     * supplied prop keys and the denylist (only appropriate for HTMLElements).
+     *
+     * @param props The original props object to filter down.
+     * @param {string[]} invalidProps If supplied, overwrites the default denylist.
+     * @param {boolean} shouldMerge If true, will merge supplied invalidProps and denylist together.
+     */
+    function removeNonHTMLProps(props, invalidProps, shouldMerge) {
+        if (invalidProps === void 0) { invalidProps = INVALID_PROPS; }
+        if (shouldMerge === void 0) { shouldMerge = false; }
+        if (shouldMerge) {
+            invalidProps = invalidProps.concat(INVALID_PROPS);
+        }
+        return invalidProps.reduce(function (prev, curr) {
+            // Props with hyphens (e.g. data-*) are always considered html props
+            if (curr.indexOf("-") !== -1) {
+                return prev;
+            }
+            if (prev.hasOwnProperty(curr)) {
+                delete prev[curr];
+            }
+            return prev;
+        }, __assign({}, props));
     }
 
-    function createCommonjsModule(fn, module) {
-    	return module = { exports: {} }, fn(module, module.exports), module.exports;
+    var ENTER = 13;
+    var SPACE = 32;
+    /** Returns whether the key code is `enter` or `space`, the two keys that can click a button. */
+    function isKeyboardClick(keyCode) {
+        return keyCode === ENTER || keyCode === SPACE;
     }
-
-    var ARROW_LEFT = 37;
-    var ARROW_UP = 38;
-    var ARROW_RIGHT = 39;
-    var ARROW_DOWN = 40;
 
     var classnames = createCommonjsModule(function (module) {
     /*!
@@ -1743,617 +1858,225 @@
         return Icon;
     }(AbstractPureComponent2));
 
-    /*
-     * Copyright 2018 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    var HandleType = {
-        /** A full handle appears as a small square. */
-        FULL: "full",
-        /** A start handle appears as the left or top half of a square. */
-        START: "start",
-        /** An end handle appears as the right or bottom half of a square. */
-        END: "end",
-    };
-    var HandleInteractionKind = {
-        /** Locked handles prevent other handles from being dragged past then. */
-        LOCK: "lock",
-        /** Push handles move overlapping handles with them as they are dragged. */
-        PUSH: "push",
-        /**
-         * Handles marked "none" are not interactive and do not appear in the UI.
-         * They serve only to break the track into subsections that can be colored separately.
-         */
-        NONE: "none",
-    };
-
-    /*
-     * Copyright 2018 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    /** Helper function for formatting ratios as CSS percentage values. */
-    function formatPercentage(ratio) {
-        return (ratio * 100).toFixed(2) + "%";
-    }
-    /**
-     * Mutates the values array by filling all the values between start and end index (inclusive) with the fill value.
-     */
-    function fillValues(values, startIndex, endIndex, fillValue) {
-        var inc = startIndex < endIndex ? 1 : -1;
-        for (var index = startIndex; index !== endIndex + inc; index += inc) {
-            values[index] = fillValue;
-        }
-    }
-    /**
-     * Returns the minimum element of an array as determined by comparing the results of calling the arg function on each
-     * element of the array. The function will only be called once per element.
-     */
-    function argMin(values, argFn) {
-        if (values.length === 0) {
-            return undefined;
-        }
-        var minValue = values[0];
-        var minArg = argFn(minValue);
-        for (var index = 1; index < values.length; index++) {
-            var value = values[index];
-            var arg = argFn(value);
-            if (arg < minArg) {
-                minValue = value;
-                minArg = arg;
-            }
-        }
-        return minValue;
-    }
-
-    // props that require number values, for validation
-    var NUMBER_PROPS = ["max", "min", "stepSize", "tickSize", "value"];
-    /** Internal component for a Handle with click/drag/keyboard logic to determine a new value. */
-    var Handle = /** @class */ (function (_super) {
-        __extends(Handle, _super);
-        function Handle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.state = {
-                isMoving: false,
-            };
-            _this.handleElement = null;
-            _this.refHandlers = {
-                handle: function (el) { return (_this.handleElement = el); },
-            };
-            _this.beginHandleMovement = function (event) {
-                document.addEventListener("mousemove", _this.handleHandleMovement);
-                document.addEventListener("mouseup", _this.endHandleMovement);
-                _this.setState({ isMoving: true });
-                _this.changeValue(_this.clientToValue(_this.mouseEventClientOffset(event)));
-            };
-            _this.beginHandleTouchMovement = function (event) {
-                document.addEventListener("touchmove", _this.handleHandleTouchMovement);
-                document.addEventListener("touchend", _this.endHandleTouchMovement);
-                document.addEventListener("touchcancel", _this.endHandleTouchMovement);
-                _this.setState({ isMoving: true });
-                _this.changeValue(_this.clientToValue(_this.touchEventClientOffset(event)));
-            };
-            _this.getStyleProperties = function () {
-                if (_this.handleElement == null) {
-                    return {};
-                }
-                // The handle midpoint of RangeSlider is actually shifted by a margin to
-                // be on the edge of the visible handle element. Because the midpoint
-                // calculation does not take this margin into account, we instead
-                // measure the long side (which is equal to the short side plus the
-                // margin).
-                var _a = _this.props, _b = _a.min, min = _b === void 0 ? 0 : _b, tickSizeRatio = _a.tickSizeRatio, value = _a.value, vertical = _a.vertical;
-                var handleMidpoint = _this.getHandleMidpointAndOffset(_this.handleElement, true).handleMidpoint;
-                var offsetRatio = (value - min) * tickSizeRatio;
-                var offsetCalc = "calc(" + formatPercentage(offsetRatio) + " - " + handleMidpoint + "px)";
-                return vertical ? { bottom: offsetCalc } : { left: offsetCalc };
-            };
-            _this.endHandleMovement = function (event) {
-                _this.handleMoveEndedAt(_this.mouseEventClientOffset(event));
-            };
-            _this.endHandleTouchMovement = function (event) {
-                _this.handleMoveEndedAt(_this.touchEventClientOffset(event));
-            };
-            _this.handleMoveEndedAt = function (clientPixel) {
-                var _a, _b;
-                _this.removeDocumentEventListeners();
-                _this.setState({ isMoving: false });
-                // always invoke onRelease; changeValue may call onChange if value is different
-                var finalValue = _this.changeValue(_this.clientToValue(clientPixel));
-                (_b = (_a = _this.props).onRelease) === null || _b === void 0 ? void 0 : _b.call(_a, finalValue);
-            };
-            _this.handleHandleMovement = function (event) {
-                _this.handleMovedTo(_this.mouseEventClientOffset(event));
-            };
-            _this.handleHandleTouchMovement = function (event) {
-                _this.handleMovedTo(_this.touchEventClientOffset(event));
-            };
-            _this.handleMovedTo = function (clientPixel) {
-                if (_this.state.isMoving && !_this.props.disabled) {
-                    _this.changeValue(_this.clientToValue(clientPixel));
-                }
-            };
-            _this.handleKeyDown = function (event) {
-                var _a = _this.props, stepSize = _a.stepSize, value = _a.value;
-                // HACKHACK: https://github.com/palantir/blueprint/issues/4165
-                /* eslint-disable-next-line deprecation/deprecation */
-                var which = event.which;
-                if (which === ARROW_DOWN || which === ARROW_LEFT) {
-                    _this.changeValue(value - stepSize);
-                    // this key event has been handled! prevent browser scroll on up/down
-                    event.preventDefault();
-                }
-                else if (which === ARROW_UP || which === ARROW_RIGHT) {
-                    _this.changeValue(value + stepSize);
-                    event.preventDefault();
-                }
-            };
-            _this.handleKeyUp = function (event) {
-                var _a, _b;
-                // HACKHACK: https://github.com/palantir/blueprint/issues/4165
-                /* eslint-disable-next-line deprecation/deprecation */
-                if ([ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT].indexOf(event.which) >= 0) {
-                    (_b = (_a = _this.props).onRelease) === null || _b === void 0 ? void 0 : _b.call(_a, _this.props.value);
-                }
-            };
-            return _this;
-        }
-        Handle.prototype.componentDidMount = function () {
-            // The first time this component renders, it has no ref to the handle and thus incorrectly centers the handle.
-            // Therefore, on the first mount, force a re-render to center the handle with the ref'd component.
-            this.forceUpdate();
-        };
-        Handle.prototype.render = function () {
-            var _a;
-            var _b = this.props, className = _b.className, disabled = _b.disabled, label = _b.label;
-            var isMoving = this.state.isMoving;
-            return (React.createElement("span", { className: classnames(SLIDER_HANDLE, (_a = {}, _a[ACTIVE] = isMoving, _a), className), onKeyDown: disabled ? undefined : this.handleKeyDown, onKeyUp: disabled ? undefined : this.handleKeyUp, onMouseDown: disabled ? undefined : this.beginHandleMovement, onTouchStart: disabled ? undefined : this.beginHandleTouchMovement, ref: this.refHandlers.handle, style: this.getStyleProperties(), tabIndex: 0 }, label == null ? null : React.createElement("span", { className: SLIDER_LABEL }, label)));
-        };
-        Handle.prototype.componentWillUnmount = function () {
-            this.removeDocumentEventListeners();
-        };
-        /** Convert client pixel to value between min and max. */
-        Handle.prototype.clientToValue = function (clientPixel) {
-            var _a = this.props, stepSize = _a.stepSize, tickSize = _a.tickSize, value = _a.value, vertical = _a.vertical;
-            if (this.handleElement == null) {
-                return value;
-            }
-            // #1769: this logic doesn't work perfectly when the tick size is
-            // smaller than the handle size; it may be off by a tick or two.
-            var clientPixelNormalized = vertical ? window.innerHeight - clientPixel : clientPixel;
-            var handleCenterPixel = this.getHandleElementCenterPixel(this.handleElement);
-            var pixelDelta = clientPixelNormalized - handleCenterPixel;
-            if (isNaN(pixelDelta)) {
-                return value;
-            }
-            // convert pixels to range value in increments of `stepSize`
-            return value + Math.round(pixelDelta / (tickSize * stepSize)) * stepSize;
-        };
-        Handle.prototype.mouseEventClientOffset = function (event) {
-            return this.props.vertical ? event.clientY : event.clientX;
-        };
-        Handle.prototype.touchEventClientOffset = function (event) {
-            var touch = event.changedTouches[0];
-            return this.props.vertical ? touch.clientY : touch.clientX;
-        };
-        Handle.prototype.validateProps = function (props) {
-            for (var _i = 0, NUMBER_PROPS_1 = NUMBER_PROPS; _i < NUMBER_PROPS_1.length; _i++) {
-                var prop = NUMBER_PROPS_1[_i];
-                if (typeof props[prop] !== "number") {
-                    throw new Error("[Blueprint] <Handle> requires number value for " + prop + " prop");
-                }
-            }
-        };
-        /** Clamp value and invoke callback if it differs from current value */
-        Handle.prototype.changeValue = function (newValue, callback) {
-            if (callback === void 0) { callback = this.props.onChange; }
-            newValue = this.clamp(newValue);
-            if (!isNaN(newValue) && this.props.value !== newValue) {
-                callback === null || callback === void 0 ? void 0 : callback(newValue);
-            }
-            return newValue;
-        };
-        /** Clamp value between min and max props */
-        Handle.prototype.clamp = function (value) {
-            return clamp(value, this.props.min, this.props.max);
-        };
-        Handle.prototype.getHandleElementCenterPixel = function (handleElement) {
-            var _a = this.getHandleMidpointAndOffset(handleElement), handleMidpoint = _a.handleMidpoint, handleOffset = _a.handleOffset;
-            return handleOffset + handleMidpoint;
-        };
-        Handle.prototype.getHandleMidpointAndOffset = function (handleElement, useOppositeDimension) {
-            if (useOppositeDimension === void 0) { useOppositeDimension = false; }
-            if (handleElement == null) {
-                return { handleMidpoint: 0, handleOffset: 0 };
-            }
-            var vertical = this.props.vertical;
-            // getBoundingClientRect().height includes border size; clientHeight does not.
-            var handleRect = handleElement.getBoundingClientRect();
-            var sizeKey = vertical
-                ? useOppositeDimension
-                    ? "width"
-                    : "height"
-                : useOppositeDimension
-                    ? "height"
-                    : "width";
-            // "bottom" value seems to be consistently incorrect, so explicitly
-            // calculate it using the window offset instead.
-            var handleOffset = vertical ? window.innerHeight - (handleRect.top + handleRect[sizeKey]) : handleRect.left;
-            return { handleMidpoint: handleRect[sizeKey] / 2, handleOffset: handleOffset };
-        };
-        Handle.prototype.removeDocumentEventListeners = function () {
-            document.removeEventListener("mousemove", this.handleHandleMovement);
-            document.removeEventListener("mouseup", this.endHandleMovement);
-            document.removeEventListener("touchmove", this.handleHandleTouchMovement);
-            document.removeEventListener("touchend", this.endHandleTouchMovement);
-            document.removeEventListener("touchcancel", this.endHandleTouchMovement);
-        };
-        Handle.displayName = DISPLAYNAME_PREFIX + ".SliderHandle";
-        Handle = __decorate([
-            reactLifecyclesCompat_cjs_1
-        ], Handle);
-        return Handle;
-    }(AbstractPureComponent2));
-
-    /**
-     * SFC used to pass slider handle props to a `MultiSlider`.
-     * This element is not rendered directly.
-     */
-    var MultiSliderHandle = function () { return null; };
-    MultiSliderHandle.displayName = DISPLAYNAME_PREFIX + ".MultiSliderHandle";
-    var MultiSlider = /** @class */ (function (_super) {
-        __extends(MultiSlider, _super);
-        function MultiSlider() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.state = {
-                labelPrecision: getLabelPrecision(_this.props),
-                tickSize: 0,
-                tickSizeRatio: 0,
-            };
-            _this.handleElements = [];
-            _this.trackElement = null;
-            _this.addHandleRef = function (ref) {
-                if (ref != null) {
-                    _this.handleElements.push(ref);
-                }
-            };
-            _this.maybeHandleTrackClick = function (event) {
-                if (_this.canHandleTrackEvent(event)) {
-                    var foundHandle = _this.nearestHandleForValue(_this.handleElements, function (handle) {
-                        return handle.mouseEventClientOffset(event);
-                    });
-                    if (foundHandle) {
-                        foundHandle.beginHandleMovement(event);
-                    }
-                }
-            };
-            _this.maybeHandleTrackTouch = function (event) {
-                if (_this.canHandleTrackEvent(event)) {
-                    var foundHandle = _this.nearestHandleForValue(_this.handleElements, function (handle) {
-                        return handle.touchEventClientOffset(event);
-                    });
-                    if (foundHandle) {
-                        foundHandle.beginHandleTouchMovement(event);
-                    }
-                }
-            };
-            _this.canHandleTrackEvent = function (event) {
-                var target = event.target;
-                // ensure event does not come from inside the handle
-                return !_this.props.disabled && target.closest("." + SLIDER_HANDLE) == null;
-            };
-            _this.getHandlerForIndex = function (index, callback) {
-                return function (newValue) {
-                    callback === null || callback === void 0 ? void 0 : callback(_this.getNewHandleValues(newValue, index));
-                };
-            };
-            _this.handleChange = function (newValues) {
-                var _a, _b;
-                var handleProps = getSortedInteractiveHandleProps(_this.props);
-                var oldValues = handleProps.map(function (handle) { return handle.value; });
-                if (!arraysEqual(newValues, oldValues)) {
-                    (_b = (_a = _this.props).onChange) === null || _b === void 0 ? void 0 : _b.call(_a, newValues);
-                    handleProps.forEach(function (handle, index) {
-                        var _a;
-                        if (oldValues[index] !== newValues[index]) {
-                            (_a = handle.onChange) === null || _a === void 0 ? void 0 : _a.call(handle, newValues[index]);
-                        }
-                    });
-                }
-            };
-            _this.handleRelease = function (newValues) {
-                var _a, _b;
-                var handleProps = getSortedInteractiveHandleProps(_this.props);
-                (_b = (_a = _this.props).onRelease) === null || _b === void 0 ? void 0 : _b.call(_a, newValues);
-                handleProps.forEach(function (handle, index) {
-                    var _a;
-                    (_a = handle.onRelease) === null || _a === void 0 ? void 0 : _a.call(handle, newValues[index]);
-                });
-            };
-            return _this;
-        }
-        MultiSlider_1 = MultiSlider;
-        MultiSlider.getDerivedStateFromProps = function (props) {
-            return { labelPrecision: MultiSlider_1.getLabelPrecision(props) };
-        };
-        MultiSlider.getLabelPrecision = function (_a) {
-            var labelPrecision = _a.labelPrecision, stepSize = _a.stepSize;
-            // infer default label precision from stepSize because that's how much the handle moves.
-            return labelPrecision == null ? countDecimalPlaces(stepSize) : labelPrecision;
-        };
-        MultiSlider.prototype.getSnapshotBeforeUpdate = function (prevProps) {
-            var prevHandleProps = getSortedInteractiveHandleProps(prevProps);
-            var newHandleProps = getSortedInteractiveHandleProps(this.props);
-            if (newHandleProps.length !== prevHandleProps.length) {
-                // clear refs
-                this.handleElements = [];
-            }
-            return null;
-        };
-        MultiSlider.prototype.render = function () {
-            var _a;
-            var _this = this;
-            var classes = classnames(SLIDER, (_a = {},
-                _a[DISABLED] = this.props.disabled,
-                _a[SLIDER + "-unlabeled"] = this.props.labelRenderer === false,
-                _a[VERTICAL] = this.props.vertical,
-                _a), this.props.className);
-            return (React.createElement("div", { className: classes, onMouseDown: this.maybeHandleTrackClick, onTouchStart: this.maybeHandleTrackTouch },
-                React.createElement("div", { className: SLIDER_TRACK, ref: function (ref) { return (_this.trackElement = ref); } }, this.renderTracks()),
-                React.createElement("div", { className: SLIDER_AXIS }, this.renderLabels()),
-                this.renderHandles()));
-        };
-        MultiSlider.prototype.componentDidMount = function () {
-            this.updateTickSize();
-        };
-        MultiSlider.prototype.componentDidUpdate = function (prevProps, prevState) {
-            _super.prototype.componentDidUpdate.call(this, prevProps, prevState);
-            this.updateTickSize();
-        };
-        MultiSlider.prototype.validateProps = function (props) {
-            if (props.stepSize <= 0) {
-                throw new Error(SLIDER_ZERO_STEP);
-            }
-            if (props.labelStepSize !== undefined && props.labelValues !== undefined) {
-                throw new Error(MULTISLIDER_WARN_LABEL_STEP_SIZE_LABEL_VALUES_MUTEX);
-            }
-            if (props.labelStepSize !== undefined && props.labelStepSize <= 0) {
-                throw new Error(SLIDER_ZERO_LABEL_STEP);
-            }
-            var anyInvalidChildren = false;
-            React.Children.forEach(props.children, function (child) {
-                // allow boolean coercion to omit nulls and false values
-                if (child && !isElementOfType(child, MultiSlider_1.Handle)) {
-                    anyInvalidChildren = true;
-                }
-            });
-            if (anyInvalidChildren) {
-                throw new Error(MULTISLIDER_INVALID_CHILD);
-            }
-        };
-        MultiSlider.prototype.formatLabel = function (value, isHandleTooltip) {
-            if (isHandleTooltip === void 0) { isHandleTooltip = false; }
-            var labelRenderer = this.props.labelRenderer;
-            if (labelRenderer === false) {
-                return undefined;
-            }
-            else if (isFunction(labelRenderer)) {
-                return labelRenderer(value, { isHandleTooltip: isHandleTooltip });
-            }
-            else {
-                return value.toFixed(this.state.labelPrecision);
-            }
-        };
-        MultiSlider.prototype.renderLabels = function () {
-            var _this = this;
-            if (this.props.labelRenderer === false) {
-                return null;
-            }
-            var values = this.getLabelValues();
-            var _a = this.props, max = _a.max, min = _a.min;
-            var labels = values.map(function (step, i) {
-                var offsetPercentage = formatPercentage((step - min) / (max - min));
-                var style = _this.props.vertical ? { bottom: offsetPercentage } : { left: offsetPercentage };
-                return (React.createElement("div", { className: SLIDER_LABEL, key: i, style: style }, _this.formatLabel(step)));
-            });
-            return labels;
-        };
-        MultiSlider.prototype.renderTracks = function () {
-            var trackStops = getSortedHandleProps(this.props);
-            trackStops.push({ value: this.props.max });
-            // render from current to previous, then increment previous
-            var previous = { value: this.props.min };
-            var handles = [];
-            for (var index = 0; index < trackStops.length; index++) {
-                var current = trackStops[index];
-                handles.push(this.renderTrackFill(index, previous, current));
-                previous = current;
-            }
-            return handles;
-        };
-        MultiSlider.prototype.renderTrackFill = function (index, start, end) {
-            // ensure startRatio <= endRatio
-            var _a = [this.getOffsetRatio(start.value), this.getOffsetRatio(end.value)].sort(function (left, right) { return left - right; }), startRatio = _a[0], endRatio = _a[1];
-            var startOffset = formatPercentage(startRatio);
-            var endOffset = formatPercentage(1 - endRatio);
-            var orientationStyle = this.props.vertical
-                ? { bottom: startOffset, top: endOffset, left: 0 }
-                : { left: startOffset, right: endOffset, top: 0 };
-            var style = __assign(__assign({}, orientationStyle), (start.trackStyleAfter || end.trackStyleBefore || {}));
-            var classes = classnames(SLIDER_PROGRESS, intentClass(this.getTrackIntent(start, end)));
-            return React.createElement("div", { key: "track-" + index, className: classes, style: style });
-        };
-        MultiSlider.prototype.renderHandles = function () {
-            var _this = this;
-            var _a = this.props, disabled = _a.disabled, max = _a.max, min = _a.min, stepSize = _a.stepSize, vertical = _a.vertical;
-            var handleProps = getSortedInteractiveHandleProps(this.props);
-            if (handleProps.length === 0) {
-                return null;
-            }
-            return handleProps.map(function (_a, index) {
-                var _b;
-                var value = _a.value, type = _a.type, className = _a.className;
-                return (React.createElement(Handle, { className: classnames((_b = {},
-                        _b[START] = type === HandleType.START,
-                        _b[END] = type === HandleType.END,
-                        _b), className), disabled: disabled, key: index + "-" + handleProps.length, label: _this.formatLabel(value, true), max: max, min: min, onChange: _this.getHandlerForIndex(index, _this.handleChange), onRelease: _this.getHandlerForIndex(index, _this.handleRelease), ref: _this.addHandleRef, stepSize: stepSize, tickSize: _this.state.tickSize, tickSizeRatio: _this.state.tickSizeRatio, value: value, vertical: vertical }));
-            });
-        };
-        MultiSlider.prototype.nearestHandleForValue = function (handles, getOffset) {
-            return argMin(handles, function (handle) {
-                var offset = getOffset(handle);
-                var offsetValue = handle.clientToValue(offset);
-                var handleValue = handle.props.value;
-                return Math.abs(offsetValue - handleValue);
-            });
-        };
-        MultiSlider.prototype.getNewHandleValues = function (newValue, oldIndex) {
-            var handleProps = getSortedInteractiveHandleProps(this.props);
-            var oldValues = handleProps.map(function (handle) { return handle.value; });
-            var newValues = oldValues.slice();
-            newValues[oldIndex] = newValue;
-            newValues.sort(function (left, right) { return left - right; });
-            var newIndex = newValues.indexOf(newValue);
-            var lockIndex = this.findFirstLockedHandleIndex(oldIndex, newIndex);
-            if (lockIndex === -1) {
-                fillValues(newValues, oldIndex, newIndex, newValue);
-            }
-            else {
-                // If pushing past a locked handle, discard the new value and only make the updates to clamp values against the lock.
-                var lockValue = oldValues[lockIndex];
-                fillValues(oldValues, oldIndex, lockIndex, lockValue);
-                return oldValues;
-            }
-            return newValues;
-        };
-        MultiSlider.prototype.findFirstLockedHandleIndex = function (startIndex, endIndex) {
-            var inc = startIndex < endIndex ? 1 : -1;
-            var handleProps = getSortedInteractiveHandleProps(this.props);
-            for (var index = startIndex + inc; index !== endIndex + inc; index += inc) {
-                if (handleProps[index].interactionKind !== HandleInteractionKind.PUSH) {
-                    return index;
-                }
-            }
-            return -1;
-        };
-        MultiSlider.prototype.getLabelValues = function () {
-            var _a = this.props, labelStepSize = _a.labelStepSize, labelValues = _a.labelValues, min = _a.min, max = _a.max;
-            var values = [];
-            if (labelValues !== undefined) {
-                values = labelValues;
-            }
-            else {
-                for (var i = min; i < max || approxEqual(i, max); i += labelStepSize !== null && labelStepSize !== void 0 ? labelStepSize : 1) {
-                    values.push(i);
-                }
-            }
-            return values;
-        };
-        MultiSlider.prototype.getOffsetRatio = function (value) {
-            return clamp((value - this.props.min) * this.state.tickSizeRatio, 0, 1);
-        };
-        MultiSlider.prototype.getTrackIntent = function (start, end) {
-            if (!this.props.showTrackFill) {
-                return Intent.NONE;
-            }
-            if (start.intentAfter !== undefined) {
-                return start.intentAfter;
-            }
-            else if (end !== undefined && end.intentBefore !== undefined) {
-                return end.intentBefore;
-            }
-            return this.props.defaultTrackIntent;
-        };
-        MultiSlider.prototype.updateTickSize = function () {
-            if (this.trackElement != null) {
-                var trackSize = this.props.vertical ? this.trackElement.clientHeight : this.trackElement.clientWidth;
-                var tickSizeRatio = 1 / (this.props.max - this.props.min);
-                var tickSize = trackSize * tickSizeRatio;
-                this.setState({ tickSize: tickSize, tickSizeRatio: tickSizeRatio });
-            }
-        };
-        var MultiSlider_1;
-        MultiSlider.defaultSliderProps = {
-            disabled: false,
-            max: 10,
-            min: 0,
-            showTrackFill: true,
-            stepSize: 1,
-            vertical: false,
-        };
-        MultiSlider.defaultProps = __assign(__assign({}, MultiSlider_1.defaultSliderProps), { defaultTrackIntent: Intent.NONE });
-        MultiSlider.displayName = DISPLAYNAME_PREFIX + ".MultiSlider";
-        MultiSlider.Handle = MultiSliderHandle;
-        MultiSlider = MultiSlider_1 = __decorate([
-            reactLifecyclesCompat_cjs_1
-        ], MultiSlider);
-        return MultiSlider;
-    }(AbstractPureComponent2));
-    function getLabelPrecision(_a) {
-        var labelPrecision = _a.labelPrecision, _b = _a.stepSize, stepSize = _b === void 0 ? MultiSlider.defaultSliderProps.stepSize : _b;
-        // infer default label precision from stepSize because that's how much the handle moves.
-        return labelPrecision == null ? countDecimalPlaces(stepSize) : labelPrecision;
-    }
-    function getSortedInteractiveHandleProps(props) {
-        return getSortedHandleProps(props, function (childProps) { return childProps.interactionKind !== HandleInteractionKind.NONE; });
-    }
-    function getSortedHandleProps(_a, predicate) {
-        var children = _a.children;
-        if (predicate === void 0) { predicate = function () { return true; }; }
-        var maybeHandles = React.Children.map(children, function (child) {
-            return isElementOfType(child, MultiSlider.Handle) && predicate(child.props) ? child.props : null;
-        });
-        var handles = maybeHandles != null ? maybeHandles : [];
-        handles = handles.filter(function (handle) { return handle !== null; });
-        handles.sort(function (left, right) { return left.value - right.value; });
-        return handles;
-    }
-
-    var Slider = /** @class */ (function (_super) {
-        __extends(Slider, _super);
-        function Slider() {
+    var SpinnerSize;
+    (function (SpinnerSize) {
+        SpinnerSize[SpinnerSize["SMALL"] = 20] = "SMALL";
+        SpinnerSize[SpinnerSize["STANDARD"] = 50] = "STANDARD";
+        SpinnerSize[SpinnerSize["LARGE"] = 100] = "LARGE";
+    })(SpinnerSize || (SpinnerSize = {}));
+    // see http://stackoverflow.com/a/18473154/3124288 for calculating arc path
+    var R = 45;
+    var SPINNER_TRACK = "M 50,50 m 0,-" + R + " a " + R + "," + R + " 0 1 1 0," + R * 2 + " a " + R + "," + R + " 0 1 1 0,-" + R * 2;
+    // unitless total length of SVG path, to which stroke-dash* properties are relative.
+    // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/pathLength
+    // this value is the result of `<path d={SPINNER_TRACK} />.getTotalLength()` and works in all browsers:
+    var PATH_LENGTH = 280;
+    var MIN_SIZE = 10;
+    var STROKE_WIDTH = 4;
+    var MIN_STROKE_WIDTH = 16;
+    var Spinner = /** @class */ (function (_super) {
+        __extends(Spinner, _super);
+        function Spinner() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        Slider.prototype.render = function () {
-            var _a = this.props, initialValue = _a.initialValue, intent = _a.intent, value = _a.value, onChange = _a.onChange, onRelease = _a.onRelease, props = __rest(_a, ["initialValue", "intent", "value", "onChange", "onRelease"]);
-            return (React.createElement(MultiSlider, __assign({}, props),
-                React.createElement(MultiSlider.Handle, { value: value, intentAfter: value < initialValue ? intent : undefined, intentBefore: value >= initialValue ? intent : undefined, onChange: onChange, onRelease: onRelease }),
-                React.createElement(MultiSlider.Handle, { value: initialValue, interactionKind: "none" })));
+        Spinner.prototype.componentDidUpdate = function (prevProps) {
+            if (prevProps.value !== this.props.value) {
+                // IE/Edge: re-render after changing value to force SVG update
+                this.forceUpdate();
+            }
         };
-        Slider.defaultProps = __assign(__assign({}, MultiSlider.defaultSliderProps), { initialValue: 0, intent: Intent.PRIMARY, value: 0 });
-        Slider.displayName = DISPLAYNAME_PREFIX + ".Slider";
-        Slider = __decorate([
+        Spinner.prototype.render = function () {
+            var _a;
+            var _b = this.props, className = _b.className, intent = _b.intent, value = _b.value, _c = _b.tagName, tagName = _c === void 0 ? "div" : _c;
+            var size = this.getSize();
+            var classes = classnames(SPINNER, intentClass(intent), (_a = {}, _a[SPINNER_NO_SPIN] = value != null, _a), className);
+            // keep spinner track width consistent at all sizes (down to about 10px).
+            var strokeWidth = Math.min(MIN_STROKE_WIDTH, (STROKE_WIDTH * SpinnerSize.LARGE) / size);
+            var strokeOffset = PATH_LENGTH - PATH_LENGTH * (value == null ? 0.25 : clamp(value, 0, 1));
+            // multiple DOM elements around SVG are necessary to properly isolate animation:
+            // - SVG elements in IE do not support anim/trans so they must be set on a parent HTML element.
+            // - SPINNER_ANIMATION isolates svg from parent display and is always centered inside root element.
+            return React.createElement(tagName, {
+                className: classes,
+                role: "progressbar",
+            }, React.createElement(tagName, { className: SPINNER_ANIMATION }, React.createElement("svg", { width: size, height: size, strokeWidth: strokeWidth.toFixed(2), viewBox: this.getViewBox(strokeWidth) },
+                React.createElement("path", { className: SPINNER_TRACK$1, d: SPINNER_TRACK }),
+                React.createElement("path", { className: SPINNER_HEAD, d: SPINNER_TRACK, pathLength: PATH_LENGTH, strokeDasharray: PATH_LENGTH + " " + PATH_LENGTH, strokeDashoffset: strokeOffset }))));
+        };
+        Spinner.prototype.validateProps = function (_a) {
+            var _b = _a.className, className = _b === void 0 ? "" : _b, size = _a.size;
+            if (size != null && (className.indexOf(SMALL) >= 0 || className.indexOf(LARGE) >= 0)) {
+                console.warn(SPINNER_WARN_CLASSES_SIZE);
+            }
+        };
+        /**
+         * Resolve size to a pixel value.
+         * Size can be set by className, props, default, or minimum constant.
+         */
+        Spinner.prototype.getSize = function () {
+            var _a = this.props, _b = _a.className, className = _b === void 0 ? "" : _b, size = _a.size;
+            if (size == null) {
+                // allow Classes constants to determine default size.
+                if (className.indexOf(SMALL) >= 0) {
+                    return SpinnerSize.SMALL;
+                }
+                else if (className.indexOf(LARGE) >= 0) {
+                    return SpinnerSize.LARGE;
+                }
+                return SpinnerSize.STANDARD;
+            }
+            return Math.max(MIN_SIZE, size);
+        };
+        /** Compute viewbox such that stroked track sits exactly at edge of image frame. */
+        Spinner.prototype.getViewBox = function (strokeWidth) {
+            var radius = R + strokeWidth / 2;
+            var viewBoxX = (50 - radius).toFixed(2);
+            var viewBoxWidth = (radius * 2).toFixed(2);
+            return viewBoxX + " " + viewBoxX + " " + viewBoxWidth + " " + viewBoxWidth;
+        };
+        Spinner.displayName = DISPLAYNAME_PREFIX + ".Spinner";
+        /** @deprecated use SpinnerSize.SMALL */
+        Spinner.SIZE_SMALL = SpinnerSize.SMALL;
+        /** @deprecated use SpinnerSize.STANDARD */
+        Spinner.SIZE_STANDARD = SpinnerSize.STANDARD;
+        /** @deprecated use SpinnerSize.LARGE */
+        Spinner.SIZE_LARGE = SpinnerSize.LARGE;
+        Spinner = __decorate([
             reactLifecyclesCompat_cjs_1
-        ], Slider);
-        return Slider;
+        ], Spinner);
+        return Spinner;
     }(AbstractPureComponent2));
 
-    var ThemeColor;(function(ThemeColor){ThemeColor["BLUE"]="lightblue";ThemeColor["PINK"]="salmon";ThemeColor["GREY"]="#707070";ThemeColor["GREEN"]="#42a870";ThemeColor["YELLOW"]="#f0d60e";ThemeColor["RED"]="red";ThemeColor["BLACK"]="black";})(ThemeColor||(ThemeColor={}));
+    var AbstractButton = /** @class */ (function (_super) {
+        __extends(AbstractButton, _super);
+        function AbstractButton() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = {
+                isActive: false,
+            };
+            // we're casting as `any` to get around a somewhat opaque safeInvoke error
+            // that "Type argument candidate 'KeyboardEvent<T>' is not a valid type
+            // argument because it is not a supertype of candidate
+            // 'KeyboardEvent<HTMLElement>'."
+            _this.handleKeyDown = function (e) {
+                var _a, _b;
+                // HACKHACK: https://github.com/palantir/blueprint/issues/4165
+                /* eslint-disable deprecation/deprecation */
+                if (isKeyboardClick(e.which)) {
+                    e.preventDefault();
+                    if (e.which !== _this.currentKeyDown) {
+                        _this.setState({ isActive: true });
+                    }
+                }
+                _this.currentKeyDown = e.which;
+                (_b = (_a = _this.props).onKeyDown) === null || _b === void 0 ? void 0 : _b.call(_a, e);
+            };
+            _this.handleKeyUp = function (e) {
+                var _a, _b, _c;
+                // HACKHACK: https://github.com/palantir/blueprint/issues/4165
+                /* eslint-disable deprecation/deprecation */
+                if (isKeyboardClick(e.which)) {
+                    _this.setState({ isActive: false });
+                    (_a = _this.buttonRef) === null || _a === void 0 ? void 0 : _a.click();
+                }
+                _this.currentKeyDown = undefined;
+                (_c = (_b = _this.props).onKeyUp) === null || _c === void 0 ? void 0 : _c.call(_b, e);
+            };
+            _this.handleBlur = function (e) {
+                var _a, _b;
+                if (_this.state.isActive) {
+                    _this.setState({ isActive: false });
+                }
+                (_b = (_a = _this.props).onBlur) === null || _b === void 0 ? void 0 : _b.call(_a, e);
+            };
+            return _this;
+        }
+        AbstractButton.prototype.getCommonButtonProps = function () {
+            var _a;
+            var _b = this.props, active = _b.active, alignText = _b.alignText, fill = _b.fill, large = _b.large, loading = _b.loading, outlined = _b.outlined, minimal = _b.minimal, small = _b.small, tabIndex = _b.tabIndex;
+            var disabled = this.props.disabled || loading;
+            var className = classnames(BUTTON, (_a = {},
+                _a[ACTIVE] = !disabled && (active || this.state.isActive),
+                _a[DISABLED] = disabled,
+                _a[FILL] = fill,
+                _a[LARGE] = large,
+                _a[LOADING] = loading,
+                _a[MINIMAL] = minimal,
+                _a[OUTLINED] = outlined,
+                _a[SMALL] = small,
+                _a), alignmentClass(alignText), intentClass(this.props.intent), this.props.className);
+            return {
+                className: className,
+                disabled: disabled,
+                onBlur: this.handleBlur,
+                onClick: disabled ? undefined : this.props.onClick,
+                onKeyDown: this.handleKeyDown,
+                onKeyUp: this.handleKeyUp,
+                tabIndex: disabled ? -1 : tabIndex,
+            };
+        };
+        AbstractButton.prototype.renderChildren = function () {
+            var _a = this.props, children = _a.children, icon = _a.icon, loading = _a.loading, rightIcon = _a.rightIcon, text = _a.text;
+            return [
+                loading && React.createElement(Spinner, { key: "loading", className: BUTTON_SPINNER, size: IconSize.LARGE }),
+                React.createElement(Icon, { key: "leftIcon", icon: icon }),
+                (!isReactNodeEmpty(text) || !isReactNodeEmpty(children)) && (React.createElement("span", { key: "text", className: BUTTON_TEXT },
+                    text,
+                    children)),
+                React.createElement(Icon, { key: "rightIcon", icon: rightIcon }),
+            ];
+        };
+        return AbstractButton;
+    }(AbstractPureComponent2));
 
-    var COMMAND;(function(COMMAND){COMMAND["FLIP"]="Flip";COMMAND["PUSH"]="Push";COMMAND["POP"]="Pop";COMMAND["COPY"]="Copy";COMMAND["ASSIGN"]="Assign";COMMAND["NEW"]="New";COMMAND["SCAN"]="Scan";COMMAND["INIT"]="Initialize Memory";})(COMMAND||(COMMAND={}));
+    var Button = /** @class */ (function (_super) {
+        __extends(Button, _super);
+        function Button() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            // need to keep this ref so that we can access it in AbstractButton#handleKeyUp
+            _this.buttonRef = null;
+            _this.handleRef = refHandler(_this, "buttonRef", _this.props.elementRef);
+            return _this;
+        }
+        Button.prototype.render = function () {
+            return (React.createElement("button", __assign({ type: "button", ref: this.handleRef }, removeNonHTMLProps(this.props), this.getCommonButtonProps()), this.renderChildren()));
+        };
+        Button.prototype.componentDidUpdate = function (prevProps) {
+            if (prevProps.elementRef !== this.props.elementRef) {
+                setRef(prevProps.elementRef, null);
+                this.handleRef = refHandler(this, "buttonRef", this.props.elementRef);
+                setRef(this.props.elementRef, this.buttonRef);
+            }
+        };
+        Button.displayName = DISPLAYNAME_PREFIX + ".Button";
+        return Button;
+    }(AbstractButton));
+    /** @class */ ((function (_super) {
+        __extends(AnchorButton, _super);
+        function AnchorButton() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            // need to keep this ref so that we can access it in AbstractButton#handleKeyUp
+            _this.buttonRef = null;
+            _this.handleRef = refHandler(_this, "buttonRef", _this.props.elementRef);
+            return _this;
+        }
+        AnchorButton.prototype.render = function () {
+            var _a = this.props, href = _a.href, _b = _a.tabIndex, tabIndex = _b === void 0 ? 0 : _b;
+            var commonProps = this.getCommonButtonProps();
+            return (React.createElement("a", __assign({ role: "button", ref: this.handleRef }, removeNonHTMLProps(this.props), commonProps, { href: commonProps.disabled ? undefined : href, tabIndex: commonProps.disabled ? -1 : tabIndex }), this.renderChildren()));
+        };
+        AnchorButton.prototype.componentDidUpdate = function (prevProps) {
+            if (prevProps.elementRef !== this.props.elementRef) {
+                setRef(prevProps.elementRef, null);
+                this.handleRef = refHandler(this, "buttonRef", this.props.elementRef);
+                setRef(this.props.elementRef, this.buttonRef);
+            }
+        };
+        AnchorButton.displayName = DISPLAYNAME_PREFIX + ".AnchorButton";
+        return AnchorButton;
+    })(AbstractButton));
 
-    var CopyGC=function(_super){__extends(CopyGC,_super);function CopyGC(props){var _this=_super.call(this,props)||this;_this.initialize_state=function(){var debuggerContext=_this.props.debuggerContext;var functions=debuggerContext.result.value;var memorySize=functions.get_memory_size();var column=functions.get_column_size();var tags=functions.get_tags();var commandHeap=functions.get_command();var heap=[];var toSpace=-1;var command="";var firstChild=-1;var lastChild=-1;var description="";var leftDesc="";var rightDesc="";if(commandHeap[0]){var currentHeap=commandHeap[0];heap=currentHeap.heap;toSpace=currentHeap.to;command=currentHeap.type;firstChild=currentHeap.left;lastChild=currentHeap.right;description=currentHeap.desc;leftDesc=currentHeap.leftDesc;rightDesc=currentHeap.rightDesc;}var toMemoryMatrix=functions.get_to_memory_matrix();var fromMemoryMatrix=functions.get_from_memory_matrix();var flips=functions.get_flips();_this.setState(function(){var running=true;return {memorySize:memorySize,toSpace:toSpace,column:column,tags:tags,heap:heap,toMemoryMatrix:toMemoryMatrix,fromMemoryMatrix:fromMemoryMatrix,flips:flips,commandHeap:commandHeap,command:command,firstChild:firstChild,lastChild:lastChild,description:description,leftDesc:leftDesc,rightDesc:rightDesc,running:running}});};_this.sliderShift=function(newValue){_this.setState(function(){var commandHeap=_this.state.commandHeap;return {value:newValue,heap:commandHeap[newValue].heap,toSpace:commandHeap[newValue].to,command:commandHeap[newValue].type,firstChild:commandHeap[newValue].left,lastChild:commandHeap[newValue].right,description:commandHeap[newValue].desc,leftDesc:commandHeap[newValue].leftDesc,rightDesc:commandHeap[newValue].rightDesc}});};_this.handlePlus=function(){var value=_this.state.value;var lengthOfFunction=_this.getlengthFunction();if(value<lengthOfFunction-1){value+=1;_this.setState(function(){var commandHeap=_this.state.commandHeap;return {value:value,heap:commandHeap[value].heap,toSpace:commandHeap[value].to,command:commandHeap[value].type,firstChild:commandHeap[value].left,lastChild:commandHeap[value].right,description:commandHeap[value].desc,leftDesc:commandHeap[value].leftDesc,rightDesc:commandHeap[value].rightDesc}});}};_this.handleMinus=function(){var value=_this.state.value;if(value>0){value-=1;_this.setState(function(){var commandHeap=_this.state.commandHeap;return {value:value,heap:commandHeap[value].heap,toSpace:commandHeap[value].to,command:commandHeap[value].type,firstChild:commandHeap[value].left,lastChild:commandHeap[value].right,description:commandHeap[value].desc,leftDesc:commandHeap[value].leftDesc,rightDesc:commandHeap[value].rightDesc}});}};_this.getlengthFunction=function(){var debuggerContext=_this.props.debuggerContext;var commandHeap=debuggerContext.result.value?debuggerContext.result.value.get_command():[];return commandHeap.length};_this.isTag=function(tag){var tags=_this.state.tags;return tags?tags.includes(tag):false};_this.getMemoryColor=function(indexValue){var heap=_this.state.heap;var value=heap?heap[indexValue]:0;var color="";if(!value){color=ThemeColor.GREY;}else if(_this.isTag(value)){color=ThemeColor.PINK;}else {color=ThemeColor.BLUE;}return color};_this.getBackgroundColor=function(indexValue){var firstChild=_this.state.firstChild;var lastChild=_this.state.lastChild;var _a=_this.state,commandHeap=_a.commandHeap,value=_a.value;var size1=commandHeap[value].sizeLeft;var size2=commandHeap[value].sizeRight;var command=_this.state.command;var color="";if(command===COMMAND.FLIP){if(indexValue===firstChild){color=ThemeColor.GREEN;}if(indexValue===lastChild){color=ThemeColor.YELLOW;}}else if(indexValue>=firstChild&&indexValue<firstChild+size1){color=ThemeColor.GREEN;}else if(indexValue>=lastChild&&indexValue<lastChild+size2){color=ThemeColor.YELLOW;}return color};_this.renderLabel=function(val){var flips=_this.state.flips;return flips.includes(val)?"^":""+val};_this.state={value:0,memorySize:0,toSpace:0,column:0,tags:[],heap:[],commandHeap:[],flips:[0],toMemoryMatrix:[],fromMemoryMatrix:[],firstChild:-1,lastChild:-1,command:"",description:"",rightDesc:"",leftDesc:"",running:false};return _this}CopyGC.prototype.componentDidMount=function(){var debuggerContext=this.props.debuggerContext;if(debuggerContext&&debuggerContext.result&&debuggerContext.result.value){this.initialize_state();}};CopyGC.prototype.render=function(){var _this=this;var state=this.state;if(state.running){var _a=this.state,toMemoryMatrix=_a.toMemoryMatrix,fromMemoryMatrix=_a.fromMemoryMatrix;var lengthOfFunction=this.getlengthFunction();return React__default['default'].createElement("div",null,React__default['default'].createElement("div",null,React__default['default'].createElement("p",null,"This is a visualiser for stop and copy garbage collector. Check the guide"," ",React__default['default'].createElement("a",{href:"https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide"},"here"),"."),React__default['default'].createElement("h3",null,state.command),React__default['default'].createElement("p",null," ",state.description," "),React__default['default'].createElement("div",{style:{display:"flex",flexDirection:"row",marginTop:10}},state.leftDesc?React__default['default'].createElement("div",{style:{flex:1}},React__default['default'].createElement("canvas",{width:10,height:10,style:{backgroundColor:ThemeColor.GREEN}}),React__default['default'].createElement("span",null," ",state.leftDesc," ")):false,state.rightDesc?React__default['default'].createElement("div",{style:{flex:1}},React__default['default'].createElement("canvas",{width:10,height:10,style:{backgroundColor:ThemeColor.YELLOW}}),React__default['default'].createElement("span",null," ",state.rightDesc," ")):false),React__default['default'].createElement("br",null),React__default['default'].createElement("p",null,"Current step:","   ",React__default['default'].createElement(Icon,{icon:"remove",onClick:this.handleMinus}),"   ",state.value,"   ",React__default['default'].createElement(Icon,{icon:"add",onClick:this.handlePlus})),React__default['default'].createElement("div",{style:{padding:5}},React__default['default'].createElement(Slider,{disabled:lengthOfFunction<=1,min:0,max:lengthOfFunction>0?lengthOfFunction-1:0,onChange:this.sliderShift,value:state.value<=lengthOfFunction?state.value:0,labelValues:state.flips,labelRenderer:this.renderLabel}))),React__default['default'].createElement("div",null,React__default['default'].createElement("div",null,React__default['default'].createElement("h3",null,state.toSpace===0?"To Space":"From Space"),React__default['default'].createElement("div",null,toMemoryMatrix&&toMemoryMatrix.length>0&&toMemoryMatrix.map(function(item,row){return React__default['default'].createElement("div",{style:{display:"flex",flexDirection:"row"}},React__default['default'].createElement("span",{style:{width:30}}," ",row*state.column," "),item&&item.length>0&&item.map(function(content){var color=_this.getMemoryColor(content);var bgColor=_this.getBackgroundColor(content);return React__default['default'].createElement("div",{style:{width:14,backgroundColor:bgColor}},React__default['default'].createElement("canvas",{width:10,height:10,style:{backgroundColor:color}}))}))}))),React__default['default'].createElement("div",null,React__default['default'].createElement("h3",null,state.toSpace>0?"To Space":"From Space"),React__default['default'].createElement("div",null,fromMemoryMatrix&&fromMemoryMatrix.length>0&&fromMemoryMatrix.map(function(item,row){return React__default['default'].createElement("div",{style:{display:"flex",flexDirection:"row"}},React__default['default'].createElement("span",{style:{width:30}},row*state.column+state.memorySize/2),item&&item.length>0?item.map(function(content){var color=_this.getMemoryColor(content);var bgColor=_this.getBackgroundColor(content);return React__default['default'].createElement("div",{style:{width:14,backgroundColor:bgColor}},React__default['default'].createElement("canvas",{width:10,height:10,style:{backgroundColor:color}}))}):false)})))),React__default['default'].createElement("div",{style:{display:"flex",flexDirection:"row",marginTop:10}},React__default['default'].createElement("div",{style:{flex:1}},React__default['default'].createElement("canvas",{width:10,height:10,style:{backgroundColor:ThemeColor.BLUE}}),React__default['default'].createElement("span",null," defined")),React__default['default'].createElement("div",{style:{flex:1}},React__default['default'].createElement("canvas",{width:10,height:10,style:{backgroundColor:ThemeColor.PINK}}),React__default['default'].createElement("span",null," tag")),React__default['default'].createElement("div",{style:{flex:1}},React__default['default'].createElement("canvas",{width:10,height:10,style:{backgroundColor:ThemeColor.GREY}}),React__default['default'].createElement("span",null," empty or undefined"))))}return React__default['default'].createElement("div",null,React__default['default'].createElement("p",null,"This is a visualiser for stop and copy garbage collector. Check the guide"," ",React__default['default'].createElement("a",{href:"https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide"},"here"),"."),React__default['default'].createElement("p",null," Calls the function init() at the end of your code to start. "))};return CopyGC}(React__default['default'].Component);var index = {toSpawn:function(){return true},body:function(debuggerContext){return React__default['default'].createElement(CopyGC,{debuggerContext:debuggerContext})},label:"Copying Garbage Collector",iconName:"duplicate"};
+    var SoundMatrix=function(_super){__extends(SoundMatrix,_super);function SoundMatrix(props){var _this=_super.call(this,props)||this;_this.$container=null;_this.handleClear=function(){window.ToneMatrix.clear_matrix();};_this.handleRandomise=function(){window.ToneMatrix.randomise_matrix();};_this.state={};return _this}SoundMatrix.prototype.componentDidMount=function(){if(window.ToneMatrix){window.ToneMatrix.initialise_matrix(this.$container);}};SoundMatrix.prototype.shouldComponentUpdate=function(){return false};SoundMatrix.prototype.render=function(){var _this=this;return React__default['default'].createElement("div",{className:"sa-tone-matrix"},React__default['default'].createElement("div",{className:"row"},React__default['default'].createElement("div",{className:classnames$1("controls","col-xs-12",DARK,BUTTON_GROUP)},React__default['default'].createElement(Button,{id:"clear-matrix",onClick:this.handleClear},"Clear"),React__default['default'].createElement(Button,{id:"randomise-matrix",onClick:this.handleRandomise},"Randomise"))),React__default['default'].createElement("div",{className:"row"},React__default['default'].createElement("div",{className:"col-xs-12",ref:function(r){_this.$container=r;}})))};return SoundMatrix}(React__default['default'].Component);var index = {toSpawn:function(context){return context.result.value==="test"},body:function(context){return React__default['default'].createElement(SoundMatrix,{context:context})},label:"Sound Matrix",iconName:"music"};
 
     return index;
 

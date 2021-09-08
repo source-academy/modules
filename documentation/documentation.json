@@ -8805,7 +8805,7 @@
 			]
 		},
 		{
-			"id": 192,
+			"id": 303,
 			"name": "scrabble",
 			"kind": 1,
 			"kindString": "Module",
@@ -8816,7 +8816,7 @@
 			"originalName": "scrabble/functions",
 			"children": [
 				{
-					"id": 193,
+					"id": 304,
 					"name": "scrabble_array",
 					"kind": 32,
 					"kindString": "Variable",
@@ -8843,7 +8843,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 194,
+					"id": 305,
 					"name": "scrabble_list",
 					"kind": 32,
 					"kindString": "Variable",
@@ -8872,8 +8872,8 @@
 					"title": "Variables",
 					"kind": 32,
 					"children": [
-						193,
-						194
+						304,
+						305
 					]
 				}
 			],
@@ -8886,43 +8886,369 @@
 			]
 		},
 		{
-			"id": 195,
-			"name": "sound",
+			"id": 780,
+			"name": "sound_matrix/functions",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
-			"comment": {
-				"shortText": "The sounds library provides functions for constructing and playing sounds.",
-				"text": "A wave is a function that takes in a number `t` and returns\na number representing the amplitude at time `t`.\nThe amplitude should fall within the range of [-1, 1].\n\nA Sound is a pair(wave, duration) where duration is the length of the sound in seconds.\nThe constructor make_sound and accessors get_wave and get_duration are provided.\n\nSound Discipline:\nFor all sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:\n`(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.\n\nTwo functions which combine Sounds, `consecutively` and `simultaneously` are given.\nAdditionally, we provide sound transformation functions `adsr` and `phase_mod`\nwhich take in a Sound and return a Sound.\n\nFinally, the provided `play` function takes in a Sound and plays it using your\ncomputer's sound system.\n",
-				"tags": [
-					{
-						"tag": "author",
-						"text": "Koh Shang Hui"
-					},
-					{
-						"tag": "author",
-						"text": "Samyukta Sounderraman\n"
-					}
-				]
-			},
-			"originalName": "sound/functions",
 			"children": [
 				{
-					"id": 260,
+					"id": 791,
+					"name": "ToneMatrix",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {
+						"isConst": true
+					},
+					"sources": [
+						{
+							"fileName": "sound_matrix/functions.ts",
+							"line": 23,
+							"character": 23
+						}
+					],
+					"type": {
+						"type": "reflection",
+						"declaration": {
+							"id": 792,
+							"name": "__type",
+							"kind": 65536,
+							"kindString": "Type literal",
+							"flags": {},
+							"children": [
+								{
+									"id": 803,
+									"name": "bindMatrixButtons",
+									"kind": 1024,
+									"kindString": "Property",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 804,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 805,
+													"name": "__type",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"type": {
+														"type": "intrinsic",
+														"name": "void"
+													}
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 797,
+									"name": "clear_matrix",
+									"kind": 1024,
+									"kindString": "Property",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 798,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 799,
+													"name": "__type",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"type": {
+														"type": "intrinsic",
+														"name": "void"
+													}
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 793,
+									"name": "initialise_matrix",
+									"kind": 1024,
+									"kindString": "Property",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 794,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 795,
+													"name": "__type",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 796,
+															"name": "$container",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "reference",
+																"name": "HTMLElement"
+															}
+														}
+													],
+													"type": {
+														"type": "intrinsic",
+														"name": "void"
+													}
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 800,
+									"name": "randomise_matrix",
+									"kind": 1024,
+									"kindString": "Property",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 801,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 802,
+													"name": "__type",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"type": {
+														"type": "intrinsic",
+														"name": "void"
+													}
+												}
+											]
+										}
+									}
+								}
+							],
+							"groups": [
+								{
+									"title": "Properties",
+									"kind": 1024,
+									"children": [
+										803,
+										797,
+										793,
+										800
+									]
+								}
+							]
+						}
+					},
+					"defaultValue": "..."
+				},
+				{
+					"id": 789,
+					"name": "clear_all_timeout",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sound_matrix/functions.ts",
+							"line": 371,
+							"character": 33
+						}
+					],
+					"signatures": [
+						{
+							"id": 790,
+							"name": "clear_all_timeout",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 783,
+					"name": "clear_matrix",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sound_matrix/functions.ts",
+							"line": 344,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 784,
+							"name": "clear_matrix",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 781,
+					"name": "get_matrix",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sound_matrix/functions.ts",
+							"line": 330,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 782,
+							"name": "get_matrix",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"name": "List"
+							}
+						}
+					]
+				},
+				{
+					"id": 785,
+					"name": "set_timeout",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sound_matrix/functions.ts",
+							"line": 362,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 786,
+							"name": "set_timeout",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 787,
+									"name": "f",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "any"
+									}
+								},
+								{
+									"id": 788,
+									"name": "t",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "any"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Variables",
+					"kind": 32,
+					"children": [
+						791
+					]
+				},
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						789,
+						783,
+						781,
+						785
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "sound_matrix/functions.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 192,
+			"name": "sounds/functions",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 257,
 					"name": "adsr",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 634,
 							"character": 20
 						}
 					],
 					"signatures": [
 						{
-							"id": 261,
+							"id": 258,
 							"name": "adsr",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8939,7 +9265,7 @@
 							},
 							"parameters": [
 								{
-									"id": 262,
+									"id": 259,
 									"name": "attack_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8953,7 +9279,7 @@
 									}
 								},
 								{
-									"id": 263,
+									"id": 260,
 									"name": "decay_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8967,7 +9293,7 @@
 									}
 								},
 								{
-									"id": 264,
+									"id": 261,
 									"name": "sustain_level",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8981,7 +9307,7 @@
 									}
 								},
 								{
-									"id": 265,
+									"id": 262,
 									"name": "release_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9003,21 +9329,21 @@
 					]
 				},
 				{
-					"id": 286,
+					"id": 283,
 					"name": "bell",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 832,
 							"character": 20
 						}
 					],
 					"signatures": [
 						{
-							"id": 287,
+							"id": 284,
 							"name": "bell",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9034,7 +9360,7 @@
 							},
 							"parameters": [
 								{
-									"id": 288,
+									"id": 285,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9048,7 +9374,7 @@
 									}
 								},
 								{
-									"id": 289,
+									"id": 286,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9070,21 +9396,21 @@
 					]
 				},
 				{
-					"id": 290,
+					"id": 287,
 					"name": "cello",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 854,
 							"character": 21
 						}
 					],
 					"signatures": [
 						{
-							"id": 291,
+							"id": 288,
 							"name": "cello",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9101,7 +9427,7 @@
 							},
 							"parameters": [
 								{
-									"id": 292,
+									"id": 289,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9115,7 +9441,7 @@
 									}
 								},
 								{
-									"id": 293,
+									"id": 290,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9137,21 +9463,21 @@
 					]
 				},
 				{
-					"id": 254,
+					"id": 251,
 					"name": "consecutively",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 579,
 							"character": 29
 						}
 					],
 					"signatures": [
 						{
-							"id": 255,
+							"id": 252,
 							"name": "consecutively",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9163,6 +9489,1081 @@
 									{
 										"tag": "example",
 										"text": "consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 253,
+									"name": "list_of_sounds",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "given list of sounds"
+									},
+									"type": {
+										"type": "reference",
+										"name": "List"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Sound"
+							}
+						}
+					]
+				},
+				{
+					"id": 215,
+					"name": "get_duration",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 284,
+							"character": 28
+						}
+					],
+					"signatures": [
+						{
+							"id": 216,
+							"name": "get_duration",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Accesses the duration of a given Sound.",
+								"returns": "the duration of the Sound",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "get_duration(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns 5\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 217,
+									"name": "sound",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "given Sound"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Sound"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 212,
+					"name": "get_wave",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 273,
+							"character": 24
+						}
+					],
+					"signatures": [
+						{
+							"id": 213,
+							"name": "get_wave",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Accesses the wave function of a given Sound.",
+								"returns": "the wave function of the Sound",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 214,
+									"name": "sound",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "given Sound"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Sound"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Wave"
+							}
+						}
+					]
+				},
+				{
+					"id": 193,
+					"name": "init_record",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 163,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 194,
+							"name": "init_record",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Initialize recording by obtaining permission\nto use the default device microphone",
+								"returns": "string \"obtaining recording permission\"\n"
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					]
+				},
+				{
+					"id": 218,
+					"name": "is_sound",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 295,
+							"character": 24
+						}
+					],
+					"signatures": [
+						{
+							"id": 219,
+							"name": "is_sound",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Checks if the argument is a Sound",
+								"returns": "true if x is a Sound, false otherwise",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "is_sound(make_sound(t => 0, 2)); // Returns true\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 220,
+									"name": "x",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "input to be checked"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "any"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						}
+					]
+				},
+				{
+					"id": 280,
+					"name": "letter_name_to_frequency",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 818,
+							"character": 40
+						}
+					],
+					"signatures": [
+						{
+							"id": 281,
+							"name": "letter_name_to_frequency",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Converts a letter name to its corresponding frequency.",
+								"returns": "the corresponding frequency",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "letter_name_to_frequency(\"A4\"); // Returns 440\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 282,
+									"name": "note",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 274,
+					"name": "letter_name_to_midi_note",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 747,
+							"character": 40
+						}
+					],
+					"signatures": [
+						{
+							"id": 275,
+							"name": "letter_name_to_midi_note",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to <a href=\"https://i.imgur.com/qGQgmYr.png\">this mapping from\nletter name to midi notes.",
+								"returns": "the corresponding midi note",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "letter_name_to_midi_note(\"C4\"); // Returns 60\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 276,
+									"name": "note",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 208,
+					"name": "make_sound",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 262,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 209,
+							"name": "make_sound",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a Sound with given wave function and duration.\nThe wave function is a function: number -> number\nthat takes in a non-negative input time and returns an amplitude\nbetween -1 and 1.",
+								"returns": "with wave as wave function and duration as duration",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 210,
+									"name": "wave",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "wave function of the sound"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Wave"
+									}
+								},
+								{
+									"id": 211,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "duration of the sound"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Sound"
+							}
+						}
+					]
+				},
+				{
+					"id": 277,
+					"name": "midi_note_to_frequency",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 806,
+							"character": 38
+						}
+					],
+					"signatures": [
+						{
+							"id": 278,
+							"name": "midi_note_to_frequency",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Converts a MIDI note to its corresponding frequency.",
+								"returns": "the frequency of the MIDI note",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "midi_note_to_frequency(69); // Returns 440\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 279,
+									"name": "note",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "given MIDI note"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							}
+						}
+					]
+				},
+				{
+					"id": 229,
+					"name": "noise_sound",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 472,
+							"character": 27
+						}
+					],
+					"signatures": [
+						{
+							"id": 230,
+							"name": "noise_sound",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a noise sound with given duration",
+								"returns": "resulting noise sound",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "noise_sound(5);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 231,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the duration of the noise sound"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Sound"
+							}
+						}
+					]
+				},
+				{
+					"id": 269,
+					"name": "phase_mod",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 722,
+							"character": 25
+						}
+					],
+					"signatures": [
+						{
+							"id": 270,
+							"name": "phase_mod",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a SoundTransformer which uses its argument\nto modulate the phase of a (carrier) sine wave\nof given frequency and duration with a given Sound.\nModulating with a low frequency Sound results in a vibrato effect.\nModulating with a Sound with frequencies comparable to\nthe sine wave frequency results in more complex wave forms.",
+								"returns": "function which takes in a Sound and returns a Sound",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "phase_mod(440, 5, 1)(sine_sound(220, 5));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 271,
+									"name": "freq",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the frequency of the sine wave to be modulated"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 272,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the duration of the output soud"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 273,
+									"name": "amount",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the amount of modulation to apply to the carrier sine wave"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "SoundTransformer"
+							}
+						}
+					]
+				},
+				{
+					"id": 291,
+					"name": "piano",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 871,
+							"character": 21
+						}
+					],
+					"signatures": [
+						{
+							"id": 292,
+							"name": "piano",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "returns a Sound reminiscent of a piano, playing\na given note for a given duration",
+								"returns": "Sound resulting piano Sound with given pitch and duration",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "piano(48, 5);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 293,
+									"name": "note",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "MIDI note"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 294,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "duration in seconds"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Sound"
+							}
+						}
+					]
+				},
+				{
+					"id": 221,
+					"name": "play",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 311,
+							"character": 20
+						}
+					],
+					"signatures": [
+						{
+							"id": 222,
+							"name": "play",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Plays the given Sound using the computer’s sound device.\nThe sound is only played if no other sounds are currently being played.",
+								"returns": "the given sound",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "play(sine_sound(440, 5));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 223,
+									"name": "sound",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the sound to play"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Sound"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "AudioPlayed"
+							}
+						}
+					]
+				},
+				{
+					"id": 224,
+					"name": "play_concurrently",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 397,
+							"character": 33
+						}
+					],
+					"signatures": [
+						{
+							"id": 225,
+							"name": "play_concurrently",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Plays the given Sound using the computer’s sound device\non top of any sounds that are currently playing.",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "play_concurrently(sine_sound(440, 5));\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 226,
+									"name": "sound",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the sound to play"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Sound"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
+					"id": 195,
+					"name": "record",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 186,
+							"character": 22
+						}
+					],
+					"signatures": [
+						{
+							"id": 196,
+							"name": "record",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "takes a <CODE>buffer</CODE> duration (in seconds) as argument, and\nreturns a nullary stop function <CODE>stop</CODE>. A call\n<CODE>stop()</CODE> returns a sound promise: a nullary function\nthat returns a sound. Example: <PRE><CODE>init_record();\nconst stop = record(0.5);\n// record after 0.5 seconds. Then in next query:\nconst promise = stop();\n// In next query, you can play the promised sound, by\n// applying the promise:\nplay(promise());</CODE></PRE>",
+								"returns": "nullary <CODE>stop</CODE> function;\n<CODE>stop()</CODE> stops the recording and\nreturns a sound promise: a nullary function that returns the recorded sound\n"
+							},
+							"parameters": [
+								{
+									"id": 197,
+									"name": "buffer",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "pause before recording, in seconds"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 198,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "sounds/functions.ts",
+											"line": 186,
+											"character": 39
+										}
+									],
+									"signatures": [
+										{
+											"id": 199,
+											"name": "__type",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"type": {
+												"type": "reflection",
+												"declaration": {
+													"id": 200,
+													"name": "__type",
+													"kind": 65536,
+													"kindString": "Type literal",
+													"flags": {},
+													"sources": [
+														{
+															"fileName": "sounds/functions.ts",
+															"line": 186,
+															"character": 45
+														}
+													],
+													"signatures": [
+														{
+															"id": 201,
+															"name": "__type",
+															"kind": 4096,
+															"kindString": "Call signature",
+															"flags": {},
+															"type": {
+																"type": "reference",
+																"name": "Sound"
+															}
+														}
+													]
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"id": 202,
+					"name": "record_for",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 219,
+							"character": 26
+						}
+					],
+					"signatures": [
+						{
+							"id": 203,
+							"name": "record_for",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Records a sound of given <CODE>duration</CODE> in seconds, after\na <CODE>buffer</CODE> also in seconds, and\nreturns a sound promise: a nullary function\nthat returns a sound. Example: <PRE><CODE>init_record();\nconst promise = record_for(2, 0.5);\n// In next query, you can play the promised sound, by\n// applying the promise:\nplay(promise());</CODE></PRE>",
+								"returns": "<CODE>promise</CODE>: nullary function which returns the recorded sound\n"
+							},
+							"parameters": [
+								{
+									"id": 204,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "duration in seconds"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 205,
+									"name": "buffer",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "pause before recording, in seconds"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 206,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "sounds/functions.ts",
+											"line": 219,
+											"character": 61
+										}
+									],
+									"signatures": [
+										{
+											"id": 207,
+											"name": "__type",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"type": {
+												"type": "reference",
+												"name": "Sound"
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"id": 247,
+					"name": "sawtooth_sound",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 553,
+							"character": 30
+						}
+					],
+					"signatures": [
+						{
+							"id": 248,
+							"name": "sawtooth_sound",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a sawtooth wave sound with given frequency and duration",
+								"returns": "resulting sawtooth wave sound",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "sawtooth_sound(440, 5);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 249,
+									"name": "freq",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the frequency of the sawtooth wave sound"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 250,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the duration of the sawtooth wave sound"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Sound"
+							}
+						}
+					]
+				},
+				{
+					"id": 232,
+					"name": "silence_sound",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 483,
+							"character": 29
+						}
+					],
+					"signatures": [
+						{
+							"id": 233,
+							"name": "silence_sound",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a silence sound with given duration",
+								"returns": "resulting silence sound",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "silence_sound(5);\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 234,
+									"name": "duration",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the duration of the silence sound"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Sound"
+							}
+						}
+					]
+				},
+				{
+					"id": 254,
+					"name": "simultaneously",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "sounds/functions.ts",
+							"line": 599,
+							"character": 30
+						}
+					],
+					"signatures": [
+						{
+							"id": 255,
+							"name": "simultaneously",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Makes a new Sound by combining the sounds in a given list\nwhere all the sounds are overlapped on top of each other.",
+								"returns": "the combined Sound",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))\n"
 									}
 								]
 							},
@@ -9190,1096 +10591,21 @@
 					]
 				},
 				{
-					"id": 218,
-					"name": "get_duration",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 284,
-							"character": 28
-						}
-					],
-					"signatures": [
-						{
-							"id": 219,
-							"name": "get_duration",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Accesses the duration of a given Sound.",
-								"returns": "the duration of the Sound",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "get_duration(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns 5\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 220,
-									"name": "sound",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "given Sound"
-									},
-									"type": {
-										"type": "reference",
-										"name": "Sound"
-									}
-								}
-							],
-							"type": {
-								"type": "intrinsic",
-								"name": "number"
-							}
-						}
-					]
-				},
-				{
-					"id": 215,
-					"name": "get_wave",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 273,
-							"character": 24
-						}
-					],
-					"signatures": [
-						{
-							"id": 216,
-							"name": "get_wave",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Accesses the wave function of a given Sound.",
-								"returns": "the wave function of the Sound",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 217,
-									"name": "sound",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "given Sound"
-									},
-									"type": {
-										"type": "reference",
-										"name": "Sound"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Wave"
-							}
-						}
-					]
-				},
-				{
-					"id": 196,
-					"name": "init_record",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 163,
-							"character": 27
-						}
-					],
-					"signatures": [
-						{
-							"id": 197,
-							"name": "init_record",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Initialize recording by obtaining permission\nto use the default device microphone",
-								"returns": "string \"obtaining recording permission\"\n"
-							},
-							"type": {
-								"type": "intrinsic",
-								"name": "string"
-							}
-						}
-					]
-				},
-				{
-					"id": 221,
-					"name": "is_sound",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 295,
-							"character": 24
-						}
-					],
-					"signatures": [
-						{
-							"id": 222,
-							"name": "is_sound",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Checks if the argument is a Sound",
-								"returns": "true if x is a Sound, false otherwise",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "is_sound(make_sound(t => 0, 2)); // Returns true\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 223,
-									"name": "x",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "input to be checked"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "any"
-									}
-								}
-							],
-							"type": {
-								"type": "intrinsic",
-								"name": "boolean"
-							}
-						}
-					]
-				},
-				{
-					"id": 283,
-					"name": "letter_name_to_frequency",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 818,
-							"character": 40
-						}
-					],
-					"signatures": [
-						{
-							"id": 284,
-							"name": "letter_name_to_frequency",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Converts a letter name to its corresponding frequency.",
-								"returns": "the corresponding frequency",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "letter_name_to_frequency(\"A4\"); // Returns 440\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 285,
-									"name": "note",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"type": {
-										"type": "intrinsic",
-										"name": "string"
-									}
-								}
-							],
-							"type": {
-								"type": "intrinsic",
-								"name": "number"
-							}
-						}
-					]
-				},
-				{
-					"id": 277,
-					"name": "letter_name_to_midi_note",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 747,
-							"character": 40
-						}
-					],
-					"signatures": [
-						{
-							"id": 278,
-							"name": "letter_name_to_midi_note",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to <a href=\"https://i.imgur.com/qGQgmYr.png\">this mapping from\nletter name to midi notes.",
-								"returns": "the corresponding midi note",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "letter_name_to_midi_note(\"C4\"); // Returns 60\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 279,
-									"name": "note",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"type": {
-										"type": "intrinsic",
-										"name": "string"
-									}
-								}
-							],
-							"type": {
-								"type": "intrinsic",
-								"name": "number"
-							}
-						}
-					]
-				},
-				{
-					"id": 211,
-					"name": "make_sound",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 262,
-							"character": 26
-						}
-					],
-					"signatures": [
-						{
-							"id": 212,
-							"name": "make_sound",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Makes a Sound with given wave function and duration.\nThe wave function is a function: number -> number\nthat takes in a non-negative input time and returns an amplitude\nbetween -1 and 1.",
-								"returns": "with wave as wave function and duration as duration",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 213,
-									"name": "wave",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "wave function of the sound"
-									},
-									"type": {
-										"type": "reference",
-										"name": "Wave"
-									}
-								},
-								{
-									"id": 214,
-									"name": "duration",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "duration of the sound"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Sound"
-							}
-						}
-					]
-				},
-				{
-					"id": 280,
-					"name": "midi_note_to_frequency",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 806,
-							"character": 38
-						}
-					],
-					"signatures": [
-						{
-							"id": 281,
-							"name": "midi_note_to_frequency",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Converts a MIDI note to its corresponding frequency.",
-								"returns": "the frequency of the MIDI note",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "midi_note_to_frequency(69); // Returns 440\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 282,
-									"name": "note",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "given MIDI note"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "intrinsic",
-								"name": "number"
-							}
-						}
-					]
-				},
-				{
-					"id": 232,
-					"name": "noise_sound",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 472,
-							"character": 27
-						}
-					],
-					"signatures": [
-						{
-							"id": 233,
-							"name": "noise_sound",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Makes a noise sound with given duration",
-								"returns": "resulting noise sound",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "noise_sound(5);\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 234,
-									"name": "duration",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the duration of the noise sound"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Sound"
-							}
-						}
-					]
-				},
-				{
-					"id": 272,
-					"name": "phase_mod",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 722,
-							"character": 25
-						}
-					],
-					"signatures": [
-						{
-							"id": 273,
-							"name": "phase_mod",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Returns a SoundTransformer which uses its argument\nto modulate the phase of a (carrier) sine wave\nof given frequency and duration with a given Sound.\nModulating with a low frequency Sound results in a vibrato effect.\nModulating with a Sound with frequencies comparable to\nthe sine wave frequency results in more complex wave forms.",
-								"returns": "function which takes in a Sound and returns a Sound",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "phase_mod(440, 5, 1)(sine_sound(220, 5));\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 274,
-									"name": "freq",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the frequency of the sine wave to be modulated"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 275,
-									"name": "duration",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the duration of the output soud"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 276,
-									"name": "amount",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the amount of modulation to apply to the carrier sine wave"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "SoundTransformer"
-							}
-						}
-					]
-				},
-				{
-					"id": 294,
-					"name": "piano",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 871,
-							"character": 21
-						}
-					],
-					"signatures": [
-						{
-							"id": 295,
-							"name": "piano",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "returns a Sound reminiscent of a piano, playing\na given note for a given duration",
-								"returns": "Sound resulting piano Sound with given pitch and duration",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "piano(48, 5);\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 296,
-									"name": "note",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "MIDI note"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 297,
-									"name": "duration",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "duration in seconds"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Sound"
-							}
-						}
-					]
-				},
-				{
-					"id": 224,
-					"name": "play",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 311,
-							"character": 20
-						}
-					],
-					"signatures": [
-						{
-							"id": 225,
-							"name": "play",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Plays the given Sound using the computer’s sound device.\nThe sound is only played if no other sounds are currently being played.",
-								"returns": "the given sound",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "play(sine_sound(440, 5));\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 226,
-									"name": "sound",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the sound to play"
-									},
-									"type": {
-										"type": "reference",
-										"name": "Sound"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "AudioPlayed"
-							}
-						}
-					]
-				},
-				{
-					"id": 227,
-					"name": "play_concurrently",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 397,
-							"character": 33
-						}
-					],
-					"signatures": [
-						{
-							"id": 228,
-							"name": "play_concurrently",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Plays the given Sound using the computer’s sound device\non top of any sounds that are currently playing.",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "play_concurrently(sine_sound(440, 5));\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 229,
-									"name": "sound",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the sound to play"
-									},
-									"type": {
-										"type": "reference",
-										"name": "Sound"
-									}
-								}
-							],
-							"type": {
-								"type": "intrinsic",
-								"name": "void"
-							}
-						}
-					]
-				},
-				{
-					"id": 198,
-					"name": "record",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 186,
-							"character": 22
-						}
-					],
-					"signatures": [
-						{
-							"id": 199,
-							"name": "record",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "takes a <CODE>buffer</CODE> duration (in seconds) as argument, and\nreturns a nullary stop function <CODE>stop</CODE>. A call\n<CODE>stop()</CODE> returns a sound promise: a nullary function\nthat returns a sound. Example: <PRE><CODE>init_record();\nconst stop = record(0.5);\n// record after 0.5 seconds. Then in next query:\nconst promise = stop();\n// In next query, you can play the promised sound, by\n// applying the promise:\nplay(promise());</CODE></PRE>",
-								"returns": "nullary <CODE>stop</CODE> function;\n<CODE>stop()</CODE> stops the recording and\nreturns a sound promise: a nullary function that returns the recorded sound\n"
-							},
-							"parameters": [
-								{
-									"id": 200,
-									"name": "buffer",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "pause before recording, in seconds"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reflection",
-								"declaration": {
-									"id": 201,
-									"name": "__type",
-									"kind": 65536,
-									"kindString": "Type literal",
-									"flags": {},
-									"sources": [
-										{
-											"fileName": "sound/functions.ts",
-											"line": 186,
-											"character": 39
-										}
-									],
-									"signatures": [
-										{
-											"id": 202,
-											"name": "__type",
-											"kind": 4096,
-											"kindString": "Call signature",
-											"flags": {},
-											"type": {
-												"type": "reflection",
-												"declaration": {
-													"id": 203,
-													"name": "__type",
-													"kind": 65536,
-													"kindString": "Type literal",
-													"flags": {},
-													"sources": [
-														{
-															"fileName": "sound/functions.ts",
-															"line": 186,
-															"character": 45
-														}
-													],
-													"signatures": [
-														{
-															"id": 204,
-															"name": "__type",
-															"kind": 4096,
-															"kindString": "Call signature",
-															"flags": {},
-															"type": {
-																"type": "reference",
-																"name": "Sound"
-															}
-														}
-													]
-												}
-											}
-										}
-									]
-								}
-							}
-						}
-					]
-				},
-				{
-					"id": 205,
-					"name": "record_for",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 219,
-							"character": 26
-						}
-					],
-					"signatures": [
-						{
-							"id": 206,
-							"name": "record_for",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Records a sound of given <CODE>duration</CODE> in seconds, after\na <CODE>buffer</CODE> also in seconds, and\nreturns a sound promise: a nullary function\nthat returns a sound. Example: <PRE><CODE>init_record();\nconst promise = record_for(2, 0.5);\n// In next query, you can play the promised sound, by\n// applying the promise:\nplay(promise());</CODE></PRE>",
-								"returns": "<CODE>promise</CODE>: nullary function which returns the recorded sound\n"
-							},
-							"parameters": [
-								{
-									"id": 207,
-									"name": "duration",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "duration in seconds"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 208,
-									"name": "buffer",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "pause before recording, in seconds"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reflection",
-								"declaration": {
-									"id": 209,
-									"name": "__type",
-									"kind": 65536,
-									"kindString": "Type literal",
-									"flags": {},
-									"sources": [
-										{
-											"fileName": "sound/functions.ts",
-											"line": 219,
-											"character": 61
-										}
-									],
-									"signatures": [
-										{
-											"id": 210,
-											"name": "__type",
-											"kind": 4096,
-											"kindString": "Call signature",
-											"flags": {},
-											"type": {
-												"type": "reference",
-												"name": "Sound"
-											}
-										}
-									]
-								}
-							}
-						}
-					]
-				},
-				{
-					"id": 250,
-					"name": "sawtooth_sound",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 553,
-							"character": 30
-						}
-					],
-					"signatures": [
-						{
-							"id": 251,
-							"name": "sawtooth_sound",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Makes a sawtooth wave sound with given frequency and duration",
-								"returns": "resulting sawtooth wave sound",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "sawtooth_sound(440, 5);\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 252,
-									"name": "freq",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the frequency of the sawtooth wave sound"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 253,
-									"name": "duration",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the duration of the sawtooth wave sound"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Sound"
-							}
-						}
-					]
-				},
-				{
 					"id": 235,
-					"name": "silence_sound",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 483,
-							"character": 29
-						}
-					],
-					"signatures": [
-						{
-							"id": 236,
-							"name": "silence_sound",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Makes a silence sound with given duration",
-								"returns": "resulting silence sound",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "silence_sound(5);\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 237,
-									"name": "duration",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the duration of the silence sound"
-									},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Sound"
-							}
-						}
-					]
-				},
-				{
-					"id": 257,
-					"name": "simultaneously",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 599,
-							"character": 30
-						}
-					],
-					"signatures": [
-						{
-							"id": 258,
-							"name": "simultaneously",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Makes a new Sound by combining the sounds in a given list\nwhere all the sounds are overlapped on top of each other.",
-								"returns": "the combined Sound",
-								"tags": [
-									{
-										"tag": "example",
-										"text": "simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))\n"
-									}
-								]
-							},
-							"parameters": [
-								{
-									"id": 259,
-									"name": "list_of_sounds",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "given list of sounds"
-									},
-									"type": {
-										"type": "reference",
-										"name": "List"
-									}
-								}
-							],
-							"type": {
-								"type": "reference",
-								"name": "Sound"
-							}
-						}
-					]
-				},
-				{
-					"id": 238,
 					"name": "sine_sound",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 495,
 							"character": 26
 						}
 					],
 					"signatures": [
 						{
-							"id": 239,
+							"id": 236,
 							"name": "sine_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10296,7 +10622,7 @@
 							},
 							"parameters": [
 								{
-									"id": 240,
+									"id": 237,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10310,7 +10636,7 @@
 									}
 								},
 								{
-									"id": 241,
+									"id": 238,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10332,21 +10658,21 @@
 					]
 				},
 				{
-					"id": 242,
+					"id": 239,
 					"name": "square_sound",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 507,
 							"character": 28
 						}
 					],
 					"signatures": [
 						{
-							"id": 243,
+							"id": 240,
 							"name": "square_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10363,7 +10689,7 @@
 							},
 							"parameters": [
 								{
-									"id": 244,
+									"id": 241,
 									"name": "f",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10374,7 +10700,7 @@
 									}
 								},
 								{
-									"id": 245,
+									"id": 242,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10396,21 +10722,21 @@
 					]
 				},
 				{
-					"id": 266,
+					"id": 263,
 					"name": "stacking_adsr",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 685,
 							"character": 29
 						}
 					],
 					"signatures": [
 						{
-							"id": 267,
+							"id": 264,
 							"name": "stacking_adsr",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10427,7 +10753,7 @@
 							},
 							"parameters": [
 								{
-									"id": 268,
+									"id": 265,
 									"name": "waveform",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10441,7 +10767,7 @@
 									}
 								},
 								{
-									"id": 269,
+									"id": 266,
 									"name": "base_frequency",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10455,7 +10781,7 @@
 									}
 								},
 								{
-									"id": 270,
+									"id": 267,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10469,7 +10795,7 @@
 									}
 								},
 								{
-									"id": 271,
+									"id": 268,
 									"name": "envelopes",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10491,21 +10817,21 @@
 					]
 				},
 				{
-					"id": 230,
+					"id": 227,
 					"name": "stop",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 458,
 							"character": 20
 						}
 					],
 					"signatures": [
 						{
-							"id": 231,
+							"id": 228,
 							"name": "stop",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10521,21 +10847,21 @@
 					]
 				},
 				{
-					"id": 246,
+					"id": 243,
 					"name": "triangle_sound",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 529,
 							"character": 30
 						}
 					],
 					"signatures": [
 						{
-							"id": 247,
+							"id": 244,
 							"name": "triangle_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10552,7 +10878,7 @@
 							},
 							"parameters": [
 								{
-									"id": 248,
+									"id": 245,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10566,7 +10892,7 @@
 									}
 								},
 								{
-									"id": 249,
+									"id": 246,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10588,21 +10914,21 @@
 					]
 				},
 				{
-					"id": 298,
+					"id": 295,
 					"name": "trombone",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 888,
 							"character": 24
 						}
 					],
 					"signatures": [
 						{
-							"id": 299,
+							"id": 296,
 							"name": "trombone",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10619,7 +10945,7 @@
 							},
 							"parameters": [
 								{
-									"id": 300,
+									"id": 297,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10633,7 +10959,7 @@
 									}
 								},
 								{
-									"id": 301,
+									"id": 298,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10655,21 +10981,21 @@
 					]
 				},
 				{
-					"id": 302,
+					"id": 299,
 					"name": "violin",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
-							"fileName": "sound/functions.ts",
+							"fileName": "sounds/functions.ts",
 							"line": 905,
 							"character": 22
 						}
 					],
 					"signatures": [
 						{
-							"id": 303,
+							"id": 300,
 							"name": "violin",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10686,7 +11012,7 @@
 							},
 							"parameters": [
 								{
-									"id": 304,
+									"id": 301,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10700,7 +11026,7 @@
 									}
 								},
 								{
-									"id": 305,
+									"id": 302,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10727,41 +11053,41 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						260,
-						286,
-						290,
-						254,
-						218,
-						215,
-						196,
-						221,
-						283,
-						277,
-						211,
-						280,
-						232,
-						272,
-						294,
-						224,
-						227,
-						198,
-						205,
-						250,
-						235,
 						257,
-						238,
-						242,
-						266,
-						230,
-						246,
-						298,
-						302
+						283,
+						287,
+						251,
+						215,
+						212,
+						193,
+						218,
+						280,
+						274,
+						208,
+						277,
+						229,
+						269,
+						291,
+						221,
+						224,
+						195,
+						202,
+						247,
+						232,
+						254,
+						235,
+						239,
+						263,
+						227,
+						243,
+						295,
+						299
 					]
 				}
 			],
 			"sources": [
 				{
-					"fileName": "sound/functions.ts",
+					"fileName": "sounds/functions.ts",
 					"line": 1,
 					"character": 0
 				}
@@ -12941,8 +13267,9 @@
 				12,
 				1,
 				635,
+				303,
+				780,
 				192,
-				195,
 				306
 			]
 		}
