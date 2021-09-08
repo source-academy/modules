@@ -27,13 +27,13 @@
       "MarkSweep"
     ]
   },
+  "sounds": {
+    "tabs": [
+      "Sounds"
+    ]
+  },
   "scrabble": {
     "tabs": []
-  },
-  "sound": {
-    "tabs": [
-      "Sound"
-    ]
   },
   "stereo_sound": {
     "tabs": [
@@ -48,6 +48,11 @@
   "rune": {
     "tabs": [
       "Rune"
+    ]
+  },
+  "sound_matrix": {
+    "tabs": [
+      "SoundMatrix"
     ]
   }
 }
