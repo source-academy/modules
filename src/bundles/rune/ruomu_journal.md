@@ -47,3 +47,6 @@
 
 ### 21 Aug 2021
 - 18:00pm - 21:00pm : fix the memory leak / high memomry consumption by hollusion #95
+
+### 5 Sep 2021
+- 12:30 - 13:30 : fix #97 #100
