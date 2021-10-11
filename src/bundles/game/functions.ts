@@ -17,6 +17,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, consistent-return, @typescript-eslint/no-shadow */
 import {
   GameObject,
+  List,
   ObjectConfig,
   RawContainer,
   RawGameElement,
@@ -141,6 +142,85 @@ export default function gameFuncs(_params: __Params) {
     throw console.error(`${arguments.callee.caller.name}: ${message}`);
   }
 
+  // List processing
+  // Original Author: Martin Henz
+
+  /**
+   * array test works differently for Rhino and
+   * the Firefox environment (especially Web Console)
+   */
+  function array_test(x: any): boolean {
+    if (Array.isArray === undefined) {
+      return x instanceof Array;
+    }
+    return Array.isArray(x);
+  }
+
+  /**
+   * pair constructs a pair using a two-element array
+   * LOW-LEVEL FUNCTION, NOT SOURCE
+   */
+  function pair(x: any, xs: any): [any, any] {
+    return [x, xs];
+  }
+
+  /**
+   * is_pair returns true iff arg is a two-element array
+   * LOW-LEVEL FUNCTION, NOT SOURCE
+   */
+  function is_pair(x: any): boolean {
+    return array_test(x) && x.length === 2;
+  }
+
+  /**
+   * head returns the first component of the given pair,
+   * throws an exception if the argument is not a pair
+   * LOW-LEVEL FUNCTION, NOT SOURCE
+   */
+  function head(xs: List): any {
+    if (is_pair(xs)) {
+      return xs![0];
+    }
+    throw new Error(
+      `head(xs) expects a pair as argument xs, but encountered ${xs}`
+    );
+  }
+
+  /**
+   *  tail returns the second component of the given pair
+   * throws an exception if the argument is not a pair
+   * LOW-LEVEL FUNCTION, NOT SOURCE
+   */
+  function tail(xs: List) {
+    if (is_pair(xs)) {
+      return xs![1];
+    }
+    throw new Error(
+      `tail(xs) expects a pair as argument xs, but encountered ${xs}`
+    );
+  }
+
+  /**
+   * is_null returns true if arg is exactly null
+   * LOW-LEVEL FUNCTION, NOT SOURCE
+   */
+  function is_null(xs: any) {
+    return xs === null;
+  }
+
+  /**
+   * map applies first arg f to the elements of the second argument,
+   * assumed to be a list.
+   * f is applied element-by-element:
+   * map(f,[1,[2,[]]]) results in [f(1),[f(2),[]]]
+   * map throws an exception if the second argument is not a list,
+   * and if the second argument is a non-empty list and the first
+   * argument is not a function.
+   */
+  function map(f: (x: any) => any, xs: List) {
+    return is_null(xs) ? null : pair(f(head(xs)), map(f, tail(xs)));
+  }
+
   // =============================================================================
   // Module's Exposed Functions
   // =============================================================================
@@ -149,6 +229,17 @@ export default function gameFuncs(_params: __Params) {
 
   function prepend_remote_url(asset_key: string): string {
     return remotePath(asset_key);
+  }
+
+  function create_config(lst: List): ObjectConfig {
+    const config = {};
+    map((xs: [any, any]) => {
+      if (!is_pair(xs)) {
+        throw_error(`xs is not pair!`);
+      }
+      config[head(xs)] = tail(xs);
+    }, lst);
+    return config;
   }
 
   function create_text_config(
@@ -619,6 +710,7 @@ export default function gameFuncs(_params: __Params) {
     create_anim_frame_config,
     create_anim_spritesheet_frame_configs,
     create_award,
+    create_config,
     create_container,
     create_ellipse,
     create_image,
@@ -676,6 +768,19 @@ export default function gameFuncs(_params: __Params) {
  */
 export function prepend_remote_url(asset_key: string): string {
   return '';
+}
+
+/**
+ * Transforms the given list into an object config. The list follows
+ * the format of list([key1, value1], [key2, value2]).
+ *
+ * e.g list(["alpha", 0], ["duration", 1000])
+ *
+ * @param lst the list to be turned into object config.
+ * @returns object config
+ */
+export function create_config(lst: List): ObjectConfig {
+  return {};
 }
 
 /**
