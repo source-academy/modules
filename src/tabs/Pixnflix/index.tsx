@@ -59,6 +59,7 @@ class PixNFlix extends React.Component<Props, State> {
       mode: 'video' as SideContentVideoDisplayMode,
     };
     const { debuggerContext } = this.props;
+    console.log(debuggerContext.result);
     this.pixNFlix = debuggerContext.result.value;
   }
 
@@ -296,7 +297,10 @@ class PixNFlix extends React.Component<Props, State> {
 }
 
 export default {
-  toSpawn: () => true,
+  // only spawn if result in the REPL is '[Pix N Flix]'
+  toSpawn: (debuggerContext: any) =>
+    debuggerContext.result.value &&
+    debuggerContext.result.value.toReplString() === '[Pix N Flix]',
   body: (debuggerContext: any) => (
     <PixNFlix debuggerContext={debuggerContext} />
   ),
