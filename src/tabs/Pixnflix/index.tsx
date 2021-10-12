@@ -59,26 +59,25 @@ class PixNFlix extends React.Component<Props, State> {
       mode: 'video' as SideContentVideoDisplayMode,
     };
     const { debuggerContext } = this.props;
-    console.log(debuggerContext.result);
     this.pixNFlix = debuggerContext.result.value;
   }
 
   public componentDidMount() {
-    if (this.pixNFlix) {
+    if (this.isPixNFlix()) {
       this.setupVideoService();
       window.addEventListener('beforeunload', this.pixNFlix.deinit);
     }
   }
 
   public componentWillUnmount() {
-    if (this.pixNFlix) {
+    if (this.isPixNFlix()) {
       this.closeVideo();
       window.removeEventListener('beforeunload', this.pixNFlix.deinit);
     }
   }
 
   public setupVideoService = () => {
-    if (this.$video && this.$canvas && this.pixNFlix) {
+    if (this.$video && this.$canvas && this.isPixNFlix()) {
       const { debuggerContext } = this.props;
       this.pixNFlix = debuggerContext.result.value;
       // get the properties of the video in an array
@@ -97,15 +96,21 @@ class PixNFlix extends React.Component<Props, State> {
   };
 
   public closeVideo = () => {
-    this.pixNFlix.deinit();
+    if (this.isPixNFlix()) {
+      this.pixNFlix.deinit();
+    }
   };
 
   public handleStartVideo = () => {
-    this.pixNFlix.startVideo();
+    if (this.isPixNFlix()) {
+      this.pixNFlix.startVideo();
+    }
   };
 
   public handleSnapPicture = () => {
-    this.pixNFlix.snapPicture();
+    if (this.isPixNFlix()) {
+      this.pixNFlix.snapPicture();
+    }
   };
 
   public handleWidthChange = (width: number) => {
@@ -123,7 +128,9 @@ class PixNFlix extends React.Component<Props, State> {
       this.setState({
         FPS: fps,
       });
-      this.pixNFlix.updateFPS(fps);
+      if (this.isPixNFlix()) {
+        this.pixNFlix.updateFPS(fps);
+      }
     }
   };
 
@@ -138,7 +145,9 @@ class PixNFlix extends React.Component<Props, State> {
         width: w,
         height: h,
       });
-      this.pixNFlix.updateDimensions(w, h);
+      if (this.isPixNFlix()) {
+        this.pixNFlix.updateDimensions(w, h);
+      }
     }
   };
 
@@ -167,6 +176,18 @@ class PixNFlix extends React.Component<Props, State> {
         break;
     }
   };
+
+  /**
+   * Checks if pixNFlix is initialised as the last line (ie. REPL output is '[Pix N Flix]')
+   * @returns Boolean if pixNFlix is intialised
+   */
+  private isPixNFlix() {
+    return (
+      this.pixNFlix &&
+      this.pixNFlix.toReplString &&
+      this.pixNFlix.toReplString() === '[Pix N Flix]'
+    );
+  }
 
   public render() {
     const { mode, width, height, FPS } = this.state;
@@ -275,10 +296,7 @@ class PixNFlix extends React.Component<Props, State> {
 }
 
 export default {
-  // only spawn if result in the REPL is '[Pix N Flix]'
-  toSpawn: (debuggerContext: any) =>
-    debuggerContext.result.value &&
-    debuggerContext.result.value.toReplString() === '[Pix N Flix]',
+  toSpawn: () => true,
   body: (debuggerContext: any) => (
     <PixNFlix debuggerContext={debuggerContext} />
   ),
