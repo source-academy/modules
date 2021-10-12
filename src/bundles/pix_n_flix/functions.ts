@@ -65,9 +65,13 @@ let startTime: number;
 
 /** @hidden */
 function setupData(): void {
-  for (let i = 0; i < WIDTH; i += 1) {
+  for (let i = 0; i < HEIGHT; i += 1) {
     pixels[i] = [];
     temporaryPixels[i] = [];
+    for (let j = 0; j < WIDTH; j += 1) {
+      pixels[i][j] = [0, 0, 0, 255];
+      temporaryPixels[i][j] = [0, 0, 0, 255];
+    }
   }
 }
 
@@ -142,7 +146,7 @@ function drawFrame(): void {
   try {
     filter(pixels, temporaryPixels);
     writeToBuffer(pixelObj.data, temporaryPixels);
-  } catch (e) {
+  } catch (e: any) {
     // eslint-disable-next-line no-console
     console.error(JSON.stringify(e));
     const errMsg = `There is an error with filter function, filter will be reset to default. ${e.name}: ${e.message}`;
