@@ -128,7 +128,12 @@ class PixNFlix extends React.Component<Props, State> {
   };
 
   public handleUpdateDimensions = (w: number, h: number) => {
-    if (w >= MIN_WIDTH && w <= MAX_WIDTH && h >= MIN_HEIGHT && h <= MIN_WIDTH) {
+    if (
+      w >= MIN_WIDTH &&
+      w <= MAX_WIDTH &&
+      h >= MIN_HEIGHT &&
+      h <= MAX_HEIGHT
+    ) {
       this.setState({
         width: w,
         height: h,
@@ -273,7 +278,7 @@ export default {
   // only spawn if result in the REPL is '[Pix N Flix]'
   toSpawn: (debuggerContext: any) =>
     debuggerContext.result.value &&
-    debuggerContext.result.value.toReplString === '[Pix N Flix]',
+    debuggerContext.result.value.toReplString() === '[Pix N Flix]',
   body: (debuggerContext: any) => (
     <PixNFlix debuggerContext={debuggerContext} />
   ),
