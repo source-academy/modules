@@ -59,21 +59,26 @@ class PixNFlix extends React.Component<Props, State> {
       mode: 'video' as SideContentVideoDisplayMode,
     };
     const { debuggerContext } = this.props;
+    console.log(debuggerContext.result);
     this.pixNFlix = debuggerContext.result.value;
   }
 
   public componentDidMount() {
-    this.setupVideoService();
-    window.addEventListener('beforeunload', this.pixNFlix.deinit);
+    if (this.pixNFlix) {
+      this.setupVideoService();
+      window.addEventListener('beforeunload', this.pixNFlix.deinit);
+    }
   }
 
   public componentWillUnmount() {
-    this.closeVideo();
-    window.removeEventListener('beforeunload', this.pixNFlix.deinit);
+    if (this.pixNFlix) {
+      this.closeVideo();
+      window.removeEventListener('beforeunload', this.pixNFlix.deinit);
+    }
   }
 
   public setupVideoService = () => {
-    if (this.$video && this.$canvas) {
+    if (this.$video && this.$canvas && this.pixNFlix) {
       const { debuggerContext } = this.props;
       this.pixNFlix = debuggerContext.result.value;
       // get the properties of the video in an array
@@ -123,7 +128,12 @@ class PixNFlix extends React.Component<Props, State> {
   };
 
   public handleUpdateDimensions = (w: number, h: number) => {
-    if (w >= MIN_WIDTH && w <= MAX_WIDTH && h >= MIN_HEIGHT && h <= MIN_WIDTH) {
+    if (
+      w >= MIN_WIDTH &&
+      w <= MAX_WIDTH &&
+      h >= MIN_HEIGHT &&
+      h <= MAX_HEIGHT
+    ) {
       this.setState({
         width: w,
         height: h,
@@ -265,7 +275,10 @@ class PixNFlix extends React.Component<Props, State> {
 }
 
 export default {
-  toSpawn: () => true,
+  // only spawn if result in the REPL is '[Pix N Flix]'
+  toSpawn: (debuggerContext: any) =>
+    debuggerContext.result.value &&
+    debuggerContext.result.value.toReplString() === '[Pix N Flix]',
   body: (debuggerContext: any) => (
     <PixNFlix debuggerContext={debuggerContext} />
   ),
