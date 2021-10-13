@@ -221,6 +221,7 @@ class PixNFlix extends React.Component<Props, State> {
             <div className='sa-video-header-numeric-input'>
               {/* <Tooltip2 content='Change width'> */}
               <NumericInput
+                disabled
                 leftIcon={IconNames.HORIZONTAL_DISTRIBUTION}
                 style={{ width: 70 }}
                 value={width}
@@ -236,6 +237,7 @@ class PixNFlix extends React.Component<Props, State> {
             <div className='sa-video-header-numeric-input'>
               {/* <Tooltip2 content='Change height'> */}
               <NumericInput
+                disabled
                 leftIcon={IconNames.VERTICAL_DISTRIBUTION}
                 style={{ width: 70 }}
                 value={height}
