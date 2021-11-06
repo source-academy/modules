@@ -8961,7 +8961,7 @@
 							],
 							"type": {
 								"type": "intrinsic",
-								"name": "string"
+								"name": "any"
 							}
 						}
 					]
