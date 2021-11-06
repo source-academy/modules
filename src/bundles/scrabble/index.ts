@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { scrabble_array, scrabble_list, char_at } from './functions';
+import { scrabble_array, scrabble_list, charAt } from './functions';
 
 /**
  * Scrabble words for Source Academy
@@ -9,5 +9,5 @@ import { scrabble_array, scrabble_list, char_at } from './functions';
 export default () => ({
   scrabble_array,
   scrabble_list,
-  char_at,
+  charAt,
 });
