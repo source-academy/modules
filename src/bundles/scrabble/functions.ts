@@ -67612,5 +67612,5 @@ export const scrabble_list = current_list;
 
 export function charAt(s: string, i: number): string {
   const result = s.charAt(i);
-  return result === "" ? undefined : result;
+  return result === `` ? undefined : result;
 }
