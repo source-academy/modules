@@ -9,4 +9,5 @@ import { scrabble_array, scrabble_list } from './functions';
 export default () => ({
   scrabble_array,
   scrabble_list,
+  char_at,
 });
