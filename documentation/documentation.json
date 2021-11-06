@@ -8917,7 +8917,7 @@
 				},
 				{
 					"id": 415,
-					"name": "char_at",
+					"name": "charAt",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
@@ -8925,13 +8925,13 @@
 						{
 							"fileName": "scrabble/functions.ts",
 							"line": 67613,
-							"character": 23
+							"character": 22
 						}
 					],
 					"signatures": [
 						{
 							"id": 416,
-							"name": "char_at",
+							"name": "charAt",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
