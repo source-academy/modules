@@ -67593,7 +67593,7 @@ export const scrabble_array = [
   'zygomorphy',
   'zygosities',
   'zygospores',
-  'zymologies'
+  'zymologies',
 ];
 
 const len = scrabble_array.length;
