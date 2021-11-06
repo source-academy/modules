@@ -67610,7 +67610,7 @@ for (let i = len - 1; i >= 0; i -= 1) {
 
 export const scrabble_list = current_list;
 
-export function charAt(s: string, i: number): string {
+export function charAt(s: string, i: number): any {
   const result = s.charAt(i);
   return result === `` ? undefined : result;
 }
