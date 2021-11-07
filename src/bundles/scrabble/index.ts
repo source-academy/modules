@@ -2,8 +2,8 @@
 import {
   scrabble_array,
   scrabble_list,
-  char_at,
-  array_length,
+  charAt,
+  arrayLength,
 } from './functions';
 
 /**
@@ -14,6 +14,6 @@ import {
 export default () => ({
   scrabble_array,
   scrabble_list,
-  char_at,
-  array_length,
+  charAt,
+  arrayLength,
 });

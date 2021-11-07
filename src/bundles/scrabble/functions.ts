@@ -67610,11 +67610,11 @@ for (let i = len - 1; i >= 0; i -= 1) {
 
 export const scrabble_list = current_list;
 
-export function char_at(s: string, i: number): any {
+export function charAt(s: string, i: number): any {
   const result = s.charAt(i);
   return result === `` ? undefined : result;
 }
 
-export function array_length(x: any): number {
+export function arrayLength(x: any): number {
   return x.length;
 }
