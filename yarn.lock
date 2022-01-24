@@ -1335,6 +1335,27 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@jscad/array-utils@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@jscad/array-utils/-/array-utils-2.1.1.tgz#ed034ee8f85961457655bc5dca293e54d08b062c"
+  integrity sha512-Zwg1FEsStvbp1QZZtReHTiwSBI4ImPXmR17VSVaWoUFCCAfcBcedWWZFa5MwqNCfAK/Nk96mgfsMTqw2ePZFeA==
+
+"@jscad/modeling@^2.7.1":
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.7.1.tgz#b2a4b8aa4fa4e3cba05c05a94a0002f8171b508c"
+  integrity sha512-HgO96oiSIlfqA0iCJdNK2RhJ1r3s1ZlH/0kQZagbDQ36dQNBvoqIa/1Kw9zlzYrTlzRiz856jYoJeenCtAy1zQ==
+
+"@jscad/regl-renderer@^2.5.3":
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/@jscad/regl-renderer/-/regl-renderer-2.5.3.tgz#596daf122d20bf11231103d1ba38dd8651339c37"
+  integrity sha512-d7kf6yu0GRoNG4P6eyrxGQqGONYt7CFLAy7c7sluXuTLEfuN7Iak+vRsXAlUzjxP3L0kc78iMy9nSB2F34KzUg==
+  dependencies:
+    "@jscad/array-utils" "2.1.1"
+    camera-unproject "1.0.1"
+    gl-mat4 "1.2.0"
+    gl-vec3 "1.1.3"
+    regl "2.1.0"
+
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents":
   version "2.1.8-no-fsevents"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.tgz#da7c3996b8e6e19ebd14d82eaced2313e7769f9b"
@@ -2411,6 +2432,11 @@ camelcase@^6.0.0, camelcase@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.2.0.tgz#924af881c9d525ac9d87f40d964e5cea982a1809"
   integrity sha512-c7wVvbw3f37nuobQNtgsgG9POC9qMbNuMQmTCqZv23b6MIz0fcYpBiOlv9gEN/hdLdnZTDQhg6e9Dq5M1vKvfg==
+
+camera-unproject@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/camera-unproject/-/camera-unproject-1.0.1.tgz#86927a9d6d5340a8c9e36da840f7ccb6d6da12cf"
+  integrity sha1-hpJ6nW1TQKjJ422oQPfMttbaEs8=
 
 caniuse-lite@^1.0.30001181:
   version "1.0.30001199"
@@ -3687,10 +3713,20 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+gl-mat4@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/gl-mat4/-/gl-mat4-1.2.0.tgz#49d8a7636b70aa00819216635f4a3fd3f4669b26"
+  integrity sha512-sT5C0pwB1/e9G9AvAoLsoaJtbMGjfd/jfxo8jMCKqYYEnjZuFvqV5rehqar0538EmssjdDeiEWnKyBSTw7quoA==
+
 gl-matrix@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-3.3.0.tgz#232eef60b1c8b30a28cbbe75b2caf6c48fd6358b"
   integrity sha512-COb7LDz+SXaHtl/h4LeaFcNdJdAQSDeVqjiIihSXNrkWObZLhDI4hIkZC11Aeqp7bcE72clzB0BnDXr2SmslRA==
+
+gl-vec3@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/gl-vec3/-/gl-vec3-1.1.3.tgz#a47c62f918774a06cbed1b65bcd0288ecbb03826"
+  integrity sha512-jduKUqT0SGH02l8Yl+mV1yVsDfYgQAJyXGxkJQGyxPLHRiW25DwVIRPt6uvhrEMHftJfqhqKthRcyZqNEl9Xdw==
 
 glob-parent@^3.1.0:
   version "3.1.0"
@@ -6309,6 +6345,11 @@ regjsparser@^0.6.4:
   integrity sha512-ib77G0uxsA2ovgiYbCVGx4Pv3PSttAx2vIwidqQzbL2U5S4Q+j00HdSAneSBuyVcMvEnTXMjiGgB+DlXozVhpQ==
   dependencies:
     jsesc "~0.5.0"
+
+regl@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/regl/-/regl-2.1.0.tgz#7dae71e9ff20f29c4f42f510c70cd92ebb6b657c"
+  integrity sha512-oWUce/aVoEvW5l2V0LK7O5KJMzUSKeiOwFuJehzpSFd43dO5spP9r+sSUfhKtsky4u6MCqWJaRL+abzExynfTg==
 
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
