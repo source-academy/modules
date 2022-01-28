@@ -19,10 +19,6 @@ class WebGLCanvas extends React.Component<Props, State> {
     this.state = {};
   }
 
-  /**
-   * This function decides whether the rendered curve is in 3D and setState
-   * accordingly.
-   */
   public componentDidMount() {
     if (this.$canvas) {
       const {
