@@ -17,8 +17,8 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
     controls: orbitControls.defaults,
   };
 
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
+  const { width } = canvas;
+  const { height } = canvas;
 
   // prepare the camera
   perspectiveCamera.setProjection(state.camera, state.camera, {
@@ -36,7 +36,7 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
   const gridOptions = {
     visuals: {
       drawCmd: 'drawGrid',
-      show: false,
+      show: true,
     },
     size: [500, 500],
     ticks: [25, 5],
@@ -47,7 +47,7 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
   const axisOptions = {
     visuals: {
       drawCmd: 'drawAxis',
-      show: false,
+      show: true,
     },
     size: 300,
     // alwaysVisible: false,
@@ -123,7 +123,6 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
 
   const updateAndRender = () => {
     doRotatePanZoom();
-
     if (updateView) {
       const updates = orbitControls.update({
         controls: state.controls,
@@ -142,15 +141,13 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
   requestAnimationFrame(updateAndRender);
 
   /* eslint-disable no-param-reassign */
-  /**
-   * Move camera perspective of the canvas
-   */
-  canvas.onpointermove = (ev: PointerEvent) => {
+  const moveHandler = (ev: PointerEvent) => {
     if (!pointerDown) return;
     const dx = lastX - ev.pageX;
     const dy = ev.pageY - lastY;
 
-    const shiftKey = ev.shiftKey === true;
+    const shiftKey =
+      ev.shiftKey === true;
     if (shiftKey) {
       panDelta[0] += dx;
       panDelta[1] += dy;
@@ -164,11 +161,7 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
 
     ev.preventDefault();
   };
-
-  /**
-   * Move the rotational perspective of the CSG
-   */
-  canvas.onpointerdown = (ev: PointerEvent) => {
+  const downHandler = (ev: PointerEvent) => {
     pointerDown = true;
     lastX = ev.pageX;
     lastY = ev.pageY;
@@ -176,21 +169,19 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
     ev.preventDefault();
   };
 
-  /**
-   * Cancels the movement of the rotation of the CSG
-   */
-  canvas.onpointerup = (ev: PointerEvent) => {
+  const upHandler = (ev: PointerEvent) => {
     pointerDown = false;
     canvas.releasePointerCapture(ev.pointerId);
     ev.preventDefault();
   };
 
-  /**
-   * Zooming in and out of the CSG
-   */
-  canvas.onwheel = (ev: WheelEvent) => {
+  const wheelHandler = (ev: WheelEvent) => {
     zoomDelta += ev.deltaY;
     ev.preventDefault();
   };
-  /* eslint-disable no-param-reassign */
+
+  canvas.onpointermove = moveHandler;
+  canvas.onpointerdown = downHandler;
+  canvas.onpointerup = upHandler;
+  canvas.onwheel = wheelHandler;
 }

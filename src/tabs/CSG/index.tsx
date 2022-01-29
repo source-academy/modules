@@ -14,7 +14,7 @@ type State = {};
 class WebGLCanvas extends React.Component<Props, State> {
   private $canvas: HTMLCanvasElement | null = null;
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {};
   }
@@ -43,6 +43,7 @@ class WebGLCanvas extends React.Component<Props, State> {
         }}
       >
         <canvas
+          id='csgCanvas'
           ref={(r) => {
             this.$canvas = r;
           }}
