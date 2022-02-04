@@ -4,7 +4,7 @@ import {
   cameras,
   controls,
   entitiesFromSolids,
-} from '@jscad/regl-renderer/types';
+} from '@jscad/regl-renderer';
 import { Shape } from './utilities';
 
 //FIXME doesn't work yet
