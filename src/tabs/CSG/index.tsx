@@ -1,5 +1,5 @@
 import React from 'react';
-import drawCSG from '../../bundles/csg/renderer';
+import render from '../../bundles/csg/renderer';
 import { looseInstanceOf, Shape } from '../../bundles/csg/utilities';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 type State = {};
 
-class WebGLCanvas extends React.Component<Props, State> {
+class CsgCanvas extends React.Component<Props, State> {
   private canvas: HTMLCanvasElement | null = null;
 
   public constructor(props: Props) {
@@ -19,8 +19,8 @@ class WebGLCanvas extends React.Component<Props, State> {
 
   public componentDidMount() {
     //FIXME
-    console.log("HTMLCanvasElement", this.canvas)
-    console.log("Props", this.props)
+    // console.log("HTMLCanvasElement", this.canvas)
+    // console.log("Props", this.props)
 
     if (this.canvas === null) {
       return;
@@ -30,14 +30,19 @@ class WebGLCanvas extends React.Component<Props, State> {
     // ESLint configured to require destructuring assignment like this
     const {
       debuggerContext: {
-        result: { potentialShape },
+        result: { value: potentialShape },
       },
     }: any = this.props;
-    if (!(potentialShape instanceof Shape)) {
+    if (!looseInstanceOf(potentialShape, Shape)) {
       return;
     }
 
-    drawCSG(this.canvas, potentialShape as Shape);
+    try {
+      render(this.canvas, potentialShape as Shape);
+    } catch (error: any) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
   }
 
   //TODO to go over
@@ -70,15 +75,17 @@ export default {
   // DebuggerContext from frontend WorkspaceTypes
   toSpawn: (debuggerContext: any) => {
     //FIXME
-    console.log("DebuggerContext", debuggerContext)
+    // console.log("DebuggerContext", debuggerContext)
 
     const potentialShape: any = debuggerContext?.result?.value;
     // instanceof Shape won't work due to different contexts
     if (looseInstanceOf(potentialShape, Shape)) {
       try {
         return (potentialShape as Shape).spawnsTab;
-        // eslint-disable-next-line no-empty
-      } catch (_: any) {}
+      } catch (error: any) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
     }
 
     return false;
@@ -86,7 +93,7 @@ export default {
   // Prettier requires no block for single line function,
   // but needs parentheses on new line as exceeds column width
   body: (debuggerContext: any) => (
-    <WebGLCanvas debuggerContext={debuggerContext} />
+    <CsgCanvas debuggerContext={debuggerContext} />
   ),
   label: 'CSG Tab',
   iconName: 'shapes',

@@ -11,7 +11,6 @@ import { Shape } from './utilities';
 export const cube: Shape = new Shape(() => [primitives.cube({ size: 30 })]);
 
 //NOTE Commented while narrowing down regl-renderer issues:
-// "Error(s) occured when executing the module "CSG"."
 
 /**
  * Primitive Shape of a sphere.
@@ -54,7 +53,6 @@ export function render(shape: Shape): Shape {
 }
 
 //FIXME Commented while narrowing down regl-renderer issues:
-// "Error(s) occured when executing the module "CSG"."
 
 // function csg_clone(csg_array: CsgObject[]): CsgObject[] {
 //   const csgCopy: CsgObject[] = [];

@@ -1,189 +1,45 @@
+import { Geometry } from '@jscad/modeling/src/geometries/types';
 import {
-  prepareRender,
-  drawCommands,
   cameras,
-  controls,
   entitiesFromSolids,
+  prepareRender,
 } from '@jscad/regl-renderer';
 import { Shape } from './utilities';
 
-//FIXME doesn't work yet
-// See also jscad\packages\web\src\ui\views\viewer.js
+export default function render(canvas: HTMLCanvasElement, shape: Shape) {
+  //FIXME
+  console.log("HTMLCanvasElement", canvas)
+  console.log("Shape", shape)
+  globalThis.canvas = canvas
+  globalThis.shape = shape
 
-// Functions that rotate, zoom and render CSG
-export default function drawCSG(canvas: HTMLCanvasElement, csg: Shape) {
-  const perspectiveCamera = cameras.perspective;
-  const orbitControls = controls.orbit;
-
-  const state = {
-    camera: perspectiveCamera.defaults,
-    controls: orbitControls.defaults,
-  };
-
-  const { width } = canvas;
-  const { height } = canvas;
-
-  // prepare the camera
-  perspectiveCamera.setProjection(state.camera, state.camera, {
-    width,
-    height,
-  });
-  perspectiveCamera.update(state.camera, state.camera);
-
-  // prepare the renderer
-  const setupOptions = {
-    glOptions: { container: canvas },
-  };
-  const renderer = prepareRender(setupOptions);
-
-  const gridOptions = {
-    visuals: {
-      drawCmd: 'drawGrid',
-      show: true,
+  const prepareRenderOptions: any = {
+    glOptions: {
+      gl: canvas.getContext('webgl2') ?? undefined,
     },
-    size: [500, 500],
-    ticks: [25, 5],
-    // color: [0, 0, 1, 1],
-    // subColor: [0, 0, 1, 0.5]
   };
+  console.log("prepareRenderOptions", prepareRenderOptions)
+  const preparedRenderer: any = prepareRender(prepareRenderOptions);
+  console.log("preparedRenderer", preparedRenderer)
 
-  const axisOptions = {
-    visuals: {
-      drawCmd: 'drawAxis',
-      show: true,
-    },
-    size: 300,
-    // alwaysVisible: false,
-    // xColor: [0, 0, 1, 1],
-    // yColor: [1, 0, 1, 1],
-    // zColor: [0, 0, 0, 1]
+  const cameraState: typeof cameras.perspective.cameraState = {
+    ...cameras.perspective.defaults,
+    position: [150, -180, 233],
   };
-
-  const entities = entitiesFromSolids({}, ...csg.getObjects());
-
-  // assemble the options for rendering
-  const renderOptions = {
-    camera: state.camera,
-    drawCommands: {
-      drawAxis: drawCommands.drawAxis,
-      drawGrid: drawCommands.drawGrid,
-      drawLines: drawCommands.drawLines,
-      drawMesh: drawCommands.drawMesh,
-    },
-    // define the visual content
-    entities: [gridOptions, axisOptions, ...entities],
+  console.log("cameraState", cameraState)
+  const geometries: Geometry[] = entitiesFromSolids({}, ...shape.getObjects());
+  console.log("geometries", geometries)
+  const renderOptions: any = {
+    ...prepareRenderOptions,
+    camera: cameraState,
+    drawCommands: {},
+    entities: geometries,
   };
+  console.log("renderOptions", renderOptions)
 
-  // Canvas mouse events handler
-
-  let updateView = true;
-
-  const rotateSpeed = 0.002;
-  const panSpeed = 1;
-  const zoomSpeed = 0.08;
-
-  let lastX = 0;
-  let lastY = 0;
-
-  let rotateDelta = [0, 0];
-  let panDelta = [0, 0];
-  let zoomDelta = 0;
-  let pointerDown = false;
-
-  const doRotatePanZoom = () => {
-    if (rotateDelta[0] || rotateDelta[1]) {
-      const updated = orbitControls.rotate(
-        { controls: state.controls, camera: state.camera, speed: rotateSpeed },
-        rotateDelta
-      );
-      state.controls = { ...state.controls, ...updated.controls };
-      updateView = true;
-      rotateDelta = [0, 0];
-    }
-
-    if (panDelta[0] || panDelta[1]) {
-      const updated = orbitControls.pan(
-        { controls: state.controls, camera: state.camera, speed: panSpeed },
-        panDelta
-      );
-      state.controls = { ...state.controls, ...updated.controls };
-      panDelta = [0, 0];
-      state.camera.position = updated.camera.position;
-      state.camera.target = updated.camera.target;
-      updateView = true;
-    }
-
-    if (zoomDelta) {
-      const updated = orbitControls.zoom(
-        { controls: state.controls, camera: state.camera, speed: zoomSpeed },
-        zoomDelta
-      );
-      state.controls = { ...state.controls, ...updated.controls };
-      zoomDelta = 0;
-      updateView = true;
-    }
-  };
-
-  const updateAndRender = () => {
-    doRotatePanZoom();
-    if (updateView) {
-      const updates = orbitControls.update({
-        controls: state.controls,
-        camera: state.camera,
-      });
-      state.controls = { ...state.controls, ...updates.controls };
-      updateView = state.controls.changed;
-
-      state.camera.position = updates.camera.position;
-      perspectiveCamera.update(state.camera);
-
-      renderer(renderOptions);
-    }
-    requestAnimationFrame(updateAndRender);
-  };
-  requestAnimationFrame(updateAndRender);
-
-  /* eslint-disable no-param-reassign */
-  const moveHandler = (ev: PointerEvent) => {
-    if (!pointerDown) return;
-    const dx = lastX - ev.pageX;
-    const dy = ev.pageY - lastY;
-
-    const shiftKey = ev.shiftKey === true;
-    if (shiftKey) {
-      panDelta[0] += dx;
-      panDelta[1] += dy;
-    } else {
-      rotateDelta[0] -= dx;
-      rotateDelta[1] -= dy;
-    }
-
-    lastX = ev.pageX;
-    lastY = ev.pageY;
-
-    ev.preventDefault();
-  };
-  const downHandler = (ev: PointerEvent) => {
-    pointerDown = true;
-    lastX = ev.pageX;
-    lastY = ev.pageY;
-    canvas.setPointerCapture(ev.pointerId);
-    ev.preventDefault();
-  };
-
-  const upHandler = (ev: PointerEvent) => {
-    pointerDown = false;
-    canvas.releasePointerCapture(ev.pointerId);
-    ev.preventDefault();
-  };
-
-  const wheelHandler = (ev: WheelEvent) => {
-    zoomDelta += ev.deltaY;
-    ev.preventDefault();
-  };
-
-  canvas.onpointermove = moveHandler;
-  canvas.onpointerdown = downHandler;
-  canvas.onpointerup = upHandler;
-  canvas.onwheel = wheelHandler;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function animationCallback(timestamp: DOMHighResTimeStamp) {
+    preparedRenderer(renderOptions);
+  }
+  window.requestAnimationFrame(animationCallback);
 }

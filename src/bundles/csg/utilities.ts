@@ -1,11 +1,10 @@
-import { CsgObject } from './types';
+import { Geom3 } from '@jscad/modeling/src/geometries/types';
 
-// eslint-disable-next-line import/prefer-default-export
 export class Shape {
-  public getObjects: () => CsgObject[];
+  public getObjects: () => Geom3[];
 
   public constructor(
-    objectsCallback: () => CsgObject[],
+    objectsCallback: () => Geom3[],
     // Whether a Source program that results in this Shape should spawn the CSG tab
     public spawnsTab: boolean = false,
     private shapeName: string = 'Shape'
