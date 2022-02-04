@@ -1,5 +1,5 @@
 import React from 'react';
-import drawCSG from '../../bundles/csg/csg_renderer';
+import drawCSG from '../../bundles/csg/renderer';
 import { CsgObject } from '../../bundles/csg/types';
 
 type Props = {
@@ -10,7 +10,6 @@ type Props = {
 
 type State = {};
 
-/* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<Props, State> {
   private $canvas: HTMLCanvasElement | null = null;
 

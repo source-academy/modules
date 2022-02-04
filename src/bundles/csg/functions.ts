@@ -1,72 +1,72 @@
 import { primitives, geometries } from '@jscad/modeling';
-import { CSG, CsgObject } from './types';
+import { Shape } from './utilities';
 
 // =============================================================================
-// Basic CSG
+// Primitives
 // =============================================================================
 
 /**
- * CSG with the shape of a cube
+ * Primitive Shape of a cube.
  */
-function csg_cube(): CSG {
-  return {
-    toReplString: () => '<CSG>',
-    csgObjects: [primitives.cube({ size: 30 })],
-  };
-}
+export const cube: Shape = new Shape(() => [primitives.cube({ size: 30 })]);
 
-export const cube: CSG = csg_cube();
+//NOTE Commented while narrowing down regl-renderer issues:
+// "Error(s) occured when executing the module "CSG"."
 
 /**
- * CSG with the shape of a sphere
+ * Primitive Shape of a sphere.
  */
-function csg_sphere(): CSG {
-  return {
-    toReplString: () => '<CSG>',
-    csgObjects: [primitives.sphere({ segments: 128 })],
-  };
-}
-
-export const sphere: CSG = csg_sphere();
+// export const sphere: Shape = new Shape(() => [
+//   primitives.sphere({ segments: 128 }),
+// ]);
 
 /**
- * CSG with the shape of a cylinder
+ * Primitive Shape of a cylinder.
  */
-function csg_cylinder(): CSG {
-  return {
-    toReplString: () => '<CSG>',
-    csgObjects: [primitives.cylinder({ segments: 128 })],
-  };
-}
-
-export const cylinder: CSG = csg_cylinder();
+// export const cylinder: Shape = new Shape(() => [
+//   primitives.cylinder({ segments: 128 }),
+// ]);
 
 // =============================================================================
-// CSG Functions
+// Functions
 // =============================================================================
-function csg_clone(csg_array: CsgObject[]): CsgObject[] {
-  const csgCopy: CsgObject[] = [];
-  for (let i = 0; i < csg_array.length; i += 1) {
-    csgCopy[i] = geometries.geom3.clone(csg_array[i]);
-  }
-  return csgCopy;
+
+/**
+ * Returns a copy of the specified Shape.
+ * Source programs that result in a Shape will have that Shape rendered in a
+ * tab.
+ * I.e., use `render(yourShape);` as the last statement in your program to render
+ * the specified shape.
+ *
+ * @param {Shape} shape - The Shape to render.
+ * @returns {Shape} A copy of the specified Shape for rendering.
+ */
+export function render(shape: Shape): Shape {
+  //FIXME input validation
+  // if (!is_csg(...csg.csgObjects)) {
+  //   throw Error(`show expects a Shape as argument.`);
+  // }
+
+  //TODO actually copy the shape
+  return shape;
 }
 
-export function is_csg(...csg_objects: CsgObject[]): boolean {
-  for (let i = 0; i < csg_objects.length; i += 1) {
-    if (!geometries.geom3.isA(csg_objects[i])) {
-      return false;
-    }
-  }
-  return true;
-}
+//FIXME Commented while narrowing down regl-renderer issues:
+// "Error(s) occured when executing the module "CSG"."
 
-export function show(csg: CSG): CSG {
-  if (!is_csg(...csg.csgObjects)) {
-    throw Error(`show expects a rune as argument.`);
-  }
-  return {
-    toReplString: () => '<RENDERING CSG>',
-    csgObjects: csg_clone(csg.csgObjects),
-  };
-}
+// function csg_clone(csg_array: CsgObject[]): CsgObject[] {
+//   const csgCopy: CsgObject[] = [];
+//   for (let i = 0; i < csg_array.length; i += 1) {
+//     csgCopy[i] = geometries.geom3.clone(csg_array[i]);
+//   }
+//   return csgCopy;
+// }
+
+// export function is_csg(...csg_objects: CsgObject[]): boolean {
+//   for (let i = 0; i < csg_objects.length; i += 1) {
+//     if (!geometries.geom3.isA(csg_objects[i])) {
+//       return false;
+//     }
+//   }
+//   return true;
+// }

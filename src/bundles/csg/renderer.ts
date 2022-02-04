@@ -4,11 +4,14 @@ import {
   cameras,
   controls,
   entitiesFromSolids,
-} from '@jscad/regl-renderer';
-import { CSG } from './types';
+} from '@jscad/regl-renderer/types';
+import { Shape } from './utilities';
+
+//FIXME doesn't work yet
+// See also jscad\packages\web\src\ui\views\viewer.js
 
 // Functions that rotate, zoom and render CSG
-export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
+export default function drawCSG(canvas: HTMLCanvasElement, csg: Shape) {
   const perspectiveCamera = cameras.perspective;
   const orbitControls = controls.orbit;
 
@@ -56,7 +59,7 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
     // zColor: [0, 0, 0, 1]
   };
 
-  const entities = entitiesFromSolids({}, ...csg.csgObjects);
+  const entities = entitiesFromSolids({}, ...csg.getObjects());
 
   // assemble the options for rendering
   const renderOptions = {
@@ -146,8 +149,7 @@ export default function drawCSG(canvas: HTMLCanvasElement, csg: CSG) {
     const dx = lastX - ev.pageX;
     const dy = ev.pageY - lastY;
 
-    const shiftKey =
-      ev.shiftKey === true;
+    const shiftKey = ev.shiftKey === true;
     if (shiftKey) {
       panDelta[0] += dx;
       panDelta[1] += dy;

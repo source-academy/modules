@@ -1,6 +1,7 @@
-import { cube, show } from './functions';
+import { cube, render } from './functions';
 
 export default () => ({
   cube,
-  show,
+
+  render,
 });
