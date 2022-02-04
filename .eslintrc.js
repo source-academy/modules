@@ -5,7 +5,7 @@ module.exports = {
   ignorePatterns: ['build/**/*'],
   rules: {
     'linebreak-style': 'off',
-    'prettier/prettier': ['error'],
+    'prettier/prettier': ['warn'],
   },
   overrides: [
     {
@@ -43,9 +43,9 @@ module.exports = {
       extends: ['airbnb-typescript', 'eslint-config-prettier'],
       rules: {
         'linebreak-style': 'off',
-        'prettier/prettier': ['error'],
+        'prettier/prettier': ['warn'],
         '@typescript-eslint/naming-convention': [
-          'error',
+          'warn',
           {
             selector: 'variable',
             format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
