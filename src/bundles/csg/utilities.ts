@@ -22,8 +22,8 @@ export function looseInstanceOf(object: Object, c: any): boolean {
   const objectName: string | undefined = object?.constructor?.name;
   const className: string | undefined = c?.name;
   return (
-    objectName !== undefined
-    && className !== undefined
-    && objectName === className
+    objectName !== undefined &&
+    className !== undefined &&
+    objectName === className
   );
 }
