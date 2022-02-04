@@ -1,6 +1,6 @@
 import React from 'react';
 import drawCSG from '../../bundles/csg/renderer';
-import { Shape } from '../../bundles/csg/utilities';
+import { looseInstanceOf, Shape } from '../../bundles/csg/utilities';
 
 type Props = {
   debuggerContext: any;
@@ -18,13 +18,13 @@ class WebGLCanvas extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    if (this.canvas === null) {
-      return;
-    }
-
     //FIXME
     console.log("HTMLCanvasElement", this.canvas)
     console.log("Props", this.props)
+
+    if (this.canvas === null) {
+      return;
+    }
 
     // Since the tab did spawn, the program should've resulted in a Shape (?).
     // ESLint configured to require destructuring assignment like this
@@ -73,17 +73,14 @@ export default {
     console.log("DebuggerContext", debuggerContext)
 
     const potentialShape: any = debuggerContext?.result?.value;
-    // instanceof is a TS type guard, automatic type narrowing
-    console.log(potentialShape)
-    console.log(new Shape(() => []))
-    console.log(new Shape(() => []) instanceof Shape)
-    if (potentialShape instanceof Shape) {
-      console.log(potentialShape)
-      return potentialShape.spawnsTab;
+    // instanceof Shape won't work due to different contexts
+    if (looseInstanceOf(potentialShape, Shape)) {
+      try {
+        return (potentialShape as Shape).spawnsTab;
+        // eslint-disable-next-line no-empty
+      } catch (_: any) {}
     }
 
-    // return true;
-    console.log(potentialShape instanceof Shape)
     return false;
   },
   // Prettier requires no block for single line function,
