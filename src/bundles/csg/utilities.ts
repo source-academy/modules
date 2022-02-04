@@ -6,6 +6,8 @@ export class Shape {
 
   public constructor(
     objectsCallback: () => CsgObject[],
+    // Whether a Source program that results in this Shape should spawn the CSG tab
+    public spawnsTab: boolean = false,
     private shapeName: string = 'Shape'
   ) {
     this.getObjects = objectsCallback;

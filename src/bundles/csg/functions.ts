@@ -32,14 +32,13 @@ export const cube: Shape = new Shape(() => [primitives.cube({ size: 30 })]);
 // =============================================================================
 
 /**
- * Returns a copy of the specified Shape.
- * Source programs that result in a Shape will have that Shape rendered in a
- * tab.
- * I.e., use `render(yourShape);` as the last statement in your program to render
- * the specified shape.
+ * Returns a copy of the specified Shape that will get rendered in a tab,
+ * if your Source program results in that Shape.
+ * I.e., use this function as the last statement in your program to render the
+ * specified shape.
  *
  * @param {Shape} shape - The Shape to render.
- * @returns {Shape} A copy of the specified Shape for rendering.
+ * @returns {Shape} A copy of the specified Shape, marked for rendering.
  */
 export function render(shape: Shape): Shape {
   //FIXME input validation
@@ -48,6 +47,9 @@ export function render(shape: Shape): Shape {
   // }
 
   //TODO actually copy the shape
+
+  // eslint-disable-next-line no-param-reassign
+  shape.spawnsTab = true;
   return shape;
 }
 
