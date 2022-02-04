@@ -1,4 +1,4 @@
-import { primitives, geometries } from '@jscad/modeling';
+import { primitives } from '@jscad/modeling';
 import { Shape } from './utilities';
 
 // =============================================================================
@@ -10,7 +10,7 @@ import { Shape } from './utilities';
  */
 export const cube: Shape = new Shape(() => [primitives.cube({ size: 30 })]);
 
-//NOTE Commented while narrowing down regl-renderer issues:
+// NOTE Commented while narrowing down regl-renderer issues:
 
 /**
  * Primitive Shape of a sphere.
@@ -40,19 +40,19 @@ export const cube: Shape = new Shape(() => [primitives.cube({ size: 30 })]);
  * @returns {Shape} A copy of the specified Shape, marked for rendering.
  */
 export function render(shape: Shape): Shape {
-  //FIXME input validation
+  // FIXME input validation
   // if (!is_csg(...csg.csgObjects)) {
   //   throw Error(`show expects a Shape as argument.`);
   // }
 
-  //TODO actually copy the shape
+  // TODO actually copy the shape
 
   // eslint-disable-next-line no-param-reassign
   shape.spawnsTab = true;
   return shape;
 }
 
-//FIXME Commented while narrowing down regl-renderer issues:
+// FIXME Commented while narrowing down regl-renderer issues:
 
 // function csg_clone(csg_array: CsgObject[]): CsgObject[] {
 //   const csgCopy: CsgObject[] = [];

@@ -18,7 +18,7 @@ class CsgCanvas extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    //FIXME
+    // FIXME
     // console.log("HTMLCanvasElement", this.canvas)
     // console.log("Props", this.props)
 
@@ -45,7 +45,7 @@ class CsgCanvas extends React.Component<Props, State> {
     }
   }
 
-  //TODO to go over
+  // TODO to go over
   public render() {
     return (
       <div
@@ -74,7 +74,7 @@ class CsgCanvas extends React.Component<Props, State> {
 export default {
   // DebuggerContext from frontend WorkspaceTypes
   toSpawn: (debuggerContext: any) => {
-    //FIXME
+    // FIXME
     // console.log("DebuggerContext", debuggerContext)
 
     const potentialShape: any = debuggerContext?.result?.value;
