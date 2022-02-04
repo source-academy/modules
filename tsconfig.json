@@ -26,8 +26,6 @@
     "strict": true,
     /* The target setting changes which JS features are downleveled and which are left intact. */
     "target": "es5",
-    /* By default all visible ”@types” packages are included in your compilation. */
-    "types": ["node", "jest", "dom-mediacapture-record"],
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
