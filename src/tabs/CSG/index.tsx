@@ -89,5 +89,5 @@ export default {
     <WebGLCanvas debuggerContext={debuggerContext} />
   ),
   label: 'CSG Tab',
-  iconName: 'media',
+  iconName: 'shapes',
 };
