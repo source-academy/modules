@@ -7,6 +7,8 @@ export class Shape {
     objectsCallback: () => Geom3,
     // Whether a Source program that results in this Shape should spawn the CSG tab
     public spawnsTab: boolean = false,
+    public axis: boolean = false,
+    public grid: boolean = false,
     private shapeName: string = 'Shape'
   ) {
     this.getObject = objectsCallback;

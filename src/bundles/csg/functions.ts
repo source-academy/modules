@@ -7,44 +7,21 @@ import {
 } from '@jscad/modeling/src/operations/booleans';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { RGB } from '@jscad/modeling/src/colors/types';
+import {
+  center,
+  mirror,
+  rotate,
+  scale,
+  translate,
+} from '@jscad/modeling/src/operations/transforms';
+import {
+  measureArea,
+  measureVolume,
+  measureCenter,
+  measureBoundingBox,
+  measureCenterOfMass,
+} from '@jscad/modeling/src/measurements';
 import { Shape, looseInstanceOf } from './utilities';
-
-// =============================================================================
-// Primitives
-// =============================================================================
-
-/**
- * Primitive Shape of a cube.
- */
-export const cube: Shape = new Shape(() => primitives.cube());
-
-/**
- * Primitive Shape of a sphere.
- */
-export const sphere: Shape = new Shape(() =>
-  primitives.sphere({ segments: 128 })
-);
-
-/**
- * Primitive Shape of a cylinder.
- */
-export const cylinder: Shape = new Shape(() =>
-  primitives.cylinder({ segments: 128 })
-);
-
-/**
- * Primitive Shape of a triangular prism.
- */
-export const triangularPrism: Shape = new Shape(() =>
-  extrudeLinear({ height: 1 }, primitives.triangle())
-);
-
-/**
- * Primitive Shape of an extruded star.
- */
-export const extrudedStar: Shape = new Shape(() =>
-  extrudeLinear({ height: 1 }, primitives.star())
-);
 
 // =============================================================================
 // Colors
@@ -116,6 +93,127 @@ export function shapeColorizeHex(shape: Shape, hex: string): Shape {
   );
 }
 
+export function shapeScale(
+  shape: Shape,
+  x: number,
+  y: number,
+  z: number
+): Shape {
+  return new Shape(() => scale([x, y, z], shape.getObject()));
+}
+
+export function shapeScaleX(shape: Shape, x: number): Shape {
+  return shapeScale(shape, x, 1, 1);
+}
+
+export function shapeScaleY(shape: Shape, y: number): Shape {
+  return shapeScale(shape, 1, y, 1);
+}
+
+export function shapeScaleZ(shape: Shape, z: number): Shape {
+  return shapeScale(shape, 1, 1, z);
+}
+
+export function shapeCenter(shape: Shape): number[] {
+  return measureCenter(shape.getObject());
+}
+
+export function shapeSetCenter(
+  shape: Shape,
+  x: number,
+  y: number,
+  z: number
+): Shape {
+  return new Shape(() => center({ relativeTo: [x, y, z] }, shape.getObject()));
+}
+
+export function shapeArea(shape: Shape): number {
+  return measureArea(shape.getObject());
+}
+
+export function shapeVolume(shape: Shape): number {
+  return measureVolume(shape.getObject());
+}
+
+function shapeMirror(shape: Shape, x: number, y: number, z: number) {
+  return new Shape(() => mirror({ normal: [x, y, z] }, shape.getObject()));
+}
+
+export function shapeFlipX(shape: Shape): Shape {
+  return shapeMirror(shape, 1, 0, 0);
+}
+
+export function shapeFlipY(shape: Shape): Shape {
+  return shapeMirror(shape, 0, 1, 0);
+}
+
+export function shapeFlipZ(shape: Shape): Shape {
+  return shapeMirror(shape, 0, 0, 1);
+}
+
+export function shapeTranslate(
+  shape: Shape,
+  x: number,
+  y: number,
+  z: number
+): Shape {
+  return new Shape(() => translate([x, y, z], shape.getObject()));
+}
+
+export function shapeTranslateX(shape: Shape, x: number): Shape {
+  return shapeTranslate(shape, x, 0, 0);
+}
+
+export function shapeTranslateY(shape: Shape, y: number): Shape {
+  return shapeTranslate(shape, 0, y, 0);
+}
+
+export function shapeTranslateZ(shape: Shape, z: number): Shape {
+  return shapeTranslate(shape, 0, 0, z);
+}
+
+export function shapeStack(a: Shape, b: Shape): Shape {
+  const aBounds = measureBoundingBox(a.getObject());
+  const bBounds = measureBoundingBox(b.getObject());
+  const newX = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
+  const newY = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
+  const newZ =
+    aBounds[1][2] + (bBounds[1][2] + (bBounds[1][2] - bBounds[0][2]) / 2);
+  return shapeUnion(a, shapeSetCenter(b, newX, newY, newZ));
+}
+
+export function shapeRotate(
+  shape: Shape,
+  x: number,
+  y: number,
+  z: number
+): Shape {
+  return new Shape(() => rotate([x, y, z], shape.getObject()));
+}
+
+export function shapeRotateX(shape: Shape, x: number): Shape {
+  return shapeRotate(shape, x, 0, 0);
+}
+
+export function shapeRotateY(shape: Shape, y: number): Shape {
+  return shapeRotate(shape, 0, y, 0);
+}
+
+export function shapeRotateZ(shape: Shape, z: number): Shape {
+  return shapeRotate(shape, 0, 0, z);
+}
+
+function shapeSetOrigin(shape: Shape) {
+  const shapeDimen = measureCenterOfMass(shape.getObject());
+  const shapeCent = shapeCenter(shape);
+  return shapeSetCenter(
+    shape,
+    shapeCent[0] - shapeDimen[0],
+    shapeCent[1] - shapeDimen[1],
+    shapeCent[2] - shapeDimen[2]
+  );
+}
+
 export function isShape(shape: Shape): boolean {
   if (looseInstanceOf(shape, Shape)) {
     if (!geometries.geom3.isA(shape.getObject())) {
@@ -126,8 +224,13 @@ export function isShape(shape: Shape): boolean {
   return false;
 }
 
-function shapeClone(shape: Shape): Shape {
-  return new Shape(() => geometries.geom3.clone(shape.getObject()), true);
+function shapeClone(shape: Shape, axis: boolean, grid: boolean): Shape {
+  return new Shape(
+    () => geometries.geom3.clone(shape.getObject()),
+    true,
+    axis,
+    grid
+  );
 }
 
 /**
@@ -143,5 +246,68 @@ export function render(shape: Shape): Shape {
   if (!isShape(shape)) {
     throw Error(`render expects a Shape as argument.`);
   }
-  return shapeClone(shape);
+  return shapeClone(shape, false, false);
 }
+
+export function renderAxis(shape: Shape): Shape {
+  if (!isShape(shape)) {
+    throw Error(`renderAxis expects a Shape as argument.`);
+  }
+  return shapeClone(shape, true, false);
+}
+
+export function renderGrid(shape: Shape): Shape {
+  if (!isShape(shape)) {
+    throw Error(`renderGrid expects a Shape as argument.`);
+  }
+  return shapeClone(shape, false, true);
+}
+export function renderAxisGrid(shape: Shape): Shape {
+  if (!isShape(shape)) {
+    throw Error(`renderAxisGrid expects a Shape as argument.`);
+  }
+  return shapeClone(shape, true, true);
+}
+
+// =============================================================================
+// Primitives
+// =============================================================================
+
+/**
+ * Primitive Shape of a cube.
+ */
+export const cube: Shape = shapeSetOrigin(
+  new Shape(() => primitives.cube({ size: 1 }))
+);
+
+/**
+ * Primitive Shape of a sphere.
+ */
+export const sphere: Shape = shapeSetOrigin(
+  new Shape(() => primitives.sphere({ radius: 0.5, segments: 128 }))
+);
+
+/**
+ * Primitive Shape of a cylinder.
+ */
+export const cylinder: Shape = shapeSetOrigin(
+  new Shape(() =>
+    primitives.cylinder({ radius: 0.5, height: 1, segments: 128 })
+  )
+);
+
+/**
+ * Primitive Shape of a triangular prism.
+ */
+export const triangularPrism: Shape = shapeSetOrigin(
+  new Shape(() => extrudeLinear({ height: 1 }, primitives.triangle()))
+);
+
+/**
+ * Primitive Shape of an extruded star.
+ */
+export const extrudedStar: Shape = shapeSetOrigin(
+  new Shape(() =>
+    extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))
+  )
+);

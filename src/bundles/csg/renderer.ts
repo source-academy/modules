@@ -5,6 +5,7 @@ import {
   drawCommands,
   controls,
 } from '@jscad/regl-renderer';
+import { measureBoundingBox } from '@jscad/modeling/src/measurements';
 import { Shape } from './utilities';
 import { Entities } from './types';
 
@@ -36,26 +37,33 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   // @ts-ignore
   const geometries: Entities[] = entitiesFromSolids({}, shape.getObject());
 
+  const shapeBoundingBox = measureBoundingBox(shape.getObject());
+  const maxSize = Math.max(
+    shapeBoundingBox[0][1],
+    shapeBoundingBox[1][1],
+    shapeBoundingBox[1][2]
+  );
+
   // Setting up Renderer
   const grid = {
     visuals: {
       drawCmd: 'drawGrid',
-      show: false,
+      show: shape.grid,
       color: [0, 0, 0, 1],
       subColor: [0, 0, 1, 0.5],
       fadeOut: false,
       transparent: true,
     },
-    size: [200, 200],
-    ticks: [10, 1],
+    size: [maxSize, maxSize],
+    ticks: [1, 1],
   };
 
   const axis = {
     visuals: {
       drawCmd: 'drawAxis',
-      show: false,
+      show: shape.axis,
     },
-    size: 300,
+    size: maxSize * 1.5,
   };
 
   const renderOptions = {
@@ -117,7 +125,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
     }
 
     if (zoomToFit) {
-      viewControls.zoomToFit.tightness = 1.2;
+      viewControls.zoomToFit.tightness = 1.5;
       const updated = orbitControls.zoomToFit({
         controls: viewControls,
         camera,
