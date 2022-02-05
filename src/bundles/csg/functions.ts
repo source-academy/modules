@@ -297,9 +297,9 @@ export const cylinder: Shape = shapeSetOrigin(
 );
 
 /**
- * Primitive Shape of a triangular prism.
+ * Primitive Shape of a prism.
  */
-export const triangularPrism: Shape = shapeSetOrigin(
+export const prism: Shape = shapeSetOrigin(
   new Shape(() => extrudeLinear({ height: 1 }, primitives.triangle()))
 );
 
@@ -309,5 +309,20 @@ export const triangularPrism: Shape = shapeSetOrigin(
 export const extrudedStar: Shape = shapeSetOrigin(
   new Shape(() =>
     extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))
+  )
+);
+
+const small = 10 ** -30;
+
+/**
+ * Primitive Shape of a square pyramid.
+ */
+export const squarePyramid: Shape = shapeSetOrigin(
+  new Shape(() =>
+    primitives.cylinderElliptic({
+      height: 1,
+      endRadius: [small, small],
+      segments: 4,
+    })
   )
 );
