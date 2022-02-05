@@ -1,15 +1,15 @@
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
 
 export class Shape {
-  public getObjects: () => Geom3[];
+  public getObject: () => Geom3;
 
   public constructor(
-    objectsCallback: () => Geom3[],
+    objectsCallback: () => Geom3,
     // Whether a Source program that results in this Shape should spawn the CSG tab
     public spawnsTab: boolean = false,
     private shapeName: string = 'Shape'
   ) {
-    this.getObjects = objectsCallback;
+    this.getObject = objectsCallback;
   }
 
   public toReplString(): string {

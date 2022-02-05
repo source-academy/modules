@@ -1,7 +1,65 @@
-import { cube, render } from './functions';
+import {
+  // Primitives
+  cube,
+  sphere,
+  cylinder,
+  triangularPrism,
+  extrudedStar,
+  // Colors
+  black,
+  navy,
+  green,
+  teal,
+  purple,
+  orange,
+  silver,
+  grey,
+  blue,
+  lime,
+  cyan,
+  pink,
+  yellow,
+  white,
+  // Functions
+  shapeUnion,
+  shapeSubtract,
+  shapeIntersect,
+  shapeColorize,
+  shapeColorizeHex,
+  shapeColorizeRGB,
+  isShape,
+  render,
+} from './functions';
 
 export default () => ({
+  // Primitives
   cube,
-
+  sphere,
+  cylinder,
+  triangularPrism,
+  extrudedStar,
+  // Colors
+  black,
+  navy,
+  green,
+  teal,
+  purple,
+  orange,
+  silver,
+  grey,
+  blue,
+  lime,
+  cyan,
+  pink,
+  yellow,
+  white,
+  // Functions
+  shapeUnion,
+  shapeSubtract,
+  shapeIntersect,
+  shapeColorize,
+  shapeColorizeHex,
+  shapeColorizeRGB,
+  isShape,
   render,
 });

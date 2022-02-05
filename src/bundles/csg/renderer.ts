@@ -1,4 +1,3 @@
-import { Geometry } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
   entitiesFromSolids,
@@ -7,15 +6,16 @@ import {
   controls,
 } from '@jscad/regl-renderer';
 import { Shape } from './utilities';
+import { Entities } from './types';
 
 export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   // Prepare Renderer
-  const prepareRenderOptions: any = {
+  const prepareRenderOptions = {
     glOptions: {
       gl: canvas.getContext('webgl2') ?? undefined,
     },
   };
-  const preparedRenderer: any = prepareRender(prepareRenderOptions);
+  const preparedRenderer = prepareRender(prepareRenderOptions);
 
   // Setting up Camera
   const perspectiveCamera = cameras.perspective;
@@ -33,7 +33,8 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   let viewControls = orbitControls.defaults;
 
   // Getting CSG Objects
-  const geometries: Geometry[] = entitiesFromSolids({}, ...shape.getObjects());
+  // @ts-ignore
+  const geometries: Entities[] = entitiesFromSolids({}, shape.getObject());
 
   // Setting up Renderer
   const grid = {
@@ -52,12 +53,12 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   const axis = {
     visuals: {
       drawCmd: 'drawAxis',
-      show: true,
+      show: false,
     },
     size: 300,
   };
 
-  const renderOptions: any = {
+  const renderOptions = {
     camera,
     drawCommands: {
       drawAxis: drawCommands.drawAxis,
@@ -79,6 +80,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   let panDelta = [0, 0];
   let zoomDelta = 0;
   let pointerDown = false;
+  let zoomToFit = true;
   let updateView = true;
 
   const doRotatePanZoom = () => {
@@ -113,6 +115,18 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
       zoomDelta = 0;
       updateView = true;
     }
+
+    if (zoomToFit) {
+      viewControls.zoomToFit.tightness = 1.2;
+      const updated = orbitControls.zoomToFit({
+        controls: viewControls,
+        camera,
+        entities: geometries,
+      });
+      viewControls = { ...viewControls, ...updated.controls };
+      zoomToFit = false;
+      updateView = true;
+    }
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -125,7 +139,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
         camera,
       });
       viewControls = { ...viewControls, ...updates.controls };
-      updateView = viewControls.changed; // for elasticity in rotate / zoom
+      updateView = viewControls.changed;
 
       camera.position = updates.camera.position;
       perspectiveCamera.update(camera);
@@ -176,8 +190,14 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
     ev.preventDefault();
   };
 
+  const doubleClickHandler = (ev) => {
+    zoomToFit = true;
+    ev.preventDefault();
+  };
+
   canvas.addEventListener('pointermove', moveHandler);
   canvas.addEventListener('pointerdown', downHandler);
   canvas.addEventListener('pointerup', upHandler);
   canvas.addEventListener('wheel', wheelHandler);
+  canvas.addEventListener('dblclick', doubleClickHandler);
 }
