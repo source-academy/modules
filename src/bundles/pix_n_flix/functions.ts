@@ -58,6 +58,16 @@ let videoIsPlaying: boolean = false;
 let FPS: number = DEFAULT_FPS;
 let requestId: number;
 let startTime: number;
+let numberOfFrames: number = 0;
+
+// Water Leakage Experiments
+let renderCount: number = 0;
+const randID: number = Math.floor(Math.random() * 1000);
+function incrementRenderCount() {
+  renderCount += 1;
+  // eslint-disable-next-line no-console
+  console.log(randID, renderCount);
+}
 
 // =============================================================================
 // Module's Private Functions
@@ -182,6 +192,19 @@ function draw(timestamp: number): void {
   if (elapsed > 1000 / FPS) {
     drawFrame();
     startTime = timestamp;
+
+    if (numberOfFrames > 0) {
+      if (numberOfFrames === 1) {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        stopVideo();
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        // deinit();
+        // eslint-disable-next-line no-console
+        console.log('Disabling video');
+      }
+      numberOfFrames -= 1;
+    }
+    incrementRenderCount();
   }
 }
 
@@ -325,6 +348,8 @@ function init(
   canvas: CanvasElement,
   _errorLogger: ErrorLogger
 ): number[] {
+  // eslint-disable-next-line no-console
+  console.log('Initialising', randID);
   videoElement = video;
   canvasElement = canvas;
   errorLogger = _errorLogger;
@@ -344,10 +369,14 @@ function init(
  * @hidden
  */
 function deinit(): void {
+  stopVideo();
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
   }
+  // eslint-disable-next-line no-console
+  console.log('Deinitializing', randID);
+
   stream.getTracks().forEach((track) => {
     track.stop();
   });
@@ -547,4 +576,14 @@ export function set_dimensions(width: number, height: number): void {
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
+}
+
+/**
+ * Sets number of frames to display before cutting the video.
+ * Note: Any value <= 0 will be taken to be indefinite number of frames (Default)
+ *
+ * @param nframes Number of frames to display before the video stream cuts.
+ */
+export function cut_at(nframes: number): void {
+  numberOfFrames = nframes;
 }
