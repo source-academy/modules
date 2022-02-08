@@ -1,3 +1,10 @@
+/**
+ *
+ * @module csg
+ * @author Liu Muchen
+ * @author Joel Leow
+ */
+
 import { primitives, geometries } from '@jscad/modeling';
 import { colorize, cssColors, hexToRgb } from '@jscad/modeling/src/colors';
 import {
@@ -8,6 +15,7 @@ import {
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { RGB } from '@jscad/modeling/src/colors/types';
 import {
+  align,
   center,
   mirror,
   rotate,
@@ -17,9 +25,7 @@ import {
 import {
   measureArea,
   measureVolume,
-  measureCenter,
   measureBoundingBox,
-  measureCenterOfMass,
 } from '@jscad/modeling/src/measurements';
 import { Shape, looseInstanceOf } from './utilities';
 
@@ -115,7 +121,12 @@ export function shapeScaleZ(shape: Shape, z: number): Shape {
 }
 
 export function shapeCenter(shape: Shape): number[] {
-  return measureCenter(shape.getObject());
+  const bounds = measureBoundingBox(shape.getObject());
+  return [
+    bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
+    bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
+    bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
+  ];
 }
 
 export function shapeSetCenter(
@@ -174,12 +185,15 @@ export function shapeTranslateZ(shape: Shape, z: number): Shape {
 
 export function shapeStack(a: Shape, b: Shape): Shape {
   const aBounds = measureBoundingBox(a.getObject());
-  const bBounds = measureBoundingBox(b.getObject());
   const newX = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
   const newY = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
-  const newZ =
-    aBounds[1][2] + (bBounds[1][2] + (bBounds[1][2] - bBounds[0][2]) / 2);
-  return shapeUnion(a, shapeSetCenter(b, newX, newY, newZ));
+  const newZ = aBounds[1][2];
+  return new Shape(() =>
+    union(
+      a.getObject(), // @ts-ignore
+      align({ relativeTo: [newX, newY, newZ] }, b.getObject())
+    )
+  );
 }
 
 export function shapeRotate(
@@ -204,14 +218,7 @@ export function shapeRotateZ(shape: Shape, z: number): Shape {
 }
 
 function shapeSetOrigin(shape: Shape) {
-  const shapeDimen = measureCenterOfMass(shape.getObject());
-  const shapeCent = shapeCenter(shape);
-  return shapeSetCenter(
-    shape,
-    shapeCent[0] - shapeDimen[0],
-    shapeCent[1] - shapeDimen[1],
-    shapeCent[2] - shapeDimen[2]
-  );
+  return new Shape(() => align({}, shape.getObject()));
 }
 
 export function isShape(shape: Shape): boolean {
@@ -321,6 +328,7 @@ export const squarePyramid: Shape = shapeSetOrigin(
   new Shape(() =>
     primitives.cylinderElliptic({
       height: 1,
+      startRadius: [0.5, 0.5],
       endRadius: [small, small],
       segments: 4,
     })
