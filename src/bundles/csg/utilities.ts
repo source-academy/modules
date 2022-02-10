@@ -23,9 +23,7 @@ export const perspectiveCameraStateDefaults: PerspectiveCameraState =
   perspectiveCamera.defaults;
 
 export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSolids as unknown) as EntitiesFromSolids.Function;
-export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = {
-  ...drawCommands,
-};
+export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
 
 // [Custom]
 export class Shape {
