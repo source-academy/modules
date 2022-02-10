@@ -75,7 +75,6 @@
     "@blueprintjs/core": "^3.47.0",
     "@blueprintjs/icons": "^3.27.0",
     "@blueprintjs/popover2": "^0.4.0",
-    "@jscad/array-utils": "^2.1.1",
     "@jscad/modeling": "^2.7.1",
     "@jscad/regl-renderer": "^2.5.3",
     "@types/dom-mediacapture-record": "^1.0.7",
