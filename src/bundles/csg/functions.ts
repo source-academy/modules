@@ -53,20 +53,20 @@ export const { white } = cssColors;
 // =============================================================================
 
 export function shapeUnion(a: Shape, b: Shape): Shape {
-  return new Shape(() => union(a.getObject(), b.getObject()));
+  return new Shape(() => union(a.getSolid(), b.getSolid()));
 }
 
 export function shapeSubtract(a: Shape, b: Shape): Shape {
-  return new Shape(() => subtract(a.getObject(), b.getObject()));
+  return new Shape(() => subtract(a.getSolid(), b.getSolid()));
 }
 
 export function shapeIntersect(a: Shape, b: Shape): Shape {
-  return new Shape(() => intersect(a.getObject(), b.getObject()));
+  return new Shape(() => intersect(a.getSolid(), b.getSolid()));
 }
 
 export function shapeColorize(shape: Shape, color: RGB): Shape {
   try {
-    return new Shape(() => colorize(color, shape.getObject()));
+    return new Shape(() => colorize(color, shape.getSolid()));
   } catch {
     throw Error(`shapeColorize expects a shape color`);
   }
@@ -87,12 +87,12 @@ export function shapeColorizeRGB(
   if (b > 1.0 || b < 0) {
     throw Error(`shapeColorizeRGB expects blue value to be between 0 and 1.0`);
   }
-  return new Shape(() => colorize([r, g, b], shape.getObject()));
+  return new Shape(() => colorize([r, g, b], shape.getSolid()));
 }
 
 export function shapeColorizeHex(shape: Shape, hex: string): Shape {
   if (hex.replace('#', '').length === 6) {
-    return new Shape(() => colorize(hexToRgb(hex), shape.getObject()));
+    return new Shape(() => colorize(hexToRgb(hex), shape.getSolid()));
   }
   throw Error(
     `shapeColorizeHex expects a hex value of the form "#000000" or "000000"`
@@ -105,7 +105,7 @@ export function shapeScale(
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => scale([x, y, z], shape.getObject()));
+  return new Shape(() => scale([x, y, z], shape.getSolid()));
 }
 
 export function shapeScaleX(shape: Shape, x: number): Shape {
@@ -121,7 +121,7 @@ export function shapeScaleZ(shape: Shape, z: number): Shape {
 }
 
 export function shapeCenter(shape: Shape): number[] {
-  const bounds = measureBoundingBox(shape.getObject());
+  const bounds = measureBoundingBox(shape.getSolid());
   return [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
     bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
@@ -135,19 +135,19 @@ export function shapeSetCenter(
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => center({ relativeTo: [x, y, z] }, shape.getObject()));
+  return new Shape(() => center({ relativeTo: [x, y, z] }, shape.getSolid()));
 }
 
 export function shapeArea(shape: Shape): number {
-  return measureArea(shape.getObject());
+  return measureArea(shape.getSolid());
 }
 
 export function shapeVolume(shape: Shape): number {
-  return measureVolume(shape.getObject());
+  return measureVolume(shape.getSolid());
 }
 
 function shapeMirror(shape: Shape, x: number, y: number, z: number) {
-  return new Shape(() => mirror({ normal: [x, y, z] }, shape.getObject()));
+  return new Shape(() => mirror({ normal: [x, y, z] }, shape.getSolid()));
 }
 
 export function shapeFlipX(shape: Shape): Shape {
@@ -168,7 +168,7 @@ export function shapeTranslate(
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => translate([x, y, z], shape.getObject()));
+  return new Shape(() => translate([x, y, z], shape.getSolid()));
 }
 
 export function shapeTranslateX(shape: Shape, x: number): Shape {
@@ -184,14 +184,14 @@ export function shapeTranslateZ(shape: Shape, z: number): Shape {
 }
 
 export function shapeStack(a: Shape, b: Shape): Shape {
-  const aBounds = measureBoundingBox(a.getObject());
+  const aBounds = measureBoundingBox(a.getSolid());
   const newX = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
   const newY = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   const newZ = aBounds[1][2];
   return new Shape(() =>
     union(
-      a.getObject(), // @ts-ignore
-      align({ relativeTo: [newX, newY, newZ] }, b.getObject())
+      a.getSolid(), // @ts-ignore
+      align({ relativeTo: [newX, newY, newZ] }, b.getSolid())
     )
   );
 }
@@ -202,7 +202,7 @@ export function shapeRotate(
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => rotate([x, y, z], shape.getObject()));
+  return new Shape(() => rotate([x, y, z], shape.getSolid()));
 }
 
 export function shapeRotateX(shape: Shape, x: number): Shape {
@@ -218,12 +218,12 @@ export function shapeRotateZ(shape: Shape, z: number): Shape {
 }
 
 function shapeSetOrigin(shape: Shape) {
-  return new Shape(() => align({}, shape.getObject()));
+  return new Shape(() => align({}, shape.getSolid()));
 }
 
 export function isShape(shape: Shape): boolean {
   if (looseInstanceOf(shape, Shape)) {
-    if (!geometries.geom3.isA(shape.getObject())) {
+    if (!geometries.geom3.isA(shape.getSolid())) {
       return false;
     }
     return true;
@@ -233,7 +233,7 @@ export function isShape(shape: Shape): boolean {
 
 function shapeClone(shape: Shape, axis: boolean, grid: boolean): Shape {
   return new Shape(
-    () => geometries.geom3.clone(shape.getObject()),
+    () => geometries.geom3.clone(shape.getSolid()),
     true,
     axis,
     grid
