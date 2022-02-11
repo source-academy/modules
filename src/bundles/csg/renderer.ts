@@ -38,10 +38,12 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   const geometries: Entities[] = entitiesFromSolids({}, shape.getObject());
 
   const shapeBoundingBox = measureBoundingBox(shape.getObject());
-  const maxSize = Math.max(
-    shapeBoundingBox[0][1],
-    shapeBoundingBox[1][1],
-    shapeBoundingBox[1][2]
+  const maxSize = Math.ceil(
+    Math.max(
+      shapeBoundingBox[0][1],
+      shapeBoundingBox[1][1],
+      shapeBoundingBox[1][2]
+    )
   );
 
   // Setting up Renderer
