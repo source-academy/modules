@@ -58,98 +58,98 @@ import {
  *
  * @category Colour
  */
-export const black = _black;
+export const black: RGB = _black;
 
 /**
  * Navy attribute for colorize function
  *
  * @category Colour
  */
-export const navy = _navy;
+export const navy: RGB = _navy;
 
 /**
  * Green attribute for colorize function
  *
  * @category Colour
  */
-export const green = _green;
+export const green: RGB = _green;
 
 /**
  * Teal attribute for colorize function
  *
  * @category Colour
  */
-export const teal = _teal;
+export const teal: RGB = _teal;
 
 /**
  * Purple attribute for colorize function
  *
  * @category Colour
  */
-export const purple = _purple;
+export const purple: RGB = _purple;
 
 /**
  * Orange attribute for colorize function
  *
  * @category Colour
  */
-export const orange = _orange;
+export const orange: RGB = _orange;
 
 /**
  * Silver attribute for colorize function
  *
  * @category Colour
  */
-export const silver = _silver;
+export const silver: RGB = _silver;
 
 /**
  * Grey attribute for colorize function
  *
  * @category Colour
  */
-export const grey = _grey;
+export const grey: RGB = _grey;
 
 /**
  * Blue attribute for colorize function
  *
  * @category Colour
  */
-export const blue = _blue;
+export const blue: RGB = _blue;
 
 /**
  * Lime attribute for colorize function
  *
  * @category Colour
  */
-export const lime = _lime;
+export const lime: RGB = _lime;
 
 /**
  * Cyan attribute for colorize function
  *
  * @category Colour
  */
-export const cyan = _cyan;
+export const cyan: RGB = _cyan;
 
 /**
  * Pink attribute for colorize function
  *
  * @category Colour
  */
-export const pink = _pink;
+export const pink: RGB = _pink;
 
 /**
  * Yellow attribute for colorize function
  *
  * @category Colour
  */
-export const yellow = _yellow;
+export const yellow: RGB = _yellow;
 
 /**
  * White attribute for colorize function
  *
  * @category Colour
  */
-export const white = _white;
+export const white: RGB = _white;
 
 // =============================================================================
 // Functions
