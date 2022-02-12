@@ -1,3 +1,4 @@
+import { cssColors } from '@jscad/modeling/src/colors';
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
 
 export class Shape {
@@ -28,3 +29,20 @@ export function looseInstanceOf(object: Object, c: any): boolean {
     objectName === className
   );
 }
+
+export const {
+  black,
+  navy,
+  green,
+  teal,
+  purple,
+  orange,
+  silver,
+  grey,
+  blue,
+  lime,
+  cyan,
+  pink,
+  yellow,
+  white,
+} = cssColors;

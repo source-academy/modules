@@ -1,4 +1,7 @@
 /**
+ * The module `csg` provides functions for drawing Constructive Solid Geometry (CSG) called `Shape`.
+ *
+ * A *Shape* is defined by its polygons and vertices.
  *
  * @module csg
  * @author Liu Muchen
@@ -6,11 +9,7 @@
  */
 
 import { primitives, geometries } from '@jscad/modeling';
-import {
-  colorize as _colorize,
-  cssColors,
-  hexToRgb,
-} from '@jscad/modeling/src/colors';
+import { colorize as _colorize, hexToRgb } from '@jscad/modeling/src/colors';
 import {
   intersect as _intersect,
   subtract as _subtract,
@@ -31,7 +30,24 @@ import {
   measureVolume,
   measureBoundingBox,
 } from '@jscad/modeling/src/measurements';
-import { Shape, looseInstanceOf } from './utilities';
+import {
+  Shape,
+  looseInstanceOf,
+  black as _black,
+  navy as _navy,
+  green as _green,
+  teal as _teal,
+  purple as _purple,
+  orange as _orange,
+  silver as _silver,
+  grey as _grey,
+  blue as _blue,
+  lime as _lime,
+  cyan as _cyan,
+  pink as _pink,
+  yellow as _yellow,
+  white as _white,
+} from './utilities';
 
 // =============================================================================
 // Colors
@@ -39,73 +55,101 @@ import { Shape, looseInstanceOf } from './utilities';
 
 /**
  * Black attribute for colorize function
+ *
+ * @category Colour
  */
-export const { black } = cssColors;
+export const black = _black;
 
 /**
  * Navy attribute for colorize function
+ *
+ * @category Colour
  */
-export const { navy } = cssColors;
+export const navy = _navy;
 
 /**
  * Green attribute for colorize function
+ *
+ * @category Colour
  */
-export const { green } = cssColors;
+export const green = _green;
 
 /**
  * Teal attribute for colorize function
+ *
+ * @category Colour
  */
-export const { teal } = cssColors;
+export const teal = _teal;
 
 /**
  * Purple attribute for colorize function
+ *
+ * @category Colour
  */
-export const { purple } = cssColors;
+export const purple = _purple;
 
 /**
  * Orange attribute for colorize function
+ *
+ * @category Colour
  */
-export const { orange } = cssColors;
+export const orange = _orange;
 
 /**
  * Silver attribute for colorize function
+ *
+ * @category Colour
  */
-export const { silver } = cssColors;
+export const silver = _silver;
 
 /**
  * Grey attribute for colorize function
+ *
+ * @category Colour
  */
-export const { grey } = cssColors;
+export const grey = _grey;
 
 /**
  * Blue attribute for colorize function
+ *
+ * @category Colour
  */
-export const { blue } = cssColors;
+export const blue = _blue;
 
 /**
  * Lime attribute for colorize function
+ *
+ * @category Colour
  */
-export const { lime } = cssColors;
+export const lime = _lime;
 
 /**
  * Cyan attribute for colorize function
+ *
+ * @category Colour
  */
-export const { cyan } = cssColors;
+export const cyan = _cyan;
 
 /**
  * Pink attribute for colorize function
+ *
+ * @category Colour
  */
-export const { pink } = cssColors;
+export const pink = _pink;
 
 /**
  * Yellow attribute for colorize function
+ *
+ * @category Colour
  */
-export const { yellow } = cssColors;
+export const yellow = _yellow;
 
 /**
  * White attribute for colorize function
+ *
+ * @category Colour
  */
-export const { white } = cssColors;
+export const white = _white;
 
 // =============================================================================
 // Functions
@@ -603,6 +647,8 @@ export function render_axis_grid(shape: Shape): Shape {
 
 /**
  * Primitive Shape of a cube.
+ *
+ * @category Primitive
  */
 export const cube: Shape = shapeSetOrigin(
   new Shape(() => primitives.cube({ size: 1 }))
@@ -610,6 +656,8 @@ export const cube: Shape = shapeSetOrigin(
 
 /**
  * Primitive Shape of a sphere.
+ *
+ * @category Primitive
  */
 export const sphere: Shape = shapeSetOrigin(
   new Shape(() => primitives.sphere({ radius: 0.5, segments: 128 }))
@@ -617,6 +665,8 @@ export const sphere: Shape = shapeSetOrigin(
 
 /**
  * Primitive Shape of a cylinder.
+ *
+ * @category Primitive
  */
 export const cylinder: Shape = shapeSetOrigin(
   new Shape(() =>
@@ -626,6 +676,8 @@ export const cylinder: Shape = shapeSetOrigin(
 
 /**
  * Primitive Shape of a prism.
+ *
+ * @category Primitive
  */
 export const prism: Shape = shapeSetOrigin(
   new Shape(() => extrudeLinear({ height: 1 }, primitives.triangle()))
@@ -633,6 +685,8 @@ export const prism: Shape = shapeSetOrigin(
 
 /**
  * Primitive Shape of an extruded star.
+ *
+ * @category Primitive
  */
 export const extrudedStar: Shape = shapeSetOrigin(
   new Shape(() =>
@@ -644,6 +698,8 @@ const small = 10 ** -30;
 
 /**
  * Primitive Shape of a square pyramid.
+ *
+ * @category Primitive
  */
 export const squarePyramid: Shape = shapeSetOrigin(
   new Shape(() =>
