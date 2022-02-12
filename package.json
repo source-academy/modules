@@ -22,7 +22,7 @@
     "module": "node ./scripts/templates/app.js",
     "lint": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src",
     "lint:fix": "./node_modules/.bin/eslint --config ./.eslintrc.js --ext \".ts, .tsx\" src --fix",
-    "build": "yarn lint && yarn build:docs && yarn build:modules",
+    "build": "yarn lint:fix && yarn build:docs && yarn build:modules",
     "build:modules": "./node_modules/.bin/tsc && rollup --config rollup.config.js",
     "build:docs": "node ./scripts/docs/index.js",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
