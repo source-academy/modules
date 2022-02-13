@@ -38,9 +38,10 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   const geometries: Entities[] = entitiesFromSolids({}, shape.getObject());
 
   const shapeBoundingBox = measureBoundingBox(shape.getObject());
+
   const maxSize = Math.ceil(
     Math.max(
-      shapeBoundingBox[0][1],
+      shapeBoundingBox[1][0],
       shapeBoundingBox[1][1],
       shapeBoundingBox[1][2]
     )
@@ -56,7 +57,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
       fadeOut: false,
       transparent: true,
     },
-    size: [maxSize, maxSize],
+    size: [maxSize * 2, maxSize * 2],
     ticks: [1, 1],
   };
 
@@ -65,7 +66,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
       drawCmd: 'drawAxis',
       show: shape.axis,
     },
-    size: maxSize * 1.5,
+    size: maxSize * 1.2,
   };
 
   const renderOptions = {
