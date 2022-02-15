@@ -14,6 +14,7 @@ import {
   snapshot,
   set_dimensions,
   set_fps,
+  pause_at,
 } from './functions';
 
 /**
@@ -38,4 +39,5 @@ export default () => ({
   snapshot,
   set_dimensions,
   set_fps,
+  pause_at,
 });
