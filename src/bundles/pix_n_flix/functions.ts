@@ -54,11 +54,11 @@ const temporaryPixels: Pixels = [];
 let filter: Filter = copy_image;
 
 let videoIsPlaying: boolean = false;
+let videoIsLoaded: boolean = false;
 
 let FPS: number = DEFAULT_FPS;
 let requestId: number;
 let startTime: number;
-let numberOfFrames: number = 0;
 
 // =============================================================================
 // Module's Private Functions
@@ -183,20 +183,12 @@ function draw(timestamp: number): void {
   if (elapsed > 1000 / FPS) {
     drawFrame();
     startTime = timestamp;
-
-    if (numberOfFrames > 0) {
-      if (numberOfFrames === 1) {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        stopVideo();
-      }
-      numberOfFrames -= 1;
-    }
   }
 }
 
 /** @hidden */
 function startVideo(): void {
-  if (videoIsPlaying) return;
+  if (videoIsLoaded && videoIsPlaying) return;
   videoIsPlaying = true;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
@@ -208,7 +200,7 @@ function startVideo(): void {
  * @hidden
  */
 function stopVideo(): void {
-  if (!videoIsPlaying) {
+  if (videoIsLoaded && !videoIsPlaying) {
     return;
   }
   videoIsPlaying = false;
@@ -231,6 +223,7 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
+      videoIsLoaded = true;
     })
     .catch((error) => {
       const errorMessage = `${error.name}: ${error.message}`;
@@ -353,11 +346,12 @@ function init(
  * @hidden
  */
 function deinit(): void {
-  stopVideo();
+  snapPicture();
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
   }
+  videoIsLoaded = false;
   stream.getTracks().forEach((track) => {
     track.stop();
   });
@@ -560,11 +554,10 @@ export function set_fps(fps: number): void {
 }
 
 /**
- * Sets number of frames to display before pausing the video.
- * Note: Any value <= 0 will be taken to be indefinite number of frames (Default)
+ * Stops the video after a set delay.
  *
- * @param nframes Integer number of frames to display before the video is paused.
+ * @param delay Delay in ms before video ends.
  */
-export function pause_at(nframes: number): void {
-  numberOfFrames = nframes;
+export function stop_video_after(delay: number): void {
+  enqueue(() => setTimeout(deinit, delay >= 0 ? delay : -delay));
 }
