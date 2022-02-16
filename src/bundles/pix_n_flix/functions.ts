@@ -54,6 +54,7 @@ const temporaryPixels: Pixels = [];
 let filter: Filter = copy_image;
 
 let videoIsPlaying: boolean = false;
+let videoIsLoaded: boolean = false;
 
 let FPS: number = DEFAULT_FPS;
 let requestId: number;
@@ -187,7 +188,7 @@ function draw(timestamp: number): void {
 
 /** @hidden */
 function startVideo(): void {
-  if (videoIsPlaying) return;
+  if (videoIsLoaded && videoIsPlaying) return;
   videoIsPlaying = true;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
@@ -199,7 +200,7 @@ function startVideo(): void {
  * @hidden
  */
 function stopVideo(): void {
-  if (!videoIsPlaying) {
+  if (videoIsLoaded && !videoIsPlaying) {
     return;
   }
   videoIsPlaying = false;
@@ -222,6 +223,7 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
+      videoIsLoaded = true;
     })
     .catch((error) => {
       const errorMessage = `${error.name}: ${error.message}`;
@@ -344,10 +346,12 @@ function init(
  * @hidden
  */
 function deinit(): void {
+  snapPicture();
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
   }
+  videoIsLoaded = false;
   stream.getTracks().forEach((track) => {
     track.stop();
   });
@@ -547,4 +551,13 @@ export function set_dimensions(width: number, height: number): void {
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
+}
+
+/**
+ * Stops the video after a set delay.
+ *
+ * @param delay Delay in ms before video ends.
+ */
+export function stop_video_after(delay: number): void {
+  enqueue(() => setTimeout(deinit, delay >= 0 ? delay : -delay));
 }
