@@ -188,7 +188,7 @@ function draw(timestamp: number): void {
 
 /** @hidden */
 function startVideo(): void {
-  if (videoIsLoaded && videoIsPlaying) return;
+  if (!videoIsLoaded || videoIsPlaying) return;
   videoIsPlaying = true;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
@@ -200,9 +200,7 @@ function startVideo(): void {
  * @hidden
  */
 function stopVideo(): void {
-  if (videoIsLoaded && !videoIsPlaying) {
-    return;
-  }
+  if (!videoIsLoaded || !videoIsPlaying) return;
   videoIsPlaying = false;
   window.cancelAnimationFrame(requestId);
 }
@@ -223,7 +221,6 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
-      videoIsLoaded = true;
     })
     .catch((error) => {
       const errorMessage = `${error.name}: ${error.message}`;
@@ -334,6 +331,7 @@ function init(
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
 
+  videoIsLoaded = true;
   setupData();
   loadMedia();
   queue();
