@@ -1,3 +1,4 @@
+import { Context } from 'js-slang';
 import {
   make_point,
   make_3D_point,
@@ -34,6 +35,8 @@ import {
   arc,
   invert,
 } from './functions';
+import { CurveModuleState } from './types';
+import { drawnCurves } from './curves_webgl';
 
 /**
  * Bundle for Source Academy Curves module
@@ -41,7 +44,39 @@ import {
  * @author Ng Yong Xiang
  */
 
-export default function curves() {
+export default function curves(context: Context) {
+  if (context == null) {
+    // eslint-disable-next-line no-alert
+    alert('Context is null on first evaluation for some reason');
+  }
+
+  if (context.modules != null) {
+    let moduleContext = context.modules.get('curve');
+
+    if (moduleContext == null) {
+      // If module context is null, create the context
+      moduleContext = {
+        tabs: [],
+        state: {
+          drawnCurves,
+        },
+      };
+
+      // Then update the context
+      context.modules.set('curve', moduleContext);
+    }
+
+    if (moduleContext.state == null) {
+      // If the module's state object is null, create it
+      moduleContext.state = {
+        drawnCurves,
+      };
+    } else {
+      // Otherwise update the drawnCurves array
+      (moduleContext.state as CurveModuleState).drawnCurves = drawnCurves;
+    }
+  }
+
   return {
     make_point,
     make_3D_point,

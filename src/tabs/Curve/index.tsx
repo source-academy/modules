@@ -1,6 +1,6 @@
 import { Button, Icon, Slider } from '@blueprintjs/core';
 import React from 'react';
-import { ShapeDrawn } from '../../bundles/curve/types';
+import { CurveModuleState, ShapeDrawn } from '../../bundles/curve/types';
 
 /**
  * Currently used for rendering HTML canvas element for curves.
@@ -16,7 +16,7 @@ type Props = {
   context?: any;
 };
 
-type State = {
+type CurvesTabState = {
   /**
    * Slider component reflects this value. This value is also passed in as
    * argument to render curves.
@@ -37,7 +37,7 @@ type State = {
 };
 
 /* eslint-disable react/destructuring-assignment */
-class WebGLCanvas extends React.Component<Props, State> {
+class WebGLCanvas extends React.Component<Props, CurvesTabState> {
   private $canvas: HTMLCanvasElement | null = null;
 
   constructor(props) {
@@ -55,7 +55,11 @@ class WebGLCanvas extends React.Component<Props, State> {
    */
   public componentDidMount() {
     if (this.$canvas) {
-      if (this.props.context.result.value.init(this.$canvas)) {
+      const curveToDraw: ShapeDrawn = this.props.context.context.modules.get(
+        'curve'
+      ).state.drawnCurves[0];
+
+      if (curveToDraw.init(this.$canvas)) {
         this.setState(
           (prevState) => ({
             ...prevState,
@@ -72,7 +76,7 @@ class WebGLCanvas extends React.Component<Props, State> {
             is3D: false,
           }),
           () => {
-            this.props.context.result.value.redraw(this.state.rotationAngle);
+            curveToDraw.redraw(this.state.rotationAngle);
           }
         );
       }
@@ -194,14 +198,21 @@ class WebGLCanvas extends React.Component<Props, State> {
 
 export default {
   toSpawn: (context: any) => {
-    function isValidFunction(value: any): value is ShapeDrawn {
-      try {
-        return value instanceof Object && value.init instanceof Function;
-      } catch (e) {
-        return false;
-      }
+    const moduleContext = context.context?.modules?.get('curve');
+    if (moduleContext == null) {
+      // eslint-disable-next-line no-alert
+      alert('moduleContext was null (curves tab)');
+      return false;
     }
-    return isValidFunction(context.result.value);
+
+    const moduleState: CurveModuleState = moduleContext.state;
+    if (moduleState == null) {
+      // eslint-disable-next-line no-alert
+      alert('moduleState was null (curves tab)');
+      return false;
+    }
+
+    return moduleState.drawnCurves.length > 0;
   },
   body: (context: any) => <WebGLCanvas context={context} />,
   label: 'Curve Canvas',

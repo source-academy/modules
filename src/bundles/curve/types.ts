@@ -1,3 +1,5 @@
+import { ModuleState } from 'js-slang';
+
 /** Encapsulates 3D point with RGB values. */
 export type Point = {
   x: number;
@@ -45,3 +47,11 @@ export type BufferInfo = {
   curveBuffer: WebGLBuffer | null;
   curveColorBuffer: WebGLBuffer | null;
 };
+
+export class CurveModuleState implements ModuleState {
+  constructor() {
+    this.drawnCurves = [];
+  }
+
+  public drawnCurves: ShapeDrawn[];
+}

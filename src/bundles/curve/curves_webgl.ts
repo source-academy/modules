@@ -6,6 +6,7 @@ let canvasElement: HTMLCanvasElement;
 let renderingContext: WebGLRenderingContext | null;
 let programs: ProgramInfo;
 let buffersInfo: BufferInfo;
+export const drawnCurves: ShapeDrawn[] = [];
 
 // Vertex shader program
 const vsS: string = `
@@ -340,7 +341,7 @@ export default function generateCurve(
     }
   }
 
-  return {
+  const drawnCurve = {
     toReplString: () => '<ShapeDrawn>',
     init: (canvas) => {
       canvasElement = canvas;
@@ -421,4 +422,7 @@ export default function generateCurve(
       );
     },
   };
+
+  drawnCurves.push(drawnCurve);
+  return drawnCurve;
 }
