@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { DragEvent } from 'react';
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { ErrorLogger } from '../../bundles/pix_n_flix/types';
@@ -151,6 +151,15 @@ class PixNFlix extends React.Component<Props, State> {
     }
   };
 
+  public handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    console.log(e.dataTransfer.files[0]);
+  }
+
+  public handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  }
+
   public printError: ErrorLogger = () => {};
 
   private swapModes = (mode: SideContentVideoDisplayMode) => () => {
@@ -194,7 +203,7 @@ class PixNFlix extends React.Component<Props, State> {
     const videoIsActive = mode === ('video' as SideContentVideoDisplayMode);
     const stillIsActive = mode === ('still' as SideContentVideoDisplayMode);
     return (
-      <div className='sa-video'>
+      <div className='sa-video' onDragOver={this.handleDragOver} onDrop={this.handleDrop}>
         <div className='sa-video-header'>
           <div className='sa-video-header-element'>
             <ButtonGroup>

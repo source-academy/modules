@@ -56,7 +56,8 @@ let filter: Filter = copy_image;
 let initialised: boolean = false;
 let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
-let videoIsLoaded: boolean = false;
+let useVideo: boolean;
+let videoUrl: string;
 
 let FPS: number = DEFAULT_FPS;
 let requestId: number;
@@ -240,6 +241,14 @@ function loadMedia(): void {
   startVideo();
 }
 
+/** @hidden */
+function loadVideo(): void {
+  videoElement.src = videoUrl;
+  videoElement.crossOrigin = 'anonymous';
+  toRunLateQueue = true;
+  startVideo();
+}
+
 /**
  * Just draws once on frame and stops video.
  *
@@ -354,7 +363,7 @@ function init(
 
   initialised = true;
   setupData();
-  loadMedia();
+  useVideo ? loadVideo() : loadMedia();
   queue();
   return [HEIGHT, WIDTH, FPS];
 }
@@ -580,4 +589,9 @@ export function set_fps(fps: number): void {
 export function stop_video_after(delay: number): void {
   // prevent negative delays
   lateEnqueue(() => setTimeout(deinit, delay >= 0 ? delay : -delay));
+}
+
+export function use_video(videoUrlLink: string): void {
+  useVideo = true;
+  videoUrl = videoUrlLink;
 }
