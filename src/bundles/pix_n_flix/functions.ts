@@ -363,7 +363,11 @@ function init(
 
   initialised = true;
   setupData();
-  useVideo ? loadVideo() : loadMedia();
+  if (useVideo) {
+    loadVideo();
+  } else {
+    loadMedia();
+  }
   queue();
   return [HEIGHT, WIDTH, FPS];
 }
@@ -591,6 +595,11 @@ export function stop_video_after(delay: number): void {
   lateEnqueue(() => setTimeout(deinit, delay >= 0 ? delay : -delay));
 }
 
+/**
+ * Sets video to be from video URL given instead of camera
+ *
+ * @param videoUrlLink URL to online MP4 file
+ */
 export function use_video(videoUrlLink: string): void {
   useVideo = true;
   videoUrl = videoUrlLink;

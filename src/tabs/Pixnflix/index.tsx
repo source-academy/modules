@@ -153,12 +153,13 @@ class PixNFlix extends React.Component<Props, State> {
 
   public handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    // eslint-disable-next-line no-console
     console.log(e.dataTransfer.files[0]);
-  }
+  };
 
   public handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-  }
+  };
 
   public printError: ErrorLogger = () => {};
 
@@ -203,7 +204,11 @@ class PixNFlix extends React.Component<Props, State> {
     const videoIsActive = mode === ('video' as SideContentVideoDisplayMode);
     const stillIsActive = mode === ('still' as SideContentVideoDisplayMode);
     return (
-      <div className='sa-video' onDragOver={this.handleDragOver} onDrop={this.handleDrop}>
+      <div
+        className='sa-video'
+        onDragOver={this.handleDragOver}
+        onDrop={this.handleDrop}
+      >
         <div className='sa-video-header'>
           <div className='sa-video-header-element'>
             <ButtonGroup>
