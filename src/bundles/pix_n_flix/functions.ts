@@ -56,6 +56,7 @@ let filter: Filter = copy_image;
 let initialised: boolean = false;
 let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
+let videoIsLoaded: boolean = false;
 
 let FPS: number = DEFAULT_FPS;
 let requestId: number;
