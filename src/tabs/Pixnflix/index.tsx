@@ -1,4 +1,4 @@
-import React, { DragEvent } from 'react';
+import React, { DragEvent, ChangeEvent } from 'react';
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { ErrorLogger } from '../../bundles/pix_n_flix/types';
@@ -27,6 +27,7 @@ type State = {
   height: number;
   FPS: number;
   mode: SideContentVideoDisplayMode;
+  useLocalVideo: boolean;
 };
 
 type Video = {
@@ -56,6 +57,7 @@ class PixNFlix extends React.Component<Props, State> {
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
       FPS: DEFAULT_FPS,
+      useLocalVideo: false,
       mode: 'video' as SideContentVideoDisplayMode,
     };
     const { debuggerContext } = this.props;
@@ -91,6 +93,7 @@ class PixNFlix extends React.Component<Props, State> {
         height: videoProperties[0],
         width: videoProperties[1],
         FPS: videoProperties[2],
+        useLocalVideo: videoProperties[3] == 1 ? true: false,
       });
     }
   };
@@ -151,15 +154,26 @@ class PixNFlix extends React.Component<Props, State> {
     }
   };
 
+  public loadFileToVideo = (file: File) => {
+    if (this.$video && this.state.useLocalVideo) {
+      this.$video.src = URL.createObjectURL(file);
+    }
+  }
+
   public handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (this.$video) {
-      this.$video.src = URL.createObjectURL(e.dataTransfer.files[0]);
-    }
+    this.loadFileToVideo(e.dataTransfer.files[0]);
   };
 
   public handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+  };
+
+  public handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (e.target && e.target.files) {
+      this.loadFileToVideo(e.target.files[0]);
+    }
   };
 
   public printError: ErrorLogger = () => {};
@@ -302,6 +316,11 @@ class PixNFlix extends React.Component<Props, State> {
             height={DEFAULT_HEIGHT}
           />
           <br />
+          <input 
+            type="file"
+            onChange={this.handleFileUpload}
+            style={{ display: this.state.useLocalVideo ? 'initial' : 'none'}}
+          />
           <p style={{ fontFamily: 'courier' }}>
             Note: Is video lagging? Switch to &apos;still image&apos; or adjust
             FPS rate!

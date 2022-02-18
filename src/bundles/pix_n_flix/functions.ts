@@ -387,7 +387,7 @@ function init(
     loadMedia();
   }
   queue();
-  return [HEIGHT, WIDTH, FPS];
+  return [HEIGHT, WIDTH, FPS, useLocalVideo ? 1 : 0];
 }
 
 /**
