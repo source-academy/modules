@@ -53,9 +53,9 @@ const temporaryPixels: Pixels = [];
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
 let filter: Filter = copy_image;
 
-let initialised: boolean = false;
 let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
+
 let useVideo: boolean;
 let videoUrl: string;
 
@@ -194,14 +194,23 @@ function draw(timestamp: number): void {
   }
 }
 
+async function playVideoElement() {
+  if (videoElement.paused && !videoIsPlaying) {
+    return videoElement.play();
+  }
+  return null;
+}
+
+function pauseVideoElement() {
+  if (!videoElement.paused && videoIsPlaying) {
+    videoElement.pause();
+  }
+}
+
 /** @hidden */
 function startVideo(): void {
-  // console.log("Called start", initialised, videoIsPlaying);
-  if (!initialised || videoIsPlaying) return;
-  if (useVideo) {
-    videoElement.play();
-  }
-  videoIsPlaying = true;
+  if (videoIsPlaying) return;
+  playVideoElement();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 }
@@ -212,12 +221,8 @@ function startVideo(): void {
  * @hidden
  */
 function stopVideo(): void {
-  // console.log("Called stop", initialised, videoIsPlaying);
-  if (!initialised || !videoIsPlaying) return;
-  if (useVideo) {
-    videoElement.pause();
-  }
-  videoIsPlaying = false;
+  if (!videoIsPlaying) return;
+  pauseVideoElement();
   window.cancelAnimationFrame(requestId);
 }
 
@@ -340,7 +345,7 @@ function enqueue(funcToAdd: Queue): void {
   };
 }
 
-// Queue is runned after media has properly loaded
+// lateQueue is runned after media has properly loaded
 let lateQueue: Queue = () => {};
 
 // adds function to the lateQueue
@@ -370,7 +375,13 @@ function init(
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
 
-  initialised = true;
+  videoElement.onplaying = () => {
+    videoIsPlaying = true;
+  };
+  videoElement.onpause = () => {
+    videoIsPlaying = false;
+  };
+
   setupData();
   if (useVideo) {
     loadVideo();
@@ -388,7 +399,6 @@ function init(
  */
 function deinit(): void {
   snapPicture();
-  initialised = false;
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
@@ -564,11 +574,11 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 }
 
 /**
- * Takes a snapshot of image after a set delay.
+ * Pauses the video after a set delay.
  *
- * @param delay Delay in ms before a snapshot is taken
+ * @param delay Delay in ms after the video starts.
  */
-export function snapshot(delay: number): void {
+export function pause_after(delay: number): void {
   // prevent negative delays
   lateEnqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
 }
@@ -593,17 +603,6 @@ export function set_dimensions(width: number, height: number): void {
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
 }
-
-/**
- * Stops the video after a set delay.
- *
- * @param delay Delay in ms after the video starts
- */
-export function stop_video_after(delay: number): void {
-  // prevent negative delays
-  lateEnqueue(() => setTimeout(deinit, delay >= 0 ? delay : -delay));
-}
-
 /**
  * Sets video to be from video URL given instead of camera
  *
