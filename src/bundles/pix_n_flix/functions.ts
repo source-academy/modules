@@ -53,8 +53,8 @@ const temporaryPixels: Pixels = [];
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
 let filter: Filter = copy_image;
 
+let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
-let videoIsLoaded: boolean = false;
 
 let FPS: number = DEFAULT_FPS;
 let requestId: number;
@@ -183,12 +183,17 @@ function draw(timestamp: number): void {
   if (elapsed > 1000 / FPS) {
     drawFrame();
     startTime = timestamp;
+    if (toRunLateQueue) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      lateQueue();
+      toRunLateQueue = false;
+    }
   }
 }
 
 /** @hidden */
 function startVideo(): void {
-  if (videoIsLoaded && videoIsPlaying) return;
+  if (videoIsPlaying) return;
   videoIsPlaying = true;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
@@ -200,9 +205,7 @@ function startVideo(): void {
  * @hidden
  */
 function stopVideo(): void {
-  if (videoIsLoaded && !videoIsPlaying) {
-    return;
-  }
+  if (!videoIsPlaying) return;
   videoIsPlaying = false;
   window.cancelAnimationFrame(requestId);
 }
@@ -223,7 +226,7 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
-      videoIsLoaded = true;
+      toRunLateQueue = true;
     })
     .catch((error) => {
       const errorMessage = `${error.name}: ${error.message}`;
@@ -305,10 +308,23 @@ function updateDimensions(w: number, h: number): void {
   startVideo();
 }
 
+// queue is runned when init is called
 let queue: Queue = () => {};
 
 // adds function to the queue
 function enqueue(funcToAdd: Queue): void {
+  const funcToRunFirst: Queue = queue;
+  queue = () => {
+    funcToRunFirst();
+    funcToAdd();
+  };
+}
+
+// lateQueue is runned after media has properly loaded
+let lateQueue: Queue = () => {};
+
+// adds function to the lateQueue
+function lateEnqueue(funcToAdd: Queue): void {
   const funcToRunFirst: Queue = queue;
   queue = () => {
     funcToRunFirst();
@@ -351,7 +367,6 @@ function deinit(): void {
   if (!stream) {
     return;
   }
-  videoIsLoaded = false;
   stream.getTracks().forEach((track) => {
     track.stop();
   });
@@ -523,13 +538,13 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 }
 
 /**
- * Takes a snapshot of image after a set delay.
+ * Pauses the video after a set delay.
  *
- * @param delay Delay in ms before a snapshot is taken
+ * @param delay Delay in ms after the video starts.
  */
-export function snapshot(delay: number): void {
+export function pause_after(delay: number): void {
   // prevent negative delays
-  enqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
+  lateEnqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
 }
 
 /**
@@ -551,13 +566,4 @@ export function set_dimensions(width: number, height: number): void {
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
-}
-
-/**
- * Stops the video after a set delay.
- *
- * @param delay Delay in ms before video ends.
- */
-export function stop_video_after(delay: number): void {
-  enqueue(() => setTimeout(deinit, delay >= 0 ? delay : -delay));
 }
