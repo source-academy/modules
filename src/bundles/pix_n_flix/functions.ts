@@ -196,7 +196,11 @@ function draw(timestamp: number): void {
 
 /** @hidden */
 function startVideo(): void {
+  // console.log("Called start", initialised, videoIsPlaying);
   if (!initialised || videoIsPlaying) return;
+  if (useVideo) {
+    videoElement.play();
+  }
   videoIsPlaying = true;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
@@ -208,7 +212,11 @@ function startVideo(): void {
  * @hidden
  */
 function stopVideo(): void {
+  // console.log("Called stop", initialised, videoIsPlaying);
   if (!initialised || !videoIsPlaying) return;
+  if (useVideo) {
+    videoElement.pause();
+  }
   videoIsPlaying = false;
   window.cancelAnimationFrame(requestId);
 }
@@ -245,6 +253,7 @@ function loadMedia(): void {
 function loadVideo(): void {
   videoElement.src = videoUrl;
   videoElement.crossOrigin = 'anonymous';
+  videoElement.loop = true;
   toRunLateQueue = true;
   startVideo();
 }
@@ -379,11 +388,11 @@ function init(
  */
 function deinit(): void {
   snapPicture();
+  initialised = false;
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
   }
-  initialised = false;
   stream.getTracks().forEach((track) => {
     track.stop();
   });
