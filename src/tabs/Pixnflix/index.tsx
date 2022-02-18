@@ -153,8 +153,9 @@ class PixNFlix extends React.Component<Props, State> {
 
   public handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // eslint-disable-next-line no-console
-    console.log(e.dataTransfer.files[0]);
+    if (this.$video) {
+      this.$video.src = URL.createObjectURL(e.dataTransfer.files[0]);
+    }
   };
 
   public handleDragOver = (e: DragEvent<HTMLDivElement>) => {

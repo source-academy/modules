@@ -56,12 +56,11 @@ let filter: Filter = copy_image;
 let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
 
-let useVideo: boolean;
-let videoUrl: string;
-
 let FPS: number = DEFAULT_FPS;
 let requestId: number;
 let startTime: number;
+
+let useLocalVideo: boolean;
 
 // =============================================================================
 // Module's Private Functions
@@ -256,7 +255,6 @@ function loadMedia(): void {
 
 /** @hidden */
 function loadVideo(): void {
-  videoElement.src = videoUrl;
   videoElement.crossOrigin = 'anonymous';
   videoElement.loop = true;
   toRunLateQueue = true;
@@ -383,7 +381,7 @@ function init(
   };
 
   setupData();
-  if (useVideo) {
+  if (useLocalVideo) {
     loadVideo();
   } else {
     loadMedia();
@@ -603,12 +601,10 @@ export function set_dimensions(width: number, height: number): void {
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
 }
+
 /**
- * Sets video to be from video URL given instead of camera
- *
- * @param videoUrlLink URL to online MP4 file
+ * Allows you to upload videos into Pix-n-Flix
  */
-export function use_video(videoUrlLink: string): void {
-  useVideo = true;
-  videoUrl = videoUrlLink;
+export function use_local_video(): void {
+  useLocalVideo = true;
 }
