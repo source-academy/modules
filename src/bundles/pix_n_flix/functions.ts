@@ -53,7 +53,6 @@ const temporaryPixels: Pixels = [];
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
 let filter: Filter = copy_image;
 
-let initialised: boolean = false;
 let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
 
@@ -194,7 +193,7 @@ function draw(timestamp: number): void {
 
 /** @hidden */
 function startVideo(): void {
-  if (!initialised || videoIsPlaying) return;
+  if (videoIsPlaying) return;
   videoIsPlaying = true;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
@@ -206,7 +205,7 @@ function startVideo(): void {
  * @hidden
  */
 function stopVideo(): void {
-  if (!initialised || !videoIsPlaying) return;
+  if (!videoIsPlaying) return;
   videoIsPlaying = false;
   window.cancelAnimationFrame(requestId);
 }
@@ -321,7 +320,7 @@ function enqueue(funcToAdd: Queue): void {
   };
 }
 
-// Queue is runned after media has properly loaded
+// lateQueue is runned after media has properly loaded
 let lateQueue: Queue = () => {};
 
 // adds function to the lateQueue
@@ -351,7 +350,6 @@ function init(
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
 
-  initialised = true;
   setupData();
   loadMedia();
   queue();
@@ -369,7 +367,6 @@ function deinit(): void {
   if (!stream) {
     return;
   }
-  initialised = false;
   stream.getTracks().forEach((track) => {
     track.stop();
   });
@@ -541,11 +538,11 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 }
 
 /**
- * Takes a snapshot of image after a set delay.
+ * Pauses the video after a set delay.
  *
- * @param delay Delay in ms before a snapshot is taken
+ * @param delay Delay in ms after the video starts.
  */
-export function snapshot(delay: number): void {
+export function pause_after(delay: number): void {
   // prevent negative delays
   lateEnqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
 }
@@ -569,14 +566,4 @@ export function set_dimensions(width: number, height: number): void {
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
-}
-
-/**
- * Stops the video after a set delay.
- *
- * @param delay Delay in ms after the video starts
- */
-export function stop_video_after(delay: number): void {
-  // prevent negative delays
-  lateEnqueue(() => setTimeout(deinit, delay >= 0 ? delay : -delay));
 }
