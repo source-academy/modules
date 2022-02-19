@@ -135,6 +135,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
         entities: geometries,
       });
       viewControls = { ...viewControls, ...updated.controls };
+      camera.target = updated.camera.target;
       zoomToFit = false;
       updateView = true;
     }
