@@ -1,4 +1,7 @@
 /**
+ * The module `csg` provides functions for drawing Constructive Solid Geometry (CSG) called `Shape`.
+ *
+ * A *Shape* is defined by its polygons and vertices.
  *
  * @module csg
  * @author Liu Muchen
@@ -6,11 +9,11 @@
  */
 
 import { primitives, geometries } from '@jscad/modeling';
-import { colorize, cssColors, hexToRgb } from '@jscad/modeling/src/colors';
+import { colorize as _colorize, hexToRgb } from '@jscad/modeling/src/colors';
 import {
-  intersect,
-  subtract,
-  union,
+  intersect as _intersect,
+  subtract as _subtract,
+  union as _union,
 } from '@jscad/modeling/src/operations/booleans';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { RGB } from '@jscad/modeling/src/colors/types';
@@ -18,109 +21,303 @@ import {
   align,
   center,
   mirror,
-  rotate,
-  scale,
-  translate,
+  rotate as _rotate,
+  scale as _scale,
+  translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
 import {
   measureArea,
   measureVolume,
   measureBoundingBox,
 } from '@jscad/modeling/src/measurements';
-import { Shape, looseInstanceOf } from './utilities';
+import {
+  Shape,
+  looseInstanceOf,
+  black as _black,
+  navy as _navy,
+  green as _green,
+  teal as _teal,
+  purple as _purple,
+  orange as _orange,
+  silver as _silver,
+  grey as _grey,
+  blue as _blue,
+  lime as _lime,
+  cyan as _cyan,
+  pink as _pink,
+  yellow as _yellow,
+  white as _white,
+} from './utilities';
 
 // =============================================================================
 // Colors
 // =============================================================================
 
-export const { black } = cssColors;
-export const { navy } = cssColors;
-export const { green } = cssColors;
-export const { teal } = cssColors;
-export const { purple } = cssColors;
-export const { orange } = cssColors;
-export const { silver } = cssColors;
-export const { grey } = cssColors;
-export const { blue } = cssColors;
-export const { lime } = cssColors;
-export const { cyan } = cssColors;
-export const { pink } = cssColors;
-export const { yellow } = cssColors;
-export const { white } = cssColors;
+/**
+ * Black attribute for colorize function
+ *
+ * @category Colour
+ */
+export const black: RGB = _black;
+
+/**
+ * Navy attribute for colorize function
+ *
+ * @category Colour
+ */
+export const navy: RGB = _navy;
+
+/**
+ * Green attribute for colorize function
+ *
+ * @category Colour
+ */
+export const green: RGB = _green;
+
+/**
+ * Teal attribute for colorize function
+ *
+ * @category Colour
+ */
+export const teal: RGB = _teal;
+
+/**
+ * Purple attribute for colorize function
+ *
+ * @category Colour
+ */
+export const purple: RGB = _purple;
+
+/**
+ * Orange attribute for colorize function
+ *
+ * @category Colour
+ */
+export const orange: RGB = _orange;
+
+/**
+ * Silver attribute for colorize function
+ *
+ * @category Colour
+ */
+export const silver: RGB = _silver;
+
+/**
+ * Grey attribute for colorize function
+ *
+ * @category Colour
+ */
+export const grey: RGB = _grey;
+
+/**
+ * Blue attribute for colorize function
+ *
+ * @category Colour
+ */
+export const blue: RGB = _blue;
+
+/**
+ * Lime attribute for colorize function
+ *
+ * @category Colour
+ */
+export const lime: RGB = _lime;
+
+/**
+ * Cyan attribute for colorize function
+ *
+ * @category Colour
+ */
+export const cyan: RGB = _cyan;
+
+/**
+ * Pink attribute for colorize function
+ *
+ * @category Colour
+ */
+export const pink: RGB = _pink;
+
+/**
+ * Yellow attribute for colorize function
+ *
+ * @category Colour
+ */
+export const yellow: RGB = _yellow;
+
+/**
+ * White attribute for colorize function
+ *
+ * @category Colour
+ */
+export const white: RGB = _white;
 
 // =============================================================================
 // Functions
 // =============================================================================
 
-export function shapeUnion(a: Shape, b: Shape): Shape {
-  return new Shape(() => union(a.getSolid(), b.getSolid()));
+/**
+ * Union of the two provided shapes to produce a new shape.
+ *
+ * @param {Shape} a - The first shape
+ * @param {Shape} b - The second shape
+ * @returns {Shape} The resulting unioned shape
+ */
+export function union(a: Shape, b: Shape): Shape {
+  return new Shape(() => _union(a.getSolid(), b.getSolid()));
 }
 
-export function shapeSubtract(a: Shape, b: Shape): Shape {
-  return new Shape(() => subtract(a.getSolid(), b.getSolid()));
+/**
+ * Subtraction of the second shape from the first shape to produce a new shape.
+ *
+ * @param {Shape} a - The shape to be subtracted from
+ * @param {Shape} b - The shape to remove from the first shape
+ * @returns {Shape} The resulting subtracted shape
+ */
+export function subtract(a: Shape, b: Shape): Shape {
+  return new Shape(() => _subtract(a.getSolid(), b.getSolid()));
 }
 
-export function shapeIntersect(a: Shape, b: Shape): Shape {
-  return new Shape(() => intersect(a.getSolid(), b.getSolid()));
+/**
+ * Intersection of the two shape to produce a new shape.
+ *
+ * @param {Shape} a - The first shape
+ * @param {Shape} b - The second shape
+ * @returns {Shape} The resulting intersection shape
+ */
+export function intersect(a: Shape, b: Shape): Shape {
+  return new Shape(() => _intersect(a.getSolid(), b.getSolid()));
 }
 
-export function shapeColorize(shape: Shape, color: RGB): Shape {
+/**
+ * Colours the given shape with the colour provided.
+ *
+ * @param {Shape} shape - The shape to be coloured
+ * @param {RGB} color - The colour to colour the shape with
+ * @returns {Shape} Resulting Shape
+ */
+export function colorize(shape: Shape, color: RGB): Shape {
   try {
-    return new Shape(() => colorize(color, shape.getSolid()));
+    return new Shape(() => _colorize(color, shape.getSolid()));
   } catch {
-    throw Error(`shapeColorize expects a shape color`);
+    throw Error(`colorize expects a shape color`);
   }
 }
 
-export function shapeColorizeRGB(
+/**
+ * Colours the given shape by specifying the red, green, blue (RGB) value,
+ * ranging from 0.0 to 1.0.
+ * For example RGB value of (1.0, 1.0, 1.0) is white while the RGB value of
+ * (0.0, 0.0, 0.0) is black.
+ *
+ * @param {Shape} shape - The shape to be coloured
+ * @param {number} r - Red value [0.0 - 1.0]
+ * @param {number} g - Green value [0.0 - 1.0]
+ * @param {number} b - Blue value [0.0 - 1.0]
+ * @returns {Shape} Resulting Shape
+ */
+export function colorize_rgb(
   shape: Shape,
   r: number,
   g: number,
   b: number
 ): Shape {
   if (r > 1.0 || r < 0) {
-    throw Error(`shapeColorizeRGB expects red value to be between 0 and 1.0`);
+    throw Error(`colorize_rgb expects red value to be between 0 and 1.0`);
   }
   if (g > 1.0 || g < 0) {
-    throw Error(`shapeColorizeRGB expects green value to be between 0 and 1.0`);
+    throw Error(`colorize_rgb expects green value to be between 0 and 1.0`);
   }
   if (b > 1.0 || b < 0) {
-    throw Error(`shapeColorizeRGB expects blue value to be between 0 and 1.0`);
+    throw Error(`colorize_rgb expects blue value to be between 0 and 1.0`);
   }
-  return new Shape(() => colorize([r, g, b], shape.getSolid()));
+  return new Shape(() => _colorize([r, g, b], shape.getSolid()));
 }
 
-export function shapeColorizeHex(shape: Shape, hex: string): Shape {
+/**
+ * Colours the given shape by specifying the hex, in the form of #xxxxxx or
+ * xxxxxx.
+ * For example hex value of #FFFFFF is white while the hex value of #000000
+ * is black.
+ *
+ * @param {Shape} shape - The shape to be coloured
+ * @param {string} hex - The hex value to colour the shape with
+ * @returns {Shape} Resulting Shape
+ */
+export function colorize_hex(shape: Shape, hex: string): Shape {
   if (hex.replace('#', '').length === 6) {
-    return new Shape(() => colorize(hexToRgb(hex), shape.getSolid()));
+    return new Shape(() => _colorize(hexToRgb(hex), shape.getSolid()));
   }
   throw Error(
-    `shapeColorizeHex expects a hex value of the form "#000000" or "000000"`
+    `colorize_hex expects a hex value of the form "#000000" or "000000"`
   );
 }
 
-export function shapeScale(
-  shape: Shape,
-  x: number,
-  y: number,
-  z: number
-): Shape {
-  return new Shape(() => scale([x, y, z], shape.getSolid()));
+/**
+ * Scales the shape in the x, y and z direction with the specified factor,
+ * ranging from 0 to infinity.
+ * For example scaling the shape by 1 in x, y and z direction results in
+ * the original shape.
+ *
+ * @param {Shape} shape - The shape to be scaled
+ * @param {number} x - Scaling in the x direction
+ * @param {number} y - Scaling in the y direction
+ * @param {number} z - Scaling in the z direction
+ * @returns {Shape} Resulting Shape
+ */
+export function scale(shape: Shape, x: number, y: number, z: number): Shape {
+  return new Shape(() => _scale([x, y, z], shape.getSolid()));
 }
 
-export function shapeScaleX(shape: Shape, x: number): Shape {
-  return shapeScale(shape, x, 1, 1);
+/**
+ * Scales the shape in the x direction with the specified factor,
+ * ranging from 0 to infinity.
+ * For example scaling the shape by 1 in x direction results in the
+ * original shape.
+ *
+ * @param {Shape} shape - The shape to be scaled
+ * @param {number} x - Scaling in the x direction
+ * @returns {Shape} Resulting Shape
+ */
+export function scale_x(shape: Shape, x: number): Shape {
+  return scale(shape, x, 1, 1);
 }
 
-export function shapeScaleY(shape: Shape, y: number): Shape {
-  return shapeScale(shape, 1, y, 1);
+/**
+ * Scales the shape in the y direction with the specified factor,
+ * ranging from 0 to infinity.
+ * For example scaling the shape by 1 in y direction results in the
+ * original shape.
+ *
+ * @param {Shape} shape - The shape to be scaled
+ * @param {number} y - Scaling in the y direction
+ * @returns {Shape} Resulting Shape
+ */
+export function scale_y(shape: Shape, y: number): Shape {
+  return scale(shape, 1, y, 1);
 }
 
-export function shapeScaleZ(shape: Shape, z: number): Shape {
-  return shapeScale(shape, 1, 1, z);
+/**
+ * Scales the shape in the z direction with the specified factor,
+ * ranging from 0 to infinity.
+ * For example scaling the shape by 1 in z direction results in the
+ * original shape.
+ *
+ * @param {Shape} shape - The shape to be scaled
+ * @param {number} z - Scaling in the z direction
+ * @returns {Shape} Resulting Shape
+ */
+export function scale_z(shape: Shape, z: number): Shape {
+  return scale(shape, 1, 1, z);
 }
 
-export function shapeCenter(shape: Shape): number[] {
+/**
+ * Obtain the center of the given shape in the x, y and z direction.
+ *
+ * @param {Shape} shape - The scale to be measured
+ * @returns {number[]} An array of number representing the center in the form of
+ * [x, y, z]
+ */
+export function shape_center(shape: Shape): number[] {
   const bounds = measureBoundingBox(shape.getSolid());
   return [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
@@ -129,7 +326,16 @@ export function shapeCenter(shape: Shape): number[] {
   ];
 }
 
-export function shapeSetCenter(
+/**
+ * Set the center of the shape with the provided x, y and z coordinates.
+ *
+ * @param {Shape} shape - The scale to have the center set
+ * @param {nunber} x - The center with the x coordinate
+ * @param {nunber} y - The center with the y coordinate
+ * @param {nunber} z - The center with the z coordinate
+ * @returns {Shape} The shape with the new center
+ */
+export function shape_set_center(
   shape: Shape,
   x: number,
   y: number,
@@ -138,90 +344,213 @@ export function shapeSetCenter(
   return new Shape(() => center({ relativeTo: [x, y, z] }, shape.getSolid()));
 }
 
-export function shapeArea(shape: Shape): number {
+/**
+ * Measure the area of the provided shape.
+ *
+ * @param {Shape} shape - The shape to measure the area from
+ * @returns {number} The area of the shape
+ */
+export function area(shape: Shape): number {
   return measureArea(shape.getSolid());
 }
 
-export function shapeVolume(shape: Shape): number {
+/**
+ * Measure the volume of the provided shape.
+ *
+ * @param {Shape} shape - The shape to measure the volume from
+ * @returns {number} The volume of the shape
+ */
+export function volume(shape: Shape): number {
   return measureVolume(shape.getSolid());
 }
 
-function shapeMirror(shape: Shape, x: number, y: number, z: number) {
+/**
+ * Mirror / Flip the provided shape by the plane with normal direction vector
+ * given by the x, y and z components.
+ *
+ * @param {Shape} shape - The shape to mirror / flip
+ * @param {number} x - The x coordinate of the direction vector
+ * @param {number} y - The y coordinate of the direction vector
+ * @param {number} z - The z coordinate of the direction vector
+ * @returns {Shape} The mirrored / flipped shape
+ */
+function shape_mirror(shape: Shape, x: number, y: number, z: number) {
   return new Shape(() => mirror({ normal: [x, y, z] }, shape.getSolid()));
 }
 
-export function shapeFlipX(shape: Shape): Shape {
-  return shapeMirror(shape, 1, 0, 0);
+/**
+ * Mirror / Flip the provided shape by the x axis.
+ *
+ * @param {Shape} shape - The shape to mirror / flip
+ * @returns {Shape} The mirrored / flipped shape
+ */
+export function flip_x(shape: Shape): Shape {
+  return shape_mirror(shape, 1, 0, 0);
 }
 
-export function shapeFlipY(shape: Shape): Shape {
-  return shapeMirror(shape, 0, 1, 0);
+/**
+ * Mirror / Flip the provided shape by the y axis.
+ *
+ * @param {Shape} shape - The shape to mirror / flip
+ * @returns {Shape} The mirrored / flipped shape
+ */
+export function flip_y(shape: Shape): Shape {
+  return shape_mirror(shape, 0, 1, 0);
 }
 
-export function shapeFlipZ(shape: Shape): Shape {
-  return shapeMirror(shape, 0, 0, 1);
+/**
+ * Mirror / Flip the provided shape by the z axis.
+ *
+ * @param {Shape} shape - The shape to mirror / flip
+ * @returns {Shape} The mirrored / flipped shape
+ */
+export function flip_z(shape: Shape): Shape {
+  return shape_mirror(shape, 0, 0, 1);
 }
 
-export function shapeTranslate(
+/**
+ * Translate / Move the shape by the provided x, y and z units from negative
+ * infinity to infinity.
+ *
+ * @param {Shape} shape
+ * @param {number} x - The number to shift the shape in the x direction
+ * @param {number} y - The number to shift the shape in the y direction
+ * @param {number} z - The number to shift the shape in the z direction
+ * @returns {Shape} The translated shape
+ */
+export function translate(
   shape: Shape,
   x: number,
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => translate([x, y, z], shape.getSolid()));
+  return new Shape(() => _translate([x, y, z], shape.getSolid()));
 }
 
-export function shapeTranslateX(shape: Shape, x: number): Shape {
-  return shapeTranslate(shape, x, 0, 0);
+/**
+ * Translate / Move the shape by the provided x units from negative infinity
+ * to infinity.
+ *
+ * @param {Shape} shape
+ * @param {number} x - The number to shift the shape in the x direction
+ * @returns {Shape} The translated shape
+ */
+export function translate_x(shape: Shape, x: number): Shape {
+  return translate(shape, x, 0, 0);
 }
 
-export function shapeTranslateY(shape: Shape, y: number): Shape {
-  return shapeTranslate(shape, 0, y, 0);
+/**
+ * Translate / Move the shape by the provided y units from negative infinity
+ * to infinity.
+ *
+ * @param {Shape} shape
+ * @param {number} y - The number to shift the shape in the y direction
+ * @returns {Shape} The translated shape
+ */
+export function translate_y(shape: Shape, y: number): Shape {
+  return translate(shape, 0, y, 0);
 }
 
-export function shapeTranslateZ(shape: Shape, z: number): Shape {
-  return shapeTranslate(shape, 0, 0, z);
+/**
+ * Translate / Move the shape by the provided z units from negative infinity
+ * to infinity.
+ *
+ * @param {Shape} shape
+ * @param {number} z - The number to shift the shape in the z direction
+ * @returns {Shape} The translated shape
+ */
+export function translate_z(shape: Shape, z: number): Shape {
+  return translate(shape, 0, 0, z);
 }
 
-export function shapeStack(a: Shape, b: Shape): Shape {
+/**
+ * Stack the second shape ontop of the first shape in the z direction
+ *
+ * @param {Shape} a - The shape to be stacked on
+ * @param {Shape} b - The stacking shape
+ * @returns {Shape} The stacked shape
+ */
+export function stack(a: Shape, b: Shape): Shape {
   const aBounds = measureBoundingBox(a.getSolid());
   const newX = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
   const newY = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   const newZ = aBounds[1][2];
   return new Shape(() =>
-    union(
+    _union(
       a.getSolid(), // @ts-ignore
       align({ relativeTo: [newX, newY, newZ] }, b.getSolid())
     )
   );
 }
 
-export function shapeRotate(
-  shape: Shape,
-  x: number,
-  y: number,
-  z: number
-): Shape {
-  return new Shape(() => rotate([x, y, z], shape.getSolid()));
+/**
+ * Rotate the shape by the provided angles in the x, y and z direction.
+ * Angles provided are in the form of radians (i.e. 2π represent 360
+ * degrees)
+ *
+ * @param {Shape} shape - The shape to be rotated
+ * @param {number} x - Angle of rotation in the x direction
+ * @param {number} y - Angle of rotation in the y direction
+ * @param {number} z - Angle of rotation in the z direction
+ * @returns {Shape} The rotated shape
+ */
+export function rotate(shape: Shape, x: number, y: number, z: number): Shape {
+  return new Shape(() => _rotate([x, y, z], shape.getSolid()));
 }
 
-export function shapeRotateX(shape: Shape, x: number): Shape {
-  return shapeRotate(shape, x, 0, 0);
+/**
+ * Rotate the shape by the provided angles in the x direction. Angles
+ * provided are in the form of radians (i.e. 2π represent 360 degrees)
+ *
+ * @param {Shape} shape - The shape to be rotated
+ * @param {number} x - Angle of rotation in the x direction
+ * @returns {Shape} The rotated shape
+ */
+export function rotate_x(shape: Shape, x: number): Shape {
+  return rotate(shape, x, 0, 0);
 }
 
-export function shapeRotateY(shape: Shape, y: number): Shape {
-  return shapeRotate(shape, 0, y, 0);
+/**
+ * Rotate the shape by the provided angles in the y direction. Angles
+ * provided are in the form of radians (i.e. 2π represent 360 degrees)
+ *
+ * @param {Shape} shape - The shape to be rotated
+ * @param {number} y - Angle of rotation in the y direction
+ * @returns {Shape} The rotated shape
+ */
+export function rotate_y(shape: Shape, y: number): Shape {
+  return rotate(shape, 0, y, 0);
 }
 
-export function shapeRotateZ(shape: Shape, z: number): Shape {
-  return shapeRotate(shape, 0, 0, z);
+/**
+ * Rotate the shape by the provided angles in the z direction. Angles
+ * provided are in the form of radians (i.e. 2π represent 360 degrees)
+ *
+ * @param {Shape} shape - The shape to be rotated
+ * @param {number} z - Angle of rotation in the z direction
+ * @returns {Shape} The rotated shape
+ */
+export function rotate_z(shape: Shape, z: number): Shape {
+  return rotate(shape, 0, 0, z);
 }
 
+/**
+ * Center the provided shape with the middle base of the shape at (0, 0, 0).
+ *
+ * @param {Shape} shape - The shape to be centered
+ * @returns {Shape} The shape that is centered
+ */
 function shapeSetOrigin(shape: Shape) {
   return new Shape(() => align({}, shape.getSolid()));
 }
 
-export function isShape(shape: Shape): boolean {
+/**
+ * Checks whether the given shape is a Shape.
+ *
+ * @param {Shape} shape - The shape to be checked
+ * @returns {boolean} Boolean on whether shape provided is a Shape
+ */
+export function is_shape(shape: Shape): boolean {
   if (looseInstanceOf(shape, Shape)) {
     if (!geometries.geom3.isA(shape.getSolid())) {
       return false;
@@ -231,7 +560,15 @@ export function isShape(shape: Shape): boolean {
   return false;
 }
 
-function shapeClone(shape: Shape, axis: boolean, grid: boolean): Shape {
+/**
+ * Clones the given shape, stating whether axis and grid needs to be rendered.
+ *
+ * @param {Shape} shape - The shape to be cloned
+ * @param {boolean} axis - Whether axis needs to be rendered
+ * @param {boolean} grid - Whether grid needs to be rendered
+ * @returns {Shape} Cloned shape
+ */
+function shape_clone(shape: Shape, axis: boolean, grid: boolean): Shape {
   return new Shape(
     () => geometries.geom3.clone(shape.getSolid()),
     true,
@@ -250,30 +587,58 @@ function shapeClone(shape: Shape, axis: boolean, grid: boolean): Shape {
  * @returns {Shape} A copy of the specified Shape, marked for rendering.
  */
 export function render(shape: Shape): Shape {
-  if (!isShape(shape)) {
+  if (!is_shape(shape)) {
     throw Error(`render expects a Shape as argument.`);
   }
-  return shapeClone(shape, false, false);
+  return shape_clone(shape, false, false);
 }
 
-export function renderAxis(shape: Shape): Shape {
-  if (!isShape(shape)) {
-    throw Error(`renderAxis expects a Shape as argument.`);
+/**
+ * Returns a copy of the specified Shape that will get rendered in a tab with axis,
+ * if your Source program results in that Shape.
+ * I.e., use this function as the last statement in your program to render the
+ * specified shape.
+ *
+ * @param {Shape} shape - The Shape to render.
+ * @returns {Shape} A copy of the specified Shape, marked for rendering.
+ */
+export function render_axis(shape: Shape): Shape {
+  if (!is_shape(shape)) {
+    throw Error(`render_axis expects a Shape as argument.`);
   }
-  return shapeClone(shape, true, false);
+  return shape_clone(shape, true, false);
 }
 
-export function renderGrid(shape: Shape): Shape {
-  if (!isShape(shape)) {
-    throw Error(`renderGrid expects a Shape as argument.`);
+/**
+ * Returns a copy of the specified Shape that will get rendered in a tab with grid,
+ * if your Source program results in that Shape.
+ * I.e., use this function as the last statement in your program to render the
+ * specified shape.
+ *
+ * @param {Shape} shape - The Shape to render.
+ * @returns {Shape} A copy of the specified Shape, marked for rendering.
+ */
+export function render_grid(shape: Shape): Shape {
+  if (!is_shape(shape)) {
+    throw Error(`render_grid expects a Shape as argument.`);
   }
-  return shapeClone(shape, false, true);
+  return shape_clone(shape, false, true);
 }
-export function renderAxisGrid(shape: Shape): Shape {
-  if (!isShape(shape)) {
-    throw Error(`renderAxisGrid expects a Shape as argument.`);
+
+/**
+ * Returns a copy of the specified Shape that will get rendered in a tab with axis and
+ * grid, if your Source program results in that Shape.
+ * I.e., use this function as the last statement in your program to render the
+ * specified shape.
+ *
+ * @param {Shape} shape - The Shape to render.
+ * @returns {Shape} A copy of the specified Shape, marked for rendering.
+ */
+export function render_axis_grid(shape: Shape): Shape {
+  if (!is_shape(shape)) {
+    throw Error(`render_axis_grid expects a Shape as argument.`);
   }
-  return shapeClone(shape, true, true);
+  return shape_clone(shape, true, true);
 }
 
 // =============================================================================
@@ -282,6 +647,8 @@ export function renderAxisGrid(shape: Shape): Shape {
 
 /**
  * Primitive Shape of a cube.
+ *
+ * @category Primitive
  */
 export const cube: Shape = shapeSetOrigin(
   new Shape(() => primitives.cube({ size: 1 }))
@@ -289,6 +656,8 @@ export const cube: Shape = shapeSetOrigin(
 
 /**
  * Primitive Shape of a sphere.
+ *
+ * @category Primitive
  */
 export const sphere: Shape = shapeSetOrigin(
   new Shape(() => primitives.sphere({ radius: 0.5, segments: 128 }))
@@ -296,6 +665,8 @@ export const sphere: Shape = shapeSetOrigin(
 
 /**
  * Primitive Shape of a cylinder.
+ *
+ * @category Primitive
  */
 export const cylinder: Shape = shapeSetOrigin(
   new Shape(() =>
@@ -305,6 +676,8 @@ export const cylinder: Shape = shapeSetOrigin(
 
 /**
  * Primitive Shape of a prism.
+ *
+ * @category Primitive
  */
 export const prism: Shape = shapeSetOrigin(
   new Shape(() => extrudeLinear({ height: 1 }, primitives.triangle()))
@@ -312,6 +685,8 @@ export const prism: Shape = shapeSetOrigin(
 
 /**
  * Primitive Shape of an extruded star.
+ *
+ * @category Primitive
  */
 export const extrudedStar: Shape = shapeSetOrigin(
   new Shape(() =>
@@ -323,6 +698,8 @@ const small = 10 ** -30;
 
 /**
  * Primitive Shape of a square pyramid.
+ *
+ * @category Primitive
  */
 export const squarePyramid: Shape = shapeSetOrigin(
   new Shape(() =>

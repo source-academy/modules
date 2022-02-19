@@ -1,6 +1,7 @@
 /* [Imports] */
 import { Geometry as Solid } from '@jscad/modeling/src/geometries/types';
-import { cameras, drawCommands } from '@jscad/regl-renderer';
+import { cameras, controls, drawCommands } from '@jscad/regl-renderer';
+import * as orbitTypes from '@jscad/regl-renderer/types/controls/orbitControls';
 import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 import * as renderDefaults from '@jscad/regl-renderer/types/rendering/renderDefaults';
 import { InitializationOptions } from 'regl';
@@ -219,3 +220,26 @@ export namespace EntitiesFromSolids {
     smoothNormals?: boolean;
   };
 }
+
+export type BoundingBox = [Numbers3, Numbers3];
+
+const orbitControls = controls.orbit;
+const orbitControlsState = orbitControls.defaults;
+
+export type OrbitControls = typeof orbitControls;
+export type OrbitControlsState = typeof orbitControlsState;
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type OrbitRotate = ReturnType<typeof orbitTypes.rotate>;
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type OrbitZoom = ReturnType<typeof orbitTypes.zoom>;
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type OrbitPan = ReturnType<typeof orbitTypes.pan>;
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type OrbitZoomToFit = ReturnType<typeof orbitTypes.zoomToFit>;
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type OrbitUpdate = ReturnType<typeof orbitTypes.update>;

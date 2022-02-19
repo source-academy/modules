@@ -53,6 +53,7 @@ const temporaryPixels: Pixels = [];
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
 let filter: Filter = copy_image;
 
+let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
 
 let FPS: number = DEFAULT_FPS;
@@ -182,6 +183,11 @@ function draw(timestamp: number): void {
   if (elapsed > 1000 / FPS) {
     drawFrame();
     startTime = timestamp;
+    if (toRunLateQueue) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      lateQueue();
+      toRunLateQueue = false;
+    }
   }
 }
 
@@ -199,9 +205,7 @@ function startVideo(): void {
  * @hidden
  */
 function stopVideo(): void {
-  if (!videoIsPlaying) {
-    return;
-  }
+  if (!videoIsPlaying) return;
   videoIsPlaying = false;
   window.cancelAnimationFrame(requestId);
 }
@@ -222,6 +226,7 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
+      toRunLateQueue = true;
     })
     .catch((error) => {
       const errorMessage = `${error.name}: ${error.message}`;
@@ -303,10 +308,23 @@ function updateDimensions(w: number, h: number): void {
   startVideo();
 }
 
+// queue is runned when init is called
 let queue: Queue = () => {};
 
 // adds function to the queue
 function enqueue(funcToAdd: Queue): void {
+  const funcToRunFirst: Queue = queue;
+  queue = () => {
+    funcToRunFirst();
+    funcToAdd();
+  };
+}
+
+// lateQueue is runned after media has properly loaded
+let lateQueue: Queue = () => {};
+
+// adds function to the lateQueue
+function lateEnqueue(funcToAdd: Queue): void {
   const funcToRunFirst: Queue = queue;
   queue = () => {
     funcToRunFirst();
@@ -344,6 +362,7 @@ function init(
  * @hidden
  */
 function deinit(): void {
+  snapPicture();
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
@@ -519,13 +538,13 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 }
 
 /**
- * Takes a snapshot of image after a set delay.
+ * Pauses the video after a set delay.
  *
- * @param delay Delay in ms before a snapshot is taken
+ * @param delay Delay in ms after the video starts.
  */
-export function snapshot(delay: number): void {
+export function pause_after(delay: number): void {
   // prevent negative delays
-  enqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
+  lateEnqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
 }
 
 /**

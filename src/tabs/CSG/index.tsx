@@ -2,12 +2,23 @@ import React from 'react';
 import render from '../../bundles/csg/renderer';
 import { looseInstanceOf, Shape } from '../../bundles/csg/utilities';
 
+/**
+ * React Component props for the Tab.
+ */
 type Props = {
-  debuggerContext: any;
+  children?: never;
+  className?: never;
+  context?: any;
 };
 
+/**
+ * React Component state for the Tab.
+ */
 type State = {};
 
+/**
+ * The main React Component of the Tab.
+ */
 class CsgCanvas extends React.Component<Props, State> {
   private canvas: HTMLCanvasElement | null = null;
 
@@ -17,35 +28,28 @@ class CsgCanvas extends React.Component<Props, State> {
     this.state = {};
   }
 
+  /**
+   * This function is called when the tab is created.
+   * This is the entrypoint for the tab.
+   */
   public componentDidMount() {
-    // FIXME
-    // console.log("HTMLCanvasElement", this.canvas)
-    // console.log("Props", this.props)
-
-    if (this.canvas === null) {
-      return;
-    }
-
-    // Since the tab did spawn, the program should've resulted in a Shape (?).
-    // ESLint configured to require destructuring assignment like this
-    const {
-      debuggerContext: {
-        result: { value: potentialShape },
-      },
-    }: any = this.props;
-    if (!looseInstanceOf(potentialShape, Shape)) {
-      return;
-    }
-
-    try {
-      render(this.canvas, potentialShape as Shape);
-    } catch (error: any) {
-      // eslint-disable-next-line no-console
-      console.error(error);
+    if (this.canvas) {
+      const {
+        context: {
+          result: { value: potentialShape },
+        },
+      }: any = this.props;
+      if (looseInstanceOf(potentialShape, Shape)) {
+        render(this.canvas, potentialShape as Shape);
+      }
     }
   }
 
-  // TODO to go over
+  /**
+   * This function sets the layout of the React Component in HTML
+   * Notice the the Canvas hook in "ref" property.
+   * @returns HTMLComponent
+   */
   public render() {
     return (
       <div
@@ -72,13 +76,14 @@ class CsgCanvas extends React.Component<Props, State> {
 }
 
 export default {
-  // DebuggerContext from frontend WorkspaceTypes
-  toSpawn: (debuggerContext: any) => {
-    // FIXME
-    // console.log("DebuggerContext", debuggerContext)
-
-    const potentialShape: any = debuggerContext?.result?.value;
-    // instanceof Shape won't work due to different contexts
+  /**
+   * This function will be called to determine if the component will be
+   * rendered. Currently spawns when the result in the REPL is "<RUNE>".
+   * @param {DebuggerContext} context
+   * @returns {boolean}
+   */
+  toSpawn: (context: any) => {
+    const potentialShape: any = context.result.value;
     if (looseInstanceOf(potentialShape, Shape)) {
       try {
         return (potentialShape as Shape).spawnsTab;
@@ -86,15 +91,27 @@ export default {
         // eslint-disable-next-line no-console
         console.error(error);
       }
+      return false;
     }
-
     return false;
   },
-  // Prettier requires no block for single line function,
-  // but needs parentheses on new line as exceeds column width
-  body: (debuggerContext: any) => (
-    <CsgCanvas debuggerContext={debuggerContext} />
-  ),
+
+  /**
+   * This function will be called to render the module tab in the side contents
+   * on Source Academy frontend.
+   * @param {DebuggerContext} context
+   */
+  body: (context: any) => <CsgCanvas context={context} />,
+
+  /**
+   * The Tab's icon tooltip in the side contents on Source Academy frontend.
+   */
   label: 'CSG Tab',
+
+  /**
+   * BlueprintJS IconName element's name, used to render the icon which will be
+   * displayed in the side contents panel.
+   * @see https://blueprintjs.com/docs/#icons
+   */
   iconName: 'shapes',
 };
