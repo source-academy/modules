@@ -163,7 +163,7 @@ export const white: RGB = _white;
  * @returns {Shape} The resulting unioned shape
  */
 export function union(a: Shape, b: Shape): Shape {
-  return new Shape(() => _union(a.getObject(), b.getObject()));
+  return new Shape(() => _union(a.getSolid(), b.getSolid()));
 }
 
 /**
@@ -174,7 +174,7 @@ export function union(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting subtracted shape
  */
 export function subtract(a: Shape, b: Shape): Shape {
-  return new Shape(() => _subtract(a.getObject(), b.getObject()));
+  return new Shape(() => _subtract(a.getSolid(), b.getSolid()));
 }
 
 /**
@@ -185,7 +185,7 @@ export function subtract(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting intersection shape
  */
 export function intersect(a: Shape, b: Shape): Shape {
-  return new Shape(() => _intersect(a.getObject(), b.getObject()));
+  return new Shape(() => _intersect(a.getSolid(), b.getSolid()));
 }
 
 /**
@@ -197,7 +197,7 @@ export function intersect(a: Shape, b: Shape): Shape {
  */
 export function colorize(shape: Shape, color: RGB): Shape {
   try {
-    return new Shape(() => _colorize(color, shape.getObject()));
+    return new Shape(() => _colorize(color, shape.getSolid()));
   } catch {
     throw Error(`colorize expects a shape color`);
   }
@@ -230,7 +230,7 @@ export function colorize_rgb(
   if (b > 1.0 || b < 0) {
     throw Error(`colorize_rgb expects blue value to be between 0 and 1.0`);
   }
-  return new Shape(() => _colorize([r, g, b], shape.getObject()));
+  return new Shape(() => _colorize([r, g, b], shape.getSolid()));
 }
 
 /**
@@ -245,7 +245,7 @@ export function colorize_rgb(
  */
 export function colorize_hex(shape: Shape, hex: string): Shape {
   if (hex.replace('#', '').length === 6) {
-    return new Shape(() => _colorize(hexToRgb(hex), shape.getObject()));
+    return new Shape(() => _colorize(hexToRgb(hex), shape.getSolid()));
   }
   throw Error(
     `colorize_hex expects a hex value of the form "#000000" or "000000"`
@@ -265,7 +265,7 @@ export function colorize_hex(shape: Shape, hex: string): Shape {
  * @returns {Shape} Resulting Shape
  */
 export function scale(shape: Shape, x: number, y: number, z: number): Shape {
-  return new Shape(() => _scale([x, y, z], shape.getObject()));
+  return new Shape(() => _scale([x, y, z], shape.getSolid()));
 }
 
 /**
@@ -318,7 +318,7 @@ export function scale_z(shape: Shape, z: number): Shape {
  * [x, y, z]
  */
 export function shape_center(shape: Shape): number[] {
-  const bounds = measureBoundingBox(shape.getObject());
+  const bounds = measureBoundingBox(shape.getSolid());
   return [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
     bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
@@ -341,7 +341,7 @@ export function shape_set_center(
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => center({ relativeTo: [x, y, z] }, shape.getObject()));
+  return new Shape(() => center({ relativeTo: [x, y, z] }, shape.getSolid()));
 }
 
 /**
@@ -351,7 +351,7 @@ export function shape_set_center(
  * @returns {number} The area of the shape
  */
 export function area(shape: Shape): number {
-  return measureArea(shape.getObject());
+  return measureArea(shape.getSolid());
 }
 
 /**
@@ -361,7 +361,7 @@ export function area(shape: Shape): number {
  * @returns {number} The volume of the shape
  */
 export function volume(shape: Shape): number {
-  return measureVolume(shape.getObject());
+  return measureVolume(shape.getSolid());
 }
 
 /**
@@ -375,7 +375,7 @@ export function volume(shape: Shape): number {
  * @returns {Shape} The mirrored / flipped shape
  */
 function shape_mirror(shape: Shape, x: number, y: number, z: number) {
-  return new Shape(() => mirror({ normal: [x, y, z] }, shape.getObject()));
+  return new Shape(() => mirror({ normal: [x, y, z] }, shape.getSolid()));
 }
 
 /**
@@ -424,7 +424,7 @@ export function translate(
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => _translate([x, y, z], shape.getObject()));
+  return new Shape(() => _translate([x, y, z], shape.getSolid()));
 }
 
 /**
@@ -471,14 +471,14 @@ export function translate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The stacked shape
  */
 export function stack(a: Shape, b: Shape): Shape {
-  const aBounds = measureBoundingBox(a.getObject());
+  const aBounds = measureBoundingBox(a.getSolid());
   const newX = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
   const newY = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   const newZ = aBounds[1][2];
   return new Shape(() =>
     _union(
-      a.getObject(), // @ts-ignore
-      align({ relativeTo: [newX, newY, newZ] }, b.getObject())
+      a.getSolid(), // @ts-ignore
+      align({ relativeTo: [newX, newY, newZ] }, b.getSolid())
     )
   );
 }
@@ -495,7 +495,7 @@ export function stack(a: Shape, b: Shape): Shape {
  * @returns {Shape} The rotated shape
  */
 export function rotate(shape: Shape, x: number, y: number, z: number): Shape {
-  return new Shape(() => _rotate([x, y, z], shape.getObject()));
+  return new Shape(() => _rotate([x, y, z], shape.getSolid()));
 }
 
 /**
@@ -541,7 +541,7 @@ export function rotate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  return new Shape(() => align({}, shape.getObject()));
+  return new Shape(() => align({}, shape.getSolid()));
 }
 
 /**
@@ -552,7 +552,7 @@ function shapeSetOrigin(shape: Shape) {
  */
 export function is_shape(shape: Shape): boolean {
   if (looseInstanceOf(shape, Shape)) {
-    if (!geometries.geom3.isA(shape.getObject())) {
+    if (!geometries.geom3.isA(shape.getSolid())) {
       return false;
     }
     return true;
@@ -570,7 +570,7 @@ export function is_shape(shape: Shape): boolean {
  */
 function shape_clone(shape: Shape, axis: boolean, grid: boolean): Shape {
   return new Shape(
-    () => geometries.geom3.clone(shape.getObject()),
+    () => geometries.geom3.clone(shape.getSolid()),
     true,
     axis,
     grid

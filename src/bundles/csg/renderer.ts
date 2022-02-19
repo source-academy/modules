@@ -1,45 +1,68 @@
-import {
-  cameras,
-  entitiesFromSolids,
-  prepareRender,
-  drawCommands,
-  controls,
-} from '@jscad/regl-renderer';
 import { measureBoundingBox } from '@jscad/modeling/src/measurements';
-import { Shape } from './utilities';
-import { Entities } from './types';
+import {
+  entitiesFromSolids,
+  perspectiveCamera as _perspectiveCamera,
+  perspectiveCameraStateDefaults,
+  orbitControls as _orbitControls,
+  orbitControlsStateDefaults,
+  prepareDrawCommands,
+  prepareRender,
+  Shape,
+} from './utilities';
+import {
+  AxisEntity,
+  BoundingBox,
+  MultiGridEntity,
+  Numbers2,
+  OrbitControls,
+  OrbitControlsState,
+  OrbitPan,
+  OrbitRotate,
+  OrbitUpdate,
+  OrbitZoom,
+  OrbitZoomToFit,
+  PerspectiveCamera,
+  PerspectiveCameraState,
+  PrepareRender,
+  WrappedRenderer,
+} from './types';
 
 export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   // Prepare Renderer
-  const prepareRenderOptions = {
+  const prepareRenderOptions: PrepareRender.AllOptions = {
     glOptions: {
       gl: canvas.getContext('webgl2') ?? undefined,
     },
   };
-  const preparedRenderer = prepareRender(prepareRenderOptions);
+  const preparedRenderer: WrappedRenderer.Function = prepareRender(
+    prepareRenderOptions
+  );
 
   // Setting up Camera
-  const perspectiveCamera = cameras.perspective;
-  const camera = perspectiveCamera.defaults;
-  const width = 512;
-  const height = 512;
-  perspectiveCamera.setProjection(camera, camera, {
-    width,
-    height,
-  });
-  perspectiveCamera.update(camera, camera);
+  const perspectiveCamera: PerspectiveCamera = _perspectiveCamera;
+  let perspectiveCameraState: PerspectiveCameraState = perspectiveCameraStateDefaults;
+
+  perspectiveCamera.setProjection(
+    perspectiveCameraState,
+    perspectiveCameraState,
+    {
+      width: 512,
+      height: 512,
+    }
+  );
+  perspectiveCamera.update(perspectiveCameraState, perspectiveCameraState);
 
   // Setting up Camera Controller
-  const orbitControls = controls.orbit;
-  let viewControls = orbitControls.defaults;
+  const orbitControls: OrbitControls = _orbitControls;
+  let orbitControlsState: OrbitControlsState = orbitControlsStateDefaults;
 
   // Getting CSG Objects
   // @ts-ignore
-  const geometries: Entities[] = entitiesFromSolids({}, shape.getObject());
+  const geometries: GeometryEntity[] = entitiesFromSolids({}, shape.getSolid());
 
-  const shapeBoundingBox = measureBoundingBox(shape.getObject());
+  const shapeBoundingBox: BoundingBox = measureBoundingBox(shape.getSolid());
 
-  const maxSize = Math.ceil(
+  const maxSize: number = Math.ceil(
     Math.max(
       shapeBoundingBox[1][0],
       shapeBoundingBox[1][1],
@@ -48,7 +71,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   );
 
   // Setting up Renderer
-  const grid = {
+  const grid: MultiGridEntity = {
     visuals: {
       drawCmd: 'drawGrid',
       show: shape.grid,
@@ -61,7 +84,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
     ticks: [1, 1],
   };
 
-  const axis = {
+  const axis: AxisEntity = {
     visuals: {
       drawCmd: 'drawAxis',
       show: shape.axis,
@@ -69,107 +92,111 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
     size: maxSize * 1.2,
   };
 
-  const renderOptions = {
-    camera,
-    drawCommands: {
-      drawAxis: drawCommands.drawAxis,
-      drawGrid: drawCommands.drawGrid,
-      drawLines: drawCommands.drawLines,
-      drawMesh: drawCommands.drawMesh,
-    },
+  let renderOptions: WrappedRenderer.AllData = {
+    camera: perspectiveCameraState,
+    drawCommands: prepareDrawCommands,
     entities: [grid, axis, ...geometries],
   };
 
   // Running Renderer and Mouse Events to Control Camera
-  let lastX = 0;
-  let lastY = 0;
+  let lastX: number = 0;
+  let lastY: number = 0;
 
-  const rotateSpeed = 0.002;
-  const panSpeed = 1;
-  const zoomSpeed = 0.08;
-  let rotateDelta = [0, 0];
-  let panDelta = [0, 0];
-  let zoomDelta = 0;
-  let pointerDown = false;
-  let zoomToFit = true;
-  let updateView = true;
+  const rotateSpeed: number = 0.002;
+  const panSpeed: number = 1;
+  const zoomSpeed: number = 0.08;
+  let rotateDelta: Numbers2 = [0, 0];
+  let panDelta: Numbers2 = [0, 0];
+  let zoomDelta: number = 0;
+  let pointerDown: boolean = false;
+  let zoomToFit: boolean = true;
+  let updateView: boolean = true;
 
-  const doRotatePanZoom = () => {
+  function doRotatePanZoom() {
     if (rotateDelta[0] || rotateDelta[1]) {
-      const updated = orbitControls.rotate(
-        { controls: viewControls, camera, speed: rotateSpeed },
+      const updated: OrbitRotate = orbitControls.rotate(
+        {
+          controls: orbitControlsState,
+          camera: perspectiveCameraState,
+          speed: rotateSpeed,
+        },
         rotateDelta
       );
-      viewControls = { ...viewControls, ...updated.controls };
+      orbitControlsState = { ...orbitControlsState, ...updated.controls };
       updateView = true;
       rotateDelta = [0, 0];
     }
 
     if (panDelta[0] || panDelta[1]) {
-      const updated = orbitControls.pan(
-        { controls: viewControls, camera, speed: panSpeed },
+      const updated: OrbitPan = orbitControls.pan(
+        {
+          controls: orbitControlsState,
+          camera: perspectiveCameraState,
+          speed: panSpeed,
+        },
         panDelta
       );
-      viewControls = { ...viewControls, ...updated.controls };
+      orbitControlsState = { ...orbitControlsState, ...updated.controls };
       panDelta = [0, 0];
-      camera.position = updated.camera.position;
-      camera.target = updated.camera.target;
+      perspectiveCameraState = { ...perspectiveCameraState, ...updated.camera };
       updateView = true;
     }
 
     if (zoomDelta) {
-      const updated = orbitControls.zoom(
-        { controls: viewControls, camera, speed: zoomSpeed },
+      const updated: OrbitZoom = orbitControls.zoom(
+        {
+          controls: orbitControlsState,
+          camera: perspectiveCameraState,
+          speed: zoomSpeed,
+        },
         zoomDelta
       );
-      viewControls = { ...viewControls, ...updated.controls };
+      orbitControlsState = { ...orbitControlsState, ...updated.controls };
       zoomDelta = 0;
       updateView = true;
     }
 
     if (zoomToFit) {
-      viewControls.zoomToFit.tightness = 1.5;
-      const updated = orbitControls.zoomToFit({
-        controls: viewControls,
-        camera,
+      orbitControlsState.zoomToFit.tightness = 1.5;
+      const updated: OrbitZoomToFit = orbitControls.zoomToFit({
+        controls: orbitControlsState,
+        camera: perspectiveCameraState,
         entities: geometries,
       });
-      viewControls = { ...viewControls, ...updated.controls };
-      camera.target = updated.camera.target;
+      orbitControlsState = { ...orbitControlsState, ...updated.controls };
+      perspectiveCameraState = { ...perspectiveCameraState, ...updated.camera };
       zoomToFit = false;
       updateView = true;
     }
-  };
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const updateAndRender = (timestamp: DOMHighResTimeStamp) => {
+  function updateAndRender(timestamp: DOMHighResTimeStamp) {
     doRotatePanZoom();
 
     if (updateView) {
-      const updates = orbitControls.update({
-        controls: viewControls,
-        camera,
+      const updates: OrbitUpdate = orbitControls.update({
+        controls: orbitControlsState,
+        camera: perspectiveCameraState,
       });
-      viewControls = { ...viewControls, ...updates.controls };
-      updateView = viewControls.changed;
-
-      camera.position = updates.camera.position;
-      perspectiveCamera.update(camera);
-
+      orbitControlsState = { ...orbitControlsState, ...updates.controls };
+      updateView = orbitControlsState.changed;
+      perspectiveCameraState = { ...perspectiveCameraState, ...updates.camera };
+      perspectiveCamera.update(perspectiveCameraState);
+      renderOptions = { ...renderOptions, ...{camera: perspectiveCameraState}};
       preparedRenderer(renderOptions);
     }
     window.requestAnimationFrame(updateAndRender);
-  };
+  }
   window.requestAnimationFrame(updateAndRender);
 
   /* eslint-disable no-param-reassign */
-  const moveHandler = (ev) => {
+  function moveHandler(ev: PointerEvent) {
     if (!pointerDown) return;
-    const dx = lastX - ev.pageX;
-    const dy = ev.pageY - lastY;
+    const dx: number = lastX - ev.pageX;
+    const dy: number = ev.pageY - lastY;
 
-    const shiftKey =
-      ev.shiftKey === true || (ev.touches && ev.touches.length > 2);
+    const shiftKey: boolean = ev.shiftKey === true;
     if (shiftKey) {
       panDelta[0] += dx;
       panDelta[1] += dy;
@@ -182,34 +209,33 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
     lastY = ev.pageY;
 
     ev.preventDefault();
-  };
-  const downHandler = (ev) => {
+  }
+  function downHandler(ev: PointerEvent) {
     pointerDown = true;
     lastX = ev.pageX;
     lastY = ev.pageY;
     canvas.setPointerCapture(ev.pointerId);
     ev.preventDefault();
-  };
+  }
 
-  const upHandler = (ev) => {
+  function upHandler(ev: PointerEvent) {
     pointerDown = false;
     canvas.releasePointerCapture(ev.pointerId);
     ev.preventDefault();
-  };
+  }
 
-  const wheelHandler = (ev) => {
+  function wheelHandler(ev: WheelEvent) {
     zoomDelta += ev.deltaY;
-    ev.preventDefault();
-  };
+  }
 
-  const doubleClickHandler = (ev) => {
+  function doubleClickHandler(ev: MouseEvent) {
     zoomToFit = true;
     ev.preventDefault();
-  };
+  }
 
   canvas.addEventListener('pointermove', moveHandler);
   canvas.addEventListener('pointerdown', downHandler);
   canvas.addEventListener('pointerup', upHandler);
-  canvas.addEventListener('wheel', wheelHandler);
+  canvas.addEventListener('wheel', wheelHandler, {passive: true});
   canvas.addEventListener('dblclick', doubleClickHandler);
 }

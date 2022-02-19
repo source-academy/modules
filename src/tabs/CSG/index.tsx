@@ -34,15 +34,15 @@ class CsgCanvas extends React.Component<Props, State> {
    */
   public componentDidMount() {
     if (this.canvas) {
-    const {
-      context: {
-        result: { value: potentialShape },
-      },
-    }: any = this.props;
-    if (looseInstanceOf(potentialShape, Shape)) {
-      render(this.canvas, potentialShape as Shape);
+      const {
+        context: {
+          result: { value: potentialShape },
+        },
+      }: any = this.props;
+      if (looseInstanceOf(potentialShape, Shape)) {
+        render(this.canvas, potentialShape as Shape);
+      }
     }
-  }
   }
 
   /**
@@ -90,9 +90,10 @@ export default {
       } catch (error: any) {
         // eslint-disable-next-line no-console
         console.error(error);
-        return false;
       }
+      return false;
     }
+    return false;
   },
 
   /**
