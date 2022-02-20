@@ -63,6 +63,20 @@ module.exports = {
         // turn on errors for missing imports
         // @see https://www.npmjs.com/package/eslint-import-resolver-typescript
         'import/no-unresolved': 'error',
+
+        // To allow multiple classes per file, eg a utilities file,
+        // rather than creating a bunch of files to separate responsibilities
+        'max-classes-per-file': 'off',
+
+        // To enable exporting non-destructered variables,
+        // so that comments can get used to generate documentation
+        'prefer-destructuring': 'off',
+
+        // Error → warn
+        '@typescript-eslint/no-unused-vars': 'warn',
+        '@typescript-eslint/lines-between-class-members': 'warn',
+        'prefer-template': 'warn',
+        'no-param-reassign': 'warn',
       },
       settings: {
         'import/parsers': {
