@@ -77,6 +77,7 @@ module.exports = {
         '@typescript-eslint/lines-between-class-members': 'warn',
         'prefer-template': 'warn',
         'no-param-reassign': 'warn',
+        'class-methods-use-this': 'warn',
       },
       settings: {
         'import/parsers': {
