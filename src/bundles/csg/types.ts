@@ -135,18 +135,32 @@ export type GeometryEntity = Entity & {
   geometry: Geometry;
 };
 
-// @jscad\regl-renderer\src\rendering\commands\drawAxis\index.js
-// @jscad\regl-renderer\demo-web.js
-export type AxisEntity = Entity & {
-  xColor?: Rgba;
-  yColor?: Rgba;
-  zColor?: Rgba;
-  size?: number;
-  alwaysVisible?: true;
+export namespace AxisEntity {
+  // @jscad\regl-renderer\src\rendering\commands\drawAxis\index.js
+  // @jscad\regl-renderer\demo-web.js
+  export type Type = Entity & {
+    xColor?: Rgba;
+    yColor?: Rgba;
+    zColor?: Rgba;
+    size?: number;
+    alwaysVisible?: true;
 
-  // Deprecated
-  lineWidth?: number;
-};
+    // Deprecated
+    lineWidth?: number;
+  };
+
+  export class Class implements Type {
+    public visuals: {
+      drawCmd: 'drawAxis' | 'drawGrid' | 'drawLines' | 'drawMesh';
+      show: boolean;
+    } = {
+      drawCmd: 'drawAxis',
+      show: true,
+    };
+
+    // public size: number = 10
+  }
+}
 
 // @jscad\regl-renderer\src\rendering\commands\drawGrid\index.js
 // @jscad\regl-renderer\demo-web.js
@@ -163,22 +177,44 @@ export type GridEntity = Entity & {
   lineWidth?: number;
 };
 
-// @jscad\regl-renderer\src\rendering\commands\drawGrid\multi.js
-// @jscad\regl-renderer\demo-web.js
-// @jscad\web\src\ui\views\viewer.js
-// @jscad\regl-renderer\src\index.js
-export type MultiGridEntity = GridEntity & {
-  // Entity#visuals gets stuffed into the nested DrawCommand as Props.
-  // The Props get passed on wholesale by makeDrawMultiGrid()'s returned lambda,
-  // where the following properties then get used
-  // (rather than while setting up the DrawCommands)
-  visuals: {
-    subColor?: Rgba; // as color
+export namespace MultiGridEntity {
+  // @jscad\regl-renderer\src\rendering\commands\drawGrid\multi.js
+  // @jscad\regl-renderer\demo-web.js
+  // @jscad\web\src\ui\views\viewer.js
+  // @jscad\regl-renderer\src\index.js
+  export type Type = Omit<GridEntity, 'ticks'> & {
+    // Entity#visuals gets stuffed into the nested DrawCommand as Props.
+    // The Props get passed on wholesale by makeDrawMultiGrid()'s returned lambda,
+    // where the following properties then get used
+    // (rather than while setting up the DrawCommands)
+    visuals: {
+      subColor?: Rgba; // as color
+    };
+
+    // First number used on the main grid, second number on sub grid
+    ticks?: [number, number];
   };
 
-  // First number used on the main grid, second number on sub grid
-  ticks?: [number, number];
-};
+  export class Class implements Type {
+    public visuals: {
+      drawCmd: 'drawAxis' | 'drawGrid' | 'drawLines' | 'drawMesh';
+      show: boolean;
+      color?: Rgba;
+      subColor?: Rgba;
+    } = {
+      drawCmd: 'drawGrid',
+      show: true,
+      color: [0, 0, 0, 1],
+      subColor: [0.5, 0.5, 0.5, 1],
+    };
+
+    public size: [number, number] = [1000, 1000];
+
+    public ticks: [number, number] = [10, 1];
+
+    // public centered = true;
+  }
+}
 
 // @jscad\regl-renderer\src\rendering\commands\drawLines\index.js
 export type LinesEntity = Entity & {
