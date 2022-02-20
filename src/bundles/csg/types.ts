@@ -157,8 +157,6 @@ export namespace AxisEntity {
       drawCmd: 'drawAxis',
       show: true,
     };
-
-    // public size: number = 10
   }
 }
 
@@ -211,8 +209,6 @@ export namespace MultiGridEntity {
     public size: [number, number] = [1000, 1000];
 
     public ticks: [number, number] = [10, 1];
-
-    // public centered = true;
   }
 }
 
