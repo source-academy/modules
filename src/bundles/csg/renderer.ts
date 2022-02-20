@@ -183,7 +183,10 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
       updateView = orbitControlsState.changed;
       perspectiveCameraState = { ...perspectiveCameraState, ...updates.camera };
       perspectiveCamera.update(perspectiveCameraState);
-      renderOptions = { ...renderOptions, ...{camera: perspectiveCameraState}};
+      renderOptions = {
+        ...renderOptions,
+        ...{ camera: perspectiveCameraState },
+      };
       preparedRenderer(renderOptions);
     }
     window.requestAnimationFrame(updateAndRender);
@@ -236,6 +239,6 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   canvas.addEventListener('pointermove', moveHandler);
   canvas.addEventListener('pointerdown', downHandler);
   canvas.addEventListener('pointerup', upHandler);
-  canvas.addEventListener('wheel', wheelHandler, {passive: true});
+  canvas.addEventListener('wheel', wheelHandler, { passive: true });
   canvas.addEventListener('dblclick', doubleClickHandler);
 }
