@@ -660,7 +660,7 @@ export const cube: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const sphere: Shape = shapeSetOrigin(
-  new Shape(() => primitives.sphere({ radius: 0.5, segments: 128 }))
+  new Shape(() => primitives.sphere({ radius: 0.5 }))
 );
 
 /**
@@ -670,7 +670,7 @@ export const sphere: Shape = shapeSetOrigin(
  */
 export const cylinder: Shape = shapeSetOrigin(
   new Shape(() =>
-    primitives.cylinder({ radius: 0.5, height: 1, segments: 128 })
+    primitives.cylinder({ radius: 0.5, height: 1 })
   )
 );
 
@@ -688,7 +688,7 @@ export const prism: Shape = shapeSetOrigin(
  *
  * @category Primitive
  */
-export const extrudedStar: Shape = shapeSetOrigin(
+export const star: Shape = shapeSetOrigin(
   new Shape(() =>
     extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))
   )
@@ -701,7 +701,7 @@ const small = 10 ** -30;
  *
  * @category Primitive
  */
-export const squarePyramid: Shape = shapeSetOrigin(
+export const pyramid: Shape = shapeSetOrigin(
   new Shape(() =>
     primitives.cylinderElliptic({
       height: 1,
