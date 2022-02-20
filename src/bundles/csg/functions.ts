@@ -174,7 +174,7 @@ export function generate_shape(geom: Geom3): Shape {
  * @returns {Shape} The resulting unioned shape
  */
 export function union(a: Shape, b: Shape): Shape {
-  const newShape = _union(a.getSolid(), b.getSolid());
+  const newShape: Geom3 = _union(a.getSolid(), b.getSolid());
   return generate_shape(newShape);
 }
 
@@ -186,7 +186,7 @@ export function union(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting subtracted shape
  */
 export function subtract(a: Shape, b: Shape): Shape {
-  const newShape = _subtract(a.getSolid(), b.getSolid());
+  const newShape: Geom3 = _subtract(a.getSolid(), b.getSolid());
   return generate_shape(newShape);
 }
 
@@ -198,7 +198,7 @@ export function subtract(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting intersection shape
  */
 export function intersect(a: Shape, b: Shape): Shape {
-  const newShape = _intersect(a.getSolid(), b.getSolid());
+  const newShape: Geom3 = _intersect(a.getSolid(), b.getSolid());
   return generate_shape(newShape);
 }
 
@@ -211,7 +211,7 @@ export function intersect(a: Shape, b: Shape): Shape {
  */
 export function colorize(shape: Shape, color: RGB): Shape {
   try {
-    const newShape = _colorize(color, shape.getSolid());
+    const newShape: Geom3 = _colorize(color, shape.getSolid());
     return generate_shape(newShape);
   } catch {
     throw Error(`colorize expects a shape color`);
@@ -245,7 +245,7 @@ export function colorize_rgb(
   if (b > 1.0 || b < 0) {
     throw Error(`colorize_rgb expects blue value to be between 0 and 1.0`);
   }
-  const newShape = _colorize([r, g, b], shape.getSolid());
+  const newShape: Geom3 = _colorize([r, g, b], shape.getSolid());
   return generate_shape(newShape);
 }
 
@@ -261,7 +261,7 @@ export function colorize_rgb(
  */
 export function colorize_hex(shape: Shape, hex: string): Shape {
   if (hex.replace('#', '').length === 6) {
-    const newShape = _colorize(hexToRgb(hex), shape.getSolid());
+    const newShape: Geom3 = _colorize(hexToRgb(hex), shape.getSolid());
     return generate_shape(newShape);
   }
   throw Error(
@@ -282,7 +282,7 @@ export function colorize_hex(shape: Shape, hex: string): Shape {
  * @returns {Shape} Resulting Shape
  */
 export function scale(shape: Shape, x: number, y: number, z: number): Shape {
-  const newShape = _scale([x, y, z], shape.getSolid());
+  const newShape: Geom3 = _scale([x, y, z], shape.getSolid());
   return generate_shape(newShape);
 }
 
@@ -359,7 +359,7 @@ export function shape_set_center(
   y: number,
   z: number
 ): Shape {
-  const newShape = center({ relativeTo: [x, y, z] }, shape.getSolid());
+  const newShape: Geom3 = center({ relativeTo: [x, y, z] }, shape.getSolid());
   return generate_shape(newShape);
 }
 
@@ -394,7 +394,7 @@ export function volume(shape: Shape): number {
  * @returns {Shape} The mirrored / flipped shape
  */
 export function shape_mirror(shape: Shape, x: number, y: number, z: number) {
-  const newShape = mirror({ normal: [x, y, z] }, shape.getSolid());
+  const newShape: Geom3 = mirror({ normal: [x, y, z] }, shape.getSolid());
   return generate_shape(newShape);
 }
 
@@ -444,7 +444,7 @@ export function translate(
   y: number,
   z: number
 ): Shape {
-  const newShape = _translate([x, y, z], shape.getSolid());
+  const newShape: Geom3 = _translate([x, y, z], shape.getSolid());
   return generate_shape(newShape);
 }
 
@@ -496,7 +496,7 @@ export function stack(a: Shape, b: Shape): Shape {
   const newX = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
   const newY = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   const newZ = aBounds[1][2];
-  const newShape = _union(
+  const newShape: Geom3 = _union(
     a.getSolid(), // @ts-ignore
     align({ relativeTo: [newX, newY, newZ] }, b.getSolid())
   );
@@ -515,7 +515,7 @@ export function stack(a: Shape, b: Shape): Shape {
  * @returns {Shape} The rotated shape
  */
 export function rotate(shape: Shape, x: number, y: number, z: number): Shape {
-  const newShape = _rotate([x, y, z], shape.getSolid());
+  const newShape: Geom3 = _rotate([x, y, z], shape.getSolid());
   return generate_shape(newShape);
 }
 
@@ -562,7 +562,7 @@ export function rotate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  const newShape = align({}, shape.getSolid());
+  const newShape: Geom3 = align({}, shape.getSolid());
   return generate_shape(newShape);
 }
 
