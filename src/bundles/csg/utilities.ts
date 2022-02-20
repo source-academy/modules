@@ -16,6 +16,7 @@ import {
 } from './types';
 
 /* [Exports] */
+
 // [Proper typing for JS in regl-renderer]
 export const prepareRender: PrepareRender.Function = _prepareRender;
 
@@ -47,7 +48,10 @@ export class Shape {
   }
 }
 
-// [Custom]
+export class CameraViewportDimensions {
+  public constructor(public width: number, public height: number) {}
+}
+
 export function looseInstanceOf(object: Object, c: any): boolean {
   const objectName: string | undefined = object?.constructor?.name;
   const className: string | undefined = c?.name;

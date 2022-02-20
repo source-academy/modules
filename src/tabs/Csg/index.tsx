@@ -54,21 +54,34 @@ class CsgCanvas extends React.Component<Props, State> {
     return (
       <div
         style={{
-          width: '100%',
+          // Centre canvas when sidebar is wider than it
           display: 'flex',
-          paddingLeft: '20px',
-          paddingRight: '20px',
-          flexDirection: 'column',
           justifyContent: 'center',
         }}
       >
         <canvas
-          id='csgCanvas'
-          ref={(r) => {
-            this.canvas = r;
+          ref={(canvas: HTMLCanvasElement | null) => {
+            this.canvas = canvas;
           }}
-          width={512}
-          height={512}
+          style={{
+            // Expand to take as much space as possible,
+            // else will have no height
+            width: '100%',
+
+            // Flex has auto min width
+            // This makes a narrow sidebar shrink it rather than overflow
+            minWidth: '0px',
+
+            // Prevent canvas from becoming too large & require lots of
+            // scrolling in wide sidebar
+            maxWidth: '50vw',
+
+            // Force square ratio,
+            // else will have no height
+            aspectRatio: '1',
+          }}
+          width={0}
+          height={0}
         />
       </div>
     );
