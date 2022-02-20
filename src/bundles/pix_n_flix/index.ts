@@ -11,10 +11,9 @@ import {
   install_filter,
   reset_filter,
   compose_filter,
-  snapshot,
+  pause_after,
   set_dimensions,
   set_fps,
-  stop_video_after,
 } from './functions';
 
 /**
@@ -36,8 +35,7 @@ export default () => ({
   install_filter,
   reset_filter,
   compose_filter,
-  snapshot,
+  pause_after,
   set_dimensions,
   set_fps,
-  stop_video_after,
 });
