@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, jsx-a11y/media-has-caption */
 import React from 'react';
-import { AudioPlayed } from '../../bundles/sound/types';
+import { AudioPlayed, SoundsModuleState } from '../../bundles/sound/types';
+import { DebuggerContext } from '../../type_helpers';
 // import sounds from '../../bundles/sounds';
 
 /**
@@ -12,10 +13,10 @@ import { AudioPlayed } from '../../bundles/sound/types';
 /**
  * React Component props for the Tab.
  */
-type Props = {
+type SoundsTabProps = {
   children?: never;
   className?: never;
-  context?: any;
+  debuggerContext: DebuggerContext;
 };
 
 /**
@@ -26,10 +27,10 @@ type State = {};
 /**
  * The main React Component of the Tab.
  */
-class Sounds extends React.Component<Props, State> {
+class Sounds extends React.Component<SoundsTabProps, State> {
   private $audio: HTMLAudioElement | null = null;
 
-  constructor(props) {
+  constructor(props: SoundsTabProps | Readonly<SoundsTabProps>) {
     super(props);
     this.state = {};
   }
@@ -37,7 +38,17 @@ class Sounds extends React.Component<Props, State> {
   public componentDidMount() {
     if (this.$audio) {
       // eslint-disable-next-line react/destructuring-assignment
-      this.props.context.result.value.init(this.$audio);
+      const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
+        'sound'
+      );
+      if (moduleContext == null) {
+        return;
+      }
+
+      const audioToPlay = (moduleContext.state as SoundsModuleState)
+        .audioPlayed[0];
+
+      audioToPlay.init(this.$audio);
     }
   }
 
@@ -71,22 +82,25 @@ export default {
    * rendered. Currently spawns when the result in the REPL is "test".
    * @returns {boolean}
    */
-  toSpawn: (context: any) => {
-    function valid(value: any): value is AudioPlayed {
-      try {
-        return value instanceof Object && value.init instanceof Function;
-      } catch (e) {
-        return false;
-      }
+  toSpawn: (context: DebuggerContext) => {
+    const moduleContext = context.context?.moduleContexts.get('sound');
+    if (moduleContext == null) {
+      return false;
     }
-    return valid(context.result.value);
+
+    const moduleState = moduleContext.state as SoundsModuleState;
+    if (moduleState == null) {
+      return false;
+    }
+
+    return moduleState.audioPlayed.length > 0;
   },
   /**
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <Sounds context={context} />,
+  body: (context: DebuggerContext) => <Sounds debuggerContext={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
