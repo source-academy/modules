@@ -1,6 +1,7 @@
 import { Button, Icon, Slider } from '@blueprintjs/core';
 import React from 'react';
-import { CurveModuleState, ShapeDrawn } from '../../bundles/curve/types';
+import { CurveModuleState } from '../../bundles/curve/types';
+import { DebuggerContext } from '../../type_helpers';
 
 /**
  * Currently used for rendering HTML canvas element for curves.
@@ -10,10 +11,10 @@ import { CurveModuleState, ShapeDrawn } from '../../bundles/curve/types';
  * @author Ng Yong Xiang
  */
 
-type Props = {
+type CurvesTabProps = {
   children?: never;
   className?: never;
-  context?: any;
+  context: DebuggerContext;
 };
 
 type CurvesTabState = {
@@ -37,10 +38,10 @@ type CurvesTabState = {
 };
 
 /* eslint-disable react/destructuring-assignment */
-class WebGLCanvas extends React.Component<Props, CurvesTabState> {
+class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
   private $canvas: HTMLCanvasElement | null = null;
 
-  constructor(props) {
+  constructor(props: CurvesTabProps | Readonly<CurvesTabProps>) {
     super(props);
     this.state = {
       rotationAngle: 0,
@@ -55,9 +56,15 @@ class WebGLCanvas extends React.Component<Props, CurvesTabState> {
    */
   public componentDidMount() {
     if (this.$canvas) {
-      const curveToDraw: ShapeDrawn = this.props.context.context.modules.get(
+      const moduleContext = this.props.context.context.moduleContexts.get(
         'curve'
-      ).state.drawnCurves[0];
+      );
+      if (moduleContext == null) {
+        return;
+      }
+
+      const curveToDraw = (moduleContext.state as CurveModuleState)
+        .drawnCurves[0];
 
       if (curveToDraw.init(this.$canvas)) {
         this.setState(
@@ -197,24 +204,20 @@ class WebGLCanvas extends React.Component<Props, CurvesTabState> {
 }
 
 export default {
-  toSpawn: (context: any) => {
-    const moduleContext = context.context?.modules?.get('curve');
+  toSpawn: (context: DebuggerContext) => {
+    const moduleContext = context.context?.moduleContexts.get('curve');
     if (moduleContext == null) {
-      // eslint-disable-next-line no-alert
-      alert('moduleContext was null (curves tab)');
       return false;
     }
 
-    const moduleState: CurveModuleState = moduleContext.state;
+    const moduleState = moduleContext.state as CurveModuleState;
     if (moduleState == null) {
-      // eslint-disable-next-line no-alert
-      alert('moduleState was null (curves tab)');
       return false;
     }
 
     return moduleState.drawnCurves.length > 0;
   },
-  body: (context: any) => <WebGLCanvas context={context} />,
+  body: (context: DebuggerContext) => <WebGLCanvas context={context} />,
   label: 'Curve Canvas',
   iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options
 };

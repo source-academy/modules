@@ -1,4 +1,5 @@
-import { Context } from 'js-slang';
+import { ModuleContext } from 'js-slang';
+import { drawnCurves } from './curves_webgl';
 import {
   make_point,
   make_3D_point,
@@ -36,7 +37,6 @@ import {
   invert,
 } from './functions';
 import { CurveModuleState } from './types';
-import { drawnCurves } from './curves_webgl';
 
 /**
  * Bundle for Source Academy Curves module
@@ -44,37 +44,28 @@ import { drawnCurves } from './curves_webgl';
  * @author Ng Yong Xiang
  */
 
-export default function curves(context: Context) {
-  if (context == null) {
-    // eslint-disable-next-line no-alert
-    alert('Context is null on first evaluation for some reason');
-  }
+export default function curves(
+  params: any,
+  context: Map<string, ModuleContext>
+) {
+  // Update the module's global context
+  let moduleContext = context.get('curve');
 
-  if (context.modules != null) {
-    let moduleContext = context.modules.get('curve');
-
-    if (moduleContext == null) {
-      // If module context is null, create the context
-      moduleContext = {
-        tabs: [],
-        state: {
-          drawnCurves,
-        },
-      };
-
-      // Then update the context
-      context.modules.set('curve', moduleContext);
-    }
-
-    if (moduleContext.state == null) {
-      // If the module's state object is null, create it
-      moduleContext.state = {
+  if (moduleContext == null) {
+    moduleContext = {
+      tabs: [],
+      state: {
         drawnCurves,
-      };
-    } else {
-      // Otherwise update the drawnCurves array
-      (moduleContext.state as CurveModuleState).drawnCurves = drawnCurves;
-    }
+      },
+    };
+
+    context.set('curve', moduleContext);
+  } else if (moduleContext.state == null) {
+    moduleContext.state = {
+      drawnCurves,
+    };
+  } else {
+    (moduleContext.state as CurveModuleState).drawnCurves = drawnCurves;
   }
 
   return {

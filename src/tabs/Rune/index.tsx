@@ -4,7 +4,8 @@ import {
   drawHollusion,
   drawRune,
 } from '../../bundles/rune/runes_webgl';
-import { Rune } from '../../bundles/rune/types';
+import { RunesModuleState } from '../../bundles/rune/types';
+import { DebuggerContext } from '../../type_helpers';
 
 /**
  * tab for displaying runes
@@ -15,10 +16,10 @@ import { Rune } from '../../bundles/rune/types';
  * React Component props for the Tab.
  * Provided by the template, nothing was changed.
  */
-type Props = {
+type RunesTabProps = {
   children?: never;
   className?: never;
-  context?: any;
+  debuggerContext: DebuggerContext;
 };
 
 /**
@@ -29,10 +30,11 @@ type State = {};
 /**
  * The main React Component of the Tab.
  */
-class WebGLCanvas extends React.Component<Props, State> {
+/* eslint-disable react/destructuring-assignment */
+class WebGLCanvas extends React.Component<RunesTabProps, State> {
   private $canvas: HTMLCanvasElement | null = null;
 
-  constructor(props) {
+  constructor(props: RunesTabProps | Readonly<RunesTabProps>) {
     super(props);
     this.state = {};
   }
@@ -43,19 +45,24 @@ class WebGLCanvas extends React.Component<Props, State> {
    */
   public componentDidMount() {
     if (this.$canvas) {
-      const {
-        context: {
-          result: { value },
-        },
-      } = this.props;
-      if (value.drawMethod === 'anaglyph') {
-        drawAnaglyph(this.$canvas, value);
-      } else if (value.drawMethod === 'hollusion') {
-        drawHollusion(this.$canvas, value);
-      } else if (value.drawMethod === 'normal') {
-        drawRune(this.$canvas, value);
+      const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
+        'rune'
+      );
+      if (moduleContext == null) {
+        return;
+      }
+
+      const runeToDraw = (moduleContext.state as RunesModuleState)
+        .drawnRunes[0];
+
+      if (runeToDraw.drawMethod === 'anaglyph') {
+        drawAnaglyph(this.$canvas, runeToDraw);
+      } else if (runeToDraw.drawMethod === 'hollusion') {
+        drawHollusion(this.$canvas, runeToDraw);
+      } else if (runeToDraw.drawMethod === 'normal') {
+        drawRune(this.$canvas, runeToDraw);
       } else {
-        throw Error(`Unexpected Drawing Method ${value.drawMethod}`);
+        throw Error(`Unexpected Drawing Method ${runeToDraw.drawMethod}`);
       }
     }
   }
@@ -93,21 +100,23 @@ class WebGLCanvas extends React.Component<Props, State> {
 export default {
   /**
    * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "<RUNE>".
+   * rendered. Currently spawns when there is at least one rune to be
+   * displayed
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: any) => {
-    function isValidFunction(value: any): value is Rune {
-      try {
-        return (
-          value.toReplString() === '<RENDERING>' && value.drawMethod !== ''
-        );
-      } catch (e) {
-        return false;
-      }
+  toSpawn: (context: DebuggerContext) => {
+    const moduleContext = context.context?.moduleContexts.get('rune');
+    if (moduleContext == null) {
+      return false;
     }
-    return isValidFunction(context.result.value);
+
+    const moduleState = moduleContext.state as RunesModuleState;
+    if (moduleState == null) {
+      return false;
+    }
+
+    return moduleState.drawnRunes.length > 0;
   },
 
   /**
@@ -115,7 +124,7 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <WebGLCanvas context={context} />,
+  body: (context: DebuggerContext) => <WebGLCanvas debuggerContext={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
