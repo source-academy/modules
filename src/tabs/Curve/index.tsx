@@ -1,7 +1,19 @@
-import { Button, Icon, Slider } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-import { CurveModuleState } from '../../bundles/curve/types';
+/*
+ * Cannot import directly from react-hotkeys for some unknown reason
+ * Referring to the fix posted here: https://github.com/evanw/esbuild/issues/1455
+ */
+import {
+  configure,
+  GlobalHotKeys,
+  // eslint-disable-next-line import/extensions
+} from 'react-hotkeys/es/react-hotkeys.production.min.js';
+import { CurveModuleState, ShapeDrawn } from '../../bundles/curve/types';
 import { DebuggerContext } from '../../type_helpers';
+import CurveCanvas from './curve_canvas';
+import CurveCanvas3D from './curve_canvas3d';
 
 /**
  * Currently used for rendering HTML canvas element for curves.
@@ -18,187 +30,125 @@ type CurvesTabProps = {
 };
 
 type CurvesTabState = {
-  /**
-   * Slider component reflects this value. This value is also passed in as
-   * argument to render curves.
-   */
-  rotationAngle: number;
-  /**
-   * Set to true by default. Slider updates this value to false when interacted
-   * with. Recursive `autoRotate()` checks for this value to decide whether to
-   * stop recursion. Button checks for this value to decide whether clicking the
-   * button takes effect, for countering spam-clicking.
-   */
-  isRotating: boolean;
-  /**
-   * Set to false by default. Slider and button checks for this value to decide
-   * whether to be disabled.
-   */
-  is3D: boolean;
+  currentStep: number;
+};
+
+const visualizerKeyMap = {
+  PREVIOUS_STEP: 'left',
+  NEXT_STEP: 'right',
 };
 
 /* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
-  private $canvas: HTMLCanvasElement | null = null;
+  private curvesToDraw: ShapeDrawn[];
 
   constructor(props: CurvesTabProps | Readonly<CurvesTabProps>) {
     super(props);
+
     this.state = {
-      rotationAngle: 0,
-      isRotating: true,
-      is3D: false,
+      currentStep: 0,
     };
+
+    const moduleContext = props.context.context.moduleContexts.get('curve');
+    if (moduleContext == null) {
+      this.curvesToDraw = [];
+    } else {
+      this.curvesToDraw = (moduleContext.state as CurveModuleState).drawnCurves;
+    }
   }
 
-  /**
-   * This function decides whether the rendered curve is in 3D and setState
-   * accordingly.
-   */
   public componentDidMount() {
-    if (this.$canvas) {
-      const moduleContext = this.props.context.context.moduleContexts.get(
-        'curve'
-      );
-      if (moduleContext == null) {
-        return;
-      }
-
-      const curveToDraw = (moduleContext.state as CurveModuleState)
-        .drawnCurves[0];
-
-      if (curveToDraw.init(this.$canvas)) {
-        this.setState(
-          (prevState) => ({
-            ...prevState,
-            is3D: true,
-          }),
-          () => {
-            this.autoRotate();
-          }
-        );
-      } else {
-        this.setState(
-          (prevState) => ({
-            ...prevState,
-            is3D: false,
-          }),
-          () => {
-            curveToDraw.redraw(this.state.rotationAngle);
-          }
-        );
-      }
-    }
+    // Set up GlobalHotKeys
+    configure({
+      ignoreEventsCondition: (event) =>
+        (event.key === 'ArrowLeft' && this.firstStep()) ||
+        (event.key === 'ArrowRight' && this.finalStep()),
+      ignoreRepeatedEventsWhenKeyHeldDown: false,
+      stopEventPropagationAfterIgnoring: false,
+    });
   }
 
-  /**
-   * Event handler for slider component. Updates the canvas for any change in
-   * rotation.
-   *
-   * @param newValue new rotation angle
-   */
-  private onChangeHandler = (newValue: number) => {
-    this.setState(
-      (prevState) => ({
-        ...prevState,
-        rotationAngle: newValue,
-        isRotating: false,
-      }),
-      () => {
-        if (this.$canvas) {
-          this.props.context.result.value.redraw(newValue);
-        }
-      }
-    );
+  private firstStep = () => this.state.currentStep === 0;
+
+  private finalStep = () =>
+    this.state.currentStep === this.curvesToDraw.length - 1;
+
+  private onPrevButtonClick = () => {
+    this.setState((state) => ({ currentStep: state.currentStep - 1 }));
   };
 
-  /**
-   * Event handler for play button. Starts automated rotation by calling
-   * `autoRotate()`.
-   */
-  private onClickHandler = () => {
-    if (this.$canvas && !this.state.isRotating) {
-      this.setState(
-        (prevState) => ({
-          ...prevState,
-          isRotating: true,
-        }),
-        () => {
-          this.autoRotate();
-        }
-      );
-    }
-  };
-
-  /**
-   * Environment where `requestAnimationFrame` is called.
-   */
-  private autoRotate = () => {
-    if (this.$canvas && this.state.isRotating) {
-      this.setState(
-        (prevState) => ({
-          ...prevState,
-          rotationAngle:
-            prevState.rotationAngle >= 2 * Math.PI
-              ? 0
-              : prevState.rotationAngle + 0.005,
-        }),
-        () => {
-          this.props.context.result.value.redraw(this.state.rotationAngle);
-          window.requestAnimationFrame(this.autoRotate);
-        }
-      );
-    }
+  private onNextButtonClick = () => {
+    this.setState((state) => ({ currentStep: state.currentStep + 1 }));
   };
 
   public render() {
+    const visualizerHandlers = {
+      PREVIOUS_STEP: this.onPrevButtonClick,
+      NEXT_STEP: this.onNextButtonClick,
+    };
+
+    const curveToDraw = this.curvesToDraw[this.state.currentStep];
+
     return (
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          paddingLeft: '20px',
-          paddingRight: '20px',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
-        <canvas
-          ref={(r) => {
-            this.$canvas = r;
-          }}
-          width={500}
-          height={500}
-        />
+      <GlobalHotKeys keyMap={visualizerKeyMap} handlers={visualizerHandlers}>
+        {this.curvesToDraw.length > 1 ? (
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}
+          >
+            <Button
+              style={{
+                position: 'absolute',
+                left: 0,
+              }}
+              large
+              outlined
+              icon={IconNames.ARROW_LEFT}
+              onClick={this.onPrevButtonClick}
+              disabled={this.firstStep()}
+            >
+              Previous
+            </Button>
+            <h3 className='bp3-text-large'>
+              Call {this.state.currentStep + 1}/{this.curvesToDraw.length}
+            </h3>
+            <Button
+              style={{
+                position: 'absolute',
+                right: 0,
+              }}
+              large
+              outlined
+              icon={IconNames.ARROW_RIGHT}
+              onClick={this.onNextButtonClick}
+              disabled={this.finalStep()}
+            >
+              Next
+            </Button>
+          </div>
+        ) : null}
         <div
           style={{
+            width: '100%',
             display: 'flex',
-            padding: '10px',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            paddingLeft: '20px',
+            paddingRight: '20px',
+            flexDirection: 'column',
+            justifyContent: 'center',
           }}
         >
-          <Slider
-            value={this.state.rotationAngle}
-            stepSize={0.01}
-            labelValues={[0, 2 * Math.PI]}
-            labelRenderer={false}
-            disabled={!this.state.is3D}
-            min={0}
-            max={2 * Math.PI}
-            onChange={this.onChangeHandler}
-          />
-          <Button
-            style={{
-              marginLeft: '20px',
-            }}
-            disabled={!this.state.is3D}
-            onClick={this.onClickHandler}
-          >
-            <Icon icon='play' />
-          </Button>
+          {curveToDraw.is3D() ? (
+            <CurveCanvas3D curve={curveToDraw} />
+          ) : (
+            <CurveCanvas curve={curveToDraw} />
+          )}
         </div>
-      </div>
+      </GlobalHotKeys>
     );
   }
 }

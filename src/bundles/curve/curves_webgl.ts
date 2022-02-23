@@ -405,7 +405,7 @@ export default function generateCurve(
         curveBuffer,
         curveColorBuffer,
       };
-      return space === '3D';
+      // return space === '3D';
     },
     redraw: (angle) => {
       if (!renderingContext) {
@@ -421,6 +421,7 @@ export default function generateCurve(
         angle
       );
     },
+    is3D: () => space === '3D',
   };
 
   drawnCurves.push(drawnCurve);

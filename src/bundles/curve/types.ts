@@ -27,9 +27,12 @@ export type ShapeDrawn = {
    * A series of actions to perform as initialization of the curve on the given
    * canvas. Return a boolean indicating whether the rendering function is in 3D.
    */
-  init: (canvas: HTMLCanvasElement) => boolean;
+  init: (canvas: HTMLCanvasElement) => void;
   /** Redraws the canvas with the given rotation angle. */
   redraw: (angle: number) => void;
+
+  /** Boolean value indicating if the curve is 3D */
+  is3D: () => boolean;
 };
 export type ProgramInfo = {
   program: WebGLProgram;
