@@ -1,10 +1,12 @@
 import React from 'react';
+import { Button } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import {
   drawAnaglyph,
   drawHollusion,
   drawRune,
 } from '../../bundles/rune/runes_webgl';
-import { RunesModuleState } from '../../bundles/rune/types';
+import { RunesModuleState, Rune } from '../../bundles/rune/types';
 import { DebuggerContext } from '../../type_helpers';
 
 /**
@@ -14,7 +16,6 @@ import { DebuggerContext } from '../../type_helpers';
 
 /**
  * React Component props for the Tab.
- * Provided by the template, nothing was changed.
  */
 type RunesTabProps = {
   children?: never;
@@ -25,73 +26,127 @@ type RunesTabProps = {
 /**
  * React Component state for the Tab.
  */
-type State = {};
+type State = {
+  currentStep: number;
+};
 
 /**
  * The main React Component of the Tab.
  */
 /* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<RunesTabProps, State> {
-  private $canvas: HTMLCanvasElement | null = null;
+  private runesToDraw: Rune[];
 
   constructor(props: RunesTabProps | Readonly<RunesTabProps>) {
     super(props);
-    this.state = {};
-  }
+    this.state = {
+      currentStep: 0,
+    };
 
-  /**
-   * This function is called when the tab is created.
-   * This is the entrypoint for the tab.
-   */
-  public componentDidMount() {
-    if (this.$canvas) {
-      const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
-        'rune'
-      );
-      if (moduleContext == null) {
-        return;
-      }
-
-      const runeToDraw = (moduleContext.state as RunesModuleState)
-        .drawnRunes[0];
-
-      if (runeToDraw.drawMethod === 'anaglyph') {
-        drawAnaglyph(this.$canvas, runeToDraw);
-      } else if (runeToDraw.drawMethod === 'hollusion') {
-        drawHollusion(this.$canvas, runeToDraw);
-      } else if (runeToDraw.drawMethod === 'normal') {
-        drawRune(this.$canvas, runeToDraw);
-      } else {
-        throw Error(`Unexpected Drawing Method ${runeToDraw.drawMethod}`);
-      }
+    const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
+      'rune'
+    );
+    if (moduleContext == null) {
+      this.runesToDraw = [];
+    } else {
+      this.runesToDraw = (moduleContext.state as RunesModuleState).drawnRunes;
     }
   }
 
+  private firstStep = () => this.state.currentStep === 0;
+
+  private finalStep = () =>
+    this.state.currentStep === this.runesToDraw.length - 1;
+
+  private onPrevButtonClick = () => {
+    this.setState((state) => ({ currentStep: state.currentStep - 1 }));
+  };
+
+  private onNextButtonClick = () => {
+    this.setState((state) => ({ currentStep: state.currentStep + 1 }));
+  };
+
   /**
    * This function sets the layout of the React Component in HTML
-   * Notice the the Canvas hook in "ref" property.
    * @returns HTMLComponent
    */
   public render() {
+    const runeToDraw = this.runesToDraw[this.state.currentStep];
+
     return (
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          paddingLeft: '20px',
-          paddingRight: '20px',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
-        <canvas
-          id='runesCanvas'
-          ref={(r) => {
-            this.$canvas = r;
+      <div>
+        {this.runesToDraw.length > 1 ? (
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}
+          >
+            <Button
+              style={{
+                position: 'absolute',
+                left: 0,
+              }}
+              large
+              outlined
+              icon={IconNames.ARROW_LEFT}
+              onClick={this.onPrevButtonClick}
+              disabled={this.firstStep()}
+            >
+              Previous
+            </Button>
+            <h3 className='bp3-text-large'>
+              Call {this.state.currentStep + 1}/{this.runesToDraw.length}
+            </h3>
+            <Button
+              style={{
+                position: 'absolute',
+                right: 0,
+              }}
+              large
+              outlined
+              icon={IconNames.ARROW_RIGHT}
+              onClick={this.onNextButtonClick}
+              disabled={this.finalStep()}
+            >
+              Next
+            </Button>
+          </div>
+        ) : null}
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            paddingLeft: '20px',
+            paddingRight: '20px',
+            flexDirection: 'column',
+            justifyContent: 'center',
           }}
-          width={512}
-          height={512}
-        />
+        >
+          <canvas
+            id='runesCanvas'
+            ref={(r) => {
+              if (r) {
+                if (runeToDraw.drawMethod === 'anaglyph') {
+                  drawAnaglyph(r, runeToDraw);
+                } else if (runeToDraw.drawMethod === 'hollusion') {
+                  drawHollusion(r, runeToDraw);
+                } else if (runeToDraw.drawMethod === 'normal') {
+                  drawRune(r, runeToDraw);
+                } else {
+                  throw Error(
+                    `Unexpected Drawing Method ${runeToDraw.drawMethod}`
+                  );
+                }
+              }
+            }}
+            width={512}
+            height={512}
+          />
+        </div>
       </div>
     );
   }

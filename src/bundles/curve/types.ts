@@ -25,7 +25,7 @@ export type ShapeDrawn = {
   toReplString: () => string;
   /**
    * A series of actions to perform as initialization of the curve on the given
-   * canvas. Return a boolean indicating whether the rendering function is in 3D.
+   * canvas.
    */
   init: (canvas: HTMLCanvasElement) => void;
   /** Redraws the canvas with the given rotation angle. */

@@ -1,15 +1,6 @@
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-/*
- * Cannot import directly from react-hotkeys for some unknown reason
- * Referring to the fix posted here: https://github.com/evanw/esbuild/issues/1455
- */
-import {
-  configure,
-  GlobalHotKeys,
-  // eslint-disable-next-line import/extensions
-} from 'react-hotkeys/es/react-hotkeys.production.min.js';
 import { CurveModuleState, ShapeDrawn } from '../../bundles/curve/types';
 import { DebuggerContext } from '../../type_helpers';
 import CurveCanvas from './curve_canvas';
@@ -33,11 +24,6 @@ type CurvesTabState = {
   currentStep: number;
 };
 
-const visualizerKeyMap = {
-  PREVIOUS_STEP: 'left',
-  NEXT_STEP: 'right',
-};
-
 /* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
   private curvesToDraw: ShapeDrawn[];
@@ -57,17 +43,6 @@ class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
     }
   }
 
-  public componentDidMount() {
-    // Set up GlobalHotKeys
-    configure({
-      ignoreEventsCondition: (event) =>
-        (event.key === 'ArrowLeft' && this.firstStep()) ||
-        (event.key === 'ArrowRight' && this.finalStep()),
-      ignoreRepeatedEventsWhenKeyHeldDown: false,
-      stopEventPropagationAfterIgnoring: false,
-    });
-  }
-
   private firstStep = () => this.state.currentStep === 0;
 
   private finalStep = () =>
@@ -82,15 +57,10 @@ class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
   };
 
   public render() {
-    const visualizerHandlers = {
-      PREVIOUS_STEP: this.onPrevButtonClick,
-      NEXT_STEP: this.onNextButtonClick,
-    };
-
     const curveToDraw = this.curvesToDraw[this.state.currentStep];
 
     return (
-      <GlobalHotKeys keyMap={visualizerKeyMap} handlers={visualizerHandlers}>
+      <div>
         {this.curvesToDraw.length > 1 ? (
           <div
             style={{
@@ -148,7 +118,7 @@ class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
             <CurveCanvas curve={curveToDraw} />
           )}
         </div>
-      </GlobalHotKeys>
+      </div>
     );
   }
 }
@@ -168,6 +138,6 @@ export default {
     return moduleState.drawnCurves.length > 0;
   },
   body: (context: DebuggerContext) => <WebGLCanvas context={context} />,
-  label: 'Curve Canvas',
+  label: 'Curves Tab',
   iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options
 };
