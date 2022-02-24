@@ -11,6 +11,8 @@ import {
   pan_mod,
   // Play-related
   play,
+  play_wave,
+  play_waves,
   play_concurrently,
   stop,
   // Recording
@@ -56,6 +58,8 @@ export default function sounds() {
     pan_mod,
     // Play-related
     play,
+    play_wave,
+    play_waves,
     play_concurrently,
     stop,
     // Recording

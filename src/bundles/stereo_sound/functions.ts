@@ -275,11 +275,7 @@ export function make_stereo_sound(
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
-  return make_stereo_sound(
-    (t) => 0.5 * wave(t),
-    (t) => 0.5 * wave(t),
-    duration
-  );
+  return make_stereo_sound(wave, wave, duration);
 }
 
 /**
@@ -329,6 +325,38 @@ export function is_sound(x: any): boolean {
     typeof get_right_wave(x) === 'function' &&
     typeof get_duration(x) === 'number'
   );
+}
+
+/**
+ * Plays the given Wave using the computer’s sound device, for the duration
+ * given in seconds.
+ * The sound is only played if no other sounds are currently being played.
+ *
+ * @param wave the wave function to play, starting at 0
+ * @return the given sound
+ * @example play_wave(t => math_sin(t * 3000), 5);
+ */
+export function play_wave(wave: Wave, duration: number): AudioPlayed {
+  return play(make_sound(wave, duration));
+}
+
+/**
+ * Plays the given two Waves using the computer’s sound device, for the duration
+ * given in seconds. The first Wave is for the left channel, the second for the
+ * right channel.
+ * The sound is only played if no other sounds are currently being played.
+ *
+ * @param wave1 the wave function to play on the left channel, starting at 0
+ * @param wave2 the wave function to play on the right channel, starting at 0
+ * @return the given sound
+ * @example play_waves(t => math_sin(t * 3000), t => math_sin(t * 6000), 5);
+ */
+export function play_waves(
+  wave1: Wave,
+  wave2: Wave,
+  duration: number
+): AudioPlayed {
+  return play(make_stereo_sound(wave1, wave2, duration));
 }
 
 /**
