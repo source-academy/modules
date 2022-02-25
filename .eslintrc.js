@@ -3,6 +3,9 @@ module.exports = {
   extends: ['eslint:recommended', 'prettier', 'plugin:prettier/recommended'],
   plugins: ['prettier'],
   ignorePatterns: ['build/**/*'],
+  rules: {
+    'prettier/prettier': 1,
+  },
   overrides: [
     {
       files: ['**/*.js'],
@@ -38,8 +41,6 @@ module.exports = {
       plugins: ['react', '@typescript-eslint', 'eslint-plugin-prettier'],
       extends: ['airbnb-typescript', 'eslint-config-prettier'],
       rules: {
-        'linebreak-style': 'off',
-        'prettier/prettier': ['warn'],
         '@typescript-eslint/naming-convention': [
           'warn',
           {
@@ -60,21 +61,35 @@ module.exports = {
         // @see https://www.npmjs.com/package/eslint-import-resolver-typescript
         'import/no-unresolved': 'error',
 
-        // To allow multiple classes per file, eg a utilities file,
-        // rather than creating a bunch of files to separate responsibilities
-        'max-classes-per-file': 'off',
+        // Allow unused arguments if they start with an underscore
+        '@typescript-eslint/no-unused-vars': [
+          1,
+          {
+            argsIgnorePattern: '^_',
+            caughtErrors: 'all',
+            caughtErrorsIgnorePattern: '^_',
+          },
+        ],
 
-        // To enable exporting non-destructered variables,
+        // Allow multiple classes per file, eg a utilities file,
+        // rather than creating a bunch of files to separate responsibilities
+        'max-classes-per-file': 0,
+
+        // Enable exporting non-destructured variables,
         // so that comments can get used to generate documentation
-        'prefer-destructuring': 'off',
-        'react/destructuring-assignment': 'off',
+        'prefer-destructuring': 0,
+
+        // Avoid messy destructuring from deeply nested Props
+        'react/destructuring-assignment': 0,
+
+        // Reinstate the default of allowing properties to be reassigned,
+        // eg working with canvases
+        'no-param-reassign': [1, { props: false }],
 
         // Error → warn
-        '@typescript-eslint/no-unused-vars': 'warn',
-        '@typescript-eslint/lines-between-class-members': 'warn',
-        'prefer-template': 'warn',
-        'no-param-reassign': 'warn',
-        'class-methods-use-this': 'warn',
+        '@typescript-eslint/lines-between-class-members': 1,
+        'prefer-template': 1,
+        'class-methods-use-this': 1,
       },
       settings: {
         'import/parsers': {
