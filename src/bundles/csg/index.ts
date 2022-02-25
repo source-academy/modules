@@ -4,8 +4,8 @@ import {
   sphere,
   cylinder,
   prism,
-  extrudedStar,
-  squarePyramid,
+  star,
+  pyramid,
   // Colors
   black,
   navy,
@@ -61,8 +61,8 @@ export default () => ({
   sphere,
   cylinder,
   prism,
-  extrudedStar,
-  squarePyramid,
+  star,
+  pyramid,
   // Colors
   black,
   navy,

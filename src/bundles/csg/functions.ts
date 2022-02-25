@@ -17,6 +17,7 @@ import {
 } from '@jscad/modeling/src/operations/booleans';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { RGB } from '@jscad/modeling/src/colors/types';
+import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   align,
   center,
@@ -156,6 +157,16 @@ export const white: RGB = _white;
 // =============================================================================
 
 /**
+ * Generates a new Shape object with the given geometry.
+ *
+ * @param {Geom3} geom
+ * @returns {Shape} New shape based on input geometry
+ */
+export function generate_shape(geom: Geom3): Shape {
+  return new Shape(() => geom);
+}
+
+/**
  * Union of the two provided shapes to produce a new shape.
  *
  * @param {Shape} a - The first shape
@@ -163,7 +174,8 @@ export const white: RGB = _white;
  * @returns {Shape} The resulting unioned shape
  */
 export function union(a: Shape, b: Shape): Shape {
-  return new Shape(() => _union(a.getSolid(), b.getSolid()));
+  const newShape: Geom3 = _union(a.getSolid(), b.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -174,7 +186,8 @@ export function union(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting subtracted shape
  */
 export function subtract(a: Shape, b: Shape): Shape {
-  return new Shape(() => _subtract(a.getSolid(), b.getSolid()));
+  const newShape: Geom3 = _subtract(a.getSolid(), b.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -185,7 +198,8 @@ export function subtract(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting intersection shape
  */
 export function intersect(a: Shape, b: Shape): Shape {
-  return new Shape(() => _intersect(a.getSolid(), b.getSolid()));
+  const newShape: Geom3 = _intersect(a.getSolid(), b.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -197,7 +211,8 @@ export function intersect(a: Shape, b: Shape): Shape {
  */
 export function colorize(shape: Shape, color: RGB): Shape {
   try {
-    return new Shape(() => _colorize(color, shape.getSolid()));
+    const newShape: Geom3 = _colorize(color, shape.getSolid());
+    return generate_shape(newShape);
   } catch {
     throw Error(`colorize expects a shape color`);
   }
@@ -230,7 +245,8 @@ export function colorize_rgb(
   if (b > 1.0 || b < 0) {
     throw Error(`colorize_rgb expects blue value to be between 0 and 1.0`);
   }
-  return new Shape(() => _colorize([r, g, b], shape.getSolid()));
+  const newShape: Geom3 = _colorize([r, g, b], shape.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -245,7 +261,8 @@ export function colorize_rgb(
  */
 export function colorize_hex(shape: Shape, hex: string): Shape {
   if (hex.replace('#', '').length === 6) {
-    return new Shape(() => _colorize(hexToRgb(hex), shape.getSolid()));
+    const newShape: Geom3 = _colorize(hexToRgb(hex), shape.getSolid());
+    return generate_shape(newShape);
   }
   throw Error(
     `colorize_hex expects a hex value of the form "#000000" or "000000"`
@@ -265,7 +282,8 @@ export function colorize_hex(shape: Shape, hex: string): Shape {
  * @returns {Shape} Resulting Shape
  */
 export function scale(shape: Shape, x: number, y: number, z: number): Shape {
-  return new Shape(() => _scale([x, y, z], shape.getSolid()));
+  const newShape: Geom3 = _scale([x, y, z], shape.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -341,7 +359,8 @@ export function shape_set_center(
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => center({ relativeTo: [x, y, z] }, shape.getSolid()));
+  const newShape: Geom3 = center({ relativeTo: [x, y, z] }, shape.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -374,8 +393,9 @@ export function volume(shape: Shape): number {
  * @param {number} z - The z coordinate of the direction vector
  * @returns {Shape} The mirrored / flipped shape
  */
-function shape_mirror(shape: Shape, x: number, y: number, z: number) {
-  return new Shape(() => mirror({ normal: [x, y, z] }, shape.getSolid()));
+export function shape_mirror(shape: Shape, x: number, y: number, z: number) {
+  const newShape: Geom3 = mirror({ normal: [x, y, z] }, shape.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -424,7 +444,8 @@ export function translate(
   y: number,
   z: number
 ): Shape {
-  return new Shape(() => _translate([x, y, z], shape.getSolid()));
+  const newShape: Geom3 = _translate([x, y, z], shape.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -475,12 +496,11 @@ export function stack(a: Shape, b: Shape): Shape {
   const newX = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
   const newY = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   const newZ = aBounds[1][2];
-  return new Shape(() =>
-    _union(
-      a.getSolid(), // @ts-ignore
-      align({ relativeTo: [newX, newY, newZ] }, b.getSolid())
-    )
+  const newShape: Geom3 = _union(
+    a.getSolid(), // @ts-ignore
+    align({ relativeTo: [newX, newY, newZ] }, b.getSolid())
   );
+  return generate_shape(newShape);
 }
 
 /**
@@ -495,7 +515,8 @@ export function stack(a: Shape, b: Shape): Shape {
  * @returns {Shape} The rotated shape
  */
 export function rotate(shape: Shape, x: number, y: number, z: number): Shape {
-  return new Shape(() => _rotate([x, y, z], shape.getSolid()));
+  const newShape: Geom3 = _rotate([x, y, z], shape.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -541,7 +562,8 @@ export function rotate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  return new Shape(() => align({}, shape.getSolid()));
+  const newShape: Geom3 = align({}, shape.getSolid());
+  return generate_shape(newShape);
 }
 
 /**
@@ -568,7 +590,7 @@ export function is_shape(shape: Shape): boolean {
  * @param {boolean} grid - Whether grid needs to be rendered
  * @returns {Shape} Cloned shape
  */
-function shape_clone(shape: Shape, axis: boolean, grid: boolean): Shape {
+export function shape_clone(shape: Shape, axis: boolean, grid: boolean): Shape {
   return new Shape(
     () => geometries.geom3.clone(shape.getSolid()),
     true,
@@ -651,7 +673,7 @@ export function render_axis_grid(shape: Shape): Shape {
  * @category Primitive
  */
 export const cube: Shape = shapeSetOrigin(
-  new Shape(() => primitives.cube({ size: 1 }))
+  generate_shape(primitives.cube({ size: 1 }))
 );
 
 /**
@@ -660,7 +682,7 @@ export const cube: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const sphere: Shape = shapeSetOrigin(
-  new Shape(() => primitives.sphere({ radius: 0.5, segments: 128 }))
+  generate_shape(primitives.sphere({ radius: 0.5 }))
 );
 
 /**
@@ -669,9 +691,7 @@ export const sphere: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const cylinder: Shape = shapeSetOrigin(
-  new Shape(() =>
-    primitives.cylinder({ radius: 0.5, height: 1, segments: 128 })
-  )
+  generate_shape(primitives.cylinder({ radius: 0.5, height: 1 }))
 );
 
 /**
@@ -680,7 +700,7 @@ export const cylinder: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const prism: Shape = shapeSetOrigin(
-  new Shape(() => extrudeLinear({ height: 1 }, primitives.triangle()))
+  generate_shape(extrudeLinear({ height: 1 }, primitives.triangle()))
 );
 
 /**
@@ -688,8 +708,8 @@ export const prism: Shape = shapeSetOrigin(
  *
  * @category Primitive
  */
-export const extrudedStar: Shape = shapeSetOrigin(
-  new Shape(() =>
+export const star: Shape = shapeSetOrigin(
+  generate_shape(
     extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))
   )
 );
@@ -701,8 +721,8 @@ const small = 10 ** -30;
  *
  * @category Primitive
  */
-export const squarePyramid: Shape = shapeSetOrigin(
-  new Shape(() =>
+export const pyramid: Shape = shapeSetOrigin(
+  generate_shape(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
