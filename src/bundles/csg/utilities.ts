@@ -44,7 +44,9 @@ export class Shape {
     this.getSolid = solidCallback;
   }
 
-  public static toReplString(): string {
+  // Needs to be instance method for REPL
+  // eslint-disable-next-line class-methods-use-this
+  public toReplString(): string {
     return '<Shape>';
   }
 }
