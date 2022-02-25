@@ -1,13 +1,17 @@
 /* [Imports] */
 import {
+  ControlsState,
   Entity,
+  GeometryEntity,
   PerspectiveCameraState,
   PrepareRender,
   WrappedRenderer,
+  ZoomToFit,
 } from './types';
 import {
   AxisEntity,
   CameraViewportDimensions,
+  controlsStateDefaults,
   entitiesFromSolids,
   FrameTracker,
   MultiGridEntity,
@@ -16,6 +20,7 @@ import {
   prepareDrawCommands,
   prepareRender,
   Shape,
+  zoomToFit,
 } from './utilities';
 
 /* [Main] */
@@ -28,22 +33,13 @@ function makeWrappedRenderer(
   return prepareRender(prepareRenderOptions);
 }
 
-function adjustCameraAngle(
-  perspectiveCameraState: PerspectiveCameraState
-): void {
-  // Modify the position & view of the passed camera state,
-  // based on its existing position of the viewer (eye),
-  // target point the viewer is looking at (centre) & up axis
-  perspectiveCamera.update(perspectiveCameraState);
-}
+function addEntities(shape, geometryEntities): Entity[] {
+  const allEntities: Entity[] = [...geometryEntities];
 
-function makeEntities(shape): Entity[] {
-  const entities: Entity[] = entitiesFromSolids(undefined, shape.getSolid());
+  if (shape.addAxis) allEntities.push(new AxisEntity.Class());
+  if (shape.addMultiGrid) allEntities.push(new MultiGridEntity.Class());
 
-  if (shape.addAxis) entities.push(new AxisEntity.Class());
-  if (shape.addMultiGrid) entities.push(new MultiGridEntity.Class());
-
-  return entities;
+  return allEntities;
 }
 
 function doDynamicResize(
@@ -68,6 +64,34 @@ function doDynamicResize(
   );
 }
 
+function doZoomToFit(
+  controlsState: ControlsState,
+  perspectiveCameraState: PerspectiveCameraState,
+  geometryEntities: GeometryEntity[]
+) {
+  const options: ZoomToFit.Options = {
+    controls: controlsState,
+    camera: perspectiveCameraState,
+    entities: geometryEntities,
+  };
+  const output: ZoomToFit.Output = zoomToFit(options);
+  console.log(output);
+
+  // TODO
+  // orbitControlsState = { ...orbitControlsState, ...updated.controls };
+  // perspectiveCameraState = { ...perspectiveCameraState, ...updated.camera };
+  // updateView = true;
+}
+
+function adjustCameraAngle(
+  perspectiveCameraState: PerspectiveCameraState
+): void {
+  // Modify the position & view of the passed camera state,
+  // based on its existing position of the viewer (eye),
+  // target point the viewer is looking at (centre) & up axis
+  perspectiveCamera.update(perspectiveCameraState);
+}
+
 /* [Exports] */
 export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
   const wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
@@ -75,21 +99,39 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
   // Create our own state to modify based on the defaults
   const perspectiveCameraState: PerspectiveCameraState = {
     ...perspectiveCameraStateDefaults,
-    position: [1.414811372756958, 1.7292139530181885, 2.200817823410034],
+    // position: [1.414811372756958, 1.7292139530181885, 2.200817823410034],
   };
-  adjustCameraAngle(perspectiveCameraState);
+  // adjustCameraAngle(perspectiveCameraState);
+  const controlsState: ControlsState = {
+    ...controlsStateDefaults,
+    //TODO Meaning behind zoom tightness 1.5
+  };
+
+  const geometryEntities: GeometryEntity[] = entitiesFromSolids(
+    undefined,
+    shape.getSolid()
+  );
 
   // Data to pass to the wrapped renderer we made, below
   const wrappedRendererData: WrappedRenderer.AllData = {
-    entities: makeEntities(shape),
+    entities: addEntities(shape, geometryEntities),
     drawCommands: prepareDrawCommands,
     camera: perspectiveCameraState,
   };
+
+  // Custom object to track processing
+  const frameTracker: FrameTracker = new FrameTracker();
 
   // Create a callback function.
   // Request animation frame with it once; it will loop itself from there
   function animationCallback(_timestamp: DOMHighResTimeStamp) {
     doDynamicResize(canvas, perspectiveCameraState);
+
+    if (frameTracker.zoomToFit) {
+      frameTracker.zoomToFit = false;
+
+      doZoomToFit(controlsState, perspectiveCameraState, geometryEntities);
+    }
 
     // Trigger render once processing for the current frame is done
     wrappedRenderer(wrappedRendererData);

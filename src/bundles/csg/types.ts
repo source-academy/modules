@@ -1,7 +1,11 @@
 /* [Imports] */
 import { RGBA } from '@jscad/modeling/src/colors';
 import { Geometry as Solid } from '@jscad/modeling/src/geometries/types';
-import { cameras, controls, drawCommands } from '@jscad/regl-renderer';
+import {
+  cameras,
+  controls as _controls,
+  drawCommands,
+} from '@jscad/regl-renderer';
 import * as orbitTypes from '@jscad/regl-renderer/types/controls/orbitControls';
 import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 import * as renderDefaults from '@jscad/regl-renderer/types/rendering/renderDefaults';
@@ -10,6 +14,8 @@ import { InitializationOptions } from 'regl';
 /* [Main] */
 const orthographicCamera = cameras.orthographic;
 const perspectiveCamera = cameras.perspective;
+
+const controls = _controls.orbit;
 
 /* [Exports] */
 
@@ -25,12 +31,12 @@ export namespace PrepareRender {
   };
 }
 
-export type OrthographicCamera = typeof orthographicCamera;
-export type PerspectiveCamera = typeof perspectiveCamera;
-
 export type CameraState = OrthographicCameraState | PerspectiveCameraState;
 export type OrthographicCameraState = typeof orthographicCamera.cameraState;
 export type PerspectiveCameraState = typeof perspectiveCamera.cameraState;
+
+export type OrthographicCamera = typeof orthographicCamera;
+export type PerspectiveCamera = typeof perspectiveCamera;
 
 // When called, the WrappedRenderer creates a main DrawCommand.
 // This main DrawCommand then gets called as a scoped command,
@@ -123,8 +129,9 @@ export type Entity = {
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 export type GeometryEntity = Entity & {
-  // For drawCmd, "2d" Geometry#type uses "drawLines", else "drawMesh"
   visuals: {
+    drawCmd: 'drawLines' | 'drawMesh';
+
     // Whether the Geometry is transparent.
     // Transparents need to be rendered before non-transparents
     transparent: boolean;
@@ -142,6 +149,8 @@ export type GeometryEntity = Entity & {
 // @jscad\regl-renderer\demo-web.js
 export type GridEntity = Entity & {
   visuals: {
+    drawCmd: 'drawGrid';
+
     color?: RGBA;
     fadeOut?: boolean;
   };
@@ -155,11 +164,19 @@ export type GridEntity = Entity & {
 
 // @jscad\regl-renderer\src\rendering\commands\drawLines\index.js
 export type LinesEntity = Entity & {
+  visuals: {
+    drawCmd: 'drawLines';
+  };
+
   color?: RGBA;
 };
 
 // @jscad\regl-renderer\src\rendering\commands\drawMesh\index.js
 export type MeshEntity = Entity & {
+  visuals: {
+    drawCmd: 'drawMesh';
+  };
+
   dynamicCulling?: boolean;
   color?: RGBA;
 };
@@ -194,14 +211,26 @@ export namespace EntitiesFromSolids {
   };
 }
 
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type Controls = typeof controls;
+export type ControlsState = typeof controls.controlsState &
+  typeof controls.controlsProps;
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export namespace ZoomToFit {
+  export type Function = (options: Options) => Output;
+
+  export type Options = {
+    controls: ControlsState;
+    camera: CameraState;
+    entities: GeometryEntity[];
+  };
+
+  export type Output = ReturnType<typeof controls.zoomToFit>;
+}
+
 //
 export type BoundingBox = [Numbers3, Numbers3];
-
-const orbitControls = controls.orbit;
-const orbitControlsState = orbitControls.defaults;
-
-export type OrbitControls = typeof orbitControls;
-export type OrbitControlsState = typeof orbitControlsState;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type OrbitRotate = ReturnType<typeof orbitTypes.rotate>;
@@ -211,9 +240,6 @@ export type OrbitZoom = ReturnType<typeof orbitTypes.zoom>;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type OrbitPan = ReturnType<typeof orbitTypes.pan>;
-
-// @jscad\regl-renderer\src\controls\orbitControls.js
-export type OrbitZoomToFit = ReturnType<typeof orbitTypes.zoomToFit>;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type OrbitUpdate = ReturnType<typeof orbitTypes.update>;

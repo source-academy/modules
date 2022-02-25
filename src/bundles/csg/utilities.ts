@@ -3,6 +3,7 @@ import { cssColors, RGBA } from '@jscad/modeling/src/colors';
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
+  controls as _controls,
   drawCommands,
   entitiesFromSolids as _entitiesFromSolids,
   prepareRender as _prepareRender,
@@ -11,10 +12,13 @@ import {
   EntitiesFromSolids,
   Entity,
   GridEntity,
+  Controls,
+  ControlsState,
   PerspectiveCamera,
   PerspectiveCameraState,
   PrepareRender,
   WrappedRenderer,
+  ZoomToFit,
 } from './types';
 
 /* [Exports] */
@@ -29,11 +33,19 @@ export const perspectiveCameraStateDefaults: PerspectiveCameraState =
 export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSolids as unknown) as EntitiesFromSolids.Function;
 export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
 
+export const controls: Controls = _controls.orbit;
+export const controlsStateDefaults: ControlsState = controls.defaults;
+export const zoomToFit: ZoomToFit.Function = (controls.zoomToFit as unknown) as ZoomToFit.Function;
+
 // [Custom]
 export namespace AxisEntity {
   // @jscad\regl-renderer\src\rendering\commands\drawAxis\index.js
   // @jscad\regl-renderer\demo-web.js
   export type Type = Entity & {
+    visuals: {
+      drawCmd: 'drawAxis';
+    };
+
     xColor?: RGBA;
     yColor?: RGBA;
     zColor?: RGBA;
@@ -46,7 +58,7 @@ export namespace AxisEntity {
 
   export class Class implements Type {
     public visuals: {
-      drawCmd: 'drawAxis' | 'drawGrid' | 'drawLines' | 'drawMesh';
+      drawCmd: 'drawAxis';
       show: boolean;
     } = {
       drawCmd: 'drawAxis',
@@ -77,7 +89,7 @@ export namespace MultiGridEntity {
 
   export class Class implements Type {
     public visuals: {
-      drawCmd: 'drawAxis' | 'drawGrid' | 'drawLines' | 'drawMesh';
+      drawCmd: 'drawGrid';
       show: boolean;
       color?: RGBA;
       subColor?: RGBA;
