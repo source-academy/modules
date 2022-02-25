@@ -1,3 +1,6 @@
+let todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
+let todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
+
 module.exports = {
   root: true,
   extends: ['eslint:recommended', 'prettier', 'plugin:prettier/recommended'],
@@ -86,10 +89,14 @@ module.exports = {
         // eg working with canvases
         'no-param-reassign': [1, { props: false }],
 
+        // Account for warning comments
+        'spaced-comment': [1, 'always', { markers: todoTreeKeywordsAll }],
+
         // Error → warn
         '@typescript-eslint/lines-between-class-members': 1,
         'prefer-template': 1,
         'class-methods-use-this': 1,
+        'import/prefer-default-export': 1,
       },
       settings: {
         'import/parsers': {
