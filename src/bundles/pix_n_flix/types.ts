@@ -4,13 +4,18 @@ export type ErrorLogger = (
   error: string | string[],
   isSlangError?: boolean
 ) => void;
+export type TabsPackage = {
+  handleSwapModes: () => void;
+};
+
 export type Queue = () => void;
 export type Video = {
   toReplString: () => string;
   init: (
     video: VideoElement,
     canvas: CanvasElement,
-    errorLogger: ErrorLogger
+    errorLogger: ErrorLogger,
+    tabsPackage: TabsPackage
   ) => number[];
   deinit: () => void;
   startVideo: () => void;

@@ -25,6 +25,7 @@ import {
   Pixels,
   Filter,
   Queue,
+  TabsPackage,
 } from './types';
 
 import {
@@ -47,6 +48,7 @@ let videoElement: VideoElement;
 let canvasElement: CanvasElement;
 let canvasRenderingContext: CanvasRenderingContext2D;
 let errorLogger: ErrorLogger;
+let tabsPackage: TabsPackage;
 
 const pixels: Pixels = [];
 const temporaryPixels: Pixels = [];
@@ -61,6 +63,7 @@ let requestId: number;
 let startTime: number;
 
 let useLocalVideo: boolean;
+// let counter = 0;
 
 // =============================================================================
 // Module's Private Functions
@@ -185,6 +188,7 @@ function draw(timestamp: number): void {
   if (elapsed > 1000 / FPS) {
     drawFrame();
     startTime = timestamp;
+    // console.log(counter++);
     if (toRunLateQueue) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       lateQueue();
@@ -255,7 +259,6 @@ function loadMedia(): void {
 
 /** @hidden */
 function loadVideo(): void {
-  videoElement.crossOrigin = 'anonymous';
   videoElement.loop = true;
   toRunLateQueue = true;
   startVideo();
@@ -364,11 +367,13 @@ function lateEnqueue(funcToAdd: Queue): void {
 function init(
   video: VideoElement,
   canvas: CanvasElement,
-  _errorLogger: ErrorLogger
+  _errorLogger: ErrorLogger,
+  _tabsPackage: TabsPackage
 ): number[] {
   videoElement = video;
   canvasElement = canvas;
   errorLogger = _errorLogger;
+  tabsPackage = _tabsPackage;
   const context = canvasElement.getContext('2d');
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
@@ -578,7 +583,9 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
  */
 export function pause_after(delay: number): void {
   // prevent negative delays
-  lateEnqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
+  lateEnqueue(() =>
+    setTimeout(tabsPackage.handleSwapModes, delay >= 0 ? delay : -delay)
+  );
 }
 
 /**
