@@ -143,7 +143,7 @@ export namespace AxisEntity {
     yColor?: Rgba;
     zColor?: Rgba;
     size?: number;
-    alwaysVisible?: true;
+    alwaysVisible?: boolean;
 
     // Deprecated
     lineWidth?: number;
@@ -157,6 +157,8 @@ export namespace AxisEntity {
       drawCmd: 'drawAxis',
       show: true,
     };
+
+    public alwaysVisible: boolean = true;
   }
 }
 
