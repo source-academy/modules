@@ -49,7 +49,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function animationCallback(timestamp: DOMHighResTimeStamp) {
+  function animationCallback(_timestamp: DOMHighResTimeStamp) {
     // [Support dynamic resizing]
     const canvasBounds: DOMRect = canvas.getBoundingClientRect();
     const devicePixelRatio: number = window.devicePixelRatio;

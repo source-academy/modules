@@ -53,6 +53,9 @@ export class CameraViewportDimensions {
   public constructor(public width: number, public height: number) {}
 }
 
+// When the object's class and the class used for comparison are from different
+// contexts, they may appear identical, but are not recognised as such.
+// This check acts as a useful but unconfirmed instanceOf
 export function looseInstanceOf(object: Object, c: any): boolean {
   const objectName: string | undefined = object?.constructor?.name;
   const className: string | undefined = c?.name;
