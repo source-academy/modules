@@ -90,6 +90,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape) {
       show: shape.axis,
     },
     size: maxSize * 1.2,
+    alwaysVisible: false,
   };
 
   let renderOptions: WrappedRenderer.AllData = {
