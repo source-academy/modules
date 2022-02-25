@@ -3,10 +3,6 @@ module.exports = {
   extends: ['eslint:recommended', 'prettier', 'plugin:prettier/recommended'],
   plugins: ['prettier'],
   ignorePatterns: ['build/**/*'],
-  rules: {
-    'linebreak-style': 'off',
-    'prettier/prettier': ['warn'],
-  },
   overrides: [
     {
       files: ['**/*.js'],
@@ -71,6 +67,7 @@ module.exports = {
         // To enable exporting non-destructered variables,
         // so that comments can get used to generate documentation
         'prefer-destructuring': 'off',
+        'react/destructuring-assignment': 'off',
 
         // Error → warn
         '@typescript-eslint/no-unused-vars': 'warn',
