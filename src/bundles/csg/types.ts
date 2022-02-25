@@ -1,4 +1,5 @@
 /* [Imports] */
+import { RGBA } from '@jscad/modeling/src/colors';
 import { Geometry as Solid } from '@jscad/modeling/src/geometries/types';
 import { cameras, controls, drawCommands } from '@jscad/regl-renderer';
 import * as orbitTypes from '@jscad/regl-renderer/types/controls/orbitControls';
@@ -6,12 +7,12 @@ import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/dra
 import * as renderDefaults from '@jscad/regl-renderer/types/rendering/renderDefaults';
 import { InitializationOptions } from 'regl';
 
+/* [Main] */
 const orthographicCamera = cameras.orthographic;
 const perspectiveCamera = cameras.perspective;
-const orthographicCameraState = orthographicCamera.cameraState;
-const perspectiveCameraState = perspectiveCamera.cameraState;
 
 /* [Exports] */
+
 // [Proper typing for JS in regl-renderer]
 export namespace PrepareRender {
   // @jscad\regl-renderer\src\rendering\render.js
@@ -26,6 +27,10 @@ export namespace PrepareRender {
 
 export type OrthographicCamera = typeof orthographicCamera;
 export type PerspectiveCamera = typeof perspectiveCamera;
+
+export type CameraState = OrthographicCameraState | PerspectiveCameraState;
+export type OrthographicCameraState = typeof orthographicCamera.cameraState;
+export type PerspectiveCameraState = typeof perspectiveCamera.cameraState;
 
 // When called, the WrappedRenderer creates a main DrawCommand.
 // This main DrawCommand then gets called as a scoped command,
@@ -61,6 +66,30 @@ export namespace WrappedRenderer {
     // Messy & needs tidying in regl-renderer
     camera: CameraState;
   };
+
+  // @jscad\regl-renderer\src\rendering\renderDefaults.js
+  export type RenderOptions = typeof renderDefaults & {
+    // Custom value used early on in render.js.
+    // Clears the canvas to this background colour
+    background?: RGBA;
+
+    // Default value used directly in V2's entitiesFromSolids.js as the default Geometry colour.
+    // Default value also used directly in various rendering commands as their shader uniforms' default colour.
+    // Custom value appears unused
+    meshColor?: RGBA;
+
+    // Custom value used in various rendering commands as shader uniforms
+    lightColor?: RGBA;
+    lightDirection?: VectorXYZ;
+    ambientLightAmount?: number;
+    diffuseLightAmount?: number;
+    specularLightAmount?: number;
+    materialShininess?: number; // As uMaterialShininess in main DrawCommand
+
+    // Unused
+    lightPosition?: CoordinatesXYZ; // See also lightDirection
+  };
+
   // There are 4 rendering commands to use in regl-renderer:
   // drawAxis, drawGrid, drawLines & drawMesh.
   // drawExps appears abandoned.
@@ -69,34 +98,8 @@ export namespace WrappedRenderer {
   export type PrepareDrawCommandFunction =
     | typeof drawCommands
     | typeof makeDrawMultiGrid;
-
-  // @jscad\regl-renderer\src\rendering\renderDefaults.js
-  export type RenderOptions = typeof renderDefaults & {
-    // Custom value used early on in render.js.
-    // Clears the canvas to this background colour
-    background?: Rgba;
-
-    // Default value used directly in V2's entitiesFromSolids.js as the default Geometry colour.
-    // Default value also used directly in various rendering commands as their shader uniforms' default colour.
-    // Custom value appears unused
-    meshColor?: Rgba;
-
-    // Custom value used in various rendering commands as shader uniforms
-    lightColor?: Rgba;
-    lightDirection?: VectorXYZ;
-    ambientLightAmount?: number;
-    diffuseLightAmount?: number;
-    specularLightAmount?: number;
-    materialShininess?: number; // as uMaterialShininess in main DrawCommand
-
-    // Unused
-    lightPosition?: CoordinatesXYZ; // see also lightDirection
-  };
 }
-export type CameraState = OrthographicCameraState | PerspectiveCameraState;
-export type OrthographicCameraState = typeof orthographicCameraState;
-export type PerspectiveCameraState = typeof perspectiveCameraState;
-export type Rgba = [number, number, number, number];
+
 export type VectorXYZ = Numbers3;
 export type CoordinatesXYZ = Numbers3;
 type Numbers3 = [number, number, number];
@@ -135,38 +138,11 @@ export type GeometryEntity = Entity & {
   geometry: Geometry;
 };
 
-export namespace AxisEntity {
-  // @jscad\regl-renderer\src\rendering\commands\drawAxis\index.js
-  // @jscad\regl-renderer\demo-web.js
-  export type Type = Entity & {
-    xColor?: Rgba;
-    yColor?: Rgba;
-    zColor?: Rgba;
-    size?: number;
-    alwaysVisible?: boolean;
-
-    // Deprecated
-    lineWidth?: number;
-  };
-
-  export class Class implements Type {
-    public visuals: {
-      drawCmd: 'drawAxis' | 'drawGrid' | 'drawLines' | 'drawMesh';
-      show: boolean;
-    } = {
-      drawCmd: 'drawAxis',
-      show: true,
-    };
-
-    public alwaysVisible: boolean = true;
-  }
-}
-
 // @jscad\regl-renderer\src\rendering\commands\drawGrid\index.js
 // @jscad\regl-renderer\demo-web.js
 export type GridEntity = Entity & {
   visuals: {
-    color?: Rgba;
+    color?: RGBA;
     fadeOut?: boolean;
   };
   size?: [number, number];
@@ -177,52 +153,15 @@ export type GridEntity = Entity & {
   lineWidth?: number;
 };
 
-export namespace MultiGridEntity {
-  // @jscad\regl-renderer\src\rendering\commands\drawGrid\multi.js
-  // @jscad\regl-renderer\demo-web.js
-  // @jscad\web\src\ui\views\viewer.js
-  // @jscad\regl-renderer\src\index.js
-  export type Type = Omit<GridEntity, 'ticks'> & {
-    // Entity#visuals gets stuffed into the nested DrawCommand as Props.
-    // The Props get passed on wholesale by makeDrawMultiGrid()'s returned lambda,
-    // where the following properties then get used
-    // (rather than while setting up the DrawCommands)
-    visuals: {
-      subColor?: Rgba; // as color
-    };
-
-    // First number used on the main grid, second number on sub grid
-    ticks?: [number, number];
-  };
-
-  export class Class implements Type {
-    public visuals: {
-      drawCmd: 'drawAxis' | 'drawGrid' | 'drawLines' | 'drawMesh';
-      show: boolean;
-      color?: Rgba;
-      subColor?: Rgba;
-    } = {
-      drawCmd: 'drawGrid',
-      show: true,
-      color: [0, 0, 0, 1],
-      subColor: [0.5, 0.5, 0.5, 1],
-    };
-
-    public size: [number, number] = [1000, 1000];
-
-    public ticks: [number, number] = [10, 1];
-  }
-}
-
 // @jscad\regl-renderer\src\rendering\commands\drawLines\index.js
 export type LinesEntity = Entity & {
-  color?: Rgba;
+  color?: RGBA;
 };
 
 // @jscad\regl-renderer\src\rendering\commands\drawMesh\index.js
 export type MeshEntity = Entity & {
   dynamicCulling?: boolean;
-  color?: Rgba;
+  color?: RGBA;
 };
 
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.js
@@ -232,7 +171,7 @@ export type Geometry = {
   positions: CoordinatesXYZ[];
   normals: CoordinatesXYZ[];
   indices: CoordinatesXYZ[];
-  colors: Rgba[];
+  colors: RGBA[];
   transforms: Mat4;
   isTransparent: boolean;
 };
@@ -248,13 +187,14 @@ export namespace EntitiesFromSolids {
 
   export type Options = {
     // Default colour for entity rendering if the solid does not have one
-    color?: Rgba;
+    color?: RGBA;
 
     // Whether to smooth the normals of 3D solids, rendering a smooth surface
     smoothNormals?: boolean;
   };
 }
 
+//
 export type BoundingBox = [Numbers3, Numbers3];
 
 const orbitControls = controls.orbit;

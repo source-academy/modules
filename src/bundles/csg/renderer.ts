@@ -1,15 +1,16 @@
 /* [Imports] */
 import {
-  AxisEntity,
   Entity,
-  MultiGridEntity,
   PerspectiveCameraState,
   PrepareRender,
   WrappedRenderer,
 } from './types';
 import {
+  AxisEntity,
   CameraViewportDimensions,
   entitiesFromSolids,
+  FrameTracker,
+  MultiGridEntity,
   perspectiveCamera,
   perspectiveCameraStateDefaults,
   prepareDrawCommands,
@@ -22,9 +23,7 @@ function makeWrappedRenderer(
   canvas: HTMLCanvasElement
 ): WrappedRenderer.Function {
   const prepareRenderOptions: PrepareRender.AllOptions = {
-    glOptions: {
-      canvas,
-    },
+    glOptions: { canvas },
   };
   return prepareRender(prepareRenderOptions);
 }
