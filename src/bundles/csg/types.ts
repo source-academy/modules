@@ -142,7 +142,7 @@ export type AxisEntity = Entity & {
   yColor?: Rgba;
   zColor?: Rgba;
   size?: number;
-  alwaysVisible?: true;
+  alwaysVisible?: boolean;
 
   // Deprecated
   lineWidth?: number;
