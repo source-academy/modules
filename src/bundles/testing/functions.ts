@@ -36,11 +36,11 @@ export const context: TestContext = {
 
     try {
       test();
+      context.suiteResults.passed += 1;
     } catch (err: any) {
       error = handleErr(err);
     }
 
-    context.suiteResults.passed += 1;
     context.suiteResults.results.push({
       name,
       error,

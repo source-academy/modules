@@ -1,5 +1,5 @@
 import React from 'react';
-import { Results, SuiteResult } from '../../bundles/unittest/types';
+import { Results, SuiteResult } from '../../bundles/testing/types';
 
 /**
  * Tab for unit tests.
@@ -10,12 +10,12 @@ type Props = {
   result: any;
 };
 
-class UnitTests extends React.PureComponent<Props> {
+class TestSuitesTab extends React.PureComponent<Props> {
   /**
    * Converts the results of a test suite run into a table format in its own div.
    */
-  private static suiteResultToDiv(suiteResult: any) {
-    const { name, results, total, passed } = suiteResult as SuiteResult;
+  private static suiteResultToDiv(suiteResult: SuiteResult) {
+    const { name, results, total, passed } = suiteResult;
     const colfixed = {
       border: '1px solid gray',
       overflow: 'hidden',
@@ -72,7 +72,7 @@ class UnitTests extends React.PureComponent<Props> {
   public render() {
     const { result: res } = this.props;
     const block = res.results.map((suiteresult: SuiteResult) =>
-      UnitTests.suiteResultToDiv(suiteresult)
+      TestSuitesTab.suiteResultToDiv(suiteresult)
     );
 
     return (
@@ -112,12 +112,12 @@ export default {
    * @param {DebuggerContext} context
    */
   // eslint-disable-next-line react/destructuring-assignment
-  body: (context: any) => <UnitTests result={context.result.value} />,
+  body: (context: any) => <TestSuitesTab result={context.result.value} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
    */
-  label: 'Unit Tests',
+  label: 'Test suites',
 
   /**
    * BlueprintJS IconName element's name, used to render the icon which will be
