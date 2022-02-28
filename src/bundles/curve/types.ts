@@ -1,3 +1,5 @@
+import { ModuleState } from 'js-slang';
+
 /** Encapsulates 3D point with RGB values. */
 export type Point = {
   x: number;
@@ -23,11 +25,14 @@ export type ShapeDrawn = {
   toReplString: () => string;
   /**
    * A series of actions to perform as initialization of the curve on the given
-   * canvas. Return a boolean indicating whether the rendering function is in 3D.
+   * canvas.
    */
-  init: (canvas: HTMLCanvasElement) => boolean;
+  init: (canvas: HTMLCanvasElement) => void;
   /** Redraws the canvas with the given rotation angle. */
   redraw: (angle: number) => void;
+
+  /** Boolean value indicating if the curve is 3D */
+  is3D: () => boolean;
 };
 export type ProgramInfo = {
   program: WebGLProgram;
@@ -45,3 +50,11 @@ export type BufferInfo = {
   curveBuffer: WebGLBuffer | null;
   curveColorBuffer: WebGLBuffer | null;
 };
+
+export class CurveModuleState implements ModuleState {
+  constructor() {
+    this.drawnCurves = [];
+  }
+
+  public drawnCurves: ShapeDrawn[];
+}

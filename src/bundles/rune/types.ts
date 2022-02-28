@@ -1,4 +1,5 @@
 import { mat4 } from 'gl-matrix';
+import { ModuleState } from 'js-slang';
 
 /**
  * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
@@ -22,3 +23,11 @@ export type FrameBufferWithTexture = {
   framebuffer: WebGLFramebuffer;
   texture: WebGLTexture;
 };
+
+export class RunesModuleState implements ModuleState {
+  constructor() {
+    this.drawnRunes = [];
+  }
+
+  public drawnRunes: Rune[];
+}
