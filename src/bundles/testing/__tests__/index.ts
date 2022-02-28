@@ -1,5 +1,6 @@
 import * as testing from '../functions';
 import * as asserts from '../asserts';
+import { pair, list } from '../list';
 
 beforeAll(() => {
   testing.context.suiteResults = {
@@ -29,6 +30,23 @@ test('Test context fails correctly', () => {
   expect(testing.context.suiteResults.total).toEqual(1);
 });
 
-test('Assert equal works', () => {
+test('assert_equals works', () => {
+  expect(() => asserts.assert_equals(1, 1)).not.toThrow();
   expect(() => asserts.assert_equals(0, 1)).toThrow('Expected');
+});
+
+test('assert_not_equals works', () => {
+  expect(() => asserts.assert_not_equals(0, 1)).not.toThrow();
+  expect(() => asserts.assert_not_equals(1, 1)).toThrow('Expected not');
+});
+
+test('assert_greater works', () => {
+  expect(() => asserts.assert_equals(1, 1)).not.toThrow();
+  expect(() => asserts.assert_equals(1, 0)).toThrow('Expected');
+});
+
+test('assert_contains works', () => {
+  const list1 = list(1, 2, 3);
+  expect(() => asserts.assert_contains(list1, 2)).not.toThrow();
+  expect(() => asserts.assert_contains(list1, 10)).toThrow();
 });
