@@ -6,6 +6,8 @@ let canvasElement: HTMLCanvasElement;
 let renderingContext: WebGLRenderingContext | null;
 let programs: ProgramInfo;
 let buffersInfo: BufferInfo;
+
+/** @hidden */
 export const drawnCurves: ShapeDrawn[] = [];
 
 // Vertex shader program
