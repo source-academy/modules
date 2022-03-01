@@ -6493,7 +6493,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 42,
+							"line": 43,
 							"character": 18
 						}
 					],
@@ -6517,7 +6517,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 72,
+							"line": 73,
 							"character": 19
 						}
 					],
@@ -6541,37 +6541,13 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 62,
+							"line": 63,
 							"character": 19
 						}
 					],
 					"type": {
 						"type": "reference",
 						"name": "Rune"
-					},
-					"defaultValue": "..."
-				},
-				{
-					"id": 789,
-					"name": "drawnRunes",
-					"kind": 32,
-					"kindString": "Variable",
-					"flags": {
-						"isConst": true
-					},
-					"sources": [
-						{
-							"fileName": "rune/functions.ts",
-							"line": 29,
-							"character": 23
-						}
-					],
-					"type": {
-						"type": "array",
-						"elementType": {
-							"type": "reference",
-							"name": "Rune"
-						}
 					},
 					"defaultValue": "..."
 				},
@@ -6589,7 +6565,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 76,
+							"line": 77,
 							"character": 18
 						}
 					],
@@ -6613,7 +6589,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 68,
+							"line": 69,
 							"character": 17
 						}
 					],
@@ -6637,7 +6613,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 80,
+							"line": 81,
 							"character": 22
 						}
 					],
@@ -6661,7 +6637,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 49,
+							"line": 50,
 							"character": 19
 						}
 					],
@@ -6685,7 +6661,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 85,
+							"line": 86,
 							"character": 19
 						}
 					],
@@ -6709,7 +6685,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 53,
+							"line": 54,
 							"character": 17
 						}
 					],
@@ -6733,7 +6709,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 38,
+							"line": 39,
 							"character": 19
 						}
 					],
@@ -6757,7 +6733,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 57,
+							"line": 58,
 							"character": 21
 						}
 					],
@@ -6776,7 +6752,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 608,
+							"line": 609,
 							"character": 24
 						}
 					],
@@ -6823,7 +6799,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 304,
+							"line": 305,
 							"character": 22
 						}
 					],
@@ -6884,7 +6860,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 280,
+							"line": 281,
 							"character": 27
 						}
 					],
@@ -6959,7 +6935,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 567,
+							"line": 568,
 							"character": 21
 						}
 					],
@@ -7006,7 +6982,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 517,
+							"line": 518,
 							"character": 20
 						}
 					],
@@ -7053,7 +7029,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 557,
+							"line": 558,
 							"character": 21
 						}
 					],
@@ -7100,7 +7076,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 445,
+							"line": 446,
 							"character": 21
 						}
 					],
@@ -7189,7 +7165,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 329,
+							"line": 330,
 							"character": 26
 						}
 					],
@@ -7236,7 +7212,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 317,
+							"line": 318,
 							"character": 25
 						}
 					],
@@ -7283,7 +7259,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 96,
+							"line": 97,
 							"character": 24
 						}
 					],
@@ -7330,7 +7306,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 527,
+							"line": 528,
 							"character": 21
 						}
 					],
@@ -7377,7 +7353,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 640,
+							"line": 641,
 							"character": 25
 						}
 					],
@@ -7424,7 +7400,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 624,
+							"line": 625,
 							"character": 35
 						}
 					],
@@ -7486,7 +7462,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 507,
+							"line": 508,
 							"character": 22
 						}
 					],
@@ -7533,7 +7509,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 341,
+							"line": 342,
 							"character": 26
 						}
 					],
@@ -7580,7 +7556,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 547,
+							"line": 548,
 							"character": 22
 						}
 					],
@@ -7627,7 +7603,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 424,
+							"line": 425,
 							"character": 23
 						}
 					],
@@ -7688,7 +7664,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 379,
+							"line": 380,
 							"character": 28
 						}
 					],
@@ -7763,7 +7739,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 487,
+							"line": 488,
 							"character": 20
 						}
 					],
@@ -7810,7 +7786,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 497,
+							"line": 498,
 							"character": 22
 						}
 					],
@@ -7857,7 +7833,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 253,
+							"line": 254,
 							"character": 33
 						}
 					],
@@ -7904,7 +7880,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 241,
+							"line": 242,
 							"character": 34
 						}
 					],
@@ -7951,7 +7927,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 461,
+							"line": 462,
 							"character": 28
 						}
 					],
@@ -7998,7 +7974,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 477,
+							"line": 478,
 							"character": 19
 						}
 					],
@@ -8045,7 +8021,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 357,
+							"line": 358,
 							"character": 30
 						}
 					],
@@ -8095,7 +8071,7 @@
 											"sources": [
 												{
 													"fileName": "rune/functions.ts",
-													"line": 359,
+													"line": 360,
 													"character": 10
 												}
 											],
@@ -8159,7 +8135,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 168,
+							"line": 169,
 							"character": 22
 						}
 					],
@@ -8220,7 +8196,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 136,
+							"line": 137,
 							"character": 21
 						}
 					],
@@ -8281,7 +8257,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 115,
+							"line": 116,
 							"character": 33
 						}
 					],
@@ -8356,7 +8332,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 592,
+							"line": 593,
 							"character": 20
 						}
 					],
@@ -8403,7 +8379,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 213,
+							"line": 214,
 							"character": 21
 						}
 					],
@@ -8464,7 +8440,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 189,
+							"line": 190,
 							"character": 26
 						}
 					],
@@ -8539,7 +8515,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 226,
+							"line": 227,
 							"character": 22
 						}
 					],
@@ -8600,7 +8576,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 148,
+							"line": 149,
 							"character": 25
 						}
 					],
@@ -8675,7 +8651,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 264,
+							"line": 265,
 							"character": 32
 						}
 					],
@@ -8722,7 +8698,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 577,
+							"line": 578,
 							"character": 21
 						}
 					],
@@ -8769,7 +8745,7 @@
 					"sources": [
 						{
 							"fileName": "rune/functions.ts",
-							"line": 537,
+							"line": 538,
 							"character": 22
 						}
 					],
@@ -8816,7 +8792,6 @@
 						791,
 						797,
 						795,
-						789,
 						798,
 						796,
 						799,
@@ -9081,30 +9056,6 @@
 			"originalName": "sound/functions",
 			"children": [
 				{
-					"id": 303,
-					"name": "audioPlayed",
-					"kind": 32,
-					"kindString": "Variable",
-					"flags": {
-						"isConst": true
-					},
-					"sources": [
-						{
-							"fileName": "sound/functions.ts",
-							"line": 52,
-							"character": 24
-						}
-					],
-					"type": {
-						"type": "array",
-						"elementType": {
-							"type": "reference",
-							"name": "AudioPlayed"
-						}
-					},
-					"defaultValue": "..."
-				},
-				{
 					"id": 257,
 					"name": "adsr",
 					"kind": 64,
@@ -9113,7 +9064,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 637,
+							"line": 639,
 							"character": 20
 						}
 					],
@@ -9208,7 +9159,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 835,
+							"line": 837,
 							"character": 20
 						}
 					],
@@ -9275,7 +9226,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 857,
+							"line": 859,
 							"character": 21
 						}
 					],
@@ -9342,7 +9293,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 582,
+							"line": 584,
 							"character": 29
 						}
 					],
@@ -9395,7 +9346,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 285,
+							"line": 287,
 							"character": 28
 						}
 					],
@@ -9448,7 +9399,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 274,
+							"line": 276,
 							"character": 24
 						}
 					],
@@ -9501,7 +9452,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 164,
+							"line": 166,
 							"character": 27
 						}
 					],
@@ -9532,7 +9483,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 296,
+							"line": 298,
 							"character": 24
 						}
 					],
@@ -9585,7 +9536,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 821,
+							"line": 823,
 							"character": 40
 						}
 					],
@@ -9635,7 +9586,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 750,
+							"line": 752,
 							"character": 40
 						}
 					],
@@ -9685,7 +9636,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 263,
+							"line": 265,
 							"character": 26
 						}
 					],
@@ -9752,7 +9703,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 809,
+							"line": 811,
 							"character": 38
 						}
 					],
@@ -9805,7 +9756,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 475,
+							"line": 477,
 							"character": 27
 						}
 					],
@@ -9858,7 +9809,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 725,
+							"line": 727,
 							"character": 25
 						}
 					],
@@ -9939,7 +9890,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 874,
+							"line": 876,
 							"character": 21
 						}
 					],
@@ -10006,7 +9957,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 312,
+							"line": 314,
 							"character": 20
 						}
 					],
@@ -10059,7 +10010,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 400,
+							"line": 402,
 							"character": 33
 						}
 					],
@@ -10111,7 +10062,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 187,
+							"line": 189,
 							"character": 22
 						}
 					],
@@ -10153,7 +10104,7 @@
 									"sources": [
 										{
 											"fileName": "sound/functions.ts",
-											"line": 187,
+											"line": 189,
 											"character": 39
 										}
 									],
@@ -10175,7 +10126,7 @@
 													"sources": [
 														{
 															"fileName": "sound/functions.ts",
-															"line": 187,
+															"line": 189,
 															"character": 45
 														}
 													],
@@ -10210,7 +10161,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 220,
+							"line": 222,
 							"character": 26
 						}
 					],
@@ -10266,7 +10217,7 @@
 									"sources": [
 										{
 											"fileName": "sound/functions.ts",
-											"line": 220,
+											"line": 222,
 											"character": 61
 										}
 									],
@@ -10297,7 +10248,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 556,
+							"line": 558,
 							"character": 30
 						}
 					],
@@ -10364,7 +10315,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 486,
+							"line": 488,
 							"character": 29
 						}
 					],
@@ -10417,7 +10368,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 602,
+							"line": 604,
 							"character": 30
 						}
 					],
@@ -10470,7 +10421,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 498,
+							"line": 500,
 							"character": 26
 						}
 					],
@@ -10537,7 +10488,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 510,
+							"line": 512,
 							"character": 28
 						}
 					],
@@ -10601,7 +10552,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 688,
+							"line": 690,
 							"character": 29
 						}
 					],
@@ -10696,7 +10647,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 461,
+							"line": 463,
 							"character": 20
 						}
 					],
@@ -10726,7 +10677,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 532,
+							"line": 534,
 							"character": 30
 						}
 					],
@@ -10793,7 +10744,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 891,
+							"line": 893,
 							"character": 24
 						}
 					],
@@ -10860,7 +10811,7 @@
 					"sources": [
 						{
 							"fileName": "sound/functions.ts",
-							"line": 908,
+							"line": 910,
 							"character": 22
 						}
 					],
@@ -10920,13 +10871,6 @@
 				}
 			],
 			"groups": [
-				{
-					"title": "Variables",
-					"kind": 32,
-					"children": [
-						303
-					]
-				},
 				{
 					"title": "Functions",
 					"kind": 64,
