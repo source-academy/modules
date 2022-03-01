@@ -535,9 +535,9 @@
 
     var ENTER = 13;
     var SPACE = 32;
-    var ARROW_LEFT = 37;
+    var ARROW_LEFT$1 = 37;
     var ARROW_UP = 38;
-    var ARROW_RIGHT = 39;
+    var ARROW_RIGHT$1 = 39;
     var ARROW_DOWN = 40;
     /** Returns whether the key code is `enter` or `space`, the two keys that can click a button. */
     function isKeyboardClick(keyCode) {
@@ -759,6 +759,9 @@
 
     unwrapExports(reactLifecyclesCompat_cjs);
     var reactLifecyclesCompat_cjs_1 = reactLifecyclesCompat_cjs.polyfill;
+
+    var ARROW_LEFT = "arrow-left";
+    var ARROW_RIGHT = "arrow-right";
 
     /*
      * Copyright 2017 Palantir Technologies, Inc. All rights reserved.
@@ -2288,12 +2291,12 @@
                 // HACKHACK: https://github.com/palantir/blueprint/issues/4165
                 /* eslint-disable-next-line deprecation/deprecation */
                 var which = event.which;
-                if (which === ARROW_DOWN || which === ARROW_LEFT) {
+                if (which === ARROW_DOWN || which === ARROW_LEFT$1) {
                     _this.changeValue(value - stepSize);
                     // this key event has been handled! prevent browser scroll on up/down
                     event.preventDefault();
                 }
-                else if (which === ARROW_UP || which === ARROW_RIGHT) {
+                else if (which === ARROW_UP || which === ARROW_RIGHT$1) {
                     _this.changeValue(value + stepSize);
                     event.preventDefault();
                 }
@@ -2302,7 +2305,7 @@
                 var _a, _b;
                 // HACKHACK: https://github.com/palantir/blueprint/issues/4165
                 /* eslint-disable-next-line deprecation/deprecation */
-                if ([ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT].indexOf(event.which) >= 0) {
+                if ([ARROW_UP, ARROW_DOWN, ARROW_LEFT$1, ARROW_RIGHT$1].indexOf(event.which) >= 0) {
                     (_b = (_a = _this.props).onRelease) === null || _b === void 0 ? void 0 : _b.call(_a, _this.props.value);
                 }
             };
@@ -2738,7 +2741,11 @@
         return Slider;
     }(AbstractPureComponent2));
 
-    var WebGLCanvas=function(_super){__extends(WebGLCanvas,_super);function WebGLCanvas(props){var _this=_super.call(this,props)||this;_this.$canvas=null;_this.onChangeHandler=function(newValue){_this.setState(function(prevState){return __assign(__assign({},prevState),{rotationAngle:newValue,isRotating:false})},function(){if(_this.$canvas){_this.props.context.result.value.redraw(newValue);}});};_this.onClickHandler=function(){if(_this.$canvas&&!_this.state.isRotating){_this.setState(function(prevState){return __assign(__assign({},prevState),{isRotating:true})},function(){_this.autoRotate();});}};_this.autoRotate=function(){if(_this.$canvas&&_this.state.isRotating){_this.setState(function(prevState){return __assign(__assign({},prevState),{rotationAngle:prevState.rotationAngle>=2*Math.PI?0:prevState.rotationAngle+0.005})},function(){_this.props.context.result.value.redraw(_this.state.rotationAngle);window.requestAnimationFrame(_this.autoRotate);});}};_this.state={rotationAngle:0,isRotating:true,is3D:false};return _this}WebGLCanvas.prototype.componentDidMount=function(){var _this=this;if(this.$canvas){if(this.props.context.result.value.init(this.$canvas)){this.setState(function(prevState){return __assign(__assign({},prevState),{is3D:true})},function(){_this.autoRotate();});}else {this.setState(function(prevState){return __assign(__assign({},prevState),{is3D:false})},function(){_this.props.context.result.value.redraw(_this.state.rotationAngle);});}}};WebGLCanvas.prototype.render=function(){var _this=this;return React__default['default'].createElement("div",{style:{width:"100%",display:"flex",paddingLeft:"20px",paddingRight:"20px",flexDirection:"column",justifyContent:"center"}},React__default['default'].createElement("canvas",{ref:function(r){_this.$canvas=r;},width:500,height:500}),React__default['default'].createElement("div",{style:{display:"flex",padding:"10px",flexDirection:"row",justifyContent:"space-between",alignItems:"center"}},React__default['default'].createElement(Slider,{value:this.state.rotationAngle,stepSize:0.01,labelValues:[0,2*Math.PI],labelRenderer:false,disabled:!this.state.is3D,min:0,max:2*Math.PI,onChange:this.onChangeHandler}),React__default['default'].createElement(Button,{style:{marginLeft:"20px"},disabled:!this.state.is3D,onClick:this.onClickHandler},React__default['default'].createElement(Icon,{icon:"play"}))))};return WebGLCanvas}(React__default['default'].Component);var index = {toSpawn:function(context){function isValidFunction(value){try{return value instanceof Object&&value.init instanceof Function}catch(e){return false}}return isValidFunction(context.result.value)},body:function(context){return React__default['default'].createElement(WebGLCanvas,{context:context})},label:"Curve Canvas",iconName:"media"};
+    var CurveCanvas=function(_super){__extends(CurveCanvas,_super);function CurveCanvas(){return _super!==null&&_super.apply(this,arguments)||this}CurveCanvas.prototype.render=function(){var _this=this;return React__default['default'].createElement("canvas",{ref:function(r){if(r){_this.props.curve.init(r);_this.props.curve.redraw(0);}},height:500,width:500})};return CurveCanvas}(React__default['default'].Component);
+
+    var CurveCanvas3D=function(_super){__extends(CurveCanvas3D,_super);function CurveCanvas3D(props){var _this=_super.call(this,props)||this;_this.onChangeHandler=function(newValue){_this.setState(function(prevState){return __assign(__assign({},prevState),{rotationAngle:newValue,isRotating:false})},function(){if(_this.$canvas){_this.props.curve.redraw(newValue);}});};_this.onClickHandler=function(){if(_this.$canvas&&!_this.state.isRotating){_this.setState(function(prevState){return __assign(__assign({},prevState),{isRotating:true})},function(){_this.autoRotate();});}};_this.autoRotate=function(){if(_this.$canvas&&_this.state.isRotating){_this.setState(function(prevState){return __assign(__assign({},prevState),{rotationAngle:prevState.rotationAngle>=2*Math.PI?0:prevState.rotationAngle+0.005})},function(){_this.props.curve.redraw(_this.state.rotationAngle);window.requestAnimationFrame(_this.autoRotate);});}};_this.$canvas=null;_this.state={rotationAngle:0,isRotating:false};return _this}CurveCanvas3D.prototype.componentDidMount=function(){if(this.$canvas){this.props.curve.init(this.$canvas);this.props.curve.redraw(this.state.rotationAngle);}};CurveCanvas3D.prototype.render=function(){var _this=this;return React__default['default'].createElement("div",null,React__default['default'].createElement("canvas",{ref:function(r){if(r){_this.$canvas=r;_this.props.curve.init(_this.$canvas);_this.props.curve.redraw(_this.state.rotationAngle);}},height:500,width:500}),React__default['default'].createElement("div",{style:{display:"flex",padding:"10px",flexDirection:"row",justifyContent:"space-between",alignItems:"center"}},React__default['default'].createElement(Slider,{value:this.state.rotationAngle,stepSize:0.01,labelValues:[0,2*Math.PI],labelRenderer:false,min:0,max:2*Math.PI,onChange:this.onChangeHandler}),React__default['default'].createElement(Button,{style:{marginLeft:"20px"},onClick:this.onClickHandler},React__default['default'].createElement(Icon,{icon:"play"}))))};return CurveCanvas3D}(React__default['default'].Component);
+
+    var WebGLCanvas=function(_super){__extends(WebGLCanvas,_super);function WebGLCanvas(props){var _this=_super.call(this,props)||this;_this.firstStep=function(){return _this.state.currentStep===0};_this.finalStep=function(){return _this.state.currentStep===_this.curvesToDraw.length-1};_this.onPrevButtonClick=function(){_this.setState(function(state){return {currentStep:state.currentStep-1}});};_this.onNextButtonClick=function(){_this.setState(function(state){return {currentStep:state.currentStep+1}});};_this.state={currentStep:0};var moduleContext=props.context.context.moduleContexts.get("curve");if(moduleContext==null){_this.curvesToDraw=[];}else {_this.curvesToDraw=moduleContext.state.drawnCurves;}return _this}WebGLCanvas.prototype.render=function(){var curveToDraw=this.curvesToDraw[this.state.currentStep];return React__default['default'].createElement("div",null,this.curvesToDraw.length>1?React__default['default'].createElement("div",{style:{position:"relative",display:"flex",justifyContent:"center",alignItems:"center",marginBottom:10}},React__default['default'].createElement(Button,{style:{position:"absolute",left:0},large:true,outlined:true,icon:ARROW_LEFT,onClick:this.onPrevButtonClick,disabled:this.firstStep()},"Previous"),React__default['default'].createElement("h3",{className:"bp3-text-large"},"Call ",this.state.currentStep+1,"/",this.curvesToDraw.length),React__default['default'].createElement(Button,{style:{position:"absolute",right:0},large:true,outlined:true,icon:ARROW_RIGHT,onClick:this.onNextButtonClick,disabled:this.finalStep()},"Next")):null,React__default['default'].createElement("div",{style:{width:"100%",display:"flex",paddingLeft:"20px",paddingRight:"20px",flexDirection:"column",justifyContent:"center"}},curveToDraw.is3D()?React__default['default'].createElement(CurveCanvas3D,{curve:curveToDraw}):React__default['default'].createElement(CurveCanvas,{curve:curveToDraw})))};return WebGLCanvas}(React__default['default'].Component);var index = {toSpawn:function(context){var _a;var moduleContext=(_a=context.context)===null||_a===void 0?void 0:_a.moduleContexts.get("curve");if(moduleContext==null){return false}var moduleState=moduleContext.state;if(moduleState==null){return false}return moduleState.drawnCurves.length>0},body:function(context){return React__default['default'].createElement(WebGLCanvas,{context:context})},label:"Curves Tab",iconName:"media"};
 
     return index;
 
