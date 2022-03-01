@@ -26,6 +26,7 @@ import {
   copyRune,
 } from './runes_ops';
 
+/** @hidden */
 export const drawnRunes: Rune[] = [];
 
 // =============================================================================

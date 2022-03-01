@@ -49,6 +49,8 @@ import { RIFFWAVE } from './riffwave';
 let audioElement: HTMLAudioElement;
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
+
+/** @hidden */
 export const audioPlayed: AudioPlayed[] = [];
 
 // Singular audio context for all playback functions
