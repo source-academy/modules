@@ -29,7 +29,7 @@
     "prepare": "husky install",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
-    "dev": "yarn build:modules && yarn serve"
+    "dev": "yarn build && yarn serve"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.10",
@@ -78,6 +78,7 @@
     "@jscad/modeling": "^2.7.1",
     "@jscad/regl-renderer": "^2.5.3",
     "@types/dom-mediacapture-record": "^1.0.7",
+    "js-slang": "^0.5.31",
     "chalk": "^4.1.0",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.4",

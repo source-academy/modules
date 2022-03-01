@@ -63,6 +63,7 @@ module.exports = {
         // turn on errors for missing imports
         // @see https://www.npmjs.com/package/eslint-import-resolver-typescript
         'import/no-unresolved': 'error',
+        'no-nested-ternary': 'off'
       },
       settings: {
         'import/parsers': {

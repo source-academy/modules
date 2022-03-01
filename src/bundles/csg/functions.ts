@@ -49,6 +49,7 @@ import {
   yellow as _yellow,
   white as _white,
 } from './utilities';
+import { BoundingBox, Numbers3 } from './types';
 
 // =============================================================================
 // Colors
@@ -329,19 +330,36 @@ export function scale_z(shape: Shape, z: number): Shape {
 }
 
 /**
- * Obtain the center of the given shape in the x, y and z direction.
+ * Returns a lambda function that contains the center of the given shape in the
+ * x, y and z direction. Providing 'x', 'y', 'z' as input would return x, y and
+ * z coordinates of shape's center
+ *
+ * For example
+ * ````
+ * const a = shape_center(sphere);
+ * a('x'); // Returns the x coordinate of the shape's center
+ * ````
  *
  * @param {Shape} shape - The scale to be measured
- * @returns {number[]} An array of number representing the center in the form of
- * [x, y, z]
+ * @returns {(String) => number} A lambda function providing the shape's center
+ * coordinates
  */
-export function shape_center(shape: Shape): number[] {
-  const bounds = measureBoundingBox(shape.getSolid());
-  return [
+export function shape_center(shape: Shape): (axis: String) => number {
+  const bounds: BoundingBox = measureBoundingBox(shape.getSolid());
+  const centerCoords: Numbers3 = [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
     bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
     bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
   ];
+  return (axis: String): number => {
+    const i: number =
+      axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
+    if (i === -1) {
+      throw Error(`shape_center's returned function expects a proper axis.`);
+    } else {
+      return centerCoords[i];
+    }
+  };
 }
 
 /**
@@ -492,15 +510,48 @@ export function translate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The stacked shape
  */
 export function stack(a: Shape, b: Shape): Shape {
-  const aBounds = measureBoundingBox(a.getSolid());
-  const newX = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
-  const newY = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
-  const newZ = aBounds[1][2];
+  const aBounds: BoundingBox = measureBoundingBox(a.getSolid());
+  const newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
+  const newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
+  const newZ: number = aBounds[1][2];
   const newShape: Geom3 = _union(
     a.getSolid(), // @ts-ignore
     align({ relativeTo: [newX, newY, newZ] }, b.getSolid())
   );
   return generate_shape(newShape);
+}
+
+/**
+ * Returns a lambda function that contains the coordinates of the bounding box.
+ * Provided with the axis 'x', 'y' or 'z' and value 0 for bottom and 1 for top,
+ * it returns the coordinates of the bounding box.
+ *
+ * For example
+ * ````
+ * const a = bounding_box(sphere);
+ * a('x', 1); // Returns the top x coordinate of the bounding box
+ * ````
+ *
+ * @param {Shape} shape - The scale to be measured
+ * @returns {(String, number) => number} A lambda function providing the
+ * shape's bounding box coordinates
+ */
+
+export function bounding_box(
+  shape: Shape
+): (axis: String, min: number) => number {
+  const bounds: BoundingBox = measureBoundingBox(shape.getSolid());
+  return (axis: String, min: number): number => {
+    const i: number =
+      axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
+    if (i === -1 || min < 0 || min > 1) {
+      throw Error(
+        `bounding_box returned function expects a proper axis and an integer 0 or 1.`
+      );
+    } else {
+      return bounds[min][i];
+    }
+  };
 }
 
 /**
