@@ -26,6 +26,8 @@ import {
   copyRune,
 } from './runes_ops';
 
+export const drawnRunes: Rune[] = [];
+
 // =============================================================================
 // Basic Runes
 // =============================================================================
@@ -592,6 +594,8 @@ export function show(rune: Rune): Rune {
   const normalRune = copyRune(rune);
   normalRune.drawMethod = 'normal';
   normalRune.toReplString = () => '<RENDERING>';
+  drawnRunes.push(normalRune);
+
   return normalRune;
 }
 
@@ -606,6 +610,8 @@ export function anaglyph(rune: Rune): Rune {
   const analyphRune = copyRune(rune);
   analyphRune.drawMethod = 'anaglyph';
   analyphRune.toReplString = () => '<RENDERING>';
+  drawnRunes.push(analyphRune);
+
   return analyphRune;
 }
 
@@ -621,6 +627,8 @@ export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
   hollusionRune.drawMethod = 'hollusion';
   hollusionRune.hollusionDistance = magnitude;
   hollusionRune.toReplString = () => '<RENDERING>';
+  drawnRunes.push(hollusionRune);
+
   return hollusionRune;
 }
 

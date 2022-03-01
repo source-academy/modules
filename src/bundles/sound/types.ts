@@ -1,3 +1,5 @@
+import { ModuleState } from 'js-slang';
+
 /* eslint-disable no-unused-vars */
 export type Pair<H, T> = [H, T];
 export type EmptyList = null;
@@ -16,3 +18,11 @@ export type AudioPlayed = {
   toReplString: () => string;
   init: (audio: HTMLAudioElement) => boolean;
 };
+
+export class SoundsModuleState implements ModuleState {
+  constructor() {
+    this.audioPlayed = [];
+  }
+
+  public audioPlayed: AudioPlayed[];
+}
