@@ -597,7 +597,7 @@ export function show(rune: Rune): Rune {
   normalRune.toReplString = () => '<RENDERING>';
   drawnRunes.push(normalRune);
 
-  return normalRune;
+  return rune;
 }
 
 /**
@@ -613,7 +613,7 @@ export function anaglyph(rune: Rune): Rune {
   analyphRune.toReplString = () => '<RENDERING>';
   drawnRunes.push(analyphRune);
 
-  return analyphRune;
+  return rune;
 }
 
 /**
@@ -630,7 +630,7 @@ export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
   hollusionRune.toReplString = () => '<RENDERING>';
   drawnRunes.push(hollusionRune);
 
-  return hollusionRune;
+  return rune;
 }
 
 /**
