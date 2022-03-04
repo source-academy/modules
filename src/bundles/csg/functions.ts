@@ -523,33 +523,34 @@ export function stack(a: Shape, b: Shape): Shape {
 
 /**
  * Returns a lambda function that contains the coordinates of the bounding box.
- * Provided with the axis 'x', 'y' or 'z' and value 0 for bottom and 1 for top,
- * it returns the coordinates of the bounding box.
+ * Provided with the axis 'x', 'y' or 'z' and value 'min' for minimum and 'max'
+ * for maximum, it returns the coordinates of the bounding box.
  *
  * For example
  * ````
  * const a = bounding_box(sphere);
- * a('x', 1); // Returns the top x coordinate of the bounding box
+ * a('x', 'min'); // Returns the maximum x coordinate of the bounding box
  * ````
  *
  * @param {Shape} shape - The scale to be measured
- * @returns {(String, number) => number} A lambda function providing the
+ * @returns {(String, String) => number} A lambda function providing the
  * shape's bounding box coordinates
  */
 
 export function bounding_box(
   shape: Shape
-): (axis: String, min: number) => number {
+): (axis: String, min: String) => number {
   const bounds: BoundingBox = measureBoundingBox(shape.getSolid());
-  return (axis: String, min: number): number => {
+  return (axis: String, min: String): number => {
     const i: number =
       axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
-    if (i === -1 || min < 0 || min > 1) {
+    const j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
+    if (i === -1 || j === -1) {
       throw Error(
-        `bounding_box returned function expects a proper axis and an integer 0 or 1.`
+        `bounding_box returned function expects a proper axis and min String.`
       );
     } else {
-      return bounds[min][i];
+      return bounds[j][i];
     }
   };
 }
