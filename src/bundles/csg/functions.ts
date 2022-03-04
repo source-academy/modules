@@ -163,7 +163,7 @@ export const white: RGB = _white;
  * @param {Geom3} geom
  * @returns {Shape} New shape based on input geometry
  */
-export function generate_shape(geom: Geom3): Shape {
+function generate_shape(geom: Geom3): Shape {
   return new Shape(() => geom);
 }
 
@@ -411,13 +411,13 @@ export function volume(shape: Shape): number {
  * @param {number} z - The z coordinate of the direction vector
  * @returns {Shape} The mirrored / flipped shape
  */
-export function shape_mirror(shape: Shape, x: number, y: number, z: number) {
+function shape_mirror(shape: Shape, x: number, y: number, z: number) {
   const newShape: Geom3 = mirror({ normal: [x, y, z] }, shape.getSolid());
   return generate_shape(newShape);
 }
 
 /**
- * Mirror / Flip the provided shape by the x axis.
+ * Mirror / Flip the provided shape in the x direction.
  *
  * @param {Shape} shape - The shape to mirror / flip
  * @returns {Shape} The mirrored / flipped shape
@@ -427,7 +427,7 @@ export function flip_x(shape: Shape): Shape {
 }
 
 /**
- * Mirror / Flip the provided shape by the y axis.
+ * Mirror / Flip the provided shape in the y direction.
  *
  * @param {Shape} shape - The shape to mirror / flip
  * @returns {Shape} The mirrored / flipped shape
@@ -437,7 +437,7 @@ export function flip_y(shape: Shape): Shape {
 }
 
 /**
- * Mirror / Flip the provided shape by the z axis.
+ * Mirror / Flip the provided shape in the z direction.
  *
  * @param {Shape} shape - The shape to mirror / flip
  * @returns {Shape} The mirrored / flipped shape
@@ -641,7 +641,7 @@ export function is_shape(shape: Shape): boolean {
  * @param {boolean} grid - Whether grid needs to be rendered
  * @returns {Shape} Cloned shape
  */
-export function shape_clone(shape: Shape, axis: boolean, grid: boolean): Shape {
+function shape_clone(shape: Shape, axis: boolean, grid: boolean): Shape {
   return new Shape(
     () => geometries.geom3.clone(shape.getSolid()),
     true,
