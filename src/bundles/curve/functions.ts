@@ -36,8 +36,41 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Curve, RenderFunction, CurveTransformer, Point } from './types';
-import generateCurve from './curves_webgl';
+import {
+  Curve,
+  RenderFunction,
+  CurveDrawn,
+  drawnCurves,
+  CurveTransformer,
+  Point,
+} from './curves_webgl';
+
+function createDrawFunction(
+  scaleMode: 'none' | 'stretch' | 'fit',
+  drawMode: 'lines' | 'points',
+  space: '2D' | '3D',
+  isFullView: boolean
+): (numPoints: number) => RenderFunction {
+  return (numPoints: number) => (curve) => {
+    const curveDrawn = new CurveDrawn(
+      scaleMode,
+      drawMode,
+      numPoints,
+      curve,
+      space,
+      isFullView
+    );
+
+    if (
+      (curve as any).shouldAppend === undefined ||
+      (curve as any).shouldAppend
+    ) {
+      drawnCurves.push(curveDrawn);
+    }
+
+    return curveDrawn;
+  };
+}
 
 // =============================================================================
 // Module's Exposed Functions
@@ -60,9 +93,7 @@ import generateCurve from './curves_webgl';
  * draw_connected(100)(t => make_point(t, t));
  * ```
  */
-export function draw_connected(num: number): RenderFunction {
-  return (func) => generateCurve('none', 'lines', num, func, '2D', false);
-}
+export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -78,9 +109,12 @@ export function draw_connected(num: number): RenderFunction {
  * draw_connected_full_view(100)(t => make_point(t, t));
  * ```
  */
-export function draw_connected_full_view(num: number): RenderFunction {
-  return (func) => generateCurve('stretch', 'lines', num, func, '2D', true);
-}
+export const draw_connected_full_view = createDrawFunction(
+  'stretch',
+  'lines',
+  '2D',
+  true
+);
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -96,11 +130,12 @@ export function draw_connected_full_view(num: number): RenderFunction {
  * draw_connected_full_view_proportional(100)(t => make_point(t, t));
  * ```
  */
-export function draw_connected_full_view_proportional(
-  num: number
-): RenderFunction {
-  return (func) => generateCurve('fit', 'lines', num, func, '2D', true);
-}
+export const draw_connected_full_view_proportional = createDrawFunction(
+  'fit',
+  'lines',
+  '2D',
+  true
+);
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -116,9 +151,7 @@ export function draw_connected_full_view_proportional(
  * draw_points(100)(t => make_point(t, t));
  * ```
  */
-export function draw_points(num: number): RenderFunction {
-  return (func) => generateCurve('none', 'points', num, func, '2D', false);
-}
+export const draw_points = createDrawFunction('none', 'points', '2D', false);
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -135,9 +168,12 @@ export function draw_points(num: number): RenderFunction {
  * draw_points_full_view(100)(t => make_point(t, t));
  * ```
  */
-export function draw_points_full_view(num: number): RenderFunction {
-  return (func) => generateCurve('stretch', 'points', num, func, '2D', true);
-}
+export const draw_points_full_view = createDrawFunction(
+  'stretch',
+  'points',
+  '2D',
+  true
+);
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -154,11 +190,12 @@ export function draw_points_full_view(num: number): RenderFunction {
  * draw_points_full_view_proportional(100)(t => make_point(t, t));
  * ```
  */
-export function draw_points_full_view_proportional(
-  num: number
-): RenderFunction {
-  return (func) => generateCurve('fit', 'points', num, func, '2D', true);
-}
+export const draw_points_full_view_proportional = createDrawFunction(
+  'fit',
+  'points',
+  '2D',
+  true
+);
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -174,9 +211,12 @@ export function draw_points_full_view_proportional(
  * draw_3D_connected(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export function draw_3D_connected(num: number): RenderFunction {
-  return (func) => generateCurve('none', 'lines', num, func, '3D', false);
-}
+export const draw_3D_connected = createDrawFunction(
+  'none',
+  'lines',
+  '3D',
+  false
+);
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -192,9 +232,12 @@ export function draw_3D_connected(num: number): RenderFunction {
  * draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export function draw_3D_connected_full_view(num: number): RenderFunction {
-  return (func) => generateCurve('stretch', 'lines', num, func, '3D', false);
-}
+export const draw_3D_connected_full_view = createDrawFunction(
+  'stretch',
+  'lines',
+  '3D',
+  false
+);
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -210,11 +253,12 @@ export function draw_3D_connected_full_view(num: number): RenderFunction {
  * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export function draw_3D_connected_full_view_proportional(
-  num: number
-): RenderFunction {
-  return (func) => generateCurve('fit', 'lines', num, func, '3D', false);
-}
+export const draw_3D_connected_full_view_proportional = createDrawFunction(
+  'fit',
+  'lines',
+  '3D',
+  false
+);
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -230,9 +274,7 @@ export function draw_3D_connected_full_view_proportional(
  * draw_3D_points(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export function draw_3D_points(num: number): RenderFunction {
-  return (func) => generateCurve('none', 'points', num, func, '3D', false);
-}
+export const draw_3D_points = createDrawFunction('none', 'points', '3D', false);
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -248,9 +290,12 @@ export function draw_3D_points(num: number): RenderFunction {
  * draw_3D_points_full_view(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export function draw_3D_points_full_view(num: number): RenderFunction {
-  return (func) => generateCurve('stretch', 'points', num, func, '3D', false);
-}
+export const draw_3D_points_full_view = createDrawFunction(
+  'stretch',
+  'points',
+  '3D',
+  false
+);
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -266,11 +311,12 @@ export function draw_3D_points_full_view(num: number): RenderFunction {
  * draw_3D_points_full_view_proportional(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export function draw_3D_points_full_view_proportional(
-  num: number
-): RenderFunction {
-  return (func) => generateCurve('fit', 'points', num, func, '3D', false);
-}
+export const draw_3D_points_full_view_proportional = createDrawFunction(
+  'fit',
+  'points',
+  '3D',
+  false
+);
 
 /**
  * Makes a Point with given x and y coordinates.
