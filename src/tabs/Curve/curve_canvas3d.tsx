@@ -111,11 +111,12 @@ export default class CurveCanvas3D extends React.Component<
       <div>
         <canvas
           ref={(r) => {
+            this.$canvas = r;
+            /*
             if (r) {
-              this.$canvas = r;
               this.props.curve.init(this.$canvas);
               this.props.curve.redraw(this.state.rotationAngle);
-            }
+            } */
           }}
           height={500}
           width={500}

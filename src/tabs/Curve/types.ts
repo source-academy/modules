@@ -1,7 +1,7 @@
-import { ShapeDrawn } from '../../bundles/curve/types';
+import { CurveDrawn } from '../../bundles/curve/types';
 
 export type CurveCanvasProps = {
   children?: never;
   className?: never;
-  curve: ShapeDrawn;
+  curve: CurveDrawn;
 };

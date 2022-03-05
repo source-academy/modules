@@ -1,13 +1,8 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-import {
-  drawAnaglyph,
-  drawHollusion,
-  drawRune,
-} from '../../bundles/rune/runes_webgl';
-import { RunesModuleState, Rune } from '../../bundles/rune/types';
+import { RunesModuleState } from '../../bundles/rune/types';
 import { DebuggerContext } from '../../type_helpers';
+import MultiItemDisplay from '../../typings/multi_item';
+import RuneCanvas from './rune_canvas';
 
 /**
  * tab for displaying runes
@@ -15,25 +10,17 @@ import { DebuggerContext } from '../../type_helpers';
  */
 
 /**
- * React Component props for the Tab.
- */
+ * The main React Component of the Tab.
 type RunesTabProps = {
   children?: never;
   className?: never;
   debuggerContext: DebuggerContext;
 };
 
-/**
- * React Component state for the Tab.
- */
-type State = {
+ type State = {
   currentStep: number;
 };
-
-/**
- * The main React Component of the Tab.
- */
-/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/destructuring-assignment
 class WebGLCanvas extends React.Component<RunesTabProps, State> {
   private runesToDraw: Rune[];
 
@@ -69,7 +56,7 @@ class WebGLCanvas extends React.Component<RunesTabProps, State> {
   /**
    * This function sets the layout of the React Component in HTML
    * @returns HTMLComponent
-   */
+   *
   public render() {
     const runeToDraw = this.runesToDraw[this.state.currentStep];
 
@@ -126,31 +113,12 @@ class WebGLCanvas extends React.Component<RunesTabProps, State> {
             justifyContent: 'center',
           }}
         >
-          <canvas
-            id='runesCanvas'
-            ref={(r) => {
-              if (r) {
-                if (runeToDraw.drawMethod === 'anaglyph') {
-                  drawAnaglyph(r, runeToDraw);
-                } else if (runeToDraw.drawMethod === 'hollusion') {
-                  drawHollusion(r, runeToDraw);
-                } else if (runeToDraw.drawMethod === 'normal') {
-                  drawRune(r, runeToDraw);
-                } else {
-                  throw Error(
-                    `Unexpected Drawing Method ${runeToDraw.drawMethod}`
-                  );
-                }
-              }
-            }}
-            width={512}
-            height={512}
-          />
+          <canvas id='runesCanvas' ref={(r) => {}} width={512} height={512} />
         </div>
       </div>
     );
   }
-}
+} */
 
 export default {
   /**
@@ -179,7 +147,16 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: DebuggerContext) => <WebGLCanvas debuggerContext={context} />,
+  body: (context: DebuggerContext) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    const moduleContext = context.context?.moduleContexts.get('rune');
+    const moduleState = moduleContext!.state as RunesModuleState;
+    const runeCanvases = moduleState.drawnRunes.map((rune) => (
+      <RuneCanvas rune={rune} />
+    ));
+
+    return <MultiItemDisplay elements={runeCanvases} />;
+  },
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.

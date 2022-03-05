@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { mat4, vec3 } from 'gl-matrix';
-import { ShapeDrawn, Curve, ProgramInfo, BufferInfo } from './types';
+import { CurveDrawn, Curve, ProgramInfo, BufferInfo } from './types';
 
 let canvasElement: HTMLCanvasElement;
 let renderingContext: WebGLRenderingContext | null;
@@ -8,7 +8,7 @@ let programs: ProgramInfo;
 let buffersInfo: BufferInfo;
 
 /** @hidden */
-export const drawnCurves: ShapeDrawn[] = [];
+export const drawnCurves: CurveDrawn[] = [];
 
 // Vertex shader program
 const vsS: string = `
@@ -211,7 +211,7 @@ export default function generateCurve(
   func: Curve,
   space: '2D' | '3D',
   isFullView: boolean
-): ShapeDrawn {
+): CurveDrawn {
   let curvePosArray: number[] = [];
   let curveColorArray: number[] = [];
   const drawCubeArray: number[] = [];
