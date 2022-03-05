@@ -35,6 +35,7 @@ import {
   rotate_around_origin,
   arc,
   invert,
+  curve_animation,
 } from './functions';
 
 /**
@@ -72,6 +73,7 @@ export default function curves(
     make_3D_point,
     make_color_point,
     make_3D_color_point,
+    curve_animation,
     draw_connected,
     draw_connected_full_view,
     draw_connected_full_view_proportional,

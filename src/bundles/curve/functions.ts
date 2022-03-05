@@ -43,6 +43,7 @@ import {
   drawnCurves,
   CurveTransformer,
   Point,
+  CurveAnimation,
 } from './curves_webgl';
 
 function createDrawFunction(
@@ -784,4 +785,23 @@ export function unit_line_at(t: number): Curve {
  */
 export function arc(t: number): Point {
   return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
+}
+
+/**
+ * Create a animation of curves using a curve generatting function.
+ * The curve generating function should take in a number between [0, 1]
+ * and return a curve.
+ * @param numFrames Number of frames to draw
+ * @param drawer Draw function to the generated curves with
+ * @returns A function that accepts a curve generating function as a parameter
+ */
+export function curve_animation(
+  numFrames: number,
+  drawer: RenderFunction
+): (gen: (step: number) => Curve) => CurveAnimation {
+  return (func) => {
+    const anim = new CurveAnimation(numFrames, func, drawer);
+    drawnCurves.push(anim);
+    return anim;
+  };
 }

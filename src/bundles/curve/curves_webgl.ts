@@ -2,9 +2,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { mat4, vec3 } from 'gl-matrix';
 import { ModuleState } from 'js-slang';
+import { AnimFrame, glAnimation } from '../../typings/anim_test';
 
 /** @hidden */
-export const drawnCurves: CurveDrawn[] = [];
+export const drawnCurves: (CurveDrawn | CurveAnimation)[] = [];
 
 // Vertex shader program
 const vsS: string = `
@@ -442,10 +443,31 @@ export class CurveDrawn {
   };
 }
 
+export class CurveAnimation extends glAnimation {
+  constructor(
+    numFrames: number,
+    private readonly func: (step: number) => Curve,
+    private readonly drawer: RenderFunction
+  ) {
+    super(numFrames);
+  }
+
+  public getFrame(step: number): AnimFrame {
+    const curve = this.func(step);
+    (curve as any).shouldAppend = false;
+    const curveDrawn = this.drawer(curve);
+
+    return {
+      draw: () => curveDrawn.redraw(0),
+      init: curveDrawn.init,
+    };
+  }
+}
+
 export class CurveModuleState implements ModuleState {
   constructor() {
     this.drawnCurves = [];
   }
 
-  public drawnCurves: CurveDrawn[];
+  public drawnCurves: (CurveDrawn | CurveAnimation)[];
 }
