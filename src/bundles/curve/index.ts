@@ -1,5 +1,5 @@
 import { ModuleContext } from 'js-slang';
-import { drawnCurves } from './curves_webgl';
+import { CurveModuleState, drawnCurves } from './curves_webgl';
 import {
   make_point,
   make_3D_point,
@@ -36,7 +36,6 @@ import {
   arc,
   invert,
 } from './functions';
-import { CurveModuleState } from './types';
 
 /**
  * Bundle for Source Academy Curves module

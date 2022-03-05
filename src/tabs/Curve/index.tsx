@@ -1,7 +1,7 @@
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-import { CurveModuleState, ShapeDrawn } from '../../bundles/curve/types';
+import { CurveModuleState, CurveDrawn } from '../../bundles/curve/curves_webgl';
 import { DebuggerContext } from '../../type_helpers';
 import CurveCanvas from './curve_canvas';
 import CurveCanvas3D from './curve_canvas3d';
@@ -26,7 +26,7 @@ type CurvesTabState = {
 
 /* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
-  private curvesToDraw: ShapeDrawn[];
+  private curvesToDraw: CurveDrawn[];
 
   constructor(props: CurvesTabProps | Readonly<CurvesTabProps>) {
     super(props);
