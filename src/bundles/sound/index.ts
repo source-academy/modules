@@ -7,6 +7,7 @@ import {
   is_sound,
   // Play-related
   play,
+  play_wave,
   play_concurrently,
   stop,
   // Recording
@@ -69,6 +70,7 @@ export default function sounds(params, context: Map<string, ModuleContext>) {
     is_sound,
     // Play-related
     play,
+    play_wave,
     play_concurrently,
     stop,
     // Recording
