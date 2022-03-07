@@ -9,117 +9,6 @@ import RuneCanvas from './rune_canvas';
  * @author Hou Ruomu
  */
 
-/**
- * The main React Component of the Tab.
-type RunesTabProps = {
-  children?: never;
-  className?: never;
-  debuggerContext: DebuggerContext;
-};
-
- type State = {
-  currentStep: number;
-};
-/* eslint-disable react/destructuring-assignment
-class WebGLCanvas extends React.Component<RunesTabProps, State> {
-  private runesToDraw: Rune[];
-
-  constructor(props: RunesTabProps | Readonly<RunesTabProps>) {
-    super(props);
-    this.state = {
-      currentStep: 0,
-    };
-
-    const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
-      'rune'
-    );
-    if (moduleContext == null) {
-      this.runesToDraw = [];
-    } else {
-      this.runesToDraw = (moduleContext.state as RunesModuleState).drawnRunes;
-    }
-  }
-
-  private firstStep = () => this.state.currentStep === 0;
-
-  private finalStep = () =>
-    this.state.currentStep === this.runesToDraw.length - 1;
-
-  private onPrevButtonClick = () => {
-    this.setState((state) => ({ currentStep: state.currentStep - 1 }));
-  };
-
-  private onNextButtonClick = () => {
-    this.setState((state) => ({ currentStep: state.currentStep + 1 }));
-  };
-
-  /**
-   * This function sets the layout of the React Component in HTML
-   * @returns HTMLComponent
-   *
-  public render() {
-    const runeToDraw = this.runesToDraw[this.state.currentStep];
-
-    return (
-      <div>
-        {this.runesToDraw.length > 1 ? (
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 10,
-            }}
-          >
-            <Button
-              style={{
-                position: 'absolute',
-                left: 0,
-              }}
-              large
-              outlined
-              icon={IconNames.ARROW_LEFT}
-              onClick={this.onPrevButtonClick}
-              disabled={this.firstStep()}
-            >
-              Previous
-            </Button>
-            <h3 className='bp3-text-large'>
-              Call {this.state.currentStep + 1}/{this.runesToDraw.length}
-            </h3>
-            <Button
-              style={{
-                position: 'absolute',
-                right: 0,
-              }}
-              large
-              outlined
-              icon={IconNames.ARROW_RIGHT}
-              onClick={this.onNextButtonClick}
-              disabled={this.finalStep()}
-            >
-              Next
-            </Button>
-          </div>
-        ) : null}
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            paddingLeft: '20px',
-            paddingRight: '20px',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <canvas id='runesCanvas' ref={(r) => {}} width={512} height={512} />
-        </div>
-      </div>
-    );
-  }
-} */
-
 export default {
   /**
    * This function will be called to determine if the component will be
@@ -151,6 +40,9 @@ export default {
     // eslint-disable-next-line react/destructuring-assignment
     const moduleContext = context.context?.moduleContexts.get('rune');
     const moduleState = moduleContext!.state as RunesModuleState;
+
+    // Based on the toSpawn conditions, it should be safe to assume
+    // that neither moduleContext or moduleState are null
     const runeCanvases = moduleState.drawnRunes.map((rune) => (
       <RuneCanvas rune={rune} />
     ));
