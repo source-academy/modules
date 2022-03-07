@@ -503,20 +503,79 @@ export function translate_z(shape: Shape, z: number): Shape {
 }
 
 /**
- * Stack the second shape ontop of the first shape in the z direction
+ * Places the second shape `b` beside the first shape `a` in the positive x direction,
+ * centering the `b`'s y and z on the `a`'s y and z center.
  *
- * @param {Shape} a - The shape to be stacked on
- * @param {Shape} b - The stacking shape
- * @returns {Shape} The stacked shape
+ * @param {Shape} a - The shape to be placed beside with
+ * @param {Shape} b - The shape placed beside
+ * @returns {Shape} The final shape
  */
-export function stack(a: Shape, b: Shape): Shape {
+export function beside_x(a: Shape, b: Shape): Shape {
+  const aBounds: BoundingBox = measureBoundingBox(a.getSolid());
+  const newX: number = aBounds[1][0];
+  const newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
+  const newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
+  const newShape: Geom3 = _union(
+    a.getSolid(), // @ts-ignore
+    align(
+      {
+        modes: ['min', 'center', 'center'],
+        relativeTo: [newX, newY, newZ],
+      },
+      b.getSolid()
+    )
+  );
+  return generate_shape(newShape);
+}
+
+/**
+ * Places the second shape `b` beside the first shape `a` in the positive y direction,
+ * centering the `b`'s x and z on the `a`'s x and z center.
+ *
+ * @param {Shape} a - The shape to be placed beside with
+ * @param {Shape} b - The shape placed beside
+ * @returns {Shape} The final shape
+ */
+export function beside_y(a: Shape, b: Shape): Shape {
+  const aBounds: BoundingBox = measureBoundingBox(a.getSolid());
+  const newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
+  const newY: number = aBounds[1][1];
+  const newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
+  const newShape: Geom3 = _union(
+    a.getSolid(), // @ts-ignore
+    align(
+      {
+        modes: ['center', 'min', 'center'],
+        relativeTo: [newX, newY, newZ],
+      },
+      b.getSolid()
+    )
+  );
+  return generate_shape(newShape);
+}
+
+/**
+ * Places the second shape `b` beside the first shape `a` in the positive z direction,
+ * centering the `b`'s x and y on the `a`'s x and y center.
+ *
+ * @param {Shape} a - The shape to be placed beside with
+ * @param {Shape} b - The shape placed beside
+ * @returns {Shape} The final shape
+ */
+export function beside_z(a: Shape, b: Shape): Shape {
   const aBounds: BoundingBox = measureBoundingBox(a.getSolid());
   const newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
   const newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   const newZ: number = aBounds[1][2];
   const newShape: Geom3 = _union(
     a.getSolid(), // @ts-ignore
-    align({ relativeTo: [newX, newY, newZ] }, b.getSolid())
+    align(
+      {
+        modes: ['center', 'center', 'min'],
+        relativeTo: [newX, newY, newZ],
+      },
+      b.getSolid()
+    )
   );
   return generate_shape(newShape);
 }
