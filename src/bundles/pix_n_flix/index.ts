@@ -11,7 +11,7 @@ import {
   install_filter,
   reset_filter,
   compose_filter,
-  pause_after,
+  pause_at,
   set_dimensions,
   set_fps,
 } from './functions';
@@ -35,7 +35,7 @@ export default () => ({
   install_filter,
   reset_filter,
   compose_filter,
-  pause_after,
+  pause_at,
   set_dimensions,
   set_fps,
 });
