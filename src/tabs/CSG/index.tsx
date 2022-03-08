@@ -1,6 +1,11 @@
 import React from 'react';
+import { Icon } from '@blueprintjs/core';
 import render from '../../bundles/csg/renderer';
-import { looseInstanceOf, Shape } from '../../bundles/csg/utilities';
+import {
+  looseInstanceOf,
+  Shape,
+  toolTipText,
+} from '../../bundles/csg/utilities';
 
 /**
  * React Component props for the Tab.
@@ -14,7 +19,12 @@ type Props = {
 /**
  * React Component state for the Tab.
  */
-type State = {};
+type State = {
+  zoomTooltip: String;
+  angleTooltip: String;
+  perspectiveTooltip: String;
+  fitTooltip: String;
+};
 
 /**
  * The main React Component of the Tab.
@@ -25,7 +35,12 @@ class CsgCanvas extends React.Component<Props, State> {
   public constructor(props: Props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      zoomTooltip: 'hidden',
+      angleTooltip: 'hidden',
+      perspectiveTooltip: 'hidden',
+      fitTooltip: 'hidden',
+    };
   }
 
   /**
@@ -51,6 +66,38 @@ class CsgCanvas extends React.Component<Props, State> {
    * @returns HTMLComponent
    */
   public render() {
+    const {
+      zoomTooltip,
+      angleTooltip,
+      perspectiveTooltip,
+      fitTooltip,
+    } = this.state;
+
+    const zoomStyle: React.CSSProperties = {
+      ...toolTipText,
+      ...{ visibility: zoomTooltip },
+    } as React.CSSProperties;
+    const angleStyle: React.CSSProperties = {
+      ...toolTipText,
+      ...{ visibility: angleTooltip },
+    } as React.CSSProperties;
+    const perspectiveStyle: React.CSSProperties = {
+      ...toolTipText,
+      ...{ visibility: perspectiveTooltip },
+    } as React.CSSProperties;
+    const fitStyle: React.CSSProperties = {
+      ...toolTipText,
+      ...{ visibility: fitTooltip },
+    } as React.CSSProperties;
+
+    const stack: React.CSSProperties = {
+      display: 'flex',
+      flexDirection: 'column',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      justifyContent: 'center',
+    } as React.CSSProperties;
+
     return (
       <div
         style={{
@@ -62,7 +109,71 @@ class CsgCanvas extends React.Component<Props, State> {
           justifyContent: 'center',
         }}
       >
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              padding: '10px',
+            }}
+            onMouseEnter={() => this.setState({ zoomTooltip: 'visible' })}
+            onMouseLeave={() => this.setState({ zoomTooltip: 'hidden' })}
+          >
+            <span style={zoomStyle}>Scroll Up and Down</span>
+            <div style={stack}>
+              <Icon icon='zoom-in' />
+              <span> Zoom </span>
+            </div>
+          </div>
+          <div
+            style={{
+              padding: '10px',
+            }}
+            onMouseEnter={() => this.setState({ angleTooltip: 'visible' })}
+            onMouseLeave={() => this.setState({ angleTooltip: 'hidden' })}
+          >
+            <span style={angleStyle}>Left Click Drag</span>
+            <div style={stack}>
+              <Icon icon='repeat' />
+              <span> Camera Angle </span>
+            </div>
+          </div>
+          <div
+            style={{
+              padding: '10px',
+            }}
+            onMouseEnter={() =>
+              this.setState({ perspectiveTooltip: 'visible' })
+            }
+            onMouseLeave={() => this.setState({ perspectiveTooltip: 'hidden' })}
+          >
+            <span style={perspectiveStyle}>Shift + Left Click Drag</span>
+            <div style={stack}>
+              <Icon icon='layer-outline' />
+              <span> Camera Perspective </span>
+            </div>
+          </div>
+          <div
+            style={{
+              padding: '10px',
+            }}
+            onMouseEnter={() => this.setState({ fitTooltip: 'visible' })}
+            onMouseLeave={() => this.setState({ fitTooltip: 'hidden' })}
+          >
+            <span style={fitStyle}> Double Left Click </span>
+            <div style={stack}>
+              <Icon icon='zoom-to-fit' />
+              <span> Zoom to Fit</span>
+            </div>
+          </div>
+        </div>
         <canvas
+          style={{ marginTop: '10px' }}
           id='csgCanvas'
           ref={(r) => {
             this.canvas = r;
