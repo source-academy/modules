@@ -1,10 +1,13 @@
 import React from 'react';
+import { Button } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import {
   drawAnaglyph,
   drawHollusion,
   drawRune,
 } from '../../bundles/rune/runes_webgl';
-import { Rune } from '../../bundles/rune/types';
+import { RunesModuleState, Rune } from '../../bundles/rune/types';
+import { DebuggerContext } from '../../type_helpers';
 
 /**
  * tab for displaying runes
@@ -13,78 +16,137 @@ import { Rune } from '../../bundles/rune/types';
 
 /**
  * React Component props for the Tab.
- * Provided by the template, nothing was changed.
  */
-type Props = {
+type RunesTabProps = {
   children?: never;
   className?: never;
-  context?: any;
+  debuggerContext: DebuggerContext;
 };
 
 /**
  * React Component state for the Tab.
  */
-type State = {};
+type State = {
+  currentStep: number;
+};
 
 /**
  * The main React Component of the Tab.
  */
-class WebGLCanvas extends React.Component<Props, State> {
-  private $canvas: HTMLCanvasElement | null = null;
+/* eslint-disable react/destructuring-assignment */
+class WebGLCanvas extends React.Component<RunesTabProps, State> {
+  private runesToDraw: Rune[];
 
-  constructor(props) {
+  constructor(props: RunesTabProps | Readonly<RunesTabProps>) {
     super(props);
-    this.state = {};
-  }
+    this.state = {
+      currentStep: 0,
+    };
 
-  /**
-   * This function is called when the tab is created.
-   * This is the entrypoint for the tab.
-   */
-  public componentDidMount() {
-    if (this.$canvas) {
-      const {
-        context: {
-          result: { value },
-        },
-      } = this.props;
-      if (value.drawMethod === 'anaglyph') {
-        drawAnaglyph(this.$canvas, value);
-      } else if (value.drawMethod === 'hollusion') {
-        drawHollusion(this.$canvas, value);
-      } else if (value.drawMethod === 'normal') {
-        drawRune(this.$canvas, value);
-      } else {
-        throw Error(`Unexpected Drawing Method ${value.drawMethod}`);
-      }
+    const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
+      'rune'
+    );
+    if (moduleContext == null) {
+      this.runesToDraw = [];
+    } else {
+      this.runesToDraw = (moduleContext.state as RunesModuleState).drawnRunes;
     }
   }
 
+  private firstStep = () => this.state.currentStep === 0;
+
+  private finalStep = () =>
+    this.state.currentStep === this.runesToDraw.length - 1;
+
+  private onPrevButtonClick = () => {
+    this.setState((state) => ({ currentStep: state.currentStep - 1 }));
+  };
+
+  private onNextButtonClick = () => {
+    this.setState((state) => ({ currentStep: state.currentStep + 1 }));
+  };
+
   /**
    * This function sets the layout of the React Component in HTML
-   * Notice the the Canvas hook in "ref" property.
    * @returns HTMLComponent
    */
   public render() {
+    const runeToDraw = this.runesToDraw[this.state.currentStep];
+
     return (
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          paddingLeft: '20px',
-          paddingRight: '20px',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
-        <canvas
-          id='runesCanvas'
-          ref={(r) => {
-            this.$canvas = r;
+      <div>
+        {this.runesToDraw.length > 1 ? (
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}
+          >
+            <Button
+              style={{
+                position: 'absolute',
+                left: 0,
+              }}
+              large
+              outlined
+              icon={IconNames.ARROW_LEFT}
+              onClick={this.onPrevButtonClick}
+              disabled={this.firstStep()}
+            >
+              Previous
+            </Button>
+            <h3 className='bp3-text-large'>
+              Call {this.state.currentStep + 1}/{this.runesToDraw.length}
+            </h3>
+            <Button
+              style={{
+                position: 'absolute',
+                right: 0,
+              }}
+              large
+              outlined
+              icon={IconNames.ARROW_RIGHT}
+              onClick={this.onNextButtonClick}
+              disabled={this.finalStep()}
+            >
+              Next
+            </Button>
+          </div>
+        ) : null}
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            paddingLeft: '20px',
+            paddingRight: '20px',
+            flexDirection: 'column',
+            justifyContent: 'center',
           }}
-          width={512}
-          height={512}
-        />
+        >
+          <canvas
+            id='runesCanvas'
+            ref={(r) => {
+              if (r) {
+                if (runeToDraw.drawMethod === 'anaglyph') {
+                  drawAnaglyph(r, runeToDraw);
+                } else if (runeToDraw.drawMethod === 'hollusion') {
+                  drawHollusion(r, runeToDraw);
+                } else if (runeToDraw.drawMethod === 'normal') {
+                  drawRune(r, runeToDraw);
+                } else {
+                  throw Error(
+                    `Unexpected Drawing Method ${runeToDraw.drawMethod}`
+                  );
+                }
+              }
+            }}
+            width={512}
+            height={512}
+          />
+        </div>
       </div>
     );
   }
@@ -93,21 +155,23 @@ class WebGLCanvas extends React.Component<Props, State> {
 export default {
   /**
    * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "<RUNE>".
+   * rendered. Currently spawns when there is at least one rune to be
+   * displayed
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: any) => {
-    function isValidFunction(value: any): value is Rune {
-      try {
-        return (
-          value.toReplString() === '<RENDERING>' && value.drawMethod !== ''
-        );
-      } catch (e) {
-        return false;
-      }
+  toSpawn: (context: DebuggerContext) => {
+    const moduleContext = context.context?.moduleContexts.get('rune');
+    if (moduleContext == null) {
+      return false;
     }
-    return isValidFunction(context.result.value);
+
+    const moduleState = moduleContext.state as RunesModuleState;
+    if (moduleState == null) {
+      return false;
+    }
+
+    return moduleState.drawnRunes.length > 0;
   },
 
   /**
@@ -115,7 +179,7 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <WebGLCanvas context={context} />,
+  body: (context: DebuggerContext) => <WebGLCanvas debuggerContext={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
