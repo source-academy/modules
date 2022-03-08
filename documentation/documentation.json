@@ -5511,7 +5511,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 433,
+							"line": 437,
 							"character": 24
 						}
 					],
@@ -5558,7 +5558,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 422,
+							"line": 426,
 							"character": 23
 						}
 					],
@@ -5605,7 +5605,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 532,
+							"line": 536,
 							"character": 30
 						}
 					],
@@ -5666,7 +5666,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 493,
+							"line": 497,
 							"character": 26
 						}
 					],
@@ -5726,7 +5726,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 411,
+							"line": 415,
 							"character": 24
 						}
 					],
@@ -5773,7 +5773,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 513,
+							"line": 517,
 							"character": 30
 						}
 					],
@@ -5810,21 +5810,21 @@
 				},
 				{
 					"id": 51,
-					"name": "pause_after",
+					"name": "pause_at",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {},
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 545,
-							"character": 27
+							"line": 549,
+							"character": 24
 						}
 					],
 					"signatures": [
 						{
 							"id": 52,
-							"name": "pause_after",
+							"name": "pause_at",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
@@ -5863,7 +5863,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 400,
+							"line": 404,
 							"character": 22
 						}
 					],
@@ -5910,7 +5910,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 520,
+							"line": 524,
 							"character": 28
 						}
 					],
@@ -5940,7 +5940,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 557,
+							"line": 563,
 							"character": 30
 						}
 					],
@@ -6000,7 +6000,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 567,
+							"line": 573,
 							"character": 23
 						}
 					],
@@ -6046,7 +6046,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 448,
+							"line": 452,
 							"character": 24
 						}
 					],
@@ -6148,7 +6148,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 382,
+							"line": 386,
 							"character": 21
 						}
 					],
@@ -6178,7 +6178,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 472,
+							"line": 476,
 							"character": 28
 						}
 					],
@@ -6209,7 +6209,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 482,
+							"line": 486,
 							"character": 27
 						}
 					],
