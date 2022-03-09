@@ -11,3 +11,7 @@ export type DebuggerContext = {
   context: Context;
   workspaceLocation?: any;
 };
+
+export interface ReplResult {
+  toReplString: () => string;
+}

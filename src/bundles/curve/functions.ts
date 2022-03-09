@@ -36,15 +36,11 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  Curve,
-  RenderFunction,
-  CurveDrawn,
-  drawnCurves,
-  CurveTransformer,
-  Point,
-  CurveAnimation,
-} from './curves_webgl';
+import { Curve, CurveDrawn, generateCurve, Point } from './curves_webgl';
+import { CurveAnimation, CurveTransformer, RenderFunction } from './types';
+
+/** @hidden */
+export const drawnCurves: (CurveDrawn | CurveAnimation)[] = [];
 
 function createDrawFunction(
   scaleMode: 'none' | 'stretch' | 'fit',
@@ -53,7 +49,7 @@ function createDrawFunction(
   isFullView: boolean
 ): (numPoints: number) => RenderFunction {
   return (numPoints: number) => (curve) => {
-    const curveDrawn = new CurveDrawn(
+    const curveDrawn = generateCurve(
       scaleMode,
       drawMode,
       numPoints,

@@ -1,5 +1,5 @@
 import { ModuleContext } from 'js-slang';
-import { CurveModuleState, drawnCurves } from './curves_webgl';
+import { CurveModuleState } from './types';
 import {
   make_point,
   make_3D_point,
@@ -36,6 +36,7 @@ import {
   arc,
   invert,
   curve_animation,
+  drawnCurves,
 } from './functions';
 
 /**

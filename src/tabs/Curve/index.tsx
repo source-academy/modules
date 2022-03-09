@@ -1,10 +1,11 @@
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-import { CurveModuleState, CurveDrawn } from '../../bundles/curve/curves_webgl';
-import { DebuggerContext } from '../../type_helpers';
+import { CurveDrawn } from '../../bundles/curve/curves_webgl';
+import { CurveAnimation, CurveModuleState } from '../../bundles/curve/types';
+import { DebuggerContext } from '../../typings/type_helpers';
 import CurveCanvas from './curve_canvas';
-import CurveCanvas3D from './curve_canvas3d';
+import CurveCanvas3D, { AnimationCanvas } from './curve_canvas3d';
 
 /**
  * Currently used for rendering HTML canvas element for curves.
@@ -26,7 +27,7 @@ type CurvesTabState = {
 
 /* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
-  private curvesToDraw: CurveDrawn[];
+  private curvesToDraw: (CurveAnimation | CurveDrawn)[];
 
   constructor(props: CurvesTabProps | Readonly<CurvesTabProps>) {
     super(props);
@@ -58,6 +59,15 @@ class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
 
   public render() {
     const curveToDraw = this.curvesToDraw[this.state.currentStep];
+
+    let element: JSX.Element;
+    if ((curveToDraw as CurveAnimation).numFrames !== undefined) {
+      element = <AnimationCanvas animation={curveToDraw as CurveAnimation} />;
+    } else if ((curveToDraw as CurveDrawn).is3D()) {
+      element = <CurveCanvas3D curve={curveToDraw as CurveDrawn} />;
+    } else {
+      element = <CurveCanvas curve={curveToDraw as CurveDrawn} />;
+    }
 
     return (
       <div>
@@ -112,11 +122,7 @@ class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
             justifyContent: 'center',
           }}
         >
-          {curveToDraw.is3D() ? (
-            <CurveCanvas3D curve={curveToDraw} />
-          ) : (
-            <CurveCanvas curve={curveToDraw} />
-          )}
+          {element}
         </div>
       </div>
     );
