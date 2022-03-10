@@ -83,10 +83,10 @@ export const toolTipText = {
   visibility: 'hidden',
   backgroundColor: '#ffffff',
   color: '#7b7b7b',
-  textAlign: 'center',
   borderRadius: '6px',
-  padding: '5px',
   position: 'absolute',
   whiteSpace: 'nowrap',
-  bottom: '92%',
+  padding: '5px',
+  top: '-1px',
+  zIndex: '1',
 };

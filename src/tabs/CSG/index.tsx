@@ -96,6 +96,21 @@ class CsgCanvas extends React.Component<Props, State> {
       flexWrap: 'wrap',
       alignItems: 'center',
       justifyContent: 'center',
+      width: '64px',
+    } as React.CSSProperties;
+
+    const centerStyle: React.CSSProperties = {
+      marginLeft: '-100%',
+      marginRight: '-100%',
+      textAlign: 'center',
+      wordBreak: 'break-word',
+      inlineSize: '80px',
+      color: '#7b7b7b',
+    } as React.CSSProperties;
+
+    const containerStyle: React.CSSProperties = {
+      padding: '10px',
+      position: 'relative',
     } as React.CSSProperties;
 
     return (
@@ -118,35 +133,29 @@ class CsgCanvas extends React.Component<Props, State> {
           }}
         >
           <div
-            style={{
-              padding: '10px',
-            }}
+            style={containerStyle}
             onMouseEnter={() => this.setState({ zoomTooltip: 'visible' })}
             onMouseLeave={() => this.setState({ zoomTooltip: 'hidden' })}
           >
             <span style={zoomStyle}>Scroll Up and Down</span>
             <div style={stack}>
-              <Icon icon='zoom-in' />
-              <span> Zoom </span>
+              <Icon icon='zoom-in' size={20} color='#7b7b7b' />
+              <span style={centerStyle}> Zoom </span>
             </div>
           </div>
           <div
-            style={{
-              padding: '10px',
-            }}
+            style={containerStyle}
             onMouseEnter={() => this.setState({ angleTooltip: 'visible' })}
             onMouseLeave={() => this.setState({ angleTooltip: 'hidden' })}
           >
             <span style={angleStyle}>Left Click Drag</span>
             <div style={stack}>
-              <Icon icon='repeat' />
-              <span> Camera Angle </span>
+              <Icon icon='repeat' size={20} color='#7b7b7b' />
+              <span style={centerStyle}> Camera Angle </span>
             </div>
           </div>
           <div
-            style={{
-              padding: '10px',
-            }}
+            style={containerStyle}
             onMouseEnter={() =>
               this.setState({ perspectiveTooltip: 'visible' })
             }
@@ -154,21 +163,19 @@ class CsgCanvas extends React.Component<Props, State> {
           >
             <span style={perspectiveStyle}>Shift + Left Click Drag</span>
             <div style={stack}>
-              <Icon icon='layer-outline' />
-              <span> Camera Perspective </span>
+              <Icon icon='layer-outline' size={20} color='#7b7b7b' />
+              <span style={centerStyle}> Camera Perspective </span>
             </div>
           </div>
           <div
-            style={{
-              padding: '10px',
-            }}
+            style={containerStyle}
             onMouseEnter={() => this.setState({ fitTooltip: 'visible' })}
             onMouseLeave={() => this.setState({ fitTooltip: 'hidden' })}
           >
             <span style={fitStyle}> Double Left Click </span>
             <div style={stack}>
-              <Icon icon='zoom-to-fit' />
-              <span> Zoom to Fit</span>
+              <Icon icon='zoom-to-fit' size={20} color='#7b7b7b' />
+              <span style={centerStyle}> Zoom to Fit</span>
             </div>
           </div>
         </div>
