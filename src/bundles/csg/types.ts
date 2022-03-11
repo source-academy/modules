@@ -43,8 +43,9 @@ export type OrthographicCameraState = typeof orthographicCamera.cameraState;
 export type CameraState = PerspectiveCameraState | OrthographicCameraState;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
-export type Controls = Omit<typeof controls, 'update'> & {
+export type Controls = Omit<typeof controls, 'update' | 'zoomToFit'> & {
   update: ControlsUpdate.Function;
+  zoomToFit: ControlsZoomToFit.Function;
 };
 export namespace ControlsUpdate {
   export type Function = (options: Options) => Output;
@@ -64,6 +65,41 @@ export namespace ControlsUpdate {
     camera: {
       position: CoordinatesXYZ;
       view: Mat4;
+    };
+  };
+}
+//FIXME
+// export namespace ControlsZoom {
+//   export type Function = (options: Options, zoomDelta: number) => Output;
+
+//   export type Options = {
+//     controls: ControlsState;
+//     camera: CameraState;
+//     speed?: number;
+//   };
+
+//   export type Output = {
+//     controls: {
+//       scale: number;
+//     };
+//     camera: CameraState;
+//   };
+// }
+export namespace ControlsZoomToFit {
+  export type Function = (options: Options) => Output;
+
+  export type Options = {
+    controls: ControlsState;
+    camera: CameraState;
+    entities: GeometryEntity[];
+  };
+
+  export type Output = {
+    camera: {
+      target: VectorXYZ;
+    };
+    controls: {
+      scale: number;
     };
   };
 }
@@ -255,26 +291,6 @@ export namespace EntitiesFromSolids {
 
     // Whether to smooth the normals of 3D solids, rendering a smooth surface
     smoothNormals?: boolean;
-  };
-}
-
-// @jscad\regl-renderer\src\controls\orbitControls.js
-export namespace ZoomToFit {
-  export type Function = (options: Options) => Output;
-
-  export type Options = {
-    controls: ControlsState;
-    camera: CameraState;
-    entities: GeometryEntity[];
-  };
-
-  export type Output = {
-    camera: {
-      target: VectorXYZ;
-    };
-    controls: {
-      scale: number;
-    };
   };
 }
 

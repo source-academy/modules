@@ -9,16 +9,15 @@ import {
   prepareRender as _prepareRender,
 } from '@jscad/regl-renderer';
 import {
+  Controls,
+  ControlsState,
   EntitiesFromSolids,
   Entity,
   GridEntity,
-  Controls,
-  ControlsState,
   PerspectiveCamera,
   PerspectiveCameraState,
   PrepareRender,
   WrappedRenderer,
-  ZoomToFit,
 } from './types';
 
 /* [Exports] */
@@ -35,8 +34,6 @@ export const prepareRender: PrepareRender.Function = _prepareRender;
 
 export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSolids as unknown) as EntitiesFromSolids.Function;
 export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
-
-export const zoomToFit: ZoomToFit.Function = (controls.zoomToFit as unknown) as ZoomToFit.Function;
 
 // [Custom]
 export namespace AxisEntity {
@@ -132,9 +129,39 @@ export class Shape {
 // To track the processing to be done between frames
 export class FrameTracker {
   public constructor(
+    private zoomTicks: number = 0,
+
     // Start off the first frame by initially zooming to fit
-    public doZoomToFit: boolean = true
+    private zoomToFitOnce: boolean = true
   ) {}
+
+  public getZoomTicks(): number {
+    return this.zoomTicks;
+  }
+
+  public changeZoomTicks(wheelDelta: number): void {
+    this.zoomTicks += Math.sign(wheelDelta);
+  }
+
+  public setZoomToFit() {
+    this.zoomToFitOnce = true;
+  }
+
+  public shouldZoom(): boolean {
+    return this.zoomTicks !== 0;
+  }
+
+  public didZoom(): void {
+    this.zoomTicks = 0;
+  }
+
+  public shouldZoomToFit(): boolean {
+    return this.zoomToFitOnce;
+  }
+
+  public didZoomToFit(): void {
+    this.zoomToFitOnce = false;
+  }
 }
 
 // Used as options when setting camera projection

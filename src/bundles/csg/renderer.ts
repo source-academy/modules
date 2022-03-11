@@ -1,13 +1,14 @@
 /* [Imports] */
+import vec3 from '@jscad/modeling/src/maths/vec3';
 import {
   ControlsState,
   ControlsUpdate,
+  ControlsZoomToFit,
   Entity,
   GeometryEntity,
   PerspectiveCameraState,
   PrepareRender,
   WrappedRenderer,
-  ZoomToFit,
 } from './types';
 import {
   AxisEntity,
@@ -22,7 +23,6 @@ import {
   prepareDrawCommands,
   prepareRender,
   Shape,
-  zoomToFit,
 } from './utilities';
 
 /* [Main] */
@@ -60,11 +60,11 @@ function adjustCameraAngle(
     controls: controlsState,
     camera: perspectiveCameraState,
   });
-  console.log(output);
 
   // Manually apply unlike perspectiveCamera.update()
   controlsState.thetaDelta = output.controls.thetaDelta;
   controlsState.phiDelta = output.controls.phiDelta;
+  controlsState.scale = output.controls.scale;
 
   perspectiveCameraState.position = output.camera.position;
   perspectiveCameraState.view = output.camera.view;
@@ -92,31 +92,59 @@ function doDynamicResize(
   );
 }
 
+function doZoom(
+  zoomTicks: number,
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState
+) {
+  while (zoomTicks !== 0) {
+    const currentTick = Math.sign(zoomTicks);
+    zoomTicks -= currentTick;
+
+    const scaleChange: number = currentTick * 0.1;
+    const potentialNewScale: number = controlsState.scale + scaleChange;
+    const potentialNewDistance: number =
+      vec3.distance(
+        perspectiveCameraState.position,
+        perspectiveCameraState.target
+      ) * potentialNewScale;
+
+    if (
+      potentialNewDistance > controlsState.limits.minDistance &&
+      potentialNewDistance < controlsState.limits.maxDistance
+    ) {
+      controlsState.scale = potentialNewScale;
+    } else break;
+  }
+
+  adjustCameraAngle(perspectiveCameraState, controlsState);
+}
+
 function doZoomToFit(
   geometryEntities: GeometryEntity[],
   perspectiveCameraState: PerspectiveCameraState,
   controlsState: ControlsState
 ) {
-  console.log({...perspectiveCameraState})
-
-  const options: ZoomToFit.Options = {
+  const options: ControlsZoomToFit.Options = {
     controls: controlsState,
     camera: perspectiveCameraState,
     entities: geometryEntities,
   };
-  const output: ZoomToFit.Output = zoomToFit(options);
-  console.log(output);
+  const output: ControlsZoomToFit.Output = controls.zoomToFit(options);
 
   perspectiveCameraState.target = output.camera.target;
   controlsState.scale = output.controls.scale;
-  console.log({...perspectiveCameraState})
 
   adjustCameraAngle(perspectiveCameraState, controlsState);
 }
 
 function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
+  canvas.addEventListener('wheel', (wheelEvent: WheelEvent) => {
+    frameTracker.changeZoomTicks(wheelEvent.deltaY);
+  });
+
   canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
-    frameTracker.doZoomToFit = true;
+    frameTracker.setZoomToFit();
   });
 }
 
@@ -153,9 +181,18 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
   function animationCallback(_timestamp: DOMHighResTimeStamp) {
     doDynamicResize(canvas, perspectiveCameraState);
 
-    if (frameTracker.doZoomToFit) {
-      frameTracker.doZoomToFit = false;
+    if (frameTracker.shouldZoom()) {
+      doZoom(
+        frameTracker.getZoomTicks(),
+        perspectiveCameraState,
+        controlsState
+      );
+      frameTracker.didZoom();
+    }
+
+    if (frameTracker.shouldZoomToFit()) {
       doZoomToFit(geometryEntities, perspectiveCameraState, controlsState);
+      frameTracker.didZoomToFit();
     }
 
     // Trigger render once processing for the current frame is done
