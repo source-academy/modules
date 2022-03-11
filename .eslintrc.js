@@ -85,9 +85,9 @@ module.exports = {
         // Avoid messy destructuring from deeply nested Props
         'react/destructuring-assignment': 0,
 
-        // Reinstate the default of allowing properties to be reassigned,
-        // eg working with canvases
-        'no-param-reassign': [1, { props: false }],
+        // Allow reassignment for flexibility, especially for properties,
+        // eg working with canvases or state objects
+        'no-param-reassign': 0,
 
         // Account for warning comments
         'spaced-comment': [1, 'always', { markers: todoTreeKeywordsAll }],
