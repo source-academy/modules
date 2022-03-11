@@ -116,6 +116,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
   // Create our own state to modify based on the defaults
   const perspectiveCameraState: PerspectiveCameraState = {
     ...perspectiveCameraStateDefaults,
+    position: [1000, 1000, 1500],
   };
   const controlsState: ControlsState = {
     ...controlsStateDefaults,
@@ -144,7 +145,9 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
     if (frameTracker.doZoomToFit) {
       frameTracker.doZoomToFit = false;
 
+      console.log({...perspectiveCameraState})
       doZoomToFit(geometryEntities, perspectiveCameraState, controlsState);
+      console.log({...perspectiveCameraState})
       adjustCameraAngle(perspectiveCameraState, controlsState);
     }
 
