@@ -109,6 +109,12 @@ function adjustCameraAngle(
   perspectiveCameraState.view = output.camera.view;
 }
 
+function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
+  canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
+    frameTracker.doZoomToFit = true;
+  });
+}
+
 /* [Exports] */
 export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
   const wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
@@ -157,4 +163,6 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
     window.requestAnimationFrame(animationCallback);
   }
   window.requestAnimationFrame(animationCallback);
+
+  registerEvents(canvas, frameTracker);
 }
