@@ -1,245 +1,308 @@
-import { measureBoundingBox } from '@jscad/modeling/src/measurements';
+/* [Imports] */
+import vec3 from '@jscad/modeling/src/maths/vec3';
 import {
-  entitiesFromSolids,
-  perspectiveCamera as _perspectiveCamera,
-  perspectiveCameraStateDefaults,
-  orbitControls as _orbitControls,
-  orbitControlsStateDefaults,
-  prepareDrawCommands,
-  prepareRender,
-  Shape,
-} from './utilities';
-import {
-  AxisEntity,
-  BoundingBox,
-  MultiGridEntity,
-  Numbers2,
-  OrbitControls,
-  OrbitControlsState,
-  OrbitPan,
-  OrbitRotate,
-  OrbitUpdate,
-  OrbitZoom,
-  OrbitZoomToFit,
-  PerspectiveCamera,
+  ControlsState,
+  ControlsUpdate,
+  ControlsZoomToFit,
+  Entity,
+  GeometryEntity,
   PerspectiveCameraState,
   PrepareRender,
   WrappedRenderer,
 } from './types';
+import {
+  AxisEntity,
+  CameraViewportDimensions,
+  controls,
+  controlsStateDefaults,
+  entitiesFromSolids,
+  FrameTracker,
+  MultiGridEntity,
+  perspectiveCamera,
+  perspectiveCameraStateDefaults,
+  prepareDrawCommands,
+  prepareRender,
+  Shape,
+} from './utilities';
 
-export default function render(canvas: HTMLCanvasElement, shape: Shape) {
-  // Prepare Renderer
+/* [Main] */
+function makeWrappedRenderer(
+  canvas: HTMLCanvasElement
+): WrappedRenderer.Function {
   const prepareRenderOptions: PrepareRender.AllOptions = {
-    glOptions: {
-      gl: canvas.getContext('webgl2') ?? undefined,
-    },
+    glOptions: { canvas },
   };
-  const preparedRenderer: WrappedRenderer.Function = prepareRender(
-    prepareRenderOptions
-  );
+  return prepareRender(prepareRenderOptions);
+}
 
-  // Setting up Camera
-  const perspectiveCamera: PerspectiveCamera = _perspectiveCamera;
-  let perspectiveCameraState: PerspectiveCameraState = perspectiveCameraStateDefaults;
+function addEntities(shape, geometryEntities): Entity[] {
+  const allEntities: Entity[] = [...geometryEntities];
 
+  if (shape.addAxis) allEntities.push(new AxisEntity.Class());
+  if (shape.addMultiGrid) allEntities.push(new MultiGridEntity.Class());
+
+  return allEntities;
+}
+
+function adjustCameraAngle(
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState | null = null
+): void {
+  if (controlsState === null) {
+    // Modify the position & view of the passed camera state,
+    // based on its existing position of the viewer (eye),
+    // target point the viewer is looking at (centre) & up axis
+    perspectiveCamera.update(perspectiveCameraState);
+    return;
+  }
+
+  const output: ControlsUpdate.Output = controls.update({
+    controls: controlsState,
+    camera: perspectiveCameraState,
+  });
+
+  // Manually apply unlike perspectiveCamera.update()
+  controlsState.thetaDelta = output.controls.thetaDelta;
+  controlsState.phiDelta = output.controls.phiDelta;
+  controlsState.scale = output.controls.scale;
+
+  perspectiveCameraState.position = output.camera.position;
+  perspectiveCameraState.view = output.camera.view;
+}
+
+function doDynamicResize(
+  canvas: HTMLCanvasElement,
+  perspectiveCameraState: PerspectiveCameraState
+): void {
+  const canvasBounds: DOMRect = canvas.getBoundingClientRect();
+  const devicePixelRatio: number = window.devicePixelRatio;
+
+  // Account for display scaling
+  const width: number = canvasBounds.width * devicePixelRatio;
+  const height: number = canvasBounds.height * devicePixelRatio;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  // Modify the projection, aspect ratio & viewport
   perspectiveCamera.setProjection(
     perspectiveCameraState,
     perspectiveCameraState,
-    {
-      width: 512,
-      height: 512,
-    }
+    new CameraViewportDimensions(width, height)
   );
-  perspectiveCamera.update(perspectiveCameraState, perspectiveCameraState);
+}
 
-  // Setting up Camera Controller
-  const orbitControls: OrbitControls = _orbitControls;
-  let orbitControlsState: OrbitControlsState = orbitControlsStateDefaults;
+function doZoom(
+  zoomTicks: number,
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState
+) {
+  while (zoomTicks !== 0) {
+    const currentTick: number = Math.sign(zoomTicks);
+    zoomTicks -= currentTick;
 
-  // Getting CSG Objects
-  // @ts-ignore
-  const geometries: GeometryEntity[] = entitiesFromSolids({}, shape.getSolid());
+    const scaleChange: number = currentTick * 0.1;
+    const potentialNewScale: number = controlsState.scale + scaleChange;
+    const potentialNewDistance: number =
+      vec3.distance(
+        perspectiveCameraState.position,
+        perspectiveCameraState.target
+      ) * potentialNewScale;
 
-  const shapeBoundingBox: BoundingBox = measureBoundingBox(shape.getSolid());
+    if (
+      potentialNewDistance > controlsState.limits.minDistance &&
+      potentialNewDistance < controlsState.limits.maxDistance
+    ) {
+      controlsState.scale = potentialNewScale;
+    } else break;
+  }
 
-  const maxSize: number = Math.ceil(
-    Math.max(
-      shapeBoundingBox[1][0],
-      shapeBoundingBox[1][1],
-      shapeBoundingBox[1][2]
-    )
-  );
+  adjustCameraAngle(perspectiveCameraState, controlsState);
+}
 
-  // Setting up Renderer
-  const grid: MultiGridEntity = {
-    visuals: {
-      drawCmd: 'drawGrid',
-      show: shape.grid,
-      color: [0, 0, 0, 1],
-      subColor: [0, 0, 1, 0.5],
-      fadeOut: false,
-      transparent: true,
-    },
-    size: [maxSize * 2, maxSize * 2],
-    ticks: [1, 1],
-  };
-
-  const axis: AxisEntity = {
-    visuals: {
-      drawCmd: 'drawAxis',
-      show: shape.axis,
-    },
-    size: maxSize * 1.2,
-    alwaysVisible: false,
-  };
-
-  let renderOptions: WrappedRenderer.AllData = {
+function doZoomToFit(
+  geometryEntities: GeometryEntity[],
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState
+) {
+  const options: ControlsZoomToFit.Options = {
+    controls: controlsState,
     camera: perspectiveCameraState,
-    drawCommands: prepareDrawCommands,
-    entities: [grid, axis, ...geometries],
+    entities: geometryEntities,
+  };
+  const output: ControlsZoomToFit.Output = controls.zoomToFit(options);
+
+  perspectiveCameraState.target = output.camera.target;
+  controlsState.scale = output.controls.scale;
+
+  adjustCameraAngle(perspectiveCameraState, controlsState);
+}
+
+function doRotate(
+  rotateX: number,
+  rotateY: number,
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState
+) {
+  const output = controls.rotate(
+    {
+      controls: controlsState,
+      camera: perspectiveCameraState,
+      speed: 0.0015,
+    },
+    [rotateX, rotateY]
+  );
+
+  const newControlsState = output.controls;
+  controlsState.thetaDelta = newControlsState.thetaDelta;
+  controlsState.phiDelta = newControlsState.phiDelta;
+
+  adjustCameraAngle(perspectiveCameraState, controlsState);
+}
+
+function doPan(
+  panX: number,
+  panY: number,
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState
+) {
+  const output = controls.pan(
+    {
+      controls: controlsState,
+      camera: perspectiveCameraState,
+    },
+    [panX, panY * 0.75]
+  );
+
+  const newCameraState = output.camera;
+  perspectiveCameraState.position = newCameraState.position;
+  perspectiveCameraState.target = newCameraState.target;
+
+  adjustCameraAngle(perspectiveCameraState, controlsState);
+}
+
+function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
+  canvas.addEventListener('wheel', (wheelEvent: WheelEvent) => {
+    frameTracker.changeZoomTicks(wheelEvent.deltaY);
+  });
+
+  canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
+    frameTracker.setZoomToFit();
+  });
+
+  canvas.addEventListener('pointerdown', (pointerEvent: PointerEvent) => {
+    frameTracker.setHeldPointer(pointerEvent.button);
+    frameTracker.lastX = pointerEvent.pageX;
+    frameTracker.lastY = pointerEvent.pageY;
+
+    // Detect drags even outside the canvas element's borders
+    canvas.setPointerCapture(pointerEvent.pointerId);
+  });
+  canvas.addEventListener('pointerup', (pointerEvent: PointerEvent) => {
+    frameTracker.unsetHeldPointer();
+    frameTracker.unsetLastCoordinates();
+
+    canvas.releasePointerCapture(pointerEvent.pointerId);
+  });
+
+  canvas.addEventListener('pointermove', (pointerEvent: PointerEvent) => {
+    if (!frameTracker.isPointerHeld()) return;
+
+    const currentX = pointerEvent.pageX;
+    const currentY = pointerEvent.pageY;
+    const differenceX = frameTracker.lastX - currentX;
+    const differenceY = frameTracker.lastY - currentY;
+
+    if (!(frameTracker.isPointerPan() || pointerEvent.shiftKey)) {
+      frameTracker.rotateX -= differenceX;
+      frameTracker.rotateY += differenceY;
+    } else {
+      frameTracker.panX += differenceX;
+      frameTracker.panY += differenceY;
+    }
+
+    frameTracker.lastX = currentX;
+    frameTracker.lastY = currentY;
+  });
+
+  canvas.addEventListener('contextmenu', (mouseEvent: MouseEvent) => {
+    mouseEvent.preventDefault();
+  });
+}
+
+/* [Exports] */
+export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
+  const wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
+
+  // Create our own state to modify based on the defaults
+  const perspectiveCameraState: PerspectiveCameraState = {
+    ...perspectiveCameraStateDefaults,
+    position: [1000, 1000, 1500],
+  };
+  const controlsState: ControlsState = {
+    ...controlsStateDefaults,
   };
 
-  // Running Renderer and Mouse Events to Control Camera
-  let lastX: number = 0;
-  let lastY: number = 0;
+  const geometryEntities: GeometryEntity[] = entitiesFromSolids(
+    undefined,
+    shape.getSolid()
+  );
 
-  const rotateSpeed: number = 0.002;
-  const panSpeed: number = 1;
-  const zoomSpeed: number = 0.08;
-  let rotateDelta: Numbers2 = [0, 0];
-  let panDelta: Numbers2 = [0, 0];
-  let zoomDelta: number = 0;
-  let pointerDown: boolean = false;
-  let zoomToFit: boolean = true;
-  let updateView: boolean = true;
+  // Data to pass to the wrapped renderer we made, below
+  const wrappedRendererData: WrappedRenderer.AllData = {
+    entities: addEntities(shape, geometryEntities),
+    drawCommands: prepareDrawCommands,
+    camera: perspectiveCameraState,
+  };
 
-  function doRotatePanZoom() {
-    if (rotateDelta[0] || rotateDelta[1]) {
-      const updated: OrbitRotate = orbitControls.rotate(
-        {
-          controls: orbitControlsState,
-          camera: perspectiveCameraState,
-          speed: rotateSpeed,
-        },
-        rotateDelta
+  // Custom object to track processing
+  const frameTracker: FrameTracker = new FrameTracker();
+
+  // Create a callback function.
+  // Request animation frame with it once; it will loop itself from there
+  function animationCallback(_timestamp: DOMHighResTimeStamp) {
+    doDynamicResize(canvas, perspectiveCameraState);
+
+    if (frameTracker.shouldZoom()) {
+      doZoom(
+        frameTracker.getZoomTicks(),
+        perspectiveCameraState,
+        controlsState
       );
-      orbitControlsState = { ...orbitControlsState, ...updated.controls };
-      updateView = true;
-      rotateDelta = [0, 0];
+      frameTracker.didZoom();
     }
 
-    if (panDelta[0] || panDelta[1]) {
-      const updated: OrbitPan = orbitControls.pan(
-        {
-          controls: orbitControlsState,
-          camera: perspectiveCameraState,
-          speed: panSpeed,
-        },
-        panDelta
+    if (frameTracker.shouldZoomToFit()) {
+      doZoomToFit(geometryEntities, perspectiveCameraState, controlsState);
+      frameTracker.didZoomToFit();
+    }
+
+    if (frameTracker.shouldRotate()) {
+      doRotate(
+        frameTracker.rotateX,
+        frameTracker.rotateY,
+        perspectiveCameraState,
+        controlsState
       );
-      orbitControlsState = { ...orbitControlsState, ...updated.controls };
-      panDelta = [0, 0];
-      perspectiveCameraState = { ...perspectiveCameraState, ...updated.camera };
-      updateView = true;
+      frameTracker.didRotate();
     }
 
-    if (zoomDelta) {
-      const updated: OrbitZoom = orbitControls.zoom(
-        {
-          controls: orbitControlsState,
-          camera: perspectiveCameraState,
-          speed: zoomSpeed,
-        },
-        zoomDelta
+    if (frameTracker.shouldPan()) {
+      doPan(
+        frameTracker.panX,
+        frameTracker.panY,
+        perspectiveCameraState,
+        controlsState
       );
-      orbitControlsState = { ...orbitControlsState, ...updated.controls };
-      zoomDelta = 0;
-      updateView = true;
+      frameTracker.didPan();
     }
 
-    if (zoomToFit) {
-      orbitControlsState.zoomToFit.tightness = 1.5;
-      const updated: OrbitZoomToFit = orbitControls.zoomToFit({
-        controls: orbitControlsState,
-        camera: perspectiveCameraState,
-        entities: geometries,
-      });
-      orbitControlsState = { ...orbitControlsState, ...updated.controls };
-      perspectiveCameraState = { ...perspectiveCameraState, ...updated.camera };
-      zoomToFit = false;
-      updateView = true;
-    }
+    // Trigger render once processing for the current frame is done
+    wrappedRenderer(wrappedRendererData);
+
+    window.requestAnimationFrame(animationCallback);
   }
+  window.requestAnimationFrame(animationCallback);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function updateAndRender(timestamp: DOMHighResTimeStamp) {
-    doRotatePanZoom();
-
-    if (updateView) {
-      const updates: OrbitUpdate = orbitControls.update({
-        controls: orbitControlsState,
-        camera: perspectiveCameraState,
-      });
-      orbitControlsState = { ...orbitControlsState, ...updates.controls };
-      updateView = orbitControlsState.changed;
-      perspectiveCameraState = { ...perspectiveCameraState, ...updates.camera };
-      perspectiveCamera.update(perspectiveCameraState);
-      renderOptions = {
-        ...renderOptions,
-        ...{ camera: perspectiveCameraState },
-      };
-      preparedRenderer(renderOptions);
-    }
-    window.requestAnimationFrame(updateAndRender);
-  }
-  window.requestAnimationFrame(updateAndRender);
-
-  /* eslint-disable no-param-reassign */
-  function moveHandler(ev: PointerEvent) {
-    if (!pointerDown) return;
-    const dx: number = lastX - ev.pageX;
-    const dy: number = ev.pageY - lastY;
-
-    const shiftKey: boolean = ev.shiftKey === true;
-    if (shiftKey) {
-      panDelta[0] += dx;
-      panDelta[1] += dy;
-    } else {
-      rotateDelta[0] -= dx;
-      rotateDelta[1] -= dy;
-    }
-
-    lastX = ev.pageX;
-    lastY = ev.pageY;
-
-    ev.preventDefault();
-  }
-  function downHandler(ev: PointerEvent) {
-    pointerDown = true;
-    lastX = ev.pageX;
-    lastY = ev.pageY;
-    canvas.setPointerCapture(ev.pointerId);
-    ev.preventDefault();
-  }
-
-  function upHandler(ev: PointerEvent) {
-    pointerDown = false;
-    canvas.releasePointerCapture(ev.pointerId);
-    ev.preventDefault();
-  }
-
-  function wheelHandler(ev: WheelEvent) {
-    zoomDelta += ev.deltaY;
-  }
-
-  function doubleClickHandler(ev: MouseEvent) {
-    zoomToFit = true;
-    ev.preventDefault();
-  }
-
-  canvas.addEventListener('pointermove', moveHandler);
-  canvas.addEventListener('pointerdown', downHandler);
-  canvas.addEventListener('pointerup', upHandler);
-  canvas.addEventListener('wheel', wheelHandler, { passive: true });
-  canvas.addEventListener('dblclick', doubleClickHandler);
+  registerEvents(canvas, frameTracker);
 }

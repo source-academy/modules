@@ -8,16 +8,21 @@
  * @author Joel Leow
  */
 
-import { primitives, geometries } from '@jscad/modeling';
+import { geometries, primitives } from '@jscad/modeling';
 import { colorize as _colorize, hexToRgb } from '@jscad/modeling/src/colors';
+import { RGB } from '@jscad/modeling/src/colors/types';
+import { Geom3 } from '@jscad/modeling/src/geometries/types';
+import {
+  measureArea,
+  measureBoundingBox,
+  measureVolume,
+} from '@jscad/modeling/src/measurements';
 import {
   intersect as _intersect,
   subtract as _subtract,
   union as _union,
 } from '@jscad/modeling/src/operations/booleans';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
-import { RGB } from '@jscad/modeling/src/colors/types';
-import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   align,
   center,
@@ -27,27 +32,22 @@ import {
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
 import {
-  measureArea,
-  measureVolume,
-  measureBoundingBox,
-} from '@jscad/modeling/src/measurements';
-import {
-  Shape,
-  looseInstanceOf,
   black as _black,
-  navy as _navy,
-  green as _green,
-  teal as _teal,
-  purple as _purple,
-  orange as _orange,
-  silver as _silver,
-  grey as _grey,
   blue as _blue,
-  lime as _lime,
   cyan as _cyan,
+  green as _green,
+  grey as _grey,
+  lime as _lime,
+  looseInstanceOf,
+  navy as _navy,
+  orange as _orange,
   pink as _pink,
-  yellow as _yellow,
+  purple as _purple,
+  Shape,
+  silver as _silver,
+  teal as _teal,
   white as _white,
+  yellow as _yellow,
 } from './utilities';
 import { BoundingBox, Numbers3 } from './types';
 

@@ -1,11 +1,13 @@
+let todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
+let todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
+
 module.exports = {
   root: true,
   extends: ['eslint:recommended', 'prettier', 'plugin:prettier/recommended'],
   plugins: ['prettier'],
   ignorePatterns: ['build/**/*'],
   rules: {
-    'linebreak-style': 'off',
-    'prettier/prettier': ['warn'],
+    'prettier/prettier': 1,
   },
   overrides: [
     {
@@ -42,8 +44,6 @@ module.exports = {
       plugins: ['react', '@typescript-eslint', 'eslint-plugin-prettier'],
       extends: ['airbnb-typescript', 'eslint-config-prettier'],
       rules: {
-        'linebreak-style': 'off',
-        'prettier/prettier': ['warn'],
         '@typescript-eslint/naming-convention': [
           'warn',
           {
@@ -63,7 +63,43 @@ module.exports = {
         // turn on errors for missing imports
         // @see https://www.npmjs.com/package/eslint-import-resolver-typescript
         'import/no-unresolved': 'error',
-        'no-nested-ternary': 'off'
+
+        // Allow unused arguments if they start with an underscore
+        '@typescript-eslint/no-unused-vars': [
+          1,
+          {
+            argsIgnorePattern: '^_',
+            caughtErrors: 'all',
+            caughtErrorsIgnorePattern: '^_',
+          },
+        ],
+
+        // Allow multiple classes per file, eg a utilities file,
+        // rather than creating a bunch of files to separate responsibilities
+        'max-classes-per-file': 0,
+
+        // Enable exporting non-destructured variables,
+        // so that comments can get used to generate documentation
+        'prefer-destructuring': 0,
+
+        // Avoid messy destructuring from deeply nested Props
+        'react/destructuring-assignment': 0,
+
+        // Allow reassignment for flexibility, especially for properties,
+        // eg working with canvases or state objects
+        'no-param-reassign': 0,
+
+        // Account for warning comments
+        'spaced-comment': [1, 'always', { markers: todoTreeKeywordsAll }],
+
+        // Allow shorthand logic
+        'no-nested-ternary': 0,
+
+        // Error → warn
+        '@typescript-eslint/lines-between-class-members': 1,
+        'prefer-template': 1,
+        'class-methods-use-this': 1,
+        'import/prefer-default-export': 1,
       },
       settings: {
         'import/parsers': {
