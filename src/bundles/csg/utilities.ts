@@ -127,13 +127,20 @@ export class Shape {
 }
 
 // To track the processing to be done between frames
+export enum MousePointer {
+  NONE = -1,
+  LEFT = 0,
+  RIGHT = 2,
+  MIDDLE = 1,
+  OTHER = 7050,
+}
 export class FrameTracker {
   private zoomTicks = 0;
 
   // Start off the first frame by initially zooming to fit
   private zoomToFitOnce = true;
 
-  public isHeld = false;
+  private heldPointer: MousePointer = MousePointer.NONE;
 
   public lastX = -1;
 
@@ -146,10 +153,6 @@ export class FrameTracker {
   public panX = 0;
 
   public panY = 0;
-
-  public constructor() {
-    this.unsetLastCoordinates();
-  }
 
   public getZoomTicks(): number {
     return this.zoomTicks;
@@ -166,6 +169,23 @@ export class FrameTracker {
   public unsetLastCoordinates() {
     this.lastX = -1;
     this.lastY = -1;
+  }
+
+  public setHeldPointer(mouseEventButton: number) {
+    switch (mouseEventButton) {
+      case MousePointer.LEFT:
+      case MousePointer.RIGHT:
+      case MousePointer.MIDDLE:
+        this.heldPointer = mouseEventButton;
+        break;
+      default:
+        this.heldPointer = MousePointer.OTHER;
+        break;
+    }
+  }
+
+  public unsetHeldPointer() {
+    this.heldPointer = MousePointer.NONE;
   }
 
   public shouldZoom(): boolean {
@@ -200,6 +220,14 @@ export class FrameTracker {
   public didPan() {
     this.panX = 0;
     this.panY = 0;
+  }
+
+  public isPointerHeld(): boolean {
+    return this.heldPointer !== MousePointer.NONE;
+  }
+
+  public isPointerPan(): boolean {
+    return [MousePointer.RIGHT, MousePointer.MIDDLE].includes(this.heldPointer);
   }
 }
 

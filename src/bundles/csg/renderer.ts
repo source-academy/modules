@@ -148,7 +148,7 @@ function doRotate(
     {
       controls: controlsState,
       camera: perspectiveCameraState,
-      speed: 0.002,
+      speed: 0.0015,
     },
     [rotateX, rotateY]
   );
@@ -191,32 +191,31 @@ function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
   });
 
   canvas.addEventListener('pointerdown', (pointerEvent: PointerEvent) => {
-    frameTracker.isHeld = true;
+    frameTracker.setHeldPointer(pointerEvent.button);
     frameTracker.lastX = pointerEvent.pageX;
     frameTracker.lastY = pointerEvent.pageY;
 
+    // Detect drags even outside the canvas element's borders
     canvas.setPointerCapture(pointerEvent.pointerId);
   });
   canvas.addEventListener('pointerup', (pointerEvent: PointerEvent) => {
-    frameTracker.isHeld = false;
+    frameTracker.unsetHeldPointer();
     frameTracker.unsetLastCoordinates();
 
     canvas.releasePointerCapture(pointerEvent.pointerId);
   });
 
   canvas.addEventListener('pointermove', (pointerEvent: PointerEvent) => {
-    if (!frameTracker.isHeld) return;
+    if (!frameTracker.isPointerHeld()) return;
 
     const currentX = pointerEvent.pageX;
     const currentY = pointerEvent.pageY;
     const differenceX = frameTracker.lastX - currentX;
     const differenceY = frameTracker.lastY - currentY;
 
-    const isRightClick = pointerEvent.button === 2;
-    const isShift = pointerEvent.shiftKey;
-    if (!(isRightClick || isShift)) {
+    if (!(frameTracker.isPointerPan() || pointerEvent.shiftKey)) {
       frameTracker.rotateX -= differenceX;
-      frameTracker.rotateY -= differenceY;
+      frameTracker.rotateY += differenceY;
     } else {
       frameTracker.panX += differenceX;
       frameTracker.panY += differenceY;
@@ -224,6 +223,10 @@ function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
 
     frameTracker.lastX = currentX;
     frameTracker.lastY = currentY;
+  });
+
+  canvas.addEventListener('contextmenu', (mouseEvent: MouseEvent) => {
+    mouseEvent.preventDefault();
   });
 }
 
