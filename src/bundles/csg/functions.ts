@@ -49,7 +49,7 @@ import {
   white as _white,
   yellow as _yellow,
 } from './utilities';
-import { BoundingBox, Numbers3 } from './types';
+import { BoundingBox, CoordinatesXYZ } from './types';
 
 // =============================================================================
 // Colors
@@ -346,7 +346,7 @@ export function scale_z(shape: Shape, z: number): Shape {
  */
 export function shape_center(shape: Shape): (axis: String) => number {
   const bounds: BoundingBox = measureBoundingBox(shape.getSolid());
-  const centerCoords: Numbers3 = [
+  const centerCoords: CoordinatesXYZ = [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
     bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
     bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
