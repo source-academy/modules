@@ -68,23 +68,6 @@ export namespace ControlsUpdate {
     };
   };
 }
-//FIXME
-// export namespace ControlsZoom {
-//   export type Function = (options: Options, zoomDelta: number) => Output;
-
-//   export type Options = {
-//     controls: ControlsState;
-//     camera: CameraState;
-//     speed?: number;
-//   };
-
-//   export type Output = {
-//     controls: {
-//       scale: number;
-//     };
-//     camera: CameraState;
-//   };
-// }
 export namespace ControlsZoomToFit {
   export type Function = (options: Options) => Output;
 
