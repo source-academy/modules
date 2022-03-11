@@ -7,6 +7,9 @@ let renderingContext: WebGLRenderingContext | null;
 let programs: ProgramInfo;
 let buffersInfo: BufferInfo;
 
+/** @hidden */
+export const drawnCurves: ShapeDrawn[] = [];
+
 // Vertex shader program
 const vsS: string = `
 attribute vec4 aFragColor;
@@ -340,7 +343,7 @@ export default function generateCurve(
     }
   }
 
-  return {
+  const drawnCurve = {
     toReplString: () => '<ShapeDrawn>',
     init: (canvas) => {
       canvasElement = canvas;
@@ -404,7 +407,7 @@ export default function generateCurve(
         curveBuffer,
         curveColorBuffer,
       };
-      return space === '3D';
+      // return space === '3D';
     },
     redraw: (angle) => {
       if (!renderingContext) {
@@ -420,5 +423,9 @@ export default function generateCurve(
         angle
       );
     },
+    is3D: () => space === '3D',
   };
+
+  drawnCurves.push(drawnCurve);
+  return drawnCurve;
 }

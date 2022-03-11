@@ -50,9 +50,7 @@ import generateCurve from './curves_webgl';
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The parts between (0,0) and
- * (1,1) of the resulting Drawing are shown in the window.
+ * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -68,11 +66,9 @@ export function draw_connected(num: number): RenderFunction {
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at `num` sample points and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The Drawing is translated and
- * stretched/shrunk to show the full curve and maximize its width and height, with
- * some padding.
+ * Curve at `num` sample points and connecting each pair with a line. The Drawing is
+ * translated and stretched/shrunk to show the full curve and maximize its width
+ * and height, with some padding.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -88,11 +84,9 @@ export function draw_connected_full_view(num: number): RenderFunction {
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at `num` sample points and connecting each pair with a line.
- * When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The Drawing is translated
- * and scaled proportionally to show the full curve and maximize its size, with
- * some padding.
+ * Curve at `num` sample points and connecting each pair with a line. The Drawing
+ * is translated and scaled proportionally to show the full curve and maximize
+ * its size, with some padding.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -111,10 +105,8 @@ export function draw_connected_full_view_proportional(
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points. The Drawing consists of isolated
- * points, and does not connect them. When a program evaluates to a Drawing,
- * the Source system displays it graphically, in a window, instead of textually.
- * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the
- * window.
+ * points, and does not connect them. The parts between (0,0) and (1,1) of the
+ * resulting Drawing are shown in the window.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1,there are `num + 1` evenly spaced sample points
@@ -131,10 +123,9 @@ export function draw_points(num: number): RenderFunction {
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points. The Drawing consists of isolated
- * points, and does not connect them. When a program evaluates to a Drawing, the
- * Source system displays it graphically, in a window, instead of textually. The
- * Drawing is translated and stretched/shrunk to show the full curve and maximize
- * its width and height, with some padding.
+ * points, and does not connect them. The Drawing is translated and
+ * stretched/shrunk to show the full curve and maximize its width and height,
+ * with some padding.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -151,10 +142,9 @@ export function draw_points_full_view(num: number): RenderFunction {
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points. The Drawing consists of isolated
- * points, and does not connect them. When a program evaluates to a Drawing, the
- * Source system displays it graphically, in a window, instead of textually. The
- * Drawing is translated and scaled proportionally with its size maximized to fit
- * entirely inside the window, with some padding.
+ * points, and does not connect them. The Drawing is translated and scaled
+ * proportionally with its size maximized to fit entirely inside the window,
+ * with some padding.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -173,9 +163,8 @@ export function draw_points_full_view_proportional(
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
  * the 3D Curve at `num` sample points and connecting each pair with
- * a line. When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The parts between (0,0,0) and
- * (1,1,1) of the resulting Drawing are shown within the unit cube.
+ * a line. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are
+ * shown within the unit cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -192,10 +181,8 @@ export function draw_3D_connected(num: number): RenderFunction {
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
  * the 3D Curve at `num` sample points and connecting each pair with
- * a line. When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The Drawing is translated and
- * stretched/shrunk to show the full curve and maximize its width and height within
- * the cube.
+ * a line. The Drawing is translated and stretched/shrunk to show the full
+ * curve and maximize its width and height within the cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -212,9 +199,8 @@ export function draw_3D_connected_full_view(num: number): RenderFunction {
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
  * the 3D Curve at `num` sample points and connecting each pair with
- * a line. When a program evaluates to a Drawing, the Source system displays it
- * graphically, in a window, instead of textually. The Drawing is translated and
- * scaled proportionally with its size maximized to fit entirely inside the cube.
+ * a line. The Drawing is translated and scaled proportionally with its size
+ * maximized to fit entirely inside the cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -233,10 +219,8 @@ export function draw_3D_connected_full_view_proportional(
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
  * the 3D Curve at `num` sample points. The Drawing consists of
- * isolated points, and does not connect them. When a program evaluates to a
- * Drawing, the Source system displays it graphically, in a window, instead of
- * textually. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are
- * shown within the unit cube.
+ * isolated points, and does not connect them. The parts between (0,0,0)
+ * and (1,1,1) of the resulting Drawing are shown within the unit cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -253,10 +237,8 @@ export function draw_3D_points(num: number): RenderFunction {
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
  * the 3D Curve at `num` sample points. The Drawing consists of
- * isolated points, and does not connect them. When a program evaluates to a
- * Drawing, the Source system displays it graphically, in a window, instead of
- * textually. The Drawing is translated and stretched/shrunk to maximize its
- * size to fit entirely inside the cube.
+ * isolated points, and does not connect them. The Drawing is translated and
+ * stretched/shrunk to maximize its size to fit entirely inside the cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
@@ -273,10 +255,8 @@ export function draw_3D_points_full_view(num: number): RenderFunction {
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
  * the 3D Curve at `num` sample points. The Drawing consists of
- * isolated points, and does not connect them. When a program evaluates to a
- * Drawing, the Source system displays it graphically, in a window, instead of
- * textually. The Drawing is translated and scaled proportionally with its size
- * maximized to fit entirely inside the cube.
+ * isolated points, and does not connect them. The Drawing is translated and
+ * scaled proportionally with its size maximized to fit entirely inside the cube.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points

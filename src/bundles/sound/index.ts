@@ -1,3 +1,4 @@
+import { ModuleContext } from 'js-slang';
 import {
   // Constructor/Accessors/Typecheck
   make_sound,
@@ -6,6 +7,7 @@ import {
   is_sound,
   // Play-related
   play,
+  play_wave,
   play_concurrently,
   stop,
   // Recording
@@ -35,9 +37,31 @@ import {
   piano,
   trombone,
   violin,
+  audioPlayed,
 } from './functions';
+import { SoundsModuleState } from './types';
 
-export default function sounds() {
+export default function sounds(params, context: Map<string, ModuleContext>) {
+  // Update the module's global context
+  let moduleContext = context.get('sound');
+
+  if (moduleContext == null) {
+    moduleContext = {
+      tabs: [],
+      state: {
+        audioPlayed,
+      },
+    };
+
+    context.set('sound', moduleContext);
+  } else if (moduleContext.state == null) {
+    moduleContext.state = {
+      audioPlayed,
+    };
+  } else {
+    (moduleContext.state as SoundsModuleState).audioPlayed = audioPlayed;
+  }
+
   return {
     // Constructor/Accessors/Typecheck
     make_sound,
@@ -46,6 +70,7 @@ export default function sounds() {
     is_sound,
     // Play-related
     play,
+    play_wave,
     play_concurrently,
     stop,
     // Recording

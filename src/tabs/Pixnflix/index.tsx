@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { ErrorLogger } from '../../bundles/pix_n_flix/types';
+import { ErrorLogger, TabsPackage } from '../../bundles/pix_n_flix/types';
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
@@ -34,7 +34,8 @@ type Video = {
   init: (
     video: HTMLVideoElement | null,
     canvas: HTMLCanvasElement | null,
-    errorLogger: ErrorLogger
+    errorLogger: ErrorLogger,
+    tabsPackage: TabsPackage
   ) => number[];
   deinit: () => void;
   startVideo: () => void;
@@ -76,6 +77,15 @@ class PixNFlix extends React.Component<Props, State> {
     }
   }
 
+  private onClickStill = () => {
+    const { mode } = this.state;
+    if (mode === ('still' as SideContentVideoDisplayMode)) {
+      this.handleSnapPicture();
+    } else {
+      this.swapModes(mode)();
+    }
+  };
+
   public setupVideoService = () => {
     if (this.$video && this.$canvas && this.isPixNFlix()) {
       const { debuggerContext } = this.props;
@@ -85,7 +95,10 @@ class PixNFlix extends React.Component<Props, State> {
       const videoProperties: number[] = this.pixNFlix.init(
         this.$video,
         this.$canvas,
-        this.printError
+        this.printError,
+        {
+          onClickStill: this.onClickStill,
+        }
       );
       this.setState({
         height: videoProperties[0],

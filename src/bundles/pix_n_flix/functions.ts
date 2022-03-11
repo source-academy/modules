@@ -25,6 +25,7 @@ import {
   Pixels,
   Filter,
   Queue,
+  TabsPackage,
 } from './types';
 
 import {
@@ -47,6 +48,7 @@ let videoElement: VideoElement;
 let canvasElement: CanvasElement;
 let canvasRenderingContext: CanvasRenderingContext2D;
 let errorLogger: ErrorLogger;
+let tabsPackage: TabsPackage;
 
 const pixels: Pixels = [];
 const temporaryPixels: Pixels = [];
@@ -341,11 +343,13 @@ function lateEnqueue(funcToAdd: Queue): void {
 function init(
   video: VideoElement,
   canvas: CanvasElement,
-  _errorLogger: ErrorLogger
+  _errorLogger: ErrorLogger,
+  _tabsPackage: TabsPackage
 ): number[] {
   videoElement = video;
   canvasElement = canvas;
   errorLogger = _errorLogger;
+  tabsPackage = _tabsPackage;
   const context = canvasElement.getContext('2d');
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
@@ -362,7 +366,7 @@ function init(
  * @hidden
  */
 function deinit(): void {
-  snapPicture();
+  stopVideo();
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
@@ -542,9 +546,11 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
  *
  * @param delay Delay in ms after the video starts.
  */
-export function pause_after(delay: number): void {
+export function pause_at(delay: number): void {
   // prevent negative delays
-  lateEnqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
+  lateEnqueue(() =>
+    setTimeout(tabsPackage.onClickStill, delay >= 0 ? delay : -delay)
+  );
 }
 
 /**
