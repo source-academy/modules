@@ -112,6 +112,7 @@ class CsgCanvasHolder extends React.Component<Props, State> {
           // Centre canvas when sidebar is wider than it
           display: 'flex',
           justifyContent: 'center',
+          flexDirection: 'column',
         }}
       >
         <div
