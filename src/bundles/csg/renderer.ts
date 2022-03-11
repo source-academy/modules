@@ -98,7 +98,7 @@ function doZoom(
   controlsState: ControlsState
 ) {
   while (zoomTicks !== 0) {
-    const currentTick = Math.sign(zoomTicks);
+    const currentTick: number = Math.sign(zoomTicks);
     zoomTicks -= currentTick;
 
     const scaleChange: number = currentTick * 0.1;
