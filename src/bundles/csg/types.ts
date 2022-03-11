@@ -6,7 +6,6 @@ import {
   controls as _controls,
   drawCommands,
 } from '@jscad/regl-renderer';
-import * as orbitTypes from '@jscad/regl-renderer/types/controls/orbitControls';
 import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 import { InitializationOptions } from 'regl';
 
