@@ -65,7 +65,7 @@ export namespace AxisEntity {
       show: true,
     };
 
-    public alwaysVisible: boolean = true;
+    public alwaysVisible: boolean = false;
   }
 }
 
