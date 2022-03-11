@@ -24,17 +24,18 @@ import {
 /* [Exports] */
 
 // [Proper typing for JS in regl-renderer]
-export const prepareRender: PrepareRender.Function = _prepareRender;
-
 export const perspectiveCamera: PerspectiveCamera = cameras.perspective;
 export const perspectiveCameraStateDefaults: PerspectiveCameraState =
   perspectiveCamera.defaults;
 
+export const controls: Controls = (_controls.orbit as unknown) as Controls;
+export const controlsStateDefaults: ControlsState = controls.defaults;
+
+export const prepareRender: PrepareRender.Function = _prepareRender;
+
 export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSolids as unknown) as EntitiesFromSolids.Function;
 export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
 
-export const controls: Controls = _controls.orbit;
-export const controlsStateDefaults: ControlsState = controls.defaults;
 export const zoomToFit: ZoomToFit.Function = (controls.zoomToFit as unknown) as ZoomToFit.Function;
 
 // [Custom]
@@ -100,6 +101,7 @@ export namespace MultiGridEntity {
       subColor: [0.5, 0.5, 0.5, 1],
     };
 
+    //TODO construct with specific amount
     public size: [number, number] = [1000, 1000];
 
     public ticks: [number, number] = [10, 1];
@@ -131,7 +133,7 @@ export class Shape {
 export class FrameTracker {
   public constructor(
     // Start off the first frame by initially zooming to fit
-    public zoomToFit: boolean = true
+    public doZoomToFit: boolean = true
   ) {}
 }
 

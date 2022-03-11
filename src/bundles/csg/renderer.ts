@@ -1,6 +1,7 @@
 /* [Imports] */
 import {
   ControlsState,
+  ControlsUpdate,
   Entity,
   GeometryEntity,
   PerspectiveCameraState,
@@ -11,6 +12,7 @@ import {
 import {
   AxisEntity,
   CameraViewportDimensions,
+  controls,
   controlsStateDefaults,
   entitiesFromSolids,
   FrameTracker,
@@ -65,9 +67,9 @@ function doDynamicResize(
 }
 
 function doZoomToFit(
-  controlsState: ControlsState,
+  geometryEntities: GeometryEntity[],
   perspectiveCameraState: PerspectiveCameraState,
-  geometryEntities: GeometryEntity[]
+  controlsState: ControlsState
 ) {
   const options: ZoomToFit.Options = {
     controls: controlsState,
@@ -77,19 +79,34 @@ function doZoomToFit(
   const output: ZoomToFit.Output = zoomToFit(options);
   console.log(output);
 
-  // TODO
-  // orbitControlsState = { ...orbitControlsState, ...updated.controls };
-  // perspectiveCameraState = { ...perspectiveCameraState, ...updated.camera };
-  // updateView = true;
+  perspectiveCameraState.target = output.camera.target;
+  controlsState.scale = output.controls.scale;
 }
 
 function adjustCameraAngle(
-  perspectiveCameraState: PerspectiveCameraState
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState | null = null
 ): void {
-  // Modify the position & view of the passed camera state,
-  // based on its existing position of the viewer (eye),
-  // target point the viewer is looking at (centre) & up axis
-  perspectiveCamera.update(perspectiveCameraState);
+  if (controlsState === null) {
+    // Modify the position & view of the passed camera state,
+    // based on its existing position of the viewer (eye),
+    // target point the viewer is looking at (centre) & up axis
+    perspectiveCamera.update(perspectiveCameraState);
+    return;
+  }
+
+  const output: ControlsUpdate.Output = controls.update({
+    controls: controlsState,
+    camera: perspectiveCameraState,
+  });
+  console.log(output);
+
+  // Manually apply unlike perspectiveCamera.update()
+  controlsState.thetaDelta = output.controls.thetaDelta;
+  controlsState.phiDelta = output.controls.phiDelta;
+
+  perspectiveCameraState.position = output.camera.position;
+  perspectiveCameraState.view = output.camera.view;
 }
 
 /* [Exports] */
@@ -99,12 +116,9 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
   // Create our own state to modify based on the defaults
   const perspectiveCameraState: PerspectiveCameraState = {
     ...perspectiveCameraStateDefaults,
-    // position: [1.414811372756958, 1.7292139530181885, 2.200817823410034],
   };
-  // adjustCameraAngle(perspectiveCameraState);
   const controlsState: ControlsState = {
     ...controlsStateDefaults,
-    //TODO Meaning behind zoom tightness 1.5
   };
 
   const geometryEntities: GeometryEntity[] = entitiesFromSolids(
@@ -127,10 +141,11 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
   function animationCallback(_timestamp: DOMHighResTimeStamp) {
     doDynamicResize(canvas, perspectiveCameraState);
 
-    if (frameTracker.zoomToFit) {
-      frameTracker.zoomToFit = false;
+    if (frameTracker.doZoomToFit) {
+      frameTracker.doZoomToFit = false;
 
-      doZoomToFit(controlsState, perspectiveCameraState, geometryEntities);
+      doZoomToFit(geometryEntities, perspectiveCameraState, controlsState);
+      adjustCameraAngle(perspectiveCameraState, controlsState);
     }
 
     // Trigger render once processing for the current frame is done

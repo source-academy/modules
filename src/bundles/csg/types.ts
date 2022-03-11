@@ -8,7 +8,6 @@ import {
 } from '@jscad/regl-renderer';
 import * as orbitTypes from '@jscad/regl-renderer/types/controls/orbitControls';
 import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
-import * as renderDefaults from '@jscad/regl-renderer/types/rendering/renderDefaults';
 import { InitializationOptions } from 'regl';
 
 /* [Main] */
@@ -20,95 +19,77 @@ const controls = _controls.orbit;
 /* [Exports] */
 
 // [Proper typing for JS in regl-renderer]
-export namespace PrepareRender {
-  // @jscad\regl-renderer\src\rendering\render.js
-  export type Function = (options: AllOptions) => WrappedRenderer.Function;
+type Numbers3 = [number, number, number];
+export type VectorXYZ = Numbers3;
+export type CoordinatesXYZ = Numbers3;
 
-  // @jscad\regl-renderer\src\rendering\render.js
-  export type AllOptions = {
-    // Used to initialise Regl from the REGL package constructor
-    glOptions: InitializationOptions;
-  };
-}
+export type Mat4 = Float32Array;
 
-export type CameraState = OrthographicCameraState | PerspectiveCameraState;
-export type OrthographicCameraState = typeof orthographicCamera.cameraState;
-export type PerspectiveCameraState = typeof perspectiveCamera.cameraState;
-
-export type OrthographicCamera = typeof orthographicCamera;
+//  @jscad\regl-renderer\src\cameras\perspectiveCamera.js
+//  @jscad\regl-renderer\src\cameras\orthographicCamera.js
 export type PerspectiveCamera = typeof perspectiveCamera;
+export type OrthographicCamera = typeof orthographicCamera;
 
-// When called, the WrappedRenderer creates a main DrawCommand.
-// This main DrawCommand then gets called as a scoped command,
-// used to create & call more DrawCommands for the #entities.
-// Nested DrawCommands get cached
-// & may store some Entity properties during setup,
-// but properties passed in from Props later may take precedence.
-// The main DrawCommand is said to be in charge of injecting most uniforms into
-// the Regl context, ie keeping track of all Regl global state
-export namespace WrappedRenderer {
-  // @jscad\regl-renderer\src\rendering\render.js
-  export type Function = (data: AllData) => void;
+export type PerspectiveCameraState = Omit<
+  typeof perspectiveCamera.cameraState,
+  'target' | 'position' | 'view'
+> & {
+  target: CoordinatesXYZ;
 
-  // @jscad\regl-renderer\src\rendering\render.js
-  // Gets used in the WrappedRenderer.
-  // Also gets passed as Props into the main DrawCommand,
-  // where it is used in setup specified by the internal
-  // renderContext.js/renderWrapper.
-  // The lambda of the main DrawCommand does not use those Props, rather,
-  // it references the data in the WrappedRenderer directly.
-  // Therefore, regl.prop() is not called,
-  // nor are Props used via the semantic equivalent (context, props) => {}.
-  // The context passed to that lambda also remains unused
-  export type AllData = {
-    rendering?: RenderOptions;
+  position: CoordinatesXYZ;
+  view: Mat4;
+};
+export type OrthographicCameraState = typeof orthographicCamera.cameraState;
+export type CameraState = PerspectiveCameraState | OrthographicCameraState;
 
-    entities: Entity[];
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type Controls = Omit<typeof controls, 'update'> & {
+  update: ControlsUpdate.Function;
+};
+export namespace ControlsUpdate {
+  export type Function = (options: Options) => Output;
 
-    drawCommands: PrepareDrawCommands;
-
-    // Along with all of the relevant Entity's & Entity#visuals's properties,
-    // this gets stuffed into each nested DrawCommand as Props.
-    // Messy & needs tidying in regl-renderer
+  export type Options = {
+    controls: ControlsState;
     camera: CameraState;
   };
 
-  // @jscad\regl-renderer\src\rendering\renderDefaults.js
-  export type RenderOptions = typeof renderDefaults & {
-    // Custom value used early on in render.js.
-    // Clears the canvas to this background colour
-    background?: RGBA;
-
-    // Default value used directly in V2's entitiesFromSolids.js as the default Geometry colour.
-    // Default value also used directly in various rendering commands as their shader uniforms' default colour.
-    // Custom value appears unused
-    meshColor?: RGBA;
-
-    // Custom value used in various rendering commands as shader uniforms
-    lightColor?: RGBA;
-    lightDirection?: VectorXYZ;
-    ambientLightAmount?: number;
-    diffuseLightAmount?: number;
-    specularLightAmount?: number;
-    materialShininess?: number; // As uMaterialShininess in main DrawCommand
-
-    // Unused
-    lightPosition?: CoordinatesXYZ; // See also lightDirection
+  export type Output = {
+    controls: {
+      thetaDelta: number;
+      phiDelta: number;
+      scale: number;
+      changed: boolean;
+    };
+    camera: {
+      position: CoordinatesXYZ;
+      view: Mat4;
+    };
   };
-
-  // There are 4 rendering commands to use in regl-renderer:
-  // drawAxis, drawGrid, drawLines & drawMesh.
-  // drawExps appears abandoned.
-  // Only once passed Regl & an Entity do they return an actual DrawCommand
-  export type PrepareDrawCommands = Record<string, PrepareDrawCommandFunction>;
-  export type PrepareDrawCommandFunction =
-    | typeof drawCommands
-    | typeof makeDrawMultiGrid;
 }
 
-export type VectorXYZ = Numbers3;
-export type CoordinatesXYZ = Numbers3;
-type Numbers3 = [number, number, number];
+export type ControlsState = Omit<
+  typeof controls.controlsState,
+  'scale' | 'thetaDelta' | 'phiDelta'
+> &
+  typeof controls.controlsProps & {
+    scale: number;
+
+    thetaDelta: number;
+    phiDelta: number;
+  };
+
+// @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.js
+// @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.test.js
+export type Geometry = {
+  type: '2d' | '3d';
+  positions: CoordinatesXYZ[];
+  normals: CoordinatesXYZ[];
+  indices: CoordinatesXYZ[];
+  colors: RGBA[];
+  transforms: Mat4;
+  isTransparent: boolean;
+};
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 // @jscad\regl-renderer\demo-web.js
@@ -181,18 +162,84 @@ export type MeshEntity = Entity & {
   color?: RGBA;
 };
 
-// @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.js
-// @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.test.js
-export type Geometry = {
-  type: '2d' | '3d';
-  positions: CoordinatesXYZ[];
-  normals: CoordinatesXYZ[];
-  indices: CoordinatesXYZ[];
-  colors: RGBA[];
-  transforms: Mat4;
-  isTransparent: boolean;
-};
-export type Mat4 = Float32Array;
+export namespace PrepareRender {
+  // @jscad\regl-renderer\src\rendering\render.js
+  export type Function = (options: AllOptions) => WrappedRenderer.Function;
+
+  // @jscad\regl-renderer\src\rendering\render.js
+  export type AllOptions = {
+    // Used to initialise Regl from the REGL package constructor
+    glOptions: InitializationOptions;
+  };
+}
+
+// When called, the WrappedRenderer creates a main DrawCommand.
+// This main DrawCommand then gets called as a scoped command,
+// used to create & call more DrawCommands for the #entities.
+// Nested DrawCommands get cached
+// & may store some Entity properties during setup,
+// but properties passed in from Props later may take precedence.
+// The main DrawCommand is said to be in charge of injecting most uniforms into
+// the Regl context, ie keeping track of all Regl global state
+export namespace WrappedRenderer {
+  // @jscad\regl-renderer\src\rendering\render.js
+  export type Function = (data: AllData) => void;
+
+  // @jscad\regl-renderer\src\rendering\render.js
+  // Gets used in the WrappedRenderer.
+  // Also gets passed as Props into the main DrawCommand,
+  // where it is used in setup specified by the internal
+  // renderContext.js/renderWrapper.
+  // The lambda of the main DrawCommand does not use those Props, rather,
+  // it references the data in the WrappedRenderer directly.
+  // Therefore, regl.prop() is not called,
+  // nor are Props used via the semantic equivalent (context, props) => {}.
+  // The context passed to that lambda also remains unused
+  export type AllData = {
+    rendering?: RenderOptions;
+
+    entities: Entity[];
+
+    drawCommands: PrepareDrawCommands;
+
+    // Along with all of the relevant Entity's & Entity#visuals's properties,
+    // this gets stuffed into each nested DrawCommand as Props.
+    // Messy & needs tidying in regl-renderer
+    camera: CameraState;
+  };
+
+  // @jscad\regl-renderer\src\rendering\renderDefaults.js
+  export type RenderOptions = {
+    // Custom value used early on in render.js.
+    // Clears the canvas to this background colour
+    background?: RGBA;
+
+    // Default value used directly in V2's entitiesFromSolids.js as the default Geometry colour.
+    // Default value also used directly in various rendering commands as their shader uniforms' default colour.
+    // Custom value appears unused
+    meshColor?: RGBA;
+
+    // Custom value used in various rendering commands as shader uniforms
+    lightColor?: RGBA;
+    lightDirection?: VectorXYZ;
+    ambientLightAmount?: number;
+    diffuseLightAmount?: number;
+    specularLightAmount?: number;
+    materialShininess?: number; // As uMaterialShininess in main DrawCommand
+
+    // Unused
+    lightPosition?: CoordinatesXYZ; // See also lightDirection
+  };
+
+  // There are 4 rendering commands to use in regl-renderer:
+  // drawAxis, drawGrid, drawLines & drawMesh.
+  // drawExps appears abandoned.
+  // Only once passed Regl & an Entity do they return an actual DrawCommand
+  export type PrepareDrawCommands = Record<string, PrepareDrawCommandFunction>;
+  export type PrepareDrawCommandFunction =
+    | typeof drawCommands
+    | typeof makeDrawMultiGrid;
+}
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 // Converts Solids into Geometries and then into Entities
@@ -212,11 +259,6 @@ export namespace EntitiesFromSolids {
 }
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
-export type Controls = typeof controls;
-export type ControlsState = typeof controls.controlsState &
-  typeof controls.controlsProps;
-
-// @jscad\regl-renderer\src\controls\orbitControls.js
 export namespace ZoomToFit {
   export type Function = (options: Options) => Output;
 
@@ -226,7 +268,14 @@ export namespace ZoomToFit {
     entities: GeometryEntity[];
   };
 
-  export type Output = ReturnType<typeof controls.zoomToFit>;
+  export type Output = {
+    camera: {
+      target: VectorXYZ;
+    };
+    controls: {
+      scale: number;
+    };
+  };
 }
 
 //
