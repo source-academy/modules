@@ -19,6 +19,8 @@ const controls = _controls.orbit;
 /* [Exports] */
 
 // [Proper typing for JS in regl-renderer]
+type Numbers2 = [number, number];
+
 type Numbers3 = [number, number, number];
 export type VectorXYZ = Numbers3;
 export type CoordinatesXYZ = Numbers3;
@@ -43,9 +45,14 @@ export type OrthographicCameraState = typeof orthographicCamera.cameraState;
 export type CameraState = PerspectiveCameraState | OrthographicCameraState;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
-export type Controls = Omit<typeof controls, 'update' | 'zoomToFit'> & {
+export type Controls = Omit<
+  typeof controls,
+  'update' | 'zoomToFit' | 'rotate' | 'pan'
+> & {
   update: ControlsUpdate.Function;
   zoomToFit: ControlsZoomToFit.Function;
+  rotate: ControlsRotate;
+  pan: ControlsPan;
 };
 export namespace ControlsUpdate {
   export type Function = (options: Options) => Output;
@@ -86,6 +93,34 @@ export namespace ControlsZoomToFit {
     };
   };
 }
+export type ControlsRotate = (
+  options: {
+    controls: ControlsState;
+    camera: CameraState;
+    speed?: number;
+  },
+  rotateAngles: Numbers2
+) => {
+  controls: {
+    thetaDelta: number;
+    phiDelta: number;
+  };
+  camera: CameraState;
+};
+export type ControlsPan = (
+  options: {
+    controls: ControlsState;
+    camera: CameraState;
+    speed?: number;
+  },
+  rotateAngles: Numbers2
+) => {
+  controls: ControlsState;
+  camera: {
+    position: CoordinatesXYZ;
+    target: VectorXYZ;
+  };
+};
 
 export type ControlsState = Omit<
   typeof controls.controlsState,
@@ -154,7 +189,7 @@ export type GridEntity = Entity & {
     color?: RGBA;
     fadeOut?: boolean;
   };
-  size?: [number, number];
+  size?: Numbers2;
   ticks?: number;
   centered?: boolean;
 

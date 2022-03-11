@@ -128,18 +128,34 @@ export class Shape {
 
 // To track the processing to be done between frames
 export class FrameTracker {
-  public constructor(
-    private zoomTicks: number = 0,
+  private zoomTicks = 0;
 
-    // Start off the first frame by initially zooming to fit
-    private zoomToFitOnce: boolean = true
-  ) {}
+  // Start off the first frame by initially zooming to fit
+  private zoomToFitOnce = true;
+
+  public isHeld = false;
+
+  public lastX = -1;
+
+  public lastY = -1;
+
+  public rotateX = 0;
+
+  public rotateY = 0;
+
+  public panX = 0;
+
+  public panY = 0;
+
+  public constructor() {
+    this.unsetLastCoordinates();
+  }
 
   public getZoomTicks(): number {
     return this.zoomTicks;
   }
 
-  public changeZoomTicks(wheelDelta: number): void {
+  public changeZoomTicks(wheelDelta: number) {
     this.zoomTicks += Math.sign(wheelDelta);
   }
 
@@ -147,11 +163,16 @@ export class FrameTracker {
     this.zoomToFitOnce = true;
   }
 
+  public unsetLastCoordinates() {
+    this.lastX = -1;
+    this.lastY = -1;
+  }
+
   public shouldZoom(): boolean {
     return this.zoomTicks !== 0;
   }
 
-  public didZoom(): void {
+  public didZoom() {
     this.zoomTicks = 0;
   }
 
@@ -159,8 +180,26 @@ export class FrameTracker {
     return this.zoomToFitOnce;
   }
 
-  public didZoomToFit(): void {
+  public didZoomToFit() {
     this.zoomToFitOnce = false;
+  }
+
+  public shouldRotate(): boolean {
+    return this.rotateX !== 0 || this.rotateY !== 0;
+  }
+
+  public didRotate() {
+    this.rotateX = 0;
+    this.rotateY = 0;
+  }
+
+  public shouldPan(): boolean {
+    return this.panX !== 0 || this.panY !== 0;
+  }
+
+  public didPan() {
+    this.panX = 0;
+    this.panY = 0;
   }
 }
 

@@ -138,6 +138,49 @@ function doZoomToFit(
   adjustCameraAngle(perspectiveCameraState, controlsState);
 }
 
+function doRotate(
+  rotateX: number,
+  rotateY: number,
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState
+) {
+  const output = controls.rotate(
+    {
+      controls: controlsState,
+      camera: perspectiveCameraState,
+      speed: 0.002,
+    },
+    [rotateX, rotateY]
+  );
+
+  const newControlsState = output.controls;
+  controlsState.thetaDelta = newControlsState.thetaDelta;
+  controlsState.phiDelta = newControlsState.phiDelta;
+
+  adjustCameraAngle(perspectiveCameraState, controlsState);
+}
+
+function doPan(
+  panX: number,
+  panY: number,
+  perspectiveCameraState: PerspectiveCameraState,
+  controlsState: ControlsState
+) {
+  const output = controls.pan(
+    {
+      controls: controlsState,
+      camera: perspectiveCameraState,
+    },
+    [panX, panY * 0.75]
+  );
+
+  const newCameraState = output.camera;
+  perspectiveCameraState.position = newCameraState.position;
+  perspectiveCameraState.target = newCameraState.target;
+
+  adjustCameraAngle(perspectiveCameraState, controlsState);
+}
+
 function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
   canvas.addEventListener('wheel', (wheelEvent: WheelEvent) => {
     frameTracker.changeZoomTicks(wheelEvent.deltaY);
@@ -145,6 +188,42 @@ function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
 
   canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
     frameTracker.setZoomToFit();
+  });
+
+  canvas.addEventListener('pointerdown', (pointerEvent: PointerEvent) => {
+    frameTracker.isHeld = true;
+    frameTracker.lastX = pointerEvent.pageX;
+    frameTracker.lastY = pointerEvent.pageY;
+
+    canvas.setPointerCapture(pointerEvent.pointerId);
+  });
+  canvas.addEventListener('pointerup', (pointerEvent: PointerEvent) => {
+    frameTracker.isHeld = false;
+    frameTracker.unsetLastCoordinates();
+
+    canvas.releasePointerCapture(pointerEvent.pointerId);
+  });
+
+  canvas.addEventListener('pointermove', (pointerEvent: PointerEvent) => {
+    if (!frameTracker.isHeld) return;
+
+    const currentX = pointerEvent.pageX;
+    const currentY = pointerEvent.pageY;
+    const differenceX = frameTracker.lastX - currentX;
+    const differenceY = frameTracker.lastY - currentY;
+
+    const isRightClick = pointerEvent.button === 2;
+    const isShift = pointerEvent.shiftKey;
+    if (!(isRightClick || isShift)) {
+      frameTracker.rotateX -= differenceX;
+      frameTracker.rotateY -= differenceY;
+    } else {
+      frameTracker.panX += differenceX;
+      frameTracker.panY += differenceY;
+    }
+
+    frameTracker.lastX = currentX;
+    frameTracker.lastY = currentY;
   });
 }
 
@@ -193,6 +272,26 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
     if (frameTracker.shouldZoomToFit()) {
       doZoomToFit(geometryEntities, perspectiveCameraState, controlsState);
       frameTracker.didZoomToFit();
+    }
+
+    if (frameTracker.shouldRotate()) {
+      doRotate(
+        frameTracker.rotateX,
+        frameTracker.rotateY,
+        perspectiveCameraState,
+        controlsState
+      );
+      frameTracker.didRotate();
+    }
+
+    if (frameTracker.shouldPan()) {
+      doPan(
+        frameTracker.panX,
+        frameTracker.panY,
+        perspectiveCameraState,
+        controlsState
+      );
+      frameTracker.didPan();
     }
 
     // Trigger render once processing for the current frame is done
