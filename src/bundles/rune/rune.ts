@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { mat4 } from 'gl-matrix';
 import { ModuleState } from 'js-slang';
-import { AnimFrame, glAnimation } from '../../typings/anim_test';
+import { AnimFrame, glAnimation } from '../../typings/anim_types';
 import { ReplResult } from '../../typings/type_helpers';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 
@@ -53,7 +53,7 @@ void main(void) {
 }
 `;
 
-export class Rune {
+export abstract class Rune {
   constructor(
     public vertices: Float32Array,
     public colors: Float32Array | null,
@@ -64,19 +64,9 @@ export class Rune {
   ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public draw = (canvas: HTMLCanvasElement): void => {
-    throw Error('No drawMethod specified');
-  };
+  public abstract draw: (canvas: HTMLCanvasElement) => void;
 
-  public copy = () =>
-    new Rune(
-      this.vertices,
-      this.colors,
-      mat4.clone(this.transformMatrix),
-      this.subRunes,
-      this.texture,
-      this.hollusionDistance
-    );
+  public abstract copy: () => Rune;
 
   /**
    * Flatten the subrunes to return a list of runes
@@ -297,6 +287,16 @@ export class Rune {
  * @field subRune - a (potentially empty) list of Runes
  */
 export class NormalRune extends Rune {
+  public copy = () =>
+    new NormalRune(
+      this.vertices,
+      this.colors,
+      mat4.clone(this.transformMatrix),
+      this.subRunes,
+      this.texture,
+      this.hollusionDistance
+    );
+
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
     // stopAnimation(canvas);

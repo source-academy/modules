@@ -659,6 +659,16 @@ export class AnaglyphRune extends Rune {
     }
     `;
 
+  public copy = () =>
+    new AnaglyphRune(
+      this.vertices,
+      this.colors,
+      mat4.clone(this.transformMatrix),
+      this.subRunes,
+      this.texture,
+      this.hollusionDistance
+    );
+
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
     // stopAnimation(canvas);
@@ -777,6 +787,16 @@ export class HollusionRune extends Rune {
       gl_FragColor = texture2D(uTexture, v_texturePosition);
   }
   `;
+
+  public copy = () =>
+    new HollusionRune(
+      this.vertices,
+      this.colors,
+      mat4.clone(this.transformMatrix),
+      this.subRunes,
+      this.texture,
+      this.hollusionDistance
+    );
 
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);

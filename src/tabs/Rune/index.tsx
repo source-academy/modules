@@ -1,7 +1,8 @@
 import React from 'react';
-import { RunesModuleState } from '../../bundles/rune/rune';
+import { Rune, RuneAnimation, RunesModuleState } from '../../bundles/rune/rune';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
+import { AnimationCanvas } from '../Curve/curve_canvas3d';
 import RuneCanvas from './rune_canvas';
 
 /**
@@ -43,9 +44,12 @@ export default {
 
     // Based on the toSpawn conditions, it should be safe to assume
     // that neither moduleContext or moduleState are null
-    const runeCanvases = moduleState.drawnRunes.map((rune) => (
-      <RuneCanvas rune={rune} />
-    ));
+    const runeCanvases = moduleState.drawnRunes.map((rune) => {
+      if ((rune as any).numFrames !== undefined) {
+        return <AnimationCanvas animation={rune as RuneAnimation} />;
+      }
+      return <RuneCanvas rune={rune as Rune} />;
+    });
 
     return <MultiItemDisplay elements={runeCanvases} />;
   },
