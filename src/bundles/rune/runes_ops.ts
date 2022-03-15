@@ -1,26 +1,14 @@
 /**
  * This file contains the bundle's private functions for runes.
  */
-import { NormalRune } from './rune';
+import { NormalRune, Rune } from './rune';
 
 // =============================================================================
 // Utility Functions
 // =============================================================================
-
-export function isRune(rune) {
-  // rune should not have a drawMethod
-  return rune instanceof NormalRune;
-  return (
-    rune !== undefined &&
-    rune.toReplString instanceof Function &&
-    rune.toReplString() === '<RUNE>' &&
-    rune.drawMethod === ''
-  );
-}
-
 export function throwIfNotRune(name, ...runes) {
   runes.forEach((rune) => {
-    if (!isRune(rune)) {
+    if (!(rune instanceof Rune)) {
       throw Error(`${name} expects a rune as argument.`);
     }
   });

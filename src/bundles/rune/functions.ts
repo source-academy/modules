@@ -6,7 +6,7 @@
  * @module rune
  */
 import { mat4, vec3 } from 'gl-matrix';
-import { NormalRune, Rune, RuneAnimation } from './rune';
+import { Rune, NormalRune, RuneAnimation } from './rune';
 import {
   getSquare,
   getBlank,
@@ -41,54 +41,54 @@ export const drawnRunes: (Rune | RuneAnimation)[] = [];
 /**
  * Rune with the shape of a full square
  */
-export const square: NormalRune = getSquare();
+export const square: Rune = getSquare();
 /**
  * Rune with the shape of a blank square
  */
-export const blank: NormalRune = getBlank();
+export const blank: Rune = getBlank();
 /**
  * Rune with the shape of a
  * smallsquare inside a large square,
  * each diagonally split into a
  * black and white half
  */
-export const rcross: NormalRune = getRcross();
+export const rcross: Rune = getRcross();
 /**
  * Rune with the shape of a sail
  */
-export const sail: NormalRune = getSail();
+export const sail: Rune = getSail();
 /**
  * Rune with the shape of a triangle
  */
-export const triangle: NormalRune = getTriangle();
+export const triangle: Rune = getTriangle();
 /**
  * Rune with black triangle,
  * filling upper right corner
  */
-export const corner: NormalRune = getCorner();
+export const corner: Rune = getCorner();
 /**
  * Rune with the shape of two overlapping
  * triangles, residing in the upper half
  * of the shape
  */
-export const nova: NormalRune = getNova();
+export const nova: Rune = getNova();
 /**
  * Rune with the shape of a circle
  */
-export const circle: NormalRune = getCircle();
+export const circle: Rune = getCircle();
 /**
  * Rune with the shape of a heart
  */
-export const heart: NormalRune = getHeart();
+export const heart: Rune = getHeart();
 /**
  * Rune with the shape of a pentagram
  */
-export const pentagram: NormalRune = getPentagram();
+export const pentagram: Rune = getPentagram();
 /**
  * Rune with the shape of a ribbon
  * winding outwards in an anticlockwise spiral
  */
-export const ribbon: NormalRune = getRibbon();
+export const ribbon: Rune = getRibbon();
 
 // =============================================================================
 // Textured Runes
@@ -97,9 +97,9 @@ export const ribbon: NormalRune = getRibbon();
  * create a rune using the image provided in the url
  * @param {string} imageUrl a URL to the image that is used to create the rune.
  * note that the url must be from a domain that allows CORS.
- * @returns {NormalRune} a rune created using the image.
+ * @returns {Rune} a rune created using the image.
  */
-export function from_url(imageUrl: string): NormalRune {
+export function from_url(imageUrl: string): Rune {
   const rune = getSquare();
   rune.texture = new Image();
   rune.texture.crossOrigin = 'anonymous';
@@ -115,14 +115,14 @@ export function from_url(imageUrl: string): NormalRune {
  * scales a given Rune by separate factors in x and y direction
  * @param {number} ratio_x - scaling factor in x direction
  * @param {number} ratio_y - scaling factor in y direction
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting scaled Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting scaled Rune
  */
 export function scale_independent(
   ratio_x: number,
   ratio_y: number,
-  rune: NormalRune
-): NormalRune {
+  rune: Rune
+): Rune {
   throwIfNotRune('scale_independent', rune);
   const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
   const scaleMat = mat4.create();
@@ -139,10 +139,10 @@ export function scale_independent(
 /**
  * scales a given Rune by a given factor in both x and y direction
  * @param {number} ratio - scaling factor
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting scaled Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting scaled Rune
  */
-export function scale(ratio: number, rune: NormalRune): NormalRune {
+export function scale(ratio: number, rune: Rune): Rune {
   throwIfNotRune('scale', rune);
   return scale_independent(ratio, ratio, rune);
 }
@@ -151,10 +151,10 @@ export function scale(ratio: number, rune: NormalRune): NormalRune {
  * translates a given Rune by given values in x and y direction
  * @param {number} x - translation in x direction
  * @param {number} y - translation in y direction
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting translated Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting translated Rune
  */
-export function translate(x: number, y: number, rune: NormalRune): NormalRune {
+export function translate(x: number, y: number, rune: Rune): Rune {
   throwIfNotRune('translate', rune);
   const translateVec = vec3.fromValues(x, -y, 0);
   const translateMat = mat4.create();
@@ -174,10 +174,10 @@ export function translate(x: number, y: number, rune: NormalRune): NormalRune {
  * Note that parts of the Rune
  * may be cropped as a result.
  * @param {number} rad - angle in radians
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} rotated Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} rotated Rune
  */
-export function rotate(rad: number, rune: NormalRune): NormalRune {
+export function rotate(rad: number, rune: Rune): Rune {
   throwIfNotRune('rotate', rune);
   const rotateMat = mat4.create();
   mat4.rotateZ(rotateMat, rotateMat, rad);
@@ -197,15 +197,11 @@ export function rotate(rad: number, rune: NormalRune): NormalRune {
  * portion of the height of the result and
  * the second the rest
  * @param {number} frac - fraction between 0 and 1 (inclusive)
- * @param {NormalRune} rune1 - given Rune
- * @param {NormalRune} rune2 - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune1 - given Rune
+ * @param {Rune} rune2 - given Rune
+ * @return {Rune} resulting Rune
  */
-export function stack_frac(
-  frac: number,
-  rune1: NormalRune,
-  rune2: NormalRune
-): NormalRune {
+export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('stack_frac', rune1);
   throwIfNotRune('stack_frac', rune2);
 
@@ -225,13 +221,12 @@ export function stack_frac(
  * placing the first on top of the second, each
  * occupying equal parts of the height of the
  * result
- * @param {NormalRune} rune1 - given Rune
- * @param {NormalRune} rune2 - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune1 - given Rune
+ * @param {Rune} rune2 - given Rune
+ * @return {Rune} resulting Rune
  */
-export function stack(rune1: NormalRune, rune2: NormalRune): NormalRune {
-  throwIfNotRune('stack', rune2);
-  throwIfNotRune('stack', rune1);
+export function stack(rune1: Rune, rune2: Rune): Rune {
+  throwIfNotRune('stack', rune1, rune2);
   return stack_frac(1 / 2, rune1, rune2);
 }
 
@@ -239,10 +234,10 @@ export function stack(rune1: NormalRune, rune2: NormalRune): NormalRune {
  * makes a new Rune from a given Rune
  * by vertically stacking n copies of it
  * @param {number} n - positive integer
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting Rune
  */
-export function stackn(n: number, rune: NormalRune): NormalRune {
+export function stackn(n: number, rune: Rune): Rune {
   throwIfNotRune('stackn', rune);
   if (n === 1) {
     return rune;
@@ -254,10 +249,10 @@ export function stackn(n: number, rune: NormalRune): NormalRune {
  * makes a new Rune from a given Rune
  * by turning it a quarter-turn around the centre in
  * clockwise direction.
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting Rune
  */
-export function quarter_turn_right(rune: NormalRune): NormalRune {
+export function quarter_turn_right(rune: Rune): Rune {
   throwIfNotRune('quarter_turn_right', rune);
   return rotate(-Math.PI / 2, rune);
 }
@@ -266,10 +261,10 @@ export function quarter_turn_right(rune: NormalRune): NormalRune {
  * makes a new Rune from a given Rune
  * by turning it a quarter-turn in
  * anti-clockwise direction.
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting Rune
  */
-export function quarter_turn_left(rune: NormalRune): NormalRune {
+export function quarter_turn_left(rune: Rune): Rune {
   throwIfNotRune('quarter_turn_left', rune);
   return rotate(Math.PI / 2, rune);
 }
@@ -277,10 +272,10 @@ export function quarter_turn_left(rune: NormalRune): NormalRune {
 /**
  * makes a new Rune from a given Rune
  * by turning it upside-down
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting Rune
  */
-export function turn_upside_down(rune: NormalRune): NormalRune {
+export function turn_upside_down(rune: Rune): Rune {
   throwIfNotRune('turn_upside_down', rune);
   return rotate(Math.PI, rune);
 }
@@ -292,17 +287,12 @@ export function turn_upside_down(rune: NormalRune): NormalRune {
  * portion of the width of the result and
  * the second the rest
  * @param {number} frac - fraction between 0 and 1 (inclusive)
- * @param {NormalRune} rune1 - given Rune
- * @param {NormalRune} rune2 - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune1 - given Rune
+ * @param {Rune} rune2 - given Rune
+ * @return {Rune} resulting Rune
  */
-export function beside_frac(
-  frac: number,
-  rune1: NormalRune,
-  rune2: NormalRune
-): NormalRune {
-  throwIfNotRune('beside_frac', rune1);
-  throwIfNotRune('beside_frac', rune2);
+export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
+  throwIfNotRune('beside_frac', rune1, rune2);
 
   if (!(frac >= 0 && frac <= 1)) {
     throw Error('beside_frac can only take fraction in [0,1].');
@@ -320,13 +310,12 @@ export function beside_frac(
  * placing the first on the left of the second,
  * both occupying equal portions of the width
  * of the result
- * @param {NormalRune} rune1 - given Rune
- * @param {NormalRune} rune2 - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune1 - given Rune
+ * @param {Rune} rune2 - given Rune
+ * @return {Rune} resulting Rune
  */
-export function beside(rune1: NormalRune, rune2: NormalRune): NormalRune {
-  throwIfNotRune('beside', rune1);
-  throwIfNotRune('beside', rune2);
+export function beside(rune1: Rune, rune2: Rune): Rune {
+  throwIfNotRune('beside', rune1, rune2);
   return beside_frac(1 / 2, rune1, rune2);
 }
 
@@ -334,10 +323,10 @@ export function beside(rune1: NormalRune, rune2: NormalRune): NormalRune {
  * makes a new Rune from a given Rune by
  * flipping it around a horizontal axis,
  * turning it upside down
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting Rune
  */
-export function flip_vert(rune: NormalRune): NormalRune {
+export function flip_vert(rune: Rune): Rune {
   throwIfNotRune('flip_vert', rune);
   return scale_independent(1, -1, rune);
 }
@@ -346,10 +335,10 @@ export function flip_vert(rune: NormalRune): NormalRune {
  * makes a new Rune from a given Rune by
  * flipping it around a vertical axis,
  * creating a mirror image
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting Rune
  */
-export function flip_horiz(rune: NormalRune): NormalRune {
+export function flip_horiz(rune: Rune): Rune {
   throwIfNotRune('flip_horiz', rune);
   return scale_independent(-1, 1, rune);
 }
@@ -358,10 +347,10 @@ export function flip_horiz(rune: NormalRune): NormalRune {
  * makes a new Rune from a given Rune by
  * arranging into a square for copies of the
  * given Rune in different orientations
- * @param {NormalRune} rune - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune - given Rune
+ * @return {Rune} resulting Rune
  */
-export function make_cross(rune: NormalRune): NormalRune {
+export function make_cross(rune: Rune): Rune {
   throwIfNotRune('make_cross', rune);
   return stack(
     beside(quarter_turn_right(rune), rotate(Math.PI, rune)),
@@ -373,15 +362,15 @@ export function make_cross(rune: NormalRune): NormalRune {
  * applies a given function n times to an initial value
  * @param {number} n - a non-negative integer
  * @param {function} pattern - unary function from Rune to Rune
- * @param {NormalRune} initial - the initial Rune
- * @return {NormalRune} - result of n times application of
+ * @param {Rune} initial - the initial Rune
+ * @return {Rune} - result of n times application of
  *               pattern to initial: pattern(pattern(...pattern(pattern(initial))...))
  */
 export function repeat_pattern(
   n: number,
-  pattern: (a: NormalRune) => NormalRune,
-  initial: NormalRune
-): NormalRune {
+  pattern: (a: Rune) => Rune,
+  initial: Rune
+): Rune {
   if (n === 0) {
     return initial;
   }
@@ -395,15 +384,11 @@ export function repeat_pattern(
 /**
  * the depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.
  * @param {number} frac - fraction between 0 and 1 (inclusive)
- * @param {NormalRune} rune1 - given Rune
- * @param {NormalRune} rune2 - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune1 - given Rune
+ * @param {Rune} rune2 - given Rune
+ * @return {Rune} resulting Rune
  */
-export function overlay_frac(
-  frac: number,
-  rune1: NormalRune,
-  rune2: NormalRune
-): NormalRune {
+export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation.
   // The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
   throwIfNotRune('overlay_frac', rune1);
@@ -449,11 +434,11 @@ export function overlay_frac(
 
 /**
  * the depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
- * @param {NormalRune} rune1 - given Rune
- * @param {NormalRune} rune2 - given Rune
- * @return {NormalRune} resulting Rune
+ * @param {Rune} rune1 - given Rune
+ * @param {Rune} rune2 - given Rune
+ * @return {Rune} resulting Rune
  */
-export function overlay(rune1: NormalRune, rune2: NormalRune): NormalRune {
+export function overlay(rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('overlay', rune1);
   throwIfNotRune('overlay', rune2);
   return overlay_frac(0.5, rune1, rune2);
@@ -468,18 +453,13 @@ export function overlay(rune1: NormalRune, rune2: NormalRune): NormalRune {
  * the red, green, blue (RGB) value, ranging from 0.0 to 1.0.
  * RGB is additive: if all values are 1, the color is white,
  * and if all values are 0, the color is black.
- * @param {NormalRune} rune - the rune to add color to
+ * @param {Rune} rune - the rune to add color to
  * @param {number} r - red value [0.0-1.0]
  * @param {number} g - green value [0.0-1.0]
  * @param {number} b - blue value [0.0-1.0]
- * @returns {NormalRune} the colored Rune
+ * @returns {Rune} the colored Rune
  */
-export function color(
-  rune: NormalRune,
-  r: number,
-  g: number,
-  b: number
-): NormalRune {
+export function color(rune: Rune, r: number, g: number, b: number): Rune {
   throwIfNotRune('color', rune);
 
   const colorVector = [r, g, b, 1];
@@ -493,10 +473,10 @@ export function color(
  * Gives random color to the given rune.
  * The color is chosen randomly from the following nine
  * colors: red, pink, purple, indigo, blue, green, yellow, orange, brown
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function random_color(rune: NormalRune): NormalRune {
+export function random_color(rune: Rune): Rune {
   throwIfNotRune('random_color', rune);
   const randomColor = hexToColor(
     colorPalette[Math.floor(Math.random() * colorPalette.length)]
@@ -510,110 +490,110 @@ export function random_color(rune: NormalRune): NormalRune {
 
 /**
  * colors the given rune red.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function red(rune: NormalRune): NormalRune {
+export function red(rune: Rune): Rune {
   throwIfNotRune('red', rune);
   return addColorFromHex(rune, '#F44336');
 }
 
 /**
  * colors the given rune pink.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function pink(rune: NormalRune): NormalRune {
+export function pink(rune: Rune): Rune {
   throwIfNotRune('pink', rune);
   return addColorFromHex(rune, '#E91E63');
 }
 
 /**
  * colors the given rune purple.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function purple(rune: NormalRune): NormalRune {
+export function purple(rune: Rune): Rune {
   throwIfNotRune('purple', rune);
   return addColorFromHex(rune, '#AA00FF');
 }
 
 /**
  * colors the given rune indigo.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function indigo(rune: NormalRune): NormalRune {
+export function indigo(rune: Rune): Rune {
   throwIfNotRune('indigo', rune);
   return addColorFromHex(rune, '#3F51B5');
 }
 
 /**
  * colors the given rune blue.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function blue(rune: NormalRune): NormalRune {
+export function blue(rune: Rune): Rune {
   throwIfNotRune('blue', rune);
   return addColorFromHex(rune, '#2196F3');
 }
 
 /**
  * colors the given rune green.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function green(rune: NormalRune): NormalRune {
+export function green(rune: Rune): Rune {
   throwIfNotRune('green', rune);
   return addColorFromHex(rune, '#4CAF50');
 }
 
 /**
  * colors the given rune yellow.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function yellow(rune: NormalRune): NormalRune {
+export function yellow(rune: Rune): Rune {
   throwIfNotRune('yellow', rune);
   return addColorFromHex(rune, '#FFEB3B');
 }
 
 /**
  * colors the given rune orange.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function orange(rune: NormalRune): NormalRune {
+export function orange(rune: Rune): Rune {
   throwIfNotRune('orange', rune);
   return addColorFromHex(rune, '#FF9800');
 }
 
 /**
  * colors the given rune brown.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function brown(rune: NormalRune): NormalRune {
+export function brown(rune: Rune): Rune {
   throwIfNotRune('brown', rune);
   return addColorFromHex(rune, '#795548');
 }
 
 /**
  * colors the given rune black.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function black(rune: NormalRune): NormalRune {
+export function black(rune: Rune): Rune {
   throwIfNotRune('black', rune);
   return addColorFromHex(rune, '#000000');
 }
 
 /**
  * colors the given rune white.
- * @param {NormalRune} rune - the rune to color
- * @returns {NormalRune} the colored Rune
+ * @param {Rune} rune - the rune to color
+ * @returns {Rune} the colored Rune
  */
-export function white(rune: NormalRune): NormalRune {
+export function white(rune: Rune): Rune {
   throwIfNotRune('white', rune);
   return addColorFromHex(rune, '#FFFFFF');
 }
@@ -626,14 +606,15 @@ export function white(rune: NormalRune): NormalRune {
  * Show the rune on the tab using the basic drawing.
  *
  * @param rune - Rune to render
- * @return {NormalRune} with drawing method set to normal
+ * @return {Rune} with drawing method set to normal
  */
-export function show(rune: NormalRune): NormalRune {
+export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
   drawnRunes.push(rune.copy());
   return rune;
 }
 
+/** @hidden */
 export class AnaglyphRune extends Rune {
   private static readonly anaglyphVertexShader = `
     precision mediump float;
@@ -749,7 +730,7 @@ export class AnaglyphRune extends Rune {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   };
 
-  public static fromRune(rune: NormalRune) {
+  public static fromRune(rune: Rune) {
     return rune.copy() as AnaglyphRune;
   }
 }
@@ -757,15 +738,16 @@ export class AnaglyphRune extends Rune {
 /**
  * render the given Rune in an Anaglyph. Use your 3D-glasses
  * to view the Anaglyph.
- * @param {NormalRune} rune - Rune to render
- * @return {NormalRune} with drawing method set to anaglyph
+ * @param {Rune} rune - Rune to render
+ * @return {Rune} with drawing method set to anaglyph
  */
-export function anaglyph(rune: NormalRune): NormalRune {
+export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('anaglyph', rune);
   drawnRunes.push(AnaglyphRune.fromRune(rune));
   return rune;
 }
 
+/** @hidden */
 export class HollusionRune extends Rune {
   private static readonly copyVertexShader = `
   precision mediump float;
@@ -895,7 +877,7 @@ export class HollusionRune extends Rune {
     // requestAnimationFrame(render);
   };
 
-  public static fromRune(rune: NormalRune, hollusionDistance: number) {
+  public static fromRune(rune: Rune, hollusionDistance: number) {
     const runeCopy = rune.copy();
     runeCopy.hollusionDistance = hollusionDistance;
     return runeCopy as HollusionRune;
@@ -904,14 +886,11 @@ export class HollusionRune extends Rune {
 
 /**
  * render the given Rune with hollusion, with adjustable magnitude.
- * @param {NormalRune} rune - Rune to render
+ * @param {Rune} rune - Rune to render
  * @param {number} magnitude - (optional) the magnitude of hollusion
- * @return {NormalRune} with drawing method set to hollusion
+ * @return {Rune} with drawing method set to hollusion
  */
-export function hollusion_magnitude(
-  rune: NormalRune,
-  magnitude: number = 0.1
-): NormalRune {
+export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
   throwIfNotRune('hollusion_magnitude', rune);
   drawnRunes.push(HollusionRune.fromRune(rune, magnitude));
   return rune;
@@ -919,10 +898,10 @@ export function hollusion_magnitude(
 
 /**
  * render the given Rune with hollusion, with default magnitude 0.1.
- * @param {NormalRune} rune - Rune to render
- * @return {NormalRune} with drawing method set to hollusion
+ * @param {Rune} rune - Rune to render
+ * @return {Rune} with drawing method set to hollusion
  */
-export function hollusion(rune: NormalRune): NormalRune {
+export function hollusion(rune: Rune): Rune {
   throwIfNotRune('hollusion', rune);
   return hollusion_magnitude(rune, 0.1);
 }

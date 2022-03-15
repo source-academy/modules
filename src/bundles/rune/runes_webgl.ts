@@ -161,13 +161,3 @@ export function initFramebufferObject(
     texture,
   };
 }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function stopAnimation(canvas: HTMLCanvasElement) {
-  if (canvas.hasAttribute('animRequestID')) {
-    const nodeMap = canvas.attributes;
-    const idAttr = nodeMap.getNamedItem('animRequestID');
-    const id = parseInt(idAttr?.value as string, 10);
-    window.cancelAnimationFrame(id);
-  }
-}
