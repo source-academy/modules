@@ -51,50 +51,65 @@ const defaultConfigurations = {
   ],
 };
 
-const moduleBundles = Object.keys(modules);
+export default (args) => {
+  let moduleBundles;
+  if (args.module !== undefined) {
+    if (typeof args.module === 'string') {
+      moduleBundles = [args.module];
+    } else {
+      moduleBundles = args.module;
+    }
 
-const buildBundles = (name) => ({
-  ...defaultConfigurations,
-  input: `./src/bundles/${name}/index.ts`,
-  output: {
-    file: `./build/bundles/${name}.js`,
-    format: 'iife',
-  },
-});
+    const undefineds = moduleBundles.filter(
+      (val) => !Object.keys(modules).includes(val)
+    );
 
-let moduleTabs = [];
-moduleBundles
-  .map((modulePackage) => modules[modulePackage].tabs)
-  .forEach((__tabs) => Array.prototype.push.apply(moduleTabs, __tabs));
+    if (undefineds.length > 0) {
+      throw new Error(`Unknown modules: ${undefineds.join(', ')}`);
+    }
 
-moduleTabs = [...new Set(moduleTabs)];
+    delete args.module;
+  } else {
+    moduleBundles = Object.keys(modules);
+  }
 
-const buildTabs = (name) => ({
-  ...defaultConfigurations,
-  input: `./src/tabs/${name}/index.tsx`,
-  output: {
-    file: `./build/tabs/${name}.js`,
-    format: 'iife',
-    globals: {
-      react: 'React',
-      'react-dom': 'ReactDom',
-    },
-  },
-  external: ['react', 'react-dom'],
-});
-
-// eslint-disable-next-line no-console
-console.log(chalk.blueBright('Building modules with tabs:'));
-moduleBundles.forEach((modulePackage) => {
-  // eslint-disable-next-line no-console
-  console.log(
-    chalk.green(`Module ${modulePackage}`),
-    'with',
-    chalk.yellow(`tabs ${modules[modulePackage].tabs}`)
+  const moduleTabs = Array.from(
+    new Set(moduleBundles.flatMap((module) => modules[module].tabs))
   );
-});
 
-export default [
-  ...moduleBundles.map(buildBundles),
-  ...moduleTabs.map(buildTabs),
-];
+  const buildBundle = (name) => ({
+    ...defaultConfigurations,
+    input: `./src/bundles/${name}/index.ts`,
+    output: {
+      file: `./build/bundles/${name}.js`,
+      format: 'iife',
+    },
+  });
+
+  const buildTabs = (name) => ({
+    ...defaultConfigurations,
+    input: `./src/tabs/${name}/index.tsx`,
+    output: {
+      file: `./build/tabs/${name}.js`,
+      format: 'iife',
+      globals: {
+        react: 'React',
+        'react-dom': 'ReactDom',
+      },
+    },
+    external: ['react', 'react-dom'],
+  });
+
+  // eslint-disable-next-line no-console
+  console.log(chalk.blueBright('Building modules with tabs:'));
+  moduleBundles.forEach((modulePackage) => {
+    // eslint-disable-next-line no-console
+    console.log(
+      chalk.green(`Module ${modulePackage}`),
+      'with',
+      chalk.yellow(`tabs ${modules[modulePackage].tabs}`)
+    );
+  });
+
+  return [...moduleBundles.map(buildBundle), ...moduleTabs.map(buildTabs)];
+};

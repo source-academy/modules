@@ -49,7 +49,7 @@ import {
   hollusion,
   drawnRunes,
 } from './functions';
-import { RunesModuleState } from './types';
+import { RunesModuleState } from './rune';
 
 /**
  * Bundle for Source Academy Runes module

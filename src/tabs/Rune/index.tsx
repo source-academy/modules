@@ -1,5 +1,5 @@
 import React from 'react';
-import { RunesModuleState } from '../../bundles/rune/types';
+import { RunesModuleState } from '../../bundles/rune/rune';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
 import RuneCanvas from './rune_canvas';

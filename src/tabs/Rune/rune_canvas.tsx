@@ -1,32 +1,17 @@
-/* eslint-disable react/destructuring-assignment */
 import React from 'react';
-import {
-  drawAnaglyph,
-  drawHollusion,
-  drawRune,
-} from '../../bundles/rune/runes_webgl';
-import { Rune } from '../../bundles/rune/types';
+import { AnaglyphRune } from '../../bundles/rune/functions';
+import { NormalRune } from '../../bundles/rune/rune';
 
-export default function runeCanvas(props: { rune: Rune }) {
+export default function runeCanvas(props: { rune: NormalRune | AnaglyphRune }) {
   return (
     <canvas
-      id='runesCanvas'
+      height={512}
+      width={512}
       ref={(r) => {
-        const runeToDraw = props.rune;
         if (r) {
-          if (runeToDraw.drawMethod === 'anaglyph') {
-            drawAnaglyph(r, runeToDraw);
-          } else if (runeToDraw.drawMethod === 'hollusion') {
-            drawHollusion(r, runeToDraw);
-          } else if (runeToDraw.drawMethod === 'normal') {
-            drawRune(r, runeToDraw);
-          } else {
-            throw Error(`Unexpected Drawing Method ${runeToDraw.drawMethod}`);
-          }
+          props.rune.draw(r);
         }
       }}
-      width={512}
-      height={512}
     />
   );
 }
