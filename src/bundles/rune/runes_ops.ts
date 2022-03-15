@@ -8,21 +8,9 @@ import { Rune } from './types';
 // Utility Functions
 // =============================================================================
 
-export function getEmptyRune(): Rune {
-  return {
-    toReplString: () => '<RUNE>',
-    drawMethod: '',
-    vertices: new Float32Array(),
-    colors: null,
-    transformMatrix: mat4.create(),
-    subRunes: [],
-    texture: null,
-    hollusionDistance: 0.1,
-  };
-}
-
 export function isRune(rune) {
   // rune should not have a drawMethod
+  return rune instanceof Rune;
   return (
     rune !== undefined &&
     rune.toReplString instanceof Function &&
@@ -39,17 +27,6 @@ export function throwIfNotRune(name, ...runes) {
   });
 }
 
-export function copyRune(rune: Rune): Rune {
-  const newRune = getEmptyRune();
-  newRune.vertices = rune.vertices;
-  newRune.colors = rune.colors;
-  newRune.transformMatrix = mat4.clone(rune.transformMatrix);
-  newRune.subRunes = rune.subRunes;
-  newRune.texture = rune.texture;
-  newRune.hollusionDistance = rune.hollusionDistance;
-  return newRune;
-}
-
 /**
  * flatten the subrunes to return a list of runes
  * @param rune - the rune to be flattened
@@ -61,11 +38,11 @@ export function flattenRune(rune: Rune): Rune[] {
   }
   const runeList: Rune[] = [];
   const runeTodoList: Rune[] = [];
-  runeTodoList.push(copyRune(rune));
+  runeTodoList.push(rune.copy());
   while (runeTodoList.length !== 0) {
     const runeToExpand: Rune = runeTodoList.pop()!; // ! claims that the pop() will not return undefined.
     runeToExpand.subRunes.forEach((subRune: Rune) => {
-      const subRuneCopy = copyRune(subRune);
+      const subRuneCopy = subRune.copy();
       mat4.multiply(
         subRuneCopy.transformMatrix,
         runeToExpand.transformMatrix,
@@ -105,13 +82,13 @@ export const getSquare: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
-export const getBlank: () => Rune = () => getEmptyRune();
+export const getBlank: () => Rune = () => Rune.of();
 
 /**
  * primitive Rune in the rune of a
@@ -146,10 +123,10 @@ export const getRcross: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 /**
@@ -165,10 +142,10 @@ export const getSail: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 /**
@@ -184,10 +161,10 @@ export const getTriangle: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 /**
@@ -203,10 +180,10 @@ export const getCorner: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 /**
@@ -227,10 +204,10 @@ export const getNova: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 /**
@@ -249,10 +226,10 @@ export const getCircle: () => Rune = () => {
   }
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 /**
@@ -310,10 +287,10 @@ export const getHeart: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 /**
@@ -344,10 +321,10 @@ export const getPentagram: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 /**
@@ -385,10 +362,10 @@ export const getRibbon: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  const rune: Rune = getEmptyRune();
-  rune.vertices = new Float32Array(vertexList);
-  rune.colors = new Float32Array(colorList);
-  return rune;
+  return Rune.of({
+    vertices: new Float32Array(vertexList),
+    colors: new Float32Array(colorList),
+  });
 };
 
 // =============================================================================
@@ -423,8 +400,8 @@ export function hexToColor(hex): number[] {
 
 export function addColorFromHex(rune, hex) {
   throwIfNotRune('addColorFromHex', rune);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
-  wrapper.colors = new Float32Array(hexToColor(hex));
-  return wrapper;
+  return Rune.of({
+    subRunes: [rune],
+    colors: new Float32Array(hexToColor(hex)),
+  });
 }

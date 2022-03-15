@@ -4,7 +4,6 @@
 
 import { mat4, vec3 } from 'gl-matrix';
 import { FrameBufferWithTexture, Rune } from './types';
-import { flattenRune } from './runes_ops';
 import { blank, overlay_frac, scale, square, white } from './functions';
 
 // =============================================================================
@@ -457,7 +456,7 @@ function stopAnimation(canvas: HTMLCanvasElement) {
 export function drawRune(canvas: HTMLCanvasElement, rune: Rune) {
   const gl = getWebGlFromCanvas(canvas);
   stopAnimation(canvas);
-  const runes = flattenRune(rune);
+  const runes = rune.flatten();
 
   // prepare camera projection array
   const cameraMatrix = mat4.create();
@@ -486,10 +485,9 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
   stopAnimation(canvas);
 
   // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
-  let runes = flattenRune(rune);
-  runes = flattenRune(
-    white(overlay_frac(0.999999999, blank, scale(2.2, square)))
-  ).concat(runes);
+  const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
+    .flatten()
+    .concat(rune.flatten());
 
   // calculate the left and right camera matrices
   const halfEyeDistance = 0.03;
@@ -572,10 +570,10 @@ export function drawAnaglyph(canvas: HTMLCanvasElement, rune: Rune) {
 export function drawHollusion(canvas: HTMLCanvasElement, rune: Rune) {
   const gl = getWebGlFromCanvas(canvas);
   stopAnimation(canvas);
-  let runes = flattenRune(rune);
-  runes = flattenRune(
-    white(overlay_frac(0.999999999, blank, scale(5, square)))
-  ).concat(runes);
+
+  const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
+    .flatten()
+    .concat(rune.flatten());
 
   // first render all the frames into a framebuffer
   const xshiftMax = runes[0].hollusionDistance;

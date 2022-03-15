@@ -19,11 +19,9 @@ import {
   getPentagram,
   getRibbon,
   throwIfNotRune,
-  getEmptyRune,
   addColorFromHex,
   colorPalette,
   hexToColor,
-  copyRune,
 } from './runes_ops';
 
 /** @hidden */
@@ -122,10 +120,13 @@ export function scale_independent(
   const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
   const scaleMat = mat4.create();
   mat4.scale(scaleMat, scaleMat, scaleVec);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
-  mat4.multiply(wrapper.transformMatrix, scaleMat, wrapper.transformMatrix);
-  return wrapper;
+
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, scaleMat, wrapperMat);
+  return Rune.of({
+    subRunes: [rune],
+    transformMatrix: wrapperMat,
+  });
 }
 
 /**
@@ -151,10 +152,13 @@ export function translate(x: number, y: number, rune: Rune): Rune {
   const translateVec = vec3.fromValues(x, -y, 0);
   const translateMat = mat4.create();
   mat4.translate(translateMat, translateMat, translateVec);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
-  mat4.multiply(wrapper.transformMatrix, translateMat, wrapper.transformMatrix);
-  return wrapper;
+
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, translateMat, wrapperMat);
+  return Rune.of({
+    subRunes: [rune],
+    transformMatrix: wrapperMat,
+  });
 }
 
 /**
@@ -170,10 +174,13 @@ export function rotate(rad: number, rune: Rune): Rune {
   throwIfNotRune('rotate', rune);
   const rotateMat = mat4.create();
   mat4.rotateZ(rotateMat, rotateMat, rad);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
-  mat4.multiply(wrapper.transformMatrix, rotateMat, wrapper.transformMatrix);
-  return wrapper;
+
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, rotateMat, wrapperMat);
+  return Rune.of({
+    subRunes: [rune],
+    transformMatrix: wrapperMat,
+  });
 }
 
 /**
@@ -197,9 +204,9 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 
   const upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1));
   const lower = translate(0, frac, scale_independent(1, 1 - frac, rune2));
-  const combined = getEmptyRune();
-  combined.subRunes.push(upper, lower);
-  return combined;
+  return Rune.of({
+    subRunes: [upper, lower],
+  });
 }
 
 /**
@@ -288,9 +295,9 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 
   const left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1));
   const right = translate(frac, 0, scale_independent(1 - frac, 1, rune2));
-  const combined = getEmptyRune();
-  combined.subRunes.push(left, right);
-  return combined;
+  return Rune.of({
+    subRunes: [left, right],
+  });
 }
 
 /**
@@ -378,7 +385,8 @@ export function repeat_pattern(
  * @return {Rune} resulting Rune
  */
 export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-  // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation. The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
+  // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation.
+  // The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
   throwIfNotRune('overlay_frac', rune1);
   throwIfNotRune('overlay_frac', rune2);
   if (!(frac >= 0 && frac <= 1)) {
@@ -398,22 +406,26 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     useFrac = maxFrac;
   }
 
-  const front = getEmptyRune();
-  front.subRunes.push(rune1);
-  const frontMat = front.transformMatrix;
+  const frontMat = mat4.create();
   // z: scale by frac
   mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, useFrac));
+  const front = Rune.of({
+    subRunes: [rune1],
+    transformMatrix: frontMat,
+  });
 
-  const back = getEmptyRune();
-  back.subRunes.push(rune2);
-  const backMat = back.transformMatrix;
+  const backMat = mat4.create();
   // need to apply transformation in backwards order!
   mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -useFrac));
   mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - useFrac));
+  const back = Rune.of({
+    subRunes: [rune2],
+    transformMatrix: backMat,
+  });
 
-  const combined = getEmptyRune();
-  combined.subRunes = [front, back]; // render front first to avoid redrawing
-  return combined;
+  return Rune.of({
+    subRunes: [front, back], // render front first to avoid redrawing
+  });
 }
 
 /**
@@ -445,11 +457,12 @@ export function overlay(rune1: Rune, rune2: Rune): Rune {
  */
 export function color(rune: Rune, r: number, g: number, b: number): Rune {
   throwIfNotRune('color', rune);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
+
   const colorVector = [r, g, b, 1];
-  wrapper.colors = new Float32Array(colorVector);
-  return wrapper;
+  return Rune.of({
+    colors: new Float32Array(colorVector),
+    subRunes: [rune],
+  });
 }
 
 /**
@@ -461,13 +474,14 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
  */
 export function random_color(rune: Rune): Rune {
   throwIfNotRune('random_color', rune);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
   const randomColor = hexToColor(
     colorPalette[Math.floor(Math.random() * colorPalette.length)]
   );
-  wrapper.colors = new Float32Array(randomColor);
-  return wrapper;
+
+  return Rune.of({
+    colors: new Float32Array(randomColor),
+    subRunes: [rune],
+  });
 }
 
 /**
@@ -592,7 +606,7 @@ export function white(rune: Rune): Rune {
  */
 export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
-  const normalRune = copyRune(rune);
+  const normalRune = rune.copy();
   normalRune.drawMethod = 'normal';
   normalRune.toReplString = () => '<RENDERING>';
   drawnRunes.push(normalRune);
@@ -608,7 +622,7 @@ export function show(rune: Rune): Rune {
  */
 export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('anaglyph', rune);
-  const analyphRune = copyRune(rune);
+  const analyphRune = rune.copy();
   analyphRune.drawMethod = 'anaglyph';
   analyphRune.toReplString = () => '<RENDERING>';
   drawnRunes.push(analyphRune);
@@ -624,7 +638,7 @@ export function anaglyph(rune: Rune): Rune {
  */
 export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
   throwIfNotRune('hollusion_magnitude', rune);
-  const hollusionRune = copyRune(rune);
+  const hollusionRune = rune.copy();
   hollusionRune.drawMethod = 'hollusion';
   hollusionRune.hollusionDistance = magnitude;
   hollusionRune.toReplString = () => '<RENDERING>';
