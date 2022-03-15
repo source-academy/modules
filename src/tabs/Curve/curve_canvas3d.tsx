@@ -5,7 +5,7 @@ import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { CurveDrawn } from '../../bundles/curve/curves_webgl';
-import { glAnimation } from '../../typings/anim_test';
+import { glAnimation } from '../../typings/anim_types';
 
 type State = {
   /**

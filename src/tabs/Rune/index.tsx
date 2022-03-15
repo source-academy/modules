@@ -1,7 +1,7 @@
 import React from 'react';
 import { RunesModuleState } from '../../bundles/rune/types';
-import { DebuggerContext } from '../../type_helpers';
 import MultiItemDisplay from '../../typings/multi_item';
+import { DebuggerContext } from '../../typings/type_helpers';
 import RuneCanvas from './rune_canvas';
 
 /**

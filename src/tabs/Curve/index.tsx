@@ -24,20 +24,19 @@ export default {
   body: (context: DebuggerContext) => {
     const moduleContext = context.context?.moduleContexts.get('curve');
     const moduleState = moduleContext!.state as CurveModuleState;
-    const curves = moduleState!.drawnCurves
-      .filter((curve) => (curve as any).numFrames === undefined)
-      .map((curve) => {
-        if ((curve as any).numFrames !== undefined) {
-          return <AnimationCanvas animation={curve as CurveAnimation} />;
-        }
-        return (curve as CurveDrawn).is3D() ? (
-          <CurveCanvas3D curve={curve as CurveDrawn} />
-        ) : (
-          <CurveCanvas curve={curve as CurveDrawn} />
-        );
-      });
 
-    return <MultiItemDisplay elements={curves} />;
+    const canvases = moduleState!.drawnCurves.map((curve) => {
+      if ((curve as any).numFrames !== undefined) {
+        return <AnimationCanvas animation={curve as CurveAnimation} />;
+      }
+      return (curve as CurveDrawn).is3D() ? (
+        <CurveCanvas3D curve={curve as CurveDrawn} />
+      ) : (
+        <CurveCanvas curve={curve as CurveDrawn} />
+      );
+    });
+
+    return <MultiItemDisplay elements={canvases} />;
   },
   label: 'Curves Tab',
   iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options

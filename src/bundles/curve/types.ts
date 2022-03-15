@@ -1,7 +1,8 @@
 /* eslint-disable max-classes-per-file */
 
 import { ModuleState } from 'js-slang';
-import { glAnimation, AnimFrame } from '../../typings/anim_test';
+import { glAnimation, AnimFrame } from '../../typings/anim_types';
+import { ReplResult } from '../../typings/type_helpers';
 import { Curve, CurveDrawn } from './curves_webgl';
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
@@ -13,7 +14,7 @@ export type CurveTransformer = (c: Curve) => Curve;
  */
 export type RenderFunction = (func: Curve) => CurveDrawn;
 
-export class CurveAnimation extends glAnimation {
+export class CurveAnimation extends glAnimation implements ReplResult {
   constructor(
     numFrames: number,
     private readonly func: (step: number) => Curve,
@@ -34,6 +35,8 @@ export class CurveAnimation extends glAnimation {
       },
     };
   }
+
+  public toReplString = () => '<CurveAnimation>';
 }
 
 export class CurveModuleState implements ModuleState {

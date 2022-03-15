@@ -1,12 +1,9 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars, jsx-a11y/media-has-caption */
 import React from 'react';
-import {
-  AudioPlayed,
-  StereoSoundsModuleState,
-} from '../../bundles/stereo_sound/types';
-import { DebuggerContext } from '../../type_helpers';
+import { StereoSoundsModuleState } from '../../bundles/stereo_sound/types';
 import MultiItemDisplay from '../../typings/multi_item';
+import { DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * Tab for Source Academy Sounds Module
