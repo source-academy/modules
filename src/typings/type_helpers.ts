@@ -12,6 +12,10 @@ export type DebuggerContext = {
   workspaceLocation?: any;
 };
 
+/**
+ * Interface to represent objects that require a
+ * string representation in the REPL
+ */
 export interface ReplResult {
   toReplString: () => string;
 }
