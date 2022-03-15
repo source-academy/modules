@@ -1,5 +1,5 @@
 import { ModuleContext } from 'js-slang';
-import { drawnCurves } from './curves_webgl';
+import { CurveModuleState } from './types';
 import {
   make_point,
   make_3D_point,
@@ -35,8 +35,9 @@ import {
   rotate_around_origin,
   arc,
   invert,
+  curve_animation,
+  drawnCurves,
 } from './functions';
-import { CurveModuleState } from './types';
 
 /**
  * Bundle for Source Academy Curves module
@@ -73,6 +74,7 @@ export default function curves(
     make_3D_point,
     make_color_point,
     make_3D_color_point,
+    curve_animation,
     draw_connected,
     draw_connected_full_view,
     draw_connected_full_view_proportional,
