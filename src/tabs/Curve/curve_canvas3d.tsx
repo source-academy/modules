@@ -57,7 +57,7 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
    *
    * @param newValue new rotation angle
    */
-  private onChangeHandler = (newValue: number) => {
+  private onSliderChangeHandler = (newValue: number) => {
     this.setState(
       (prevState) => ({
         ...prevState,
@@ -153,7 +153,7 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
             labelRenderer={false}
             min={0}
             max={360}
-            onChange={this.onChangeHandler}
+            onChange={this.onSliderChangeHandler}
           />
           <Button
             style={{
@@ -190,6 +190,7 @@ type AnimCanvasProps = {
 type AnimCanvasState = {
   currentFrame: number;
   isPlaying: boolean;
+  wasPlaying: boolean;
   autoPlay: boolean;
   frameDuration: number;
 };
@@ -216,8 +217,9 @@ export class AnimationCanvas extends React.Component<
     this.state = {
       currentFrame: 0,
       isPlaying: false,
+      wasPlaying: false,
       autoPlay: true,
-      frameDuration: 10 / 24,
+      frameDuration: 1000 / 60, // default fps is 60
     };
 
     this.canvas = null;
@@ -242,16 +244,16 @@ export class AnimationCanvas extends React.Component<
   /**
    * Callback to use with `requestAnimationFrame`
    */
-  private animationCallback = (timestamp) => {
+  private animationCallback = (timeInMs: number) => {
     if (this.canvas && this.state.isPlaying) {
-      if (timestamp - this.prevTimestamp < this.state.frameDuration) {
+      if (timeInMs - this.prevTimestamp < this.state.frameDuration) {
         // Not time to draw the frame yet
         requestAnimationFrame(this.animationCallback);
         return;
       }
 
       this.drawFrame();
-      this.prevTimestamp = timestamp;
+      this.prevTimestamp = timeInMs;
 
       if (this.state.currentFrame >= 1) {
         // CurrentFrame exceeded
@@ -315,6 +317,32 @@ export class AnimationCanvas extends React.Component<
     );
   };
 
+  private onSliderChange = (newValue: number) => {
+    this.setState(
+      (prev) => ({
+        wasPlaying: prev.isPlaying,
+        currentFrame: newValue,
+        isPlaying: false,
+      }),
+      () => {
+        this.drawFrame();
+      }
+    );
+  };
+
+  private onSliderRelease = () => {
+    this.setState(
+      (prev) => ({
+        isPlaying: prev.wasPlaying,
+      }),
+      () => {
+        if (this.state.isPlaying) {
+          requestAnimationFrame(this.animationCallback);
+        }
+      }
+    );
+  };
+
   private autoPlaySwitchChanged = () => {
     this.setState((prev) => ({
       autoPlay: !prev.autoPlay,
@@ -322,22 +350,32 @@ export class AnimationCanvas extends React.Component<
   };
 
   private onFPSChanged = (event) => {
-    const frameDuration = 10 / parseFloat(event.target.value);
+    const frameDuration = 1000 / parseFloat(event.target.value);
     this.setState({
       frameDuration,
     });
   };
 
   public render() {
+    // Max frame rate value
+    const maxFrameRate = 200;
+
     return (
       <div>
-        <div>
+        <div
+          style={{
+            alignItems: 'center',
+          }}
+        >
           <canvas
+            style={{
+              width: '100%',
+            }}
             ref={(r) => {
               this.canvas = r;
             }}
-            height={500}
-            width={500}
+            height={512}
+            width={512}
           />
         </div>
         <div
@@ -374,15 +412,36 @@ export class AnimationCanvas extends React.Component<
               </Button>
             </Tooltip2>
           </div>
-          <Tooltip2 content='FPS'>
-            <input
-              type='number'
+          <div
+            style={{
+              marginLeft: '20px',
+            }}
+          >
+            <Slider
+              value={this.state.currentFrame}
+              onChange={this.onSliderChange}
+              onRelease={this.onSliderRelease}
+              stepSize={this.step}
+              labelRenderer={false}
               min={0}
-              max={1000}
-              value={Math.round(10 / this.state.frameDuration)}
-              onChange={this.onFPSChanged}
+              max={1}
             />
-          </Tooltip2>
+          </div>
+          <div
+            style={{
+              marginLeft: '20px',
+            }}
+          >
+            <Tooltip2 content='FPS'>
+              <input
+                type='number'
+                min={0}
+                max={maxFrameRate}
+                value={Math.round(1000 / this.state.frameDuration)}
+                onChange={this.onFPSChanged}
+              />
+            </Tooltip2>
+          </div>
           <Switch
             label='Auto Play'
             onChange={this.autoPlaySwitchChanged}
