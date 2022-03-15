@@ -55,7 +55,7 @@ export default (args) => {
   let moduleBundles;
   if (args.module !== undefined) {
     if (typeof args.module === 'string') {
-      moduleBundles = [args.module];
+      moduleBundles = args.module.split(',');
     } else {
       moduleBundles = args.module;
     }
