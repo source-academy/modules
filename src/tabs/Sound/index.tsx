@@ -11,32 +11,10 @@ import { DebuggerContext } from '../../typings/type_helpers';
  * @author Samyukta Sounderraman
  */
 
-type Props = {
-  elements: JSX.Element[];
-};
-
-/**
- * React component for the Sounds Tab
- */
-function soundsTab(props: Props) {
-  return (
-    <div>
-      <p id='sound-default-text'>
-        The sound tab gives you control over your custom sounds. You can play,
-        pause, adjust the volume and download your sounds.
-        <br />
-        <br />
-        <MultiItemDisplay elements={props.elements} />
-        <br />
-      </p>
-    </div>
-  );
-}
-
 export default {
   /**
    * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
+   * rendered.
    * @returns {boolean}
    */
   toSpawn: (context: DebuggerContext) => {
@@ -69,7 +47,18 @@ export default {
       />
     ));
 
-    return soundsTab({ elements });
+    return (
+      <div>
+        <p id='sound-default-text'>
+          The sound tab gives you control over your custom sounds. You can play,
+          pause, adjust the volume and download your sounds.
+          <br />
+          <br />
+          <MultiItemDisplay elements={elements} />
+          <br />
+        </p>
+      </div>
+    );
   },
 
   /**
