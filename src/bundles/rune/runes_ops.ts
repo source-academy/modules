@@ -1,8 +1,7 @@
 /**
  * This file contains the bundle's private functions for runes.
  */
-import { mat4 } from 'gl-matrix';
-import { Rune } from './types';
+import { NormalRune } from './rune';
 
 // =============================================================================
 // Utility Functions
@@ -10,7 +9,7 @@ import { Rune } from './types';
 
 export function isRune(rune) {
   // rune should not have a drawMethod
-  return rune instanceof Rune;
+  return rune instanceof NormalRune;
   return (
     rune !== undefined &&
     rune.toReplString instanceof Function &&
@@ -27,41 +26,6 @@ export function throwIfNotRune(name, ...runes) {
   });
 }
 
-/**
- * flatten the subrunes to return a list of runes
- * @param rune - the rune to be flattened
- * @return type Rune[], a list of runes
- */
-export function flattenRune(rune: Rune): Rune[] {
-  if (rune === undefined) {
-    return [];
-  }
-  const runeList: Rune[] = [];
-  const runeTodoList: Rune[] = [];
-  runeTodoList.push(rune.copy());
-  while (runeTodoList.length !== 0) {
-    const runeToExpand: Rune = runeTodoList.pop()!; // ! claims that the pop() will not return undefined.
-    runeToExpand.subRunes.forEach((subRune: Rune) => {
-      const subRuneCopy = subRune.copy();
-      mat4.multiply(
-        subRuneCopy.transformMatrix,
-        runeToExpand.transformMatrix,
-        subRuneCopy.transformMatrix
-      );
-      subRuneCopy.hollusionDistance = runeToExpand.hollusionDistance;
-      if (runeToExpand.colors !== null) {
-        subRuneCopy.colors = runeToExpand.colors;
-      }
-      runeTodoList.push(subRuneCopy);
-    });
-    runeToExpand.subRunes = [];
-    if (runeToExpand.vertices.length > 0) {
-      runeList.push(runeToExpand);
-    }
-  }
-  return runeList;
-}
-
 // =============================================================================
 // Basic Runes
 // =============================================================================
@@ -69,7 +33,7 @@ export function flattenRune(rune: Rune): Rune[] {
 /**
  * primitive Rune in the rune of a full square
  * */
-export const getSquare: () => Rune = () => {
+export const getSquare: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -82,13 +46,13 @@ export const getSquare: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
 };
 
-export const getBlank: () => Rune = () => Rune.of();
+export const getBlank: () => NormalRune = () => NormalRune.of();
 
 /**
  * primitive Rune in the rune of a
@@ -96,7 +60,7 @@ export const getBlank: () => Rune = () => Rune.of();
  * each diagonally split into a
  * black and white half
  * */
-export const getRcross: () => Rune = () => {
+export const getRcross: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
   // lower small triangle
@@ -123,7 +87,7 @@ export const getRcross: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -132,7 +96,7 @@ export const getRcross: () => Rune = () => {
 /**
  * primitive Rune in the rune of a sail
  * */
-export const getSail: () => Rune = () => {
+export const getSail: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -142,7 +106,7 @@ export const getSail: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -151,7 +115,7 @@ export const getSail: () => Rune = () => {
 /**
  * primitive Rune in the rune of a triangle
  * */
-export const getTriangle: () => Rune = () => {
+export const getTriangle: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -161,7 +125,7 @@ export const getTriangle: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -171,7 +135,7 @@ export const getTriangle: () => Rune = () => {
  * primitive Rune with black triangle,
  * filling upper right corner
  * */
-export const getCorner: () => Rune = () => {
+export const getCorner: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
   vertexList.push(1, 0, 0, 1);
@@ -180,7 +144,7 @@ export const getCorner: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -191,7 +155,7 @@ export const getCorner: () => Rune = () => {
  * triangles, residing in the upper half
  * of
  * */
-export const getNova: () => Rune = () => {
+export const getNova: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
   vertexList.push(0, 1, 0, 1);
@@ -204,7 +168,7 @@ export const getNova: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -213,7 +177,7 @@ export const getNova: () => Rune = () => {
 /**
  * primitive Rune in the rune of a circle
  * */
-export const getCircle: () => Rune = () => {
+export const getCircle: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
   const circleDiv = 60;
@@ -226,7 +190,7 @@ export const getCircle: () => Rune = () => {
   }
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -235,7 +199,7 @@ export const getCircle: () => Rune = () => {
 /**
  * primitive Rune in the rune of a heart
  * */
-export const getHeart: () => Rune = () => {
+export const getHeart: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -287,7 +251,7 @@ export const getHeart: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -296,7 +260,7 @@ export const getHeart: () => Rune = () => {
 /**
  * primitive Rune in the rune of a pentagram
  * */
-export const getPentagram: () => Rune = () => {
+export const getPentagram: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -321,7 +285,7 @@ export const getPentagram: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -331,7 +295,7 @@ export const getPentagram: () => Rune = () => {
  * primitive Rune in the rune of a ribbon
  * winding outwards in an anticlockwise spiral
  * */
-export const getRibbon: () => Rune = () => {
+export const getRibbon: () => NormalRune = () => {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -362,7 +326,7 @@ export const getRibbon: () => Rune = () => {
 
   colorList.push(0, 0, 0, 1);
 
-  return Rune.of({
+  return NormalRune.of({
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList),
   });
@@ -400,7 +364,7 @@ export function hexToColor(hex): number[] {
 
 export function addColorFromHex(rune, hex) {
   throwIfNotRune('addColorFromHex', rune);
-  return Rune.of({
+  return NormalRune.of({
     subRunes: [rune],
     colors: new Float32Array(hexToColor(hex)),
   });

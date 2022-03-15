@@ -1,13 +1,9 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import {
-  drawAnaglyph,
-  drawHollusion,
-  drawRune,
-} from '../../bundles/rune/runes_webgl';
-import { RunesModuleState, Rune } from '../../bundles/rune/types';
-import { DebuggerContext } from '../../type_helpers';
+
+import { DebuggerContext } from '../../typings/type_helpers';
+import { NormalRune, RunesModuleState } from '../../bundles/rune/rune';
 
 /**
  * tab for displaying runes
@@ -35,7 +31,7 @@ type State = {
  */
 /* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<RunesTabProps, State> {
-  private runesToDraw: Rune[];
+  private runesToDraw: NormalRune[];
 
   constructor(props: RunesTabProps | Readonly<RunesTabProps>) {
     super(props);
@@ -127,20 +123,9 @@ class WebGLCanvas extends React.Component<RunesTabProps, State> {
           }}
         >
           <canvas
-            id='runesCanvas'
             ref={(r) => {
               if (r) {
-                if (runeToDraw.drawMethod === 'anaglyph') {
-                  drawAnaglyph(r, runeToDraw);
-                } else if (runeToDraw.drawMethod === 'hollusion') {
-                  drawHollusion(r, runeToDraw);
-                } else if (runeToDraw.drawMethod === 'normal') {
-                  drawRune(r, runeToDraw);
-                } else {
-                  throw Error(
-                    `Unexpected Drawing Method ${runeToDraw.drawMethod}`
-                  );
-                }
+                runeToDraw.draw(r);
               }
             }}
             width={512}
