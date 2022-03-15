@@ -3,7 +3,7 @@ import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 import { DebuggerContext } from '../../typings/type_helpers';
-import { NormalRune, RunesModuleState } from '../../bundles/rune/rune';
+import { Rune, RuneAnimation, RunesModuleState } from '../../bundles/rune/rune';
 
 /**
  * tab for displaying runes
@@ -31,7 +31,7 @@ type State = {
  */
 /* eslint-disable react/destructuring-assignment */
 class WebGLCanvas extends React.Component<RunesTabProps, State> {
-  private runesToDraw: NormalRune[];
+  private runesToDraw: (Rune | RuneAnimation)[];
 
   constructor(props: RunesTabProps | Readonly<RunesTabProps>) {
     super(props);

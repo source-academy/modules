@@ -1,6 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import { mat4 } from 'gl-matrix';
 import { ModuleState } from 'js-slang';
+import { AnimFrame, glAnimation } from '../../typings/anim_test';
+import { ReplResult } from '../../typings/type_helpers';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 
 const normalVertexShader = `
@@ -337,6 +339,24 @@ export class NormalRune extends Rune {
   };
 }
 
+export class RuneAnimation extends glAnimation implements ReplResult {
+  private func: (frame: number) => Rune;
+
+  constructor(numFrames: number, func: (frame: number) => Rune) {
+    super(numFrames);
+    this.func = func;
+  }
+
+  public getFrame(num: number): AnimFrame {
+    const rune = this.func(num);
+    return {
+      draw: rune.draw,
+    };
+  }
+
+  public toReplString = () => '<RuneAnimation>';
+}
+
 export class RunesModuleState implements ModuleState {
-  constructor(public drawnRunes: NormalRune[] = []) {}
+  constructor(public drawnRunes: (Rune | RuneAnimation)[] = []) {}
 }

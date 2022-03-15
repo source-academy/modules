@@ -6,7 +6,7 @@
  * @module rune
  */
 import { mat4, vec3 } from 'gl-matrix';
-import { NormalRune, Rune } from './rune';
+import { NormalRune, Rune, RuneAnimation } from './rune';
 import {
   getSquare,
   getBlank,
@@ -32,7 +32,7 @@ import {
 } from './runes_webgl';
 
 /** @hidden */
-export const drawnRunes: NormalRune[] = [];
+export const drawnRunes: (Rune | RuneAnimation)[] = [];
 
 // =============================================================================
 // Basic Runes
@@ -905,4 +905,16 @@ export function hollusion_magnitude(
 export function hollusion(rune: NormalRune): NormalRune {
   throwIfNotRune('hollusion', rune);
   return hollusion_magnitude(rune, 0.1);
+}
+
+/**
+ * Create an animation of runes
+ * @param frames Number of frames
+ * @param func Takes in a number between 0 and 1 and returns the Rune to draw
+ * @returns A rune animation
+ */
+export function rune_animation(frames: number, func: (frame: number) => Rune) {
+  const anim = new RuneAnimation(frames, func);
+  drawnRunes.push(anim);
+  return anim;
 }
