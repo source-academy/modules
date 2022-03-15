@@ -3,6 +3,9 @@
 import { mat4, vec3 } from 'gl-matrix';
 import { ReplResult } from '../../typings/type_helpers';
 
+/** @hidden */
+export const drawnCurves: CurveDrawn[] = [];
+
 // Vertex shader program
 const vsS: string = `
 attribute vec4 aFragColor;
