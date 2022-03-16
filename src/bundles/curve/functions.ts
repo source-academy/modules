@@ -787,16 +787,18 @@ export function arc(t: number): Point {
  * Create a animation of curves using a curve generatting function.
  * The curve generating function should take in a number between [0, 1]
  * and return a curve.
+ * @param duration The duration of each frame in milliseconds
  * @param numFrames Number of frames to draw
  * @param drawer Draw function to the generated curves with
  * @returns A function that accepts a curve generating function as a parameter
  */
 export function curve_animation(
+  duration: number,
   numFrames: number,
   drawer: RenderFunction
 ): (gen: (step: number) => Curve) => CurveAnimation {
   return (func) => {
-    const anim = new CurveAnimation(numFrames, func, drawer);
+    const anim = new CurveAnimation(duration, numFrames, func, drawer);
     drawnCurves.push(anim);
     return anim;
   };

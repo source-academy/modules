@@ -3,7 +3,10 @@
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export abstract class glAnimation {
-  constructor(public readonly numFrames: number) {}
+  constructor(
+    public readonly duration: number,
+    public readonly numFrames: number
+  ) {}
 
   public abstract getFrame(num: number): AnimFrame;
 }

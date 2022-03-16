@@ -16,11 +16,12 @@ export type RenderFunction = (func: Curve) => CurveDrawn;
 
 export class CurveAnimation extends glAnimation implements ReplResult {
   constructor(
+    duration: number,
     numFrames: number,
     private readonly func: (step: number) => Curve,
     private readonly drawer: RenderFunction
   ) {
-    super(numFrames);
+    super(duration, numFrames);
   }
 
   public getFrame(step: number): AnimFrame {

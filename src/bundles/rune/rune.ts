@@ -342,8 +342,12 @@ export class NormalRune extends Rune {
 export class RuneAnimation extends glAnimation implements ReplResult {
   private func: (frame: number) => Rune;
 
-  constructor(numFrames: number, func: (frame: number) => Rune) {
-    super(numFrames);
+  constructor(
+    duration: number,
+    numFrames: number,
+    func: (frame: number) => Rune
+  ) {
+    super(duration, numFrames);
     this.func = func;
   }
 

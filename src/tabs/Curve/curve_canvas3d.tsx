@@ -192,7 +192,6 @@ type AnimCanvasState = {
   isPlaying: boolean;
   wasPlaying: boolean;
   autoPlay: boolean;
-  frameDuration: number;
 };
 
 /**
@@ -211,6 +210,8 @@ export class AnimationCanvas extends React.Component<
 
   private prevTimestamp: number;
 
+  private frameDuration: number;
+
   constructor(props: AnimCanvasProps | Readonly<AnimCanvasProps>) {
     super(props);
 
@@ -219,11 +220,11 @@ export class AnimationCanvas extends React.Component<
       isPlaying: false,
       wasPlaying: false,
       autoPlay: true,
-      frameDuration: 1000 / 60, // default fps is 60
     };
 
     this.canvas = null;
     this.step = 1 / props.animation.numFrames;
+    this.frameDuration = props.animation.duration;
     this.prevTimestamp = 0;
   }
 
@@ -246,7 +247,7 @@ export class AnimationCanvas extends React.Component<
    */
   private animationCallback = (timeInMs: number) => {
     if (this.canvas && this.state.isPlaying) {
-      if (timeInMs - this.prevTimestamp < this.state.frameDuration) {
+      if (timeInMs - this.prevTimestamp < this.frameDuration) {
         // Not time to draw the frame yet
         requestAnimationFrame(this.animationCallback);
         return;
@@ -263,7 +264,7 @@ export class AnimationCanvas extends React.Component<
             () => ({
               currentFrame: 0,
             }),
-            () => setTimeout(this.animationCallback, this.state.frameDuration)
+            () => requestAnimationFrame(this.animationCallback)
           );
         } else {
           // Autoplay isn't on
@@ -349,17 +350,16 @@ export class AnimationCanvas extends React.Component<
     }));
   };
 
+  /*
   private onFPSChanged = (event) => {
     const frameDuration = 1000 / parseFloat(event.target.value);
     this.setState({
       frameDuration,
     });
   };
+  */
 
   public render() {
-    // Max frame rate value
-    const maxFrameRate = 200;
-
     return (
       <div>
         <div
@@ -427,7 +427,7 @@ export class AnimationCanvas extends React.Component<
               max={1}
             />
           </div>
-          <div
+          {/* <div
             style={{
               marginLeft: '20px',
             }}
@@ -441,7 +441,7 @@ export class AnimationCanvas extends React.Component<
                 onChange={this.onFPSChanged}
               />
             </Tooltip2>
-          </div>
+          </div> */}
           <Switch
             label='Auto Play'
             onChange={this.autoPlaySwitchChanged}
