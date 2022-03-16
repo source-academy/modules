@@ -5,54 +5,6 @@ import { AnimFrame, glAnimation } from '../../typings/anim_types';
 import { ReplResult } from '../../typings/type_helpers';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 
-const normalVertexShader = `
-attribute vec4 aVertexPosition;
-uniform vec4 uVertexColor;
-uniform mat4 uModelViewMatrix;
-uniform mat4 uProjectionMatrix;
-uniform mat4 uCameraMatrix;
-
-varying lowp vec4 vColor;
-varying highp vec2 vTexturePosition;
-varying lowp float colorFactor;
-void main(void) {
-  gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
-  vColor = uVertexColor;
-
-  // texture position is in [0,1], vertex position is in [-1,1]
-  vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;
-  vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;
-
-  colorFactor = gl_Position.z;
-}
-`;
-
-const normalFragmentShader = `
-precision mediump float;
-uniform bool uRenderWithTexture;
-uniform bool uRenderWithDepthColor;
-uniform sampler2D uTexture;
-varying lowp float colorFactor;
-uniform vec4 uColorFilter;
-
-
-varying lowp vec4 vColor;
-varying highp vec2 vTexturePosition;
-void main(void) {
-  if (uRenderWithTexture){
-    gl_FragColor = texture2D(uTexture, vTexturePosition);
-  } else {
-    gl_FragColor = vColor;
-  }
-  if (uRenderWithDepthColor){
-    gl_FragColor += (colorFactor + 0.5) * (1.0 - gl_FragColor);
-    gl_FragColor.a = 1.0;
-  }
-  gl_FragColor = uColorFilter * gl_FragColor + 1.0 - uColorFilter;
-  gl_FragColor.a = 1.0;
-}
-`;
-
 /**
  * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
  * @field vertices - a list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
@@ -138,7 +90,58 @@ export class Rune {
   public toReplString = () => '<Rune>';
 }
 
+/**
+ * Represents runes with a draw method attached
+ */
 export abstract class DrawnRune implements ReplResult {
+  private static readonly normalVertexShader = `
+  attribute vec4 aVertexPosition;
+  uniform vec4 uVertexColor;
+  uniform mat4 uModelViewMatrix;
+  uniform mat4 uProjectionMatrix;
+  uniform mat4 uCameraMatrix;
+  
+  varying lowp vec4 vColor;
+  varying highp vec2 vTexturePosition;
+  varying lowp float colorFactor;
+  void main(void) {
+    gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
+    vColor = uVertexColor;
+  
+    // texture position is in [0,1], vertex position is in [-1,1]
+    vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;
+    vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;
+  
+    colorFactor = gl_Position.z;
+  }
+  `;
+  
+  private static readonly normalFragmentShader = `
+  precision mediump float;
+  uniform bool uRenderWithTexture;
+  uniform bool uRenderWithDepthColor;
+  uniform sampler2D uTexture;
+  varying lowp float colorFactor;
+  uniform vec4 uColorFilter;
+  
+  
+  varying lowp vec4 vColor;
+  varying highp vec2 vTexturePosition;
+  void main(void) {
+    if (uRenderWithTexture){
+      gl_FragColor = texture2D(uTexture, vTexturePosition);
+    } else {
+      gl_FragColor = vColor;
+    }
+    if (uRenderWithDepthColor){
+      gl_FragColor += (colorFactor + 0.5) * (1.0 - gl_FragColor);
+      gl_FragColor.a = 1.0;
+    }
+    gl_FragColor = uColorFilter * gl_FragColor + 1.0 - uColorFilter;
+    gl_FragColor.a = 1.0;
+  }
+  `;
+  
   constructor(protected readonly rune: Rune) {}
 
   public toReplString = () => '<Rune>';
@@ -164,8 +167,8 @@ export abstract class DrawnRune implements ReplResult {
     // step 2: initiate the shaderProgram
     const shaderProgram = initShaderProgram(
       gl,
-      normalVertexShader,
-      normalFragmentShader
+      DrawnRune.normalVertexShader,
+      DrawnRune.normalFragmentShader
     );
     gl.useProgram(shaderProgram);
     if (gl === null) {
