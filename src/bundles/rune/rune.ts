@@ -53,20 +53,32 @@ void main(void) {
 }
 `;
 
-export abstract class Rune {
+/**
+ * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
+ * @field vertices - a list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
+ * @field colors - a list of vertex colors, each vertex has a color (r,g,b,a).
+ * @field transformMatrix - a mat4 that is applied to all the vertices and the sub runes
+ * @field subRune - a (potentially empty) list of Runes
+ */
+export class Rune {
   constructor(
     public vertices: Float32Array,
     public colors: Float32Array | null,
     public transformMatrix: mat4,
-    public subRunes: NormalRune[],
+    public subRunes: Rune[],
     public texture: HTMLImageElement | null,
     public hollusionDistance: number
   ) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public abstract draw: (canvas: HTMLCanvasElement) => void;
-
-  public abstract copy: () => Rune;
+  public copy = () =>
+    new Rune(
+      this.vertices,
+      this.colors,
+      mat4.clone(this.transformMatrix),
+      this.subRunes,
+      this.texture,
+      this.hollusionDistance
+    );
 
   /**
    * Flatten the subrunes to return a list of runes
@@ -100,6 +112,39 @@ export abstract class Rune {
     return runeList;
   };
 
+  public static of = (
+    params: {
+      vertices?: Float32Array;
+      colors?: Float32Array | null;
+      transformMatrix?: mat4;
+      subRunes?: Rune[];
+      texture?: HTMLImageElement | null;
+      hollusionDistance?: number;
+    } = {}
+  ) => {
+    const paramGetter = (name: string, defaultValue: () => any) =>
+      params[name] === undefined ? defaultValue() : params[name];
+
+    return new Rune(
+      paramGetter('vertices', () => new Float32Array()),
+      paramGetter('colors', () => null),
+      paramGetter('transformMatrix', mat4.create),
+      paramGetter('subRunes', () => []),
+      paramGetter('texture', () => null),
+      paramGetter('hollusionDistance', () => 0.1)
+    );
+  };
+
+  public toReplString = () => '<Rune>';
+}
+
+export abstract class DrawnRune implements ReplResult {
+  constructor(protected readonly rune: Rune) {}
+
+  public toReplString = () => '<Rune>';
+
+  public abstract draw: (canvas: HTMLCanvasElement) => void;
+
   /**
    * Draws the list of runes with the prepared WebGLRenderingContext, with each rune overlapping each other onto a given framebuffer. if the framebuffer is null, draw to the default canvas.
    *
@@ -108,7 +153,7 @@ export abstract class Rune {
    */
   protected drawRunesToFrameBuffer = (
     gl: WebGLRenderingContext,
-    runes: NormalRune[],
+    runes: Rune[],
     cameraMatrix: mat4,
     colorFilter: Float32Array,
     framebuffer: WebGLFramebuffer | null = null,
@@ -243,7 +288,7 @@ export abstract class Rune {
       return texture;
     };
 
-    runes.forEach((rune: NormalRune) => {
+    runes.forEach((rune: Rune) => {
       // load position buffer
       const positionBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -275,28 +320,9 @@ export abstract class Rune {
       gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
     });
   };
-
-  public toReplString = () => '<Rune>';
 }
 
-/**
- * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
- * @field vertices - a list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
- * @field colors - a list of vertex colors, each vertex has a color (r,g,b,a).
- * @field transformMatrix - a mat4 that is applied to all the vertices and the sub runes
- * @field subRune - a (potentially empty) list of Runes
- */
-export class NormalRune extends Rune {
-  public copy = () =>
-    new NormalRune(
-      this.vertices,
-      this.colors,
-      mat4.clone(this.transformMatrix),
-      this.subRunes,
-      this.texture,
-      this.hollusionDistance
-    );
-
+export class NormalRune extends DrawnRune {
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
     // stopAnimation(canvas);
@@ -307,45 +333,22 @@ export class NormalRune extends Rune {
     // color filter set to [1,1,1,1] for transparent filter
     this.drawRunesToFrameBuffer(
       gl,
-      this.flatten(),
+      this.rune.flatten(),
       cameraMatrix,
       new Float32Array([1, 1, 1, 1]),
       null,
       true
     );
   };
-
-  public static of = (
-    params: {
-      vertices?: Float32Array;
-      colors?: Float32Array | null;
-      transformMatrix?: mat4;
-      subRunes?: NormalRune[];
-      texture?: HTMLImageElement | null;
-      hollusionDistance?: number;
-    } = {}
-  ) => {
-    const paramGetter = (name: string, defaultValue: () => any) =>
-      params[name] === undefined ? defaultValue() : params[name];
-
-    return new NormalRune(
-      paramGetter('vertices', () => new Float32Array()),
-      paramGetter('colors', () => null),
-      paramGetter('transformMatrix', mat4.create),
-      paramGetter('subRunes', () => []),
-      paramGetter('texture', () => null),
-      paramGetter('hollusionDistance', () => 0.1)
-    );
-  };
 }
 
 export class RuneAnimation extends glAnimation implements ReplResult {
-  private func: (frame: number) => Rune;
+  private func: (frame: number) => DrawnRune;
 
   constructor(
     duration: number,
     numFrames: number,
-    func: (frame: number) => Rune
+    func: (frame: number) => DrawnRune
   ) {
     super(duration, numFrames);
     this.func = func;
@@ -362,5 +365,5 @@ export class RuneAnimation extends glAnimation implements ReplResult {
 }
 
 export class RunesModuleState implements ModuleState {
-  constructor(public drawnRunes: (Rune | RuneAnimation)[] = []) {}
+  constructor(public drawnRunes: (DrawnRune | RuneAnimation)[] = []) {}
 }

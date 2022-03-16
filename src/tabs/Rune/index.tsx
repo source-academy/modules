@@ -1,5 +1,9 @@
 import React from 'react';
-import { Rune, RuneAnimation, RunesModuleState } from '../../bundles/rune/rune';
+import {
+  DrawnRune,
+  RuneAnimation,
+  RunesModuleState,
+} from '../../bundles/rune/rune';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
 import { AnimationCanvas } from '../Curve/curve_canvas3d';
@@ -48,7 +52,7 @@ export default {
       if ((rune as any).numFrames !== undefined) {
         return <AnimationCanvas animation={rune as RuneAnimation} />;
       }
-      return <RuneCanvas rune={rune as Rune} />;
+      return <RuneCanvas rune={rune as DrawnRune} />;
     });
 
     return <MultiItemDisplay elements={runeCanvases} />;

@@ -6,7 +6,7 @@
  * @module rune
  */
 import { mat4, vec3 } from 'gl-matrix';
-import { Rune, NormalRune, RuneAnimation } from './rune';
+import { Rune, NormalRune, RuneAnimation, DrawnRune } from './rune';
 import {
   getSquare,
   getBlank,
@@ -32,7 +32,7 @@ import {
 } from './runes_webgl';
 
 /** @hidden */
-export const drawnRunes: (Rune | RuneAnimation)[] = [];
+export const drawnRunes: (DrawnRune | RuneAnimation)[] = [];
 
 // =============================================================================
 // Basic Runes
@@ -130,7 +130,7 @@ export function scale_independent(
 
   const wrapperMat = mat4.create();
   mat4.multiply(wrapperMat, scaleMat, wrapperMat);
-  return NormalRune.of({
+  return Rune.of({
     subRunes: [rune],
     transformMatrix: wrapperMat,
   });
@@ -162,7 +162,7 @@ export function translate(x: number, y: number, rune: Rune): Rune {
 
   const wrapperMat = mat4.create();
   mat4.multiply(wrapperMat, translateMat, wrapperMat);
-  return NormalRune.of({
+  return Rune.of({
     subRunes: [rune],
     transformMatrix: wrapperMat,
   });
@@ -184,7 +184,7 @@ export function rotate(rad: number, rune: Rune): Rune {
 
   const wrapperMat = mat4.create();
   mat4.multiply(wrapperMat, rotateMat, wrapperMat);
-  return NormalRune.of({
+  return Rune.of({
     subRunes: [rune],
     transformMatrix: wrapperMat,
   });
@@ -211,7 +211,7 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 
   const upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1));
   const lower = translate(0, frac, scale_independent(1, 1 - frac, rune2));
-  return NormalRune.of({
+  return Rune.of({
     subRunes: [upper, lower],
   });
 }
@@ -300,7 +300,7 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 
   const left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1));
   const right = translate(frac, 0, scale_independent(1 - frac, 1, rune2));
-  return NormalRune.of({
+  return Rune.of({
     subRunes: [left, right],
   });
 }
@@ -413,7 +413,7 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   const frontMat = mat4.create();
   // z: scale by frac
   mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, useFrac));
-  const front = NormalRune.of({
+  const front = Rune.of({
     subRunes: [rune1],
     transformMatrix: frontMat,
   });
@@ -422,12 +422,12 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   // need to apply transformation in backwards order!
   mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -useFrac));
   mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - useFrac));
-  const back = NormalRune.of({
+  const back = Rune.of({
     subRunes: [rune2],
     transformMatrix: backMat,
   });
 
-  return NormalRune.of({
+  return Rune.of({
     subRunes: [front, back], // render front first to avoid redrawing
   });
 }
@@ -463,7 +463,7 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
   throwIfNotRune('color', rune);
 
   const colorVector = [r, g, b, 1];
-  return NormalRune.of({
+  return Rune.of({
     colors: new Float32Array(colorVector),
     subRunes: [rune],
   });
@@ -482,7 +482,7 @@ export function random_color(rune: Rune): Rune {
     colorPalette[Math.floor(Math.random() * colorPalette.length)]
   );
 
-  return NormalRune.of({
+  return Rune.of({
     colors: new Float32Array(randomColor),
     subRunes: [rune],
   });
@@ -610,12 +610,12 @@ export function white(rune: Rune): Rune {
  */
 export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
-  drawnRunes.push(rune.copy());
+  drawnRunes.push(new NormalRune(rune));
   return rune;
 }
 
 /** @hidden */
-export class AnaglyphRune extends Rune {
+export class AnaglyphRune extends DrawnRune {
   private static readonly anaglyphVertexShader = `
     precision mediump float;
     attribute vec4 a_position;
@@ -640,16 +640,6 @@ export class AnaglyphRune extends Rune {
     }
     `;
 
-  public copy = () =>
-    new AnaglyphRune(
-      this.vertices,
-      this.colors,
-      mat4.clone(this.transformMatrix),
-      this.subRunes,
-      this.texture,
-      this.hollusionDistance
-    );
-
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
     // stopAnimation(canvas);
@@ -657,7 +647,7 @@ export class AnaglyphRune extends Rune {
     // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
     const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
       .flatten()
-      .concat(this.flatten());
+      .concat(this.rune.flatten());
 
     // calculate the left and right camera matrices
     const halfEyeDistance = 0.03;
@@ -729,10 +719,6 @@ export class AnaglyphRune extends Rune {
     gl.enableVertexAttribArray(vertexPositionPointer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   };
-
-  public static fromRune(rune: Rune) {
-    return rune.copy() as AnaglyphRune;
-  }
 }
 
 /**
@@ -743,12 +729,17 @@ export class AnaglyphRune extends Rune {
  */
 export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('anaglyph', rune);
-  drawnRunes.push(AnaglyphRune.fromRune(rune));
+  drawnRunes.push(new AnaglyphRune(rune));
   return rune;
 }
 
 /** @hidden */
-export class HollusionRune extends Rune {
+export class HollusionRune extends DrawnRune {
+  constructor(rune: Rune, magnitude: number) {
+    super(rune);
+    this.rune.hollusionDistance = magnitude;
+  }
+
   private static readonly copyVertexShader = `
   precision mediump float;
   attribute vec4 a_position;
@@ -770,23 +761,13 @@ export class HollusionRune extends Rune {
   }
   `;
 
-  public copy = () =>
-    new HollusionRune(
-      this.vertices,
-      this.colors,
-      mat4.clone(this.transformMatrix),
-      this.subRunes,
-      this.texture,
-      this.hollusionDistance
-    );
-
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
     // stopAnimation(canvas);
 
     const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
       .flatten()
-      .concat(this.flatten());
+      .concat(this.rune.flatten());
 
     // first render all the frames into a framebuffer
     const xshiftMax = runes[0].hollusionDistance;
@@ -876,12 +857,6 @@ export class HollusionRune extends Rune {
     return render;
     // requestAnimationFrame(render);
   };
-
-  public static fromRune(rune: Rune, hollusionDistance: number) {
-    const runeCopy = rune.copy();
-    runeCopy.hollusionDistance = hollusionDistance;
-    return runeCopy as HollusionRune;
-  }
 }
 
 /**
@@ -892,7 +867,7 @@ export class HollusionRune extends Rune {
  */
 export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
   throwIfNotRune('hollusion_magnitude', rune);
-  drawnRunes.push(HollusionRune.fromRune(rune, magnitude));
+  drawnRunes.push(new HollusionRune(rune, magnitude));
   return rune;
 }
 
@@ -918,7 +893,32 @@ export function rune_animation(
   frames: number,
   func: (frame: number) => Rune
 ) {
-  const anim = new RuneAnimation(duration, frames, func);
+  const anim = new RuneAnimation(
+    duration,
+    frames,
+    (n) => new NormalRune(func(n))
+  );
+  drawnRunes.push(anim);
+  return anim;
+}
+
+/**
+ * Create an animation of anaglyph runes
+ * @param duration Duration of each frame in milliseconds
+ * @param frames Number of frames
+ * @param func Takes in a number between 0 and 1 and returns the Rune to draw
+ * @returns A rune animation
+ */
+export function anaglyph_animation(
+  duration: number,
+  frames: number,
+  func: (frame: number) => Rune
+) {
+  const anim = new RuneAnimation(
+    duration,
+    frames,
+    (n) => new AnaglyphRune(func(n))
+  );
   drawnRunes.push(anim);
   return anim;
 }
