@@ -5,9 +5,8 @@ export type ErrorLogger = (
   isSlangError?: boolean
 ) => void;
 export type TabsPackage = {
-  handleSwapModes: () => void;
+  onClickStill: () => void;
 };
-
 export type Queue = () => void;
 export type Video = {
   toReplString: () => string;

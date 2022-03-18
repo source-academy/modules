@@ -50,6 +50,9 @@ let audioElement: HTMLAudioElement;
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
 
+/** @hidden */
+export const audioPlayed: AudioPlayed[] = [];
+
 // Singular audio context for all playback functions
 let audioplayer: AudioContext;
 
@@ -117,12 +120,14 @@ function start_recording(mediaRecorder: MediaRecorder) {
   mediaRecorder.onstop = () => process(data);
 }
 
-// there is a beep signal at the beginning and end
-// of each recording
-const recording_signal_duration_ms = 100;
+// duration of recording signal in milliseconds
+const recording_signal_ms = 100;
+
+// duration of pause after "run" before recording signal is played
+const pre_recording_signal_pause_ms = 200;
 
 function play_recording_signal() {
-  play(sine_sound(1200, recording_signal_duration_ms / 1000));
+  play(sine_sound(1200, recording_signal_ms / 1000));
 }
 
 function process(data) {
@@ -189,7 +194,7 @@ export function record(buffer: number): () => () => Sound {
   setTimeout(() => {
     play_recording_signal();
     start_recording(mediaRecorder);
-  }, recording_signal_duration_ms + buffer * 1000);
+  }, recording_signal_ms + buffer * 1000);
   return () => {
     mediaRecorder.stop();
     play_recording_signal();
@@ -214,21 +219,30 @@ export function record(buffer: number): () => () => Sound {
  * play(promise());</CODE></PRE>
  * @param duration duration in seconds
  * @param buffer pause before recording, in seconds
- * @return <CODE>promise</CODE>: nullary function which returns the recorded sound
+ * @return <CODE>promise</CODE>: nullary function which returns recorded sound
  */
 export function record_for(duration: number, buffer: number): () => Sound {
   recorded_sound = undefined;
-  const duration_ms = duration * 1000;
+  const recording_ms = duration * 1000;
+  const pre_recording_pause_ms = buffer * 1000;
   check_permission();
   const mediaRecorder = new MediaRecorder(globalStream);
+
+  // order of events for record_for:
+  // pre-recording-signal pause | recording signal |
+  // pre-recording pause | recording | recording signal
+
   setTimeout(() => {
     play_recording_signal();
-    start_recording(mediaRecorder);
     setTimeout(() => {
-      mediaRecorder.stop();
-      play_recording_signal();
-    }, duration_ms);
-  }, recording_signal_duration_ms + buffer * 1000);
+      start_recording(mediaRecorder);
+      setTimeout(() => {
+        mediaRecorder.stop();
+        play_recording_signal();
+      }, recording_ms);
+    }, recording_signal_ms + pre_recording_pause_ms);
+  }, pre_recording_signal_pause_ms);
+
   return () => {
     if (recorded_sound === undefined) {
       throw new Error('recording still being processed');
@@ -298,6 +312,19 @@ export function is_sound(x: any): boolean {
     typeof get_wave(x) === 'function' &&
     typeof get_duration(x) === 'number'
   );
+}
+
+/**
+ * Plays the given Wave using the computer’s sound device, for the duration
+ * given in seconds.
+ * The sound is only played if no other sounds are currently being played.
+ *
+ * @param wave the wave function to play, starting at 0
+ * @return the given sound
+ * @example play_wave(t => math_sin(t * 3000), 5);
+ */
+export function play_wave(wave: Wave, duration: number): AudioPlayed {
+  return play(make_sound(wave, duration));
 }
 
 /**
@@ -373,7 +400,7 @@ export function play(sound: Sound): AudioPlayed {
       isPlaying = false;
     };
 
-    return {
+    const soundToPlay = {
       toReplString: () => `<AudioPlayed>`,
       init: (audio_elem) => {
         audioElement = audio_elem;
@@ -384,6 +411,8 @@ export function play(sound: Sound): AudioPlayed {
         return true;
       },
     };
+    audioPlayed.push(soundToPlay);
+    return soundToPlay;
   }
 }
 

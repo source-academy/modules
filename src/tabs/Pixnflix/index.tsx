@@ -84,6 +84,15 @@ class PixNFlix extends React.Component<Props, State> {
     }
   }
 
+  private onClickStill = () => {
+    const { mode } = this.state;
+    if (mode === ('still' as SideContentVideoDisplayMode)) {
+      this.handleSnapPicture();
+    } else {
+      this.swapModes(mode)();
+    }
+  };
+
   public setupVideoService = () => {
     if (this.$video && this.$canvas && this.isPixNFlix()) {
       const { debuggerContext } = this.props;
@@ -94,7 +103,9 @@ class PixNFlix extends React.Component<Props, State> {
         this.$video,
         this.$canvas,
         this.printError,
-        this.tabsPackage
+        {
+          onClickStill: this.onClickStill,
+        }
       );
       this.setState({
         height: videoProperties[0],

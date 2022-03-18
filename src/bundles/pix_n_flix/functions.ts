@@ -188,7 +188,6 @@ function draw(timestamp: number): void {
   if (elapsed > 1000 / FPS) {
     drawFrame();
     startTime = timestamp;
-    // console.log(counter++);
     if (toRunLateQueue) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       lateQueue();
@@ -581,10 +580,10 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
  *
  * @param delay Delay in ms after the video starts.
  */
-export function pause_after(delay: number): void {
+export function pause_at(delay: number): void {
   // prevent negative delays
   lateEnqueue(() =>
-    setTimeout(tabsPackage.handleSwapModes, delay >= 0 ? delay : -delay)
+    setTimeout(tabsPackage.onClickStill, delay >= 0 ? delay : -delay)
   );
 }
 
