@@ -1,82 +1,39 @@
 import { is_pair, head, tail, is_list, is_null, member, length } from './list';
 
 /**
- * Asserts the equality (===) of the two parameters.
+ * Asserts that a predicate returns true.
+ * @param pred An predicate function that returns true/false.
+ * @returns
+ */
+export function assert(pred: () => boolean) {
+  if (!pred()) {
+    throw new Error(`Assert failed!`);
+  }
+}
+
+/**
+ * Asserts the equality (===) of two parameters.
  * @param expected The expected value.
  * @param received The given value.
  * @returns
  */
 export function assert_equals(expected: any, received: any) {
-  if (expected !== received) {
+  const fail = () => {
     throw new Error(`Expected \`${expected}\`, got \`${received}\`!`);
+  };
+  if (typeof expected !== typeof received) {
+    fail();
   }
-}
-
-/**
- * Asserts the inequality (!==) of the two parameters.
- * @param expected The expected value.
- * @param received The given value.
- * @returns
- */
-export function assert_not_equals(expected: any, received: any) {
-  if (expected === received) {
-    throw new Error(`Expected not equal \`${expected}\`!`);
+  // approx checking for floats
+  if (typeof expected === 'number' && !Number.isInteger(expected)) {
+    if (Math.abs(expected - received) > 0.001) {
+      fail();
+    } else {
+      return;
+    }
   }
-}
-
-/**
- * Asserts the inequality (!==) of the two parameters.
- * @param expected The expected value.
- * @param received The given value.
- * @returns
- */
-export function assert_approx_equals(expected: number, received: number) {
-  if (Math.abs(expected - received) > 0.001) {
-    throw new Error(`Expected \`${expected}\` to approx. \`${received}\`!`);
-  }
-}
-
-/**
- * Asserts that `expected` > `received`.
- * @param expected
- * @param received
- */
-export function assert_greater(expected: number, received: number) {
-  if (expected <= received) {
-    throw new Error(`Expected \`${expected}\` > \`${received}\`!`);
-  }
-}
-
-/**
- * Asserts that `expected` >= `received`.
- * @param expected
- * @param received
- */
-export function assert_greater_equals(expected: number, received: number) {
-  if (expected < received) {
-    throw new Error(`Expected \`${expected}\` >= \`${received}\`!`);
-  }
-}
-
-/**
- * Asserts that `expected` < `received`.
- * @param expected
- * @param received
- */
-export function assert_lesser(expected: number, received: number) {
-  if (expected >= received) {
-    throw new Error(`Expected \`${expected}\` < \`${received}\`!`);
-  }
-}
-
-/**
- * Asserts that `expected` <= `received`.
- * @param expected
- * @param received
- */
-export function assert_lesser_equals(expected: number, received: number) {
-  if (expected > received) {
-    throw new Error(`Expected \`${expected}\` <= \`${received}\`!`);
+  if (expected !== received) {
+    fail();
   }
 }
 
