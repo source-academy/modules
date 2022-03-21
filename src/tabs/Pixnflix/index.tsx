@@ -1,7 +1,11 @@
 import React, { DragEvent, ChangeEvent } from 'react';
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { ErrorLogger, TabsPackage } from '../../bundles/pix_n_flix/types';
+import {
+  BundlePackage,
+  ErrorLogger,
+  TabsPackage,
+} from '../../bundles/pix_n_flix/types';
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
@@ -27,7 +31,7 @@ type State = {
   height: number;
   FPS: number;
   mode: SideContentVideoDisplayMode;
-  useLocalVideo: boolean;
+  useLocal: boolean;
 };
 
 type Video = {
@@ -37,7 +41,7 @@ type Video = {
     canvas: HTMLCanvasElement | null,
     errorLogger: ErrorLogger,
     tabsPackage: TabsPackage
-  ) => number[];
+  ) => BundlePackage;
   deinit: () => void;
   startVideo: () => void;
   snapPicture: () => void;
@@ -50,8 +54,6 @@ class PixNFlix extends React.Component<Props, State> {
 
   private $canvas: HTMLCanvasElement | null = null;
 
-  private tabsPackage: TabsPackage;
-
   private pixNFlix: Video;
 
   constructor(props: Props) {
@@ -60,14 +62,11 @@ class PixNFlix extends React.Component<Props, State> {
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
       FPS: DEFAULT_FPS,
-      useLocalVideo: false,
+      useLocal: false,
       mode: 'video' as SideContentVideoDisplayMode,
     };
     const { debuggerContext } = this.props;
     this.pixNFlix = debuggerContext.result.value;
-    this.tabsPackage = {
-      handleSwapModes: this.handleSwapModes,
-    };
   }
 
   public componentDidMount() {
@@ -84,22 +83,13 @@ class PixNFlix extends React.Component<Props, State> {
     }
   }
 
-  private onClickStill = () => {
-    const { mode } = this.state;
-    if (mode === ('still' as SideContentVideoDisplayMode)) {
-      this.handleSnapPicture();
-    } else {
-      this.swapModes(mode)();
-    }
-  };
-
   public setupVideoService = () => {
     if (this.$video && this.$canvas && this.isPixNFlix()) {
       const { debuggerContext } = this.props;
       this.pixNFlix = debuggerContext.result.value;
       // get the properties of the video in an array
       // [height, width, FPS]
-      const videoProperties: number[] = this.pixNFlix.init(
+      const { HEIGHT, WIDTH, FPS, useLocal } = this.pixNFlix.init(
         this.$video,
         this.$canvas,
         this.printError,
@@ -108,10 +98,11 @@ class PixNFlix extends React.Component<Props, State> {
         }
       );
       this.setState({
-        height: videoProperties[0],
-        width: videoProperties[1],
-        FPS: videoProperties[2],
-        useLocalVideo: videoProperties[3] === 1,
+        height: HEIGHT,
+        width: WIDTH,
+        FPS,
+        useLocal,
+        mode: useLocal ? 'still' : 'video',
       });
     }
   };
@@ -132,6 +123,31 @@ class PixNFlix extends React.Component<Props, State> {
     if (this.isPixNFlix()) {
       this.pixNFlix.snapPicture();
     }
+  };
+
+  private onClickStill = () => {
+    const { mode } = this.state;
+    if (mode === ('still' as SideContentVideoDisplayMode)) {
+      this.handleSnapPicture();
+    } else {
+      this.setState(
+        (state: State) => ({
+          ...state,
+          mode: 'still' as SideContentVideoDisplayMode,
+        }),
+        this.handleSnapPicture
+      );
+    }
+  };
+
+  private onClickVideo = () => {
+    this.setState(
+      (state: State) => ({
+        ...state,
+        mode: 'video' as SideContentVideoDisplayMode,
+      }),
+      this.handleStartVideo
+    );
   };
 
   public handleWidthChange = (width: number) => {
@@ -173,9 +189,10 @@ class PixNFlix extends React.Component<Props, State> {
   };
 
   public loadFileToVideo = (file: File) => {
-    const { useLocalVideo } = this.state;
-    if (this.$video && useLocalVideo) {
+    const { useLocal } = this.state;
+    if (this.$video && useLocal) {
       this.$video.src = URL.createObjectURL(file);
+      this.onClickVideo();
     }
   };
 
@@ -197,35 +214,6 @@ class PixNFlix extends React.Component<Props, State> {
 
   public printError: ErrorLogger = () => {};
 
-  private swapModes = (mode: SideContentVideoDisplayMode) => () => {
-    switch (mode) {
-      case 'video':
-        this.setState(
-          (state: State) => ({
-            ...state,
-            mode: 'still' as SideContentVideoDisplayMode,
-          }),
-          this.handleSnapPicture
-        );
-        break;
-      // case 'still':
-      default:
-        this.setState(
-          (state: State) => ({
-            ...state,
-            mode: 'video' as SideContentVideoDisplayMode,
-          }),
-          this.handleStartVideo
-        );
-        break;
-    }
-  };
-
-  private handleSwapModes: () => void = () => {
-    const { mode } = this.state;
-    this.swapModes(mode)();
-  };
-
   /**
    * Checks if pixNFlix is initialised as the last line (ie. REPL output is '[Pix N Flix]')
    * @returns Boolean if pixNFlix is intialised
@@ -239,7 +227,7 @@ class PixNFlix extends React.Component<Props, State> {
   }
 
   public render() {
-    const { mode, width, height, FPS, useLocalVideo } = this.state;
+    const { mode, width, height, FPS, useLocal } = this.state;
     const videoIsActive = mode === ('video' as SideContentVideoDisplayMode);
     const stillIsActive = mode === ('still' as SideContentVideoDisplayMode);
     return (
@@ -255,16 +243,14 @@ class PixNFlix extends React.Component<Props, State> {
                 className='sa-live-video-button'
                 icon={IconNames.VIDEO}
                 active={videoIsActive}
-                onClick={this.swapModes(mode)}
+                onClick={this.onClickVideo}
                 text='Live Video'
               />
               <Button
                 className='sa-still-image-button'
                 icon={IconNames.CAMERA}
                 active={stillIsActive}
-                onClick={
-                  stillIsActive ? this.handleSnapPicture : this.swapModes(mode)
-                }
+                onClick={this.onClickStill}
                 text='Still Image'
               />
             </ButtonGroup>
@@ -343,7 +329,7 @@ class PixNFlix extends React.Component<Props, State> {
           <input
             type='file'
             onChange={this.handleFileUpload}
-            style={{ display: useLocalVideo ? 'initial' : 'none' }}
+            style={{ display: useLocal ? 'initial' : 'none' }}
           />
           <p style={{ fontFamily: 'courier' }}>
             Note: Is video lagging? Switch to &apos;still image&apos; or adjust

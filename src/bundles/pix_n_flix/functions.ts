@@ -26,6 +26,7 @@ import {
   Filter,
   Queue,
   TabsPackage,
+  BundlePackage,
 } from './types';
 
 import {
@@ -62,7 +63,7 @@ let FPS: number = DEFAULT_FPS;
 let requestId: number;
 let startTime: number;
 
-let useLocalVideo: boolean;
+let useLocal: boolean;
 // let counter = 0;
 
 // =============================================================================
@@ -185,8 +186,9 @@ function draw(timestamp: number): void {
   if (startTime == null) startTime = timestamp;
 
   const elapsed = timestamp - startTime;
-  if (elapsed > 1000 / FPS) {
+  if (elapsed > 1000 / FPS && videoIsPlaying) {
     drawFrame();
+    // console.log(counter++);
     startTime = timestamp;
     if (toRunLateQueue) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -212,7 +214,11 @@ function pauseVideoElement() {
 /** @hidden */
 function startVideo(): void {
   if (videoIsPlaying) return;
-  playVideoElement();
+  if (useLocal) {
+    playVideoElement();
+  } else {
+    videoIsPlaying = true;
+  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 }
@@ -224,7 +230,11 @@ function startVideo(): void {
  */
 function stopVideo(): void {
   if (!videoIsPlaying) return;
-  pauseVideoElement();
+  if (useLocal) {
+    pauseVideoElement();
+  } else {
+    videoIsPlaying = false;
+  }
   window.cancelAnimationFrame(requestId);
 }
 
@@ -260,7 +270,6 @@ function loadMedia(): void {
 function loadVideo(): void {
   videoElement.loop = true;
   toRunLateQueue = true;
-  startVideo();
 }
 
 /**
@@ -350,8 +359,8 @@ let lateQueue: Queue = () => {};
 
 // adds function to the lateQueue
 function lateEnqueue(funcToAdd: Queue): void {
-  const funcToRunFirst: Queue = queue;
-  queue = () => {
+  const funcToRunFirst: Queue = lateQueue;
+  lateQueue = () => {
     funcToRunFirst();
     funcToAdd();
   };
@@ -368,7 +377,7 @@ function init(
   canvas: CanvasElement,
   _errorLogger: ErrorLogger,
   _tabsPackage: TabsPackage
-): number[] {
+): BundlePackage {
   videoElement = video;
   canvasElement = canvas;
   errorLogger = _errorLogger;
@@ -385,13 +394,13 @@ function init(
   };
 
   setupData();
-  if (useLocalVideo) {
+  if (useLocal) {
     loadVideo();
   } else {
     loadMedia();
   }
   queue();
-  return [HEIGHT, WIDTH, FPS, useLocalVideo ? 1 : 0];
+  return { HEIGHT, WIDTH, FPS, useLocal };
 }
 
 /**
@@ -582,9 +591,10 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
  */
 export function pause_at(delay: number): void {
   // prevent negative delays
-  lateEnqueue(() =>
-    setTimeout(tabsPackage.onClickStill, delay >= 0 ? delay : -delay)
-  );
+  lateEnqueue(() => {
+    // console.log("timer to pause_at started");
+    setTimeout(tabsPackage.onClickStill, delay >= 0 ? delay : -delay);
+  });
 }
 
 /**
@@ -612,5 +622,5 @@ export function set_fps(fps: number): void {
  * Allows you to upload videos into Pix-n-Flix
  */
 export function use_local_video(): void {
-  useLocalVideo = true;
+  useLocal = true;
 }

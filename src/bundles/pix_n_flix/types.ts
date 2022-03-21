@@ -7,6 +7,12 @@ export type ErrorLogger = (
 export type TabsPackage = {
   onClickStill: () => void;
 };
+export type BundlePackage = {
+  HEIGHT: number;
+  WIDTH: number;
+  FPS: number;
+  useLocal: boolean;
+};
 export type Queue = () => void;
 export type Video = {
   toReplString: () => string;
@@ -15,7 +21,7 @@ export type Video = {
     canvas: CanvasElement,
     errorLogger: ErrorLogger,
     tabsPackage: TabsPackage
-  ) => number[];
+  ) => BundlePackage;
   deinit: () => void;
   startVideo: () => void;
   snapPicture: () => void;
