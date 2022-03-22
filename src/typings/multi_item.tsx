@@ -3,94 +3,69 @@ import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 
-type Props = {
-  elements: JSX.Element[];
-};
+export default function multiItemDisplay(props: { elements: JSX.Element[] }) {
+  const [currentStep, setCurrentStep] = React.useState(0);
 
-type State = {
-  currentStep: number;
-};
+  const firstStep = () => currentStep === 0;
+  const finalStep = () => currentStep === props.elements.length - 1;
+  const onPrevButtonClick = () => setCurrentStep(currentStep - 1);
+  const onNextButtonClick = () => setCurrentStep(currentStep + 1);
 
-export default class MultiItemDisplay extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-    this.state = {
-      currentStep: 0,
-    };
-  }
-
-  private firstStep = () => this.state.currentStep === 0;
-
-  private finalStep = () =>
-    this.state.currentStep === this.props.elements.length - 1;
-
-  private onPrevButtonClick = () => {
-    this.setState((state) => ({ currentStep: state.currentStep - 1 }));
-  };
-
-  private onNextButtonClick = () => {
-    this.setState((state) => ({ currentStep: state.currentStep + 1 }));
-  };
-
-  public render() {
-    const elementToDraw = this.props.elements[this.state.currentStep];
-
-    return (
-      <div>
-        {this.props.elements.length > 1 ? (
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 10,
-            }}
-          >
-            <Button
-              style={{
-                position: 'absolute',
-                left: 0,
-              }}
-              large
-              outlined
-              icon={IconNames.ARROW_LEFT}
-              onClick={this.onPrevButtonClick}
-              disabled={this.firstStep()}
-            >
-              Previous
-            </Button>
-            <h3 className='bp3-text-large'>
-              Call {this.state.currentStep + 1}/{this.props.elements.length}
-            </h3>
-            <Button
-              style={{
-                position: 'absolute',
-                right: 0,
-              }}
-              large
-              outlined
-              icon={IconNames.ARROW_RIGHT}
-              onClick={this.onNextButtonClick}
-              disabled={this.finalStep()}
-            >
-              Next
-            </Button>
-          </div>
-        ) : null}
+  return (
+    <div>
+      {props.elements.length > 1 ? (
         <div
           style={{
-            width: '100%',
+            position: 'relative',
             display: 'flex',
-            paddingLeft: '20px',
-            paddingRight: '20px',
-            flexDirection: 'column',
             justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 10,
           }}
         >
-          {elementToDraw}
+          <Button
+            style={{
+              position: 'absolute',
+              left: 0,
+            }}
+            large
+            outlined
+            icon={IconNames.ARROW_LEFT}
+            onClick={onPrevButtonClick}
+            disabled={firstStep()}
+          >
+            Previous
+          </Button>
+          <h3 className='bp3-text-large'>
+            Call {currentStep + 1}/{props.elements.length}
+          </h3>
+          <Button
+            style={{
+              position: 'absolute',
+              right: 0,
+            }}
+            large
+            outlined
+            icon={IconNames.ARROW_RIGHT}
+            onClick={onNextButtonClick}
+            disabled={finalStep()}
+          >
+            Next
+          </Button>
         </div>
+      ) : null}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          paddingLeft: '20px',
+          paddingRight: '20px',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        {props.elements[currentStep]}
       </div>
-    );
-  }
+    </div>
+  );
 }
