@@ -1,14 +1,18 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable react/destructuring-assignment */
 
+/**
+ * Represents an animation drawn using WebGL
+ * @field duration Duration of the animation in secondss
+ * @field fps Framerate in frames per second
+ */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export abstract class glAnimation {
-  constructor(
-    public readonly duration: number,
-    public readonly numFrames: number
-  ) {}
+  constructor(public readonly duration: number, public readonly fps: number) {}
 
   public abstract getFrame(num: number): AnimFrame;
+
+  public static isAnimation = (obj: any) => obj.fps !== undefined;
 }
 
 export interface AnimFrame {

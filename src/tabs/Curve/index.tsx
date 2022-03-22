@@ -2,6 +2,7 @@
 import React from 'react';
 import { CurveDrawn } from '../../bundles/curve/curves_webgl';
 import { CurveAnimation, CurveModuleState } from '../../bundles/curve/types';
+import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
 import CurveCanvas from './curve_canvas';
@@ -26,7 +27,7 @@ export default {
     const moduleState = moduleContext!.state as CurveModuleState;
 
     const canvases = moduleState!.drawnCurves.map((curve) => {
-      if ((curve as any).numFrames !== undefined) {
+      if (glAnimation.isAnimation(curve)) {
         return <AnimationCanvas animation={curve as CurveAnimation} />;
       }
       return (curve as CurveDrawn).is3D() ? (

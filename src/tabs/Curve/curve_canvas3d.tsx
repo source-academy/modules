@@ -128,11 +128,6 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
         <canvas
           ref={(r) => {
             this.$canvas = r;
-            /*
-            if (r) {
-              this.props.curve.init(this.$canvas);
-              this.props.curve.redraw(this.state.rotationAngle);
-            } */
           }}
           height={500}
           width={500}
@@ -188,9 +183,16 @@ type AnimCanvasProps = {
 };
 
 type AnimCanvasState = {
-  currentFrame: number;
+  /** Timestamp of the animation */
+  animTimestamp: number;
+
+  /** Boolean value indicating if the animation is playing */
   isPlaying: boolean;
+
+  /** Previous value of `isPlaying` */
   wasPlaying: boolean;
+
+  /** Boolean value indicating if auto play is selected */
   autoPlay: boolean;
 };
 
@@ -206,26 +208,35 @@ export class AnimationCanvas extends React.Component<
 > {
   private canvas: HTMLCanvasElement | null;
 
-  private step: number;
-
-  private prevTimestamp: number;
-
+  /**
+   * The duration of one frame in milliseconds
+   */
   private frameDuration: number;
+
+  /**
+   * The duration of the entire animation
+   */
+  private animationDuration: number;
+
+  /**
+   * Last timestamp since the previous `requestAnimationFrame` call
+   */
+  private callbackTimestamp: number;
 
   constructor(props: AnimCanvasProps | Readonly<AnimCanvasProps>) {
     super(props);
 
     this.state = {
-      currentFrame: 0,
+      animTimestamp: 0,
       isPlaying: false,
       wasPlaying: false,
       autoPlay: true,
     };
 
     this.canvas = null;
-    this.step = 1 / props.animation.numFrames;
-    this.frameDuration = props.animation.duration;
-    this.prevTimestamp = 0;
+    this.frameDuration = 1000 / props.animation.fps;
+    this.animationDuration = Math.round(props.animation.duration * 1000);
+    this.callbackTimestamp = 0;
   }
 
   public componentDidMount() {
@@ -237,93 +248,98 @@ export class AnimationCanvas extends React.Component<
    */
   private drawFrame = () => {
     if (this.canvas) {
-      const frame = this.props.animation.getFrame(this.state.currentFrame);
+      const frame = this.props.animation.getFrame(
+        this.state.animTimestamp / 1000
+      );
       frame.draw(this.canvas);
     }
   };
+
+  private reqFrame = () => requestAnimationFrame(this.animationCallback);
 
   /**
    * Callback to use with `requestAnimationFrame`
    */
   private animationCallback = (timeInMs: number) => {
-    if (this.canvas && this.state.isPlaying) {
-      if (timeInMs - this.prevTimestamp < this.frameDuration) {
-        // Not time to draw the frame yet
-        requestAnimationFrame(this.animationCallback);
-        return;
-      }
+    if (!this.canvas || !this.state.isPlaying) return;
 
-      this.drawFrame();
-      this.prevTimestamp = timeInMs;
+    const currentFrame = timeInMs - this.callbackTimestamp;
 
-      if (this.state.currentFrame >= 1) {
-        // CurrentFrame exceeded
-        if (this.state.autoPlay) {
-          // Autoplay is on
-          this.setState(
-            () => ({
-              currentFrame: 0,
-            }),
-            () => requestAnimationFrame(this.animationCallback)
-          );
-        } else {
-          // Autoplay isn't on
-          this.setState({
-            isPlaying: false,
-          });
-        }
-      } else {
+    if (currentFrame < this.frameDuration) {
+      // Not time to draw a new frame yet
+      this.reqFrame();
+      return;
+    }
+    this.callbackTimestamp = timeInMs;
+    if (this.state.animTimestamp >= this.animationDuration) {
+      if (this.state.autoPlay) {
         this.setState(
-          (prev) => ({
-            currentFrame: this.step + prev.currentFrame,
-          }),
-          () => requestAnimationFrame(this.animationCallback)
+          {
+            animTimestamp: 0,
+          },
+          this.reqFrame
         );
+      } else {
+        this.setState({
+          isPlaying: false,
+        });
       }
+    } else {
+      this.setState(
+        (prev) => ({
+          animTimestamp: prev.animTimestamp + currentFrame,
+        }),
+        () => {
+          this.drawFrame();
+          this.reqFrame();
+        }
+      );
     }
   };
 
+  /**
+   * Play button click handler
+   */
   private onPlayButtonClick = () => {
     if (this.state.isPlaying) {
       this.setState({
         isPlaying: false,
       });
-    } else if (this.state.currentFrame >= 1) {
-      this.setState(
-        {
-          currentFrame: 0,
-          isPlaying: true,
-        },
-        () => requestAnimationFrame(this.animationCallback)
-      );
     } else {
       this.setState(
-        () => ({
+        {
           isPlaying: true,
-        }),
-        () => requestAnimationFrame(this.animationCallback)
+        },
+        this.reqFrame
       );
     }
   };
 
+  /**
+   * Reset button click handler
+   */
   private onResetButtonClick = () => {
     this.setState(
-      () => ({
-        currentFrame: 0,
-      }),
+      {
+        animTimestamp: 0,
+      },
       () => {
-        if (this.state.isPlaying) requestAnimationFrame(this.animationCallback);
+        if (this.state.isPlaying) this.reqFrame();
         else this.drawFrame();
       }
     );
   };
 
+  /**
+   * Slider value change handler
+   * @param newValue New value of the slider
+   */
   private onSliderChange = (newValue: number) => {
     this.setState(
       (prev) => ({
         wasPlaying: prev.isPlaying,
-        currentFrame: newValue,
         isPlaying: false,
+        animTimestamp: newValue,
       }),
       () => {
         this.drawFrame();
@@ -331,37 +347,30 @@ export class AnimationCanvas extends React.Component<
     );
   };
 
+  /**
+   * Handler triggered when the slider is clicked off
+   */
   private onSliderRelease = () => {
     this.setState(
       (prev) => ({
         isPlaying: prev.wasPlaying,
       }),
-      () => {
-        if (this.state.isPlaying) {
-          requestAnimationFrame(this.animationCallback);
-        }
-      }
+      this.reqFrame
     );
   };
 
+  /**
+   * Auto play switch handler
+   */
   private autoPlaySwitchChanged = () => {
     this.setState((prev) => ({
       autoPlay: !prev.autoPlay,
     }));
   };
 
-  /*
-  private onFPSChanged = (event) => {
-    const frameDuration = 1000 / parseFloat(event.target.value);
-    this.setState({
-      frameDuration,
-    });
-  };
-  */
-
   public render() {
     return (
-      <div>
+      <>
         <div
           style={{
             alignItems: 'center',
@@ -418,37 +427,22 @@ export class AnimationCanvas extends React.Component<
             }}
           >
             <Slider
-              value={this.state.currentFrame}
+              value={this.state.animTimestamp}
               onChange={this.onSliderChange}
               onRelease={this.onSliderRelease}
-              stepSize={this.step}
+              stepSize={1}
               labelRenderer={false}
               min={0}
-              max={1}
+              max={this.animationDuration}
             />
           </div>
-          {/* <div
-            style={{
-              marginLeft: '20px',
-            }}
-          >
-            <Tooltip2 content='FPS'>
-              <input
-                type='number'
-                min={0}
-                max={maxFrameRate}
-                value={Math.round(1000 / this.state.frameDuration)}
-                onChange={this.onFPSChanged}
-              />
-            </Tooltip2>
-          </div> */}
           <Switch
             label='Auto Play'
             onChange={this.autoPlaySwitchChanged}
             checked={this.state.autoPlay}
           />
         </div>
-      </div>
+      </>
     );
   }
 }

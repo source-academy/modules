@@ -115,7 +115,7 @@ export abstract class DrawnRune implements ReplResult {
     colorFactor = gl_Position.z;
   }
   `;
-  
+
   private static readonly normalFragmentShader = `
   precision mediump float;
   uniform bool uRenderWithTexture;
@@ -141,7 +141,7 @@ export abstract class DrawnRune implements ReplResult {
     gl_FragColor.a = 1.0;
   }
   `;
-  
+
   constructor(protected readonly rune: Rune) {}
 
   public toReplString = () => '<Rune>';
@@ -350,10 +350,10 @@ export class RuneAnimation extends glAnimation implements ReplResult {
 
   constructor(
     duration: number,
-    numFrames: number,
+    fps: number,
     func: (frame: number) => DrawnRune
   ) {
-    super(duration, numFrames);
+    super(duration, fps);
     this.func = func;
   }
 

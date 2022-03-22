@@ -883,21 +883,17 @@ export function hollusion(rune: Rune): Rune {
 
 /**
  * Create an animation of runes
- * @param duration Duration of each frame in milliseconds
- * @param frames Number of frames
- * @param func Takes in a number between 0 and 1 and returns the Rune to draw
+ * @param duration Duration of the entire animation in seconds
+ * @param fps Number of frames in frames per seconds
+ * @param func Takes in the timestamp and returns a Rune to draw
  * @returns A rune animation
  */
 export function rune_animation(
   duration: number,
-  frames: number,
+  fps: number,
   func: (frame: number) => Rune
 ) {
-  const anim = new RuneAnimation(
-    duration,
-    frames,
-    (n) => new NormalRune(func(n))
-  );
+  const anim = new RuneAnimation(duration, fps, (n) => new NormalRune(func(n)));
   drawnRunes.push(anim);
   return anim;
 }

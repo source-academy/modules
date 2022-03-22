@@ -4,6 +4,7 @@ import {
   RuneAnimation,
   RunesModuleState,
 } from '../../bundles/rune/rune';
+import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
 import { AnimationCanvas } from '../Curve/curve_canvas3d';
@@ -49,7 +50,7 @@ export default {
     // Based on the toSpawn conditions, it should be safe to assume
     // that neither moduleContext or moduleState are null
     const runeCanvases = moduleState.drawnRunes.map((rune) => {
-      if ((rune as any).numFrames !== undefined) {
+      if (glAnimation.isAnimation(rune)) {
         return <AnimationCanvas animation={rune as RuneAnimation} />;
       }
       return <RuneCanvas rune={rune as DrawnRune} />;

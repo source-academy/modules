@@ -48,24 +48,30 @@ function createDrawFunction(
   space: '2D' | '3D',
   isFullView: boolean
 ): (numPoints: number) => RenderFunction {
-  return (numPoints: number) => (curve) => {
-    const curveDrawn = generateCurve(
-      scaleMode,
-      drawMode,
-      numPoints,
-      curve,
-      space,
-      isFullView
-    );
+  return (numPoints: number) => {
+    const func = (curve) => {
+      const curveDrawn = generateCurve(
+        scaleMode,
+        drawMode,
+        numPoints,
+        curve,
+        space,
+        isFullView
+      );
 
-    if (
-      (curve as any).shouldAppend === undefined ||
-      (curve as any).shouldAppend
-    ) {
-      drawnCurves.push(curveDrawn);
-    }
+      if (
+        (curve as any).shouldAppend === undefined ||
+        (curve as any).shouldAppend
+      ) {
+        drawnCurves.push(curveDrawn);
+      }
 
-    return curveDrawn;
+      return curveDrawn;
+    };
+    // Because the draw functions are actually functions
+    // we need hacky workarounds like these to pass information around
+    func.is3D = space === '3D';
+    return func;
   };
 }
 
@@ -327,7 +333,7 @@ export const draw_3D_points_full_view_proportional = createDrawFunction(
  * ```
  */
 export function make_point(x: number, y: number): Point {
-  return { x, y, z: 0, color: [0, 0, 0, 1] };
+  return new Point(x, y, 0, [0, 0, 0, 1]);
 }
 
 /**
@@ -343,7 +349,7 @@ export function make_point(x: number, y: number): Point {
  * ```
  */
 export function make_3D_point(x: number, y: number, z: number): Point {
-  return { x, y, z, color: [0, 0, 0, 1] };
+  return new Point(x, y, z, [0, 0, 0, 1]);
 }
 
 /**
@@ -369,7 +375,7 @@ export function make_color_point(
   g: number,
   b: number
 ): Point {
-  return { x, y, z: 0, color: [r / 255, g / 255, b / 255, 1] };
+  return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
 }
 
 /**
@@ -397,7 +403,7 @@ export function make_3D_color_point(
   g: number,
   b: number
 ): Point {
-  return { x, y, z, color: [r / 255, g / 255, b / 255, 1] };
+  return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
 }
 
 /**
@@ -784,22 +790,47 @@ export function arc(t: number): Point {
 }
 
 /**
- * Create a animation of curves using a curve generatting function.
- * The curve generating function should take in a number between [0, 1]
- * and return a curve.
- * @param duration The duration of each frame in milliseconds
- * @param numFrames Number of frames to draw
+ * Create a animation of curves using a curve generating function.
+ * @param duration The duration of the animation in seconds
+ * @param fps Framerate of the animation in frames per second
  * @param drawer Draw function to the generated curves with
- * @returns A function that accepts a curve generating function as a parameter
+ * @param func Curve generating function. Takes in a timestamp value and returns a curve
+ * @return Curve Animation
  */
 export function curve_animation(
   duration: number,
-  numFrames: number,
-  drawer: RenderFunction
-): (gen: (step: number) => Curve) => CurveAnimation {
-  return (func) => {
-    const anim = new CurveAnimation(duration, numFrames, func, drawer);
-    drawnCurves.push(anim);
-    return anim;
-  };
+  fps: number,
+  drawer: RenderFunction,
+  func: (step: number) => Curve
+): CurveAnimation {
+  if ((drawer as any).is3D) {
+    throw new Error('Curve Animation cannot be used with 3D draw function!');
+  }
+
+  const anim = new CurveAnimation(duration, fps, func, drawer);
+  drawnCurves.push(anim);
+  return anim;
+}
+
+/**
+ * Create a animation of curves using a curve generating function.
+ * @param duration The duration of the animation in seconds
+ * @param fps Framerate of the animation in frames per second
+ * @param drawer Draw function to the generated curves with
+ * @param func Curve generating function. Takes in a timestamp value and returns a curve
+ * @return 3D Curve Animation
+ */
+export function curve_3D_animation(
+  duration: number,
+  fps: number,
+  drawer: RenderFunction,
+  func: (step: number) => Curve
+): CurveAnimation {
+  if (!(drawer as any).is3D) {
+    throw new Error('Curve 3D Animation cannot be used with 2D draw function!');
+  }
+
+  const anim = new CurveAnimation(duration, fps, func, drawer);
+  drawnCurves.push(anim);
+  return anim;
 }
