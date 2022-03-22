@@ -45,7 +45,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
   /**
    * Last timestamp since the previous `requestAnimationFrame` call
    */
-  private callbackTimestamp: number;
+  private callbackTimestamp: number | null;
 
   constructor(props: Props | Readonly<Props>) {
     super(props);
@@ -61,7 +61,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
     this.canvas = null;
     this.frameDuration = 1000 / props.animation.fps;
     this.animationDuration = Math.round(props.animation.duration * 1000);
-    this.callbackTimestamp = 0;
+    this.callbackTimestamp = null;
   }
 
   public componentDidMount() {
@@ -88,6 +88,13 @@ export default class Curve3DAnimationCanvas extends React.Component<
   private animationCallback = (timeInMs: number) => {
     if (!this.canvas || !this.state.isPlaying) return;
 
+    if (this.callbackTimestamp == null) {
+      this.callbackTimestamp = timeInMs;
+      this.drawFrame();
+      this.reqFrame();
+      return;
+    }
+
     const currentFrame = timeInMs - this.callbackTimestamp;
 
     if (currentFrame < this.frameDuration) {
@@ -109,9 +116,14 @@ export default class Curve3DAnimationCanvas extends React.Component<
         );
       } else {
         // Otherwise, stop the animation
-        this.setState({
-          isPlaying: false,
-        });
+        this.setState(
+          {
+            isPlaying: false,
+          },
+          () => {
+            this.callbackTimestamp = null;
+          }
+        );
       }
     } else {
       // Animation hasn't ended, so just draw the next frame
@@ -132,9 +144,14 @@ export default class Curve3DAnimationCanvas extends React.Component<
    */
   private onPlayButtonClick = () => {
     if (this.state.isPlaying) {
-      this.setState({
-        isPlaying: false,
-      });
+      this.setState(
+        {
+          isPlaying: false,
+        },
+        () => {
+          this.callbackTimestamp = null;
+        }
+      );
     } else {
       this.setState(
         {
@@ -165,6 +182,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
    * @param newValue New value of the slider
    */
   private onTimeSliderChange = (newValue: number) => {
+    this.callbackTimestamp = null;
     this.setState(
       (prev) => ({
         wasPlaying: prev.isPlaying,
@@ -183,7 +201,13 @@ export default class Curve3DAnimationCanvas extends React.Component<
       (prev) => ({
         isPlaying: prev.wasPlaying,
       }),
-      this.reqFrame
+      () => {
+        if (!this.state.isPlaying) {
+          this.callbackTimestamp = null;
+        } else {
+          this.reqFrame();
+        }
+      }
     );
   };
 
