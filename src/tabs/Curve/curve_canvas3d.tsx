@@ -381,7 +381,7 @@ export class AnimationCanvas extends React.Component<
         >
           <canvas
             style={{
-              width: '100%',
+              width: '80%',
             }}
             ref={(r) => {
               this.canvas = r;
@@ -401,8 +401,8 @@ export class AnimationCanvas extends React.Component<
         >
           <div
             style={{
-              float: 'right',
-              marginRight: '20px',
+              float: 'left',
+              marginLeft: '20px',
             }}
           >
             <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
@@ -415,7 +415,8 @@ export class AnimationCanvas extends React.Component<
           </div>
           <div
             style={{
-              marginRight: '20px',
+              float: 'left',
+              marginLeft: '20px',
             }}
           >
             <Tooltip2 content='Reset'>
@@ -427,6 +428,7 @@ export class AnimationCanvas extends React.Component<
           <div
             style={{
               marginLeft: '20px',
+              marginRight: '20px',
             }}
           >
             <Slider
@@ -439,11 +441,18 @@ export class AnimationCanvas extends React.Component<
               max={this.animationDuration}
             />
           </div>
-          <Switch
-            label='Auto Play'
-            onChange={this.autoPlaySwitchChanged}
-            checked={this.state.autoPlay}
-          />
+          <div
+            style={{
+              float: 'right',
+              marginRight: '20px',
+            }}
+          >
+            <Switch
+              label='Auto Play'
+              onChange={this.autoPlaySwitchChanged}
+              checked={this.state.autoPlay}
+            />
+          </div>
         </div>
       </>
     );
