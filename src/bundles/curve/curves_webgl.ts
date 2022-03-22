@@ -148,7 +148,7 @@ export class CurveDrawn implements ReplResult {
     this.buffersInfo = null;
   }
 
-  public toReplString = () => '<CurveAnimation>';
+  public toReplString = () => '<Curve>';
 
   public is3D = () => this.space === '3D';
 
