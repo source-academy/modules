@@ -1,4 +1,5 @@
 import React from 'react';
+import { HollusionRune } from '../../bundles/rune/functions';
 import {
   DrawnRune,
   RuneAnimation,
@@ -8,7 +9,7 @@ import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
 import { AnimationCanvas } from '../Curve/curve_canvas3d';
-import RuneCanvas from './rune_canvas';
+import HollusionCanvas from './hollusion_canvas';
 
 /**
  * tab for displaying runes
@@ -53,7 +54,21 @@ export default {
       if (glAnimation.isAnimation(rune)) {
         return <AnimationCanvas animation={rune as RuneAnimation} />;
       }
-      return <RuneCanvas rune={rune as DrawnRune} />;
+      const drawnRune = rune as DrawnRune;
+      if (drawnRune.isHollusion) {
+        return <HollusionCanvas rune={drawnRune as HollusionRune} />;
+      }
+      return (
+        <canvas
+          height={512}
+          width={512}
+          ref={(r) => {
+            if (r) {
+              (rune as DrawnRune).draw(r);
+            }
+          }}
+        />
+      );
     });
 
     return <MultiItemDisplay elements={runeCanvases} />;

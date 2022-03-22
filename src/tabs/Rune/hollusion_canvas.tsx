@@ -2,36 +2,34 @@
 import React from 'react';
 import { HollusionRune } from '../../bundles/rune/functions';
 
-type Props = {
-  rune: HollusionRune;
-};
+/**
+ * Canvas used to display Hollusion runes
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export default function HollusionCanvas(props: { rune: HollusionRune }) {
+  const canvasRef = React.useRef(null);
+  const renderFuncRef = React.useRef<(time: number) => void>();
+  const animId = React.useRef(0);
 
-type State = {};
+  const animCallback = (timeInMs: number) => {
+    renderFuncRef.current!(timeInMs);
+    animId.current = requestAnimationFrame(animCallback);
+  };
 
-export default class HollusionCanvas extends React.Component<Props, State> {
-  private canvas: HTMLCanvasElement | null;
+  React.useEffect(() => {
+    if (canvasRef.current) {
+      renderFuncRef.current = props.rune.draw(canvasRef.current!);
+      animCallback(0);
 
-  constructor(props) {
-    super(props);
-
-    this.canvas = null;
-  }
-
-  public componentDidMount() {
-    if (this.canvas) {
-      this.props.rune.draw(this.canvas);
+      return () => {
+        if (animId.current) {
+          cancelAnimationFrame(animId.current);
+        }
+      };
     }
-  }
 
-  public render() {
-    return (
-      <canvas
-        height={512}
-        width={512}
-        ref={(r) => {
-          this.canvas = r;
-        }}
-      />
-    );
-  }
+    return undefined;
+  }, []);
+
+  return <canvas height={512} width={512} ref={canvasRef} />;
 }

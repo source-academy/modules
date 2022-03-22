@@ -640,6 +640,10 @@ export class AnaglyphRune extends DrawnRune {
     }
     `;
 
+  constructor(rune: Rune) {
+    super(rune, false);
+  }
+
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
     // stopAnimation(canvas);
@@ -736,7 +740,7 @@ export function anaglyph(rune: Rune): Rune {
 /** @hidden */
 export class HollusionRune extends DrawnRune {
   constructor(rune: Rune, magnitude: number) {
-    super(rune);
+    super(rune, true);
     this.rune.hollusionDistance = magnitude;
   }
 
@@ -763,7 +767,6 @@ export class HollusionRune extends DrawnRune {
 
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
-    // stopAnimation(canvas);
 
     const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
       .flatten()
@@ -829,12 +832,6 @@ export class HollusionRune extends DrawnRune {
 
     let lastTime = 0;
     function render(timeInMs: number) {
-      // if (!canvas.isEqualNode(document.getElementById('runesCanvas'))) {
-      //   return;
-      // }
-      // const id = requestAnimationFrame(render);
-      // canvas.setAttribute('animRequestID', `${id}`);
-
       if (timeInMs - lastTime < period / frameCount) {
         return;
       }
@@ -855,7 +852,6 @@ export class HollusionRune extends DrawnRune {
     }
 
     return render;
-    // requestAnimationFrame(render);
   };
 }
 
@@ -884,7 +880,7 @@ export function hollusion(rune: Rune): Rune {
 /**
  * Create an animation of runes
  * @param duration Duration of the entire animation in seconds
- * @param fps Number of frames in frames per seconds
+ * @param fps Duration of each frame in frames per seconds
  * @param func Takes in the timestamp and returns a Rune to draw
  * @returns A rune animation
  */
@@ -900,19 +896,19 @@ export function rune_animation(
 
 /**
  * Create an animation of anaglyph runes
- * @param duration Duration of each frame in milliseconds
- * @param frames Number of frames
- * @param func Takes in a number between 0 and 1 and returns the Rune to draw
+ * @param duration Duration of the entire animation in seconds
+ * @param fps Duration of each frame in frames per seconds
+ * @param func Takes in the timestamp and returns a Rune to draw
  * @returns A rune animation
  */
 export function anaglyph_animation(
   duration: number,
-  frames: number,
+  fps: number,
   func: (timestamp: number) => Rune
 ) {
   const anim = new RuneAnimation(
     duration,
-    frames,
+    fps,
     (n) => new AnaglyphRune(func(n))
   );
   drawnRunes.push(anim);

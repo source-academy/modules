@@ -142,7 +142,10 @@ export abstract class DrawnRune implements ReplResult {
   }
   `;
 
-  constructor(protected readonly rune: Rune) {}
+  constructor(
+    protected readonly rune: Rune,
+    public readonly isHollusion: boolean
+  ) {}
 
   public toReplString = () => '<Rune>';
 
@@ -326,6 +329,10 @@ export abstract class DrawnRune implements ReplResult {
 }
 
 export class NormalRune extends DrawnRune {
+  constructor(rune: Rune) {
+    super(rune, false);
+  }
+
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
     // stopAnimation(canvas);
