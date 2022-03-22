@@ -9,7 +9,7 @@ import { HollusionRune } from '../../bundles/rune/functions';
 export default function HollusionCanvas(props: { rune: HollusionRune }) {
   const canvasRef = React.useRef(null);
   const renderFuncRef = React.useRef<(time: number) => void>();
-  const animId = React.useRef(0);
+  const animId = React.useRef<number | null>(null);
 
   const animCallback = (timeInMs: number) => {
     renderFuncRef.current!(timeInMs);
@@ -23,7 +23,7 @@ export default function HollusionCanvas(props: { rune: HollusionRune }) {
 
       return () => {
         if (animId.current) {
-          cancelAnimationFrame(animId.current);
+          cancelAnimationFrame(animId.current!);
         }
       };
     }
