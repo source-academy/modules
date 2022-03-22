@@ -891,7 +891,7 @@ export function hollusion(rune: Rune): Rune {
 export function rune_animation(
   duration: number,
   fps: number,
-  func: (frame: number) => Rune
+  func: (timestamp: number) => Rune
 ) {
   const anim = new RuneAnimation(duration, fps, (n) => new NormalRune(func(n)));
   drawnRunes.push(anim);
@@ -908,7 +908,7 @@ export function rune_animation(
 export function anaglyph_animation(
   duration: number,
   frames: number,
-  func: (frame: number) => Rune
+  func: (timestamp: number) => Rune
 ) {
   const anim = new RuneAnimation(
     duration,
