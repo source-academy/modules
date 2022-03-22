@@ -211,12 +211,12 @@ export class AnimationCanvas extends React.Component<
   /**
    * The duration of one frame in milliseconds
    */
-  private frameDuration: number;
+  private readonly frameDuration: number;
 
   /**
    * The duration of the entire animation
    */
-  private animationDuration: number;
+  private readonly animationDuration: number;
 
   /**
    * Last timestamp since the previous `requestAnimationFrame` call
@@ -270,9 +270,12 @@ export class AnimationCanvas extends React.Component<
       this.reqFrame();
       return;
     }
+
     this.callbackTimestamp = timeInMs;
     if (this.state.animTimestamp >= this.animationDuration) {
+      // Animation has ended
       if (this.state.autoPlay) {
+        // If autoplay is active, reset the animation
         this.setState(
           {
             animTimestamp: 0,
@@ -280,11 +283,13 @@ export class AnimationCanvas extends React.Component<
           this.reqFrame
         );
       } else {
+        // Otherwise, stop the animation
         this.setState({
           isPlaying: false,
         });
       }
     } else {
+      // Animation hasn't ended, so just draw the next frame
       this.setState(
         (prev) => ({
           animTimestamp: prev.animTimestamp + currentFrame,
@@ -341,9 +346,7 @@ export class AnimationCanvas extends React.Component<
         isPlaying: false,
         animTimestamp: newValue,
       }),
-      () => {
-        this.drawFrame();
-      }
+      this.drawFrame
     );
   };
 
