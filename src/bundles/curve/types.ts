@@ -17,25 +17,29 @@ export type RenderFunction = (func: Curve) => CurveDrawn;
 export class CurveAnimation extends glAnimation implements ReplResult {
   constructor(
     duration: number,
-    numFrames: number,
-    private readonly func: (step: number) => Curve,
-    private readonly drawer: RenderFunction
+    fps: number,
+    private readonly func: (timestamp: number) => Curve,
+    private readonly drawer: RenderFunction,
+    public readonly is3D: boolean
   ) {
-    super(duration, numFrames);
+    super(duration, fps);
+    this.angle = 0;
   }
 
-  public getFrame(step: number): AnimFrame {
-    const curve = this.func(step);
+  public getFrame(timestamp: number): AnimFrame {
+    const curve = this.func(timestamp);
     (curve as any).shouldAppend = false;
     const curveDrawn = this.drawer(curve);
 
     return {
       draw: (canvas: HTMLCanvasElement) => {
         curveDrawn.init(canvas);
-        curveDrawn.redraw(0);
+        curveDrawn.redraw(this.angle);
       },
     };
   }
+
+  public angle: number;
 
   public toReplString = () => '<CurveAnimation>';
 }

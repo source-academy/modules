@@ -801,13 +801,13 @@ export function curve_animation(
   duration: number,
   fps: number,
   drawer: RenderFunction,
-  func: (step: number) => Curve
+  func: (timestamp: number) => Curve
 ): CurveAnimation {
   if ((drawer as any).is3D) {
     throw new Error('Curve Animation cannot be used with 3D draw function!');
   }
 
-  const anim = new CurveAnimation(duration, fps, func, drawer);
+  const anim = new CurveAnimation(duration, fps, func, drawer, false);
   drawnCurves.push(anim);
   return anim;
 }
@@ -824,13 +824,13 @@ export function curve_3D_animation(
   duration: number,
   fps: number,
   drawer: RenderFunction,
-  func: (step: number) => Curve
+  func: (timestamp: number) => Curve
 ): CurveAnimation {
   if (!(drawer as any).is3D) {
     throw new Error('Curve 3D Animation cannot be used with 2D draw function!');
   }
 
-  const anim = new CurveAnimation(duration, fps, func, drawer);
+  const anim = new CurveAnimation(duration, fps, func, drawer, true);
   drawnCurves.push(anim);
   return anim;
 }

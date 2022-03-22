@@ -37,6 +37,7 @@ import {
   invert,
   curve_animation,
   drawnCurves,
+  curve_3D_animation,
 } from './functions';
 
 /**
@@ -75,6 +76,7 @@ export default function curves(
     make_color_point,
     make_3D_color_point,
     curve_animation,
+    curve_3D_animation,
     draw_connected,
     draw_connected_full_view,
     draw_connected_full_view_proportional,
