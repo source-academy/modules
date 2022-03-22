@@ -109,13 +109,20 @@ type BufferInfo = {
 /** A function that takes in number from 0 to 1 and returns a Point. */
 export type Curve = (t: number) => Point;
 
+type Color = [r: number, g: number, b: number, t: number];
+
 /** Encapsulates 3D point with RGB values. */
-export type Point = {
-  x: number;
-  y: number;
-  z: number;
-  color: [r: number, g: number, b: number, t: number];
-};
+export class Point implements ReplResult {
+  constructor(
+    public readonly x: number,
+    public readonly y: number,
+    public readonly z: number,
+    public readonly color: Color
+  ) {}
+
+  public toReplString = () =>
+    `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
+}
 
 /**
  * Represents a Curve that has been generated from the `generateCurve`
