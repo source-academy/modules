@@ -797,7 +797,7 @@ export function arc(t: number): Point {
  * @param func Curve generating function. Takes in a timestamp value and returns a curve
  * @return Curve Animation
  */
-export function curve_animation(
+export function animate_curve(
   duration: number,
   fps: number,
   drawer: RenderFunction,
@@ -820,7 +820,7 @@ export function curve_animation(
  * @param func Curve generating function. Takes in a timestamp value and returns a curve
  * @return 3D Curve Animation
  */
-export function curve_3D_animation(
+export function animate_3D_curve(
   duration: number,
   fps: number,
   drawer: RenderFunction,

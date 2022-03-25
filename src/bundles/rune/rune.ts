@@ -353,15 +353,12 @@ export class NormalRune extends DrawnRune {
 }
 
 export class RuneAnimation extends glAnimation implements ReplResult {
-  private func: (frame: number) => DrawnRune;
-
   constructor(
     duration: number,
     fps: number,
-    func: (frame: number) => DrawnRune
+    private readonly func: (frame: number) => DrawnRune
   ) {
     super(duration, fps);
-    this.func = func;
   }
 
   public getFrame(num: number): AnimFrame {

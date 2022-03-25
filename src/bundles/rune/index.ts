@@ -48,8 +48,8 @@ import {
   hollusion_magnitude,
   hollusion,
   drawnRunes,
-  rune_animation,
-  anaglyph_animation,
+  animate_rune,
+  animate_anaglyph,
 } from './functions';
 import { RunesModuleState } from './rune';
 
@@ -135,7 +135,7 @@ export default function runes(
     anaglyph,
     hollusion_magnitude,
     hollusion,
-    rune_animation,
-    anaglyph_animation,
+    animate_rune,
+    animate_anaglyph,
   };
 }
