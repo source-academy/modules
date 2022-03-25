@@ -1,6 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { HollusionRune } from '../../bundles/rune/functions';
+import { DefaultCanvas } from '../styles/default_canvas';
 
 /**
  * Canvas used to display Hollusion runes
@@ -31,5 +32,5 @@ export default function HollusionCanvas(props: { rune: HollusionRune }) {
     return undefined;
   }, []);
 
-  return <canvas height={512} width={512} ref={canvasRef} />;
+  return <DefaultCanvas ref={canvasRef} />;
 }

@@ -9,6 +9,7 @@ import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
 import { AnimationCanvas } from '../Curve/curve_canvas3d';
+import { DefaultCanvas } from '../styles/default_canvas';
 import HollusionCanvas from './hollusion_canvas';
 
 /**
@@ -59,9 +60,7 @@ export default {
         return <HollusionCanvas rune={drawnRune as HollusionRune} />;
       }
       return (
-        <canvas
-          height={512}
-          width={512}
+        <DefaultCanvas
           ref={(r) => {
             if (r) {
               (rune as DrawnRune).draw(r);

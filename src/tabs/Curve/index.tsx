@@ -5,6 +5,7 @@ import { CurveAnimation, CurveModuleState } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
+import { DefaultCanvas } from '../styles/default_canvas';
 import Curve3DAnimationCanvas from './3Dcurve_anim_canvas';
 import CurveCanvas3D, { AnimationCanvas } from './curve_canvas3d';
 
@@ -39,15 +40,13 @@ export default {
       return curveDrawn.is3D() ? (
         <CurveCanvas3D curve={curveDrawn} />
       ) : (
-        <canvas
+        <DefaultCanvas
           ref={(r) => {
             if (r) {
               curveDrawn.init(r);
               curveDrawn.redraw(0);
             }
           }}
-          height={500}
-          width={500}
         />
       );
     });
