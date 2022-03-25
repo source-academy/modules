@@ -6,7 +6,6 @@ import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../../typings/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
 import Curve3DAnimationCanvas from './3Dcurve_anim_canvas';
-import CurveCanvas from './curve_canvas';
 import CurveCanvas3D, { AnimationCanvas } from './curve_canvas3d';
 
 export default {
@@ -36,10 +35,20 @@ export default {
           <AnimationCanvas animation={anim} />
         );
       }
-      return (curve as CurveDrawn).is3D() ? (
-        <CurveCanvas3D curve={curve as CurveDrawn} />
+      const curveDrawn = curve as CurveDrawn;
+      return curveDrawn.is3D() ? (
+        <CurveCanvas3D curve={curveDrawn} />
       ) : (
-        <CurveCanvas curve={curve as CurveDrawn} />
+        <canvas
+          ref={(r) => {
+            if (r) {
+              curveDrawn.init(r);
+              curveDrawn.redraw(0);
+            }
+          }}
+          height={500}
+          width={500}
+        />
       );
     });
 
