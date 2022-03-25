@@ -51,50 +51,47 @@ const defaultConfigurations = {
   ],
 };
 
-const moduleBundles = Object.keys(modules);
-
-const buildBundles = (name) => ({
-  ...defaultConfigurations,
-  input: `./src/bundles/${name}/index.ts`,
-  output: {
-    file: `./build/bundles/${name}.js`,
-    format: 'iife',
-  },
-});
-
-let moduleTabs = [];
-moduleBundles
-  .map((modulePackage) => modules[modulePackage].tabs)
-  .forEach((__tabs) => Array.prototype.push.apply(moduleTabs, __tabs));
-
-moduleTabs = [...new Set(moduleTabs)];
-
-const buildTabs = (name) => ({
-  ...defaultConfigurations,
-  input: `./src/tabs/${name}/index.tsx`,
-  output: {
-    file: `./build/tabs/${name}.js`,
-    format: 'iife',
-    globals: {
-      react: 'React',
-      'react-dom': 'ReactDom',
-    },
-  },
-  external: ['react', 'react-dom'],
-});
-
-// eslint-disable-next-line no-console
-console.log(chalk.blueBright('Building modules with tabs:'));
-moduleBundles.forEach((modulePackage) => {
-  // eslint-disable-next-line no-console
-  console.log(
-    chalk.green(`Module ${modulePackage}`),
-    'with',
-    chalk.yellow(`tabs ${modules[modulePackage].tabs}`)
+export default (args) => {
+  const definedTabs = Array.from(
+    new Set(Object.keys(modules).flatMap((module) => modules[module].tabs))
   );
-});
 
-export default [
-  ...moduleBundles.map(buildBundles),
-  ...moduleTabs.map(buildTabs),
-];
+  let moduleTabs;
+
+  if (args.tab !== undefined) {
+    if (typeof args.tab === 'string') {
+      moduleTabs = args.tab.split(',');
+    } else {
+      moduleTabs = args.tab;
+    }
+
+    const undefineds = moduleTabs.filter((val) => !definedTabs.includes(val));
+
+    if (undefineds.length > 0) {
+      throw new Error(`Unknown tabs: ${undefineds.join(', ')}`);
+    }
+
+    delete args.tab;
+  } else {
+    moduleTabs = definedTabs;
+  }
+
+  const buildTabs = (name) => ({
+    ...defaultConfigurations,
+    input: `./src/tabs/${name}/index.tsx`,
+    output: {
+      file: `./build/tabs/${name}.js`,
+      format: 'iife',
+      globals: {
+        react: 'React',
+        'react-dom': 'ReactDom',
+      },
+    },
+    external: ['react', 'react-dom'],
+  });
+
+  console.log(chalk.blueBright('Building tabs:'));
+  moduleTabs.forEach((tab) => console.log(chalk.yellow(tab)));
+
+  return moduleTabs.map(buildTabs);
+};
