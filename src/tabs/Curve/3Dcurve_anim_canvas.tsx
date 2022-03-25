@@ -127,14 +127,12 @@ export default class Curve3DAnimationCanvas extends React.Component<
       }
     } else {
       // Animation hasn't ended, so just draw the next frame
+      this.drawFrame();
       this.setState(
         (prev) => ({
           animTimestamp: prev.animTimestamp + currentFrame,
         }),
-        () => {
-          this.drawFrame();
-          this.reqFrame();
-        }
+        this.reqFrame
       );
     }
   };
