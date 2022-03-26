@@ -183,6 +183,7 @@ function doPan(
 
 function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
   canvas.addEventListener('wheel', (wheelEvent: WheelEvent) => {
+    wheelEvent.preventDefault();
     frameTracker.changeZoomTicks(wheelEvent.deltaY);
   });
 
@@ -218,7 +219,7 @@ function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
       frameTracker.rotateY += differenceY;
     } else {
       frameTracker.panX += differenceX;
-      frameTracker.panY += differenceY;
+      frameTracker.panY -= differenceY;
     }
 
     frameTracker.lastX = currentX;
