@@ -6,6 +6,7 @@ import {
   prism,
   star,
   pyramid,
+  cone,
   // Colors
   black,
   navy,
@@ -66,6 +67,7 @@ export default () => ({
   prism,
   star,
   pyramid,
+  cone,
   // Colors
   black,
   navy,

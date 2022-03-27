@@ -842,3 +842,19 @@ export const pyramid: Shape = shapeSetOrigin(
     })
   )
 );
+
+/**
+ * Primitive Shape of a cone.
+ *
+ * @category Primitive
+ */
+export const cone: Shape = shapeSetOrigin(
+  generate_shape(
+    primitives.cylinderElliptic({
+      height: 1,
+      startRadius: [0.5, 0.5],
+      endRadius: [small, small],
+      segments: 32,
+    })
+  )
+);
