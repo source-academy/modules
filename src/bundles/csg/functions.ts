@@ -36,7 +36,7 @@ import {
   blue as _blue,
   cyan as _cyan,
   green as _green,
-  grey as _grey,
+  gray as _gray,
   lime as _lime,
   looseInstanceOf,
   navy as _navy,
@@ -109,7 +109,7 @@ export const silver: RGB = _silver;
  *
  * @category Colour
  */
-export const grey: RGB = _grey;
+export const gray: RGB = _gray;
 
 /**
  * Blue attribute for colorize function

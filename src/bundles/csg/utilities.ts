@@ -258,7 +258,7 @@ export const {
   purple,
   orange,
   silver,
-  grey,
+  gray,
   blue,
   lime,
   cyan,
