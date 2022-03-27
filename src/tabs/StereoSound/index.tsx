@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, jsx-a11y/media-has-caption */
 import React from 'react';
 import { StereoSoundsModuleState } from '../../bundles/stereo_sound/types';
-import MultiItemDisplay from '../../typings/multi_item';
+import MultiItemDisplay from '../common/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
 
 /**
