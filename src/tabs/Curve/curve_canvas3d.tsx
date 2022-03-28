@@ -6,6 +6,7 @@ import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { CurveDrawn } from '../../bundles/curve/curves_webgl';
 import { glAnimation } from '../../typings/anim_types';
+import { DefaultCanvas } from '../styles/default_canvas';
 
 type State = {
   /**
@@ -125,12 +126,10 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
   public render() {
     return (
       <div>
-        <canvas
+        <DefaultCanvas
           ref={(r) => {
             this.$canvas = r;
           }}
-          height={500}
-          width={500}
         />
         <div
           style={{
@@ -397,88 +396,83 @@ export class AnimationCanvas extends React.Component<
 
   public render() {
     return (
-      <>
-        <div
-          style={{
-            alignItems: 'center',
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        <DefaultCanvas
+          ref={(r) => {
+            this.canvas = r;
           }}
-        >
-          <canvas
-            style={{
-              width: '80%',
-            }}
-            ref={(r) => {
-              this.canvas = r;
-            }}
-            height={512}
-            width={512}
-          />
-        </div>
+        />
         <div
           style={{
+            marginTop: '10px',
             display: 'flex',
             padding: '10px',
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'right',
           }}
         >
           <div
             style={{
               float: 'left',
-              marginLeft: '20px',
-            }}
-          >
-            <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
-              <Button onClick={this.onPlayButtonClick}>
-                <Icon
-                  icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
-                />
-              </Button>
-            </Tooltip2>
-          </div>
-          <div
-            style={{
-              float: 'left',
-              marginLeft: '20px',
-            }}
-          >
-            <Tooltip2 content='Reset'>
-              <Button onClick={this.onResetButtonClick}>
-                <Icon icon={IconNames.RESET} />
-              </Button>
-            </Tooltip2>
-          </div>
-          <div
-            style={{
-              marginLeft: '20px',
+              display: 'flex',
+              justifyContent: 'space-between',
               marginRight: '20px',
             }}
           >
-            <Slider
-              value={this.state.animTimestamp}
-              onChange={this.onSliderChange}
-              onRelease={this.onSliderRelease}
-              stepSize={1}
-              labelRenderer={false}
-              min={0}
-              max={this.animationDuration}
-            />
+            <div
+              style={{
+                width: '100px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              <Switch
+                label='Auto Play'
+                onChange={this.autoPlaySwitchChanged}
+                checked={this.state.autoPlay}
+              />
+            </div>
+            <div
+              style={{
+                marginLeft: '20px',
+                marginRight: '20px',
+              }}
+            >
+              <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
+                <Button onClick={this.onPlayButtonClick}>
+                  <Icon
+                    icon={
+                      this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY
+                    }
+                  />
+                </Button>
+              </Tooltip2>
+            </div>
+            <div>
+              <Tooltip2 content='Reset'>
+                <Button onClick={this.onResetButtonClick}>
+                  <Icon icon={IconNames.RESET} />
+                </Button>
+              </Tooltip2>
+            </div>
           </div>
-          <div
-            style={{
-              float: 'right',
-              marginRight: '20px',
-            }}
-          >
-            <Switch
-              label='Auto Play'
-              onChange={this.autoPlaySwitchChanged}
-              checked={this.state.autoPlay}
-            />
-          </div>
+          <Slider
+            value={this.state.animTimestamp}
+            onChange={this.onSliderChange}
+            onRelease={this.onSliderRelease}
+            stepSize={1}
+            labelRenderer={false}
+            min={0}
+            max={this.animationDuration}
+          />
         </div>
-      </>
+      </div>
     );
   }
 }

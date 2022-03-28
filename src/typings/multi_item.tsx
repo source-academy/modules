@@ -3,23 +3,25 @@ import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 
-export default function multiItemDisplay(props: { elements: JSX.Element[] }) {
+const MultiItemDisplay = (props: { elements: JSX.Element[] }) => {
   const [currentStep, setCurrentStep] = React.useState(0);
 
-  const firstStep = () => currentStep === 0;
-  const finalStep = () => currentStep === props.elements.length - 1;
-  const onPrevButtonClick = () => setCurrentStep(currentStep - 1);
-  const onNextButtonClick = () => setCurrentStep(currentStep + 1);
-
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+    >
       {props.elements.length > 1 ? (
         <div
           style={{
-            position: 'relative',
             display: 'flex',
-            justifyContent: 'center',
+            // justifyContent: 'center',
             alignItems: 'center',
+            flexDirection: 'row',
+            position: 'relative',
             marginBottom: 10,
           }}
         >
@@ -31,8 +33,8 @@ export default function multiItemDisplay(props: { elements: JSX.Element[] }) {
             large
             outlined
             icon={IconNames.ARROW_LEFT}
-            onClick={onPrevButtonClick}
-            disabled={firstStep()}
+            onClick={() => setCurrentStep(currentStep - 1)}
+            disabled={currentStep === 0}
           >
             Previous
           </Button>
@@ -47,8 +49,8 @@ export default function multiItemDisplay(props: { elements: JSX.Element[] }) {
             large
             outlined
             icon={IconNames.ARROW_RIGHT}
-            onClick={onNextButtonClick}
-            disabled={finalStep()}
+            onClick={() => setCurrentStep(currentStep + 1)}
+            disabled={currentStep === props.elements.length - 1}
           >
             Next
           </Button>
@@ -57,10 +59,8 @@ export default function multiItemDisplay(props: { elements: JSX.Element[] }) {
       <div
         style={{
           width: '100%',
-          display: 'flex',
           paddingLeft: '20px',
           paddingRight: '20px',
-          flexDirection: 'column',
           justifyContent: 'center',
         }}
       >
@@ -68,4 +68,6 @@ export default function multiItemDisplay(props: { elements: JSX.Element[] }) {
       </div>
     </div>
   );
-}
+};
+
+export default MultiItemDisplay;

@@ -233,62 +233,81 @@ export default class Curve3DAnimationCanvas extends React.Component<
 
   public render() {
     return (
-      <>
-        <div
-          style={{
-            alignItems: 'center',
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        <canvas
+          ref={(r) => {
+            this.canvas = r;
           }}
-        >
-          <canvas
-            style={{
-              width: '100%',
-            }}
-            ref={(r) => {
-              this.canvas = r;
-            }}
-            height={512}
-            width={512}
-          />
-        </div>
+          height={512}
+          width={512}
+        />
         <div
           style={{
+            marginTop: '10px',
             display: 'flex',
             padding: '10px',
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'right',
           }}
         >
           <div
             style={{
-              float: 'right',
+              float: 'left',
+              display: 'flex',
+              justifyContent: 'space-between',
               marginRight: '20px',
             }}
           >
-            <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
-              <Button onClick={this.onPlayButtonClick}>
-                <Icon
-                  icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
-                />
-              </Button>
-            </Tooltip2>
-          </div>
-          <div
-            style={{
-              marginRight: '20px',
-            }}
-          >
-            <Tooltip2 content='Reset'>
-              <Button onClick={this.onResetButtonClick}>
-                <Icon icon={IconNames.RESET} />
-              </Button>
-            </Tooltip2>
+            <div
+              style={{
+                width: '100px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              <Switch
+                label='Auto Play'
+                onChange={this.autoPlaySwitchChanged}
+                checked={this.state.autoPlay}
+              />
+            </div>
+            <div
+              style={{
+                marginLeft: '20px',
+                marginRight: '20px',
+              }}
+            >
+              <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
+                <Button onClick={this.onPlayButtonClick}>
+                  <Icon
+                    icon={
+                      this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY
+                    }
+                  />
+                </Button>
+              </Tooltip2>
+            </div>
+            <div>
+              <Tooltip2 content='Reset'>
+                <Button onClick={this.onResetButtonClick}>
+                  <Icon icon={IconNames.RESET} />
+                </Button>
+              </Tooltip2>
+            </div>
           </div>
           <div
             style={{
               display: 'flex',
-              marginLeft: '20px',
+              justifyContent: 'center',
               flexDirection: 'column',
+              flexGrow: 1,
+              width: '100%',
             }}
           >
             <Slider
@@ -303,27 +322,23 @@ export default class Curve3DAnimationCanvas extends React.Component<
             <div
               style={{
                 marginTop: '10px',
+                width: '100%',
               }}
             >
               <Tooltip2 content='Angle'>
                 <Slider
                   value={this.state.curveAngle}
-                  onChange={this.onAngleSliderChange}
-                  stepSize={0.01}
-                  labelRenderer={false}
                   min={0}
-                  max={2 * Math.PI}
+                  max={Math.PI * 2}
+                  stepSize={0.01}
+                  onChange={this.onAngleSliderChange}
+                  labelRenderer={false}
                 />
               </Tooltip2>
             </div>
           </div>
-          <Switch
-            label='Auto Play'
-            onChange={this.autoPlaySwitchChanged}
-            checked={this.state.autoPlay}
-          />
         </div>
-      </>
+      </div>
     );
   }
 }
