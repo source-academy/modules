@@ -889,7 +889,11 @@ export function animate_rune(
   fps: number,
   func: (timestamp: number) => Rune
 ) {
-  const anim = new RuneAnimation(duration, fps, (n) => new NormalRune(func(n)));
+  const anim = new RuneAnimation(duration, fps, (n) => {
+    const rune = func(n);
+    throwIfNotRune('animate_rune', rune);
+    return new NormalRune(rune);
+  });
   drawnRunes.push(anim);
   return anim;
 }
@@ -906,11 +910,11 @@ export function animate_anaglyph(
   fps: number,
   func: (timestamp: number) => Rune
 ) {
-  const anim = new RuneAnimation(
-    duration,
-    fps,
-    (n) => new AnaglyphRune(func(n))
-  );
+  const anim = new RuneAnimation(duration, fps, (n) => {
+    const rune = func(n);
+    throwIfNotRune('animate_anaglyph', rune);
+    return new AnaglyphRune(rune);
+  });
   drawnRunes.push(anim);
   return anim;
 }
