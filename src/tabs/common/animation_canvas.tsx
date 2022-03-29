@@ -173,8 +173,7 @@ export default class AnimationCanvas extends React.Component<
         animTimestamp: 0,
       },
       () => {
-        if (this.state.isPlaying) this.reqFrame();
-        else this.drawFrame();
+        if (!this.state.isPlaying) this.drawFrame();
       }
     );
   };
