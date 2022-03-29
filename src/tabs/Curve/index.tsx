@@ -3,12 +3,12 @@ import React from 'react';
 import { CurveDrawn } from '../../bundles/curve/curves_webgl';
 import { CurveAnimation, CurveModuleState } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
-import MultiItemDisplay from '../common/multi_item';
+import MultiItemDisplay from '../common/multi_item_display';
 import { DebuggerContext } from '../../typings/type_helpers';
-import { DefaultCanvas } from '../styles/default_canvas';
 import Curve3DAnimationCanvas from './3Dcurve_anim_canvas';
 import CurveCanvas3D from './curve_canvas3d';
 import AnimationCanvas from '../common/animation_canvas';
+import WebGLCanvas from '../common/webgl_canvas';
 
 export default {
   toSpawn: (context: DebuggerContext) => {
@@ -41,7 +41,7 @@ export default {
       return curveDrawn.is3D() ? (
         <CurveCanvas3D curve={curveDrawn} />
       ) : (
-        <DefaultCanvas
+        <WebGLCanvas
           ref={(r) => {
             if (r) {
               curveDrawn.init(r);

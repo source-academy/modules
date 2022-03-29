@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, jsx-a11y/media-has-caption */
 import React from 'react';
 import { SoundsModuleState } from '../../bundles/sound/types';
-import MultiItemDisplay from '../common/multi_item';
 import { DebuggerContext } from '../../typings/type_helpers';
+import MultiItemDisplay from '../common/multi_item_display';
 
 /**
  * Tab for Source Academy Sounds Module

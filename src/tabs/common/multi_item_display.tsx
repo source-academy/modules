@@ -12,13 +12,14 @@ const MultiItemDisplay = (props: { elements: JSX.Element[] }) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        height: '100%',
       }}
     >
       {props.elements.length > 1 ? (
         <div
           style={{
             display: 'flex',
-            // justifyContent: 'center',
+            justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',
             position: 'relative',
@@ -61,7 +62,6 @@ const MultiItemDisplay = (props: { elements: JSX.Element[] }) => {
           width: '100%',
           paddingLeft: '20px',
           paddingRight: '20px',
-          justifyContent: 'center',
         }}
       >
         {props.elements[currentStep]}

@@ -4,6 +4,7 @@ import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { glAnimation } from '../../typings/anim_types';
+import WebGLCanvas from './webgl_canvas';
 
 type AnimCanvasProps = {
   animation: glAnimation;
@@ -84,6 +85,14 @@ export default class AnimationCanvas extends React.Component<
 
   private reqFrame = () => requestAnimationFrame(this.animationCallback);
 
+  private startAnimation = () =>
+    this.setState(
+      {
+        isPlaying: true,
+      },
+      this.reqFrame
+    );
+
   private stopAnimation = () =>
     this.setState(
       {
@@ -151,12 +160,7 @@ export default class AnimationCanvas extends React.Component<
     if (this.state.isPlaying) {
       this.stopAnimation();
     } else {
-      this.setState(
-        {
-          isPlaying: true,
-        },
-        this.reqFrame
-      );
+      this.startAnimation();
     }
   };
 
@@ -219,87 +223,97 @@ export default class AnimationCanvas extends React.Component<
   };
 
   public render() {
+    const buttons = (
+      <div
+        style={{
+          marginLeft: '20px',
+          marginRight: '20px',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div
+          style={{
+            marginRight: '20px',
+          }}
+        >
+          <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
+            <Button onClick={this.onPlayButtonClick}>
+              <Icon
+                icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
+              />
+            </Button>
+          </Tooltip2>
+        </div>
+        <Tooltip2 content='Reset'>
+          <Button onClick={this.onResetButtonClick}>
+            <Icon icon={IconNames.RESET} />
+          </Button>
+        </Tooltip2>
+      </div>
+    );
+
+    const animSlider = (
+      <div
+        style={{
+          marginTop: '7px',
+          flexGrow: 1,
+        }}
+      >
+        <Slider
+          value={this.state.animTimestamp}
+          onChange={this.onSliderChange}
+          onRelease={this.onSliderRelease}
+          stepSize={1}
+          labelRenderer={false}
+          min={0}
+          max={this.animationDuration}
+        />
+      </div>
+    );
+
     return (
       <>
         <div
           style={{
-            alignItems: 'center',
+            display: 'flex',
+            alignContent: 'center',
+            justifyContent: 'center',
           }}
         >
-          <canvas
+          <WebGLCanvas
             style={{
-              width: '80%',
+              flexGrow: 1,
             }}
             ref={(r) => {
               this.canvas = r;
             }}
-            height={512}
-            width={512}
           />
         </div>
         <div
           style={{
             display: 'flex',
+            marginTop: '10px',
             padding: '10px',
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'right',
+            justifyContent: 'stretch',
+            alignContent: 'center',
           }}
         >
-          <div
-            style={{
-              float: 'left',
-              marginLeft: '20px',
-            }}
-          >
-            <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
-              <Button onClick={this.onPlayButtonClick}>
-                <Icon
-                  icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
-                />
-              </Button>
-            </Tooltip2>
-          </div>
-          <div
-            style={{
-              float: 'left',
-              marginLeft: '20px',
-            }}
-          >
-            <Tooltip2 content='Reset'>
-              <Button onClick={this.onResetButtonClick}>
-                <Icon icon={IconNames.RESET} />
-              </Button>
-            </Tooltip2>
-          </div>
-          <div
+          {buttons}
+          {animSlider}
+          <Switch
             style={{
               marginLeft: '20px',
               marginRight: '20px',
+              marginTop: '5px',
+              whiteSpace: 'nowrap',
             }}
-          >
-            <Slider
-              value={this.state.animTimestamp}
-              onChange={this.onSliderChange}
-              onRelease={this.onSliderRelease}
-              stepSize={1}
-              labelRenderer={false}
-              min={0}
-              max={this.animationDuration}
-            />
-          </div>
-          <div
-            style={{
-              float: 'right',
-              marginRight: '20px',
-            }}
-          >
-            <Switch
-              label='Auto Play'
-              onChange={this.autoPlaySwitchChanged}
-              checked={this.state.autoPlay}
-            />
-          </div>
+            label='Auto Play'
+            onChange={this.autoPlaySwitchChanged}
+            checked={this.state.autoPlay}
+          />
         </div>
       </>
     );

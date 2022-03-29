@@ -3,7 +3,7 @@ import { Slider, Button, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import { CurveDrawn } from '../../bundles/curve/curves_webgl';
-import { DefaultCanvas } from '../styles/default_canvas';
+import WebGLCanvas from '../common/webgl_canvas';
 
 type State = {
   /**
@@ -19,6 +19,8 @@ type State = {
    * button takes effect, for countering spam-clicking.
    */
   isRotating: boolean;
+
+  displayAngle: boolean;
 };
 
 type Props = {
@@ -39,6 +41,7 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
     this.state = {
       rotationAngle: 0,
       isRotating: false,
+      displayAngle: false,
     };
   }
 
@@ -57,11 +60,11 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
    */
   private onSliderChangeHandler = (newValue: number) => {
     this.setState(
-      (prevState) => ({
-        ...prevState,
+      {
         rotationAngle: newValue,
         isRotating: false,
-      }),
+        displayAngle: true,
+      },
       () => {
         if (this.$canvas) {
           this.props.curve.redraw((newValue / 180) * Math.PI);
@@ -69,6 +72,11 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
       }
     );
   };
+
+  private onSliderReleaseHandler = () =>
+    this.setState({
+      displayAngle: false,
+    });
 
   /**
    * Event handler for play button. Starts automated rotation by calling
@@ -122,8 +130,14 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
 
   public render() {
     return (
-      <div>
-        <DefaultCanvas
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignContent: 'center',
+        }}
+      >
+        <WebGLCanvas
           ref={(r) => {
             this.$canvas = r;
           }}
@@ -140,11 +154,24 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
           <Slider
             value={this.state.rotationAngle}
             stepSize={1}
-            labelValues={[0, 360]}
-            labelRenderer={false}
+            labelValues={[]}
+            labelRenderer={
+              this.state.displayAngle
+                ? (val) => (
+                    <text
+                      style={{
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {val}
+                    </text>
+                  )
+                : false
+            }
             min={0}
             max={360}
             onChange={this.onSliderChangeHandler}
+            onRelease={this.onSliderReleaseHandler}
           />
           <Button
             style={{
