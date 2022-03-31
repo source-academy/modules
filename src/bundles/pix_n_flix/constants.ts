@@ -2,6 +2,7 @@
 export const DEFAULT_WIDTH: number = 400;
 export const DEFAULT_HEIGHT: number = 300;
 export const DEFAULT_FPS: number = 10;
+export const DEFAULT_VOLUME: number = 1;
 
 // Maximum values allowed for video
 export const MAX_HEIGHT: number = 500;

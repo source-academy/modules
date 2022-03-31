@@ -33,6 +33,7 @@ import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
   DEFAULT_FPS,
+  DEFAULT_VOLUME,
   MAX_HEIGHT,
   MIN_HEIGHT,
   MAX_WIDTH,
@@ -44,6 +45,8 @@ import {
 // Global Variables
 let WIDTH: number = DEFAULT_WIDTH;
 let HEIGHT: number = DEFAULT_HEIGHT;
+let FPS: number = DEFAULT_FPS;
+let VOLUME: number = DEFAULT_VOLUME;
 
 let videoElement: VideoElement;
 let canvasElement: CanvasElement;
@@ -59,12 +62,10 @@ let filter: Filter = copy_image;
 let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
 
-let FPS: number = DEFAULT_FPS;
 let requestId: number;
 let startTime: number;
 
 let useLocal: boolean;
-// let counter = 0;
 
 // =============================================================================
 // Module's Private Functions
@@ -188,7 +189,6 @@ function draw(timestamp: number): void {
   const elapsed = timestamp - startTime;
   if (elapsed > 1000 / FPS && videoIsPlaying) {
     drawFrame();
-    // console.log(counter++);
     startTime = timestamp;
     if (toRunLateQueue) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -342,6 +342,16 @@ function updateDimensions(w: number, h: number): void {
   startVideo();
 }
 
+/**
+ * Updates the volume of the local video
+ * 
+ * @hidden
+ */
+function updateVolume(v: number): void {
+  VOLUME = Math.max(0.0, Math.min(1.0, v));
+  videoElement.volume = VOLUME;
+}
+
 // queue is runned when init is called
 let queue: Queue = () => {};
 
@@ -400,7 +410,7 @@ function init(
     loadMedia();
   }
   queue();
-  return { HEIGHT, WIDTH, FPS, useLocal };
+  return { HEIGHT, WIDTH, FPS, VOLUME, useLocal };
 }
 
 /**
@@ -434,6 +444,7 @@ export function start(): Video {
     startVideo,
     snapPicture,
     updateFPS,
+    updateVolume,
     updateDimensions,
   };
 }
@@ -592,7 +603,6 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 export function pause_at(delay: number): void {
   // prevent negative delays
   lateEnqueue(() => {
-    // console.log("timer to pause_at started");
     setTimeout(tabsPackage.onClickStill, delay >= 0 ? delay : -delay);
   });
 }
@@ -616,6 +626,16 @@ export function set_dimensions(width: number, height: number): void {
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
+}
+
+/**
+ * Sets the audio volume of the video.
+ * Note: Only accepts volume video within the range of 0 to 100.
+ * 
+ * @param volume Volume of video (Default value of 100)
+ */
+export function set_volume(volume: number): void {
+  enqueue(() => updateVolume(Math.max(0, Math.min(100, volume) / 100.0)));
 }
 
 /**

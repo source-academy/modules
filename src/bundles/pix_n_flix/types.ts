@@ -11,6 +11,7 @@ export type BundlePackage = {
   HEIGHT: number;
   WIDTH: number;
   FPS: number;
+  VOLUME: number;
   useLocal: boolean;
 };
 export type Queue = () => void;
@@ -26,6 +27,7 @@ export type Video = {
   startVideo: () => void;
   snapPicture: () => void;
   updateFPS: (fps: number) => void;
+  updateVolume: (volume: number) => void
   updateDimensions: (width: number, height: number) => void;
 };
 export type Pixel = number[];
