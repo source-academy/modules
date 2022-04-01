@@ -646,7 +646,6 @@ export class AnaglyphRune extends DrawnRune {
 
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
-    // stopAnimation(canvas);
 
     // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
     const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))

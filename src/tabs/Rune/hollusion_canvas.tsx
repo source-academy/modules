@@ -7,7 +7,7 @@ import WebGLCanvas from '../common/webgl_canvas';
  * Canvas used to display Hollusion runes
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export default function HollusionCanvas(props: { rune: HollusionRune }) {
+export default function HollusionCanvas({ rune }: { rune: HollusionRune }) {
   const canvasRef = React.useRef(null);
   const renderFuncRef = React.useRef<(time: number) => void>();
   const animId = React.useRef<number | null>(null);
@@ -19,7 +19,7 @@ export default function HollusionCanvas(props: { rune: HollusionRune }) {
 
   React.useEffect(() => {
     if (canvasRef.current) {
-      renderFuncRef.current = props.rune.draw(canvasRef.current!);
+      renderFuncRef.current = rune.draw(canvasRef.current!);
       animCallback(0);
 
       return () => {

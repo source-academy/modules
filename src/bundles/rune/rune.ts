@@ -335,7 +335,6 @@ export class NormalRune extends DrawnRune {
 
   public draw = (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
-    // stopAnimation(canvas);
 
     // prepare camera projection array
     const cameraMatrix = mat4.create();
