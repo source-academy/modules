@@ -174,8 +174,8 @@ function generate_shape(geom: Geom3): Shape {
  * @param {Shape} b - The second shape
  * @returns {Shape} The resulting unioned shape
  */
-export function union(...shapes: Shape[]): Shape {
-  const newShape: Geom3 = _union(shapes.map((x) => x.getSolid()));
+export function union(a: Shape, b: Shape): Shape {
+  const newShape: Geom3 = _union(a.getSolid(), b.getSolid());
   return generate_shape(newShape);
 }
 
