@@ -53,6 +53,7 @@ const defaultConfigurations = {
 
 export default (args) => {
   let moduleBundles;
+
   if (args.module !== undefined) {
     if (typeof args.module === 'string') {
       moduleBundles = args.module.split(',');
@@ -60,22 +61,16 @@ export default (args) => {
       moduleBundles = args.module;
     }
 
-    const undefineds = moduleBundles.filter(
-      (val) => !Object.keys(modules).includes(val)
+    const unknowns = moduleBundles.filter(
+      (x) => !Object.keys(modules).includes(x)
     );
 
-    if (undefineds.length > 0) {
-      throw new Error(`Unknown modules: ${undefineds.join(', ')}`);
+    if (unknowns.length > 0) {
+      throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
     }
 
     delete args.module;
-  } else {
-    moduleBundles = Object.keys(modules);
   }
-
-  const moduleTabs = Array.from(
-    new Set(moduleBundles.flatMap((module) => modules[module].tabs))
-  );
 
   const buildBundle = (name) => ({
     ...defaultConfigurations,
@@ -86,30 +81,9 @@ export default (args) => {
     },
   });
 
-  const buildTabs = (name) => ({
-    ...defaultConfigurations,
-    input: `./src/tabs/${name}/index.tsx`,
-    output: {
-      file: `./build/tabs/${name}.js`,
-      format: 'iife',
-      globals: {
-        react: 'React',
-        'react-dom': 'ReactDom',
-      },
-    },
-    external: ['react', 'react-dom'],
-  });
-
   // eslint-disable-next-line no-console
-  console.log(chalk.blueBright('Building modules with tabs:'));
-  moduleBundles.forEach((modulePackage) => {
-    // eslint-disable-next-line no-console
-    console.log(
-      chalk.green(`Module ${modulePackage}`),
-      'with',
-      chalk.yellow(`tabs ${modules[modulePackage].tabs}`)
-    );
-  });
+  console.log(chalk.blueBright('Building bundles:'));
+  moduleBundles.forEach((module) => console.log(chalk.green(module)));
 
-  return [...moduleBundles.map(buildBundle), ...moduleTabs.map(buildTabs)];
+  return moduleBundles.map(buildBundle);
 };
