@@ -17,7 +17,8 @@
     "prepare": "Enable git hooks",
     "test": "Run unit tests",
     "test:watch": "Watch files for changes and rerun tests related to changed files",
-    "dev": "Run `yarn dev` to conveniently build just the modules & serve in one command, for rapid dev work / testing"
+    "dev": "Run `yarn dev` to conveniently build just the modules & serve in one command, for rapid dev work / testing",
+    "ddev": "Docs dev - like `yarn dev` but also builds module documentation."
   },
   "scripts": {
     "module": "node ./scripts/templates/app.js",
@@ -31,7 +32,8 @@
     "prepare": "husky install",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
-    "dev": "yarn build && yarn serve"
+    "dev": "yarn build:modules && yarn serve",
+    "ddev": "yarn build && yarn serve"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.10",
