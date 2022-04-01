@@ -344,7 +344,7 @@ function updateDimensions(w: number, h: number): void {
 
 /**
  * Updates the volume of the local video
- * 
+ *
  * @hidden
  */
 function updateVolume(v: number): void {
@@ -631,7 +631,7 @@ export function set_fps(fps: number): void {
 /**
  * Sets the audio volume of the video.
  * Note: Only accepts volume video within the range of 0 to 100.
- * 
+ *
  * @param volume Volume of video (Default value of 100)
  */
 export function set_volume(volume: number): void {
@@ -641,6 +641,6 @@ export function set_volume(volume: number): void {
 /**
  * Allows you to upload videos into Pix-n-Flix
  */
-export function use_local_video(): void {
+export function use_video_file(): void {
   useLocal = true;
 }

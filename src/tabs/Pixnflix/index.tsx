@@ -130,7 +130,7 @@ class PixNFlix extends React.Component<Props, State> {
     }
   };
 
-  private onClickStill = () => {
+  public onClickStill = () => {
     const { mode } = this.state;
     if (mode === 'accepting') return;
     if (mode === 'still') {
@@ -146,7 +146,7 @@ class PixNFlix extends React.Component<Props, State> {
     }
   };
 
-  private onClickVideo = () => {
+  public onClickVideo = () => {
     const { mode } = this.state;
     if (mode === 'accepting') return;
     this.setState(
@@ -198,11 +198,12 @@ class PixNFlix extends React.Component<Props, State> {
 
   public loadFileToVideo = (file: File) => {
     const { mode } = this.state;
-    if (this.$video && mode === "accepting") {
+    if (!file.type.match('video.*')) return;
+    if (this.$video && mode === 'accepting') {
       this.$video.src = URL.createObjectURL(file);
       this.setState({
-        mode: "video" as VideoMode,
-      })
+        mode: 'video' as VideoMode,
+      });
       this.handleStartVideo();
     }
   };
@@ -228,7 +229,7 @@ class PixNFlix extends React.Component<Props, State> {
     const volume = parseFloat(e.target.value);
     this.setState({
       volume,
-    })
+    });
     this.pixNFlix.updateVolume(volume);
   };
 
@@ -345,20 +346,19 @@ class PixNFlix extends React.Component<Props, State> {
             }}
             width={DEFAULT_WIDTH}
             height={DEFAULT_HEIGHT}
-            style={{ display: !isAccepting ? 'initial' : 'none'}}
+            style={{ display: !isAccepting ? 'initial' : 'none' }}
           />
-          <br/>
+          <br />
           <div style={{ display: isAccepting ? 'initial' : 'none' }}>
-            <div style={{fontSize: 40}}>Drag video here</div>
-            <br/>
-            <input
-              type='file'
-              onChange={this.handleFileUpload}
-            />
+            <div style={{ fontSize: 40 }}>Drag video here</div>
+            <br />
+            <input type='file' onChange={this.handleFileUpload} />
           </div>
-          <br/>
-          <div style={{ display: useLocal && !isAccepting  ? 'initial' : 'none' }}>
-            <span>Volume: </span>
+          <br />
+          <div
+            style={{ display: useLocal && !isAccepting ? 'initial' : 'none' }}
+          >
+            Volume:
             <input
               type='range'
               onChange={this.handleVolumeChange}

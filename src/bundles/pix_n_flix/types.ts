@@ -27,7 +27,7 @@ export type Video = {
   startVideo: () => void;
   snapPicture: () => void;
   updateFPS: (fps: number) => void;
-  updateVolume: (volume: number) => void
+  updateVolume: (volume: number) => void;
   updateDimensions: (width: number, height: number) => void;
 };
 export type Pixel = number[];
