@@ -7,6 +7,10 @@ import {
   star,
   pyramid,
   cone,
+  torus,
+  roundedCube,
+  roundedCylinder,
+  geodesicSphere,
   // Colors
   black,
   navy,
@@ -68,6 +72,10 @@ export default () => ({
   star,
   pyramid,
   cone,
+  torus,
+  roundedCube,
+  roundedCylinder,
+  geodesicSphere,
   // Colors
   black,
   navy,

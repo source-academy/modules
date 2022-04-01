@@ -45,7 +45,7 @@ import {
   purple as _purple,
   Shape,
   silver as _silver,
-  teal as _teal,
+  teal as _teal, 
   white as _white,
   yellow as _yellow,
 } from './utilities';
@@ -174,8 +174,8 @@ function generate_shape(geom: Geom3): Shape {
  * @param {Shape} b - The second shape
  * @returns {Shape} The resulting unioned shape
  */
-export function union(a: Shape, b: Shape): Shape {
-  const newShape: Geom3 = _union(a.getSolid(), b.getSolid());
+export function union(...shapes: Shape[]): Shape {
+  const newShape: Geom3 = _union(shapes.map((x) => x.getSolid()));
   return generate_shape(newShape);
 }
 
@@ -673,7 +673,10 @@ export function rotate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  const newShape: Geom3 = align({modes: ['min', 'min', 'min']}, shape.getSolid());
+  const newShape: Geom3 = align(
+    { modes: ['min', 'min', 'min'] },
+    shape.getSolid()
+  );
   return generate_shape(newShape);
 }
 
@@ -854,7 +857,42 @@ export const cone: Shape = shapeSetOrigin(
       height: 1,
       startRadius: [0.5, 0.5],
       endRadius: [small, small],
-      segments: 32,
     })
   )
+);
+
+/**
+ * Primitive Shape of a torus.
+ *
+ * @category Primitive
+ */
+export const torus: Shape = shapeSetOrigin(
+  generate_shape(primitives.torus({ innerRadius: 0.125, outerRadius: 0.375 }))
+);
+
+/**
+ * Primitive Shape of a rounded cube.
+ *
+ * @category Primitive
+ */
+export const roundedCube: Shape = shapeSetOrigin(
+  generate_shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
+);
+
+/**
+ * Primitive Shape of a rounded cylinder.
+ *
+ * @category Primitive
+ */
+export const roundedCylinder: Shape = shapeSetOrigin(
+  generate_shape(primitives.roundedCylinder({ height: 1, radius: 0.5 }))
+);
+
+/**
+ * Primitive Shape of a geodesic sphere.
+ *
+ * @category Primitive
+ */
+ export const geodesicSphere: Shape = shapeSetOrigin(
+  generate_shape(primitives.geodesicSphere({ radius: 0.5 }))
 );
