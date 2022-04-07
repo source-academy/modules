@@ -41,5 +41,21 @@ module.exports = {
       1,
       'single' // Was "double"
     ]
-  }
+  },
+
+  'overrides': [
+    {
+      'files': ['*.ts', '*.tsx'],
+
+      'plugins': ['import', 'react', '@typescript-eslint'],
+      'extends': ['airbnb-typescript'],
+
+      'parser': '@typescript-eslint/parser',
+      'parserOptions': {
+        project: './tsconfig.json'
+      },
+
+      'rules': {}
+    }
+  ]
 };
