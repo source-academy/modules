@@ -1,35 +1,24 @@
-let todoTreeKeywordsWarning = [
-  'TODO',
-  'TODOS',
-  'TODO WIP',
-  'FIXME',
-  'WIP'
-];
-let todoTreeKeywordsAll = [
-  ...todoTreeKeywordsWarning,
-  'NOTE',
-  'NOTES',
-  'LIST'
-];
+let todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
+let todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
 module.exports = {
-  'extends': ['eslint:recommended'],
+  extends: ['eslint:recommended'],
 
-  'env': {
+  env: {
     node: true,
     //NOTE Set to es2022 once VSCode eslint extension updates
     // https://github.com/eslint/eslint/pull/15587
-    es2021: true
+    es2021: true,
   },
 
-  'rules': {
+  rules: {
     // [Possible Problems]
     'array-callback-return': [
       1,
       {
         // allowImplicit: false,
-        checkForEach: true
-      }
+        checkForEach: true,
+      },
     ],
     // "constructor-super": 2,
     'for-direction': 1, // Was 2
@@ -40,12 +29,12 @@ module.exports = {
     'no-compare-neg-zero': 1, // Was 2
     'no-cond-assign': [
       1, // Was 2
-      'always' // Was "except-parens"
+      'always', // Was "except-parens"
     ],
     // "no-const-assign": 2,
     'no-constant-condition': [
       1, // Was 2
-      { checkLoops: false }
+      { checkLoops: false },
     ],
     'no-constructor-return': 1,
     'no-control-regex': 1, // Was 2
@@ -70,8 +59,8 @@ module.exports = {
         // skipStrings: true,
         // skipComments: false,
         // skipRegExps: false,
-        skipTemplates: true
-      }
+        skipTemplates: true,
+      },
     ],
     'no-loss-of-precision': 1, // Was 2
     'no-misleading-character-class': 1, // Was 2
@@ -85,10 +74,7 @@ module.exports = {
     'no-sparse-arrays': 1, // Was 2
     'no-template-curly-in-string': 1,
     // "no-this-before-super": 2,
-    'no-undef': [
-      2,
-      { 'typeof': true }
-    ],
+    'no-undef': [2, { typeof: true }],
     'no-unexpected-multiline': 1, // Was 2
     'no-unmodified-loop-condition': 1,
     'no-unreachable': 1, // Was 2
@@ -96,12 +82,9 @@ module.exports = {
     'no-unsafe-finally': 1, // Was 2
     'no-unsafe-negation': [
       1, // Was 2
-      { enforceForOrderingRelations: true }
+      { enforceForOrderingRelations: true },
     ],
-    'no-unsafe-optional-chaining': [
-      2,
-      { disallowArithmeticOperators: true }
-    ],
+    'no-unsafe-optional-chaining': [2, { disallowArithmeticOperators: true }],
     'no-unused-private-class-members': 1,
     'no-unused-vars': [
       1, // Was 2
@@ -111,16 +94,16 @@ module.exports = {
         // ignoreRestSiblings: false,
         argsIgnorePattern: '^_',
         caughtErrors: 'all', // Was "none"
-        caughtErrorsIgnorePattern: '^_'
-      }
+        caughtErrorsIgnorePattern: '^_',
+      },
     ],
     'no-use-before-define': [
       1,
       {
-        functions: false
+        functions: false,
         // classes: true,
         // variables: true
-      }
+      },
     ],
     'no-useless-backreference': 1,
     'require-atomic-updates': 1,
@@ -128,49 +111,49 @@ module.exports = {
       1, // Was 2
       {
         // enforceForSwitchCase: true,
-        enforceForIndexOf: true
-      }
+        enforceForIndexOf: true,
+      },
     ],
     'valid-typeof': [
       1, // Was 2
-      { requireStringLiterals: true }
+      { requireStringLiterals: true },
     ],
 
     // [Suggestions]
     'accessor-pairs': 1,
     'arrow-body-style': 1,
     'block-scoped-var': 1,
-    'camelcase': 1,
+    camelcase: 1,
     // "capitalized-comments": 0, // Allow commented code
     // "class-methods-use-this": 0,
-    'complexity': 1,
+    complexity: 1,
     'consistent-return': 1,
     'consistent-this': 1,
-    'curly': [
+    curly: [
       1,
-      'multi-line' // Was "all"
+      'multi-line', // Was "all"
     ],
     // "default-case": 0,
     'default-case-last': 1,
     'default-param-last': 1,
     'dot-notation': 1,
-    'eqeqeq': 1,
+    eqeqeq: 1,
     'func-name-matching': [
       1,
       'always', // Same
       {
-        considerPropertyDescriptor: true
+        considerPropertyDescriptor: true,
         // includeCommonJSModuleExports: false
-      }
+      },
     ],
     // "func-names": 0,
     'func-style': [
       1,
-      'declaration' // Was "expression"
+      'declaration', // Was "expression"
     ],
     'grouped-accessor-pairs': [
       1,
-      'getBeforeSet' // Was "anyOrder"
+      'getBeforeSet', // Was "anyOrder"
     ],
     // "guard-for-in": 0,
     // "id-denylist": 0,
@@ -196,13 +179,10 @@ module.exports = {
     // "no-continue": 0,
     // "no-delete-var": 2,
     // "no-div-regex": 0,
-    'no-else-return': [
-      1,
-      { allowElseIf: false }
-    ],
+    'no-else-return': [1, { allowElseIf: false }],
     'no-empty': [
       1, // Was 2
-      { allowEmptyCatch: true }
+      { allowEmptyCatch: true },
     ],
     'no-empty-function': 1,
     'no-eq-null': 1,
@@ -211,17 +191,14 @@ module.exports = {
     'no-extra-bind': 1,
     'no-extra-boolean-cast': [
       1, // Was 2
-      { enforceForLogicalOperands: true }
+      { enforceForLogicalOperands: true },
     ],
     'no-extra-label': 1,
     'no-extra-semi': 1, // Was 2
     'no-floating-decimal': 1,
     // "no-global-assign": 2,
     'no-implicit-coercion': 1,
-    'no-implicit-globals': [
-      1,
-      { lexicalBindings: true }
-    ],
+    'no-implicit-globals': [1, { lexicalBindings: true }],
     'no-implied-eval': 1,
     // "no-inline-comments": 0,
     'no-invalid-this': 2,
@@ -261,9 +238,9 @@ module.exports = {
     'no-shadow': [
       1,
       {
-        builtinGlobals: true
+        builtinGlobals: true,
         // hoist: "functions"
-      }
+      },
     ],
     // "no-shadow-restricted-names": 2,
     // "no-ternary": 0,
@@ -274,17 +251,14 @@ module.exports = {
     'no-unneeded-ternary': [
       1,
       {
-        defaultAssignment: false // Use || or ?? instead
-      }
+        defaultAssignment: false, // Use || or ?? instead
+      },
     ],
     'no-unused-expressions': 1,
     'no-unused-labels': 1, // Was 2
     'no-useless-call': 1,
     'no-useless-catch': 1, // Was 2
-    'no-useless-computed-key': [
-      1,
-      { enforceForClassMembers: true }
-    ],
+    'no-useless-computed-key': [1, { enforceForClassMembers: true }],
     'no-useless-concat': 1,
     'no-useless-constructor': 1,
     'no-useless-escape': 1, // Was 2
@@ -295,9 +269,9 @@ module.exports = {
     'no-warning-comments': [
       1,
       {
-        terms: todoTreeKeywordsWarning
+        terms: todoTreeKeywordsWarning,
         // location: "start"
-      }
+      },
     ],
     // "no-with": 2,
     'object-shorthand': [
@@ -306,12 +280,12 @@ module.exports = {
       {
         // avoidQuotes: false,
         // ignoreConstructors: false,
-        avoidExplicitReturnArrows: true
-      }
+        avoidExplicitReturnArrows: true,
+      },
     ],
     'one-var': [
       1,
-      'never' // Was "always"
+      'never', // Was "always"
     ],
     'one-var-declaration-per-line': 1,
     'operator-assignment': 1,
@@ -324,10 +298,7 @@ module.exports = {
     'prefer-object-has-own': 1,
     'prefer-object-spread': 1,
     'prefer-promise-reject-errors': 1,
-    'prefer-regex-literals': [
-      1,
-      { disallowRedundantWrapping: true }
-    ],
+    'prefer-regex-literals': [1, { disallowRedundantWrapping: true }],
     'prefer-rest-params': 1,
     'prefer-spread': 1,
     'prefer-template': 1,
@@ -337,12 +308,12 @@ module.exports = {
       {
         keywords: true,
         // unnecessary: true,
-        numbers: true
-      }
+        numbers: true,
+      },
     ],
-    'radix': [
+    radix: [
       1,
-      'as-needed' // Was "always"
+      'as-needed', // Was "always"
     ],
     'require-await': 1,
     'require-unicode-regexp': 1,
@@ -353,22 +324,22 @@ module.exports = {
     'spaced-comment': [
       1,
       'always', // Same
-      { markers: todoTreeKeywordsAll }
+      { markers: todoTreeKeywordsAll },
     ],
     // "strict": 0, // Don't force, though rule configs assume strict errors
     // "symbol-description": 0,
     // "vars-on-top": 0,
-    'yoda': 1,
+    yoda: 1,
 
     // [Layout & Formatting]
     'array-bracket-newline': [
       1,
-      'consistent' // Was "multiline". Limitation: No consistent + multiline
+      'consistent', // Was "multiline". Limitation: No consistent + multiline
     ],
     'array-bracket-spacing': 1,
     'array-element-newline': [
       1,
-      'consistent' // Was "always". Limitation: No consistent + multiline
+      'consistent', // Was "always". Limitation: No consistent + multiline
     ],
     'arrow-parens': 1,
     'arrow-spacing': 1,
@@ -380,28 +351,28 @@ module.exports = {
     'computed-property-spacing': 1,
     'dot-location': [
       1,
-      'property' // Was "object"
+      'property', // Was "object"
     ],
     'eol-last': 1,
     'func-call-spacing': 1,
     'function-call-argument-newline': [
       1,
-      'consistent' // Was "always". Limitation: No consistent + multiline
+      'consistent', // Was "always". Limitation: No consistent + multiline
     ],
     'function-paren-newline': [
       1,
-      'consistent' // Was "multiline". Limitation: No consistent + multiline
+      'consistent', // Was "multiline". Limitation: No consistent + multiline
     ],
     'generator-star-spacing': [
       1,
-      'after' // Was "before"
+      'after', // Was "before"
     ],
     'implicit-arrow-linebreak': 1,
-    'indent': [
+    indent: [
       1,
       'tab', // Was 4
       {
-        SwitchCase: 1 // Was 0
+        SwitchCase: 1, // Was 0
         // VariableDeclarator: 1,
         // outerIIFEBody: 1,
         // MemberExpression: 1,
@@ -425,7 +396,7 @@ module.exports = {
         // flatTernaryExpressions: false,
         // offsetTernaryExpressions: false,
         // ignoreComments: false
-      }
+      },
     ],
     'jsx-quotes': 1,
     'key-spacing': 1,
@@ -433,7 +404,7 @@ module.exports = {
     // "line-comment-position": 0,
     'linebreak-style': [
       1,
-      'windows' // Was "unix"
+      'windows', // Was "unix"
     ],
     // "lines-around-comment": 0,
     // "lines-between-class-members": 0,
@@ -441,14 +412,14 @@ module.exports = {
     'max-statements-per-line': 1,
     'multiline-ternary': [
       1,
-      'always-multiline' // Was "always"
+      'always-multiline', // Was "always"
     ],
     'new-parens': 1,
     'newline-per-chained-call': [
       1,
       {
-        ignoreChainWithDepth: 1 // Was 2
-      }
+        ignoreChainWithDepth: 1, // Was 2
+      },
     ],
     // "no-extra-parens": 0, // Limitation: No exception for ternary conditions
     'no-mixed-spaces-and-tabs': 1, // Was 2
@@ -458,8 +429,8 @@ module.exports = {
       {
         max: 3, // Was 2
         maxEOF: 0,
-        maxBOF: 0
-      }
+        maxBOF: 0,
+      },
     ],
     // "no-tabs": 0, // Limitation: allowIndentationTabs doesn't allow partial tabs from commenting a block with deeper indentation
     'no-trailing-spaces': 1,
@@ -469,26 +440,26 @@ module.exports = {
       1,
       {
         multiline: true,
-        consistent: true // Same. Only default if no object option
-      }
+        consistent: true, // Same. Only default if no object option
+      },
     ],
     'object-curly-spacing': [
       1,
-      'always' // Was "never"
+      'always', // Was "never"
     ],
     'object-property-newline': 1,
     'operator-linebreak': [
       1,
-      'before' // Was "after"
+      'before', // Was "after"
     ],
     'padded-blocks': [
       1,
-      'never' // Was "always"
+      'never', // Was "always"
     ],
     // "padding-line-between-statements": 0,
-    'quotes': 1,
+    quotes: 1,
     'rest-spread-spacing': 1,
-    'semi': 1,
+    semi: 1,
     'semi-spacing': 1,
     'semi-style': 1,
     'space-before-blocks': 1,
@@ -497,8 +468,8 @@ module.exports = {
       {
         anonymous: 'never',
         named: 'never',
-        asyncArrow: 'always'
-      }
+        asyncArrow: 'always',
+      },
     ],
     'space-in-parens': 1,
     'space-infix-ops': 1,
@@ -510,9 +481,9 @@ module.exports = {
     'wrap-iife': [
       1,
       'inside', // Was "outside"
-      { functionPrototypeMethods: true }
+      { functionPrototypeMethods: true },
     ],
     // "wrap-regex": 0,
-    'yield-star-spacing': 1
-  }
+    'yield-star-spacing': 1,
+  },
 };

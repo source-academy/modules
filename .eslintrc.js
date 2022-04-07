@@ -1,17 +1,17 @@
 module.exports = {
-  'extends': ['./.eslintrc.base.js'],
+  extends: ['./.eslintrc.base.js', 'plugin:prettier/recommended'],
 
-  'root': true,
-  'parserOptions': {
-    sourceType: 'module'
+  root: true,
+  parserOptions: {
+    sourceType: 'module',
   },
 
-  'rules': {
+  rules: {
     indent: [
       1,
       2, // Was "tabs"
       {
-        SwitchCase: 1 // Same
+        SwitchCase: 1, // Same
         // VariableDeclarator: 1,
         // outerIIFEBody: 1,
         // MemberExpression: 1,
@@ -35,27 +35,29 @@ module.exports = {
         // flatTernaryExpressions: false,
         // offsetTernaryExpressions: false,
         // ignoreComments: false
-      }
+      },
     ],
     quotes: [
       1,
-      'single' // Was "double"
-    ]
+      'single', // Was "double"
+    ],
+
+    'prettier/prettier': 1, // Was 2
   },
 
-  'overrides': [
+  overrides: [
     {
-      'files': ['*.ts', '*.tsx'],
+      files: ['*.ts', '*.tsx'],
 
-      'plugins': ['import', 'react', '@typescript-eslint'],
-      'extends': ['airbnb-typescript'],
+      plugins: ['import', 'react', '@typescript-eslint'],
+      extends: ['airbnb-typescript', 'plugin:prettier/recommended'],
 
-      'parser': '@typescript-eslint/parser',
-      'parserOptions': {
-        project: './tsconfig.json'
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        project: './tsconfig.json',
       },
 
-      'rules': {}
-    }
-  ]
+      rules: {},
+    },
+  ],
 };
