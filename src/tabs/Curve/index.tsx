@@ -36,7 +36,7 @@ class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
     };
 
     const moduleContext = props.context.context.moduleContexts.get('curve');
-    if (moduleContext == null) {
+    if (!moduleContext) {
       this.curvesToDraw = [];
     } else {
       this.curvesToDraw = (moduleContext.state as CurveModuleState).drawnCurves;
@@ -124,14 +124,14 @@ class WebGLCanvas extends React.Component<CurvesTabProps, CurvesTabState> {
 }
 
 export default {
-  toSpawn: (context: DebuggerContext) => {
+  toSpawn(context: DebuggerContext) {
     const moduleContext = context.context?.moduleContexts.get('curve');
-    if (moduleContext == null) {
+    if (!moduleContext) {
       return false;
     }
 
     const moduleState = moduleContext.state as CurveModuleState;
-    if (moduleState == null) {
+    if (!moduleState) {
       return false;
     }
 

@@ -203,7 +203,7 @@ export default {
   // Called by the frontend to decide whether to spawn the CSG tab.
   // If the Source program results in a Shape,
   // we use its spawnsTab property to decide
-  toSpawn: (debuggerContext: DebuggerContext) => {
+  toSpawn(debuggerContext: DebuggerContext) {
     const potentialShape: any = debuggerContext?.result?.value;
     if (!looseInstanceOf(potentialShape, Shape)) {
       return false;

@@ -673,7 +673,10 @@ export function rotate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  const newShape: Geom3 = align({modes: ['min', 'min', 'min']}, shape.getSolid());
+  const newShape: Geom3 = align(
+    { modes: ['min', 'min', 'min'] },
+    shape.getSolid()
+  );
   return generate_shape(newShape);
 }
 

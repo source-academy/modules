@@ -457,7 +457,14 @@ module.exports = {
       'never', // Was "always"
     ],
     // "padding-line-between-statements": 0,
-    quotes: 1,
+    quotes: [
+      1,
+      'double', // Same
+      {
+        avoidEscape: true,
+        // allowTemplateLiterals: false
+      },
+    ],
     'rest-spread-spacing': 1,
     semi: 1,
     'semi-spacing': 1,

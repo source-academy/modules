@@ -7,6 +7,7 @@ module.exports = {
   },
 
   rules: {
+    'func-style': 0,
     'sort-imports': 0,
     indent: [
       1,
@@ -41,6 +42,10 @@ module.exports = {
     quotes: [
       1,
       'single', // Was "double"
+      {
+        avoidEscape: true, // Same
+        // allowTemplateLiterals: false
+      },
     ],
 
     'prettier/prettier': 1, // Was 2
@@ -66,10 +71,12 @@ module.exports = {
           A similar complete config but for all typescript-eslint rules hasn't
           been made, instead simply using airbnb-typescript's layers of
           extended configs & plugins.
+
           This section is for reconfiguring the typescript-eslint extension
           rules configured by airbnb-typescript that have replaced their eslint
           equivalents, to make them match the behaviour in .eslintrc.base.js
         */
+        '@typescript-eslint/default-param-last': 1, // Was 2
         '@typescript-eslint/no-unused-vars': [
           1, // Was 2
           {

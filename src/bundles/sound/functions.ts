@@ -24,7 +24,7 @@
  * @author Samyukta Sounderraman
  */
 
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars, new-cap */
 import {
   Wave,
   Sound,
@@ -402,7 +402,7 @@ export function play(sound: Sound): AudioPlayed {
 
     const soundToPlay = {
       toReplString: () => `<AudioPlayed>`,
-      init: (audio_elem) => {
+      init(audio_elem) {
         audioElement = audio_elem;
         if (!audioElement) {
           throw new Error('Audio element cannot be null.');
@@ -806,7 +806,7 @@ export function letter_name_to_midi_note(note: string): number {
   }
 
   if (note.length === 2) {
-    res += parseInt(note[1], 10) * 12;
+    res += parseInt(note[1]) * 12;
   } else if (note.length === 3) {
     switch (note[1]) {
       case '#':
@@ -820,7 +820,7 @@ export function letter_name_to_midi_note(note: string): number {
       default:
         break;
     }
-    res += parseInt(note[2], 10) * 12;
+    res += parseInt(note[2]) * 12;
   }
   return res;
 }

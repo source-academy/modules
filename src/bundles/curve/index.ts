@@ -51,7 +51,7 @@ export default function curves(
   // Update the module's global context
   let moduleContext = context.get('curve');
 
-  if (moduleContext == null) {
+  if (!moduleContext) {
     moduleContext = {
       tabs: [],
       state: {
@@ -60,7 +60,7 @@ export default function curves(
     };
 
     context.set('curve', moduleContext);
-  } else if (moduleContext.state == null) {
+  } else if (!moduleContext.state) {
     moduleContext.state = {
       drawnCurves,
     };
