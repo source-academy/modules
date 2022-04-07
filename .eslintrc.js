@@ -1,5 +1,4 @@
 module.exports = {
-  plugins: ['sort-imports-es6-autofix'],
   extends: ['./.eslintrc.base.js', 'plugin:prettier/recommended'],
 
   root: true,
@@ -8,6 +7,7 @@ module.exports = {
   },
 
   rules: {
+    'sort-imports': 0,
     indent: [
       1,
       2, // Was "tabs"
@@ -44,9 +44,6 @@ module.exports = {
     ],
 
     'prettier/prettier': 1, // Was 2
-
-    'sort-imports': 0,
-    'sort-imports-es6-autofix/sort-imports-es6': 1,
   },
 
   overrides: [
