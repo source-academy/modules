@@ -53,7 +53,7 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
 
-      plugins: ['import', 'react', '@typescript-eslint'],
+      plugins: ['import', 'react', 'jsx-a11y', '@typescript-eslint'],
       extends: ['airbnb-typescript', 'plugin:prettier/recommended'],
 
       parser: '@typescript-eslint/parser',
