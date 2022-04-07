@@ -57,7 +57,57 @@ module.exports = {
         project: './tsconfig.json',
       },
 
-      rules: {},
+      rules: {
+        // [typescript-eslint Extension Rules]
+        /* NOTE
+          .eslintrc.base.js has been configured for every rule off the
+          eslint:recommended config as of V8.
+          A similar complete config but for all typescript-eslint rules hasn't
+          been made, instead simply using airbnb-typescript's layers of
+          extended configs & plugins.
+          This section is for reconfiguring the typescript-eslint extension
+          rules configured by airbnb-typescript that have replaced their eslint
+          equivalents, to make them match the behaviour in .eslintrc.base.js
+        */
+        '@typescript-eslint/no-unused-vars': [
+          1, // Was 2
+          {
+            // vars: "all",
+            // args: "after-used",
+            // ignoreRestSiblings: false,
+            argsIgnorePattern: '^_',
+            caughtErrors: 'all', // Was "none"
+            caughtErrorsIgnorePattern: '^_',
+          },
+        ],
+
+        // [Error → Warn]
+        /* NOTE
+          This section is for reducing the severity of rules configured by
+          airbnb-typescript from 2 to 1, if the problems they point out do not
+          have the possibility of directly leading to errors
+        */
+        'prettier/prettier': 1,
+
+        // [Other]
+        '@typescript-eslint/naming-convention': [
+          'error',
+          {
+            selector: 'variable',
+            format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+          },
+          {
+            selector: 'function',
+            // Was ['camelCase', 'PascalCase'].
+            // Add snake case to let exported module functions match Source
+            format: ['camelCase', 'PascalCase', 'snake_case'],
+          },
+          {
+            selector: 'typeLike',
+            format: ['PascalCase'],
+          },
+        ],
+      },
     },
   ],
 };
