@@ -45,7 +45,7 @@ import {
   purple as _purple,
   Shape,
   silver as _silver,
-  teal as _teal, 
+  teal as _teal,
   white as _white,
   yellow as _yellow,
 } from './utilities';
@@ -893,6 +893,6 @@ export const roundedCylinder: Shape = shapeSetOrigin(
  *
  * @category Primitive
  */
- export const geodesicSphere: Shape = shapeSetOrigin(
+export const geodesicSphere: Shape = shapeSetOrigin(
   generate_shape(primitives.geodesicSphere({ radius: 0.5 }))
 );
