@@ -23,7 +23,7 @@ function success(...args) {
   return console.log(...args.map((string) => chalk.green(string)));
 }
 
-async function askQuestion(question) {
+function askQuestion(question) {
   return new Promise((resolve) => {
     rl.question(chalk.blueBright(`${question}\n`), resolve);
   });

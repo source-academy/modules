@@ -65,7 +65,9 @@ const buildBundles = (name) => ({
 let moduleTabs = [];
 moduleBundles
   .map((modulePackage) => modules[modulePackage].tabs)
-  .forEach((__tabs) => Array.prototype.push.apply(moduleTabs, __tabs));
+  .forEach((__tabs) => {
+    Array.prototype.push.apply(moduleTabs, __tabs);
+  });
 
 moduleTabs = [...new Set(moduleTabs)];
 

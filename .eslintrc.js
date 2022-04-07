@@ -1,116 +1,120 @@
-let todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
-let todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
-
 module.exports = {
+  extends: ['./.eslintrc.base.js', 'plugin:prettier/recommended'],
+
   root: true,
-  extends: ['eslint:recommended', 'prettier', 'plugin:prettier/recommended'],
-  plugins: ['prettier'],
-  ignorePatterns: ['build/**/*'],
-  rules: {
-    'prettier/prettier': 1,
+  parserOptions: {
+    sourceType: 'module',
   },
+
+  rules: {
+    'func-style': 0,
+    'sort-imports': 0,
+    indent: [
+      1,
+      2, // Was "tabs"
+      {
+        SwitchCase: 1, // Same
+        // VariableDeclarator: 1,
+        // outerIIFEBody: 1,
+        // MemberExpression: 1,
+        // FunctionDeclaration: {
+        // 	parameters: 1,
+        // 	body: 1
+        // },
+        // FunctionExpression: {
+        // 	parameters: 1,
+        // 	body: 1
+        // },
+        // StaticBlock: {
+        // 	body: 1
+        // },
+        // CallExpression: {
+        // 	arguments: 1,
+        // },
+        // ArrayExpression: 1,
+        // ObjectExpression: 1,
+        // ImportDeclaration: 1,
+        // flatTernaryExpressions: false,
+        // offsetTernaryExpressions: false,
+        // ignoreComments: false
+      },
+    ],
+    quotes: [
+      1,
+      'single', // Was "double"
+      {
+        avoidEscape: true, // Same
+        // allowTemplateLiterals: false
+      },
+    ],
+
+    'prettier/prettier': 1, // Was 2
+  },
+
   overrides: [
     {
-      files: ['**/*.js'],
-      parserOptions: {
-        ecmaVersion: 2020,
-        sourceType: 'module',
-      },
-      env: {
-        node: true,
-        es6: true,
-      },
-    },
-    {
       files: ['*.ts', '*.tsx'],
-      excludedFiles: ['**/*.js'],
+
+      plugins: ['import', 'react', 'jsx-a11y', '@typescript-eslint'],
+      extends: ['airbnb-typescript', 'plugin:prettier/recommended'],
+
       parser: '@typescript-eslint/parser',
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-        ecmaVersion: 2018,
-        sourceType: 'module',
         project: './tsconfig.json',
       },
-      env: {
-        browser: true,
-        es6: true,
-      },
-      globals: {
-        Atomics: 'readonly',
-        SharedArrayBuffer: 'readonly',
-      },
-      plugins: ['react', '@typescript-eslint', 'eslint-plugin-prettier'],
-      extends: ['airbnb-typescript', 'eslint-config-prettier'],
+
       rules: {
+        // [typescript-eslint Extension Rules]
+        /* NOTE
+          .eslintrc.base.js has been configured for every rule off the
+          eslint:recommended config as of V8.
+          A similar complete config but for all typescript-eslint rules hasn't
+          been made, instead simply using airbnb-typescript's layers of
+          extended configs & plugins.
+
+          This section is for reconfiguring the typescript-eslint extension
+          rules configured by airbnb-typescript that have replaced their eslint
+          equivalents, to make them match the behaviour in .eslintrc.base.js
+        */
+        '@typescript-eslint/default-param-last': 1, // Was 2
+        '@typescript-eslint/no-unused-vars': [
+          1, // Was 2
+          {
+            // vars: "all",
+            // args: "after-used",
+            // ignoreRestSiblings: false,
+            argsIgnorePattern: '^_',
+            caughtErrors: 'all', // Was "none"
+            caughtErrorsIgnorePattern: '^_',
+          },
+        ],
+
+        // [Error → Warn]
+        /* NOTE
+          This section is for reducing the severity of rules configured by
+          airbnb-typescript from 2 to 1, if the problems they point out do not
+          have the possibility of directly leading to errors
+        */
+        'prettier/prettier': 1,
+
+        // [Other]
         '@typescript-eslint/naming-convention': [
-          'warn',
+          'error',
           {
             selector: 'variable',
             format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
           },
           {
+            selector: 'function',
+            // Was ['camelCase', 'PascalCase'].
+            // Add snake case to let exported module functions match Source
+            format: ['camelCase', 'PascalCase', 'snake_case'],
+          },
+          {
             selector: 'typeLike',
             format: ['PascalCase'],
           },
-          {
-            selector: 'function',
-            // Include snake_case for function names for bundle exported functions
-            format: ['camelCase', 'snake_case'],
-          },
         ],
-        // turn on errors for missing imports
-        // @see https://www.npmjs.com/package/eslint-import-resolver-typescript
-        'import/no-unresolved': 'error',
-
-        // Allow unused arguments if they start with an underscore
-        '@typescript-eslint/no-unused-vars': [
-          1,
-          {
-            argsIgnorePattern: '^_',
-            caughtErrors: 'all',
-            caughtErrorsIgnorePattern: '^_',
-          },
-        ],
-
-        // Allow multiple classes per file, eg a utilities file,
-        // rather than creating a bunch of files to separate responsibilities
-        'max-classes-per-file': 0,
-
-        // Enable exporting non-destructured variables,
-        // so that comments can get used to generate documentation
-        'prefer-destructuring': 0,
-
-        // Avoid messy destructuring from deeply nested Props
-        'react/destructuring-assignment': 0,
-
-        // Allow reassignment for flexibility, especially for properties,
-        // eg working with canvases or state objects
-        'no-param-reassign': 0,
-
-        // Account for warning comments
-        'spaced-comment': [1, 'always', { markers: todoTreeKeywordsAll }],
-
-        // Allow shorthand logic
-        'no-nested-ternary': 0,
-
-        // Error → warn
-        '@typescript-eslint/lines-between-class-members': 1,
-        'prefer-template': 1,
-        'class-methods-use-this': 1,
-        'import/prefer-default-export': 1,
-      },
-      settings: {
-        'import/parsers': {
-          '@typescript-eslint/parser': ['.ts', '.tsx'],
-        },
-        'import/resolver': {
-          typescript: {
-            // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
-            alwaysTryTypes: true,
-          },
-        },
       },
     },
   ],

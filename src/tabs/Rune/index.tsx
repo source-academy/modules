@@ -46,7 +46,7 @@ class WebGLCanvas extends React.Component<RunesTabProps, State> {
     const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
       'rune'
     );
-    if (moduleContext == null) {
+    if (!moduleContext) {
       this.runesToDraw = [];
     } else {
       this.runesToDraw = (moduleContext.state as RunesModuleState).drawnRunes;
@@ -160,14 +160,14 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: DebuggerContext) => {
+  toSpawn(context: DebuggerContext) {
     const moduleContext = context.context?.moduleContexts.get('rune');
-    if (moduleContext == null) {
+    if (!moduleContext) {
       return false;
     }
 
     const moduleState = moduleContext.state as RunesModuleState;
-    if (moduleState == null) {
+    if (!moduleState) {
       return false;
     }
 

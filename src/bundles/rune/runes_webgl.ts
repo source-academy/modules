@@ -331,7 +331,7 @@ function drawRunesToFrameBuffer(
 
     // load color/texture
     if (rune.texture === null) {
-      if (rune.colors != null) {
+      if (rune.colors) {
         gl.uniform4fv(vertexColorPointer, rune.colors);
       } else {
         gl.uniform4fv(vertexColorPointer, new Float32Array([0, 0, 0, 1]));
@@ -444,7 +444,7 @@ function stopAnimation(canvas: HTMLCanvasElement) {
   if (canvas.hasAttribute('animRequestID')) {
     const nodeMap = canvas.attributes;
     const idAttr = nodeMap.getNamedItem('animRequestID');
-    const id = parseInt(idAttr?.value as string, 10);
+    const id = parseInt(idAttr?.value as string);
     window.cancelAnimationFrame(id);
   }
 }

@@ -63,7 +63,7 @@ export default function runes(
   // Update the module's global context
   let moduleContext = context.get('rune');
 
-  if (moduleContext == null) {
+  if (!moduleContext) {
     moduleContext = {
       tabs: [],
       state: {
@@ -72,7 +72,7 @@ export default function runes(
     };
 
     context.set('rune', moduleContext);
-  } else if (moduleContext.state == null) {
+  } else if (!moduleContext.state) {
     moduleContext.state = {
       drawnRunes,
     };

@@ -179,7 +179,7 @@ function draw(timestamp: number): void {
   // eslint-disable-next-line no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 
-  if (startTime == null) startTime = timestamp;
+  if (!startTime) startTime = timestamp;
 
   const elapsed = timestamp - startTime;
   if (elapsed > 1000 / FPS) {
@@ -222,7 +222,7 @@ function loadMedia(): void {
   }
 
   // If video is already part of bundle state
-  if (videoElement.srcObject != null) return;
+  if (videoElement.srcObject) return;
 
   navigator.mediaDevices
     .getUserMedia({ video: true })
@@ -351,7 +351,7 @@ function init(
   errorLogger = _errorLogger;
   tabsPackage = _tabsPackage;
   const context = canvasElement.getContext('2d');
-  if (context == null) throw new Error('Canvas context should not be null.');
+  if (!context) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
 
   setupData();

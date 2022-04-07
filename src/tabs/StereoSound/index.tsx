@@ -71,7 +71,7 @@ export default {
    * rendered. Currently spawns when the result in the REPL is "test".
    * @returns {boolean}
    */
-  toSpawn: (context: any) => {
+  toSpawn(context: any) {
     function valid(value: any): value is AudioPlayed {
       try {
         return value instanceof Object && value.init instanceof Function;

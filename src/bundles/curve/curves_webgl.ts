@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/naming-convention, complexity */
 import { mat4, vec3 } from 'gl-matrix';
 import { ShapeDrawn, Curve, ProgramInfo, BufferInfo } from './types';
 
@@ -345,7 +345,7 @@ export default function generateCurve(
 
   const drawnCurve = {
     toReplString: () => '<ShapeDrawn>',
-    init: (canvas) => {
+    init(canvas) {
       canvasElement = canvas;
       renderingContext = canvasElement.getContext('webgl');
       if (!renderingContext) {
@@ -409,7 +409,7 @@ export default function generateCurve(
       };
       // return space === '3D';
     },
-    redraw: (angle) => {
+    redraw(angle) {
       if (!renderingContext) {
         return;
       }

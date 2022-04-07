@@ -41,7 +41,7 @@ class Sounds extends React.Component<SoundsTabProps, State> {
       const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
         'sound'
       );
-      if (moduleContext == null) {
+      if (!moduleContext) {
         return;
       }
 
@@ -82,14 +82,14 @@ export default {
    * rendered. Currently spawns when the result in the REPL is "test".
    * @returns {boolean}
    */
-  toSpawn: (context: DebuggerContext) => {
+  toSpawn(context: DebuggerContext) {
     const moduleContext = context.context?.moduleContexts.get('sound');
-    if (moduleContext == null) {
+    if (!moduleContext) {
       return false;
     }
 
     const moduleState = moduleContext.state as SoundsModuleState;
-    if (moduleState == null) {
+    if (!moduleState) {
       return false;
     }
 
