@@ -191,7 +191,7 @@ function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
       wheelEvent.preventDefault();
       frameTracker.changeZoomTicks(wheelEvent.deltaY);
     },
-    { passive: true }
+    { passive: false }
   );
 
   canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
