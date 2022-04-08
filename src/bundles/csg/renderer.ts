@@ -1,6 +1,8 @@
 /* [Imports] */
 import vec3 from '@jscad/modeling/src/maths/vec3';
+import { measureBoundingBox } from '@jscad/modeling/src/measurements';
 import {
+  BoundingBox,
   ControlsState,
   ControlsUpdate,
   ControlsZoomToFit,
@@ -35,14 +37,44 @@ function makeWrappedRenderer(
   return prepareRender(prepareRenderOptions);
 }
 
+function getSize(shape: Shape): number {
+  const shapeBoundingBox: BoundingBox = measureBoundingBox(shape.getSolid());
+  const scalingFactor: number = 1.2;
+  return Math.ceil(
+    scalingFactor *
+      Math.max(
+        Math.abs(shapeBoundingBox[0][0]),
+        Math.abs(shapeBoundingBox[0][1]),
+        Math.abs(shapeBoundingBox[0][2]),
+        Math.abs(shapeBoundingBox[1][0]),
+        Math.abs(shapeBoundingBox[1][1]),
+        Math.abs(shapeBoundingBox[1][2])
+      )
+  );
+}
+
 function addEntities(
   shape: Shape,
   geometryEntities: GeometryEntity[]
 ): Entity[] {
   const allEntities: Entity[] = [...geometryEntities];
 
-  if (shape.addAxis) allEntities.push(new AxisEntity.Class());
-  if (shape.addMultiGrid) allEntities.push(new MultiGridEntity.Class());
+  const size = getSize(shape);
+
+  if (shape.addAxis) {
+    const axis: AxisEntity.Type = {
+      ...new AxisEntity.Class(),
+      size,
+    };
+    allEntities.push(axis);
+  }
+  if (shape.addMultiGrid) {
+    const grid: MultiGridEntity.Type = {
+      ...new MultiGridEntity.Class(),
+      size: [size * 2, size * 2],
+    };
+    allEntities.push(grid);
+  }
 
   return allEntities;
 }
@@ -127,7 +159,7 @@ function doZoomToFit(
   geometryEntities: GeometryEntity[],
   perspectiveCameraState: PerspectiveCameraState,
   controlsState: ControlsState
-) {
+): void {
   const options: ControlsZoomToFit.Options = {
     controls: controlsState,
     camera: perspectiveCameraState,
@@ -146,7 +178,7 @@ function doRotate(
   rotateY: number,
   perspectiveCameraState: PerspectiveCameraState,
   controlsState: ControlsState
-) {
+): void {
   const output = controls.rotate(
     {
       controls: controlsState,
@@ -168,7 +200,7 @@ function doPan(
   panY: number,
   perspectiveCameraState: PerspectiveCameraState,
   controlsState: ControlsState
-) {
+): void {
   const output = controls.pan(
     {
       controls: controlsState,
@@ -184,7 +216,10 @@ function doPan(
   adjustCameraAngle(perspectiveCameraState, controlsState);
 }
 
-function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
+function registerEvents(
+  canvas: HTMLCanvasElement,
+  frameTracker: FrameTracker
+): void {
   canvas.addEventListener(
     'wheel',
     (wheelEvent: WheelEvent) => {
