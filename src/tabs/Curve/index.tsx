@@ -2,7 +2,7 @@ import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import { CurveModuleState, ShapeDrawn } from '../../bundles/curve/types';
-import { DebuggerContext } from '../../type_helpers';
+import { DebuggerContext } from '../../typings/type_helpers';
 import CurveCanvas from './curve_canvas';
 import CurveCanvas3D from './curve_canvas3d';
 

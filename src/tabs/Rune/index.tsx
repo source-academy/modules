@@ -7,7 +7,7 @@ import {
   drawRune,
 } from '../../bundles/rune/runes_webgl';
 import { RunesModuleState, Rune } from '../../bundles/rune/types';
-import { DebuggerContext } from '../../type_helpers';
+import { DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * tab for displaying runes

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, jsx-a11y/media-has-caption */
 import React from 'react';
 import { AudioPlayed, SoundsModuleState } from '../../bundles/sound/types';
-import { DebuggerContext } from '../../type_helpers';
+import { DebuggerContext } from '../../typings/type_helpers';
 // import sounds from '../../bundles/sounds';
 
 /**
