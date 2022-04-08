@@ -1,17 +1,24 @@
+/* [Imports] */
+import { IconName } from "@blueprintjs/icons";
+import { DebuggerContext } from '../../typings/type_helpers';
+
 /* [Exports] */
 
-// React Component Props for the CSG tab
-export type Props = {
+// React Component Props for the CSG canvas holder
+export type CanvasProps = {
   debuggerContext: DebuggerContext;
 };
 
-// React Component State for the CSG tab
-export type State = {
-  zoomTooltip: String;
-  angleTooltip: String;
-  perspectiveTooltip: String;
-  fitTooltip: String;
+// React Component State for the CSG canvas holder
+export type CanvasState = {};
+
+// React Component Props for a control hint
+export type ControlProps = {
+  tooltipText: string;
+  iconName: IconName;
 };
 
-// DebuggerContext which is in the frontend's WorkspaceTypes
-export type DebuggerContext = any;
+// React Component State for a control hint
+export type ControlState = {
+  showTooltip: boolean;
+};

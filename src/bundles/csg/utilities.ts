@@ -266,15 +266,3 @@ export const {
   yellow,
   white,
 } = cssColors;
-
-export const toolTipText = {
-  visibility: 'hidden',
-  backgroundColor: '#ffffff',
-  color: '#7b7b7b',
-  borderRadius: '6px',
-  position: 'absolute',
-  whiteSpace: 'nowrap',
-  padding: '5px',
-  top: '-1px',
-  zIndex: '1',
-};
