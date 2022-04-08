@@ -223,7 +223,7 @@ export class FrameTracker {
   }
 
   public isPointerHeld(): boolean {
-    return this.heldPointer !== MousePointer.NONE;
+    return this.heldPointer !== MousePointer.NONE && this.heldPointer !== MousePointer.RIGHT;
   }
 
   public isPointerPan(): boolean {
