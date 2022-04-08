@@ -1,7 +1,7 @@
 /* [Imports] */
 import { Icon } from '@blueprintjs/core';
 import React from 'react';
-import { ControlProps, ControlState } from './types';
+import { HintProps, HintState } from './types';
 
 /* [Main] */
 
@@ -21,10 +21,10 @@ const tooltipBackgroundLightGrey = '#e1e8ed';
 //TODO use true BlueprintJS Components by passing React down in index.tsx
 //TODO separate into ControlHint, with HoverControlHint & new ClickableControlHint
 export default class HoverControlHint extends React.Component<
-  ControlProps,
-  ControlState
+  HintProps,
+  HintState
 > {
-  public constructor(props: ControlProps) {
+  public constructor(props: HintProps) {
     super(props);
 
     this.state = {
