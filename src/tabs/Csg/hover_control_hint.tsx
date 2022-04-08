@@ -43,7 +43,6 @@ export default class HoverControlHint extends React.Component<
           icon={this.props.iconName}
           size={defaultIconSize * 1.5}
           color={iconGrey}
-
           onMouseEnter={() => this.setState({ showTooltip: true })}
           onMouseLeave={() => this.setState({ showTooltip: false })}
         />
