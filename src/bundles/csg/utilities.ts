@@ -98,8 +98,7 @@ export namespace MultiGridEntity {
       subColor: [0.5, 0.5, 0.5, 1],
     };
 
-    // TODO construct with specific amount
-    public size: [number, number] = [1000, 1000];
+    public size: [number, number] = [0, 0];
 
     public ticks: [number, number] = [10, 1];
   }
@@ -223,7 +222,10 @@ export class FrameTracker {
   }
 
   public isPointerHeld(): boolean {
-    return this.heldPointer !== MousePointer.NONE && this.heldPointer !== MousePointer.RIGHT;
+    return (
+      this.heldPointer !== MousePointer.NONE &&
+      this.heldPointer !== MousePointer.RIGHT
+    );
   }
 
   public isPointerPan(): boolean {
