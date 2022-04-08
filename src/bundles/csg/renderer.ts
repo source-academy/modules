@@ -1,8 +1,6 @@
 /* [Imports] */
 import vec3 from '@jscad/modeling/src/maths/vec3';
-import { measureBoundingBox } from '@jscad/modeling/src/measurements';
 import {
-  BoundingBox,
   ControlsState,
   ControlsUpdate,
   ControlsZoomToFit,
@@ -32,12 +30,15 @@ function makeWrappedRenderer(
   canvas: HTMLCanvasElement
 ): WrappedRenderer.Function {
   const prepareRenderOptions: PrepareRender.AllOptions = {
-    glOptions: { gl: canvas.getContext('webgl2') ?? undefined, },
+    glOptions: { canvas },
   };
   return prepareRender(prepareRenderOptions);
 }
 
-function addEntities(shape: Shape, geometryEntities: GeometryEntity[]): Entity[] {
+function addEntities(
+  shape: Shape,
+  geometryEntities: GeometryEntity[]
+): Entity[] {
   const allEntities: Entity[] = [...geometryEntities];
 
   if (shape.addAxis) allEntities.push(new AxisEntity.Class());
@@ -184,10 +185,14 @@ function doPan(
 }
 
 function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
-  canvas.addEventListener('wheel', (wheelEvent: WheelEvent) => {
-    wheelEvent.preventDefault();
-    frameTracker.changeZoomTicks(wheelEvent.deltaY);
-  }, {passive: true});
+  canvas.addEventListener(
+    'wheel',
+    (wheelEvent: WheelEvent) => {
+      wheelEvent.preventDefault();
+      frameTracker.changeZoomTicks(wheelEvent.deltaY);
+    },
+    { passive: true }
+  );
 
   canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
     frameTracker.setZoomToFit();
@@ -230,7 +235,10 @@ function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
 }
 
 /* [Exports] */
-export default function render(canvas: HTMLCanvasElement, shape: Shape): () => number {
+export default function render(
+  canvas: HTMLCanvasElement,
+  shape: Shape
+): () => number {
   const wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
 
   // Create our own state to modify based on the defaults
@@ -257,7 +265,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): () => n
   // Custom object to track processing
   const frameTracker: FrameTracker = new FrameTracker();
 
-  var requestId: number = 0;
+  let requestId: number = 0;
 
   // Create a callback function.
   // Request animation frame with it once; it will loop itself from there
