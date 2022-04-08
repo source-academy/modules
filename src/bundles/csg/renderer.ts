@@ -1,6 +1,8 @@
 /* [Imports] */
 import vec3 from '@jscad/modeling/src/maths/vec3';
+import { measureBoundingBox } from '@jscad/modeling/src/measurements';
 import {
+  BoundingBox,
   ControlsState,
   ControlsUpdate,
   ControlsZoomToFit,
@@ -30,12 +32,12 @@ function makeWrappedRenderer(
   canvas: HTMLCanvasElement
 ): WrappedRenderer.Function {
   const prepareRenderOptions: PrepareRender.AllOptions = {
-    glOptions: { canvas },
+    glOptions: { gl: canvas.getContext('webgl2') ?? undefined, },
   };
   return prepareRender(prepareRenderOptions);
 }
 
-function addEntities(shape, geometryEntities): Entity[] {
+function addEntities(shape: Shape, geometryEntities: GeometryEntity[]): Entity[] {
   const allEntities: Entity[] = [...geometryEntities];
 
   if (shape.addAxis) allEntities.push(new AxisEntity.Class());
@@ -96,7 +98,7 @@ function doZoom(
   zoomTicks: number,
   perspectiveCameraState: PerspectiveCameraState,
   controlsState: ControlsState
-) {
+): void {
   while (zoomTicks !== 0) {
     const currentTick: number = Math.sign(zoomTicks);
     zoomTicks -= currentTick;
@@ -185,7 +187,7 @@ function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
   canvas.addEventListener('wheel', (wheelEvent: WheelEvent) => {
     wheelEvent.preventDefault();
     frameTracker.changeZoomTicks(wheelEvent.deltaY);
-  });
+  }, {passive: true});
 
   canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
     frameTracker.setZoomToFit();
@@ -225,14 +227,10 @@ function registerEvents(canvas: HTMLCanvasElement, frameTracker: FrameTracker) {
     frameTracker.lastX = currentX;
     frameTracker.lastY = currentY;
   });
-
-  canvas.addEventListener('contextmenu', (mouseEvent: MouseEvent) => {
-    mouseEvent.preventDefault();
-  });
 }
 
 /* [Exports] */
-export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
+export default function render(canvas: HTMLCanvasElement, shape: Shape): () => number {
   const wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
 
   // Create our own state to modify based on the defaults
@@ -259,12 +257,19 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
   // Custom object to track processing
   const frameTracker: FrameTracker = new FrameTracker();
 
+  var requestId: number = 0;
+
   // Create a callback function.
   // Request animation frame with it once; it will loop itself from there
   function animationCallback(_timestamp: DOMHighResTimeStamp) {
     doDynamicResize(canvas, perspectiveCameraState);
 
-    if (frameTracker.shouldZoom()) {
+    const shouldZoom: boolean = frameTracker.shouldZoom();
+    const shouldZoomToFit: boolean = frameTracker.shouldZoomToFit();
+    const shouldRotate: boolean = frameTracker.shouldRotate();
+    const shouldPan: boolean = frameTracker.shouldPan();
+
+    if (shouldZoom) {
       doZoom(
         frameTracker.getZoomTicks(),
         perspectiveCameraState,
@@ -273,12 +278,12 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
       frameTracker.didZoom();
     }
 
-    if (frameTracker.shouldZoomToFit()) {
+    if (shouldZoomToFit) {
       doZoomToFit(geometryEntities, perspectiveCameraState, controlsState);
       frameTracker.didZoomToFit();
     }
 
-    if (frameTracker.shouldRotate()) {
+    if (shouldRotate) {
       doRotate(
         frameTracker.rotateX,
         frameTracker.rotateY,
@@ -288,7 +293,7 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
       frameTracker.didRotate();
     }
 
-    if (frameTracker.shouldPan()) {
+    if (shouldPan) {
       doPan(
         frameTracker.panX,
         frameTracker.panY,
@@ -299,11 +304,15 @@ export default function render(canvas: HTMLCanvasElement, shape: Shape): void {
     }
 
     // Trigger render once processing for the current frame is done
-    wrappedRenderer(wrappedRendererData);
+    if (shouldZoom || shouldZoomToFit || shouldRotate || shouldPan) {
+      wrappedRenderer(wrappedRendererData);
+    }
 
-    window.requestAnimationFrame(animationCallback);
+    requestId = window.requestAnimationFrame(animationCallback);
   }
-  window.requestAnimationFrame(animationCallback);
+  requestId = window.requestAnimationFrame(animationCallback);
 
   registerEvents(canvas, frameTracker);
+
+  return () => requestId;
 }

@@ -51,7 +51,8 @@ class CsgCanvasHolder extends React.Component<Props, State> {
       return;
     }
 
-    render(canvas, shape);
+    const requestId: () => number = render(canvas, shape);
+    window.addEventListener('beforeunload', () => window.cancelAnimationFrame(requestId()));
   }
 
   // Only required method of a React Component.
