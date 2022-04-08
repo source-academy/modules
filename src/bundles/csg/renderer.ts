@@ -312,9 +312,11 @@ export default function render(
     }
 
     // Trigger render once processing for the current frame is done
-    if (shouldZoom || shouldZoomToFit || shouldRotate || shouldPan) {
-      wrappedRenderer(wrappedRendererData);
-    }
+    //TODO investigate why render is still attempted after animation frames should've stopped being requested at all
+    //FIXME first render state bool
+    // if (shouldZoom || shouldZoomToFit || shouldRotate || shouldPan) {
+    wrappedRenderer(wrappedRendererData);
+    // }
 
     requestId = window.requestAnimationFrame(animationCallback);
   }
