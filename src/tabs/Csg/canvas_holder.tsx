@@ -39,6 +39,13 @@ export default class CanvasHolder extends React.Component<
     }
 
     const getCurrentRequestId: () => number = render(canvas, shape);
+    
+    // Clears regl context animation request when re-run.
+    canvas.addEventListener('webglcontextlost', () =>
+      window.cancelAnimationFrame(getCurrentRequestId())
+    );
+
+    // Clears regl context animation request if source academy tab is closed.
     window.addEventListener('beforeunload', () =>
       window.cancelAnimationFrame(getCurrentRequestId())
     );
