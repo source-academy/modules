@@ -105,26 +105,37 @@ function adjustCameraAngle(
   perspectiveCameraState.view = output.camera.view;
 }
 
-function doDynamicResize(
-  canvas: HTMLCanvasElement,
-  perspectiveCameraState: PerspectiveCameraState
-): void {
+function canvasWidthHeight(canvas: HTMLCanvasElement): number[] {
   const canvasBounds: DOMRect = canvas.getBoundingClientRect();
   const devicePixelRatio: number = window.devicePixelRatio;
 
   // Account for display scaling
   const width: number = canvasBounds.width * devicePixelRatio;
   const height: number = canvasBounds.height * devicePixelRatio;
+  return [width, height];
+}
 
-  canvas.width = width;
-  canvas.height = height;
+function doDynamicResize(
+  canvas: HTMLCanvasElement,
+  perspectiveCameraState: PerspectiveCameraState,
+  previous: number[]
+): boolean {
+  const widthHeight = canvasWidthHeight(canvas);
+  console.log(widthHeight);
+  canvas.width = widthHeight[0];
+  canvas.height = widthHeight[1];
 
   // Modify the projection, aspect ratio & viewport
   perspectiveCamera.setProjection(
     perspectiveCameraState,
     perspectiveCameraState,
-    new CameraViewportDimensions(width, height)
+    new CameraViewportDimensions(widthHeight[0], widthHeight[1])
   );
+
+  const diff: boolean =
+    widthHeight[0] !== previous[0] || widthHeight[1] !== previous[1];
+  previous = widthHeight;
+  return diff;
 }
 
 function doZoom(
@@ -302,10 +313,18 @@ export default function render(
 
   let requestId: number = 0;
 
+  let updateView: boolean = false;
+
+  let dimensions: number[] = canvasWidthHeight(canvas);
+
   // Create a callback function.
   // Request animation frame with it once; it will loop itself from there
   function animationCallback(_timestamp: DOMHighResTimeStamp) {
-    doDynamicResize(canvas, perspectiveCameraState);
+    const changed: boolean = doDynamicResize(
+      canvas,
+      perspectiveCameraState,
+      dimensions
+    );
 
     const shouldZoom: boolean = frameTracker.shouldZoom();
     const shouldZoomToFit: boolean = frameTracker.shouldZoomToFit();
@@ -349,9 +368,17 @@ export default function render(
     // Trigger render once processing for the current frame is done
     //TODO investigate why render is still attempted after animation frames should've stopped being requested at all
     //FIXME first render state bool
-    // if (shouldZoom || shouldZoomToFit || shouldRotate || shouldPan) {
-    wrappedRenderer(wrappedRendererData);
-    // }
+
+    updateView =
+      shouldZoom || shouldZoomToFit || shouldRotate || shouldPan || changed
+        ? true
+        : updateView;
+    console.log(updateView);
+
+    if (updateView) {
+      updateView = false;
+      wrappedRenderer(wrappedRendererData);
+    }
 
     requestId = window.requestAnimationFrame(animationCallback);
   }
