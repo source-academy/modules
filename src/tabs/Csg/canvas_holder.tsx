@@ -98,9 +98,9 @@ export default class CanvasHolder extends React.Component<
             // Prevent canvas from becoming too large when the sidebar is wide,
             // which would require lots of scrolling or never fit entirely on
             // screen.
-            // Tall but skinny sidebar maxes width at 75vh (eg portrait mobile
+            // Tall but skinny sidebar maxes width at 70vh (eg portrait mobile
             // view).
-            // Short but wide maxes width at 50vw (eg wide desktop view)
+            // Short but wide maxes width at 30vw (eg wide desktop view)
             maxWidth: 'max(70vh, 30vw)',
             // Force square aspect ratio, otherwise this will have no height
             aspectRatio: '1',

@@ -13,12 +13,12 @@ export type CanvasProps = {
 export type CanvasState = {};
 
 // React Component Props for a control hint
-export type ControlProps = {
+export type HintProps = {
   tooltipText: string;
   iconName: IconName;
 };
 
 // React Component State for a control hint
-export type ControlState = {
+export type HintState = {
   showTooltip: boolean;
 };

@@ -1,5 +1,5 @@
 /* [Imports] */
-import { cssColors, RGBA } from '@jscad/modeling/src/colors';
+import { RGBA } from '@jscad/modeling/src/colors';
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
@@ -221,15 +221,15 @@ export class FrameTracker {
     this.panY = 0;
   }
 
-  public isPointerHeld(): boolean {
-    return (
-      this.heldPointer !== MousePointer.NONE &&
-      this.heldPointer !== MousePointer.RIGHT
-    );
+  public ignorePointerMove(): boolean {
+    return [MousePointer.NONE, MousePointer.RIGHT].includes(this.heldPointer);
   }
 
-  public isPointerPan(): boolean {
-    return [MousePointer.MIDDLE].includes(this.heldPointer);
+  public isPointerPan(isShiftKey: boolean): boolean {
+    return (
+      this.heldPointer === MousePointer.MIDDLE ||
+      (this.heldPointer === MousePointer.LEFT && isShiftKey)
+    );
   }
 }
 
@@ -250,21 +250,3 @@ export function looseInstanceOf(object: Object, c: any): boolean {
     objectName === className
   );
 }
-
-//
-export const {
-  black,
-  navy,
-  green,
-  teal,
-  purple,
-  orange,
-  silver,
-  gray,
-  blue,
-  lime,
-  cyan,
-  pink,
-  yellow,
-  white,
-} = cssColors;

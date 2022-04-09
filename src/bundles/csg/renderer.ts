@@ -260,19 +260,26 @@ function registerEvents(
   });
 
   canvas.addEventListener('pointermove', (pointerEvent: PointerEvent) => {
-    if (!frameTracker.isPointerHeld()) return;
-
     const currentX = pointerEvent.pageX;
     const currentY = pointerEvent.pageY;
-    const differenceX = frameTracker.lastX - currentX;
-    const differenceY = frameTracker.lastY - currentY;
+    if (frameTracker.lastX < 0 || frameTracker.lastY < 0) {
+      // If never tracked before, let differences result in 0
+      frameTracker.lastX = currentX;
+      frameTracker.lastY = currentY;
+    }
 
-    if (!(frameTracker.isPointerPan() || pointerEvent.shiftKey)) {
-      frameTracker.rotateX -= differenceX;
-      frameTracker.rotateY += differenceY;
-    } else {
-      frameTracker.panX += differenceX;
-      frameTracker.panY -= differenceY;
+    if (!frameTracker.ignorePointerMove()) {
+      const differenceX = frameTracker.lastX - currentX;
+      const differenceY = frameTracker.lastY - currentY;
+
+      if (frameTracker.isPointerPan(pointerEvent.shiftKey)) {
+        frameTracker.panX += differenceX;
+        frameTracker.panY -= differenceY;
+      } else {
+        // Else default to rotate
+        frameTracker.rotateX -= differenceX;
+        frameTracker.rotateY += differenceY;
+      }
     }
 
     frameTracker.lastX = currentX;
