@@ -9,7 +9,11 @@
  */
 
 import { geometries, primitives } from '@jscad/modeling';
-import { colorize as _colorize, hexToRgb } from '@jscad/modeling/src/colors';
+import {
+  colorize as _colorize,
+  cssColors,
+  hexToRgb,
+} from '@jscad/modeling/src/colors';
 import { RGB } from '@jscad/modeling/src/colors/types';
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
@@ -31,25 +35,8 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import {
-  black as _black,
-  blue as _blue,
-  cyan as _cyan,
-  green as _green,
-  gray as _gray,
-  lime as _lime,
-  looseInstanceOf,
-  navy as _navy,
-  orange as _orange,
-  pink as _pink,
-  purple as _purple,
-  Shape,
-  silver as _silver,
-  teal as _teal,
-  white as _white,
-  yellow as _yellow,
-} from './utilities';
 import { BoundingBox, CoordinatesXYZ } from './types';
+import { looseInstanceOf, Shape } from './utilities';
 
 // =============================================================================
 // Colors
@@ -60,98 +47,98 @@ import { BoundingBox, CoordinatesXYZ } from './types';
  *
  * @category Colour
  */
-export const black: RGB = _black;
+export const black: RGB = cssColors.black;
 
 /**
  * Navy attribute for colorize function
  *
  * @category Colour
  */
-export const navy: RGB = _navy;
+export const navy: RGB = cssColors.navy;
 
 /**
  * Green attribute for colorize function
  *
  * @category Colour
  */
-export const green: RGB = _green;
+export const green: RGB = cssColors.green;
 
 /**
  * Teal attribute for colorize function
  *
  * @category Colour
  */
-export const teal: RGB = _teal;
+export const teal: RGB = cssColors.teal;
 
 /**
  * Purple attribute for colorize function
  *
  * @category Colour
  */
-export const purple: RGB = _purple;
+export const purple: RGB = cssColors.purple;
 
 /**
  * Orange attribute for colorize function
  *
  * @category Colour
  */
-export const orange: RGB = _orange;
+export const orange: RGB = cssColors.orange;
 
 /**
  * Silver attribute for colorize function
  *
  * @category Colour
  */
-export const silver: RGB = _silver;
+export const silver: RGB = cssColors.silver;
 
 /**
  * Grey attribute for colorize function
  *
  * @category Colour
  */
-export const gray: RGB = _gray;
+export const gray: RGB = cssColors.gray;
 
 /**
  * Blue attribute for colorize function
  *
  * @category Colour
  */
-export const blue: RGB = _blue;
+export const blue: RGB = cssColors.blue;
 
 /**
  * Lime attribute for colorize function
  *
  * @category Colour
  */
-export const lime: RGB = _lime;
+export const lime: RGB = cssColors.lime;
 
 /**
  * Cyan attribute for colorize function
  *
  * @category Colour
  */
-export const cyan: RGB = _cyan;
+export const cyan: RGB = cssColors.cyan;
 
 /**
  * Pink attribute for colorize function
  *
  * @category Colour
  */
-export const pink: RGB = _pink;
+export const pink: RGB = cssColors.pink;
 
 /**
  * Yellow attribute for colorize function
  *
  * @category Colour
  */
-export const yellow: RGB = _yellow;
+export const yellow: RGB = cssColors.yellow;
 
 /**
  * White attribute for colorize function
  *
  * @category Colour
  */
-export const white: RGB = _white;
+export const white: RGB = cssColors.white;
 
 // =============================================================================
 // Functions

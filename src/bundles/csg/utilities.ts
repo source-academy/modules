@@ -1,5 +1,5 @@
 /* [Imports] */
-import { cssColors, RGBA } from '@jscad/modeling/src/colors';
+import { RGBA } from '@jscad/modeling/src/colors';
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
@@ -250,21 +250,3 @@ export function looseInstanceOf(object: Object, c: any): boolean {
     objectName === className
   );
 }
-
-//
-export const {
-  black,
-  navy,
-  green,
-  teal,
-  purple,
-  orange,
-  silver,
-  gray,
-  blue,
-  lime,
-  cyan,
-  pink,
-  yellow,
-  white,
-} = cssColors;
