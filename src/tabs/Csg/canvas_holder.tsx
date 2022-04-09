@@ -67,7 +67,10 @@ export default class CanvasHolder extends React.Component<
       >
         <div
           style={{
+            display: 'flex',
             flexDirection: 'column',
+            alignContent: 'center',
+            justifyContent: 'space-evenly',
           }}
         >
           <HoverControlHint
