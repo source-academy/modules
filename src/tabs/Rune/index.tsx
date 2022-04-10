@@ -13,9 +13,22 @@ import HollusionCanvas from './hollusion_canvas';
 import WebGLCanvas from '../common/webgl_canvas';
 
 /**
- * tab for displaying runes
- * @author Hou Ruomu
+ * Canvas to display anaglyph and regular runes
+ * This separate canvas is required because analgyph runes
+ * and normal runes get drawn to the same buffer
+ * Instead we need to draw the runes onComponentMount
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+function RuneCanvas({ rune }: { rune: DrawnRune }) {
+  const canvasRef = React.createRef<HTMLCanvasElement>();
+
+  React.useEffect(() => {
+    if (canvasRef.current) {
+      rune.draw(canvasRef.current!);
+    }
+  }, [rune]);
+  return <WebGLCanvas ref={canvasRef} />;
+}
 
 export default {
   /**
@@ -59,15 +72,7 @@ export default {
       if (drawnRune.isHollusion) {
         return <HollusionCanvas rune={drawnRune as HollusionRune} />;
       }
-      return (
-        <WebGLCanvas
-          ref={(r) => {
-            if (r) {
-              (rune as DrawnRune).draw(r);
-            }
-          }}
-        />
-      );
+      return <RuneCanvas rune={drawnRune as DrawnRune} />;
     });
 
     return <MultiItemDisplay elements={runeCanvases} />;
