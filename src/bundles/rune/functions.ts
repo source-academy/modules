@@ -6,7 +6,13 @@
  * @module rune
  */
 import { mat4, vec3 } from 'gl-matrix';
-import { Rune, NormalRune, RuneAnimation, DrawnRune } from './rune';
+import {
+  Rune,
+  NormalRune,
+  RuneAnimation,
+  DrawnRune,
+  drawRunesToFrameBuffer,
+} from './rune';
 import {
   getSquare,
   getBlank,
@@ -672,7 +678,7 @@ export class AnaglyphRune extends DrawnRune {
     // left/right eye images are drawn into respective framebuffers
     const leftBuffer = initFramebufferObject(gl);
     const rightBuffer = initFramebufferObject(gl);
-    this.drawRunesToFrameBuffer(
+    drawRunesToFrameBuffer(
       gl,
       runes,
       leftCameraMatrix,
@@ -680,7 +686,7 @@ export class AnaglyphRune extends DrawnRune {
       leftBuffer.framebuffer,
       true
     );
-    this.drawRunesToFrameBuffer(
+    drawRunesToFrameBuffer(
       gl,
       runes,
       rightCameraMatrix,
@@ -795,7 +801,7 @@ export class HollusionRune extends DrawnRune {
         vec3.fromValues(0, 1, 0)
       );
 
-      this.drawRunesToFrameBuffer(
+      drawRunesToFrameBuffer(
         gl,
         runes,
         cameraMatrix,
