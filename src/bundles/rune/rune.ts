@@ -398,7 +398,10 @@ export class NormalRune extends DrawnRune {
   };
 }
 
-export class RuneAnimation extends glAnimation implements ReplResult {
+/** A function that takes in a timestamp and returns a Rune */
+export type RuneAnimation = (time: number) => Rune;
+
+export class AnimatedRune extends glAnimation implements ReplResult {
   constructor(
     duration: number,
     fps: number,
@@ -414,7 +417,7 @@ export class RuneAnimation extends glAnimation implements ReplResult {
     };
   }
 
-  public toReplString = () => '<RuneAnimation>';
+  public toReplString = () => '<AnimatedRune>';
 }
 
 export class RunesModuleState implements ModuleState {

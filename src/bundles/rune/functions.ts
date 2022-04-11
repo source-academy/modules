@@ -12,6 +12,7 @@ import {
   RuneAnimation,
   DrawnRune,
   drawRunesToFrameBuffer,
+  AnimatedRune,
 } from './rune';
 import {
   getSquare,
@@ -38,7 +39,7 @@ import {
 } from './runes_webgl';
 
 /** @hidden */
-export const drawnRunes: (DrawnRune | RuneAnimation)[] = [];
+export const drawnRunes: (DrawnRune | AnimatedRune)[] = [];
 
 // =============================================================================
 // Basic Runes
@@ -892,9 +893,9 @@ export function hollusion(rune: Rune): Rune {
 export function animate_rune(
   duration: number,
   fps: number,
-  func: (timestamp: number) => Rune
+  func: RuneAnimation
 ) {
-  const anim = new RuneAnimation(duration, fps, (n) => {
+  const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);
     throwIfNotRune('animate_rune', rune);
     return new NormalRune(rune);
@@ -913,9 +914,9 @@ export function animate_rune(
 export function animate_anaglyph(
   duration: number,
   fps: number,
-  func: (timestamp: number) => Rune
+  func: RuneAnimation
 ) {
-  const anim = new RuneAnimation(duration, fps, (n) => {
+  const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);
     throwIfNotRune('animate_anaglyph', rune);
     return new AnaglyphRune(rune);
