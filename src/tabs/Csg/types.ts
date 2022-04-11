@@ -1,13 +1,10 @@
 /* [Imports] */
 import { IconName } from '@blueprintjs/icons';
-import { DebuggerContext } from '../../typings/type_helpers';
 
 /* [Exports] */
 
 // React Component Props for the CSG canvas holder
-export type CanvasProps = {
-  debuggerContext: DebuggerContext;
-};
+export type CanvasProps = {};
 
 // React Component State for the CSG canvas holder
 export type CanvasState = {};
