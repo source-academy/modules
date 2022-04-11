@@ -1,5 +1,6 @@
 /* [Imports] */
 import { RGBA } from '@jscad/modeling/src/colors';
+import { clone, Geom3 } from '@jscad/modeling/src/geometries/geom3';
 import {
   cameras,
   controls as _controls,
@@ -78,6 +79,10 @@ export class MultiGridEntity implements MultiGridEntityType {
 export class Shape {
   constructor(public solid: Solid) {}
 
+  clone(): Shape {
+    return new Shape(clone(this.solid as Geom3));
+  }
+
   toReplString(): string {
     return '<Shape>';
   }
@@ -87,8 +92,8 @@ export class RenderGroup {
   constructor(public canvasNumber: number) {}
 
   render: boolean = false;
-  hasAxis: boolean = false;
-  hasGrid: boolean = false;
+  hasAxis: boolean = true;
+  hasGrid: boolean = true;
 
   shapes: Shape[] = [];
 
@@ -101,12 +106,17 @@ export class RenderGroupManager {
   canvasTracker: number = 1;
   renderGroups: RenderGroup[] = [];
 
+  enableAxis = true;
+  enableGrid = true;
+
   nextRenderGroup(): void {
     if (this.renderGroups.length >= 1) {
       let currentRenderGroup: RenderGroup = this.renderGroups.at(
         -1
       ) as RenderGroup;
       currentRenderGroup.render = true;
+      currentRenderGroup.hasAxis = this.enableAxis;
+      currentRenderGroup.hasGrid = this.enableGrid;
     }
 
     // Passes in canvasTracker as is, then increments it
@@ -273,3 +283,9 @@ export function hexToColor(hex: number): Color {
   return [red / 0xff, green / 0xff, blue / 0xff];
 }
 /* eslint-enable no-bitwise */
+
+export function clamp(value: number, lowest: number, highest: number): number {
+  value = Math.max(value, lowest);
+  value = Math.min(value, highest);
+  return value;
+}
