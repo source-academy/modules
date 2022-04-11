@@ -1,13 +1,15 @@
 /* [Imports] */
 import { RGB, RGBA } from '@jscad/modeling/src/colors';
-import { Geometry as Solid } from '@jscad/modeling/src/geometries/types';
+import { Geometry as _Geometry } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
   controls as _controls,
   drawCommands,
 } from '@jscad/regl-renderer';
 import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
+import { ModuleState } from 'js-slang';
 import { InitializationOptions } from 'regl';
+import { RenderGroupManager } from './utilities.js';
 
 /* [Main] */
 const orthographicCamera = cameras.orthographic;
@@ -131,6 +133,8 @@ export type ControlsState = Omit<
     thetaDelta: number;
     phiDelta: number;
   };
+
+export type Solid = _Geometry;
 
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.js
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.test.js
@@ -315,3 +319,7 @@ export namespace EntitiesFromSolids {
 export type Color = RGB;
 
 export type BoundingBox = [Numbers3, Numbers3];
+
+export type CsgModuleState = ModuleState & {
+  renderGroupManager: RenderGroupManager;
+};

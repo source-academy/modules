@@ -1,6 +1,5 @@
 /* [Imports] */
 import { RGBA } from '@jscad/modeling/src/colors';
-import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
   controls as _controls,
@@ -18,6 +17,7 @@ import {
   PerspectiveCamera,
   PerspectiveCameraState,
   PrepareRender,
+  Solid,
   WrappedRenderer,
 } from './types';
 
@@ -106,23 +106,48 @@ export namespace MultiGridEntity {
 }
 
 export class Shape {
-  public constructor(
-    public getSolid: () => Geom3,
+  constructor(public solid: Solid) {}
 
-    // Whether a Source program that results in this Shape should spawn the CSG
-    // tab
-    public spawnsTab: boolean = false,
-
-    // Whether to add the axis entity when rendering
-    public addAxis: boolean = false,
-    // Whether to add the multi grid entity when rendering
-    public addMultiGrid: boolean = false
-  ) {}
-
-  // Needs to be instance method for REPL
-  // eslint-disable-next-line class-methods-use-this
-  public toReplString(): string {
+  toReplString(): string {
     return '<Shape>';
+  }
+}
+
+export class RenderGroup {
+  constructor(public canvasNumber: number) {}
+
+  hasAxis: boolean = false;
+  hasGrid: boolean = false;
+
+  shapes: Shape[] = [];
+
+  toReplString(): string {
+    return `<Render #${this.canvasNumber}>`;
+  }
+}
+
+//TODO is module context per module API call / page refresh, or per run?
+// This only works properly if it's per run, or errors will make unrendered shapes spill over
+export class RenderGroupManager {
+  canvasTracker: number = 1;
+  renderGroups: RenderGroup[] = [];
+
+  nextRenderGroup(): void {
+    // Passes in canvasTracker as is, then increments it
+    this.renderGroups.push(new RenderGroup(this.canvasTracker++));
+  }
+
+  storeShape(shape: Shape): void {
+    if (this.renderGroups.length <= 0) this.nextRenderGroup();
+
+    let currentRenderGroup: RenderGroup = this.renderGroups.at(
+      -1
+    ) as RenderGroup;
+    currentRenderGroup.shapes.push(shape);
+  }
+
+  getRenderGroups(): RenderGroup[] {
+    return [...this.renderGroups];
   }
 }
 
