@@ -7,6 +7,7 @@ import {
   entitiesFromSolids as _entitiesFromSolids,
   prepareRender as _prepareRender,
 } from '@jscad/regl-renderer';
+import { ModuleState } from 'js-slang';
 import {
   Color,
   Controls,
@@ -126,8 +127,6 @@ export class RenderGroup {
   }
 }
 
-//TODO is module context per module API call / page refresh, or per run?
-// This only works properly if it's per run, or errors will make unrendered shapes spill over
 export class RenderGroupManager {
   canvasTracker: number = 1;
   renderGroups: RenderGroup[] = [];
@@ -148,6 +147,14 @@ export class RenderGroupManager {
 
   getRenderGroups(): RenderGroup[] {
     return [...this.renderGroups];
+  }
+}
+
+export class CsgModuleState implements ModuleState {
+  renderGroupManager: RenderGroupManager;
+
+  constructor() {
+    this.renderGroupManager = new RenderGroupManager();
   }
 }
 

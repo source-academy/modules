@@ -7,9 +7,7 @@ import {
   drawCommands,
 } from '@jscad/regl-renderer';
 import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
-import { ModuleState } from 'js-slang';
 import { InitializationOptions } from 'regl';
-import { RenderGroupManager } from './utilities.js';
 
 /* [Main] */
 const orthographicCamera = cameras.orthographic;
@@ -319,7 +317,3 @@ export namespace EntitiesFromSolids {
 export type Color = RGB;
 
 export type BoundingBox = [Numbers3, Numbers3];
-
-export type CsgModuleState = ModuleState & {
-  renderGroupManager: RenderGroupManager;
-};
