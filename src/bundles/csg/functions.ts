@@ -40,6 +40,124 @@ import { hexToColor, looseInstanceOf, Shape } from './utilities';
 
 /* [Exports] */
 
+// [Variables - Primitive shapes]
+
+/**
+ * Primitive Shape of a cube.
+ *
+ * @category Primitive
+ */
+export const cube: Shape = shapeSetOrigin(
+  generate_shape(primitives.cube({ size: 1 }))
+);
+
+/**
+ * Primitive Shape of a sphere.
+ *
+ * @category Primitive
+ */
+export const sphere: Shape = shapeSetOrigin(
+  generate_shape(primitives.sphere({ radius: 0.5 }))
+);
+
+/**
+ * Primitive Shape of a cylinder.
+ *
+ * @category Primitive
+ */
+export const cylinder: Shape = shapeSetOrigin(
+  generate_shape(primitives.cylinder({ radius: 0.5, height: 1 }))
+);
+
+/**
+ * Primitive Shape of a prism.
+ *
+ * @category Primitive
+ */
+export const prism: Shape = shapeSetOrigin(
+  generate_shape(extrudeLinear({ height: 1 }, primitives.triangle()))
+);
+
+/**
+ * Primitive Shape of an extruded star.
+ *
+ * @category Primitive
+ */
+export const star: Shape = shapeSetOrigin(
+  generate_shape(
+    extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))
+  )
+);
+
+const small = 10 ** -30;
+
+/**
+ * Primitive Shape of a square pyramid.
+ *
+ * @category Primitive
+ */
+export const pyramid: Shape = shapeSetOrigin(
+  generate_shape(
+    primitives.cylinderElliptic({
+      height: 1,
+      startRadius: [0.5, 0.5],
+      endRadius: [small, small],
+      segments: 4,
+    })
+  )
+);
+
+/**
+ * Primitive Shape of a cone.
+ *
+ * @category Primitive
+ */
+export const cone: Shape = shapeSetOrigin(
+  generate_shape(
+    primitives.cylinderElliptic({
+      height: 1,
+      startRadius: [0.5, 0.5],
+      endRadius: [small, small],
+    })
+  )
+);
+
+/**
+ * Primitive Shape of a torus.
+ *
+ * @category Primitive
+ */
+export const torus: Shape = shapeSetOrigin(
+  generate_shape(primitives.torus({ innerRadius: 0.125, outerRadius: 0.375 }))
+);
+
+/**
+ * Primitive Shape of a rounded cube.
+ *
+ * @category Primitive
+ */
+export const roundedCube: Shape = shapeSetOrigin(
+  generate_shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
+);
+
+/**
+ * Primitive Shape of a rounded cylinder.
+ *
+ * @category Primitive
+ */
+export const roundedCylinder: Shape = shapeSetOrigin(
+  generate_shape(primitives.roundedCylinder({ height: 1, radius: 0.5 }))
+);
+
+/**
+ * Primitive Shape of a geodesic sphere.
+ *
+ * @category Primitive
+ */
+export const geodesicSphere: Shape = shapeSetOrigin(
+  generate_shape(primitives.geodesicSphere({ radius: 0.5 }))
+);
+
 // [Variables - Colours]
 
 /**
@@ -771,129 +889,4 @@ export function render_grid(shape: Shape): Shape {
  * @param {Shape} shape - The Shape to render.
  * @returns {Shape} A copy of the specified Shape, marked for rendering.
  */
-export function render_axis_grid(shape: Shape): Shape {
-  if (!is_shape(shape)) {
-    throw Error(`render_axis_grid expects a Shape as argument.`);
-  }
-  return shape_clone(shape, true, true);
-}
-
-// =============================================================================
-// Primitives
-// =============================================================================
-
-/**
- * Primitive Shape of a cube.
- *
- * @category Primitive
- */
-export const cube: Shape = shapeSetOrigin(
-  generate_shape(primitives.cube({ size: 1 }))
-);
-
-/**
- * Primitive Shape of a sphere.
- *
- * @category Primitive
- */
-export const sphere: Shape = shapeSetOrigin(
-  generate_shape(primitives.sphere({ radius: 0.5 }))
-);
-
-/**
- * Primitive Shape of a cylinder.
- *
- * @category Primitive
- */
-export const cylinder: Shape = shapeSetOrigin(
-  generate_shape(primitives.cylinder({ radius: 0.5, height: 1 }))
-);
-
-/**
- * Primitive Shape of a prism.
- *
- * @category Primitive
- */
-export const prism: Shape = shapeSetOrigin(
-  generate_shape(extrudeLinear({ height: 1 }, primitives.triangle()))
-);
-
-/**
- * Primitive Shape of an extruded star.
- *
- * @category Primitive
- */
-export const star: Shape = shapeSetOrigin(
-  generate_shape(
-    extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))
-  )
-);
-
-const small = 10 ** -30;
-
-/**
- * Primitive Shape of a square pyramid.
- *
- * @category Primitive
- */
-export const pyramid: Shape = shapeSetOrigin(
-  generate_shape(
-    primitives.cylinderElliptic({
-      height: 1,
-      startRadius: [0.5, 0.5],
-      endRadius: [small, small],
-      segments: 4,
-    })
-  )
-);
-
-/**
- * Primitive Shape of a cone.
- *
- * @category Primitive
- */
-export const cone: Shape = shapeSetOrigin(
-  generate_shape(
-    primitives.cylinderElliptic({
-      height: 1,
-      startRadius: [0.5, 0.5],
-      endRadius: [small, small],
-    })
-  )
-);
-
-/**
- * Primitive Shape of a torus.
- *
- * @category Primitive
- */
-export const torus: Shape = shapeSetOrigin(
-  generate_shape(primitives.torus({ innerRadius: 0.125, outerRadius: 0.375 }))
-);
-
-/**
- * Primitive Shape of a rounded cube.
- *
- * @category Primitive
- */
-export const roundedCube: Shape = shapeSetOrigin(
-  generate_shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
-);
-
-/**
- * Primitive Shape of a rounded cylinder.
- *
- * @category Primitive
- */
-export const roundedCylinder: Shape = shapeSetOrigin(
-  generate_shape(primitives.roundedCylinder({ height: 1, radius: 0.5 }))
-);
-
-/**
- * Primitive Shape of a geodesic sphere.
- *
- * @category Primitive
- */
-export const geodesicSphere: Shape = shapeSetOrigin(
-  generate_shape(primitives.geodesicSphere({ radius: 0.5 }))
-);
+//
