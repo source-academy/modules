@@ -73,11 +73,6 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
     );
   };
 
-  private onSliderReleaseHandler = () =>
-    this.setState({
-      displayAngle: false,
-    });
-
   /**
    * Event handler for play button. Starts automated rotation by calling
    * `autoRotate()`.
@@ -155,23 +150,10 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
             value={this.state.rotationAngle}
             stepSize={1}
             labelValues={[]}
-            labelRenderer={
-              this.state.displayAngle
-                ? (val) => (
-                    <text
-                      style={{
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {val}
-                    </text>
-                  )
-                : false
-            }
+            labelRenderer={false}
             min={0}
             max={360}
             onChange={this.onSliderChangeHandler}
-            onRelease={this.onSliderReleaseHandler}
           />
           <Button
             style={{
