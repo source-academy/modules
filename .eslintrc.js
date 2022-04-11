@@ -75,7 +75,6 @@ module.exports = {
           rules configured by airbnb-typescript that have replaced their eslint
           equivalents, to make them match the behaviour in .eslintrc.base.js
         */
-        '@typescript-eslint/default-param-last': 1, // Was 2
         '@typescript-eslint/no-unused-vars': [
           1, // Was 2
           {
@@ -87,6 +86,19 @@ module.exports = {
             caughtErrorsIgnorePattern: '^_',
           },
         ],
+        '@typescript-eslint/no-use-before-define': [
+          1, // Was 2
+          {
+            functions: false,
+            // classes: true,
+            // variables: true,
+            // enums: true, // TS
+            // typedefs: true, // TS
+            // ignoreTypeReferences: true, // TS
+          },
+        ],
+        '@typescript-eslint/default-param-last': 1, // Was 2
+        '@typescript-eslint/lines-between-class-members': 0, // Was 2
 
         // [Error → Warn]
         /* NOTE
