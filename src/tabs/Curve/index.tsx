@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { CurveDrawn } from '../../bundles/curve/curves_webgl';
-import { CurveAnimation, CurveModuleState } from '../../bundles/curve/types';
+import { AnimatedCurve, CurveModuleState } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../common/multi_item_display';
 import { DebuggerContext } from '../../typings/type_helpers';
@@ -32,7 +32,7 @@ export default {
       const elemKey = i.toString();
 
       if (glAnimation.isAnimation(curve)) {
-        const anim = curve as CurveAnimation;
+        const anim = curve as AnimatedCurve;
         return anim.is3D ? (
           <Curve3DAnimationCanvas animation={anim} key={elemKey} />
         ) : (

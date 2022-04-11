@@ -1,8 +1,8 @@
 import React from 'react';
 import { HollusionRune } from '../../bundles/rune/functions';
 import {
+  AnimatedRune,
   DrawnRune,
-  RuneAnimation,
   RunesModuleState,
 } from '../../bundles/rune/rune';
 import { glAnimation } from '../../typings/anim_types';
@@ -51,7 +51,7 @@ export default {
 
       if (glAnimation.isAnimation(rune)) {
         return (
-          <AnimationCanvas animation={rune as RuneAnimation} key={elemKey} />
+          <AnimationCanvas animation={rune as AnimatedRune} key={elemKey} />
         );
       }
       const drawnRune = rune as DrawnRune;

@@ -421,5 +421,5 @@ export class AnimatedRune extends glAnimation implements ReplResult {
 }
 
 export class RunesModuleState implements ModuleState {
-  constructor(public drawnRunes: (DrawnRune | RuneAnimation)[] = []) {}
+  constructor(public drawnRunes: (DrawnRune | AnimatedRune)[] = []) {}
 }
