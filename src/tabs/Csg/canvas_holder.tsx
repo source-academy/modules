@@ -2,7 +2,6 @@
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import render from '../../bundles/csg/renderer';
-import { looseInstanceOf, Shape } from '../../bundles/csg/utilities';
 import HoverControlHint from './hover_control_hint';
 import { CanvasProps, CanvasState } from './types';
 
@@ -13,40 +12,15 @@ export default class CanvasHolder extends React.Component<
 > {
   private canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
 
-  // Called as part of the React lifecycle when this tab is created.
-  // See also issue #2094
+  // Called as part of the React lifecycle when this tab is created
   public componentDidMount() {
-    const canvas: HTMLCanvasElement | null = this.canvasReference.current;
+    let canvas: HTMLCanvasElement | null = this.canvasReference.current;
+    if (canvas === null) return;
 
-    if (canvas === null) {
-      return;
-    }
+    let getCurrentRequestId: () => number = render(canvas);
 
-    // Since this tab did spawn based on the conditions defined in toSpawn()
-    // below, the Source program should've resulted in a Shape
-    const potentialShape: any = this.props.debuggerContext?.result?.value;
-    if (!looseInstanceOf(potentialShape, Shape)) {
-      return;
-    }
-    // potentialShape is likely a Shape
-
-    let shape: Shape;
-    try {
-      shape = potentialShape as Shape;
-    } catch (error: any) {
-      console.error(error);
-      return;
-    }
-
-    const getCurrentRequestId: () => number = render(canvas, shape);
-    
-    // Clears regl context animation request when re-run.
+    // Stops old render loop upon re-run to prevent regl context lost errors
     canvas.addEventListener('webglcontextlost', () =>
-      window.cancelAnimationFrame(getCurrentRequestId())
-    );
-
-    // Clears regl context animation request if source academy tab is closed.
-    window.addEventListener('beforeunload', () =>
       window.cancelAnimationFrame(getCurrentRequestId())
     );
   }
@@ -67,9 +41,7 @@ export default class CanvasHolder extends React.Component<
       >
         <div
           style={{
-            display: 'flex',
             flexDirection: 'column',
-            alignContent: 'center',
             justifyContent: 'space-evenly',
           }}
         >

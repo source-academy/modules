@@ -1,8 +1,11 @@
 /* [Imports] */
 import vec3 from '@jscad/modeling/src/maths/vec3';
-import { measureBoundingBox } from '@jscad/modeling/src/measurements';
 import {
   BoundingBox,
+  measureBoundingBox,
+} from '@jscad/modeling/src/measurements';
+import { getModuleState } from './core.js';
+import {
   ControlsState,
   ControlsUpdate,
   ControlsZoomToFit,
@@ -10,6 +13,7 @@ import {
   GeometryEntity,
   PerspectiveCameraState,
   PrepareRender,
+  Solid,
   WrappedRenderer,
 } from './types';
 import {
@@ -24,6 +28,8 @@ import {
   perspectiveCameraStateDefaults,
   prepareDrawCommands,
   prepareRender,
+  RenderGroup,
+  RenderGroupManager,
   Shape,
 } from './utilities';
 
@@ -31,50 +37,34 @@ import {
 function makeWrappedRenderer(
   canvas: HTMLCanvasElement
 ): WrappedRenderer.Function {
-  const prepareRenderOptions: PrepareRender.AllOptions = {
+  let prepareRenderOptions: PrepareRender.AllOptions = {
     glOptions: { canvas },
   };
   return prepareRender(prepareRenderOptions);
 }
 
-function getSize(shape: Shape): number {
-  const shapeBoundingBox: BoundingBox = measureBoundingBox(shape.getSolid());
-  const scalingFactor: number = 1.2;
-  return Math.ceil(
-    scalingFactor *
-      Math.max(
-        Math.abs(shapeBoundingBox[0][0]),
-        Math.abs(shapeBoundingBox[0][1]),
-        Math.abs(shapeBoundingBox[0][2]),
-        Math.abs(shapeBoundingBox[1][0]),
-        Math.abs(shapeBoundingBox[1][1]),
-        Math.abs(shapeBoundingBox[1][2])
-      )
-  );
-}
-
 function addEntities(
-  shape: Shape,
+  renderGroup: RenderGroup,
+  solids: Solid[],
   geometryEntities: GeometryEntity[]
 ): Entity[] {
-  const allEntities: Entity[] = [...geometryEntities];
+  let allEntities: Entity[] = [...geometryEntities];
 
-  const size = getSize(shape);
+  let boundingBoxes: BoundingBox[] = measureBoundingBox(...solids);
+  let minMaxXys: number[][] = boundingBoxes.map((boundingBox: BoundingBox) => {
+    let minX = boundingBox[0][0];
+    let minY = boundingBox[0][1];
+    let maxX = boundingBox[1][0];
+    let maxY = boundingBox[1][1];
+    return [minX, minY, maxX, maxY];
+  });
+  let xys: number[] = minMaxXys.flat(1);
+  let distancesFromOrigin: number[] = xys.map(Math.abs);
+  let furthestDistance: number = Math.max(...distancesFromOrigin);
+  let size: number = Math.ceil(furthestDistance) + 5;
 
-  if (shape.addAxis) {
-    const axis: AxisEntity.Type = {
-      ...new AxisEntity.Class(),
-      size,
-    };
-    allEntities.push(axis);
-  }
-  if (shape.addMultiGrid) {
-    const grid: MultiGridEntity.Type = {
-      ...new MultiGridEntity.Class(),
-      size: [size * 2, size * 2],
-    };
-    allEntities.push(grid);
-  }
+  if (renderGroup.hasAxis) allEntities.push(new AxisEntity(size));
+  if (renderGroup.hasGrid) allEntities.push(new MultiGridEntity(size * 2));
 
   return allEntities;
 }
@@ -91,7 +81,7 @@ function adjustCameraAngle(
     return;
   }
 
-  const output: ControlsUpdate.Output = controls.update({
+  let output: ControlsUpdate.Output = controls.update({
     controls: controlsState,
     camera: perspectiveCameraState,
   });
@@ -109,12 +99,12 @@ function doDynamicResize(
   canvas: HTMLCanvasElement,
   perspectiveCameraState: PerspectiveCameraState
 ): void {
-  const canvasBounds: DOMRect = canvas.getBoundingClientRect();
-  const devicePixelRatio: number = window.devicePixelRatio;
+  let canvasBounds: DOMRect = canvas.getBoundingClientRect();
+  let devicePixelRatio: number = window.devicePixelRatio;
 
   // Account for display scaling
-  const width: number = canvasBounds.width * devicePixelRatio;
-  const height: number = canvasBounds.height * devicePixelRatio;
+  let width: number = canvasBounds.width * devicePixelRatio;
+  let height: number = canvasBounds.height * devicePixelRatio;
 
   canvas.width = width;
   canvas.height = height;
@@ -133,12 +123,12 @@ function doZoom(
   controlsState: ControlsState
 ): void {
   while (zoomTicks !== 0) {
-    const currentTick: number = Math.sign(zoomTicks);
+    let currentTick: number = Math.sign(zoomTicks);
     zoomTicks -= currentTick;
 
-    const scaleChange: number = currentTick * 0.1;
-    const potentialNewScale: number = controlsState.scale + scaleChange;
-    const potentialNewDistance: number =
+    let scaleChange: number = currentTick * 0.1;
+    let potentialNewScale: number = controlsState.scale + scaleChange;
+    let potentialNewDistance: number =
       vec3.distance(
         perspectiveCameraState.position,
         perspectiveCameraState.target
@@ -160,12 +150,12 @@ function doZoomToFit(
   perspectiveCameraState: PerspectiveCameraState,
   controlsState: ControlsState
 ): void {
-  const options: ControlsZoomToFit.Options = {
+  let options: ControlsZoomToFit.Options = {
     controls: controlsState,
     camera: perspectiveCameraState,
     entities: geometryEntities,
   };
-  const output: ControlsZoomToFit.Output = controls.zoomToFit(options);
+  let output: ControlsZoomToFit.Output = controls.zoomToFit(options);
 
   perspectiveCameraState.target = output.camera.target;
   controlsState.scale = output.controls.scale;
@@ -179,7 +169,7 @@ function doRotate(
   perspectiveCameraState: PerspectiveCameraState,
   controlsState: ControlsState
 ): void {
-  const output = controls.rotate(
+  let output = controls.rotate(
     {
       controls: controlsState,
       camera: perspectiveCameraState,
@@ -188,7 +178,7 @@ function doRotate(
     [rotateX, rotateY]
   );
 
-  const newControlsState = output.controls;
+  let newControlsState = output.controls;
   controlsState.thetaDelta = newControlsState.thetaDelta;
   controlsState.phiDelta = newControlsState.phiDelta;
 
@@ -201,7 +191,7 @@ function doPan(
   perspectiveCameraState: PerspectiveCameraState,
   controlsState: ControlsState
 ): void {
-  const output = controls.pan(
+  let output = controls.pan(
     {
       controls: controlsState,
       camera: perspectiveCameraState,
@@ -209,7 +199,7 @@ function doPan(
     [panX, panY * 0.75]
   );
 
-  const newCameraState = output.camera;
+  let newCameraState = output.camera;
   perspectiveCameraState.position = newCameraState.position;
   perspectiveCameraState.target = newCameraState.target;
 
@@ -249,8 +239,8 @@ function registerEvents(
   });
 
   canvas.addEventListener('pointermove', (pointerEvent: PointerEvent) => {
-    const currentX = pointerEvent.pageX;
-    const currentY = pointerEvent.pageY;
+    let currentX = pointerEvent.pageX;
+    let currentY = pointerEvent.pageY;
     if (frameTracker.lastX < 0 || frameTracker.lastY < 0) {
       // If never tracked before, let differences result in 0
       frameTracker.lastX = currentX;
@@ -258,8 +248,8 @@ function registerEvents(
     }
 
     if (!frameTracker.ignorePointerMove()) {
-      const differenceX = frameTracker.lastX - currentX;
-      const differenceY = frameTracker.lastY - currentY;
+      let differenceX = frameTracker.lastX - currentX;
+      let differenceY = frameTracker.lastY - currentY;
 
       if (frameTracker.isPointerPan(pointerEvent.shiftKey)) {
         frameTracker.panX += differenceX;
@@ -277,35 +267,42 @@ function registerEvents(
 }
 
 /* [Exports] */
-export default function render(
-  canvas: HTMLCanvasElement,
-  shape: Shape
-): () => number {
-  const wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
+export default function render(canvas: HTMLCanvasElement): () => number {
+  let renderGroupManager: RenderGroupManager = getModuleState()
+    .renderGroupManager;
+  if (!renderGroupManager.render()) return () => NaN;
+
+  let wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
 
   // Create our own state to modify based on the defaults
-  const perspectiveCameraState: PerspectiveCameraState = {
+  let perspectiveCameraState: PerspectiveCameraState = {
     ...perspectiveCameraStateDefaults,
     position: [1000, 1000, 1500],
   };
-  const controlsState: ControlsState = {
+  let controlsState: ControlsState = {
     ...controlsStateDefaults,
   };
 
-  const geometryEntities: GeometryEntity[] = entitiesFromSolids(
+  //TODO currently only puts the last render group on the single canvas
+  let renderGroups: RenderGroup[] = renderGroupManager.getGroupsToRender();
+  let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
+  let solids: Solid[] = lastRenderGroup.shapes.map(
+    (shape: Shape) => shape.solid
+  );
+  let geometryEntities: GeometryEntity[] = entitiesFromSolids(
     undefined,
-    shape.getSolid()
+    ...solids
   );
 
   // Data to pass to the wrapped renderer we made, below
-  const wrappedRendererData: WrappedRenderer.AllData = {
-    entities: addEntities(shape, geometryEntities),
+  let wrappedRendererData: WrappedRenderer.AllData = {
+    entities: addEntities(lastRenderGroup, solids, geometryEntities),
     drawCommands: prepareDrawCommands,
     camera: perspectiveCameraState,
   };
 
   // Custom object to track processing
-  const frameTracker: FrameTracker = new FrameTracker();
+  let frameTracker: FrameTracker = new FrameTracker();
 
   let requestId: number = 0;
 

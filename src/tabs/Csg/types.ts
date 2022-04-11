@@ -1,5 +1,5 @@
 /* [Imports] */
-import { IconName } from "@blueprintjs/icons";
+import { IconName } from '@blueprintjs/icons';
 import { DebuggerContext } from '../../typings/type_helpers';
 
 /* [Exports] */

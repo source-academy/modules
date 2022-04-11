@@ -1,7 +1,7 @@
 /* [Imports] */
 import { ModuleContext } from 'js-slang';
 import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
-import { initialise } from './core.js';
+import { initialize } from './core.js';
 import {
   area,
   beside_x,
@@ -65,14 +65,14 @@ import {
   white,
   yellow,
 } from './functions';
-import { CsgModuleState } from './utilities.js';
+import { CsgModuleState, getModuleContext } from './utilities.js';
 
 /* [Exports] */
 export default (moduleParams: ModuleParams, moduleContexts: ModuleContexts) => {
-  let potentialModuleContext: ModuleContext | undefined = moduleContexts.get(
-    'csg'
+  let potentialModuleContext: ModuleContext | null = getModuleContext(
+    moduleContexts
   );
-  if (potentialModuleContext !== undefined) {
+  if (potentialModuleContext !== null) {
     let moduleContext: ModuleContext = potentialModuleContext;
 
     let moduleState: CsgModuleState = new CsgModuleState();

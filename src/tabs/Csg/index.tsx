@@ -1,35 +1,33 @@
 /* [Imports] */
 import { IconNames } from '@blueprintjs/icons';
-import React from 'react';
-import { looseInstanceOf, Shape } from '../../bundles/csg/utilities';
-import { DebuggerContext } from '../../typings/type_helpers';
+import { ModuleContext, ModuleState } from 'js-slang';
+import React, { ReactElement } from 'react';
+import { CsgModuleState, getModuleContext } from '../../bundles/csg/utilities';
+import { DebuggerContext, ModuleContexts } from '../../typings/type_helpers';
 import CanvasHolder from './canvas_holder';
 
 /* [Main] */
 export default {
-  // Called by the frontend to decide whether to spawn the CSG tab.
-  // If the Source program results in a Shape, we use its spawnsTab property to
-  // decide
-  toSpawn(debuggerContext: DebuggerContext) {
-    const potentialShape: any = debuggerContext?.result?.value;
-    if (!looseInstanceOf(potentialShape, Shape)) {
-      return false;
-    }
-    // potentialShape is likely a Shape
+  // Called by the frontend to decide whether to spawn the CSG tab
+  toSpawn(debuggerContext: DebuggerContext): boolean {
+    let moduleContexts: ModuleContexts = debuggerContext.context.moduleContexts;
+    let potentialModuleContext: ModuleContext | null = getModuleContext(
+      moduleContexts
+    );
+    if (potentialModuleContext === null) return false;
+    let moduleContext: ModuleContext = potentialModuleContext;
 
-    let shape: Shape;
-    try {
-      shape = potentialShape as Shape;
-    } catch (error: any) {
-      console.error(error);
-      return false;
-    }
+    let potentialModuleState: ModuleState | undefined | null =
+      moduleContext.state;
+    if (!(potentialModuleState instanceof CsgModuleState)) return false;
+    let moduleState: CsgModuleState = potentialModuleState;
 
-    return shape.spawnsTab;
+    return moduleState.renderGroupManager.render();
   },
 
+  //TODO no debugger context, and just get from core
   // Called by the frontend to know what to render in the CSG tab
-  body: (debuggerContext: DebuggerContext) => (
+  body: (debuggerContext: DebuggerContext): ReactElement => (
     <CanvasHolder
       // debuggerContext passed as part of Component Props
       debuggerContext={debuggerContext}

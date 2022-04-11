@@ -10,10 +10,10 @@ import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/dra
 import { InitializationOptions } from 'regl';
 
 /* [Main] */
-const orthographicCamera = cameras.orthographic;
-const perspectiveCamera = cameras.perspective;
+let orthographicCamera = cameras.orthographic;
+let perspectiveCamera = cameras.perspective;
 
-const controls = _controls.orbit;
+let controls = _controls.orbit;
 
 /* [Exports] */
 
@@ -23,6 +23,7 @@ type Numbers2 = [number, number];
 type Numbers3 = [number, number, number];
 export type VectorXYZ = Numbers3;
 export type CoordinatesXYZ = Numbers3;
+export type Color = RGB;
 
 export type Mat4 = Float32Array;
 
@@ -181,6 +182,23 @@ export type GeometryEntity = Entity & {
   geometry: Geometry;
 };
 
+// @jscad\regl-renderer\src\rendering\commands\drawAxis\index.js
+// @jscad\regl-renderer\demo-web.js
+export type AxisEntityType = Entity & {
+  visuals: {
+    drawCmd: 'drawAxis';
+  };
+
+  xColor?: RGBA;
+  yColor?: RGBA;
+  zColor?: RGBA;
+  size?: number;
+  alwaysVisible?: boolean;
+
+  // Deprecated
+  lineWidth?: number;
+};
+
 // @jscad\regl-renderer\src\rendering\commands\drawGrid\index.js
 // @jscad\regl-renderer\demo-web.js
 export type GridEntity = Entity & {
@@ -196,6 +214,23 @@ export type GridEntity = Entity & {
 
   // Deprecated
   lineWidth?: number;
+};
+
+// @jscad\regl-renderer\src\rendering\commands\drawGrid\multi.js
+// @jscad\regl-renderer\demo-web.js
+// @jscad\web\src\ui\views\viewer.js
+// @jscad\regl-renderer\src\index.js
+export type MultiGridEntityType = Omit<GridEntity, 'ticks'> & {
+  // Entity#visuals gets stuffed into the nested DrawCommand as Props.
+  // The Props get passed on wholesale by makeDrawMultiGrid()'s returned lambda,
+  // where the following properties then get used
+  // (rather than while setting up the DrawCommands)
+  visuals: {
+    subColor?: RGBA; // As color
+  };
+
+  // First number used on the main grid, second number on sub grid
+  ticks?: [number, number];
 };
 
 // @jscad\regl-renderer\src\rendering\commands\drawLines\index.js
@@ -312,8 +347,3 @@ export namespace EntitiesFromSolids {
     smoothNormals?: boolean;
   };
 }
-
-// [Other]
-export type Color = RGB;
-
-export type BoundingBox = [Numbers3, Numbers3];

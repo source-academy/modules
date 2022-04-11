@@ -7,16 +7,16 @@ import { HintProps, HintState } from './types';
 
 // [CSS Values]
 // Source Academy
-const sideContentMarginBottom = '0.4rem';
+let sideContentMarginBottom = '0.4rem';
 
 // Manually extracted from BlueprintJS
-const defaultIconSize = 20;
-const iconGrey = '#a7b6c2';
+let defaultIconSize = 20;
+let iconGrey = '#a7b6c2';
 
-const tooltipPadding = '10px 12px';
-const tooltipBorderRadius = '3px';
-const tooltipTextDarkGrey = '#394b59';
-const tooltipBackgroundLightGrey = '#e1e8ed';
+let tooltipPadding = '10px 12px';
+let tooltipBorderRadius = '3px';
+let tooltipTextDarkGrey = '#394b59';
+let tooltipBackgroundLightGrey = '#e1e8ed';
 
 //TODO use true BlueprintJS Components by passing React down in index.tsx
 //TODO separate into ControlHint, with HoverControlHint & new ClickableControlHint

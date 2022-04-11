@@ -7,14 +7,15 @@ import {
   entitiesFromSolids as _entitiesFromSolids,
   prepareRender as _prepareRender,
 } from '@jscad/regl-renderer';
-import { ModuleState } from 'js-slang';
+import { ModuleContext, ModuleState } from 'js-slang';
+import { ModuleContexts } from '../../typings/type_helpers.js';
 import {
+  AxisEntityType,
   Color,
   Controls,
   ControlsState,
   EntitiesFromSolids,
-  Entity,
-  GridEntity,
+  MultiGridEntityType,
   PerspectiveCamera,
   PerspectiveCameraState,
   PrepareRender,
@@ -38,71 +39,39 @@ export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSol
 export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
 
 // [Custom]
-export namespace AxisEntity {
-  // @jscad\regl-renderer\src\rendering\commands\drawAxis\index.js
-  // @jscad\regl-renderer\demo-web.js
-  export type Type = Entity & {
-    visuals: {
-      drawCmd: 'drawAxis';
-    };
-
-    xColor?: RGBA;
-    yColor?: RGBA;
-    zColor?: RGBA;
-    size?: number;
-    alwaysVisible?: boolean;
-
-    // Deprecated
-    lineWidth?: number;
+export class AxisEntity implements AxisEntityType {
+  visuals: {
+    drawCmd: 'drawAxis';
+    show: boolean;
+  } = {
+    drawCmd: 'drawAxis',
+    show: true,
   };
 
-  export class Class implements Type {
-    public visuals: {
-      drawCmd: 'drawAxis';
-      show: boolean;
-    } = {
-      drawCmd: 'drawAxis',
-      show: true,
-    };
+  alwaysVisible: boolean = false;
 
-    public alwaysVisible: boolean = false;
-  }
+  constructor(public size?: number) {}
 }
 
-export namespace MultiGridEntity {
-  // @jscad\regl-renderer\src\rendering\commands\drawGrid\multi.js
-  // @jscad\regl-renderer\demo-web.js
-  // @jscad\web\src\ui\views\viewer.js
-  // @jscad\regl-renderer\src\index.js
-  export type Type = Omit<GridEntity, 'ticks'> & {
-    // Entity#visuals gets stuffed into the nested DrawCommand as Props.
-    // The Props get passed on wholesale by makeDrawMultiGrid()'s returned lambda,
-    // where the following properties then get used
-    // (rather than while setting up the DrawCommands)
-    visuals: {
-      subColor?: RGBA; // As color
-    };
-
-    // First number used on the main grid, second number on sub grid
-    ticks?: [number, number];
+export class MultiGridEntity implements MultiGridEntityType {
+  visuals: {
+    drawCmd: 'drawGrid';
+    show: boolean;
+    color?: RGBA;
+    subColor?: RGBA;
+  } = {
+    drawCmd: 'drawGrid',
+    show: true,
+    color: [0, 0, 0, 1],
+    subColor: [0.5, 0.5, 0.5, 1],
   };
 
-  export class Class implements Type {
-    public visuals: {
-      drawCmd: 'drawGrid';
-      show: boolean;
-      color?: RGBA;
-      subColor?: RGBA;
-    } = {
-      drawCmd: 'drawGrid',
-      show: true,
-      color: [0, 0, 0, 1],
-      subColor: [0.5, 0.5, 0.5, 1],
-    };
+  size: [number, number] = [0, 0];
 
-    public size: [number, number] = [0, 0];
+  ticks: [number, number] = [10, 1];
 
-    public ticks: [number, number] = [10, 1];
+  constructor(size: number) {
+    this.size = [size, size];
   }
 }
 
@@ -117,6 +86,7 @@ export class Shape {
 export class RenderGroup {
   constructor(public canvasNumber: number) {}
 
+  render: boolean = false;
   hasAxis: boolean = false;
   hasGrid: boolean = false;
 
@@ -132,6 +102,13 @@ export class RenderGroupManager {
   renderGroups: RenderGroup[] = [];
 
   nextRenderGroup(): void {
+    if (this.renderGroups.length >= 1) {
+      let currentRenderGroup: RenderGroup = this.renderGroups.at(
+        -1
+      ) as RenderGroup;
+      currentRenderGroup.render = true;
+    }
+
     // Passes in canvasTracker as is, then increments it
     this.renderGroups.push(new RenderGroup(this.canvasTracker++));
   }
@@ -145,8 +122,14 @@ export class RenderGroupManager {
     currentRenderGroup.shapes.push(shape);
   }
 
-  getRenderGroups(): RenderGroup[] {
-    return [...this.renderGroups];
+  render(): boolean {
+    return this.getGroupsToRender().length <= 0;
+  }
+
+  getGroupsToRender(): RenderGroup[] {
+    return this.renderGroups.filter(
+      (renderGroup: RenderGroup) => renderGroup.render
+    );
   }
 }
 
@@ -271,25 +254,21 @@ export class CameraViewportDimensions {
   public constructor(public width: number, public height: number) {}
 }
 
-// When the object's class and the class used for comparison are from different
-// contexts, they may appear identical, but are not recognised as such.
-// This check acts as a useful but unconfirmed instanceOf
-export function looseInstanceOf(object: Object, c: any): boolean {
-  const objectName: string | undefined = object?.constructor?.name;
-  const className: string | undefined = c?.name;
-  return (
-    objectName !== undefined &&
-    className !== undefined &&
-    objectName === className
+export function getModuleContext(
+  moduleContexts: ModuleContexts
+): ModuleContext | null {
+  let potentialModuleContext: ModuleContext | undefined = moduleContexts.get(
+    'csg'
   );
+  return potentialModuleContext ?? null;
 }
 
 /* eslint-disable no-bitwise */
 // Eg 0x00ffaa into [0, 1, 2/3]
 export function hexToColor(hex: number): Color {
-  const red = (hex & 0xff0000) >>> 16;
-  const green = (hex & 0x00ff00) >>> 8;
-  const blue = hex & 0x0000ff;
+  let red = (hex & 0xff0000) >>> 16;
+  let green = (hex & 0x00ff00) >>> 8;
+  let blue = hex & 0x0000ff;
 
   return [red / 0xff, green / 0xff, blue / 0xff];
 }
