@@ -10,11 +10,7 @@
 
 /* [Imports] */
 import { geometries, primitives } from '@jscad/modeling';
-import {
-  colorize as _colorize,
-  hexToRgb,
-} from '@jscad/modeling/src/colors';
-import { RGB } from '@jscad/modeling/src/colors/types';
+import { colorize } from '@jscad/modeling/src/colors';
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   measureArea,
@@ -35,8 +31,10 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import { BoundingBox, Color, CoordinatesXYZ } from './types';
-import { hexToColor, looseInstanceOf, Shape } from './utilities';
+import { hexToColor as hexStringToRgba } from '../rune/runes_ops.js';
+import { getModuleState } from './core.js';
+import { Color, CoordinatesXYZ, Solid } from './types';
+import { clamp, hexToColor, Shape } from './utilities';
 
 /* [Exports] */
 
@@ -272,19 +270,7 @@ export const yellow: Color = hexToColor(0xffff55);
  */
 export const white: Color = hexToColor(0xffffff);
 
-// =============================================================================
-// Functions
-// =============================================================================
-
-/**
- * Generates a new Shape object with the given geometry.
- *
- * @param {Geom3} geom
- * @returns {Shape} New shape based on input geometry
- */
-function generate_shape(geom: Geom3): Shape {
-  return new Shape(() => geom);
-}
+// [Functions]
 
 /**
  * Union of the two provided shapes to produce a new shape.
@@ -320,73 +306,6 @@ export function subtract(a: Shape, b: Shape): Shape {
 export function intersect(a: Shape, b: Shape): Shape {
   const newShape: Geom3 = _intersect(a.getSolid(), b.getSolid());
   return generate_shape(newShape);
-}
-
-/**
- * Colours the given shape with the colour provided.
- *
- * @param {Shape} shape - The shape to be coloured
- * @param {RGB} color - The colour to colour the shape with
- * @returns {Shape} Resulting Shape
- */
-export function colorize(shape: Shape, color: RGB): Shape {
-  try {
-    const newShape: Geom3 = _colorize(color, shape.getSolid());
-    return generate_shape(newShape);
-  } catch {
-    throw Error(`colorize expects a shape color`);
-  }
-}
-
-/**
- * Colours the given shape by specifying the red, green, blue (RGB) value,
- * ranging from 0.0 to 1.0.
- * For example RGB value of (1.0, 1.0, 1.0) is white while the RGB value of
- * (0.0, 0.0, 0.0) is black.
- *
- * @param {Shape} shape - The shape to be coloured
- * @param {number} r - Red value [0.0 - 1.0]
- * @param {number} g - Green value [0.0 - 1.0]
- * @param {number} b - Blue value [0.0 - 1.0]
- * @returns {Shape} Resulting Shape
- */
-export function colorize_rgb(
-  shape: Shape,
-  r: number,
-  g: number,
-  b: number
-): Shape {
-  if (r > 1.0 || r < 0) {
-    throw Error(`colorize_rgb expects red value to be between 0 and 1.0`);
-  }
-  if (g > 1.0 || g < 0) {
-    throw Error(`colorize_rgb expects green value to be between 0 and 1.0`);
-  }
-  if (b > 1.0 || b < 0) {
-    throw Error(`colorize_rgb expects blue value to be between 0 and 1.0`);
-  }
-  const newShape: Geom3 = _colorize([r, g, b], shape.getSolid());
-  return generate_shape(newShape);
-}
-
-/**
- * Colours the given shape by specifying the hex, in the form of #xxxxxx or
- * xxxxxx.
- * For example hex value of #FFFFFF is white while the hex value of #000000
- * is black.
- *
- * @param {Shape} shape - The shape to be coloured
- * @param {string} hex - The hex value to colour the shape with
- * @returns {Shape} Resulting Shape
- */
-export function colorize_hex(shape: Shape, hex: string): Shape {
-  if (hex.replace('#', '').length === 6) {
-    const newShape: Geom3 = _colorize(hexToRgb(hex), shape.getSolid());
-    return generate_shape(newShape);
-  }
-  throw Error(
-    `colorize_hex expects a hex value of the form "#000000" or "000000"`
-  );
 }
 
 /**
@@ -816,77 +735,149 @@ export function is_shape(shape: Shape): boolean {
 }
 
 /**
- * Clones the given shape, stating whether axis and grid needs to be rendered.
+ * Creates a clone of the specified Shape.
  *
- * @param {Shape} shape - The shape to be cloned
- * @param {boolean} axis - Whether axis needs to be rendered
- * @param {boolean} grid - Whether grid needs to be rendered
- * @returns {Shape} Cloned shape
+ * @param {Shape} shape - The Shape to be cloned.
+ * @returns {Shape} The cloned Shape.
  */
-function shape_clone(shape: Shape, axis: boolean, grid: boolean): Shape {
-  return new Shape(
-    () => geometries.geom3.clone(shape.getSolid()),
-    true,
-    axis,
-    grid
+export function clone(shape: Shape): Shape {
+  return shape.clone();
+}
+
+/**
+ * Stores a clone of the specified Shape for later rendering.
+ *
+ * @param {Shape} shape - The Shape to be stored.
+ */
+export function store(shape: Shape): void {
+  //TODO does it automatically error when not passed the right argument type?
+  getModuleState().renderGroupManager.storeShape(shape.clone());
+}
+
+/**
+ * Colours a clone of the specified Shape using the specified Color, then stores
+ * it for later rendering.
+ *
+ * @param {Shape} shape - The Shape to be coloured and stored.
+ * @param {Color} color - The Color to use.
+ */
+export function store_as_color(shape: Shape, color: Color): void {
+  try {
+    let coloredSolid: Solid = colorize(color, shape.solid);
+    getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
+  } catch {
+    throw new Error('store_as_color() expects a Shape and a Color.');
+  }
+}
+
+/**
+ * Colours a clone of the specified Shape using the specified RGB values, then
+ * stores it for later rendering.
+ *
+ * RGB values are clamped between 0 and 1.
+ *
+ * @param {Shape} shape - The Shape to be coloured and stored.
+ * @param {number} redComponent - The colour's red component.
+ * @param {number} greenComponent - The colour's green component.
+ * @param {number} blueComponent - The colour's blue component.
+ */
+export function store_as_rgb(
+  shape: Shape,
+  redComponent: number,
+  greenComponent: number,
+  blueComponent: number
+): void {
+  redComponent = clamp(redComponent, 0, 1);
+  greenComponent = clamp(greenComponent, 0, 1);
+  blueComponent = clamp(blueComponent, 0, 1);
+
+  let coloredSolid: Solid = colorize(
+    [redComponent, greenComponent, blueComponent],
+    shape.solid
   );
+  getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
 }
 
 /**
- * Returns a copy of the specified Shape that will get rendered in a tab,
- * if your Source program results in that Shape.
- * I.e., use this function as the last statement in your program to render the
- * specified shape.
+ * Colours a clone of the specified Shape using the specified hex colour code,
+ * then stores it for later rendering.
  *
- * @param {Shape} shape - The Shape to render.
- * @returns {Shape} A copy of the specified Shape, marked for rendering.
+ * Colour codes must be of the form "#XXXXXX" or "XXXXXX", where each X
+ * represents a hexadecimal number. Invalid colour codes default to black.
+ *
+ * @param {Shape} shape - The Shape to be coloured and stored.
+ * @param {string} hex - The hexadecimal colour code.
  */
-export function render(shape: Shape): Shape {
-  if (!is_shape(shape)) {
-    throw Error(`render expects a Shape as argument.`);
-  }
-  return shape_clone(shape, false, false);
+export function store_as_hex(shape: Shape, hex: string): void {
+  let color: Color = hexStringToRgba(hex).slice(0, 3) as Color;
+  let coloredSolid: Solid = colorize(color, shape.solid);
+  getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
 }
 
 /**
- * Returns a copy of the specified Shape that will get rendered in a tab with axis,
- * if your Source program results in that Shape.
- * I.e., use this function as the last statement in your program to render the
- * specified shape.
+ * Renders using any Shapes stored thus far, along with a grid and axis. The
+ * Shapes will then not be included in any subsequent renders.
  *
- * @param {Shape} shape - The Shape to render.
- * @returns {Shape} A copy of the specified Shape, marked for rendering.
+ * For convenience, this function optionally takes in a Shape. Passing in a
+ * Shape is equivalent to running store() on that Shape and then calling
+ * render_grid_axis().
+ *
+ * @param {Shape | null} shape - Optionally, a Shape to store() prior to
+ * rendering.
  */
-export function render_axis(shape: Shape): Shape {
-  if (!is_shape(shape)) {
-    throw Error(`render_axis expects a Shape as argument.`);
-  }
-  return shape_clone(shape, true, false);
+export function render_grid_axis(shape: Shape | null = null): void {
+  if (shape !== null) store(shape);
+
+  getModuleState().renderGroupManager.nextRenderGroup();
 }
 
 /**
- * Returns a copy of the specified Shape that will get rendered in a tab with grid,
- * if your Source program results in that Shape.
- * I.e., use this function as the last statement in your program to render the
- * specified shape.
+ * Renders using any Shapes stored thus far, along with a grid. The Shapes will
+ * then not be included in any subsequent renders.
  *
- * @param {Shape} shape - The Shape to render.
- * @returns {Shape} A copy of the specified Shape, marked for rendering.
+ * For convenience, this function optionally takes in a Shape. Passing in a
+ * Shape is equivalent to running store() on that Shape and then calling
+ * render_grid_axis().
+ *
+ * @param {Shape | null} shape - Optionally, a Shape to store() prior to
+ * rendering.
  */
-export function render_grid(shape: Shape): Shape {
-  if (!is_shape(shape)) {
-    throw Error(`render_grid expects a Shape as argument.`);
-  }
-  return shape_clone(shape, false, true);
+export function render_grid(shape: Shape | null = null): void {
+  if (shape !== null) store(shape);
+
+  getModuleState().renderGroupManager.nextRenderGroup(false);
 }
 
 /**
- * Returns a copy of the specified Shape that will get rendered in a tab with axis and
- * grid, if your Source program results in that Shape.
- * I.e., use this function as the last statement in your program to render the
- * specified shape.
+ * Renders using any Shapes stored thus far, along with an axis. The Shapes will
+ * then not be included in any subsequent renders.
  *
- * @param {Shape} shape - The Shape to render.
- * @returns {Shape} A copy of the specified Shape, marked for rendering.
+ * For convenience, this function optionally takes in a Shape. Passing in a
+ * Shape is equivalent to running store() on that Shape and then calling
+ * render_grid_axis().
+ *
+ * @param {Shape | null} shape - Optionally, a Shape to store() prior to
+ * rendering.
  */
-//
+export function render_axis(shape: Shape | null = null): void {
+  if (shape !== null) store(shape);
+
+  getModuleState().renderGroupManager.nextRenderGroup(undefined, false);
+}
+
+/**
+ * Renders using any Shapes stored thus far. The Shapes will then not be
+ * included in any subsequent renders.
+ *
+ * For convenience, this function optionally takes in a Shape. Passing in a
+ * Shape is equivalent to running store() on that Shape and then calling
+ * render_grid_axis().
+ *
+ * @param {Shape | null} shape - Optionally, a Shape to store() prior to
+ * rendering.
+ */
+export function render(shape: Shape | null = null): void {
+  if (shape !== null) store(shape);
+
+  getModuleState().renderGroupManager.nextRenderGroup(false, false);
+}

@@ -106,17 +106,17 @@ export class RenderGroupManager {
   canvasTracker: number = 1;
   renderGroups: RenderGroup[] = [];
 
-  enableAxis = true;
-  enableGrid = true;
-
-  nextRenderGroup(): void {
+  nextRenderGroup(
+    currentAxis: boolean = true,
+    currentGrid: boolean = true
+  ): void {
     if (this.renderGroups.length >= 1) {
       let currentRenderGroup: RenderGroup = this.renderGroups.at(
         -1
       ) as RenderGroup;
       currentRenderGroup.render = true;
-      currentRenderGroup.hasAxis = this.enableAxis;
-      currentRenderGroup.hasGrid = this.enableGrid;
+      currentRenderGroup.hasAxis = currentAxis;
+      currentRenderGroup.hasGrid = currentGrid;
     }
 
     // Passes in canvasTracker as is, then increments it

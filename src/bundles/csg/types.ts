@@ -1,6 +1,6 @@
 /* [Imports] */
 import { RGB, RGBA } from '@jscad/modeling/src/colors';
-import { Geometry as _Geometry } from '@jscad/modeling/src/geometries/types';
+import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
   controls as _controls,
@@ -133,7 +133,7 @@ export type ControlsState = Omit<
     phiDelta: number;
   };
 
-export type Solid = _Geometry;
+export type Solid = Geom3;
 
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.js
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.test.js
