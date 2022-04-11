@@ -9,12 +9,17 @@ import { Curve, CurveDrawn } from './curves_webgl';
 export type CurveTransformer = (c: Curve) => Curve;
 
 /**
+ * A function that takes in a timestamp and returns a Curve
+ */
+export type CurveAnimation = (t: number) => Curve;
+
+/**
  * A function that specifies additional rendering information when taking in
  * a CurveFunction and returns a ShapeDrawn based on its specifications.
  */
 export type RenderFunction = (func: Curve) => CurveDrawn;
 
-export class CurveAnimation extends glAnimation implements ReplResult {
+export class AnimatedCurve extends glAnimation implements ReplResult {
   constructor(
     duration: number,
     fps: number,
@@ -41,7 +46,7 @@ export class CurveAnimation extends glAnimation implements ReplResult {
 
   public angle: number;
 
-  public toReplString = () => '<CurveAnimation>';
+  public toReplString = () => '<AnimatedCurve>';
 }
 
 export class CurveModuleState implements ModuleState {
@@ -49,5 +54,5 @@ export class CurveModuleState implements ModuleState {
     this.drawnCurves = [];
   }
 
-  public drawnCurves: (CurveDrawn | CurveAnimation)[];
+  public drawnCurves: (CurveDrawn | AnimatedCurve)[];
 }

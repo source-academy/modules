@@ -37,10 +37,15 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Curve, CurveDrawn, generateCurve, Point } from './curves_webgl';
-import { CurveAnimation, CurveTransformer, RenderFunction } from './types';
+import {
+  AnimatedCurve,
+  CurveAnimation,
+  CurveTransformer,
+  RenderFunction,
+} from './types';
 
 /** @hidden */
-export const drawnCurves: (CurveDrawn | CurveAnimation)[] = [];
+export const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];
 
 function createDrawFunction(
   scaleMode: 'none' | 'stretch' | 'fit',
@@ -801,13 +806,13 @@ export function animate_curve(
   duration: number,
   fps: number,
   drawer: RenderFunction,
-  func: (timestamp: number) => Curve
-): CurveAnimation {
+  func: CurveAnimation
+): AnimatedCurve {
   if ((drawer as any).is3D) {
     throw new Error('Curve Animation cannot be used with 3D draw function!');
   }
 
-  const anim = new CurveAnimation(duration, fps, func, drawer, false);
+  const anim = new AnimatedCurve(duration, fps, func, drawer, false);
   drawnCurves.push(anim);
   return anim;
 }
@@ -824,13 +829,13 @@ export function animate_3D_curve(
   duration: number,
   fps: number,
   drawer: RenderFunction,
-  func: (timestamp: number) => Curve
-): CurveAnimation {
+  func: CurveAnimation
+): AnimatedCurve {
   if (!(drawer as any).is3D) {
     throw new Error('Curve 3D Animation cannot be used with 2D draw function!');
   }
 
-  const anim = new CurveAnimation(duration, fps, func, drawer, true);
+  const anim = new AnimatedCurve(duration, fps, func, drawer, true);
   drawnCurves.push(anim);
   return anim;
 }
