@@ -52,67 +52,25 @@ const defaultConfigurations = {
 };
 
 export default (args) => {
-  // Get desired modules to build
-  const definedModules = Array.from(Object.keys(modules));
-
   let moduleBundles;
+
   if (args.module !== undefined) {
-    if (typeof args.moduleBundles === 'string') {
-      moduleBundles = [args.module];
-    } else {
+    if (typeof args.module === 'string') {
       moduleBundles = args.module.split(',');
+    } else {
+      moduleBundles = args.module;
     }
 
-    const undefineds = moduleBundles.filter(
-      (val) => !definedModules.includes(val)
+    const unknowns = moduleBundles.filter(
+      (x) => !Object.keys(modules).includes(x)
     );
-    if (undefineds.length > 0) {
-      throw new Error(`Unknown modules: ${undefineds.join(', ')}`);
+
+    if (unknowns.length > 0) {
+      throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
     }
 
     delete args.module;
-  } else {
-    moduleBundles = definedModules;
   }
-
-  // Get desired tabs to build
-  const definedTabs = Array.from(
-    new Set(definedModules.flatMap((module) => modules[module].tabs))
-  );
-
-  let moduleTabs;
-
-  if (args.tab !== undefined) {
-    if (typeof args.tab === 'string') {
-      moduleTabs = args.tab.split(',');
-    } else {
-      moduleTabs = args.tab;
-    }
-
-    const undefineds = moduleTabs.filter((val) => !definedTabs.includes(val));
-
-    if (undefineds.length > 0) {
-      throw new Error(`Unknown tabs: ${undefineds.join(', ')}`);
-    }
-
-    delete args.tab;
-  } else {
-    moduleTabs = definedTabs;
-  }
-
-  const buildTabs = (name) => ({
-    ...defaultConfigurations,
-    input: `./src/tabs/${name}/index.tsx`,
-    output: {
-      file: `./build/tabs/${name}.js`,
-      format: 'iife',
-      globals: {
-        react: 'React',
-        'react-dom': 'ReactDom',
-      },
-    },
-    external: ['react', 'react-dom'],
-  });
 
   const buildBundle = (name) => ({
     ...defaultConfigurations,
@@ -122,11 +80,10 @@ export default (args) => {
       format: 'iife',
     },
   });
+
+  // eslint-disable-next-line no-console
   console.log(chalk.blueBright('Building bundles:'));
   moduleBundles.forEach((module) => console.log(chalk.green(module)));
 
-  console.log(chalk.blueBright('Building tabs:'));
-  moduleTabs.forEach((tab) => console.log(chalk.yellow(tab)));
-
-  return [...moduleBundles.map(buildBundle), ...moduleTabs.map(buildTabs)];
+  return moduleBundles.map(buildBundle);
 };
