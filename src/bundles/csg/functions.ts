@@ -8,10 +8,10 @@
  * @author Joel Leow
  */
 
+/* [Imports] */
 import { geometries, primitives } from '@jscad/modeling';
 import {
   colorize as _colorize,
-  cssColors,
   hexToRgb,
 } from '@jscad/modeling/src/colors';
 import { RGB } from '@jscad/modeling/src/colors/types';
@@ -35,110 +35,124 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import { BoundingBox, CoordinatesXYZ } from './types';
-import { looseInstanceOf, Shape } from './utilities';
+import { BoundingBox, Color, CoordinatesXYZ } from './types';
+import { hexToColor, looseInstanceOf, Shape } from './utilities';
 
-// =============================================================================
-// Colors
-// =============================================================================
+/* [Exports] */
+
+// [Variables - Colours]
 
 /**
- * Black attribute for colorize function
+ * A Color representing black (#000000).
  *
  * @category Colour
  */
-export const black: RGB = cssColors.black;
+export const black: Color = hexToColor(0x000000);
 
 /**
- * Navy attribute for colorize function
+ * A Color representing dark blue (#0000AA).
  *
  * @category Colour
  */
-export const navy: RGB = cssColors.navy;
+export const navy: Color = hexToColor(0x0000aa);
 
 /**
- * Green attribute for colorize function
+ * A Color representing green (#00AA00).
  *
  * @category Colour
  */
-export const green: RGB = cssColors.green;
+export const green: Color = hexToColor(0x00aa00);
 
 /**
- * Teal attribute for colorize function
+ * A Color representing dark cyan (#00AAAA).
  *
  * @category Colour
  */
-export const teal: RGB = cssColors.teal;
+export const teal: Color = hexToColor(0x00aaaa);
 
 /**
- * Purple attribute for colorize function
+ * A Color representing dark red (#AA0000).
  *
  * @category Colour
  */
-export const purple: RGB = cssColors.purple;
+export const crimson: Color = hexToColor(0xaa0000);
 
 /**
- * Orange attribute for colorize function
+ * A Color representing purple (#AA00AA).
  *
  * @category Colour
  */
-export const orange: RGB = cssColors.orange;
+export const purple: Color = hexToColor(0xaa00aa);
 
 /**
- * Silver attribute for colorize function
+ * A Color representing orange (#FFAA00).
  *
  * @category Colour
  */
-export const silver: RGB = cssColors.silver;
+export const orange: Color = hexToColor(0xffaa00);
 
 /**
- * Grey attribute for colorize function
+ * A Color representing light grey (#AAAAAA).
  *
  * @category Colour
  */
-export const gray: RGB = cssColors.gray;
+export const silver: Color = hexToColor(0xaaaaaa);
 
 /**
- * Blue attribute for colorize function
+ * A Color representing dark grey (#555555).
  *
  * @category Colour
  */
-export const blue: RGB = cssColors.blue;
+export const gray: Color = hexToColor(0x555555);
 
 /**
- * Lime attribute for colorize function
+ * A Color representing blue (#5555FF).
  *
  * @category Colour
  */
-export const lime: RGB = cssColors.lime;
+export const blue: Color = hexToColor(0x5555ff);
 
 /**
- * Cyan attribute for colorize function
+ * A Color representing light green (#55FF55).
  *
  * @category Colour
  */
-export const cyan: RGB = cssColors.cyan;
+export const lime: Color = hexToColor(0x55ff55);
 
 /**
- * Pink attribute for colorize function
+ * A Color representing cyan (#55FFFF).
  *
  * @category Colour
  */
-export const pink: RGB = cssColors.pink;
+export const cyan: Color = hexToColor(0x55ffff);
 
 /**
- * Yellow attribute for colorize function
+ * A Color representing light red (#FF5555).
  *
  * @category Colour
  */
-export const yellow: RGB = cssColors.yellow;
+export const rose: Color = hexToColor(0xff5555);
 
 /**
- * White attribute for colorize function
+ * A Color representing pink (#FF55FF).
  *
  * @category Colour
  */
-export const white: RGB = cssColors.white;
+export const pink: Color = hexToColor(0xff55ff);
+
+/**
+ * A Color representing yellow (#FFFF55).
+ *
+ * @category Colour
+ */
+export const yellow: Color = hexToColor(0xffff55);
+
+/**
+ * A Color representing white (#FFFFFF).
+ *
+ * @category Colour
+ */
+export const white: Color = hexToColor(0xffffff);
 
 // =============================================================================
 // Functions

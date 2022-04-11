@@ -1,5 +1,5 @@
 /* [Imports] */
-import { RGBA } from '@jscad/modeling/src/colors';
+import { RGB, RGBA } from '@jscad/modeling/src/colors';
 import { Geometry as Solid } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
@@ -311,5 +311,7 @@ export namespace EntitiesFromSolids {
   };
 }
 
-//
+// [Other]
+export type Color = RGB;
+
 export type BoundingBox = [Numbers3, Numbers3];
