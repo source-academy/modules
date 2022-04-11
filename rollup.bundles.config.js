@@ -70,6 +70,8 @@ export default (args) => {
     }
 
     delete args.module;
+  } else {
+    moduleBundles = Object.keys(modules);
   }
 
   const buildBundle = (name) => ({
