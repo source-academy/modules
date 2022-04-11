@@ -28,18 +28,20 @@ export default {
     const moduleContext = context.context?.moduleContexts.get('curve');
     const moduleState = moduleContext!.state as CurveModuleState;
 
-    const canvases = moduleState!.drawnCurves.map((curve) => {
+    const canvases = moduleState!.drawnCurves.map((curve, i) => {
+      const elemKey = i.toString();
+
       if (glAnimation.isAnimation(curve)) {
         const anim = curve as CurveAnimation;
         return anim.is3D ? (
-          <Curve3DAnimationCanvas animation={anim} />
+          <Curve3DAnimationCanvas animation={anim} key={elemKey} />
         ) : (
-          <AnimationCanvas animation={anim} />
+          <AnimationCanvas animation={anim} key={elemKey} />
         );
       }
       const curveDrawn = curve as CurveDrawn;
       return curveDrawn.is3D() ? (
-        <CurveCanvas3D curve={curveDrawn} />
+        <CurveCanvas3D curve={curveDrawn} key={elemKey} />
       ) : (
         <WebGLCanvas
           ref={(r) => {
@@ -48,6 +50,7 @@ export default {
               curveDrawn.redraw(0);
             }
           }}
+          key={elemKey}
         />
       );
     });

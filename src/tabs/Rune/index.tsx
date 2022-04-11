@@ -17,9 +17,9 @@ import WebGLCanvas from '../common/webgl_canvas';
  * This separate canvas is required because analgyph runes
  * and normal runes get drawn to the same buffer
  * Instead we need to draw the runes onComponentMount
- */
+ 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function RuneCanvas({ rune }: { rune: DrawnRune }) {
+export function RuneCanvas({ rune }: { rune: DrawnRune }) {
   const canvasRef = React.createRef<HTMLCanvasElement>();
 
   React.useEffect(() => {
@@ -29,6 +29,7 @@ function RuneCanvas({ rune }: { rune: DrawnRune }) {
   }, [rune]);
   return <WebGLCanvas ref={canvasRef} />;
 }
+*/
 
 export default {
   /**
@@ -64,15 +65,30 @@ export default {
 
     // Based on the toSpawn conditions, it should be safe to assume
     // that neither moduleContext or moduleState are null
-    const runeCanvases = moduleState.drawnRunes.map((rune) => {
+    const runeCanvases = moduleState.drawnRunes.map((rune, i) => {
+      const elemKey = i.toString();
+
       if (glAnimation.isAnimation(rune)) {
-        return <AnimationCanvas animation={rune as RuneAnimation} />;
+        return (
+          <AnimationCanvas animation={rune as RuneAnimation} key={elemKey} />
+        );
       }
       const drawnRune = rune as DrawnRune;
       if (drawnRune.isHollusion) {
-        return <HollusionCanvas rune={drawnRune as HollusionRune} />;
+        return (
+          <HollusionCanvas rune={drawnRune as HollusionRune} key={elemKey} />
+        );
       }
-      return <RuneCanvas rune={drawnRune as DrawnRune} />;
+      return (
+        <WebGLCanvas
+          ref={(r) => {
+            if (r) {
+              drawnRune.draw(r);
+            }
+          }}
+          key={elemKey}
+        />
+      );
     });
 
     return <MultiItemDisplay elements={runeCanvases} />;
