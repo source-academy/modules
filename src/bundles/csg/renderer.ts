@@ -314,12 +314,7 @@ export default function render(
   function animationCallback(_timestamp: DOMHighResTimeStamp) {
     doDynamicResize(canvas, perspectiveCameraState);
 
-    const shouldZoom: boolean = frameTracker.shouldZoom();
-    const shouldZoomToFit: boolean = frameTracker.shouldZoomToFit();
-    const shouldRotate: boolean = frameTracker.shouldRotate();
-    const shouldPan: boolean = frameTracker.shouldPan();
-
-    if (shouldZoom) {
+    if (frameTracker.shouldZoom()) {
       doZoom(
         frameTracker.getZoomTicks(),
         perspectiveCameraState,
@@ -328,12 +323,12 @@ export default function render(
       frameTracker.didZoom();
     }
 
-    if (shouldZoomToFit) {
+    if (frameTracker.shouldZoomToFit()) {
       doZoomToFit(geometryEntities, perspectiveCameraState, controlsState);
       frameTracker.didZoomToFit();
     }
 
-    if (shouldRotate) {
+    if (frameTracker.shouldRotate()) {
       doRotate(
         frameTracker.rotateX,
         frameTracker.rotateY,
@@ -343,7 +338,7 @@ export default function render(
       frameTracker.didRotate();
     }
 
-    if (shouldPan) {
+    if (frameTracker.shouldPan()) {
       doPan(
         frameTracker.panX,
         frameTracker.panY,
@@ -353,12 +348,7 @@ export default function render(
       frameTracker.didPan();
     }
 
-    // Trigger render once processing for the current frame is done
-    //TODO investigate why render is still attempted after animation frames should've stopped being requested at all
-    //FIXME first render state bool
-    // if (shouldZoom || shouldZoomToFit || shouldRotate || shouldPan) {
     wrappedRenderer(wrappedRendererData);
-    // }
 
     requestId = window.requestAnimationFrame(animationCallback);
   }
