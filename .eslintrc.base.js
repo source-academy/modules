@@ -318,7 +318,7 @@ module.exports = {
     'require-await': 1,
     'require-unicode-regexp': 1,
     'require-yield': 1, // Was 2
-    'sort-imports': 1,
+    // 'sort-imports': 0,
     // "sort-keys": 0,
     // "sort-vars": 0,
     'spaced-comment': [

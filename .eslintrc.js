@@ -8,7 +8,6 @@ module.exports = {
 
   rules: {
     'func-style': 0,
-    'sort-imports': 0,
     indent: [
       1,
       2, // Was "tabs"
