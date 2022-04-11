@@ -98,6 +98,15 @@ module.exports = {
           },
         ],
         '@typescript-eslint/default-param-last': 1, // Was 2
+        '@typescript-eslint/no-shadow': [
+          1, // Was 2
+          {
+            builtinGlobals: true,
+            // hoist: "functions",
+            // ignoreTypeValueShadow: true, // TS
+            // ignoreFunctionTypeParameterNameValueShadow: true, // TS
+          },
+        ],
         '@typescript-eslint/lines-between-class-members': 0, // Was 2
 
         // [Error → Warn]
