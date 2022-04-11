@@ -1,18 +1,30 @@
 /* [Imports] */
+import { RenderGroup } from './types.js';
 import { Shape } from './utilities.js';
 
 /* [Main] */
-let storedShapes: Shape[] = [];
+let renderGroups: RenderGroup[] = [];
 
 /* [Exports] */
-export function getStoredShapes(): Shape[] {
-  return [...storedShapes];
+//TODO make render groups unique to each run instead (track in module context),
+// to prevent shapes from spilling over to subsequent runs, eg from error midway
+export function nextRenderGroup(): void {
+  renderGroups.push([]);
 }
 
 export function storeShape(shape: Shape): void {
-  storedShapes.push(shape);
+  if (renderGroups.length <= 0) nextRenderGroup();
+
+  let currentRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
+  currentRenderGroup.push(shape);
 }
 
-export function clearStoredShapes(): void {
-  storedShapes = [];
+export function getRenderGroups(): RenderGroup[] {
+  return [...renderGroups];
+}
+
+export function useFirstRenderGroup(): RenderGroup | null {
+  if (renderGroups.length <= 0) return null;
+
+  return renderGroups.shift() as RenderGroup;
 }
