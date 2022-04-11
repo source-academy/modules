@@ -9,10 +9,10 @@
  */
 
 /* [Imports] */
-import { geometries, primitives } from '@jscad/modeling';
+import { primitives } from '@jscad/modeling';
 import { colorize } from '@jscad/modeling/src/colors';
-import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
+  BoundingBox,
   measureArea,
   measureBoundingBox,
   measureVolume,
@@ -46,7 +46,7 @@ import { clamp, hexToColor, Shape } from './utilities';
  * @category Primitive
  */
 export const cube: Shape = shapeSetOrigin(
-  generate_shape(primitives.cube({ size: 1 }))
+  new Shape(primitives.cube({ size: 1 }))
 );
 
 /**
@@ -55,7 +55,7 @@ export const cube: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const sphere: Shape = shapeSetOrigin(
-  generate_shape(primitives.sphere({ radius: 0.5 }))
+  new Shape(primitives.sphere({ radius: 0.5 }))
 );
 
 /**
@@ -64,7 +64,7 @@ export const sphere: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const cylinder: Shape = shapeSetOrigin(
-  generate_shape(primitives.cylinder({ radius: 0.5, height: 1 }))
+  new Shape(primitives.cylinder({ radius: 0.5, height: 1 }))
 );
 
 /**
@@ -73,7 +73,7 @@ export const cylinder: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const prism: Shape = shapeSetOrigin(
-  generate_shape(extrudeLinear({ height: 1 }, primitives.triangle()))
+  new Shape(extrudeLinear({ height: 1 }, primitives.triangle()))
 );
 
 /**
@@ -82,12 +82,11 @@ export const prism: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const star: Shape = shapeSetOrigin(
-  generate_shape(
-    extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))
-  )
+  new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 })))
 );
 
-const small = 10 ** -30;
+//TODO
+let small = 10 ** -30;
 
 /**
  * Primitive Shape of a square pyramid.
@@ -95,7 +94,7 @@ const small = 10 ** -30;
  * @category Primitive
  */
 export const pyramid: Shape = shapeSetOrigin(
-  generate_shape(
+  new Shape(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
@@ -111,7 +110,7 @@ export const pyramid: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const cone: Shape = shapeSetOrigin(
-  generate_shape(
+  new Shape(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
@@ -126,7 +125,7 @@ export const cone: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const torus: Shape = shapeSetOrigin(
-  generate_shape(primitives.torus({ innerRadius: 0.125, outerRadius: 0.375 }))
+  new Shape(primitives.torus({ innerRadius: 0.125, outerRadius: 0.375 }))
 );
 
 /**
@@ -135,7 +134,7 @@ export const torus: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const roundedCube: Shape = shapeSetOrigin(
-  generate_shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
+  new Shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
 );
 
 /**
@@ -144,7 +143,7 @@ export const roundedCube: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const roundedCylinder: Shape = shapeSetOrigin(
-  generate_shape(primitives.roundedCylinder({ height: 1, radius: 0.5 }))
+  new Shape(primitives.roundedCylinder({ height: 1, radius: 0.5 }))
 );
 
 /**
@@ -153,7 +152,7 @@ export const roundedCylinder: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const geodesicSphere: Shape = shapeSetOrigin(
-  generate_shape(primitives.geodesicSphere({ radius: 0.5 }))
+  new Shape(primitives.geodesicSphere({ radius: 0.5 }))
 );
 
 // [Variables - Colours]
@@ -280,8 +279,8 @@ export const white: Color = hexToColor(0xffffff);
  * @returns {Shape} The resulting unioned shape
  */
 export function union(a: Shape, b: Shape): Shape {
-  const newShape: Geom3 = _union(a.getSolid(), b.getSolid());
-  return generate_shape(newShape);
+  let newSolid: Solid = _union(a.solid, b.solid);
+  return new Shape(newSolid);
 }
 
 /**
@@ -292,8 +291,8 @@ export function union(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting subtracted shape
  */
 export function subtract(a: Shape, b: Shape): Shape {
-  const newShape: Geom3 = _subtract(a.getSolid(), b.getSolid());
-  return generate_shape(newShape);
+  let newSolid: Solid = _subtract(a.solid, b.solid);
+  return new Shape(newSolid);
 }
 
 /**
@@ -304,8 +303,8 @@ export function subtract(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting intersection shape
  */
 export function intersect(a: Shape, b: Shape): Shape {
-  const newShape: Geom3 = _intersect(a.getSolid(), b.getSolid());
-  return generate_shape(newShape);
+  let newSolid: Solid = _intersect(a.solid, b.solid);
+  return new Shape(newSolid);
 }
 
 /**
@@ -321,8 +320,8 @@ export function intersect(a: Shape, b: Shape): Shape {
  * @returns {Shape} Resulting Shape
  */
 export function scale(shape: Shape, x: number, y: number, z: number): Shape {
-  const newShape: Geom3 = _scale([x, y, z], shape.getSolid());
-  return generate_shape(newShape);
+  let newSolid: Solid = _scale([x, y, z], shape.solid);
+  return new Shape(newSolid);
 }
 
 /**
@@ -383,15 +382,14 @@ export function scale_z(shape: Shape, z: number): Shape {
  * coordinates
  */
 export function shape_center(shape: Shape): (axis: String) => number {
-  const bounds: BoundingBox = measureBoundingBox(shape.getSolid());
-  const centerCoords: CoordinatesXYZ = [
+  let bounds: BoundingBox = measureBoundingBox(shape.solid);
+  let centerCoords: CoordinatesXYZ = [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
     bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
     bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
   ];
   return (axis: String): number => {
-    const i: number =
-      axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
+    let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
     if (i === -1) {
       throw Error(`shape_center's returned function expects a proper axis.`);
     } else {
@@ -415,8 +413,8 @@ export function shape_set_center(
   y: number,
   z: number
 ): Shape {
-  const newShape: Geom3 = center({ relativeTo: [x, y, z] }, shape.getSolid());
-  return generate_shape(newShape);
+  let newSolid: Solid = center({ relativeTo: [x, y, z] }, shape.solid);
+  return new Shape(newSolid);
 }
 
 /**
@@ -426,7 +424,7 @@ export function shape_set_center(
  * @returns {number} The area of the shape
  */
 export function area(shape: Shape): number {
-  return measureArea(shape.getSolid());
+  return measureArea(shape.solid);
 }
 
 /**
@@ -436,9 +434,10 @@ export function area(shape: Shape): number {
  * @returns {number} The volume of the shape
  */
 export function volume(shape: Shape): number {
-  return measureVolume(shape.getSolid());
+  return measureVolume(shape.solid);
 }
 
+//TODO
 /**
  * Mirror / Flip the provided shape by the plane with normal direction vector
  * given by the x, y and z components.
@@ -450,8 +449,8 @@ export function volume(shape: Shape): number {
  * @returns {Shape} The mirrored / flipped shape
  */
 function shape_mirror(shape: Shape, x: number, y: number, z: number) {
-  const newShape: Geom3 = mirror({ normal: [x, y, z] }, shape.getSolid());
-  return generate_shape(newShape);
+  let newSolid: Solid = mirror({ normal: [x, y, z] }, shape.solid);
+  return new Shape(newSolid);
 }
 
 /**
@@ -500,8 +499,8 @@ export function translate(
   y: number,
   z: number
 ): Shape {
-  const newShape: Geom3 = _translate([x, y, z], shape.getSolid());
-  return generate_shape(newShape);
+  let newSolid: Solid = _translate([x, y, z], shape.solid);
+  return new Shape(newSolid);
 }
 
 /**
@@ -549,21 +548,21 @@ export function translate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The final shape
  */
 export function beside_x(a: Shape, b: Shape): Shape {
-  const aBounds: BoundingBox = measureBoundingBox(a.getSolid());
-  const newX: number = aBounds[1][0];
-  const newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
-  const newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
-  const newShape: Geom3 = _union(
-    a.getSolid(), // @ts-ignore
+  let aBounds: BoundingBox = measureBoundingBox(a.solid);
+  let newX: number = aBounds[1][0];
+  let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
+  let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
+  let newSolid: Solid = _union(
+    a.solid, // @ts-ignore
     align(
       {
         modes: ['min', 'center', 'center'],
         relativeTo: [newX, newY, newZ],
       },
-      b.getSolid()
+      b.solid
     )
   );
-  return generate_shape(newShape);
+  return new Shape(newSolid);
 }
 
 /**
@@ -575,21 +574,21 @@ export function beside_x(a: Shape, b: Shape): Shape {
  * @returns {Shape} The final shape
  */
 export function beside_y(a: Shape, b: Shape): Shape {
-  const aBounds: BoundingBox = measureBoundingBox(a.getSolid());
-  const newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
-  const newY: number = aBounds[1][1];
-  const newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
-  const newShape: Geom3 = _union(
-    a.getSolid(), // @ts-ignore
+  let aBounds: BoundingBox = measureBoundingBox(a.solid);
+  let newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
+  let newY: number = aBounds[1][1];
+  let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
+  let newSolid: Solid = _union(
+    a.solid, // @ts-ignore
     align(
       {
         modes: ['center', 'min', 'center'],
         relativeTo: [newX, newY, newZ],
       },
-      b.getSolid()
+      b.solid
     )
   );
-  return generate_shape(newShape);
+  return new Shape(newSolid);
 }
 
 /**
@@ -601,21 +600,21 @@ export function beside_y(a: Shape, b: Shape): Shape {
  * @returns {Shape} The final shape
  */
 export function beside_z(a: Shape, b: Shape): Shape {
-  const aBounds: BoundingBox = measureBoundingBox(a.getSolid());
-  const newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
-  const newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
-  const newZ: number = aBounds[1][2];
-  const newShape: Geom3 = _union(
-    a.getSolid(), // @ts-ignore
+  let aBounds: BoundingBox = measureBoundingBox(a.solid);
+  let newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
+  let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
+  let newZ: number = aBounds[1][2];
+  let newSolid: Solid = _union(
+    a.solid, // @ts-ignore
     align(
       {
         modes: ['center', 'center', 'min'],
         relativeTo: [newX, newY, newZ],
       },
-      b.getSolid()
+      b.solid
     )
   );
-  return generate_shape(newShape);
+  return new Shape(newSolid);
 }
 
 /**
@@ -637,11 +636,10 @@ export function beside_z(a: Shape, b: Shape): Shape {
 export function bounding_box(
   shape: Shape
 ): (axis: String, min: String) => number {
-  const bounds: BoundingBox = measureBoundingBox(shape.getSolid());
+  let bounds: BoundingBox = measureBoundingBox(shape.solid);
   return (axis: String, min: String): number => {
-    const i: number =
-      axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
-    const j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
+    let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
+    let j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
     if (i === -1 || j === -1) {
       throw Error(
         `bounding_box returned function expects a proper axis and min String.`
@@ -664,8 +662,8 @@ export function bounding_box(
  * @returns {Shape} The rotated shape
  */
 export function rotate(shape: Shape, x: number, y: number, z: number): Shape {
-  const newShape: Geom3 = _rotate([x, y, z], shape.getSolid());
-  return generate_shape(newShape);
+  let newSolid: Solid = _rotate([x, y, z], shape.solid);
+  return new Shape(newSolid);
 }
 
 /**
@@ -704,6 +702,7 @@ export function rotate_z(shape: Shape, z: number): Shape {
   return rotate(shape, 0, 0, z);
 }
 
+//TODO
 /**
  * Center the provided shape with the middle base of the shape at (0, 0, 0).
  *
@@ -711,27 +710,18 @@ export function rotate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  const newShape: Geom3 = align(
-    { modes: ['min', 'min', 'min'] },
-    shape.getSolid()
-  );
-  return generate_shape(newShape);
+  let newSolid: Solid = align({ modes: ['min', 'min', 'min'] }, shape.solid);
+  return new Shape(newSolid);
 }
 
 /**
- * Checks whether the given shape is a Shape.
+ * Checks if the specified argument is a Shape.
  *
- * @param {Shape} shape - The shape to be checked
- * @returns {boolean} Boolean on whether shape provided is a Shape
+ * @param {unknown} argument - The value to check.
+ * @returns {boolean} Whether the argument is a Shape.
  */
-export function is_shape(shape: Shape): boolean {
-  if (looseInstanceOf(shape, Shape)) {
-    if (!geometries.geom3.isA(shape.getSolid())) {
-      return false;
-    }
-    return true;
-  }
-  return false;
+export function is_shape(argument: unknown): boolean {
+  return argument instanceof Shape;
 }
 
 /**
