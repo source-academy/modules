@@ -3,12 +3,12 @@ import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import render from '../../bundles/csg/renderer';
 import HoverControlHint from './hover_control_hint';
-import { CanvasProps, CanvasState } from './types';
+import { CanvasHolderProps, CanvasHolderState } from './types';
 
 /* [Main] */
 export default class CanvasHolder extends React.Component<
-  CanvasProps,
-  CanvasState
+  CanvasHolderProps,
+  CanvasHolderState
 > {
   private canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
 
