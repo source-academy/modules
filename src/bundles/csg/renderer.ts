@@ -216,8 +216,9 @@ function registerEvents(
   canvas.addEventListener(
     'wheel',
     (wheelEvent: WheelEvent) => {
-      wheelEvent.preventDefault();
       frameTracker.changeZoomTicks(wheelEvent.deltaY);
+
+      wheelEvent.preventDefault();
     },
     { passive: false }
   );
@@ -226,14 +227,20 @@ function registerEvents(
     frameTracker.setZoomToFit();
   });
 
-  canvas.addEventListener('pointerdown', (pointerEvent: PointerEvent) => {
-    frameTracker.setHeldPointer(pointerEvent.button);
-    frameTracker.lastX = pointerEvent.pageX;
-    frameTracker.lastY = pointerEvent.pageY;
+  canvas.addEventListener(
+    'pointerdown',
+    (pointerEvent: PointerEvent) => {
+      frameTracker.setHeldPointer(pointerEvent.button);
+      frameTracker.lastX = pointerEvent.pageX;
+      frameTracker.lastY = pointerEvent.pageY;
 
-    // Detect drags even outside the canvas element's borders
-    canvas.setPointerCapture(pointerEvent.pointerId);
-  });
+      // Detect drags even outside the canvas element's borders
+      canvas.setPointerCapture(pointerEvent.pointerId);
+
+      pointerEvent.preventDefault();
+    },
+    { passive: false }
+  );
   canvas.addEventListener('pointerup', (pointerEvent: PointerEvent) => {
     frameTracker.unsetHeldPointer();
     frameTracker.unsetLastCoordinates();

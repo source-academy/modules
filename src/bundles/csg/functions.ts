@@ -739,7 +739,6 @@ export function clone(shape: Shape): Shape {
  * @param {Shape} shape - The Shape to be stored.
  */
 export function store(shape: Shape): void {
-  //TODO does it automatically error when not passed the right argument type?
   Core.getRenderGroupManager().storeShape(shape.clone());
 }
 
