@@ -4,7 +4,6 @@ import {
   BoundingBox,
   measureBoundingBox,
 } from '@jscad/modeling/src/measurements';
-import { getModuleState } from './core.js';
 import {
   ControlsState,
   ControlsUpdate,
@@ -21,6 +20,7 @@ import {
   CameraViewportDimensions,
   controls,
   controlsStateDefaults,
+  CsgModuleState,
   entitiesFromSolids,
   FrameTracker,
   MultiGridEntity,
@@ -29,7 +29,6 @@ import {
   prepareDrawCommands,
   prepareRender,
   RenderGroup,
-  RenderGroupManager,
   Shape,
 } from './utilities';
 
@@ -267,11 +266,10 @@ function registerEvents(
 }
 
 /* [Exports] */
-export default function render(canvas: HTMLCanvasElement): () => number {
-  let renderGroupManager: RenderGroupManager = getModuleState()
-    .renderGroupManager;
-  if (!renderGroupManager.render()) return () => NaN;
-
+export default function render(
+  canvas: HTMLCanvasElement,
+  moduleState: CsgModuleState
+): () => number {
   let wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
 
   // Create our own state to modify based on the defaults
@@ -284,7 +282,7 @@ export default function render(canvas: HTMLCanvasElement): () => number {
   };
 
   //TODO currently only puts the last render group on the single canvas
-  let renderGroups: RenderGroup[] = renderGroupManager.getGroupsToRender();
+  let renderGroups: RenderGroup[] = moduleState.renderGroupManager.getGroupsToRender();
   let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
   let solids: Solid[] = lastRenderGroup.shapes.map(
     (shape: Shape) => shape.solid

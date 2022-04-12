@@ -819,6 +819,7 @@ export function render_grid_axis(shape: Shape | null = null): void {
   if (shape !== null) store(shape);
 
   getModuleState().renderGroupManager.nextRenderGroup();
+  //TODO return current render group for repl text
 }
 
 /**

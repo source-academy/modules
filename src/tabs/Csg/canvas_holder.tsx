@@ -17,7 +17,10 @@ export default class CanvasHolder extends React.Component<
     let canvas: HTMLCanvasElement | null = this.canvasReference.current;
     if (canvas === null) return;
 
-    let getCurrentRequestId: () => number = render(canvas);
+    let getCurrentRequestId: () => number = render(
+      canvas,
+      this.props.moduleState
+    );
 
     // Stops old render loop upon re-run to prevent regl context lost errors
     canvas.addEventListener('webglcontextlost', () =>
@@ -42,7 +45,6 @@ export default class CanvasHolder extends React.Component<
         <div
           style={{
             flexDirection: 'column',
-            justifyContent: 'space-evenly',
           }}
         >
           <HoverControlHint
