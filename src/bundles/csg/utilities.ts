@@ -273,16 +273,19 @@ export function getModuleContext(
   return potentialModuleContext ?? null;
 }
 
-/* eslint-disable no-bitwise */
-// Eg 0x00ffaa into [0, 1, 2/3]
-export function hexToColor(hex: number): Color {
-  let red = (hex & 0xff0000) >>> 16;
-  let green = (hex & 0x00ff00) >>> 8;
-  let blue = hex & 0x0000ff;
+export function hexToColor(hex: string): Color {
+  let regex: RegExp = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
+  let potentialGroups: { [key: string]: string } | undefined = hex.match(regex)
+    ?.groups;
+  if (potentialGroups === undefined) return [0, 0, 0];
+  let groups: { [key: string]: string } = potentialGroups;
 
-  return [red / 0xff, green / 0xff, blue / 0xff];
+  return [
+    parseInt(groups.red, 16) / 0xff,
+    parseInt(groups.green, 16) / 0xff,
+    parseInt(groups.blue, 16) / 0xff,
+  ];
 }
-/* eslint-enable no-bitwise */
 
 export function clamp(value: number, lowest: number, highest: number): number {
   value = Math.max(value, lowest);

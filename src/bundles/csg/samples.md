@@ -60,7 +60,6 @@ import {
     store,
     store_as_color,
     store_as_rgb,
-    store_as_hex,
     render_grid_axis,
     render_grid,
     render_axis,

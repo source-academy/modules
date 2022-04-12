@@ -31,7 +31,6 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import { hexToColor as hexStringToRgba } from '../rune/runes_ops.js';
 import { getModuleState } from './core.js';
 import { Color, CoordinatesXYZ, Solid } from './types';
 import { clamp, hexToColor, Shape } from './utilities';
@@ -158,116 +157,116 @@ export const geodesicSphere: Shape = shapeSetOrigin(
 // [Variables - Colours]
 
 /**
- * A Color representing black (#000000).
+ * A hex colour code for black (#000000).
  *
  * @category Colour
  */
-export const black: Color = hexToColor(0x000000);
+export const black: string = '#000000';
 
 /**
- * A Color representing dark blue (#0000AA).
+ * A hex colour code for dark blue (#0000AA).
  *
  * @category Colour
  */
-export const navy: Color = hexToColor(0x0000aa);
+export const navy: string = '#0000AA';
 
 /**
- * A Color representing green (#00AA00).
+ * A hex colour code for green (#00AA00).
  *
  * @category Colour
  */
-export const green: Color = hexToColor(0x00aa00);
+export const green: string = '#00AA00';
 
 /**
- * A Color representing dark cyan (#00AAAA).
+ * A hex colour code for dark cyan (#00AAAA).
  *
  * @category Colour
  */
-export const teal: Color = hexToColor(0x00aaaa);
+export const teal: string = '#00AAAA';
 
 /**
- * A Color representing dark red (#AA0000).
+ * A hex colour code for dark red (#AA0000).
  *
  * @category Colour
  */
-export const crimson: Color = hexToColor(0xaa0000);
+export const crimson: string = '#AA0000';
 
 /**
- * A Color representing purple (#AA00AA).
+ * A hex colour code for purple (#AA00AA).
  *
  * @category Colour
  */
-export const purple: Color = hexToColor(0xaa00aa);
+export const purple: string = '#AA00AA';
 
 /**
- * A Color representing orange (#FFAA00).
+ * A hex colour code for orange (#FFAA00).
  *
  * @category Colour
  */
-export const orange: Color = hexToColor(0xffaa00);
+export const orange: string = '#FFAA00';
 
 /**
- * A Color representing light grey (#AAAAAA).
+ * A hex colour code for light grey (#AAAAAA).
  *
  * @category Colour
  */
-export const silver: Color = hexToColor(0xaaaaaa);
+export const silver: string = '#AAAAAA';
 
 /**
- * A Color representing dark grey (#555555).
+ * A hex colour code for dark grey (#555555).
  *
  * @category Colour
  */
-export const gray: Color = hexToColor(0x555555);
+export const gray: string = '#555555';
 
 /**
- * A Color representing blue (#5555FF).
+ * A hex colour code for blue (#5555FF).
  *
  * @category Colour
  */
-export const blue: Color = hexToColor(0x5555ff);
+export const blue: string = '#5555FF';
 
 /**
- * A Color representing light green (#55FF55).
+ * A hex colour code for light green (#55FF55).
  *
  * @category Colour
  */
-export const lime: Color = hexToColor(0x55ff55);
+export const lime: string = '#55FF55';
 
 /**
- * A Color representing cyan (#55FFFF).
+ * A hex colour code for cyan (#55FFFF).
  *
  * @category Colour
  */
-export const cyan: Color = hexToColor(0x55ffff);
+export const cyan: string = '#55FFFF';
 
 /**
- * A Color representing light red (#FF5555).
+ * A hex colour code for light red (#FF5555).
  *
  * @category Colour
  */
-export const rose: Color = hexToColor(0xff5555);
+export const rose: string = '#FF5555';
 
 /**
- * A Color representing pink (#FF55FF).
+ * A hex colour code for pink (#FF55FF).
  *
  * @category Colour
  */
-export const pink: Color = hexToColor(0xff55ff);
+export const pink: string = '#FF55FF';
 
 /**
- * A Color representing yellow (#FFFF55).
+ * A hex colour code for yellow (#FFFF55).
  *
  * @category Colour
  */
-export const yellow: Color = hexToColor(0xffff55);
+export const yellow: string = '#FFFF55';
 
 /**
- * A Color representing white (#FFFFFF).
+ * A hex colour code for white (#FFFFFF).
  *
  * @category Colour
  */
-export const white: Color = hexToColor(0xffffff);
+export const white: string = '#FFFFFF';
 
 // [Functions]
 
@@ -745,19 +744,22 @@ export function store(shape: Shape): void {
 }
 
 /**
- * Colours a clone of the specified Shape using the specified Color, then stores
- * it for later rendering.
+ * Colours a clone of the specified Shape using the specified hex colour code,
+ * then stores it for later rendering. You may use one of the default colour
+ * variables provided by the module, or you may specify your own custom colour
+ * code.
+ *
+ * Colour codes must be of the form "#XXXXXX" or "XXXXXX", where each X
+ * represents a non-case sensitive hexadecimal number. Invalid colour codes
+ * default to black.
  *
  * @param {Shape} shape - The Shape to be coloured and stored.
- * @param {Color} color - The Color to use.
+ * @param {string} hex - The colour code to use.
  */
-export function store_as_color(shape: Shape, color: Color): void {
-  try {
-    let coloredSolid: Solid = colorize(color, shape.solid);
-    getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
-  } catch (_error: unknown) {
-    throw new Error('store_as_color() expects a Shape and a Color.');
-  }
+export function store_as_color(shape: Shape, hex: string): void {
+  let color: Color = hexToColor(hex);
+  let coloredSolid: Solid = colorize(color, shape.solid);
+  getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
 }
 
 /**
@@ -785,22 +787,6 @@ export function store_as_rgb(
     [redComponent, greenComponent, blueComponent],
     shape.solid
   );
-  getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
-}
-
-/**
- * Colours a clone of the specified Shape using the specified hex colour code,
- * then stores it for later rendering.
- *
- * Colour codes must be of the form "#XXXXXX" or "XXXXXX", where each X
- * represents a hexadecimal number. Invalid colour codes default to black.
- *
- * @param {Shape} shape - The Shape to be coloured and stored.
- * @param {string} hex - The hexadecimal colour code.
- */
-export function store_as_hex(shape: Shape, hex: string): void {
-  let color: Color = hexStringToRgba(hex).slice(0, 3) as Color;
-  let coloredSolid: Solid = colorize(color, shape.solid);
   getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
 }
 
