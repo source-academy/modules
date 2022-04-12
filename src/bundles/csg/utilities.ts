@@ -137,7 +137,7 @@ export class RenderGroupManager {
     this.getCurrentRenderGroup().shapes.push(shape);
   }
 
-  render(): boolean {
+  shouldRender(): boolean {
     return this.getGroupsToRender().length > 0;
   }
 
@@ -252,7 +252,7 @@ export class FrameTracker {
     this.panY = 0;
   }
 
-  public ignorePointerMove(): boolean {
+  public shouldIgnorePointerMove(): boolean {
     return [MousePointer.NONE, MousePointer.RIGHT].includes(this.heldPointer);
   }
 

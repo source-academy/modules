@@ -250,7 +250,7 @@ function registerEvents(
       frameTracker.lastY = currentY;
     }
 
-    if (!frameTracker.ignorePointerMove()) {
+    if (!frameTracker.shouldIgnorePointerMove()) {
       let differenceX = frameTracker.lastX - currentX;
       let differenceY = frameTracker.lastY - currentY;
 

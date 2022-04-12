@@ -15,7 +15,7 @@ import CanvasHolder from './canvas_holder';
 export default {
   // Called by the frontend to decide whether to spawn the CSG tab
   toSpawn(_debuggerContext: DebuggerContext): boolean {
-    return Core.getRenderGroupManager().render();
+    return Core.getRenderGroupManager().shouldRender();
   },
 
   // Called by the frontend to know what to render in the CSG tab
