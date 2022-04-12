@@ -67,9 +67,9 @@ export class MultiGridEntity implements MultiGridEntityType {
     subColor: [0.5, 0.5, 0.5, 1],
   };
 
-  size: [number, number] = [0, 0];
-
   ticks: [number, number] = [10, 1];
+
+  size: [number, number];
 
   constructor(size: number) {
     this.size = [size, size];
