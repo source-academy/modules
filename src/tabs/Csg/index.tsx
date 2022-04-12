@@ -2,6 +2,7 @@
 import { IconNames } from '@blueprintjs/icons';
 import { ModuleContext, ModuleState } from 'js-slang';
 import React, { ReactElement } from 'react';
+import { Core } from '../../bundles/csg/core.js';
 import {
   CsgModuleState,
   getModuleContext,
@@ -9,13 +10,12 @@ import {
 } from '../../bundles/csg/utilities.js';
 import { DebuggerContext, ModuleContexts } from '../../typings/type_helpers';
 import CanvasHolder from './canvas_holder';
-import { TabCore } from './tab_core.js';
 
 /* [Main] */
 export default {
   // Called by the frontend to decide whether to spawn the CSG tab
   toSpawn(_debuggerContext: DebuggerContext): boolean {
-    return TabCore.getRenderGroupManager().render();
+    return Core.getRenderGroupManager().render();
   },
 
   // Called by the frontend to know what to render in the CSG tab
@@ -33,7 +33,7 @@ export default {
       return <div></div>;
     let moduleState = potentialModuleState as CsgModuleState;
 
-    TabCore.initialize(moduleState);
+    Core.initialize(moduleState);
     return <CanvasHolder moduleState={moduleState} />;
   },
 

@@ -1,7 +1,7 @@
 /* [Imports] */
 import { ModuleContext } from 'js-slang';
 import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
-import { BundleCore } from './bundle_core.js';
+import { Core } from './core.js';
 import {
   area,
   beside_x,
@@ -78,7 +78,7 @@ export default (moduleParams: ModuleParams, moduleContexts: ModuleContexts) => {
 
     let moduleState: CsgModuleState = new CsgModuleState();
     moduleContext.state = moduleState;
-    BundleCore.initialize(moduleState);
+    Core.initialize(moduleState);
   }
 
   return {
