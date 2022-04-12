@@ -31,7 +31,7 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import { getModuleState } from './core.js';
+import { BundleCore } from './bundle_core.js';
 import { Color, CoordinatesXYZ, Solid } from './types';
 import { clamp, hexToColor, Shape } from './utilities';
 
@@ -740,7 +740,7 @@ export function clone(shape: Shape): Shape {
  */
 export function store(shape: Shape): void {
   //TODO does it automatically error when not passed the right argument type?
-  getModuleState().renderGroupManager.storeShape(shape.clone());
+  BundleCore.getRenderGroupManager().storeShape(shape.clone());
 }
 
 /**
@@ -759,7 +759,7 @@ export function store(shape: Shape): void {
 export function store_as_color(shape: Shape, hex: string): void {
   let color: Color = hexToColor(hex);
   let coloredSolid: Solid = colorize(color, shape.solid);
-  getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
+  BundleCore.getRenderGroupManager().storeShape(new Shape(coloredSolid));
 }
 
 /**
@@ -787,7 +787,7 @@ export function store_as_rgb(
     [redComponent, greenComponent, blueComponent],
     shape.solid
   );
-  getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
+  BundleCore.getRenderGroupManager().storeShape(new Shape(coloredSolid));
 }
 
 /**
@@ -795,7 +795,7 @@ export function store_as_rgb(
  * Shapes will then not be included in any subsequent renders.
  */
 export function render_grid_axis(): void {
-  getModuleState().renderGroupManager.nextRenderGroup();
+  BundleCore.getRenderGroupManager().nextRenderGroup();
   //TODO return current render group for repl text
 }
 
@@ -804,7 +804,7 @@ export function render_grid_axis(): void {
  * then not be included in any subsequent renders.
  */
 export function render_grid(): void {
-  getModuleState().renderGroupManager.nextRenderGroup(false);
+  BundleCore.getRenderGroupManager().nextRenderGroup(false);
 }
 
 /**
@@ -812,7 +812,7 @@ export function render_grid(): void {
  * then not be included in any subsequent renders.
  */
 export function render_axis(): void {
-  getModuleState().renderGroupManager.nextRenderGroup(undefined, false);
+  BundleCore.getRenderGroupManager().nextRenderGroup(undefined, false);
 }
 
 /**
@@ -820,5 +820,5 @@ export function render_axis(): void {
  * included in any subsequent renders.
  */
 export function render(): void {
-  getModuleState().renderGroupManager.nextRenderGroup(false, false);
+  BundleCore.getRenderGroupManager().nextRenderGroup(false, false);
 }
