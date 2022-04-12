@@ -49,7 +49,9 @@ function addEntities(
 ): Entity[] {
   let allEntities: Entity[] = [...geometryEntities];
 
-  let boundingBoxes: BoundingBox[] = measureBoundingBox(...solids);
+  let boundingBoxes: BoundingBox[] = solids.map((solid: Solid) =>
+    measureBoundingBox(solid)
+  );
   let minMaxXys: number[][] = boundingBoxes.map((boundingBox: BoundingBox) => {
     let minX = boundingBox[0][0];
     let minY = boundingBox[0][1];
@@ -283,6 +285,7 @@ export default function render(
 
   //TODO currently only puts the last render group on the single canvas
   let renderGroups: RenderGroup[] = moduleState.renderGroupManager.getGroupsToRender();
+  console.log(renderGroups);
   let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
   let solids: Solid[] = lastRenderGroup.shapes.map(
     (shape: Shape) => shape.solid
