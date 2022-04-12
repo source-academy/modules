@@ -828,7 +828,7 @@ export function render_grid_axis(shape: Shape | null = null): void {
  *
  * For convenience, this function optionally takes in a Shape. Passing in a
  * Shape is equivalent to running store() on that Shape and then calling
- * render_grid_axis().
+ * render_grid().
  *
  * @param {Shape | null} shape - Optionally, a Shape to store() prior to
  * rendering.
@@ -845,7 +845,7 @@ export function render_grid(shape: Shape | null = null): void {
  *
  * For convenience, this function optionally takes in a Shape. Passing in a
  * Shape is equivalent to running store() on that Shape and then calling
- * render_grid_axis().
+ * render_axis().
  *
  * @param {Shape | null} shape - Optionally, a Shape to store() prior to
  * rendering.
@@ -862,7 +862,7 @@ export function render_axis(shape: Shape | null = null): void {
  *
  * For convenience, this function optionally takes in a Shape. Passing in a
  * Shape is equivalent to running store() on that Shape and then calling
- * render_grid_axis().
+ * render().
  *
  * @param {Shape | null} shape - Optionally, a Shape to store() prior to
  * rendering.
