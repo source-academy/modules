@@ -807,17 +807,8 @@ export function store_as_hex(shape: Shape, hex: string): void {
 /**
  * Renders using any Shapes stored thus far, along with a grid and axis. The
  * Shapes will then not be included in any subsequent renders.
- *
- * For convenience, this function optionally takes in a Shape. Passing in a
- * Shape is equivalent to running store() on that Shape and then calling
- * render_grid_axis().
- *
- * @param {Shape | null} shape - Optionally, a Shape to store() prior to
- * rendering.
  */
-export function render_grid_axis(shape: Shape | null = null): void {
-  if (shape !== null) store(shape);
-
+export function render_grid_axis(): void {
   getModuleState().renderGroupManager.nextRenderGroup();
   //TODO return current render group for repl text
 }
@@ -825,50 +816,23 @@ export function render_grid_axis(shape: Shape | null = null): void {
 /**
  * Renders using any Shapes stored thus far, along with a grid. The Shapes will
  * then not be included in any subsequent renders.
- *
- * For convenience, this function optionally takes in a Shape. Passing in a
- * Shape is equivalent to running store() on that Shape and then calling
- * render_grid().
- *
- * @param {Shape | null} shape - Optionally, a Shape to store() prior to
- * rendering.
  */
-export function render_grid(shape: Shape | null = null): void {
-  if (shape !== null) store(shape);
-
+export function render_grid(): void {
   getModuleState().renderGroupManager.nextRenderGroup(false);
 }
 
 /**
  * Renders using any Shapes stored thus far, along with an axis. The Shapes will
  * then not be included in any subsequent renders.
- *
- * For convenience, this function optionally takes in a Shape. Passing in a
- * Shape is equivalent to running store() on that Shape and then calling
- * render_axis().
- *
- * @param {Shape | null} shape - Optionally, a Shape to store() prior to
- * rendering.
  */
-export function render_axis(shape: Shape | null = null): void {
-  if (shape !== null) store(shape);
-
+export function render_axis(): void {
   getModuleState().renderGroupManager.nextRenderGroup(undefined, false);
 }
 
 /**
  * Renders using any Shapes stored thus far. The Shapes will then not be
  * included in any subsequent renders.
- *
- * For convenience, this function optionally takes in a Shape. Passing in a
- * Shape is equivalent to running store() on that Shape and then calling
- * render().
- *
- * @param {Shape | null} shape - Optionally, a Shape to store() prior to
- * rendering.
  */
-export function render(shape: Shape | null = null): void {
-  if (shape !== null) store(shape);
-
+export function render(): void {
   getModuleState().renderGroupManager.nextRenderGroup(false, false);
 }
