@@ -287,7 +287,6 @@ export default function render(
 
   //TODO currently only puts the last render group on the single canvas
   let renderGroups: RenderGroup[] = moduleState.renderGroupManager.getGroupsToRender();
-  console.log(renderGroups);
   let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
   let solids: Solid[] = lastRenderGroup.shapes.map(
     (shape: Shape) => shape.solid
