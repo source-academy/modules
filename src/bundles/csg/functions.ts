@@ -755,7 +755,7 @@ export function store_as_color(shape: Shape, color: Color): void {
   try {
     let coloredSolid: Solid = colorize(color, shape.solid);
     getModuleState().renderGroupManager.storeShape(new Shape(coloredSolid));
-  } catch {
+  } catch (_error: unknown) {
     throw new Error('store_as_color() expects a Shape and a Color.');
   }
 }
