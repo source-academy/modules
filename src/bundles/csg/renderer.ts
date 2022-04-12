@@ -63,6 +63,8 @@ function addEntities(
   let distancesFromOrigin: number[] = xys.map(Math.abs);
   let furthestDistance: number = Math.max(...distancesFromOrigin);
   let size: number = Math.ceil(furthestDistance) + 5;
+  // Grid is aligned to corner, set to have thicker line every 10 units
+  size = Math.ceil(size / 10) * 10;
 
   if (renderGroup.hasAxis) allEntities.push(new AxisEntity(size));
   if (renderGroup.hasGrid) allEntities.push(new MultiGridEntity(size * 2));
