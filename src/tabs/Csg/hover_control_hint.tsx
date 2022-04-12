@@ -13,6 +13,9 @@ let sideContentMarginBottom = '0.4rem';
 let defaultIconSize = 20;
 let iconGrey = '#a7b6c2';
 
+let tabButtonWidth = '40px';
+let tabButtonMargin = '20px';
+
 let tooltipPadding = '10px 12px';
 let tooltipBorderRadius = '3px';
 let tooltipTextDarkGrey = '#394b59';
@@ -36,7 +39,13 @@ export default class HoverControlHint extends React.Component<
     return (
       <div
         style={{
-          margin: `calc(${sideContentMarginBottom} * 1.5)`,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+
+          height: tabButtonWidth,
+
+          margin: `${tabButtonMargin} calc(${sideContentMarginBottom} * 2)`,
         }}
       >
         <Icon
@@ -50,6 +59,7 @@ export default class HoverControlHint extends React.Component<
           style={{
             display: this.state.showTooltip ? 'inline' : 'none',
             position: 'absolute',
+            left: `${defaultIconSize * 3}px`,
             zIndex: 1,
 
             padding: tooltipPadding,
