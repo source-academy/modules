@@ -133,7 +133,7 @@ export class RenderGroupManager {
   }
 
   render(): boolean {
-    return this.getGroupsToRender().length <= 0;
+    return this.getGroupsToRender().length > 0;
   }
 
   getGroupsToRender(): RenderGroup[] {
@@ -288,4 +288,17 @@ export function clamp(value: number, lowest: number, highest: number): number {
   value = Math.max(value, lowest);
   value = Math.min(value, highest);
   return value;
+}
+
+// When the object's class and the class used for comparison are from different
+// contexts, they may appear identical, but are not recognised as such.
+// This check acts as a useful yet not foolproof instanceof
+export function looseInstanceof(object: Object, c: any): boolean {
+  const objectName: string | undefined = object?.constructor?.name;
+  const className: string | undefined = c?.name;
+  return (
+    objectName !== undefined &&
+    className !== undefined &&
+    objectName === className
+  );
 }
