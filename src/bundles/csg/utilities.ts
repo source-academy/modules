@@ -103,33 +103,38 @@ export class RenderGroup {
 }
 
 export class RenderGroupManager {
-  canvasTracker: number = 1;
-  renderGroups: RenderGroup[] = [];
+  private canvasTracker: number = 1;
+  private renderGroups: RenderGroup[] = [];
 
-  nextRenderGroup(
-    currentAxis: boolean = true,
-    currentGrid: boolean = true
-  ): void {
-    if (this.renderGroups.length >= 1) {
-      let currentRenderGroup: RenderGroup = this.renderGroups.at(
-        -1
-      ) as RenderGroup;
-      currentRenderGroup.render = true;
-      currentRenderGroup.hasAxis = currentAxis;
-      currentRenderGroup.hasGrid = currentGrid;
-    }
+  constructor() {
+    this.addRenderGroup();
+  }
 
+  private addRenderGroup(): void {
     // Passes in canvasTracker as is, then increments it
     this.renderGroups.push(new RenderGroup(this.canvasTracker++));
   }
 
-  storeShape(shape: Shape): void {
-    if (this.renderGroups.length <= 0) this.nextRenderGroup();
+  private getCurrentRenderGroup(): RenderGroup {
+    return this.renderGroups.at(-1) as RenderGroup;
+  }
 
-    let currentRenderGroup: RenderGroup = this.renderGroups.at(
-      -1
-    ) as RenderGroup;
-    currentRenderGroup.shapes.push(shape);
+  nextRenderGroup(
+    currentAxis: boolean = true,
+    currentGrid: boolean = true
+  ): RenderGroup {
+    let previousRenderGroup: RenderGroup = this.getCurrentRenderGroup();
+    previousRenderGroup.render = true;
+    previousRenderGroup.hasAxis = currentAxis;
+    previousRenderGroup.hasGrid = currentGrid;
+
+    this.addRenderGroup();
+
+    return previousRenderGroup;
+  }
+
+  storeShape(shape: Shape): void {
+    this.getCurrentRenderGroup().shapes.push(shape);
   }
 
   render(): boolean {

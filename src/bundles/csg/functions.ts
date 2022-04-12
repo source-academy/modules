@@ -33,7 +33,7 @@ import {
 } from '@jscad/modeling/src/operations/transforms';
 import { Core } from './core.js';
 import { Color, CoordinatesXYZ, Solid } from './types';
-import { clamp, hexToColor, Shape } from './utilities';
+import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
 
 /* [Exports] */
 
@@ -794,31 +794,31 @@ export function store_as_rgb(
  * Renders using any Shapes stored thus far, along with a grid and axis. The
  * Shapes will then not be included in any subsequent renders.
  */
-export function render_grid_axis(): void {
-  Core.getRenderGroupManager().nextRenderGroup();
-  //TODO return current render group for repl text
+export function render_grid_axis(): RenderGroup {
+  // Render group is returned for REPL text only; do not document
+  return Core.getRenderGroupManager().nextRenderGroup();
 }
 
 /**
  * Renders using any Shapes stored thus far, along with a grid. The Shapes will
  * then not be included in any subsequent renders.
  */
-export function render_grid(): void {
-  Core.getRenderGroupManager().nextRenderGroup(false);
+export function render_grid(): RenderGroup {
+  return Core.getRenderGroupManager().nextRenderGroup(false);
 }
 
 /**
  * Renders using any Shapes stored thus far, along with an axis. The Shapes will
  * then not be included in any subsequent renders.
  */
-export function render_axis(): void {
-  Core.getRenderGroupManager().nextRenderGroup(undefined, false);
+export function render_axis(): RenderGroup {
+  return Core.getRenderGroupManager().nextRenderGroup(undefined, false);
 }
 
 /**
  * Renders using any Shapes stored thus far. The Shapes will then not be
  * included in any subsequent renders.
  */
-export function render(): void {
-  Core.getRenderGroupManager().nextRenderGroup(false, false);
+export function render(): RenderGroup {
+  return Core.getRenderGroupManager().nextRenderGroup(false, false);
 }

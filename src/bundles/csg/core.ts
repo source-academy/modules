@@ -6,7 +6,7 @@ import { CsgModuleState, RenderGroupManager } from './utilities.js';
 // independently and are different versions of Core. Same reason why we need
 // looseInstanceof()
 export class Core {
-  static moduleState: CsgModuleState | null = null;
+  private static moduleState: CsgModuleState | null = null;
 
   static initialize(csgModuleState: CsgModuleState): void {
     Core.moduleState = csgModuleState;
