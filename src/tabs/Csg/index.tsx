@@ -9,20 +9,17 @@ import {
 } from '../../bundles/csg/utilities.js';
 import { DebuggerContext, ModuleContexts } from '../../typings/type_helpers';
 import CanvasHolder from './canvas_holder';
+import { TabCore } from './tab_core.js';
 
 /* [Main] */
-let moduleState: CsgModuleState | null = null;
-
 export default {
   // Called by the frontend to decide whether to spawn the CSG tab
   toSpawn(_debuggerContext: DebuggerContext): boolean {
-    return (moduleState as CsgModuleState).renderGroupManager.render();
+    return TabCore.getRenderGroupManager().render();
   },
 
   // Called by the frontend to know what to render in the CSG tab
   body(debuggerContext: DebuggerContext): ReactElement {
-    // Cannot getModuleState() as the bundle is running independent of the tab
-
     let moduleContexts: ModuleContexts = debuggerContext.context.moduleContexts;
     let potentialModuleContext: ModuleContext | null = getModuleContext(
       moduleContexts
@@ -30,15 +27,13 @@ export default {
     if (potentialModuleContext === null) return <div></div>;
     let moduleContext: ModuleContext = potentialModuleContext;
 
-    let potentialModuleState: ModuleState | undefined | null =
+    let potentialModuleState: ModuleState | null | undefined =
       moduleContext.state;
-    if (
-      !potentialModuleState ||
-      !looseInstanceof(potentialModuleState, CsgModuleState)
-    )
+    if (!looseInstanceof(potentialModuleState, CsgModuleState))
       return <div></div>;
-    moduleState = potentialModuleState as CsgModuleState;
+    let moduleState = potentialModuleState as CsgModuleState;
 
+    TabCore.initialize(moduleState);
     return <CanvasHolder moduleState={moduleState} />;
   },
 

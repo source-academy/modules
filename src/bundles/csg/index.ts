@@ -1,7 +1,7 @@
 /* [Imports] */
 import { ModuleContext } from 'js-slang';
 import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
-import { BundleCore } from "./bundle_core.js";
+import { BundleCore } from './bundle_core.js';
 import {
   area,
   beside_x,
