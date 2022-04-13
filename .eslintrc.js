@@ -119,10 +119,12 @@ module.exports = {
 
         // [Other]
         '@typescript-eslint/naming-convention': [
-          'error',
+          1,
           {
             selector: 'variable',
-            format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+            // Was ['camelCase', 'PascalCase', 'UPPER_CASE'].
+            // Add snake case to let exported module variables match Source
+            format: ['camelCase', 'PascalCase', 'UPPER_CASE', 'snake_case'],
           },
           {
             selector: 'function',
