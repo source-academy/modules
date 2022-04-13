@@ -8,9 +8,9 @@ import {
     pyramid,
     cone,
     torus,
-    roundedCube,
-    roundedCylinder,
-    geodesicSphere,
+    rounded_cube,
+    rounded_cylinder,
+    geodesic_sphere,
 
     black,
     navy,

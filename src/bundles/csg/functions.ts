@@ -132,7 +132,7 @@ export const torus: Shape = shapeSetOrigin(
  *
  * @category Primitive
  */
-export const roundedCube: Shape = shapeSetOrigin(
+export const rounded_cube: Shape = shapeSetOrigin(
   new Shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
 );
 
@@ -141,7 +141,7 @@ export const roundedCube: Shape = shapeSetOrigin(
  *
  * @category Primitive
  */
-export const roundedCylinder: Shape = shapeSetOrigin(
+export const rounded_cylinder: Shape = shapeSetOrigin(
   new Shape(primitives.roundedCylinder({ height: 1, radius: 0.5 }))
 );
 
@@ -150,7 +150,7 @@ export const roundedCylinder: Shape = shapeSetOrigin(
  *
  * @category Primitive
  */
-export const geodesicSphere: Shape = shapeSetOrigin(
+export const geodesic_sphere: Shape = shapeSetOrigin(
   new Shape(primitives.geodesicSphere({ radius: 0.5 }))
 );
 
