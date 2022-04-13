@@ -18,11 +18,13 @@ import {
 import {
   AxisEntity,
   CameraViewportDimensions,
+  colorToRgba,
   controls,
   controlsStateDefaults,
   CsgModuleState,
   entitiesFromSolids,
   FrameTracker,
+  hexToColor,
   MultiGridEntity,
   perspectiveCamera,
   perspectiveCameraStateDefaults,
@@ -305,6 +307,11 @@ export default function render(
 
   // Data to pass to the wrapped renderer we made, below
   let wrappedRendererData: WrappedRenderer.AllData = {
+    rendering: {
+      //TODO
+      background: colorToRgba(hexToColor('#34495E')),
+    },
+
     entities: addEntities(lastRenderGroup, solids, geometryEntities),
     drawCommands: prepareDrawCommands,
     camera: perspectiveCameraState,

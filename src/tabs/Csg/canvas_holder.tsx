@@ -69,8 +69,7 @@ export default class CanvasHolder extends React.Component<
           />
         </div>
 
-        <canvas
-          ref={this.canvasReference}
+        <div
           style={{
             // Expand to take as much space as possible, otherwise this will
             // have no height
@@ -88,10 +87,19 @@ export default class CanvasHolder extends React.Component<
             maxWidth: 'max(70vh, 30vw)',
             // Force square aspect ratio, otherwise this will have no height
             aspectRatio: '1',
+
+            //TODO
+            borderRadius: '3px',
+            overflow: 'hidden',
           }}
-          width='0'
-          height='0'
-        />
+        >
+          <canvas
+            ref={this.canvasReference}
+            style={{ height: '100%', width: '100%' }}
+            width='0'
+            height='0'
+          />
+        </div>
       </div>
     );
   }

@@ -63,8 +63,9 @@ export class MultiGridEntity implements MultiGridEntityType {
   } = {
     drawCmd: 'drawGrid',
     show: true,
-    color: [0, 0, 0, 1],
-    subColor: [0.5, 0.5, 0.5, 1],
+    //TODO
+    color: colorToRgba(hexToColor('#F5F8FA')),
+    subColor: colorToRgba(hexToColor('#8091A0')),
   };
 
   ticks: [number, number] = [10, 1];
@@ -290,6 +291,10 @@ export function hexToColor(hex: string): Color {
     parseInt(groups.green, 16) / 0xff,
     parseInt(groups.blue, 16) / 0xff,
   ];
+}
+
+export function colorToRgba(color: Color, opacity: number = 1): RGBA {
+  return [...color, opacity];
 }
 
 export function clamp(value: number, lowest: number, highest: number): number {
