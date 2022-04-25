@@ -25,6 +25,7 @@ import {
   Pixels,
   Filter,
   Queue,
+  TabsPackage,
 } from './types';
 
 import {
@@ -47,6 +48,7 @@ let videoElement: VideoElement;
 let canvasElement: CanvasElement;
 let canvasRenderingContext: CanvasRenderingContext2D;
 let errorLogger: ErrorLogger;
+let tabsPackage: TabsPackage;
 
 const pixels: Pixels = [];
 const temporaryPixels: Pixels = [];
@@ -59,6 +61,9 @@ let videoIsPlaying: boolean = false;
 let FPS: number = DEFAULT_FPS;
 let requestId: number;
 let startTime: number;
+
+let useLocalVideo: boolean;
+// let counter = 0;
 
 // =============================================================================
 // Module's Private Functions
@@ -191,10 +196,23 @@ function draw(timestamp: number): void {
   }
 }
 
+async function playVideoElement() {
+  if (videoElement.paused && !videoIsPlaying) {
+    return videoElement.play();
+  }
+  return null;
+}
+
+function pauseVideoElement() {
+  if (!videoElement.paused && videoIsPlaying) {
+    videoElement.pause();
+  }
+}
+
 /** @hidden */
 function startVideo(): void {
   if (videoIsPlaying) return;
-  videoIsPlaying = true;
+  playVideoElement();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 }
@@ -206,7 +224,7 @@ function startVideo(): void {
  */
 function stopVideo(): void {
   if (!videoIsPlaying) return;
-  videoIsPlaying = false;
+  pauseVideoElement();
   window.cancelAnimationFrame(requestId);
 }
 
@@ -235,6 +253,13 @@ function loadMedia(): void {
       errorLogger(errorMessage, false);
     });
 
+  startVideo();
+}
+
+/** @hidden */
+function loadVideo(): void {
+  videoElement.loop = true;
+  toRunLateQueue = true;
   startVideo();
 }
 
@@ -341,19 +366,32 @@ function lateEnqueue(funcToAdd: Queue): void {
 function init(
   video: VideoElement,
   canvas: CanvasElement,
-  _errorLogger: ErrorLogger
+  _errorLogger: ErrorLogger,
+  _tabsPackage: TabsPackage
 ): number[] {
   videoElement = video;
   canvasElement = canvas;
   errorLogger = _errorLogger;
+  tabsPackage = _tabsPackage;
   const context = canvasElement.getContext('2d');
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
 
+  videoElement.onplaying = () => {
+    videoIsPlaying = true;
+  };
+  videoElement.onpause = () => {
+    videoIsPlaying = false;
+  };
+
   setupData();
-  loadMedia();
+  if (useLocalVideo) {
+    loadVideo();
+  } else {
+    loadMedia();
+  }
   queue();
-  return [HEIGHT, WIDTH, FPS];
+  return [HEIGHT, WIDTH, FPS, useLocalVideo ? 1 : 0];
 }
 
 /**
@@ -542,9 +580,11 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
  *
  * @param delay Delay in ms after the video starts.
  */
-export function pause_after(delay: number): void {
+export function pause_at(delay: number): void {
   // prevent negative delays
-  lateEnqueue(() => setTimeout(stopVideo, delay >= 0 ? delay : -delay));
+  lateEnqueue(() =>
+    setTimeout(tabsPackage.onClickStill, delay >= 0 ? delay : -delay)
+  );
 }
 
 /**
@@ -566,4 +606,11 @@ export function set_dimensions(width: number, height: number): void {
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
+}
+
+/**
+ * Allows you to upload videos into Pix-n-Flix
+ */
+export function use_local_video(): void {
+  useLocalVideo = true;
 }
