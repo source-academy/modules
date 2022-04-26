@@ -2,6 +2,8 @@ import React from 'react';
 
 const defaultStyle = {
   width: '100%',
+  maxWidth: 'max(70vh, 30vw)',
+  aspectRatio: '1',
 } as React.CSSProperties;
 
 /**

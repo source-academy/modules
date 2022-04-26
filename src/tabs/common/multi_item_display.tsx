@@ -12,6 +12,7 @@ const MultiItemDisplay = (props: { elements: JSX.Element[] }) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        alignContent: 'center',
         height: '100%',
       }}
     >
@@ -62,6 +63,9 @@ const MultiItemDisplay = (props: { elements: JSX.Element[] }) => {
           width: '100%',
           paddingLeft: '20px',
           paddingRight: '20px',
+          display: 'flex',
+          alignContent: 'center',
+          justifyContent: 'center',
         }}
       >
         {props.elements[currentStep]}
