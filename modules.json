@@ -54,5 +54,10 @@
     "tabs": [
       "SoundMatrix"
     ]
+  },
+  "testing": {
+    "tabs": [
+      "Testing"
+    ]
   }
 }
