@@ -105,13 +105,19 @@ class PixNFlix extends React.Component<Props, State> {
           onClickStill: this.onClickStill,
         }
       );
+      let mode: VideoMode = 'video';
+      if (inputFeed === 'local') {
+        mode = 'accepting';
+      } else if (inputFeed === 'imageURL') {
+        mode = 'image';
+      }
       this.setState({
         height: HEIGHT,
         width: WIDTH,
         FPS,
         volume: VOLUME,
         hasAudio: inputFeed === 'videoURL',
-        mode: inputFeed === 'local' ? 'accepting' : 'video',
+        mode,
       });
     }
   };

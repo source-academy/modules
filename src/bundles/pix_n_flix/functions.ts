@@ -667,19 +667,30 @@ export function set_volume(volume: number): void {
 }
 
 /**
- * Allows you to upload local files into Pix-n-Flix.
- * Running this function will set pix-n-flix to use the local file
+ * Set pix-n-flix to use an uploaded local file
  * as the video or image feed instead of the default camera feed.
  */
 export function use_local_file(): void {
   inputFeed = 'local';
 }
 
+/**
+ * Set pix-n-flix to use the image from given URL
+ * as the image feed instead of the default camera feed.
+ *
+ * @param URL URL of image to be loaded
+ */
 export function use_image_url(URL: string) {
   inputFeed = 'imageURL';
   url = URL;
 }
 
+/**
+ * Set pix-n-flix to use a video resource from given URL
+ * as the video feed instead of the default camera feed.
+ *
+ * @param URL URL of video to be loaded
+ */
 export function use_video_url(URL: string) {
   inputFeed = 'videoURL';
   url = URL;
