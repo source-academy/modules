@@ -6,7 +6,8 @@ export type ErrorLogger = (
   isSlangError?: boolean
 ) => void;
 export type TabsPackage = {
-  onClickStill: () => void;
+  onClickStill?: () => void;
+  handleSwapModes?: () => void;
 };
 export type InputFeed = 'camera' | 'imageURL' | 'videoURL' | 'local';
 export type BundlePackage = {
