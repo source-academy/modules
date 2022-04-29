@@ -583,7 +583,8 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 export function pause_at(delay: number): void {
   // prevent negative delays
   lateEnqueue(() =>
-    setTimeout(tabsPackage.onClickStill, delay >= 0 ? delay : -delay)
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    setTimeout(tabsPackage.onClickStill!, delay >= 0 ? delay : -delay)
   );
 }
 
