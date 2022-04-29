@@ -5,7 +5,7 @@
 	"flags": {},
 	"children": [
 		{
-			"id": 61,
+			"id": 63,
 			"name": "binary_tree",
 			"kind": 1,
 			"kindString": "Module",
@@ -16,7 +16,7 @@
 			"originalName": "binary_tree/functions",
 			"children": [
 				{
-					"id": 62,
+					"id": 64,
 					"name": "make_empty_tree",
 					"kind": 64,
 					"kindString": "Function",
@@ -30,7 +30,7 @@
 					],
 					"signatures": [
 						{
-							"id": 63,
+							"id": 65,
 							"name": "make_empty_tree",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -53,7 +53,7 @@
 					]
 				},
 				{
-					"id": 64,
+					"id": 66,
 					"name": "make_tree",
 					"kind": 64,
 					"kindString": "Function",
@@ -67,7 +67,7 @@
 					],
 					"signatures": [
 						{
-							"id": 65,
+							"id": 67,
 							"name": "make_tree",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -84,7 +84,7 @@
 							},
 							"parameters": [
 								{
-									"id": 66,
+									"id": 68,
 									"name": "value",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -98,7 +98,7 @@
 									}
 								},
 								{
-									"id": 67,
+									"id": 69,
 									"name": "left",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -112,7 +112,7 @@
 									}
 								},
 								{
-									"id": 68,
+									"id": 70,
 									"name": "right",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -139,8 +139,8 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						62,
-						64
+						64,
+						66
 					]
 				}
 			],
@@ -153,7 +153,7 @@
 			]
 		},
 		{
-			"id": 69,
+			"id": 71,
 			"name": "curve",
 			"kind": 1,
 			"kindString": "Module",
@@ -175,7 +175,7 @@
 			"originalName": "curve/functions",
 			"children": [
 				{
-					"id": 189,
+					"id": 191,
 					"name": "arc",
 					"kind": 64,
 					"kindString": "Function",
@@ -189,7 +189,7 @@
 					],
 					"signatures": [
 						{
-							"id": 190,
+							"id": 192,
 							"name": "arc",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -200,7 +200,7 @@
 							},
 							"parameters": [
 								{
-									"id": 191,
+									"id": 193,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -222,7 +222,7 @@
 					]
 				},
 				{
-					"id": 145,
+					"id": 147,
 					"name": "b_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -236,7 +236,7 @@
 					],
 					"signatures": [
 						{
-							"id": 146,
+							"id": 148,
 							"name": "b_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -253,7 +253,7 @@
 							},
 							"parameters": [
 								{
-									"id": 147,
+									"id": 149,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -272,7 +272,7 @@
 					]
 				},
 				{
-					"id": 176,
+					"id": 178,
 					"name": "connect_ends",
 					"kind": 64,
 					"kindString": "Function",
@@ -286,7 +286,7 @@
 					],
 					"signatures": [
 						{
-							"id": 177,
+							"id": 179,
 							"name": "connect_ends",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -297,7 +297,7 @@
 							},
 							"parameters": [
 								{
-									"id": 178,
+									"id": 180,
 									"name": "curve1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -311,7 +311,7 @@
 									}
 								},
 								{
-									"id": 179,
+									"id": 181,
 									"name": "curve2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -333,7 +333,7 @@
 					]
 				},
 				{
-					"id": 172,
+					"id": 174,
 					"name": "connect_rigidly",
 					"kind": 64,
 					"kindString": "Function",
@@ -347,7 +347,7 @@
 					],
 					"signatures": [
 						{
-							"id": 173,
+							"id": 175,
 							"name": "connect_rigidly",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -358,7 +358,7 @@
 							},
 							"parameters": [
 								{
-									"id": 174,
+									"id": 176,
 									"name": "curve1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -372,7 +372,7 @@
 									}
 								},
 								{
-									"id": 175,
+									"id": 177,
 									"name": "curve2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -394,7 +394,7 @@
 					]
 				},
 				{
-					"id": 88,
+					"id": 90,
 					"name": "draw_3D_connected",
 					"kind": 64,
 					"kindString": "Function",
@@ -408,7 +408,7 @@
 					],
 					"signatures": [
 						{
-							"id": 89,
+							"id": 91,
 							"name": "draw_3D_connected",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -425,7 +425,7 @@
 							},
 							"parameters": [
 								{
-									"id": 90,
+									"id": 92,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -447,7 +447,7 @@
 					]
 				},
 				{
-					"id": 91,
+					"id": 93,
 					"name": "draw_3D_connected_full_view",
 					"kind": 64,
 					"kindString": "Function",
@@ -461,7 +461,7 @@
 					],
 					"signatures": [
 						{
-							"id": 92,
+							"id": 94,
 							"name": "draw_3D_connected_full_view",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -478,7 +478,7 @@
 							},
 							"parameters": [
 								{
-									"id": 93,
+									"id": 95,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -500,7 +500,7 @@
 					]
 				},
 				{
-					"id": 94,
+					"id": 96,
 					"name": "draw_3D_connected_full_view_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -514,7 +514,7 @@
 					],
 					"signatures": [
 						{
-							"id": 95,
+							"id": 97,
 							"name": "draw_3D_connected_full_view_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -531,7 +531,7 @@
 							},
 							"parameters": [
 								{
-									"id": 96,
+									"id": 98,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -553,7 +553,7 @@
 					]
 				},
 				{
-					"id": 97,
+					"id": 99,
 					"name": "draw_3D_points",
 					"kind": 64,
 					"kindString": "Function",
@@ -567,7 +567,7 @@
 					],
 					"signatures": [
 						{
-							"id": 98,
+							"id": 100,
 							"name": "draw_3D_points",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -584,7 +584,7 @@
 							},
 							"parameters": [
 								{
-									"id": 99,
+									"id": 101,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -606,7 +606,7 @@
 					]
 				},
 				{
-					"id": 100,
+					"id": 102,
 					"name": "draw_3D_points_full_view",
 					"kind": 64,
 					"kindString": "Function",
@@ -620,7 +620,7 @@
 					],
 					"signatures": [
 						{
-							"id": 101,
+							"id": 103,
 							"name": "draw_3D_points_full_view",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -637,7 +637,7 @@
 							},
 							"parameters": [
 								{
-									"id": 102,
+									"id": 104,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -659,7 +659,7 @@
 					]
 				},
 				{
-					"id": 103,
+					"id": 105,
 					"name": "draw_3D_points_full_view_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -673,7 +673,7 @@
 					],
 					"signatures": [
 						{
-							"id": 104,
+							"id": 106,
 							"name": "draw_3D_points_full_view_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -690,7 +690,7 @@
 							},
 							"parameters": [
 								{
-									"id": 105,
+									"id": 107,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -712,7 +712,7 @@
 					]
 				},
 				{
-					"id": 70,
+					"id": 72,
 					"name": "draw_connected",
 					"kind": 64,
 					"kindString": "Function",
@@ -726,7 +726,7 @@
 					],
 					"signatures": [
 						{
-							"id": 71,
+							"id": 73,
 							"name": "draw_connected",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -743,7 +743,7 @@
 							},
 							"parameters": [
 								{
-									"id": 72,
+									"id": 74,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -765,7 +765,7 @@
 					]
 				},
 				{
-					"id": 73,
+					"id": 75,
 					"name": "draw_connected_full_view",
 					"kind": 64,
 					"kindString": "Function",
@@ -779,7 +779,7 @@
 					],
 					"signatures": [
 						{
-							"id": 74,
+							"id": 76,
 							"name": "draw_connected_full_view",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -796,7 +796,7 @@
 							},
 							"parameters": [
 								{
-									"id": 75,
+									"id": 77,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -818,7 +818,7 @@
 					]
 				},
 				{
-					"id": 76,
+					"id": 78,
 					"name": "draw_connected_full_view_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -832,7 +832,7 @@
 					],
 					"signatures": [
 						{
-							"id": 77,
+							"id": 79,
 							"name": "draw_connected_full_view_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -849,7 +849,7 @@
 							},
 							"parameters": [
 								{
-									"id": 78,
+									"id": 80,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -871,7 +871,7 @@
 					]
 				},
 				{
-					"id": 79,
+					"id": 81,
 					"name": "draw_points",
 					"kind": 64,
 					"kindString": "Function",
@@ -885,7 +885,7 @@
 					],
 					"signatures": [
 						{
-							"id": 80,
+							"id": 82,
 							"name": "draw_points",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -902,7 +902,7 @@
 							},
 							"parameters": [
 								{
-									"id": 81,
+									"id": 83,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -924,7 +924,7 @@
 					]
 				},
 				{
-					"id": 82,
+					"id": 84,
 					"name": "draw_points_full_view",
 					"kind": 64,
 					"kindString": "Function",
@@ -938,7 +938,7 @@
 					],
 					"signatures": [
 						{
-							"id": 83,
+							"id": 85,
 							"name": "draw_points_full_view",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -955,7 +955,7 @@
 							},
 							"parameters": [
 								{
-									"id": 84,
+									"id": 86,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -977,7 +977,7 @@
 					]
 				},
 				{
-					"id": 85,
+					"id": 87,
 					"name": "draw_points_full_view_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -991,7 +991,7 @@
 					],
 					"signatures": [
 						{
-							"id": 86,
+							"id": 88,
 							"name": "draw_points_full_view_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1008,7 +1008,7 @@
 							},
 							"parameters": [
 								{
-									"id": 87,
+									"id": 89,
 									"name": "num",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1030,7 +1030,7 @@
 					]
 				},
 				{
-					"id": 142,
+					"id": 144,
 					"name": "g_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -1044,7 +1044,7 @@
 					],
 					"signatures": [
 						{
-							"id": 143,
+							"id": 145,
 							"name": "g_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1061,7 +1061,7 @@
 							},
 							"parameters": [
 								{
-									"id": 144,
+									"id": 146,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1080,7 +1080,7 @@
 					]
 				},
 				{
-					"id": 148,
+					"id": 150,
 					"name": "invert",
 					"kind": 64,
 					"kindString": "Function",
@@ -1094,7 +1094,7 @@
 					],
 					"signatures": [
 						{
-							"id": 149,
+							"id": 151,
 							"name": "invert",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1105,7 +1105,7 @@
 							},
 							"parameters": [
 								{
-									"id": 150,
+									"id": 152,
 									"name": "curve",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1124,7 +1124,7 @@
 					]
 				},
 				{
-					"id": 122,
+					"id": 124,
 					"name": "make_3D_color_point",
 					"kind": 64,
 					"kindString": "Function",
@@ -1138,7 +1138,7 @@
 					],
 					"signatures": [
 						{
-							"id": 123,
+							"id": 125,
 							"name": "make_3D_color_point",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1155,7 +1155,7 @@
 							},
 							"parameters": [
 								{
-									"id": 124,
+									"id": 126,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1169,7 +1169,7 @@
 									}
 								},
 								{
-									"id": 125,
+									"id": 127,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1183,7 +1183,7 @@
 									}
 								},
 								{
-									"id": 126,
+									"id": 128,
 									"name": "z",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1197,7 +1197,7 @@
 									}
 								},
 								{
-									"id": 127,
+									"id": 129,
 									"name": "r",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1211,7 +1211,7 @@
 									}
 								},
 								{
-									"id": 128,
+									"id": 130,
 									"name": "g",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1225,7 +1225,7 @@
 									}
 								},
 								{
-									"id": 129,
+									"id": 131,
 									"name": "b",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1247,7 +1247,7 @@
 					]
 				},
 				{
-					"id": 110,
+					"id": 112,
 					"name": "make_3D_point",
 					"kind": 64,
 					"kindString": "Function",
@@ -1261,7 +1261,7 @@
 					],
 					"signatures": [
 						{
-							"id": 111,
+							"id": 113,
 							"name": "make_3D_point",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1278,7 +1278,7 @@
 							},
 							"parameters": [
 								{
-									"id": 112,
+									"id": 114,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1292,7 +1292,7 @@
 									}
 								},
 								{
-									"id": 113,
+									"id": 115,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1306,7 +1306,7 @@
 									}
 								},
 								{
-									"id": 114,
+									"id": 116,
 									"name": "z",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1328,7 +1328,7 @@
 					]
 				},
 				{
-					"id": 115,
+					"id": 117,
 					"name": "make_color_point",
 					"kind": 64,
 					"kindString": "Function",
@@ -1342,7 +1342,7 @@
 					],
 					"signatures": [
 						{
-							"id": 116,
+							"id": 118,
 							"name": "make_color_point",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1359,7 +1359,7 @@
 							},
 							"parameters": [
 								{
-									"id": 117,
+									"id": 119,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1373,7 +1373,7 @@
 									}
 								},
 								{
-									"id": 118,
+									"id": 120,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1387,7 +1387,7 @@
 									}
 								},
 								{
-									"id": 119,
+									"id": 121,
 									"name": "r",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1401,7 +1401,7 @@
 									}
 								},
 								{
-									"id": 120,
+									"id": 122,
 									"name": "g",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1415,7 +1415,7 @@
 									}
 								},
 								{
-									"id": 121,
+									"id": 123,
 									"name": "b",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1437,7 +1437,7 @@
 					]
 				},
 				{
-					"id": 106,
+					"id": 108,
 					"name": "make_point",
 					"kind": 64,
 					"kindString": "Function",
@@ -1451,7 +1451,7 @@
 					],
 					"signatures": [
 						{
-							"id": 107,
+							"id": 109,
 							"name": "make_point",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1468,7 +1468,7 @@
 							},
 							"parameters": [
 								{
-									"id": 108,
+									"id": 110,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1482,7 +1482,7 @@
 									}
 								},
 								{
-									"id": 109,
+									"id": 111,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1504,7 +1504,7 @@
 					]
 				},
 				{
-					"id": 169,
+					"id": 171,
 					"name": "put_in_standard_position",
 					"kind": 64,
 					"kindString": "Function",
@@ -1518,7 +1518,7 @@
 					],
 					"signatures": [
 						{
-							"id": 170,
+							"id": 172,
 							"name": "put_in_standard_position",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1529,7 +1529,7 @@
 							},
 							"parameters": [
 								{
-									"id": 171,
+									"id": 173,
 									"name": "curve",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1551,7 +1551,7 @@
 					]
 				},
 				{
-					"id": 139,
+					"id": 141,
 					"name": "r_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -1565,7 +1565,7 @@
 					],
 					"signatures": [
 						{
-							"id": 140,
+							"id": 142,
 							"name": "r_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1582,7 +1582,7 @@
 							},
 							"parameters": [
 								{
-									"id": 141,
+									"id": 143,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1601,7 +1601,7 @@
 					]
 				},
 				{
-					"id": 156,
+					"id": 158,
 					"name": "rotate_around_origin",
 					"kind": 64,
 					"kindString": "Function",
@@ -1615,7 +1615,7 @@
 					],
 					"signatures": [
 						{
-							"id": 157,
+							"id": 159,
 							"name": "rotate_around_origin",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1626,7 +1626,7 @@
 							},
 							"parameters": [
 								{
-									"id": 158,
+									"id": 160,
 									"name": "theta1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1637,7 +1637,7 @@
 									}
 								},
 								{
-									"id": 159,
+									"id": 161,
 									"name": "theta2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1648,7 +1648,7 @@
 									}
 								},
 								{
-									"id": 160,
+									"id": 162,
 									"name": "theta3",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1667,7 +1667,7 @@
 					]
 				},
 				{
-					"id": 161,
+					"id": 163,
 					"name": "scale",
 					"kind": 64,
 					"kindString": "Function",
@@ -1681,7 +1681,7 @@
 					],
 					"signatures": [
 						{
-							"id": 162,
+							"id": 164,
 							"name": "scale",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1692,7 +1692,7 @@
 							},
 							"parameters": [
 								{
-									"id": 163,
+									"id": 165,
 									"name": "a",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1706,7 +1706,7 @@
 									}
 								},
 								{
-									"id": 164,
+									"id": 166,
 									"name": "b",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1720,7 +1720,7 @@
 									}
 								},
 								{
-									"id": 165,
+									"id": 167,
 									"name": "c",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1742,7 +1742,7 @@
 					]
 				},
 				{
-					"id": 166,
+					"id": 168,
 					"name": "scale_proportional",
 					"kind": 64,
 					"kindString": "Function",
@@ -1756,7 +1756,7 @@
 					],
 					"signatures": [
 						{
-							"id": 167,
+							"id": 169,
 							"name": "scale_proportional",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1767,7 +1767,7 @@
 							},
 							"parameters": [
 								{
-									"id": 168,
+									"id": 170,
 									"name": "s",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1789,7 +1789,7 @@
 					]
 				},
 				{
-					"id": 151,
+					"id": 153,
 					"name": "translate",
 					"kind": 64,
 					"kindString": "Function",
@@ -1803,7 +1803,7 @@
 					],
 					"signatures": [
 						{
-							"id": 152,
+							"id": 154,
 							"name": "translate",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1814,7 +1814,7 @@
 							},
 							"parameters": [
 								{
-									"id": 153,
+									"id": 155,
 									"name": "x0",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1828,7 +1828,7 @@
 									}
 								},
 								{
-									"id": 154,
+									"id": 156,
 									"name": "y0",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1842,7 +1842,7 @@
 									}
 								},
 								{
-									"id": 155,
+									"id": 157,
 									"name": "z0",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1864,7 +1864,7 @@
 					]
 				},
 				{
-					"id": 180,
+					"id": 182,
 					"name": "unit_circle",
 					"kind": 64,
 					"kindString": "Function",
@@ -1878,7 +1878,7 @@
 					],
 					"signatures": [
 						{
-							"id": 181,
+							"id": 183,
 							"name": "unit_circle",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1889,7 +1889,7 @@
 							},
 							"parameters": [
 								{
-									"id": 182,
+									"id": 184,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1911,7 +1911,7 @@
 					]
 				},
 				{
-					"id": 183,
+					"id": 185,
 					"name": "unit_line",
 					"kind": 64,
 					"kindString": "Function",
@@ -1925,7 +1925,7 @@
 					],
 					"signatures": [
 						{
-							"id": 184,
+							"id": 186,
 							"name": "unit_line",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1936,7 +1936,7 @@
 							},
 							"parameters": [
 								{
-									"id": 185,
+									"id": 187,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -1958,7 +1958,7 @@
 					]
 				},
 				{
-					"id": 186,
+					"id": 188,
 					"name": "unit_line_at",
 					"kind": 64,
 					"kindString": "Function",
@@ -1972,7 +1972,7 @@
 					],
 					"signatures": [
 						{
-							"id": 187,
+							"id": 189,
 							"name": "unit_line_at",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -1983,7 +1983,7 @@
 							},
 							"parameters": [
 								{
-									"id": 188,
+									"id": 190,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2005,7 +2005,7 @@
 					]
 				},
 				{
-					"id": 130,
+					"id": 132,
 					"name": "x_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -2019,7 +2019,7 @@
 					],
 					"signatures": [
 						{
-							"id": 131,
+							"id": 133,
 							"name": "x_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2036,7 +2036,7 @@
 							},
 							"parameters": [
 								{
-									"id": 132,
+									"id": 134,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2055,7 +2055,7 @@
 					]
 				},
 				{
-					"id": 133,
+					"id": 135,
 					"name": "y_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -2069,7 +2069,7 @@
 					],
 					"signatures": [
 						{
-							"id": 134,
+							"id": 136,
 							"name": "y_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2086,7 +2086,7 @@
 							},
 							"parameters": [
 								{
-									"id": 135,
+									"id": 137,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2105,7 +2105,7 @@
 					]
 				},
 				{
-					"id": 136,
+					"id": 138,
 					"name": "z_of",
 					"kind": 64,
 					"kindString": "Function",
@@ -2119,7 +2119,7 @@
 					],
 					"signatures": [
 						{
-							"id": 137,
+							"id": 139,
 							"name": "z_of",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2136,7 +2136,7 @@
 							},
 							"parameters": [
 								{
-									"id": 138,
+									"id": 140,
 									"name": "pt",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2160,40 +2160,40 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						189,
-						145,
-						176,
-						172,
-						88,
-						91,
-						94,
-						97,
-						100,
-						103,
-						70,
-						73,
-						76,
-						79,
-						82,
-						85,
-						142,
-						148,
-						122,
-						110,
-						115,
-						106,
-						169,
-						139,
-						156,
-						161,
-						166,
-						151,
-						180,
-						183,
-						186,
-						130,
-						133,
-						136
+						191,
+						147,
+						178,
+						174,
+						90,
+						93,
+						96,
+						99,
+						102,
+						105,
+						72,
+						75,
+						78,
+						81,
+						84,
+						87,
+						144,
+						150,
+						124,
+						112,
+						117,
+						108,
+						171,
+						141,
+						158,
+						163,
+						168,
+						153,
+						182,
+						185,
+						188,
+						132,
+						135,
+						138
 					]
 				}
 			],
@@ -2206,7 +2206,7 @@
 			]
 		},
 		{
-			"id": 455,
+			"id": 457,
 			"name": "game",
 			"kind": 1,
 			"kindString": "Module",
@@ -2236,7 +2236,7 @@
 			"originalName": "game/functions",
 			"children": [
 				{
-					"id": 548,
+					"id": 550,
 					"name": "add",
 					"kind": 64,
 					"kindString": "Function",
@@ -2250,7 +2250,7 @@
 					],
 					"signatures": [
 						{
-							"id": 549,
+							"id": 551,
 							"name": "add",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2260,7 +2260,7 @@
 							},
 							"parameters": [
 								{
-									"id": 550,
+									"id": 552,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2291,7 +2291,7 @@
 					]
 				},
 				{
-					"id": 651,
+					"id": 653,
 					"name": "add_keyboard_listener",
 					"kind": 64,
 					"kindString": "Function",
@@ -2305,7 +2305,7 @@
 					],
 					"signatures": [
 						{
-							"id": 652,
+							"id": 654,
 							"name": "add_keyboard_listener",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2317,7 +2317,7 @@
 							},
 							"parameters": [
 								{
-									"id": 653,
+									"id": 655,
 									"name": "key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2340,7 +2340,7 @@
 									}
 								},
 								{
-									"id": 654,
+									"id": 656,
 									"name": "event",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2354,7 +2354,7 @@
 									}
 								},
 								{
-									"id": 655,
+									"id": 657,
 									"name": "callback",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2376,7 +2376,7 @@
 					]
 				},
 				{
-					"id": 646,
+					"id": 648,
 					"name": "add_listener",
 					"kind": 64,
 					"kindString": "Function",
@@ -2390,7 +2390,7 @@
 					],
 					"signatures": [
 						{
-							"id": 647,
+							"id": 649,
 							"name": "add_listener",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2402,7 +2402,7 @@
 							},
 							"parameters": [
 								{
-									"id": 648,
+									"id": 650,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2416,7 +2416,7 @@
 									}
 								},
 								{
-									"id": 649,
+									"id": 651,
 									"name": "event",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2430,7 +2430,7 @@
 									}
 								},
 								{
-									"id": 650,
+									"id": 652,
 									"name": "callback",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2461,7 +2461,7 @@
 					]
 				},
 				{
-					"id": 598,
+					"id": 600,
 					"name": "add_to_container",
 					"kind": 64,
 					"kindString": "Function",
@@ -2475,7 +2475,7 @@
 					],
 					"signatures": [
 						{
-							"id": 599,
+							"id": 601,
 							"name": "add_to_container",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2486,7 +2486,7 @@
 							},
 							"parameters": [
 								{
-									"id": 600,
+									"id": 602,
 									"name": "container",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2500,7 +2500,7 @@
 									}
 								},
 								{
-									"id": 601,
+									"id": 603,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2531,7 +2531,7 @@
 					]
 				},
 				{
-					"id": 642,
+					"id": 644,
 					"name": "add_tween",
 					"kind": 64,
 					"kindString": "Function",
@@ -2545,7 +2545,7 @@
 					],
 					"signatures": [
 						{
-							"id": 643,
+							"id": 645,
 							"name": "add_tween",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2556,7 +2556,7 @@
 							},
 							"parameters": [
 								{
-									"id": 644,
+									"id": 646,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2570,7 +2570,7 @@
 									}
 								},
 								{
-									"id": 645,
+									"id": 647,
 									"name": "config",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2608,7 +2608,7 @@
 					]
 				},
 				{
-					"id": 555,
+					"id": 557,
 					"name": "create_anim",
 					"kind": 64,
 					"kindString": "Function",
@@ -2622,7 +2622,7 @@
 					],
 					"signatures": [
 						{
-							"id": 556,
+							"id": 558,
 							"name": "create_anim",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2634,7 +2634,7 @@
 							},
 							"parameters": [
 								{
-									"id": 557,
+									"id": 559,
 									"name": "anim_config",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2654,7 +2654,7 @@
 					]
 				},
 				{
-					"id": 501,
+					"id": 503,
 					"name": "create_anim_config",
 					"kind": 64,
 					"kindString": "Function",
@@ -2668,7 +2668,7 @@
 					],
 					"signatures": [
 						{
-							"id": 502,
+							"id": 504,
 							"name": "create_anim_config",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2680,7 +2680,7 @@
 							},
 							"parameters": [
 								{
-									"id": 503,
+									"id": 505,
 									"name": "anims_key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2694,7 +2694,7 @@
 									}
 								},
 								{
-									"id": 504,
+									"id": 506,
 									"name": "anim_frames",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2711,7 +2711,7 @@
 									}
 								},
 								{
-									"id": 505,
+									"id": 507,
 									"name": "frame_rate",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2726,7 +2726,7 @@
 									"defaultValue": "24"
 								},
 								{
-									"id": 506,
+									"id": 508,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2741,7 +2741,7 @@
 									"defaultValue": "null"
 								},
 								{
-									"id": 507,
+									"id": 509,
 									"name": "repeat",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2756,7 +2756,7 @@
 									"defaultValue": "-1"
 								},
 								{
-									"id": 508,
+									"id": 510,
 									"name": "yoyo",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2771,7 +2771,7 @@
 									"defaultValue": "false"
 								},
 								{
-									"id": 509,
+									"id": 511,
 									"name": "show_on_start",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2786,7 +2786,7 @@
 									"defaultValue": "true"
 								},
 								{
-									"id": 510,
+									"id": 512,
 									"name": "hide_on_complete",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2809,7 +2809,7 @@
 					]
 				},
 				{
-					"id": 511,
+					"id": 513,
 					"name": "create_anim_frame_config",
 					"kind": 64,
 					"kindString": "Function",
@@ -2823,7 +2823,7 @@
 					],
 					"signatures": [
 						{
-							"id": 512,
+							"id": 514,
 							"name": "create_anim_frame_config",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2835,7 +2835,7 @@
 							},
 							"parameters": [
 								{
-									"id": 513,
+									"id": 515,
 									"name": "key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2849,7 +2849,7 @@
 									}
 								},
 								{
-									"id": 514,
+									"id": 516,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2864,7 +2864,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 515,
+									"id": 517,
 									"name": "visible",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2887,7 +2887,7 @@
 					]
 				},
 				{
-					"id": 516,
+					"id": 518,
 					"name": "create_anim_spritesheet_frame_configs",
 					"kind": 64,
 					"kindString": "Function",
@@ -2901,7 +2901,7 @@
 					],
 					"signatures": [
 						{
-							"id": 517,
+							"id": 519,
 							"name": "create_anim_spritesheet_frame_configs",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2913,7 +2913,7 @@
 							},
 							"parameters": [
 								{
-									"id": 518,
+									"id": 520,
 									"name": "key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2947,7 +2947,7 @@
 					]
 				},
 				{
-					"id": 567,
+					"id": 569,
 					"name": "create_award",
 					"kind": 64,
 					"kindString": "Function",
@@ -2961,7 +2961,7 @@
 					],
 					"signatures": [
 						{
-							"id": 568,
+							"id": 570,
 							"name": "create_award",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -2973,7 +2973,7 @@
 							},
 							"parameters": [
 								{
-									"id": 569,
+									"id": 571,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -2987,7 +2987,7 @@
 									}
 								},
 								{
-									"id": 570,
+									"id": 572,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3001,7 +3001,7 @@
 									}
 								},
 								{
-									"id": 571,
+									"id": 573,
 									"name": "award_key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3023,7 +3023,7 @@
 					]
 				},
 				{
-					"id": 463,
+					"id": 465,
 					"name": "create_config",
 					"kind": 64,
 					"kindString": "Function",
@@ -3037,7 +3037,7 @@
 					],
 					"signatures": [
 						{
-							"id": 464,
+							"id": 466,
 							"name": "create_config",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3049,7 +3049,7 @@
 							},
 							"parameters": [
 								{
-									"id": 465,
+									"id": 467,
 									"name": "lst",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3071,7 +3071,7 @@
 					]
 				},
 				{
-					"id": 594,
+					"id": 596,
 					"name": "create_container",
 					"kind": 64,
 					"kindString": "Function",
@@ -3085,7 +3085,7 @@
 					],
 					"signatures": [
 						{
-							"id": 595,
+							"id": 597,
 							"name": "create_container",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3097,7 +3097,7 @@
 							},
 							"parameters": [
 								{
-									"id": 596,
+									"id": 598,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3111,7 +3111,7 @@
 									}
 								},
 								{
-									"id": 597,
+									"id": 599,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3133,7 +3133,7 @@
 					]
 				},
 				{
-					"id": 586,
+					"id": 588,
 					"name": "create_ellipse",
 					"kind": 64,
 					"kindString": "Function",
@@ -3147,7 +3147,7 @@
 					],
 					"signatures": [
 						{
-							"id": 587,
+							"id": 589,
 							"name": "create_ellipse",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3158,7 +3158,7 @@
 							},
 							"parameters": [
 								{
-									"id": 588,
+									"id": 590,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3172,7 +3172,7 @@
 									}
 								},
 								{
-									"id": 589,
+									"id": 591,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3186,7 +3186,7 @@
 									}
 								},
 								{
-									"id": 590,
+									"id": 592,
 									"name": "width",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3200,7 +3200,7 @@
 									}
 								},
 								{
-									"id": 591,
+									"id": 593,
 									"name": "height",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3214,7 +3214,7 @@
 									}
 								},
 								{
-									"id": 592,
+									"id": 594,
 									"name": "fill",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3229,7 +3229,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 593,
+									"id": 595,
 									"name": "alpha",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3252,7 +3252,7 @@
 					]
 				},
 				{
-					"id": 562,
+					"id": 564,
 					"name": "create_image",
 					"kind": 64,
 					"kindString": "Function",
@@ -3266,7 +3266,7 @@
 					],
 					"signatures": [
 						{
-							"id": 563,
+							"id": 565,
 							"name": "create_image",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3278,7 +3278,7 @@
 							},
 							"parameters": [
 								{
-									"id": 564,
+									"id": 566,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3292,7 +3292,7 @@
 									}
 								},
 								{
-									"id": 565,
+									"id": 567,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3306,7 +3306,7 @@
 									}
 								},
 								{
-									"id": 566,
+									"id": 568,
 									"name": "asset_key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3337,7 +3337,7 @@
 					]
 				},
 				{
-					"id": 474,
+					"id": 476,
 					"name": "create_interactive_config",
 					"kind": 64,
 					"kindString": "Function",
@@ -3351,7 +3351,7 @@
 					],
 					"signatures": [
 						{
-							"id": 475,
+							"id": 477,
 							"name": "create_interactive_config",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3363,7 +3363,7 @@
 							},
 							"parameters": [
 								{
-									"id": 476,
+									"id": 478,
 									"name": "draggable",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3378,7 +3378,7 @@
 									"defaultValue": "false"
 								},
 								{
-									"id": 477,
+									"id": 479,
 									"name": "use_hand_cursor",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3393,7 +3393,7 @@
 									"defaultValue": "false"
 								},
 								{
-									"id": 478,
+									"id": 480,
 									"name": "pixel_perfect",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3408,7 +3408,7 @@
 									"defaultValue": "false"
 								},
 								{
-									"id": 479,
+									"id": 481,
 									"name": "alpha_tolerance",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3431,7 +3431,7 @@
 					]
 				},
 				{
-					"id": 578,
+					"id": 580,
 					"name": "create_rect",
 					"kind": 64,
 					"kindString": "Function",
@@ -3445,7 +3445,7 @@
 					],
 					"signatures": [
 						{
-							"id": 579,
+							"id": 581,
 							"name": "create_rect",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3457,7 +3457,7 @@
 							},
 							"parameters": [
 								{
-									"id": 580,
+									"id": 582,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3471,7 +3471,7 @@
 									}
 								},
 								{
-									"id": 581,
+									"id": 583,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3485,7 +3485,7 @@
 									}
 								},
 								{
-									"id": 582,
+									"id": 584,
 									"name": "width",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3499,7 +3499,7 @@
 									}
 								},
 								{
-									"id": 583,
+									"id": 585,
 									"name": "height",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3513,7 +3513,7 @@
 									}
 								},
 								{
-									"id": 584,
+									"id": 586,
 									"name": "fill",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3528,7 +3528,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 585,
+									"id": 587,
 									"name": "alpha",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3551,7 +3551,7 @@
 					]
 				},
 				{
-					"id": 480,
+					"id": 482,
 					"name": "create_sound_config",
 					"kind": 64,
 					"kindString": "Function",
@@ -3565,7 +3565,7 @@
 					],
 					"signatures": [
 						{
-							"id": 481,
+							"id": 483,
 							"name": "create_sound_config",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3577,7 +3577,7 @@
 							},
 							"parameters": [
 								{
-									"id": 482,
+									"id": 484,
 									"name": "mute",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3592,7 +3592,7 @@
 									"defaultValue": "false"
 								},
 								{
-									"id": 483,
+									"id": 485,
 									"name": "volume",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3607,7 +3607,7 @@
 									"defaultValue": "1"
 								},
 								{
-									"id": 484,
+									"id": 486,
 									"name": "rate",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3622,7 +3622,7 @@
 									"defaultValue": "1"
 								},
 								{
-									"id": 485,
+									"id": 487,
 									"name": "detune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3637,7 +3637,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 486,
+									"id": 488,
 									"name": "seek",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3652,7 +3652,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 487,
+									"id": 489,
 									"name": "loop",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3667,7 +3667,7 @@
 									"defaultValue": "false"
 								},
 								{
-									"id": 488,
+									"id": 490,
 									"name": "delay",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3690,7 +3690,7 @@
 					]
 				},
 				{
-					"id": 519,
+					"id": 521,
 					"name": "create_spritesheet_config",
 					"kind": 64,
 					"kindString": "Function",
@@ -3704,7 +3704,7 @@
 					],
 					"signatures": [
 						{
-							"id": 520,
+							"id": 522,
 							"name": "create_spritesheet_config",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3715,7 +3715,7 @@
 							},
 							"parameters": [
 								{
-									"id": 521,
+									"id": 523,
 									"name": "frame_width",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3729,7 +3729,7 @@
 									}
 								},
 								{
-									"id": 522,
+									"id": 524,
 									"name": "frame_height",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3743,7 +3743,7 @@
 									}
 								},
 								{
-									"id": 523,
+									"id": 525,
 									"name": "start_frame",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3758,7 +3758,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 524,
+									"id": 526,
 									"name": "margin",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3773,7 +3773,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 525,
+									"id": 527,
 									"name": "spacing",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3796,7 +3796,7 @@
 					]
 				},
 				{
-					"id": 572,
+					"id": 574,
 					"name": "create_text",
 					"kind": 64,
 					"kindString": "Function",
@@ -3810,7 +3810,7 @@
 					],
 					"signatures": [
 						{
-							"id": 573,
+							"id": 575,
 							"name": "create_text",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3822,7 +3822,7 @@
 							},
 							"parameters": [
 								{
-									"id": 574,
+									"id": 576,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3836,7 +3836,7 @@
 									}
 								},
 								{
-									"id": 575,
+									"id": 577,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3850,7 +3850,7 @@
 									}
 								},
 								{
-									"id": 576,
+									"id": 578,
 									"name": "text",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3864,7 +3864,7 @@
 									}
 								},
 								{
-									"id": 577,
+									"id": 579,
 									"name": "config",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3887,7 +3887,7 @@
 					]
 				},
 				{
-					"id": 466,
+					"id": 468,
 					"name": "create_text_config",
 					"kind": 64,
 					"kindString": "Function",
@@ -3901,7 +3901,7 @@
 					],
 					"signatures": [
 						{
-							"id": 467,
+							"id": 469,
 							"name": "create_text_config",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -3913,7 +3913,7 @@
 							},
 							"parameters": [
 								{
-									"id": 468,
+									"id": 470,
 									"name": "font_family",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3928,7 +3928,7 @@
 									"defaultValue": "'Courier'"
 								},
 								{
-									"id": 469,
+									"id": 471,
 									"name": "font_size",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3943,7 +3943,7 @@
 									"defaultValue": "'16px'"
 								},
 								{
-									"id": 470,
+									"id": 472,
 									"name": "color",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3958,7 +3958,7 @@
 									"defaultValue": "'#fff'"
 								},
 								{
-									"id": 471,
+									"id": 473,
 									"name": "stroke",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3973,7 +3973,7 @@
 									"defaultValue": "'#fff'"
 								},
 								{
-									"id": 472,
+									"id": 474,
 									"name": "stroke_thickness",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -3988,7 +3988,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 473,
+									"id": 475,
 									"name": "align",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4011,7 +4011,7 @@
 					]
 				},
 				{
-					"id": 489,
+					"id": 491,
 					"name": "create_tween_config",
 					"kind": 64,
 					"kindString": "Function",
@@ -4025,7 +4025,7 @@
 					],
 					"signatures": [
 						{
-							"id": 490,
+							"id": 492,
 							"name": "create_tween_config",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4037,7 +4037,7 @@
 							},
 							"parameters": [
 								{
-									"id": 491,
+									"id": 493,
 									"name": "target_prop",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4052,7 +4052,7 @@
 									"defaultValue": "'x'"
 								},
 								{
-									"id": 492,
+									"id": 494,
 									"name": "target_value",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4076,7 +4076,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 493,
+									"id": 495,
 									"name": "delay",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4091,7 +4091,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 494,
+									"id": 496,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4106,7 +4106,7 @@
 									"defaultValue": "1000"
 								},
 								{
-									"id": 495,
+									"id": 497,
 									"name": "ease",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4130,7 +4130,7 @@
 									"defaultValue": "'Power0'"
 								},
 								{
-									"id": 496,
+									"id": 498,
 									"name": "on_complete",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4144,7 +4144,7 @@
 									}
 								},
 								{
-									"id": 497,
+									"id": 499,
 									"name": "yoyo",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4159,7 +4159,7 @@
 									"defaultValue": "false"
 								},
 								{
-									"id": 498,
+									"id": 500,
 									"name": "loop",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4174,7 +4174,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 499,
+									"id": 501,
 									"name": "loop_delay",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4189,7 +4189,7 @@
 									"defaultValue": "0"
 								},
 								{
-									"id": 500,
+									"id": 502,
 									"name": "on_loop",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4211,7 +4211,7 @@
 					]
 				},
 				{
-					"id": 602,
+					"id": 604,
 					"name": "destroy_obj",
 					"kind": 64,
 					"kindString": "Function",
@@ -4225,7 +4225,7 @@
 					],
 					"signatures": [
 						{
-							"id": 603,
+							"id": 605,
 							"name": "destroy_obj",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4235,7 +4235,7 @@
 							},
 							"parameters": [
 								{
-									"id": 604,
+									"id": 606,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4257,7 +4257,7 @@
 					]
 				},
 				{
-					"id": 532,
+					"id": 534,
 					"name": "get_screen_display_height",
 					"kind": 64,
 					"kindString": "Function",
@@ -4271,7 +4271,7 @@
 					],
 					"signatures": [
 						{
-							"id": 533,
+							"id": 535,
 							"name": "get_screen_display_height",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4288,7 +4288,7 @@
 					]
 				},
 				{
-					"id": 530,
+					"id": 532,
 					"name": "get_screen_display_width",
 					"kind": 64,
 					"kindString": "Function",
@@ -4302,7 +4302,7 @@
 					],
 					"signatures": [
 						{
-							"id": 531,
+							"id": 533,
 							"name": "get_screen_display_width",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4319,7 +4319,7 @@
 					]
 				},
 				{
-					"id": 528,
+					"id": 530,
 					"name": "get_screen_height",
 					"kind": 64,
 					"kindString": "Function",
@@ -4333,7 +4333,7 @@
 					],
 					"signatures": [
 						{
-							"id": 529,
+							"id": 531,
 							"name": "get_screen_height",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4350,7 +4350,7 @@
 					]
 				},
 				{
-					"id": 526,
+					"id": 528,
 					"name": "get_screen_width",
 					"kind": 64,
 					"kindString": "Function",
@@ -4364,7 +4364,7 @@
 					],
 					"signatures": [
 						{
-							"id": 527,
+							"id": 529,
 							"name": "get_screen_width",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4381,7 +4381,7 @@
 					]
 				},
 				{
-					"id": 534,
+					"id": 536,
 					"name": "load_image",
 					"kind": 64,
 					"kindString": "Function",
@@ -4395,7 +4395,7 @@
 					],
 					"signatures": [
 						{
-							"id": 535,
+							"id": 537,
 							"name": "load_image",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4405,7 +4405,7 @@
 							},
 							"parameters": [
 								{
-									"id": 536,
+									"id": 538,
 									"name": "key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4419,7 +4419,7 @@
 									}
 								},
 								{
-									"id": 537,
+									"id": 539,
 									"name": "url",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4441,7 +4441,7 @@
 					]
 				},
 				{
-					"id": 538,
+					"id": 540,
 					"name": "load_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -4455,7 +4455,7 @@
 					],
 					"signatures": [
 						{
-							"id": 539,
+							"id": 541,
 							"name": "load_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4465,7 +4465,7 @@
 							},
 							"parameters": [
 								{
-									"id": 540,
+									"id": 542,
 									"name": "key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4479,7 +4479,7 @@
 									}
 								},
 								{
-									"id": 541,
+									"id": 543,
 									"name": "url",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4501,7 +4501,7 @@
 					]
 				},
 				{
-					"id": 542,
+					"id": 544,
 					"name": "load_spritesheet",
 					"kind": 64,
 					"kindString": "Function",
@@ -4515,7 +4515,7 @@
 					],
 					"signatures": [
 						{
-							"id": 543,
+							"id": 545,
 							"name": "load_spritesheet",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4525,7 +4525,7 @@
 							},
 							"parameters": [
 								{
-									"id": 544,
+									"id": 546,
 									"name": "key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4539,7 +4539,7 @@
 									}
 								},
 								{
-									"id": 545,
+									"id": 547,
 									"name": "url",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4553,7 +4553,7 @@
 									}
 								},
 								{
-									"id": 546,
+									"id": 548,
 									"name": "spritesheet_config",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4570,7 +4570,7 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 547,
+									"id": 549,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
@@ -4581,7 +4581,7 @@
 					]
 				},
 				{
-					"id": 558,
+					"id": 560,
 					"name": "play_anim_on_image",
 					"kind": 64,
 					"kindString": "Function",
@@ -4595,7 +4595,7 @@
 					],
 					"signatures": [
 						{
-							"id": 559,
+							"id": 561,
 							"name": "play_anim_on_image",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4605,7 +4605,7 @@
 							},
 							"parameters": [
 								{
-									"id": 560,
+									"id": 562,
 									"name": "image",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4619,7 +4619,7 @@
 									}
 								},
 								{
-									"id": 561,
+									"id": 563,
 									"name": "anims_key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4650,7 +4650,7 @@
 					]
 				},
 				{
-					"id": 551,
+					"id": 553,
 					"name": "play_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -4664,7 +4664,7 @@
 					],
 					"signatures": [
 						{
-							"id": 552,
+							"id": 554,
 							"name": "play_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4674,7 +4674,7 @@
 							},
 							"parameters": [
 								{
-									"id": 553,
+									"id": 555,
 									"name": "key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4688,7 +4688,7 @@
 									}
 								},
 								{
-									"id": 554,
+									"id": 556,
 									"name": "config",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4711,7 +4711,7 @@
 					]
 				},
 				{
-					"id": 460,
+					"id": 462,
 					"name": "prepend_remote_url",
 					"kind": 64,
 					"kindString": "Function",
@@ -4725,7 +4725,7 @@
 					],
 					"signatures": [
 						{
-							"id": 461,
+							"id": 463,
 							"name": "prepend_remote_url",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4736,7 +4736,7 @@
 							},
 							"parameters": [
 								{
-									"id": 462,
+									"id": 464,
 									"name": "asset_key",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4756,7 +4756,7 @@
 					]
 				},
 				{
-					"id": 656,
+					"id": 658,
 					"name": "remove_listener",
 					"kind": 64,
 					"kindString": "Function",
@@ -4770,7 +4770,7 @@
 					],
 					"signatures": [
 						{
-							"id": 657,
+							"id": 659,
 							"name": "remove_listener",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4781,7 +4781,7 @@
 							},
 							"parameters": [
 								{
-									"id": 658,
+									"id": 660,
 									"name": "listener",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4801,7 +4801,7 @@
 					]
 				},
 				{
-					"id": 610,
+					"id": 612,
 					"name": "set_alpha",
 					"kind": 64,
 					"kindString": "Function",
@@ -4815,7 +4815,7 @@
 					],
 					"signatures": [
 						{
-							"id": 611,
+							"id": 613,
 							"name": "set_alpha",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4826,7 +4826,7 @@
 							},
 							"parameters": [
 								{
-									"id": 612,
+									"id": 614,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4840,7 +4840,7 @@
 									}
 								},
 								{
-									"id": 613,
+									"id": 615,
 									"name": "alpha",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4871,7 +4871,7 @@
 					]
 				},
 				{
-					"id": 605,
+					"id": 607,
 					"name": "set_display_size",
 					"kind": 64,
 					"kindString": "Function",
@@ -4885,7 +4885,7 @@
 					],
 					"signatures": [
 						{
-							"id": 606,
+							"id": 608,
 							"name": "set_display_size",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4896,7 +4896,7 @@
 							},
 							"parameters": [
 								{
-									"id": 607,
+									"id": 609,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4910,7 +4910,7 @@
 									}
 								},
 								{
-									"id": 608,
+									"id": 610,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4924,7 +4924,7 @@
 									}
 								},
 								{
-									"id": 609,
+									"id": 611,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4955,7 +4955,7 @@
 					]
 				},
 				{
-					"id": 637,
+					"id": 639,
 					"name": "set_flip",
 					"kind": 64,
 					"kindString": "Function",
@@ -4969,7 +4969,7 @@
 					],
 					"signatures": [
 						{
-							"id": 638,
+							"id": 640,
 							"name": "set_flip",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -4980,7 +4980,7 @@
 							},
 							"parameters": [
 								{
-									"id": 639,
+									"id": 641,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -4994,7 +4994,7 @@
 									}
 								},
 								{
-									"id": 640,
+									"id": 642,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5008,7 +5008,7 @@
 									}
 								},
 								{
-									"id": 641,
+									"id": 643,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5039,7 +5039,7 @@
 					]
 				},
 				{
-					"id": 614,
+					"id": 616,
 					"name": "set_interactive",
 					"kind": 64,
 					"kindString": "Function",
@@ -5053,7 +5053,7 @@
 					],
 					"signatures": [
 						{
-							"id": 615,
+							"id": 617,
 							"name": "set_interactive",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -5065,7 +5065,7 @@
 							},
 							"parameters": [
 								{
-									"id": 616,
+									"id": 618,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5079,7 +5079,7 @@
 									}
 								},
 								{
-									"id": 617,
+									"id": 619,
 									"name": "config",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5111,7 +5111,7 @@
 					]
 				},
 				{
-					"id": 618,
+					"id": 620,
 					"name": "set_origin",
 					"kind": 64,
 					"kindString": "Function",
@@ -5125,7 +5125,7 @@
 					],
 					"signatures": [
 						{
-							"id": 619,
+							"id": 621,
 							"name": "set_origin",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -5136,7 +5136,7 @@
 							},
 							"parameters": [
 								{
-									"id": 620,
+									"id": 622,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5150,7 +5150,7 @@
 									}
 								},
 								{
-									"id": 621,
+									"id": 623,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5164,7 +5164,7 @@
 									}
 								},
 								{
-									"id": 622,
+									"id": 624,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5195,7 +5195,7 @@
 					]
 				},
 				{
-					"id": 623,
+					"id": 625,
 					"name": "set_position",
 					"kind": 64,
 					"kindString": "Function",
@@ -5209,7 +5209,7 @@
 					],
 					"signatures": [
 						{
-							"id": 624,
+							"id": 626,
 							"name": "set_position",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -5220,7 +5220,7 @@
 							},
 							"parameters": [
 								{
-									"id": 625,
+									"id": 627,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5234,7 +5234,7 @@
 									}
 								},
 								{
-									"id": 626,
+									"id": 628,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5248,7 +5248,7 @@
 									}
 								},
 								{
-									"id": 627,
+									"id": 629,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5279,7 +5279,7 @@
 					]
 				},
 				{
-					"id": 633,
+					"id": 635,
 					"name": "set_rotation",
 					"kind": 64,
 					"kindString": "Function",
@@ -5293,7 +5293,7 @@
 					],
 					"signatures": [
 						{
-							"id": 634,
+							"id": 636,
 							"name": "set_rotation",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -5304,7 +5304,7 @@
 							},
 							"parameters": [
 								{
-									"id": 635,
+									"id": 637,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5318,7 +5318,7 @@
 									}
 								},
 								{
-									"id": 636,
+									"id": 638,
 									"name": "rad",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5349,7 +5349,7 @@
 					]
 				},
 				{
-					"id": 628,
+					"id": 630,
 					"name": "set_scale",
 					"kind": 64,
 					"kindString": "Function",
@@ -5363,7 +5363,7 @@
 					],
 					"signatures": [
 						{
-							"id": 629,
+							"id": 631,
 							"name": "set_scale",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -5374,7 +5374,7 @@
 							},
 							"parameters": [
 								{
-									"id": 630,
+									"id": 632,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5388,7 +5388,7 @@
 									}
 								},
 								{
-									"id": 631,
+									"id": 633,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5402,7 +5402,7 @@
 									}
 								},
 								{
-									"id": 632,
+									"id": 634,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -5438,47 +5438,47 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						548,
-						651,
-						646,
-						598,
-						642,
-						555,
-						501,
-						511,
-						516,
-						567,
-						463,
-						594,
-						586,
-						562,
-						474,
-						578,
-						480,
-						519,
-						572,
-						466,
-						489,
-						602,
+						550,
+						653,
+						648,
+						600,
+						644,
+						557,
+						503,
+						513,
+						518,
+						569,
+						465,
+						596,
+						588,
+						564,
+						476,
+						580,
+						482,
+						521,
+						574,
+						468,
+						491,
+						604,
+						534,
 						532,
 						530,
 						528,
-						526,
-						534,
-						538,
-						542,
-						558,
-						551,
-						460,
-						656,
-						610,
-						605,
-						637,
-						614,
-						618,
-						623,
-						633,
-						628
+						536,
+						540,
+						544,
+						560,
+						553,
+						462,
+						658,
+						612,
+						607,
+						639,
+						616,
+						620,
+						625,
+						635,
+						630
 					]
 				}
 			],
@@ -5511,7 +5511,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 437,
+							"line": 471,
 							"character": 24
 						}
 					],
@@ -5558,7 +5558,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 426,
+							"line": 460,
 							"character": 23
 						}
 					],
@@ -5605,7 +5605,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 536,
+							"line": 570,
 							"character": 30
 						}
 					],
@@ -5666,7 +5666,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 497,
+							"line": 531,
 							"character": 26
 						}
 					],
@@ -5726,7 +5726,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 415,
+							"line": 449,
 							"character": 24
 						}
 					],
@@ -5773,7 +5773,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 517,
+							"line": 551,
 							"character": 30
 						}
 					],
@@ -5817,7 +5817,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 549,
+							"line": 583,
 							"character": 24
 						}
 					],
@@ -5863,7 +5863,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 404,
+							"line": 438,
 							"character": 22
 						}
 					],
@@ -5910,7 +5910,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 524,
+							"line": 558,
 							"character": 28
 						}
 					],
@@ -5940,7 +5940,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 563,
+							"line": 598,
 							"character": 30
 						}
 					],
@@ -6000,7 +6000,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 573,
+							"line": 608,
 							"character": 23
 						}
 					],
@@ -6046,7 +6046,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 452,
+							"line": 486,
 							"character": 24
 						}
 					],
@@ -6148,7 +6148,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 386,
+							"line": 420,
 							"character": 21
 						}
 					],
@@ -6170,6 +6170,36 @@
 					]
 				},
 				{
+					"id": 61,
+					"name": "use_local_video",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "pix_n_flix/functions.ts",
+							"line": 615,
+							"character": 31
+						}
+					],
+					"signatures": [
+						{
+							"id": 62,
+							"name": "use_local_video",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Allows you to upload videos into Pix-n-Flix"
+							},
+							"type": {
+								"type": "intrinsic",
+								"name": "void"
+							}
+						}
+					]
+				},
+				{
 					"id": 34,
 					"name": "video_height",
 					"kind": 64,
@@ -6178,7 +6208,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 476,
+							"line": 510,
 							"character": 28
 						}
 					],
@@ -6209,7 +6239,7 @@
 					"sources": [
 						{
 							"fileName": "pix_n_flix/functions.ts",
-							"line": 486,
+							"line": 520,
 							"character": 27
 						}
 					],
@@ -6250,6 +6280,7 @@
 						58,
 						27,
 						13,
+						61,
 						34,
 						36
 					]
@@ -6468,7 +6499,7 @@
 			]
 		},
 		{
-			"id": 659,
+			"id": 661,
 			"name": "rune",
 			"kind": 1,
 			"kindString": "Module",
@@ -6480,7 +6511,7 @@
 			"originalName": "rune/functions",
 			"children": [
 				{
-					"id": 795,
+					"id": 797,
 					"name": "blank",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6504,7 +6535,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 801,
+					"id": 803,
 					"name": "circle",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6528,7 +6559,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 799,
+					"id": 801,
 					"name": "corner",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6552,7 +6583,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 802,
+					"id": 804,
 					"name": "heart",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6576,7 +6607,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 800,
+					"id": 802,
 					"name": "nova",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6600,7 +6631,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 803,
+					"id": 805,
 					"name": "pentagram",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6624,7 +6655,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 796,
+					"id": 798,
 					"name": "rcross",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6648,7 +6679,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 804,
+					"id": 806,
 					"name": "ribbon",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6672,7 +6703,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 797,
+					"id": 799,
 					"name": "sail",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6696,7 +6727,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 794,
+					"id": 796,
 					"name": "square",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6720,7 +6751,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 798,
+					"id": 800,
 					"name": "triangle",
 					"kind": 32,
 					"kindString": "Variable",
@@ -6744,7 +6775,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 783,
+					"id": 785,
 					"name": "anaglyph",
 					"kind": 64,
 					"kindString": "Function",
@@ -6758,7 +6789,7 @@
 					],
 					"signatures": [
 						{
-							"id": 784,
+							"id": 786,
 							"name": "anaglyph",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -6769,7 +6800,7 @@
 							},
 							"parameters": [
 								{
-									"id": 785,
+									"id": 787,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -6791,7 +6822,7 @@
 					]
 				},
 				{
-					"id": 708,
+					"id": 710,
 					"name": "beside",
 					"kind": 64,
 					"kindString": "Function",
@@ -6805,7 +6836,7 @@
 					],
 					"signatures": [
 						{
-							"id": 709,
+							"id": 711,
 							"name": "beside",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -6816,7 +6847,7 @@
 							},
 							"parameters": [
 								{
-									"id": 710,
+									"id": 712,
 									"name": "rune1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -6830,7 +6861,7 @@
 									}
 								},
 								{
-									"id": 711,
+									"id": 713,
 									"name": "rune2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -6852,7 +6883,7 @@
 					]
 				},
 				{
-					"id": 703,
+					"id": 705,
 					"name": "beside_frac",
 					"kind": 64,
 					"kindString": "Function",
@@ -6866,7 +6897,7 @@
 					],
 					"signatures": [
 						{
-							"id": 704,
+							"id": 706,
 							"name": "beside_frac",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -6877,7 +6908,7 @@
 							},
 							"parameters": [
 								{
-									"id": 705,
+									"id": 707,
 									"name": "frac",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -6891,7 +6922,7 @@
 									}
 								},
 								{
-									"id": 706,
+									"id": 708,
 									"name": "rune1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -6905,7 +6936,7 @@
 									}
 								},
 								{
-									"id": 707,
+									"id": 709,
 									"name": "rune2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -6927,7 +6958,7 @@
 					]
 				},
 				{
-					"id": 774,
+					"id": 776,
 					"name": "black",
 					"kind": 64,
 					"kindString": "Function",
@@ -6941,7 +6972,7 @@
 					],
 					"signatures": [
 						{
-							"id": 775,
+							"id": 777,
 							"name": "black",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -6952,7 +6983,7 @@
 							},
 							"parameters": [
 								{
-									"id": 776,
+									"id": 778,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -6974,7 +7005,7 @@
 					]
 				},
 				{
-					"id": 759,
+					"id": 761,
 					"name": "blue",
 					"kind": 64,
 					"kindString": "Function",
@@ -6988,7 +7019,7 @@
 					],
 					"signatures": [
 						{
-							"id": 760,
+							"id": 762,
 							"name": "blue",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -6999,7 +7030,7 @@
 							},
 							"parameters": [
 								{
-									"id": 761,
+									"id": 763,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7021,7 +7052,7 @@
 					]
 				},
 				{
-					"id": 771,
+					"id": 773,
 					"name": "brown",
 					"kind": 64,
 					"kindString": "Function",
@@ -7035,7 +7066,7 @@
 					],
 					"signatures": [
 						{
-							"id": 772,
+							"id": 774,
 							"name": "brown",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7046,7 +7077,7 @@
 							},
 							"parameters": [
 								{
-									"id": 773,
+									"id": 775,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7068,7 +7099,7 @@
 					]
 				},
 				{
-					"id": 738,
+					"id": 740,
 					"name": "color",
 					"kind": 64,
 					"kindString": "Function",
@@ -7082,7 +7113,7 @@
 					],
 					"signatures": [
 						{
-							"id": 739,
+							"id": 741,
 							"name": "color",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7093,7 +7124,7 @@
 							},
 							"parameters": [
 								{
-									"id": 740,
+									"id": 742,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7107,7 +7138,7 @@
 									}
 								},
 								{
-									"id": 741,
+									"id": 743,
 									"name": "r",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7121,7 +7152,7 @@
 									}
 								},
 								{
-									"id": 742,
+									"id": 744,
 									"name": "g",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7135,7 +7166,7 @@
 									}
 								},
 								{
-									"id": 743,
+									"id": 745,
 									"name": "b",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7157,7 +7188,7 @@
 					]
 				},
 				{
-					"id": 715,
+					"id": 717,
 					"name": "flip_horiz",
 					"kind": 64,
 					"kindString": "Function",
@@ -7171,7 +7202,7 @@
 					],
 					"signatures": [
 						{
-							"id": 716,
+							"id": 718,
 							"name": "flip_horiz",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7182,7 +7213,7 @@
 							},
 							"parameters": [
 								{
-									"id": 717,
+									"id": 719,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7204,7 +7235,7 @@
 					]
 				},
 				{
-					"id": 712,
+					"id": 714,
 					"name": "flip_vert",
 					"kind": 64,
 					"kindString": "Function",
@@ -7218,7 +7249,7 @@
 					],
 					"signatures": [
 						{
-							"id": 713,
+							"id": 715,
 							"name": "flip_vert",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7229,7 +7260,7 @@
 							},
 							"parameters": [
 								{
-									"id": 714,
+									"id": 716,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7251,7 +7282,7 @@
 					]
 				},
 				{
-					"id": 660,
+					"id": 662,
 					"name": "from_url",
 					"kind": 64,
 					"kindString": "Function",
@@ -7265,7 +7296,7 @@
 					],
 					"signatures": [
 						{
-							"id": 661,
+							"id": 663,
 							"name": "from_url",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7276,7 +7307,7 @@
 							},
 							"parameters": [
 								{
-									"id": 662,
+									"id": 664,
 									"name": "imageUrl",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7298,7 +7329,7 @@
 					]
 				},
 				{
-					"id": 762,
+					"id": 764,
 					"name": "green",
 					"kind": 64,
 					"kindString": "Function",
@@ -7312,7 +7343,7 @@
 					],
 					"signatures": [
 						{
-							"id": 763,
+							"id": 765,
 							"name": "green",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7323,7 +7354,7 @@
 							},
 							"parameters": [
 								{
-									"id": 764,
+									"id": 766,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7345,7 +7376,7 @@
 					]
 				},
 				{
-					"id": 790,
+					"id": 792,
 					"name": "hollusion",
 					"kind": 64,
 					"kindString": "Function",
@@ -7359,7 +7390,7 @@
 					],
 					"signatures": [
 						{
-							"id": 791,
+							"id": 793,
 							"name": "hollusion",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7370,7 +7401,7 @@
 							},
 							"parameters": [
 								{
-									"id": 792,
+									"id": 794,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7392,7 +7423,7 @@
 					]
 				},
 				{
-					"id": 786,
+					"id": 788,
 					"name": "hollusion_magnitude",
 					"kind": 64,
 					"kindString": "Function",
@@ -7406,7 +7437,7 @@
 					],
 					"signatures": [
 						{
-							"id": 787,
+							"id": 789,
 							"name": "hollusion_magnitude",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7417,7 +7448,7 @@
 							},
 							"parameters": [
 								{
-									"id": 788,
+									"id": 790,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7431,7 +7462,7 @@
 									}
 								},
 								{
-									"id": 789,
+									"id": 791,
 									"name": "magnitude",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7454,7 +7485,7 @@
 					]
 				},
 				{
-					"id": 756,
+					"id": 758,
 					"name": "indigo",
 					"kind": 64,
 					"kindString": "Function",
@@ -7468,7 +7499,7 @@
 					],
 					"signatures": [
 						{
-							"id": 757,
+							"id": 759,
 							"name": "indigo",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7479,7 +7510,7 @@
 							},
 							"parameters": [
 								{
-									"id": 758,
+									"id": 760,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7501,7 +7532,7 @@
 					]
 				},
 				{
-					"id": 718,
+					"id": 720,
 					"name": "make_cross",
 					"kind": 64,
 					"kindString": "Function",
@@ -7515,7 +7546,7 @@
 					],
 					"signatures": [
 						{
-							"id": 719,
+							"id": 721,
 							"name": "make_cross",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7526,7 +7557,7 @@
 							},
 							"parameters": [
 								{
-									"id": 720,
+									"id": 722,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7548,7 +7579,7 @@
 					]
 				},
 				{
-					"id": 768,
+					"id": 770,
 					"name": "orange",
 					"kind": 64,
 					"kindString": "Function",
@@ -7562,7 +7593,7 @@
 					],
 					"signatures": [
 						{
-							"id": 769,
+							"id": 771,
 							"name": "orange",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7573,7 +7604,7 @@
 							},
 							"parameters": [
 								{
-									"id": 770,
+									"id": 772,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7595,7 +7626,7 @@
 					]
 				},
 				{
-					"id": 734,
+					"id": 736,
 					"name": "overlay",
 					"kind": 64,
 					"kindString": "Function",
@@ -7609,7 +7640,7 @@
 					],
 					"signatures": [
 						{
-							"id": 735,
+							"id": 737,
 							"name": "overlay",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7620,7 +7651,7 @@
 							},
 							"parameters": [
 								{
-									"id": 736,
+									"id": 738,
 									"name": "rune1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7634,7 +7665,7 @@
 									}
 								},
 								{
-									"id": 737,
+									"id": 739,
 									"name": "rune2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7656,7 +7687,7 @@
 					]
 				},
 				{
-					"id": 729,
+					"id": 731,
 					"name": "overlay_frac",
 					"kind": 64,
 					"kindString": "Function",
@@ -7670,7 +7701,7 @@
 					],
 					"signatures": [
 						{
-							"id": 730,
+							"id": 732,
 							"name": "overlay_frac",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7681,7 +7712,7 @@
 							},
 							"parameters": [
 								{
-									"id": 731,
+									"id": 733,
 									"name": "frac",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7695,7 +7726,7 @@
 									}
 								},
 								{
-									"id": 732,
+									"id": 734,
 									"name": "rune1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7709,7 +7740,7 @@
 									}
 								},
 								{
-									"id": 733,
+									"id": 735,
 									"name": "rune2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7731,7 +7762,7 @@
 					]
 				},
 				{
-					"id": 750,
+					"id": 752,
 					"name": "pink",
 					"kind": 64,
 					"kindString": "Function",
@@ -7745,7 +7776,7 @@
 					],
 					"signatures": [
 						{
-							"id": 751,
+							"id": 753,
 							"name": "pink",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7756,7 +7787,7 @@
 							},
 							"parameters": [
 								{
-									"id": 752,
+									"id": 754,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7778,7 +7809,7 @@
 					]
 				},
 				{
-					"id": 753,
+					"id": 755,
 					"name": "purple",
 					"kind": 64,
 					"kindString": "Function",
@@ -7792,7 +7823,7 @@
 					],
 					"signatures": [
 						{
-							"id": 754,
+							"id": 756,
 							"name": "purple",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7803,7 +7834,7 @@
 							},
 							"parameters": [
 								{
-									"id": 755,
+									"id": 757,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7825,7 +7856,7 @@
 					]
 				},
 				{
-					"id": 697,
+					"id": 699,
 					"name": "quarter_turn_left",
 					"kind": 64,
 					"kindString": "Function",
@@ -7839,7 +7870,7 @@
 					],
 					"signatures": [
 						{
-							"id": 698,
+							"id": 700,
 							"name": "quarter_turn_left",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7850,7 +7881,7 @@
 							},
 							"parameters": [
 								{
-									"id": 699,
+									"id": 701,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7872,7 +7903,7 @@
 					]
 				},
 				{
-					"id": 694,
+					"id": 696,
 					"name": "quarter_turn_right",
 					"kind": 64,
 					"kindString": "Function",
@@ -7886,7 +7917,7 @@
 					],
 					"signatures": [
 						{
-							"id": 695,
+							"id": 697,
 							"name": "quarter_turn_right",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7897,7 +7928,7 @@
 							},
 							"parameters": [
 								{
-									"id": 696,
+									"id": 698,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7919,7 +7950,7 @@
 					]
 				},
 				{
-					"id": 744,
+					"id": 746,
 					"name": "random_color",
 					"kind": 64,
 					"kindString": "Function",
@@ -7933,7 +7964,7 @@
 					],
 					"signatures": [
 						{
-							"id": 745,
+							"id": 747,
 							"name": "random_color",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7944,7 +7975,7 @@
 							},
 							"parameters": [
 								{
-									"id": 746,
+									"id": 748,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7966,7 +7997,7 @@
 					]
 				},
 				{
-					"id": 747,
+					"id": 749,
 					"name": "red",
 					"kind": 64,
 					"kindString": "Function",
@@ -7980,7 +8011,7 @@
 					],
 					"signatures": [
 						{
-							"id": 748,
+							"id": 750,
 							"name": "red",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -7991,7 +8022,7 @@
 							},
 							"parameters": [
 								{
-									"id": 749,
+									"id": 751,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8013,7 +8044,7 @@
 					]
 				},
 				{
-					"id": 721,
+					"id": 723,
 					"name": "repeat_pattern",
 					"kind": 64,
 					"kindString": "Function",
@@ -8027,7 +8058,7 @@
 					],
 					"signatures": [
 						{
-							"id": 722,
+							"id": 724,
 							"name": "repeat_pattern",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8038,7 +8069,7 @@
 							},
 							"parameters": [
 								{
-									"id": 723,
+									"id": 725,
 									"name": "n",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8052,7 +8083,7 @@
 									}
 								},
 								{
-									"id": 724,
+									"id": 726,
 									"name": "pattern",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8063,7 +8094,7 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 725,
+											"id": 727,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
@@ -8077,14 +8108,14 @@
 											],
 											"signatures": [
 												{
-													"id": 726,
+													"id": 728,
 													"name": "__type",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 727,
+															"id": 729,
 															"name": "a",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -8105,7 +8136,7 @@
 									}
 								},
 								{
-									"id": 728,
+									"id": 730,
 									"name": "initial",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8127,7 +8158,7 @@
 					]
 				},
 				{
-					"id": 677,
+					"id": 679,
 					"name": "rotate",
 					"kind": 64,
 					"kindString": "Function",
@@ -8141,7 +8172,7 @@
 					],
 					"signatures": [
 						{
-							"id": 678,
+							"id": 680,
 							"name": "rotate",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8152,7 +8183,7 @@
 							},
 							"parameters": [
 								{
-									"id": 679,
+									"id": 681,
 									"name": "rad",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8166,7 +8197,7 @@
 									}
 								},
 								{
-									"id": 680,
+									"id": 682,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8188,7 +8219,7 @@
 					]
 				},
 				{
-					"id": 668,
+					"id": 670,
 					"name": "scale",
 					"kind": 64,
 					"kindString": "Function",
@@ -8202,7 +8233,7 @@
 					],
 					"signatures": [
 						{
-							"id": 669,
+							"id": 671,
 							"name": "scale",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8213,7 +8244,7 @@
 							},
 							"parameters": [
 								{
-									"id": 670,
+									"id": 672,
 									"name": "ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8227,7 +8258,7 @@
 									}
 								},
 								{
-									"id": 671,
+									"id": 673,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8249,7 +8280,7 @@
 					]
 				},
 				{
-					"id": 663,
+					"id": 665,
 					"name": "scale_independent",
 					"kind": 64,
 					"kindString": "Function",
@@ -8263,7 +8294,7 @@
 					],
 					"signatures": [
 						{
-							"id": 664,
+							"id": 666,
 							"name": "scale_independent",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8274,7 +8305,7 @@
 							},
 							"parameters": [
 								{
-									"id": 665,
+									"id": 667,
 									"name": "ratio_x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8288,7 +8319,7 @@
 									}
 								},
 								{
-									"id": 666,
+									"id": 668,
 									"name": "ratio_y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8302,7 +8333,7 @@
 									}
 								},
 								{
-									"id": 667,
+									"id": 669,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8324,7 +8355,7 @@
 					]
 				},
 				{
-					"id": 780,
+					"id": 782,
 					"name": "show",
 					"kind": 64,
 					"kindString": "Function",
@@ -8338,7 +8369,7 @@
 					],
 					"signatures": [
 						{
-							"id": 781,
+							"id": 783,
 							"name": "show",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8349,7 +8380,7 @@
 							},
 							"parameters": [
 								{
-									"id": 782,
+									"id": 784,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8371,7 +8402,7 @@
 					]
 				},
 				{
-					"id": 686,
+					"id": 688,
 					"name": "stack",
 					"kind": 64,
 					"kindString": "Function",
@@ -8385,7 +8416,7 @@
 					],
 					"signatures": [
 						{
-							"id": 687,
+							"id": 689,
 							"name": "stack",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8396,7 +8427,7 @@
 							},
 							"parameters": [
 								{
-									"id": 688,
+									"id": 690,
 									"name": "rune1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8410,7 +8441,7 @@
 									}
 								},
 								{
-									"id": 689,
+									"id": 691,
 									"name": "rune2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8432,7 +8463,7 @@
 					]
 				},
 				{
-					"id": 681,
+					"id": 683,
 					"name": "stack_frac",
 					"kind": 64,
 					"kindString": "Function",
@@ -8446,7 +8477,7 @@
 					],
 					"signatures": [
 						{
-							"id": 682,
+							"id": 684,
 							"name": "stack_frac",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8457,7 +8488,7 @@
 							},
 							"parameters": [
 								{
-									"id": 683,
+									"id": 685,
 									"name": "frac",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8471,7 +8502,7 @@
 									}
 								},
 								{
-									"id": 684,
+									"id": 686,
 									"name": "rune1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8485,7 +8516,7 @@
 									}
 								},
 								{
-									"id": 685,
+									"id": 687,
 									"name": "rune2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8507,7 +8538,7 @@
 					]
 				},
 				{
-					"id": 690,
+					"id": 692,
 					"name": "stackn",
 					"kind": 64,
 					"kindString": "Function",
@@ -8521,7 +8552,7 @@
 					],
 					"signatures": [
 						{
-							"id": 691,
+							"id": 693,
 							"name": "stackn",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8532,7 +8563,7 @@
 							},
 							"parameters": [
 								{
-									"id": 692,
+									"id": 694,
 									"name": "n",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8546,7 +8577,7 @@
 									}
 								},
 								{
-									"id": 693,
+									"id": 695,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8568,7 +8599,7 @@
 					]
 				},
 				{
-					"id": 672,
+					"id": 674,
 					"name": "translate",
 					"kind": 64,
 					"kindString": "Function",
@@ -8582,7 +8613,7 @@
 					],
 					"signatures": [
 						{
-							"id": 673,
+							"id": 675,
 							"name": "translate",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8593,7 +8624,7 @@
 							},
 							"parameters": [
 								{
-									"id": 674,
+									"id": 676,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8607,7 +8638,7 @@
 									}
 								},
 								{
-									"id": 675,
+									"id": 677,
 									"name": "y",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8621,7 +8652,7 @@
 									}
 								},
 								{
-									"id": 676,
+									"id": 678,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8643,7 +8674,7 @@
 					]
 				},
 				{
-					"id": 700,
+					"id": 702,
 					"name": "turn_upside_down",
 					"kind": 64,
 					"kindString": "Function",
@@ -8657,7 +8688,7 @@
 					],
 					"signatures": [
 						{
-							"id": 701,
+							"id": 703,
 							"name": "turn_upside_down",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8668,7 +8699,7 @@
 							},
 							"parameters": [
 								{
-									"id": 702,
+									"id": 704,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8690,7 +8721,7 @@
 					]
 				},
 				{
-					"id": 777,
+					"id": 779,
 					"name": "white",
 					"kind": 64,
 					"kindString": "Function",
@@ -8704,7 +8735,7 @@
 					],
 					"signatures": [
 						{
-							"id": 778,
+							"id": 780,
 							"name": "white",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8715,7 +8746,7 @@
 							},
 							"parameters": [
 								{
-									"id": 779,
+									"id": 781,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8737,7 +8768,7 @@
 					]
 				},
 				{
-					"id": 765,
+					"id": 767,
 					"name": "yellow",
 					"kind": 64,
 					"kindString": "Function",
@@ -8751,7 +8782,7 @@
 					],
 					"signatures": [
 						{
-							"id": 766,
+							"id": 768,
 							"name": "yellow",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -8762,7 +8793,7 @@
 							},
 							"parameters": [
 								{
-									"id": 767,
+									"id": 769,
 									"name": "rune",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8789,59 +8820,59 @@
 					"title": "Variables",
 					"kind": 32,
 					"children": [
-						795,
-						801,
-						799,
-						802,
-						800,
-						803,
-						796,
-						804,
 						797,
-						794,
-						798
+						803,
+						801,
+						804,
+						802,
+						805,
+						798,
+						806,
+						799,
+						796,
+						800
 					]
 				},
 				{
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						783,
-						708,
-						703,
-						774,
-						759,
-						771,
-						738,
-						715,
-						712,
-						660,
-						762,
-						790,
-						786,
-						756,
-						718,
-						768,
-						734,
-						729,
-						750,
-						753,
-						697,
-						694,
-						744,
-						747,
-						721,
-						677,
-						668,
-						663,
-						780,
-						686,
-						681,
-						690,
-						672,
-						700,
-						777,
-						765
+						785,
+						710,
+						705,
+						776,
+						761,
+						773,
+						740,
+						717,
+						714,
+						662,
+						764,
+						792,
+						788,
+						758,
+						720,
+						770,
+						736,
+						731,
+						752,
+						755,
+						699,
+						696,
+						746,
+						749,
+						723,
+						679,
+						670,
+						665,
+						782,
+						688,
+						683,
+						692,
+						674,
+						702,
+						779,
+						767
 					]
 				}
 			],
@@ -8854,7 +8885,7 @@
 			]
 		},
 		{
-			"id": 308,
+			"id": 310,
 			"name": "scrabble",
 			"kind": 1,
 			"kindString": "Module",
@@ -8865,7 +8896,7 @@
 			"originalName": "scrabble/functions",
 			"children": [
 				{
-					"id": 316,
+					"id": 318,
 					"name": "scrabble_array",
 					"kind": 32,
 					"kindString": "Variable",
@@ -8892,7 +8923,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 317,
+					"id": 319,
 					"name": "scrabble_list",
 					"kind": 32,
 					"kindString": "Variable",
@@ -8916,7 +8947,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 313,
+					"id": 315,
 					"name": "arrayLength",
 					"kind": 64,
 					"kindString": "Function",
@@ -8930,14 +8961,14 @@
 					],
 					"signatures": [
 						{
-							"id": 314,
+							"id": 316,
 							"name": "arrayLength",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"parameters": [
 								{
-									"id": 315,
+									"id": 317,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8956,7 +8987,7 @@
 					]
 				},
 				{
-					"id": 309,
+					"id": 311,
 					"name": "charAt",
 					"kind": 64,
 					"kindString": "Function",
@@ -8970,14 +9001,14 @@
 					],
 					"signatures": [
 						{
-							"id": 310,
+							"id": 312,
 							"name": "charAt",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"parameters": [
 								{
-									"id": 311,
+									"id": 313,
 									"name": "s",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8988,7 +9019,7 @@
 									}
 								},
 								{
-									"id": 312,
+									"id": 314,
 									"name": "i",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9012,16 +9043,16 @@
 					"title": "Variables",
 					"kind": 32,
 					"children": [
-						316,
-						317
+						318,
+						319
 					]
 				},
 				{
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						313,
-						309
+						315,
+						311
 					]
 				}
 			],
@@ -9034,7 +9065,7 @@
 			]
 		},
 		{
-			"id": 192,
+			"id": 194,
 			"name": "sound",
 			"kind": 1,
 			"kindString": "Module",
@@ -9056,7 +9087,7 @@
 			"originalName": "sound/functions",
 			"children": [
 				{
-					"id": 261,
+					"id": 263,
 					"name": "adsr",
 					"kind": 64,
 					"kindString": "Function",
@@ -9070,7 +9101,7 @@
 					],
 					"signatures": [
 						{
-							"id": 262,
+							"id": 264,
 							"name": "adsr",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9087,7 +9118,7 @@
 							},
 							"parameters": [
 								{
-									"id": 263,
+									"id": 265,
 									"name": "attack_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9101,7 +9132,7 @@
 									}
 								},
 								{
-									"id": 264,
+									"id": 266,
 									"name": "decay_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9115,7 +9146,7 @@
 									}
 								},
 								{
-									"id": 265,
+									"id": 267,
 									"name": "sustain_level",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9129,7 +9160,7 @@
 									}
 								},
 								{
-									"id": 266,
+									"id": 268,
 									"name": "release_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9151,7 +9182,7 @@
 					]
 				},
 				{
-					"id": 287,
+					"id": 289,
 					"name": "bell",
 					"kind": 64,
 					"kindString": "Function",
@@ -9165,7 +9196,7 @@
 					],
 					"signatures": [
 						{
-							"id": 288,
+							"id": 290,
 							"name": "bell",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9182,7 +9213,7 @@
 							},
 							"parameters": [
 								{
-									"id": 289,
+									"id": 291,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9196,7 +9227,7 @@
 									}
 								},
 								{
-									"id": 290,
+									"id": 292,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9218,7 +9249,7 @@
 					]
 				},
 				{
-					"id": 291,
+					"id": 293,
 					"name": "cello",
 					"kind": 64,
 					"kindString": "Function",
@@ -9232,7 +9263,7 @@
 					],
 					"signatures": [
 						{
-							"id": 292,
+							"id": 294,
 							"name": "cello",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9249,7 +9280,7 @@
 							},
 							"parameters": [
 								{
-									"id": 293,
+									"id": 295,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9263,7 +9294,7 @@
 									}
 								},
 								{
-									"id": 294,
+									"id": 296,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9285,7 +9316,7 @@
 					]
 				},
 				{
-					"id": 255,
+					"id": 257,
 					"name": "consecutively",
 					"kind": 64,
 					"kindString": "Function",
@@ -9299,7 +9330,7 @@
 					],
 					"signatures": [
 						{
-							"id": 256,
+							"id": 258,
 							"name": "consecutively",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9316,7 +9347,7 @@
 							},
 							"parameters": [
 								{
-									"id": 257,
+									"id": 259,
 									"name": "list_of_sounds",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9338,7 +9369,7 @@
 					]
 				},
 				{
-					"id": 215,
+					"id": 217,
 					"name": "get_duration",
 					"kind": 64,
 					"kindString": "Function",
@@ -9352,7 +9383,7 @@
 					],
 					"signatures": [
 						{
-							"id": 216,
+							"id": 218,
 							"name": "get_duration",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9369,7 +9400,7 @@
 							},
 							"parameters": [
 								{
-									"id": 217,
+									"id": 219,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9391,7 +9422,7 @@
 					]
 				},
 				{
-					"id": 212,
+					"id": 214,
 					"name": "get_wave",
 					"kind": 64,
 					"kindString": "Function",
@@ -9405,7 +9436,7 @@
 					],
 					"signatures": [
 						{
-							"id": 213,
+							"id": 215,
 							"name": "get_wave",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9422,7 +9453,7 @@
 							},
 							"parameters": [
 								{
-									"id": 214,
+									"id": 216,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9444,7 +9475,7 @@
 					]
 				},
 				{
-					"id": 193,
+					"id": 195,
 					"name": "init_record",
 					"kind": 64,
 					"kindString": "Function",
@@ -9458,7 +9489,7 @@
 					],
 					"signatures": [
 						{
-							"id": 194,
+							"id": 196,
 							"name": "init_record",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9475,7 +9506,7 @@
 					]
 				},
 				{
-					"id": 218,
+					"id": 220,
 					"name": "is_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -9489,7 +9520,7 @@
 					],
 					"signatures": [
 						{
-							"id": 219,
+							"id": 221,
 							"name": "is_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9506,7 +9537,7 @@
 							},
 							"parameters": [
 								{
-									"id": 220,
+									"id": 222,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9528,7 +9559,7 @@
 					]
 				},
 				{
-					"id": 284,
+					"id": 286,
 					"name": "letter_name_to_frequency",
 					"kind": 64,
 					"kindString": "Function",
@@ -9542,7 +9573,7 @@
 					],
 					"signatures": [
 						{
-							"id": 285,
+							"id": 287,
 							"name": "letter_name_to_frequency",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9559,7 +9590,7 @@
 							},
 							"parameters": [
 								{
-									"id": 286,
+									"id": 288,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9578,7 +9609,7 @@
 					]
 				},
 				{
-					"id": 278,
+					"id": 280,
 					"name": "letter_name_to_midi_note",
 					"kind": 64,
 					"kindString": "Function",
@@ -9592,7 +9623,7 @@
 					],
 					"signatures": [
 						{
-							"id": 279,
+							"id": 281,
 							"name": "letter_name_to_midi_note",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9609,7 +9640,7 @@
 							},
 							"parameters": [
 								{
-									"id": 280,
+									"id": 282,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9628,7 +9659,7 @@
 					]
 				},
 				{
-					"id": 208,
+					"id": 210,
 					"name": "make_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -9642,7 +9673,7 @@
 					],
 					"signatures": [
 						{
-							"id": 209,
+							"id": 211,
 							"name": "make_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9659,7 +9690,7 @@
 							},
 							"parameters": [
 								{
-									"id": 210,
+									"id": 212,
 									"name": "wave",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9673,7 +9704,7 @@
 									}
 								},
 								{
-									"id": 211,
+									"id": 213,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9695,7 +9726,7 @@
 					]
 				},
 				{
-					"id": 281,
+					"id": 283,
 					"name": "midi_note_to_frequency",
 					"kind": 64,
 					"kindString": "Function",
@@ -9709,7 +9740,7 @@
 					],
 					"signatures": [
 						{
-							"id": 282,
+							"id": 284,
 							"name": "midi_note_to_frequency",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9726,7 +9757,7 @@
 							},
 							"parameters": [
 								{
-									"id": 283,
+									"id": 285,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9748,7 +9779,7 @@
 					]
 				},
 				{
-					"id": 233,
+					"id": 235,
 					"name": "noise_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -9762,7 +9793,7 @@
 					],
 					"signatures": [
 						{
-							"id": 234,
+							"id": 236,
 							"name": "noise_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9779,7 +9810,7 @@
 							},
 							"parameters": [
 								{
-									"id": 235,
+									"id": 237,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9801,7 +9832,7 @@
 					]
 				},
 				{
-					"id": 273,
+					"id": 275,
 					"name": "phase_mod",
 					"kind": 64,
 					"kindString": "Function",
@@ -9815,7 +9846,7 @@
 					],
 					"signatures": [
 						{
-							"id": 274,
+							"id": 276,
 							"name": "phase_mod",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9832,7 +9863,7 @@
 							},
 							"parameters": [
 								{
-									"id": 275,
+									"id": 277,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9846,7 +9877,7 @@
 									}
 								},
 								{
-									"id": 276,
+									"id": 278,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9860,7 +9891,7 @@
 									}
 								},
 								{
-									"id": 277,
+									"id": 279,
 									"name": "amount",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9882,7 +9913,7 @@
 					]
 				},
 				{
-					"id": 295,
+					"id": 297,
 					"name": "piano",
 					"kind": 64,
 					"kindString": "Function",
@@ -9896,7 +9927,7 @@
 					],
 					"signatures": [
 						{
-							"id": 296,
+							"id": 298,
 							"name": "piano",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9913,7 +9944,7 @@
 							},
 							"parameters": [
 								{
-									"id": 297,
+									"id": 299,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9927,7 +9958,7 @@
 									}
 								},
 								{
-									"id": 298,
+									"id": 300,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9949,7 +9980,7 @@
 					]
 				},
 				{
-					"id": 225,
+					"id": 227,
 					"name": "play",
 					"kind": 64,
 					"kindString": "Function",
@@ -9963,7 +9994,7 @@
 					],
 					"signatures": [
 						{
-							"id": 226,
+							"id": 228,
 							"name": "play",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9980,7 +10011,7 @@
 							},
 							"parameters": [
 								{
-									"id": 227,
+									"id": 229,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10002,7 +10033,7 @@
 					]
 				},
 				{
-					"id": 228,
+					"id": 230,
 					"name": "play_concurrently",
 					"kind": 64,
 					"kindString": "Function",
@@ -10016,7 +10047,7 @@
 					],
 					"signatures": [
 						{
-							"id": 229,
+							"id": 231,
 							"name": "play_concurrently",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10032,7 +10063,7 @@
 							},
 							"parameters": [
 								{
-									"id": 230,
+									"id": 232,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10054,7 +10085,7 @@
 					]
 				},
 				{
-					"id": 221,
+					"id": 223,
 					"name": "play_wave",
 					"kind": 64,
 					"kindString": "Function",
@@ -10068,7 +10099,7 @@
 					],
 					"signatures": [
 						{
-							"id": 222,
+							"id": 224,
 							"name": "play_wave",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10085,7 +10116,7 @@
 							},
 							"parameters": [
 								{
-									"id": 223,
+									"id": 225,
 									"name": "wave",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10099,7 +10130,7 @@
 									}
 								},
 								{
-									"id": 224,
+									"id": 226,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10118,7 +10149,7 @@
 					]
 				},
 				{
-					"id": 195,
+					"id": 197,
 					"name": "record",
 					"kind": 64,
 					"kindString": "Function",
@@ -10132,7 +10163,7 @@
 					],
 					"signatures": [
 						{
-							"id": 196,
+							"id": 198,
 							"name": "record",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10143,7 +10174,7 @@
 							},
 							"parameters": [
 								{
-									"id": 197,
+									"id": 199,
 									"name": "buffer",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10160,7 +10191,7 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 198,
+									"id": 200,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
@@ -10174,7 +10205,7 @@
 									],
 									"signatures": [
 										{
-											"id": 199,
+											"id": 201,
 											"name": "__type",
 											"kind": 4096,
 											"kindString": "Call signature",
@@ -10182,7 +10213,7 @@
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 200,
+													"id": 202,
 													"name": "__type",
 													"kind": 65536,
 													"kindString": "Type literal",
@@ -10196,7 +10227,7 @@
 													],
 													"signatures": [
 														{
-															"id": 201,
+															"id": 203,
 															"name": "__type",
 															"kind": 4096,
 															"kindString": "Call signature",
@@ -10217,7 +10248,7 @@
 					]
 				},
 				{
-					"id": 202,
+					"id": 204,
 					"name": "record_for",
 					"kind": 64,
 					"kindString": "Function",
@@ -10231,7 +10262,7 @@
 					],
 					"signatures": [
 						{
-							"id": 203,
+							"id": 205,
 							"name": "record_for",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10242,7 +10273,7 @@
 							},
 							"parameters": [
 								{
-									"id": 204,
+									"id": 206,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10256,7 +10287,7 @@
 									}
 								},
 								{
-									"id": 205,
+									"id": 207,
 									"name": "buffer",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10273,7 +10304,7 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 206,
+									"id": 208,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
@@ -10287,7 +10318,7 @@
 									],
 									"signatures": [
 										{
-											"id": 207,
+											"id": 209,
 											"name": "__type",
 											"kind": 4096,
 											"kindString": "Call signature",
@@ -10304,7 +10335,7 @@
 					]
 				},
 				{
-					"id": 251,
+					"id": 253,
 					"name": "sawtooth_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -10318,7 +10349,7 @@
 					],
 					"signatures": [
 						{
-							"id": 252,
+							"id": 254,
 							"name": "sawtooth_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10335,7 +10366,7 @@
 							},
 							"parameters": [
 								{
-									"id": 253,
+									"id": 255,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10349,7 +10380,7 @@
 									}
 								},
 								{
-									"id": 254,
+									"id": 256,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10371,7 +10402,7 @@
 					]
 				},
 				{
-					"id": 236,
+					"id": 238,
 					"name": "silence_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -10385,7 +10416,7 @@
 					],
 					"signatures": [
 						{
-							"id": 237,
+							"id": 239,
 							"name": "silence_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10402,7 +10433,7 @@
 							},
 							"parameters": [
 								{
-									"id": 238,
+									"id": 240,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10424,7 +10455,7 @@
 					]
 				},
 				{
-					"id": 258,
+					"id": 260,
 					"name": "simultaneously",
 					"kind": 64,
 					"kindString": "Function",
@@ -10438,7 +10469,7 @@
 					],
 					"signatures": [
 						{
-							"id": 259,
+							"id": 261,
 							"name": "simultaneously",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10455,7 +10486,7 @@
 							},
 							"parameters": [
 								{
-									"id": 260,
+									"id": 262,
 									"name": "list_of_sounds",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10477,7 +10508,7 @@
 					]
 				},
 				{
-					"id": 239,
+					"id": 241,
 					"name": "sine_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -10491,7 +10522,7 @@
 					],
 					"signatures": [
 						{
-							"id": 240,
+							"id": 242,
 							"name": "sine_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10508,7 +10539,7 @@
 							},
 							"parameters": [
 								{
-									"id": 241,
+									"id": 243,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10522,7 +10553,7 @@
 									}
 								},
 								{
-									"id": 242,
+									"id": 244,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10544,7 +10575,7 @@
 					]
 				},
 				{
-					"id": 243,
+					"id": 245,
 					"name": "square_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -10558,7 +10589,7 @@
 					],
 					"signatures": [
 						{
-							"id": 244,
+							"id": 246,
 							"name": "square_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10575,7 +10606,7 @@
 							},
 							"parameters": [
 								{
-									"id": 245,
+									"id": 247,
 									"name": "f",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10586,7 +10617,7 @@
 									}
 								},
 								{
-									"id": 246,
+									"id": 248,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10608,7 +10639,7 @@
 					]
 				},
 				{
-					"id": 267,
+					"id": 269,
 					"name": "stacking_adsr",
 					"kind": 64,
 					"kindString": "Function",
@@ -10622,7 +10653,7 @@
 					],
 					"signatures": [
 						{
-							"id": 268,
+							"id": 270,
 							"name": "stacking_adsr",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10639,7 +10670,7 @@
 							},
 							"parameters": [
 								{
-									"id": 269,
+									"id": 271,
 									"name": "waveform",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10653,7 +10684,7 @@
 									}
 								},
 								{
-									"id": 270,
+									"id": 272,
 									"name": "base_frequency",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10667,7 +10698,7 @@
 									}
 								},
 								{
-									"id": 271,
+									"id": 273,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10681,7 +10712,7 @@
 									}
 								},
 								{
-									"id": 272,
+									"id": 274,
 									"name": "envelopes",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10703,7 +10734,7 @@
 					]
 				},
 				{
-					"id": 231,
+					"id": 233,
 					"name": "stop",
 					"kind": 64,
 					"kindString": "Function",
@@ -10717,7 +10748,7 @@
 					],
 					"signatures": [
 						{
-							"id": 232,
+							"id": 234,
 							"name": "stop",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10733,7 +10764,7 @@
 					]
 				},
 				{
-					"id": 247,
+					"id": 249,
 					"name": "triangle_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -10747,7 +10778,7 @@
 					],
 					"signatures": [
 						{
-							"id": 248,
+							"id": 250,
 							"name": "triangle_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10764,7 +10795,7 @@
 							},
 							"parameters": [
 								{
-									"id": 249,
+									"id": 251,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10778,7 +10809,7 @@
 									}
 								},
 								{
-									"id": 250,
+									"id": 252,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10800,7 +10831,7 @@
 					]
 				},
 				{
-					"id": 299,
+					"id": 301,
 					"name": "trombone",
 					"kind": 64,
 					"kindString": "Function",
@@ -10814,7 +10845,7 @@
 					],
 					"signatures": [
 						{
-							"id": 300,
+							"id": 302,
 							"name": "trombone",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10831,7 +10862,7 @@
 							},
 							"parameters": [
 								{
-									"id": 301,
+									"id": 303,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10845,7 +10876,7 @@
 									}
 								},
 								{
-									"id": 302,
+									"id": 304,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10867,7 +10898,7 @@
 					]
 				},
 				{
-					"id": 303,
+					"id": 305,
 					"name": "violin",
 					"kind": 64,
 					"kindString": "Function",
@@ -10881,7 +10912,7 @@
 					],
 					"signatures": [
 						{
-							"id": 304,
+							"id": 306,
 							"name": "violin",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10898,7 +10929,7 @@
 							},
 							"parameters": [
 								{
-									"id": 305,
+									"id": 307,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10912,7 +10943,7 @@
 									}
 								},
 								{
-									"id": 306,
+									"id": 308,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10939,36 +10970,36 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						261,
-						287,
-						291,
-						255,
-						215,
-						212,
-						193,
-						218,
-						284,
-						278,
-						208,
-						281,
-						233,
-						273,
-						295,
-						225,
-						228,
-						221,
+						263,
+						289,
+						293,
+						257,
+						217,
+						214,
 						195,
-						202,
-						251,
-						236,
-						258,
-						239,
-						243,
-						267,
-						231,
-						247,
-						299,
-						303
+						220,
+						286,
+						280,
+						210,
+						283,
+						235,
+						275,
+						297,
+						227,
+						230,
+						223,
+						197,
+						204,
+						253,
+						238,
+						260,
+						241,
+						245,
+						269,
+						233,
+						249,
+						301,
+						305
 					]
 				}
 			],
@@ -10981,14 +11012,14 @@
 			]
 		},
 		{
-			"id": 805,
+			"id": 807,
 			"name": "sound_matrix/functions",
 			"kind": 1,
 			"kindString": "Module",
 			"flags": {},
 			"children": [
 				{
-					"id": 816,
+					"id": 818,
 					"name": "ToneMatrix",
 					"kind": 32,
 					"kindString": "Variable",
@@ -11005,14 +11036,14 @@
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 817,
+							"id": 819,
 							"name": "__type",
 							"kind": 65536,
 							"kindString": "Type literal",
 							"flags": {},
 							"children": [
 								{
-									"id": 828,
+									"id": 830,
 									"name": "bindMatrixButtons",
 									"kind": 1024,
 									"kindString": "Property",
@@ -11020,14 +11051,14 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 829,
+											"id": 831,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 830,
+													"id": 832,
 													"name": "__type",
 													"kind": 4096,
 													"kindString": "Call signature",
@@ -11042,7 +11073,7 @@
 									}
 								},
 								{
-									"id": 822,
+									"id": 824,
 									"name": "clear_matrix",
 									"kind": 1024,
 									"kindString": "Property",
@@ -11050,14 +11081,14 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 823,
+											"id": 825,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 824,
+													"id": 826,
 													"name": "__type",
 													"kind": 4096,
 													"kindString": "Call signature",
@@ -11072,7 +11103,7 @@
 									}
 								},
 								{
-									"id": 818,
+									"id": 820,
 									"name": "initialise_matrix",
 									"kind": 1024,
 									"kindString": "Property",
@@ -11080,21 +11111,21 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 819,
+											"id": 821,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 820,
+													"id": 822,
 													"name": "__type",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 821,
+															"id": 823,
 															"name": "$container",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -11115,7 +11146,7 @@
 									}
 								},
 								{
-									"id": 825,
+									"id": 827,
 									"name": "randomise_matrix",
 									"kind": 1024,
 									"kindString": "Property",
@@ -11123,14 +11154,14 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 826,
+											"id": 828,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 827,
+													"id": 829,
 													"name": "__type",
 													"kind": 4096,
 													"kindString": "Call signature",
@@ -11150,10 +11181,10 @@
 									"title": "Properties",
 									"kind": 1024,
 									"children": [
-										828,
-										822,
-										818,
-										825
+										830,
+										824,
+										820,
+										827
 									]
 								}
 							]
@@ -11162,7 +11193,7 @@
 					"defaultValue": "..."
 				},
 				{
-					"id": 814,
+					"id": 816,
 					"name": "clear_all_timeout",
 					"kind": 64,
 					"kindString": "Function",
@@ -11176,7 +11207,7 @@
 					],
 					"signatures": [
 						{
-							"id": 815,
+							"id": 817,
 							"name": "clear_all_timeout",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11189,7 +11220,7 @@
 					]
 				},
 				{
-					"id": 808,
+					"id": 810,
 					"name": "clear_matrix",
 					"kind": 64,
 					"kindString": "Function",
@@ -11203,7 +11234,7 @@
 					],
 					"signatures": [
 						{
-							"id": 809,
+							"id": 811,
 							"name": "clear_matrix",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11216,7 +11247,7 @@
 					]
 				},
 				{
-					"id": 806,
+					"id": 808,
 					"name": "get_matrix",
 					"kind": 64,
 					"kindString": "Function",
@@ -11230,7 +11261,7 @@
 					],
 					"signatures": [
 						{
-							"id": 807,
+							"id": 809,
 							"name": "get_matrix",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11243,7 +11274,7 @@
 					]
 				},
 				{
-					"id": 810,
+					"id": 812,
 					"name": "set_timeout",
 					"kind": 64,
 					"kindString": "Function",
@@ -11257,14 +11288,14 @@
 					],
 					"signatures": [
 						{
-							"id": 811,
+							"id": 813,
 							"name": "set_timeout",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"parameters": [
 								{
-									"id": 812,
+									"id": 814,
 									"name": "f",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11275,7 +11306,7 @@
 									}
 								},
 								{
-									"id": 813,
+									"id": 815,
 									"name": "t",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11299,17 +11330,17 @@
 					"title": "Variables",
 					"kind": 32,
 					"children": [
-						816
+						818
 					]
 				},
 				{
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						814,
+						816,
+						810,
 						808,
-						806,
-						810
+						812
 					]
 				}
 			],
@@ -11322,7 +11353,7 @@
 			]
 		},
 		{
-			"id": 318,
+			"id": 320,
 			"name": "stereo_sound",
 			"kind": 1,
 			"kindString": "Module",
@@ -11344,7 +11375,7 @@
 			"originalName": "stereo_sound/functions",
 			"children": [
 				{
-					"id": 409,
+					"id": 411,
 					"name": "adsr",
 					"kind": 64,
 					"kindString": "Function",
@@ -11358,7 +11389,7 @@
 					],
 					"signatures": [
 						{
-							"id": 410,
+							"id": 412,
 							"name": "adsr",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11375,7 +11406,7 @@
 							},
 							"parameters": [
 								{
-									"id": 411,
+									"id": 413,
 									"name": "attack_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11389,7 +11420,7 @@
 									}
 								},
 								{
-									"id": 412,
+									"id": 414,
 									"name": "decay_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11403,7 +11434,7 @@
 									}
 								},
 								{
-									"id": 413,
+									"id": 415,
 									"name": "sustain_level",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11417,7 +11448,7 @@
 									}
 								},
 								{
-									"id": 414,
+									"id": 416,
 									"name": "release_ratio",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11439,7 +11470,7 @@
 					]
 				},
 				{
-					"id": 435,
+					"id": 437,
 					"name": "bell",
 					"kind": 64,
 					"kindString": "Function",
@@ -11453,7 +11484,7 @@
 					],
 					"signatures": [
 						{
-							"id": 436,
+							"id": 438,
 							"name": "bell",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11470,7 +11501,7 @@
 							},
 							"parameters": [
 								{
-									"id": 437,
+									"id": 439,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11484,7 +11515,7 @@
 									}
 								},
 								{
-									"id": 438,
+									"id": 440,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11506,7 +11537,7 @@
 					]
 				},
 				{
-					"id": 439,
+					"id": 441,
 					"name": "cello",
 					"kind": 64,
 					"kindString": "Function",
@@ -11520,7 +11551,7 @@
 					],
 					"signatures": [
 						{
-							"id": 440,
+							"id": 442,
 							"name": "cello",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11537,7 +11568,7 @@
 							},
 							"parameters": [
 								{
-									"id": 441,
+									"id": 443,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11551,7 +11582,7 @@
 									}
 								},
 								{
-									"id": 442,
+									"id": 444,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11573,7 +11604,7 @@
 					]
 				},
 				{
-					"id": 403,
+					"id": 405,
 					"name": "consecutively",
 					"kind": 64,
 					"kindString": "Function",
@@ -11587,7 +11618,7 @@
 					],
 					"signatures": [
 						{
-							"id": 404,
+							"id": 406,
 							"name": "consecutively",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11604,7 +11635,7 @@
 							},
 							"parameters": [
 								{
-									"id": 405,
+									"id": 407,
 									"name": "list_of_sounds",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11626,7 +11657,7 @@
 					]
 				},
 				{
-					"id": 349,
+					"id": 351,
 					"name": "get_duration",
 					"kind": 64,
 					"kindString": "Function",
@@ -11640,7 +11671,7 @@
 					],
 					"signatures": [
 						{
-							"id": 350,
+							"id": 352,
 							"name": "get_duration",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11657,7 +11688,7 @@
 							},
 							"parameters": [
 								{
-									"id": 351,
+									"id": 353,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11679,7 +11710,7 @@
 					]
 				},
 				{
-					"id": 343,
+					"id": 345,
 					"name": "get_left_wave",
 					"kind": 64,
 					"kindString": "Function",
@@ -11693,7 +11724,7 @@
 					],
 					"signatures": [
 						{
-							"id": 344,
+							"id": 346,
 							"name": "get_left_wave",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11710,7 +11741,7 @@
 							},
 							"parameters": [
 								{
-									"id": 345,
+									"id": 347,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11732,7 +11763,7 @@
 					]
 				},
 				{
-					"id": 346,
+					"id": 348,
 					"name": "get_right_wave",
 					"kind": 64,
 					"kindString": "Function",
@@ -11746,7 +11777,7 @@
 					],
 					"signatures": [
 						{
-							"id": 347,
+							"id": 349,
 							"name": "get_right_wave",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11763,7 +11794,7 @@
 							},
 							"parameters": [
 								{
-									"id": 348,
+									"id": 350,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11785,7 +11816,7 @@
 					]
 				},
 				{
-					"id": 319,
+					"id": 321,
 					"name": "init_record",
 					"kind": 64,
 					"kindString": "Function",
@@ -11799,7 +11830,7 @@
 					],
 					"signatures": [
 						{
-							"id": 320,
+							"id": 322,
 							"name": "init_record",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11816,7 +11847,7 @@
 					]
 				},
 				{
-					"id": 352,
+					"id": 354,
 					"name": "is_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -11830,7 +11861,7 @@
 					],
 					"signatures": [
 						{
-							"id": 353,
+							"id": 355,
 							"name": "is_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11847,7 +11878,7 @@
 							},
 							"parameters": [
 								{
-									"id": 354,
+									"id": 356,
 									"name": "x",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11869,7 +11900,7 @@
 					]
 				},
 				{
-					"id": 432,
+					"id": 434,
 					"name": "letter_name_to_frequency",
 					"kind": 64,
 					"kindString": "Function",
@@ -11883,7 +11914,7 @@
 					],
 					"signatures": [
 						{
-							"id": 433,
+							"id": 435,
 							"name": "letter_name_to_frequency",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11900,7 +11931,7 @@
 							},
 							"parameters": [
 								{
-									"id": 434,
+									"id": 436,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11919,7 +11950,7 @@
 					]
 				},
 				{
-					"id": 426,
+					"id": 428,
 					"name": "letter_name_to_midi_note",
 					"kind": 64,
 					"kindString": "Function",
@@ -11933,7 +11964,7 @@
 					],
 					"signatures": [
 						{
-							"id": 427,
+							"id": 429,
 							"name": "letter_name_to_midi_note",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -11950,7 +11981,7 @@
 							},
 							"parameters": [
 								{
-									"id": 428,
+									"id": 430,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -11969,7 +12000,7 @@
 					]
 				},
 				{
-					"id": 339,
+					"id": 341,
 					"name": "make_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -11983,7 +12014,7 @@
 					],
 					"signatures": [
 						{
-							"id": 340,
+							"id": 342,
 							"name": "make_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12000,7 +12031,7 @@
 							},
 							"parameters": [
 								{
-									"id": 341,
+									"id": 343,
 									"name": "wave",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12014,7 +12045,7 @@
 									}
 								},
 								{
-									"id": 342,
+									"id": 344,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12036,7 +12067,7 @@
 					]
 				},
 				{
-					"id": 334,
+					"id": 336,
 					"name": "make_stereo_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -12050,7 +12081,7 @@
 					],
 					"signatures": [
 						{
-							"id": 335,
+							"id": 337,
 							"name": "make_stereo_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12067,7 +12098,7 @@
 							},
 							"parameters": [
 								{
-									"id": 336,
+									"id": 338,
 									"name": "left_wave",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12081,7 +12112,7 @@
 									}
 								},
 								{
-									"id": 337,
+									"id": 339,
 									"name": "right_wave",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12095,7 +12126,7 @@
 									}
 								},
 								{
-									"id": 338,
+									"id": 340,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12117,7 +12148,7 @@
 					]
 				},
 				{
-					"id": 429,
+					"id": 431,
 					"name": "midi_note_to_frequency",
 					"kind": 64,
 					"kindString": "Function",
@@ -12131,7 +12162,7 @@
 					],
 					"signatures": [
 						{
-							"id": 430,
+							"id": 432,
 							"name": "midi_note_to_frequency",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12148,7 +12179,7 @@
 							},
 							"parameters": [
 								{
-									"id": 431,
+									"id": 433,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12170,7 +12201,7 @@
 					]
 				},
 				{
-					"id": 381,
+					"id": 383,
 					"name": "noise_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -12184,7 +12215,7 @@
 					],
 					"signatures": [
 						{
-							"id": 382,
+							"id": 384,
 							"name": "noise_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12201,7 +12232,7 @@
 							},
 							"parameters": [
 								{
-									"id": 383,
+									"id": 385,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12223,7 +12254,7 @@
 					]
 				},
 				{
-					"id": 375,
+					"id": 377,
 					"name": "pan",
 					"kind": 64,
 					"kindString": "Function",
@@ -12237,7 +12268,7 @@
 					],
 					"signatures": [
 						{
-							"id": 376,
+							"id": 378,
 							"name": "pan",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12248,7 +12279,7 @@
 							},
 							"parameters": [
 								{
-									"id": 377,
+									"id": 379,
 									"name": "amount",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12270,7 +12301,7 @@
 					]
 				},
 				{
-					"id": 378,
+					"id": 380,
 					"name": "pan_mod",
 					"kind": 64,
 					"kindString": "Function",
@@ -12284,7 +12315,7 @@
 					],
 					"signatures": [
 						{
-							"id": 379,
+							"id": 381,
 							"name": "pan_mod",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12295,7 +12326,7 @@
 							},
 							"parameters": [
 								{
-									"id": 380,
+									"id": 382,
 									"name": "modulator",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12317,7 +12348,7 @@
 					]
 				},
 				{
-					"id": 421,
+					"id": 423,
 					"name": "phase_mod",
 					"kind": 64,
 					"kindString": "Function",
@@ -12331,7 +12362,7 @@
 					],
 					"signatures": [
 						{
-							"id": 422,
+							"id": 424,
 							"name": "phase_mod",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12348,7 +12379,7 @@
 							},
 							"parameters": [
 								{
-									"id": 423,
+									"id": 425,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12362,7 +12393,7 @@
 									}
 								},
 								{
-									"id": 424,
+									"id": 426,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12376,7 +12407,7 @@
 									}
 								},
 								{
-									"id": 425,
+									"id": 427,
 									"name": "amount",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12398,7 +12429,7 @@
 					]
 				},
 				{
-					"id": 443,
+					"id": 445,
 					"name": "piano",
 					"kind": 64,
 					"kindString": "Function",
@@ -12412,7 +12443,7 @@
 					],
 					"signatures": [
 						{
-							"id": 444,
+							"id": 446,
 							"name": "piano",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12429,7 +12460,7 @@
 							},
 							"parameters": [
 								{
-									"id": 445,
+									"id": 447,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12443,7 +12474,7 @@
 									}
 								},
 								{
-									"id": 446,
+									"id": 448,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12465,7 +12496,7 @@
 					]
 				},
 				{
-					"id": 364,
+					"id": 366,
 					"name": "play",
 					"kind": 64,
 					"kindString": "Function",
@@ -12479,7 +12510,7 @@
 					],
 					"signatures": [
 						{
-							"id": 365,
+							"id": 367,
 							"name": "play",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12496,7 +12527,7 @@
 							},
 							"parameters": [
 								{
-									"id": 366,
+									"id": 368,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12518,7 +12549,7 @@
 					]
 				},
 				{
-					"id": 367,
+					"id": 369,
 					"name": "play_concurrently",
 					"kind": 64,
 					"kindString": "Function",
@@ -12532,7 +12563,7 @@
 					],
 					"signatures": [
 						{
-							"id": 368,
+							"id": 370,
 							"name": "play_concurrently",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12548,7 +12579,7 @@
 							},
 							"parameters": [
 								{
-									"id": 369,
+									"id": 371,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12570,7 +12601,7 @@
 					]
 				},
 				{
-					"id": 355,
+					"id": 357,
 					"name": "play_wave",
 					"kind": 64,
 					"kindString": "Function",
@@ -12584,7 +12615,7 @@
 					],
 					"signatures": [
 						{
-							"id": 356,
+							"id": 358,
 							"name": "play_wave",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12601,7 +12632,7 @@
 							},
 							"parameters": [
 								{
-									"id": 357,
+									"id": 359,
 									"name": "wave",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12615,7 +12646,7 @@
 									}
 								},
 								{
-									"id": 358,
+									"id": 360,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12634,7 +12665,7 @@
 					]
 				},
 				{
-					"id": 359,
+					"id": 361,
 					"name": "play_waves",
 					"kind": 64,
 					"kindString": "Function",
@@ -12648,7 +12679,7 @@
 					],
 					"signatures": [
 						{
-							"id": 360,
+							"id": 362,
 							"name": "play_waves",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12665,7 +12696,7 @@
 							},
 							"parameters": [
 								{
-									"id": 361,
+									"id": 363,
 									"name": "wave1",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12679,7 +12710,7 @@
 									}
 								},
 								{
-									"id": 362,
+									"id": 364,
 									"name": "wave2",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12693,7 +12724,7 @@
 									}
 								},
 								{
-									"id": 363,
+									"id": 365,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12712,7 +12743,7 @@
 					]
 				},
 				{
-					"id": 321,
+					"id": 323,
 					"name": "record",
 					"kind": 64,
 					"kindString": "Function",
@@ -12726,7 +12757,7 @@
 					],
 					"signatures": [
 						{
-							"id": 322,
+							"id": 324,
 							"name": "record",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12737,7 +12768,7 @@
 							},
 							"parameters": [
 								{
-									"id": 323,
+									"id": 325,
 									"name": "buffer",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12754,7 +12785,7 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 324,
+									"id": 326,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
@@ -12768,7 +12799,7 @@
 									],
 									"signatures": [
 										{
-											"id": 325,
+											"id": 327,
 											"name": "__type",
 											"kind": 4096,
 											"kindString": "Call signature",
@@ -12776,7 +12807,7 @@
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 326,
+													"id": 328,
 													"name": "__type",
 													"kind": 65536,
 													"kindString": "Type literal",
@@ -12790,7 +12821,7 @@
 													],
 													"signatures": [
 														{
-															"id": 327,
+															"id": 329,
 															"name": "__type",
 															"kind": 4096,
 															"kindString": "Call signature",
@@ -12811,7 +12842,7 @@
 					]
 				},
 				{
-					"id": 328,
+					"id": 330,
 					"name": "record_for",
 					"kind": 64,
 					"kindString": "Function",
@@ -12825,7 +12856,7 @@
 					],
 					"signatures": [
 						{
-							"id": 329,
+							"id": 331,
 							"name": "record_for",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12836,7 +12867,7 @@
 							},
 							"parameters": [
 								{
-									"id": 330,
+									"id": 332,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12850,7 +12881,7 @@
 									}
 								},
 								{
-									"id": 331,
+									"id": 333,
 									"name": "buffer",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12867,7 +12898,7 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 332,
+									"id": 334,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
@@ -12881,7 +12912,7 @@
 									],
 									"signatures": [
 										{
-											"id": 333,
+											"id": 335,
 											"name": "__type",
 											"kind": 4096,
 											"kindString": "Call signature",
@@ -12898,7 +12929,7 @@
 					]
 				},
 				{
-					"id": 399,
+					"id": 401,
 					"name": "sawtooth_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -12912,7 +12943,7 @@
 					],
 					"signatures": [
 						{
-							"id": 400,
+							"id": 402,
 							"name": "sawtooth_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12929,7 +12960,7 @@
 							},
 							"parameters": [
 								{
-									"id": 401,
+									"id": 403,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12943,7 +12974,7 @@
 									}
 								},
 								{
-									"id": 402,
+									"id": 404,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12965,7 +12996,7 @@
 					]
 				},
 				{
-					"id": 384,
+					"id": 386,
 					"name": "silence_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -12979,7 +13010,7 @@
 					],
 					"signatures": [
 						{
-							"id": 385,
+							"id": 387,
 							"name": "silence_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12996,7 +13027,7 @@
 							},
 							"parameters": [
 								{
-									"id": 386,
+									"id": 388,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13018,7 +13049,7 @@
 					]
 				},
 				{
-					"id": 406,
+					"id": 408,
 					"name": "simultaneously",
 					"kind": 64,
 					"kindString": "Function",
@@ -13032,7 +13063,7 @@
 					],
 					"signatures": [
 						{
-							"id": 407,
+							"id": 409,
 							"name": "simultaneously",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13049,7 +13080,7 @@
 							},
 							"parameters": [
 								{
-									"id": 408,
+									"id": 410,
 									"name": "list_of_sounds",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13071,7 +13102,7 @@
 					]
 				},
 				{
-					"id": 387,
+					"id": 389,
 					"name": "sine_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -13085,7 +13116,7 @@
 					],
 					"signatures": [
 						{
-							"id": 388,
+							"id": 390,
 							"name": "sine_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13102,7 +13133,7 @@
 							},
 							"parameters": [
 								{
-									"id": 389,
+									"id": 391,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13116,7 +13147,7 @@
 									}
 								},
 								{
-									"id": 390,
+									"id": 392,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13138,7 +13169,7 @@
 					]
 				},
 				{
-					"id": 391,
+					"id": 393,
 					"name": "square_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -13152,7 +13183,7 @@
 					],
 					"signatures": [
 						{
-							"id": 392,
+							"id": 394,
 							"name": "square_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13169,7 +13200,7 @@
 							},
 							"parameters": [
 								{
-									"id": 393,
+									"id": 395,
 									"name": "f",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13180,7 +13211,7 @@
 									}
 								},
 								{
-									"id": 394,
+									"id": 396,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13202,7 +13233,7 @@
 					]
 				},
 				{
-					"id": 372,
+					"id": 374,
 					"name": "squash",
 					"kind": 64,
 					"kindString": "Function",
@@ -13216,7 +13247,7 @@
 					],
 					"signatures": [
 						{
-							"id": 373,
+							"id": 375,
 							"name": "squash",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13227,7 +13258,7 @@
 							},
 							"parameters": [
 								{
-									"id": 374,
+									"id": 376,
 									"name": "sound",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13249,7 +13280,7 @@
 					]
 				},
 				{
-					"id": 415,
+					"id": 417,
 					"name": "stacking_adsr",
 					"kind": 64,
 					"kindString": "Function",
@@ -13263,7 +13294,7 @@
 					],
 					"signatures": [
 						{
-							"id": 416,
+							"id": 418,
 							"name": "stacking_adsr",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13280,7 +13311,7 @@
 							},
 							"parameters": [
 								{
-									"id": 417,
+									"id": 419,
 									"name": "waveform",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13294,7 +13325,7 @@
 									}
 								},
 								{
-									"id": 418,
+									"id": 420,
 									"name": "base_frequency",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13308,7 +13339,7 @@
 									}
 								},
 								{
-									"id": 419,
+									"id": 421,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13322,7 +13353,7 @@
 									}
 								},
 								{
-									"id": 420,
+									"id": 422,
 									"name": "envelopes",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13344,7 +13375,7 @@
 					]
 				},
 				{
-					"id": 370,
+					"id": 372,
 					"name": "stop",
 					"kind": 64,
 					"kindString": "Function",
@@ -13358,7 +13389,7 @@
 					],
 					"signatures": [
 						{
-							"id": 371,
+							"id": 373,
 							"name": "stop",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13374,7 +13405,7 @@
 					]
 				},
 				{
-					"id": 395,
+					"id": 397,
 					"name": "triangle_sound",
 					"kind": 64,
 					"kindString": "Function",
@@ -13388,7 +13419,7 @@
 					],
 					"signatures": [
 						{
-							"id": 396,
+							"id": 398,
 							"name": "triangle_sound",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13405,7 +13436,7 @@
 							},
 							"parameters": [
 								{
-									"id": 397,
+									"id": 399,
 									"name": "freq",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13419,7 +13450,7 @@
 									}
 								},
 								{
-									"id": 398,
+									"id": 400,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13441,7 +13472,7 @@
 					]
 				},
 				{
-					"id": 447,
+					"id": 449,
 					"name": "trombone",
 					"kind": 64,
 					"kindString": "Function",
@@ -13455,7 +13486,7 @@
 					],
 					"signatures": [
 						{
-							"id": 448,
+							"id": 450,
 							"name": "trombone",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13472,7 +13503,7 @@
 							},
 							"parameters": [
 								{
-									"id": 449,
+									"id": 451,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13486,7 +13517,7 @@
 									}
 								},
 								{
-									"id": 450,
+									"id": 452,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13508,7 +13539,7 @@
 					]
 				},
 				{
-					"id": 451,
+					"id": 453,
 					"name": "violin",
 					"kind": 64,
 					"kindString": "Function",
@@ -13522,7 +13553,7 @@
 					],
 					"signatures": [
 						{
-							"id": 452,
+							"id": 454,
 							"name": "violin",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -13539,7 +13570,7 @@
 							},
 							"parameters": [
 								{
-									"id": 453,
+									"id": 455,
 									"name": "note",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13553,7 +13584,7 @@
 									}
 								},
 								{
-									"id": 454,
+									"id": 456,
 									"name": "duration",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13580,42 +13611,42 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						409,
-						435,
-						439,
-						403,
-						349,
-						343,
-						346,
-						319,
-						352,
-						432,
-						426,
-						339,
-						334,
-						429,
-						381,
-						375,
-						378,
-						421,
-						443,
-						364,
-						367,
-						355,
-						359,
+						411,
+						437,
+						441,
+						405,
+						351,
+						345,
+						348,
 						321,
-						328,
-						399,
-						384,
-						406,
-						387,
-						391,
+						354,
+						434,
+						428,
+						341,
+						336,
+						431,
+						383,
+						377,
+						380,
+						423,
+						445,
+						366,
+						369,
+						357,
+						361,
+						323,
+						330,
+						401,
+						386,
+						408,
+						389,
+						393,
+						374,
+						417,
 						372,
-						415,
-						370,
-						395,
-						447,
-						451
+						397,
+						449,
+						453
 					]
 				}
 			],
@@ -13633,16 +13664,16 @@
 			"title": "Modules",
 			"kind": 1,
 			"children": [
-				61,
-				69,
-				455,
+				63,
+				71,
+				457,
 				12,
 				1,
-				659,
-				308,
-				192,
-				805,
-				318
+				661,
+				310,
+				194,
+				807,
+				320
 			]
 		}
 	]
