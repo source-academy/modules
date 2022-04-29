@@ -1,4 +1,5 @@
 export type VideoElement = HTMLVideoElement & { srcObject?: MediaStream };
+export type ImageElement = HTMLImageElement;
 export type CanvasElement = HTMLCanvasElement;
 export type ErrorLogger = (
   error: string | string[],
@@ -7,17 +8,19 @@ export type ErrorLogger = (
 export type TabsPackage = {
   onClickStill: () => void;
 };
+export type InputFeed = 'camera' | 'imageURL' | 'videoURL' | 'local';
 export type BundlePackage = {
   HEIGHT: number;
   WIDTH: number;
   FPS: number;
   VOLUME: number;
-  useLocal: boolean;
+  inputFeed: InputFeed;
 };
 export type Queue = () => void;
 export type Video = {
   toReplString: () => string;
   init: (
+    image: ImageElement,
     video: VideoElement,
     canvas: CanvasElement,
     errorLogger: ErrorLogger,

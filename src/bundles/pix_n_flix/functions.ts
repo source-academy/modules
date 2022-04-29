@@ -6,8 +6,8 @@
  *
  * A central element of pix_n_flix is the notion of a Filter, a function that is applied
  * to two images: the source Image and the destination Image. We can install a given
- * Filter to be used to transform the Images that the camera captures into images
- * displayed on the output screen by using the function install_filter. The output
+ * Filter to be used to transform the Images that the camera captures or from a local video file
+ * into images displayed on the output screen by using the function install_filter. The output
  * screen is shown in the Source Academy in the tab with the "Video Display" icon (camera).
  *
  * The size of the output screen can be changed by the user. To access the current size of the
@@ -27,6 +27,8 @@ import {
   Queue,
   TabsPackage,
   BundlePackage,
+  InputFeed,
+  ImageElement,
 } from './types';
 
 import {
@@ -48,6 +50,7 @@ let HEIGHT: number = DEFAULT_HEIGHT;
 let FPS: number = DEFAULT_FPS;
 let VOLUME: number = DEFAULT_VOLUME;
 
+let imageElement: ImageElement;
 let videoElement: VideoElement;
 let canvasElement: CanvasElement;
 let canvasRenderingContext: CanvasRenderingContext2D;
@@ -65,7 +68,8 @@ let videoIsPlaying: boolean = false;
 let requestId: number;
 let startTime: number;
 
-let useLocal: boolean;
+let inputFeed: InputFeed = 'camera';
+let url: string = '';
 
 // =============================================================================
 // Module's Private Functions
@@ -145,8 +149,8 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
 }
 
 /** @hidden */
-function drawFrame(): void {
-  canvasRenderingContext.drawImage(videoElement, 0, 0, WIDTH, HEIGHT);
+function drawFrame(source: VideoElement | ImageElement): void {
+  canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
   const pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
   readFromBuffer(pixelObj.data, pixels);
 
@@ -188,7 +192,7 @@ function draw(timestamp: number): void {
 
   const elapsed = timestamp - startTime;
   if (elapsed > 1000 / FPS && videoIsPlaying) {
-    drawFrame();
+    drawFrame(videoElement);
     startTime = timestamp;
     if (toRunLateQueue) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -198,6 +202,7 @@ function draw(timestamp: number): void {
   }
 }
 
+/** @hidden */
 async function playVideoElement() {
   if (videoElement.paused && !videoIsPlaying) {
     return videoElement.play();
@@ -205,6 +210,7 @@ async function playVideoElement() {
   return null;
 }
 
+/** @hidden */
 function pauseVideoElement() {
   if (!videoElement.paused && videoIsPlaying) {
     videoElement.pause();
@@ -214,10 +220,10 @@ function pauseVideoElement() {
 /** @hidden */
 function startVideo(): void {
   if (videoIsPlaying) return;
-  if (useLocal) {
-    playVideoElement();
-  } else {
+  if (inputFeed === 'camera') {
     videoIsPlaying = true;
+  } else {
+    playVideoElement();
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
@@ -230,10 +236,10 @@ function startVideo(): void {
  */
 function stopVideo(): void {
   if (!videoIsPlaying) return;
-  if (useLocal) {
-    pauseVideoElement();
-  } else {
+  if (inputFeed === 'camera') {
     videoIsPlaying = false;
+  } else {
+    pauseVideoElement();
   }
   window.cancelAnimationFrame(requestId);
 }
@@ -267,9 +273,36 @@ function loadMedia(): void {
 }
 
 /** @hidden */
-function loadVideo(): void {
-  videoElement.loop = true;
+function loadAlternative(): void {
+  try {
+    if (inputFeed === 'videoURL') {
+      videoElement.src = url;
+      startVideo();
+    } else if (inputFeed === 'imageURL') {
+      imageElement.src = url;
+    }
+  } catch (e: any) {
+    // eslint-disable-next-line no-console
+    console.error(JSON.stringify(e));
+    const errMsg = `There is an error loading the url. ${e.name}: ${e.message}`;
+    // eslint-disable-next-line no-console
+    console.error(errMsg);
+    loadMedia();
+    return;
+  }
   toRunLateQueue = true;
+  videoElement.crossOrigin = 'anonymous';
+  videoElement.loop = true;
+  videoElement.onplaying = () => {
+    videoIsPlaying = true;
+  };
+  videoElement.onpause = () => {
+    videoIsPlaying = false;
+  };
+  imageElement.crossOrigin = 'anonymous';
+  imageElement.onload = () => {
+    drawFrame(imageElement);
+  };
 }
 
 /**
@@ -278,7 +311,7 @@ function loadVideo(): void {
  * @hidden
  */
 function snapPicture(): void {
-  drawFrame();
+  drawFrame(imageElement);
   stopVideo();
 }
 
@@ -379,15 +412,18 @@ function lateEnqueue(funcToAdd: Queue): void {
 /**
  * Used to initialise the video library.
  *
- * @returns an array of Video's properties, [height, width, fps]
+ * @returns an BundlePackage object containing Video's properties
+ *     and other miscellaneous information relevant to tabs.
  * @hidden
  */
 function init(
+  image: ImageElement,
   video: VideoElement,
   canvas: CanvasElement,
   _errorLogger: ErrorLogger,
   _tabsPackage: TabsPackage
 ): BundlePackage {
+  imageElement = image;
   videoElement = video;
   canvasElement = canvas;
   errorLogger = _errorLogger;
@@ -395,22 +431,14 @@ function init(
   const context = canvasElement.getContext('2d');
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
-
-  videoElement.onplaying = () => {
-    videoIsPlaying = true;
-  };
-  videoElement.onpause = () => {
-    videoIsPlaying = false;
-  };
-
   setupData();
-  if (useLocal) {
-    loadVideo();
-  } else {
+  if (inputFeed === 'camera') {
     loadMedia();
+  } else {
+    loadAlternative();
   }
   queue();
-  return { HEIGHT, WIDTH, FPS, VOLUME, useLocal };
+  return { HEIGHT, WIDTH, FPS, VOLUME, inputFeed };
 }
 
 /**
@@ -559,8 +587,8 @@ export function copy_image(src: Pixels, dest: Pixels): void {
 
 /**
  * Installs a given filter to be used to transform
- * the images that the camera captures into images
- * displayed on the screen.
+ * the images from either the video file uploaded or from the camera feed
+ * into images displayed on the screen.
  *
  * A filter is a function that is applied to two
  * two-dimensional arrays of Pixels:
@@ -629,7 +657,7 @@ export function set_fps(fps: number): void {
 }
 
 /**
- * Sets the audio volume of the video.
+ * Sets the audio volume of the local video file played.
  * Note: Only accepts volume video within the range of 0 to 100.
  *
  * @param volume Volume of video (Default value of 100)
@@ -639,8 +667,20 @@ export function set_volume(volume: number): void {
 }
 
 /**
- * Allows you to upload videos into Pix-n-Flix
+ * Allows you to upload local files into Pix-n-Flix.
+ * Running this function will set pix-n-flix to use the local file
+ * as the video or image feed instead of the default camera feed.
  */
-export function use_video_file(): void {
-  useLocal = true;
+export function use_local_file(): void {
+  inputFeed = 'local';
+}
+
+export function use_image_url(URL: string) {
+  inputFeed = 'imageURL';
+  url = URL;
+}
+
+export function use_video_url(URL: string) {
+  inputFeed = 'videoURL';
+  url = URL;
 }

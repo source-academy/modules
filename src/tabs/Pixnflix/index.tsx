@@ -25,20 +25,21 @@ type Props = {
   debuggerContext: any;
 };
 
-type VideoMode = 'video' | 'still' | 'accepting';
+type VideoMode = 'video' | 'still' | 'accepting' | 'image';
 
 type State = {
   width: number;
   height: number;
   FPS: number;
   volume: number;
+  hasAudio: boolean;
   mode: VideoMode;
-  useLocal: boolean;
 };
 
 type Video = {
   toReplString: () => string;
   init: (
+    image: HTMLImageElement | null,
     video: HTMLVideoElement | null,
     canvas: HTMLCanvasElement | null,
     errorLogger: ErrorLogger,
@@ -55,6 +56,8 @@ type Video = {
 class PixNFlix extends React.Component<Props, State> {
   private $video: HTMLVideoElement | null = null;
 
+  private $image: HTMLImageElement | null = null;
+
   private $canvas: HTMLCanvasElement | null = null;
 
   private pixNFlix: Video;
@@ -66,8 +69,8 @@ class PixNFlix extends React.Component<Props, State> {
       height: DEFAULT_HEIGHT,
       FPS: DEFAULT_FPS,
       volume: DEFAULT_VOLUME,
-      useLocal: false,
-      mode: 'video' as VideoMode,
+      hasAudio: false,
+      mode: 'video',
     };
     const { debuggerContext } = this.props;
     this.pixNFlix = debuggerContext.result.value;
@@ -92,8 +95,9 @@ class PixNFlix extends React.Component<Props, State> {
       const { debuggerContext } = this.props;
       this.pixNFlix = debuggerContext.result.value;
       // get the properties of the video in an object
-      // { Height, Width, FPS, useLocal }
-      const { HEIGHT, WIDTH, FPS, VOLUME, useLocal } = this.pixNFlix.init(
+      // { Height, Width, FPS, VOLUME, inputFeed }
+      const { HEIGHT, WIDTH, FPS, VOLUME, inputFeed } = this.pixNFlix.init(
+        this.$image,
         this.$video,
         this.$canvas,
         this.printError,
@@ -106,8 +110,8 @@ class PixNFlix extends React.Component<Props, State> {
         width: WIDTH,
         FPS,
         volume: VOLUME,
-        useLocal,
-        mode: useLocal ? 'accepting' : 'video',
+        hasAudio: inputFeed === 'videoURL',
+        mode: inputFeed === 'local' ? 'accepting' : 'video',
       });
     }
   };
@@ -132,10 +136,9 @@ class PixNFlix extends React.Component<Props, State> {
 
   public onClickStill = () => {
     const { mode } = this.state;
-    if (mode === 'accepting') return;
     if (mode === 'still') {
       this.handleSnapPicture();
-    } else {
+    } else if (mode === 'video') {
       this.setState(
         (state: State) => ({
           ...state,
@@ -148,14 +151,15 @@ class PixNFlix extends React.Component<Props, State> {
 
   public onClickVideo = () => {
     const { mode } = this.state;
-    if (mode === 'accepting') return;
-    this.setState(
-      (state: State) => ({
-        ...state,
-        mode: 'video' as VideoMode,
-      }),
-      this.handleStartVideo
-    );
+    if (mode === 'still') {
+      this.setState(
+        (state: State) => ({
+          ...state,
+          mode: 'video' as VideoMode,
+        }),
+        this.handleStartVideo
+      );
+    }
   };
 
   public handleWidthChange = (width: number) => {
@@ -198,13 +202,22 @@ class PixNFlix extends React.Component<Props, State> {
 
   public loadFileToVideo = (file: File) => {
     const { mode } = this.state;
-    if (!file.type.match('video.*')) return;
-    if (this.$video && mode === 'accepting') {
-      this.$video.src = URL.createObjectURL(file);
-      this.setState({
-        mode: 'video' as VideoMode,
-      });
-      this.handleStartVideo();
+    if (file.type.match('video.*')) {
+      if (this.$video && mode === 'accepting') {
+        this.$video.src = URL.createObjectURL(file);
+        this.setState({
+          hasAudio: true,
+          mode: 'video',
+        });
+        this.handleStartVideo();
+      }
+    } else if (file.type.match('image.*')) {
+      if (this.$image && mode === 'accepting') {
+        this.$image.src = URL.createObjectURL(file);
+        this.setState({
+          mode: 'image',
+        });
+      }
     }
   };
 
@@ -248,10 +261,10 @@ class PixNFlix extends React.Component<Props, State> {
   }
 
   public render() {
-    const { mode, width, height, FPS, volume, useLocal } = this.state;
-    const videoIsActive = mode === ('video' as VideoMode);
-    const stillIsActive = mode !== ('video' as VideoMode);
-    const isAccepting = mode === ('accepting' as VideoMode);
+    const { mode, width, height, FPS, volume, hasAudio } = this.state;
+    const displayOptions = mode === 'still' || mode === 'video';
+    const videoIsActive = mode === 'video';
+    const isAccepting = mode === 'accepting';
     return (
       <div
         className='sa-video'
@@ -259,7 +272,10 @@ class PixNFlix extends React.Component<Props, State> {
         onDrop={this.handleDrop}
       >
         <div className='sa-video-header'>
-          <div className='sa-video-header-element'>
+          <div
+            className='sa-video-header-element'
+            style={{ display: displayOptions ? 'inherit' : 'none' }}
+          >
             <ButtonGroup>
               <Button
                 className='sa-live-video-button'
@@ -271,14 +287,17 @@ class PixNFlix extends React.Component<Props, State> {
               <Button
                 className='sa-still-image-button'
                 icon={IconNames.CAMERA}
-                active={stillIsActive}
+                active={!videoIsActive}
                 onClick={this.onClickStill}
                 text='Still Image'
               />
             </ButtonGroup>
           </div>
           <Divider />
-          <div className='sa-video-header-element'>
+          <div
+            className='sa-video-header-element'
+            style={{ display: displayOptions ? 'inherit' : 'none' }}
+          >
             <div className='sa-video-header-numeric-input'>
               {/* <Tooltip2 content='Change width'> */}
               <NumericInput
@@ -329,6 +348,16 @@ class PixNFlix extends React.Component<Props, State> {
           </div>
         </div>
         <div className='sa-video-element'>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
+          <img
+            ref={(r) => {
+              this.$image = r;
+            }}
+            id='stillfeed'
+            width={DEFAULT_WIDTH}
+            height={DEFAULT_HEIGHT}
+            style={{ display: 'none' }}
+          />
           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
           <video
             ref={(r) => {
@@ -349,14 +378,14 @@ class PixNFlix extends React.Component<Props, State> {
             style={{ display: !isAccepting ? 'initial' : 'none' }}
           />
           <br />
-          <div style={{ display: isAccepting ? 'initial' : 'none' }}>
-            <div style={{ fontSize: 40 }}>Drag video here</div>
+          <div style={{ display: isAccepting ? 'inherit' : 'none' }}>
+            <div style={{ fontSize: 40 }}>Drag file here</div>
             <br />
             <input type='file' onChange={this.handleFileUpload} />
           </div>
           <br />
           <div
-            style={{ display: useLocal && !isAccepting ? 'initial' : 'none' }}
+            style={{ display: hasAudio && !isAccepting ? 'inherit' : 'none' }}
           >
             Volume:
             <input
@@ -368,7 +397,12 @@ class PixNFlix extends React.Component<Props, State> {
               step={0.01}
             />
           </div>
-          <p style={{ fontFamily: 'courier' }}>
+          <p
+            style={{
+              display: displayOptions ? 'inherit' : 'none',
+              fontFamily: 'courier',
+            }}
+          >
             Note: Is video lagging? Switch to &apos;still image&apos; or adjust
             FPS rate!
           </p>

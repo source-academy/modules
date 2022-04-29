@@ -15,7 +15,9 @@ import {
   set_dimensions,
   set_fps,
   set_volume,
-  use_video_file,
+  use_local_file,
+  use_image_url,
+  use_video_url,
 } from './functions';
 
 /**
@@ -41,5 +43,7 @@ export default () => ({
   set_dimensions,
   set_fps,
   set_volume,
-  use_video_file,
+  use_local_file,
+  use_image_url,
+  use_video_url,
 });
