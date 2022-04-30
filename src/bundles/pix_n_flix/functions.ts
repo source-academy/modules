@@ -315,26 +315,14 @@ function snapPicture(): void {
   stopVideo();
 }
 
-/** @hidden */
-// update fps
+/**
+ * Update the FPS
+ *
+ * @hidden
+ */
 function updateFPS(fps: number): void {
-  // ignore if invalid inputs
-  if (fps < MIN_FPS || fps > MAX_FPS) {
-    return;
-  }
-
-  const status = videoIsPlaying;
-  stopVideo();
-
+  if (fps < MIN_FPS || fps > MAX_FPS) return;
   FPS = fps;
-  setupData();
-
-  if (!status) {
-    setTimeout(() => snapPicture(), 50);
-    return;
-  }
-
-  startVideo();
 }
 
 /**
