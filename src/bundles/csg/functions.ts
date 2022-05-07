@@ -85,9 +85,6 @@ export const star: Shape = shapeSetOrigin(
   new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 })))
 );
 
-//TODO
-let small = 10 ** -30;
-
 /**
  * Primitive Shape of a square pyramid.
  *
@@ -98,7 +95,7 @@ export const pyramid: Shape = shapeSetOrigin(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
-      endRadius: [small, small],
+      endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
       segments: 4,
     })
   )
@@ -114,7 +111,7 @@ export const cone: Shape = shapeSetOrigin(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
-      endRadius: [small, small],
+      endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
     })
   )
 );
