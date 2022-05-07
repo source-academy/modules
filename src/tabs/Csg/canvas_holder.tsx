@@ -17,6 +17,13 @@ export default class CanvasHolder extends React.Component<
 > {
   private canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      getCurrentRequestId: () => 0
+    }
+  }
+
   // Called as part of the React lifecycle when this tab is created
   public componentDidMount() {
     let canvas: HTMLCanvasElement | null = this.canvasReference.current;
@@ -27,9 +34,17 @@ export default class CanvasHolder extends React.Component<
       this.props.moduleState
     );
 
+    // @ts-ignore
+    this.state.getCurrentRequestId = getCurrentRequestId;
+  }
+
+  public componentWillUnmount() {
+    let canvas: HTMLCanvasElement | null = this.canvasReference.current;
+    if (canvas === null) return;
+
     // Stops old render loop upon re-run to prevent regl context lost errors
     canvas.addEventListener('webglcontextlost', () =>
-      window.cancelAnimationFrame(getCurrentRequestId())
+      window.cancelAnimationFrame(this.state.getCurrentRequestId())
     );
   }
 

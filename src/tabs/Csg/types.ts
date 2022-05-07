@@ -10,7 +10,9 @@ export type CanvasHolderProps = {
 };
 
 // React Component State for the CSG canvas holder
-export type CanvasHolderState = {};
+export type CanvasHolderState = {
+  getCurrentRequestId: () => number;
+};
 
 // React Component Props for a control hint
 export type HintProps = {
