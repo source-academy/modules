@@ -1,18 +1,19 @@
-import React, { DragEvent, ChangeEvent } from 'react';
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { ErrorLogger, TabsPackage } from '../../bundles/pix_n_flix/types';
+// eslint-disable-next-line @typescript-eslint/no-shadow
+import React, { ChangeEvent, DragEvent } from 'react';
 import {
-  DEFAULT_WIDTH,
-  DEFAULT_HEIGHT,
   DEFAULT_FPS,
-  MAX_HEIGHT,
-  MIN_HEIGHT,
-  MAX_WIDTH,
-  MIN_WIDTH,
+  DEFAULT_HEIGHT,
+  DEFAULT_WIDTH,
   MAX_FPS,
+  MAX_HEIGHT,
+  MAX_WIDTH,
   MIN_FPS,
+  MIN_HEIGHT,
+  MIN_WIDTH,
 } from '../../bundles/pix_n_flix/constants';
+import { ErrorLogger, TabsPackage } from '../../bundles/pix_n_flix/types';
 
 type Props = {
   children?: never;
