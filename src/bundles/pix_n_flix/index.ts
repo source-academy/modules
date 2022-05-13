@@ -14,6 +14,7 @@ import {
   pause_at,
   set_dimensions,
   set_fps,
+  use_local_video,
 } from './functions';
 
 /**
@@ -38,4 +39,5 @@ export default () => ({
   pause_at,
   set_dimensions,
   set_fps,
+  use_local_video,
 });

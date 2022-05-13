@@ -62,6 +62,9 @@ let FPS: number = DEFAULT_FPS;
 let requestId: number;
 let startTime: number;
 
+let useLocalVideo: boolean;
+// let counter = 0;
+
 // =============================================================================
 // Module's Private Functions
 // =============================================================================
@@ -193,10 +196,23 @@ function draw(timestamp: number): void {
   }
 }
 
+async function playVideoElement() {
+  if (videoElement.paused && !videoIsPlaying) {
+    return videoElement.play();
+  }
+  return null;
+}
+
+function pauseVideoElement() {
+  if (!videoElement.paused && videoIsPlaying) {
+    videoElement.pause();
+  }
+}
+
 /** @hidden */
 function startVideo(): void {
   if (videoIsPlaying) return;
-  videoIsPlaying = true;
+  playVideoElement();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 }
@@ -208,7 +224,7 @@ function startVideo(): void {
  */
 function stopVideo(): void {
   if (!videoIsPlaying) return;
-  videoIsPlaying = false;
+  pauseVideoElement();
   window.cancelAnimationFrame(requestId);
 }
 
@@ -237,6 +253,13 @@ function loadMedia(): void {
       errorLogger(errorMessage, false);
     });
 
+  startVideo();
+}
+
+/** @hidden */
+function loadVideo(): void {
+  videoElement.loop = true;
+  toRunLateQueue = true;
   startVideo();
 }
 
@@ -354,10 +377,21 @@ function init(
   if (!context) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
 
+  videoElement.onplaying = () => {
+    videoIsPlaying = true;
+  };
+  videoElement.onpause = () => {
+    videoIsPlaying = false;
+  };
+
   setupData();
-  loadMedia();
+  if (useLocalVideo) {
+    loadVideo();
+  } else {
+    loadMedia();
+  }
   queue();
-  return [HEIGHT, WIDTH, FPS];
+  return [HEIGHT, WIDTH, FPS, useLocalVideo ? 1 : 0];
 }
 
 /**
@@ -366,7 +400,7 @@ function init(
  * @hidden
  */
 function deinit(): void {
-  stopVideo();
+  snapPicture();
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
@@ -549,7 +583,8 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 export function pause_at(delay: number): void {
   // prevent negative delays
   lateEnqueue(() =>
-    setTimeout(tabsPackage.onClickStill, delay >= 0 ? delay : -delay)
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    setTimeout(tabsPackage.onClickStill!, delay >= 0 ? delay : -delay)
   );
 }
 
@@ -572,4 +607,11 @@ export function set_dimensions(width: number, height: number): void {
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
+}
+
+/**
+ * Allows you to upload videos into Pix-n-Flix
+ */
+export function use_local_video(): void {
+  useLocalVideo = true;
 }
