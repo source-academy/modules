@@ -95,7 +95,7 @@ export default class CanvasHolder extends React.Component<
         >
           <canvas
             ref={this.canvasReference}
-            style={{ height: '100%', width: '100%' }}
+            style={{ width: '100%', height: '100%' }}
             width='0'
             height='0'
           />
