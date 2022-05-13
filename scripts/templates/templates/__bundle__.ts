@@ -23,9 +23,9 @@ function sample_function(x: number): number {
   return ++x;
 }
 
-// Remove the underscore before the parameter names if you will be using them.
-// These are passed in by the frontend, and can later be accessed in your
-// module's tab
+//NOTE Remove the underscores before the parameter names if you will be using
+// them. These parameters are passed in over on the frontend, and can later be
+// accessed again in your module's tab via the DebuggerContext it gets passed
 export default (
   _moduleParams: ModuleParams,
   _moduleContexts: ModuleContexts
