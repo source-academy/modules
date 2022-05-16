@@ -20,13 +20,13 @@ import {
   CanvasElement,
   VideoElement,
   ErrorLogger,
-  Video,
+  StartPacket,
   Pixel,
   Pixels,
   Filter,
   Queue,
-  TabsPackage,
-  BundlePackage,
+  TabsPacket,
+  BundlePacket,
   InputFeed,
   ImageElement,
 } from './types';
@@ -55,7 +55,7 @@ let videoElement: VideoElement;
 let canvasElement: CanvasElement;
 let canvasRenderingContext: CanvasRenderingContext2D;
 let errorLogger: ErrorLogger;
-let tabsPackage: TabsPackage;
+let tabsPackage: TabsPacket;
 
 const pixels: Pixels = [];
 const temporaryPixels: Pixels = [];
@@ -68,7 +68,7 @@ let videoIsPlaying: boolean = false;
 let requestId: number;
 let startTime: number;
 
-let inputFeed: InputFeed = 'camera';
+let inputFeed: InputFeed = InputFeed.Camera;
 let url: string = '';
 
 // =============================================================================
@@ -220,7 +220,7 @@ function pauseVideoElement() {
 /** @hidden */
 function startVideo(): void {
   if (videoIsPlaying) return;
-  if (inputFeed === 'camera') {
+  if (inputFeed === InputFeed.Camera) {
     videoIsPlaying = true;
   } else {
     playVideoElement();
@@ -236,7 +236,7 @@ function startVideo(): void {
  */
 function stopVideo(): void {
   if (!videoIsPlaying) return;
-  if (inputFeed === 'camera') {
+  if (inputFeed === InputFeed.Camera) {
     videoIsPlaying = false;
   } else {
     pauseVideoElement();
@@ -275,16 +275,16 @@ function loadMedia(): void {
 /** @hidden */
 function loadAlternative(): void {
   try {
-    if (inputFeed === 'videoURL') {
+    if (inputFeed === InputFeed.VideoURL) {
       videoElement.src = url;
       startVideo();
-    } else if (inputFeed === 'imageURL') {
+    } else if (inputFeed === InputFeed.ImageURL) {
       imageElement.src = url;
     }
   } catch (e: any) {
     // eslint-disable-next-line no-console
     console.error(JSON.stringify(e));
-    const errMsg = `There is an error loading the url. ${e.name}: ${e.message}`;
+    const errMsg = `There is an error loading the URL. ${e.name}: ${e.message}`;
     // eslint-disable-next-line no-console
     console.error(errMsg);
     loadMedia();
@@ -373,10 +373,14 @@ function updateVolume(v: number): void {
   videoElement.volume = VOLUME;
 }
 
-// queue is runned when init is called
+// queue is run when init is called
 let queue: Queue = () => {};
 
-// adds function to the queue
+/**
+ * Adds function to the queue
+ *
+ * @hidden
+ */
 function enqueue(funcToAdd: Queue): void {
   const funcToRunFirst: Queue = queue;
   queue = () => {
@@ -385,10 +389,14 @@ function enqueue(funcToAdd: Queue): void {
   };
 }
 
-// lateQueue is runned after media has properly loaded
+// lateQueue is run after media has properly loaded
 let lateQueue: Queue = () => {};
 
-// adds function to the lateQueue
+/**
+ * Adds function to the lateQueue
+ *
+ * @hidden
+ */
 function lateEnqueue(funcToAdd: Queue): void {
   const funcToRunFirst: Queue = lateQueue;
   lateQueue = () => {
@@ -400,7 +408,7 @@ function lateEnqueue(funcToAdd: Queue): void {
 /**
  * Used to initialise the video library.
  *
- * @returns an BundlePackage object containing Video's properties
+ * @returns a BundlePackage object containing Video's properties
  *     and other miscellaneous information relevant to tabs.
  * @hidden
  */
@@ -409,8 +417,8 @@ function init(
   video: VideoElement,
   canvas: CanvasElement,
   _errorLogger: ErrorLogger,
-  _tabsPackage: TabsPackage
-): BundlePackage {
+  _tabsPackage: TabsPacket
+): BundlePacket {
   imageElement = image;
   videoElement = video;
   canvasElement = canvas;
@@ -420,7 +428,7 @@ function init(
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
   setupData();
-  if (inputFeed === 'camera') {
+  if (inputFeed === InputFeed.Camera) {
     loadMedia();
   } else {
     loadAlternative();
@@ -452,7 +460,7 @@ function deinit(): void {
 /**
  * Initialize the PixNFlix live feed with default globals.
  */
-export function start(): Video {
+export function start(): StartPacket {
   return {
     toReplString: () => '[Pix N Flix]',
     init,
@@ -646,7 +654,7 @@ export function set_fps(fps: number): void {
 
 /**
  * Sets the audio volume of the local video file played.
- * Note: Only accepts volume video within the range of 0 to 100.
+ * Note: Only accepts volume value within the range of 0 to 100.
  *
  * @param volume Volume of video (Default value of 100)
  */
@@ -659,7 +667,7 @@ export function set_volume(volume: number): void {
  * as the video or image feed instead of the default camera feed.
  */
 export function use_local_file(): void {
-  inputFeed = 'local';
+  inputFeed = InputFeed.Local;
 }
 
 /**
@@ -669,7 +677,7 @@ export function use_local_file(): void {
  * @param URL URL of image to be loaded
  */
 export function use_image_url(URL: string) {
-  inputFeed = 'imageURL';
+  inputFeed = InputFeed.ImageURL;
   url = URL;
 }
 
@@ -680,6 +688,6 @@ export function use_image_url(URL: string) {
  * @param URL URL of video to be loaded
  */
 export function use_video_url(URL: string) {
-  inputFeed = 'videoURL';
+  inputFeed = InputFeed.VideoURL;
   url = URL;
 }

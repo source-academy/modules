@@ -5,11 +5,17 @@ export type ErrorLogger = (
   error: string | string[],
   isSlangError?: boolean
 ) => void;
-export type TabsPackage = {
+export type TabsPacket = {
   onClickStill: () => void;
 };
-export type InputFeed = 'camera' | 'imageURL' | 'videoURL' | 'local';
-export type BundlePackage = {
+export enum InputFeed {
+  Camera,
+  ImageURL,
+  VideoURL,
+  Local,
+}
+
+export type BundlePacket = {
   HEIGHT: number;
   WIDTH: number;
   FPS: number;
@@ -17,15 +23,15 @@ export type BundlePackage = {
   inputFeed: InputFeed;
 };
 export type Queue = () => void;
-export type Video = {
+export type StartPacket = {
   toReplString: () => string;
   init: (
     image: ImageElement,
     video: VideoElement,
     canvas: CanvasElement,
     errorLogger: ErrorLogger,
-    tabsPackage: TabsPackage
-  ) => BundlePackage;
+    tabsPackage: TabsPacket
+  ) => BundlePacket;
   deinit: () => void;
   startVideo: () => void;
   snapPicture: () => void;
