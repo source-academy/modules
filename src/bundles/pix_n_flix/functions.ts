@@ -220,11 +220,8 @@ function pauseVideoElement() {
 /** @hidden */
 function startVideo(): void {
   if (videoIsPlaying) return;
-  if (inputFeed === InputFeed.Camera) {
-    videoIsPlaying = true;
-  } else {
-    playVideoElement();
-  }
+  if (inputFeed === InputFeed.Camera) videoIsPlaying = true;
+  else playVideoElement();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 }
