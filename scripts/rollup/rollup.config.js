@@ -1,4 +1,5 @@
 /* [Imports] */
+import chalk from 'chalk';
 import {
   bundleNamesToConfigs,
   getRollupBundleNames,
@@ -27,8 +28,12 @@ export default function (commandLineArguments) {
 
   // Rollup bundle configs, for module bundles and/or module tabs
   let rollupBundleConfigs = [...bundleConfigs, ...tabConfigs];
-  if (rollupBundleConfigs.length === 0)
-    throw new Error('(Nothing new to build)');
+  if (rollupBundleConfigs.length === 0) {
+    console.log(chalk.yellowBright('(Nothing new to build)\n'));
+    //NOTE Lack of any config for something real to transpile means the copy
+    // plugin will also not run on modules.json
+    process.exit();
+  }
 
   return rollupBundleConfigs;
 }

@@ -95,12 +95,15 @@ function makeDefaultConfig() {
       injectProcessEnv({
         NODE_ENV: process.env.NODE_ENV,
       }),
+
       filesize({
         showMinifiedSize: false,
         showGzippedSize: false,
       }),
+
       copy({
         targets: [{ src: MODULES_PATH, dest: BUILD_PATH }],
+        copyOnce: true,
       }),
     ],
   };
@@ -210,7 +213,6 @@ export function tabNamesToConfigs(names) {
   return configs;
 }
 
-//TODO dummy config or such to proceed if nothing to rollup
 //TODO plugin event hook
 export function updateTimestamp() {
   let newTimestamp = new Date().getTime();
