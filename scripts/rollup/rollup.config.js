@@ -2,6 +2,7 @@
 import chalk from 'chalk';
 import {
   bundleNamesToConfigs,
+  getFinalPlugins,
   getRollupBundleNames,
   tabNamesToConfigs,
 } from './utilities.js';
@@ -30,10 +31,12 @@ export default function (commandLineArguments) {
   let rollupBundleConfigs = [...bundleConfigs, ...tabConfigs];
   if (rollupBundleConfigs.length === 0) {
     console.log(chalk.yellowBright('(Nothing new to build)\n'));
-    //NOTE Lack of any config for something real to transpile means the copy
-    // plugin will also not run on modules.json
+    //NOTE The lack of any config for something real to transpile also means the
+    // final plugins below don't get the chance to run
     process.exit();
   }
 
+  let lastConfig = rollupBundleConfigs[rollupBundleConfigs.length - 1];
+  lastConfig.plugins = [...lastConfig.plugins, ...getFinalPlugins()];
   return rollupBundleConfigs;
 }

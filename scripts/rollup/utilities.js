@@ -36,6 +36,11 @@ function getTimestamp() {
   return database.get(DATABASE_KEY).value() ?? 0;
 }
 
+function updateTimestamp() {
+  let newTimestamp = new Date().getTime();
+  database.set(DATABASE_KEY, newTimestamp).write();
+}
+
 function isFolderModified(fullFolderPath, storedTimestamp) {
   let contents = fs.readdirSync(fullFolderPath);
   for (let content of contents) {
@@ -99,11 +104,6 @@ function makeDefaultConfig() {
       filesize({
         showMinifiedSize: false,
         showGzippedSize: false,
-      }),
-
-      copy({
-        targets: [{ src: MODULES_PATH, dest: BUILD_PATH }],
-        copyOnce: true,
       }),
     ],
   };
@@ -213,8 +213,17 @@ export function tabNamesToConfigs(names) {
   return configs;
 }
 
-//TODO plugin event hook
-export function updateTimestamp() {
-  let newTimestamp = new Date().getTime();
-  database.set(DATABASE_KEY, newTimestamp).write();
+export function getFinalPlugins() {
+  // Run these only once, at the end
+  return [
+    copy({
+      targets: [{ src: MODULES_PATH, dest: BUILD_PATH }],
+    }),
+    {
+      name: 'lowdb-timestamp',
+      buildEnd(error) {
+        if (error === undefined) updateTimestamp();
+      },
+    },
+  ];
 }
