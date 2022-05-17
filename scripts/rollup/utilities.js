@@ -12,6 +12,7 @@ import filesize from 'rollup-plugin-filesize';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 import { fileURLToPath } from 'url';
 import modules from '../../modules.json';
+import fs from 'fs';
 import {
   BUILD_PATH,
   DATABASE_KEY,
@@ -24,20 +25,39 @@ import {
 } from './constants.js';
 
 /* [Main] */
-let filePath = join(
+let fullDatabasePath = join(
   dirname(fileURLToPath(import.meta.url)),
   `${DATABASE_NAME}.json`
 );
-let adapter = new FileSync(filePath);
+let adapter = new FileSync(fullDatabasePath);
 let database = new Low(adapter);
 
 function getTimestamp() {
-  return database.get(DATABASE_KEY);
+  return database.get(DATABASE_KEY).value() ?? 0;
 }
 
-function isPathModified(path, storedTimestamp) {
-  //TODO
-  return true;
+function isFolderModified(fullFolderPath, storedTimestamp) {
+  let contents = fs.readdirSync(fullFolderPath);
+  for (let content of contents) {
+    let fullContentPath = join(fullFolderPath, content);
+    let stats = fs.statSync(fullContentPath);
+
+    // If is folder, recurse. If found something modified, stop early
+    if (
+      stats.isDirectory() &&
+      isFolderModified(fullContentPath, storedTimestamp)
+    ) {
+      return true;
+    }
+
+    // Is file. Compare timestamps to see if stop early
+    if (stats.mtimeMs > storedTimestamp) {
+      console.log(chalk.grey(`• File modified: ${fullContentPath}`));
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function removeDuplicates(array) {
@@ -94,24 +114,38 @@ function tabNameToSourceFolder(tabName) {
   return `${SOURCE_PATH}tabs/${tabName}/`;
 }
 
+function toFullPath(rootRelativePath) {
+  return join(process.cwd(), rootRelativePath);
+}
+
 /* [Exports] */
 export function getRollupBundleNames(skipUnmodified) {
   // All module bundles
   let moduleNames = Object.keys(modules);
 
   // Skip modules whose files haven't been modified
+  console.log('');
   if (skipUnmodified) {
     let storedTimestamp = getTimestamp();
+    console.log(
+      chalk.grey(
+        `Quick rebuild mode (newer than ${new Date(
+          storedTimestamp
+        ).toLocaleString()}):`
+      )
+    );
 
     moduleNames = moduleNames.filter((moduleName) => {
       // Check module bundle
-      let bundleSourceFolder = bundleNameToSourceFolder(moduleName);
-      if (isPathModified(bundleSourceFolder, storedTimestamp)) return true;
+      let fullBundleFolderPath = toFullPath(
+        bundleNameToSourceFolder(moduleName)
+      );
+      if (isFolderModified(fullBundleFolderPath, storedTimestamp)) return true;
 
       // Check each module tab
       for (let tabName of modules[moduleName].tabs) {
-        let tabSourceFolder = tabNameToSourceFolder(tabName);
-        if (isPathModified(tabSourceFolder, storedTimestamp)) return true;
+        let fullTabFolderPath = toFullPath(tabNameToSourceFolder(tabName));
+        if (isFolderModified(fullTabFolderPath, storedTimestamp)) return true;
       }
 
       return false;
@@ -133,7 +167,7 @@ export function bundleNamesToConfigs(names) {
 
   console.log(chalk.greenBright('Configured module bundles:'));
   let configs = names.map((bundleName) => {
-    console.log(chalk.blueBright(bundleName));
+    console.log(`• ${chalk.blueBright(bundleName)}`);
 
     return {
       ...defaultConfig,
@@ -154,7 +188,7 @@ export function tabNamesToConfigs(names) {
 
   console.log(chalk.greenBright('Configured module tabs:'));
   let configs = names.map((tabName) => {
-    console.log(chalk.blueBright(tabName));
+    console.log(`• ${chalk.blueBright(tabName)}`);
 
     return {
       ...defaultConfig,
@@ -176,6 +210,7 @@ export function tabNamesToConfigs(names) {
   return configs;
 }
 
+//TODO dummy config or such to proceed if nothing to rollup
 //TODO plugin event hook
 export function updateTimestamp() {
   let newTimestamp = new Date().getTime();

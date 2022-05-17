@@ -27,6 +27,8 @@ export default function (commandLineArguments) {
 
   // Rollup bundle configs, for module bundles and/or module tabs
   let rollupBundleConfigs = [...bundleConfigs, ...tabConfigs];
+  if (rollupBundleConfigs.length === 0)
+    throw new Error('(Nothing new to build)');
 
   return rollupBundleConfigs;
 }
