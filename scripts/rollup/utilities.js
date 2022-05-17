@@ -3,13 +3,17 @@ import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import chalk from 'chalk';
+import { JSONFile, Low } from 'lowdb';
+import { dirname, join } from 'path';
 import commonJS from 'rollup-plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import filesize from 'rollup-plugin-filesize';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
+import { fileURLToPath } from 'url';
 import modules from '../../modules.json';
 import {
   BUILD_PATH,
+  DATABASE_NAME,
   MODULES_PATH,
   NODE_MODULES_PATTERN,
   SOURCE_PATH,
@@ -18,6 +22,22 @@ import {
 } from './constants.js';
 
 /* [Main] */
+let filePath = join(
+  dirname(fileURLToPath(import.meta.url)),
+  `${DATABASE_NAME}.json`
+);
+let adapter = new JSONFile(filePath);
+let low = new Low(adapter);
+
+function getTimestamp() {
+  return low.read().then(() => low.data?.timestamp ?? 0);
+}
+
+function isPathModified(path, storedTimestamp) {
+  //TODO
+  return true;
+}
+
 function removeDuplicates(array) {
   return [...new Set(array)];
 }
@@ -73,11 +93,28 @@ function tabNameToSourceFolder(tabName) {
 }
 
 /* [Exports] */
-//TODO timestamp-based
-export function getRollupBundleNames(skipUnmodified) {
+export async function getRollupBundleNames(skipUnmodified) {
   // All module bundles
   let moduleNames = Object.keys(modules);
-  moduleNames = removeDuplicates(moduleNames);
+
+  // Skip modules whose files haven't been modified
+  if (skipUnmodified) {
+    let storedTimestamp = await getTimestamp();
+
+    moduleNames = moduleNames.filter((moduleName) => {
+      // Check module bundle
+      let bundleSourceFolder = bundleNameToSourceFolder(moduleName);
+      if (isPathModified(bundleSourceFolder, storedTimestamp)) return true;
+
+      // Check each module tab
+      for (let tabName of modules[moduleName].tabs) {
+        let tabSourceFolder = tabNameToSourceFolder(tabName);
+        if (isPathModified(tabSourceFolder, storedTimestamp)) return true;
+      }
+
+      return false;
+    });
+  }
 
   // All module tabs
   let tabNames = moduleNames.flatMap((moduleName) => modules[moduleName].tabs);
@@ -135,4 +172,10 @@ export function tabNamesToConfigs(names) {
   });
 
   return configs;
+}
+
+//TODO plugin event hook
+export function updateTimestamp() {
+  low.data = { timestamp: new Date().getTime() };
+  low.write();
 }
