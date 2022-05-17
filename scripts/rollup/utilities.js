@@ -2,20 +2,27 @@
 import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
+import chalk from 'chalk';
 import commonJS from 'rollup-plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import filesize from 'rollup-plugin-filesize';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
+import modules from '../../modules.json';
 import {
   BUILD_PATH,
   MODULES_PATH,
   NODE_MODULES_PATTERN,
+  SOURCE_PATH,
   SOURCE_PATTERN,
   SUPPRESSED_WARNINGS,
 } from './constants.js';
 
-/* [Exports] */
-export function makeDefaultConfiguration() {
+/* [Main] */
+function removeDuplicates(array) {
+  return [...new Set(array)];
+}
+
+function makeDefaultConfig() {
   return {
     onwarn(warning, warn) {
       if (SUPPRESSED_WARNINGS.includes(warning.code)) return;
@@ -55,4 +62,77 @@ export function makeDefaultConfiguration() {
       }),
     ],
   };
+}
+
+function bundleNameToSourceFolder(bundleName) {
+  return `${SOURCE_PATH}bundles/${bundleName}/`;
+}
+
+function tabNameToSourceFolder(tabName) {
+  return `${SOURCE_PATH}tabs/${tabName}/`;
+}
+
+/* [Exports] */
+//TODO timestamp-based
+export function getRollupBundleNames(skipUnmodified) {
+  // All module bundles
+  let moduleNames = Object.keys(modules);
+  moduleNames = removeDuplicates(moduleNames);
+
+  // All module tabs
+  let tabNames = moduleNames.flatMap((moduleName) => modules[moduleName].tabs);
+  tabNames = removeDuplicates(tabNames);
+
+  return {
+    bundleNames: moduleNames,
+    tabNames,
+  };
+}
+
+export function bundleNamesToConfigs(names) {
+  let defaultConfig = makeDefaultConfig();
+
+  console.log(chalk.greenBright('Configured module bundles:'));
+  let configs = names.map((bundleName) => {
+    console.log(chalk.blueBright(bundleName));
+
+    return {
+      ...defaultConfig,
+
+      input: `${bundleNameToSourceFolder(bundleName)}index.ts`,
+      output: {
+        file: `${BUILD_PATH}bundles/${bundleName}.js`,
+        format: 'iife',
+      },
+    };
+  });
+
+  return configs;
+}
+
+export function tabNamesToConfigs(names) {
+  let defaultConfig = makeDefaultConfig();
+
+  console.log(chalk.greenBright('Configured module tabs:'));
+  let configs = names.map((tabName) => {
+    console.log(chalk.blueBright(tabName));
+
+    return {
+      ...defaultConfig,
+
+      input: `${tabNameToSourceFolder(tabName)}index.tsx`,
+      output: {
+        file: `${BUILD_PATH}tabs/${tabName}.js`,
+        format: 'iife',
+
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDom',
+        },
+      },
+      external: ['react', 'react-dom'],
+    };
+  });
+
+  return configs;
 }
