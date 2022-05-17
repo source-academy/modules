@@ -6,12 +6,12 @@
  *
  * A central element of pix_n_flix is the notion of a Filter, a function that is applied
  * to two images: the source Image and the destination Image. We can install a given
- * Filter to be used to transform the Images that the camera captures or from a local video file
+ * Filter to be used to transform the Images that the camera captures or from a local file
  * into images displayed on the output screen by using the function install_filter. The output
  * screen is shown in the Source Academy in the tab with the "Video Display" icon (camera).
  *
  * The size of the output screen can be changed by the user. To access the current size of the
- * output screen, we provide the functions video_height and video_width.
+ * output screen, we provide the functions frame_height and frame_width.
  *
  * @module pix_n_flix
  */
@@ -167,7 +167,7 @@ function drawFrame(source: VideoElement | ImageElement): void {
 
     if (!e.name) {
       errorLogger(
-        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the video dimensions.'
+        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.'
       );
 
       errorLogger([e], true);
@@ -543,22 +543,22 @@ export function set_rgba(
 }
 
 /**
- * Returns the current height of the output video display in
+ * Returns the current height of the output display in
  * pixels, i.e. the number of pixels in vertical direction.
  *
  * @returns height of output display (in pixels)
  */
-export function video_height(): number {
+export function frame_height(): number {
   return HEIGHT;
 }
 
 /**
- * Returns the current width of the output video display in
+ * Returns the current width of the output display in
  * pixels, i.e. the number of pixels in horizontal direction.
  *
  * @returns Width of output display (in pixels)
  */
-export function video_width(): number {
+export function frame_width(): number {
   return WIDTH;
 }
 
@@ -668,7 +668,7 @@ export function use_local_file(): void {
 }
 
 /**
- * Set pix-n-flix to use the image from given URL
+ * Set pix-n-flix to use the image ressource from given URL
  * as the image feed instead of the default camera feed.
  *
  * @param URL URL of image to be loaded
