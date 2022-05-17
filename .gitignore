@@ -6,7 +6,7 @@ build/*
 /package-lock.json
 coverage/
 
-scripts/rollup/timestamp.json
+scripts/rollup/database.json
 
 # Compiled source #
 ###################

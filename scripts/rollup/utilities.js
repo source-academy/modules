@@ -29,10 +29,10 @@ let filePath = join(
   `${DATABASE_NAME}.json`
 );
 let adapter = new FileSync(filePath);
-let low = new Low(adapter);
+let database = new Low(adapter);
 
 function getTimestamp() {
-  return low.get(DATABASE_KEY);
+  return database.get(DATABASE_KEY);
 }
 
 function isPathModified(path, storedTimestamp) {
@@ -179,5 +179,5 @@ export function tabNamesToConfigs(names) {
 //TODO plugin event hook
 export function updateTimestamp() {
   let newTimestamp = new Date().getTime();
-  low.set(DATABASE_KEY, newTimestamp).write();
+  database.set(DATABASE_KEY, newTimestamp).write();
 }
