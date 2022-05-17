@@ -3,7 +3,8 @@ import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import chalk from 'chalk';
-import { JSONFile, Low } from 'lowdb';
+import Low from 'lowdb';
+import FileSync from 'lowdb/adapters/FileSync';
 import { dirname, join } from 'path';
 import commonJS from 'rollup-plugin-commonjs';
 import copy from 'rollup-plugin-copy';
@@ -13,6 +14,7 @@ import { fileURLToPath } from 'url';
 import modules from '../../modules.json';
 import {
   BUILD_PATH,
+  DATABASE_KEY,
   DATABASE_NAME,
   MODULES_PATH,
   NODE_MODULES_PATTERN,
@@ -26,11 +28,11 @@ let filePath = join(
   dirname(fileURLToPath(import.meta.url)),
   `${DATABASE_NAME}.json`
 );
-let adapter = new JSONFile(filePath);
+let adapter = new FileSync(filePath);
 let low = new Low(adapter);
 
 function getTimestamp() {
-  return low.read().then(() => low.data?.timestamp ?? 0);
+  return low.get(DATABASE_KEY);
 }
 
 function isPathModified(path, storedTimestamp) {
@@ -93,13 +95,13 @@ function tabNameToSourceFolder(tabName) {
 }
 
 /* [Exports] */
-export async function getRollupBundleNames(skipUnmodified) {
+export function getRollupBundleNames(skipUnmodified) {
   // All module bundles
   let moduleNames = Object.keys(modules);
 
   // Skip modules whose files haven't been modified
   if (skipUnmodified) {
-    let storedTimestamp = await getTimestamp();
+    let storedTimestamp = getTimestamp();
 
     moduleNames = moduleNames.filter((moduleName) => {
       // Check module bundle
@@ -176,6 +178,6 @@ export function tabNamesToConfigs(names) {
 
 //TODO plugin event hook
 export function updateTimestamp() {
-  low.data = { timestamp: new Date().getTime() };
-  low.write();
+  let newTimestamp = new Date().getTime();
+  low.set(DATABASE_KEY, newTimestamp).write();
 }

@@ -1,6 +1,9 @@
 /* [Exports] */
 export const SUPPRESSED_WARNINGS = ['MISSING_NAME_OPTION_FOR_IIFE_EXPORT'];
 
+export const DATABASE_NAME = 'timestamp';
+export const DATABASE_KEY = 'timestamp';
+
 export const SOURCE_PATH = './src/';
 export const BUILD_PATH = './build/';
 

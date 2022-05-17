@@ -6,8 +6,8 @@ import {
 } from './utilities.js';
 
 /* [Exports] */
-export default async function (commandLineArguments) {
-  let rollupBundleNames = await getRollupBundleNames(
+export default function (commandLineArguments) {
+  let rollupBundleNames = getRollupBundleNames(
     Boolean(commandLineArguments.quick)
   );
   let { bundleNames, tabNames } = rollupBundleNames;
