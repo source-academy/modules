@@ -5,8 +5,8 @@ import {
   green_of,
   alpha_of,
   set_rgba,
-  frame_height,
-  frame_width,
+  image_height,
+  image_width,
   copy_image,
   install_filter,
   reset_filter,
@@ -18,6 +18,7 @@ import {
   use_local_file,
   use_image_url,
   use_video_url,
+  get_video_time,
 } from './functions';
 
 /**
@@ -33,8 +34,8 @@ export default () => ({
   green_of,
   alpha_of,
   set_rgba,
-  frame_height,
-  frame_width,
+  image_height,
+  image_width,
   copy_image,
   install_filter,
   reset_filter,
@@ -46,4 +47,5 @@ export default () => ({
   use_local_file,
   use_image_url,
   use_video_url,
+  get_video_time,
 });
