@@ -265,7 +265,7 @@ export function quarter_turn_right(rune: Rune): Rune {
 }
 
 /**
- * Msakes a new Rune from a given Rune
+ * Makes a new Rune from a given Rune
  * by turning it a quarter-turn in
  * anti-clockwise direction.
  * @param {Rune} rune - Given Rune
@@ -576,7 +576,7 @@ export function orange(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune brown.
+ * Colors the given rune brown.
  * @param {Rune} rune - The rune to color
  * @returns {Rune} The colored Rune
  */
@@ -838,9 +838,8 @@ export class HollusionRune extends DrawnRune {
 
     let lastTime = 0;
     function render(timeInMs: number) {
-      if (timeInMs - lastTime < period / frameCount) {
-        return;
-      }
+      if (timeInMs - lastTime < period / frameCount) return;
+
       lastTime = timeInMs;
 
       const framePos =

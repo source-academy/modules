@@ -12,8 +12,8 @@ export type FrameBufferWithTexture = {
  * Gets shader based on given shader program code.
  *
  * @param gl - WebGL's rendering context
- * @param type - constant describing the type of shader to load
- * @param source - source code of the shader
+ * @param type - Constant describing the type of shader to load
+ * @param source - Source code of the shader
  * @returns WebGLShader used to initialize shader program
  */
 function loadShader(
@@ -39,8 +39,8 @@ function loadShader(
  * Initializes the shader program used by WebGL.
  *
  * @param gl - WebGL's rendering context
- * @param vsSource - vertex shader program code
- * @param fsSource - fragment shader program code
+ * @param vsSource - Vertex shader program code
+ * @param fsSource - Fragment shader program code
  * @returns WebGLProgram used for getting AttribLocation and UniformLocation
  */
 export function initShaderProgram(
@@ -61,7 +61,7 @@ export function initShaderProgram(
 }
 
 /**
- * get a WebGLRenderingContext from Canvas input
+ * Get a WebGLRenderingContext from Canvas input
  * @param canvas WebGLRenderingContext
  * @returns
  */

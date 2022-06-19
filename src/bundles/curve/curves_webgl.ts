@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { mat4, vec3 } from 'gl-matrix';
 import { ReplResult } from '../../typings/type_helpers';
+import { CurveSpace, DrawMode, ScaleMode } from './types';
 
 /** @hidden */
 export const drawnCurves: CurveDrawn[] = [];
@@ -136,9 +137,9 @@ export class CurveDrawn implements ReplResult {
   private buffersInfo: BufferInfo | null;
 
   constructor(
-    private readonly drawMode: 'lines' | 'points',
+    private readonly drawMode: DrawMode,
     private readonly numPoints: number,
-    private readonly space: '2D' | '3D',
+    private readonly space: CurveSpace,
     private readonly drawCubeArray: number[],
     private readonly curvePosArray: number[],
     private readonly curveColorArray: number[]
@@ -312,11 +313,11 @@ export class CurveDrawn implements ReplResult {
 }
 
 export function generateCurve(
-  scaleMode: 'none' | 'stretch' | 'fit',
-  drawMode: 'lines' | 'points',
+  scaleMode: ScaleMode,
+  drawMode: DrawMode,
   numPoints: number,
   func: Curve,
-  space: '2D' | '3D',
+  space: CurveSpace,
   isFullView: boolean
 ) {
   const curvePosArray: number[] = [];

@@ -40,17 +40,20 @@ import { Curve, CurveDrawn, generateCurve, Point } from './curves_webgl';
 import {
   AnimatedCurve,
   CurveAnimation,
+  CurveSpace,
   CurveTransformer,
+  DrawMode,
   RenderFunction,
+  ScaleMode,
 } from './types';
 
 /** @hidden */
 export const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];
 
 function createDrawFunction(
-  scaleMode: 'none' | 'stretch' | 'fit',
-  drawMode: 'lines' | 'points',
-  space: '2D' | '3D',
+  scaleMode: ScaleMode,
+  drawMode: DrawMode,
+  space: CurveSpace,
   isFullView: boolean
 ): (numPoints: number) => RenderFunction {
   return (numPoints: number) => {
@@ -808,9 +811,8 @@ export function animate_curve(
   drawer: RenderFunction,
   func: CurveAnimation
 ): AnimatedCurve {
-  if ((drawer as any).is3D) {
+  if ((drawer as any).is3D)
     throw new Error('Curve Animation cannot be used with 3D draw function!');
-  }
 
   const anim = new AnimatedCurve(duration, fps, func, drawer, false);
   drawnCurves.push(anim);

@@ -8,6 +8,10 @@ import { Curve, CurveDrawn } from './curves_webgl';
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
 export type CurveTransformer = (c: Curve) => Curve;
 
+export type DrawMode = 'lines' | 'points';
+export type ScaleMode = 'none' | 'stretch' | 'fit';
+export type CurveSpace = '2D' | '3D';
+
 /**
  * A function that takes in a timestamp and returns a Curve
  */

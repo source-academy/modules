@@ -54,10 +54,10 @@ void main(void) {
 `;
 /**
  * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
- * @field vertices - a list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
- * @field colors - a list of vertex colors, each vertex has a color (r,g,b,a).
- * @field transformMatrix - a mat4 that is applied to all the vertices and the sub runes
- * @field subRune - a (potentially empty) list of Runes
+ * @field vertices - A list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
+ * @field colors - A list of vertex colors, each vertex has a color (r,g,b,a).
+ * @field transformMatrix - A mat4 that is applied to all the vertices and the sub runes
+ * @field subRune - A (potentially empty) list of Runes
  */
 export class Rune {
   constructor(
@@ -81,7 +81,7 @@ export class Rune {
 
   /**
    * Flatten the subrunes to return a list of runes
-   * @return type Rune[], a list of runes
+   * @return Rune[], a list of runes
    */
   public flatten = () => {
     const runeList: Rune[] = [];
@@ -200,11 +200,7 @@ export function drawRunesToFrameBuffer(
   const texturePointer = gl.getUniformLocation(shaderProgram, 'uTexture');
 
   // load depth
-  if (depthSwitch) {
-    gl.uniform1i(depthSwitchPointer, 1);
-  } else {
-    gl.uniform1i(depthSwitchPointer, 0);
-  }
+  gl.uniform1i(depthSwitchPointer, depthSwitch ? 1 : 0);
 
   // load projection and camera
   const orthoCam = mat4.create();
@@ -290,11 +286,10 @@ export function drawRunesToFrameBuffer(
 
     // load color/texture
     if (rune.texture === null) {
-      if (rune.colors != null) {
-        gl.uniform4fv(vertexColorPointer, rune.colors);
-      } else {
-        gl.uniform4fv(vertexColorPointer, new Float32Array([0, 0, 0, 1]));
-      }
+      gl.uniform4fv(
+        vertexColorPointer,
+        rune.colors != null ? rune.colors : new Float32Array([0, 0, 0, 1])
+      );
       gl.uniform1i(textureSwitchPointer, 0);
     } else {
       const texture = loadTexture(rune.texture);
