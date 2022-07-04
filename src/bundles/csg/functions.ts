@@ -206,7 +206,8 @@ export const purple: string = '#AA00AA';
 export const orange: string = '#FFAA00';
 
 /**
- * A hex colour code for light grey (#AAAAAA).
+ * A hex colour code for light grey (#AAAAAA). This is the default colour used
+ * when storing a Shape.
  *
  * @category Colour
  */
@@ -734,19 +735,20 @@ export function clone(shape: Shape): Shape {
 }
 
 /**
- * Stores a clone of the specified Shape for later rendering.
+ * Stores a clone of the specified Shape for later rendering. Its colour
+ * defaults to the module's provided silver colour variable.
  *
  * @param {Shape} shape - The Shape to be stored.
  */
 export function store(shape: Shape): void {
-  Core.getRenderGroupManager().storeShape(shape.clone());
+  //TODO
+  store_as_color(shape, silver);
 }
 
 /**
  * Colours a clone of the specified Shape using the specified hex colour code,
- * then stores it for later rendering. You may use one of the default colour
- * variables provided by the module, or you may specify your own custom colour
- * code.
+ * then stores it for later rendering. You may use one of the colour variables
+ * provided by the module, or you may specify your own custom colour code.
  *
  * Colour codes must be of the form "#XXXXXX" or "XXXXXX", where each X
  * represents a non-case sensitive hexadecimal number. Invalid colour codes
