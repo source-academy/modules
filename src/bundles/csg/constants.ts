@@ -18,3 +18,9 @@ export const BP_ICON_COLOR: string = '#A7B6C2';
 export const ACE_GUTTER_TEXT_COLOR: string = '#8091A0';
 export const ACE_GUTTER_BACKGROUND_COLOR: string = '#34495E';
 export const BP_TOOLTIP_TEXT_COLOR: string = '#394B59';
+
+// Renderer grid constants
+export const MAIN_TICKS = 1;
+export const SUB_TICKS = MAIN_TICKS / 4;
+export const GRID_PADDING = MAIN_TICKS;
+export const ROUND_UP_INTERVAL = MAIN_TICKS;

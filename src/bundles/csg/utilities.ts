@@ -10,7 +10,14 @@ import {
 } from '@jscad/regl-renderer';
 import { ModuleContext, ModuleState } from 'js-slang';
 import { ModuleContexts } from '../../typings/type_helpers.js';
-import { ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from "./constants.js";
+import {
+  ACE_GUTTER_TEXT_COLOR,
+  BP_TEXT_COLOR,
+  GRID_PADDING,
+  MAIN_TICKS,
+  ROUND_UP_INTERVAL,
+  SUB_TICKS,
+} from './constants.js';
 import {
   AxisEntityType,
   Color,
@@ -41,20 +48,6 @@ export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSol
 export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
 
 // [Custom]
-export class AxisEntity implements AxisEntityType {
-  visuals: {
-    drawCmd: 'drawAxis';
-    show: boolean;
-  } = {
-    drawCmd: 'drawAxis',
-    show: true,
-  };
-
-  alwaysVisible: boolean = false;
-
-  constructor(public size?: number) {}
-}
-
 export class MultiGridEntity implements MultiGridEntityType {
   visuals: {
     drawCmd: 'drawGrid';
@@ -69,13 +62,27 @@ export class MultiGridEntity implements MultiGridEntityType {
     subColor: hexToRgba(ACE_GUTTER_TEXT_COLOR),
   };
 
-  ticks: [number, number] = [10, 1];
+  ticks: [number, number] = [MAIN_TICKS, SUB_TICKS];
 
   size: [number, number];
 
   constructor(size: number) {
     this.size = [size, size];
   }
+}
+
+export class AxisEntity implements AxisEntityType {
+  visuals: {
+    drawCmd: 'drawAxis';
+    show: boolean;
+  } = {
+    drawCmd: 'drawAxis',
+    show: true,
+  };
+
+  alwaysVisible: boolean = false;
+
+  constructor(public size?: number) {}
 }
 
 export class Shape {
@@ -94,8 +101,8 @@ export class RenderGroup {
   constructor(public canvasNumber: number) {}
 
   render: boolean = false;
-  hasAxis: boolean = true;
   hasGrid: boolean = true;
+  hasAxis: boolean = true;
 
   shapes: Shape[] = [];
 
@@ -122,13 +129,13 @@ export class RenderGroupManager {
   }
 
   nextRenderGroup(
-    currentAxis: boolean = true,
-    currentGrid: boolean = true
+    currentGrid: boolean = false,
+    currentAxis: boolean = false
   ): RenderGroup {
     let previousRenderGroup: RenderGroup = this.getCurrentRenderGroup();
     previousRenderGroup.render = true;
-    previousRenderGroup.hasAxis = currentAxis;
     previousRenderGroup.hasGrid = currentGrid;
+    previousRenderGroup.hasAxis = currentAxis;
 
     this.addRenderGroup();
 
@@ -322,4 +329,11 @@ export function looseInstanceof(
     className !== undefined &&
     objectName === className
   );
+}
+
+export function neatGridDistance(rawDistance: number) {
+  let paddedDistance: number = rawDistance + GRID_PADDING;
+  let roundedDistance: number =
+    Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
+  return roundedDistance;
 }

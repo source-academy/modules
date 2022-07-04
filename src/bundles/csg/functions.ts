@@ -797,7 +797,7 @@ export function store_as_rgb(
  */
 export function render_grid_axis(): RenderGroup {
   // Render group is returned for REPL text only; do not document
-  return Core.getRenderGroupManager().nextRenderGroup();
+  return Core.getRenderGroupManager().nextRenderGroup(true, true);
 }
 
 /**
@@ -805,7 +805,7 @@ export function render_grid_axis(): RenderGroup {
  * then not be included in any subsequent renders.
  */
 export function render_grid(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup(false);
+  return Core.getRenderGroupManager().nextRenderGroup(true);
 }
 
 /**
@@ -813,7 +813,7 @@ export function render_grid(): RenderGroup {
  * then not be included in any subsequent renders.
  */
 export function render_axis(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup(undefined, false);
+  return Core.getRenderGroupManager().nextRenderGroup(undefined, true);
 }
 
 /**
@@ -821,5 +821,5 @@ export function render_axis(): RenderGroup {
  * included in any subsequent renders.
  */
 export function render(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup(false, false);
+  return Core.getRenderGroupManager().nextRenderGroup();
 }

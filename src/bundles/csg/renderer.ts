@@ -26,6 +26,7 @@ import {
   FrameTracker,
   hexToRgba,
   MultiGridEntity,
+  neatGridDistance,
   perspectiveCamera,
   perspectiveCameraStateDefaults,
   prepareDrawCommands,
@@ -49,7 +50,11 @@ function addEntities(
   solids: Solid[],
   geometryEntities: GeometryEntity[]
 ): Entity[] {
+  let { hasGrid, hasAxis } = renderGroup;
   let allEntities: Entity[] = [...geometryEntities];
+
+  // Run calculations for grid and/or axis only if needed
+  if (!(hasAxis || hasGrid)) return allEntities;
 
   let boundingBoxes: BoundingBox[] = solids.map((solid: Solid) =>
     measureBoundingBox(solid)
@@ -64,13 +69,10 @@ function addEntities(
   let xys: number[] = minMaxXys.flat(1);
   let distancesFromOrigin: number[] = xys.map(Math.abs);
   let furthestDistance: number = Math.max(...distancesFromOrigin);
-  let size: number = Math.ceil(furthestDistance) + 5;
-  // Grid is aligned to corner, set to have thicker line every 10 units
-  size = Math.ceil(size / 10) * 10;
+  let neatDistance: number = neatGridDistance(furthestDistance);
 
-  if (renderGroup.hasAxis) allEntities.push(new AxisEntity(size));
-  if (renderGroup.hasGrid) allEntities.push(new MultiGridEntity(size * 2));
-
+  if (hasGrid) allEntities.push(new MultiGridEntity(neatDistance * 2));
+  if (hasAxis) allEntities.push(new AxisEntity(neatDistance));
   return allEntities;
 }
 
@@ -105,7 +107,7 @@ function doDynamicResize(
   perspectiveCameraState: PerspectiveCameraState
 ): void {
   let canvasBounds: DOMRect = canvas.getBoundingClientRect();
-  let devicePixelRatio: number = window.devicePixelRatio;
+  let { devicePixelRatio } = window;
 
   // Account for display scaling
   let width: number = canvasBounds.width * devicePixelRatio;
