@@ -35,10 +35,14 @@ export const drawnRunes: Rune[] = [];
 
 /**
  * Rune with the shape of a full square
+ *
+ * @category Primitive
  */
 export const square: Rune = getSquare();
 /**
  * Rune with the shape of a blank square
+ *
+ * @category Primitive
  */
 export const blank: Rune = getBlank();
 /**
@@ -46,42 +50,60 @@ export const blank: Rune = getBlank();
  * smallsquare inside a large square,
  * each diagonally split into a
  * black and white half
+ *
+ * @category Primitive
  */
 export const rcross: Rune = getRcross();
 /**
  * Rune with the shape of a sail
+ *
+ * @category Primitive
  */
 export const sail: Rune = getSail();
 /**
  * Rune with the shape of a triangle
+ *
+ * @category Primitive
  */
 export const triangle: Rune = getTriangle();
 /**
  * Rune with black triangle,
  * filling upper right corner
+ *
+ * @category Primitive
  */
 export const corner: Rune = getCorner();
 /**
  * Rune with the shape of two overlapping
  * triangles, residing in the upper half
  * of the shape
+ *
+ * @category Primitive
  */
 export const nova: Rune = getNova();
 /**
  * Rune with the shape of a circle
+ *
+ * @category Primitive
  */
 export const circle: Rune = getCircle();
 /**
  * Rune with the shape of a heart
+ *
+ * @category Primitive
  */
 export const heart: Rune = getHeart();
 /**
  * Rune with the shape of a pentagram
+ *
+ * @category Primitive
  */
 export const pentagram: Rune = getPentagram();
 /**
  * Rune with the shape of a ribbon
  * winding outwards in an anticlockwise spiral
+ *
+ * @category Primitive
  */
 export const ribbon: Rune = getRibbon();
 
@@ -93,6 +115,8 @@ export const ribbon: Rune = getRibbon();
  * @param {string} imageUrl a URL to the image that is used to create the rune.
  * note that the url must be from a domain that allows CORS.
  * @returns {Rune} a rune created using the image.
+ *
+ * @category Main
  */
 export function from_url(imageUrl: string): Rune {
   const rune = getSquare();
@@ -112,6 +136,8 @@ export function from_url(imageUrl: string): Rune {
  * @param {number} ratio_y - scaling factor in y direction
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting scaled Rune
+ *
+ * @category Main
  */
 export function scale_independent(
   ratio_x: number,
@@ -133,6 +159,8 @@ export function scale_independent(
  * @param {number} ratio - scaling factor
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting scaled Rune
+ *
+ * @category Main
  */
 export function scale(ratio: number, rune: Rune): Rune {
   throwIfNotRune('scale', rune);
@@ -145,6 +173,8 @@ export function scale(ratio: number, rune: Rune): Rune {
  * @param {number} y - translation in y direction
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting translated Rune
+ *
+ * @category Main
  */
 export function translate(x: number, y: number, rune: Rune): Rune {
   throwIfNotRune('translate', rune);
@@ -165,6 +195,8 @@ export function translate(x: number, y: number, rune: Rune): Rune {
  * @param {number} rad - angle in radians
  * @param {Rune} rune - given Rune
  * @return {Rune} rotated Rune
+ *
+ * @category Main
  */
 export function rotate(rad: number, rune: Rune): Rune {
   throwIfNotRune('rotate', rune);
@@ -186,6 +218,8 @@ export function rotate(rad: number, rune: Rune): Rune {
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('stack_frac', rune1);
@@ -210,6 +244,8 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function stack(rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('stack', rune2);
@@ -223,6 +259,8 @@ export function stack(rune1: Rune, rune2: Rune): Rune {
  * @param {number} n - positive integer
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function stackn(n: number, rune: Rune): Rune {
   throwIfNotRune('stackn', rune);
@@ -238,6 +276,8 @@ export function stackn(n: number, rune: Rune): Rune {
  * clockwise direction.
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function quarter_turn_right(rune: Rune): Rune {
   throwIfNotRune('quarter_turn_right', rune);
@@ -250,6 +290,8 @@ export function quarter_turn_right(rune: Rune): Rune {
  * anti-clockwise direction.
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function quarter_turn_left(rune: Rune): Rune {
   throwIfNotRune('quarter_turn_left', rune);
@@ -261,6 +303,8 @@ export function quarter_turn_left(rune: Rune): Rune {
  * by turning it upside-down
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function turn_upside_down(rune: Rune): Rune {
   throwIfNotRune('turn_upside_down', rune);
@@ -277,6 +321,8 @@ export function turn_upside_down(rune: Rune): Rune {
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('beside_frac', rune1);
@@ -301,6 +347,8 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function beside(rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('beside', rune1);
@@ -314,6 +362,8 @@ export function beside(rune1: Rune, rune2: Rune): Rune {
  * turning it upside down
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function flip_vert(rune: Rune): Rune {
   throwIfNotRune('flip_vert', rune);
@@ -326,6 +376,8 @@ export function flip_vert(rune: Rune): Rune {
  * creating a mirror image
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function flip_horiz(rune: Rune): Rune {
   throwIfNotRune('flip_horiz', rune);
@@ -338,6 +390,8 @@ export function flip_horiz(rune: Rune): Rune {
  * given Rune in different orientations
  * @param {Rune} rune - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function make_cross(rune: Rune): Rune {
   throwIfNotRune('make_cross', rune);
@@ -354,6 +408,8 @@ export function make_cross(rune: Rune): Rune {
  * @param {Rune} initial - the initial Rune
  * @return {Rune} - result of n times application of
  *               pattern to initial: pattern(pattern(...pattern(pattern(initial))...))
+ *
+ * @category Main
  */
 export function repeat_pattern(
   n: number,
@@ -376,6 +432,8 @@ export function repeat_pattern(
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation. The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
@@ -421,6 +479,8 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @param {Rune} rune1 - given Rune
  * @param {Rune} rune2 - given Rune
  * @return {Rune} resulting Rune
+ *
+ * @category Main
  */
 export function overlay(rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('overlay', rune1);
@@ -442,6 +502,8 @@ export function overlay(rune1: Rune, rune2: Rune): Rune {
  * @param {number} g - green value [0.0-1.0]
  * @param {number} b - blue value [0.0-1.0]
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function color(rune: Rune, r: number, g: number, b: number): Rune {
   throwIfNotRune('color', rune);
@@ -458,6 +520,8 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
  * colors: red, pink, purple, indigo, blue, green, yellow, orange, brown
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function random_color(rune: Rune): Rune {
   throwIfNotRune('random_color', rune);
@@ -474,6 +538,8 @@ export function random_color(rune: Rune): Rune {
  * colors the given rune red.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function red(rune: Rune): Rune {
   throwIfNotRune('red', rune);
@@ -484,6 +550,8 @@ export function red(rune: Rune): Rune {
  * colors the given rune pink.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function pink(rune: Rune): Rune {
   throwIfNotRune('pink', rune);
@@ -494,6 +562,8 @@ export function pink(rune: Rune): Rune {
  * colors the given rune purple.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function purple(rune: Rune): Rune {
   throwIfNotRune('purple', rune);
@@ -504,6 +574,8 @@ export function purple(rune: Rune): Rune {
  * colors the given rune indigo.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function indigo(rune: Rune): Rune {
   throwIfNotRune('indigo', rune);
@@ -514,6 +586,8 @@ export function indigo(rune: Rune): Rune {
  * colors the given rune blue.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function blue(rune: Rune): Rune {
   throwIfNotRune('blue', rune);
@@ -524,6 +598,8 @@ export function blue(rune: Rune): Rune {
  * colors the given rune green.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function green(rune: Rune): Rune {
   throwIfNotRune('green', rune);
@@ -534,6 +610,8 @@ export function green(rune: Rune): Rune {
  * colors the given rune yellow.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function yellow(rune: Rune): Rune {
   throwIfNotRune('yellow', rune);
@@ -544,6 +622,8 @@ export function yellow(rune: Rune): Rune {
  * colors the given rune orange.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function orange(rune: Rune): Rune {
   throwIfNotRune('orange', rune);
@@ -554,6 +634,8 @@ export function orange(rune: Rune): Rune {
  * colors the given rune brown.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function brown(rune: Rune): Rune {
   throwIfNotRune('brown', rune);
@@ -564,6 +646,8 @@ export function brown(rune: Rune): Rune {
  * colors the given rune black.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function black(rune: Rune): Rune {
   throwIfNotRune('black', rune);
@@ -574,6 +658,8 @@ export function black(rune: Rune): Rune {
  * colors the given rune white.
  * @param {Rune} rune - the rune to color
  * @returns {Rune} the colored Rune
+ *
+ * @category Color
  */
 export function white(rune: Rune): Rune {
   throwIfNotRune('white', rune);
@@ -589,6 +675,8 @@ export function white(rune: Rune): Rune {
  *
  * @param rune - Rune to render
  * @return {Rune} with drawing method set to normal
+ *
+ * @category Main
  */
 export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
@@ -605,6 +693,8 @@ export function show(rune: Rune): Rune {
  * to view the Anaglyph.
  * @param {Rune} rune - Rune to render
  * @return {Rune} with drawing method set to anaglyph
+ *
+ * @category Main
  */
 export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('anaglyph', rune);
@@ -621,6 +711,8 @@ export function anaglyph(rune: Rune): Rune {
  * @param {Rune} rune - Rune to render
  * @param {number} magnitude - (optional) the magnitude of hollusion
  * @return {Rune} with drawing method set to hollusion
+ *
+ * @category Main
  */
 export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
   throwIfNotRune('hollusion_magnitude', rune);
@@ -637,6 +729,8 @@ export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
  * render the given Rune with hollusion, with default magnitude 0.1.
  * @param {Rune} rune - Rune to render
  * @return {Rune} with drawing method set to hollusion
+ *
+ * @category Main
  */
 export function hollusion(rune: Rune): Rune {
   throwIfNotRune('hollusion', rune);
