@@ -1,7 +1,11 @@
 /* [Imports] */
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-import { BP_BORDER_RADIUS } from '../../bundles/csg/constants.js';
+import {
+  BP_BORDER_RADIUS,
+  BP_TAB_BUTTON_MARGIN,
+  BP_TAB_PANEL_MARGIN,
+} from '../../bundles/csg/constants.js';
 import render from '../../bundles/csg/renderer';
 import HoverControlHint from './hover_control_hint';
 import { CanvasHolderProps, CanvasHolderState } from './types';
@@ -43,7 +47,15 @@ export default class CanvasHolder extends React.Component<
           justifyContent: 'center',
         }}
       >
-        <div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: BP_TAB_BUTTON_MARGIN,
+
+            marginRight: BP_TAB_PANEL_MARGIN,
+          }}
+        >
           <HoverControlHint
             tooltipText='Zoom in • Scroll up'
             iconName={IconNames.ZOOM_IN}

@@ -4,8 +4,6 @@ import React from 'react';
 import {
   BP_BORDER_RADIUS,
   BP_ICON_COLOR,
-  BP_TAB_BUTTON_MARGIN,
-  BP_TAB_PANEL_MARGIN,
   BP_TOOLTIP_BACKGROUND_COLOR,
   BP_TOOLTIP_PADDING,
   BP_TOOLTIP_TEXT_COLOR,
@@ -35,13 +33,10 @@ export default class HoverControlHint extends React.Component<
         style={{
           display: 'flex',
           flexDirection: 'column',
+          // Centre icon within hint's height
           justifyContent: 'center',
 
           height: SA_TAB_BUTTON_WIDTH,
-
-          marginTop: BP_TAB_BUTTON_MARGIN,
-          marginRight: BP_TAB_PANEL_MARGIN,
-          marginBottom: BP_TAB_BUTTON_MARGIN,
         }}
         onMouseEnter={() => this.setState({ showTooltip: true })}
         onMouseLeave={() => this.setState({ showTooltip: false })}
@@ -50,7 +45,6 @@ export default class HoverControlHint extends React.Component<
           icon={this.props.iconName}
           size={SA_TAB_ICON_SIZE}
           color={BP_ICON_COLOR}
-
         />
         <span
           style={{
