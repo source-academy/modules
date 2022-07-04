@@ -41,23 +41,28 @@ function updateTimestamp() {
   database.set(DATABASE_KEY, newTimestamp).write();
 }
 
-function isFolderModified(fullFolderPath, storedTimestamp) {
+// Function takes in relative paths, for cleaner logging
+function isFolderModified(relativeFolderPath, storedTimestamp) {
+  let fullFolderPath = toFullPath(relativeFolderPath);
+
   let contents = fs.readdirSync(fullFolderPath);
   for (let content of contents) {
+    let relativeContentPath = join(relativeFolderPath, content);
     let fullContentPath = join(fullFolderPath, content);
+
     let stats = fs.statSync(fullContentPath);
 
     // If is folder, recurse. If found something modified, stop early
     if (
       stats.isDirectory() &&
-      isFolderModified(fullContentPath, storedTimestamp)
+      isFolderModified(relativeContentPath, storedTimestamp)
     ) {
       return true;
     }
 
     // Is file. Compare timestamps to see if stop early
     if (stats.mtimeMs > storedTimestamp) {
-      console.log(chalk.grey(`• File modified: ${fullContentPath}`));
+      console.log(chalk.grey(`• File modified: ${relativeContentPath}`));
       return true;
     }
   }
@@ -110,10 +115,12 @@ function makeDefaultConfig() {
 }
 
 function bundleNameToSourceFolder(bundleName) {
+  // Root relative path
   return `${SOURCE_PATH}bundles/${bundleName}/`;
 }
 
 function tabNameToSourceFolder(tabName) {
+  // Root relative path
   return `${SOURCE_PATH}tabs/${tabName}/`;
 }
 
@@ -140,15 +147,15 @@ export function getRollupBundleNames(skipUnmodified) {
 
     moduleNames = moduleNames.filter((moduleName) => {
       // Check module bundle
-      let fullBundleFolderPath = toFullPath(
-        bundleNameToSourceFolder(moduleName)
-      );
-      if (isFolderModified(fullBundleFolderPath, storedTimestamp)) return true;
+      let relativeBundleFolderPath = bundleNameToSourceFolder(moduleName);
+      if (isFolderModified(relativeBundleFolderPath, storedTimestamp))
+        return true;
 
       // Check each module tab
       for (let tabName of modules[moduleName].tabs) {
-        let fullTabFolderPath = toFullPath(tabNameToSourceFolder(tabName));
-        if (isFolderModified(fullTabFolderPath, storedTimestamp)) return true;
+        let relativeTabFolderPath = tabNameToSourceFolder(tabName);
+        if (isFolderModified(relativeTabFolderPath, storedTimestamp))
+          return true;
       }
 
       return false;
