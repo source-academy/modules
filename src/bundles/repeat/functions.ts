@@ -8,8 +8,8 @@
  * as applying the specified function to the same argument n times.
  * @example
  * ```typescript
- * const plusFour = repeat(x => x + 2);
- * plusFour(0); // Returns 4
+ * const plusTen = repeat(x => x + 2, 5);
+ * plusTen(0); // Returns 10
  * ```
  * @param func the function to be repeated
  * @param n the number of times to repeat the function
