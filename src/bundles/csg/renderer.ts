@@ -4,6 +4,7 @@ import {
   BoundingBox,
   measureBoundingBox,
 } from '@jscad/modeling/src/measurements';
+import { ACE_GUTTER_BACKGROUND_COLOR } from './constants.js';
 import {
   ControlsState,
   ControlsUpdate,
@@ -18,13 +19,12 @@ import {
 import {
   AxisEntity,
   CameraViewportDimensions,
-  colorToRgba,
   controls,
   controlsStateDefaults,
   CsgModuleState,
   entitiesFromSolids,
   FrameTracker,
-  hexToColor,
+  hexToRgba,
   MultiGridEntity,
   perspectiveCamera,
   perspectiveCameraStateDefaults,
@@ -294,7 +294,6 @@ export default function render(
     ...controlsStateDefaults,
   };
 
-  //TODO currently only puts the last render group on the single canvas
   let renderGroups: RenderGroup[] = moduleState.renderGroupManager.getGroupsToRender();
   let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
   let solids: Solid[] = lastRenderGroup.shapes.map(
@@ -308,8 +307,7 @@ export default function render(
   // Data to pass to the wrapped renderer we made, below
   let wrappedRendererData: WrappedRenderer.AllData = {
     rendering: {
-      //TODO
-      background: colorToRgba(hexToColor('#34495E')),
+      background: hexToRgba(ACE_GUTTER_BACKGROUND_COLOR),
     },
 
     entities: addEntities(lastRenderGroup, solids, geometryEntities),

@@ -31,6 +31,7 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
+import { DEFAULT_COLOR, SILVER } from './constants.js';
 import { Core } from './core.js';
 import { Color, CoordinatesXYZ, Solid } from './types';
 import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
@@ -211,7 +212,7 @@ export const orange: string = '#FFAA00';
  *
  * @category Colour
  */
-export const silver: string = '#AAAAAA';
+export const silver: string = SILVER;
 
 /**
  * A hex colour code for dark grey (#555555).
@@ -741,8 +742,7 @@ export function clone(shape: Shape): Shape {
  * @param {Shape} shape - The Shape to be stored.
  */
 export function store(shape: Shape): void {
-  //TODO
-  store_as_color(shape, silver);
+  store_as_color(shape, DEFAULT_COLOR);
 }
 
 /**

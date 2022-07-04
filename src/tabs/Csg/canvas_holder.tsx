@@ -1,6 +1,7 @@
 /* [Imports] */
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
+import { BP_BORDER_RADIUS } from '../../bundles/csg/constants.js';
 import render from '../../bundles/csg/renderer';
 import HoverControlHint from './hover_control_hint';
 import { CanvasHolderProps, CanvasHolderState } from './types';
@@ -42,11 +43,7 @@ export default class CanvasHolder extends React.Component<
           justifyContent: 'center',
         }}
       >
-        <div
-          style={{
-            flexDirection: 'column',
-          }}
-        >
+        <div>
           <HoverControlHint
             tooltipText='Zoom in • Scroll up'
             iconName={IconNames.ZOOM_IN}
@@ -74,10 +71,6 @@ export default class CanvasHolder extends React.Component<
             // Expand to take as much space as possible, otherwise this will
             // have no height
             width: '100%',
-            // Flex has min width set to auto by default, causing this to
-            // overflow.
-            // Setting this makes a narrow sidebar shrink this instead
-            minWidth: '0px',
             // Prevent canvas from becoming too large when the sidebar is wide,
             // which would require lots of scrolling or never fit entirely on
             // screen.
@@ -87,15 +80,21 @@ export default class CanvasHolder extends React.Component<
             maxWidth: 'max(70vh, 30vw)',
             // Force square aspect ratio, otherwise this will have no height
             aspectRatio: '1',
-
-            //TODO
-            borderRadius: '3px',
-            overflow: 'hidden',
           }}
         >
           <canvas
             ref={this.canvasReference}
-            style={{ width: '100%', height: '100%' }}
+            style={{
+              // Inline element tries to align to text baseline, with space
+              // below for descender. This prevents that
+              display: 'block',
+
+              width: '100%',
+              height: '100%',
+
+              borderRadius: BP_BORDER_RADIUS,
+            }}
+            // These get set on the fly by our renderer's dynamic resizer
             width='0'
             height='0'
           />

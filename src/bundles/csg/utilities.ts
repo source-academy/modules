@@ -10,6 +10,7 @@ import {
 } from '@jscad/regl-renderer';
 import { ModuleContext, ModuleState } from 'js-slang';
 import { ModuleContexts } from '../../typings/type_helpers.js';
+import { ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from "./constants.js";
 import {
   AxisEntityType,
   Color,
@@ -63,9 +64,9 @@ export class MultiGridEntity implements MultiGridEntityType {
   } = {
     drawCmd: 'drawGrid',
     show: true,
-    //TODO
-    color: colorToRgba(hexToColor('#F5F8FA')),
-    subColor: colorToRgba(hexToColor('#8091A0')),
+
+    color: hexToRgba(BP_TEXT_COLOR),
+    subColor: hexToRgba(ACE_GUTTER_TEXT_COLOR),
   };
 
   ticks: [number, number] = [10, 1];
@@ -295,6 +296,10 @@ export function hexToColor(hex: string): Color {
 
 export function colorToRgba(color: Color, opacity: number = 1): RGBA {
   return [...color, opacity];
+}
+
+export function hexToRgba(hex: string): RGBA {
+  return colorToRgba(hexToColor(hex));
 }
 
 export function clamp(value: number, lowest: number, highest: number): number {
