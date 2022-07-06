@@ -56,16 +56,18 @@ function addEntities(
   // Run calculations for grid and/or axis only if needed
   if (!(hasAxis || hasGrid)) return allEntities;
 
-  let boundingBoxes: BoundingBox[] = solids.map((solid: Solid) =>
-    measureBoundingBox(solid)
+  let boundingBoxes: BoundingBox[] = solids.map(
+    (solid: Solid): BoundingBox => measureBoundingBox(solid)
   );
-  let minMaxXys: number[][] = boundingBoxes.map((boundingBox: BoundingBox) => {
-    let minX = boundingBox[0][0];
-    let minY = boundingBox[0][1];
-    let maxX = boundingBox[1][0];
-    let maxY = boundingBox[1][1];
-    return [minX, minY, maxX, maxY];
-  });
+  let minMaxXys: number[][] = boundingBoxes.map(
+    (boundingBox: BoundingBox): number[] => {
+      let minX = boundingBox[0][0];
+      let minY = boundingBox[0][1];
+      let maxX = boundingBox[1][0];
+      let maxY = boundingBox[1][1];
+      return [minX, minY, maxX, maxY];
+    }
+  );
   let xys: number[] = minMaxXys.flat(1);
   let distancesFromOrigin: number[] = xys.map(Math.abs);
   let furthestDistance: number = Math.max(...distancesFromOrigin);
@@ -213,27 +215,28 @@ function doPan(
   adjustCameraAngle(perspectiveCameraState, controlsState);
 }
 
-function registerEvents(
+function addControlListeners(
   canvas: HTMLCanvasElement,
   frameTracker: FrameTracker
 ): void {
   canvas.addEventListener(
     'wheel',
-    (wheelEvent: WheelEvent) => {
+    (wheelEvent: WheelEvent): void => {
       frameTracker.changeZoomTicks(wheelEvent.deltaY);
 
+      // Prevent scrolling the side panel when there is overflow
       wheelEvent.preventDefault();
     },
     { passive: false }
   );
 
-  canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
+  canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent): void => {
     frameTracker.setZoomToFit();
   });
 
   canvas.addEventListener(
     'pointerdown',
-    (pointerEvent: PointerEvent) => {
+    (pointerEvent: PointerEvent): void => {
       frameTracker.setHeldPointer(pointerEvent.button);
       frameTracker.lastX = pointerEvent.pageX;
       frameTracker.lastY = pointerEvent.pageY;
@@ -241,18 +244,19 @@ function registerEvents(
       // Detect drags even outside the canvas element's borders
       canvas.setPointerCapture(pointerEvent.pointerId);
 
+      // Prevent middle-click from activating auto-scrolling
       pointerEvent.preventDefault();
     },
     { passive: false }
   );
-  canvas.addEventListener('pointerup', (pointerEvent: PointerEvent) => {
+  canvas.addEventListener('pointerup', (pointerEvent: PointerEvent): void => {
     frameTracker.unsetHeldPointer();
     frameTracker.unsetLastCoordinates();
 
     canvas.releasePointerCapture(pointerEvent.pointerId);
   });
 
-  canvas.addEventListener('pointermove', (pointerEvent: PointerEvent) => {
+  canvas.addEventListener('pointermove', (pointerEvent: PointerEvent): void => {
     let currentX = pointerEvent.pageX;
     let currentY = pointerEvent.pageY;
     if (frameTracker.lastX < 0 || frameTracker.lastY < 0) {
@@ -281,6 +285,7 @@ function registerEvents(
 }
 
 /* [Exports] */
+//FIXME multiple simultaneous loops running, unsure if module/regl/frontend
 export default function render(
   canvas: HTMLCanvasElement,
   moduleState: CsgModuleState
@@ -299,7 +304,7 @@ export default function render(
   let renderGroups: RenderGroup[] = moduleState.renderGroupManager.getGroupsToRender();
   let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
   let solids: Solid[] = lastRenderGroup.shapes.map(
-    (shape: Shape) => shape.solid
+    (shape: Shape): Solid => shape.solid
   );
   let geometryEntities: GeometryEntity[] = entitiesFromSolids(
     undefined,
@@ -321,10 +326,14 @@ export default function render(
   let frameTracker: FrameTracker = new FrameTracker();
 
   let requestId: number = 0;
+  //TODO render loop count tracker
+  let x = Math.floor(Math.random() * 1000)
 
   // Create a callback function.
   // Request animation frame with it once; it will loop itself from there
   function animationCallback(_timestamp: DOMHighResTimeStamp) {
+    console.debug('>>> Frame for ' + x);
+
     doDynamicResize(canvas, perspectiveCameraState);
 
     if (frameTracker.shouldZoom()) {
@@ -367,7 +376,29 @@ export default function render(
   }
   requestId = window.requestAnimationFrame(animationCallback);
 
-  registerEvents(canvas, frameTracker);
+  canvas.addEventListener('webglcontextlost', (contextEvent: Event): void => {
+    contextEvent = contextEvent as WebGLContextEvent;
 
-  return () => requestId;
+    console.debug('>>> CONTEXT LOST');
+
+    window.cancelAnimationFrame(requestId);
+
+    // Allow restoration of context
+    contextEvent.preventDefault();
+  });
+  canvas.addEventListener(
+    'webglcontextrestored',
+    (_contextEvent: Event): void => {
+      _contextEvent = _contextEvent as WebGLContextEvent;
+
+      console.debug('>>> CONTEXT RESTORED');
+
+      //FIXME insufficient, need to recreate regl
+      requestId = window.requestAnimationFrame(animationCallback);
+    }
+  );
+
+  addControlListeners(canvas, frameTracker);
+
+  return (): number => requestId;
 }

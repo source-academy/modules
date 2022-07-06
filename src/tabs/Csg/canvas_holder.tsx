@@ -27,18 +27,25 @@ export default class CanvasHolder extends React.Component<
 
   // Called as part of the React lifecycle when this tab is created
   public componentDidMount() {
+    console.debug('>>> MOUNT');
+
     let canvas: HTMLCanvasElement | null = this.canvasReference.current;
     if (canvas === null) return;
 
     this.setState({
+      // From renderer.ts, not this.render()
       getCurrentRequestId: render(canvas, this.props.moduleState),
     });
   }
 
   public componentWillUnmount() {
+    console.debug('>>> UNMOUNT');
+
     let { current: canvas } = this.canvasReference;
+    if (canvas === null) return;
+
     let { getCurrentRequestId } = this.state;
-    if (canvas === null || getCurrentRequestId === null) return;
+    if (getCurrentRequestId === null) return;
 
     window.cancelAnimationFrame(getCurrentRequestId());
   }
