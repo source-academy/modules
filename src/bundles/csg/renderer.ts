@@ -285,7 +285,6 @@ function addControlListeners(
 }
 
 /* [Exports] */
-//FIXME multiple simultaneous loops running, unsure if module/regl/frontend
 export default function render(
   canvas: HTMLCanvasElement,
   moduleState: CsgModuleState,
