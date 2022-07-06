@@ -14,6 +14,14 @@ export class Core {
 
   static getRenderGroupManager(): RenderGroupManager {
     let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
+
     return moduleState.renderGroupManager;
+  }
+
+  // Returns the new component number
+  static nextComponent(): number {
+    let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
+
+    return ++moduleState.componentCounter;
   }
 }

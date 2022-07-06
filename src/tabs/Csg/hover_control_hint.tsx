@@ -19,7 +19,7 @@ export default class HoverControlHint extends React.Component<
   HintProps,
   HintState
 > {
-  public constructor(props: HintProps) {
+  constructor(props: HintProps) {
     super(props);
 
     this.state = {
@@ -27,7 +27,7 @@ export default class HoverControlHint extends React.Component<
     };
   }
 
-  public render() {
+  render() {
     return (
       <div
         style={{

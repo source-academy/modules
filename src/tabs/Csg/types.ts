@@ -11,6 +11,8 @@ export type CanvasHolderProps = {
 
 // React Component State for the CSG canvas holder
 export type CanvasHolderState = {
+  componentNumber: number;
+
   getCurrentRequestId: (() => number) | null;
 };
 

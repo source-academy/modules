@@ -288,7 +288,8 @@ function addControlListeners(
 //FIXME multiple simultaneous loops running, unsure if module/regl/frontend
 export default function render(
   canvas: HTMLCanvasElement,
-  moduleState: CsgModuleState
+  moduleState: CsgModuleState,
+  componentNumber: number
 ): () => number {
   let wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
 
@@ -325,14 +326,16 @@ export default function render(
   // Custom object to track processing
   let frameTracker: FrameTracker = new FrameTracker();
 
+  let frameCounter: number = 0;
   let requestId: number = 0;
-  //TODO render loop count tracker
-  let x = Math.floor(Math.random() * 1000)
 
   // Create a callback function.
   // Request animation frame with it once; it will loop itself from there
   function animationCallback(_timestamp: DOMHighResTimeStamp) {
-    console.debug('>>> Frame for ' + x);
+    // Log every 100 frames
+    frameCounter = ++frameCounter % 100;
+    if (frameCounter === 1)
+      console.debug(`>>> 1/100th frame for #${componentNumber}`);
 
     doDynamicResize(canvas, perspectiveCameraState);
 
@@ -379,7 +382,7 @@ export default function render(
   canvas.addEventListener('webglcontextlost', (contextEvent: Event): void => {
     contextEvent = contextEvent as WebGLContextEvent;
 
-    console.debug('>>> CONTEXT LOST');
+    console.debug(`>>> CONTEXT LOST FOR #${componentNumber}`);
 
     window.cancelAnimationFrame(requestId);
 
@@ -391,7 +394,7 @@ export default function render(
     (_contextEvent: Event): void => {
       _contextEvent = _contextEvent as WebGLContextEvent;
 
-      console.debug('>>> CONTEXT RESTORED');
+      console.debug(`>>> CONTEXT RESTORED FOR #${componentNumber}`);
 
       //FIXME insufficient, need to recreate regl
       requestId = window.requestAnimationFrame(animationCallback);

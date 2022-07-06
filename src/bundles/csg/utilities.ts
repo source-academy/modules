@@ -128,18 +128,19 @@ export class RenderGroupManager {
     return this.renderGroups.at(-1) as RenderGroup;
   }
 
+  // Returns the old render group
   nextRenderGroup(
-    currentGrid: boolean = false,
-    currentAxis: boolean = false
+    oldHasGrid: boolean = false,
+    oldHasAxis: boolean = false
   ): RenderGroup {
-    let previousRenderGroup: RenderGroup = this.getCurrentRenderGroup();
-    previousRenderGroup.render = true;
-    previousRenderGroup.hasGrid = currentGrid;
-    previousRenderGroup.hasAxis = currentAxis;
+    let oldRenderGroup: RenderGroup = this.getCurrentRenderGroup();
+    oldRenderGroup.render = true;
+    oldRenderGroup.hasGrid = oldHasGrid;
+    oldRenderGroup.hasAxis = oldHasAxis;
 
     this.addRenderGroup();
 
-    return previousRenderGroup;
+    return oldRenderGroup;
   }
 
   storeShape(shape: Shape): void {
@@ -158,7 +159,9 @@ export class RenderGroupManager {
 }
 
 export class CsgModuleState implements ModuleState {
-  renderGroupManager: RenderGroupManager;
+  componentCounter: number = 0;
+
+  readonly renderGroupManager: RenderGroupManager;
 
   constructor() {
     this.renderGroupManager = new RenderGroupManager();
@@ -181,36 +184,36 @@ export class FrameTracker {
 
   private heldPointer: MousePointer = MousePointer.NONE;
 
-  public lastX = -1;
+  lastX = -1;
 
-  public lastY = -1;
+  lastY = -1;
 
-  public rotateX = 0;
+  rotateX = 0;
 
-  public rotateY = 0;
+  rotateY = 0;
 
-  public panX = 0;
+  panX = 0;
 
-  public panY = 0;
+  panY = 0;
 
-  public getZoomTicks(): number {
+  getZoomTicks(): number {
     return this.zoomTicks;
   }
 
-  public changeZoomTicks(wheelDelta: number) {
+  changeZoomTicks(wheelDelta: number) {
     this.zoomTicks += Math.sign(wheelDelta);
   }
 
-  public setZoomToFit() {
+  setZoomToFit() {
     this.zoomToFitOnce = true;
   }
 
-  public unsetLastCoordinates() {
+  unsetLastCoordinates() {
     this.lastX = -1;
     this.lastY = -1;
   }
 
-  public setHeldPointer(mouseEventButton: number) {
+  setHeldPointer(mouseEventButton: number) {
     switch (mouseEventButton) {
       case MousePointer.LEFT:
       case MousePointer.RIGHT:
@@ -223,49 +226,49 @@ export class FrameTracker {
     }
   }
 
-  public unsetHeldPointer() {
+  unsetHeldPointer() {
     this.heldPointer = MousePointer.NONE;
   }
 
-  public shouldZoom(): boolean {
+  shouldZoom(): boolean {
     return this.zoomTicks !== 0;
   }
 
-  public didZoom() {
+  didZoom() {
     this.zoomTicks = 0;
   }
 
-  public shouldZoomToFit(): boolean {
+  shouldZoomToFit(): boolean {
     return this.zoomToFitOnce;
   }
 
-  public didZoomToFit() {
+  didZoomToFit() {
     this.zoomToFitOnce = false;
   }
 
-  public shouldRotate(): boolean {
+  shouldRotate(): boolean {
     return this.rotateX !== 0 || this.rotateY !== 0;
   }
 
-  public didRotate() {
+  didRotate() {
     this.rotateX = 0;
     this.rotateY = 0;
   }
 
-  public shouldPan(): boolean {
+  shouldPan(): boolean {
     return this.panX !== 0 || this.panY !== 0;
   }
 
-  public didPan() {
+  didPan() {
     this.panX = 0;
     this.panY = 0;
   }
 
-  public shouldIgnorePointerMove(): boolean {
+  shouldIgnorePointerMove(): boolean {
     return [MousePointer.NONE, MousePointer.RIGHT].includes(this.heldPointer);
   }
 
-  public isPointerPan(isShiftKey: boolean): boolean {
+  isPointerPan(isShiftKey: boolean): boolean {
     return (
       this.heldPointer === MousePointer.MIDDLE ||
       (this.heldPointer === MousePointer.LEFT && isShiftKey)
@@ -275,7 +278,7 @@ export class FrameTracker {
 
 // Used as options when setting camera projection
 export class CameraViewportDimensions {
-  public constructor(public width: number, public height: number) {}
+  constructor(public width: number, public height: number) {}
 }
 
 export function getModuleContext(

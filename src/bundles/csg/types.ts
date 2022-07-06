@@ -265,7 +265,7 @@ export namespace PrepareRender {
 
 // When called, the WrappedRenderer creates a main DrawCommand.
 // This main DrawCommand then gets called as a scoped command,
-// used to create & call more DrawCommands for the #entities.
+// used to create & call more DrawCommands for the Entities.
 // Nested DrawCommands get cached
 // & may store some Entity properties during setup,
 // but properties passed in from Props later may take precedence.

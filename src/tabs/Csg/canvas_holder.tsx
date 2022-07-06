@@ -6,6 +6,7 @@ import {
   BP_TAB_BUTTON_MARGIN,
   BP_TAB_PANEL_MARGIN,
 } from '../../bundles/csg/constants.js';
+import { Core } from '../../bundles/csg/core.js';
 import render from '../../bundles/csg/renderer';
 import HoverControlHint from './hover_control_hint';
 import { CanvasHolderProps, CanvasHolderState } from './types';
@@ -21,32 +22,52 @@ export default class CanvasHolder extends React.Component<
     super(props);
 
     this.state = {
+      componentNumber: Core.nextComponent(),
+
       getCurrentRequestId: null,
     };
   }
 
   // Called as part of the React lifecycle when this tab is created
-  public componentDidMount() {
-    console.debug('>>> MOUNT');
+  componentDidMount() {
+    let { componentNumber } = this.state;
+    console.debug(`>>> MOUNT #${componentNumber}`);
 
     let canvas: HTMLCanvasElement | null = this.canvasReference.current;
     if (canvas === null) return;
 
     this.setState({
       // From renderer.ts, not this.render()
-      getCurrentRequestId: render(canvas, this.props.moduleState),
+      getCurrentRequestId: render(
+        canvas,
+        this.props.moduleState,
+        componentNumber
+      ),
     });
   }
 
-  public componentWillUnmount() {
-    console.debug('>>> UNMOUNT');
+  componentWillUnmount() {
+    console.debug(`>>> UNMOUNT #${this.state.componentNumber}`);
 
     let { current: canvas } = this.canvasReference;
     if (canvas === null) return;
 
     let { getCurrentRequestId } = this.state;
-    if (getCurrentRequestId === null) return;
+    if (getCurrentRequestId === null) {
+      console.debug(
+        `>>> UNMOUNT #${this.state.componentNumber}: Request ID still unknown`
+      );
+      return;
+    }
 
+    //NOTE The frontend tends to rapidly mount and unmount lots of new
+    // Components (source-academy/frontend#2094). Once a canvas is mounted, it
+    // will start requesting animation frames, but it takes a little time for
+    // the enqueued setState() in componentDidMount() to actually set the
+    // getCurrentRequestId(). During this gap, if the canvas gets unmounted,
+    // this lifecycle method will not know the request ID, meaning the animation
+    // loop never gets cancelled properly
+    //FIXME
     window.cancelAnimationFrame(getCurrentRequestId());
   }
 
@@ -55,7 +76,7 @@ export default class CanvasHolder extends React.Component<
   // node.
   // Also attaches the canvasReference via the ref attribute, for imperatively
   // modifying the canvas
-  public render() {
+  render() {
     return (
       <div
         style={{
