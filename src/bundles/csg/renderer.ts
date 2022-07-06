@@ -395,8 +395,14 @@ export default function render(
 
       console.debug(`>>> CONTEXT RESTORED FOR #${componentNumber}`);
 
-      //FIXME insufficient, need to recreate regl
+      //FIXME insufficient, causes strange rendering of just axis entity, only
+      // once resize is triggered
       requestId = window.requestAnimationFrame(animationCallback);
+
+      //TODO return a stop render function, called in unmount or in context lost
+      //TODO remove control listeners when stop render
+      //TODO Create subset of render() that needs to get rerun. Run it at the
+      // start, and when context is restored
     }
   );
 

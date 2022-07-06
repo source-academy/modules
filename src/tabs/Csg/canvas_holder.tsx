@@ -38,7 +38,6 @@ export default class CanvasHolder extends React.Component<
   componentWillUnmount() {
     console.debug(`>>> UNMOUNT #${this.componentNumber}`);
 
-    if (this.canvasReference.current === null) return;
     if (this.getCurrentRequestId === null) return;
 
     window.cancelAnimationFrame(this.getCurrentRequestId());
