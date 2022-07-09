@@ -1,17 +1,21 @@
 /**
- * The pix_n_flix library allows us to process still images and video. Each Image is a
+ * The pix_n_flix module allows us to process still images and videos.
+ *
+ * An Image (which is a still image or a frame of a video) is a
  * two-dimensional array of Pixels, and a Pixel consists of red, blue and green color
- * values, each ranging from 0 and 255. To access these color values of a Pixel, we
+ * values, each ranging from 0 to 255. To access these color values of a Pixel, we
  * provide the functions red_of, blue_of and green_of.
  *
  * A central element of pix_n_flix is the notion of a Filter, a function that is applied
- * to two images: the source Image and the destination Image. We can install a given
- * Filter to be used to transform the Images that the camera captures into images
- * displayed on the output screen by using the function install_filter. The output
- * screen is shown in the Source Academy in the tab with the "Video Display" icon (camera).
+ * to two Images: the source Image and the destination Image. When a Filter is installed
+ * (using the function install_filter), it transforms each source Image from the live camera
+ * or from a local/remote file to a destination Image that is then displayed on screen
+ * in the Source Academy "Pix N Flix" tab (with a camera icon).
  *
- * The size of the output screen can be changed by the user. To access the current size of the
- * output screen, we provide the functions video_height and video_width.
+ * The dimensions (i.e. width and height) of the displayed images can be set by the user using
+ * the function set_dimensions, and all source and destination Images of the Filters will
+ * also be set to the same dimensions. To access the current dimensions of the Images, the user
+ * can use the functions image_width and image_height.
  *
  * @module pix_n_flix
  */
@@ -20,18 +24,22 @@ import {
   CanvasElement,
   VideoElement,
   ErrorLogger,
-  Video,
+  StartPacket,
   Pixel,
   Pixels,
   Filter,
   Queue,
-  TabsPackage,
+  TabsPacket,
+  BundlePacket,
+  InputFeed,
+  ImageElement,
 } from './types';
 
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
   DEFAULT_FPS,
+  DEFAULT_VOLUME,
   MAX_HEIGHT,
   MIN_HEIGHT,
   MAX_WIDTH,
@@ -43,12 +51,15 @@ import {
 // Global Variables
 let WIDTH: number = DEFAULT_WIDTH;
 let HEIGHT: number = DEFAULT_HEIGHT;
+let FPS: number = DEFAULT_FPS;
+let VOLUME: number = DEFAULT_VOLUME;
 
+let imageElement: ImageElement;
 let videoElement: VideoElement;
 let canvasElement: CanvasElement;
 let canvasRenderingContext: CanvasRenderingContext2D;
 let errorLogger: ErrorLogger;
-let tabsPackage: TabsPackage;
+let tabsPackage: TabsPacket;
 
 const pixels: Pixels = [];
 const temporaryPixels: Pixels = [];
@@ -58,12 +69,12 @@ let filter: Filter = copy_image;
 let toRunLateQueue: boolean = false;
 let videoIsPlaying: boolean = false;
 
-let FPS: number = DEFAULT_FPS;
 let requestId: number;
-let startTime: number;
+let prevTime: number | null = null;
+let totalElapsedTime: number = 0;
 
-let useLocalVideo: boolean;
-// let counter = 0;
+let inputFeed: InputFeed = InputFeed.Camera;
+let url: string = '';
 
 // =============================================================================
 // Module's Private Functions
@@ -143,8 +154,8 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
 }
 
 /** @hidden */
-function drawFrame(): void {
-  canvasRenderingContext.drawImage(videoElement, 0, 0, WIDTH, HEIGHT);
+function drawImage(source: VideoElement | ImageElement): void {
+  canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
   const pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
   readFromBuffer(pixelObj.data, pixels);
 
@@ -161,7 +172,7 @@ function drawFrame(): void {
 
     if (!e.name) {
       errorLogger(
-        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the video dimensions.'
+        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.'
       );
 
       errorLogger([e], true);
@@ -182,12 +193,13 @@ function draw(timestamp: number): void {
   // eslint-disable-next-line no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 
-  if (startTime == null) startTime = timestamp;
+  if (prevTime === null) prevTime = timestamp;
 
-  const elapsed = timestamp - startTime;
-  if (elapsed > 1000 / FPS) {
-    drawFrame();
-    startTime = timestamp;
+  const elapsed = timestamp - prevTime;
+  if (elapsed > 1000 / FPS && videoIsPlaying) {
+    drawImage(videoElement);
+    prevTime = timestamp;
+    totalElapsedTime += elapsed;
     if (toRunLateQueue) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       lateQueue();
@@ -196,36 +208,49 @@ function draw(timestamp: number): void {
   }
 }
 
-async function playVideoElement() {
-  if (videoElement.paused && !videoIsPlaying) {
-    return videoElement.play();
+/** @hidden */
+function playVideoElement() {
+  if (!videoIsPlaying) {
+    videoElement
+      .play()
+      .then(() => {
+        videoIsPlaying = true;
+      })
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.warn(err);
+      });
   }
-  return null;
 }
 
+/** @hidden */
 function pauseVideoElement() {
-  if (!videoElement.paused && videoIsPlaying) {
+  if (videoIsPlaying) {
     videoElement.pause();
+    videoIsPlaying = false;
   }
 }
 
 /** @hidden */
 function startVideo(): void {
   if (videoIsPlaying) return;
-  playVideoElement();
+  if (inputFeed === InputFeed.Camera) videoIsPlaying = true;
+  else playVideoElement();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 }
 
 /**
- * Stops the loop that is drawing on frame.
+ * Stops the loop that is drawing on image.
  *
  * @hidden
  */
 function stopVideo(): void {
   if (!videoIsPlaying) return;
-  pauseVideoElement();
+  if (inputFeed === InputFeed.Camera) videoIsPlaying = false;
+  else pauseVideoElement();
   window.cancelAnimationFrame(requestId);
+  prevTime = null;
 }
 
 /** @hidden */
@@ -257,46 +282,54 @@ function loadMedia(): void {
 }
 
 /** @hidden */
-function loadVideo(): void {
-  videoElement.loop = true;
+function loadAlternative(): void {
+  try {
+    if (inputFeed === InputFeed.VideoURL) {
+      videoElement.src = url;
+      startVideo();
+    } else if (inputFeed === InputFeed.ImageURL) {
+      imageElement.src = url;
+    }
+  } catch (e: any) {
+    // eslint-disable-next-line no-console
+    console.error(JSON.stringify(e));
+    const errMsg = `There is an error loading the URL. ${e.name}: ${e.message}`;
+    // eslint-disable-next-line no-console
+    console.error(errMsg);
+    loadMedia();
+    return;
+  }
   toRunLateQueue = true;
-  startVideo();
+  videoElement.crossOrigin = 'anonymous';
+  videoElement.loop = true;
+  imageElement.crossOrigin = 'anonymous';
+  imageElement.onload = () => {
+    drawImage(imageElement);
+  };
 }
 
 /**
- * Just draws once on frame and stops video.
+ * Just draws once on image and stops video.
  *
  * @hidden
  */
 function snapPicture(): void {
-  drawFrame();
+  drawImage(imageElement);
   stopVideo();
-}
-
-/** @hidden */
-// update fps
-function updateFPS(fps: number): void {
-  // ignore if invalid inputs
-  if (fps < MIN_FPS || fps > MAX_FPS) {
-    return;
-  }
-
-  const status = videoIsPlaying;
-  stopVideo();
-
-  FPS = fps;
-  setupData();
-
-  if (!status) {
-    setTimeout(() => snapPicture(), 50);
-    return;
-  }
-
-  startVideo();
 }
 
 /**
- * Update the frame dimensions.
+ * Update the FPS
+ *
+ * @hidden
+ */
+function updateFPS(fps: number): void {
+  if (fps < MIN_FPS || fps > MAX_FPS) return;
+  FPS = fps;
+}
+
+/**
+ * Update the image dimensions.
  *
  * @hidden
  */
@@ -333,10 +366,24 @@ function updateDimensions(w: number, h: number): void {
   startVideo();
 }
 
-// queue is runned when init is called
+/**
+ * Updates the volume of the local video
+ *
+ * @hidden
+ */
+function updateVolume(v: number): void {
+  VOLUME = Math.max(0.0, Math.min(1.0, v));
+  videoElement.volume = VOLUME;
+}
+
+// queue is run when init is called
 let queue: Queue = () => {};
 
-// adds function to the queue
+/**
+ * Adds function to the queue
+ *
+ * @hidden
+ */
 function enqueue(funcToAdd: Queue): void {
   const funcToRunFirst: Queue = queue;
   queue = () => {
@@ -345,13 +392,17 @@ function enqueue(funcToAdd: Queue): void {
   };
 }
 
-// lateQueue is runned after media has properly loaded
+// lateQueue is run after media has properly loaded
 let lateQueue: Queue = () => {};
 
-// adds function to the lateQueue
+/**
+ * Adds function to the lateQueue
+ *
+ * @hidden
+ */
 function lateEnqueue(funcToAdd: Queue): void {
-  const funcToRunFirst: Queue = queue;
-  queue = () => {
+  const funcToRunFirst: Queue = lateQueue;
+  lateQueue = () => {
     funcToRunFirst();
     funcToAdd();
   };
@@ -360,15 +411,18 @@ function lateEnqueue(funcToAdd: Queue): void {
 /**
  * Used to initialise the video library.
  *
- * @returns an array of Video's properties, [height, width, fps]
+ * @returns a BundlePackage object containing Video's properties
+ *     and other miscellaneous information relevant to tabs.
  * @hidden
  */
 function init(
+  image: ImageElement,
   video: VideoElement,
   canvas: CanvasElement,
   _errorLogger: ErrorLogger,
-  _tabsPackage: TabsPackage
-): number[] {
+  _tabsPackage: TabsPacket
+): BundlePacket {
+  imageElement = image;
   videoElement = video;
   canvasElement = canvas;
   errorLogger = _errorLogger;
@@ -376,22 +430,14 @@ function init(
   const context = canvasElement.getContext('2d');
   if (context == null) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
-
-  videoElement.onplaying = () => {
-    videoIsPlaying = true;
-  };
-  videoElement.onpause = () => {
-    videoIsPlaying = false;
-  };
-
   setupData();
-  if (useLocalVideo) {
-    loadVideo();
-  } else {
+  if (inputFeed === InputFeed.Camera) {
     loadMedia();
+  } else {
+    loadAlternative();
   }
   queue();
-  return [HEIGHT, WIDTH, FPS, useLocalVideo ? 1 : 0];
+  return { HEIGHT, WIDTH, FPS, VOLUME, inputFeed };
 }
 
 /**
@@ -415,9 +461,9 @@ function deinit(): void {
 // =============================================================================
 
 /**
- * Initialize the PixNFlix live feed with default globals.
+ * Starts processing the image or video using the installed filter.
  */
-export function start(): Video {
+export function start(): StartPacket {
   return {
     toReplString: () => '[Pix N Flix]',
     init,
@@ -425,14 +471,15 @@ export function start(): Video {
     startVideo,
     snapPicture,
     updateFPS,
+    updateVolume,
     updateDimensions,
   };
 }
 
 /**
- * Returns the red component of a given Pixel.
+ * Returns the red component of the given pixel.
  *
- * @param pixel Given Pixel
+ * @param pixel The given pixel
  * @returns The red component as a number between 0 and 255
  */
 export function red_of(pixel: Pixel): number {
@@ -441,9 +488,9 @@ export function red_of(pixel: Pixel): number {
 }
 
 /**
- * Returns the green component of a given Pixel.
+ * Returns the green component of the given pixel.
  *
- * @param pixel Given Pixel
+ * @param pixel The given pixel
  * @returns The green component as a number between 0 and 255
  */
 export function green_of(pixel: Pixel): number {
@@ -452,9 +499,9 @@ export function green_of(pixel: Pixel): number {
 }
 
 /**
- * Returns the blue component of a given Pixel.
+ * Returns the blue component of the given pixel.
  *
- * @param pixel Given Pixel
+ * @param pixel The given pixel
  * @returns The blue component as a number between 0 and 255
  */
 export function blue_of(pixel: Pixel): number {
@@ -463,9 +510,9 @@ export function blue_of(pixel: Pixel): number {
 }
 
 /**
- * Returns the alpha component of a given Pixel.
+ * Returns the alpha component of the given pixel.
  *
- * @param pixel Given Pixel
+ * @param pixel The given pixel
  * @returns The alpha component as a number between 0 and 255
  */
 export function alpha_of(pixel: Pixel): number {
@@ -474,10 +521,10 @@ export function alpha_of(pixel: Pixel): number {
 }
 
 /**
- * Assigns the red, green, blue and alpha components of a pixel
- * to given values.
+ * Assigns the given red, green, blue and alpha component values to
+ * the given pixel.
  *
- * @param pixel Given Pixel
+ * @param pixel The given pixel
  * @param r The red component as a number between 0 and 255
  * @param g The green component as a number between 0 and 255
  * @param b The blue component as a number between 0 and 255
@@ -502,31 +549,31 @@ export function set_rgba(
 }
 
 /**
- * Returns the current height of the output video display in
- * pixels, i.e. the number of pixels in vertical direction.
+ * Returns the current height of the displayed images in
+ * pixels, i.e. the number of pixels in the vertical dimension.
  *
- * @returns height of output display (in pixels)
+ * @returns The height of the displayed images (in pixels)
  */
-export function video_height(): number {
+export function image_height(): number {
   return HEIGHT;
 }
 
 /**
- * Returns the current width of the output video display in
- * pixels, i.e. the number of pixels in horizontal direction.
+ * Returns the current width of the displayed images in
+ * pixels, i.e. the number of pixels in the horizontal dimension.
  *
- * @returns Width of output display (in pixels)
+ * @returns The width of the displayed images (in pixels)
  */
-export function video_width(): number {
+export function image_width(): number {
   return WIDTH;
 }
 
 /**
- * The default filter that just copies the input 2D
- * grid to output.
+ * The default filter that just copies the source image to the
+ * destination image.
  *
- * @param src 2D input src of pixels
- * @param dest 2D output src of pixels
+ * @param src Source image
+ * @param dest Destination image
  */
 export function copy_image(src: Pixels, dest: Pixels): void {
   for (let i = 0; i < HEIGHT; i += 1) {
@@ -538,80 +585,140 @@ export function copy_image(src: Pixels, dest: Pixels): void {
 }
 
 /**
- * Installs a given filter to be used to transform
- * the images that the camera captures into images
- * displayed on the screen.
+ * Installs the given filter to be used to transform each source image from
+ * the live camera or from a local/remote file to a destination image that
+ * is then displayed on screen.
  *
  * A filter is a function that is applied to two
  * two-dimensional arrays of Pixels:
  * the source image and the destination image.
  *
- * @param filter - Filter to be installed
+ * @param filter The filter to be installed
  */
 export function install_filter(_filter: Filter): void {
   filter = _filter;
 }
 
 /**
- * Resets any filter applied on the video.
+ * Resets the installed filter to the default filter.
  */
 export function reset_filter(): void {
   install_filter(copy_image);
 }
 
 /**
- * Returns a new filter that is the result of applying both
- * filter1 and filter2 together.
+ * Creates a black image.
  *
- * @param filter1 First filter
- * @param filter2 Second filter
- * @returns Filter after applying filter1 and filter2
+ * @hidden
+ */
+function new_image(): Pixels {
+  const img: Pixels = [];
+  for (let i = 0; i < HEIGHT; i += 1) {
+    img[i] = [];
+    for (let j = 0; j < WIDTH; j += 1) {
+      img[i][j] = [0, 0, 0, 255];
+    }
+  }
+  return img;
+}
+
+/**
+ * Returns a new filter that is equivalent to applying
+ * filter1 and then filter2.
+ *
+ * @param filter1 The first filter
+ * @param filter2 The second filter
+ * @returns The filter equivalent to applying filter1 and then filter2
  */
 export function compose_filter(filter1: Filter, filter2: Filter): Filter {
   return (src, dest) => {
-    filter1(src, dest);
-    copy_image(dest, src);
-    filter2(src, dest);
+    const temp = new_image();
+    filter1(src, temp);
+    filter2(temp, dest);
   };
 }
 
 /**
- * Pauses the video after a set delay.
+ * Pauses the video at a set time after the video starts.
  *
- * @param delay Delay in ms after the video starts.
+ * @param pause_time Time in ms after the video starts.
  */
-export function pause_at(delay: number): void {
-  // prevent negative delays
-  lateEnqueue(() =>
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
-    setTimeout(tabsPackage.onClickStill!, delay >= 0 ? delay : -delay)
-  );
+export function pause_at(pause_time: number): void {
+  // prevent negative pause_time
+  lateEnqueue(() => {
+    setTimeout(
+      tabsPackage.onClickStill,
+      pause_time >= 0 ? pause_time : -pause_time
+    );
+  });
 }
 
 /**
- * Sets height of video frame.
- * Note: Only accepts height and width within the range of 1 and 500.
+ * Sets the diemsions of the displayed images.
+ * Note: Only accepts width and height values within the range of 1 to 500.
  *
- * @param width Width of video (Default value of 300)
- * @param height Height of video (Default value of 400)
+ * @param width The width of the displayed images (default value: 300)
+ * @param height The height of the displayed images (default value: 400)
  */
 export function set_dimensions(width: number, height: number): void {
   enqueue(() => updateDimensions(width, height));
 }
 
 /**
- * Sets frames per second (FPS) of the video.
+ * Sets the framerate (i.e. frames per second (FPS)) of the video.
  * Note: Only accepts FPS values within the range of 2 to 30.
  *
- * @param fps FPS of video (Default value of 10)
+ * @param fps FPS of video (default value: 10)
  */
 export function set_fps(fps: number): void {
   enqueue(() => updateFPS(fps));
 }
 
 /**
- * Allows you to upload videos into Pix-n-Flix
+ * Sets the audio volume of the local video file played.
+ * Note: Only accepts volume value within the range of 0 to 100.
+ *
+ * @param volume Volume of video (Default value of 50)
  */
-export function use_local_video(): void {
-  useLocalVideo = true;
+export function set_volume(volume: number): void {
+  enqueue(() => updateVolume(Math.max(0, Math.min(100, volume) / 100.0)));
+}
+
+/**
+ * Sets pix_n_flix to use video or image feed from a local file
+ * instead of using the default live camera feed.
+ */
+export function use_local_file(): void {
+  inputFeed = InputFeed.Local;
+}
+
+/**
+ * Sets pix_n_flix to use the image from the given URL as the image feed
+ * instead of using the default live camera feed.
+ *
+ * @param URL URL of the image
+ */
+export function use_image_url(URL: string) {
+  inputFeed = InputFeed.ImageURL;
+  url = URL;
+}
+
+/**
+ * Sets pix_n_flix to use the video from the given URL as the video feed
+ * instead of using the default live camera feed.
+ *
+ * @param URL URL of the video
+ */
+export function use_video_url(URL: string) {
+  inputFeed = InputFeed.VideoURL;
+  url = URL;
+}
+
+/**
+ * Returns the elapsed time in milliseconds since the start of the video.
+ *
+ * @returns The elapsed time in milliseconds since the start of the video
+ */
+export function get_video_time() {
+  return totalElapsedTime;
 }
