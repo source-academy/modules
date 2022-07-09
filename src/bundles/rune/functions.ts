@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /**
  * The module `rune` provides functions for drawing runes.
  *
@@ -5,7 +6,14 @@
  * @module rune
  */
 import { mat4, vec3 } from 'gl-matrix';
-import { Rune } from './types';
+import {
+  Rune,
+  NormalRune,
+  RuneAnimation,
+  DrawnRune,
+  drawRunesToFrameBuffer,
+  AnimatedRune,
+} from './rune';
 import {
   getSquare,
   getBlank,
@@ -19,15 +27,19 @@ import {
   getPentagram,
   getRibbon,
   throwIfNotRune,
-  getEmptyRune,
   addColorFromHex,
   colorPalette,
   hexToColor,
-  copyRune,
 } from './runes_ops';
+import {
+  FrameBufferWithTexture,
+  getWebGlFromCanvas,
+  initFramebufferObject,
+  initShaderProgram,
+} from './runes_webgl';
 
 /** @hidden */
-export const drawnRunes: Rune[] = [];
+export const drawnRunes: (DrawnRune | AnimatedRune)[] = [];
 
 // =============================================================================
 // Basic Runes
@@ -43,7 +55,7 @@ export const square: Rune = getSquare();
 export const blank: Rune = getBlank();
 /**
  * Rune with the shape of a
- * smallsquare inside a large square,
+ * small square inside a large square,
  * each diagonally split into a
  * black and white half
  */
@@ -89,10 +101,10 @@ export const ribbon: Rune = getRibbon();
 // Textured Runes
 // =============================================================================
 /**
- * create a rune using the image provided in the url
- * @param {string} imageUrl a URL to the image that is used to create the rune.
- * note that the url must be from a domain that allows CORS.
- * @returns {Rune} a rune created using the image.
+ * Create a rune using the image provided in the url
+ * @param {string} imageUrl URL to the image that is used to create the rune.
+ * Note that the url must be from a domain that allows CORS.
+ * @returns {Rune} Rune created using the image.
  */
 export function from_url(imageUrl: string): Rune {
   const rune = getSquare();
@@ -107,11 +119,11 @@ export function from_url(imageUrl: string): Rune {
 // =============================================================================
 
 /**
- * scales a given Rune by separate factors in x and y direction
- * @param {number} ratio_x - scaling factor in x direction
- * @param {number} ratio_y - scaling factor in y direction
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting scaled Rune
+ * Scales a given Rune by separate factors in x and y direction
+ * @param {number} ratio_x - Scaling factor in x direction
+ * @param {number} ratio_y - Scaling factor in y direction
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting scaled Rune
  */
 export function scale_independent(
   ratio_x: number,
@@ -122,16 +134,19 @@ export function scale_independent(
   const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
   const scaleMat = mat4.create();
   mat4.scale(scaleMat, scaleMat, scaleVec);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
-  mat4.multiply(wrapper.transformMatrix, scaleMat, wrapper.transformMatrix);
-  return wrapper;
+
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, scaleMat, wrapperMat);
+  return Rune.of({
+    subRunes: [rune],
+    transformMatrix: wrapperMat,
+  });
 }
 
 /**
- * scales a given Rune by a given factor in both x and y direction
- * @param {number} ratio - scaling factor
- * @param {Rune} rune - given Rune
+ * Scales a given Rune by a given factor in both x and y direction
+ * @param {number} ratio - Scaling factor
+ * @param {Rune} rune - Given Rune
  * @return {Rune} resulting scaled Rune
  */
 export function scale(ratio: number, rune: Rune): Rune {
@@ -140,52 +155,58 @@ export function scale(ratio: number, rune: Rune): Rune {
 }
 
 /**
- * translates a given Rune by given values in x and y direction
- * @param {number} x - translation in x direction
- * @param {number} y - translation in y direction
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting translated Rune
+ * Translates a given Rune by given values in x and y direction
+ * @param {number} x - Translation in x direction
+ * @param {number} y - Translation in y direction
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting translated Rune
  */
 export function translate(x: number, y: number, rune: Rune): Rune {
   throwIfNotRune('translate', rune);
   const translateVec = vec3.fromValues(x, -y, 0);
   const translateMat = mat4.create();
   mat4.translate(translateMat, translateMat, translateVec);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
-  mat4.multiply(wrapper.transformMatrix, translateMat, wrapper.transformMatrix);
-  return wrapper;
+
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, translateMat, wrapperMat);
+  return Rune.of({
+    subRunes: [rune],
+    transformMatrix: wrapperMat,
+  });
 }
 
 /**
- * rotates a given Rune by a given angle,
+ * Rotates a given Rune by a given angle,
  * given in radians, in anti-clockwise direction.
  * Note that parts of the Rune
  * may be cropped as a result.
- * @param {number} rad - angle in radians
- * @param {Rune} rune - given Rune
- * @return {Rune} rotated Rune
+ * @param {number} rad - Angle in radians
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Rotated Rune
  */
 export function rotate(rad: number, rune: Rune): Rune {
   throwIfNotRune('rotate', rune);
   const rotateMat = mat4.create();
   mat4.rotateZ(rotateMat, rotateMat, rad);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
-  mat4.multiply(wrapper.transformMatrix, rotateMat, wrapper.transformMatrix);
-  return wrapper;
+
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, rotateMat, wrapperMat);
+  return Rune.of({
+    subRunes: [rune],
+    transformMatrix: wrapperMat,
+  });
 }
 
 /**
- * makes a new Rune from two given Runes by
+ * Makes a new Rune from two given Runes by
  * placing the first on top of the second
  * such that the first one occupies frac
  * portion of the height of the result and
  * the second the rest
- * @param {number} frac - fraction between 0 and 1 (inclusive)
- * @param {Rune} rune1 - given Rune
- * @param {Rune} rune2 - given Rune
- * @return {Rune} resulting Rune
+ * @param {number} frac - Fraction between 0 and 1 (inclusive)
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('stack_frac', rune1);
@@ -197,32 +218,31 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 
   const upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1));
   const lower = translate(0, frac, scale_independent(1, 1 - frac, rune2));
-  const combined = getEmptyRune();
-  combined.subRunes.push(upper, lower);
-  return combined;
+  return Rune.of({
+    subRunes: [upper, lower],
+  });
 }
 
 /**
- * makes a new Rune from two given Runes by
+ * Makes a new Rune from two given Runes by
  * placing the first on top of the second, each
  * occupying equal parts of the height of the
  * result
- * @param {Rune} rune1 - given Rune
- * @param {Rune} rune2 - given Rune
- * @return {Rune} resulting Rune
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function stack(rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune('stack', rune2);
-  throwIfNotRune('stack', rune1);
+  throwIfNotRune('stack', rune1, rune2);
   return stack_frac(1 / 2, rune1, rune2);
 }
 
 /**
- * makes a new Rune from a given Rune
+ * Makes a new Rune from a given Rune
  * by vertically stacking n copies of it
- * @param {number} n - positive integer
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting Rune
+ * @param {number} n - Positive integer
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function stackn(n: number, rune: Rune): Rune {
   throwIfNotRune('stackn', rune);
@@ -233,11 +253,11 @@ export function stackn(n: number, rune: Rune): Rune {
 }
 
 /**
- * makes a new Rune from a given Rune
+ * Makes a new Rune from a given Rune
  * by turning it a quarter-turn around the centre in
  * clockwise direction.
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting Rune
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function quarter_turn_right(rune: Rune): Rune {
   throwIfNotRune('quarter_turn_right', rune);
@@ -245,11 +265,11 @@ export function quarter_turn_right(rune: Rune): Rune {
 }
 
 /**
- * makes a new Rune from a given Rune
+ * Makes a new Rune from a given Rune
  * by turning it a quarter-turn in
  * anti-clockwise direction.
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting Rune
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function quarter_turn_left(rune: Rune): Rune {
   throwIfNotRune('quarter_turn_left', rune);
@@ -257,10 +277,10 @@ export function quarter_turn_left(rune: Rune): Rune {
 }
 
 /**
- * makes a new Rune from a given Rune
+ * Makes a new Rune from a given Rune
  * by turning it upside-down
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting Rune
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function turn_upside_down(rune: Rune): Rune {
   throwIfNotRune('turn_upside_down', rune);
@@ -268,19 +288,18 @@ export function turn_upside_down(rune: Rune): Rune {
 }
 
 /**
- * makes a new Rune from two given Runes by
+ * Makes a new Rune from two given Runes by
  * placing the first on the left of the second
  * such that the first one occupies frac
  * portion of the width of the result and
  * the second the rest
- * @param {number} frac - fraction between 0 and 1 (inclusive)
- * @param {Rune} rune1 - given Rune
- * @param {Rune} rune2 - given Rune
- * @return {Rune} resulting Rune
+ * @param {number} frac - Fraction between 0 and 1 (inclusive)
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune('beside_frac', rune1);
-  throwIfNotRune('beside_frac', rune2);
+  throwIfNotRune('beside_frac', rune1, rune2);
 
   if (!(frac >= 0 && frac <= 1)) {
     throw Error('beside_frac can only take fraction in [0,1].');
@@ -288,32 +307,31 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
 
   const left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1));
   const right = translate(frac, 0, scale_independent(1 - frac, 1, rune2));
-  const combined = getEmptyRune();
-  combined.subRunes.push(left, right);
-  return combined;
+  return Rune.of({
+    subRunes: [left, right],
+  });
 }
 
 /**
- * makes a new Rune from two given Runes by
+ * Makes a new Rune from two given Runes by
  * placing the first on the left of the second,
  * both occupying equal portions of the width
  * of the result
- * @param {Rune} rune1 - given Rune
- * @param {Rune} rune2 - given Rune
- * @return {Rune} resulting Rune
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function beside(rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune('beside', rune1);
-  throwIfNotRune('beside', rune2);
+  throwIfNotRune('beside', rune1, rune2);
   return beside_frac(1 / 2, rune1, rune2);
 }
 
 /**
- * makes a new Rune from a given Rune by
+ * Makes a new Rune from a given Rune by
  * flipping it around a horizontal axis,
  * turning it upside down
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting Rune
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function flip_vert(rune: Rune): Rune {
   throwIfNotRune('flip_vert', rune);
@@ -321,11 +339,11 @@ export function flip_vert(rune: Rune): Rune {
 }
 
 /**
- * makes a new Rune from a given Rune by
+ * Makes a new Rune from a given Rune by
  * flipping it around a vertical axis,
  * creating a mirror image
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting Rune
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function flip_horiz(rune: Rune): Rune {
   throwIfNotRune('flip_horiz', rune);
@@ -333,11 +351,11 @@ export function flip_horiz(rune: Rune): Rune {
 }
 
 /**
- * makes a new Rune from a given Rune by
+ * Makes a new Rune from a given Rune by
  * arranging into a square for copies of the
  * given Rune in different orientations
- * @param {Rune} rune - given Rune
- * @return {Rune} resulting Rune
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function make_cross(rune: Rune): Rune {
   throwIfNotRune('make_cross', rune);
@@ -348,11 +366,11 @@ export function make_cross(rune: Rune): Rune {
 }
 
 /**
- * applies a given function n times to an initial value
- * @param {number} n - a non-negative integer
- * @param {function} pattern - unary function from Rune to Rune
- * @param {Rune} initial - the initial Rune
- * @return {Rune} - result of n times application of
+ * Applies a given function n times to an initial value
+ * @param {number} n - A non-negative integer
+ * @param {function} pattern - Unary function from Rune to Rune
+ * @param {Rune} initial - The initial Rune
+ * @return {Rune} - Result of n times application of
  *               pattern to initial: pattern(pattern(...pattern(pattern(initial))...))
  */
 export function repeat_pattern(
@@ -371,14 +389,15 @@ export function repeat_pattern(
 // =============================================================================
 
 /**
- * the depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.
- * @param {number} frac - fraction between 0 and 1 (inclusive)
- * @param {Rune} rune1 - given Rune
- * @param {Rune} rune2 - given Rune
- * @return {Rune} resulting Rune
+ * The depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.
+ * @param {number} frac - Fraction between 0 and 1 (inclusive)
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
  */
 export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-  // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation. The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
+  // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation.
+  // The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
   throwIfNotRune('overlay_frac', rune1);
   throwIfNotRune('overlay_frac', rune2);
   if (!(frac >= 0 && frac <= 1)) {
@@ -398,29 +417,33 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     useFrac = maxFrac;
   }
 
-  const front = getEmptyRune();
-  front.subRunes.push(rune1);
-  const frontMat = front.transformMatrix;
+  const frontMat = mat4.create();
   // z: scale by frac
   mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, useFrac));
+  const front = Rune.of({
+    subRunes: [rune1],
+    transformMatrix: frontMat,
+  });
 
-  const back = getEmptyRune();
-  back.subRunes.push(rune2);
-  const backMat = back.transformMatrix;
+  const backMat = mat4.create();
   // need to apply transformation in backwards order!
   mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -useFrac));
   mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - useFrac));
+  const back = Rune.of({
+    subRunes: [rune2],
+    transformMatrix: backMat,
+  });
 
-  const combined = getEmptyRune();
-  combined.subRunes = [front, back]; // render front first to avoid redrawing
-  return combined;
+  return Rune.of({
+    subRunes: [front, back], // render front first to avoid redrawing
+  });
 }
 
 /**
- * the depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
- * @param {Rune} rune1 - given Rune
- * @param {Rune} rune2 - given Rune
- * @return {Rune} resulting Rune
+ * The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Runes
  */
 export function overlay(rune1: Rune, rune2: Rune): Rune {
   throwIfNotRune('overlay', rune1);
@@ -433,47 +456,49 @@ export function overlay(rune1: Rune, rune2: Rune): Rune {
 // =============================================================================
 
 /**
- * adds color to rune by specifying
+ * Adds color to rune by specifying
  * the red, green, blue (RGB) value, ranging from 0.0 to 1.0.
  * RGB is additive: if all values are 1, the color is white,
  * and if all values are 0, the color is black.
- * @param {Rune} rune - the rune to add color to
- * @param {number} r - red value [0.0-1.0]
- * @param {number} g - green value [0.0-1.0]
- * @param {number} b - blue value [0.0-1.0]
- * @returns {Rune} the colored Rune
+ * @param {Rune} rune - The rune to add color to
+ * @param {number} r - Red value [0.0-1.0]
+ * @param {number} g - Green value [0.0-1.0]
+ * @param {number} b - Blue value [0.0-1.0]
+ * @returns {Rune} The colored Rune
  */
 export function color(rune: Rune, r: number, g: number, b: number): Rune {
   throwIfNotRune('color', rune);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
+
   const colorVector = [r, g, b, 1];
-  wrapper.colors = new Float32Array(colorVector);
-  return wrapper;
+  return Rune.of({
+    colors: new Float32Array(colorVector),
+    subRunes: [rune],
+  });
 }
 
 /**
  * Gives random color to the given rune.
  * The color is chosen randomly from the following nine
  * colors: red, pink, purple, indigo, blue, green, yellow, orange, brown
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function random_color(rune: Rune): Rune {
   throwIfNotRune('random_color', rune);
-  const wrapper = getEmptyRune();
-  wrapper.subRunes.push(rune);
   const randomColor = hexToColor(
     colorPalette[Math.floor(Math.random() * colorPalette.length)]
   );
-  wrapper.colors = new Float32Array(randomColor);
-  return wrapper;
+
+  return Rune.of({
+    colors: new Float32Array(randomColor),
+    subRunes: [rune],
+  });
 }
 
 /**
- * colors the given rune red.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune red (#F44336).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function red(rune: Rune): Rune {
   throwIfNotRune('red', rune);
@@ -481,9 +506,9 @@ export function red(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune pink.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune pink (#E91E63s).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function pink(rune: Rune): Rune {
   throwIfNotRune('pink', rune);
@@ -491,9 +516,9 @@ export function pink(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune purple.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune purple (#AA00FF).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function purple(rune: Rune): Rune {
   throwIfNotRune('purple', rune);
@@ -501,9 +526,9 @@ export function purple(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune indigo.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune indigo (#3F51B5).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function indigo(rune: Rune): Rune {
   throwIfNotRune('indigo', rune);
@@ -511,9 +536,9 @@ export function indigo(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune blue.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune blue (#2196F3).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function blue(rune: Rune): Rune {
   throwIfNotRune('blue', rune);
@@ -521,9 +546,9 @@ export function blue(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune green.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune green (#4CAF50).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function green(rune: Rune): Rune {
   throwIfNotRune('green', rune);
@@ -531,9 +556,9 @@ export function green(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune yellow.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune yellow (#FFEB3B).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function yellow(rune: Rune): Rune {
   throwIfNotRune('yellow', rune);
@@ -541,9 +566,9 @@ export function yellow(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune orange.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune orange (#FF9800).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function orange(rune: Rune): Rune {
   throwIfNotRune('orange', rune);
@@ -551,9 +576,9 @@ export function orange(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune brown.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune brown.
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function brown(rune: Rune): Rune {
   throwIfNotRune('brown', rune);
@@ -561,9 +586,9 @@ export function brown(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune black.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune black (#000000).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function black(rune: Rune): Rune {
   throwIfNotRune('black', rune);
@@ -571,9 +596,9 @@ export function black(rune: Rune): Rune {
 }
 
 /**
- * colors the given rune white.
- * @param {Rune} rune - the rune to color
- * @returns {Rune} the colored Rune
+ * Colors the given rune white (#FFFFFF).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
  */
 export function white(rune: Rune): Rune {
   throwIfNotRune('white', rune);
@@ -592,53 +617,309 @@ export function white(rune: Rune): Rune {
  */
 export function show(rune: Rune): Rune {
   throwIfNotRune('show', rune);
-  const normalRune = copyRune(rune);
-  normalRune.drawMethod = 'normal';
-  normalRune.toReplString = () => '<RENDERING>';
-  drawnRunes.push(normalRune);
+  drawnRunes.push(new NormalRune(rune));
+  return rune;
+}
 
-  return normalRune;
+/** @hidden */
+export class AnaglyphRune extends DrawnRune {
+  private static readonly anaglyphVertexShader = `
+    precision mediump float;
+    attribute vec4 a_position;
+    varying highp vec2 v_texturePosition;
+    void main() {
+        gl_Position = a_position;
+        // texture position is in [0,1], vertex position is in [-1,1]
+        v_texturePosition.x = (a_position.x + 1.0) / 2.0;
+        v_texturePosition.y = (a_position.y + 1.0) / 2.0;
+    }
+    `;
+
+  private static readonly anaglyphFragmentShader = `
+    precision mediump float;
+    uniform sampler2D u_sampler_red;
+    uniform sampler2D u_sampler_cyan;
+    varying highp vec2 v_texturePosition;
+    void main() {
+        gl_FragColor = texture2D(u_sampler_red, v_texturePosition)
+                + texture2D(u_sampler_cyan, v_texturePosition) - 1.0;
+        gl_FragColor.a = 1.0;
+    }
+    `;
+
+  constructor(rune: Rune) {
+    super(rune, false);
+  }
+
+  public draw = (canvas: HTMLCanvasElement) => {
+    const gl = getWebGlFromCanvas(canvas);
+
+    // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
+    const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
+      .flatten()
+      .concat(this.rune.flatten());
+
+    // calculate the left and right camera matrices
+    const halfEyeDistance = 0.03;
+    const leftCameraMatrix = mat4.create();
+    mat4.lookAt(
+      leftCameraMatrix,
+      vec3.fromValues(-halfEyeDistance, 0, 0),
+      vec3.fromValues(0, 0, -0.4),
+      vec3.fromValues(0, 1, 0)
+    );
+    const rightCameraMatrix = mat4.create();
+    mat4.lookAt(
+      rightCameraMatrix,
+      vec3.fromValues(halfEyeDistance, 0, 0),
+      vec3.fromValues(0, 0, -0.4),
+      vec3.fromValues(0, 1, 0)
+    );
+
+    // left/right eye images are drawn into respective framebuffers
+    const leftBuffer = initFramebufferObject(gl);
+    const rightBuffer = initFramebufferObject(gl);
+    drawRunesToFrameBuffer(
+      gl,
+      runes,
+      leftCameraMatrix,
+      new Float32Array([1, 0, 0, 1]),
+      leftBuffer.framebuffer,
+      true
+    );
+    drawRunesToFrameBuffer(
+      gl,
+      runes,
+      rightCameraMatrix,
+      new Float32Array([0, 1, 1, 1]),
+      rightBuffer.framebuffer,
+      true
+    );
+
+    // prepare to draw to screen by setting framebuffer to null
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    // prepare the shader program to combine the left/right eye images
+    const shaderProgram = initShaderProgram(
+      gl,
+      AnaglyphRune.anaglyphVertexShader,
+      AnaglyphRune.anaglyphFragmentShader
+    );
+    gl.useProgram(shaderProgram);
+    const reduPt = gl.getUniformLocation(shaderProgram, 'u_sampler_red');
+    const cyanuPt = gl.getUniformLocation(shaderProgram, 'u_sampler_cyan');
+    const vertexPositionPointer = gl.getAttribLocation(
+      shaderProgram,
+      'a_position'
+    );
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, leftBuffer.texture);
+    gl.uniform1i(cyanuPt, 0);
+
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, rightBuffer.texture);
+    gl.uniform1i(reduPt, 1);
+
+    // draw a square, which will allow the texture to be used
+    // load position buffer
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vertexPositionPointer);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  };
 }
 
 /**
- * render the given Rune in an Anaglyph. Use your 3D-glasses
+ * Render the given Rune in an Anaglyph. Use your 3D-glasses
  * to view the Anaglyph.
  * @param {Rune} rune - Rune to render
  * @return {Rune} with drawing method set to anaglyph
  */
 export function anaglyph(rune: Rune): Rune {
   throwIfNotRune('anaglyph', rune);
-  const analyphRune = copyRune(rune);
-  analyphRune.drawMethod = 'anaglyph';
-  analyphRune.toReplString = () => '<RENDERING>';
-  drawnRunes.push(analyphRune);
+  drawnRunes.push(new AnaglyphRune(rune));
+  return rune;
+}
 
-  return analyphRune;
+/** @hidden */
+export class HollusionRune extends DrawnRune {
+  constructor(rune: Rune, magnitude: number) {
+    super(rune, true);
+    this.rune.hollusionDistance = magnitude;
+  }
+
+  private static readonly copyVertexShader = `
+  precision mediump float;
+  attribute vec4 a_position;
+  varying highp vec2 v_texturePosition;
+  void main() {
+      gl_Position = a_position;
+      // texture position is in [0,1], vertex position is in [-1,1]
+      v_texturePosition.x = (a_position.x + 1.0) / 2.0;
+      v_texturePosition.y = (a_position.y + 1.0) / 2.0;
+  }
+  `;
+
+  private static readonly copyFragmentShader = `
+  precision mediump float;
+  uniform sampler2D uTexture;
+  varying highp vec2 v_texturePosition;
+  void main() {
+      gl_FragColor = texture2D(uTexture, v_texturePosition);
+  }
+  `;
+
+  public draw = (canvas: HTMLCanvasElement) => {
+    const gl = getWebGlFromCanvas(canvas);
+
+    const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
+      .flatten()
+      .concat(this.rune.flatten());
+
+    // first render all the frames into a framebuffer
+    const xshiftMax = runes[0].hollusionDistance;
+    const period = 2000; // animations loops every 2 seconds
+    const frameCount = 50; // in total 50 frames, gives rise to 25 fps
+    const frameBuffer: FrameBufferWithTexture[] = [];
+
+    const renderFrame = (framePos: number): FrameBufferWithTexture => {
+      const fb = initFramebufferObject(gl);
+      // prepare camera projection array
+      const cameraMatrix = mat4.create();
+      // let the object shift in the x direction
+      // the following calculation will let x oscillate in (-xshiftMax, xshiftMax) with time
+      let xshift = (framePos * (period / frameCount)) % period;
+      if (xshift > period / 2) {
+        xshift = period - xshift;
+      }
+      xshift = xshiftMax * (2 * ((2 * xshift) / period) - 1);
+      mat4.lookAt(
+        cameraMatrix,
+        vec3.fromValues(xshift, 0, 0),
+        vec3.fromValues(0, 0, -0.4),
+        vec3.fromValues(0, 1, 0)
+      );
+
+      drawRunesToFrameBuffer(
+        gl,
+        runes,
+        cameraMatrix,
+        new Float32Array([1, 1, 1, 1]),
+        fb.framebuffer,
+        true
+      );
+      return fb;
+    };
+
+    for (let i = 0; i < frameCount; i += 1) {
+      frameBuffer.push(renderFrame(i));
+    }
+
+    // Then, draw a frame from framebuffer for each update
+    const copyShaderProgram = initShaderProgram(
+      gl,
+      HollusionRune.copyVertexShader,
+      HollusionRune.copyFragmentShader
+    );
+    gl.useProgram(copyShaderProgram);
+    const texturePt = gl.getUniformLocation(copyShaderProgram, 'uTexture');
+    const vertexPositionPointer = gl.getAttribLocation(
+      copyShaderProgram,
+      'a_position'
+    );
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vertexPositionPointer);
+
+    let lastTime = 0;
+    function render(timeInMs: number) {
+      if (timeInMs - lastTime < period / frameCount) return;
+
+      lastTime = timeInMs;
+
+      const framePos =
+        Math.floor(timeInMs / (period / frameCount)) % frameCount;
+      const fbObject = frameBuffer[framePos];
+      gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
+      // eslint-disable-next-line no-bitwise
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, fbObject.texture);
+      gl.uniform1i(texturePt, 0);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
+    return render;
+  };
 }
 
 /**
- * render the given Rune with hollusion, with adjustable magnitude.
+ * Render the given Rune with hollusion, with adjustable magnitude.
  * @param {Rune} rune - Rune to render
- * @param {number} magnitude - (optional) the magnitude of hollusion
+ * @param {number} magnitude - (Optional) The magnitude of hollusion
  * @return {Rune} with drawing method set to hollusion
  */
 export function hollusion_magnitude(rune: Rune, magnitude: number = 0.1): Rune {
   throwIfNotRune('hollusion_magnitude', rune);
-  const hollusionRune = copyRune(rune);
-  hollusionRune.drawMethod = 'hollusion';
-  hollusionRune.hollusionDistance = magnitude;
-  hollusionRune.toReplString = () => '<RENDERING>';
-  drawnRunes.push(hollusionRune);
-
-  return hollusionRune;
+  drawnRunes.push(new HollusionRune(rune, magnitude));
+  return rune;
 }
 
 /**
- * render the given Rune with hollusion, with default magnitude 0.1.
+ * Render the given Rune with hollusion, with default magnitude 0.1.
  * @param {Rune} rune - Rune to render
  * @return {Rune} with drawing method set to hollusion
  */
 export function hollusion(rune: Rune): Rune {
   throwIfNotRune('hollusion', rune);
   return hollusion_magnitude(rune, 0.1);
+}
+
+/**
+ * Create an animation of runes
+ * @param duration Duration of the entire animation in seconds
+ * @param fps Duration of each frame in frames per seconds
+ * @param func Takes in the timestamp and returns a Rune to draw
+ * @returns A rune animation
+ */
+export function animate_rune(
+  duration: number,
+  fps: number,
+  func: RuneAnimation
+) {
+  const anim = new AnimatedRune(duration, fps, (n) => {
+    const rune = func(n);
+    throwIfNotRune('animate_rune', rune);
+    return new NormalRune(rune);
+  });
+  drawnRunes.push(anim);
+  return anim;
+}
+
+/**
+ * Create an animation of anaglyph runes
+ * @param duration Duration of the entire animation in seconds
+ * @param fps Duration of each frame in frames per seconds
+ * @param func Takes in the timestamp and returns a Rune to draw
+ * @returns A rune animation
+ */
+export function animate_anaglyph(
+  duration: number,
+  fps: number,
+  func: RuneAnimation
+) {
+  const anim = new AnimatedRune(duration, fps, (n) => {
+    const rune = func(n);
+    throwIfNotRune('animate_anaglyph', rune);
+    return new AnaglyphRune(rune);
+  });
+  drawnRunes.push(anim);
+  return anim;
 }

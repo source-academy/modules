@@ -1,156 +1,16 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { HollusionRune } from '../../bundles/rune/functions';
 import {
-  drawAnaglyph,
-  drawHollusion,
-  drawRune,
-} from '../../bundles/rune/runes_webgl';
-import { RunesModuleState, Rune } from '../../bundles/rune/types';
-import { DebuggerContext } from '../../type_helpers';
-
-/**
- * tab for displaying runes
- * @author Hou Ruomu
- */
-
-/**
- * React Component props for the Tab.
- */
-type RunesTabProps = {
-  children?: never;
-  className?: never;
-  debuggerContext: DebuggerContext;
-};
-
-/**
- * React Component state for the Tab.
- */
-type State = {
-  currentStep: number;
-};
-
-/**
- * The main React Component of the Tab.
- */
-/* eslint-disable react/destructuring-assignment */
-class WebGLCanvas extends React.Component<RunesTabProps, State> {
-  private runesToDraw: Rune[];
-
-  constructor(props: RunesTabProps | Readonly<RunesTabProps>) {
-    super(props);
-    this.state = {
-      currentStep: 0,
-    };
-
-    const moduleContext = this.props.debuggerContext.context.moduleContexts.get(
-      'rune'
-    );
-    if (moduleContext == null) {
-      this.runesToDraw = [];
-    } else {
-      this.runesToDraw = (moduleContext.state as RunesModuleState).drawnRunes;
-    }
-  }
-
-  private firstStep = () => this.state.currentStep === 0;
-
-  private finalStep = () =>
-    this.state.currentStep === this.runesToDraw.length - 1;
-
-  private onPrevButtonClick = () => {
-    this.setState((state) => ({ currentStep: state.currentStep - 1 }));
-  };
-
-  private onNextButtonClick = () => {
-    this.setState((state) => ({ currentStep: state.currentStep + 1 }));
-  };
-
-  /**
-   * This function sets the layout of the React Component in HTML
-   * @returns HTMLComponent
-   */
-  public render() {
-    const runeToDraw = this.runesToDraw[this.state.currentStep];
-
-    return (
-      <div>
-        {this.runesToDraw.length > 1 ? (
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 10,
-            }}
-          >
-            <Button
-              style={{
-                position: 'absolute',
-                left: 0,
-              }}
-              large
-              outlined
-              icon={IconNames.ARROW_LEFT}
-              onClick={this.onPrevButtonClick}
-              disabled={this.firstStep()}
-            >
-              Previous
-            </Button>
-            <h3 className='bp3-text-large'>
-              Call {this.state.currentStep + 1}/{this.runesToDraw.length}
-            </h3>
-            <Button
-              style={{
-                position: 'absolute',
-                right: 0,
-              }}
-              large
-              outlined
-              icon={IconNames.ARROW_RIGHT}
-              onClick={this.onNextButtonClick}
-              disabled={this.finalStep()}
-            >
-              Next
-            </Button>
-          </div>
-        ) : null}
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            paddingLeft: '20px',
-            paddingRight: '20px',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <canvas
-            id='runesCanvas'
-            ref={(r) => {
-              if (r) {
-                if (runeToDraw.drawMethod === 'anaglyph') {
-                  drawAnaglyph(r, runeToDraw);
-                } else if (runeToDraw.drawMethod === 'hollusion') {
-                  drawHollusion(r, runeToDraw);
-                } else if (runeToDraw.drawMethod === 'normal') {
-                  drawRune(r, runeToDraw);
-                } else {
-                  throw Error(
-                    `Unexpected Drawing Method ${runeToDraw.drawMethod}`
-                  );
-                }
-              }
-            }}
-            width={512}
-            height={512}
-          />
-        </div>
-      </div>
-    );
-  }
-}
+  AnimatedRune,
+  DrawnRune,
+  RunesModuleState,
+} from '../../bundles/rune/rune';
+import { glAnimation } from '../../typings/anim_types';
+import MultiItemDisplay from '../common/multi_item_display';
+import { DebuggerContext } from '../../typings/type_helpers';
+import AnimationCanvas from '../common/animation_canvas';
+import HollusionCanvas from './hollusion_canvas';
+import WebGLCanvas from '../common/webgl_canvas';
 
 export default {
   /**
@@ -179,7 +39,41 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: DebuggerContext) => <WebGLCanvas debuggerContext={context} />,
+  body: (context: DebuggerContext) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    const moduleContext = context.context?.moduleContexts.get('rune');
+    const moduleState = moduleContext!.state as RunesModuleState;
+
+    // Based on the toSpawn conditions, it should be safe to assume
+    // that neither moduleContext or moduleState are null
+    const runeCanvases = moduleState.drawnRunes.map((rune, i) => {
+      const elemKey = i.toString();
+
+      if (glAnimation.isAnimation(rune)) {
+        return (
+          <AnimationCanvas animation={rune as AnimatedRune} key={elemKey} />
+        );
+      }
+      const drawnRune = rune as DrawnRune;
+      if (drawnRune.isHollusion) {
+        return (
+          <HollusionCanvas rune={drawnRune as HollusionRune} key={elemKey} />
+        );
+      }
+      return (
+        <WebGLCanvas
+          ref={(r) => {
+            if (r) {
+              drawnRune.draw(r);
+            }
+          }}
+          key={elemKey}
+        />
+      );
+    });
+
+    return <MultiItemDisplay elements={runeCanvases} />;
+  },
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
