@@ -1,7 +1,9 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars, jsx-a11y/media-has-caption */
-import { FILE_UPLOAD_INPUT_CUSTOM_TEXT } from '@blueprintjs/core/lib/esm/common/classes';
 import React from 'react';
-import { AudioPlayed } from '../../bundles/stereo_sound/types';
+import { StereoSoundsModuleState } from '../../bundles/stereo_sound/types';
+import { DebuggerContext } from '../../typings/type_helpers';
+import MultiItemDisplay from '../common/multi_item_display';
 
 /**
  * Tab for Source Academy Sounds Module
@@ -9,39 +11,39 @@ import { AudioPlayed } from '../../bundles/stereo_sound/types';
  * @author Samyukta Sounderraman
  */
 
-/**
- * React Component props for the Tab.
- */
-type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
-};
+export default {
+  /**
+   * This function will be called to determine if the component will be
+   * rendered.
+   * @returns {boolean}
+   */
+  toSpawn(context: any) {
+    const moduleContext = context.context?.moduleContexts.get('stereo_sound');
+    if (!moduleContext) return false;
 
-/**
- * React Component state for the Tab.
- */
-type State = {};
+    const moduleState = moduleContext.state as StereoSoundsModuleState;
+    if (!moduleState) return false;
 
-/**
- * The main React Component of the Tab.
- */
-class StereoSounds extends React.Component<Props, State> {
-  private $audio: HTMLAudioElement | null = null;
+    return moduleState.audioPlayed.length > 0;
+  },
+  /**
+   * This function will be called to render the module tab in the side contents
+   * on Source Academy frontend.
+   * @param {DebuggerContext} context
+   */
+  body(context: DebuggerContext) {
+    const moduleContext = context.context?.moduleContexts.get('sound');
+    const moduleState = (moduleContext!.state as StereoSoundsModuleState)
+      .audioPlayed;
+    const elements = moduleState.map((audio) => (
+      <audio
+        src={audio.dataUri}
+        controls
+        id='sound-tab-player'
+        style={{ width: '100%' }}
+      />
+    ));
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  public componentDidMount() {
-    if (this.$audio) {
-      // eslint-disable-next-line react/destructuring-assignment
-      this.props.context.result.value.init(this.$audio);
-    }
-  }
-
-  public render() {
     return (
       <div>
         <p id='sound-default-text'>
@@ -49,44 +51,12 @@ class StereoSounds extends React.Component<Props, State> {
           pause, adjust the volume and download your sounds.
           <br />
           <br />
-          <audio
-            ref={(r) => {
-              this.$audio = r;
-            }}
-            src=''
-            controls
-            id='sound-tab-player'
-            style={{ width: '100%' }}
-          />
+          <MultiItemDisplay elements={elements} />
           <br />
         </p>
       </div>
     );
-  }
-}
-
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
-   * @returns {boolean}
-   */
-  toSpawn(context: any) {
-    function valid(value: any): value is AudioPlayed {
-      try {
-        return value instanceof Object && value.init instanceof Function;
-      } catch (e) {
-        return false;
-      }
-    }
-    return valid(context.result.value);
   },
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (context: any) => <StereoSounds context={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.

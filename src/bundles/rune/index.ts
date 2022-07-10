@@ -1,6 +1,8 @@
 import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
 import {
   anaglyph,
+  animate_anaglyph,
+  animate_rune,
   beside,
   beside_frac,
   black,
@@ -49,7 +51,7 @@ import {
   white,
   yellow,
 } from './functions';
-import { RunesModuleState } from './types';
+import { RunesModuleState } from './rune';
 
 /**
  * Bundle for Source Academy Runes module
@@ -133,5 +135,7 @@ export default function runes(
     anaglyph,
     hollusion_magnitude,
     hollusion,
+    animate_rune,
+    animate_anaglyph,
   };
 }
