@@ -45,3 +45,7 @@ scripts/rollup/database.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# IDE Related Configuration Files #
+###################################
+.vscode/

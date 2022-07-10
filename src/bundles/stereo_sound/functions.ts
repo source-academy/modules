@@ -14,29 +14,32 @@
 
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars, new-cap */
 import {
-  Wave,
+  accumulate,
+  head,
+  is_null,
+  is_pair,
+  length,
+  list,
+  pair,
+  tail,
+} from './list';
+import { RIFFWAVE } from './riffwave';
+import {
+  AudioPlayed,
+  List,
   Sound,
   SoundProducer,
   SoundTransformer,
-  List,
-  AudioPlayed,
+  Wave,
 } from './types';
-import {
-  pair,
-  head,
-  tail,
-  list,
-  length,
-  is_null,
-  is_pair,
-  accumulate,
-} from './list';
-import { RIFFWAVE } from './riffwave';
 
 // Global Constants and Variables
 
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
+
+/** @hidden */
+export const audioPlayed: AudioPlayed[] = [];
 
 let audioElement: HTMLAudioElement;
 // Singular audio context for all playback functions
@@ -445,6 +448,8 @@ export function play(sound: Sound): AudioPlayed {
     riffwave.header.numChannels = 2;
     riffwave.header.bitsPerSample = 16;
     riffwave.Make(channel);
+
+    /*
     const audio = new Audio(riffwave.dataURI);
     const source2 = audioplayer.createMediaElementSource(audio);
     source2.connect(audioplayer.destination);
@@ -455,19 +460,15 @@ export function play(sound: Sound): AudioPlayed {
     audio.onended = () => {
       source2.disconnect(audioplayer.destination);
       isPlaying = false;
+    }; */
+
+    const audio = {
+      toReplString: () => `<AudioPlayed>`,
+      dataUri: riffwave.dataURI,
     };
 
-    return {
-      toReplString: () => `<AudioPlayed>`,
-      init(audio_elem) {
-        audioElement = audio_elem;
-        if (!audioElement) {
-          throw new Error('Audio element cannot be null.');
-        }
-        audioElement.src = riffwave.dataURI;
-        return true;
-      },
-    };
+    audioPlayed.push(audio);
+    return audio;
   }
 }
 
