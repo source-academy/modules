@@ -551,7 +551,7 @@ export function beside_x(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['min', 'center', 'center'],
@@ -577,7 +577,7 @@ export function beside_y(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[1][1];
   let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['center', 'min', 'center'],
@@ -603,7 +603,7 @@ export function beside_z(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   let newZ: number = aBounds[1][2];
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['center', 'center', 'min'],
