@@ -20,6 +20,7 @@
  * @module pix_n_flix
  */
 
+/* eslint-disable @typescript-eslint/no-shadow */
 import {
   CanvasElement,
   VideoElement,
@@ -263,7 +264,7 @@ function loadMedia(): void {
   }
 
   // If video is already part of bundle state
-  if (videoElement.srcObject != null) return;
+  if (videoElement.srcObject) return;
 
   navigator.mediaDevices
     .getUserMedia({ video: true })
@@ -428,7 +429,7 @@ function init(
   errorLogger = _errorLogger;
   tabsPackage = _tabsPackage;
   const context = canvasElement.getContext('2d');
-  if (context == null) throw new Error('Canvas context should not be null.');
+  if (!context) throw new Error('Canvas context should not be null.');
   canvasRenderingContext = context;
   setupData();
   if (inputFeed === InputFeed.Camera) {

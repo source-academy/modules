@@ -12,6 +12,10 @@ export type DebuggerContext = {
   workspaceLocation?: any;
 };
 
+export type ModuleParams = Context['moduleParams'];
+
+export type ModuleContexts = Context['moduleContexts'];
+
 /**
  * Interface to represent objects that require a
  * string representation in the REPL

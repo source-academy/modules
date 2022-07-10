@@ -11,20 +11,20 @@ import AnimationCanvas from '../common/animation_canvas';
 import WebGLCanvas from '../common/webgl_canvas';
 
 export default {
-  toSpawn: (context: DebuggerContext) => {
+  toSpawn(context: DebuggerContext) {
     const moduleContext = context.context?.moduleContexts.get('curve');
-    if (moduleContext == null) {
+    if (!moduleContext) {
       return false;
     }
 
     const moduleState = moduleContext.state as CurveModuleState;
-    if (moduleState == null) {
+    if (!moduleState) {
       return false;
     }
 
     return moduleState.drawnCurves.length > 0;
   },
-  body: (context: DebuggerContext) => {
+  body(context: DebuggerContext) {
     const moduleContext = context.context?.moduleContexts.get('curve');
     const moduleState = moduleContext!.state as CurveModuleState;
 

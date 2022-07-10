@@ -109,7 +109,7 @@ export default class AnimationCanvas extends React.Component<
   private animationCallback = (timeInMs: number) => {
     if (!this.canvas || !this.state.isPlaying) return;
 
-    if (this.callbackTimestamp == null) {
+    if (!this.callbackTimestamp) {
       this.callbackTimestamp = timeInMs;
       this.drawFrame();
       this.reqFrame();

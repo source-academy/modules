@@ -51,7 +51,7 @@ export default function sounds(params, contexts: Map<string, ModuleContext>) {
   // Update the module's global context
   let moduleContext = contexts.get('stereo_sound');
 
-  if (moduleContext == null) {
+  if (!moduleContext) {
     moduleContext = {
       tabs: [],
       state: {
@@ -60,7 +60,7 @@ export default function sounds(params, contexts: Map<string, ModuleContext>) {
     };
 
     contexts.set('stereo_sound', moduleContext);
-  } else if (moduleContext.state == null) {
+  } else if (!moduleContext.state) {
     moduleContext.state = {
       audioPlayed,
     };

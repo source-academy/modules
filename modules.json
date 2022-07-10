@@ -54,5 +54,10 @@
     "tabs": [
       "SoundMatrix"
     ]
+  },
+  "csg": {
+    "tabs": [
+      "Csg"
+    ]
   }
 }

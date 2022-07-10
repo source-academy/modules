@@ -1,0 +1,153 @@
+/* [Imports] */
+import { ModuleContext } from 'js-slang';
+import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
+import { Core } from './core.js';
+import {
+  area,
+  beside_x,
+  beside_y,
+  beside_z,
+  black,
+  blue,
+  bounding_box,
+  clone,
+  cone,
+  crimson,
+  cube,
+  cyan,
+  cylinder,
+  flip_x,
+  flip_y,
+  flip_z,
+  geodesic_sphere,
+  gray,
+  green,
+  intersect,
+  is_shape,
+  lime,
+  navy,
+  orange,
+  pink,
+  prism,
+  purple,
+  pyramid,
+  render,
+  render_axis,
+  render_grid,
+  render_grid_axis,
+  rose,
+  rotate,
+  rotate_x,
+  rotate_y,
+  rotate_z,
+  rounded_cube,
+  rounded_cylinder,
+  scale,
+  scale_x,
+  scale_y,
+  scale_z,
+  shape_center,
+  shape_set_center,
+  silver,
+  sphere,
+  star,
+  store,
+  store_as_color,
+  store_as_rgb,
+  subtract,
+  teal,
+  torus,
+  translate,
+  translate_x,
+  translate_y,
+  translate_z,
+  union,
+  volume,
+  white,
+  yellow,
+} from './functions';
+import { CsgModuleState, getModuleContext } from './utilities.js';
+
+/* [Exports] */
+export default (moduleParams: ModuleParams, moduleContexts: ModuleContexts) => {
+  let potentialModuleContext: ModuleContext | null = getModuleContext(
+    moduleContexts
+  );
+  if (potentialModuleContext !== null) {
+    let moduleContext: ModuleContext = potentialModuleContext;
+
+    let moduleState: CsgModuleState = new CsgModuleState();
+    moduleContext.state = moduleState;
+    Core.initialize(moduleState);
+  }
+
+  return {
+    // [Variables - Primitive shapes]
+    cube,
+    sphere,
+    cylinder,
+    prism,
+    star,
+    pyramid,
+    cone,
+    torus,
+    rounded_cube,
+    rounded_cylinder,
+    geodesic_sphere,
+
+    // [Variables - Colours]
+    black,
+    navy,
+    green,
+    teal,
+    crimson,
+    purple,
+    orange,
+    silver,
+    gray,
+    blue,
+    lime,
+    cyan,
+    rose,
+    pink,
+    yellow,
+    white,
+
+    // [Functions]
+    union,
+    subtract,
+    intersect,
+    scale,
+    scale_x,
+    scale_y,
+    scale_z,
+    shape_center,
+    shape_set_center,
+    area,
+    volume,
+    flip_x,
+    flip_y,
+    flip_z,
+    translate,
+    translate_x,
+    translate_y,
+    translate_z,
+    beside_x,
+    beside_y,
+    beside_z,
+    bounding_box,
+    rotate,
+    rotate_x,
+    rotate_y,
+    rotate_z,
+    is_shape,
+    clone,
+    store,
+    store_as_color,
+    store_as_rgb,
+    render_grid_axis,
+    render_grid,
+    render_axis,
+    render,
+  };
+};

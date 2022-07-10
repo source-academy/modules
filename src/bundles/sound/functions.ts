@@ -24,7 +24,7 @@
  * @author Samyukta Sounderraman
  */
 
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars, new-cap */
 import {
   Wave,
   Sound,
@@ -130,6 +130,7 @@ function play_recording_signal() {
   play(sine_sound(1200, recording_signal_ms / 1000));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-shadow
 function process(data) {
   const audioContext = new AudioContext();
   const blob = new Blob(data);
@@ -801,7 +802,7 @@ export function letter_name_to_midi_note(note: string): number {
   }
 
   if (note.length === 2) {
-    res += parseInt(note[1], 10) * 12;
+    res += parseInt(note[1]) * 12;
   } else if (note.length === 3) {
     switch (note[1]) {
       case '#':
@@ -815,7 +816,7 @@ export function letter_name_to_midi_note(note: string): number {
       default:
         break;
     }
-    res += parseInt(note[2], 10) * 12;
+    res += parseInt(note[2]) * 12;
   }
   return res;
 }

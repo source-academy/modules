@@ -1,55 +1,55 @@
-import { ModuleContext } from 'js-slang';
+import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
 import {
-  square,
-  blank,
-  rcross,
-  sail,
-  triangle,
-  corner,
-  nova,
-  circle,
-  heart,
-  pentagram,
-  ribbon,
-  from_url,
-  scale_independent,
-  scale,
-  translate,
-  rotate,
-  stack_frac,
-  stack,
-  stackn,
-  quarter_turn_left,
-  quarter_turn_right,
-  turn_upside_down,
-  beside_frac,
+  anaglyph,
+  animate_anaglyph,
+  animate_rune,
   beside,
-  flip_vert,
-  flip_horiz,
-  make_cross,
-  repeat_pattern,
-  overlay_frac,
-  overlay,
+  beside_frac,
+  black,
+  blank,
+  blue,
+  brown,
+  circle,
   color,
-  random_color,
-  red,
+  corner,
+  drawnRunes,
+  flip_horiz,
+  flip_vert,
+  from_url,
+  green,
+  heart,
+  hollusion,
+  hollusion_magnitude,
+  indigo,
+  make_cross,
+  nova,
+  orange,
+  overlay,
+  overlay_frac,
+  pentagram,
   pink,
   purple,
-  indigo,
-  blue,
-  green,
-  yellow,
-  orange,
-  brown,
-  black,
-  white,
+  quarter_turn_left,
+  quarter_turn_right,
+  random_color,
+  rcross,
+  red,
+  repeat_pattern,
+  ribbon,
+  rotate,
+  sail,
+  scale,
+  scale_independent,
   show,
-  anaglyph,
-  hollusion_magnitude,
-  hollusion,
-  drawnRunes,
-  animate_rune,
-  animate_anaglyph,
+  square,
+  stack,
+  stackn,
+  stack_frac,
+  translate,
+  triangle,
+  turn_upside_down,
+  white,
+  yellow,
 } from './functions';
 import { RunesModuleState } from './rune';
 
@@ -59,13 +59,13 @@ import { RunesModuleState } from './rune';
  */
 
 export default function runes(
-  params: Map<string, any>,
-  context: Map<string, ModuleContext>
+  moduleParams: ModuleParams,
+  moduleContexts: ModuleContexts
 ) {
   // Update the module's global context
-  let moduleContext = context.get('rune');
+  let moduleContext = moduleContexts.get('rune');
 
-  if (moduleContext == null) {
+  if (!moduleContext) {
     moduleContext = {
       tabs: [],
       state: {
@@ -73,8 +73,8 @@ export default function runes(
       },
     };
 
-    context.set('rune', moduleContext);
-  } else if (moduleContext.state == null) {
+    moduleContexts.set('rune', moduleContext);
+  } else if (!moduleContext.state) {
     moduleContext.state = {
       drawnRunes,
     };
