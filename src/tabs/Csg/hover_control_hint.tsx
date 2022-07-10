@@ -1,28 +1,20 @@
 /* [Imports] */
 import { Icon } from '@blueprintjs/core';
 import React from 'react';
+import {
+  BP_BORDER_RADIUS,
+  BP_ICON_COLOR,
+  BP_TOOLTIP_BACKGROUND_COLOR,
+  BP_TOOLTIP_PADDING,
+  BP_TOOLTIP_TEXT_COLOR,
+  SA_TAB_BUTTON_WIDTH,
+  SA_TAB_ICON_SIZE,
+} from '../../bundles/csg/constants.js';
 import { HintProps, HintState } from './types';
 
 /* [Main] */
 
 // [CSS Values]
-// Source Academy
-let sideContentMarginBottom = '0.4rem';
-
-// Manually extracted from BlueprintJS
-let defaultIconSize = 20;
-let iconGrey = '#a7b6c2';
-
-let tabButtonWidth = '40px';
-let tabButtonMargin = '20px';
-
-let tooltipPadding = '10px 12px';
-let tooltipBorderRadius = '3px';
-let tooltipTextDarkGrey = '#394b59';
-let tooltipBackgroundLightGrey = '#e1e8ed';
-
-//TODO use true BlueprintJS Components by passing React down in index.tsx
-//TODO separate into ControlHint, with HoverControlHint & new ClickableControlHint
 export default class HoverControlHint extends React.Component<
   HintProps,
   HintState
@@ -41,32 +33,31 @@ export default class HoverControlHint extends React.Component<
         style={{
           display: 'flex',
           flexDirection: 'column',
+          // Centre icon within hint's height
           justifyContent: 'center',
 
-          height: tabButtonWidth,
-
-          margin: `${tabButtonMargin} calc(${sideContentMarginBottom} * 2)`,
+          height: SA_TAB_BUTTON_WIDTH,
         }}
+        onMouseEnter={() => this.setState({ showTooltip: true })}
+        onMouseLeave={() => this.setState({ showTooltip: false })}
       >
         <Icon
           icon={this.props.iconName}
-          size={defaultIconSize}
-          color={iconGrey}
-          onMouseEnter={() => this.setState({ showTooltip: true })}
-          onMouseLeave={() => this.setState({ showTooltip: false })}
+          size={SA_TAB_ICON_SIZE}
+          color={BP_ICON_COLOR}
         />
         <span
           style={{
             display: this.state.showTooltip ? 'inline' : 'none',
             position: 'absolute',
-            left: `${defaultIconSize * 3}px`,
+            left: `${SA_TAB_ICON_SIZE * 4}px`,
             zIndex: 1,
 
-            padding: tooltipPadding,
-            borderRadius: tooltipBorderRadius,
+            padding: BP_TOOLTIP_PADDING,
+            borderRadius: BP_BORDER_RADIUS,
 
-            color: tooltipTextDarkGrey,
-            backgroundColor: tooltipBackgroundLightGrey,
+            color: BP_TOOLTIP_TEXT_COLOR,
+            backgroundColor: BP_TOOLTIP_BACKGROUND_COLOR,
           }}
         >
           {this.props.tooltipText}

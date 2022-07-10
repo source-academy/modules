@@ -11,6 +11,14 @@ import {
 import { ModuleContext, ModuleState } from 'js-slang';
 import { ModuleContexts } from '../../typings/type_helpers.js';
 import {
+  ACE_GUTTER_TEXT_COLOR,
+  BP_TEXT_COLOR,
+  GRID_PADDING,
+  MAIN_TICKS,
+  ROUND_UP_INTERVAL,
+  SUB_TICKS,
+} from './constants.js';
+import {
   AxisEntityType,
   Color,
   Controls,
@@ -40,6 +48,29 @@ export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSol
 export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
 
 // [Custom]
+export class MultiGridEntity implements MultiGridEntityType {
+  visuals: {
+    drawCmd: 'drawGrid';
+    show: boolean;
+    color?: RGBA;
+    subColor?: RGBA;
+  } = {
+    drawCmd: 'drawGrid',
+    show: true,
+
+    color: hexToRgba(BP_TEXT_COLOR),
+    subColor: hexToRgba(ACE_GUTTER_TEXT_COLOR),
+  };
+
+  ticks: [number, number] = [MAIN_TICKS, SUB_TICKS];
+
+  size: [number, number];
+
+  constructor(size: number) {
+    this.size = [size, size];
+  }
+}
+
 export class AxisEntity implements AxisEntityType {
   visuals: {
     drawCmd: 'drawAxis';
@@ -52,29 +83,6 @@ export class AxisEntity implements AxisEntityType {
   alwaysVisible: boolean = false;
 
   constructor(public size?: number) {}
-}
-
-export class MultiGridEntity implements MultiGridEntityType {
-  visuals: {
-    drawCmd: 'drawGrid';
-    show: boolean;
-    color?: RGBA;
-    subColor?: RGBA;
-  } = {
-    drawCmd: 'drawGrid',
-    show: true,
-    //TODO
-    color: colorToRgba(hexToColor('#F5F8FA')),
-    subColor: colorToRgba(hexToColor('#8091A0')),
-  };
-
-  ticks: [number, number] = [10, 1];
-
-  size: [number, number];
-
-  constructor(size: number) {
-    this.size = [size, size];
-  }
 }
 
 export class Shape {
@@ -93,8 +101,8 @@ export class RenderGroup {
   constructor(public canvasNumber: number) {}
 
   render: boolean = false;
-  hasAxis: boolean = true;
   hasGrid: boolean = true;
+  hasAxis: boolean = true;
 
   shapes: Shape[] = [];
 
@@ -121,13 +129,13 @@ export class RenderGroupManager {
   }
 
   nextRenderGroup(
-    currentAxis: boolean = true,
-    currentGrid: boolean = true
+    currentGrid: boolean = false,
+    currentAxis: boolean = false
   ): RenderGroup {
     let previousRenderGroup: RenderGroup = this.getCurrentRenderGroup();
     previousRenderGroup.render = true;
-    previousRenderGroup.hasAxis = currentAxis;
     previousRenderGroup.hasGrid = currentGrid;
+    previousRenderGroup.hasAxis = currentAxis;
 
     this.addRenderGroup();
 
@@ -297,6 +305,10 @@ export function colorToRgba(color: Color, opacity: number = 1): RGBA {
   return [...color, opacity];
 }
 
+export function hexToRgba(hex: string): RGBA {
+  return colorToRgba(hexToColor(hex));
+}
+
 export function clamp(value: number, lowest: number, highest: number): number {
   value = Math.max(value, lowest);
   value = Math.min(value, highest);
@@ -317,4 +329,11 @@ export function looseInstanceof(
     className !== undefined &&
     objectName === className
   );
+}
+
+export function neatGridDistance(rawDistance: number) {
+  let paddedDistance: number = rawDistance + GRID_PADDING;
+  let roundedDistance: number =
+    Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
+  return roundedDistance;
 }

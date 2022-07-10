@@ -31,6 +31,7 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
+import { DEFAULT_COLOR, SILVER } from './constants.js';
 import { Core } from './core.js';
 import { Color, CoordinatesXYZ, Solid } from './types';
 import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
@@ -206,11 +207,12 @@ export const purple: string = '#AA00AA';
 export const orange: string = '#FFAA00';
 
 /**
- * A hex colour code for light grey (#AAAAAA).
+ * A hex colour code for light grey (#AAAAAA). This is the default colour used
+ * when storing a Shape.
  *
  * @category Colour
  */
-export const silver: string = '#AAAAAA';
+export const silver: string = SILVER;
 
 /**
  * A hex colour code for dark grey (#555555).
@@ -734,19 +736,19 @@ export function clone(shape: Shape): Shape {
 }
 
 /**
- * Stores a clone of the specified Shape for later rendering.
+ * Stores a clone of the specified Shape for later rendering. Its colour
+ * defaults to the module's provided silver colour variable.
  *
  * @param {Shape} shape - The Shape to be stored.
  */
 export function store(shape: Shape): void {
-  Core.getRenderGroupManager().storeShape(shape.clone());
+  store_as_color(shape, DEFAULT_COLOR);
 }
 
 /**
  * Colours a clone of the specified Shape using the specified hex colour code,
- * then stores it for later rendering. You may use one of the default colour
- * variables provided by the module, or you may specify your own custom colour
- * code.
+ * then stores it for later rendering. You may use one of the colour variables
+ * provided by the module, or you may specify your own custom colour code.
  *
  * Colour codes must be of the form "#XXXXXX" or "XXXXXX", where each X
  * represents a non-case sensitive hexadecimal number. Invalid colour codes
@@ -795,7 +797,7 @@ export function store_as_rgb(
  */
 export function render_grid_axis(): RenderGroup {
   // Render group is returned for REPL text only; do not document
-  return Core.getRenderGroupManager().nextRenderGroup();
+  return Core.getRenderGroupManager().nextRenderGroup(true, true);
 }
 
 /**
@@ -803,7 +805,7 @@ export function render_grid_axis(): RenderGroup {
  * then not be included in any subsequent renders.
  */
 export function render_grid(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup(false);
+  return Core.getRenderGroupManager().nextRenderGroup(true);
 }
 
 /**
@@ -811,7 +813,7 @@ export function render_grid(): RenderGroup {
  * then not be included in any subsequent renders.
  */
 export function render_axis(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup(undefined, false);
+  return Core.getRenderGroupManager().nextRenderGroup(undefined, true);
 }
 
 /**
@@ -819,5 +821,5 @@ export function render_axis(): RenderGroup {
  * included in any subsequent renders.
  */
 export function render(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup(false, false);
+  return Core.getRenderGroupManager().nextRenderGroup();
 }
