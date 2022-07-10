@@ -9,7 +9,7 @@ import {
   prepareRender as _prepareRender,
 } from '@jscad/regl-renderer';
 import { ModuleContext, ModuleState } from 'js-slang';
-import { ModuleContexts } from '../../typings/type_helpers.js';
+import { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
 import {
   ACE_GUTTER_TEXT_COLOR,
   BP_TEXT_COLOR,
@@ -85,19 +85,19 @@ export class AxisEntity implements AxisEntityType {
   constructor(public size?: number) {}
 }
 
-export class Shape {
+export class Shape implements ReplResult {
   constructor(public solid: Solid) {}
-
-  clone(): Shape {
-    return new Shape(clone(this.solid as Geom3));
-  }
 
   toReplString(): string {
     return '<Shape>';
   }
+
+  clone(): Shape {
+    return new Shape(clone(this.solid as Geom3));
+  }
 }
 
-export class RenderGroup {
+export class RenderGroup implements ReplResult {
   constructor(public canvasNumber: number) {}
 
   render: boolean = false;
