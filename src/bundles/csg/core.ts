@@ -22,6 +22,6 @@ export class Core {
   static nextComponent(): number {
     let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
 
-    return ++moduleState.componentCounter;
+    return moduleState.nextComponent();
   }
 }

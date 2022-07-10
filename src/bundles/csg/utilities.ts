@@ -159,12 +159,16 @@ export class RenderGroupManager {
 }
 
 export class CsgModuleState implements ModuleState {
-  componentCounter: number = 0;
+  private componentCounter: number = 0;
 
   readonly renderGroupManager: RenderGroupManager;
 
   constructor() {
     this.renderGroupManager = new RenderGroupManager();
+  }
+
+  nextComponent() {
+    return ++this.componentCounter;
   }
 }
 
