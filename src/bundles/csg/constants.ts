@@ -20,7 +20,7 @@ export const ACE_GUTTER_BACKGROUND_COLOR: string = '#34495E';
 export const BP_TOOLTIP_TEXT_COLOR: string = '#394B59';
 
 // Renderer grid constants
-export const MAIN_TICKS = 1;
-export const SUB_TICKS = MAIN_TICKS / 4;
-export const GRID_PADDING = MAIN_TICKS;
-export const ROUND_UP_INTERVAL = MAIN_TICKS;
+export const MAIN_TICKS: number = 1;
+export const SUB_TICKS: number = MAIN_TICKS / 4;
+export const GRID_PADDING: number = MAIN_TICKS;
+export const ROUND_UP_INTERVAL: number = MAIN_TICKS;
