@@ -288,7 +288,7 @@ export function drawRunesToFrameBuffer(
     if (rune.texture === null) {
       gl.uniform4fv(
         vertexColorPointer,
-        rune.colors != null ? rune.colors : new Float32Array([0, 0, 0, 1])
+        rune.colors || new Float32Array([0, 0, 0, 1])
       );
       gl.uniform1i(textureSwitchPointer, 0);
     } else {
@@ -318,18 +318,18 @@ export abstract class DrawnRune implements ReplResult {
   uniform mat4 uModelViewMatrix;
   uniform mat4 uProjectionMatrix;
   uniform mat4 uCameraMatrix;
-  
+
   varying lowp vec4 vColor;
   varying highp vec2 vTexturePosition;
   varying lowp float colorFactor;
   void main(void) {
     gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
     vColor = uVertexColor;
-  
+
     // texture position is in [0,1], vertex position is in [-1,1]
     vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;
     vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;
-  
+
     colorFactor = gl_Position.z;
   }
   `;
@@ -341,8 +341,8 @@ export abstract class DrawnRune implements ReplResult {
   uniform sampler2D uTexture;
   varying lowp float colorFactor;
   uniform vec4 uColorFilter;
-  
-  
+
+
   varying lowp vec4 vColor;
   varying highp vec2 vTexturePosition;
   void main(void) {

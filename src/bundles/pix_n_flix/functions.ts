@@ -20,6 +20,7 @@
  * @module pix_n_flix
  */
 
+/* eslint-disable @typescript-eslint/no-shadow */
 import {
   CanvasElement,
   VideoElement,
