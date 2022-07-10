@@ -111,6 +111,8 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="curve.html#animate_3d_curve" class="tsd-kind-icon">animate_<wbr>3<wbr>D_<wbr>curve</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="curve.html#animate_curve" class="tsd-kind-icon">animate_<wbr>curve</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="curve.html#arc" class="tsd-kind-icon">arc</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="curve.html#b_of" class="tsd-kind-icon">b_<wbr>of</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="curve.html#connect_ends" class="tsd-kind-icon">connect_<wbr>ends</a></li>
@@ -153,6 +155,106 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="animate_3d_curve" class="tsd-anchor"></a>
+					<h3>animate_<wbr>3<wbr>D_<wbr>curve</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">animate_<wbr>3<wbr>D_<wbr>curve<span class="tsd-signature-symbol">(</span>duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, fps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, drawer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CurveAnimation</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AnimatedCurve</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L830">curve/functions.ts:830</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a animation of curves using a curve generating function.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>duration: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The duration of the animation in seconds</p>
+									</div>
+								</li>
+								<li>
+									<h5>fps: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Framerate of the animation in frames per second</p>
+									</div>
+								</li>
+								<li>
+									<h5>drawer: <span class="tsd-signature-type">RenderFunction</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Draw function to the generated curves with</p>
+									</div>
+								</li>
+								<li>
+									<h5>func: <span class="tsd-signature-type">CurveAnimation</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Curve generating function. Takes in a timestamp value and returns a curve</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AnimatedCurve</span></h4>
+							<p>3D Curve Animation</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="animate_curve" class="tsd-anchor"></a>
+					<h3>animate_<wbr>curve</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">animate_<wbr>curve<span class="tsd-signature-symbol">(</span>duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, fps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, drawer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CurveAnimation</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AnimatedCurve</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L808">curve/functions.ts:808</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a animation of curves using a curve generating function.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>duration: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The duration of the animation in seconds</p>
+									</div>
+								</li>
+								<li>
+									<h5>fps: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Framerate of the animation in frames per second</p>
+									</div>
+								</li>
+								<li>
+									<h5>drawer: <span class="tsd-signature-type">RenderFunction</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Draw function to the generated curves with</p>
+									</div>
+								</li>
+								<li>
+									<h5>func: <span class="tsd-signature-type">CurveAnimation</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Curve generating function. Takes in a timestamp value and returns a curve</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AnimatedCurve</span></h4>
+							<p>Curve Animation</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="arc" class="tsd-anchor"></a>
 					<h3>arc</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -162,7 +264,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L739">curve/functions.ts:739</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L796">curve/functions.ts:796</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -197,7 +299,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L446">curve/functions.ts:446</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L503">curve/functions.ts:503</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -233,7 +335,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L682">curve/functions.ts:682</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L739">curve/functions.ts:739</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -276,7 +378,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L666">curve/functions.ts:666</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L723">curve/functions.ts:723</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -310,15 +412,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_3d_connected" class="tsd-anchor"></a>
-					<h3>draw_<wbr>3<wbr>D_<wbr>connected</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>3<wbr>D_<wbr>connected</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>connected<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>connected<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L177">curve/functions.ts:177</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L225">curve/functions.ts:225</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -338,11 +440,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -352,15 +450,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_3d_connected_full_view" class="tsd-anchor"></a>
-					<h3>draw_<wbr>3<wbr>D_<wbr>connected_<wbr>full_<wbr>view</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>3<wbr>D_<wbr>connected_<wbr>full_<wbr>view</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>connected_<wbr>full_<wbr>view<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>connected_<wbr>full_<wbr>view<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L195">curve/functions.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L246">curve/functions.ts:246</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -380,11 +478,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -394,15 +488,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_3d_connected_full_view_proportional" class="tsd-anchor"></a>
-					<h3>draw_<wbr>3<wbr>D_<wbr>connected_<wbr>full_<wbr>view_<wbr>proportional</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>3<wbr>D_<wbr>connected_<wbr>full_<wbr>view_<wbr>proportional</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>connected_<wbr>full_<wbr>view_<wbr>proportional<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>connected_<wbr>full_<wbr>view_<wbr>proportional<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L213">curve/functions.ts:213</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L267">curve/functions.ts:267</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -422,11 +516,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -436,15 +526,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_3d_points" class="tsd-anchor"></a>
-					<h3>draw_<wbr>3<wbr>D_<wbr>points</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>3<wbr>D_<wbr>points</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>points<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>points<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L233">curve/functions.ts:233</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L288">curve/functions.ts:288</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -464,11 +554,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -478,15 +564,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_3d_points_full_view" class="tsd-anchor"></a>
-					<h3>draw_<wbr>3<wbr>D_<wbr>points_<wbr>full_<wbr>view</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>3<wbr>D_<wbr>points_<wbr>full_<wbr>view</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>points_<wbr>full_<wbr>view<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>points_<wbr>full_<wbr>view<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L251">curve/functions.ts:251</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L304">curve/functions.ts:304</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -506,11 +592,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -520,15 +602,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_3d_points_full_view_proportional" class="tsd-anchor"></a>
-					<h3>draw_<wbr>3<wbr>D_<wbr>points_<wbr>full_<wbr>view_<wbr>proportional</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>3<wbr>D_<wbr>points_<wbr>full_<wbr>view_<wbr>proportional</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>points_<wbr>full_<wbr>view_<wbr>proportional<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>3<wbr>D_<wbr>points_<wbr>full_<wbr>view_<wbr>proportional<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L269">curve/functions.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L325">curve/functions.ts:325</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -548,11 +630,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -562,15 +640,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_connected" class="tsd-anchor"></a>
-					<h3>draw_<wbr>connected</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>connected</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>connected<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>connected<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L63">curve/functions.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L107">curve/functions.ts:107</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -589,11 +667,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -603,15 +677,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_connected_full_view" class="tsd-anchor"></a>
-					<h3>draw_<wbr>connected_<wbr>full_<wbr>view</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>connected_<wbr>full_<wbr>view</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>connected_<wbr>full_<wbr>view<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>connected_<wbr>full_<wbr>view<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L81">curve/functions.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L123">curve/functions.ts:123</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -631,11 +705,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -645,15 +715,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_connected_full_view_proportional" class="tsd-anchor"></a>
-					<h3>draw_<wbr>connected_<wbr>full_<wbr>view_<wbr>proportional</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>connected_<wbr>full_<wbr>view_<wbr>proportional</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>connected_<wbr>full_<wbr>view_<wbr>proportional<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>connected_<wbr>full_<wbr>view_<wbr>proportional<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L99">curve/functions.ts:99</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L144">curve/functions.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -673,11 +743,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -687,15 +753,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_points" class="tsd-anchor"></a>
-					<h3>draw_<wbr>points</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>points</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>points<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>points<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L119">curve/functions.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L165">curve/functions.ts:165</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -715,11 +781,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1,there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -729,15 +791,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_points_full_view" class="tsd-anchor"></a>
-					<h3>draw_<wbr>points_<wbr>full_<wbr>view</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>points_<wbr>full_<wbr>view</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>points_<wbr>full_<wbr>view<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>points_<wbr>full_<wbr>view<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L138">curve/functions.ts:138</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L182">curve/functions.ts:182</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -758,11 +820,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -772,15 +830,15 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="draw_points_full_view_proportional" class="tsd-anchor"></a>
-					<h3>draw_<wbr>points_<wbr>full_<wbr>view_<wbr>proportional</h3>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> draw_<wbr>points_<wbr>full_<wbr>view_<wbr>proportional</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">draw_<wbr>points_<wbr>full_<wbr>view_<wbr>proportional<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
+						<li class="tsd-signature tsd-kind-icon">draw_<wbr>points_<wbr>full_<wbr>view_<wbr>proportional<span class="tsd-signature-symbol">(</span>numPoints<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L157">curve/functions.ts:157</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L204">curve/functions.ts:204</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -801,11 +859,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>determines the number of points, lower than 65535, to be sampled.
-										Including 0 and 1, there are <code>num + 1</code> evenly spaced sample points</p>
-									</div>
+									<h5>numPoints: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RenderFunction</span></h4>
@@ -823,7 +877,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L431">curve/functions.ts:431</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L488">curve/functions.ts:488</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -859,7 +913,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L459">curve/functions.ts:459</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L516">curve/functions.ts:516</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -891,7 +945,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L349">curve/functions.ts:349</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L406">curve/functions.ts:406</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -961,7 +1015,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L302">curve/functions.ts:302</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L359">curve/functions.ts:359</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1011,7 +1065,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L322">curve/functions.ts:322</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L379">curve/functions.ts:379</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1075,7 +1129,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L286">curve/functions.ts:286</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L343">curve/functions.ts:343</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1119,7 +1173,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L637">curve/functions.ts:637</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L694">curve/functions.ts:694</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1157,7 +1211,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L416">curve/functions.ts:416</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L473">curve/functions.ts:473</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1193,7 +1247,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L511">curve/functions.ts:511</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L568">curve/functions.ts:568</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1232,7 +1286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L594">curve/functions.ts:594</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L651">curve/functions.ts:651</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1279,7 +1333,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L621">curve/functions.ts:621</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L678">curve/functions.ts:678</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1312,7 +1366,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L475">curve/functions.ts:475</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L532">curve/functions.ts:532</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1360,7 +1414,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L703">curve/functions.ts:703</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L760">curve/functions.ts:760</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1394,7 +1448,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L714">curve/functions.ts:714</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L771">curve/functions.ts:771</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1427,7 +1481,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L726">curve/functions.ts:726</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L783">curve/functions.ts:783</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1461,7 +1515,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L371">curve/functions.ts:371</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L428">curve/functions.ts:428</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1497,7 +1551,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L386">curve/functions.ts:386</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L443">curve/functions.ts:443</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1533,7 +1587,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/source-academy/modules/blob/ea10280/src/bundles/curve/functions.ts#L401">curve/functions.ts:401</a></li>
+									<li>Defined in <a href="https://github.com/source-academy/modules/blob/3455644/src/bundles/curve/functions.ts#L458">curve/functions.ts:458</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1570,6 +1624,9 @@
 					<li class=" tsd-kind-module">
 						<a href="binary_tree.html">binary_<wbr>tree</a>
 					</li>
+					<li class=" tsd-kind-module">
+						<a href="csg.html">csg</a>
+					</li>
 					<li class="current tsd-kind-module">
 						<a href="curve.html">curve</a>
 					</li>
@@ -1601,6 +1658,12 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="curve.html#animate_3d_curve" class="tsd-kind-icon">animate_<wbr>3<wbr>D_<wbr>curve</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="curve.html#animate_curve" class="tsd-kind-icon">animate_<wbr>curve</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="curve.html#arc" class="tsd-kind-icon">arc</a>
 					</li>

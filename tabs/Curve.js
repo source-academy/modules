@@ -1,9 +1,10 @@
-(function (React) {
+(function (React, ReactDOM) {
     'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
     var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
+    var ReactDOM__default = /*#__PURE__*/_interopDefaultLegacy(ReactDOM);
 
     (function() {
         const env = {};
@@ -17,64 +18,7 @@
         globalThis.process = { env:env };
     })();
 
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation.
-
-    Permission to use, copy, modify, and/or distribute this software for any
-    purpose with or without fee is hereby granted.
-
-    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-    PERFORMANCE OF THIS SOFTWARE.
-    ***************************************************************************** */
-    /* global Reflect, Promise */
-
-    var extendStatics = function(d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-
-    function __extends(d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    }
-
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
-
-    function __rest(s, e) {
-        var t = {};
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-            t[p] = s[p];
-        if (s != null && typeof Object.getOwnPropertySymbols === "function")
-            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                    t[p[i]] = s[p[i]];
-            }
-        return t;
-    }
-
-    function __decorate(decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    }
+    var glAnimation=function(){function glAnimation(duration,fps){this.duration=duration;this.fps=fps;}glAnimation.isAnimation=function(obj){return obj.fps!==undefined};return glAnimation}();
 
     /*
      * Copyright 2018 Palantir Technologies, Inc. All rights reserved.
@@ -117,7 +61,7 @@
     /**
      * The four basic intents.
      */
-    var Intent = {
+    var Intent$1 = {
         NONE: "none",
         PRIMARY: "primary",
         SUCCESS: "success",
@@ -125,40 +69,48 @@
         DANGER: "danger",
     };
 
-    var NS = process.env.BLUEPRINT_NAMESPACE || process.env.REACT_APP_BLUEPRINT_NAMESPACE || "bp3";
+    var NS$2 = process.env.BLUEPRINT_NAMESPACE || process.env.REACT_APP_BLUEPRINT_NAMESPACE || "bp3";
     // modifiers
-    var ACTIVE = NS + "-active";
-    var ALIGN_LEFT = NS + "-align-left";
-    var ALIGN_RIGHT = NS + "-align-right";
-    var DISABLED = NS + "-disabled";
-    var FILL = NS + "-fill";
-    var LARGE = NS + "-large";
-    var LOADING = NS + "-loading";
-    var MINIMAL = NS + "-minimal";
-    var OUTLINED = NS + "-outlined";
-    var SMALL = NS + "-small";
-    var VERTICAL = NS + "-vertical";
-    intentClass(Intent.PRIMARY);
-    intentClass(Intent.SUCCESS);
-    intentClass(Intent.WARNING);
-    intentClass(Intent.DANGER);
-    var BUTTON = NS + "-button";
+    var ACTIVE$1 = NS$2 + "-active";
+    var ALIGN_LEFT = NS$2 + "-align-left";
+    var ALIGN_RIGHT = NS$2 + "-align-right";
+    var DISABLED$1 = NS$2 + "-disabled";
+    var FILL$1 = NS$2 + "-fill";
+    var INLINE = NS$2 + "-inline";
+    var LARGE = NS$2 + "-large";
+    var LOADING = NS$2 + "-loading";
+    var MINIMAL$1 = NS$2 + "-minimal";
+    var OUTLINED = NS$2 + "-outlined";
+    var SMALL = NS$2 + "-small";
+    var VERTICAL = NS$2 + "-vertical";
+    intentClass$1(Intent$1.PRIMARY);
+    intentClass$1(Intent$1.SUCCESS);
+    intentClass$1(Intent$1.WARNING);
+    intentClass$1(Intent$1.DANGER);
+    var BUTTON = NS$2 + "-button";
     var BUTTON_SPINNER = BUTTON + "-spinner";
     var BUTTON_TEXT = BUTTON + "-text";
-    var SLIDER = NS + "-slider";
+    var CONTROL = NS$2 + "-control";
+    var CONTROL_INDICATOR = CONTROL + "-indicator";
+    var CONTROL_INDICATOR_CHILD = CONTROL_INDICATOR + "-child";
+    var CHECKBOX = NS$2 + "-checkbox";
+    var RADIO = NS$2 + "-radio";
+    var SWITCH = NS$2 + "-switch";
+    var SWITCH_INNER_TEXT = SWITCH + "-inner-text";
+    var SLIDER = NS$2 + "-slider";
     var SLIDER_AXIS = SLIDER + "-axis";
     var SLIDER_HANDLE = SLIDER + "-handle";
     var SLIDER_LABEL = SLIDER + "-label";
     var SLIDER_TRACK = SLIDER + "-track";
     var SLIDER_PROGRESS = SLIDER + "-progress";
-    var START = NS + "-start";
-    var END = NS + "-end";
-    var SPINNER = NS + "-spinner";
+    var START = NS$2 + "-start";
+    var END = NS$2 + "-end";
+    var SPINNER = NS$2 + "-spinner";
     var SPINNER_ANIMATION = SPINNER + "-animation";
     var SPINNER_HEAD = SPINNER + "-head";
-    var SPINNER_NO_SPIN = NS + "-no-spin";
+    var SPINNER_NO_SPIN = NS$2 + "-no-spin";
     var SPINNER_TRACK$1 = SPINNER + "-track";
-    var ICON = NS + "-icon";
+    var ICON = NS$2 + "-icon";
     /** Return CSS class for alignment. */
     function alignmentClass(alignment) {
         switch (alignment) {
@@ -174,13 +126,74 @@
         if (iconName == null) {
             return undefined;
         }
-        return iconName.indexOf(NS + "-icon-") === 0 ? iconName : NS + "-icon-" + iconName;
+        return iconName.indexOf(NS$2 + "-icon-") === 0 ? iconName : NS$2 + "-icon-" + iconName;
     }
-    function intentClass(intent) {
-        if (intent == null || intent === Intent.NONE) {
+    function intentClass$1(intent) {
+        if (intent == null || intent === Intent$1.NONE) {
             return undefined;
         }
-        return NS + "-intent-" + intent.toLowerCase();
+        return NS$2 + "-intent-" + intent.toLowerCase();
+    }
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    function __rest(s, e) {
+        var t = {};
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                    t[p[i]] = s[p[i]];
+            }
+        return t;
+    }
+
+    function __decorate(decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
     }
 
     /*
@@ -235,7 +248,7 @@
      */
     /** Returns whether the value is a function. Acts as a type guard. */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    function isFunction(value) {
+    function isFunction$1(value) {
         return typeof value === "function";
     }
 
@@ -254,17 +267,17 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    var ns = "[Blueprint]";
-    var CLAMP_MIN_MAX = ns + " clamp: max cannot be less than min";
-    var SLIDER_ZERO_STEP = ns + " <Slider> stepSize must be greater than zero.";
-    var SLIDER_ZERO_LABEL_STEP = ns + " <Slider> labelStepSize must be greater than zero.";
-    var MULTISLIDER_INVALID_CHILD = ns + " <MultiSlider> children must be <SliderHandle>s or <SliderTrackStop>s";
-    var MULTISLIDER_WARN_LABEL_STEP_SIZE_LABEL_VALUES_MUTEX = ns +
+    var ns$2 = "[Blueprint]";
+    var CLAMP_MIN_MAX = ns$2 + " clamp: max cannot be less than min";
+    var SLIDER_ZERO_STEP = ns$2 + " <Slider> stepSize must be greater than zero.";
+    var SLIDER_ZERO_LABEL_STEP = ns$2 + " <Slider> labelStepSize must be greater than zero.";
+    var MULTISLIDER_INVALID_CHILD = ns$2 + " <MultiSlider> children must be <SliderHandle>s or <SliderTrackStop>s";
+    var MULTISLIDER_WARN_LABEL_STEP_SIZE_LABEL_VALUES_MUTEX = ns$2 +
         " <MultiSlider> labelStepSize and labelValues prop are mutually exclusive, with labelStepSize taking priority.";
-    var SPINNER_WARN_CLASSES_SIZE = ns + " <Spinner> Classes.SMALL/LARGE are ignored if size prop is set.";
+    var SPINNER_WARN_CLASSES_SIZE = ns$2 + " <Spinner> Classes.SMALL/LARGE are ignored if size prop is set.";
 
     /** Returns whether `process.env.NODE_ENV` exists and equals `env`. */
-    function isNodeEnv(env) {
+    function isNodeEnv$1(env) {
         return typeof process !== "undefined" && process.env && process.env.NODE_ENV === env;
     }
     /**
@@ -329,7 +342,7 @@
      * @param ComponentType desired component type of element
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    function isElementOfType(element, ComponentType) {
+    function isElementOfType$1(element, ComponentType) {
         return (element != null &&
             element.type != null &&
             element.type.displayName != null &&
@@ -351,20 +364,20 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    function isRefObject(value) {
+    function isRefObject$1(value) {
         return value != null && typeof value !== "function";
     }
-    function isRefCallback(value) {
+    function isRefCallback$1(value) {
         return typeof value === "function";
     }
     /**
      * Assign the given ref to a target, either a React ref object or a callback which takes the ref as its first argument.
      */
-    function setRef(refTarget, ref) {
-        if (isRefObject(refTarget)) {
+    function setRef$1(refTarget, ref) {
+        if (isRefObject$1(refTarget)) {
             refTarget.current = ref;
         }
-        else if (isRefCallback(refTarget)) {
+        else if (isRefCallback$1(refTarget)) {
             refTarget(ref);
         }
     }
@@ -377,7 +390,7 @@
     function refHandler(refTargetParent, refTargetKey, refProp) {
         return function (ref) {
             refTargetParent[refTargetKey] = ref;
-            setRef(refProp, ref);
+            setRef$1(refProp, ref);
         };
     }
 
@@ -386,7 +399,7 @@
      * in order to add some common functionality like runtime props validation.
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    var AbstractPureComponent2 = /** @class */ (function (_super) {
+    var AbstractPureComponent2$1 = /** @class */ (function (_super) {
         __extends(AbstractPureComponent2, _super);
         function AbstractPureComponent2(props, context) {
             var _this = _super.call(this, props, context) || this;
@@ -417,13 +430,13 @@
                     _this.requestIds = [];
                 }
             };
-            if (!isNodeEnv("production")) {
+            if (!isNodeEnv$1("production")) {
                 _this.validateProps(_this.props);
             }
             return _this;
         }
         AbstractPureComponent2.prototype.componentDidUpdate = function (_prevProps, _prevState, _snapshot) {
-            if (!isNodeEnv("production")) {
+            if (!isNodeEnv$1("production")) {
                 this.validateProps(this.props);
             }
         };
@@ -468,7 +481,7 @@
         return AbstractPureComponent2;
     }(React.PureComponent));
 
-    var DISPLAYNAME_PREFIX = "Blueprint3";
+    var DISPLAYNAME_PREFIX$1 = "Blueprint3";
     /** A collection of curated prop keys used across our Components which are not valid HTMLElement props. */
     var INVALID_PROPS = [
         "active",
@@ -544,7 +557,7 @@
         return keyCode === ENTER || keyCode === SPACE;
     }
 
-    var classnames = createCommonjsModule(function (module) {
+    var classnames$1 = createCommonjsModule(function (module) {
     /*!
       Copyright (c) 2017 Jed Watson.
       Licensed under the MIT License (MIT), see
@@ -760,8 +773,3696 @@
     unwrapExports(reactLifecyclesCompat_cjs);
     var reactLifecyclesCompat_cjs_1 = reactLifecyclesCompat_cjs.polyfill;
 
+    var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):60103,d=b?Symbol.for("react.portal"):60106,e=b?Symbol.for("react.fragment"):60107,f=b?Symbol.for("react.strict_mode"):60108,g=b?Symbol.for("react.profiler"):60114,h=b?Symbol.for("react.provider"):60109,k=b?Symbol.for("react.context"):60110,l=b?Symbol.for("react.async_mode"):60111,m=b?Symbol.for("react.concurrent_mode"):60111,n=b?Symbol.for("react.forward_ref"):60112,p=b?Symbol.for("react.suspense"):60113,q=b?
+    Symbol.for("react.suspense_list"):60120,r=b?Symbol.for("react.memo"):60115,t=b?Symbol.for("react.lazy"):60116,v=b?Symbol.for("react.block"):60121,w=b?Symbol.for("react.fundamental"):60117,x=b?Symbol.for("react.responder"):60118,y=b?Symbol.for("react.scope"):60119;
+    function z(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case t:case r:case h:return a;default:return u}}case d:return u}}}function A(a){return z(a)===m}var AsyncMode=l;var ConcurrentMode=m;var ContextConsumer=k;var ContextProvider=h;var Element$1=c;var ForwardRef=n;var Fragment=e;var Lazy=t;var Memo=r;var Portal$1=d;
+    var Profiler=g;var StrictMode=f;var Suspense=p;var isAsyncMode=function(a){return A(a)||z(a)===l};var isConcurrentMode=A;var isContextConsumer=function(a){return z(a)===k};var isContextProvider=function(a){return z(a)===h};var isElement$1=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};var isForwardRef=function(a){return z(a)===n};var isFragment=function(a){return z(a)===e};var isLazy=function(a){return z(a)===t};
+    var isMemo=function(a){return z(a)===r};var isPortal=function(a){return z(a)===d};var isProfiler=function(a){return z(a)===g};var isStrictMode=function(a){return z(a)===f};var isSuspense=function(a){return z(a)===p};
+    var isValidElementType=function(a){return "string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||a===q||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n||a.$$typeof===w||a.$$typeof===x||a.$$typeof===y||a.$$typeof===v)};var typeOf=z;
+
+    var reactIs_production_min = {
+    	AsyncMode: AsyncMode,
+    	ConcurrentMode: ConcurrentMode,
+    	ContextConsumer: ContextConsumer,
+    	ContextProvider: ContextProvider,
+    	Element: Element$1,
+    	ForwardRef: ForwardRef,
+    	Fragment: Fragment,
+    	Lazy: Lazy,
+    	Memo: Memo,
+    	Portal: Portal$1,
+    	Profiler: Profiler,
+    	StrictMode: StrictMode,
+    	Suspense: Suspense,
+    	isAsyncMode: isAsyncMode,
+    	isConcurrentMode: isConcurrentMode,
+    	isContextConsumer: isContextConsumer,
+    	isContextProvider: isContextProvider,
+    	isElement: isElement$1,
+    	isForwardRef: isForwardRef,
+    	isFragment: isFragment,
+    	isLazy: isLazy,
+    	isMemo: isMemo,
+    	isPortal: isPortal,
+    	isProfiler: isProfiler,
+    	isStrictMode: isStrictMode,
+    	isSuspense: isSuspense,
+    	isValidElementType: isValidElementType,
+    	typeOf: typeOf
+    };
+
+    var reactIs_development = createCommonjsModule(function (module, exports) {
+
+
+
+    if (process.env.NODE_ENV !== "production") {
+      (function() {
+
+    // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+    // nor polyfill, then a plain number is used for performance.
+    var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+    var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+    var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+    var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+    var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+    var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+    var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+    var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+    // (unstable) APIs that have been removed. Can we remove the symbols?
+
+    var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+    var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+    var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+    var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+    var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+    var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+    var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
+    var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+    var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+    var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+
+    function isValidElementType(type) {
+      return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+      type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+    }
+
+    function typeOf(object) {
+      if (typeof object === 'object' && object !== null) {
+        var $$typeof = object.$$typeof;
+
+        switch ($$typeof) {
+          case REACT_ELEMENT_TYPE:
+            var type = object.type;
+
+            switch (type) {
+              case REACT_ASYNC_MODE_TYPE:
+              case REACT_CONCURRENT_MODE_TYPE:
+              case REACT_FRAGMENT_TYPE:
+              case REACT_PROFILER_TYPE:
+              case REACT_STRICT_MODE_TYPE:
+              case REACT_SUSPENSE_TYPE:
+                return type;
+
+              default:
+                var $$typeofType = type && type.$$typeof;
+
+                switch ($$typeofType) {
+                  case REACT_CONTEXT_TYPE:
+                  case REACT_FORWARD_REF_TYPE:
+                  case REACT_LAZY_TYPE:
+                  case REACT_MEMO_TYPE:
+                  case REACT_PROVIDER_TYPE:
+                    return $$typeofType;
+
+                  default:
+                    return $$typeof;
+                }
+
+            }
+
+          case REACT_PORTAL_TYPE:
+            return $$typeof;
+        }
+      }
+
+      return undefined;
+    } // AsyncMode is deprecated along with isAsyncMode
+
+    var AsyncMode = REACT_ASYNC_MODE_TYPE;
+    var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+    var ContextConsumer = REACT_CONTEXT_TYPE;
+    var ContextProvider = REACT_PROVIDER_TYPE;
+    var Element = REACT_ELEMENT_TYPE;
+    var ForwardRef = REACT_FORWARD_REF_TYPE;
+    var Fragment = REACT_FRAGMENT_TYPE;
+    var Lazy = REACT_LAZY_TYPE;
+    var Memo = REACT_MEMO_TYPE;
+    var Portal = REACT_PORTAL_TYPE;
+    var Profiler = REACT_PROFILER_TYPE;
+    var StrictMode = REACT_STRICT_MODE_TYPE;
+    var Suspense = REACT_SUSPENSE_TYPE;
+    var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+
+    function isAsyncMode(object) {
+      {
+        if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+          hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+          console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+        }
+      }
+
+      return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+    }
+    function isConcurrentMode(object) {
+      return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+    }
+    function isContextConsumer(object) {
+      return typeOf(object) === REACT_CONTEXT_TYPE;
+    }
+    function isContextProvider(object) {
+      return typeOf(object) === REACT_PROVIDER_TYPE;
+    }
+    function isElement(object) {
+      return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+    }
+    function isForwardRef(object) {
+      return typeOf(object) === REACT_FORWARD_REF_TYPE;
+    }
+    function isFragment(object) {
+      return typeOf(object) === REACT_FRAGMENT_TYPE;
+    }
+    function isLazy(object) {
+      return typeOf(object) === REACT_LAZY_TYPE;
+    }
+    function isMemo(object) {
+      return typeOf(object) === REACT_MEMO_TYPE;
+    }
+    function isPortal(object) {
+      return typeOf(object) === REACT_PORTAL_TYPE;
+    }
+    function isProfiler(object) {
+      return typeOf(object) === REACT_PROFILER_TYPE;
+    }
+    function isStrictMode(object) {
+      return typeOf(object) === REACT_STRICT_MODE_TYPE;
+    }
+    function isSuspense(object) {
+      return typeOf(object) === REACT_SUSPENSE_TYPE;
+    }
+
+    exports.AsyncMode = AsyncMode;
+    exports.ConcurrentMode = ConcurrentMode;
+    exports.ContextConsumer = ContextConsumer;
+    exports.ContextProvider = ContextProvider;
+    exports.Element = Element;
+    exports.ForwardRef = ForwardRef;
+    exports.Fragment = Fragment;
+    exports.Lazy = Lazy;
+    exports.Memo = Memo;
+    exports.Portal = Portal;
+    exports.Profiler = Profiler;
+    exports.StrictMode = StrictMode;
+    exports.Suspense = Suspense;
+    exports.isAsyncMode = isAsyncMode;
+    exports.isConcurrentMode = isConcurrentMode;
+    exports.isContextConsumer = isContextConsumer;
+    exports.isContextProvider = isContextProvider;
+    exports.isElement = isElement;
+    exports.isForwardRef = isForwardRef;
+    exports.isFragment = isFragment;
+    exports.isLazy = isLazy;
+    exports.isMemo = isMemo;
+    exports.isPortal = isPortal;
+    exports.isProfiler = isProfiler;
+    exports.isStrictMode = isStrictMode;
+    exports.isSuspense = isSuspense;
+    exports.isValidElementType = isValidElementType;
+    exports.typeOf = typeOf;
+      })();
+    }
+    });
+    reactIs_development.AsyncMode;
+    reactIs_development.ConcurrentMode;
+    reactIs_development.ContextConsumer;
+    reactIs_development.ContextProvider;
+    reactIs_development.Element;
+    reactIs_development.ForwardRef;
+    reactIs_development.Fragment;
+    reactIs_development.Lazy;
+    reactIs_development.Memo;
+    reactIs_development.Portal;
+    reactIs_development.Profiler;
+    reactIs_development.StrictMode;
+    reactIs_development.Suspense;
+    reactIs_development.isAsyncMode;
+    reactIs_development.isConcurrentMode;
+    reactIs_development.isContextConsumer;
+    reactIs_development.isContextProvider;
+    reactIs_development.isElement;
+    reactIs_development.isForwardRef;
+    reactIs_development.isFragment;
+    reactIs_development.isLazy;
+    reactIs_development.isMemo;
+    reactIs_development.isPortal;
+    reactIs_development.isProfiler;
+    reactIs_development.isStrictMode;
+    reactIs_development.isSuspense;
+    reactIs_development.isValidElementType;
+    reactIs_development.typeOf;
+
+    var reactIs = createCommonjsModule(function (module) {
+
+    if (process.env.NODE_ENV === 'production') {
+      module.exports = reactIs_production_min;
+    } else {
+      module.exports = reactIs_development;
+    }
+    });
+
+    /* eslint-disable no-unused-vars */
+    var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
+    var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+    function toObject(val) {
+    	if (val === null || val === undefined) {
+    		throw new TypeError('Object.assign cannot be called with null or undefined');
+    	}
+
+    	return Object(val);
+    }
+
+    function shouldUseNative() {
+    	try {
+    		if (!Object.assign) {
+    			return false;
+    		}
+
+    		// Detect buggy property enumeration order in older V8 versions.
+
+    		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+    		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+    		test1[5] = 'de';
+    		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+    			return false;
+    		}
+
+    		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+    		var test2 = {};
+    		for (var i = 0; i < 10; i++) {
+    			test2['_' + String.fromCharCode(i)] = i;
+    		}
+    		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+    			return test2[n];
+    		});
+    		if (order2.join('') !== '0123456789') {
+    			return false;
+    		}
+
+    		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+    		var test3 = {};
+    		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+    			test3[letter] = letter;
+    		});
+    		if (Object.keys(Object.assign({}, test3)).join('') !==
+    				'abcdefghijklmnopqrst') {
+    			return false;
+    		}
+
+    		return true;
+    	} catch (err) {
+    		// We don't expect any of the above to throw, but better to be safe.
+    		return false;
+    	}
+    }
+
+    var objectAssign = shouldUseNative() ? Object.assign : function (target, source) {
+    	var from;
+    	var to = toObject(target);
+    	var symbols;
+
+    	for (var s = 1; s < arguments.length; s++) {
+    		from = Object(arguments[s]);
+
+    		for (var key in from) {
+    			if (hasOwnProperty.call(from, key)) {
+    				to[key] = from[key];
+    			}
+    		}
+
+    		if (getOwnPropertySymbols) {
+    			symbols = getOwnPropertySymbols(from);
+    			for (var i = 0; i < symbols.length; i++) {
+    				if (propIsEnumerable.call(from, symbols[i])) {
+    					to[symbols[i]] = from[symbols[i]];
+    				}
+    			}
+    		}
+    	}
+
+    	return to;
+    };
+
+    var ReactPropTypesSecret$1 = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+    var ReactPropTypesSecret_1 = ReactPropTypesSecret$1;
+
+    var printWarning$2 = function() {};
+
+    if (process.env.NODE_ENV !== 'production') {
+      var ReactPropTypesSecret = ReactPropTypesSecret_1;
+      var loggedTypeFailures = {};
+      var has$1 = Function.call.bind(Object.prototype.hasOwnProperty);
+
+      printWarning$2 = function(text) {
+        var message = 'Warning: ' + text;
+        if (typeof console !== 'undefined') {
+          console.error(message);
+        }
+        try {
+          // --- Welcome to debugging React ---
+          // This error was thrown as a convenience so that you can use this stack
+          // to find the callsite that caused this warning to fire.
+          throw new Error(message);
+        } catch (x) {}
+      };
+    }
+
+    /**
+     * Assert that the values match with the type specs.
+     * Error messages are memorized and will only be shown once.
+     *
+     * @param {object} typeSpecs Map of name to a ReactPropType
+     * @param {object} values Runtime values that need to be type-checked
+     * @param {string} location e.g. "prop", "context", "child context"
+     * @param {string} componentName Name of the component for error messages.
+     * @param {?Function} getStack Returns the component stack.
+     * @private
+     */
+    function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
+      if (process.env.NODE_ENV !== 'production') {
+        for (var typeSpecName in typeSpecs) {
+          if (has$1(typeSpecs, typeSpecName)) {
+            var error;
+            // Prop type validation may throw. In case they do, we don't want to
+            // fail the render phase where it didn't fail before. So we log it.
+            // After these have been cleaned up, we'll let them throw.
+            try {
+              // This is intentionally an invariant that gets caught. It's the same
+              // behavior as without this statement except with a better message.
+              if (typeof typeSpecs[typeSpecName] !== 'function') {
+                var err = Error(
+                  (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
+                  'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.'
+                );
+                err.name = 'Invariant Violation';
+                throw err;
+              }
+              error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+            } catch (ex) {
+              error = ex;
+            }
+            if (error && !(error instanceof Error)) {
+              printWarning$2(
+                (componentName || 'React class') + ': type specification of ' +
+                location + ' `' + typeSpecName + '` is invalid; the type checker ' +
+                'function must return `null` or an `Error` but returned a ' + typeof error + '. ' +
+                'You may have forgotten to pass an argument to the type checker ' +
+                'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
+                'shape all require an argument).'
+              );
+            }
+            if (error instanceof Error && !(error.message in loggedTypeFailures)) {
+              // Only monitor this failure once because there tends to be a lot of the
+              // same error.
+              loggedTypeFailures[error.message] = true;
+
+              var stack = getStack ? getStack() : '';
+
+              printWarning$2(
+                'Failed ' + location + ' type: ' + error.message + (stack != null ? stack : '')
+              );
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Resets warning cache when testing.
+     *
+     * @private
+     */
+    checkPropTypes.resetWarningCache = function() {
+      if (process.env.NODE_ENV !== 'production') {
+        loggedTypeFailures = {};
+      }
+    };
+
+    var checkPropTypes_1 = checkPropTypes;
+
+    var has = Function.call.bind(Object.prototype.hasOwnProperty);
+    var printWarning$1 = function() {};
+
+    if (process.env.NODE_ENV !== 'production') {
+      printWarning$1 = function(text) {
+        var message = 'Warning: ' + text;
+        if (typeof console !== 'undefined') {
+          console.error(message);
+        }
+        try {
+          // --- Welcome to debugging React ---
+          // This error was thrown as a convenience so that you can use this stack
+          // to find the callsite that caused this warning to fire.
+          throw new Error(message);
+        } catch (x) {}
+      };
+    }
+
+    function emptyFunctionThatReturnsNull() {
+      return null;
+    }
+
+    var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
+      /* global Symbol */
+      var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+      var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+
+      /**
+       * Returns the iterator method function contained on the iterable object.
+       *
+       * Be sure to invoke the function with the iterable as context:
+       *
+       *     var iteratorFn = getIteratorFn(myIterable);
+       *     if (iteratorFn) {
+       *       var iterator = iteratorFn.call(myIterable);
+       *       ...
+       *     }
+       *
+       * @param {?object} maybeIterable
+       * @return {?function}
+       */
+      function getIteratorFn(maybeIterable) {
+        var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+        if (typeof iteratorFn === 'function') {
+          return iteratorFn;
+        }
+      }
+
+      /**
+       * Collection of methods that allow declaration and validation of props that are
+       * supplied to React components. Example usage:
+       *
+       *   var Props = require('ReactPropTypes');
+       *   var MyArticle = React.createClass({
+       *     propTypes: {
+       *       // An optional string prop named "description".
+       *       description: Props.string,
+       *
+       *       // A required enum prop named "category".
+       *       category: Props.oneOf(['News','Photos']).isRequired,
+       *
+       *       // A prop named "dialog" that requires an instance of Dialog.
+       *       dialog: Props.instanceOf(Dialog).isRequired
+       *     },
+       *     render: function() { ... }
+       *   });
+       *
+       * A more formal specification of how these methods are used:
+       *
+       *   type := array|bool|func|object|number|string|oneOf([...])|instanceOf(...)
+       *   decl := ReactPropTypes.{type}(.isRequired)?
+       *
+       * Each and every declaration produces a function with the same signature. This
+       * allows the creation of custom validation functions. For example:
+       *
+       *  var MyLink = React.createClass({
+       *    propTypes: {
+       *      // An optional string or URI prop named "href".
+       *      href: function(props, propName, componentName) {
+       *        var propValue = props[propName];
+       *        if (propValue != null && typeof propValue !== 'string' &&
+       *            !(propValue instanceof URI)) {
+       *          return new Error(
+       *            'Expected a string or an URI for ' + propName + ' in ' +
+       *            componentName
+       *          );
+       *        }
+       *      }
+       *    },
+       *    render: function() {...}
+       *  });
+       *
+       * @internal
+       */
+
+      var ANONYMOUS = '<<anonymous>>';
+
+      // Important!
+      // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
+      var ReactPropTypes = {
+        array: createPrimitiveTypeChecker('array'),
+        bool: createPrimitiveTypeChecker('boolean'),
+        func: createPrimitiveTypeChecker('function'),
+        number: createPrimitiveTypeChecker('number'),
+        object: createPrimitiveTypeChecker('object'),
+        string: createPrimitiveTypeChecker('string'),
+        symbol: createPrimitiveTypeChecker('symbol'),
+
+        any: createAnyTypeChecker(),
+        arrayOf: createArrayOfTypeChecker,
+        element: createElementTypeChecker(),
+        elementType: createElementTypeTypeChecker(),
+        instanceOf: createInstanceTypeChecker,
+        node: createNodeChecker(),
+        objectOf: createObjectOfTypeChecker,
+        oneOf: createEnumTypeChecker,
+        oneOfType: createUnionTypeChecker,
+        shape: createShapeTypeChecker,
+        exact: createStrictShapeTypeChecker,
+      };
+
+      /**
+       * inlined Object.is polyfill to avoid requiring consumers ship their own
+       * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+       */
+      /*eslint-disable no-self-compare*/
+      function is(x, y) {
+        // SameValue algorithm
+        if (x === y) {
+          // Steps 1-5, 7-10
+          // Steps 6.b-6.e: +0 != -0
+          return x !== 0 || 1 / x === 1 / y;
+        } else {
+          // Step 6.a: NaN == NaN
+          return x !== x && y !== y;
+        }
+      }
+      /*eslint-enable no-self-compare*/
+
+      /**
+       * We use an Error-like object for backward compatibility as people may call
+       * PropTypes directly and inspect their output. However, we don't use real
+       * Errors anymore. We don't inspect their stack anyway, and creating them
+       * is prohibitively expensive if they are created too often, such as what
+       * happens in oneOfType() for any type before the one that matched.
+       */
+      function PropTypeError(message) {
+        this.message = message;
+        this.stack = '';
+      }
+      // Make `instanceof Error` still work for returned errors.
+      PropTypeError.prototype = Error.prototype;
+
+      function createChainableTypeChecker(validate) {
+        if (process.env.NODE_ENV !== 'production') {
+          var manualPropTypeCallCache = {};
+          var manualPropTypeWarningCount = 0;
+        }
+        function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
+          componentName = componentName || ANONYMOUS;
+          propFullName = propFullName || propName;
+
+          if (secret !== ReactPropTypesSecret_1) {
+            if (throwOnDirectAccess) {
+              // New behavior only for users of `prop-types` package
+              var err = new Error(
+                'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
+                'Use `PropTypes.checkPropTypes()` to call them. ' +
+                'Read more at http://fb.me/use-check-prop-types'
+              );
+              err.name = 'Invariant Violation';
+              throw err;
+            } else if (process.env.NODE_ENV !== 'production' && typeof console !== 'undefined') {
+              // Old behavior for people using React.PropTypes
+              var cacheKey = componentName + ':' + propName;
+              if (
+                !manualPropTypeCallCache[cacheKey] &&
+                // Avoid spamming the console because they are often not actionable except for lib authors
+                manualPropTypeWarningCount < 3
+              ) {
+                printWarning$1(
+                  'You are manually calling a React.PropTypes validation ' +
+                  'function for the `' + propFullName + '` prop on `' + componentName  + '`. This is deprecated ' +
+                  'and will throw in the standalone `prop-types` package. ' +
+                  'You may be seeing this warning due to a third-party PropTypes ' +
+                  'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.'
+                );
+                manualPropTypeCallCache[cacheKey] = true;
+                manualPropTypeWarningCount++;
+              }
+            }
+          }
+          if (props[propName] == null) {
+            if (isRequired) {
+              if (props[propName] === null) {
+                return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required ' + ('in `' + componentName + '`, but its value is `null`.'));
+              }
+              return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required in ' + ('`' + componentName + '`, but its value is `undefined`.'));
+            }
+            return null;
+          } else {
+            return validate(props, propName, componentName, location, propFullName);
+          }
+        }
+
+        var chainedCheckType = checkType.bind(null, false);
+        chainedCheckType.isRequired = checkType.bind(null, true);
+
+        return chainedCheckType;
+      }
+
+      function createPrimitiveTypeChecker(expectedType) {
+        function validate(props, propName, componentName, location, propFullName, secret) {
+          var propValue = props[propName];
+          var propType = getPropType(propValue);
+          if (propType !== expectedType) {
+            // `propValue` being instance of, say, date/regexp, pass the 'object'
+            // check, but we can offer a more precise error message here rather than
+            // 'of type `object`'.
+            var preciseType = getPreciseType(propValue);
+
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createAnyTypeChecker() {
+        return createChainableTypeChecker(emptyFunctionThatReturnsNull);
+      }
+
+      function createArrayOfTypeChecker(typeChecker) {
+        function validate(props, propName, componentName, location, propFullName) {
+          if (typeof typeChecker !== 'function') {
+            return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside arrayOf.');
+          }
+          var propValue = props[propName];
+          if (!Array.isArray(propValue)) {
+            var propType = getPropType(propValue);
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an array.'));
+          }
+          for (var i = 0; i < propValue.length; i++) {
+            var error = typeChecker(propValue, i, componentName, location, propFullName + '[' + i + ']', ReactPropTypesSecret_1);
+            if (error instanceof Error) {
+              return error;
+            }
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createElementTypeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          if (!isValidElement(propValue)) {
+            var propType = getPropType(propValue);
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement.'));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createElementTypeTypeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          if (!reactIs.isValidElementType(propValue)) {
+            var propType = getPropType(propValue);
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement type.'));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createInstanceTypeChecker(expectedClass) {
+        function validate(props, propName, componentName, location, propFullName) {
+          if (!(props[propName] instanceof expectedClass)) {
+            var expectedClassName = expectedClass.name || ANONYMOUS;
+            var actualClassName = getClassName(props[propName]);
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + actualClassName + '` supplied to `' + componentName + '`, expected ') + ('instance of `' + expectedClassName + '`.'));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createEnumTypeChecker(expectedValues) {
+        if (!Array.isArray(expectedValues)) {
+          if (process.env.NODE_ENV !== 'production') {
+            if (arguments.length > 1) {
+              printWarning$1(
+                'Invalid arguments supplied to oneOf, expected an array, got ' + arguments.length + ' arguments. ' +
+                'A common mistake is to write oneOf(x, y, z) instead of oneOf([x, y, z]).'
+              );
+            } else {
+              printWarning$1('Invalid argument supplied to oneOf, expected an array.');
+            }
+          }
+          return emptyFunctionThatReturnsNull;
+        }
+
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          for (var i = 0; i < expectedValues.length; i++) {
+            if (is(propValue, expectedValues[i])) {
+              return null;
+            }
+          }
+
+          var valuesString = JSON.stringify(expectedValues, function replacer(key, value) {
+            var type = getPreciseType(value);
+            if (type === 'symbol') {
+              return String(value);
+            }
+            return value;
+          });
+          return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + String(propValue) + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createObjectOfTypeChecker(typeChecker) {
+        function validate(props, propName, componentName, location, propFullName) {
+          if (typeof typeChecker !== 'function') {
+            return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside objectOf.');
+          }
+          var propValue = props[propName];
+          var propType = getPropType(propValue);
+          if (propType !== 'object') {
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an object.'));
+          }
+          for (var key in propValue) {
+            if (has(propValue, key)) {
+              var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret_1);
+              if (error instanceof Error) {
+                return error;
+              }
+            }
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createUnionTypeChecker(arrayOfTypeCheckers) {
+        if (!Array.isArray(arrayOfTypeCheckers)) {
+          process.env.NODE_ENV !== 'production' ? printWarning$1('Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
+          return emptyFunctionThatReturnsNull;
+        }
+
+        for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+          var checker = arrayOfTypeCheckers[i];
+          if (typeof checker !== 'function') {
+            printWarning$1(
+              'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
+              'received ' + getPostfixForTypeWarning(checker) + ' at index ' + i + '.'
+            );
+            return emptyFunctionThatReturnsNull;
+          }
+        }
+
+        function validate(props, propName, componentName, location, propFullName) {
+          for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+            var checker = arrayOfTypeCheckers[i];
+            if (checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret_1) == null) {
+              return null;
+            }
+          }
+
+          return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`.'));
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createNodeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+          if (!isNode(props[propName])) {
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`, expected a ReactNode.'));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createShapeTypeChecker(shapeTypes) {
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          var propType = getPropType(propValue);
+          if (propType !== 'object') {
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+          }
+          for (var key in shapeTypes) {
+            var checker = shapeTypes[key];
+            if (!checker) {
+              continue;
+            }
+            var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret_1);
+            if (error) {
+              return error;
+            }
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+
+      function createStrictShapeTypeChecker(shapeTypes) {
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          var propType = getPropType(propValue);
+          if (propType !== 'object') {
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+          }
+          // We need to check all keys in case some are required but missing from
+          // props.
+          var allKeys = objectAssign({}, props[propName], shapeTypes);
+          for (var key in allKeys) {
+            var checker = shapeTypes[key];
+            if (!checker) {
+              return new PropTypeError(
+                'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
+                '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
+                '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
+              );
+            }
+            var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret_1);
+            if (error) {
+              return error;
+            }
+          }
+          return null;
+        }
+
+        return createChainableTypeChecker(validate);
+      }
+
+      function isNode(propValue) {
+        switch (typeof propValue) {
+          case 'number':
+          case 'string':
+          case 'undefined':
+            return true;
+          case 'boolean':
+            return !propValue;
+          case 'object':
+            if (Array.isArray(propValue)) {
+              return propValue.every(isNode);
+            }
+            if (propValue === null || isValidElement(propValue)) {
+              return true;
+            }
+
+            var iteratorFn = getIteratorFn(propValue);
+            if (iteratorFn) {
+              var iterator = iteratorFn.call(propValue);
+              var step;
+              if (iteratorFn !== propValue.entries) {
+                while (!(step = iterator.next()).done) {
+                  if (!isNode(step.value)) {
+                    return false;
+                  }
+                }
+              } else {
+                // Iterator will provide entry [k,v] tuples rather than values.
+                while (!(step = iterator.next()).done) {
+                  var entry = step.value;
+                  if (entry) {
+                    if (!isNode(entry[1])) {
+                      return false;
+                    }
+                  }
+                }
+              }
+            } else {
+              return false;
+            }
+
+            return true;
+          default:
+            return false;
+        }
+      }
+
+      function isSymbol(propType, propValue) {
+        // Native Symbol.
+        if (propType === 'symbol') {
+          return true;
+        }
+
+        // falsy value can't be a Symbol
+        if (!propValue) {
+          return false;
+        }
+
+        // 19.4.3.5 Symbol.prototype[@@toStringTag] === 'Symbol'
+        if (propValue['@@toStringTag'] === 'Symbol') {
+          return true;
+        }
+
+        // Fallback for non-spec compliant Symbols which are polyfilled.
+        if (typeof Symbol === 'function' && propValue instanceof Symbol) {
+          return true;
+        }
+
+        return false;
+      }
+
+      // Equivalent of `typeof` but with special handling for array and regexp.
+      function getPropType(propValue) {
+        var propType = typeof propValue;
+        if (Array.isArray(propValue)) {
+          return 'array';
+        }
+        if (propValue instanceof RegExp) {
+          // Old webkits (at least until Android 4.0) return 'function' rather than
+          // 'object' for typeof a RegExp. We'll normalize this here so that /bla/
+          // passes PropTypes.object.
+          return 'object';
+        }
+        if (isSymbol(propType, propValue)) {
+          return 'symbol';
+        }
+        return propType;
+      }
+
+      // This handles more types than `getPropType`. Only used for error messages.
+      // See `createPrimitiveTypeChecker`.
+      function getPreciseType(propValue) {
+        if (typeof propValue === 'undefined' || propValue === null) {
+          return '' + propValue;
+        }
+        var propType = getPropType(propValue);
+        if (propType === 'object') {
+          if (propValue instanceof Date) {
+            return 'date';
+          } else if (propValue instanceof RegExp) {
+            return 'regexp';
+          }
+        }
+        return propType;
+      }
+
+      // Returns a string that is postfixed to a warning about an invalid type.
+      // For example, "undefined" or "of type array"
+      function getPostfixForTypeWarning(value) {
+        var type = getPreciseType(value);
+        switch (type) {
+          case 'array':
+          case 'object':
+            return 'an ' + type;
+          case 'boolean':
+          case 'date':
+          case 'regexp':
+            return 'a ' + type;
+          default:
+            return type;
+        }
+      }
+
+      // Returns class name of the object, if any.
+      function getClassName(propValue) {
+        if (!propValue.constructor || !propValue.constructor.name) {
+          return ANONYMOUS;
+        }
+        return propValue.constructor.name;
+      }
+
+      ReactPropTypes.checkPropTypes = checkPropTypes_1;
+      ReactPropTypes.resetWarningCache = checkPropTypes_1.resetWarningCache;
+      ReactPropTypes.PropTypes = ReactPropTypes;
+
+      return ReactPropTypes;
+    };
+
+    function emptyFunction() {}
+    function emptyFunctionWithReset() {}
+    emptyFunctionWithReset.resetWarningCache = emptyFunction;
+
+    var factoryWithThrowingShims = function() {
+      function shim(props, propName, componentName, location, propFullName, secret) {
+        if (secret === ReactPropTypesSecret_1) {
+          // It is still safe when called from React.
+          return;
+        }
+        var err = new Error(
+          'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
+          'Use PropTypes.checkPropTypes() to call them. ' +
+          'Read more at http://fb.me/use-check-prop-types'
+        );
+        err.name = 'Invariant Violation';
+        throw err;
+      }  shim.isRequired = shim;
+      function getShim() {
+        return shim;
+      }  // Important!
+      // Keep this list in sync with production version in `./factoryWithTypeCheckers.js`.
+      var ReactPropTypes = {
+        array: shim,
+        bool: shim,
+        func: shim,
+        number: shim,
+        object: shim,
+        string: shim,
+        symbol: shim,
+
+        any: shim,
+        arrayOf: getShim,
+        element: shim,
+        elementType: shim,
+        instanceOf: getShim,
+        node: shim,
+        objectOf: getShim,
+        oneOf: getShim,
+        oneOfType: getShim,
+        shape: getShim,
+        exact: getShim,
+
+        checkPropTypes: emptyFunctionWithReset,
+        resetWarningCache: emptyFunction
+      };
+
+      ReactPropTypes.PropTypes = ReactPropTypes;
+
+      return ReactPropTypes;
+    };
+
+    var propTypes = createCommonjsModule(function (module) {
+    /**
+     * Copyright (c) 2013-present, Facebook, Inc.
+     *
+     * This source code is licensed under the MIT license found in the
+     * LICENSE file in the root directory of this source tree.
+     */
+
+    if (process.env.NODE_ENV !== 'production') {
+      var ReactIs = reactIs;
+
+      // By explicitly using `prop-types` you are opting into new development behavior.
+      // http://fb.me/prop-types-in-prod
+      var throwOnDirectAccess = true;
+      module.exports = factoryWithTypeCheckers(ReactIs.isElement, throwOnDirectAccess);
+    } else {
+      // By explicitly using `prop-types` you are opting into new production behavior.
+      // http://fb.me/prop-types-in-prod
+      module.exports = factoryWithThrowingShims();
+    }
+    });
+
+    /**
+     * Similar to invariant but only logs a warning if the condition is not met.
+     * This can be used to log issues in development environments in critical
+     * paths. Removing the logging code for production environments will keep the
+     * same logic and follow the same code paths.
+     */
+
+    var __DEV__ = process.env.NODE_ENV !== 'production';
+
+    var warning = function() {};
+
+    if (__DEV__) {
+      var printWarning = function printWarning(format, args) {
+        var len = arguments.length;
+        args = new Array(len > 1 ? len - 1 : 0);
+        for (var key = 1; key < len; key++) {
+          args[key - 1] = arguments[key];
+        }
+        var argIndex = 0;
+        var message = 'Warning: ' +
+          format.replace(/%s/g, function() {
+            return args[argIndex++];
+          });
+        if (typeof console !== 'undefined') {
+          console.error(message);
+        }
+        try {
+          // --- Welcome to debugging React ---
+          // This error was thrown as a convenience so that you can use this stack
+          // to find the callsite that caused this warning to fire.
+          throw new Error(message);
+        } catch (x) {}
+      };
+
+      warning = function(condition, format, args) {
+        var len = arguments.length;
+        args = new Array(len > 2 ? len - 2 : 0);
+        for (var key = 2; key < len; key++) {
+          args[key - 2] = arguments[key];
+        }
+        if (format === undefined) {
+          throw new Error(
+              '`warning(condition, format, ...args)` requires a warning ' +
+              'message argument'
+          );
+        }
+        if (!condition) {
+          printWarning.apply(null, [format].concat(args));
+        }
+      };
+    }
+
+    var warning_1 = warning;
+
+    var interopRequireDefault = createCommonjsModule(function (module) {
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : {
+        "default": obj
+      };
+    }
+
+    module.exports = _interopRequireDefault;
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
+    });
+
+    unwrapExports(interopRequireDefault);
+
+    var hasClass_1 = createCommonjsModule(function (module, exports) {
+
+    exports.__esModule = true;
+    exports.default = hasClass;
+
+    function hasClass(element, className) {
+      if (element.classList) return !!className && element.classList.contains(className);else return (" " + (element.className.baseVal || element.className) + " ").indexOf(" " + className + " ") !== -1;
+    }
+
+    module.exports = exports["default"];
+    });
+
+    unwrapExports(hasClass_1);
+
+    var addClass_1 = createCommonjsModule(function (module, exports) {
+
+
+
+    exports.__esModule = true;
+    exports.default = addClass;
+
+    var _hasClass = interopRequireDefault(hasClass_1);
+
+    function addClass(element, className) {
+      if (element.classList) element.classList.add(className);else if (!(0, _hasClass.default)(element, className)) if (typeof element.className === 'string') element.className = element.className + ' ' + className;else element.setAttribute('class', (element.className && element.className.baseVal || '') + ' ' + className);
+    }
+
+    module.exports = exports["default"];
+    });
+
+    unwrapExports(addClass_1);
+
+    function replaceClassName(origClass, classToRemove) {
+      return origClass.replace(new RegExp('(^|\\s)' + classToRemove + '(?:\\s|$)', 'g'), '$1').replace(/\s+/g, ' ').replace(/^\s*|\s*$/g, '');
+    }
+
+    var removeClass = function removeClass(element, className) {
+      if (element.classList) element.classList.remove(className);else if (typeof element.className === 'string') element.className = replaceClassName(element.className, className);else element.setAttribute('class', replaceClassName(element.className && element.className.baseVal || '', className));
+    };
+
+    var PropTypes = createCommonjsModule(function (module, exports) {
+
+    exports.__esModule = true;
+    exports.classNamesShape = exports.timeoutsShape = void 0;
+
+    var _propTypes = _interopRequireDefault(propTypes);
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    var timeoutsShape = process.env.NODE_ENV !== 'production' ? _propTypes.default.oneOfType([_propTypes.default.number, _propTypes.default.shape({
+      enter: _propTypes.default.number,
+      exit: _propTypes.default.number,
+      appear: _propTypes.default.number
+    }).isRequired]) : null;
+    exports.timeoutsShape = timeoutsShape;
+    var classNamesShape = process.env.NODE_ENV !== 'production' ? _propTypes.default.oneOfType([_propTypes.default.string, _propTypes.default.shape({
+      enter: _propTypes.default.string,
+      exit: _propTypes.default.string,
+      active: _propTypes.default.string
+    }), _propTypes.default.shape({
+      enter: _propTypes.default.string,
+      enterDone: _propTypes.default.string,
+      enterActive: _propTypes.default.string,
+      exit: _propTypes.default.string,
+      exitDone: _propTypes.default.string,
+      exitActive: _propTypes.default.string
+    })]) : null;
+    exports.classNamesShape = classNamesShape;
+    });
+
+    unwrapExports(PropTypes);
+    PropTypes.classNamesShape;
+    PropTypes.timeoutsShape;
+
+    var Transition_1 = createCommonjsModule(function (module, exports) {
+
+    exports.__esModule = true;
+    exports.default = exports.EXITING = exports.ENTERED = exports.ENTERING = exports.EXITED = exports.UNMOUNTED = void 0;
+
+    var PropTypes$1 = _interopRequireWildcard(propTypes);
+
+    var _react = _interopRequireDefault(React__default['default']);
+
+    var _reactDom = _interopRequireDefault(ReactDOM__default['default']);
+
+
+
+
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+    function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+    function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+    var UNMOUNTED = 'unmounted';
+    exports.UNMOUNTED = UNMOUNTED;
+    var EXITED = 'exited';
+    exports.EXITED = EXITED;
+    var ENTERING = 'entering';
+    exports.ENTERING = ENTERING;
+    var ENTERED = 'entered';
+    exports.ENTERED = ENTERED;
+    var EXITING = 'exiting';
+    /**
+     * The Transition component lets you describe a transition from one component
+     * state to another _over time_ with a simple declarative API. Most commonly
+     * it's used to animate the mounting and unmounting of a component, but can also
+     * be used to describe in-place transition states as well.
+     *
+     * ---
+     *
+     * **Note**: `Transition` is a platform-agnostic base component. If you're using
+     * transitions in CSS, you'll probably want to use
+     * [`CSSTransition`](https://reactcommunity.org/react-transition-group/css-transition)
+     * instead. It inherits all the features of `Transition`, but contains
+     * additional features necessary to play nice with CSS transitions (hence the
+     * name of the component).
+     *
+     * ---
+     *
+     * By default the `Transition` component does not alter the behavior of the
+     * component it renders, it only tracks "enter" and "exit" states for the
+     * components. It's up to you to give meaning and effect to those states. For
+     * example we can add styles to a component when it enters or exits:
+     *
+     * ```jsx
+     * import { Transition } from 'react-transition-group';
+     *
+     * const duration = 300;
+     *
+     * const defaultStyle = {
+     *   transition: `opacity ${duration}ms ease-in-out`,
+     *   opacity: 0,
+     * }
+     *
+     * const transitionStyles = {
+     *   entering: { opacity: 0 },
+     *   entered:  { opacity: 1 },
+     * };
+     *
+     * const Fade = ({ in: inProp }) => (
+     *   <Transition in={inProp} timeout={duration}>
+     *     {state => (
+     *       <div style={{
+     *         ...defaultStyle,
+     *         ...transitionStyles[state]
+     *       }}>
+     *         I'm a fade Transition!
+     *       </div>
+     *     )}
+     *   </Transition>
+     * );
+     * ```
+     *
+     * There are 4 main states a Transition can be in:
+     *  - `'entering'`
+     *  - `'entered'`
+     *  - `'exiting'`
+     *  - `'exited'`
+     *
+     * Transition state is toggled via the `in` prop. When `true` the component
+     * begins the "Enter" stage. During this stage, the component will shift from
+     * its current transition state, to `'entering'` for the duration of the
+     * transition and then to the `'entered'` stage once it's complete. Let's take
+     * the following example (we'll use the
+     * [useState](https://reactjs.org/docs/hooks-reference.html#usestate) hook):
+     *
+     * ```jsx
+     * function App() {
+     *   const [inProp, setInProp] = useState(false);
+     *   return (
+     *     <div>
+     *       <Transition in={inProp} timeout={500}>
+     *         {state => (
+     *           // ...
+     *         )}
+     *       </Transition>
+     *       <button onClick={() => setInProp(true)}>
+     *         Click to Enter
+     *       </button>
+     *     </div>
+     *   );
+     * }
+     * ```
+     *
+     * When the button is clicked the component will shift to the `'entering'` state
+     * and stay there for 500ms (the value of `timeout`) before it finally switches
+     * to `'entered'`.
+     *
+     * When `in` is `false` the same thing happens except the state moves from
+     * `'exiting'` to `'exited'`.
+     */
+
+    exports.EXITING = EXITING;
+
+    var Transition =
+    /*#__PURE__*/
+    function (_React$Component) {
+      _inheritsLoose(Transition, _React$Component);
+
+      function Transition(props, context) {
+        var _this;
+
+        _this = _React$Component.call(this, props, context) || this;
+        var parentGroup = context.transitionGroup; // In the context of a TransitionGroup all enters are really appears
+
+        var appear = parentGroup && !parentGroup.isMounting ? props.enter : props.appear;
+        var initialStatus;
+        _this.appearStatus = null;
+
+        if (props.in) {
+          if (appear) {
+            initialStatus = EXITED;
+            _this.appearStatus = ENTERING;
+          } else {
+            initialStatus = ENTERED;
+          }
+        } else {
+          if (props.unmountOnExit || props.mountOnEnter) {
+            initialStatus = UNMOUNTED;
+          } else {
+            initialStatus = EXITED;
+          }
+        }
+
+        _this.state = {
+          status: initialStatus
+        };
+        _this.nextCallback = null;
+        return _this;
+      }
+
+      var _proto = Transition.prototype;
+
+      _proto.getChildContext = function getChildContext() {
+        return {
+          transitionGroup: null // allows for nested Transitions
+
+        };
+      };
+
+      Transition.getDerivedStateFromProps = function getDerivedStateFromProps(_ref, prevState) {
+        var nextIn = _ref.in;
+
+        if (nextIn && prevState.status === UNMOUNTED) {
+          return {
+            status: EXITED
+          };
+        }
+
+        return null;
+      }; // getSnapshotBeforeUpdate(prevProps) {
+      //   let nextStatus = null
+      //   if (prevProps !== this.props) {
+      //     const { status } = this.state
+      //     if (this.props.in) {
+      //       if (status !== ENTERING && status !== ENTERED) {
+      //         nextStatus = ENTERING
+      //       }
+      //     } else {
+      //       if (status === ENTERING || status === ENTERED) {
+      //         nextStatus = EXITING
+      //       }
+      //     }
+      //   }
+      //   return { nextStatus }
+      // }
+
+
+      _proto.componentDidMount = function componentDidMount() {
+        this.updateStatus(true, this.appearStatus);
+      };
+
+      _proto.componentDidUpdate = function componentDidUpdate(prevProps) {
+        var nextStatus = null;
+
+        if (prevProps !== this.props) {
+          var status = this.state.status;
+
+          if (this.props.in) {
+            if (status !== ENTERING && status !== ENTERED) {
+              nextStatus = ENTERING;
+            }
+          } else {
+            if (status === ENTERING || status === ENTERED) {
+              nextStatus = EXITING;
+            }
+          }
+        }
+
+        this.updateStatus(false, nextStatus);
+      };
+
+      _proto.componentWillUnmount = function componentWillUnmount() {
+        this.cancelNextCallback();
+      };
+
+      _proto.getTimeouts = function getTimeouts() {
+        var timeout = this.props.timeout;
+        var exit, enter, appear;
+        exit = enter = appear = timeout;
+
+        if (timeout != null && typeof timeout !== 'number') {
+          exit = timeout.exit;
+          enter = timeout.enter; // TODO: remove fallback for next major
+
+          appear = timeout.appear !== undefined ? timeout.appear : enter;
+        }
+
+        return {
+          exit: exit,
+          enter: enter,
+          appear: appear
+        };
+      };
+
+      _proto.updateStatus = function updateStatus(mounting, nextStatus) {
+        if (mounting === void 0) {
+          mounting = false;
+        }
+
+        if (nextStatus !== null) {
+          // nextStatus will always be ENTERING or EXITING.
+          this.cancelNextCallback();
+
+          var node = _reactDom.default.findDOMNode(this);
+
+          if (nextStatus === ENTERING) {
+            this.performEnter(node, mounting);
+          } else {
+            this.performExit(node);
+          }
+        } else if (this.props.unmountOnExit && this.state.status === EXITED) {
+          this.setState({
+            status: UNMOUNTED
+          });
+        }
+      };
+
+      _proto.performEnter = function performEnter(node, mounting) {
+        var _this2 = this;
+
+        var enter = this.props.enter;
+        var appearing = this.context.transitionGroup ? this.context.transitionGroup.isMounting : mounting;
+        var timeouts = this.getTimeouts();
+        var enterTimeout = appearing ? timeouts.appear : timeouts.enter; // no enter animation skip right to ENTERED
+        // if we are mounting and running this it means appear _must_ be set
+
+        if (!mounting && !enter) {
+          this.safeSetState({
+            status: ENTERED
+          }, function () {
+            _this2.props.onEntered(node);
+          });
+          return;
+        }
+
+        this.props.onEnter(node, appearing);
+        this.safeSetState({
+          status: ENTERING
+        }, function () {
+          _this2.props.onEntering(node, appearing);
+
+          _this2.onTransitionEnd(node, enterTimeout, function () {
+            _this2.safeSetState({
+              status: ENTERED
+            }, function () {
+              _this2.props.onEntered(node, appearing);
+            });
+          });
+        });
+      };
+
+      _proto.performExit = function performExit(node) {
+        var _this3 = this;
+
+        var exit = this.props.exit;
+        var timeouts = this.getTimeouts(); // no exit animation skip right to EXITED
+
+        if (!exit) {
+          this.safeSetState({
+            status: EXITED
+          }, function () {
+            _this3.props.onExited(node);
+          });
+          return;
+        }
+
+        this.props.onExit(node);
+        this.safeSetState({
+          status: EXITING
+        }, function () {
+          _this3.props.onExiting(node);
+
+          _this3.onTransitionEnd(node, timeouts.exit, function () {
+            _this3.safeSetState({
+              status: EXITED
+            }, function () {
+              _this3.props.onExited(node);
+            });
+          });
+        });
+      };
+
+      _proto.cancelNextCallback = function cancelNextCallback() {
+        if (this.nextCallback !== null) {
+          this.nextCallback.cancel();
+          this.nextCallback = null;
+        }
+      };
+
+      _proto.safeSetState = function safeSetState(nextState, callback) {
+        // This shouldn't be necessary, but there are weird race conditions with
+        // setState callbacks and unmounting in testing, so always make sure that
+        // we can cancel any pending setState callbacks after we unmount.
+        callback = this.setNextCallback(callback);
+        this.setState(nextState, callback);
+      };
+
+      _proto.setNextCallback = function setNextCallback(callback) {
+        var _this4 = this;
+
+        var active = true;
+
+        this.nextCallback = function (event) {
+          if (active) {
+            active = false;
+            _this4.nextCallback = null;
+            callback(event);
+          }
+        };
+
+        this.nextCallback.cancel = function () {
+          active = false;
+        };
+
+        return this.nextCallback;
+      };
+
+      _proto.onTransitionEnd = function onTransitionEnd(node, timeout, handler) {
+        this.setNextCallback(handler);
+        var doesNotHaveTimeoutOrListener = timeout == null && !this.props.addEndListener;
+
+        if (!node || doesNotHaveTimeoutOrListener) {
+          setTimeout(this.nextCallback, 0);
+          return;
+        }
+
+        if (this.props.addEndListener) {
+          this.props.addEndListener(node, this.nextCallback);
+        }
+
+        if (timeout != null) {
+          setTimeout(this.nextCallback, timeout);
+        }
+      };
+
+      _proto.render = function render() {
+        var status = this.state.status;
+
+        if (status === UNMOUNTED) {
+          return null;
+        }
+
+        var _this$props = this.props,
+            children = _this$props.children,
+            childProps = _objectWithoutPropertiesLoose(_this$props, ["children"]); // filter props for Transtition
+
+
+        delete childProps.in;
+        delete childProps.mountOnEnter;
+        delete childProps.unmountOnExit;
+        delete childProps.appear;
+        delete childProps.enter;
+        delete childProps.exit;
+        delete childProps.timeout;
+        delete childProps.addEndListener;
+        delete childProps.onEnter;
+        delete childProps.onEntering;
+        delete childProps.onEntered;
+        delete childProps.onExit;
+        delete childProps.onExiting;
+        delete childProps.onExited;
+
+        if (typeof children === 'function') {
+          return children(status, childProps);
+        }
+
+        var child = _react.default.Children.only(children);
+
+        return _react.default.cloneElement(child, childProps);
+      };
+
+      return Transition;
+    }(_react.default.Component);
+
+    Transition.contextTypes = {
+      transitionGroup: PropTypes$1.object
+    };
+    Transition.childContextTypes = {
+      transitionGroup: function transitionGroup() {}
+    };
+    Transition.propTypes = process.env.NODE_ENV !== "production" ? {
+      /**
+       * A `function` child can be used instead of a React element. This function is
+       * called with the current transition status (`'entering'`, `'entered'`,
+       * `'exiting'`, `'exited'`, `'unmounted'`), which can be used to apply context
+       * specific props to a component.
+       *
+       * ```jsx
+       * <Transition in={this.state.in} timeout={150}>
+       *   {state => (
+       *     <MyComponent className={`fade fade-${state}`} />
+       *   )}
+       * </Transition>
+       * ```
+       */
+      children: PropTypes$1.oneOfType([PropTypes$1.func.isRequired, PropTypes$1.element.isRequired]).isRequired,
+
+      /**
+       * Show the component; triggers the enter or exit states
+       */
+      in: PropTypes$1.bool,
+
+      /**
+       * By default the child component is mounted immediately along with
+       * the parent `Transition` component. If you want to "lazy mount" the component on the
+       * first `in={true}` you can set `mountOnEnter`. After the first enter transition the component will stay
+       * mounted, even on "exited", unless you also specify `unmountOnExit`.
+       */
+      mountOnEnter: PropTypes$1.bool,
+
+      /**
+       * By default the child component stays mounted after it reaches the `'exited'` state.
+       * Set `unmountOnExit` if you'd prefer to unmount the component after it finishes exiting.
+       */
+      unmountOnExit: PropTypes$1.bool,
+
+      /**
+       * Normally a component is not transitioned if it is shown when the `<Transition>` component mounts.
+       * If you want to transition on the first mount set `appear` to `true`, and the
+       * component will transition in as soon as the `<Transition>` mounts.
+       *
+       * > Note: there are no specific "appear" states. `appear` only adds an additional `enter` transition.
+       */
+      appear: PropTypes$1.bool,
+
+      /**
+       * Enable or disable enter transitions.
+       */
+      enter: PropTypes$1.bool,
+
+      /**
+       * Enable or disable exit transitions.
+       */
+      exit: PropTypes$1.bool,
+
+      /**
+       * The duration of the transition, in milliseconds.
+       * Required unless `addEndListener` is provided.
+       *
+       * You may specify a single timeout for all transitions:
+       *
+       * ```jsx
+       * timeout={500}
+       * ```
+       *
+       * or individually:
+       *
+       * ```jsx
+       * timeout={{
+       *  appear: 500,
+       *  enter: 300,
+       *  exit: 500,
+       * }}
+       * ```
+       *
+       * - `appear` defaults to the value of `enter`
+       * - `enter` defaults to `0`
+       * - `exit` defaults to `0`
+       *
+       * @type {number | { enter?: number, exit?: number, appear?: number }}
+       */
+      timeout: function timeout(props) {
+        var pt = PropTypes.timeoutsShape;
+        if (!props.addEndListener) pt = pt.isRequired;
+
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        return pt.apply(void 0, [props].concat(args));
+      },
+
+      /**
+       * Add a custom transition end trigger. Called with the transitioning
+       * DOM node and a `done` callback. Allows for more fine grained transition end
+       * logic. **Note:** Timeouts are still used as a fallback if provided.
+       *
+       * ```jsx
+       * addEndListener={(node, done) => {
+       *   // use the css transitionend event to mark the finish of a transition
+       *   node.addEventListener('transitionend', done, false);
+       * }}
+       * ```
+       */
+      addEndListener: PropTypes$1.func,
+
+      /**
+       * Callback fired before the "entering" status is applied. An extra parameter
+       * `isAppearing` is supplied to indicate if the enter stage is occurring on the initial mount
+       *
+       * @type Function(node: HtmlElement, isAppearing: bool) -> void
+       */
+      onEnter: PropTypes$1.func,
+
+      /**
+       * Callback fired after the "entering" status is applied. An extra parameter
+       * `isAppearing` is supplied to indicate if the enter stage is occurring on the initial mount
+       *
+       * @type Function(node: HtmlElement, isAppearing: bool)
+       */
+      onEntering: PropTypes$1.func,
+
+      /**
+       * Callback fired after the "entered" status is applied. An extra parameter
+       * `isAppearing` is supplied to indicate if the enter stage is occurring on the initial mount
+       *
+       * @type Function(node: HtmlElement, isAppearing: bool) -> void
+       */
+      onEntered: PropTypes$1.func,
+
+      /**
+       * Callback fired before the "exiting" status is applied.
+       *
+       * @type Function(node: HtmlElement) -> void
+       */
+      onExit: PropTypes$1.func,
+
+      /**
+       * Callback fired after the "exiting" status is applied.
+       *
+       * @type Function(node: HtmlElement) -> void
+       */
+      onExiting: PropTypes$1.func,
+
+      /**
+       * Callback fired after the "exited" status is applied.
+       *
+       * @type Function(node: HtmlElement) -> void
+       */
+      onExited: PropTypes$1.func // Name the function so it is clearer in the documentation
+
+    } : {};
+
+    function noop() {}
+
+    Transition.defaultProps = {
+      in: false,
+      mountOnEnter: false,
+      unmountOnExit: false,
+      appear: false,
+      enter: true,
+      exit: true,
+      onEnter: noop,
+      onEntering: noop,
+      onEntered: noop,
+      onExit: noop,
+      onExiting: noop,
+      onExited: noop
+    };
+    Transition.UNMOUNTED = 0;
+    Transition.EXITED = 1;
+    Transition.ENTERING = 2;
+    Transition.ENTERED = 3;
+    Transition.EXITING = 4;
+
+    var _default = (0, reactLifecyclesCompat_cjs.polyfill)(Transition);
+
+    exports.default = _default;
+    });
+
+    unwrapExports(Transition_1);
+    Transition_1.EXITING;
+    Transition_1.ENTERED;
+    Transition_1.ENTERING;
+    Transition_1.EXITED;
+    Transition_1.UNMOUNTED;
+
+    var CSSTransition_1 = createCommonjsModule(function (module, exports) {
+
+    exports.__esModule = true;
+    exports.default = void 0;
+
+    var PropTypes$1 = _interopRequireWildcard(propTypes);
+
+    var _addClass = _interopRequireDefault(addClass_1);
+
+    var _removeClass = _interopRequireDefault(removeClass);
+
+    var _react = _interopRequireDefault(React__default['default']);
+
+    var _Transition = _interopRequireDefault(Transition_1);
+
+
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+    function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+    function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+    var addClass = function addClass(node, classes) {
+      return node && classes && classes.split(' ').forEach(function (c) {
+        return (0, _addClass.default)(node, c);
+      });
+    };
+
+    var removeClass$1 = function removeClass(node, classes) {
+      return node && classes && classes.split(' ').forEach(function (c) {
+        return (0, _removeClass.default)(node, c);
+      });
+    };
+    /**
+     * A transition component inspired by the excellent
+     * [ng-animate](http://www.nganimate.org/) library, you should use it if you're
+     * using CSS transitions or animations. It's built upon the
+     * [`Transition`](https://reactcommunity.org/react-transition-group/transition)
+     * component, so it inherits all of its props.
+     *
+     * `CSSTransition` applies a pair of class names during the `appear`, `enter`,
+     * and `exit` states of the transition. The first class is applied and then a
+     * second `*-active` class in order to activate the CSSS transition. After the
+     * transition, matching `*-done` class names are applied to persist the
+     * transition state.
+     *
+     * ```jsx
+     * function App() {
+     *   const [inProp, setInProp] = useState(false);
+     *   return (
+     *     <div>
+     *       <CSSTransition in={inProp} timeout={200} classNames="my-node">
+     *         <div>
+     *           {"I'll receive my-node-* classes"}
+     *         </div>
+     *       </CSSTransition>
+     *       <button type="button" onClick={() => setInProp(true)}>
+     *         Click to Enter
+     *       </button>
+     *     </div>
+     *   );
+     * }
+     * ```
+     *
+     * When the `in` prop is set to `true`, the child component will first receive
+     * the class `example-enter`, then the `example-enter-active` will be added in
+     * the next tick. `CSSTransition` [forces a
+     * reflow](https://github.com/reactjs/react-transition-group/blob/5007303e729a74be66a21c3e2205e4916821524b/src/CSSTransition.js#L208-L215)
+     * between before adding the `example-enter-active`. This is an important trick
+     * because it allows us to transition between `example-enter` and
+     * `example-enter-active` even though they were added immediately one after
+     * another. Most notably, this is what makes it possible for us to animate
+     * _appearance_.
+     *
+     * ```css
+     * .my-node-enter {
+     *   opacity: 0;
+     * }
+     * .my-node-enter-active {
+     *   opacity: 1;
+     *   transition: opacity 200ms;
+     * }
+     * .my-node-exit {
+     *   opacity: 1;
+     * }
+     * .my-node-exit-active {
+     *   opacity: 0;
+     *   transition: opacity: 200ms;
+     * }
+     * ```
+     *
+     * `*-active` classes represent which styles you want to animate **to**.
+     */
+
+
+    var CSSTransition =
+    /*#__PURE__*/
+    function (_React$Component) {
+      _inheritsLoose(CSSTransition, _React$Component);
+
+      function CSSTransition() {
+        var _this;
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+
+        _this.onEnter = function (node, appearing) {
+          var _this$getClassNames = _this.getClassNames(appearing ? 'appear' : 'enter'),
+              className = _this$getClassNames.className;
+
+          _this.removeClasses(node, 'exit');
+
+          addClass(node, className);
+
+          if (_this.props.onEnter) {
+            _this.props.onEnter(node, appearing);
+          }
+        };
+
+        _this.onEntering = function (node, appearing) {
+          var _this$getClassNames2 = _this.getClassNames(appearing ? 'appear' : 'enter'),
+              activeClassName = _this$getClassNames2.activeClassName;
+
+          _this.reflowAndAddClass(node, activeClassName);
+
+          if (_this.props.onEntering) {
+            _this.props.onEntering(node, appearing);
+          }
+        };
+
+        _this.onEntered = function (node, appearing) {
+          var appearClassName = _this.getClassNames('appear').doneClassName;
+
+          var enterClassName = _this.getClassNames('enter').doneClassName;
+
+          var doneClassName = appearing ? appearClassName + " " + enterClassName : enterClassName;
+
+          _this.removeClasses(node, appearing ? 'appear' : 'enter');
+
+          addClass(node, doneClassName);
+
+          if (_this.props.onEntered) {
+            _this.props.onEntered(node, appearing);
+          }
+        };
+
+        _this.onExit = function (node) {
+          var _this$getClassNames3 = _this.getClassNames('exit'),
+              className = _this$getClassNames3.className;
+
+          _this.removeClasses(node, 'appear');
+
+          _this.removeClasses(node, 'enter');
+
+          addClass(node, className);
+
+          if (_this.props.onExit) {
+            _this.props.onExit(node);
+          }
+        };
+
+        _this.onExiting = function (node) {
+          var _this$getClassNames4 = _this.getClassNames('exit'),
+              activeClassName = _this$getClassNames4.activeClassName;
+
+          _this.reflowAndAddClass(node, activeClassName);
+
+          if (_this.props.onExiting) {
+            _this.props.onExiting(node);
+          }
+        };
+
+        _this.onExited = function (node) {
+          var _this$getClassNames5 = _this.getClassNames('exit'),
+              doneClassName = _this$getClassNames5.doneClassName;
+
+          _this.removeClasses(node, 'exit');
+
+          addClass(node, doneClassName);
+
+          if (_this.props.onExited) {
+            _this.props.onExited(node);
+          }
+        };
+
+        _this.getClassNames = function (type) {
+          var classNames = _this.props.classNames;
+          var isStringClassNames = typeof classNames === 'string';
+          var prefix = isStringClassNames && classNames ? classNames + '-' : '';
+          var className = isStringClassNames ? prefix + type : classNames[type];
+          var activeClassName = isStringClassNames ? className + '-active' : classNames[type + 'Active'];
+          var doneClassName = isStringClassNames ? className + '-done' : classNames[type + 'Done'];
+          return {
+            className: className,
+            activeClassName: activeClassName,
+            doneClassName: doneClassName
+          };
+        };
+
+        return _this;
+      }
+
+      var _proto = CSSTransition.prototype;
+
+      _proto.removeClasses = function removeClasses(node, type) {
+        var _this$getClassNames6 = this.getClassNames(type),
+            className = _this$getClassNames6.className,
+            activeClassName = _this$getClassNames6.activeClassName,
+            doneClassName = _this$getClassNames6.doneClassName;
+
+        className && removeClass$1(node, className);
+        activeClassName && removeClass$1(node, activeClassName);
+        doneClassName && removeClass$1(node, doneClassName);
+      };
+
+      _proto.reflowAndAddClass = function reflowAndAddClass(node, className) {
+        // This is for to force a repaint,
+        // which is necessary in order to transition styles when adding a class name.
+        if (className) {
+          /* eslint-disable no-unused-expressions */
+          node && node.scrollTop;
+          /* eslint-enable no-unused-expressions */
+
+          addClass(node, className);
+        }
+      };
+
+      _proto.render = function render() {
+        var props = _extends({}, this.props);
+
+        delete props.classNames;
+        return _react.default.createElement(_Transition.default, _extends({}, props, {
+          onEnter: this.onEnter,
+          onEntered: this.onEntered,
+          onEntering: this.onEntering,
+          onExit: this.onExit,
+          onExiting: this.onExiting,
+          onExited: this.onExited
+        }));
+      };
+
+      return CSSTransition;
+    }(_react.default.Component);
+
+    CSSTransition.defaultProps = {
+      classNames: ''
+    };
+    CSSTransition.propTypes = process.env.NODE_ENV !== "production" ? _extends({}, _Transition.default.propTypes, {
+      /**
+       * The animation classNames applied to the component as it enters, exits or
+       * has finished the transition. A single name can be provided and it will be
+       * suffixed for each stage: e.g.
+       *
+       * `classNames="fade"` applies `fade-enter`, `fade-enter-active`,
+       * `fade-enter-done`, `fade-exit`, `fade-exit-active`, `fade-exit-done`,
+       * `fade-appear`, `fade-appear-active`, and `fade-appear-done`.
+       *
+       * **Note**: `fade-appear-done` and `fade-enter-done` will _both_ be applied.
+       * This allows you to define different behavior for when appearing is done and
+       * when regular entering is done, using selectors like
+       * `.fade-enter-done:not(.fade-appear-done)`. For example, you could apply an
+       * epic entrance animation when element first appears in the DOM using
+       * [Animate.css](https://daneden.github.io/animate.css/). Otherwise you can
+       * simply use `fade-enter-done` for defining both cases.
+       *
+       * Each individual classNames can also be specified independently like:
+       *
+       * ```js
+       * classNames={{
+       *  appear: 'my-appear',
+       *  appearActive: 'my-active-appear',
+       *  appearDone: 'my-done-appear',
+       *  enter: 'my-enter',
+       *  enterActive: 'my-active-enter',
+       *  enterDone: 'my-done-enter',
+       *  exit: 'my-exit',
+       *  exitActive: 'my-active-exit',
+       *  exitDone: 'my-done-exit',
+       * }}
+       * ```
+       *
+       * If you want to set these classes using CSS Modules:
+       *
+       * ```js
+       * import styles from './styles.css';
+       * ```
+       *
+       * you might want to use camelCase in your CSS file, that way could simply
+       * spread them instead of listing them one by one:
+       *
+       * ```js
+       * classNames={{ ...styles }}
+       * ```
+       *
+       * @type {string | {
+       *  appear?: string,
+       *  appearActive?: string,
+       *  appearDone?: string,
+       *  enter?: string,
+       *  enterActive?: string,
+       *  enterDone?: string,
+       *  exit?: string,
+       *  exitActive?: string,
+       *  exitDone?: string,
+       * }}
+       */
+      classNames: PropTypes.classNamesShape,
+
+      /**
+       * A `<Transition>` callback fired immediately after the 'enter' or 'appear' class is
+       * applied.
+       *
+       * @type Function(node: HtmlElement, isAppearing: bool)
+       */
+      onEnter: PropTypes$1.func,
+
+      /**
+       * A `<Transition>` callback fired immediately after the 'enter-active' or
+       * 'appear-active' class is applied.
+       *
+       * @type Function(node: HtmlElement, isAppearing: bool)
+       */
+      onEntering: PropTypes$1.func,
+
+      /**
+       * A `<Transition>` callback fired immediately after the 'enter' or
+       * 'appear' classes are **removed** and the `done` class is added to the DOM node.
+       *
+       * @type Function(node: HtmlElement, isAppearing: bool)
+       */
+      onEntered: PropTypes$1.func,
+
+      /**
+       * A `<Transition>` callback fired immediately after the 'exit' class is
+       * applied.
+       *
+       * @type Function(node: HtmlElement)
+       */
+      onExit: PropTypes$1.func,
+
+      /**
+       * A `<Transition>` callback fired immediately after the 'exit-active' is applied.
+       *
+       * @type Function(node: HtmlElement)
+       */
+      onExiting: PropTypes$1.func,
+
+      /**
+       * A `<Transition>` callback fired immediately after the 'exit' classes
+       * are **removed** and the `exit-done` class is added to the DOM node.
+       *
+       * @type Function(node: HtmlElement)
+       */
+      onExited: PropTypes$1.func
+    }) : {};
+    var _default = CSSTransition;
+    exports.default = _default;
+    module.exports = exports["default"];
+    });
+
+    unwrapExports(CSSTransition_1);
+
+    var ChildMapping = createCommonjsModule(function (module, exports) {
+
+    exports.__esModule = true;
+    exports.getChildMapping = getChildMapping;
+    exports.mergeChildMappings = mergeChildMappings;
+    exports.getInitialChildMapping = getInitialChildMapping;
+    exports.getNextChildMapping = getNextChildMapping;
+
+
+
+    /**
+     * Given `this.props.children`, return an object mapping key to child.
+     *
+     * @param {*} children `this.props.children`
+     * @return {object} Mapping of key to child
+     */
+    function getChildMapping(children, mapFn) {
+      var mapper = function mapper(child) {
+        return mapFn && (0, React__default['default'].isValidElement)(child) ? mapFn(child) : child;
+      };
+
+      var result = Object.create(null);
+      if (children) React__default['default'].Children.map(children, function (c) {
+        return c;
+      }).forEach(function (child) {
+        // run the map function here instead so that the key is the computed one
+        result[child.key] = mapper(child);
+      });
+      return result;
+    }
+    /**
+     * When you're adding or removing children some may be added or removed in the
+     * same render pass. We want to show *both* since we want to simultaneously
+     * animate elements in and out. This function takes a previous set of keys
+     * and a new set of keys and merges them with its best guess of the correct
+     * ordering. In the future we may expose some of the utilities in
+     * ReactMultiChild to make this easy, but for now React itself does not
+     * directly have this concept of the union of prevChildren and nextChildren
+     * so we implement it here.
+     *
+     * @param {object} prev prev children as returned from
+     * `ReactTransitionChildMapping.getChildMapping()`.
+     * @param {object} next next children as returned from
+     * `ReactTransitionChildMapping.getChildMapping()`.
+     * @return {object} a key set that contains all keys in `prev` and all keys
+     * in `next` in a reasonable order.
+     */
+
+
+    function mergeChildMappings(prev, next) {
+      prev = prev || {};
+      next = next || {};
+
+      function getValueForKey(key) {
+        return key in next ? next[key] : prev[key];
+      } // For each key of `next`, the list of keys to insert before that key in
+      // the combined list
+
+
+      var nextKeysPending = Object.create(null);
+      var pendingKeys = [];
+
+      for (var prevKey in prev) {
+        if (prevKey in next) {
+          if (pendingKeys.length) {
+            nextKeysPending[prevKey] = pendingKeys;
+            pendingKeys = [];
+          }
+        } else {
+          pendingKeys.push(prevKey);
+        }
+      }
+
+      var i;
+      var childMapping = {};
+
+      for (var nextKey in next) {
+        if (nextKeysPending[nextKey]) {
+          for (i = 0; i < nextKeysPending[nextKey].length; i++) {
+            var pendingNextKey = nextKeysPending[nextKey][i];
+            childMapping[nextKeysPending[nextKey][i]] = getValueForKey(pendingNextKey);
+          }
+        }
+
+        childMapping[nextKey] = getValueForKey(nextKey);
+      } // Finally, add the keys which didn't appear before any key in `next`
+
+
+      for (i = 0; i < pendingKeys.length; i++) {
+        childMapping[pendingKeys[i]] = getValueForKey(pendingKeys[i]);
+      }
+
+      return childMapping;
+    }
+
+    function getProp(child, prop, props) {
+      return props[prop] != null ? props[prop] : child.props[prop];
+    }
+
+    function getInitialChildMapping(props, onExited) {
+      return getChildMapping(props.children, function (child) {
+        return (0, React__default['default'].cloneElement)(child, {
+          onExited: onExited.bind(null, child),
+          in: true,
+          appear: getProp(child, 'appear', props),
+          enter: getProp(child, 'enter', props),
+          exit: getProp(child, 'exit', props)
+        });
+      });
+    }
+
+    function getNextChildMapping(nextProps, prevChildMapping, onExited) {
+      var nextChildMapping = getChildMapping(nextProps.children);
+      var children = mergeChildMappings(prevChildMapping, nextChildMapping);
+      Object.keys(children).forEach(function (key) {
+        var child = children[key];
+        if (!(0, React__default['default'].isValidElement)(child)) return;
+        var hasPrev = key in prevChildMapping;
+        var hasNext = key in nextChildMapping;
+        var prevChild = prevChildMapping[key];
+        var isLeaving = (0, React__default['default'].isValidElement)(prevChild) && !prevChild.props.in; // item is new (entering)
+
+        if (hasNext && (!hasPrev || isLeaving)) {
+          // console.log('entering', key)
+          children[key] = (0, React__default['default'].cloneElement)(child, {
+            onExited: onExited.bind(null, child),
+            in: true,
+            exit: getProp(child, 'exit', nextProps),
+            enter: getProp(child, 'enter', nextProps)
+          });
+        } else if (!hasNext && hasPrev && !isLeaving) {
+          // item is old (exiting)
+          // console.log('leaving', key)
+          children[key] = (0, React__default['default'].cloneElement)(child, {
+            in: false
+          });
+        } else if (hasNext && hasPrev && (0, React__default['default'].isValidElement)(prevChild)) {
+          // item hasn't changed transition states
+          // copy over the last transition props;
+          // console.log('unchanged', key)
+          children[key] = (0, React__default['default'].cloneElement)(child, {
+            onExited: onExited.bind(null, child),
+            in: prevChild.props.in,
+            exit: getProp(child, 'exit', nextProps),
+            enter: getProp(child, 'enter', nextProps)
+          });
+        }
+      });
+      return children;
+    }
+    });
+
+    unwrapExports(ChildMapping);
+    ChildMapping.getChildMapping;
+    ChildMapping.mergeChildMappings;
+    ChildMapping.getInitialChildMapping;
+    ChildMapping.getNextChildMapping;
+
+    var TransitionGroup_1 = createCommonjsModule(function (module, exports) {
+
+    exports.__esModule = true;
+    exports.default = void 0;
+
+    var _propTypes = _interopRequireDefault(propTypes);
+
+    var _react = _interopRequireDefault(React__default['default']);
+
+
+
+
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+    function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+    function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+    function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+    var values = Object.values || function (obj) {
+      return Object.keys(obj).map(function (k) {
+        return obj[k];
+      });
+    };
+
+    var defaultProps = {
+      component: 'div',
+      childFactory: function childFactory(child) {
+        return child;
+      }
+      /**
+       * The `<TransitionGroup>` component manages a set of transition components
+       * (`<Transition>` and `<CSSTransition>`) in a list. Like with the transition
+       * components, `<TransitionGroup>` is a state machine for managing the mounting
+       * and unmounting of components over time.
+       *
+       * Consider the example below. As items are removed or added to the TodoList the
+       * `in` prop is toggled automatically by the `<TransitionGroup>`.
+       *
+       * Note that `<TransitionGroup>`  does not define any animation behavior!
+       * Exactly _how_ a list item animates is up to the individual transition
+       * component. This means you can mix and match animations across different list
+       * items.
+       */
+
+    };
+
+    var TransitionGroup =
+    /*#__PURE__*/
+    function (_React$Component) {
+      _inheritsLoose(TransitionGroup, _React$Component);
+
+      function TransitionGroup(props, context) {
+        var _this;
+
+        _this = _React$Component.call(this, props, context) || this;
+
+        var handleExited = _this.handleExited.bind(_assertThisInitialized(_assertThisInitialized(_this))); // Initial children should all be entering, dependent on appear
+
+
+        _this.state = {
+          handleExited: handleExited,
+          firstRender: true
+        };
+        return _this;
+      }
+
+      var _proto = TransitionGroup.prototype;
+
+      _proto.getChildContext = function getChildContext() {
+        return {
+          transitionGroup: {
+            isMounting: !this.appeared
+          }
+        };
+      };
+
+      _proto.componentDidMount = function componentDidMount() {
+        this.appeared = true;
+        this.mounted = true;
+      };
+
+      _proto.componentWillUnmount = function componentWillUnmount() {
+        this.mounted = false;
+      };
+
+      TransitionGroup.getDerivedStateFromProps = function getDerivedStateFromProps(nextProps, _ref) {
+        var prevChildMapping = _ref.children,
+            handleExited = _ref.handleExited,
+            firstRender = _ref.firstRender;
+        return {
+          children: firstRender ? (0, ChildMapping.getInitialChildMapping)(nextProps, handleExited) : (0, ChildMapping.getNextChildMapping)(nextProps, prevChildMapping, handleExited),
+          firstRender: false
+        };
+      };
+
+      _proto.handleExited = function handleExited(child, node) {
+        var currentChildMapping = (0, ChildMapping.getChildMapping)(this.props.children);
+        if (child.key in currentChildMapping) return;
+
+        if (child.props.onExited) {
+          child.props.onExited(node);
+        }
+
+        if (this.mounted) {
+          this.setState(function (state) {
+            var children = _extends({}, state.children);
+
+            delete children[child.key];
+            return {
+              children: children
+            };
+          });
+        }
+      };
+
+      _proto.render = function render() {
+        var _this$props = this.props,
+            Component = _this$props.component,
+            childFactory = _this$props.childFactory,
+            props = _objectWithoutPropertiesLoose(_this$props, ["component", "childFactory"]);
+
+        var children = values(this.state.children).map(childFactory);
+        delete props.appear;
+        delete props.enter;
+        delete props.exit;
+
+        if (Component === null) {
+          return children;
+        }
+
+        return _react.default.createElement(Component, props, children);
+      };
+
+      return TransitionGroup;
+    }(_react.default.Component);
+
+    TransitionGroup.childContextTypes = {
+      transitionGroup: _propTypes.default.object.isRequired
+    };
+    TransitionGroup.propTypes = process.env.NODE_ENV !== "production" ? {
+      /**
+       * `<TransitionGroup>` renders a `<div>` by default. You can change this
+       * behavior by providing a `component` prop.
+       * If you use React v16+ and would like to avoid a wrapping `<div>` element
+       * you can pass in `component={null}`. This is useful if the wrapping div
+       * borks your css styles.
+       */
+      component: _propTypes.default.any,
+
+      /**
+       * A set of `<Transition>` components, that are toggled `in` and out as they
+       * leave. the `<TransitionGroup>` will inject specific transition props, so
+       * remember to spread them through if you are wrapping the `<Transition>` as
+       * with our `<Fade>` example.
+       *
+       * While this component is meant for multiple `Transition` or `CSSTransition`
+       * children, sometimes you may want to have a single transition child with
+       * content that you want to be transitioned out and in when you change it
+       * (e.g. routes, images etc.) In that case you can change the `key` prop of
+       * the transition child as you change its content, this will cause
+       * `TransitionGroup` to transition the child out and back in.
+       */
+      children: _propTypes.default.node,
+
+      /**
+       * A convenience prop that enables or disables appear animations
+       * for all children. Note that specifying this will override any defaults set
+       * on individual children Transitions.
+       */
+      appear: _propTypes.default.bool,
+
+      /**
+       * A convenience prop that enables or disables enter animations
+       * for all children. Note that specifying this will override any defaults set
+       * on individual children Transitions.
+       */
+      enter: _propTypes.default.bool,
+
+      /**
+       * A convenience prop that enables or disables exit animations
+       * for all children. Note that specifying this will override any defaults set
+       * on individual children Transitions.
+       */
+      exit: _propTypes.default.bool,
+
+      /**
+       * You may need to apply reactive updates to a child as it is exiting.
+       * This is generally done by using `cloneElement` however in the case of an exiting
+       * child the element has already been removed and not accessible to the consumer.
+       *
+       * If you do need to update a child as it leaves you can provide a `childFactory`
+       * to wrap every child, even the ones that are leaving.
+       *
+       * @type Function(child: ReactElement) -> ReactElement
+       */
+      childFactory: _propTypes.default.func
+    } : {};
+    TransitionGroup.defaultProps = defaultProps;
+
+    var _default = (0, reactLifecyclesCompat_cjs.polyfill)(TransitionGroup);
+
+    exports.default = _default;
+    module.exports = exports["default"];
+    });
+
+    unwrapExports(TransitionGroup_1);
+
+    var ReplaceTransition_1 = createCommonjsModule(function (module, exports) {
+
+    exports.__esModule = true;
+    exports.default = void 0;
+
+    var _propTypes = _interopRequireDefault(propTypes);
+
+    var _react = _interopRequireDefault(React__default['default']);
+
+
+
+    var _TransitionGroup = _interopRequireDefault(TransitionGroup_1);
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+    function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+    /**
+     * The `<ReplaceTransition>` component is a specialized `Transition` component
+     * that animates between two children.
+     *
+     * ```jsx
+     * <ReplaceTransition in>
+     *   <Fade><div>I appear first</div></Fade>
+     *   <Fade><div>I replace the above</div></Fade>
+     * </ReplaceTransition>
+     * ```
+     */
+    var ReplaceTransition =
+    /*#__PURE__*/
+    function (_React$Component) {
+      _inheritsLoose(ReplaceTransition, _React$Component);
+
+      function ReplaceTransition() {
+        var _this;
+
+        for (var _len = arguments.length, _args = new Array(_len), _key = 0; _key < _len; _key++) {
+          _args[_key] = arguments[_key];
+        }
+
+        _this = _React$Component.call.apply(_React$Component, [this].concat(_args)) || this;
+
+        _this.handleEnter = function () {
+          for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            args[_key2] = arguments[_key2];
+          }
+
+          return _this.handleLifecycle('onEnter', 0, args);
+        };
+
+        _this.handleEntering = function () {
+          for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+            args[_key3] = arguments[_key3];
+          }
+
+          return _this.handleLifecycle('onEntering', 0, args);
+        };
+
+        _this.handleEntered = function () {
+          for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+            args[_key4] = arguments[_key4];
+          }
+
+          return _this.handleLifecycle('onEntered', 0, args);
+        };
+
+        _this.handleExit = function () {
+          for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+            args[_key5] = arguments[_key5];
+          }
+
+          return _this.handleLifecycle('onExit', 1, args);
+        };
+
+        _this.handleExiting = function () {
+          for (var _len6 = arguments.length, args = new Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+            args[_key6] = arguments[_key6];
+          }
+
+          return _this.handleLifecycle('onExiting', 1, args);
+        };
+
+        _this.handleExited = function () {
+          for (var _len7 = arguments.length, args = new Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+            args[_key7] = arguments[_key7];
+          }
+
+          return _this.handleLifecycle('onExited', 1, args);
+        };
+
+        return _this;
+      }
+
+      var _proto = ReplaceTransition.prototype;
+
+      _proto.handleLifecycle = function handleLifecycle(handler, idx, originalArgs) {
+        var _child$props;
+
+        var children = this.props.children;
+
+        var child = _react.default.Children.toArray(children)[idx];
+
+        if (child.props[handler]) (_child$props = child.props)[handler].apply(_child$props, originalArgs);
+        if (this.props[handler]) this.props[handler]((0, ReactDOM__default['default'].findDOMNode)(this));
+      };
+
+      _proto.render = function render() {
+        var _this$props = this.props,
+            children = _this$props.children,
+            inProp = _this$props.in,
+            props = _objectWithoutPropertiesLoose(_this$props, ["children", "in"]);
+
+        var _React$Children$toArr = _react.default.Children.toArray(children),
+            first = _React$Children$toArr[0],
+            second = _React$Children$toArr[1];
+
+        delete props.onEnter;
+        delete props.onEntering;
+        delete props.onEntered;
+        delete props.onExit;
+        delete props.onExiting;
+        delete props.onExited;
+        return _react.default.createElement(_TransitionGroup.default, props, inProp ? _react.default.cloneElement(first, {
+          key: 'first',
+          onEnter: this.handleEnter,
+          onEntering: this.handleEntering,
+          onEntered: this.handleEntered
+        }) : _react.default.cloneElement(second, {
+          key: 'second',
+          onEnter: this.handleExit,
+          onEntering: this.handleExiting,
+          onEntered: this.handleExited
+        }));
+      };
+
+      return ReplaceTransition;
+    }(_react.default.Component);
+
+    ReplaceTransition.propTypes = process.env.NODE_ENV !== "production" ? {
+      in: _propTypes.default.bool.isRequired,
+      children: function children(props, propName) {
+        if (_react.default.Children.count(props[propName]) !== 2) return new Error("\"" + propName + "\" must be exactly two transition components.");
+        return null;
+      }
+    } : {};
+    var _default = ReplaceTransition;
+    exports.default = _default;
+    module.exports = exports["default"];
+    });
+
+    unwrapExports(ReplaceTransition_1);
+
+    var reactTransitionGroup = createCommonjsModule(function (module) {
+
+    var _CSSTransition = _interopRequireDefault(CSSTransition_1);
+
+    var _ReplaceTransition = _interopRequireDefault(ReplaceTransition_1);
+
+    var _TransitionGroup = _interopRequireDefault(TransitionGroup_1);
+
+    var _Transition = _interopRequireDefault(Transition_1);
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    module.exports = {
+      Transition: _Transition.default,
+      TransitionGroup: _TransitionGroup.default,
+      ReplaceTransition: _ReplaceTransition.default,
+      CSSTransition: _CSSTransition.default
+    };
+    });
+
+    unwrapExports(reactTransitionGroup);
+    reactTransitionGroup.Transition;
+    var reactTransitionGroup_2 = reactTransitionGroup.TransitionGroup;
+    reactTransitionGroup.ReplaceTransition;
+    var reactTransitionGroup_4 = reactTransitionGroup.CSSTransition;
+
+    /**
+     * A collection of shims that provide minimal functionality of the ES6 collections.
+     *
+     * These implementations are not meant to be used outside of the ResizeObserver
+     * modules as they cover only a limited range of use cases.
+     */
+    /* eslint-disable require-jsdoc, valid-jsdoc */
+    var MapShim = (function () {
+        if (typeof Map !== 'undefined') {
+            return Map;
+        }
+        /**
+         * Returns index in provided array that matches the specified key.
+         *
+         * @param {Array<Array>} arr
+         * @param {*} key
+         * @returns {number}
+         */
+        function getIndex(arr, key) {
+            var result = -1;
+            arr.some(function (entry, index) {
+                if (entry[0] === key) {
+                    result = index;
+                    return true;
+                }
+                return false;
+            });
+            return result;
+        }
+        return /** @class */ (function () {
+            function class_1() {
+                this.__entries__ = [];
+            }
+            Object.defineProperty(class_1.prototype, "size", {
+                /**
+                 * @returns {boolean}
+                 */
+                get: function () {
+                    return this.__entries__.length;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            /**
+             * @param {*} key
+             * @returns {*}
+             */
+            class_1.prototype.get = function (key) {
+                var index = getIndex(this.__entries__, key);
+                var entry = this.__entries__[index];
+                return entry && entry[1];
+            };
+            /**
+             * @param {*} key
+             * @param {*} value
+             * @returns {void}
+             */
+            class_1.prototype.set = function (key, value) {
+                var index = getIndex(this.__entries__, key);
+                if (~index) {
+                    this.__entries__[index][1] = value;
+                }
+                else {
+                    this.__entries__.push([key, value]);
+                }
+            };
+            /**
+             * @param {*} key
+             * @returns {void}
+             */
+            class_1.prototype.delete = function (key) {
+                var entries = this.__entries__;
+                var index = getIndex(entries, key);
+                if (~index) {
+                    entries.splice(index, 1);
+                }
+            };
+            /**
+             * @param {*} key
+             * @returns {void}
+             */
+            class_1.prototype.has = function (key) {
+                return !!~getIndex(this.__entries__, key);
+            };
+            /**
+             * @returns {void}
+             */
+            class_1.prototype.clear = function () {
+                this.__entries__.splice(0);
+            };
+            /**
+             * @param {Function} callback
+             * @param {*} [ctx=null]
+             * @returns {void}
+             */
+            class_1.prototype.forEach = function (callback, ctx) {
+                if (ctx === void 0) { ctx = null; }
+                for (var _i = 0, _a = this.__entries__; _i < _a.length; _i++) {
+                    var entry = _a[_i];
+                    callback.call(ctx, entry[1], entry[0]);
+                }
+            };
+            return class_1;
+        }());
+    })();
+
+    /**
+     * Detects whether window and document objects are available in current environment.
+     */
+    var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && window.document === document;
+
+    // Returns global object of a current environment.
+    var global$1 = (function () {
+        if (typeof global !== 'undefined' && global.Math === Math) {
+            return global;
+        }
+        if (typeof self !== 'undefined' && self.Math === Math) {
+            return self;
+        }
+        if (typeof window !== 'undefined' && window.Math === Math) {
+            return window;
+        }
+        // eslint-disable-next-line no-new-func
+        return Function('return this')();
+    })();
+
+    /**
+     * A shim for the requestAnimationFrame which falls back to the setTimeout if
+     * first one is not supported.
+     *
+     * @returns {number} Requests' identifier.
+     */
+    var requestAnimationFrame$1 = (function () {
+        if (typeof requestAnimationFrame === 'function') {
+            // It's required to use a bounded function because IE sometimes throws
+            // an "Invalid calling object" error if rAF is invoked without the global
+            // object on the left hand side.
+            return requestAnimationFrame.bind(global$1);
+        }
+        return function (callback) { return setTimeout(function () { return callback(Date.now()); }, 1000 / 60); };
+    })();
+
+    // Defines minimum timeout before adding a trailing call.
+    var trailingTimeout = 2;
+    /**
+     * Creates a wrapper function which ensures that provided callback will be
+     * invoked only once during the specified delay period.
+     *
+     * @param {Function} callback - Function to be invoked after the delay period.
+     * @param {number} delay - Delay after which to invoke callback.
+     * @returns {Function}
+     */
+    function throttle (callback, delay) {
+        var leadingCall = false, trailingCall = false, lastCallTime = 0;
+        /**
+         * Invokes the original callback function and schedules new invocation if
+         * the "proxy" was called during current request.
+         *
+         * @returns {void}
+         */
+        function resolvePending() {
+            if (leadingCall) {
+                leadingCall = false;
+                callback();
+            }
+            if (trailingCall) {
+                proxy();
+            }
+        }
+        /**
+         * Callback invoked after the specified delay. It will further postpone
+         * invocation of the original function delegating it to the
+         * requestAnimationFrame.
+         *
+         * @returns {void}
+         */
+        function timeoutCallback() {
+            requestAnimationFrame$1(resolvePending);
+        }
+        /**
+         * Schedules invocation of the original function.
+         *
+         * @returns {void}
+         */
+        function proxy() {
+            var timeStamp = Date.now();
+            if (leadingCall) {
+                // Reject immediately following calls.
+                if (timeStamp - lastCallTime < trailingTimeout) {
+                    return;
+                }
+                // Schedule new call to be in invoked when the pending one is resolved.
+                // This is important for "transitions" which never actually start
+                // immediately so there is a chance that we might miss one if change
+                // happens amids the pending invocation.
+                trailingCall = true;
+            }
+            else {
+                leadingCall = true;
+                trailingCall = false;
+                setTimeout(timeoutCallback, delay);
+            }
+            lastCallTime = timeStamp;
+        }
+        return proxy;
+    }
+
+    // Minimum delay before invoking the update of observers.
+    var REFRESH_DELAY = 20;
+    // A list of substrings of CSS properties used to find transition events that
+    // might affect dimensions of observed elements.
+    var transitionKeys = ['top', 'right', 'bottom', 'left', 'width', 'height', 'size', 'weight'];
+    // Check if MutationObserver is available.
+    var mutationObserverSupported = typeof MutationObserver !== 'undefined';
+    /**
+     * Singleton controller class which handles updates of ResizeObserver instances.
+     */
+    var ResizeObserverController = /** @class */ (function () {
+        /**
+         * Creates a new instance of ResizeObserverController.
+         *
+         * @private
+         */
+        function ResizeObserverController() {
+            /**
+             * Indicates whether DOM listeners have been added.
+             *
+             * @private {boolean}
+             */
+            this.connected_ = false;
+            /**
+             * Tells that controller has subscribed for Mutation Events.
+             *
+             * @private {boolean}
+             */
+            this.mutationEventsAdded_ = false;
+            /**
+             * Keeps reference to the instance of MutationObserver.
+             *
+             * @private {MutationObserver}
+             */
+            this.mutationsObserver_ = null;
+            /**
+             * A list of connected observers.
+             *
+             * @private {Array<ResizeObserverSPI>}
+             */
+            this.observers_ = [];
+            this.onTransitionEnd_ = this.onTransitionEnd_.bind(this);
+            this.refresh = throttle(this.refresh.bind(this), REFRESH_DELAY);
+        }
+        /**
+         * Adds observer to observers list.
+         *
+         * @param {ResizeObserverSPI} observer - Observer to be added.
+         * @returns {void}
+         */
+        ResizeObserverController.prototype.addObserver = function (observer) {
+            if (!~this.observers_.indexOf(observer)) {
+                this.observers_.push(observer);
+            }
+            // Add listeners if they haven't been added yet.
+            if (!this.connected_) {
+                this.connect_();
+            }
+        };
+        /**
+         * Removes observer from observers list.
+         *
+         * @param {ResizeObserverSPI} observer - Observer to be removed.
+         * @returns {void}
+         */
+        ResizeObserverController.prototype.removeObserver = function (observer) {
+            var observers = this.observers_;
+            var index = observers.indexOf(observer);
+            // Remove observer if it's present in registry.
+            if (~index) {
+                observers.splice(index, 1);
+            }
+            // Remove listeners if controller has no connected observers.
+            if (!observers.length && this.connected_) {
+                this.disconnect_();
+            }
+        };
+        /**
+         * Invokes the update of observers. It will continue running updates insofar
+         * it detects changes.
+         *
+         * @returns {void}
+         */
+        ResizeObserverController.prototype.refresh = function () {
+            var changesDetected = this.updateObservers_();
+            // Continue running updates if changes have been detected as there might
+            // be future ones caused by CSS transitions.
+            if (changesDetected) {
+                this.refresh();
+            }
+        };
+        /**
+         * Updates every observer from observers list and notifies them of queued
+         * entries.
+         *
+         * @private
+         * @returns {boolean} Returns "true" if any observer has detected changes in
+         *      dimensions of it's elements.
+         */
+        ResizeObserverController.prototype.updateObservers_ = function () {
+            // Collect observers that have active observations.
+            var activeObservers = this.observers_.filter(function (observer) {
+                return observer.gatherActive(), observer.hasActive();
+            });
+            // Deliver notifications in a separate cycle in order to avoid any
+            // collisions between observers, e.g. when multiple instances of
+            // ResizeObserver are tracking the same element and the callback of one
+            // of them changes content dimensions of the observed target. Sometimes
+            // this may result in notifications being blocked for the rest of observers.
+            activeObservers.forEach(function (observer) { return observer.broadcastActive(); });
+            return activeObservers.length > 0;
+        };
+        /**
+         * Initializes DOM listeners.
+         *
+         * @private
+         * @returns {void}
+         */
+        ResizeObserverController.prototype.connect_ = function () {
+            // Do nothing if running in a non-browser environment or if listeners
+            // have been already added.
+            if (!isBrowser || this.connected_) {
+                return;
+            }
+            // Subscription to the "Transitionend" event is used as a workaround for
+            // delayed transitions. This way it's possible to capture at least the
+            // final state of an element.
+            document.addEventListener('transitionend', this.onTransitionEnd_);
+            window.addEventListener('resize', this.refresh);
+            if (mutationObserverSupported) {
+                this.mutationsObserver_ = new MutationObserver(this.refresh);
+                this.mutationsObserver_.observe(document, {
+                    attributes: true,
+                    childList: true,
+                    characterData: true,
+                    subtree: true
+                });
+            }
+            else {
+                document.addEventListener('DOMSubtreeModified', this.refresh);
+                this.mutationEventsAdded_ = true;
+            }
+            this.connected_ = true;
+        };
+        /**
+         * Removes DOM listeners.
+         *
+         * @private
+         * @returns {void}
+         */
+        ResizeObserverController.prototype.disconnect_ = function () {
+            // Do nothing if running in a non-browser environment or if listeners
+            // have been already removed.
+            if (!isBrowser || !this.connected_) {
+                return;
+            }
+            document.removeEventListener('transitionend', this.onTransitionEnd_);
+            window.removeEventListener('resize', this.refresh);
+            if (this.mutationsObserver_) {
+                this.mutationsObserver_.disconnect();
+            }
+            if (this.mutationEventsAdded_) {
+                document.removeEventListener('DOMSubtreeModified', this.refresh);
+            }
+            this.mutationsObserver_ = null;
+            this.mutationEventsAdded_ = false;
+            this.connected_ = false;
+        };
+        /**
+         * "Transitionend" event handler.
+         *
+         * @private
+         * @param {TransitionEvent} event
+         * @returns {void}
+         */
+        ResizeObserverController.prototype.onTransitionEnd_ = function (_a) {
+            var _b = _a.propertyName, propertyName = _b === void 0 ? '' : _b;
+            // Detect whether transition may affect dimensions of an element.
+            var isReflowProperty = transitionKeys.some(function (key) {
+                return !!~propertyName.indexOf(key);
+            });
+            if (isReflowProperty) {
+                this.refresh();
+            }
+        };
+        /**
+         * Returns instance of the ResizeObserverController.
+         *
+         * @returns {ResizeObserverController}
+         */
+        ResizeObserverController.getInstance = function () {
+            if (!this.instance_) {
+                this.instance_ = new ResizeObserverController();
+            }
+            return this.instance_;
+        };
+        /**
+         * Holds reference to the controller's instance.
+         *
+         * @private {ResizeObserverController}
+         */
+        ResizeObserverController.instance_ = null;
+        return ResizeObserverController;
+    }());
+
+    /**
+     * Defines non-writable/enumerable properties of the provided target object.
+     *
+     * @param {Object} target - Object for which to define properties.
+     * @param {Object} props - Properties to be defined.
+     * @returns {Object} Target object.
+     */
+    var defineConfigurable = (function (target, props) {
+        for (var _i = 0, _a = Object.keys(props); _i < _a.length; _i++) {
+            var key = _a[_i];
+            Object.defineProperty(target, key, {
+                value: props[key],
+                enumerable: false,
+                writable: false,
+                configurable: true
+            });
+        }
+        return target;
+    });
+
+    /**
+     * Returns the global object associated with provided element.
+     *
+     * @param {Object} target
+     * @returns {Object}
+     */
+    var getWindowOf = (function (target) {
+        // Assume that the element is an instance of Node, which means that it
+        // has the "ownerDocument" property from which we can retrieve a
+        // corresponding global object.
+        var ownerGlobal = target && target.ownerDocument && target.ownerDocument.defaultView;
+        // Return the local global object if it's not possible extract one from
+        // provided element.
+        return ownerGlobal || global$1;
+    });
+
+    // Placeholder of an empty content rectangle.
+    var emptyRect = createRectInit(0, 0, 0, 0);
+    /**
+     * Converts provided string to a number.
+     *
+     * @param {number|string} value
+     * @returns {number}
+     */
+    function toFloat(value) {
+        return parseFloat(value) || 0;
+    }
+    /**
+     * Extracts borders size from provided styles.
+     *
+     * @param {CSSStyleDeclaration} styles
+     * @param {...string} positions - Borders positions (top, right, ...)
+     * @returns {number}
+     */
+    function getBordersSize(styles) {
+        var positions = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            positions[_i - 1] = arguments[_i];
+        }
+        return positions.reduce(function (size, position) {
+            var value = styles['border-' + position + '-width'];
+            return size + toFloat(value);
+        }, 0);
+    }
+    /**
+     * Extracts paddings sizes from provided styles.
+     *
+     * @param {CSSStyleDeclaration} styles
+     * @returns {Object} Paddings box.
+     */
+    function getPaddings(styles) {
+        var positions = ['top', 'right', 'bottom', 'left'];
+        var paddings = {};
+        for (var _i = 0, positions_1 = positions; _i < positions_1.length; _i++) {
+            var position = positions_1[_i];
+            var value = styles['padding-' + position];
+            paddings[position] = toFloat(value);
+        }
+        return paddings;
+    }
+    /**
+     * Calculates content rectangle of provided SVG element.
+     *
+     * @param {SVGGraphicsElement} target - Element content rectangle of which needs
+     *      to be calculated.
+     * @returns {DOMRectInit}
+     */
+    function getSVGContentRect(target) {
+        var bbox = target.getBBox();
+        return createRectInit(0, 0, bbox.width, bbox.height);
+    }
+    /**
+     * Calculates content rectangle of provided HTMLElement.
+     *
+     * @param {HTMLElement} target - Element for which to calculate the content rectangle.
+     * @returns {DOMRectInit}
+     */
+    function getHTMLElementContentRect(target) {
+        // Client width & height properties can't be
+        // used exclusively as they provide rounded values.
+        var clientWidth = target.clientWidth, clientHeight = target.clientHeight;
+        // By this condition we can catch all non-replaced inline, hidden and
+        // detached elements. Though elements with width & height properties less
+        // than 0.5 will be discarded as well.
+        //
+        // Without it we would need to implement separate methods for each of
+        // those cases and it's not possible to perform a precise and performance
+        // effective test for hidden elements. E.g. even jQuery's ':visible' filter
+        // gives wrong results for elements with width & height less than 0.5.
+        if (!clientWidth && !clientHeight) {
+            return emptyRect;
+        }
+        var styles = getWindowOf(target).getComputedStyle(target);
+        var paddings = getPaddings(styles);
+        var horizPad = paddings.left + paddings.right;
+        var vertPad = paddings.top + paddings.bottom;
+        // Computed styles of width & height are being used because they are the
+        // only dimensions available to JS that contain non-rounded values. It could
+        // be possible to utilize the getBoundingClientRect if only it's data wasn't
+        // affected by CSS transformations let alone paddings, borders and scroll bars.
+        var width = toFloat(styles.width), height = toFloat(styles.height);
+        // Width & height include paddings and borders when the 'border-box' box
+        // model is applied (except for IE).
+        if (styles.boxSizing === 'border-box') {
+            // Following conditions are required to handle Internet Explorer which
+            // doesn't include paddings and borders to computed CSS dimensions.
+            //
+            // We can say that if CSS dimensions + paddings are equal to the "client"
+            // properties then it's either IE, and thus we don't need to subtract
+            // anything, or an element merely doesn't have paddings/borders styles.
+            if (Math.round(width + horizPad) !== clientWidth) {
+                width -= getBordersSize(styles, 'left', 'right') + horizPad;
+            }
+            if (Math.round(height + vertPad) !== clientHeight) {
+                height -= getBordersSize(styles, 'top', 'bottom') + vertPad;
+            }
+        }
+        // Following steps can't be applied to the document's root element as its
+        // client[Width/Height] properties represent viewport area of the window.
+        // Besides, it's as well not necessary as the <html> itself neither has
+        // rendered scroll bars nor it can be clipped.
+        if (!isDocumentElement(target)) {
+            // In some browsers (only in Firefox, actually) CSS width & height
+            // include scroll bars size which can be removed at this step as scroll
+            // bars are the only difference between rounded dimensions + paddings
+            // and "client" properties, though that is not always true in Chrome.
+            var vertScrollbar = Math.round(width + horizPad) - clientWidth;
+            var horizScrollbar = Math.round(height + vertPad) - clientHeight;
+            // Chrome has a rather weird rounding of "client" properties.
+            // E.g. for an element with content width of 314.2px it sometimes gives
+            // the client width of 315px and for the width of 314.7px it may give
+            // 314px. And it doesn't happen all the time. So just ignore this delta
+            // as a non-relevant.
+            if (Math.abs(vertScrollbar) !== 1) {
+                width -= vertScrollbar;
+            }
+            if (Math.abs(horizScrollbar) !== 1) {
+                height -= horizScrollbar;
+            }
+        }
+        return createRectInit(paddings.left, paddings.top, width, height);
+    }
+    /**
+     * Checks whether provided element is an instance of the SVGGraphicsElement.
+     *
+     * @param {Element} target - Element to be checked.
+     * @returns {boolean}
+     */
+    var isSVGGraphicsElement = (function () {
+        // Some browsers, namely IE and Edge, don't have the SVGGraphicsElement
+        // interface.
+        if (typeof SVGGraphicsElement !== 'undefined') {
+            return function (target) { return target instanceof getWindowOf(target).SVGGraphicsElement; };
+        }
+        // If it's so, then check that element is at least an instance of the
+        // SVGElement and that it has the "getBBox" method.
+        // eslint-disable-next-line no-extra-parens
+        return function (target) { return (target instanceof getWindowOf(target).SVGElement &&
+            typeof target.getBBox === 'function'); };
+    })();
+    /**
+     * Checks whether provided element is a document element (<html>).
+     *
+     * @param {Element} target - Element to be checked.
+     * @returns {boolean}
+     */
+    function isDocumentElement(target) {
+        return target === getWindowOf(target).document.documentElement;
+    }
+    /**
+     * Calculates an appropriate content rectangle for provided html or svg element.
+     *
+     * @param {Element} target - Element content rectangle of which needs to be calculated.
+     * @returns {DOMRectInit}
+     */
+    function getContentRect(target) {
+        if (!isBrowser) {
+            return emptyRect;
+        }
+        if (isSVGGraphicsElement(target)) {
+            return getSVGContentRect(target);
+        }
+        return getHTMLElementContentRect(target);
+    }
+    /**
+     * Creates rectangle with an interface of the DOMRectReadOnly.
+     * Spec: https://drafts.fxtf.org/geometry/#domrectreadonly
+     *
+     * @param {DOMRectInit} rectInit - Object with rectangle's x/y coordinates and dimensions.
+     * @returns {DOMRectReadOnly}
+     */
+    function createReadOnlyRect(_a) {
+        var x = _a.x, y = _a.y, width = _a.width, height = _a.height;
+        // If DOMRectReadOnly is available use it as a prototype for the rectangle.
+        var Constr = typeof DOMRectReadOnly !== 'undefined' ? DOMRectReadOnly : Object;
+        var rect = Object.create(Constr.prototype);
+        // Rectangle's properties are not writable and non-enumerable.
+        defineConfigurable(rect, {
+            x: x, y: y, width: width, height: height,
+            top: y,
+            right: x + width,
+            bottom: height + y,
+            left: x
+        });
+        return rect;
+    }
+    /**
+     * Creates DOMRectInit object based on the provided dimensions and the x/y coordinates.
+     * Spec: https://drafts.fxtf.org/geometry/#dictdef-domrectinit
+     *
+     * @param {number} x - X coordinate.
+     * @param {number} y - Y coordinate.
+     * @param {number} width - Rectangle's width.
+     * @param {number} height - Rectangle's height.
+     * @returns {DOMRectInit}
+     */
+    function createRectInit(x, y, width, height) {
+        return { x: x, y: y, width: width, height: height };
+    }
+
+    /**
+     * Class that is responsible for computations of the content rectangle of
+     * provided DOM element and for keeping track of it's changes.
+     */
+    var ResizeObservation = /** @class */ (function () {
+        /**
+         * Creates an instance of ResizeObservation.
+         *
+         * @param {Element} target - Element to be observed.
+         */
+        function ResizeObservation(target) {
+            /**
+             * Broadcasted width of content rectangle.
+             *
+             * @type {number}
+             */
+            this.broadcastWidth = 0;
+            /**
+             * Broadcasted height of content rectangle.
+             *
+             * @type {number}
+             */
+            this.broadcastHeight = 0;
+            /**
+             * Reference to the last observed content rectangle.
+             *
+             * @private {DOMRectInit}
+             */
+            this.contentRect_ = createRectInit(0, 0, 0, 0);
+            this.target = target;
+        }
+        /**
+         * Updates content rectangle and tells whether it's width or height properties
+         * have changed since the last broadcast.
+         *
+         * @returns {boolean}
+         */
+        ResizeObservation.prototype.isActive = function () {
+            var rect = getContentRect(this.target);
+            this.contentRect_ = rect;
+            return (rect.width !== this.broadcastWidth ||
+                rect.height !== this.broadcastHeight);
+        };
+        /**
+         * Updates 'broadcastWidth' and 'broadcastHeight' properties with a data
+         * from the corresponding properties of the last observed content rectangle.
+         *
+         * @returns {DOMRectInit} Last observed content rectangle.
+         */
+        ResizeObservation.prototype.broadcastRect = function () {
+            var rect = this.contentRect_;
+            this.broadcastWidth = rect.width;
+            this.broadcastHeight = rect.height;
+            return rect;
+        };
+        return ResizeObservation;
+    }());
+
+    var ResizeObserverEntry = /** @class */ (function () {
+        /**
+         * Creates an instance of ResizeObserverEntry.
+         *
+         * @param {Element} target - Element that is being observed.
+         * @param {DOMRectInit} rectInit - Data of the element's content rectangle.
+         */
+        function ResizeObserverEntry(target, rectInit) {
+            var contentRect = createReadOnlyRect(rectInit);
+            // According to the specification following properties are not writable
+            // and are also not enumerable in the native implementation.
+            //
+            // Property accessors are not being used as they'd require to define a
+            // private WeakMap storage which may cause memory leaks in browsers that
+            // don't support this type of collections.
+            defineConfigurable(this, { target: target, contentRect: contentRect });
+        }
+        return ResizeObserverEntry;
+    }());
+
+    var ResizeObserverSPI = /** @class */ (function () {
+        /**
+         * Creates a new instance of ResizeObserver.
+         *
+         * @param {ResizeObserverCallback} callback - Callback function that is invoked
+         *      when one of the observed elements changes it's content dimensions.
+         * @param {ResizeObserverController} controller - Controller instance which
+         *      is responsible for the updates of observer.
+         * @param {ResizeObserver} callbackCtx - Reference to the public
+         *      ResizeObserver instance which will be passed to callback function.
+         */
+        function ResizeObserverSPI(callback, controller, callbackCtx) {
+            /**
+             * Collection of resize observations that have detected changes in dimensions
+             * of elements.
+             *
+             * @private {Array<ResizeObservation>}
+             */
+            this.activeObservations_ = [];
+            /**
+             * Registry of the ResizeObservation instances.
+             *
+             * @private {Map<Element, ResizeObservation>}
+             */
+            this.observations_ = new MapShim();
+            if (typeof callback !== 'function') {
+                throw new TypeError('The callback provided as parameter 1 is not a function.');
+            }
+            this.callback_ = callback;
+            this.controller_ = controller;
+            this.callbackCtx_ = callbackCtx;
+        }
+        /**
+         * Starts observing provided element.
+         *
+         * @param {Element} target - Element to be observed.
+         * @returns {void}
+         */
+        ResizeObserverSPI.prototype.observe = function (target) {
+            if (!arguments.length) {
+                throw new TypeError('1 argument required, but only 0 present.');
+            }
+            // Do nothing if current environment doesn't have the Element interface.
+            if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+                return;
+            }
+            if (!(target instanceof getWindowOf(target).Element)) {
+                throw new TypeError('parameter 1 is not of type "Element".');
+            }
+            var observations = this.observations_;
+            // Do nothing if element is already being observed.
+            if (observations.has(target)) {
+                return;
+            }
+            observations.set(target, new ResizeObservation(target));
+            this.controller_.addObserver(this);
+            // Force the update of observations.
+            this.controller_.refresh();
+        };
+        /**
+         * Stops observing provided element.
+         *
+         * @param {Element} target - Element to stop observing.
+         * @returns {void}
+         */
+        ResizeObserverSPI.prototype.unobserve = function (target) {
+            if (!arguments.length) {
+                throw new TypeError('1 argument required, but only 0 present.');
+            }
+            // Do nothing if current environment doesn't have the Element interface.
+            if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+                return;
+            }
+            if (!(target instanceof getWindowOf(target).Element)) {
+                throw new TypeError('parameter 1 is not of type "Element".');
+            }
+            var observations = this.observations_;
+            // Do nothing if element is not being observed.
+            if (!observations.has(target)) {
+                return;
+            }
+            observations.delete(target);
+            if (!observations.size) {
+                this.controller_.removeObserver(this);
+            }
+        };
+        /**
+         * Stops observing all elements.
+         *
+         * @returns {void}
+         */
+        ResizeObserverSPI.prototype.disconnect = function () {
+            this.clearActive();
+            this.observations_.clear();
+            this.controller_.removeObserver(this);
+        };
+        /**
+         * Collects observation instances the associated element of which has changed
+         * it's content rectangle.
+         *
+         * @returns {void}
+         */
+        ResizeObserverSPI.prototype.gatherActive = function () {
+            var _this = this;
+            this.clearActive();
+            this.observations_.forEach(function (observation) {
+                if (observation.isActive()) {
+                    _this.activeObservations_.push(observation);
+                }
+            });
+        };
+        /**
+         * Invokes initial callback function with a list of ResizeObserverEntry
+         * instances collected from active resize observations.
+         *
+         * @returns {void}
+         */
+        ResizeObserverSPI.prototype.broadcastActive = function () {
+            // Do nothing if observer doesn't have active observations.
+            if (!this.hasActive()) {
+                return;
+            }
+            var ctx = this.callbackCtx_;
+            // Create ResizeObserverEntry instance for every active observation.
+            var entries = this.activeObservations_.map(function (observation) {
+                return new ResizeObserverEntry(observation.target, observation.broadcastRect());
+            });
+            this.callback_.call(ctx, entries, ctx);
+            this.clearActive();
+        };
+        /**
+         * Clears the collection of active observations.
+         *
+         * @returns {void}
+         */
+        ResizeObserverSPI.prototype.clearActive = function () {
+            this.activeObservations_.splice(0);
+        };
+        /**
+         * Tells whether observer has active observations.
+         *
+         * @returns {boolean}
+         */
+        ResizeObserverSPI.prototype.hasActive = function () {
+            return this.activeObservations_.length > 0;
+        };
+        return ResizeObserverSPI;
+    }());
+
+    // Registry of internal observers. If WeakMap is not available use current shim
+    // for the Map collection as it has all required methods and because WeakMap
+    // can't be fully polyfilled anyway.
+    var observers = typeof WeakMap !== 'undefined' ? new WeakMap() : new MapShim();
+    /**
+     * ResizeObserver API. Encapsulates the ResizeObserver SPI implementation
+     * exposing only those methods and properties that are defined in the spec.
+     */
+    var ResizeObserver = /** @class */ (function () {
+        /**
+         * Creates a new instance of ResizeObserver.
+         *
+         * @param {ResizeObserverCallback} callback - Callback that is invoked when
+         *      dimensions of the observed elements change.
+         */
+        function ResizeObserver(callback) {
+            if (!(this instanceof ResizeObserver)) {
+                throw new TypeError('Cannot call a class as a function.');
+            }
+            if (!arguments.length) {
+                throw new TypeError('1 argument required, but only 0 present.');
+            }
+            var controller = ResizeObserverController.getInstance();
+            var observer = new ResizeObserverSPI(callback, controller, this);
+            observers.set(this, observer);
+        }
+        return ResizeObserver;
+    }());
+    // Expose public methods of ResizeObserver.
+    [
+        'observe',
+        'unobserve',
+        'disconnect'
+    ].forEach(function (method) {
+        ResizeObserver.prototype[method] = function () {
+            var _a;
+            return (_a = observers.get(this))[method].apply(_a, arguments);
+        };
+    });
+
+    var index$1 = (function () {
+        // Export existing implementation if available.
+        if (typeof global$1.ResizeObserver !== 'undefined') {
+            return global$1.ResizeObserver;
+        }
+        return ResizeObserver;
+    })();
+
     var ARROW_LEFT = "arrow-left";
     var ARROW_RIGHT = "arrow-right";
+    var PAUSE = "pause";
+    var PLAY = "play";
+    var RESET = "reset";
 
     /*
      * Copyright 2017 Palantir Technologies, Inc. All rights reserved.
@@ -1891,7 +5592,7 @@
             // render path elements, or nothing if icon name is unknown.
             var paths = this.renderSvgPaths(pixelGridSize, icon);
             // eslint-disable-next-line deprecation/deprecation
-            var classes = classnames(ICON, iconClass(icon), intentClass(intent), className);
+            var classes = classnames$1(ICON, iconClass(icon), intentClass$1(intent), className);
             var viewBox = "0 0 " + pixelGridSize + " " + pixelGridSize;
             return React.createElement(tagName, __assign(__assign({}, htmlprops), { "aria-hidden": title ? undefined : true, className: classes, title: htmlTitle }), React.createElement("svg", { fill: color, "data-icon": icon, width: size, height: size, viewBox: viewBox },
                 title && React.createElement("desc", null, title),
@@ -1906,7 +5607,7 @@
             }
             return pathStrings.map(function (d, i) { return React.createElement("path", { key: i, d: d, fillRule: "evenodd" }); });
         };
-        Icon.displayName = DISPLAYNAME_PREFIX + ".Icon";
+        Icon.displayName = DISPLAYNAME_PREFIX$1 + ".Icon";
         /** @deprecated use IconSize.STANDARD */
         Icon.SIZE_STANDARD = IconSize.STANDARD;
         /** @deprecated use IconSize.LARGE */
@@ -1915,7 +5616,7 @@
             reactLifecyclesCompat_cjs_1
         ], Icon);
         return Icon;
-    }(AbstractPureComponent2));
+    }(AbstractPureComponent2$1));
 
     var SpinnerSize;
     (function (SpinnerSize) {
@@ -1948,7 +5649,7 @@
             var _a;
             var _b = this.props, className = _b.className, intent = _b.intent, value = _b.value, _c = _b.tagName, tagName = _c === void 0 ? "div" : _c;
             var size = this.getSize();
-            var classes = classnames(SPINNER, intentClass(intent), (_a = {}, _a[SPINNER_NO_SPIN] = value != null, _a), className);
+            var classes = classnames$1(SPINNER, intentClass$1(intent), (_a = {}, _a[SPINNER_NO_SPIN] = value != null, _a), className);
             // keep spinner track width consistent at all sizes (down to about 10px).
             var strokeWidth = Math.min(MIN_STROKE_WIDTH, (STROKE_WIDTH * SpinnerSize.LARGE) / size);
             var strokeOffset = PATH_LENGTH - PATH_LENGTH * (value == null ? 0.25 : clamp(value, 0, 1));
@@ -1993,7 +5694,7 @@
             var viewBoxWidth = (radius * 2).toFixed(2);
             return viewBoxX + " " + viewBoxX + " " + viewBoxWidth + " " + viewBoxWidth;
         };
-        Spinner.displayName = DISPLAYNAME_PREFIX + ".Spinner";
+        Spinner.displayName = DISPLAYNAME_PREFIX$1 + ".Spinner";
         /** @deprecated use SpinnerSize.SMALL */
         Spinner.SIZE_SMALL = SpinnerSize.SMALL;
         /** @deprecated use SpinnerSize.STANDARD */
@@ -2004,7 +5705,7 @@
             reactLifecyclesCompat_cjs_1
         ], Spinner);
         return Spinner;
-    }(AbstractPureComponent2));
+    }(AbstractPureComponent2$1));
 
     var AbstractButton = /** @class */ (function (_super) {
         __extends(AbstractButton, _super);
@@ -2054,16 +5755,16 @@
             var _a;
             var _b = this.props, active = _b.active, alignText = _b.alignText, fill = _b.fill, large = _b.large, loading = _b.loading, outlined = _b.outlined, minimal = _b.minimal, small = _b.small, tabIndex = _b.tabIndex;
             var disabled = this.props.disabled || loading;
-            var className = classnames(BUTTON, (_a = {},
-                _a[ACTIVE] = !disabled && (active || this.state.isActive),
-                _a[DISABLED] = disabled,
-                _a[FILL] = fill,
+            var className = classnames$1(BUTTON, (_a = {},
+                _a[ACTIVE$1] = !disabled && (active || this.state.isActive),
+                _a[DISABLED$1] = disabled,
+                _a[FILL$1] = fill,
                 _a[LARGE] = large,
                 _a[LOADING] = loading,
-                _a[MINIMAL] = minimal,
+                _a[MINIMAL$1] = minimal,
                 _a[OUTLINED] = outlined,
                 _a[SMALL] = small,
-                _a), alignmentClass(alignText), intentClass(this.props.intent), this.props.className);
+                _a), alignmentClass(alignText), intentClass$1(this.props.intent), this.props.className);
             return {
                 className: className,
                 disabled: disabled,
@@ -2086,7 +5787,7 @@
             ];
         };
         return AbstractButton;
-    }(AbstractPureComponent2));
+    }(AbstractPureComponent2$1));
 
     var Button = /** @class */ (function (_super) {
         __extends(Button, _super);
@@ -2102,12 +5803,12 @@
         };
         Button.prototype.componentDidUpdate = function (prevProps) {
             if (prevProps.elementRef !== this.props.elementRef) {
-                setRef(prevProps.elementRef, null);
+                setRef$1(prevProps.elementRef, null);
                 this.handleRef = refHandler(this, "buttonRef", this.props.elementRef);
-                setRef(this.props.elementRef, this.buttonRef);
+                setRef$1(this.props.elementRef, this.buttonRef);
             }
         };
-        Button.displayName = DISPLAYNAME_PREFIX + ".Button";
+        Button.displayName = DISPLAYNAME_PREFIX$1 + ".Button";
         return Button;
     }(AbstractButton));
     /** @class */ ((function (_super) {
@@ -2126,14 +5827,122 @@
         };
         AnchorButton.prototype.componentDidUpdate = function (prevProps) {
             if (prevProps.elementRef !== this.props.elementRef) {
-                setRef(prevProps.elementRef, null);
+                setRef$1(prevProps.elementRef, null);
                 this.handleRef = refHandler(this, "buttonRef", this.props.elementRef);
-                setRef(this.props.elementRef, this.buttonRef);
+                setRef$1(this.props.elementRef, this.buttonRef);
             }
         };
-        AnchorButton.displayName = DISPLAYNAME_PREFIX + ".AnchorButton";
+        AnchorButton.displayName = DISPLAYNAME_PREFIX$1 + ".AnchorButton";
         return AnchorButton;
     })(AbstractButton));
+
+    /**
+     * Renders common control elements, with additional props to customize appearance.
+     * This component is not exported and is only used in this file for `Checkbox`, `Radio`, and `Switch` below.
+     */
+    var Control = function (_a) {
+        var _b;
+        var alignIndicator = _a.alignIndicator, children = _a.children, className = _a.className, indicatorChildren = _a.indicatorChildren, inline = _a.inline, inputRef = _a.inputRef, label = _a.label, labelElement = _a.labelElement, large = _a.large, style = _a.style, type = _a.type, typeClassName = _a.typeClassName, _c = _a.tagName, tagName = _c === void 0 ? "label" : _c, htmlProps = __rest(_a, ["alignIndicator", "children", "className", "indicatorChildren", "inline", "inputRef", "label", "labelElement", "large", "style", "type", "typeClassName", "tagName"]);
+        var classes = classnames$1(CONTROL, typeClassName, (_b = {},
+            _b[DISABLED$1] = htmlProps.disabled,
+            _b[INLINE] = inline,
+            _b[LARGE] = large,
+            _b), alignmentClass(alignIndicator), className);
+        return React.createElement(tagName, { className: classes, style: style }, React.createElement("input", __assign({}, htmlProps, { ref: inputRef, type: type })), React.createElement("span", { className: CONTROL_INDICATOR }, indicatorChildren), label, labelElement, children);
+    };
+    var Switch = /** @class */ (function (_super) {
+        __extends(Switch, _super);
+        function Switch() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Switch.prototype.render = function () {
+            var _a = this.props, innerLabelChecked = _a.innerLabelChecked, innerLabel = _a.innerLabel, controlProps = __rest(_a, ["innerLabelChecked", "innerLabel"]);
+            var switchLabels = innerLabel || innerLabelChecked
+                ? [
+                    React.createElement("div", { key: "checked", className: CONTROL_INDICATOR_CHILD },
+                        React.createElement("div", { className: SWITCH_INNER_TEXT }, innerLabelChecked ? innerLabelChecked : innerLabel)),
+                    React.createElement("div", { key: "unchecked", className: CONTROL_INDICATOR_CHILD },
+                        React.createElement("div", { className: SWITCH_INNER_TEXT }, innerLabel)),
+                ]
+                : null;
+            return (React.createElement(Control, __assign({}, controlProps, { type: "checkbox", typeClassName: SWITCH, indicatorChildren: switchLabels })));
+        };
+        Switch.displayName = DISPLAYNAME_PREFIX$1 + ".Switch";
+        Switch = __decorate([
+            reactLifecyclesCompat_cjs_1
+        ], Switch);
+        return Switch;
+    }(AbstractPureComponent2$1));
+    /** @class */ ((function (_super) {
+        __extends(Radio, _super);
+        function Radio() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Radio.prototype.render = function () {
+            return React.createElement(Control, __assign({}, this.props, { type: "radio", typeClassName: RADIO }));
+        };
+        Radio.displayName = DISPLAYNAME_PREFIX$1 + ".Radio";
+        Radio = __decorate([
+            reactLifecyclesCompat_cjs_1
+        ], Radio);
+        return Radio;
+    })(AbstractPureComponent2$1));
+    /** @class */ ((function (_super) {
+        __extends(Checkbox, _super);
+        function Checkbox() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = {
+                indeterminate: _this.props.indeterminate || _this.props.defaultIndeterminate || false,
+            };
+            // must maintain internal reference for `indeterminate` support
+            _this.input = null;
+            _this.handleInputRef = refHandler(_this, "input", _this.props.inputRef);
+            _this.handleChange = function (evt) {
+                var _a, _b;
+                var indeterminate = evt.target.indeterminate;
+                // update state immediately only if uncontrolled
+                if (_this.props.indeterminate == null) {
+                    _this.setState({ indeterminate: indeterminate });
+                }
+                // otherwise wait for props change. always invoke handler.
+                (_b = (_a = _this.props).onChange) === null || _b === void 0 ? void 0 : _b.call(_a, evt);
+            };
+            return _this;
+        }
+        Checkbox.getDerivedStateFromProps = function (_a) {
+            var indeterminate = _a.indeterminate;
+            // put props into state if controlled by props
+            if (indeterminate != null) {
+                return { indeterminate: indeterminate };
+            }
+            return null;
+        };
+        Checkbox.prototype.render = function () {
+            var _a = this.props; _a.defaultIndeterminate; _a.indeterminate; var controlProps = __rest(_a, ["defaultIndeterminate", "indeterminate"]);
+            return (React.createElement(Control, __assign({}, controlProps, { inputRef: this.handleInputRef, onChange: this.handleChange, type: "checkbox", typeClassName: CHECKBOX })));
+        };
+        Checkbox.prototype.componentDidMount = function () {
+            this.updateIndeterminate();
+        };
+        Checkbox.prototype.componentDidUpdate = function (prevProps) {
+            this.updateIndeterminate();
+            if (prevProps.inputRef !== this.props.inputRef) {
+                setRef$1(prevProps.inputRef, null);
+                this.handleInputRef = refHandler(this, "input", this.props.inputRef);
+                setRef$1(this.props.inputRef, this.input);
+            }
+        };
+        Checkbox.prototype.updateIndeterminate = function () {
+            if (this.input != null) {
+                this.input.indeterminate = this.state.indeterminate;
+            }
+        };
+        Checkbox.displayName = DISPLAYNAME_PREFIX$1 + ".Checkbox";
+        Checkbox = __decorate([
+            reactLifecyclesCompat_cjs_1
+        ], Checkbox);
+        return Checkbox;
+    })(AbstractPureComponent2$1));
 
     /*
      * Copyright 2018 Palantir Technologies, Inc. All rights reserved.
@@ -2320,7 +6129,7 @@
             var _a;
             var _b = this.props, className = _b.className, disabled = _b.disabled, label = _b.label;
             var isMoving = this.state.isMoving;
-            return (React.createElement("span", { className: classnames(SLIDER_HANDLE, (_a = {}, _a[ACTIVE] = isMoving, _a), className), onKeyDown: disabled ? undefined : this.handleKeyDown, onKeyUp: disabled ? undefined : this.handleKeyUp, onMouseDown: disabled ? undefined : this.beginHandleMovement, onTouchStart: disabled ? undefined : this.beginHandleTouchMovement, ref: this.refHandlers.handle, style: this.getStyleProperties(), tabIndex: 0 }, label == null ? null : React.createElement("span", { className: SLIDER_LABEL }, label)));
+            return (React.createElement("span", { className: classnames$1(SLIDER_HANDLE, (_a = {}, _a[ACTIVE$1] = isMoving, _a), className), onKeyDown: disabled ? undefined : this.handleKeyDown, onKeyUp: disabled ? undefined : this.handleKeyUp, onMouseDown: disabled ? undefined : this.beginHandleMovement, onTouchStart: disabled ? undefined : this.beginHandleTouchMovement, ref: this.refHandlers.handle, style: this.getStyleProperties(), tabIndex: 0 }, label == null ? null : React.createElement("span", { className: SLIDER_LABEL }, label)));
         };
         Handle.prototype.componentWillUnmount = function () {
             this.removeDocumentEventListeners();
@@ -2401,19 +6210,19 @@
             document.removeEventListener("touchend", this.endHandleTouchMovement);
             document.removeEventListener("touchcancel", this.endHandleTouchMovement);
         };
-        Handle.displayName = DISPLAYNAME_PREFIX + ".SliderHandle";
+        Handle.displayName = DISPLAYNAME_PREFIX$1 + ".SliderHandle";
         Handle = __decorate([
             reactLifecyclesCompat_cjs_1
         ], Handle);
         return Handle;
-    }(AbstractPureComponent2));
+    }(AbstractPureComponent2$1));
 
     /**
      * SFC used to pass slider handle props to a `MultiSlider`.
      * This element is not rendered directly.
      */
     var MultiSliderHandle = function () { return null; };
-    MultiSliderHandle.displayName = DISPLAYNAME_PREFIX + ".MultiSliderHandle";
+    MultiSliderHandle.displayName = DISPLAYNAME_PREFIX$1 + ".MultiSliderHandle";
     var MultiSlider = /** @class */ (function (_super) {
         __extends(MultiSlider, _super);
         function MultiSlider() {
@@ -2506,8 +6315,8 @@
         MultiSlider.prototype.render = function () {
             var _a;
             var _this = this;
-            var classes = classnames(SLIDER, (_a = {},
-                _a[DISABLED] = this.props.disabled,
+            var classes = classnames$1(SLIDER, (_a = {},
+                _a[DISABLED$1] = this.props.disabled,
                 _a[SLIDER + "-unlabeled"] = this.props.labelRenderer === false,
                 _a[VERTICAL] = this.props.vertical,
                 _a), this.props.className);
@@ -2536,7 +6345,7 @@
             var anyInvalidChildren = false;
             React.Children.forEach(props.children, function (child) {
                 // allow boolean coercion to omit nulls and false values
-                if (child && !isElementOfType(child, MultiSlider_1.Handle)) {
+                if (child && !isElementOfType$1(child, MultiSlider_1.Handle)) {
                     anyInvalidChildren = true;
                 }
             });
@@ -2550,7 +6359,7 @@
             if (labelRenderer === false) {
                 return undefined;
             }
-            else if (isFunction(labelRenderer)) {
+            else if (isFunction$1(labelRenderer)) {
                 return labelRenderer(value, { isHandleTooltip: isHandleTooltip });
             }
             else {
@@ -2593,7 +6402,7 @@
                 ? { bottom: startOffset, top: endOffset, left: 0 }
                 : { left: startOffset, right: endOffset, top: 0 };
             var style = __assign(__assign({}, orientationStyle), (start.trackStyleAfter || end.trackStyleBefore || {}));
-            var classes = classnames(SLIDER_PROGRESS, intentClass(this.getTrackIntent(start, end)));
+            var classes = classnames$1(SLIDER_PROGRESS, intentClass$1(this.getTrackIntent(start, end)));
             return React.createElement("div", { key: "track-" + index, className: classes, style: style });
         };
         MultiSlider.prototype.renderHandles = function () {
@@ -2606,7 +6415,7 @@
             return handleProps.map(function (_a, index) {
                 var _b;
                 var value = _a.value, type = _a.type, className = _a.className;
-                return (React.createElement(Handle, { className: classnames((_b = {},
+                return (React.createElement(Handle, { className: classnames$1((_b = {},
                         _b[START] = type === HandleType.START,
                         _b[END] = type === HandleType.END,
                         _b), className), disabled: disabled, key: index + "-" + handleProps.length, label: _this.formatLabel(value, true), max: max, min: min, onChange: _this.getHandlerForIndex(index, _this.handleChange), onRelease: _this.getHandlerForIndex(index, _this.handleRelease), ref: _this.addHandleRef, stepSize: stepSize, tickSize: _this.state.tickSize, tickSizeRatio: _this.state.tickSizeRatio, value: value, vertical: vertical }));
@@ -2667,7 +6476,7 @@
         };
         MultiSlider.prototype.getTrackIntent = function (start, end) {
             if (!this.props.showTrackFill) {
-                return Intent.NONE;
+                return Intent$1.NONE;
             }
             if (start.intentAfter !== undefined) {
                 return start.intentAfter;
@@ -2694,14 +6503,14 @@
             stepSize: 1,
             vertical: false,
         };
-        MultiSlider.defaultProps = __assign(__assign({}, MultiSlider_1.defaultSliderProps), { defaultTrackIntent: Intent.NONE });
-        MultiSlider.displayName = DISPLAYNAME_PREFIX + ".MultiSlider";
+        MultiSlider.defaultProps = __assign(__assign({}, MultiSlider_1.defaultSliderProps), { defaultTrackIntent: Intent$1.NONE });
+        MultiSlider.displayName = DISPLAYNAME_PREFIX$1 + ".MultiSlider";
         MultiSlider.Handle = MultiSliderHandle;
         MultiSlider = MultiSlider_1 = __decorate([
             reactLifecyclesCompat_cjs_1
         ], MultiSlider);
         return MultiSlider;
-    }(AbstractPureComponent2));
+    }(AbstractPureComponent2$1));
     function getLabelPrecision(_a) {
         var labelPrecision = _a.labelPrecision, _b = _a.stepSize, stepSize = _b === void 0 ? MultiSlider.defaultSliderProps.stepSize : _b;
         // infer default label precision from stepSize because that's how much the handle moves.
@@ -2714,7 +6523,7 @@
         var children = _a.children;
         if (predicate === void 0) { predicate = function () { return true; }; }
         var maybeHandles = React.Children.map(children, function (child) {
-            return isElementOfType(child, MultiSlider.Handle) && predicate(child.props) ? child.props : null;
+            return isElementOfType$1(child, MultiSlider.Handle) && predicate(child.props) ? child.props : null;
         });
         var handles = maybeHandles != null ? maybeHandles : [];
         handles = handles.filter(function (handle) { return handle !== null; });
@@ -2733,20 +6542,3763 @@
                 React.createElement(MultiSlider.Handle, { value: value, intentAfter: value < initialValue ? intent : undefined, intentBefore: value >= initialValue ? intent : undefined, onChange: onChange, onRelease: onRelease }),
                 React.createElement(MultiSlider.Handle, { value: initialValue, interactionKind: "none" })));
         };
-        Slider.defaultProps = __assign(__assign({}, MultiSlider.defaultSliderProps), { initialValue: 0, intent: Intent.PRIMARY, value: 0 });
-        Slider.displayName = DISPLAYNAME_PREFIX + ".Slider";
+        Slider.defaultProps = __assign(__assign({}, MultiSlider.defaultSliderProps), { initialValue: 0, intent: Intent$1.PRIMARY, value: 0 });
+        Slider.displayName = DISPLAYNAME_PREFIX$1 + ".Slider";
         Slider = __decorate([
             reactLifecyclesCompat_cjs_1
         ], Slider);
         return Slider;
+    }(AbstractPureComponent2$1));
+
+    var MultiItemDisplay=function MultiItemDisplay(props){var _a=React__default['default'].useState(0),currentStep=_a[0],setCurrentStep=_a[1];return React__default['default'].createElement("div",{style:{display:"flex",flexDirection:"column",justifyContent:"center",alignContent:"center",height:"100%"}},props.elements.length>1?React__default['default'].createElement("div",{style:{display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"row",position:"relative",marginBottom:10}},React__default['default'].createElement(Button,{style:{position:"absolute",left:0},large:true,outlined:true,icon:ARROW_LEFT,onClick:function(){return setCurrentStep(currentStep-1)},disabled:currentStep===0},"Previous"),React__default['default'].createElement("h3",{className:"bp3-text-large"},"Call ",currentStep+1,"/",props.elements.length),React__default['default'].createElement(Button,{style:{position:"absolute",right:0},large:true,outlined:true,icon:ARROW_RIGHT,onClick:function(){return setCurrentStep(currentStep+1)},disabled:currentStep===props.elements.length-1},"Next")):null,React__default['default'].createElement("div",{style:{width:"100%",paddingLeft:"20px",paddingRight:"20px",display:"flex",alignContent:"center",justifyContent:"center"}},props.elements[currentStep]))};
+
+    /*
+     * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    // tslint:disable:object-literal-sort-keys
+    /**
+     * The four basic intents.
+     */
+    var Intent = {
+        NONE: "none",
+        PRIMARY: "primary",
+        SUCCESS: "success",
+        WARNING: "warning",
+        DANGER: "danger",
+    };
+
+    /*
+     * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var Position = {
+        BOTTOM: "bottom",
+        BOTTOM_LEFT: "bottom-left",
+        BOTTOM_RIGHT: "bottom-right",
+        LEFT: "left",
+        LEFT_BOTTOM: "left-bottom",
+        LEFT_TOP: "left-top",
+        RIGHT: "right",
+        RIGHT_BOTTOM: "right-bottom",
+        RIGHT_TOP: "right-top",
+        TOP: "top",
+        TOP_LEFT: "top-left",
+        TOP_RIGHT: "top-right",
+    };
+
+    var NS$1 = process.env.BLUEPRINT_NAMESPACE || process.env.REACT_APP_BLUEPRINT_NAMESPACE || "bp3";
+    // modifiers
+    var ACTIVE = NS$1 + "-active";
+    var DARK = NS$1 + "-dark";
+    var DISABLED = NS$1 + "-disabled";
+    var FILL = NS$1 + "-fill";
+    var MINIMAL = NS$1 + "-minimal";
+    intentClass(Intent.PRIMARY);
+    intentClass(Intent.SUCCESS);
+    intentClass(Intent.WARNING);
+    intentClass(Intent.DANGER);
+    var OVERLAY = NS$1 + "-overlay";
+    var OVERLAY_BACKDROP = OVERLAY + "-backdrop";
+    var OVERLAY_CONTENT = OVERLAY + "-content";
+    var OVERLAY_INLINE = OVERLAY + "-inline";
+    var OVERLAY_OPEN = OVERLAY + "-open";
+    var POPOVER = NS$1 + "-popover";
+    var POPOVER_DISMISS = POPOVER + "-dismiss";
+    var POPOVER_DISMISS_OVERRIDE = POPOVER_DISMISS + "-override";
+    var PORTAL = NS$1 + "-portal";
+    /**
+     * Returns the namespace prefix for all Blueprint CSS classes.
+     * Customize this namespace at build time with the `process.env.BLUEPRINT_NAMESPACE` environment variable.
+     */
+    function getClassNamespace() {
+        return NS$1;
+    }
+    function intentClass(intent) {
+        if (intent == null || intent === Intent.NONE) {
+            return undefined;
+        }
+        return NS$1 + "-intent-" + intent.toLowerCase();
+    }
+
+    /*
+     * Copyright 2020 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /** Returns whether the value is a function. Acts as a type guard. */
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    function isFunction(value) {
+        return typeof value === "function";
+    }
+
+    function elementIsOrContains(element, testElement) {
+        return element === testElement || element.contains(testElement);
+    }
+
+    /*
+     * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var ns$1 = "[Blueprint]";
+    var PORTAL_CONTEXT_CLASS_NAME_STRING = ns$1 + " <Portal> context blueprintPortalClassName must be string";
+
+    /** Returns whether `process.env.NODE_ENV` exists and equals `env`. */
+    function isNodeEnv(env) {
+        return typeof process !== "undefined" && process.env && process.env.NODE_ENV === env;
+    }
+
+    /**
+     * Converts a React node to an element: non-empty string or number or
+     * `React.Fragment` (React 16.3+) is wrapped in given tag name; empty strings
+     * and booleans are discarded.
+     */
+    function ensureElement(child, tagName) {
+        if (tagName === void 0) { tagName = "span"; }
+        if (child == null || typeof child === "boolean") {
+            return undefined;
+        }
+        else if (typeof child === "string") {
+            // cull whitespace strings
+            return child.trim().length > 0 ? React.createElement(tagName, {}, child) : undefined;
+        }
+        else if (typeof child === "number" || typeof child.type === "symbol" || Array.isArray(child)) {
+            // React.Fragment has a symbol type, ReactNodeArray extends from Array
+            return React.createElement(tagName, {}, child);
+        }
+        else if (isReactElement(child)) {
+            return child;
+        }
+        else {
+            // child is inferred as {}
+            return undefined;
+        }
+    }
+    function isReactElement(child) {
+        return (typeof child === "object" &&
+            typeof child.type !== "undefined" &&
+            typeof child.props !== "undefined");
+    }
+    /**
+     * Returns true if the given JSX element matches the given component type.
+     *
+     * NOTE: This function only checks equality of `displayName` for performance and
+     * to tolerate multiple minor versions of a component being included in one
+     * application bundle.
+     *
+     * @param element JSX element in question
+     * @param ComponentType desired component type of element
+     */
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    function isElementOfType(element, ComponentType) {
+        return (element != null &&
+            element.type != null &&
+            element.type.displayName != null &&
+            element.type.displayName === ComponentType.displayName);
+    }
+    /**
+     * Returns React.createRef if it's available, or a ref-like object if not.
+     */
+    function createReactRef() {
+        return typeof React.createRef !== "undefined" ? React.createRef() : { current: null };
+    }
+
+    /*
+     * Copyright 2020 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function isRefObject(value) {
+        return value != null && typeof value.current !== "undefined";
+    }
+    function isRefCallback(value) {
+        return typeof value === "function";
+    }
+    function combineRefs(ref1, ref2) {
+        return mergeRefs(ref1, ref2);
+    }
+    function mergeRefs() {
+        var refs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            refs[_i] = arguments[_i];
+        }
+        return function (value) {
+            refs.forEach(function (ref) {
+                if (isRefCallback(ref)) {
+                    ref(value);
+                }
+                else if (isRefObject(ref)) {
+                    ref.current = value;
+                }
+            });
+        };
+    }
+
+    /**
+     * An abstract component that Blueprint components can extend
+     * in order to add some common functionality like runtime props validation.
+     */
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    var AbstractPureComponent2 = /** @class */ (function (_super) {
+        __extends(AbstractPureComponent2, _super);
+        function AbstractPureComponent2(props, context) {
+            var _this = _super.call(this, props, context) || this;
+            // Not bothering to remove entries when their timeouts finish because clearing invalid ID is a no-op
+            _this.timeoutIds = [];
+            _this.requestIds = [];
+            /**
+             * Clear all known timeouts.
+             */
+            _this.clearTimeouts = function () {
+                if (_this.timeoutIds.length > 0) {
+                    for (var _i = 0, _a = _this.timeoutIds; _i < _a.length; _i++) {
+                        var timeoutId = _a[_i];
+                        window.clearTimeout(timeoutId);
+                    }
+                    _this.timeoutIds = [];
+                }
+            };
+            /**
+             * Clear all known animation frame requests.
+             */
+            _this.cancelAnimationFrames = function () {
+                if (_this.requestIds.length > 0) {
+                    for (var _i = 0, _a = _this.requestIds; _i < _a.length; _i++) {
+                        var requestId = _a[_i];
+                        window.cancelAnimationFrame(requestId);
+                    }
+                    _this.requestIds = [];
+                }
+            };
+            if (!isNodeEnv("production")) {
+                _this.validateProps(_this.props);
+            }
+            return _this;
+        }
+        AbstractPureComponent2.prototype.componentDidUpdate = function (_prevProps, _prevState, _snapshot) {
+            if (!isNodeEnv("production")) {
+                this.validateProps(this.props);
+            }
+        };
+        AbstractPureComponent2.prototype.componentWillUnmount = function () {
+            this.clearTimeouts();
+            this.cancelAnimationFrames();
+        };
+        /**
+         * Request an animation frame and remember its ID.
+         * All pending requests will be canceled when component unmounts.
+         *
+         * @returns a "cancel" function that will cancel the request when invoked.
+         */
+        AbstractPureComponent2.prototype.requestAnimationFrame = function (callback) {
+            var handle = window.requestAnimationFrame(callback);
+            this.requestIds.push(handle);
+            return function () { return window.cancelAnimationFrame(handle); };
+        };
+        /**
+         * Set a timeout and remember its ID.
+         * All pending timeouts will be cleared when component unmounts.
+         *
+         * @returns a "cancel" function that will clear timeout when invoked.
+         */
+        AbstractPureComponent2.prototype.setTimeout = function (callback, timeout) {
+            var handle = window.setTimeout(callback, timeout);
+            this.timeoutIds.push(handle);
+            return function () { return window.clearTimeout(handle); };
+        };
+        /**
+         * Ensures that the props specified for a component are valid.
+         * Implementations should check that props are valid and usually throw an Error if they are not.
+         * Implementations should not duplicate checks that the type system already guarantees.
+         *
+         * This method should be used instead of React's
+         * [propTypes](https://facebook.github.io/react/docs/reusable-components.html#prop-validation) feature.
+         * Like propTypes, these runtime checks run only in development mode.
+         */
+        AbstractPureComponent2.prototype.validateProps = function (_props) {
+            // implement in subclass
+        };
+        return AbstractPureComponent2;
+    }(React.PureComponent));
+
+    var DISPLAYNAME_PREFIX = "Blueprint3";
+
+    var ESCAPE = 27;
+
+    var classnames = createCommonjsModule(function (module) {
+    /*!
+      Copyright (c) 2017 Jed Watson.
+      Licensed under the MIT License (MIT), see
+      http://jedwatson.github.io/classnames
+    */
+    /* global define */
+
+    (function () {
+
+    	var hasOwn = {}.hasOwnProperty;
+
+    	function classNames () {
+    		var classes = [];
+
+    		for (var i = 0; i < arguments.length; i++) {
+    			var arg = arguments[i];
+    			if (!arg) continue;
+
+    			var argType = typeof arg;
+
+    			if (argType === 'string' || argType === 'number') {
+    				classes.push(arg);
+    			} else if (Array.isArray(arg) && arg.length) {
+    				var inner = classNames.apply(null, arg);
+    				if (inner) {
+    					classes.push(inner);
+    				}
+    			} else if (argType === 'object') {
+    				for (var key in arg) {
+    					if (hasOwn.call(arg, key) && arg[key]) {
+    						classes.push(key);
+    					}
+    				}
+    			}
+    		}
+
+    		return classes.join(' ');
+    	}
+
+    	if (module.exports) {
+    		classNames.default = classNames;
+    		module.exports = classNames;
+    	} else {
+    		window.classNames = classNames;
+    	}
+    }());
+    });
+
+    /** Detect if `React.createPortal()` API method does not exist. */
+    var cannotCreatePortal = !isFunction(ReactDOM.createPortal);
+    var REACT_CONTEXT_TYPES = {
+        blueprintPortalClassName: function (obj, key) {
+            if (obj[key] != null && typeof obj[key] !== "string") {
+                return new Error(PORTAL_CONTEXT_CLASS_NAME_STRING);
+            }
+            return undefined;
+        },
+    };
+    /**
+     * This component detaches its contents and re-attaches them to document.body.
+     * Use it when you need to circumvent DOM z-stacking (for dialogs, popovers, etc.).
+     * Any class names passed to this element will be propagated to the new container element on document.body.
+     */
+    var Portal = /** @class */ (function (_super) {
+        __extends(Portal, _super);
+        function Portal() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.context = {};
+            _this.state = { hasMounted: false };
+            _this.portalElement = null;
+            return _this;
+        }
+        Portal.prototype.render = function () {
+            // Only render `children` once this component has mounted in a browser environment, so they are
+            // immediately attached to the DOM tree and can do DOM things like measuring or `autoFocus`.
+            // See long comment on componentDidMount in https://reactjs.org/docs/portals.html#event-bubbling-through-portals
+            if (cannotCreatePortal ||
+                typeof document === "undefined" ||
+                !this.state.hasMounted ||
+                this.portalElement === null) {
+                return null;
+            }
+            else {
+                return ReactDOM.createPortal(this.props.children, this.portalElement);
+            }
+        };
+        Portal.prototype.componentDidMount = function () {
+            if (!this.props.container) {
+                return;
+            }
+            this.portalElement = this.createContainerElement();
+            this.props.container.appendChild(this.portalElement);
+            /* eslint-disable-next-line react/no-did-mount-set-state */
+            this.setState({ hasMounted: true }, this.props.onChildrenMount);
+            if (cannotCreatePortal) {
+                this.unstableRenderNoPortal();
+            }
+        };
+        Portal.prototype.componentDidUpdate = function (prevProps) {
+            // update className prop on portal DOM element
+            if (this.portalElement != null && prevProps.className !== this.props.className) {
+                if (prevProps.className !== undefined) {
+                    this.portalElement.classList.remove(prevProps.className);
+                }
+                maybeAddClass(this.portalElement.classList, this.props.className);
+            }
+            if (cannotCreatePortal) {
+                this.unstableRenderNoPortal();
+            }
+        };
+        Portal.prototype.componentWillUnmount = function () {
+            if (this.portalElement != null) {
+                if (cannotCreatePortal) {
+                    ReactDOM.unmountComponentAtNode(this.portalElement);
+                }
+                this.portalElement.remove();
+            }
+        };
+        Portal.prototype.createContainerElement = function () {
+            var container = document.createElement("div");
+            container.classList.add(PORTAL);
+            maybeAddClass(container.classList, this.props.className);
+            if (this.context != null) {
+                maybeAddClass(container.classList, this.context.blueprintPortalClassName);
+            }
+            return container;
+        };
+        Portal.prototype.unstableRenderNoPortal = function () {
+            if (this.portalElement === null) {
+                return;
+            }
+            ReactDOM.unstable_renderSubtreeIntoContainer(
+            /* parentComponent */ this, React.createElement("div", null, this.props.children), this.portalElement);
+        };
+        Portal.displayName = DISPLAYNAME_PREFIX + ".Portal";
+        Portal.contextTypes = REACT_CONTEXT_TYPES;
+        Portal.defaultProps = {
+            container: typeof document !== "undefined" ? document.body : undefined,
+        };
+        return Portal;
+    }(React.Component));
+    function maybeAddClass(classList, className) {
+        if (className != null && className !== "") {
+            classList.add.apply(classList, className.split(" "));
+        }
+    }
+
+    // HACKHACK: https://github.com/palantir/blueprint/issues/4342
+    var Overlay = /** @class */ (function (_super) {
+        __extends(Overlay, _super);
+        function Overlay() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = {
+                hasEverOpened: _this.props.isOpen,
+            };
+            // an HTMLElement that contains the backdrop and any children, to query for focus target
+            _this.containerElement = null;
+            _this.refHandlers = {
+                // HACKHACK: see https://github.com/palantir/blueprint/issues/3979
+                /* eslint-disable-next-line react/no-find-dom-node */
+                container: function (ref) { return (_this.containerElement = ReactDOM.findDOMNode(ref)); },
+            };
+            _this.maybeRenderChild = function (child) {
+                if (isFunction(child)) {
+                    child = child();
+                }
+                if (child == null) {
+                    return null;
+                }
+                // add a special class to each child element that will automatically set the appropriate
+                // CSS position mode under the hood. also, make the container focusable so we can
+                // trap focus inside it (via `enforceFocus`).
+                var decoratedChild = typeof child === "object" ? (React.cloneElement(child, {
+                    className: classnames(child.props.className, OVERLAY_CONTENT),
+                    tabIndex: _this.props.enforceFocus || _this.props.autoFocus ? 0 : undefined,
+                })) : (React.createElement("span", { className: OVERLAY_CONTENT }, child));
+                var _a = _this.props, onOpening = _a.onOpening, onOpened = _a.onOpened, onClosing = _a.onClosing, onClosed = _a.onClosed, transitionDuration = _a.transitionDuration, transitionName = _a.transitionName;
+                // a breaking change in react-transition-group types requires us to be explicit about the type overload here,
+                // using a technique similar to Select.ofType() in @blueprintjs/select
+                var CSSTransitionImplicit = reactTransitionGroup_4;
+                return (React.createElement(CSSTransitionImplicit, { classNames: transitionName, onEntering: onOpening, onEntered: onOpened, onExiting: onClosing, onExited: onClosed, timeout: transitionDuration, addEndListener: _this.handleTransitionAddEnd }, decoratedChild));
+            };
+            _this.handleBackdropMouseDown = function (e) {
+                var _a;
+                var _b = _this.props, backdropProps = _b.backdropProps, canOutsideClickClose = _b.canOutsideClickClose, enforceFocus = _b.enforceFocus, onClose = _b.onClose;
+                if (canOutsideClickClose) {
+                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
+                }
+                if (enforceFocus) {
+                    // make sure document.activeElement is updated before bringing the focus back
+                    _this.bringFocusInsideOverlay();
+                }
+                (_a = backdropProps === null || backdropProps === void 0 ? void 0 : backdropProps.onMouseDown) === null || _a === void 0 ? void 0 : _a.call(backdropProps, e);
+            };
+            _this.handleDocumentClick = function (e) {
+                var _a = _this.props, canOutsideClickClose = _a.canOutsideClickClose, isOpen = _a.isOpen, onClose = _a.onClose;
+                // get the actually target even if we are in an open mode Shadow DOM
+                var eventTarget = (e.composed ? e.composedPath()[0] : e.target);
+                var stackIndex = Overlay_1.openStack.indexOf(_this);
+                var isClickInThisOverlayOrDescendant = Overlay_1.openStack
+                    .slice(stackIndex)
+                    .some(function (_a) {
+                    var elem = _a.containerElement;
+                    // `elem` is the container of backdrop & content, so clicking on that container
+                    // should not count as being "inside" the overlay.
+                    return elem && elem.contains(eventTarget) && !elem.isSameNode(eventTarget);
+                });
+                if (isOpen && canOutsideClickClose && !isClickInThisOverlayOrDescendant) {
+                    // casting to any because this is a native event
+                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
+                }
+            };
+            _this.handleDocumentFocus = function (e) {
+                // get the actually target even if we are in an open mode Shadow DOM
+                var eventTarget = e.composed ? e.composedPath()[0] : e.target;
+                if (_this.props.enforceFocus &&
+                    _this.containerElement != null &&
+                    eventTarget instanceof Node &&
+                    !_this.containerElement.contains(eventTarget)) {
+                    // prevent default focus behavior (sometimes auto-scrolls the page)
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    _this.bringFocusInsideOverlay();
+                }
+            };
+            _this.handleKeyDown = function (e) {
+                var _a = _this.props, canEscapeKeyClose = _a.canEscapeKeyClose, onClose = _a.onClose;
+                // HACKHACK: https://github.com/palantir/blueprint/issues/4165
+                /* eslint-disable-next-line deprecation/deprecation */
+                if (e.which === ESCAPE && canEscapeKeyClose) {
+                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
+                    // prevent browser-specific escape key behavior (Safari exits fullscreen)
+                    e.preventDefault();
+                }
+            };
+            _this.handleTransitionAddEnd = function () {
+                // no-op
+            };
+            return _this;
+        }
+        Overlay_1 = Overlay;
+        Overlay.getDerivedStateFromProps = function (_a) {
+            var hasEverOpened = _a.isOpen;
+            if (hasEverOpened) {
+                return { hasEverOpened: hasEverOpened };
+            }
+            return null;
+        };
+        Overlay.prototype.render = function () {
+            var _a;
+            var _b;
+            // oh snap! no reason to render anything at all if we're being truly lazy
+            if (this.props.lazy && !this.state.hasEverOpened) {
+                return null;
+            }
+            var _c = this.props, children = _c.children, className = _c.className, usePortal = _c.usePortal, isOpen = _c.isOpen;
+            // TransitionGroup types require single array of children; does not support nested arrays.
+            // So we must collapse backdrop and children into one array, and every item must be wrapped in a
+            // Transition element (no ReactText allowed).
+            var childrenWithTransitions = isOpen ? (_b = React.Children.map(children, this.maybeRenderChild)) !== null && _b !== void 0 ? _b : [] : [];
+            var maybeBackdrop = this.maybeRenderBackdrop();
+            if (maybeBackdrop !== null) {
+                childrenWithTransitions.unshift(maybeBackdrop);
+            }
+            var containerClasses = classnames(OVERLAY, (_a = {},
+                _a[OVERLAY_OPEN] = isOpen,
+                _a[OVERLAY_INLINE] = !usePortal,
+                _a), className);
+            var transitionGroup = (React.createElement(reactTransitionGroup_2, { appear: true, className: containerClasses, component: "div", onKeyDown: this.handleKeyDown, ref: this.refHandlers.container }, childrenWithTransitions));
+            if (usePortal) {
+                return (React.createElement(Portal, { className: this.props.portalClassName, container: this.props.portalContainer }, transitionGroup));
+            }
+            else {
+                return transitionGroup;
+            }
+        };
+        Overlay.prototype.componentDidMount = function () {
+            if (this.props.isOpen) {
+                this.overlayWillOpen();
+            }
+        };
+        Overlay.prototype.componentDidUpdate = function (prevProps) {
+            if (prevProps.isOpen && !this.props.isOpen) {
+                this.overlayWillClose();
+            }
+            else if (!prevProps.isOpen && this.props.isOpen) {
+                this.overlayWillOpen();
+            }
+        };
+        Overlay.prototype.componentWillUnmount = function () {
+            this.overlayWillClose();
+        };
+        /**
+         * @public for testing
+         * @internal
+         */
+        Overlay.prototype.bringFocusInsideOverlay = function () {
+            var _this = this;
+            // always delay focus manipulation to just before repaint to prevent scroll jumping
+            return this.requestAnimationFrame(function () {
+                // container ref may be undefined between component mounting and Portal rendering
+                // activeElement may be undefined in some rare cases in IE
+                if (_this.containerElement == null || document.activeElement == null || !_this.props.isOpen) {
+                    return;
+                }
+                var isFocusOutsideModal = !_this.containerElement.contains(document.activeElement);
+                if (isFocusOutsideModal) {
+                    // element marked autofocus has higher priority than the other clowns
+                    var autofocusElement = _this.containerElement.querySelector("[autofocus]");
+                    var wrapperElement = _this.containerElement.querySelector("[tabindex]");
+                    if (autofocusElement != null) {
+                        autofocusElement.focus();
+                    }
+                    else if (wrapperElement != null) {
+                        wrapperElement.focus();
+                    }
+                }
+            });
+        };
+        Overlay.prototype.maybeRenderBackdrop = function () {
+            var _a = this.props, backdropClassName = _a.backdropClassName, backdropProps = _a.backdropProps, hasBackdrop = _a.hasBackdrop, isOpen = _a.isOpen, transitionDuration = _a.transitionDuration, transitionName = _a.transitionName;
+            if (hasBackdrop && isOpen) {
+                return (React.createElement(reactTransitionGroup_4, { classNames: transitionName, key: "__backdrop", timeout: transitionDuration, addEndListener: this.handleTransitionAddEnd },
+                    React.createElement("div", __assign({}, backdropProps, { className: classnames(OVERLAY_BACKDROP, backdropClassName, backdropProps === null || backdropProps === void 0 ? void 0 : backdropProps.className), onMouseDown: this.handleBackdropMouseDown, tabIndex: this.props.canOutsideClickClose ? 0 : undefined }))));
+            }
+            else {
+                return null;
+            }
+        };
+        Overlay.prototype.overlayWillClose = function () {
+            document.removeEventListener("focus", this.handleDocumentFocus, /* useCapture */ true);
+            document.removeEventListener("mousedown", this.handleDocumentClick);
+            var openStack = Overlay_1.openStack;
+            var stackIndex = openStack.indexOf(this);
+            if (stackIndex !== -1) {
+                openStack.splice(stackIndex, 1);
+                if (openStack.length > 0) {
+                    var lastOpenedOverlay = Overlay_1.getLastOpened();
+                    if (lastOpenedOverlay.props.enforceFocus) {
+                        document.addEventListener("focus", lastOpenedOverlay.handleDocumentFocus, /* useCapture */ true);
+                    }
+                }
+                if (openStack.filter(function (o) { return o.props.usePortal && o.props.hasBackdrop; }).length === 0) {
+                    document.body.classList.remove(OVERLAY_OPEN);
+                }
+            }
+        };
+        Overlay.prototype.overlayWillOpen = function () {
+            var openStack = Overlay_1.openStack;
+            if (openStack.length > 0) {
+                document.removeEventListener("focus", Overlay_1.getLastOpened().handleDocumentFocus, /* useCapture */ true);
+            }
+            openStack.push(this);
+            if (this.props.autoFocus) {
+                this.bringFocusInsideOverlay();
+            }
+            if (this.props.enforceFocus) {
+                document.addEventListener("focus", this.handleDocumentFocus, /* useCapture */ true);
+            }
+            if (this.props.canOutsideClickClose && !this.props.hasBackdrop) {
+                document.addEventListener("mousedown", this.handleDocumentClick);
+            }
+            if (this.props.hasBackdrop && this.props.usePortal) {
+                // add a class to the body to prevent scrolling of content below the overlay
+                document.body.classList.add(OVERLAY_OPEN);
+            }
+        };
+        var Overlay_1;
+        Overlay.displayName = DISPLAYNAME_PREFIX + ".Overlay";
+        Overlay.defaultProps = {
+            autoFocus: true,
+            backdropProps: {},
+            canEscapeKeyClose: true,
+            canOutsideClickClose: true,
+            enforceFocus: true,
+            hasBackdrop: true,
+            isOpen: false,
+            lazy: true,
+            transitionDuration: 300,
+            transitionName: OVERLAY,
+            usePortal: true,
+        };
+        Overlay.openStack = [];
+        Overlay.getLastOpened = function () { return Overlay_1.openStack[Overlay_1.openStack.length - 1]; };
+        Overlay = Overlay_1 = __decorate([
+            reactLifecyclesCompat_cjs_1
+        ], Overlay);
+        return Overlay;
     }(AbstractPureComponent2));
 
-    var CurveCanvas=function(_super){__extends(CurveCanvas,_super);function CurveCanvas(){return _super!==null&&_super.apply(this,arguments)||this}CurveCanvas.prototype.render=function(){var _this=this;return React__default['default'].createElement("canvas",{ref:function(r){if(r){_this.props.curve.init(r);_this.props.curve.redraw(0);}},height:500,width:500})};return CurveCanvas}(React__default['default'].Component);
+    var ResizeSensor = /** @class */ (function (_super) {
+        __extends(ResizeSensor, _super);
+        function ResizeSensor() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.element = null;
+            _this.observer = new index$1(function (entries) { var _a, _b; return (_b = (_a = _this.props).onResize) === null || _b === void 0 ? void 0 : _b.call(_a, entries); });
+            return _this;
+        }
+        ResizeSensor.prototype.render = function () {
+            // pass-through render of single child
+            return React.Children.only(this.props.children);
+        };
+        ResizeSensor.prototype.componentDidMount = function () {
+            this.observeElement();
+        };
+        ResizeSensor.prototype.componentDidUpdate = function (prevProps) {
+            this.observeElement(this.props.observeParents !== prevProps.observeParents);
+        };
+        ResizeSensor.prototype.componentWillUnmount = function () {
+            this.observer.disconnect();
+        };
+        /**
+         * Observe the DOM element, if defined and different from the currently
+         * observed element. Pass `force` argument to skip element checks and always
+         * re-observe.
+         */
+        ResizeSensor.prototype.observeElement = function (force) {
+            if (force === void 0) { force = false; }
+            var element = this.getElement();
+            if (!(element instanceof Element)) {
+                // stop everything if not defined
+                this.observer.disconnect();
+                return;
+            }
+            if (element === this.element && !force) {
+                // quit if given same element -- nothing to update (unless forced)
+                return;
+            }
+            else {
+                // clear observer list if new element
+                this.observer.disconnect();
+                // remember element reference for next time
+                this.element = element;
+            }
+            // observer callback is invoked immediately when observing new elements
+            this.observer.observe(element);
+            if (this.props.observeParents) {
+                var parent_1 = element.parentElement;
+                while (parent_1 != null) {
+                    this.observer.observe(parent_1);
+                    parent_1 = parent_1.parentElement;
+                }
+            }
+        };
+        ResizeSensor.prototype.getElement = function () {
+            try {
+                // using findDOMNode for two reasons:
+                // 1. cloning to insert a ref is unwieldy and not performant.
+                // 2. ensure that we resolve to an actual DOM node (instead of any JSX ref instance).
+                // HACKHACK: see https://github.com/palantir/blueprint/issues/3979
+                /* eslint-disable-next-line react/no-find-dom-node */
+                return ReactDOM.findDOMNode(this);
+            }
+            catch (_a) {
+                // swallow error if findDOMNode is run on unmounted component.
+                return null;
+            }
+        };
+        ResizeSensor.displayName = DISPLAYNAME_PREFIX + ".ResizeSensor";
+        ResizeSensor = __decorate([
+            reactLifecyclesCompat_cjs_1
+        ], ResizeSensor);
+        return ResizeSensor;
+    }(AbstractPureComponent2));
 
-    var CurveCanvas3D=function(_super){__extends(CurveCanvas3D,_super);function CurveCanvas3D(props){var _this=_super.call(this,props)||this;_this.onChangeHandler=function(newValue){_this.setState(function(prevState){return __assign(__assign({},prevState),{rotationAngle:newValue,isRotating:false})},function(){if(_this.$canvas){_this.props.curve.redraw(newValue);}});};_this.onClickHandler=function(){if(_this.$canvas&&!_this.state.isRotating){_this.setState(function(prevState){return __assign(__assign({},prevState),{isRotating:true})},function(){_this.autoRotate();});}};_this.autoRotate=function(){if(_this.$canvas&&_this.state.isRotating){_this.setState(function(prevState){return __assign(__assign({},prevState),{rotationAngle:prevState.rotationAngle>=2*Math.PI?0:prevState.rotationAngle+0.005})},function(){_this.props.curve.redraw(_this.state.rotationAngle);window.requestAnimationFrame(_this.autoRotate);});}};_this.$canvas=null;_this.state={rotationAngle:0,isRotating:false};return _this}CurveCanvas3D.prototype.componentDidMount=function(){if(this.$canvas){this.props.curve.init(this.$canvas);this.props.curve.redraw(this.state.rotationAngle);}};CurveCanvas3D.prototype.render=function(){var _this=this;return React__default['default'].createElement("div",null,React__default['default'].createElement("canvas",{ref:function(r){if(r){_this.$canvas=r;_this.props.curve.init(_this.$canvas);_this.props.curve.redraw(_this.state.rotationAngle);}},height:500,width:500}),React__default['default'].createElement("div",{style:{display:"flex",padding:"10px",flexDirection:"row",justifyContent:"space-between",alignItems:"center"}},React__default['default'].createElement(Slider,{value:this.state.rotationAngle,stepSize:0.01,labelValues:[0,2*Math.PI],labelRenderer:false,min:0,max:2*Math.PI,onChange:this.onChangeHandler}),React__default['default'].createElement(Button,{style:{marginLeft:"20px"},onClick:this.onClickHandler},React__default['default'].createElement(Icon,{icon:"play"}))))};return CurveCanvas3D}(React__default['default'].Component);
+    /** `Position` with `"auto"` values, used by `Popover` and `Tooltip`. */
+    var PopoverPosition = __assign(__assign({}, Position), { AUTO: "auto", AUTO_END: "auto-end", AUTO_START: "auto-start" });
 
-    var WebGLCanvas=function(_super){__extends(WebGLCanvas,_super);function WebGLCanvas(props){var _this=_super.call(this,props)||this;_this.firstStep=function(){return _this.state.currentStep===0};_this.finalStep=function(){return _this.state.currentStep===_this.curvesToDraw.length-1};_this.onPrevButtonClick=function(){_this.setState(function(state){return {currentStep:state.currentStep-1}});};_this.onNextButtonClick=function(){_this.setState(function(state){return {currentStep:state.currentStep+1}});};_this.state={currentStep:0};var moduleContext=props.context.context.moduleContexts.get("curve");if(moduleContext==null){_this.curvesToDraw=[];}else {_this.curvesToDraw=moduleContext.state.drawnCurves;}return _this}WebGLCanvas.prototype.render=function(){var curveToDraw=this.curvesToDraw[this.state.currentStep];return React__default['default'].createElement("div",null,this.curvesToDraw.length>1?React__default['default'].createElement("div",{style:{position:"relative",display:"flex",justifyContent:"center",alignItems:"center",marginBottom:10}},React__default['default'].createElement(Button,{style:{position:"absolute",left:0},large:true,outlined:true,icon:ARROW_LEFT,onClick:this.onPrevButtonClick,disabled:this.firstStep()},"Previous"),React__default['default'].createElement("h3",{className:"bp3-text-large"},"Call ",this.state.currentStep+1,"/",this.curvesToDraw.length),React__default['default'].createElement(Button,{style:{position:"absolute",right:0},large:true,outlined:true,icon:ARROW_RIGHT,onClick:this.onNextButtonClick,disabled:this.finalStep()},"Next")):null,React__default['default'].createElement("div",{style:{width:"100%",display:"flex",paddingLeft:"20px",paddingRight:"20px",flexDirection:"column",justifyContent:"center"}},curveToDraw.is3D()?React__default['default'].createElement(CurveCanvas3D,{curve:curveToDraw}):React__default['default'].createElement(CurveCanvas,{curve:curveToDraw})))};return WebGLCanvas}(React__default['default'].Component);var index = {toSpawn:function(context){var _a;var moduleContext=(_a=context.context)===null||_a===void 0?void 0:_a.moduleContexts.get("curve");if(moduleContext==null){return false}var moduleState=moduleContext.state;if(moduleState==null){return false}return moduleState.drawnCurves.length>0},body:function(context){return React__default['default'].createElement(WebGLCanvas,{context:context})},label:"Curves Tab",iconName:"media"};
+    var NS = getClassNamespace();
+    var POPOVER2 = NS + "-popover2";
+    var POPOVER2_ARROW = POPOVER2 + "-arrow";
+    var POPOVER2_BACKDROP = POPOVER2 + "-backdrop";
+    var POPOVER2_CAPTURING_DISMISS = POPOVER2 + "-capturing-dismiss";
+    var POPOVER2_CONTENT = POPOVER2 + "-content";
+    var POPOVER2_CONTENT_PLACEMENT = POPOVER2 + "-placement";
+    var POPOVER2_DISMISS = POPOVER2 + "-dismiss";
+    var POPOVER2_DISMISS_OVERRIDE = POPOVER2_DISMISS + "-override";
+    var POPOVER2_OPEN = POPOVER2 + "-open";
+    var POPOVER2_TARGET = POPOVER2 + "-target";
+    var POPOVER2_TRANSITION_CONTAINER = POPOVER2 + "-transition-container";
+    var TOOLTIP2 = NS + "-tooltip2";
+
+    /**
+     * Copyright 2021 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var ns = "[Blueprint]";
+    var POPOVER2_REQUIRES_TARGET = ns + " <Popover2> requires renderTarget prop or a child element.";
+    var POPOVER2_HAS_BACKDROP_INTERACTION = ns + " <Popover2 hasBackdrop={true}> requires interactionKind=\"click\".";
+    var POPOVER2_WARN_TOO_MANY_CHILDREN = ns + " <Popover2> supports only one child which is rendered as its target; additional children are ignored.";
+    var POPOVER2_WARN_DOUBLE_TARGET = ns + " <Popover2> with children ignores renderTarget prop; use either prop or children.";
+    var POPOVER2_WARN_EMPTY_CONTENT = ns + " Disabling <Popover2> with empty/whitespace content...";
+    var POPOVER2_WARN_HAS_BACKDROP_INLINE = ns + " <Popover2 usePortal={false}> ignores hasBackdrop";
+    var POPOVER2_WARN_PLACEMENT_AND_POSITION_MUTEX = ns + " <Popover2> supports either placement or position prop, not both.";
+    var POPOVER2_WARN_UNCONTROLLED_ONINTERACTION = ns + " <Popover2> onInteraction is ignored when uncontrolled.";
+
+    var ManagerReferenceNodeContext = React.createContext();
+    var ManagerReferenceNodeSetterContext = React.createContext();
+    function Manager(_ref) {
+      var children = _ref.children;
+
+      var _React$useState = React.useState(null),
+          referenceNode = _React$useState[0],
+          setReferenceNode = _React$useState[1];
+
+      var hasUnmounted = React.useRef(false);
+      React.useEffect(function () {
+        return function () {
+          hasUnmounted.current = true;
+        };
+      }, []);
+      var handleSetReferenceNode = React.useCallback(function (node) {
+        if (!hasUnmounted.current) {
+          setReferenceNode(node);
+        }
+      }, []);
+      return /*#__PURE__*/React.createElement(ManagerReferenceNodeContext.Provider, {
+        value: referenceNode
+      }, /*#__PURE__*/React.createElement(ManagerReferenceNodeSetterContext.Provider, {
+        value: handleSetReferenceNode
+      }, children));
+    }
+
+    /**
+     * Takes an argument and if it's an array, returns the first item in the array,
+     * otherwise returns the argument. Used for Preact compatibility.
+     */
+    var unwrapArray = function unwrapArray(arg) {
+      return Array.isArray(arg) ? arg[0] : arg;
+    };
+    /**
+     * Takes a maybe-undefined function and arbitrary args and invokes the function
+     * only if it is defined.
+     */
+
+    var safeInvoke = function safeInvoke(fn) {
+      if (typeof fn === 'function') {
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        return fn.apply(void 0, args);
+      }
+    };
+    /**
+     * Sets a ref using either a ref callback or a ref object
+     */
+
+    var setRef = function setRef(ref, node) {
+      // if its a function call it
+      if (typeof ref === 'function') {
+        return safeInvoke(ref, node);
+      } // otherwise we should treat it as a ref object
+      else if (ref != null) {
+          ref.current = node;
+        }
+    };
+    /**
+     * Simple ponyfill for Object.fromEntries
+     */
+
+    var fromEntries = function fromEntries(entries) {
+      return entries.reduce(function (acc, _ref) {
+        var key = _ref[0],
+            value = _ref[1];
+        acc[key] = value;
+        return acc;
+      }, {});
+    };
+    /**
+     * Small wrapper around `useLayoutEffect` to get rid of the warning on SSR envs
+     */
+
+    var useIsomorphicLayoutEffect = typeof window !== 'undefined' && window.document && window.document.createElement ? React.useLayoutEffect : React.useEffect;
+
+    var top = 'top';
+    var bottom = 'bottom';
+    var right = 'right';
+    var left = 'left';
+    var auto = 'auto';
+    var basePlacements = [top, bottom, right, left];
+    var start = 'start';
+    var end = 'end';
+    var clippingParents = 'clippingParents';
+    var viewport = 'viewport';
+    var popper = 'popper';
+    var reference = 'reference';
+    var variationPlacements = /*#__PURE__*/basePlacements.reduce(function (acc, placement) {
+      return acc.concat([placement + "-" + start, placement + "-" + end]);
+    }, []);
+    var placements = /*#__PURE__*/[].concat(basePlacements, [auto]).reduce(function (acc, placement) {
+      return acc.concat([placement, placement + "-" + start, placement + "-" + end]);
+    }, []); // modifiers that need to read the DOM
+
+    var beforeRead = 'beforeRead';
+    var read = 'read';
+    var afterRead = 'afterRead'; // pure-logic modifiers
+
+    var beforeMain = 'beforeMain';
+    var main = 'main';
+    var afterMain = 'afterMain'; // modifier with the purpose to write to the DOM (or write into a framework state)
+
+    var beforeWrite = 'beforeWrite';
+    var write = 'write';
+    var afterWrite = 'afterWrite';
+    var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
+
+    function getNodeName(element) {
+      return element ? (element.nodeName || '').toLowerCase() : null;
+    }
+
+    function getWindow(node) {
+      if (node == null) {
+        return window;
+      }
+
+      if (node.toString() !== '[object Window]') {
+        var ownerDocument = node.ownerDocument;
+        return ownerDocument ? ownerDocument.defaultView || window : window;
+      }
+
+      return node;
+    }
+
+    function isElement(node) {
+      var OwnElement = getWindow(node).Element;
+      return node instanceof OwnElement || node instanceof Element;
+    }
+
+    function isHTMLElement(node) {
+      var OwnElement = getWindow(node).HTMLElement;
+      return node instanceof OwnElement || node instanceof HTMLElement;
+    }
+
+    function isShadowRoot(node) {
+      // IE 11 has no ShadowRoot
+      if (typeof ShadowRoot === 'undefined') {
+        return false;
+      }
+
+      var OwnElement = getWindow(node).ShadowRoot;
+      return node instanceof OwnElement || node instanceof ShadowRoot;
+    }
+
+    // and applies them to the HTMLElements such as popper and arrow
+
+    function applyStyles(_ref) {
+      var state = _ref.state;
+      Object.keys(state.elements).forEach(function (name) {
+        var style = state.styles[name] || {};
+        var attributes = state.attributes[name] || {};
+        var element = state.elements[name]; // arrow is optional + virtual elements
+
+        if (!isHTMLElement(element) || !getNodeName(element)) {
+          return;
+        } // Flow doesn't support to extend this property, but it's the most
+        // effective way to apply styles to an HTMLElement
+        // $FlowFixMe[cannot-write]
+
+
+        Object.assign(element.style, style);
+        Object.keys(attributes).forEach(function (name) {
+          var value = attributes[name];
+
+          if (value === false) {
+            element.removeAttribute(name);
+          } else {
+            element.setAttribute(name, value === true ? '' : value);
+          }
+        });
+      });
+    }
+
+    function effect$2(_ref2) {
+      var state = _ref2.state;
+      var initialStyles = {
+        popper: {
+          position: state.options.strategy,
+          left: '0',
+          top: '0',
+          margin: '0'
+        },
+        arrow: {
+          position: 'absolute'
+        },
+        reference: {}
+      };
+      Object.assign(state.elements.popper.style, initialStyles.popper);
+      state.styles = initialStyles;
+
+      if (state.elements.arrow) {
+        Object.assign(state.elements.arrow.style, initialStyles.arrow);
+      }
+
+      return function () {
+        Object.keys(state.elements).forEach(function (name) {
+          var element = state.elements[name];
+          var attributes = state.attributes[name] || {};
+          var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]); // Set all values to an empty string to unset them
+
+          var style = styleProperties.reduce(function (style, property) {
+            style[property] = '';
+            return style;
+          }, {}); // arrow is optional + virtual elements
+
+          if (!isHTMLElement(element) || !getNodeName(element)) {
+            return;
+          }
+
+          Object.assign(element.style, style);
+          Object.keys(attributes).forEach(function (attribute) {
+            element.removeAttribute(attribute);
+          });
+        });
+      };
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var applyStyles$1 = {
+      name: 'applyStyles',
+      enabled: true,
+      phase: 'write',
+      fn: applyStyles,
+      effect: effect$2,
+      requires: ['computeStyles']
+    };
+
+    function getBasePlacement$1(placement) {
+      return placement.split('-')[0];
+    }
+
+    function getBoundingClientRect(element) {
+      var rect = element.getBoundingClientRect();
+      return {
+        width: rect.width,
+        height: rect.height,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        left: rect.left,
+        x: rect.left,
+        y: rect.top
+      };
+    }
+
+    // means it doesn't take into account transforms.
+
+    function getLayoutRect(element) {
+      var clientRect = getBoundingClientRect(element); // Use the clientRect sizes if it's not been transformed.
+      // Fixes https://github.com/popperjs/popper-core/issues/1223
+
+      var width = element.offsetWidth;
+      var height = element.offsetHeight;
+
+      if (Math.abs(clientRect.width - width) <= 1) {
+        width = clientRect.width;
+      }
+
+      if (Math.abs(clientRect.height - height) <= 1) {
+        height = clientRect.height;
+      }
+
+      return {
+        x: element.offsetLeft,
+        y: element.offsetTop,
+        width: width,
+        height: height
+      };
+    }
+
+    function contains(parent, child) {
+      var rootNode = child.getRootNode && child.getRootNode(); // First, attempt with faster native method
+
+      if (parent.contains(child)) {
+        return true;
+      } // then fallback to custom implementation with Shadow DOM support
+      else if (rootNode && isShadowRoot(rootNode)) {
+          var next = child;
+
+          do {
+            if (next && parent.isSameNode(next)) {
+              return true;
+            } // $FlowFixMe[prop-missing]: need a better way to handle this...
+
+
+            next = next.parentNode || next.host;
+          } while (next);
+        } // Give up, the result is false
+
+
+      return false;
+    }
+
+    function getComputedStyle(element) {
+      return getWindow(element).getComputedStyle(element);
+    }
+
+    function isTableElement(element) {
+      return ['table', 'td', 'th'].indexOf(getNodeName(element)) >= 0;
+    }
+
+    function getDocumentElement(element) {
+      // $FlowFixMe[incompatible-return]: assume body is always available
+      return ((isElement(element) ? element.ownerDocument : // $FlowFixMe[prop-missing]
+      element.document) || window.document).documentElement;
+    }
+
+    function getParentNode(element) {
+      if (getNodeName(element) === 'html') {
+        return element;
+      }
+
+      return (// this is a quicker (but less type safe) way to save quite some bytes from the bundle
+        // $FlowFixMe[incompatible-return]
+        // $FlowFixMe[prop-missing]
+        element.assignedSlot || // step into the shadow DOM of the parent of a slotted node
+        element.parentNode || ( // DOM Element detected
+        isShadowRoot(element) ? element.host : null) || // ShadowRoot detected
+        // $FlowFixMe[incompatible-call]: HTMLElement is a Node
+        getDocumentElement(element) // fallback
+
+      );
+    }
+
+    function getTrueOffsetParent(element) {
+      if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
+      getComputedStyle(element).position === 'fixed') {
+        return null;
+      }
+
+      return element.offsetParent;
+    } // `.offsetParent` reports `null` for fixed elements, while absolute elements
+    // return the containing block
+
+
+    function getContainingBlock(element) {
+      var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') !== -1;
+      var isIE = navigator.userAgent.indexOf('Trident') !== -1;
+
+      if (isIE && isHTMLElement(element)) {
+        // In IE 9, 10 and 11 fixed elements containing block is always established by the viewport
+        var elementCss = getComputedStyle(element);
+
+        if (elementCss.position === 'fixed') {
+          return null;
+        }
+      }
+
+      var currentNode = getParentNode(element);
+
+      while (isHTMLElement(currentNode) && ['html', 'body'].indexOf(getNodeName(currentNode)) < 0) {
+        var css = getComputedStyle(currentNode); // This is non-exhaustive but covers the most common CSS properties that
+        // create a containing block.
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
+
+        if (css.transform !== 'none' || css.perspective !== 'none' || css.contain === 'paint' || ['transform', 'perspective'].indexOf(css.willChange) !== -1 || isFirefox && css.willChange === 'filter' || isFirefox && css.filter && css.filter !== 'none') {
+          return currentNode;
+        } else {
+          currentNode = currentNode.parentNode;
+        }
+      }
+
+      return null;
+    } // Gets the closest ancestor positioned element. Handles some edge cases,
+    // such as table ancestors and cross browser bugs.
+
+
+    function getOffsetParent(element) {
+      var window = getWindow(element);
+      var offsetParent = getTrueOffsetParent(element);
+
+      while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === 'static') {
+        offsetParent = getTrueOffsetParent(offsetParent);
+      }
+
+      if (offsetParent && (getNodeName(offsetParent) === 'html' || getNodeName(offsetParent) === 'body' && getComputedStyle(offsetParent).position === 'static')) {
+        return window;
+      }
+
+      return offsetParent || getContainingBlock(element) || window;
+    }
+
+    function getMainAxisFromPlacement(placement) {
+      return ['top', 'bottom'].indexOf(placement) >= 0 ? 'x' : 'y';
+    }
+
+    var max = Math.max;
+    var min = Math.min;
+    var round = Math.round;
+
+    function within(min$1, value, max$1) {
+      return max(min$1, min(value, max$1));
+    }
+
+    function getFreshSideObject() {
+      return {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      };
+    }
+
+    function mergePaddingObject(paddingObject) {
+      return Object.assign({}, getFreshSideObject(), paddingObject);
+    }
+
+    function expandToHashMap(value, keys) {
+      return keys.reduce(function (hashMap, key) {
+        hashMap[key] = value;
+        return hashMap;
+      }, {});
+    }
+
+    var toPaddingObject = function toPaddingObject(padding, state) {
+      padding = typeof padding === 'function' ? padding(Object.assign({}, state.rects, {
+        placement: state.placement
+      })) : padding;
+      return mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements));
+    };
+
+    function arrow(_ref) {
+      var _state$modifiersData$;
+
+      var state = _ref.state,
+          name = _ref.name,
+          options = _ref.options;
+      var arrowElement = state.elements.arrow;
+      var popperOffsets = state.modifiersData.popperOffsets;
+      var basePlacement = getBasePlacement$1(state.placement);
+      var axis = getMainAxisFromPlacement(basePlacement);
+      var isVertical = [left, right].indexOf(basePlacement) >= 0;
+      var len = isVertical ? 'height' : 'width';
+
+      if (!arrowElement || !popperOffsets) {
+        return;
+      }
+
+      var paddingObject = toPaddingObject(options.padding, state);
+      var arrowRect = getLayoutRect(arrowElement);
+      var minProp = axis === 'y' ? top : left;
+      var maxProp = axis === 'y' ? bottom : right;
+      var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets[axis] - state.rects.popper[len];
+      var startDiff = popperOffsets[axis] - state.rects.reference[axis];
+      var arrowOffsetParent = getOffsetParent(arrowElement);
+      var clientSize = arrowOffsetParent ? axis === 'y' ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
+      var centerToReference = endDiff / 2 - startDiff / 2; // Make sure the arrow doesn't overflow the popper if the center point is
+      // outside of the popper bounds
+
+      var min = paddingObject[minProp];
+      var max = clientSize - arrowRect[len] - paddingObject[maxProp];
+      var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
+      var offset = within(min, center, max); // Prevents breaking syntax highlighting...
+
+      var axisProp = axis;
+      state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset, _state$modifiersData$.centerOffset = offset - center, _state$modifiersData$);
+    }
+
+    function effect$1(_ref2) {
+      var state = _ref2.state,
+          options = _ref2.options;
+      var _options$element = options.element,
+          arrowElement = _options$element === void 0 ? '[data-popper-arrow]' : _options$element;
+
+      if (arrowElement == null) {
+        return;
+      } // CSS selector
+
+
+      if (typeof arrowElement === 'string') {
+        arrowElement = state.elements.popper.querySelector(arrowElement);
+
+        if (!arrowElement) {
+          return;
+        }
+      }
+
+      if (process.env.NODE_ENV !== "production") {
+        if (!isHTMLElement(arrowElement)) {
+          console.error(['Popper: "arrow" element must be an HTMLElement (not an SVGElement).', 'To use an SVG arrow, wrap it in an HTMLElement that will be used as', 'the arrow.'].join(' '));
+        }
+      }
+
+      if (!contains(state.elements.popper, arrowElement)) {
+        if (process.env.NODE_ENV !== "production") {
+          console.error(['Popper: "arrow" modifier\'s `element` must be a child of the popper', 'element.'].join(' '));
+        }
+
+        return;
+      }
+
+      state.elements.arrow = arrowElement;
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var arrow$1 = {
+      name: 'arrow',
+      enabled: true,
+      phase: 'main',
+      fn: arrow,
+      effect: effect$1,
+      requires: ['popperOffsets'],
+      requiresIfExists: ['preventOverflow']
+    };
+
+    var unsetSides = {
+      top: 'auto',
+      right: 'auto',
+      bottom: 'auto',
+      left: 'auto'
+    }; // Round the offsets to the nearest suitable subpixel based on the DPR.
+    // Zooming can change the DPR, but it seems to report a value that will
+    // cleanly divide the values into the appropriate subpixels.
+
+    function roundOffsetsByDPR(_ref) {
+      var x = _ref.x,
+          y = _ref.y;
+      var win = window;
+      var dpr = win.devicePixelRatio || 1;
+      return {
+        x: round(round(x * dpr) / dpr) || 0,
+        y: round(round(y * dpr) / dpr) || 0
+      };
+    }
+
+    function mapToStyles(_ref2) {
+      var _Object$assign2;
+
+      var popper = _ref2.popper,
+          popperRect = _ref2.popperRect,
+          placement = _ref2.placement,
+          offsets = _ref2.offsets,
+          position = _ref2.position,
+          gpuAcceleration = _ref2.gpuAcceleration,
+          adaptive = _ref2.adaptive,
+          roundOffsets = _ref2.roundOffsets;
+
+      var _ref3 = roundOffsets === true ? roundOffsetsByDPR(offsets) : typeof roundOffsets === 'function' ? roundOffsets(offsets) : offsets,
+          _ref3$x = _ref3.x,
+          x = _ref3$x === void 0 ? 0 : _ref3$x,
+          _ref3$y = _ref3.y,
+          y = _ref3$y === void 0 ? 0 : _ref3$y;
+
+      var hasX = offsets.hasOwnProperty('x');
+      var hasY = offsets.hasOwnProperty('y');
+      var sideX = left;
+      var sideY = top;
+      var win = window;
+
+      if (adaptive) {
+        var offsetParent = getOffsetParent(popper);
+        var heightProp = 'clientHeight';
+        var widthProp = 'clientWidth';
+
+        if (offsetParent === getWindow(popper)) {
+          offsetParent = getDocumentElement(popper);
+
+          if (getComputedStyle(offsetParent).position !== 'static') {
+            heightProp = 'scrollHeight';
+            widthProp = 'scrollWidth';
+          }
+        } // $FlowFixMe[incompatible-cast]: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
+
+
+        offsetParent = offsetParent;
+
+        if (placement === top) {
+          sideY = bottom; // $FlowFixMe[prop-missing]
+
+          y -= offsetParent[heightProp] - popperRect.height;
+          y *= gpuAcceleration ? 1 : -1;
+        }
+
+        if (placement === left) {
+          sideX = right; // $FlowFixMe[prop-missing]
+
+          x -= offsetParent[widthProp] - popperRect.width;
+          x *= gpuAcceleration ? 1 : -1;
+        }
+      }
+
+      var commonStyles = Object.assign({
+        position: position
+      }, adaptive && unsetSides);
+
+      if (gpuAcceleration) {
+        var _Object$assign;
+
+        return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (win.devicePixelRatio || 1) < 2 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
+      }
+
+      return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
+    }
+
+    function computeStyles(_ref4) {
+      var state = _ref4.state,
+          options = _ref4.options;
+      var _options$gpuAccelerat = options.gpuAcceleration,
+          gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat,
+          _options$adaptive = options.adaptive,
+          adaptive = _options$adaptive === void 0 ? true : _options$adaptive,
+          _options$roundOffsets = options.roundOffsets,
+          roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
+
+      if (process.env.NODE_ENV !== "production") {
+        var transitionProperty = getComputedStyle(state.elements.popper).transitionProperty || '';
+
+        if (adaptive && ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
+          return transitionProperty.indexOf(property) >= 0;
+        })) {
+          console.warn(['Popper: Detected CSS transitions on at least one of the following', 'CSS properties: "transform", "top", "right", "bottom", "left".', '\n\n', 'Disable the "computeStyles" modifier\'s `adaptive` option to allow', 'for smooth transitions, or remove these properties from the CSS', 'transition declaration on the popper element if only transitioning', 'opacity or background-color for example.', '\n\n', 'We recommend using the popper element as a wrapper around an inner', 'element that can have any CSS property transitioned for animations.'].join(' '));
+        }
+      }
+
+      var commonStyles = {
+        placement: getBasePlacement$1(state.placement),
+        popper: state.elements.popper,
+        popperRect: state.rects.popper,
+        gpuAcceleration: gpuAcceleration
+      };
+
+      if (state.modifiersData.popperOffsets != null) {
+        state.styles.popper = Object.assign({}, state.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
+          offsets: state.modifiersData.popperOffsets,
+          position: state.options.strategy,
+          adaptive: adaptive,
+          roundOffsets: roundOffsets
+        })));
+      }
+
+      if (state.modifiersData.arrow != null) {
+        state.styles.arrow = Object.assign({}, state.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
+          offsets: state.modifiersData.arrow,
+          position: 'absolute',
+          adaptive: false,
+          roundOffsets: roundOffsets
+        })));
+      }
+
+      state.attributes.popper = Object.assign({}, state.attributes.popper, {
+        'data-popper-placement': state.placement
+      });
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var computeStyles$1 = {
+      name: 'computeStyles',
+      enabled: true,
+      phase: 'beforeWrite',
+      fn: computeStyles,
+      data: {}
+    };
+
+    var passive = {
+      passive: true
+    };
+
+    function effect(_ref) {
+      var state = _ref.state,
+          instance = _ref.instance,
+          options = _ref.options;
+      var _options$scroll = options.scroll,
+          scroll = _options$scroll === void 0 ? true : _options$scroll,
+          _options$resize = options.resize,
+          resize = _options$resize === void 0 ? true : _options$resize;
+      var window = getWindow(state.elements.popper);
+      var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
+
+      if (scroll) {
+        scrollParents.forEach(function (scrollParent) {
+          scrollParent.addEventListener('scroll', instance.update, passive);
+        });
+      }
+
+      if (resize) {
+        window.addEventListener('resize', instance.update, passive);
+      }
+
+      return function () {
+        if (scroll) {
+          scrollParents.forEach(function (scrollParent) {
+            scrollParent.removeEventListener('scroll', instance.update, passive);
+          });
+        }
+
+        if (resize) {
+          window.removeEventListener('resize', instance.update, passive);
+        }
+      };
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var eventListeners = {
+      name: 'eventListeners',
+      enabled: true,
+      phase: 'write',
+      fn: function fn() {},
+      effect: effect,
+      data: {}
+    };
+
+    var hash$1 = {
+      left: 'right',
+      right: 'left',
+      bottom: 'top',
+      top: 'bottom'
+    };
+    function getOppositePlacement$1(placement) {
+      return placement.replace(/left|right|bottom|top/g, function (matched) {
+        return hash$1[matched];
+      });
+    }
+
+    var hash = {
+      start: 'end',
+      end: 'start'
+    };
+    function getOppositeVariationPlacement(placement) {
+      return placement.replace(/start|end/g, function (matched) {
+        return hash[matched];
+      });
+    }
+
+    function getWindowScroll(node) {
+      var win = getWindow(node);
+      var scrollLeft = win.pageXOffset;
+      var scrollTop = win.pageYOffset;
+      return {
+        scrollLeft: scrollLeft,
+        scrollTop: scrollTop
+      };
+    }
+
+    function getWindowScrollBarX(element) {
+      // If <html> has a CSS width greater than the viewport, then this will be
+      // incorrect for RTL.
+      // Popper 1 is broken in this case and never had a bug report so let's assume
+      // it's not an issue. I don't think anyone ever specifies width on <html>
+      // anyway.
+      // Browsers where the left scrollbar doesn't cause an issue report `0` for
+      // this (e.g. Edge 2019, IE11, Safari)
+      return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
+    }
+
+    function getViewportRect(element) {
+      var win = getWindow(element);
+      var html = getDocumentElement(element);
+      var visualViewport = win.visualViewport;
+      var width = html.clientWidth;
+      var height = html.clientHeight;
+      var x = 0;
+      var y = 0; // NB: This isn't supported on iOS <= 12. If the keyboard is open, the popper
+      // can be obscured underneath it.
+      // Also, `html.clientHeight` adds the bottom bar height in Safari iOS, even
+      // if it isn't open, so if this isn't available, the popper will be detected
+      // to overflow the bottom of the screen too early.
+
+      if (visualViewport) {
+        width = visualViewport.width;
+        height = visualViewport.height; // Uses Layout Viewport (like Chrome; Safari does not currently)
+        // In Chrome, it returns a value very close to 0 (+/-) but contains rounding
+        // errors due to floating point numbers, so we need to check precision.
+        // Safari returns a number <= 0, usually < -1 when pinch-zoomed
+        // Feature detection fails in mobile emulation mode in Chrome.
+        // Math.abs(win.innerWidth / visualViewport.scale - visualViewport.width) <
+        // 0.001
+        // Fallback here: "Not Safari" userAgent
+
+        if (!/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+          x = visualViewport.offsetLeft;
+          y = visualViewport.offsetTop;
+        }
+      }
+
+      return {
+        width: width,
+        height: height,
+        x: x + getWindowScrollBarX(element),
+        y: y
+      };
+    }
+
+    // of the `<html>` and `<body>` rect bounds if horizontally scrollable
+
+    function getDocumentRect(element) {
+      var _element$ownerDocumen;
+
+      var html = getDocumentElement(element);
+      var winScroll = getWindowScroll(element);
+      var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
+      var width = max(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
+      var height = max(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
+      var x = -winScroll.scrollLeft + getWindowScrollBarX(element);
+      var y = -winScroll.scrollTop;
+
+      if (getComputedStyle(body || html).direction === 'rtl') {
+        x += max(html.clientWidth, body ? body.clientWidth : 0) - width;
+      }
+
+      return {
+        width: width,
+        height: height,
+        x: x,
+        y: y
+      };
+    }
+
+    function isScrollParent(element) {
+      // Firefox wants us to check `-x` and `-y` variations as well
+      var _getComputedStyle = getComputedStyle(element),
+          overflow = _getComputedStyle.overflow,
+          overflowX = _getComputedStyle.overflowX,
+          overflowY = _getComputedStyle.overflowY;
+
+      return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
+    }
+
+    function getScrollParent(node) {
+      if (['html', 'body', '#document'].indexOf(getNodeName(node)) >= 0) {
+        // $FlowFixMe[incompatible-return]: assume body is always available
+        return node.ownerDocument.body;
+      }
+
+      if (isHTMLElement(node) && isScrollParent(node)) {
+        return node;
+      }
+
+      return getScrollParent(getParentNode(node));
+    }
+
+    /*
+    given a DOM element, return the list of all scroll parents, up the list of ancesors
+    until we get to the top window object. This list is what we attach scroll listeners
+    to, because if any of these parent elements scroll, we'll need to re-calculate the
+    reference element's position.
+    */
+
+    function listScrollParents(element, list) {
+      var _element$ownerDocumen;
+
+      if (list === void 0) {
+        list = [];
+      }
+
+      var scrollParent = getScrollParent(element);
+      var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
+      var win = getWindow(scrollParent);
+      var target = isBody ? [win].concat(win.visualViewport || [], isScrollParent(scrollParent) ? scrollParent : []) : scrollParent;
+      var updatedList = list.concat(target);
+      return isBody ? updatedList : // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
+      updatedList.concat(listScrollParents(getParentNode(target)));
+    }
+
+    function rectToClientRect(rect) {
+      return Object.assign({}, rect, {
+        left: rect.x,
+        top: rect.y,
+        right: rect.x + rect.width,
+        bottom: rect.y + rect.height
+      });
+    }
+
+    function getInnerBoundingClientRect(element) {
+      var rect = getBoundingClientRect(element);
+      rect.top = rect.top + element.clientTop;
+      rect.left = rect.left + element.clientLeft;
+      rect.bottom = rect.top + element.clientHeight;
+      rect.right = rect.left + element.clientWidth;
+      rect.width = element.clientWidth;
+      rect.height = element.clientHeight;
+      rect.x = rect.left;
+      rect.y = rect.top;
+      return rect;
+    }
+
+    function getClientRectFromMixedType(element, clippingParent) {
+      return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isHTMLElement(clippingParent) ? getInnerBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+    } // A "clipping parent" is an overflowable container with the characteristic of
+    // clipping (or hiding) overflowing elements with a position different from
+    // `initial`
+
+
+    function getClippingParents(element) {
+      var clippingParents = listScrollParents(getParentNode(element));
+      var canEscapeClipping = ['absolute', 'fixed'].indexOf(getComputedStyle(element).position) >= 0;
+      var clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
+
+      if (!isElement(clipperElement)) {
+        return [];
+      } // $FlowFixMe[incompatible-return]: https://github.com/facebook/flow/issues/1414
+
+
+      return clippingParents.filter(function (clippingParent) {
+        return isElement(clippingParent) && contains(clippingParent, clipperElement) && getNodeName(clippingParent) !== 'body';
+      });
+    } // Gets the maximum area that the element is visible in due to any number of
+    // clipping parents
+
+
+    function getClippingRect(element, boundary, rootBoundary) {
+      var mainClippingParents = boundary === 'clippingParents' ? getClippingParents(element) : [].concat(boundary);
+      var clippingParents = [].concat(mainClippingParents, [rootBoundary]);
+      var firstClippingParent = clippingParents[0];
+      var clippingRect = clippingParents.reduce(function (accRect, clippingParent) {
+        var rect = getClientRectFromMixedType(element, clippingParent);
+        accRect.top = max(rect.top, accRect.top);
+        accRect.right = min(rect.right, accRect.right);
+        accRect.bottom = min(rect.bottom, accRect.bottom);
+        accRect.left = max(rect.left, accRect.left);
+        return accRect;
+      }, getClientRectFromMixedType(element, firstClippingParent));
+      clippingRect.width = clippingRect.right - clippingRect.left;
+      clippingRect.height = clippingRect.bottom - clippingRect.top;
+      clippingRect.x = clippingRect.left;
+      clippingRect.y = clippingRect.top;
+      return clippingRect;
+    }
+
+    function getVariation(placement) {
+      return placement.split('-')[1];
+    }
+
+    function computeOffsets(_ref) {
+      var reference = _ref.reference,
+          element = _ref.element,
+          placement = _ref.placement;
+      var basePlacement = placement ? getBasePlacement$1(placement) : null;
+      var variation = placement ? getVariation(placement) : null;
+      var commonX = reference.x + reference.width / 2 - element.width / 2;
+      var commonY = reference.y + reference.height / 2 - element.height / 2;
+      var offsets;
+
+      switch (basePlacement) {
+        case top:
+          offsets = {
+            x: commonX,
+            y: reference.y - element.height
+          };
+          break;
+
+        case bottom:
+          offsets = {
+            x: commonX,
+            y: reference.y + reference.height
+          };
+          break;
+
+        case right:
+          offsets = {
+            x: reference.x + reference.width,
+            y: commonY
+          };
+          break;
+
+        case left:
+          offsets = {
+            x: reference.x - element.width,
+            y: commonY
+          };
+          break;
+
+        default:
+          offsets = {
+            x: reference.x,
+            y: reference.y
+          };
+      }
+
+      var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
+
+      if (mainAxis != null) {
+        var len = mainAxis === 'y' ? 'height' : 'width';
+
+        switch (variation) {
+          case start:
+            offsets[mainAxis] = offsets[mainAxis] - (reference[len] / 2 - element[len] / 2);
+            break;
+
+          case end:
+            offsets[mainAxis] = offsets[mainAxis] + (reference[len] / 2 - element[len] / 2);
+            break;
+        }
+      }
+
+      return offsets;
+    }
+
+    function detectOverflow(state, options) {
+      if (options === void 0) {
+        options = {};
+      }
+
+      var _options = options,
+          _options$placement = _options.placement,
+          placement = _options$placement === void 0 ? state.placement : _options$placement,
+          _options$boundary = _options.boundary,
+          boundary = _options$boundary === void 0 ? clippingParents : _options$boundary,
+          _options$rootBoundary = _options.rootBoundary,
+          rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary,
+          _options$elementConte = _options.elementContext,
+          elementContext = _options$elementConte === void 0 ? popper : _options$elementConte,
+          _options$altBoundary = _options.altBoundary,
+          altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary,
+          _options$padding = _options.padding,
+          padding = _options$padding === void 0 ? 0 : _options$padding;
+      var paddingObject = mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements));
+      var altContext = elementContext === popper ? reference : popper;
+      var referenceElement = state.elements.reference;
+      var popperRect = state.rects.popper;
+      var element = state.elements[altBoundary ? altContext : elementContext];
+      var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary);
+      var referenceClientRect = getBoundingClientRect(referenceElement);
+      var popperOffsets = computeOffsets({
+        reference: referenceClientRect,
+        element: popperRect,
+        strategy: 'absolute',
+        placement: placement
+      });
+      var popperClientRect = rectToClientRect(Object.assign({}, popperRect, popperOffsets));
+      var elementClientRect = elementContext === popper ? popperClientRect : referenceClientRect; // positive = overflowing the clipping rect
+      // 0 or negative = within the clipping rect
+
+      var overflowOffsets = {
+        top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
+        bottom: elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom,
+        left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
+        right: elementClientRect.right - clippingClientRect.right + paddingObject.right
+      };
+      var offsetData = state.modifiersData.offset; // Offsets can be applied only to the popper element
+
+      if (elementContext === popper && offsetData) {
+        var offset = offsetData[placement];
+        Object.keys(overflowOffsets).forEach(function (key) {
+          var multiply = [right, bottom].indexOf(key) >= 0 ? 1 : -1;
+          var axis = [top, bottom].indexOf(key) >= 0 ? 'y' : 'x';
+          overflowOffsets[key] += offset[axis] * multiply;
+        });
+      }
+
+      return overflowOffsets;
+    }
+
+    function computeAutoPlacement(state, options) {
+      if (options === void 0) {
+        options = {};
+      }
+
+      var _options = options,
+          placement = _options.placement,
+          boundary = _options.boundary,
+          rootBoundary = _options.rootBoundary,
+          padding = _options.padding,
+          flipVariations = _options.flipVariations,
+          _options$allowedAutoP = _options.allowedAutoPlacements,
+          allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
+      var variation = getVariation(placement);
+      var placements$1 = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function (placement) {
+        return getVariation(placement) === variation;
+      }) : basePlacements;
+      var allowedPlacements = placements$1.filter(function (placement) {
+        return allowedAutoPlacements.indexOf(placement) >= 0;
+      });
+
+      if (allowedPlacements.length === 0) {
+        allowedPlacements = placements$1;
+
+        if (process.env.NODE_ENV !== "production") {
+          console.error(['Popper: The `allowedAutoPlacements` option did not allow any', 'placements. Ensure the `placement` option matches the variation', 'of the allowed placements.', 'For example, "auto" cannot be used to allow "bottom-start".', 'Use "auto-start" instead.'].join(' '));
+        }
+      } // $FlowFixMe[incompatible-type]: Flow seems to have problems with two array unions...
+
+
+      var overflows = allowedPlacements.reduce(function (acc, placement) {
+        acc[placement] = detectOverflow(state, {
+          placement: placement,
+          boundary: boundary,
+          rootBoundary: rootBoundary,
+          padding: padding
+        })[getBasePlacement$1(placement)];
+        return acc;
+      }, {});
+      return Object.keys(overflows).sort(function (a, b) {
+        return overflows[a] - overflows[b];
+      });
+    }
+
+    function getExpandedFallbackPlacements(placement) {
+      if (getBasePlacement$1(placement) === auto) {
+        return [];
+      }
+
+      var oppositePlacement = getOppositePlacement$1(placement);
+      return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
+    }
+
+    function flip(_ref) {
+      var state = _ref.state,
+          options = _ref.options,
+          name = _ref.name;
+
+      if (state.modifiersData[name]._skip) {
+        return;
+      }
+
+      var _options$mainAxis = options.mainAxis,
+          checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis,
+          _options$altAxis = options.altAxis,
+          checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis,
+          specifiedFallbackPlacements = options.fallbackPlacements,
+          padding = options.padding,
+          boundary = options.boundary,
+          rootBoundary = options.rootBoundary,
+          altBoundary = options.altBoundary,
+          _options$flipVariatio = options.flipVariations,
+          flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio,
+          allowedAutoPlacements = options.allowedAutoPlacements;
+      var preferredPlacement = state.options.placement;
+      var basePlacement = getBasePlacement$1(preferredPlacement);
+      var isBasePlacement = basePlacement === preferredPlacement;
+      var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement$1(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
+      var placements = [preferredPlacement].concat(fallbackPlacements).reduce(function (acc, placement) {
+        return acc.concat(getBasePlacement$1(placement) === auto ? computeAutoPlacement(state, {
+          placement: placement,
+          boundary: boundary,
+          rootBoundary: rootBoundary,
+          padding: padding,
+          flipVariations: flipVariations,
+          allowedAutoPlacements: allowedAutoPlacements
+        }) : placement);
+      }, []);
+      var referenceRect = state.rects.reference;
+      var popperRect = state.rects.popper;
+      var checksMap = new Map();
+      var makeFallbackChecks = true;
+      var firstFittingPlacement = placements[0];
+
+      for (var i = 0; i < placements.length; i++) {
+        var placement = placements[i];
+
+        var _basePlacement = getBasePlacement$1(placement);
+
+        var isStartVariation = getVariation(placement) === start;
+        var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
+        var len = isVertical ? 'width' : 'height';
+        var overflow = detectOverflow(state, {
+          placement: placement,
+          boundary: boundary,
+          rootBoundary: rootBoundary,
+          altBoundary: altBoundary,
+          padding: padding
+        });
+        var mainVariationSide = isVertical ? isStartVariation ? right : left : isStartVariation ? bottom : top;
+
+        if (referenceRect[len] > popperRect[len]) {
+          mainVariationSide = getOppositePlacement$1(mainVariationSide);
+        }
+
+        var altVariationSide = getOppositePlacement$1(mainVariationSide);
+        var checks = [];
+
+        if (checkMainAxis) {
+          checks.push(overflow[_basePlacement] <= 0);
+        }
+
+        if (checkAltAxis) {
+          checks.push(overflow[mainVariationSide] <= 0, overflow[altVariationSide] <= 0);
+        }
+
+        if (checks.every(function (check) {
+          return check;
+        })) {
+          firstFittingPlacement = placement;
+          makeFallbackChecks = false;
+          break;
+        }
+
+        checksMap.set(placement, checks);
+      }
+
+      if (makeFallbackChecks) {
+        // `2` may be desired in some cases – research later
+        var numberOfChecks = flipVariations ? 3 : 1;
+
+        var _loop = function _loop(_i) {
+          var fittingPlacement = placements.find(function (placement) {
+            var checks = checksMap.get(placement);
+
+            if (checks) {
+              return checks.slice(0, _i).every(function (check) {
+                return check;
+              });
+            }
+          });
+
+          if (fittingPlacement) {
+            firstFittingPlacement = fittingPlacement;
+            return "break";
+          }
+        };
+
+        for (var _i = numberOfChecks; _i > 0; _i--) {
+          var _ret = _loop(_i);
+
+          if (_ret === "break") break;
+        }
+      }
+
+      if (state.placement !== firstFittingPlacement) {
+        state.modifiersData[name]._skip = true;
+        state.placement = firstFittingPlacement;
+        state.reset = true;
+      }
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var flip$1 = {
+      name: 'flip',
+      enabled: true,
+      phase: 'main',
+      fn: flip,
+      requiresIfExists: ['offset'],
+      data: {
+        _skip: false
+      }
+    };
+
+    function getSideOffsets(overflow, rect, preventedOffsets) {
+      if (preventedOffsets === void 0) {
+        preventedOffsets = {
+          x: 0,
+          y: 0
+        };
+      }
+
+      return {
+        top: overflow.top - rect.height - preventedOffsets.y,
+        right: overflow.right - rect.width + preventedOffsets.x,
+        bottom: overflow.bottom - rect.height + preventedOffsets.y,
+        left: overflow.left - rect.width - preventedOffsets.x
+      };
+    }
+
+    function isAnySideFullyClipped(overflow) {
+      return [top, right, bottom, left].some(function (side) {
+        return overflow[side] >= 0;
+      });
+    }
+
+    function hide(_ref) {
+      var state = _ref.state,
+          name = _ref.name;
+      var referenceRect = state.rects.reference;
+      var popperRect = state.rects.popper;
+      var preventedOffsets = state.modifiersData.preventOverflow;
+      var referenceOverflow = detectOverflow(state, {
+        elementContext: 'reference'
+      });
+      var popperAltOverflow = detectOverflow(state, {
+        altBoundary: true
+      });
+      var referenceClippingOffsets = getSideOffsets(referenceOverflow, referenceRect);
+      var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
+      var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
+      var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
+      state.modifiersData[name] = {
+        referenceClippingOffsets: referenceClippingOffsets,
+        popperEscapeOffsets: popperEscapeOffsets,
+        isReferenceHidden: isReferenceHidden,
+        hasPopperEscaped: hasPopperEscaped
+      };
+      state.attributes.popper = Object.assign({}, state.attributes.popper, {
+        'data-popper-reference-hidden': isReferenceHidden,
+        'data-popper-escaped': hasPopperEscaped
+      });
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var hide$1 = {
+      name: 'hide',
+      enabled: true,
+      phase: 'main',
+      requiresIfExists: ['preventOverflow'],
+      fn: hide
+    };
+
+    function distanceAndSkiddingToXY(placement, rects, offset) {
+      var basePlacement = getBasePlacement$1(placement);
+      var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
+
+      var _ref = typeof offset === 'function' ? offset(Object.assign({}, rects, {
+        placement: placement
+      })) : offset,
+          skidding = _ref[0],
+          distance = _ref[1];
+
+      skidding = skidding || 0;
+      distance = (distance || 0) * invertDistance;
+      return [left, right].indexOf(basePlacement) >= 0 ? {
+        x: distance,
+        y: skidding
+      } : {
+        x: skidding,
+        y: distance
+      };
+    }
+
+    function offset(_ref2) {
+      var state = _ref2.state,
+          options = _ref2.options,
+          name = _ref2.name;
+      var _options$offset = options.offset,
+          offset = _options$offset === void 0 ? [0, 0] : _options$offset;
+      var data = placements.reduce(function (acc, placement) {
+        acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset);
+        return acc;
+      }, {});
+      var _data$state$placement = data[state.placement],
+          x = _data$state$placement.x,
+          y = _data$state$placement.y;
+
+      if (state.modifiersData.popperOffsets != null) {
+        state.modifiersData.popperOffsets.x += x;
+        state.modifiersData.popperOffsets.y += y;
+      }
+
+      state.modifiersData[name] = data;
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var offset$1 = {
+      name: 'offset',
+      enabled: true,
+      phase: 'main',
+      requires: ['popperOffsets'],
+      fn: offset
+    };
+
+    function popperOffsets(_ref) {
+      var state = _ref.state,
+          name = _ref.name;
+      // Offsets are the actual position the popper needs to have to be
+      // properly positioned near its reference element
+      // This is the most basic placement, and will be adjusted by
+      // the modifiers in the next step
+      state.modifiersData[name] = computeOffsets({
+        reference: state.rects.reference,
+        element: state.rects.popper,
+        strategy: 'absolute',
+        placement: state.placement
+      });
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var popperOffsets$1 = {
+      name: 'popperOffsets',
+      enabled: true,
+      phase: 'read',
+      fn: popperOffsets,
+      data: {}
+    };
+
+    function getAltAxis(axis) {
+      return axis === 'x' ? 'y' : 'x';
+    }
+
+    function preventOverflow(_ref) {
+      var state = _ref.state,
+          options = _ref.options,
+          name = _ref.name;
+      var _options$mainAxis = options.mainAxis,
+          checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis,
+          _options$altAxis = options.altAxis,
+          checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis,
+          boundary = options.boundary,
+          rootBoundary = options.rootBoundary,
+          altBoundary = options.altBoundary,
+          padding = options.padding,
+          _options$tether = options.tether,
+          tether = _options$tether === void 0 ? true : _options$tether,
+          _options$tetherOffset = options.tetherOffset,
+          tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
+      var overflow = detectOverflow(state, {
+        boundary: boundary,
+        rootBoundary: rootBoundary,
+        padding: padding,
+        altBoundary: altBoundary
+      });
+      var basePlacement = getBasePlacement$1(state.placement);
+      var variation = getVariation(state.placement);
+      var isBasePlacement = !variation;
+      var mainAxis = getMainAxisFromPlacement(basePlacement);
+      var altAxis = getAltAxis(mainAxis);
+      var popperOffsets = state.modifiersData.popperOffsets;
+      var referenceRect = state.rects.reference;
+      var popperRect = state.rects.popper;
+      var tetherOffsetValue = typeof tetherOffset === 'function' ? tetherOffset(Object.assign({}, state.rects, {
+        placement: state.placement
+      })) : tetherOffset;
+      var data = {
+        x: 0,
+        y: 0
+      };
+
+      if (!popperOffsets) {
+        return;
+      }
+
+      if (checkMainAxis || checkAltAxis) {
+        var mainSide = mainAxis === 'y' ? top : left;
+        var altSide = mainAxis === 'y' ? bottom : right;
+        var len = mainAxis === 'y' ? 'height' : 'width';
+        var offset = popperOffsets[mainAxis];
+        var min$1 = popperOffsets[mainAxis] + overflow[mainSide];
+        var max$1 = popperOffsets[mainAxis] - overflow[altSide];
+        var additive = tether ? -popperRect[len] / 2 : 0;
+        var minLen = variation === start ? referenceRect[len] : popperRect[len];
+        var maxLen = variation === start ? -popperRect[len] : -referenceRect[len]; // We need to include the arrow in the calculation so the arrow doesn't go
+        // outside the reference bounds
+
+        var arrowElement = state.elements.arrow;
+        var arrowRect = tether && arrowElement ? getLayoutRect(arrowElement) : {
+          width: 0,
+          height: 0
+        };
+        var arrowPaddingObject = state.modifiersData['arrow#persistent'] ? state.modifiersData['arrow#persistent'].padding : getFreshSideObject();
+        var arrowPaddingMin = arrowPaddingObject[mainSide];
+        var arrowPaddingMax = arrowPaddingObject[altSide]; // If the reference length is smaller than the arrow length, we don't want
+        // to include its full size in the calculation. If the reference is small
+        // and near the edge of a boundary, the popper can overflow even if the
+        // reference is not overflowing as well (e.g. virtual elements with no
+        // width or height)
+
+        var arrowLen = within(0, referenceRect[len], arrowRect[len]);
+        var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - tetherOffsetValue : minLen - arrowLen - arrowPaddingMin - tetherOffsetValue;
+        var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + tetherOffsetValue : maxLen + arrowLen + arrowPaddingMax + tetherOffsetValue;
+        var arrowOffsetParent = state.elements.arrow && getOffsetParent(state.elements.arrow);
+        var clientOffset = arrowOffsetParent ? mainAxis === 'y' ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
+        var offsetModifierValue = state.modifiersData.offset ? state.modifiersData.offset[state.placement][mainAxis] : 0;
+        var tetherMin = popperOffsets[mainAxis] + minOffset - offsetModifierValue - clientOffset;
+        var tetherMax = popperOffsets[mainAxis] + maxOffset - offsetModifierValue;
+
+        if (checkMainAxis) {
+          var preventedOffset = within(tether ? min(min$1, tetherMin) : min$1, offset, tether ? max(max$1, tetherMax) : max$1);
+          popperOffsets[mainAxis] = preventedOffset;
+          data[mainAxis] = preventedOffset - offset;
+        }
+
+        if (checkAltAxis) {
+          var _mainSide = mainAxis === 'x' ? top : left;
+
+          var _altSide = mainAxis === 'x' ? bottom : right;
+
+          var _offset = popperOffsets[altAxis];
+
+          var _min = _offset + overflow[_mainSide];
+
+          var _max = _offset - overflow[_altSide];
+
+          var _preventedOffset = within(tether ? min(_min, tetherMin) : _min, _offset, tether ? max(_max, tetherMax) : _max);
+
+          popperOffsets[altAxis] = _preventedOffset;
+          data[altAxis] = _preventedOffset - _offset;
+        }
+      }
+
+      state.modifiersData[name] = data;
+    } // eslint-disable-next-line import/no-unused-modules
+
+
+    var preventOverflow$1 = {
+      name: 'preventOverflow',
+      enabled: true,
+      phase: 'main',
+      fn: preventOverflow,
+      requiresIfExists: ['offset']
+    };
+
+    function getHTMLElementScroll(element) {
+      return {
+        scrollLeft: element.scrollLeft,
+        scrollTop: element.scrollTop
+      };
+    }
+
+    function getNodeScroll(node) {
+      if (node === getWindow(node) || !isHTMLElement(node)) {
+        return getWindowScroll(node);
+      } else {
+        return getHTMLElementScroll(node);
+      }
+    }
+
+    // Composite means it takes into account transforms as well as layout.
+
+    function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
+      if (isFixed === void 0) {
+        isFixed = false;
+      }
+
+      var documentElement = getDocumentElement(offsetParent);
+      var rect = getBoundingClientRect(elementOrVirtualElement);
+      var isOffsetParentAnElement = isHTMLElement(offsetParent);
+      var scroll = {
+        scrollLeft: 0,
+        scrollTop: 0
+      };
+      var offsets = {
+        x: 0,
+        y: 0
+      };
+
+      if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
+        if (getNodeName(offsetParent) !== 'body' || // https://github.com/popperjs/popper-core/issues/1078
+        isScrollParent(documentElement)) {
+          scroll = getNodeScroll(offsetParent);
+        }
+
+        if (isHTMLElement(offsetParent)) {
+          offsets = getBoundingClientRect(offsetParent);
+          offsets.x += offsetParent.clientLeft;
+          offsets.y += offsetParent.clientTop;
+        } else if (documentElement) {
+          offsets.x = getWindowScrollBarX(documentElement);
+        }
+      }
+
+      return {
+        x: rect.left + scroll.scrollLeft - offsets.x,
+        y: rect.top + scroll.scrollTop - offsets.y,
+        width: rect.width,
+        height: rect.height
+      };
+    }
+
+    function order(modifiers) {
+      var map = new Map();
+      var visited = new Set();
+      var result = [];
+      modifiers.forEach(function (modifier) {
+        map.set(modifier.name, modifier);
+      }); // On visiting object, check for its dependencies and visit them recursively
+
+      function sort(modifier) {
+        visited.add(modifier.name);
+        var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
+        requires.forEach(function (dep) {
+          if (!visited.has(dep)) {
+            var depModifier = map.get(dep);
+
+            if (depModifier) {
+              sort(depModifier);
+            }
+          }
+        });
+        result.push(modifier);
+      }
+
+      modifiers.forEach(function (modifier) {
+        if (!visited.has(modifier.name)) {
+          // check for visited object
+          sort(modifier);
+        }
+      });
+      return result;
+    }
+
+    function orderModifiers(modifiers) {
+      // order based on dependencies
+      var orderedModifiers = order(modifiers); // order based on phase
+
+      return modifierPhases.reduce(function (acc, phase) {
+        return acc.concat(orderedModifiers.filter(function (modifier) {
+          return modifier.phase === phase;
+        }));
+      }, []);
+    }
+
+    function debounce(fn) {
+      var pending;
+      return function () {
+        if (!pending) {
+          pending = new Promise(function (resolve) {
+            Promise.resolve().then(function () {
+              pending = undefined;
+              resolve(fn());
+            });
+          });
+        }
+
+        return pending;
+      };
+    }
+
+    function format(str) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      return [].concat(args).reduce(function (p, c) {
+        return p.replace(/%s/, c);
+      }, str);
+    }
+
+    var INVALID_MODIFIER_ERROR = 'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s';
+    var MISSING_DEPENDENCY_ERROR = 'Popper: modifier "%s" requires "%s", but "%s" modifier is not available';
+    var VALID_PROPERTIES = ['name', 'enabled', 'phase', 'fn', 'effect', 'requires', 'options'];
+    function validateModifiers(modifiers) {
+      modifiers.forEach(function (modifier) {
+        Object.keys(modifier).forEach(function (key) {
+          switch (key) {
+            case 'name':
+              if (typeof modifier.name !== 'string') {
+                console.error(format(INVALID_MODIFIER_ERROR, String(modifier.name), '"name"', '"string"', "\"" + String(modifier.name) + "\""));
+              }
+
+              break;
+
+            case 'enabled':
+              if (typeof modifier.enabled !== 'boolean') {
+                console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"enabled"', '"boolean"', "\"" + String(modifier.enabled) + "\""));
+              }
+
+            case 'phase':
+              if (modifierPhases.indexOf(modifier.phase) < 0) {
+                console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"phase"', "either " + modifierPhases.join(', '), "\"" + String(modifier.phase) + "\""));
+              }
+
+              break;
+
+            case 'fn':
+              if (typeof modifier.fn !== 'function') {
+                console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"fn"', '"function"', "\"" + String(modifier.fn) + "\""));
+              }
+
+              break;
+
+            case 'effect':
+              if (typeof modifier.effect !== 'function') {
+                console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"effect"', '"function"', "\"" + String(modifier.fn) + "\""));
+              }
+
+              break;
+
+            case 'requires':
+              if (!Array.isArray(modifier.requires)) {
+                console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"requires"', '"array"', "\"" + String(modifier.requires) + "\""));
+              }
+
+              break;
+
+            case 'requiresIfExists':
+              if (!Array.isArray(modifier.requiresIfExists)) {
+                console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"requiresIfExists"', '"array"', "\"" + String(modifier.requiresIfExists) + "\""));
+              }
+
+              break;
+
+            case 'options':
+            case 'data':
+              break;
+
+            default:
+              console.error("PopperJS: an invalid property has been provided to the \"" + modifier.name + "\" modifier, valid properties are " + VALID_PROPERTIES.map(function (s) {
+                return "\"" + s + "\"";
+              }).join(', ') + "; but \"" + key + "\" was provided.");
+          }
+
+          modifier.requires && modifier.requires.forEach(function (requirement) {
+            if (modifiers.find(function (mod) {
+              return mod.name === requirement;
+            }) == null) {
+              console.error(format(MISSING_DEPENDENCY_ERROR, String(modifier.name), requirement, requirement));
+            }
+          });
+        });
+      });
+    }
+
+    function uniqueBy(arr, fn) {
+      var identifiers = new Set();
+      return arr.filter(function (item) {
+        var identifier = fn(item);
+
+        if (!identifiers.has(identifier)) {
+          identifiers.add(identifier);
+          return true;
+        }
+      });
+    }
+
+    function mergeByName(modifiers) {
+      var merged = modifiers.reduce(function (merged, current) {
+        var existing = merged[current.name];
+        merged[current.name] = existing ? Object.assign({}, existing, current, {
+          options: Object.assign({}, existing.options, current.options),
+          data: Object.assign({}, existing.data, current.data)
+        }) : current;
+        return merged;
+      }, {}); // IE11 does not support Object.values
+
+      return Object.keys(merged).map(function (key) {
+        return merged[key];
+      });
+    }
+
+    var INVALID_ELEMENT_ERROR = 'Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.';
+    var INFINITE_LOOP_ERROR = 'Popper: An infinite loop in the modifiers cycle has been detected! The cycle has been interrupted to prevent a browser crash.';
+    var DEFAULT_OPTIONS = {
+      placement: 'bottom',
+      modifiers: [],
+      strategy: 'absolute'
+    };
+
+    function areValidElements() {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return !args.some(function (element) {
+        return !(element && typeof element.getBoundingClientRect === 'function');
+      });
+    }
+
+    function popperGenerator(generatorOptions) {
+      if (generatorOptions === void 0) {
+        generatorOptions = {};
+      }
+
+      var _generatorOptions = generatorOptions,
+          _generatorOptions$def = _generatorOptions.defaultModifiers,
+          defaultModifiers = _generatorOptions$def === void 0 ? [] : _generatorOptions$def,
+          _generatorOptions$def2 = _generatorOptions.defaultOptions,
+          defaultOptions = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
+      return function createPopper(reference, popper, options) {
+        if (options === void 0) {
+          options = defaultOptions;
+        }
+
+        var state = {
+          placement: 'bottom',
+          orderedModifiers: [],
+          options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions),
+          modifiersData: {},
+          elements: {
+            reference: reference,
+            popper: popper
+          },
+          attributes: {},
+          styles: {}
+        };
+        var effectCleanupFns = [];
+        var isDestroyed = false;
+        var instance = {
+          state: state,
+          setOptions: function setOptions(options) {
+            cleanupModifierEffects();
+            state.options = Object.assign({}, defaultOptions, state.options, options);
+            state.scrollParents = {
+              reference: isElement(reference) ? listScrollParents(reference) : reference.contextElement ? listScrollParents(reference.contextElement) : [],
+              popper: listScrollParents(popper)
+            }; // Orders the modifiers based on their dependencies and `phase`
+            // properties
+
+            var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers, state.options.modifiers))); // Strip out disabled modifiers
+
+            state.orderedModifiers = orderedModifiers.filter(function (m) {
+              return m.enabled;
+            }); // Validate the provided modifiers so that the consumer will get warned
+            // if one of the modifiers is invalid for any reason
+
+            if (process.env.NODE_ENV !== "production") {
+              var modifiers = uniqueBy([].concat(orderedModifiers, state.options.modifiers), function (_ref) {
+                var name = _ref.name;
+                return name;
+              });
+              validateModifiers(modifiers);
+
+              if (getBasePlacement$1(state.options.placement) === auto) {
+                var flipModifier = state.orderedModifiers.find(function (_ref2) {
+                  var name = _ref2.name;
+                  return name === 'flip';
+                });
+
+                if (!flipModifier) {
+                  console.error(['Popper: "auto" placements require the "flip" modifier be', 'present and enabled to work.'].join(' '));
+                }
+              }
+
+              var _getComputedStyle = getComputedStyle(popper),
+                  marginTop = _getComputedStyle.marginTop,
+                  marginRight = _getComputedStyle.marginRight,
+                  marginBottom = _getComputedStyle.marginBottom,
+                  marginLeft = _getComputedStyle.marginLeft; // We no longer take into account `margins` on the popper, and it can
+              // cause bugs with positioning, so we'll warn the consumer
+
+
+              if ([marginTop, marginRight, marginBottom, marginLeft].some(function (margin) {
+                return parseFloat(margin);
+              })) {
+                console.warn(['Popper: CSS "margin" styles cannot be used to apply padding', 'between the popper and its reference element or boundary.', 'To replicate margin, use the `offset` modifier, as well as', 'the `padding` option in the `preventOverflow` and `flip`', 'modifiers.'].join(' '));
+              }
+            }
+
+            runModifierEffects();
+            return instance.update();
+          },
+          // Sync update – it will always be executed, even if not necessary. This
+          // is useful for low frequency updates where sync behavior simplifies the
+          // logic.
+          // For high frequency updates (e.g. `resize` and `scroll` events), always
+          // prefer the async Popper#update method
+          forceUpdate: function forceUpdate() {
+            if (isDestroyed) {
+              return;
+            }
+
+            var _state$elements = state.elements,
+                reference = _state$elements.reference,
+                popper = _state$elements.popper; // Don't proceed if `reference` or `popper` are not valid elements
+            // anymore
+
+            if (!areValidElements(reference, popper)) {
+              if (process.env.NODE_ENV !== "production") {
+                console.error(INVALID_ELEMENT_ERROR);
+              }
+
+              return;
+            } // Store the reference and popper rects to be read by modifiers
+
+
+            state.rects = {
+              reference: getCompositeRect(reference, getOffsetParent(popper), state.options.strategy === 'fixed'),
+              popper: getLayoutRect(popper)
+            }; // Modifiers have the ability to reset the current update cycle. The
+            // most common use case for this is the `flip` modifier changing the
+            // placement, which then needs to re-run all the modifiers, because the
+            // logic was previously ran for the previous placement and is therefore
+            // stale/incorrect
+
+            state.reset = false;
+            state.placement = state.options.placement; // On each update cycle, the `modifiersData` property for each modifier
+            // is filled with the initial data specified by the modifier. This means
+            // it doesn't persist and is fresh on each update.
+            // To ensure persistent data, use `${name}#persistent`
+
+            state.orderedModifiers.forEach(function (modifier) {
+              return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
+            });
+            var __debug_loops__ = 0;
+
+            for (var index = 0; index < state.orderedModifiers.length; index++) {
+              if (process.env.NODE_ENV !== "production") {
+                __debug_loops__ += 1;
+
+                if (__debug_loops__ > 100) {
+                  console.error(INFINITE_LOOP_ERROR);
+                  break;
+                }
+              }
+
+              if (state.reset === true) {
+                state.reset = false;
+                index = -1;
+                continue;
+              }
+
+              var _state$orderedModifie = state.orderedModifiers[index],
+                  fn = _state$orderedModifie.fn,
+                  _state$orderedModifie2 = _state$orderedModifie.options,
+                  _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2,
+                  name = _state$orderedModifie.name;
+
+              if (typeof fn === 'function') {
+                state = fn({
+                  state: state,
+                  options: _options,
+                  name: name,
+                  instance: instance
+                }) || state;
+              }
+            }
+          },
+          // Async and optimistically optimized update – it will not be executed if
+          // not necessary (debounced to run at most once-per-tick)
+          update: debounce(function () {
+            return new Promise(function (resolve) {
+              instance.forceUpdate();
+              resolve(state);
+            });
+          }),
+          destroy: function destroy() {
+            cleanupModifierEffects();
+            isDestroyed = true;
+          }
+        };
+
+        if (!areValidElements(reference, popper)) {
+          if (process.env.NODE_ENV !== "production") {
+            console.error(INVALID_ELEMENT_ERROR);
+          }
+
+          return instance;
+        }
+
+        instance.setOptions(options).then(function (state) {
+          if (!isDestroyed && options.onFirstUpdate) {
+            options.onFirstUpdate(state);
+          }
+        }); // Modifiers have the ability to execute arbitrary code before the first
+        // update cycle runs. They will be executed in the same order as the update
+        // cycle. This is useful when a modifier adds some persistent data that
+        // other modifiers need to use, but the modifier is run after the dependent
+        // one.
+
+        function runModifierEffects() {
+          state.orderedModifiers.forEach(function (_ref3) {
+            var name = _ref3.name,
+                _ref3$options = _ref3.options,
+                options = _ref3$options === void 0 ? {} : _ref3$options,
+                effect = _ref3.effect;
+
+            if (typeof effect === 'function') {
+              var cleanupFn = effect({
+                state: state,
+                name: name,
+                instance: instance,
+                options: options
+              });
+
+              var noopFn = function noopFn() {};
+
+              effectCleanupFns.push(cleanupFn || noopFn);
+            }
+          });
+        }
+
+        function cleanupModifierEffects() {
+          effectCleanupFns.forEach(function (fn) {
+            return fn();
+          });
+          effectCleanupFns = [];
+        }
+
+        return instance;
+      };
+    }
+
+    var defaultModifiers = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1, offset$1, flip$1, preventOverflow$1, arrow$1, hide$1];
+    var createPopper = /*#__PURE__*/popperGenerator({
+      defaultModifiers: defaultModifiers
+    }); // eslint-disable-next-line import/no-unused-modules
+
+    /* global Map:readonly, Set:readonly, ArrayBuffer:readonly */
+
+    var hasElementType = typeof Element !== 'undefined';
+    var hasMap = typeof Map === 'function';
+    var hasSet = typeof Set === 'function';
+    var hasArrayBuffer = typeof ArrayBuffer === 'function' && !!ArrayBuffer.isView;
+
+    // Note: We **don't** need `envHasBigInt64Array` in fde es6/index.js
+
+    function equal(a, b) {
+      // START: fast-deep-equal es6/index.js 3.1.1
+      if (a === b) return true;
+
+      if (a && b && typeof a == 'object' && typeof b == 'object') {
+        if (a.constructor !== b.constructor) return false;
+
+        var length, i, keys;
+        if (Array.isArray(a)) {
+          length = a.length;
+          if (length != b.length) return false;
+          for (i = length; i-- !== 0;)
+            if (!equal(a[i], b[i])) return false;
+          return true;
+        }
+
+        // START: Modifications:
+        // 1. Extra `has<Type> &&` helpers in initial condition allow es6 code
+        //    to co-exist with es5.
+        // 2. Replace `for of` with es5 compliant iteration using `for`.
+        //    Basically, take:
+        //
+        //    ```js
+        //    for (i of a.entries())
+        //      if (!b.has(i[0])) return false;
+        //    ```
+        //
+        //    ... and convert to:
+        //
+        //    ```js
+        //    it = a.entries();
+        //    while (!(i = it.next()).done)
+        //      if (!b.has(i.value[0])) return false;
+        //    ```
+        //
+        //    **Note**: `i` access switches to `i.value`.
+        var it;
+        if (hasMap && (a instanceof Map) && (b instanceof Map)) {
+          if (a.size !== b.size) return false;
+          it = a.entries();
+          while (!(i = it.next()).done)
+            if (!b.has(i.value[0])) return false;
+          it = a.entries();
+          while (!(i = it.next()).done)
+            if (!equal(i.value[1], b.get(i.value[0]))) return false;
+          return true;
+        }
+
+        if (hasSet && (a instanceof Set) && (b instanceof Set)) {
+          if (a.size !== b.size) return false;
+          it = a.entries();
+          while (!(i = it.next()).done)
+            if (!b.has(i.value[0])) return false;
+          return true;
+        }
+        // END: Modifications
+
+        if (hasArrayBuffer && ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+          length = a.length;
+          if (length != b.length) return false;
+          for (i = length; i-- !== 0;)
+            if (a[i] !== b[i]) return false;
+          return true;
+        }
+
+        if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
+        if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
+        if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
+
+        keys = Object.keys(a);
+        length = keys.length;
+        if (length !== Object.keys(b).length) return false;
+
+        for (i = length; i-- !== 0;)
+          if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
+        // END: fast-deep-equal
+
+        // START: react-fast-compare
+        // custom handling for DOM elements
+        if (hasElementType && a instanceof Element) return false;
+
+        // custom handling for React/Preact
+        for (i = length; i-- !== 0;) {
+          if ((keys[i] === '_owner' || keys[i] === '__v' || keys[i] === '__o') && a.$$typeof) {
+            // React-specific: avoid traversing React elements' _owner
+            // Preact-specific: avoid traversing Preact elements' __v and __o
+            //    __v = $_original / $_vnode
+            //    __o = $_owner
+            // These properties contain circular references and are not needed when
+            // comparing the actual elements (and not their owners)
+            // .$$typeof and ._store on just reasonable markers of elements
+
+            continue;
+          }
+
+          // all other properties should be traversed as usual
+          if (!equal(a[keys[i]], b[keys[i]])) return false;
+        }
+        // END: react-fast-compare
+
+        // START: fast-deep-equal
+        return true;
+      }
+
+      return a !== a && b !== b;
+    }
+    // end fast-deep-equal
+
+    var reactFastCompare = function isEqual(a, b) {
+      try {
+        return equal(a, b);
+      } catch (error) {
+        if (((error.message || '').match(/stack|recursion/i))) {
+          // warn on circular references, don't crash
+          // browsers give this different errors name and messages:
+          // chrome/safari: "RangeError", "Maximum call stack size exceeded"
+          // firefox: "InternalError", too much recursion"
+          // edge: "Error", "Out of stack space"
+          console.warn('react-fast-compare cannot handle circular refs');
+          return false;
+        }
+        // some other error. we should definitely know about these
+        throw error;
+      }
+    };
+
+    var EMPTY_MODIFIERS$1 = [];
+    var usePopper = function usePopper(referenceElement, popperElement, options) {
+      if (options === void 0) {
+        options = {};
+      }
+
+      var prevOptions = React.useRef(null);
+      var optionsWithDefaults = {
+        onFirstUpdate: options.onFirstUpdate,
+        placement: options.placement || 'bottom',
+        strategy: options.strategy || 'absolute',
+        modifiers: options.modifiers || EMPTY_MODIFIERS$1
+      };
+
+      var _React$useState = React.useState({
+        styles: {
+          popper: {
+            position: optionsWithDefaults.strategy,
+            left: '0',
+            top: '0'
+          },
+          arrow: {
+            position: 'absolute'
+          }
+        },
+        attributes: {}
+      }),
+          state = _React$useState[0],
+          setState = _React$useState[1];
+
+      var updateStateModifier = React.useMemo(function () {
+        return {
+          name: 'updateState',
+          enabled: true,
+          phase: 'write',
+          fn: function fn(_ref) {
+            var state = _ref.state;
+            var elements = Object.keys(state.elements);
+            setState({
+              styles: fromEntries(elements.map(function (element) {
+                return [element, state.styles[element] || {}];
+              })),
+              attributes: fromEntries(elements.map(function (element) {
+                return [element, state.attributes[element]];
+              }))
+            });
+          },
+          requires: ['computeStyles']
+        };
+      }, []);
+      var popperOptions = React.useMemo(function () {
+        var newOptions = {
+          onFirstUpdate: optionsWithDefaults.onFirstUpdate,
+          placement: optionsWithDefaults.placement,
+          strategy: optionsWithDefaults.strategy,
+          modifiers: [].concat(optionsWithDefaults.modifiers, [updateStateModifier, {
+            name: 'applyStyles',
+            enabled: false
+          }])
+        };
+
+        if (reactFastCompare(prevOptions.current, newOptions)) {
+          return prevOptions.current || newOptions;
+        } else {
+          prevOptions.current = newOptions;
+          return newOptions;
+        }
+      }, [optionsWithDefaults.onFirstUpdate, optionsWithDefaults.placement, optionsWithDefaults.strategy, optionsWithDefaults.modifiers, updateStateModifier]);
+      var popperInstanceRef = React.useRef();
+      useIsomorphicLayoutEffect(function () {
+        if (popperInstanceRef.current) {
+          popperInstanceRef.current.setOptions(popperOptions);
+        }
+      }, [popperOptions]);
+      useIsomorphicLayoutEffect(function () {
+        if (referenceElement == null || popperElement == null) {
+          return;
+        }
+
+        var createPopper$1 = options.createPopper || createPopper;
+        var popperInstance = createPopper$1(referenceElement, popperElement, popperOptions);
+        popperInstanceRef.current = popperInstance;
+        return function () {
+          popperInstance.destroy();
+          popperInstanceRef.current = null;
+        };
+      }, [referenceElement, popperElement, options.createPopper]);
+      return {
+        state: popperInstanceRef.current ? popperInstanceRef.current.state : null,
+        styles: state.styles,
+        attributes: state.attributes,
+        update: popperInstanceRef.current ? popperInstanceRef.current.update : null,
+        forceUpdate: popperInstanceRef.current ? popperInstanceRef.current.forceUpdate : null
+      };
+    };
+
+    var NOOP = function NOOP() {
+      return void 0;
+    };
+
+    var NOOP_PROMISE = function NOOP_PROMISE() {
+      return Promise.resolve(null);
+    };
+
+    var EMPTY_MODIFIERS = [];
+    function Popper(_ref) {
+      var _ref$placement = _ref.placement,
+          placement = _ref$placement === void 0 ? 'bottom' : _ref$placement,
+          _ref$strategy = _ref.strategy,
+          strategy = _ref$strategy === void 0 ? 'absolute' : _ref$strategy,
+          _ref$modifiers = _ref.modifiers,
+          modifiers = _ref$modifiers === void 0 ? EMPTY_MODIFIERS : _ref$modifiers,
+          referenceElement = _ref.referenceElement,
+          onFirstUpdate = _ref.onFirstUpdate,
+          innerRef = _ref.innerRef,
+          children = _ref.children;
+      var referenceNode = React.useContext(ManagerReferenceNodeContext);
+
+      var _React$useState = React.useState(null),
+          popperElement = _React$useState[0],
+          setPopperElement = _React$useState[1];
+
+      var _React$useState2 = React.useState(null),
+          arrowElement = _React$useState2[0],
+          setArrowElement = _React$useState2[1];
+
+      React.useEffect(function () {
+        setRef(innerRef, popperElement);
+      }, [innerRef, popperElement]);
+      var options = React.useMemo(function () {
+        return {
+          placement: placement,
+          strategy: strategy,
+          onFirstUpdate: onFirstUpdate,
+          modifiers: [].concat(modifiers, [{
+            name: 'arrow',
+            enabled: arrowElement != null,
+            options: {
+              element: arrowElement
+            }
+          }])
+        };
+      }, [placement, strategy, onFirstUpdate, modifiers, arrowElement]);
+
+      var _usePopper = usePopper(referenceElement || referenceNode, popperElement, options),
+          state = _usePopper.state,
+          styles = _usePopper.styles,
+          forceUpdate = _usePopper.forceUpdate,
+          update = _usePopper.update;
+
+      var childrenProps = React.useMemo(function () {
+        return {
+          ref: setPopperElement,
+          style: styles.popper,
+          placement: state ? state.placement : placement,
+          hasPopperEscaped: state && state.modifiersData.hide ? state.modifiersData.hide.hasPopperEscaped : null,
+          isReferenceHidden: state && state.modifiersData.hide ? state.modifiersData.hide.isReferenceHidden : null,
+          arrowProps: {
+            style: styles.arrow,
+            ref: setArrowElement
+          },
+          forceUpdate: forceUpdate || NOOP,
+          update: update || NOOP_PROMISE
+        };
+      }, [setPopperElement, setArrowElement, placement, state, styles, update, forceUpdate]);
+      return unwrapArray(children)(childrenProps);
+    }
+
+    function Reference(_ref) {
+      var children = _ref.children,
+          innerRef = _ref.innerRef;
+      var setReferenceNode = React.useContext(ManagerReferenceNodeSetterContext);
+      var refHandler = React.useCallback(function (node) {
+        setRef(innerRef, node);
+        safeInvoke(setReferenceNode, node);
+      }, [innerRef, setReferenceNode]); // ran on unmount
+
+      React.useEffect(function () {
+        return function () {
+          return setRef(innerRef, null);
+        };
+      });
+      React.useEffect(function () {
+        warning_1(Boolean(setReferenceNode), '`Reference` should not be used outside of a `Manager` component.');
+      }, [setReferenceNode]);
+      return unwrapArray(children)({
+        ref: refHandler
+      });
+    }
+
+    /*
+     * Copyright 2021 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    // Popper placement utils
+    // ======================
+    /** Converts a full placement to one of the four positions by stripping text after the `-`. */
+    function getBasePlacement(placement) {
+        return placement.split("-")[0];
+    }
+    /** Returns true if position is left or right. */
+    function isVerticalPlacement(side) {
+        return ["left", "right"].indexOf(side) !== -1;
+    }
+    /** Returns the opposite position. */
+    function getOppositePlacement(side) {
+        switch (side) {
+            case "top":
+                return "bottom";
+            case "left":
+                return "right";
+            case "bottom":
+                return "top";
+            default:
+                return "left";
+        }
+    }
+    /** Returns the CSS alignment keyword corresponding to given placement. */
+    function getAlignment(placement) {
+        var align = placement.split("-")[1];
+        switch (align) {
+            case "start":
+                return "left";
+            case "end":
+                return "right";
+            default:
+                return "center";
+        }
+    }
+    // Popper modifiers
+    // ================
+    /** Modifier helper function to compute popper transform-origin based on arrow position */
+    function getTransformOrigin(placement, arrowStyles) {
+        var basePlacement = getBasePlacement(placement);
+        if (arrowStyles === undefined) {
+            return isVerticalPlacement(basePlacement)
+                ? getOppositePlacement(basePlacement) + " " + getAlignment(basePlacement)
+                : getAlignment(basePlacement) + " " + getOppositePlacement(basePlacement);
+        }
+        else {
+            // const arrowSizeShift = state.elements.arrow.clientHeight / 2;
+            var arrowSizeShift = 30 / 2;
+            // can use keyword for dimension without the arrow, to ease computation burden.
+            // move origin by half arrow's height to keep it centered.
+            return isVerticalPlacement(basePlacement)
+                ? getOppositePlacement(basePlacement) + " " + (parseInt(arrowStyles.top, 10) + arrowSizeShift) + "px"
+                : parseInt(arrowStyles.left, 10) + arrowSizeShift + "px " + getOppositePlacement(basePlacement);
+        }
+    }
+
+    // these paths come from the Core Kit Sketch file
+    // https://github.com/palantir/blueprint/blob/develop/resources/sketch/Core%20Kit.sketch
+    var SVG_SHADOW_PATH = "M8.11 6.302c1.015-.936 1.887-2.922 1.887-4.297v26c0-1.378" +
+        "-.868-3.357-1.888-4.297L.925 17.09c-1.237-1.14-1.233-3.034 0-4.17L8.11 6.302z";
+    var SVG_ARROW_PATH = "M8.787 7.036c1.22-1.125 2.21-3.376 2.21-5.03V0v30-2.005" +
+        "c0-1.654-.983-3.9-2.21-5.03l-7.183-6.616c-.81-.746-.802-1.96 0-2.7l7.183-6.614z";
+    // additional space between arrow and edge of target
+    var ARROW_SPACING = 4;
+    var POPOVER_ARROW_SVG_SIZE = 30;
+    var TOOLTIP_ARROW_SVG_SIZE = 22;
+    /** Modifier helper function to compute arrow rotate() transform */
+    function getArrowAngle(placement) {
+        if (placement == null) {
+            return 0;
+        }
+        // can only be top/left/bottom/right - auto is resolved internally
+        switch (getBasePlacement(placement)) {
+            case "top":
+                return -90;
+            case "left":
+                return 180;
+            case "bottom":
+                return 90;
+            default:
+                return 0;
+        }
+    }
+    /**
+     * Popper's builtin "arrow" modifier options.padding doesn't seem to work for us, so we
+     * need to compute our own offset in the direction of the popover relative to the reference.
+     */
+    function getArrowReferenceOffsetStyle(placement) {
+        var offset = POPOVER_ARROW_SVG_SIZE / 2 - ARROW_SPACING;
+        switch (getBasePlacement(placement)) {
+            case "top":
+                return { bottom: -offset };
+            case "left":
+                return { right: -offset };
+            case "bottom":
+                return { top: -offset };
+            default:
+                return { left: -offset };
+        }
+    }
+    var Popover2Arrow = function (_a) {
+        var _b = _a.arrowProps, ref = _b.ref, style = _b.style, placement = _a.placement;
+        return (
+        // data attribute allows popper.js to position the arrow
+        React.createElement("div", { className: POPOVER2_ARROW, "data-popper-arrow": true, ref: ref, style: __assign(__assign({}, style), getArrowReferenceOffsetStyle(placement)) },
+            React.createElement("svg", { viewBox: "0 0 " + POPOVER_ARROW_SVG_SIZE + " " + POPOVER_ARROW_SVG_SIZE, style: { transform: "rotate(" + getArrowAngle(placement) + "deg)" } },
+                React.createElement("path", { className: POPOVER2_ARROW + "-border", d: SVG_SHADOW_PATH }),
+                React.createElement("path", { className: POPOVER2_ARROW + "-fill", d: SVG_ARROW_PATH }))));
+    };
+    Popover2Arrow.displayName = DISPLAYNAME_PREFIX + ".Popover2Arrow";
+
+    /**
+     * Convert a position to a placement.
+     *
+     * @param position the position to convert
+     */
+    function positionToPlacement(position) {
+        /* istanbul ignore next */
+        switch (position) {
+            case PopoverPosition.TOP_LEFT:
+                return "top-start";
+            case PopoverPosition.TOP:
+                return "top";
+            case PopoverPosition.TOP_RIGHT:
+                return "top-end";
+            case PopoverPosition.RIGHT_TOP:
+                return "right-start";
+            case PopoverPosition.RIGHT:
+                return "right";
+            case PopoverPosition.RIGHT_BOTTOM:
+                return "right-end";
+            case PopoverPosition.BOTTOM_RIGHT:
+                return "bottom-end";
+            case PopoverPosition.BOTTOM:
+                return "bottom";
+            case PopoverPosition.BOTTOM_LEFT:
+                return "bottom-start";
+            case PopoverPosition.LEFT_BOTTOM:
+                return "left-end";
+            case PopoverPosition.LEFT:
+                return "left";
+            case PopoverPosition.LEFT_TOP:
+                return "left-start";
+            case "auto":
+            case "auto-start":
+            case "auto-end":
+                // Return the string unchanged.
+                return position;
+            default:
+                return assertNever(position);
+        }
+    }
+    /* istanbul ignore next */
+    function assertNever(x) {
+        throw new Error("Unexpected position: " + x);
+    }
+
+    var Tooltip2 = /** @class */ (function (_super) {
+        __extends(Tooltip2, _super);
+        function Tooltip2() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.popover = null;
+            return _this;
+        }
+        Tooltip2.prototype.render = function () {
+            var _a;
+            var _this = this;
+            var _b = this.props, children = _b.children, intent = _b.intent, popoverClassName = _b.popoverClassName, restProps = __rest(_b, ["children", "intent", "popoverClassName"]);
+            var classes = classnames(TOOLTIP2, (_a = {}, _a[MINIMAL] = this.props.minimal, _a), intentClass(intent), popoverClassName);
+            return (React.createElement(Popover2, __assign({ interactionKind: Popover2InteractionKind.HOVER_TARGET_ONLY, modifiers: {
+                    arrow: {
+                        enabled: !this.props.minimal,
+                    },
+                    offset: {
+                        options: {
+                            offset: [0, TOOLTIP_ARROW_SVG_SIZE / 2],
+                        },
+                    },
+                } }, restProps, { autoFocus: false, canEscapeKeyClose: false, enforceFocus: false, lazy: true, popoverClassName: classes, portalContainer: this.props.portalContainer, ref: function (ref) { return (_this.popover = ref); } }), children));
+        };
+        Tooltip2.prototype.reposition = function () {
+            if (this.popover != null) {
+                this.popover.reposition();
+            }
+        };
+        Tooltip2.displayName = DISPLAYNAME_PREFIX + ".Tooltip2";
+        Tooltip2.defaultProps = {
+            hoverCloseDelay: 0,
+            hoverOpenDelay: 100,
+            minimal: false,
+            transitionDuration: 100,
+        };
+        return Tooltip2;
+    }(React.PureComponent));
+
+    var Popover2InteractionKind = {
+        CLICK: "click",
+        CLICK_TARGET_ONLY: "click-target",
+        HOVER: "hover",
+        HOVER_TARGET_ONLY: "hover-target",
+    };
+    /**
+     * @template T target component props inteface
+     */
+    var Popover2 = /** @class */ (function (_super) {
+        __extends(Popover2, _super);
+        function Popover2() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.popoverRef = createReactRef();
+            _this.state = {
+                hasDarkParent: false,
+                isOpen: _this.getIsOpen(_this.props),
+            };
+            /**
+             * DOM element that contains the popover.
+             * When `usePortal={true}`, this element will be portaled outside the usual DOM flow,
+             * so this reference can be very useful for testing.
+             */
+            _this.popoverElement = null;
+            /** DOM element that contains the target. */
+            _this.targetElement = null;
+            _this.refHandlers = {
+                popover: function (ref) {
+                    var _a, _b;
+                    _this.popoverElement = ref;
+                    (_b = (_a = _this.props).popoverRef) === null || _b === void 0 ? void 0 : _b.call(_a, ref);
+                },
+                target: function (ref) { return (_this.targetElement = ref); },
+            };
+            // a flag that lets us detect mouse movement between the target and popover,
+            // now that mouseleave is triggered when you cross the gap between the two.
+            _this.isMouseInTargetOrPopover = false;
+            // a flag that indicates whether the target previously lost focus to another
+            // element on the same page.
+            _this.lostFocusOnSamePage = true;
+            _this.isControlled = function () { return _this.props.isOpen !== undefined; };
+            // arrow is disabled if minimal, or if the arrow modifier was explicitly disabled
+            _this.isArrowEnabled = function () { var _a, _b; return !_this.props.minimal && ((_b = (_a = _this.props.modifiers) === null || _a === void 0 ? void 0 : _a.arrow) === null || _b === void 0 ? void 0 : _b.enabled) !== false; };
+            _this.isHoverInteractionKind = function () {
+                return (_this.props.interactionKind === Popover2InteractionKind.HOVER ||
+                    _this.props.interactionKind === Popover2InteractionKind.HOVER_TARGET_ONLY);
+            };
+            /**
+             * Instance method to instruct the `Popover` to recompute its position.
+             *
+             * This method should only be used if you are updating the target in a way
+             * that does not cause it to re-render, such as changing its _position_
+             * without changing its _size_ (since `Popover` already repositions when it
+             * detects a resize).
+             */
+            _this.reposition = function () { var _a; return (_a = _this.popperScheduleUpdate) === null || _a === void 0 ? void 0 : _a.call(_this); };
+            _this.renderTarget = function (_a) {
+                var _b, _c;
+                var _d;
+                var ref = _a.ref;
+                var _e = _this.props, children = _e.children, className = _e.className, fill = _e.fill, openOnTargetFocus = _e.openOnTargetFocus, renderTarget = _e.renderTarget;
+                var isOpen = _this.state.isOpen;
+                var isControlled = _this.isControlled();
+                var isHoverInteractionKind = _this.isHoverInteractionKind();
+                var targetTagName = _this.props.targetTagName;
+                if (fill) {
+                    targetTagName = "div";
+                }
+                if (isRefCallback(ref)) {
+                    ref = combineRefs(ref, _this.refHandlers.target);
+                }
+                var targetEventHandlers = isHoverInteractionKind
+                    ? {
+                        // HOVER handlers
+                        onBlur: _this.handleTargetBlur,
+                        onFocus: _this.handleTargetFocus,
+                        onMouseEnter: _this.handleMouseEnter,
+                        onMouseLeave: _this.handleMouseLeave,
+                    }
+                    : {
+                        // CLICK needs only one handler
+                        onClick: _this.handleTargetClick,
+                    };
+                // Ensure target is focusable if relevant prop enabled
+                var targetTabIndex = openOnTargetFocus && isHoverInteractionKind ? 0 : undefined;
+                var targetProps = __assign({ 
+                    // N.B. this.props.className is passed along to renderTarget even though the user would have access to it.
+                    // If, instead, renderTarget is undefined and the target is provided as a child, this.props.className is
+                    // applied to the generated target wrapper element.
+                    className: classnames(className, POPOVER2_TARGET, (_b = {},
+                        _b[POPOVER2_OPEN] = isOpen,
+                        // this class is mainly useful for button targets
+                        _b[ACTIVE] = !isControlled && isOpen && !isHoverInteractionKind,
+                        _b)), ref: ref }, targetEventHandlers);
+                var target;
+                if (renderTarget !== undefined) {
+                    target = renderTarget(__assign(__assign({}, targetProps), { 
+                        // if the consumer renders a tooltip target, it's their responsibility to disable that tooltip
+                        // when *this* popover is open
+                        isOpen: isOpen, tabIndex: targetTabIndex }));
+                }
+                else {
+                    var childTarget = ensureElement(React.Children.toArray(children)[0]);
+                    if (childTarget === undefined) {
+                        return null;
+                    }
+                    var targetModifierClasses = (_c = {},
+                        // this class is mainly useful for Blueprint <Button> targets; we should only apply it for
+                        // uncontrolled popovers when they are opened by a user interaction
+                        _c[ACTIVE] = isOpen && !isControlled && !isHoverInteractionKind,
+                        // similarly, this class is mainly useful for targets like <Button>, <InputGroup>, etc.
+                        _c[FILL] = fill,
+                        _c);
+                    var clonedTarget = React.cloneElement(childTarget, {
+                        className: classnames(childTarget.props.className, targetModifierClasses),
+                        // force disable single Tooltip2 child when popover is open
+                        disabled: isOpen && isElementOfType(childTarget, Tooltip2) ? true : childTarget.props.disabled,
+                        tabIndex: (_d = childTarget.props.tabIndex) !== null && _d !== void 0 ? _d : targetTabIndex,
+                    });
+                    var wrappedTarget = React.createElement(targetTagName, targetProps, clonedTarget);
+                    target = wrappedTarget;
+                }
+                return React.createElement(ResizeSensor, { onResize: _this.reposition }, target);
+            };
+            _this.renderPopover = function (popperProps) {
+                var _a;
+                var _b = _this.props, interactionKind = _b.interactionKind, usePortal = _b.usePortal;
+                var isOpen = _this.state.isOpen;
+                // compute an appropriate transform origin so the scale animation points towards target
+                var transformOrigin = getTransformOrigin(popperProps.placement, _this.isArrowEnabled() ? popperProps.arrowProps.style : undefined);
+                // need to update our reference to this function on every render as it will change.
+                _this.popperScheduleUpdate = popperProps.update;
+                var popoverHandlers = {
+                    // always check popover clicks for dismiss class
+                    onClick: _this.handlePopoverClick,
+                };
+                if (interactionKind === Popover2InteractionKind.HOVER ||
+                    (!usePortal && interactionKind === Popover2InteractionKind.HOVER_TARGET_ONLY)) {
+                    popoverHandlers.onMouseEnter = _this.handleMouseEnter;
+                    popoverHandlers.onMouseLeave = _this.handleMouseLeave;
+                }
+                var basePlacement = getBasePlacement(popperProps.placement);
+                var popoverClasses = classnames(POPOVER2, (_a = {},
+                    _a[DARK] = _this.props.inheritDarkTheme && _this.state.hasDarkParent,
+                    _a[MINIMAL] = _this.props.minimal,
+                    _a[POPOVER2_CAPTURING_DISMISS] = _this.props.captureDismiss,
+                    _a), POPOVER2_CONTENT_PLACEMENT + "-" + basePlacement, _this.props.popoverClassName);
+                return (React.createElement(Overlay, { autoFocus: _this.props.autoFocus, backdropClassName: POPOVER2_BACKDROP, backdropProps: _this.props.backdropProps, canEscapeKeyClose: _this.props.canEscapeKeyClose, canOutsideClickClose: _this.props.interactionKind === Popover2InteractionKind.CLICK, enforceFocus: _this.props.enforceFocus, hasBackdrop: _this.props.hasBackdrop, isOpen: isOpen, onClose: _this.handleOverlayClose, onClosed: _this.props.onClosed, onClosing: _this.props.onClosing, onOpened: _this.props.onOpened, onOpening: _this.props.onOpening, transitionDuration: _this.props.transitionDuration, transitionName: POPOVER2, usePortal: _this.props.usePortal, portalClassName: _this.props.portalClassName, portalContainer: _this.props.portalContainer },
+                    React.createElement("div", { className: POPOVER2_TRANSITION_CONTAINER, ref: popperProps.ref, style: popperProps.style },
+                        React.createElement(ResizeSensor, { onResize: _this.reposition },
+                            React.createElement("div", __assign({ className: popoverClasses, style: { transformOrigin: transformOrigin }, ref: _this.popoverRef }, popoverHandlers),
+                                _this.isArrowEnabled() && (React.createElement(Popover2Arrow, { arrowProps: popperProps.arrowProps, placement: popperProps.placement })),
+                                React.createElement("div", { className: POPOVER2_CONTENT }, _this.props.content))))));
+            };
+            _this.handleTargetFocus = function (e) {
+                if (_this.props.openOnTargetFocus && _this.isHoverInteractionKind()) {
+                    if (e.relatedTarget == null && !_this.lostFocusOnSamePage) {
+                        // ignore this focus event -- the target was already focused but the page itself
+                        // lost focus (e.g. due to switching tabs).
+                        return;
+                    }
+                    _this.handleMouseEnter(e);
+                }
+            };
+            _this.handleTargetBlur = function (e) {
+                if (_this.props.openOnTargetFocus && _this.isHoverInteractionKind()) {
+                    // if the next element to receive focus is within the popover, we'll want to leave the
+                    // popover open. e.relatedTarget ought to tell us the next element to receive focus, but if the user just
+                    // clicked on an element which is not focusable (either by default or with a tabIndex attribute),
+                    // it won't be set. So, we filter those out here and assume that a click handler somewhere else will
+                    // close the popover if necessary.
+                    if (e.relatedTarget != null && !_this.isElementInPopover(e.relatedTarget)) {
+                        _this.handleMouseLeave(e);
+                    }
+                }
+                _this.lostFocusOnSamePage = e.relatedTarget != null;
+            };
+            _this.handleMouseEnter = function (e) {
+                _this.isMouseInTargetOrPopover = true;
+                // if we're entering the popover, and the mode is set to be HOVER_TARGET_ONLY, we want to manually
+                // trigger the mouse leave event, as hovering over the popover shouldn't count.
+                if (!_this.props.usePortal &&
+                    _this.isElementInPopover(e.target) &&
+                    _this.props.interactionKind === Popover2InteractionKind.HOVER_TARGET_ONLY &&
+                    !_this.props.openOnTargetFocus) {
+                    _this.handleMouseLeave(e);
+                }
+                else if (!_this.props.disabled) {
+                    // only begin opening popover when it is enabled
+                    _this.setOpenState(true, e, _this.props.hoverOpenDelay);
+                }
+            };
+            _this.handleMouseLeave = function (e) {
+                _this.isMouseInTargetOrPopover = false;
+                // wait until the event queue is flushed, because we want to leave the
+                // popover open if the mouse entered the popover immediately after
+                // leaving the target (or vice versa).
+                _this.setTimeout(function () {
+                    if (_this.isMouseInTargetOrPopover) {
+                        return;
+                    }
+                    // user-configurable closing delay is helpful when moving mouse from target to popover
+                    _this.setOpenState(false, e, _this.props.hoverCloseDelay);
+                });
+            };
+            _this.handlePopoverClick = function (e) {
+                var eventTarget = e.target;
+                var eventPopover = eventTarget.closest("." + POPOVER2);
+                var isEventFromSelf = eventPopover === _this.popoverRef.current;
+                var isEventPopoverCapturing = eventPopover === null || eventPopover === void 0 ? void 0 : eventPopover.classList.contains(POPOVER2_CAPTURING_DISMISS);
+                // an OVERRIDE inside a DISMISS does not dismiss, and a DISMISS inside an OVERRIDE will dismiss.
+                var dismissElement = eventTarget.closest("." + POPOVER2_DISMISS + ", ." + POPOVER2_DISMISS_OVERRIDE);
+                var shouldDismiss = dismissElement === null || dismissElement === void 0 ? void 0 : dismissElement.classList.contains(POPOVER2_DISMISS);
+                // dismiss selectors from the "V1" version of Popover in the core pacakge
+                // we expect these to be rendered by MenuItem, which at this point has no knowledge of Popover2
+                // this can be removed once Popover2 is merged into core in v4.0
+                var dismissElementV1 = eventTarget.closest("." + POPOVER_DISMISS + ", ." + POPOVER_DISMISS_OVERRIDE);
+                var shouldDismissV1 = dismissElementV1 === null || dismissElementV1 === void 0 ? void 0 : dismissElementV1.classList.contains(POPOVER_DISMISS);
+                var isDisabled = eventTarget.closest(":disabled, ." + DISABLED) != null;
+                if ((shouldDismiss || shouldDismissV1) && !isDisabled && (!isEventPopoverCapturing || isEventFromSelf)) {
+                    _this.setOpenState(false, e);
+                }
+            };
+            _this.handleOverlayClose = function (e) {
+                if (_this.targetElement === null || e === undefined) {
+                    return;
+                }
+                var eventTarget = e.target;
+                // if click was in target, target event listener will handle things, so don't close
+                if (!elementIsOrContains(_this.targetElement, eventTarget) || e.nativeEvent instanceof KeyboardEvent) {
+                    _this.setOpenState(false, e);
+                }
+            };
+            _this.handleTargetClick = function (e) {
+                // ensure click did not originate from within inline popover before closing
+                if (!_this.props.disabled && !_this.isElementInPopover(e.target)) {
+                    if (_this.props.isOpen == null) {
+                        _this.setState(function (prevState) { return ({ isOpen: !prevState.isOpen }); });
+                    }
+                    else {
+                        _this.setOpenState(!_this.props.isOpen, e);
+                    }
+                }
+            };
+            return _this;
+        }
+        Popover2.prototype.getIsOpen = function (props) {
+            var _a;
+            // disabled popovers should never be allowed to open.
+            if (props.disabled) {
+                return false;
+            }
+            else {
+                return (_a = props.isOpen) !== null && _a !== void 0 ? _a : props.defaultIsOpen;
+            }
+        };
+        Popover2.prototype.render = function () {
+            var _a = this.props, disabled = _a.disabled, content = _a.content, placement = _a.placement, _b = _a.position, position = _b === void 0 ? "auto" : _b, positioningStrategy = _a.positioningStrategy;
+            var isOpen = this.state.isOpen;
+            var isContentEmpty = content == null || (typeof content === "string" && content.trim() === "");
+            if (isContentEmpty) {
+                // need to do this check in render(), because `isOpen` is derived from
+                // state, and state can't necessarily be accessed in validateProps.
+                if (!disabled && isOpen !== false && !isNodeEnv("production")) {
+                    console.warn(POPOVER2_WARN_EMPTY_CONTENT);
+                }
+                // just render the target without a content overlay if there is no content to display
+                return this.renderTarget({ ref: noop });
+            }
+            return (React.createElement(Manager, null,
+                React.createElement(Reference, null, this.renderTarget),
+                React.createElement(Popper, { innerRef: this.refHandlers.popover, placement: placement !== null && placement !== void 0 ? placement : positionToPlacement(position), strategy: positioningStrategy, modifiers: this.computePopperModifiers() }, this.renderPopover)));
+        };
+        Popover2.prototype.componentDidMount = function () {
+            this.updateDarkParent();
+        };
+        Popover2.prototype.componentDidUpdate = function (props, state) {
+            _super.prototype.componentDidUpdate.call(this, props, state);
+            this.updateDarkParent();
+            var nextIsOpen = this.getIsOpen(this.props);
+            if (this.props.isOpen != null && nextIsOpen !== this.state.isOpen) {
+                this.setOpenState(nextIsOpen);
+                // tricky: setOpenState calls setState only if this.props.isOpen is
+                // not controlled, so we need to invoke setState manually here.
+                this.setState({ isOpen: nextIsOpen });
+            }
+            else if (this.props.disabled && this.state.isOpen && this.props.isOpen == null) {
+                // special case: close an uncontrolled popover when disabled is set to true
+                this.setOpenState(false);
+            }
+        };
+        Popover2.prototype.validateProps = function (props) {
+            if (props.isOpen == null && props.onInteraction != null) {
+                console.warn(POPOVER2_WARN_UNCONTROLLED_ONINTERACTION);
+            }
+            if (props.hasBackdrop && !props.usePortal) {
+                console.warn(POPOVER2_WARN_HAS_BACKDROP_INLINE);
+            }
+            if (props.hasBackdrop && props.interactionKind !== Popover2InteractionKind.CLICK) {
+                console.warn(POPOVER2_HAS_BACKDROP_INTERACTION);
+            }
+            if (props.placement !== undefined && props.position !== undefined) {
+                console.warn(POPOVER2_WARN_PLACEMENT_AND_POSITION_MUTEX);
+            }
+            var childrenCount = React.Children.count(props.children);
+            var hasRenderTargetPropp = props.renderTarget !== undefined;
+            if (childrenCount === 0 && !hasRenderTargetPropp) {
+                console.warn(POPOVER2_REQUIRES_TARGET);
+            }
+            if (childrenCount > 1) {
+                console.warn(POPOVER2_WARN_TOO_MANY_CHILDREN);
+            }
+            if (childrenCount > 0 && hasRenderTargetPropp) {
+                console.warn(POPOVER2_WARN_DOUBLE_TARGET);
+            }
+        };
+        Popover2.prototype.computePopperModifiers = function () {
+            var _a, _b, _c, _d;
+            var modifiers = this.props.modifiers;
+            return [
+                __assign({ enabled: this.isArrowEnabled(), name: "arrow" }, modifiers === null || modifiers === void 0 ? void 0 : modifiers.arrow),
+                __assign(__assign({ name: "computeStyles" }, modifiers === null || modifiers === void 0 ? void 0 : modifiers.computeStyles), { options: __assign({ adaptive: true, 
+                        // We disable the built-in gpuAcceleration so that
+                        // Popper.js will return us easy to interpolate values
+                        // (top, left instead of transform: translate3d)
+                        // We'll then use these values to generate the needed
+                        // css transform values blended with the react-spring values
+                        gpuAcceleration: false }, (_a = modifiers === null || modifiers === void 0 ? void 0 : modifiers.computeStyles) === null || _a === void 0 ? void 0 : _a.options) }),
+                __assign(__assign({ enabled: this.isArrowEnabled(), name: "offset" }, modifiers === null || modifiers === void 0 ? void 0 : modifiers.offset), { options: __assign({ offset: [0, POPOVER_ARROW_SVG_SIZE / 2] }, (_b = modifiers === null || modifiers === void 0 ? void 0 : modifiers.offset) === null || _b === void 0 ? void 0 : _b.options) }),
+                __assign(__assign({ name: "flip" }, modifiers === null || modifiers === void 0 ? void 0 : modifiers.flip), { options: __assign({ boundary: this.props.boundary, rootBoundary: this.props.rootBoundary }, (_c = modifiers === null || modifiers === void 0 ? void 0 : modifiers.flip) === null || _c === void 0 ? void 0 : _c.options) }),
+                __assign(__assign({ name: "preventOverflow" }, modifiers === null || modifiers === void 0 ? void 0 : modifiers.preventOverflow), { options: __assign({ boundary: this.props.boundary, rootBoundary: this.props.rootBoundary }, (_d = modifiers === null || modifiers === void 0 ? void 0 : modifiers.preventOverflow) === null || _d === void 0 ? void 0 : _d.options) }),
+            ];
+        };
+        // a wrapper around setState({ isOpen }) that will call props.onInteraction instead when in controlled mode.
+        // starts a timeout to delay changing the state if a non-zero duration is provided.
+        Popover2.prototype.setOpenState = function (isOpen, e, timeout) {
+            var _this = this;
+            var _a, _b, _c, _d, _e;
+            // cancel any existing timeout because we have new state
+            (_a = this.cancelOpenTimeout) === null || _a === void 0 ? void 0 : _a.call(this);
+            if (timeout !== undefined && timeout > 0) {
+                this.cancelOpenTimeout = this.setTimeout(function () { return _this.setOpenState(isOpen, e); }, timeout);
+            }
+            else {
+                if (this.props.isOpen == null) {
+                    this.setState({ isOpen: isOpen });
+                }
+                else {
+                    (_c = (_b = this.props).onInteraction) === null || _c === void 0 ? void 0 : _c.call(_b, isOpen, e);
+                }
+                if (!isOpen) {
+                    // non-null assertion because the only time `e` is undefined is when in controlled mode
+                    // or the rare special case in uncontrolled mode when the `disabled` flag is toggled true
+                    (_e = (_d = this.props).onClose) === null || _e === void 0 ? void 0 : _e.call(_d, e);
+                }
+            }
+        };
+        Popover2.prototype.updateDarkParent = function () {
+            if (this.props.usePortal && this.state.isOpen) {
+                var hasDarkParent = this.targetElement != null && this.targetElement.closest("." + DARK) != null;
+                this.setState({ hasDarkParent: hasDarkParent });
+            }
+        };
+        Popover2.prototype.isElementInPopover = function (element) {
+            return this.popoverElement != null && this.popoverElement.contains(element);
+        };
+        Popover2.displayName = DISPLAYNAME_PREFIX + ".Popover2";
+        Popover2.defaultProps = {
+            boundary: "clippingParents",
+            captureDismiss: false,
+            defaultIsOpen: false,
+            disabled: false,
+            fill: false,
+            hasBackdrop: false,
+            hoverCloseDelay: 300,
+            hoverOpenDelay: 150,
+            inheritDarkTheme: true,
+            interactionKind: Popover2InteractionKind.CLICK,
+            minimal: false,
+            openOnTargetFocus: true,
+            // N.B. we don't set a default for `placement` or `position` here because that would trigger
+            // a warning in validateProps if the other prop is specified by a user of this component
+            positioningStrategy: "absolute",
+            renderTarget: undefined,
+            targetTagName: "span",
+            transitionDuration: 300,
+            usePortal: true,
+        };
+        return Popover2;
+    }(AbstractPureComponent2));
+    function noop() {
+        // no-op
+    }
+
+    function _extends() {
+      _extends = Object.assign || function (target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+
+        return target;
+      };
+
+      return _extends.apply(this, arguments);
+    }
+
+    var defaultStyle={width:"100%",maxWidth:"max(70vh, 30vw)",aspectRatio:"1"};var WebGLCanvas=React__default['default'].forwardRef(function(props,ref){var style=props.style!==undefined?__assign(__assign({},defaultStyle),props.style):defaultStyle;return React__default['default'].createElement("canvas",_extends({},props,{style:style,ref:ref,height:512,width:512}))});
+
+    var Curve3DAnimationCanvas=function(_super){__extends(Curve3DAnimationCanvas,_super);function Curve3DAnimationCanvas(props){var _this=_super.call(this,props)||this;_this.drawFrame=function(){if(_this.canvas){var frame=_this.props.animation.getFrame(_this.state.animTimestamp/1000);frame.draw(_this.canvas);}};_this.reqFrame=function(){return requestAnimationFrame(_this.animationCallback)};_this.animationCallback=function(timeInMs){if(!_this.canvas||!_this.state.isPlaying)return;if(!_this.callbackTimestamp){_this.callbackTimestamp=timeInMs;_this.drawFrame();_this.reqFrame();return}var currentFrame=timeInMs-_this.callbackTimestamp;if(currentFrame<_this.frameDuration){_this.reqFrame();return}_this.callbackTimestamp=timeInMs;if(_this.state.animTimestamp>=_this.animationDuration){if(_this.state.autoPlay){_this.setState({animTimestamp:0},_this.reqFrame);}else {_this.setState({isPlaying:false},function(){_this.callbackTimestamp=null;});}}else {_this.drawFrame();_this.setState(function(prev){return {animTimestamp:prev.animTimestamp+currentFrame}},_this.reqFrame);}};_this.onPlayButtonClick=function(){if(_this.state.isPlaying){_this.setState({isPlaying:false},function(){_this.callbackTimestamp=null;});}else {_this.setState({isPlaying:true},_this.reqFrame);}};_this.onResetButtonClick=function(){_this.setState({animTimestamp:0},function(){if(_this.state.isPlaying)_this.reqFrame();else _this.drawFrame();});};_this.onTimeSliderChange=function(newValue){_this.callbackTimestamp=null;_this.setState(function(prev){return {wasPlaying:prev.isPlaying,isPlaying:false,animTimestamp:newValue}},_this.drawFrame);};_this.onTimeSliderRelease=function(){_this.setState(function(prev){return {isPlaying:prev.wasPlaying}},function(){if(!_this.state.isPlaying){_this.callbackTimestamp=null;}else {_this.reqFrame();}});};_this.onAngleSliderChange=function(newAngle){_this.setState({curveAngle:newAngle},function(){_this.props.animation.angle=newAngle;if(_this.state.isPlaying)_this.reqFrame();else _this.drawFrame();});};_this.autoPlaySwitchChanged=function(){_this.setState(function(prev){return {autoPlay:!prev.autoPlay}});};_this.state={animTimestamp:0,isPlaying:false,wasPlaying:false,autoPlay:true,curveAngle:0};_this.canvas=null;_this.frameDuration=1000/props.animation.fps;_this.animationDuration=Math.round(props.animation.duration*1000);_this.callbackTimestamp=null;return _this}Curve3DAnimationCanvas.prototype.componentDidMount=function(){this.drawFrame();};Curve3DAnimationCanvas.prototype.render=function(){var _this=this;var buttons=React__default['default'].createElement("div",{style:{marginLeft:"20px",marginRight:"20px",marginTop:"5px",display:"flex",flexDirection:"row",justifyContent:"space-between"}},React__default['default'].createElement("div",{style:{marginRight:"20px"}},React__default['default'].createElement(Tooltip2,{content:this.state.isPlaying?"Pause":"Play"},React__default['default'].createElement(Button,{onClick:this.onPlayButtonClick},React__default['default'].createElement(Icon,{icon:this.state.isPlaying?PAUSE:PLAY})))),React__default['default'].createElement(Tooltip2,{content:"Reset"},React__default['default'].createElement(Button,{onClick:this.onResetButtonClick},React__default['default'].createElement(Icon,{icon:RESET}))));var sliders=React__default['default'].createElement("div",{style:{flexGrow:1,display:"flex",flexDirection:"column",alignContent:"stretch"}},React__default['default'].createElement(Slider,{value:this.state.animTimestamp,onChange:this.onTimeSliderChange,onRelease:this.onTimeSliderRelease,stepSize:1,labelRenderer:false,min:0,max:this.animationDuration}),React__default['default'].createElement(Tooltip2,{content:"Display Angle"},React__default['default'].createElement("div",{style:{marginTop:"5px"}},React__default['default'].createElement(Slider,{value:this.state.curveAngle,onChange:this.onAngleSliderChange,stepSize:0.01,min:0,max:2*Math.PI,labelRenderer:false}))));return React__default['default'].createElement(React__default['default'].Fragment,null,React__default['default'].createElement("div",{style:{display:"flex",alignContent:"center",justifyContent:"center"}},React__default['default'].createElement(WebGLCanvas,{style:{flexGrow:1},ref:function(r){_this.canvas=r;}})),React__default['default'].createElement("div",{style:{display:"flex",marginTop:"10px",padding:"10px",flexDirection:"row",justifyContent:"stretch",alignContent:"center"}},buttons,sliders,React__default['default'].createElement(Switch,{style:{marginLeft:"20px",marginRight:"20px",marginTop:"10px",whiteSpace:"nowrap"},label:"Auto Play",onChange:this.autoPlaySwitchChanged,checked:this.state.autoPlay})))};return Curve3DAnimationCanvas}(React__default['default'].Component);
+
+    var CurveCanvas3D=function(_super){__extends(CurveCanvas3D,_super);function CurveCanvas3D(props){var _this=_super.call(this,props)||this;_this.onSliderChangeHandler=function(newValue){_this.setState({rotationAngle:newValue,isRotating:false,displayAngle:true},function(){if(_this.$canvas){_this.props.curve.redraw(newValue/180*Math.PI);}});};_this.onClickHandler=function(){if(!_this.$canvas)return;_this.setState(function(prevState){return {isRotating:!prevState.isRotating}},function(){if(_this.state.isRotating){_this.autoRotate();}});};_this.autoRotate=function(){if(_this.$canvas&&_this.state.isRotating){_this.setState(function(prevState){return __assign(__assign({},prevState),{rotationAngle:prevState.rotationAngle>=360?0:prevState.rotationAngle+2})},function(){_this.props.curve.redraw(_this.state.rotationAngle/180*Math.PI);window.requestAnimationFrame(_this.autoRotate);});}};_this.onTextBoxChange=function(event){var angle=parseFloat(event.target.value);_this.setState(function(){return {rotationAngle:angle}},function(){if(_this.$canvas){_this.props.curve.redraw(angle/180*Math.PI);}});};_this.$canvas=null;_this.state={rotationAngle:0,isRotating:false,displayAngle:false};return _this}CurveCanvas3D.prototype.componentDidMount=function(){if(this.$canvas){this.props.curve.init(this.$canvas);this.props.curve.redraw(this.state.rotationAngle/180*Math.PI);}};CurveCanvas3D.prototype.render=function(){var _this=this;return React__default['default'].createElement("div",{style:{display:"flex",flexDirection:"column",alignContent:"center"}},React__default['default'].createElement(WebGLCanvas,{ref:function(r){_this.$canvas=r;}}),React__default['default'].createElement("div",{style:{display:"flex",padding:"10px",flexDirection:"row",justifyContent:"space-between",alignItems:"center"}},React__default['default'].createElement(Slider,{value:this.state.rotationAngle,stepSize:1,labelValues:[],labelRenderer:false,min:0,max:360,onChange:this.onSliderChangeHandler}),React__default['default'].createElement(Button,{style:{marginLeft:"20px"},onClick:this.onClickHandler},React__default['default'].createElement(Icon,{icon:this.state.isRotating?PAUSE:PLAY})),React__default['default'].createElement("input",{style:{marginLeft:"20px"},type:"number",min:0,max:360,step:1,disabled:this.state.isRotating,onChange:this.onTextBoxChange,value:this.state.rotationAngle})))};return CurveCanvas3D}(React__default['default'].Component);
+
+    var AnimationCanvas=function(_super){__extends(AnimationCanvas,_super);function AnimationCanvas(props){var _this=_super.call(this,props)||this;_this.drawFrame=function(){if(_this.canvas){var frame=_this.props.animation.getFrame(_this.state.animTimestamp/1000);frame.draw(_this.canvas);}};_this.reqFrame=function(){return requestAnimationFrame(_this.animationCallback)};_this.startAnimation=function(){return _this.setState({isPlaying:true},_this.reqFrame)};_this.stopAnimation=function(){return _this.setState({isPlaying:false},function(){_this.callbackTimestamp=null;})};_this.animationCallback=function(timeInMs){if(!_this.canvas||!_this.state.isPlaying)return;if(!_this.callbackTimestamp){_this.callbackTimestamp=timeInMs;_this.drawFrame();_this.reqFrame();return}var currentFrame=timeInMs-_this.callbackTimestamp;if(currentFrame<_this.frameDuration){_this.reqFrame();return}_this.callbackTimestamp=timeInMs;if(_this.state.animTimestamp>=_this.animationDuration){if(_this.state.autoPlay){_this.setState({animTimestamp:0},_this.reqFrame);}else {_this.stopAnimation();}}else {_this.setState(function(prev){return {animTimestamp:prev.animTimestamp+currentFrame}},function(){_this.drawFrame();_this.reqFrame();});}};_this.onPlayButtonClick=function(){if(_this.state.isPlaying){_this.stopAnimation();}else {_this.startAnimation();}};_this.onResetButtonClick=function(){_this.setState({animTimestamp:0},function(){if(!_this.state.isPlaying)_this.drawFrame();});};_this.onSliderChange=function(newValue){_this.callbackTimestamp=null;_this.setState(function(prev){return {wasPlaying:prev.isPlaying,isPlaying:false,animTimestamp:newValue}},_this.drawFrame);};_this.onSliderRelease=function(){_this.setState(function(prev){return {isPlaying:prev.wasPlaying}},function(){if(!_this.state.isPlaying){_this.callbackTimestamp=null;}else {_this.reqFrame();}});};_this.autoPlaySwitchChanged=function(){_this.setState(function(prev){return {autoPlay:!prev.autoPlay}});};_this.state={animTimestamp:0,isPlaying:false,wasPlaying:false,autoPlay:true};_this.canvas=null;_this.frameDuration=1000/props.animation.fps;_this.animationDuration=Math.round(props.animation.duration*1000);_this.callbackTimestamp=null;return _this}AnimationCanvas.prototype.componentDidMount=function(){this.drawFrame();};AnimationCanvas.prototype.render=function(){var _this=this;var buttons=React__default['default'].createElement("div",{style:{marginLeft:"20px",marginRight:"20px",display:"flex",flexDirection:"row",justifyContent:"space-between"}},React__default['default'].createElement("div",{style:{marginRight:"20px"}},React__default['default'].createElement(Tooltip2,{content:this.state.isPlaying?"Pause":"Play"},React__default['default'].createElement(Button,{onClick:this.onPlayButtonClick},React__default['default'].createElement(Icon,{icon:this.state.isPlaying?PAUSE:PLAY})))),React__default['default'].createElement(Tooltip2,{content:"Reset"},React__default['default'].createElement(Button,{onClick:this.onResetButtonClick},React__default['default'].createElement(Icon,{icon:RESET}))));var animSlider=React__default['default'].createElement("div",{style:{marginTop:"7px",flexGrow:1}},React__default['default'].createElement(Slider,{value:this.state.animTimestamp,onChange:this.onSliderChange,onRelease:this.onSliderRelease,stepSize:1,labelRenderer:false,min:0,max:this.animationDuration}));return React__default['default'].createElement(React__default['default'].Fragment,null,React__default['default'].createElement("div",{style:{display:"flex",alignContent:"center",justifyContent:"center"}},React__default['default'].createElement(WebGLCanvas,{style:{flexGrow:1},ref:function(r){_this.canvas=r;}})),React__default['default'].createElement("div",{style:{display:"flex",marginTop:"10px",padding:"10px",flexDirection:"row",justifyContent:"stretch",alignContent:"center"}},buttons,animSlider,React__default['default'].createElement(Switch,{style:{marginLeft:"20px",marginRight:"20px",marginTop:"5px",whiteSpace:"nowrap"},label:"Auto Play",onChange:this.autoPlaySwitchChanged,checked:this.state.autoPlay})))};return AnimationCanvas}(React__default['default'].Component);
+
+    var index = {toSpawn:function(context){var _a;var moduleContext=(_a=context.context)===null||_a===void 0?void 0:_a.moduleContexts.get("curve");if(!moduleContext){return false}var moduleState=moduleContext.state;if(!moduleState){return false}return moduleState.drawnCurves.length>0},body:function(context){var _a;var moduleContext=(_a=context.context)===null||_a===void 0?void 0:_a.moduleContexts.get("curve");var moduleState=moduleContext.state;var canvases=moduleState.drawnCurves.map(function(curve,i){var elemKey=i.toString();if(glAnimation.isAnimation(curve)){var anim=curve;return anim.is3D?React__default['default'].createElement(Curve3DAnimationCanvas,{animation:anim,key:elemKey}):React__default['default'].createElement(AnimationCanvas,{animation:anim,key:elemKey})}var curveDrawn=curve;return curveDrawn.is3D()?React__default['default'].createElement(CurveCanvas3D,{curve:curveDrawn,key:elemKey}):React__default['default'].createElement(WebGLCanvas,{ref:function(r){if(r){curveDrawn.init(r);curveDrawn.redraw(0);}},key:elemKey})});return React__default['default'].createElement(MultiItemDisplay,{elements:canvases})},label:"Curves Tab",iconName:"media"};
 
     return index;
 
-}(React));
+}(React, ReactDom));
