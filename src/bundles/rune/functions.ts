@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 /**
  * The module `rune` provides functions for drawing runes.
  *

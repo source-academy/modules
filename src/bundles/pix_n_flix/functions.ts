@@ -64,7 +64,6 @@ let tabsPackage: TabsPacket;
 
 const pixels: Pixels = [];
 const temporaryPixels: Pixels = [];
-// eslint-disable-next-line @typescript-eslint/no-use-before-define
 let filter: Filter = copy_image;
 
 let toRunLateQueue: boolean = false;
@@ -98,11 +97,9 @@ function isPixelFilled(pixel: Pixel): boolean {
   let ok = true;
   for (let i = 0; i < 4; i += 1) {
     if (pixel[i] >= 0 && pixel[i] <= 255) {
-      // eslint-disable-next-line no-continue
       continue;
     }
     ok = false;
-    // eslint-disable-next-line no-param-reassign
     pixel[i] = 0;
   }
   return ok;
@@ -118,13 +115,9 @@ function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
       if (isPixelFilled(data[i][j]) === false) {
         ok = false;
       }
-      // eslint-disable-next-line no-param-reassign, prefer-destructuring
       buffer[p] = data[i][j][0];
-      // eslint-disable-next-line no-param-reassign, prefer-destructuring
       buffer[p + 1] = data[i][j][1];
-      // eslint-disable-next-line no-param-reassign, prefer-destructuring
       buffer[p + 2] = data[i][j][2];
-      // eslint-disable-next-line no-param-reassign, prefer-destructuring
       buffer[p + 3] = data[i][j][3];
     }
   }
@@ -132,7 +125,6 @@ function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   if (!ok) {
     const warningMessage =
       'You have invalid values for some pixels! Reseting them to default (0)';
-    // eslint-disable-next-line no-console
     console.warn(warningMessage);
     errorLogger(warningMessage, false);
   }
@@ -143,7 +135,6 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
       const p = i * WIDTH * 4 + j * 4;
-      // eslint-disable-next-line no-param-reassign
       src[i][j] = [
         pixelData[p],
         pixelData[p + 1],
@@ -165,10 +156,8 @@ function drawImage(source: VideoElement | ImageElement): void {
     filter(pixels, temporaryPixels);
     writeToBuffer(pixelObj.data, temporaryPixels);
   } catch (e: any) {
-    // eslint-disable-next-line no-console
     console.error(JSON.stringify(e));
     const errMsg = `There is an error with filter function, filter will be reset to default. ${e.name}: ${e.message}`;
-    // eslint-disable-next-line no-console
     console.error(errMsg);
 
     if (!e.name) {
@@ -181,7 +170,6 @@ function drawImage(source: VideoElement | ImageElement): void {
       errorLogger(errMsg, false);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     filter = copy_image;
     filter(pixels, temporaryPixels);
   }
@@ -191,7 +179,6 @@ function drawImage(source: VideoElement | ImageElement): void {
 
 /** @hidden */
 function draw(timestamp: number): void {
-  // eslint-disable-next-line no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 
   if (prevTime === null) prevTime = timestamp;
@@ -218,7 +205,6 @@ function playVideoElement() {
         videoIsPlaying = true;
       })
       .catch((err) => {
-        // eslint-disable-next-line no-console
         console.warn(err);
       });
   }
@@ -237,7 +223,6 @@ function startVideo(): void {
   if (videoIsPlaying) return;
   if (inputFeed === InputFeed.Camera) videoIsPlaying = true;
   else playVideoElement();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestId = window.requestAnimationFrame(draw);
 }
 
@@ -258,7 +243,6 @@ function stopVideo(): void {
 function loadMedia(): void {
   if (!navigator.mediaDevices.getUserMedia) {
     const errMsg = 'The browser you are using does not support getUserMedia';
-    // eslint-disable-next-line no-console
     console.error(errMsg);
     errorLogger(errMsg, false);
   }
@@ -274,7 +258,6 @@ function loadMedia(): void {
     })
     .catch((error) => {
       const errorMessage = `${error.name}: ${error.message}`;
-      // eslint-disable-next-line no-console
       console.error(errorMessage);
       errorLogger(errorMessage, false);
     });
@@ -292,10 +275,8 @@ function loadAlternative(): void {
       imageElement.src = url;
     }
   } catch (e: any) {
-    // eslint-disable-next-line no-console
     console.error(JSON.stringify(e));
     const errMsg = `There is an error loading the URL. ${e.name}: ${e.message}`;
-    // eslint-disable-next-line no-console
     console.error(errMsg);
     loadMedia();
     return;
@@ -539,13 +520,9 @@ export function set_rgba(
   a: number
 ): void {
   // assigns the r,g,b values to this pixel
-  // eslint-disable-next-line no-param-reassign
   pixel[0] = r;
-  // eslint-disable-next-line no-param-reassign
   pixel[1] = g;
-  // eslint-disable-next-line no-param-reassign
   pixel[2] = b;
-  // eslint-disable-next-line no-param-reassign
   pixel[3] = a;
 }
 
@@ -579,7 +556,6 @@ export function image_width(): number {
 export function copy_image(src: Pixels, dest: Pixels): void {
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
-      // eslint-disable-next-line no-param-reassign
       dest[i][j] = src[i][j];
     }
   }

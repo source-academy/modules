@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention, complexity */
 import { mat4, vec3 } from 'gl-matrix';
 import { ReplResult } from '../../typings/type_helpers';
 import { CurveSpace, DrawMode, ScaleMode } from './types';
@@ -311,6 +310,7 @@ export class CurveDrawn implements ReplResult {
   };
 }
 
+// eslint-disable-next-line complexity
 export function generateCurve(
   scaleMode: ScaleMode,
   drawMode: DrawMode,

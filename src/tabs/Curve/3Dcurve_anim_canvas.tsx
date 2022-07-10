@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import { Button, Icon, Slider, Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';

@@ -22,14 +22,7 @@ const WebGLCanvas = React.forwardRef<HTMLCanvasElement, any>(
         : defaultStyle;
 
     return (
-      <canvas
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        {...props}
-        style={style}
-        ref={ref}
-        height={512}
-        width={512}
-      />
+      <canvas {...props} style={style} ref={ref} height={512} width={512} />
     );
   }
 );

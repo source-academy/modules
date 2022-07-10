@@ -1,5 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable @typescript-eslint/no-unused-vars, jsx-a11y/media-has-caption */
 import React from 'react';
 import { SoundsModuleState } from '../../bundles/sound/types';
 import { DebuggerContext } from '../../typings/type_helpers';

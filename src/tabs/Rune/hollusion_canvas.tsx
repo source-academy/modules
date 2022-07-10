@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { HollusionRune } from '../../bundles/rune/functions';
 import WebGLCanvas from '../common/webgl_canvas';
@@ -6,7 +5,6 @@ import WebGLCanvas from '../common/webgl_canvas';
 /**
  * Canvas used to display Hollusion runes
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function HollusionCanvas({ rune }: { rune: HollusionRune }) {
   const canvasRef = React.useRef(null);
   const renderFuncRef = React.useRef<(time: number) => void>();

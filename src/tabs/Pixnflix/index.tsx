@@ -358,7 +358,6 @@ class PixNFlix extends React.Component<Props, State> {
           </div>
         </div>
         <div className='sa-video-element'>
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <img
             ref={(r) => {
               this.$image = r;
@@ -367,7 +366,6 @@ class PixNFlix extends React.Component<Props, State> {
             height={DEFAULT_HEIGHT}
             style={{ display: 'none' }}
           />
-          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
           <video
             ref={(r) => {
               this.$video = r;

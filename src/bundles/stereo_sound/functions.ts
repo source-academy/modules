@@ -12,7 +12,7 @@
  * @author Samyukta Sounderraman
  */
 
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars, new-cap */
+/* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import {
   accumulate,
   head,
@@ -41,7 +41,6 @@ const fourier_expansion_level: number = 5; // fourier expansion level
 /** @hidden */
 export const audioPlayed: AudioPlayed[] = [];
 
-let audioElement: HTMLAudioElement;
 // Singular audio context for all playback functions
 let audioplayer: AudioContext;
 
@@ -102,10 +101,8 @@ function setPermissionToFalse() {
 
 function start_recording(mediaRecorder: MediaRecorder) {
   const data: any[] = [];
-  // eslint-disable-next-line no-param-reassign
   mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
   mediaRecorder.start();
-  // eslint-disable-next-line no-param-reassign
   mediaRecorder.onstop = () => process(data);
 }
 
@@ -599,14 +596,11 @@ export function squash(sound: Sound): Sound {
 export function pan(amount: number): SoundTransformer {
   return (sound) => {
     if (amount > 1) {
-      // eslint-disable-next-line no-param-reassign
       amount = 1;
     }
     if (amount < -1) {
-      // eslint-disable-next-line no-param-reassign
       amount = -1;
     }
-    // eslint-disable-next-line no-param-reassign
     sound = squash(sound);
     return make_stereo_sound(
       (t) => ((1 - amount) / 2) * get_left_wave(sound)(t),
@@ -637,7 +631,6 @@ export function pan_mod(modulator: Sound): SoundTransformer {
     return output;
   };
   return (sound) => {
-    // eslint-disable-next-line no-param-reassign
     sound = squash(sound);
     return make_stereo_sound(
       (t) => ((1 - amount(t)) / 2) * get_left_wave(sound)(t),
@@ -657,7 +650,7 @@ export function pan_mod(modulator: Sound): SoundTransformer {
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
-  return make_sound((t) => Math.random() * 2 - 1, duration);
+  return make_sound((_t) => Math.random() * 2 - 1, duration);
 }
 
 /**
@@ -668,7 +661,7 @@ export function noise_sound(duration: number): Sound {
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
-  return make_sound((t) => 0, duration);
+  return make_sound((_t) => 0, duration);
 }
 
 /**

@@ -40,7 +40,6 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    // eslint-disable-next-line react/destructuring-assignment
     const moduleContext = context.context?.moduleContexts.get('rune');
     const moduleState = moduleContext!.state as RunesModuleState;
 
