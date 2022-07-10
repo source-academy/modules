@@ -48,8 +48,10 @@ import {
   hollusion_magnitude,
   hollusion,
   drawnRunes,
+  animate_rune,
+  animate_anaglyph,
 } from './functions';
-import { RunesModuleState } from './types';
+import { RunesModuleState } from './rune';
 
 /**
  * Bundle for Source Academy Runes module
@@ -133,5 +135,7 @@ export default function runes(
     anaglyph,
     hollusion_magnitude,
     hollusion,
+    animate_rune,
+    animate_anaglyph,
   };
 }
