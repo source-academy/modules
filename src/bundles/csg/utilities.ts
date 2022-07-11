@@ -93,11 +93,6 @@ export class CsgModuleState implements ModuleState {
   }
 }
 
-// Used as options when setting camera projection
-export class CameraViewportDimensions {
-  constructor(public width: number, public height: number) {}
-}
-
 export function getModuleContext(
   moduleContexts: ModuleContexts
 ): ModuleContext | null {

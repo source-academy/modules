@@ -14,8 +14,11 @@ import {
   BP_TEXT_COLOR,
   GRID_PADDING,
   MAIN_TICKS,
+  ROTATION_SPEED,
   ROUND_UP_INTERVAL,
   SUB_TICKS,
+  X_FACTOR,
+  Y_FACTOR,
 } from '../constants.js';
 import { hexToAlphaColor, RenderGroup, Shape } from '../utilities.js';
 import {
@@ -27,7 +30,9 @@ import {
   Entity,
   GeometryEntity,
   MultiGridEntityType,
+  PanStates,
   PerspectiveCameraState,
+  RotateStates,
   Solid,
   UpdatedStates,
   WrappedRenderer,
@@ -207,4 +212,41 @@ export function zoomToFit(
   cameraState.target = states.camera.target;
 
   controlsState.scale = states.controls.scale;
+}
+
+export function rotate(
+  cameraState: PerspectiveCameraState,
+  controlsState: ControlsState,
+  rotateX: number,
+  rotateY: number
+) {
+  let states: RotateStates = (controls.orbit.rotate(
+    {
+      camera: cameraState,
+      controls: controlsState,
+      speed: ROTATION_SPEED,
+    },
+    [rotateX, rotateY]
+  ) as unknown) as RotateStates;
+
+  controlsState.thetaDelta = states.controls.thetaDelta;
+  controlsState.phiDelta = states.controls.phiDelta;
+}
+
+export function pan(
+  cameraState: PerspectiveCameraState,
+  controlsState: ControlsState,
+  panX: number,
+  panY: number
+) {
+  let states: PanStates = (controls.orbit.pan(
+    {
+      camera: cameraState,
+      controls: controlsState,
+    },
+    [panX * X_FACTOR, panY * Y_FACTOR]
+  ) as unknown) as PanStates;
+
+  cameraState.position = states.camera.position;
+  cameraState.target = states.camera.target;
 }

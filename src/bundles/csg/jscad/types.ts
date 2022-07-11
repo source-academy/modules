@@ -153,7 +153,8 @@ export type DrawCommandMakers = Record<string, DrawCommandMaker>;
 // @jscad\regl-renderer\src\cameras\perspectiveCamera.js
 // @jscad\regl-renderer\src\cameras\orthographicCamera.js
 /*
-  (Not exhaustive, only defines well the important properties we need)
+  (Not exhaustive, only defines well the important properties we need.)
+  (Orthgraphic camera is ignored, this file assumes PerspectiveCameraState)
 */
 export type Mat4 = Float32Array;
 export type PerspectiveCameraState = Omit<
@@ -256,4 +257,22 @@ export type ZoomToFitStates = {
   controls: {
     scale: number;
   };
+};
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type RotateStates = {
+  camera: PerspectiveCameraState;
+  controls: {
+    thetaDelta: number;
+    phiDelta: number;
+  };
+};
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type PanStates = {
+  camera: {
+    position: Coordinates;
+    target: Vector;
+  };
+  controls: ControlsState;
 };

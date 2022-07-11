@@ -1,8 +1,10 @@
 /* [Imports] */
 import vec3 from '@jscad/modeling/src/maths/vec3';
-import { ZOOM_TICK_SCALE } from './constants.js';
+import { ROTATION_SPEED, ZOOM_TICK_SCALE } from './constants.js';
 import {
   cloneControlsState,
+  pan,
+  rotate,
   updateProjection,
   updateStates,
   zoomToFit,
@@ -151,6 +153,26 @@ export default class InputTracker {
     this.zoomTicks = 0;
   }
 
+  private tryRotate() {
+    if (this.rotateX === 0 && this.rotateY === 0) return;
+    this.frameDirty = true;
+
+    rotate(this.cameraState, this.controlsState, this.rotateX, this.rotateY);
+
+    this.rotateX = 0;
+    this.rotateY = 0;
+  }
+
+  private tryPan() {
+    if (this.panX === 0 && this.panY === 0) return;
+    this.frameDirty = true;
+
+    pan(this.cameraState, this.controlsState, this.panX, this.panY);
+
+    this.panX = 0;
+    this.panY = 0;
+  }
+
   public addListeners() {
     this.listenerTracker.addListener('dblclick', (_mouseEvent: MouseEvent) => {
       this.zoomToFit = true;
@@ -244,58 +266,12 @@ export default class InputTracker {
   public respondToInput() {
     this.tryZoomToFit();
     this.tryZoom();
+    this.tryRotate();
+    this.tryPan();
     if (this.frameDirty) updateStates(this.cameraState, this.controlsState);
 
     // A successful resize dirties the frame, but does not require
     // updateStates(), only its own updateProjection()
     this.tryDynamicResize();
-
-    //TODO respond to input
-    // if (inputTracker.shouldZoom()) {
-    //   doZoom(
-    //     inputTracker.getZoomTicks(),
-    //     perspectiveCameraState,
-    //     controlsState
-    //   );
-    //   inputTracker.didZoom();
-    // }
-
-    // if (inputTracker.shouldRotate()) {
-    //   doRotate(
-    //     inputTracker.rotateX,
-    //     inputTracker.rotateY,
-    //     perspectiveCameraState,
-    //     controlsState
-    //   );
-    //   inputTracker.didRotate();
-    // }
-
-    // if (inputTracker.shouldPan()) {
-    //   doPan(
-    //     inputTracker.panX,
-    //     inputTracker.panY,
-    //     perspectiveCameraState,
-    //     controlsState
-    //   );
-    //   inputTracker.didPan();
-    // }
   }
-
-  // shouldRotate(): boolean {
-  //   return this.rotateX !== 0 || this.rotateY !== 0;
-  // }
-
-  // didRotate() {
-  //   this.rotateX = 0;
-  //   this.rotateY = 0;
-  // }
-
-  // shouldPan(): boolean {
-  //   return this.panX !== 0 || this.panY !== 0;
-  // }
-
-  // didPan() {
-  //   this.panX = 0;
-  //   this.panY = 0;
-  // }
 }
