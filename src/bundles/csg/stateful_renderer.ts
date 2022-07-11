@@ -30,7 +30,10 @@ export default class StatefulRenderer {
   constructor(
     private canvas: HTMLCanvasElement,
     renderGroup: RenderGroup,
-    private componentNumber: number
+    private componentNumber: number,
+
+    private loseCallback: Function,
+    private restoreCallback: Function
   ) {
     //FIXME Issue #7
     this.cameraState.position = [1000, 1000, 1500];
@@ -58,6 +61,8 @@ export default class StatefulRenderer {
 
         console.debug(`>>> CONTEXT LOST FOR #${this.componentNumber}`);
 
+        this.loseCallback();
+
         this.stop();
       }
     );
@@ -68,6 +73,8 @@ export default class StatefulRenderer {
         console.debug(`>>> CONTEXT RESTORED FOR #${this.componentNumber}`);
 
         this.start();
+
+        this.restoreCallback();
       }
     );
   }

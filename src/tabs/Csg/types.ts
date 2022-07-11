@@ -11,7 +11,9 @@ export type CanvasHolderProps = {
 };
 
 // React Component State for the CSG canvas holder
-export type CanvasHolderState = {};
+export type CanvasHolderState = {
+  contextLost: boolean;
+};
 
 // React Component Props for a control hint
 export type HintProps = {
