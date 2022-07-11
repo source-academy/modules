@@ -178,6 +178,9 @@ export type PerspectiveCameraState = Omit<
 */
 export type WrappedRendererData = {
   entities: Entity[];
+  // A CUSTOM property used to easily pass only the GeometryEntities to
+  // InputTracker for zoom to fit
+  geometryEntities: GeometryEntity[];
 
   // Along with all of the relevant Entity's & Entity#visuals's properties, this
   // entire object gets destructured & stuffed into each nested DrawCommand as
@@ -228,4 +231,29 @@ export type EntitiesFromSolidsOptions = {
 
   // Whether to smooth the normals of 3D solids, rendering a smooth surface
   smoothNormals?: boolean;
+};
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type UpdatedStates = {
+  camera: {
+    position: Coordinates;
+    view: Mat4;
+  };
+  controls: {
+    thetaDelta: number;
+    phiDelta: number;
+    scale: number;
+
+    changed: boolean;
+  };
+};
+
+// @jscad\regl-renderer\src\controls\orbitControls.js
+export type ZoomToFitStates = {
+  camera: {
+    target: Vector;
+  };
+  controls: {
+    scale: number;
+  };
 };

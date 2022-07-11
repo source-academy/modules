@@ -1,56 +1,8 @@
-// function adjustCameraAngle(
-//   perspectiveCameraState: PerspectiveCameraState,
-//   controlsState: ControlsState | null = null
-// ): void {
-//   if (controlsState === null) {
-//     // Modify the position & view of the passed camera state,
-//     // based on its existing position of the viewer (eye),
-//     // target point the viewer is looking at (centre) & up axis
-//     perspectiveCamera.update(perspectiveCameraState);
-//     return;
-//   }
-
-//   let output: ControlsUpdate.Output = controls.update({
-//     controls: controlsState,
-//     camera: perspectiveCameraState,
-//   });
-
-//   // Manually apply unlike perspectiveCamera.update()
-//   controlsState.thetaDelta = output.controls.thetaDelta;
-//   controlsState.phiDelta = output.controls.phiDelta;
-//   controlsState.scale = output.controls.scale;
-
-//   perspectiveCameraState.position = output.camera.position;
-//   perspectiveCameraState.view = output.camera.view;
-// }
-
-// function doDynamicResize(
-//   canvas: HTMLCanvasElement,
-//   perspectiveCameraState: PerspectiveCameraState
-// ): void {
-//   let canvasBounds: DOMRect = canvas.getBoundingClientRect();
-//   let { devicePixelRatio } = window;
-
-//   // Account for display scaling
-//   let width: number = canvasBounds.width * devicePixelRatio;
-//   let height: number = canvasBounds.height * devicePixelRatio;
-
-//   canvas.width = width;
-//   canvas.height = height;
-
-//   // Modify the projection, aspect ratio & viewport
-//   perspectiveCamera.setProjection(
-//     perspectiveCameraState,
-//     perspectiveCameraState,
-//     new CameraViewportDimensions(width, height)
-//   );
-// }
-
 // function doZoom(
 //   zoomTicks: number,
 //   perspectiveCameraState: PerspectiveCameraState,
 //   controlsState: ControlsState
-// ): void {
+// ) {
 //   while (zoomTicks !== 0) {
 //     let currentTick: number = Math.sign(zoomTicks);
 //     zoomTicks -= currentTick;
@@ -74,30 +26,12 @@
 //   adjustCameraAngle(perspectiveCameraState, controlsState);
 // }
 
-// function doZoomToFit(
-//   geometryEntities: GeometryEntity[],
-//   perspectiveCameraState: PerspectiveCameraState,
-//   controlsState: ControlsState
-// ): void {
-//   let options: ControlsZoomToFit.Options = {
-//     controls: controlsState,
-//     camera: perspectiveCameraState,
-//     entities: geometryEntities,
-//   };
-//   let output: ControlsZoomToFit.Output = controls.zoomToFit(options);
-
-//   perspectiveCameraState.target = output.camera.target;
-//   controlsState.scale = output.controls.scale;
-
-//   adjustCameraAngle(perspectiveCameraState, controlsState);
-// }
-
 // function doRotate(
 //   rotateX: number,
 //   rotateY: number,
 //   perspectiveCameraState: PerspectiveCameraState,
 //   controlsState: ControlsState
-// ): void {
+// ) {
 //   let output = controls.rotate(
 //     {
 //       controls: controlsState,
@@ -119,7 +53,7 @@
 //   panY: number,
 //   perspectiveCameraState: PerspectiveCameraState,
 //   controlsState: ControlsState
-// ): void {
+// ) {
 //   let output = controls.pan(
 //     {
 //       controls: controlsState,

@@ -1,4 +1,5 @@
 /* [Imports] */
+import { Geom3 } from '@jscad/modeling/src/geometries/types.js';
 import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox.js';
 import {
   cameras,
@@ -28,8 +29,10 @@ import {
   MultiGridEntityType,
   PerspectiveCameraState,
   Solid,
+  UpdatedStates,
   WrappedRenderer,
   WrappedRendererData,
+  ZoomToFitStates,
 } from './types.js';
 
 /* [Main] */
@@ -132,6 +135,7 @@ export function makeWrappedRendererData(
 
   return {
     entities: allEntities,
+    geometryEntities,
 
     camera: cameraState,
 
@@ -157,4 +161,50 @@ export function cloneCameraState(): PerspectiveCameraState {
 }
 export function cloneControlsState(): ControlsState {
   return { ...controls.orbit.defaults };
+}
+
+export function updateProjection(
+  cameraState: PerspectiveCameraState,
+  width: number,
+  height: number
+) {
+  // Modify the projection, aspect ratio & viewport. As compared to the general
+  // controls.orbit.update() or even cameras.perspective.update()
+  cameras.perspective.setProjection(cameraState, cameraState, {
+    width,
+    height,
+  });
+}
+
+export function updateStates(
+  cameraState: PerspectiveCameraState,
+  controlsState: ControlsState
+) {
+  let states: UpdatedStates = (controls.orbit.update({
+    camera: cameraState,
+    controls: controlsState,
+  }) as unknown) as UpdatedStates;
+
+  cameraState.position = states.camera.position;
+  cameraState.view = states.camera.view;
+
+  controlsState.thetaDelta = states.controls.thetaDelta;
+  controlsState.phiDelta = states.controls.phiDelta;
+  controlsState.scale = states.controls.scale;
+}
+
+export function zoomToFit(
+  cameraState: PerspectiveCameraState,
+  controlsState: ControlsState,
+  geometryEntities: GeometryEntity[]
+) {
+  let states: ZoomToFitStates = (controls.orbit.zoomToFit({
+    camera: cameraState,
+    controls: controlsState,
+    entities: geometryEntities as any,
+  }) as unknown) as ZoomToFitStates;
+
+  cameraState.target = states.camera.target;
+
+  controlsState.scale = states.controls.scale;
 }

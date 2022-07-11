@@ -1,3 +1,17 @@
+/* [Imports] */
+import {
+  cloneControlsState,
+  updateProjection,
+  updateStates,
+  zoomToFit,
+} from './jscad/renderer.js';
+import {
+  ControlsState,
+  GeometryEntity,
+  PerspectiveCameraState,
+} from './jscad/types.js';
+import ListenerTracker from './listener_tracker.js';
+
 /* [Main] */
 enum MousePointer {
   // Based on MouseEvent#button
@@ -13,41 +27,48 @@ enum MousePointer {
 
 /* [Exports] */
 export default class InputTracker {
-  private zoomTicks = 0;
+  private controlsState: ControlsState = cloneControlsState();
 
   // Start off the first frame by initially zooming to fit
-  private doZoomToFit = true;
+  private zoomToFit: boolean = true;
+
+  private zoomTicks: number = 0;
 
   private heldPointer: MousePointer = MousePointer.NONE;
 
-  lastX = -1;
-  lastY = -1;
+  private lastX: number | null = null;
+  private lastY: number | null = null;
 
-  rotateX = 0;
-  rotateY = 0;
+  private rotateX: number = 0;
+  private rotateY: number = 0;
+  private panX: number = 0;
+  private panY: number = 0;
 
-  panX = 0;
-  panY = 0;
+  private listenerTracker: ListenerTracker;
 
-  getZoomTicks(): number {
-    return this.zoomTicks;
+  // Set to true when a new frame must be requested, as states have changed and
+  // the canvas should look different
+  public frameDirty: boolean = false;
+
+  constructor(
+    private canvas: HTMLCanvasElement,
+    private cameraState: PerspectiveCameraState,
+    private geometryEntities: GeometryEntity[]
+  ) {
+    this.listenerTracker = new ListenerTracker(canvas);
   }
 
-  changeZoomTicks(wheelDelta: number) {
+  private changeZoomTicks(wheelDelta: number) {
+    // Regardless of scroll magnitude, which the OS can change, each event
+    // firing should only tick once up or down
     this.zoomTicks += Math.sign(wheelDelta);
   }
 
-  setZoomToFit() {
-    this.doZoomToFit = true;
-  }
-
-  setHeldPointer(mouseEventButton: number) {
+  private setHeldPointer(mouseEventButton: number) {
     switch (mouseEventButton) {
       case MousePointer.LEFT:
       case MousePointer.RIGHT:
       case MousePointer.MIDDLE:
-      case MousePointer.FORWARD:
-      case MousePointer.BACK:
         this.heldPointer = mouseEventButton;
         break;
       default:
@@ -56,57 +77,203 @@ export default class InputTracker {
     }
   }
 
-  unsetHeldPointer() {
+  private unsetHeldPointer() {
     this.heldPointer = MousePointer.NONE;
   }
 
-  shouldZoom(): boolean {
-    return this.zoomTicks !== 0;
+  private shouldIgnorePointerMove(): boolean {
+    return ![MousePointer.LEFT, MousePointer.MIDDLE].includes(this.heldPointer);
   }
 
-  didZoom() {
-    this.zoomTicks = 0;
-  }
-
-  shouldZoomToFit(): boolean {
-    return this.doZoomToFit;
-  }
-
-  didZoomToFit() {
-    this.doZoomToFit = false;
-  }
-
-  shouldIgnorePointerMove(): boolean {
-    return [MousePointer.NONE, MousePointer.RIGHT].includes(this.heldPointer);
-  }
-
-  isPointerPan(isShiftKey: boolean): boolean {
+  private isPointerPan(isShiftKey: boolean): boolean {
     return (
       this.heldPointer === MousePointer.MIDDLE ||
       (this.heldPointer === MousePointer.LEFT && isShiftKey)
     );
   }
 
-  unsetLastCoordinates() {
-    this.lastX = -1;
-    this.lastY = -1;
+  private unsetLastCoordinates() {
+    this.lastX = null;
+    this.lastY = null;
   }
 
-  shouldRotate(): boolean {
-    return this.rotateX !== 0 || this.rotateY !== 0;
+  private tryDynamicResize() {
+    let { width: oldWidth, height: oldHeight } = this.canvas;
+
+    // Account for display scaling
+    let canvasBounds: DOMRect = this.canvas.getBoundingClientRect();
+    let { devicePixelRatio } = window;
+    let newWidth: number = Math.floor(canvasBounds.width * devicePixelRatio);
+    let newHeight: number = Math.floor(canvasBounds.height * devicePixelRatio);
+
+    if (oldWidth === newWidth && oldHeight === newHeight) return;
+    this.frameDirty = true;
+
+    this.canvas.width = newWidth;
+    this.canvas.height = newHeight;
+
+    updateProjection(this.cameraState, newWidth, newHeight);
   }
 
-  didRotate() {
-    this.rotateX = 0;
-    this.rotateY = 0;
+  private tryZoomToFit() {
+    if (!this.zoomToFit) return;
+    this.frameDirty = true;
+
+    zoomToFit(this.cameraState, this.controlsState, this.geometryEntities);
+    updateStates(this.cameraState, this.controlsState);
+
+    this.zoomToFit = false;
   }
 
-  shouldPan(): boolean {
-    return this.panX !== 0 || this.panY !== 0;
+  public addListeners() {
+    this.listenerTracker.addListener('dblclick', (_mouseEvent: MouseEvent) => {
+      this.zoomToFit = true;
+    });
+
+    this.listenerTracker.addListener(
+      'wheel',
+      (wheelEvent: WheelEvent) => {
+        // Prevent scrolling the side panel when there is overflow
+        wheelEvent.preventDefault();
+
+        this.changeZoomTicks(wheelEvent.deltaY);
+      },
+      // Force wait for our potential preventDefault()
+      { passive: false }
+    );
+
+    this.listenerTracker.addListener(
+      'pointerdown',
+      (pointerEvent: PointerEvent) => {
+        // Prevent middle-click from activating auto-scrolling
+        pointerEvent.preventDefault();
+
+        this.setHeldPointer(pointerEvent.button);
+        this.lastX = pointerEvent.pageX;
+        this.lastY = pointerEvent.pageY;
+
+        // Detect drags even outside the canvas element's borders
+        this.canvas.setPointerCapture(pointerEvent.pointerId);
+      },
+      // Force wait for our potential preventDefault()
+      { passive: false }
+    );
+
+    this.listenerTracker.addListener(
+      'pointerup',
+      (pointerEvent: PointerEvent) => {
+        this.unsetHeldPointer();
+        this.unsetLastCoordinates();
+
+        this.canvas.releasePointerCapture(pointerEvent.pointerId);
+      }
+    );
+
+    this.listenerTracker.addListener(
+      'pointermove',
+      (pointerEvent: PointerEvent) => {
+        if (this.shouldIgnorePointerMove()) return;
+
+        let currentX = pointerEvent.pageX;
+        let currentY = pointerEvent.pageY;
+
+        if (this.lastX !== null && this.lastY !== null) {
+          // If tracked before, use differences to react to input
+          let differenceX = this.lastX - currentX;
+          let differenceY = this.lastY - currentY;
+
+          if (this.isPointerPan(pointerEvent.shiftKey)) {
+            // Drag right (X increases)
+            // Camera right (still +)
+            // Viewport left (invert to -)
+            this.panX += differenceX;
+
+            // Drag down (Y increases)
+            // Camera down (invert to -)
+            // Viewport up (still -)
+            this.panY -= differenceY;
+          } else {
+            // Else default to rotate
+
+            // Drag right (X increases)
+            // Camera angle from origin left (invert to -)
+            this.rotateX -= differenceX;
+
+            // Drag down (Y increases)
+            // Camera angle from origin up (still +)
+            this.rotateY += differenceY;
+          }
+        }
+
+        this.lastX = currentX;
+        this.lastY = currentY;
+      }
+    );
   }
 
-  didPan() {
-    this.panX = 0;
-    this.panY = 0;
+  public removeListeners() {
+    this.listenerTracker.removeListeners();
   }
+
+  public respondToInput() {
+    this.tryDynamicResize();
+
+    this.tryZoomToFit();
+
+    //TODO respond to input
+    // if (inputTracker.shouldZoom()) {
+    //   doZoom(
+    //     inputTracker.getZoomTicks(),
+    //     perspectiveCameraState,
+    //     controlsState
+    //   );
+    //   inputTracker.didZoom();
+    // }
+
+    // if (inputTracker.shouldRotate()) {
+    //   doRotate(
+    //     inputTracker.rotateX,
+    //     inputTracker.rotateY,
+    //     perspectiveCameraState,
+    //     controlsState
+    //   );
+    //   inputTracker.didRotate();
+    // }
+
+    // if (inputTracker.shouldPan()) {
+    //   doPan(
+    //     inputTracker.panX,
+    //     inputTracker.panY,
+    //     perspectiveCameraState,
+    //     controlsState
+    //   );
+    //   inputTracker.didPan();
+    // }
+  }
+
+  // shouldZoom(): boolean {
+  //   return this.zoomTicks !== 0;
+  // }
+
+  // didZoom() {
+  //   this.zoomTicks = 0;
+  // }
+
+  // shouldRotate(): boolean {
+  //   return this.rotateX !== 0 || this.rotateY !== 0;
+  // }
+
+  // didRotate() {
+  //   this.rotateX = 0;
+  //   this.rotateY = 0;
+  // }
+
+  // shouldPan(): boolean {
+  //   return this.panX !== 0 || this.panY !== 0;
+  // }
+
+  // didPan() {
+  //   this.panX = 0;
+  //   this.panY = 0;
+  // }
 }

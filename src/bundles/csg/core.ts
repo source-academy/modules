@@ -8,7 +8,7 @@ import { CsgModuleState, RenderGroupManager } from './utilities.js';
 export class Core {
   private static moduleState: CsgModuleState | null = null;
 
-  static initialize(csgModuleState: CsgModuleState): void {
+  static initialize(csgModuleState: CsgModuleState) {
     Core.moduleState = csgModuleState;
   }
 

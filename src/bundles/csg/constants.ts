@@ -24,6 +24,3 @@ export const MAIN_TICKS: number = 1;
 export const SUB_TICKS: number = MAIN_TICKS / 4;
 export const GRID_PADDING: number = MAIN_TICKS;
 export const ROUND_UP_INTERVAL: number = MAIN_TICKS;
-
-// Frame debug log frequency
-export const LOG_FREQUENCY: number = 100;

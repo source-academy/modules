@@ -738,7 +738,7 @@ export function clone(shape: Shape): Shape {
  *
  * @param {Shape} shape - The Shape to be stored.
  */
-export function store(shape: Shape): void {
+export function store(shape: Shape) {
   store_as_color(shape, DEFAULT_COLOR);
 }
 
@@ -754,7 +754,7 @@ export function store(shape: Shape): void {
  * @param {Shape} shape - The Shape to be coloured and stored.
  * @param {string} hex - The colour code to use.
  */
-export function store_as_color(shape: Shape, hex: string): void {
+export function store_as_color(shape: Shape, hex: string) {
   let color: Color = hexToColor(hex);
   let coloredSolid: Solid = colorize(color, shape.solid);
   Core.getRenderGroupManager().storeShape(new Shape(coloredSolid));
@@ -776,7 +776,7 @@ export function store_as_rgb(
   redComponent: number,
   greenComponent: number,
   blueComponent: number
-): void {
+) {
   redComponent = clamp(redComponent, 0, 1);
   greenComponent = clamp(greenComponent, 0, 1);
   blueComponent = clamp(blueComponent, 0, 1);

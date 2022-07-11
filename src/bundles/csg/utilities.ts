@@ -39,7 +39,7 @@ export class RenderGroupManager {
     this.addRenderGroup();
   }
 
-  private addRenderGroup(): void {
+  private addRenderGroup() {
     // Passes in canvasTracker as is, then increments it
     this.renderGroups.push(new RenderGroup(this.canvasTracker++));
   }
@@ -63,7 +63,7 @@ export class RenderGroupManager {
     return oldRenderGroup;
   }
 
-  storeShape(shape: Shape): void {
+  storeShape(shape: Shape) {
     this.getCurrentRenderGroup().shapes.push(shape);
   }
 
