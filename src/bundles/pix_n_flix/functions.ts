@@ -46,6 +46,7 @@ import {
   MIN_WIDTH,
   MAX_FPS,
   MIN_FPS,
+  DEFAULT_LOOP,
 } from './constants';
 
 // Global Variables
@@ -53,6 +54,7 @@ let WIDTH: number = DEFAULT_WIDTH;
 let HEIGHT: number = DEFAULT_HEIGHT;
 let FPS: number = DEFAULT_FPS;
 let VOLUME: number = DEFAULT_VOLUME;
+let LOOP_COUNT: number = DEFAULT_LOOP;
 
 let imageElement: ImageElement;
 let videoElement: VideoElement;
@@ -75,6 +77,13 @@ let totalElapsedTime: number = 0;
 
 let inputFeed: InputFeed = InputFeed.Camera;
 let url: string = '';
+
+// Images dont aspect ratio correctly
+let keepAspectRatio: boolean = false;
+let intrinsicWidth: number = WIDTH;
+let intrinsicHeight: number = HEIGHT;
+let displayWidth: number = WIDTH;
+let displayHeight: number = HEIGHT;
 
 // =============================================================================
 // Module's Private Functions
@@ -155,7 +164,20 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
 
 /** @hidden */
 function drawImage(source: VideoElement | ImageElement): void {
-  canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
+  if (keepAspectRatio) {
+    canvasRenderingContext.drawImage(
+      source,
+      0,
+      0,
+      intrinsicWidth,
+      intrinsicHeight,
+      0,
+      0,
+      displayWidth,
+      displayHeight
+    );
+  } else canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
+
   const pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
   readFromBuffer(pixelObj.data, pixels);
 
@@ -254,6 +276,15 @@ function stopVideo(): void {
 }
 
 /** @hidden */
+function setAspectRatioDimensions(w: number, h: number): void {
+  intrinsicHeight = h;
+  intrinsicWidth = w;
+  const scale = Math.min(WIDTH / w, HEIGHT / h);
+  displayWidth = scale * w;
+  displayHeight = scale * h;
+}
+
+/** @hidden */
 function loadMedia(): void {
   if (!navigator.mediaDevices.getUserMedia) {
     const errMsg = 'The browser you are using does not support getUserMedia';
@@ -269,6 +300,11 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
+      videoElement.onloadedmetadata = () =>
+        setAspectRatioDimensions(
+          videoElement.videoWidth,
+          videoElement.videoHeight
+        );
       toRunLateQueue = true;
     })
     .catch((error) => {
@@ -301,8 +337,23 @@ function loadAlternative(): void {
   }
   toRunLateQueue = true;
   videoElement.crossOrigin = 'anonymous';
-  videoElement.loop = true;
+  videoElement.loop = LOOP_COUNT < 0;
+  videoElement.onended = () => {
+    stopVideo();
+    if (LOOP_COUNT > 0) {
+      startVideo();
+      LOOP_COUNT -= 1;
+    }
+  };
+  videoElement.onloadedmetadata = () =>
+    setAspectRatioDimensions(videoElement.videoWidth, videoElement.videoHeight);
+
   imageElement.crossOrigin = 'anonymous';
+  imageElement.onloadedmetadata = () =>
+    setAspectRatioDimensions(
+      imageElement.naturalWidth,
+      imageElement.naturalHeight
+    );
   imageElement.onload = () => {
     drawImage(imageElement);
   };
@@ -698,7 +749,7 @@ export function use_local_file(): void {
  *
  * @param URL URL of the image
  */
-export function use_image_url(URL: string) {
+export function use_image_url(URL: string): void {
   inputFeed = InputFeed.ImageURL;
   url = URL;
 }
@@ -709,7 +760,7 @@ export function use_image_url(URL: string) {
  *
  * @param URL URL of the video
  */
-export function use_video_url(URL: string) {
+export function use_video_url(URL: string): void {
   inputFeed = InputFeed.VideoURL;
   url = URL;
 }
@@ -719,6 +770,25 @@ export function use_video_url(URL: string) {
  *
  * @returns The elapsed time in milliseconds since the start of the video
  */
-export function get_video_time() {
+export function get_video_time(): number {
   return totalElapsedTime;
+}
+
+/**
+ * Sets pix_n_flix to preserve the aspect ratio of the video or image
+ *
+ * @param keepAspectRatio to keep aspect ratio.
+ */
+export function keep_aspect_ratio(_keepAspectRatio: boolean): void {
+  keepAspectRatio = _keepAspectRatio;
+}
+
+/**
+ * Sets the number of times the video repeats after the first iteration.
+ * If the number of times the video repeats is negative, the video will loop forever.
+ *
+ * @param n number of times the video repeats after the first iteration. If n < 0, video will repeat forever.
+ */
+export function set_loop_count(n: number): void {
+  LOOP_COUNT = n;
 }
