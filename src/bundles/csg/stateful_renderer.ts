@@ -122,8 +122,9 @@ export default class StatefulRenderer {
     this.inputTracker.removeListeners();
 
     if (!lastStop) {
-      //TODO reset the mid-tracking of the input listener by calling a method on it,
-      // eg to prevent mouse stuck down
+      // As listeners are now removed, flush some tracked inputs to avoid bugs
+      // like the pointer being stuck down
+      this.inputTracker.flushMidInput();
 
       this.forgetEntityCaches();
     }

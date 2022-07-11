@@ -274,4 +274,9 @@ export default class InputTracker {
     // updateStates(), only its own updateProjection()
     this.tryDynamicResize();
   }
+
+  public flushMidInput() {
+    this.unsetHeldPointer();
+    this.unsetLastCoordinates();
+  }
 }
