@@ -12,26 +12,26 @@
  * @author Samyukta Sounderraman
  */
 
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars, new-cap */
 import {
-  Wave,
+  accumulate,
+  head,
+  is_null,
+  is_pair,
+  length,
+  list,
+  pair,
+  tail,
+} from './list';
+import { RIFFWAVE } from './riffwave';
+import {
+  AudioPlayed,
+  List,
   Sound,
   SoundProducer,
   SoundTransformer,
-  List,
-  AudioPlayed,
+  Wave,
 } from './types';
-import {
-  pair,
-  head,
-  tail,
-  list,
-  length,
-  is_null,
-  is_pair,
-  accumulate,
-} from './list';
-import { RIFFWAVE } from './riffwave';
 
 // Global Constants and Variables
 
@@ -117,6 +117,7 @@ function play_recording_signal() {
   play(sine_sound(1200, recording_signal_duration_ms / 1000));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-shadow
 function process(data: any[] | undefined) {
   const audioContext = new AudioContext();
   const blob = new Blob(data);
@@ -984,7 +985,7 @@ export function letter_name_to_midi_note(note: string): number {
   }
 
   if (note.length === 2) {
-    res += parseInt(note[1], 10) * 12;
+    res += parseInt(note[1]) * 12;
   } else if (note.length === 3) {
     switch (note[1]) {
       case '#':
@@ -998,7 +999,7 @@ export function letter_name_to_midi_note(note: string): number {
       default:
         break;
     }
-    res += parseInt(note[2], 10) * 12;
+    res += parseInt(note[2]) * 12;
   }
   return res;
 }

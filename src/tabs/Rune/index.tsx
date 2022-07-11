@@ -20,14 +20,14 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: DebuggerContext) => {
+  toSpawn(context: DebuggerContext) {
     const moduleContext = context.context?.moduleContexts.get('rune');
-    if (moduleContext == null) {
+    if (!moduleContext) {
       return false;
     }
 
     const moduleState = moduleContext.state as RunesModuleState;
-    if (moduleState == null) {
+    if (!moduleState) {
       return false;
     }
 
@@ -39,7 +39,7 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: DebuggerContext) => {
+  body(context: DebuggerContext) {
     // eslint-disable-next-line react/destructuring-assignment
     const moduleContext = context.context?.moduleContexts.get('rune');
     const moduleState = moduleContext!.state as RunesModuleState;

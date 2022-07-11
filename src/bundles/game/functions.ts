@@ -14,8 +14,9 @@
  * @author Gokul Rajiv
  */
 
-/* eslint-disable @typescript-eslint/no-unused-vars, consistent-return, @typescript-eslint/no-shadow */
+/* eslint-disable @typescript-eslint/no-unused-vars, consistent-return, @typescript-eslint/no-shadow, @typescript-eslint/default-param-last */
 import {
+  GameModuleParams,
   GameObject,
   List,
   ObjectConfig,
@@ -23,11 +24,10 @@ import {
   RawGameElement,
   RawGameObject,
   RawInputObject,
-  __Params,
 } from './types';
 
 /** @hidden */
-export default function gameFuncs(_params: __Params) {
+export default function gameFuncs(moduleParams: GameModuleParams) {
   const {
     scene,
     preloadImageMap,
@@ -36,7 +36,7 @@ export default function gameFuncs(_params: __Params) {
     remotePath,
     screenSize,
     createAward,
-  } = _params.game || {};
+  } = moduleParams.game || {};
 
   // Listener ObjectTypes
   enum ListenerTypes {

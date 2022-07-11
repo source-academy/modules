@@ -17,14 +17,14 @@ export default {
    * rendered.
    * @returns {boolean}
    */
-  toSpawn: (context: DebuggerContext) => {
+  toSpawn(context: DebuggerContext) {
     const moduleContext = context.context?.moduleContexts.get('sound');
-    if (moduleContext == null) {
+    if (!moduleContext) {
       return false;
     }
 
     const moduleState = moduleContext.state as SoundsModuleState;
-    if (moduleState == null) {
+    if (!moduleState) {
       return false;
     }
 
@@ -35,7 +35,7 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: DebuggerContext) => {
+  body(context: DebuggerContext) {
     const moduleContext = context.context?.moduleContexts.get('sound');
     const moduleState = (moduleContext!.state as SoundsModuleState).audioPlayed;
     const elements = moduleState.map((audio) => (
