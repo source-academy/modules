@@ -1,6 +1,6 @@
 /* [Imports] */
 import vec3 from '@jscad/modeling/src/maths/vec3';
-import { ROTATION_SPEED, ZOOM_TICK_SCALE } from './constants.js';
+import { ZOOM_TICK_SCALE } from './constants.js';
 import {
   cloneControlsState,
   pan,

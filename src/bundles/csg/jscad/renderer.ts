@@ -1,5 +1,4 @@
 /* [Imports] */
-import { Geom3 } from '@jscad/modeling/src/geometries/types.js';
 import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox.js';
 import {
   cameras,

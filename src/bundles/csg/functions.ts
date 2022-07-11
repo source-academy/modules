@@ -31,9 +31,9 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import { DEFAULT_COLOR, SILVER } from './constants.js';
+import { SILVER } from './constants.js';
 import { Core } from './core.js';
-import { Color, Coordinates, Solid } from "./jscad/types.js";
+import { Color, Coordinates, Solid } from './jscad/types.js';
 import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
 
 /* [Exports] */
