@@ -1,4 +1,6 @@
 /* [Imports] */
+import vec3 from '@jscad/modeling/src/maths/vec3';
+import { ZOOM_TICK_SCALE } from './constants.js';
 import {
   cloneControlsState,
   updateProjection,
@@ -120,9 +122,33 @@ export default class InputTracker {
     this.frameDirty = true;
 
     zoomToFit(this.cameraState, this.controlsState, this.geometryEntities);
-    updateStates(this.cameraState, this.controlsState);
 
     this.zoomToFit = false;
+  }
+
+  private tryZoom() {
+    if (this.zoomTicks === 0) return;
+
+    while (this.zoomTicks !== 0) {
+      let currentTick: number = Math.sign(this.zoomTicks);
+      this.zoomTicks -= currentTick;
+
+      let scaledChange: number = currentTick * ZOOM_TICK_SCALE;
+      let potentialNewScale: number = this.controlsState.scale + scaledChange;
+      let potentialNewDistance: number =
+        vec3.distance(this.cameraState.position, this.cameraState.target) *
+        potentialNewScale;
+
+      if (
+        potentialNewDistance > this.controlsState.limits.minDistance &&
+        potentialNewDistance < this.controlsState.limits.maxDistance
+      ) {
+        this.frameDirty = true;
+        this.controlsState.scale = potentialNewScale;
+      } else break;
+    }
+
+    this.zoomTicks = 0;
   }
 
   public addListeners() {
@@ -216,9 +242,13 @@ export default class InputTracker {
   }
 
   public respondToInput() {
-    this.tryDynamicResize();
-
     this.tryZoomToFit();
+    this.tryZoom();
+    if (this.frameDirty) updateStates(this.cameraState, this.controlsState);
+
+    // A successful resize dirties the frame, but does not require
+    // updateStates(), only its own updateProjection()
+    this.tryDynamicResize();
 
     //TODO respond to input
     // if (inputTracker.shouldZoom()) {
@@ -250,14 +280,6 @@ export default class InputTracker {
     //   inputTracker.didPan();
     // }
   }
-
-  // shouldZoom(): boolean {
-  //   return this.zoomTicks !== 0;
-  // }
-
-  // didZoom() {
-  //   this.zoomTicks = 0;
-  // }
 
   // shouldRotate(): boolean {
   //   return this.rotateX !== 0 || this.rotateY !== 0;

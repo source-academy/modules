@@ -1,31 +1,3 @@
-// function doZoom(
-//   zoomTicks: number,
-//   perspectiveCameraState: PerspectiveCameraState,
-//   controlsState: ControlsState
-// ) {
-//   while (zoomTicks !== 0) {
-//     let currentTick: number = Math.sign(zoomTicks);
-//     zoomTicks -= currentTick;
-
-//     let scaleChange: number = currentTick * 0.1;
-//     let potentialNewScale: number = controlsState.scale + scaleChange;
-//     let potentialNewDistance: number =
-//       vec3.distance(
-//         perspectiveCameraState.position,
-//         perspectiveCameraState.target
-//       ) * potentialNewScale;
-
-//     if (
-//       potentialNewDistance > controlsState.limits.minDistance &&
-//       potentialNewDistance < controlsState.limits.maxDistance
-//     ) {
-//       controlsState.scale = potentialNewScale;
-//     } else break;
-//   }
-
-//   adjustCameraAngle(perspectiveCameraState, controlsState);
-// }
-
 // function doRotate(
 //   rotateX: number,
 //   rotateY: number,

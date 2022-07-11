@@ -24,3 +24,6 @@ export const MAIN_TICKS: number = 1;
 export const SUB_TICKS: number = MAIN_TICKS / 4;
 export const GRID_PADDING: number = MAIN_TICKS;
 export const ROUND_UP_INTERVAL: number = MAIN_TICKS;
+
+// Renderer zoom constants
+export const ZOOM_TICK_SCALE: number = 0.1;
