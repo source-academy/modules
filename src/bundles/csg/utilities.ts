@@ -1,90 +1,10 @@
 /* [Imports] */
-import { RGBA } from '@jscad/modeling/src/colors';
 import { clone, Geom3 } from '@jscad/modeling/src/geometries/geom3';
-import {
-  cameras,
-  controls as _controls,
-  drawCommands,
-  entitiesFromSolids as _entitiesFromSolids,
-  prepareRender as _prepareRender,
-} from '@jscad/regl-renderer';
 import { ModuleContext, ModuleState } from 'js-slang';
 import { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
-import {
-  ACE_GUTTER_TEXT_COLOR,
-  BP_TEXT_COLOR,
-  GRID_PADDING,
-  MAIN_TICKS,
-  ROUND_UP_INTERVAL,
-  SUB_TICKS,
-} from './constants.js';
-import {
-  AxisEntityType,
-  Color,
-  Controls,
-  ControlsState,
-  EntitiesFromSolids,
-  MultiGridEntityType,
-  PerspectiveCamera,
-  PerspectiveCameraState,
-  PrepareRender,
-  Solid,
-  WrappedRenderer,
-} from './types';
+import { AlphaColor, Color, Solid } from './jscad/types.js';
 
 /* [Exports] */
-
-// [Proper typing for JS in regl-renderer]
-export const perspectiveCamera: PerspectiveCamera = cameras.perspective;
-export const perspectiveCameraStateDefaults: PerspectiveCameraState =
-  perspectiveCamera.defaults;
-
-export const controls: Controls = (_controls.orbit as unknown) as Controls;
-export const controlsStateDefaults: ControlsState = controls.defaults;
-
-export const prepareRender: PrepareRender.Function = _prepareRender;
-
-export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSolids as unknown) as EntitiesFromSolids.Function;
-export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
-
-// [Custom]
-export class MultiGridEntity implements MultiGridEntityType {
-  visuals: {
-    drawCmd: 'drawGrid';
-    show: boolean;
-    color?: RGBA;
-    subColor?: RGBA;
-  } = {
-    drawCmd: 'drawGrid',
-    show: true,
-
-    color: hexToRgba(BP_TEXT_COLOR),
-    subColor: hexToRgba(ACE_GUTTER_TEXT_COLOR),
-  };
-
-  ticks: [number, number] = [MAIN_TICKS, SUB_TICKS];
-
-  size: [number, number];
-
-  constructor(size: number) {
-    this.size = [size, size];
-  }
-}
-
-export class AxisEntity implements AxisEntityType {
-  visuals: {
-    drawCmd: 'drawAxis';
-    show: boolean;
-  } = {
-    drawCmd: 'drawAxis',
-    show: true,
-  };
-
-  alwaysVisible: boolean = false;
-
-  constructor(public size?: number) {}
-}
-
 export class Shape implements ReplResult {
   constructor(public solid: Solid) {}
 
@@ -167,116 +87,9 @@ export class CsgModuleState implements ModuleState {
     this.renderGroupManager = new RenderGroupManager();
   }
 
+  // Returns the new component number
   nextComponent() {
     return ++this.componentCounter;
-  }
-}
-
-// To track the processing to be done between frames
-export enum MousePointer {
-  NONE = -1,
-  LEFT = 0,
-  RIGHT = 2,
-  MIDDLE = 1,
-  OTHER = 7050,
-}
-export class FrameTracker {
-  private zoomTicks = 0;
-
-  // Start off the first frame by initially zooming to fit
-  private zoomToFitOnce = true;
-
-  private heldPointer: MousePointer = MousePointer.NONE;
-
-  lastX = -1;
-
-  lastY = -1;
-
-  rotateX = 0;
-
-  rotateY = 0;
-
-  panX = 0;
-
-  panY = 0;
-
-  getZoomTicks(): number {
-    return this.zoomTicks;
-  }
-
-  changeZoomTicks(wheelDelta: number) {
-    this.zoomTicks += Math.sign(wheelDelta);
-  }
-
-  setZoomToFit() {
-    this.zoomToFitOnce = true;
-  }
-
-  unsetLastCoordinates() {
-    this.lastX = -1;
-    this.lastY = -1;
-  }
-
-  setHeldPointer(mouseEventButton: number) {
-    switch (mouseEventButton) {
-      case MousePointer.LEFT:
-      case MousePointer.RIGHT:
-      case MousePointer.MIDDLE:
-        this.heldPointer = mouseEventButton;
-        break;
-      default:
-        this.heldPointer = MousePointer.OTHER;
-        break;
-    }
-  }
-
-  unsetHeldPointer() {
-    this.heldPointer = MousePointer.NONE;
-  }
-
-  shouldZoom(): boolean {
-    return this.zoomTicks !== 0;
-  }
-
-  didZoom() {
-    this.zoomTicks = 0;
-  }
-
-  shouldZoomToFit(): boolean {
-    return this.zoomToFitOnce;
-  }
-
-  didZoomToFit() {
-    this.zoomToFitOnce = false;
-  }
-
-  shouldRotate(): boolean {
-    return this.rotateX !== 0 || this.rotateY !== 0;
-  }
-
-  didRotate() {
-    this.rotateX = 0;
-    this.rotateY = 0;
-  }
-
-  shouldPan(): boolean {
-    return this.panX !== 0 || this.panY !== 0;
-  }
-
-  didPan() {
-    this.panX = 0;
-    this.panY = 0;
-  }
-
-  shouldIgnorePointerMove(): boolean {
-    return [MousePointer.NONE, MousePointer.RIGHT].includes(this.heldPointer);
-  }
-
-  isPointerPan(isShiftKey: boolean): boolean {
-    return (
-      this.heldPointer === MousePointer.MIDDLE ||
-      (this.heldPointer === MousePointer.LEFT && isShiftKey)
-    );
   }
 }
 
@@ -308,12 +121,15 @@ export function hexToColor(hex: string): Color {
   ];
 }
 
-export function colorToRgba(color: Color, opacity: number = 1): RGBA {
+export function colorToAlphaColor(
+  color: Color,
+  opacity: number = 1
+): AlphaColor {
   return [...color, opacity];
 }
 
-export function hexToRgba(hex: string): RGBA {
-  return colorToRgba(hexToColor(hex));
+export function hexToAlphaColor(hex: string): AlphaColor {
+  return colorToAlphaColor(hexToColor(hex));
 }
 
 export function clamp(value: number, lowest: number, highest: number): number {
@@ -336,11 +152,4 @@ export function looseInstanceof(
     className !== undefined &&
     objectName === className
   );
-}
-
-export function neatGridDistance(rawDistance: number) {
-  let paddedDistance: number = rawDistance + GRID_PADDING;
-  let roundedDistance: number =
-    Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
-  return roundedDistance;
 }

@@ -34,7 +34,12 @@ export default {
     let moduleState = potentialModuleState as CsgModuleState;
 
     Core.initialize(moduleState);
-    return <CanvasHolder moduleState={moduleState} />;
+    return (
+      <CanvasHolder
+        moduleState={moduleState}
+        componentNumber={moduleState.nextComponent()}
+      />
+    );
   },
 
   // BlueprintJS icon name

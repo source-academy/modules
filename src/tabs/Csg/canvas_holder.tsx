@@ -6,8 +6,8 @@ import {
   BP_TAB_BUTTON_MARGIN,
   BP_TAB_PANEL_MARGIN,
 } from '../../bundles/csg/constants.js';
-import { Core } from '../../bundles/csg/core.js';
-import render from '../../bundles/csg/renderer';
+import StatefulRenderer from '../../bundles/csg/stateful_renderer.js';
+import { RenderGroup } from '../../bundles/csg/utilities.js';
 import HoverControlHint from './hover_control_hint';
 import { CanvasHolderProps, CanvasHolderState } from './types';
 
@@ -16,31 +16,33 @@ export default class CanvasHolder extends React.Component<
   CanvasHolderProps,
   CanvasHolderState
 > {
-  private readonly componentNumber: number = Core.nextComponent();
   private readonly canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
 
-  private getCurrentRequestId: (() => number) | null = null;
+  private statefulRenderer: StatefulRenderer | null = null;
 
   // Called as part of the React lifecycle when this tab is created
   componentDidMount() {
-    console.debug(`>>> MOUNT #${this.componentNumber}`);
+    console.debug(`>>> MOUNT #${this.props.componentNumber}`);
 
     let { current: canvas } = this.canvasReference;
     if (canvas === null) return;
 
-    this.getCurrentRequestId = render(
+    let renderGroups: RenderGroup[] = this.props.moduleState.renderGroupManager.getGroupsToRender();
+    //TODO Issue #35
+    let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
+
+    this.statefulRenderer = new StatefulRenderer(
       canvas,
-      this.props.moduleState,
-      this.componentNumber
+      lastRenderGroup,
+      this.props.componentNumber
     );
+    this.statefulRenderer.start();
   }
 
   componentWillUnmount() {
-    console.debug(`>>> UNMOUNT #${this.componentNumber}`);
+    console.debug(`>>> UNMOUNT #${this.props.componentNumber}`);
 
-    if (this.getCurrentRequestId === null) return;
-
-    window.cancelAnimationFrame(this.getCurrentRequestId());
+    this.statefulRenderer?.stop();
   }
 
   // Only required method of a React Component.

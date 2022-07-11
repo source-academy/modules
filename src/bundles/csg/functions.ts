@@ -33,7 +33,7 @@ import {
 } from '@jscad/modeling/src/operations/transforms';
 import { DEFAULT_COLOR, SILVER } from './constants.js';
 import { Core } from './core.js';
-import { Color, CoordinatesXYZ, Solid } from './types';
+import { Color, Coordinates, Solid } from "./jscad/types.js";
 import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
 
 /* [Exports] */
@@ -381,7 +381,7 @@ export function scale_z(shape: Shape, z: number): Shape {
  */
 export function shape_center(shape: Shape): (axis: String) => number {
   let bounds: BoundingBox = measureBoundingBox(shape.solid);
-  let centerCoords: CoordinatesXYZ = [
+  let centerCoords: Coordinates = [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
     bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
     bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,

@@ -17,11 +17,4 @@ export class Core {
 
     return moduleState.renderGroupManager;
   }
-
-  // Returns the new component number
-  static nextComponent(): number {
-    let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
-
-    return moduleState.nextComponent();
-  }
 }
