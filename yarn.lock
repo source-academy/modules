@@ -1354,22 +1354,22 @@
   resolved "https://registry.yarnpkg.com/@joeychenofficial/alt-ergo-modified/-/alt-ergo-modified-2.4.0.tgz#27aec0cbed8ab4e2f0dad6feb4f0c9766ac3132f"
   integrity sha512-58b0K8pNUVZXGbua4IJQ+1K+E+jz3MkhDazZaaeKlD+sOLYR9iTHIbicV/I5K16ivYW6R9lONiT3dz8rMeFJ1w==
 
-"@jscad/array-utils@2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@jscad/array-utils/-/array-utils-2.1.3.tgz#0de2eaaf122c43efc534a948c8d80a65483160e8"
-  integrity sha512-ItHPDcd+WIVNrFnqdPm0mFvU3T3zhaOUjnAyDSdcQiHyFp8lAiEh3X7I/8VGGSCUhBErbKT5RXhHKqUcYL3bJA==
+"@jscad/array-utils@2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@jscad/array-utils/-/array-utils-2.1.4.tgz#05e93c7c0ccaab8fa5e81e3ec685aab9c41e7075"
+  integrity sha512-c31r4zSKsE+4Xfwk2V8monDA0hx5G89QGzaakWVUvuGNowYS9WSsYCwHiTIXodjR+HEnDu4okQ7k/whmP0Ne2g==
 
-"@jscad/modeling@^2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.9.2.tgz#97445ec06d46be7333d017a7faac66c09ea68fc5"
-  integrity sha512-bU4WKfJcg3ijcRt4WEq4rh5kcnYA7XdOOlOev7/azV/07aiOffSJwqMDEoLeJQyiwBtk5Q/Iw6Ph+5C4iXeXJQ==
+"@jscad/modeling@^2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.9.5.tgz#ab4f51c089a042e0c542445583ed0fbb28931e1d"
+  integrity sha512-mhdSVEr0XHyu3wDmZcAAYnhqKC+Xs9pri/T7j85QisiHet5BtOL36WOVsvbS+5cJbqHyuuQbZ0vSzAH1eYLf2g==
 
-"@jscad/regl-renderer@^2.5.8":
-  version "2.5.8"
-  resolved "https://registry.yarnpkg.com/@jscad/regl-renderer/-/regl-renderer-2.5.8.tgz#3ad9fb69e983f60b6b480d2bae98c9e5371bbadf"
-  integrity sha512-2AiOeOK35be2iuxJGOOpZf+lHt2PGT8ypr9f7kI/vup5xV13xkfE3xOFQSikaeT5MfC3ALuZIBNuKqBBDMSSEA==
+"@jscad/regl-renderer@^2.6.1":
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/@jscad/regl-renderer/-/regl-renderer-2.6.1.tgz#c36fa282314d922e5d373d411e26fcd5ece4880e"
+  integrity sha512-it3wHa7wMuFJJ3opHbivll4G5ZLQT5fgYlYOAe9DG2GQEKL4+uWqLbDAReMjfGqwH3u8MlMWOVnq4jBut0ngRQ==
   dependencies:
-    "@jscad/array-utils" "2.1.3"
+    "@jscad/array-utils" "2.1.4"
     camera-unproject "1.0.1"
     gl-mat4 "1.2.0"
     gl-vec3 "1.1.3"
