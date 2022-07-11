@@ -23,7 +23,7 @@ async function main() {
   if (project) {
     const outputDir = 'build/documentation';
     await app.generateDocs(project, outputDir);
-    await app.generateJson(project, outputDir + '/documentation.json');
+    await app.generateJson(project, `${outputDir}/documentation.json`);
   }
 }
 

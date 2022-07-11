@@ -9,7 +9,7 @@ async function main() {
     else if (mode === 'tab') await tabs.addNew();
   } catch (error) {
     print.error(`ERROR: ${error.message}`);
-    print.info(`Terminating module app...`);
+    print.info('Terminating module app...');
   } finally {
     print.rl.close();
   }

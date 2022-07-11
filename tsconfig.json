@@ -19,21 +19,19 @@
     /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
     "resolveJsonModule": true,
     /* The longest common path of all non-declaration input files. */
-    "rootDir": "./src",
+    "rootDir": "./",
     /* Enables the generation of sourcemap files. These files allow debuggers and other tools to display the original TypeScript source code when actually working with the emitted JavaScript files. */
     "sourceMap": false,
     /* The strict flag enables a wide range of type checking behavior that results in stronger guarantees of program correctness. */
     "strict": true,
     /* The target setting changes which JS features are downleveled and which are left intact. */
     "target": "es5",
-    /* By default all visible ”@types” packages are included in your compilation. */
-    "types": ["node", "jest", "dom-mediacapture-record"],
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
   },
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
-  "include": ["src/**/*", "templates/templates/**/*"],
+  "include": ["src/", "scripts/templates/"],
   /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
-  "exclude": ["node_modules"]
+  "exclude": []
 }

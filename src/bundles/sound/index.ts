@@ -1,51 +1,54 @@
-import { ModuleContext } from 'js-slang';
+import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
 import {
-  // Constructor/Accessors/Typecheck
-  make_sound,
-  get_wave,
-  get_duration,
-  is_sound,
-  // Play-related
-  play,
-  play_wave,
-  play_concurrently,
-  stop,
-  // Recording
-  init_record,
-  record,
-  record_for,
-  // Composition and Envelopes
-  consecutively,
-  simultaneously,
-  phase_mod,
   adsr,
-  stacking_adsr,
-  // Basic waveforms
-  noise_sound,
-  silence_sound,
-  sine_sound,
-  sawtooth_sound,
-  triangle_sound,
-  square_sound,
-  // MIDI
-  letter_name_to_midi_note,
-  midi_note_to_frequency,
-  letter_name_to_frequency,
+  audioPlayed,
   // Instruments
   bell,
   cello,
+  // Composition and Envelopes
+  consecutively,
+  get_duration,
+  get_wave,
+  // Recording
+  init_record,
+  is_sound,
+  letter_name_to_frequency,
+  // MIDI
+  letter_name_to_midi_note,
+  // Constructor/Accessors/Typecheck
+  make_sound,
+  midi_note_to_frequency,
+  // Basic waveforms
+  noise_sound,
+  phase_mod,
   piano,
+  // Play-related
+  play,
+  play_concurrently,
+  play_wave,
+  record,
+  record_for,
+  sawtooth_sound,
+  silence_sound,
+  simultaneously,
+  sine_sound,
+  square_sound,
+  stacking_adsr,
+  stop,
+  triangle_sound,
   trombone,
   violin,
-  audioPlayed,
 } from './functions';
 import { SoundsModuleState } from './types';
 
-export default function sounds(params, context: Map<string, ModuleContext>) {
+export default function sounds(
+  moduleParams: ModuleParams,
+  moduleContexts: ModuleContexts
+) {
   // Update the module's global context
-  let moduleContext = context.get('sound');
+  let moduleContext = moduleContexts.get('sound');
 
-  if (moduleContext == null) {
+  if (!moduleContext) {
     moduleContext = {
       tabs: [],
       state: {
@@ -53,8 +56,8 @@ export default function sounds(params, context: Map<string, ModuleContext>) {
       },
     };
 
-    context.set('sound', moduleContext);
-  } else if (moduleContext.state == null) {
+    moduleContexts.set('sound', moduleContext);
+  } else if (!moduleContext.state) {
     moduleContext.state = {
       audioPlayed,
     };

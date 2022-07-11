@@ -1,44 +1,44 @@
-import { ModuleContext } from 'js-slang';
-import { CurveModuleState } from './types';
+import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
 import {
-  make_point,
-  make_3D_point,
-  make_color_point,
-  make_3D_color_point,
-  draw_connected,
-  draw_connected_full_view,
-  draw_connected_full_view_proportional,
-  draw_points,
-  draw_points_full_view,
-  draw_points_full_view_proportional,
+  animate_3D_curve,
+  animate_curve,
+  arc,
+  b_of,
+  connect_ends,
+  connect_rigidly,
+  drawnCurves,
   draw_3D_connected,
   draw_3D_connected_full_view,
   draw_3D_connected_full_view_proportional,
   draw_3D_points,
   draw_3D_points_full_view,
   draw_3D_points_full_view_proportional,
+  draw_connected,
+  draw_connected_full_view,
+  draw_connected_full_view_proportional,
+  draw_points,
+  draw_points_full_view,
+  draw_points_full_view_proportional,
+  g_of,
+  invert,
+  make_3D_color_point,
+  make_3D_point,
+  make_color_point,
+  make_point,
+  put_in_standard_position,
+  rotate_around_origin,
+  r_of,
+  scale,
+  scale_proportional,
+  translate,
+  unit_circle,
+  unit_line,
+  unit_line_at,
   x_of,
   y_of,
   z_of,
-  r_of,
-  g_of,
-  b_of,
-  unit_line,
-  unit_line_at,
-  unit_circle,
-  connect_rigidly,
-  connect_ends,
-  put_in_standard_position,
-  translate,
-  scale_proportional,
-  scale,
-  rotate_around_origin,
-  arc,
-  invert,
-  animate_curve,
-  drawnCurves,
-  animate_3D_curve,
 } from './functions';
+import { CurveModuleState } from './types';
 
 /**
  * Bundle for Source Academy Curves module
@@ -47,13 +47,13 @@ import {
  */
 
 export default function curves(
-  params: any,
-  context: Map<string, ModuleContext>
+  moduleParams: ModuleParams,
+  moduleContexts: ModuleContexts
 ) {
   // Update the module's global context
-  let moduleContext = context.get('curve');
+  let moduleContext = moduleContexts.get('curve');
 
-  if (moduleContext == null) {
+  if (!moduleContext) {
     moduleContext = {
       tabs: [],
       state: {
@@ -61,8 +61,8 @@ export default function curves(
       },
     };
 
-    context.set('curve', moduleContext);
-  } else if (moduleContext.state == null) {
+    moduleContexts.set('curve', moduleContext);
+  } else if (!moduleContext.state) {
     moduleContext.state = {
       drawnCurves,
     };
