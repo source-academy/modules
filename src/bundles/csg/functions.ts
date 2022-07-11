@@ -739,7 +739,7 @@ export function clone(shape: Shape): Shape {
  * @param {Shape} shape - The Shape to be stored.
  */
 export function store(shape: Shape) {
-  store_as_color(shape, DEFAULT_COLOR);
+  Core.getRenderGroupManager().storeShape(shape.clone());
 }
 
 /**

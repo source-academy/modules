@@ -12,6 +12,7 @@ import {
   ACE_GUTTER_BACKGROUND_COLOR,
   ACE_GUTTER_TEXT_COLOR,
   BP_TEXT_COLOR,
+  DEFAULT_COLOR,
   GRID_PADDING,
   MAIN_TICKS,
   ROTATION_SPEED,
@@ -42,8 +43,9 @@ import {
 
 /* [Main] */
 function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
-  //TODO apply silver default here instead, see if works
-  let options: EntitiesFromSolidsOptions = {};
+  let options: EntitiesFromSolidsOptions = {
+    color: hexToAlphaColor(DEFAULT_COLOR),
+  };
   return (entitiesFromSolids(
     options,
     ...solids
