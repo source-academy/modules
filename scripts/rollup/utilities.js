@@ -101,6 +101,34 @@ function makeDefaultConfig() {
       }),
       commonJS({
         include: NODE_MODULES_PATTERN,
+
+        // https://github.com/rollup/rollup-plugin-commonjs#custom-named-exports
+        namedExports: {
+          react: [
+            'Children',
+            'cloneElement',
+            'Component',
+            'createContext',
+            'createElement',
+            'createRef',
+            'isValidElement',
+            'PureComponent',
+            'useCallback',
+            'useContext',
+            'useEffect',
+            'useMemo',
+            'useReducer',
+            'useRef',
+            'useState',
+          ],
+          'react-dom': [
+            'createPortal',
+            'findDOMNode',
+            'render',
+            'unmountComponentAtNode',
+            'unstable_renderSubtreeIntoContainer',
+          ],
+        },
       }),
       injectProcessEnv({
         NODE_ENV: process.env.NODE_ENV,
