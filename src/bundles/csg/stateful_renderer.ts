@@ -131,8 +131,11 @@ export default class StatefulRenderer {
   private inputTracker: InputTracker = new InputTracker();
   private controlsState: ControlsState = cloneControlsState();
 
+  private webGlListeners: [string, EventListenerOrEventListenerObject][] = [];
+  private inputListeners: [string, EventListenerOrEventListenerObject][] = [];
+
   private isStarted: boolean = false;
-  private currentRequestId: number = -1;
+  private currentRequestId: number | null = null;
 
   private wrappedRendererData: WrappedRendererData;
 
@@ -151,22 +154,27 @@ export default class StatefulRenderer {
     );
   }
 
+  private addWebGlListener(
+    eventType: string,
+    listener: EventListenerOrEventListenerObject
+  ) {
+    this.webGlListeners.push([eventType, listener]);
+    this.canvas.addEventListener(eventType, listener);
+  }
+
   private addWebGlListeners() {
-    this.canvas.addEventListener(
-      'webglcontextlost',
-      (contextEvent: Event): void => {
-        contextEvent = contextEvent as WebGLContextEvent;
+    this.addWebGlListener('webglcontextlost', (contextEvent: Event): void => {
+      contextEvent = contextEvent as WebGLContextEvent;
 
-        // Allow restoration of context
-        contextEvent.preventDefault();
+      // Allow restoration of context
+      contextEvent.preventDefault();
 
-        console.debug(`>>> CONTEXT LOST FOR #${this.componentNumber}`);
+      console.debug(`>>> CONTEXT LOST FOR #${this.componentNumber}`);
 
-        this.stop();
-      }
-    );
+      this.stop();
+    });
 
-    this.canvas.addEventListener(
+    this.addWebGlListener(
       'webglcontextrestored',
       (_contextEvent: Event): void => {
         _contextEvent = _contextEvent as WebGLContextEvent;
@@ -178,7 +186,21 @@ export default class StatefulRenderer {
     );
   }
 
-  start() {
+  private removeWebGlListeners() {
+    this.webGlListeners.forEach(([eventType, listener]) => {
+      this.canvas.removeEventListener(eventType, listener);
+    });
+  }
+
+  private forgetEntityCaches() {
+    // Clear draw cache IDs so starting again doesn't try to retrieve
+    // DrawCommands
+    this.wrappedRendererData.entities.forEach((entity: Entity) => {
+      entity.visuals.cacheId = null;
+    });
+  }
+
+  start(firstStart = false) {
     if (this.isStarted) return;
     this.isStarted = true;
 
@@ -186,12 +208,13 @@ export default class StatefulRenderer {
     // requires repeating this step (ie, with each start())
     let wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
 
-    this.addWebGlListeners();
-
+    if (firstStart) this.addWebGlListeners();
     //TODO register controls as addInputListeners()
 
     let frameCounter: number = 0;
-    let animationCallback = (_timestamp: DOMHighResTimeStamp) => {
+    let animationCallback: FrameRequestCallback = (
+      _timestamp: DOMHighResTimeStamp
+    ) => {
       frameCounter = ++frameCounter % LOG_FREQUENCY;
       if (frameCounter === 1)
         console.debug(`>>> Frame interval for #${this.componentNumber}`);
@@ -240,21 +263,21 @@ export default class StatefulRenderer {
     this.currentRequestId = window.requestAnimationFrame(animationCallback);
   }
 
-  stop() {
-    if (!this.isStarted) return;
+  stop(lastStop = false) {
+    if (this.currentRequestId !== null) {
+      window.cancelAnimationFrame(this.currentRequestId);
+      this.currentRequestId = null;
+    }
 
-    window.cancelAnimationFrame(this.currentRequestId);
+    if (lastStop) this.removeWebGlListeners();
+    //TODO remove input listeners
 
-    //TODO remove all stored listeners (they must first get stored)
+    if (!lastStop) {
+      //TODO reset the mid-tracking of the input listener by calling a method on it,
+      // eg to prevent mouse stuck down
 
-    //TODO reset the mid-tracking of the input listener by calling a method on it,
-    // eg to prevent mouse stuck down
-
-    // Clear draw cache IDs so starting again doesn't try to retrieve
-    // DrawCommands
-    this.wrappedRendererData.entities.forEach((entity: Entity) => {
-      entity.visuals.cacheId = null;
-    });
+      this.forgetEntityCaches();
+    }
 
     this.isStarted = false;
   }

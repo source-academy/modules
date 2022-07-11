@@ -36,13 +36,13 @@ export default class CanvasHolder extends React.Component<
       lastRenderGroup,
       this.props.componentNumber
     );
-    this.statefulRenderer.start();
+    this.statefulRenderer.start(true);
   }
 
   componentWillUnmount() {
     console.debug(`>>> UNMOUNT #${this.props.componentNumber}`);
 
-    this.statefulRenderer?.stop();
+    this.statefulRenderer?.stop(true);
   }
 
   // Only required method of a React Component.
