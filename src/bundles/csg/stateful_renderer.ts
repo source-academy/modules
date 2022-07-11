@@ -1,5 +1,6 @@
 /* [Imports] */
 import { LOG_FREQUENCY } from './constants.js';
+import InputTracker from './input_tracker.js';
 import {
   cloneCameraState,
   cloneControlsState,
@@ -14,125 +15,13 @@ import {
 } from './jscad/types.js';
 import { RenderGroup } from './utilities.js';
 
-/* [Main] */
-enum MousePointer {
-  // Based on MouseEvent#button
-  LEFT = 0,
-  MIDDLE = 1,
-  RIGHT = 2,
-  BACK = 3,
-  FORWARD = 4,
-
-  NONE = -1,
-  OTHER = 7050,
-}
-
-class InputTracker {
-  private zoomTicks = 0;
-
-  // Start off the first frame by initially zooming to fit
-  private doZoomToFit = true;
-
-  private heldPointer: MousePointer = MousePointer.NONE;
-
-  lastX = -1;
-  lastY = -1;
-
-  rotateX = 0;
-  rotateY = 0;
-
-  panX = 0;
-  panY = 0;
-
-  getZoomTicks(): number {
-    return this.zoomTicks;
-  }
-
-  changeZoomTicks(wheelDelta: number) {
-    this.zoomTicks += Math.sign(wheelDelta);
-  }
-
-  setZoomToFit() {
-    this.doZoomToFit = true;
-  }
-
-  setHeldPointer(mouseEventButton: number) {
-    switch (mouseEventButton) {
-      case MousePointer.LEFT:
-      case MousePointer.RIGHT:
-      case MousePointer.MIDDLE:
-      case MousePointer.FORWARD:
-      case MousePointer.BACK:
-        this.heldPointer = mouseEventButton;
-        break;
-      default:
-        this.heldPointer = MousePointer.OTHER;
-        break;
-    }
-  }
-
-  unsetHeldPointer() {
-    this.heldPointer = MousePointer.NONE;
-  }
-
-  shouldZoom(): boolean {
-    return this.zoomTicks !== 0;
-  }
-
-  didZoom() {
-    this.zoomTicks = 0;
-  }
-
-  shouldZoomToFit(): boolean {
-    return this.doZoomToFit;
-  }
-
-  didZoomToFit() {
-    this.doZoomToFit = false;
-  }
-
-  shouldIgnorePointerMove(): boolean {
-    return [MousePointer.NONE, MousePointer.RIGHT].includes(this.heldPointer);
-  }
-
-  isPointerPan(isShiftKey: boolean): boolean {
-    return (
-      this.heldPointer === MousePointer.MIDDLE ||
-      (this.heldPointer === MousePointer.LEFT && isShiftKey)
-    );
-  }
-
-  unsetLastCoordinates() {
-    this.lastX = -1;
-    this.lastY = -1;
-  }
-
-  shouldRotate(): boolean {
-    return this.rotateX !== 0 || this.rotateY !== 0;
-  }
-
-  didRotate() {
-    this.rotateX = 0;
-    this.rotateY = 0;
-  }
-
-  shouldPan(): boolean {
-    return this.panX !== 0 || this.panY !== 0;
-  }
-
-  didPan() {
-    this.panX = 0;
-    this.panY = 0;
-  }
-}
-
 /* [Exports] */
 export default class StatefulRenderer {
   private inputTracker: InputTracker = new InputTracker();
   private controlsState: ControlsState = cloneControlsState();
 
-  private webGlListeners: [string, EventListenerOrEventListenerObject][] = [];
-  private inputListeners: [string, EventListenerOrEventListenerObject][] = [];
+  private webGlListeners: [string, Function][] = [];
+  private inputListeners: [string, Function][] = [];
 
   private isStarted: boolean = false;
   private currentRequestId: number | null = null;
@@ -154,31 +43,43 @@ export default class StatefulRenderer {
     );
   }
 
-  private addWebGlListener(
-    eventType: string,
-    listener: EventListenerOrEventListenerObject
-  ) {
+  private addWebGlListener(eventType: string, listener: Function) {
     this.webGlListeners.push([eventType, listener]);
-    this.canvas.addEventListener(eventType, listener);
+    this.canvas.addEventListener(
+      eventType,
+      listener as EventListenerOrEventListenerObject
+    );
+  }
+
+  private addInputListener(
+    eventType: string,
+    listener: Function,
+    options?: AddEventListenerOptions
+  ) {
+    this.inputListeners.push([eventType, listener]);
+    this.canvas.addEventListener(
+      eventType,
+      listener as EventListenerOrEventListenerObject,
+      options
+    );
   }
 
   private addWebGlListeners() {
-    this.addWebGlListener('webglcontextlost', (contextEvent: Event): void => {
-      contextEvent = contextEvent as WebGLContextEvent;
+    this.addWebGlListener(
+      'webglcontextlost',
+      (contextEvent: WebGLContextEvent): void => {
+        // Allow restoration of context
+        contextEvent.preventDefault();
 
-      // Allow restoration of context
-      contextEvent.preventDefault();
+        console.debug(`>>> CONTEXT LOST FOR #${this.componentNumber}`);
 
-      console.debug(`>>> CONTEXT LOST FOR #${this.componentNumber}`);
-
-      this.stop();
-    });
+        this.stop();
+      }
+    );
 
     this.addWebGlListener(
       'webglcontextrestored',
-      (_contextEvent: Event): void => {
-        _contextEvent = _contextEvent as WebGLContextEvent;
-
+      (_contextEvent: WebGLContextEvent): void => {
         console.debug(`>>> CONTEXT RESTORED FOR #${this.componentNumber}`);
 
         this.start();
@@ -186,9 +87,91 @@ export default class StatefulRenderer {
     );
   }
 
+  private addInputListeners() {
+    let inputTracker: InputTracker = this.inputTracker;
+
+    this.addInputListener(
+      'wheel',
+      (wheelEvent: WheelEvent): void => {
+        inputTracker.changeZoomTicks(wheelEvent.deltaY);
+
+        // Prevent scrolling the side panel when there is overflow
+        wheelEvent.preventDefault();
+      },
+      // Force wait for our potential preventDefault()
+      { passive: false }
+    );
+
+    this.addInputListener('dblclick', (_mouseEvent: MouseEvent): void => {
+      inputTracker.setZoomToFit();
+    });
+
+    this.addInputListener(
+      'pointerdown',
+      (pointerEvent: PointerEvent): void => {
+        inputTracker.setHeldPointer(pointerEvent.button);
+        inputTracker.lastX = pointerEvent.pageX;
+        inputTracker.lastY = pointerEvent.pageY;
+
+        // Detect drags even outside the canvas element's borders
+        this.canvas.setPointerCapture(pointerEvent.pointerId);
+
+        // Prevent middle-click from activating auto-scrolling
+        pointerEvent.preventDefault();
+      },
+      { passive: false }
+    );
+
+    this.addInputListener('pointerup', (pointerEvent: PointerEvent): void => {
+      inputTracker.unsetHeldPointer();
+      inputTracker.unsetLastCoordinates();
+
+      this.canvas.releasePointerCapture(pointerEvent.pointerId);
+    });
+
+    this.addInputListener('pointermove', (pointerEvent: PointerEvent): void => {
+      let currentX = pointerEvent.pageX;
+      let currentY = pointerEvent.pageY;
+      if (inputTracker.lastX < 0 || inputTracker.lastY < 0) {
+        // If never tracked before, let differences result in 0
+        inputTracker.lastX = currentX;
+        inputTracker.lastY = currentY;
+      }
+
+      if (!inputTracker.shouldIgnorePointerMove()) {
+        let differenceX = inputTracker.lastX - currentX;
+        let differenceY = inputTracker.lastY - currentY;
+
+        if (inputTracker.isPointerPan(pointerEvent.shiftKey)) {
+          inputTracker.panX += differenceX;
+          inputTracker.panY -= differenceY;
+        } else {
+          // Else default to rotate
+          inputTracker.rotateX -= differenceX;
+          inputTracker.rotateY += differenceY;
+        }
+      }
+
+      inputTracker.lastX = currentX;
+      inputTracker.lastY = currentY;
+    });
+  }
+
   private removeWebGlListeners() {
     this.webGlListeners.forEach(([eventType, listener]) => {
-      this.canvas.removeEventListener(eventType, listener);
+      this.canvas.removeEventListener(
+        eventType,
+        listener as EventListenerOrEventListenerObject
+      );
+    });
+  }
+
+  private removeInputListeners() {
+    this.inputListeners.forEach(([eventType, listener]) => {
+      this.canvas.removeEventListener(
+        eventType,
+        listener as EventListenerOrEventListenerObject
+      );
     });
   }
 
@@ -209,7 +192,7 @@ export default class StatefulRenderer {
     let wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
 
     if (firstStart) this.addWebGlListeners();
-    //TODO register controls as addInputListeners()
+    this.addInputListeners();
 
     let frameCounter: number = 0;
     let animationCallback: FrameRequestCallback = (
@@ -219,41 +202,41 @@ export default class StatefulRenderer {
       if (frameCounter === 1)
         console.debug(`>>> Frame interval for #${this.componentNumber}`);
 
-      //TODO react to controls
+      //TODOO react to controls
       // doDynamicResize(canvas, perspectiveCameraState);
 
-      // if (frameTracker.shouldZoom()) {
+      // if (inputTracker.shouldZoom()) {
       //   doZoom(
-      //     frameTracker.getZoomTicks(),
+      //     inputTracker.getZoomTicks(),
       //     perspectiveCameraState,
       //     controlsState
       //   );
-      //   frameTracker.didZoom();
+      //   inputTracker.didZoom();
       // }
 
-      // if (frameTracker.shouldZoomToFit()) {
+      // if (inputTracker.shouldZoomToFit()) {
       //   doZoomToFit(geometryEntities, perspectiveCameraState, controlsState);
-      //   frameTracker.didZoomToFit();
+      //   inputTracker.didZoomToFit();
       // }
 
-      // if (frameTracker.shouldRotate()) {
+      // if (inputTracker.shouldRotate()) {
       //   doRotate(
-      //     frameTracker.rotateX,
-      //     frameTracker.rotateY,
+      //     inputTracker.rotateX,
+      //     inputTracker.rotateY,
       //     perspectiveCameraState,
       //     controlsState
       //   );
-      //   frameTracker.didRotate();
+      //   inputTracker.didRotate();
       // }
 
-      // if (frameTracker.shouldPan()) {
+      // if (inputTracker.shouldPan()) {
       //   doPan(
-      //     frameTracker.panX,
-      //     frameTracker.panY,
+      //     inputTracker.panX,
+      //     inputTracker.panY,
       //     perspectiveCameraState,
       //     controlsState
       //   );
-      //   frameTracker.didPan();
+      //   inputTracker.didPan();
       // }
 
       wrappedRenderer(this.wrappedRendererData);
@@ -270,7 +253,7 @@ export default class StatefulRenderer {
     }
 
     if (lastStop) this.removeWebGlListeners();
-    //TODO remove input listeners
+    this.removeInputListeners();
 
     if (!lastStop) {
       //TODO reset the mid-tracking of the input listener by calling a method on it,
