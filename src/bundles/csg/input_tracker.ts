@@ -173,7 +173,7 @@ export default class InputTracker {
     this.panY = 0;
   }
 
-  public addListeners() {
+  addListeners() {
     this.listenerTracker.addListener('dblclick', (_mouseEvent: MouseEvent) => {
       this.zoomToFit = true;
     });
@@ -259,11 +259,11 @@ export default class InputTracker {
     );
   }
 
-  public removeListeners() {
+  removeListeners() {
     this.listenerTracker.removeListeners();
   }
 
-  public respondToInput() {
+  respondToInput() {
     this.tryZoomToFit();
     this.tryZoom();
     this.tryRotate();
@@ -275,7 +275,7 @@ export default class InputTracker {
     this.tryDynamicResize();
   }
 
-  public flushMidInput() {
+  flushMidInput() {
     this.unsetHeldPointer();
     this.unsetLastCoordinates();
   }

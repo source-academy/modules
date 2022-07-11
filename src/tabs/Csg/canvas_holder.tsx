@@ -31,7 +31,6 @@ export default class CanvasHolder extends React.Component<
     };
   }
 
-  // Called as part of the React lifecycle when this tab is created
   componentDidMount() {
     console.debug(`>>> MOUNT #${this.props.componentNumber}`);
 
@@ -59,11 +58,10 @@ export default class CanvasHolder extends React.Component<
     this.statefulRenderer?.stop(true);
   }
 
-  // Only required method of a React Component.
-  // Returns a React Element created via JSX to instruct React to render a DOM
-  // node.
-  // Also attaches the canvasReference via the ref attribute, for imperatively
-  // modifying the canvas
+  // Only required method of a React Component. Returns a React Element created
+  // via JSX to instruct React to render a DOM node. Also attaches the
+  // canvasReference via the ref attribute, for imperatively modifying the
+  // canvas
   render() {
     return (
       <>
@@ -110,12 +108,11 @@ export default class CanvasHolder extends React.Component<
               // Expand to take as much space as possible, otherwise this will
               // have no height
               width: '100%',
-              // Prevent canvas from becoming too large when the sidebar is wide,
-              // which would require lots of scrolling or never fit entirely on
-              // screen.
-              // Tall but skinny sidebar maxes width at 70vh (eg portrait mobile
-              // view).
-              // Short but wide maxes width at 30vw (eg wide desktop view)
+              // Prevent canvas from becoming too large when the sidebar is
+              // wide, which would require lots of scrolling or never fit
+              // entirely on screen. Tall but skinny sidebar maxes width at 70vh
+              // (eg portrait mobile view). Short but wide maxes width at 30vw
+              // (eg wide desktop view)
               maxWidth: 'max(70vh, 30vw)',
               // Force square aspect ratio, otherwise this will have no height
               aspectRatio: '1',
@@ -124,8 +121,8 @@ export default class CanvasHolder extends React.Component<
             <canvas
               ref={this.canvasReference}
               style={{
-                // Inline element tries to align to text baseline, with space
-                // below for descender. This prevents that
+                // Inline element would try to align to text baseline, with
+                // space below for descender. This prevents that
                 display: 'block',
 
                 width: '100%',
@@ -133,7 +130,8 @@ export default class CanvasHolder extends React.Component<
 
                 borderRadius: BP_BORDER_RADIUS,
               }}
-              // These get set on the fly by our renderer's dynamic resizer
+              // These get set on the fly by the dynamic resizer in
+              // StatefulRenderer's InputTracker
               width='0'
               height='0'
             />

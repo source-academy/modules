@@ -41,6 +41,8 @@ import {
 } from './types.js';
 
 /* [Main] */
+let { orbit } = controls;
+
 function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
   let options: EntitiesFromSolidsOptions = {
     color: hexToAlphaColor(DEFAULT_COLOR),
@@ -186,7 +188,7 @@ export function updateStates(
   cameraState: PerspectiveCameraState,
   controlsState: ControlsState
 ) {
-  let states: UpdatedStates = (controls.orbit.update({
+  let states: UpdatedStates = (orbit.update({
     camera: cameraState,
     controls: controlsState,
   }) as unknown) as UpdatedStates;
@@ -204,7 +206,7 @@ export function zoomToFit(
   controlsState: ControlsState,
   geometryEntities: GeometryEntity[]
 ) {
-  let states: ZoomToFitStates = (controls.orbit.zoomToFit({
+  let states: ZoomToFitStates = (orbit.zoomToFit({
     camera: cameraState,
     controls: controlsState,
     entities: geometryEntities as any,
@@ -221,7 +223,7 @@ export function rotate(
   rotateX: number,
   rotateY: number
 ) {
-  let states: RotateStates = (controls.orbit.rotate(
+  let states: RotateStates = (orbit.rotate(
     {
       camera: cameraState,
       controls: controlsState,
@@ -240,7 +242,7 @@ export function pan(
   panX: number,
   panY: number
 ) {
-  let states: PanStates = (controls.orbit.pan(
+  let states: PanStates = (orbit.pan(
     {
       camera: cameraState,
       controls: controlsState,

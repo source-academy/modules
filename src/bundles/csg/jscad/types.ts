@@ -8,7 +8,6 @@ import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/dra
 let { orbit } = controls;
 
 /* [Exports] */
-
 export type Color = RGB;
 export type AlphaColor = RGBA;
 
