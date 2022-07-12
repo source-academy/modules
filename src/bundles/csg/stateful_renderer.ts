@@ -91,6 +91,14 @@ export default class StatefulRenderer {
     if (this.isStarted) return;
     this.isStarted = true;
 
+    if (!firstStart) {
+      // As listeners were previously removed, flush some tracked inputs to
+      // avoid bugs like the pointer being stuck down
+      this.inputTracker.flushMidInput();
+
+      this.forgetEntityCaches();
+    }
+
     // Creating the WrappedRenderer already involves REGL. Losing WebGL context
     // requires repeating this step (ie, with each start())
     let wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
@@ -125,16 +133,8 @@ export default class StatefulRenderer {
       this.currentRequestId = null;
     }
 
-    if (lastStop) this.webGlListenerTracker.removeListeners();
     this.inputTracker.removeListeners();
-
-    if (!lastStop) {
-      // As listeners are now removed, flush some tracked inputs to avoid bugs
-      // like the pointer being stuck down
-      this.inputTracker.flushMidInput();
-
-      this.forgetEntityCaches();
-    }
+    if (lastStop) this.webGlListenerTracker.removeListeners();
 
     this.isStarted = false;
   }
