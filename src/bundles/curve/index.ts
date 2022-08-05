@@ -53,6 +53,9 @@ export default function curves(
   // Update the module's global context
   let moduleContext = moduleContexts.get('curve');
 
+  // Probably can edit this because modules can only be loaded once
+  // Otherwise loading the module twice just overwrites the existing context
+  // thing
   if (!moduleContext) {
     moduleContext = {
       tabs: [],

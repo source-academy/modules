@@ -31,7 +31,7 @@
     "noImplicitAny": false,
   },
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
-  "include": ["src/", "scripts/templates/"],
+  "include": ["."],
   /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
-  "exclude": []
+  "exclude": [],
 }
