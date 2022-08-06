@@ -169,7 +169,6 @@ export const buildDocs = async () => {
     ),
     tsconfig: 'src/tsconfig.json',
     theme: 'typedoc-modules-theme',
-    readme: `${cjsDirname()}/README.md`,
     excludeInternal: true,
     categorizeByGroup: true,
     name: 'Source Academy Modules',
@@ -177,8 +176,12 @@ export const buildDocs = async () => {
 
   const project = app.convert();
   if (project) {
-    await app.generateDocs(project, 'build/documentation');
-    await app.generateJson(project, 'build/docs.json');
+    const docsTask =  app.generateDocs(project, 'build/documentation');
+    const jsonTask =  app.generateJson(project, 'build/docs.json');
+    await Promise.all([docsTask, jsonTask]);
+
+    // For some reason typedoc's not working, so do a manual copy
+    fs.copyFileSync(`${cjsDirname()}/docs/README.md`, 'build/documentation/README.md')
   }
 };
 
