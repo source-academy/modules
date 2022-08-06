@@ -1,9 +1,8 @@
 import fs from 'fs';
-import gulp from 'gulp';
-import typedoc from 'gulp-typedoc';
+import * as typedoc from 'typedoc';
 import chalk from 'chalk';
 import drawdown from './drawdown';
-import { isFolderModified, getDb, expandPath } from '../utilities';
+import { isFolderModified, getDb, cjsDirname } from '../utilities';
 import modules from '../../../modules.json';
 
 const parsers = {
@@ -39,7 +38,10 @@ const parsers = {
     if (!signature.parameters) paramStr = `()`;
     else
       paramStr = `(${signature.parameters
-        .map((param) => param.name)
+        .map((param) => {
+          const typeStr = param.type ? param.type.name : 'unknown';
+          return `${param.name}: ${typeStr}`;
+        })
         .join(', ')})`;
 
     // Form the result representation for the function
@@ -92,19 +94,20 @@ export async function buildJsons() {
         console.warn(
           `${chalk.yellow('Warning:')} No documentation found for ${bundle}`
         );
-      } else {
-        moduleDocs.children.forEach((element) => {
-          if (parsers[element.kindString]) {
-            output[element.name] = parsers[element.kindString](element, bundle);
-          } else {
-            console.warn(
-              `${chalk.yellow('Warning:')} ${bundle}: No parser found for ${
-                element.name
-              } of type ${element.type}`
-            );
-          }
-        });
+        continue;
       }
+
+      moduleDocs.children.forEach((element) => {
+        if (parsers[element.kindString]) {
+          output[element.name] = parsers[element.kindString](element, bundle);
+        } else {
+          console.warn(
+            `${chalk.yellow('Warning:')} ${bundle}: No parser found for ${
+              element.name
+            } of type ${element.type}`
+          );
+        }
+      });
 
       fs.writeFile(
         `build/jsons/${bundle}.json`,
@@ -127,33 +130,37 @@ export const buildDocs = async (db) => {
   const bundleNames = Object.keys(modules).filter(isBundleModifed);
   if (bundleNames.length === 0) {
     console.log('Documentation up to date');
-    return null;
+    return;
   }
 
   console.log(
-    chalk.greenBright('Building documentation for the following modules:')
+    chalk.greenBright('Building documentation for the following bundles:')
   );
   console.log(
     bundleNames.map((bundle) => `• ${chalk.blueBright(bundle)}`).join('\n')
   );
 
-  return gulp
-    .src(
-      bundleNames.map((bundle) => `src/bundles/${bundle}/functions.ts`),
-      { allowEmpty: true }
-    )
-    .pipe(
-      typedoc({
-        out: 'build/documentation',
-        json: 'build/docs.json',
-        tsconfig: 'src/tsconfig.json',
-        theme: 'typedoc-modules-theme',
-        readme: `${expandPath()}/README.md`,
-        excludeInternal: true,
-        categorizeByGroup: true,
-        name: 'Source Academy Modules',
-      })
-    );
+  const app = new typedoc.Application();
+  app.options.addReader(new typedoc.TSConfigReader());
+  app.options.addReader(new typedoc.TypeDocReader());
+
+  app.bootstrap({
+    entryPoints: bundleNames.map(
+      (bundle) => `src/bundles/${bundle}/functions.ts`
+    ),
+    tsconfig: 'src/tsconfig.json',
+    theme: 'typedoc-modules-theme',
+    readme: `${cjsDirname()}/README.md`,
+    excludeInternal: true,
+    categorizeByGroup: true,
+    name: 'Source Academy Modules',
+  });
+
+  const project = app.convert();
+  if (project) {
+    await app.generateDocs(project, 'build/documentation');
+    await app.generateJson(project, 'build/docs.json');
+  }
 };
 
 export default async () => {

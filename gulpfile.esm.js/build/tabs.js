@@ -1,17 +1,19 @@
 import gulp from 'gulp';
-import { rollup } from 'gulp-rollup-2';
+import { rollup } from 'rollup';
 import chalk from 'chalk';
+import fs from 'fs';
 import {
   isFolderModified,
   getDb,
   removeDuplicates,
-  tabNameToConfig,
+  defaultConfig,
 } from './utilities';
 import copy from './copyfile';
 import modules from '../../modules.json';
 
 export const buildTabs = (db) => {
   const isTabModifed = (tabName) => {
+    if (process.argv[3] === '--force') return true;
     const timestamp = db.get(`tabs.${tabName}`).value() || 0;
     return isFolderModified(`src/tabs/${tabName}`, timestamp);
   };
@@ -24,26 +26,36 @@ export const buildTabs = (db) => {
     return null;
   }
 
-  console.log('Building the following tabs:');
-  console.log(tabNames.map(chalk.blue).join('\n'));
+  console.log(chalk.greenBright('Building the following tabs:'));
+  console.log(tabNames.map((x) => `• ${chalk.blue(x)}`).join('\n'));
 
   const buildTime = new Date().getTime();
 
-  const promises = tabNames.map(
-    (tabName) =>
-      new Promise((resolve, reject) =>
-        // eslint-disable-next-line no-promise-executor-return
-        gulp
-          .src(`src/tabs/${tabName}/index.tsx`)
-          .pipe(rollup(tabNameToConfig(tabName)))
-          .on('error', reject)
-          .pipe(gulp.dest('build/tabs/'))
-          .on('end', () => {
-            db.set(`tabs.${tabName}`, buildTime).write();
-            resolve();
-          })
-      )
-  );
+  const processTab = async (tabName) => {
+    const result = await rollup({
+      ...defaultConfig,
+      input: `src/tabs/${tabName}/index.tsx`,
+      external: ['react', 'react-dom'],
+    });
+
+    const tabFile = `build/tabs/${tabName}.js`;
+    await result.write({
+      file: tabFile,
+      format: 'iife',
+      globals: {
+        react: 'React',
+        'react-dom': 'ReactDom',
+      },
+    });
+
+    const rawTab = fs.readFileSync(tabFile, 'utf-8');
+    const lastBracket = rawTab.lastIndexOf('(');
+    fs.writeFileSync(tabFile, `${rawTab.substring(0, lastBracket)})`);
+
+    db.set(`tabs.${tabName}`, buildTime).write();
+  };
+
+  const promises = tabNames.map(processTab);
 
   return Promise.all(promises);
 };
@@ -52,7 +64,7 @@ export default gulp.series(
   Object.assign(
     async () => {
       const db = await getDb();
-      return buildTabs(db);
+      await buildTabs(db);
     },
     {
       displayName: 'buildTabs',

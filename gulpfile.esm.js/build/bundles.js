@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import gulp from 'gulp';
-import { rollup } from 'gulp-rollup-2';
+import { rollup } from 'rollup';
 import modules from '../../modules.json';
 import copy from './copyfile';
-import { bundleNameToConfig, getDb, isFolderModified } from './utilities';
+import { defaultConfig, getDb, isFolderModified } from './utilities';
 
 export const buildBundles = (db) => {
   const isBundleModifed = (bundle) => {
@@ -26,22 +26,21 @@ export const buildBundles = (db) => {
 
   const buildTime = new Date().getTime();
 
-  const promises = moduleNames.map(
-    (bundle) =>
-      new Promise((resolve, reject) =>
-        // eslint-disable-next-line no-promise-executor-return
-        gulp
-          .src(`src/bundles/${bundle}/index.ts`)
-          .pipe(rollup(bundleNameToConfig(bundle)))
-          .on('error', reject)
-          .pipe(gulp.dest('build/bundles/'))
-          .on('end', () => {
-            db.set(`bundles.${bundle}`, buildTime).write();
-            resolve();
-          })
-      )
-  );
+  const processBundle = async (bundle) => {
+    const result = await rollup({
+      ...defaultConfig,
+      input: `src/bundles/${bundle}/index.ts`,
+    });
 
+    await result.write({
+      file: `build/bundles/${bundle}.js`,
+      format: 'iife',
+    });
+
+    db.set(`bundle.${bundle}`, buildTime).write();
+  };
+
+  const promises = moduleNames.map((bundle) => processBundle(bundle));
   return Promise.all(promises);
 };
 

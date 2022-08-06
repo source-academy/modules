@@ -60,6 +60,7 @@ module.exports = {
       rules: {
         'import/no-extraneous-dependencies': 0,
         'no-console': 0,
+        'no-continue': 0,
         'no-param-reassign': 0,
         'no-restricted-syntax': 0,
         'prefer-const': 0,

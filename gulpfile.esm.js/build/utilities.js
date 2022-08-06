@@ -12,7 +12,6 @@ import { fileURLToPath } from 'url';
 import Low from 'lowdb';
 import FileAsync from 'lowdb/adapters/FileAsync';
 import {
-  BUILD_PATH,
   DATABASE_NAME,
   NODE_MODULES_PATTERN,
   SOURCE_PATTERN,
@@ -59,38 +58,6 @@ export const defaultConfig = {
   ],
 };
 
-export function tabNameToConfig(tabName) {
-  console.log(chalk.greenBright('Configured module tabs:'));
-  console.log(`• ${chalk.blueBright(tabName)}`);
-
-  return {
-    ...defaultConfig,
-
-    // input: `${tabNameToSourceFolder(tabName)}index.tsx`,
-    output: {
-      file: `${BUILD_PATH}tabs/${tabName}.js`,
-      format: 'iife',
-
-      globals: {
-        react: 'React',
-        'react-dom': 'ReactDom',
-      },
-    },
-    external: ['react', 'react-dom'],
-  };
-}
-
-export function bundleNameToConfig(bundleName) {
-  return {
-    ...defaultConfig,
-
-    // input: `${bundleNameToSourceFolder(bundleName)}index.ts`,
-    output: {
-      file: `${BUILD_PATH}bundles/${bundleName}.js`,
-      format: 'iife',
-    },
-  };
-}
 // Function takes in relative paths, for cleaner logging
 export function isFolderModified(relativeFolderPath, storedTimestamp) {
   function toFullPath(rootRelativePath) {
@@ -124,14 +91,23 @@ export function isFolderModified(relativeFolderPath, storedTimestamp) {
   return false;
 }
 
-export function expandPath() {
+/**
+ * Function to replicate the functionality of `__dirname` in CJS code
+ */
+export function cjsDirname() {
   return dirname(fileURLToPath(import.meta.url));
 }
 
+/**
+ * Get the path to the database file
+ */
 export function getDbPath() {
   return join(dirname(fileURLToPath(import.meta.url)), `${DATABASE_NAME}.json`);
 }
 
+/**
+ * Get a new Lowdb instance
+ */
 export function getDb() {
   return Low(new FileAsync(getDbPath()));
 }
