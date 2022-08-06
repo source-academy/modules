@@ -5,6 +5,10 @@ import drawdown from './drawdown';
 import { isFolderModified, getDb, cjsDirname } from '../utilities';
 import modules from '../../../modules.json';
 
+/**
+ * Convert each element type (e.g. variable, function) to its respective HTML docstring
+ * to be displayed to users
+ */
 const parsers = {
   Variable: (element, bundle) => {
     let desc;
@@ -64,15 +68,38 @@ const parsers = {
     return `<div><h4>${element.name}${paramStr} → {${resultStr}}</h4><div class="description">${desc}</div></div>`;
   },
 };
+
 /**
  * Build the json documentation for the specified modules
  */
-export async function buildJsons() {
+export const buildJsons = async (db) => {
+  const isBundleModifed = (bundle) => {
+    if (process.argv[3] === '--force') return true;
+
+    const timestamp = db.get(`docs.${bundle}`).value() || 0;
+    return isFolderModified(`src/bundles/${bundle}`, timestamp);
+  };
+
+  const bundleNames = Object.keys(modules).filter(isBundleModifed);
+  if (bundleNames.length === 0) {
+    console.log('Documentation up to date');
+    return;
+  }
+
+  console.log(
+    chalk.greenBright('Building documentation for the following bundles:')
+  );
+  console.log(
+    bundleNames.map((bundle) => `• ${chalk.blueBright(bundle)}`).join('\n')
+  );
+
   const errHandler = (err) => {
     if (err) console.error(err);
   };
 
   if (!fs.existsSync('build/jsons')) fs.mkdirSync(`build/jsons`, {});
+
+  const buildTime = new Date().getTime();
 
   // Read from the TypeDoc output and retrieve the JSON relevant to the each module
   fs.readFile('build/docs.json', 'utf-8', (err, data) => {
@@ -112,40 +139,32 @@ export async function buildJsons() {
       fs.writeFile(
         `build/jsons/${bundle}.json`,
         JSON.stringify(output, null, 2),
-        errHandler
+        (err) => {
+          if (err) console.error(err);
+          else {
+            db.set(`docs.${bundle}`, buildTime).write();
+          }
+        }
       );
     }
     fs.rm('build/jsons/output', { recursive: true, force: true }, errHandler);
   });
 }
 
-export const buildDocs = async (db) => {
-  const isBundleModifed = (bundle) => {
-    if (process.argv[3] === '--force') return true;
-
-    const timestamp = db.get(`bundles.${bundle}`).value() || 0;
-    return isFolderModified(`src/bundles/${bundle}`, timestamp);
-  };
-
-  const bundleNames = Object.keys(modules).filter(isBundleModifed);
-  if (bundleNames.length === 0) {
-    console.log('Documentation up to date');
-    return;
-  }
-
-  console.log(
-    chalk.greenBright('Building documentation for the following bundles:')
-  );
-  console.log(
-    bundleNames.map((bundle) => `• ${chalk.blueBright(bundle)}`).join('\n')
-  );
-
+/**
+ * Build the HTML documentation for all modules.\
+ * \
+ * TypeDoc always clears the directory after each build, so if you leave some modules out
+ * their documentation won't be properly included. Hence all modules have to be built at
+ * the same time.
+ */
+export const buildDocs = async () => {
   const app = new typedoc.Application();
   app.options.addReader(new typedoc.TSConfigReader());
   app.options.addReader(new typedoc.TypeDocReader());
 
   app.bootstrap({
-    entryPoints: bundleNames.map(
+    entryPoints: Object.keys(modules).map(
       (bundle) => `src/bundles/${bundle}/functions.ts`
     ),
     tsconfig: 'src/tsconfig.json',
@@ -163,8 +182,12 @@ export const buildDocs = async (db) => {
   }
 };
 
+/**
+ * Build both JSONS and HTML documentation
+ */
 export default async () => {
+  await buildDocs();
+
   const db = await getDb();
-  await buildDocs(db);
-  await buildJsons();
+  await buildJsons(db);
 };

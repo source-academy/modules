@@ -8,9 +8,12 @@ import {
   removeDuplicates,
   defaultConfig,
 } from './utilities';
-import copy from './copyfile';
+import copy from './misc';
 import modules from '../../modules.json';
 
+/**
+ * Transpile tabs to the build folder
+ */
 export const buildTabs = (db) => {
   const isTabModifed = (tabName) => {
     if (process.argv[3] === '--force') return true;
@@ -55,9 +58,7 @@ export const buildTabs = (db) => {
     db.set(`tabs.${tabName}`, buildTime).write();
   };
 
-  const promises = tabNames.map(processTab);
-
-  return Promise.all(promises);
+  return Promise.all(tabNames.map(processTab));
 };
 
 export default gulp.series(

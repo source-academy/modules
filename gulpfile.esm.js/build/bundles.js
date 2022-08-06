@@ -2,9 +2,12 @@ import chalk from 'chalk';
 import gulp from 'gulp';
 import { rollup } from 'rollup';
 import modules from '../../modules.json';
-import copy from './copyfile';
+import copy from './misc';
 import { defaultConfig, getDb, isFolderModified } from './utilities';
 
+/**
+ * Transpile bundles to the build folder
+ */
 export const buildBundles = (db) => {
   const isBundleModifed = (bundle) => {
     if (process.argv[3] === '--force') return true;
@@ -40,8 +43,7 @@ export const buildBundles = (db) => {
     db.set(`bundle.${bundle}`, buildTime).write();
   };
 
-  const promises = moduleNames.map((bundle) => processBundle(bundle));
-  return Promise.all(promises);
+  return Promise.all(moduleNames.map(processBundle));
 };
 
 export default gulp.series(

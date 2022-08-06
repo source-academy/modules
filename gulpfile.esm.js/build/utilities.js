@@ -18,6 +18,9 @@ import {
   SUPPRESSED_WARNINGS,
 } from './constants';
 
+/**
+ * Default configuration used by rollup for transpiling both tabs and bundles
+ */
 export const defaultConfig = {
   onwarn(warning, warn) {
     if (SUPPRESSED_WARNINGS.includes(warning.code)) return;
