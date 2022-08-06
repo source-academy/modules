@@ -9,7 +9,12 @@ export default series(
   Object.assign(
     async () => {
       const db = await getDb();
-      await Promise.all([buildBundles(db), buildTabs(db), buildDocs(), buildJsons(db)]);
+      await Promise.all([
+        buildBundles(db),
+        buildTabs(db),
+        buildDocs(),
+        buildJsons(db),
+      ]);
     },
     {
       displayName: 'build',

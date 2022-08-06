@@ -7,6 +7,7 @@ import {
   getDb,
   removeDuplicates,
   defaultConfig,
+  shouldBuildAll,
 } from './utilities';
 import copy from './misc';
 import modules from '../../modules.json';
@@ -23,14 +24,18 @@ export const buildTabs = (db) => {
 
   const tabNames = removeDuplicates(
     Object.values(modules).flatMap((x) => x.tabs)
-  ).filter(isTabModifed);
+  );
 
-  if (tabNames.length === 0) {
+  const filteredTabs = shouldBuildAll('tabs')
+    ? tabNames
+    : tabNames.filter(isTabModifed);
+
+  if (filteredTabs.length === 0) {
     return null;
   }
 
   console.log(chalk.greenBright('Building the following tabs:'));
-  console.log(tabNames.map((x) => `• ${chalk.blue(x)}`).join('\n'));
+  console.log(filteredTabs.map((x) => `• ${chalk.blue(x)}`).join('\n'));
 
   const buildTime = new Date().getTime();
 
@@ -58,7 +63,7 @@ export const buildTabs = (db) => {
     db.set(`tabs.${tabName}`, buildTime).write();
   };
 
-  return Promise.all(tabNames.map(processTab));
+  return Promise.all(filteredTabs.map(processTab));
 };
 
 export default gulp.series(

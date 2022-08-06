@@ -2,7 +2,12 @@ import fs from 'fs';
 import * as typedoc from 'typedoc';
 import chalk from 'chalk';
 import drawdown from './drawdown';
-import { isFolderModified, getDb, cjsDirname } from '../utilities';
+import {
+  isFolderModified,
+  getDb,
+  cjsDirname,
+  shouldBuildAll,
+} from '../utilities';
 import modules from '../../../modules.json';
 
 /**
@@ -74,14 +79,16 @@ const parsers = {
  */
 export const buildJsons = async (db) => {
   const isBundleModifed = (bundle) => {
-    if (process.argv[3] === '--force') return true;
-
     const timestamp = db.get(`docs.${bundle}`).value() || 0;
     return isFolderModified(`src/bundles/${bundle}`, timestamp);
   };
 
-  const bundleNames = Object.keys(modules).filter(isBundleModifed);
-  if (bundleNames.length === 0) {
+  const bundleNames = Object.keys(modules);
+  const filteredBundles = shouldBuildAll('jsons')
+    ? bundleNames
+    : bundleNames.filter(isBundleModifed);
+
+  if (filteredBundles.length === 0) {
     console.log('Documentation up to date');
     return;
   }
@@ -90,7 +97,7 @@ export const buildJsons = async (db) => {
     chalk.greenBright('Building documentation for the following bundles:')
   );
   console.log(
-    bundleNames.map((bundle) => `• ${chalk.blueBright(bundle)}`).join('\n')
+    filteredBundles.map((bundle) => `• ${chalk.blueBright(bundle)}`).join('\n')
   );
 
   const errHandler = (err) => {
@@ -139,8 +146,8 @@ export const buildJsons = async (db) => {
       fs.writeFile(
         `build/jsons/${bundle}.json`,
         JSON.stringify(output, null, 2),
-        (err) => {
-          if (err) console.error(err);
+        (error) => {
+          if (error) console.error(error);
           else {
             db.set(`docs.${bundle}`, buildTime).write();
           }
@@ -149,7 +156,7 @@ export const buildJsons = async (db) => {
     }
     fs.rm('build/jsons/output', { recursive: true, force: true }, errHandler);
   });
-}
+};
 
 /**
  * Build the HTML documentation for all modules.\
@@ -176,12 +183,15 @@ export const buildDocs = async () => {
 
   const project = app.convert();
   if (project) {
-    const docsTask =  app.generateDocs(project, 'build/documentation');
-    const jsonTask =  app.generateJson(project, 'build/docs.json');
+    const docsTask = app.generateDocs(project, 'build/documentation');
+    const jsonTask = app.generateJson(project, 'build/docs.json');
     await Promise.all([docsTask, jsonTask]);
 
     // For some reason typedoc's not working, so do a manual copy
-    fs.copyFileSync(`${cjsDirname()}/docs/README.md`, 'build/documentation/README.md')
+    fs.copyFileSync(
+      `${cjsDirname()}/docs/README.md`,
+      'build/documentation/README.md'
+    );
   }
 };
 

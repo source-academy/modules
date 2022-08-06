@@ -3,7 +3,12 @@ import gulp from 'gulp';
 import { rollup } from 'rollup';
 import modules from '../../modules.json';
 import copy from './misc';
-import { defaultConfig, getDb, isFolderModified } from './utilities';
+import {
+  defaultConfig,
+  getDb,
+  isFolderModified,
+  shouldBuildAll,
+} from './utilities';
 
 /**
  * Transpile bundles to the build folder
@@ -15,16 +20,19 @@ export const buildBundles = (db) => {
     return isFolderModified(`src/bundles/${bundle}`, timestamp);
   };
 
-  const moduleNames = Object.keys(modules).filter(isBundleModifed);
+  const bundleNames = Object.keys(modules);
+  const filteredBundles = shouldBuildAll('bundles')
+    ? bundleNames
+    : bundleNames.filter(isBundleModifed);
 
-  if (moduleNames.length === 0) {
+  if (filteredBundles.length === 0) {
     console.log('All bundles up to date');
     return null;
   }
 
   console.log(chalk.greenBright('Building bundles for the following modules:'));
   console.log(
-    moduleNames.map((bundle) => `• ${chalk.blueBright(bundle)}`).join('\n')
+    filteredBundles.map((bundle) => `• ${chalk.blueBright(bundle)}`).join('\n')
   );
 
   const buildTime = new Date().getTime();
@@ -43,7 +51,7 @@ export const buildBundles = (db) => {
     db.set(`bundle.${bundle}`, buildTime).write();
   };
 
-  return Promise.all(moduleNames.map(processBundle));
+  return Promise.all(filteredBundles.map(processBundle));
 };
 
 export default gulp.series(

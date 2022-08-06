@@ -118,3 +118,15 @@ export function getDb() {
 export function removeDuplicates(arr) {
   return [...new Set(arr)];
 }
+
+/**
+ * Checks if the given output directory is empty, to determine
+ * if the given build script should execute regardless of the last build time
+ */
+export const shouldBuildAll = (outputDir) => {
+  if (process.argv[3] === '--force') return true;
+
+  if (!fs.existsSync(`build/${outputDir}`)) return true;
+
+  return fs.readdirSync(`build/${outputDir}`).length === 0;
+};
