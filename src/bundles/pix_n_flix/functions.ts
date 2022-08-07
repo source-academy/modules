@@ -75,12 +75,13 @@ let videoIsPlaying: boolean = false;
 let requestId: number;
 let prevTime: number | null = null;
 let totalElapsedTime: number = 0;
+let playCount: number = 0;
 
 let inputFeed: InputFeed = InputFeed.Camera;
 let url: string = '';
 
 // Images dont aspect ratio correctly
-let keepAspectRatio: boolean = false;
+let keepAspectRatio: boolean = true;
 let intrinsicWidth: number = WIDTH;
 let intrinsicHeight: number = HEIGHT;
 let displayWidth: number = WIDTH;
@@ -166,14 +167,16 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
 /** @hidden */
 function drawImage(source: VideoElement | ImageElement): void {
   if (keepAspectRatio) {
+    canvasRenderingContext.rect(0, 0, WIDTH, HEIGHT);
+    canvasRenderingContext.fill();
     canvasRenderingContext.drawImage(
       source,
       0,
       0,
       intrinsicWidth,
       intrinsicHeight,
-      0,
-      0,
+      (WIDTH - displayWidth) / 2,
+      (HEIGHT - displayHeight) / 2,
       displayWidth,
       displayHeight
     );
@@ -337,37 +340,34 @@ function loadAlternative(): void {
     return;
   }
   toRunLateQueue = true;
+
+  /** Setting Up videoElement */
   videoElement.crossOrigin = 'anonymous';
-  videoElement.loop = LOOP_COUNT < 0;
   videoElement.onended = () => {
-    stopVideo();
-    if (LOOP_COUNT > 0) {
+    playCount++;
+    if (playCount == LOOP_COUNT) {
+      tabsPackage.onClickStill()
+      playCount = 0;
+    } else if (playCount < LOOP_COUNT) {
+      stopVideo();
       startVideo();
-      LOOP_COUNT -= 1;
+    } else {
+      playCount = 0;
     }
   };
-  videoElement.onloadedmetadata = () =>
+  videoElement.onloadedmetadata = () => {
     setAspectRatioDimensions(videoElement.videoWidth, videoElement.videoHeight);
+  };
 
+  /** Setting Up imageElement */
   imageElement.crossOrigin = 'anonymous';
-  imageElement.onloadedmetadata = () =>
+  imageElement.onload = () => {
     setAspectRatioDimensions(
       imageElement.naturalWidth,
       imageElement.naturalHeight
     );
-  imageElement.onload = () => {
     drawImage(imageElement);
   };
-}
-
-/**
- * Just draws once on image and stops video.
- *
- * @hidden
- */
-function snapPicture(): void {
-  drawImage(imageElement);
-  stopVideo();
 }
 
 /**
@@ -403,6 +403,8 @@ function updateDimensions(w: number, h: number): void {
   WIDTH = w;
   HEIGHT = h;
 
+  imageElement.width = w;
+  imageElement.height = h;
   videoElement.width = w;
   videoElement.height = h;
   canvasElement.width = w;
@@ -411,7 +413,7 @@ function updateDimensions(w: number, h: number): void {
   setupData();
 
   if (!status) {
-    setTimeout(() => snapPicture(), 50);
+    setTimeout(() => stopVideo(), 50);
     return;
   }
 
@@ -498,7 +500,7 @@ function init(
  * @hidden
  */
 function deinit(): void {
-  snapPicture();
+  stopVideo();
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
@@ -521,7 +523,7 @@ export function start(): StartPacket {
     init,
     deinit,
     startVideo,
-    snapPicture,
+    stopVideo,
     updateFPS,
     updateVolume,
     updateDimensions,
@@ -778,17 +780,17 @@ export function get_video_time(): number {
 /**
  * Sets pix_n_flix to preserve the aspect ratio of the video or image
  *
- * @param keepAspectRatio to keep aspect ratio.
+ * @param keepAspectRatio to keep aspect ratio. (Default value of true)
  */
 export function keep_aspect_ratio(_keepAspectRatio: boolean): void {
   keepAspectRatio = _keepAspectRatio;
 }
 
 /**
- * Sets the number of times the video repeats after the first iteration.
+ * Sets the number of times the video is played.
  * If the number of times the video repeats is negative, the video will loop forever.
  *
- * @param n number of times the video repeats after the first iteration. If n < 0, video will repeat forever.
+ * @param n number of times the video repeats after the first iteration. If n < 1, n will be taken to be 1. (Default value of Infinity)
  */
 export function set_loop_count(n: number): void {
   LOOP_COUNT = n;
