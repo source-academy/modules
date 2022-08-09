@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['../.eslintrc.base.js', 'plugin:prettier/recommended'],
+  extends: ['.eslintrc.base.js', 'plugin:prettier/recommended'],
 
   root: true,
   parserOptions: {
@@ -59,7 +59,7 @@ module.exports = {
 
       parser: '@typescript-eslint/parser',
       parserOptions: {
-        project: './tsconfig.json',
+        project: './src/tsconfig.json',
         tsconfigRootDir: __dirname,
       },
 
@@ -140,5 +140,26 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['gulpfile.esm.js/**js'],
+      extends: ['airbnb', 'plugin:prettier/recommended'],
+      parserOptions: {
+        ecmaVersion: '2020',
+      },
+      rules: {
+        'import/no-extraneous-dependencies': 0,
+        'no-console': 0,
+        'no-continue': 0,
+        'no-param-reassign': 0,
+        'no-restricted-syntax': 0,
+        'prefer-const': 0,
+        'prettier/prettier': 1, // Was 2
+      },
+    },
+    {
+      files: ['./**/__tests__/**.test.js', './**/__tests__/**.test.ts'],
+      extends: ['airbnb', 'plugin:prettier/recommended', 'plugin:jest/recommeended'],
+      plugins: ['jest']
+    }
   ],
 };
