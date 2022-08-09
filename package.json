@@ -105,7 +105,8 @@
   "jest": {
     "roots": [
       "<rootDir>/src/bundles",
-      "<rootDir>/src/tabs"
+      "<rootDir>/src/tabs",
+      "<rootDir>/gulpfile.esm.js"
     ]
   }
 }

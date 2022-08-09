@@ -12,6 +12,11 @@ import {
 import copy from './misc';
 import modules from '../../modules.json';
 
+export const convertRawTab = (rawTab) => {
+  const lastBracket = rawTab.lastIndexOf('(');
+  return `${rawTab.substring(0, lastBracket)})`
+}
+
 /**
  * Transpile tabs to the build folder
  */
@@ -57,8 +62,7 @@ export const buildTabs = (db) => {
     });
 
     const rawTab = fs.readFileSync(tabFile, 'utf-8');
-    const lastBracket = rawTab.lastIndexOf('(');
-    fs.writeFileSync(tabFile, `${rawTab.substring(0, lastBracket)})`);
+    fs.writeFileSync(tabFile, convertRawTab(rawTab));
 
     db.set(`tabs.${tabName}`, buildTime).write();
   };
