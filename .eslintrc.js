@@ -141,7 +141,7 @@ module.exports = {
       },
     },
     {
-      files: ['gulpfile.esm.js/**js'],
+      files: ['gulpfile.esm.js/**.js'],
       extends: ['airbnb', 'plugin:prettier/recommended'],
       parserOptions: {
         ecmaVersion: '2020',
