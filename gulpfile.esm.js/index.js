@@ -1,7 +1,6 @@
 /* eslint-disable import/no-named-as-default */
-import build from './build';
-import buildBundles from './build/bundles';
-import buildTabs from './build/tabs';
-import buildDocs from './build/docs';
-
-export { build, buildBundles, buildTabs, buildDocs };
+export { default as build } from './build';
+export { default as buildBundles } from './build/bundles';
+export { default as buildTabs } from './build/tabs';
+export { default as buildDocs } from './build/docs';
+export { default as create } from './templates';

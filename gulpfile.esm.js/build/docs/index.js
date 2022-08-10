@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { constants as fsConstants, promises as fs } from 'fs';
 import * as typedoc from 'typedoc';
 import chalk from 'chalk';
 import drawdown from './drawdown';
@@ -15,7 +15,7 @@ import modules from '../../../modules.json';
  * to be displayed to users
  */
 const parsers = {
-  Variable: (element, bundle) => {
+  Variable(element, bundle) {
     let desc;
     if (element.comment && element.comment.shortText) {
       desc = drawdown(element.comment.shortText);
@@ -33,7 +33,7 @@ const parsers = {
 
     return `<div><h4>${element.name}${typeStr}</h4><div class="description">${desc}</div></div>`;
   },
-  Function: (element, bundle) => {
+  Function(element, bundle) {
     if (!element.signatures || element.signatures[0] === undefined)
       throw new Error(
         `Error: ${bundle}: Unable to find a signature for function ${element.name}!`
@@ -44,7 +44,7 @@ const parsers = {
 
     // Form the parameter string for the function
     let paramStr;
-    if (!signature.parameters) paramStr = `()`;
+    if (!signature.parameters) paramStr = '()';
     else
       paramStr = `(${signature.parameters
         .map((param) => {
@@ -55,7 +55,7 @@ const parsers = {
 
     // Form the result representation for the function
     let resultStr;
-    if (!signature.type) resultStr = `void`;
+    if (!signature.type) resultStr = 'void';
     else resultStr = signature.type.name;
 
     let desc;
@@ -100,38 +100,40 @@ export const buildJsons = async (db) => {
     filteredBundles.map((bundle) => `• ${chalk.blueBright(bundle)}`).join('\n')
   );
 
-  const errHandler = (err) => {
-    if (err) console.error(err);
-  };
-
-  if (!fs.existsSync('build/jsons')) fs.mkdirSync(`build/jsons`, {});
+  try {
+    await fs.access('build/jsons', fsConstants.F_OK);
+  } catch (_error) {
+    await fs.mkdir('build/jsons');
+  }
 
   const buildTime = new Date().getTime();
 
-  // Read from the TypeDoc output and retrieve the JSON relevant to the each module
-  fs.readFile('build/docs.json', 'utf-8', (err, data) => {
-    if (err) throw err;
+  const docsFile = await fs.readFile('build/docs.json');
+  const parsedJSON = JSON.parse(docsFile).children;
 
-    const parsedJSON = JSON.parse(data).children;
+  if (!parsedJSON) {
+    throw new Error('Failed to parse docs.json');
+  }
 
-    if (!parsedJSON) {
-      throw new Error('Failed to parse docs.json');
+  const bundles = Object.keys(modules).map((bundle) => {
+    const moduleDocs = parsedJSON.find((x) => x.name === bundle);
+
+    if (!moduleDocs || !moduleDocs.children) {
+      console.warn(
+        `${chalk.yellow('Warning:')} No documentation found for ${bundle}`
+      );
+      return undefined;
     }
 
-    const bundles = Object.keys(modules);
+    return [bundle, moduleDocs.children];
+  });
 
-    for (const bundle of bundles) {
-      const moduleDocs = parsedJSON.find((x) => x.name === bundle);
-
-      if (!moduleDocs || !moduleDocs.children) {
-        console.warn(
-          `${chalk.yellow('Warning:')} No documentation found for ${bundle}`
-        );
-        continue;
-      }
+  await Promise.all(
+    bundles.map(async ([bundle, docs]) => {
+      if (!docs) return;
 
       const output = {};
-      moduleDocs.children.forEach((element) => {
+      docs.forEach((element) => {
         if (parsers[element.kindString]) {
           output[element.name] = parsers[element.kindString](element, bundle);
         } else {
@@ -143,19 +145,17 @@ export const buildJsons = async (db) => {
         }
       });
 
-      fs.writeFile(
+      await fs.writeFile(
         `build/jsons/${bundle}.json`,
-        JSON.stringify(output, null, 2),
-        (error) => {
-          if (error) console.error(error);
-          else {
-            db.set(`docs.${bundle}`, buildTime).write();
-          }
-        }
+        JSON.stringify(output, null, 2)
       );
-    }
-    fs.rm('build/jsons/output', { recursive: true, force: true }, errHandler);
-  });
+
+      db.set(`docs.${bundle}`, buildTime);
+    })
+  );
+
+  // Read from the TypeDoc output and retrieve the JSON relevant to the each module
+  await fs.rm('build/jsons/output', { recursive: true, force: true });
 };
 
 /**
@@ -188,7 +188,7 @@ export const buildDocs = async () => {
     await Promise.all([docsTask, jsonTask]);
 
     // For some reason typedoc's not working, so do a manual copy
-    fs.copyFileSync(
+    await fs.copyFile(
       `${cjsDirname()}/docs/README.md`,
       'build/documentation/README.md'
     );

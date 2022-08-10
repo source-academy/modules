@@ -7,8 +7,8 @@ import chalk from 'chalk';
 import commonJS from 'rollup-plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
+import { cjsDirname } from '../utilities';
 import Low from 'lowdb';
 import FileAsync from 'lowdb/adapters/FileAsync';
 import {
@@ -92,13 +92,6 @@ export function isFolderModified(relativeFolderPath, storedTimestamp) {
   }
 
   return false;
-}
-
-/**
- * Function to replicate the functionality of `__dirname` in CJS code
- */
-export function cjsDirname() {
-  return dirname(fileURLToPath(import.meta.url));
 }
 
 /**

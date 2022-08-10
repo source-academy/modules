@@ -1,7 +1,7 @@
 import gulp from 'gulp';
 import { rollup } from 'rollup';
 import chalk from 'chalk';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import {
   isFolderModified,
   getDb,
@@ -14,8 +14,8 @@ import modules from '../../modules.json';
 
 export const convertRawTab = (rawTab) => {
   const lastBracket = rawTab.lastIndexOf('(');
-  return `${rawTab.substring(0, lastBracket)})`
-}
+  return `${rawTab.substring(0, lastBracket)})`;
+};
 
 /**
  * Transpile tabs to the build folder
@@ -61,8 +61,8 @@ export const buildTabs = (db) => {
       },
     });
 
-    const rawTab = fs.readFileSync(tabFile, 'utf-8');
-    fs.writeFileSync(tabFile, convertRawTab(rawTab));
+    const rawTab = await fs.readFile(tabFile, 'utf-8');
+    await fs.writeFile(tabFile, convertRawTab(rawTab));
 
     db.set(`tabs.${tabName}`, buildTime).write();
   };

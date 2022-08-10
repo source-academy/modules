@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "scripts-info": {
     "//NOTE": "Run `npm i npm-scripts-info -g` to install once globally, then run `npm-scripts-info` as needed to list these descriptions",
-    "module": "Interactively initialise a new bundle or tab from their templates",
+    "create": "Interactively initialise a new bundle or tab from their templates",
     "lint": "Check code for eslint warnings and errors",
     "lint:fix": "Lint code and fix automatically fixable problems",
     "build": "Lint code, then build modules and documentation",
@@ -20,7 +20,7 @@
     "test:watch": "Watch files for changes and rerun tests related to changed files"
   },
   "scripts": {
-    "module": "node ./scripts/templates/app.js",
+    "create": "gulp create",
     "lint": "./node_modules/.bin/eslint -c src/.eslintrc.js --ext \".ts, .tsx\" src/",
     "lint:fix": "./node_modules/.bin/eslint -c src/.eslintrc.js --ext \".ts, .tsx\" src/ --fix",
     "build": "yarn lint && gulp build",
