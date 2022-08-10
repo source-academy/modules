@@ -158,8 +158,12 @@ module.exports = {
     },
     {
       files: ['./**/__tests__/**.test.js', './**/__tests__/**.test.ts'],
-      extends: ['airbnb', 'plugin:prettier/recommended', 'plugin:jest/recommeended'],
-      plugins: ['jest']
-    }
+      extends: [
+        'airbnb',
+        'plugin:prettier/recommended',
+        'plugin:jest/recommended',
+      ],
+      plugins: ['jest'],
+    },
   ],
 };
