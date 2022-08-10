@@ -123,7 +123,6 @@ export const buildJsons = async (db) => {
     for (const bundle of bundles) {
       const moduleDocs = parsedJSON.find((x) => x.name === bundle);
 
-      const output = {};
       if (!moduleDocs || !moduleDocs.children) {
         console.warn(
           `${chalk.yellow('Warning:')} No documentation found for ${bundle}`
@@ -131,6 +130,7 @@ export const buildJsons = async (db) => {
         continue;
       }
 
+      const output = {};
       moduleDocs.children.forEach((element) => {
         if (parsers[element.kindString]) {
           output[element.name] = parsers[element.kindString](element, bundle);

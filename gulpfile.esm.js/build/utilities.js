@@ -105,7 +105,7 @@ export function cjsDirname() {
  * Get the path to the database file
  */
 export function getDbPath() {
-  return join(dirname(fileURLToPath(import.meta.url)), `${DATABASE_NAME}.json`);
+  return join(cjsDirname(), `${DATABASE_NAME}.json`);
 }
 
 /**

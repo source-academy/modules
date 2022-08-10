@@ -12,8 +12,7 @@ export default series(
       await Promise.all([
         buildBundles(db),
         buildTabs(db),
-        buildDocs(),
-        buildJsons(db),
+        buildDocs().then(() => buildJsons(db)),
       ]);
     },
     {

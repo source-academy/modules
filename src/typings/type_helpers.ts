@@ -1,4 +1,4 @@
-import { Context } from 'js-slang';
+import type { Context } from 'js-slang';
 
 /**
  * DebuggerContext type used by frontend
