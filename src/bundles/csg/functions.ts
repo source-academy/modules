@@ -31,9 +31,9 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import { DEFAULT_COLOR, SILVER } from './constants.js';
+import { SILVER } from './constants.js';
 import { Core } from './core.js';
-import { Color, CoordinatesXYZ, Solid } from './types';
+import { Color, Coordinates, Solid } from './jscad/types.js';
 import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
 
 /* [Exports] */
@@ -85,9 +85,6 @@ export const star: Shape = shapeSetOrigin(
   new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 })))
 );
 
-//TODO
-let small = 10 ** -30;
-
 /**
  * Primitive Shape of a square pyramid.
  *
@@ -98,7 +95,7 @@ export const pyramid: Shape = shapeSetOrigin(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
-      endRadius: [small, small],
+      endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
       segments: 4,
     })
   )
@@ -114,7 +111,7 @@ export const cone: Shape = shapeSetOrigin(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
-      endRadius: [small, small],
+      endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
     })
   )
 );
@@ -384,7 +381,7 @@ export function scale_z(shape: Shape, z: number): Shape {
  */
 export function shape_center(shape: Shape): (axis: String) => number {
   let bounds: BoundingBox = measureBoundingBox(shape.solid);
-  let centerCoords: CoordinatesXYZ = [
+  let centerCoords: Coordinates = [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
     bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
     bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
@@ -554,7 +551,7 @@ export function beside_x(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['min', 'center', 'center'],
@@ -580,7 +577,7 @@ export function beside_y(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[1][1];
   let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['center', 'min', 'center'],
@@ -606,7 +603,7 @@ export function beside_z(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   let newZ: number = aBounds[1][2];
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['center', 'center', 'min'],
@@ -741,8 +738,8 @@ export function clone(shape: Shape): Shape {
  *
  * @param {Shape} shape - The Shape to be stored.
  */
-export function store(shape: Shape): void {
-  store_as_color(shape, DEFAULT_COLOR);
+export function store(shape: Shape) {
+  Core.getRenderGroupManager().storeShape(shape.clone());
 }
 
 /**
@@ -757,7 +754,7 @@ export function store(shape: Shape): void {
  * @param {Shape} shape - The Shape to be coloured and stored.
  * @param {string} hex - The colour code to use.
  */
-export function store_as_color(shape: Shape, hex: string): void {
+export function store_as_color(shape: Shape, hex: string) {
   let color: Color = hexToColor(hex);
   let coloredSolid: Solid = colorize(color, shape.solid);
   Core.getRenderGroupManager().storeShape(new Shape(coloredSolid));
@@ -779,7 +776,7 @@ export function store_as_rgb(
   redComponent: number,
   greenComponent: number,
   blueComponent: number
-): void {
+) {
   redComponent = clamp(redComponent, 0, 1);
   greenComponent = clamp(greenComponent, 0, 1);
   blueComponent = clamp(blueComponent, 0, 1);

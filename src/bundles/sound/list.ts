@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention, no-else-return, prefer-template, no-param-reassign, no-plusplus, operator-assignment, no-lonely-if */
-/* prettier-ignore */
+/* eslint-disable no-else-return, no-lonely-if, operator-assignment, prefer-template */
+
 // list.js: Supporting lists in the Scheme style, using pairs made
 //          up of two-element JavaScript array (vector)
 
@@ -11,11 +11,11 @@
 
 // array test works differently for Rhino and
 // the Firefox environment (especially Web Console)
-export function array_test(x) : boolean {
+export function array_test(x): boolean {
   if (Array.isArray === undefined) {
-    return x instanceof Array
+    return x instanceof Array;
   } else {
-    return Array.isArray(x)
+    return Array.isArray(x);
   }
 }
 

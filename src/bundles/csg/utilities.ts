@@ -1,103 +1,23 @@
 /* [Imports] */
-import { RGBA } from '@jscad/modeling/src/colors';
 import { clone, Geom3 } from '@jscad/modeling/src/geometries/geom3';
-import {
-  cameras,
-  controls as _controls,
-  drawCommands,
-  entitiesFromSolids as _entitiesFromSolids,
-  prepareRender as _prepareRender,
-} from '@jscad/regl-renderer';
 import { ModuleContext, ModuleState } from 'js-slang';
-import { ModuleContexts } from '../../typings/type_helpers.js';
-import {
-  ACE_GUTTER_TEXT_COLOR,
-  BP_TEXT_COLOR,
-  GRID_PADDING,
-  MAIN_TICKS,
-  ROUND_UP_INTERVAL,
-  SUB_TICKS,
-} from './constants.js';
-import {
-  AxisEntityType,
-  Color,
-  Controls,
-  ControlsState,
-  EntitiesFromSolids,
-  MultiGridEntityType,
-  PerspectiveCamera,
-  PerspectiveCameraState,
-  PrepareRender,
-  Solid,
-  WrappedRenderer,
-} from './types';
+import { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
+import { AlphaColor, Color, Solid } from './jscad/types.js';
 
 /* [Exports] */
-
-// [Proper typing for JS in regl-renderer]
-export const perspectiveCamera: PerspectiveCamera = cameras.perspective;
-export const perspectiveCameraStateDefaults: PerspectiveCameraState =
-  perspectiveCamera.defaults;
-
-export const controls: Controls = (_controls.orbit as unknown) as Controls;
-export const controlsStateDefaults: ControlsState = controls.defaults;
-
-export const prepareRender: PrepareRender.Function = _prepareRender;
-
-export const entitiesFromSolids: EntitiesFromSolids.Function = (_entitiesFromSolids as unknown) as EntitiesFromSolids.Function;
-export const prepareDrawCommands: WrappedRenderer.PrepareDrawCommands = drawCommands;
-
-// [Custom]
-export class MultiGridEntity implements MultiGridEntityType {
-  visuals: {
-    drawCmd: 'drawGrid';
-    show: boolean;
-    color?: RGBA;
-    subColor?: RGBA;
-  } = {
-    drawCmd: 'drawGrid',
-    show: true,
-
-    color: hexToRgba(BP_TEXT_COLOR),
-    subColor: hexToRgba(ACE_GUTTER_TEXT_COLOR),
-  };
-
-  ticks: [number, number] = [MAIN_TICKS, SUB_TICKS];
-
-  size: [number, number];
-
-  constructor(size: number) {
-    this.size = [size, size];
-  }
-}
-
-export class AxisEntity implements AxisEntityType {
-  visuals: {
-    drawCmd: 'drawAxis';
-    show: boolean;
-  } = {
-    drawCmd: 'drawAxis',
-    show: true,
-  };
-
-  alwaysVisible: boolean = false;
-
-  constructor(public size?: number) {}
-}
-
-export class Shape {
+export class Shape implements ReplResult {
   constructor(public solid: Solid) {}
-
-  clone(): Shape {
-    return new Shape(clone(this.solid as Geom3));
-  }
 
   toReplString(): string {
     return '<Shape>';
   }
+
+  clone(): Shape {
+    return new Shape(clone(this.solid as Geom3));
+  }
 }
 
-export class RenderGroup {
+export class RenderGroup implements ReplResult {
   constructor(public canvasNumber: number) {}
 
   render: boolean = false;
@@ -119,7 +39,7 @@ export class RenderGroupManager {
     this.addRenderGroup();
   }
 
-  private addRenderGroup(): void {
+  private addRenderGroup() {
     // Passes in canvasTracker as is, then increments it
     this.renderGroups.push(new RenderGroup(this.canvasTracker++));
   }
@@ -128,21 +48,22 @@ export class RenderGroupManager {
     return this.renderGroups.at(-1) as RenderGroup;
   }
 
+  // Returns the old render group
   nextRenderGroup(
-    currentGrid: boolean = false,
-    currentAxis: boolean = false
+    oldHasGrid: boolean = false,
+    oldHasAxis: boolean = false
   ): RenderGroup {
-    let previousRenderGroup: RenderGroup = this.getCurrentRenderGroup();
-    previousRenderGroup.render = true;
-    previousRenderGroup.hasGrid = currentGrid;
-    previousRenderGroup.hasAxis = currentAxis;
+    let oldRenderGroup: RenderGroup = this.getCurrentRenderGroup();
+    oldRenderGroup.render = true;
+    oldRenderGroup.hasGrid = oldHasGrid;
+    oldRenderGroup.hasAxis = oldHasAxis;
 
     this.addRenderGroup();
 
-    return previousRenderGroup;
+    return oldRenderGroup;
   }
 
-  storeShape(shape: Shape): void {
+  storeShape(shape: Shape) {
     this.getCurrentRenderGroup().shapes.push(shape);
   }
 
@@ -158,124 +79,18 @@ export class RenderGroupManager {
 }
 
 export class CsgModuleState implements ModuleState {
-  renderGroupManager: RenderGroupManager;
+  private componentCounter: number = 0;
+
+  readonly renderGroupManager: RenderGroupManager;
 
   constructor() {
     this.renderGroupManager = new RenderGroupManager();
   }
-}
 
-// To track the processing to be done between frames
-export enum MousePointer {
-  NONE = -1,
-  LEFT = 0,
-  RIGHT = 2,
-  MIDDLE = 1,
-  OTHER = 7050,
-}
-export class FrameTracker {
-  private zoomTicks = 0;
-
-  // Start off the first frame by initially zooming to fit
-  private zoomToFitOnce = true;
-
-  private heldPointer: MousePointer = MousePointer.NONE;
-
-  public lastX = -1;
-
-  public lastY = -1;
-
-  public rotateX = 0;
-
-  public rotateY = 0;
-
-  public panX = 0;
-
-  public panY = 0;
-
-  public getZoomTicks(): number {
-    return this.zoomTicks;
+  // Returns the new component number
+  nextComponent() {
+    return ++this.componentCounter;
   }
-
-  public changeZoomTicks(wheelDelta: number) {
-    this.zoomTicks += Math.sign(wheelDelta);
-  }
-
-  public setZoomToFit() {
-    this.zoomToFitOnce = true;
-  }
-
-  public unsetLastCoordinates() {
-    this.lastX = -1;
-    this.lastY = -1;
-  }
-
-  public setHeldPointer(mouseEventButton: number) {
-    switch (mouseEventButton) {
-      case MousePointer.LEFT:
-      case MousePointer.RIGHT:
-      case MousePointer.MIDDLE:
-        this.heldPointer = mouseEventButton;
-        break;
-      default:
-        this.heldPointer = MousePointer.OTHER;
-        break;
-    }
-  }
-
-  public unsetHeldPointer() {
-    this.heldPointer = MousePointer.NONE;
-  }
-
-  public shouldZoom(): boolean {
-    return this.zoomTicks !== 0;
-  }
-
-  public didZoom() {
-    this.zoomTicks = 0;
-  }
-
-  public shouldZoomToFit(): boolean {
-    return this.zoomToFitOnce;
-  }
-
-  public didZoomToFit() {
-    this.zoomToFitOnce = false;
-  }
-
-  public shouldRotate(): boolean {
-    return this.rotateX !== 0 || this.rotateY !== 0;
-  }
-
-  public didRotate() {
-    this.rotateX = 0;
-    this.rotateY = 0;
-  }
-
-  public shouldPan(): boolean {
-    return this.panX !== 0 || this.panY !== 0;
-  }
-
-  public didPan() {
-    this.panX = 0;
-    this.panY = 0;
-  }
-
-  public shouldIgnorePointerMove(): boolean {
-    return [MousePointer.NONE, MousePointer.RIGHT].includes(this.heldPointer);
-  }
-
-  public isPointerPan(isShiftKey: boolean): boolean {
-    return (
-      this.heldPointer === MousePointer.MIDDLE ||
-      (this.heldPointer === MousePointer.LEFT && isShiftKey)
-    );
-  }
-}
-
-// Used as options when setting camera projection
-export class CameraViewportDimensions {
-  public constructor(public width: number, public height: number) {}
 }
 
 export function getModuleContext(
@@ -301,12 +116,15 @@ export function hexToColor(hex: string): Color {
   ];
 }
 
-export function colorToRgba(color: Color, opacity: number = 1): RGBA {
+export function colorToAlphaColor(
+  color: Color,
+  opacity: number = 1
+): AlphaColor {
   return [...color, opacity];
 }
 
-export function hexToRgba(hex: string): RGBA {
-  return colorToRgba(hexToColor(hex));
+export function hexToAlphaColor(hex: string): AlphaColor {
+  return colorToAlphaColor(hexToColor(hex));
 }
 
 export function clamp(value: number, lowest: number, highest: number): number {
@@ -329,11 +147,4 @@ export function looseInstanceof(
     className !== undefined &&
     objectName === className
   );
-}
-
-export function neatGridDistance(rawDistance: number) {
-  let paddedDistance: number = rawDistance + GRID_PADDING;
-  let roundedDistance: number =
-    Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
-  return roundedDistance;
 }

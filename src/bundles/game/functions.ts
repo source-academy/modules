@@ -14,7 +14,7 @@
  * @author Gokul Rajiv
  */
 
-/* eslint-disable @typescript-eslint/no-unused-vars, consistent-return, @typescript-eslint/no-shadow, @typescript-eslint/default-param-last */
+/* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
 import {
   GameModuleParams,
   GameObject,
@@ -108,7 +108,6 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
    * @hidden
    */
   function is_any_type(obj: GameObject, types: string[]): boolean {
-    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < types.length; ++i) {
       if (is_type(obj, types[i])) return true;
     }
@@ -138,7 +137,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
    * @hidden
    */
   function throw_error(message: string) {
-    // eslint-disable-next-line no-console, no-caller, @typescript-eslint/no-throw-literal, no-restricted-properties
+    // eslint-disable-next-line no-caller, @typescript-eslint/no-throw-literal
     throw console.error(`${arguments.callee.caller.name}: ${message}`);
   }
 
@@ -745,8 +744,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   const finalFunctions = {};
 
-  // eslint-disable-next-line array-callback-return
-  Object.entries(functions).map(([key, fn]) => {
+  Object.entries(functions).forEach(([key, fn]) => {
     finalFunctions[key] = !scene ? nullFn : fn;
   });
 

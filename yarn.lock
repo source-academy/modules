@@ -1049,17 +1049,19 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@blueprintjs/colors@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/colors/-/colors-3.0.0.tgz#f121dc1bc24cc367668a425911fa8ff52e87014a"
-  integrity sha512-8rRkIcnnOwMEMAGDciKFdVQ3dZXvCkSGcgEzVR2ijopCvLZrrHf+ySzn8v7Y2d60A2Q2A3Of8NDrYbV32sBssg==
+"@blueprintjs/colors@^4.0.0-alpha.3":
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/colors/-/colors-4.1.4.tgz#13ef8fd91dc7973ddaf0e98d58f7032193aeb04e"
+  integrity sha512-jggWTpazxg6ifWnaAiug9REsWUeMtkkuaWOFg5CjAiH6YtvMPU4ykWmQc9NnKAkabpKoXfZuR1V1KPAz79iYXQ==
 
-"@blueprintjs/core@^3.42.0":
-  version "3.42.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-3.42.0.tgz#a686f9f37b7467792995c04dc907862477bf7809"
-  integrity sha512-ln+4SNqVUnAGKy8r39l+3u/ycI9YEdPUT7bWUI4lFTyckX+eQzj4Jznqvy8UljXXzJwjCNABFs83OjG70QdAQw==
+"@blueprintjs/core@^3.54.0":
+  version "3.54.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-3.54.0.tgz#7269f34eccdf0d2874377c5ad973ca2a31562221"
+  integrity sha512-u2c1s6MNn0ocxhnC6CuiG5g3KV6b4cKUvSobznepA9SC3/AL1s3XOvT7DLWoHRv2B/vBOHFYEDzLw2/vlcGGZg==
   dependencies:
-    "@blueprintjs/icons" "^3.26.0"
+    "@blueprintjs/colors" "^4.0.0-alpha.3"
+    "@blueprintjs/icons" "^3.33.0"
+    "@juggle/resize-observer" "^3.3.1"
     "@types/dom4" "^2.0.1"
     classnames "^2.2"
     dom4 "^2.1.5"
@@ -1068,54 +1070,28 @@
     react-lifecycles-compat "^3.0.4"
     react-popper "^1.3.7"
     react-transition-group "^2.9.0"
-    resize-observer-polyfill "^1.5.1"
-    tslib "~1.13.0"
+    tslib "~2.3.1"
 
-"@blueprintjs/core@^3.47.0":
-  version "3.49.1"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-3.49.1.tgz#6824ddb11ce2858f0b009c8ae0c774547e3edb0a"
-  integrity sha512-H6UAYZeBZcGDQb24vEkFps0eKlkyKvy/B/OJ2elZjHC1B1Regv7TwIDjju9wgzZvzKCcCVZzUg9OqtH43V+1yA==
-  dependencies:
-    "@blueprintjs/colors" "^3.0.0"
-    "@blueprintjs/icons" "^3.29.0"
-    "@types/dom4" "^2.0.1"
-    classnames "^2.2"
-    dom4 "^2.1.5"
-    normalize.css "^8.0.1"
-    popper.js "^1.16.1"
-    react-lifecycles-compat "^3.0.4"
-    react-popper "^1.3.7"
-    react-transition-group "^2.9.0"
-    resize-observer-polyfill "^1.5.1"
-    tslib "~1.13.0"
-
-"@blueprintjs/icons@^3.26.0":
-  version "3.26.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-3.26.0.tgz#d3f0aa0d35a9ebe8648db9651af364dfcc529d9f"
-  integrity sha512-1+yhYH1Fjj5qGx8drZUL2L1R42MiN0WVHTTKYqGEV9TAzhvFHCSZgALD7WNQa+FEibw/8B4U+79IRgUPJNEjow==
+"@blueprintjs/icons@^3.33.0":
+  version "3.33.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-3.33.0.tgz#4dacdb7731abdf08d1ab240f3a23a185df60918b"
+  integrity sha512-Q6qoSDIm0kRYQZISm59UUcDCpV3oeHulkLuh3bSlw0HhcSjvEQh2PSYbtaifM60Q4aK4PCd6bwJHg7lvF1x5fQ==
   dependencies:
     classnames "^2.2"
-    tslib "~1.13.0"
+    tslib "~2.3.1"
 
-"@blueprintjs/icons@^3.27.0", "@blueprintjs/icons@^3.29.0":
-  version "3.29.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-3.29.0.tgz#2e786c6264a1783f2df9423749236189a84c436e"
-  integrity sha512-FDpPsEBwzsFBsxDXNsea+u+bU+iFWcVTbKH05+jtGEpvDEOrpOsOwUYvkBvVaReR0DORREVye2/NL0/uvLCRrg==
+"@blueprintjs/popover2@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/popover2/-/popover2-0.14.0.tgz#2d24c51fe1d998b0f1269c14538ae8a120231608"
+  integrity sha512-skpa73gDB4zqLc1FzEalrgpXW0DjzJk8bA32HHxXVzCR9ELwYsfc0Zo464tS7727OBsN+U/AHXeNXrAVloagnQ==
   dependencies:
-    classnames "^2.2"
-    tslib "~1.13.0"
-
-"@blueprintjs/popover2@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/popover2/-/popover2-0.4.0.tgz#93925e15bc97301a9d8a63df957bba4df9453e16"
-  integrity sha512-7XT6wIvQZmQlN//0EhaDUL3JPo61GF4ELB2uqiYT8I44SvFjPPKfgv9aHnaoAcE/GrwnvqSaZkgEZwDhIXT3Bw==
-  dependencies:
-    "@blueprintjs/core" "^3.42.0"
+    "@blueprintjs/core" "^3.54.0"
+    "@juggle/resize-observer" "^3.3.1"
     "@popperjs/core" "^2.5.4"
     classnames "^2.2"
     dom4 "^2.1.5"
     react-popper "^2.2.4"
-    tslib "~1.13.0"
+    tslib "~2.3.1"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
@@ -1354,26 +1330,31 @@
   resolved "https://registry.yarnpkg.com/@joeychenofficial/alt-ergo-modified/-/alt-ergo-modified-2.4.0.tgz#27aec0cbed8ab4e2f0dad6feb4f0c9766ac3132f"
   integrity sha512-58b0K8pNUVZXGbua4IJQ+1K+E+jz3MkhDazZaaeKlD+sOLYR9iTHIbicV/I5K16ivYW6R9lONiT3dz8rMeFJ1w==
 
-"@jscad/array-utils@2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@jscad/array-utils/-/array-utils-2.1.3.tgz#0de2eaaf122c43efc534a948c8d80a65483160e8"
-  integrity sha512-ItHPDcd+WIVNrFnqdPm0mFvU3T3zhaOUjnAyDSdcQiHyFp8lAiEh3X7I/8VGGSCUhBErbKT5RXhHKqUcYL3bJA==
+"@jscad/array-utils@2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@jscad/array-utils/-/array-utils-2.1.4.tgz#05e93c7c0ccaab8fa5e81e3ec685aab9c41e7075"
+  integrity sha512-c31r4zSKsE+4Xfwk2V8monDA0hx5G89QGzaakWVUvuGNowYS9WSsYCwHiTIXodjR+HEnDu4okQ7k/whmP0Ne2g==
 
-"@jscad/modeling@^2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.9.2.tgz#97445ec06d46be7333d017a7faac66c09ea68fc5"
-  integrity sha512-bU4WKfJcg3ijcRt4WEq4rh5kcnYA7XdOOlOev7/azV/07aiOffSJwqMDEoLeJQyiwBtk5Q/Iw6Ph+5C4iXeXJQ==
+"@jscad/modeling@^2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.9.5.tgz#ab4f51c089a042e0c542445583ed0fbb28931e1d"
+  integrity sha512-mhdSVEr0XHyu3wDmZcAAYnhqKC+Xs9pri/T7j85QisiHet5BtOL36WOVsvbS+5cJbqHyuuQbZ0vSzAH1eYLf2g==
 
-"@jscad/regl-renderer@^2.5.8":
-  version "2.5.8"
-  resolved "https://registry.yarnpkg.com/@jscad/regl-renderer/-/regl-renderer-2.5.8.tgz#3ad9fb69e983f60b6b480d2bae98c9e5371bbadf"
-  integrity sha512-2AiOeOK35be2iuxJGOOpZf+lHt2PGT8ypr9f7kI/vup5xV13xkfE3xOFQSikaeT5MfC3ALuZIBNuKqBBDMSSEA==
+"@jscad/regl-renderer@^2.6.1":
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/@jscad/regl-renderer/-/regl-renderer-2.6.1.tgz#c36fa282314d922e5d373d411e26fcd5ece4880e"
+  integrity sha512-it3wHa7wMuFJJ3opHbivll4G5ZLQT5fgYlYOAe9DG2GQEKL4+uWqLbDAReMjfGqwH3u8MlMWOVnq4jBut0ngRQ==
   dependencies:
-    "@jscad/array-utils" "2.1.3"
+    "@jscad/array-utils" "2.1.4"
     camera-unproject "1.0.1"
     gl-mat4 "1.2.0"
     gl-vec3 "1.1.3"
     regl "2.1.0"
+
+"@juggle/resize-observer@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.3.1.tgz#b50a781709c81e10701004214340f25475a171a0"
+  integrity sha512-zMM9Ds+SawiUkakS7y94Ymqx+S0ORzpG3frZirN3l+UlXUmSUR7hF4wxCVqW+ei94JzV5kt0uXBcoOEAuiydrw==
 
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents":
   version "2.1.8-no-fsevents"
@@ -6911,11 +6892,6 @@ requires-port@^1.0.0:
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
 
-resize-observer-polyfill@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
-  integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
-
 resolve-cwd@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/resolve-cwd/-/resolve-cwd-3.0.0.tgz#0f0075f1bb2544766cf73ba6a6e2adfebcb13f2d"
@@ -7824,15 +7800,10 @@ tslib@^1.8.1, tslib@^1.9.2:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.3.1:
+tslib@^2.3.1, tslib@~2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
-
-tslib@~1.13.0:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
-  integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
 
 tsutils@^3.21.0:
   version "3.21.0"

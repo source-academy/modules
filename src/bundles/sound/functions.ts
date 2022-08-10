@@ -24,7 +24,7 @@
  * @author Samyukta Sounderraman
  */
 
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars, new-cap */
+/* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import {
   Wave,
   Sound,
@@ -46,7 +46,6 @@ import {
 import { RIFFWAVE } from './riffwave';
 
 // Global Constants and Variables
-let audioElement: HTMLAudioElement;
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
 
@@ -113,10 +112,8 @@ function setPermissionToFalse() {
 
 function start_recording(mediaRecorder: MediaRecorder) {
   const data: any[] = [];
-  // eslint-disable-next-line no-param-reassign
   mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
   mediaRecorder.start();
-  // eslint-disable-next-line no-param-reassign
   mediaRecorder.onstop = () => process(data);
 }
 
@@ -495,7 +492,7 @@ export function stop(): void {
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
-  return make_sound((t) => Math.random() * 2 - 1, duration);
+  return make_sound((_t) => Math.random() * 2 - 1, duration);
 }
 
 /**
@@ -506,7 +503,7 @@ export function noise_sound(duration: number): Sound {
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
-  return make_sound((t) => 0, duration);
+  return make_sound((_t) => 0, duration);
 }
 
 /**

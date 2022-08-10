@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import { Slider, Button, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';

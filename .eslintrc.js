@@ -118,6 +118,8 @@ module.exports = {
         'prettier/prettier': 1,
 
         // [Other]
+        'import/extensions': 0,
+
         '@typescript-eslint/naming-convention': [
           1,
           {

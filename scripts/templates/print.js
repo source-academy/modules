@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const chalk = require('chalk');
 const readline = require('readline');
 

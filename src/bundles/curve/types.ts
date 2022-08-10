@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { ModuleState } from 'js-slang';
 import { glAnimation, AnimFrame } from '../../typings/anim_types';
 import { ReplResult } from '../../typings/type_helpers';

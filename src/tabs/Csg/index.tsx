@@ -11,7 +11,7 @@ import {
 import { DebuggerContext, ModuleContexts } from '../../typings/type_helpers';
 import CanvasHolder from './canvas_holder';
 
-/* [Main] */
+/* [Exports] */
 export default {
   // Called by the frontend to decide whether to spawn the CSG tab
   toSpawn(_debuggerContext: DebuggerContext): boolean {
@@ -34,7 +34,12 @@ export default {
     let moduleState = potentialModuleState as CsgModuleState;
 
     Core.initialize(moduleState);
-    return <CanvasHolder moduleState={moduleState} />;
+    return (
+      <CanvasHolder
+        moduleState={moduleState}
+        componentNumber={moduleState.nextComponent()}
+      />
+    );
   },
 
   // BlueprintJS icon name

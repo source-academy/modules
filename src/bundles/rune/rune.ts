@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import { mat4 } from 'gl-matrix';
 import { ModuleState } from 'js-slang';
 import { AnimFrame, glAnimation } from '../../typings/anim_types';
