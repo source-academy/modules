@@ -61,7 +61,7 @@
     /**
      * The four basic intents.
      */
-    var Intent$1 = {
+    var Intent = {
         NONE: "none",
         PRIMARY: "primary",
         SUCCESS: "success",
@@ -69,48 +69,117 @@
         DANGER: "danger",
     };
 
-    var NS$2 = process.env.BLUEPRINT_NAMESPACE || process.env.REACT_APP_BLUEPRINT_NAMESPACE || "bp3";
+    /*
+     * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var Position = {
+        BOTTOM: "bottom",
+        BOTTOM_LEFT: "bottom-left",
+        BOTTOM_RIGHT: "bottom-right",
+        LEFT: "left",
+        LEFT_BOTTOM: "left-bottom",
+        LEFT_TOP: "left-top",
+        RIGHT: "right",
+        RIGHT_BOTTOM: "right-bottom",
+        RIGHT_TOP: "right-top",
+        TOP: "top",
+        TOP_LEFT: "top-left",
+        TOP_RIGHT: "top-right",
+    };
+
+    /*
+     * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var _a, _b, _c, _d;
+    var NS$1 = "bp3";
+    if (typeof process !== "undefined") {
+        NS$1 = (_d = (_b = (_a = process.env) === null || _a === void 0 ? void 0 : _a.BLUEPRINT_NAMESPACE) !== null && _b !== void 0 ? _b : (_c = process.env) === null || _c === void 0 ? void 0 : _c.REACT_APP_BLUEPRINT_NAMESPACE) !== null && _d !== void 0 ? _d : NS$1;
+    }
     // modifiers
-    var ACTIVE$1 = NS$2 + "-active";
-    var ALIGN_LEFT = NS$2 + "-align-left";
-    var ALIGN_RIGHT = NS$2 + "-align-right";
-    var DISABLED$1 = NS$2 + "-disabled";
-    var FILL$1 = NS$2 + "-fill";
-    var INLINE = NS$2 + "-inline";
-    var LARGE = NS$2 + "-large";
-    var LOADING = NS$2 + "-loading";
-    var MINIMAL$1 = NS$2 + "-minimal";
-    var OUTLINED = NS$2 + "-outlined";
-    var SMALL = NS$2 + "-small";
-    var VERTICAL = NS$2 + "-vertical";
-    intentClass$1(Intent$1.PRIMARY);
-    intentClass$1(Intent$1.SUCCESS);
-    intentClass$1(Intent$1.WARNING);
-    intentClass$1(Intent$1.DANGER);
-    var BUTTON = NS$2 + "-button";
-    var BUTTON_SPINNER = BUTTON + "-spinner";
-    var BUTTON_TEXT = BUTTON + "-text";
-    var CONTROL = NS$2 + "-control";
-    var CONTROL_INDICATOR = CONTROL + "-indicator";
-    var CONTROL_INDICATOR_CHILD = CONTROL_INDICATOR + "-child";
-    var CHECKBOX = NS$2 + "-checkbox";
-    var RADIO = NS$2 + "-radio";
-    var SWITCH = NS$2 + "-switch";
-    var SWITCH_INNER_TEXT = SWITCH + "-inner-text";
-    var SLIDER = NS$2 + "-slider";
-    var SLIDER_AXIS = SLIDER + "-axis";
-    var SLIDER_HANDLE = SLIDER + "-handle";
-    var SLIDER_LABEL = SLIDER + "-label";
-    var SLIDER_TRACK = SLIDER + "-track";
-    var SLIDER_PROGRESS = SLIDER + "-progress";
-    var START = NS$2 + "-start";
-    var END = NS$2 + "-end";
-    var SPINNER = NS$2 + "-spinner";
-    var SPINNER_ANIMATION = SPINNER + "-animation";
-    var SPINNER_HEAD = SPINNER + "-head";
-    var SPINNER_NO_SPIN = NS$2 + "-no-spin";
-    var SPINNER_TRACK$1 = SPINNER + "-track";
-    var ICON = NS$2 + "-icon";
+    var ACTIVE = "".concat(NS$1, "-active");
+    var ALIGN_LEFT = "".concat(NS$1, "-align-left");
+    var ALIGN_RIGHT = "".concat(NS$1, "-align-right");
+    var DARK = "".concat(NS$1, "-dark");
+    var DISABLED = "".concat(NS$1, "-disabled");
+    var FILL = "".concat(NS$1, "-fill");
+    var INLINE = "".concat(NS$1, "-inline");
+    var LARGE = "".concat(NS$1, "-large");
+    var LOADING = "".concat(NS$1, "-loading");
+    var MINIMAL = "".concat(NS$1, "-minimal");
+    var OUTLINED = "".concat(NS$1, "-outlined");
+    var SMALL = "".concat(NS$1, "-small");
+    var VERTICAL = "".concat(NS$1, "-vertical");
+    intentClass(Intent.PRIMARY);
+    intentClass(Intent.SUCCESS);
+    intentClass(Intent.WARNING);
+    intentClass(Intent.DANGER);
+    var BUTTON = "".concat(NS$1, "-button");
+    var BUTTON_SPINNER = "".concat(BUTTON, "-spinner");
+    var BUTTON_TEXT = "".concat(BUTTON, "-text");
+    var CONTROL = "".concat(NS$1, "-control");
+    var CONTROL_INDICATOR = "".concat(CONTROL, "-indicator");
+    var CONTROL_INDICATOR_CHILD = "".concat(CONTROL_INDICATOR, "-child");
+    var CHECKBOX = "".concat(NS$1, "-checkbox");
+    var RADIO = "".concat(NS$1, "-radio");
+    var SWITCH = "".concat(NS$1, "-switch");
+    var SWITCH_INNER_TEXT = "".concat(SWITCH, "-inner-text");
+    var OVERLAY = "".concat(NS$1, "-overlay");
+    var OVERLAY_BACKDROP = "".concat(OVERLAY, "-backdrop");
+    var OVERLAY_CONTENT = "".concat(OVERLAY, "-content");
+    var OVERLAY_INLINE = "".concat(OVERLAY, "-inline");
+    var OVERLAY_OPEN = "".concat(OVERLAY, "-open");
+    var OVERLAY_START_FOCUS_TRAP = "".concat(OVERLAY, "-start-focus-trap");
+    var OVERLAY_END_FOCUS_TRAP = "".concat(OVERLAY, "-end-focus-trap");
+    var POPOVER = "".concat(NS$1, "-popover");
+    var POPOVER_CAPTURING_DISMISS = "".concat(POPOVER, "-capturing-dismiss");
+    var POPOVER_DISMISS = "".concat(POPOVER, "-dismiss");
+    var POPOVER_DISMISS_OVERRIDE = "".concat(POPOVER_DISMISS, "-override");
+    var PORTAL = "".concat(NS$1, "-portal");
+    var SLIDER = "".concat(NS$1, "-slider");
+    var SLIDER_AXIS = "".concat(SLIDER, "-axis");
+    var SLIDER_HANDLE = "".concat(SLIDER, "-handle");
+    var SLIDER_LABEL = "".concat(SLIDER, "-label");
+    var SLIDER_TRACK = "".concat(SLIDER, "-track");
+    var SLIDER_PROGRESS = "".concat(SLIDER, "-progress");
+    var START = "".concat(NS$1, "-start");
+    var END = "".concat(NS$1, "-end");
+    var SPINNER = "".concat(NS$1, "-spinner");
+    var SPINNER_ANIMATION = "".concat(SPINNER, "-animation");
+    var SPINNER_HEAD = "".concat(SPINNER, "-head");
+    var SPINNER_NO_SPIN = "".concat(NS$1, "-no-spin");
+    var SPINNER_TRACK$1 = "".concat(SPINNER, "-track");
+    var ICON = "".concat(NS$1, "-icon");
+    /**
+     * Returns the namespace prefix for all Blueprint CSS classes.
+     * Customize this namespace at build time with the `process.env.BLUEPRINT_NAMESPACE` environment variable.
+     */
+    function getClassNamespace() {
+        return NS$1;
+    }
     /** Return CSS class for alignment. */
     function alignmentClass(alignment) {
         switch (alignment) {
@@ -126,13 +195,13 @@
         if (iconName == null) {
             return undefined;
         }
-        return iconName.indexOf(NS$2 + "-icon-") === 0 ? iconName : NS$2 + "-icon-" + iconName;
+        return iconName.indexOf("".concat(NS$1, "-icon-")) === 0 ? iconName : "".concat(NS$1, "-icon-").concat(iconName);
     }
-    function intentClass$1(intent) {
-        if (intent == null || intent === Intent$1.NONE) {
+    function intentClass(intent) {
+        if (intent == null || intent === Intent.NONE) {
             return undefined;
         }
-        return NS$2 + "-intent-" + intent.toLowerCase();
+        return "".concat(NS$1, "-intent-").concat(intent.toLowerCase());
     }
 
     /*! *****************************************************************************
@@ -248,8 +317,12 @@
      */
     /** Returns whether the value is a function. Acts as a type guard. */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    function isFunction$1(value) {
+    function isFunction(value) {
         return typeof value === "function";
+    }
+
+    function elementIsOrContains(element, testElement) {
+        return element === testElement || element.contains(testElement);
     }
 
     /*
@@ -267,17 +340,18 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    var ns$2 = "[Blueprint]";
-    var CLAMP_MIN_MAX = ns$2 + " clamp: max cannot be less than min";
-    var SLIDER_ZERO_STEP = ns$2 + " <Slider> stepSize must be greater than zero.";
-    var SLIDER_ZERO_LABEL_STEP = ns$2 + " <Slider> labelStepSize must be greater than zero.";
-    var MULTISLIDER_INVALID_CHILD = ns$2 + " <MultiSlider> children must be <SliderHandle>s or <SliderTrackStop>s";
-    var MULTISLIDER_WARN_LABEL_STEP_SIZE_LABEL_VALUES_MUTEX = ns$2 +
+    var ns$1 = "[Blueprint]";
+    var CLAMP_MIN_MAX = ns$1 + " clamp: max cannot be less than min";
+    var PORTAL_CONTEXT_CLASS_NAME_STRING = ns$1 + " <Portal> context blueprintPortalClassName must be string";
+    var SLIDER_ZERO_STEP = ns$1 + " <Slider> stepSize must be greater than zero.";
+    var SLIDER_ZERO_LABEL_STEP = ns$1 + " <Slider> labelStepSize must be greater than zero.";
+    var MULTISLIDER_INVALID_CHILD = ns$1 + " <MultiSlider> children must be <SliderHandle>s or <SliderTrackStop>s";
+    var MULTISLIDER_WARN_LABEL_STEP_SIZE_LABEL_VALUES_MUTEX = ns$1 +
         " <MultiSlider> labelStepSize and labelValues prop are mutually exclusive, with labelStepSize taking priority.";
-    var SPINNER_WARN_CLASSES_SIZE = ns$2 + " <Spinner> Classes.SMALL/LARGE are ignored if size prop is set.";
+    var SPINNER_WARN_CLASSES_SIZE = ns$1 + " <Spinner> Classes.SMALL/LARGE are ignored if size prop is set.";
 
     /** Returns whether `process.env.NODE_ENV` exists and equals `env`. */
-    function isNodeEnv$1(env) {
+    function isNodeEnv(env) {
         return typeof process !== "undefined" && process.env && process.env.NODE_ENV === env;
     }
     /**
@@ -332,6 +406,37 @@
                 (node.length === 0 || node.every(function (n) { return isReactNodeEmpty(n, true); }))));
     }
     /**
+     * Converts a React node to an element: non-empty string or number or
+     * `React.Fragment` (React 16.3+) is wrapped in given tag name; empty strings
+     * and booleans are discarded.
+     */
+    function ensureElement(child, tagName) {
+        if (tagName === void 0) { tagName = "span"; }
+        if (child == null || typeof child === "boolean") {
+            return undefined;
+        }
+        else if (typeof child === "string") {
+            // cull whitespace strings
+            return child.trim().length > 0 ? React.createElement(tagName, {}, child) : undefined;
+        }
+        else if (typeof child === "number" || typeof child.type === "symbol" || Array.isArray(child)) {
+            // React.Fragment has a symbol type, ReactNodeArray extends from Array
+            return React.createElement(tagName, {}, child);
+        }
+        else if (isReactElement(child)) {
+            return child;
+        }
+        else {
+            // child is inferred as {}
+            return undefined;
+        }
+    }
+    function isReactElement(child) {
+        return (typeof child === "object" &&
+            typeof child.type !== "undefined" &&
+            typeof child.props !== "undefined");
+    }
+    /**
      * Returns true if the given JSX element matches the given component type.
      *
      * NOTE: This function only checks equality of `displayName` for performance and
@@ -342,7 +447,7 @@
      * @param ComponentType desired component type of element
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    function isElementOfType$1(element, ComponentType) {
+    function isElementOfType(element, ComponentType) {
         return (element != null &&
             element.type != null &&
             element.type.displayName != null &&
@@ -364,22 +469,37 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    function isRefObject$1(value) {
+    function isRefObject(value) {
         return value != null && typeof value !== "function";
     }
-    function isRefCallback$1(value) {
+    function isRefCallback(value) {
         return typeof value === "function";
     }
     /**
      * Assign the given ref to a target, either a React ref object or a callback which takes the ref as its first argument.
      */
     function setRef$1(refTarget, ref) {
-        if (isRefObject$1(refTarget)) {
+        if (isRefObject(refTarget)) {
             refTarget.current = ref;
         }
-        else if (isRefCallback$1(refTarget)) {
+        else if (isRefCallback(refTarget)) {
             refTarget(ref);
         }
+    }
+    /**
+     * Utility for merging refs into one singular callback ref.
+     * If using in a functional component, would recomend using `useMemo` to preserve function identity.
+     */
+    function mergeRefs() {
+        var refs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            refs[_i] = arguments[_i];
+        }
+        return function (value) {
+            refs.forEach(function (ref) {
+                setRef$1(ref, value);
+            });
+        };
     }
     /**
      * Creates a ref handler which assigns the ref returned by React for a mounted component to a field on the target object.
@@ -399,7 +519,7 @@
      * in order to add some common functionality like runtime props validation.
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    var AbstractPureComponent2$1 = /** @class */ (function (_super) {
+    var AbstractPureComponent2 = /** @class */ (function (_super) {
         __extends(AbstractPureComponent2, _super);
         function AbstractPureComponent2(props, context) {
             var _this = _super.call(this, props, context) || this;
@@ -430,13 +550,13 @@
                     _this.requestIds = [];
                 }
             };
-            if (!isNodeEnv$1("production")) {
+            if (!isNodeEnv("production")) {
                 _this.validateProps(_this.props);
             }
             return _this;
         }
         AbstractPureComponent2.prototype.componentDidUpdate = function (_prevProps, _prevState, _snapshot) {
-            if (!isNodeEnv$1("production")) {
+            if (!isNodeEnv("production")) {
                 this.validateProps(this.props);
             }
         };
@@ -481,7 +601,15 @@
         return AbstractPureComponent2;
     }(React.PureComponent));
 
-    var DISPLAYNAME_PREFIX$1 = "Blueprint3";
+    function unwrapExports (x) {
+    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+    }
+
+    function createCommonjsModule(fn, module) {
+    	return module = { exports: {} }, fn(module, module.exports), module.exports;
+    }
+
+    var DISPLAYNAME_PREFIX = "Blueprint3";
     /** A collection of curated prop keys used across our Components which are not valid HTMLElement props. */
     var INVALID_PROPS = [
         "active",
@@ -538,15 +666,9 @@
         }, __assign({}, props));
     }
 
-    function unwrapExports (x) {
-    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-    }
-
-    function createCommonjsModule(fn, module) {
-    	return module = { exports: {} }, fn(module, module.exports), module.exports;
-    }
-
+    var TAB = 9;
     var ENTER = 13;
+    var ESCAPE = 27;
     var SPACE = 32;
     var ARROW_LEFT$1 = 37;
     var ARROW_UP = 38;
@@ -776,7 +898,7 @@
     var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):60103,d=b?Symbol.for("react.portal"):60106,e=b?Symbol.for("react.fragment"):60107,f=b?Symbol.for("react.strict_mode"):60108,g=b?Symbol.for("react.profiler"):60114,h=b?Symbol.for("react.provider"):60109,k=b?Symbol.for("react.context"):60110,l=b?Symbol.for("react.async_mode"):60111,m=b?Symbol.for("react.concurrent_mode"):60111,n=b?Symbol.for("react.forward_ref"):60112,p=b?Symbol.for("react.suspense"):60113,q=b?
     Symbol.for("react.suspense_list"):60120,r=b?Symbol.for("react.memo"):60115,t=b?Symbol.for("react.lazy"):60116,v=b?Symbol.for("react.block"):60121,w=b?Symbol.for("react.fundamental"):60117,x=b?Symbol.for("react.responder"):60118,y=b?Symbol.for("react.scope"):60119;
     function z(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case t:case r:case h:return a;default:return u}}case d:return u}}}function A(a){return z(a)===m}var AsyncMode=l;var ConcurrentMode=m;var ContextConsumer=k;var ContextProvider=h;var Element$1=c;var ForwardRef=n;var Fragment=e;var Lazy=t;var Memo=r;var Portal$1=d;
-    var Profiler=g;var StrictMode=f;var Suspense=p;var isAsyncMode=function(a){return A(a)||z(a)===l};var isConcurrentMode=A;var isContextConsumer=function(a){return z(a)===k};var isContextProvider=function(a){return z(a)===h};var isElement$1=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};var isForwardRef=function(a){return z(a)===n};var isFragment=function(a){return z(a)===e};var isLazy=function(a){return z(a)===t};
+    var Profiler=g;var StrictMode=f;var Suspense=p;var isAsyncMode=function(a){return A(a)||z(a)===l};var isConcurrentMode=A;var isContextConsumer=function(a){return z(a)===k};var isContextProvider=function(a){return z(a)===h};var isElement$2=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};var isForwardRef=function(a){return z(a)===n};var isFragment=function(a){return z(a)===e};var isLazy=function(a){return z(a)===t};
     var isMemo=function(a){return z(a)===r};var isPortal=function(a){return z(a)===d};var isProfiler=function(a){return z(a)===g};var isStrictMode=function(a){return z(a)===f};var isSuspense=function(a){return z(a)===p};
     var isValidElementType=function(a){return "string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||a===q||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n||a.$$typeof===w||a.$$typeof===x||a.$$typeof===y||a.$$typeof===v)};var typeOf=z;
 
@@ -798,7 +920,7 @@
     	isConcurrentMode: isConcurrentMode,
     	isContextConsumer: isContextConsumer,
     	isContextProvider: isContextProvider,
-    	isElement: isElement$1,
+    	isElement: isElement$2,
     	isForwardRef: isForwardRef,
     	isFragment: isFragment,
     	isLazy: isLazy,
@@ -3531,932 +3653,987 @@
     reactTransitionGroup.ReplaceTransition;
     var reactTransitionGroup_4 = reactTransitionGroup.CSSTransition;
 
-    /**
-     * A collection of shims that provide minimal functionality of the ES6 collections.
-     *
-     * These implementations are not meant to be used outside of the ResizeObserver
-     * modules as they cover only a limited range of use cases.
-     */
-    /* eslint-disable require-jsdoc, valid-jsdoc */
-    var MapShim = (function () {
-        if (typeof Map !== 'undefined') {
-            return Map;
-        }
-        /**
-         * Returns index in provided array that matches the specified key.
-         *
-         * @param {Array<Array>} arr
-         * @param {*} key
-         * @returns {number}
-         */
-        function getIndex(arr, key) {
-            var result = -1;
-            arr.some(function (entry, index) {
-                if (entry[0] === key) {
-                    result = index;
-                    return true;
-                }
-                return false;
-            });
-            return result;
-        }
-        return /** @class */ (function () {
-            function class_1() {
-                this.__entries__ = [];
+    /** Detect if `React.createPortal()` API method does not exist. */
+    var cannotCreatePortal = !isFunction(ReactDOM.createPortal);
+    var REACT_CONTEXT_TYPES = {
+        blueprintPortalClassName: function (obj, key) {
+            if (obj[key] != null && typeof obj[key] !== "string") {
+                return new Error(PORTAL_CONTEXT_CLASS_NAME_STRING);
             }
-            Object.defineProperty(class_1.prototype, "size", {
-                /**
-                 * @returns {boolean}
-                 */
-                get: function () {
-                    return this.__entries__.length;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            /**
-             * @param {*} key
-             * @returns {*}
-             */
-            class_1.prototype.get = function (key) {
-                var index = getIndex(this.__entries__, key);
-                var entry = this.__entries__[index];
-                return entry && entry[1];
-            };
-            /**
-             * @param {*} key
-             * @param {*} value
-             * @returns {void}
-             */
-            class_1.prototype.set = function (key, value) {
-                var index = getIndex(this.__entries__, key);
-                if (~index) {
-                    this.__entries__[index][1] = value;
-                }
-                else {
-                    this.__entries__.push([key, value]);
-                }
-            };
-            /**
-             * @param {*} key
-             * @returns {void}
-             */
-            class_1.prototype.delete = function (key) {
-                var entries = this.__entries__;
-                var index = getIndex(entries, key);
-                if (~index) {
-                    entries.splice(index, 1);
-                }
-            };
-            /**
-             * @param {*} key
-             * @returns {void}
-             */
-            class_1.prototype.has = function (key) {
-                return !!~getIndex(this.__entries__, key);
-            };
-            /**
-             * @returns {void}
-             */
-            class_1.prototype.clear = function () {
-                this.__entries__.splice(0);
-            };
-            /**
-             * @param {Function} callback
-             * @param {*} [ctx=null]
-             * @returns {void}
-             */
-            class_1.prototype.forEach = function (callback, ctx) {
-                if (ctx === void 0) { ctx = null; }
-                for (var _i = 0, _a = this.__entries__; _i < _a.length; _i++) {
-                    var entry = _a[_i];
-                    callback.call(ctx, entry[1], entry[0]);
-                }
-            };
-            return class_1;
-        }());
-    })();
-
+            return undefined;
+        },
+    };
     /**
-     * Detects whether window and document objects are available in current environment.
+     * This component detaches its contents and re-attaches them to document.body.
+     * Use it when you need to circumvent DOM z-stacking (for dialogs, popovers, etc.).
+     * Any class names passed to this element will be propagated to the new container element on document.body.
      */
-    var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && window.document === document;
-
-    // Returns global object of a current environment.
-    var global$1 = (function () {
-        if (typeof global !== 'undefined' && global.Math === Math) {
-            return global;
+    var Portal = /** @class */ (function (_super) {
+        __extends(Portal, _super);
+        function Portal() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.context = {};
+            _this.state = { hasMounted: false };
+            _this.portalElement = null;
+            return _this;
         }
-        if (typeof self !== 'undefined' && self.Math === Math) {
-            return self;
-        }
-        if (typeof window !== 'undefined' && window.Math === Math) {
-            return window;
-        }
-        // eslint-disable-next-line no-new-func
-        return Function('return this')();
-    })();
-
-    /**
-     * A shim for the requestAnimationFrame which falls back to the setTimeout if
-     * first one is not supported.
-     *
-     * @returns {number} Requests' identifier.
-     */
-    var requestAnimationFrame$1 = (function () {
-        if (typeof requestAnimationFrame === 'function') {
-            // It's required to use a bounded function because IE sometimes throws
-            // an "Invalid calling object" error if rAF is invoked without the global
-            // object on the left hand side.
-            return requestAnimationFrame.bind(global$1);
-        }
-        return function (callback) { return setTimeout(function () { return callback(Date.now()); }, 1000 / 60); };
-    })();
-
-    // Defines minimum timeout before adding a trailing call.
-    var trailingTimeout = 2;
-    /**
-     * Creates a wrapper function which ensures that provided callback will be
-     * invoked only once during the specified delay period.
-     *
-     * @param {Function} callback - Function to be invoked after the delay period.
-     * @param {number} delay - Delay after which to invoke callback.
-     * @returns {Function}
-     */
-    function throttle (callback, delay) {
-        var leadingCall = false, trailingCall = false, lastCallTime = 0;
-        /**
-         * Invokes the original callback function and schedules new invocation if
-         * the "proxy" was called during current request.
-         *
-         * @returns {void}
-         */
-        function resolvePending() {
-            if (leadingCall) {
-                leadingCall = false;
-                callback();
+        Portal.prototype.render = function () {
+            // Only render `children` once this component has mounted in a browser environment, so they are
+            // immediately attached to the DOM tree and can do DOM things like measuring or `autoFocus`.
+            // See long comment on componentDidMount in https://reactjs.org/docs/portals.html#event-bubbling-through-portals
+            if (cannotCreatePortal ||
+                typeof document === "undefined" ||
+                !this.state.hasMounted ||
+                this.portalElement === null) {
+                return null;
             }
-            if (trailingCall) {
-                proxy();
+            else {
+                return ReactDOM.createPortal(this.props.children, this.portalElement);
             }
+        };
+        Portal.prototype.componentDidMount = function () {
+            if (!this.props.container) {
+                return;
+            }
+            this.portalElement = this.createContainerElement();
+            this.props.container.appendChild(this.portalElement);
+            /* eslint-disable-next-line react/no-did-mount-set-state */
+            this.setState({ hasMounted: true }, this.props.onChildrenMount);
+            if (cannotCreatePortal) {
+                this.unstableRenderNoPortal();
+            }
+        };
+        Portal.prototype.componentDidUpdate = function (prevProps) {
+            // update className prop on portal DOM element
+            if (this.portalElement != null && prevProps.className !== this.props.className) {
+                maybeRemoveClass(this.portalElement.classList, prevProps.className);
+                maybeAddClass(this.portalElement.classList, this.props.className);
+            }
+            if (cannotCreatePortal) {
+                this.unstableRenderNoPortal();
+            }
+        };
+        Portal.prototype.componentWillUnmount = function () {
+            if (this.portalElement != null) {
+                if (cannotCreatePortal) {
+                    ReactDOM.unmountComponentAtNode(this.portalElement);
+                }
+                this.portalElement.remove();
+            }
+        };
+        Portal.prototype.createContainerElement = function () {
+            var container = document.createElement("div");
+            container.classList.add(PORTAL);
+            maybeAddClass(container.classList, this.props.className);
+            if (this.context != null) {
+                maybeAddClass(container.classList, this.context.blueprintPortalClassName);
+            }
+            return container;
+        };
+        Portal.prototype.unstableRenderNoPortal = function () {
+            if (this.portalElement === null) {
+                return;
+            }
+            ReactDOM.unstable_renderSubtreeIntoContainer(
+            /* parentComponent */ this, React.createElement("div", null, this.props.children), this.portalElement);
+        };
+        Portal.displayName = "".concat(DISPLAYNAME_PREFIX, ".Portal");
+        Portal.contextTypes = REACT_CONTEXT_TYPES;
+        Portal.defaultProps = {
+            container: typeof document !== "undefined" ? document.body : undefined,
+        };
+        return Portal;
+    }(React.Component));
+    function maybeRemoveClass(classList, className) {
+        if (className != null && className !== "") {
+            classList.remove.apply(classList, className.split(" "));
         }
-        /**
-         * Callback invoked after the specified delay. It will further postpone
-         * invocation of the original function delegating it to the
-         * requestAnimationFrame.
-         *
-         * @returns {void}
-         */
-        function timeoutCallback() {
-            requestAnimationFrame$1(resolvePending);
+    }
+    function maybeAddClass(classList, className) {
+        if (className != null && className !== "") {
+            classList.add.apply(classList, className.split(" "));
         }
-        /**
-         * Schedules invocation of the original function.
-         *
-         * @returns {void}
-         */
-        function proxy() {
-            var timeStamp = Date.now();
-            if (leadingCall) {
-                // Reject immediately following calls.
-                if (timeStamp - lastCallTime < trailingTimeout) {
+    }
+
+    // HACKHACK: https://github.com/palantir/blueprint/issues/4342
+    // eslint-disable-next-line deprecation/deprecation
+    var Overlay = /** @class */ (function (_super) {
+        __extends(Overlay, _super);
+        function Overlay() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.isAutoFocusing = false;
+            _this.state = {
+                hasEverOpened: _this.props.isOpen,
+            };
+            // an HTMLElement that contains the backdrop and any children, to query for focus target
+            _this.containerElement = null;
+            // An empty, keyboard-focusable div at the beginning of the Overlay content
+            _this.startFocusTrapElement = null;
+            // An empty, keyboard-focusable div at the end of the Overlay content
+            _this.endFocusTrapElement = null;
+            _this.refHandlers = {
+                // HACKHACK: see https://github.com/palantir/blueprint/issues/3979
+                /* eslint-disable-next-line react/no-find-dom-node */
+                container: function (ref) { return (_this.containerElement = ReactDOM.findDOMNode(ref)); },
+                endFocusTrap: function (ref) { return (_this.endFocusTrapElement = ref); },
+                startFocusTrap: function (ref) { return (_this.startFocusTrapElement = ref); },
+            };
+            _this.maybeRenderChild = function (child) {
+                if (isFunction(child)) {
+                    child = child();
+                }
+                if (child == null) {
+                    return null;
+                }
+                // add a special class to each child element that will automatically set the appropriate
+                // CSS position mode under the hood.
+                var decoratedChild = typeof child === "object" ? (React.cloneElement(child, {
+                    className: classnames$1(child.props.className, OVERLAY_CONTENT),
+                })) : (React.createElement("span", { className: OVERLAY_CONTENT }, child));
+                var _a = _this.props, onOpening = _a.onOpening, onOpened = _a.onOpened, onClosing = _a.onClosing, transitionDuration = _a.transitionDuration, transitionName = _a.transitionName;
+                // a breaking change in react-transition-group types requires us to be explicit about the type overload here,
+                // using a technique similar to Select.ofType() in @blueprintjs/select
+                var CSSTransitionImplicit = reactTransitionGroup_4;
+                return (React.createElement(CSSTransitionImplicit, { classNames: transitionName, onEntering: onOpening, onEntered: onOpened, onExiting: onClosing, onExited: _this.handleTransitionExited, timeout: transitionDuration, addEndListener: _this.handleTransitionAddEnd }, decoratedChild));
+            };
+            /**
+             * Ensures repeatedly pressing shift+tab keeps focus inside the Overlay. Moves focus to
+             * the `endFocusTrapElement` or the first keyboard-focusable element in the Overlay (excluding
+             * the `startFocusTrapElement`), depending on whether the element losing focus is inside the
+             * Overlay.
+             */
+            _this.handleStartFocusTrapElementFocus = function (e) {
+                var _a;
+                if (!_this.props.enforceFocus || _this.isAutoFocusing) {
                     return;
                 }
-                // Schedule new call to be in invoked when the pending one is resolved.
-                // This is important for "transitions" which never actually start
-                // immediately so there is a chance that we might miss one if change
-                // happens amids the pending invocation.
-                trailingCall = true;
-            }
-            else {
-                leadingCall = true;
-                trailingCall = false;
-                setTimeout(timeoutCallback, delay);
-            }
-            lastCallTime = timeStamp;
-        }
-        return proxy;
-    }
-
-    // Minimum delay before invoking the update of observers.
-    var REFRESH_DELAY = 20;
-    // A list of substrings of CSS properties used to find transition events that
-    // might affect dimensions of observed elements.
-    var transitionKeys = ['top', 'right', 'bottom', 'left', 'width', 'height', 'size', 'weight'];
-    // Check if MutationObserver is available.
-    var mutationObserverSupported = typeof MutationObserver !== 'undefined';
-    /**
-     * Singleton controller class which handles updates of ResizeObserver instances.
-     */
-    var ResizeObserverController = /** @class */ (function () {
-        /**
-         * Creates a new instance of ResizeObserverController.
-         *
-         * @private
-         */
-        function ResizeObserverController() {
+                // e.relatedTarget will not be defined if this was a programmatic focus event, as is the
+                // case when we call this.bringFocusInsideOverlay() after a user clicked on the backdrop.
+                // Otherwise, we're handling a user interaction, and we should wrap around to the last
+                // element in this transition group.
+                if (e.relatedTarget != null &&
+                    _this.containerElement.contains(e.relatedTarget) &&
+                    e.relatedTarget !== _this.endFocusTrapElement) {
+                    (_a = _this.endFocusTrapElement) === null || _a === void 0 ? void 0 : _a.focus({ preventScroll: true });
+                }
+            };
             /**
-             * Indicates whether DOM listeners have been added.
-             *
-             * @private {boolean}
+             * Wrap around to the end of the dialog if `enforceFocus` is enabled.
              */
-            this.connected_ = false;
+            _this.handleStartFocusTrapElementKeyDown = function (e) {
+                var _a;
+                if (!_this.props.enforceFocus) {
+                    return;
+                }
+                // HACKHACK: https://github.com/palantir/blueprint/issues/4165
+                /* eslint-disable-next-line deprecation/deprecation */
+                if (e.shiftKey && e.which === TAB) {
+                    var lastFocusableElement = _this.getKeyboardFocusableElements().pop();
+                    if (lastFocusableElement != null) {
+                        lastFocusableElement.focus();
+                    }
+                    else {
+                        (_a = _this.endFocusTrapElement) === null || _a === void 0 ? void 0 : _a.focus({ preventScroll: true });
+                    }
+                }
+            };
             /**
-             * Tells that controller has subscribed for Mutation Events.
-             *
-             * @private {boolean}
+             * Ensures repeatedly pressing tab keeps focus inside the Overlay. Moves focus to the
+             * `startFocusTrapElement` or the last keyboard-focusable element in the Overlay (excluding the
+             * `startFocusTrapElement`), depending on whether the element losing focus is inside the
+             * Overlay.
              */
-            this.mutationEventsAdded_ = false;
-            /**
-             * Keeps reference to the instance of MutationObserver.
-             *
-             * @private {MutationObserver}
-             */
-            this.mutationsObserver_ = null;
-            /**
-             * A list of connected observers.
-             *
-             * @private {Array<ResizeObserverSPI>}
-             */
-            this.observers_ = [];
-            this.onTransitionEnd_ = this.onTransitionEnd_.bind(this);
-            this.refresh = throttle(this.refresh.bind(this), REFRESH_DELAY);
-        }
-        /**
-         * Adds observer to observers list.
-         *
-         * @param {ResizeObserverSPI} observer - Observer to be added.
-         * @returns {void}
-         */
-        ResizeObserverController.prototype.addObserver = function (observer) {
-            if (!~this.observers_.indexOf(observer)) {
-                this.observers_.push(observer);
-            }
-            // Add listeners if they haven't been added yet.
-            if (!this.connected_) {
-                this.connect_();
-            }
-        };
-        /**
-         * Removes observer from observers list.
-         *
-         * @param {ResizeObserverSPI} observer - Observer to be removed.
-         * @returns {void}
-         */
-        ResizeObserverController.prototype.removeObserver = function (observer) {
-            var observers = this.observers_;
-            var index = observers.indexOf(observer);
-            // Remove observer if it's present in registry.
-            if (~index) {
-                observers.splice(index, 1);
-            }
-            // Remove listeners if controller has no connected observers.
-            if (!observers.length && this.connected_) {
-                this.disconnect_();
-            }
-        };
-        /**
-         * Invokes the update of observers. It will continue running updates insofar
-         * it detects changes.
-         *
-         * @returns {void}
-         */
-        ResizeObserverController.prototype.refresh = function () {
-            var changesDetected = this.updateObservers_();
-            // Continue running updates if changes have been detected as there might
-            // be future ones caused by CSS transitions.
-            if (changesDetected) {
-                this.refresh();
-            }
-        };
-        /**
-         * Updates every observer from observers list and notifies them of queued
-         * entries.
-         *
-         * @private
-         * @returns {boolean} Returns "true" if any observer has detected changes in
-         *      dimensions of it's elements.
-         */
-        ResizeObserverController.prototype.updateObservers_ = function () {
-            // Collect observers that have active observations.
-            var activeObservers = this.observers_.filter(function (observer) {
-                return observer.gatherActive(), observer.hasActive();
-            });
-            // Deliver notifications in a separate cycle in order to avoid any
-            // collisions between observers, e.g. when multiple instances of
-            // ResizeObserver are tracking the same element and the callback of one
-            // of them changes content dimensions of the observed target. Sometimes
-            // this may result in notifications being blocked for the rest of observers.
-            activeObservers.forEach(function (observer) { return observer.broadcastActive(); });
-            return activeObservers.length > 0;
-        };
-        /**
-         * Initializes DOM listeners.
-         *
-         * @private
-         * @returns {void}
-         */
-        ResizeObserverController.prototype.connect_ = function () {
-            // Do nothing if running in a non-browser environment or if listeners
-            // have been already added.
-            if (!isBrowser || this.connected_) {
-                return;
-            }
-            // Subscription to the "Transitionend" event is used as a workaround for
-            // delayed transitions. This way it's possible to capture at least the
-            // final state of an element.
-            document.addEventListener('transitionend', this.onTransitionEnd_);
-            window.addEventListener('resize', this.refresh);
-            if (mutationObserverSupported) {
-                this.mutationsObserver_ = new MutationObserver(this.refresh);
-                this.mutationsObserver_.observe(document, {
-                    attributes: true,
-                    childList: true,
-                    characterData: true,
-                    subtree: true
+            _this.handleEndFocusTrapElementFocus = function (e) {
+                var _a, _b;
+                // No need for this.props.enforceFocus check here because this element is only rendered
+                // when that prop is true.
+                // During user interactions, e.relatedTarget will be defined, and we should wrap around to the
+                // "start focus trap" element.
+                // Otherwise, we're handling a programmatic focus event, which can only happen after a user
+                // presses shift+tab from the first focusable element in the overlay.
+                if (e.relatedTarget != null &&
+                    _this.containerElement.contains(e.relatedTarget) &&
+                    e.relatedTarget !== _this.startFocusTrapElement) {
+                    var firstFocusableElement = _this.getKeyboardFocusableElements().shift();
+                    // ensure we don't re-focus an already active element by comparing against e.relatedTarget
+                    if (!_this.isAutoFocusing && firstFocusableElement != null && firstFocusableElement !== e.relatedTarget) {
+                        firstFocusableElement.focus();
+                    }
+                    else {
+                        (_a = _this.startFocusTrapElement) === null || _a === void 0 ? void 0 : _a.focus({ preventScroll: true });
+                    }
+                }
+                else {
+                    var lastFocusableElement = _this.getKeyboardFocusableElements().pop();
+                    if (lastFocusableElement != null) {
+                        lastFocusableElement.focus();
+                    }
+                    else {
+                        // Keeps focus within Overlay even if there are no keyboard-focusable children
+                        (_b = _this.startFocusTrapElement) === null || _b === void 0 ? void 0 : _b.focus({ preventScroll: true });
+                    }
+                }
+            };
+            _this.handleTransitionExited = function (node) {
+                var _a, _b;
+                if (_this.props.shouldReturnFocusOnClose && _this.lastActiveElementBeforeOpened instanceof HTMLElement) {
+                    _this.lastActiveElementBeforeOpened.focus();
+                }
+                (_b = (_a = _this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a, node);
+            };
+            _this.handleBackdropMouseDown = function (e) {
+                var _a;
+                var _b = _this.props, backdropProps = _b.backdropProps, canOutsideClickClose = _b.canOutsideClickClose, enforceFocus = _b.enforceFocus, onClose = _b.onClose;
+                if (canOutsideClickClose) {
+                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
+                }
+                if (enforceFocus) {
+                    _this.bringFocusInsideOverlay();
+                }
+                (_a = backdropProps === null || backdropProps === void 0 ? void 0 : backdropProps.onMouseDown) === null || _a === void 0 ? void 0 : _a.call(backdropProps, e);
+            };
+            _this.handleDocumentClick = function (e) {
+                var _a = _this.props, canOutsideClickClose = _a.canOutsideClickClose, isOpen = _a.isOpen, onClose = _a.onClose;
+                // get the actual target even in the Shadow DOM
+                var eventTarget = (e.composed ? e.composedPath()[0] : e.target);
+                var stackIndex = Overlay_1.openStack.indexOf(_this);
+                var isClickInThisOverlayOrDescendant = Overlay_1.openStack
+                    .slice(stackIndex)
+                    .some(function (_a) {
+                    var elem = _a.containerElement;
+                    // `elem` is the container of backdrop & content, so clicking on that container
+                    // should not count as being "inside" the overlay.
+                    return elem && elem.contains(eventTarget) && !elem.isSameNode(eventTarget);
                 });
+                if (isOpen && !isClickInThisOverlayOrDescendant && canOutsideClickClose) {
+                    // casting to any because this is a native event
+                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
+                }
+            };
+            /**
+             * When multiple Overlays are open, this event handler is only active for the most recently
+             * opened one to avoid Overlays competing with each other for focus.
+             */
+            _this.handleDocumentFocus = function (e) {
+                // get the actual target even in the Shadow DOM
+                var eventTarget = e.composed ? e.composedPath()[0] : e.target;
+                if (_this.props.enforceFocus &&
+                    _this.containerElement != null &&
+                    eventTarget instanceof Node &&
+                    !_this.containerElement.contains(eventTarget)) {
+                    // prevent default focus behavior (sometimes auto-scrolls the page)
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    _this.bringFocusInsideOverlay();
+                }
+            };
+            _this.handleKeyDown = function (e) {
+                var _a = _this.props, canEscapeKeyClose = _a.canEscapeKeyClose, onClose = _a.onClose;
+                // HACKHACK: https://github.com/palantir/blueprint/issues/4165
+                /* eslint-disable-next-line deprecation/deprecation */
+                if (e.which === ESCAPE && canEscapeKeyClose) {
+                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
+                    // prevent browser-specific escape key behavior (Safari exits fullscreen)
+                    e.preventDefault();
+                }
+            };
+            _this.handleTransitionAddEnd = function () {
+                // no-op
+            };
+            return _this;
+        }
+        Overlay_1 = Overlay;
+        Overlay.getDerivedStateFromProps = function (_a) {
+            var hasEverOpened = _a.isOpen;
+            if (hasEverOpened) {
+                return { hasEverOpened: hasEverOpened };
+            }
+            return null;
+        };
+        Overlay.prototype.render = function () {
+            var _a;
+            var _b;
+            // oh snap! no reason to render anything at all if we're being truly lazy
+            if (this.props.lazy && !this.state.hasEverOpened) {
+                return null;
+            }
+            var _c = this.props, autoFocus = _c.autoFocus, children = _c.children, className = _c.className, enforceFocus = _c.enforceFocus, usePortal = _c.usePortal, isOpen = _c.isOpen;
+            // TransitionGroup types require single array of children; does not support nested arrays.
+            // So we must collapse backdrop and children into one array, and every item must be wrapped in a
+            // Transition element (no ReactText allowed).
+            var childrenWithTransitions = isOpen ? (_b = React.Children.map(children, this.maybeRenderChild)) !== null && _b !== void 0 ? _b : [] : [];
+            var maybeBackdrop = this.maybeRenderBackdrop();
+            if (maybeBackdrop !== null) {
+                childrenWithTransitions.unshift(maybeBackdrop);
+            }
+            if (isOpen && (autoFocus || enforceFocus) && childrenWithTransitions.length > 0) {
+                childrenWithTransitions.unshift(this.renderDummyElement("__start", {
+                    className: OVERLAY_START_FOCUS_TRAP,
+                    onFocus: this.handleStartFocusTrapElementFocus,
+                    onKeyDown: this.handleStartFocusTrapElementKeyDown,
+                    ref: this.refHandlers.startFocusTrap,
+                }));
+                if (enforceFocus) {
+                    childrenWithTransitions.push(this.renderDummyElement("__end", {
+                        className: OVERLAY_END_FOCUS_TRAP,
+                        onFocus: this.handleEndFocusTrapElementFocus,
+                        ref: this.refHandlers.endFocusTrap,
+                    }));
+                }
+            }
+            var containerClasses = classnames$1(OVERLAY, (_a = {},
+                _a[OVERLAY_OPEN] = isOpen,
+                _a[OVERLAY_INLINE] = !usePortal,
+                _a), className);
+            var transitionGroup = (React.createElement(reactTransitionGroup_2, { appear: true, "aria-live": "polite", className: containerClasses, component: "div", onKeyDown: this.handleKeyDown, ref: this.refHandlers.container }, childrenWithTransitions));
+            if (usePortal) {
+                return (React.createElement(Portal, { className: this.props.portalClassName, container: this.props.portalContainer }, transitionGroup));
             }
             else {
-                document.addEventListener('DOMSubtreeModified', this.refresh);
-                this.mutationEventsAdded_ = true;
+                return transitionGroup;
             }
-            this.connected_ = true;
+        };
+        Overlay.prototype.componentDidMount = function () {
+            if (this.props.isOpen) {
+                this.overlayWillOpen();
+            }
+        };
+        Overlay.prototype.componentDidUpdate = function (prevProps) {
+            if (prevProps.isOpen && !this.props.isOpen) {
+                this.overlayWillClose();
+            }
+            else if (!prevProps.isOpen && this.props.isOpen) {
+                this.overlayWillOpen();
+            }
+        };
+        Overlay.prototype.componentWillUnmount = function () {
+            this.overlayWillClose();
         };
         /**
-         * Removes DOM listeners.
-         *
-         * @private
-         * @returns {void}
+         * @public for testing
+         * @internal
          */
-        ResizeObserverController.prototype.disconnect_ = function () {
-            // Do nothing if running in a non-browser environment or if listeners
-            // have been already removed.
-            if (!isBrowser || !this.connected_) {
-                return;
-            }
-            document.removeEventListener('transitionend', this.onTransitionEnd_);
-            window.removeEventListener('resize', this.refresh);
-            if (this.mutationsObserver_) {
-                this.mutationsObserver_.disconnect();
-            }
-            if (this.mutationEventsAdded_) {
-                document.removeEventListener('DOMSubtreeModified', this.refresh);
-            }
-            this.mutationsObserver_ = null;
-            this.mutationEventsAdded_ = false;
-            this.connected_ = false;
-        };
-        /**
-         * "Transitionend" event handler.
-         *
-         * @private
-         * @param {TransitionEvent} event
-         * @returns {void}
-         */
-        ResizeObserverController.prototype.onTransitionEnd_ = function (_a) {
-            var _b = _a.propertyName, propertyName = _b === void 0 ? '' : _b;
-            // Detect whether transition may affect dimensions of an element.
-            var isReflowProperty = transitionKeys.some(function (key) {
-                return !!~propertyName.indexOf(key);
+        Overlay.prototype.bringFocusInsideOverlay = function () {
+            var _this = this;
+            // always delay focus manipulation to just before repaint to prevent scroll jumping
+            return this.requestAnimationFrame(function () {
+                var _a;
+                // container ref may be undefined between component mounting and Portal rendering
+                // activeElement may be undefined in some rare cases in IE
+                if (_this.containerElement == null || document.activeElement == null || !_this.props.isOpen) {
+                    return;
+                }
+                var isFocusOutsideModal = !_this.containerElement.contains(document.activeElement);
+                if (isFocusOutsideModal) {
+                    (_a = _this.startFocusTrapElement) === null || _a === void 0 ? void 0 : _a.focus({ preventScroll: true });
+                    _this.isAutoFocusing = false;
+                }
             });
-            if (isReflowProperty) {
-                this.refresh();
+        };
+        Overlay.prototype.maybeRenderBackdrop = function () {
+            var _a = this.props, backdropClassName = _a.backdropClassName, backdropProps = _a.backdropProps, hasBackdrop = _a.hasBackdrop, isOpen = _a.isOpen, transitionDuration = _a.transitionDuration, transitionName = _a.transitionName;
+            if (hasBackdrop && isOpen) {
+                return (React.createElement(reactTransitionGroup_4, { classNames: transitionName, key: "__backdrop", timeout: transitionDuration, addEndListener: this.handleTransitionAddEnd },
+                    React.createElement("div", __assign({}, backdropProps, { className: classnames$1(OVERLAY_BACKDROP, backdropClassName, backdropProps === null || backdropProps === void 0 ? void 0 : backdropProps.className), onMouseDown: this.handleBackdropMouseDown }))));
+            }
+            else {
+                return null;
             }
         };
-        /**
-         * Returns instance of the ResizeObserverController.
-         *
-         * @returns {ResizeObserverController}
-         */
-        ResizeObserverController.getInstance = function () {
-            if (!this.instance_) {
-                this.instance_ = new ResizeObserverController();
-            }
-            return this.instance_;
+        Overlay.prototype.renderDummyElement = function (key, props) {
+            var _a = this.props, transitionDuration = _a.transitionDuration, transitionName = _a.transitionName;
+            return (React.createElement(reactTransitionGroup_4, { classNames: transitionName, key: key, addEndListener: this.handleTransitionAddEnd, timeout: transitionDuration, unmountOnExit: true },
+                React.createElement("div", __assign({ tabIndex: 0 }, props))));
         };
-        /**
-         * Holds reference to the controller's instance.
-         *
-         * @private {ResizeObserverController}
-         */
-        ResizeObserverController.instance_ = null;
-        return ResizeObserverController;
+        Overlay.prototype.getKeyboardFocusableElements = function () {
+            var focusableElements = this.containerElement !== null
+                ? Array.from(
+                // Order may not be correct if children elements use tabindex values > 0.
+                // Selectors derived from this SO question:
+                // https://stackoverflow.com/questions/1599660/which-html-elements-can-receive-focus
+                this.containerElement.querySelectorAll([
+                    'a[href]:not([tabindex="-1"])',
+                    'button:not([disabled]):not([tabindex="-1"])',
+                    'details:not([tabindex="-1"])',
+                    'input:not([disabled]):not([tabindex="-1"])',
+                    'select:not([disabled]):not([tabindex="-1"])',
+                    'textarea:not([disabled]):not([tabindex="-1"])',
+                    '[tabindex]:not([tabindex="-1"])',
+                ].join(",")))
+                : [];
+            return focusableElements.filter(function (el) {
+                return !el.classList.contains(OVERLAY_START_FOCUS_TRAP) &&
+                    !el.classList.contains(OVERLAY_END_FOCUS_TRAP);
+            });
+        };
+        Overlay.prototype.overlayWillClose = function () {
+            document.removeEventListener("focus", this.handleDocumentFocus, /* useCapture */ true);
+            document.removeEventListener("mousedown", this.handleDocumentClick);
+            var openStack = Overlay_1.openStack;
+            var stackIndex = openStack.indexOf(this);
+            if (stackIndex !== -1) {
+                openStack.splice(stackIndex, 1);
+                if (openStack.length > 0) {
+                    var lastOpenedOverlay = Overlay_1.getLastOpened();
+                    // Only bring focus back to last overlay if it had autoFocus _and_ enforceFocus enabled.
+                    // If `autoFocus={false}`, it's likely that the overlay never received focus in the first place,
+                    // so it would be surprising for us to send it there. See https://github.com/palantir/blueprint/issues/4921
+                    if (lastOpenedOverlay.props.autoFocus && lastOpenedOverlay.props.enforceFocus) {
+                        lastOpenedOverlay.bringFocusInsideOverlay();
+                        document.addEventListener("focus", lastOpenedOverlay.handleDocumentFocus, /* useCapture */ true);
+                    }
+                }
+                if (openStack.filter(function (o) { return o.props.usePortal && o.props.hasBackdrop; }).length === 0) {
+                    document.body.classList.remove(OVERLAY_OPEN);
+                }
+            }
+        };
+        Overlay.prototype.overlayWillOpen = function () {
+            var getLastOpened = Overlay_1.getLastOpened, openStack = Overlay_1.openStack;
+            if (openStack.length > 0) {
+                document.removeEventListener("focus", getLastOpened().handleDocumentFocus, /* useCapture */ true);
+            }
+            openStack.push(this);
+            if (this.props.autoFocus) {
+                this.isAutoFocusing = true;
+                this.bringFocusInsideOverlay();
+            }
+            if (this.props.enforceFocus) {
+                // Focus events do not bubble, but setting useCapture allows us to listen in and execute
+                // our handler before all others
+                document.addEventListener("focus", this.handleDocumentFocus, /* useCapture */ true);
+            }
+            if (this.props.canOutsideClickClose && !this.props.hasBackdrop) {
+                document.addEventListener("mousedown", this.handleDocumentClick);
+            }
+            if (this.props.hasBackdrop && this.props.usePortal) {
+                // add a class to the body to prevent scrolling of content below the overlay
+                document.body.classList.add(OVERLAY_OPEN);
+            }
+            this.lastActiveElementBeforeOpened = document.activeElement;
+        };
+        var Overlay_1;
+        Overlay.displayName = "".concat(DISPLAYNAME_PREFIX, ".Overlay");
+        Overlay.defaultProps = {
+            autoFocus: true,
+            backdropProps: {},
+            canEscapeKeyClose: true,
+            canOutsideClickClose: true,
+            enforceFocus: true,
+            hasBackdrop: true,
+            isOpen: false,
+            lazy: true,
+            shouldReturnFocusOnClose: true,
+            transitionDuration: 300,
+            transitionName: OVERLAY,
+            usePortal: true,
+        };
+        Overlay.openStack = [];
+        Overlay.getLastOpened = function () { return Overlay_1.openStack[Overlay_1.openStack.length - 1]; };
+        Overlay = Overlay_1 = __decorate([
+            reactLifecyclesCompat_cjs_1
+        ], Overlay);
+        return Overlay;
+    }(AbstractPureComponent2));
+
+    var resizeObservers = [];
+
+    var hasActiveObservations = function () {
+        return resizeObservers.some(function (ro) { return ro.activeTargets.length > 0; });
+    };
+
+    var hasSkippedObservations = function () {
+        return resizeObservers.some(function (ro) { return ro.skippedTargets.length > 0; });
+    };
+
+    var msg = 'ResizeObserver loop completed with undelivered notifications.';
+    var deliverResizeLoopError = function () {
+        var event;
+        if (typeof ErrorEvent === 'function') {
+            event = new ErrorEvent('error', {
+                message: msg
+            });
+        }
+        else {
+            event = document.createEvent('Event');
+            event.initEvent('error', false, false);
+            event.message = msg;
+        }
+        window.dispatchEvent(event);
+    };
+
+    var ResizeObserverBoxOptions;
+    (function (ResizeObserverBoxOptions) {
+        ResizeObserverBoxOptions["BORDER_BOX"] = "border-box";
+        ResizeObserverBoxOptions["CONTENT_BOX"] = "content-box";
+        ResizeObserverBoxOptions["DEVICE_PIXEL_CONTENT_BOX"] = "device-pixel-content-box";
+    })(ResizeObserverBoxOptions || (ResizeObserverBoxOptions = {}));
+
+    var freeze = function (obj) { return Object.freeze(obj); };
+
+    var ResizeObserverSize = (function () {
+        function ResizeObserverSize(inlineSize, blockSize) {
+            this.inlineSize = inlineSize;
+            this.blockSize = blockSize;
+            freeze(this);
+        }
+        return ResizeObserverSize;
     }());
 
-    /**
-     * Defines non-writable/enumerable properties of the provided target object.
-     *
-     * @param {Object} target - Object for which to define properties.
-     * @param {Object} props - Properties to be defined.
-     * @returns {Object} Target object.
-     */
-    var defineConfigurable = (function (target, props) {
-        for (var _i = 0, _a = Object.keys(props); _i < _a.length; _i++) {
-            var key = _a[_i];
-            Object.defineProperty(target, key, {
-                value: props[key],
-                enumerable: false,
-                writable: false,
-                configurable: true
-            });
+    var DOMRectReadOnly = (function () {
+        function DOMRectReadOnly(x, y, width, height) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.top = this.y;
+            this.left = this.x;
+            this.bottom = this.top + this.height;
+            this.right = this.left + this.width;
+            return freeze(this);
         }
-        return target;
-    });
+        DOMRectReadOnly.prototype.toJSON = function () {
+            var _a = this, x = _a.x, y = _a.y, top = _a.top, right = _a.right, bottom = _a.bottom, left = _a.left, width = _a.width, height = _a.height;
+            return { x: x, y: y, top: top, right: right, bottom: bottom, left: left, width: width, height: height };
+        };
+        DOMRectReadOnly.fromRect = function (rectangle) {
+            return new DOMRectReadOnly(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        };
+        return DOMRectReadOnly;
+    }());
 
-    /**
-     * Returns the global object associated with provided element.
-     *
-     * @param {Object} target
-     * @returns {Object}
-     */
-    var getWindowOf = (function (target) {
-        // Assume that the element is an instance of Node, which means that it
-        // has the "ownerDocument" property from which we can retrieve a
-        // corresponding global object.
-        var ownerGlobal = target && target.ownerDocument && target.ownerDocument.defaultView;
-        // Return the local global object if it's not possible extract one from
-        // provided element.
-        return ownerGlobal || global$1;
-    });
+    var isSVG = function (target) { return target instanceof SVGElement && 'getBBox' in target; };
+    var isHidden = function (target) {
+        if (isSVG(target)) {
+            var _a = target.getBBox(), width = _a.width, height = _a.height;
+            return !width && !height;
+        }
+        var _b = target, offsetWidth = _b.offsetWidth, offsetHeight = _b.offsetHeight;
+        return !(offsetWidth || offsetHeight || target.getClientRects().length);
+    };
+    var isElement$1 = function (obj) {
+        var _a, _b;
+        if (obj instanceof Element) {
+            return true;
+        }
+        var scope = (_b = (_a = obj) === null || _a === void 0 ? void 0 : _a.ownerDocument) === null || _b === void 0 ? void 0 : _b.defaultView;
+        return !!(scope && obj instanceof scope.Element);
+    };
+    var isReplacedElement = function (target) {
+        switch (target.tagName) {
+            case 'INPUT':
+                if (target.type !== 'image') {
+                    break;
+                }
+            case 'VIDEO':
+            case 'AUDIO':
+            case 'EMBED':
+            case 'OBJECT':
+            case 'CANVAS':
+            case 'IFRAME':
+            case 'IMG':
+                return true;
+        }
+        return false;
+    };
 
-    // Placeholder of an empty content rectangle.
-    var emptyRect = createRectInit(0, 0, 0, 0);
-    /**
-     * Converts provided string to a number.
-     *
-     * @param {number|string} value
-     * @returns {number}
-     */
-    function toFloat(value) {
-        return parseFloat(value) || 0;
-    }
-    /**
-     * Extracts borders size from provided styles.
-     *
-     * @param {CSSStyleDeclaration} styles
-     * @param {...string} positions - Borders positions (top, right, ...)
-     * @returns {number}
-     */
-    function getBordersSize(styles) {
-        var positions = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            positions[_i - 1] = arguments[_i];
+    var global = typeof window !== 'undefined' ? window : {};
+
+    var cache = new WeakMap();
+    var scrollRegexp = /auto|scroll/;
+    var verticalRegexp = /^tb|vertical/;
+    var IE = (/msie|trident/i).test(global.navigator && global.navigator.userAgent);
+    var parseDimension = function (pixel) { return parseFloat(pixel || '0'); };
+    var size = function (inlineSize, blockSize, switchSizes) {
+        if (inlineSize === void 0) { inlineSize = 0; }
+        if (blockSize === void 0) { blockSize = 0; }
+        if (switchSizes === void 0) { switchSizes = false; }
+        return new ResizeObserverSize((switchSizes ? blockSize : inlineSize) || 0, (switchSizes ? inlineSize : blockSize) || 0);
+    };
+    var zeroBoxes = freeze({
+        devicePixelContentBoxSize: size(),
+        borderBoxSize: size(),
+        contentBoxSize: size(),
+        contentRect: new DOMRectReadOnly(0, 0, 0, 0)
+    });
+    var calculateBoxSizes = function (target, forceRecalculation) {
+        if (forceRecalculation === void 0) { forceRecalculation = false; }
+        if (cache.has(target) && !forceRecalculation) {
+            return cache.get(target);
         }
-        return positions.reduce(function (size, position) {
-            var value = styles['border-' + position + '-width'];
-            return size + toFloat(value);
-        }, 0);
-    }
-    /**
-     * Extracts paddings sizes from provided styles.
-     *
-     * @param {CSSStyleDeclaration} styles
-     * @returns {Object} Paddings box.
-     */
-    function getPaddings(styles) {
-        var positions = ['top', 'right', 'bottom', 'left'];
-        var paddings = {};
-        for (var _i = 0, positions_1 = positions; _i < positions_1.length; _i++) {
-            var position = positions_1[_i];
-            var value = styles['padding-' + position];
-            paddings[position] = toFloat(value);
+        if (isHidden(target)) {
+            cache.set(target, zeroBoxes);
+            return zeroBoxes;
         }
-        return paddings;
-    }
-    /**
-     * Calculates content rectangle of provided SVG element.
-     *
-     * @param {SVGGraphicsElement} target - Element content rectangle of which needs
-     *      to be calculated.
-     * @returns {DOMRectInit}
-     */
-    function getSVGContentRect(target) {
-        var bbox = target.getBBox();
-        return createRectInit(0, 0, bbox.width, bbox.height);
-    }
-    /**
-     * Calculates content rectangle of provided HTMLElement.
-     *
-     * @param {HTMLElement} target - Element for which to calculate the content rectangle.
-     * @returns {DOMRectInit}
-     */
-    function getHTMLElementContentRect(target) {
-        // Client width & height properties can't be
-        // used exclusively as they provide rounded values.
-        var clientWidth = target.clientWidth, clientHeight = target.clientHeight;
-        // By this condition we can catch all non-replaced inline, hidden and
-        // detached elements. Though elements with width & height properties less
-        // than 0.5 will be discarded as well.
-        //
-        // Without it we would need to implement separate methods for each of
-        // those cases and it's not possible to perform a precise and performance
-        // effective test for hidden elements. E.g. even jQuery's ':visible' filter
-        // gives wrong results for elements with width & height less than 0.5.
-        if (!clientWidth && !clientHeight) {
-            return emptyRect;
-        }
-        var styles = getWindowOf(target).getComputedStyle(target);
-        var paddings = getPaddings(styles);
-        var horizPad = paddings.left + paddings.right;
-        var vertPad = paddings.top + paddings.bottom;
-        // Computed styles of width & height are being used because they are the
-        // only dimensions available to JS that contain non-rounded values. It could
-        // be possible to utilize the getBoundingClientRect if only it's data wasn't
-        // affected by CSS transformations let alone paddings, borders and scroll bars.
-        var width = toFloat(styles.width), height = toFloat(styles.height);
-        // Width & height include paddings and borders when the 'border-box' box
-        // model is applied (except for IE).
-        if (styles.boxSizing === 'border-box') {
-            // Following conditions are required to handle Internet Explorer which
-            // doesn't include paddings and borders to computed CSS dimensions.
-            //
-            // We can say that if CSS dimensions + paddings are equal to the "client"
-            // properties then it's either IE, and thus we don't need to subtract
-            // anything, or an element merely doesn't have paddings/borders styles.
-            if (Math.round(width + horizPad) !== clientWidth) {
-                width -= getBordersSize(styles, 'left', 'right') + horizPad;
-            }
-            if (Math.round(height + vertPad) !== clientHeight) {
-                height -= getBordersSize(styles, 'top', 'bottom') + vertPad;
-            }
-        }
-        // Following steps can't be applied to the document's root element as its
-        // client[Width/Height] properties represent viewport area of the window.
-        // Besides, it's as well not necessary as the <html> itself neither has
-        // rendered scroll bars nor it can be clipped.
-        if (!isDocumentElement(target)) {
-            // In some browsers (only in Firefox, actually) CSS width & height
-            // include scroll bars size which can be removed at this step as scroll
-            // bars are the only difference between rounded dimensions + paddings
-            // and "client" properties, though that is not always true in Chrome.
-            var vertScrollbar = Math.round(width + horizPad) - clientWidth;
-            var horizScrollbar = Math.round(height + vertPad) - clientHeight;
-            // Chrome has a rather weird rounding of "client" properties.
-            // E.g. for an element with content width of 314.2px it sometimes gives
-            // the client width of 315px and for the width of 314.7px it may give
-            // 314px. And it doesn't happen all the time. So just ignore this delta
-            // as a non-relevant.
-            if (Math.abs(vertScrollbar) !== 1) {
-                width -= vertScrollbar;
-            }
-            if (Math.abs(horizScrollbar) !== 1) {
-                height -= horizScrollbar;
-            }
-        }
-        return createRectInit(paddings.left, paddings.top, width, height);
-    }
-    /**
-     * Checks whether provided element is an instance of the SVGGraphicsElement.
-     *
-     * @param {Element} target - Element to be checked.
-     * @returns {boolean}
-     */
-    var isSVGGraphicsElement = (function () {
-        // Some browsers, namely IE and Edge, don't have the SVGGraphicsElement
-        // interface.
-        if (typeof SVGGraphicsElement !== 'undefined') {
-            return function (target) { return target instanceof getWindowOf(target).SVGGraphicsElement; };
-        }
-        // If it's so, then check that element is at least an instance of the
-        // SVGElement and that it has the "getBBox" method.
-        // eslint-disable-next-line no-extra-parens
-        return function (target) { return (target instanceof getWindowOf(target).SVGElement &&
-            typeof target.getBBox === 'function'); };
-    })();
-    /**
-     * Checks whether provided element is a document element (<html>).
-     *
-     * @param {Element} target - Element to be checked.
-     * @returns {boolean}
-     */
-    function isDocumentElement(target) {
-        return target === getWindowOf(target).document.documentElement;
-    }
-    /**
-     * Calculates an appropriate content rectangle for provided html or svg element.
-     *
-     * @param {Element} target - Element content rectangle of which needs to be calculated.
-     * @returns {DOMRectInit}
-     */
-    function getContentRect(target) {
-        if (!isBrowser) {
-            return emptyRect;
-        }
-        if (isSVGGraphicsElement(target)) {
-            return getSVGContentRect(target);
-        }
-        return getHTMLElementContentRect(target);
-    }
-    /**
-     * Creates rectangle with an interface of the DOMRectReadOnly.
-     * Spec: https://drafts.fxtf.org/geometry/#domrectreadonly
-     *
-     * @param {DOMRectInit} rectInit - Object with rectangle's x/y coordinates and dimensions.
-     * @returns {DOMRectReadOnly}
-     */
-    function createReadOnlyRect(_a) {
-        var x = _a.x, y = _a.y, width = _a.width, height = _a.height;
-        // If DOMRectReadOnly is available use it as a prototype for the rectangle.
-        var Constr = typeof DOMRectReadOnly !== 'undefined' ? DOMRectReadOnly : Object;
-        var rect = Object.create(Constr.prototype);
-        // Rectangle's properties are not writable and non-enumerable.
-        defineConfigurable(rect, {
-            x: x, y: y, width: width, height: height,
-            top: y,
-            right: x + width,
-            bottom: height + y,
-            left: x
+        var cs = getComputedStyle(target);
+        var svg = isSVG(target) && target.ownerSVGElement && target.getBBox();
+        var removePadding = !IE && cs.boxSizing === 'border-box';
+        var switchSizes = verticalRegexp.test(cs.writingMode || '');
+        var canScrollVertically = !svg && scrollRegexp.test(cs.overflowY || '');
+        var canScrollHorizontally = !svg && scrollRegexp.test(cs.overflowX || '');
+        var paddingTop = svg ? 0 : parseDimension(cs.paddingTop);
+        var paddingRight = svg ? 0 : parseDimension(cs.paddingRight);
+        var paddingBottom = svg ? 0 : parseDimension(cs.paddingBottom);
+        var paddingLeft = svg ? 0 : parseDimension(cs.paddingLeft);
+        var borderTop = svg ? 0 : parseDimension(cs.borderTopWidth);
+        var borderRight = svg ? 0 : parseDimension(cs.borderRightWidth);
+        var borderBottom = svg ? 0 : parseDimension(cs.borderBottomWidth);
+        var borderLeft = svg ? 0 : parseDimension(cs.borderLeftWidth);
+        var horizontalPadding = paddingLeft + paddingRight;
+        var verticalPadding = paddingTop + paddingBottom;
+        var horizontalBorderArea = borderLeft + borderRight;
+        var verticalBorderArea = borderTop + borderBottom;
+        var horizontalScrollbarThickness = !canScrollHorizontally ? 0 : target.offsetHeight - verticalBorderArea - target.clientHeight;
+        var verticalScrollbarThickness = !canScrollVertically ? 0 : target.offsetWidth - horizontalBorderArea - target.clientWidth;
+        var widthReduction = removePadding ? horizontalPadding + horizontalBorderArea : 0;
+        var heightReduction = removePadding ? verticalPadding + verticalBorderArea : 0;
+        var contentWidth = svg ? svg.width : parseDimension(cs.width) - widthReduction - verticalScrollbarThickness;
+        var contentHeight = svg ? svg.height : parseDimension(cs.height) - heightReduction - horizontalScrollbarThickness;
+        var borderBoxWidth = contentWidth + horizontalPadding + verticalScrollbarThickness + horizontalBorderArea;
+        var borderBoxHeight = contentHeight + verticalPadding + horizontalScrollbarThickness + verticalBorderArea;
+        var boxes = freeze({
+            devicePixelContentBoxSize: size(Math.round(contentWidth * devicePixelRatio), Math.round(contentHeight * devicePixelRatio), switchSizes),
+            borderBoxSize: size(borderBoxWidth, borderBoxHeight, switchSizes),
+            contentBoxSize: size(contentWidth, contentHeight, switchSizes),
+            contentRect: new DOMRectReadOnly(paddingLeft, paddingTop, contentWidth, contentHeight)
         });
-        return rect;
-    }
-    /**
-     * Creates DOMRectInit object based on the provided dimensions and the x/y coordinates.
-     * Spec: https://drafts.fxtf.org/geometry/#dictdef-domrectinit
-     *
-     * @param {number} x - X coordinate.
-     * @param {number} y - Y coordinate.
-     * @param {number} width - Rectangle's width.
-     * @param {number} height - Rectangle's height.
-     * @returns {DOMRectInit}
-     */
-    function createRectInit(x, y, width, height) {
-        return { x: x, y: y, width: width, height: height };
-    }
-
-    /**
-     * Class that is responsible for computations of the content rectangle of
-     * provided DOM element and for keeping track of it's changes.
-     */
-    var ResizeObservation = /** @class */ (function () {
-        /**
-         * Creates an instance of ResizeObservation.
-         *
-         * @param {Element} target - Element to be observed.
-         */
-        function ResizeObservation(target) {
-            /**
-             * Broadcasted width of content rectangle.
-             *
-             * @type {number}
-             */
-            this.broadcastWidth = 0;
-            /**
-             * Broadcasted height of content rectangle.
-             *
-             * @type {number}
-             */
-            this.broadcastHeight = 0;
-            /**
-             * Reference to the last observed content rectangle.
-             *
-             * @private {DOMRectInit}
-             */
-            this.contentRect_ = createRectInit(0, 0, 0, 0);
-            this.target = target;
+        cache.set(target, boxes);
+        return boxes;
+    };
+    var calculateBoxSize = function (target, observedBox, forceRecalculation) {
+        var _a = calculateBoxSizes(target, forceRecalculation), borderBoxSize = _a.borderBoxSize, contentBoxSize = _a.contentBoxSize, devicePixelContentBoxSize = _a.devicePixelContentBoxSize;
+        switch (observedBox) {
+            case ResizeObserverBoxOptions.DEVICE_PIXEL_CONTENT_BOX:
+                return devicePixelContentBoxSize;
+            case ResizeObserverBoxOptions.BORDER_BOX:
+                return borderBoxSize;
+            default:
+                return contentBoxSize;
         }
-        /**
-         * Updates content rectangle and tells whether it's width or height properties
-         * have changed since the last broadcast.
-         *
-         * @returns {boolean}
-         */
-        ResizeObservation.prototype.isActive = function () {
-            var rect = getContentRect(this.target);
-            this.contentRect_ = rect;
-            return (rect.width !== this.broadcastWidth ||
-                rect.height !== this.broadcastHeight);
-        };
-        /**
-         * Updates 'broadcastWidth' and 'broadcastHeight' properties with a data
-         * from the corresponding properties of the last observed content rectangle.
-         *
-         * @returns {DOMRectInit} Last observed content rectangle.
-         */
-        ResizeObservation.prototype.broadcastRect = function () {
-            var rect = this.contentRect_;
-            this.broadcastWidth = rect.width;
-            this.broadcastHeight = rect.height;
-            return rect;
-        };
-        return ResizeObservation;
-    }());
+    };
 
-    var ResizeObserverEntry = /** @class */ (function () {
-        /**
-         * Creates an instance of ResizeObserverEntry.
-         *
-         * @param {Element} target - Element that is being observed.
-         * @param {DOMRectInit} rectInit - Data of the element's content rectangle.
-         */
-        function ResizeObserverEntry(target, rectInit) {
-            var contentRect = createReadOnlyRect(rectInit);
-            // According to the specification following properties are not writable
-            // and are also not enumerable in the native implementation.
-            //
-            // Property accessors are not being used as they'd require to define a
-            // private WeakMap storage which may cause memory leaks in browsers that
-            // don't support this type of collections.
-            defineConfigurable(this, { target: target, contentRect: contentRect });
+    var ResizeObserverEntry = (function () {
+        function ResizeObserverEntry(target) {
+            var boxes = calculateBoxSizes(target);
+            this.target = target;
+            this.contentRect = boxes.contentRect;
+            this.borderBoxSize = freeze([boxes.borderBoxSize]);
+            this.contentBoxSize = freeze([boxes.contentBoxSize]);
+            this.devicePixelContentBoxSize = freeze([boxes.devicePixelContentBoxSize]);
         }
         return ResizeObserverEntry;
     }());
 
-    var ResizeObserverSPI = /** @class */ (function () {
-        /**
-         * Creates a new instance of ResizeObserver.
-         *
-         * @param {ResizeObserverCallback} callback - Callback function that is invoked
-         *      when one of the observed elements changes it's content dimensions.
-         * @param {ResizeObserverController} controller - Controller instance which
-         *      is responsible for the updates of observer.
-         * @param {ResizeObserver} callbackCtx - Reference to the public
-         *      ResizeObserver instance which will be passed to callback function.
-         */
-        function ResizeObserverSPI(callback, controller, callbackCtx) {
-            /**
-             * Collection of resize observations that have detected changes in dimensions
-             * of elements.
-             *
-             * @private {Array<ResizeObservation>}
-             */
-            this.activeObservations_ = [];
-            /**
-             * Registry of the ResizeObservation instances.
-             *
-             * @private {Map<Element, ResizeObservation>}
-             */
-            this.observations_ = new MapShim();
-            if (typeof callback !== 'function') {
-                throw new TypeError('The callback provided as parameter 1 is not a function.');
-            }
-            this.callback_ = callback;
-            this.controller_ = controller;
-            this.callbackCtx_ = callbackCtx;
+    var calculateDepthForNode = function (node) {
+        if (isHidden(node)) {
+            return Infinity;
         }
-        /**
-         * Starts observing provided element.
-         *
-         * @param {Element} target - Element to be observed.
-         * @returns {void}
-         */
-        ResizeObserverSPI.prototype.observe = function (target) {
-            if (!arguments.length) {
-                throw new TypeError('1 argument required, but only 0 present.');
-            }
-            // Do nothing if current environment doesn't have the Element interface.
-            if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+        var depth = 0;
+        var parent = node.parentNode;
+        while (parent) {
+            depth += 1;
+            parent = parent.parentNode;
+        }
+        return depth;
+    };
+
+    var broadcastActiveObservations = function () {
+        var shallowestDepth = Infinity;
+        var callbacks = [];
+        resizeObservers.forEach(function processObserver(ro) {
+            if (ro.activeTargets.length === 0) {
                 return;
             }
-            if (!(target instanceof getWindowOf(target).Element)) {
-                throw new TypeError('parameter 1 is not of type "Element".');
-            }
-            var observations = this.observations_;
-            // Do nothing if element is already being observed.
-            if (observations.has(target)) {
-                return;
-            }
-            observations.set(target, new ResizeObservation(target));
-            this.controller_.addObserver(this);
-            // Force the update of observations.
-            this.controller_.refresh();
-        };
-        /**
-         * Stops observing provided element.
-         *
-         * @param {Element} target - Element to stop observing.
-         * @returns {void}
-         */
-        ResizeObserverSPI.prototype.unobserve = function (target) {
-            if (!arguments.length) {
-                throw new TypeError('1 argument required, but only 0 present.');
-            }
-            // Do nothing if current environment doesn't have the Element interface.
-            if (typeof Element === 'undefined' || !(Element instanceof Object)) {
-                return;
-            }
-            if (!(target instanceof getWindowOf(target).Element)) {
-                throw new TypeError('parameter 1 is not of type "Element".');
-            }
-            var observations = this.observations_;
-            // Do nothing if element is not being observed.
-            if (!observations.has(target)) {
-                return;
-            }
-            observations.delete(target);
-            if (!observations.size) {
-                this.controller_.removeObserver(this);
-            }
-        };
-        /**
-         * Stops observing all elements.
-         *
-         * @returns {void}
-         */
-        ResizeObserverSPI.prototype.disconnect = function () {
-            this.clearActive();
-            this.observations_.clear();
-            this.controller_.removeObserver(this);
-        };
-        /**
-         * Collects observation instances the associated element of which has changed
-         * it's content rectangle.
-         *
-         * @returns {void}
-         */
-        ResizeObserverSPI.prototype.gatherActive = function () {
+            var entries = [];
+            ro.activeTargets.forEach(function processTarget(ot) {
+                var entry = new ResizeObserverEntry(ot.target);
+                var targetDepth = calculateDepthForNode(ot.target);
+                entries.push(entry);
+                ot.lastReportedSize = calculateBoxSize(ot.target, ot.observedBox);
+                if (targetDepth < shallowestDepth) {
+                    shallowestDepth = targetDepth;
+                }
+            });
+            callbacks.push(function resizeObserverCallback() {
+                ro.callback.call(ro.observer, entries, ro.observer);
+            });
+            ro.activeTargets.splice(0, ro.activeTargets.length);
+        });
+        for (var _i = 0, callbacks_1 = callbacks; _i < callbacks_1.length; _i++) {
+            var callback = callbacks_1[_i];
+            callback();
+        }
+        return shallowestDepth;
+    };
+
+    var gatherActiveObservationsAtDepth = function (depth) {
+        resizeObservers.forEach(function processObserver(ro) {
+            ro.activeTargets.splice(0, ro.activeTargets.length);
+            ro.skippedTargets.splice(0, ro.skippedTargets.length);
+            ro.observationTargets.forEach(function processTarget(ot) {
+                if (ot.isActive()) {
+                    if (calculateDepthForNode(ot.target) > depth) {
+                        ro.activeTargets.push(ot);
+                    }
+                    else {
+                        ro.skippedTargets.push(ot);
+                    }
+                }
+            });
+        });
+    };
+
+    var process$1 = function () {
+        var depth = 0;
+        gatherActiveObservationsAtDepth(depth);
+        while (hasActiveObservations()) {
+            depth = broadcastActiveObservations();
+            gatherActiveObservationsAtDepth(depth);
+        }
+        if (hasSkippedObservations()) {
+            deliverResizeLoopError();
+        }
+        return depth > 0;
+    };
+
+    var trigger;
+    var callbacks = [];
+    var notify = function () { return callbacks.splice(0).forEach(function (cb) { return cb(); }); };
+    var queueMicroTask = function (callback) {
+        if (!trigger) {
+            var toggle_1 = 0;
+            var el_1 = document.createTextNode('');
+            var config = { characterData: true };
+            new MutationObserver(function () { return notify(); }).observe(el_1, config);
+            trigger = function () { el_1.textContent = "" + (toggle_1 ? toggle_1-- : toggle_1++); };
+        }
+        callbacks.push(callback);
+        trigger();
+    };
+
+    var queueResizeObserver = function (cb) {
+        queueMicroTask(function ResizeObserver() {
+            requestAnimationFrame(cb);
+        });
+    };
+
+    var watching = 0;
+    var isWatching = function () { return !!watching; };
+    var CATCH_PERIOD = 250;
+    var observerConfig = { attributes: true, characterData: true, childList: true, subtree: true };
+    var events = [
+        'resize',
+        'load',
+        'transitionend',
+        'animationend',
+        'animationstart',
+        'animationiteration',
+        'keyup',
+        'keydown',
+        'mouseup',
+        'mousedown',
+        'mouseover',
+        'mouseout',
+        'blur',
+        'focus'
+    ];
+    var time = function (timeout) {
+        if (timeout === void 0) { timeout = 0; }
+        return Date.now() + timeout;
+    };
+    var scheduled = false;
+    var Scheduler = (function () {
+        function Scheduler() {
             var _this = this;
-            this.clearActive();
-            this.observations_.forEach(function (observation) {
-                if (observation.isActive()) {
-                    _this.activeObservations_.push(observation);
+            this.stopped = true;
+            this.listener = function () { return _this.schedule(); };
+        }
+        Scheduler.prototype.run = function (timeout) {
+            var _this = this;
+            if (timeout === void 0) { timeout = CATCH_PERIOD; }
+            if (scheduled) {
+                return;
+            }
+            scheduled = true;
+            var until = time(timeout);
+            queueResizeObserver(function () {
+                var elementsHaveResized = false;
+                try {
+                    elementsHaveResized = process$1();
+                }
+                finally {
+                    scheduled = false;
+                    timeout = until - time();
+                    if (!isWatching()) {
+                        return;
+                    }
+                    if (elementsHaveResized) {
+                        _this.run(1000);
+                    }
+                    else if (timeout > 0) {
+                        _this.run(timeout);
+                    }
+                    else {
+                        _this.start();
+                    }
                 }
             });
         };
-        /**
-         * Invokes initial callback function with a list of ResizeObserverEntry
-         * instances collected from active resize observations.
-         *
-         * @returns {void}
-         */
-        ResizeObserverSPI.prototype.broadcastActive = function () {
-            // Do nothing if observer doesn't have active observations.
-            if (!this.hasActive()) {
-                return;
+        Scheduler.prototype.schedule = function () {
+            this.stop();
+            this.run();
+        };
+        Scheduler.prototype.observe = function () {
+            var _this = this;
+            var cb = function () { return _this.observer && _this.observer.observe(document.body, observerConfig); };
+            document.body ? cb() : global.addEventListener('DOMContentLoaded', cb);
+        };
+        Scheduler.prototype.start = function () {
+            var _this = this;
+            if (this.stopped) {
+                this.stopped = false;
+                this.observer = new MutationObserver(this.listener);
+                this.observe();
+                events.forEach(function (name) { return global.addEventListener(name, _this.listener, true); });
             }
-            var ctx = this.callbackCtx_;
-            // Create ResizeObserverEntry instance for every active observation.
-            var entries = this.activeObservations_.map(function (observation) {
-                return new ResizeObserverEntry(observation.target, observation.broadcastRect());
-            });
-            this.callback_.call(ctx, entries, ctx);
-            this.clearActive();
         };
-        /**
-         * Clears the collection of active observations.
-         *
-         * @returns {void}
-         */
-        ResizeObserverSPI.prototype.clearActive = function () {
-            this.activeObservations_.splice(0);
+        Scheduler.prototype.stop = function () {
+            var _this = this;
+            if (!this.stopped) {
+                this.observer && this.observer.disconnect();
+                events.forEach(function (name) { return global.removeEventListener(name, _this.listener, true); });
+                this.stopped = true;
+            }
         };
-        /**
-         * Tells whether observer has active observations.
-         *
-         * @returns {boolean}
-         */
-        ResizeObserverSPI.prototype.hasActive = function () {
-            return this.activeObservations_.length > 0;
+        return Scheduler;
+    }());
+    var scheduler = new Scheduler();
+    var updateCount = function (n) {
+        !watching && n > 0 && scheduler.start();
+        watching += n;
+        !watching && scheduler.stop();
+    };
+
+    var skipNotifyOnElement = function (target) {
+        return !isSVG(target)
+            && !isReplacedElement(target)
+            && getComputedStyle(target).display === 'inline';
+    };
+    var ResizeObservation = (function () {
+        function ResizeObservation(target, observedBox) {
+            this.target = target;
+            this.observedBox = observedBox || ResizeObserverBoxOptions.CONTENT_BOX;
+            this.lastReportedSize = {
+                inlineSize: 0,
+                blockSize: 0
+            };
+        }
+        ResizeObservation.prototype.isActive = function () {
+            var size = calculateBoxSize(this.target, this.observedBox, true);
+            if (skipNotifyOnElement(this.target)) {
+                this.lastReportedSize = size;
+            }
+            if (this.lastReportedSize.inlineSize !== size.inlineSize
+                || this.lastReportedSize.blockSize !== size.blockSize) {
+                return true;
+            }
+            return false;
         };
-        return ResizeObserverSPI;
+        return ResizeObservation;
     }());
 
-    // Registry of internal observers. If WeakMap is not available use current shim
-    // for the Map collection as it has all required methods and because WeakMap
-    // can't be fully polyfilled anyway.
-    var observers = typeof WeakMap !== 'undefined' ? new WeakMap() : new MapShim();
-    /**
-     * ResizeObserver API. Encapsulates the ResizeObserver SPI implementation
-     * exposing only those methods and properties that are defined in the spec.
-     */
-    var ResizeObserver = /** @class */ (function () {
-        /**
-         * Creates a new instance of ResizeObserver.
-         *
-         * @param {ResizeObserverCallback} callback - Callback that is invoked when
-         *      dimensions of the observed elements change.
-         */
+    var ResizeObserverDetail = (function () {
+        function ResizeObserverDetail(resizeObserver, callback) {
+            this.activeTargets = [];
+            this.skippedTargets = [];
+            this.observationTargets = [];
+            this.observer = resizeObserver;
+            this.callback = callback;
+        }
+        return ResizeObserverDetail;
+    }());
+
+    var observerMap = new WeakMap();
+    var getObservationIndex = function (observationTargets, target) {
+        for (var i = 0; i < observationTargets.length; i += 1) {
+            if (observationTargets[i].target === target) {
+                return i;
+            }
+        }
+        return -1;
+    };
+    var ResizeObserverController = (function () {
+        function ResizeObserverController() {
+        }
+        ResizeObserverController.connect = function (resizeObserver, callback) {
+            var detail = new ResizeObserverDetail(resizeObserver, callback);
+            observerMap.set(resizeObserver, detail);
+        };
+        ResizeObserverController.observe = function (resizeObserver, target, options) {
+            var detail = observerMap.get(resizeObserver);
+            var firstObservation = detail.observationTargets.length === 0;
+            if (getObservationIndex(detail.observationTargets, target) < 0) {
+                firstObservation && resizeObservers.push(detail);
+                detail.observationTargets.push(new ResizeObservation(target, options && options.box));
+                updateCount(1);
+                scheduler.schedule();
+            }
+        };
+        ResizeObserverController.unobserve = function (resizeObserver, target) {
+            var detail = observerMap.get(resizeObserver);
+            var index = getObservationIndex(detail.observationTargets, target);
+            var lastObservation = detail.observationTargets.length === 1;
+            if (index >= 0) {
+                lastObservation && resizeObservers.splice(resizeObservers.indexOf(detail), 1);
+                detail.observationTargets.splice(index, 1);
+                updateCount(-1);
+            }
+        };
+        ResizeObserverController.disconnect = function (resizeObserver) {
+            var _this = this;
+            var detail = observerMap.get(resizeObserver);
+            detail.observationTargets.slice().forEach(function (ot) { return _this.unobserve(resizeObserver, ot.target); });
+            detail.activeTargets.splice(0, detail.activeTargets.length);
+        };
+        return ResizeObserverController;
+    }());
+
+    var ResizeObserver = (function () {
         function ResizeObserver(callback) {
-            if (!(this instanceof ResizeObserver)) {
-                throw new TypeError('Cannot call a class as a function.');
+            if (arguments.length === 0) {
+                throw new TypeError("Failed to construct 'ResizeObserver': 1 argument required, but only 0 present.");
             }
-            if (!arguments.length) {
-                throw new TypeError('1 argument required, but only 0 present.');
+            if (typeof callback !== 'function') {
+                throw new TypeError("Failed to construct 'ResizeObserver': The callback provided as parameter 1 is not a function.");
             }
-            var controller = ResizeObserverController.getInstance();
-            var observer = new ResizeObserverSPI(callback, controller, this);
-            observers.set(this, observer);
+            ResizeObserverController.connect(this, callback);
         }
+        ResizeObserver.prototype.observe = function (target, options) {
+            if (arguments.length === 0) {
+                throw new TypeError("Failed to execute 'observe' on 'ResizeObserver': 1 argument required, but only 0 present.");
+            }
+            if (!isElement$1(target)) {
+                throw new TypeError("Failed to execute 'observe' on 'ResizeObserver': parameter 1 is not of type 'Element");
+            }
+            ResizeObserverController.observe(this, target, options);
+        };
+        ResizeObserver.prototype.unobserve = function (target) {
+            if (arguments.length === 0) {
+                throw new TypeError("Failed to execute 'unobserve' on 'ResizeObserver': 1 argument required, but only 0 present.");
+            }
+            if (!isElement$1(target)) {
+                throw new TypeError("Failed to execute 'unobserve' on 'ResizeObserver': parameter 1 is not of type 'Element");
+            }
+            ResizeObserverController.unobserve(this, target);
+        };
+        ResizeObserver.prototype.disconnect = function () {
+            ResizeObserverController.disconnect(this);
+        };
+        ResizeObserver.toString = function () {
+            return 'function ResizeObserver () { [polyfill code] }';
+        };
         return ResizeObserver;
     }());
-    // Expose public methods of ResizeObserver.
-    [
-        'observe',
-        'unobserve',
-        'disconnect'
-    ].forEach(function (method) {
-        ResizeObserver.prototype[method] = function () {
-            var _a;
-            return (_a = observers.get(this))[method].apply(_a, arguments);
-        };
-    });
-
-    var index$1 = (function () {
-        // Export existing implementation if available.
-        if (typeof global$1.ResizeObserver !== 'undefined') {
-            return global$1.ResizeObserver;
-        }
-        return ResizeObserver;
-    })();
 
     var ARROW_LEFT = "arrow-left";
     var ARROW_RIGHT = "arrow-right";
@@ -4465,10 +4642,11 @@
     var RESET = "reset";
 
     /*
-     * Copyright 2017 Palantir Technologies, Inc. All rights reserved.
+     * Copyright 2021 Palantir Technologies, Inc. All rights reserved.
      */
     var IconSvgPaths16 = {
         "add": ["M10.99 6.99h-2v-2c0-.55-.45-1-1-1s-1 .45-1 1v2h-2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1zm-3-7c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.68 6-6 6z"],
+        "add-clip": ["M12 0a1 1 0 00-1 1v2H9a1 1 0 000 2h2v2a1 1 0 102 0V5h2a1 1 0 100-2h-2V1a1 1 0 00-1-1zM0 4a1 1 0 011-1h3.5a1 1 0 010 2H2v2a1 1 0 01-2 0V4zm1 12a1 1 0 01-1-1v-3a1 1 0 112 0v2h2.5a1 1 0 110 2H1zm11 0a1 1 0 001-1v-3a1 1 0 10-2 0v2H9a1 1 0 100 2h3zm-5.5-4a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"],
         "add-column-left": ["M15 0H1C.45 0 0 .45 0 1v14c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-5 14H2V2h8v12zm4 0h-3V2h3v12zM4 9h1v1c0 .55.45 1 1 1s1-.45 1-1V9h1c.55 0 1-.45 1-1s-.45-1-1-1H7V6c0-.55-.45-1-1-1s-1 .45-1 1v1H4c-.55 0-1 .45-1 1s.45 1 1 1z"],
         "add-column-right": ["M8 9h1v1c0 .55.45 1 1 1s1-.45 1-1V9h1c.55 0 1-.45 1-1s-.45-1-1-1h-1V6c0-.55-.45-1-1-1s-1 .45-1 1v1H8c-.55 0-1 .45-1 1s.45 1 1 1zm7-9H1C.45 0 0 .45 0 1v14c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zM5 14H2V2h3v12zm9 0H6V2h8v12z"],
         "add-location": ["M8 0a1 1 0 110 2 6 6 0 106 6 1 1 0 012 0 8 8 0 11-8-8zm0 5a3 3 0 110 6 3 3 0 010-6zm5-5a1 1 0 011 1v.999L15 2a1 1 0 010 2h-1v1a1 1 0 01-2 0V4h-1a1 1 0 010-2h1V1a1 1 0 011-1z"],
@@ -4534,6 +4712,7 @@
         "caret-left": ["M9.5 4c-.13 0-.24.05-.33.13l-4 3.5c-.1.09-.17.22-.17.37s.07.28.17.37l4 3.5a.495.495 0 00.83-.37v-7c0-.28-.22-.5-.5-.5z"],
         "caret-right": ["M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"],
         "caret-up": ["M11.87 9.17s.01 0 0 0l-3.5-4C8.28 5.07 8.15 5 8 5s-.28.07-.37.17l-3.5 4a.495.495 0 00.37.83h7a.495.495 0 00.37-.83z"],
+        "cargo-ship": ["M10 1h3a1 1 0 011 1v2h-4V1zM2.25 4a.25.25 0 00-.25.25V9H.883a.5.5 0 00-.429.757l1.072 1.787c.207.344.477.638.791.87A9.76 9.76 0 011 12.5a.5.5 0 000 1c2.067 0 3.414-.543 4.161-.917.55.373 1.505.917 2.839.917 1.32 0 2.27-.533 2.822-.905l.004.002c.196.105.48.24.856.374.75.268 1.857.529 3.318.529a.5.5 0 000-1c-.326 0-.63-.014-.916-.039.47-.328.848-.79 1.07-1.347l.572-1.428A.5.5 0 0015.26 9H4V4.25A.25.25 0 003.75 4h-1.5zm2.714 9.56a.5.5 0 01.527.033c.455.325 1.277.907 2.509.907s2.054-.582 2.51-.907a.5.5 0 01.579-.001l.006.004.036.023c.034.022.09.055.168.097.154.082.394.197.72.313.649.232 1.642.471 2.981.471a.5.5 0 010 1c-1.46 0-2.568-.261-3.318-.53a6.316 6.316 0 01-.856-.373l-.004-.002c-.552.372-1.502.905-2.822.905-1.334 0-2.289-.544-2.839-.917-.747.374-2.094.917-4.161.917a.5.5 0 010-1c2.129 0 3.384-.63 3.964-.94zM14 5h-4v3h3a1 1 0 001-1V5zM5 2a1 1 0 011-1h3v3H5V2zm4 3H5v2a1 1 0 001 1h3V5z"],
         "cell-tower": ["M8.97 6.76c-.01-.05-.04-.08-.06-.13-.02-.05-.03-.1-.05-.15.08-.14.14-.3.14-.48 0-.55-.45-1-1-1s-1 .45-1 1c0 .18.06.34.14.48-.03.05-.03.1-.05.15-.02.05-.05.08-.06.13l-2 8c-.13.54.19 1.08.73 1.21a.995.995 0 001.21-.73L7.53 13h.94l.56 2.24a1 1 0 001.94-.48l-2-8zM3.72 1.7C4.1 1.3 4.09.67 3.7.28S2.67-.09 2.28.3c-3.05 3.12-3.05 8.28 0 11.4a.996.996 0 101.43-1.39c-2.28-2.35-2.28-6.27.01-8.61zM11.6 3.2c-.44-.33-1.07-.24-1.4.2-.33.44-.24 1.07.2 1.4.43.32.53 1.96-.04 2.43-.42.35-.48.98-.13 1.41.35.42.98.48 1.41.13 1.59-1.33 1.39-4.5-.04-5.57z",
             "M13.72.3c-.39-.4-1.02-.4-1.41-.02s-.41 1.02-.03 1.42c2.29 2.34 2.29 6.26 0 8.6-.39.39-.38 1.03.02 1.41s1.03.38 1.41-.02c3.05-3.11 3.05-8.27.01-11.39zM5.4 7.23c-.57-.47-.47-2.11-.04-2.43.44-.33.53-.96.2-1.4s-.96-.53-1.4-.2c-1.44 1.07-1.63 4.24-.04 5.57.42.35 1.05.3 1.41-.13.35-.42.29-1.06-.13-1.41z"],
         "changes": ["M8.29 7.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3a1.003 1.003 0 00-1.42-1.42L13 7.59V1c0-.55-.45-1-1-1s-1 .45-1 1v6.59l-1.29-1.3a1.003 1.003 0 00-1.42 1.42zM14.5 13h-13c-.83 0-1.5.67-1.5 1.5S.67 16 1.5 16h13c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5zM1 5c.28 0 .53-.11.71-.29L3 3.41V10c0 .55.45 1 1 1s1-.45 1-1V3.41L6.29 4.7c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-3-3C4.53.11 4.28 0 4 0s-.53.11-.71.29l-3 3A1.003 1.003 0 001 5z"],
@@ -4552,6 +4731,7 @@
         "circle-arrow-up": ["M8.71 4.29C8.53 4.11 8.28 4 8 4s-.53.11-.71.29l-3 3a1.003 1.003 0 001.42 1.42L7 7.41V11c0 .55.45 1 1 1s1-.45 1-1V7.41l1.29 1.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-3-3zM8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"],
         "citation": ["M15.02 5c0-1.66-1.34-3-3-3s-3 1.34-3 3a2.996 2.996 0 003.6 2.94C12.1 9.76 11.14 11 10.02 11c-.55 0-1 .45-1 1s.45 1 1 1c2.76 0 5-3.13 5-7 0-.2-.02-.39-.04-.58.01-.14.04-.28.04-.42zm-11-3c-1.66 0-3 1.34-3 3a2.996 2.996 0 003.6 2.94C4.1 9.76 3.14 11 2.02 11c-.55 0-1 .45-1 1s.45 1 1 1c2.76 0 5-3.13 5-7 0-.2-.02-.39-.04-.58.01-.14.04-.28.04-.42 0-1.66-1.35-3-3-3z"],
         "clean": ["M12 8l-1.2 2.796-2.8 1.2 2.8 1.197L12 16l1.2-2.807L16 12l-2.8-1.204zM5 0L3.5 3.5 0 4.995 3.5 6.5 5 10l1.5-3.5L10 5 6.5 3.5z"],
+        "clip": ["M0 1a1 1 0 011-1h4a1 1 0 010 2H2v3a1 1 0 01-2 0V1zm1 15a1 1 0 01-1-1v-4a1 1 0 112 0v3h3a1 1 0 110 2H1zm14 0a1 1 0 001-1v-4a1 1 0 10-2 0v3h-3a1 1 0 100 2h4zm0-16a1 1 0 011 1v4a1 1 0 11-2 0V2h-3a1 1 0 110-2h4zM8 11a3 3 0 100-6 3 3 0 000 6z"],
         "clipboard": ["M11 2c0-.55-.45-1-1-1h.22C9.88.4 9.24 0 8.5 0S7.12.4 6.78 1H7c-.55 0-1 .45-1 1v1h5V2zm2 0h-1v2H5V2H4c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h9c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1z"],
         "cloud": ["M12 6c-.03 0-.07 0-.1.01A5 5 0 002 7c0 .11.01.22.02.33A3.51 3.51 0 000 10.5C0 12.43 1.57 14 3.5 14H12c2.21 0 4-1.79 4-4s-1.79-4-4-4z"],
         "cloud-download": ["M11 11c-.28 0-.53.11-.71.29L9 12.59V8c0-.55-.45-1-1-1s-1 .45-1 1v4.59L5.71 11.3A.965.965 0 005 11a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 11zm1-7c-.03 0-.07 0-.1.01A5 5 0 002 5c0 .11.01.22.02.33A3.51 3.51 0 000 8.5c0 1.41.84 2.61 2.03 3.17C2.2 10.17 3.46 9 5 9c.06 0 .13.02.19.02C5.07 8.7 5 8.36 5 8c0-1.66 1.34-3 3-3s3 1.34 3 3c0 .36-.07.7-.19 1.02.06 0 .13-.02.19-.02 1.48 0 2.7 1.07 2.95 2.47A3.964 3.964 0 0016 8c0-2.21-1.79-4-4-4z"],
@@ -4711,6 +4891,8 @@
         "horizontal-bar-chart-asc": ["M1 3h5c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1zm0 4h7c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1zm14 6H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zM1 11h10c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1z"],
         "horizontal-bar-chart-desc": ["M15 1H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zM8 9H1c-.55 0-1 .45-1 1s.45 1 1 1h7c.55 0 1-.45 1-1s-.45-1-1-1zm-2 4H1c-.55 0-1 .45-1 1s.45 1 1 1h5c.55 0 1-.45 1-1s-.45-1-1-1zm5-8H1c-.55 0-1 .45-1 1s.45 1 1 1h10c.55 0 1-.45 1-1s-.45-1-1-1z"],
         "horizontal-distribution": ["M2 0c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1s1-.45 1-1V1c0-.55-.45-1-1-1zm13 0c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1s1-.45 1-1V1c0-.55-.45-1-1-1zm-5 2H7c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1z"],
+        "hurricane": ["M3.5 12c-.86 0-2.5-.5-3.5-1 1 3.5 4.506 4 7 4a7 7 0 007-7l-.006-.004a5.974 5.974 0 00-1.29-3.988c.896.066 2.37.53 3.296.992-1-3.5-4.506-4-7-4a6.998 6.998 0 00-6.14 3.635 5.972 5.972 0 00-.859 3.226L2 8l.006.005a5.98 5.98 0 001.771 3.99A7.469 7.469 0 013.5 12zM8 6a2 2 0 100 4 2 2 0 000-4z",
+            "M0 0h16v16H0z"],
         "id-number": ["M2 5v7h12V5H2zm0-2h12c1.1 0 2 .9 2 2v7c0 1.1-.9 2-2 2H2c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2z",
             "M7.9 10.48c-.14-.33-.84-.55-1.3-.75-.46-.2-.4-.33-.42-.5v-.07c.16-.14.29-.33.37-.56 0 0 0-.01.01-.02.02-.05.03-.1.05-.15.1-.01.16-.13.19-.23.03-.04.07-.15.06-.27-.02-.16-.08-.24-.15-.26v-.03c0-.2-.02-.48-.05-.67-.01-.05-.02-.1-.03-.16-.07-.23-.21-.44-.4-.58-.2-.15-.48-.23-.73-.23s-.53.08-.72.23c-.19.14-.33.35-.4.58-.02.05-.03.1-.03.16-.05.18-.06.47-.06.67v.03c-.07.03-.14.1-.15.26-.02.12.03.22.06.27.02.1.09.22.2.24.01.05.03.1.05.15v.01c.08.23.22.42.38.56v.07c-.02.17.03.29-.43.5-.46.2-1.16.42-1.3.75s-.09.52-.09.52H8c-.01 0 .05-.19-.1-.52zM10 6h2c.55 0 1 .45 1 1s-.45 1-1 1h-2c-.55 0-1-.45-1-1s.45-1 1-1zM10 9h2c.55 0 1 .45 1 1s-.45 1-1 1h-2c-.55 0-1-.45-1-1s.45-1 1-1z"],
         "image-rotate-left": ["M13 2h-1.59l.29-.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-2 2C8.11 2.47 8 2.72 8 3c0 .28.11.53.29.71l2 2a1.003 1.003 0 001.42-1.42l-.3-.29H13c.55 0 1 .45 1 1v3c0 .55.45 1 1 1s1-.45 1-1V5c0-1.66-1.34-3-3-3zm-5.5 9c.28 0 .5-.22.5-.5s-.22-.5-.5-.5-.5.22-.5.5.22.5.5.5zM10 7H1c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h9c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-1 6.33L7 12l-1 1-2-3-2 2.67V9h7v4.33z"],
@@ -4766,6 +4948,7 @@
         "less-than-or-equal-to": ["M13.287 3.958a1 1 0 00-.575-1.916l-10 3c-.95.285-.95 1.63 0 1.916l10 3a1 1 0 00.575-1.916L6.48 6l6.807-2.042zM13 12H3a1 1 0 000 2h10a1 1 0 000-2z"],
         "lifesaver": ["M9.405 11.746C8.968 11.91 8.495 12 8 12c-.494 0-.968-.09-1.405-.254l-.702 1.873C6.548 13.865 7.258 14 8 14c.742 0 1.452-.135 2.107-.38l-.702-1.874zm2.341-2.341l1.873.702C13.865 9.452 14 8.742 14 8c0-.742-.135-1.452-.38-2.107l-1.874.702c.164.437.254.91.254 1.405 0 .494-.09.968-.254 1.405zM9.405 4.254l.702-1.873A5.987 5.987 0 008 2c-.742 0-1.452.135-2.107.38l.702 1.874C7.032 4.09 7.505 4 8 4c.494 0 .968.09 1.405.254zM4.254 6.595L2.38 5.893A5.987 5.987 0 002 8c0 .742.135 1.452.38 2.107l1.874-.702A3.991 3.991 0 014 8c0-.494.09-.968.254-1.405zM8 16A8 8 0 118 0a8 8 0 010 16zm0-6a2 2 0 100-4 2 2 0 000 4z"],
         "lightbulb": ["M9.01 14h-2c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1s-.44-1-1-1zm1-3h-4c-.55 0-1 .45-1 1s.45 1 1 1h4c.55 0 1-.45 1-1s-.44-1-1-1zm-2-11C5.26 0 3.03 1.95 3.03 4.35c0 2.37 1.63 2.64 1.94 5.22 0 .24.22.44.5.44h5.09c.28 0 .5-.19.5-.44C11.37 6.99 13 6.72 13 4.35 13 1.95 10.77 0 8.01 0z"],
+        "lightning": ["M7 9H5a1 1 0 01-1-1L4.89.876A1 1 0 015.884 0h4.27a.847.847 0 01.793 1.144L9.125 6h2.05a.825.825 0 01.754 1.16L8.16 15.64A.606.606 0 017 15.394V9z"],
         "link": ["M4.99 11.99c.28 0 .53-.11.71-.29l6-6a1.003 1.003 0 00-1.42-1.42l-6 6a1.003 1.003 0 00.71 1.71zm3.85-2.02L6.4 12.41l-1 1-.01-.01c-.36.36-.85.6-1.4.6-1.1 0-2-.9-2-2 0-.55.24-1.04.6-1.4l-.01-.01 1-1 2.44-2.44c-.33-.1-.67-.16-1.03-.16-1.1 0-2.09.46-2.81 1.19l-.02-.02-1 1 .02.02c-.73.72-1.19 1.71-1.19 2.81 0 2.21 1.79 4 4 4 1.1 0 2.09-.46 2.81-1.19l.02.02 1-1-.02-.02c.73-.72 1.19-1.71 1.19-2.81 0-.35-.06-.69-.15-1.02zm7.15-5.98c0-2.21-1.79-4-4-4-1.1 0-2.09.46-2.81 1.19l-.02-.02-1 1 .02.02c-.72.72-1.19 1.71-1.19 2.81 0 .36.06.69.15 1.02l2.44-2.44 1-1 .01.01c.36-.36.85-.6 1.4-.6 1.1 0 2 .9 2 2 0 .55-.24 1.04-.6 1.4l.01.01-1 1-2.43 2.45c.33.09.67.15 1.02.15 1.1 0 2.09-.46 2.81-1.19l.02.02 1-1-.02-.02a3.92 3.92 0 001.19-2.81z"],
         "list": ["M1 3h14c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1zm14 10H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm0-4H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm0-4H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1z"],
         "list-columns": ["M6 1c.55 0 1 .45 1 1s-.45 1-1 1H1c-.55 0-1-.45-1-1s.45-1 1-1h5zm0 4c.55 0 1 .45 1 1s-.45 1-1 1H1c-.55 0-1-.45-1-1s.45-1 1-1h5zm0 4c.55 0 1 .45 1 1s-.45 1-1 1H1c-.55 0-1-.45-1-1s.45-1 1-1h5zm0 4c.55 0 1 .45 1 1s-.45 1-1 1H1c-.55 0-1-.45-1-1s.45-1 1-1h5zm9-12c.55 0 1 .45 1 1s-.45 1-1 1h-5c-.55 0-1-.45-1-1s.45-1 1-1h5zm0 4c.55 0 1 .45 1 1s-.45 1-1 1h-5c-.55 0-1-.45-1-1s.45-1 1-1h5zm0 4c.55 0 1 .45 1 1s-.45 1-1 1h-5c-.55 0-1-.45-1-1s.45-1 1-1h5zm0 4c.55 0 1 .45 1 1s-.45 1-1 1h-5c-.55 0-1-.45-1-1s.45-1 1-1h5z"],
@@ -4801,6 +4984,7 @@
         "mugshot": ["M15 0H1C.45 0 0 .45 0 1v14c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-1 14h-.15c-.03-.09-.04-.16-.08-.25-.34-.79-2.01-1.31-3.12-1.8-1.11-.49-.96-.79-1-1.2-.01-.06-.01-.12-.01-.18.38-.34.69-.8.89-1.33 0 0 .01-.03.01-.04.04-.12.08-.24.11-.36.25-.05.4-.33.46-.59.06-.1.18-.36.15-.65-.04-.37-.19-.55-.35-.62v-.06c0-.48-.04-1.16-.13-1.61-.02-.12-.05-.25-.08-.37-.16-.55-.51-1.05-.96-1.39C9.26 3.19 8.6 3 8 3c-.59 0-1.26.19-1.73.55-.45.35-.8.84-.96 1.39-.04.13-.06.25-.08.38-.09.45-.13 1.13-.13 1.61v.06c-.18.06-.33.24-.37.62-.03.29.09.54.15.65.06.26.21.54.47.59.03.12.07.25.11.36 0 .01.01.02.01.02v.01c.21.54.53 1.01.92 1.35 0 .05-.01.11-.01.16-.04.41.08.7-1.03 1.2-1.11.49-2.77 1.01-3.12 1.8-.04.09-.05.16-.08.25H2V2h12v12z"],
         "multi-select": ["M12 3.98H4c-.55 0-1 .45-1 1v1h8v5h1c.55 0 1-.45 1-1v-5c0-.55-.45-1-1-1zm3-3H7c-.55 0-1 .45-1 1v1h8v5h1c.55 0 1-.45 1-1v-5c0-.55-.45-1-1-1zm-6 6H1c-.55 0-1 .45-1 1v5c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-5c0-.55-.45-1-1-1zm-1 5H2v-3h6v3z"],
         "music": ["M15 0c-.07 0-.13.03-.19.04V.02l-10 2v.02C4.35 2.13 4 2.52 4 3v9.12c-.31-.07-.65-.12-1-.12-1.66 0-3 .9-3 2s1.34 2 3 2 3-.9 3-2V6.32l8-1.6v5.4c-.31-.07-.65-.12-1-.12-1.66 0-3 .9-3 2s1.34 2 3 2 3-.9 3-2V1c0-.55-.45-1-1-1z"],
+        "nest": ["M2 2c.55 0 1 .45 1 1v3c0 1.66 1.34 3 3 3h5.59L10.3 7.71A.965.965 0 0110 7a1.003 1.003 0 011.71-.71l3 3c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-3 3a1.003 1.003 0 01-1.42-1.42l1.3-1.29H6c-2.76 0-5-2.24-5-5V3c0-.55.45-1 1-1z"],
         "new-drawing": ["M14.9 11c.6 0 1 .5 1 1 0 .257-.073.44-.22.614l-.08.086-3 3c-.2.2-.4.3-.7.3-.5 0-1-.4-1-1 0-.257.073-.44.22-.614l.08-.086 3-3c.2-.2.4-.3.7-.3zM1.3.1l6.734 2.45a3.005 3.005 0 002.095 3.322 3.005 3.005 0 003.401 2.081L13.9 9.8v.2c0 .257-.073.44-.22.614l-.08.086-3 3c-.171.171-.343.27-.577.294L9.9 14h-.2l-5-1-.1-.01c-.231-.05-.45-.26-.56-.49L4 12.4l-4-11 .3-.3 5.8 5.8c-.1.2-.2.4-.2.6 0 .8.6 1.5 1.5 1.5s1.5-.7 1.5-1.5S8.2 6 7.4 6c-.16 0-.32.064-.48.14l-.12.06L1 .4l.3-.3zM13 0c.55 0 1 .45 1 1v1h1c.55 0 1 .45 1 1s-.45 1-1 1h-1v1c0 .503-.376.922-.861.99l-.013.002A.999.999 0 0113 6l.097-.006-.027.004a1 1 0 01-.037.001L13 6c-.55 0-1-.45-1-1V4h-1a.993.993 0 01-.855-.482A1 1 0 0110 3c0-.55.45-1 1-1h1V1c0-.55.45-1 1-1z"],
         "new-grid-item": ["M6 0H1C.45 0 0 .45 0 1v5c0 .55.45 1 1 1h5c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm5 14c0-.55-.45-1-1-1s-1 .45-1 1v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1s-.45-1-1-1zM6 9H1c-.55 0-1 .45-1 1v5c0 .55.45 1 1 1h5c.55 0 1-.45 1-1v-5c0-.55-.45-1-1-1zm9 4c-.55 0-1 .45-1 1-.55 0-1 .45-1 1s.45 1 1 1h1c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1zm-4-4h-1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1s1-.45 1-1c.55 0 1-.45 1-1s-.45-1-1-1zm4-9h-5c-.55 0-1 .45-1 1v5c0 .55.45 1 1 1h5c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm0 9h-1c-.55 0-1 .45-1 1s.45 1 1 1c0 .55.45 1 1 1s1-.45 1-1v-1c0-.55-.45-1-1-1z"],
         "new-layer": ["M13.982 6.272l1.518.868-.01.01c.3.17.51.48.51.85s-.21.68-.51.85l.01.01-7 4-.01-.01A.94.94 0 018 13a.94.94 0 01-.49-.15l-.01.01-7-4 .01-.01A.977.977 0 010 8c0-.37.21-.68.51-.86L.5 7.13l7-4 .01.02A.94.94 0 018 3c.086 0 .168.014.246.038a2 2 0 105.736 3.234zM14 3c.55 0 1 .45 1 1s-.45 1-1 1h-1v1c0 .55-.45 1-1 1s-1-.45-1-1V5h-1c-.55 0-1-.45-1-1s.45-1 1-1h1V2c0-.55.45-1 1-1s1 .45 1 1v1h1z"],
@@ -4856,8 +5040,10 @@
         "property": ["M3 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-.5-6.5a2.5 2.5 0 000 5 2.5 2.5 0 000-5zM7 3h8c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1zm8 10H7c-.55 0-1 .45-1 1s.45 1 1 1h8c.55 0 1-.45 1-1s-.45-1-1-1zM3 0C1.9 0 1 .9 1 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 6H7c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V7c0-.55-.45-1-1-1z"],
         "publish-function": ["M12.16 3.76c.15-.11.3-.16.47-.16.06 0 .17.02.34.06.16.04.31.06.43.06a.58.58 0 00.6-.6c0-.19-.06-.33-.17-.44-.11-.11-.28-.16-.49-.16-.19 0-.37.04-.54.13-.17.09-.39.27-.65.55-.2.21-.48.58-.87 1.11a5.22 5.22 0 00-.78-1.79l-2.05.32-.04.21c.15-.03.28-.04.39-.04.2 0 .37.08.5.25.21.26.5 1.03.88 2.33-.29.36-.49.6-.6.71-.18.19-.33.31-.45.36-.09.04-.19.07-.3.07-.09 0-.23-.04-.42-.13a.904.904 0 00-.36-.09c-.2 0-.36.06-.49.18a.59.59 0 00-.19.46c0 .18.06.32.18.43.12.11.28.16.48.16.2 0 .38-.04.55-.12.17-.08.39-.24.65-.49s.62-.65 1.07-1.19c.18.52.33.89.46 1.13.13.24.28.4.44.51.17.1.37.16.62.16.24 0 .49-.08.74-.25.33-.21.66-.58 1.01-1.09l-.21-.11c-.23.31-.41.5-.52.57a.44.44 0 01-.26.07c-.12 0-.24-.07-.36-.21-.2-.24-.46-.91-.8-2 .29-.49.54-.81.74-.96zM6.37 5.83l.68-2.53h.83l.2-.64h-.84c.24-.91.56-1.59.96-2.01.24-.27.48-.4.71-.4.05 0 .08.01.11.04s.04.06.04.1c0 .04-.03.11-.1.21-.06.1-.1.2-.1.29 0 .13.05.24.15.33.1.09.23.14.39.14.17 0 .31-.06.42-.17.12-.12.18-.27.18-.46 0-.21-.08-.39-.25-.52C9.57.07 9.3 0 8.93 0c-.59 0-1.12.16-1.59.48-.48.32-.93.85-1.36 1.59-.15.26-.29.42-.42.49s-.35.11-.64.1l-.19.65h.81L4.35 7.68c-.2.72-.33 1.16-.4 1.33-.1.24-.26.45-.46.62a.48.48 0 01-.31.1c-.03 0-.06-.01-.08-.03l-.03-.03c0-.02.03-.06.09-.11.06-.06.09-.15.09-.26 0-.13-.05-.23-.14-.32-.1-.09-.23-.13-.41-.13-.21 0-.38.05-.51.16A.52.52 0 002 9.4c0 .16.08.3.23.42.16.12.4.18.74.18.53 0 .99-.13 1.4-.39.41-.26.76-.65 1.07-1.19.3-.53.61-1.39.93-2.59zm2.34 3.46A.997.997 0 008 9c-.28 0-.53.11-.71.29l-2 2a1.003 1.003 0 001.42 1.42l.29-.3V15c0 .55.45 1 1 1s1-.45 1-1v-2.59l.29.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-2-2z"],
         "pulse": ["M15 8h-1.46l-1.7-2.55-.02.01A.984.984 0 0011 5c-.43 0-.79.27-.93.65h-.01l-1.69 4.51-1.38-8.32h-.02A.989.989 0 006 1c-.41 0-.77.25-.92.61L2.34 8H1c-.55 0-1 .45-1 1s.45 1 1 1h2c.41 0 .77-.25.92-.61l1.65-3.86 1.44 8.63h.02c.08.47.47.84.97.84.43 0 .79-.27.93-.65h.01l2.31-6.17.92 1.38.02-.01c.17.26.46.45.81.45h2c.55 0 1-.45 1-1s-.45-1-1-1z"],
+        "rain": ["M3.5 8a2.5 2.5 0 11.608-4.926 4.002 4.002 0 017.381-1.03A3 3 0 1112 8H3.501zM3 10a1 1 0 012 0v4a1 1 0 11-2 0v-4zm7-1a1 1 0 00-1 1v5a1 1 0 102 0v-5a1 1 0 00-1-1zm2 1a1 1 0 112 0v2a1 1 0 11-2 0v-2zM7 9a1 1 0 00-1 1v2a1 1 0 102 0v-2a1 1 0 00-1-1z"],
         "random": ["M11.48 4h1.11l-.29.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l2-2c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71l-2-2a1.003 1.003 0 00-1.42 1.42l.3.29H11c-.32 0-.59.16-.77.38l-.01-.01L8.28 4.8l1.28 1.6L11.48 4zm2.23 6.29a1.003 1.003 0 00-1.42 1.42l.3.29h-1.11l-7.7-9.62h-.01A.996.996 0 003 2H1c-.55 0-1 .45-1 1s.45 1 1 1h1.52l7.7 9.62.01-.01c.18.23.45.39.77.39h1.59l-.29.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l2-2c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71l-2-2zM2.52 12H1c-.55 0-1 .45-1 1s.45 1 1 1h2c.32 0 .59-.16.77-.38l.01.01 1.94-2.42L4.44 9.6 2.52 12z"],
         "record": ["M8 3a5 5 0 100 10A5 5 0 108 3z"],
+        "rectangle": ["M1 3h14c.55 0 1 .45 1 1v8c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1zm1 2v6h12V5H2z"],
         "redo": ["M12 11c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm3.71-6.71l-3-3a1.003 1.003 0 00-1.42 1.42L12.59 4H5C2.24 4 0 6.24 0 9s2.24 5 5 5h4v-2H5c-1.66 0-3-1.34-3-3s1.34-3 3-3h7.59L11.3 7.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3-3c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"],
         "refresh": ["M14.99 6.99c-.55 0-1 .45-1 1 0 3.31-2.69 6-6 6-1.77 0-3.36-.78-4.46-2h1.46c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-1.74a7.95 7.95 0 006 2.74c4.42 0 8-3.58 8-8 0-.55-.45-1-1-1zm0-7c-.55 0-1 .45-1 1v1.74a7.95 7.95 0 00-6-2.74c-4.42 0-8 3.58-8 8 0 .55.45 1 1 1s1-.45 1-1c0-3.31 2.69-6 6-6 1.77 0 3.36.78 4.46 2h-1.46c-.55 0-1 .45-1 1s.45 1 1 1h4c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1z"],
         "regression-chart": ["M13 6.5c0 .83.67 1.5 1.5 1.5S16 7.33 16 6.5 15.33 5 14.5 5 13 5.67 13 6.5zM8.5 5c.83 0 1.5-.67 1.5-1.5S9.33 2 8.5 2 7 2.67 7 3.5 7.67 5 8.5 5zM9 9.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5S11.33 8 10.5 8 9 8.67 9 9.5zM4.5 8C5.33 8 6 7.33 6 6.5S5.33 5 4.5 5 3 5.67 3 6.5 3.67 8 4.5 8zM15 12H3.26l12.03-8.59-.58-.81L2 11.67V3c0-.55-.45-1-1-1s-1 .45-1 1v10c0 .55.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1z"],
@@ -4903,6 +5089,7 @@
         "shared-filter": ["M13.843 15.163c.232.53.138.837.138.837H6.017s-.088-.308.138-.837c.226-.53 1.338-.88 2.079-1.206.735-.332.66-.53.685-.8 0-.03.006-.068.006-.105a2.171 2.171 0 01-.61-.892v-.006s-.006-.006-.006-.012c-.025-.074-.056-.16-.075-.24-.176-.031-.276-.222-.314-.394a.8.8 0 01-.1-.437c.025-.253.131-.37.244-.419v-.037c0-.313.032-.775.088-1.07A1.835 1.835 0 018.85 8.37c.315-.24.76-.37 1.156-.37.396 0 .842.13 1.156.37.301.233.534.56.64.935.026.08.045.166.057.246.057.295.088.75.088 1.064v.043c.113.05.214.167.232.413a.75.75 0 01-.1.437c-.038.172-.132.357-.301.387a1.77 1.77 0 01-.076.24.136.136 0 01-.006.025 2.346 2.346 0 01-.597.892v.111c.025.277-.075.474.666.8.741.326 1.853.67 2.079 1.2z",
             "M14.852 15h1.131s.083-.27-.12-.732c-.16-.373-.82-.641-1.411-.88a15.328 15.328 0 01-.409-.17c-.565-.25-.57-.412-.577-.61-.001-.03-.002-.06-.005-.09v-.097c.22-.2.401-.469.522-.781 0 0 .005-.016.005-.022.028-.07.05-.14.066-.21.149-.026.231-.188.264-.339a.655.655 0 00.088-.382c-.016-.215-.104-.318-.203-.36v-.039c0-.274-.028-.673-.077-.931a1.598 1.598 0 00-.61-1.034 1.736 1.736 0 00-1.285-.3c.236.285.42.622.529.996.038.124.065.248.083.36.048.257.079.578.093.867a1.736 1.736 0 01.08 1.624 1.65 1.65 0 01-.217.453 1.42 1.42 0 01-.176.209c-.08.204-.178.4-.292.585l.202.083c.285.117.64.261.9.387.226.11.475.245.698.414.213.161.476.408.63.764.034.08.065.159.091.235zM12.14 14.12l.09.037zM11 1c.55 0 1 .45 1 1 0 .28-.11.53-.29.7L8 6.41v1.374a2.813 2.813 0 00-.833 1.589 6.925 6.925 0 00-.092.86 1.64 1.64 0 00-.25.739l-.001.004c-.02.217.006.413.046.573L5.71 12.71A1.003 1.003 0 014 12V6.41L.29 2.71A1.003 1.003 0 011 1h10z"],
         "shield": ["M8 16c4.667-3.048 7-7.238 7-12.571-1.556 0-3.889-1.143-7-3.429-3.111 2.286-5.444 3.429-7 3.429C1 8.762 3.333 12.952 8 16zM8 2.121c2.005 1.388 3.715 2.304 5.186 2.735-.342 3.702-2.05 6.683-5.186 9.038V2.121z"],
+        "ship": ["M5.44.804L5.2 2H3a1 1 0 00-1 1v3.714l-1.08.309a.988.988 0 00-.69 1.192c.366 1.432.897 3.324 1.309 4.26a.644.644 0 00.005.01c-.175.01-.356.015-.544.015a.5.5 0 000 1c2.067 0 3.414-.543 4.161-.917.55.373 1.505.917 2.839.917 1.32 0 2.27-.533 2.822-.905l.004.002c.196.105.48.24.856.374.75.268 1.857.529 3.318.529a.5.5 0 000-1c-.295 0-.572-.012-.834-.032a.995.995 0 00.308-.458l1.208-3.74a1 1 0 00-.677-1.269L14 6.714V3a1 1 0 00-1-1h-2.2L10.56.804A1 1 0 009.58 0H6.42a1 1 0 00-.98.804zM4 6.143l3-.857V4H4v2.143zm5-.857l3 .857V4H9v1.286zm-4.036 8.273a.5.5 0 01.527.034c.455.325 1.277.907 2.509.907s2.054-.582 2.51-.907a.5.5 0 01.579-.001l.006.004.036.023c.034.022.09.055.168.097.154.082.394.197.72.313.649.232 1.642.471 2.981.471a.5.5 0 010 1c-1.46 0-2.568-.261-3.318-.53a6.316 6.316 0 01-.856-.373l-.004-.002c-.552.372-1.502.905-2.822.905-1.334 0-2.289-.544-2.839-.917-.747.374-2.094.917-4.161.917a.5.5 0 010-1c2.129 0 3.384-.63 3.964-.94z"],
         "shop": ["M3 2h10c.55 0 1-.45 1-1s-.45-1-1-1H3c-.55 0-1 .45-1 1s.45 1 1 1zm9 11H4v-3H2v5c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-5h-2v3zm4-6l-1.01-3.17C14.9 3.36 14.49 3 14 3H2c-.49 0-.9.36-.98.83L.01 7H0c0 1.1.9 2 2 2s2-.9 2-2c0 1.1.9 2 2 2s2-.9 2-2c0 1.1.9 2 2 2s2-.9 2-2c0 1.1.9 2 2 2s2-.9 2-2z"],
         "shopping-cart": ["M14 10H7.72l-.33-1H13c.39 0 .72-.23.89-.56h.01l2-4h-.01c.06-.13.11-.28.11-.44 0-.55-.45-1-1-1H5.39l-.44-1.32h-.01C4.8 1.29 4.44 1 4 1H1c-.55 0-1 .45-1 1s.45 1 1 1h2.28l2.33 7H4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2h6c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2zM6.05 5h7.33l-1 2H6.72l-.67-2z"],
         "signal-search": ["M5.474 7.971A5.31 5.31 0 006.66 8.9l.007.019.018.056c.015.038.038.06.045.098l1.5 5.999a.75.75 0 01-1.455.36l-.42-1.68h-.704l-.42 1.68a.746.746 0 01-.907.547.746.746 0 01-.547-.907l1.5-6c.007-.037.03-.06.044-.097.015-.037.015-.075.038-.112a.722.722 0 01-.105-.36c0-.207.084-.394.22-.53zM2.795 5.277a.763.763 0 00-.015-1.065.756.756 0 00-1.065.015c-2.286 2.34-2.286 6.21 0 8.549a.747.747 0 101.072-1.042c-1.709-1.763-1.709-4.702.008-6.457zM7.808 9.388a5.318 5.318 0 001.58.211 2.236 2.236 0 01-.656.98.756.756 0 01-1.057-.098.756.756 0 01.097-1.057l.036-.036zM11.544 9.105l.378.378a6.02 6.02 0 01-1.638 3.285c-.285.3-.757.3-1.057.015a.74.74 0 01-.015-1.057 4.52 4.52 0 001.185-2.24c.4-.083.785-.212 1.147-.381z",
@@ -4912,6 +5099,7 @@
         "small-cross": ["M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"],
         "small-minus": ["M11 7H5c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1z"],
         "small-plus": ["M11 7H9V5c0-.55-.45-1-1-1s-1 .45-1 1v2H5c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1V9h2c.55 0 1-.45 1-1s-.45-1-1-1z"],
+        "small-square": ["M5 5v6h6V5H5zM4 3a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1V4a1 1 0 00-1-1H4z"],
         "small-tick": ["M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"],
         "snowflake": ["M13.364 9l.879.879a1 1 0 11-1.415 1.414l-2.12-2.121A1.003 1.003 0 0110.568 9H9v1.604c.042.03.083.065.121.103l2.122 2.121a1 1 0 01-1.415 1.415L9 13.414V15a1 1 0 01-2 0v-1.636l-.879.879a1 1 0 11-1.414-1.415l2.121-2.12c.054-.054.111-.1.172-.139V9H5.38c-.038.06-.084.118-.137.172l-2.122 2.12A1 1 0 111.707 9.88L2.586 9H1a1 1 0 110-2h1.536l-.829-.828a1 1 0 011.414-1.415L5.243 6.88c.038.038.072.079.103.121H7V5.38a1.003 1.003 0 01-.172-.137L4.708 3.12A1 1 0 016.12 1.707L7 2.586V1a1 1 0 112 0v1.536l.828-.829a1 1 0 011.415 1.414L9.12 5.243A1.007 1.007 0 019 5.346V7h1.604c.03-.042.065-.083.103-.121l2.121-2.122a1 1 0 011.415 1.415L13.414 7H15a1 1 0 010 2h-1.636z"],
         "social-media": ["M9.5 4c.4 0 .8-.1 1.1-.3C12 4.5 12.9 6 13 7.6c0 .5.5.9 1 .9.6 0 1-.4 1-1v-.2c-.2-2.4-1.5-4.4-3.5-5.5-.1-1-.9-1.8-2-1.8s-2 .9-2 2 .9 2 2 2zM4 8.5c0-.7-.4-1.3-.9-1.7.3-1.4 1.2-2.6 2.5-3.3.3-.1.6-.4.6-.9s-.4-1-1-1c-.2 0-.3 0-.5.1-1.9 1-3.2 2.8-3.6 5C.4 7.1 0 7.8 0 8.5c0 1.1.9 2 2 2s2-.9 2-2zm8.8 1.2c-1.1 0-2 .9-2 2v.3c-.8.6-1.8.9-2.8.9-1.2 0-2.3-.4-3.2-1.1-.2-.2-.4-.3-.7-.3-.6 0-1 .4-1 1 0 .3.1.6.3.8C4.6 14.4 6.2 15 8 15c1.5 0 3-.5 4.1-1.3.2.1.5.1.7.1 1.1 0 2-.9 2-2s-.9-2.1-2-2.1z"],
@@ -4941,6 +5129,7 @@
         "symbol-circle": ["M8 3.01a5 5 0 100 10 5 5 0 100-10z"],
         "symbol-cross": ["M12 6.01h-2v-2c0-.55-.45-1-1-1H7c-.55 0-1 .45-1 1v2H4c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1h2v2c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-2h2c.55 0 1-.45 1-1v-2c0-.56-.45-1-1-1z"],
         "symbol-diamond": ["M12 8.01c0-.19-.07-.36-.16-.51l.01-.01-3-5-.01.01c-.17-.29-.48-.49-.84-.49s-.67.2-.84.49l-.02-.01-3 5 .02.01c-.09.15-.16.32-.16.51s.07.36.16.51h-.02l3 5 .01-.01c.18.29.49.5.85.5s.67-.2.84-.49l.01.01 3-5-.01-.01c.09-.16.16-.32.16-.51z"],
+        "symbol-rectangle": ["M13 4H3c-.5 0-1 .5-1 1v6c0 .5.5 1 1 1h10c.5 0 1-.5 1-1V5c0-.5-.5-1-1-1z"],
         "symbol-square": ["M12 3.01H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-8c0-.56-.45-1-1-1z"],
         "symbol-triangle-down": ["M13 4.01c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 .16.05.31.11.44H3.1l4 8h.01c.16.33.49.56.89.56s.72-.23.89-.56h.01l4-8h-.01c.06-.14.11-.28.11-.44z"],
         "symbol-triangle-up": ["M12.89 11.56l-3.99-8h-.01c-.17-.32-.5-.55-.89-.55s-.72.23-.89.55H7.1l-4 8h.01c-.06.14-.11.29-.11.45 0 .55.45 1 1 1h8c.55 0 1-.45 1-1 0-.16-.05-.31-.11-.45z"],
@@ -4948,7 +5137,10 @@
         "tag": ["M1 3a2 2 0 012-2h4.584a2 2 0 011.414.586l5.413 5.412a2 2 0 010 2.829L9.827 14.41a2 2 0 01-2.829 0L1.586 8.998A2 2 0 011 7.584V3zm3.487-.007a1.494 1.494 0 100 2.988 1.494 1.494 0 000-2.988z"],
         "take-action": ["M9 11a1.003 1.003 0 001.71.71l4-4a1.003 1.003 0 00-1.42-1.42l-4 4c-.18.18-.29.43-.29.71zM4 6c.28 0 .53-.11.71-.29l4-4A1.003 1.003 0 007.29.29l-4 4A1.003 1.003 0 004 6zm4 4l5-5-.79-.79.5-.5a1.003 1.003 0 00-1.42-1.42l-.5.5L10 2 5 7l.79.79-5.5 5.5a1.003 1.003 0 001.42 1.42l5.5-5.5L8 10zm7 4H7c-.55 0-1 .45-1 1s.45 1 1 1h8c.55 0 1-.45 1-1s-.45-1-1-1z"],
         "tank": ["M3.7 3.4a1 1 0 01.8-.4h5.086a1 1 0 01.707.293L11 4h3a1 1 0 110 2h-3v1h2.5a2.5 2.5 0 010 5h-11a2.5 2.5 0 010-5H3V4.667a1 1 0 01.2-.6l.5-.667zM2.5 9h11a.5.5 0 010 1h-11a.5.5 0 110-1z"],
+        "target": ["M7 4a1 1 0 012 0v2a1 1 0 01-2 0V4zM10 7a1 1 0 000 2h2a1 1 0 000-2h-2zM3 8a1 1 0 011-1h2a1 1 0 010 2H4a1 1 0 01-1-1zM8 9a1 1 0 00-1 1v2a1 1 0 002 0v-2a1 1 0 00-1-1z",
+            "M8 16A8 8 0 108 0a8 8 0 000 16zm0-2A6 6 0 108 2a6 6 0 000 12z"],
         "taxi": ["M15.12 6.63h-.38L15 7c-.01.3-.01.64 0 .98V8c0 .07-.03.13-.04.19h.02L14 13.1v.9c0 .55-.45 1-1 1s-1-.45-1-1v-1H4v1c0 .55-.45 1-1 1s-1-.45-1-1v-.9l-.98-4.9h.02C1.03 8.13 1 8.07 1 8H.99c0-.33 0-.67.01-1l.26-.37H.88C.4 6.63 0 6.21 0 5.69s.4-.94.88-.94h1.05l.77-2.11c.19-.53.76-1.08 1.26-1.24 0 0 .68-.2 2.05-.32C6.01 1.05 6 1.03 6 1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1 0 .03-.01.05-.02.08 1.37.12 2.05.32 2.05.32.51.15 1.08.71 1.27 1.24l.76 2.12h1.05c.49 0 .89.42.89.93 0 .52-.4.94-.88.94zM11 10h2V8h-2v2zm-8 0h2V8H3v2zm10-5l-.73-1.63C12.21 3.19 12.18 3 12 3H4c-.18 0-.21.19-.27.37L3 5c-.06.18-.18 1 0 1h10c.18 0 .06-.82 0-1z"],
+        "temperature": ["M8.5 0A1.5 1.5 0 007 1.5v7.837a3.5 3.5 0 103 0V1.5A1.5 1.5 0 008.5 0zM2 5.5a.5.5 0 01.5-.5h3a.5.5 0 010 1h-3a.5.5 0 01-.5-.5zM2.5 1a.5.5 0 000 1h3a.5.5 0 000-1h-3zM4 3.5a.5.5 0 01.5-.5h1a.5.5 0 010 1h-1a.5.5 0 01-.5-.5zM4.5 7a.5.5 0 000 1h1a.5.5 0 000-1h-1z"],
         "text-highlight": ["M9 10H2V6h7V4H1c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h8v-2zm4 3h-1V3h1c.55 0 1-.45 1-1s-.45-1-1-1h-1c-.37 0-.7.11-1 .28-.3-.17-.63-.28-1-.28H9c-.55 0-1 .45-1 1s.45 1 1 1h1v10H9c-.55 0-1 .45-1 1s.45 1 1 1h1c.37 0 .7-.11 1-.28.3.17.63.28 1 .28h1c.55 0 1-.45 1-1s-.45-1-1-1zm2-9h-2v2h1v4h-1v2h2c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1z"],
         "th": ["M15 1H1c-.6 0-1 .5-1 1v12c0 .6.4 1 1 1h14c.6 0 1-.4 1-1V2c0-.5-.4-1-1-1zM6 13H2v-2h4v2zm0-3H2V8h4v2zm0-3H2V5h4v2zm8 6H7v-2h7v2zm0-3H7V8h7v2zm0-3H7V5h7v2z"],
         "th-derived": ["M5.6 10l-.3.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l2-2c.2-.2.3-.4.3-.7s-.1-.5-.3-.7l-2-2C6.5 6.1 6.3 6 6 6c-.5 0-1 .4-1 1 0 .3.1.5.3.7l.3.3H1c-.6 0-1 .4-1 1s.4 1 1 1h4.6zM15 1H2c-.5 0-1 .5-1 1v5h2V5h11v2H8.8l.6.6c.1.1.2.3.3.4H14v2H9.7c-.1.1-.2.3-.3.4l-.6.6H14v2H3v-2H1v3c0 .5.5 1 1 1h13c.6 0 1-.5 1-1V2c0-.5-.4-1-1-1z"],
@@ -5000,10 +5192,12 @@
         "walk": ["M13 8h-2c-.16 0-.31-.05-.44-.11v.01l-1.02-.51-.37 1.86 1.38.92-.01.02c.27.17.46.46.46.81v4c0 .55-.45 1-1 1s-1-.45-1-1v-3.46l-1.27-.85-1.8 4.67h-.01A.98.98 0 015 16c-.55 0-1-.45-1-1 0-.13.03-.25.07-.36h-.01L7.39 6H5.62l-.73 1.45h-.01C4.72 7.77 4.39 8 4 8c-.55 0-1-.45-1-1 0-.16.05-.31.11-.44H3.1l1-2h.01c.17-.33.5-.56.89-.56h3.16l.29-.75C8.17 2.9 8 2.47 8 2c0-1.1.9-2 2-2s2 .9 2 2c0 1-.73 1.82-1.69 1.97l-.5 1.32 1.43.71H13c.55 0 1 .45 1 1s-.45 1-1 1z"],
         "warning-sign": ["M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"],
         "waterfall-chart": ["M8 7c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm-4 4h1c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1zm7-6c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1s-1 .45-1 1v1c0 .55.45 1 1 1zm4-3h-1c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h1c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm0 10H2V3c0-.55-.45-1-1-1s-1 .45-1 1v10c0 .55.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1z"],
+        "waves": ["M3 1a1 1 0 01.894.553c.102.202.393.607.779.957.419.381.72.49.827.49.108 0 .408-.109.827-.49.386-.35.677-.755.779-.957a1 1 0 011.788 0c.102.202.393.607.779.957.419.381.72.49.827.49.108 0 .408-.109.827-.49.386-.35.677-.755.779-.957a1 1 0 011.788 0c.173.344.38.75.637 1.072.277.347.437.375.469.375a1 1 0 110 2c-.968 0-1.642-.64-2.03-1.125a4.755 4.755 0 01-.076-.097 6.093 6.093 0 01-.221.212C12.175 4.442 11.393 5 10.5 5c-.892 0-1.675-.558-2.173-1.01A6.243 6.243 0 018 3.67c-.105.11-.214.217-.327.32C7.175 4.442 6.393 5 5.5 5c-.892 0-1.675-.558-2.173-1.01a6.119 6.119 0 01-.221-.212l-.075.097C2.64 4.36 1.968 5 1 5a1 1 0 010-2c.032 0 .191-.028.47-.375.256-.321.463-.728.636-1.072A1 1 0 013 1zm0 5a1 1 0 01.894.553c.102.202.393.607.779.957.419.381.72.49.827.49.108 0 .408-.109.827-.49.386-.35.677-.755.779-.957a1 1 0 011.788 0c.102.202.393.607.779.957.419.381.72.49.827.49.108 0 .408-.109.827-.49.386-.35.677-.755.779-.957a1 1 0 011.788 0c.173.344.38.75.637 1.072.277.347.437.375.469.375a1 1 0 110 2c-.968 0-1.642-.639-2.03-1.125a4.726 4.726 0 01-.076-.097 6.093 6.093 0 01-.221.212c-.498.452-1.28 1.01-2.173 1.01-.892 0-1.675-.558-2.173-1.01A6.243 6.243 0 018 8.67c-.105.11-.214.217-.327.32C7.175 9.442 6.393 10 5.5 10c-.892 0-1.675-.558-2.173-1.01a6.119 6.119 0 01-.221-.212l-.075.097C2.64 9.36 1.968 10 1 10a1 1 0 010-2c.032 0 .191-.028.47-.375.256-.321.463-.728.636-1.072A1 1 0 013 6zm.894 5.553a1 1 0 00-1.788 0c-.173.344-.38.75-.637 1.072-.278.347-.437.375-.469.375a1 1 0 100 2c.968 0 1.642-.639 2.03-1.125a4.9 4.9 0 00.076-.097c.072.073.146.143.221.212.498.452 1.28 1.01 2.173 1.01.892 0 1.675-.558 2.173-1.01.113-.103.222-.21.327-.32.105.11.214.217.327.32.498.452 1.28 1.01 2.173 1.01.892 0 1.675-.558 2.173-1.01.075-.069.149-.14.221-.212a4.9 4.9 0 00.075.097C13.36 14.36 14.032 15 15 15a1 1 0 100-2c-.032 0-.191-.028-.47-.375-.256-.321-.463-.728-.636-1.072a1 1 0 00-1.788 0c-.102.202-.393.607-.779.957-.419.381-.72.49-.827.49-.108 0-.408-.109-.827-.49-.386-.35-.677-.755-.779-.957a1 1 0 00-1.788 0c-.102.202-.393.607-.779.957-.419.381-.72.49-.827.49-.108 0-.408-.109-.827-.49-.386-.35-.677-.755-.779-.957z"],
         "widget": ["M13 11h2V5h-2v6zM3 5H1v6h2V5zm11-1c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM2 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM5 3h6V1H5v2zM2 0C.9 0 0 .9 0 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm3 15h6v-2H5v2z"],
         "widget-button": ["M1 3h14c.55 0 1 .45 1 1v8c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1zm1 2v6h12V5H2zm3 4c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm3 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm3 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"],
         "widget-footer": ["M14 0H2c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-1 14H3v-3h10v3zm0-4H3V2h10v8z"],
         "widget-header": ["M14 0H2c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-1 14H3V6h10v8zm0-9H3V2h10v3z"],
+        "wind": ["M10 4a2 2 0 112 2H4a1 1 0 000 2h8a4 4 0 10-4-4 1 1 0 002 0zM1 9a1 1 0 100 2h7.5a1.5 1.5 0 010 3c-.749 0-1.386-.538-1.52-1.199a1 1 0 10-1.96.398C5.35 14.82 6.83 16 8.5 16a3.5 3.5 0 100-7H1z"],
         "wrench": ["M15.83 3.7l-3.06 3.05-2.84-.7-.7-2.83L12.29.17a5.004 5.004 0 00-4.83 1.29 4.967 4.967 0 00-1.12 5.36L.58 12.58c-.36.36-.58.86-.58 1.41 0 1.1.9 2 2 2 .55 0 1.05-.22 1.41-.59l5.77-5.77c1.79.69 3.91.33 5.35-1.12 1.32-1.3 1.74-3.15 1.3-4.81z"],
         "zoom-in": ["M7.99 5.99v-2c0-.55-.45-1-1-1s-1 .45-1 1v2h-2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1h-2zm7.56 7.44l-2.67-2.68a6.94 6.94 0 001.11-3.76c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.39 0 2.68-.42 3.76-1.11l2.68 2.67a1.498 1.498 0 102.12-2.12zm-8.56-1.44c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"],
         "zoom-out": ["M3.99 5.99c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1h-6zm11.56 7.44l-2.67-2.68a6.94 6.94 0 001.11-3.76c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.39 0 2.68-.42 3.76-1.11l2.68 2.67a1.498 1.498 0 102.12-2.12zm-8.56-1.44c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"],
@@ -5011,6 +5205,7 @@
     };
     var IconSvgPaths20 = {
         "add": ["M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm5-9h-4V5c0-.55-.45-1-1-1s-1 .45-1 1v4H5c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1v-4h4c.55 0 1-.45 1-1s-.45-1-1-1z"],
+        "add-clip": ["M15 0a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0V6h-3a1 1 0 110-2h3V1a1 1 0 011-1zM1 4a1 1 0 00-1 1v4a1 1 0 002 0V6h3a1 1 0 000-2H1zM0 19a1 1 0 001 1h4a1 1 0 100-2H2v-3a1 1 0 10-2 0v4zm15 1h-4a1 1 0 110-2h3v-3a1 1 0 112 0v4a1 1 0 01-1 1zm-7-5a3 3 0 100-6 3 3 0 000 6z"],
         "add-column-left": ["M4 11h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1H8V7c0-.55-.45-1-1-1s-1 .45-1 1v2H4c-.55 0-1 .45-1 1s.45 1 1 1zM19 0H1C.45 0 0 .45 0 1v18c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-7 18H2V2h10v16zm6 0h-5V2h5v16z"],
         "add-column-right": ["M10 11h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1h-2V7c0-.55-.45-1-1-1s-1 .45-1 1v2h-2c-.55 0-1 .45-1 1s.45 1 1 1zm9-11H1C.45 0 0 .45 0 1v18c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zM7 18H2V2h5v16zm11 0H8V2h10v16z"],
         "add-location": ["M10 0a1 1 0 010 2 8 8 0 108 8 1 1 0 012 0c0 5.523-4.477 10-10 10S0 15.523 0 10 4.477 0 10 0zm0 6a4 4 0 110 8 4 4 0 010-8zm6-6c.6 0 1 .4 1 1v2h2c.6 0 1 .4 1 1s-.4 1-1 1h-2v2c0 .6-.4 1-1 1s-1-.4-1-1V5h-2c-.6 0-1-.4-1-1 0-.5.4-1 1-1h2V1c0-.6.4-1 1-1z"],
@@ -5076,6 +5271,7 @@
         "caret-left": ["M13 4c-.24 0-.46.1-.63.24l-.01-.01-6 5 .01.01c-.22.19-.37.45-.37.76s.15.57.37.76l-.01.01 6 5 .01-.01c.17.14.39.24.63.24.55 0 1-.45 1-1V5c0-.55-.45-1-1-1z"],
         "caret-right": ["M14 10c0-.31-.15-.57-.37-.76l.01-.01-6-5-.01.01C7.46 4.1 7.24 4 7 4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1 .24 0 .46-.1.63-.24l.01.01 6-5-.01-.01c.22-.19.37-.45.37-.76z"],
         "caret-up": ["M15.76 12.37l.01-.01-5-6-.01.01C10.57 6.15 10.31 6 10 6s-.57.15-.76.37l-.01-.01-5 6 .01.01c-.14.17-.24.39-.24.63 0 .55.45 1 1 1h10c.55 0 1-.45 1-1 0-.24-.1-.46-.24-.63z"],
+        "cargo-ship": ["M12.5 1.25h4a1 1 0 011 1V5h-5V1.25zM2.75 5a.25.25 0 00-.25.25v6H.883a.5.5 0 00-.429.757l1.672 2.787c.17.284.384.533.63.741-.458.057-.959.09-1.506.09a.625.625 0 100 1.25c2.583 0 4.268-.68 5.202-1.146.687.466 1.88 1.146 3.548 1.146 1.65 0 2.837-.666 3.528-1.132l.005.003c.244.131.6.3 1.07.468.938.335 2.321.661 4.147.661a.625.625 0 100-1.25c-.319 0-.622-.01-.91-.03.398-.318.717-.738.914-1.23l.972-2.43a.5.5 0 00-.464-.685H5v-6A.25.25 0 004.75 5h-2zm3.455 11.95a.625.625 0 01.658.041c.569.407 1.597 1.134 3.137 1.134s2.568-.727 3.137-1.134a.625.625 0 01.724-.001l.007.005.045.029c.044.027.114.069.21.12.194.104.493.247.9.392.812.29 2.053.589 3.727.589a.625.625 0 110 1.25c-1.826 0-3.21-.326-4.148-.661a7.894 7.894 0 01-1.069-.468l-.005-.003c-.691.466-1.878 1.132-3.528 1.132-1.667 0-2.861-.68-3.548-1.146-.934.467-2.619 1.146-5.202 1.146a.625.625 0 110-1.25c2.66 0 4.23-.787 4.955-1.176zM17.5 6.25h-5V10h4a1 1 0 001-1V6.25zm-11.25-4a1 1 0 011-1h4V5h-5V2.25zm5 4h-5V9a1 1 0 001 1h4V6.25z"],
         "cell-tower": ["M11.5 8.32c.31-.35.51-.81.51-1.32 0-1.1-.9-2-2-2s-2 .9-2 2c0 .51.2.97.51 1.32L5.06 18.69c-.17.52.11 1.09.63 1.26s1.09-.11 1.26-.63L8.39 15h3.23l1.44 4.32c.17.52.74.81 1.26.63s.81-.74.63-1.26L11.5 8.32zM10.95 13H9.06l.95-2.84.94 2.84zM5.31 10.73a.996.996 0 101.37-1.45c-1.4-1.33-1.28-3.35-.01-4.54.4-.38.43-1.01.05-1.41-.36-.41-1-.43-1.4-.06-2.09 1.95-2.28 5.3-.01 7.46z",
             "M4.6 12.2C3 11.1 2 9 2 7c0-2.1.9-3.9 2.6-5.2.5-.3.5-1 .2-1.4-.3-.5-1-.5-1.4-.2C1.2 1.9-.1 4.2 0 7c.1 2.7 1.4 5.3 3.4 6.8.2.1.4.2.6.2.3 0 .6-.1.8-.4.4-.5.3-1.1-.2-1.4zM13.27 10.69c.38.4 1.01.42 1.41.04 2.27-2.16 2.08-5.51-.01-7.46a.996.996 0 10-1.36 1.46c1.28 1.19 1.39 3.21-.01 4.54-.39.39-.41 1.02-.03 1.42z",
             "M16.6.2c-.4-.3-1.1-.3-1.4.2-.3.4-.3 1.1.2 1.4C17.1 3.1 18 4.9 18 7c0 2-1 4.1-2.6 5.2-.5.3-.6.9-.2 1.4.2.3.5.4.8.4.2 0 .4-.1.6-.2C18.7 12.3 20 9.7 20 7c.09-2.8-1.2-5.1-3.4-6.8z"],
@@ -5095,6 +5291,7 @@
         "circle-arrow-up": ["M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.71-13.71C10.53 4.11 10.28 4 10 4s-.53.11-.71.29l-4 4a1.003 1.003 0 001.42 1.42L9 7.41V15c0 .55.45 1 1 1s1-.45 1-1V7.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4z"],
         "citation": ["M4 1C1.79 1 0 2.79 0 5s1.79 4 4 4c.1 0 .2-.01.3-.02C3.82 11.32 2.53 13 1 13c-.55 0-1 .45-1 1s.45 1 1 1c3.87 0 7-4.48 7-10 0-2.21-1.79-4-4-4zM16 1c-2.21 0-4 1.79-4 4s1.79 4 4 4c.1 0 .2-.01.3-.02C15.82 11.32 14.53 13 13 13c-.55 0-1 .45-1 1s.45 1 1 1c3.87 0 7-4.48 7-10 0-2.21-1.79-4-4-4z"],
         "clean": ["M7 0L5 5 0 6.998 5 9l2 5 2-5 5-1.995L9 5zM15 10l-1.5 3.496-3.5 1.499 3.5 1.498L15 20l1.5-3.507L20 15l-3.5-1.504z"],
+        "clip": ["M0 1a1 1 0 011-1h5a1 1 0 010 2H2v4a1 1 0 01-2 0V1zm1 19a1 1 0 01-1-1v-5a1 1 0 112 0v4h4a1 1 0 110 2H1zm18 0a1 1 0 001-1v-5a1 1 0 10-2 0v4h-4a1 1 0 100 2h5zm0-20a1 1 0 011 1v5a1 1 0 11-2 0V2h-4a1 1 0 110-2h5zm-9 14a4 4 0 100-8 4 4 0 000 8z"],
         "clipboard": ["M13 2c0-.55-.45-1-1-1h-.78a1.98 1.98 0 00-3.44 0H7c-.55 0-1 .45-1 1v2h7V2z",
             "M16 2h-2v3H5V2H3c-.55 0-1 .45-1 1v16c0 .55.45 1 1 1h13c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1z"],
         "cloud": ["M15 7c-.12 0-.24.03-.36.04C13.83 4.69 11.62 3 9 3 5.69 3 3 5.69 3 9c0 .05.01.09.01.14A3.98 3.98 0 000 13c0 2.21 1.79 4 4 4h11c2.76 0 5-2.24 5-5s-2.24-5-5-5z"],
@@ -5257,6 +5454,7 @@
         "horizontal-bar-chart-asc": ["M1 9h11c.55 0 1-.45 1-1V7c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1zm0-5h9c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1zm18 12H1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h18c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1zM1 14h14c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1z"],
         "horizontal-bar-chart-desc": ["M10 16H1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1zm2-5H1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h11c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1zm3-5H1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V7c0-.55-.45-1-1-1zm4-5H1c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1z"],
         "horizontal-distribution": ["M12 2H8c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zM1 0C.45 0 0 .45 0 1v18c0 .55.45 1 1 1s1-.45 1-1V1c0-.55-.45-1-1-1zm18 0c-.55 0-1 .45-1 1v18c0 .55.45 1 1 1s1-.45 1-1V1c0-.55-.45-1-1-1z"],
+        "hurricane": ["M0 14c1.648.775 3 1 4 1-1-1-2-3.112-2-5a5.098 5.098 0 000-.045C2 5.17 6.201 1 11.172 1c3.206 0 6.9.667 8.828 5-1.648-.775-3-1-4-1 1 1 2 3.112 2 5v.045C18 14.83 13.799 19 8.828 19c-3.206 0-6.9-.667-8.828-5zm10-7a3 3 0 100 6 3 3 0 000-6z"],
         "id-number": ["M2 5v10h16V5H2zm0-2h16c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H2c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2z",
             "M8.88 12.38c-.17-.39-1.01-.66-1.56-.9-.56-.24-.48-.39-.5-.6v-.09c.19-.17.35-.4.45-.67 0 0 0-.02.01-.02l.06-.18c.13-.03.2-.17.23-.29.03-.05.09-.18.08-.33-.04-.18-.11-.27-.2-.3v-.03c0-.24-.02-.58-.06-.81-.01-.06-.02-.12-.04-.19-.08-.27-.25-.52-.48-.7C6.63 7.09 6.3 7 6 7s-.63.09-.87.27c-.23.17-.4.42-.48.7-.02.06-.03.13-.04.19-.04.22-.06.57-.06.81V9c-.09.03-.17.12-.19.31-.01.14.05.27.08.32.03.14.1.27.23.3.02.06.03.12.06.18v.01c.11.27.27.51.47.68v.08c-.02.2.04.35-.51.6-.56.24-1.39.51-1.56.9-.19.39-.12.62-.12.62h5.98c-.01 0 .06-.23-.11-.62zM12 7h4c.55 0 1 .45 1 1s-.45 1-1 1h-4c-.55 0-1-.45-1-1s.45-1 1-1zM12 11h4c.55 0 1 .45 1 1s-.45 1-1 1h-4c-.55 0-1-.45-1-1s.45-1 1-1z"],
         "image-rotate-left": ["M10.5 13c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zM14 7H1c-.55 0-1 .45-1 1v11c0 .55.45 1 1 1h13c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-1 10l-5-3-1 2-2-4-3 4.5V9h11v8zm3-15h-1.59l.29-.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-2 2c-.18.18-.29.43-.29.71 0 .28.11.53.29.71l2 2a1.003 1.003 0 001.42-1.42l-.3-.29H16c1.1 0 2 .9 2 2v3c0 .55.45 1 1 1s1-.45 1-1V6c0-2.21-1.79-4-4-4z"],
@@ -5314,6 +5512,7 @@
         "less-than-or-equal-to": ["M16.316 11.051L7.162 8l9.154-3.051a1 1 0 10-.632-1.898l-12 4c-.912.304-.912 1.594 0 1.898l12 4a1 1 0 10.632-1.898zM16 15H4a1 1 0 100 2h12a1 1 0 100-2z"],
         "lifesaver": ["M8.143 14.644L7.028 17.43c.919.368 1.922.57 2.972.57s2.053-.202 2.972-.57l-1.115-2.786A4.986 4.986 0 0110 15a4.986 4.986 0 01-1.857-.356zm-2.787-2.787A4.986 4.986 0 015 10c0-.656.126-1.283.356-1.857L2.57 7.028A7.978 7.978 0 002 10c0 1.05.202 2.053.57 2.972l2.786-1.115zm2.787-6.5A4.986 4.986 0 0110 5c.656 0 1.283.126 1.857.356l1.115-2.786A7.978 7.978 0 0010 2c-1.05 0-2.053.202-2.972.57l1.115 2.786zm6.5 2.786c.23.574.357 1.2.357 1.857 0 .656-.126 1.283-.356 1.857l2.786 1.115c.368-.919.57-1.922.57-2.972s-.202-2.053-.57-2.972l-2.786 1.115zM10 13a3 3 0 100-6 3 3 0 000 6zm0 7C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10z"],
         "lightbulb": ["M6.33 13.39c0 .34.27.61.6.61h6.13c.33 0 .6-.27.6-.61C14.03 9.78 16 9.4 16 6.09 16 2.72 13.31 0 10 0S4 2.72 4 6.09c0 3.31 1.97 3.69 2.33 7.3zM13 15H7c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1zm-1 3H8c-.55 0-1 .45-1 1s.45 1 1 1h4c.55 0 1-.45 1-1s-.45-1-1-1z"],
+        "lightning": ["M9 11H6a1 1 0 01-1-1L5.91.9a1 1 0 01.995-.9h6.256a.839.839 0 01.779 1.15L11.2 8h2.978a.822.822 0 01.748 1.162l-4.764 10.481A.608.608 0 019 19.392V11z"],
         "link": ["M10.85 11.98l-4.44 4.44-1 1c-.36.36-.86.58-1.41.58-1.1 0-2-.9-2-2 0-.55.22-1.05.59-1.41l5.44-5.44C7.69 9.06 7.36 9 7 9c-1.11 0-2.09.46-2.82 1.18l-.01-.01-3 3 .01.01C.46 13.91 0 14.89 0 16c0 2.21 1.79 4 4 4 1.11 0 2.09-.46 2.82-1.18l.01.01 3-3-.01-.01C10.54 15.09 11 14.11 11 13c0-.36-.06-.69-.15-1.02zM20 4c0-2.21-1.79-4-4-4-1.11 0-2.09.46-2.82 1.18l-.01-.01-3 3 .01.01C9.46 4.91 9 5.89 9 7c0 .36.06.69.15 1.02l4.44-4.44 1-1c.36-.36.86-.58 1.41-.58 1.1 0 2 .9 2 2 0 .55-.22 1.05-.59 1.41l-5.44 5.44c.34.09.67.15 1.03.15 1.11 0 2.09-.46 2.82-1.18l.01.01 3-3-.01-.01C19.54 6.09 20 5.11 20 4zM5 14a1.003 1.003 0 001.71.71l8-8a1.003 1.003 0 00-1.42-1.42l-2 2-2 2-2 2-2 2c-.18.18-.29.43-.29.71z"],
         "list": ["M1.03 1C.46 1 0 1.46 0 2.03v.95C0 3.54.46 4 1.03 4h17.95C19.54 4 20 3.54 20 2.97v-.94C20 1.46 19.54 1 18.97 1H1.03zM0 17.97C0 18.54.46 19 1.03 19h17.95c.56 0 1.03-.46 1.03-1.03v-.95c0-.56-.46-1.03-1.03-1.03H1.03C.46 16 0 16.46 0 17.03v.94zM0 12.97C0 13.54.46 14 1.03 14h17.95c.56 0 1.03-.46 1.03-1.03v-.95c0-.56-.46-1.03-1.03-1.03H1.03C.46 11 0 11.46 0 12.03v.94zM0 7.97C0 8.54.46 9 1.03 9h17.95C19.54 9 20 8.54 20 7.97v-.94C20 6.46 19.54 6 18.97 6H1.03C.46 6 0 6.46 0 7.03v.94z"],
         "list-columns": ["M0 2.973v-.936C0 1.468.46 1.01 1.029 1H7.97C8.541 1 9 1.468 9 2.027v.946C9 3.542 8.53 4 7.971 4H1.03C.459 4 0 3.542 0 2.973zm0 5v-.936C0 6.468.46 6.01 1.029 6H7.97C8.541 6 9 6.468 9 7.027v.946C9 8.542 8.53 9 7.971 9H1.03C.459 9 0 8.542 0 7.973zm0 5v-.936C0 11.468.46 11.01 1.029 11H7.97C8.541 11 9 11.468 9 12.027v.946C9 13.542 8.53 14 7.971 14H1.03C.459 14 0 13.542 0 12.973zm0 5v-.936C0 16.468.46 16.01 1.029 16H7.97C8.541 16 9 16.468 9 17.027v.946C9 18.542 8.53 19 7.971 19H1.03C.459 19 0 18.542 0 17.973zm11-15v-.936c0-.569.46-1.027 1.029-1.037h6.942C19.541 1 20 1.468 20 2.027v.946C20 3.542 19.53 4 18.971 4H12.03C11.459 4 11 3.542 11 2.973zm0 5v-.936c0-.569.46-1.027 1.029-1.037h6.942C19.541 6 20 6.468 20 7.027v.946C20 8.542 19.53 9 18.971 9H12.03C11.459 9 11 8.542 11 7.973zm0 5v-.936c0-.569.46-1.027 1.029-1.037h6.942c.57 0 1.029.468 1.029 1.027v.946c0 .569-.47 1.027-1.029 1.027H12.03c-.57 0-1.029-.458-1.029-1.027zm0 5v-.936c0-.569.46-1.027 1.029-1.037h6.942c.57 0 1.029.468 1.029 1.027v.946c0 .569-.47 1.027-1.029 1.027H12.03c-.57 0-1.029-.458-1.029-1.027z"],
@@ -5349,6 +5548,7 @@
         "mugshot": ["M19 0H1C.45 0 0 .45 0 1v18c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-1 18h-.07c-.05-.2-.12-.42-.22-.67-.46-1.05-2.68-1.75-4.16-2.4-1.48-.65-1.28-1.05-1.33-1.59-.01-.07-.01-.15-.01-.23.51-.45.92-1.07 1.19-1.78 0 0 .01-.04.02-.05.06-.15.11-.32.15-.48.34-.07.54-.44.61-.78.08-.14.23-.48.2-.87-.05-.5-.25-.73-.47-.82v-.09c0-.63-.06-1.55-.17-2.15-.02-.17-.06-.33-.11-.5a3.67 3.67 0 00-1.29-1.86C11.7 3.25 10.81 3 10.02 3s-1.68.25-2.31.73c-.61.47-1.07 1.13-1.29 1.86-.05.16-.09.33-.11.5-.12.6-.17 1.51-.17 2.14v.08c-.24.09-.44.32-.49.83-.04.39.12.73.2.87.08.35.28.72.63.78.04.17.09.33.15.48 0 .01.01.02.01.03l.01.01c.27.72.7 1.35 1.22 1.8 0 .07-.01.14-.01.21-.05.54.1.94-1.38 1.59-1.48.65-3.7 1.35-4.16 2.4-.12.27-.18.49-.23.69H2V2h16v16z"],
         "multi-select": ["M19 3H7c-.55 0-1 .45-1 1v1h12v6h1c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm-6 6H1c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm-1 6H2v-4h10v4zm4-9H4c-.55 0-1 .45-1 1v1h12v6h1c.55 0 1-.45 1-1V7c0-.55-.45-1-1-1z"],
         "music": ["M19 0c-.08 0-.16.03-.24.05V.03l-12 3v.02C6.33 3.16 6 3.53 6 4v11.35c-.59-.22-1.27-.35-2-.35-2.21 0-4 1.12-4 2.5S1.79 20 4 20c1.94 0 3.55-.86 3.92-2H8V7.78l10-2.5v7.07c-.59-.22-1.27-.35-2-.35-2.21 0-4 1.12-4 2.5s1.79 2.5 4 2.5c1.94 0 3.55-.86 3.92-2H20V1c0-.55-.45-1-1-1z"],
+        "nest": ["M2 2c.55 0 1 .45 1 1v5c0 2.21 1.79 4 4 4h8.59L13.3 9.71A.965.965 0 0113 9a1.003 1.003 0 011.71-.71l4 4c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-4 4a1.003 1.003 0 01-1.42-1.42l2.3-2.29H7c-3.31 0-6-2.69-6-6V3c0-.55.45-1 1-1z"],
         "new-drawing": ["M18.7 13.7c.5 0 1 .4 1 1 0 .257-.073.44-.22.614l-.08.086-4 4c-.2.2-.4.3-.7.3-.6 0-1-.5-1-1 0-.257.073-.44.22-.614L14 18l4-4c.2-.2.4-.3.7-.3zM1.8 0l8.378 2.982A3.003 3.003 0 0013 7a3.003 3.003 0 003.877 2.87l.723 2.53.049.06a.41.41 0 01.051.24c0 .167-.07.403-.208.593l-.092.107-4 4c-.2.2-.4.3-.7.3-.075 0-.15-.056-.225-.084L12.4 17.6l-7-2-.112-.042c-.223-.094-.431-.244-.542-.45L4.7 15 0 1.8l.5-.6L7 7.7c-.2.3-.3.6-.3 1 0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2a1.68 1.68 0 00-.871.22L7.7 7 1.2.5l.6-.5zM16 0c.55 0 1 .45 1 1v2h2c.55 0 1 .45 1 1s-.45 1-1 1h-2v2c0 .432-.278.803-.664.941l-.01.004A.989.989 0 0116 8c-.55 0-1-.45-1-1V5h-2c-.55 0-1-.45-1-1l.007-.116C12.065 3.388 12.489 3 13 3h2V1c0-.55.45-1 1-1z"],
         "new-grid-item": ["M8 0H1C.45 0 0 .45 0 1v7c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm0 11H1c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h7c.55 0 1-.45 1-1v-7c0-.55-.45-1-1-1zm6 7h-1v-1c0-.55-.45-1-1-1s-1 .45-1 1v2c0 .55.45 1 1 1h2c.55 0 1-.45 1-1s-.45-1-1-1zm5-7h-2c-.55 0-1 .45-1 1s.45 1 1 1h1v1c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1zm0-11h-7c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-5 11h-2c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1v-1h1c.55 0 1-.45 1-1s-.45-1-1-1zm5 5c-.55 0-1 .45-1 1v1h-1c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1v-2c0-.55-.45-1-1-1z"],
         "new-layer": ["M11.513 2.663A2 2 0 0013 6h1v1a2 2 0 104 0v-.733l1.5.833c.3.2.5.5.5.9s-.2.7-.5.9l-9 5c-.2.1-.3.1-.5.1s-.3 0-.5-.1l-9-5C.2 8.7 0 8.4 0 8s.2-.7.5-.9l9-5c.2-.1.3-.1.5-.1s.3 0 .5.1l1.013.563zM17 3h2a1 1 0 010 2h-2v2a1 1 0 01-2 0V5h-2a1 1 0 010-2h2V1a1 1 0 012 0v2z"],
@@ -5403,8 +5603,10 @@
         "property": ["M3 5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm5-1h11c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1zM3 15c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm16 1H8c-.55 0-1 .45-1 1s.45 1 1 1h11c.55 0 1-.45 1-1s-.45-1-1-1zm-1-8H9c-1.1 0-2 .9-2 2s.9 2 2 2h9c1.1 0 2-.9 2-2s-.9-2-2-2zM3 7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"],
         "publish-function": ["M7.01 10.11c.35-.64.72-1.68 1.09-3.11l.8-3.03h.96l.24-.77h-.99c.28-1.11.66-1.92 1.12-2.43.28-.32.56-.48.83-.48.05 0 .1.02.13.05.03.03.05.07.05.12 0 .04-.04.13-.11.25-.08.12-.11.24-.11.35 0 .15.06.28.18.39.12.11.27.16.45.16.2 0 .36-.07.49-.2s.2-.31.2-.54c0-.26-.1-.47-.3-.63-.2-.16-.52-.24-.96-.24-.68 0-1.3.19-1.86.58-.55.38-1.08 1.02-1.58 1.91-.17.3-.34.5-.49.59-.15.08-.4.13-.74.12l-.23.77h.95L5.74 9.21c-.23.86-.39 1.39-.47 1.59-.12.29-.3.54-.54.75-.1.08-.21.12-.35.12-.04 0-.07-.01-.1-.03l-.03-.04c0-.02.03-.07.1-.13.07-.07.1-.17.1-.31 0-.15-.05-.28-.16-.38-.11-.1-.27-.15-.47-.15-.25 0-.44.07-.59.2-.15.12-.23.28-.23.46 0 .19.09.36.27.5.19.14.47.21.86.21.61 0 1.16-.15 1.63-.46.48-.31.89-.79 1.25-1.43zm3.7 1.18c-.18-.18-.43-.29-.71-.29s-.53.11-.71.29l-3 3a1.003 1.003 0 001.42 1.42L9 14.41V19c0 .55.45 1 1 1s1-.45 1-1v-4.59l1.29 1.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-3-3zm4.15-6.78c.17-.13.36-.2.55-.2.07 0 .2.03.39.08s.36.08.5.08c.2 0 .37-.07.5-.2.13-.14.2-.31.2-.52 0-.22-.07-.4-.2-.53s-.33-.2-.58-.2c-.22 0-.43.05-.63.15-.2.1-.45.32-.75.67-.23.25-.56.7-1.01 1.33a6.52 6.52 0 00-.91-2.15l-2.38.39-.05.25c.18-.03.33-.05.45-.05.24 0 .43.1.59.3.25.31.59 1.24 1.02 2.79-.34.44-.58.73-.7.87-.21.22-.38.36-.52.43-.1.05-.22.08-.35.08-.1 0-.26-.05-.49-.16a1.01 1.01 0 00-.42-.11c-.23 0-.42.07-.57.22-.17.14-.24.32-.24.55 0 .21.07.38.21.51.14.13.33.2.56.2.23 0 .44-.05.64-.14.2-.09.45-.29.75-.59s.72-.78 1.25-1.43c.2.62.38 1.07.53 1.35.15.28.32.49.52.61.19.12.44.19.73.19.28 0 .57-.1.86-.3.38-.25.77-.69 1.17-1.31l-.25-.14c-.27.37-.48.6-.61.69-.09.06-.19.09-.31.09-.14 0-.28-.09-.42-.26-.23-.29-.54-1.09-.93-2.4.37-.58.66-.96.9-1.14z"],
         "pulse": ["M19 10h-2.38L14.9 6.55h-.01c-.17-.32-.5-.55-.89-.55-.43 0-.79.28-.93.66h-.01l-2.75 7.57L7.98 1.82h-.02A.978.978 0 007 1c-.44 0-.8.29-.94.69h-.01L3.28 10H1c-.55 0-1 .45-1 1s.45 1 1 1h3c.44 0 .8-.29.94-.69h.01l1.78-5.34 2.29 12.21h.02c.08.46.47.82.96.82.43 0 .79-.28.93-.66h.01l3.21-8.82.96 1.92h.01c.16.33.49.56.88.56h3c.55 0 1-.45 1-1s-.45-1-1-1z"],
+        "rain": ["M4 10a3 3 0 111.065-5.806A5.001 5.001 0 0114.63 3.11 3.5 3.5 0 1115.5 10H4zm0 2a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm9 1a1 1 0 10-2 0v6a1 1 0 102 0v-6zm3-1a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-7 1a1 1 0 10-2 0v3a1 1 0 102 0v-3z"],
         "random": ["M14.47 5h2.12L15.3 6.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3-3c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71l-3-3a1.003 1.003 0 00-1.42 1.42L16.59 3H14c-.31 0-.57.15-.76.37l-.01-.01-2.93 3.52 1.3 1.56L14.47 5zm2.24 7.29a1.003 1.003 0 00-1.42 1.42l1.3 1.29h-2.12L4.77 3.36l-.01.01A.998.998 0 004 3H1c-.55 0-1 .45-1 1s.45 1 1 1h2.53l9.7 11.64.01-.01c.19.22.45.37.76.37h2.59l-1.29 1.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3-3c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71l-3-3zM3.53 15H1c-.55 0-1 .45-1 1s.45 1 1 1h3c.31 0 .57-.15.76-.37l.01.01 2.93-3.52-1.3-1.56L3.53 15z"],
         "record": ["M10 3a7 7 0 100 14 7 7 0 100-14z"],
+        "rectangle": ["M1 4h18c.55 0 1 .45 1 1v10c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V5c0-.55.45-1 1-1zm1 2v8h16V6H2z"],
         "redo": ["M19.71 5.29l-4-4a1.003 1.003 0 00-1.42 1.42L16.59 5H6c-3.31 0-6 2.69-6 6s2.69 6 6 6h5v-2H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h10.59L14.3 9.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71zM15 14c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"],
         "refresh": ["M19 1c-.55 0-1 .45-1 1v2.06C16.18 1.61 13.29 0 10 0 4.48 0 0 4.48 0 10c0 .55.45 1 1 1s1-.45 1-1c0-4.42 3.58-8 8-8 2.52 0 4.76 1.18 6.22 3H15c-.55 0-1 .45-1 1s.45 1 1 1h4c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zm0 8c-.55 0-1 .45-1 1 0 4.42-3.58 8-8 8-2.52 0-4.76-1.18-6.22-3H5c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-2.06C3.82 18.39 6.71 20 10 20c5.52 0 10-4.48 10-10 0-.55-.45-1-1-1z"],
         "regression-chart": ["M19 16H3.1L19.31 3.39l-.61-.79L2 15.59V3c0-.55-.45-1-1-1s-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1s-.45-1-1-1zm-9-9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-5 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm10-2c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2-2 .9-2 2zm-5 4c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2-2 .9-2 2z"],
@@ -5456,6 +5658,7 @@
             "M14.976 16.57c-.24-.099-.455-.186-.65-.273l-.007-.004a3.801 3.801 0 01-.194-.091c.224-.288.41-.609.554-.946l.001-.002.013-.033c.018-.043.036-.087.052-.13l.011-.027.016-.04c.105-.092.19-.19.256-.284.129-.184.213-.38.265-.563.105-.226.225-.592.192-1.026l-.001-.011-.002-.011a1.854 1.854 0 00-.325-.91 9.924 9.924 0 00-.12-1.246 3.09 3.09 0 00-.106-.475l-.001-.006a3.543 3.543 0 00-.763-1.353c.27-.092.56-.139.83-.139.495 0 1.05.156 1.444.456a2.269 2.269 0 01.875 1.475c.069.375.106.95.106 1.344v.056c.138.056.263.2.294.513.019.244-.075.456-.125.543-.044.213-.169.444-.381.488-.025.1-.056.206-.094.3a2.815 2.815 0 01-.756 1.144c0 .05 0 .1.006.144.004.043.006.086.007.127.01.283.018.518.824.872.192.087.404.173.623.263.83.34 1.752.717 1.99 1.231.28.657.168 1.044.168 1.044h-2.081a3.864 3.864 0 00-.188-.542l-.005-.013-.006-.012c-.183-.397-.491-.681-.76-.88a5.614 5.614 0 00-.896-.522 17.36 17.36 0 00-.916-.4l-.15-.061zM14 1c.55 0 1 .45 1 1 0 .28-.11.53-.29.7L10 7.41v.897a3.182 3.182 0 00-.69.4 3.508 3.508 0 00-1.343 2.259c-.07.37-.107.836-.122 1.237a1.836 1.836 0 00-.339.926c-.046.458.09.84.195 1.06.053.178.138.376.27.56.055.08.125.162.21.242v.143l.053.052L6.71 16.71A1.003 1.003 0 015 16V7.41L.29 2.71A1.003 1.003 0 011 1h13z",
             "M9.059 14.361c-.23-.044-.366-.296-.42-.535a1.045 1.045 0 01-.138-.598c.034-.35.179-.509.337-.57v-.056c0-.44.034-1.065.117-1.478A2.508 2.508 0 0110 9.441V13c0 .28-.11.53-.29.71l-.651.651z"],
         "shield": ["M10 20c6-3.81 9-9.048 9-15.714-2 0-5-1.429-9-4.286-4 2.857-7 4.286-9 4.286C1 10.952 4 16.19 10 20zm0-17.348c2.577 1.734 4.776 2.88 6.667 3.419-.44 4.627-2.636 8.353-6.667 11.297V2.652z"],
+        "ship": ["M6.84.804L6.5 2.5h-3a1 1 0 00-1 1v4.893l-1.58.451a.99.99 0 00-.691 1.192c.46 1.82 1.163 4.356 1.701 5.571-.218.012-.445.018-.68.018a.625.625 0 100 1.25c2.583 0 4.268-.68 5.202-1.146.687.466 1.88 1.146 3.548 1.146 1.65 0 2.837-.666 3.528-1.132l.005.003c.244.131.6.3 1.07.468.938.335 2.321.661 4.147.661a.625.625 0 100-1.25c-.323 0-.63-.011-.922-.031a.996.996 0 00.184-.334l1.67-5.168a1 1 0 00-.677-1.27l-1.505-.43V3.5a1 1 0 00-1-1h-3L13.16.804A1 1 0 0012.18 0H7.82a1 1 0 00-.98.804zM5 7.679l3.75-1.072V5H5v2.679zm6.25-1.072L15 7.68V5h-3.75v1.607zM6.205 16.95a.625.625 0 01.658.042c.569.407 1.597 1.134 3.137 1.134s2.568-.727 3.137-1.134a.625.625 0 01.724-.001l.007.005.045.029c.044.027.114.069.21.12.194.104.493.247.9.392.811.29 2.053.589 3.727.589a.625.625 0 110 1.25c-1.826 0-3.21-.326-4.148-.661a7.894 7.894 0 01-1.069-.468l-.005-.003c-.691.466-1.878 1.132-3.528 1.132-1.667 0-2.861-.68-3.548-1.146-.934.467-2.619 1.146-5.202 1.146a.625.625 0 110-1.25c2.66 0 4.23-.787 4.955-1.176z"],
         "shop": ["M17.94 3.63c-.01-.02-.01-.03-.02-.04l-.03-.09h-.01c-.18-.3-.49-.5-.86-.5h-14c-.42 0-.77.25-.92.61L0 8.5h.02a2.5 2.5 0 005 0 2.5 2.5 0 005 0 2.5 2.5 0 005 0 2.5 2.5 0 005 0l-2.08-4.87zM3.02 2h14c.55 0 1-.45 1-1s-.45-1-1-1h-14c-.55 0-1 .45-1 1s.44 1 1 1zm13 14h-12v-4h-2v7c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-7h-2v4z"],
         "shopping-cart": ["M18 14H8.72l-.67-2H17c.44 0 .8-.29.94-.69h.01l2-6h-.01c.03-.1.06-.2.06-.31 0-.55-.45-1-1-1H5.39l-.44-1.32h-.01C4.8 2.29 4.44 2 4 2H1c-.55 0-1 .45-1 1s.45 1 1 1h2.28l3.33 10H5c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2h9c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2zM6.05 6h11.56l-1.33 4H7.39L6.05 6z"],
         "signal-search": ["M7.15 10.33c.888.8 1.999 1.36 3.228 1.574l2.326 6.98a.846.846 0 01-.535 1.07.844.844 0 01-1.072-.535l-1.225-3.671H7.125L5.9 19.419a.85.85 0 01-1.072.536.85.85 0 01-.536-1.071l2.857-8.555zm1.353 1.305l-.808 2.413h1.607l-.8-2.413zM5 5.5c0 .76.13 1.49.37 2.17-.496 1.056-.313 2.356.704 3.29.385.353.404.94.038 1.311a.982.982 0 01-1.356.038c-2.183-2.01-2-5.125.01-6.94a.95.95 0 01.24-.156A6.421 6.421 0 005 5.5z",
@@ -5466,6 +5669,7 @@
         "small-cross": ["M11.41 10l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L10 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L8.59 10 5.3 13.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3.29-3.3 3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L11.41 10z"],
         "small-minus": ["M14 9H6c-.55 0-1 .45-1 1s.45 1 1 1h8c.55 0 1-.45 1-1s-.45-1-1-1z"],
         "small-plus": ["M14 9h-3V6c0-.55-.45-1-1-1s-1 .45-1 1v3H6c-.55 0-1 .45-1 1s.45 1 1 1h3v3c0 .55.45 1 1 1s1-.45 1-1v-3h3c.55 0 1-.45 1-1s-.45-1-1-1z"],
+        "small-square": ["M5 5v10h10V5H5zM4 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H4z"],
         "small-tick": ["M15 5c-.28 0-.53.11-.71.29L8 11.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7A1.003 1.003 0 0015 5z"],
         "snowflake": ["M11 11.776v2.81l2.31 2.242a.987.987 0 010 1.415c-.399.39-1.044.39-1.442 0L11 17.414V19a.99.99 0 01-.996 1A.996.996 0 019 19v-1.636l-.912.879c-.398.39-1.043.39-1.441 0a.987.987 0 010-1.415L9 14.536v-2.79l-2.548 1.435-.837 3.063c-.146.534-.705.85-1.248.707a.998.998 0 01-.721-1.224l.309-1.132-1.4.793a1.03 1.03 0 01-1.393-.366.99.99 0 01.373-1.366l1.445-.818-1.224-.322a.998.998 0 01-.72-1.225c.145-.533.704-.85 1.248-.707l3.193.84 2.462-1.395-2.532-1.434-3.123.82a1.022 1.022 0 01-1.249-.706.998.998 0 01.721-1.225L2.91 7.18l-1.4-.793a.99.99 0 01-.373-1.366 1.03 1.03 0 011.392-.366l1.445.818-.328-1.2a.998.998 0 01.72-1.225 1.022 1.022 0 011.25.707l.855 3.132L9 8.311V5.414L6.647 3.121a.987.987 0 010-1.414 1.033 1.033 0 011.441 0L9 2.586V1c0-.552.44-1 1.004-1A.99.99 0 0111 1l-.007 1.536.875-.829a1.033 1.033 0 011.441 0 .987.987 0 010 1.414L11 5.364v2.918l2.53-1.42.855-3.131c.146-.534.705-.85 1.249-.707a.998.998 0 01.72 1.224l-.327 1.2 1.4-.792a1.03 1.03 0 011.392.366.99.99 0 01-.373 1.366l-1.355.768 1.153.303a.998.998 0 01.721 1.225c-.146.533-.705.85-1.249.707l-3.123-.821-2.576 1.459 2.506 1.42 3.193-.84a1.022 1.022 0 011.249.707.998.998 0 01-.72 1.225l-1.224.322 1.4.793a.99.99 0 01.373 1.366 1.03 1.03 0 01-1.393.366l-1.356-.768.31 1.132a.998.998 0 01-.721 1.224 1.022 1.022 0 01-1.249-.707l-.837-3.063L11 11.776z"],
         "social-media": ["M11.5 5c.8 0 1.6-.4 2-1 2 1.2 3.3 3.3 3.5 5.7 0 .5.5.9 1 .9.6 0 1-.5 1-1v-.1c-.2-3.3-2.2-6.2-5.1-7.6C13.7.8 12.7 0 11.5 0 10.1 0 9 1.1 9 2.5S10.1 5 11.5 5zm5 7c-1.4 0-2.5 1.1-2.5 2.5 0 .4.1.7.2 1.1-1.1.9-2.6 1.4-4.2 1.4-1.9 0-3.6-.8-4.9-2-.2-.2-.5-.4-.8-.4-.5 0-1 .5-1 1 0 .3.1.5.3.7C5.3 18 7.5 19 10 19c2.2 0 4.2-.8 5.8-2.1.2.1.5.1.7.1 1.4 0 2.5-1.1 2.5-2.5S17.9 12 16.5 12zM5 10.5c0-1.1-.7-2.1-1.7-2.4.5-1.9 1.9-3.5 3.6-4.4.3-.2.6-.5.6-.9 0-.5-.4-1-1-1-.2 0-.4.1-.6.2-2.4 1.2-4.2 3.6-4.7 6.4C.5 8.9 0 9.6 0 10.5 0 11.9 1.1 13 2.5 13S5 11.9 5 10.5z"],
@@ -5495,6 +5699,7 @@
         "symbol-circle": ["M10 4.01a6 6 0 100 12 6 6 0 100-12z"],
         "symbol-cross": ["M15 8.01h-3v-3c0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1v3H5c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1h3v3c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-3h3c.55 0 1-.45 1-1v-2c0-.56-.45-1-1-1z"],
         "symbol-diamond": ["M15 10.01c0-.21-.08-.39-.18-.54l.02-.01-4-6-.02.01c-.18-.28-.47-.46-.82-.46s-.64.18-.82.45l-.01-.01-4 6 .02.01c-.11.16-.19.34-.19.55s.08.39.18.54l-.02.01 4 6 .02-.01c.18.27.47.46.82.46s.64-.19.82-.46l.02.01 4-6-.02-.01c.1-.16.18-.34.18-.54z"],
+        "symbol-rectangle": ["M16 5H4c-.5 0-1 .5-1 1v8c0 .5.5 1 1 1h12c.5 0 1-.5 1-1V6c0-.5-.5-1-1-1z"],
         "symbol-square": ["M15 4.01H5c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-10c0-.56-.45-1-1-1z"],
         "symbol-triangle-down": ["M16 5c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1 0 .16.05.31.11.44H4.1l5 10h.01c.17.33.5.56.89.56s.72-.23.89-.56h.01l5-10h-.01c.06-.13.11-.28.11-.44z"],
         "symbol-triangle-up": ["M15.89 14.56l-4.99-10h-.01c-.17-.33-.5-.56-.89-.56s-.72.23-.89.56H9.1l-5 10h.01c-.06.13-.11.28-.11.44 0 .55.45 1 1 1h10c.55 0 1-.45 1-1 0-.16-.05-.31-.11-.44z"],
@@ -5502,7 +5707,10 @@
         "tag": ["M2 4a2 2 0 012-2h4.588a2 2 0 011.414.586l7.41 7.41a2 2 0 010 2.828l-4.588 4.588a2 2 0 01-2.829 0l-7.41-7.41A2 2 0 012 8.588V4zm3.489-.006a1.495 1.495 0 100 2.99 1.495 1.495 0 000-2.99z"],
         "take-action": ["M5 7c.28 0 .53-.11.71-.29l5-5A1.003 1.003 0 009.29.29l-5 5A1.003 1.003 0 005 7zm6 6a1.003 1.003 0 001.71.71l5-5a1.003 1.003 0 00-1.42-1.42l-5 5c-.18.18-.29.43-.29.71zm8 5h-1c0-.55-.45-1-1-1h-7c-.55 0-1 .45-1 1H8c-.55 0-1 .45-1 1s.45 1 1 1h11c.55 0 1-.45 1-1s-.45-1-1-1zm-9-6l6-6-1.29-1.29a1.003 1.003 0 00-1.42-1.42L12 2 6 8l1.29 1.29-7 7a1.003 1.003 0 001.42 1.42l7-7L10 12z"],
         "tank": ["M3.956 4.47A1 1 0 014.804 4h6.392a1 1 0 01.848.47L13 6h5a1 1 0 010 2h-5v1h4a3 3 0 110 6H3a3 3 0 010-6V6.287a1 1 0 01.152-.53l.804-1.287zM3 11h14a1 1 0 110 2H3a1 1 0 110-2z"],
+        "target": ["M9 5a1 1 0 012 0v3a1 1 0 01-2 0V5zM12 9a1 1 0 000 2h3a1 1 0 000-2h-3zM4 10a1 1 0 011-1h3a1 1 0 010 2H5a1 1 0 01-1-1zM10 11a1 1 0 00-1 1v3a1 1 0 002 0v-3a1 1 0 00-1-1z",
+            "M10 20c5.523 0 10-4.477 10-10S15.523 0 10 0 0 4.477 0 10s4.477 10 10 10zm0-2a8 8 0 100-16 8 8 0 000 16z"],
         "taxi": ["M19 9h-.33l.33 1v.5c0 .15-.03.3-.07.44h.01L17 17.23v.27c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5V17H6v.5c0 .83-.67 1.5-1.5 1.5S3 18.33 3 17.5v-.27l-1.93-6.28h.01c-.05-.15-.08-.3-.08-.45V10s.02-.06.05-.16c.06-.17.16-.47.28-.84H1c-.55 0-1-.45-1-1s.45-1 1-1h1l1-3h-.01v-.01c.25-.64 1-1.31 1.67-1.5 0 0 .78-.21 2.33-.36V1c0-.55.45-1 1-1h4c.55 0 1 .45 1 1v1.13c1.55.14 2.33.36 2.33.36.67.19 1.42.86 1.67 1.5V4H17l1 3h1c.55 0 1 .45 1 1s-.45 1-1 1zM3 11.5c0 .83.67 1.5 1.5 1.5S6 12.33 6 11.5 5.33 10 4.5 10 3 10.67 3 11.5zM16 7l-1-3H5L4 7v1h12V7zm-.5 3c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"],
+        "temperature": ["M11 0a2 2 0 00-2 2v10.535a4 4 0 104 0V2a2 2 0 00-2-2zM3 2.5a.5.5 0 01.5-.5h4a.5.5 0 010 1h-4a.5.5 0 01-.5-.5zM3.5 8a.5.5 0 000 1h4a.5.5 0 000-1h-4zM5 5.5a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm.5 5.5a.5.5 0 000 1h2a.5.5 0 000-1h-2z"],
         "text-highlight": ["M16 17c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1s1-.45 1-1-.45-1-1-1c-.77 0-1.47.3-2 .78-.53-.48-1.23-.78-2-.78-.55 0-1 .45-1 1s.45 1 1 1 1 .45 1 1v12c0 .55-.45 1-1 1s-1 .45-1 1 .45 1 1 1c.77 0 1.47-.3 2-.78.53.48 1.23.78 2 .78.55 0 1-.45 1-1s-.45-1-1-1zm-4-4H2V7h10V5H1c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h11v-2zm7-8h-3v2h2v6h-2v2h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1z"],
         "th": ["M19 1H1c-.6 0-1 .5-1 1v16c0 .5.4 1 1 1h18c.5 0 1-.5 1-1V2c0-.5-.5-1-1-1zM7 17H2v-3h5v3zm0-4H2v-3h5v3zm0-4H2V6h5v3zm11 8H8v-3h10v3zm0-4H8v-3h10v3zm0-4H8V6h10v3z"],
         "th-derived": ["M5.3 13.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l3-3c.2-.2.3-.4.3-.7s-.1-.5-.3-.7l-3-3C6.5 7.1 6.3 7 6 7c-.6 0-1 .4-1 1 0 .3.1.5.3.7L6.6 10H1c-.6 0-1 .4-1 1s.4 1 1 1h5.6l-1.3 1.3zM19 1H3c-.5 0-1 .5-1 1v6h1c0-1.7 1.3-3 3-3 .8 0 1.6.3 2.1.9l.1.1H9v.8l1 1V6h8v3h-6.8c.3.3.5.6.6 1H18v3h-6.8l-.1.1-.9.9H18v3h-8v-2.8l-1 1V17H4v-.8c-.6-.5-1-1.3-1-2.2H2v4c0 .5.5 1 1 1h16c.6 0 1-.5 1-1V2c0-.5-.5-1-1-1z"],
@@ -5556,10 +5764,12 @@
         "walk": ["M16 10h-2c-.23 0-.42-.09-.59-.21l-.01.01-1.69-1.27-.63 3.14 2.62 2.62c.19.18.3.43.3.71v4c0 .55-.45 1-1 1s-1-.45-1-1v-3.59L9.39 12.8l-2.45 6.55h-.01c-.14.38-.5.65-.93.65-.55 0-1-.45-1-1 0-.12.03-.24.07-.35h-.01L9.43 7h-2.9l-1.7 2.55-.01-.01c-.18.27-.47.46-.82.46-.55 0-1-.45-1-1 0-.21.08-.39.18-.54l-.01-.01 2-3 .02.01C5.36 5.19 5.65 5 6 5h4.18l.36-.96c-.33-.43-.54-.96-.54-1.54a2.5 2.5 0 015 0A2.5 2.5 0 0112.5 5c-.06 0-.12-.01-.18-.02l-.44 1.18L14.33 8H16c.55 0 1 .45 1 1s-.45 1-1 1z"],
         "warning-sign": ["M19.86 17.52l.01-.01-9-16-.01.01C10.69 1.21 10.37 1 10 1s-.69.21-.86.52l-.01-.01-9 16 .01.01c-.08.14-.14.3-.14.48 0 .55.45 1 1 1h18c.55 0 1-.45 1-1 0-.18-.06-.34-.14-.48zM11 17H9v-2h2v2zm0-3H9V6h2v8z"],
         "waterfall-chart": ["M13 7h2c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1h-2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1zm-9 8h1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm4-6h2c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1zm11-5h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h1c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm0 12H2V3c0-.55-.45-1-1-1s-1 .45-1 1v14a.998.998 0 001 1h18c.55 0 1-.45 1-1s-.45-1-1-1z"],
+        "waves": ["M4.948 2.682a1 1 0 00-1.897.001l-.005.016-.027.074a6.05 6.05 0 01-.6 1.172C1.958 4.635 1.468 5 .999 5a1 1 0 000 2c1.457 0 2.442-1.027 3-1.825C4.558 5.973 5.543 7 7 7s2.442-1.027 3-1.825C10.558 5.973 11.543 7 13 7s2.442-1.027 3-1.825C16.558 5.973 17.544 7 19 7a1 1 0 100-2c-.47 0-.958-.365-1.418-1.055a6.048 6.048 0 01-.628-1.246l-.006-.016a1 1 0 00-1.896 0l-.006.016a5.868 5.868 0 01-.147.364c-.11.246-.272.568-.481.882C13.958 4.635 13.469 5 13 5c-.47 0-.958-.365-1.418-1.055a6.048 6.048 0 01-.628-1.246l-.006-.016a1 1 0 00-1.897 0l-.005.016-.027.074a6.05 6.05 0 01-.6 1.172C7.958 4.635 7.468 5 6.999 5c-.47 0-.958-.365-1.418-1.055A6.05 6.05 0 014.954 2.7l-.006-.016v-.001zm0 6a1 1 0 00-1.897.001l-.005.016-.027.074a6.05 6.05 0 01-.6 1.172c-.46.69-.95 1.055-1.419 1.055a1 1 0 100 2c1.457 0 2.442-1.027 3-1.825C4.558 11.973 5.543 13 7 13s2.442-1.027 3-1.825c.558.798 1.543 1.825 3 1.825s2.442-1.027 3-1.825c.558.798 1.544 1.825 3 1.825a1 1 0 100-2c-.47 0-.958-.365-1.418-1.055a6.048 6.048 0 01-.628-1.246l-.006-.016a1 1 0 00-1.896 0l-.006.016a5.868 5.868 0 01-.147.364c-.11.246-.272.568-.481.882-.46.69-.949 1.055-1.418 1.055-.47 0-.958-.365-1.418-1.055a6.048 6.048 0 01-.628-1.246l-.006-.016a1 1 0 00-1.897 0l-.005.016-.027.074a6.05 6.05 0 01-.6 1.172c-.46.69-.95 1.055-1.419 1.055-.47 0-.958-.365-1.418-1.055A6.05 6.05 0 014.954 8.7l-.006-.016zm-1.896-6zm1.896 12l.006.017.027.074a6.053 6.053 0 00.6 1.172c.46.69.95 1.055 1.419 1.055.47 0 .958-.365 1.418-1.055a6.053 6.053 0 00.628-1.246l.005-.016a1 1 0 011.897 0l.006.016.027.074a6.051 6.051 0 00.6 1.172c.46.69.95 1.055 1.419 1.055.47 0 .958-.365 1.418-1.055a6.051 6.051 0 00.628-1.246l.006-.016a1 1 0 011.896 0l.006.016.027.074a6.051 6.051 0 00.6 1.172c.46.69.95 1.055 1.419 1.055a1 1 0 110 2c-1.456 0-2.442-1.027-3-1.825-.558.798-1.543 1.825-3 1.825s-2.442-1.027-3-1.825C9.442 17.973 8.457 19 7 19s-2.442-1.027-3-1.825C3.442 17.973 2.457 19 1 19a1 1 0 110-2c.47 0 .958-.365 1.418-1.055a6.053 6.053 0 00.628-1.246l.005-.016a1 1 0 011.897-.001z"],
         "widget": ["M18 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM2 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm15-1h2V5h-2v10zM3 5H1v10h2V5zM2 0C.9 0 0 .9 0 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm3 3h10V1H5v2zm13 13c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM5 19h10v-2H5v2z"],
         "widget-button": ["M1 4h18c.55 0 1 .45 1 1v10c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V5c0-.55.45-1 1-1zm1 2v8h16V6H2zm4 5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm4 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm4 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"],
         "widget-footer": ["M17 0H3c-.55 0-1 .45-1 1v18c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-1 18H4v-4h12v4zm0-5H4V2h12v11z"],
         "widget-header": ["M17 0H3c-.55 0-1 .45-1 1v18c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-1 18H4V7h12v11zm0-12H4V2h12v4z"],
+        "wind": ["M12 6a3 3 0 113 3H4a1 1 0 000 2h11a5 5 0 10-5-5 1 1 0 102 0zM1 12a1 1 0 100 2h10a2 2 0 110 4c-.934 0-1.803-.614-2.057-1.333a1 1 0 10-1.886.666C7.627 18.944 9.321 20 11 20a4 4 0 000-8H1z"],
         "wrench": ["M19.8 4.44L16.13 8.1l-3.55-.71-.71-3.53L15.54.21c-2.01-.53-4.23-.03-5.8 1.53-1.86 1.85-2.23 4.6-1.14 6.83L.59 16.59C.22 16.95 0 17.45 0 18a2 2 0 002 2c.55 0 1.05-.22 1.41-.59l8.03-8.04c2.23 1.05 4.97.67 6.82-1.16 1.57-1.56 2.07-3.77 1.54-5.77z"],
         "zoom-in": ["M19.56 17.44l-4.94-4.94A8.004 8.004 0 0016 8c0-4.42-3.58-8-8-8S0 3.58 0 8s3.58 8 8 8c1.67 0 3.21-.51 4.5-1.38l4.94 4.94a1.498 1.498 0 102.12-2.12zM8 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm3-7H9V5c0-.55-.45-1-1-1s-1 .45-1 1v2H5c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1V9h2c.55 0 1-.45 1-1s-.45-1-1-1z"],
         "zoom-out": ["M11 7H5c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1zm8.56 10.44l-4.94-4.94A8.004 8.004 0 0016 8c0-4.42-3.58-8-8-8S0 3.58 0 8s3.58 8 8 8c1.67 0 3.21-.51 4.5-1.38l4.94 4.94a1.498 1.498 0 102.12-2.12zM8 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"],
@@ -5592,8 +5802,8 @@
             // render path elements, or nothing if icon name is unknown.
             var paths = this.renderSvgPaths(pixelGridSize, icon);
             // eslint-disable-next-line deprecation/deprecation
-            var classes = classnames$1(ICON, iconClass(icon), intentClass$1(intent), className);
-            var viewBox = "0 0 " + pixelGridSize + " " + pixelGridSize;
+            var classes = classnames$1(ICON, iconClass(icon), intentClass(intent), className);
+            var viewBox = "0 0 ".concat(pixelGridSize, " ").concat(pixelGridSize);
             return React.createElement(tagName, __assign(__assign({}, htmlprops), { "aria-hidden": title ? undefined : true, className: classes, title: htmlTitle }), React.createElement("svg", { fill: color, "data-icon": icon, width: size, height: size, viewBox: viewBox },
                 title && React.createElement("desc", null, title),
                 paths));
@@ -5607,7 +5817,7 @@
             }
             return pathStrings.map(function (d, i) { return React.createElement("path", { key: i, d: d, fillRule: "evenodd" }); });
         };
-        Icon.displayName = DISPLAYNAME_PREFIX$1 + ".Icon";
+        Icon.displayName = "".concat(DISPLAYNAME_PREFIX, ".Icon");
         /** @deprecated use IconSize.STANDARD */
         Icon.SIZE_STANDARD = IconSize.STANDARD;
         /** @deprecated use IconSize.LARGE */
@@ -5616,7 +5826,7 @@
             reactLifecyclesCompat_cjs_1
         ], Icon);
         return Icon;
-    }(AbstractPureComponent2$1));
+    }(AbstractPureComponent2));
 
     var SpinnerSize;
     (function (SpinnerSize) {
@@ -5626,7 +5836,7 @@
     })(SpinnerSize || (SpinnerSize = {}));
     // see http://stackoverflow.com/a/18473154/3124288 for calculating arc path
     var R = 45;
-    var SPINNER_TRACK = "M 50,50 m 0,-" + R + " a " + R + "," + R + " 0 1 1 0," + R * 2 + " a " + R + "," + R + " 0 1 1 0,-" + R * 2;
+    var SPINNER_TRACK = "M 50,50 m 0,-".concat(R, " a ").concat(R, ",").concat(R, " 0 1 1 0,").concat(R * 2, " a ").concat(R, ",").concat(R, " 0 1 1 0,-").concat(R * 2);
     // unitless total length of SVG path, to which stroke-dash* properties are relative.
     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/pathLength
     // this value is the result of `<path d={SPINNER_TRACK} />.getTotalLength()` and works in all browsers:
@@ -5649,7 +5859,7 @@
             var _a;
             var _b = this.props, className = _b.className, intent = _b.intent, value = _b.value, _c = _b.tagName, tagName = _c === void 0 ? "div" : _c;
             var size = this.getSize();
-            var classes = classnames$1(SPINNER, intentClass$1(intent), (_a = {}, _a[SPINNER_NO_SPIN] = value != null, _a), className);
+            var classes = classnames$1(SPINNER, intentClass(intent), (_a = {}, _a[SPINNER_NO_SPIN] = value != null, _a), className);
             // keep spinner track width consistent at all sizes (down to about 10px).
             var strokeWidth = Math.min(MIN_STROKE_WIDTH, (STROKE_WIDTH * SpinnerSize.LARGE) / size);
             var strokeOffset = PATH_LENGTH - PATH_LENGTH * (value == null ? 0.25 : clamp(value, 0, 1));
@@ -5661,7 +5871,7 @@
                 role: "progressbar",
             }, React.createElement(tagName, { className: SPINNER_ANIMATION }, React.createElement("svg", { width: size, height: size, strokeWidth: strokeWidth.toFixed(2), viewBox: this.getViewBox(strokeWidth) },
                 React.createElement("path", { className: SPINNER_TRACK$1, d: SPINNER_TRACK }),
-                React.createElement("path", { className: SPINNER_HEAD, d: SPINNER_TRACK, pathLength: PATH_LENGTH, strokeDasharray: PATH_LENGTH + " " + PATH_LENGTH, strokeDashoffset: strokeOffset }))));
+                React.createElement("path", { className: SPINNER_HEAD, d: SPINNER_TRACK, pathLength: PATH_LENGTH, strokeDasharray: "".concat(PATH_LENGTH, " ").concat(PATH_LENGTH), strokeDashoffset: strokeOffset }))));
         };
         Spinner.prototype.validateProps = function (_a) {
             var _b = _a.className, className = _b === void 0 ? "" : _b, size = _a.size;
@@ -5692,9 +5902,9 @@
             var radius = R + strokeWidth / 2;
             var viewBoxX = (50 - radius).toFixed(2);
             var viewBoxWidth = (radius * 2).toFixed(2);
-            return viewBoxX + " " + viewBoxX + " " + viewBoxWidth + " " + viewBoxWidth;
+            return "".concat(viewBoxX, " ").concat(viewBoxX, " ").concat(viewBoxWidth, " ").concat(viewBoxWidth);
         };
-        Spinner.displayName = DISPLAYNAME_PREFIX$1 + ".Spinner";
+        Spinner.displayName = "".concat(DISPLAYNAME_PREFIX, ".Spinner");
         /** @deprecated use SpinnerSize.SMALL */
         Spinner.SIZE_SMALL = SpinnerSize.SMALL;
         /** @deprecated use SpinnerSize.STANDARD */
@@ -5705,7 +5915,7 @@
             reactLifecyclesCompat_cjs_1
         ], Spinner);
         return Spinner;
-    }(AbstractPureComponent2$1));
+    }(AbstractPureComponent2));
 
     var AbstractButton = /** @class */ (function (_super) {
         __extends(AbstractButton, _super);
@@ -5756,15 +5966,15 @@
             var _b = this.props, active = _b.active, alignText = _b.alignText, fill = _b.fill, large = _b.large, loading = _b.loading, outlined = _b.outlined, minimal = _b.minimal, small = _b.small, tabIndex = _b.tabIndex;
             var disabled = this.props.disabled || loading;
             var className = classnames$1(BUTTON, (_a = {},
-                _a[ACTIVE$1] = !disabled && (active || this.state.isActive),
-                _a[DISABLED$1] = disabled,
-                _a[FILL$1] = fill,
+                _a[ACTIVE] = !disabled && (active || this.state.isActive),
+                _a[DISABLED] = disabled,
+                _a[FILL] = fill,
                 _a[LARGE] = large,
                 _a[LOADING] = loading,
-                _a[MINIMAL$1] = minimal,
+                _a[MINIMAL] = minimal,
                 _a[OUTLINED] = outlined,
                 _a[SMALL] = small,
-                _a), alignmentClass(alignText), intentClass$1(this.props.intent), this.props.className);
+                _a), alignmentClass(alignText), intentClass(this.props.intent), this.props.className);
             return {
                 className: className,
                 disabled: disabled,
@@ -5777,17 +5987,19 @@
         };
         AbstractButton.prototype.renderChildren = function () {
             var _a = this.props, children = _a.children, icon = _a.icon, loading = _a.loading, rightIcon = _a.rightIcon, text = _a.text;
+            var maybeHasText = !isReactNodeEmpty(text) || !isReactNodeEmpty(children);
             return [
                 loading && React.createElement(Spinner, { key: "loading", className: BUTTON_SPINNER, size: IconSize.LARGE }),
-                React.createElement(Icon, { key: "leftIcon", icon: icon }),
-                (!isReactNodeEmpty(text) || !isReactNodeEmpty(children)) && (React.createElement("span", { key: "text", className: BUTTON_TEXT },
+                // The icon is purely decorative if text is provided
+                React.createElement(Icon, { key: "leftIcon", icon: icon, "aria-hidden": maybeHasText, tabIndex: maybeHasText ? -1 : 0 }),
+                maybeHasText && (React.createElement("span", { key: "text", className: BUTTON_TEXT },
                     text,
                     children)),
                 React.createElement(Icon, { key: "rightIcon", icon: rightIcon }),
             ];
         };
         return AbstractButton;
-    }(AbstractPureComponent2$1));
+    }(AbstractPureComponent2));
 
     var Button = /** @class */ (function (_super) {
         __extends(Button, _super);
@@ -5808,7 +6020,7 @@
                 setRef$1(this.props.elementRef, this.buttonRef);
             }
         };
-        Button.displayName = DISPLAYNAME_PREFIX$1 + ".Button";
+        Button.displayName = "".concat(DISPLAYNAME_PREFIX, ".Button");
         return Button;
     }(AbstractButton));
     /** @class */ ((function (_super) {
@@ -5832,7 +6044,7 @@
                 setRef$1(this.props.elementRef, this.buttonRef);
             }
         };
-        AnchorButton.displayName = DISPLAYNAME_PREFIX$1 + ".AnchorButton";
+        AnchorButton.displayName = "".concat(DISPLAYNAME_PREFIX, ".AnchorButton");
         return AnchorButton;
     })(AbstractButton));
 
@@ -5844,7 +6056,7 @@
         var _b;
         var alignIndicator = _a.alignIndicator, children = _a.children, className = _a.className, indicatorChildren = _a.indicatorChildren, inline = _a.inline, inputRef = _a.inputRef, label = _a.label, labelElement = _a.labelElement, large = _a.large, style = _a.style, type = _a.type, typeClassName = _a.typeClassName, _c = _a.tagName, tagName = _c === void 0 ? "label" : _c, htmlProps = __rest(_a, ["alignIndicator", "children", "className", "indicatorChildren", "inline", "inputRef", "label", "labelElement", "large", "style", "type", "typeClassName", "tagName"]);
         var classes = classnames$1(CONTROL, typeClassName, (_b = {},
-            _b[DISABLED$1] = htmlProps.disabled,
+            _b[DISABLED] = htmlProps.disabled,
             _b[INLINE] = inline,
             _b[LARGE] = large,
             _b), alignmentClass(alignIndicator), className);
@@ -5867,12 +6079,12 @@
                 : null;
             return (React.createElement(Control, __assign({}, controlProps, { type: "checkbox", typeClassName: SWITCH, indicatorChildren: switchLabels })));
         };
-        Switch.displayName = DISPLAYNAME_PREFIX$1 + ".Switch";
+        Switch.displayName = "".concat(DISPLAYNAME_PREFIX, ".Switch");
         Switch = __decorate([
             reactLifecyclesCompat_cjs_1
         ], Switch);
         return Switch;
-    }(AbstractPureComponent2$1));
+    }(AbstractPureComponent2));
     /** @class */ ((function (_super) {
         __extends(Radio, _super);
         function Radio() {
@@ -5881,12 +6093,12 @@
         Radio.prototype.render = function () {
             return React.createElement(Control, __assign({}, this.props, { type: "radio", typeClassName: RADIO }));
         };
-        Radio.displayName = DISPLAYNAME_PREFIX$1 + ".Radio";
+        Radio.displayName = "".concat(DISPLAYNAME_PREFIX, ".Radio");
         Radio = __decorate([
             reactLifecyclesCompat_cjs_1
         ], Radio);
         return Radio;
-    })(AbstractPureComponent2$1));
+    })(AbstractPureComponent2));
     /** @class */ ((function (_super) {
         __extends(Checkbox, _super);
         function Checkbox() {
@@ -5937,12 +6149,15 @@
                 this.input.indeterminate = this.state.indeterminate;
             }
         };
-        Checkbox.displayName = DISPLAYNAME_PREFIX$1 + ".Checkbox";
+        Checkbox.displayName = "".concat(DISPLAYNAME_PREFIX, ".Checkbox");
         Checkbox = __decorate([
             reactLifecyclesCompat_cjs_1
         ], Checkbox);
         return Checkbox;
-    })(AbstractPureComponent2$1));
+    })(AbstractPureComponent2));
+
+    /** `Position` with `"auto"` values, used by `Popover` and `Tooltip`. */
+    var PopoverPosition = __assign(__assign({}, Position), { AUTO: "auto", AUTO_END: "auto-end", AUTO_START: "auto-start" });
 
     /*
      * Copyright 2018 Palantir Technologies, Inc. All rights reserved.
@@ -5996,7 +6211,7 @@
      */
     /** Helper function for formatting ratios as CSS percentage values. */
     function formatPercentage(ratio) {
-        return (ratio * 100).toFixed(2) + "%";
+        return "".concat((ratio * 100).toFixed(2), "%");
     }
     /**
      * Mutates the values array by filling all the values between start and end index (inclusive) with the fill value.
@@ -6067,7 +6282,7 @@
                 var _a = _this.props, _b = _a.min, min = _b === void 0 ? 0 : _b, tickSizeRatio = _a.tickSizeRatio, value = _a.value, vertical = _a.vertical;
                 var handleMidpoint = _this.getHandleMidpointAndOffset(_this.handleElement, true).handleMidpoint;
                 var offsetRatio = (value - min) * tickSizeRatio;
-                var offsetCalc = "calc(" + formatPercentage(offsetRatio) + " - " + handleMidpoint + "px)";
+                var offsetCalc = "calc(".concat(formatPercentage(offsetRatio), " - ").concat(handleMidpoint, "px)");
                 return vertical ? { bottom: offsetCalc } : { left: offsetCalc };
             };
             _this.endHandleMovement = function (event) {
@@ -6129,7 +6344,7 @@
             var _a;
             var _b = this.props, className = _b.className, disabled = _b.disabled, label = _b.label;
             var isMoving = this.state.isMoving;
-            return (React.createElement("span", { className: classnames$1(SLIDER_HANDLE, (_a = {}, _a[ACTIVE$1] = isMoving, _a), className), onKeyDown: disabled ? undefined : this.handleKeyDown, onKeyUp: disabled ? undefined : this.handleKeyUp, onMouseDown: disabled ? undefined : this.beginHandleMovement, onTouchStart: disabled ? undefined : this.beginHandleTouchMovement, ref: this.refHandlers.handle, style: this.getStyleProperties(), tabIndex: 0 }, label == null ? null : React.createElement("span", { className: SLIDER_LABEL }, label)));
+            return (React.createElement("span", { className: classnames$1(SLIDER_HANDLE, (_a = {}, _a[ACTIVE] = isMoving, _a), className), onKeyDown: disabled ? undefined : this.handleKeyDown, onKeyUp: disabled ? undefined : this.handleKeyUp, onMouseDown: disabled ? undefined : this.beginHandleMovement, onTouchStart: disabled ? undefined : this.beginHandleTouchMovement, ref: this.refHandlers.handle, style: this.getStyleProperties(), tabIndex: 0 }, label == null ? null : React.createElement("span", { className: SLIDER_LABEL }, label)));
         };
         Handle.prototype.componentWillUnmount = function () {
             this.removeDocumentEventListeners();
@@ -6162,7 +6377,7 @@
             for (var _i = 0, NUMBER_PROPS_1 = NUMBER_PROPS; _i < NUMBER_PROPS_1.length; _i++) {
                 var prop = NUMBER_PROPS_1[_i];
                 if (typeof props[prop] !== "number") {
-                    throw new Error("[Blueprint] <Handle> requires number value for " + prop + " prop");
+                    throw new Error("[Blueprint] <Handle> requires number value for ".concat(prop, " prop"));
                 }
             }
         };
@@ -6210,19 +6425,19 @@
             document.removeEventListener("touchend", this.endHandleTouchMovement);
             document.removeEventListener("touchcancel", this.endHandleTouchMovement);
         };
-        Handle.displayName = DISPLAYNAME_PREFIX$1 + ".SliderHandle";
+        Handle.displayName = "".concat(DISPLAYNAME_PREFIX, ".SliderHandle");
         Handle = __decorate([
             reactLifecyclesCompat_cjs_1
         ], Handle);
         return Handle;
-    }(AbstractPureComponent2$1));
+    }(AbstractPureComponent2));
 
     /**
      * SFC used to pass slider handle props to a `MultiSlider`.
      * This element is not rendered directly.
      */
     var MultiSliderHandle = function () { return null; };
-    MultiSliderHandle.displayName = DISPLAYNAME_PREFIX$1 + ".MultiSliderHandle";
+    MultiSliderHandle.displayName = "".concat(DISPLAYNAME_PREFIX, ".MultiSliderHandle");
     var MultiSlider = /** @class */ (function (_super) {
         __extends(MultiSlider, _super);
         function MultiSlider() {
@@ -6262,7 +6477,7 @@
             _this.canHandleTrackEvent = function (event) {
                 var target = event.target;
                 // ensure event does not come from inside the handle
-                return !_this.props.disabled && target.closest("." + SLIDER_HANDLE) == null;
+                return !_this.props.disabled && target.closest(".".concat(SLIDER_HANDLE)) == null;
             };
             _this.getHandlerForIndex = function (index, callback) {
                 return function (newValue) {
@@ -6316,8 +6531,8 @@
             var _a;
             var _this = this;
             var classes = classnames$1(SLIDER, (_a = {},
-                _a[DISABLED$1] = this.props.disabled,
-                _a[SLIDER + "-unlabeled"] = this.props.labelRenderer === false,
+                _a[DISABLED] = this.props.disabled,
+                _a["".concat(SLIDER, "-unlabeled")] = this.props.labelRenderer === false,
                 _a[VERTICAL] = this.props.vertical,
                 _a), this.props.className);
             return (React.createElement("div", { className: classes, onMouseDown: this.maybeHandleTrackClick, onTouchStart: this.maybeHandleTrackTouch },
@@ -6345,7 +6560,7 @@
             var anyInvalidChildren = false;
             React.Children.forEach(props.children, function (child) {
                 // allow boolean coercion to omit nulls and false values
-                if (child && !isElementOfType$1(child, MultiSlider_1.Handle)) {
+                if (child && !isElementOfType(child, MultiSlider_1.Handle)) {
                     anyInvalidChildren = true;
                 }
             });
@@ -6359,7 +6574,7 @@
             if (labelRenderer === false) {
                 return undefined;
             }
-            else if (isFunction$1(labelRenderer)) {
+            else if (isFunction(labelRenderer)) {
                 return labelRenderer(value, { isHandleTooltip: isHandleTooltip });
             }
             else {
@@ -6402,8 +6617,8 @@
                 ? { bottom: startOffset, top: endOffset, left: 0 }
                 : { left: startOffset, right: endOffset, top: 0 };
             var style = __assign(__assign({}, orientationStyle), (start.trackStyleAfter || end.trackStyleBefore || {}));
-            var classes = classnames$1(SLIDER_PROGRESS, intentClass$1(this.getTrackIntent(start, end)));
-            return React.createElement("div", { key: "track-" + index, className: classes, style: style });
+            var classes = classnames$1(SLIDER_PROGRESS, intentClass(this.getTrackIntent(start, end)));
+            return React.createElement("div", { key: "track-".concat(index), className: classes, style: style });
         };
         MultiSlider.prototype.renderHandles = function () {
             var _this = this;
@@ -6418,7 +6633,7 @@
                 return (React.createElement(Handle, { className: classnames$1((_b = {},
                         _b[START] = type === HandleType.START,
                         _b[END] = type === HandleType.END,
-                        _b), className), disabled: disabled, key: index + "-" + handleProps.length, label: _this.formatLabel(value, true), max: max, min: min, onChange: _this.getHandlerForIndex(index, _this.handleChange), onRelease: _this.getHandlerForIndex(index, _this.handleRelease), ref: _this.addHandleRef, stepSize: stepSize, tickSize: _this.state.tickSize, tickSizeRatio: _this.state.tickSizeRatio, value: value, vertical: vertical }));
+                        _b), className), disabled: disabled, key: "".concat(index, "-").concat(handleProps.length), label: _this.formatLabel(value, true), max: max, min: min, onChange: _this.getHandlerForIndex(index, _this.handleChange), onRelease: _this.getHandlerForIndex(index, _this.handleRelease), ref: _this.addHandleRef, stepSize: stepSize, tickSize: _this.state.tickSize, tickSizeRatio: _this.state.tickSizeRatio, value: value, vertical: vertical }));
             });
         };
         MultiSlider.prototype.nearestHandleForValue = function (handles, getOffset) {
@@ -6462,7 +6677,7 @@
             var _a = this.props, labelStepSize = _a.labelStepSize, labelValues = _a.labelValues, min = _a.min, max = _a.max;
             var values = [];
             if (labelValues !== undefined) {
-                values = labelValues;
+                values = labelValues.slice();
             }
             else {
                 for (var i = min; i < max || approxEqual(i, max); i += labelStepSize !== null && labelStepSize !== void 0 ? labelStepSize : 1) {
@@ -6476,7 +6691,7 @@
         };
         MultiSlider.prototype.getTrackIntent = function (start, end) {
             if (!this.props.showTrackFill) {
-                return Intent$1.NONE;
+                return Intent.NONE;
             }
             if (start.intentAfter !== undefined) {
                 return start.intentAfter;
@@ -6503,14 +6718,14 @@
             stepSize: 1,
             vertical: false,
         };
-        MultiSlider.defaultProps = __assign(__assign({}, MultiSlider_1.defaultSliderProps), { defaultTrackIntent: Intent$1.NONE });
-        MultiSlider.displayName = DISPLAYNAME_PREFIX$1 + ".MultiSlider";
+        MultiSlider.defaultProps = __assign(__assign({}, MultiSlider_1.defaultSliderProps), { defaultTrackIntent: Intent.NONE });
+        MultiSlider.displayName = "".concat(DISPLAYNAME_PREFIX, ".MultiSlider");
         MultiSlider.Handle = MultiSliderHandle;
         MultiSlider = MultiSlider_1 = __decorate([
             reactLifecyclesCompat_cjs_1
         ], MultiSlider);
         return MultiSlider;
-    }(AbstractPureComponent2$1));
+    }(AbstractPureComponent2));
     function getLabelPrecision(_a) {
         var labelPrecision = _a.labelPrecision, _b = _a.stepSize, stepSize = _b === void 0 ? MultiSlider.defaultSliderProps.stepSize : _b;
         // infer default label precision from stepSize because that's how much the handle moves.
@@ -6523,7 +6738,7 @@
         var children = _a.children;
         if (predicate === void 0) { predicate = function () { return true; }; }
         var maybeHandles = React.Children.map(children, function (child) {
-            return isElementOfType$1(child, MultiSlider.Handle) && predicate(child.props) ? child.props : null;
+            return isElementOfType(child, MultiSlider.Handle) && predicate(child.props) ? child.props : null;
         });
         var handles = maybeHandles != null ? maybeHandles : [];
         handles = handles.filter(function (handle) { return handle !== null; });
@@ -6542,18 +6757,34 @@
                 React.createElement(MultiSlider.Handle, { value: value, intentAfter: value < initialValue ? intent : undefined, intentBefore: value >= initialValue ? intent : undefined, onChange: onChange, onRelease: onRelease }),
                 React.createElement(MultiSlider.Handle, { value: initialValue, interactionKind: "none" })));
         };
-        Slider.defaultProps = __assign(__assign({}, MultiSlider.defaultSliderProps), { initialValue: 0, intent: Intent$1.PRIMARY, value: 0 });
-        Slider.displayName = DISPLAYNAME_PREFIX$1 + ".Slider";
+        Slider.defaultProps = __assign(__assign({}, MultiSlider.defaultSliderProps), { initialValue: 0, intent: Intent.PRIMARY, value: 0 });
+        Slider.displayName = "".concat(DISPLAYNAME_PREFIX, ".Slider");
         Slider = __decorate([
             reactLifecyclesCompat_cjs_1
         ], Slider);
         return Slider;
-    }(AbstractPureComponent2$1));
+    }(AbstractPureComponent2));
 
     var MultiItemDisplay=function MultiItemDisplay(props){var _a=React__default['default'].useState(0),currentStep=_a[0],setCurrentStep=_a[1];return React__default['default'].createElement("div",{style:{display:"flex",flexDirection:"column",justifyContent:"center",alignContent:"center",height:"100%"}},props.elements.length>1?React__default['default'].createElement("div",{style:{display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"row",position:"relative",marginBottom:10}},React__default['default'].createElement(Button,{style:{position:"absolute",left:0},large:true,outlined:true,icon:ARROW_LEFT,onClick:function(){return setCurrentStep(currentStep-1)},disabled:currentStep===0},"Previous"),React__default['default'].createElement("h3",{className:"bp3-text-large"},"Call ",currentStep+1,"/",props.elements.length),React__default['default'].createElement(Button,{style:{position:"absolute",right:0},large:true,outlined:true,icon:ARROW_RIGHT,onClick:function(){return setCurrentStep(currentStep+1)},disabled:currentStep===props.elements.length-1},"Next")):null,React__default['default'].createElement("div",{style:{width:"100%",paddingLeft:"20px",paddingRight:"20px",display:"flex",alignContent:"center",justifyContent:"center"}},props.elements[currentStep]))};
 
-    /*
-     * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+    var NS = getClassNamespace();
+    var POPOVER2 = "".concat(NS, "-popover2");
+    var POPOVER2_ARROW = "".concat(POPOVER2, "-arrow");
+    var POPOVER2_BACKDROP = "".concat(POPOVER2, "-backdrop");
+    var POPOVER2_CAPTURING_DISMISS = "".concat(POPOVER2, "-capturing-dismiss");
+    var POPOVER2_CONTENT = "".concat(POPOVER2, "-content");
+    var POPOVER2_CONTENT_PLACEMENT = "".concat(POPOVER2, "-placement");
+    var POPOVER2_DISMISS = "".concat(POPOVER2, "-dismiss");
+    var POPOVER2_DISMISS_OVERRIDE = "".concat(POPOVER2_DISMISS, "-override");
+    var POPOVER2_OPEN = "".concat(POPOVER2, "-open");
+    var POPOVER2_POPPER_ESCAPED = "".concat(POPOVER2, "-popper-escaped");
+    var POPOVER2_REFERENCE_HIDDEN = "".concat(POPOVER2, "-reference-hidden");
+    var POPOVER2_TARGET = "".concat(POPOVER2, "-target");
+    var POPOVER2_TRANSITION_CONTAINER = "".concat(POPOVER2, "-transition-container");
+    var TOOLTIP2 = "".concat(NS, "-tooltip2");
+
+    /**
+     * Copyright 2021 Palantir Technologies, Inc. All rights reserved.
      *
      * Licensed under the Apache License, Version 2.0 (the "License");
      * you may not use this file except in compliance with the License.
@@ -6567,316 +6798,15 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    // tslint:disable:object-literal-sort-keys
-    /**
-     * The four basic intents.
-     */
-    var Intent = {
-        NONE: "none",
-        PRIMARY: "primary",
-        SUCCESS: "success",
-        WARNING: "warning",
-        DANGER: "danger",
-    };
-
-    /*
-     * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    var Position = {
-        BOTTOM: "bottom",
-        BOTTOM_LEFT: "bottom-left",
-        BOTTOM_RIGHT: "bottom-right",
-        LEFT: "left",
-        LEFT_BOTTOM: "left-bottom",
-        LEFT_TOP: "left-top",
-        RIGHT: "right",
-        RIGHT_BOTTOM: "right-bottom",
-        RIGHT_TOP: "right-top",
-        TOP: "top",
-        TOP_LEFT: "top-left",
-        TOP_RIGHT: "top-right",
-    };
-
-    var NS$1 = process.env.BLUEPRINT_NAMESPACE || process.env.REACT_APP_BLUEPRINT_NAMESPACE || "bp3";
-    // modifiers
-    var ACTIVE = NS$1 + "-active";
-    var DARK = NS$1 + "-dark";
-    var DISABLED = NS$1 + "-disabled";
-    var FILL = NS$1 + "-fill";
-    var MINIMAL = NS$1 + "-minimal";
-    intentClass(Intent.PRIMARY);
-    intentClass(Intent.SUCCESS);
-    intentClass(Intent.WARNING);
-    intentClass(Intent.DANGER);
-    var OVERLAY = NS$1 + "-overlay";
-    var OVERLAY_BACKDROP = OVERLAY + "-backdrop";
-    var OVERLAY_CONTENT = OVERLAY + "-content";
-    var OVERLAY_INLINE = OVERLAY + "-inline";
-    var OVERLAY_OPEN = OVERLAY + "-open";
-    var POPOVER = NS$1 + "-popover";
-    var POPOVER_DISMISS = POPOVER + "-dismiss";
-    var POPOVER_DISMISS_OVERRIDE = POPOVER_DISMISS + "-override";
-    var PORTAL = NS$1 + "-portal";
-    /**
-     * Returns the namespace prefix for all Blueprint CSS classes.
-     * Customize this namespace at build time with the `process.env.BLUEPRINT_NAMESPACE` environment variable.
-     */
-    function getClassNamespace() {
-        return NS$1;
-    }
-    function intentClass(intent) {
-        if (intent == null || intent === Intent.NONE) {
-            return undefined;
-        }
-        return NS$1 + "-intent-" + intent.toLowerCase();
-    }
-
-    /*
-     * Copyright 2020 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    /** Returns whether the value is a function. Acts as a type guard. */
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    function isFunction(value) {
-        return typeof value === "function";
-    }
-
-    function elementIsOrContains(element, testElement) {
-        return element === testElement || element.contains(testElement);
-    }
-
-    /*
-     * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    var ns$1 = "[Blueprint]";
-    var PORTAL_CONTEXT_CLASS_NAME_STRING = ns$1 + " <Portal> context blueprintPortalClassName must be string";
-
-    /** Returns whether `process.env.NODE_ENV` exists and equals `env`. */
-    function isNodeEnv(env) {
-        return typeof process !== "undefined" && process.env && process.env.NODE_ENV === env;
-    }
-
-    /**
-     * Converts a React node to an element: non-empty string or number or
-     * `React.Fragment` (React 16.3+) is wrapped in given tag name; empty strings
-     * and booleans are discarded.
-     */
-    function ensureElement(child, tagName) {
-        if (tagName === void 0) { tagName = "span"; }
-        if (child == null || typeof child === "boolean") {
-            return undefined;
-        }
-        else if (typeof child === "string") {
-            // cull whitespace strings
-            return child.trim().length > 0 ? React.createElement(tagName, {}, child) : undefined;
-        }
-        else if (typeof child === "number" || typeof child.type === "symbol" || Array.isArray(child)) {
-            // React.Fragment has a symbol type, ReactNodeArray extends from Array
-            return React.createElement(tagName, {}, child);
-        }
-        else if (isReactElement(child)) {
-            return child;
-        }
-        else {
-            // child is inferred as {}
-            return undefined;
-        }
-    }
-    function isReactElement(child) {
-        return (typeof child === "object" &&
-            typeof child.type !== "undefined" &&
-            typeof child.props !== "undefined");
-    }
-    /**
-     * Returns true if the given JSX element matches the given component type.
-     *
-     * NOTE: This function only checks equality of `displayName` for performance and
-     * to tolerate multiple minor versions of a component being included in one
-     * application bundle.
-     *
-     * @param element JSX element in question
-     * @param ComponentType desired component type of element
-     */
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    function isElementOfType(element, ComponentType) {
-        return (element != null &&
-            element.type != null &&
-            element.type.displayName != null &&
-            element.type.displayName === ComponentType.displayName);
-    }
-    /**
-     * Returns React.createRef if it's available, or a ref-like object if not.
-     */
-    function createReactRef() {
-        return typeof React.createRef !== "undefined" ? React.createRef() : { current: null };
-    }
-
-    /*
-     * Copyright 2020 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    function isRefObject(value) {
-        return value != null && typeof value.current !== "undefined";
-    }
-    function isRefCallback(value) {
-        return typeof value === "function";
-    }
-    function combineRefs(ref1, ref2) {
-        return mergeRefs(ref1, ref2);
-    }
-    function mergeRefs() {
-        var refs = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            refs[_i] = arguments[_i];
-        }
-        return function (value) {
-            refs.forEach(function (ref) {
-                if (isRefCallback(ref)) {
-                    ref(value);
-                }
-                else if (isRefObject(ref)) {
-                    ref.current = value;
-                }
-            });
-        };
-    }
-
-    /**
-     * An abstract component that Blueprint components can extend
-     * in order to add some common functionality like runtime props validation.
-     */
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    var AbstractPureComponent2 = /** @class */ (function (_super) {
-        __extends(AbstractPureComponent2, _super);
-        function AbstractPureComponent2(props, context) {
-            var _this = _super.call(this, props, context) || this;
-            // Not bothering to remove entries when their timeouts finish because clearing invalid ID is a no-op
-            _this.timeoutIds = [];
-            _this.requestIds = [];
-            /**
-             * Clear all known timeouts.
-             */
-            _this.clearTimeouts = function () {
-                if (_this.timeoutIds.length > 0) {
-                    for (var _i = 0, _a = _this.timeoutIds; _i < _a.length; _i++) {
-                        var timeoutId = _a[_i];
-                        window.clearTimeout(timeoutId);
-                    }
-                    _this.timeoutIds = [];
-                }
-            };
-            /**
-             * Clear all known animation frame requests.
-             */
-            _this.cancelAnimationFrames = function () {
-                if (_this.requestIds.length > 0) {
-                    for (var _i = 0, _a = _this.requestIds; _i < _a.length; _i++) {
-                        var requestId = _a[_i];
-                        window.cancelAnimationFrame(requestId);
-                    }
-                    _this.requestIds = [];
-                }
-            };
-            if (!isNodeEnv("production")) {
-                _this.validateProps(_this.props);
-            }
-            return _this;
-        }
-        AbstractPureComponent2.prototype.componentDidUpdate = function (_prevProps, _prevState, _snapshot) {
-            if (!isNodeEnv("production")) {
-                this.validateProps(this.props);
-            }
-        };
-        AbstractPureComponent2.prototype.componentWillUnmount = function () {
-            this.clearTimeouts();
-            this.cancelAnimationFrames();
-        };
-        /**
-         * Request an animation frame and remember its ID.
-         * All pending requests will be canceled when component unmounts.
-         *
-         * @returns a "cancel" function that will cancel the request when invoked.
-         */
-        AbstractPureComponent2.prototype.requestAnimationFrame = function (callback) {
-            var handle = window.requestAnimationFrame(callback);
-            this.requestIds.push(handle);
-            return function () { return window.cancelAnimationFrame(handle); };
-        };
-        /**
-         * Set a timeout and remember its ID.
-         * All pending timeouts will be cleared when component unmounts.
-         *
-         * @returns a "cancel" function that will clear timeout when invoked.
-         */
-        AbstractPureComponent2.prototype.setTimeout = function (callback, timeout) {
-            var handle = window.setTimeout(callback, timeout);
-            this.timeoutIds.push(handle);
-            return function () { return window.clearTimeout(handle); };
-        };
-        /**
-         * Ensures that the props specified for a component are valid.
-         * Implementations should check that props are valid and usually throw an Error if they are not.
-         * Implementations should not duplicate checks that the type system already guarantees.
-         *
-         * This method should be used instead of React's
-         * [propTypes](https://facebook.github.io/react/docs/reusable-components.html#prop-validation) feature.
-         * Like propTypes, these runtime checks run only in development mode.
-         */
-        AbstractPureComponent2.prototype.validateProps = function (_props) {
-            // implement in subclass
-        };
-        return AbstractPureComponent2;
-    }(React.PureComponent));
-
-    var DISPLAYNAME_PREFIX = "Blueprint3";
-
-    var ESCAPE = 27;
+    var ns = "[Blueprint]";
+    var POPOVER2_REQUIRES_TARGET = "".concat(ns, " <Popover2> requires renderTarget prop or a child element.");
+    var POPOVER2_HAS_BACKDROP_INTERACTION = "".concat(ns, " <Popover2 hasBackdrop={true}> requires interactionKind=\"click\".");
+    var POPOVER2_WARN_TOO_MANY_CHILDREN = "".concat(ns, " <Popover2> supports only one child which is rendered as its target; additional children are ignored.");
+    var POPOVER2_WARN_DOUBLE_TARGET = ns + " <Popover2> with children ignores renderTarget prop; use either prop or children.";
+    var POPOVER2_WARN_EMPTY_CONTENT = ns + " Disabling <Popover2> with empty/whitespace content...";
+    var POPOVER2_WARN_HAS_BACKDROP_INLINE = ns + " <Popover2 usePortal={false}> ignores hasBackdrop";
+    var POPOVER2_WARN_PLACEMENT_AND_POSITION_MUTEX = ns + " <Popover2> supports either placement or position prop, not both.";
+    var POPOVER2_WARN_UNCONTROLLED_ONINTERACTION = ns + " <Popover2> onInteraction is ignored when uncontrolled.";
 
     var classnames = createCommonjsModule(function (module) {
     /*!
@@ -6926,465 +6856,6 @@
     	}
     }());
     });
-
-    /** Detect if `React.createPortal()` API method does not exist. */
-    var cannotCreatePortal = !isFunction(ReactDOM.createPortal);
-    var REACT_CONTEXT_TYPES = {
-        blueprintPortalClassName: function (obj, key) {
-            if (obj[key] != null && typeof obj[key] !== "string") {
-                return new Error(PORTAL_CONTEXT_CLASS_NAME_STRING);
-            }
-            return undefined;
-        },
-    };
-    /**
-     * This component detaches its contents and re-attaches them to document.body.
-     * Use it when you need to circumvent DOM z-stacking (for dialogs, popovers, etc.).
-     * Any class names passed to this element will be propagated to the new container element on document.body.
-     */
-    var Portal = /** @class */ (function (_super) {
-        __extends(Portal, _super);
-        function Portal() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.context = {};
-            _this.state = { hasMounted: false };
-            _this.portalElement = null;
-            return _this;
-        }
-        Portal.prototype.render = function () {
-            // Only render `children` once this component has mounted in a browser environment, so they are
-            // immediately attached to the DOM tree and can do DOM things like measuring or `autoFocus`.
-            // See long comment on componentDidMount in https://reactjs.org/docs/portals.html#event-bubbling-through-portals
-            if (cannotCreatePortal ||
-                typeof document === "undefined" ||
-                !this.state.hasMounted ||
-                this.portalElement === null) {
-                return null;
-            }
-            else {
-                return ReactDOM.createPortal(this.props.children, this.portalElement);
-            }
-        };
-        Portal.prototype.componentDidMount = function () {
-            if (!this.props.container) {
-                return;
-            }
-            this.portalElement = this.createContainerElement();
-            this.props.container.appendChild(this.portalElement);
-            /* eslint-disable-next-line react/no-did-mount-set-state */
-            this.setState({ hasMounted: true }, this.props.onChildrenMount);
-            if (cannotCreatePortal) {
-                this.unstableRenderNoPortal();
-            }
-        };
-        Portal.prototype.componentDidUpdate = function (prevProps) {
-            // update className prop on portal DOM element
-            if (this.portalElement != null && prevProps.className !== this.props.className) {
-                if (prevProps.className !== undefined) {
-                    this.portalElement.classList.remove(prevProps.className);
-                }
-                maybeAddClass(this.portalElement.classList, this.props.className);
-            }
-            if (cannotCreatePortal) {
-                this.unstableRenderNoPortal();
-            }
-        };
-        Portal.prototype.componentWillUnmount = function () {
-            if (this.portalElement != null) {
-                if (cannotCreatePortal) {
-                    ReactDOM.unmountComponentAtNode(this.portalElement);
-                }
-                this.portalElement.remove();
-            }
-        };
-        Portal.prototype.createContainerElement = function () {
-            var container = document.createElement("div");
-            container.classList.add(PORTAL);
-            maybeAddClass(container.classList, this.props.className);
-            if (this.context != null) {
-                maybeAddClass(container.classList, this.context.blueprintPortalClassName);
-            }
-            return container;
-        };
-        Portal.prototype.unstableRenderNoPortal = function () {
-            if (this.portalElement === null) {
-                return;
-            }
-            ReactDOM.unstable_renderSubtreeIntoContainer(
-            /* parentComponent */ this, React.createElement("div", null, this.props.children), this.portalElement);
-        };
-        Portal.displayName = DISPLAYNAME_PREFIX + ".Portal";
-        Portal.contextTypes = REACT_CONTEXT_TYPES;
-        Portal.defaultProps = {
-            container: typeof document !== "undefined" ? document.body : undefined,
-        };
-        return Portal;
-    }(React.Component));
-    function maybeAddClass(classList, className) {
-        if (className != null && className !== "") {
-            classList.add.apply(classList, className.split(" "));
-        }
-    }
-
-    // HACKHACK: https://github.com/palantir/blueprint/issues/4342
-    var Overlay = /** @class */ (function (_super) {
-        __extends(Overlay, _super);
-        function Overlay() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.state = {
-                hasEverOpened: _this.props.isOpen,
-            };
-            // an HTMLElement that contains the backdrop and any children, to query for focus target
-            _this.containerElement = null;
-            _this.refHandlers = {
-                // HACKHACK: see https://github.com/palantir/blueprint/issues/3979
-                /* eslint-disable-next-line react/no-find-dom-node */
-                container: function (ref) { return (_this.containerElement = ReactDOM.findDOMNode(ref)); },
-            };
-            _this.maybeRenderChild = function (child) {
-                if (isFunction(child)) {
-                    child = child();
-                }
-                if (child == null) {
-                    return null;
-                }
-                // add a special class to each child element that will automatically set the appropriate
-                // CSS position mode under the hood. also, make the container focusable so we can
-                // trap focus inside it (via `enforceFocus`).
-                var decoratedChild = typeof child === "object" ? (React.cloneElement(child, {
-                    className: classnames(child.props.className, OVERLAY_CONTENT),
-                    tabIndex: _this.props.enforceFocus || _this.props.autoFocus ? 0 : undefined,
-                })) : (React.createElement("span", { className: OVERLAY_CONTENT }, child));
-                var _a = _this.props, onOpening = _a.onOpening, onOpened = _a.onOpened, onClosing = _a.onClosing, onClosed = _a.onClosed, transitionDuration = _a.transitionDuration, transitionName = _a.transitionName;
-                // a breaking change in react-transition-group types requires us to be explicit about the type overload here,
-                // using a technique similar to Select.ofType() in @blueprintjs/select
-                var CSSTransitionImplicit = reactTransitionGroup_4;
-                return (React.createElement(CSSTransitionImplicit, { classNames: transitionName, onEntering: onOpening, onEntered: onOpened, onExiting: onClosing, onExited: onClosed, timeout: transitionDuration, addEndListener: _this.handleTransitionAddEnd }, decoratedChild));
-            };
-            _this.handleBackdropMouseDown = function (e) {
-                var _a;
-                var _b = _this.props, backdropProps = _b.backdropProps, canOutsideClickClose = _b.canOutsideClickClose, enforceFocus = _b.enforceFocus, onClose = _b.onClose;
-                if (canOutsideClickClose) {
-                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
-                }
-                if (enforceFocus) {
-                    // make sure document.activeElement is updated before bringing the focus back
-                    _this.bringFocusInsideOverlay();
-                }
-                (_a = backdropProps === null || backdropProps === void 0 ? void 0 : backdropProps.onMouseDown) === null || _a === void 0 ? void 0 : _a.call(backdropProps, e);
-            };
-            _this.handleDocumentClick = function (e) {
-                var _a = _this.props, canOutsideClickClose = _a.canOutsideClickClose, isOpen = _a.isOpen, onClose = _a.onClose;
-                // get the actually target even if we are in an open mode Shadow DOM
-                var eventTarget = (e.composed ? e.composedPath()[0] : e.target);
-                var stackIndex = Overlay_1.openStack.indexOf(_this);
-                var isClickInThisOverlayOrDescendant = Overlay_1.openStack
-                    .slice(stackIndex)
-                    .some(function (_a) {
-                    var elem = _a.containerElement;
-                    // `elem` is the container of backdrop & content, so clicking on that container
-                    // should not count as being "inside" the overlay.
-                    return elem && elem.contains(eventTarget) && !elem.isSameNode(eventTarget);
-                });
-                if (isOpen && canOutsideClickClose && !isClickInThisOverlayOrDescendant) {
-                    // casting to any because this is a native event
-                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
-                }
-            };
-            _this.handleDocumentFocus = function (e) {
-                // get the actually target even if we are in an open mode Shadow DOM
-                var eventTarget = e.composed ? e.composedPath()[0] : e.target;
-                if (_this.props.enforceFocus &&
-                    _this.containerElement != null &&
-                    eventTarget instanceof Node &&
-                    !_this.containerElement.contains(eventTarget)) {
-                    // prevent default focus behavior (sometimes auto-scrolls the page)
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    _this.bringFocusInsideOverlay();
-                }
-            };
-            _this.handleKeyDown = function (e) {
-                var _a = _this.props, canEscapeKeyClose = _a.canEscapeKeyClose, onClose = _a.onClose;
-                // HACKHACK: https://github.com/palantir/blueprint/issues/4165
-                /* eslint-disable-next-line deprecation/deprecation */
-                if (e.which === ESCAPE && canEscapeKeyClose) {
-                    onClose === null || onClose === void 0 ? void 0 : onClose(e);
-                    // prevent browser-specific escape key behavior (Safari exits fullscreen)
-                    e.preventDefault();
-                }
-            };
-            _this.handleTransitionAddEnd = function () {
-                // no-op
-            };
-            return _this;
-        }
-        Overlay_1 = Overlay;
-        Overlay.getDerivedStateFromProps = function (_a) {
-            var hasEverOpened = _a.isOpen;
-            if (hasEverOpened) {
-                return { hasEverOpened: hasEverOpened };
-            }
-            return null;
-        };
-        Overlay.prototype.render = function () {
-            var _a;
-            var _b;
-            // oh snap! no reason to render anything at all if we're being truly lazy
-            if (this.props.lazy && !this.state.hasEverOpened) {
-                return null;
-            }
-            var _c = this.props, children = _c.children, className = _c.className, usePortal = _c.usePortal, isOpen = _c.isOpen;
-            // TransitionGroup types require single array of children; does not support nested arrays.
-            // So we must collapse backdrop and children into one array, and every item must be wrapped in a
-            // Transition element (no ReactText allowed).
-            var childrenWithTransitions = isOpen ? (_b = React.Children.map(children, this.maybeRenderChild)) !== null && _b !== void 0 ? _b : [] : [];
-            var maybeBackdrop = this.maybeRenderBackdrop();
-            if (maybeBackdrop !== null) {
-                childrenWithTransitions.unshift(maybeBackdrop);
-            }
-            var containerClasses = classnames(OVERLAY, (_a = {},
-                _a[OVERLAY_OPEN] = isOpen,
-                _a[OVERLAY_INLINE] = !usePortal,
-                _a), className);
-            var transitionGroup = (React.createElement(reactTransitionGroup_2, { appear: true, className: containerClasses, component: "div", onKeyDown: this.handleKeyDown, ref: this.refHandlers.container }, childrenWithTransitions));
-            if (usePortal) {
-                return (React.createElement(Portal, { className: this.props.portalClassName, container: this.props.portalContainer }, transitionGroup));
-            }
-            else {
-                return transitionGroup;
-            }
-        };
-        Overlay.prototype.componentDidMount = function () {
-            if (this.props.isOpen) {
-                this.overlayWillOpen();
-            }
-        };
-        Overlay.prototype.componentDidUpdate = function (prevProps) {
-            if (prevProps.isOpen && !this.props.isOpen) {
-                this.overlayWillClose();
-            }
-            else if (!prevProps.isOpen && this.props.isOpen) {
-                this.overlayWillOpen();
-            }
-        };
-        Overlay.prototype.componentWillUnmount = function () {
-            this.overlayWillClose();
-        };
-        /**
-         * @public for testing
-         * @internal
-         */
-        Overlay.prototype.bringFocusInsideOverlay = function () {
-            var _this = this;
-            // always delay focus manipulation to just before repaint to prevent scroll jumping
-            return this.requestAnimationFrame(function () {
-                // container ref may be undefined between component mounting and Portal rendering
-                // activeElement may be undefined in some rare cases in IE
-                if (_this.containerElement == null || document.activeElement == null || !_this.props.isOpen) {
-                    return;
-                }
-                var isFocusOutsideModal = !_this.containerElement.contains(document.activeElement);
-                if (isFocusOutsideModal) {
-                    // element marked autofocus has higher priority than the other clowns
-                    var autofocusElement = _this.containerElement.querySelector("[autofocus]");
-                    var wrapperElement = _this.containerElement.querySelector("[tabindex]");
-                    if (autofocusElement != null) {
-                        autofocusElement.focus();
-                    }
-                    else if (wrapperElement != null) {
-                        wrapperElement.focus();
-                    }
-                }
-            });
-        };
-        Overlay.prototype.maybeRenderBackdrop = function () {
-            var _a = this.props, backdropClassName = _a.backdropClassName, backdropProps = _a.backdropProps, hasBackdrop = _a.hasBackdrop, isOpen = _a.isOpen, transitionDuration = _a.transitionDuration, transitionName = _a.transitionName;
-            if (hasBackdrop && isOpen) {
-                return (React.createElement(reactTransitionGroup_4, { classNames: transitionName, key: "__backdrop", timeout: transitionDuration, addEndListener: this.handleTransitionAddEnd },
-                    React.createElement("div", __assign({}, backdropProps, { className: classnames(OVERLAY_BACKDROP, backdropClassName, backdropProps === null || backdropProps === void 0 ? void 0 : backdropProps.className), onMouseDown: this.handleBackdropMouseDown, tabIndex: this.props.canOutsideClickClose ? 0 : undefined }))));
-            }
-            else {
-                return null;
-            }
-        };
-        Overlay.prototype.overlayWillClose = function () {
-            document.removeEventListener("focus", this.handleDocumentFocus, /* useCapture */ true);
-            document.removeEventListener("mousedown", this.handleDocumentClick);
-            var openStack = Overlay_1.openStack;
-            var stackIndex = openStack.indexOf(this);
-            if (stackIndex !== -1) {
-                openStack.splice(stackIndex, 1);
-                if (openStack.length > 0) {
-                    var lastOpenedOverlay = Overlay_1.getLastOpened();
-                    if (lastOpenedOverlay.props.enforceFocus) {
-                        document.addEventListener("focus", lastOpenedOverlay.handleDocumentFocus, /* useCapture */ true);
-                    }
-                }
-                if (openStack.filter(function (o) { return o.props.usePortal && o.props.hasBackdrop; }).length === 0) {
-                    document.body.classList.remove(OVERLAY_OPEN);
-                }
-            }
-        };
-        Overlay.prototype.overlayWillOpen = function () {
-            var openStack = Overlay_1.openStack;
-            if (openStack.length > 0) {
-                document.removeEventListener("focus", Overlay_1.getLastOpened().handleDocumentFocus, /* useCapture */ true);
-            }
-            openStack.push(this);
-            if (this.props.autoFocus) {
-                this.bringFocusInsideOverlay();
-            }
-            if (this.props.enforceFocus) {
-                document.addEventListener("focus", this.handleDocumentFocus, /* useCapture */ true);
-            }
-            if (this.props.canOutsideClickClose && !this.props.hasBackdrop) {
-                document.addEventListener("mousedown", this.handleDocumentClick);
-            }
-            if (this.props.hasBackdrop && this.props.usePortal) {
-                // add a class to the body to prevent scrolling of content below the overlay
-                document.body.classList.add(OVERLAY_OPEN);
-            }
-        };
-        var Overlay_1;
-        Overlay.displayName = DISPLAYNAME_PREFIX + ".Overlay";
-        Overlay.defaultProps = {
-            autoFocus: true,
-            backdropProps: {},
-            canEscapeKeyClose: true,
-            canOutsideClickClose: true,
-            enforceFocus: true,
-            hasBackdrop: true,
-            isOpen: false,
-            lazy: true,
-            transitionDuration: 300,
-            transitionName: OVERLAY,
-            usePortal: true,
-        };
-        Overlay.openStack = [];
-        Overlay.getLastOpened = function () { return Overlay_1.openStack[Overlay_1.openStack.length - 1]; };
-        Overlay = Overlay_1 = __decorate([
-            reactLifecyclesCompat_cjs_1
-        ], Overlay);
-        return Overlay;
-    }(AbstractPureComponent2));
-
-    var ResizeSensor = /** @class */ (function (_super) {
-        __extends(ResizeSensor, _super);
-        function ResizeSensor() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.element = null;
-            _this.observer = new index$1(function (entries) { var _a, _b; return (_b = (_a = _this.props).onResize) === null || _b === void 0 ? void 0 : _b.call(_a, entries); });
-            return _this;
-        }
-        ResizeSensor.prototype.render = function () {
-            // pass-through render of single child
-            return React.Children.only(this.props.children);
-        };
-        ResizeSensor.prototype.componentDidMount = function () {
-            this.observeElement();
-        };
-        ResizeSensor.prototype.componentDidUpdate = function (prevProps) {
-            this.observeElement(this.props.observeParents !== prevProps.observeParents);
-        };
-        ResizeSensor.prototype.componentWillUnmount = function () {
-            this.observer.disconnect();
-        };
-        /**
-         * Observe the DOM element, if defined and different from the currently
-         * observed element. Pass `force` argument to skip element checks and always
-         * re-observe.
-         */
-        ResizeSensor.prototype.observeElement = function (force) {
-            if (force === void 0) { force = false; }
-            var element = this.getElement();
-            if (!(element instanceof Element)) {
-                // stop everything if not defined
-                this.observer.disconnect();
-                return;
-            }
-            if (element === this.element && !force) {
-                // quit if given same element -- nothing to update (unless forced)
-                return;
-            }
-            else {
-                // clear observer list if new element
-                this.observer.disconnect();
-                // remember element reference for next time
-                this.element = element;
-            }
-            // observer callback is invoked immediately when observing new elements
-            this.observer.observe(element);
-            if (this.props.observeParents) {
-                var parent_1 = element.parentElement;
-                while (parent_1 != null) {
-                    this.observer.observe(parent_1);
-                    parent_1 = parent_1.parentElement;
-                }
-            }
-        };
-        ResizeSensor.prototype.getElement = function () {
-            try {
-                // using findDOMNode for two reasons:
-                // 1. cloning to insert a ref is unwieldy and not performant.
-                // 2. ensure that we resolve to an actual DOM node (instead of any JSX ref instance).
-                // HACKHACK: see https://github.com/palantir/blueprint/issues/3979
-                /* eslint-disable-next-line react/no-find-dom-node */
-                return ReactDOM.findDOMNode(this);
-            }
-            catch (_a) {
-                // swallow error if findDOMNode is run on unmounted component.
-                return null;
-            }
-        };
-        ResizeSensor.displayName = DISPLAYNAME_PREFIX + ".ResizeSensor";
-        ResizeSensor = __decorate([
-            reactLifecyclesCompat_cjs_1
-        ], ResizeSensor);
-        return ResizeSensor;
-    }(AbstractPureComponent2));
-
-    /** `Position` with `"auto"` values, used by `Popover` and `Tooltip`. */
-    var PopoverPosition = __assign(__assign({}, Position), { AUTO: "auto", AUTO_END: "auto-end", AUTO_START: "auto-start" });
-
-    var NS = getClassNamespace();
-    var POPOVER2 = NS + "-popover2";
-    var POPOVER2_ARROW = POPOVER2 + "-arrow";
-    var POPOVER2_BACKDROP = POPOVER2 + "-backdrop";
-    var POPOVER2_CAPTURING_DISMISS = POPOVER2 + "-capturing-dismiss";
-    var POPOVER2_CONTENT = POPOVER2 + "-content";
-    var POPOVER2_CONTENT_PLACEMENT = POPOVER2 + "-placement";
-    var POPOVER2_DISMISS = POPOVER2 + "-dismiss";
-    var POPOVER2_DISMISS_OVERRIDE = POPOVER2_DISMISS + "-override";
-    var POPOVER2_OPEN = POPOVER2 + "-open";
-    var POPOVER2_TARGET = POPOVER2 + "-target";
-    var POPOVER2_TRANSITION_CONTAINER = POPOVER2 + "-transition-container";
-    var TOOLTIP2 = NS + "-tooltip2";
-
-    /**
-     * Copyright 2021 Palantir Technologies, Inc. All rights reserved.
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *     http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    var ns = "[Blueprint]";
-    var POPOVER2_REQUIRES_TARGET = ns + " <Popover2> requires renderTarget prop or a child element.";
-    var POPOVER2_HAS_BACKDROP_INTERACTION = ns + " <Popover2 hasBackdrop={true}> requires interactionKind=\"click\".";
-    var POPOVER2_WARN_TOO_MANY_CHILDREN = ns + " <Popover2> supports only one child which is rendered as its target; additional children are ignored.";
-    var POPOVER2_WARN_DOUBLE_TARGET = ns + " <Popover2> with children ignores renderTarget prop; use either prop or children.";
-    var POPOVER2_WARN_EMPTY_CONTENT = ns + " Disabling <Popover2> with empty/whitespace content...";
-    var POPOVER2_WARN_HAS_BACKDROP_INLINE = ns + " <Popover2 usePortal={false}> ignores hasBackdrop";
-    var POPOVER2_WARN_PLACEMENT_AND_POSITION_MUTEX = ns + " <Popover2> supports either placement or position prop, not both.";
-    var POPOVER2_WARN_UNCONTROLLED_ONINTERACTION = ns + " <Popover2> onInteraction is ignored when uncontrolled.";
 
     var ManagerReferenceNodeContext = React.createContext();
     var ManagerReferenceNodeSetterContext = React.createContext();
@@ -7683,7 +7154,7 @@
       return false;
     }
 
-    function getComputedStyle(element) {
+    function getComputedStyle$1(element) {
       return getWindow(element).getComputedStyle(element);
     }
 
@@ -7716,7 +7187,7 @@
 
     function getTrueOffsetParent(element) {
       if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
-      getComputedStyle(element).position === 'fixed') {
+      getComputedStyle$1(element).position === 'fixed') {
         return null;
       }
 
@@ -7731,7 +7202,7 @@
 
       if (isIE && isHTMLElement(element)) {
         // In IE 9, 10 and 11 fixed elements containing block is always established by the viewport
-        var elementCss = getComputedStyle(element);
+        var elementCss = getComputedStyle$1(element);
 
         if (elementCss.position === 'fixed') {
           return null;
@@ -7741,7 +7212,7 @@
       var currentNode = getParentNode(element);
 
       while (isHTMLElement(currentNode) && ['html', 'body'].indexOf(getNodeName(currentNode)) < 0) {
-        var css = getComputedStyle(currentNode); // This is non-exhaustive but covers the most common CSS properties that
+        var css = getComputedStyle$1(currentNode); // This is non-exhaustive but covers the most common CSS properties that
         // create a containing block.
         // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
 
@@ -7761,11 +7232,11 @@
       var window = getWindow(element);
       var offsetParent = getTrueOffsetParent(element);
 
-      while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === 'static') {
+      while (offsetParent && isTableElement(offsetParent) && getComputedStyle$1(offsetParent).position === 'static') {
         offsetParent = getTrueOffsetParent(offsetParent);
       }
 
-      if (offsetParent && (getNodeName(offsetParent) === 'html' || getNodeName(offsetParent) === 'body' && getComputedStyle(offsetParent).position === 'static')) {
+      if (offsetParent && (getNodeName(offsetParent) === 'html' || getNodeName(offsetParent) === 'body' && getComputedStyle$1(offsetParent).position === 'static')) {
         return window;
       }
 
@@ -7947,7 +7418,7 @@
         if (offsetParent === getWindow(popper)) {
           offsetParent = getDocumentElement(popper);
 
-          if (getComputedStyle(offsetParent).position !== 'static') {
+          if (getComputedStyle$1(offsetParent).position !== 'static') {
             heightProp = 'scrollHeight';
             widthProp = 'scrollWidth';
           }
@@ -7995,7 +7466,7 @@
           roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
 
       if (process.env.NODE_ENV !== "production") {
-        var transitionProperty = getComputedStyle(state.elements.popper).transitionProperty || '';
+        var transitionProperty = getComputedStyle$1(state.elements.popper).transitionProperty || '';
 
         if (adaptive && ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
           return transitionProperty.indexOf(property) >= 0;
@@ -8185,7 +7656,7 @@
       var x = -winScroll.scrollLeft + getWindowScrollBarX(element);
       var y = -winScroll.scrollTop;
 
-      if (getComputedStyle(body || html).direction === 'rtl') {
+      if (getComputedStyle$1(body || html).direction === 'rtl') {
         x += max(html.clientWidth, body ? body.clientWidth : 0) - width;
       }
 
@@ -8199,7 +7670,7 @@
 
     function isScrollParent(element) {
       // Firefox wants us to check `-x` and `-y` variations as well
-      var _getComputedStyle = getComputedStyle(element),
+      var _getComputedStyle = getComputedStyle$1(element),
           overflow = _getComputedStyle.overflow,
           overflowX = _getComputedStyle.overflowX,
           overflowY = _getComputedStyle.overflowY;
@@ -8274,7 +7745,7 @@
 
     function getClippingParents(element) {
       var clippingParents = listScrollParents(getParentNode(element));
-      var canEscapeClipping = ['absolute', 'fixed'].indexOf(getComputedStyle(element).position) >= 0;
+      var canEscapeClipping = ['absolute', 'fixed'].indexOf(getComputedStyle$1(element).position) >= 0;
       var clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
 
       if (!isElement(clipperElement)) {
@@ -9178,7 +8649,7 @@
                 }
               }
 
-              var _getComputedStyle = getComputedStyle(popper),
+              var _getComputedStyle = getComputedStyle$1(popper),
                   marginTop = _getComputedStyle.marginTop,
                   marginRight = _getComputedStyle.marginRight,
                   marginBottom = _getComputedStyle.marginBottom,
@@ -9724,8 +9195,8 @@
         var basePlacement = getBasePlacement(placement);
         if (arrowStyles === undefined) {
             return isVerticalPlacement(basePlacement)
-                ? getOppositePlacement(basePlacement) + " " + getAlignment(basePlacement)
-                : getAlignment(basePlacement) + " " + getOppositePlacement(basePlacement);
+                ? "".concat(getOppositePlacement(basePlacement), " ").concat(getAlignment(basePlacement))
+                : "".concat(getAlignment(basePlacement), " ").concat(getOppositePlacement(basePlacement));
         }
         else {
             // const arrowSizeShift = state.elements.arrow.clientHeight / 2;
@@ -9733,8 +9204,8 @@
             // can use keyword for dimension without the arrow, to ease computation burden.
             // move origin by half arrow's height to keep it centered.
             return isVerticalPlacement(basePlacement)
-                ? getOppositePlacement(basePlacement) + " " + (parseInt(arrowStyles.top, 10) + arrowSizeShift) + "px"
-                : parseInt(arrowStyles.left, 10) + arrowSizeShift + "px " + getOppositePlacement(basePlacement);
+                ? "".concat(getOppositePlacement(basePlacement), " ").concat(parseInt(arrowStyles.top, 10) + arrowSizeShift, "px")
+                : "".concat(parseInt(arrowStyles.left, 10) + arrowSizeShift, "px ").concat(getOppositePlacement(basePlacement));
         }
     }
 
@@ -9787,11 +9258,11 @@
         return (
         // data attribute allows popper.js to position the arrow
         React.createElement("div", { className: POPOVER2_ARROW, "data-popper-arrow": true, ref: ref, style: __assign(__assign({}, style), getArrowReferenceOffsetStyle(placement)) },
-            React.createElement("svg", { viewBox: "0 0 " + POPOVER_ARROW_SVG_SIZE + " " + POPOVER_ARROW_SVG_SIZE, style: { transform: "rotate(" + getArrowAngle(placement) + "deg)" } },
+            React.createElement("svg", { viewBox: "0 0 ".concat(POPOVER_ARROW_SVG_SIZE, " ").concat(POPOVER_ARROW_SVG_SIZE), style: { transform: "rotate(".concat(getArrowAngle(placement), "deg)") } },
                 React.createElement("path", { className: POPOVER2_ARROW + "-border", d: SVG_SHADOW_PATH }),
                 React.createElement("path", { className: POPOVER2_ARROW + "-fill", d: SVG_ARROW_PATH }))));
     };
-    Popover2Arrow.displayName = DISPLAYNAME_PREFIX + ".Popover2Arrow";
+    Popover2Arrow.displayName = "".concat(DISPLAYNAME_PREFIX, ".Popover2Arrow");
 
     /**
      * Convert a position to a placement.
@@ -9839,35 +9310,136 @@
         throw new Error("Unexpected position: " + x);
     }
 
+    var ResizeSensor2 = /** @class */ (function (_super) {
+        __extends(ResizeSensor2, _super);
+        function ResizeSensor2() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.targetRef = React.createRef();
+            _this.prevElement = undefined;
+            _this.observer = new ResizeObserver(function (entries) { var _a, _b; return (_b = (_a = _this.props).onResize) === null || _b === void 0 ? void 0 : _b.call(_a, entries); });
+            return _this;
+        }
+        ResizeSensor2.prototype.render = function () {
+            var onlyChild = React.Children.only(this.props.children);
+            // if we're provided a ref to the child already, we don't need to attach one ourselves
+            if (this.props.targetRef !== undefined) {
+                return onlyChild;
+            }
+            return React.cloneElement(onlyChild, { ref: this.targetRef });
+        };
+        ResizeSensor2.prototype.componentDidMount = function () {
+            this.observeElement();
+        };
+        ResizeSensor2.prototype.componentDidUpdate = function (prevProps) {
+            this.observeElement(this.props.observeParents !== prevProps.observeParents);
+        };
+        ResizeSensor2.prototype.componentWillUnmount = function () {
+            this.observer.disconnect();
+        };
+        /**
+         * Observe the DOM element, if defined and different from the currently
+         * observed element. Pass `force` argument to skip element checks and always
+         * re-observe.
+         */
+        ResizeSensor2.prototype.observeElement = function (force) {
+            if (force === void 0) { force = false; }
+            if (!(this.targetRef.current instanceof Element)) {
+                // stop everything if not defined
+                this.observer.disconnect();
+                return;
+            }
+            if (this.targetRef.current === this.prevElement && !force) {
+                // quit if given same element -- nothing to update (unless forced)
+                return;
+            }
+            else {
+                // clear observer list if new element
+                this.observer.disconnect();
+                // remember element reference for next time
+                this.prevElement = this.targetRef.current;
+            }
+            // observer callback is invoked immediately when observing new elements
+            this.observer.observe(this.targetRef.current);
+            if (this.props.observeParents) {
+                var parent_1 = this.targetRef.current.parentElement;
+                while (parent_1 != null) {
+                    this.observer.observe(parent_1);
+                    parent_1 = parent_1.parentElement;
+                }
+            }
+        };
+        ResizeSensor2.displayName = "".concat(DISPLAYNAME_PREFIX, ".ResizeSensor2");
+        return ResizeSensor2;
+    }(AbstractPureComponent2));
+
+    var noOpDispatch = function () { return null; };
+    var Tooltip2Context = React.createContext([
+        {},
+        noOpDispatch,
+    ]);
+    var tooltip2Reducer = function (state, action) {
+        switch (action.type) {
+            case "FORCE_DISABLED_STATE":
+                return { forceDisabled: true };
+            case "RESET_DISABLED_STATE":
+                return {};
+            default:
+                return state;
+        }
+    };
+    var Tooltip2Provider = function (_a) {
+        var children = _a.children, forceDisable = _a.forceDisable;
+        var _b = React.useReducer(tooltip2Reducer, {}), state = _b[0], dispatch = _b[1];
+        React.useEffect(function () {
+            if (forceDisable) {
+                dispatch({ type: "FORCE_DISABLED_STATE" });
+            }
+            else {
+                dispatch({ type: "RESET_DISABLED_STATE" });
+            }
+        }, [forceDisable]);
+        return (React.createElement(Tooltip2Context.Provider, { value: [state, dispatch] }, typeof children === "function" ? children(state) : children));
+    };
+
     var Tooltip2 = /** @class */ (function (_super) {
         __extends(Tooltip2, _super);
         function Tooltip2() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.popover = null;
+            // any descendant ContextMenu2s may update this ctxState
+            _this.renderPopover = function (ctxState) {
+                var _a;
+                var _b;
+                var _c = _this.props, children = _c.children, disabled = _c.disabled, intent = _c.intent, popoverClassName = _c.popoverClassName, restProps = __rest(_c, ["children", "disabled", "intent", "popoverClassName"]);
+                var classes = classnames(TOOLTIP2, (_a = {}, _a[MINIMAL] = _this.props.minimal, _a), intentClass(intent), popoverClassName);
+                return (React.createElement(Popover2, __assign({ interactionKind: Popover2InteractionKind.HOVER_TARGET_ONLY, modifiers: {
+                        arrow: {
+                            enabled: !_this.props.minimal,
+                        },
+                        offset: {
+                            options: {
+                                offset: [0, TOOLTIP_ARROW_SVG_SIZE / 2],
+                            },
+                        },
+                    } }, restProps, { autoFocus: false, canEscapeKeyClose: false, disabled: (_b = ctxState.forceDisabled) !== null && _b !== void 0 ? _b : disabled, enforceFocus: false, lazy: true, popoverClassName: classes, portalContainer: _this.props.portalContainer, ref: function (ref) { return (_this.popover = ref); } }), children));
+            };
             return _this;
         }
         Tooltip2.prototype.render = function () {
-            var _a;
             var _this = this;
-            var _b = this.props, children = _b.children, intent = _b.intent, popoverClassName = _b.popoverClassName, restProps = __rest(_b, ["children", "intent", "popoverClassName"]);
-            var classes = classnames(TOOLTIP2, (_a = {}, _a[MINIMAL] = this.props.minimal, _a), intentClass(intent), popoverClassName);
-            return (React.createElement(Popover2, __assign({ interactionKind: Popover2InteractionKind.HOVER_TARGET_ONLY, modifiers: {
-                    arrow: {
-                        enabled: !this.props.minimal,
-                    },
-                    offset: {
-                        options: {
-                            offset: [0, TOOLTIP_ARROW_SVG_SIZE / 2],
-                        },
-                    },
-                } }, restProps, { autoFocus: false, canEscapeKeyClose: false, enforceFocus: false, lazy: true, popoverClassName: classes, portalContainer: this.props.portalContainer, ref: function (ref) { return (_this.popover = ref); } }), children));
+            // if we have an ancestor Tooltip2Context, we should take its state into account in this render path,
+            // it was likely created by a parent ContextMenu2
+            return (React.createElement(Tooltip2Context.Consumer, null, function (_a) {
+                var state = _a[0];
+                return React.createElement(Tooltip2Provider, __assign({}, state), _this.renderPopover);
+            }));
         };
         Tooltip2.prototype.reposition = function () {
             if (this.popover != null) {
                 this.popover.reposition();
             }
         };
-        Tooltip2.displayName = DISPLAYNAME_PREFIX + ".Tooltip2";
+        Tooltip2.displayName = "".concat(DISPLAYNAME_PREFIX, ".Tooltip2");
         Tooltip2.defaultProps = {
             hoverCloseDelay: 0,
             hoverOpenDelay: 100,
@@ -9890,7 +9462,6 @@
         __extends(Popover2, _super);
         function Popover2() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.popoverRef = createReactRef();
             _this.state = {
                 hasDarkParent: false,
                 isOpen: _this.getIsOpen(_this.props),
@@ -9903,14 +9474,10 @@
             _this.popoverElement = null;
             /** DOM element that contains the target. */
             _this.targetElement = null;
-            _this.refHandlers = {
-                popover: function (ref) {
-                    var _a, _b;
-                    _this.popoverElement = ref;
-                    (_b = (_a = _this.props).popoverRef) === null || _b === void 0 ? void 0 : _b.call(_a, ref);
-                },
-                target: function (ref) { return (_this.targetElement = ref); },
-            };
+            /** Popover ref handler */
+            _this.popoverRef = refHandler(_this, "popoverElement", _this.props.popoverRef);
+            /** Target ref handler */
+            _this.targetRef = function (el) { return (_this.targetElement = el); };
             // a flag that lets us detect mouse movement between the target and popover,
             // now that mouseleave is triggered when you cross the gap between the two.
             _this.isMouseInTargetOrPopover = false;
@@ -9936,7 +9503,7 @@
             _this.renderTarget = function (_a) {
                 var _b, _c;
                 var _d;
-                var ref = _a.ref;
+                var popperChildRef = _a.ref;
                 var _e = _this.props, children = _e.children, className = _e.className, fill = _e.fill, openOnTargetFocus = _e.openOnTargetFocus, renderTarget = _e.renderTarget;
                 var isOpen = _this.state.isOpen;
                 var isControlled = _this.isControlled();
@@ -9945,13 +9512,12 @@
                 if (fill) {
                     targetTagName = "div";
                 }
-                if (isRefCallback(ref)) {
-                    ref = combineRefs(ref, _this.refHandlers.target);
-                }
+                var ref = mergeRefs(popperChildRef, _this.targetRef);
                 var targetEventHandlers = isHoverInteractionKind
                     ? {
                         // HOVER handlers
                         onBlur: _this.handleTargetBlur,
+                        onContextMenu: _this.handleTargetContextMenu,
                         onFocus: _this.handleTargetFocus,
                         onMouseEnter: _this.handleMouseEnter,
                         onMouseLeave: _this.handleMouseLeave,
@@ -9959,10 +9525,15 @@
                     : {
                         // CLICK needs only one handler
                         onClick: _this.handleTargetClick,
+                        // For keyboard accessibility, trigger the same behavior as a click event upon pressing ENTER/SPACE
+                        onKeyDown: function (event) {
+                            // eslint-disable-next-line deprecation/deprecation
+                            return isKeyboardClick(event.keyCode) && _this.handleTargetClick(event);
+                        },
                     };
                 // Ensure target is focusable if relevant prop enabled
                 var targetTabIndex = openOnTargetFocus && isHoverInteractionKind ? 0 : undefined;
-                var targetProps = __assign({ 
+                var targetProps = __assign({ "aria-haspopup": "true", 
                     // N.B. this.props.className is passed along to renderTarget even though the user would have access to it.
                     // If, instead, renderTarget is undefined and the target is provided as a child, this.props.className is
                     // applied to the generated target wrapper element.
@@ -9999,11 +9570,12 @@
                     var wrappedTarget = React.createElement(targetTagName, targetProps, clonedTarget);
                     target = wrappedTarget;
                 }
-                return React.createElement(ResizeSensor, { onResize: _this.reposition }, target);
+                return (React.createElement(ResizeSensor2, { targetRef: ref, onResize: _this.reposition }, target));
             };
             _this.renderPopover = function (popperProps) {
                 var _a;
-                var _b = _this.props, interactionKind = _b.interactionKind, usePortal = _b.usePortal;
+                var _b;
+                var _c = _this.props, interactionKind = _c.interactionKind, shouldReturnFocusOnClose = _c.shouldReturnFocusOnClose, usePortal = _c.usePortal;
                 var isOpen = _this.state.isOpen;
                 // compute an appropriate transform origin so the scale animation points towards target
                 var transformOrigin = getTransformOrigin(popperProps.placement, _this.isArrowEnabled() ? popperProps.arrowProps.style : undefined);
@@ -10012,6 +9584,9 @@
                 var popoverHandlers = {
                     // always check popover clicks for dismiss class
                     onClick: _this.handlePopoverClick,
+                    // treat ENTER/SPACE keys the same as a click for accessibility
+                    // eslint-disable-next-line deprecation/deprecation
+                    onKeyDown: function (event) { return isKeyboardClick(event.keyCode) && _this.handlePopoverClick(event); },
                 };
                 if (interactionKind === Popover2InteractionKind.HOVER ||
                     (!usePortal && interactionKind === Popover2InteractionKind.HOVER_TARGET_ONLY)) {
@@ -10023,10 +9598,15 @@
                     _a[DARK] = _this.props.inheritDarkTheme && _this.state.hasDarkParent,
                     _a[MINIMAL] = _this.props.minimal,
                     _a[POPOVER2_CAPTURING_DISMISS] = _this.props.captureDismiss,
-                    _a), POPOVER2_CONTENT_PLACEMENT + "-" + basePlacement, _this.props.popoverClassName);
-                return (React.createElement(Overlay, { autoFocus: _this.props.autoFocus, backdropClassName: POPOVER2_BACKDROP, backdropProps: _this.props.backdropProps, canEscapeKeyClose: _this.props.canEscapeKeyClose, canOutsideClickClose: _this.props.interactionKind === Popover2InteractionKind.CLICK, enforceFocus: _this.props.enforceFocus, hasBackdrop: _this.props.hasBackdrop, isOpen: isOpen, onClose: _this.handleOverlayClose, onClosed: _this.props.onClosed, onClosing: _this.props.onClosing, onOpened: _this.props.onOpened, onOpening: _this.props.onOpening, transitionDuration: _this.props.transitionDuration, transitionName: POPOVER2, usePortal: _this.props.usePortal, portalClassName: _this.props.portalClassName, portalContainer: _this.props.portalContainer },
+                    _a[POPOVER2_REFERENCE_HIDDEN] = popperProps.isReferenceHidden === true,
+                    _a[POPOVER2_POPPER_ESCAPED] = popperProps.hasPopperEscaped === true,
+                    _a), "".concat(POPOVER2_CONTENT_PLACEMENT, "-").concat(basePlacement), _this.props.popoverClassName);
+                var defaultAutoFocus = _this.isHoverInteractionKind() ? false : undefined;
+                return (React.createElement(Overlay, { autoFocus: (_b = _this.props.autoFocus) !== null && _b !== void 0 ? _b : defaultAutoFocus, backdropClassName: POPOVER2_BACKDROP, backdropProps: _this.props.backdropProps, canEscapeKeyClose: _this.props.canEscapeKeyClose, canOutsideClickClose: _this.props.interactionKind === Popover2InteractionKind.CLICK, enforceFocus: _this.props.enforceFocus, hasBackdrop: _this.props.hasBackdrop, isOpen: isOpen, onClose: _this.handleOverlayClose, onClosed: _this.props.onClosed, onClosing: _this.props.onClosing, onOpened: _this.props.onOpened, onOpening: _this.props.onOpening, transitionDuration: _this.props.transitionDuration, transitionName: POPOVER2, usePortal: _this.props.usePortal, portalClassName: _this.props.portalClassName, portalContainer: _this.props.portalContainer, 
+                    // if hover interaciton, it doesn't make sense to take over focus control
+                    shouldReturnFocusOnClose: _this.isHoverInteractionKind() ? false : shouldReturnFocusOnClose },
                     React.createElement("div", { className: POPOVER2_TRANSITION_CONTAINER, ref: popperProps.ref, style: popperProps.style },
-                        React.createElement(ResizeSensor, { onResize: _this.reposition },
+                        React.createElement(ResizeSensor2, { onResize: _this.reposition },
                             React.createElement("div", __assign({ className: popoverClasses, style: { transformOrigin: transformOrigin }, ref: _this.popoverRef }, popoverHandlers),
                                 _this.isArrowEnabled() && (React.createElement(Popover2Arrow, { arrowProps: popperProps.arrowProps, placement: popperProps.placement })),
                                 React.createElement("div", { className: POPOVER2_CONTENT }, _this.props.content))))));
@@ -10043,16 +9623,26 @@
             };
             _this.handleTargetBlur = function (e) {
                 if (_this.props.openOnTargetFocus && _this.isHoverInteractionKind()) {
-                    // if the next element to receive focus is within the popover, we'll want to leave the
-                    // popover open. e.relatedTarget ought to tell us the next element to receive focus, but if the user just
-                    // clicked on an element which is not focusable (either by default or with a tabIndex attribute),
-                    // it won't be set. So, we filter those out here and assume that a click handler somewhere else will
-                    // close the popover if necessary.
-                    if (e.relatedTarget != null && !_this.isElementInPopover(e.relatedTarget)) {
+                    if (e.relatedTarget != null) {
+                        // if the next element to receive focus is within the popover, we'll want to leave the
+                        // popover open.
+                        if (e.relatedTarget !== _this.popoverElement &&
+                            !_this.isElementInPopover(e.relatedTarget)) {
+                            _this.handleMouseLeave(e);
+                        }
+                    }
+                    else {
                         _this.handleMouseLeave(e);
                     }
                 }
                 _this.lostFocusOnSamePage = e.relatedTarget != null;
+            };
+            _this.handleTargetContextMenu = function (e) {
+                // we assume that when someone prevents the default interaction on this event (a browser native context menu),
+                // they are showing a custom context menu (as ContextMenu2 does); in this case, we should close this popover/tooltip
+                if (e.defaultPrevented) {
+                    _this.setOpenState(false, e);
+                }
             };
             _this.handleMouseEnter = function (e) {
                 _this.isMouseInTargetOrPopover = true;
@@ -10083,20 +9673,21 @@
                 });
             };
             _this.handlePopoverClick = function (e) {
+                var _a, _b, _c, _d;
                 var eventTarget = e.target;
-                var eventPopover = eventTarget.closest("." + POPOVER2);
-                var isEventFromSelf = eventPopover === _this.popoverRef.current;
-                var isEventPopoverCapturing = eventPopover === null || eventPopover === void 0 ? void 0 : eventPopover.classList.contains(POPOVER2_CAPTURING_DISMISS);
+                var eventPopover = eventTarget.closest(".".concat(POPOVER2));
+                var eventPopoverV1 = eventTarget.closest(".".concat(POPOVER));
+                var isEventFromSelf = (eventPopover !== null && eventPopover !== void 0 ? eventPopover : eventPopoverV1) === _this.getPopoverElement();
+                var isEventPopoverCapturing = (_b = (_a = eventPopover === null || eventPopover === void 0 ? void 0 : eventPopover.classList.contains(POPOVER2_CAPTURING_DISMISS)) !== null && _a !== void 0 ? _a : eventPopoverV1 === null || eventPopoverV1 === void 0 ? void 0 : eventPopoverV1.classList.contains(POPOVER_CAPTURING_DISMISS)) !== null && _b !== void 0 ? _b : false;
                 // an OVERRIDE inside a DISMISS does not dismiss, and a DISMISS inside an OVERRIDE will dismiss.
-                var dismissElement = eventTarget.closest("." + POPOVER2_DISMISS + ", ." + POPOVER2_DISMISS_OVERRIDE);
-                var shouldDismiss = dismissElement === null || dismissElement === void 0 ? void 0 : dismissElement.classList.contains(POPOVER2_DISMISS);
+                var dismissElement = eventTarget.closest(".".concat(POPOVER2_DISMISS, ", .").concat(POPOVER2_DISMISS_OVERRIDE));
                 // dismiss selectors from the "V1" version of Popover in the core pacakge
                 // we expect these to be rendered by MenuItem, which at this point has no knowledge of Popover2
-                // this can be removed once Popover2 is merged into core in v4.0
-                var dismissElementV1 = eventTarget.closest("." + POPOVER_DISMISS + ", ." + POPOVER_DISMISS_OVERRIDE);
-                var shouldDismissV1 = dismissElementV1 === null || dismissElementV1 === void 0 ? void 0 : dismissElementV1.classList.contains(POPOVER_DISMISS);
-                var isDisabled = eventTarget.closest(":disabled, ." + DISABLED) != null;
-                if ((shouldDismiss || shouldDismissV1) && !isDisabled && (!isEventPopoverCapturing || isEventFromSelf)) {
+                // this can be removed once Popover2 is merged into core in v5.0
+                var dismissElementV1 = eventTarget.closest(".".concat(POPOVER_DISMISS, ", .").concat(POPOVER_DISMISS_OVERRIDE));
+                var shouldDismiss = (_d = (_c = dismissElement === null || dismissElement === void 0 ? void 0 : dismissElement.classList.contains(POPOVER2_DISMISS)) !== null && _c !== void 0 ? _c : dismissElementV1 === null || dismissElementV1 === void 0 ? void 0 : dismissElementV1.classList.contains(POPOVER_DISMISS)) !== null && _d !== void 0 ? _d : false;
+                var isDisabled = eventTarget.closest(":disabled, .".concat(DISABLED)) != null;
+                if (shouldDismiss && !isDisabled && (!isEventPopoverCapturing || isEventFromSelf)) {
                     _this.setOpenState(false, e);
                 }
             };
@@ -10123,6 +9714,12 @@
             };
             return _this;
         }
+        // popper innerRef gives us a handle on the transition container, since that's what we render as the overlay child,
+        // so if we want to look at our actual popover element, we need to reach inside a bit
+        Popover2.prototype.getPopoverElement = function () {
+            var _a;
+            return (_a = this.popoverElement) === null || _a === void 0 ? void 0 : _a.querySelector(".".concat(POPOVER2));
+        };
         Popover2.prototype.getIsOpen = function (props) {
             var _a;
             // disabled popovers should never be allowed to open.
@@ -10148,7 +9745,7 @@
             }
             return (React.createElement(Manager, null,
                 React.createElement(Reference, null, this.renderTarget),
-                React.createElement(Popper, { innerRef: this.refHandlers.popover, placement: placement !== null && placement !== void 0 ? placement : positionToPlacement(position), strategy: positioningStrategy, modifiers: this.computePopperModifiers() }, this.renderPopover)));
+                React.createElement(Popper, { innerRef: this.popoverRef, placement: placement !== null && placement !== void 0 ? placement : positionToPlacement(position), strategy: positioningStrategy, modifiers: this.getPopperModifiers() }, this.renderPopover)));
         };
         Popover2.prototype.componentDidMount = function () {
             this.updateDarkParent();
@@ -10193,7 +9790,7 @@
                 console.warn(POPOVER2_WARN_DOUBLE_TARGET);
             }
         };
-        Popover2.prototype.computePopperModifiers = function () {
+        Popover2.prototype.getPopperModifiers = function () {
             var _a, _b, _c, _d;
             var modifiers = this.props.modifiers;
             return [
@@ -10236,14 +9833,15 @@
         };
         Popover2.prototype.updateDarkParent = function () {
             if (this.props.usePortal && this.state.isOpen) {
-                var hasDarkParent = this.targetElement != null && this.targetElement.closest("." + DARK) != null;
+                var hasDarkParent = this.targetElement != null && this.targetElement.closest(".".concat(DARK)) != null;
                 this.setState({ hasDarkParent: hasDarkParent });
             }
         };
         Popover2.prototype.isElementInPopover = function (element) {
-            return this.popoverElement != null && this.popoverElement.contains(element);
+            var _a, _b;
+            return (_b = (_a = this.getPopoverElement()) === null || _a === void 0 ? void 0 : _a.contains(element)) !== null && _b !== void 0 ? _b : false;
         };
-        Popover2.displayName = DISPLAYNAME_PREFIX + ".Popover2";
+        Popover2.displayName = "".concat(DISPLAYNAME_PREFIX, ".Popover2");
         Popover2.defaultProps = {
             boundary: "clippingParents",
             captureDismiss: false,
@@ -10261,6 +9859,7 @@
             // a warning in validateProps if the other prop is specified by a user of this component
             positioningStrategy: "absolute",
             renderTarget: undefined,
+            shouldReturnFocusOnClose: false,
             targetTagName: "span",
             transitionDuration: 300,
             usePortal: true,
