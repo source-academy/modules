@@ -122,7 +122,7 @@ export const buildJsons = async (db) => {
       console.warn(
         `${chalk.yellow('Warning:')} No documentation found for ${bundle}`
       );
-      return undefined;
+      return [bundle, undefined];
     }
 
     return [bundle, moduleDocs.children];
@@ -150,12 +150,9 @@ export const buildJsons = async (db) => {
         JSON.stringify(output, null, 2)
       );
 
-      db.set(`docs.${bundle}`, buildTime);
+      db.set(`docs.${bundle}`, buildTime).write();
     })
   );
-
-  // Read from the TypeDoc output and retrieve the JSON relevant to the each module
-  await fs.rm('build/jsons/output', { recursive: true, force: true });
 };
 
 /**

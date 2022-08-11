@@ -9,18 +9,19 @@ export function check(moduleName) {
 }
 
 async function askModuleName() {
-  const name = await askQuestion(
-    'What is the name of your new module? (eg. binary_tree)'
-  );
-  if (isSnakeCase(name) === false) {
-    warn('Module names must be in snake case. (eg. binary_tree)');
-    return askModuleName();
+  while (true) {
+    // eslint-disable-next-line no-await-in-loop
+    const name = await askQuestion(
+      'What is the name of your new module? (eg. binary_tree)'
+    );
+    if (isSnakeCase(name) === false) {
+      warn('Module names must be in snake case. (eg. binary_tree)');
+    } else if (check(name)) {
+      warn('A module with the same name already exists.');
+    } else {
+      return name;
+    }
   }
-  if (check(name) === true) {
-    warn('A module with the same name already exists.');
-    return askModuleName();
-  }
-  return name;
 }
 
 export async function addNew() {

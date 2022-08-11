@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default */
 export { default as build } from './build';
 export { default as buildBundles } from './build/bundles';
 export { default as buildTabs } from './build/tabs';
