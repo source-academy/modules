@@ -79,7 +79,7 @@ const parsers = {
  */
 export const buildJsons = async (db) => {
   const isBundleModifed = (bundle) => {
-    const timestamp = db.get(`docs.${bundle}`).value() || 0;
+    const timestamp = db.get(`jsons.${bundle}`).value() || 0;
     return isFolderModified(`src/bundles/${bundle}`, timestamp);
   };
 
@@ -108,7 +108,7 @@ export const buildJsons = async (db) => {
 
   const buildTime = new Date().getTime();
 
-  const docsFile = await fs.readFile('build/docs.json');
+  const docsFile = await fs.readFile('build/docs.json', 'utf-8');
   const parsedJSON = JSON.parse(docsFile).children;
 
   if (!parsedJSON) {
@@ -150,7 +150,7 @@ export const buildJsons = async (db) => {
         JSON.stringify(output, null, 2)
       );
 
-      db.set(`docs.${bundle}`, buildTime).write();
+      db.set(`jsons.${bundle}`, buildTime).write();
     })
   );
 };
@@ -162,7 +162,7 @@ export const buildJsons = async (db) => {
  * their documentation won't be properly included. Hence all modules have to be built at
  * the same time.
  */
-export const buildDocs = async () => {
+export const buildDocs = async (db) => {
   const app = new typedoc.Application();
   app.options.addReader(new typedoc.TSConfigReader());
   app.options.addReader(new typedoc.TypeDocReader());
@@ -189,6 +189,8 @@ export const buildDocs = async () => {
       `${cjsDirname()}/docs/README.md`,
       'build/documentation/README.md'
     );
+
+    db.set('docs', new Date().getTime()).write();
   }
 };
 
@@ -196,8 +198,7 @@ export const buildDocs = async () => {
  * Build both JSONS and HTML documentation
  */
 export default async () => {
-  await buildDocs();
-
   const db = await getDb();
+  await buildDocs(db);
   await buildJsons(db);
 };

@@ -105,6 +105,7 @@ export function getDbPath() {
  * Get a new Lowdb instance
  */
 export function getDb() {
+  // eslint-disable-next-line new-cap
   return Low(new FileAsync(getDbPath()));
 }
 
@@ -119,7 +120,10 @@ export function removeDuplicates(arr) {
 export const shouldBuildAll = (outputDir) => {
   if (process.argv[3] === '--force') return true;
 
-  if (!fs.existsSync(`build/${outputDir}`)) return true;
-
-  return fs.readdirSync(`build/${outputDir}`).length === 0;
+  try {
+    return fs.readdirSync(`build/${outputDir}`).length === 0;
+  } catch (error) {
+    if (error.code === 'ENOENT') return true;
+    throw error;
+  }
 };
