@@ -3,13 +3,12 @@ import { promises as fs } from 'fs';
 import { askQuestion, warn, success } from './print';
 import { isPascalCase } from './utilities';
 import { check as _check } from './module';
-import manifest from '../../modules.json';
-import { cjsDirname } from '../utilities';
+import { modules as manifest, cjsDirname } from '../utilities';
 
 const existingTabs = Object.values(manifest)
   .flatMap((value) => value.tabs);
 
-export function check(tabName) {
+export function check(tabName: string) {
   return existingTabs.includes(tabName);
 }
 

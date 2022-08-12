@@ -14,22 +14,23 @@
     "build:tabs": "Transpile tabs into the `build/` folder and copy over `modules.json`",
     "build:docs": "Generate TypeDocs in the `build/documentation/` folder",
     "serve": "Start the HTTP server to serve all files in `build/`, with the same directory structure",
+    "scripts": "Run a script within the script server using ts-node",
     "dev": "Rebuild modules, then serve",
     "prepare": "Enable git hooks",
     "test": "Run unit tests",
     "test:watch": "Watch files for changes and rerun tests related to changed files"
   },
   "scripts": {
-    "gulp": "cross-env TS_NODE_PROJECT=gulpfile.ts/tsconfig.json gulp",
-    "create": "gulp create",
+    "create": "yarn scripts create",
     "lint": "./node_modules/.bin/eslint -c src/.eslintrc.js --ext \".ts, .tsx\" src/",
     "lint:fix": "./node_modules/.bin/eslint -c src/.eslintrc.js --ext \".ts, .tsx\" src/ --fix",
     "build": "yarn lint && gulp build",
-    "build:bundles": "./node_modules/.bin/tsc --project src/tsconfig.json && gulp buildBundles",
-    "build:tabs": "./node_modules/.bin/tsc --project src/tsconfig.json && gulp buildTabs",
-    "build:docs": "gulp buildDocs",
+    "build:bundles": "./node_modules/.bin/tsc --project src/tsconfig.json && yarn scripts build:bundles",
+    "build:tabs": "./node_modules/.bin/tsc --project src/tsconfig.json && yarn scripts build:tabs",
+    "build:docs": "yarn scripts build:docs",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "dev": "yarn build && yarn serve",
+    "scripts": "cross-env TS_NODE_PROJECT=scripts/tsconfig.json ts-node scripts/index.ts",
     "prepare": "husky install",
     "test": "jest --verbose",
     "test:watch": "jest --watch"
@@ -47,7 +48,6 @@
     "@types/gulp": "^4.0.9",
     "@types/jest": "^27.4.1",
     "@types/lowdb": "^1.0.11",
-    "@types/merge-stream": "^1.1.2",
     "@types/node": "^17.0.23",
     "@types/react": "^17.0.43",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
@@ -66,13 +66,11 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
-    "esm": "^3.2.25",
     "generate-template-files": "^3.0.0",
     "http-server": "^0.12.3",
     "husky": "5",
     "jest": "^26.6.3",
-    "lowdb": "^1.0.0",
-    "merge-stream": "^2.0.0",
+    "lowdb": "^3.0.0",
     "rollup": "^2.41.2",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -107,7 +105,7 @@
     "roots": [
       "<rootDir>/src/bundles",
       "<rootDir>/src/tabs",
-      "<rootDir>/gulpfile.esm.js"
+      "<rootDir>/scripts"
     ]
   }
 }

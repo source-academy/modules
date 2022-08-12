@@ -16,8 +16,7 @@ import {
 export const buildBundles: BuildTask = (db) => {
   const isBundleModifed = (bundle: string) => {
     if (process.argv[3] === '--force') return true;
-    const timestamp = db.get(`bundles.${bundle}`)
-      .value() || 0;
+    const timestamp = db.data.bundles[bundle] ?? 0;
     return isFolderModified(`src/bundles/${bundle}`, timestamp);
   };
 
@@ -51,8 +50,8 @@ export const buildBundles: BuildTask = (db) => {
       format: 'iife',
     });
 
-    db.set(`bundle.${bundle}`, buildTime)
-      .write();
+    db.data.bundles[bundle] = buildTime
+    await db.write();
   };
 
   return Promise.all(filteredBundles.map(processBundle));

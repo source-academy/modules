@@ -23,8 +23,7 @@ export const convertRawTab = (rawTab: string) => {
 export const buildTabs: BuildTask = (db) => {
   const isTabModifed = (tabName: string) => {
     if (process.argv[3] === '--force') return true;
-    const timestamp = db.get(`tabs.${tabName}`)
-      .value() || 0;
+    const timestamp = db.data.tabs[tabName] ?? 0;
     return isFolderModified(`src/tabs/${tabName}`, timestamp);
   };
 
@@ -68,8 +67,8 @@ export const buildTabs: BuildTask = (db) => {
     const rawTab = await fs.readFile(tabFile, 'utf-8');
     await fs.writeFile(tabFile, convertRawTab(rawTab));
 
-    db.set(`tabs.${tabName}`, buildTime)
-      .write();
+    db.data.tabs[tabName] = buildTime
+    await db.write();
   };
 
   return Promise.all(filteredTabs.map(processTab));

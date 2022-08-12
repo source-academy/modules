@@ -8,8 +8,7 @@ import commonJS from 'rollup-plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 import { join } from 'path';
-import Low from 'lowdb';
-import FileAsync from 'lowdb/adapters/FileAsync';
+import { Low, JSONFile } from 'lowdb';
 import {
   DATABASE_NAME,
   NODE_MODULES_PATTERN,
@@ -101,25 +100,43 @@ export function getDbPath() {
   return join(cjsDirname(import.meta.url), `${DATABASE_NAME}.json`);
 }
 
-type DBKeys = 'jsons' | 'bundles' | 'tabs';
+const DBKeys = ['jsons', 'bundles', 'tabs'] as const;
+
+type ObjectFromList<T extends ReadonlyArray<string>, V = string> = {
+  [K in (T extends ReadonlyArray<infer U> ? U : never)]: V
+};
 
 export type DBType = {
   docs: number;
-} & {
-  [k in DBKeys]: {
-    [name: string]: number;
-  }
-};
+} & ObjectFromList<typeof DBKeys, {
+  [name: string]: number;
+}>
 
 /**
  * Get a new Lowdb instance
  */
-export function getDb() {
-  // eslint-disable-next-line new-cap
-  return Low(new FileAsync<DBType>(getDbPath()));
+export async function getDb() {
+  const db = new Low(new JSONFile<DBType>(getDbPath()));
+  await db.read();
+
+  if (!db.data) {
+    db.data = {
+      docs: 0,
+      jsons: {},
+      bundles: {},
+      tabs: {}
+    }
+  }
+  // } else {
+  //   for (const element of DBKeys.values()) {
+  //     if (!db.data[element]) db.data[element] = {};
+  //   };
+  // }
+  
+  return db;
 }
 
-export type BuildTask = (db: Low.LowdbAsync<DBType>) => Promise<any>;
+export type BuildTask = (db: Low<DBType>) => Promise<any>;
 
 export function removeDuplicates<T>(arr: T[]) {
   return [...new Set<T>(arr)];

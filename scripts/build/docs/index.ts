@@ -14,9 +14,11 @@ import { cjsDirname, modules } from '../../utilities';
  * Convert each element type (e.g. variable, function) to its respective HTML docstring
  * to be displayed to users
  */
-const parsers = {
+const parsers: {
+  [name: string]: (element: any, bundle: string) => string
+} = {
   Variable(element, bundle) {
-    let desc;
+    let desc: string;
     if (element.comment && element.comment.shortText) {
       desc = drawdown(element.comment.shortText);
     } else {
@@ -44,7 +46,7 @@ const parsers = {
     const signature = element.signatures[0];
 
     // Form the parameter string for the function
-    let paramStr;
+    let paramStr: string;
     if (!signature.parameters) paramStr = '()';
     else {
       paramStr = `(${signature.parameters
@@ -56,11 +58,9 @@ const parsers = {
     }
 
     // Form the result representation for the function
-    let resultStr;
-    if (!signature.type) resultStr = 'void';
-    else resultStr = signature.type.name;
+    const resultStr = !signature.type ? 'void' : signature.type.name;
 
-    let desc;
+    let desc: string;
     if (signature.comment && signature.comment.shortText) {
       desc = drawdown(signature.comment.shortText);
     } else {
@@ -81,8 +81,7 @@ const parsers = {
  */
 export const buildJsons: BuildTask = async (db) => {
   const isBundleModifed = (bundle: string) => {
-    const timestamp = db.get(`jsons.${bundle}`)
-      .value() || 0;
+    const timestamp = db.data.jsons[bundle] ?? 0;
     return isFolderModified(`src/bundles/${bundle}`, timestamp);
   };
 
@@ -156,10 +155,11 @@ export const buildJsons: BuildTask = async (db) => {
         JSON.stringify(output, null, 2),
       );
 
-      db.set(`jsons.${bundle}`, buildTime)
-        .write();
+      db.data.jsons[bundle] = buildTime
     }),
   );
+
+  await db.write();
 };
 
 /**
@@ -198,9 +198,9 @@ export const buildDocs: BuildTask = async (db) => {
       'build/documentation/README.md',
     );
 
-    db.set('docs', new Date()
-      .getTime())
-      .write();
+    db.data.docs = new Date()
+      .getTime()
+    await db.write();
   }
 };
 

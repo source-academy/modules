@@ -1,10 +1,9 @@
 import { promises as fs } from 'fs';
 import { askQuestion, warn, success } from './print';
 import { isSnakeCase } from './utilities';
-import manifest from '../../modules.json';
-import { cjsDirname } from '../utilities';
+import { modules as manifest, cjsDirname } from '../utilities';
 
-export function check(moduleName) {
+export function check(moduleName: string) {
   return Object.keys(manifest)
     .includes(moduleName);
 }
