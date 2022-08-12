@@ -6,7 +6,7 @@ build/*
 /package-lock.json
 coverage/
 
-gulpfile.esm.js/build/database.json
+scripts/build/database.json
 
 # Compiled source #
 ###################
