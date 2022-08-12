@@ -1,0 +1,19 @@
+{
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+    "moduleTypes": {
+      "./**/*.ts": "esm",
+    },
+  },
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "target": "ES2020",
+  },
+  "include": ["./**.ts"],
+  "exclude": ["./**/__tests__/**"]
+}
