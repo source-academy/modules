@@ -20,7 +20,7 @@ export const convertRawTab = (rawTab: string) => {
 /**
  * Transpile tabs to the build folder
  */
-export const buildTabs: BuildTask = (db) => {
+export const buildTabs: BuildTask = async (db) => {
   const isTabModifed = (tabName: string) => {
     if (process.argv[3] === '--force') return true;
     const timestamp = db.data.tabs[tabName] ?? 0;
@@ -37,7 +37,8 @@ export const buildTabs: BuildTask = (db) => {
     : tabNames.filter(isTabModifed);
 
   if (filteredTabs.length === 0) {
-    return null;
+    console.log(chalk.greenBright('All tabs up to date'));
+    return;
   }
 
   console.log(chalk.greenBright('Building the following tabs:'));
@@ -55,7 +56,7 @@ export const buildTabs: BuildTask = (db) => {
     });
 
     const tabFile = `build/tabs/${tabName}.js`;
-    await result.write({
+    const { output: rollupOutput } = await result.generate({
       file: tabFile,
       format: 'iife',
       globals: {
@@ -64,14 +65,14 @@ export const buildTabs: BuildTask = (db) => {
       },
     });
 
-    const rawTab = await fs.readFile(tabFile, 'utf-8');
+    const rawTab = rollupOutput[0].code;
     await fs.writeFile(tabFile, convertRawTab(rawTab));
 
     db.data.tabs[tabName] = buildTime
-    await db.write();
   };
 
-  return Promise.all(filteredTabs.map(processTab));
+  await Promise.all(filteredTabs.map(processTab));
+  await db.write();
 };
 
 export default async () => {

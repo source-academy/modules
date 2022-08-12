@@ -13,7 +13,7 @@ import {
 /**
  * Transpile bundles to the build folder
  */
-export const buildBundles: BuildTask = (db) => {
+export const buildBundles: BuildTask = async (db) => {
   const isBundleModifed = (bundle: string) => {
     if (process.argv[3] === '--force') return true;
     const timestamp = db.data.bundles[bundle] ?? 0;
@@ -51,10 +51,10 @@ export const buildBundles: BuildTask = (db) => {
     });
 
     db.data.bundles[bundle] = buildTime
-    await db.write();
   };
 
-  return Promise.all(filteredBundles.map(processBundle));
+  await Promise.all(filteredBundles.map(processBundle));
+  await db.write();
 };
 
 export default async () => {
