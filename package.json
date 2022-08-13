@@ -24,7 +24,7 @@
     "create": "yarn scripts create",
     "lint": "./node_modules/.bin/eslint -c src/.eslintrc.js --ext \".ts, .tsx\" src/",
     "lint:fix": "./node_modules/.bin/eslint -c src/.eslintrc.js --ext \".ts, .tsx\" src/ --fix",
-    "build": "yarn lint && gulp build",
+    "build": "yarn lint && yarn scripts build",
     "build:bundles": "./node_modules/.bin/tsc --project src/tsconfig.json && yarn scripts build:bundles",
     "build:tabs": "./node_modules/.bin/tsc --project src/tsconfig.json && yarn scripts build:tabs",
     "build:docs": "yarn scripts build:docs",

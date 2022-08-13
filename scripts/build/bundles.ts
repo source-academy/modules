@@ -49,6 +49,7 @@ export const buildBundles: BuildTask = async (db) => {
       file: `build/bundles/${bundle}.js`,
       format: 'iife',
     });
+    await result.close();
 
     db.data.bundles[bundle] = buildTime
   };

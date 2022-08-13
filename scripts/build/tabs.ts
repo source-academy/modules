@@ -64,9 +64,11 @@ export const buildTabs: BuildTask = async (db) => {
         'react-dom': 'ReactDom',
       },
     });
-
+    
+    // Only one chunk should be generated
     const rawTab = rollupOutput[0].code;
     await fs.writeFile(tabFile, convertRawTab(rawTab));
+    await result.close();
 
     db.data.tabs[tabName] = buildTime
   };

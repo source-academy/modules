@@ -120,6 +120,7 @@ export async function getDb() {
   await db.read();
 
   if (!db.data) {
+    // Set default data if database.json is missing
     db.data = {
       docs: 0,
       jsons: {},
@@ -127,12 +128,6 @@ export async function getDb() {
       tabs: {}
     }
   }
-  // } else {
-  //   for (const element of DBKeys.values()) {
-  //     if (!db.data[element]) db.data[element] = {};
-  //   };
-  // }
-  
   return db;
 }
 
