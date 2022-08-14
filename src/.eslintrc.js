@@ -92,6 +92,7 @@ module.exports = {
       }
     ],
     "@typescript-eslint/lines-between-class-members": 0, // Was 2
+    // "@typescript-eslint/consistent-type-imports": 1,
 
     // [Error → Warn]
     /* NOTE

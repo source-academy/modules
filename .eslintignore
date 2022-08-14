@@ -3,3 +3,4 @@
 build/
 
 **/.eslintrc*.js
+scripts/templates/templates

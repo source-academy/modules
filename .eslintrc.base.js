@@ -318,7 +318,6 @@ module.exports = {
     'require-await': 1,
     'require-unicode-regexp': 1,
     'require-yield': 1, // Was 2
-    // 'sort-imports': 0,
     // "sort-keys": 0,
     // "sort-vars": 0,
     'spaced-comment': [
@@ -493,4 +492,14 @@ module.exports = {
     // "wrap-regex": 0,
     'yield-star-spacing': 1,
   },
+  overrides: [
+    {
+      files: ['src/**/__tests__/**.ts', 'scripts/**/__tests__/**.ts'],
+      extends: ['airbnb-typescript', 'plugin:jest/recommended'],
+      plugins: ['jest'],
+      rules: {
+        'no-console': 0,
+      }
+    }
+  ]
 };
