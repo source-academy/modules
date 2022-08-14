@@ -9,7 +9,7 @@ import {
   isFolderModified,
   shouldBuildAll,
 } from './buildUtils';
-import { BUILD_PATH, SOURCE_PATH } from './constants';
+import { BUILD_PATH, SOURCE_PATH } from '../constants';
 
 /**
  * Transpile bundles to the build folder

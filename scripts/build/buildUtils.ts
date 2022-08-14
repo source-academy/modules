@@ -14,7 +14,7 @@ import {
   NODE_MODULES_PATTERN,
   SOURCE_PATTERN,
   SUPPRESSED_WARNINGS,
-} from './constants';
+} from '../constants';
 import { cjsDirname } from '../utilities';
 
 /**
@@ -97,7 +97,7 @@ export function isFolderModified(relativeFolderPath: string, storedTimestamp: nu
  * Get the path to the database file
  */
 export function getDbPath() {
-  return join(cjsDirname(import.meta.url), `${DATABASE_NAME}.json`);
+  return join(cjsDirname(import.meta.url), DATABASE_NAME);
 }
 
 const DBKeys = ['jsons', 'bundles', 'tabs'] as const;

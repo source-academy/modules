@@ -9,7 +9,7 @@ import {
   BuildTask,
 } from '../buildUtils';
 import { cjsDirname, modules as manifest } from '../../utilities';
-import { BUILD_PATH, SOURCE_PATH } from '../constants';
+import { BUILD_PATH, SOURCE_PATH } from '../../constants';
 
 /**
  * Convert each element type (e.g. variable, function) to its respective HTML docstring

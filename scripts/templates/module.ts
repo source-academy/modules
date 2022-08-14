@@ -2,6 +2,7 @@ import { askQuestion, success, warn } from './print';
 import { cjsDirname, modules as manifest } from '../utilities';
 import { promises as fs } from 'fs';
 import { isSnakeCase } from './utilities';
+import { SOURCE_PATH } from '../constants';
 
 export function check(moduleName: string) {
   return Object.keys(manifest)
@@ -26,7 +27,7 @@ async function askModuleName() {
 
 export async function addNew() {
   const moduleName = await askModuleName();
-  const bundleDestination = `src/bundles/${moduleName}`;
+  const bundleDestination = `${SOURCE_PATH}/bundles/${moduleName}`;
   await fs.mkdir(bundleDestination, { recursive: true });
   await fs.copyFile(
     `${cjsDirname(import.meta.url)}/__bundle__.ts`,

@@ -4,6 +4,7 @@ import { askQuestion, warn, success } from './print';
 import { isPascalCase } from './utilities';
 import { check as _check } from './module';
 import { modules as manifest, cjsDirname } from '../utilities';
+import { SOURCE_PATH } from '../constants';
 
 const existingTabs = Object.values(manifest)
   .flatMap((value) => value.tabs);
@@ -43,7 +44,7 @@ export async function addNew() {
   const tabName = await askTabName();
 
   // Copy module tab template into correct destination and show success message
-  const tabDestination = `src/tabs/${tabName}`;
+  const tabDestination = `${SOURCE_PATH}/tabs/${tabName}`;
   await fs.mkdir(tabDestination, { recursive: true });
   await fs.copyFile(
     `${cjsDirname(import.meta.url)}/templates/__templates__.ts`,
