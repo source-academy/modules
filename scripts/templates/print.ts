@@ -22,7 +22,7 @@ export function success(...args) {
   return console.log(...args.map((string) => chalk.green(string)));
 }
 
-export function askQuestion(question) {
+export function askQuestion(question: string) {
   return new Promise<string>((resolve) => {
     rl.question(chalk.blueBright(`${question}\n`), resolve);
   });

@@ -8,7 +8,8 @@ import {
   shouldBuildAll,
   BuildTask,
 } from '../buildUtils';
-import { cjsDirname, modules } from '../../utilities';
+import { cjsDirname, modules as manifest } from '../../utilities';
+import { BUILD_PATH, SOURCE_PATH } from '../constants';
 
 /**
  * Convert each element type (e.g. variable, function) to its respective HTML docstring
@@ -85,7 +86,7 @@ export const buildJsons: BuildTask = async (db) => {
     return isFolderModified(`src/bundles/${bundle}`, timestamp);
   };
 
-  const bundleNames = Object.keys(modules);
+  const bundleNames = Object.keys(manifest);
   const filteredBundles = shouldBuildAll('jsons')
     ? bundleNames
     : bundleNames.filter(isBundleModifed);
@@ -119,7 +120,7 @@ export const buildJsons: BuildTask = async (db) => {
     throw new Error('Failed to parse docs.json');
   }
 
-  const bundles = Object.keys(modules)
+  const bundles: [string, any][] = Object.keys(manifest)
     .map((bundle) => {
       const moduleDocs = parsedJSON.find((x) => x.name === bundle);
 
@@ -137,8 +138,9 @@ export const buildJsons: BuildTask = async (db) => {
     bundles.map(async ([bundle, docs]) => {
       if (!docs) return;
 
-      const output = {};
-      docs.forEach((element) => {
+      // Run through each item in the bundle and run its parser
+      const output: { [name: string]: string } = {};
+      docs.forEach((element: any) => {
         if (parsers[element.kindString]) {
           output[element.name] = parsers[element.kindString](element, bundle);
         } else {
@@ -150,8 +152,9 @@ export const buildJsons: BuildTask = async (db) => {
         }
       });
 
+      // Then write that output to the bundles' respective json files
       await fs.writeFile(
-        `build/jsons/${bundle}.json`,
+        `${BUILD_PATH}/jsons/${bundle}.json`,
         JSON.stringify(output, null, 2),
       );
 
@@ -175,9 +178,9 @@ export const buildDocs: BuildTask = async (db) => {
   app.options.addReader(new typedoc.TypeDocReader());
 
   app.bootstrap({
-    entryPoints: Object.keys(modules)
+    entryPoints: Object.keys(manifest)
       .map(
-        (bundle) => `src/bundles/${bundle}/functions.ts`,
+        (bundle) => `${SOURCE_PATH}/bundles/${bundle}/functions.ts`,
       ),
     tsconfig: 'src/tsconfig.json',
     theme: 'typedoc-modules-theme',
@@ -195,7 +198,7 @@ export const buildDocs: BuildTask = async (db) => {
     // For some reason typedoc's not working, so do a manual copy
     await fs.copyFile(
       `${cjsDirname(import.meta.url)}/README.md`,
-      'build/documentation/README.md',
+      `${BUILD_PATH}/documentation/README.md`,
     );
 
     db.data.docs = new Date()

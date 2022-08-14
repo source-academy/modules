@@ -9,6 +9,7 @@ import {
   isFolderModified,
   shouldBuildAll,
 } from './buildUtils';
+import { BUILD_PATH, SOURCE_PATH } from './constants';
 
 /**
  * Transpile bundles to the build folder
@@ -42,11 +43,11 @@ export const buildBundles: BuildTask = async (db) => {
   const processBundle = async (bundle: string) => {
     const result = await rollup({
       ...defaultConfig,
-      input: `src/bundles/${bundle}/index.ts`,
+      input: `${SOURCE_PATH}/bundles/${bundle}/index.ts`,
     });
 
     await result.write({
-      file: `build/bundles/${bundle}.js`,
+      file: `${BUILD_PATH}/bundles/${bundle}.js`,
       format: 'iife',
     });
     await result.close();

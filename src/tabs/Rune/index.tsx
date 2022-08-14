@@ -1,6 +1,6 @@
 import React from 'react';
 import { HollusionRune } from '../../bundles/rune/functions';
-import {
+import type {
   AnimatedRune,
   DrawnRune,
   RunesModuleState,
