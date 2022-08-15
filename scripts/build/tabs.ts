@@ -6,11 +6,11 @@ import {
   getDb,
   removeDuplicates,
   defaultConfig,
-  shouldBuildAll,
   BuildTask,
 } from './buildUtils';
 import copy from './misc';
 import { modules } from '../utilities';
+import { BUILD_PATH, SOURCE_PATH } from '../constants';
 
 export const convertRawTab = (rawTab: string) => {
   const lastBracket = rawTab.lastIndexOf('(');
@@ -21,21 +21,54 @@ export const convertRawTab = (rawTab: string) => {
  * Transpile tabs to the build folder
  */
 export const buildTabs: BuildTask = async (db) => {
-  const isTabModifed = (tabName: string) => {
-    if (process.argv[3] === '--force') return true;
-    const timestamp = db.data.tabs[tabName] ?? 0;
-    return isFolderModified(`src/tabs/${tabName}`, timestamp);
-  };
+  const getTabs = async () => {
+    const getAllTabs = () => removeDuplicates(Object.values(modules).flatMap(x => x.tabs));
 
-  const tabNames = removeDuplicates(
-    Object.values(modules)
-      .flatMap((x) => x.tabs),
-  );
+    // If forcing, just get all tabs
+    if (process.argv[3] === '--force') return getAllTabs();
 
-  const filteredTabs = shouldBuildAll('tabs')
-    ? tabNames
-    : tabNames.filter(isTabModifed);
+    try {
+      const tabBuildDir = await fs.readdir(`${BUILD_PATH}/tabs`);
+      
+      // If the tab build directory is empty, build all tabs
+      if (tabBuildDir.length === 0) return getAllTabs();
+    } catch (error) {
 
+      // If the tab build directory doesn't exist, build all tabs
+      if (error.code === 'ENOENT') return getAllTabs();
+      throw error;
+    }
+
+    const tabNames = new Set<string>();
+
+    Object.entries(modules).forEach(([bundle, { tabs }]) => {
+      const bundleTimestamp = db.data.bundles[bundle] ?? 0;
+
+      // If bundle has no tabs, skip it
+      if (tabs.length === 0) return;
+
+      // For each bundle, if it was modified, its tabs need to be rebuilt
+      if (!bundleTimestamp || isFolderModified(`${SOURCE_PATH}/bundles/${bundle}`, bundleTimestamp)) {
+        console.log(`${chalk.blue(bundle)} was modified, rebuilding it's tabs`);
+        tabs.forEach(tabNames.add);
+
+        return;
+      }
+    
+      tabs.forEach(tabName => {
+        // Check if the tab itself was modified
+        const tabTimestamp = db.data.tabs[tabName];
+        if (!tabTimestamp || isFolderModified(`${SOURCE_PATH}/tabs/${tabName}`, tabTimestamp)) {
+          tabNames.add(tabName);
+        }
+      })
+    })
+    
+    return [...tabNames];
+  }
+
+  const filteredTabs = await getTabs();
+  
   if (filteredTabs.length === 0) {
     console.log(chalk.greenBright('All tabs up to date'));
     return;
