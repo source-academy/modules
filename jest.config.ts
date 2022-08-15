@@ -1,4 +1,9 @@
 export default {
+  roots: [
+    "<rootDir>/src/bundles",
+    "<rootDir>/src/tabs",
+    "<rootDir>/scripts"
+  ],
   modulePaths:[
     '<rootDir>',
   ],

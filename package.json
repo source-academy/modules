@@ -101,12 +101,5 @@
     "regl": "^2.1.0",
     "tslib": "^2.3.1",
     "typedoc-default-themes": "^0.12.10"
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src/bundles",
-      "<rootDir>/src/tabs",
-      "<rootDir>/scripts"
-    ]
   }
 }
