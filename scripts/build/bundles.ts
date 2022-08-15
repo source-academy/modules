@@ -18,7 +18,7 @@ export const buildBundles: BuildTask = async (db) => {
   const isBundleModifed = (bundle: string) => {
     if (process.argv[3] === '--force') return true;
     const timestamp = db.data.bundles[bundle] ?? 0;
-    return isFolderModified(`src/bundles/${bundle}`, timestamp);
+    return isFolderModified(`${SOURCE_PATH}/bundles/${bundle}`, timestamp);
   };
 
   const bundleNames = Object.keys(modules);

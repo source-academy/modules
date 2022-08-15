@@ -30,5 +30,5 @@ async function main() {
 
 main()
   .then(() => process.exit(0));
-// I think LowDB is keeping the process alive after it should die
+// Something is keeping the process alive after it should die
 // but I haven't found how to close it so process.exit will have to do

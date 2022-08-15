@@ -83,7 +83,7 @@ const parsers: {
 export const buildJsons: BuildTask = async (db) => {
   const isBundleModifed = (bundle: string) => {
     const timestamp = db.data.jsons[bundle] ?? 0;
-    return isFolderModified(`src/bundles/${bundle}`, timestamp);
+    return isFolderModified(`${SOURCE_PATH}/bundles/${bundle}`, timestamp);
   };
 
   const bundleNames = Object.keys(manifest);
@@ -120,7 +120,7 @@ export const buildJsons: BuildTask = async (db) => {
     throw new Error('Failed to parse docs.json');
   }
 
-  const bundles: [string, any][] = Object.keys(manifest)
+  const bundles: [string, undefined | any[]][] = Object.keys(manifest)
     .map((bundle) => {
       const moduleDocs = parsedJSON.find((x) => x.name === bundle);
 
@@ -140,7 +140,7 @@ export const buildJsons: BuildTask = async (db) => {
 
       // Run through each item in the bundle and run its parser
       const output: { [name: string]: string } = {};
-      docs.forEach((element: any) => {
+      docs.forEach((element) => {
         if (parsers[element.kindString]) {
           output[element.name] = parsers[element.kindString](element, bundle);
         } else {
