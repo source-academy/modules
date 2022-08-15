@@ -50,7 +50,7 @@ export const buildTabs: BuildTask = async (db) => {
       // For each bundle, if it was modified, its tabs need to be rebuilt
       if (!bundleTimestamp || isFolderModified(`${SOURCE_PATH}/bundles/${bundle}`, bundleTimestamp)) {
         console.log(`${chalk.blue(bundle)} was modified, rebuilding it's tabs`);
-        tabs.forEach(tabNames.add);
+        tabs.forEach(tabName => tabNames.add(tabName));
 
         return;
       }
@@ -84,11 +84,11 @@ export const buildTabs: BuildTask = async (db) => {
   const processTab = async (tabName: string) => {
     const result = await rollup({
       ...defaultConfig,
-      input: `src/tabs/${tabName}/index.tsx`,
+      input: `${SOURCE_PATH}/tabs/${tabName}/index.tsx`,
       external: ['react', 'react-dom'],
     });
 
-    const tabFile = `build/tabs/${tabName}.js`;
+    const tabFile = `${BUILD_PATH}/tabs/${tabName}.js`;
     const { output: rollupOutput } = await result.generate({
       file: tabFile,
       format: 'iife',
