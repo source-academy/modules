@@ -47,17 +47,3 @@ export async function* asCompleted(promises: Promise<any>[]) {
     yield toYield.promise;
   }
 }
-
-export const testFunc = async () => {
-  const sleep = (d: number) => new Promise((r) => setTimeout(r, d));
-
-  const promises = Array.from({ length: 10 }, async (_, i) => {
-    const duration = Math.floor(Math.random() * 1000) + 1;
-    await sleep(duration);
-    return `Task ${i}: Duration: ${duration}ms`;
-  });
-
-  for await (const promise of asCompleted(promises)) {
-    console.log(await promise);
-  }
-};

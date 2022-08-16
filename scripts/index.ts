@@ -1,18 +1,12 @@
 import build from './build';
-import buildBundles from './build/bundles';
-import buildTabs from './build/tabs';
 import buildDocs from './build/docs';
 import create from './templates';
 import chalk from 'chalk';
-import { testFunc } from './utilities';
 
 const tasks = {
   build,
-  'build:bundles': buildBundles,
-  'build:tabs': buildTabs,
   'build:docs': buildDocs,
   create,
-  testFunc,
 };
 
 async function main() {

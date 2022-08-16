@@ -92,7 +92,7 @@ export const buildJsons: BuildTask = async (db) => {
     : bundleNames.filter(isBundleModifed);
 
   if (filteredBundles.length === 0) {
-    console.log('Documentation up to date');
+    console.log(chalk.greenBright('Documentation up to date'));
     return;
   }
 

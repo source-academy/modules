@@ -1,4 +1,4 @@
-import { convertRawTab } from '../build/tabs';
+import { convertRawTab } from '../build';
 
 describe('Testing raw tab processing', () => {
   test('Converts React tab properly', () => {
