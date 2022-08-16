@@ -1,27 +1,48 @@
+import { promises as fs, constants as fsConstants } from 'fs';
 import build from './build';
 import buildDocs from './build/docs';
+import buildBundlesAndTabs from './build/build';
 import create from './templates';
+import type { Opts } from './build/buildUtils';
+import { Command } from 'commander';
+import { BUILD_PATH } from './constants';
 import chalk from 'chalk';
 
-const tasks = {
-  build,
-  'build:docs': buildDocs,
-  create,
+const buildTasks: { [name: string]: (opts: Opts) => Promise<void> } = {
+  docs: buildDocs,
+  modules: buildBundlesAndTabs,
 };
 
 async function main() {
-  if (process.argv.length < 3) {
-    console.log(chalk.green('Available tasks:'));
-    console.log(Object.keys(tasks)
-      .map((each) => `• ${each}`)
-      .join('\n'));
-    return;
-  }
+  const parser = new Command();
 
-  const task = tasks[process.argv[2]];
+  parser.command('create', 'Interactive script for creating modules and tabs')
+    .action(create);
 
-  if (!task) console.error(chalk.redBright(`Unknown task: ${process.argv[2]}`));
-  else await task();
+  parser.command('build')
+    .argument('[script]', 'Build task to execute')
+    .option('-f, --force', 'Force all files to be rebuilt')
+    .option('-m, --module <modules...>', 'Specify bundles to be rebuilt')
+    .option('-t, --tab <tabs...>', 'Specify tabs to be rebuilt')
+    .option('-j, --jsons <jsons...>', 'Specify jsons to be rebuilt')
+    .action(async (script: string, options: Opts) => {
+      if (script !== undefined && !buildTasks[script]) {
+        console.error(chalk.redBright(`Unknown task: ${script}`));
+        return;
+      }
+
+      try {
+        // Create the build folder if it doesn't already exist
+        await fs.access(BUILD_PATH, fsConstants.F_OK);
+      } catch (error) {
+        await fs.mkdir(BUILD_PATH);
+      }
+
+      if (script === undefined) await build(options);
+      else await buildTasks[script](options);
+    });
+
+  await parser.parseAsync();
 }
 
 main()

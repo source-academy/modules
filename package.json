@@ -24,7 +24,7 @@
     "lint:src": "./node_modules/.bin/eslint -c src/.eslintrc.js --ext \".ts, .tsx\" src/",
     "lint:scripts": "./node_modules/.bin/eslint -c scripts/.eslintrc.js --ext \".ts, .tsx\" scripts/",
     "build": "yarn lint && yarn scripts build",
-    "build:docs": "yarn scripts build:docs",
+    "build:docs": "yarn scripts build docs",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "dev": "yarn build && yarn serve",
     "scripts": "cross-env TS_NODE_PROJECT=scripts/tsconfig.json ts-node scripts/index.ts",

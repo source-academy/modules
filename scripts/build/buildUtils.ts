@@ -12,7 +12,7 @@ import { Low, JSONFile } from 'lowdb';
 import {
   DATABASE_NAME,
   NODE_MODULES_PATTERN,
-  SOURCE_PATTERN,
+  SOURCE_PATH,
   SUPPRESSED_WARNINGS,
 } from '../constants';
 import { cjsDirname } from '../utilities';
@@ -33,7 +33,7 @@ export const defaultConfig = {
     babel({
       babelHelpers: 'bundled',
       extensions: ['.ts', '.tsx'],
-      include: [SOURCE_PATTERN],
+      include: [`${SOURCE_PATH}/**`],
     }),
     rollupResolve({
       // Source Academy's modules run in a browser environment. The default setting (false) may
@@ -100,6 +100,8 @@ export function getDbPath() {
   return join(cjsDirname(import.meta.url), DATABASE_NAME);
 }
 
+export const checkForUnknowns = <T>(inputs: T[], existing: T[]) => inputs.filter((each) => !existing.includes(each));
+
 const DBKeys = ['jsons', 'bundles', 'tabs'] as const;
 
 type ObjectFromList<T extends ReadonlyArray<string>, V = string> = {
@@ -110,7 +112,16 @@ export type DBType = {
   docs: number;
 } & ObjectFromList<typeof DBKeys, {
   [name: string]: number;
-}>
+}>;
+
+export type EntryWithReason = [string, string];
+
+export type Opts = Partial<{
+  force: boolean;
+  modules: string[];
+  tabs: string[];
+  jsons: string[];
+}>;
 
 /**
  * Get a new Lowdb instance
@@ -125,8 +136,8 @@ export async function getDb() {
       docs: 0,
       jsons: {},
       bundles: {},
-      tabs: {}
-    }
+      tabs: {},
+    };
   }
   return db;
 }
@@ -136,18 +147,3 @@ export type BuildTask = (db: Low<DBType>) => Promise<any>;
 export function removeDuplicates<T>(arr: T[]) {
   return [...new Set<T>(arr)];
 }
-
-/**
- * Checks if the given output directory is empty, to determine
- * if the given build script should execute regardless of the last build time
- */
-export const shouldBuildAll = (outputDir: string) => {
-  if (process.argv[3] === '--force') return true;
-
-  try {
-    return fs.readdirSync(`build/${outputDir}`).length === 0;
-  } catch (error) {
-    if (error.code === 'ENOENT') return true;
-    throw error;
-  }
-};
