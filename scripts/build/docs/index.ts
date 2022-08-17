@@ -226,7 +226,7 @@ const buildDocs: BuildTask = async (db) => {
         (bundle) => `${SOURCE_PATH}/bundles/${bundle}/functions.ts`,
       ),
     tsconfig: 'src/tsconfig.json',
-    theme: `${cjsDirname(import.meta.url)}/typedoc-modules-theme`,
+    theme: 'typedoc-modules-theme',
     excludeInternal: true,
     categorizeByGroup: true,
     name: 'Source Academy Modules',
