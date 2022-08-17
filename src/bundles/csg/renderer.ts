@@ -37,7 +37,7 @@ import {
 
 /* [Main] */
 function makeWrappedRenderer(
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
 ): WrappedRenderer.Function {
   let prepareRenderOptions: PrepareRender.AllOptions = {
     glOptions: { canvas },
@@ -48,7 +48,7 @@ function makeWrappedRenderer(
 function addEntities(
   renderGroup: RenderGroup,
   solids: Solid[],
-  geometryEntities: GeometryEntity[]
+  geometryEntities: GeometryEntity[],
 ): Entity[] {
   let { hasGrid, hasAxis } = renderGroup;
   let allEntities: Entity[] = [...geometryEntities];
@@ -56,9 +56,7 @@ function addEntities(
   // Run calculations for grid and/or axis only if needed
   if (!(hasAxis || hasGrid)) return allEntities;
 
-  let boundingBoxes: BoundingBox[] = solids.map((solid: Solid) =>
-    measureBoundingBox(solid)
-  );
+  let boundingBoxes: BoundingBox[] = solids.map((solid: Solid) => measureBoundingBox(solid));
   let minMaxXys: number[][] = boundingBoxes.map((boundingBox: BoundingBox) => {
     let minX = boundingBox[0][0];
     let minY = boundingBox[0][1];
@@ -78,7 +76,7 @@ function addEntities(
 
 function adjustCameraAngle(
   perspectiveCameraState: PerspectiveCameraState,
-  controlsState: ControlsState | null = null
+  controlsState: ControlsState | null = null,
 ): void {
   if (controlsState === null) {
     // Modify the position & view of the passed camera state,
@@ -104,7 +102,7 @@ function adjustCameraAngle(
 
 function doDynamicResize(
   canvas: HTMLCanvasElement,
-  perspectiveCameraState: PerspectiveCameraState
+  perspectiveCameraState: PerspectiveCameraState,
 ): void {
   let canvasBounds: DOMRect = canvas.getBoundingClientRect();
   let { devicePixelRatio } = window;
@@ -120,14 +118,14 @@ function doDynamicResize(
   perspectiveCamera.setProjection(
     perspectiveCameraState,
     perspectiveCameraState,
-    new CameraViewportDimensions(width, height)
+    new CameraViewportDimensions(width, height),
   );
 }
 
 function doZoom(
   zoomTicks: number,
   perspectiveCameraState: PerspectiveCameraState,
-  controlsState: ControlsState
+  controlsState: ControlsState,
 ): void {
   while (zoomTicks !== 0) {
     let currentTick: number = Math.sign(zoomTicks);
@@ -135,15 +133,15 @@ function doZoom(
 
     let scaleChange: number = currentTick * 0.1;
     let potentialNewScale: number = controlsState.scale + scaleChange;
-    let potentialNewDistance: number =
-      vec3.distance(
+    let potentialNewDistance: number
+      = vec3.distance(
         perspectiveCameraState.position,
-        perspectiveCameraState.target
+        perspectiveCameraState.target,
       ) * potentialNewScale;
 
     if (
-      potentialNewDistance > controlsState.limits.minDistance &&
-      potentialNewDistance < controlsState.limits.maxDistance
+      potentialNewDistance > controlsState.limits.minDistance
+      && potentialNewDistance < controlsState.limits.maxDistance
     ) {
       controlsState.scale = potentialNewScale;
     } else break;
@@ -155,7 +153,7 @@ function doZoom(
 function doZoomToFit(
   geometryEntities: GeometryEntity[],
   perspectiveCameraState: PerspectiveCameraState,
-  controlsState: ControlsState
+  controlsState: ControlsState,
 ): void {
   let options: ControlsZoomToFit.Options = {
     controls: controlsState,
@@ -174,7 +172,7 @@ function doRotate(
   rotateX: number,
   rotateY: number,
   perspectiveCameraState: PerspectiveCameraState,
-  controlsState: ControlsState
+  controlsState: ControlsState,
 ): void {
   let output = controls.rotate(
     {
@@ -182,7 +180,7 @@ function doRotate(
       camera: perspectiveCameraState,
       speed: 0.0015,
     },
-    [rotateX, rotateY]
+    [rotateX, rotateY],
   );
 
   let newControlsState = output.controls;
@@ -196,14 +194,14 @@ function doPan(
   panX: number,
   panY: number,
   perspectiveCameraState: PerspectiveCameraState,
-  controlsState: ControlsState
+  controlsState: ControlsState,
 ): void {
   let output = controls.pan(
     {
       controls: controlsState,
       camera: perspectiveCameraState,
     },
-    [panX, panY * 0.75]
+    [panX, panY * 0.75],
   );
 
   let newCameraState = output.camera;
@@ -215,7 +213,7 @@ function doPan(
 
 function registerEvents(
   canvas: HTMLCanvasElement,
-  frameTracker: FrameTracker
+  frameTracker: FrameTracker,
 ): void {
   canvas.addEventListener(
     'wheel',
@@ -224,7 +222,7 @@ function registerEvents(
 
       wheelEvent.preventDefault();
     },
-    { passive: false }
+    { passive: false },
   );
 
   canvas.addEventListener('dblclick', (_mouseEvent: MouseEvent) => {
@@ -243,7 +241,7 @@ function registerEvents(
 
       pointerEvent.preventDefault();
     },
-    { passive: false }
+    { passive: false },
   );
   canvas.addEventListener('pointerup', (pointerEvent: PointerEvent) => {
     frameTracker.unsetHeldPointer();
@@ -283,7 +281,7 @@ function registerEvents(
 /* [Exports] */
 export default function render(
   canvas: HTMLCanvasElement,
-  moduleState: CsgModuleState
+  moduleState: CsgModuleState,
 ): () => number {
   let wrappedRenderer: WrappedRenderer.Function = makeWrappedRenderer(canvas);
 
@@ -299,11 +297,11 @@ export default function render(
   let renderGroups: RenderGroup[] = moduleState.renderGroupManager.getGroupsToRender();
   let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
   let solids: Solid[] = lastRenderGroup.shapes.map(
-    (shape: Shape) => shape.solid
+    (shape: Shape) => shape.solid,
   );
   let geometryEntities: GeometryEntity[] = entitiesFromSolids(
     undefined,
-    ...solids
+    ...solids,
   );
 
   // Data to pass to the wrapped renderer we made, below
@@ -331,7 +329,7 @@ export default function render(
       doZoom(
         frameTracker.getZoomTicks(),
         perspectiveCameraState,
-        controlsState
+        controlsState,
       );
       frameTracker.didZoom();
     }
@@ -346,7 +344,7 @@ export default function render(
         frameTracker.rotateX,
         frameTracker.rotateY,
         perspectiveCameraState,
-        controlsState
+        controlsState,
       );
       frameTracker.didRotate();
     }
@@ -356,7 +354,7 @@ export default function render(
         frameTracker.panX,
         frameTracker.panY,
         perspectiveCameraState,
-        controlsState
+        controlsState,
       );
       frameTracker.didPan();
     }

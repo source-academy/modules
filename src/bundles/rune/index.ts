@@ -60,7 +60,7 @@ import { RunesModuleState } from './rune';
 
 export default function runes(
   moduleParams: ModuleParams,
-  moduleContexts: ModuleContexts
+  moduleContexts: ModuleContexts,
 ) {
   // Update the module's global context
   let moduleContext = moduleContexts.get('rune');

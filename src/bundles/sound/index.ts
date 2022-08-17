@@ -43,7 +43,7 @@ import { SoundsModuleState } from './types';
 
 export default function sounds(
   moduleParams: ModuleParams,
-  moduleContexts: ModuleContexts
+  moduleContexts: ModuleContexts,
 ) {
   // Update the module's global context
   let moduleContext = moduleContexts.get('sound');

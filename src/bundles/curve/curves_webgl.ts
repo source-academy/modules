@@ -48,7 +48,7 @@ void main() {
 function loadShader(
   gl: WebGLRenderingContext,
   type: number,
-  source: string
+  source: string,
 ): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
@@ -70,7 +70,7 @@ function loadShader(
 function initShaderProgram(
   gl: WebGLRenderingContext,
   vsSource: string,
-  fsSource: string
+  fsSource: string,
 ): WebGLProgram {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
@@ -117,11 +117,10 @@ export class Point implements ReplResult {
     public readonly x: number,
     public readonly y: number,
     public readonly z: number,
-    public readonly color: Color
+    public readonly color: Color,
   ) {}
 
-  public toReplString = () =>
-    `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
+  public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
 }
 
 /**
@@ -141,7 +140,7 @@ export class CurveDrawn implements ReplResult {
     private readonly space: CurveSpace,
     private readonly drawCubeArray: number[],
     private readonly curvePosArray: number[],
-    private readonly curveColorArray: number[]
+    private readonly curveColorArray: number[],
   ) {
     this.renderingContext = null;
     this.programs = null;
@@ -160,34 +159,34 @@ export class CurveDrawn implements ReplResult {
     const cubeBuffer = this.renderingContext.createBuffer();
     this.renderingContext.bindBuffer(
       this.renderingContext.ARRAY_BUFFER,
-      cubeBuffer
+      cubeBuffer,
     );
     this.renderingContext.bufferData(
       this.renderingContext.ARRAY_BUFFER,
       new Float32Array(this.drawCubeArray),
-      this.renderingContext.STATIC_DRAW
+      this.renderingContext.STATIC_DRAW,
     );
 
     const curveBuffer = this.renderingContext.createBuffer();
     this.renderingContext.bindBuffer(
       this.renderingContext.ARRAY_BUFFER,
-      curveBuffer
+      curveBuffer,
     );
     this.renderingContext.bufferData(
       this.renderingContext.ARRAY_BUFFER,
       new Float32Array(this.curvePosArray),
-      this.renderingContext.STATIC_DRAW
+      this.renderingContext.STATIC_DRAW,
     );
 
     const curveColorBuffer = this.renderingContext.createBuffer();
     this.renderingContext.bindBuffer(
       this.renderingContext.ARRAY_BUFFER,
-      curveColorBuffer
+      curveColorBuffer,
     );
     this.renderingContext.bufferData(
       this.renderingContext.ARRAY_BUFFER,
       new Float32Array(this.curveColorArray),
-      this.renderingContext.STATIC_DRAW
+      this.renderingContext.STATIC_DRAW,
     );
 
     const shaderProgram = initShaderProgram(this.renderingContext, vsS, fsS);
@@ -196,21 +195,21 @@ export class CurveDrawn implements ReplResult {
       attribLocations: {
         vertexPosition: this.renderingContext.getAttribLocation(
           shaderProgram,
-          'aVertexPosition'
+          'aVertexPosition',
         ),
         vertexColor: this.renderingContext.getAttribLocation(
           shaderProgram,
-          'aFragColor'
+          'aFragColor',
         ),
       },
       uniformLocations: {
         projectionMatrix: this.renderingContext.getUniformLocation(
           shaderProgram,
-          'uProjectionMatrix'
+          'uProjectionMatrix',
         ),
         modelViewMatrix: this.renderingContext.getUniformLocation(
           shaderProgram,
-          'uModelViewMatrix'
+          'uModelViewMatrix',
         ),
       },
     };
@@ -243,7 +242,7 @@ export class CurveDrawn implements ReplResult {
       mat4.scale(
         transMat,
         transMat,
-        vec3.fromValues(padding, padding, padding)
+        vec3.fromValues(padding, padding, padding),
       );
       mat4.translate(transMat, transMat, [0, 0, -5]);
       mat4.rotate(transMat, transMat, -(Math.PI / 2), [1, 0, 0]); // axis to rotate around X (static)
@@ -260,12 +259,12 @@ export class CurveDrawn implements ReplResult {
     gl.uniformMatrix4fv(
       this.programs!.uniformLocations.projectionMatrix,
       false,
-      projMat
+      projMat,
     );
     gl.uniformMatrix4fv(
       this.programs!.uniformLocations.modelViewMatrix,
       false,
-      transMat
+      transMat,
     );
     gl.enableVertexAttribArray(this.programs!.attribLocations.vertexPosition);
     gl.enableVertexAttribArray(this.programs!.attribLocations.vertexColor);
@@ -279,7 +278,7 @@ export class CurveDrawn implements ReplResult {
         gl.FLOAT,
         false,
         0,
-        0
+        0,
       );
       const colors: number[] = [];
       for (let i = 0; i < 16; i += 1) {
@@ -299,7 +298,7 @@ export class CurveDrawn implements ReplResult {
       gl.FLOAT,
       false,
       0,
-      0
+      0,
     );
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffersInfo!.curveColorBuffer);
     gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
@@ -317,7 +316,7 @@ export function generateCurve(
   numPoints: number,
   func: Curve,
   space: CurveSpace,
-  isFullView: boolean
+  isFullView: boolean,
 ) {
   const curvePosArray: number[] = [];
   const curveColorArray: number[] = [];
@@ -452,6 +451,6 @@ export function generateCurve(
     space,
     drawCubeArray,
     curvePosArray,
-    curveColorArray
+    curveColorArray,
   );
 }

@@ -4,5 +4,5 @@ import { GameModuleParams } from './types.js';
 
 export default (
   moduleParams: GameModuleParams,
-  _moduleContexts: ModuleContexts
+  _moduleContexts: ModuleContexts,
 ) => gameFuncs(moduleParams);

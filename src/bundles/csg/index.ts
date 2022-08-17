@@ -71,7 +71,7 @@ import { CsgModuleState, getModuleContext } from './utilities.js';
 /* [Exports] */
 export default (moduleParams: ModuleParams, moduleContexts: ModuleContexts) => {
   let potentialModuleContext: ModuleContext | null = getModuleContext(
-    moduleContexts
+    moduleContexts,
   );
   if (potentialModuleContext !== null) {
     let moduleContext: ModuleContext = potentialModuleContext;

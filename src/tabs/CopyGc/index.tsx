@@ -57,9 +57,9 @@ class CopyGC extends React.Component<Props, State> {
   componentDidMount() {
     const { debuggerContext } = this.props;
     if (
-      debuggerContext &&
-      debuggerContext.result &&
-      debuggerContext.result.value
+      debuggerContext
+      && debuggerContext.result
+      && debuggerContext.result.value
     ) {
       this.initialize_state();
     }
@@ -236,7 +236,7 @@ class CopyGC extends React.Component<Props, State> {
 
   private renderLabel = (val: number) => {
     const { flips } = this.state;
-    return flips.includes(val) ? `^` : `${val}`;
+    return flips.includes(val) ? '^' : `${val}`;
   };
 
   public render() {
@@ -250,7 +250,7 @@ class CopyGC extends React.Component<Props, State> {
             <p>
               This is a visualiser for stop and copy garbage collector. Check
               the guide{' '}
-              <a href='https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide'>
+              <a href="https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide">
                 here
               </a>
               .
@@ -258,46 +258,54 @@ class CopyGC extends React.Component<Props, State> {
             <h3>{state.command}</h3>
             <p> {state.description} </p>
             <div
-              style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginTop: 10,
+              }}
             >
-              {state.leftDesc ? (
-                <div style={{ flex: 1 }}>
-                  <canvas
-                    width={10}
-                    height={10}
-                    style={{
-                      backgroundColor: ThemeColor.GREEN,
-                    }}
-                  />
-                  <span> {state.leftDesc} </span>
-                </div>
-              ) : (
-                false
-              )}
-              {state.rightDesc ? (
-                <div style={{ flex: 1 }}>
-                  <canvas
-                    width={10}
-                    height={10}
-                    style={{
-                      backgroundColor: ThemeColor.YELLOW,
-                    }}
-                  />
-                  <span> {state.rightDesc} </span>
-                </div>
-              ) : (
-                false
-              )}
+              {state.leftDesc
+                ? (
+                  <div style={{ flex: 1 }}>
+                    <canvas
+                      width={10}
+                      height={10}
+                      style={{
+                        backgroundColor: ThemeColor.GREEN,
+                      }}
+                    />
+                    <span> {state.leftDesc} </span>
+                  </div>
+                )
+                : (
+                  false
+                )}
+              {state.rightDesc
+                ? (
+                  <div style={{ flex: 1 }}>
+                    <canvas
+                      width={10}
+                      height={10}
+                      style={{
+                        backgroundColor: ThemeColor.YELLOW,
+                      }}
+                    />
+                    <span> {state.rightDesc} </span>
+                  </div>
+                )
+                : (
+                  false
+                )}
             </div>
             <br />
             <p>
               Current step:
               {'   '}
-              <Icon icon='remove' onClick={this.handleMinus} />
+              <Icon icon="remove" onClick={this.handleMinus} />
               {'   '}
               {state.value}
               {'   '}
-              <Icon icon='add' onClick={this.handlePlus} />
+              <Icon icon="add" onClick={this.handlePlus} />
             </p>
             <div style={{ padding: 5 }}>
               <Slider
@@ -315,14 +323,17 @@ class CopyGC extends React.Component<Props, State> {
             <div>
               <h3>{state.toSpace === 0 ? 'To Space' : 'From Space'}</h3>
               <div>
-                {toMemoryMatrix &&
-                  toMemoryMatrix.length > 0 &&
-                  toMemoryMatrix.map((item, row) => (
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                {toMemoryMatrix
+                  && toMemoryMatrix.length > 0
+                  && toMemoryMatrix.map((item, row) => (
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                    }}>
                       <span style={{ width: 30 }}> {row * state.column} </span>
-                      {item &&
-                        item.length > 0 &&
-                        item.map((content) => {
+                      {item
+                        && item.length > 0
+                        && item.map((content) => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (
@@ -349,41 +360,48 @@ class CopyGC extends React.Component<Props, State> {
             <div>
               <h3>{state.toSpace > 0 ? 'To Space' : 'From Space'}</h3>
               <div>
-                {fromMemoryMatrix &&
-                  fromMemoryMatrix.length > 0 &&
-                  fromMemoryMatrix.map((item, row) => (
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                {fromMemoryMatrix
+                  && fromMemoryMatrix.length > 0
+                  && fromMemoryMatrix.map((item, row) => (
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                    }}>
                       <span style={{ width: 30 }}>
                         {row * state.column + state.memorySize / 2}
                       </span>
                       {item && item.length > 0
                         ? item.map((content) => {
-                            const color = this.getMemoryColor(content);
-                            const bgColor = this.getBackgroundColor(content);
-                            return (
-                              <div
+                          const color = this.getMemoryColor(content);
+                          const bgColor = this.getBackgroundColor(content);
+                          return (
+                            <div
+                              style={{
+                                width: 14,
+                                backgroundColor: bgColor,
+                              }}
+                            >
+                              <canvas
+                                width={10}
+                                height={10}
                                 style={{
-                                  width: 14,
-                                  backgroundColor: bgColor,
+                                  backgroundColor: color,
                                 }}
-                              >
-                                <canvas
-                                  width={10}
-                                  height={10}
-                                  style={{
-                                    backgroundColor: color,
-                                  }}
-                                />
-                              </div>
-                            );
-                          })
+                              />
+                            </div>
+                          );
+                        })
                         : false}
                     </div>
                   ))}
               </div>
             </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            marginTop: 10,
+          }}>
             <div style={{ flex: 1 }}>
               <canvas
                 width={10}
@@ -424,7 +442,7 @@ class CopyGC extends React.Component<Props, State> {
         <p>
           This is a visualiser for stop and copy garbage collector. Check the
           guide{' '}
-          <a href='https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide'>
+          <a href="https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide">
             here
           </a>
           .

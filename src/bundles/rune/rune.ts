@@ -66,18 +66,17 @@ export class Rune {
     public transformMatrix: mat4,
     public subRunes: Rune[],
     public texture: HTMLImageElement | null,
-    public hollusionDistance: number
+    public hollusionDistance: number,
   ) {}
 
-  public copy = () =>
-    new Rune(
-      this.vertices,
-      this.colors,
-      mat4.clone(this.transformMatrix),
-      this.subRunes,
-      this.texture,
-      this.hollusionDistance
-    );
+  public copy = () => new Rune(
+    this.vertices,
+    this.colors,
+    mat4.clone(this.transformMatrix),
+    this.subRunes,
+    this.texture,
+    this.hollusionDistance,
+  );
 
   /**
    * Flatten the subrunes to return a list of runes
@@ -95,7 +94,7 @@ export class Rune {
         mat4.multiply(
           subRuneCopy.transformMatrix,
           runeToExpand.transformMatrix,
-          subRuneCopy.transformMatrix
+          subRuneCopy.transformMatrix,
         );
         subRuneCopy.hollusionDistance = runeToExpand.hollusionDistance;
         if (runeToExpand.colors !== null) {
@@ -119,10 +118,9 @@ export class Rune {
       subRunes?: Rune[];
       texture?: HTMLImageElement | null;
       hollusionDistance?: number;
-    } = {}
+    } = {},
   ) => {
-    const paramGetter = (name: string, defaultValue: () => any) =>
-      params[name] === undefined ? defaultValue() : params[name];
+    const paramGetter = (name: string, defaultValue: () => any) => (params[name] === undefined ? defaultValue() : params[name]);
 
     return new Rune(
       paramGetter('vertices', () => new Float32Array()),
@@ -130,7 +128,7 @@ export class Rune {
       paramGetter('transformMatrix', mat4.create),
       paramGetter('subRunes', () => []),
       paramGetter('texture', () => null),
-      paramGetter('hollusionDistance', () => 0.1)
+      paramGetter('hollusionDistance', () => 0.1),
     );
   };
 
@@ -149,7 +147,7 @@ export function drawRunesToFrameBuffer(
   cameraMatrix: mat4,
   colorFilter: Float32Array,
   framebuffer: WebGLFramebuffer | null = null,
-  depthSwitch: boolean = false
+  depthSwitch: boolean = false,
 ) {
   // step 1: initiate the WebGLRenderingContext
   gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
@@ -157,7 +155,7 @@ export function drawRunesToFrameBuffer(
   const shaderProgram = initShaderProgram(
     gl,
     normalVertexShader,
-    normalFragmentShader
+    normalFragmentShader,
   );
   gl.useProgram(shaderProgram);
   if (gl === null) {
@@ -167,35 +165,35 @@ export function drawRunesToFrameBuffer(
   // create pointers to the data-entries of the shader program
   const vertexPositionPointer = gl.getAttribLocation(
     shaderProgram,
-    'aVertexPosition'
+    'aVertexPosition',
   );
   const vertexColorPointer = gl.getUniformLocation(
     shaderProgram,
-    'uVertexColor'
+    'uVertexColor',
   );
   const vertexColorFilterPt = gl.getUniformLocation(
     shaderProgram,
-    'uColorFilter'
+    'uColorFilter',
   );
   const projectionMatrixPointer = gl.getUniformLocation(
     shaderProgram,
-    'uProjectionMatrix'
+    'uProjectionMatrix',
   );
   const cameraMatrixPointer = gl.getUniformLocation(
     shaderProgram,
-    'uCameraMatrix'
+    'uCameraMatrix',
   );
   const modelViewMatrixPointer = gl.getUniformLocation(
     shaderProgram,
-    'uModelViewMatrix'
+    'uModelViewMatrix',
   );
   const textureSwitchPointer = gl.getUniformLocation(
     shaderProgram,
-    'uRenderWithTexture'
+    'uRenderWithTexture',
   );
   const depthSwitchPointer = gl.getUniformLocation(
     shaderProgram,
-    'uRenderWithDepthColor'
+    'uRenderWithDepthColor',
   );
   const texturePointer = gl.getUniformLocation(shaderProgram, 'uTexture');
 
@@ -246,7 +244,7 @@ export function drawRunesToFrameBuffer(
       border,
       srcFormat,
       srcType,
-      pixel
+      pixel,
     );
 
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -256,7 +254,7 @@ export function drawRunesToFrameBuffer(
       internalFormat,
       srcFormat,
       srcType,
-      image
+      image,
     );
 
     // WebGL1 has different requirements for power of 2 images
@@ -288,7 +286,7 @@ export function drawRunesToFrameBuffer(
     if (rune.texture === null) {
       gl.uniform4fv(
         vertexColorPointer,
-        rune.colors || new Float32Array([0, 0, 0, 1])
+        rune.colors || new Float32Array([0, 0, 0, 1]),
       );
       gl.uniform1i(textureSwitchPointer, 0);
     } else {
@@ -362,7 +360,7 @@ export abstract class DrawnRune implements ReplResult {
 
   constructor(
     protected readonly rune: Rune,
-    public readonly isHollusion: boolean
+    public readonly isHollusion: boolean,
   ) {}
 
   public toReplString = () => '<Rune>';
@@ -388,7 +386,7 @@ export class NormalRune extends DrawnRune {
       cameraMatrix,
       new Float32Array([1, 1, 1, 1]),
       null,
-      true
+      true,
     );
   };
 }
@@ -400,7 +398,7 @@ export class AnimatedRune extends glAnimation implements ReplResult {
   constructor(
     duration: number,
     fps: number,
-    private readonly func: (frame: number) => DrawnRune
+    private readonly func: (frame: number) => DrawnRune,
   ) {
     super(duration, fps);
   }

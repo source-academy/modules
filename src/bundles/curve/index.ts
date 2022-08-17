@@ -1,4 +1,4 @@
-import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
+import type { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
 import {
   animate_3D_curve,
   animate_curve,
@@ -6,7 +6,6 @@ import {
   b_of,
   connect_ends,
   connect_rigidly,
-  drawnCurves,
   draw_3D_connected,
   draw_3D_connected_full_view,
   draw_3D_connected_full_view_proportional,
@@ -19,6 +18,7 @@ import {
   draw_points,
   draw_points_full_view,
   draw_points_full_view_proportional,
+  drawnCurves,
   g_of,
   invert,
   make_3D_color_point,
@@ -26,8 +26,8 @@ import {
   make_color_point,
   make_point,
   put_in_standard_position,
-  rotate_around_origin,
   r_of,
+  rotate_around_origin,
   scale,
   scale_proportional,
   translate,
@@ -38,7 +38,7 @@ import {
   y_of,
   z_of,
 } from './functions';
-import { CurveModuleState } from './types';
+import type { CurveModuleState } from './types';
 
 /**
  * Bundle for Source Academy Curves module
@@ -48,7 +48,7 @@ import { CurveModuleState } from './types';
 
 export default function curves(
   moduleParams: ModuleParams,
-  moduleContexts: ModuleContexts
+  moduleContexts: ModuleContexts,
 ) {
   // Update the module's global context
   let moduleContext = moduleContexts.get('curve');
@@ -73,7 +73,7 @@ export default function curves(
     (moduleContext.state as CurveModuleState).drawnCurves = drawnCurves;
   }
 
-  return {
+  return new Proxy({
     make_point,
     make_3D_point,
     make_color_point,
@@ -110,5 +110,10 @@ export default function curves(
     rotate_around_origin,
     arc,
     invert,
-  };
+  }, {
+    get(target, name) {
+      if (target[name]) return target[name];
+      throw new Error(`Undefined symbol: ${name.toString()}`);
+    },
+  });
 }

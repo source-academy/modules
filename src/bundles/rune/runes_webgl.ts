@@ -19,7 +19,7 @@ export type FrameBufferWithTexture = {
 function loadShader(
   gl: WebGLRenderingContext,
   type: number,
-  source: string
+  source: string,
 ): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
@@ -46,7 +46,7 @@ function loadShader(
 export function initShaderProgram(
   gl: WebGLRenderingContext,
   vsSource: string,
-  fsSource: string
+  fsSource: string,
 ): WebGLProgram {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
@@ -66,7 +66,7 @@ export function initShaderProgram(
  * @returns
  */
 export function getWebGlFromCanvas(
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
 ): WebGLRenderingContext {
   const gl: WebGLRenderingContext | null = canvas.getContext('webgl');
   if (!gl) {
@@ -86,7 +86,7 @@ export function getWebGlFromCanvas(
  * @returns FrameBufferWithTexture
  */
 export function initFramebufferObject(
-  gl: WebGLRenderingContext
+  gl: WebGLRenderingContext,
 ): FrameBufferWithTexture {
   // create a framebuffer object
   const framebuffer = gl.createFramebuffer();
@@ -109,7 +109,7 @@ export function initFramebufferObject(
     0,
     gl.RGBA,
     gl.UNSIGNED_BYTE,
-    null
+    null,
   );
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
@@ -125,7 +125,7 @@ export function initFramebufferObject(
     gl.RENDERBUFFER,
     gl.DEPTH_COMPONENT16,
     gl.drawingBufferWidth,
-    gl.drawingBufferHeight
+    gl.drawingBufferHeight,
   );
 
   // set the texture object to the framebuffer object
@@ -135,14 +135,14 @@ export function initFramebufferObject(
     gl.COLOR_ATTACHMENT0,
     gl.TEXTURE_2D,
     texture,
-    0
+    0,
   );
   // set the renderbuffer object to the framebuffer object
   gl.framebufferRenderbuffer(
     gl.FRAMEBUFFER,
     gl.DEPTH_ATTACHMENT,
     gl.RENDERBUFFER,
-    depthBuffer
+    depthBuffer,
   );
 
   // check whether the framebuffer is configured correctly

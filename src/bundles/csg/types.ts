@@ -34,7 +34,7 @@ export type OrthographicCamera = typeof orthographicCamera;
 
 export type PerspectiveCameraState = Omit<
   typeof perspectiveCamera.cameraState,
-  'target' | 'position' | 'view'
+'target' | 'position' | 'view'
 > & {
   target: CoordinatesXYZ;
 
@@ -47,7 +47,7 @@ export type CameraState = PerspectiveCameraState | OrthographicCameraState;
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type Controls = Omit<
   typeof controls,
-  'update' | 'zoomToFit' | 'rotate' | 'pan'
+'update' | 'zoomToFit' | 'rotate' | 'pan'
 > & {
   update: ControlsUpdate.Function;
   zoomToFit: ControlsZoomToFit.Function;
@@ -124,14 +124,14 @@ export type ControlsPan = (
 
 export type ControlsState = Omit<
   typeof controls.controlsState,
-  'scale' | 'thetaDelta' | 'phiDelta'
+'scale' | 'thetaDelta' | 'phiDelta'
 > &
   typeof controls.controlsProps & {
-    scale: number;
+  scale: number;
 
-    thetaDelta: number;
-    phiDelta: number;
-  };
+  thetaDelta: number;
+  phiDelta: number;
+};
 
 export type Solid = Geom3;
 

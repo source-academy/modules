@@ -1,10 +1,10 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
-import { CurveDrawn } from '../../bundles/curve/curves_webgl';
-import { AnimatedCurve, CurveModuleState } from '../../bundles/curve/types';
+import type { CurveDrawn } from '../../bundles/curve/curves_webgl';
+import type { AnimatedCurve, CurveModuleState } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../common/multi_item_display';
-import { DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import Curve3DAnimationCanvas from './3Dcurve_anim_canvas';
 import CurveCanvas3D from './curve_canvas3d';
 import AnimationCanvas from '../common/animation_canvas';
@@ -33,26 +33,30 @@ export default {
 
       if (glAnimation.isAnimation(curve)) {
         const anim = curve as AnimatedCurve;
-        return anim.is3D ? (
-          <Curve3DAnimationCanvas animation={anim} key={elemKey} />
-        ) : (
-          <AnimationCanvas animation={anim} key={elemKey} />
-        );
+        return anim.is3D
+          ? (
+            <Curve3DAnimationCanvas animation={anim} key={elemKey} />
+          )
+          : (
+            <AnimationCanvas animation={anim} key={elemKey} />
+          );
       }
       const curveDrawn = curve as CurveDrawn;
-      return curveDrawn.is3D() ? (
-        <CurveCanvas3D curve={curveDrawn} key={elemKey} />
-      ) : (
-        <WebGLCanvas
-          ref={(r) => {
-            if (r) {
-              curveDrawn.init(r);
-              curveDrawn.redraw(0);
-            }
-          }}
-          key={elemKey}
-        />
-      );
+      return curveDrawn.is3D()
+        ? (
+          <CurveCanvas3D curve={curveDrawn} key={elemKey} />
+        )
+        : (
+          <WebGLCanvas
+            ref={(r) => {
+              if (r) {
+                curveDrawn.init(r);
+                curveDrawn.redraw(0);
+              }
+            }}
+            key={elemKey}
+          />
+        );
     });
 
     return <MultiItemDisplay elements={canvases} />;

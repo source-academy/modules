@@ -111,7 +111,7 @@ function newCommand(
   heap,
   description,
   firstDesc,
-  lastDesc
+  lastDesc,
 ): void {
   const newType = type;
   const newToSpace = toSpace;
@@ -166,7 +166,7 @@ function newCopy(left, right, heap): void {
     heap,
     desc,
     'index',
-    'free'
+    'free',
   );
 }
 
@@ -187,7 +187,7 @@ function endFlip(left, heap): void {
     heap,
     desc,
     'free',
-    ''
+    '',
   );
   updateFlip();
 }
@@ -215,7 +215,7 @@ function startFlip(toSpace, fromSpace, heap): void {
     heap,
     desc,
     '',
-    ''
+    '',
   );
   updateFlip();
 }
@@ -236,7 +236,7 @@ function newPush(left, right, heap): void {
     heap,
     desc,
     'last child address slot',
-    'new child pushed'
+    'new child pushed',
   );
 }
 
@@ -257,14 +257,14 @@ function newPop(res, left, right, heap): void {
     heap,
     desc,
     'popped memory',
-    'last child address slot'
+    'last child address slot',
   );
 }
 
 function doneShowRoot(heap): void {
   const toSpace = 0;
   const fromSpace = 0;
-  const desc = `All root nodes are copied`;
+  const desc = 'All root nodes are copied';
   newCommand(
     'Copied Roots',
     toSpace,
@@ -276,7 +276,7 @@ function doneShowRoot(heap): void {
     heap,
     desc,
     '',
-    ''
+    '',
   );
 }
 
@@ -297,7 +297,7 @@ function showRoots(left, heap): void {
     heap,
     desc,
     'roots',
-    ''
+    '',
   );
 }
 
@@ -318,7 +318,7 @@ function newAssign(res, left, heap): void {
     heap,
     desc,
     'assigned memory',
-    ''
+    '',
   );
 }
 
@@ -339,7 +339,7 @@ function newNew(left, heap): void {
     heap,
     desc,
     'new memory allocated',
-    ''
+    '',
   );
 }
 
@@ -390,7 +390,7 @@ function updateSlotSegment(
   tag: number,
   size: number,
   first: number,
-  last: number
+  last: number,
 ): void {
   if (tag >= 0) {
     TAG_SLOT = tag;

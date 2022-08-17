@@ -1,9 +1,10 @@
 /* eslint-disable max-classes-per-file */
 
-import { ModuleState } from 'js-slang';
-import { glAnimation, AnimFrame } from '../../typings/anim_types';
-import { ReplResult } from '../../typings/type_helpers';
-import { Curve, CurveDrawn } from './curves_webgl';
+import type { ModuleState } from 'js-slang';
+import type { AnimFrame } from '../../typings/anim_types';
+import { glAnimation } from '../../typings/anim_types';
+import type { ReplResult } from '../../typings/type_helpers';
+import type { Curve, CurveDrawn } from './curves_webgl';
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
 export type CurveTransformer = (c: Curve) => Curve;
@@ -29,7 +30,7 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
     fps: number,
     private readonly func: (timestamp: number) => Curve,
     private readonly drawer: RenderFunction,
-    public readonly is3D: boolean
+    public readonly is3D: boolean,
   ) {
     super(duration, fps);
     this.angle = 0;

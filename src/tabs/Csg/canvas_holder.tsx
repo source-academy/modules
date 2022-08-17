@@ -12,8 +12,8 @@ import { CanvasHolderProps, CanvasHolderState } from './types';
 
 /* [Main] */
 export default class CanvasHolder extends React.Component<
-  CanvasHolderProps,
-  CanvasHolderState
+CanvasHolderProps,
+CanvasHolderState
 > {
   private canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
 
@@ -24,13 +24,11 @@ export default class CanvasHolder extends React.Component<
 
     let getCurrentRequestId: () => number = render(
       canvas,
-      this.props.moduleState
+      this.props.moduleState,
     );
 
     // Stops old render loop upon re-run to prevent regl context lost errors
-    canvas.addEventListener('webglcontextlost', () =>
-      window.cancelAnimationFrame(getCurrentRequestId())
-    );
+    canvas.addEventListener('webglcontextlost', () => window.cancelAnimationFrame(getCurrentRequestId()));
   }
 
   // Only required method of a React Component.
@@ -57,23 +55,23 @@ export default class CanvasHolder extends React.Component<
           }}
         >
           <HoverControlHint
-            tooltipText='Zoom in • Scroll up'
+            tooltipText="Zoom in • Scroll up"
             iconName={IconNames.ZOOM_IN}
           />
           <HoverControlHint
-            tooltipText='Zoom out • Scroll down'
+            tooltipText="Zoom out • Scroll down"
             iconName={IconNames.ZOOM_OUT}
           />
           <HoverControlHint
-            tooltipText='Zoom to fit • Double left-click'
+            tooltipText="Zoom to fit • Double left-click"
             iconName={IconNames.ZOOM_TO_FIT}
           />
           <HoverControlHint
-            tooltipText='Rotate • Left-click'
+            tooltipText="Rotate • Left-click"
             iconName={IconNames.REPEAT}
           />
           <HoverControlHint
-            tooltipText='Pan • Middle-click OR shift + left-click'
+            tooltipText="Pan • Middle-click OR shift + left-click"
             iconName={IconNames.MOVE}
           />
         </div>
@@ -107,8 +105,8 @@ export default class CanvasHolder extends React.Component<
               borderRadius: BP_BORDER_RADIUS,
             }}
             // These get set on the fly by our renderer's dynamic resizer
-            width='0'
-            height='0'
+            width="0"
+            height="0"
           />
         </div>
       </div>

@@ -36,8 +36,8 @@ import {
 
 // [Proper typing for JS in regl-renderer]
 export const perspectiveCamera: PerspectiveCamera = cameras.perspective;
-export const perspectiveCameraStateDefaults: PerspectiveCameraState =
-  perspectiveCamera.defaults;
+export const perspectiveCameraStateDefaults: PerspectiveCameraState
+  = perspectiveCamera.defaults;
 
 export const controls: Controls = (_controls.orbit as unknown) as Controls;
 export const controlsStateDefaults: ControlsState = controls.defaults;
@@ -55,12 +55,12 @@ export class MultiGridEntity implements MultiGridEntityType {
     color?: RGBA;
     subColor?: RGBA;
   } = {
-    drawCmd: 'drawGrid',
-    show: true,
+      drawCmd: 'drawGrid',
+      show: true,
 
-    color: hexToRgba(BP_TEXT_COLOR),
-    subColor: hexToRgba(ACE_GUTTER_TEXT_COLOR),
-  };
+      color: hexToRgba(BP_TEXT_COLOR),
+      subColor: hexToRgba(ACE_GUTTER_TEXT_COLOR),
+    };
 
   ticks: [number, number] = [MAIN_TICKS, SUB_TICKS];
 
@@ -76,9 +76,9 @@ export class AxisEntity implements AxisEntityType {
     drawCmd: 'drawAxis';
     show: boolean;
   } = {
-    drawCmd: 'drawAxis',
-    show: true,
-  };
+      drawCmd: 'drawAxis',
+      show: true,
+    };
 
   alwaysVisible: boolean = false;
 
@@ -130,7 +130,7 @@ export class RenderGroupManager {
 
   nextRenderGroup(
     currentGrid: boolean = false,
-    currentAxis: boolean = false
+    currentAxis: boolean = false,
   ): RenderGroup {
     let previousRenderGroup: RenderGroup = this.getCurrentRenderGroup();
     previousRenderGroup.render = true;
@@ -152,7 +152,7 @@ export class RenderGroupManager {
 
   getGroupsToRender(): RenderGroup[] {
     return this.renderGroups.filter(
-      (renderGroup: RenderGroup) => renderGroup.render
+      (renderGroup: RenderGroup) => renderGroup.render,
     );
   }
 }
@@ -267,8 +267,8 @@ export class FrameTracker {
 
   public isPointerPan(isShiftKey: boolean): boolean {
     return (
-      this.heldPointer === MousePointer.MIDDLE ||
-      (this.heldPointer === MousePointer.LEFT && isShiftKey)
+      this.heldPointer === MousePointer.MIDDLE
+      || (this.heldPointer === MousePointer.LEFT && isShiftKey)
     );
   }
 }
@@ -279,10 +279,10 @@ export class CameraViewportDimensions {
 }
 
 export function getModuleContext(
-  moduleContexts: ModuleContexts
+  moduleContexts: ModuleContexts,
 ): ModuleContext | null {
   let potentialModuleContext: ModuleContext | undefined = moduleContexts.get(
-    'csg'
+    'csg',
   );
   return potentialModuleContext ?? null;
 }
@@ -320,20 +320,20 @@ export function clamp(value: number, lowest: number, highest: number): number {
 // This check acts as a useful yet not foolproof instanceof
 export function looseInstanceof(
   object: object | null | undefined,
-  c: any
+  c: any,
 ): boolean {
   const objectName: string | undefined = object?.constructor?.name;
   const className: string | undefined = c?.name;
   return (
-    objectName !== undefined &&
-    className !== undefined &&
-    objectName === className
+    objectName !== undefined
+    && className !== undefined
+    && objectName === className
   );
 }
 
 export function neatGridDistance(rawDistance: number) {
   let paddedDistance: number = rawDistance + GRID_PADDING;
-  let roundedDistance: number =
-    Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
+  let roundedDistance: number
+    = Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
   return roundedDistance;
 }

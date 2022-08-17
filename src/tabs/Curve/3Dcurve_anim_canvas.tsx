@@ -28,8 +28,8 @@ type State = {
 };
 
 export default class Curve3DAnimationCanvas extends React.Component<
-  Props,
-  State
+Props,
+State
 > {
   private canvas: HTMLCanvasElement | null;
 
@@ -75,7 +75,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
   private drawFrame = () => {
     if (this.canvas) {
       const frame = this.props.animation.getFrame(
-        this.state.animTimestamp / 1000
+        this.state.animTimestamp / 1000,
       );
       frame.draw(this.canvas);
     }
@@ -113,7 +113,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
           {
             animTimestamp: 0,
           },
-          this.reqFrame
+          this.reqFrame,
         );
       } else {
         // Otherwise, stop the animation
@@ -123,7 +123,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
           },
           () => {
             this.callbackTimestamp = null;
-          }
+          },
         );
       }
     } else {
@@ -133,7 +133,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
         (prev) => ({
           animTimestamp: prev.animTimestamp + currentFrame,
         }),
-        this.reqFrame
+        this.reqFrame,
       );
     }
   };
@@ -149,14 +149,14 @@ export default class Curve3DAnimationCanvas extends React.Component<
         },
         () => {
           this.callbackTimestamp = null;
-        }
+        },
       );
     } else {
       this.setState(
         {
           isPlaying: true,
         },
-        this.reqFrame
+        this.reqFrame,
       );
     }
   };
@@ -172,7 +172,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
       () => {
         if (this.state.isPlaying) this.reqFrame();
         else this.drawFrame();
-      }
+      },
     );
   };
 
@@ -188,7 +188,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
         isPlaying: false,
         animTimestamp: newValue,
       }),
-      this.drawFrame
+      this.drawFrame,
     );
   };
 
@@ -206,7 +206,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
         } else {
           this.reqFrame();
         }
-      }
+      },
     );
   };
 
@@ -219,7 +219,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
         this.props.animation.angle = newAngle;
         if (this.state.isPlaying) this.reqFrame();
         else this.drawFrame();
-      }
+      },
     );
   };
 
@@ -257,7 +257,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
             </Button>
           </Tooltip2>
         </div>
-        <Tooltip2 content='Reset'>
+        <Tooltip2 content="Reset">
           <Button onClick={this.onResetButtonClick}>
             <Icon icon={IconNames.RESET} />
           </Button>
@@ -283,7 +283,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
           min={0}
           max={this.animationDuration}
         />
-        <Tooltip2 content='Display Angle'>
+        <Tooltip2 content="Display Angle">
           <div
             style={{
               marginTop: '5px',
@@ -339,7 +339,7 @@ export default class Curve3DAnimationCanvas extends React.Component<
               marginTop: '10px',
               whiteSpace: 'nowrap',
             }}
-            label='Auto Play'
+            label="Auto Play"
             onChange={this.autoPlaySwitchChanged}
             checked={this.state.autoPlay}
           />
