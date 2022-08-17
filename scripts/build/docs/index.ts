@@ -158,7 +158,7 @@ const buildJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[])
     .getTime();
 
   const docsFile = await fsPromises.readFile(`${BUILD_PATH}/docs.json`, 'utf-8');
-  const parsedJSON = JSON.parse(docsFile).children;
+  const parsedJSON = JSON.parse(docsFile)?.children;
 
   if (!parsedJSON) {
     throw new Error('Failed to parse docs.json');
@@ -166,17 +166,14 @@ const buildJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[])
 
   await Promise.all(
     bundleNames.map(async (bundle) => {
-      const moduleDocs = parsedJSON.find((x) => x.name === bundle);
+      const docs = parsedJSON.find((x) => x.name === bundle)?.children;
 
-      if (!moduleDocs || !moduleDocs.children) {
+      if (!docs) {
         console.warn(
           `${chalk.yellow('Warning:')} No documentation found for ${bundle}`,
         );
         return;
       }
-
-      const docs = moduleDocs.children;
-      if (!docs) return;
 
       // Run through each item in the bundle and run its parser
       const output: { [name: string]: string } = {};
