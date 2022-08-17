@@ -178,28 +178,27 @@ const buildJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[],
         console.warn(
           `${chalk.yellow('Warning:')} No documentation found for ${bundle}`,
         );
-        return;
+      } else {
+        // Run through each item in the bundle and run its parser
+        const output: { [name: string]: string } = {};
+        docs.forEach((element) => {
+          if (parsers[element.kindString]) {
+            output[element.name] = parsers[element.kindString](element, bundle);
+          } else {
+            console.warn(
+              `${chalk.yellow('Warning:')} ${bundle}: No parser found for ${
+                element.name
+              } of type ${element.type}`,
+            );
+          }
+        });
+
+        // Then write that output to the bundles' respective json files
+        await fsPromises.writeFile(
+          `${BUILD_PATH}/jsons/${bundle}.json`,
+          JSON.stringify(output, null, 2),
+        );
       }
-
-      // Run through each item in the bundle and run its parser
-      const output: { [name: string]: string } = {};
-      docs.forEach((element) => {
-        if (parsers[element.kindString]) {
-          output[element.name] = parsers[element.kindString](element, bundle);
-        } else {
-          console.warn(
-            `${chalk.yellow('Warning:')} ${bundle}: No parser found for ${
-              element.name
-            } of type ${element.type}`,
-          );
-        }
-      });
-
-      // Then write that output to the bundles' respective json files
-      await fsPromises.writeFile(
-        `${BUILD_PATH}/jsons/${bundle}.json`,
-        JSON.stringify(output, null, 2),
-      );
 
       db.data.jsons[bundle] = buildTime;
     }),
@@ -226,7 +225,7 @@ const buildDocs: BuildTask = async (db) => {
         (bundle) => `${SOURCE_PATH}/bundles/${bundle}/functions.ts`,
       ),
     tsconfig: 'src/tsconfig.json',
-    theme: 'typedoc-modules-theme',
+    theme: 'default',
     excludeInternal: true,
     categorizeByGroup: true,
     name: 'Source Academy Modules',
