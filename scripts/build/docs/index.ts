@@ -220,13 +220,15 @@ const buildDocs: BuildTask = async (db) => {
   app.options.addReader(new typedoc.TSConfigReader());
   app.options.addReader(new typedoc.TypeDocReader());
 
+  console.log('theme files located at ', `${cjsDirname(import.meta.url)}/typedoc-modules-theme`);
+
   app.bootstrap({
     entryPoints: Object.keys(manifest)
       .map(
         (bundle) => `${SOURCE_PATH}/bundles/${bundle}/functions.ts`,
       ),
     tsconfig: 'src/tsconfig.json',
-    theme: 'typedoc-modules-theme',
+    theme: `${cjsDirname(import.meta.url)}/typedoc-modules-theme`,
     excludeInternal: true,
     categorizeByGroup: true,
     name: 'Source Academy Modules',
