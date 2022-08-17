@@ -220,8 +220,6 @@ const buildDocs: BuildTask = async (db) => {
   app.options.addReader(new typedoc.TSConfigReader());
   app.options.addReader(new typedoc.TypeDocReader());
 
-  console.log('theme files located at ', `${cjsDirname(import.meta.url)}/typedoc-modules-theme`);
-
   app.bootstrap({
     entryPoints: Object.keys(manifest)
       .map(
