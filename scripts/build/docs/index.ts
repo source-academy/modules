@@ -132,7 +132,7 @@ export const getJsonsToBuild = async (db: Low<DBType>, opts: JsonOpts): Promise<
 /**
  * Build the json documentation for the specified modules
  */
-const buildJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[]) => {
+const buildJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[], verbose: boolean) => {
   if (bundlesWithReason.length === 0) {
     console.log(chalk.greenBright('Documentation up to date'));
     return;
@@ -141,10 +141,16 @@ const buildJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[])
   console.log(
     chalk.greenBright('Building documentation for the following bundles:'),
   );
-  console.log(
-    bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
-      .join('\n'),
-  );
+
+  if (verbose) {
+    console.log(
+      bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
+        .join('\n'),
+    );
+  } else {
+    console.log(bundlesWithReason.map(([bundle]) => `• ${chalk.blueBright(bundle)}`)
+      .join('\n'));
+  }
 
   const bundleNames = bundlesWithReason.map(([bundle]) => bundle);
 
@@ -244,20 +250,20 @@ const buildDocs: BuildTask = async (db) => {
   }
 };
 
-export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[]) => {
+export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[], verbose: boolean) => {
   await buildDocs(db);
-  await buildJsons(db, bundlesWithReason);
+  await buildJsons(db, bundlesWithReason, verbose);
 };
 
 /**
  * Build both JSONS and HTML documentation
  */
-export default async ({ jsons, force }: Opts) => {
+export default async ({ verbose, jsons, force }: Opts) => {
   const db = await getDb();
   const jsonsToBuild = await getJsonsToBuild(db, {
     jsons,
     force,
   });
 
-  await buildDocsAndJsons(db, jsonsToBuild);
+  await buildDocsAndJsons(db, jsonsToBuild, verbose);
 };

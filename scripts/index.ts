@@ -25,6 +25,7 @@ async function main() {
     .option('-m, --module <modules...>', 'Specify bundles to be rebuilt')
     .option('-t, --tab <tabs...>', 'Specify tabs to be rebuilt')
     .option('-j, --jsons <jsons...>', 'Specify jsons to be rebuilt')
+    .option('-v, --verbose', 'Enable verbose information')
     .action(async (script: string, options: Opts) => {
       if (script !== undefined && !buildTasks[script]) {
         console.error(chalk.redBright(`Unknown task: ${script}`));

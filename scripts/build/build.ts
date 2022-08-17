@@ -46,7 +46,7 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: Opts): Promise<Co
         throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
       }
 
-      return opts.modules.map((bundle) => [bundle, 'Specified by --module']) as [string, string][];
+      return opts.modules.map((bundle) => [bundle, 'Specified by --module']) as EntryWithReason[];
     }
 
     try {
@@ -65,7 +65,7 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: Opts): Promise<Co
       const result = shouldBuildBundle(bundleName);
       return result === false ? result : [bundleName, result];
     })
-      .filter((x) => x !== false) as unknown as [string, string][];
+      .filter((x) => x !== false) as EntryWithReason[];
   };
 
   const bundlesWithReason = await getBundles();
@@ -150,13 +150,18 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: Opts): Promise<Co
 export const buildBundlesAndTabs = async (db: Low<DBType>, {
   bundlesWithReason,
   tabsWithReason,
-}: Config) => {
+}: Config, verbose: boolean) => {
   if (bundlesWithReason.length === 0) {
     console.log(chalk.greenBright('All bundles up to date'));
   } else {
     console.log('Building the following bundles:');
-    console.log(bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
-      .join('\n'));
+    if (verbose) {
+      console.log(bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
+        .join('\n'));
+    } else {
+      console.log(bundlesWithReason.map(([bundle]) => `• ${chalk.blueBright(bundle)}`)
+        .join('\n'));
+    }
   }
 
   const bundlesToBuild = bundlesWithReason.map(([bundle]) => bundle);
@@ -166,8 +171,13 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
     console.log(chalk.greenBright('All tabs up to date'));
   } else {
     console.log('Building the following tabs:');
-    console.log(tabsWithReason.map(([tabName, reason]) => `• ${chalk.blueBright(tabName)}: ${reason}`)
-      .join('\n'));
+    if (verbose) {
+      console.log(tabsWithReason.map(([tabName, reason]) => `• ${chalk.blueBright(tabName)}: ${reason}`)
+        .join('\n'));
+    } else {
+      console.log(tabsWithReason.map(([tabName]) => `• ${chalk.blueBright(tabName)}`)
+        .join('\n'));
+    }
   }
 
   const tabsToBuild = tabsWithReason.map(([tabName]) => tabName);
@@ -222,6 +232,6 @@ export default async (opts: Opts) => {
   const db = await getDb();
   const parsedOpts = await getBundlesAndTabs(db, opts);
 
-  await buildBundlesAndTabs(db, parsedOpts);
+  await buildBundlesAndTabs(db, parsedOpts, opts.verbose);
   await copy();
 };

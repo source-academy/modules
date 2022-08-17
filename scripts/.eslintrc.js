@@ -23,7 +23,7 @@ module.exports = {
   "overrides": [{
     "files": ["./**/__tests__/**.test.ts"],
     "parserOptions": {
-      "project": "tsconfig.test.json",
+      "project": "./tsconfig.test.json",
       "tsconfigRootDir": __dirname,
     },
     "extends": ["plugin:jest/recommended"],

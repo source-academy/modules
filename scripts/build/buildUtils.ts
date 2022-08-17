@@ -118,6 +118,7 @@ export type EntryWithReason = [string, string];
 
 export type Opts = Partial<{
   force: boolean;
+  verbose: boolean;
   modules: string[];
   tabs: string[];
   jsons: string[];

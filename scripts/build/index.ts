@@ -15,7 +15,6 @@ const getThingsToBuild = async (db: Low<DBType>, { force, modules, tabs, jsons }
   })]);
 
   return {
-    force,
     jsonOpts,
     bundleOpts,
   };
@@ -27,6 +26,6 @@ const getThingsToBuild = async (db: Low<DBType>, { force, modules, tabs, jsons }
 export default async (opts: Opts) => {
   const db = await getDb();
   const { jsonOpts, bundleOpts } = await getThingsToBuild(db, opts);
-  await Promise.all([buildBundlesAndTabs(db, bundleOpts), buildDocsAndJsons(db, jsonOpts)]);
+  await Promise.all([buildBundlesAndTabs(db, bundleOpts, opts.verbose), buildDocsAndJsons(db, jsonOpts, opts.verbose)]);
   await copy();
 };
