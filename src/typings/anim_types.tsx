@@ -1,6 +1,3 @@
-/* eslint-disable max-classes-per-file */
-/* eslint-disable react/destructuring-assignment */
-
 /**
  * Represents an animation drawn using WebGL
  * @field duration Duration of the animation in secondss

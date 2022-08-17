@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import {
   scrabble_array,
   scrabble_list,

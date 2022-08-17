@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import type { CurveDrawn } from '../../bundles/curve/curves_webgl';
 import type { AnimatedCurve, CurveModuleState } from '../../bundles/curve/types';

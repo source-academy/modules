@@ -31,9 +31,9 @@ import {
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import { DEFAULT_COLOR, SILVER } from './constants.js';
+import { SILVER } from './constants.js';
 import { Core } from './core.js';
-import { Color, CoordinatesXYZ, Solid } from './types';
+import { Color, Coordinates, Solid } from './jscad/types.js';
 import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
 
 /* [Exports] */
@@ -46,7 +46,7 @@ import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
  * @category Primitive
  */
 export const cube: Shape = shapeSetOrigin(
-  new Shape(primitives.cube({ size: 1 })),
+  new Shape(primitives.cube({ size: 1 }))
 );
 
 /**
@@ -55,7 +55,7 @@ export const cube: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const sphere: Shape = shapeSetOrigin(
-  new Shape(primitives.sphere({ radius: 0.5 })),
+  new Shape(primitives.sphere({ radius: 0.5 }))
 );
 
 /**
@@ -64,10 +64,7 @@ export const sphere: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const cylinder: Shape = shapeSetOrigin(
-  new Shape(primitives.cylinder({
-    radius: 0.5,
-    height: 1,
-  })),
+  new Shape(primitives.cylinder({ radius: 0.5, height: 1 }))
 );
 
 /**
@@ -76,7 +73,7 @@ export const cylinder: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const prism: Shape = shapeSetOrigin(
-  new Shape(extrudeLinear({ height: 1 }, primitives.triangle())),
+  new Shape(extrudeLinear({ height: 1 }, primitives.triangle()))
 );
 
 /**
@@ -85,11 +82,8 @@ export const prism: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const star: Shape = shapeSetOrigin(
-  new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))),
+  new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 })))
 );
-
-//TODO
-let small = 10 ** -30;
 
 /**
  * Primitive Shape of a square pyramid.
@@ -101,10 +95,10 @@ export const pyramid: Shape = shapeSetOrigin(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
-      endRadius: [small, small],
+      endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
       segments: 4,
-    }),
-  ),
+    })
+  )
 );
 
 /**
@@ -117,9 +111,9 @@ export const cone: Shape = shapeSetOrigin(
     primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
-      endRadius: [small, small],
-    }),
-  ),
+      endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
+    })
+  )
 );
 
 /**
@@ -128,10 +122,7 @@ export const cone: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const torus: Shape = shapeSetOrigin(
-  new Shape(primitives.torus({
-    innerRadius: 0.125,
-    outerRadius: 0.375,
-  })),
+  new Shape(primitives.torus({ innerRadius: 0.125, outerRadius: 0.375 }))
 );
 
 /**
@@ -140,7 +131,7 @@ export const torus: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const rounded_cube: Shape = shapeSetOrigin(
-  new Shape(primitives.roundedCuboid({ size: [1, 1, 1] })),
+  new Shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
 );
 
 /**
@@ -149,10 +140,7 @@ export const rounded_cube: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const rounded_cylinder: Shape = shapeSetOrigin(
-  new Shape(primitives.roundedCylinder({
-    height: 1,
-    radius: 0.5,
-  })),
+  new Shape(primitives.roundedCylinder({ height: 1, radius: 0.5 }))
 );
 
 /**
@@ -161,7 +149,7 @@ export const rounded_cylinder: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const geodesic_sphere: Shape = shapeSetOrigin(
-  new Shape(primitives.geodesicSphere({ radius: 0.5 })),
+  new Shape(primitives.geodesicSphere({ radius: 0.5 }))
 );
 
 // [Variables - Colours]
@@ -393,7 +381,7 @@ export function scale_z(shape: Shape, z: number): Shape {
  */
 export function shape_center(shape: Shape): (axis: String) => number {
   let bounds: BoundingBox = measureBoundingBox(shape.solid);
-  let centerCoords: CoordinatesXYZ = [
+  let centerCoords: Coordinates = [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
     bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
     bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
@@ -401,7 +389,7 @@ export function shape_center(shape: Shape): (axis: String) => number {
   return (axis: String): number => {
     let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
     if (i === -1) {
-      throw Error('shape_center\'s returned function expects a proper axis.');
+      throw Error(`shape_center's returned function expects a proper axis.`);
     } else {
       return centerCoords[i];
     }
@@ -421,7 +409,7 @@ export function shape_set_center(
   shape: Shape,
   x: number,
   y: number,
-  z: number,
+  z: number
 ): Shape {
   let newSolid: Solid = center({ relativeTo: [x, y, z] }, shape.solid);
   return new Shape(newSolid);
@@ -507,7 +495,7 @@ export function translate(
   shape: Shape,
   x: number,
   y: number,
-  z: number,
+  z: number
 ): Shape {
   let newSolid: Solid = _translate([x, y, z], shape.solid);
   return new Shape(newSolid);
@@ -563,14 +551,14 @@ export function beside_x(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['min', 'center', 'center'],
         relativeTo: [newX, newY, newZ],
       },
-      b.solid,
-    ),
+      b.solid
+    )
   );
   return new Shape(newSolid);
 }
@@ -589,14 +577,14 @@ export function beside_y(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[1][1];
   let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['center', 'min', 'center'],
         relativeTo: [newX, newY, newZ],
       },
-      b.solid,
-    ),
+      b.solid
+    )
   );
   return new Shape(newSolid);
 }
@@ -615,14 +603,14 @@ export function beside_z(a: Shape, b: Shape): Shape {
   let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
   let newZ: number = aBounds[1][2];
   let newSolid: Solid = _union(
-    a.solid, // @ts-ignore
+    a.solid,
     align(
       {
         modes: ['center', 'center', 'min'],
         relativeTo: [newX, newY, newZ],
       },
-      b.solid,
-    ),
+      b.solid
+    )
   );
   return new Shape(newSolid);
 }
@@ -644,7 +632,7 @@ export function beside_z(a: Shape, b: Shape): Shape {
  */
 
 export function bounding_box(
-  shape: Shape,
+  shape: Shape
 ): (axis: String, min: String) => number {
   let bounds: BoundingBox = measureBoundingBox(shape.solid);
   return (axis: String, min: String): number => {
@@ -652,7 +640,7 @@ export function bounding_box(
     let j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
     if (i === -1 || j === -1) {
       throw Error(
-        'bounding_box returned function expects a proper axis and min String.',
+        `bounding_box returned function expects a proper axis and min String.`
       );
     } else {
       return bounds[j][i];
@@ -750,8 +738,8 @@ export function clone(shape: Shape): Shape {
  *
  * @param {Shape} shape - The Shape to be stored.
  */
-export function store(shape: Shape): void {
-  store_as_color(shape, DEFAULT_COLOR);
+export function store(shape: Shape) {
+  Core.getRenderGroupManager().storeShape(shape.clone());
 }
 
 /**
@@ -766,11 +754,10 @@ export function store(shape: Shape): void {
  * @param {Shape} shape - The Shape to be coloured and stored.
  * @param {string} hex - The colour code to use.
  */
-export function store_as_color(shape: Shape, hex: string): void {
+export function store_as_color(shape: Shape, hex: string) {
   let color: Color = hexToColor(hex);
   let coloredSolid: Solid = colorize(color, shape.solid);
-  Core.getRenderGroupManager()
-    .storeShape(new Shape(coloredSolid));
+  Core.getRenderGroupManager().storeShape(new Shape(coloredSolid));
 }
 
 /**
@@ -788,18 +775,17 @@ export function store_as_rgb(
   shape: Shape,
   redComponent: number,
   greenComponent: number,
-  blueComponent: number,
-): void {
+  blueComponent: number
+) {
   redComponent = clamp(redComponent, 0, 1);
   greenComponent = clamp(greenComponent, 0, 1);
   blueComponent = clamp(blueComponent, 0, 1);
 
   let coloredSolid: Solid = colorize(
     [redComponent, greenComponent, blueComponent],
-    shape.solid,
+    shape.solid
   );
-  Core.getRenderGroupManager()
-    .storeShape(new Shape(coloredSolid));
+  Core.getRenderGroupManager().storeShape(new Shape(coloredSolid));
 }
 
 /**
@@ -808,8 +794,7 @@ export function store_as_rgb(
  */
 export function render_grid_axis(): RenderGroup {
   // Render group is returned for REPL text only; do not document
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(true, true);
+  return Core.getRenderGroupManager().nextRenderGroup(true, true);
 }
 
 /**
@@ -817,8 +802,7 @@ export function render_grid_axis(): RenderGroup {
  * then not be included in any subsequent renders.
  */
 export function render_grid(): RenderGroup {
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(true);
+  return Core.getRenderGroupManager().nextRenderGroup(true);
 }
 
 /**
@@ -826,8 +810,7 @@ export function render_grid(): RenderGroup {
  * then not be included in any subsequent renders.
  */
 export function render_axis(): RenderGroup {
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(undefined, true);
+  return Core.getRenderGroupManager().nextRenderGroup(undefined, true);
 }
 
 /**
@@ -835,6 +818,5 @@ export function render_axis(): RenderGroup {
  * included in any subsequent renders.
  */
 export function render(): RenderGroup {
-  return Core.getRenderGroupManager()
-    .nextRenderGroup();
+  return Core.getRenderGroupManager().nextRenderGroup();
 }

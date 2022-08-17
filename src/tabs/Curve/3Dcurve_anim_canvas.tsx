@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import { Button, Icon, Slider, Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
@@ -28,8 +27,8 @@ type State = {
 };
 
 export default class Curve3DAnimationCanvas extends React.Component<
-Props,
-State
+  Props,
+  State
 > {
   private canvas: HTMLCanvasElement | null;
 
@@ -75,7 +74,7 @@ State
   private drawFrame = () => {
     if (this.canvas) {
       const frame = this.props.animation.getFrame(
-        this.state.animTimestamp / 1000,
+        this.state.animTimestamp / 1000
       );
       frame.draw(this.canvas);
     }
@@ -113,7 +112,7 @@ State
           {
             animTimestamp: 0,
           },
-          this.reqFrame,
+          this.reqFrame
         );
       } else {
         // Otherwise, stop the animation
@@ -123,7 +122,7 @@ State
           },
           () => {
             this.callbackTimestamp = null;
-          },
+          }
         );
       }
     } else {
@@ -133,7 +132,7 @@ State
         (prev) => ({
           animTimestamp: prev.animTimestamp + currentFrame,
         }),
-        this.reqFrame,
+        this.reqFrame
       );
     }
   };
@@ -149,14 +148,14 @@ State
         },
         () => {
           this.callbackTimestamp = null;
-        },
+        }
       );
     } else {
       this.setState(
         {
           isPlaying: true,
         },
-        this.reqFrame,
+        this.reqFrame
       );
     }
   };
@@ -172,7 +171,7 @@ State
       () => {
         if (this.state.isPlaying) this.reqFrame();
         else this.drawFrame();
-      },
+      }
     );
   };
 
@@ -188,7 +187,7 @@ State
         isPlaying: false,
         animTimestamp: newValue,
       }),
-      this.drawFrame,
+      this.drawFrame
     );
   };
 
@@ -206,7 +205,7 @@ State
         } else {
           this.reqFrame();
         }
-      },
+      }
     );
   };
 
@@ -219,7 +218,7 @@ State
         this.props.animation.angle = newAngle;
         if (this.state.isPlaying) this.reqFrame();
         else this.drawFrame();
-      },
+      }
     );
   };
 
@@ -257,7 +256,7 @@ State
             </Button>
           </Tooltip2>
         </div>
-        <Tooltip2 content="Reset">
+        <Tooltip2 content='Reset'>
           <Button onClick={this.onResetButtonClick}>
             <Icon icon={IconNames.RESET} />
           </Button>
@@ -283,7 +282,7 @@ State
           min={0}
           max={this.animationDuration}
         />
-        <Tooltip2 content="Display Angle">
+        <Tooltip2 content='Display Angle'>
           <div
             style={{
               marginTop: '5px',
@@ -339,7 +338,7 @@ State
               marginTop: '10px',
               whiteSpace: 'nowrap',
             }}
-            label="Auto Play"
+            label='Auto Play'
             onChange={this.autoPlaySwitchChanged}
             checked={this.state.autoPlay}
           />

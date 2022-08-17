@@ -7,8 +7,6 @@
 
 import { List } from './types';
 
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars */
-
 /**
  * `scrabble_array` is an array of strings, each representing
  * an allowed word in Scrabble.

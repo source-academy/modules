@@ -82,11 +82,11 @@
     "yarnhook": "^0.5.1"
   },
   "dependencies": {
-    "@blueprintjs/core": "^3.47.0",
-    "@blueprintjs/icons": "^3.27.0",
-    "@blueprintjs/popover2": "^0.4.0",
-    "@jscad/modeling": "^2.9.2",
-    "@jscad/regl-renderer": "^2.5.8",
+    "@blueprintjs/core": "^3.54.0",
+    "@blueprintjs/icons": "^3.33.0",
+    "@blueprintjs/popover2": "^0.14.0",
+    "@jscad/modeling": "^2.9.5",
+    "@jscad/regl-renderer": "^2.6.1",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.4",
     "gl-matrix": "^3.3.0",

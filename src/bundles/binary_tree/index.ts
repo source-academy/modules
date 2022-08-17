@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import { make_empty_tree, make_tree } from './functions';
 
 /**

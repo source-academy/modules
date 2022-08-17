@@ -1,8 +1,7 @@
 import type { Context } from 'js-slang';
 
 /**
- * DebuggerContext type used by frontend
- * to assist typing information
+ * DebuggerContext type used by frontend to assist typing information
  */
 export type DebuggerContext = {
   result: any;
@@ -17,9 +16,10 @@ export type ModuleParams = Context['moduleParams'];
 export type ModuleContexts = Context['moduleContexts'];
 
 /**
- * Interface to represent objects that require a
- * string representation in the REPL
+ * Interface to represent objects that require a string representation in the
+ * REPL
  */
 export interface ReplResult {
   toReplString: () => string;
 }
+

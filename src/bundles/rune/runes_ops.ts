@@ -206,13 +206,13 @@ export const getHeart: () => Rune = () => {
       (Math.cos(angle1) * r + rightCenterX) * scaleX,
       Math.sin(angle1) * r + rightCenterY,
       0,
-      1,
+      1
     );
     vertexList.push(
       (Math.cos(angle2) * r + rightCenterX) * scaleX,
       Math.sin(angle2) * r + rightCenterY,
       0,
-      1,
+      1
     );
     vertexList.push(0, -1, 0, 1);
   }
@@ -226,13 +226,13 @@ export const getHeart: () => Rune = () => {
       (Math.cos(angle1) * r + leftCenterX) * scaleX,
       Math.sin(angle1) * r + leftCenterY,
       0,
-      1,
+      1
     );
     vertexList.push(
       (Math.cos(angle2) * r + leftCenterX) * scaleX,
       Math.sin(angle2) * r + leftCenterY,
       0,
-      1,
+      1
     );
     vertexList.push(0, -1, 0, 1);
   }
@@ -338,8 +338,9 @@ export const colorPalette = [
 ];
 
 export function hexToColor(hex): number[] {
-  // eslint-disable-next-line prefer-named-capture-group
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/iu.exec(hex);
+  const result = /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(
+    hex
+  );
   if (result === null || result.length < 4) {
     return [0, 0, 0];
   }

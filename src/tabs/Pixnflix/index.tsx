@@ -54,7 +54,7 @@ type Video = {
   ) => BundlePacket;
   deinit: () => void;
   startVideo: () => void;
-  snapPicture: () => void;
+  stopVideo: () => void;
   updateFPS: (fps: number) => void;
   updateDimensions: (width: number, height: number) => void;
   updateVolume: (v: number) => void;
@@ -140,22 +140,22 @@ class PixNFlix extends React.Component<Props, State> {
     }
   };
 
-  public handleSnapPicture = () => {
+  public handleStopVideo = () => {
     if (this.isPixNFlix()) {
-      this.pixNFlix.snapPicture();
+      this.pixNFlix.stopVideo();
     }
   };
 
   public onClickStill = () => {
     const { mode } = this.state;
     if (mode === VideoMode.Still) {
-      this.handleSnapPicture();
+      this.handleStopVideo();
     } else if (mode === VideoMode.Video) {
       this.setState(
         () => ({
           mode: VideoMode.Still,
         }),
-        this.handleSnapPicture,
+        this.handleStopVideo
       );
     }
   };
@@ -292,14 +292,14 @@ class PixNFlix extends React.Component<Props, State> {
                 icon={IconNames.VIDEO}
                 active={videoIsActive}
                 onClick={this.onClickVideo}
-                text="Live Video"
+                text='Play Video'
               />
               <Button
                 className="sa-still-image-button"
                 icon={IconNames.CAMERA}
                 active={!videoIsActive}
                 onClick={this.onClickStill}
-                text="Still Image"
+                text='Pause Video'
               />
             </ButtonGroup>
           </div>
@@ -357,8 +357,7 @@ class PixNFlix extends React.Component<Props, State> {
             </div>
           </div>
         </div>
-        <div className="sa-video-element">
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
+        <div className='sa-video-element'>
           <img
             ref={(r) => {
               this.$image = r;
@@ -367,7 +366,6 @@ class PixNFlix extends React.Component<Props, State> {
             height={DEFAULT_HEIGHT}
             style={{ display: 'none' }}
           />
-          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
           <video
             ref={(r) => {
               this.$video = r;

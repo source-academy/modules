@@ -13,25 +13,18 @@ const defaultStyle = {
  */
 const WebGLCanvas = React.forwardRef<HTMLCanvasElement, any>(
   (props: any, ref) => {
-    const style
-      = props.style !== undefined
+    const style =
+      props.style !== undefined
         ? {
-          ...defaultStyle,
-          ...props.style,
-        }
+            ...defaultStyle,
+            ...props.style,
+          }
         : defaultStyle;
 
     return (
-      <canvas
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        {...props}
-        style={style}
-        ref={ref}
-        height={512}
-        width={512}
-      />
+      <canvas {...props} style={style} ref={ref} height={512} width={512} />
     );
-  },
+  }
 );
 
 export default WebGLCanvas;

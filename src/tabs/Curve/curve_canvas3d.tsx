@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import { Slider, Button, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
@@ -69,7 +68,7 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
         if (this.$canvas) {
           this.props.curve.redraw((newValue / 180) * Math.PI);
         }
-      },
+      }
     );
   };
 
@@ -88,7 +87,7 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
         if (this.state.isRotating) {
           this.autoRotate();
         }
-      },
+      }
     );
   };
 
@@ -106,7 +105,7 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
         () => {
           this.props.curve.redraw((this.state.rotationAngle / 180) * Math.PI);
           window.requestAnimationFrame(this.autoRotate);
-        },
+        }
       );
     }
   };
@@ -119,7 +118,7 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
         if (this.$canvas) {
           this.props.curve.redraw((angle / 180) * Math.PI);
         }
-      },
+      }
     );
   };
 
@@ -169,7 +168,7 @@ export default class CurveCanvas3D extends React.Component<Props, State> {
             style={{
               marginLeft: '20px',
             }}
-            type="number"
+            type='number'
             min={0}
             max={360}
             step={1}

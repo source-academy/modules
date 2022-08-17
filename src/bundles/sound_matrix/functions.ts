@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars, no-plusplus */
-/* prettier-ignore */
 /*
   Support for CS1101S Mission 15
   Sound mission - Tone Matrix
@@ -11,14 +9,9 @@
   v2 (2016/2017) Xiao Pu - September 2016 - fit source academy IDE
 */
 
-import {
-  List,
-} from './types';
-
-import {
-  list_to_vector,
-  vector_to_list,
-} from './list';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { List } from './types';
+import { list_to_vector, vector_to_list } from './list';
 
 export const ToneMatrix = {
   initialise_matrix,
@@ -49,17 +42,20 @@ const grid_duration: number = 0.5;
 // but the duration for playing one entire sound is 1 (which means there will be reverberations)
 const sound_duration: number = 1;
 
-let matrix : boolean[][];
+let matrix: boolean[][];
 let timeout_objects: number[] = []; // set_timeout_renamed return type
 
 // given the x, y coordinates of a "click" event
 // return the row and column numbers of the clicked square in an array
-function x_y_to_row_column(x: number, y:number): number[] {
-  const row = Math.floor((y - margin_length) / (square_side_length + distance_between_squares));
-  const column = Math.floor((x - margin_length) / (square_side_length + distance_between_squares));
+function x_y_to_row_column(x: number, y: number): number[] {
+  const row = Math.floor(
+    (y - margin_length) / (square_side_length + distance_between_squares)
+  );
+  const column = Math.floor(
+    (x - margin_length) / (square_side_length + distance_between_squares)
+  );
   return [row, column];
 }
-
 
 // given the row number of a square, return the leftmost coordinate
 function row_to_y(row: number): number {
@@ -68,7 +64,9 @@ function row_to_y(row: number): number {
 
 // given the column number of a square, return the topmost coordinate
 function column_to_x(column: number): number {
-  return margin_length + column * (square_side_length + distance_between_squares);
+  return (
+    margin_length + column * (square_side_length + distance_between_squares)
+  );
 }
 
 // return a list representing a particular row
@@ -101,10 +99,12 @@ function set_color(row: number, column: number, color: string): void {
   const ctx = $tone_matrix.getContext('2d') as CanvasRenderingContext2D;
   ctx.fillStyle = color;
 
-  ctx.fillRect(column_to_x(column),
+  ctx.fillRect(
+    column_to_x(column),
     row_to_y(row),
     square_side_length,
-    square_side_length);
+    square_side_length
+  );
 }
 
 // highlight a given square
@@ -113,7 +113,11 @@ function highlight_color(row: number, column: number, color: string): void {
 }
 
 // given the square that we are supposed to highlight, color the neighboring squares
-function set_adjacent_color_1(row: number, column: number, color: string): void {
+function set_adjacent_color_1(
+  row: number,
+  column: number,
+  color: string
+): void {
   if (!is_on(row, column - 1)) {
     set_color(row, column - 1, color);
   }
@@ -132,7 +136,11 @@ function set_adjacent_color_1(row: number, column: number, color: string): void 
 }
 
 // given the square that we are supposed to highlight, color the squares 2 units from it
-function set_adjacent_color_2(row: number, column: number, color: string): void {
+function set_adjacent_color_2(
+  row: number,
+  column: number,
+  color: string
+): void {
   if (!is_on(row, column - 2)) {
     set_color(row, column - 2, color);
   }
@@ -209,31 +217,35 @@ ToneMatrix.initialise_matrix = initialise_matrix;
 
 // bind the click events to the matrix
 function bind_events_to_rect(c) {
-  c.addEventListener('click', (event) => {
-    // calculate the x, y coordinates of the click event
-    const rect = c.getBoundingClientRect();
-    const offset_top = rect.top + document.documentElement.scrollTop;
-    const offset_left = rect.left + document.documentElement.scrollLeft;
-    const x = event.pageX - offset_left;
-    const y = event.pageY - offset_top;
+  c.addEventListener(
+    'click',
+    (event) => {
+      // calculate the x, y coordinates of the click event
+      const rect = c.getBoundingClientRect();
+      const offset_top = rect.top + document.documentElement.scrollTop;
+      const offset_left = rect.left + document.documentElement.scrollLeft;
+      const x = event.pageX - offset_left;
+      const y = event.pageY - offset_top;
 
-    // obtain the row and column numbers of the square clicked
-    const row_column = x_y_to_row_column(x, y);
-    const row = row_column[0];
-    const column = row_column[1];
+      // obtain the row and column numbers of the square clicked
+      const row_column = x_y_to_row_column(x, y);
+      const row = row_column[0];
+      const column = row_column[1];
 
-    if (row < 0 || row > 15 || column < 0 || column > 15) {
-      return;
-    }
+      if (row < 0 || row > 15 || column < 0 || column > 15) {
+        return;
+      }
 
-    if (matrix[row][column] === undefined || !matrix[row][column]) {
-      matrix[row][column] = true;
-      set_color(row, column, color_on);
-    } else {
-      matrix[row][column] = false;
-      set_color(row, column, color_off);
-    }
-  }, false);
+      if (matrix[row][column] === undefined || !matrix[row][column]) {
+        matrix[row][column] = true;
+        set_color(row, column, color_on);
+      } else {
+        matrix[row][column] = false;
+        set_color(row, column, color_off);
+      }
+    },
+    false
+  );
 }
 
 function random_animate(): void {
@@ -329,7 +341,9 @@ ToneMatrix.bindMatrixButtons = bindMatrixButtons;
 // return the current state of the matrix, represented by a list of lists of bits
 export function get_matrix(): List {
   if (!matrix) {
-    throw new Error('Please activate the tone matrix first by clicking on the tab!');
+    throw new Error(
+      'Please activate the tone matrix first by clicking on the tab!'
+    );
   }
   const matrix_list = matrix.slice(0);
   const result: List[] = [];
@@ -364,7 +378,9 @@ export function set_timeout(f, t) {
     const timeoutObj = set_time_out_renamed(f, t);
     timeout_objects.push(timeoutObj);
   } else {
-    throw new Error('set_timeout(f, t) expects a function and a number respectively.');
+    throw new Error(
+      'set_timeout(f, t) expects a function and a number respectively.'
+    );
   }
 }
 

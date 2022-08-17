@@ -19,6 +19,8 @@ import {
   use_image_url,
   use_video_url,
   get_video_time,
+  keep_aspect_ratio,
+  set_loop_count,
 } from './functions';
 
 /**
@@ -48,4 +50,6 @@ export default () => ({
   use_image_url,
   use_video_url,
   get_video_time,
+  keep_aspect_ratio,
+  set_loop_count,
 });
