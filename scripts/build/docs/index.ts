@@ -23,22 +23,24 @@ const parsers: {
   [name: string]: (element: any, bundle: string) => string
 } = {
   Variable(element, bundle) {
-    let desc: string;
-    if (element.comment && element.comment.shortText) {
-      desc = drawdown(element.comment.shortText);
-    } else {
-      desc = element.name;
-      console.warn(
-        `${chalk.yellow('Warning:')} ${bundle}: No description found for ${
-          element.name
-        }`,
-      );
-    }
+    const getDesc = () => {
+      try {
+        const { comment: { summary: [{ text }] } } = element;
+        return drawdown(text);
+      } catch (_error) {
+        console.warn(
+          `${chalk.yellow('Warning:')} ${bundle}: Could not get description found for ${
+            element.name
+          }`,
+        );
+        return element.name;
+      }
+    };
 
     const typeStr
       = element.type.name && element.type.name ? `:${element.type.name}` : '';
 
-    return `<div><h4>${element.name}${typeStr}</h4><div class="description">${desc}</div></div>`;
+    return `<div><h4>${element.name}${typeStr}</h4><div class="description">${getDesc()}</div></div>`;
   },
   Function(element, bundle) {
     if (!element.signatures || element.signatures[0] === undefined) {
@@ -65,19 +67,21 @@ const parsers: {
     // Form the result representation for the function
     const resultStr = !signature.type ? 'void' : signature.type.name;
 
-    let desc: string;
-    if (signature.comment && signature.comment.shortText) {
-      desc = drawdown(signature.comment.shortText);
-    } else {
-      desc = element.name;
-      console.warn(
-        `${chalk.yellow('Warning:')} ${bundle}: No description found for ${
-          element.name
-        }`,
-      );
-    }
+    const getDesc = () => {
+      try {
+        const { comment: { summary: [{ text }] } } = signature;
+        return drawdown(text);
+      } catch (_error) {
+        console.warn(
+          `${chalk.yellow('Warning:')} ${bundle}: Could not get description found for ${
+            element.name
+          }`,
+        );
+        return element.name;
+      }
+    };
 
-    return `<div><h4>${element.name}${paramStr} → {${resultStr}}</h4><div class="description">${desc}</div></div>`;
+    return `<div><h4>${element.name}${paramStr} → {${resultStr}}</h4><div class="description">${getDesc()}</div></div>`;
   },
 };
 
