@@ -1,6 +1,15 @@
 import fs from 'fs';
 import fsPromises from 'fs/promises';
-import { checkForUnknowns, DBType, defaultConfig, EntryWithReason, getDb, isFolderModified, Opts, removeDuplicates } from './buildUtils';
+import {
+  checkForUnknowns,
+  DBType,
+  defaultConfig,
+  EntryWithReason,
+  getDb,
+  isFolderModified,
+  Opts,
+  removeDuplicates,
+} from './buildUtils';
 import { modules } from '../utilities';
 import { BUILD_PATH, SOURCE_PATH } from '../constants';
 import chalk from 'chalk';
@@ -14,9 +23,14 @@ type Config = {
   tabsWithReason: EntryWithReason[];
 };
 
+/**
+ * Converts the iife output from rollup to the format that js-slang
+ * expects
+ */
 export const convertRawTab = (rawTab: string) => {
-  const lastBracket = rawTab.lastIndexOf('(');
-  return `${rawTab.substring(0, lastBracket)})`;
+  const regexp = /(?<str>\(React(?:,\s?ReactDom)?\))/ugm;
+  const [{ index, groups: { str } }] = [...rawTab.matchAll(regexp)].slice(-1);
+  return rawTab.substring(0, index) + rawTab.substring(index + str.length);
 };
 
 /**

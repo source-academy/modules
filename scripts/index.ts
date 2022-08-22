@@ -22,8 +22,8 @@ async function main() {
   parser.command('build')
     .argument('[script]', 'Build task to execute')
     .option('-f, --force', 'Force all files to be rebuilt')
-    .option('-m, --module <modules...>', 'Specify bundles to be rebuilt')
-    .option('-t, --tab <tabs...>', 'Specify tabs to be rebuilt')
+    .option('-m, --modules <modules...>', 'Specify bundles to be rebuilt')
+    .option('-t, --tabs <tabs...>', 'Specify tabs to be rebuilt')
     .option('-j, --jsons <jsons...>', 'Specify jsons to be rebuilt')
     .option('-v, --verbose', 'Enable verbose information')
     .action(async (script: string, options: Opts) => {
