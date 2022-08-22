@@ -21,12 +21,7 @@ module.exports = {
     "prefer-const": 0
   },
   "overrides": [{
+    "extends": "../.eslintrc.test.json",
     "files": ["./**/__tests__/**.test.ts"],
-    "parserOptions": {
-      "project": "./tsconfig.test.json",
-      "tsconfigRootDir": __dirname,
-    },
-    "extends": ["plugin:jest/recommended"],
-    "plugins": ["jest"]
   }]
 }

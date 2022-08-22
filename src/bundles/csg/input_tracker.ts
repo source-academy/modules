@@ -57,7 +57,7 @@ export default class InputTracker {
   constructor(
     private canvas: HTMLCanvasElement,
     private cameraState: PerspectiveCameraState,
-    private geometryEntities: GeometryEntity[]
+    private geometryEntities: GeometryEntity[],
   ) {
     this.listenerTracker = new ListenerTracker(canvas);
   }
@@ -91,8 +91,8 @@ export default class InputTracker {
 
   private isPointerPan(isShiftKey: boolean): boolean {
     return (
-      this.heldPointer === MousePointer.MIDDLE ||
-      (this.heldPointer === MousePointer.LEFT && isShiftKey)
+      this.heldPointer === MousePointer.MIDDLE
+      || (this.heldPointer === MousePointer.LEFT && isShiftKey)
     );
   }
 
@@ -137,13 +137,13 @@ export default class InputTracker {
 
       let scaledChange: number = currentTick * ZOOM_TICK_SCALE;
       let potentialNewScale: number = this.controlsState.scale + scaledChange;
-      let potentialNewDistance: number =
-        vec3.distance(this.cameraState.position, this.cameraState.target) *
-        potentialNewScale;
+      let potentialNewDistance: number
+        = vec3.distance(this.cameraState.position, this.cameraState.target)
+        * potentialNewScale;
 
       if (
-        potentialNewDistance > this.controlsState.limits.minDistance &&
-        potentialNewDistance < this.controlsState.limits.maxDistance
+        potentialNewDistance > this.controlsState.limits.minDistance
+        && potentialNewDistance < this.controlsState.limits.maxDistance
       ) {
         this.frameDirty = true;
         this.controlsState.scale = potentialNewScale;
@@ -187,7 +187,7 @@ export default class InputTracker {
         this.changeZoomTicks(wheelEvent.deltaY);
       },
       // Force wait for our potential preventDefault()
-      { passive: false }
+      { passive: false },
     );
 
     this.listenerTracker.addListener(
@@ -204,7 +204,7 @@ export default class InputTracker {
         this.canvas.setPointerCapture(pointerEvent.pointerId);
       },
       // Force wait for our potential preventDefault()
-      { passive: false }
+      { passive: false },
     );
 
     this.listenerTracker.addListener(
@@ -214,7 +214,7 @@ export default class InputTracker {
         this.unsetLastCoordinates();
 
         this.canvas.releasePointerCapture(pointerEvent.pointerId);
-      }
+      },
     );
 
     this.listenerTracker.addListener(
@@ -255,7 +255,7 @@ export default class InputTracker {
 
         this.lastX = currentX;
         this.lastY = currentY;
-      }
+      },
     );
   }
 

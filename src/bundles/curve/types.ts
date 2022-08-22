@@ -27,7 +27,7 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
     fps: number,
     private readonly func: (timestamp: number) => Curve,
     private readonly drawer: RenderFunction,
-    public readonly is3D: boolean
+    public readonly is3D: boolean,
   ) {
     super(duration, fps);
     this.angle = 0;

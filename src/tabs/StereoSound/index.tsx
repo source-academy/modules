@@ -37,14 +37,14 @@ export default {
       <audio
         src={audio.dataUri}
         controls
-        id='sound-tab-player'
+        id="sound-tab-player"
         style={{ width: '100%' }}
       />
     ));
 
     return (
       <div>
-        <p id='sound-default-text'>
+        <p id="sound-default-text">
           The sound tab gives you control over your custom sounds. You can play,
           pause, adjust the volume and download your sounds.
           <br />

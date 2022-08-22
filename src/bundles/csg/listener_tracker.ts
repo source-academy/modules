@@ -7,13 +7,13 @@ export default class ListenerTracker {
   addListener(
     eventType: string,
     listener: Function,
-    options?: AddEventListenerOptions
+    options?: AddEventListenerOptions,
   ) {
     this.listeners.push([eventType, listener]);
     this.element.addEventListener(
       eventType,
       listener as EventListenerOrEventListenerObject,
-      options
+      options,
     );
   }
 
@@ -21,7 +21,7 @@ export default class ListenerTracker {
     this.listeners.forEach(([eventType, listener]) => {
       this.element.removeEventListener(
         eventType,
-        listener as EventListenerOrEventListenerObject
+        listener as EventListenerOrEventListenerObject,
       );
     });
   }

@@ -153,7 +153,7 @@ export function from_url(imageUrl: string): Rune {
 export function scale_independent(
   ratio_x: number,
   ratio_y: number,
-  rune: Rune
+  rune: Rune,
 ): Rune {
   throwIfNotRune('scale_independent', rune);
   const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
@@ -414,7 +414,7 @@ export function make_cross(rune: Rune): Rune {
   throwIfNotRune('make_cross', rune);
   return stack(
     beside(quarter_turn_right(rune), rotate(Math.PI, rune)),
-    beside(rune, rotate(Math.PI / 2, rune))
+    beside(rune, rotate(Math.PI / 2, rune)),
   );
 }
 
@@ -431,7 +431,7 @@ export function make_cross(rune: Rune): Rune {
 export function repeat_pattern(
   n: number,
   pattern: (a: Rune) => Rune,
-  initial: Rune
+  initial: Rune,
 ): Rune {
   if (n === 0) {
     return initial;
@@ -549,7 +549,7 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
 export function random_color(rune: Rune): Rune {
   throwIfNotRune('random_color', rune);
   const randomColor = hexToColor(
-    colorPalette[Math.floor(Math.random() * colorPalette.length)]
+    colorPalette[Math.floor(Math.random() * colorPalette.length)],
   );
 
   return Rune.of({
@@ -752,14 +752,14 @@ export class AnaglyphRune extends DrawnRune {
       leftCameraMatrix,
       vec3.fromValues(-halfEyeDistance, 0, 0),
       vec3.fromValues(0, 0, -0.4),
-      vec3.fromValues(0, 1, 0)
+      vec3.fromValues(0, 1, 0),
     );
     const rightCameraMatrix = mat4.create();
     mat4.lookAt(
       rightCameraMatrix,
       vec3.fromValues(halfEyeDistance, 0, 0),
       vec3.fromValues(0, 0, -0.4),
-      vec3.fromValues(0, 1, 0)
+      vec3.fromValues(0, 1, 0),
     );
 
     // left/right eye images are drawn into respective framebuffers
@@ -771,7 +771,7 @@ export class AnaglyphRune extends DrawnRune {
       leftCameraMatrix,
       new Float32Array([1, 0, 0, 1]),
       leftBuffer.framebuffer,
-      true
+      true,
     );
     drawRunesToFrameBuffer(
       gl,
@@ -779,7 +779,7 @@ export class AnaglyphRune extends DrawnRune {
       rightCameraMatrix,
       new Float32Array([0, 1, 1, 1]),
       rightBuffer.framebuffer,
-      true
+      true,
     );
 
     // prepare to draw to screen by setting framebuffer to null
@@ -788,14 +788,14 @@ export class AnaglyphRune extends DrawnRune {
     const shaderProgram = initShaderProgram(
       gl,
       AnaglyphRune.anaglyphVertexShader,
-      AnaglyphRune.anaglyphFragmentShader
+      AnaglyphRune.anaglyphFragmentShader,
     );
     gl.useProgram(shaderProgram);
     const reduPt = gl.getUniformLocation(shaderProgram, 'u_sampler_red');
     const cyanuPt = gl.getUniformLocation(shaderProgram, 'u_sampler_cyan');
     const vertexPositionPointer = gl.getAttribLocation(
       shaderProgram,
-      'a_position'
+      'a_position',
     );
 
     gl.activeTexture(gl.TEXTURE0);
@@ -887,7 +887,7 @@ export class HollusionRune extends DrawnRune {
         cameraMatrix,
         vec3.fromValues(xshift, 0, 0),
         vec3.fromValues(0, 0, -0.4),
-        vec3.fromValues(0, 1, 0)
+        vec3.fromValues(0, 1, 0),
       );
 
       drawRunesToFrameBuffer(
@@ -896,7 +896,7 @@ export class HollusionRune extends DrawnRune {
         cameraMatrix,
         new Float32Array([1, 1, 1, 1]),
         fb.framebuffer,
-        true
+        true,
       );
       return fb;
     };
@@ -909,13 +909,13 @@ export class HollusionRune extends DrawnRune {
     const copyShaderProgram = initShaderProgram(
       gl,
       HollusionRune.copyVertexShader,
-      HollusionRune.copyFragmentShader
+      HollusionRune.copyFragmentShader,
     );
     gl.useProgram(copyShaderProgram);
     const texturePt = gl.getUniformLocation(copyShaderProgram, 'uTexture');
     const vertexPositionPointer = gl.getAttribLocation(
       copyShaderProgram,
-      'a_position'
+      'a_position',
     );
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     const positionBuffer = gl.createBuffer();
@@ -930,8 +930,8 @@ export class HollusionRune extends DrawnRune {
 
       lastTime = timeInMs;
 
-      const framePos =
-        Math.floor(timeInMs / (period / frameCount)) % frameCount;
+      const framePos
+        = Math.floor(timeInMs / (period / frameCount)) % frameCount;
       const fbObject = frameBuffer[framePos];
       gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
       // eslint-disable-next-line no-bitwise
@@ -988,7 +988,7 @@ export function hollusion(rune: Rune): Rune {
 export function animate_rune(
   duration: number,
   fps: number,
-  func: RuneAnimation
+  func: RuneAnimation,
 ) {
   const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);
@@ -1011,7 +1011,7 @@ export function animate_rune(
 export function animate_anaglyph(
   duration: number,
   fps: number,
-  func: RuneAnimation
+  func: RuneAnimation,
 ) {
   const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);

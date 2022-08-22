@@ -15,48 +15,50 @@ const MultiItemDisplay = (props: { elements: JSX.Element[] }) => {
         height: '100%',
       }}
     >
-      {props.elements.length > 1 ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-            position: 'relative',
-            marginBottom: 10,
-          }}
-        >
-          <Button
+      {props.elements.length > 1
+        ? (
+          <div
             style={{
-              position: 'absolute',
-              left: 0,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+              position: 'relative',
+              marginBottom: 10,
             }}
-            large
-            outlined
-            icon={IconNames.ARROW_LEFT}
-            onClick={() => setCurrentStep(currentStep - 1)}
-            disabled={currentStep === 0}
           >
+            <Button
+              style={{
+                position: 'absolute',
+                left: 0,
+              }}
+              large
+              outlined
+              icon={IconNames.ARROW_LEFT}
+              onClick={() => setCurrentStep(currentStep - 1)}
+              disabled={currentStep === 0}
+            >
             Previous
-          </Button>
-          <h3 className='bp3-text-large'>
+            </Button>
+            <h3 className="bp3-text-large">
             Call {currentStep + 1}/{props.elements.length}
-          </h3>
-          <Button
-            style={{
-              position: 'absolute',
-              right: 0,
-            }}
-            large
-            outlined
-            icon={IconNames.ARROW_RIGHT}
-            onClick={() => setCurrentStep(currentStep + 1)}
-            disabled={currentStep === props.elements.length - 1}
-          >
+            </h3>
+            <Button
+              style={{
+                position: 'absolute',
+                right: 0,
+              }}
+              large
+              outlined
+              icon={IconNames.ARROW_RIGHT}
+              onClick={() => setCurrentStep(currentStep + 1)}
+              disabled={currentStep === props.elements.length - 1}
+            >
             Next
-          </Button>
-        </div>
-      ) : null}
+            </Button>
+          </div>
+        )
+        : null}
       <div
         style={{
           width: '100%',

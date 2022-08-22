@@ -121,5 +121,9 @@ module.exports = {
         "format": ["PascalCase"]
       }
     ]
-  }
+  },
+  "overrides": [{
+    "extends": ["../.eslintrc.test.json"],
+    "files": ["./**/__tests__/**/*.ts"],
+  }]
 }

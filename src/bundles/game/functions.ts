@@ -66,7 +66,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   /** @hidden */
   function get_obj(
-    obj: GameObject
+    obj: GameObject,
   ): RawGameObject | RawInputObject | RawContainer {
     return obj.object!;
   }
@@ -125,9 +125,12 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
    */
   function set_type(
     object: RawGameObject | RawInputObject | RawContainer,
-    type: string
+    type: string,
   ): GameObject {
-    return { type, object };
+    return {
+      type,
+      object,
+    };
   }
 
   /**
@@ -181,7 +184,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
       return xs![0];
     }
     throw new Error(
-      `head(xs) expects a pair as argument xs, but encountered ${xs}`
+      `head(xs) expects a pair as argument xs, but encountered ${xs}`,
     );
   }
 
@@ -195,7 +198,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
       return xs![1];
     }
     throw new Error(
-      `tail(xs) expects a pair as argument xs, but encountered ${xs}`
+      `tail(xs) expects a pair as argument xs, but encountered ${xs}`,
     );
   }
 
@@ -234,7 +237,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     const config = {};
     map((xs: [any, any]) => {
       if (!is_pair(xs)) {
-        throw_error(`xs is not pair!`);
+        throw_error('xs is not pair!');
       }
       config[head(xs)] = tail(xs);
     }, lst);
@@ -247,7 +250,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     color: string = '#fff',
     stroke: string = '#fff',
     stroke_thickness: number = 0,
-    align: string = 'left'
+    align: string = 'left',
   ): ObjectConfig {
     return {
       fontFamily: font_family,
@@ -263,7 +266,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     draggable: boolean = false,
     use_hand_cursor: boolean = false,
     pixel_perfect: boolean = false,
-    alpha_tolerance: number = 1
+    alpha_tolerance: number = 1,
   ): ObjectConfig {
     return {
       draggable,
@@ -280,7 +283,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     detune: number = 0,
     seek: number = 0,
     loop: boolean = false,
-    delay: number = 0
+    delay: number = 0,
   ): ObjectConfig {
     return {
       mute,
@@ -303,7 +306,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     yoyo: boolean = false,
     loop: number = 0,
     loop_delay: number = 0,
-    on_loop: Function = nullFn
+    on_loop: Function = nullFn,
   ): ObjectConfig {
     return {
       [target_prop]: target_value,
@@ -326,7 +329,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     repeat: number = -1,
     yoyo: boolean = false,
     show_on_start: boolean = true,
-    hide_on_complete: boolean = false
+    hide_on_complete: boolean = false,
   ): ObjectConfig {
     return {
       key: anims_key,
@@ -343,7 +346,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function create_anim_frame_config(
     key: string,
     duration: number = 0,
-    visible: boolean = true
+    visible: boolean = true,
   ): ObjectConfig {
     return {
       key,
@@ -353,7 +356,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   }
 
   function create_anim_spritesheet_frame_configs(
-    key: string
+    key: string,
   ): ObjectConfig[] | undefined {
     if (preloadSpritesheetMap.get(key)) {
       const configArr = scene.anims.generateFrameNumbers(key, {});
@@ -367,7 +370,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     frame_height: number,
     start_frame: number = 0,
     margin: number = 0,
-    spacing: number = 0
+    spacing: number = 0,
   ): ObjectConfig {
     return {
       frameWidth: frame_width,
@@ -409,7 +412,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function load_spritesheet(
     key: string,
     url: string,
-    spritesheet_config: ObjectConfig
+    spritesheet_config: ObjectConfig,
   ) {
     preloadSpritesheetMap.set(key, [url, spritesheet_config]);
   }
@@ -443,7 +446,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   function play_anim_on_image(
     image: GameObject,
-    anims_key: string
+    anims_key: string,
   ): GameObject | undefined {
     if (is_type(image, ObjectTypes.ImageType)) {
       (get_obj(image) as Phaser.GameObjects.Sprite).play(anims_key);
@@ -457,11 +460,11 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function create_image(
     x: number,
     y: number,
-    asset_key: string
+    asset_key: string,
   ): GameObject | undefined {
     if (
-      preloadImageMap.get(asset_key) ||
-      preloadSpritesheetMap.get(asset_key)
+      preloadImageMap.get(asset_key)
+      || preloadSpritesheetMap.get(asset_key)
     ) {
       const image = new Phaser.GameObjects.Sprite(scene, x, y, asset_key);
       return set_type(image, ObjectTypes.ImageType);
@@ -481,7 +484,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     x: number,
     y: number,
     text: string,
-    config: ObjectConfig = {}
+    config: ObjectConfig = {},
   ): GameObject {
     const txt = new Phaser.GameObjects.Text(scene, x, y, text, config);
     return set_type(txt, ObjectTypes.TextType);
@@ -495,7 +498,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     width: number,
     height: number,
     fill: number = 0,
-    alpha: number = 1
+    alpha: number = 1,
   ): GameObject {
     const rect = new Phaser.GameObjects.Rectangle(
       scene,
@@ -504,7 +507,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
       width,
       height,
       fill,
-      alpha
+      alpha,
     );
     return set_type(rect, ObjectTypes.RectType);
   }
@@ -517,7 +520,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
     width: number,
     height: number,
     fill: number = 0,
-    alpha: number = 1
+    alpha: number = 1,
   ): GameObject {
     const ellipse = new Phaser.GameObjects.Ellipse(
       scene,
@@ -526,7 +529,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
       width,
       height,
       fill,
-      alpha
+      alpha,
     );
     return set_type(ellipse, ObjectTypes.EllipseType);
   }
@@ -540,17 +543,18 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   function add_to_container(
     container: GameObject,
-    obj: GameObject
+    obj: GameObject,
   ): GameObject | undefined {
     if (
-      is_type(container, ObjectTypes.ContainerType) &&
-      is_any_type(obj, ObjTypes)
+      is_type(container, ObjectTypes.ContainerType)
+      && is_any_type(obj, ObjTypes)
     ) {
-      get_container(container).add(get_game_obj(obj));
+      get_container(container)
+        .add(get_game_obj(obj));
       return container;
     }
     throw_error(
-      `${obj} is not of type ${ObjTypes} or ${container} is not of type ${ObjectTypes.ContainerType}`
+      `${obj} is not of type ${ObjTypes} or ${container} is not of type ${ObjectTypes.ContainerType}`,
     );
   }
 
@@ -558,7 +562,8 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   function destroy_obj(obj: GameObject) {
     if (is_any_type(obj, ObjTypes)) {
-      get_game_obj(obj).destroy();
+      get_game_obj(obj)
+        .destroy();
     } else {
       throw_error(`${obj} is not of type ${ObjTypes}`);
     }
@@ -567,10 +572,11 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function set_display_size(
     obj: GameObject,
     x: number,
-    y: number
+    y: number,
   ): GameObject | undefined {
     if (is_any_type(obj, ObjTypes)) {
-      get_game_obj(obj).setDisplaySize(x, y);
+      get_game_obj(obj)
+        .setDisplaySize(x, y);
       return obj;
     }
     throw_error(`${obj} is not of type ${ObjTypes}`);
@@ -578,7 +584,8 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   function set_alpha(obj: GameObject, alpha: number): GameObject | undefined {
     if (is_any_type(obj, ObjTypes)) {
-      get_game_obj(obj).setAlpha(alpha);
+      get_game_obj(obj)
+        .setAlpha(alpha);
       return obj;
     }
     throw_error(`${obj} is not of type ${ObjTypes}`);
@@ -586,10 +593,11 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   function set_interactive(
     obj: GameObject,
-    config: ObjectConfig = {}
+    config: ObjectConfig = {},
   ): GameObject | undefined {
     if (is_any_type(obj, ObjTypes)) {
-      get_game_obj(obj).setInteractive(config);
+      get_game_obj(obj)
+        .setInteractive(config);
       return obj;
     }
     throw_error(`${obj} is not of type ${ObjTypes}`);
@@ -598,7 +606,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function set_origin(
     obj: GameObject,
     x: number,
-    y: number
+    y: number,
   ): GameObject | undefined {
     if (is_any_type(obj, ObjTypes)) {
       (get_game_obj(obj) as RawGameObject).setOrigin(x, y);
@@ -610,10 +618,11 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function set_position(
     obj: GameObject,
     x: number,
-    y: number
+    y: number,
   ): GameObject | undefined {
     if (obj && is_any_type(obj, ObjTypes)) {
-      get_game_obj(obj).setPosition(x, y);
+      get_game_obj(obj)
+        .setPosition(x, y);
       return obj;
     }
     throw_error(`${obj} is not of type ${ObjTypes}`);
@@ -622,10 +631,11 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function set_scale(
     obj: GameObject,
     x: number,
-    y: number
+    y: number,
   ): GameObject | undefined {
     if (is_any_type(obj, ObjTypes)) {
-      get_game_obj(obj).setScale(x, y);
+      get_game_obj(obj)
+        .setScale(x, y);
       return obj;
     }
     throw_error(`${obj} is not of type ${ObjTypes}`);
@@ -633,7 +643,8 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   function set_rotation(obj: GameObject, rad: number): GameObject | undefined {
     if (is_any_type(obj, ObjTypes)) {
-      get_game_obj(obj).setRotation(rad);
+      get_game_obj(obj)
+        .setRotation(rad);
       return obj;
     }
     throw_error(`${obj} is not of type ${ObjTypes}`);
@@ -642,7 +653,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function set_flip(
     obj: GameObject,
     x: boolean,
-    y: boolean
+    y: boolean,
   ): GameObject | undefined {
     const GameElementType = [ObjectTypes.ImageType, ObjectTypes.TextType];
     if (is_any_type(obj, GameElementType)) {
@@ -654,7 +665,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   async function add_tween(
     obj: GameObject,
-    config: ObjectConfig = {}
+    config: ObjectConfig = {},
   ): Promise<GameObject | undefined> {
     if (is_any_type(obj, ObjTypes)) {
       scene.tweens.add({
@@ -671,10 +682,11 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function add_listener(
     obj: GameObject,
     event: string,
-    callback: Function
+    callback: Function,
   ): GameObject | undefined {
     if (is_any_type(obj, ObjTypes)) {
-      const listener = get_game_obj(obj).addListener(event, callback);
+      const listener = get_game_obj(obj)
+        .addListener(event, callback);
       return set_type(listener, ListenerTypes.InputPlugin);
     }
     throw_error(`${obj} is not of type ${ObjTypes}`);
@@ -683,7 +695,7 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
   function add_keyboard_listener(
     key: string | number,
     event: string,
-    callback: Function
+    callback: Function,
   ): GameObject {
     const keyObj = scene.input.keyboard.addKey(key);
     const keyboardListener = keyObj.addListener(event, callback);
@@ -692,7 +704,8 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   function remove_listener(listener: GameObject): boolean {
     if (is_any_type(listener, ListnerTypes)) {
-      get_input_obj(listener).removeAllListeners();
+      get_input_obj(listener)
+        .removeAllListeners();
       return true;
     }
     return false;
@@ -744,9 +757,10 @@ export default function gameFuncs(moduleParams: GameModuleParams) {
 
   const finalFunctions = {};
 
-  Object.entries(functions).forEach(([key, fn]) => {
-    finalFunctions[key] = !scene ? nullFn : fn;
-  });
+  Object.entries(functions)
+    .forEach(([key, fn]) => {
+      finalFunctions[key] = !scene ? nullFn : fn;
+    });
 
   return finalFunctions;
 }
@@ -806,7 +820,7 @@ export function create_text_config(
   color: string = '#fff',
   stroke: string = '#fff',
   stroke_thickness: number = 0,
-  align: string = 'left'
+  align: string = 'left',
 ): ObjectConfig {
   return {};
 }
@@ -827,7 +841,7 @@ export function create_interactive_config(
   draggable: boolean = false,
   use_hand_cursor: boolean = false,
   pixel_perfect: boolean = false,
-  alpha_tolerance: number = 1
+  alpha_tolerance: number = 1,
 ): ObjectConfig {
   return {};
 }
@@ -854,7 +868,7 @@ export function create_sound_config(
   detune: number = 0,
   seek: number = 0,
   loop: boolean = false,
-  delay: number = 0
+  delay: number = 0,
 ): ObjectConfig {
   return {};
 }
@@ -887,7 +901,7 @@ export function create_tween_config(
   yoyo: boolean = false,
   loop: number = 0,
   loop_delay: number = 0,
-  on_loop: Function
+  on_loop: Function,
 ): ObjectConfig {
   return {};
 }
@@ -917,7 +931,7 @@ export function create_anim_config(
   repeat: number = -1,
   yoyo: boolean = false,
   show_on_start: boolean = true,
-  hide_on_complete: boolean = false
+  hide_on_complete: boolean = false,
 ): ObjectConfig {
   return {};
 }
@@ -938,7 +952,7 @@ export function create_anim_config(
 export function create_anim_frame_config(
   key: string,
   duration: number = 0,
-  visible: boolean = true
+  visible: boolean = true,
 ): ObjectConfig {
   return {};
 }
@@ -960,7 +974,7 @@ export function create_anim_frame_config(
  * @returns animation frame configs
  */
 export function create_anim_spritesheet_frame_configs(
-  key: string
+  key: string,
 ): ObjectConfig[] | undefined {
   return undefined;
 }
@@ -981,7 +995,7 @@ export function create_spritesheet_config(
   frame_height: number,
   start_frame: number = 0,
   margin: number = 0,
-  spacing: number = 0
+  spacing: number = 0,
 ): ObjectConfig {
   return {};
 }
@@ -1055,7 +1069,7 @@ export function load_sound(key: string, url: string) {}
 export function load_spritesheet(
   key: string,
   url: string,
-  spritesheet_config: ObjectConfig
+  spritesheet_config: ObjectConfig,
 ) {
   return {};
 }
@@ -1111,7 +1125,7 @@ export function create_anim(anim_config: ObjectConfig): boolean {
  */
 export function play_anim_on_image(
   image: GameObject,
-  anims_key: string
+  anims_key: string,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1132,7 +1146,7 @@ export function play_anim_on_image(
 export function create_image(
   x: number,
   y: number,
-  asset_key: string
+  asset_key: string,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1158,9 +1172,12 @@ export function create_image(
 export function create_award(
   x: number,
   y: number,
-  award_key: string
+  award_key: string,
 ): GameObject {
-  return { type: 'null', object: undefined };
+  return {
+    type: 'null',
+    object: undefined,
+  };
 }
 
 // TEXT
@@ -1180,9 +1197,12 @@ export function create_text(
   x: number,
   y: number,
   text: string,
-  config: ObjectConfig = {}
+  config: ObjectConfig = {},
 ): GameObject {
-  return { type: 'null', object: undefined };
+  return {
+    type: 'null',
+    object: undefined,
+  };
 }
 
 // RECTANGLE
@@ -1206,9 +1226,12 @@ export function create_rect(
   width: number,
   height: number,
   fill: number = 0,
-  alpha: number = 1
+  alpha: number = 1,
 ): GameObject {
-  return { type: 'null', object: undefined };
+  return {
+    type: 'null',
+    object: undefined,
+  };
 }
 
 // ELLIPSE
@@ -1230,9 +1253,12 @@ export function create_ellipse(
   width: number,
   height: number,
   fill: number = 0,
-  alpha: number = 1
+  alpha: number = 1,
 ): GameObject {
-  return { type: 'null', object: undefined };
+  return {
+    type: 'null',
+    object: undefined,
+  };
 }
 
 // CONTAINER
@@ -1256,7 +1282,10 @@ export function create_ellipse(
  * @returns container object
  */
 export function create_container(x: number, y: number): GameObject {
-  return { type: 'container', object: undefined };
+  return {
+    type: 'container',
+    object: undefined,
+  };
 }
 
 /**
@@ -1269,7 +1298,7 @@ export function create_container(x: number, y: number): GameObject {
  */
 export function add_to_container(
   container: GameObject,
-  obj: GameObject
+  obj: GameObject,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1297,7 +1326,7 @@ export function destroy_obj(obj: GameObject) {}
 export function set_display_size(
   obj: GameObject,
   x: number,
-  y: number
+  y: number,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1312,7 +1341,7 @@ export function set_display_size(
  */
 export function set_alpha(
   obj: GameObject,
-  alpha: number
+  alpha: number,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1330,7 +1359,7 @@ export function set_alpha(
  */
 export function set_interactive(
   obj: GameObject,
-  config: ObjectConfig = {}
+  config: ObjectConfig = {},
 ): GameObject | undefined {
   return undefined;
 }
@@ -1348,7 +1377,7 @@ export function set_interactive(
 export function set_origin(
   obj: GameObject,
   x: number,
-  y: number
+  y: number,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1365,7 +1394,7 @@ export function set_origin(
 export function set_position(
   obj: GameObject,
   x: number,
-  y: number
+  y: number,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1382,7 +1411,7 @@ export function set_position(
 export function set_scale(
   obj: GameObject,
   x: number,
-  y: number
+  y: number,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1397,7 +1426,7 @@ export function set_scale(
  */
 export function set_rotation(
   obj: GameObject,
-  rad: number
+  rad: number,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1414,7 +1443,7 @@ export function set_rotation(
 export function set_flip(
   obj: GameObject,
   x: boolean,
-  y: boolean
+  y: boolean,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1429,7 +1458,7 @@ export function set_flip(
  */
 export async function add_tween(
   obj: GameObject,
-  config: ObjectConfig = {}
+  config: ObjectConfig = {},
 ): Promise<GameObject | undefined> {
   return undefined;
 }
@@ -1452,7 +1481,7 @@ export async function add_tween(
 export function add_listener(
   obj: GameObject,
   event: string,
-  callback: Function
+  callback: Function,
 ): GameObject | undefined {
   return undefined;
 }
@@ -1476,9 +1505,12 @@ export function add_listener(
 export function add_keyboard_listener(
   key: string | number,
   event: string,
-  callback: Function
+  callback: Function,
 ): GameObject {
-  return { type: 'null', object: undefined };
+  return {
+    type: 'null',
+    object: undefined,
+  };
 }
 
 /**

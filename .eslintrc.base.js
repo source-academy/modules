@@ -209,7 +209,7 @@ module.exports = {
     'no-lonely-if': 1,
     'no-loop-func': 1,
     // "no-magic-numbers": 0,
-    'no-mixed-operators': 1,
+    'no-mixed-operators': 0,
     'no-multi-assign': 1,
     'no-multi-str': 1,
     // "no-negated-condition": 0,
@@ -492,14 +492,4 @@ module.exports = {
     // "wrap-regex": 0,
     'yield-star-spacing': 1,
   },
-  overrides: [
-    {
-      files: ['src/**/__tests__/**.ts', 'scripts/**/__tests__/**.ts'],
-      extends: ['airbnb-typescript', 'plugin:jest/recommended'],
-      plugins: ['jest'],
-      rules: {
-        'no-console': 0,
-      }
-    }
-  ]
 };

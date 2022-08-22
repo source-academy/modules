@@ -155,7 +155,7 @@ class PixNFlix extends React.Component<Props, State> {
         () => ({
           mode: VideoMode.Still,
         }),
-        this.handleStopVideo
+        this.handleStopVideo,
       );
     }
   };
@@ -292,14 +292,14 @@ class PixNFlix extends React.Component<Props, State> {
                 icon={IconNames.VIDEO}
                 active={videoIsActive}
                 onClick={this.onClickVideo}
-                text='Play Video'
+                text="Play Video"
               />
               <Button
                 className="sa-still-image-button"
                 icon={IconNames.CAMERA}
                 active={!videoIsActive}
                 onClick={this.onClickStill}
-                text='Pause Video'
+                text="Pause Video"
               />
             </ButtonGroup>
           </div>
@@ -357,7 +357,7 @@ class PixNFlix extends React.Component<Props, State> {
             </div>
           </div>
         </div>
-        <div className='sa-video-element'>
+        <div className="sa-video-element">
           <img
             ref={(r) => {
               this.$image = r;

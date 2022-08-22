@@ -49,10 +49,10 @@ let timeout_objects: number[] = []; // set_timeout_renamed return type
 // return the row and column numbers of the clicked square in an array
 function x_y_to_row_column(x: number, y: number): number[] {
   const row = Math.floor(
-    (y - margin_length) / (square_side_length + distance_between_squares)
+    (y - margin_length) / (square_side_length + distance_between_squares),
   );
   const column = Math.floor(
-    (x - margin_length) / (square_side_length + distance_between_squares)
+    (x - margin_length) / (square_side_length + distance_between_squares),
   );
   return [row, column];
 }
@@ -103,7 +103,7 @@ function set_color(row: number, column: number, color: string): void {
     column_to_x(column),
     row_to_y(row),
     square_side_length,
-    square_side_length
+    square_side_length,
   );
 }
 
@@ -116,7 +116,7 @@ function highlight_color(row: number, column: number, color: string): void {
 function set_adjacent_color_1(
   row: number,
   column: number,
-  color: string
+  color: string,
 ): void {
   if (!is_on(row, column - 1)) {
     set_color(row, column - 1, color);
@@ -139,7 +139,7 @@ function set_adjacent_color_1(
 function set_adjacent_color_2(
   row: number,
   column: number,
-  color: string
+  color: string,
 ): void {
   if (!is_on(row, column - 2)) {
     set_color(row, column - 2, color);
@@ -244,7 +244,7 @@ function bind_events_to_rect(c) {
         set_color(row, column, color_off);
       }
     },
-    false
+    false,
   );
 }
 
@@ -342,7 +342,7 @@ ToneMatrix.bindMatrixButtons = bindMatrixButtons;
 export function get_matrix(): List {
   if (!matrix) {
     throw new Error(
-      'Please activate the tone matrix first by clicking on the tab!'
+      'Please activate the tone matrix first by clicking on the tab!',
     );
   }
   const matrix_list = matrix.slice(0);
@@ -379,7 +379,7 @@ export function set_timeout(f, t) {
     timeout_objects.push(timeoutObj);
   } else {
     throw new Error(
-      'set_timeout(f, t) expects a function and a number respectively.'
+      'set_timeout(f, t) expects a function and a number respectively.',
     );
   }
 }
