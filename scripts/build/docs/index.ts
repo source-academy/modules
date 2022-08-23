@@ -29,7 +29,7 @@ const parsers: {
         return drawdown(text);
       } catch (_error) {
         console.warn(
-          `${chalk.yellow('Warning:')} ${bundle}: Could not get description found for ${
+          `${chalk.yellow('Warning:')} ${bundle}: Could not get description for ${
             element.name
           }`,
         );
@@ -73,7 +73,7 @@ const parsers: {
         return drawdown(text);
       } catch (_error) {
         console.warn(
-          `${chalk.yellow('Warning:')} ${bundle}: Could not get description found for ${
+          `${chalk.yellow('Warning:')} ${bundle}: Could not get description for ${
             element.name
           }`,
         );
