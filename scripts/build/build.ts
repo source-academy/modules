@@ -221,7 +221,9 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
     });
 
     const tabFile = `${BUILD_PATH}/tabs/${tabName}.js`;
-    const { output: rollupOutput } = await rollupBundle.generate({
+
+    // Only one chunk should be generated
+    const { output: [{ code: rawTab }] } = await rollupBundle.generate({
       file: tabFile,
       format: 'iife',
       globals: {
@@ -230,8 +232,6 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
       },
     });
 
-    // Only one chunk should be generated
-    const rawTab = rollupOutput[0].code;
     await fsPromises.writeFile(tabFile, convertRawTab(rawTab));
     await rollupBundle.close();
 
