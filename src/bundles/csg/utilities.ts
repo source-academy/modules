@@ -1,8 +1,8 @@
 /* [Imports] */
 import { clone, Geom3 } from '@jscad/modeling/src/geometries/geom3';
-import { ModuleContext, ModuleState } from 'js-slang';
-import { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
-import { AlphaColor, Color, Solid } from './jscad/types.js';
+import type { ModuleContext } from 'js-slang';
+import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
+import type { AlphaColor, Color, Solid } from './jscad/types.js';
 
 /* [Exports] */
 export class Shape implements ReplResult {
@@ -78,7 +78,7 @@ export class RenderGroupManager {
   }
 }
 
-export class CsgModuleState implements ModuleState {
+export class CsgModuleState {
   private componentCounter: number = 0;
 
   readonly renderGroupManager: RenderGroupManager;
@@ -96,9 +96,7 @@ export class CsgModuleState implements ModuleState {
 export function getModuleContext(
   moduleContexts: ModuleContexts,
 ): ModuleContext | null {
-  let potentialModuleContext: ModuleContext | undefined = moduleContexts.get(
-    'csg',
-  );
+  let potentialModuleContext: ModuleContext | undefined = moduleContexts.csg;
   return potentialModuleContext ?? null;
 }
 

@@ -4,6 +4,7 @@
  * A *Rune* is defined by its vertices (x,y,z,t), the colors on its vertices (r,g,b,a), a transformation matrix for rendering the Rune and a (could be empty) list of its sub-Runes.
  * @module rune
  */
+import { context } from 'js-slang/moduleHelpers';
 import { mat4, vec3 } from 'gl-matrix';
 import {
   Rune,
@@ -37,8 +38,10 @@ import {
   initShaderProgram,
 } from './runes_webgl';
 
-/** @hidden */
-export const drawnRunes: (DrawnRune | AnimatedRune)[] = [];
+const drawnRunes: (DrawnRune | AnimatedRune)[] = [];
+context.moduleContexts.rune.state = {
+  drawnRunes,
+};
 
 // =============================================================================
 // Basic Runes

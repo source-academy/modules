@@ -3,7 +3,6 @@ import { HollusionRune } from '../../bundles/rune/functions';
 import type {
   AnimatedRune,
   DrawnRune,
-  RunesModuleState,
 } from '../../bundles/rune/rune';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../common/multi_item_display';
@@ -21,17 +20,8 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const moduleContext = context.context?.moduleContexts.get('rune');
-    if (!moduleContext) {
-      return false;
-    }
-
-    const moduleState = moduleContext.state as RunesModuleState;
-    if (!moduleState) {
-      return false;
-    }
-
-    return moduleState.drawnRunes.length > 0;
+    const drawnRunes = context.context?.moduleContexts?.rune?.state?.drawnRunes;
+    return drawnRunes.length > 0;
   },
 
   /**
@@ -40,12 +30,11 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    const moduleContext = context.context?.moduleContexts.get('rune');
-    const moduleState = moduleContext!.state as RunesModuleState;
+    const { context: { moduleContexts: { rune: { state: { drawnRunes } } } } } = context;
 
     // Based on the toSpawn conditions, it should be safe to assume
     // that neither moduleContext or moduleState are null
-    const runeCanvases = moduleState.drawnRunes.map((rune, i) => {
+    const runeCanvases = drawnRunes.map((rune, i) => {
       const elemKey = i.toString();
 
       if (glAnimation.isAnimation(rune)) {

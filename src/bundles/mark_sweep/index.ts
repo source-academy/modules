@@ -349,28 +349,26 @@ function init() {
   };
 }
 
-export default function mark_sweep() {
-  return {
-    init,
-    // initialisation
-    initialize_memory,
-    initialize_tag,
-    generateMemory,
-    allHeap,
-    updateSlotSegment,
-    newCommand,
-    newMark,
-    newPush,
-    newPop,
-    newAssign,
-    newNew,
-    newGC,
-    newSweep,
-    updateRoots,
-    newUpdateSweep,
-    showRoots,
-    endGC,
-    addRoots,
-    showRoot,
-  };
-}
+export {
+  init,
+  // initialisation
+  initialize_memory,
+  initialize_tag,
+  generateMemory,
+  allHeap,
+  updateSlotSegment,
+  newCommand,
+  newMark,
+  newPush,
+  newPop,
+  newAssign,
+  newNew,
+  newGC,
+  newSweep,
+  updateRoots,
+  newUpdateSweep,
+  showRoots,
+  endGC,
+  addRoots,
+  showRoot,
+};

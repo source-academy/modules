@@ -482,28 +482,26 @@ function init() {
   };
 }
 
-export default function copy_gc() {
-  return {
-    init,
-    // initialisation
-    initialize_memory,
-    initialize_tag,
-    generateMemory,
-    allHeap,
-    updateSlotSegment,
-    resetFromSpace,
-    newCommand,
-    newCopy,
-    endFlip,
-    newPush,
-    newPop,
-    newAssign,
-    newNew,
-    scanFlip,
-    startFlip,
-    updateRoots,
-    resetRoots,
-    showRoots,
-    doneShowRoot,
-  };
-}
+export {
+  init,
+  // initialisation
+  initialize_memory,
+  initialize_tag,
+  generateMemory,
+  allHeap,
+  updateSlotSegment,
+  resetFromSpace,
+  newCommand,
+  newCopy,
+  endFlip,
+  newPush,
+  newPop,
+  newAssign,
+  newNew,
+  scanFlip,
+  startFlip,
+  updateRoots,
+  resetRoots,
+  showRoots,
+  doneShowRoot,
+};

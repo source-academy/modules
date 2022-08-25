@@ -36,9 +36,10 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { Curve, CurveDrawn } from './curves_webgl';
-import { generateCurve, Point } from './curves_webgl';
-import type {
+import { context } from 'js-slang/moduleHelpers';
+import { Curve, CurveDrawn, generateCurve, Point } from './curves_webgl';
+import {
+  AnimatedCurve,
   CurveAnimation,
   CurveSpace,
   CurveTransformer,
@@ -46,12 +47,11 @@ import type {
   RenderFunction,
   ScaleMode,
 } from './types';
-import {
-  AnimatedCurve,
-} from './types';
 
-/** @hidden */
-export const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];
+const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];
+context.moduleContexts.curve.state = {
+  drawnCurves,
+};
 
 function createDrawFunction(
   scaleMode: ScaleMode,
@@ -60,7 +60,7 @@ function createDrawFunction(
   isFullView: boolean,
 ): (numPoints: number) => RenderFunction {
   return (numPoints: number) => {
-    const func = (curve) => {
+    const func = (curve: Curve) => {
       const curveDrawn = generateCurve(
         scaleMode,
         drawMode,
@@ -70,10 +70,7 @@ function createDrawFunction(
         isFullView,
       );
 
-      if (
-        (curve as any).shouldAppend === undefined
-        || (curve as any).shouldAppend
-      ) {
+      if (!curve.shouldNotAppend) {
         drawnCurves.push(curveDrawn);
       }
 
@@ -766,7 +763,7 @@ export function unit_circle(t: number): Point {
 
 /**
  * This function is a curve: a function from a fraction t to a point. The
- * x-coordinate at franction t is t, and the y-coordinate is 0.
+ * x-coordinate at fraction t is t, and the y-coordinate is 0.
  *
  * @param t fraction between 0 and 1
  * @returns Point on the line at t
@@ -814,7 +811,9 @@ export function animate_curve(
   drawer: RenderFunction,
   func: CurveAnimation,
 ): AnimatedCurve {
-  if ((drawer as any).is3D) { throw new Error('Curve Animation cannot be used with 3D draw function!'); }
+  if (drawer.is3D) {
+    throw new Error('animate_curve cannot be used with 3D draw function!');
+  }
 
   const anim = new AnimatedCurve(duration, fps, func, drawer, false);
   drawnCurves.push(anim);
@@ -835,8 +834,8 @@ export function animate_3D_curve(
   drawer: RenderFunction,
   func: CurveAnimation,
 ): AnimatedCurve {
-  if (!(drawer as any).is3D) {
-    throw new Error('Curve 3D Animation cannot be used with 2D draw function!');
+  if (!drawer.is3D) {
+    throw new Error('animate_3D_curve cannot be used with 2D draw function!');
   }
 
   const anim = new AnimatedCurve(duration, fps, func, drawer, true);

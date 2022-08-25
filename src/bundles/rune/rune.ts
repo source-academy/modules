@@ -1,7 +1,6 @@
 import { mat4 } from 'gl-matrix';
-import { ModuleState } from 'js-slang';
 import { AnimFrame, glAnimation } from '../../typings/anim_types';
-import { ReplResult } from '../../typings/type_helpers';
+import type { ReplResult } from '../../typings/type_helpers';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 
 const normalVertexShader = `
@@ -410,8 +409,4 @@ export class AnimatedRune extends glAnimation implements ReplResult {
   }
 
   public toReplString = () => '<AnimatedRune>';
-}
-
-export class RunesModuleState implements ModuleState {
-  constructor(public drawnRunes: (DrawnRune | AnimatedRune)[] = []) {}
 }

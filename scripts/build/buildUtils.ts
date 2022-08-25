@@ -16,6 +16,159 @@ import {
   SUPPRESSED_WARNINGS,
 } from '../constants';
 import { cjsDirname } from '../utilities';
+import { generate } from 'astring';
+import type { Plugin } from 'rollup';
+import type {
+  BinaryExpression,
+  CallExpression,
+  Expression,
+  ExpressionStatement,
+  FunctionExpression,
+  Identifier,
+  IfStatement,
+  MemberExpression,
+  NewExpression,
+  ObjectExpression,
+  Program,
+  Property,
+  ReturnStatement,
+  Statement,
+  ThrowStatement,
+} from 'estree';
+
+export const converterPlugin = (): Plugin => ({
+  name: 'Module Converter',
+  async renderChunk(code) {
+    const parsed = this.parse(code) as unknown as Program;
+    const exprStatement = parsed.body[0] as ExpressionStatement;
+    const { callee: funcExpression } = exprStatement.expression as CallExpression;
+    exprStatement.expression = funcExpression as FunctionExpression;
+
+    return generate(exprStatement);
+  },
+});
+
+/**
+ * Rollup plugin to use with bundles to compile them with the proxy object
+ * to build in undefined symbol checking
+ */
+export const bundlePlugin = (): Plugin => ({
+  name: 'Bundle Parser',
+  async renderChunk(code) {
+    const parsed = this.parse(code) as unknown as Program;
+    const originalExpr = parsed.body[0] as ExpressionStatement;
+    const { callee: funcExpr } = originalExpr.expression as CallExpression;
+
+    const statements = (funcExpr as FunctionExpression).body.body;
+    const [lastReturn] = statements.slice(-1);
+    if (lastReturn.type !== 'ReturnStatement') throw new Error('Idk what to do here');
+
+    const createIdentifier = (name: string): Identifier => ({
+      type: 'Identifier',
+      name,
+    });
+
+    const createFunctionExpr = (params: string[], body: Statement[]): FunctionExpression => ({
+      type: 'FunctionExpression',
+      params: params.map(createIdentifier),
+      body: {
+        type: 'BlockStatement',
+        body,
+      },
+    });
+
+    const createProperty = (name: string, value: Expression): Property => ({
+      type: 'Property',
+      kind: 'init',
+      computed: false,
+      shorthand: false,
+      method: false,
+      key: createIdentifier(name),
+      value,
+    });
+
+    // Need to find some way to inherit from RuntimeSourceError
+    const errorProg = this.parse(`({
+        type: 'Runtime',
+        severity: 'Error',
+        location: {
+          start: {
+            line: -1,
+            column: -1,
+          },
+          end: {
+            line: -1,
+            column: -1,
+          },
+        },
+        explain: function() { return "Unknown symbol '" + name + "'"; },
+        elaborate: function() { return "You should check your imports and make sure the name you're importing is defined in that module"; }
+      })`) as unknown as Program;
+
+    const errorObj = (errorProg.body[0] as ExpressionStatement).expression as ObjectExpression;
+
+    const proxyExpr = {
+      type: 'NewExpression',
+      callee: createIdentifier('Proxy'),
+      arguments: [
+        lastReturn.argument,
+        {
+          type: 'ObjectExpression',
+          properties: [
+            createProperty('get', createFunctionExpr(['target', 'name'], [{
+              type: 'IfStatement',
+              test: {
+                type: 'BinaryExpression',
+                left: createIdentifier('name'),
+                right: createIdentifier('target'),
+                operator: 'in',
+              } as BinaryExpression,
+              consequent: {
+                type: 'BlockStatement',
+                body: [{
+                  type: 'ReturnStatement',
+                  argument: {
+                    type: 'MemberExpression',
+                    object: createIdentifier('target'),
+                    property: createIdentifier('name'),
+                    computed: true,
+                    optional: false,
+                  } as MemberExpression,
+                } as ReturnStatement],
+              },
+            } as IfStatement,
+            {
+              type: 'ThrowStatement',
+              argument: errorObj,
+            } as ThrowStatement])),
+          ],
+        } as ObjectExpression,
+      ],
+    } as NewExpression;
+
+    const newFunc = {
+      ...funcExpr,
+      type: 'FunctionExpression',
+      body: {
+        type: 'BlockStatement',
+        body: [
+          ...statements.slice(0, -1),
+          {
+            type: 'ReturnStatement',
+            argument: proxyExpr,
+          },
+        ],
+      },
+    } as FunctionExpression;
+
+    parsed.body = [{
+      type: 'ExpressionStatement',
+      expression: newFunc,
+    }];
+
+    return generate(parsed);
+  },
+});
 
 /**
  * Default configuration used by rollup for transpiling both tabs and bundles
@@ -85,6 +238,7 @@ export const defaultConfig = {
       showMinifiedSize: false,
       showGzippedSize: false,
     }),
+    converterPlugin(),
   ],
 };
 

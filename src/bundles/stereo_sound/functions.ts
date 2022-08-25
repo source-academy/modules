@@ -24,7 +24,7 @@ import {
   tail,
 } from './list';
 import { RIFFWAVE } from './riffwave';
-import {
+import type {
   AudioPlayed,
   List,
   Sound,
@@ -32,14 +32,17 @@ import {
   SoundTransformer,
   Wave,
 } from './types';
+import { context } from 'js-slang/moduleHelpers';
 
 // Global Constants and Variables
 
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
 
-/** @hidden */
-export const audioPlayed: AudioPlayed[] = [];
+const audioPlayed: AudioPlayed[] = [];
+context.moduleContexts.stereo_sound.state = {
+  audioPlayed,
+};
 
 // Singular audio context for all playback functions
 let audioplayer: AudioContext;

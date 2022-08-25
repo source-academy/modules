@@ -1,6 +1,5 @@
-import { ModuleState } from 'js-slang';
 import { glAnimation, AnimFrame } from '../../typings/anim_types';
-import { ReplResult } from '../../typings/type_helpers';
+import type { ReplResult } from '../../typings/type_helpers';
 import { Curve, CurveDrawn } from './curves_webgl';
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
@@ -19,7 +18,9 @@ export type CurveAnimation = (t: number) => Curve;
  * A function that specifies additional rendering information when taking in
  * a CurveFunction and returns a ShapeDrawn based on its specifications.
  */
-export type RenderFunction = (func: Curve) => CurveDrawn;
+export type RenderFunction = {
+  is3D: boolean
+} & ((func: Curve) => CurveDrawn);
 
 export class AnimatedCurve extends glAnimation implements ReplResult {
   constructor(
@@ -35,7 +36,7 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
 
   public getFrame(timestamp: number): AnimFrame {
     const curve = this.func(timestamp);
-    (curve as any).shouldAppend = false;
+    curve.shouldNotAppend = true;
     const curveDrawn = this.drawer(curve);
 
     return {
@@ -49,12 +50,4 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
   public angle: number;
 
   public toReplString = () => '<AnimatedCurve>';
-}
-
-export class CurveModuleState implements ModuleState {
-  constructor() {
-    this.drawnCurves = [];
-  }
-
-  public drawnCurves: (CurveDrawn | AnimatedCurve)[];
 }

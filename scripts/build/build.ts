@@ -33,6 +33,13 @@ export const convertRawTab = (rawTab: string) => {
   return rawTab.substring(0, index) + rawTab.substring(index + str.length);
 };
 
+export const convertRawBundle = (rawBundle: string) => {
+  const regexp = /(?<str>\(\{\}(?:, ctx)?\))/ugm;
+  const [{ index, groups: { str } }] = [...rawBundle.matchAll(regexp)].slice(-1);
+  return rawBundle.substring(0, index) + rawBundle.substring(index + str.length);
+};
+
+
 /**
  * Determine which bundles and tabs to build
  */
@@ -202,11 +209,17 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
     const rollupBundle = await rollup({
       ...defaultConfig,
       input: `${SOURCE_PATH}/bundles/${bundle}/index.ts`,
+      external: ['js-slang/moduleHelpers'],
     });
 
+    const bundleFile = `${BUILD_PATH}/bundles/${bundle}.js`;
+
     await rollupBundle.write({
-      file: `${BUILD_PATH}/bundles/${bundle}.js`,
+      file: bundleFile,
       format: 'iife',
+      globals: {
+        'js-slang/moduleHelpers': 'ctx',
+      },
     });
     await rollupBundle.close();
 
@@ -223,7 +236,7 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
     const tabFile = `${BUILD_PATH}/tabs/${tabName}.js`;
 
     // Only one chunk should be generated
-    const { output: [{ code: rawTab }] } = await rollupBundle.generate({
+    await rollupBundle.write({
       file: tabFile,
       format: 'iife',
       globals: {
@@ -232,7 +245,6 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
       },
     });
 
-    await fsPromises.writeFile(tabFile, convertRawTab(rawTab));
     await rollupBundle.close();
 
     db.data.tabs[tabName] = buildTime;

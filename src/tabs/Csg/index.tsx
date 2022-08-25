@@ -1,6 +1,6 @@
 /* [Imports] */
 import { IconNames } from '@blueprintjs/icons';
-import { ModuleContext, ModuleState } from 'js-slang';
+import type { ModuleContext } from 'js-slang';
 import React, { ReactElement } from 'react';
 import { Core } from '../../bundles/csg/core.js';
 import {
@@ -28,7 +28,7 @@ export default {
     if (potentialModuleContext === null) return <div></div>;
     let moduleContext: ModuleContext = potentialModuleContext;
 
-    let potentialModuleState: ModuleState | null | undefined
+    let potentialModuleState: any | null | undefined
       = moduleContext.state;
     if (!looseInstanceof(potentialModuleState, CsgModuleState)) { return <div></div>; }
     let moduleState = potentialModuleState as CsgModuleState;

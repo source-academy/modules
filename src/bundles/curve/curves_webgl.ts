@@ -106,7 +106,9 @@ type BufferInfo = {
 };
 
 /** A function that takes in number from 0 to 1 and returns a Point. */
-export type Curve = (u: number) => Point;
+export type Curve = ((u: number) => Point) & {
+  shouldNotAppend?: boolean;
+};
 
 type Color = [r: number, g: number, b: number, t: number];
 

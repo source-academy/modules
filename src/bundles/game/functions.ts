@@ -15,7 +15,7 @@
  */
 
 /* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
-import {
+import type {
   GameModuleParams,
   GameObject,
   List,
@@ -26,17 +26,21 @@ import {
   RawInputObject,
 } from './types';
 
+import { context } from 'js-slang/moduleHelpers';
+
 /** @hidden */
-export default function gameFuncs(moduleParams: GameModuleParams) {
+export default function gameFuncs(): { [name: string]: any } {
   const {
-    scene,
-    preloadImageMap,
-    preloadSoundMap,
-    preloadSpritesheetMap,
-    remotePath,
-    screenSize,
-    createAward,
-  } = moduleParams.game || {};
+    game: {
+      scene,
+      preloadImageMap,
+      preloadSoundMap,
+      preloadSpritesheetMap,
+      remotePath,
+      screenSize,
+      createAward,
+    },
+  } = context.moduleParams || {};
 
   // Listener ObjectTypes
   enum ListenerTypes {

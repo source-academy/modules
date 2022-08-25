@@ -1,6 +1,6 @@
 import React from 'react';
 import type { CurveDrawn } from '../../bundles/curve/curves_webgl';
-import type { AnimatedCurve, CurveModuleState } from '../../bundles/curve/types';
+import type { AnimatedCurve } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../common/multi_item_display';
 import type { DebuggerContext } from '../../typings/type_helpers';
@@ -11,23 +11,13 @@ import WebGLCanvas from '../common/webgl_canvas';
 
 export default {
   toSpawn(context: DebuggerContext) {
-    const moduleContext = context.context?.moduleContexts.get('curve');
-    if (!moduleContext) {
-      return false;
-    }
-
-    const moduleState = moduleContext.state as CurveModuleState;
-    if (!moduleState) {
-      return false;
-    }
-
-    return moduleState.drawnCurves.length > 0;
+    const drawnCurves = context.context?.moduleContexts?.curve?.state?.drawnCurves;
+    return drawnCurves.length > 0;
   },
   body(context: DebuggerContext) {
-    const moduleContext = context.context?.moduleContexts.get('curve');
-    const moduleState = moduleContext!.state as CurveModuleState;
+    const { context: { moduleContexts: { curve: { state: { drawnCurves } } } } } = context;
 
-    const canvases = moduleState!.drawnCurves.map((curve, i) => {
+    const canvases = drawnCurves.map((curve, i) => {
       const elemKey = i.toString();
 
       if (glAnimation.isAnimation(curve)) {
