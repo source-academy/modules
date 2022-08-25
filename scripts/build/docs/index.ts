@@ -159,9 +159,9 @@ const buildJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[],
   const bundleNames = bundlesWithReason.map(([bundle]) => bundle);
 
   try {
-    await fsPromises.access('build/jsons', fsConstants.F_OK);
+    await fsPromises.access(`${BUILD_PATH}/jsons`, fsConstants.F_OK);
   } catch (_error) {
-    await fsPromises.mkdir('build/jsons');
+    await fsPromises.mkdir(`${BUILD_PATH}/jsons`);
   }
 
   const buildTime = new Date()
