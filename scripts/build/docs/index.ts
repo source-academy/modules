@@ -5,7 +5,6 @@ import drawdown from './drawdown';
 import {
   isFolderModified,
   getDb,
-  BuildTask,
   DBType,
   checkForUnknowns,
   EntryWithReason,
@@ -133,92 +132,7 @@ export const getJsonsToBuild = async (db: Low<DBType>, opts: JsonOpts): Promise<
     .filter((x) => x !== false) as EntryWithReason[];
 };
 
-/**
- * Build the json documentation for the specified modules
- */
-const buildJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[], verbose: boolean) => {
-  if (bundlesWithReason.length === 0) {
-    console.log(chalk.greenBright('Documentation up to date'));
-    return;
-  }
-
-  console.log(
-    chalk.greenBright('Building documentation for the following bundles:'),
-  );
-
-  if (verbose) {
-    console.log(
-      bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
-        .join('\n'),
-    );
-  } else {
-    console.log(bundlesWithReason.map(([bundle]) => `• ${chalk.blueBright(bundle)}`)
-      .join('\n'));
-  }
-
-  const bundleNames = bundlesWithReason.map(([bundle]) => bundle);
-
-  try {
-    await fsPromises.access(`${BUILD_PATH}/jsons`, fsConstants.F_OK);
-  } catch (_error) {
-    await fsPromises.mkdir(`${BUILD_PATH}/jsons`);
-  }
-
-  const buildTime = new Date()
-    .getTime();
-
-  const docsFile = await fsPromises.readFile(`${BUILD_PATH}/docs.json`, 'utf-8');
-  const parsedJSON = JSON.parse(docsFile)?.children;
-
-  if (!parsedJSON) {
-    throw new Error('Failed to parse docs.json');
-  }
-
-  await Promise.all(
-    bundleNames.map(async (bundle) => {
-      const docs = parsedJSON.find((x) => x.name === bundle)?.children;
-
-      if (!docs) {
-        console.warn(
-          `${chalk.yellow('Warning:')} No documentation found for ${bundle}`,
-        );
-      } else {
-        // Run through each item in the bundle and run its parser
-        const output: { [name: string]: string } = {};
-        docs.forEach((element) => {
-          if (parsers[element.kindString]) {
-            output[element.name] = parsers[element.kindString](element, bundle);
-          } else {
-            console.warn(
-              `${chalk.yellow('Warning:')} ${bundle}: No parser found for ${
-                element.name
-              } of type ${element.type}`,
-            );
-          }
-        });
-
-        // Then write that output to the bundles' respective json files
-        await fsPromises.writeFile(
-          `${BUILD_PATH}/jsons/${bundle}.json`,
-          JSON.stringify(output, null, 2),
-        );
-      }
-
-      db.data.jsons[bundle] = buildTime;
-    }),
-  );
-
-  await db.write();
-};
-
-/**
- * Build the HTML documentation for all modules.\
- * \
- * TypeDoc always clears the directory after each build, so if you leave some modules out
- * their documentation won't be properly included. Hence all modules have to be built at
- * the same time.
- */
-const buildDocs: BuildTask = async (db) => {
+export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[], verbose: boolean) => {
   const app = new typedoc.Application();
   app.options.addReader(new typedoc.TSConfigReader());
   app.options.addReader(new typedoc.TypeDocReader());
@@ -236,26 +150,95 @@ const buildDocs: BuildTask = async (db) => {
   });
 
   const project = app.convert();
-  if (project) {
-    const docsTask = app.generateDocs(project, `${BUILD_PATH}/documentation`);
-    const jsonTask = app.generateJson(project, `${BUILD_PATH}/docs.json`);
-    await Promise.all([docsTask, jsonTask]);
+  if (!project) return;
+
+  const docsTask = (async () => {
+    await app.generateDocs(project, `${BUILD_PATH}/documentation`);
 
     // For some reason typedoc's not working, so do a manual copy
     await fsPromises.copyFile(
       `${cjsDirname(import.meta.url)}/README.md`,
       `${BUILD_PATH}/documentation/README.md`,
     );
-
     db.data.docs = new Date()
       .getTime();
-    await db.write();
-  }
-};
+  })();
 
-export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[], verbose: boolean) => {
-  await buildDocs(db);
-  await buildJsons(db, bundlesWithReason, verbose);
+  const jsonTask = (async () => {
+    if (bundlesWithReason.length === 0) {
+      console.log(chalk.greenBright('No jsons to build.'));
+      return;
+    }
+    console.log(
+      chalk.greenBright('Building documentation for the following bundles:'),
+    );
+
+    if (verbose) {
+      console.log(
+        bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
+          .join('\n'),
+      );
+    } else {
+      console.log(bundlesWithReason.map(([bundle]) => `• ${chalk.blueBright(bundle)}`)
+        .join('\n'));
+    }
+    await app.generateJson(project, `${BUILD_PATH}/docs.json`);
+
+    const bundleNames = bundlesWithReason.map(([bundle]) => bundle);
+
+    try {
+      await fsPromises.access(`${BUILD_PATH}/jsons`, fsConstants.F_OK);
+    } catch (_error) {
+      await fsPromises.mkdir(`${BUILD_PATH}/jsons`);
+    }
+
+    const buildTime = new Date()
+      .getTime();
+
+    const docsFile = await fsPromises.readFile(`${BUILD_PATH}/docs.json`, 'utf-8');
+    const parsedJSON = JSON.parse(docsFile)?.children;
+
+    if (!parsedJSON) {
+      throw new Error('Failed to parse docs.json');
+    }
+
+    await Promise.all(
+      bundleNames.map(async (bundle) => {
+        const docs = parsedJSON.find((x) => x.name === bundle)?.children;
+
+        if (!docs) {
+          console.warn(
+            `${chalk.yellow('Warning:')} No documentation found for ${bundle}`,
+          );
+        } else {
+        // Run through each item in the bundle and run its parser
+          const output: { [name: string]: string } = {};
+          docs.forEach((element) => {
+            if (parsers[element.kindString]) {
+              output[element.name] = parsers[element.kindString](element, bundle);
+            } else {
+              console.warn(
+                `${chalk.yellow('Warning:')} ${bundle}: No parser found for ${
+                  element.name
+                } of type ${element.type}`,
+              );
+            }
+          });
+
+          // Then write that output to the bundles' respective json files
+          await fsPromises.writeFile(
+            `${BUILD_PATH}/jsons/${bundle}.json`,
+            JSON.stringify(output, null, 2),
+          );
+        }
+
+        db.data.jsons[bundle] = buildTime;
+      }),
+    );
+  })();
+
+  await Promise.all([docsTask, jsonTask]);
+  await db.write();
 };
 
 /**
