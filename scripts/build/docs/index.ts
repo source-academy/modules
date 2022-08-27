@@ -1,4 +1,4 @@
-import fs, { constants as fsConstants, promises as fsPromises } from 'fs';
+import fs, { promises as fsPromises } from 'fs';
 import * as typedoc from 'typedoc';
 import chalk from 'chalk';
 import drawdown from './drawdown';
@@ -14,12 +14,17 @@ import { cjsDirname, modules as manifest } from '../../utilities';
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
 import type { Low } from 'lowdb/lib';
 
+const warner = (msg: string, bundle: string) => console.log(`${chalk.yellow('Warning:')} ${bundle}: ${msg}`);
+
 /**
  * Convert each element type (e.g. variable, function) to its respective HTML docstring
  * to be displayed to users
  */
 const parsers: {
-  [name: string]: (element: any, bundle: string) => string
+  [name: string]: (element: any, bundle: string) => {
+    header: string;
+    desc: string;
+  }
 } = {
   Variable(element, bundle) {
     const getDesc = () => {
@@ -27,44 +32,42 @@ const parsers: {
         const { comment: { summary: [{ text }] } } = element;
         return drawdown(text);
       } catch (_error) {
-        console.warn(
-          `${chalk.yellow('Warning:')} ${bundle}: Could not get description for ${
-            element.name
-          }`,
-        );
+        warner(`Could not get description for ${element.name}`, bundle);
         return element.name;
       }
     };
 
-    const typeStr
-      = element.type.name && element.type.name ? `:${element.type.name}` : '';
+    if (!element.type?.name) {
+      warner(`Could not determine type for ${element.name}`, bundle);
+    }
 
-    return `<div><h4>${element.name}${typeStr}</h4><div class="description">${getDesc()}</div></div>`;
+    return {
+      header: `${element.name}: ${element.type.name || 'unknown'}`,
+      desc: getDesc(),
+    };
   },
   Function(element, bundle) {
-    if (!element.signatures || element.signatures[0] === undefined) {
-      throw new Error(
-        `Error: ${bundle}: Unable to find a signature for function ${element.name}!`,
-      );
-    }
-
     // In source all functions should only have one signature
-    const signature = element.signatures[0];
+    const { signatures: [signature] } = element;
 
-    // Form the parameter string for the function
-    let paramStr: string;
-    if (!signature.parameters) paramStr = '()';
-    else {
-      paramStr = `(${signature.parameters
-        .map((param) => {
-          const typeStr = param.type ? param.type.name : 'unknown';
-          return `${param.name}: ${typeStr}`;
-        })
-        .join(', ')})`;
-    }
+    const getHeader = () => {
+      // Form the parameter string for the function
+      let paramStr: string;
+      if (!signature.parameters) paramStr = '()';
+      else {
+        paramStr = `(${signature.parameters
+          .map((param) => {
+            const typeStr = param.type ? param.type.name : 'unknown';
+            return `${param.name}: ${typeStr}`;
+          })
+          .join(', ')})`;
+      }
 
-    // Form the result representation for the function
-    const resultStr = !signature.type ? 'void' : signature.type.name;
+      // Form the result representation for the function
+      const resultStr = !signature.type ? 'void' : signature.type.name;
+
+      return `${element.name}${paramStr} → {${resultStr}}`;
+    };
 
     const getDesc = () => {
       try {
@@ -80,7 +83,10 @@ const parsers: {
       }
     };
 
-    return `<div><h4>${element.name}${paramStr} → {${resultStr}}</h4><div class="description">${getDesc()}</div></div>`;
+    return {
+      header: getHeader(),
+      desc: getDesc(),
+    };
   },
 };
 
@@ -150,7 +156,7 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
   });
 
   const project = app.convert();
-  if (!project) return;
+  if (!project) throw new Error('Failed to initialize Typedoc project');
 
   const docsTask = (async () => {
     await app.generateDocs(project, `${BUILD_PATH}/documentation`);
@@ -185,13 +191,6 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
     await app.generateJson(project, `${BUILD_PATH}/docs.json`);
 
     const bundleNames = bundlesWithReason.map(([bundle]) => bundle);
-
-    try {
-      await fsPromises.access(`${BUILD_PATH}/jsons`, fsConstants.F_OK);
-    } catch (_error) {
-      await fsPromises.mkdir(`${BUILD_PATH}/jsons`);
-    }
-
     const buildTime = new Date()
       .getTime();
 
@@ -215,7 +214,8 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
           const output: { [name: string]: string } = {};
           docs.forEach((element) => {
             if (parsers[element.kindString]) {
-              output[element.name] = parsers[element.kindString](element, bundle);
+              const { header, desc } = parsers[element.kindString](element, bundle);
+              output[element.name] = `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
             } else {
               console.warn(
                 `${chalk.yellow('Warning:')} ${bundle}: No parser found for ${
