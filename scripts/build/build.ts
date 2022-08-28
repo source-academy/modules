@@ -24,23 +24,6 @@ type Config = {
 };
 
 /**
- * Converts the iife output from rollup to the format that js-slang
- * expects
- */
-export const convertRawTab = (rawTab: string) => {
-  const regexp = /(?<str>\(React(?:,\s?ReactDom)?\))/ugm;
-  const [{ index, groups: { str } }] = [...rawTab.matchAll(regexp)].slice(-1);
-  return rawTab.substring(0, index) + rawTab.substring(index + str.length);
-};
-
-export const convertRawBundle = (rawBundle: string) => {
-  const regexp = /(?<str>\(\{\}(?:, ctx)?\))/ugm;
-  const [{ index, groups: { str } }] = [...rawBundle.matchAll(regexp)].slice(-1);
-  return rawBundle.substring(0, index) + rawBundle.substring(index + str.length);
-};
-
-
-/**
  * Determine which bundles and tabs to build
  */
 export const getBundlesAndTabs = async (db: Low<DBType>, opts: Opts): Promise<Config> => {
@@ -67,7 +50,7 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: Opts): Promise<Co
         throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
       }
 
-      return opts.modules.map((bundle) => [bundle, 'Specified by --module']) as EntryWithReason[];
+      return opts.modules.map((bundle) => [bundle, 'Specified by --module']);
     }
 
     try {
@@ -207,7 +190,7 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
 
   const bundlePromises = bundlesToBuild.map(async (bundle) => {
     const rollupBundle = await rollup({
-      ...defaultConfig,
+      ...defaultConfig('bundle'),
       input: `${SOURCE_PATH}/bundles/${bundle}/index.ts`,
       external: ['js-slang/moduleHelpers'],
     });
@@ -228,7 +211,7 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
 
   const tabPromises = tabsToBuild.map(async (tabName) => {
     const rollupBundle = await rollup({
-      ...defaultConfig,
+      ...defaultConfig('tab'),
       input: `${SOURCE_PATH}/tabs/${tabName}/index.tsx`,
       external: ['react', 'react-dom'],
     });
@@ -246,7 +229,6 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
     });
 
     await rollupBundle.close();
-
     db.data.tabs[tabName] = buildTime;
   });
 

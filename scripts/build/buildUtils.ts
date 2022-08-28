@@ -34,23 +34,63 @@ import type {
   ReturnStatement,
   Statement,
   ThrowStatement,
+  VariableDeclaration,
 } from 'estree';
 
-export const converterPlugin = (): Plugin => ({
+/**
+ * Use AST parsing to convert modules and tabs to the appropriate form
+ */
+export const converterPlugin = (type: 'bundle' | 'tab'): Plugin => ({
   name: 'Module Converter',
   async renderChunk(code) {
     const parsed = this.parse(code) as unknown as Program;
     const exprStatement = parsed.body[0] as ExpressionStatement;
-    const { callee: funcExpression } = exprStatement.expression as CallExpression;
-    exprStatement.expression = funcExpression as FunctionExpression;
+    const funcExpr = (exprStatement.expression as CallExpression).callee as FunctionExpression;
 
-    return generate(exprStatement);
+    if (type === 'bundle' && funcExpr.params.length > 0) {
+      const [param0, ...params] = funcExpr.params as Identifier[];
+      if (param0.name === 'exports') {
+        // Rollup adds an exports parameter for bundles that directly export their functions
+        // This section removes that parameter
+        const [useStrictExpr, ...newBody] = funcExpr.body.body;
+
+        funcExpr.params = params;
+        funcExpr.body.body = [useStrictExpr, {
+          type: 'VariableDeclaration',
+          kind: 'var',
+          declarations: [{
+            type: 'VariableDeclarator',
+            id: {
+              type: 'Identifier',
+              name: 'exports',
+            },
+            init: {
+              type: 'ObjectExpression',
+              properties: [],
+            },
+          }],
+        } as VariableDeclaration].concat(newBody);
+      } else if (param0.name !== 'moduleHelpers') {
+        // This section handles bundles that don't export all their functions directly
+        // They should only have one parameter named moduleHelpers
+        console.warn(`Expected the first parameter of the bundle to be called 'moduleHelpers', got ${param0.name}`);
+      }
+    }
+
+    exprStatement.expression = funcExpr;
+    const result = generate(exprStatement);
+
+    // Remove trailing semicolon
+    if (result.endsWith(';')) return result.substring(0, result.length - 1);
+    return result;
   },
 });
 
 /**
  * Rollup plugin to use with bundles to compile them with the proxy object
  * to build in undefined symbol checking
+ *
+ * Not currently in use, but the option is there
  */
 export const bundlePlugin = (): Plugin => ({
   name: 'Bundle Parser',
@@ -173,7 +213,7 @@ export const bundlePlugin = (): Plugin => ({
 /**
  * Default configuration used by rollup for transpiling both tabs and bundles
  */
-export const defaultConfig = {
+export const defaultConfig = (type: 'bundle' | 'tab') => ({
   onwarn(warning: any, warn: any) {
     if (SUPPRESSED_WARNINGS.includes(warning.code)) return;
 
@@ -238,9 +278,9 @@ export const defaultConfig = {
       showMinifiedSize: false,
       showGzippedSize: false,
     }),
-    converterPlugin(),
+    converterPlugin(type),
   ],
-};
+});
 
 // Function takes in relative paths, for cleaner logging
 export function isFolderModified(relativeFolderPath: string, storedTimestamp: number) {
