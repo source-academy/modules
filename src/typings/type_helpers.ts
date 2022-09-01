@@ -11,8 +11,6 @@ export type DebuggerContext = {
   workspaceLocation?: any;
 };
 
-export type ModuleParams = Context['moduleParams'];
-
 export type ModuleContexts = Context['moduleContexts'];
 
 /**

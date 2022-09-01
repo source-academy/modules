@@ -1,5 +1,4 @@
 import * as Phaser from 'phaser';
-import { ModuleParams } from '../../typings/type_helpers.js';
 
 export type List = [any, List] | null;
 
@@ -26,9 +25,6 @@ export type GameObject = {
   object: RawGameObject | RawInputObject | RawContainer | undefined;
 };
 
-export type GameModuleParams = ModuleParams & {
-  game: GameParams;
-};
 
 export type GameParams = {
   scene: Phaser.Scene;

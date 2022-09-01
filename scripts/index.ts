@@ -7,6 +7,7 @@ import type { Opts } from './build/buildUtils';
 import { Command } from 'commander';
 import { BUILD_PATH } from './constants';
 import chalk from 'chalk';
+import { minify } from 'terser';
 
 const buildTasks: { [name: string]: (opts: Opts) => Promise<void> } = {
   docs: buildDocs,
@@ -18,6 +19,16 @@ async function main() {
 
   parser.command('create', 'Interactive script for creating modules and tabs')
     .action(create);
+
+  parser.command('test')
+    .action(async () => {
+      const output = await minify('(function() { return 3 + 2; })()');
+      console.log(output.code, {
+        module: true,
+        ecma: 5,
+        toplevel: true,
+      });
+    });
 
   parser.command('build')
     .argument('[script]', 'Build task to execute')

@@ -17,6 +17,7 @@ import { rollup } from 'rollup';
 import memoize from 'lodash/memoize';
 import type { Low } from 'lowdb/lib';
 import copy from './misc';
+import { minify } from 'terser';
 
 type Config = {
   bundlesWithReason: EntryWithReason[];
@@ -42,7 +43,9 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: Opts): Promise<Co
     };
     const bundleNames = Object.keys(modules);
 
-    if (opts.force) return bundleNames.map((bundle) => [bundle, '--force specified']);
+    if (opts.force) {
+      return bundleNames.map((bundle) => [bundle, '--force specified']);
+    }
 
     if (opts.modules) {
       const unknowns = checkForUnknowns(opts.modules, bundleNames);
@@ -196,8 +199,14 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
     });
 
     const bundleFile = `${BUILD_PATH}/bundles/${bundle}.js`;
+    try {
+      // Remove previous bundle file if it still exists
+      await fsPromises.rm(bundleFile);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
 
-    await rollupBundle.write({
+    const { output: [{ code }] } = await rollupBundle.generate({
       file: bundleFile,
       format: 'iife',
       globals: {
@@ -205,6 +214,16 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
       },
     });
     await rollupBundle.close();
+
+    const { code: bundleCode } = await minify(code, {
+      module: true,
+      ecma: 5,
+      compress: {
+        side_effects: false,
+      },
+    });
+
+    await fsPromises.writeFile(bundleFile, bundleCode);
 
     db.data.bundles[bundle] = buildTime;
   });
@@ -217,9 +236,15 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
     });
 
     const tabFile = `${BUILD_PATH}/tabs/${tabName}.js`;
+    try {
+      // Remove previous tab file if it still exists
+      await fsPromises.rm(tabFile);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
 
     // Only one chunk should be generated
-    await rollupBundle.write({
+    const { output: [{ code }] } = await rollupBundle.generate({
       file: tabFile,
       format: 'iife',
       globals: {
@@ -227,8 +252,14 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
         'react-dom': 'ReactDom',
       },
     });
-
     await rollupBundle.close();
+
+    const { code: minified } = await minify(code, {
+      compress: {
+        side_effects: false,
+      },
+    });
+    await fsPromises.writeFile(tabFile, minified);
     db.data.tabs[tabName] = buildTime;
   });
 
