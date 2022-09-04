@@ -1,5 +1,4 @@
 /* [Exports] */
-export const SUPPRESSED_WARNINGS = ['MISSING_NAME_OPTION_FOR_IIFE_EXPORT'];
 
 export const DATABASE_NAME = 'database.json';
 

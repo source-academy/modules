@@ -5,11 +5,10 @@ import type { Low } from 'lowdb/lib';
 import { rollup } from 'rollup';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
-import { CommandInfo, createCommand, modules } from '../../utilities';
+import { CommandInfo, createCommand, Logger, modules } from '../../utilities';
 import {
   checkForUnknowns,
   DBType,
-  defaultConfig,
   EntriesWithReasons,
   getDb,
   isFolderModified,
@@ -18,6 +17,7 @@ import {
 import copy from '../misc';
 
 import commandInfo from './command.json' assert { type: 'json' };
+import { defaultConfig } from './utils';
 
 type Config = {
   bundlesWithReason: EntriesWithReasons;
@@ -30,14 +30,6 @@ type ModulesCommandOptions = Partial<{
   verbose: boolean;
   force: boolean;
 }>;
-
-
-type ModulesActionsOptions = Partial<{
-  verbose: boolean;
-  force: boolean;
-  terserify: boolean;
-}>;
-
 
 /**
  * Determine which bundles and tabs to build
@@ -185,113 +177,142 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: ModulesCommandOpt
 
   const tabsWithReason = await getTabs();
 
+  const startLogger = new Logger();
+
+  const bundlesReason = Object.entries(bundlesWithReason);
+  if (bundlesReason.length === 0) {
+    startLogger.log(chalk.greenBright('All bundles up to date'));
+  } else {
+    startLogger.log(chalk.cyanBright('Building the following bundles:'));
+    if (opts.verbose) {
+      bundlesReason.forEach(([bundle, reason]) => startLogger.log(`• ${chalk.blueBright(bundle)}: ${reason}`));
+    } else {
+      bundlesReason.forEach(([bundle]) => startLogger.log(`• ${chalk.blueBright(bundle)}`));
+    }
+  }
+
+  startLogger.log('');
+  const tabsReason = Object.entries(tabsWithReason);
+
+  if (tabsReason.length === 0) {
+    startLogger.log(chalk.greenBright('All tabs up to date'));
+  } else {
+    startLogger.log(chalk.cyanBright('Building the following tabs:'));
+    if (opts.verbose) {
+      tabsReason.forEach(([tabName, reason]) => startLogger.log(`• ${chalk.blueBright(tabName)}: ${reason}`));
+    } else {
+      tabsReason.forEach(([tabName]) => startLogger.log(`• ${chalk.blueBright(tabName)}`));
+    }
+  }
+
+  startLogger.log('');
+
   return {
     bundlesWithReason,
     tabsWithReason,
+    logs: startLogger.contents,
   };
 };
 
-const buildBundles = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, buildTime: number, opts: ModulesActionsOptions) => {
-  const bundlesWithReason = Object.entries(bundlesReason);
-
-  if (bundlesWithReason.length === 0) {
-    console.log(chalk.greenBright('All bundles up to date'));
-  } else {
-    console.log('Building the following bundles:');
-    if (opts.verbose) {
-      console.log(bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
-        .join('\n'));
-    } else {
-      console.log(bundlesWithReason.map(([bundle]) => `• ${chalk.blueBright(bundle)}`)
-        .join('\n'));
-    }
-  }
-
-  const bundlePromises = bundlesWithReason.map(async ([bundle]) => {
-    try {
-      const rollupBundle = await rollup({
-        ...defaultConfig('bundle'),
-        input: `${SOURCE_PATH}/bundles/${bundle}/index.ts`,
-        external: ['js-slang/moduleHelpers'],
-      });
-
-      const bundleFile = `${BUILD_PATH}/bundles/${bundle}.js`;
+const buildBundles = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, buildTime: number) => {
+  const bundlePromises = Object.keys(bundlesReason)
+    .map(async (bundle) => {
       try {
-      // Remove previous bundle file if it still exists
-        await fsPromises.rm(bundleFile);
+        const rollupBundle = await rollup({
+          ...defaultConfig('bundle'),
+          input: `${SOURCE_PATH}/bundles/${bundle}/index.ts`,
+          external: ['js-slang/moduleHelpers'],
+        });
+
+        const bundleFile = `${BUILD_PATH}/bundles/${bundle}.js`;
+        try {
+          // Remove previous bundle file if it still exists
+          await fsPromises.rm(bundleFile);
+        } catch (error) {
+          if (error.code !== 'ENOENT') throw error;
+        }
+
+        await rollupBundle.write({
+          file: bundleFile,
+          format: 'iife',
+          globals: {
+            'js-slang/moduleHelpers': 'ctx',
+          },
+        });
+
+        await rollupBundle.close();
+        const { size } = await fsPromises.stat(bundleFile);
+
+        db.data.bundles[bundle] = buildTime;
+        return ['success', bundle, `${(size / 1024).toFixed(2)} KB`];
       } catch (error) {
-        if (error.code !== 'ENOENT') throw error;
+        return ['error', bundle, error];
+        // (`Failed to build tab '${bundle}': ${error}`));
       }
+    });
 
-      await rollupBundle.write({
-        file: bundleFile,
-        format: 'iife',
-        globals: {
-          'js-slang/moduleHelpers': 'ctx',
-        },
-      });
+  const buildLogger = new Logger();
+  const buildResults = await Promise.all(bundlePromises);
+  if (buildResults.find(([status]) => status === 'error')) buildLogger.log(`${chalk.cyanBright('Bundles finished with')} ${chalk.redBright('errors:')}`);
+  else buildLogger.log(`${chalk.cyanBright('Bundles finished')} ${chalk.greenBright('successfully:')}`);
 
-      await rollupBundle.close();
-
-      db.data.bundles[bundle] = buildTime;
-    } catch (error) {
-      console.log(chalk.redBright(`Failed to build tab '${bundle}': ${error}`));
-    }
+  buildResults.forEach(([status, bundle, info]) => {
+    if (status === 'success') buildLogger.log(`• ${chalk.blueBright(bundle)}: Build ${chalk.greenBright('successful')} (${info})`);
+    else buildLogger.log(`• ${chalk.blueBright(bundle)}: ${chalk.redBright(info)}`);
   });
 
-  await Promise.all(bundlePromises);
+  return buildLogger.contents;
 };
 
-const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildTime: number, opts: ModulesActionsOptions) => {
-  const tabsWithReason = Object.entries(tabReasons);
-
-  if (tabsWithReason.length === 0) {
-    console.log(chalk.greenBright('All tabs up to date'));
-  } else {
-    console.log('Building the following tabs:');
-    if (opts.verbose) {
-      console.log(tabsWithReason.map(([tabName, reason]) => `• ${chalk.blueBright(tabName)}: ${reason}`)
-        .join('\n'));
-    } else {
-      console.log(tabsWithReason.map(([tabName]) => `• ${chalk.blueBright(tabName)}`)
-        .join('\n'));
-    }
-  }
-
-  const tabPromises = tabsWithReason.map(async ([tabName]) => {
-    try {
-      const rollupBundle = await rollup({
-        ...defaultConfig('tab'),
-        input: `${SOURCE_PATH}/tabs/${tabName}/index.tsx`,
-        external: ['react', 'react-dom'],
-      });
-
-      const tabFile = `${BUILD_PATH}/tabs/${tabName}.js`;
+const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildTime: number) => {
+  const tabPromises = Object.keys(tabReasons)
+    .map(async (tabName) => {
       try {
-      // Remove previous tab file if it still exists
-        await fsPromises.rm(tabFile);
+        const rollupBundle = await rollup({
+          ...defaultConfig('tab'),
+          input: `${SOURCE_PATH}/tabs/${tabName}/index.tsx`,
+          external: ['react', 'react-dom'],
+        });
+
+        const tabFile = `${BUILD_PATH}/tabs/${tabName}.js`;
+        try {
+          // Remove previous tab file if it still exists
+          await fsPromises.rm(tabFile);
+        } catch (error) {
+          if (error.code !== 'ENOENT') throw error;
+        }
+
+        // Only one chunk should be generated
+        await rollupBundle.write({
+          file: tabFile,
+          format: 'iife',
+          globals: {
+            'react': 'React',
+            'react-dom': 'ReactDom',
+          },
+        });
+        await rollupBundle.close();
+        const { size } = await fsPromises.stat(tabFile);
+
+        db.data.tabs[tabName] = buildTime;
+
+        return ['success', tabName, `${(size / 1024).toFixed(2)} KB`];
       } catch (error) {
-        if (error.code !== 'ENOENT') throw error;
+        return ['error', tabName, error];
       }
+    });
 
-      // Only one chunk should be generated
-      await rollupBundle.write({
-        file: tabFile,
-        format: 'iife',
-        globals: {
-          'react': 'React',
-          'react-dom': 'ReactDom',
-        },
-      });
-      await rollupBundle.close();
+  const buildLogger = new Logger();
+  const buildResults = await Promise.all(tabPromises);
+  if (buildResults.find(([status]) => status === 'error')) buildLogger.log(`${chalk.cyanBright('Tabs finished with')} ${chalk.redBright('errors:')}`);
+  else buildLogger.log(`${chalk.cyanBright('Tabs finished')} ${chalk.greenBright('successfully:')}`);
 
-      db.data.tabs[tabName] = buildTime;
-    } catch (error) {
-      console.log(chalk.redBright(`Failed to build tab '${tabName}': ${error}`));
-    }
+  buildResults.forEach(([status, tabName, info]) => {
+    if (status === 'success') buildLogger.log(`• ${chalk.blueBright(tabName)}: Build ${chalk.greenBright('successful')} (${info})`);
+    else buildLogger.log(`• ${chalk.blueBright(tabName)}: ${chalk.redBright(info)}`);
   });
 
-  await Promise.all(tabPromises);
+  return buildLogger.contents;
 };
 
 
@@ -301,22 +322,29 @@ const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildT
 export const buildBundlesAndTabs = async (db: Low<DBType>, {
   bundlesWithReason,
   tabsWithReason,
-}: Config, opts: ModulesActionsOptions) => {
+}: Config) => {
   const buildTime = new Date()
     .getTime();
 
-  await Promise.all([
-    buildBundles(db, bundlesWithReason, buildTime, opts),
-    buildTabs(db, tabsWithReason, buildTime, opts),
+  const [bundleLogs, tabsLogs] = await Promise.all([
+    buildBundles(db, bundlesWithReason, buildTime),
+    buildTabs(db, tabsWithReason, buildTime),
   ]);
   await db.write();
+
+  return [...bundleLogs, '', ...tabsLogs];
 };
 
 export default createCommand(commandInfo as CommandInfo,
   async (opts: ModulesCommandOptions) => {
     const db = await getDb();
-    const parsedOpts = await getBundlesAndTabs(db, opts);
+    const {
+      logs: startLogs,
+      ...parsedOpts
+    } = await getBundlesAndTabs(db, opts);
+    console.log(startLogs.join('\n'));
 
-    await buildBundlesAndTabs(db, parsedOpts, opts);
+    const endLogs = await buildBundlesAndTabs(db, parsedOpts);
+    console.log(endLogs.join('\n'));
     await copy();
   });

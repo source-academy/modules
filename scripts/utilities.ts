@@ -1,6 +1,7 @@
 /**
  * Utilities for scripts
  */
+import chalk from 'chalk';
 import { Command } from 'commander';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -50,17 +51,10 @@ export async function* asCompleted(promises: Promise<any>[]) {
   }
 }
 
-export const objMapper = <TResult extends { [key: string]: any }>(
-  vals: [keyof TResult, TResult[keyof TResult]][],
-): TResult => vals.reduce((prev, [key, value]) => ({
-    ...prev,
-    [key]: value,
-  }), {}) as TResult;
-
 export type CommandInfo = {
   name: string;
   description: string;
-  helpText: string;
+  helpText: string | string[];
   options: {
     optionStrs: string | string[];
     help: string;
@@ -73,11 +67,36 @@ export type CommandInfo = {
 export const createCommand = <TOpts>(
   info: CommandInfo,
   handler: (opts: TOpts) => void | Promise<void>,
-) => info.options.reduce((cmd, { optionStrs, help }) => {
-    if (typeof optionStrs === 'string') optionStrs = [optionStrs];
+) => {
+  const helpText = `${(typeof info.helpText === 'string' ? [info.helpText] : info.helpText).join('\n')}\n`;
+
+  return info.options.reduce((cmd, { optionStrs, help }) => {
+    if (typeof optionStrs === 'string') {
+      optionStrs = [optionStrs];
+    }
     return cmd.option(optionStrs.join(', '), help);
   },
   new Command(info.name)
-    .description(info.description)
-    .addHelpText('beforeAll', info.helpText))
+    .description(chalk.greenBright(info.description))
+    .addHelpText('after', chalk.yellow(helpText)))
     .action(handler);
+};
+
+export class Logger {
+  private logs: string[] = [];
+
+  public get contents() {
+    return this.logs;
+  }
+
+  public reset() { this.logs = []; }
+
+  public printToConsole() {
+    console.log(this.contents.join('\n'));
+    this.reset();
+  }
+
+  public log(str: string) {
+    this.logs.push(str);
+  }
+}

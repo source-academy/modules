@@ -12,6 +12,7 @@ module.exports = {
     "tsconfigRootDir": __dirname,
   },
   "rules": {
+    "array-callback-return": [2, { "checkForEach": false }],
     "func-style": 0,
     "import/no-extraneous-dependencies": 0,
     "no-console": 0,

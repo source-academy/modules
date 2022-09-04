@@ -4,7 +4,7 @@ import type { Low } from 'lowdb/lib';
 import * as typedoc from 'typedoc';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
-import { cjsDirname, CommandInfo, createCommand, modules as manifest } from '../../utilities';
+import { cjsDirname, CommandInfo, createCommand, Logger, modules as manifest } from '../../utilities';
 import {
   checkForUnknowns,
   DBType,
@@ -17,31 +17,30 @@ import copy from '../misc';
 import commandInfo from './command.json' assert { type: 'json'};
 import drawdown from './drawdown';
 
-const warner = (msg: string, bundle: string) => console.log(`${chalk.yellow('Warning:')} ${bundle}: ${msg}`);
 
 /**
  * Convert each element type (e.g. variable, function) to its respective HTML docstring
  * to be displayed to users
  */
 const parsers: {
-  [name: string]: (element: any, bundle: string) => {
+  [name: string]: (element: any, warner: (str: string) => void) => {
     header: string;
     desc: string;
   }
 } = {
-  Variable(element, bundle) {
+  Variable(element, warner) {
     const getDesc = () => {
       try {
         const { comment: { summary: [{ text }] } } = element;
         return drawdown(text);
       } catch (_error) {
-        warner(`Could not get description for ${element.name}`, bundle);
+        warner(`Could not get description for ${element.name}`);
         return element.name;
       }
     };
 
     if (!element.type?.name) {
-      warner(`Could not determine type for ${element.name}`, bundle);
+      warner(`Could not determine type for ${element.name}`);
     }
 
     return {
@@ -49,7 +48,7 @@ const parsers: {
       desc: getDesc(),
     };
   },
-  Function(element, bundle) {
+  Function(element, warner) {
     // In source all functions should only have one signature
     const { signatures: [signature] } = element;
 
@@ -77,11 +76,7 @@ const parsers: {
         const { comment: { summary: [{ text }] } } = signature;
         return drawdown(text);
       } catch (_error) {
-        console.warn(
-          `${chalk.yellow('Warning:')} ${bundle}: Could not get description for ${
-            element.name
-          }`,
-        );
+        warner(`Could not get description for ${element.name}`);
         return element.name;
       }
     };
@@ -100,67 +95,127 @@ type DocsCommandOptions = Partial<{
   force: boolean;
 }>;
 
-type DocsActionOptions = Partial<{
-  html: boolean;
-  verbose: boolean;
-  force: boolean;
-}>;
-
 /**
  * Determine which json files to build
  */
-export const getJsonsToBuild = async (db: Low<DBType>, opts: DocsCommandOptions): Promise<EntriesWithReasons> => {
-  const bundleNames = Object.keys(manifest);
-  const bundleNamesWithReason = (reason: string, names?: string[]) => (names ?? bundleNames).reduce((prev, bundle) => ({
-    ...prev,
-    [bundle]: reason,
-  }), {});
+export const getDocsToBuild = async (db: Low<DBType>, opts: DocsCommandOptions) => {
+  const getJsons = async () => {
+    const bundleNames = Object.keys(manifest);
+    const bundleNamesWithReason = (reason: string, names?: string[]) => (names ?? bundleNames).reduce((prev, bundle) => ({
+      ...prev,
+      [bundle]: reason,
+    }), {});
 
-  try {
-    const docsDir = await fsPromises.readdir(`${BUILD_PATH}/jsons`);
-    if (docsDir.length === 0) {
-      return bundleNamesWithReason('JSONs build directory empty');
+    try {
+      const docsDir = await fsPromises.readdir(`${BUILD_PATH}/jsons`);
+      if (docsDir.length === 0) {
+        return bundleNamesWithReason('JSONs build directory empty');
+      }
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        await fsPromises.mkdir(`${BUILD_PATH}/jsons`);
+        return bundleNamesWithReason('JSONs build directory missing');
+      }
+      throw error;
     }
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      await fsPromises.mkdir(`${BUILD_PATH}/jsons`);
-      return bundleNamesWithReason('JSONs build directory missing');
+
+    if (opts.force) {
+      return bundleNamesWithReason('--force specified');
     }
-    throw error;
+
+    if (opts.bundles) {
+      const unknowns = checkForUnknowns(opts.bundles, bundleNames);
+      if (unknowns.length > 0) throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
+
+      return bundleNamesWithReason('Specified by --module', opts.bundles);
+    }
+
+    return bundleNames.reduce((prev, bundleName) => {
+      if (!fs.existsSync(`${BUILD_PATH}/jsons/${bundleName}.json`)) {
+        return {
+          ...prev,
+          [bundleName]: 'JSON missing from JSONS build directory',
+        };
+      }
+
+      const timestamp = db.data.jsons[bundleName];
+      if (!timestamp || isFolderModified(`${SOURCE_PATH}/bundles/${bundleName}`, timestamp)) {
+        return {
+          ...prev,
+          [bundleName]: 'Outdated build',
+        };
+      }
+
+      return prev;
+    }, {});
+  };
+
+  const toBuild = await getJsons() as EntriesWithReasons;
+
+  const getHtml = async (): Promise<[boolean, string]> => {
+    if (opts.force) return [true, '--force specified'];
+
+    if (Object.keys(toBuild).length > 0) {
+      return opts.html ? [true, 'Modified bundles present'] : [false, '--no-html specified'];
+    }
+
+    try {
+      const dir = await fsPromises.readdir(`${BUILD_PATH}/documentation`);
+      if (dir.length === 0) return [true, 'HTML Build directory empty'];
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+      return [true, 'HTML Build directory missing'];
+    }
+
+    return [false, 'HTML Documentation rebuild not required'];
+  };
+
+  const [shouldBuildHTML, htmlReason] = await getHtml();
+  const logger = new Logger();
+
+  if (!shouldBuildHTML) {
+    if (opts.verbose) logger.log(chalk.yellow(`Not building HTML documentation: ${chalk.yellow(htmlReason)}`));
+    else logger.log(chalk.yellow('Not building HTML documentation'));
+  } else {
+    // eslint-disable-next-line no-lonely-if
+    if (opts.verbose) logger.log(chalk.cyanBright(`Building HTML documentation: ${chalk.yellow(htmlReason)}`));
+    else logger.log(chalk.cyanBright('Building HTML documentation'));
   }
 
-  if (opts.force) {
-    return bundleNamesWithReason('--force specified');
-  }
+  logger.log('');
 
-  if (opts.bundles) {
-    const unknowns = checkForUnknowns(opts.bundles, bundleNames);
-    if (unknowns.length > 0) throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
+  const bundlesWithReason = Object.entries(toBuild);
+  if (bundlesWithReason.length === 0) {
+    logger.log(chalk.greenBright('No jsons to build.'));
+  } else {
+    logger.log(
+      chalk.cyanBright('Building documentation for the following bundles:'),
+    );
 
-    return bundleNamesWithReason('Specified by --module', opts.bundles);
-  }
-
-  return bundleNames.reduce((prev, bundleName) => {
-    if (!fs.existsSync(`${BUILD_PATH}/jsons/${bundleName}.json`)) {
-      return {
-        ...prev,
-        [bundleName]: 'JSON missing from JSONS build directory',
-      };
+    if (opts.verbose) {
+      bundlesWithReason.forEach(([bundle, reason]) => logger.log(`• ${chalk.blueBright(bundle)}: ${reason}`));
+    } else {
+      bundlesWithReason.forEach(([bundle]) => logger.log(`• ${chalk.blueBright(bundle)}`));
     }
-
-    const timestamp = db.data.jsons[bundleName];
-    if (!timestamp || isFolderModified(`${SOURCE_PATH}/bundles/${bundleName}`, timestamp)) {
-      return {
-        ...prev,
-        [bundleName]: 'Outdated build',
-      };
-    }
-
-    return prev;
-  }, {});
+  }
+  return {
+    toBuild,
+    shouldBuildHTML,
+    logs: logger.contents,
+  };
 };
 
-export const buildDocsAndJsons = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, opts: DocsActionOptions) => {
+type Config = {
+  toBuild: EntriesWithReasons;
+  shouldBuildHTML: boolean;
+};
+
+export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildHTML }: Config) => {
+  const bundlesWithReason = Object.entries(toBuild);
+
+  // If nothing needs to be built forego initializing typedoc
+  if (!shouldBuildHTML && bundlesWithReason.length === 0) return [];
+
   const app = new typedoc.Application();
   app.options.addReader(new typedoc.TSConfigReader());
   app.options.addReader(new typedoc.TypeDocReader());
@@ -175,106 +230,146 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesReason: EntriesW
     excludeInternal: true,
     categorizeByGroup: true,
     name: 'Source Academy Modules',
+    logger: 'none',
   });
 
   const project = app.convert();
-  if (!project) throw new Error('Failed to initialize Typedoc project');
+  if (!project) return [chalk.redBright('Docs Error: Failed to initialize Typedoc project')];
 
   const buildTime = new Date()
     .getTime();
 
-  const docsTask = (async () => {
-    if (!opts.html) {
-      console.log(chalk.yellow('--no-html specified, skipping HTML documentation'));
-      return;
+  const docsTask = (async (): Promise<string[]> => {
+    if (!shouldBuildHTML) return [];
+    const docsLogger = new Logger();
+
+    try {
+      await app.generateDocs(project, `${BUILD_PATH}/documentation`);
+
+      // For some reason typedoc's not working, so do a manual copy
+      await fsPromises.copyFile(
+        `${cjsDirname(import.meta.url)}/README.md`,
+        `${BUILD_PATH}/documentation/README.md`,
+      );
+      db.data.html = buildTime;
+      docsLogger.log(`${chalk.cyanBright('HTML Documentation built')} ${chalk.greenBright('succesfully')}`);
+    } catch (error) {
+      docsLogger.log(`${chalk.cyanBright('HTML Documentation')} ${chalk.redBright('errored:')} ${error}`);
     }
 
-    console.log(chalk.greenBright('Building HTML documentation'));
-    await app.generateDocs(project, `${BUILD_PATH}/documentation`);
-
-    // For some reason typedoc's not working, so do a manual copy
-    await fsPromises.copyFile(
-      `${cjsDirname(import.meta.url)}/README.md`,
-      `${BUILD_PATH}/documentation/README.md`,
-    );
-    db.data.html = buildTime;
+    return docsLogger.contents;
   })();
 
-  const jsonTask = (async () => {
-    const bundlesWithReason = Object.entries(bundlesReason);
+  const jsonTask = (async (): Promise<string[]> => {
+    if (bundlesWithReason.length === 0) return [];
 
-    if (bundlesWithReason.length === 0) {
-      console.log(chalk.greenBright('No jsons to build.'));
-      return;
-    }
-    console.log(
-      chalk.greenBright('Building documentation for the following bundles:'),
-    );
+    const jsonsLogger = new Logger();
 
-    if (opts.verbose) {
-      console.log(
-        bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
-          .join('\n'),
-      );
-    } else {
-      console.log(bundlesWithReason.map(([bundle]) => `• ${chalk.blueBright(bundle)}`)
-        .join('\n'));
-    }
-    await app.generateJson(project, `${BUILD_PATH}/docs.json`);
+    try {
+      await app.generateJson(project, `${BUILD_PATH}/docs.json`);
 
+      const docsFile = await fsPromises.readFile(`${BUILD_PATH}/docs.json`, 'utf-8');
+      const parsedJSON = JSON.parse(docsFile)?.children;
 
-    const docsFile = await fsPromises.readFile(`${BUILD_PATH}/docs.json`, 'utf-8');
-    const parsedJSON = JSON.parse(docsFile)?.children;
+      if (!parsedJSON) {
+        return [chalk.redBright('ERROR: Failed to parse docs.json')];
+      }
 
-    if (!parsedJSON) {
-      throw new Error('Failed to parse docs.json');
-    }
+      const jsonResults = await Promise.all(
+        bundlesWithReason.map(async ([bundle]) => {
+          const jsonLogger = new Logger();
 
-    await Promise.all(
-      bundlesWithReason.map(async ([bundle]) => {
-        const docs = parsedJSON.find((x) => x.name === bundle)?.children;
+          let status = 'success';
+          const warner = (msg: string) => {
+            status = 'warn';
+            return jsonLogger.log(msg);
+          };
 
-        if (!docs) {
-          console.warn(
-            `${chalk.yellow('Warning:')} No documentation found for ${bundle}`,
-          );
-        } else {
-        // Run through each item in the bundle and run its parser
-          const output: { [name: string]: string } = {};
-          docs.forEach((element) => {
-            if (parsers[element.kindString]) {
-              const { header, desc } = parsers[element.kindString](element, bundle);
-              output[element.name] = `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
+          try {
+            const docs = parsedJSON.find((x) => x.name === bundle)?.children;
+
+            if (!docs) {
+              warner('No documentation found for bundle');
             } else {
-              console.warn(
-                `${chalk.yellow('Warning:')} ${bundle}: No parser found for ${
-                  element.name
-                } of type ${element.type}`,
+            // Run through each item in the bundle and run its parser
+              const output: { [name: string]: string } = {};
+              docs.forEach((element) => {
+                if (parsers[element.kindString]) {
+                  const { header, desc } = parsers[element.kindString](element, warner);
+                  output[element.name] = `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
+                } else {
+                  warner(`No parser found for ${element.name} of type ${element.type}`);
+                }
+              });
+
+              // Then write that output to the bundles' respective json files
+              await fsPromises.writeFile(
+                `${BUILD_PATH}/jsons/${bundle}.json`,
+                JSON.stringify(output, null, 2),
               );
             }
-          });
 
-          // Then write that output to the bundles' respective json files
-          await fsPromises.writeFile(
-            `${BUILD_PATH}/jsons/${bundle}.json`,
-            JSON.stringify(output, null, 2),
-          );
+            db.data.jsons[bundle] = buildTime;
+
+            return {
+              bundle,
+              status,
+              logs: jsonLogger.contents,
+            };
+          } catch (error) {
+            return {
+              bundle,
+              status: 'error',
+              logs: [`Error: ${error}`],
+            };
+          }
+        }),
+      );
+
+      if (jsonResults.find(({ status }) => status === 'error')) jsonsLogger.log(`${chalk.cyanBright('Jsons finished with')} ${chalk.redBright('errors')}`);
+      else if (jsonResults.find(({ status }) => status === 'warn')) jsonsLogger.log(`${chalk.cyanBright('Jsons finished with')} ${chalk.yellow('warnings')}`);
+      else jsonsLogger.log(`${chalk.cyanBright('Jsons finished')} ${chalk.greenBright('successfully')}`);
+
+      jsonResults.forEach(({ bundle, status, logs }) => {
+        switch (status) {
+          case 'error': {
+            jsonsLogger.log(`• ${chalk.blueBright(bundle)} ${chalk.redBright('errored')}: ${logs[0]}`);
+            break;
+          }
+          case 'warn': {
+            jsonsLogger.log(`• ${chalk.blueBright(bundle)}: Built with ${chalk.yellow('warnings')}:`);
+            logs.forEach((x) => jsonsLogger.log(`\t${x}`));
+            break;
+          }
+          case 'success': {
+            jsonsLogger.log(`• ${chalk.blueBright(bundle)}: Build ${chalk.greenBright('successful')}`);
+            break;
+          }
         }
+      });
 
-        db.data.jsons[bundle] = buildTime;
-      }),
-    );
+      return jsonsLogger.contents;
+    } catch (error) {
+      return [chalk.redBright(`JSON Task errored: ${error}`)];
+    }
   })();
 
-  await Promise.all([docsTask, jsonTask]);
+  const [docsResult, jsonsResult] = await Promise.all([docsTask, jsonTask]);
   await db.write();
+
+  return [...docsResult, '', ...jsonsResult];
 };
 
 export default createCommand(commandInfo as CommandInfo,
   async (opts: DocsCommandOptions) => {
     const db = await getDb();
-    const jsonsToBuild = await getJsonsToBuild(db, opts);
+    const {
+      logs: startLogs,
+      ...docsBuildOpts
+    } = await getDocsToBuild(db, opts);
+    console.log(startLogs.join('\n'));
 
-    await buildDocsAndJsons(db, jsonsToBuild, opts);
+    const endLogs = await buildDocsAndJsons(db, docsBuildOpts);
+    console.log(endLogs.join('\n'));
     await copy();
   });

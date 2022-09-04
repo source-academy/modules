@@ -1,7 +1,21 @@
 {
   "name": "modules",
   "description": "Command for building bundles and tabs",
-  "helpText": "",
+  "helpText": [
+    "Running the command without options will rebuild tabs and bundles if they have been modified since the last recorded build time",
+    "By specifying options, the command will look through the source files and rebuild bundles for the following reasons:",
+    "  1. Bundle was specified by -b",
+    "  2. Bundle is missing from the build folder",
+    "  3. The build folder for bundles is missing or empty",
+    "  4. --force was specified, in which case all bundles will be rebuilt regardless of status\n",
+    "Tabs will be rebuilt for similar reasons:",
+    "  1. Tab was specified by -t",
+    "  2. Tab is missing from the build folder",
+    "  3. The build folder for tabs is missing or empty",
+    "  4. --force was specified, in which case all tabs will be rebuilt regardless of status",
+    "  5. Its parent bundle is being rebuilt\n",
+    "Use --verbose to see the reason each tab and bundle is being rebuilt"
+  ],
   "options": [
     {
       "optionStrs": ["-f", "--force"],
