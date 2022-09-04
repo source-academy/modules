@@ -1,23 +1,9 @@
 // /* [Imports] */
-import fs from 'fs';
 import { babel } from '@rollup/plugin-babel';
 import rollupResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import chalk from 'chalk';
-import commonJS from 'rollup-plugin-commonjs';
-import filesize from 'rollup-plugin-filesize';
-import injectProcessEnv from 'rollup-plugin-inject-process-env';
-import { join } from 'path';
-import { Low, JSONFile } from 'lowdb';
-import {
-  DATABASE_NAME,
-  NODE_MODULES_PATTERN,
-  SOURCE_PATH,
-  SUPPRESSED_WARNINGS,
-} from '../constants';
-import { cjsDirname } from '../utilities';
 import { generate } from 'astring';
-import type { Plugin } from 'rollup';
+import chalk from 'chalk';
 import type {
   BinaryExpression,
   CallExpression,
@@ -36,6 +22,21 @@ import type {
   ThrowStatement,
   VariableDeclaration,
 } from 'estree';
+import fs from 'fs';
+import { JSONFile, Low } from 'lowdb';
+import { join } from 'path';
+import type { Plugin } from 'rollup';
+import commonJS from 'rollup-plugin-commonjs';
+import filesize from 'rollup-plugin-filesize';
+import injectProcessEnv from 'rollup-plugin-inject-process-env';
+
+import {
+  DATABASE_NAME,
+  NODE_MODULES_PATTERN,
+  SOURCE_PATH,
+  SUPPRESSED_WARNINGS,
+} from '../constants';
+import { cjsDirname } from '../utilities';
 
 /**
  * Use AST parsing to convert modules and tabs to the appropriate form
@@ -331,12 +332,14 @@ type ObjectFromList<T extends ReadonlyArray<string>, V = string> = {
 };
 
 export type DBType = {
-  docs: number;
+  html: number;
 } & ObjectFromList<typeof DBKeys, {
   [name: string]: number;
 }>;
 
-export type EntryWithReason = [string, string];
+export type EntriesWithReasons = {
+  [name: string]: string;
+};
 
 export type Opts = Partial<{
   force: boolean;
@@ -356,7 +359,7 @@ export async function getDb() {
   if (!db.data) {
     // Set default data if database.json is missing
     db.data = {
-      docs: 0,
+      html: 0,
       jsons: {},
       bundles: {},
       tabs: {},

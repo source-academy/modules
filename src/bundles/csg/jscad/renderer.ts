@@ -1,5 +1,5 @@
 /* [Imports] */
-import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox.js';
+import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox';
 import {
   cameras,
   controls,

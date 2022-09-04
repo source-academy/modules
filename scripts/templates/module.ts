@@ -1,8 +1,10 @@
-import { askQuestion, success, warn } from './print';
-import { cjsDirname, modules as manifest } from '../utilities';
 import { promises as fs } from 'fs';
-import { isSnakeCase } from './utilities';
+
 import { SOURCE_PATH } from '../constants';
+import { cjsDirname, modules as manifest } from '../utilities';
+
+import { askQuestion, success, warn } from './print';
+import { isSnakeCase } from './utilities';
 
 export function check(moduleName: string) {
   return Object.keys(manifest)

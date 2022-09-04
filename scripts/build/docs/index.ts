@@ -1,18 +1,21 @@
-import fs, { promises as fsPromises } from 'fs';
-import * as typedoc from 'typedoc';
 import chalk from 'chalk';
-import drawdown from './drawdown';
-import {
-  isFolderModified,
-  getDb,
-  DBType,
-  checkForUnknowns,
-  EntryWithReason,
-  Opts,
-} from '../buildUtils';
-import { cjsDirname, modules as manifest } from '../../utilities';
-import { BUILD_PATH, SOURCE_PATH } from '../../constants';
+import { Command } from 'commander';
+import fs, { promises as fsPromises } from 'fs';
 import type { Low } from 'lowdb/lib';
+import * as typedoc from 'typedoc';
+
+import { BUILD_PATH, SOURCE_PATH } from '../../constants';
+import { cjsDirname, modules as manifest } from '../../utilities';
+import {
+  checkForUnknowns,
+  DBType,
+  EntriesWithReasons,
+  getDb,
+  isFolderModified,
+} from '../buildUtils';
+import copy from '../misc';
+
+import drawdown from './drawdown';
 
 const warner = (msg: string, bundle: string) => console.log(`${chalk.yellow('Warning:')} ${bundle}: ${msg}`);
 
@@ -90,55 +93,74 @@ const parsers: {
   },
 };
 
-type JsonOpts = {
-  force?: boolean;
-  jsons: string[];
-};
+type DocsCommandOptions = Partial<{
+  bundles: string[];
+  html: boolean;
+  verbose: boolean;
+  force: boolean;
+}>;
+
+type DocsActionOptions = Partial<{
+  html: boolean;
+  verbose: boolean;
+  force: boolean;
+}>;
 
 /**
  * Determine which json files to build
  */
-export const getJsonsToBuild = async (db: Low<DBType>, opts: JsonOpts): Promise<EntryWithReason[]> => {
+export const getJsonsToBuild = async (db: Low<DBType>, opts: DocsCommandOptions): Promise<EntriesWithReasons> => {
   const bundleNames = Object.keys(manifest);
+  const bundleNamesWithReason = (reason: string, names?: string[]) => (names ?? bundleNames).reduce((prev, bundle) => ({
+    ...prev,
+    [bundle]: reason,
+  }), {});
 
   try {
     const docsDir = await fsPromises.readdir(`${BUILD_PATH}/jsons`);
-    if (docsDir.length === 0) return bundleNames.map((bundleName) => [bundleName, 'JSONs build directory empty']);
+    if (docsDir.length === 0) {
+      return bundleNamesWithReason('JSONs build directory empty');
+    }
   } catch (error) {
     if (error.code === 'ENOENT') {
       await fsPromises.mkdir(`${BUILD_PATH}/jsons`);
-      return bundleNames.map((bundleName) => [bundleName, 'JSONs build directory missing']);
+      return bundleNamesWithReason('JSONs build directory missing');
     }
     throw error;
   }
 
   if (opts.force) {
-    return bundleNames.map((bundleName) => [bundleName, '--force specified']);
+    return bundleNamesWithReason('--force specified');
   }
 
-  if (opts.jsons) {
-    const unknowns = checkForUnknowns(opts.jsons, bundleNames);
+  if (opts.bundles) {
+    const unknowns = checkForUnknowns(opts.bundles, bundleNames);
     if (unknowns.length > 0) throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
 
-    return opts.jsons.map((bundleName) => [bundleName, 'Specified by --module']);
+    return bundleNamesWithReason('Specified by --module', opts.bundles);
   }
 
-  return bundleNames.map((bundleName) => {
+  return bundleNames.reduce((prev, bundleName) => {
     if (!fs.existsSync(`${BUILD_PATH}/jsons/${bundleName}.json`)) {
-      return [bundleName, 'JSON missing from JSONS build directory'];
+      return {
+        ...prev,
+        [bundleName]: 'JSON missing from JSONS build directory',
+      };
     }
 
     const timestamp = db.data.jsons[bundleName];
     if (!timestamp || isFolderModified(`${SOURCE_PATH}/bundles/${bundleName}`, timestamp)) {
-      return [bundleName, 'Outdated build'];
+      return {
+        ...prev,
+        [bundleName]: 'Outdated build',
+      };
     }
 
-    return false;
-  })
-    .filter((x) => x !== false) as EntryWithReason[];
+    return prev;
+  }, {});
 };
 
-export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: EntryWithReason[], verbose: boolean) => {
+export const buildDocsAndJsons = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, opts: DocsActionOptions) => {
   const app = new typedoc.Application();
   app.options.addReader(new typedoc.TSConfigReader());
   app.options.addReader(new typedoc.TypeDocReader());
@@ -158,7 +180,16 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
   const project = app.convert();
   if (!project) throw new Error('Failed to initialize Typedoc project');
 
+  const buildTime = new Date()
+    .getTime();
+
   const docsTask = (async () => {
+    if (!opts.html) {
+      console.log(chalk.yellow('--no-html specified, skipping HTML documentation'));
+      return;
+    }
+
+    console.log(chalk.greenBright('Building HTML documentation'));
     await app.generateDocs(project, `${BUILD_PATH}/documentation`);
 
     // For some reason typedoc's not working, so do a manual copy
@@ -166,11 +197,12 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
       `${cjsDirname(import.meta.url)}/README.md`,
       `${BUILD_PATH}/documentation/README.md`,
     );
-    db.data.docs = new Date()
-      .getTime();
+    db.data.html = buildTime;
   })();
 
   const jsonTask = (async () => {
+    const bundlesWithReason = Object.entries(bundlesReason);
+
     if (bundlesWithReason.length === 0) {
       console.log(chalk.greenBright('No jsons to build.'));
       return;
@@ -179,7 +211,7 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
       chalk.greenBright('Building documentation for the following bundles:'),
     );
 
-    if (verbose) {
+    if (opts.verbose) {
       console.log(
         bundlesWithReason.map(([bundle, reason]) => `• ${chalk.blueBright(bundle)}: ${reason}`)
           .join('\n'),
@@ -190,9 +222,6 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
     }
     await app.generateJson(project, `${BUILD_PATH}/docs.json`);
 
-    const bundleNames = bundlesWithReason.map(([bundle]) => bundle);
-    const buildTime = new Date()
-      .getTime();
 
     const docsFile = await fsPromises.readFile(`${BUILD_PATH}/docs.json`, 'utf-8');
     const parsedJSON = JSON.parse(docsFile)?.children;
@@ -202,7 +231,7 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
     }
 
     await Promise.all(
-      bundleNames.map(async (bundle) => {
+      bundlesWithReason.map(async ([bundle]) => {
         const docs = parsedJSON.find((x) => x.name === bundle)?.children;
 
         if (!docs) {
@@ -241,15 +270,16 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesWithReason: Entr
   await db.write();
 };
 
-/**
- * Build both JSONS and HTML documentation
- */
-export default async ({ verbose, jsons, force }: Opts) => {
-  const db = await getDb();
-  const jsonsToBuild = await getJsonsToBuild(db, {
-    jsons,
-    force,
-  });
+export default new Command('docs')
+  .description('Command for building JSON and HTML documentation')
+  .option('-f, --force', 'Force all files to be rebuilt')
+  .option('-v, --verbose', 'Enable verbose information')
+  .option('-b, --bundles <bundles...>', 'Specify jsons of which bundles to be rebuilt')
+  .option('--no-html', 'Skip building HTML documentation')
+  .action(async (opts: DocsCommandOptions) => {
+    const db = await getDb();
+    const jsonsToBuild = await getJsonsToBuild(db, opts);
 
-  await buildDocsAndJsons(db, jsonsToBuild, verbose);
-};
+    await buildDocsAndJsons(db, jsonsToBuild, opts);
+    await copy();
+  });

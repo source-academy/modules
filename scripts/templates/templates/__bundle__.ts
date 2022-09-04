@@ -8,10 +8,11 @@
  * @author Author Name
  */
 
-import {
-  ModuleContexts,
-  ModuleParams,
-} from '../../../src/typings/type_helpers.js';
+/*
+  To access things like the context or module state you can just import the context
+  using the import below
+ */
+import { context } from 'js-slang/moduleHelpers';
 
 /**
  * Sample function. Increments a number by 1.
@@ -19,16 +20,6 @@ import {
  * @param x The number to be incremented.
  * @returns The incremented value of the number.
  */
-function sample_function(x: number): number {
+export function sample_function(x: number): number {
   return ++x;
-}
-
-//NOTE Remove the underscores before the parameter names if you will be using
-// them. These parameters are passed in over on the frontend, and can later be
-// accessed again in your module's tab via the DebuggerContext it gets passed
-export default (
-  _moduleParams: ModuleParams,
-  _moduleContexts: ModuleContexts
-) => ({
-  sample_function,
-});
+} // Then any functions or variables you want to expose to the user is exported from the bundle's index.ts file

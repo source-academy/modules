@@ -1,10 +1,12 @@
 /* eslint-disable no-await-in-loop */
 import { promises as fs } from 'fs';
-import { askQuestion, warn, success } from './print';
-import { isPascalCase } from './utilities';
-import { check as _check } from './module';
-import { modules as manifest, cjsDirname } from '../utilities';
+
 import { SOURCE_PATH } from '../constants';
+import { cjsDirname, modules as manifest } from '../utilities';
+
+import { check as _check } from './module';
+import { askQuestion, success, warn } from './print';
+import { isPascalCase } from './utilities';
 
 const existingTabs = Object.values(manifest)
   .flatMap((value) => value.tabs);

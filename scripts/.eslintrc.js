@@ -3,7 +3,7 @@
 
 module.exports = {
   // Need react here because otherwise we get undefined rule errors
-  "plugins": ["import", "react", "@typescript-eslint"],
+  "plugins": ["import", "react", "simple-import-sort", "@typescript-eslint"],
   "extends": ["../.eslintrc.base.js", "airbnb-typescript"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -18,7 +18,26 @@ module.exports = {
     "no-continue": 0,
     "no-param-reassign": 0,
     "no-restricted-syntax": 0,
-    "prefer-const": 0
+    "prefer-const": 0,
+    "simple-import-sort/imports": [
+      1,
+      {
+        "groups": [
+          // Packages `react` related packages come first.
+          ["^react", "^@?\\w"],
+          // Internal packages.
+          ["^(@|components)(/.*|$)"],
+          // Side effect imports.
+          ["^\\u0000"],
+          // Parent imports. Put `..` last.
+          ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+          // Other relative imports. Put same-folder imports and `.` last.
+          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+          // Style imports.
+          ["^.+\\.?(css)$"]
+        ]
+      }
+    ]
   },
   "overrides": [{
     "extends": "../.eslintrc.test.json",

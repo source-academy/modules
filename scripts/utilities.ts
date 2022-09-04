@@ -3,7 +3,7 @@
  */
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import _modules from '../modules.json';
+import _modules from '../modules.json' assert { type: 'json' };
 
 export type ModuleManifest = {
   [name: string]: {
@@ -47,3 +47,10 @@ export async function* asCompleted(promises: Promise<any>[]) {
     yield toYield.promise;
   }
 }
+
+export const objMapper = <TResult extends { [key: string]: any }>(
+  vals: [keyof TResult, TResult[keyof TResult]][],
+): TResult => vals.reduce((prev, [key, value]) => ({
+    ...prev,
+    [key]: value,
+  }), {}) as TResult;

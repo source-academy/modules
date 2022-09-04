@@ -1,5 +1,7 @@
-import { error as _error, info, rl, askQuestion, warn } from './print';
+import { Command } from 'commander';
+
 import { addNew as addNewModule } from './module';
+import { askQuestion, error as _error, info, rl, warn } from './print';
 import { addNew as addNewTab } from './tab';
 
 async function askMode() {
@@ -16,15 +18,19 @@ async function askMode() {
   }
 }
 
-export default async function () {
-  try {
-    const mode = await askMode();
-    if (mode === 'module') await addNewModule();
-    else if (mode === 'tab') await addNewTab();
-  } catch (error) {
-    _error(`ERROR: ${error.message}`);
-    info('Terminating module app...');
-  } finally {
-    rl.close();
-  }
-}
+export default new Command('create')
+  .description('Interactive script for creating modules and tabs')
+  .action(
+    async () => {
+      try {
+        const mode = await askMode();
+        if (mode === 'module') await addNewModule();
+        else if (mode === 'tab') await addNewTab();
+      } catch (error) {
+        _error(`ERROR: ${error.message}`);
+        info('Terminating module app...');
+      } finally {
+        rl.close();
+      }
+    },
+  );
