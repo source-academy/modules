@@ -93,6 +93,9 @@ const defaultConfig = {
 module.exports = api => api.env('test') ? {
   ...defaultConfig,
   plugins: [
-    ["babel-plugin-transform-import-meta", { module: "ES6" }]
+    [
+      "babel-plugin-transform-import-meta", { module: "ES6" },
+      "@babel/plugin-syntax-import-assertions",
+    ]
   ],
 } : defaultConfig;
