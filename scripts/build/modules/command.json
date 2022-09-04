@@ -1,0 +1,23 @@
+{
+  "name": "modules",
+  "description": "Command for building bundles and tabs",
+  "helpText": "",
+  "options": [
+    {
+      "optionStrs": ["-f", "--force"],
+      "help": "Force all files to be rebuilt"
+    },
+    {
+      "optionStrs": ["-v", "--verbose"],
+      "help": "Enable verbose information"
+    },
+    {
+      "optionStrs": ["-b", "--bundles"],
+      "help": "Specify bundles to be built"
+    },
+    {
+      "optionStrs": ["-t", "--tabs"],
+      "help": "Specify tabs to be built"
+    }
+  ]
+}

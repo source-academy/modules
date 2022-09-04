@@ -1,8 +1,10 @@
 /**
  * Utilities for scripts
  */
+import { Command } from 'commander';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+
 import _modules from '../modules.json' assert { type: 'json' };
 
 export type ModuleManifest = {
@@ -54,3 +56,28 @@ export const objMapper = <TResult extends { [key: string]: any }>(
     ...prev,
     [key]: value,
   }), {}) as TResult;
+
+export type CommandInfo = {
+  name: string;
+  description: string;
+  helpText: string;
+  options: {
+    optionStrs: string | string[];
+    help: string;
+  }[];
+};
+
+/**
+ * Create a `commander` command using a configuration object
+ */
+export const createCommand = <TOpts>(
+  info: CommandInfo,
+  handler: (opts: TOpts) => void | Promise<void>,
+) => info.options.reduce((cmd, { optionStrs, help }) => {
+    if (typeof optionStrs === 'string') optionStrs = [optionStrs];
+    return cmd.option(optionStrs.join(', '), help);
+  },
+  new Command(info.name)
+    .description(info.description)
+    .addHelpText('beforeAll', info.helpText))
+    .action(handler);

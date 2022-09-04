@@ -1,11 +1,10 @@
 import chalk from 'chalk';
-import { Command } from 'commander';
 import fs, { promises as fsPromises } from 'fs';
 import type { Low } from 'lowdb/lib';
 import * as typedoc from 'typedoc';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
-import { cjsDirname, modules as manifest } from '../../utilities';
+import { cjsDirname, CommandInfo, createCommand, modules as manifest } from '../../utilities';
 import {
   checkForUnknowns,
   DBType,
@@ -15,6 +14,7 @@ import {
 } from '../buildUtils';
 import copy from '../misc';
 
+import commandInfo from './command.json' assert { type: 'json'};
 import drawdown from './drawdown';
 
 const warner = (msg: string, bundle: string) => console.log(`${chalk.yellow('Warning:')} ${bundle}: ${msg}`);
@@ -270,13 +270,8 @@ export const buildDocsAndJsons = async (db: Low<DBType>, bundlesReason: EntriesW
   await db.write();
 };
 
-export default new Command('docs')
-  .description('Command for building JSON and HTML documentation')
-  .option('-f, --force', 'Force all files to be rebuilt')
-  .option('-v, --verbose', 'Enable verbose information')
-  .option('-b, --bundles <bundles...>', 'Specify jsons of which bundles to be rebuilt')
-  .option('--no-html', 'Skip building HTML documentation')
-  .action(async (opts: DocsCommandOptions) => {
+export default createCommand(commandInfo as CommandInfo,
+  async (opts: DocsCommandOptions) => {
     const db = await getDb();
     const jsonsToBuild = await getJsonsToBuild(db, opts);
 

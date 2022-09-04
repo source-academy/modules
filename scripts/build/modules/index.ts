@@ -1,13 +1,11 @@
 import chalk from 'chalk';
-import { Command } from 'commander';
 import fs, { promises as fsPromises } from 'fs';
 import memoize from 'lodash/memoize';
 import type { Low } from 'lowdb/lib';
 import { rollup } from 'rollup';
 
-import { BUILD_PATH, SOURCE_PATH } from '../constants';
-import { modules } from '../utilities';
-
+import { BUILD_PATH, SOURCE_PATH } from '../../constants';
+import { CommandInfo, createCommand, modules } from '../../utilities';
 import {
   checkForUnknowns,
   DBType,
@@ -16,8 +14,10 @@ import {
   getDb,
   isFolderModified,
   removeDuplicates,
-} from './buildUtils';
-import copy from './misc';
+} from '../buildUtils';
+import copy from '../misc';
+
+import commandInfo from './command.json' assert { type: 'json' };
 
 type Config = {
   bundlesWithReason: EntriesWithReasons;
@@ -312,13 +312,8 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
   await db.write();
 };
 
-export default new Command('modules')
-  .description('Command for building bundles and tabs')
-  .option('-f, --force', 'Force all files to be rebuilt')
-  .option('-v, --verbose', 'Enable verbose information')
-  .option('-b, --bundles <bundles...>', 'Specify bundles to be rebuilt')
-  .option('-t, --tabs <tabs...>', 'Specify tabs to be rebuilt')
-  .action(async (opts: ModulesCommandOptions) => {
+export default createCommand(commandInfo as CommandInfo,
+  async (opts: ModulesCommandOptions) => {
     const db = await getDb();
     const parsedOpts = await getBundlesAndTabs(db, opts);
 

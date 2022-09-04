@@ -341,14 +341,6 @@ export type EntriesWithReasons = {
   [name: string]: string;
 };
 
-export type Opts = Partial<{
-  force: boolean;
-  verbose: boolean;
-  modules: string[];
-  tabs: string[];
-  jsons: string[];
-}>;
-
 /**
  * Get a new Lowdb instance
  */
@@ -367,8 +359,6 @@ export async function getDb() {
   }
   return db;
 }
-
-export type BuildTask = (db: Low<DBType>) => Promise<any>;
 
 export function removeDuplicates<T>(arr: T[]) {
   return [...new Set<T>(arr)];
