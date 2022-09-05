@@ -155,7 +155,8 @@ export const getDocsToBuild = async (db: Low<DBType>, opts: DocsCommandOptions) 
   const getHtml = async (): Promise<[boolean, string]> => {
     if (opts.force) return [true, '--force specified'];
 
-    if (Object.keys(toBuild).length > 0) {
+    if (Object.keys(manifest)
+      .find((moduleName) => isFolderModified(`${SOURCE_PATH}/bundles/${moduleName}`, db.data.html))) {
       return opts.html ? [true, 'Modified bundles present'] : [false, '--no-html specified'];
     }
 
@@ -241,7 +242,6 @@ export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildH
 
   const docsTask = (async (): Promise<string[]> => {
     if (!shouldBuildHTML) return [];
-    const docsLogger = new Logger();
 
     try {
       await app.generateDocs(project, `${BUILD_PATH}/documentation`);
@@ -252,12 +252,10 @@ export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildH
         `${BUILD_PATH}/documentation/README.md`,
       );
       db.data.html = buildTime;
-      docsLogger.log(`${chalk.cyanBright('HTML Documentation built')} ${chalk.greenBright('succesfully')}`);
+      return [`${chalk.cyanBright('HTML Documentation built')} ${chalk.greenBright('succesfully')}`];
     } catch (error) {
-      docsLogger.log(`${chalk.cyanBright('HTML Documentation')} ${chalk.redBright('errored:')} ${error}`);
+      return [`${chalk.cyanBright('HTML Documentation')} ${chalk.redBright('errored:')} ${error}`];
     }
-
-    return docsLogger.contents;
   })();
 
   const jsonTask = (async (): Promise<string[]> => {
