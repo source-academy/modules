@@ -1,4 +1,5 @@
 import { babel } from '@rollup/plugin-babel';
+import commonJS from '@rollup/plugin-commonjs';
 import rollupResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import { generate } from 'astring';
@@ -11,7 +12,6 @@ import type {
   VariableDeclaration,
 } from 'estree';
 import { Plugin } from 'rollup';
-import commonJS from 'rollup-plugin-commonjs';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 import { NODE_MODULES_PATTERN, SOURCE_PATH } from '../../constants';
@@ -101,32 +101,32 @@ export const defaultConfig = (type: 'bundle' | 'tab') => ({
     commonJS({
       include: NODE_MODULES_PATTERN,
       // https://github.com/rollup/rollup-plugin-commonjs#custom-named-exports
-      namedExports: {
-        'react': [
-          'Children',
-          'cloneElement',
-          'Component',
-          'createContext',
-          'createElement',
-          'createRef',
-          'isValidElement',
-          'PureComponent',
-          'useCallback',
-          'useContext',
-          'useEffect',
-          'useMemo',
-          'useReducer',
-          'useRef',
-          'useState',
-        ],
-        'react-dom': [
-          'createPortal',
-          'findDOMNode',
-          'render',
-          'unmountComponentAtNode',
-          'unstable_renderSubtreeIntoContainer',
-        ],
-      },
+      // namedExports: {
+      //   'react': [
+      //     'Children',
+      //     'cloneElement',
+      //     'Component',
+      //     'createContext',
+      //     'createElement',
+      //     'createRef',
+      //     'isValidElement',
+      //     'PureComponent',
+      //     'useCallback',
+      //     'useContext',
+      //     'useEffect',
+      //     'useMemo',
+      //     'useReducer',
+      //     'useRef',
+      //     'useState',
+      //   ],
+      //   'react-dom': [
+      //     'createPortal',
+      //     'findDOMNode',
+      //     'render',
+      //     'unmountComponentAtNode',
+      //     'unstable_renderSubtreeIntoContainer',
+      //   ],
+      // },
     }),
     injectProcessEnv({
       NODE_ENV: process.env.NODE_ENV,
