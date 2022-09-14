@@ -1,6 +1,7 @@
 import { parse } from 'acorn';
 
-import { converterPlugin } from '../build/buildUtils';
+import { converterPlugin } from '../build/modules/utils';
+
 
 const plugin = (type: 'bundle' | 'tab') => Object.assign(converterPlugin(type), {
   parse: (code) => parse(code, {
