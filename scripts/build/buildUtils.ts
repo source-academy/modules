@@ -1,5 +1,4 @@
 // /* [Imports] */
-import chalk from 'chalk';
 import fs from 'fs';
 import { JSONFile, Low } from 'lowdb';
 import { join } from 'path';
@@ -35,7 +34,7 @@ export function isFolderModified(relativeFolderPath: string, storedTimestamp: nu
 
     // Is file. Compare timestamps to see if stop early
     if (stats.mtimeMs > storedTimestamp) {
-      console.log(chalk.grey(`• File modified: ${relativeContentPath}`));
+      // console.log(chalk.grey(`• File modified: ${relativeContentPath}`));
       return true;
     }
   }

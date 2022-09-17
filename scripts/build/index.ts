@@ -10,9 +10,9 @@ import copy from './misc';
 import modulesCommand, { buildBundlesAndTabs, getBundlesAndTabs } from './modules';
 
 type BuildAllCommandOptions = Partial<{
-  bundles: string[];
-  tabs: string[];
-  jsons: string[];
+  bundles: string | string[];
+  tabs: string | string[];
+  jsons: string | string[];
   html: boolean;
   verbose: boolean;
   force: boolean;

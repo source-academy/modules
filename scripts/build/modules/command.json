@@ -26,11 +26,11 @@
       "help": "Enable verbose information"
     },
     {
-      "optionStrs": ["-b", "--bundles"],
+      "optionStrs": ["-b", "--bundles <...bundles>"],
       "help": "Specify bundles to be built"
     },
     {
-      "optionStrs": ["-t", "--tabs"],
+      "optionStrs": ["-t", "--tabs <...tabs>"],
       "help": "Specify tabs to be built"
     }
   ]

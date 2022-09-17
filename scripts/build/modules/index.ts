@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import fs, { promises as fsPromises } from 'fs';
 import memoize from 'lodash/memoize';
 import type { Low } from 'lowdb/lib';
+import { performance } from 'perf_hooks';
 import { rollup } from 'rollup';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
@@ -25,8 +26,8 @@ type Config = {
 };
 
 type ModulesCommandOptions = Partial<{
-  bundles: string[];
-  tabs: string[];
+  bundles: string | string[];
+  tabs: string | string[];
   verbose: boolean;
   force: boolean;
 }>;
@@ -61,12 +62,13 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: ModulesCommandOpt
     }
 
     if (opts.bundles) {
-      const unknowns = checkForUnknowns(opts.bundles, bundleNames);
+      const optsBundles = typeof opts.bundles === 'string' ? [opts.bundles] : opts.bundles;
+      const unknowns = checkForUnknowns(optsBundles, bundleNames);
       if (unknowns.length > 0) {
         throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
       }
 
-      return opts.bundles.reduce((prev, bundle) => ({
+      return optsBundles.reduce((prev, bundle) => ({
         ...prev,
         [bundle]: 'Specified by --module',
       }), {});
@@ -141,10 +143,11 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: ModulesCommandOpt
 
     // If tab was specified to be rebuilt, then rebuild
     if (opts.tabs) {
-      const unknowns = checkForUnknowns(opts.tabs, getAllTabs());
+      const optsTabs = typeof opts.tabs === 'string' ? [opts.tabs] : opts.tabs;
+      const unknowns = checkForUnknowns(optsTabs, getAllTabs());
 
       if (unknowns.length > 0) throw new Error(`Unknown tabs: ${unknowns.join('\n')}`);
-      opts.tabs.forEach((tabName) => {
+      optsTabs.forEach((tabName) => {
         tabNames[tabName] = 'Specified by --tab';
       });
     }
@@ -218,6 +221,7 @@ const buildBundles = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, 
   const bundlePromises = Object.keys(bundlesReason)
     .map(async (bundle) => {
       try {
+        const startTime = performance.now();
         const rollupBundle = await rollup({
           ...defaultConfig('bundle'),
           input: `${SOURCE_PATH}/bundles/${bundle}/index.ts`,
@@ -244,9 +248,10 @@ const buildBundles = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, 
         const { size } = await fsPromises.stat(bundleFile);
 
         db.data.bundles[bundle] = buildTime;
-        return ['success', bundle, `${(size / 1024).toFixed(2)} KB`];
+        const endTime = performance.now();
+        return ['success', bundle, `${(size / 1024).toFixed(2)} KB`, endTime - startTime];
       } catch (error) {
-        return ['error', bundle, error];
+        return ['error', bundle, error, 0];
         // (`Failed to build tab '${bundle}': ${error}`));
       }
     });
@@ -256,9 +261,9 @@ const buildBundles = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, 
   if (buildResults.find(([status]) => status === 'error')) buildLogger.log(`${chalk.cyanBright('Bundles finished with')} ${chalk.redBright('errors:')}`);
   else buildLogger.log(`${chalk.cyanBright('Bundles finished')} ${chalk.greenBright('successfully:')}`);
 
-  buildResults.forEach(([status, bundle, info]) => {
+  buildResults.forEach(([status, bundle, info, time]) => {
     if (status === 'success') buildLogger.log(`• ${chalk.blueBright(bundle)}: Build ${chalk.greenBright('successful')} (${info})`);
-    else buildLogger.log(`• ${chalk.blueBright(bundle)}: ${chalk.redBright(info)}`);
+    else buildLogger.log(`• ${chalk.blueBright(bundle)}: ${chalk.redBright(info)} ${time / 1000}s`);
   });
 
   return buildLogger.contents;
@@ -268,6 +273,7 @@ const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildT
   const tabPromises = Object.keys(tabReasons)
     .map(async (tabName) => {
       try {
+        const startTime = performance.now();
         const rollupBundle = await rollup({
           ...defaultConfig('tab'),
           input: `${SOURCE_PATH}/tabs/${tabName}/index.tsx`,
@@ -295,10 +301,11 @@ const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildT
         const { size } = await fsPromises.stat(tabFile);
 
         db.data.tabs[tabName] = buildTime;
+        const endTime = performance.now();
 
-        return ['success', tabName, `${(size / 1024).toFixed(2)} KB`];
+        return ['success', tabName, `${(size / 1024).toFixed(2)} KB`, endTime - startTime];
       } catch (error) {
-        return ['error', tabName, error];
+        return ['error', tabName, error, 0];
       }
     });
 
@@ -307,9 +314,9 @@ const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildT
   if (buildResults.find(([status]) => status === 'error')) buildLogger.log(`${chalk.cyanBright('Tabs finished with')} ${chalk.redBright('errors:')}`);
   else buildLogger.log(`${chalk.cyanBright('Tabs finished')} ${chalk.greenBright('successfully:')}`);
 
-  buildResults.forEach(([status, tabName, info]) => {
+  buildResults.forEach(([status, tabName, info, time]) => {
     if (status === 'success') buildLogger.log(`• ${chalk.blueBright(tabName)}: Build ${chalk.greenBright('successful')} (${info})`);
-    else buildLogger.log(`• ${chalk.blueBright(tabName)}: ${chalk.redBright(info)}`);
+    else buildLogger.log(`• ${chalk.blueBright(tabName)}: ${chalk.redBright(info)} ${time / 1000}s`);
   });
 
   return buildLogger.contents;

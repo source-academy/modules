@@ -100,6 +100,7 @@ export const defaultConfig = (type: 'bundle' | 'tab') => ({
     }),
     commonJS({
       include: NODE_MODULES_PATTERN,
+      sourceMap: false,
       // https://github.com/rollup/rollup-plugin-commonjs#custom-named-exports
       // namedExports: {
       //   'react': [

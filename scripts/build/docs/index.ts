@@ -89,7 +89,7 @@ const parsers: {
 };
 
 type DocsCommandOptions = Partial<{
-  bundles: string[];
+  bundles: string | string[];
   html: boolean;
   verbose: boolean;
   force: boolean;
@@ -124,10 +124,11 @@ export const getDocsToBuild = async (db: Low<DBType>, opts: DocsCommandOptions) 
     }
 
     if (opts.bundles) {
-      const unknowns = checkForUnknowns(opts.bundles, bundleNames);
+      const optsBundles = typeof opts.bundles === 'string' ? [opts.bundles] : opts.bundles;
+      const unknowns = checkForUnknowns(optsBundles, bundleNames);
       if (unknowns.length > 0) throw new Error(`Unknown modules: ${unknowns.join(', ')}`);
 
-      return bundleNamesWithReason('Specified by --module', opts.bundles);
+      return bundleNamesWithReason('Specified by --module', optsBundles);
     }
 
     return bundleNames.reduce((prev, bundleName) => {

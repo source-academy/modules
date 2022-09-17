@@ -19,7 +19,7 @@
       "help": "Enable verbose information"
     },
     {
-      "optionStrs": ["-b", "--bundles"],
+      "optionStrs": ["-b", "--bundles <...bundles>"],
       "help": "Specify which bundles to build JSONS for"
     },
     {
