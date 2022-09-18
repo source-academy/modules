@@ -11,7 +11,7 @@ import type {
   Program,
   VariableDeclaration,
 } from 'estree';
-import type { Plugin } from 'rollup';
+import type { Plugin, RollupOptions } from 'rollup';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 import { NODE_MODULES_PATTERN, SOURCE_PATH } from '../../constants';
@@ -19,7 +19,34 @@ import { NODE_MODULES_PATTERN, SOURCE_PATH } from '../../constants';
 const SUPPRESSED_WARNINGS = ['MISSING_NAME_OPTION_FOR_IIFE_EXPORT'];
 
 /**
- * Use AST parsing to convert modules and tabs to the appropriate form
+ * Use AST parsing to convert modules and tabs to the appropriate form\
+ * For tabs, rollup outputs the following iife:
+ * ```
+ * (function(React, ReactDom) {
+ *  // tab code
+ * })(React, ReactDom)
+ * ```
+ * which gets converted to
+ * ```
+ * (function(React, ReactDom) {
+ *   // tab code
+ * })
+ * ```
+ * Rollup outputs the following for bundles that are variations of:
+ * ```
+ * (function(exports, moduleHelpers) {
+ *   'use strict';
+ *   // bundle code
+ * })({}, moduleHelpers)
+ * ```
+ * The plugin converts them to the format below:
+ * ```
+ * (function(moduleHelpers){
+ *   'use strict';
+ *    var exports = {};
+ *   // bundle code
+ * })
+ * ```
  */
 export const converterPlugin = (type: 'bundle' | 'tab'): Plugin => ({
   name: 'Module Converter',
@@ -73,7 +100,7 @@ export const converterPlugin = (type: 'bundle' | 'tab'): Plugin => ({
 /**
  * Default configuration used by rollup for transpiling both tabs and bundles
  */
-export const defaultConfig = (type: 'bundle' | 'tab') => ({
+export const defaultConfig = (type: 'bundle' | 'tab'): RollupOptions => ({
   onwarn(warning: any, warn: any) {
     if (SUPPRESSED_WARNINGS.includes(warning.code)) return;
     warn(warning);
