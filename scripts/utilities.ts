@@ -52,21 +52,12 @@ export const createCommand = <TOpts>(
     .action(handler);
 };
 
-export class Logger {
-  private logs: string[] = [];
-
-  public get contents() {
-    return this.logs;
+export const joinArrays = <T>(joiner: T, ...arrays: T[][]): T[] => {
+  switch (arrays.length) {
+    case 0: return [];
+    case 1: return arrays[0];
   }
 
-  public reset() { this.logs = []; }
-
-  public printToConsole() {
-    console.log(this.contents.join('\n'));
-    this.reset();
-  }
-
-  public log(str: string) {
-    this.logs.push(str);
-  }
-}
+  const [first, ...others] = arrays;
+  return others.reduceRight((each, prev) => [...prev, joiner, ...each], first);
+};

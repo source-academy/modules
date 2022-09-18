@@ -67,6 +67,20 @@ export type EntriesWithReasons = {
   [name: string]: string;
 };
 
+export type BuildLog = {
+  result: 'success' | 'error',
+  name: string;
+  fileSize?: number,
+  elapsed?: number
+  error?: any
+};
+
+export type BuildResult = {
+  result: 'success' | 'error'
+  logs: BuildLog[]
+  error?: any;
+};
+
 /**
  * Get a new Lowdb instance
  */

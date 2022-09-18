@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { Table } from 'console-table-printer';
 import fs, { promises as fsPromises } from 'fs';
 import memoize from 'lodash/memoize';
 import type { Low } from 'lowdb/lib';
@@ -6,8 +7,10 @@ import { performance } from 'perf_hooks';
 import { rollup } from 'rollup';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
-import { CommandInfo, createCommand, Logger, modules } from '../../utilities';
+import { CommandInfo, createCommand, joinArrays, modules } from '../../utilities';
 import {
+  BuildLog,
+  BuildResult,
   checkForUnknowns,
   DBType,
   EntriesWithReasons,
@@ -180,46 +183,45 @@ export const getBundlesAndTabs = async (db: Low<DBType>, opts: ModulesCommandOpt
 
   const tabsWithReason = await getTabs();
 
-  const startLogger = new Logger();
+  const startLogs: string[] = [];
 
   const bundlesReason = Object.entries(bundlesWithReason);
   if (bundlesReason.length === 0) {
-    startLogger.log(chalk.greenBright('All bundles up to date'));
+    startLogs.push(chalk.greenBright('All bundles up to date'));
   } else {
-    startLogger.log(chalk.cyanBright('Building the following bundles:'));
+    startLogs.push(chalk.cyanBright('Building the following bundles:'));
     if (opts.verbose) {
-      bundlesReason.forEach(([bundle, reason]) => startLogger.log(`• ${chalk.blueBright(bundle)}: ${reason}`));
+      bundlesReason.forEach(([bundle, reason]) => startLogs.push(`• ${chalk.blueBright(bundle)}: ${reason}`));
     } else {
-      bundlesReason.forEach(([bundle]) => startLogger.log(`• ${chalk.blueBright(bundle)}`));
+      bundlesReason.forEach(([bundle]) => startLogs.push(`• ${chalk.blueBright(bundle)}`));
     }
   }
 
-  startLogger.log('');
+  if (startLogs.length > 0) startLogs.push('');
   const tabsReason = Object.entries(tabsWithReason);
 
   if (tabsReason.length === 0) {
-    startLogger.log(chalk.greenBright('All tabs up to date'));
+    startLogs.push(chalk.greenBright('All tabs up to date'));
   } else {
-    startLogger.log(chalk.cyanBright('Building the following tabs:'));
+    startLogs.push(chalk.cyanBright('Building the following tabs:'));
     if (opts.verbose) {
-      tabsReason.forEach(([tabName, reason]) => startLogger.log(`• ${chalk.blueBright(tabName)}: ${reason}`));
+      tabsReason.forEach(([tabName, reason]) => startLogs.push(`• ${chalk.blueBright(tabName)}: ${reason}`));
     } else {
-      tabsReason.forEach(([tabName]) => startLogger.log(`• ${chalk.blueBright(tabName)}`));
+      tabsReason.forEach(([tabName]) => startLogs.push(`• ${chalk.blueBright(tabName)}`));
     }
   }
-
-  startLogger.log('');
 
   return {
     bundlesWithReason,
     tabsWithReason,
-    logs: startLogger.contents,
+    logs: startLogs,
   };
 };
 
-const buildBundles = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, buildTime: number) => {
+
+const buildBundles = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
   const bundlePromises = Object.keys(bundlesReason)
-    .map(async (bundle) => {
+    .map(async (bundle): Promise<BuildLog> => {
       try {
         const startTime = performance.now();
         const rollupBundle = await rollup({
@@ -249,29 +251,33 @@ const buildBundles = async (db: Low<DBType>, bundlesReason: EntriesWithReasons, 
 
         db.data.bundles[bundle] = buildTime;
         const endTime = performance.now();
-        return ['success', bundle, `${(size / 1024).toFixed(2)} KB`, endTime - startTime];
+        return {
+          result: 'success',
+          name: bundle,
+          fileSize: size,
+          elapsed: (endTime - startTime) / 1000,
+        };
       } catch (error) {
-        return ['error', bundle, error, 0];
-        // (`Failed to build tab '${bundle}': ${error}`));
+        return {
+          result: 'error',
+          name: bundle,
+          error,
+        };
       }
     });
 
-  const buildLogger = new Logger();
   const buildResults = await Promise.all(bundlePromises);
-  if (buildResults.find(([status]) => status === 'error')) buildLogger.log(`${chalk.cyanBright('Bundles finished with')} ${chalk.redBright('errors:')}`);
-  else buildLogger.log(`${chalk.cyanBright('Bundles finished')} ${chalk.greenBright('successfully:')}`);
+  const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';
 
-  buildResults.forEach(([status, bundle, info, time]) => {
-    if (status === 'success') buildLogger.log(`• ${chalk.blueBright(bundle)}: Build ${chalk.greenBright('successful')} (${info})`);
-    else buildLogger.log(`• ${chalk.blueBright(bundle)}: ${chalk.redBright(info)} ${time / 1000}s`);
-  });
-
-  return buildLogger.contents;
+  return {
+    result: finalResult,
+    logs: buildResults,
+  };
 };
 
-const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildTime: number) => {
+const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
   const tabPromises = Object.keys(tabReasons)
-    .map(async (tabName) => {
+    .map(async (tabName): Promise<BuildLog> => {
       try {
         const startTime = performance.now();
         const rollupBundle = await rollup({
@@ -303,25 +309,83 @@ const buildTabs = async (db: Low<DBType>, tabReasons: EntriesWithReasons, buildT
         db.data.tabs[tabName] = buildTime;
         const endTime = performance.now();
 
-        return ['success', tabName, `${(size / 1024).toFixed(2)} KB`, endTime - startTime];
+        return {
+          name: tabName,
+          result: 'success',
+          fileSize: size,
+          elapsed: ((endTime - startTime) / 1000),
+        };
       } catch (error) {
-        return ['error', tabName, error, 0];
+        return {
+          name: tabName,
+          fileSize: 0,
+          elapsed: 0,
+          result: 'error',
+          error,
+        };
       }
     });
 
-  const buildLogger = new Logger();
   const buildResults = await Promise.all(tabPromises);
-  if (buildResults.find(([status]) => status === 'error')) buildLogger.log(`${chalk.cyanBright('Tabs finished with')} ${chalk.redBright('errors:')}`);
-  else buildLogger.log(`${chalk.cyanBright('Tabs finished')} ${chalk.greenBright('successfully:')}`);
+  const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';
 
-  buildResults.forEach(([status, tabName, info, time]) => {
-    if (status === 'success') buildLogger.log(`• ${chalk.blueBright(tabName)}: Build ${chalk.greenBright('successful')} (${info})`);
-    else buildLogger.log(`• ${chalk.blueBright(tabName)}: ${chalk.redBright(info)} ${time / 1000}s`);
-  });
-
-  return buildLogger.contents;
+  return {
+    result: finalResult,
+    logs: buildResults,
+  };
 };
 
+export const logBuildResults = (bundlesResult: BuildResult, tabResult: BuildResult) => {
+  const bundleLogs: string[] = [];
+  if (bundlesResult.logs.length > 0) {
+    if (bundlesResult.result === 'error') {
+      bundleLogs.push(`${chalk.blueBright('Bundles finished with')} ${chalk.redBright('errors')}`);
+    } else {
+      bundleLogs.push(`${chalk.blueBright('Bundles finished')} ${chalk.greenBright('successfully')}`);
+    }
+
+    const bundlesTable = new Table();
+
+    bundlesResult.logs.forEach(({ result, name, fileSize, error, elapsed }) => {
+      const entry = {
+        'Bundle': name,
+        'Result': result === 'success' ? 'Success' : 'Error',
+        'File Size': fileSize ? `${(fileSize / 1024).toFixed(2)} KB` : '-',
+        'Elapsed (s)': elapsed?.toFixed(2) ?? '-',
+        'Errors': error?.toString() ?? '-',
+      };
+
+      const color = result === 'error' ? 'red' : 'green';
+
+      bundlesTable.addRow(entry, { color });
+    });
+    bundleLogs.push(bundlesTable.render());
+  }
+
+  const tabLogs: string[] = [];
+
+  if (tabResult.logs.length > 0) {
+    if (tabResult.result === 'error') {
+      tabLogs.push(`${chalk.cyanBright('Tabs finished with')} ${chalk.redBright('errors')}`);
+    } else {
+      tabLogs.push(`${chalk.cyanBright('Tabs finished')} ${chalk.greenBright('successfully')}`);
+    }
+
+    const tabsTable = new Table();
+    tabResult.logs.forEach(({ result, name, fileSize, error, elapsed }) => {
+      tabsTable.addRow({
+        'Tab': name,
+        'Result': result === 'success' ? 'Success' : 'Error',
+        'File Size': fileSize ? `${(fileSize / 1024).toFixed(2)} KB` : '-',
+        'Elapsed (s)': elapsed?.toFixed(2) ?? '-',
+        'Errors': error ?? '-',
+      }, { color: result === 'error' ? 'red' : 'green' });
+    });
+    tabLogs.push(tabsTable.render());
+  }
+
+  return joinArrays('', bundleLogs, tabLogs);
+};
 
 /**
  * Use rollup to rebuild bundles and tabs
@@ -333,13 +397,12 @@ export const buildBundlesAndTabs = async (db: Low<DBType>, {
   const buildTime = new Date()
     .getTime();
 
-  const [bundleLogs, tabsLogs] = await Promise.all([
+  const results = await Promise.all([
     buildBundles(db, bundlesWithReason, buildTime),
     buildTabs(db, tabsWithReason, buildTime),
   ]);
   await db.write();
-
-  return [...bundleLogs, '', ...tabsLogs];
+  return results;
 };
 
 export default createCommand(commandInfo as CommandInfo,
@@ -349,9 +412,10 @@ export default createCommand(commandInfo as CommandInfo,
       logs: startLogs,
       ...parsedOpts
     } = await getBundlesAndTabs(db, opts);
-    console.log(startLogs.join('\n'));
+    console.log(`${startLogs.join('\n')}\n`);
 
-    const endLogs = await buildBundlesAndTabs(db, parsedOpts);
-    console.log(endLogs.join('\n'));
+    const [bundlesResult, tabsResult] = await buildBundlesAndTabs(db, parsedOpts);
+    console.log(logBuildResults(bundlesResult, tabsResult)
+      .join('\n'));
     await copy();
   });

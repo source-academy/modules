@@ -1,11 +1,14 @@
 import chalk from 'chalk';
+import { Table } from 'console-table-printer';
 import fs, { promises as fsPromises } from 'fs';
 import type { Low } from 'lowdb/lib';
+import { performance } from 'perf_hooks';
 import * as typedoc from 'typedoc';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
-import { cjsDirname, CommandInfo, createCommand, Logger, modules as manifest } from '../../utilities';
+import { cjsDirname, CommandInfo, createCommand, joinArrays, modules as manifest } from '../../utilities';
 import {
+  BuildLog,
   checkForUnknowns,
   DBType,
   EntriesWithReasons,
@@ -173,37 +176,37 @@ export const getDocsToBuild = async (db: Low<DBType>, opts: DocsCommandOptions) 
   };
 
   const [shouldBuildHTML, htmlReason] = await getHtml();
-  const logger = new Logger();
+  const logs: string[] = [];
 
   if (!shouldBuildHTML) {
-    if (opts.verbose) logger.log(chalk.yellow(`Not building HTML documentation: ${chalk.yellow(htmlReason)}`));
-    else logger.log(chalk.yellow('Not building HTML documentation'));
+    if (opts.verbose) logs.push(chalk.yellow(`Not building HTML documentation: ${chalk.yellow(htmlReason)}`));
+    else logs.push(chalk.yellow('Not building HTML documentation'));
   } else {
     // eslint-disable-next-line no-lonely-if
-    if (opts.verbose) logger.log(chalk.cyanBright(`Building HTML documentation: ${chalk.yellow(htmlReason)}`));
-    else logger.log(chalk.cyanBright('Building HTML documentation'));
+    if (opts.verbose) logs.push(chalk.cyanBright(`Building HTML documentation: ${chalk.yellow(htmlReason)}`));
+    else logs.push(chalk.cyanBright('Building HTML documentation'));
   }
 
-  logger.log('');
+  logs.push('');
 
   const bundlesWithReason = Object.entries(toBuild);
   if (bundlesWithReason.length === 0) {
-    logger.log(chalk.greenBright('No jsons to build.'));
+    logs.push(chalk.greenBright('No jsons to build.'));
   } else {
-    logger.log(
+    logs.push(
       chalk.cyanBright('Building documentation for the following bundles:'),
     );
 
     if (opts.verbose) {
-      bundlesWithReason.forEach(([bundle, reason]) => logger.log(`• ${chalk.blueBright(bundle)}: ${reason}`));
+      bundlesWithReason.forEach(([bundle, reason]) => logs.push(`• ${chalk.blueBright(bundle)}: ${reason}`));
     } else {
-      bundlesWithReason.forEach(([bundle]) => logger.log(`• ${chalk.blueBright(bundle)}`));
+      bundlesWithReason.forEach(([bundle]) => logs.push(`• ${chalk.blueBright(bundle)}`));
     }
   }
   return {
     toBuild,
     shouldBuildHTML,
-    logs: logger.contents,
+    logs,
   };
 };
 
@@ -212,11 +215,31 @@ type Config = {
   shouldBuildHTML: boolean;
 };
 
-export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildHTML }: Config) => {
+type JSONBuildLog = {
+  result: 'error' | 'success' | 'warn'
+} & Omit<BuildLog, 'result'>;
+
+type JSONBuildResult = {
+  result: 'success' | 'error' | 'warn'
+  error?: any;
+  logs: JSONBuildLog[];
+};
+
+type DocsResult = {
+  result: 'error' | 'success'
+  error?: any
+};
+
+export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildHTML }: Config): Promise<{
+  docs: DocsResult | null,
+  jsons: JSONBuildResult,
+} | null> => {
   const bundlesWithReason = Object.entries(toBuild);
 
   // If nothing needs to be built forego initializing typedoc
-  if (!shouldBuildHTML && bundlesWithReason.length === 0) return [];
+  if (!shouldBuildHTML && bundlesWithReason.length === 0) {
+    return null;
+  }
 
   const app = new typedoc.Application();
   app.options.addReader(new typedoc.TSConfigReader());
@@ -236,13 +259,15 @@ export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildH
   });
 
   const project = app.convert();
-  if (!project) return [chalk.redBright('Docs Error: Failed to initialize Typedoc project')];
+  if (!project) {
+    throw new Error('Docs Error: Failed to initialize Typedoc project');
+  }
 
   const buildTime = new Date()
     .getTime();
 
-  const docsTask = (async (): Promise<string[]> => {
-    if (!shouldBuildHTML) return [];
+  const docsTask = (async (): Promise<DocsResult | null> => {
+    if (!shouldBuildHTML) return null;
 
     try {
       await app.generateDocs(project, `${BUILD_PATH}/documentation`);
@@ -253,16 +278,24 @@ export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildH
         `${BUILD_PATH}/documentation/README.md`,
       );
       db.data.html = buildTime;
-      return [`${chalk.cyanBright('HTML Documentation built')} ${chalk.greenBright('succesfully')}`];
+      return {
+        result: 'success',
+      };
     } catch (error) {
-      return [`${chalk.cyanBright('HTML Documentation')} ${chalk.redBright('errored:')} ${error}`];
+      return {
+        result: 'error',
+        error,
+      };
     }
   })();
 
-  const jsonTask = (async (): Promise<string[]> => {
-    if (bundlesWithReason.length === 0) return [];
-
-    const jsonsLogger = new Logger();
+  const jsonTask = (async (): Promise<JSONBuildResult> => {
+    if (bundlesWithReason.length === 0) {
+      return {
+        result: 'success',
+        logs: [],
+      };
+    }
 
     try {
       await app.generateJson(project, `${BUILD_PATH}/docs.json`);
@@ -271,20 +304,26 @@ export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildH
       const parsedJSON = JSON.parse(docsFile)?.children;
 
       if (!parsedJSON) {
-        return [chalk.redBright('ERROR: Failed to parse docs.json')];
+        return {
+          result: 'error',
+          logs: [],
+          error: 'Failed to parse docs.json',
+        };
       }
 
       const jsonResults = await Promise.all(
-        bundlesWithReason.map(async ([bundle]) => {
-          const jsonLogger = new Logger();
+        bundlesWithReason.map(async ([bundle]): Promise<JSONBuildLog> => {
+          const warnLogs: string[] = [];
 
-          let status = 'success';
+          let status: JSONBuildLog['result'] = 'success';
+          let fileSize: number | undefined;
           const warner = (msg: string) => {
             status = 'warn';
-            return jsonLogger.log(msg);
+            return warnLogs.push(msg);
           };
 
           try {
+            const startTime = performance.now();
             const docs = parsedJSON.find((x) => x.name === bundle)?.children;
 
             if (!docs) {
@@ -302,61 +341,143 @@ export const buildDocsAndJsons = async (db: Low<DBType>, { toBuild, shouldBuildH
               });
 
               // Then write that output to the bundles' respective json files
+              const jsonFile = `${BUILD_PATH}/jsons/${bundle}.json`;
               await fsPromises.writeFile(
-                `${BUILD_PATH}/jsons/${bundle}.json`,
+                jsonFile,
                 JSON.stringify(output, null, 2),
               );
+
+              ({ size: fileSize } = await fsPromises.stat(jsonFile));
             }
 
             db.data.jsons[bundle] = buildTime;
 
+            const endTime = performance.now();
+
+            let warnString: string | null;
+            if (warnLogs.length === 0) warnString = null;
+            else if (warnLogs.length > 1) warnString = `${warnLogs[0]} +${warnLogs.length - 1}`;
+            else warnString = warnLogs[0];
+
             return {
-              bundle,
-              status,
-              logs: jsonLogger.contents,
+              name: bundle,
+              result: status,
+              fileSize,
+              elapsed: (endTime - startTime) / 1000,
+              error: warnString,
             };
           } catch (error) {
             return {
-              bundle,
-              status: 'error',
-              logs: [`Error: ${error}`],
+              name: bundle,
+              result: 'error',
+              error,
             };
           }
         }),
       );
 
-      if (jsonResults.find(({ status }) => status === 'error')) jsonsLogger.log(`${chalk.cyanBright('Jsons finished with')} ${chalk.redBright('errors')}`);
-      else if (jsonResults.find(({ status }) => status === 'warn')) jsonsLogger.log(`${chalk.cyanBright('Jsons finished with')} ${chalk.yellow('warnings')}`);
-      else jsonsLogger.log(`${chalk.cyanBright('Jsons finished')} ${chalk.greenBright('successfully')}`);
+      let finalStatus: JSONBuildResult['result'];
+      if (jsonResults.find(({ result }) => result === 'error')) finalStatus = 'error';
+      else if (jsonResults.find(({ result }) => result === 'warn')) finalStatus = 'warn';
+      else finalStatus = 'success';
 
-      jsonResults.forEach(({ bundle, status, logs }) => {
-        switch (status) {
-          case 'error': {
-            jsonsLogger.log(`• ${chalk.blueBright(bundle)} ${chalk.redBright('errored')}: ${logs[0]}`);
-            break;
-          }
-          case 'warn': {
-            jsonsLogger.log(`• ${chalk.blueBright(bundle)}: Built with ${chalk.yellow('warnings')}:`);
-            logs.forEach((x) => jsonsLogger.log(`\t${x}`));
-            break;
-          }
-          case 'success': {
-            jsonsLogger.log(`• ${chalk.blueBright(bundle)}: Build ${chalk.greenBright('successful')}`);
-            break;
-          }
-        }
-      });
+      return {
+        result: finalStatus,
+        logs: jsonResults,
 
-      return jsonsLogger.contents;
+      };
     } catch (error) {
-      return [chalk.redBright(`JSON Task errored: ${error}`)];
+      return {
+        result: 'error',
+        error,
+        logs: [],
+      };
     }
   })();
 
   const [docsResult, jsonsResult] = await Promise.all([docsTask, jsonTask]);
   await db.write();
+  return {
+    docs: docsResult,
+    jsons: jsonsResult,
+  };
+};
 
-  return [...docsResult, '', ...jsonsResult];
+export const logResultDocs = ({ docs: docsResult, jsons: jsonsResult }: {
+  docs: DocsResult | null
+  jsons: JSONBuildResult
+}) => {
+  const docsLogs: string[] = [];
+  if (docsResult) {
+    if (docsResult.error) docsLogs.push(`${chalk.cyanBright('HTML documentation finished with')} ${chalk.redBright('errors')}`);
+    else docsLogs.push(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')}`);
+  }
+
+  const jsonLogs: string[] = [];
+
+  if (jsonsResult.error) {
+    jsonLogs.push(`${chalk.redBright('JSONS errored:')} ${jsonsResult.error}`);
+  }
+
+  if (jsonsResult.logs.length > 0) {
+    jsonLogs.push('\n');
+    switch (jsonsResult.result) {
+      case 'error': {
+        jsonLogs.push(`${chalk.cyanBright('JSONS built with')} ${chalk.redBright('errors')}`);
+        break;
+      }
+      case 'warn': {
+        jsonLogs.push(`${chalk.cyanBright('JSONS built with')} ${chalk.yellow('warnings')}`);
+        break;
+      }
+      case 'success': {
+        jsonLogs.push(`${chalk.cyanBright('JSONS built')} ${chalk.greenBright('successfully')}`);
+        break;
+      }
+    }
+
+    const resultTable = new Table({
+      columns: [
+        {
+          name: 'bundle',
+          title: 'Bundle',
+        },
+        {
+          name: 'result',
+          title: 'Result',
+        },
+        {
+          name: 'fileSize',
+          title: 'File Size',
+        },
+        {
+          name: 'elapsed',
+          title: 'Elapsed (s)',
+        },
+        {
+          name: 'error',
+          title: 'Error',
+        },
+      ],
+    });
+    jsonsResult.logs.forEach(({ name, fileSize, elapsed, result, error }) => resultTable.addRow({
+      bundle: name,
+      result,
+      fileSize: isNaN(fileSize) ? '-' : `${(fileSize / 1024).toFixed(2)} KB`,
+      elapsed: elapsed < 0.01 ? '>0.00' : elapsed.toFixed(2),
+      error: error || '-',
+    }, {
+      color: {
+        error: 'red',
+        warn: 'yellow',
+        success: 'green',
+      }[result],
+    }));
+
+    jsonLogs.push(resultTable.render());
+  }
+
+  return joinArrays('', docsLogs, jsonLogs);
 };
 
 export default createCommand(commandInfo as CommandInfo,
@@ -366,9 +487,11 @@ export default createCommand(commandInfo as CommandInfo,
       logs: startLogs,
       ...docsBuildOpts
     } = await getDocsToBuild(db, opts);
-    console.log(startLogs.join('\n'));
+
+    if (startLogs.length > 0) console.log(`${startLogs.join('\n')}\n`);
 
     const endLogs = await buildDocsAndJsons(db, docsBuildOpts);
-    console.log(endLogs.join('\n'));
+    console.log(logResultDocs(endLogs)
+      .join('\n'));
     await copy();
   });

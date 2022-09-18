@@ -11,7 +11,7 @@ import type {
   Program,
   VariableDeclaration,
 } from 'estree';
-import { Plugin } from 'rollup';
+import type { Plugin } from 'rollup';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 import { NODE_MODULES_PATTERN, SOURCE_PATH } from '../../constants';

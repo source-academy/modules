@@ -56,6 +56,7 @@
     "babel-plugin-transform-import-meta": "^2.2.0",
     "chalk": "^5.0.1",
     "commander": "^9.4.0",
+    "console-table-printer": "^2.11.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.21.0",
     "eslint-config-airbnb": "^19.0.4",

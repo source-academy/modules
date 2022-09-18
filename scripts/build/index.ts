@@ -3,11 +3,12 @@ import { Command } from 'commander';
 import { constants as fsConstants, promises as fs } from 'fs';
 
 import { BUILD_PATH } from '../constants';
+import { joinArrays } from '../utilities';
 
 import { getDb } from './buildUtils';
-import docsCommand, { buildDocsAndJsons, getDocsToBuild } from './docs';
+import docsCommand, { buildDocsAndJsons, getDocsToBuild, logResultDocs } from './docs';
 import copy from './misc';
-import modulesCommand, { buildBundlesAndTabs, getBundlesAndTabs } from './modules';
+import modulesCommand, { buildBundlesAndTabs, getBundlesAndTabs, logBuildResults } from './modules';
 
 type BuildAllCommandOptions = Partial<{
   bundles: string | string[];
@@ -51,8 +52,7 @@ const allCommand = new Command('all')
       }),
     ]);
 
-    const startLogs = [...moduleStartLogs, '', ...docsStartLogs];
-
+    const startLogs = joinArrays('', moduleStartLogs, docsStartLogs);
     console.log(`${startLogs.join('\n')}\n`);
 
     // If its parent bundle is being rebuilt, rebuild the JSON
@@ -65,7 +65,9 @@ const allCommand = new Command('all')
       buildBundlesAndTabs(db, moduleOpts),
       buildDocsAndJsons(db, jsonOpts),
     ]);
-    console.log([...moduleEndLogs, '', ...docsEndLogs].join('\n'));
+
+    const allLogs = joinArrays('', logBuildResults(...moduleEndLogs), logResultDocs(docsEndLogs));
+    console.log(allLogs.join('\n'));
     await copy();
   });
 
