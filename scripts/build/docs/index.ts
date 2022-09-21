@@ -26,10 +26,10 @@ export default createCommand(commandInfo as CommandInfo,
     const project = initTypedoc();
     const [htmlResult, jsonResult] = await Promise.all([buildHtml(db, project), buildJsons(db, project, jsonOpts)]);
 
-
     const endLogs = joinArrays('', logHtmlResult(htmlResult), logJsonResult(jsonResult));
     console.log(endLogs
       .join('\n'));
+    await db.write();
     await copy();
   });
 

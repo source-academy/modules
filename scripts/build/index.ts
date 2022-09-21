@@ -80,6 +80,7 @@ const allCommand = new Command('all')
       .join('\n'));
 
 
+    await db.write();
     await copy();
   });
 

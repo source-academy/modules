@@ -30,6 +30,7 @@ export default createCommand(commandInfo as CommandInfo,
     console.log(joinArrays('', logBundleResult(bundleResult), logTabResult(tabResult))
       .join('\n'));
 
+    await db.write();
     await copy();
   });
 

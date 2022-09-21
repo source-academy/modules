@@ -6,6 +6,7 @@ import fs, { promises as fsPromises } from 'fs';
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
 import { modules as manifest } from '../../utilities';
 import { BuildLog, checkForUnknowns, DBType, EntriesWithReasons, getDb, isFolderModified } from '../buildUtils';
+import copy from '../misc';
 
 import drawdown from './drawdown';
 import { DocsProject, initTypedoc } from './utils';
@@ -359,4 +360,5 @@ export const jsonCommand = new Command('json')
       .join('\n'));
 
     await db.write();
+    await copy();
   });

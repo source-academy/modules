@@ -8,6 +8,7 @@ import { rollup } from 'rollup';
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
 import { cjsDirname, modules } from '../../utilities';
 import { BuildLog, BuildResult, checkForUnknowns, DBType, EntriesWithReasons, getDb, isFolderModified, removeDuplicates } from '../buildUtils';
+import copy from '../misc';
 
 import { defaultConfig, runWorker } from './utils';
 
@@ -243,4 +244,7 @@ export const tabCommand = new Command('tabs')
 
     console.log(logTabResult(result)
       .join('\n'));
+
+    await db.write();
+    await copy();
   });

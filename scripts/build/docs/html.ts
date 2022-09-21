@@ -5,6 +5,7 @@ import { promises as fsPromises } from 'fs';
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
 import { cjsDirname, modules as manifest, wrapWithTimer } from '../../utilities';
 import { DBType, getDb, isFolderModified } from '../buildUtils';
+import copy from '../misc';
 
 import { DocsProject, initTypedoc } from './utils';
 
@@ -94,4 +95,5 @@ export const htmlCommand = new Command('html')
     console.log(logHtmlResult(result)
       .join('\n'));
     await db.write();
+    await copy();
   });
