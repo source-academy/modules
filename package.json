@@ -28,7 +28,7 @@
     "build:docs": "yarn scripts build docs",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "dev": "yarn build && yarn serve",
-    "scripts": "cross-env TS_NODE_PROJECT=\"scripts/tsconfig.json\" NODE_OPTIONS=\"--max-old-space-size=8192\" ts-node scripts/index.ts",
+    "scripts": "cross-env TS_NODE_PROJECT=\"scripts/tsconfig.json\" node --no-warnings --max-old-space-size=8192 --loader ts-node/esm scripts/index.ts",
     "prepare": "husky install",
     "test": "jest --verbose",
     "test:watch": "jest --watch"

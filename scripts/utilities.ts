@@ -59,5 +59,19 @@ export const joinArrays = <T>(joiner: T, ...arrays: T[][]): T[] => {
   }
 
   const [first, ...others] = arrays;
-  return others.reduceRight((each, prev) => [...prev, joiner, ...each], first);
+  return others.reduce((each, prev) => [...prev, joiner, ...each], first);
+};
+
+export const wrapWithTimer = <T extends (...params: any[]) => Promise<any>>(func: T) => async (...params: Parameters<T>): Promise<{
+  elapsed: number,
+  result: Awaited<ReturnType<T>>
+}> => {
+  const startTime = performance.now();
+  const result = await func(...params);
+  const endTime = performance.now();
+
+  return {
+    elapsed: endTime - startTime,
+    result,
+  };
 };
