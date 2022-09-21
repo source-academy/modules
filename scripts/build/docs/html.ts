@@ -87,7 +87,8 @@ export const htmlCommand = new Command('html')
   .action(async (opts) => {
     const db = await getDb();
     const [shouldBuild, reason] = await shouldBuildHtml(db, opts);
-    console.log(logHtmlStart([shouldBuild, reason], opts.verbose));
+    console.log(logHtmlStart([shouldBuild, reason], opts.verbose)
+      .join('\n'));
 
     const project = initTypedoc();
     const result = await buildHtml(db, project);
