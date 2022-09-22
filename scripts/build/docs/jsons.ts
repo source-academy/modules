@@ -97,7 +97,7 @@ const parsers: {
   },
 };
 
-export const getJsonsToBuild = async (db: DBType, opts: JSONCommandOpts): Promise<EntriesWithReasons> => {
+export const getJsonsToBuild = async (db: DBType, opts: JSONCommandOpts, bundles?: EntriesWithReasons): Promise<EntriesWithReasons> => {
   const bundleNames = Object.keys(manifest);
   const bundleNamesWithReason = (reason: string, names: string[] = null) => (names ?? bundleNames).reduce((prev, bundle) => ({
     ...prev,
@@ -129,24 +129,30 @@ export const getJsonsToBuild = async (db: DBType, opts: JSONCommandOpts): Promis
     return bundleNamesWithReason('Specified by --module', optsBundles);
   }
 
-  return bundleNames.reduce((prev, bundleName) => {
+  const output = {} as EntriesWithReasons;
+
+  if (bundles) {
+    Object.keys(bundles)
+      .forEach((bundle) => {
+        if (!output[bundle]) output[bundle] = `${bundle} is being rebuilt`;
+      });
+  }
+
+  bundleNames.forEach((bundleName) => {
+    if (output[bundleName]) return;
+
     if (!fs.existsSync(`${BUILD_PATH}/jsons/${bundleName}.json`)) {
-      return {
-        ...prev,
-        [bundleName]: 'JSON missing from JSONS build directory',
-      };
+      output[bundleName] = 'JSON missing from JSONS build directory';
+      return;
     }
 
     const timestamp = db.data.jsons[bundleName];
     if (!timestamp || isFolderModified(`${SOURCE_PATH}/bundles/${bundleName}`, timestamp)) {
-      return {
-        ...prev,
-        [bundleName]: 'Outdated build',
-      };
+      output[bundleName] = 'Outdated Build';
     }
-
-    return prev;
   }, {});
+
+  return output;
 };
 
 export const logJsonStart = (jsons: EntriesWithReasons, verbose?: boolean) => {
@@ -346,6 +352,7 @@ export const logJsonResult = (jsonsResult: JSONBuildResult) => {
 
 export const jsonCommand = new Command('json')
   .option('-f, --force')
+  .option('-v, --verbose')
   .option('-b, --bundles <...bundles>')
   .description('Build JSONs')
   .action(async (opts) => {

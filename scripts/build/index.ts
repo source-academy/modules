@@ -9,11 +9,11 @@ import { buildHtml, logHtmlResult, logHtmlStart, shouldBuildHtml } from './docs/
 import { buildJsons, getJsonsToBuild, logJsonResult, logJsonStart } from './docs/jsons';
 import { initTypedoc } from './docs/utils';
 import { buildBundles, getBundles, logBundleResult, logBundleStart } from './modules/bundle';
-import { buildTabs, getTabs, logTabResult, logTabStart, tabCommand } from './modules/tab';
+import { buildTabs, getTabs, logTabResult, logTabStart } from './modules/tab';
 import { getDb } from './buildUtils';
 import docCommand, { htmlCommand, jsonCommand } from './docs';
 import copy from './misc';
-import moduleCommand from './modules';
+import moduleCommand, { tabCommand } from './modules';
 
 type BuildAllCommandOptions = Partial<{
   bundles: string | string[];
@@ -35,24 +35,12 @@ const allCommand = new Command('all')
   .option('--no-html', 'Skip building HTML documentation')
   .action(async (opts: BuildAllCommandOptions) => {
     const db = await getDb();
-    const [[bundleOpts, tabOpts], htmlOpts, jsonOpts] = await Promise.all([
-      (async () => {
-        const bundles = await getBundles(db, opts);
-        const tabs = await getTabs(db, opts, bundles);
-        return [bundles, tabs];
-      })(),
-      shouldBuildHtml(db, opts),
-      getJsonsToBuild(db, {
-        ...opts,
-        bundles: opts.jsons,
-      }),
-    ]);
 
-    // If its parent bundle is being rebuilt, rebuild the JSON
-    Object.keys(bundleOpts)
-      .forEach((bundle) => {
-        if (!jsonOpts[bundle]) jsonOpts[bundle] = `${bundle} is being rebuilt`;
-      });
+    const [bundleOpts, htmlOpts] = await Promise.all([getBundles(db, opts), shouldBuildHtml(db, opts)]);
+    const [tabOpts, jsonOpts] = await Promise.all([getTabs(db, opts, bundleOpts), getJsonsToBuild(db, {
+      ...opts,
+      bundles: opts.jsons,
+    }, bundleOpts)]);
 
     console.log(joinArrays('',
       logBundleStart(bundleOpts, opts.verbose),
@@ -78,7 +66,6 @@ const allCommand = new Command('all')
       logHtmlResult(htmlResult),
       logJsonResult(jsonResult))
       .join('\n'));
-
 
     await db.write();
     await copy();
