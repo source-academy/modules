@@ -6,7 +6,7 @@ import memoize from 'lodash/memoize';
 import { rollup } from 'rollup';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
-import { cjsDirname, modules } from '../../utilities';
+import { cjsDirname, modules, wrapWithTimer } from '../../utilities';
 import { BuildLog, BuildResult, checkForUnknowns, DBType, EntriesWithReasons, getDb, isFolderModified, removeDuplicates } from '../buildUtils';
 import copy from '../misc';
 
@@ -114,9 +114,8 @@ export const logTabStart = (toBuild: EntriesWithReasons, verbose?: boolean) => {
   }));
 };
 
-export const buildTab = async ({ db, buildTime, tabName }: Args): Promise<BuildLog> => {
+export const buildTab = wrapWithTimer(async ({ db, buildTime, tabName }: Args): Promise<BuildLog> => {
   try {
-    const startTime = performance.now();
     const rollupBundle = await rollup({
       ...defaultConfig('tab'),
       input: `${SOURCE_PATH}/tabs/${tabName}/index.tsx`,
@@ -144,13 +143,11 @@ export const buildTab = async ({ db, buildTime, tabName }: Args): Promise<BuildL
     const { size } = await fsPromises.stat(tabFile);
 
     db.data.tabs[tabName] = buildTime;
-    const endTime = performance.now();
 
     return {
       name: tabName,
       result: 'success',
       fileSize: size,
-      elapsed: ((endTime - startTime) / 1000),
     };
   } catch (error) {
     return {
@@ -161,7 +158,7 @@ export const buildTab = async ({ db, buildTime, tabName }: Args): Promise<BuildL
       error,
     };
   }
-};
+});
 
 export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
   const tabPromises = Object.keys(toBuild)
@@ -219,7 +216,7 @@ export const logTabResult = (tabResult: BuildResult) => {
       tab: name,
       result: result === 'success' ? 'Success' : 'Error',
       fileSize: fileSize ? `${(fileSize / 1024).toFixed(2)} KB` : '-',
-      elapsed: elapsed?.toFixed(2) ?? '-',
+      elapsed: elapsed ? (elapsed / 1000).toFixed(2) : '-',
       error: error ?? '-',
     }, { color: result === 'error' ? 'red' : 'green' }));
     tabLogs.push(tabsTable.render());

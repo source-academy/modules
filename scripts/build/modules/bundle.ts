@@ -4,7 +4,7 @@ import fs, { promises as fsPromises } from 'fs';
 import { rollup } from 'rollup';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
-import { cjsDirname, modules } from '../../utilities';
+import { cjsDirname, modules, wrapWithTimer } from '../../utilities';
 import { BuildLog, BuildResult, checkForUnknowns, DBType, EntriesWithReasons, isFolderModified } from '../buildUtils';
 
 import { defaultConfig, runWorker } from './utils';
@@ -97,9 +97,8 @@ export const logBundleStart = (bundles: EntriesWithReasons, verbose?: boolean) =
     }));
 };
 
-export const buildBundle = async ({ db, buildTime, bundle }: Args): Promise<BuildLog> => {
+export const buildBundle = wrapWithTimer(async ({ db, buildTime, bundle }: Args): Promise<BuildLog> => {
   try {
-    const startTime = performance.now();
     const rollupBundle = await rollup({
       ...defaultConfig('bundle'),
       input: `${SOURCE_PATH}/bundles/${bundle}/index.ts`,
@@ -126,12 +125,10 @@ export const buildBundle = async ({ db, buildTime, bundle }: Args): Promise<Buil
     const { size } = await fsPromises.stat(bundleFile);
 
     db.data.bundles[bundle] = buildTime;
-    const endTime = performance.now();
     return {
       result: 'success',
       name: bundle,
       fileSize: size,
-      elapsed: (endTime - startTime) / 1000,
     };
   } catch (error) {
     return {
@@ -140,7 +137,7 @@ export const buildBundle = async ({ db, buildTime, bundle }: Args): Promise<Buil
       error,
     };
   }
-};
+});
 
 export const buildBundles = async (db: DBType, bundlesReason: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
   const bundlePromises = Object.keys(bundlesReason)
@@ -175,7 +172,7 @@ export const logBundleResult = (bundlesResult: BuildResult) => {
         'Bundle': name,
         'Result': result === 'success' ? 'Success' : 'Error',
         'File Size': fileSize ? `${(fileSize / 1024).toFixed(2)} KB` : '-',
-        'Elapsed (s)': elapsed?.toFixed(2) ?? '-',
+        'Elapsed (s)': elapsed ? (elapsed / 1000)?.toFixed(2) : '-',
         'Errors': error?.toString() ?? '-',
       };
 
