@@ -273,7 +273,6 @@ export const buildJsons = async (
     return {
       result: finalStatus,
       logs: jsonResults,
-
     };
   } catch (error) {
     return {
@@ -358,7 +357,7 @@ export const jsonCommand = new Command('json')
   .action(async (opts) => {
     const db = await getDb();
     const toBuild = await getJsonsToBuild(db, opts);
-    console.log(logJsonStart(toBuild)
+    console.log(logJsonStart(toBuild, opts.verbose)
       .join('\n'));
 
     const project = initTypedoc();

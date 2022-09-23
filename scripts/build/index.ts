@@ -49,15 +49,12 @@ const allCommand = new Command('all')
       logJsonStart(jsonOpts, opts.verbose))
       .join('\n'));
 
-    const buildTime = new Date()
-      .getTime();
-
-    const typeDocProj = initTypedoc();
+    const typedocProj = initTypedoc();
     const [bundleResult, tabResult, htmlResult, jsonResult] = await Promise.all([
-      buildBundles(db, bundleOpts, buildTime),
-      buildTabs(db, tabOpts, buildTime),
-      buildHtml(db, typeDocProj),
-      buildJsons(db, typeDocProj, jsonOpts),
+      buildBundles(db, bundleOpts, typedocProj.buildTime),
+      buildTabs(db, tabOpts, typedocProj.buildTime),
+      buildHtml(db, typedocProj),
+      buildJsons(db, typedocProj, jsonOpts),
     ]);
 
     console.log(joinArrays('',

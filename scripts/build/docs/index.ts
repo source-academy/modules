@@ -14,13 +14,13 @@ type DocsCommandOptions = Partial<{
   force: boolean;
 }>;
 
-export default createCommand(commandInfo as CommandInfo,
+const docsCommand = createCommand(commandInfo as CommandInfo,
   async (opts: DocsCommandOptions) => {
     const db = await getDb();
 
     const [htmlOpts, jsonOpts] = await Promise.all([shouldBuildHtml(db, opts), getJsonsToBuild(db, opts)]);
 
-    console.log(joinArrays('', logHtmlStart(htmlOpts), logJsonStart(jsonOpts))
+    console.log(joinArrays('', logHtmlStart(htmlOpts, opts.verbose), logJsonStart(jsonOpts, opts.verbose))
       .join('\n'));
 
     const project = initTypedoc();
@@ -33,5 +33,6 @@ export default createCommand(commandInfo as CommandInfo,
     await copy();
   });
 
+export default docsCommand;
 export { htmlCommand } from './html';
 export { jsonCommand } from './jsons';

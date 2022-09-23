@@ -4,5 +4,5 @@ import { buildTab } from './tab';
 const { elapsed, result } = await buildTab(workerData);
 parentPort.postMessage({
   ...result,
-  elapsed,
+  elapsed: result.result !== 'error' ? elapsed : null,
 });

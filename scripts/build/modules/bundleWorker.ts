@@ -5,5 +5,5 @@ import { buildBundle } from './bundle';
 const { elapsed, result } = await buildBundle(workerData);
 parentPort.postMessage({
   ...result,
-  elapsed,
+  elapsed: result.result !== 'error' ? elapsed : null,
 });
