@@ -13,6 +13,7 @@ import type {
 } from 'estree';
 import type { Plugin, RollupOptions } from 'rollup';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
+import { Worker } from 'worker_threads';
 
 import { NODE_MODULES_PATTERN, SOURCE_PATH } from '../../constants';
 
@@ -161,4 +162,15 @@ export const defaultConfig = (type: 'bundle' | 'tab'): RollupOptions => ({
     }),
     converterPlugin(type),
   ],
+});
+
+export const runWorker = <T>(path: string, data: any) => new Promise<T>((resolve, reject) => {
+  const worker = new Worker(path, { workerData: data });
+  worker.on('message', resolve);
+  worker.on('error', reject);
+  worker.on('exit', (code) => {
+    if (code !== 0) {
+      reject(new Error(`stopped with exit code ${code}`));
+    }
+  });
 });

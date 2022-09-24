@@ -5,10 +5,15 @@ import { constants as fsConstants, promises as fs } from 'fs';
 import { BUILD_PATH } from '../constants';
 import { joinArrays } from '../utilities';
 
+import { buildHtml, logHtmlResult, logHtmlStart, shouldBuildHtml } from './docs/html';
+import { buildJsons, getJsonsToBuild, logJsonResult, logJsonStart } from './docs/jsons';
+import { initTypedoc } from './docs/utils';
+import { buildBundles, getBundles, logBundleResult, logBundleStart } from './modules/bundle';
+import { buildTabs, getTabs, logTabResult, logTabStart } from './modules/tab';
 import { getDb } from './buildUtils';
-import docsCommand, { buildDocsAndJsons, getDocsToBuild, logResultDocs } from './docs';
+import docCommand, { htmlCommand, jsonCommand } from './docs';
 import copy from './misc';
-import modulesCommand, { buildBundlesAndTabs, getBundlesAndTabs, logBuildResults } from './modules';
+import moduleCommand, { tabCommand } from './modules';
 
 type BuildAllCommandOptions = Partial<{
   bundles: string | string[];
@@ -31,43 +36,35 @@ const allCommand = new Command('all')
   .action(async (opts: BuildAllCommandOptions) => {
     const db = await getDb();
 
-    const [{
-      logs: docsStartLogs,
-      ...jsonOpts
-    }, {
-      logs: moduleStartLogs,
-      ...moduleOpts
-    }] = await Promise.all([
-      getDocsToBuild(db, {
-        force: opts.force,
-        verbose: opts.verbose,
-        html: opts.html,
-        bundles: opts.jsons,
-      }),
-      getBundlesAndTabs(db, {
-        force: opts.force,
-        verbose: opts.verbose,
-        tabs: opts.tabs,
-        bundles: opts.bundles,
-      }),
+    const [bundleOpts, htmlOpts] = await Promise.all([getBundles(db, opts), shouldBuildHtml(db, opts)]);
+    const [tabOpts, jsonOpts] = await Promise.all([getTabs(db, opts, bundleOpts), getJsonsToBuild(db, {
+      ...opts,
+      bundles: opts.jsons,
+    }, bundleOpts)]);
+
+    console.log(joinArrays('',
+      logBundleStart(bundleOpts, opts.verbose),
+      logTabStart(tabOpts, opts.verbose),
+      logHtmlStart(htmlOpts, opts.verbose),
+      logJsonStart(jsonOpts, opts.verbose))
+      .join('\n'));
+
+    const typedocProj = initTypedoc();
+    const [bundleResult, tabResult, htmlResult, jsonResult] = await Promise.all([
+      buildBundles(db, bundleOpts, typedocProj.buildTime),
+      buildTabs(db, tabOpts, typedocProj.buildTime),
+      buildHtml(db, typedocProj),
+      buildJsons(db, typedocProj, jsonOpts),
     ]);
 
-    const startLogs = joinArrays('', moduleStartLogs, docsStartLogs);
-    console.log(`${startLogs.join('\n')}\n`);
+    console.log(joinArrays('',
+      logBundleResult(bundleResult),
+      logTabResult(tabResult),
+      logHtmlResult(htmlResult),
+      logJsonResult(jsonResult))
+      .join('\n'));
 
-    // If its parent bundle is being rebuilt, rebuild the JSON
-    Object.keys(moduleOpts)
-      .forEach((bundle) => {
-        if (!jsonOpts[bundle]) jsonOpts[bundle] = `${bundle} is being rebuilt`;
-      });
-
-    const [moduleEndLogs, docsEndLogs] = await Promise.all([
-      buildBundlesAndTabs(db, moduleOpts),
-      buildDocsAndJsons(db, jsonOpts),
-    ]);
-
-    const allLogs = joinArrays('', logBuildResults(...moduleEndLogs), logResultDocs(docsEndLogs));
-    console.log(allLogs.join('\n'));
+    await db.write();
     await copy();
   });
 
@@ -81,5 +78,8 @@ export default new Command('build')
     }
   })
   .addCommand(allCommand, { isDefault: true })
-  .addCommand(modulesCommand)
-  .addCommand(docsCommand);
+  .addCommand(tabCommand)
+  .addCommand(moduleCommand)
+  .addCommand(docCommand)
+  .addCommand(htmlCommand)
+  .addCommand(jsonCommand);

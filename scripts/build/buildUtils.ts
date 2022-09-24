@@ -57,11 +57,13 @@ type ObjectFromList<T extends ReadonlyArray<string>, V = string> = {
   [K in (T extends ReadonlyArray<infer U> ? U : never)]: V
 };
 
-export type DBType = {
+export type DBData = {
   html: number;
 } & ObjectFromList<typeof DBKeys, {
   [name: string]: number;
 }>;
+
+export type DBType = Low<DBData>;
 
 export type EntriesWithReasons = {
   [name: string]: string;
@@ -85,7 +87,7 @@ export type BuildResult = {
  * Get a new Lowdb instance
  */
 export async function getDb() {
-  const db = new Low(new JSONFile<DBType>(getDbPath()));
+  const db = new Low(new JSONFile<DBData>(getDbPath()));
   await db.read();
 
   if (!db.data) {
