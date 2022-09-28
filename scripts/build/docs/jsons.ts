@@ -4,7 +4,7 @@ import { Table } from 'console-table-printer';
 import fs, { promises as fsPromises } from 'fs';
 
 import { BUILD_PATH, SOURCE_PATH } from '../../constants';
-import { modules as manifest } from '../../utilities';
+import { modules as manifest, wrapWithTimer } from '../../utilities';
 import { BuildLog, checkForUnknowns, DBType, EntriesWithReasons, getDb, isFolderModified } from '../buildUtils';
 import copy from '../misc';
 
@@ -168,7 +168,7 @@ export const logJsonStart = (jsons: EntriesWithReasons, verbose?: boolean) => {
   }));
 };
 
-export const buildJson = async (parsedJSON: any, bundle: string, db: DBType, buildTime: number): Promise<JSONBuildLog> => {
+export const buildJson = wrapWithTimer(async (parsedJSON: any, bundle: string): Promise<JSONBuildLog> => {
   const warnLogs: string[] = [];
 
   let status: JSONBuildLog['result'] = 'success';
@@ -179,7 +179,6 @@ export const buildJson = async (parsedJSON: any, bundle: string, db: DBType, bui
   };
 
   try {
-    const startTime = performance.now();
     const docs = parsedJSON.find((x) => x.name === bundle)?.children;
 
     if (!docs) {
@@ -206,10 +205,6 @@ export const buildJson = async (parsedJSON: any, bundle: string, db: DBType, bui
       ({ size: fileSize } = await fsPromises.stat(jsonFile));
     }
 
-    db.data.jsons[bundle] = buildTime;
-
-    const endTime = performance.now();
-
     let warnString: string | null;
     if (warnLogs.length === 0) warnString = null;
     else if (warnLogs.length > 1) warnString = `${warnLogs[0]} +${warnLogs.length - 1}`;
@@ -219,7 +214,6 @@ export const buildJson = async (parsedJSON: any, bundle: string, db: DBType, bui
       name: bundle,
       result: status,
       fileSize,
-      elapsed: (endTime - startTime) / 1000,
       error: warnString,
     };
   } catch (error) {
@@ -229,7 +223,7 @@ export const buildJson = async (parsedJSON: any, bundle: string, db: DBType, bui
       error,
     };
   }
-};
+});
 
 export const buildJsons = async (
   db: DBType,
@@ -263,14 +257,24 @@ export const buildJsons = async (
       };
     }
 
-    const jsonResults = await Promise.all(
-      bundles.map((bundle) => buildJson(parsedJSON, bundle, db, buildTime)),
-    );
+    const wrapper = async (bundle: string) => {
+      const { elapsed, result } = await buildJson(parsedJSON, bundle);
 
-    let finalStatus: JSONBuildResult['result'];
-    if (jsonResults.find(({ result }) => result === 'error')) finalStatus = 'error';
-    else if (jsonResults.find(({ result }) => result === 'warn')) finalStatus = 'warn';
-    else finalStatus = 'success';
+      if (result.result !== 'error') db.data.jsons[bundle] = buildTime;
+
+      return {
+        ...result,
+        elapsed,
+      };
+    };
+
+    const jsonResults = await Promise.all(bundles.map((bundle) => wrapper(bundle)));
+
+    const finalStatus = jsonResults.reduce((out, { result }) => {
+      if (out === 'error' || result === 'error') return 'error';
+      if (result === 'warn') return 'warn';
+      return out;
+    }, 'success' as JSONBuildResult['result']);
 
     return {
       result: finalStatus,
@@ -355,7 +359,7 @@ export const jsonCommand = new Command('jsons')
   .option('-f, --force')
   .option('-v, --verbose')
   .option('-b, --bundles <...bundles>')
-  .description('Build JSONs')
+  .description(chalk.greenBright('Build jsons only'))
   .action(async (opts) => {
     const db = await getDb();
     const toBuild = await getJsonsToBuild(db, opts);

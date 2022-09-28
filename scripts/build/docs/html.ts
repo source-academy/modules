@@ -83,7 +83,7 @@ export const logHtmlResult = ({ result: { result, error }, elapsed }: { elapsed:
 export const htmlCommand = new Command('html')
   .option('-v, --verbose')
   .option('-f, --force')
-  .description('Build only HTML documentation')
+  .description(chalk.greenBright('Build only HTML documentation'))
   .action(async (opts) => {
     const db = await getDb();
     const [shouldBuild, reason] = await shouldBuildHtml(db, opts);

@@ -24,8 +24,8 @@ type BuildAllCommandOptions = Partial<{
   force: boolean;
 }>;
 
-const allCommand = new Command('all')
-  .description(chalk.greenBright('Run both the build modules and build docs subcommands'))
+const modulesCommand = new Command('modules')
+  .description(chalk.greenBright('Build all outputs (bundles, tabs, jsons and html)'))
   .addHelpText('after', chalk.yellow('Use --help on each subcommand to understand how they work'))
   .option('-f, --force', 'Force all files to be rebuilt')
   .option('-v, --verbose', 'Enable verbose information')
@@ -76,9 +76,10 @@ export default new Command('build')
     } catch (error) {
       await fs.mkdir(BUILD_PATH);
     }
-    console.log(chalk.magentaBright(`Executing ${command.name()}...`));
+    console.log(chalk.magentaBright(`Executing ${command.name()} command...\n`));
   })
-  .addCommand(allCommand, { isDefault: true })
+  .allowUnknownOption(false)
+  .addCommand(modulesCommand, { isDefault: true })
   .addCommand(tabCommand)
   .addCommand(docCommand)
   .addCommand(htmlCommand)

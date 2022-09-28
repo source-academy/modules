@@ -224,7 +224,7 @@ export const tabCommand = new Command('tabs')
   .option('-t, --tabs <...tabs>')
   .option('-f, --force')
   .option('-v, --verbose')
-  .description('Build tabs')
+  .description(chalk.greenBright('Build only tabs'))
   .action(async (opts) => {
     const db = await getDb();
     const tabs = await getTabs(db, opts);
