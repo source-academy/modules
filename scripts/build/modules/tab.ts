@@ -156,7 +156,7 @@ export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTi
   const wrapper = async (tabName: string) => {
     const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
 
-    db.data.tabs[tabName] = buildTime;
+    if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
     return result;
   };
 

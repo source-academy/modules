@@ -136,19 +136,12 @@ export const buildBundles = async (db: DBType, bundlesReason: EntriesWithReasons
   const wrapper = async (bundle: string) => {
     const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, bundle);
 
-    db.data.bundles[bundle] = buildTime;
+    if (result.result !== 'error') db.data.bundles[bundle] = buildTime;
     return result;
   };
 
   const bundlePromises = Object.keys(bundlesReason)
     .map((bundle) => wrapper(bundle));
-  // const bundlePromises = Object.keys(bundlesReason)
-  //   .map((bundle) => runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, {
-  //     db,
-  //     bundle,
-  //     buildTime,
-  //   }));
-
   const buildResults = await Promise.all(bundlePromises);
   const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';
 
