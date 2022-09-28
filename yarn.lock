@@ -1562,10 +1562,10 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
   integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
 
-"@types/estree@0.0.51":
-  version "0.0.51"
-  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.51.tgz#cfd70924a25a3fd32b218e5e420e6897e1ac4f40"
-  integrity sha512-CuPgU6f3eT/XgKKPqKd/gLZV1Xmvf1a2R5POBOGQa6uv82xpls89HU5zKeVoyR8XzHd1RGNOlQlvUe3CFkjWNQ==
+"@types/estree@0.0.52":
+  version "0.0.52"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.52.tgz#7f1f57ad5b741f3d5b210d3b1f145640d89bf8fe"
+  integrity sha512-BZWrtCU0bMVAIliIV+HJO1f1PR41M7NKjfxrFJwwhKI1KwhwOxYw1SXg9ao+CIMt774nFuGiG6eU+udtbEI9oQ==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
@@ -4923,13 +4923,13 @@ jest@^26.6.3:
     import-local "^3.0.2"
     jest-cli "^26.6.3"
 
-js-slang@^0.5.31:
-  version "0.5.33"
-  resolved "https://registry.yarnpkg.com/js-slang/-/js-slang-0.5.33.tgz#62bb1be0ac0a6463b36d24a3209cb1f9d03c5c9c"
-  integrity sha512-BxZXR8ewvckTcPNBC7ICfjHa1kJBCrYaMqmxtAYmnLiznWkOi/4YB96S0aKXh8PZlsv0Zg10B5VJrlVZtIKmCw==
+js-slang@^0.5.38:
+  version "0.5.38"
+  resolved "https://registry.yarnpkg.com/js-slang/-/js-slang-0.5.38.tgz#9c514049ec9b50f5c082b6363983c4116dfdc7e6"
+  integrity sha512-9CwEeIU6goUypEmPN640Edu2x5MFbAXhWMLMaACWAjaJZ3uPmZDV6UhLg45GZxuCiIOg9rZIKIi19bYdw+qBrg==
   dependencies:
     "@joeychenofficial/alt-ergo-modified" "^2.4.0"
-    "@types/estree" "0.0.51"
+    "@types/estree" "0.0.52"
     acorn "^8.0.3"
     acorn-loose "^8.0.0"
     acorn-walk "^8.0.0"
@@ -4938,7 +4938,7 @@ js-slang@^0.5.31:
     gpu.js "^2.10.4"
     lodash "^4.17.20"
     node-getopt "^0.3.2"
-    source-map "^0.7.3"
+    source-map "0.7.3"
     xmlhttprequest-ts "^1.0.1"
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
@@ -6687,6 +6687,11 @@ source-map-url@^0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/source-map-url/-/source-map-url-0.4.1.tgz#0af66605a745a5a2f91cf1bbf8a7afbc283dec56"
   integrity sha512-cPiFOTLUKvJFIg4SKVScy4ilPPW6rFgMgfuZJPNoDuMs3nC1HbMUycBoJw77xFIp6z1UJQJOfx6C9GMH80DiTw==
+
+source-map@0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
+  integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
 
 source-map@^0.5.6:
   version "0.5.7"
