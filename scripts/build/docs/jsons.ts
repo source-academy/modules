@@ -337,7 +337,7 @@ export const logJsonResult = (jsonsResult: JSONBuildResult) => {
       bundle: name,
       result,
       fileSize: isNaN(fileSize) ? '-' : `${(fileSize / 1024).toFixed(2)} KB`,
-      elapsed: elapsed < 0.01 ? '>0.00' : elapsed.toFixed(2),
+      elapsed: elapsed < 0.01 ? '<0.00' : elapsed.toFixed(2),
       error: error || '-',
     }, {
       color: {
@@ -351,7 +351,7 @@ export const logJsonResult = (jsonsResult: JSONBuildResult) => {
   return jsonLogs;
 };
 
-export const jsonCommand = new Command('json')
+export const jsonCommand = new Command('jsons')
   .option('-f, --force')
   .option('-v, --verbose')
   .option('-b, --bundles <...bundles>')

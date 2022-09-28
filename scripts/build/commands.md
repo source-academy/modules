@@ -18,8 +18,9 @@ Each build order consists of the following steps:
 4. Log the result of the build process (`logBundlesResult()`)
 
 The `build json`, `build tab` and `build html` commands each run their respective build orders.
-Bundles cannot be separately from tabs and jsons as both are reliant on their parent bundle. 
-To rebuild a bundle, run `build modules`, which will also build the jsons and tabs if their parent bundle is being rebuilt.
+Bundles cannot be separately as tabs and documentations are reliant on bundles.
+To rebuild a bundle, run `build modules`, which will also build the jsons and tabs if their parent bundle is being rebuilt,
+along with the html documentation.
 
 You can specify `-f` or `--force` when executing a build command, which will display the reasons why a certain file is being rebuilt.
 

@@ -13,7 +13,7 @@ import { buildTabs, getTabs, logTabResult, logTabStart } from './modules/tab';
 import { getDb } from './buildUtils';
 import docCommand, { htmlCommand, jsonCommand } from './docs';
 import copy from './misc';
-import moduleCommand, { tabCommand } from './modules';
+import { tabCommand } from './modules';
 
 type BuildAllCommandOptions = Partial<{
   bundles: string | string[];
@@ -69,17 +69,17 @@ const allCommand = new Command('all')
   });
 
 export default new Command('build')
-  .hook('preAction', async () => {
+  .hook('preAction', async (_, command) => {
     try {
     // Create the build folder if it doesn't already exist
       await fs.access(BUILD_PATH, fsConstants.F_OK);
     } catch (error) {
       await fs.mkdir(BUILD_PATH);
     }
+    console.log(chalk.magentaBright(`Executing ${command.name()}...`));
   })
   .addCommand(allCommand, { isDefault: true })
   .addCommand(tabCommand)
-  .addCommand(moduleCommand)
   .addCommand(docCommand)
   .addCommand(htmlCommand)
   .addCommand(jsonCommand);
