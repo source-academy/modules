@@ -9,12 +9,6 @@ import { BuildLog, BuildResult, checkForUnknowns, DBType, EntriesWithReasons, is
 
 import { defaultConfig, runWorker } from './utils';
 
-type Args = {
-  db: DBType;
-  buildTime: number;
-  bundle: string;
-};
-
 type BundleOpts = {
   force?: boolean;
   bundles?: string | string[];
@@ -97,7 +91,7 @@ export const logBundleStart = (bundles: EntriesWithReasons, verbose?: boolean) =
     }));
 };
 
-export const buildBundle = wrapWithTimer(async ({ db, buildTime, bundle }: Args): Promise<BuildLog> => {
+export const buildBundle = wrapWithTimer(async (bundle: string): Promise<BuildLog> => {
   try {
     const rollupBundle = await rollup({
       ...defaultConfig('bundle'),
@@ -124,7 +118,6 @@ export const buildBundle = wrapWithTimer(async ({ db, buildTime, bundle }: Args)
     await rollupBundle.close();
     const { size } = await fsPromises.stat(bundleFile);
 
-    db.data.bundles[bundle] = buildTime;
     return {
       result: 'success',
       name: bundle,
@@ -140,12 +133,21 @@ export const buildBundle = wrapWithTimer(async ({ db, buildTime, bundle }: Args)
 });
 
 export const buildBundles = async (db: DBType, bundlesReason: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
+  const wrapper = async (bundle: string) => {
+    const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, bundle);
+
+    db.data.bundles[bundle] = buildTime;
+    return result;
+  };
+
   const bundlePromises = Object.keys(bundlesReason)
-    .map((bundle) => runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, {
-      db,
-      bundle,
-      buildTime,
-    }));
+    .map((bundle) => wrapper(bundle));
+  // const bundlePromises = Object.keys(bundlesReason)
+  //   .map((bundle) => runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, {
+  //     db,
+  //     bundle,
+  //     buildTime,
+  //   }));
 
   const buildResults = await Promise.all(bundlePromises);
   const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';

@@ -168,6 +168,69 @@ export const logJsonStart = (jsons: EntriesWithReasons, verbose?: boolean) => {
   }));
 };
 
+export const buildJson = async (parsedJSON: any, bundle: string, db: DBType, buildTime: number): Promise<JSONBuildLog> => {
+  const warnLogs: string[] = [];
+
+  let status: JSONBuildLog['result'] = 'success';
+  let fileSize: number | undefined;
+  const warner = (msg: string) => {
+    status = 'warn';
+    return warnLogs.push(msg);
+  };
+
+  try {
+    const startTime = performance.now();
+    const docs = parsedJSON.find((x) => x.name === bundle)?.children;
+
+    if (!docs) {
+      warner('No documentation found for bundle');
+    } else {
+      // Run through each item in the bundle and run its parser
+      const output: { [name: string]: string } = {};
+      docs.forEach((element) => {
+        if (parsers[element.kindString]) {
+          const { header, desc } = parsers[element.kindString](element, warner);
+          output[element.name] = `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
+        } else {
+          warner(`No parser found for ${element.name} of type ${element.type}`);
+        }
+      });
+
+      // Then write that output to the bundles' respective json files
+      const jsonFile = `${BUILD_PATH}/jsons/${bundle}.json`;
+      await fsPromises.writeFile(
+        jsonFile,
+        JSON.stringify(output, null, 2),
+      );
+
+      ({ size: fileSize } = await fsPromises.stat(jsonFile));
+    }
+
+    db.data.jsons[bundle] = buildTime;
+
+    const endTime = performance.now();
+
+    let warnString: string | null;
+    if (warnLogs.length === 0) warnString = null;
+    else if (warnLogs.length > 1) warnString = `${warnLogs[0]} +${warnLogs.length - 1}`;
+    else warnString = warnLogs[0];
+
+    return {
+      name: bundle,
+      result: status,
+      fileSize,
+      elapsed: (endTime - startTime) / 1000,
+      error: warnString,
+    };
+  } catch (error) {
+    return {
+      name: bundle,
+      result: 'error',
+      error,
+    };
+  }
+};
+
 export const buildJsons = async (
   db: DBType,
   {
@@ -177,9 +240,9 @@ export const buildJsons = async (
   }: DocsProject,
   toBuild: EntriesWithReasons,
 ): Promise<JSONBuildResult> => {
-  const bundlesWithReason = Object.keys(toBuild);
+  const bundles = Object.keys(toBuild);
 
-  if (bundlesWithReason.length === 0) {
+  if (bundles.length === 0) {
     return {
       result: 'success',
       logs: [],
@@ -201,68 +264,7 @@ export const buildJsons = async (
     }
 
     const jsonResults = await Promise.all(
-      bundlesWithReason.map(async (bundle): Promise<JSONBuildLog> => {
-        const warnLogs: string[] = [];
-
-        let status: JSONBuildLog['result'] = 'success';
-        let fileSize: number | undefined;
-        const warner = (msg: string) => {
-          status = 'warn';
-          return warnLogs.push(msg);
-        };
-
-        try {
-          const startTime = performance.now();
-          const docs = parsedJSON.find((x) => x.name === bundle)?.children;
-
-          if (!docs) {
-            warner('No documentation found for bundle');
-          } else {
-            // Run through each item in the bundle and run its parser
-            const output: { [name: string]: string } = {};
-            docs.forEach((element) => {
-              if (parsers[element.kindString]) {
-                const { header, desc } = parsers[element.kindString](element, warner);
-                output[element.name] = `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
-              } else {
-                warner(`No parser found for ${element.name} of type ${element.type}`);
-              }
-            });
-
-            // Then write that output to the bundles' respective json files
-            const jsonFile = `${BUILD_PATH}/jsons/${bundle}.json`;
-            await fsPromises.writeFile(
-              jsonFile,
-              JSON.stringify(output, null, 2),
-            );
-
-            ({ size: fileSize } = await fsPromises.stat(jsonFile));
-          }
-
-          db.data.jsons[bundle] = buildTime;
-
-          const endTime = performance.now();
-
-          let warnString: string | null;
-          if (warnLogs.length === 0) warnString = null;
-          else if (warnLogs.length > 1) warnString = `${warnLogs[0]} +${warnLogs.length - 1}`;
-          else warnString = warnLogs[0];
-
-          return {
-            name: bundle,
-            result: status,
-            fileSize,
-            elapsed: (endTime - startTime) / 1000,
-            error: warnString,
-          };
-        } catch (error) {
-          return {
-            name: bundle,
-            result: 'error',
-            error,
-          };
-        }
-      }),
+      bundles.map((bundle) => buildJson(parsedJSON, bundle, db, buildTime)),
     );
 
     let finalStatus: JSONBuildResult['result'];

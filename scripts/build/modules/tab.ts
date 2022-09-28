@@ -12,12 +12,6 @@ import copy from '../misc';
 
 import { defaultConfig, runWorker } from './utils';
 
-type Args = {
-  db: DBType;
-  buildTime: number;
-  tabName: string;
-};
-
 type TabOpts = {
   force?: boolean;
   tabs?: string | string[];
@@ -114,7 +108,7 @@ export const logTabStart = (toBuild: EntriesWithReasons, verbose?: boolean) => {
   }));
 };
 
-export const buildTab = wrapWithTimer(async ({ db, buildTime, tabName }: Args): Promise<BuildLog> => {
+export const buildTab = wrapWithTimer(async (tabName: string): Promise<BuildLog> => {
   try {
     const rollupBundle = await rollup({
       ...defaultConfig('tab'),
@@ -142,8 +136,6 @@ export const buildTab = wrapWithTimer(async ({ db, buildTime, tabName }: Args): 
     await rollupBundle.close();
     const { size } = await fsPromises.stat(tabFile);
 
-    db.data.tabs[tabName] = buildTime;
-
     return {
       name: tabName,
       result: 'success',
@@ -161,12 +153,15 @@ export const buildTab = wrapWithTimer(async ({ db, buildTime, tabName }: Args): 
 });
 
 export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
+  const wrapper = async (tabName: string) => {
+    const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
+
+    db.data.tabs[tabName] = buildTime;
+    return result;
+  };
+
   const tabPromises = Object.keys(toBuild)
-    .map((tabName) => runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, {
-      db,
-      buildTime,
-      tabName,
-    }));
+    .map((tab) => wrapper(tab));
 
   const buildResults = await Promise.all(tabPromises);
   const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';
@@ -226,7 +221,7 @@ export const logTabResult = (tabResult: BuildResult) => {
 };
 
 export const tabCommand = new Command('tabs')
-  .option('-t, --t <...tabs>')
+  .option('-t, --tabs <...tabs>')
   .option('-f, --force')
   .option('-v, --verbose')
   .description('Build tabs')
