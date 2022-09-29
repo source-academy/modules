@@ -22,6 +22,7 @@ type BuildAllCommandOptions = Partial<{
   html: boolean;
   verbose: boolean;
   force: boolean;
+  singleThread?: boolean;
 }>;
 
 const modulesCommand = new Command('modules')
@@ -32,6 +33,7 @@ const modulesCommand = new Command('modules')
   .option('-b, --bundles <bundles...>', 'Specify bundles to be rebuilt')
   .option('-t, --tabs <tabs...>', 'Specify tabs to be rebuilt')
   .option('-j, --jsons <jsons...>', 'Specify jsons of which bundles to be rebuild')
+  .option('--single-thread', 'Do not use separate worker threads during builds')
   .option('--no-html', 'Skip building HTML documentation')
   .action(async (opts: BuildAllCommandOptions) => {
     const db = await getDb();
@@ -52,8 +54,8 @@ const modulesCommand = new Command('modules')
     try {
       const typedocProj = initTypedoc();
       const [bundleResult, tabResult, htmlResult, jsonResult] = await Promise.all([
-        buildBundles(db, bundleOpts, typedocProj.buildTime),
-        buildTabs(db, tabOpts, typedocProj.buildTime),
+        buildBundles(db, bundleOpts, typedocProj.buildTime, opts.singleThread),
+        buildTabs(db, tabOpts, typedocProj.buildTime, opts.singleThread),
         buildHtml(db, typedocProj),
         buildJsons(db, typedocProj, jsonOpts),
       ]);

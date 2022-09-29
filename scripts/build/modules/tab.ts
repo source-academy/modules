@@ -152,21 +152,31 @@ export const buildTab = wrapWithTimer(async (tabName: string): Promise<BuildLog>
   }
 });
 
-export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
+export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTime: number, singleThread: boolean): Promise<BuildResult> => {
   try {
-    const wrapper = async (tabName: string) => {
-      try {
-        const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
+    const wrapper = singleThread
+      ? async (tabName: string) => {
+        const { result, elapsed } = await buildTab(tabName);
 
         if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
-        return result;
-      } catch (error) {
         return {
-          result: 'error',
-          error,
-        } as BuildLog;
+          ...result,
+          elapsed,
+        };
       }
-    };
+      : async (tabName: string) => {
+        try {
+          const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
+
+          if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
+          return result;
+        } catch (error) {
+          return {
+            result: 'error',
+            error,
+          } as BuildLog;
+        }
+      };
 
     const tabPromises = Object.keys(toBuild)
       .map((tab) => wrapper(tab));
@@ -243,6 +253,7 @@ export const tabCommand = new Command('tabs')
   .option('-t, --tabs <...tabs>')
   .option('-f, --force')
   .option('-v, --verbose')
+  .option('--single-thread', 'Do not use separate worker threads during builds')
   .description(chalk.greenBright('Build only tabs'))
   .action(async (opts) => {
     const db = await getDb();
@@ -251,7 +262,7 @@ export const tabCommand = new Command('tabs')
       .join('\n'));
     const buildTime = new Date()
       .getTime();
-    const result = await buildTabs(db, tabs, buildTime);
+    const result = await buildTabs(db, tabs, buildTime, opts.singleThread);
 
     console.log(logTabResult(result)
       .join('\n'));

@@ -132,21 +132,30 @@ export const buildBundle = wrapWithTimer(async (bundle: string): Promise<BuildLo
   }
 });
 
-export const buildBundles = async (db: DBType, bundlesReason: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
+export const buildBundles = async (db: DBType, bundlesReason: EntriesWithReasons, buildTime: number, singleThread: boolean): Promise<BuildResult> => {
   try {
-    const wrapper = async (bundle: string) => {
-      try {
-        const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, bundle);
-
+    const wrapper = singleThread
+      ? async (bundle: string) => {
+        const { result, elapsed } = await buildBundle(bundle);
         if (result.result !== 'error') db.data.bundles[bundle] = buildTime;
-        return result;
-      } catch (error) {
         return {
-          result: 'error',
-          error,
-        } as BuildLog;
+          ...result,
+          elapsed,
+        };
       }
-    };
+      : async (bundle: string) => {
+        try {
+          const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, bundle);
+
+          if (result.result !== 'error') db.data.bundles[bundle] = buildTime;
+          return result;
+        } catch (error) {
+          return {
+            result: 'error',
+            error,
+          } as BuildLog;
+        }
+      };
 
     const bundlePromises = Object.keys(bundlesReason)
       .map((bundle) => wrapper(bundle));
