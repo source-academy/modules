@@ -62,10 +62,12 @@ export const buildHtml = wrapWithTimer(async (db: DBType, { buildTime, app, proj
       `${BUILD_PATH}/documentation/README.md`,
     );
     db.data.html = buildTime;
+    console.log('HTML completed');
     return {
       result: 'success',
     };
   } catch (error) {
+    console.log('HTML Errored.');
     return {
       result: 'error',
       error,

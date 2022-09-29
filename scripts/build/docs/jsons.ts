@@ -257,7 +257,7 @@ export const buildJsons = async (
       };
     }
 
-    const wrapper = async (bundle: string) => {
+    const wrapper = async (bundle: string): Promise<JSONBuildLog> => {
       const { elapsed, result } = await buildJson(parsedJSON, bundle);
 
       if (result.result !== 'error') db.data.jsons[bundle] = buildTime;
@@ -276,11 +276,14 @@ export const buildJsons = async (
       return out;
     }, 'success' as JSONBuildResult['result']);
 
+    console.log('JSONS completed!');
+
     return {
       result: finalStatus,
       logs: jsonResults,
     };
   } catch (error) {
+    console.log('JSONS errored!');
     return {
       result: 'error',
       error,

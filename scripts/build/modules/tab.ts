@@ -153,23 +153,35 @@ export const buildTab = wrapWithTimer(async (tabName: string): Promise<BuildLog>
 });
 
 export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
-  const wrapper = async (tabName: string) => {
-    const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
+  try {
+    const wrapper = async (tabName: string) => {
+      const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
 
-    if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
-    return result;
-  };
+      if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
+      return result;
+    };
 
-  const tabPromises = Object.keys(toBuild)
-    .map((tab) => wrapper(tab));
+    const tabPromises = Object.keys(toBuild)
+      .map((tab) => wrapper(tab));
 
-  const buildResults = await Promise.all(tabPromises);
-  const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';
+    const buildResults = await Promise.all(tabPromises);
+    const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';
 
-  return {
-    result: finalResult,
-    logs: buildResults,
-  };
+    console.log('Tabs completed');
+
+    return {
+      result: finalResult,
+      logs: buildResults,
+    };
+  } catch (error) {
+    console.log('Tabs errored');
+
+    return {
+      result: 'error',
+      logs: [],
+      error,
+    };
+  }
 };
 
 export const logTabResult = (tabResult: BuildResult) => {
