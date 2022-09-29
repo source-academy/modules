@@ -7,8 +7,11 @@ async function main() {
   const parser = new Command()
     .addCommand(createCommand)
     .addCommand(buildCommand);
-
-  await parser.parseAsync();
+  try {
+    await parser.parseAsync();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 main()
