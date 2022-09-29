@@ -134,42 +134,33 @@ export const buildBundle = wrapWithTimer(async (bundle: string): Promise<BuildLo
 
 export const buildBundles = async (db: DBType, bundlesReason: EntriesWithReasons, buildTime: number, singleThread: boolean): Promise<BuildResult> => {
   try {
-    const wrapper = singleThread
-      ? async (bundle: string) => {
-        const { result, elapsed } = await buildBundle(bundle);
+    const wrapper = async (bundle: string) => {
+      try {
+        const { result, elapsed } = await (singleThread ? buildBundle(bundle) : runWorker<ReturnType<typeof buildBundle>>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, bundle));
+
         if (result.result !== 'error') db.data.bundles[bundle] = buildTime;
         return {
           ...result,
           elapsed,
         };
+      } catch (error) {
+        return {
+          result: 'error',
+          error,
+        } as BuildLog;
       }
-      : async (bundle: string) => {
-        try {
-          const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, bundle);
-
-          if (result.result !== 'error') db.data.bundles[bundle] = buildTime;
-          return result;
-        } catch (error) {
-          return {
-            result: 'error',
-            error,
-          } as BuildLog;
-        }
-      };
+    };
 
     const bundlePromises = Object.keys(bundlesReason)
       .map((bundle) => wrapper(bundle));
     const buildResults = await Promise.all(bundlePromises);
     const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';
 
-    console.log('Bundles completed');
-
     return {
       result: finalResult,
       logs: buildResults,
     };
   } catch (error) {
-    console.log('Bundles errored');
     return {
       result: 'error',
       error,

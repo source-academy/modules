@@ -154,29 +154,22 @@ export const buildTab = wrapWithTimer(async (tabName: string): Promise<BuildLog>
 
 export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTime: number, singleThread: boolean): Promise<BuildResult> => {
   try {
-    const wrapper = singleThread
-      ? async (tabName: string) => {
-        const { result, elapsed } = await buildTab(tabName);
+    const wrapper = async (tabName: string) => {
+      try {
+        const { result, elapsed } = await (singleThread ? buildTab(tabName) : runWorker<ReturnType<typeof buildTab>>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName));
 
-        if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
+        if (result.result !== 'error') db.data.bundles[tabName] = buildTime;
         return {
           ...result,
           elapsed,
         };
+      } catch (error) {
+        return {
+          result: 'error',
+          error,
+        } as BuildLog;
       }
-      : async (tabName: string) => {
-        try {
-          const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
-
-          if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
-          return result;
-        } catch (error) {
-          return {
-            result: 'error',
-            error,
-          } as BuildLog;
-        }
-      };
+    };
 
     const tabPromises = Object.keys(toBuild)
       .map((tab) => wrapper(tab));
@@ -184,15 +177,11 @@ export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTi
     const buildResults = await Promise.all(tabPromises);
     const finalResult = buildResults.find(({ result }) => result === 'error') ? 'error' : 'success';
 
-    console.log('Tabs completed');
-
     return {
       result: finalResult,
       logs: buildResults,
     };
   } catch (error) {
-    console.log('Tabs errored');
-
     return {
       result: 'error',
       logs: [],

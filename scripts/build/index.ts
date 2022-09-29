@@ -60,8 +60,6 @@ const modulesCommand = new Command('modules')
         buildJsons(db, typedocProj, jsonOpts),
       ]);
 
-      console.log('Modules command completed!');
-
       console.log(joinArrays('',
         logBundleResult(bundleResult),
         logTabResult(tabResult),
