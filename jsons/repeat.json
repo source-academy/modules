@@ -1,0 +1,5 @@
+{
+  "repeat": "<div><h4>repeat(func: Function, n: number) → {Function}</h4><div class=\"description\"><p>Returns a new function which when applied to an argument, has the same effect  \nas applying the specified function to the same argument n times.</p></div></div>",
+  "thrice": "<div><h4>thrice(func: Function) → {Function}</h4><div class=\"description\"><p>Returns a new function which when applied to an argument, has the same effect  \nas applying the specified function to the same argument 3 times.</p></div></div>",
+  "twice": "<div><h4>twice(func: Function) → {Function}</h4><div class=\"description\"><p>Returns a new function which when applied to an argument, has the same effect  \nas applying the specified function to the same argument 2 times.</p></div></div>"
+}

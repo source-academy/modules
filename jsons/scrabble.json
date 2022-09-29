@@ -1,0 +1,6 @@
+{
+  "scrabble_array": "<div><h4>scrabble_array: unknown</h4><div class=\"description\"><p><code>scrabble_array</code></p></div></div>",
+  "scrabble_list": "<div><h4>scrabble_list: List</h4><div class=\"description\"><p><code>scrabble_list</code></p></div></div>",
+  "arrayLength": "<div><h4>arrayLength(x: any) → {number}</h4><div class=\"description\">arrayLength</div></div>",
+  "charAt": "<div><h4>charAt(s: string, i: number) → {any}</h4><div class=\"description\">charAt</div></div>"
+}

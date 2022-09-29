@@ -1,22 +1,29 @@
 (function () {
-    'use strict';
-
-    (function() {
-        const env = {};
-        try {
-            if (process) {
-                process.env = Object.assign({}, process.env);
-                Object.assign(process.env, env);
-                return;
-            }
-        } catch (e) {} // avoid ReferenceError: process is not defined
-        globalThis.process = { env:env };
-    })();
-
-    function make_empty_tree(){return null}function make_tree(value,left,right){return [left,value,right]}
-
-    var index = (function(){return {make_empty_tree:make_empty_tree,make_tree:make_tree}});
-
-    return index;
-
-}());
+  'use strict';
+  var exports = {};
+  (function () {
+    const env = {};
+    try {
+      if (process) {
+        process.env = Object.assign({}, process.env);
+        Object.assign(process.env, env);
+        return;
+      }
+    } catch (e) {}
+    globalThis.process = {
+      env: env
+    };
+  })();
+  function make_empty_tree() {
+    return null;
+  }
+  function make_tree(value, left, right) {
+    return [left, value, right];
+  }
+  exports.make_empty_tree = make_empty_tree;
+  exports.make_tree = make_tree;
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  return exports;
+})

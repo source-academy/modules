@@ -1,0 +1,4 @@
+{
+  "make_empty_tree": "<div><h4>make_empty_tree() → {BinaryTree}</h4><div class=\"description\"><p>Returns an empty binary tree, represented by the empty list null</p></div></div>",
+  "make_tree": "<div><h4>make_tree(value: any, left: BinaryTree, right: BinaryTree) → {BinaryTree}</h4><div class=\"description\"><p>Returns a binary tree node composed of the specified left subtree, value and right subtree.</p></div></div>"
+}
