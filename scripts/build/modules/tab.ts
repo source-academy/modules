@@ -155,10 +155,17 @@ export const buildTab = wrapWithTimer(async (tabName: string): Promise<BuildLog>
 export const buildTabs = async (db: DBType, toBuild: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
   try {
     const wrapper = async (tabName: string) => {
-      const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
+      try {
+        const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/tabWorker.ts`, tabName);
 
-      if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
-      return result;
+        if (result.result !== 'error') db.data.tabs[tabName] = buildTime;
+        return result;
+      } catch (error) {
+        return {
+          result: 'error',
+          error,
+        } as BuildLog;
+      }
     };
 
     const tabPromises = Object.keys(toBuild)

@@ -276,14 +276,11 @@ export const buildJsons = async (
       return out;
     }, 'success' as JSONBuildResult['result']);
 
-    console.log('JSONS completed!');
-
     return {
       result: finalStatus,
       logs: jsonResults,
     };
   } catch (error) {
-    console.log('JSONS errored!');
     return {
       result: 'error',
       error,

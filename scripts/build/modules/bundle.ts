@@ -135,10 +135,17 @@ export const buildBundle = wrapWithTimer(async (bundle: string): Promise<BuildLo
 export const buildBundles = async (db: DBType, bundlesReason: EntriesWithReasons, buildTime: number): Promise<BuildResult> => {
   try {
     const wrapper = async (bundle: string) => {
-      const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, bundle);
+      try {
+        const result = await runWorker<BuildLog>(`${cjsDirname(import.meta.url)}/bundleWorker.ts`, bundle);
 
-      if (result.result !== 'error') db.data.bundles[bundle] = buildTime;
-      return result;
+        if (result.result !== 'error') db.data.bundles[bundle] = buildTime;
+        return result;
+      } catch (error) {
+        return {
+          result: 'error',
+          error,
+        } as BuildLog;
+      }
     };
 
     const bundlePromises = Object.keys(bundlesReason)
