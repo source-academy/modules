@@ -133,8 +133,8 @@ function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   }
 
   if (!ok) {
-    const warningMessage =
-      'You have invalid values for some pixels! Reseting them to default (0)';
+    const warningMessage
+      = 'You have invalid values for some pixels! Reseting them to default (0)';
     console.warn(warningMessage);
     errorLogger(warningMessage, false);
   }
@@ -169,7 +169,7 @@ function drawImage(source: VideoElement | ImageElement): void {
       (WIDTH - displayWidth) / 2,
       (HEIGHT - displayHeight) / 2,
       displayWidth,
-      displayHeight
+      displayHeight,
     );
   } else canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
 
@@ -187,7 +187,7 @@ function drawImage(source: VideoElement | ImageElement): void {
 
     if (!e.name) {
       errorLogger(
-        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.'
+        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.',
       );
 
       errorLogger([e], true);
@@ -288,11 +288,10 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
-      videoElement.onloadedmetadata = () =>
-        setAspectRatioDimensions(
-          videoElement.videoWidth,
-          videoElement.videoHeight
-        );
+      videoElement.onloadedmetadata = () => setAspectRatioDimensions(
+        videoElement.videoWidth,
+        videoElement.videoHeight,
+      );
       toRunLateQueue = true;
     })
     .catch((error) => {
@@ -327,7 +326,7 @@ function loadAlternative(): void {
   videoElement.onended = () => {
     playCount++;
     if (playCount == LOOP_COUNT) {
-      tabsPackage.onClickStill()
+      tabsPackage.onClickStill();
       playCount = 0;
     } else if (playCount < LOOP_COUNT) {
       stopVideo();
@@ -345,7 +344,7 @@ function loadAlternative(): void {
   imageElement.onload = () => {
     setAspectRatioDimensions(
       imageElement.naturalWidth,
-      imageElement.naturalHeight
+      imageElement.naturalHeight,
     );
     drawImage(imageElement);
   };
@@ -369,11 +368,11 @@ function updateFPS(fps: number): void {
 function updateDimensions(w: number, h: number): void {
   // ignore if no change or bad inputs
   if (
-    (w === WIDTH && h === HEIGHT) ||
-    w > MAX_WIDTH ||
-    w < MIN_WIDTH ||
-    h > MAX_HEIGHT ||
-    h < MIN_HEIGHT
+    (w === WIDTH && h === HEIGHT)
+    || w > MAX_WIDTH
+    || w < MIN_WIDTH
+    || h > MAX_HEIGHT
+    || h < MIN_HEIGHT
   ) {
     return;
   }
@@ -455,7 +454,7 @@ function init(
   video: VideoElement,
   canvas: CanvasElement,
   _errorLogger: ErrorLogger,
-  _tabsPackage: TabsPacket
+  _tabsPackage: TabsPacket,
 ): BundlePacket {
   imageElement = image;
   videoElement = video;
@@ -472,7 +471,13 @@ function init(
     loadAlternative();
   }
   queue();
-  return { HEIGHT, WIDTH, FPS, VOLUME, inputFeed };
+  return {
+    HEIGHT,
+    WIDTH,
+    FPS,
+    VOLUME,
+    inputFeed,
+  };
 }
 
 /**
@@ -486,9 +491,10 @@ function deinit(): void {
   if (!stream) {
     return;
   }
-  stream.getTracks().forEach((track) => {
-    track.stop();
-  });
+  stream.getTracks()
+    .forEach((track) => {
+      track.stop();
+    });
 }
 
 // =============================================================================
@@ -570,7 +576,7 @@ export function set_rgba(
   r: number,
   g: number,
   b: number,
-  a: number
+  a: number,
 ): void {
   // assigns the r,g,b values to this pixel
   pixel[0] = r;
@@ -678,7 +684,7 @@ export function pause_at(pause_time: number): void {
   lateEnqueue(() => {
     setTimeout(
       tabsPackage.onClickStill,
-      pause_time >= 0 ? pause_time : -pause_time
+      pause_time >= 0 ? pause_time : -pause_time,
     );
   });
 }

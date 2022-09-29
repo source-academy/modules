@@ -209,7 +209,7 @@ module.exports = {
     'no-lonely-if': 1,
     'no-loop-func': 1,
     // "no-magic-numbers": 0,
-    'no-mixed-operators': 1,
+    'no-mixed-operators': 0,
     'no-multi-assign': 1,
     'no-multi-str': 1,
     // "no-negated-condition": 0,
@@ -318,7 +318,6 @@ module.exports = {
     'require-await': 1,
     'require-unicode-regexp': 1,
     'require-yield': 1, // Was 2
-    // 'sort-imports': 0,
     // "sort-keys": 0,
     // "sort-vars": 0,
     'spaced-comment': [

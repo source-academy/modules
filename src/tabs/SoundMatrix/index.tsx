@@ -53,27 +53,27 @@ class SoundMatrix extends React.Component<Props, State> {
 
   public render() {
     return (
-      <div className='sa-tone-matrix'>
-        <div className='row'>
+      <div className="sa-tone-matrix">
+        <div className="row">
           <div
             className={classNames(
               'controls',
               'col-xs-12',
               Classes.DARK,
-              Classes.BUTTON_GROUP
+              Classes.BUTTON_GROUP,
             )}
           >
-            <Button id='clear-matrix' onClick={this.handleClear}>
+            <Button id="clear-matrix" onClick={this.handleClear}>
               Clear
             </Button>
-            <Button id='randomise-matrix' onClick={this.handleRandomise}>
+            <Button id="randomise-matrix" onClick={this.handleRandomise}>
               Randomise
             </Button>
           </div>
         </div>
-        <div className='row'>
+        <div className="row">
           <div
-            className='col-xs-12'
+            className="col-xs-12"
             ref={(r) => {
               this.$container = r;
             }}

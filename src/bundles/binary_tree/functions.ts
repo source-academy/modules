@@ -35,7 +35,7 @@ export function make_empty_tree(): BinaryTree {
 export function make_tree(
   value: any,
   left: BinaryTree,
-  right: BinaryTree
+  right: BinaryTree,
 ): BinaryTree {
   return [left, value, right];
 }

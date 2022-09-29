@@ -109,7 +109,7 @@ class PixNFlix extends React.Component<Props, State> {
         this.printError,
         {
           onClickStill: this.onClickStill,
-        }
+        },
       );
       let mode: VideoMode = VideoMode.Video;
       if (inputFeed === InputFeed.Local) {
@@ -155,7 +155,7 @@ class PixNFlix extends React.Component<Props, State> {
         () => ({
           mode: VideoMode.Still,
         }),
-        this.handleStopVideo
+        this.handleStopVideo,
       );
     }
   };
@@ -167,7 +167,7 @@ class PixNFlix extends React.Component<Props, State> {
         () => ({
           mode: VideoMode.Video,
         }),
-        this.handleStartVideo
+        this.handleStartVideo,
       );
     }
   };
@@ -195,10 +195,10 @@ class PixNFlix extends React.Component<Props, State> {
 
   public handleUpdateDimensions = (w: number, h: number) => {
     if (
-      w >= MIN_WIDTH &&
-      w <= MAX_WIDTH &&
-      h >= MIN_HEIGHT &&
-      h <= MAX_HEIGHT
+      w >= MIN_WIDTH
+      && w <= MAX_WIDTH
+      && h >= MIN_HEIGHT
+      && h <= MAX_HEIGHT
     ) {
       this.setState({
         width: w,
@@ -264,9 +264,9 @@ class PixNFlix extends React.Component<Props, State> {
    */
   private isPixNFlix() {
     return (
-      this.pixNFlix &&
-      this.pixNFlix.toReplString &&
-      this.pixNFlix.toReplString() === '[Pix N Flix]'
+      this.pixNFlix
+      && this.pixNFlix.toReplString
+      && this.pixNFlix.toReplString() === '[Pix N Flix]'
     );
   }
 
@@ -277,38 +277,38 @@ class PixNFlix extends React.Component<Props, State> {
     const isAccepting = mode === VideoMode.Accepting;
     return (
       <div
-        className='sa-video'
+        className="sa-video"
         onDragOver={this.handleDragOver}
         onDrop={this.handleDrop}
       >
-        <div className='sa-video-header'>
+        <div className="sa-video-header">
           <div
-            className='sa-video-header-element'
+            className="sa-video-header-element"
             style={{ display: displayOptions ? 'inherit' : 'none' }}
           >
             <ButtonGroup>
               <Button
-                className='sa-live-video-button'
+                className="sa-live-video-button"
                 icon={IconNames.VIDEO}
                 active={videoIsActive}
                 onClick={this.onClickVideo}
-                text='Play Video'
+                text="Play Video"
               />
               <Button
-                className='sa-still-image-button'
+                className="sa-still-image-button"
                 icon={IconNames.CAMERA}
                 active={!videoIsActive}
                 onClick={this.onClickStill}
-                text='Pause Video'
+                text="Pause Video"
               />
             </ButtonGroup>
           </div>
           <Divider />
           <div
-            className='sa-video-header-element'
+            className="sa-video-header-element"
             style={{ display: displayOptions ? 'inherit' : 'none' }}
           >
-            <div className='sa-video-header-numeric-input'>
+            <div className="sa-video-header-numeric-input">
               {/* <Tooltip2 content='Change width'> */}
               <NumericInput
                 disabled
@@ -324,7 +324,7 @@ class PixNFlix extends React.Component<Props, State> {
               />
               {/* </Tooltip2> */}
             </div>
-            <div className='sa-video-header-numeric-input'>
+            <div className="sa-video-header-numeric-input">
               {/* <Tooltip2 content='Change height'> */}
               <NumericInput
                 disabled
@@ -340,7 +340,7 @@ class PixNFlix extends React.Component<Props, State> {
               />
               {/* </Tooltip2> */}
             </div>
-            <div className='sa-video-header-numeric-input'>
+            <div className="sa-video-header-numeric-input">
               {/* <Tooltip2 content='Change FPS'> */}
               <NumericInput
                 leftIcon={IconNames.STOPWATCH}
@@ -357,7 +357,7 @@ class PixNFlix extends React.Component<Props, State> {
             </div>
           </div>
         </div>
-        <div className='sa-video-element'>
+        <div className="sa-video-element">
           <img
             ref={(r) => {
               this.$image = r;
@@ -387,7 +387,7 @@ class PixNFlix extends React.Component<Props, State> {
           <div style={{ display: isAccepting ? 'inherit' : 'none' }}>
             <div style={{ fontSize: 40 }}>Drag file here</div>
             <br />
-            <input type='file' onChange={this.handleFileUpload} />
+            <input type="file" onChange={this.handleFileUpload} />
           </div>
           <br />
           <div
@@ -395,7 +395,7 @@ class PixNFlix extends React.Component<Props, State> {
           >
             Volume:
             <input
-              type='range'
+              type="range"
               onChange={this.handleVolumeChange}
               min={0}
               max={1}

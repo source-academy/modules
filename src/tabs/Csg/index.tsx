@@ -1,6 +1,6 @@
 /* [Imports] */
 import { IconNames } from '@blueprintjs/icons';
-import { ModuleContext, ModuleState } from 'js-slang';
+import type { ModuleContext } from 'js-slang';
 import React, { ReactElement } from 'react';
 import { Core } from '../../bundles/csg/core.js';
 import {
@@ -15,22 +15,22 @@ import CanvasHolder from './canvas_holder';
 export default {
   // Called by the frontend to decide whether to spawn the CSG tab
   toSpawn(_debuggerContext: DebuggerContext): boolean {
-    return Core.getRenderGroupManager().shouldRender();
+    return Core.getRenderGroupManager()
+      .shouldRender();
   },
 
   // Called by the frontend to know what to render in the CSG tab
   body(debuggerContext: DebuggerContext): ReactElement {
     let moduleContexts: ModuleContexts = debuggerContext.context.moduleContexts;
     let potentialModuleContext: ModuleContext | null = getModuleContext(
-      moduleContexts
+      moduleContexts,
     );
     if (potentialModuleContext === null) return <div></div>;
     let moduleContext: ModuleContext = potentialModuleContext;
 
-    let potentialModuleState: ModuleState | null | undefined =
-      moduleContext.state;
-    if (!looseInstanceof(potentialModuleState, CsgModuleState))
-      return <div></div>;
+    let potentialModuleState: any | null | undefined
+      = moduleContext.state;
+    if (!looseInstanceof(potentialModuleState, CsgModuleState)) { return <div></div>; }
     let moduleState = potentialModuleState as CsgModuleState;
 
     Core.initialize(moduleState);

@@ -33,7 +33,7 @@ export default class StatefulRenderer {
     private componentNumber: number,
 
     private loseCallback: Function,
-    private restoreCallback: Function
+    private restoreCallback: Function,
   ) {
     //FIXME Issue #7
     this.cameraState.position = [1000, 1000, 1500];
@@ -42,13 +42,13 @@ export default class StatefulRenderer {
 
     this.wrappedRendererData = makeWrappedRendererData(
       renderGroup,
-      this.cameraState
+      this.cameraState,
     );
 
     this.inputTracker = new InputTracker(
       canvas,
       this.cameraState,
-      this.wrappedRendererData.geometryEntities
+      this.wrappedRendererData.geometryEntities,
     );
   }
 
@@ -64,7 +64,7 @@ export default class StatefulRenderer {
         this.loseCallback();
 
         this.stop();
-      }
+      },
     );
 
     this.webGlListenerTracker.addListener(
@@ -75,7 +75,7 @@ export default class StatefulRenderer {
         this.start();
 
         this.restoreCallback();
-      }
+      },
     );
   }
 
@@ -107,7 +107,7 @@ export default class StatefulRenderer {
     this.inputTracker.addListeners();
 
     let frameCallback: FrameRequestCallback = (
-      _timestamp: DOMHighResTimeStamp
+      _timestamp: DOMHighResTimeStamp,
     ) => {
       this.inputTracker.respondToInput();
 

@@ -16,8 +16,8 @@ import { HintProps, HintState } from './types';
 
 // [CSS Values]
 export default class HoverControlHint extends React.Component<
-  HintProps,
-  HintState
+HintProps,
+HintState
 > {
   constructor(props: HintProps) {
     super(props);

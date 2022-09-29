@@ -1,6 +1,5 @@
 import React from 'react';
-import { SoundsModuleState } from '../../bundles/sound/types';
-import { DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import MultiItemDisplay from '../common/multi_item_display';
 
 /**
@@ -16,17 +15,8 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const moduleContext = context.context?.moduleContexts.get('sound');
-    if (!moduleContext) {
-      return false;
-    }
-
-    const moduleState = moduleContext.state as SoundsModuleState;
-    if (!moduleState) {
-      return false;
-    }
-
-    return moduleState.audioPlayed.length > 0;
+    const audioPlayed = context.context?.moduleContexts?.sound?.state?.audioPlayed;
+    return audioPlayed.length > 0;
   },
   /**
    * This function will be called to render the module tab in the side contents
@@ -34,20 +24,19 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    const moduleContext = context.context?.moduleContexts.get('sound');
-    const moduleState = (moduleContext!.state as SoundsModuleState).audioPlayed;
-    const elements = moduleState.map((audio) => (
+    const audioPlayed = context.context.moduleContexts.sound.state.audioPlayed;
+    const elements = audioPlayed.map((audio) => (
       <audio
         src={audio.dataUri}
         controls
-        id='sound-tab-player'
+        id="sound-tab-player"
         style={{ width: '100%' }}
       />
     ));
 
     return (
       <div>
-        <p id='sound-default-text'>
+        <p id="sound-default-text">
           The sound tab gives you control over your custom sounds. You can play,
           pause, adjust the volume and download your sounds.
           <br />

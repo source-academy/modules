@@ -1,4 +1,4 @@
-module.exports = {
+const defaultConfig = {
   /**
    * - **script** - Parse the file using the ECMAScript Script grammar. No import/export statements allowed, and files are not in strict mode.
    * - **module** - Parse the file using the ECMAScript Module grammar. Files are automatically strict, and import/export statements are allowed.
@@ -89,3 +89,11 @@ module.exports = {
     ],
   ],
 };
+
+module.exports = api => api.env('test') ? {
+  ...defaultConfig,
+  plugins: [
+    ["babel-plugin-transform-import-meta", { module: "ES6" }],
+    "@babel/plugin-syntax-import-assertions",
+  ],
+} : defaultConfig;

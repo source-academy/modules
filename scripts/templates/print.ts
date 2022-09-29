@@ -1,38 +1,29 @@
-const chalk = require('chalk');
-const readline = require('readline');
+import chalk from 'chalk';
+import { createInterface } from 'readline';
 
-const rl = readline.createInterface({
+export const rl = createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-function info(...args) {
+export function info(...args) {
   return console.log(...args.map((string) => chalk.grey(string)));
 }
 
-function error(...args) {
+export function error(...args) {
   return console.log(...args.map((string) => chalk.red(string)));
 }
 
-function warn(...args) {
+export function warn(...args) {
   return console.log(...args.map((string) => chalk.yellow(string)));
 }
 
-function success(...args) {
+export function success(...args) {
   return console.log(...args.map((string) => chalk.green(string)));
 }
 
-function askQuestion(question) {
-  return new Promise((resolve) => {
+export function askQuestion(question: string) {
+  return new Promise<string>((resolve) => {
     rl.question(chalk.blueBright(`${question}\n`), resolve);
   });
 }
-
-module.exports = {
-  rl,
-  info,
-  error,
-  warn,
-  success,
-  askQuestion,
-};

@@ -56,7 +56,7 @@ function initialize_memory(
   memorySize: number,
   nodeSize,
   marked,
-  unmarked
+  unmarked,
 ): void {
   MEMORY_SIZE = memorySize;
   NODE_SIZE = nodeSize;
@@ -91,7 +91,7 @@ function newCommand(
   description,
   firstDesc,
   lastDesc,
-  queue = []
+  queue = [],
 ): void {
   const newType = type;
   const newLeft = left;
@@ -139,7 +139,7 @@ function newSweep(left, heap): void {
     heap,
     desc,
     'freed node',
-    ''
+    '',
   );
 }
 
@@ -156,7 +156,7 @@ function newMark(left, heap, queue): void {
     desc,
     'marked node',
     '',
-    queue
+    queue,
   );
 }
 
@@ -167,7 +167,7 @@ function addRoots(arr): void {
 }
 
 function showRoot(heap): void {
-  const desc = `All root nodes are marked`;
+  const desc = 'All root nodes are marked';
   newCommand(COMMAND.SHOW_MARKED, -1, -1, 0, 0, heap, desc, '', '');
 }
 
@@ -189,7 +189,7 @@ function newUpdateSweep(right, heap): void {
     heap,
     desc,
     'free node',
-    ''
+    '',
   );
 }
 
@@ -204,7 +204,7 @@ function newPush(left, right, heap): void {
     heap,
     desc,
     'last child address slot',
-    'new child pushed'
+    'new child pushed',
   );
 }
 
@@ -220,7 +220,7 @@ function newPop(res, left, right, heap): void {
     heap,
     desc,
     'popped memory',
-    'last child address slot'
+    'last child address slot',
   );
 }
 
@@ -242,18 +242,18 @@ function newNew(left, heap): void {
     heap,
     desc,
     'new memory allocated',
-    ''
+    '',
   );
 }
 
 function newGC(heap): void {
-  const desc = `Memory exhausted, start Mark and Sweep Algorithm`;
+  const desc = 'Memory exhausted, start Mark and Sweep Algorithm';
   newCommand(COMMAND.START, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
 }
 
 function endGC(heap): void {
-  const desc = `Result of free memory`;
+  const desc = 'Result of free memory';
   newCommand(COMMAND.END, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
 }
@@ -262,7 +262,7 @@ function updateSlotSegment(
   tag: number,
   size: number,
   first: number,
-  last: number
+  last: number,
 ): void {
   if (tag >= 0) {
     TAG_SLOT = tag;
@@ -349,28 +349,26 @@ function init() {
   };
 }
 
-export default function mark_sweep() {
-  return {
-    init,
-    // initialisation
-    initialize_memory,
-    initialize_tag,
-    generateMemory,
-    allHeap,
-    updateSlotSegment,
-    newCommand,
-    newMark,
-    newPush,
-    newPop,
-    newAssign,
-    newNew,
-    newGC,
-    newSweep,
-    updateRoots,
-    newUpdateSweep,
-    showRoots,
-    endGC,
-    addRoots,
-    showRoot,
-  };
-}
+export {
+  init,
+  // initialisation
+  initialize_memory,
+  initialize_tag,
+  generateMemory,
+  allHeap,
+  updateSlotSegment,
+  newCommand,
+  newMark,
+  newPush,
+  newPop,
+  newAssign,
+  newNew,
+  newGC,
+  newSweep,
+  updateRoots,
+  newUpdateSweep,
+  showRoots,
+  endGC,
+  addRoots,
+  showRoot,
+};

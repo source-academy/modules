@@ -36,6 +36,7 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
+import { context } from 'js-slang/moduleHelpers';
 import { Curve, CurveDrawn, generateCurve, Point } from './curves_webgl';
 import {
   AnimatedCurve,
@@ -47,30 +48,29 @@ import {
   ScaleMode,
 } from './types';
 
-/** @hidden */
-export const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];
+const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];
+context.moduleContexts.curve.state = {
+  drawnCurves,
+};
 
 function createDrawFunction(
   scaleMode: ScaleMode,
   drawMode: DrawMode,
   space: CurveSpace,
-  isFullView: boolean
+  isFullView: boolean,
 ): (numPoints: number) => RenderFunction {
   return (numPoints: number) => {
-    const func = (curve) => {
+    const func = (curve: Curve) => {
       const curveDrawn = generateCurve(
         scaleMode,
         drawMode,
         numPoints,
         curve,
         space,
-        isFullView
+        isFullView,
       );
 
-      if (
-        (curve as any).shouldAppend === undefined ||
-        (curve as any).shouldAppend
-      ) {
+      if (!curve.shouldNotAppend) {
         drawnCurves.push(curveDrawn);
       }
 
@@ -124,7 +124,7 @@ export const draw_connected_full_view = createDrawFunction(
   'stretch',
   'lines',
   '2D',
-  true
+  true,
 );
 
 /**
@@ -145,7 +145,7 @@ export const draw_connected_full_view_proportional = createDrawFunction(
   'fit',
   'lines',
   '2D',
-  true
+  true,
 );
 
 /**
@@ -183,7 +183,7 @@ export const draw_points_full_view = createDrawFunction(
   'stretch',
   'points',
   '2D',
-  true
+  true,
 );
 
 /**
@@ -205,7 +205,7 @@ export const draw_points_full_view_proportional = createDrawFunction(
   'fit',
   'points',
   '2D',
-  true
+  true,
 );
 
 /**
@@ -226,7 +226,7 @@ export const draw_3D_connected = createDrawFunction(
   'none',
   'lines',
   '3D',
-  false
+  false,
 );
 
 /**
@@ -247,7 +247,7 @@ export const draw_3D_connected_full_view = createDrawFunction(
   'stretch',
   'lines',
   '3D',
-  false
+  false,
 );
 
 /**
@@ -268,7 +268,7 @@ export const draw_3D_connected_full_view_proportional = createDrawFunction(
   'fit',
   'lines',
   '3D',
-  false
+  false,
 );
 
 /**
@@ -305,7 +305,7 @@ export const draw_3D_points_full_view = createDrawFunction(
   'stretch',
   'points',
   '3D',
-  false
+  false,
 );
 
 /**
@@ -326,7 +326,7 @@ export const draw_3D_points_full_view_proportional = createDrawFunction(
   'fit',
   'points',
   '3D',
-  false
+  false,
 );
 
 /**
@@ -381,7 +381,7 @@ export function make_color_point(
   y: number,
   r: number,
   g: number,
-  b: number
+  b: number,
 ): Point {
   return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
 }
@@ -409,7 +409,7 @@ export function make_3D_color_point(
   z: number,
   r: number,
   g: number,
-  b: number
+  b: number,
 ): Point {
   return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
 }
@@ -532,7 +532,7 @@ export function invert(curve: Curve): Curve {
 export function translate(
   x0: number,
   y0: number,
-  z0: number
+  z0: number,
 ): CurveTransformer {
   return (curve: Curve) => {
     const transformation = (cf: Curve) => (t: number) => {
@@ -546,7 +546,7 @@ export function translate(
         c + z_of(ct),
         r_of(ct),
         g_of(ct),
-        b_of(ct)
+        b_of(ct),
       );
     };
     return transformation(curve);
@@ -568,15 +568,15 @@ export function translate(
 export function rotate_around_origin(
   theta1: number,
   theta2: number,
-  theta3: number
+  theta3: number,
 ): CurveTransformer {
   if (theta3 === undefined && theta1 !== undefined && theta2 !== undefined) {
     // 2 args
     throw new Error('Expected 1 or 3 arguments, but received 2');
   } else if (
-    theta1 !== undefined &&
-    theta2 === undefined &&
-    theta3 === undefined
+    theta1 !== undefined
+    && theta2 === undefined
+    && theta3 === undefined
   ) {
     // 1 args
     const cth = Math.cos(theta1);
@@ -593,7 +593,7 @@ export function rotate_around_origin(
           z,
           r_of(ct),
           g_of(ct),
-          b_of(ct)
+          b_of(ct),
         );
       };
       return transformation(curve);
@@ -661,7 +661,7 @@ export function scale(a: number, b: number, c: number): CurveTransformer {
         c1 * z_of(ct),
         r_of(ct),
         g_of(ct),
-        b_of(ct)
+        b_of(ct),
       );
     };
     return transformation(curve);
@@ -696,14 +696,14 @@ export function put_in_standard_position(curve: Curve): Curve {
   const curve_started_at_origin = translate(
     -x_of(start_point),
     -y_of(start_point),
-    0
+    0,
   )(curve);
   const new_end_point = curve_started_at_origin(1);
   const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
   const curve_ended_at_x_axis = rotate_around_origin(
     0,
     0,
-    -theta
+    -theta,
   )(curve_started_at_origin);
   const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
   return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
@@ -744,8 +744,8 @@ export function connect_ends(curve1: Curve, curve2: Curve): Curve {
     translate(
       x_of(endPointOfCurve1) - x_of(startPointOfCurve2),
       y_of(endPointOfCurve1) - y_of(startPointOfCurve2),
-      z_of(endPointOfCurve1) - z_of(startPointOfCurve2)
-    )(curve2)
+      z_of(endPointOfCurve1) - z_of(startPointOfCurve2),
+    )(curve2),
   );
 }
 
@@ -763,7 +763,7 @@ export function unit_circle(t: number): Point {
 
 /**
  * This function is a curve: a function from a fraction t to a point. The
- * x-coordinate at franction t is t, and the y-coordinate is 0.
+ * x-coordinate at fraction t is t, and the y-coordinate is 0.
  *
  * @param t fraction between 0 and 1
  * @returns Point on the line at t
@@ -809,10 +809,11 @@ export function animate_curve(
   duration: number,
   fps: number,
   drawer: RenderFunction,
-  func: CurveAnimation
+  func: CurveAnimation,
 ): AnimatedCurve {
-  if ((drawer as any).is3D)
-    throw new Error('Curve Animation cannot be used with 3D draw function!');
+  if (drawer.is3D) {
+    throw new Error('animate_curve cannot be used with 3D draw function!');
+  }
 
   const anim = new AnimatedCurve(duration, fps, func, drawer, false);
   drawnCurves.push(anim);
@@ -831,10 +832,10 @@ export function animate_3D_curve(
   duration: number,
   fps: number,
   drawer: RenderFunction,
-  func: CurveAnimation
+  func: CurveAnimation,
 ): AnimatedCurve {
-  if (!(drawer as any).is3D) {
-    throw new Error('Curve 3D Animation cannot be used with 2D draw function!');
+  if (!drawer.is3D) {
+    throw new Error('animate_3D_curve cannot be used with 2D draw function!');
   }
 
   const anim = new AnimatedCurve(duration, fps, func, drawer, true);

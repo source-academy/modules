@@ -1,8 +1,8 @@
 /* [Imports] */
 import { clone, Geom3 } from '@jscad/modeling/src/geometries/geom3';
-import { ModuleContext, ModuleState } from 'js-slang';
-import { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
-import { AlphaColor, Color, Solid } from './jscad/types.js';
+import type { ModuleContext } from 'js-slang';
+import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
+import type { AlphaColor, Color, Solid } from './jscad/types.js';
 
 /* [Exports] */
 export class Shape implements ReplResult {
@@ -51,7 +51,7 @@ export class RenderGroupManager {
   // Returns the old render group
   nextRenderGroup(
     oldHasGrid: boolean = false,
-    oldHasAxis: boolean = false
+    oldHasAxis: boolean = false,
   ): RenderGroup {
     let oldRenderGroup: RenderGroup = this.getCurrentRenderGroup();
     oldRenderGroup.render = true;
@@ -73,12 +73,12 @@ export class RenderGroupManager {
 
   getGroupsToRender(): RenderGroup[] {
     return this.renderGroups.filter(
-      (renderGroup: RenderGroup) => renderGroup.render
+      (renderGroup: RenderGroup) => renderGroup.render,
     );
   }
 }
 
-export class CsgModuleState implements ModuleState {
+export class CsgModuleState {
   private componentCounter: number = 0;
 
   readonly renderGroupManager: RenderGroupManager;
@@ -94,11 +94,9 @@ export class CsgModuleState implements ModuleState {
 }
 
 export function getModuleContext(
-  moduleContexts: ModuleContexts
+  moduleContexts: ModuleContexts,
 ): ModuleContext | null {
-  let potentialModuleContext: ModuleContext | undefined = moduleContexts.get(
-    'csg'
-  );
+  let potentialModuleContext: ModuleContext | undefined = moduleContexts.csg;
   return potentialModuleContext ?? null;
 }
 
@@ -118,7 +116,7 @@ export function hexToColor(hex: string): Color {
 
 export function colorToAlphaColor(
   color: Color,
-  opacity: number = 1
+  opacity: number = 1,
 ): AlphaColor {
   return [...color, opacity];
 }
@@ -138,13 +136,13 @@ export function clamp(value: number, lowest: number, highest: number): number {
 // This check acts as a useful yet not foolproof instanceof
 export function looseInstanceof(
   object: object | null | undefined,
-  c: any
+  c: any,
 ): boolean {
   const objectName: string | undefined = object?.constructor?.name;
   const className: string | undefined = c?.name;
   return (
-    objectName !== undefined &&
-    className !== undefined &&
-    objectName === className
+    objectName !== undefined
+    && className !== undefined
+    && objectName === className
   );
 }

@@ -1,5 +1,3 @@
-import { ModuleState } from 'js-slang';
-
 export type Pair<H, T> = [H, T];
 export type EmptyList = null;
 export type NonEmptyList = Pair<any, any>;
@@ -16,11 +14,3 @@ export type AudioPlayed = {
   toReplString: () => string;
   dataUri: string;
 };
-
-export class SoundsModuleState implements ModuleState {
-  constructor() {
-    this.audioPlayed = [];
-  }
-
-  public audioPlayed: AudioPlayed[];
-}

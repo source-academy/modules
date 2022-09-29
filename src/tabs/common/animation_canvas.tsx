@@ -30,8 +30,8 @@ type AnimCanvasState = {
 // with the blueprint/js components if it's located in
 // another file so it's here for now
 export default class AnimationCanvas extends React.Component<
-  AnimCanvasProps,
-  AnimCanvasState
+AnimCanvasProps,
+AnimCanvasState
 > {
   private canvas: HTMLCanvasElement | null;
 
@@ -76,7 +76,7 @@ export default class AnimationCanvas extends React.Component<
   private drawFrame = () => {
     if (this.canvas) {
       const frame = this.props.animation.getFrame(
-        this.state.animTimestamp / 1000
+        this.state.animTimestamp / 1000,
       );
       frame.draw(this.canvas);
     }
@@ -84,23 +84,21 @@ export default class AnimationCanvas extends React.Component<
 
   private reqFrame = () => requestAnimationFrame(this.animationCallback);
 
-  private startAnimation = () =>
-    this.setState(
-      {
-        isPlaying: true,
-      },
-      this.reqFrame
-    );
+  private startAnimation = () => this.setState(
+    {
+      isPlaying: true,
+    },
+    this.reqFrame,
+  );
 
-  private stopAnimation = () =>
-    this.setState(
-      {
-        isPlaying: false,
-      },
-      () => {
-        this.callbackTimestamp = null;
-      }
-    );
+  private stopAnimation = () => this.setState(
+    {
+      isPlaying: false,
+    },
+    () => {
+      this.callbackTimestamp = null;
+    },
+  );
 
   /**
    * Callback to use with `requestAnimationFrame`
@@ -132,7 +130,7 @@ export default class AnimationCanvas extends React.Component<
           {
             animTimestamp: 0,
           },
-          this.reqFrame
+          this.reqFrame,
         );
       } else {
         // Otherwise, stop the animation
@@ -147,7 +145,7 @@ export default class AnimationCanvas extends React.Component<
         () => {
           this.drawFrame();
           this.reqFrame();
-        }
+        },
       );
     }
   };
@@ -173,7 +171,7 @@ export default class AnimationCanvas extends React.Component<
       },
       () => {
         if (!this.state.isPlaying) this.drawFrame();
-      }
+      },
     );
   };
 
@@ -189,7 +187,7 @@ export default class AnimationCanvas extends React.Component<
         isPlaying: false,
         animTimestamp: newValue,
       }),
-      this.drawFrame
+      this.drawFrame,
     );
   };
 
@@ -207,7 +205,7 @@ export default class AnimationCanvas extends React.Component<
         } else {
           this.reqFrame();
         }
-      }
+      },
     );
   };
 
@@ -244,7 +242,7 @@ export default class AnimationCanvas extends React.Component<
             </Button>
           </Tooltip2>
         </div>
-        <Tooltip2 content='Reset'>
+        <Tooltip2 content="Reset">
           <Button onClick={this.onResetButtonClick}>
             <Icon icon={IconNames.RESET} />
           </Button>
@@ -308,7 +306,7 @@ export default class AnimationCanvas extends React.Component<
               marginTop: '5px',
               whiteSpace: 'nowrap',
             }}
-            label='Auto Play'
+            label="Auto Play"
             onChange={this.autoPlaySwitchChanged}
             checked={this.state.autoPlay}
           />

@@ -29,9 +29,16 @@
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
+    // "typeRoots": [
+    //   "typings/@types",
+    //   "node_modules/@types"
+    // ],
+    "paths": {
+      "js-slang/*": ["./typings/@types/js-slang/*"]
+    },
   },
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
-  "include": ["src/", "scripts/templates/"],
+  "include": ["."],
   /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
-  "exclude": []
+  // "exclude": []
 }

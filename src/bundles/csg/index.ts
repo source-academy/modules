@@ -1,8 +1,13 @@
 /* [Imports] */
-import { ModuleContext } from 'js-slang';
-import { ModuleContexts, ModuleParams } from '../../typings/type_helpers.js';
+import { context } from 'js-slang/moduleHelpers';
 import { Core } from './core.js';
-import {
+import { CsgModuleState } from './utilities.js';
+
+const moduleContext = new CsgModuleState();
+context.moduleContexts.csg.state = moduleContext;
+Core.initialize(moduleContext);
+
+export {
   area,
   beside_x,
   beside_y,
@@ -66,88 +71,3 @@ import {
   white,
   yellow,
 } from './functions';
-import { CsgModuleState, getModuleContext } from './utilities.js';
-
-/* [Exports] */
-export default (moduleParams: ModuleParams, moduleContexts: ModuleContexts) => {
-  let potentialModuleContext: ModuleContext | null = getModuleContext(
-    moduleContexts
-  );
-  if (potentialModuleContext !== null) {
-    let moduleContext: ModuleContext = potentialModuleContext;
-
-    let moduleState: CsgModuleState = new CsgModuleState();
-    moduleContext.state = moduleState;
-    Core.initialize(moduleState);
-  }
-
-  return {
-    // [Variables - Primitive shapes]
-    cube,
-    sphere,
-    cylinder,
-    prism,
-    star,
-    pyramid,
-    cone,
-    torus,
-    rounded_cube,
-    rounded_cylinder,
-    geodesic_sphere,
-
-    // [Variables - Colours]
-    black,
-    navy,
-    green,
-    teal,
-    crimson,
-    purple,
-    orange,
-    silver,
-    gray,
-    blue,
-    lime,
-    cyan,
-    rose,
-    pink,
-    yellow,
-    white,
-
-    // [Functions]
-    union,
-    subtract,
-    intersect,
-    scale,
-    scale_x,
-    scale_y,
-    scale_z,
-    shape_center,
-    shape_set_center,
-    area,
-    volume,
-    flip_x,
-    flip_y,
-    flip_z,
-    translate,
-    translate_x,
-    translate_y,
-    translate_z,
-    beside_x,
-    beside_y,
-    beside_z,
-    bounding_box,
-    rotate,
-    rotate_x,
-    rotate_y,
-    rotate_z,
-    is_shape,
-    clone,
-    store,
-    store_as_color,
-    store_as_rgb,
-    render_grid_axis,
-    render_grid,
-    render_axis,
-    render,
-  };
-};

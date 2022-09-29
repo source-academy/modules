@@ -16,8 +16,8 @@ import { CanvasHolderProps, CanvasHolderState } from './types';
 
 /* [Main] */
 export default class CanvasHolder extends React.Component<
-  CanvasHolderProps,
-  CanvasHolderState
+CanvasHolderProps,
+CanvasHolderState
 > {
   private readonly canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
 
@@ -47,7 +47,7 @@ export default class CanvasHolder extends React.Component<
       this.props.componentNumber,
 
       () => this.setState({ contextLost: true }),
-      () => this.setState({ contextLost: false })
+      () => this.setState({ contextLost: false }),
     );
     this.statefulRenderer.start(true);
   }
@@ -82,23 +82,23 @@ export default class CanvasHolder extends React.Component<
             }}
           >
             <HoverControlHint
-              tooltipText='Zoom in • Scroll up'
+              tooltipText="Zoom in • Scroll up"
               iconName={IconNames.ZOOM_IN}
             />
             <HoverControlHint
-              tooltipText='Zoom out • Scroll down'
+              tooltipText="Zoom out • Scroll down"
               iconName={IconNames.ZOOM_OUT}
             />
             <HoverControlHint
-              tooltipText='Zoom to fit • Double left-click'
+              tooltipText="Zoom to fit • Double left-click"
               iconName={IconNames.ZOOM_TO_FIT}
             />
             <HoverControlHint
-              tooltipText='Rotate • Left-click'
+              tooltipText="Rotate • Left-click"
               iconName={IconNames.REPEAT}
             />
             <HoverControlHint
-              tooltipText='Pan • Middle-click OR shift + left-click'
+              tooltipText="Pan • Middle-click OR shift + left-click"
               iconName={IconNames.MOVE}
             />
           </div>
@@ -132,15 +132,15 @@ export default class CanvasHolder extends React.Component<
               }}
               // These get set on the fly by the dynamic resizer in
               // StatefulRenderer's InputTracker
-              width='0'
-              height='0'
+              width="0"
+              height="0"
             />
           </div>
         </div>
         <div
           // Explicit dark theme as mobile view switches to dark text with light
           // spinner
-          className='bp3-dark'
+          className="bp3-dark"
           style={{
             display: this.state.contextLost ? 'block' : 'none',
 
@@ -154,7 +154,7 @@ export default class CanvasHolder extends React.Component<
           >
             WebGL Context Lost
           </h2>
-          <Spinner intent='warning' size={SpinnerSize.LARGE} />
+          <Spinner intent="warning" size={SpinnerSize.LARGE} />
           <p
             style={{
               margin: `${STANDARD_MARGIN} 0px 0px 0px`,

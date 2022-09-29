@@ -1,4 +1,4 @@
-import { Context } from 'js-slang';
+import type { Context } from 'js-slang';
 
 /**
  * DebuggerContext type used by frontend to assist typing information
@@ -10,8 +10,6 @@ export type DebuggerContext = {
   context: Context;
   workspaceLocation?: any;
 };
-
-export type ModuleParams = Context['moduleParams'];
 
 export type ModuleContexts = Context['moduleContexts'];
 
