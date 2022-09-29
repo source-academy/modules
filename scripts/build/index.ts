@@ -49,23 +49,27 @@ const modulesCommand = new Command('modules')
       logJsonStart(jsonOpts, opts.verbose))
       .join('\n'));
 
-    const typedocProj = initTypedoc();
-    const [bundleResult, tabResult, htmlResult, jsonResult] = await Promise.all([
-      buildBundles(db, bundleOpts, typedocProj.buildTime),
-      buildTabs(db, tabOpts, typedocProj.buildTime),
-      buildHtml(db, typedocProj),
-      buildJsons(db, typedocProj, jsonOpts),
-    ]);
+    try {
+      const typedocProj = initTypedoc();
+      const [bundleResult, tabResult, htmlResult, jsonResult] = await Promise.all([
+        buildBundles(db, bundleOpts, typedocProj.buildTime),
+        buildTabs(db, tabOpts, typedocProj.buildTime),
+        buildHtml(db, typedocProj),
+        buildJsons(db, typedocProj, jsonOpts),
+      ]);
 
-    console.log(joinArrays('',
-      logBundleResult(bundleResult),
-      logTabResult(tabResult),
-      logHtmlResult(htmlResult),
-      logJsonResult(jsonResult))
-      .join('\n'));
+      console.log(joinArrays('',
+        logBundleResult(bundleResult),
+        logTabResult(tabResult),
+        logHtmlResult(htmlResult),
+        logJsonResult(jsonResult))
+        .join('\n'));
 
-    await db.write();
-    await copy();
+      await db.write();
+      await copy();
+    } catch (error) {
+      console.log(error);
+    }
   });
 
 export default new Command('build')
