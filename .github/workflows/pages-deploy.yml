@@ -23,7 +23,7 @@ jobs:
           
       - name: Build Modules 🔧
         run: |
-          yarn run build
+          yarn run build --single-thread
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
