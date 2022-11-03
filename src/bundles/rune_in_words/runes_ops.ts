@@ -9,7 +9,7 @@ import { Rune } from './rune';
 export function throwIfNotRune(name, ...runes) {
   runes.forEach((rune) => {
     if (!(typeof rune === 'string')) {
-      throw Error(`${name} expects a rune as argument.`);
+      throw Error(`${name} expects a rune (string) as argument.`);
     }
   });
 }
