@@ -1,15 +1,10 @@
-/**
- * This file contains the bundle's private functions for runes.
- */
-import { Rune } from './rune';
-
 // =============================================================================
 // Utility Functions
 // =============================================================================
 export function throwIfNotRune(name, ...runes) {
   runes.forEach((rune) => {
     if (!(typeof rune === 'string')) {
-      throw Error(`${name} expects a rune as argument.`);
+      throw Error(`${name} expects a rune (string) as argument.`);
     }
   });
 }
