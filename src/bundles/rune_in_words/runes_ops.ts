@@ -1,8 +1,3 @@
-/**
- * This file contains the bundle's private functions for runes.
- */
-import { Rune } from './rune';
-
 // =============================================================================
 // Utility Functions
 // =============================================================================
