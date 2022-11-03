@@ -1,6 +1,6 @@
 /**
- * Bundle for Source Academy Runes module
- * @author Hou Ruomu
+ * Bundle for Source Academy Runes module using words instead of pictures
+ * @author Martin Henz
  */
 export {
   anaglyph,

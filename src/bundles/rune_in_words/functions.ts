@@ -1,7 +1,7 @@
 /**
- * The module `rune` provides functions for drawing runes.
+ * The module `rune_in_words` provides functions for computing with runes using text instead of graphics.
  *
- * A *Rune* is defined by its vertices (x,y,z,t), the colors on its vertices (r,g,b,a), a transformation matrix for rendering the Rune and a (could be empty) list of its sub-Runes.
+ * A *Rune* is defined by its vertices (x,y,z,t), the colors on its vertices (r,g,b,a), a transformation matrix for rendering the Rune and a (could be empty) list of its sub-Runes. In this module, runes are represented as strings that approximate the way they are created. No graphical output is generated.
  * @module rune
  */
 import {
@@ -31,13 +31,13 @@ import {
  *
  * @category Primitive
  */
-export const square: Rune = getSquare();
+export const square: string = getSquare();
 /**
  * Rune with the shape of a blank square
  *
  * @category Primitive
  */
-export const blank: Rune = getBlank();
+export const blank: string = getBlank();
 /**
  * Rune with the shape of a
  * small square inside a large square,
@@ -46,26 +46,26 @@ export const blank: Rune = getBlank();
  *
  * @category Primitive
  */
-export const rcross: Rune = getRcross();
+export const rcross: string = getRcross();
 /**
  * Rune with the shape of a sail
  *
  * @category Primitive
  */
-export const sail: Rune = getSail();
+export const sail: string = getSail();
 /**
  * Rune with the shape of a triangle
  *
  * @category Primitive
  */
-export const triangle: Rune = getTriangle();
+export const triangle: string = getTriangle();
 /**
  * Rune with black triangle,
  * filling upper right corner
  *
  * @category Primitive
  */
-export const corner: Rune = getCorner();
+export const corner: string = getCorner();
 /**
  * Rune with the shape of two overlapping
  * triangles, residing in the upper half
@@ -73,32 +73,32 @@ export const corner: Rune = getCorner();
  *
  * @category Primitive
  */
-export const nova: Rune = getNova();
+export const nova: string = getNova();
 /**
  * Rune with the shape of a circle
  *
  * @category Primitive
  */
-export const circle: Rune = getCircle();
+export const circle: string = getCircle();
 /**
  * Rune with the shape of a heart
  *
  * @category Primitive
  */
-export const heart: Rune = getHeart();
+export const heart: string = getHeart();
 /**
  * Rune with the shape of a pentagram
  *
  * @category Primitive
  */
-export const pentagram: Rune = getPentagram();
+export const pentagram: string = getPentagram();
 /**
  * Rune with the shape of a ribbon
  * winding outwards in an anticlockwise spiral
  *
  * @category Primitive
  */
-export const ribbon: Rune = getRibbon();
+export const ribbon: string = getRibbon();
 
 // =============================================================================
 // Textured Runes
@@ -111,7 +111,7 @@ export const ribbon: Rune = getRibbon();
  *
  * @category Main
  */
-export function from_url(imageUrl: string): Rune {
+export function from_url(imageUrl: string): string {
   return 'url(' + imageUrl + ')';
 }
 
@@ -131,8 +131,8 @@ export function from_url(imageUrl: string): Rune {
 export function scale_independent(
   ratio_x: number,
   ratio_y: number,
-  rune: Rune,
-): Rune {
+  rune: string,
+): string {
   throwIfNotRune('scale_independent', rune);
   return 'scaled(' + rune + ', ' + ratio_x + ', ' + ratio_y + ')';
 }
@@ -145,7 +145,7 @@ export function scale_independent(
  *
  * @category Main
  */
-export function scale(ratio: number, rune: Rune): Rune {
+export function scale(ratio: number, rune: string): string {
   throwIfNotRune('scale', rune);
   return scale_independent(ratio, ratio, rune);
 }
@@ -159,7 +159,7 @@ export function scale(ratio: number, rune: Rune): Rune {
  *
  * @category Main
  */
-export function translate(x: number, y: number, rune: Rune): Rune {
+export function translate(x: number, y: number, rune: string): string {
   throwIfNotRune('translate', rune);
   return 'translated(' + rune + ', ' + x + ', ' + y + ')';
 }
@@ -175,7 +175,7 @@ export function translate(x: number, y: number, rune: Rune): Rune {
  *
  * @category Main
  */
-export function rotate(rad: number, rune: Rune): Rune {
+export function rotate(rad: number, rune: string): string {
   throwIfNotRune('rotate', rune);
   return 'rotated(' + rune + ', ' + rad + ')';
 }
@@ -193,7 +193,7 @@ export function rotate(rad: number, rune: Rune): Rune {
  *
  * @category Main
  */
-export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
+export function stack_frac(frac: number, rune1: string, rune2: string): string {
   throwIfNotRune('stack_frac', rune1);
   throwIfNotRune('stack_frac', rune2);
 
@@ -211,7 +211,7 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  *
  * @category Main
  */
-export function stack(rune1: Rune, rune2: Rune): Rune {
+export function stack(rune1: string, rune2: string): string {
   throwIfNotRune('stack', rune1, rune2);
   return 'stack(' + rune1 + ', ' + rune2 + ')';
 }
@@ -225,7 +225,7 @@ export function stack(rune1: Rune, rune2: Rune): Rune {
  *
  * @category Main
  */
-export function stackn(n: number, rune: Rune): Rune {
+export function stackn(n: number, rune: string): string {
   throwIfNotRune('stackn', rune);
 
   return 'stackn(' + n + ', ' + rune + ')';
@@ -240,7 +240,7 @@ export function stackn(n: number, rune: Rune): Rune {
  *
  * @category Main
  */
-export function quarter_turn_right(rune: Rune): Rune {
+export function quarter_turn_right(rune: string): string {
   throwIfNotRune('quarter_turn_right', rune);
   return 'quarter_turn_right(' + rune + ')';
 }
@@ -254,7 +254,7 @@ export function quarter_turn_right(rune: Rune): Rune {
  *
  * @category Main
  */
-export function quarter_turn_left(rune: Rune): Rune {
+export function quarter_turn_left(rune: string): string {
   throwIfNotRune('quarter_turn_left', rune);
   return 'quarter_turn_left(' + rune + ')';
 }
@@ -267,7 +267,7 @@ export function quarter_turn_left(rune: Rune): Rune {
  *
  * @category Main
  */
-export function turn_upside_down(rune: Rune): Rune {
+export function turn_upside_down(rune: string): string {
   throwIfNotRune('turn_upside_down', rune);
   return 'quarter_upside_down(' + rune + ')';
 }
@@ -285,7 +285,7 @@ export function turn_upside_down(rune: Rune): Rune {
  *
  * @category Main
  */
-export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
+export function beside_frac(frac: number, rune1: string, rune2: string): string {
   throwIfNotRune('beside_frac', rune1, rune2);
 
   return 'beside_frac(' + frac + ', ' + rune1 + ', ' + rune2 + ')';
@@ -302,7 +302,7 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  *
  * @category Main
  */
-export function beside(rune1: Rune, rune2: Rune): Rune {
+export function beside(rune1: string, rune2: string): string {
   throwIfNotRune('beside', rune1, rune2);
   return 'stack(' + rune1 + ', ' + rune2 + ')';
 }
@@ -316,7 +316,7 @@ export function beside(rune1: Rune, rune2: Rune): Rune {
  *
  * @category Main
  */
-export function flip_vert(rune: Rune): Rune {
+export function flip_vert(rune: string): string {
   throwIfNotRune('flip_vert', rune);
   return 'flip_vert(' + rune + ')';
 }
@@ -330,7 +330,7 @@ export function flip_vert(rune: Rune): Rune {
  *
  * @category Main
  */
-export function flip_horiz(rune: Rune): Rune {
+export function flip_horiz(rune: string): string {
   throwIfNotRune('flip_horiz', rune);
   return 'flip_horiz(' + rune + ')';
 }
@@ -344,7 +344,7 @@ export function flip_horiz(rune: Rune): Rune {
  *
  * @category Main
  */
-export function make_cross(rune: Rune): Rune {
+export function make_cross(rune: string): string {
   throwIfNotRune('make_cross', rune);
   return stack(
     beside(quarter_turn_right(rune), turn_upside_down(rune)),
@@ -363,9 +363,9 @@ export function make_cross(rune: Rune): Rune {
  */
 export function repeat_pattern(
   n: number,
-  pattern: (a: Rune) => Rune,
-  initial: Rune,
-): Rune {
+  pattern: (a: string) => Rune,
+  initial: string,
+): string {
   if (n === 0) {
     return initial;
   }
@@ -385,7 +385,7 @@ export function repeat_pattern(
  *
  * @category Main
  */
-export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
+export function overlay_frac(frac: number, rune1: string, rune2: string): string {
   throwIfNotRune('overlay_frac', rune1);
   throwIfNotRune('overlay_frac', rune2);
   return 'overlay_frac(' + frac + ', ' + rune1 + ', ' + rune2 + ')';
@@ -399,7 +399,7 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  *
  * @category Main
  */
-export function overlay(rune1: Rune, rune2: Rune): Rune {
+export function overlay(rune1: string, rune2: string): string {
   throwIfNotRune('overlay', rune1);
   throwIfNotRune('overlay', rune2);
   return 'overlay(' + rune1 + ', ' + rune2 + ')';
@@ -422,7 +422,7 @@ export function overlay(rune1: Rune, rune2: Rune): Rune {
  *
  * @category Color
  */
-export function color(rune: Rune, r: number, g: number, b: number): Rune {
+export function color(rune: string, r: number, g: number, b: number): string {
   throwIfNotRune('color', rune);
   return 'color(' + rune + ', ' + r + ', ' + g + ', ' + b + ')';
 }
@@ -436,7 +436,7 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
  *
  * @category Color
  */
-export function random_color(rune: Rune): Rune {
+export function random_color(rune: string): string {
   throwIfNotRune('random_color', rune);
   return 'random(' + rune + ')';
 }
@@ -448,7 +448,7 @@ export function random_color(rune: Rune): Rune {
  *
  * @category Color
  */
-export function red(rune: Rune): Rune {
+export function red(rune: string): string {
   throwIfNotRune('red', rune);
   return 'red(' + rune + ')';
 }
@@ -460,7 +460,7 @@ export function red(rune: Rune): Rune {
  *
  * @category Color
  */
-export function pink(rune: Rune): Rune {
+export function pink(rune: string): string {
   throwIfNotRune('pink', rune);
   return 'pink(' + rune + ')';
 }
@@ -472,7 +472,7 @@ export function pink(rune: Rune): Rune {
  *
  * @category Color
  */
-export function purple(rune: Rune): Rune {
+export function purple(rune: string): string {
   throwIfNotRune('purple', rune);
   return 'purple(' + rune + ')';
 }
@@ -484,7 +484,7 @@ export function purple(rune: Rune): Rune {
  *
  * @category Color
  */
-export function indigo(rune: Rune): Rune {
+export function indigo(rune: string): string {
   throwIfNotRune('indigo', rune);
   return 'indigo(' + rune + ')';
 }
@@ -496,7 +496,7 @@ export function indigo(rune: Rune): Rune {
  *
  * @category Color
  */
-export function blue(rune: Rune): Rune {
+export function blue(rune: string): string {
   throwIfNotRune('blue', rune);
   return 'blue(' + rune + ')';
 }
@@ -508,7 +508,7 @@ export function blue(rune: Rune): Rune {
  *
  * @category Color
  */
-export function green(rune: Rune): Rune {
+export function green(rune: string): string {
   throwIfNotRune('green', rune);
   return 'green(' + rune + ')';
 }
@@ -520,7 +520,7 @@ export function green(rune: Rune): Rune {
  *
  * @category Color
  */
-export function yellow(rune: Rune): Rune {
+export function yellow(rune: string): string {
   throwIfNotRune('yellow', rune);
   return 'yellow(' + rune + ')';
 }
@@ -532,7 +532,7 @@ export function yellow(rune: Rune): Rune {
  *
  * @category Color
  */
-export function orange(rune: Rune): Rune {
+export function orange(rune: string): string {
   throwIfNotRune('orange', rune);
   return 'orange(' + rune + ')';
 }
@@ -544,7 +544,7 @@ export function orange(rune: Rune): Rune {
  *
  * @category Color
  */
-export function brown(rune: Rune): Rune {
+export function brown(rune: string): string {
   throwIfNotRune('brown', rune);
   return 'brown(' + rune + ')';
 }
@@ -556,7 +556,7 @@ export function brown(rune: Rune): Rune {
  *
  * @category Color
  */
-export function black(rune: Rune): Rune {
+export function black(rune: string): string {
   throwIfNotRune('black', rune);
   return 'black(' + rune + ')';
 }
@@ -568,7 +568,7 @@ export function black(rune: Rune): Rune {
  *
  * @category Color
  */
-export function white(rune: Rune): Rune {
+export function white(rune: string): string {
   throwIfNotRune('white', rune);
   return 'white(' + rune + ')';
 }
@@ -584,7 +584,7 @@ export function white(rune: Rune): Rune {
  *
  * @category Main
  */
-export function show(rune: Rune): Rune {
+export function show(rune: string): string {
   throwIfNotRune('show', rune);
   return rune;
 }
@@ -597,7 +597,7 @@ export function show(rune: Rune): Rune {
  *
  * @category Main
  */
-export function anaglyph(rune: Rune): Rune {
+export function anaglyph(rune: string): string {
   throwIfNotRune('anaglyph', rune);
   return rune;
 }
@@ -610,7 +610,7 @@ export function anaglyph(rune: Rune): Rune {
  *
  * @category Main
  */
-export function hollusion(rune: Rune): Rune {
+export function hollusion(rune: string): string {
   throwIfNotRune('hollusion', rune);
   return rune;
 }
