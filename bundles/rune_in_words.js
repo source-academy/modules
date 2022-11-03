@@ -21,7 +21,7 @@
     }
     runes.forEach(function (rune) {
       if (!(typeof rune === "string")) {
-        throw Error(("").concat(name, " expects a rune as argument."));
+        throw Error(("").concat(name, " expects a rune (string) as argument."));
       }
     });
   }
