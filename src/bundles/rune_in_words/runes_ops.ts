@@ -16,27 +16,27 @@ export function throwIfNotRune(name, ...runes) {
 /**
  * primitive Rune in the rune of a full square
  * */
-export const getSquare: () => Rune = () => 'square';
+export const getSquare: () => string = () => 'square';
 
-export const getBlank: () => Rune = () => 'blank';
+export const getBlank: () => string = () => 'blank';
 
-export const getRcross: () => Rune = () => 'rcross';
+export const getRcross: () => string = () => 'rcross';
 
-export const getSail: () => Rune = () => 'sail';
+export const getSail: () => string = () => 'sail';
 
-export const getTriangle: () => Rune = () => 'triangle';
+export const getTriangle: () => string = () => 'triangle';
 
-export const getCorner: () => Rune = () => 'corner';
+export const getCorner: () => string = () => 'corner';
 
-export const getNova: () => Rune = () => 'nova';
+export const getNova: () => string = () => 'nova';
 
-export const getCircle: () => Rune = () => 'circle';
+export const getCircle: () => string = () => 'circle';
 
-export const getHeart: () => Rune = () => 'heart';
+export const getHeart: () => string = () => 'heart';
 
-export const getPentagram: () => Rune = () => 'pentagram';
+export const getPentagram: () => string = () => 'pentagram';
 
-export const getRibbon: () => Rune = () => 'ribbon';
+export const getRibbon: () => string = () => 'ribbon';
 
 // =============================================================================
 // Coloring Functions
