@@ -4,4 +4,7 @@
  * @author Joel Lee
  * @author Loh Xian Ze, Bryan
  */
-export { make_empty_tree, make_tree } from './functions';
+export {
+  entry, is_empty_tree, is_tree, left_branch,
+  make_empty_tree, make_tree, right_branch,
+} from './functions';

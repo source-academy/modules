@@ -57,5 +57,5 @@ export const colorPalette = [
 
 export function addColorFromHex(rune, hex) {
   throwIfNotRune('addColorFromHex', rune);
-  return 'color(' + rune + ', ' + hex + ')';
+  return `color(${rune}, ${hex})`;
 }
