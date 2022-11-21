@@ -112,7 +112,7 @@ export const ribbon: string = getRibbon();
  * @category Main
  */
 export function from_url(imageUrl: string): string {
-  return 'url(' + imageUrl + ')';
+  return `url(${imageUrl})`;
 }
 
 // =============================================================================
@@ -134,7 +134,7 @@ export function scale_independent(
   rune: string,
 ): string {
   throwIfNotRune('scale_independent', rune);
-  return 'scaled(' + rune + ', ' + ratio_x + ', ' + ratio_y + ')';
+  return `scaled(${rune}, ${ratio_x}, ${ratio_y})`;
 }
 
 /**
@@ -161,7 +161,7 @@ export function scale(ratio: number, rune: string): string {
  */
 export function translate(x: number, y: number, rune: string): string {
   throwIfNotRune('translate', rune);
-  return 'translated(' + rune + ', ' + x + ', ' + y + ')';
+  return `translated(${rune}, ${x}, ${y})`;
 }
 
 /**
@@ -177,7 +177,7 @@ export function translate(x: number, y: number, rune: string): string {
  */
 export function rotate(rad: number, rune: string): string {
   throwIfNotRune('rotate', rune);
-  return 'rotated(' + rune + ', ' + rad + ')';
+  return `rotated(${rune}, ${rad})`;
 }
 
 /**
@@ -197,7 +197,7 @@ export function stack_frac(frac: number, rune1: string, rune2: string): string {
   throwIfNotRune('stack_frac', rune1);
   throwIfNotRune('stack_frac', rune2);
 
-  return 'stack_frac(' + frac + ', ' + rune1 + ', ' + rune2 + ')';
+  return `stack_frac(${frac}, ${rune1}, ${rune2})`;
 }
 
 /**
@@ -213,7 +213,7 @@ export function stack_frac(frac: number, rune1: string, rune2: string): string {
  */
 export function stack(rune1: string, rune2: string): string {
   throwIfNotRune('stack', rune1, rune2);
-  return 'stack(' + rune1 + ', ' + rune2 + ')';
+  return `stack(${rune1}, ${rune2})`;
 }
 
 /**
@@ -228,7 +228,7 @@ export function stack(rune1: string, rune2: string): string {
 export function stackn(n: number, rune: string): string {
   throwIfNotRune('stackn', rune);
 
-  return 'stackn(' + n + ', ' + rune + ')';
+  return `stackn(${n}, ${rune})`;
 }
 
 /**
@@ -242,7 +242,7 @@ export function stackn(n: number, rune: string): string {
  */
 export function quarter_turn_right(rune: string): string {
   throwIfNotRune('quarter_turn_right', rune);
-  return 'quarter_turn_right(' + rune + ')';
+  return `quarter_turn_right(${rune})`;
 }
 
 /**
@@ -256,7 +256,7 @@ export function quarter_turn_right(rune: string): string {
  */
 export function quarter_turn_left(rune: string): string {
   throwIfNotRune('quarter_turn_left', rune);
-  return 'quarter_turn_left(' + rune + ')';
+  return `quarter_turn_left(${rune})`;
 }
 
 /**
@@ -269,7 +269,7 @@ export function quarter_turn_left(rune: string): string {
  */
 export function turn_upside_down(rune: string): string {
   throwIfNotRune('turn_upside_down', rune);
-  return 'quarter_upside_down(' + rune + ')';
+  return `quarter_upside_down(${rune})`;
 }
 
 /**
@@ -288,7 +288,7 @@ export function turn_upside_down(rune: string): string {
 export function beside_frac(frac: number, rune1: string, rune2: string): string {
   throwIfNotRune('beside_frac', rune1, rune2);
 
-  return 'beside_frac(' + frac + ', ' + rune1 + ', ' + rune2 + ')';
+  return `beside_frac(${frac}, ${rune1}, ${rune2})`;
 }
 
 /**
@@ -304,7 +304,7 @@ export function beside_frac(frac: number, rune1: string, rune2: string): string 
  */
 export function beside(rune1: string, rune2: string): string {
   throwIfNotRune('beside', rune1, rune2);
-  return 'stack(' + rune1 + ', ' + rune2 + ')';
+  return `stack(${rune1}, ${rune2})`;
 }
 
 /**
@@ -318,7 +318,7 @@ export function beside(rune1: string, rune2: string): string {
  */
 export function flip_vert(rune: string): string {
   throwIfNotRune('flip_vert', rune);
-  return 'flip_vert(' + rune + ')';
+  return `flip_vert(${rune})`;
 }
 
 /**
@@ -332,7 +332,7 @@ export function flip_vert(rune: string): string {
  */
 export function flip_horiz(rune: string): string {
   throwIfNotRune('flip_horiz', rune);
-  return 'flip_horiz(' + rune + ')';
+  return `flip_horiz(${rune})`;
 }
 
 /**
@@ -348,7 +348,8 @@ export function make_cross(rune: string): string {
   throwIfNotRune('make_cross', rune);
   return stack(
     beside(quarter_turn_right(rune), turn_upside_down(rune)),
-    beside(rune, quarter_turn_left(rune)));
+    beside(rune, quarter_turn_left(rune)),
+  );
 }
 
 /**
@@ -388,7 +389,7 @@ export function repeat_pattern(
 export function overlay_frac(frac: number, rune1: string, rune2: string): string {
   throwIfNotRune('overlay_frac', rune1);
   throwIfNotRune('overlay_frac', rune2);
-  return 'overlay_frac(' + frac + ', ' + rune1 + ', ' + rune2 + ')';
+  return `overlay_frac(${frac}, ${rune1}, ${rune2})`;
 }
 
 /**
@@ -402,7 +403,7 @@ export function overlay_frac(frac: number, rune1: string, rune2: string): string
 export function overlay(rune1: string, rune2: string): string {
   throwIfNotRune('overlay', rune1);
   throwIfNotRune('overlay', rune2);
-  return 'overlay(' + rune1 + ', ' + rune2 + ')';
+  return `overlay(${rune1}, ${rune2})`;
 }
 
 // =============================================================================
@@ -424,7 +425,7 @@ export function overlay(rune1: string, rune2: string): string {
  */
 export function color(rune: string, r: number, g: number, b: number): string {
   throwIfNotRune('color', rune);
-  return 'color(' + rune + ', ' + r + ', ' + g + ', ' + b + ')';
+  return `color(${rune}, ${r}, ${g}, ${b})`;
 }
 
 /**
@@ -438,7 +439,7 @@ export function color(rune: string, r: number, g: number, b: number): string {
  */
 export function random_color(rune: string): string {
   throwIfNotRune('random_color', rune);
-  return 'random(' + rune + ')';
+  return `random(${rune})`;
 }
 
 /**
@@ -450,7 +451,7 @@ export function random_color(rune: string): string {
  */
 export function red(rune: string): string {
   throwIfNotRune('red', rune);
-  return 'red(' + rune + ')';
+  return `red(${rune})`;
 }
 
 /**
@@ -462,7 +463,7 @@ export function red(rune: string): string {
  */
 export function pink(rune: string): string {
   throwIfNotRune('pink', rune);
-  return 'pink(' + rune + ')';
+  return `pink(${rune})`;
 }
 
 /**
@@ -474,7 +475,7 @@ export function pink(rune: string): string {
  */
 export function purple(rune: string): string {
   throwIfNotRune('purple', rune);
-  return 'purple(' + rune + ')';
+  return `purple(${rune})`;
 }
 
 /**
@@ -486,7 +487,7 @@ export function purple(rune: string): string {
  */
 export function indigo(rune: string): string {
   throwIfNotRune('indigo', rune);
-  return 'indigo(' + rune + ')';
+  return `indigo(${rune})`;
 }
 
 /**
@@ -498,7 +499,7 @@ export function indigo(rune: string): string {
  */
 export function blue(rune: string): string {
   throwIfNotRune('blue', rune);
-  return 'blue(' + rune + ')';
+  return `blue(${rune})`;
 }
 
 /**
@@ -510,7 +511,7 @@ export function blue(rune: string): string {
  */
 export function green(rune: string): string {
   throwIfNotRune('green', rune);
-  return 'green(' + rune + ')';
+  return `green(${rune})`;
 }
 
 /**
@@ -522,7 +523,7 @@ export function green(rune: string): string {
  */
 export function yellow(rune: string): string {
   throwIfNotRune('yellow', rune);
-  return 'yellow(' + rune + ')';
+  return `yellow(${rune})`;
 }
 
 /**
@@ -534,7 +535,7 @@ export function yellow(rune: string): string {
  */
 export function orange(rune: string): string {
   throwIfNotRune('orange', rune);
-  return 'orange(' + rune + ')';
+  return `orange(${rune})`;
 }
 
 /**
@@ -546,7 +547,7 @@ export function orange(rune: string): string {
  */
 export function brown(rune: string): string {
   throwIfNotRune('brown', rune);
-  return 'brown(' + rune + ')';
+  return `brown(${rune})`;
 }
 
 /**
@@ -558,7 +559,7 @@ export function brown(rune: string): string {
  */
 export function black(rune: string): string {
   throwIfNotRune('black', rune);
-  return 'black(' + rune + ')';
+  return `black(${rune})`;
 }
 
 /**
@@ -570,7 +571,7 @@ export function black(rune: string): string {
  */
 export function white(rune: string): string {
   throwIfNotRune('white', rune);
-  return 'white(' + rune + ')';
+  return `white(${rune})`;
 }
 
 // =============================================================================
