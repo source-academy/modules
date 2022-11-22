@@ -18,10 +18,10 @@
     return null;
   }
   function make_tree(value, left, right) {
-    return [value, [left, right]];
+    return [value, [left, [right, null]]];
   }
   function is_tree(value) {
-    return value === null || Array.isArray(value) && value.length === 2 && Array.isArray(value[1]) && value[1].length === 2 && is_tree(value[1][0]) && is_tree(value[1][1]);
+    return value === null || Array.isArray(value) && value.length === 2 && Array.isArray(value[1]) && value[1].length === 2 && is_tree(value[1][0]) && value[1][1].length === 2 && is_tree(value[1][1][0]) && value[1][1][1] === null;
   }
   function is_empty_tree(value) {
     return value === null;
@@ -39,8 +39,8 @@
     throw new Error(("function left_branch expects binary tree, received: ").concat(t));
   }
   function right_branch(t) {
-    if (Array.isArray(t) && t.length === 2 && Array.isArray(t[1]) && t.length === 2) {
-      return t[1][1];
+    if (Array.isArray(t) && t.length === 2 && Array.isArray(t[1]) && t[1].length === 2 && Array.isArray(t[1][1]) && t[1][1].length === 2) {
+      return t[1][1][0];
     }
     throw new Error(("function right_branch expects binary tree, received: ").concat(t));
   }
