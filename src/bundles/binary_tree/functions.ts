@@ -1,8 +1,8 @@
 /**
  * The `binary_tree` Source Module provides functions for the interaction with binary trees, as covered the textbook
- * [Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)](https://sicp.comp.nus.edu.sg/)
- * in [section 2.3.3 Example: Representing Sets](https://sicp.comp.nus.edu.sg/chapters/37).
- * Click on a name on the left to see how they are defined and used.
+ * [Structure and Interpretation of Computer Programs, JavaScript Adaptation (SICP JS)](https://sourceacademy.org/sicpjs)
+ * in [section 2.3.3 Example: Representing Sets](https://sourceacademy.org/sicpjs/2.3.3#h3).
+ * Click on a function name in the index below to see how the function is defined and used.
  * @module binary_tree
  */
 import { BinaryTree } from './types';
@@ -11,7 +11,7 @@ import { BinaryTree } from './types';
  * Returns an empty binary tree, represented by the empty list null
  * @example
  * ```typescript
- * display(make_empty_tree()); // Shows "[]" in the REPL
+ * display(make_empty_tree()); // Shows "null" in the REPL
  * ```
  * @return An empty binary tree
  */
