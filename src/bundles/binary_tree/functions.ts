@@ -25,7 +25,7 @@ export function make_empty_tree(): BinaryTree {
  * @example
  * ```typescript
  * const tree = make_tree(1, make_empty_tree(), make_empty_tree());
- * display(tree); // Shows "[null, 1, null]" in the REPL
+ * display(tree); // Shows "[1, [null, [null, null]]]" in the REPL
  * ```
  * @param value Value to be stored in the node
  * @param left Left subtree of the node
@@ -37,7 +37,7 @@ export function make_tree(
   left: BinaryTree,
   right: BinaryTree,
 ): BinaryTree {
-  return [value, [left, right]];
+  return [value, [left, [right, null]]];
 }
 
 /**
@@ -60,7 +60,9 @@ export function is_tree(
 	  && Array.isArray(value[1])
   	  && value[1].length === 2
 	  && is_tree(value[1][0])
-	  && is_tree(value[1][1]));
+	  && value[1][1].length === 2
+	  && is_tree(value[1][1][0])
+	  && value[1][1][1] === null);
 }
 
 /**
@@ -137,8 +139,9 @@ export function right_branch(
   t: BinaryTree,
 ): BinaryTree {
   if (Array.isArray(t) && t.length === 2 &&
-      Array.isArray(t[1]) && t.length === 2) {
-    return t[1][1];
+      Array.isArray(t[1]) && t[1].length === 2 &&
+      Array.isArray(t[1][1]) && t[1][1].length === 2) {
+    return t[1][1][0];
   }
   throw new Error(
     `function right_branch expects binary tree, received: ${t}`,
