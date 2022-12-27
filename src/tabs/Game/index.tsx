@@ -18,13 +18,13 @@ class Game extends React.PureComponent<Props> {
         You may find the game module{' '}
         <a
           href={Links.gameAPIDocumentation}
-          rel='noopener noreferrer'
-          target='_blank'
+          rel="noopener noreferrer"
+          target="_blank"
         >
           documentation{' '}
         </a>
         and{' '}
-        <a href={Links.gameUserGuide} rel='noopener noreferrer' target='_blank'>
+        <a href={Links.gameUserGuide} rel="noopener noreferrer" target="_blank">
           user guide{' '}
         </a>
         useful.

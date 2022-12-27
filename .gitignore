@@ -6,6 +6,8 @@ build/*
 /package-lock.json
 coverage/
 
+scripts/build/database.json
+
 # Compiled source #
 ###################
 *.com
@@ -43,3 +45,7 @@ coverage/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# IDE Related Configuration Files #
+###################################
+.vscode/

@@ -25,10 +25,6 @@ export type GameObject = {
   object: RawGameObject | RawInputObject | RawContainer | undefined;
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export type __Params = {
-  game: GameParams;
-};
 
 export type GameParams = {
   scene: Phaser.Scene;

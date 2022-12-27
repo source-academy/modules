@@ -50,9 +50,17 @@
       "Rune"
     ]
   },
+  "rune_in_words": {
+    "tabs": []
+  },
   "sound_matrix": {
     "tabs": [
       "SoundMatrix"
+    ]
+  },
+  "csg": {
+    "tabs": [
+      "Csg"
     ]
   }
 }

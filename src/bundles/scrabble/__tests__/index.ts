@@ -7,9 +7,11 @@ function list_ref(list, n) {
 // Test functions
 
 test('get the first word in the array', () => {
-  expect(scrabble_array[0]).toBe('aardwolves');
+  expect(scrabble_array[0])
+    .toBe('aardwolves');
 });
 
 test('get the first word in the list', () => {
-  expect(list_ref(scrabble_list, 0)).toBe('aardwolves');
+  expect(list_ref(scrabble_list, 0))
+    .toBe('aardwolves');
 });

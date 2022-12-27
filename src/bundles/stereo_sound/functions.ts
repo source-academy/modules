@@ -12,33 +12,38 @@
  * @author Samyukta Sounderraman
  */
 
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars */
+/* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import {
-  Wave,
+  accumulate,
+  head,
+  is_null,
+  is_pair,
+  length,
+  list,
+  pair,
+  tail,
+} from './list';
+import { RIFFWAVE } from './riffwave';
+import type {
+  AudioPlayed,
+  List,
   Sound,
   SoundProducer,
   SoundTransformer,
-  List,
-  AudioPlayed,
+  Wave,
 } from './types';
-import {
-  pair,
-  head,
-  tail,
-  list,
-  length,
-  is_null,
-  is_pair,
-  accumulate,
-} from './list';
-import { RIFFWAVE } from './riffwave';
+import { context } from 'js-slang/moduleHelpers';
 
 // Global Constants and Variables
 
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
 
-let audioElement: HTMLAudioElement;
+const audioPlayed: AudioPlayed[] = [];
+context.moduleContexts.stereo_sound.state = {
+  audioPlayed,
+};
+
 // Singular audio context for all playback functions
 let audioplayer: AudioContext;
 
@@ -77,7 +82,7 @@ let recorded_sound: Sound | undefined;
 function check_permission() {
   if (permission === undefined) {
     throw new Error(
-      `Call init_record(); to obtain permission to use microphone`
+      'Call init_record(); to obtain permission to use microphone',
     );
   } else if (permission === false) {
     throw new Error(`Permission has been denied.\n
@@ -99,10 +104,8 @@ function setPermissionToFalse() {
 
 function start_recording(mediaRecorder: MediaRecorder) {
   const data: any[] = [];
-  // eslint-disable-next-line no-param-reassign
   mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
   mediaRecorder.start();
-  // eslint-disable-next-line no-param-reassign
   mediaRecorder.onstop = () => process(data);
 }
 
@@ -114,6 +117,7 @@ function play_recording_signal() {
   play(sine_sound(1200, recording_signal_duration_ms / 1000));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-shadow
 function process(data: any[] | undefined) {
   const audioContext = new AudioContext();
   const blob = new Blob(data);
@@ -126,7 +130,8 @@ function process(data: any[] | undefined) {
 // Converts input microphone sound (blob) into array format.
 function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   const url = URL.createObjectURL(blob);
-  return fetch(url).then((response) => response.arrayBuffer());
+  return fetch(url)
+    .then((response) => response.arrayBuffer());
 }
 
 function save(audioBuffer: AudioBuffer) {
@@ -252,14 +257,14 @@ export function record_for(duration: number, buffer: number): () => Sound {
 export function make_stereo_sound(
   left_wave: Wave,
   right_wave: Wave,
-  duration: number
+  duration: number,
 ): Sound {
   return pair(
     pair(
       (t: number) => (t >= duration ? 0 : left_wave(t)),
-      (t: number) => (t >= duration ? 0 : right_wave(t))
+      (t: number) => (t >= duration ? 0 : right_wave(t)),
     ),
-    duration
+    duration,
   );
 }
 
@@ -320,10 +325,10 @@ export function get_duration(sound: Sound): number {
  */
 export function is_sound(x: any): boolean {
   return (
-    is_pair(x) &&
-    typeof get_left_wave(x) === 'function' &&
-    typeof get_right_wave(x) === 'function' &&
-    typeof get_duration(x) === 'number'
+    is_pair(x)
+    && typeof get_left_wave(x) === 'function'
+    && typeof get_right_wave(x) === 'function'
+    && typeof get_duration(x) === 'number'
   );
 }
 
@@ -354,7 +359,7 @@ export function play_wave(wave: Wave, duration: number): AudioPlayed {
 export function play_waves(
   wave1: Wave,
   wave2: Wave,
-  duration: number
+  duration: number,
 ): AudioPlayed {
   return play(make_stereo_sound(wave1, wave2, duration));
 }
@@ -405,8 +410,8 @@ export function play(sound: Sound): AudioPlayed {
 
       // smoothen out sudden cut-outs
       if (
-        channel[2 * i] === 0 &&
-        Math.abs(channel[2 * i] - Lprev_value) > 0.01
+        channel[2 * i] === 0
+        && Math.abs(channel[2 * i] - Lprev_value) > 0.01
       ) {
         channel[2 * i] = Lprev_value * 0.999;
       }
@@ -425,8 +430,8 @@ export function play(sound: Sound): AudioPlayed {
 
       // smoothen out sudden cut-outs
       if (
-        channel[2 * i + 1] === 0 &&
-        Math.abs(channel[2 * i] - Rprev_value) > 0.01
+        channel[2 * i + 1] === 0
+        && Math.abs(channel[2 * i] - Rprev_value) > 0.01
       ) {
         channel[2 * i + 1] = Rprev_value * 0.999;
       }
@@ -444,6 +449,8 @@ export function play(sound: Sound): AudioPlayed {
     riffwave.header.numChannels = 2;
     riffwave.header.bitsPerSample = 16;
     riffwave.Make(channel);
+
+    /*
     const audio = new Audio(riffwave.dataURI);
     const source2 = audioplayer.createMediaElementSource(audio);
     source2.connect(audioplayer.destination);
@@ -454,19 +461,15 @@ export function play(sound: Sound): AudioPlayed {
     audio.onended = () => {
       source2.disconnect(audioplayer.destination);
       isPlaying = false;
+    }; */
+
+    const audio = {
+      toReplString: () => '<AudioPlayed>',
+      dataUri: riffwave.dataURI,
     };
 
-    return {
-      toReplString: () => `<AudioPlayed>`,
-      init: (audio_elem) => {
-        audioElement = audio_elem;
-        if (!audioElement) {
-          throw new Error('Audio element cannot be null.');
-        }
-        audioElement.src = riffwave.dataURI;
-        return true;
-      },
-    };
+    audioPlayed.push(audio);
+    return audio;
   }
 }
 
@@ -481,7 +484,7 @@ export function play_concurrently(sound: Sound): void {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
-      `play_concurrently is expecting sound, but encountered ${sound}`
+      `play_concurrently is expecting sound, but encountered ${sound}`,
     );
   } else if (get_duration(sound) <= 0) {
     // Do nothing
@@ -597,19 +600,16 @@ export function squash(sound: Sound): Sound {
 export function pan(amount: number): SoundTransformer {
   return (sound) => {
     if (amount > 1) {
-      // eslint-disable-next-line no-param-reassign
       amount = 1;
     }
     if (amount < -1) {
-      // eslint-disable-next-line no-param-reassign
       amount = -1;
     }
-    // eslint-disable-next-line no-param-reassign
     sound = squash(sound);
     return make_stereo_sound(
       (t) => ((1 - amount) / 2) * get_left_wave(sound)(t),
       (t) => ((1 + amount) / 2) * get_right_wave(sound)(t),
-      get_duration(sound)
+      get_duration(sound),
     );
   };
 }
@@ -635,12 +635,11 @@ export function pan_mod(modulator: Sound): SoundTransformer {
     return output;
   };
   return (sound) => {
-    // eslint-disable-next-line no-param-reassign
     sound = squash(sound);
     return make_stereo_sound(
       (t) => ((1 - amount(t)) / 2) * get_left_wave(sound)(t),
       (t) => ((1 + amount(t)) / 2) * get_right_wave(sound)(t),
-      get_duration(sound)
+      get_duration(sound),
     );
   };
 }
@@ -655,7 +654,7 @@ export function pan_mod(modulator: Sound): SoundTransformer {
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
-  return make_sound((t) => Math.random() * 2 - 1, duration);
+  return make_sound((_t) => Math.random() * 2 - 1, duration);
 }
 
 /**
@@ -666,7 +665,7 @@ export function noise_sound(duration: number): Sound {
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
-  return make_sound((t) => 0, duration);
+  return make_sound((_t) => 0, duration);
 }
 
 /**
@@ -699,7 +698,7 @@ export function square_sound(f: number, duration: number): Sound {
   }
   return make_sound(
     (t) => (4 / Math.PI) * fourier_expansion_square(t),
-    duration
+    duration,
   );
 }
 
@@ -715,15 +714,15 @@ export function triangle_sound(freq: number, duration: number): Sound {
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
-      answer +=
-        ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2)) /
-        (2 * i + 1) ** 2;
+      answer
+        += ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2))
+        / (2 * i + 1) ** 2;
     }
     return answer;
   }
   return make_sound(
     (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
-    duration
+    duration,
   );
 }
 
@@ -745,7 +744,7 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
   }
   return make_sound(
     (t) => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
-    duration
+    duration,
   );
 }
 
@@ -801,13 +800,11 @@ export function simultaneously(list_of_sounds: List): Sound {
   const unnormed = accumulate(
     stereo_simul_two,
     silence_sound(0),
-    list_of_sounds
+    list_of_sounds,
   );
   const sounds_length = length(list_of_sounds);
-  const normalised_left = (t: number) =>
-    head(head(unnormed))(t) / sounds_length;
-  const normalised_right = (t: number) =>
-    tail(head(unnormed))(t) / sounds_length;
+  const normalised_left = (t: number) => head(head(unnormed))(t) / sounds_length;
+  const normalised_right = (t: number) => tail(head(unnormed))(t) / sounds_length;
   const highest_duration = tail(unnormed);
   return make_stereo_sound(normalised_left, normalised_right, highest_duration);
 }
@@ -831,7 +828,7 @@ export function adsr(
   attack_ratio: number,
   decay_ratio: number,
   sustain_level: number,
-  release_ratio: number
+  release_ratio: number,
 ): SoundTransformer {
   return (sound) => {
     const Lwave = get_left_wave(sound);
@@ -848,18 +845,18 @@ export function adsr(
         }
         if (x < attack_time + decay_time) {
           return (
-            ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) +
-              sustain_level) *
-            wave(x)
+            ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
+              + sustain_level)
+            * wave(x)
           );
         }
         if (x < duration - release_time) {
           return wave(x) * sustain_level;
         }
         return (
-          wave(x) *
-          sustain_level *
-          linear_decay(release_time)(x - (duration - release_time))
+          wave(x)
+          * sustain_level
+          * linear_decay(release_time)(x - (duration - release_time))
         );
       };
     }
@@ -887,7 +884,7 @@ export function stacking_adsr(
   waveform: SoundProducer,
   base_frequency: number,
   duration: number,
-  envelopes: List
+  envelopes: List,
 ): Sound {
   function zip(lst: List, n: number) {
     if (is_null(lst)) {
@@ -898,11 +895,10 @@ export function stacking_adsr(
 
   return simultaneously(
     accumulate(
-      (x: any, y: any) =>
-        pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+      (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
       null,
-      zip(envelopes, 1)
-    )
+      zip(envelopes, 1),
+    ),
   );
 }
 
@@ -923,18 +919,15 @@ export function stacking_adsr(
 export function phase_mod(
   freq: number,
   duration: number,
-  amount: number
+  amount: number,
 ): SoundTransformer {
-  return (modulator: Sound) =>
-    make_stereo_sound(
-      (t) =>
-        Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
-      (t) =>
-        Math.sin(
-          2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)
-        ),
-      duration
-    );
+  return (modulator: Sound) => make_stereo_sound(
+    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
+    (t) => Math.sin(
+      2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t),
+    ),
+    duration,
+  );
 }
 
 // MIDI conversion functions
@@ -983,7 +976,7 @@ export function letter_name_to_midi_note(note: string): number {
   }
 
   if (note.length === 2) {
-    res += parseInt(note[1], 10) * 12;
+    res += parseInt(note[1]) * 12;
   } else if (note.length === 3) {
     switch (note[1]) {
       case '#':
@@ -997,7 +990,7 @@ export function letter_name_to_midi_note(note: string): number {
       default:
         break;
     }
-    res += parseInt(note[2], 10) * 12;
+    res += parseInt(note[2]) * 12;
   }
   return res;
 }
@@ -1044,8 +1037,8 @@ export function bell(note: number, duration: number): Sound {
       adsr(0, 0.6, 0, 0.05),
       adsr(0, 0.6618, 0, 0.05),
       adsr(0, 0.7618, 0, 0.05),
-      adsr(0, 0.9071, 0, 0.05)
-    )
+      adsr(0, 0.9071, 0, 0.05),
+    ),
   );
 }
 
@@ -1062,7 +1055,7 @@ export function cello(note: number, duration: number): Sound {
     square_sound,
     midi_note_to_frequency(note),
     duration,
-    list(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15))
+    list(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)),
   );
 }
 
@@ -1079,7 +1072,7 @@ export function piano(note: number, duration: number): Sound {
     triangle_sound,
     midi_note_to_frequency(note),
     duration,
-    list(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05))
+    list(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)),
   );
 }
 
@@ -1096,7 +1089,7 @@ export function trombone(note: number, duration: number): Sound {
     square_sound,
     midi_note_to_frequency(note),
     duration,
-    list(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1))
+    list(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)),
   );
 }
 
@@ -1117,7 +1110,7 @@ export function violin(note: number, duration: number): Sound {
       adsr(0.35, 0, 1, 0.15),
       adsr(0.35, 0, 1, 0.15),
       adsr(0.45, 0, 1, 0.15),
-      adsr(0.45, 0, 1, 0.15)
-    )
+      adsr(0.45, 0, 1, 0.15),
+    ),
   );
 }

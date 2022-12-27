@@ -15,7 +15,7 @@ jobs:
       - name: Use Node.js 💻
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: '16.x'
       
       - name: Install Dependencies 📦
         run: |
@@ -23,7 +23,7 @@ jobs:
           
       - name: Build Modules 🔧
         run: |
-          yarn run build
+          yarn run build --single-thread
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3

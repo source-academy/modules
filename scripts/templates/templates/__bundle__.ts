@@ -1,25 +1,25 @@
-// Un-comment the next line if your bundle requires the use of variables
-// declared in cadet-frontend or js-slang.
-// import __Params from '../../typings/__Params';
-
 /**
- * <Brief description of the module>
- * @author <Author Name>
- * @author <Author Name>
+ * A single sentence summarising the module (this sentence is displayed larger).
+ *
+ * Sentences describing the module. More sentences about the module.
+ *
+ * @module module_name
+ * @author Author Name
+ * @author Author Name
  */
 
-/**
- * Increment a number by a value of 1.
- * @param x the number to be incremented
- * @returns the incremented value of the number
+/*
+  To access things like the context or module state you can just import the context
+  using the import below
  */
-function sample_function(x: number) {
-  return x + 1;
-}
+import { context } from 'js-slang/moduleHelpers';
 
-// Un-comment the next line if your bundle requires the use of variables
-// declared in cadet-frontend or js-slang.
-// export default (_params: __Params) => ({
-export default () => ({
-  sample_function,
-});
+/**
+ * Sample function. Increments a number by 1.
+ *
+ * @param x The number to be incremented.
+ * @returns The incremented value of the number.
+ */
+export function sample_function(x: number): number {
+  return ++x;
+} // Then any functions or variables you want to expose to the user is exported from the bundle's index.ts file

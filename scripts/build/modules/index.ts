@@ -1,0 +1,1 @@
+export { tabCommand } from './tab';

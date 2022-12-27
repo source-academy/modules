@@ -1,37 +1,18 @@
-import {
-  start,
-  red_of,
-  blue_of,
-  green_of,
-  alpha_of,
-  set_rgba,
-  video_height,
-  video_width,
-  copy_image,
-  install_filter,
-  reset_filter,
-  compose_filter,
-  pause_at,
-  set_dimensions,
-  set_fps,
-  use_local_video,
-} from './functions';
-
 /**
  * Bundle for Source Academy pix_n_flix module
  * @author Loh Xian Ze, Bryan
  * @author Tang Xin Kye, Marcus
  */
 
-export default () => ({
+export {
   start,
   red_of,
   blue_of,
   green_of,
   alpha_of,
   set_rgba,
-  video_height,
-  video_width,
+  image_height,
+  image_width,
   copy_image,
   install_filter,
   reset_filter,
@@ -39,5 +20,11 @@ export default () => ({
   pause_at,
   set_dimensions,
   set_fps,
-  use_local_video,
-});
+  set_volume,
+  use_local_file,
+  use_image_url,
+  use_video_url,
+  get_video_time,
+  keep_aspect_ratio,
+  set_loop_count,
+} from './functions';
