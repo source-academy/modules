@@ -1,6 +1,10 @@
+import { parse } from 'acorn';
+import { generate } from 'astring';
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { Table } from 'console-table-printer';
+import { build } from 'esbuild';
+import { BlockStatement, ExpressionStatement, FunctionExpression, Identifier, Literal, MemberExpression, Program, ReturnStatement, VariableDeclaration } from 'estree';
 import fs, { promises as fsPromises } from 'fs';
 import memoize from 'lodash/memoize';
 import { rollup } from 'rollup';
@@ -110,31 +114,68 @@ export const logTabStart = (toBuild: EntriesWithReasons, verbose?: boolean) => {
 
 export const buildTab = wrapWithTimer(async (tabName: string): Promise<BuildLog> => {
   try {
-    const rollupBundle = await rollup({
-      ...defaultConfig('tab'),
-      input: `${SOURCE_PATH}/tabs/${tabName}/index.tsx`,
+    const { outputFiles: [{ text }] } = await build({
+      bundle: true,
+      entryPoints: [`src/tabs/${tabName}/index.tsx`],
       external: ['react', 'react-dom'],
-    });
-
-    const tabFile = `${BUILD_PATH}/tabs/${tabName}.js`;
-    try {
-      // Remove previous tab file if it still exists
-      await fsPromises.rm(tabFile);
-    } catch (error) {
-      if (error.code !== 'ENOENT') throw error;
-    }
-
-    // Only one chunk should be generated
-    await rollupBundle.write({
-      file: tabFile,
       format: 'iife',
-      globals: {
-        'react': 'React',
-        'react-dom': 'ReactDom',
+      globalName: 'tab',
+      jsx: 'transform',
+      loader: {
+        '.tsx': 'tsx',
       },
+      platform: 'browser',
+      target: 'es6',
+      tsconfig: 'src/tsconfig.json',
+      write: false,
     });
-    await rollupBundle.close();
-    const { size } = await fsPromises.stat(tabFile);
+
+    const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
+    const declStatement = parsed.body[1] as VariableDeclaration;
+
+    const newTab = {
+      type: 'ExpressionStatement',
+      expression: {
+        type: 'FunctionExpression',
+        params: [
+          {
+            type: 'Identifier',
+            name: '_React',
+          } as Identifier,
+          {
+            type: 'Identifier',
+            name: 'ReactDOM',
+          } as Identifier,
+        ],
+        body: {
+          type: 'BlockStatement',
+          body: [
+            {
+              type: 'ReturnStatement',
+              argument: {
+                type: 'MemberExpression',
+                object: declStatement.declarations[0].init,
+                property: {
+                  type: 'Literal',
+                  value: 'default',
+                } as Literal,
+                computed: true,
+              } as MemberExpression,
+            } as ReturnStatement,
+          ],
+        } as BlockStatement,
+      } as FunctionExpression,
+    } as ExpressionStatement;
+
+    let newCode = generate(newTab);
+    if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
+
+    newCode = newCode.replace(/__require\("react"\)/gu, '_React');
+    newCode = newCode.replace(/__require\("react-dom"\)/gu, 'ReactDOM');
+
+    const outFile = `${BUILD_PATH}/tabs/${tabName}.js`
+    await fsPromises.writeFile(outFile, newCode);
+    const { size } = await fsPromises.stat(outFile);
 
     return {
       name: tabName,

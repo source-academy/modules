@@ -1,5 +1,9 @@
+import { parse } from 'acorn';
+import { generate } from 'astring';
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
+import { build } from 'esbuild';
+import type { ArrowFunctionExpression, CallExpression, ExpressionStatement, FunctionExpression, Identifier, Program, VariableDeclaration } from 'estree';
 import fs, { promises as fsPromises } from 'fs';
 import { rollup } from 'rollup';
 
@@ -93,30 +97,82 @@ export const logBundleStart = (bundles: EntriesWithReasons, verbose?: boolean) =
 
 export const buildBundle = wrapWithTimer(async (bundle: string): Promise<BuildLog> => {
   try {
-    const rollupBundle = await rollup({
-      ...defaultConfig('bundle'),
-      input: `${SOURCE_PATH}/bundles/${bundle}/index.ts`,
-      external: ['js-slang/moduleHelpers'],
-    });
-
-    const bundleFile = `${BUILD_PATH}/bundles/${bundle}.js`;
-    try {
-      // Remove previous bundle file if it still exists
-      await fsPromises.rm(bundleFile);
-    } catch (error) {
-      if (error.code !== 'ENOENT') throw error;
-    }
-
-    await rollupBundle.write({
-      file: bundleFile,
+    const { outputFiles: [{ text }] } = await build({
+      bundle: true,
+      entryPoints: [`src/bundles/${bundle}/index.ts`],
       format: 'iife',
-      globals: {
-        'js-slang/moduleHelpers': 'ctx',
+      globalName: 'bundle',
+      loader: {
+        '.ts': 'ts',
       },
+      platform: 'browser',
+      plugins: [
+        {
+          name: 'yippee',
+          setup(pluginBuild) {
+            pluginBuild.onResolve({
+              filter: /js-slang\/moduleHelpers/u,
+            }, (args) => ({
+              path: args.path,
+              namespace: 'js-slang-context',
+            }));
+
+            pluginBuild.onLoad({
+              filter: /.*/u,
+              namespace: 'js-slang-context',
+            }, () => ({
+              contents: 'export const context = moduleHelpers.context;',
+            }));
+          },
+        },
+      ],
+      target: 'es6',
+      tsconfig: 'src/tsconfig.json',
+      write: false,
     });
 
-    await rollupBundle.close();
-    const { size } = await fsPromises.stat(bundleFile);
+    const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
+
+    const exprStatement = parsed.body[1] as unknown as VariableDeclaration;
+    const varDeclarator = exprStatement.declarations[0];
+    const callExpression = varDeclarator.init as CallExpression;
+    const moduleCode = callExpression.callee as ArrowFunctionExpression;
+
+    const newModule = {
+      type: 'ExpressionStatement',
+      expression:
+      {
+        type: 'FunctionExpression',
+        params: [
+          {
+            type: 'Identifier',
+            name: 'moduleHelpers',
+          } as Identifier,
+        ],
+        body: moduleCode.body,
+        // Code to use if the use strict directive is still needed
+        // body: {
+        //   type: 'BlockStatement',
+        //   body: [
+        //     {
+        //       type: 'ExpressionStatement',
+      //       expression: {
+      //         type: 'Literal',
+      //         value: 'use strict',
+      //       } as Literal,
+      //     },
+      //     ...(moduleCode.body as BlockStatement).body,
+      //   ],
+      // } as BlockStatement,
+    } as FunctionExpression,
+  } as ExpressionStatement;
+
+    let newCode = generate(newModule);
+    if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
+
+    const outFile = `${BUILD_PATH}/bundles/${bundle}.js`
+    await fsPromises.writeFile(outFile, newCode);
+    const { size } = await fsPromises.stat(outFile);
 
     return {
       result: 'success',
