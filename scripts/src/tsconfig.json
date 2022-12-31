@@ -13,8 +13,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "target": "ES2020",
+    "outDir": "../bin",
+    
   },
   "include": ["."],
-  "exclude": ["templates/templates"]
-  // "exclude": ["./**/__tests__/**"]
+  "exclude": ["./**/__tests__/**", "./templates/templates/**"]
 }

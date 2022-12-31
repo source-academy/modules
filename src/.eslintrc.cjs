@@ -1,5 +1,5 @@
 module.exports = {
-  "extends": ["../.eslintrc.base.js", "airbnb-typescript"],
+  "extends": ["../.eslintrc.base.cjs", "airbnb-typescript"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json",

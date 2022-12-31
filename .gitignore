@@ -46,6 +46,5 @@ scripts/build/database.json
 ehthumbs.db
 Thumbs.db
 
-# IDE Related Configuration Files #
-###################################
-.vscode/
+# Compiled Scripts
+scripts/bin
