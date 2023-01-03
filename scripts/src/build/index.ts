@@ -1,79 +1,77 @@
 import chalk from 'chalk';
-import { Command } from 'commander';
+import fs from 'fs/promises';
 
-import { type BuildOptions, getDefaultOptions, retrieveManifest } from '../scriptUtils';
+import { type BuildOptions, retrieveManifest } from '../scriptUtils';
 
 import { initTypedoc } from './docs/docUtils';
-import buildHtml from './docs/html';
-import buildBundles from './modules/bundle';
-import buildTabs from './modules/tab';
+import buildHtml, { logHtmlResult } from './docs/html';
+import { logJsonResults } from './docs/json';
+import { buildBundles, logBundleResults, watchBundles } from './modules/bundle';
+import { buildTabs, logTabResults, watchTabs } from './modules/tab';
 import { divideAndRound } from './buildUtils';
 
-const buildAll = async (buildOpts: BuildOptions) => {
+export const buildAll = async (buildOpts: BuildOptions) => {
   const manifest = await retrieveManifest(buildOpts);
   const bundlesToBuild = Object.keys(manifest);
   const tabs = Object.values(manifest)
     .flatMap((module) => module.tabs);
 
-  console.log(chalk.cyanBright('Building bundles, tabs, jsons and HTML'));
-  console.log(`${chalk.cyanBright('Bundles to build:')}\n${
+  console.log(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n${
     bundlesToBuild.map((bundle, i) => `${i + 1}. ${bundle}`)
       .join('\n')
   }`);
-  const app = initTypedoc(bundlesToBuild, buildOpts);
-  const project = app.convert();
 
-  if (!project) throw new Error('Failed to init typedoc');
+  const typedocWrapper = async () => {
+    // Helper to initialize typedoc in parallel
+    const { elapsed: typedocTime, result: [app, project] } = await initTypedoc(bundlesToBuild, buildOpts);
+    const [{ elapsed: bundleTime, result: { bundles, jsons } }, htmlResult] = await Promise.all([buildBundles(buildOpts, project, bundlesToBuild), buildHtml(app, project, buildOpts)]);
+    return {
+      typedocTime,
+      bundleTime,
+      bundles,
+      jsons,
+      htmlResult,
+    };
+  };
 
-  const [{
-    elapsed: bundleTime,
-    result: {
-      bundles: [bundleSeverity, bundleTable],
-      jsons: [jsonSeverity, jsonTable],
+  const [
+    {
+      typedocTime,
+      bundleTime,
+      bundles: bundleResults,
+      jsons: jsonResults,
+      htmlResult,
     },
-  },
-  {
-    elapsed: tabTime,
-    result: [tabSeverity, tabTable],
-  },
-  htmlResult] = await Promise.all([
-    buildBundles(buildOpts, project, bundlesToBuild),
+    {
+      elapsed: tabTime,
+      result: tabResults,
+    },
+  ] = await Promise.all([
+    typedocWrapper(),
     buildTabs(buildOpts, tabs),
-    buildHtml(app, project, buildOpts),
+    fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/${buildOpts.manifest}`),
   ]);
 
-  const bundleTimeStr = `${divideAndRound(bundleTime, 1000, 2)}s`;
-  if (bundleSeverity === 'success') {
-    console.log(`${chalk.cyanBright('Bundles built')} ${chalk.greenBright('successfully')}:\n${bundleTable.render()} in ${bundleTimeStr}`);
-  } else {
-    console.log(`${chalk.cyanBright('Bundles failed with')} ${chalk.redBright('errors')}:\n${bundleTable.render()} in ${bundleTimeStr}`);
-  }
-
-  const tabTimeStr = `${divideAndRound(tabTime, 1000, 2)}s`;
-  if (tabSeverity === 'success') {
-    console.log(`${chalk.cyanBright('Tabs built')} ${chalk.greenBright('successfully')}:\n${tabTable.render()} in ${tabTimeStr}`);
-  } else {
-    console.log(`${chalk.cyanBright('Tabs failed with')} ${chalk.redBright('errors')}:\n${tabTable.render()} in ${tabTimeStr}`);
-  }
-
-  if (jsonSeverity === 'success') {
-    console.log(`${chalk.cyanBright('JSONS built')} ${chalk.greenBright('successfully')}:\n${jsonTable.render()}`);
-  } else if (jsonSeverity === 'warn') {
-    console.log(`${chalk.cyanBright('JSONS built with')} ${chalk.yellowBright('warnings')}:\n${jsonTable.render()}`);
-  } else {
-    console.log(`${chalk.cyanBright('JSONS failed with')} ${chalk.redBright('errors')}:\n${jsonTable.render()}`);
-  }
-
-  if (htmlResult.result.severity === 'success') {
-    const timeStr = divideAndRound(htmlResult.elapsed, 1000, 2);
-    console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s`);
-  } else {
-    console.log(`${chalk.cyanBright('HTML documentation')} ${chalk.redBright('failed')}: ${htmlResult.result.error}`);
-  }
+  console.log(chalk.cyanBright(`Took ${divideAndRound(typedocTime, 1000, 2)}s to initialize typedoc`));
+  logBundleResults(bundleTime, bundleResults);
+  logTabResults(tabTime, tabResults);
+  logJsonResults(jsonResults);
+  logHtmlResult(htmlResult);
 };
 
-export default new Command('build')
-  .action(async (opts: Partial<BuildOptions>) => {
-    const fullOpts = getDefaultOptions(opts);
-    await buildAll(fullOpts);
-  });
+export const watchAll = async (buildOpts: BuildOptions) => {
+  const manifest = await retrieveManifest(buildOpts);
+  const bundlesToBuild = Object.keys(manifest);
+  const tabs = Object.values(manifest)
+    .flatMap((module) => module.tabs);
+
+  console.log(chalk.magentaBright('Beginning watch'));
+  await Promise.all([
+    initTypedoc(bundlesToBuild, buildOpts)
+      .then(({ elapsed, result: [, project] }) => {
+        console.log(chalk.cyanBright(`Took ${divideAndRound(elapsed, 1000, 2)}s to initialize typedoc`));
+        return watchBundles(buildOpts, project, bundlesToBuild);
+      }),
+    watchTabs(buildOpts, tabs),
+  ]);
+};

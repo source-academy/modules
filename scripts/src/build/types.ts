@@ -20,6 +20,6 @@ export type ESBuildOutput = BuildIncremental & { metafile: Metafile };
 
 export type BuildResult = {
   severity: Severity;
-  error?: any;
   fileSize?: number;
+  error?: any
 };

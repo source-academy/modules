@@ -32,5 +32,11 @@ export const getDefaultOptions = (rawOpts: Partial<BuildOptions>) => ({
   outDir: 'build',
   dbFile: 'database.json',
   manifest: 'modules.json',
+  watch: false,
   ...rawOpts,
 });
+
+export const keyPairsToObj = <TKey extends string | number | symbol, TValue>(items: [TKey, TValue][]) => items.reduce((res, [key, value]) => ({
+  ...res,
+  [key]: value,
+}), {} as Record<TKey, TValue>);

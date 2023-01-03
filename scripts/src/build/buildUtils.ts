@@ -3,7 +3,7 @@ import { JSONFile, Low } from 'lowdb';
 
 import type { BuildOptions } from '../scriptUtils';
 
-import type { DBData } from './types';
+import type { DBData, Severity } from './types';
 
 export const wrapWithTimer = <T extends (...params: any[]) => Promise<any>>(func: T) => async (...params: Parameters<T>): Promise<{
   elapsed: number,
@@ -52,4 +52,16 @@ export const esbuildOptions: ESBuildOptions = {
   platform: 'browser',
   target: 'es6',
   write: false,
+};
+
+export const findSeverity = <T>(items: T[], processor: (each: T) => Severity) => {
+  let severity: Severity = 'success';
+
+  for (const item of items) {
+    const itemSev = processor(item);
+    if (itemSev === 'error') return 'error';
+    if (itemSev === 'warn' && severity === 'success') severity = 'warn';
+  }
+
+  return severity;
 };

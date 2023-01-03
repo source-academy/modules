@@ -1,6 +1,4 @@
-import { Command } from 'commander';
-
-import { BuildOptions, getDefaultOptions } from '../scriptUtils';
+import { type BuildOptions, getDefaultOptions } from '../scriptUtils';
 
 import { addNew as addNewModule } from './module';
 import { askQuestion, error as _error, info, rl, warn } from './print';
@@ -20,21 +18,17 @@ async function askMode() {
   }
 }
 
-export default new Command('create')
-  .description('Interactive script for creating modules and tabs')
-  .action(
-    async (opts: Partial<BuildOptions>) => {
-      const buildOpts = getDefaultOptions(opts);
+export default async (opts: Omit<BuildOptions, 'watch'>) => {
+  const buildOpts = getDefaultOptions(opts);
 
-      try {
-        const mode = await askMode();
-        if (mode === 'module') await addNewModule(buildOpts);
-        else if (mode === 'tab') await addNewTab(buildOpts);
-      } catch (error) {
-        _error(`ERROR: ${error.message}`);
-        info('Terminating module app...');
-      } finally {
-        rl.close();
-      }
-    },
-  );
+  try {
+    const mode = await askMode();
+    if (mode === 'module') await addNewModule(buildOpts);
+    else if (mode === 'tab') await addNewTab(buildOpts);
+  } catch (error) {
+    _error(`ERROR: ${error.message}`);
+    info('Terminating module app...');
+  } finally {
+    rl.close();
+  }
+};

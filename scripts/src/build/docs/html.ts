@@ -1,7 +1,8 @@
+import chalk from 'chalk';
 import type { Application, ProjectReflection } from 'typedoc';
 
 import type { BuildOptions } from '../../scriptUtils';
-import { wrapWithTimer } from '../buildUtils';
+import { divideAndRound, wrapWithTimer } from '../buildUtils';
 import type { BuildResult } from '../types';
 
 export default wrapWithTimer(async (app: Application, project: ProjectReflection, buildOpts: BuildOptions): Promise<BuildResult> => {
@@ -17,3 +18,12 @@ export default wrapWithTimer(async (app: Application, project: ProjectReflection
     };
   }
 });
+
+export const logHtmlResult = ({ elapsed, result: { severity, error } }: { elapsed: number, result: BuildResult }) => {
+  if (severity === 'success') {
+    const timeStr = divideAndRound(elapsed, 1000, 2);
+    console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s`);
+  } else {
+    console.log(`${chalk.cyanBright('HTML documentation')} ${chalk.redBright('failed')}: ${error}`);
+  }
+};

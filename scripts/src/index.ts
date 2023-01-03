@@ -1,12 +1,32 @@
+import chalk from 'chalk';
 import { Command } from 'commander';
 
-import buildCommand from './build';
+import { buildAll, watchAll } from './build';
 import createCommand from './templates';
 
 async function main() {
   const parser = new Command()
-    .addCommand(createCommand)
-    .addCommand(buildCommand);
+    .argument('<command>')
+    .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+    .option('--outDir <outdir>', 'Output directory', 'build')
+    .option('--manifest <file>', 'Manifest file', 'modules.json')
+    .option('--database <file>', 'Database file', 'database.json')
+    .enablePositionalOptions(true)
+    .passThroughOptions(true)
+    .action(async (command, buildOpts) => {
+      const result = {
+        build: () => buildAll(buildOpts),
+        watch: () => watchAll(buildOpts),
+        create: () => createCommand(buildOpts),
+      }[command];
+
+      if (!command) {
+        console.log(chalk.redBright(`Unknown command ${command}`));
+      } else {
+        await result();
+      }
+    });
+
   try {
     await parser.parseAsync();
   } catch (error) {
