@@ -1,7 +1,7 @@
 import type { BuildOptions as ESBuildOptions } from 'esbuild';
 import { JSONFile, Low } from 'lowdb';
 
-import type { BuildOptions } from '../scriptUtils';
+import { BuildOptions, cjsDirname } from '../scriptUtils';
 
 import type { DBData, Severity } from './types';
 
@@ -45,6 +45,7 @@ export const esbuildOptions: ESBuildOptions = {
   external: ['react', 'react-dom', 'js-slang/moduleHelpers'],
   format: 'iife',
   globalName: 'module',
+  inject: [`${cjsDirname(import.meta.url)}/import-shim.js`],
   loader: {
     '.ts': 'ts',
     '.tsx': 'tsx',
