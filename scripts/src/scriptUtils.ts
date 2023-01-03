@@ -19,24 +19,9 @@ export const retrieveManifest = async (buildOpts: BuildOptions) => {
 export type BuildOptions = {
   srcDir: string;
   outDir: string;
-  dbFile: string;
   manifest: string;
 };
 
 export type ModuleManifest = Record<string, {
   tabs: string[]
 }>;
-
-export const getDefaultOptions = (rawOpts: Partial<BuildOptions>) => ({
-  srcDir: 'src',
-  outDir: 'build',
-  dbFile: 'database.json',
-  manifest: 'modules.json',
-  watch: false,
-  ...rawOpts,
-});
-
-export const keyPairsToObj = <TKey extends string | number | symbol, TValue>(items: [TKey, TValue][]) => items.reduce((res, [key, value]) => ({
-  ...res,
-  [key]: value,
-}), {} as Record<TKey, TValue>);

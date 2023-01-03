@@ -209,28 +209,26 @@ export const watchBundles = (
     entryPoints: bundlesToWatch.map((module) => `${buildOpts.srcDir}/bundles/${module}/index.ts`),
     outdir: `${buildOpts.outDir}/bundles`,
     watch: {
-      onRebuild(_, { outputFiles }) {
-        afterBundleBuild(outputFiles, buildOpts, docsProject, (
-          moduleName,
-          { error: bundleError, severity: bundleSeverity },
-          { elapsed: jsonTime, result: { error: jsonError, severity: jsonSeverity } },
-        ) => {
-          const bundleStr = bundleSeverity === 'error'
-            ? `${chalk.cyanBright(`Build of ${moduleName}`)} ${chalk.redBright('failed')}: ${bundleError}`
-            : `${chalk.cyanBright(`Rebuilt ${moduleName}`)} ${chalk.greenBright('successfully')}`;
+      onRebuild: (_, { outputFiles }) => afterBundleBuild(outputFiles, buildOpts, docsProject, (
+        moduleName,
+        { error: bundleError, severity: bundleSeverity },
+        { elapsed: jsonTime, result: { error: jsonError, severity: jsonSeverity } },
+      ) => {
+        const bundleStr = bundleSeverity === 'error'
+          ? `${chalk.cyanBright(`Build of ${moduleName}`)} ${chalk.redBright('failed')}: ${bundleError}`
+          : `${chalk.cyanBright(`Rebuilt ${moduleName}`)} ${chalk.greenBright('successfully')}`;
 
-          const jsonTimeStr = `in ${divideAndRound(jsonTime, 1000, 2)}s`;
-          let jsonStr: string;
-          if (jsonSeverity === 'error') {
-            jsonStr = `${chalk.cyanBright(`Build of ${moduleName} json`)} ${chalk.redBright('failed')}: ${jsonError}`;
-          } else if (jsonSeverity === 'warn') {
-            jsonStr = `${chalk.cyanBright(`Rebuilt json of ${moduleName} ${jsonTimeStr} with`)} ${chalk.yellowBright('warnings')}: ${jsonError}`;
-          } else {
-            jsonStr = `${chalk.cyanBright(`Rebuilt ${moduleName} json ${jsonTimeStr}`)} ${chalk.greenBright('successfully')}`;
-          }
+        const jsonTimeStr = `in ${divideAndRound(jsonTime, 1000, 2)}s`;
+        let jsonStr: string;
+        if (jsonSeverity === 'error') {
+          jsonStr = `${chalk.cyanBright(`Build of ${moduleName} json`)} ${chalk.redBright('failed')}: ${jsonError}`;
+        } else if (jsonSeverity === 'warn') {
+          jsonStr = `${chalk.cyanBright(`Rebuilt json of ${moduleName} ${jsonTimeStr} with`)} ${chalk.yellowBright('warnings')}: ${jsonError}`;
+        } else {
+          jsonStr = `${chalk.cyanBright(`Rebuilt ${moduleName} json ${jsonTimeStr}`)} ${chalk.greenBright('successfully')}`;
+        }
 
-          console.log(`${bundleStr}\n${jsonStr}`);
-        });
-      },
+        console.log(`${bundleStr}\n${jsonStr}`);
+      }),
     },
   }));

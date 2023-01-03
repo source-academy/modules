@@ -1,4 +1,4 @@
-import { type BuildOptions, getDefaultOptions } from '../scriptUtils';
+import type { BuildOptions } from '../scriptUtils';
 
 import { addNew as addNewModule } from './module';
 import { askQuestion, error as _error, info, rl, warn } from './print';
@@ -18,9 +18,7 @@ async function askMode() {
   }
 }
 
-export default async (opts: Omit<BuildOptions, 'watch'>) => {
-  const buildOpts = getDefaultOptions(opts);
-
+export default async (buildOpts: Omit<BuildOptions, 'watch'>) => {
   try {
     const mode = await askMode();
     if (mode === 'module') await addNewModule(buildOpts);

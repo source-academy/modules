@@ -1,8 +1,9 @@
 export default {
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
   roots: [
-    "<rootDir>/src/bundles",
-    "<rootDir>/src/tabs",
-    "<rootDir>/src/scripts"
+    "<rootDir>/src",
+    "<rootDir>/scripts/src"
   ],
   modulePaths:[
     '<rootDir>',

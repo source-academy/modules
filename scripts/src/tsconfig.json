@@ -1,11 +1,4 @@
 {
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node",
-    "moduleTypes": {
-      "./**/*.ts": "esm",
-    },
-  },
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

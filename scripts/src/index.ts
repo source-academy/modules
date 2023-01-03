@@ -10,7 +10,6 @@ async function main() {
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--outDir <outdir>', 'Output directory', 'build')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
-    .option('--database <file>', 'Database file', 'database.json')
     .enablePositionalOptions(true)
     .passThroughOptions(true)
     .action(async (command, buildOpts) => {
