@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 
-import { buildAll, watchAll } from './build';
+import { buildAll } from './build';
 import createCommand from './templates';
 
 async function main() {
@@ -15,7 +15,7 @@ async function main() {
     .action(async (command, buildOpts) => {
       const result = {
         build: () => buildAll(buildOpts),
-        watch: () => watchAll(buildOpts),
+        // watch: () => watchAll(buildOpts), watch command doesn't yet work :(
         create: () => createCommand(buildOpts),
       }[command];
 
