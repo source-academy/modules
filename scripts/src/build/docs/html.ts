@@ -22,8 +22,8 @@ export default wrapWithTimer(async (app: Application, project: ProjectReflection
 export const logHtmlResult = ({ elapsed, result: { severity, error } }: { elapsed: number, result: BuildResult }) => {
   if (severity === 'success') {
     const timeStr = divideAndRound(elapsed, 1000, 2);
-    console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s`);
+    console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s\n`);
   } else {
-    console.log(`${chalk.cyanBright('HTML documentation')} ${chalk.redBright('failed')}: ${error}`);
+    console.log(`${chalk.cyanBright('HTML documentation')} ${chalk.redBright('failed')}: ${error}\n`);
   }
 };

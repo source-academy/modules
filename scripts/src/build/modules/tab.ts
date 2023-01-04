@@ -18,11 +18,11 @@ import pathlib from 'path';
 
 import type { BuildOptions } from '../../scriptUtils';
 import { divideAndRound, esbuildOptions, wrapWithTimer } from '../buildUtils';
-import type { BuildResult, Severity } from '../types';
+import type { BuildResult, OperationResult, Severity } from '../types';
 
 import { requireCreator } from './moduleUtils';
 
-const outputTab = async (tabName: string, text: string, buildOpts: BuildOptions): Promise<BuildResult> => {
+export const outputTab = async (tabName: string, text: string, buildOpts: BuildOptions): Promise<BuildResult> => {
   try {
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
     const declStatement = parsed.body[1] as VariableDeclaration;
@@ -83,7 +83,10 @@ const outputTab = async (tabName: string, text: string, buildOpts: BuildOptions)
   }
 };
 
-export const logTabResults = (tabTime: number, { overall, results }: { overall: Severity, results: Record<string, BuildResult> }) => {
+export const logTabResults = (tabResults: OperationResult) => {
+  if (typeof tabResults === 'boolean') return;
+
+  const { elapsed: tabTime, severity: tabSeverity, results } = tabResults;
   const entries = Object.entries(results);
   if (entries.length === 0) return;
 
@@ -127,11 +130,11 @@ export const logTabResults = (tabTime: number, { overall, results }: { overall: 
     }
   });
 
-  const tabTimeStr = `${divideAndRound(tabTime, 1000, 2)}s`;
-  if (overall === 'success') {
-    console.log(`${chalk.cyanBright('Tabs built')} ${chalk.greenBright('successfully')} in ${tabTimeStr}:\n${tabTable.render()}`);
+  const tabTimeStr = tabTime < 0.01 ? '<0.01s' : `${divideAndRound(tabTime, 1000, 2)}s`;
+  if (tabSeverity === 'success') {
+    console.log(`${chalk.cyanBright('Tabs built')} ${chalk.greenBright('successfully')} in ${tabTimeStr}:\n${tabTable.render()}\n`);
   } else {
-    console.log(`${chalk.cyanBright('Tabs failed with')} ${chalk.redBright('errors')} in ${tabTimeStr}:\n${tabTable.render()}`);
+    console.log(`${chalk.cyanBright('Tabs failed with')} ${chalk.redBright('errors')} in ${tabTimeStr}:\n${tabTable.render()}\n`);
   }
 };
 
@@ -171,28 +174,28 @@ export const buildTabs = wrapWithTimer(async (
   };
 });
 
-export const watchTabs = (
-  buildOpts: BuildOptions,
-  tabs: string[],
-) => fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true })
-  .then(() => esbuild({
-    ...esbuildOptions,
-    entryPoints: tabs.map((tabName) => `${buildOpts.srcDir}/tabs/${tabName}/index.tsx`),
-    outdir: `${buildOpts.outDir}/tabs`,
-    watch: {
-      async onRebuild(_, { outputFiles }) {
-        const strings = await Promise.all(outputFiles.map(async ({ path, text }) => {
-          const { dir } = pathlib.parse(path);
-          const tabName = pathlib.basename(dir);
+// export const watchTabs = (
+//   buildOpts: BuildOptions,
+//   tabs: string[],
+// ) => fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true })
+//   .then(() => esbuild({
+//     ...esbuildOptions,
+//     entryPoints: tabs.map((tabName) => `${buildOpts.srcDir}/tabs/${tabName}/index.tsx`),
+//     outdir: `${buildOpts.outDir}/tabs`,
+//     watch: {
+//       async onRebuild(_, { outputFiles }) {
+//         const strings = await Promise.all(outputFiles.map(async ({ path, text }) => {
+//           const { dir } = pathlib.parse(path);
+//           const tabName = pathlib.basename(dir);
 
-          const { severity, error } = await outputTab(tabName, text, buildOpts);
-          if (severity === 'success') {
-            return `${chalk.cyanBright(`${tabName} built`)} ${chalk.greenBright('successfully')}`;
-          }
-          return `${chalk.cyanBright(`${tabName} build`)} ${chalk.redBright('failed')}: ${error}`;
-        }));
+//           const { severity, error } = await outputTab(tabName, text, buildOpts);
+//           if (severity === 'success') {
+//             return `${chalk.cyanBright(`${tabName} built`)} ${chalk.greenBright('successfully')}`;
+//           }
+//           return `${chalk.cyanBright(`${tabName} build`)} ${chalk.redBright('failed')}: ${error}`;
+//         }));
 
-        console.log(strings.join('\n'));
-      },
-    },
-  }));
+//         console.log(strings.join('\n'));
+//       },
+//     },
+//   }));

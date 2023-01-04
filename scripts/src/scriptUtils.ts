@@ -20,7 +20,6 @@ export type BuildOptions = {
   srcDir: string;
   outDir: string;
   manifest: string;
-  docs: boolean;
 };
 
 export type ModuleManifest = Record<string, {

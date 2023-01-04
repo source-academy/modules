@@ -23,3 +23,9 @@ export type BuildResult = {
   fileSize?: number;
   error?: any
 };
+
+export type OperationResult = {
+  severity: Severity;
+  results: Record<string, BuildResult>;
+  elapsed: number;
+} | false;

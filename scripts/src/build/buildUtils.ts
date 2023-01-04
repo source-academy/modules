@@ -55,7 +55,7 @@ export const esbuildOptions: ESBuildOptions = {
   write: false,
 };
 
-export const findSeverity = <T>(items: T[], processor: (each: T) => Severity) => {
+export const findSeverity = <T>(items: T[], processor: (each: T) => Severity): Severity => {
   let severity: Severity = 'success';
 
   for (const item of items) {

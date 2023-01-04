@@ -1,10 +1,16 @@
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
 import fs from 'fs/promises';
-import type { DeclarationReflection, IntrinsicType, ProjectReflection, ReferenceReflection, ReferenceType } from 'typedoc';
+import type {
+  DeclarationReflection,
+  IntrinsicType,
+  ProjectReflection,
+  ReferenceReflection,
+  ReferenceType,
+} from 'typedoc';
 
 import type { BuildOptions } from '../../scriptUtils';
-import { divideAndRound, wrapWithTimer } from '../buildUtils';
+import { divideAndRound, findSeverity, wrapWithTimer } from '../buildUtils';
 import type { BuildResult, Severity } from '../types';
 
 const buildJson = wrapWithTimer(async (bundle: string, project: ProjectReflection, buildOpts: BuildOptions): Promise<BuildResult> => {
@@ -119,9 +125,28 @@ const buildJson = wrapWithTimer(async (bundle: string, project: ProjectReflectio
   }
 });
 
-export default buildJson;
+export default async (bundles: string[], project: ProjectReflection, buildOpts: BuildOptions) => {
+  if (bundles.length === 0) return false;
 
-export const logJsonResults = ({ overall: jsonSeverity, results }: { overall: Severity, results: Record<string, { elapsed: number, result: BuildResult }> }) => {
+  const jsonStartTime = performance.now();
+  const results = await Promise.all(bundles.map(async (bundle) => [bundle, await buildJson(bundle, project, buildOpts)] as [string, { elapsed: number, result: BuildResult }]));
+  const resultObj = results.reduce((res, [bundle, result]) => ({
+    ...res,
+    [bundle]: result,
+  }), {} as Record<string, { elapsed: number, result: BuildResult }>);
+  const jsonEndTime = performance.now();
+
+  return {
+    severity: findSeverity(results, ([,{ result: { severity } }]) => severity),
+    results: resultObj,
+    elapsed: jsonEndTime - jsonStartTime,
+  };
+};
+
+export const logJsonResults = (jsonResults: { elapsed: number, severity: Severity, results: Record<string, { elapsed: number, result: BuildResult }> } | false) => {
+  if (typeof jsonResults === 'boolean') return;
+
+  const { elapsed: jsonTime, severity: jsonSeverity, results } = jsonResults;
   const entries = Object.entries(results);
   if (entries.length === 0) return;
 
@@ -169,11 +194,12 @@ export const logJsonResults = ({ overall: jsonSeverity, results }: { overall: Se
     }
   });
 
+  const jsonTimeStr = `${divideAndRound(jsonTime, 1000, 2)}s`;
   if (jsonSeverity === 'success') {
-    console.log(`${chalk.cyanBright('JSONS built')} ${chalk.greenBright('successfully')}:\n${jsonTable.render()}`);
+    console.log(`${chalk.cyanBright('JSONS built')} ${chalk.greenBright('successfully')} in ${jsonTimeStr}:\n${jsonTable.render()}\n`);
   } else if (jsonSeverity === 'warn') {
-    console.log(`${chalk.cyanBright('JSONS built with')} ${chalk.yellowBright('warnings')}:\n${jsonTable.render()}`);
+    console.log(`${chalk.cyanBright('JSONS built with')} ${chalk.yellowBright('warnings')} in ${jsonTimeStr}:\n${jsonTable.render()}\n`);
   } else {
-    console.log(`${chalk.cyanBright('JSONS failed with')} ${chalk.redBright('errors')}:\n${jsonTable.render()}`);
+    console.log(`${chalk.cyanBright('JSONS failed with')} ${chalk.redBright('errors')}:\n${jsonTable.render()}\n`);
   }
 };

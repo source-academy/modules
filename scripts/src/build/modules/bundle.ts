@@ -2,7 +2,6 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
-import { type OutputFile, build as esbuild } from 'esbuild';
 import type {
   ArrowFunctionExpression,
   BlockStatement,
@@ -14,19 +13,16 @@ import type {
   VariableDeclaration,
 } from 'estree';
 import { promises as fsPromises } from 'fs';
-import pathlib from 'path';
-import type { ProjectReflection } from 'typedoc';
 
 import type { BuildOptions } from '../../scriptUtils';
-import { divideAndRound, esbuildOptions, wrapWithTimer } from '../buildUtils';
-import buildJson from '../docs/json';
-import type { BuildResult, Severity } from '../types';
+import { divideAndRound } from '../buildUtils';
+import type { BuildResult, OperationResult } from '../types';
 
 import { requireCreator } from './moduleUtils';
 
 const HELPER_NAME = 'moduleHelpers';
 
-const outputBundle = async (outFile: string, bundleText: string): Promise<BuildResult> => {
+export const outputBundle = async (name: string, bundleText: string, buildOpts: BuildOptions): Promise<BuildResult> => {
   try {
     const parsed = parse(bundleText, { ecmaVersion: 6 }) as unknown as Program;
     const exprStatement = parsed.body[1] as unknown as VariableDeclaration;
@@ -61,6 +57,7 @@ const outputBundle = async (outFile: string, bundleText: string): Promise<BuildR
     let newCode = generate(output);
     if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
 
+    const outFile = `${buildOpts.outDir}/bundles/${name}.js`;
     await fsPromises.writeFile(outFile, newCode);
     const { size } = await fsPromises.stat(outFile);
     return {
@@ -75,20 +72,10 @@ const outputBundle = async (outFile: string, bundleText: string): Promise<BuildR
   }
 };
 
-const afterBundleBuild = async (outputFiles: OutputFile[], buildOpts: BuildOptions, project: ProjectReflection,
-  callback: (name: string, bundleResult: BuildResult, jsonResult: { elapsed: number, result: BuildResult }) => void) => Promise.all(outputFiles.map(async ({ path, text }) => {
-  const { dir } = pathlib.parse(path);
-  const moduleName = pathlib.basename(dir);
+export const logBundleResults = (bundleResults: OperationResult) => {
+  if (typeof bundleResults === 'boolean') return;
 
-  const [bundleResult, jsonResult] = await Promise.all([
-    outputBundle(`${buildOpts.outDir}/bundles/${moduleName}.js`, text),
-    buildJson(moduleName, project, buildOpts),
-  ]);
-
-  callback(moduleName, bundleResult, jsonResult);
-})) as unknown as Promise<void>;
-
-export const logBundleResults = (bundleTime: number, { overall: bundleSeverity, results }: { overall: Severity, results: Record<string, BuildResult> }) => {
+  const { elapsed: bundleTime, severity: bundleSeverity, results } = bundleResults;
   const entries = Object.entries(results);
   if (entries.length === 0) return;
 
@@ -129,13 +116,27 @@ export const logBundleResults = (bundleTime: number, { overall: bundleSeverity, 
     }
   });
 
-  const bundleTimeStr = `${divideAndRound(bundleTime, 1000, 2)}s`;
+  const bundleTimeStr = bundleTime < 0.01 ? '<0.01s' : `${divideAndRound(bundleTime, 1000, 2)}s`;
   if (bundleSeverity === 'success') {
-    console.log(`${chalk.cyanBright('Bundles built')} ${chalk.greenBright('successfully')} in ${bundleTimeStr}:\n${bundleTable.render()}`);
+    console.log(`${chalk.cyanBright('Bundles built')} ${chalk.greenBright('successfully')} in ${bundleTimeStr}:\n${bundleTable.render()}\n`);
   } else {
-    console.log(`${chalk.cyanBright('Bundles failed with')} ${chalk.redBright('errors')} in ${bundleTimeStr}:\n${bundleTable.render()}`);
+    console.log(`${chalk.cyanBright('Bundles failed with')} ${chalk.redBright('errors')} in ${bundleTimeStr}:\n${bundleTable.render()}\n`);
   }
 };
+
+/*
+const afterBundleBuild = async (outputFiles: OutputFile[], buildOpts: BuildOptions, project: ProjectReflection,
+  callback: (name: string, bundleResult: BuildResult, jsonResult: { elapsed: number, result: BuildResult }) => void) => Promise.all(outputFiles.map(async ({ path, text }) => {
+  const { dir } = pathlib.parse(path);
+  const moduleName = pathlib.basename(dir);
+
+  const [bundleResult, jsonResult] = await Promise.all([
+    outputBundle(`${buildOpts.outDir}/bundles/${moduleName}.js`, text),
+    buildJson(moduleName, project, buildOpts),
+  ]);
+
+  callback(moduleName, bundleResult, jsonResult);
+})) as unknown as Promise<void>;
 
 export const buildBundles = wrapWithTimer(async (
   buildOpts: BuildOptions,
@@ -170,21 +171,14 @@ export const buildBundles = wrapWithTimer(async (
       {
         name: 'bundlePlugin',
         setup(pluginBuild) {
-          if (buildOpts.docs) {
-            pluginBuild.onEnd(({ outputFiles }) => afterBundleBuild(outputFiles, buildOpts, project, (moduleName, bundleResult, jsonResult) => {
-              bundleResults[moduleName] = bundleResult;
-              if (bundleResult.severity === 'error') bundleSeverity = 'error';
+          pluginBuild.onEnd(({ outputFiles }) => afterBundleBuild(outputFiles, buildOpts, project, (moduleName, bundleResult, jsonResult) => {
+            bundleResults[moduleName] = bundleResult;
+            if (bundleResult.severity === 'error') bundleSeverity = 'error';
 
-              jsonResults[moduleName] = jsonResult;
-              if (jsonResult.result.severity === 'error') jsonSeverity = 'error';
-              else if (jsonSeverity === 'success' && jsonResult.result.severity === 'warn') jsonSeverity = 'warn';
-            }));
-          } else {
-            // pluginBuild.onEnd(({ outputFiles }) => Promise.all(outputFiles.map(async ({ path, text}) => {
-            //   bundleResults[moduleName] = bundleResult;
-            //   if (bundleResult.severity === 'error') bundleSeverity = 'error';
-            // })));
-          }
+            jsonResults[moduleName] = jsonResult;
+            if (jsonResult.result.severity === 'error') jsonSeverity = 'error';
+            else if (jsonSeverity === 'success' && jsonResult.result.severity === 'warn') jsonSeverity = 'warn';
+          }));
         },
       },
     ],
@@ -238,3 +232,4 @@ export const watchBundles = (
       }),
     },
   }));
+*/

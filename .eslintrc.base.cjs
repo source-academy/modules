@@ -106,6 +106,7 @@ module.exports = {
       },
     ],
     'no-useless-backreference': 1,
+    'require-await': 1,
     'require-atomic-updates': 1,
     'use-isnan': [
       1, // Was 2
@@ -325,6 +326,13 @@ module.exports = {
       'always', // Same
       { markers: todoTreeKeywordsAll },
     ],
+    '@typescript-eslint/consistent-type-imports': [
+      1,
+      {
+        fixStyle: 'inline-type-imports',
+        prefer: 'type-imports',
+      }
+    ],
     // "strict": 0, // Don't force, though rule configs assume strict errors
     // "symbol-description": 0,
     // "vars-on-top": 0,
@@ -483,13 +491,7 @@ module.exports = {
     'switch-colon-spacing': 1,
     'template-curly-spacing': 1,
     'template-tag-spacing': 1,
-    '@typescript-eslint/consistent-type-imports': [
-      2,
-      {
-        fixStyle: 'inline-type-imports',
-        prefer: 'type-imports',
-      }
-    ],
+    
     'unicode-bom': 1,
     'wrap-iife': [
       1,
