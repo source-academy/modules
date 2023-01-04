@@ -22,18 +22,18 @@
 
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
-  CanvasElement,
-  VideoElement,
-  ErrorLogger,
-  StartPacket,
-  Pixel,
-  Pixels,
-  Filter,
-  Queue,
-  TabsPacket,
-  BundlePacket,
+  type CanvasElement,
+  type VideoElement,
+  type ErrorLogger,
+  type StartPacket,
+  type Pixel,
+  type Pixels,
+  type Filter,
+  type Queue,
+  type TabsPacket,
+  type BundlePacket,
   InputFeed,
-  ImageElement,
+  type ImageElement,
 } from './types';
 
 import {

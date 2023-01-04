@@ -483,6 +483,13 @@ module.exports = {
     'switch-colon-spacing': 1,
     'template-curly-spacing': 1,
     'template-tag-spacing': 1,
+    '@typescript-eslint/consistent-type-imports': [
+      2,
+      {
+        fixStyle: 'inline-type-imports',
+        prefer: 'type-imports',
+      }
+    ],
     'unicode-bom': 1,
     'wrap-iife': [
       1,

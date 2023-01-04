@@ -2,7 +2,7 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
-import { build as esbuild, OutputFile } from 'esbuild';
+import { type OutputFile, build as esbuild } from 'esbuild';
 import type {
   ArrowFunctionExpression,
   BlockStatement,
@@ -17,7 +17,7 @@ import { promises as fsPromises } from 'fs';
 import pathlib from 'path';
 import type { ProjectReflection } from 'typedoc';
 
-import { BuildOptions } from '../../scriptUtils';
+import type { BuildOptions } from '../../scriptUtils';
 import { divideAndRound, esbuildOptions, wrapWithTimer } from '../buildUtils';
 import buildJson from '../docs/json';
 import type { BuildResult, Severity } from '../types';
@@ -34,7 +34,7 @@ const outputBundle = async (outFile: string, bundleText: string): Promise<BuildR
     const callExpression = varDeclarator.init as CallExpression;
     const moduleCode = callExpression.callee as ArrowFunctionExpression;
 
-    callExpression.callee = {
+    const output = {
       type: 'FunctionExpression',
       body: {
         type: 'BlockStatement',
@@ -58,7 +58,7 @@ const outputBundle = async (outFile: string, bundleText: string): Promise<BuildR
       ],
     } as FunctionExpression;
 
-    let newCode = generate(callExpression);
+    let newCode = generate(output);
     if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
 
     await fsPromises.writeFile(outFile, newCode);
@@ -90,7 +90,6 @@ const afterBundleBuild = async (outputFiles: OutputFile[], buildOpts: BuildOptio
 
 export const logBundleResults = (bundleTime: number, { overall: bundleSeverity, results }: { overall: Severity, results: Record<string, BuildResult> }) => {
   const entries = Object.entries(results);
-
   if (entries.length === 0) return;
 
   const bundleTable = new Table({
@@ -171,14 +170,21 @@ export const buildBundles = wrapWithTimer(async (
       {
         name: 'bundlePlugin',
         setup(pluginBuild) {
-          pluginBuild.onEnd(({ outputFiles }) => afterBundleBuild(outputFiles, buildOpts, project, (moduleName, bundleResult, jsonResult) => {
-            bundleResults[moduleName] = bundleResult;
-            if (bundleResult.severity === 'error') bundleSeverity = 'error';
+          if (buildOpts.docs) {
+            pluginBuild.onEnd(({ outputFiles }) => afterBundleBuild(outputFiles, buildOpts, project, (moduleName, bundleResult, jsonResult) => {
+              bundleResults[moduleName] = bundleResult;
+              if (bundleResult.severity === 'error') bundleSeverity = 'error';
 
-            jsonResults[moduleName] = jsonResult;
-            if (jsonResult.result.severity === 'error') jsonSeverity = 'error';
-            else if (jsonSeverity === 'success' && jsonResult.result.severity === 'warn') jsonSeverity = 'warn';
-          }));
+              jsonResults[moduleName] = jsonResult;
+              if (jsonResult.result.severity === 'error') jsonSeverity = 'error';
+              else if (jsonSeverity === 'success' && jsonResult.result.severity === 'warn') jsonSeverity = 'warn';
+            }));
+          } else {
+            // pluginBuild.onEnd(({ outputFiles }) => Promise.all(outputFiles.map(async ({ path, text}) => {
+            //   bundleResults[moduleName] = bundleResult;
+            //   if (bundleResult.severity === 'error') bundleSeverity = 'error';
+            // })));
+          }
         },
       },
     ],

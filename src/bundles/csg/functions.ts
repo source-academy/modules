@@ -12,7 +12,7 @@
 import { primitives } from '@jscad/modeling';
 import { colorize } from '@jscad/modeling/src/colors';
 import {
-  BoundingBox,
+  type BoundingBox,
   measureArea,
   measureBoundingBox,
   measureVolume,
@@ -33,8 +33,8 @@ import {
 } from '@jscad/modeling/src/operations/transforms';
 import { SILVER } from './constants.js';
 import { Core } from './core.js';
-import { Color, Coordinates, Solid } from './jscad/types.js';
-import { clamp, hexToColor, RenderGroup, Shape } from './utilities';
+import type { Color, Coordinates, Solid } from './jscad/types.js';
+import { clamp, hexToColor, type RenderGroup, Shape } from './utilities';
 
 /* [Exports] */
 

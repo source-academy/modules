@@ -84,6 +84,9 @@ const outputTab = async (tabName: string, text: string, buildOpts: BuildOptions)
 };
 
 export const logTabResults = (tabTime: number, { overall, results }: { overall: Severity, results: Record<string, BuildResult> }) => {
+  const entries = Object.entries(results);
+  if (entries.length === 0) return;
+
   const tabTable = new Table({
     columns: [
       {
@@ -105,25 +108,24 @@ export const logTabResults = (tabTime: number, { overall, results }: { overall: 
     ],
   });
 
-  Object.entries(results)
-    .forEach(([tabName, { severity, error, fileSize }]) => {
-      if (severity === 'success') {
-        tabTable.addRow({
-          tab: tabName,
-          severity: 'Success',
-          fileSize: `${divideAndRound(fileSize, 1000, 2)} KB`,
-          error: '-',
-        }, { color: 'green' });
-      } else {
-        severity = 'error';
-        tabTable.addRow({
-          tab: tabName,
-          severity: 'Error',
-          fileSize: '-',
-          error,
-        }, { color: 'red' });
-      }
-    });
+  entries.forEach(([tabName, { severity, error, fileSize }]) => {
+    if (severity === 'success') {
+      tabTable.addRow({
+        tab: tabName,
+        severity: 'Success',
+        fileSize: `${divideAndRound(fileSize, 1000, 2)} KB`,
+        error: '-',
+      }, { color: 'green' });
+    } else {
+      severity = 'error';
+      tabTable.addRow({
+        tab: tabName,
+        severity: 'Error',
+        fileSize: '-',
+        error,
+      }, { color: 'red' });
+    }
+  });
 
   const tabTimeStr = `${divideAndRound(tabTime, 1000, 2)}s`;
   if (overall === 'success') {
@@ -150,14 +152,14 @@ export const buildTabs = wrapWithTimer(async (
       {
         name: 'tabPlugin',
         setup(pluginBuild) {
-          pluginBuild.onEnd(({ outputFiles }) => outputFiles.forEach(async ({ path, text }) => {
+          pluginBuild.onEnd(({ outputFiles }) => Promise.all(outputFiles.map(async ({ path, text }) => {
             const { dir } = pathlib.parse(path);
             const tabName = pathlib.basename(dir);
 
             const result = await outputTab(tabName, text, buildOpts);
             if (result.severity === 'error') tabSeverity = 'error';
             tabResults[tabName] = result;
-          }));
+          })) as unknown as Promise<void>);
         },
       },
     ],

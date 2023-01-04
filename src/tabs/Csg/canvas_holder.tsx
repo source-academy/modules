@@ -10,9 +10,9 @@ import {
   STANDARD_MARGIN,
 } from '../../bundles/csg/constants.js';
 import StatefulRenderer from '../../bundles/csg/stateful_renderer.js';
-import { RenderGroup } from '../../bundles/csg/utilities.js';
+import type { RenderGroup } from '../../bundles/csg/utilities.js';
 import HoverControlHint from './hover_control_hint';
-import { CanvasHolderProps, CanvasHolderState } from './types';
+import type { CanvasHolderProps, CanvasHolderState } from './types';
 
 /* [Main] */
 export default class CanvasHolder extends React.Component<

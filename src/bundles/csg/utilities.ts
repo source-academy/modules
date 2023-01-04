@@ -1,5 +1,5 @@
 /* [Imports] */
-import { clone, Geom3 } from '@jscad/modeling/src/geometries/geom3';
+import { clone, type Geom3 } from '@jscad/modeling/src/geometries/geom3';
 import type { ModuleContext } from 'js-slang';
 import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';

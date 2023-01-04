@@ -11,6 +11,8 @@ import { buildTabs, logTabResults, watchTabs } from './modules/tab';
 import { divideAndRound } from './buildUtils';
 
 export const buildAll = async (buildOpts: BuildOptions) => {
+  console.log(buildOpts);
+
   const manifest = await retrieveManifest(buildOpts);
   const bundlesToBuild = Object.keys(manifest);
   const tabs = Object.values(manifest)

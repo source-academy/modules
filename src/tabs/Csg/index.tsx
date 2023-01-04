@@ -1,14 +1,14 @@
 /* [Imports] */
 import { IconNames } from '@blueprintjs/icons';
 import type { ModuleContext } from 'js-slang';
-import React, { ReactElement } from 'react';
+import React, { type ReactElement } from 'react';
 import { Core } from '../../bundles/csg/core.js';
 import {
   CsgModuleState,
   getModuleContext,
   looseInstanceof,
 } from '../../bundles/csg/utilities.js';
-import { DebuggerContext, ModuleContexts } from '../../typings/type_helpers';
+import type { DebuggerContext, ModuleContexts } from '../../typings/type_helpers';
 import CanvasHolder from './canvas_holder';
 
 /* [Exports] */

@@ -1,5 +1,5 @@
 /* [Imports] */
-import { CsgModuleState, RenderGroupManager } from './utilities.js';
+import type { CsgModuleState, RenderGroupManager } from './utilities.js';
 
 /* [Exports] */
 // After bundle initialises, tab will need to reinit on its end, as they run

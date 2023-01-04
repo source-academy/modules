@@ -122,6 +122,9 @@ const buildJson = wrapWithTimer(async (bundle: string, project: ProjectReflectio
 export default buildJson;
 
 export const logJsonResults = ({ overall: jsonSeverity, results }: { overall: Severity, results: Record<string, { elapsed: number, result: BuildResult }> }) => {
+  const entries = Object.entries(results);
+  if (entries.length === 0) return;
+
   const jsonTable = new Table({
     columns: [
       {
@@ -147,25 +150,24 @@ export const logJsonResults = ({ overall: jsonSeverity, results }: { overall: Se
     ],
   });
 
-  Object.entries(results)
-    .forEach(([moduleName, { elapsed, result: { severity, error, fileSize } }]) => {
-      if (severity === 'error') {
-        jsonTable.addRow({
-          jsonSeverity: 'Error',
-          jsonTime: '-',
-          jsonError: error,
-          fileSize: '-',
-        }, { color: 'red' });
-      } else {
-        jsonTable.addRow({
-          bundle: moduleName,
-          jsonSeverity: severity === 'warn' ? 'Warning' : 'Success',
-          jsonTime: divideAndRound(elapsed, 1000, 2),
-          jsonError: error || '-',
-          fileSize: `${divideAndRound(fileSize, 1000, 2)} KB`,
-        }, { color: severity === 'warn' ? 'yellow' : 'green' });
-      }
-    });
+  entries.forEach(([moduleName, { elapsed, result: { severity, error, fileSize } }]) => {
+    if (severity === 'error') {
+      jsonTable.addRow({
+        jsonSeverity: 'Error',
+        jsonTime: '-',
+        jsonError: error,
+        fileSize: '-',
+      }, { color: 'red' });
+    } else {
+      jsonTable.addRow({
+        bundle: moduleName,
+        jsonSeverity: severity === 'warn' ? 'Warning' : 'Success',
+        jsonTime: divideAndRound(elapsed, 1000, 2),
+        jsonError: error || '-',
+        fileSize: `${divideAndRound(fileSize, 1000, 2)} KB`,
+      }, { color: severity === 'warn' ? 'yellow' : 'green' });
+    }
+  });
 
   if (jsonSeverity === 'success') {
     console.log(`${chalk.cyanBright('JSONS built')} ${chalk.greenBright('successfully')}:\n${jsonTable.render()}`);

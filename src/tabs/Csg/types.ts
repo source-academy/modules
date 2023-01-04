@@ -1,6 +1,6 @@
 /* [Imports] */
-import { IconName } from '@blueprintjs/icons';
-import { CsgModuleState } from '../../bundles/csg/utilities.js';
+import type { IconName } from '@blueprintjs/icons';
+import type { CsgModuleState } from '../../bundles/csg/utilities.js';
 
 /* [Exports] */
 
