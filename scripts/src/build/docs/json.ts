@@ -5,13 +5,45 @@ import type {
   DeclarationReflection,
   IntrinsicType,
   ProjectReflection,
-  ReferenceReflection,
   ReferenceType,
+  SomeType,
 } from 'typedoc';
 
 import type { BuildOptions } from '../../scriptUtils';
 import { divideAndRound, fileSizeFormatter, findSeverity, wrapWithTimer } from '../buildUtils';
 import type { BuildResult, Severity } from '../types';
+
+import drawdown from './drawdown';
+
+const typeToName = (type?: SomeType, alt : string = 'unknown') => (type ? (type as ReferenceType | IntrinsicType).name : alt);
+
+const parsers: Record<string, (docs: DeclarationReflection) => string> = {
+  Variable(element) {
+    const { comment: { summary } } = element;
+    const desc = drawdown(summary.map(({ text }) => text)
+      .join(''));
+    return `<div><h4>${element.name}: ${typeToName(element.type)}</h4><div class="description">${desc}</div></div>`;
+  },
+  Function({ name: elementName, signatures: [signature] }) {
+    const { comment: { summary } } = signature;
+    // Form the parameter string for the function
+    let paramStr: string;
+    if (!signature.parameters) paramStr = '()';
+    else {
+      paramStr = `(${signature.parameters
+        .map(({ type, name }) => {
+          const typeStr = typeToName(type);
+          return `${name}: ${typeStr}`;
+        })
+        .join(', ')})`;
+    }
+    const resultStr = typeToName(signature.type, 'void');
+    const desc = drawdown(summary.map(({ text }) => text)
+      .join(''));
+    const header = `${elementName}${paramStr} → {${resultStr}}`;
+    return `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
+  },
+};
 
 const buildJson = wrapWithTimer(async (bundle: string, moduleDocs: DeclarationReflection | undefined, buildOpts: BuildOptions): Promise<BuildResult> => {
   try {
@@ -24,54 +56,21 @@ const buildJson = wrapWithTimer(async (bundle: string, moduleDocs: DeclarationRe
 
     const [sevRes, result] = moduleDocs.children.reduce(([{ severity, errors }, decls], decl) => {
       try {
-        switch (decl.kindString) {
-          case 'Variable': {
-            const { comment: { summary } } = decl;
-            return [{
-              severity,
-              errors,
-            }, {
-              ...decls,
-              [decl.name]: {
-                kind: 'variable',
-                type: (decl.type as IntrinsicType | ReferenceType).name,
-                description: summary.map(({ text }) => text)
-                  .join(''),
-              },
-            }];
-          }
-          case 'Function': {
-            const { signatures: [signature] } = decl as ReferenceReflection;
-
-            const { comment: { summary } } = signature;
-
-            // const paramTags = signature.comment.getTags('@param');
-            return [{
-              severity,
-              errors,
-            }, {
-              ...decls,
-              [signature.name]: {
-                description: summary.map(({ text }) => text)
-                  .join(''),
-                returnType: (signature.type as IntrinsicType | ReferenceType)?.name ?? 'void',
-                parameters: signature.parameters.reduce((res, param) => ({
-                  ...res,
-                  [param.name]: {
-                    type: (param.type as IntrinsicType | ReferenceType).name,
-                    // description: paramTags.find(tag => 'test'),
-                  },
-                }), {}),
-              },
-            }];
-          }
-          default: {
-            return [{
-              severity: 'warn' as Severity,
-              errors: [...errors, `Could not find parser for type ${decl.kindString}`],
-            }, decls];
-          }
+        const parser = parsers[decl.kindString];
+        if (!parser) {
+          return [{
+            severity: 'warn' as Severity,
+            errors: [...errors, `Could not find parser for type ${decl.kindString}`],
+          }, decls];
         }
+
+        return [{
+          severity,
+          errors,
+        }, {
+          ...decls,
+          [decl.name]: parser(decl),
+        }];
       } catch (error) {
         return [{
           severity: 'warn' as Severity,
