@@ -7,6 +7,7 @@
   "scripts-info": {
     "//NOTE": "Run `npm i npm-scripts-info -g` to install once globally, then run `npm-scripts-info` as needed to list these descriptions",
     "create": "Interactively initialise a new bundle or tab from their templates",
+    "docs": "Build only documentation",
     "lint": "Check code for eslint warnings and errors",
     "lint:src": "Lint bundle and tab code",
     "lint:scripts": "Lint build script code",
@@ -22,6 +23,7 @@
   "type": "module",
   "scripts": {
     "create": "yarn scripts create",
+    "docs": "yarn scripts build docs",
     "lint": " yarn lint:src && yarn lint:scripts",
     "lint:src": "./node_modules/.bin/eslint -c src/.eslintrc.cjs --ext \".ts, .tsx\" src/",
     "lint:scripts": "./node_modules/.bin/eslint -c scripts/src/.eslintrc.cjs --ext \".ts, .tsx\" scripts/src",
@@ -30,7 +32,7 @@
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "dev": "yarn build && yarn serve",
     "scripts": "node --no-warnings --max-old-space-size=8192 --experimental-specifier-resolution=node scripts/bin/index.js",
-    "prepare": "husky install && yarn build:scripts",
+    "prepare": "husky install",
     "test": "jest --verbose",
     "test:watch": "jest --watch"
   },
