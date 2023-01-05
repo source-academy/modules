@@ -1,11 +1,11 @@
 /* eslint-disable no-await-in-loop */
 import { promises as fs } from 'fs';
 
-import { type BuildOptions, type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils';
+import { type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils';
 
 import { check as _check } from './module';
 import { askQuestion, success, warn } from './print';
-import { isPascalCase } from './utilities';
+import { type Options, isPascalCase } from './utilities';
 
 export function check(manifest: ModuleManifest, tabName: string) {
   return Object.values(manifest)
@@ -39,8 +39,8 @@ async function askTabName(manifest: ModuleManifest) {
   }
 }
 
-export async function addNew(buildOpts: BuildOptions) {
-  const manifest = await retrieveManifest(buildOpts);
+export async function addNew(buildOpts: Options) {
+  const manifest = await retrieveManifest(buildOpts.manifest);
 
   const moduleName = await askModuleName(manifest);
   const tabName = await askTabName(manifest);

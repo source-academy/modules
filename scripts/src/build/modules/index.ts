@@ -3,18 +3,15 @@ import { build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
 
-import { type BuildOptions, type ModuleManifest, retrieveManifest } from '../../scriptUtils';
+import type { BuildOptions } from '../../scriptUtils';
 import { esbuildOptions } from '../buildUtils';
 import type { BuildResult, Severity } from '../types';
 
 import { logBundleResults, outputBundle } from './bundle';
 import { logTabResults, outputTab } from './tab';
 
-export const buildModules = async (buildOpts: BuildOptions, manifest: ModuleManifest) => {
-  const bundles = Object.keys(manifest);
-  const tabs = Object.values(manifest)
-    .flatMap((x) => x.tabs);
-
+export const buildModules = async (buildOpts: BuildOptions) => {
+  const { modules: bundles, tabs } = buildOpts;
   const startPromises: Promise<string>[] = [];
   if (bundles.length > 0) {
     startPromises.push(fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }));
@@ -26,79 +23,86 @@ export const buildModules = async (buildOpts: BuildOptions, manifest: ModuleMani
 
   await Promise.all(startPromises);
   const startTime = performance.now();
-
-  const results = {
+  const stats = {
     bundles: {
-      results: {},
-      severity: 'success',
-      totalCount: 0,
-      currentCount: 0,
-      elapsed: 0,
+      time: 0,
+      buildCount: 0,
+      totalCount: bundles.length,
     },
     tabs: {
-      results: {},
-      severity: 'success',
-      totalCount: 0,
-      currentCount: 0,
-      elapsed: 0,
+      time: 0,
+      buildCount: 0,
+      totalCount: tabs.length,
     },
-  } as Record<'bundles' | 'tabs', {
-    severity: Severity,
-    results: Record<string, BuildResult>,
-    totalCount: number,
-    currentCount: number,
-    elapsed: number,
-  }>;
+  };
 
-  results.bundles.totalCount = bundles.length;
-  results.tabs.totalCount = tabs.length;
-
-  await esbuild({
+  const config = {
     ...esbuildOptions,
     entryPoints: [
       ...bundles.map((bundle) => `${buildOpts.srcDir}/bundles/${bundle}/index.ts`),
       ...tabs.map((tabName) => `${buildOpts.srcDir}/tabs/${tabName}/index.tsx`),
     ],
+    outbase: buildOpts.outDir,
     outdir: buildOpts.outDir,
-    plugins: [
-      {
-        name: 'endPlugin',
-        setup: (pluginBuild) => pluginBuild.onEnd(({ outputFiles }) => Promise.all(outputFiles.map(async (outputFile) => {
-          const { dir: sourceDir } = pathlib.parse(outputFile.path);
-          const name = pathlib.basename(sourceDir);
+  };
 
-          const { dir: typeDir } = pathlib.parse(sourceDir);
-          const type = pathlib.basename(typeDir);
+  const [{ outputFiles }] = await Promise.all([
+    esbuild(config),
+    fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/modules.json`),
+  ]);
 
-          if (type !== 'bundles' && type !== 'tabs') {
-            throw new Error(`Unknown type found for: ${type}`);
-          }
+  const buildResults = await Promise.all(outputFiles.map(async (outputFile) => {
+    const { dir: sourceDir } = pathlib.parse(outputFile.path);
+    const name = pathlib.basename(sourceDir);
 
-          const result = await (type === 'bundles' ? outputBundle : outputTab)(name, outputFile.text, buildOpts);
-          results[type].currentCount++;
-          if (results[type].currentCount === results[type].totalCount) {
-            results[type].elapsed = performance.now() - startTime;
-          }
+    const { dir: typeDir } = pathlib.parse(sourceDir);
+    const type = pathlib.basename(typeDir);
 
-          results[type].results[name] = result;
-          if (result.severity === 'error') results[type].severity = 'error';
-        })) as unknown as Promise<void>),
-      },
-    ],
-  });
+    if (type !== 'bundles' && type !== 'tabs') {
+      throw new Error(`Unknown type found for: ${type}: ${outputFile.path}`);
+    }
 
-  await fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/modules.json`);
+    const result = await (type === 'bundles' ? outputBundle : outputTab)(name, outputFile.text, buildOpts);
+    const endTime = performance.now() - startTime;
+
+    stats[type].buildCount++;
+    if (stats[type].buildCount === stats[type].totalCount) stats[type].time = endTime;
+
+    return {
+      name,
+      elapsed: endTime,
+      type,
+      ...result,
+    };
+  }));
+
+  const { bundles: bundleResults, tabs: tabResults } = buildResults.reduce((res, entry) => {
+    if (entry.severity === 'error') res[entry.type].severity = 'error';
+    res[entry.type].results[entry.name] = entry;
+
+    return res;
+  }, {
+    bundles: {
+      severity: 'success',
+      results: {},
+    },
+    tabs: {
+      severity: 'success',
+      results: {},
+    },
+  } as Record<'bundles' | 'tabs', {
+    severity: Severity,
+    results: Record<string, BuildResult>,
+  }>);
 
   return {
     bundles: {
-      elapsed: results.bundles.elapsed,
-      severity: results.bundles.severity,
-      results: results.bundles.results,
+      elapsed: stats.bundles.time,
+      ...bundleResults,
     },
     tabs: {
-      elapsed: results.bundles.elapsed,
-      severity: results.bundles.severity,
-      results: results.bundles.results,
+      elapsed: stats.tabs.time,
+      ...tabResults,
     },
   };
 };
@@ -107,8 +111,7 @@ export const buildModules = async (buildOpts: BuildOptions, manifest: ModuleMani
  * Build bundles and tabs only
  */
 export default async (buildOpts: BuildOptions) => {
-  const manifest = await retrieveManifest(buildOpts);
-  const bundlesToBuild = Object.keys(manifest);
+  const bundlesToBuild = buildOpts.modules;
   console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${
     bundlesToBuild.map((bundle, i) => `${i + 1}. ${bundle}`)
       .join('\n')
@@ -119,10 +122,15 @@ export default async (buildOpts: BuildOptions) => {
     fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true }),
   ]);
 
-  const results = await buildModules(buildOpts, manifest);
+  const results = await buildModules(buildOpts);
   logBundleResults(results.bundles);
   logTabResults(results.tabs);
+
+  // if (results.serveResult) {
+  //   console.log(chalk.greenBright(`Now serving modules at ${results.serveResult.host}:${results.serveResult.port}`));
+  //   await results.serveResult.wait;
+  // }
 };
 
 export { logBundleResults } from './bundle';
-export { logTabResults } from './tab';
+export { default as buildTabCommand, logTabResults } from './tab';

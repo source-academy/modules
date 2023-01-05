@@ -66,3 +66,10 @@ export const findSeverity = <T>(items: T[], processor: (each: T) => Severity): S
 
   return severity;
 };
+
+export const fileSizeFormatter = (size: number) => {
+  size /= 1000;
+  if (size < 0.01) return '<0.01 KB';
+  if (size >= 100) return `${divideAndRound(size, 1000, 2)} MB`;
+  return `${size.toFixed(2)} KB`;
+};

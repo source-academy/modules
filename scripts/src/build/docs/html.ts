@@ -6,6 +6,12 @@ import { divideAndRound, wrapWithTimer } from '../buildUtils';
 import type { BuildResult } from '../types';
 
 export default wrapWithTimer(async (app: Application, project: ProjectReflection, buildOpts: BuildOptions): Promise<BuildResult> => {
+  if (buildOpts.modulesSpecified) {
+    return {
+      severity: 'warn',
+    };
+  }
+
   try {
     await app.generateDocs(project, `${buildOpts.outDir}/documentation`);
     return {
@@ -23,6 +29,8 @@ export const logHtmlResult = ({ elapsed, result: { severity, error } }: { elapse
   if (severity === 'success') {
     const timeStr = divideAndRound(elapsed, 1000, 2);
     console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s\n`);
+  } else if (severity === 'warn') {
+    console.log(chalk.yellowBright('-m was specified, not building HTML documentation\n'));
   } else {
     console.log(`${chalk.cyanBright('HTML documentation')} ${chalk.redBright('failed')}: ${error}\n`);
   }

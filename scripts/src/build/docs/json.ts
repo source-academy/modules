@@ -10,12 +10,11 @@ import type {
 } from 'typedoc';
 
 import type { BuildOptions } from '../../scriptUtils';
-import { divideAndRound, findSeverity, wrapWithTimer } from '../buildUtils';
+import { divideAndRound, fileSizeFormatter, findSeverity, wrapWithTimer } from '../buildUtils';
 import type { BuildResult, Severity } from '../types';
 
-const buildJson = wrapWithTimer(async (bundle: string, project: ProjectReflection, buildOpts: BuildOptions): Promise<BuildResult> => {
+const buildJson = wrapWithTimer(async (bundle: string, moduleDocs: DeclarationReflection | undefined, buildOpts: BuildOptions): Promise<BuildResult> => {
   try {
-    const moduleDocs = project.getChildByName(bundle) as DeclarationReflection;
     if (!moduleDocs) {
       return {
         severity: 'error',
@@ -27,7 +26,7 @@ const buildJson = wrapWithTimer(async (bundle: string, project: ProjectReflectio
       try {
         switch (decl.kindString) {
           case 'Variable': {
-            const { comment: { summary: [{ text }] } } = decl;
+            const { comment: { summary } } = decl;
             return [{
               severity,
               errors,
@@ -36,26 +35,33 @@ const buildJson = wrapWithTimer(async (bundle: string, project: ProjectReflectio
               [decl.name]: {
                 kind: 'variable',
                 type: (decl.type as IntrinsicType | ReferenceType).name,
-                description: text,
+                description: summary.map(({ text }) => text)
+                  .join(''),
               },
             }];
           }
           case 'Function': {
             const { signatures: [signature] } = decl as ReferenceReflection;
-            const { comment: { summary: [{ text }] } } = signature;
 
+            const { comment: { summary } } = signature;
+
+            // const paramTags = signature.comment.getTags('@param');
             return [{
               severity,
               errors,
             }, {
               ...decls,
               [signature.name]: {
-                description: text,
-                returnType: (signature?.type as IntrinsicType | ReferenceType)?.name ?? 'void',
-                parameters: signature.parameters.map((param) => ({
-                  name: param.name,
-                  type: (param.type as IntrinsicType | ReferenceType).name,
-                })),
+                description: summary.map(({ text }) => text)
+                  .join(''),
+                returnType: (signature.type as IntrinsicType | ReferenceType)?.name ?? 'void',
+                parameters: signature.parameters.reduce((res, param) => ({
+                  ...res,
+                  [param.name]: {
+                    type: (param.type as IntrinsicType | ReferenceType).name,
+                    // description: paramTags.find(tag => 'test'),
+                  },
+                }), {}),
               },
             }];
           }
@@ -100,6 +106,7 @@ const buildJson = wrapWithTimer(async (bundle: string, project: ProjectReflectio
 
     if (!result) {
       return {
+        elapsed: 0,
         severity: 'warn',
         error: `No json generated for ${bundle}`,
         fileSize: 0,
@@ -125,11 +132,25 @@ const buildJson = wrapWithTimer(async (bundle: string, project: ProjectReflectio
   }
 });
 
-export default async (bundles: string[], project: ProjectReflection, buildOpts: BuildOptions) => {
+export default async (project: ProjectReflection, buildOpts: BuildOptions) => {
+  const bundles = buildOpts.modules;
+
   if (bundles.length === 0) return false;
+  if (bundles.length === 1) {
+    const jsonStartTime = performance.now();
+    const [bundle] = buildOpts.modules;
+    const result = await buildJson(bundle, project as any, buildOpts);
+    return {
+      elapsed: performance.now() - jsonStartTime,
+      results: { [bundle]: result },
+      severity: result.result.severity,
+    };
+  }
 
   const jsonStartTime = performance.now();
-  const results = await Promise.all(bundles.map(async (bundle) => [bundle, await buildJson(bundle, project, buildOpts)] as [string, { elapsed: number, result: BuildResult }]));
+  const results = await Promise.all(
+    bundles.map(async (bundle) => [bundle, await buildJson(bundle, project.getChildByName(bundle) as DeclarationReflection, buildOpts)] as [string, { elapsed: number, result: BuildResult }]),
+  );
   const resultObj = results.reduce((res, [bundle, result]) => ({
     ...res,
     [bundle]: result,
@@ -189,7 +210,7 @@ export const logJsonResults = (jsonResults: { elapsed: number, severity: Severit
         jsonSeverity: severity === 'warn' ? 'Warning' : 'Success',
         jsonTime: divideAndRound(elapsed, 1000, 2),
         jsonError: error || '-',
-        fileSize: `${divideAndRound(fileSize, 1000, 2)} KB`,
+        fileSize: fileSizeFormatter(fileSize),
       }, { color: severity === 'warn' ? 'yellow' : 'green' });
     }
   });

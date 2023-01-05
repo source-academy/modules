@@ -15,14 +15,14 @@ import type {
 import { promises as fsPromises } from 'fs';
 
 import type { BuildOptions } from '../../scriptUtils';
-import { divideAndRound } from '../buildUtils';
+import { divideAndRound, fileSizeFormatter } from '../buildUtils';
 import type { BuildResult, OperationResult } from '../types';
 
 import { requireCreator } from './moduleUtils';
 
 const HELPER_NAME = 'moduleHelpers';
 
-export const outputBundle = async (name: string, bundleText: string, buildOpts: BuildOptions): Promise<BuildResult> => {
+export const outputBundle = async (name: string, bundleText: string, buildOpts: BuildOptions): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(bundleText, { ecmaVersion: 6 }) as unknown as Program;
     const exprStatement = parsed.body[1] as unknown as VariableDeclaration;
@@ -89,6 +89,10 @@ export const logBundleResults = (bundleResults: OperationResult) => {
       title: 'Status',
     },
     {
+      name: 'elapsed',
+      title: 'Build Time (s)',
+    },
+    {
       name: 'fileSize',
       title: 'File Size',
     },
@@ -98,20 +102,22 @@ export const logBundleResults = (bundleResults: OperationResult) => {
     }],
   });
 
-  entries.forEach(([moduleName, { severity, error, fileSize }]) => {
+  entries.forEach(([moduleName, { elapsed, severity, error, fileSize }]) => {
     if (severity === 'error') {
       bundleTable.addRow({
         bundle: moduleName,
-        severity: 'Error',
-        fileSize: '-',
+        elapsed: '-',
         error,
+        fileSize: '-',
+        severity: 'Error',
       }, { color: 'red' });
     } else {
       bundleTable.addRow({
         bundle: moduleName,
-        severity: 'Success',
-        fileSize: `${divideAndRound(fileSize, 1000, 2)} KB`,
+        elapsed: divideAndRound(elapsed, 1000, 2),
         error: '-',
+        fileSize: fileSizeFormatter(fileSize),
+        severity: 'Success',
       }, { color: 'green' });
     }
   });

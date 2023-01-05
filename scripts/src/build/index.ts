@@ -1,15 +1,14 @@
 import chalk from 'chalk';
+import { Command } from 'commander';
 
 import { type BuildOptions, retrieveManifest } from '../scriptUtils';
 
 import { divideAndRound } from './buildUtils';
-import { buildDocs, initTypedoc, logHtmlResult, logJsonResults } from './docs';
-import { buildModules, logBundleResults, logTabResults } from './modules';
+import buildDocsCommand, { buildDocs, initTypedoc, logHtmlResult, logJsonResults } from './docs';
+import buildModulesCommand, { buildModules, buildTabCommand, logBundleResults, logTabResults } from './modules';
 
-export const buildAll = async (buildOpts: BuildOptions) => {
-  const manifest = await retrieveManifest(buildOpts);
-  const bundlesToBuild = Object.keys(manifest);
-
+const buildAllCommand = async (buildOpts: BuildOptions) => {
+  const bundlesToBuild = buildOpts.modules;
   console.log(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n${
     bundlesToBuild.map((bundle, i) => `${i + 1}. ${bundle}`)
       .join('\n')
@@ -20,10 +19,10 @@ export const buildAll = async (buildOpts: BuildOptions) => {
     html: htmlResult,
     json: jsonResults,
   }] = await Promise.all([
-    buildModules(buildOpts, manifest),
-    initTypedoc(bundlesToBuild, buildOpts)
+    buildModules(buildOpts),
+    initTypedoc(buildOpts)
       .then(async ({ elapsed, result: [app, project] }) => {
-        const docsResults = await buildDocs(buildOpts, app, project, bundlesToBuild);
+        const docsResults = await buildDocs(buildOpts, app, project);
         return {
           typedoctime: elapsed,
           ...docsResults,
@@ -39,8 +38,46 @@ export const buildAll = async (buildOpts: BuildOptions) => {
   logHtmlResult(htmlResult);
 };
 
-export { default as buildModules } from './modules';
-export { default as buildDocs } from './docs';
+export default new Command('build')
+  .argument('[subcommand]', 'Build subcommands: "all, modules, docs"', 'all')
+  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+  .option('--outDir <outdir>', 'Output directory', 'build')
+  .option('--manifest <file>', 'Manifest file', 'modules.json')
+  .option('-m, --modules <...modules>', 'Manually specify which modules to build', [])
+  .action(async (subcommand: string, rawOpts: Omit<BuildOptions, 'modules'> & { modules: string | string[] }) => {
+    const manifest = await retrieveManifest(rawOpts.manifest);
+    if (typeof rawOpts.modules === 'string') {
+      rawOpts.modules = rawOpts.modules.split(' ');
+    }
+
+    if (rawOpts.modules.length === 0) {
+      rawOpts.modules = Object.keys(manifest);
+      rawOpts.modulesSpecified = false;
+    } else {
+      const undefineds = rawOpts.modules.reduce((res, module) => (!rawOpts.modules.includes(module) ? [...res, module] : res), [] as string[]);
+      if (undefineds.length > 0) {
+        console.log(chalk.redBright(`Unknown modules: ${undefineds.join(', ')}`));
+        return;
+      }
+
+      rawOpts.modulesSpecified = true;
+    }
+    const buildOpts = {
+      ...rawOpts,
+      tabs: Object.values(manifest)
+        .flatMap((x) => x.tabs),
+      modules: rawOpts.modules as string[],
+    };
+
+    const subfunc = {
+      all: buildAllCommand,
+      docs: buildDocsCommand,
+      modules: buildModulesCommand,
+      tabs: buildTabCommand,
+    }[subcommand];
+    if (!subcommand) console.log(chalk.redBright(`Unknown build command: "${subcommand}"`));
+    else await subfunc(buildOpts);
+  });
 
 // export const watchAll = async (buildOpts: BuildOptions) => {
 //   const manifest = await retrieveManifest(buildOpts);

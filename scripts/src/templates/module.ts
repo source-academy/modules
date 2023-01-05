@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs';
 
-import { type BuildOptions, type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils';
+import { type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils';
 
 import { askQuestion, success, warn } from './print';
-import { isSnakeCase } from './utilities';
+import { type Options, isSnakeCase } from './utilities';
 
 export const check = (manifest: ModuleManifest, name: string) => Object.keys(manifest)
   .includes(name);
@@ -24,8 +24,8 @@ async function askModuleName(manifest: ModuleManifest) {
   }
 }
 
-export async function addNew(buildOpts: BuildOptions) {
-  const manifest = await retrieveManifest(buildOpts);
+export async function addNew(buildOpts: Options) {
+  const manifest = await retrieveManifest(buildOpts.manifest);
   const moduleName = await askModuleName(manifest);
 
   const bundleDestination = `${buildOpts.srcDir}/bundles/${moduleName}`;

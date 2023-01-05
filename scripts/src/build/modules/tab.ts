@@ -2,7 +2,6 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
-import { build as esbuild } from 'esbuild';
 import type {
   BlockStatement, ExpressionStatement,
   FunctionExpression,
@@ -14,15 +13,15 @@ import type {
   VariableDeclaration,
 } from 'estree';
 import { promises as fs } from 'fs';
-import pathlib from 'path';
 
 import type { BuildOptions } from '../../scriptUtils';
-import { divideAndRound, esbuildOptions, wrapWithTimer } from '../buildUtils';
-import type { BuildResult, OperationResult, Severity } from '../types';
+import { divideAndRound, fileSizeFormatter } from '../buildUtils';
+import type { BuildResult, OperationResult } from '../types';
 
 import { requireCreator } from './moduleUtils';
+import { buildModules } from '.';
 
-export const outputTab = async (tabName: string, text: string, buildOpts: BuildOptions): Promise<BuildResult> => {
+export const outputTab = async (tabName: string, text: string, buildOpts: BuildOptions): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
     const declStatement = parsed.body[1] as VariableDeclaration;
@@ -101,6 +100,10 @@ export const logTabResults = (tabResults: OperationResult) => {
         title: 'Status',
       },
       {
+        name: 'elapsed',
+        title: 'Build Time (s)',
+      },
+      {
         name: 'fileSize',
         title: 'File Size',
       },
@@ -111,21 +114,23 @@ export const logTabResults = (tabResults: OperationResult) => {
     ],
   });
 
-  entries.forEach(([tabName, { severity, error, fileSize }]) => {
+  entries.forEach(([tabName, { elapsed, severity, error, fileSize }]) => {
     if (severity === 'success') {
       tabTable.addRow({
-        tab: tabName,
-        severity: 'Success',
-        fileSize: `${divideAndRound(fileSize, 1000, 2)} KB`,
+        elapsed: divideAndRound(elapsed, 1000, 2),
         error: '-',
+        fileSize: fileSizeFormatter(fileSize),
+        severity: 'Success',
+        tab: tabName,
       }, { color: 'green' });
     } else {
       severity = 'error';
       tabTable.addRow({
-        tab: tabName,
-        severity: 'Error',
-        fileSize: '-',
+        elapsed: '-',
         error,
+        fileSize: '-',
+        severity: 'Error',
+        tab: tabName,
       }, { color: 'red' });
     }
   });
@@ -138,41 +143,50 @@ export const logTabResults = (tabResults: OperationResult) => {
   }
 };
 
-export const buildTabs = wrapWithTimer(async (
-  buildOpts: BuildOptions,
-  tabs: string[],
-) => {
-  const tabResults: Record<string, BuildResult> = {};
-  let tabSeverity: Severity = 'success';
-
+export default async (buildOpts: BuildOptions) => {
+  buildOpts.modules = [];
   await fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true });
+  console.log(`${chalk.cyanBright('Building the following tabs:')}\n${buildOpts.tabs.map((tabName, i) => `${i + 1}. ${tabName}`)
+    .join('\n')}\n`);
+  const { tabs } = await buildModules(buildOpts);
+  logTabResults(tabs);
+};
 
-  await esbuild({
-    ...esbuildOptions,
-    entryPoints: tabs.map((tabName) => `${buildOpts.srcDir}/tabs/${tabName}/index.tsx`),
-    outdir: `${buildOpts.outDir}/tabs`,
-    plugins: [
-      {
-        name: 'tabPlugin',
-        setup(pluginBuild) {
-          pluginBuild.onEnd(({ outputFiles }) => Promise.all(outputFiles.map(async ({ path, text }) => {
-            const { dir } = pathlib.parse(path);
-            const tabName = pathlib.basename(dir);
+// export const buildTabs = wrapWithTimer(async (
+//   buildOpts: BuildOptions,
+//   tabs: string[],
+// ) => {
+//   const tabResults: Record<string, BuildResult> = {};
+//   let tabSeverity: Severity = 'success';
 
-            const result = await outputTab(tabName, text, buildOpts);
-            if (result.severity === 'error') tabSeverity = 'error';
-            tabResults[tabName] = result;
-          })) as unknown as Promise<void>);
-        },
-      },
-    ],
-  });
+//   await fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true });
 
-  return {
-    overall: tabSeverity,
-    results: tabResults,
-  };
-});
+//   await esbuild({
+//     ...esbuildOptions,
+//     entryPoints: tabs.map((tabName) => `${buildOpts.srcDir}/tabs/${tabName}/index.tsx`),
+//     outdir: `${buildOpts.outDir}/tabs`,
+//     plugins: [
+//       {
+//         name: 'tabPlugin',
+//         setup(pluginBuild) {
+//           pluginBuild.onEnd(({ outputFiles }) => Promise.all(outputFiles.map(async ({ path, text }) => {
+//             const { dir } = pathlib.parse(path);
+//             const tabName = pathlib.basename(dir);
+
+//             const result = await outputTab(tabName, text, buildOpts);
+//             if (result.severity === 'error') tabSeverity = 'error';
+//             tabResults[tabName] = result;
+//           })) as unknown as Promise<void>);
+//         },
+//       },
+//     ],
+//   });
+
+//   return {
+//     overall: tabSeverity,
+//     results: tabResults,
+//   };
+// });
 
 // export const watchTabs = (
 //   buildOpts: BuildOptions,

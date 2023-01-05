@@ -1,8 +1,9 @@
-import type { BuildOptions } from '../scriptUtils';
+import { Command } from 'commander';
 
 import { addNew as addNewModule } from './module';
 import { askQuestion, error as _error, info, rl, warn } from './print';
 import { addNew as addNewTab } from './tab';
+import type { Options } from './utilities';
 
 async function askMode() {
   while (true) {
@@ -18,15 +19,20 @@ async function askMode() {
   }
 }
 
-export default async (buildOpts: Omit<BuildOptions, 'watch'>) => {
-  try {
-    const mode = await askMode();
-    if (mode === 'module') await addNewModule(buildOpts);
-    else if (mode === 'tab') await addNewTab(buildOpts);
-  } catch (error) {
-    _error(`ERROR: ${error.message}`);
-    info('Terminating module app...');
-  } finally {
-    rl.close();
-  }
-};
+export default new Command('create')
+  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+  .option('--manifest <file>', 'Manifest file', 'modules.json')
+  .action(
+    async (buildOpts: Options) => {
+      try {
+        const mode = await askMode();
+        if (mode === 'module') await addNewModule(buildOpts);
+        else if (mode === 'tab') await addNewTab(buildOpts);
+      } catch (error) {
+        _error(`ERROR: ${error.message}`);
+        info('Terminating module app...');
+      } finally {
+        rl.close();
+      }
+    },
+  );

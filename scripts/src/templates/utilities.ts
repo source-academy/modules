@@ -8,3 +8,7 @@ export function isSnakeCase(string: string) {
 export function isPascalCase(string: string) {
   return pascalCaseRegex.test(string);
 }
+export type Options = {
+  srcDir: string;
+  manifest: string;
+};
