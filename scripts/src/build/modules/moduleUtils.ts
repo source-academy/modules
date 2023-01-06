@@ -1,3 +1,4 @@
+import type { BuildOptions as ESBuildOptions } from 'esbuild';
 import type {
   BinaryExpression,
   FunctionDeclaration,
@@ -13,6 +14,8 @@ import type {
   ThrowStatement,
   VariableDeclaration,
 } from 'estree';
+
+import { cjsDirname } from '../../scriptUtils';
 
 /**
  * Build the AST representation of a `require` function to use with the transpiled IIFEs
@@ -131,3 +134,26 @@ export const requireCreator = (createObj: Record<string, string>) => ({
     ],
   },
 }) as FunctionDeclaration;
+
+export const esbuildOptions: ESBuildOptions = {
+  bundle: true,
+  external: ['react', 'react-dom', 'js-slang/moduleHelpers'],
+  format: 'iife',
+  globalName: 'module',
+  inject: [`${cjsDirname(import.meta.url)}/import-shim.js`],
+  loader: {
+    '.ts': 'ts',
+    '.tsx': 'tsx',
+  },
+  metafile: true,
+  // minify: true,
+  platform: 'browser',
+  target: 'es6',
+  write: false,
+};
+
+export const externalDependencies = {
+  'react': '_react',
+  'react-dom': 'ReactDOM',
+  'js-slang/moduleHelpers': 'moduleHelpers',
+};

@@ -3,6 +3,9 @@ import { type ProjectReflection, Application, TSConfigReader } from 'typedoc';
 import type { BuildOptions } from '../../scriptUtils';
 import { wrapWithTimer } from '../buildUtils';
 
+/**
+ * Offload running typedoc into async code to increase parallelism
+ */
 export const initTypedoc = wrapWithTimer((buildOpts: BuildOptions) => new Promise<[Application, ProjectReflection]>((resolve, reject) => {
   try {
     const app = new Application();

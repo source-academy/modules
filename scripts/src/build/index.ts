@@ -30,7 +30,7 @@ const buildAllCommand = async (buildOpts: BuildOptions) => {
       }),
   ]);
 
-  console.log(`${chalk.cyanBright('Took')} ${divideAndRound(typedoctime, 1000, 2)}s ${chalk.cyanBright('to initialize typedoc')}`);
+  console.log(`${chalk.cyanBright('Took')} ${divideAndRound(typedoctime, 1000, 2)}s ${chalk.cyanBright('to initialize typedoc')}\n`);
 
   logBundleResults(bundleResults);
   logTabResults(tabResults);
@@ -54,7 +54,7 @@ export default new Command('build')
       rawOpts.modules = Object.keys(manifest);
       rawOpts.modulesSpecified = false;
     } else {
-      const undefineds = rawOpts.modules.reduce((res, module) => (!rawOpts.modules.includes(module) ? [...res, module] : res), [] as string[]);
+      const undefineds = rawOpts.modules.filter((module) => !rawOpts.modules.includes(module));
       if (undefineds.length > 0) {
         console.log(chalk.redBright(`Unknown modules: ${undefineds.join(', ')}`));
         return;

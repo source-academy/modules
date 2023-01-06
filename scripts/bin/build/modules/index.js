@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { esbuildOptions } from '../buildUtils';
 import { logBundleResults, outputBundle } from './bundle';
+import { esbuildOptions } from './moduleUtils';
 import { logTabResults, outputTab } from './tab';
 export const buildModules = async (buildOpts) => {
     const { modules: bundles, tabs } = buildOpts;
@@ -37,10 +37,11 @@ export const buildModules = async (buildOpts) => {
         outbase: buildOpts.outDir,
         outdir: buildOpts.outDir,
     };
-    const [{ outputFiles }] = await Promise.all([
+    const [{ metafile, outputFiles }] = await Promise.all([
         esbuild(config),
         fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/modules.json`),
     ]);
+    await fs.writeFile('metafile.json', JSON.stringify(metafile, null, 2));
     const buildResults = await Promise.all(outputFiles.map(async (outputFile) => {
         const { dir: sourceDir } = pathlib.parse(outputFile.path);
         const name = pathlib.basename(sourceDir);

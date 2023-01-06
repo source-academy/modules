@@ -23,8 +23,10 @@ export default async (buildOpts) => {
     console.log(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n${bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
         .join('\n')}\n`);
     const { elapsed, result: [app, project] } = await initTypedoc(buildOpts);
-    const results = await buildDocs(buildOpts, app, project);
-    await app.generateJson(project, `${buildOpts.outDir}/docs.json`);
+    const [results] = await Promise.all([
+        buildDocs(buildOpts, app, project),
+        app.generateJson(project, `${buildOpts.outDir}/docs.json`),
+    ]);
     console.log(`${chalk.cyanBright('Took')} ${divideAndRound(elapsed, 1000, 2)}s ${chalk.cyanBright('to initialize typedoc')}`);
     if (!results)
         return;

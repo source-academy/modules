@@ -45,6 +45,9 @@ const parsers: Record<string, (docs: DeclarationReflection) => string> = {
   },
 };
 
+/**
+ * Build a single json
+ */
 const buildJson = wrapWithTimer(async (bundle: string, moduleDocs: DeclarationReflection | undefined, buildOpts: BuildOptions): Promise<BuildResult> => {
   try {
     if (!moduleDocs) {
@@ -131,11 +134,16 @@ const buildJson = wrapWithTimer(async (bundle: string, moduleDocs: DeclarationRe
   }
 });
 
+/**
+ * Build json documentation for the specified bundles
+ */
 export default async (project: ProjectReflection, buildOpts: BuildOptions) => {
   const bundles = buildOpts.modules;
 
   if (bundles.length === 0) return false;
   if (bundles.length === 1) {
+    // If only 1 bundle is provided, typedoc's output is different in structure
+    // So this new parser is used instead.
     const jsonStartTime = performance.now();
     const [bundle] = buildOpts.modules;
     const result = await buildJson(bundle, project as any, buildOpts);

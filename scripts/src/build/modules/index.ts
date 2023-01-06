@@ -4,10 +4,10 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 
 import type { BuildOptions } from '../../scriptUtils';
-import { esbuildOptions } from '../buildUtils';
 import type { BuildResult, Severity } from '../types';
 
 import { logBundleResults, outputBundle } from './bundle';
+import { esbuildOptions } from './moduleUtils';
 import { logTabResults, outputTab } from './tab';
 
 export const buildModules = async (buildOpts: BuildOptions) => {
@@ -46,23 +46,20 @@ export const buildModules = async (buildOpts: BuildOptions) => {
     outdir: buildOpts.outDir,
   };
 
-  const [{ outputFiles }] = await Promise.all([
+  const [{ metafile: { outputs }, outputFiles }] = await Promise.all([
     esbuild(config),
     fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/modules.json`),
   ]);
 
-  const buildResults = await Promise.all(outputFiles.map(async (outputFile) => {
-    const { dir: sourceDir } = pathlib.parse(outputFile.path);
-    const name = pathlib.basename(sourceDir);
-
-    const { dir: typeDir } = pathlib.parse(sourceDir);
-    const type = pathlib.basename(typeDir);
+  const buildResults = await Promise.all(outputFiles.map(async ({ path, text }) => {
+    const { entryPoint } = outputs[path];
+    const [, type, name] = entryPoint.split(pathlib.sep);
 
     if (type !== 'bundles' && type !== 'tabs') {
-      throw new Error(`Unknown type found for: ${type}: ${outputFile.path}`);
+      throw new Error(`Unknown type found for: ${type}: ${path}`);
     }
 
-    const result = await (type === 'bundles' ? outputBundle : outputTab)(name, outputFile.text, buildOpts);
+    const result = await (type === 'bundles' ? outputBundle : outputTab)(name, text, buildOpts);
     const endTime = performance.now() - startTime;
 
     stats[type].buildCount++;
@@ -126,6 +123,8 @@ export default async (buildOpts: BuildOptions) => {
   logBundleResults(results.bundles);
   logTabResults(results.tabs);
 
+  // Refer to https://github.com/evanw/esbuild/issues/1384
+  // Since plugins' 'onEnd' callbacks aren't properly called, we can't use esbuild's internal serve system yet
   // if (results.serveResult) {
   //   console.log(chalk.greenBright(`Now serving modules at ${results.serveResult.host}:${results.serveResult.port}`));
   //   await results.serveResult.wait;
