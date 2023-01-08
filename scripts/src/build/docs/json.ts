@@ -9,14 +9,23 @@ import type {
   SomeType,
 } from 'typedoc';
 
-import type { BuildOptions } from '../../scriptUtils';
-import { divideAndRound, fileSizeFormatter, findSeverity, wrapWithTimer } from '../buildUtils';
+import {
+  type BuildOptions,
+  createBuildCommand,
+  divideAndRound,
+  fileSizeFormatter,
+  wrapWithTimer,
+} from '../buildUtils';
 import type { BuildResult, Severity } from '../types';
 
+import { initTypedoc, logTypedocTime } from './docUtils';
 import drawdown from './drawdown';
 
 const typeToName = (type?: SomeType, alt : string = 'unknown') => (type ? (type as ReferenceType | IntrinsicType).name : alt);
 
+/**
+ * Parsers to convert typedoc elements into strings
+ */
 const parsers: Record<string, (docs: DeclarationReflection) => string> = {
   Variable(element) {
     const { comment: { summary } } = element;
@@ -91,19 +100,20 @@ const buildJson = wrapWithTimer(async (bundle: string, moduleDocs: DeclarationRe
         severity: Severity,
         errors: any[]
       },
-      Record<string, ({
-        description: string;
-      } & ({
-        kind: 'function',
-        returnType: string;
-        parameters: {
-          name: string;
-          type: string;
-        }[],
-      } | {
-        kind: 'variable',
-        type: string;
-      }))>,
+      Record<string, string>,
+      // Record<string, ({
+      //   description: string;
+      // } & ({
+      //   kind: 'function',
+      //   returnType: string;
+      //   parameters: {
+      //     name: string;
+      //     type: string;
+      //   }[],
+      // } | {
+      //   kind: 'variable',
+      //   type: string;
+      // }))>,
     ]);
 
     if (!result) {
@@ -135,46 +145,37 @@ const buildJson = wrapWithTimer(async (bundle: string, moduleDocs: DeclarationRe
 });
 
 /**
- * Build json documentation for the specified bundles
+ * Build all specified jsons
  */
-export default async (project: ProjectReflection, buildOpts: BuildOptions) => {
-  const bundles = buildOpts.modules;
-
-  if (bundles.length === 0) return false;
-  if (bundles.length === 1) {
+export const buildJsons = wrapWithTimer(async (project: ProjectReflection, buildOpts: BuildOptions) => {
+  await fs.mkdir(`${buildOpts.outDir}/jsons`, { recursive: true });
+  if (buildOpts.bundles.length === 1) {
     // If only 1 bundle is provided, typedoc's output is different in structure
     // So this new parser is used instead.
-    const jsonStartTime = performance.now();
-    const [bundle] = buildOpts.modules;
+    const [bundle] = buildOpts.bundles;
     const result = await buildJson(bundle, project as any, buildOpts);
     return {
-      elapsed: performance.now() - jsonStartTime,
-      results: { [bundle]: result },
-      severity: result.result.severity,
+      [bundle]: result,
     };
   }
 
-  const jsonStartTime = performance.now();
   const results = await Promise.all(
-    bundles.map(async (bundle) => [bundle, await buildJson(bundle, project.getChildByName(bundle) as DeclarationReflection, buildOpts)] as [string, { elapsed: number, result: BuildResult }]),
+    buildOpts.bundles.map(async (bundle) => [bundle, await buildJson(bundle, project.getChildByName(bundle) as DeclarationReflection, buildOpts)] as [string, { elapsed: number, result: BuildResult }]),
   );
-  const resultObj = results.reduce((res, [bundle, result]) => ({
+  return results.reduce((res, [bundle, result]) => ({
     ...res,
     [bundle]: result,
   }), {} as Record<string, { elapsed: number, result: BuildResult }>);
-  const jsonEndTime = performance.now();
+});
 
-  return {
-    severity: findSeverity(results, ([,{ result: { severity } }]) => severity),
-    results: resultObj,
-    elapsed: jsonEndTime - jsonStartTime,
-  };
-};
-
-export const logJsonResults = (jsonResults: { elapsed: number, severity: Severity, results: Record<string, { elapsed: number, result: BuildResult }> } | false) => {
+/**
+ * Log output from `buildJsons`
+ * @see {buildJsons}
+ */
+export const logJsonResults = (jsonResults: { elapsed: number, results: Record<string, { elapsed: number, result: BuildResult }> } | false) => {
   if (typeof jsonResults === 'boolean') return;
 
-  const { elapsed: jsonTime, severity: jsonSeverity, results } = jsonResults;
+  const { elapsed: jsonTime, results } = jsonResults;
   const entries = Object.entries(results);
   if (entries.length === 0) return;
 
@@ -203,8 +204,10 @@ export const logJsonResults = (jsonResults: { elapsed: number, severity: Severit
     ],
   });
 
+  let jsonSeverity: Severity = 'success';
   entries.forEach(([moduleName, { elapsed, result: { severity, error, fileSize } }]) => {
     if (severity === 'error') {
+      jsonSeverity = 'error';
       jsonTable.addRow({
         jsonSeverity: 'Error',
         jsonTime: '-',
@@ -212,6 +215,8 @@ export const logJsonResults = (jsonResults: { elapsed: number, severity: Severit
         fileSize: '-',
       }, { color: 'red' });
     } else {
+      if (jsonSeverity === 'success' && severity === 'warn') jsonSeverity = 'warn';
+
       jsonTable.addRow({
         bundle: moduleName,
         jsonSeverity: severity === 'warn' ? 'Warning' : 'Success',
@@ -231,3 +236,23 @@ export const logJsonResults = (jsonResults: { elapsed: number, severity: Severit
     console.log(`${chalk.cyanBright('JSONS failed with')} ${chalk.redBright('errors')}:\n${jsonTable.render()}\n`);
   }
 };
+
+/**
+ * Console command for building jsons
+ */
+const jsonCommand = createBuildCommand('jsons', async (buildOpts) => {
+  if (buildOpts.bundles.length === 0) return;
+
+  const { elapsed: typedocTime, result: [, project] } = await initTypedoc(buildOpts);
+
+  logTypedocTime(typedocTime);
+  const { elapsed: jsonTotalTime, result } = await buildJsons(project, buildOpts);
+
+  logJsonResults({
+    results: result,
+    elapsed: jsonTotalTime,
+  });
+})
+  .description('Build only jsons');
+
+export default jsonCommand;

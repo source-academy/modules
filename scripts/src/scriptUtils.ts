@@ -16,17 +16,6 @@ export const retrieveManifest = async (manifest: string) => {
   }
 };
 
-export type BuildOptions = {
-  srcDir: string;
-  outDir: string;
-  manifest: string;
-  serve: boolean;
-
-  modulesSpecified: boolean;
-  modules: string[];
-  tabs: string[];
-};
-
 export type ModuleManifest = Record<string, {
   tabs: string[]
 }>;

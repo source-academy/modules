@@ -145,7 +145,6 @@ export const esbuildOptions: ESBuildOptions = {
     '.ts': 'ts',
     '.tsx': 'tsx',
   },
-  metafile: true,
   // minify: true,
   platform: 'browser',
   target: 'es6',

@@ -1,3 +1,7 @@
+import { Command } from 'commander';
+
+import { retrieveManifest } from '../scriptUtils';
+
 import type { Severity } from './types';
 
 export const wrapWithTimer = <T extends (...params: any[]) => Promise<any>>(func: T) => async (...params: Parameters<T>): Promise<{
@@ -33,4 +37,61 @@ export const fileSizeFormatter = (size: number) => {
   if (size < 0.01) return '<0.01 KB';
   if (size >= 100) return `${divideAndRound(size, 1000, 2)} MB`;
   return `${size.toFixed(2)} KB`;
+};
+
+type CommandHandler = (buildOpts: BuildOptions) => Promise<void>;
+type BuildCommandOptions = {
+  srcDir: string;
+  outDir: string;
+  manifest: string;
+  modules?: string[] | string;
+};
+export const createBuildCommand = (name: string, handler?: CommandHandler) => {
+  const cmd = new Command(name)
+    .option('--outDir <outdir>', 'Output directory', 'build')
+    .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+    .option('--manifest <file>', 'Manifest file', 'modules.json')
+    .option('-m, --modules <...modules>', 'Manually specify which modules to build');
+  if (handler) {
+    return cmd.action(async (opts: BuildCommandOptions) => {
+      const manifest = await retrieveManifest(opts.manifest);
+
+      let bundles: string[] = Object.keys(manifest);
+      let modulesSpecified = false;
+      if (opts.modules) {
+        if (typeof opts.modules === 'string') opts.modules = [opts.modules];
+        const undefineds = opts.modules.filter((m) => !bundles.includes(m));
+
+        if (undefineds.length > 0) {
+          throw new Error(`Unknown modules: ${undefineds.join(', ')}`);
+        }
+
+        bundles = opts.modules;
+        modulesSpecified = true;
+      }
+
+      const tabs = bundles
+        .flatMap((x) => manifest[x].tabs);
+
+      await handler({
+        srcDir: opts.srcDir,
+        outDir: opts.outDir,
+        bundles,
+        manifest: opts.manifest,
+        tabs,
+        modulesSpecified,
+      });
+    });
+  }
+  return cmd;
+};
+
+export type BuildOptions = {
+  srcDir: string;
+  outDir: string;
+  manifest: string;
+
+  modulesSpecified: boolean;
+  bundles: string[];
+  tabs: string[];
 };

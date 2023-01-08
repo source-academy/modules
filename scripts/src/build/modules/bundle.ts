@@ -14,8 +14,7 @@ import type {
 } from 'estree';
 import { promises as fsPromises } from 'fs';
 
-import type { BuildOptions } from '../../scriptUtils';
-import { divideAndRound, fileSizeFormatter } from '../buildUtils';
+import { type BuildOptions, divideAndRound, fileSizeFormatter } from '../buildUtils';
 import type { BuildResult, OperationResult } from '../types';
 
 import { requireCreator } from './moduleUtils';

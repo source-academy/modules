@@ -1,4 +1,3 @@
-import type { BuildIncremental, Metafile, ServeResult } from 'esbuild';
 import type { Low } from 'lowdb';
 
 export type Severity = 'success' | 'error' | 'warn';
@@ -16,8 +15,6 @@ export type DBData = AssetRecord<number>;
 
 export type DBType = Low<DBData>;
 
-export type ESBuildOutput = BuildIncremental & { metafile: Metafile };
-
 export type BuildResult = {
   elapsed?: number;
   fileSize?: number;
@@ -29,5 +26,4 @@ export type OperationResult = {
   severity: Severity;
   results: Record<string, BuildResult>;
   elapsed: number;
-  serveResult?: ServeResult
 } | false;

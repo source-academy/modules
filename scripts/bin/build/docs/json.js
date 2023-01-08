@@ -1,9 +1,13 @@
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
 import fs from 'fs/promises';
-import { divideAndRound, fileSizeFormatter, findSeverity, wrapWithTimer } from '../buildUtils';
+import { createBuildCommand, divideAndRound, fileSizeFormatter, wrapWithTimer, } from '../buildUtils';
+import { initTypedoc, logTypedocTime } from './docUtils';
 import drawdown from './drawdown';
 const typeToName = (type, alt = 'unknown') => (type ? type.name : alt);
+/**
+ * Parsers to convert typedoc elements into strings
+ */
 const parsers = {
     Variable(element) {
         const { comment: { summary } } = element;
@@ -32,6 +36,9 @@ const parsers = {
         return `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
     },
 };
+/**
+ * Build a single json
+ */
 const buildJson = wrapWithTimer(async (bundle, moduleDocs, buildOpts) => {
     try {
         if (!moduleDocs) {
@@ -95,37 +102,34 @@ const buildJson = wrapWithTimer(async (bundle, moduleDocs, buildOpts) => {
         };
     }
 });
-export default async (project, buildOpts) => {
-    const bundles = buildOpts.modules;
-    if (bundles.length === 0)
-        return false;
-    if (bundles.length === 1) {
-        const jsonStartTime = performance.now();
-        const [bundle] = buildOpts.modules;
+/**
+ * Build all specified jsons
+ */
+export const buildJsons = wrapWithTimer(async (project, buildOpts) => {
+    await fs.mkdir(`${buildOpts.outDir}/jsons`, { recursive: true });
+    if (buildOpts.bundles.length === 1) {
+        // If only 1 bundle is provided, typedoc's output is different in structure
+        // So this new parser is used instead.
+        const [bundle] = buildOpts.bundles;
         const result = await buildJson(bundle, project, buildOpts);
         return {
-            elapsed: performance.now() - jsonStartTime,
-            results: { [bundle]: result },
-            severity: result.result.severity,
+            [bundle]: result,
         };
     }
-    const jsonStartTime = performance.now();
-    const results = await Promise.all(bundles.map(async (bundle) => [bundle, await buildJson(bundle, project.getChildByName(bundle), buildOpts)]));
-    const resultObj = results.reduce((res, [bundle, result]) => ({
+    const results = await Promise.all(buildOpts.bundles.map(async (bundle) => [bundle, await buildJson(bundle, project.getChildByName(bundle), buildOpts)]));
+    return results.reduce((res, [bundle, result]) => ({
         ...res,
         [bundle]: result,
     }), {});
-    const jsonEndTime = performance.now();
-    return {
-        severity: findSeverity(results, ([, { result: { severity } }]) => severity),
-        results: resultObj,
-        elapsed: jsonEndTime - jsonStartTime,
-    };
-};
+});
+/**
+ * Log output from `buildJsons`
+ * @see {buildJsons}
+ */
 export const logJsonResults = (jsonResults) => {
     if (typeof jsonResults === 'boolean')
         return;
-    const { elapsed: jsonTime, severity: jsonSeverity, results } = jsonResults;
+    const { elapsed: jsonTime, results } = jsonResults;
     const entries = Object.entries(results);
     if (entries.length === 0)
         return;
@@ -153,8 +157,10 @@ export const logJsonResults = (jsonResults) => {
             },
         ],
     });
+    let jsonSeverity = 'success';
     entries.forEach(([moduleName, { elapsed, result: { severity, error, fileSize } }]) => {
         if (severity === 'error') {
+            jsonSeverity = 'error';
             jsonTable.addRow({
                 jsonSeverity: 'Error',
                 jsonTime: '-',
@@ -163,6 +169,8 @@ export const logJsonResults = (jsonResults) => {
             }, { color: 'red' });
         }
         else {
+            if (jsonSeverity === 'success' && severity === 'warn')
+                jsonSeverity = 'warn';
             jsonTable.addRow({
                 bundle: moduleName,
                 jsonSeverity: severity === 'warn' ? 'Warning' : 'Success',
@@ -183,3 +191,19 @@ export const logJsonResults = (jsonResults) => {
         console.log(`${chalk.cyanBright('JSONS failed with')} ${chalk.redBright('errors')}:\n${jsonTable.render()}\n`);
     }
 };
+/**
+ * Console command for building jsons
+ */
+const jsonCommand = createBuildCommand('jsons', async (buildOpts) => {
+    if (buildOpts.bundles.length === 0)
+        return;
+    const { elapsed: typedocTime, result: [, project] } = await initTypedoc(buildOpts);
+    logTypedocTime(typedocTime);
+    const { elapsed: jsonTotalTime, result } = await buildJsons(project, buildOpts);
+    logJsonResults({
+        results: result,
+        elapsed: jsonTotalTime,
+    });
+})
+    .description('Build only jsons');
+export default jsonCommand;

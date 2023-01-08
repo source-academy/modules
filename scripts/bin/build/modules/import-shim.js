@@ -5,3 +5,4 @@ export const process = {
         NODE_ENV: 'production',
     },
 };
+// or any other constant that needs to be injected

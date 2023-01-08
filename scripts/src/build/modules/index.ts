@@ -3,7 +3,7 @@ import { build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
 
-import type { BuildOptions } from '../../scriptUtils';
+import { type BuildOptions, createBuildCommand } from '../buildUtils';
 import type { BuildResult, Severity } from '../types';
 
 import { logBundleResults, outputBundle } from './bundle';
@@ -11,7 +11,7 @@ import { esbuildOptions } from './moduleUtils';
 import { logTabResults, outputTab } from './tab';
 
 export const buildModules = async (buildOpts: BuildOptions) => {
-  const { modules: bundles, tabs } = buildOpts;
+  const { bundles, tabs } = buildOpts;
   const startPromises: Promise<string>[] = [];
   if (bundles.length > 0) {
     startPromises.push(fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }));
@@ -46,14 +46,14 @@ export const buildModules = async (buildOpts: BuildOptions) => {
     outdir: buildOpts.outDir,
   };
 
-  const [{ metafile: { outputs }, outputFiles }] = await Promise.all([
+  const [{ outputFiles }] = await Promise.all([
     esbuild(config),
-    fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/modules.json`),
+    fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/${buildOpts.manifest}`),
   ]);
 
   const buildResults = await Promise.all(outputFiles.map(async ({ path, text }) => {
-    const { entryPoint } = outputs[path];
-    const [, type, name] = entryPoint.split(pathlib.sep);
+    const [type, name] = path.split(pathlib.sep)
+      .slice(-3, -1);
 
     if (type !== 'bundles' && type !== 'tabs') {
       throw new Error(`Unknown type found for: ${type}: ${path}`);
@@ -104,13 +104,9 @@ export const buildModules = async (buildOpts: BuildOptions) => {
   };
 };
 
-/**
- * Build bundles and tabs only
- */
-export default async (buildOpts: BuildOptions) => {
-  const bundlesToBuild = buildOpts.modules;
+const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
   console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${
-    bundlesToBuild.map((bundle, i) => `${i + 1}. ${bundle}`)
+    buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
       .join('\n')
   }\n`);
 
@@ -122,14 +118,9 @@ export default async (buildOpts: BuildOptions) => {
   const results = await buildModules(buildOpts);
   logBundleResults(results.bundles);
   logTabResults(results.tabs);
-
-  // Refer to https://github.com/evanw/esbuild/issues/1384
-  // Since plugins' 'onEnd' callbacks aren't properly called, we can't use esbuild's internal serve system yet
-  // if (results.serveResult) {
-  //   console.log(chalk.greenBright(`Now serving modules at ${results.serveResult.host}:${results.serveResult.port}`));
-  //   await results.serveResult.wait;
-  // }
-};
+})
+  .description('Build only bundles and tabs');
 
 export { logBundleResults } from './bundle';
-export { default as buildTabCommand, logTabResults } from './tab';
+export { default as buildTabsCommand, logTabResults } from './tab';
+export default buildModulesCommand;

@@ -1,3 +1,5 @@
+import { Command } from 'commander';
+import { retrieveManifest } from '../scriptUtils';
 export const wrapWithTimer = (func) => async (...params) => {
     const startTime = performance.now();
     const result = await func(...params);
@@ -26,4 +28,39 @@ export const fileSizeFormatter = (size) => {
     if (size >= 100)
         return `${divideAndRound(size, 1000, 2)} MB`;
     return `${size.toFixed(2)} KB`;
+};
+export const createBuildCommand = (name, handler) => {
+    const cmd = new Command(name)
+        .option('--outDir <outdir>', 'Output directory', 'build')
+        .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+        .option('--manifest <file>', 'Manifest file', 'modules.json')
+        .option('-m, --modules <...modules>', 'Manually specify which modules to build');
+    if (handler) {
+        return cmd.action(async (opts) => {
+            const manifest = await retrieveManifest(opts.manifest);
+            let bundles = Object.keys(manifest);
+            let modulesSpecified = false;
+            if (opts.modules) {
+                if (typeof opts.modules === 'string')
+                    opts.modules = [opts.modules];
+                const undefineds = opts.modules.filter((m) => !bundles.includes(m));
+                if (undefineds.length > 0) {
+                    throw new Error(`Unknown modules: ${undefineds.join(', ')}`);
+                }
+                bundles = opts.modules;
+                modulesSpecified = true;
+            }
+            const tabs = bundles
+                .flatMap((x) => manifest[x].tabs);
+            await handler({
+                srcDir: opts.srcDir,
+                outDir: opts.outDir,
+                bundles,
+                manifest: opts.manifest,
+                tabs,
+                modulesSpecified,
+            });
+        });
+    }
+    return cmd;
 };

@@ -2,11 +2,12 @@ import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
+import { createBuildCommand } from '../buildUtils';
 import { logBundleResults, outputBundle } from './bundle';
 import { esbuildOptions } from './moduleUtils';
 import { logTabResults, outputTab } from './tab';
 export const buildModules = async (buildOpts) => {
-    const { modules: bundles, tabs } = buildOpts;
+    const { bundles, tabs } = buildOpts;
     const startPromises = [];
     if (bundles.length > 0) {
         startPromises.push(fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }));
@@ -37,20 +38,17 @@ export const buildModules = async (buildOpts) => {
         outbase: buildOpts.outDir,
         outdir: buildOpts.outDir,
     };
-    const [{ metafile, outputFiles }] = await Promise.all([
+    const [{ outputFiles }] = await Promise.all([
         esbuild(config),
-        fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/modules.json`),
+        fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/${buildOpts.manifest}`),
     ]);
-    await fs.writeFile('metafile.json', JSON.stringify(metafile, null, 2));
-    const buildResults = await Promise.all(outputFiles.map(async (outputFile) => {
-        const { dir: sourceDir } = pathlib.parse(outputFile.path);
-        const name = pathlib.basename(sourceDir);
-        const { dir: typeDir } = pathlib.parse(sourceDir);
-        const type = pathlib.basename(typeDir);
+    const buildResults = await Promise.all(outputFiles.map(async ({ path, text }) => {
+        const [type, name] = path.split(pathlib.sep)
+            .slice(-3, -1);
         if (type !== 'bundles' && type !== 'tabs') {
-            throw new Error(`Unknown type found for: ${type}: ${outputFile.path}`);
+            throw new Error(`Unknown type found for: ${type}: ${path}`);
         }
-        const result = await (type === 'bundles' ? outputBundle : outputTab)(name, outputFile.text, buildOpts);
+        const result = await (type === 'bundles' ? outputBundle : outputTab)(name, text, buildOpts);
         const endTime = performance.now() - startTime;
         stats[type].buildCount++;
         if (stats[type].buildCount === stats[type].totalCount)
@@ -88,12 +86,8 @@ export const buildModules = async (buildOpts) => {
         },
     };
 };
-/**
- * Build bundles and tabs only
- */
-export default async (buildOpts) => {
-    const bundlesToBuild = buildOpts.modules;
-    console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${bundlesToBuild.map((bundle, i) => `${i + 1}. ${bundle}`)
+const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
+    console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
         .join('\n')}\n`);
     await Promise.all([
         fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }),
@@ -102,10 +96,8 @@ export default async (buildOpts) => {
     const results = await buildModules(buildOpts);
     logBundleResults(results.bundles);
     logTabResults(results.tabs);
-    // if (results.serveResult) {
-    //   console.log(chalk.greenBright(`Now serving modules at ${results.serveResult.host}:${results.serveResult.port}`));
-    //   await results.serveResult.wait;
-    // }
-};
+})
+    .description('Build only bundles and tabs');
 export { logBundleResults } from './bundle';
-export { default as buildTabCommand, logTabResults } from './tab';
+export { default as buildTabsCommand, logTabResults } from './tab';
+export default buildModulesCommand;

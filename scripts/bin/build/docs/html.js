@@ -1,6 +1,11 @@
 import chalk from 'chalk';
+import { Command } from 'commander';
 import { divideAndRound, wrapWithTimer } from '../buildUtils';
-export default wrapWithTimer(async (app, project, buildOpts) => {
+import { initTypedoc, logTypedocTime } from './docUtils';
+/**
+ * Build HTML documentation
+ */
+export const buildHtml = wrapWithTimer(async (app, project, buildOpts) => {
     if (buildOpts.modulesSpecified) {
         return {
             severity: 'warn',
@@ -19,6 +24,10 @@ export default wrapWithTimer(async (app, project, buildOpts) => {
         };
     }
 });
+/**
+ * Log output from `buildHtml`
+ * @see {buildHtml}
+ */
 export const logHtmlResult = ({ elapsed, result: { severity, error } }) => {
     if (severity === 'success') {
         const timeStr = divideAndRound(elapsed, 1000, 2);
@@ -31,3 +40,17 @@ export const logHtmlResult = ({ elapsed, result: { severity, error } }) => {
         console.log(`${chalk.cyanBright('HTML documentation')} ${chalk.redBright('failed')}: ${error}\n`);
     }
 };
+/**
+ * CLI command to only build HTML documentation
+ */
+const buildHtmlCommand = new Command('html')
+    .option('--outDir <outdir>', 'Output directory', 'build')
+    .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+    .description('Build only HTML documentation')
+    .action(async (buildOpts) => {
+    const { elapsed: typedoctime, result: [app, project] } = await initTypedoc(buildOpts);
+    logTypedocTime(typedoctime);
+    const htmlResult = await buildHtml(app, project, buildOpts);
+    logHtmlResult(htmlResult);
+});
+export default buildHtmlCommand;

@@ -1,8 +1,10 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
+import { Command } from 'commander';
 import { Table } from 'console-table-printer';
 import { promises as fs } from 'fs';
+import { retrieveManifest } from '../../scriptUtils';
 import { divideAndRound, fileSizeFormatter } from '../buildUtils';
 import { requireCreator } from './moduleUtils';
 import { buildModules } from '.';
@@ -125,14 +127,41 @@ export const logTabResults = (tabResults) => {
         console.log(`${chalk.cyanBright('Tabs failed with')} ${chalk.redBright('errors')} in ${tabTimeStr}:\n${tabTable.render()}\n`);
     }
 };
-export default async (buildOpts) => {
-    buildOpts.modules = [];
-    await fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true });
+const buildTabsCommand = new Command('tabs')
+    .option('--outDir <outdir>', 'Output directory', 'build')
+    .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+    .option('--manifest <file>', 'Manifest file', 'modules.json')
+    .option('-t, --tabs <...tabs>', 'Manually specify which tabs to build')
+    .description('Build only tabs')
+    .action(async (buildOpts) => {
+    const [manifest] = await Promise.all([
+        retrieveManifest(buildOpts.manifest),
+        await fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true }),
+    ]);
+    const allTabs = Object.values(manifest)
+        .flatMap((x) => x.tabs);
+    if (buildOpts.tabs) {
+        if (typeof buildOpts.tabs === 'string')
+            buildOpts.tabs = [buildOpts.tabs];
+        const undefineds = buildOpts.tabs.filter((tabName) => !allTabs.includes(tabName));
+        if (undefineds.length > 0) {
+            throw new Error(`Unknown tabs: ${undefineds.join(', ')}`);
+        }
+    }
+    else {
+        buildOpts.tabs = allTabs;
+    }
     console.log(`${chalk.cyanBright('Building the following tabs:')}\n${buildOpts.tabs.map((tabName, i) => `${i + 1}. ${tabName}`)
         .join('\n')}\n`);
-    const { tabs } = await buildModules(buildOpts);
+    const { tabs } = await buildModules({
+        ...buildOpts,
+        tabs: buildOpts.tabs,
+        bundles: [],
+        modulesSpecified: true,
+    });
     logTabResults(tabs);
-};
+});
+export default buildTabsCommand;
 // export const buildTabs = wrapWithTimer(async (
 //   buildOpts: BuildOptions,
 //   tabs: string[],

@@ -22,17 +22,15 @@ async function askMode() {
 export default new Command('create')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
-  .action(
-    async (buildOpts: Options) => {
-      try {
-        const mode = await askMode();
-        if (mode === 'module') await addNewModule(buildOpts);
-        else if (mode === 'tab') await addNewTab(buildOpts);
-      } catch (error) {
-        _error(`ERROR: ${error.message}`);
-        info('Terminating module app...');
-      } finally {
-        rl.close();
-      }
-    },
-  );
+  .action(async (buildOpts: Options) => {
+    try {
+      const mode = await askMode();
+      if (mode === 'module') await addNewModule(buildOpts);
+      else if (mode === 'tab') await addNewTab(buildOpts);
+    } catch (error) {
+      _error(`ERROR: ${error.message}`);
+      info('Terminating module app...');
+    } finally {
+      rl.close();
+    }
+  });

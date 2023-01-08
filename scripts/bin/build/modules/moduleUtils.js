@@ -126,9 +126,13 @@ export const esbuildOptions = {
         '.ts': 'ts',
         '.tsx': 'tsx',
     },
-    metafile: true,
-    minify: true,
+    // minify: true,
     platform: 'browser',
     target: 'es6',
     write: false,
+};
+export const externalDependencies = {
+    'react': '_react',
+    'react-dom': 'ReactDOM',
+    'js-slang/moduleHelpers': 'moduleHelpers',
 };
