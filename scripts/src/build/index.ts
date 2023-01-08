@@ -3,7 +3,15 @@ import { Command } from 'commander';
 
 import { logTypedocTime } from './docs/docUtils';
 import { createBuildCommand } from './buildUtils';
-import buildDocsCommand, { buildHtml, buildHtmlCommand, buildJsonCommand, buildJsons, initTypedoc, logHtmlResult, logJsonResults } from './docs';
+import buildDocsCommand, {
+  buildHtml,
+  buildHtmlCommand,
+  buildJsonCommand,
+  buildJsons,
+  initTypedoc,
+  logHtmlResult,
+  logJsonResults,
+} from './docs';
 import buildModulesCommand, { buildModules, buildTabsCommand, logBundleResults, logTabResults } from './modules';
 
 const buildAllCommand = createBuildCommand('all', async (buildOpts) => {
@@ -45,7 +53,7 @@ const buildAllCommand = createBuildCommand('all', async (buildOpts) => {
   .description('Build bundles, tabs, jsons and HTML documentation');
 
 export default new Command('build')
-  .description('Run without arguments to build all, or the specific build subcommand')
+  .description('Run without arguments to build all, or use a specific build subcommand')
   .addCommand(buildAllCommand, { isDefault: true })
   .addCommand(buildDocsCommand)
   .addCommand(buildHtmlCommand)

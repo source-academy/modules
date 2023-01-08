@@ -6,6 +6,11 @@ By reading comments and type annotations, `typedoc` is able to generate both hum
 
 By default, `typedoc` does type checking for the code, similar to `tsc`. It has been turned off as more often then not, `tsc` will be run before `typedoc`, making the type checking performed by `typedoc` extraneous. This does mean that if the build script is called without running `tsc`, there is a possibility that type errors will cause `typedoc` to crash.
 
+## Commands
+- `build docs`: Build both json and html documentation
+- `build html`: Build only html documentation
+- `build jsons` Build only json documentation
+
 ## Writing Documentation
 `typedoc` reads both Typescript type annotations, as well as JSDOC style comments. It will build documentation for all functions and constants exported by the particular module.
 

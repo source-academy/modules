@@ -22,6 +22,7 @@ async function askMode() {
 export default new Command('create')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
+  .description('Interactively create a new module or tab')
   .action(async (buildOpts: Options) => {
     try {
       const mode = await askMode();

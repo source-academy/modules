@@ -22,6 +22,14 @@ import type { BuildResult, OperationResult } from '../types';
 import { requireCreator } from './moduleUtils';
 import { buildModules } from '.';
 
+/**
+ * Imports that are provided at runtime
+ */
+const externals = {
+  'react': '_react',
+  'react-dom': 'ReactDOM',
+};
+
 export const outputTab = async (tabName: string, text: string, buildOpts: BuildOptions): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
@@ -31,23 +39,15 @@ export const outputTab = async (tabName: string, text: string, buildOpts: BuildO
       type: 'ExpressionStatement',
       expression: {
         type: 'FunctionExpression',
-        params: [
-          {
+        params: Object.keys(externals)
+          .map((name) => ({
             type: 'Identifier',
-            name: '_react',
-          } as Identifier,
-          {
-            type: 'Identifier',
-            name: 'ReactDOM',
-          } as Identifier,
-        ],
+            name,
+          }) as Identifier),
         body: {
           type: 'BlockStatement',
           body: [
-            requireCreator({
-              'react': '_react',
-              'react-dom': 'ReactDOM',
-            }),
+            requireCreator(externals),
             {
               type: 'ReturnStatement',
               argument: {
