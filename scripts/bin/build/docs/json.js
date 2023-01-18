@@ -180,10 +180,11 @@ export const logJsonResults = (jsonResults) => {
         else {
             if (jsonSeverity === 'success' && severity === 'warn')
                 jsonSeverity = 'warn';
+            const timeStr = elapsed < 10 ? '<0.01s' : `${divideAndRound(jsonTime, 1000, 2)}s`;
             jsonTable.addRow({
                 bundle: moduleName,
                 jsonSeverity: severity === 'warn' ? 'Warning' : 'Success',
-                jsonTime: divideAndRound(elapsed, 1000, 2),
+                jsonTime: timeStr,
                 jsonError: error || '-',
                 fileSize: fileSizeFormatter(fileSize),
             }, { color: severity === 'warn' ? 'yellow' : 'green' });
