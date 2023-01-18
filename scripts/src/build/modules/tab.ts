@@ -39,7 +39,7 @@ export const outputTab = async (tabName: string, text: string, buildOpts: BuildO
       type: 'ExpressionStatement',
       expression: {
         type: 'FunctionExpression',
-        params: Object.keys(externals)
+        params: Object.values(externals)
           .map((name) => ({
             type: 'Identifier',
             name,
