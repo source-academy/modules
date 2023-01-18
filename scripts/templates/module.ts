@@ -32,7 +32,7 @@ export async function addNew() {
   const bundleDestination = `${SOURCE_PATH}/bundles/${moduleName}`;
   await fs.mkdir(bundleDestination, { recursive: true });
   await fs.copyFile(
-    `${cjsDirname(import.meta.url)}/__bundle__.ts`,
+    `${cjsDirname(import.meta.url)}/templates/__bundle__.ts`,
     `${bundleDestination}/index.ts`,
   );
   await fs.writeFile(

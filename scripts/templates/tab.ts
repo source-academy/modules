@@ -49,7 +49,7 @@ export async function addNew() {
   const tabDestination = `${SOURCE_PATH}/tabs/${tabName}`;
   await fs.mkdir(tabDestination, { recursive: true });
   await fs.copyFile(
-    `${cjsDirname(import.meta.url)}/templates/__templates__.ts`,
+    `${cjsDirname(import.meta.url)}/templates/__tab__.tsx`,
     `${tabDestination}/index.tsx`,
   );
   await fs.writeFile(
