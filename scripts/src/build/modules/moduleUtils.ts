@@ -107,7 +107,7 @@ export const requireCreator = (createObj: Record<string, string>) => ({
                   {
                     type: 'TemplateElement',
                     value: {
-                      raw: 'Unknown import "',
+                      raw: 'Internal Error: Unknown import "',
                     },
                     tail: false,
                   },
