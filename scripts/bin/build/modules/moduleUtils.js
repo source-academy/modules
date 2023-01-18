@@ -89,7 +89,7 @@ export const requireCreator = (createObj) => ({
                                     {
                                         type: 'TemplateElement',
                                         value: {
-                                            raw: 'Unknown import "',
+                                            raw: 'Internal Error: Unknown import "',
                                         },
                                         tail: false,
                                     },

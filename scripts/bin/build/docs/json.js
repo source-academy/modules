@@ -10,13 +10,16 @@ const typeToName = (type, alt = 'unknown') => (type ? type.name : alt);
  */
 const parsers = {
     Variable(element) {
-        const { comment: { summary } } = element;
-        const desc = drawdown(summary.map(({ text }) => text)
-            .join(''));
+        let desc;
+        if (!element.comment)
+            desc = 'No description available';
+        else {
+            desc = drawdown(element.comment.summary.map(({ text }) => text)
+                .join(''));
+        }
         return `<div><h4>${element.name}: ${typeToName(element.type)}</h4><div class="description">${desc}</div></div>`;
     },
     Function({ name: elementName, signatures: [signature] }) {
-        const { comment: { summary } } = signature;
         // Form the parameter string for the function
         let paramStr;
         if (!signature.parameters)
@@ -30,8 +33,13 @@ const parsers = {
                 .join(', ')})`;
         }
         const resultStr = typeToName(signature.type, 'void');
-        const desc = drawdown(summary.map(({ text }) => text)
-            .join(''));
+        let desc;
+        if (!signature.comment)
+            desc = 'No description available';
+        else {
+            desc = drawdown(signature.comment.summary.map(({ text }) => text)
+                .join(''));
+        }
         const header = `${elementName}${paramStr} → {${resultStr}}`;
         return `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
     },
@@ -77,17 +85,18 @@ const buildJson = wrapWithTimer(async (bundle, moduleDocs, buildOpts) => {
             },
             {},
         ]);
-        if (!result) {
-            return {
-                elapsed: 0,
-                severity: 'warn',
-                error: `No json generated for ${bundle}`,
-                fileSize: 0,
-            };
+        let size;
+        if (result) {
+            const outFile = `${buildOpts.outDir}/jsons/${bundle}.json`;
+            await fs.writeFile(outFile, JSON.stringify(result, null, 2));
+            ({ size } = await fs.stat(outFile));
         }
-        const outFile = `${buildOpts.outDir}/jsons/${bundle}.json`;
-        await fs.writeFile(outFile, JSON.stringify(result, null, 2));
-        const { size } = await fs.stat(outFile);
+        else {
+            if (sevRes.severity !== 'error')
+                sevRes.severity = 'warn';
+            sevRes.errors.push(`No json generated for ${bundle}`);
+            size = 0;
+        }
         const errorStr = sevRes.errors.length > 1 ? `${sevRes.errors[0]} +${sevRes.errors.length - 1}` : sevRes.errors[0];
         return {
             severity: sevRes.severity,

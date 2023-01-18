@@ -8,6 +8,13 @@ import { retrieveManifest } from '../../scriptUtils';
 import { divideAndRound, fileSizeFormatter } from '../buildUtils';
 import { requireCreator } from './moduleUtils';
 import { buildModules } from '.';
+/**
+ * Imports that are provided at runtime
+ */
+const externals = {
+    'react': '_react',
+    'react-dom': 'ReactDOM',
+};
 export const outputTab = async (tabName, text, buildOpts) => {
     try {
         const parsed = parse(text, { ecmaVersion: 6 });
@@ -16,23 +23,15 @@ export const outputTab = async (tabName, text, buildOpts) => {
             type: 'ExpressionStatement',
             expression: {
                 type: 'FunctionExpression',
-                params: [
-                    {
-                        type: 'Identifier',
-                        name: '_react',
-                    },
-                    {
-                        type: 'Identifier',
-                        name: 'ReactDOM',
-                    },
-                ],
+                params: Object.keys(externals)
+                    .map((name) => ({
+                    type: 'Identifier',
+                    name,
+                })),
                 body: {
                     type: 'BlockStatement',
                     body: [
-                        requireCreator({
-                            'react': '_react',
-                            'react-dom': 'ReactDOM',
-                        }),
+                        requireCreator(externals),
                         {
                             type: 'ReturnStatement',
                             argument: {
