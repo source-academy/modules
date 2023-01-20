@@ -44,14 +44,14 @@ type BuildCommandOptions = {
   srcDir: string;
   outDir: string;
   manifest: string;
-  modules?: string[] | string;
+  modules?: string[];
 };
 export const createBuildCommand = (name: string, handler?: CommandHandler) => {
   const cmd = new Command(name)
     .option('--outDir <outdir>', 'Output directory', 'build')
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
-    .option('-m, --modules <...modules>', 'Manually specify which modules to build');
+    .option('-m, --modules <modules...>', 'Manually specify which modules to build');
   if (handler) {
     return cmd.action(async (opts: BuildCommandOptions) => {
       const manifest = await retrieveManifest(opts.manifest);
@@ -59,7 +59,6 @@ export const createBuildCommand = (name: string, handler?: CommandHandler) => {
       let bundles: string[] = Object.keys(manifest);
       let modulesSpecified = false;
       if (opts.modules) {
-        if (typeof opts.modules === 'string') opts.modules = [opts.modules];
         const undefineds = opts.modules.filter((m) => !bundles.includes(m));
 
         if (undefineds.length > 0) {

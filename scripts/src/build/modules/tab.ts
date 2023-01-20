@@ -148,13 +148,13 @@ const buildTabsCommand = new Command('tabs')
   .option('--outDir <outdir>', 'Output directory', 'build')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
-  .option('-t, --tabs <...tabs>', 'Manually specify which tabs to build')
+  .option('-t, --tabs <tabs...>', 'Manually specify which tabs to build')
   .description('Build only tabs')
   .action(async (buildOpts: {
     srcDir: string,
     outDir: string,
     manifest: string,
-    tabs?: string[] | string,
+    tabs?: string[],
   }) => {
     const [manifest] = await Promise.all([
       retrieveManifest(buildOpts.manifest),
@@ -165,7 +165,6 @@ const buildTabsCommand = new Command('tabs')
       .flatMap((x) => x.tabs);
 
     if (buildOpts.tabs) {
-      if (typeof buildOpts.tabs === 'string') buildOpts.tabs = [buildOpts.tabs];
       const undefineds = buildOpts.tabs.filter((tabName) => !allTabs.includes(tabName));
       if (undefineds.length > 0) {
         throw new Error(`Unknown tabs: ${undefineds.join(', ')}`);
