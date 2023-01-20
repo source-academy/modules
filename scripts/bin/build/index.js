@@ -16,19 +16,16 @@ const buildAllCommand = createBuildCommand('all', async (buildOpts) => {
                 buildHtml(app, project, buildOpts),
             ]);
             return {
-                json: {
-                    elapsed: json.elapsed,
-                    results: json.result,
-                },
+                json,
                 html,
                 typedoctime: elapsed,
             };
         }),
     ]);
     logTypedocTime(typedoctime);
-    logBundleResults(bundleResults);
-    logTabResults(tabResults);
-    logJsonResults(jsonResults);
+    logBundleResults(bundleResults, buildOpts.verbose);
+    logTabResults(tabResults, buildOpts.verbose);
+    logJsonResults(jsonResults, buildOpts.verbose);
     logHtmlResult(htmlResult);
 })
     .description('Build bundles, tabs, jsons and HTML documentation');
@@ -40,18 +37,3 @@ export default new Command('build')
     .addCommand(buildJsonCommand)
     .addCommand(buildModulesCommand)
     .addCommand(buildTabsCommand);
-// export const watchAll = async (buildOpts: BuildOptions) => {
-//   const manifest = await retrieveManifest(buildOpts);
-//   const bundlesToBuild = Object.keys(manifest);
-//   const tabs = Object.values(manifest)
-//     .flatMap((module) => module.tabs);
-//   console.log(chalk.magentaBright('Beginning watch'));
-//   await Promise.all([
-//     initTypedoc(bundlesToBuild, buildOpts)
-//       .then(({ elapsed, result: [, project] }) => {
-//         console.log(chalk.cyanBright(`Took ${divideAndRound(elapsed, 1000, 2)}s to initialize typedoc`));
-//         return watchBundles(buildOpts, project, bundlesToBuild);
-//       }),
-//     watchTabs(buildOpts, tabs),
-//   ]);
-// };

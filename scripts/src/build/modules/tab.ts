@@ -16,7 +16,7 @@ import type {
 import { promises as fs } from 'fs';
 
 import { retrieveManifest } from '../../scriptUtils';
-import { type BuildOptions, divideAndRound, fileSizeFormatter } from '../buildUtils';
+import { divideAndRound, fileSizeFormatter } from '../buildUtils';
 import type { BuildResult, OperationResult } from '../types';
 
 import { requireCreator } from './moduleUtils';
@@ -30,7 +30,7 @@ const externals = {
   'react-dom': 'ReactDOM',
 };
 
-export const outputTab = async (tabName: string, text: string, buildOpts: BuildOptions): Promise<Omit<BuildResult, 'elapsed'>> => {
+export const outputTab = async (tabName: string, text: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
     const declStatement = parsed.body[1] as VariableDeclaration;
@@ -68,7 +68,7 @@ export const outputTab = async (tabName: string, text: string, buildOpts: BuildO
     let newCode = generate(newTab);
     if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
 
-    const outFile = `${buildOpts.outDir}/tabs/${tabName}.js`;
+    const outFile = `${outDir}/tabs/${tabName}.js`;
     await fs.writeFile(outFile, newCode);
     const { size } = await fs.stat(outFile);
     return {
@@ -83,13 +83,28 @@ export const outputTab = async (tabName: string, text: string, buildOpts: BuildO
   }
 };
 
-export const logTabResults = (tabResults: OperationResult) => {
+export const logTabResults = (tabResults: OperationResult, verbose: boolean) => {
   if (typeof tabResults === 'boolean') return;
 
-  const { elapsed: tabTime, severity: tabSeverity, results } = tabResults;
+  const { severity: tabSeverity, results } = tabResults;
   const entries = Object.entries(results);
   if (entries.length === 0) return;
 
+  if (!verbose) {
+    if (tabSeverity === 'success') {
+      console.log(chalk.greenBright('Successfully built all tabs!\n'));
+      return;
+    }
+
+    console.log(chalk.cyanBright(`Tab building ${chalk.redBright('failed')} with errors:\n${
+      Object.entries(results)
+        .filter(([, { severity }]) => severity === 'error')
+        .map(([tabName, { error }], i) => chalk.redBright(`${i + 1}. ${tabName}: ${error}`))
+        .join('\n')
+    }\n`));
+
+    return;
+  }
   const tabTable = new Table({
     columns: [
       {
@@ -136,11 +151,10 @@ export const logTabResults = (tabResults: OperationResult) => {
     }
   });
 
-  const tabTimeStr = tabTime < 0.01 ? '<0.01s' : `${divideAndRound(tabTime, 1000, 2)}s`;
   if (tabSeverity === 'success') {
-    console.log(`${chalk.cyanBright('Tabs built')} ${chalk.greenBright('successfully')} in ${tabTimeStr}:\n${tabTable.render()}\n`);
+    console.log(`${chalk.cyanBright('Tabs built')} ${chalk.greenBright('successfully')}:\n${tabTable.render()}\n`);
   } else {
-    console.log(`${chalk.cyanBright('Tabs failed with')} ${chalk.redBright('errors')} in ${tabTimeStr}:\n${tabTable.render()}\n`);
+    console.log(`${chalk.cyanBright('Tabs failed with')} ${chalk.redBright('errors')}:\n${tabTable.render()}\n`);
   }
 };
 
@@ -155,6 +169,7 @@ const buildTabsCommand = new Command('tabs')
     outDir: string,
     manifest: string,
     tabs?: string[],
+    verbose: boolean,
   }) => {
     const [manifest] = await Promise.all([
       retrieveManifest(buildOpts.manifest),
@@ -181,70 +196,8 @@ const buildTabsCommand = new Command('tabs')
       bundles: [],
       modulesSpecified: true,
     });
-    logTabResults(tabs);
+    logTabResults(tabs, buildOpts.verbose);
   });
 
 
 export default buildTabsCommand;
-
-// export const buildTabs = wrapWithTimer(async (
-//   buildOpts: BuildOptions,
-//   tabs: string[],
-// ) => {
-//   const tabResults: Record<string, BuildResult> = {};
-//   let tabSeverity: Severity = 'success';
-
-//   await fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true });
-
-//   await esbuild({
-//     ...esbuildOptions,
-//     entryPoints: tabs.map((tabName) => `${buildOpts.srcDir}/tabs/${tabName}/index.tsx`),
-//     outdir: `${buildOpts.outDir}/tabs`,
-//     plugins: [
-//       {
-//         name: 'tabPlugin',
-//         setup(pluginBuild) {
-//           pluginBuild.onEnd(({ outputFiles }) => Promise.all(outputFiles.map(async ({ path, text }) => {
-//             const { dir } = pathlib.parse(path);
-//             const tabName = pathlib.basename(dir);
-
-//             const result = await outputTab(tabName, text, buildOpts);
-//             if (result.severity === 'error') tabSeverity = 'error';
-//             tabResults[tabName] = result;
-//           })) as unknown as Promise<void>);
-//         },
-//       },
-//     ],
-//   });
-
-//   return {
-//     overall: tabSeverity,
-//     results: tabResults,
-//   };
-// });
-
-// export const watchTabs = (
-//   buildOpts: BuildOptions,
-//   tabs: string[],
-// ) => fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true })
-//   .then(() => esbuild({
-//     ...esbuildOptions,
-//     entryPoints: tabs.map((tabName) => `${buildOpts.srcDir}/tabs/${tabName}/index.tsx`),
-//     outdir: `${buildOpts.outDir}/tabs`,
-//     watch: {
-//       async onRebuild(_, { outputFiles }) {
-//         const strings = await Promise.all(outputFiles.map(async ({ path, text }) => {
-//           const { dir } = pathlib.parse(path);
-//           const tabName = pathlib.basename(dir);
-
-//           const { severity, error } = await outputTab(tabName, text, buildOpts);
-//           if (severity === 'success') {
-//             return `${chalk.cyanBright(`${tabName} built`)} ${chalk.greenBright('successfully')}`;
-//           }
-//           return `${chalk.cyanBright(`${tabName} build`)} ${chalk.redBright('failed')}: ${error}`;
-//         }));
-
-//         console.log(strings.join('\n'));
-//       },
-//     },
-//   }));

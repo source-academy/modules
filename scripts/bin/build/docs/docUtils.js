@@ -4,7 +4,7 @@ import { divideAndRound, wrapWithTimer } from '../buildUtils';
 /**
  * Offload running typedoc into async code to increase parallelism
  */
-export const initTypedoc = wrapWithTimer(({ srcDir, bundles }) => new Promise((resolve, reject) => {
+export const initTypedoc = wrapWithTimer(({ srcDir, bundles, verbose, }, watch) => new Promise((resolve, reject) => {
     try {
         const app = new Application();
         app.options.addReader(new TSConfigReader());
@@ -12,15 +12,20 @@ export const initTypedoc = wrapWithTimer(({ srcDir, bundles }) => new Promise((r
             categorizeByGroup: true,
             entryPoints: bundles.map((bundle) => `${srcDir}/bundles/${bundle}/index.ts`),
             excludeInternal: true,
-            logger: 'none',
+            logLevel: verbose ? 'Info' : 'Error',
             name: 'Source Academy Modules',
             readme: `${srcDir}/README.md`,
             tsconfig: `${srcDir}/tsconfig.json`,
             skipErrorChecking: true,
         });
+        if (watch) {
+            resolve([app, null]);
+            return;
+        }
         const project = app.convert();
-        if (!project)
+        if (!project) {
             reject(new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'));
+        }
         else
             resolve([app, project]);
     }

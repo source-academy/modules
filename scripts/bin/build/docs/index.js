@@ -18,10 +18,7 @@ const buildDocsCommand = createBuildCommand('docs', async (buildOpts) => {
     if (!jsonResults && !htmlResult)
         return;
     logHtmlResult(htmlResult);
-    logJsonResults({
-        elapsed: jsonResults.elapsed,
-        results: jsonResults.result,
-    });
+    logJsonResults(jsonResults, buildOpts.verbose);
 })
     .description('Build only jsons and HTML documentation');
 export default buildDocsCommand;

@@ -6,6 +6,34 @@ import { createBuildCommand } from '../buildUtils';
 import { logBundleResults, outputBundle } from './bundle';
 import { esbuildOptions } from './moduleUtils';
 import { logTabResults, outputTab } from './tab';
+export const reduceOutputFiles = (outputFiles, outDir, startTime) => Promise.all(outputFiles.map(async ({ path, text }) => {
+    const [type, name] = path.split(pathlib.sep)
+        .slice(-3, -1);
+    if (type !== 'bundles' && type !== 'tabs') {
+        throw new Error(`Unknown type found for: ${type}: ${path}`);
+    }
+    const result = await (type === 'bundles' ? outputBundle : outputTab)(name, text, outDir);
+    const endTime = performance.now() - startTime;
+    return [type, name, {
+            elapsed: endTime,
+            ...result,
+        }];
+}));
+export const reduceModuleResults = (results) => results.reduce((res, [type, name, entry]) => {
+    if (entry.severity === 'error')
+        res[type].severity = 'error';
+    res[type].results[name] = entry;
+    return res;
+}, {
+    bundles: {
+        severity: 'success',
+        results: {},
+    },
+    tabs: {
+        severity: 'success',
+        results: {},
+    },
+});
 export const buildModules = async (buildOpts) => {
     const { bundles, tabs } = buildOpts;
     const startPromises = [];
@@ -17,18 +45,6 @@ export const buildModules = async (buildOpts) => {
     }
     await Promise.all(startPromises);
     const startTime = performance.now();
-    const stats = {
-        bundles: {
-            time: 0,
-            buildCount: 0,
-            totalCount: bundles.length,
-        },
-        tabs: {
-            time: 0,
-            buildCount: 0,
-            totalCount: tabs.length,
-        },
-    };
     const config = {
         ...esbuildOptions,
         entryPoints: [
@@ -42,49 +58,8 @@ export const buildModules = async (buildOpts) => {
         esbuild(config),
         fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/${buildOpts.manifest}`),
     ]);
-    const buildResults = await Promise.all(outputFiles.map(async ({ path, text }) => {
-        const [type, name] = path.split(pathlib.sep)
-            .slice(-3, -1);
-        if (type !== 'bundles' && type !== 'tabs') {
-            throw new Error(`Unknown type found for: ${type}: ${path}`);
-        }
-        const result = await (type === 'bundles' ? outputBundle : outputTab)(name, text, buildOpts);
-        const endTime = performance.now() - startTime;
-        stats[type].buildCount++;
-        if (stats[type].buildCount === stats[type].totalCount)
-            stats[type].time = endTime;
-        return {
-            name,
-            elapsed: endTime,
-            type,
-            ...result,
-        };
-    }));
-    const { bundles: bundleResults, tabs: tabResults } = buildResults.reduce((res, entry) => {
-        if (entry.severity === 'error')
-            res[entry.type].severity = 'error';
-        res[entry.type].results[entry.name] = entry;
-        return res;
-    }, {
-        bundles: {
-            severity: 'success',
-            results: {},
-        },
-        tabs: {
-            severity: 'success',
-            results: {},
-        },
-    });
-    return {
-        bundles: {
-            elapsed: stats.bundles.time,
-            ...bundleResults,
-        },
-        tabs: {
-            elapsed: stats.tabs.time,
-            ...tabResults,
-        },
-    };
+    const buildResults = await reduceOutputFiles(outputFiles, buildOpts.outDir, startTime);
+    return reduceModuleResults(buildResults);
 };
 const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
     console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
@@ -94,8 +69,8 @@ const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
         fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true }),
     ]);
     const results = await buildModules(buildOpts);
-    logBundleResults(results.bundles);
-    logTabResults(results.tabs);
+    logBundleResults(results.bundles, buildOpts.verbose);
+    logTabResults(results.tabs, buildOpts.verbose);
 })
     .description('Build only bundles and tabs');
 export { logBundleResults } from './bundle';

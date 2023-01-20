@@ -34,14 +34,14 @@ export const createBuildCommand = (name, handler) => {
         .option('--outDir <outdir>', 'Output directory', 'build')
         .option('--srcDir <srcdir>', 'Source directory for files', 'src')
         .option('--manifest <file>', 'Manifest file', 'modules.json')
-        .option('-m, --modules <modules...>', 'Manually specify which modules to build');
+        .option('-m, --modules <modules...>', 'Manually specify which modules to build')
+        .option('-v, --verbose', 'Display more information about the build results', false);
     if (handler) {
         return cmd.action(async (opts) => {
             const manifest = await retrieveManifest(opts.manifest);
             let bundles = Object.keys(manifest);
             let modulesSpecified = false;
             if (opts.modules) {
-                // if (typeof opts.modules === 'string') opts.modules = [opts.modules];
                 const undefineds = opts.modules.filter((m) => !bundles.includes(m));
                 if (undefineds.length > 0) {
                     throw new Error(`Unknown modules: ${undefineds.join(', ')}`);
@@ -58,6 +58,7 @@ export const createBuildCommand = (name, handler) => {
                 manifest: opts.manifest,
                 tabs,
                 modulesSpecified,
+                verbose: opts.verbose,
             });
         });
     }

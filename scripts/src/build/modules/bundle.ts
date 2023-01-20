@@ -14,14 +14,14 @@ import type {
 } from 'estree';
 import { promises as fsPromises } from 'fs';
 
-import { type BuildOptions, divideAndRound, fileSizeFormatter } from '../buildUtils';
+import { divideAndRound, fileSizeFormatter } from '../buildUtils';
 import type { BuildResult, OperationResult } from '../types';
 
 import { requireCreator } from './moduleUtils';
 
 const HELPER_NAME = 'moduleHelpers';
 
-export const outputBundle = async (name: string, bundleText: string, buildOpts: BuildOptions): Promise<Omit<BuildResult, 'elapsed'>> => {
+export const outputBundle = async (name: string, bundleText: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(bundleText, { ecmaVersion: 6 }) as unknown as Program;
     const exprStatement = parsed.body[1] as unknown as VariableDeclaration;
@@ -56,7 +56,7 @@ export const outputBundle = async (name: string, bundleText: string, buildOpts: 
     let newCode = generate(output);
     if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
 
-    const outFile = `${buildOpts.outDir}/bundles/${name}.js`;
+    const outFile = `${outDir}/bundles/${name}.js`;
     await fsPromises.writeFile(outFile, newCode);
     const { size } = await fsPromises.stat(outFile);
     return {
@@ -71,12 +71,28 @@ export const outputBundle = async (name: string, bundleText: string, buildOpts: 
   }
 };
 
-export const logBundleResults = (bundleResults: OperationResult) => {
+export const logBundleResults = (bundleResults: OperationResult, verbose: boolean) => {
   if (typeof bundleResults === 'boolean') return;
 
-  const { elapsed: bundleTime, severity: bundleSeverity, results } = bundleResults;
+  const { severity: bundleSeverity, results } = bundleResults;
   const entries = Object.entries(results);
   if (entries.length === 0) return;
+
+  if (!verbose) {
+    if (bundleSeverity === 'success') {
+      console.log(chalk.greenBright('Successfully built all bundles!\n'));
+      return;
+    }
+
+    console.log(chalk.cyanBright(`Bundle building ${chalk.redBright('failed')} with errors:\n${
+      Object.entries(results)
+        .filter(([, { severity }]) => severity === 'error')
+        .map(([bundle, { error }], i) => chalk.redBright(`${i + 1}. ${bundle}: ${error}`))
+        .join('\n')
+    }\n`));
+
+    return;
+  }
 
   const bundleTable = new Table({
     columns: [{
@@ -121,120 +137,9 @@ export const logBundleResults = (bundleResults: OperationResult) => {
     }
   });
 
-  const bundleTimeStr = bundleTime < 0.01 ? '<0.01s' : `${divideAndRound(bundleTime, 1000, 2)}s`;
   if (bundleSeverity === 'success') {
-    console.log(`${chalk.cyanBright('Bundles built')} ${chalk.greenBright('successfully')} in ${bundleTimeStr}:\n${bundleTable.render()}\n`);
+    console.log(`${chalk.cyanBright('Bundles built')} ${chalk.greenBright('successfully')}:\n${bundleTable.render()}\n`);
   } else {
-    console.log(`${chalk.cyanBright('Bundles failed with')} ${chalk.redBright('errors')} in ${bundleTimeStr}:\n${bundleTable.render()}\n`);
+    console.log(`${chalk.cyanBright('Bundles failed with')} ${chalk.redBright('errors')}:\n${bundleTable.render()}\n`);
   }
 };
-
-/*
-const afterBundleBuild = async (outputFiles: OutputFile[], buildOpts: BuildOptions, project: ProjectReflection,
-  callback: (name: string, bundleResult: BuildResult, jsonResult: { elapsed: number, result: BuildResult }) => void) => Promise.all(outputFiles.map(async ({ path, text }) => {
-  const { dir } = pathlib.parse(path);
-  const moduleName = pathlib.basename(dir);
-
-  const [bundleResult, jsonResult] = await Promise.all([
-    outputBundle(`${buildOpts.outDir}/bundles/${moduleName}.js`, text),
-    buildJson(moduleName, project, buildOpts),
-  ]);
-
-  callback(moduleName, bundleResult, jsonResult);
-})) as unknown as Promise<void>;
-
-export const buildBundles = wrapWithTimer(async (
-  buildOpts: BuildOptions,
-  project: ProjectReflection,
-  bundlesToBuild: string[],
-): Promise<{
-  bundles: {
-    overall: Severity,
-    results: Record<string, BuildResult>,
-  }
-  jsons: {
-    overall: Severity,
-    results: Record<string, { elapsed: number, result: BuildResult }>,
-  }
-}> => {
-  const bundleResults: Record<string, BuildResult> = {};
-  let bundleSeverity: Severity = 'success';
-
-  const jsonResults: Record<string, { elapsed: number, result: BuildResult }> = {};
-  let jsonSeverity: Severity = 'success';
-
-  await Promise.all([
-    fsPromises.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }),
-    fsPromises.mkdir(`${buildOpts.outDir}/jsons`, { recursive: true }),
-  ]);
-
-  await esbuild({
-    ...esbuildOptions,
-    entryPoints: bundlesToBuild.map((module) => `${buildOpts.srcDir}/bundles/${module}/index.ts`),
-    outdir: `${buildOpts.outDir}/bundles`,
-    plugins: [
-      {
-        name: 'bundlePlugin',
-        setup(pluginBuild) {
-          pluginBuild.onEnd(({ outputFiles }) => afterBundleBuild(outputFiles, buildOpts, project, (moduleName, bundleResult, jsonResult) => {
-            bundleResults[moduleName] = bundleResult;
-            if (bundleResult.severity === 'error') bundleSeverity = 'error';
-
-            jsonResults[moduleName] = jsonResult;
-            if (jsonResult.result.severity === 'error') jsonSeverity = 'error';
-            else if (jsonSeverity === 'success' && jsonResult.result.severity === 'warn') jsonSeverity = 'warn';
-          }));
-        },
-      },
-    ],
-  });
-
-  return {
-    bundles: {
-      overall: bundleSeverity,
-      results: bundleResults,
-    },
-    jsons: {
-      overall: jsonSeverity,
-      results: jsonResults,
-    },
-  };
-});
-
-export const watchBundles = (
-  buildOpts: BuildOptions,
-  docsProject: ProjectReflection,
-  bundlesToWatch: string[],
-) => Promise.all([
-  fsPromises.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }),
-  fsPromises.mkdir(`${buildOpts.outDir}/jsons`, { recursive: true }),
-])
-  .then(() => esbuild({
-    ...esbuildOptions,
-    entryPoints: bundlesToWatch.map((module) => `${buildOpts.srcDir}/bundles/${module}/index.ts`),
-    outdir: `${buildOpts.outDir}/bundles`,
-    watch: {
-      onRebuild: (_, { outputFiles }) => afterBundleBuild(outputFiles, buildOpts, docsProject, (
-        moduleName,
-        { error: bundleError, severity: bundleSeverity },
-        { elapsed: jsonTime, result: { error: jsonError, severity: jsonSeverity } },
-      ) => {
-        const bundleStr = bundleSeverity === 'error'
-          ? `${chalk.cyanBright(`Build of ${moduleName}`)} ${chalk.redBright('failed')}: ${bundleError}`
-          : `${chalk.cyanBright(`Rebuilt ${moduleName}`)} ${chalk.greenBright('successfully')}`;
-
-        const jsonTimeStr = `in ${divideAndRound(jsonTime, 1000, 2)}s`;
-        let jsonStr: string;
-        if (jsonSeverity === 'error') {
-          jsonStr = `${chalk.cyanBright(`Build of ${moduleName} json`)} ${chalk.redBright('failed')}: ${jsonError}`;
-        } else if (jsonSeverity === 'warn') {
-          jsonStr = `${chalk.cyanBright(`Rebuilt json of ${moduleName} ${jsonTimeStr} with`)} ${chalk.yellowBright('warnings')}: ${jsonError}`;
-        } else {
-          jsonStr = `${chalk.cyanBright(`Rebuilt ${moduleName} json ${jsonTimeStr}`)} ${chalk.greenBright('successfully')}`;
-        }
-
-        console.log(`${bundleStr}\n${jsonStr}`);
-      }),
-    },
-  }));
-*/

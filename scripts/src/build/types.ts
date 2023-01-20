@@ -25,5 +25,4 @@ export type BuildResult = {
 export type OperationResult = {
   severity: Severity;
   results: Record<string, BuildResult>;
-  elapsed: number;
 } | false;

@@ -1,18 +1,19 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
+import { retrieveManifest } from '../../scriptUtils';
 import { divideAndRound, wrapWithTimer } from '../buildUtils';
 import { initTypedoc, logTypedocTime } from './docUtils';
 /**
  * Build HTML documentation
  */
-export const buildHtml = wrapWithTimer(async (app, project, buildOpts) => {
-    if (buildOpts.modulesSpecified) {
+export const buildHtml = wrapWithTimer(async (app, project, { outDir, modulesSpecified, }) => {
+    if (modulesSpecified) {
         return {
             severity: 'warn',
         };
     }
     try {
-        await app.generateDocs(project, `${buildOpts.outDir}/documentation`);
+        await app.generateDocs(project, `${outDir}/documentation`);
         return {
             severity: 'success',
         };
@@ -46,11 +47,21 @@ export const logHtmlResult = ({ elapsed, result: { severity, error } }) => {
 const buildHtmlCommand = new Command('html')
     .option('--outDir <outdir>', 'Output directory', 'build')
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+    .option('--manifest <file>', 'Manifest file', 'modules.json')
+    .option('-v, --verbose', 'Display more information about the build results', false)
     .description('Build only HTML documentation')
-    .action(async (buildOpts) => {
-    const { elapsed: typedoctime, result: [app, project] } = await initTypedoc(buildOpts);
+    .action(async (opts) => {
+    const manifest = await retrieveManifest(opts.manifest);
+    const { elapsed: typedoctime, result: [app, project] } = await initTypedoc({
+        bundles: Object.keys(manifest),
+        srcDir: opts.srcDir,
+        verbose: opts.verbose,
+    });
     logTypedocTime(typedoctime);
-    const htmlResult = await buildHtml(app, project, buildOpts);
+    const htmlResult = await buildHtml(app, project, {
+        outDir: opts.outDir,
+        modulesSpecified: false,
+    });
     logHtmlResult(htmlResult);
 });
 export default buildHtmlCommand;

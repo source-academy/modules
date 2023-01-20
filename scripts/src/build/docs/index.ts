@@ -9,8 +9,10 @@ import { buildJsons, logJsonResults } from './json';
 const buildDocsCommand = createBuildCommand('docs', async (buildOpts) => {
   if (buildOpts.bundles.length === 0) return;
 
-  console.log(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n${buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-    .join('\n')}\n`);
+  console.log(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n${
+    buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
+      .join('\n')
+  }\n`);
 
   const { elapsed, result: [app, project] } = await initTypedoc(buildOpts);
   const [jsonResults, htmlResult] = await Promise.all([
@@ -23,10 +25,7 @@ const buildDocsCommand = createBuildCommand('docs', async (buildOpts) => {
   if (!jsonResults && !htmlResult) return;
 
   logHtmlResult(htmlResult);
-  logJsonResults({
-    elapsed: jsonResults.elapsed,
-    results: jsonResults.result,
-  });
+  logJsonResults(jsonResults, buildOpts.verbose);
 })
   .description('Build only jsons and HTML documentation');
 

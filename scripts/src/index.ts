@@ -1,12 +1,15 @@
 import { Command } from 'commander';
 
+import watchCommand, { serveCommand } from './build/watchers';
 import buildAllCommand from './build';
 import createCommand from './templates';
 
 async function main() {
   const parser = new Command()
+    .addCommand(watchCommand)
     .addCommand(buildAllCommand)
-    .addCommand(createCommand);
+    .addCommand(createCommand)
+    .addCommand(serveCommand);
 
   try {
     await parser.parseAsync();

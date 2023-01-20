@@ -45,13 +45,16 @@ type BuildCommandOptions = {
   outDir: string;
   manifest: string;
   modules?: string[];
+  verbose: boolean;
 };
 export const createBuildCommand = (name: string, handler?: CommandHandler) => {
   const cmd = new Command(name)
     .option('--outDir <outdir>', 'Output directory', 'build')
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
-    .option('-m, --modules <modules...>', 'Manually specify which modules to build');
+    .option('-m, --modules <modules...>', 'Manually specify which modules to build')
+    .option('-v, --verbose', 'Display more information about the build results', false);
+
   if (handler) {
     return cmd.action(async (opts: BuildCommandOptions) => {
       const manifest = await retrieveManifest(opts.manifest);
@@ -79,6 +82,7 @@ export const createBuildCommand = (name: string, handler?: CommandHandler) => {
         manifest: opts.manifest,
         tabs,
         modulesSpecified,
+        verbose: opts.verbose,
       });
     });
   }
@@ -89,6 +93,7 @@ export type BuildOptions = {
   srcDir: string;
   outDir: string;
   manifest: string;
+  verbose: boolean;
 
   modulesSpecified: boolean;
   bundles: string[];
