@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs';
 
-import { type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils';
+import { type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils.js';
 
-import { askQuestion, success, warn } from './print';
-import { type Options, isSnakeCase } from './utilities';
+import { askQuestion, success, warn } from './print.js';
+import { type Options, isSnakeCase } from './utilities.js';
 
 export const check = (manifest: ModuleManifest, name: string) => Object.keys(manifest)
   .includes(name);

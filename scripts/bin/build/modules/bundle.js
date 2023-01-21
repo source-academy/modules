@@ -3,8 +3,8 @@ import { generate } from 'astring';
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
 import { promises as fsPromises } from 'fs';
-import { divideAndRound, fileSizeFormatter } from '../buildUtils';
-import { requireCreator } from './moduleUtils';
+import { divideAndRound, fileSizeFormatter } from '../buildUtils.js';
+import { requireCreator } from './moduleUtils.js';
 const HELPER_NAME = 'moduleHelpers';
 export const outputBundle = async (name, bundleText, outDir) => {
     try {

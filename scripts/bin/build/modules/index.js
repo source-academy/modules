@@ -2,10 +2,10 @@ import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { createBuildCommand } from '../buildUtils';
-import { logBundleResults, outputBundle } from './bundle';
-import { esbuildOptions } from './moduleUtils';
-import { logTabResults, outputTab } from './tab';
+import { createBuildCommand } from '../buildUtils.js';
+import { logBundleResults, outputBundle } from './bundle.js';
+import { esbuildOptions } from './moduleUtils.js';
+import { logTabResults, outputTab } from './tab.js';
 export const reduceOutputFiles = (outputFiles, outDir, startTime) => Promise.all(outputFiles.map(async ({ path, text }) => {
     const [type, name] = path.split(pathlib.sep)
         .slice(-3, -1);
@@ -73,6 +73,6 @@ const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
     logTabResults(results.tabs, buildOpts.verbose);
 })
     .description('Build only bundles and tabs');
-export { logBundleResults } from './bundle';
-export { default as buildTabsCommand, logTabResults } from './tab';
+export { logBundleResults } from './bundle.js';
+export { default as buildTabsCommand, logTabResults } from './tab.js';
 export default buildModulesCommand;

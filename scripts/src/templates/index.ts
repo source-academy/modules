@@ -1,9 +1,9 @@
 import { Command } from 'commander';
 
-import { addNew as addNewModule } from './module';
-import { askQuestion, error as _error, info, rl, warn } from './print';
-import { addNew as addNewTab } from './tab';
-import type { Options } from './utilities';
+import { addNew as addNewModule } from './module.js';
+import { askQuestion, error as _error, info, rl, warn } from './print.js';
+import { addNew as addNewTab } from './tab.js';
+import type { Options } from './utilities.js';
 
 async function askMode() {
   while (true) {

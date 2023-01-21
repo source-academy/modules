@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
-import { retrieveManifest } from '../../scriptUtils';
-import { divideAndRound, wrapWithTimer } from '../buildUtils';
-import { initTypedoc, logTypedocTime } from './docUtils';
+import { retrieveManifest } from '../../scriptUtils.js';
+import { divideAndRound, wrapWithTimer } from '../buildUtils.js';
+import { initTypedoc, logTypedocTime } from './docUtils.js';
 /**
  * Build HTML documentation
  */

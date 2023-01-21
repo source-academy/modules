@@ -1,8 +1,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 
-import { logTypedocTime } from './docs/docUtils';
-import { createBuildCommand } from './buildUtils';
+import { logTypedocTime } from './docs/docUtils.js';
 import buildDocsCommand, {
   buildHtml,
   buildHtmlCommand,
@@ -11,8 +10,12 @@ import buildDocsCommand, {
   initTypedoc,
   logHtmlResult,
   logJsonResults,
-} from './docs';
-import buildModulesCommand, { buildModules, buildTabsCommand, logBundleResults, logTabResults } from './modules';
+} from './docs/index.js';
+import buildModulesCommand, {
+  buildModules,
+  buildTabsCommand, logBundleResults, logTabResults,
+} from './modules/index.js';
+import { createBuildCommand } from './buildUtils.js';
 
 const buildAllCommand = createBuildCommand('all', async (buildOpts) => {
   console.log(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n${

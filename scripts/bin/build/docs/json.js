@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
 import fs from 'fs/promises';
-import { createBuildCommand, divideAndRound, fileSizeFormatter, wrapWithTimer, } from '../buildUtils';
-import { initTypedoc, logTypedocTime } from './docUtils';
-import drawdown from './drawdown';
+import { createBuildCommand, divideAndRound, fileSizeFormatter, wrapWithTimer, } from '../buildUtils.js';
+import { initTypedoc, logTypedocTime } from './docUtils.js';
+import drawdown from './drawdown.js';
 const typeToName = (type, alt = 'unknown') => (type ? type.name : alt);
 /**
  * Parsers to convert typedoc elements into strings

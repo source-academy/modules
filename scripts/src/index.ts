@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 
-import watchCommand, { serveCommand } from './build/watchers';
-import buildAllCommand from './build';
-import createCommand from './templates';
+import buildAllCommand from './build/index.js';
+import watchCommand, { serveCommand } from './build/watchers/index.js';
+import createCommand from './templates/index.js';
 
 async function main() {
   const parser = new Command()

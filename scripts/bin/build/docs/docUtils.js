@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { Application, TSConfigReader } from 'typedoc';
-import { divideAndRound, wrapWithTimer } from '../buildUtils';
+import { divideAndRound, wrapWithTimer } from '../buildUtils.js';
 /**
  * Offload running typedoc into async code to increase parallelism
  */
@@ -18,11 +18,8 @@ export const initTypedoc = wrapWithTimer(({ srcDir, bundles, verbose, }, watch) 
             readme: `${srcDir}/README.md`,
             tsconfig: `${srcDir}/tsconfig.json`,
             skipErrorChecking: true,
+            watch,
         });
-        if (watch) {
-            resolve([app, null]);
-            return;
-        }
         const project = app.convert();
         if (!project) {
             reject(new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'));

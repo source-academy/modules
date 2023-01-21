@@ -14,11 +14,11 @@ import {
   divideAndRound,
   fileSizeFormatter,
   wrapWithTimer,
-} from '../buildUtils';
+} from '../buildUtils.js';
 import type { BuildResult, Severity } from '../types';
 
-import { initTypedoc, logTypedocTime } from './docUtils';
-import drawdown from './drawdown';
+import { initTypedoc, logTypedocTime } from './docUtils.js';
+import drawdown from './drawdown.js';
 
 const typeToName = (type?: SomeType, alt : string = 'unknown') => (type ? (type as ReferenceType | IntrinsicType).name : alt);
 

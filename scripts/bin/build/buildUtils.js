@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { retrieveManifest } from '../scriptUtils';
+import { retrieveManifest } from '../scriptUtils.js';
 export const wrapWithTimer = (func) => async (...params) => {
     const startTime = performance.now();
     const result = await func(...params);

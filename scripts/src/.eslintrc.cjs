@@ -16,6 +16,7 @@ module.exports = {
     "array-callback-return": [2, { "checkForEach": false }],
     "func-style": 0,
     "import/no-extraneous-dependencies": 0,
+    "import/extensions": [2, "ignorePackages"],
     "no-console": 0,
     "no-continue": 0,
     "no-param-reassign": 0,

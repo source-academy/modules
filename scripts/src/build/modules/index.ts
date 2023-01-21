@@ -3,12 +3,12 @@ import { type OutputFile, build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
 
-import { type BuildOptions, createBuildCommand } from '../buildUtils';
+import { type BuildOptions, createBuildCommand } from '../buildUtils.js';
 import type { BuildResult, Severity } from '../types';
 
-import { logBundleResults, outputBundle } from './bundle';
-import { esbuildOptions } from './moduleUtils';
-import { logTabResults, outputTab } from './tab';
+import { logBundleResults, outputBundle } from './bundle.js';
+import { esbuildOptions } from './moduleUtils.js';
+import { logTabResults, outputTab } from './tab.js';
 
 export const reduceOutputFiles = (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
   outputFiles.map(async ({ path, text }) => {
@@ -97,6 +97,6 @@ const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
 })
   .description('Build only bundles and tabs');
 
-export { logBundleResults } from './bundle';
-export { default as buildTabsCommand, logTabResults } from './tab';
+export { logBundleResults } from './bundle.js';
+export { default as buildTabsCommand, logTabResults } from './tab.js';
 export default buildModulesCommand;

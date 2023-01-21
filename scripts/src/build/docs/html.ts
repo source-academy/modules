@@ -2,11 +2,11 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import type { Application, ProjectReflection } from 'typedoc';
 
-import { retrieveManifest } from '../../scriptUtils';
-import { divideAndRound, wrapWithTimer } from '../buildUtils';
+import { retrieveManifest } from '../../scriptUtils.js';
+import { divideAndRound, wrapWithTimer } from '../buildUtils.js';
 import type { BuildResult } from '../types';
 
-import { initTypedoc, logTypedocTime } from './docUtils';
+import { initTypedoc, logTypedocTime } from './docUtils.js';
 
 type HTMLOptions = {
   outDir: string;

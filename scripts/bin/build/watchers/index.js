@@ -3,13 +3,14 @@ import { Command } from 'commander';
 import { context as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { retrieveManifest } from '../../scriptUtils';
-import { buildHtml, initTypedoc, logHtmlResult } from '../docs';
-import { buildJson } from '../docs/json';
-import { outputBundle } from '../modules/bundle';
-import { esbuildOptions } from '../modules/moduleUtils';
-import { outputTab } from '../modules/tab';
-import { waitForQuit } from './watchUtils';
+import { retrieveManifest } from '../../scriptUtils.js';
+import { divideAndRound } from '../buildUtils.js';
+import { buildHtml, initTypedoc, logHtmlResult } from '../docs/index.js';
+import { buildJson } from '../docs/json.js';
+import { outputBundle } from '../modules/bundle.js';
+import { esbuildOptions } from '../modules/moduleUtils.js';
+import { outputTab } from '../modules/tab.js';
+import { waitForQuit } from './watchUtils.js';
 const watchCommand = new Command('watch')
     .description('Watch the source directory and rebuild whenever there are changes')
     .option('--outDir <outdir>', 'Output directory', 'build')
@@ -43,6 +44,7 @@ const watchCommand = new Command('watch')
                 recursive: true,
                 signal: abortController.signal,
             })) {
+                const startTime = performance.now();
                 console.log(chalk.magentaBright(`Bundle ${bundle} changed, rebuilding...`));
                 const { outputFiles: [{ text }] } = await ctx.rebuild();
                 // unfortunately incremental typedoc doesn't seem to work here
@@ -70,6 +72,7 @@ const watchCommand = new Command('watch')
                 else {
                     console.log(chalk.greenBright(`Successfully rebuilt json for '${bundle}'`));
                 }
+                console.log(chalk.gray(`Took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete`));
             }
         }
         catch (error) {
@@ -121,7 +124,6 @@ const watchCommand = new Command('watch')
     console.log(chalk.yellowBright('Stopping server...'));
     abortController.abort();
     await Promise.all(buildPromises);
-    console.log(chalk.magentaBright('Running final tasks...'));
     if (opts.docs) {
         const { result: [app, project] } = await initTypedoc({
             bundles: Object.keys(manifest),
@@ -136,7 +138,7 @@ const watchCommand = new Command('watch')
     }
 });
 export default watchCommand;
-export { default as serveCommand } from './serve';
+export { default as serveCommand } from './serve.js';
 /* An implementation using fs.watch but watching only the source directory
   const contextPromises = Object.entries(manifest)
     .flatMap(([bundle, { tabs }]) => [

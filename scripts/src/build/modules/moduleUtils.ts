@@ -15,7 +15,7 @@ import type {
   VariableDeclaration,
 } from 'estree';
 
-import { cjsDirname } from '../../scriptUtils';
+import { cjsDirname } from '../../scriptUtils.js';
 
 /**
  * Build the AST representation of a `require` function to use with the transpiled IIFEs

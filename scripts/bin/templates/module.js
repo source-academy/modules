@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
-import { cjsDirname, retrieveManifest } from '../scriptUtils';
-import { askQuestion, success, warn } from './print';
-import { isSnakeCase } from './utilities';
+import { cjsDirname, retrieveManifest } from '../scriptUtils.js';
+import { askQuestion, success, warn } from './print.js';
+import { isSnakeCase } from './utilities.js';
 export const check = (manifest, name) => Object.keys(manifest)
     .includes(name);
 async function askModuleName(manifest) {

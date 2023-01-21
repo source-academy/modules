@@ -1,7 +1,7 @@
 import { Command } from 'commander';
-import { addNew as addNewModule } from './module';
-import { askQuestion, error as _error, info, rl, warn } from './print';
-import { addNew as addNewTab } from './tab';
+import { addNew as addNewModule } from './module.js';
+import { askQuestion, error as _error, info, rl, warn } from './print.js';
+import { addNew as addNewTab } from './tab.js';
 async function askMode() {
     while (true) {
         // eslint-disable-next-line no-await-in-loop

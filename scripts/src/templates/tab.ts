@@ -1,11 +1,11 @@
 /* eslint-disable no-await-in-loop */
 import { promises as fs } from 'fs';
 
-import { type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils';
+import { type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils.js';
 
-import { check as _check } from './module';
-import { askQuestion, success, warn } from './print';
-import { type Options, isPascalCase } from './utilities';
+import { check as _check } from './module.js';
+import { askQuestion, success, warn } from './print.js';
+import { type Options, isPascalCase } from './utilities.js';
 
 export function check(manifest: ModuleManifest, tabName: string) {
   return Object.values(manifest)

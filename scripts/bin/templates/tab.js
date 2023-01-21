@@ -1,9 +1,9 @@
 /* eslint-disable no-await-in-loop */
 import { promises as fs } from 'fs';
-import { cjsDirname, retrieveManifest } from '../scriptUtils';
-import { check as _check } from './module';
-import { askQuestion, success, warn } from './print';
-import { isPascalCase } from './utilities';
+import { cjsDirname, retrieveManifest } from '../scriptUtils.js';
+import { check as _check } from './module.js';
+import { askQuestion, success, warn } from './print.js';
+import { isPascalCase } from './utilities.js';
 export function check(manifest, tabName) {
     return Object.values(manifest)
         .flatMap((x) => x.tabs)

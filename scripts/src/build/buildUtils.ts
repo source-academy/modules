@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 
-import { retrieveManifest } from '../scriptUtils';
+import { retrieveManifest } from '../scriptUtils.js';
 
 import type { Severity } from './types';
 

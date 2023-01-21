@@ -14,10 +14,10 @@ import type {
 } from 'estree';
 import { promises as fsPromises } from 'fs';
 
-import { divideAndRound, fileSizeFormatter } from '../buildUtils';
-import type { BuildResult, OperationResult } from '../types';
+import { divideAndRound, fileSizeFormatter } from '../buildUtils.js';
+import type { BuildResult, OperationResult } from '../types.js';
 
-import { requireCreator } from './moduleUtils';
+import { requireCreator } from './moduleUtils.js';
 
 const HELPER_NAME = 'moduleHelpers';
 

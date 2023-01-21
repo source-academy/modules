@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import { createBuildCommand } from '../buildUtils';
-import { initTypedoc, logTypedocTime } from './docUtils';
-import { buildHtml, logHtmlResult } from './html';
-import { buildJsons, logJsonResults } from './json';
+import { createBuildCommand } from '../buildUtils.js';
+import { initTypedoc, logTypedocTime } from './docUtils.js';
+import { buildHtml, logHtmlResult } from './html.js';
+import { buildJsons, logJsonResults } from './json.js';
 const buildDocsCommand = createBuildCommand('docs', async (buildOpts) => {
     if (buildOpts.bundles.length === 0)
         return;
@@ -22,6 +22,6 @@ const buildDocsCommand = createBuildCommand('docs', async (buildOpts) => {
 })
     .description('Build only jsons and HTML documentation');
 export default buildDocsCommand;
-export { default as buildHtmlCommand, logHtmlResult, buildHtml } from './html';
-export { default as buildJsonCommand, logJsonResults, buildJsons } from './json';
-export { initTypedoc } from './docUtils';
+export { default as buildHtmlCommand, logHtmlResult, buildHtml } from './html.js';
+export { default as buildJsonCommand, logJsonResults, buildJsons } from './json.js';
+export { initTypedoc } from './docUtils.js';

@@ -4,10 +4,10 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import { Table } from 'console-table-printer';
 import { promises as fs } from 'fs';
-import { retrieveManifest } from '../../scriptUtils';
-import { divideAndRound, fileSizeFormatter } from '../buildUtils';
-import { requireCreator } from './moduleUtils';
-import { buildModules } from '.';
+import { retrieveManifest } from '../../scriptUtils.js';
+import { divideAndRound, fileSizeFormatter } from '../buildUtils.js';
+import { buildModules } from './index.js';
+import { requireCreator } from './moduleUtils.js';
 /**
  * Imports that are provided at runtime
  */

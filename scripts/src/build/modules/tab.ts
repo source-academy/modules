@@ -15,12 +15,12 @@ import type {
 } from 'estree';
 import { promises as fs } from 'fs';
 
-import { retrieveManifest } from '../../scriptUtils';
-import { divideAndRound, fileSizeFormatter } from '../buildUtils';
+import { retrieveManifest } from '../../scriptUtils.js';
+import { divideAndRound, fileSizeFormatter } from '../buildUtils.js';
 import type { BuildResult, OperationResult } from '../types';
 
-import { requireCreator } from './moduleUtils';
-import { buildModules } from '.';
+import { buildModules } from './index.js';
+import { requireCreator } from './moduleUtils.js';
 
 /**
  * Imports that are provided at runtime
