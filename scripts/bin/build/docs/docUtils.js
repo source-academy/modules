@@ -12,6 +12,7 @@ export const initTypedoc = wrapWithTimer(({ srcDir, bundles, verbose, }, watch) 
             categorizeByGroup: true,
             entryPoints: bundles.map((bundle) => `${srcDir}/bundles/${bundle}/index.ts`),
             excludeInternal: true,
+            logger: watch ? 'none' : undefined,
             logLevel: verbose ? 'Info' : 'Error',
             name: 'Source Academy Modules',
             readme: `${srcDir}/README.md`,

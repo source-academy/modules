@@ -50,6 +50,21 @@ const serveCommand = new Command('serve')
       fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
     ]);
 
+    // const { result: [app] } = await initTypedoc({
+    //   bundles: Object.keys(manifest),
+    //   srcDir: opts.srcDir,
+    //   verbose,
+    // }, true);
+
+    // app.convertAndWatch(async (project) => {
+    //   const jsonsResult = await buildJsons(project, {
+    //     bundles: Object.keys(manifest),
+    //     outDir: opts.outDir,
+    //   });
+
+    //   logJsonResults(jsonsResult, verbose);
+    // });
+
     const context = await esbuild({
       ...esbuildOptions,
       outbase: opts.outDir,
@@ -64,6 +79,7 @@ const serveCommand = new Command('serve')
         setup(pluginBuild) {
           let startTime: number;
           pluginBuild.onStart(() => {
+            console.log(chalk.magentaBright('Beginning build...'));
             startTime = performance.now();
           });
 
@@ -86,10 +102,13 @@ const serveCommand = new Command('serve')
             });
 
             logJsonResults(jsonsResult, verbose);
+            console.log(chalk.gray('Build Complete\n'));
           });
         },
       }],
     });
+
+    await context.watch();
 
     const { host, port: servePort } = await context.serve({
       servedir: opts.outDir,

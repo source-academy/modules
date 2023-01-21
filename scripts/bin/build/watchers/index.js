@@ -28,76 +28,61 @@ const watchCommand = new Command('watch')
     ]);
     console.log(`Watching source directory ${chalk.yellowBright(`./${opts.srcDir}`)} for changes\nPress CTRL+C to quit at any time\n`);
     const abortController = new AbortController();
-    const buildPromises = Object.entries(manifest)
-        .flatMap(([bundle, { tabs }]) => [
-        (async () => {
-            const bundleDir = pathlib.join(opts.srcDir, 'bundles', bundle);
-            const bundleEntry = pathlib.join(bundleDir, 'index.ts');
-            const [ctx, { result: [app] }] = await Promise.all([esbuild({
-                    ...esbuildOptions,
-                    outbase: opts.outDir,
-                    outdir: opts.outDir,
-                    entryPoints: [bundleEntry],
-                }),
-                initTypedoc({
-                    srcDir: opts.srcDir,
-                    bundles: [bundle],
-                    verbose: opts.verbose,
-                }, true)]);
-            app.convertAndWatch(async (project) => {
-                const { result: { severity, error } } = await buildJson(bundle, project, opts.outDir);
-                if (severity === 'error') {
-                    console.log(chalk.redBright(`Rebuild json for '${bundle}' failed: ${error}`));
+    const buildBundle = async (bundle) => {
+        const bundleDir = pathlib.join(opts.srcDir, 'bundles', bundle);
+        const bundleEntry = pathlib.join(bundleDir, 'index.ts');
+        const ctx = await esbuild({
+            ...esbuildOptions,
+            outbase: opts.outDir,
+            outdir: opts.outDir,
+            entryPoints: [bundleEntry],
+        });
+        try {
+            // eslint-disable-next-line no-empty-pattern
+            for await (const {} of fs.watch(bundleDir, {
+                recursive: true,
+                signal: abortController.signal,
+            })) {
+                console.log(chalk.magentaBright(`Bundle ${bundle} changed, rebuilding...`));
+                const { outputFiles: [{ text }] } = await ctx.rebuild();
+                // unfortunately incremental typedoc doesn't seem to work here
+                const [bundleResult, jsonResult] = await Promise.all([
+                    outputBundle(bundle, text, opts.outDir),
+                    initTypedoc({
+                        ...opts,
+                        bundles: [bundle],
+                    })
+                        .then(({ result: [, project] }) => buildJson(bundle, project, opts.outDir)),
+                ]);
+                // const bundleResult = await outputBundle(bundle, text, opts.outDir);
+                if (bundleResult.severity === 'error') {
+                    console.log(chalk.redBright(`Rebuild for '${bundle}' failed: ${bundleResult.error}`));
                 }
-                else if (severity === 'warn') {
-                    console.log(chalk.yellowBright(`Rebuilt json for '${bundle}' with warnings: ${error}`));
+                else {
+                    console.log(chalk.greenBright(`Successfully rebuilt '${bundle}`));
+                }
+                if (jsonResult.result.severity === 'error') {
+                    console.log(chalk.redBright(`Rebuild json for '${bundle}' failed: ${jsonResult.result.error}`));
+                }
+                else if (jsonResult.result.severity === 'warn') {
+                    console.log(chalk.yellowBright(`Rebuilt json for '${bundle}' with warnings: ${jsonResult.result.error}`));
                 }
                 else {
                     console.log(chalk.greenBright(`Successfully rebuilt json for '${bundle}'`));
                 }
-            });
-            try {
-                // eslint-disable-next-line no-empty-pattern
-                for await (const {} of fs.watch(bundleDir, {
-                    recursive: true,
-                    signal: abortController.signal,
-                })) {
-                    console.log(chalk.magentaBright(`Bundle ${bundle} changed, rebuilding...`));
-                    const { outputFiles: [{ text }] } = await ctx.rebuild();
-                    // const [bundleResult, jsonResult] = await Promise.all([
-                    //   outputBundle(bundle, text, opts.outDir),
-                    //   initTypedoc({
-                    //     ...opts,
-                    //     bundles: [bundle],
-                    //   })
-                    //     .then(
-                    //       ({ result: [, project] }) => buildJson(bundle,
-                    //         project as any,
-                    //         opts.outDir),
-                    //     ),
-                    // ]);
-                    const bundleResult = await outputBundle(bundle, text, opts.outDir);
-                    if (bundleResult.severity === 'error') {
-                        console.log(chalk.redBright(`Rebuild for '${bundle}' failed: ${bundleResult.error}`));
-                    }
-                    else {
-                        console.log(chalk.greenBright(`Successfully rebuilt '${bundle}`));
-                    }
-                    // if (jsonResult.result.severity === 'error') {
-                    //   console.log(chalk.redBright(`Rebuild json for '${bundle}' failed: ${jsonResult.result.error}`));
-                    // } else if (jsonResult.result.severity === 'warn') {
-                    //   console.log(chalk.yellowBright(`Rebuilt json for '${bundle}' with warnings: ${jsonResult.result.error}`));
-                    // } else {
-                    //   console.log(chalk.greenBright(`Successfully rebuilt json for '${bundle}'`));
-                    // }
-                }
             }
-            catch (error) {
-            }
-            finally {
-                await ctx.dispose();
-            }
-        })(),
+        }
+        catch (error) {
+            if (error.name !== 'AbortError')
+                throw error;
+        }
+        finally {
+            await ctx.dispose();
+        }
+    };
+    const buildPromises = Object.entries(manifest)
+        .flatMap(([bundle, { tabs }]) => [
+        buildBundle(bundle),
         ...tabs.map(async (tabName) => {
             const tabDir = pathlib.join(opts.srcDir, 'tabs', tabName);
             const ctx = await esbuild({
@@ -124,6 +109,8 @@ const watchCommand = new Command('watch')
                 }
             }
             catch (error) {
+                if (error.name !== 'AbortError')
+                    throw error;
             }
             finally {
                 await ctx.dispose();
@@ -131,6 +118,7 @@ const watchCommand = new Command('watch')
         }),
     ]);
     await waitForQuit();
+    console.log(chalk.yellowBright('Stopping server...'));
     abortController.abort();
     await Promise.all(buildPromises);
     console.log(chalk.magentaBright('Running final tasks...'));
