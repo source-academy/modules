@@ -16,7 +16,7 @@
     "build:scripts": "Compile build scripts",
     "serve": "Start the HTTP server to serve all files in `build/`, with the same directory structure",
     "scripts": "Run a script within the scripts directory",
-    "dev": "Rebuild modules, then serve",
+    "dev": "Serve modules, rebuilding every time one is requested",
     "prepare": "Enable git hooks",
     "test": "Run unit tests",
     "test:watch": "Watch files for changes and rerun tests related to changed files"
