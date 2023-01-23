@@ -16,9 +16,19 @@ const containerStyle = {
   backgroundColor: 'rgb(199, 196, 196)',
 } as React.CSSProperties;
 
+const bodyStyle = {
+  backgroundColor: '#fffafa',
+  border: '2px solid black',
+  borderRadius: '5px',
+  boxShadow: '0px 0px 5px inset gray',
+  height: '100%',
+  overflowY: 'auto',
+  padding: '0.75rem',
+} as React.CSSProperties;
+
 const backdropStyle = {
   position: 'fixed',
-  zIndex: 9998,
+  zIndex: 90,
   top: 0,
   left: 0,
   right: 0,
@@ -26,6 +36,7 @@ const backdropStyle = {
   width: '100%',
   height: '100%',
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  filter: 'blur(10px)',
 } as React.CSSProperties;
 
 interface ModalProp {
@@ -35,17 +46,16 @@ interface ModalProp {
   handleClose: MouseEventHandler
   children: ReactElement
 }
-
 const Modal = ({ open, height, width, children, handleClose }: ModalProp) => (
   <>
     {open && (
       <>
-        <div className={'modal_container'} style={{
+        <div style={{
           height,
           width,
           ...containerStyle,
         }}>
-          <div className={'modal_body'}>{children}</div>
+          <div style={bodyStyle}>{children}</div>
         </div>
         <div style={backdropStyle} onClick={handleClose} />
       </>

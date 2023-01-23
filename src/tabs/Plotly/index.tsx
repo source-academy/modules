@@ -37,21 +37,22 @@ class Plotly extends React.Component<Props, State> {
       <div>
         <Modal
           open={this.state.modalOpen}
-          height={'80vh'}
-          width={'50vw'}
+          height={'90vh'}
+          width={'80vw'}
           handleClose={() => this.setState({ modalOpen: false })}
         >
           <div
-          id='modalDiv'
-          ref={(r) => {
-            drawnPlots[0].draw('modalDiv');
-          }}
-        ></div>
+            id='modalDiv'
+            ref={() => {
+              drawnPlots[0].draw('modalDiv');
+            }}
+            style={{ width: '80vw', height: '80vh' }}
+          ></div>
         </Modal>
         <div onClick={() => this.handleOpen()}>Click here to open Modal</div>
         <div
           id='myDiv'
-          ref={(r) => {
+          ref={() => {
             drawnPlots[0].draw();
           }}
         ></div>
