@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/modal_div';
 
@@ -10,6 +10,7 @@ type Props = {
 
 type State = {
   modalOpen: boolean
+  modalDiv: any
 };
 
 class Plotly extends React.Component<Props, State> {
@@ -17,8 +18,18 @@ class Plotly extends React.Component<Props, State> {
     super(props);
     this.state = {
       modalOpen: false,
+      modalDiv: <div></div>,
     };
   }
+
+  handleOpen = () => {
+    this.setState({ modalOpen: true });
+    const plotlyDiv = document.getElementById('myDiv')?.innerHTML;
+    if (plotlyDiv) {
+      this.setState({ modalDiv: plotlyDiv });
+    }
+  };
+
   public render() {
     const { context: { moduleContexts: { plotly: { state: { drawnPlots } } } } } = this.props.debuggerContext;
 
@@ -31,12 +42,15 @@ class Plotly extends React.Component<Props, State> {
           handleClose={() => this.setState({ modalOpen: false })}
         >
           <div
-            id="modalDiv"
-          ></div>
+          id='modalDiv'
+          ref={(r) => {
+            drawnPlots[0].draw('modalDiv');
+          }}
+        ></div>
         </Modal>
-        <div onClick={() => this.setState({ modalOpen: true })}>Click here to open Modal</div>
+        <div onClick={() => this.handleOpen()}>Click here to open Modal</div>
         <div
-          id="myDiv"
+          id='myDiv'
           ref={(r) => {
             drawnPlots[0].draw();
           }}

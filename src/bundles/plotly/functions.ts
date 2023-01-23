@@ -35,7 +35,7 @@ export function draw3dGraph(): void {
   drawnPlots.unshift(new ScatterPlot(demo3dScatterPlot));
 }
 
-function demoLineGraphSetup(): void {
+function demoLineGraphSetup(divId: string = 'myDiv'): void {
   let trace1: Data = {
     x: [1, 2, 3, 4],
     y: [10, 15, 13, 17],
@@ -49,10 +49,10 @@ function demoLineGraphSetup(): void {
   };
 
   let data: Data[] = [trace1, trace2];
-  Plotly.newPlot('myDiv', data);
+  Plotly.newPlot(divId, data);
 }
 
-function demo3dScatterPlot(): void {
+function demo3dScatterPlot(divId: string = 'myDiv'): void {
   let z1 = [
     [8.83, 8.89, 8.81, 8.87, 8.9, 8.87],
     [8.89, 8.94, 8.85, 8.94, 8.96, 8.92],
@@ -105,5 +105,5 @@ function demo3dScatterPlot(): void {
     type: 'surface',
   };
 
-  Plotly.newPlot('myDiv', [data_z1, data_z2, data_z3]);
+  Plotly.newPlot(divId, [data_z1, data_z2, data_z3]);
 }
