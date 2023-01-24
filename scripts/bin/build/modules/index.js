@@ -2,40 +2,25 @@ import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { createBuildCommand } from '../buildUtils.js';
-import { logBundleResults, outputBundle } from './bundle.js';
+import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { outputBundle } from './bundle.js';
 import { esbuildOptions } from './moduleUtils.js';
-import { logTabResults, outputTab } from './tab.js';
-export const reduceOutputFiles = (outputFiles, outDir, startTime) => Promise.all(outputFiles.map(async ({ path, text }) => {
-    const [type, name] = path.split(pathlib.sep)
+import { outputTab } from './tab.js';
+export const processOutputFiles = async (outputFiles, outDir, startTime) => Promise.all(outputFiles.map(async ({ path, text }) => {
+    const [rawType, name] = path.split(pathlib.sep)
         .slice(-3, -1);
-    if (type !== 'bundles' && type !== 'tabs') {
+    const type = rawType.slice(0, -1);
+    if (type !== 'bundle' && type !== 'tab') {
         throw new Error(`Unknown type found for: ${type}: ${path}`);
     }
-    const result = await (type === 'bundles' ? outputBundle : outputTab)(name, text, outDir);
+    const result = await (type === 'bundle' ? outputBundle : outputTab)(name, text, outDir);
     const endTime = performance.now() - startTime;
     return [type, name, {
             elapsed: endTime,
             ...result,
         }];
 }));
-export const reduceModuleResults = (results) => results.reduce((res, [type, name, entry]) => {
-    if (entry.severity === 'error')
-        res[type].severity = 'error';
-    res[type].results[name] = entry;
-    return res;
-}, {
-    bundles: {
-        severity: 'success',
-        results: {},
-    },
-    tabs: {
-        severity: 'success',
-        results: {},
-    },
-});
-export const buildModules = async (buildOpts) => {
-    const { bundles, tabs } = buildOpts;
+export const buildModules = async (buildOpts, { bundles, tabs }) => {
     const startPromises = [];
     if (bundles.length > 0) {
         startPromises.push(fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }));
@@ -58,21 +43,18 @@ export const buildModules = async (buildOpts) => {
         esbuild(config),
         fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/${buildOpts.manifest}`),
     ]);
-    const buildResults = await reduceOutputFiles(outputFiles, buildOpts.outDir, startTime);
-    return reduceModuleResults(buildResults);
+    return processOutputFiles(outputFiles, buildOpts.outDir, startTime);
 };
-const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
-    console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
+const buildModulesCommand = createBuildCommand('modules')
+    .argument('[modules...]', 'Manually specify which modules to build', null)
+    .description('Build modules and their tabs')
+    .action(async (modules, opts) => {
+    const assets = await retrieveBundlesAndTabs(opts.manifest, modules, null);
+    console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${assets.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
         .join('\n')}\n`);
-    await Promise.all([
-        fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }),
-        fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true }),
-    ]);
-    const results = await buildModules(buildOpts);
-    logBundleResults(results.bundles, buildOpts.verbose);
-    logTabResults(results.tabs, buildOpts.verbose);
+    const results = await buildModules(opts, assets);
+    logResult(results, opts.verbose);
 })
     .description('Build only bundles and tabs');
-export { logBundleResults } from './bundle.js';
-export { default as buildTabsCommand, logTabResults } from './tab.js';
+export { default as buildTabsCommand } from './tab.js';
 export default buildModulesCommand;

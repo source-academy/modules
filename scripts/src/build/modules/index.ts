@@ -3,52 +3,34 @@ import { type OutputFile, build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
 
-import { type BuildOptions, createBuildCommand } from '../buildUtils.js';
-import type { BuildResult, Severity } from '../types';
+import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import type { AssetInfo, BuildCommandInputs, UnreducedResult } from '../types';
 
-import { logBundleResults, outputBundle } from './bundle.js';
+import { outputBundle } from './bundle.js';
 import { esbuildOptions } from './moduleUtils.js';
-import { logTabResults, outputTab } from './tab.js';
+import { outputTab } from './tab.js';
 
-export const reduceOutputFiles = (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
+export const processOutputFiles = async (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
   outputFiles.map(async ({ path, text }) => {
-    const [type, name] = path.split(pathlib.sep)
+    const [rawType, name] = path.split(pathlib.sep)
       .slice(-3, -1);
+    const type = rawType.slice(0, -1);
 
-    if (type !== 'bundles' && type !== 'tabs') {
+    if (type !== 'bundle' && type !== 'tab') {
       throw new Error(`Unknown type found for: ${type}: ${path}`);
     }
 
-    const result = await (type === 'bundles' ? outputBundle : outputTab)(name, text, outDir);
+    const result = await (type === 'bundle' ? outputBundle : outputTab)(name, text, outDir);
     const endTime = performance.now() - startTime;
 
     return [type, name, {
       elapsed: endTime,
       ...result,
-    }] as ['bundles' | 'tabs', string, BuildResult];
+    }] as UnreducedResult;
   }),
 );
 
-export const reduceModuleResults = (results: ['bundles' | 'tabs', string, BuildResult][]) => results.reduce((res, [type, name, entry]) => {
-  if (entry.severity === 'error') res[type].severity = 'error';
-  res[type].results[name] = entry;
-  return res;
-}, {
-  bundles: {
-    severity: 'success',
-    results: {},
-  },
-  tabs: {
-    severity: 'success',
-    results: {},
-  },
-} as Record<'bundles' | 'tabs', {
-  severity: Severity,
-  results: Record<string, BuildResult>,
-}>);
-
-export const buildModules = async (buildOpts: BuildOptions) => {
-  const { bundles, tabs } = buildOpts;
+export const buildModules = async (buildOpts: BuildCommandInputs, { bundles, tabs }: AssetInfo) => {
   const startPromises: Promise<string>[] = [];
   if (bundles.length > 0) {
     startPromises.push(fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }));
@@ -75,28 +57,24 @@ export const buildModules = async (buildOpts: BuildOptions) => {
     fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/${buildOpts.manifest}`),
   ]);
 
-  const buildResults = await reduceOutputFiles(outputFiles, buildOpts.outDir, startTime);
-  return reduceModuleResults(buildResults);
+  return processOutputFiles(outputFiles, buildOpts.outDir, startTime);
 };
 
+const buildModulesCommand = createBuildCommand('modules')
+  .argument('[modules...]', 'Manually specify which modules to build', null)
+  .description('Build modules and their tabs')
+  .action(async (modules: string[] | null, opts: BuildCommandInputs) => {
+    const assets = await retrieveBundlesAndTabs(opts.manifest, modules, null);
 
-const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
-  console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${
-    buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-      .join('\n')
-  }\n`);
+    console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${
+      assets.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
+        .join('\n')
+    }\n`);
 
-  await Promise.all([
-    fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }),
-    fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true }),
-  ]);
-
-  const results = await buildModules(buildOpts);
-  logBundleResults(results.bundles, buildOpts.verbose);
-  logTabResults(results.tabs, buildOpts.verbose);
-})
+    const results = await buildModules(opts, assets);
+    logResult(results, opts.verbose);
+  })
   .description('Build only bundles and tabs');
 
-export { logBundleResults } from './bundle.js';
-export { default as buildTabsCommand, logTabResults } from './tab.js';
+export { default as buildTabsCommand } from './tab.js';
 export default buildModulesCommand;

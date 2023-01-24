@@ -1,5 +1,3 @@
-import type { Low } from 'lowdb';
-
 export type Severity = 'success' | 'error' | 'warn';
 
 export const Assets = ['bundle', 'tab', 'json'] as const;
@@ -7,13 +5,7 @@ export const Assets = ['bundle', 'tab', 'json'] as const;
 /**
  * Type of assets that can be built
  */
-export type AssetTypes = (typeof Assets)[number];
-
-type AssetRecord<T> = { html: T } & Record<`${AssetTypes}s`, Record<string, T>>;
-
-export type DBData = AssetRecord<number>;
-
-export type DBType = Low<DBData>;
+export type AssetTypes = typeof Assets[number];
 
 export type BuildResult = {
   elapsed?: number;
@@ -22,7 +14,22 @@ export type BuildResult = {
   error?: any
 };
 
-export type OperationResult = {
+export type OverallResult = {
   severity: Severity;
   results: Record<string, BuildResult>;
-} | false;
+};
+
+export type UnreducedResult = [AssetTypes, string, BuildResult];
+
+export type BuildCommandInputs = {
+  srcDir: string;
+  outDir: string;
+  manifest: string;
+  verbose: boolean;
+};
+
+export type AssetInfo = {
+  bundles: string[];
+  tabs: string[];
+  modulesSpecified: boolean;
+};

@@ -29,7 +29,10 @@ export const buildHtml = wrapWithTimer(async (app, project, { outDir, modulesSpe
  * Log output from `buildHtml`
  * @see {buildHtml}
  */
-export const logHtmlResult = ({ elapsed, result: { severity, error } }) => {
+export const logHtmlResult = (htmlResult) => {
+    if (typeof htmlResult === 'boolean')
+        return;
+    const { elapsed, result: { severity, error } } = htmlResult;
     if (severity === 'success') {
         const timeStr = divideAndRound(elapsed, 1000, 2);
         console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s\n`);

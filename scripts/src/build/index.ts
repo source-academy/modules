@@ -9,47 +9,58 @@ import buildDocsCommand, {
   buildJsons,
   initTypedoc,
   logHtmlResult,
-  logJsonResults,
 } from './docs/index.js';
 import buildModulesCommand, {
   buildModules,
-  buildTabsCommand, logBundleResults, logTabResults,
+  buildTabsCommand,
 } from './modules/index.js';
-import { createBuildCommand } from './buildUtils.js';
+import { createBuildCommand, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
+import type { BuildCommandInputs } from './types.js';
 
-const buildAllCommand = createBuildCommand('all', async (buildOpts) => {
-  console.log(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n${
-    buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-      .join('\n')
-  }\n`);
+const buildAllCommand = createBuildCommand('all')
+  .argument('[modules...]', 'Manually specify which modules to build', null)
+  .action(async (modules: string[] | null, opts: BuildCommandInputs) => {
+    const assets = await retrieveBundlesAndTabs(opts.manifest, modules, null);
 
-  const [{ bundles: bundleResults, tabs: tabResults }, {
-    typedoctime,
-    html: htmlResult,
-    json: jsonResults,
-  }] = await Promise.all([
-    buildModules(buildOpts),
-    initTypedoc(buildOpts)
-      .then(async ({ elapsed, result: [app, project] }) => {
-        const [json, html] = await Promise.all([
-          buildJsons(project, buildOpts),
-          buildHtml(app, project, buildOpts),
-        ]);
-        return {
-          json,
-          html,
-          typedoctime: elapsed,
-        };
-      }),
-  ]);
+    console.log(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n${
+      assets.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
+        .join('\n')
+    }\n`);
 
-  logTypedocTime(typedoctime);
+    const [results, {
+      typedoctime,
+      html: htmlResult,
+      json: jsonResults,
+    }] = await Promise.all([
+      buildModules(opts, assets),
+      initTypedoc({
+        ...opts,
+        bundles: assets.bundles,
+      })
+        .then(async ({ elapsed, result: [app, project] }) => {
+          const [json, html] = await Promise.all([
+            buildJsons(project, {
+              outDir: opts.outDir,
+              bundles: assets.bundles,
+            }),
+            buildHtml(app, project, {
+              outDir: opts.outDir,
+              modulesSpecified: assets.modulesSpecified,
+            }),
+          ]);
+          return {
+            json,
+            html,
+            typedoctime: elapsed,
+          };
+        }),
+    ]);
 
-  logBundleResults(bundleResults, buildOpts.verbose);
-  logTabResults(tabResults, buildOpts.verbose);
-  logJsonResults(jsonResults, buildOpts.verbose);
-  logHtmlResult(htmlResult);
-})
+    logTypedocTime(typedoctime);
+
+    logResult(results.concat(jsonResults), opts.verbose);
+    logHtmlResult(htmlResult);
+  })
   .description('Build bundles, tabs, jsons and HTML documentation');
 
 export default new Command('build')
