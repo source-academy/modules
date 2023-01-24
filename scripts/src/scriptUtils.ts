@@ -2,6 +2,10 @@ import { readFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
+export type ModuleManifest = Record<string, {
+  tabs: string[]
+}>;
+
 export function cjsDirname(url: string) {
   return join(dirname(fileURLToPath(url)));
 }
@@ -16,6 +20,16 @@ export const retrieveManifest = async (manifest: string) => {
   }
 };
 
-export type ModuleManifest = Record<string, {
-  tabs: string[]
-}>;
+export const wrapWithTimer = <T extends (...params: any[]) => Promise<any>>(func: T) => async (...params: Parameters<T>): Promise<{
+  elapsed: number,
+  result: Awaited<ReturnType<T>>
+}> => {
+  const startTime = performance.now();
+  const result = await func(...params);
+  const endTime = performance.now();
+
+  return {
+    elapsed: endTime - startTime,
+    result,
+  };
+};

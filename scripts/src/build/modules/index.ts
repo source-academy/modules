@@ -1,15 +1,20 @@
 import chalk from 'chalk';
+import { Command, Option } from 'commander';
 import { type OutputFile, build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
 
-import { type BuildOptions, createBuildCommand } from '../buildUtils.js';
-import type { BuildResult, Severity } from '../types';
+import { expandBundleName, expandTabName, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { logLintResult } from '../prebuild/eslint.js';
+import { preBuild } from '../prebuild/index.js';
+import { logTscResults } from '../prebuild/tsc.js';
+import type { AssetTypes, BuildCommandInputs, BuildOpts, BuildOverallResult, BuildResult, CommandHandler } from '../types';
 
 import { logBundleResults, outputBundle } from './bundle.js';
 import { esbuildOptions } from './moduleUtils.js';
 import { logTabResults, outputTab } from './tab.js';
 
+type ReducedOutputFile = [`${AssetTypes}s`, string, BuildResult];
 export const reduceOutputFiles = (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
   outputFiles.map(async ({ path, text }) => {
     const [type, name] = path.split(pathlib.sep)
@@ -25,12 +30,14 @@ export const reduceOutputFiles = (outputFiles: OutputFile[], outDir: string, sta
     return [type, name, {
       elapsed: endTime,
       ...result,
-    }] as ['bundles' | 'tabs', string, BuildResult];
+    }] as ReducedOutputFile;
   }),
 );
 
-export const reduceModuleResults = (results: ['bundles' | 'tabs', string, BuildResult][]) => results.reduce((res, [type, name, entry]) => {
+export const reduceModuleResults = (results: ReducedOutputFile[]) => results.reduce((res, [type, name, entry]) => {
   if (entry.severity === 'error') res[type].severity = 'error';
+  else if (entry.severity === 'warn' && res[type].severity === 'success') res[type].severity = 'warn';
+
   res[type].results[name] = entry;
   return res;
 }, {
@@ -42,20 +49,20 @@ export const reduceModuleResults = (results: ['bundles' | 'tabs', string, BuildR
     severity: 'success',
     results: {},
   },
-} as Record<'bundles' | 'tabs', {
-  severity: Severity,
-  results: Record<string, BuildResult>,
-}>);
+  jsons: {
+    severity: 'success',
+    results: {},
+  },
+} as Record<`${AssetTypes}s`, BuildOverallResult>);
 
-export const buildModules = async (buildOpts: BuildOptions) => {
-  const { bundles, tabs } = buildOpts;
+export const buildModules: CommandHandler<BuildOpts, Record<'bundles' | 'tabs', BuildOverallResult>> = async (opts: BuildOpts, { bundles, tabs }) => {
   const startPromises: Promise<string>[] = [];
   if (bundles.length > 0) {
-    startPromises.push(fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }));
+    startPromises.push(fs.mkdir(`${opts.outDir}/bundles`, { recursive: true }));
   }
 
   if (tabs.length > 0) {
-    startPromises.push(fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true }));
+    startPromises.push(fs.mkdir(`${opts.outDir}/tabs`, { recursive: true }));
   }
 
   await Promise.all(startPromises);
@@ -63,38 +70,49 @@ export const buildModules = async (buildOpts: BuildOptions) => {
   const config = {
     ...esbuildOptions,
     entryPoints: [
-      ...bundles.map((bundle) => `${buildOpts.srcDir}/bundles/${bundle}/index.ts`),
-      ...tabs.map((tabName) => `${buildOpts.srcDir}/tabs/${tabName}/index.tsx`),
+      ...bundles.map(expandBundleName(opts.srcDir)),
+      ...tabs.map(expandTabName(opts.srcDir)),
     ],
-    outbase: buildOpts.outDir,
-    outdir: buildOpts.outDir,
+    outbase: opts.outDir,
+    outdir: opts.outDir,
   };
 
-  const [{ outputFiles }] = await Promise.all([
-    esbuild(config),
-    fs.copyFile(buildOpts.manifest, `${buildOpts.outDir}/${buildOpts.manifest}`),
-  ]);
+  const { outputFiles } = await esbuild(config);
 
-  const buildResults = await reduceOutputFiles(outputFiles, buildOpts.outDir, startTime);
+  const buildResults = await reduceOutputFiles(outputFiles, opts.outDir, startTime);
   return reduceModuleResults(buildResults);
 };
 
+const buildModulesCommand = new Command('modules')
+  .option('--fix', 'Ask eslint to autofix linting errors', false)
+  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+  .option('--outDir <outdir>', 'Source directory for files', 'build')
+  .option('--manifest <file>', 'Manifest file', 'modules.json')
+  .option('-v, --verbose', 'Display more information about the build results', false)
+  .option('--no-tsc', 'Don\'t run tsc before building')
+  .addOption(new Option('--no-lint', 'Don\t run eslint before building')
+    .conflicts('fix'))
+  .argument('[modules...]', 'Manually specify which modules to build', null)
+  .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs & { fix: boolean }) => {
+    const assets = await retrieveBundlesAndTabs(manifest, modules, []);
 
-const buildModulesCommand = createBuildCommand('modules', async (buildOpts) => {
-  console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${
-    buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-      .join('\n')
-  }\n`);
+    console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${
+      assets.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
+        .join('\n')
+    }\n`);
 
-  await Promise.all([
-    fs.mkdir(`${buildOpts.outDir}/bundles`, { recursive: true }),
-    fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true }),
-  ]);
+    const { lintResult, tscResult } = await preBuild(opts, assets);
+    logLintResult(lintResult);
+    logTscResults(tscResult, opts.srcDir);
 
-  const results = await buildModules(buildOpts);
-  logBundleResults(results.bundles, buildOpts.verbose);
-  logTabResults(results.tabs, buildOpts.verbose);
-})
+    const [results] = await Promise.all([
+      buildModules(opts, assets),
+      fs.copyFile(manifest, `${opts.outDir}/${manifest}`),
+    ]);
+
+    logBundleResults(results.bundles, opts.verbose);
+    logTabResults(results.tabs, opts.verbose);
+  })
   .description('Build only bundles and tabs');
 
 export { logBundleResults } from './bundle.js';

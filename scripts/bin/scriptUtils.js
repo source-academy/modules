@@ -15,3 +15,12 @@ export const retrieveManifest = async (manifest) => {
         throw error;
     }
 };
+export const wrapWithTimer = (func) => async (...params) => {
+    const startTime = performance.now();
+    const result = await func(...params);
+    const endTime = performance.now();
+    return {
+        elapsed: endTime - startTime,
+        result,
+    };
+};

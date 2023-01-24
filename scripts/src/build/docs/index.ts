@@ -1,32 +1,57 @@
 import chalk from 'chalk';
+import { Command } from 'commander';
 
-import { createBuildCommand } from '../buildUtils.js';
+import { retrieveBundlesAndTabs } from '../buildUtils.js';
+import { type CommandInputs } from '../types.js';
 
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import { buildHtml, logHtmlResult } from './html.js';
 import { buildJsons, logJsonResults } from './json.js';
 
-const buildDocsCommand = createBuildCommand('docs', async (buildOpts) => {
-  if (buildOpts.bundles.length === 0) return;
+type DocsCommandInput = {
+  outDir: string;
+} & CommandInputs;
 
-  console.log(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n${
-    buildOpts.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-      .join('\n')
-  }\n`);
+const buildDocsCommand = new Command('docs')
+  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+  .option('--outDir <outdir>', 'Source directory for files', 'build')
+  .option('--manifest <file>', 'Manifest file', 'modules.json')
+  .option('-v, --verbose', 'Display more information about the build results', false)
+  .argument('[modules...]', 'Modules to build jsons for', null)
+  .description('Build only jsons and HTML documentation')
+  .action(async (modules: string[] | null, opts: DocsCommandInput) => {
+    const { bundles, modulesSpecified } = await retrieveBundlesAndTabs(opts.manifest, modules, []);
 
-  const { elapsed, result: [app, project] } = await initTypedoc(buildOpts);
-  const [jsonResults, htmlResult] = await Promise.all([
-    buildJsons(project, buildOpts),
-    buildHtml(app, project, buildOpts),
+    if (bundles.length === 0) return;
+
+    console.log(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n${
+      bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
+        .join('\n')
+    }\n`);
+
+    const { elapsed, result: [app, project] } = await initTypedoc({
+      srcDir: opts.srcDir,
+      bundles,
+      verbose: opts.verbose,
+    });
+    const [jsonResults, htmlResult] = await Promise.all([
+      buildJsons(project, {
+        bundles,
+        outDir: opts.outDir,
+      }),
+      buildHtml(app, project, {
+        modulesSpecified,
+        outDir: opts.outDir,
+      }),
     // app.generateJson(project, `${buildOpts.outDir}/docs.json`),
-  ]);
+    ]);
 
-  logTypedocTime(elapsed);
-  if (!jsonResults && !htmlResult) return;
+    logTypedocTime(elapsed);
+    if (!jsonResults && !htmlResult) return;
 
-  logHtmlResult(htmlResult);
-  logJsonResults(jsonResults, buildOpts.verbose);
-})
+    logHtmlResult(htmlResult);
+    logJsonResults(jsonResults, opts.verbose);
+  })
   .description('Build only jsons and HTML documentation');
 
 export default buildDocsCommand;

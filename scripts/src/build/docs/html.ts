@@ -2,9 +2,9 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import type { Application, ProjectReflection } from 'typedoc';
 
-import { retrieveManifest } from '../../scriptUtils.js';
-import { divideAndRound, wrapWithTimer } from '../buildUtils.js';
-import type { BuildResult } from '../types';
+import { retrieveManifest, wrapWithTimer } from '../../scriptUtils.js';
+import { divideAndRound } from '../buildUtils.js';
+import type { BuildResult, CommandInputs } from '../types';
 
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 
@@ -46,21 +46,18 @@ export const buildHtml = wrapWithTimer(async (app: Application,
  */
 export const logHtmlResult = ({ elapsed, result: { severity, error } }: { elapsed: number, result: BuildResult }) => {
   if (severity === 'success') {
-    const timeStr = divideAndRound(elapsed, 1000, 2);
+    const timeStr = divideAndRound(elapsed, 1000);
     console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s\n`);
   } else if (severity === 'warn') {
-    console.log(chalk.yellowBright('-m was specified, not building HTML documentation\n'));
+    console.log(chalk.yellowBright('Modules were manually specified, not building HTML documentation\n'));
   } else {
     console.log(`${chalk.cyanBright('HTML documentation')} ${chalk.redBright('failed')}: ${error}\n`);
   }
 };
 
-type HTMLCommandOpts = {
-  srcDir: string;
+type HTMLCommandInputs = {
   outDir: string;
-  manifest: string;
-  verbose: boolean;
-};
+} & CommandInputs;
 
 /**
  * CLI command to only build HTML documentation
@@ -71,7 +68,7 @@ const buildHtmlCommand = new Command('html')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
   .option('-v, --verbose', 'Display more information about the build results', false)
   .description('Build only HTML documentation')
-  .action(async (opts: HTMLCommandOpts) => {
+  .action(async (opts: HTMLCommandInputs) => {
     const manifest = await retrieveManifest(opts.manifest);
 
     const { elapsed: typedoctime, result: [app, project] } = await initTypedoc({

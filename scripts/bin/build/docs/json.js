@@ -1,7 +1,8 @@
-import chalk from 'chalk';
-import { Table } from 'console-table-printer';
+import { Command } from 'commander';
 import fs from 'fs/promises';
-import { createBuildCommand, divideAndRound, fileSizeFormatter, wrapWithTimer, } from '../buildUtils.js';
+import { wrapWithTimer } from '../../scriptUtils.js';
+import { createBuildLogger, retrieveBundlesAndTabs, } from '../buildUtils.js';
+import { reduceModuleResults } from '../modules/index.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import drawdown from './drawdown.js';
 const typeToName = (type, alt = 'unknown') => (type ? type.name : alt);
@@ -122,127 +123,143 @@ export const buildJsons = async (project, { outDir, bundles }) => {
         const [bundle] = bundles;
         const { elapsed, result } = await buildJson(bundle, project, outDir);
         return {
-            [bundle]: {
-                ...result,
-                elapsed,
+            results: {
+                [bundle]: {
+                    ...result,
+                    elapsed,
+                },
             },
+            severity: result.severity,
+            error: result.error,
         };
     }
     const results = await Promise.all(bundles.map(async (bundle) => {
         const { elapsed, result } = await buildJson(bundle, project.getChildByName(bundle), outDir);
-        return [bundle, {
+        return [
+            'jsons',
+            bundle,
+            {
                 ...result,
                 elapsed,
-            }];
+            },
+        ];
     }));
-    return results.reduce((res, [bundle, result]) => ({
-        ...res,
-        [bundle]: result,
-    }), {});
+    return reduceModuleResults(results).jsons;
 };
 /**
  * Log output from `buildJsons`
  * @see {buildJsons}
  */
-export const logJsonResults = (jsonResults, verbose) => {
-    if (typeof jsonResults === 'boolean')
-        return;
-    const entries = Object.entries(jsonResults);
-    if (entries.length === 0)
-        return;
-    if (!verbose) {
-        const erroreds = entries.filter(([, { severity }]) => severity === 'error');
-        const warneds = entries.filter(([, { severity }]) => severity === 'warn');
-        if (erroreds.length === 0 && warneds.length === 0) {
-            console.log(chalk.greenBright('Successfully built all jsons!\n'));
-            return;
-        }
-        let errStr;
-        if (erroreds.length > 0) {
-            errStr = chalk.redBright('failed') + chalk.cyanBright('with errors');
-        }
-        else {
-            errStr = chalk.yellowBright('succeeded with warnings');
-        }
-        console.log(chalk.cyanBright(`JSON building ${errStr}:\n${erroreds.length > 0
-            ? `${chalk.redBright('Errors')}:\n${erroreds
-                .map(([bundle, { error }], i) => chalk.redBright(`${i + 1}. ${bundle}: ${error}`))
-                .join('\n')}\n`
-            : ''}${warneds.length > 0
-            ? `${chalk.yellowBright('Warnings')}:\n${warneds
-                .map(([bundle, { error }], i) => chalk.yellowBright(`${i + 1}. ${bundle}: ${error}`))
-                .join('\n')}\n`
-            : ''}\n`));
-        return;
-    }
-    const jsonTable = new Table({
-        columns: [
-            {
-                name: 'bundle',
-                title: 'Bundle',
-            },
-            {
-                name: 'jsonSeverity',
-                title: 'Status',
-            },
-            {
-                name: 'fileSize',
-                title: 'File Size',
-            },
-            {
-                name: 'jsonTime',
-                title: 'Build Time(s)',
-            },
-            {
-                name: 'jsonError',
-                title: 'Errors',
-            },
-        ],
-    });
-    let jsonSeverity = 'success';
-    entries.forEach(([moduleName, { elapsed, severity, error, fileSize }]) => {
-        if (severity === 'error') {
-            jsonSeverity = 'error';
-            jsonTable.addRow({
-                jsonSeverity: 'Error',
-                jsonTime: '-',
-                jsonError: error,
-                fileSize: '-',
-            }, { color: 'red' });
-        }
-        else {
-            if (jsonSeverity === 'success' && severity === 'warn')
-                jsonSeverity = 'warn';
-            const timeStr = elapsed < 10 ? '<0.01s' : `${divideAndRound(elapsed, 1000, 2)}s`;
-            jsonTable.addRow({
-                bundle: moduleName,
-                jsonSeverity: severity === 'warn' ? 'Warning' : 'Success',
-                jsonTime: timeStr,
-                jsonError: error || '-',
-                fileSize: fileSizeFormatter(fileSize),
-            }, { color: severity === 'warn' ? 'yellow' : 'green' });
-        }
-    });
-    if (jsonSeverity === 'success') {
-        console.log(`${chalk.cyanBright('JSONS built')} ${chalk.greenBright('successfully')}:\n${jsonTable.render()}\n`);
-    }
-    else if (jsonSeverity === 'warn') {
-        console.log(`${chalk.cyanBright('JSONS built with')} ${chalk.yellowBright('warnings')}:\n${jsonTable.render()}\n`);
-    }
-    else {
-        console.log(`${chalk.cyanBright('JSONS failed with')} ${chalk.redBright('errors')}:\n${jsonTable.render()}\n`);
-    }
-};
+export const logJsonResults = createBuildLogger('json');
+// (jsonResults: Record<string, BuildResult> | false, verbose: boolean) => {
+//   if (typeof jsonResults === 'boolean') return;
+//   const entries = Object.entries(jsonResults);
+//   if (entries.length === 0) return;
+//   if (!verbose) {
+//     const erroreds = entries.filter(([, { severity }]) => severity === 'error');
+//     const warneds = entries.filter(([, { severity }]) => severity === 'warn');
+//     if (erroreds.length === 0 && warneds.length === 0) {
+//       console.log(chalk.greenBright('Successfully built all jsons!\n'));
+//       return;
+//     }
+//     let errStr: string;
+//     if (erroreds.length > 0) {
+//       errStr = chalk.redBright('failed') + chalk.cyanBright('with errors');
+//     } else {
+//       errStr = chalk.yellowBright('succeeded with warnings');
+//     }
+//     console.log(chalk.cyanBright(`JSON building ${errStr}:\n${
+//       erroreds.length > 0
+//         ? `${chalk.redBright('Errors')}:\n${erroreds
+//           .map(([bundle, { error }], i) => chalk.redBright(`${i + 1}. ${bundle}: ${error}`))
+//           .join('\n')}\n`
+//         : ''
+//     }${warneds.length > 0
+//       ? `${chalk.yellowBright('Warnings')}:\n${warneds
+//         .map(([bundle, { error }], i) => chalk.yellowBright(`${i + 1}. ${bundle}: ${error}`))
+//         .join('\n')}\n`
+//       : ''
+//     }\n`));
+//     return;
+//   }
+//   const jsonTable = new Table({
+//     columns: [
+//       {
+//         name: 'bundle',
+//         title: 'Bundle',
+//       },
+//       {
+//         name: 'jsonSeverity',
+//         title: 'Status',
+//       },
+//       {
+//         name: 'fileSize',
+//         title: 'File Size',
+//       },
+//       {
+//         name: 'jsonTime',
+//         title: 'Build Time(s)',
+//       },
+//       {
+//         name: 'jsonError',
+//         title: 'Errors',
+//       },
+//     ],
+//   });
+//   let jsonSeverity: Severity = 'success';
+//   entries.forEach(([moduleName, { elapsed, severity, error, fileSize }]) => {
+//     if (severity === 'error') {
+//       jsonSeverity = 'error';
+//       jsonTable.addRow({
+//         jsonSeverity: 'Error',
+//         jsonTime: '-',
+//         jsonError: error,
+//         fileSize: '-',
+//       }, { color: 'red' });
+//     } else {
+//       if (jsonSeverity === 'success' && severity === 'warn') jsonSeverity = 'warn';
+//       const timeStr = elapsed < 10 ? '<0.01s' : `${divideAndRound(elapsed, 1000)}s`;
+//       jsonTable.addRow({
+//         bundle: moduleName,
+//         jsonSeverity: severity === 'warn' ? 'Warning' : 'Success',
+//         jsonTime: timeStr,
+//         jsonError: error || '-',
+//         fileSize: fileSizeFormatter(fileSize),
+//       }, { color: severity === 'warn' ? 'yellow' : 'green' });
+//     }
+//   });
+//   if (jsonSeverity === 'success') {
+//     console.log(`${chalk.cyanBright('JSONS built')} ${chalk.greenBright('successfully')}:\n${jsonTable.render()}\n`);
+//   } else if (jsonSeverity === 'warn') {
+//     console.log(`${chalk.cyanBright('JSONS built with')} ${chalk.yellowBright('warnings')}:\n${jsonTable.render()}\n`);
+//   } else {
+//     console.log(`${chalk.cyanBright('JSONS failed with')} ${chalk.redBright('errors')}:\n${jsonTable.render()}\n`);
+//   }
+// });
 /**
  * Console command for building jsons
  */
-const jsonCommand = createBuildCommand('jsons', async (buildOpts) => {
-    if (buildOpts.bundles.length === 0)
+const jsonCommand = new Command('jsons')
+    .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+    .option('--outDir <outdir>', 'Source directory for files', 'build')
+    .option('--manifest <file>', 'Manifest file', 'modules.json')
+    .option('-v, --verbose', 'Display more information about the build results', false)
+    .argument('[modules...]', 'Modules to build jsons for', null)
+    .description('Build only jsons')
+    .action(async (modules, opts) => {
+    const { bundles } = await retrieveBundlesAndTabs(opts.manifest, modules, []);
+    if (bundles.length === 0)
         return;
-    const { elapsed: typedocTime, result: [, project] } = await initTypedoc(buildOpts);
+    const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
+        srcDir: opts.srcDir,
+        bundles,
+        verbose: opts.verbose,
+    });
     logTypedocTime(typedocTime);
-    const jsonResults = await buildJsons(project, buildOpts);
-    logJsonResults(jsonResults, buildOpts.verbose);
-})
-    .description('Build only jsons');
+    const jsonResults = await buildJsons(project, {
+        bundles,
+        outDir: opts.outDir,
+    });
+    logJsonResults(jsonResults, opts.verbose);
+});
 export default jsonCommand;

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
-import { retrieveManifest } from '../../scriptUtils.js';
-import { divideAndRound, wrapWithTimer } from '../buildUtils.js';
+import { retrieveManifest, wrapWithTimer } from '../../scriptUtils.js';
+import { divideAndRound } from '../buildUtils.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 /**
  * Build HTML documentation
@@ -31,7 +31,7 @@ export const buildHtml = wrapWithTimer(async (app, project, { outDir, modulesSpe
  */
 export const logHtmlResult = ({ elapsed, result: { severity, error } }) => {
     if (severity === 'success') {
-        const timeStr = divideAndRound(elapsed, 1000, 2);
+        const timeStr = divideAndRound(elapsed, 1000);
         console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s\n`);
     }
     else if (severity === 'warn') {

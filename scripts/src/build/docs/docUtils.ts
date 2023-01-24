@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import { type ProjectReflection, Application, TSConfigReader } from 'typedoc';
 
-import { divideAndRound, wrapWithTimer } from '../buildUtils.js';
+import { wrapWithTimer } from '../../scriptUtils.js';
+import { divideAndRound, expandBundleName } from '../buildUtils.js';
 
 type TypedocOpts = {
   srcDir: string;
@@ -17,23 +18,20 @@ export const initTypedoc = wrapWithTimer(
     srcDir,
     bundles,
     verbose,
-  }: TypedocOpts,
-  watch?: boolean) => new Promise<[Application, ProjectReflection]>((resolve, reject) => {
+  }: TypedocOpts) => new Promise<[Application, ProjectReflection]>((resolve, reject) => {
     try {
       const app = new Application();
       app.options.addReader(new TSConfigReader());
 
       app.bootstrap({
         categorizeByGroup: true,
-        entryPoints: bundles.map((bundle) => `${srcDir}/bundles/${bundle}/index.ts`),
+        entryPoints: bundles.map(expandBundleName(srcDir)),
         excludeInternal: true,
-        logger: watch ? 'none' : undefined,
         logLevel: verbose ? 'Info' : 'Error',
         name: 'Source Academy Modules',
         readme: `${srcDir}/README.md`,
         tsconfig: `${srcDir}/tsconfig.json`,
         skipErrorChecking: true,
-        watch,
       });
       const project = app.convert();
       if (!project) {
@@ -46,5 +44,5 @@ export const initTypedoc = wrapWithTimer(
 );
 
 export const logTypedocTime = (elapsed: number) => console.log(
-  `${chalk.cyanBright('Took')} ${divideAndRound(elapsed, 1000, 2)}s ${chalk.cyanBright('to initialize typedoc')}`,
+  `${chalk.cyanBright('Took')} ${divideAndRound(elapsed, 1000)}s ${chalk.cyanBright('to initialize typedoc')}`,
 );

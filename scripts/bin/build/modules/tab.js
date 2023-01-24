@@ -1,11 +1,12 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
-import { Command } from 'commander';
-import { Table } from 'console-table-printer';
+import { Command, Option } from 'commander';
 import { promises as fs } from 'fs';
-import { retrieveManifest } from '../../scriptUtils.js';
-import { divideAndRound, fileSizeFormatter } from '../buildUtils.js';
+import { createBuildLogger, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { logLintResult } from '../prebuild/eslint.js';
+import { preBuild } from '../prebuild/index.js';
+import { logTscResults } from '../prebuild/tsc.js';
 import { buildModules } from './index.js';
 import { requireCreator } from './moduleUtils.js';
 /**
@@ -66,106 +67,30 @@ export const outputTab = async (tabName, text, outDir) => {
         };
     }
 };
-export const logTabResults = (tabResults, verbose) => {
-    if (typeof tabResults === 'boolean')
-        return;
-    const { severity: tabSeverity, results } = tabResults;
-    const entries = Object.entries(results);
-    if (entries.length === 0)
-        return;
-    if (!verbose) {
-        if (tabSeverity === 'success') {
-            console.log(chalk.greenBright('Successfully built all tabs!\n'));
-            return;
-        }
-        console.log(chalk.cyanBright(`Tab building ${chalk.redBright('failed')} with errors:\n${Object.entries(results)
-            .filter(([, { severity }]) => severity === 'error')
-            .map(([tabName, { error }], i) => chalk.redBright(`${i + 1}. ${tabName}: ${error}`))
-            .join('\n')}\n`));
-        return;
-    }
-    const tabTable = new Table({
-        columns: [
-            {
-                name: 'tab',
-                title: 'Tab',
-            },
-            {
-                name: 'severity',
-                title: 'Status',
-            },
-            {
-                name: 'elapsed',
-                title: 'Build Time (s)',
-            },
-            {
-                name: 'fileSize',
-                title: 'File Size',
-            },
-            {
-                name: 'error',
-                title: 'Errors',
-            },
-        ],
-    });
-    entries.forEach(([tabName, { elapsed, severity, error, fileSize }]) => {
-        if (severity === 'success') {
-            tabTable.addRow({
-                elapsed: divideAndRound(elapsed, 1000, 2),
-                error: '-',
-                fileSize: fileSizeFormatter(fileSize),
-                severity: 'Success',
-                tab: tabName,
-            }, { color: 'green' });
-        }
-        else {
-            severity = 'error';
-            tabTable.addRow({
-                elapsed: '-',
-                error,
-                fileSize: '-',
-                severity: 'Error',
-                tab: tabName,
-            }, { color: 'red' });
-        }
-    });
-    if (tabSeverity === 'success') {
-        console.log(`${chalk.cyanBright('Tabs built')} ${chalk.greenBright('successfully')}:\n${tabTable.render()}\n`);
-    }
-    else {
-        console.log(`${chalk.cyanBright('Tabs failed with')} ${chalk.redBright('errors')}:\n${tabTable.render()}\n`);
-    }
-};
+export const logTabResults = createBuildLogger('tab');
 const buildTabsCommand = new Command('tabs')
+    .option('--fix', 'Ask eslint to autofix linting errors', false)
     .option('--outDir <outdir>', 'Output directory', 'build')
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
-    .option('-t, --tabs <tabs...>', 'Manually specify which tabs to build')
+    .option('--no-tsc', 'Don\'t run tsc before building')
+    .addOption(new Option('--no-lint', 'Don\t run eslint before building')
+    .conflicts('fix'))
+    .argument('[tabs...]', 'Manually specify which tabs to build', null)
     .description('Build only tabs')
-    .action(async (buildOpts) => {
-    const [manifest] = await Promise.all([
-        retrieveManifest(buildOpts.manifest),
-        await fs.mkdir(`${buildOpts.outDir}/tabs`, { recursive: true }),
+    .action(async (tabs, { manifest, ...opts }) => {
+    const [assets] = await Promise.all([
+        retrieveBundlesAndTabs(manifest, [], tabs),
+        fs.mkdir(`${opts.outDir}/tabs`, { recursive: true }),
     ]);
-    const allTabs = Object.values(manifest)
-        .flatMap((x) => x.tabs);
-    if (buildOpts.tabs) {
-        const undefineds = buildOpts.tabs.filter((tabName) => !allTabs.includes(tabName));
-        if (undefineds.length > 0) {
-            throw new Error(`Unknown tabs: ${undefineds.join(', ')}`);
-        }
-    }
-    else {
-        buildOpts.tabs = allTabs;
-    }
-    console.log(`${chalk.cyanBright('Building the following tabs:')}\n${buildOpts.tabs.map((tabName, i) => `${i + 1}. ${tabName}`)
+    const { tscResult, lintResult, proceed } = await preBuild(opts, assets);
+    logLintResult(lintResult);
+    logTscResults(tscResult, opts.srcDir);
+    if (!proceed)
+        return;
+    console.log(`${chalk.cyanBright('Building the following tabs:')}\n${assets.tabs.map((tabName, i) => `${i + 1}. ${tabName}`)
         .join('\n')}\n`);
-    const { tabs } = await buildModules({
-        ...buildOpts,
-        tabs: buildOpts.tabs,
-        bundles: [],
-        modulesSpecified: true,
-    });
-    logTabResults(tabs, buildOpts.verbose);
+    const { tabs: tabResult } = await buildModules(opts, assets);
+    logTabResults(tabResult, opts.verbose);
 });
 export default buildTabsCommand;
