@@ -1,3 +1,6 @@
+/* [Imports] */
+import { IconSize } from '@blueprintjs/core';
+
 /* [Exports] */
 
 //NOTE Silver is in here to avoid circular dependencies, instead of in
@@ -7,11 +10,7 @@ export const DEFAULT_COLOR: string = SILVER;
 
 // Values extracted from the styling of the frontend
 export const SA_TAB_BUTTON_WIDTH: string = '40px';
-//NOTE The value 20 is a hardcoded IconSize.LARGE from BlueprintJS V4, to match
-// the frontend. It is no longer imported, because importing @blueprintjs/core
-// has the built tab bundle try to access React due to the esbuild build system,
-// causing an error when the tab spawns
-export const SA_TAB_ICON_SIZE: number = 20;
+export const SA_TAB_ICON_SIZE: number = IconSize.LARGE;
 
 export const BP_TOOLTIP_PADDING: string = '10px 12px';
 export const BP_TAB_BUTTON_MARGIN: string = '20px';
