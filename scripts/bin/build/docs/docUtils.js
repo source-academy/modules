@@ -20,6 +20,8 @@ export const initTypedoc = wrapWithTimer(({ srcDir, bundles, verbose, }, watch) 
             skipErrorChecking: true,
             watch,
         });
+        if (watch)
+            resolve([app, null]);
         const project = app.convert();
         if (!project) {
             reject(new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'));

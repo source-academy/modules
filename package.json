@@ -16,12 +16,10 @@
     "build:scripts": "Compile build scripts",
     "serve": "Start the HTTP server to serve all files in `build/`, with the same directory structure",
     "scripts": "Run a script within the scripts directory",
-    "dev": "Serve modules, rebuilding every time one is requested",
-    "dev:watch": "Rebuild modules every time source files change. Need to use with yarn serve",
-    "dev:live": "Serve modules, rebuilding on each request or file system change",
     "prepare": "Enable git hooks",
     "test": "Run unit tests",
-    "test:watch": "Watch files for changes and rerun tests related to changed files"
+    "test:watch": "Watch files for changes and rerun tests related to changed files",
+    "watch": "Watch files for changes and rebuild on those changes"
   },
   "type": "module",
   "scripts": {
@@ -34,13 +32,11 @@
     "build:help": "yarn scripts build --help",
     "build:scripts": "yarn lint:scripts && tsc --project scripts/src/tsconfig.json && copyfiles -f \"scripts/src/templates/templates/*\" scripts/bin/templates/templates",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
-    "dev": "yarn scripts dev",
-    "dev:watch": "yarn scripts dev --watch",
-    "dev:live": "yarn scripts dev -ws",
     "scripts": "node --no-warnings --max-old-space-size=8192 scripts/bin/index.js",
     "prepare": "husky install",
     "test": "jest --verbose",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "watch": "yarn scripts watch"
   },
   "devDependencies": {
     "@types/dom-mediacapture-record": "^1.0.11",

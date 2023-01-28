@@ -15,8 +15,6 @@ import type {
   VariableDeclaration,
 } from 'estree';
 
-import { cjsDirname } from '../../scriptUtils.js';
-
 /**
  * Build the AST representation of a `require` function to use with the transpiled IIFEs
  */
@@ -137,10 +135,15 @@ export const requireCreator = (createObj: Record<string, string>) => ({
 
 export const esbuildOptions: ESBuildOptions = {
   bundle: true,
-  external: ['react', 'react-dom', 'js-slang/moduleHelpers'],
   format: 'iife',
   globalName: 'module',
-  inject: [`${cjsDirname(import.meta.url)}/import-shim.js`],
+  define: {
+    process: JSON.stringify({
+      env: {
+        NODE_ENV: 'production',
+      },
+    }),
+  },
   loader: {
     '.ts': 'ts',
     '.tsx': 'tsx',
@@ -149,10 +152,4 @@ export const esbuildOptions: ESBuildOptions = {
   platform: 'browser',
   target: 'es6',
   write: false,
-};
-
-export const externalDependencies = {
-  'react': '_react',
-  'react-dom': 'ReactDOM',
-  'js-slang/moduleHelpers': 'moduleHelpers',
 };

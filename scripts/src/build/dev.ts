@@ -1,28 +1,14 @@
 import chalk from 'chalk';
-import { InvalidArgumentError } from 'commander';
 import { context as esbuild } from 'esbuild';
-import { promises as fsPromises } from 'fs';
-import path from 'path';
-import type { Application, ProjectReflection } from 'typedoc';
-
-import { retrieveManifest } from '../scriptUtils.js';
+import { promises as fs } from 'fs';
+import type { Application } from 'typedoc';
 
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
-import { processOutputFiles } from './modules/index.js';
+import { reduceBundleOutputFiles } from './modules/bundle.js';
 import { esbuildOptions } from './modules/moduleUtils.js';
-import { createBuildCommand, divideAndRound, logResult } from './buildUtils.js';
-import type { BuildCommandInputs } from './types.js';
-
-type DevCommandInputs = {
-  docs: boolean;
-
-  ip: string | null;
-  port: number | null;
-
-  watch: boolean;
-  serve: boolean;
-} & BuildCommandInputs;
-
+import { reduceTabOutputFiles } from './modules/tab.js';
+import { bundleNameExpander, createBuildCommand, divideAndRound, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
+import type { BuildCommandInputs, UnreducedResult } from './types.js';
 
 /**
  * Wait until the user presses 'ctrl+c' on the keyboard
@@ -38,6 +24,140 @@ const waitForQuit = () => new Promise<void>((resolve) => {
     }
   });
 });
+
+type ContextOptions = Record<'srcDir' | 'outDir', string>;
+const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[], app?: Application) => esbuild({
+  ...esbuildOptions,
+  outbase: outDir,
+  outdir: outDir,
+  entryPoints: bundles.map(bundleNameExpander(srcDir)),
+  external: ['js-slang/moduleHelpers'],
+  plugins: [{
+    name: 'Bundle Compiler',
+    async setup(pluginBuild) {
+      let jsonResults: UnreducedResult[] = [];
+      if (app) {
+        app.convertAndWatch(async (project) => {
+          jsonResults = await buildJsons(project, {
+            outDir,
+            bundles,
+          });
+        });
+      }
+
+      let startTime: number;
+      pluginBuild.onStart(() => {
+        console.log(chalk.magentaBright('Beginning build...'));
+        startTime = performance.now();
+      });
+
+      pluginBuild.onEnd(async ({ outputFiles }) => {
+        const mainResults = await reduceBundleOutputFiles(outputFiles, startTime, outDir);
+        logResult(mainResults.concat(jsonResults), false);
+
+        console.log(chalk.gray(`Took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
+      });
+    },
+  }],
+});
+
+const getTabContext = ({ srcDir, outDir }: ContextOptions, bundles: string[]) => esbuild({
+  ...esbuildOptions,
+  outbase: outDir,
+  outdir: outDir,
+  entryPoints: bundles.map(bundleNameExpander(srcDir)),
+  external: ['react', 'react-dom'],
+  plugins: [{
+    name: 'Tab Compiler',
+    setup(pluginBuild) {
+      let startTime: number;
+      pluginBuild.onStart(() => {
+        console.log(chalk.magentaBright('Beginning build...'));
+        startTime = performance.now();
+      });
+
+      pluginBuild.onEnd(async ({ outputFiles }) => {
+        const mainResults = await reduceTabOutputFiles(outputFiles, startTime, outDir);
+        logResult(mainResults, false);
+
+        console.log(chalk.gray(`Took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
+      });
+    },
+  }],
+});
+
+// const serveContext = async (context: Awaited<ReturnType<typeof esbuild>>) => {
+//   const { port } = await context.serve({
+//     host: '127.0.0.2',
+//     onRequest: ({ method, path: urlPath, remoteAddress, timeInMS }) => console.log(`[${new Date()
+//       .toISOString()}] ${chalk.gray(remoteAddress)} "${chalk.cyan(`${method} ${urlPath}`)}": Response Time: ${
+//       chalk.magentaBright(`${divideAndRound(timeInMS, 1000, 2)}s`)}`),
+//   });
+
+//   return port;
+// };
+
+type WatchCommandInputs = {
+  docs: boolean;
+} & BuildCommandInputs;
+
+export const watchCommand = createBuildCommand('watch')
+  .description('Run esbuild in watch mode, rebuilding on every detected file system change')
+  .option('--no-docs', 'Don\'t rebuild documentation')
+  .action(async (opts: WatchCommandInputs) => {
+    const [{ bundles, tabs }] = await Promise.all([
+      retrieveBundlesAndTabs(opts.manifest, null, null),
+      fs.mkdir(`${opts.outDir}/bundles/`, { recursive: true }),
+      fs.mkdir(`${opts.outDir}/tabs/`, { recursive: true }),
+      fs.mkdir(`${opts.outDir}/jsons/`, { recursive: true }),
+      fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
+    ]);
+
+    let app: Application | null = null;
+    if (opts.docs) {
+      ({ result: [app] } = await initTypedoc({
+        srcDir: opts.srcDir,
+        bundles,
+        verbose: false,
+      }, true));
+    }
+
+    const [bundlesContext, tabsContext] = await Promise.all([
+      getBundleContext(opts, bundles, app),
+      getTabContext(opts, tabs),
+    ]);
+
+    await Promise.all([bundlesContext.watch(), tabsContext.watch()]);
+
+    console.log(chalk.yellowBright(`Watching ${chalk.cyanBright(`./${opts.srcDir}`)} for changes\nPress CTRL + C to stop`));
+    await waitForQuit();
+    console.log(chalk.yellowBright('Stopping...'));
+
+    const [htmlResult] = await Promise.all([
+      opts.docs
+        ? buildHtml(app, app.convert(), {
+          outDir: opts.outDir,
+          modulesSpecified: false,
+        })
+        : Promise.resolve(null),
+      bundlesContext.cancel()
+        .then(() => bundlesContext.dispose()),
+      tabsContext.cancel()
+        .then(() => tabsContext.dispose()),
+    ]);
+    logHtmlResult(htmlResult);
+  });
+
+/*
+type DevCommandInputs = {
+  docs: boolean;
+
+  ip: string | null;
+  port: number | null;
+
+  watch: boolean;
+  serve: boolean;
+} & BuildCommandInputs;
 
 const devCommand = createBuildCommand('dev')
   .description('Use this command to leverage esbuild\'s automatic rebuilding capapbilities.'
@@ -64,12 +184,128 @@ const devCommand = createBuildCommand('dev')
       if (opts.port) console.log(chalk.yellowBright('--port option specified without --serve!'));
     }
 
-    const [manifest] = await Promise.all([
-      retrieveManifest(opts.manifest),
+    const [{ bundles, tabs }] = await Promise.all([
+      retrieveBundlesAndTabs(opts.manifest, null, null),
       fsPromises.mkdir(`${opts.outDir}/bundles/`, { recursive: true }),
       fsPromises.mkdir(`${opts.outDir}/tabs/`, { recursive: true }),
       fsPromises.mkdir(`${opts.outDir}/jsons/`, { recursive: true }),
       fsPromises.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
+    ]);
+
+
+    const [bundlesContext, tabsContext] = await Promise.all([
+      getBundleContext(opts, bundles),
+      getTabContext(opts, tabs),
+    ]);
+
+    await Promise.all([
+      bundlesContext.watch(),
+      tabsContext.watch(),
+    ]);
+
+    await Promise.all([
+      bundlesContext.cancel()
+        .then(() => bundlesContext.dispose()),
+      tabsContext.cancel()
+        .then(() => tabsContext.dispose()),
+    ]);
+
+    await waitForQuit();
+
+
+    if (opts.watch) {
+      await Promise.all([
+        bundlesContext.watch(),
+        tabsContext.watch(),
+      ]);
+    }
+
+    let httpServer: http.Server | null = null;
+    if (opts.serve) {
+      const [bundlesPort, tabsPort] = await Promise.all([
+        serveContext(bundlesContext),
+        serveContext(tabsContext),
+      ]);
+
+      httpServer = http.createServer((req, res) => {
+        const urlSegments = req.url.split('/');
+        if (urlSegments.length === 3) {
+          const [, assetType, name] = urlSegments;
+
+          if (assetType === 'jsons') {
+            const filePath = path.join(opts.outDir, 'jsons', name);
+            if (!fsSync.existsSync(filePath)) {
+              res.writeHead(404, 'No such json file');
+              res.end();
+              return;
+            }
+
+            const readStream = fsSync.createReadStream(filePath);
+            readStream.on('data', (data) => res.write(data));
+            readStream.on('end', () => {
+              res.writeHead(200);
+              res.end();
+            });
+            readStream.on('error', (err) => {
+              res.writeHead(500, `Error Occurred: ${err}`);
+              res.end();
+            });
+          } else if (assetType === 'tabs') {
+            const proxyReq = http.request({
+              host: '127.0.0.2',
+              port: tabsPort,
+              path: req.url,
+              method: req.method,
+              headers: req.headers,
+            }, (proxyRes) => {
+              // Forward each incoming request to esbuild
+              res.writeHead(proxyRes.statusCode, proxyRes.headers);
+              proxyRes.pipe(res, { end: true });
+            });
+            // Forward the body of the request to esbuild
+            req.pipe(proxyReq, { end: true });
+          } else if (assetType === 'bundles') {
+            const proxyReq = http.request({
+              host: '127.0.0.2',
+              port: bundlesPort,
+              path: req.url,
+              method: req.method,
+              headers: req.headers,
+            }, (proxyRes) => {
+              // Forward each incoming request to esbuild
+              res.writeHead(proxyRes.statusCode, proxyRes.headers);
+              proxyRes.pipe(res, { end: true });
+            });
+            // Forward the body of the request to esbuild
+            req.pipe(proxyReq, { end: true });
+          } else {
+            res.writeHead(400);
+            res.end();
+          }
+        }
+      });
+      httpServer.listen(opts.port, opts.ip);
+
+      await new Promise<void>((resolve) => httpServer.once('listening', () => resolve()));
+      console.log(`${
+        chalk.greenBright(`Serving ${
+          chalk.cyanBright(`./${opts.outDir}`)
+        } at`)} ${
+        chalk.yellowBright(`${opts.ip}:${opts.port}`)
+      }`);
+    }
+
+    await waitForQuit();
+
+    if (httpServer) {
+      httpServer.close();
+    }
+
+    await Promise.all([
+      bundlesContext.cancel()
+        .then(() => bundlesContext.dispose()),
+      tabsContext.cancel()
+        .then(() => tabsContext.dispose()),
     ]);
 
     let app: Application | null = null;
@@ -90,38 +326,6 @@ const devCommand = createBuildCommand('dev')
         outDir: opts.outDir,
       });
     };
-
-    const context = await esbuild({
-      ...esbuildOptions,
-      outbase: opts.outDir,
-      outdir: opts.outDir,
-      entryPoints: Object.entries(manifest)
-        .flatMap(([bundle, { tabs }]) => [
-          path.join(opts.srcDir, 'bundles', bundle, 'index.ts'),
-          ...tabs.map((tabName) => path.join(opts.srcDir, 'tabs', tabName, 'index.tsx')),
-        ]),
-      plugins: [{
-        name: 'Source Module Compiler',
-        setup(pluginBuild) {
-          let startTime: number;
-          pluginBuild.onStart(() => {
-            console.log(chalk.magentaBright('Beginning build...'));
-            startTime = performance.now();
-          });
-
-          pluginBuild.onEnd(async ({ outputFiles }) => {
-            const [mainResults, jsonResults] = await Promise.all([
-              processOutputFiles(outputFiles, opts.outDir, startTime),
-              buildDocs(),
-            ]);
-
-            logResult(mainResults.concat(jsonResults), false);
-
-            console.log(chalk.gray(`Took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
-          });
-        },
-      }],
-    });
 
     if (shouldWatch) {
       console.log(chalk.yellowBright(`Watching ${chalk.cyanBright(`./${opts.srcDir}`)} for changes`));
@@ -164,3 +368,4 @@ const devCommand = createBuildCommand('dev')
   });
 
 export default devCommand;
+*/

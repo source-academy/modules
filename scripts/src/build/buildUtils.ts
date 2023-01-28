@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { Table } from 'console-table-printer';
+import path from 'path';
 
 import { retrieveManifest } from '../scriptUtils.js';
 
@@ -219,6 +220,9 @@ export const retrieveBundlesAndTabs = async (
     modulesSpecified: modules !== null,
   };
 };
+
+export const bundleNameExpander = (srcdir: string) => (name: string) => path.join(srcdir, 'bundles', name, 'index.ts');
+export const tabNameExpander = (srcdir: string) => (name: string) => path.join(srcdir, 'tabs', name, 'index.tsx');
 
 export const createBuildCommand = (label: string) => new Command(label)
   .option('--outDir <outdir>', 'Output directory', 'build')

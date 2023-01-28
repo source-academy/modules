@@ -1,5 +1,6 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
+import { type OutputFile, build as esbuild } from 'esbuild';
 import type {
   ArrowFunctionExpression,
   BlockStatement,
@@ -10,15 +11,17 @@ import type {
   Program,
   VariableDeclaration,
 } from 'estree';
-import { promises as fsPromises } from 'fs';
+import { promises as fs } from 'fs';
+import pathlib from 'path';
 
-import type { BuildResult } from '../types.js';
+import { bundleNameExpander } from '../buildUtils.js';
+import type { BuildCommandInputs, BuildResult, UnreducedResult } from '../types.js';
 
-import { requireCreator } from './moduleUtils.js';
+import { esbuildOptions, requireCreator } from './moduleUtils.js';
 
 const HELPER_NAME = 'moduleHelpers';
 
-export const outputBundle = async (name: string, bundleText: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
+const outputBundle = async (name: string, bundleText: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(bundleText, { ecmaVersion: 6 }) as unknown as Program;
     const exprStatement = parsed.body[1] as unknown as VariableDeclaration;
@@ -54,8 +57,8 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
     if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
 
     const outFile = `${outDir}/bundles/${name}.js`;
-    await fsPromises.writeFile(outFile, newCode);
-    const { size } = await fsPromises.stat(outFile);
+    await fs.writeFile(outFile, newCode);
+    const { size } = await fs.stat(outFile);
     return {
       severity: 'success',
       fileSize: size,
@@ -67,3 +70,29 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
     };
   }
 };
+
+export const buildBundles = async (bundles: string[], opts: BuildCommandInputs) => {
+  const { outputFiles } = await esbuild({
+    ...esbuildOptions,
+    entryPoints: bundles.map(bundleNameExpander(opts.srcDir)),
+    outbase: opts.outDir,
+    outdir: opts.outDir,
+    external: ['js-slang/moduleHelpers'],
+  });
+  return outputFiles;
+};
+
+export const reduceBundleOutputFiles = (outputFiles: OutputFile[], startTime: number, outDir: string) => Promise.all(outputFiles.map(async ({ path, text }) => {
+  const [rawType, name] = path.split(pathlib.sep)
+    .slice(-3, -1);
+
+  if (rawType !== 'bundles') {
+    throw new Error(`Expected only bundles, got ${rawType}`);
+  }
+
+  const result = await outputBundle(name, text, outDir);
+  return ['bundle', name, {
+    elapsed: performance.now() - startTime,
+    ...result,
+  }] as UnreducedResult;
+}));

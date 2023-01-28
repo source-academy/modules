@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { Table } from 'console-table-printer';
+import path from 'path';
 import { retrieveManifest } from '../scriptUtils.js';
 export const wrapWithTimer = (func) => async (...params) => {
     const startTime = performance.now();
@@ -196,6 +197,8 @@ export const retrieveBundlesAndTabs = async (manifestFile, modules, tabOpts, add
         modulesSpecified: modules !== null,
     };
 };
+export const bundleNameExpander = (srcdir) => (name) => path.join(srcdir, 'bundles', name, 'index.ts');
+export const tabNameExpander = (srcdir) => (name) => path.join(srcdir, 'tabs', name, 'index.tsx');
 export const createBuildCommand = (label) => new Command(label)
     .option('--outDir <outdir>', 'Output directory', 'build')
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')

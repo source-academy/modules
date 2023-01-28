@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { type ProjectReflection, Application, TSConfigReader } from 'typedoc';
 
-import { divideAndRound, wrapWithTimer } from '../buildUtils.js';
+import { bundleNameExpander, divideAndRound, wrapWithTimer } from '../buildUtils.js';
 
 type TypedocOpts = {
   srcDir: string;
@@ -25,7 +25,7 @@ export const initTypedoc = wrapWithTimer(
 
       app.bootstrap({
         categorizeByGroup: true,
-        entryPoints: bundles.map((bundle) => `${srcDir}/bundles/${bundle}/index.ts`),
+        entryPoints: bundles.map(bundleNameExpander(srcDir)),
         excludeInternal: true,
         logger: watch ? 'none' : undefined,
         logLevel: verbose ? 'Info' : 'Error',
@@ -35,6 +35,9 @@ export const initTypedoc = wrapWithTimer(
         skipErrorChecking: true,
         watch,
       });
+
+      if (watch) resolve([app, null]);
+
       const project = app.convert();
       if (!project) {
         reject(new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'));

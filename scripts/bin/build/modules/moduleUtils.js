@@ -1,4 +1,3 @@
-import { cjsDirname } from '../../scriptUtils.js';
 /**
  * Build the AST representation of a `require` function to use with the transpiled IIFEs
  */
@@ -118,10 +117,15 @@ export const requireCreator = (createObj) => ({
 });
 export const esbuildOptions = {
     bundle: true,
-    external: ['react', 'react-dom', 'js-slang/moduleHelpers'],
     format: 'iife',
     globalName: 'module',
-    inject: [`${cjsDirname(import.meta.url)}/import-shim.js`],
+    define: {
+        process: JSON.stringify({
+            env: {
+                NODE_ENV: 'production',
+            },
+        }),
+    },
     loader: {
         '.ts': 'ts',
         '.tsx': 'tsx',
