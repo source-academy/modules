@@ -46,13 +46,13 @@ module.exports = {
         // allowTemplateLiterals: false
       }
     ],
-    
+
     // [typescript-eslint Extension Rules]
     /* NOTE
       .eslintrc.base.js has been configured for every rule off the
       eslint:recommended config as of V8.
-      A similar complete config but for all typescript-eslint rules hasn"t
-      been made, instead simply using airbnb-typescript"s layers of
+      A similar complete config but for all typescript-eslint rules hasn't
+      been made, instead simply using airbnb-typescript's layers of
       extended configs & plugins.
 
       This section is for reconfiguring the typescript-eslint extension
