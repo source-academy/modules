@@ -56,13 +56,13 @@ export function is_tree(
 ): boolean {
   return value === null
          || (Array.isArray(value)
-	  && value.length === 2
-	  && Array.isArray(value[1])
-  	  && value[1].length === 2
-	  && is_tree(value[1][0])
-	  && value[1][1].length === 2
-	  && is_tree(value[1][1][0])
-	  && value[1][1][1] === null);
+    && value.length === 2
+    && Array.isArray(value[1])
+      && value[1].length === 2
+    && is_tree(value[1][0])
+    && value[1][1].length === 2
+    && is_tree(value[1][1][0])
+    && value[1][1][1] === null);
 }
 
 /**
