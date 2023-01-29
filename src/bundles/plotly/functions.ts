@@ -5,12 +5,27 @@
 
 import { context } from 'js-slang/moduleHelpers';
 import Plotly, { Data } from 'plotly.js-dist';
-import { BarPlot, DrawnPlot, ScatterPlot } from './plots';
+import { BarPlot, DrawnPlot, Plot, ScatterPlot } from './plots';
 
 const drawnPlots: (DrawnPlot)[] = [];
 context.moduleContexts.plotly.state = {
   drawnPlots,
 };
+
+
+export function checkInput(input: any): void {
+  console.log(input);
+  return input;
+}
+
+export function newPlot(data:any): void {
+  drawnPlots.push(new Plot(drawNewPlot, data));
+}
+
+function drawNewPlot(data: any, divId: string) {
+  const plotlyData = convertToPlotlyData(data);
+  Plotly.newPlot(divId, [plotlyData]);
+}
 
 /**
  * Draws a Line Graph on the Plotly Tab
@@ -34,6 +49,35 @@ export function drawLineGraph(): void {
 export function draw3dGraph(): void {
   drawnPlots.push(new ScatterPlot(demo3dScatterPlot));
 }
+
+
+function convertToPlotlyData(data: any): Data {
+  let demoData: Data[] = [{
+    x: [1, 2, 3, 4],
+    y: [10, 15, 13, 17],
+    type: 'scatter',
+  }];
+
+  let convertedData: Data = {};
+
+  if (Array.isArray(data) && data.length == 2) {
+    addFeildsToData(convertedData, data);
+  }
+  console.log(convertedData);
+
+  return convertedData;
+}
+
+function addFeildsToData(convertedData: Data, data: any[]) {
+  console.log(convertedData, data);
+  if (Array.isArray(data) && data.length == 2 && data[0].length == 2) {
+    const field = data[0][0];
+    const value = data[0][1];
+    convertedData[field] = value;
+    addFeildsToData(convertedData, data[1]);
+  } 
+}
+
 
 function demoLineGraphSetup(divId: string = 'myDiv'): void {
   let trace1: Data = {

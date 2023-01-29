@@ -3,4 +3,4 @@
  * @author Sourabh Raj Jaiswal
  */
 
-export { drawLineGraph, draw3dGraph } from './functions';
+export { drawLineGraph, draw3dGraph, checkInput, newPlot } from './functions';
