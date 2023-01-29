@@ -3,7 +3,11 @@ import { retrieveBundlesAndTabs } from '../buildUtils.js';
 import { logLintResult, runEslint } from './eslint.js';
 import { logTscResults, runTsc } from './tsc.js';
 /**
- * Run both `tsc` and `eslint` in parallel if `--fix` was not specified
+ * Run both `tsc` and `eslint` in parallel if `--fix` was not specified. Otherwise, run eslint
+ * to fix linting errors first, then run tsc for type checking
+ *
+ * @returns An object that contains the results from linting and typechecking, as well
+ * as a boolean `proceed` to indicate if either eslint or tsc encountered a fatal error
  */
 export const preBuild = async (opts, assets) => {
     if (opts.fix) {
@@ -38,13 +42,14 @@ export const preBuild = async (opts, assets) => {
     }
 };
 const prebuildCommand = new Command('prebuild')
+    .description('Run both tsc and eslint')
     .option('--fix', 'Ask eslint to autofix linting errors', false)
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
     .option('-m, --modules [modules...]', 'Manually specify which modules to check')
     .option('-t, --tabs [tabs...]', 'Manually specify which tabs to check')
     .action(async ({ modules, tabs, manifest, ...opts }) => {
-    const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
+    const assets = await retrieveBundlesAndTabs(manifest, modules, tabs, false);
     const { lintResult, tscResult } = await preBuild({
         ...opts,
         tsc: true,

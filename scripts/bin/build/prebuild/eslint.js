@@ -22,11 +22,11 @@ export const runEslint = wrapWithTimer(async (opts, { bundles, tabs }) => {
     ];
     const [lintBundles, lintTabs] = await Promise.all(promises);
     if (bundles.length > 0) {
-        console.log(`${chalk.magentaBright('Running eslint for the following bundles:')}:\n${bundles.map((bundle, i) => `${i + 1}: ${bundle}`)
+        console.log(`${chalk.magentaBright('Running eslint for the following bundles:')}\n${bundles.map((bundle, i) => `${i + 1}: ${bundle}`)
             .join('\n')}`);
     }
     if (tabs.length > 0) {
-        console.log(`${chalk.magentaBright('Running eslint for the following tabs:')}:\n${tabs.map((tabName, i) => `${i + 1}: ${tabName}`)
+        console.log(`${chalk.magentaBright('Running eslint for the following tabs:')}\n${tabs.map((tabName, i) => `${i + 1}: ${tabName}`)
             .join('\n')}`);
     }
     const lintResults = [...lintBundles, ...lintTabs];

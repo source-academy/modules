@@ -35,7 +35,7 @@ export const logHtmlResult = ({ elapsed, result: { severity, error } }) => {
         console.log(`${chalk.cyanBright('HTML documentation built')} ${chalk.greenBright('successfully')} in ${timeStr}s\n`);
     }
     else if (severity === 'warn') {
-        console.log(chalk.yellowBright('-m was specified, not building HTML documentation\n'));
+        console.log(chalk.yellowBright('Modules were manually specified, not building HTML documentation\n'));
     }
     else {
         console.log(`${chalk.cyanBright('HTML documentation')} ${chalk.redBright('failed')}: ${error}\n`);
