@@ -1,8 +1,9 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import { build as esbuild } from 'esbuild';
-import { promises as fsPromises } from 'fs';
+import { promises as fs } from 'fs';
 import pathlib from 'path';
+import { bundleNameExpander } from '../buildUtils.js';
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
 const HELPER_NAME = 'moduleHelpers';
 const outputBundle = async (name, bundleText, outDir) => {
@@ -39,8 +40,8 @@ const outputBundle = async (name, bundleText, outDir) => {
         if (newCode.endsWith(';'))
             newCode = newCode.slice(0, -1);
         const outFile = `${outDir}/bundles/${name}.js`;
-        await fsPromises.writeFile(outFile, newCode);
-        const { size } = await fsPromises.stat(outFile);
+        await fs.writeFile(outFile, newCode);
+        const { size } = await fs.stat(outFile);
         return {
             severity: 'success',
             fileSize: size,
@@ -56,7 +57,7 @@ const outputBundle = async (name, bundleText, outDir) => {
 export const buildBundles = async (bundles, opts) => {
     const { outputFiles } = await esbuild({
         ...esbuildOptions,
-        entryPoints: bundles.map((bundle) => `${opts.srcDir}/bundles/${bundle}/index.ts`),
+        entryPoints: bundles.map(bundleNameExpander(opts.srcDir)),
         outbase: opts.outDir,
         outdir: opts.outDir,
         external: ['js-slang/moduleHelpers'],

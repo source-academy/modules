@@ -13,6 +13,7 @@ import type {
   VariableDeclaration,
 } from 'estree';
 import { promises as fs } from 'fs';
+import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 
 import { createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
@@ -26,6 +27,7 @@ import { esbuildOptions, requireCreator } from './moduleUtils.js';
 const externals = {
   'react': '_react',
   'react-dom': 'ReactDOM',
+  'react/jsx-runtime': '_react',
 };
 
 const outputTab = async (tabName: string, text: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
@@ -37,7 +39,7 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
       type: 'ExpressionStatement',
       expression: {
         type: 'FunctionExpression',
-        params: Object.values(externals)
+        params: uniq(Object.values(externals))
           .map((name) => ({
             type: 'Identifier',
             name,
@@ -85,6 +87,7 @@ export const buildTabs = async (tabs: string[], opts: BuildCommandInputs) => {
   const { outputFiles } = await esbuild({
     ...esbuildOptions,
     entryPoints: tabs.map(tabNameExpander(opts.srcDir)),
+    jsx: 'automatic',
     outbase: opts.outDir,
     outdir: opts.outDir,
     external: ['react', 'react-dom'],

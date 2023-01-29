@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs, wrapWithTimer, } from '../buildUtils.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import drawdown from './drawdown.js';

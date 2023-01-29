@@ -135,8 +135,3 @@ export const esbuildOptions = {
     target: 'es6',
     write: false,
 };
-export const externalDependencies = {
-    'react': '_react',
-    'react-dom': 'ReactDOM',
-    'js-slang/moduleHelpers': 'moduleHelpers',
-};

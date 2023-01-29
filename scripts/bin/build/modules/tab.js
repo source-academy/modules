@@ -3,8 +3,9 @@ import { generate } from 'astring';
 import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
 import { promises as fs } from 'fs';
+import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
 /**
  * Imports that are provided at runtime
@@ -12,6 +13,7 @@ import { esbuildOptions, requireCreator } from './moduleUtils.js';
 const externals = {
     'react': '_react',
     'react-dom': 'ReactDOM',
+    'react/jsx-runtime': '_react',
 };
 const outputTab = async (tabName, text, outDir) => {
     try {
@@ -21,7 +23,7 @@ const outputTab = async (tabName, text, outDir) => {
             type: 'ExpressionStatement',
             expression: {
                 type: 'FunctionExpression',
-                params: Object.values(externals)
+                params: uniq(Object.values(externals))
                     .map((name) => ({
                     type: 'Identifier',
                     name,
@@ -67,7 +69,8 @@ const outputTab = async (tabName, text, outDir) => {
 export const buildTabs = async (tabs, opts) => {
     const { outputFiles } = await esbuild({
         ...esbuildOptions,
-        entryPoints: tabs.map((tabName) => `${opts.srcDir}/tabs/${tabName}/index.tsx`),
+        entryPoints: tabs.map(tabNameExpander(opts.srcDir)),
+        jsx: 'automatic',
         outbase: opts.outDir,
         outdir: opts.outDir,
         external: ['react', 'react-dom'],

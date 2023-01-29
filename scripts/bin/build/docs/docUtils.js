@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { Application, TSConfigReader } from 'typedoc';
-import { divideAndRound, wrapWithTimer } from '../buildUtils.js';
+import { bundleNameExpander, divideAndRound, wrapWithTimer } from '../buildUtils.js';
 /**
  * Offload running typedoc into async code to increase parallelism
  */
@@ -10,7 +10,7 @@ export const initTypedoc = wrapWithTimer(({ srcDir, bundles, verbose, }, watch) 
         app.options.addReader(new TSConfigReader());
         app.bootstrap({
             categorizeByGroup: true,
-            entryPoints: bundles.map((bundle) => `${srcDir}/bundles/${bundle}/index.ts`),
+            entryPoints: bundles.map(bundleNameExpander(srcDir)),
             excludeInternal: true,
             logger: watch ? 'none' : undefined,
             logLevel: verbose ? 'Info' : 'Error',

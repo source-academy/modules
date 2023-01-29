@@ -97,8 +97,9 @@ export const watchCommand = createBuildCommand('watch')
         getTabContext(opts, tabs),
     ]);
     await Promise.all([bundlesContext.watch(), tabsContext.watch()]);
-    console.log(chalk.yellowBright('Press CTRL + C to stop'));
+    console.log(chalk.yellowBright(`Watching ${chalk.cyanBright(`./${opts.srcDir}`)} for changes\nPress CTRL + C to stop`));
     await waitForQuit();
+    console.log(chalk.yellowBright('Stopping...'));
     const [htmlResult] = await Promise.all([
         opts.docs
             ? buildHtml(app, app.convert(), {
