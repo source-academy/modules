@@ -325,14 +325,13 @@ function loadAlternative(): void {
   videoElement.crossOrigin = 'anonymous';
   videoElement.onended = () => {
     playCount++;
-    if (playCount == LOOP_COUNT) {
-      tabsPackage.onClickStill();
+    if (playCount >= LOOP_COUNT) {
       playCount = 0;
-    } else if (playCount < LOOP_COUNT) {
+
+      tabsPackage.onClickStill();
+    } else {
       stopVideo();
       startVideo();
-    } else {
-      playCount = 0;
     }
   };
   videoElement.onloadedmetadata = () => {
