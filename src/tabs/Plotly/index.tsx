@@ -10,7 +10,7 @@ type Props = {
 
 type State = {
   modalOpen: boolean
-  modalDiv: any
+  selectedPlot: any | null
 };
 
 class Plotly extends React.Component<Props, State> {
@@ -18,16 +18,12 @@ class Plotly extends React.Component<Props, State> {
     super(props);
     this.state = {
       modalOpen: false,
-      modalDiv: <div></div>,
+      selectedPlot: null,
     };
   }
 
-  handleOpen = () => {
-    this.setState({ modalOpen: true });
-    const plotlyDiv = document.getElementById('myDiv')?.innerHTML;
-    if (plotlyDiv) {
-      this.setState({ modalDiv: plotlyDiv });
-    }
+  handleOpen = (selectedPlot: any) => {
+    this.setState({ modalOpen: true, selectedPlot: selectedPlot });
   };
 
   public render() {
@@ -44,18 +40,30 @@ class Plotly extends React.Component<Props, State> {
           <div
             id='modalDiv'
             ref={() => {
-              drawnPlots[0].draw('modalDiv');
+              if (this.state.selectedPlot) {
+                this.state.selectedPlot.draw('modalDiv');
+              }
             }}
-            style={{ width: '80vw', height: '80vh' }}
+            style={{ height: '80vh' }}
           ></div>
         </Modal>
-        <div onClick={() => this.handleOpen()}>Click here to open Modal</div>
-        <div
-          id='myDiv'
-          ref={() => {
-            drawnPlots[0].draw();
-          }}
-        ></div>
+        {
+          drawnPlots.map((drawnPlot: any, id:number) => {
+            const divId = `plotDiv${id}`;
+            return (     
+              <>
+                <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
+                <div
+                  id={divId}
+                  ref={() => {
+                    drawnPlot.draw(divId);
+                  }}
+                ></div>
+              </>
+            );
+          })
+        }
+
       </div>
     );
   }

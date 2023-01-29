@@ -21,7 +21,7 @@ context.moduleContexts.plotly.state = {
  */
 
 export function drawLineGraph(): void {
-  drawnPlots.unshift(new BarPlot(demoLineGraphSetup));
+  drawnPlots.push(new BarPlot(demoLineGraphSetup));
 }
 
 /**
@@ -32,7 +32,7 @@ export function drawLineGraph(): void {
  * ```
  */
 export function draw3dGraph(): void {
-  drawnPlots.unshift(new ScatterPlot(demo3dScatterPlot));
+  drawnPlots.push(new ScatterPlot(demo3dScatterPlot));
 }
 
 function demoLineGraphSetup(divId: string = 'myDiv'): void {
