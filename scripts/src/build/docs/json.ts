@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { Command } from 'commander';
 import fs from 'fs/promises';
 import type {
@@ -8,7 +9,7 @@ import type {
   SomeType,
 } from 'typedoc';
 
-import { wrapWithTimer } from '../../scriptUtils.js';
+import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import {
   createBuildLogger,
   retrieveBundlesAndTabs,
@@ -321,6 +322,7 @@ const jsonCommand = new Command('jsons')
     });
 
     logTypedocTime(typedocTime);
+    printList(chalk.magentaBright('Building jsons for the following modules:\n'), bundles);
     const jsonResults = await buildJsons(project, {
       bundles,
       outDir: opts.outDir,

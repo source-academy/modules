@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import { ESLint } from 'eslint';
 import pathlib from 'path';
-import { wrapWithTimer } from '../../scriptUtils.js';
+import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { createLogger, divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
 /**
  * Run eslint programmatically
@@ -22,12 +22,10 @@ export const runEslint = wrapWithTimer(async (opts, { bundles, tabs }) => {
     ];
     const [lintBundles, lintTabs] = await Promise.all(promises);
     if (bundles.length > 0) {
-        console.log(`${chalk.magentaBright('Running eslint for the following bundles:')}\n${bundles.map((bundle, i) => `${i + 1}: ${bundle}`)
-            .join('\n')}`);
+        printList(`${chalk.magentaBright('Running eslint on the following bundles')}:\n`, bundles);
     }
     if (tabs.length > 0) {
-        console.log(`${chalk.magentaBright('Running eslint for the following tabs:')}\n${tabs.map((tabName, i) => `${i + 1}: ${tabName}`)
-            .join('\n')}`);
+        printList(`${chalk.magentaBright('Running eslint on the following tabs')}:\n`, tabs);
     }
     const lintResults = [...lintBundles, ...lintTabs];
     if (opts.fix) {
@@ -63,8 +61,8 @@ export const lintCommand = new Command('lint')
     .option('--fix', 'Ask eslint to autofix linting errors', false)
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
-    .option('-m, --modules <modules...>', 'Manually specify which modules to check')
-    .option('-t, --tabs <tabs...>', 'Manually specify which tabs to check')
+    .option('-m, --modules <modules...>', 'Manually specify which modules to check', null)
+    .option('-t, --tabs <tabs...>', 'Manually specify which tabs to check', null)
     .action(async ({ modules, tabs, manifest, ...opts }) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const result = await runEslint(opts, assets);

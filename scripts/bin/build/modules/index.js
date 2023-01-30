@@ -3,6 +3,7 @@ import { Command, Option } from 'commander';
 import { build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
+import { printList } from '../../scriptUtils.js';
 import { expandBundleName, expandTabName, retrieveBundlesAndTabs } from '../buildUtils.js';
 import { logLintResult } from '../prebuild/eslint.js';
 import { preBuild } from '../prebuild/index.js';
@@ -79,8 +80,7 @@ const buildModulesCommand = new Command('modules')
     .argument('[modules...]', 'Manually specify which modules to build', null)
     .action(async (modules, { manifest, ...opts }) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, []);
-    console.log(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n${assets.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-        .join('\n')}\n`);
+    printList(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n`, assets.bundles);
     const { lintResult, tscResult } = await preBuild(opts, assets);
     logLintResult(lintResult);
     logTscResults(tscResult, opts.srcDir);

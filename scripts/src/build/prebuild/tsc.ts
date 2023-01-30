@@ -4,7 +4,7 @@ import { existsSync, promises as fs } from 'fs';
 import pathlib from 'path';
 import ts from 'typescript';
 
-import { wrapWithTimer } from '../../scriptUtils.js';
+import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { createLogger, divideAndRound, expandBundleName, expandTabName, retrieveBundlesAndTabs } from '../buildUtils.js';
 import type { CommandHandler, CommandInputs, OverallResult, Severity } from '../types.js';
 
@@ -24,20 +24,12 @@ export const runTsc = wrapWithTimer((async ({ srcDir }, { bundles, tabs }): Prom
   const fileNames: string[] = [];
 
   if (bundles.length > 0) {
-    console.log(`${chalk.magentaBright('Running tsc on the following bundles')}:\n${
-      bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-        .join('\n')
-    }`);
-
+    printList(`${chalk.magentaBright('Running tsc on the following bundles')}:\n`, bundles);
     bundles.forEach((bundle) => fileNames.push(expandBundleName(srcDir)(bundle)));
   }
 
   if (tabs.length > 0) {
-    console.log(`${chalk.magentaBright('Running tsc on the following tabs')}:\n${
-      tabs.map((tabName, i) => `${i + 1}. ${tabName}`)
-        .join('\n')
-    }`);
-
+    printList(`${chalk.magentaBright('Running tsc on the following tabs')}:\n`, tabs);
     tabs.forEach((tabName) => fileNames.push(expandTabName(srcDir)(tabName)));
   }
 
@@ -105,8 +97,8 @@ export const tscCommand = new Command('typecheck')
   .description('Run tsc to perform type checking')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
-  .option('-m, --modules [modules...]', 'Manually specify which modules to check')
-  .option('-t, --tabs [tabs...]', 'Manually specify which tabs to check')
+  .option('-m, --modules [modules...]', 'Manually specify which modules to check', null)
+  .option('-t, --tabs [tabs...]', 'Manually specify which tabs to check', null)
   .action(async ({ modules, tabs, manifest, ...opts }: TscCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const tscResults = await runTsc(opts, assets);

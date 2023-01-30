@@ -33,3 +33,15 @@ export const wrapWithTimer = <T extends (...params: any[]) => Promise<any>>(func
     result,
   };
 };
+
+export const printList = <T = string>(header: string, lst: T[], mapper?: (each: T) => string, sep: string = '\n') => {
+  const mappingFunction = mapper || ((each) => {
+    if (typeof each === 'string') return each;
+    return `${each}`;
+  });
+
+  return console.log(`${header}\n${
+    lst.map((str, i) => `${i + 1}. ${mappingFunction(str)}`)
+      .join(sep)
+  }`);
+};

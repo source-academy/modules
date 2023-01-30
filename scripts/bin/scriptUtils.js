@@ -24,3 +24,12 @@ export const wrapWithTimer = (func) => async (...params) => {
         result,
     };
 };
+export const printList = (header, lst, mapper, sep = '\n') => {
+    const mappingFunction = mapper || ((each) => {
+        if (typeof each === 'string')
+            return each;
+        return `${each}`;
+    });
+    return console.log(`${header}\n${lst.map((str, i) => `${i + 1}. ${mappingFunction(str)}`)
+        .join(sep)}`);
+};

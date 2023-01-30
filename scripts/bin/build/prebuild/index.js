@@ -46,8 +46,8 @@ const prebuildCommand = new Command('prebuild')
     .option('--fix', 'Ask eslint to autofix linting errors', false)
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
-    .option('-m, --modules [modules...]', 'Manually specify which modules to check')
-    .option('-t, --tabs [tabs...]', 'Manually specify which tabs to check')
+    .option('-m, --modules [modules...]', 'Manually specify which modules to check', null)
+    .option('-t, --tabs [tabs...]', 'Manually specify which tabs to check', null)
     .action(async ({ modules, tabs, manifest, ...opts }) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs, false);
     const { lintResult, tscResult } = await preBuild({

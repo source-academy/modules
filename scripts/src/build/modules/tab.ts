@@ -3,7 +3,8 @@ import { generate } from 'astring';
 import chalk from 'chalk';
 import { Command, Option } from 'commander';
 import type {
-  BlockStatement, ExpressionStatement,
+  BlockStatement,
+  ExpressionStatement,
   FunctionExpression,
   Identifier,
   Literal,
@@ -14,6 +15,7 @@ import type {
 } from 'estree';
 import { promises as fs } from 'fs';
 
+import { printList } from '../../scriptUtils.js';
 import { createBuildLogger, retrieveBundlesAndTabs } from '../buildUtils.js';
 import { logLintResult } from '../prebuild/eslint.js';
 import { preBuild } from '../prebuild/index.js';
@@ -94,7 +96,7 @@ const buildTabsCommand = new Command('tabs')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
   .option('--no-tsc', 'Don\'t run tsc before building')
-  .addOption(new Option('--no-lint', 'Don\t run eslint before building')
+  .addOption(new Option('--no-lint', 'Don\'t run eslint before building')
     .conflicts('fix'))
   .argument('[tabs...]', 'Manually specify which tabs to build', null)
   .description('Build only tabs')
@@ -110,8 +112,7 @@ const buildTabsCommand = new Command('tabs')
     logTscResults(tscResult, opts.srcDir);
     if (!proceed) return;
 
-    console.log(`${chalk.cyanBright('Building the following tabs:')}\n${assets.tabs.map((tabName, i) => `${i + 1}. ${tabName}`)
-      .join('\n')}\n`);
+    printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
     const { tabs: tabResult } = await buildModules(opts, assets);
     logTabResults(tabResult, opts.verbose);
   });

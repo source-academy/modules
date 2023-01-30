@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
+import { printList } from '../../scriptUtils.js';
 import { retrieveBundlesAndTabs } from '../buildUtils.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import { buildHtml, logHtmlResult } from './html.js';
@@ -15,8 +16,7 @@ const buildDocsCommand = new Command('docs')
     const { bundles, modulesSpecified } = await retrieveBundlesAndTabs(opts.manifest, modules, []);
     if (bundles.length === 0)
         return;
-    console.log(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n${bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-        .join('\n')}\n`);
+    printList(`${chalk.magentaBright('Building HTML documentation and jsons for the following bundles:')}\n`, bundles);
     const { elapsed, result: [app, project] } = await initTypedoc({
         srcDir: opts.srcDir,
         bundles,

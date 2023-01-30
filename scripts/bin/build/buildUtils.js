@@ -12,10 +12,22 @@ export const fileSizeFormatter = (size) => {
     return `${size.toFixed(2)} KB`;
 };
 /**
- * Check for bundles or tabs that don't exist. If either bundles or tabs were not
- * given, then load them from the manifest
+ * Function to determine which bundles and tabs to build based on the user's input.
+ *
+ * @param modules
+ * - Pass `null` to indicate that the user did not specify any modules. This
+ *   will add all bundles currently registered in the manifest
+ * - Pass `[]` to indicate not to add any modules
+ * - Pass an array of strings to manually specify modules to process
+ * @param tabOpts
+ * - Pass `null` to indicate that the user did not specify any tabs. This
+ *   will add all tabs currently registered in the manifest
+ * - Pass `[]` to indicate not to add any tabs
+ * - Pass an array of strings to manually specify tabs to process
+ * @param addTabs If `true`, then all tabs of selected bundles will be added to
+ * the list of tabs to build.
  */
-export const retrieveBundlesAndTabs = async (manifestFile, modules, tabOpts) => {
+export const retrieveBundlesAndTabs = async (manifestFile, modules, tabOpts, addTabs = true) => {
     const manifest = await retrieveManifest(manifestFile);
     const knownBundles = Object.keys(manifest);
     const knownTabs = Object.values(manifest)
@@ -29,8 +41,13 @@ export const retrieveBundlesAndTabs = async (manifestFile, modules, tabOpts) => 
             throw new Error(`Unknown modules: ${unknownModules.join(', ')}`);
         }
         bundles = modules;
-        // If a bundle is being rebuilt, add its tabs
-        tabs = modules.flatMap((bundle) => manifest[bundle].tabs);
+        if (addTabs) {
+            // If a bundle is being rebuilt, add its tabs
+            tabs = modules.flatMap((bundle) => manifest[bundle].tabs);
+        }
+        else {
+            tabs = [];
+        }
         if (tabOpts) {
             // Tabs were specified
             const unknownTabs = tabOpts.filter((t) => !knownTabs.includes(t));
