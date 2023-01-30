@@ -1,7 +1,6 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
-import { Command, Option } from 'commander';
 import type {
   BlockStatement,
   ExpressionStatement,
@@ -16,10 +15,7 @@ import type {
 import { promises as fs } from 'fs';
 
 import { printList } from '../../scriptUtils.js';
-import { createBuildLogger, retrieveBundlesAndTabs } from '../buildUtils.js';
-import { logLintResult } from '../prebuild/eslint.js';
-import { preBuild } from '../prebuild/index.js';
-import { logTscResults } from '../prebuild/tsc.js';
+import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
 import type { BuildCommandInputs, BuildResult } from '../types';
 
 import { buildModules } from './index.js';
@@ -86,35 +82,15 @@ export const outputTab = async (tabName: string, text: string, outDir: string): 
   }
 };
 
-export const logTabResults = createBuildLogger('tab');
-
-type TabCommandInputs = Omit<BuildCommandInputs, 'modules' | 'tabs'> & { fix: boolean; };
-
-const buildTabsCommand = new Command('tabs')
-  .option('--fix', 'Ask eslint to autofix linting errors', false)
-  .option('--outDir <outdir>', 'Output directory', 'build')
-  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
-  .option('--manifest <file>', 'Manifest file', 'modules.json')
-  .option('--no-tsc', 'Don\'t run tsc before building')
-  .addOption(new Option('--no-lint', 'Don\'t run eslint before building')
-    .conflicts('fix'))
+const buildTabsCommand = createBuildCommand('tabs')
   .argument('[tabs...]', 'Manually specify which tabs to build', null)
   .description('Build only tabs')
-  .action(async (tabs: string[] | null, { manifest, ...opts }: TabCommandInputs) => {
-    const [assets] = await Promise.all([
-      retrieveBundlesAndTabs(manifest, [], tabs),
-      fs.mkdir(`${opts.outDir}/tabs`, { recursive: true }),
-    ]);
-
-    const { tscResult, lintResult, proceed } = await preBuild(opts, assets);
-
-    logLintResult(lintResult);
-    logTscResults(tscResult, opts.srcDir);
-    if (!proceed) return;
+  .action(async (tabs: string[] | null, opts: BuildCommandInputs) => {
+    const assets = await retrieveBundlesAndTabs(opts.manifest, [], tabs);
 
     printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
-    const { tabs: tabResult } = await buildModules(opts, assets);
-    logTabResults(tabResult, opts.verbose);
+    const results = await buildModules(opts, assets);
+    logResult(results, opts.verbose);
   });
 
 

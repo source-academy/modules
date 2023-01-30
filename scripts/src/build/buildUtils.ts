@@ -1,18 +1,130 @@
 import chalk from 'chalk';
+import { Command, Option } from 'commander';
 import { Table } from 'console-table-printer';
-import path from 'path';
 
-import { retrieveManifest } from '../scriptUtils.js';
+import { retrieveManifest } from '../../src 03-11-29-939/scriptUtils.js';
 
-import type { AssetTypes, BuildOverallResult } from './types.js';
+import type { AssetTypes, BuildResult, OverallResult, UnreducedResult } from './types';
 
 export const divideAndRound = (dividend: number, divisor: number, round: number = 2) => (dividend / divisor).toFixed(round);
 
-export const fileSizeFormatter = (size: number) => {
+export const fileSizeFormatter = (size?: number) => {
+  if (typeof size !== 'number') return '-';
+
   size /= 1000;
   if (size < 0.01) return '<0.01 KB';
   if (size >= 100) return `${divideAndRound(size, 1000)} MB`;
   return `${size.toFixed(2)} KB`;
+};
+
+export const logResult = (
+  unreduced: UnreducedResult[],
+  verbose: boolean,
+) => {
+  const overallResult = unreduced.reduce((res, [type, name, entry]) => {
+    if (!res[type]) {
+      res[type] = {
+        severity: 'success',
+        results: {},
+      };
+    }
+
+    if (entry.severity === 'error') res[type].severity = 'error';
+    else if (res[type].severity === 'success' && entry.severity === 'warn') res[type].severity = 'warn';
+
+    res[type].results[name] = entry;
+    return res;
+  }, {} as Partial<Record<AssetTypes, OverallResult<BuildResult>>>);
+  return console.log(Object.entries(overallResult)
+    .map(([label, toLog]) => {
+      if (typeof toLog === 'boolean' || typeof toLog === 'undefined') return null;
+
+      const upperCaseLabel = label[0].toUpperCase() + label.slice(1);
+      const { severity: overallSev, results } = toLog;
+      const entries = Object.entries(overallResult);
+      if (entries.length === 0) return '';
+
+      if (!verbose) {
+        if (overallSev === 'success') {
+          return `${chalk.cyanBright(`${upperCaseLabel}s built`)} ${chalk.greenBright('successfully')}\n`;
+        }
+        if (overallSev === 'warn') {
+          return chalk.cyanBright(`${upperCaseLabel}s built with ${chalk.yellowBright('warnings')}:\n${Object.entries(results)
+            .filter(([, { severity }]) => severity === 'warn')
+            .map(([bundle, { error }], i) => chalk.yellowBright(`${i + 1}. ${bundle}: ${error}`))
+            .join('\n')}\n`);
+        }
+
+        return chalk.cyanBright(`${upperCaseLabel}s build ${chalk.redBright('failed')} with errors:\n${Object.entries(results)
+          .filter(([, { severity }]) => severity !== 'success')
+          .map(([bundle, { error, severity }], i) => (severity === 'error'
+            ? chalk.redBright(`${i + 1}. Error ${bundle}: ${error}`)
+            : chalk.yellowBright(`${i + 1}. Warning ${bundle}: +${error}`)))
+          .join('\n')}\n`);
+      }
+
+      const outputTable = new Table({
+        columns: [{
+          name: 'bundle',
+          title: upperCaseLabel,
+        },
+        {
+          name: 'severity',
+          title: 'Status',
+        },
+        {
+          name: 'elapsed',
+          title: 'Elapsed (s)',
+        },
+        {
+          name: 'fileSize',
+          title: 'File Size',
+        },
+        {
+          name: 'error',
+          title: 'Errors',
+        }],
+      });
+
+      Object.entries(results)
+        .forEach(([moduleName, { elapsed, severity, error, fileSize }]) => {
+          if (severity === 'error') {
+            outputTable.addRow({
+              bundle: moduleName,
+              elapsed: '-',
+              error,
+              fileSize: '-',
+              severity: 'Error',
+            }, { color: 'red' });
+          } else if (severity === 'warn') {
+            outputTable.addRow({
+              bundle: moduleName,
+              elapsed: divideAndRound(elapsed, 1000, 2),
+              error: '-',
+              fileSize: fileSizeFormatter(fileSize),
+              severity: 'Warning',
+            }, { color: 'yellow' });
+          } else {
+            outputTable.addRow({
+              bundle: moduleName,
+              elapsed: divideAndRound(elapsed, 1000, 2),
+              error: '-',
+              fileSize: fileSizeFormatter(fileSize),
+              severity: 'Success',
+            }, { color: 'green' });
+          }
+        });
+
+      if (overallSev === 'success') {
+        return `${chalk.cyanBright(`${upperCaseLabel}s built`)} ${chalk.greenBright('successfully')}:\n${outputTable.render()}\n`;
+      }
+      if (overallSev === 'warn') {
+        return `${chalk.cyanBright(`${upperCaseLabel}s built`)} with ${chalk.yellowBright('warnings')}:\n${outputTable.render()}\n`;
+      }
+      return `${chalk.cyanBright(`${upperCaseLabel}s build ${chalk.redBright('failed')} with errors`)}:\n${outputTable.render()}\n`;
+    })
+    .filter((str) => str !== null)
+    .join('\n'));
 };
 
 /**
@@ -81,111 +193,14 @@ export const retrieveBundlesAndTabs = async (
     bundles: [...new Set(bundles)],
     tabs: [...new Set(tabs)],
     modulesSpecified: modules !== null,
-    manifest: manifestFile,
   };
 };
 
-/**
- *
- */
-export const createLogger = <T>(handler: (res: T, ...args: any[]) => void) => (overallRes: T | false, ...args: any[]) => {
-  if (typeof overallRes === 'boolean') return;
-  handler(overallRes, ...args);
-};
-
-export const createBuildLogger = (label: AssetTypes) => createLogger<BuildOverallResult>((res, verbose: boolean) => {
-  if (typeof res === 'boolean') return;
-
-  const uppercaseLabel = label[0].toUpperCase() + label.slice(1);
-
-  const { severity: overallSev, results } = res;
-  const entries = Object.entries(results);
-  if (entries.length === 0) return;
-
-  if (!verbose) {
-    if (overallSev === 'success') {
-      console.log(chalk.greenBright(`Successfully built all ${label}s!\n`));
-      return;
-    }
-
-    if (overallSev === 'warn') {
-      console.log(chalk.cyanBright(`${uppercaseLabel}s built with ${chalk.yellowBright('warnings')}\n${
-        Object.entries(results)
-          .filter(([, { severity }]) => severity === 'warn')
-          .map(([bundle, { error }], i) => chalk.yellowBright(`${i + 1}. ${bundle}: ${error}`))
-          .join('\n')
-      }\n`));
-      return;
-    }
-
-    console.log(chalk.cyanBright(`${uppercaseLabel} building ${chalk.redBright('failed')} with errors:\n${
-      Object.entries(results)
-        .filter(([, { severity }]) => severity !== 'success')
-        .map(([bundle, { error, severity }], i) => (severity === 'warn' ? chalk.yellowBright(`${i + 1}. ${bundle}: ${error}`) : chalk.redBright(`${i + 1}. ${bundle}: ${error}`)))
-        .join('\n')
-    }\n`));
-    return;
-  }
-
-  const outputTable = new Table({
-    columns: [{
-      name: 'name',
-      title: uppercaseLabel,
-    },
-    {
-      name: 'severity',
-      title: 'Status',
-    },
-    {
-      name: 'elapsed',
-      title: 'Build Time (s)',
-    },
-    {
-      name: 'fileSize',
-      title: 'File Size',
-    },
-    {
-      name: 'error',
-      title: 'Errors',
-    }],
-  });
-
-  entries.forEach(([moduleName, { elapsed, severity, error, fileSize }]) => {
-    if (severity === 'error') {
-      outputTable.addRow({
-        name: moduleName,
-        elapsed: '-',
-        error,
-        fileSize: '-',
-        severity: 'Error',
-      }, { color: 'red' });
-    } else if (severity === 'warn') {
-      outputTable.addRow({
-        name: moduleName,
-        elapsed: '-',
-        error,
-        fileSize: fileSize === undefined ? '-' : fileSizeFormatter(fileSize),
-        severity: 'Warn',
-      }, { color: 'yellow' });
-    } else {
-      outputTable.addRow({
-        name: moduleName,
-        elapsed: divideAndRound(elapsed, 1000),
-        error: '-',
-        fileSize: fileSizeFormatter(fileSize),
-        severity: 'Success',
-      }, { color: 'green' });
-    }
-  });
-
-  if (overallSev === 'success') {
-    console.log(`${chalk.cyanBright(`${uppercaseLabel}s built`)} ${chalk.greenBright('successfully')}:\n${outputTable.render()}\n`);
-  } else if (overallSev === 'warn') {
-    console.log(`${chalk.cyanBright(`${uppercaseLabel}s built with`)} ${chalk.yellowBright('warnings')}:\n${outputTable.render()}\n`);
-  } else {
-    console.log(`${chalk.cyanBright(`${uppercaseLabel}s failed with`)} ${chalk.redBright('errors')}:\n${outputTable.render()}\n`);
-  }
-});
-
-export const expandBundleName = (srcDir: string) => (name: string) => path.join(srcDir, 'bundles', name, 'index.ts');
-export const expandTabName = (srcDir: string) => (name: string) => path.join(srcDir, 'tabs', name, 'index.tsx');
+export const createBuildCommand = (label: string) => new Command(label)
+  .option('--outDir <outdir>', 'Output directory', 'build')
+  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+  .option('--manifest <file>', 'Manifest file', 'modules.json')
+  .option('-v, --verbose', 'Display more information about the build results', false)
+  .option('--no-tsc', 'Don\'t run tsc before building')
+  .addOption(new Option('--no-lint', 'Don\t run eslint before building')
+    .conflicts('fix'));

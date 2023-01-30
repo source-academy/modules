@@ -1,24 +1,14 @@
 import { Command } from 'commander';
 
+import devCommand from './build/dev.js';
 import buildAllCommand from './build/index.js';
-import prebuildCommand, { lintCommand, tscCommand } from './build/prebuild/index.js';
-import { serveCommand, serveWatchCommand, watchCommand } from './build/serve.js';
 import createCommand from './templates/index.js';
 
-const commandList = [
-  buildAllCommand,
-  createCommand,
-  serveCommand,
-  serveWatchCommand,
-  watchCommand,
-  tscCommand,
-  lintCommand,
-  prebuildCommand,
-];
-
 async function main() {
-  const parser = new Command();
-  commandList.forEach((cmd) => parser.addCommand(cmd));
+  const parser = new Command()
+    .addCommand(devCommand)
+    .addCommand(buildAllCommand)
+    .addCommand(createCommand);
 
   try {
     await parser.parseAsync();

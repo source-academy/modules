@@ -4,8 +4,8 @@ import { ESLint } from 'eslint';
 import pathlib from 'path';
 
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { createLogger, divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
-import type { AssetParams, CommandHandler, CommandInputs, Severity } from '../types.js';
+import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
+import type { AssetInfo, CommandHandler, CommandInputs, Severity } from '../types.js';
 
 export type LintOpts = {
   fix: boolean;
@@ -24,7 +24,7 @@ type LintResults = {
 export const runEslint: CommandHandler<LintOpts, {
   elapsed: number;
   result: LintResults
-}> = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: AssetParams): Promise<LintResults> => {
+}> = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: AssetInfo): Promise<LintResults> => {
   const linter = new ESLint({
     cwd: pathlib.resolve(opts.srcDir),
     overrideConfigFile: '.eslintrc.cjs',

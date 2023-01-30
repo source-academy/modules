@@ -12,10 +12,10 @@ import type {
 } from 'estree';
 import fs from 'fs/promises';
 
-import { createBuildLogger } from '../buildUtils.js';
 import type { BuildResult } from '../types.js';
 
 import { requireCreator } from './moduleUtils.js';
+
 
 const HELPER_NAME = 'moduleHelpers';
 
@@ -68,5 +68,3 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
     };
   }
 };
-
-export const logBundleResults = createBuildLogger('bundle');

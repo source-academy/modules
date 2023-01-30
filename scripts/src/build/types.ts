@@ -5,71 +5,43 @@ export const Assets = ['bundle', 'tab', 'json'] as const;
 /**
  * Type of assets that can be built
  */
-export type AssetTypes = (typeof Assets)[number];
+export type AssetTypes = typeof Assets[number];
 
-/**
- * Represents the result of doing an operation on a single asset
- */
 export type OperationResult = {
-  elapsed?: number;
   severity: Severity;
   error?: any;
 };
 
-/**
- * For Operation results that output files. Includes the size of the file written to disk
- */
 export type BuildResult = {
+  elapsed?: number;
   fileSize?: number;
 } & OperationResult;
 
-/**
- * Represents the result of a command's execution
- */
-export type OverallResult<T> = {
+export type OverallResult<T extends OperationResult = OperationResult> = {
   severity: Severity;
-  results: T,
-  error?: any;
-};
+  results: Record<string, T>;
+} | null;
 
-/**
- * Represents the result of a build command's execution
- */
-export type BuildOverallResult<T extends BuildResult = BuildResult> = OverallResult<Record<string, T>>;
+export type UnreducedResult = [AssetTypes, string, BuildResult];
 
-/**
- * Represents the options the user can specify via options
- */
 export type CommandInputs = {
   srcDir: string;
-  manifest: string;
-  modules?: string[];
-  tabs?: string[];
   verbose: boolean;
+  manifest: string;
+  modules: string[] | null;
+  tabs: string[] | null;
 };
 
-/**
- * Represents the options the user can specify for build subcommands
- */
 export type BuildCommandInputs = {
   outDir: string;
   tsc: boolean;
   lint: boolean;
 } & CommandInputs;
 
-/**
- * Specifiers to determine which bundles or tabs to build
- */
-export type AssetParams = {
-  modulesSpecified: boolean;
+export type BuildOptions = Omit<BuildCommandInputs, 'lint' | 'tsc' | 'manifest' | 'verbose'>;
+
+export type AssetInfo = {
   bundles: string[];
   tabs: string[];
-  manifest: string;
+  modulesSpecified: boolean;
 };
-
-/**
- * Represents options passed to build subcommands without the asset specifiers
- */
-export type BuildOpts = Omit<BuildCommandInputs, 'manifest' | 'modules' | 'tabs'>;
-
-export type CommandHandler<U, T> = (opts: U, conf: AssetParams) => Promise<T>;
