@@ -1,38 +1,35 @@
 import chalk from 'chalk';
-import { type OutputFile, build as esbuild } from 'esbuild';
-import fs from 'fs/promises';
-import pathlib from 'path';
+import { promises as fs } from 'fs';
 
 import { printList } from '../../scriptUtils.js';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
 import { logLintResult } from '../prebuild/eslint.js';
 import { preBuild } from '../prebuild/index.js';
 import { logTscResults } from '../prebuild/tsc.js';
-import type { AssetInfo, BuildCommandInputs, BuildOptions, UnreducedResult } from '../types';
+import type { AssetInfo, BuildCommandInputs, BuildOptions } from '../types';
 
-import { outputBundle } from './bundle.js';
-import { esbuildOptions } from './moduleUtils.js';
-import { outputTab } from './tab.js';
+import { buildBundles, reduceBundleOutputFiles } from './bundle.js';
+import { buildTabs, reduceTabOutputFiles } from './tab.js';
 
-export const processOutputFiles = async (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
-  outputFiles.map(async ({ path, text }) => {
-    const [rawType, name] = path.split(pathlib.sep)
-      .slice(-3, -1);
-    const type = rawType.slice(0, -1);
+// export const processOutputFiles = async (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
+//   outputFiles.map(async ({ path, text }) => {
+//     const [rawType, name] = path.split(pathlib.sep)
+//       .slice(-3, -1);
+//     const type = rawType.slice(0, -1);
 
-    if (type !== 'bundle' && type !== 'tab') {
-      throw new Error(`Unknown type found for: ${type}: ${path}`);
-    }
+//     if (type !== 'bundle' && type !== 'tab') {
+//       throw new Error(`Unknown type found for: ${type}: ${path}`);
+//     }
 
-    const result = await (type === 'bundle' ? outputBundle : outputTab)(name, text, outDir);
-    const endTime = performance.now() - startTime;
+//     const result = await (type === 'bundle' ? outputBundle : outputTab)(name, text, outDir);
+//     const endTime = performance.now() - startTime;
 
-    return [type, name, {
-      elapsed: endTime,
-      ...result,
-    }] as UnreducedResult;
-  }),
-);
+//     return [type, name, {
+//       elapsed: endTime,
+//       ...result,
+//     }] as UnreducedResult;
+//   }),
+// );
 
 export const buildModules = async (opts: BuildOptions, { bundles, tabs }: AssetInfo) => {
   const startPromises: Promise<string>[] = [];
@@ -46,20 +43,15 @@ export const buildModules = async (opts: BuildOptions, { bundles, tabs }: AssetI
 
   await Promise.all(startPromises);
   const startTime = performance.now();
-  const config = {
-    ...esbuildOptions,
-    entryPoints: [
-      ...bundles.map(bundleNameExpander(opts.srcDir)),
-      ...tabs.map(tabNameExpander(opts.srcDir)),
-    ],
-    outbase: opts.outDir,
-    outdir: opts.outDir,
-  };
+  const [bundleResults, tabResults] = await Promise.all([
+    buildBundles(bundles, opts)
+      .then((outputFiles) => reduceBundleOutputFiles(outputFiles, startTime, opts.outDir)),
+    buildTabs(tabs, opts)
+      .then((outputFiles) => reduceTabOutputFiles(outputFiles, startTime, opts.outDir)),
+    fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
+  ]);
 
-  const { outputFiles } = await esbuild(config);
-
-  const buildResults = await reduceOutputFiles(outputFiles, opts.outDir, startTime);
-  return reduceModuleResults(buildResults);
+  return bundleResults.concat(tabResults);
 };
 
 const buildModulesCommand = createBuildCommand('modules')

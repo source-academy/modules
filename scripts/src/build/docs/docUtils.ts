@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { type ProjectReflection, Application, TSConfigReader } from 'typedoc';
 
 import { wrapWithTimer } from '../../scriptUtils.js';
-import { divideAndRound, expandBundleName } from '../buildUtils.js';
+import { bundleNameExpander, divideAndRound } from '../buildUtils.js';
 
 type TypedocOpts = {
   srcDir: string;
@@ -18,21 +18,26 @@ export const initTypedoc = wrapWithTimer(
     srcDir,
     bundles,
     verbose,
-  }: TypedocOpts) => new Promise<[Application, ProjectReflection]>((resolve, reject) => {
+  }: TypedocOpts,
+  watch?: boolean) => new Promise<[Application, ProjectReflection]>((resolve, reject) => {
     try {
       const app = new Application();
       app.options.addReader(new TSConfigReader());
 
       app.bootstrap({
         categorizeByGroup: true,
-        entryPoints: bundles.map(expandBundleName(srcDir)),
+        entryPoints: bundles.map(bundleNameExpander(srcDir)),
         excludeInternal: true,
+        logger: watch ? 'none' : undefined,
         logLevel: verbose ? 'Info' : 'Error',
         name: 'Source Academy Modules',
         readme: `${srcDir}/README.md`,
         tsconfig: `${srcDir}/tsconfig.json`,
         skipErrorChecking: true,
       });
+
+      if (watch) resolve([app, null]);
+
       const project = app.convert();
       if (!project) {
         reject(new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'));

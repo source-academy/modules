@@ -1,6 +1,7 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
+import { type OutputFile, build as esbuild } from 'esbuild';
 import type {
   BlockStatement,
   ExpressionStatement,
@@ -13,13 +14,13 @@ import type {
   VariableDeclaration,
 } from 'estree';
 import { promises as fs } from 'fs';
-
+import pathlib from 'path';
 import { printList } from '../../scriptUtils.js';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
-import type { BuildCommandInputs, BuildResult } from '../types';
 
-import { buildModules } from './index.js';
-import { requireCreator } from './moduleUtils.js';
+import { createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
+import type { BuildCommandInputs, BuildResult, UnreducedResult } from '../types';
+
+import { esbuildOptions, requireCreator } from './moduleUtils.js';
 
 /**
  * Imports that are provided at runtime
@@ -29,7 +30,7 @@ const externals = {
   'react-dom': 'ReactDOM',
 };
 
-export const outputTab = async (tabName: string, text: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
+const outputTab = async (tabName: string, text: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
     const declStatement = parsed.body[1] as VariableDeclaration;
@@ -82,6 +83,32 @@ export const outputTab = async (tabName: string, text: string, outDir: string): 
   }
 };
 
+export const buildTabs = async (tabs: string[], opts: BuildCommandInputs) => {
+  const { outputFiles } = await esbuild({
+    ...esbuildOptions,
+    entryPoints: tabs.map(tabNameExpander(opts.srcDir)),
+    outbase: opts.outDir,
+    outdir: opts.outDir,
+    external: ['react', 'react-dom'],
+  });
+  return outputFiles;
+};
+
+export const reduceTabOutputFiles = (outputFiles: OutputFile[], startTime: number, outDir: string) => Promise.all(outputFiles.map(async ({ path, text }) => {
+  const [rawType, name] = path.split(pathlib.sep)
+    .slice(-3, -1);
+
+  if (rawType !== 'tabs') {
+    throw new Error(`Expected only tabs, got ${rawType}`);
+  }
+
+  const result = await outputTab(name, text, outDir);
+  return ['tab', name, {
+    elapsed: performance.now() - startTime,
+    ...result,
+  }] as UnreducedResult;
+}));
+
 const buildTabsCommand = createBuildCommand('tabs')
   .argument('[tabs...]', 'Manually specify which tabs to build', null)
   .description('Build only tabs')
@@ -89,8 +116,11 @@ const buildTabsCommand = createBuildCommand('tabs')
     const assets = await retrieveBundlesAndTabs(opts.manifest, [], tabs);
 
     printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
-    const results = await buildModules(opts, assets);
-    logResult(results, opts.verbose);
+
+    const startTime = performance.now();
+    const results = await buildTabs(assets.tabs, opts);
+    const reducedRes = await reduceTabOutputFiles(results, startTime, opts.outDir);
+    logResult(reducedRes, opts.verbose);
   });
 
 

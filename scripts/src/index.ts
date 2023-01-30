@@ -1,12 +1,12 @@
 import { Command } from 'commander';
 
-import devCommand from './build/dev.js';
+import { watchCommand } from './build/dev.js';
 import buildAllCommand from './build/index.js';
 import createCommand from './templates/index.js';
 
 async function main() {
   const parser = new Command()
-    .addCommand(devCommand)
+    .addCommand(watchCommand)
     .addCommand(buildAllCommand)
     .addCommand(createCommand);
 
