@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
+import fs from 'fs/promises';
 
 import { printList } from '../scriptUtils.js';
 
@@ -57,6 +58,7 @@ const buildAllCommand = createBuildCommand('all', true)
             typedoctime: elapsed,
           };
         }),
+      fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
     ]);
 
     logTypedocTime(typedoctime);

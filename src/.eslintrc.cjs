@@ -1,5 +1,6 @@
 module.exports = {
   "extends": ["../.eslintrc.base.cjs", "airbnb-typescript"],
+  "ignorePatterns": ["**/__tests__/**", "**/__mocks__/**", "**/*.*js"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json",
@@ -123,7 +124,10 @@ module.exports = {
     ]
   },
   "overrides": [{
-    "extends": ["../.eslintrc.test.json"],
-    "files": ["./**/__tests__/**/*.ts"],
+    "extends": ["../.eslintrc.test.cjs"],
+    "files": ["**/__tests__/**", "**/__mocks__/**"],
+  }, {
+    extends: ["../.eslintrc.base.cjs"],
+    files: ["**/*.*.js"]
   }]
 }

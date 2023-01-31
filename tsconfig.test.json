@@ -9,5 +9,5 @@
     "outDir": "../bin",
     
   },
-  "exclude": ["./**/__tests__/**", "./**/__mocks__/**", "./templates/templates/**"]
+  "include": ["./**/__tests__/**", "./**/__mocks__/**", "./templates/templates/**"]
 }

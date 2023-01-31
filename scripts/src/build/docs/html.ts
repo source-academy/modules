@@ -45,7 +45,7 @@ export const buildHtml = wrapWithTimer(async (app: Application,
  * @see {buildHtml}
  */
 export const logHtmlResult = (htmlResult: { elapsed: number, result: BuildResult } | null) => {
-  if (typeof htmlResult === 'boolean') return;
+  if (!htmlResult) return;
 
   const { elapsed, result: { severity, error } } = htmlResult;
   if (severity === 'success') {
@@ -60,7 +60,7 @@ export const logHtmlResult = (htmlResult: { elapsed: number, result: BuildResult
 
 type HTMLCommandInputs = {
   outDir: string;
-} & CommandInputs;
+} & Omit<CommandInputs, 'modules' | 'tabs'>;
 
 /**
  * CLI command to only build HTML documentation

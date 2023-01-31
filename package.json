@@ -26,11 +26,11 @@
     "create": "yarn scripts create",
     "docs": "yarn scripts build docs",
     "lint": " yarn lint:src && yarn lint:scripts",
-    "lint:src": "./node_modules/.bin/eslint -c src/.eslintrc.cjs --ext \".ts, .tsx\" src/",
-    "lint:scripts": "./node_modules/.bin/eslint -c scripts/src/.eslintrc.cjs --ext \".ts, .tsx\" scripts/src",
-    "build": "yarn lint:src && tsc --project src/tsconfig.json && yarn scripts build",
+    "lint:src": "yarn scripts lint",
+    "lint:scripts": "./node_modules/.bin/eslint -c scripts/src/.eslintrc.cjs scripts/src",
+    "build": "yarn scripts build",
     "build:help": "yarn scripts build --help",
-    "build:scripts": "yarn lint:scripts && tsc --project scripts/src/tsconfig.json && copyfiles -f \"scripts/src/templates/templates/*\" scripts/bin/templates/templates",
+    "build:scripts": "yarn lint:scripts && rimraf scripts/bin && tsc --project scripts/src/tsconfig.json && copyfiles -f \"scripts/src/templates/templates/*\" scripts/bin/templates/templates",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "scripts": "node --no-warnings --max-old-space-size=8192 scripts/bin/index.js",
     "prepare": "husky install",
@@ -68,6 +68,7 @@
     "http-server": "^0.12.3",
     "husky": "5",
     "jest": "^26.6.3",
+    "rimraf": "^4.1.2",
     "ts-jest": "^26.5.4",
     "typedoc": "^0.23.23",
     "typescript": "4.8",
@@ -90,5 +91,11 @@
     "regl": "^2.1.0",
     "tslib": "^2.3.1",
     "typedoc-default-themes": "^0.12.10"
+  },
+  "jest": {
+    "projects": [
+      "src/jest.config.js",
+      "scripts/src/jest.config.js"
+    ]
   }
 }

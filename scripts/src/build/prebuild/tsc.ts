@@ -44,9 +44,9 @@ export const runTsc = wrapWithTimer((async (srcDir: string, { bundles, tabs }: O
       error: `Could not locate tsconfig.json at ${tsconfigLocation}`,
     };
   }
+  const configText = await fs.readFile(tsconfigLocation, 'utf-8');
 
   // Step 2: Parse the raw text into a json object
-  const configText = await fs.readFile(tsconfigLocation, 'utf-8');
   const { error: configJsonError, config: configJson } = ts.parseConfigFileTextToJson(tsconfigLocation, configText);
   if (configJsonError) {
     return {

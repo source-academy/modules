@@ -38,7 +38,7 @@ export const logResult = (
   }, {} as Partial<Record<AssetTypes, OverallResult<BuildResult>>>);
   return console.log(Object.entries(overallResult)
     .map(([label, toLog]) => {
-      if (typeof toLog === 'boolean' || typeof toLog === 'undefined') return null;
+      if (!toLog) return null;
 
       const upperCaseLabel = label[0].toUpperCase() + label.slice(1);
       const { severity: overallSev, results } = toLog;
@@ -68,7 +68,7 @@ export const logResult = (
 
       const outputTable = new Table({
         columns: [{
-          name: 'bundle',
+          name: 'name',
           title: upperCaseLabel,
         },
         {
@@ -89,34 +89,33 @@ export const logResult = (
         }],
       });
 
-      Object.entries(results)
-        .forEach(([moduleName, { elapsed, severity, error, fileSize }]) => {
-          if (severity === 'error') {
-            outputTable.addRow({
-              bundle: moduleName,
-              elapsed: '-',
-              error,
-              fileSize: '-',
-              severity: 'Error',
-            }, { color: 'red' });
-          } else if (severity === 'warn') {
-            outputTable.addRow({
-              bundle: moduleName,
-              elapsed: divideAndRound(elapsed, 1000, 2),
-              error: '-',
-              fileSize: fileSizeFormatter(fileSize),
-              severity: 'Warning',
-            }, { color: 'yellow' });
-          } else {
-            outputTable.addRow({
-              bundle: moduleName,
-              elapsed: divideAndRound(elapsed, 1000, 2),
-              error: '-',
-              fileSize: fileSizeFormatter(fileSize),
-              severity: 'Success',
-            }, { color: 'green' });
-          }
-        });
+      entries.forEach(([name, { elapsed, severity, error, fileSize }]) => {
+        if (severity === 'error') {
+          outputTable.addRow({
+            name,
+            elapsed: '-',
+            error,
+            fileSize: '-',
+            severity: 'Error',
+          }, { color: 'red' });
+        } else if (severity === 'warn') {
+          outputTable.addRow({
+            name,
+            elapsed: divideAndRound(elapsed, 1000, 2),
+            error,
+            fileSize: fileSizeFormatter(fileSize),
+            severity: 'Warning',
+          }, { color: 'yellow' });
+        } else {
+          outputTable.addRow({
+            name,
+            elapsed: divideAndRound(elapsed, 1000, 2),
+            error: '-',
+            fileSize: fileSizeFormatter(fileSize),
+            severity: 'Success',
+          }, { color: 'green' });
+        }
+      });
 
       if (overallSev === 'success') {
         return `${chalk.cyanBright(`${upperCaseLabel}s built`)} ${chalk.greenBright('successfully')}:\n${outputTable.render()}\n`;
