@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 
 import { retrieveBundlesAndTabs } from '../buildUtils.js';
-import type { CommandHandler } from '../types.js';
+import type { AssetInfo } from '../types.js';
 
 import { type LintCommandInputs, type LintOpts, logLintResult, runEslint } from './eslint.js';
 import { type TscCommandInputs, type TscOpts, logTscResults, runTsc } from './tsc.js';
@@ -10,6 +10,12 @@ type PreBuildOpts = TscOpts & LintOpts & {
   lint: boolean;
   tsc: boolean;
 };
+
+type PreBuildResult = {
+  lintResult: Awaited<ReturnType<typeof runEslint>>;
+  tscResult: Awaited<ReturnType<typeof runTsc>>;
+  proceed: boolean;
+};
 /**
  * Run both `tsc` and `eslint` in parallel if `--fix` was not specified. Otherwise, run eslint
  * to fix linting errors first, then run tsc for type checking
@@ -17,11 +23,7 @@ type PreBuildOpts = TscOpts & LintOpts & {
  * @returns An object that contains the results from linting and typechecking, as well
  * as a boolean `proceed` to indicate if either eslint or tsc encountered a fatal error
  */
-export const preBuild: CommandHandler<PreBuildOpts, {
-  lintResult: Awaited<ReturnType<typeof runEslint>> | false;
-  tscResult: Awaited<ReturnType<typeof runTsc>> | false;
-  proceed: boolean;
-}> = async (opts, assets) => {
+export const preBuild = async (opts: PreBuildOpts, assets: AssetInfo): Promise<PreBuildResult> => {
   if (opts.fix) {
     // Run tsc and then lint
     const lintResult = await runEslint(opts, assets);
@@ -29,12 +31,12 @@ export const preBuild: CommandHandler<PreBuildOpts, {
     if (!opts.tsc || lintResult.result.severity === 'error') {
       return {
         lintResult,
-        tscResult: false as false,
+        tscResult: null,
         proceed: false,
       };
     }
 
-    const tscResult = await runTsc(opts, assets);
+    const tscResult = await runTsc(opts.srcDir, assets);
     return {
       lintResult,
       tscResult,
@@ -43,8 +45,8 @@ export const preBuild: CommandHandler<PreBuildOpts, {
   // eslint-disable-next-line no-else-return
   } else {
     const [lintResult, tscResult] = await Promise.all([
-      opts.lint ? runEslint(opts, assets) : Promise.resolve(false as false),
-      opts.tsc ? runTsc(opts, assets) : Promise.resolve(false as false),
+      opts.lint ? runEslint(opts, assets) : Promise.resolve(null),
+      opts.tsc ? runTsc(opts.srcDir, assets) : Promise.resolve(null),
     ]);
 
     return {
@@ -54,6 +56,13 @@ export const preBuild: CommandHandler<PreBuildOpts, {
             && (!tscResult || (tscResult && tscResult.result.severity !== 'error')),
     };
   }
+};
+
+export const autoLogPrebuild = async (opts: PreBuildOpts, assets: AssetInfo) => {
+  const { lintResult, tscResult, proceed } = await preBuild(opts, assets);
+  logLintResult(lintResult);
+  logTscResults(tscResult, opts.srcDir);
+  return proceed;
 };
 
 type PrebuildCommandInputs = LintCommandInputs & TscCommandInputs;
@@ -67,14 +76,11 @@ const prebuildCommand = new Command('prebuild')
   .option('-t, --tabs [tabs...]', 'Manually specify which tabs to check', null)
   .action(async ({ modules, tabs, manifest, ...opts }: PrebuildCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs, false);
-    const { lintResult, tscResult } = await preBuild({
+    await autoLogPrebuild({
       ...opts,
       tsc: true,
       lint: true,
     }, assets);
-
-    logLintResult(lintResult);
-    logTscResults(tscResult, opts.srcDir);
   });
 
 export default prebuildCommand;

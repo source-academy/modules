@@ -10,5 +10,5 @@
     
   },
   "include": ["."],
-  "exclude": ["./**/__tests__/**", "./templates/templates/**"]
+  "exclude": ["./**/__tests__/**", "./**/__mocks__/**", "./templates/templates/**"]
 }

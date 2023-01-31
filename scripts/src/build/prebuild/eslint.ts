@@ -5,11 +5,22 @@ import pathlib from 'path';
 
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
-import type { AssetInfo, CommandHandler, CommandInputs, Severity } from '../types.js';
+import type { AssetInfo, BuildCommandInputs, Severity } from '../types.js';
 
 export type LintOpts = {
   fix: boolean;
-} & Omit<CommandInputs, 'manifest'>;
+  srcDir: string;
+};
+
+export type LintCommandInputs = ({
+  lint: false;
+  fix: false;
+} | {
+  lint: true;
+  fix: boolean;
+}) & {
+  srcDir: string;
+};
 
 type LintResults = {
   formatted: string;
@@ -21,10 +32,7 @@ type LintResults = {
  * Run eslint programmatically
  * Refer to https://eslint.org/docs/latest/integrate/nodejs-api for documentation
  */
-export const runEslint: CommandHandler<LintOpts, {
-  elapsed: number;
-  result: LintResults
-}> = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: AssetInfo): Promise<LintResults> => {
+export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: AssetInfo): Promise<LintResults> => {
   const linter = new ESLint({
     cwd: pathlib.resolve(opts.srcDir),
     overrideConfigFile: '.eslintrc.cjs',
@@ -69,7 +77,10 @@ export const runEslint: CommandHandler<LintOpts, {
   };
 });
 
-export const logLintResult = createLogger(({ elapsed, result: { formatted, severity } }: Awaited<ReturnType<typeof runEslint>>) => {
+export const logLintResult = (input: Awaited<ReturnType<typeof runEslint>> | null) => {
+  if (!input) return;
+
+  const { elapsed, result: { formatted, severity } } = input;
   let errStr: string;
 
   if (severity === 'error') errStr = chalk.cyanBright('with ') + chalk.redBright('errors');
@@ -77,11 +88,7 @@ export const logLintResult = createLogger(({ elapsed, result: { formatted, sever
   else errStr = chalk.greenBright('successfully');
 
   console.log(`${chalk.cyanBright(`Linting completed in ${divideAndRound(elapsed, 1000)}s ${errStr}:`)}\n${formatted}`);
-});
-
-export type LintCommandInputs = {
-  fix: boolean;
-} & CommandInputs;
+};
 
 export const lintCommand = new Command('lint')
   .description('Run eslint')
@@ -90,7 +97,8 @@ export const lintCommand = new Command('lint')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
   .option('-m, --modules <modules...>', 'Manually specify which modules to check', null)
   .option('-t, --tabs <tabs...>', 'Manually specify which tabs to check', null)
-  .action(async ({ modules, tabs, manifest, ...opts }: LintCommandInputs) => {
+  .option('-v, --verbose', 'Display more information about the build results', false)
+  .action(async ({ modules, tabs, manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const result = await runEslint(opts, assets);
     logLintResult(result);

@@ -3,9 +3,8 @@ import { promises as fs } from 'fs';
 
 import { printList } from '../../scriptUtils.js';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
-import { logLintResult } from '../prebuild/eslint.js';
-import { preBuild } from '../prebuild/index.js';
-import { logTscResults } from '../prebuild/tsc.js';
+import type { LintCommandInputs } from '../prebuild/eslint.js';
+import { autoLogPrebuild } from '../prebuild/index.js';
 import type { AssetInfo, BuildCommandInputs, BuildOptions } from '../types';
 
 import { buildBundles, reduceBundleOutputFiles } from './bundle.js';
@@ -48,23 +47,21 @@ export const buildModules = async (opts: BuildOptions, { bundles, tabs }: AssetI
       .then((outputFiles) => reduceBundleOutputFiles(outputFiles, startTime, opts.outDir)),
     buildTabs(tabs, opts)
       .then((outputFiles) => reduceTabOutputFiles(outputFiles, startTime, opts.outDir)),
-    fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
   ]);
 
   return bundleResults.concat(tabResults);
 };
 
-const buildModulesCommand = createBuildCommand('modules')
+const buildModulesCommand = createBuildCommand('modules', true)
   .argument('[modules...]', 'Manually specify which modules to build', null)
   .description('Build modules and their tabs')
-  .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs) => {
+  .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, []);
 
     printList(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n`, assets.bundles);
 
-    const { lintResult, tscResult } = await preBuild(opts, assets);
-    logLintResult(lintResult);
-    logTscResults(tscResult, opts.srcDir);
+    const proceed = await autoLogPrebuild(opts, assets);
+    if (!proceed) return;
 
     const [results] = await Promise.all([
       buildModules(opts, assets),

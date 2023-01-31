@@ -3,7 +3,7 @@ import { Command, Option } from 'commander';
 import { Table } from 'console-table-printer';
 import path from 'path';
 
-import { retrieveManifest } from '../../src 03-11-29-939/scriptUtils.js';
+import { retrieveManifest } from '../scriptUtils.js';
 
 import type { AssetTypes, BuildResult, OverallResult, UnreducedResult } from './types';
 
@@ -42,7 +42,7 @@ export const logResult = (
 
       const upperCaseLabel = label[0].toUpperCase() + label.slice(1);
       const { severity: overallSev, results } = toLog;
-      const entries = Object.entries(overallResult);
+      const entries = Object.entries(results);
       if (entries.length === 0) return '';
 
       if (!verbose) {
@@ -50,18 +50,20 @@ export const logResult = (
           return `${chalk.cyanBright(`${upperCaseLabel}s built`)} ${chalk.greenBright('successfully')}\n`;
         }
         if (overallSev === 'warn') {
-          return chalk.cyanBright(`${upperCaseLabel}s built with ${chalk.yellowBright('warnings')}:\n${Object.entries(results)
-            .filter(([, { severity }]) => severity === 'warn')
-            .map(([bundle, { error }], i) => chalk.yellowBright(`${i + 1}. ${bundle}: ${error}`))
-            .join('\n')}\n`);
+          return chalk.cyanBright(`${upperCaseLabel}s built with ${chalk.yellowBright('warnings')}:\n${
+            entries
+              .filter(([, { severity }]) => severity === 'warn')
+              .map(([bundle, { error }], i) => chalk.yellowBright(`${i + 1}. ${bundle}: ${error}`))
+              .join('\n')}\n`);
         }
 
-        return chalk.cyanBright(`${upperCaseLabel}s build ${chalk.redBright('failed')} with errors:\n${Object.entries(results)
-          .filter(([, { severity }]) => severity !== 'success')
-          .map(([bundle, { error, severity }], i) => (severity === 'error'
-            ? chalk.redBright(`${i + 1}. Error ${bundle}: ${error}`)
-            : chalk.yellowBright(`${i + 1}. Warning ${bundle}: +${error}`)))
-          .join('\n')}\n`);
+        return chalk.cyanBright(`${upperCaseLabel}s build ${chalk.redBright('failed')} with errors:\n${
+          entries
+            .filter(([, { severity }]) => severity !== 'success')
+            .map(([bundle, { error, severity }], i) => (severity === 'error'
+              ? chalk.redBright(`${i + 1}. Error ${bundle}: ${error}`)
+              : chalk.yellowBright(`${i + 1}. Warning ${bundle}: +${error}`)))
+            .join('\n')}\n`);
       }
 
       const outputTable = new Table({
@@ -200,11 +202,19 @@ export const retrieveBundlesAndTabs = async (
 export const bundleNameExpander = (srcdir: string) => (name: string) => path.join(srcdir, 'bundles', name, 'index.ts');
 export const tabNameExpander = (srcdir: string) => (name: string) => path.join(srcdir, 'tabs', name, 'index.tsx');
 
-export const createBuildCommand = (label: string) => new Command(label)
-  .option('--outDir <outdir>', 'Output directory', 'build')
-  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
-  .option('--manifest <file>', 'Manifest file', 'modules.json')
-  .option('-v, --verbose', 'Display more information about the build results', false)
-  .option('--no-tsc', 'Don\'t run tsc before building')
-  .addOption(new Option('--no-lint', 'Don\t run eslint before building')
-    .conflicts('fix'));
+export const createBuildCommand = (label: string, addLint: boolean) => {
+  const cmd = new Command(label)
+    .option('--outDir <outdir>', 'Output directory', 'build')
+    .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+    .option('--manifest <file>', 'Manifest file', 'modules.json')
+    .option('-v, --verbose', 'Display more information about the build results', false);
+
+  if (addLint) {
+    cmd.option('--no-tsc', 'Don\'t run tsc before building')
+      .option('--fix', 'Ask eslint to autofix linting errors', false)
+      .addOption(new Option('--no-lint', 'Don\'t run eslint before building')
+        .conflicts('fix'));
+  }
+
+  return cmd;
+};

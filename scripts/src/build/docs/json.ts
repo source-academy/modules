@@ -14,6 +14,8 @@ import {
   logResult,
   retrieveBundlesAndTabs,
 } from '../buildUtils.js';
+import { type LintCommandInputs } from '../prebuild/eslint.js';
+import { autoLogPrebuild } from '../prebuild/index.js';
 import type { BuildCommandInputs, BuildResult, Severity, UnreducedResult } from '../types';
 
 import { initTypedoc, logTypedocTime } from './docUtils.js';
@@ -185,22 +187,28 @@ export const buildJsons = async (project: ProjectReflection, { outDir, bundles }
 /**
  * Console command for building jsons
  */
-const jsonCommand = createBuildCommand('jsons')
+const jsonCommand = createBuildCommand('jsons', true)
   .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
-  .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose }: BuildCommandInputs) => {
-    const { bundles } = await retrieveBundlesAndTabs(manifest, modules, null, false);
-    if (bundles.length === 0) return;
+  .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose, ...opts }: BuildCommandInputs & LintCommandInputs) => {
+    const assets = await retrieveBundlesAndTabs(manifest, modules, null, false);
+    if (assets.bundles.length === 0) return;
+
+    const proceed = await autoLogPrebuild({
+      srcDir,
+      ...opts,
+    }, assets);
+    if (!proceed) return;
 
     const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
-      bundles,
+      bundles: assets.bundles,
       srcDir,
       verbose,
     });
 
     logTypedocTime(typedocTime);
-    printList(chalk.magentaBright('Building jsons for the following modules:\n'), bundles);
+    printList(chalk.magentaBright('Building jsons for the following modules:\n'), assets.bundles);
     const jsonResults = await buildJsons(project, {
-      bundles,
+      bundles: assets.bundles,
       outDir,
     });
     logResult(jsonResults, verbose);

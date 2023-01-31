@@ -101,7 +101,7 @@ type WatchCommandInputs = {
   docs: boolean;
 } & BuildCommandInputs;
 
-export const watchCommand = createBuildCommand('watch')
+export const watchCommand = createBuildCommand('watch', false)
   .description('Run esbuild in watch mode, rebuilding on every detected file system change')
   .option('--no-docs', 'Don\'t rebuild documentation')
   .action(async (opts: WatchCommandInputs) => {

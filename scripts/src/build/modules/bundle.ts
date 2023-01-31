@@ -15,14 +15,14 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 
 import { bundleNameExpander } from '../buildUtils.js';
-import type { BuildCommandInputs, BuildResult, UnreducedResult } from '../types.js';
+import type { BuildOptions, BuildResult, UnreducedResult } from '../types.js';
 
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
 
 
 const HELPER_NAME = 'moduleHelpers';
 
-const outputBundle = async (name: string, bundleText: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
+export const outputBundle = async (name: string, bundleText: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(bundleText, { ecmaVersion: 6 }) as unknown as Program;
     const exprStatement = parsed.body[1] as unknown as VariableDeclaration;
@@ -72,7 +72,7 @@ const outputBundle = async (name: string, bundleText: string, outDir: string): P
   }
 };
 
-export const buildBundles = async (bundles: string[], opts: BuildCommandInputs) => {
+export const buildBundles = async (bundles: string[], opts: BuildOptions) => {
   const { outputFiles } = await esbuild({
     ...esbuildOptions,
     entryPoints: bundles.map(bundleNameExpander(opts.srcDir)),

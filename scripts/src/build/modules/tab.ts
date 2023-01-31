@@ -15,10 +15,13 @@ import type {
 } from 'estree';
 import { promises as fs } from 'fs';
 import pathlib from 'path';
-import { printList } from '../../scriptUtils.js';
 
+import { printList } from '../../scriptUtils.js';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
-import type { BuildCommandInputs, BuildResult, UnreducedResult } from '../types';
+import { type LintCommandInputs, logLintResult } from '../prebuild/eslint.js';
+import { preBuild } from '../prebuild/index.js';
+import { logTscResults } from '../prebuild/tsc.js';
+import type { BuildCommandInputs, BuildOptions, BuildResult, UnreducedResult } from '../types';
 
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
 
@@ -83,7 +86,7 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
   }
 };
 
-export const buildTabs = async (tabs: string[], opts: BuildCommandInputs) => {
+export const buildTabs = async (tabs: string[], opts: BuildOptions) => {
   const { outputFiles } = await esbuild({
     ...esbuildOptions,
     entryPoints: tabs.map(tabNameExpander(opts.srcDir)),
@@ -109,14 +112,19 @@ export const reduceTabOutputFiles = (outputFiles: OutputFile[], startTime: numbe
   }] as UnreducedResult;
 }));
 
-const buildTabsCommand = createBuildCommand('tabs')
+const buildTabsCommand = createBuildCommand('tabs', true)
   .argument('[tabs...]', 'Manually specify which tabs to build', null)
   .description('Build only tabs')
-  .action(async (tabs: string[] | null, opts: BuildCommandInputs) => {
+  .action(async (tabs: string[] | null, opts: BuildCommandInputs & LintCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(opts.manifest, [], tabs);
+    const { lintResult, tscResult, proceed } = await preBuild(opts, assets);
+
+    logLintResult(lintResult);
+    logTscResults(tscResult, opts.srcDir);
+
+    if (!proceed) return;
 
     printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
-
     const startTime = performance.now();
     const results = await buildTabs(assets.tabs, opts);
     const reducedRes = await reduceTabOutputFiles(results, startTime, opts.outDir);

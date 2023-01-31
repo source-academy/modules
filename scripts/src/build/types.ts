@@ -38,6 +38,8 @@ export type BuildCommandInputs = {
   lint: boolean;
 } & CommandInputs;
 
+
+
 export type BuildOptions = Omit<BuildCommandInputs, 'lint' | 'tsc' | 'manifest' | 'verbose'>;
 
 export type AssetInfo = {

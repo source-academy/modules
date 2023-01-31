@@ -22,7 +22,7 @@ export const retrieveManifest = async (manifest: string) => {
 
 export const wrapWithTimer = <T extends (...params: any[]) => Promise<any>>(func: T) => async (...params: Parameters<T>): Promise<{
   elapsed: number,
-  result: Awaited<ReturnType<T>>
+  result: Awaited<ReturnType<typeof func>>
 }> => {
   const startTime = performance.now();
   const result = await func(...params);

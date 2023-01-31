@@ -1,6 +1,8 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 
+import { printList } from '../scriptUtils.js';
+
 import { logTypedocTime } from './docs/docUtils.js';
 import buildDocsCommand, {
   buildHtml,
@@ -14,18 +16,19 @@ import buildModulesCommand, {
   buildModules,
   buildTabsCommand,
 } from './modules/index.js';
+import type { LintCommandInputs } from './prebuild/eslint.js';
+import { autoLogPrebuild } from './prebuild/index.js';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
 import type { BuildCommandInputs } from './types.js';
 
-const buildAllCommand = createBuildCommand('all')
+const buildAllCommand = createBuildCommand('all', true)
   .argument('[modules...]', 'Manually specify which modules to build', null)
-  .action(async (modules: string[] | null, opts: BuildCommandInputs) => {
+  .action(async (modules: string[] | null, opts: BuildCommandInputs & LintCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(opts.manifest, modules, null);
+    const proceed = await autoLogPrebuild(opts, assets);
+    if (!proceed) return;
 
-    console.log(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n${
-      assets.bundles.map((bundle, i) => `${i + 1}. ${bundle}`)
-        .join('\n')
-    }\n`);
+    printList(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n`, assets.bundles);
 
     const [results, {
       typedoctime,
