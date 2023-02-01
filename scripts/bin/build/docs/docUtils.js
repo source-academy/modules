@@ -4,6 +4,8 @@ import { wrapWithTimer } from '../../scriptUtils.js';
 import { bundleNameExpander, divideAndRound } from '../buildUtils.js';
 /**
  * Offload running typedoc into async code to increase parallelism
+ *
+ * @param watch Pass true to initialize typedoc in watch mode. `app.convert()` will not be called.
  */
 export const initTypedoc = wrapWithTimer(({ srcDir, bundles, verbose, }, watch) => new Promise((resolve, reject) => {
     try {

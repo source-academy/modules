@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { context as esbuild } from 'esbuild';
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
 import type { Application } from 'typedoc';
 
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';

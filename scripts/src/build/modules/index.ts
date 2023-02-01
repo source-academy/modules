@@ -58,7 +58,7 @@ const buildModulesCommand = createBuildCommand('modules', true)
   .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, []);
 
-    printList(`${chalk.cyanBright('Building bundles and tabs for the following bundles:')}\n`, assets.bundles);
+    printList(`${chalk.magentaBright('Building bundles and tabs for the following bundles:')}\n`, assets.bundles);
 
     const proceed = await autoLogPrebuild(opts, assets);
     if (!proceed) return;

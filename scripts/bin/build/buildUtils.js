@@ -31,7 +31,7 @@ export const logResult = (unreduced, verbose) => {
     }, {});
     return console.log(Object.entries(overallResult)
         .map(([label, toLog]) => {
-        if (typeof toLog === 'boolean' || typeof toLog === 'undefined')
+        if (!toLog)
             return null;
         const upperCaseLabel = label[0].toUpperCase() + label.slice(1);
         const { severity: overallSev, results } = toLog;
@@ -57,7 +57,7 @@ export const logResult = (unreduced, verbose) => {
         }
         const outputTable = new Table({
             columns: [{
-                    name: 'bundle',
+                    name: 'name',
                     title: upperCaseLabel,
                 },
                 {
@@ -77,11 +77,10 @@ export const logResult = (unreduced, verbose) => {
                     title: 'Errors',
                 }],
         });
-        Object.entries(results)
-            .forEach(([moduleName, { elapsed, severity, error, fileSize }]) => {
+        entries.forEach(([name, { elapsed, severity, error, fileSize }]) => {
             if (severity === 'error') {
                 outputTable.addRow({
-                    bundle: moduleName,
+                    name,
                     elapsed: '-',
                     error,
                     fileSize: '-',
@@ -90,16 +89,16 @@ export const logResult = (unreduced, verbose) => {
             }
             else if (severity === 'warn') {
                 outputTable.addRow({
-                    bundle: moduleName,
+                    name,
                     elapsed: divideAndRound(elapsed, 1000, 2),
-                    error: '-',
+                    error,
                     fileSize: fileSizeFormatter(fileSize),
                     severity: 'Warning',
                 }, { color: 'yellow' });
             }
             else {
                 outputTable.addRow({
-                    bundle: moduleName,
+                    name,
                     elapsed: divideAndRound(elapsed, 1000, 2),
                     error: '-',
                     fileSize: fileSizeFormatter(fileSize),

@@ -3,6 +3,7 @@ import { generate } from 'astring';
 import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
 import { promises as fs } from 'fs';
+import uniq from 'lodash/uniq';
 import pathlib from 'path';
 import { printList } from '../../scriptUtils.js';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
@@ -25,7 +26,7 @@ const outputTab = async (tabName, text, outDir) => {
             type: 'ExpressionStatement',
             expression: {
                 type: 'FunctionExpression',
-                params: Object.values(externals)
+                params: uniq(Object.values(externals))
                     .map((name) => ({
                     type: 'Identifier',
                     name,
@@ -74,7 +75,7 @@ export const buildTabs = async (tabs, opts) => {
         entryPoints: tabs.map(tabNameExpander(opts.srcDir)),
         outbase: opts.outDir,
         outdir: opts.outDir,
-        external: ['react', 'react-dom'],
+        external: Object.keys(externals),
     });
     return outputFiles;
 };

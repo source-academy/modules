@@ -5,20 +5,7 @@ import pathlib from 'path';
 import ts from 'typescript';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { bundleNameExpander, divideAndRound, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
-/**
- * @param bundles Bundles to run tsc over
- * @param tabs Tabs to run tsc over
- */
-export const runTsc = wrapWithTimer((async (srcDir, { bundles, tabs }) => {
-    const fileNames = [];
-    if (bundles.length > 0) {
-        printList(`${chalk.magentaBright('Running tsc on the following bundles')}:\n`, bundles);
-        bundles.forEach((bundle) => fileNames.push(bundleNameExpander(srcDir)(bundle)));
-    }
-    if (tabs.length > 0) {
-        printList(`${chalk.magentaBright('Running tsc on the following tabs')}:\n`, tabs);
-        tabs.forEach((tabName) => fileNames.push(tabNameExpander(srcDir)(tabName)));
-    }
+export const getTsconfig = async (srcDir) => {
     // Step 1: Read the text from tsconfig.json
     const tsconfigLocation = pathlib.join(srcDir, 'tsconfig.json');
     if (!existsSync(tsconfigLocation)) {
@@ -28,8 +15,8 @@ export const runTsc = wrapWithTimer((async (srcDir, { bundles, tabs }) => {
             error: `Could not locate tsconfig.json at ${tsconfigLocation}`,
         };
     }
-    // Step 2: Parse the raw text into a json object
     const configText = await fs.readFile(tsconfigLocation, 'utf-8');
+    // Step 2: Parse the raw text into a json object
     const { error: configJsonError, config: configJson } = ts.parseConfigFileTextToJson(tsconfigLocation, configText);
     if (configJsonError) {
         return {
@@ -45,7 +32,32 @@ export const runTsc = wrapWithTimer((async (srcDir, { bundles, tabs }) => {
             results: parseErrors,
         };
     }
-    const tsc = ts.createProgram(fileNames, tsconfig);
+    return {
+        severity: 'success',
+        results: tsconfig,
+    };
+};
+/**
+ * @param params_0 Source Directory
+ */
+export const runTsc = wrapWithTimer((async (srcDir, { bundles, tabs }) => {
+    const fileNames = [];
+    if (bundles.length > 0) {
+        printList(`${chalk.magentaBright('Running tsc on the following bundles')}:\n`, bundles);
+        bundles.forEach((bundle) => fileNames.push(bundleNameExpander(srcDir)(bundle)));
+    }
+    if (tabs.length > 0) {
+        printList(`${chalk.magentaBright('Running tsc on the following tabs')}:\n`, tabs);
+        tabs.forEach((tabName) => fileNames.push(tabNameExpander(srcDir)(tabName)));
+    }
+    const tsconfigRes = await getTsconfig(srcDir);
+    if (tsconfigRes.severity === 'error') {
+        return {
+            severity: 'error',
+            results: tsconfigRes.results,
+        };
+    }
+    const tsc = ts.createProgram(fileNames, tsconfigRes.results);
     const results = tsc.emit();
     return {
         severity: 'success',

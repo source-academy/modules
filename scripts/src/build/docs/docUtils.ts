@@ -12,6 +12,8 @@ type TypedocOpts = {
 
 /**
  * Offload running typedoc into async code to increase parallelism
+ *
+ * @param watch Pass true to initialize typedoc in watch mode. `app.convert()` will not be called.
  */
 export const initTypedoc = wrapWithTimer(
   ({

@@ -20,15 +20,16 @@ export const runEslint = wrapWithTimer(async (opts, { bundles, tabs }) => {
         bundles.length > 0 ? linter.lintFiles(bundles.map((bundle) => pathlib.join('bundles', bundle))) : Promise.resolve([]),
         tabs.length > 0 ? linter.lintFiles(tabs.map((tabName) => pathlib.join('tabs', tabName))) : Promise.resolve([]),
     ];
-    const [lintBundles, lintTabs] = await Promise.all(promises);
     if (bundles.length > 0) {
         printList(`${chalk.magentaBright('Running eslint on the following bundles')}:\n`, bundles);
     }
     if (tabs.length > 0) {
         printList(`${chalk.magentaBright('Running eslint on the following tabs')}:\n`, tabs);
     }
+    const [lintBundles, lintTabs] = await Promise.all(promises);
     const lintResults = [...lintBundles, ...lintTabs];
     if (opts.fix) {
+        console.log(chalk.magentaBright('Running eslint autofix...'));
         await ESLint.outputFixes(lintResults);
     }
     const lintSeverity = lintResults.reduce((res, { errorCount, warningCount }) => {

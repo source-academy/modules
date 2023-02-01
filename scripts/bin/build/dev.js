@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { context as esbuild } from 'esbuild';
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
 import { reduceBundleOutputFiles } from './modules/bundle.js';
 import { esbuildOptions } from './modules/moduleUtils.js';

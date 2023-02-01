@@ -14,6 +14,7 @@ import type {
   VariableDeclaration,
 } from 'estree';
 import { promises as fs } from 'fs';
+import uniq from 'lodash/uniq';
 import pathlib from 'path';
 
 import { printList } from '../../scriptUtils.js';
@@ -42,7 +43,7 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
       type: 'ExpressionStatement',
       expression: {
         type: 'FunctionExpression',
-        params: Object.values(externals)
+        params: uniq(Object.values(externals))
           .map((name) => ({
             type: 'Identifier',
             name,
@@ -92,7 +93,7 @@ export const buildTabs = async (tabs: string[], opts: BuildOptions) => {
     entryPoints: tabs.map(tabNameExpander(opts.srcDir)),
     outbase: opts.outDir,
     outdir: opts.outDir,
-    external: ['react', 'react-dom'],
+    external: Object.keys(externals),
   });
   return outputFiles;
 };

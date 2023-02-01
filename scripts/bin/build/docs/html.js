@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
-import { retrieveManifest, wrapWithTimer } from '../../scriptUtils.js';
-import { divideAndRound } from '../buildUtils.js';
+import { wrapWithTimer } from '../../scriptUtils.js';
+import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 /**
  * Build HTML documentation
@@ -30,7 +31,7 @@ export const buildHtml = wrapWithTimer(async (app, project, { outDir, modulesSpe
  * @see {buildHtml}
  */
 export const logHtmlResult = (htmlResult) => {
-    if (typeof htmlResult === 'boolean')
+    if (!htmlResult)
         return;
     const { elapsed, result: { severity, error } } = htmlResult;
     if (severity === 'success') {
@@ -52,11 +53,18 @@ const buildHtmlCommand = new Command('html')
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
     .option('-v, --verbose', 'Display more information about the build results', false)
+    .option('--no-tsc', 'Don\'t run tsc before building')
     .description('Build only HTML documentation')
     .action(async (opts) => {
-    const manifest = await retrieveManifest(opts.manifest);
+    const assets = await retrieveBundlesAndTabs(opts.manifest, null, null);
+    if (opts.tsc) {
+        const tscResult = await runTsc(opts.srcDir, assets);
+        logTscResults(tscResult, opts.srcDir);
+        if (tscResult.result.severity === 'error')
+            return;
+    }
     const { elapsed: typedoctime, result: [app, project] } = await initTypedoc({
-        bundles: Object.keys(manifest),
+        bundles: assets.bundles,
         srcDir: opts.srcDir,
         verbose: opts.verbose,
     });
