@@ -14,7 +14,7 @@ import type {
   VariableDeclaration,
 } from 'estree';
 import { promises as fs } from 'fs';
-import uniq from 'lodash/uniq';
+import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 
 import { printList } from '../../scriptUtils.js';

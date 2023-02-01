@@ -3,7 +3,7 @@ import { generate } from 'astring';
 import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
 import { promises as fs } from 'fs';
-import uniq from 'lodash/uniq';
+import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 import { printList } from '../../scriptUtils.js';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
