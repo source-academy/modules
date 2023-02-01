@@ -7,11 +7,6 @@ import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
 import type { AssetInfo, BuildCommandInputs, Severity } from '../types.js';
 
-export type LintOpts = {
-  fix: boolean;
-  srcDir: string;
-};
-
 export type LintCommandInputs = ({
   lint: false;
   fix: false;
@@ -21,6 +16,8 @@ export type LintCommandInputs = ({
 }) & {
   srcDir: string;
 };
+
+export type LintOpts = Omit<LintCommandInputs, 'lint'>;
 
 type LintResults = {
   formatted: string;
@@ -46,8 +43,6 @@ export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }:
     tabs.length > 0 ? linter.lintFiles(tabs.map((tabName) => pathlib.join('tabs', tabName))) : Promise.resolve([]),
   ];
 
-  const [lintBundles, lintTabs] = await Promise.all(promises);
-
   if (bundles.length > 0) {
     printList(`${chalk.magentaBright('Running eslint on the following bundles')}:\n`, bundles);
   }
@@ -55,9 +50,12 @@ export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }:
   if (tabs.length > 0) {
     printList(`${chalk.magentaBright('Running eslint on the following tabs')}:\n`, tabs);
   }
+
+  const [lintBundles, lintTabs] = await Promise.all(promises);
   const lintResults = [...lintBundles, ...lintTabs];
 
   if (opts.fix) {
+    console.log(chalk.magentaBright('Running eslint autofix...'));
     await ESLint.outputFixes(lintResults);
   }
 
