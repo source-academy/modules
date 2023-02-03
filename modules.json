@@ -62,5 +62,10 @@
     "tabs": [
       "Csg"
     ]
+  },
+  "arcade_two_d": {
+    "tabs": [
+      "ArcadeTwod"
+    ]
   }
 }
