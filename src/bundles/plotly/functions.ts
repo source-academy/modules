@@ -1,153 +1,64 @@
 /**
- * This is the official documentation for the plotly module.
+ * The module `plotly` provides functions for drawing plots using the plotly.js library.
  * @module plotly
  */
 
+
 import { context } from 'js-slang/moduleHelpers';
 import Plotly, { Data } from 'plotly.js-dist';
-import { BarPlot, DrawnPlot, Plot, ScatterPlot } from './plots';
+import { DrawnPlot } from './plotly';
 
 const drawnPlots: (DrawnPlot)[] = [];
 context.moduleContexts.plotly.state = {
   drawnPlots,
 };
 
+/**
+ * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
+ * @param data The data in the form of list of pair which is used to generate the plot
+ */
 
-export function checkInput(input: any): void {
-  console.log(input);
-  return input;
+export function new_plot(data: any): void {
+  drawnPlots.push(new DrawnPlot(draw_new_plot, data));
 }
 
-export function newPlot(data:any): void {
-  drawnPlots.push(new Plot(drawNewPlot, data));
-}
 
-function drawNewPlot(data: any, divId: string) {
-  const plotlyData = convertToPlotlyData(data);
+/**
+ * 
+ * @param data The data which plotly will use
+ * @param divId The id of the div element on which the plot will be displayed
+ */
+function draw_new_plot(data: any, divId: string) {
+  const plotlyData = convert_to_plotlyData(data);
   Plotly.newPlot(divId, [plotlyData]);
 }
 
-/**
- * Draws a Line Graph on the Plotly Tab
- * @example
- * ```typescript
- * drawLineGraph()
- * ```
- */
-
-export function drawLineGraph(): void {
-  drawnPlots.push(new BarPlot(demoLineGraphSetup));
-}
 
 /**
- * Draws a 3d Graph on the Plotly Tab
- * @example
- * ```typescript
- * drawLineGraph()
- * ```
+ * 
+ * @param data The list of pairs given by the user
+ * @returns The converted data that can be used by the plotly.js function
  */
-export function draw3dGraph(): void {
-  drawnPlots.push(new ScatterPlot(demo3dScatterPlot));
-}
-
-
-function convertToPlotlyData(data: any): Data {
-  let demoData: Data[] = [{
-    x: [1, 2, 3, 4],
-    y: [10, 15, 13, 17],
-    type: 'scatter',
-  }];
-
+function convert_to_plotlyData(data: any): Data {
   let convertedData: Data = {};
-
   if (Array.isArray(data) && data.length == 2) {
-    addFeildsToData(convertedData, data);
+    add_fields_to_data(convertedData, data);
   }
-  console.log(convertedData);
-
   return convertedData;
 }
 
-function addFeildsToData(convertedData: Data, data: any[]) {
-  console.log(convertedData, data);
+/**
+ * 
+ * @param convertedData Stores the Javascript object which is used by plotly.js
+ * @param data The list of pairs data used by source
+ */
+
+function add_fields_to_data(convertedData: Data, data: any[]) {
   if (Array.isArray(data) && data.length == 2 && data[0].length == 2) {
     const field = data[0][0];
     const value = data[0][1];
     convertedData[field] = value;
-    addFeildsToData(convertedData, data[1]);
+    add_fields_to_data(convertedData, data[1]);
   } 
 }
 
-
-function demoLineGraphSetup(divId: string = 'myDiv'): void {
-  let trace1: Data = {
-    x: [1, 2, 3, 4],
-    y: [10, 15, 13, 17],
-    type: 'scatter',
-  };
-
-  let trace2: Data = {
-    x: [1, 2, 3, 4],
-    y: [16, 5, 11, 9],
-    type: 'scatter',
-  };
-
-  let data: Data[] = [trace1, trace2];
-  Plotly.newPlot(divId, data);
-}
-
-function demo3dScatterPlot(divId: string = 'myDiv'): void {
-  let z1 = [
-    [8.83, 8.89, 8.81, 8.87, 8.9, 8.87],
-    [8.89, 8.94, 8.85, 8.94, 8.96, 8.92],
-    [8.84, 8.9, 8.82, 8.92, 8.93, 8.91],
-    [8.79, 8.85, 8.79, 8.9, 8.94, 8.92],
-    [8.79, 8.88, 8.81, 8.9, 8.95, 8.92],
-    [8.8, 8.82, 8.78, 8.91, 8.94, 8.92],
-    [8.75, 8.78, 8.77, 8.91, 8.95, 8.92],
-    [8.8, 8.8, 8.77, 8.91, 8.95, 8.94],
-    [8.74, 8.81, 8.76, 8.93, 8.98, 8.99],
-    [8.89, 8.99, 8.92, 9.1, 9.13, 9.11],
-    [8.97, 8.97, 8.91, 9.09, 9.11, 9.11],
-    [9.04, 9.08, 9.05, 9.25, 9.28, 9.27],
-    [9, 9.01, 9, 9.2, 9.23, 9.2],
-    [8.99, 8.99, 8.98, 9.18, 9.2, 9.19],
-    [8.93, 8.97, 8.97, 9.18, 9.2, 9.18],
-  ];
-
-  let z2: number[][] = [];
-  for (let i = 0; i < z1.length; i++) {
-    let z2_row: number[] = [];
-    for (let j = 0; j < z1[i].length; j++) {
-      z2_row.push(z1[i][j] + 1);
-    }
-    z2.push(z2_row);
-  }
-
-  let z3: number[][] = [];
-  for (let i = 0; i < z1.length; i++) {
-    let z3_row: number[] = [];
-    for (let j = 0; j < z1[i].length; j++) {
-      z3_row.push(z1[i][j] - 1);
-    }
-    z3.push(z3_row);
-  }
-  let data_z1: Data = {
-    z: z1,
-    type: 'surface',
-  };
-  let data_z2: Data = {
-    z: z2,
-    showscale: false,
-    opacity: 0.9,
-    type: 'surface',
-  };
-  let data_z3: Data = {
-    z: z3,
-    showscale: false,
-    opacity: 0.9,
-    type: 'surface',
-  };
-
-  Plotly.newPlot(divId, [data_z1, data_z2, data_z3]);
-}

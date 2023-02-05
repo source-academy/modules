@@ -1,6 +1,6 @@
 /**
- * Test bundle for Source Academy modules repository
+ * Bundle for Source Academy Plotly repository
  * @author Sourabh Raj Jaiswal
  */
 
-export { drawLineGraph, draw3dGraph, checkInput, newPlot } from './functions';
+export { new_plot } from './functions';
