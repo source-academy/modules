@@ -3,7 +3,8 @@ import { IconSize } from '@blueprintjs/core';
 
 /* [Exports] */
 
-// Silver is in here to avoid circular dependencies
+//NOTE Silver is in here to avoid circular dependencies, instead of in
+// functions.ts with the other colour strings
 export const SILVER: string = '#AAAAAA';
 export const DEFAULT_COLOR: string = SILVER;
 

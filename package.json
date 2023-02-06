@@ -19,6 +19,7 @@
     "prepare": "Enable git hooks",
     "test": "Run unit tests",
     "test:watch": "Watch files for changes and rerun tests related to changed files",
+    "dev": "Build bundles and tabs only, then serve. Skips linting / type checking, does not build jsons and HTML docs. For rapid testing during development",
     "watch": "Watch files for changes and rebuild on those changes"
   },
   "type": "module",
@@ -36,6 +37,7 @@
     "prepare": "husky install",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
+    "dev": "yarn scripts build modules && yarn serve",
     "watch": "yarn scripts watch"
   },
   "devDependencies": {
