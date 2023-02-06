@@ -87,12 +87,12 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
   }
 };
 
-export const buildTabs = async (tabs: string[], opts: BuildOptions) => {
+export const buildTabs = async (tabs: string[], { srcDir, outDir }: BuildOptions) => {
   const { outputFiles } = await esbuild({
     ...esbuildOptions,
-    entryPoints: tabs.map(tabNameExpander(opts.srcDir)),
-    outbase: opts.outDir,
-    outdir: opts.outDir,
+    entryPoints: tabs.map(tabNameExpander(srcDir)),
+    outbase: outDir,
+    outdir: outDir,
     external: Object.keys(externals),
   });
   return outputFiles;

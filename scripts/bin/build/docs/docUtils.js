@@ -21,6 +21,7 @@ export const initTypedoc = wrapWithTimer(({ srcDir, bundles, verbose, }, watch) 
             readme: `${srcDir}/README.md`,
             tsconfig: `${srcDir}/tsconfig.json`,
             skipErrorChecking: true,
+            watch,
         });
         if (watch)
             resolve([app, null]);

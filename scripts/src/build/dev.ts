@@ -7,13 +7,13 @@ import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.
 import { reduceBundleOutputFiles } from './modules/bundle.js';
 import { esbuildOptions } from './modules/moduleUtils.js';
 import { reduceTabOutputFiles } from './modules/tab.js';
-import { bundleNameExpander, createBuildCommand, divideAndRound, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
+import { bundleNameExpander, createBuildCommand, divideAndRound, logResult, retrieveBundlesAndTabs, tabNameExpander } from './buildUtils.js';
 import type { BuildCommandInputs, UnreducedResult } from './types.js';
 
 /**
  * Wait until the user presses 'ctrl+c' on the keyboard
  */
-const waitForQuit = () => new Promise<void>((resolve) => {
+const waitForQuit = () => new Promise<void>((resolve, reject) => {
   process.stdin.setRawMode(true);
   process.stdin.on('data', (data) => {
     const byteArray = [...data];
@@ -23,6 +23,7 @@ const waitForQuit = () => new Promise<void>((resolve) => {
       resolve();
     }
   });
+  process.stdin.on('error', reject);
 });
 
 type ContextOptions = Record<'srcDir' | 'outDir', string>;
@@ -35,10 +36,11 @@ const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[],
   plugins: [{
     name: 'Bundle Compiler',
     async setup(pluginBuild) {
-      let jsonResults: UnreducedResult[] = [];
+      let jsonPromise: Promise<UnreducedResult[]> | null = null;
       if (app) {
         app.convertAndWatch(async (project) => {
-          jsonResults = await buildJsons(project, {
+          console.log(chalk.magentaBright('Beginning jsons build...'));
+          jsonPromise = buildJsons(project, {
             outDir,
             bundles,
           });
@@ -47,32 +49,35 @@ const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[],
 
       let startTime: number;
       pluginBuild.onStart(() => {
-        console.log(chalk.magentaBright('Beginning build...'));
+        console.log(chalk.magentaBright('Beginning bundles build...'));
         startTime = performance.now();
       });
 
       pluginBuild.onEnd(async ({ outputFiles }) => {
-        const mainResults = await reduceBundleOutputFiles(outputFiles, startTime, outDir);
+        const [mainResults, jsonResults] = await Promise.all([
+          reduceBundleOutputFiles(outputFiles, startTime, outDir),
+          jsonPromise || Promise.resolve([]),
+        ]);
         logResult(mainResults.concat(jsonResults), false);
 
-        console.log(chalk.gray(`Took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
+        console.log(chalk.gray(`Bundles took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
       });
     },
   }],
 });
 
-const getTabContext = ({ srcDir, outDir }: ContextOptions, bundles: string[]) => esbuild({
+const getTabContext = ({ srcDir, outDir }: ContextOptions, tabs: string[]) => esbuild({
   ...esbuildOptions,
   outbase: outDir,
   outdir: outDir,
-  entryPoints: bundles.map(bundleNameExpander(srcDir)),
+  entryPoints: tabs.map(tabNameExpander(srcDir)),
   external: ['react', 'react-dom'],
   plugins: [{
     name: 'Tab Compiler',
     setup(pluginBuild) {
       let startTime: number;
       pluginBuild.onStart(() => {
-        console.log(chalk.magentaBright('Beginning build...'));
+        console.log(chalk.magentaBright('Beginning tabs build...'));
         startTime = performance.now();
       });
 
@@ -80,7 +85,7 @@ const getTabContext = ({ srcDir, outDir }: ContextOptions, bundles: string[]) =>
         const mainResults = await reduceTabOutputFiles(outputFiles, startTime, outDir);
         logResult(mainResults, false);
 
-        console.log(chalk.gray(`Took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
+        console.log(chalk.gray(`Tabs took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
       });
     },
   }],
@@ -127,9 +132,8 @@ export const watchCommand = createBuildCommand('watch', false)
       getTabContext(opts, tabs),
     ]);
 
-    await Promise.all([bundlesContext.watch(), tabsContext.watch()]);
-
     console.log(chalk.yellowBright(`Watching ${chalk.cyanBright(`./${opts.srcDir}`)} for changes\nPress CTRL + C to stop`));
+    await Promise.all([bundlesContext.watch(), tabsContext.watch()]);
     await waitForQuit();
     console.log(chalk.yellowBright('Stopping...'));
 

@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import fs from 'fs/promises';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs, } from '../buildUtils.js';
-import { autoLogPrebuild } from '../prebuild/index.js';
+import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import drawdown from './drawdown.js';
 const typeToName = (type, alt = 'unknown') => (type ? type.name : alt);
@@ -137,27 +137,31 @@ export const buildJsons = async (project, { outDir, bundles }) => {
 /**
  * Console command for building jsons
  */
-const jsonCommand = createBuildCommand('jsons', true)
+const jsonCommand = createBuildCommand('jsons', false)
+    .option('--no-tsc', 'Don\'t run tsc before building')
     .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
-    .action(async (modules, { manifest, srcDir, outDir, verbose, ...opts }) => {
-    const assets = await retrieveBundlesAndTabs(manifest, modules, null, false);
-    if (assets.bundles.length === 0)
+    .action(async (modules, { manifest, srcDir, outDir, verbose, tsc }) => {
+    const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
+    if (bundles.length === 0)
         return;
-    const proceed = await autoLogPrebuild({
-        srcDir,
-        ...opts,
-    }, assets);
-    if (!proceed)
-        return;
+    if (tsc) {
+        const tscResult = await runTsc(srcDir, {
+            bundles,
+            tabs: [],
+        });
+        logTscResults(tscResult, srcDir);
+        if (tscResult.result.severity === 'error')
+            return;
+    }
     const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
-        bundles: assets.bundles,
+        bundles,
         srcDir,
         verbose,
     });
     logTypedocTime(typedocTime);
-    printList(chalk.magentaBright('Building jsons for the following modules:\n'), assets.bundles);
+    printList(chalk.magentaBright('Building jsons for the following modules:\n'), bundles);
     const jsonResults = await buildJsons(project, {
-        bundles: assets.bundles,
+        bundles,
         outDir,
     });
     logResult(jsonResults, verbose);

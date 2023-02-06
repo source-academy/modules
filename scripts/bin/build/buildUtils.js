@@ -154,23 +154,23 @@ export const retrieveBundlesAndTabs = async (manifestFile, modules, tabOpts, add
         else {
             tabs = [];
         }
-        if (tabOpts) {
-            // Tabs were specified
-            const unknownTabs = tabOpts.filter((t) => !knownTabs.includes(t));
-            if (unknownTabs.length > 0) {
-                throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
-            }
-            tabs = tabs.concat(tabOpts);
-        }
-        else {
-            // No tabs were specified
-            tabs = knownTabs;
-        }
     }
     else {
         // No modules were specified
         bundles = knownBundles;
-        tabs = knownTabs;
+        tabs = [];
+    }
+    if (tabOpts !== null) {
+        // Tabs were specified
+        const unknownTabs = tabOpts.filter((t) => !knownTabs.includes(t));
+        if (unknownTabs.length > 0) {
+            throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
+        }
+        tabs = tabs.concat(tabOpts);
+    }
+    else {
+        // No tabs were specified
+        tabs = tabs.concat(knownTabs);
     }
     return {
         bundles: [...new Set(bundles)],

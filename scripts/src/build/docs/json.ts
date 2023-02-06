@@ -14,15 +14,14 @@ import {
   logResult,
   retrieveBundlesAndTabs,
 } from '../buildUtils.js';
-import { type LintCommandInputs } from '../prebuild/eslint.js';
-import { autoLogPrebuild } from '../prebuild/index.js';
+import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import type { BuildCommandInputs, BuildResult, Severity, UnreducedResult } from '../types';
 
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import drawdown from './drawdown.js';
 
 
-const typeToName = (type?: SomeType, alt : string = 'unknown') => (type ? (type as ReferenceType | IntrinsicType).name : alt);
+const typeToName = (type?: SomeType, alt: string = 'unknown') => (type ? (type as ReferenceType | IntrinsicType).name : alt);
 
 /**
  * Parsers to convert typedoc elements into strings
@@ -187,28 +186,32 @@ export const buildJsons = async (project: ProjectReflection, { outDir, bundles }
 /**
  * Console command for building jsons
  */
-const jsonCommand = createBuildCommand('jsons', true)
+const jsonCommand = createBuildCommand('jsons', false)
+  .option('--no-tsc', 'Don\'t run tsc before building')
   .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
-  .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose, ...opts }: BuildCommandInputs & LintCommandInputs) => {
-    const assets = await retrieveBundlesAndTabs(manifest, modules, null, false);
-    if (assets.bundles.length === 0) return;
+  .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose, tsc }: Omit<BuildCommandInputs, 'modules' | 'tabs'>) => {
+    const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
+    if (bundles.length === 0) return;
 
-    const proceed = await autoLogPrebuild({
-      srcDir,
-      ...opts,
-    }, assets);
-    if (!proceed) return;
+    if (tsc) {
+      const tscResult = await runTsc(srcDir, {
+        bundles,
+        tabs: [],
+      });
+      logTscResults(tscResult, srcDir);
+      if (tscResult.result.severity === 'error') return;
+    }
 
     const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
-      bundles: assets.bundles,
+      bundles,
       srcDir,
       verbose,
     });
 
     logTypedocTime(typedocTime);
-    printList(chalk.magentaBright('Building jsons for the following modules:\n'), assets.bundles);
+    printList(chalk.magentaBright('Building jsons for the following modules:\n'), bundles);
     const jsonResults = await buildJsons(project, {
-      bundles: assets.bundles,
+      bundles,
       outDir,
     });
     logResult(jsonResults, verbose);

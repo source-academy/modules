@@ -29,7 +29,7 @@ type LintResults = {
  * Run eslint programmatically
  * Refer to https://eslint.org/docs/latest/integrate/nodejs-api for documentation
  */
-export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: AssetInfo): Promise<LintResults> => {
+export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: Omit<AssetInfo, 'modulesSpecified'>): Promise<LintResults> => {
   const linter = new ESLint({
     cwd: pathlib.resolve(opts.srcDir),
     overrideConfigFile: '.eslintrc.cjs',

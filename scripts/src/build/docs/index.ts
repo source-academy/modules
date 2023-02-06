@@ -2,39 +2,41 @@ import chalk from 'chalk';
 
 import { printList } from '../../scriptUtils.js';
 import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
-import type { LintCommandInputs } from '../prebuild/eslint.js';
-import { autoLogPrebuild } from '../prebuild/index.js';
+import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import type { BuildCommandInputs } from '../types.js';
 
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import { buildHtml, logHtmlResult } from './html.js';
 import { buildJsons } from './json.js';
 
-export const docsCommandHandler = async (modules: string[] | null, { manifest, srcDir, outDir, verbose, ...opts }: Omit<BuildCommandInputs, 'modules' | 'tabs'> & LintCommandInputs) => {
-  const assets = await retrieveBundlesAndTabs(manifest, modules, [], false);
-  if (assets.bundles.length === 0) return;
+export const docsCommandHandler = async (modules: string[] | null, { manifest, srcDir, outDir, verbose, tsc }: Omit<BuildCommandInputs, 'modules' | 'tabs'>) => {
+  const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
+  if (bundles.length === 0) return;
 
-  const proceed = await autoLogPrebuild({
-    srcDir,
-    ...opts,
-  }, assets);
-  if (!proceed) return;
+  if (tsc) {
+    const tscResult = await runTsc(srcDir, {
+      bundles,
+      tabs: [],
+    });
+    logTscResults(tscResult, srcDir);
+    if (tscResult.result.severity === 'error') return;
+  }
 
-  printList(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n`, assets.bundles);
+  printList(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n`, bundles);
 
   const { elapsed, result: [app, project] } = await initTypedoc({
-    bundles: assets.bundles,
+    bundles,
     srcDir,
     verbose,
   });
   const [jsonResults, htmlResult] = await Promise.all([
     buildJsons(project, {
       outDir,
-      bundles: assets.bundles,
+      bundles,
     }),
     buildHtml(app, project, {
       outDir,
-      modulesSpecified: assets.modulesSpecified,
+      modulesSpecified: modules !== null,
     }),
     // app.generateJson(project, `${buildOpts.outDir}/docs.json`),
   ]);

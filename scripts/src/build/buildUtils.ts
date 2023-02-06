@@ -171,24 +171,26 @@ export const retrieveBundlesAndTabs = async (
     if (addTabs) {
     // If a bundle is being rebuilt, add its tabs
       tabs = modules.flatMap((bundle) => manifest[bundle].tabs);
-    } else { tabs = []; }
-
-    if (tabOpts) {
-    // Tabs were specified
-      const unknownTabs = tabOpts.filter((t) => !knownTabs.includes(t));
-
-      if (unknownTabs.length > 0) {
-        throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
-      }
-      tabs = tabs.concat(tabOpts);
     } else {
-      // No tabs were specified
-      tabs = knownTabs;
+      tabs = [];
     }
   } else {
     // No modules were specified
     bundles = knownBundles;
-    tabs = knownTabs;
+    tabs = [];
+  }
+
+  if (tabOpts !== null) {
+    // Tabs were specified
+    const unknownTabs = tabOpts.filter((t) => !knownTabs.includes(t));
+
+    if (unknownTabs.length > 0) {
+      throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
+    }
+    tabs = tabs.concat(tabOpts);
+  } else {
+    // No tabs were specified
+    tabs = tabs.concat(knownTabs);
   }
 
   return {

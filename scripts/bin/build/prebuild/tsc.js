@@ -5,7 +5,7 @@ import pathlib from 'path';
 import ts from 'typescript';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { bundleNameExpander, divideAndRound, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
-export const getTsconfig = async (srcDir) => {
+const getTsconfig = async (srcDir) => {
     // Step 1: Read the text from tsconfig.json
     const tsconfigLocation = pathlib.join(srcDir, 'tsconfig.json');
     if (!existsSync(tsconfigLocation)) {

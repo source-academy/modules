@@ -36,6 +36,7 @@ export const initTypedoc = wrapWithTimer(
         readme: `${srcDir}/README.md`,
         tsconfig: `${srcDir}/tsconfig.json`,
         skipErrorChecking: true,
+        watch,
       });
 
       if (watch) resolve([app, null]);

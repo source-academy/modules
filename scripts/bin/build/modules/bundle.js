@@ -54,12 +54,12 @@ export const outputBundle = async (name, bundleText, outDir) => {
         };
     }
 };
-export const buildBundles = async (bundles, opts) => {
+export const buildBundles = async (bundles, { srcDir, outDir }) => {
     const { outputFiles } = await esbuild({
         ...esbuildOptions,
-        entryPoints: bundles.map(bundleNameExpander(opts.srcDir)),
-        outbase: opts.outDir,
-        outdir: opts.outDir,
+        entryPoints: bundles.map(bundleNameExpander(srcDir)),
+        outbase: outDir,
+        outdir: outDir,
         external: ['js-slang/moduleHelpers'],
     });
     return outputFiles;

@@ -1,7 +1,4 @@
-import chalk from 'chalk';
 import type { ProjectReference } from 'typescript';
-
-import { divideAndRound } from '../../buildUtils.js';
 
 export const initTypedoc = jest.fn(() => {
   const proj = {
@@ -20,7 +17,3 @@ export const initTypedoc = jest.fn(() => {
     }, proj],
   });
 });
-
-export const logTypedocTime = (elapsed: number) => console.log(
-  `${chalk.cyanBright('Took')} ${divideAndRound(elapsed, 1000, 2)}s ${chalk.cyanBright('to initialize typedoc')}`,
-);

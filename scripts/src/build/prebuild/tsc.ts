@@ -27,7 +27,7 @@ type TsconfigResult = {
   results: CompilerOptions;
 };
 
-export const getTsconfig = async (srcDir: string): Promise<TsconfigResult> => {
+const getTsconfig = async (srcDir: string): Promise<TsconfigResult> => {
   // Step 1: Read the text from tsconfig.json
   const tsconfigLocation = pathlib.join(srcDir, 'tsconfig.json');
   if (!existsSync(tsconfigLocation)) {
