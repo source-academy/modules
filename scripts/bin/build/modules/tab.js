@@ -76,6 +76,7 @@ export const buildTabs = async (tabs, { srcDir, outDir }) => {
         outbase: outDir,
         outdir: outDir,
         external: Object.keys(externals),
+        jsx: 'transform',
     });
     return outputFiles;
 };

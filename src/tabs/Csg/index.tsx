@@ -1,6 +1,6 @@
 /* [Imports] */
+import React, { type ReactElement } from 'react';
 import { IconNames } from '@blueprintjs/icons';
-import { type ReactElement } from 'react';
 import { Core } from '../../bundles/csg/core.js';
 import {
   type CsgModuleState,

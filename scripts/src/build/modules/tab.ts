@@ -94,6 +94,7 @@ export const buildTabs = async (tabs: string[], { srcDir, outDir }: BuildOptions
     outbase: outDir,
     outdir: outDir,
     external: Object.keys(externals),
+    jsx: 'transform',
   });
   return outputFiles;
 };
