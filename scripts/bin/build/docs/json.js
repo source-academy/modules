@@ -18,7 +18,10 @@ const parsers = {
             desc = drawdown(element.comment.summary.map(({ text }) => text)
                 .join(''));
         }
-        return `<div><h4>${element.name}: ${typeToName(element.type)}</h4><div class="description">${desc}</div></div>`;
+        return {
+            header: `${element.name}: ${typeToName(element.type)}`,
+            desc,
+        };
     },
     Function({ name: elementName, signatures: [signature] }) {
         // Form the parameter string for the function
@@ -41,8 +44,10 @@ const parsers = {
             desc = drawdown(signature.comment.summary.map(({ text }) => text)
                 .join(''));
         }
-        const header = `${elementName}${paramStr} → {${resultStr}}`;
-        return `<div><h4>${header}</h4><div class="description">${desc}</div></div>`;
+        return {
+            header: `${elementName}${paramStr} → {${resultStr}}`,
+            desc,
+        };
     },
 };
 /**
@@ -65,12 +70,13 @@ const buildJson = wrapWithTimer(async (bundle, moduleDocs, outDir) => {
                             errors: [...errors, `Symbol '${decl.name}': Could not find parser for type ${decl.kindString}`],
                         }, decls];
                 }
+                const { header, desc } = parser(decl);
                 return [{
                         severity,
                         errors,
                     }, {
                         ...decls,
-                        [decl.name]: parser(decl),
+                        [decl.name]: `<div><h4>${header}</h4><div class="description">${desc}</div></div>`,
                     }];
             }
             catch (error) {
