@@ -1,4 +1,5 @@
 import React from 'react';
+import { DrawnPlot } from '../../bundles/plotly/plotly';
 import { DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/modal_div';
 
@@ -22,8 +23,11 @@ class Plotly extends React.Component<Props, State> {
     };
   }
 
-  handleOpen = (selectedPlot: any) => {
-    this.setState({ modalOpen: true, selectedPlot: selectedPlot });
+  handleOpen = (selectedPlot: DrawnPlot) => {
+    this.setState({
+      modalOpen: true,
+      selectedPlot,
+    });
   };
 
   public render() {
@@ -50,7 +54,7 @@ class Plotly extends React.Component<Props, State> {
         {
           drawnPlots.map((drawnPlot: any, id:number) => {
             const divId = `plotDiv${id}`;
-            return (     
+            return (
               <>
                 <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
                 <div
@@ -76,5 +80,5 @@ export default {
   },
   body: (debuggerContext: any) => <Plotly debuggerContext={debuggerContext} />,
   label: 'Plotly Test Tab',
-  iconName: 'build',
+  iconName: 'scatter-plot',
 };
