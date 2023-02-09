@@ -62,5 +62,10 @@
     "tabs": [
       "Csg"
     ]
+  },
+  "programmable_repl": {
+    "tabs": [
+      "ProgrammableREPL"
+    ]
   }
 }
