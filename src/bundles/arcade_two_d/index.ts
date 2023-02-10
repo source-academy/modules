@@ -3,9 +3,9 @@
  *
  * Sentences describing the module. More sentences about the module.
  *
- * @module module_name
- * @author Author Name
- * @author Author Name
+ * @module arcade_two_d
+ * @author Titus Chew Xuan Jun
+ * @author Xenos Fiorenzo Anong
  */
 
 /*
@@ -23,3 +23,13 @@ import { context } from 'js-slang/moduleHelpers';
 export function sample_function(x: number): number {
   return ++x;
 } // Then any functions or variables you want to expose to the user is exported from the bundle's index.ts file
+
+export {
+  createShapeGameObject,
+  createTextGameObject,
+  queryGameObjectId,
+  queryGameObjectPosition,
+  queryGameObjectText,
+  updateGameObjectPosition,
+  updateGameObjectText,
+} from './functions';
