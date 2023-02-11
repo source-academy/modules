@@ -15,18 +15,18 @@ lodash.get
 */
 
 import React from 'react';
-import { DebuggerContext } from '../../typings/type_helpers';
+import { type DebuggerContext } from '../../typings/type_helpers';
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { ProgrammableRepl } from '../../bundles/programmable_repl/programmable_repl';
-//import './ace-builds/src-noconflict/ace';
-//import AceEditor from './react-ace';
-//import { Ace } from 'ace-builds';
+import { type ProgrammableRepl } from '../../bundles/programmable_repl/programmable_repl';
+// import './ace-builds/src-noconflict/ace';
+// import AceEditor from './react-ace';
+// import { Ace } from 'ace-builds';
 import AceEditor from 'react-ace';
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-twilight";
-import "ace-builds/src-noconflict/ext-language_tools";
-//import './styles.css';
+import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/theme-twilight';
+import 'ace-builds/src-noconflict/ext-language_tools';
+// import './styles.css';
 
 
 type GUI_Data = {
@@ -35,23 +35,23 @@ type GUI_Data = {
 
 class ProgrammableReplGUI extends React.Component<GUI_Data> {
   public replInstance : ProgrammableRepl;
-  //private _editorInstance : any;
+  // private _editorInstance : any;
   constructor(data: GUI_Data) {
     super(data);
     this.replInstance = data.programmableReplInstance;
     this.replInstance.setTabReactComponentInstance(this);
-    //this._editorInstance = null;
+    // this._editorInstance = null;
   }
   public render() {
     const outputDivs : JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
-    for ( let i = 0; i < outputStringCount; i++ ) {
-      //outputDivs.push( <div style={{ color: this.replInstance.outputStrings[i].color }} >{this.replInstance.outputStrings[i].content}</div> );
-      outputDivs.push( <div style={{ color: this.replInstance.outputStrings[i].color }}  dangerouslySetInnerHTML={ { __html: this.replInstance.outputStrings[i].content }} /> );
+    for (let i = 0; i < outputStringCount; i++) {
+      // outputDivs.push( <div style={{ color: this.replInstance.outputStrings[i].color }} >{this.replInstance.outputStrings[i].content}</div> );
+      outputDivs.push(<div style={{ color: this.replInstance.outputStrings[i].color }} dangerouslySetInnerHTML={ { __html: this.replInstance.outputStrings[i].content }} />);
     }
-  /*  const styles=CSS`.ace_gutter-cell.ace_breakpoint{
+    /*  const styles=CSS`.ace_gutter-cell.ace_breakpoint{
     border-radius: 20px 0px 0px 20px;
-    box-shadow: 0px 0px 1px 1px #248c46 inset; 
+    box-shadow: 0px 0px 1px 1px #248c46 inset;
     }`;*/
     return (
       <div>
@@ -59,30 +59,39 @@ class ProgrammableReplGUI extends React.Component<GUI_Data> {
           className="programmable-repl-button"
           icon={IconNames.PLAY}
           active={true}
-          onClick={()=>this.replInstance.RunCode()}//Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
+          onClick={() => this.replInstance.RunCode()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Run"
         />
         <Button
           className="programmable-repl-button"
           icon={IconNames.FLOPPY_DISK}
           active={true}
-          onClick={()=>this.replInstance.saveEditorContent()}//Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
+          onClick={() => this.replInstance.saveEditorContent()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Save"
         />
-        <AceEditor 
-          ref={ (e) => this.replInstance.SetEditorInstance(e?.editor)} 
-          style= { { width: '100%', height: '375px', ...( this.replInstance.customizedEditorProps.backgroundImageUrl != 'no-background-image' && { backgroundImage : `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`, backgroundColor : `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`, backgroundSize: '100%', backgroundRepeat : 'no-repeat' } ) } } 
-          mode='javascript' theme='twilight' 
-          onChange={ newValue => this.replInstance.UpdateUserCode(newValue) } 
-          value={this.replInstance.userCodeInEditor.toString()} 
-          //editorProps = { {fontSize: 17} }
+        <AceEditor
+          ref={ (e) => this.replInstance.SetEditorInstance(e?.editor)}
+          style= { {
+            width: '100%',
+            height: '375px',
+            ...(this.replInstance.customizedEditorProps.backgroundImageUrl != 'no-background-image' && {
+              backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
+              backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
+              backgroundSize: '100%',
+              backgroundRepeat: 'no-repeat',
+            }),
+          } }
+          mode="javascript" theme="twilight"
+          onChange={ (newValue) => this.replInstance.UpdateUserCode(newValue) }
+          value={this.replInstance.userCodeInEditor.toString()}
+          // editorProps = { {fontSize: 17} }
         />
         <div id="output_strings">{outputDivs}</div>
       </div>
     );
-    //<AceEditor style= { { width: '720px', height: '375px' } } mode='javascript' theme='twilight' onChange={ newValue => this.replInstance.UpdateUserCode(newValue) } value={this.replInstance.userCodeInEditor.toString()} />;
-    //value={this.replInstance.userCodeInEditor.toString()}
-    //<textarea style= { { width: '720px', height: '375px' } } onChange={e => this.replInstance.UpdateUserCode(e.target.value) } />
+    // <AceEditor style= { { width: '720px', height: '375px' } } mode='javascript' theme='twilight' onChange={ newValue => this.replInstance.UpdateUserCode(newValue) } value={this.replInstance.userCodeInEditor.toString()} />;
+    // value={this.replInstance.userCodeInEditor.toString()}
+    // <textarea style= { { width: '720px', height: '375px' } } onChange={e => this.replInstance.UpdateUserCode(e.target.value) } />
   }
 }
 
@@ -119,6 +128,3 @@ export default {
    */
   iconName: 'code',
 };
-
-
-

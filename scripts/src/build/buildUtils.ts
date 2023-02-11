@@ -211,10 +211,6 @@ export const createBuildCommand = (label: string, addLint: boolean) => {
     .option('--manifest <file>', 'Manifest file', 'modules.json')
     .option('-v, --verbose', 'Display more information about the build results', false);
 
-  new Option('--fix', 'Ask eslint to autofix linting errors')
-    .implies({ lint: true });
-
-
   if (addLint) {
     cmd.option('--tsc', 'Run tsc before building')
       .option('--lint', 'Run eslint before building')
@@ -225,4 +221,4 @@ export const createBuildCommand = (label: string, addLint: boolean) => {
   return cmd;
 };
 
-export const copyManifest = (opts: { manifest: string, outDir: string }) => fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`);
+export const copyManifest = (opts: { manifest: string, outDir: string }) => fs.copyFile(opts.manifest, path.join(opts.outDir, opts.manifest));
