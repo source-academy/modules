@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { promises as fs } from 'fs';
 import { printList } from '../../scriptUtils.js';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
 import { autoLogPrebuild } from '../prebuild/index.js';
 import { buildBundles, reduceBundleOutputFiles } from './bundle.js';
 import { buildTabs, reduceTabOutputFiles } from './tab.js';
@@ -50,7 +50,10 @@ const buildModulesCommand = createBuildCommand('modules', true)
         return;
     const [results] = await Promise.all([
         buildModules(opts, assets),
-        fs.copyFile(manifest, `${opts.outDir}/${manifest}`),
+        copyManifest({
+            manifest,
+            outDir: opts.outDir,
+        }),
     ]);
     logResult(results, opts.verbose);
 })

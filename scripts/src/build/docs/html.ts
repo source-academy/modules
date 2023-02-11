@@ -69,7 +69,7 @@ const buildHtmlCommand = new Command('html')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
   .option('-v, --verbose', 'Display more information about the build results', false)
-  .option('--no-tsc', 'Don\'t run tsc before building')
+  .option('--tsc', 'Run tsc before building')
   .description('Build only HTML documentation')
   .action(async (opts: HTMLCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(opts.manifest, null, null);

@@ -1,12 +1,11 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
-import fs from 'fs/promises';
 import { printList } from '../scriptUtils.js';
 import { logTypedocTime } from './docs/docUtils.js';
 import buildDocsCommand, { buildHtml, buildHtmlCommand, buildJsonCommand, buildJsons, initTypedoc, logHtmlResult, } from './docs/index.js';
 import buildModulesCommand, { buildModules, buildTabsCommand, } from './modules/index.js';
 import { autoLogPrebuild } from './prebuild/index.js';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
+import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
 const buildAllCommand = createBuildCommand('all', true)
     .argument('[modules...]', 'Manually specify which modules to build', null)
     .action(async (modules, opts) => {
@@ -38,7 +37,7 @@ const buildAllCommand = createBuildCommand('all', true)
                 typedoctime: elapsed,
             };
         }),
-        fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
+        copyManifest(opts),
     ]);
     logTypedocTime(typedoctime);
     logResult(results.concat(jsonResults), opts.verbose);

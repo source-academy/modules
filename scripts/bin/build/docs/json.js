@@ -144,7 +144,7 @@ export const buildJsons = async (project, { outDir, bundles }) => {
  * Console command for building jsons
  */
 const jsonCommand = createBuildCommand('jsons', false)
-    .option('--no-tsc', 'Don\'t run tsc before building')
+    .option('--tsc', 'Run tsc before building')
     .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
     .action(async (modules, { manifest, srcDir, outDir, verbose, tsc }) => {
     const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
