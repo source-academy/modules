@@ -22,6 +22,8 @@
     "rootDir": "./",
     /* Enables the generation of sourcemap files. These files allow debuggers and other tools to display the original TypeScript source code when actually working with the emitted JavaScript files. */
     "sourceMap": false,
+    /* Skip running typescript on declaration files. This option is needed due to a known bug in react-ace */
+    "skipLibCheck": true,
     /* The strict flag enables a wide range of type checking behavior that results in stronger guarantees of program correctness. */
     "strict": true,
     /* The target setting changes which JS features are downleveled and which are left intact. */
