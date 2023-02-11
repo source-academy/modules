@@ -7,7 +7,7 @@ import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.
 import { reduceBundleOutputFiles } from './modules/bundle.js';
 import { esbuildOptions } from './modules/moduleUtils.js';
 import { reduceTabOutputFiles } from './modules/tab.js';
-import { bundleNameExpander, createBuildCommand, divideAndRound, logResult, retrieveBundlesAndTabs, tabNameExpander } from './buildUtils.js';
+import { bundleNameExpander, copyManifest, createBuildCommand, divideAndRound, logResult, retrieveBundlesAndTabs, tabNameExpander } from './buildUtils.js';
 import type { BuildCommandInputs, UnreducedResult } from './types.js';
 
 /**
@@ -148,6 +148,7 @@ export const watchCommand = createBuildCommand('watch', false)
         .then(() => bundlesContext.dispose()),
       tabsContext.cancel()
         .then(() => tabsContext.dispose()),
+      copyManifest(opts),
     ]);
     logHtmlResult(htmlResult);
   });

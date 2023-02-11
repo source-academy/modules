@@ -18,7 +18,7 @@ import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 
 import { printList } from '../../scriptUtils.js';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
+import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
 import { type LintCommandInputs, logLintResult } from '../prebuild/eslint.js';
 import { preBuild } from '../prebuild/index.js';
 import { logTscResults } from '../prebuild/tsc.js';
@@ -128,8 +128,11 @@ const buildTabsCommand = createBuildCommand('tabs', true)
 
     printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
     const startTime = performance.now();
-    const results = await buildTabs(assets.tabs, opts);
-    const reducedRes = await reduceTabOutputFiles(results, startTime, opts.outDir);
+    const [reducedRes] = await Promise.all([
+      buildTabs(assets.tabs, opts)
+        .then((results) => reduceTabOutputFiles(results, startTime, opts.outDir)),
+      copyManifest(opts),
+    ]);
     logResult(reducedRes, opts.verbose);
   });
 

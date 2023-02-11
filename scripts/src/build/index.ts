@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
-import fs from 'fs/promises';
 
 import { printList } from '../scriptUtils.js';
 
@@ -19,7 +18,7 @@ import buildModulesCommand, {
 } from './modules/index.js';
 import type { LintCommandInputs } from './prebuild/eslint.js';
 import { autoLogPrebuild } from './prebuild/index.js';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
+import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
 import type { BuildCommandInputs } from './types.js';
 
 const buildAllCommand = createBuildCommand('all', true)
@@ -58,7 +57,7 @@ const buildAllCommand = createBuildCommand('all', true)
             typedoctime: elapsed,
           };
         }),
-      fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
+      copyManifest(opts),
     ]);
 
     logTypedocTime(typedoctime);

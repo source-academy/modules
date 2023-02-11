@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { Command, Option } from 'commander';
 import { Table } from 'console-table-printer';
+import fs from 'fs/promises';
 import path from 'path';
 
 import { retrieveManifest } from '../scriptUtils.js';
@@ -210,12 +211,18 @@ export const createBuildCommand = (label: string, addLint: boolean) => {
     .option('--manifest <file>', 'Manifest file', 'modules.json')
     .option('-v, --verbose', 'Display more information about the build results', false);
 
+  new Option('--fix', 'Ask eslint to autofix linting errors')
+    .implies({ lint: true });
+
+
   if (addLint) {
-    cmd.option('--no-tsc', 'Don\'t run tsc before building')
-      .option('--fix', 'Ask eslint to autofix linting errors', false)
-      .addOption(new Option('--no-lint', 'Don\'t run eslint before building')
-        .conflicts('fix'));
+    cmd.option('--tsc', 'Run tsc before building')
+      .option('--lint', 'Run eslint before building')
+      .addOption(new Option('--fix', 'Ask eslint to autofix linting errors')
+        .implies({ lint: true }));
   }
 
   return cmd;
 };
+
+export const copyManifest = (opts: { manifest: string, outDir: string }) => fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`);
