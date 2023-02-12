@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 
 import { printList } from '../../scriptUtils.js';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import type { BuildCommandInputs } from '../types.js';
 
@@ -10,7 +10,11 @@ import { buildHtml, logHtmlResult } from './html.js';
 import { buildJsons } from './json.js';
 
 export const docsCommandHandler = async (modules: string[] | null, { manifest, srcDir, outDir, verbose, tsc }: Omit<BuildCommandInputs, 'modules' | 'tabs'>) => {
-  const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
+  const [{ bundles }] = await Promise.all([
+    retrieveBundlesAndTabs(manifest, modules, [], false),
+    createOutDir(outDir),
+  ]);
+
   if (bundles.length === 0) return;
 
   if (tsc) {
@@ -19,7 +23,7 @@ export const docsCommandHandler = async (modules: string[] | null, { manifest, s
       tabs: [],
     });
     logTscResults(tscResult, srcDir);
-    if (tscResult.result.severity === 'error') return;
+    if (tscResult.result.severity === 'error') process.exit(1);
   }
 
   printList(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n`, bundles);
@@ -46,6 +50,7 @@ export const docsCommandHandler = async (modules: string[] | null, { manifest, s
 
   logHtmlResult(htmlResult);
   logResult(jsonResults, verbose);
+  exitOnError(jsonResults, htmlResult.result);
 };
 
 const buildDocsCommand = createBuildCommand('docs', true)

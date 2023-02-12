@@ -11,6 +11,8 @@ import type {
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import {
   createBuildCommand,
+  createOutDir,
+  exitOnError,
   logResult,
   retrieveBundlesAndTabs,
 } from '../buildUtils.js';
@@ -197,7 +199,11 @@ const jsonCommand = createBuildCommand('jsons', false)
   .option('--tsc', 'Run tsc before building')
   .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
   .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose, tsc }: Omit<BuildCommandInputs, 'modules' | 'tabs'>) => {
-    const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
+    const [{ bundles }] = await Promise.all([
+      retrieveBundlesAndTabs(manifest, modules, [], false),
+      createOutDir(outDir),
+    ]);
+
     if (bundles.length === 0) return;
 
     if (tsc) {
@@ -206,7 +212,7 @@ const jsonCommand = createBuildCommand('jsons', false)
         tabs: [],
       });
       logTscResults(tscResult, srcDir);
-      if (tscResult.result.severity === 'error') return;
+      if (tscResult.result.severity === 'error') process.exit(1);
     }
 
     const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
@@ -222,6 +228,7 @@ const jsonCommand = createBuildCommand('jsons', false)
       outDir,
     });
     logResult(jsonResults, verbose);
+    exitOnError(jsonResults);
   })
   .description('Build only jsons');
 

@@ -4,6 +4,7 @@ import { Table } from 'console-table-printer';
 import fs from 'fs/promises';
 import path from 'path';
 import { retrieveManifest } from '../scriptUtils.js';
+import { Assets, } from './types.js';
 export const divideAndRound = (dividend, divisor, round = 2) => (dividend / divisor).toFixed(round);
 export const fileSizeFormatter = (size) => {
     if (typeof size !== 'number')
@@ -195,4 +196,17 @@ export const createBuildCommand = (label, addLint) => {
     }
     return cmd;
 };
-export const copyManifest = (opts) => fs.copyFile(opts.manifest, path.join(opts.outDir, opts.manifest));
+/**
+ * Create the output directory's root folder
+ */
+export const createOutDir = (outDir) => fs.mkdir(outDir, { recursive: true });
+/**
+ * Copy the manifest to the output folder. The root output folder will be created
+ * if it does not already exist.
+ */
+export const copyManifest = ({ manifest, outDir }) => createOutDir(outDir)
+    .then(() => fs.copyFile(manifest, path.join(outDir, manifest)));
+/**
+ * Create the output directories for each type of asset.
+ */
+export const createBuildDirs = (outDir) => Promise.all(Assets.map((asset) => fs.mkdir(path.join(outDir, `${asset}s`), { recursive: true })));

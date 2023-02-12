@@ -1,12 +1,15 @@
 import chalk from 'chalk';
 import { printList } from '../../scriptUtils.js';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { createBuildCommand, createOutDir, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import { buildHtml, logHtmlResult } from './html.js';
 import { buildJsons } from './json.js';
 export const docsCommandHandler = async (modules, { manifest, srcDir, outDir, verbose, tsc }) => {
-    const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
+    const [{ bundles }] = await Promise.all([
+        retrieveBundlesAndTabs(manifest, modules, [], false),
+        createOutDir(outDir),
+    ]);
     if (bundles.length === 0)
         return;
     if (tsc) {

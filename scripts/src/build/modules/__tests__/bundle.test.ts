@@ -1,25 +1,36 @@
+import { build as esbuild } from 'esbuild';
 import fs from 'fs/promises';
 import { outputBundle } from '../bundle';
+import { esbuildOptions } from '../moduleUtils';
 
 jest.mock('fs/promises', () => ({
   writeFile: jest.fn(() => Promise.resolve()),
   stat: jest.fn().mockResolvedValue({ size: 10 })
 }))
 
-test('bundle output', async () => {
-  const testBundle = `
-  'use strict';
-  var module = (function () {
-    var exports = {}
-    exports.foo = function() { return 'foo'; }
-    exports.bar = function() {
-      var obj = require("js-slang/moduleHelpers");
-      obj.context.moduleContexts.test0.state = 'bar';
-    }
-    return exports;
-  })();`
+const testBundle = `
+  import { context } from 'js-slang/moduleHelpers';
 
-  const result = await outputBundle('test0', testBundle, 'build');
+  export const foo = () => 'foo';
+  export const bar = () => {
+    context.moduleContexts.test0.state = 'bar';
+  };
+`
+
+test('building a bundle', async () => {
+  const { outputFiles } = await esbuild({
+    ...esbuildOptions,
+    stdin: {
+      contents: testBundle,
+    },
+    outdir: '.',
+    outbase: '.',
+    external: ['js-slang/moduleHelpers'],
+  });
+
+  const [{ text: compiledBundle }] = outputFiles!;
+
+  const result = await outputBundle('test0', compiledBundle, 'build');
   expect(result).toMatchObject({
     fileSize: 10,
     severity: 'success',

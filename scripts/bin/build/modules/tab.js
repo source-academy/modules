@@ -2,14 +2,12 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
 import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 import { printList } from '../../scriptUtils.js';
 import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
-import { logLintResult } from '../prebuild/eslint.js';
-import { preBuild } from '../prebuild/index.js';
-import { logTscResults } from '../prebuild/tsc.js';
+import { autoLogPrebuild } from '../prebuild/index.js';
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
 /**
  * Imports that are provided at runtime
@@ -97,9 +95,7 @@ const buildTabsCommand = createBuildCommand('tabs', true)
     .description('Build only tabs')
     .action(async (tabs, opts) => {
     const assets = await retrieveBundlesAndTabs(opts.manifest, [], tabs);
-    const { lintResult, tscResult, proceed } = await preBuild(opts, assets);
-    logLintResult(lintResult);
-    logTscResults(tscResult, opts.srcDir);
+    const proceed = await autoLogPrebuild(opts, assets);
     if (!proceed)
         return;
     printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);

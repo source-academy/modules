@@ -35,7 +35,7 @@ export default {
   },
   // Module Name settings required to make chalk work with jest
   moduleNameMapper: {
-    'chalk': '<rootDir>/scripts/src/__mocks__/chalk.js',
+    'chalk': '<rootDir>/scripts/src/__mocks__/chalk.cjs',
     '(.+)\\.js': '$1',
   },
   testMatch: [

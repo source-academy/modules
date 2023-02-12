@@ -5,7 +5,7 @@ import pathlib from 'path';
 import ts, { type CompilerOptions } from 'typescript';
 
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { bundleNameExpander, divideAndRound, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
+import { bundleNameExpander, divideAndRound, exitOnError, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
 import type { AssetInfo, CommandInputs, Severity } from '../types.js';
 
 type TscResult = {
@@ -132,4 +132,5 @@ export const tscCommand = new Command('typecheck')
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const tscResults = await runTsc(srcDir, assets);
     logTscResults(tscResults, srcDir);
+    exitOnError([], tscResults.result);
   });
