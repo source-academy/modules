@@ -23,6 +23,7 @@ jobs:
           
       - name: Build Modules 🔧
         run: |
+          mkdir build
           yarn run build
 
       - name: Deploy 🚀
