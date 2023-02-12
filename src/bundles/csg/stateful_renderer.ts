@@ -5,14 +5,14 @@ import {
   makeWrappedRenderer,
   makeWrappedRendererData,
 } from './jscad/renderer.js';
-import {
+import type {
   Entity,
   PerspectiveCameraState,
   WrappedRenderer,
   WrappedRendererData,
 } from './jscad/types.js';
 import ListenerTracker from './listener_tracker.js';
-import { RenderGroup } from './utilities.js';
+import type { RenderGroup } from './utilities.js';
 
 /* [Exports] */
 export default class StatefulRenderer {

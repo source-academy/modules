@@ -9,7 +9,7 @@ import { mat4, vec3 } from 'gl-matrix';
 import {
   Rune,
   NormalRune,
-  RuneAnimation,
+  type RuneAnimation,
   DrawnRune,
   drawRunesToFrameBuffer,
   AnimatedRune,
@@ -32,7 +32,7 @@ import {
   hexToColor,
 } from './runes_ops';
 import {
-  FrameBufferWithTexture,
+  type FrameBufferWithTexture,
   getWebGlFromCanvas,
   initFramebufferObject,
   initShaderProgram,
