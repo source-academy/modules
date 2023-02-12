@@ -1,26 +1,57 @@
-(function () {
-  'use strict';
-  var exports = {};
-  (function () {
-    const env = {};
-    try {
-      if (process) {
-        process.env = Object.assign({}, process.env);
-        Object.assign(process.env, env);
-        return;
-      }
-    } catch (e) {}
-    globalThis.process = {
-      env: env
-    };
-  })();
-  var InputFeed;
-  (function (InputFeed) {
-    InputFeed[InputFeed["Camera"] = 0] = "Camera";
-    InputFeed[InputFeed["ImageURL"] = 1] = "ImageURL";
-    InputFeed[InputFeed["VideoURL"] = 2] = "VideoURL";
-    InputFeed[InputFeed["Local"] = 3] = "Local";
-  })(InputFeed || (InputFeed = {}));
+function (moduleHelpers) {
+  function require(x) {
+    const result = ({
+      "js-slang/moduleHelpers": moduleHelpers
+    })[x];
+    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
+  }
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all) __defProp(target, name, {
+      get: all[name],
+      enumerable: true
+    });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+        get: () => from[key],
+        enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+      });
+    }
+    return to;
+  };
+  var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
+    value: true
+  }), mod);
+  var pix_n_flix_exports = {};
+  __export(pix_n_flix_exports, {
+    alpha_of: () => alpha_of,
+    blue_of: () => blue_of,
+    compose_filter: () => compose_filter,
+    copy_image: () => copy_image,
+    get_video_time: () => get_video_time,
+    green_of: () => green_of,
+    image_height: () => image_height,
+    image_width: () => image_width,
+    install_filter: () => install_filter,
+    keep_aspect_ratio: () => keep_aspect_ratio,
+    pause_at: () => pause_at,
+    red_of: () => red_of,
+    reset_filter: () => reset_filter,
+    set_dimensions: () => set_dimensions,
+    set_fps: () => set_fps,
+    set_loop_count: () => set_loop_count,
+    set_rgba: () => set_rgba,
+    set_volume: () => set_volume,
+    start: () => start,
+    use_image_url: () => use_image_url,
+    use_local_file: () => use_local_file,
+    use_video_url: () => use_video_url
+  });
   var DEFAULT_WIDTH = 400;
   var DEFAULT_HEIGHT = 300;
   var DEFAULT_FPS = 10;
@@ -52,7 +83,7 @@
   var prevTime = null;
   var totalElapsedTime = 0;
   var playCount = 0;
-  var inputFeed = InputFeed.Camera;
+  var inputFeed = 0;
   var url = "";
   var keepAspectRatio = true;
   var intrinsicWidth = WIDTH;
@@ -60,18 +91,18 @@
   var displayWidth = WIDTH;
   var displayHeight = HEIGHT;
   function setupData() {
-    for (var i = 0; i < HEIGHT; i += 1) {
+    for (let i = 0; i < HEIGHT; i += 1) {
       pixels[i] = [];
       temporaryPixels[i] = [];
-      for (var j = 0; j < WIDTH; j += 1) {
+      for (let j = 0; j < WIDTH; j += 1) {
         pixels[i][j] = [0, 0, 0, 255];
         temporaryPixels[i][j] = [0, 0, 0, 255];
       }
     }
   }
   function isPixelFilled(pixel) {
-    var ok = true;
-    for (var i = 0; i < 4; i += 1) {
+    let ok = true;
+    for (let i = 0; i < 4; i += 1) {
       if (pixel[i] >= 0 && pixel[i] <= 255) {
         continue;
       }
@@ -81,10 +112,10 @@
     return ok;
   }
   function writeToBuffer(buffer, data) {
-    var ok = true;
-    for (var i = 0; i < HEIGHT; i += 1) {
-      for (var j = 0; j < WIDTH; j += 1) {
-        var p = i * WIDTH * 4 + j * 4;
+    let ok = true;
+    for (let i = 0; i < HEIGHT; i += 1) {
+      for (let j = 0; j < WIDTH; j += 1) {
+        const p = i * WIDTH * 4 + j * 4;
         if (isPixelFilled(data[i][j]) === false) {
           ok = false;
         }
@@ -95,15 +126,15 @@
       }
     }
     if (!ok) {
-      var warningMessage = "You have invalid values for some pixels! Reseting them to default (0)";
+      const warningMessage = "You have invalid values for some pixels! Reseting them to default (0)";
       console.warn(warningMessage);
       errorLogger(warningMessage, false);
     }
   }
   function readFromBuffer(pixelData, src) {
-    for (var i = 0; i < HEIGHT; i += 1) {
-      for (var j = 0; j < WIDTH; j += 1) {
-        var p = i * WIDTH * 4 + j * 4;
+    for (let i = 0; i < HEIGHT; i += 1) {
+      for (let j = 0; j < WIDTH; j += 1) {
+        const p = i * WIDTH * 4 + j * 4;
         src[i][j] = [pixelData[p], pixelData[p + 1], pixelData[p + 2], pixelData[p + 3]];
       }
     }
@@ -114,14 +145,14 @@
       canvasRenderingContext.fill();
       canvasRenderingContext.drawImage(source, 0, 0, intrinsicWidth, intrinsicHeight, (WIDTH - displayWidth) / 2, (HEIGHT - displayHeight) / 2, displayWidth, displayHeight);
     } else canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
-    var pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
+    const pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
     readFromBuffer(pixelObj.data, pixels);
     try {
       filter(pixels, temporaryPixels);
       writeToBuffer(pixelObj.data, temporaryPixels);
     } catch (e) {
       console.error(JSON.stringify(e));
-      var errMsg = ("There is an error with filter function, filter will be reset to default. ").concat(e.name, ": ").concat(e.message);
+      const errMsg = `There is an error with filter function, filter will be reset to default. ${e.name}: ${e.message}`;
       console.error(errMsg);
       if (!e.name) {
         errorLogger("There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.");
@@ -137,22 +168,22 @@
   function draw(timestamp) {
     requestId = window.requestAnimationFrame(draw);
     if (prevTime === null) prevTime = timestamp;
-    var elapsed = timestamp - prevTime;
-    if (elapsed > 1000 / FPS && videoIsPlaying) {
+    const elapsed = timestamp - prevTime;
+    if (elapsed > 1e3 / FPS && videoIsPlaying) {
       drawImage(videoElement);
       prevTime = timestamp;
       totalElapsedTime += elapsed;
       if (toRunLateQueue) {
-        _lateQueue();
+        lateQueue();
         toRunLateQueue = false;
       }
     }
   }
   function playVideoElement() {
     if (!videoIsPlaying) {
-      videoElement.play().then(function () {
+      videoElement.play().then(() => {
         videoIsPlaying = true;
-      }).catch(function (err) {
+      }).catch(err => {
         console.warn(err);
       });
     }
@@ -165,39 +196,37 @@
   }
   function startVideo() {
     if (videoIsPlaying) return;
-    if (inputFeed === InputFeed.Camera) videoIsPlaying = true; else playVideoElement();
+    if (inputFeed === 0) videoIsPlaying = true; else playVideoElement();
     requestId = window.requestAnimationFrame(draw);
   }
   function stopVideo() {
     if (!videoIsPlaying) return;
-    if (inputFeed === InputFeed.Camera) videoIsPlaying = false; else pauseVideoElement();
+    if (inputFeed === 0) videoIsPlaying = false; else pauseVideoElement();
     window.cancelAnimationFrame(requestId);
     prevTime = null;
   }
   function setAspectRatioDimensions(w, h) {
     intrinsicHeight = h;
     intrinsicWidth = w;
-    var scale = Math.min(WIDTH / w, HEIGHT / h);
+    const scale = Math.min(WIDTH / w, HEIGHT / h);
     displayWidth = scale * w;
     displayHeight = scale * h;
   }
   function loadMedia() {
     if (!navigator.mediaDevices.getUserMedia) {
-      var errMsg = "The browser you are using does not support getUserMedia";
+      const errMsg = "The browser you are using does not support getUserMedia";
       console.error(errMsg);
       errorLogger(errMsg, false);
     }
     if (videoElement.srcObject) return;
     navigator.mediaDevices.getUserMedia({
       video: true
-    }).then(function (stream) {
+    }).then(stream => {
       videoElement.srcObject = stream;
-      videoElement.onloadedmetadata = function () {
-        return setAspectRatioDimensions(videoElement.videoWidth, videoElement.videoHeight);
-      };
+      videoElement.onloadedmetadata = () => setAspectRatioDimensions(videoElement.videoWidth, videoElement.videoHeight);
       toRunLateQueue = true;
-    }).catch(function (error) {
-      var errorMessage = ("").concat(error.name, ": ").concat(error.message);
+    }).catch(error => {
+      const errorMessage = `${error.name}: ${error.message}`;
       console.error(errorMessage);
       errorLogger(errorMessage, false);
     });
@@ -205,38 +234,36 @@
   }
   function loadAlternative() {
     try {
-      if (inputFeed === InputFeed.VideoURL) {
+      if (inputFeed === 2) {
         videoElement.src = url;
         startVideo();
-      } else if (inputFeed === InputFeed.ImageURL) {
+      } else if (inputFeed === 1) {
         imageElement.src = url;
       }
     } catch (e) {
       console.error(JSON.stringify(e));
-      var errMsg = ("There is an error loading the URL. ").concat(e.name, ": ").concat(e.message);
+      const errMsg = `There is an error loading the URL. ${e.name}: ${e.message}`;
       console.error(errMsg);
       loadMedia();
       return;
     }
     toRunLateQueue = true;
     videoElement.crossOrigin = "anonymous";
-    videoElement.onended = function () {
+    videoElement.onended = () => {
       playCount++;
-      if (playCount == LOOP_COUNT) {
-        tabsPackage.onClickStill();
+      if (playCount >= LOOP_COUNT) {
         playCount = 0;
-      } else if (playCount < LOOP_COUNT) {
+        tabsPackage.onClickStill();
+      } else {
         stopVideo();
         startVideo();
-      } else {
-        playCount = 0;
       }
     };
-    videoElement.onloadedmetadata = function () {
+    videoElement.onloadedmetadata = () => {
       setAspectRatioDimensions(videoElement.videoWidth, videoElement.videoHeight);
     };
     imageElement.crossOrigin = "anonymous";
-    imageElement.onload = function () {
+    imageElement.onload = () => {
       setAspectRatioDimensions(imageElement.naturalWidth, imageElement.naturalHeight);
       drawImage(imageElement);
     };
@@ -249,7 +276,7 @@
     if (w === WIDTH && h === HEIGHT || w > MAX_WIDTH || w < MIN_WIDTH || h > MAX_HEIGHT || h < MIN_HEIGHT) {
       return;
     }
-    var status = videoIsPlaying;
+    const status = videoIsPlaying;
     stopVideo();
     WIDTH = w;
     HEIGHT = h;
@@ -261,9 +288,7 @@
     canvasElement.height = h;
     setupData();
     if (!status) {
-      setTimeout(function () {
-        return stopVideo();
-      }, 50);
+      setTimeout(() => stopVideo(), 50);
       return;
     }
     startVideo();
@@ -272,18 +297,18 @@
     VOLUME = Math.max(0, Math.min(1, v));
     videoElement.volume = VOLUME;
   }
-  var _queue = function queue() {};
+  var queue = () => {};
   function enqueue(funcToAdd) {
-    var funcToRunFirst = _queue;
-    _queue = function () {
+    const funcToRunFirst = queue;
+    queue = () => {
       funcToRunFirst();
       funcToAdd();
     };
   }
-  var _lateQueue = function lateQueue() {};
+  var lateQueue = () => {};
   function lateEnqueue(funcToAdd) {
-    var funcToRunFirst = _lateQueue;
-    _lateQueue = function () {
+    const funcToRunFirst = lateQueue;
+    lateQueue = () => {
       funcToRunFirst();
       funcToAdd();
     };
@@ -294,46 +319,44 @@
     canvasElement = canvas;
     errorLogger = _errorLogger;
     tabsPackage = _tabsPackage;
-    var context = canvasElement.getContext("2d");
+    const context = canvasElement.getContext("2d");
     if (!context) throw new Error("Canvas context should not be null.");
     canvasRenderingContext = context;
     setupData();
-    if (inputFeed === InputFeed.Camera) {
+    if (inputFeed === 0) {
       loadMedia();
     } else {
       loadAlternative();
     }
-    _queue();
+    queue();
     return {
-      HEIGHT: HEIGHT,
-      WIDTH: WIDTH,
-      FPS: FPS,
-      VOLUME: VOLUME,
-      inputFeed: inputFeed
+      HEIGHT,
+      WIDTH,
+      FPS,
+      VOLUME,
+      inputFeed
     };
   }
   function deinit() {
     stopVideo();
-    var stream = videoElement.srcObject;
+    const stream = videoElement.srcObject;
     if (!stream) {
       return;
     }
-    stream.getTracks().forEach(function (track) {
+    stream.getTracks().forEach(track => {
       track.stop();
     });
   }
   function start() {
     return {
-      toReplString: function () {
-        return "[Pix N Flix]";
-      },
-      init: init,
-      deinit: deinit,
-      startVideo: startVideo,
-      stopVideo: stopVideo,
-      updateFPS: updateFPS,
-      updateVolume: updateVolume,
-      updateDimensions: updateDimensions
+      toReplString: () => "[Pix N Flix]",
+      init,
+      deinit,
+      startVideo,
+      stopVideo,
+      updateFPS,
+      updateVolume,
+      updateDimensions
     };
   }
   function red_of(pixel) {
@@ -361,8 +384,8 @@
     return WIDTH;
   }
   function copy_image(src, dest) {
-    for (var i = 0; i < HEIGHT; i += 1) {
-      for (var j = 0; j < WIDTH; j += 1) {
+    for (let i = 0; i < HEIGHT; i += 1) {
+      for (let j = 0; j < WIDTH; j += 1) {
         dest[i][j] = src[i][j];
       }
     }
@@ -374,51 +397,45 @@
     install_filter(copy_image);
   }
   function new_image() {
-    var img = [];
-    for (var i = 0; i < HEIGHT; i += 1) {
+    const img = [];
+    for (let i = 0; i < HEIGHT; i += 1) {
       img[i] = [];
-      for (var j = 0; j < WIDTH; j += 1) {
+      for (let j = 0; j < WIDTH; j += 1) {
         img[i][j] = [0, 0, 0, 255];
       }
     }
     return img;
   }
   function compose_filter(filter1, filter2) {
-    return function (src, dest) {
-      var temp = new_image();
+    return (src, dest) => {
+      const temp = new_image();
       filter1(src, temp);
       filter2(temp, dest);
     };
   }
   function pause_at(pause_time) {
-    lateEnqueue(function () {
+    lateEnqueue(() => {
       setTimeout(tabsPackage.onClickStill, pause_time >= 0 ? pause_time : -pause_time);
     });
   }
   function set_dimensions(width, height) {
-    enqueue(function () {
-      return updateDimensions(width, height);
-    });
+    enqueue(() => updateDimensions(width, height));
   }
   function set_fps(fps) {
-    enqueue(function () {
-      return updateFPS(fps);
-    });
+    enqueue(() => updateFPS(fps));
   }
   function set_volume(volume) {
-    enqueue(function () {
-      return updateVolume(Math.max(0, Math.min(100, volume) / 100));
-    });
+    enqueue(() => updateVolume(Math.max(0, Math.min(100, volume) / 100)));
   }
   function use_local_file() {
-    inputFeed = InputFeed.Local;
+    inputFeed = 3;
   }
   function use_image_url(URL) {
-    inputFeed = InputFeed.ImageURL;
+    inputFeed = 1;
     url = URL;
   }
   function use_video_url(URL) {
-    inputFeed = InputFeed.VideoURL;
+    inputFeed = 2;
     url = URL;
   }
   function get_video_time() {
@@ -430,30 +447,5 @@
   function set_loop_count(n) {
     LOOP_COUNT = n;
   }
-  exports.alpha_of = alpha_of;
-  exports.blue_of = blue_of;
-  exports.compose_filter = compose_filter;
-  exports.copy_image = copy_image;
-  exports.get_video_time = get_video_time;
-  exports.green_of = green_of;
-  exports.image_height = image_height;
-  exports.image_width = image_width;
-  exports.install_filter = install_filter;
-  exports.keep_aspect_ratio = keep_aspect_ratio;
-  exports.pause_at = pause_at;
-  exports.red_of = red_of;
-  exports.reset_filter = reset_filter;
-  exports.set_dimensions = set_dimensions;
-  exports.set_fps = set_fps;
-  exports.set_loop_count = set_loop_count;
-  exports.set_rgba = set_rgba;
-  exports.set_volume = set_volume;
-  exports.start = start;
-  exports.use_image_url = use_image_url;
-  exports.use_local_file = use_local_file;
-  exports.use_video_url = use_video_url;
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  return exports;
-})
+  return __toCommonJS(pix_n_flix_exports);
+}

@@ -1,19 +1,42 @@
-(function () {
-  'use strict';
-  var exports = {};
-  (function () {
-    const env = {};
-    try {
-      if (process) {
-        process.env = Object.assign({}, process.env);
-        Object.assign(process.env, env);
-        return;
-      }
-    } catch (e) {}
-    globalThis.process = {
-      env: env
-    };
-  })();
+function (moduleHelpers) {
+  function require(x) {
+    const result = ({
+      "js-slang/moduleHelpers": moduleHelpers
+    })[x];
+    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
+  }
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all) __defProp(target, name, {
+      get: all[name],
+      enumerable: true
+    });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+        get: () => from[key],
+        enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+      });
+    }
+    return to;
+  };
+  var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
+    value: true
+  }), mod);
+  var binary_tree_exports = {};
+  __export(binary_tree_exports, {
+    entry: () => entry,
+    is_empty_tree: () => is_empty_tree,
+    is_tree: () => is_tree,
+    left_branch: () => left_branch,
+    make_empty_tree: () => make_empty_tree,
+    make_tree: () => make_tree,
+    right_branch: () => right_branch
+  });
   function make_empty_tree() {
     return null;
   }
@@ -30,29 +53,19 @@
     if (Array.isArray(t) && t.length === 2) {
       return t[0];
     }
-    throw new Error(("function entry expects binary tree, received: ").concat(t));
+    throw new Error(`function entry expects binary tree, received: ${t}`);
   }
   function left_branch(t) {
     if (Array.isArray(t) && t.length === 2 && Array.isArray(t[1]) && t[1].length === 2) {
       return t[1][0];
     }
-    throw new Error(("function left_branch expects binary tree, received: ").concat(t));
+    throw new Error(`function left_branch expects binary tree, received: ${t}`);
   }
   function right_branch(t) {
     if (Array.isArray(t) && t.length === 2 && Array.isArray(t[1]) && t[1].length === 2 && Array.isArray(t[1][1]) && t[1][1].length === 2) {
       return t[1][1][0];
     }
-    throw new Error(("function right_branch expects binary tree, received: ").concat(t));
+    throw new Error(`function right_branch expects binary tree, received: ${t}`);
   }
-  exports.entry = entry;
-  exports.is_empty_tree = is_empty_tree;
-  exports.is_tree = is_tree;
-  exports.left_branch = left_branch;
-  exports.make_empty_tree = make_empty_tree;
-  exports.make_tree = make_tree;
-  exports.right_branch = right_branch;
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  return exports;
-})
+  return __toCommonJS(binary_tree_exports);
+}

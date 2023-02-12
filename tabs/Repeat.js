@@ -1,63 +1,64 @@
-(function (React) {
-  'use strict';
-  function _interopDefaultLegacy(e) {
-    return e && typeof e === 'object' && ('default' in e) ? e : {
-      'default': e
-    };
+(function (_react, ReactDOM) {
+  function require(x) {
+    const result = ({
+      "react": _react,
+      "react-dom": ReactDOM
+    })[x];
+    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
   }
-  var React__default = _interopDefaultLegacy(React);
-  (function () {
-    const env = {};
-    try {
-      if (process) {
-        process.env = Object.assign({}, process.env);
-        Object.assign(process.env, env);
-        return;
-      }
-    } catch (e) {}
-    globalThis.process = {
-      env: env
-    };
-  })();
-  var extendStatics = function (d, b) {
-    extendStatics = Object.setPrototypeOf || ({
-      __proto__: []
-    }) instanceof Array && (function (d, b) {
-      d.__proto__ = b;
-    }) || (function (d, b) {
-      for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+  return (() => {
+    var __create = Object.create;
+    var __defProp = Object.defineProperty;
+    var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames = Object.getOwnPropertyNames;
+    var __getProtoOf = Object.getPrototypeOf;
+    var __hasOwnProp = Object.prototype.hasOwnProperty;
+    var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+      get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+    }) : x)(function (x) {
+      if (typeof require !== "undefined") return require.apply(this, arguments);
+      throw new Error('Dynamic require of "' + x + '" is not supported');
     });
-    return extendStatics(d, b);
-  };
-  function __extends(d, b) {
-    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-    extendStatics(d, b);
-    function __() {
-      this.constructor = d;
-    }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-  }
-  var Repeat = (function (_super) {
-    __extends(Repeat, _super);
-    function Repeat() {
-      return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Repeat.prototype.render = function () {
-      return React__default["default"].createElement("div", null, "This is spawned from the repeat package");
-    };
-    return Repeat;
-  })(React__default["default"].PureComponent);
-  var index = {
-    toSpawn: function () {
-      return true;
-    },
-    body: function (debuggerContext) {
-      return React__default["default"].createElement(Repeat, {
-        debuggerContext: debuggerContext
+    var __export = (target, all) => {
+      for (var name in all) __defProp(target, name, {
+        get: all[name],
+        enumerable: true
       });
-    },
-    label: "Repeat Test Tab",
-    iconName: "build"
-  };
-  return index;
+    };
+    var __copyProps = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+        });
+      }
+      return to;
+    };
+    var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+      value: mod,
+      enumerable: true
+    }) : target, mod));
+    var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
+      value: true
+    }), mod);
+    var Repeat_exports = {};
+    __export(Repeat_exports, {
+      default: () => Repeat_default
+    });
+    var import_react = __toESM(__require("react"), 1);
+    var Repeat = class extends import_react.default.PureComponent {
+      render() {
+        return import_react.default.createElement("div", null, "This is spawned from the repeat package");
+      }
+    };
+    var Repeat_default = {
+      toSpawn: () => true,
+      body: debuggerContext => import_react.default.createElement(Repeat, {
+        debuggerContext
+      }),
+      label: "Repeat Test Tab",
+      iconName: "build"
+    };
+    return __toCommonJS(Repeat_exports);
+  })()["default"];
 })

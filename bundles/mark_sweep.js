@@ -1,35 +1,55 @@
-(function () {
-  'use strict';
-  var exports = {};
-  (function () {
-    const env = {};
-    try {
-      if (process) {
-        process.env = Object.assign({}, process.env);
-        Object.assign(process.env, env);
-        return;
-      }
-    } catch (e) {}
-    globalThis.process = {
-      env: env
-    };
-  })();
-  var COMMAND;
-  (function (COMMAND) {
-    COMMAND["FLIP"] = "Flip";
-    COMMAND["PUSH"] = "Push";
-    COMMAND["POP"] = "Pop";
-    COMMAND["COPY"] = "Copy";
-    COMMAND["ASSIGN"] = "Assign";
-    COMMAND["NEW"] = "New";
-    COMMAND["START"] = "Mark and Sweep Start";
-    COMMAND["END"] = "End of Garbage Collector";
-    COMMAND["RESET"] = "Sweep Reset";
-    COMMAND["SHOW_MARKED"] = "Marked Roots";
-    COMMAND["MARK"] = "Mark";
-    COMMAND["SWEEP"] = "Sweep";
-    COMMAND["INIT"] = "Initialize Memory";
-  })(COMMAND || (COMMAND = {}));
+function (moduleHelpers) {
+  function require(x) {
+    const result = ({
+      "js-slang/moduleHelpers": moduleHelpers
+    })[x];
+    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
+  }
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all) __defProp(target, name, {
+      get: all[name],
+      enumerable: true
+    });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+        get: () => from[key],
+        enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+      });
+    }
+    return to;
+  };
+  var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
+    value: true
+  }), mod);
+  var mark_sweep_exports = {};
+  __export(mark_sweep_exports, {
+    addRoots: () => addRoots,
+    allHeap: () => allHeap,
+    endGC: () => endGC,
+    generateMemory: () => generateMemory,
+    init: () => init,
+    initialize_memory: () => initialize_memory,
+    initialize_tag: () => initialize_tag,
+    newAssign: () => newAssign,
+    newCommand: () => newCommand,
+    newGC: () => newGC,
+    newMark: () => newMark,
+    newNew: () => newNew,
+    newPop: () => newPop,
+    newPush: () => newPush,
+    newSweep: () => newSweep,
+    newUpdateSweep: () => newUpdateSweep,
+    showRoot: () => showRoot,
+    showRoots: () => showRoots,
+    updateRoots: () => updateRoots,
+    updateSlotSegment: () => updateSlotSegment
+  });
   var ROW = 10;
   var COLUMN = 32;
   var NODE_SIZE = 0;
@@ -50,15 +70,15 @@
   var ROOTS = [];
   function generateMemory() {
     memoryMatrix = [];
-    for (var i = 0; i < ROW; i += 1) {
+    for (let i = 0; i < ROW; i += 1) {
       memory = [];
-      for (var j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
+      for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
         memory.push(i * COLUMN + j);
       }
       memoryMatrix.push(memory);
     }
-    var obj = {
-      type: COMMAND.INIT,
+    const obj = {
+      type: "Initialize Memory",
       heap: [],
       left: -1,
       right: -1,
@@ -72,14 +92,14 @@
     commandHeap.push(obj);
   }
   function updateRoots(array) {
-    for (var i = 0; i < array.length; i += 1) {
+    for (let i = 0; i < array.length; i += 1) {
       ROOTS.push(array[i]);
     }
   }
   function initialize_memory(memorySize, nodeSize, marked, unmarked) {
     MEMORY_SIZE = memorySize;
     NODE_SIZE = nodeSize;
-    var excess = MEMORY_SIZE % NODE_SIZE;
+    const excess = MEMORY_SIZE % NODE_SIZE;
     MEMORY_SIZE -= excess;
     ROW = MEMORY_SIZE / COLUMN;
     MARKED = marked;
@@ -96,27 +116,24 @@
   function updateFlip() {
     flips.push(commandHeap.length - 1);
   }
-  function newCommand(type, left, right, sizeLeft, sizeRight, heap, description, firstDesc, lastDesc, queue) {
-    if (queue === void 0) {
-      queue = [];
-    }
-    var newType = type;
-    var newLeft = left;
-    var newRight = right;
-    var newSizeLeft = sizeLeft;
-    var newSizeRight = sizeRight;
-    var newDesc = description;
-    var newFirstDesc = firstDesc;
-    var newLastDesc = lastDesc;
+  function newCommand(type, left, right, sizeLeft, sizeRight, heap, description, firstDesc, lastDesc, queue = []) {
+    const newType = type;
+    const newLeft = left;
+    const newRight = right;
+    const newSizeLeft = sizeLeft;
+    const newSizeRight = sizeRight;
+    const newDesc = description;
+    const newFirstDesc = firstDesc;
+    const newLastDesc = lastDesc;
     memory = [];
-    for (var j = 0; j < heap.length; j += 1) {
+    for (let j = 0; j < heap.length; j += 1) {
       memory.push(heap[j]);
     }
-    var newQueue = [];
-    for (var j = 0; j < queue.length; j += 1) {
+    const newQueue = [];
+    for (let j = 0; j < queue.length; j += 1) {
       newQueue.push(queue[j]);
     }
-    var obj = {
+    const obj = {
       type: newType,
       heap: memory,
       left: newLeft,
@@ -131,61 +148,61 @@
     commandHeap.push(obj);
   }
   function newSweep(left, heap) {
-    var newSizeLeft = NODE_SIZE;
-    var desc = ("Freeing node ").concat(left);
-    newCommand(COMMAND.SWEEP, left, -1, newSizeLeft, 0, heap, desc, "freed node", "");
+    const newSizeLeft = NODE_SIZE;
+    const desc = `Freeing node ${left}`;
+    newCommand("Sweep", left, -1, newSizeLeft, 0, heap, desc, "freed node", "");
   }
   function newMark(left, heap, queue) {
-    var newSizeLeft = NODE_SIZE;
-    var desc = ("Marking node ").concat(left, " to be live memory");
-    newCommand(COMMAND.MARK, left, -1, newSizeLeft, 0, heap, desc, "marked node", "", queue);
+    const newSizeLeft = NODE_SIZE;
+    const desc = `Marking node ${left} to be live memory`;
+    newCommand("Mark", left, -1, newSizeLeft, 0, heap, desc, "marked node", "", queue);
   }
   function addRoots(arr) {
-    for (var i = 0; i < arr.length; i += 1) {
+    for (let i = 0; i < arr.length; i += 1) {
       ROOTS.push(arr[i]);
     }
   }
   function showRoot(heap) {
-    var desc = "All root nodes are marked";
-    newCommand(COMMAND.SHOW_MARKED, -1, -1, 0, 0, heap, desc, "", "");
+    const desc = "All root nodes are marked";
+    newCommand("Marked Roots", -1, -1, 0, 0, heap, desc, "", "");
   }
   function showRoots(heap) {
-    for (var i = 0; i < ROOTS.length; i += 1) {
+    for (let i = 0; i < ROOTS.length; i += 1) {
       showRoot(heap);
     }
     ROOTS = [];
   }
   function newUpdateSweep(right, heap) {
-    var desc = ("Set node ").concat(right, " to freelist");
-    newCommand(COMMAND.RESET, -1, right, 0, NODE_SIZE, heap, desc, "free node", "");
+    const desc = `Set node ${right} to freelist`;
+    newCommand("Sweep Reset", -1, right, 0, NODE_SIZE, heap, desc, "free node", "");
   }
   function newPush(left, right, heap) {
-    var desc = ("Push OS update memory ").concat(left, " and ").concat(right, ".");
-    newCommand(COMMAND.PUSH, left, right, 1, 1, heap, desc, "last child address slot", "new child pushed");
+    const desc = `Push OS update memory ${left} and ${right}.`;
+    newCommand("Push", left, right, 1, 1, heap, desc, "last child address slot", "new child pushed");
   }
   function newPop(res, left, right, heap) {
-    var newRes = res;
-    var desc = ("Pop OS from memory ").concat(left, ", with value ").concat(newRes, ".");
-    newCommand(COMMAND.POP, left, right, 1, 1, heap, desc, "popped memory", "last child address slot");
+    const newRes = res;
+    const desc = `Pop OS from memory ${left}, with value ${newRes}.`;
+    newCommand("Pop", left, right, 1, 1, heap, desc, "popped memory", "last child address slot");
   }
   function newAssign(res, left, heap) {
-    var newRes = res;
-    var desc = ("Assign memory [").concat(left, "] with ").concat(newRes, ".");
-    newCommand(COMMAND.ASSIGN, left, -1, 1, 1, heap, desc, "assigned memory", "");
+    const newRes = res;
+    const desc = `Assign memory [${left}] with ${newRes}.`;
+    newCommand("Assign", left, -1, 1, 1, heap, desc, "assigned memory", "");
   }
   function newNew(left, heap) {
-    var newSizeLeft = NODE_SIZE;
-    var desc = ("New node starts in [").concat(left, "].");
-    newCommand(COMMAND.NEW, left, -1, newSizeLeft, 0, heap, desc, "new memory allocated", "");
+    const newSizeLeft = NODE_SIZE;
+    const desc = `New node starts in [${left}].`;
+    newCommand("New", left, -1, newSizeLeft, 0, heap, desc, "new memory allocated", "");
   }
   function newGC(heap) {
-    var desc = "Memory exhausted, start Mark and Sweep Algorithm";
-    newCommand(COMMAND.START, -1, -1, 0, 0, heap, desc, "", "");
+    const desc = "Memory exhausted, start Mark and Sweep Algorithm";
+    newCommand("Mark and Sweep Start", -1, -1, 0, 0, heap, desc, "", "");
     updateFlip();
   }
   function endGC(heap) {
-    var desc = "Result of free memory";
-    newCommand(COMMAND.END, -1, -1, 0, 0, heap, desc, "", "");
+    const desc = "Result of free memory";
+    newCommand("End of Garbage Collector", -1, -1, 0, 0, heap, desc, "", "");
     updateFlip();
   }
   function updateSlotSegment(tag, size, first, last) {
@@ -243,46 +260,21 @@
   }
   function init() {
     return {
-      toReplString: function () {
-        return "<GC REDACTED>";
-      },
-      get_memory_size: get_memory_size,
-      get_memory_heap: get_memory_heap,
-      get_tags: get_tags,
-      get_types: get_types,
-      get_column_size: get_column_size,
-      get_row_size: get_row_size,
-      get_memory_matrix: get_memory_matrix,
-      get_flips: get_flips,
-      get_slots: get_slots,
-      get_command: get_command,
-      get_unmarked: get_unmarked,
-      get_marked: get_marked,
-      get_roots: get_roots
+      toReplString: () => "<GC REDACTED>",
+      get_memory_size,
+      get_memory_heap,
+      get_tags,
+      get_types,
+      get_column_size,
+      get_row_size,
+      get_memory_matrix,
+      get_flips,
+      get_slots,
+      get_command,
+      get_unmarked,
+      get_marked,
+      get_roots
     };
   }
-  exports.addRoots = addRoots;
-  exports.allHeap = allHeap;
-  exports.endGC = endGC;
-  exports.generateMemory = generateMemory;
-  exports.init = init;
-  exports.initialize_memory = initialize_memory;
-  exports.initialize_tag = initialize_tag;
-  exports.newAssign = newAssign;
-  exports.newCommand = newCommand;
-  exports.newGC = newGC;
-  exports.newMark = newMark;
-  exports.newNew = newNew;
-  exports.newPop = newPop;
-  exports.newPush = newPush;
-  exports.newSweep = newSweep;
-  exports.newUpdateSweep = newUpdateSweep;
-  exports.showRoot = showRoot;
-  exports.showRoots = showRoots;
-  exports.updateRoots = updateRoots;
-  exports.updateSlotSegment = updateSlotSegment;
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  return exports;
-})
+  return __toCommonJS(mark_sweep_exports);
+}

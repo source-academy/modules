@@ -1,0 +1,22 @@
+{
+  "addRoots": "<div><h4>addRoots(arr: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "allHeap": "<div><h4>allHeap(newHeap: undefined) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "endGC": "<div><h4>endGC(heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "generateMemory": "<div><h4>generateMemory() → {void}</h4><div class=\"description\">No description available</div></div>",
+  "init": "<div><h4>init() → {undefined}</h4><div class=\"description\">No description available</div></div>",
+  "initialize_memory": "<div><h4>initialize_memory(memorySize: number, nodeSize: any, marked: any, unmarked: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "initialize_tag": "<div><h4>initialize_tag(allTag: undefined, types: undefined) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newAssign": "<div><h4>newAssign(res: any, left: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newCommand": "<div><h4>newCommand(type: any, left: any, right: any, sizeLeft: any, sizeRight: any, heap: any, description: any, firstDesc: any, lastDesc: any, queue: undefined) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newGC": "<div><h4>newGC(heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newMark": "<div><h4>newMark(left: any, heap: any, queue: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newNew": "<div><h4>newNew(left: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newPop": "<div><h4>newPop(res: any, left: any, right: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newPush": "<div><h4>newPush(left: any, right: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newSweep": "<div><h4>newSweep(left: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newUpdateSweep": "<div><h4>newUpdateSweep(right: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "showRoot": "<div><h4>showRoot(heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "showRoots": "<div><h4>showRoots(heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "updateRoots": "<div><h4>updateRoots(array: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "updateSlotSegment": "<div><h4>updateSlotSegment(tag: number, size: number, first: number, last: number) → {void}</h4><div class=\"description\">No description available</div></div>"
+}

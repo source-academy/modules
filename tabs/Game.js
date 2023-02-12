@@ -1,77 +1,72 @@
-(function (React) {
-  'use strict';
-  function _interopDefaultLegacy(e) {
-    return e && typeof e === 'object' && ('default' in e) ? e : {
-      'default': e
-    };
+(function (_react, ReactDOM) {
+  function require(x) {
+    const result = ({
+      "react": _react,
+      "react-dom": ReactDOM
+    })[x];
+    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
   }
-  var React__default = _interopDefaultLegacy(React);
-  (function () {
-    const env = {};
-    try {
-      if (process) {
-        process.env = Object.assign({}, process.env);
-        Object.assign(process.env, env);
-        return;
-      }
-    } catch (e) {}
-    globalThis.process = {
-      env: env
-    };
-  })();
-  var extendStatics = function (d, b) {
-    extendStatics = Object.setPrototypeOf || ({
-      __proto__: []
-    }) instanceof Array && (function (d, b) {
-      d.__proto__ = b;
-    }) || (function (d, b) {
-      for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+  return (() => {
+    var __create = Object.create;
+    var __defProp = Object.defineProperty;
+    var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames = Object.getOwnPropertyNames;
+    var __getProtoOf = Object.getPrototypeOf;
+    var __hasOwnProp = Object.prototype.hasOwnProperty;
+    var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+      get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+    }) : x)(function (x) {
+      if (typeof require !== "undefined") return require.apply(this, arguments);
+      throw new Error('Dynamic require of "' + x + '" is not supported');
     });
-    return extendStatics(d, b);
-  };
-  function __extends(d, b) {
-    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-    extendStatics(d, b);
-    function __() {
-      this.constructor = d;
-    }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-  }
-  var Links;
-  (function (Links) {
-    Links["gameUserGuide"] = "https://github.com/source-academy/modules/wiki/%5Bgame%5D-User-Guide";
-    Links["gameDeveloperDocumentation"] = "https://github.com/source-academy/modules/wiki/%5Bgame%5D-Developer-Documentation";
-    Links["gameAPIDocumentation"] = "https://source-academy.github.io/modules/documentation/modules/game.html";
-  })(Links || (Links = {}));
-  var Game = (function (_super) {
-    __extends(Game, _super);
-    function Game() {
-      return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Game.prototype.render = function () {
-      return React__default["default"].createElement("div", null, "Info: You need to visit the game to see the effect of your program. Remember to save your work first!", React__default["default"].createElement("br", null), React__default["default"].createElement("br", null), "You may find the game module", " ", React__default["default"].createElement("a", {
-        href: Links.gameAPIDocumentation,
-        rel: "noopener noreferrer",
-        target: "_blank"
-      }, "documentation", " "), "and", " ", React__default["default"].createElement("a", {
-        href: Links.gameUserGuide,
-        rel: "noopener noreferrer",
-        target: "_blank"
-      }, "user guide", " "), "useful.");
-    };
-    return Game;
-  })(React__default["default"].PureComponent);
-  var index = {
-    toSpawn: function () {
-      return true;
-    },
-    body: function (debuggerContext) {
-      return React__default["default"].createElement(Game, {
-        debuggerContext: debuggerContext
+    var __export = (target, all) => {
+      for (var name in all) __defProp(target, name, {
+        get: all[name],
+        enumerable: true
       });
-    },
-    label: "Game Info Tab",
-    iconName: "info-sign"
-  };
-  return index;
+    };
+    var __copyProps = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+        });
+      }
+      return to;
+    };
+    var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+      value: mod,
+      enumerable: true
+    }) : target, mod));
+    var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
+      value: true
+    }), mod);
+    var Game_exports = {};
+    __export(Game_exports, {
+      default: () => Game_default
+    });
+    var import_react = __toESM(__require("react"), 1);
+    var Game = class extends import_react.default.PureComponent {
+      render() {
+        return import_react.default.createElement("div", null, "Info: You need to visit the game to see the effect of your program. Remember to save your work first!", import_react.default.createElement("br", null), import_react.default.createElement("br", null), "You may find the game module", " ", import_react.default.createElement("a", {
+          href: "https://source-academy.github.io/modules/documentation/modules/game.html",
+          rel: "noopener noreferrer",
+          target: "_blank"
+        }, "documentation", " "), "and", " ", import_react.default.createElement("a", {
+          href: "https://github.com/source-academy/modules/wiki/%5Bgame%5D-User-Guide",
+          rel: "noopener noreferrer",
+          target: "_blank"
+        }, "user guide", " "), "useful.");
+      }
+    };
+    var Game_default = {
+      toSpawn: () => true,
+      body: debuggerContext => import_react.default.createElement(Game, {
+        debuggerContext
+      }),
+      label: "Game Info Tab",
+      iconName: "info-sign"
+    };
+    return __toCommonJS(Game_exports);
+  })()["default"];
 })

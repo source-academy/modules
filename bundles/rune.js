@@ -1,39 +1,95 @@
-(function (moduleHelpers) {
-  'use strict';
-  var exports = {};
-  (function () {
-    const env = {};
-    try {
-      if (process) {
-        process.env = Object.assign({}, process.env);
-        Object.assign(process.env, env);
-        return;
-      }
-    } catch (e) {}
-    globalThis.process = {
-      env: env
-    };
-  })();
-  var extendStatics = function (d, b) {
-    extendStatics = Object.setPrototypeOf || ({
-      __proto__: []
-    }) instanceof Array && (function (d, b) {
-      d.__proto__ = b;
-    }) || (function (d, b) {
-      for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
-    });
-    return extendStatics(d, b);
-  };
-  function __extends(d, b) {
-    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-    extendStatics(d, b);
-    function __() {
-      this.constructor = d;
-    }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+function (moduleHelpers) {
+  function require(x) {
+    const result = ({
+      "js-slang/moduleHelpers": moduleHelpers
+    })[x];
+    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
   }
-  var EPSILON = 0.000001;
-  var ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function (x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw new Error('Dynamic require of "' + x + '" is not supported');
+  });
+  var __export = (target, all) => {
+    for (var name in all) __defProp(target, name, {
+      get: all[name],
+      enumerable: true
+    });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+        get: () => from[key],
+        enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+      });
+    }
+    return to;
+  };
+  var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
+    value: true
+  }), mod);
+  var rune_exports = {};
+  __export(rune_exports, {
+    anaglyph: () => anaglyph,
+    animate_anaglyph: () => animate_anaglyph,
+    animate_rune: () => animate_rune,
+    beside: () => beside,
+    beside_frac: () => beside_frac,
+    black: () => black,
+    blank: () => blank,
+    blue: () => blue,
+    brown: () => brown,
+    circle: () => circle,
+    color: () => color,
+    corner: () => corner,
+    flip_horiz: () => flip_horiz,
+    flip_vert: () => flip_vert,
+    from_url: () => from_url,
+    green: () => green,
+    heart: () => heart,
+    hollusion: () => hollusion,
+    hollusion_magnitude: () => hollusion_magnitude,
+    indigo: () => indigo,
+    make_cross: () => make_cross,
+    nova: () => nova,
+    orange: () => orange,
+    overlay: () => overlay,
+    overlay_frac: () => overlay_frac,
+    pentagram: () => pentagram,
+    pink: () => pink,
+    purple: () => purple,
+    quarter_turn_left: () => quarter_turn_left,
+    quarter_turn_right: () => quarter_turn_right,
+    random_color: () => random_color,
+    rcross: () => rcross,
+    red: () => red,
+    repeat_pattern: () => repeat_pattern,
+    ribbon: () => ribbon,
+    rotate: () => rotate2,
+    sail: () => sail,
+    scale: () => scale3,
+    scale_independent: () => scale_independent,
+    show: () => show,
+    square: () => square,
+    stack: () => stack,
+    stack_frac: () => stack_frac,
+    stackn: () => stackn,
+    translate: () => translate2,
+    triangle: () => triangle,
+    turn_upside_down: () => turn_upside_down,
+    white: () => white,
+    yellow: () => yellow
+  });
+  var import_moduleHelpers = __require("js-slang/moduleHelpers");
+  var EPSILON = 1e-6;
+  var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
+  var RANDOM = Math.random;
+  var degree = Math.PI / 180;
   if (!Math.hypot) Math.hypot = function () {
     var y = 0, i = arguments.length;
     while (i--) {
@@ -41,22 +97,61 @@
     }
     return Math.sqrt(y);
   };
-  function create$5() {
-    var out = new ARRAY_TYPE(9);
-    if (ARRAY_TYPE != Float32Array) {
-      out[1] = 0;
-      out[2] = 0;
-      out[3] = 0;
-      out[5] = 0;
-      out[6] = 0;
-      out[7] = 0;
-    }
-    out[0] = 1;
-    out[4] = 1;
-    out[8] = 1;
-    return out;
-  }
-  function create$4() {
+  var mat4_exports = {};
+  __export(mat4_exports, {
+    add: () => add,
+    adjoint: () => adjoint,
+    clone: () => clone,
+    copy: () => copy,
+    create: () => create,
+    determinant: () => determinant,
+    equals: () => equals,
+    exactEquals: () => exactEquals,
+    frob: () => frob,
+    fromQuat: () => fromQuat,
+    fromQuat2: () => fromQuat2,
+    fromRotation: () => fromRotation,
+    fromRotationTranslation: () => fromRotationTranslation,
+    fromRotationTranslationScale: () => fromRotationTranslationScale,
+    fromRotationTranslationScaleOrigin: () => fromRotationTranslationScaleOrigin,
+    fromScaling: () => fromScaling,
+    fromTranslation: () => fromTranslation,
+    fromValues: () => fromValues,
+    fromXRotation: () => fromXRotation,
+    fromYRotation: () => fromYRotation,
+    fromZRotation: () => fromZRotation,
+    frustum: () => frustum,
+    getRotation: () => getRotation,
+    getScaling: () => getScaling,
+    getTranslation: () => getTranslation,
+    identity: () => identity,
+    invert: () => invert,
+    lookAt: () => lookAt,
+    mul: () => mul,
+    multiply: () => multiply,
+    multiplyScalar: () => multiplyScalar,
+    multiplyScalarAndAdd: () => multiplyScalarAndAdd,
+    ortho: () => ortho,
+    orthoNO: () => orthoNO,
+    orthoZO: () => orthoZO,
+    perspective: () => perspective,
+    perspectiveFromFieldOfView: () => perspectiveFromFieldOfView,
+    perspectiveNO: () => perspectiveNO,
+    perspectiveZO: () => perspectiveZO,
+    rotate: () => rotate,
+    rotateX: () => rotateX,
+    rotateY: () => rotateY,
+    rotateZ: () => rotateZ,
+    scale: () => scale,
+    set: () => set,
+    str: () => str,
+    sub: () => sub,
+    subtract: () => subtract,
+    targetTo: () => targetTo,
+    translate: () => translate,
+    transpose: () => transpose
+  });
+  function create() {
     var out = new ARRAY_TYPE(16);
     if (ARRAY_TYPE != Float32Array) {
       out[1] = 0;
@@ -98,6 +193,64 @@
     out[15] = a[15];
     return out;
   }
+  function copy(out, a) {
+    out[0] = a[0];
+    out[1] = a[1];
+    out[2] = a[2];
+    out[3] = a[3];
+    out[4] = a[4];
+    out[5] = a[5];
+    out[6] = a[6];
+    out[7] = a[7];
+    out[8] = a[8];
+    out[9] = a[9];
+    out[10] = a[10];
+    out[11] = a[11];
+    out[12] = a[12];
+    out[13] = a[13];
+    out[14] = a[14];
+    out[15] = a[15];
+    return out;
+  }
+  function fromValues(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
+    var out = new ARRAY_TYPE(16);
+    out[0] = m00;
+    out[1] = m01;
+    out[2] = m02;
+    out[3] = m03;
+    out[4] = m10;
+    out[5] = m11;
+    out[6] = m12;
+    out[7] = m13;
+    out[8] = m20;
+    out[9] = m21;
+    out[10] = m22;
+    out[11] = m23;
+    out[12] = m30;
+    out[13] = m31;
+    out[14] = m32;
+    out[15] = m33;
+    return out;
+  }
+  function set(out, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
+    out[0] = m00;
+    out[1] = m01;
+    out[2] = m02;
+    out[3] = m03;
+    out[4] = m10;
+    out[5] = m11;
+    out[6] = m12;
+    out[7] = m13;
+    out[8] = m20;
+    out[9] = m21;
+    out[10] = m22;
+    out[11] = m23;
+    out[12] = m30;
+    out[13] = m31;
+    out[14] = m32;
+    out[15] = m33;
+    return out;
+  }
   function identity(out) {
     out[0] = 1;
     out[1] = 0;
@@ -116,6 +269,125 @@
     out[14] = 0;
     out[15] = 1;
     return out;
+  }
+  function transpose(out, a) {
+    if (out === a) {
+      var a01 = a[1], a02 = a[2], a03 = a[3];
+      var a12 = a[6], a13 = a[7];
+      var a23 = a[11];
+      out[1] = a[4];
+      out[2] = a[8];
+      out[3] = a[12];
+      out[4] = a01;
+      out[6] = a[9];
+      out[7] = a[13];
+      out[8] = a02;
+      out[9] = a12;
+      out[11] = a[14];
+      out[12] = a03;
+      out[13] = a13;
+      out[14] = a23;
+    } else {
+      out[0] = a[0];
+      out[1] = a[4];
+      out[2] = a[8];
+      out[3] = a[12];
+      out[4] = a[1];
+      out[5] = a[5];
+      out[6] = a[9];
+      out[7] = a[13];
+      out[8] = a[2];
+      out[9] = a[6];
+      out[10] = a[10];
+      out[11] = a[14];
+      out[12] = a[3];
+      out[13] = a[7];
+      out[14] = a[11];
+      out[15] = a[15];
+    }
+    return out;
+  }
+  function invert(out, a) {
+    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
+    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
+    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+    var b00 = a00 * a11 - a01 * a10;
+    var b01 = a00 * a12 - a02 * a10;
+    var b02 = a00 * a13 - a03 * a10;
+    var b03 = a01 * a12 - a02 * a11;
+    var b04 = a01 * a13 - a03 * a11;
+    var b05 = a02 * a13 - a03 * a12;
+    var b06 = a20 * a31 - a21 * a30;
+    var b07 = a20 * a32 - a22 * a30;
+    var b08 = a20 * a33 - a23 * a30;
+    var b09 = a21 * a32 - a22 * a31;
+    var b10 = a21 * a33 - a23 * a31;
+    var b11 = a22 * a33 - a23 * a32;
+    var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+    if (!det) {
+      return null;
+    }
+    det = 1 / det;
+    out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+    out[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+    out[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+    out[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
+    out[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+    out[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+    out[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+    out[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
+    out[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+    out[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+    out[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+    out[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
+    out[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
+    out[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
+    out[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
+    out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
+    return out;
+  }
+  function adjoint(out, a) {
+    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
+    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
+    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+    out[0] = a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22);
+    out[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
+    out[2] = a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12);
+    out[3] = -(a01 * (a12 * a23 - a13 * a22) - a11 * (a02 * a23 - a03 * a22) + a21 * (a02 * a13 - a03 * a12));
+    out[4] = -(a10 * (a22 * a33 - a23 * a32) - a20 * (a12 * a33 - a13 * a32) + a30 * (a12 * a23 - a13 * a22));
+    out[5] = a00 * (a22 * a33 - a23 * a32) - a20 * (a02 * a33 - a03 * a32) + a30 * (a02 * a23 - a03 * a22);
+    out[6] = -(a00 * (a12 * a33 - a13 * a32) - a10 * (a02 * a33 - a03 * a32) + a30 * (a02 * a13 - a03 * a12));
+    out[7] = a00 * (a12 * a23 - a13 * a22) - a10 * (a02 * a23 - a03 * a22) + a20 * (a02 * a13 - a03 * a12);
+    out[8] = a10 * (a21 * a33 - a23 * a31) - a20 * (a11 * a33 - a13 * a31) + a30 * (a11 * a23 - a13 * a21);
+    out[9] = -(a00 * (a21 * a33 - a23 * a31) - a20 * (a01 * a33 - a03 * a31) + a30 * (a01 * a23 - a03 * a21));
+    out[10] = a00 * (a11 * a33 - a13 * a31) - a10 * (a01 * a33 - a03 * a31) + a30 * (a01 * a13 - a03 * a11);
+    out[11] = -(a00 * (a11 * a23 - a13 * a21) - a10 * (a01 * a23 - a03 * a21) + a20 * (a01 * a13 - a03 * a11));
+    out[12] = -(a10 * (a21 * a32 - a22 * a31) - a20 * (a11 * a32 - a12 * a31) + a30 * (a11 * a22 - a12 * a21));
+    out[13] = a00 * (a21 * a32 - a22 * a31) - a20 * (a01 * a32 - a02 * a31) + a30 * (a01 * a22 - a02 * a21);
+    out[14] = -(a00 * (a11 * a32 - a12 * a31) - a10 * (a01 * a32 - a02 * a31) + a30 * (a01 * a12 - a02 * a11));
+    out[15] = a00 * (a11 * a22 - a12 * a21) - a10 * (a01 * a22 - a02 * a21) + a20 * (a01 * a12 - a02 * a11);
+    return out;
+  }
+  function determinant(a) {
+    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
+    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
+    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+    var b00 = a00 * a11 - a01 * a10;
+    var b01 = a00 * a12 - a02 * a10;
+    var b02 = a00 * a13 - a03 * a10;
+    var b03 = a01 * a12 - a02 * a11;
+    var b04 = a01 * a13 - a03 * a11;
+    var b05 = a02 * a13 - a03 * a12;
+    var b06 = a20 * a31 - a21 * a30;
+    var b07 = a20 * a32 - a22 * a30;
+    var b08 = a20 * a33 - a23 * a30;
+    var b09 = a21 * a32 - a22 * a31;
+    var b10 = a21 * a33 - a23 * a31;
+    var b11 = a22 * a33 - a23 * a32;
+    return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
   }
   function multiply(out, a, b) {
     var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
@@ -153,7 +425,7 @@
     out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
     return out;
   }
-  function translate$1(out, a, v) {
+  function translate(out, a, v) {
     var x = v[0], y = v[1], z = v[2];
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
@@ -195,7 +467,7 @@
     }
     return out;
   }
-  function scale$1(out, a, v) {
+  function scale(out, a, v) {
     var x = v[0], y = v[1], z = v[2];
     out[0] = a[0] * x;
     out[1] = a[1] * x;
@@ -213,6 +485,129 @@
     out[13] = a[13];
     out[14] = a[14];
     out[15] = a[15];
+    return out;
+  }
+  function rotate(out, a, rad, axis) {
+    var x = axis[0], y = axis[1], z = axis[2];
+    var len2 = Math.hypot(x, y, z);
+    var s, c, t;
+    var a00, a01, a02, a03;
+    var a10, a11, a12, a13;
+    var a20, a21, a22, a23;
+    var b00, b01, b02;
+    var b10, b11, b12;
+    var b20, b21, b22;
+    if (len2 < EPSILON) {
+      return null;
+    }
+    len2 = 1 / len2;
+    x *= len2;
+    y *= len2;
+    z *= len2;
+    s = Math.sin(rad);
+    c = Math.cos(rad);
+    t = 1 - c;
+    a00 = a[0];
+    a01 = a[1];
+    a02 = a[2];
+    a03 = a[3];
+    a10 = a[4];
+    a11 = a[5];
+    a12 = a[6];
+    a13 = a[7];
+    a20 = a[8];
+    a21 = a[9];
+    a22 = a[10];
+    a23 = a[11];
+    b00 = x * x * t + c;
+    b01 = y * x * t + z * s;
+    b02 = z * x * t - y * s;
+    b10 = x * y * t - z * s;
+    b11 = y * y * t + c;
+    b12 = z * y * t + x * s;
+    b20 = x * z * t + y * s;
+    b21 = y * z * t - x * s;
+    b22 = z * z * t + c;
+    out[0] = a00 * b00 + a10 * b01 + a20 * b02;
+    out[1] = a01 * b00 + a11 * b01 + a21 * b02;
+    out[2] = a02 * b00 + a12 * b01 + a22 * b02;
+    out[3] = a03 * b00 + a13 * b01 + a23 * b02;
+    out[4] = a00 * b10 + a10 * b11 + a20 * b12;
+    out[5] = a01 * b10 + a11 * b11 + a21 * b12;
+    out[6] = a02 * b10 + a12 * b11 + a22 * b12;
+    out[7] = a03 * b10 + a13 * b11 + a23 * b12;
+    out[8] = a00 * b20 + a10 * b21 + a20 * b22;
+    out[9] = a01 * b20 + a11 * b21 + a21 * b22;
+    out[10] = a02 * b20 + a12 * b21 + a22 * b22;
+    out[11] = a03 * b20 + a13 * b21 + a23 * b22;
+    if (a !== out) {
+      out[12] = a[12];
+      out[13] = a[13];
+      out[14] = a[14];
+      out[15] = a[15];
+    }
+    return out;
+  }
+  function rotateX(out, a, rad) {
+    var s = Math.sin(rad);
+    var c = Math.cos(rad);
+    var a10 = a[4];
+    var a11 = a[5];
+    var a12 = a[6];
+    var a13 = a[7];
+    var a20 = a[8];
+    var a21 = a[9];
+    var a22 = a[10];
+    var a23 = a[11];
+    if (a !== out) {
+      out[0] = a[0];
+      out[1] = a[1];
+      out[2] = a[2];
+      out[3] = a[3];
+      out[12] = a[12];
+      out[13] = a[13];
+      out[14] = a[14];
+      out[15] = a[15];
+    }
+    out[4] = a10 * c + a20 * s;
+    out[5] = a11 * c + a21 * s;
+    out[6] = a12 * c + a22 * s;
+    out[7] = a13 * c + a23 * s;
+    out[8] = a20 * c - a10 * s;
+    out[9] = a21 * c - a11 * s;
+    out[10] = a22 * c - a12 * s;
+    out[11] = a23 * c - a13 * s;
+    return out;
+  }
+  function rotateY(out, a, rad) {
+    var s = Math.sin(rad);
+    var c = Math.cos(rad);
+    var a00 = a[0];
+    var a01 = a[1];
+    var a02 = a[2];
+    var a03 = a[3];
+    var a20 = a[8];
+    var a21 = a[9];
+    var a22 = a[10];
+    var a23 = a[11];
+    if (a !== out) {
+      out[4] = a[4];
+      out[5] = a[5];
+      out[6] = a[6];
+      out[7] = a[7];
+      out[12] = a[12];
+      out[13] = a[13];
+      out[14] = a[14];
+      out[15] = a[15];
+    }
+    out[0] = a00 * c - a20 * s;
+    out[1] = a01 * c - a21 * s;
+    out[2] = a02 * c - a22 * s;
+    out[3] = a03 * c - a23 * s;
+    out[8] = a00 * s + a20 * c;
+    out[9] = a01 * s + a21 * c;
+    out[10] = a02 * s + a22 * c;
+    out[11] = a03 * s + a23 * c;
     return out;
   }
   function rotateZ(out, a, rad) {
@@ -246,6 +641,466 @@
     out[7] = a13 * c - a03 * s;
     return out;
   }
+  function fromTranslation(out, v) {
+    out[0] = 1;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = 1;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = 0;
+    out[10] = 1;
+    out[11] = 0;
+    out[12] = v[0];
+    out[13] = v[1];
+    out[14] = v[2];
+    out[15] = 1;
+    return out;
+  }
+  function fromScaling(out, v) {
+    out[0] = v[0];
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = v[1];
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = 0;
+    out[10] = v[2];
+    out[11] = 0;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = 0;
+    out[15] = 1;
+    return out;
+  }
+  function fromRotation(out, rad, axis) {
+    var x = axis[0], y = axis[1], z = axis[2];
+    var len2 = Math.hypot(x, y, z);
+    var s, c, t;
+    if (len2 < EPSILON) {
+      return null;
+    }
+    len2 = 1 / len2;
+    x *= len2;
+    y *= len2;
+    z *= len2;
+    s = Math.sin(rad);
+    c = Math.cos(rad);
+    t = 1 - c;
+    out[0] = x * x * t + c;
+    out[1] = y * x * t + z * s;
+    out[2] = z * x * t - y * s;
+    out[3] = 0;
+    out[4] = x * y * t - z * s;
+    out[5] = y * y * t + c;
+    out[6] = z * y * t + x * s;
+    out[7] = 0;
+    out[8] = x * z * t + y * s;
+    out[9] = y * z * t - x * s;
+    out[10] = z * z * t + c;
+    out[11] = 0;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = 0;
+    out[15] = 1;
+    return out;
+  }
+  function fromXRotation(out, rad) {
+    var s = Math.sin(rad);
+    var c = Math.cos(rad);
+    out[0] = 1;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = c;
+    out[6] = s;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = -s;
+    out[10] = c;
+    out[11] = 0;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = 0;
+    out[15] = 1;
+    return out;
+  }
+  function fromYRotation(out, rad) {
+    var s = Math.sin(rad);
+    var c = Math.cos(rad);
+    out[0] = c;
+    out[1] = 0;
+    out[2] = -s;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = 1;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = s;
+    out[9] = 0;
+    out[10] = c;
+    out[11] = 0;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = 0;
+    out[15] = 1;
+    return out;
+  }
+  function fromZRotation(out, rad) {
+    var s = Math.sin(rad);
+    var c = Math.cos(rad);
+    out[0] = c;
+    out[1] = s;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = -s;
+    out[5] = c;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = 0;
+    out[10] = 1;
+    out[11] = 0;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = 0;
+    out[15] = 1;
+    return out;
+  }
+  function fromRotationTranslation(out, q, v) {
+    var x = q[0], y = q[1], z = q[2], w = q[3];
+    var x2 = x + x;
+    var y2 = y + y;
+    var z2 = z + z;
+    var xx = x * x2;
+    var xy = x * y2;
+    var xz = x * z2;
+    var yy = y * y2;
+    var yz = y * z2;
+    var zz = z * z2;
+    var wx = w * x2;
+    var wy = w * y2;
+    var wz = w * z2;
+    out[0] = 1 - (yy + zz);
+    out[1] = xy + wz;
+    out[2] = xz - wy;
+    out[3] = 0;
+    out[4] = xy - wz;
+    out[5] = 1 - (xx + zz);
+    out[6] = yz + wx;
+    out[7] = 0;
+    out[8] = xz + wy;
+    out[9] = yz - wx;
+    out[10] = 1 - (xx + yy);
+    out[11] = 0;
+    out[12] = v[0];
+    out[13] = v[1];
+    out[14] = v[2];
+    out[15] = 1;
+    return out;
+  }
+  function fromQuat2(out, a) {
+    var translation = new ARRAY_TYPE(3);
+    var bx = -a[0], by = -a[1], bz = -a[2], bw = a[3], ax = a[4], ay = a[5], az = a[6], aw = a[7];
+    var magnitude = bx * bx + by * by + bz * bz + bw * bw;
+    if (magnitude > 0) {
+      translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2 / magnitude;
+      translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2 / magnitude;
+      translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2 / magnitude;
+    } else {
+      translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2;
+      translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
+      translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
+    }
+    fromRotationTranslation(out, a, translation);
+    return out;
+  }
+  function getTranslation(out, mat) {
+    out[0] = mat[12];
+    out[1] = mat[13];
+    out[2] = mat[14];
+    return out;
+  }
+  function getScaling(out, mat) {
+    var m11 = mat[0];
+    var m12 = mat[1];
+    var m13 = mat[2];
+    var m21 = mat[4];
+    var m22 = mat[5];
+    var m23 = mat[6];
+    var m31 = mat[8];
+    var m32 = mat[9];
+    var m33 = mat[10];
+    out[0] = Math.hypot(m11, m12, m13);
+    out[1] = Math.hypot(m21, m22, m23);
+    out[2] = Math.hypot(m31, m32, m33);
+    return out;
+  }
+  function getRotation(out, mat) {
+    var scaling = new ARRAY_TYPE(3);
+    getScaling(scaling, mat);
+    var is1 = 1 / scaling[0];
+    var is2 = 1 / scaling[1];
+    var is3 = 1 / scaling[2];
+    var sm11 = mat[0] * is1;
+    var sm12 = mat[1] * is2;
+    var sm13 = mat[2] * is3;
+    var sm21 = mat[4] * is1;
+    var sm22 = mat[5] * is2;
+    var sm23 = mat[6] * is3;
+    var sm31 = mat[8] * is1;
+    var sm32 = mat[9] * is2;
+    var sm33 = mat[10] * is3;
+    var trace = sm11 + sm22 + sm33;
+    var S = 0;
+    if (trace > 0) {
+      S = Math.sqrt(trace + 1) * 2;
+      out[3] = 0.25 * S;
+      out[0] = (sm23 - sm32) / S;
+      out[1] = (sm31 - sm13) / S;
+      out[2] = (sm12 - sm21) / S;
+    } else if (sm11 > sm22 && sm11 > sm33) {
+      S = Math.sqrt(1 + sm11 - sm22 - sm33) * 2;
+      out[3] = (sm23 - sm32) / S;
+      out[0] = 0.25 * S;
+      out[1] = (sm12 + sm21) / S;
+      out[2] = (sm31 + sm13) / S;
+    } else if (sm22 > sm33) {
+      S = Math.sqrt(1 + sm22 - sm11 - sm33) * 2;
+      out[3] = (sm31 - sm13) / S;
+      out[0] = (sm12 + sm21) / S;
+      out[1] = 0.25 * S;
+      out[2] = (sm23 + sm32) / S;
+    } else {
+      S = Math.sqrt(1 + sm33 - sm11 - sm22) * 2;
+      out[3] = (sm12 - sm21) / S;
+      out[0] = (sm31 + sm13) / S;
+      out[1] = (sm23 + sm32) / S;
+      out[2] = 0.25 * S;
+    }
+    return out;
+  }
+  function fromRotationTranslationScale(out, q, v, s) {
+    var x = q[0], y = q[1], z = q[2], w = q[3];
+    var x2 = x + x;
+    var y2 = y + y;
+    var z2 = z + z;
+    var xx = x * x2;
+    var xy = x * y2;
+    var xz = x * z2;
+    var yy = y * y2;
+    var yz = y * z2;
+    var zz = z * z2;
+    var wx = w * x2;
+    var wy = w * y2;
+    var wz = w * z2;
+    var sx = s[0];
+    var sy = s[1];
+    var sz = s[2];
+    out[0] = (1 - (yy + zz)) * sx;
+    out[1] = (xy + wz) * sx;
+    out[2] = (xz - wy) * sx;
+    out[3] = 0;
+    out[4] = (xy - wz) * sy;
+    out[5] = (1 - (xx + zz)) * sy;
+    out[6] = (yz + wx) * sy;
+    out[7] = 0;
+    out[8] = (xz + wy) * sz;
+    out[9] = (yz - wx) * sz;
+    out[10] = (1 - (xx + yy)) * sz;
+    out[11] = 0;
+    out[12] = v[0];
+    out[13] = v[1];
+    out[14] = v[2];
+    out[15] = 1;
+    return out;
+  }
+  function fromRotationTranslationScaleOrigin(out, q, v, s, o) {
+    var x = q[0], y = q[1], z = q[2], w = q[3];
+    var x2 = x + x;
+    var y2 = y + y;
+    var z2 = z + z;
+    var xx = x * x2;
+    var xy = x * y2;
+    var xz = x * z2;
+    var yy = y * y2;
+    var yz = y * z2;
+    var zz = z * z2;
+    var wx = w * x2;
+    var wy = w * y2;
+    var wz = w * z2;
+    var sx = s[0];
+    var sy = s[1];
+    var sz = s[2];
+    var ox = o[0];
+    var oy = o[1];
+    var oz = o[2];
+    var out0 = (1 - (yy + zz)) * sx;
+    var out1 = (xy + wz) * sx;
+    var out2 = (xz - wy) * sx;
+    var out4 = (xy - wz) * sy;
+    var out5 = (1 - (xx + zz)) * sy;
+    var out6 = (yz + wx) * sy;
+    var out8 = (xz + wy) * sz;
+    var out9 = (yz - wx) * sz;
+    var out10 = (1 - (xx + yy)) * sz;
+    out[0] = out0;
+    out[1] = out1;
+    out[2] = out2;
+    out[3] = 0;
+    out[4] = out4;
+    out[5] = out5;
+    out[6] = out6;
+    out[7] = 0;
+    out[8] = out8;
+    out[9] = out9;
+    out[10] = out10;
+    out[11] = 0;
+    out[12] = v[0] + ox - (out0 * ox + out4 * oy + out8 * oz);
+    out[13] = v[1] + oy - (out1 * ox + out5 * oy + out9 * oz);
+    out[14] = v[2] + oz - (out2 * ox + out6 * oy + out10 * oz);
+    out[15] = 1;
+    return out;
+  }
+  function fromQuat(out, q) {
+    var x = q[0], y = q[1], z = q[2], w = q[3];
+    var x2 = x + x;
+    var y2 = y + y;
+    var z2 = z + z;
+    var xx = x * x2;
+    var yx = y * x2;
+    var yy = y * y2;
+    var zx = z * x2;
+    var zy = z * y2;
+    var zz = z * z2;
+    var wx = w * x2;
+    var wy = w * y2;
+    var wz = w * z2;
+    out[0] = 1 - yy - zz;
+    out[1] = yx + wz;
+    out[2] = zx - wy;
+    out[3] = 0;
+    out[4] = yx - wz;
+    out[5] = 1 - xx - zz;
+    out[6] = zy + wx;
+    out[7] = 0;
+    out[8] = zx + wy;
+    out[9] = zy - wx;
+    out[10] = 1 - xx - yy;
+    out[11] = 0;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = 0;
+    out[15] = 1;
+    return out;
+  }
+  function frustum(out, left, right, bottom, top, near, far) {
+    var rl = 1 / (right - left);
+    var tb = 1 / (top - bottom);
+    var nf = 1 / (near - far);
+    out[0] = near * 2 * rl;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = near * 2 * tb;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = (right + left) * rl;
+    out[9] = (top + bottom) * tb;
+    out[10] = (far + near) * nf;
+    out[11] = -1;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = far * near * 2 * nf;
+    out[15] = 0;
+    return out;
+  }
+  function perspectiveNO(out, fovy, aspect, near, far) {
+    var f = 1 / Math.tan(fovy / 2), nf;
+    out[0] = f / aspect;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = f;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = 0;
+    out[11] = -1;
+    out[12] = 0;
+    out[13] = 0;
+    out[15] = 0;
+    if (far != null && far !== Infinity) {
+      nf = 1 / (near - far);
+      out[10] = (far + near) * nf;
+      out[14] = 2 * far * near * nf;
+    } else {
+      out[10] = -1;
+      out[14] = -2 * near;
+    }
+    return out;
+  }
+  var perspective = perspectiveNO;
+  function perspectiveZO(out, fovy, aspect, near, far) {
+    var f = 1 / Math.tan(fovy / 2), nf;
+    out[0] = f / aspect;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = f;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = 0;
+    out[11] = -1;
+    out[12] = 0;
+    out[13] = 0;
+    out[15] = 0;
+    if (far != null && far !== Infinity) {
+      nf = 1 / (near - far);
+      out[10] = far * nf;
+      out[14] = far * near * nf;
+    } else {
+      out[10] = -1;
+      out[14] = -near;
+    }
+    return out;
+  }
+  function perspectiveFromFieldOfView(out, fov, near, far) {
+    var upTan = Math.tan(fov.upDegrees * Math.PI / 180);
+    var downTan = Math.tan(fov.downDegrees * Math.PI / 180);
+    var leftTan = Math.tan(fov.leftDegrees * Math.PI / 180);
+    var rightTan = Math.tan(fov.rightDegrees * Math.PI / 180);
+    var xScale = 2 / (leftTan + rightTan);
+    var yScale = 2 / (upTan + downTan);
+    out[0] = xScale;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = yScale;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = -((leftTan - rightTan) * xScale * 0.5);
+    out[9] = (upTan - downTan) * yScale * 0.5;
+    out[10] = far / (near - far);
+    out[11] = -1;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = far * near / (near - far);
+    out[15] = 0;
+    return out;
+  }
   function orthoNO(out, left, right, bottom, top, near, far) {
     var lr = 1 / (left - right);
     var bt = 1 / (bottom - top);
@@ -269,8 +1124,30 @@
     return out;
   }
   var ortho = orthoNO;
+  function orthoZO(out, left, right, bottom, top, near, far) {
+    var lr = 1 / (left - right);
+    var bt = 1 / (bottom - top);
+    var nf = 1 / (near - far);
+    out[0] = -2 * lr;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = -2 * bt;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = 0;
+    out[10] = nf;
+    out[11] = 0;
+    out[12] = (left + right) * lr;
+    out[13] = (top + bottom) * bt;
+    out[14] = near * nf;
+    out[15] = 1;
+    return out;
+  }
   function lookAt(out, eye, center, up) {
-    var x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
+    var x0, x1, x2, y0, y1, y2, z0, z1, z2, len2;
     var eyex = eye[0];
     var eyey = eye[1];
     var eyez = eye[2];
@@ -286,37 +1163,37 @@
     z0 = eyex - centerx;
     z1 = eyey - centery;
     z2 = eyez - centerz;
-    len = 1 / Math.hypot(z0, z1, z2);
-    z0 *= len;
-    z1 *= len;
-    z2 *= len;
+    len2 = 1 / Math.hypot(z0, z1, z2);
+    z0 *= len2;
+    z1 *= len2;
+    z2 *= len2;
     x0 = upy * z2 - upz * z1;
     x1 = upz * z0 - upx * z2;
     x2 = upx * z1 - upy * z0;
-    len = Math.hypot(x0, x1, x2);
-    if (!len) {
+    len2 = Math.hypot(x0, x1, x2);
+    if (!len2) {
       x0 = 0;
       x1 = 0;
       x2 = 0;
     } else {
-      len = 1 / len;
-      x0 *= len;
-      x1 *= len;
-      x2 *= len;
+      len2 = 1 / len2;
+      x0 *= len2;
+      x1 *= len2;
+      x2 *= len2;
     }
     y0 = z1 * x2 - z2 * x1;
     y1 = z2 * x0 - z0 * x2;
     y2 = z0 * x1 - z1 * x0;
-    len = Math.hypot(y0, y1, y2);
-    if (!len) {
+    len2 = Math.hypot(y0, y1, y2);
+    if (!len2) {
       y0 = 0;
       y1 = 0;
       y2 = 0;
     } else {
-      len = 1 / len;
-      y0 *= len;
-      y1 *= len;
-      y2 *= len;
+      len2 = 1 / len2;
+      y0 *= len2;
+      y1 *= len2;
+      y2 *= len2;
     }
     out[0] = x0;
     out[1] = y0;
@@ -336,7 +1213,192 @@
     out[15] = 1;
     return out;
   }
-  function create$3() {
+  function targetTo(out, eye, target, up) {
+    var eyex = eye[0], eyey = eye[1], eyez = eye[2], upx = up[0], upy = up[1], upz = up[2];
+    var z0 = eyex - target[0], z1 = eyey - target[1], z2 = eyez - target[2];
+    var len2 = z0 * z0 + z1 * z1 + z2 * z2;
+    if (len2 > 0) {
+      len2 = 1 / Math.sqrt(len2);
+      z0 *= len2;
+      z1 *= len2;
+      z2 *= len2;
+    }
+    var x0 = upy * z2 - upz * z1, x1 = upz * z0 - upx * z2, x2 = upx * z1 - upy * z0;
+    len2 = x0 * x0 + x1 * x1 + x2 * x2;
+    if (len2 > 0) {
+      len2 = 1 / Math.sqrt(len2);
+      x0 *= len2;
+      x1 *= len2;
+      x2 *= len2;
+    }
+    out[0] = x0;
+    out[1] = x1;
+    out[2] = x2;
+    out[3] = 0;
+    out[4] = z1 * x2 - z2 * x1;
+    out[5] = z2 * x0 - z0 * x2;
+    out[6] = z0 * x1 - z1 * x0;
+    out[7] = 0;
+    out[8] = z0;
+    out[9] = z1;
+    out[10] = z2;
+    out[11] = 0;
+    out[12] = eyex;
+    out[13] = eyey;
+    out[14] = eyez;
+    out[15] = 1;
+    return out;
+  }
+  function str(a) {
+    return "mat4(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ", " + a[6] + ", " + a[7] + ", " + a[8] + ", " + a[9] + ", " + a[10] + ", " + a[11] + ", " + a[12] + ", " + a[13] + ", " + a[14] + ", " + a[15] + ")";
+  }
+  function frob(a) {
+    return Math.hypot(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15]);
+  }
+  function add(out, a, b) {
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
+    out[2] = a[2] + b[2];
+    out[3] = a[3] + b[3];
+    out[4] = a[4] + b[4];
+    out[5] = a[5] + b[5];
+    out[6] = a[6] + b[6];
+    out[7] = a[7] + b[7];
+    out[8] = a[8] + b[8];
+    out[9] = a[9] + b[9];
+    out[10] = a[10] + b[10];
+    out[11] = a[11] + b[11];
+    out[12] = a[12] + b[12];
+    out[13] = a[13] + b[13];
+    out[14] = a[14] + b[14];
+    out[15] = a[15] + b[15];
+    return out;
+  }
+  function subtract(out, a, b) {
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
+    out[2] = a[2] - b[2];
+    out[3] = a[3] - b[3];
+    out[4] = a[4] - b[4];
+    out[5] = a[5] - b[5];
+    out[6] = a[6] - b[6];
+    out[7] = a[7] - b[7];
+    out[8] = a[8] - b[8];
+    out[9] = a[9] - b[9];
+    out[10] = a[10] - b[10];
+    out[11] = a[11] - b[11];
+    out[12] = a[12] - b[12];
+    out[13] = a[13] - b[13];
+    out[14] = a[14] - b[14];
+    out[15] = a[15] - b[15];
+    return out;
+  }
+  function multiplyScalar(out, a, b) {
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
+    out[2] = a[2] * b;
+    out[3] = a[3] * b;
+    out[4] = a[4] * b;
+    out[5] = a[5] * b;
+    out[6] = a[6] * b;
+    out[7] = a[7] * b;
+    out[8] = a[8] * b;
+    out[9] = a[9] * b;
+    out[10] = a[10] * b;
+    out[11] = a[11] * b;
+    out[12] = a[12] * b;
+    out[13] = a[13] * b;
+    out[14] = a[14] * b;
+    out[15] = a[15] * b;
+    return out;
+  }
+  function multiplyScalarAndAdd(out, a, b, scale4) {
+    out[0] = a[0] + b[0] * scale4;
+    out[1] = a[1] + b[1] * scale4;
+    out[2] = a[2] + b[2] * scale4;
+    out[3] = a[3] + b[3] * scale4;
+    out[4] = a[4] + b[4] * scale4;
+    out[5] = a[5] + b[5] * scale4;
+    out[6] = a[6] + b[6] * scale4;
+    out[7] = a[7] + b[7] * scale4;
+    out[8] = a[8] + b[8] * scale4;
+    out[9] = a[9] + b[9] * scale4;
+    out[10] = a[10] + b[10] * scale4;
+    out[11] = a[11] + b[11] * scale4;
+    out[12] = a[12] + b[12] * scale4;
+    out[13] = a[13] + b[13] * scale4;
+    out[14] = a[14] + b[14] * scale4;
+    out[15] = a[15] + b[15] * scale4;
+    return out;
+  }
+  function exactEquals(a, b) {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
+  }
+  function equals(a, b) {
+    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
+    var a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
+    var a8 = a[8], a9 = a[9], a10 = a[10], a11 = a[11];
+    var a12 = a[12], a13 = a[13], a14 = a[14], a15 = a[15];
+    var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
+    var b4 = b[4], b5 = b[5], b6 = b[6], b7 = b[7];
+    var b8 = b[8], b9 = b[9], b10 = b[10], b11 = b[11];
+    var b12 = b[12], b13 = b[13], b14 = b[14], b15 = b[15];
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= EPSILON * Math.max(1, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= EPSILON * Math.max(1, Math.abs(a3), Math.abs(b3)) && Math.abs(a4 - b4) <= EPSILON * Math.max(1, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
+  }
+  var mul = multiply;
+  var sub = subtract;
+  var vec3_exports = {};
+  __export(vec3_exports, {
+    add: () => add2,
+    angle: () => angle,
+    bezier: () => bezier,
+    ceil: () => ceil,
+    clone: () => clone2,
+    copy: () => copy2,
+    create: () => create2,
+    cross: () => cross,
+    dist: () => dist,
+    distance: () => distance,
+    div: () => div,
+    divide: () => divide,
+    dot: () => dot,
+    equals: () => equals2,
+    exactEquals: () => exactEquals2,
+    floor: () => floor,
+    forEach: () => forEach,
+    fromValues: () => fromValues2,
+    hermite: () => hermite,
+    inverse: () => inverse,
+    len: () => len,
+    length: () => length,
+    lerp: () => lerp,
+    max: () => max,
+    min: () => min,
+    mul: () => mul2,
+    multiply: () => multiply2,
+    negate: () => negate,
+    normalize: () => normalize,
+    random: () => random,
+    rotateX: () => rotateX2,
+    rotateY: () => rotateY2,
+    rotateZ: () => rotateZ2,
+    round: () => round,
+    scale: () => scale2,
+    scaleAndAdd: () => scaleAndAdd,
+    set: () => set2,
+    sqrDist: () => sqrDist,
+    sqrLen: () => sqrLen,
+    squaredDistance: () => squaredDistance,
+    squaredLength: () => squaredLength,
+    str: () => str2,
+    sub: () => sub2,
+    subtract: () => subtract2,
+    transformMat3: () => transformMat3,
+    transformMat4: () => transformMat4,
+    transformQuat: () => transformQuat,
+    zero: () => zero
+  });
+  function create2() {
     var out = new ARRAY_TYPE(3);
     if (ARRAY_TYPE != Float32Array) {
       out[0] = 0;
@@ -345,30 +1407,145 @@
     }
     return out;
   }
+  function clone2(a) {
+    var out = new ARRAY_TYPE(3);
+    out[0] = a[0];
+    out[1] = a[1];
+    out[2] = a[2];
+    return out;
+  }
   function length(a) {
     var x = a[0];
     var y = a[1];
     var z = a[2];
     return Math.hypot(x, y, z);
   }
-  function fromValues(x, y, z) {
+  function fromValues2(x, y, z) {
     var out = new ARRAY_TYPE(3);
     out[0] = x;
     out[1] = y;
     out[2] = z;
     return out;
   }
-  function normalize$2(out, a) {
+  function copy2(out, a) {
+    out[0] = a[0];
+    out[1] = a[1];
+    out[2] = a[2];
+    return out;
+  }
+  function set2(out, x, y, z) {
+    out[0] = x;
+    out[1] = y;
+    out[2] = z;
+    return out;
+  }
+  function add2(out, a, b) {
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
+    out[2] = a[2] + b[2];
+    return out;
+  }
+  function subtract2(out, a, b) {
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
+    out[2] = a[2] - b[2];
+    return out;
+  }
+  function multiply2(out, a, b) {
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
+    out[2] = a[2] * b[2];
+    return out;
+  }
+  function divide(out, a, b) {
+    out[0] = a[0] / b[0];
+    out[1] = a[1] / b[1];
+    out[2] = a[2] / b[2];
+    return out;
+  }
+  function ceil(out, a) {
+    out[0] = Math.ceil(a[0]);
+    out[1] = Math.ceil(a[1]);
+    out[2] = Math.ceil(a[2]);
+    return out;
+  }
+  function floor(out, a) {
+    out[0] = Math.floor(a[0]);
+    out[1] = Math.floor(a[1]);
+    out[2] = Math.floor(a[2]);
+    return out;
+  }
+  function min(out, a, b) {
+    out[0] = Math.min(a[0], b[0]);
+    out[1] = Math.min(a[1], b[1]);
+    out[2] = Math.min(a[2], b[2]);
+    return out;
+  }
+  function max(out, a, b) {
+    out[0] = Math.max(a[0], b[0]);
+    out[1] = Math.max(a[1], b[1]);
+    out[2] = Math.max(a[2], b[2]);
+    return out;
+  }
+  function round(out, a) {
+    out[0] = Math.round(a[0]);
+    out[1] = Math.round(a[1]);
+    out[2] = Math.round(a[2]);
+    return out;
+  }
+  function scale2(out, a, b) {
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
+    out[2] = a[2] * b;
+    return out;
+  }
+  function scaleAndAdd(out, a, b, scale4) {
+    out[0] = a[0] + b[0] * scale4;
+    out[1] = a[1] + b[1] * scale4;
+    out[2] = a[2] + b[2] * scale4;
+    return out;
+  }
+  function distance(a, b) {
+    var x = b[0] - a[0];
+    var y = b[1] - a[1];
+    var z = b[2] - a[2];
+    return Math.hypot(x, y, z);
+  }
+  function squaredDistance(a, b) {
+    var x = b[0] - a[0];
+    var y = b[1] - a[1];
+    var z = b[2] - a[2];
+    return x * x + y * y + z * z;
+  }
+  function squaredLength(a) {
     var x = a[0];
     var y = a[1];
     var z = a[2];
-    var len = x * x + y * y + z * z;
-    if (len > 0) {
-      len = 1 / Math.sqrt(len);
+    return x * x + y * y + z * z;
+  }
+  function negate(out, a) {
+    out[0] = -a[0];
+    out[1] = -a[1];
+    out[2] = -a[2];
+    return out;
+  }
+  function inverse(out, a) {
+    out[0] = 1 / a[0];
+    out[1] = 1 / a[1];
+    out[2] = 1 / a[2];
+    return out;
+  }
+  function normalize(out, a) {
+    var x = a[0];
+    var y = a[1];
+    var z = a[2];
+    var len2 = x * x + y * y + z * z;
+    if (len2 > 0) {
+      len2 = 1 / Math.sqrt(len2);
     }
-    out[0] = a[0] * len;
-    out[1] = a[1] * len;
-    out[2] = a[2] * len;
+    out[0] = a[0] * len2;
+    out[1] = a[1] * len2;
+    out[2] = a[2] * len2;
     return out;
   }
   function dot(a, b) {
@@ -382,9 +1559,151 @@
     out[2] = ax * by - ay * bx;
     return out;
   }
+  function lerp(out, a, b, t) {
+    var ax = a[0];
+    var ay = a[1];
+    var az = a[2];
+    out[0] = ax + t * (b[0] - ax);
+    out[1] = ay + t * (b[1] - ay);
+    out[2] = az + t * (b[2] - az);
+    return out;
+  }
+  function hermite(out, a, b, c, d, t) {
+    var factorTimes2 = t * t;
+    var factor1 = factorTimes2 * (2 * t - 3) + 1;
+    var factor2 = factorTimes2 * (t - 2) + t;
+    var factor3 = factorTimes2 * (t - 1);
+    var factor4 = factorTimes2 * (3 - 2 * t);
+    out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
+    out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
+    out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+    return out;
+  }
+  function bezier(out, a, b, c, d, t) {
+    var inverseFactor = 1 - t;
+    var inverseFactorTimesTwo = inverseFactor * inverseFactor;
+    var factorTimes2 = t * t;
+    var factor1 = inverseFactorTimesTwo * inverseFactor;
+    var factor2 = 3 * t * inverseFactorTimesTwo;
+    var factor3 = 3 * factorTimes2 * inverseFactor;
+    var factor4 = factorTimes2 * t;
+    out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
+    out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
+    out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+    return out;
+  }
+  function random(out, scale4) {
+    scale4 = scale4 || 1;
+    var r = RANDOM() * 2 * Math.PI;
+    var z = RANDOM() * 2 - 1;
+    var zScale = Math.sqrt(1 - z * z) * scale4;
+    out[0] = Math.cos(r) * zScale;
+    out[1] = Math.sin(r) * zScale;
+    out[2] = z * scale4;
+    return out;
+  }
+  function transformMat4(out, a, m) {
+    var x = a[0], y = a[1], z = a[2];
+    var w = m[3] * x + m[7] * y + m[11] * z + m[15];
+    w = w || 1;
+    out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
+    out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
+    out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
+    return out;
+  }
+  function transformMat3(out, a, m) {
+    var x = a[0], y = a[1], z = a[2];
+    out[0] = x * m[0] + y * m[3] + z * m[6];
+    out[1] = x * m[1] + y * m[4] + z * m[7];
+    out[2] = x * m[2] + y * m[5] + z * m[8];
+    return out;
+  }
+  function transformQuat(out, a, q) {
+    var qx = q[0], qy = q[1], qz = q[2], qw = q[3];
+    var x = a[0], y = a[1], z = a[2];
+    var uvx = qy * z - qz * y, uvy = qz * x - qx * z, uvz = qx * y - qy * x;
+    var uuvx = qy * uvz - qz * uvy, uuvy = qz * uvx - qx * uvz, uuvz = qx * uvy - qy * uvx;
+    var w2 = qw * 2;
+    uvx *= w2;
+    uvy *= w2;
+    uvz *= w2;
+    uuvx *= 2;
+    uuvy *= 2;
+    uuvz *= 2;
+    out[0] = x + uvx + uuvx;
+    out[1] = y + uvy + uuvy;
+    out[2] = z + uvz + uuvz;
+    return out;
+  }
+  function rotateX2(out, a, b, rad) {
+    var p = [], r = [];
+    p[0] = a[0] - b[0];
+    p[1] = a[1] - b[1];
+    p[2] = a[2] - b[2];
+    r[0] = p[0];
+    r[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
+    r[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad);
+    out[0] = r[0] + b[0];
+    out[1] = r[1] + b[1];
+    out[2] = r[2] + b[2];
+    return out;
+  }
+  function rotateY2(out, a, b, rad) {
+    var p = [], r = [];
+    p[0] = a[0] - b[0];
+    p[1] = a[1] - b[1];
+    p[2] = a[2] - b[2];
+    r[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
+    r[1] = p[1];
+    r[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad);
+    out[0] = r[0] + b[0];
+    out[1] = r[1] + b[1];
+    out[2] = r[2] + b[2];
+    return out;
+  }
+  function rotateZ2(out, a, b, rad) {
+    var p = [], r = [];
+    p[0] = a[0] - b[0];
+    p[1] = a[1] - b[1];
+    p[2] = a[2] - b[2];
+    r[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
+    r[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
+    r[2] = p[2];
+    out[0] = r[0] + b[0];
+    out[1] = r[1] + b[1];
+    out[2] = r[2] + b[2];
+    return out;
+  }
+  function angle(a, b) {
+    var ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2], mag1 = Math.sqrt(ax * ax + ay * ay + az * az), mag2 = Math.sqrt(bx * bx + by * by + bz * bz), mag = mag1 * mag2, cosine = mag && dot(a, b) / mag;
+    return Math.acos(Math.min(Math.max(cosine, -1), 1));
+  }
+  function zero(out) {
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
+    return out;
+  }
+  function str2(a) {
+    return "vec3(" + a[0] + ", " + a[1] + ", " + a[2] + ")";
+  }
+  function exactEquals2(a, b) {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+  }
+  function equals2(a, b) {
+    var a0 = a[0], a1 = a[1], a2 = a[2];
+    var b0 = b[0], b1 = b[1], b2 = b[2];
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= EPSILON * Math.max(1, Math.abs(a2), Math.abs(b2));
+  }
+  var sub2 = subtract2;
+  var mul2 = multiply2;
+  var div = divide;
+  var dist = distance;
+  var sqrDist = squaredDistance;
   var len = length;
-  (function () {
-    var vec = create$3();
+  var sqrLen = squaredLength;
+  var forEach = (function () {
+    var vec = create2();
     return function (a, stride, offset, count, fn, arg) {
       var i, l;
       if (!stride) {
@@ -410,246 +1729,31 @@
       return a;
     };
   })();
-  function create$2() {
-    var out = new ARRAY_TYPE(4);
-    if (ARRAY_TYPE != Float32Array) {
-      out[0] = 0;
-      out[1] = 0;
-      out[2] = 0;
-      out[3] = 0;
-    }
-    return out;
-  }
-  function normalize$1(out, a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
-    var w = a[3];
-    var len = x * x + y * y + z * z + w * w;
-    if (len > 0) {
-      len = 1 / Math.sqrt(len);
-    }
-    out[0] = x * len;
-    out[1] = y * len;
-    out[2] = z * len;
-    out[3] = w * len;
-    return out;
-  }
-  (function () {
-    var vec = create$2();
-    return function (a, stride, offset, count, fn, arg) {
-      var i, l;
-      if (!stride) {
-        stride = 4;
-      }
-      if (!offset) {
-        offset = 0;
-      }
-      if (count) {
-        l = Math.min(count * stride + offset, a.length);
-      } else {
-        l = a.length;
-      }
-      for (i = offset; i < l; i += stride) {
-        vec[0] = a[i];
-        vec[1] = a[i + 1];
-        vec[2] = a[i + 2];
-        vec[3] = a[i + 3];
-        fn(vec, vec, arg);
-        a[i] = vec[0];
-        a[i + 1] = vec[1];
-        a[i + 2] = vec[2];
-        a[i + 3] = vec[3];
-      }
-      return a;
-    };
-  })();
-  function create$1() {
-    var out = new ARRAY_TYPE(4);
-    if (ARRAY_TYPE != Float32Array) {
-      out[0] = 0;
-      out[1] = 0;
-      out[2] = 0;
-    }
-    out[3] = 1;
-    return out;
-  }
-  function setAxisAngle(out, axis, rad) {
-    rad = rad * 0.5;
-    var s = Math.sin(rad);
-    out[0] = s * axis[0];
-    out[1] = s * axis[1];
-    out[2] = s * axis[2];
-    out[3] = Math.cos(rad);
-    return out;
-  }
-  function slerp(out, a, b, t) {
-    var ax = a[0], ay = a[1], az = a[2], aw = a[3];
-    var bx = b[0], by = b[1], bz = b[2], bw = b[3];
-    var omega, cosom, sinom, scale0, scale1;
-    cosom = ax * bx + ay * by + az * bz + aw * bw;
-    if (cosom < 0.0) {
-      cosom = -cosom;
-      bx = -bx;
-      by = -by;
-      bz = -bz;
-      bw = -bw;
-    }
-    if (1.0 - cosom > EPSILON) {
-      omega = Math.acos(cosom);
-      sinom = Math.sin(omega);
-      scale0 = Math.sin((1.0 - t) * omega) / sinom;
-      scale1 = Math.sin(t * omega) / sinom;
-    } else {
-      scale0 = 1.0 - t;
-      scale1 = t;
-    }
-    out[0] = scale0 * ax + scale1 * bx;
-    out[1] = scale0 * ay + scale1 * by;
-    out[2] = scale0 * az + scale1 * bz;
-    out[3] = scale0 * aw + scale1 * bw;
-    return out;
-  }
-  function fromMat3(out, m) {
-    var fTrace = m[0] + m[4] + m[8];
-    var fRoot;
-    if (fTrace > 0.0) {
-      fRoot = Math.sqrt(fTrace + 1.0);
-      out[3] = 0.5 * fRoot;
-      fRoot = 0.5 / fRoot;
-      out[0] = (m[5] - m[7]) * fRoot;
-      out[1] = (m[6] - m[2]) * fRoot;
-      out[2] = (m[1] - m[3]) * fRoot;
-    } else {
-      var i = 0;
-      if (m[4] > m[0]) i = 1;
-      if (m[8] > m[i * 3 + i]) i = 2;
-      var j = (i + 1) % 3;
-      var k = (i + 2) % 3;
-      fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1.0);
-      out[i] = 0.5 * fRoot;
-      fRoot = 0.5 / fRoot;
-      out[3] = (m[j * 3 + k] - m[k * 3 + j]) * fRoot;
-      out[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
-      out[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
-    }
-    return out;
-  }
-  var normalize = normalize$1;
-  (function () {
-    var tmpvec3 = create$3();
-    var xUnitVec3 = fromValues(1, 0, 0);
-    var yUnitVec3 = fromValues(0, 1, 0);
-    return function (out, a, b) {
-      var dot$1 = dot(a, b);
-      if (dot$1 < -0.999999) {
-        cross(tmpvec3, xUnitVec3, a);
-        if (len(tmpvec3) < 0.000001) cross(tmpvec3, yUnitVec3, a);
-        normalize$2(tmpvec3, tmpvec3);
-        setAxisAngle(out, tmpvec3, Math.PI);
-        return out;
-      } else if (dot$1 > 0.999999) {
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 1;
-        return out;
-      } else {
-        cross(tmpvec3, a, b);
-        out[0] = tmpvec3[0];
-        out[1] = tmpvec3[1];
-        out[2] = tmpvec3[2];
-        out[3] = 1 + dot$1;
-        return normalize(out, out);
-      }
-    };
-  })();
-  (function () {
-    var temp1 = create$1();
-    var temp2 = create$1();
-    return function (out, a, b, c, d, t) {
-      slerp(temp1, a, d, t);
-      slerp(temp2, b, c, t);
-      slerp(out, temp1, temp2, 2 * t * (1 - t));
-      return out;
-    };
-  })();
-  (function () {
-    var matr = create$5();
-    return function (out, view, right, up) {
-      matr[0] = right[0];
-      matr[3] = right[1];
-      matr[6] = right[2];
-      matr[1] = up[0];
-      matr[4] = up[1];
-      matr[7] = up[2];
-      matr[2] = -view[0];
-      matr[5] = -view[1];
-      matr[8] = -view[2];
-      return normalize(out, fromMat3(out, matr));
-    };
-  })();
-  function create() {
-    var out = new ARRAY_TYPE(2);
-    if (ARRAY_TYPE != Float32Array) {
-      out[0] = 0;
-      out[1] = 0;
-    }
-    return out;
-  }
-  (function () {
-    var vec = create();
-    return function (a, stride, offset, count, fn, arg) {
-      var i, l;
-      if (!stride) {
-        stride = 2;
-      }
-      if (!offset) {
-        offset = 0;
-      }
-      if (count) {
-        l = Math.min(count * stride + offset, a.length);
-      } else {
-        l = a.length;
-      }
-      for (i = offset; i < l; i += stride) {
-        vec[0] = a[i];
-        vec[1] = a[i + 1];
-        fn(vec, vec, arg);
-        a[i] = vec[0];
-        a[i + 1] = vec[1];
-      }
-      return a;
-    };
-  })();
-  var glAnimation = (function () {
-    function glAnimation(duration, fps) {
+  var glAnimation = class {
+    constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
     }
-    glAnimation.isAnimation = function (obj) {
-      return obj.fps !== undefined;
-    };
-    return glAnimation;
-  })();
+  };
+  glAnimation.isAnimation = obj => obj.fps !== void 0;
   function loadShader(gl, type, source) {
-    var shader = gl.createShader(type);
+    const shader = gl.createShader(type);
     if (!shader) {
       throw new Error("WebGLShader not available.");
     }
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
-    var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+    const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!compiled) {
-      var compilationLog = gl.getShaderInfoLog(shader);
-      throw Error(("Shader compilation failed: ").concat(compilationLog));
+      const compilationLog = gl.getShaderInfoLog(shader);
+      throw Error(`Shader compilation failed: ${compilationLog}`);
     }
     return shader;
   }
   function initShaderProgram(gl, vsSource, fsSource) {
-    var vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
-    var fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
-    var shaderProgram = gl.createProgram();
+    const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+    const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    const shaderProgram = gl.createProgram();
     if (!shaderProgram) {
       throw new Error("Unable to initialize the shader program.");
     }
@@ -659,7 +1763,7 @@
     return shaderProgram;
   }
   function getWebGlFromCanvas(canvas) {
-    var gl = canvas.getContext("webgl");
+    const gl = canvas.getContext("webgl");
     if (!gl) {
       throw Error("Unable to initialize WebGL.");
     }
@@ -670,18 +1774,18 @@
     return gl;
   }
   function initFramebufferObject(gl) {
-    var framebuffer = gl.createFramebuffer();
+    const framebuffer = gl.createFramebuffer();
     if (!framebuffer) {
       throw Error("Failed to create frame buffer object");
     }
-    var texture = gl.createTexture();
+    const texture = gl.createTexture();
     if (!texture) {
       throw Error("Failed to create texture object");
     }
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.drawingBufferWidth, gl.drawingBufferHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    var depthBuffer = gl.createRenderbuffer();
+    const depthBuffer = gl.createRenderbuffer();
     if (!depthBuffer) {
       throw Error("Failed to create renderbuffer object");
     }
@@ -690,40 +1794,81 @@
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
-    var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    const e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
     if (gl.FRAMEBUFFER_COMPLETE !== e) {
-      throw Error(("Frame buffer object is incomplete:").concat(e.toString()));
+      throw Error(`Frame buffer object is incomplete:${e.toString()}`);
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
     gl.bindRenderbuffer(gl.RENDERBUFFER, null);
     return {
-      framebuffer: framebuffer,
-      texture: texture
+      framebuffer,
+      texture
     };
   }
-  var normalVertexShader = "\nattribute vec4 aVertexPosition;\nuniform vec4 uVertexColor;\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\nuniform mat4 uCameraMatrix;\n\nvarying lowp vec4 vColor;\nvarying highp vec2 vTexturePosition;\nvarying lowp float colorFactor;\nvoid main(void) {\n  gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;\n  vColor = uVertexColor;\n\n  // texture position is in [0,1], vertex position is in [-1,1]\n  vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;\n  vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;\n\n  colorFactor = gl_Position.z;\n}\n";
-  var normalFragmentShader = "\nprecision mediump float;\nuniform bool uRenderWithTexture;\nuniform bool uRenderWithDepthColor;\nuniform sampler2D uTexture;\nvarying lowp float colorFactor;\nuniform vec4 uColorFilter;\n\n\nvarying lowp vec4 vColor;\nvarying highp vec2 vTexturePosition;\nvoid main(void) {\n  if (uRenderWithTexture){\n    gl_FragColor = texture2D(uTexture, vTexturePosition);\n  } else {\n    gl_FragColor = vColor;\n  }\n  if (uRenderWithDepthColor){\n    gl_FragColor += (colorFactor + 0.5) * (1.0 - gl_FragColor);\n    gl_FragColor.a = 1.0;\n  }\n  gl_FragColor = uColorFilter * gl_FragColor + 1.0 - uColorFilter;\n  gl_FragColor.a = 1.0;\n}\n";
-  var Rune = (function () {
-    function Rune(vertices, colors, transformMatrix, subRunes, texture, hollusionDistance) {
-      var _this = this;
+  var normalVertexShader = `
+attribute vec4 aVertexPosition;
+uniform vec4 uVertexColor;
+uniform mat4 uModelViewMatrix;
+uniform mat4 uProjectionMatrix;
+uniform mat4 uCameraMatrix;
+
+varying lowp vec4 vColor;
+varying highp vec2 vTexturePosition;
+varying lowp float colorFactor;
+void main(void) {
+  gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
+  vColor = uVertexColor;
+
+  // texture position is in [0,1], vertex position is in [-1,1]
+  vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;
+  vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;
+
+  colorFactor = gl_Position.z;
+}
+`;
+  var normalFragmentShader = `
+precision mediump float;
+uniform bool uRenderWithTexture;
+uniform bool uRenderWithDepthColor;
+uniform sampler2D uTexture;
+varying lowp float colorFactor;
+uniform vec4 uColorFilter;
+
+
+varying lowp vec4 vColor;
+varying highp vec2 vTexturePosition;
+void main(void) {
+  if (uRenderWithTexture){
+    gl_FragColor = texture2D(uTexture, vTexturePosition);
+  } else {
+    gl_FragColor = vColor;
+  }
+  if (uRenderWithDepthColor){
+    gl_FragColor += (colorFactor + 0.5) * (1.0 - gl_FragColor);
+    gl_FragColor.a = 1.0;
+  }
+  gl_FragColor = uColorFilter * gl_FragColor + 1.0 - uColorFilter;
+  gl_FragColor.a = 1.0;
+}
+`;
+  var _Rune = class {
+    constructor(vertices, colors, transformMatrix, subRunes, texture, hollusionDistance) {
       this.vertices = vertices;
       this.colors = colors;
       this.transformMatrix = transformMatrix;
       this.subRunes = subRunes;
       this.texture = texture;
       this.hollusionDistance = hollusionDistance;
-      this.copy = function () {
-        return new Rune(_this.vertices, _this.colors, clone(_this.transformMatrix), _this.subRunes, _this.texture, _this.hollusionDistance);
-      };
-      this.flatten = function () {
-        var runeList = [];
-        var runeTodoList = [_this.copy()];
-        var _loop_1 = function _loop_1() {
-          var runeToExpand = runeTodoList.pop();
-          runeToExpand.subRunes.forEach(function (subRune) {
-            var subRuneCopy = subRune.copy();
-            multiply(subRuneCopy.transformMatrix, runeToExpand.transformMatrix, subRuneCopy.transformMatrix);
+      this.copy = () => new _Rune(this.vertices, this.colors, mat4_exports.clone(this.transformMatrix), this.subRunes, this.texture, this.hollusionDistance);
+      this.flatten = () => {
+        const runeList = [];
+        const runeTodoList = [this.copy()];
+        while (runeTodoList.length !== 0) {
+          const runeToExpand = runeTodoList.pop();
+          runeToExpand.subRunes.forEach(subRune => {
+            const subRuneCopy = subRune.copy();
+            mat4_exports.multiply(subRuneCopy.transformMatrix, runeToExpand.transformMatrix, subRuneCopy.transformMatrix);
             subRuneCopy.hollusionDistance = runeToExpand.hollusionDistance;
             if (runeToExpand.colors !== null) {
               subRuneCopy.colors = runeToExpand.colors;
@@ -734,79 +1879,53 @@
           if (runeToExpand.vertices.length > 0) {
             runeList.push(runeToExpand);
           }
-        };
-        while (runeTodoList.length !== 0) {
-          _loop_1();
         }
         return runeList;
       };
-      this.toReplString = function () {
-        return "<Rune>";
-      };
+      this.toReplString = () => "<Rune>";
     }
-    Rune.of = function (params) {
-      if (params === void 0) {
-        params = {};
-      }
-      var paramGetter = function paramGetter(name, defaultValue) {
-        return params[name] === undefined ? defaultValue() : params[name];
-      };
-      return new Rune(paramGetter("vertices", function () {
-        return new Float32Array();
-      }), paramGetter("colors", function () {
-        return null;
-      }), paramGetter("transformMatrix", create$4), paramGetter("subRunes", function () {
-        return [];
-      }), paramGetter("texture", function () {
-        return null;
-      }), paramGetter("hollusionDistance", function () {
-        return 0.1;
-      }));
-    };
-    return Rune;
-  })();
-  function drawRunesToFrameBuffer(gl, runes, cameraMatrix, colorFilter, framebuffer, depthSwitch) {
-    if (framebuffer === void 0) {
-      framebuffer = null;
-    }
-    if (depthSwitch === void 0) {
-      depthSwitch = false;
-    }
+  };
+  var Rune = _Rune;
+  Rune.of = (params = {}) => {
+    const paramGetter = (name, defaultValue) => params[name] === void 0 ? defaultValue() : params[name];
+    return new _Rune(paramGetter("vertices", () => new Float32Array()), paramGetter("colors", () => null), paramGetter("transformMatrix", mat4_exports.create), paramGetter("subRunes", () => []), paramGetter("texture", () => null), paramGetter("hollusionDistance", () => 0.1));
+  };
+  function drawRunesToFrameBuffer(gl, runes, cameraMatrix, colorFilter, framebuffer = null, depthSwitch = false) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-    var shaderProgram = initShaderProgram(gl, normalVertexShader, normalFragmentShader);
+    const shaderProgram = initShaderProgram(gl, normalVertexShader, normalFragmentShader);
     gl.useProgram(shaderProgram);
     if (gl === null) {
       throw Error("Rendering Context not initialized for drawRune.");
     }
-    var vertexPositionPointer = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-    var vertexColorPointer = gl.getUniformLocation(shaderProgram, "uVertexColor");
-    var vertexColorFilterPt = gl.getUniformLocation(shaderProgram, "uColorFilter");
-    var projectionMatrixPointer = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
-    var cameraMatrixPointer = gl.getUniformLocation(shaderProgram, "uCameraMatrix");
-    var modelViewMatrixPointer = gl.getUniformLocation(shaderProgram, "uModelViewMatrix");
-    var textureSwitchPointer = gl.getUniformLocation(shaderProgram, "uRenderWithTexture");
-    var depthSwitchPointer = gl.getUniformLocation(shaderProgram, "uRenderWithDepthColor");
-    var texturePointer = gl.getUniformLocation(shaderProgram, "uTexture");
+    const vertexPositionPointer = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+    const vertexColorPointer = gl.getUniformLocation(shaderProgram, "uVertexColor");
+    const vertexColorFilterPt = gl.getUniformLocation(shaderProgram, "uColorFilter");
+    const projectionMatrixPointer = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
+    const cameraMatrixPointer = gl.getUniformLocation(shaderProgram, "uCameraMatrix");
+    const modelViewMatrixPointer = gl.getUniformLocation(shaderProgram, "uModelViewMatrix");
+    const textureSwitchPointer = gl.getUniformLocation(shaderProgram, "uRenderWithTexture");
+    const depthSwitchPointer = gl.getUniformLocation(shaderProgram, "uRenderWithDepthColor");
+    const texturePointer = gl.getUniformLocation(shaderProgram, "uTexture");
     gl.uniform1i(depthSwitchPointer, depthSwitch ? 1 : 0);
-    var orthoCam = create$4();
-    ortho(orthoCam, -1, 1, -1, 1, -0.5, 1.5);
+    const orthoCam = mat4_exports.create();
+    mat4_exports.ortho(orthoCam, -1, 1, -1, 1, -0.5, 1.5);
     gl.uniformMatrix4fv(projectionMatrixPointer, false, orthoCam);
     gl.uniformMatrix4fv(cameraMatrixPointer, false, cameraMatrix);
     gl.uniform4fv(vertexColorFilterPt, colorFilter);
-    var loadTexture = function loadTexture(image) {
-      var texture = gl.createTexture();
+    const loadTexture = image => {
+      const texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, texture);
       function isPowerOf2(value) {
         return (value & value - 1) === 0;
       }
-      var level = 0;
-      var internalFormat = gl.RGBA;
-      var width = 1;
-      var height = 1;
-      var border = 0;
-      var srcFormat = gl.RGBA;
-      var srcType = gl.UNSIGNED_BYTE;
-      var pixel = new Uint8Array([0, 0, 255, 255]);
+      const level = 0;
+      const internalFormat = gl.RGBA;
+      const width = 1;
+      const height = 1;
+      const border = 0;
+      const srcFormat = gl.RGBA;
+      const srcType = gl.UNSIGNED_BYTE;
+      const pixel = new Uint8Array([0, 0, 255, 255]);
       gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
@@ -819,8 +1938,8 @@
       }
       return texture;
     };
-    runes.forEach(function (rune) {
-      var positionBuffer = gl.createBuffer();
+    runes.forEach(rune => {
+      const positionBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, rune.vertices, gl.STATIC_DRAW);
       gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
@@ -829,132 +1948,103 @@
         gl.uniform4fv(vertexColorPointer, rune.colors || new Float32Array([0, 0, 0, 1]));
         gl.uniform1i(textureSwitchPointer, 0);
       } else {
-        var texture = loadTexture(rune.texture);
+        const texture = loadTexture(rune.texture);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.uniform1i(texturePointer, 0);
         gl.uniform1i(textureSwitchPointer, 1);
       }
       gl.uniformMatrix4fv(modelViewMatrixPointer, false, rune.transformMatrix);
-      var vertexCount = rune.vertices.length / 4;
+      const vertexCount = rune.vertices.length / 4;
       gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
     });
   }
-  var DrawnRune = (function () {
-    function DrawnRune(rune, isHollusion) {
+  var DrawnRune = class {
+    constructor(rune, isHollusion) {
       this.rune = rune;
       this.isHollusion = isHollusion;
-      this.toReplString = function () {
-        return "<Rune>";
+      this.toReplString = () => "<Rune>";
+    }
+  };
+  DrawnRune.normalVertexShader = `
+  attribute vec4 aVertexPosition;
+  uniform vec4 uVertexColor;
+  uniform mat4 uModelViewMatrix;
+  uniform mat4 uProjectionMatrix;
+  uniform mat4 uCameraMatrix;
+
+  varying lowp vec4 vColor;
+  varying highp vec2 vTexturePosition;
+  varying lowp float colorFactor;
+  void main(void) {
+    gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
+    vColor = uVertexColor;
+
+    // texture position is in [0,1], vertex position is in [-1,1]
+    vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;
+    vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;
+
+    colorFactor = gl_Position.z;
+  }
+  `;
+  DrawnRune.normalFragmentShader = `
+  precision mediump float;
+  uniform bool uRenderWithTexture;
+  uniform bool uRenderWithDepthColor;
+  uniform sampler2D uTexture;
+  varying lowp float colorFactor;
+  uniform vec4 uColorFilter;
+
+
+  varying lowp vec4 vColor;
+  varying highp vec2 vTexturePosition;
+  void main(void) {
+    if (uRenderWithTexture){
+      gl_FragColor = texture2D(uTexture, vTexturePosition);
+    } else {
+      gl_FragColor = vColor;
+    }
+    if (uRenderWithDepthColor){
+      gl_FragColor += (colorFactor + 0.5) * (1.0 - gl_FragColor);
+      gl_FragColor.a = 1.0;
+    }
+    gl_FragColor = uColorFilter * gl_FragColor + 1.0 - uColorFilter;
+    gl_FragColor.a = 1.0;
+  }
+  `;
+  var NormalRune = class extends DrawnRune {
+    constructor(rune) {
+      super(rune, false);
+      this.draw = canvas => {
+        const gl = getWebGlFromCanvas(canvas);
+        const cameraMatrix = mat4_exports.create();
+        drawRunesToFrameBuffer(gl, this.rune.flatten(), cameraMatrix, new Float32Array([1, 1, 1, 1]), null, true);
       };
     }
-    DrawnRune.normalVertexShader = "\n  attribute vec4 aVertexPosition;\n  uniform vec4 uVertexColor;\n  uniform mat4 uModelViewMatrix;\n  uniform mat4 uProjectionMatrix;\n  uniform mat4 uCameraMatrix;\n\n  varying lowp vec4 vColor;\n  varying highp vec2 vTexturePosition;\n  varying lowp float colorFactor;\n  void main(void) {\n    gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;\n    vColor = uVertexColor;\n\n    // texture position is in [0,1], vertex position is in [-1,1]\n    vTexturePosition.x = (aVertexPosition.x + 1.0) / 2.0;\n    vTexturePosition.y = 1.0 - (aVertexPosition.y + 1.0) / 2.0;\n\n    colorFactor = gl_Position.z;\n  }\n  ";
-    DrawnRune.normalFragmentShader = "\n  precision mediump float;\n  uniform bool uRenderWithTexture;\n  uniform bool uRenderWithDepthColor;\n  uniform sampler2D uTexture;\n  varying lowp float colorFactor;\n  uniform vec4 uColorFilter;\n\n\n  varying lowp vec4 vColor;\n  varying highp vec2 vTexturePosition;\n  void main(void) {\n    if (uRenderWithTexture){\n      gl_FragColor = texture2D(uTexture, vTexturePosition);\n    } else {\n      gl_FragColor = vColor;\n    }\n    if (uRenderWithDepthColor){\n      gl_FragColor += (colorFactor + 0.5) * (1.0 - gl_FragColor);\n      gl_FragColor.a = 1.0;\n    }\n    gl_FragColor = uColorFilter * gl_FragColor + 1.0 - uColorFilter;\n    gl_FragColor.a = 1.0;\n  }\n  ";
-    return DrawnRune;
-  })();
-  var NormalRune = (function (_super) {
-    __extends(NormalRune, _super);
-    function NormalRune(rune) {
-      var _this = _super.call(this, rune, false) || this;
-      _this.draw = function (canvas) {
-        var gl = getWebGlFromCanvas(canvas);
-        var cameraMatrix = create$4();
-        drawRunesToFrameBuffer(gl, _this.rune.flatten(), cameraMatrix, new Float32Array([1, 1, 1, 1]), null, true);
-      };
-      return _this;
+  };
+  var AnimatedRune = class extends glAnimation {
+    constructor(duration, fps, func) {
+      super(duration, fps);
+      this.func = func;
+      this.toReplString = () => "<AnimatedRune>";
     }
-    return NormalRune;
-  })(DrawnRune);
-  var AnimatedRune = (function (_super) {
-    __extends(AnimatedRune, _super);
-    function AnimatedRune(duration, fps, func) {
-      var _this = _super.call(this, duration, fps) || this;
-      _this.func = func;
-      _this.toReplString = function () {
-        return "<AnimatedRune>";
-      };
-      return _this;
-    }
-    AnimatedRune.prototype.getFrame = function (num) {
-      var rune = this.func(num);
+    getFrame(num) {
+      const rune = this.func(num);
       return {
         draw: rune.draw
       };
-    };
-    return AnimatedRune;
-  })(glAnimation);
-  function _wrapRegExp() {
-    _wrapRegExp = function (re, groups) {
-      return new BabelRegExp(re, void 0, groups);
-    };
-    var _super = RegExp.prototype, _groups = new WeakMap();
-    function BabelRegExp(re, flags, groups) {
-      var _this = new RegExp(re, flags);
-      return (_groups.set(_this, groups || _groups.get(re)), _setPrototypeOf(_this, BabelRegExp.prototype));
     }
-    function buildGroups(result, re) {
-      var g = _groups.get(re);
-      return Object.keys(g).reduce(function (groups, name) {
-        return (groups[name] = result[g[name]], groups);
-      }, Object.create(null));
-    }
-    return (_inherits(BabelRegExp, RegExp), BabelRegExp.prototype.exec = function (str) {
-      var result = _super.exec.call(this, str);
-      return (result && (result.groups = buildGroups(result, this)), result);
-    }, BabelRegExp.prototype[Symbol.replace] = function (str, substitution) {
-      if ("string" == typeof substitution) {
-        var groups = _groups.get(this);
-        return _super[Symbol.replace].call(this, str, substitution.replace(/\$<([^>]+)>/g, function (_, name) {
-          return "$" + groups[name];
-        }));
-      }
-      if ("function" == typeof substitution) {
-        var _this = this;
-        return _super[Symbol.replace].call(this, str, function () {
-          var args = arguments;
-          return ("object" != typeof args[args.length - 1] && (args = [].slice.call(args)).push(buildGroups(args, _this)), substitution.apply(this, args));
-        });
-      }
-      return _super[Symbol.replace].call(this, str, substitution);
-    }, _wrapRegExp.apply(this, arguments));
-  }
-  function _inherits(subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function");
-    }
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        writable: true,
-        configurable: true
-      }
-    });
-    Object.defineProperty(subClass, "prototype", {
-      writable: false
-    });
-    if (superClass) _setPrototypeOf(subClass, superClass);
-  }
-  function _setPrototypeOf(o, p) {
-    _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) {
-      o.__proto__ = p;
-      return o;
-    };
-    return _setPrototypeOf(o, p);
-  }
-  function throwIfNotRune(name) {
-    var runes = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-      runes[_i - 1] = arguments[_i];
-    }
-    runes.forEach(function (rune) {
+  };
+  function throwIfNotRune(name, ...runes) {
+    runes.forEach(rune => {
       if (!(rune instanceof Rune)) {
-        throw Error(("").concat(name, " expects a rune as argument."));
+        throw Error(`${name} expects a rune as argument.`);
       }
     });
   }
-  var getSquare = function getSquare() {
-    var vertexList = [];
-    var colorList = [];
+  var getSquare = () => {
+    const vertexList = [];
+    const colorList = [];
     vertexList.push(-1, 1, 0, 1);
     vertexList.push(-1, -1, 0, 1);
     vertexList.push(1, -1, 0, 1);
@@ -967,12 +2057,10 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getBlank = function getBlank() {
-    return Rune.of();
-  };
-  var getRcross = function getRcross() {
-    var vertexList = [];
-    var colorList = [];
+  var getBlank = () => Rune.of();
+  var getRcross = () => {
+    const vertexList = [];
+    const colorList = [];
     vertexList.push(-0.5, 0.5, 0, 1);
     vertexList.push(-0.5, -0.5, 0, 1);
     vertexList.push(0.5, -0.5, 0, 1);
@@ -994,9 +2082,9 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getSail = function getSail() {
-    var vertexList = [];
-    var colorList = [];
+  var getSail = () => {
+    const vertexList = [];
+    const colorList = [];
     vertexList.push(0.5, -1, 0, 1);
     vertexList.push(0, -1, 0, 1);
     vertexList.push(0, 1, 0, 1);
@@ -1006,9 +2094,9 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getTriangle = function getTriangle() {
-    var vertexList = [];
-    var colorList = [];
+  var getTriangle = () => {
+    const vertexList = [];
+    const colorList = [];
     vertexList.push(1, -1, 0, 1);
     vertexList.push(0, -1, 0, 1);
     vertexList.push(0, 1, 0, 1);
@@ -1018,9 +2106,9 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getCorner = function getCorner() {
-    var vertexList = [];
-    var colorList = [];
+  var getCorner = () => {
+    const vertexList = [];
+    const colorList = [];
     vertexList.push(1, 0, 0, 1);
     vertexList.push(1, 1, 0, 1);
     vertexList.push(0, 1, 0, 1);
@@ -1030,9 +2118,9 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getNova = function getNova() {
-    var vertexList = [];
-    var colorList = [];
+  var getNova = () => {
+    const vertexList = [];
+    const colorList = [];
     vertexList.push(0, 1, 0, 1);
     vertexList.push(-0.5, 0, 0, 1);
     vertexList.push(0, 0.5, 0, 1);
@@ -1045,13 +2133,13 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getCircle = function getCircle() {
-    var vertexList = [];
-    var colorList = [];
-    var circleDiv = 60;
-    for (var i = 0; i < circleDiv; i += 1) {
-      var angle1 = 2 * Math.PI / circleDiv * i;
-      var angle2 = 2 * Math.PI / circleDiv * (i + 1);
+  var getCircle = () => {
+    const vertexList = [];
+    const colorList = [];
+    const circleDiv = 60;
+    for (let i = 0; i < circleDiv; i += 1) {
+      const angle1 = 2 * Math.PI / circleDiv * i;
+      const angle2 = 2 * Math.PI / circleDiv * (i + 1);
       vertexList.push(Math.cos(angle1), Math.sin(angle1), 0, 1);
       vertexList.push(Math.cos(angle2), Math.sin(angle2), 0, 1);
       vertexList.push(0, 0, 0, 1);
@@ -1062,27 +2150,27 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getHeart = function getHeart() {
-    var vertexList = [];
-    var colorList = [];
-    var root2 = Math.sqrt(2);
-    var r = 4 / (2 + 3 * root2);
-    var scaleX = 1 / (r * (1 + root2 / 2));
-    var numPoints = 10;
-    var rightCenterX = r / root2;
-    var rightCenterY = 1 - r;
-    for (var i = 0; i < numPoints; i += 1) {
-      var angle1 = Math.PI * (-1 / 4 + i / numPoints);
-      var angle2 = Math.PI * (-1 / 4 + (i + 1) / numPoints);
+  var getHeart = () => {
+    const vertexList = [];
+    const colorList = [];
+    const root2 = Math.sqrt(2);
+    const r = 4 / (2 + 3 * root2);
+    const scaleX = 1 / (r * (1 + root2 / 2));
+    const numPoints = 10;
+    const rightCenterX = r / root2;
+    const rightCenterY = 1 - r;
+    for (let i = 0; i < numPoints; i += 1) {
+      const angle1 = Math.PI * (-1 / 4 + i / numPoints);
+      const angle2 = Math.PI * (-1 / 4 + (i + 1) / numPoints);
       vertexList.push((Math.cos(angle1) * r + rightCenterX) * scaleX, Math.sin(angle1) * r + rightCenterY, 0, 1);
       vertexList.push((Math.cos(angle2) * r + rightCenterX) * scaleX, Math.sin(angle2) * r + rightCenterY, 0, 1);
       vertexList.push(0, -1, 0, 1);
     }
-    var leftCenterX = -r / root2;
-    var leftCenterY = 1 - r;
-    for (var i = 0; i <= numPoints; i += 1) {
-      var angle1 = Math.PI * (1 / 4 + i / numPoints);
-      var angle2 = Math.PI * (1 / 4 + (i + 1) / numPoints);
+    const leftCenterX = -r / root2;
+    const leftCenterY = 1 - r;
+    for (let i = 0; i <= numPoints; i += 1) {
+      const angle1 = Math.PI * (1 / 4 + i / numPoints);
+      const angle2 = Math.PI * (1 / 4 + (i + 1) / numPoints);
       vertexList.push((Math.cos(angle1) * r + leftCenterX) * scaleX, Math.sin(angle1) * r + leftCenterY, 0, 1);
       vertexList.push((Math.cos(angle2) * r + leftCenterX) * scaleX, Math.sin(angle2) * r + leftCenterY, 0, 1);
       vertexList.push(0, -1, 0, 1);
@@ -1093,23 +2181,23 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getPentagram = function getPentagram() {
-    var vertexList = [];
-    var colorList = [];
-    var v1 = Math.sin(Math.PI / 10);
-    var v2 = Math.cos(Math.PI / 10);
-    var w1 = Math.sin(3 * Math.PI / 10);
-    var w2 = Math.cos(3 * Math.PI / 10);
-    var vertices = [];
+  var getPentagram = () => {
+    const vertexList = [];
+    const colorList = [];
+    const v1 = Math.sin(Math.PI / 10);
+    const v2 = Math.cos(Math.PI / 10);
+    const w1 = Math.sin(3 * Math.PI / 10);
+    const w2 = Math.cos(3 * Math.PI / 10);
+    const vertices = [];
     vertices.push([v2, v1, 0, 1]);
     vertices.push([w2, -w1, 0, 1]);
     vertices.push([-w2, -w1, 0, 1]);
     vertices.push([-v2, v1, 0, 1]);
     vertices.push([0, 1, 0, 1]);
-    for (var i = 0; i < 5; i += 1) {
+    for (let i = 0; i < 5; i += 1) {
       vertexList.push(0, 0, 0, 1);
-      vertexList.push.apply(vertexList, vertices[i]);
-      vertexList.push.apply(vertexList, vertices[(i + 2) % 5]);
+      vertexList.push(...vertices[i]);
+      vertexList.push(...vertices[(i + 2) % 5]);
     }
     colorList.push(0, 0, 0, 1);
     return Rune.of({
@@ -1117,21 +2205,21 @@
       colors: new Float32Array(colorList)
     });
   };
-  var getRibbon = function getRibbon() {
-    var vertexList = [];
-    var colorList = [];
-    var thetaMax = 30;
-    var thickness = -1 / thetaMax;
-    var unit = 0.1;
-    var vertices = [];
-    for (var i = 0; i < thetaMax; i += unit) {
+  var getRibbon = () => {
+    const vertexList = [];
+    const colorList = [];
+    const thetaMax = 30;
+    const thickness = -1 / thetaMax;
+    const unit = 0.1;
+    const vertices = [];
+    for (let i = 0; i < thetaMax; i += unit) {
       vertices.push([i / thetaMax * Math.cos(i), i / thetaMax * Math.sin(i), 0, 1]);
       vertices.push([Math.abs(Math.cos(i) * thickness) + i / thetaMax * Math.cos(i), Math.abs(Math.sin(i) * thickness) + i / thetaMax * Math.sin(i), 0, 1]);
     }
-    for (var i = 0; i < vertices.length - 2; i += 1) {
-      vertexList.push.apply(vertexList, vertices[i]);
-      vertexList.push.apply(vertexList, vertices[i + 1]);
-      vertexList.push.apply(vertexList, vertices[i + 2]);
+    for (let i = 0; i < vertices.length - 2; i += 1) {
+      vertexList.push(...vertices[i]);
+      vertexList.push(...vertices[i + 1]);
+      vertexList.push(...vertices[i + 2]);
     }
     colorList.push(0, 0, 0, 1);
     return Rune.of({
@@ -1141,11 +2229,7 @@
   };
   var colorPalette = ["#F44336", "#E91E63", "#AA00FF", "#3F51B5", "#2196F3", "#4CAF50", "#FFEB3B", "#FF9800", "#795548"];
   function hexToColor(hex) {
-    var result = _wrapRegExp(/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i, {
-      red: 1,
-      green: 2,
-      blue: 3
-    }).exec(hex);
+    const result = new RegExp("^#?(?<red>[a-f\\d]{2})(?<green>[a-f\\d]{2})(?<blue>[a-f\\d]{2})$", "iu").exec(hex);
     if (result === null || result.length < 4) {
       return [0, 0, 0];
     }
@@ -1159,8 +2243,8 @@
     });
   }
   var drawnRunes = [];
-  moduleHelpers.context.moduleContexts.rune.state = {
-    drawnRunes: drawnRunes
+  import_moduleHelpers.context.moduleContexts.rune.state = {
+    drawnRunes
   };
   var square = getSquare();
   var blank = getBlank();
@@ -1174,7 +2258,7 @@
   var pentagram = getPentagram();
   var ribbon = getRibbon();
   function from_url(imageUrl) {
-    var rune = getSquare();
+    const rune = getSquare();
     rune.texture = new Image();
     rune.texture.crossOrigin = "anonymous";
     rune.texture.src = imageUrl;
@@ -1182,38 +2266,38 @@
   }
   function scale_independent(ratio_x, ratio_y, rune) {
     throwIfNotRune("scale_independent", rune);
-    var scaleVec = fromValues(ratio_x, ratio_y, 1);
-    var scaleMat = create$4();
-    scale$1(scaleMat, scaleMat, scaleVec);
-    var wrapperMat = create$4();
-    multiply(wrapperMat, scaleMat, wrapperMat);
+    const scaleVec = vec3_exports.fromValues(ratio_x, ratio_y, 1);
+    const scaleMat = mat4_exports.create();
+    mat4_exports.scale(scaleMat, scaleMat, scaleVec);
+    const wrapperMat = mat4_exports.create();
+    mat4_exports.multiply(wrapperMat, scaleMat, wrapperMat);
     return Rune.of({
       subRunes: [rune],
       transformMatrix: wrapperMat
     });
   }
-  function scale(ratio, rune) {
+  function scale3(ratio, rune) {
     throwIfNotRune("scale", rune);
     return scale_independent(ratio, ratio, rune);
   }
-  function translate(x, y, rune) {
+  function translate2(x, y, rune) {
     throwIfNotRune("translate", rune);
-    var translateVec = fromValues(x, -y, 0);
-    var translateMat = create$4();
-    translate$1(translateMat, translateMat, translateVec);
-    var wrapperMat = create$4();
-    multiply(wrapperMat, translateMat, wrapperMat);
+    const translateVec = vec3_exports.fromValues(x, -y, 0);
+    const translateMat = mat4_exports.create();
+    mat4_exports.translate(translateMat, translateMat, translateVec);
+    const wrapperMat = mat4_exports.create();
+    mat4_exports.multiply(wrapperMat, translateMat, wrapperMat);
     return Rune.of({
       subRunes: [rune],
       transformMatrix: wrapperMat
     });
   }
-  function rotate(rad, rune) {
+  function rotate2(rad, rune) {
     throwIfNotRune("rotate", rune);
-    var rotateMat = create$4();
-    rotateZ(rotateMat, rotateMat, rad);
-    var wrapperMat = create$4();
-    multiply(wrapperMat, rotateMat, wrapperMat);
+    const rotateMat = mat4_exports.create();
+    mat4_exports.rotateZ(rotateMat, rotateMat, rad);
+    const wrapperMat = mat4_exports.create();
+    mat4_exports.multiply(wrapperMat, rotateMat, wrapperMat);
     return Rune.of({
       subRunes: [rune],
       transformMatrix: wrapperMat
@@ -1225,8 +2309,8 @@
     if (!(frac >= 0 && frac <= 1)) {
       throw Error("stack_frac can only take fraction in [0,1].");
     }
-    var upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1));
-    var lower = translate(0, frac, scale_independent(1, 1 - frac, rune2));
+    const upper = translate2(0, -(1 - frac), scale_independent(1, frac, rune1));
+    const lower = translate2(0, frac, scale_independent(1, 1 - frac, rune2));
     return Rune.of({
       subRunes: [upper, lower]
     });
@@ -1244,23 +2328,23 @@
   }
   function quarter_turn_right(rune) {
     throwIfNotRune("quarter_turn_right", rune);
-    return rotate(-Math.PI / 2, rune);
+    return rotate2(-Math.PI / 2, rune);
   }
   function quarter_turn_left(rune) {
     throwIfNotRune("quarter_turn_left", rune);
-    return rotate(Math.PI / 2, rune);
+    return rotate2(Math.PI / 2, rune);
   }
   function turn_upside_down(rune) {
     throwIfNotRune("turn_upside_down", rune);
-    return rotate(Math.PI, rune);
+    return rotate2(Math.PI, rune);
   }
   function beside_frac(frac, rune1, rune2) {
     throwIfNotRune("beside_frac", rune1, rune2);
     if (!(frac >= 0 && frac <= 1)) {
       throw Error("beside_frac can only take fraction in [0,1].");
     }
-    var left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1));
-    var right = translate(frac, 0, scale_independent(1 - frac, 1, rune2));
+    const left = translate2(-(1 - frac), 0, scale_independent(frac, 1, rune1));
+    const right = translate2(frac, 0, scale_independent(1 - frac, 1, rune2));
     return Rune.of({
       subRunes: [left, right]
     });
@@ -1279,7 +2363,7 @@
   }
   function make_cross(rune) {
     throwIfNotRune("make_cross", rune);
-    return stack(beside(quarter_turn_right(rune), rotate(Math.PI, rune)), beside(rune, rotate(Math.PI / 2, rune)));
+    return stack(beside(quarter_turn_right(rune), rotate2(Math.PI, rune)), beside(rune, rotate2(Math.PI / 2, rune)));
   }
   function repeat_pattern(n, pattern, initial) {
     if (n === 0) {
@@ -1293,25 +2377,25 @@
     if (!(frac >= 0 && frac <= 1)) {
       throw Error("overlay_frac can only take fraction in [0,1].");
     }
-    var useFrac = frac;
-    var minFrac = 0.000001;
-    var maxFrac = 1 - minFrac;
+    let useFrac = frac;
+    const minFrac = 1e-6;
+    const maxFrac = 1 - minFrac;
     if (useFrac < minFrac) {
       useFrac = minFrac;
     }
     if (useFrac > maxFrac) {
       useFrac = maxFrac;
     }
-    var frontMat = create$4();
-    scale$1(frontMat, frontMat, fromValues(1, 1, useFrac));
-    var front = Rune.of({
+    const frontMat = mat4_exports.create();
+    mat4_exports.scale(frontMat, frontMat, vec3_exports.fromValues(1, 1, useFrac));
+    const front = Rune.of({
       subRunes: [rune1],
       transformMatrix: frontMat
     });
-    var backMat = create$4();
-    translate$1(backMat, backMat, fromValues(0, 0, -useFrac));
-    scale$1(backMat, backMat, fromValues(1, 1, 1 - useFrac));
-    var back = Rune.of({
+    const backMat = mat4_exports.create();
+    mat4_exports.translate(backMat, backMat, vec3_exports.fromValues(0, 0, -useFrac));
+    mat4_exports.scale(backMat, backMat, vec3_exports.fromValues(1, 1, 1 - useFrac));
+    const back = Rune.of({
       subRunes: [rune2],
       transformMatrix: backMat
     });
@@ -1326,7 +2410,7 @@
   }
   function color(rune, r, g, b) {
     throwIfNotRune("color", rune);
-    var colorVector = [r, g, b, 1];
+    const colorVector = [r, g, b, 1];
     return Rune.of({
       colors: new Float32Array(colorVector),
       subRunes: [rune]
@@ -1334,7 +2418,7 @@
   }
   function random_color(rune) {
     throwIfNotRune("random_color", rune);
-    var randomColor = hexToColor(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
+    const randomColor = hexToColor(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
     return Rune.of({
       colors: new Float32Array(randomColor),
       subRunes: [rune]
@@ -1389,94 +2473,111 @@
     drawnRunes.push(new NormalRune(rune));
     return rune;
   }
-  var AnaglyphRune = (function (_super) {
-    __extends(AnaglyphRune, _super);
-    function AnaglyphRune(rune) {
-      var _this = _super.call(this, rune, false) || this;
-      _this.draw = function (canvas) {
-        var gl = getWebGlFromCanvas(canvas);
-        var runes = white(overlay_frac(0.999999999, blank, scale(2.2, square))).flatten().concat(_this.rune.flatten());
-        var halfEyeDistance = 0.03;
-        var leftCameraMatrix = create$4();
-        lookAt(leftCameraMatrix, fromValues(-halfEyeDistance, 0, 0), fromValues(0, 0, -0.4), fromValues(0, 1, 0));
-        var rightCameraMatrix = create$4();
-        lookAt(rightCameraMatrix, fromValues(halfEyeDistance, 0, 0), fromValues(0, 0, -0.4), fromValues(0, 1, 0));
-        var leftBuffer = initFramebufferObject(gl);
-        var rightBuffer = initFramebufferObject(gl);
+  var _AnaglyphRune = class extends DrawnRune {
+    constructor(rune) {
+      super(rune, false);
+      this.draw = canvas => {
+        const gl = getWebGlFromCanvas(canvas);
+        const runes = white(overlay_frac(0.999999999, blank, scale3(2.2, square))).flatten().concat(this.rune.flatten());
+        const halfEyeDistance = 0.03;
+        const leftCameraMatrix = mat4_exports.create();
+        mat4_exports.lookAt(leftCameraMatrix, vec3_exports.fromValues(-halfEyeDistance, 0, 0), vec3_exports.fromValues(0, 0, -0.4), vec3_exports.fromValues(0, 1, 0));
+        const rightCameraMatrix = mat4_exports.create();
+        mat4_exports.lookAt(rightCameraMatrix, vec3_exports.fromValues(halfEyeDistance, 0, 0), vec3_exports.fromValues(0, 0, -0.4), vec3_exports.fromValues(0, 1, 0));
+        const leftBuffer = initFramebufferObject(gl);
+        const rightBuffer = initFramebufferObject(gl);
         drawRunesToFrameBuffer(gl, runes, leftCameraMatrix, new Float32Array([1, 0, 0, 1]), leftBuffer.framebuffer, true);
         drawRunesToFrameBuffer(gl, runes, rightCameraMatrix, new Float32Array([0, 1, 1, 1]), rightBuffer.framebuffer, true);
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        var shaderProgram = initShaderProgram(gl, AnaglyphRune.anaglyphVertexShader, AnaglyphRune.anaglyphFragmentShader);
+        const shaderProgram = initShaderProgram(gl, _AnaglyphRune.anaglyphVertexShader, _AnaglyphRune.anaglyphFragmentShader);
         gl.useProgram(shaderProgram);
-        var reduPt = gl.getUniformLocation(shaderProgram, "u_sampler_red");
-        var cyanuPt = gl.getUniformLocation(shaderProgram, "u_sampler_cyan");
-        var vertexPositionPointer = gl.getAttribLocation(shaderProgram, "a_position");
+        const reduPt = gl.getUniformLocation(shaderProgram, "u_sampler_red");
+        const cyanuPt = gl.getUniformLocation(shaderProgram, "u_sampler_cyan");
+        const vertexPositionPointer = gl.getAttribLocation(shaderProgram, "a_position");
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, leftBuffer.texture);
         gl.uniform1i(cyanuPt, 0);
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, rightBuffer.texture);
         gl.uniform1i(reduPt, 1);
-        var positionBuffer = gl.createBuffer();
+        const positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW);
         gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(vertexPositionPointer);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       };
-      return _this;
     }
-    AnaglyphRune.anaglyphVertexShader = "\n    precision mediump float;\n    attribute vec4 a_position;\n    varying highp vec2 v_texturePosition;\n    void main() {\n        gl_Position = a_position;\n        // texture position is in [0,1], vertex position is in [-1,1]\n        v_texturePosition.x = (a_position.x + 1.0) / 2.0;\n        v_texturePosition.y = (a_position.y + 1.0) / 2.0;\n    }\n    ";
-    AnaglyphRune.anaglyphFragmentShader = "\n    precision mediump float;\n    uniform sampler2D u_sampler_red;\n    uniform sampler2D u_sampler_cyan;\n    varying highp vec2 v_texturePosition;\n    void main() {\n        gl_FragColor = texture2D(u_sampler_red, v_texturePosition)\n                + texture2D(u_sampler_cyan, v_texturePosition) - 1.0;\n        gl_FragColor.a = 1.0;\n    }\n    ";
-    return AnaglyphRune;
-  })(DrawnRune);
+  };
+  var AnaglyphRune = _AnaglyphRune;
+  AnaglyphRune.anaglyphVertexShader = `
+    precision mediump float;
+    attribute vec4 a_position;
+    varying highp vec2 v_texturePosition;
+    void main() {
+        gl_Position = a_position;
+        // texture position is in [0,1], vertex position is in [-1,1]
+        v_texturePosition.x = (a_position.x + 1.0) / 2.0;
+        v_texturePosition.y = (a_position.y + 1.0) / 2.0;
+    }
+    `;
+  AnaglyphRune.anaglyphFragmentShader = `
+    precision mediump float;
+    uniform sampler2D u_sampler_red;
+    uniform sampler2D u_sampler_cyan;
+    varying highp vec2 v_texturePosition;
+    void main() {
+        gl_FragColor = texture2D(u_sampler_red, v_texturePosition)
+                + texture2D(u_sampler_cyan, v_texturePosition) - 1.0;
+        gl_FragColor.a = 1.0;
+    }
+    `;
   function anaglyph(rune) {
     throwIfNotRune("anaglyph", rune);
     drawnRunes.push(new AnaglyphRune(rune));
     return rune;
   }
-  var HollusionRune = (function (_super) {
-    __extends(HollusionRune, _super);
-    function HollusionRune(rune, magnitude) {
-      var _this = _super.call(this, rune, true) || this;
-      _this.draw = function (canvas) {
-        var gl = getWebGlFromCanvas(canvas);
-        var runes = white(overlay_frac(0.999999999, blank, scale(2.2, square))).flatten().concat(_this.rune.flatten());
-        var xshiftMax = runes[0].hollusionDistance;
-        var period = 2000;
-        var frameCount = 50;
-        var frameBuffer = [];
-        var renderFrame = function renderFrame(framePos) {
-          var fb = initFramebufferObject(gl);
-          var cameraMatrix = create$4();
-          var xshift = framePos * (period / frameCount) % period;
+  var _HollusionRune = class extends DrawnRune {
+    constructor(rune, magnitude) {
+      super(rune, true);
+      this.draw = canvas => {
+        const gl = getWebGlFromCanvas(canvas);
+        const runes = white(overlay_frac(0.999999999, blank, scale3(2.2, square))).flatten().concat(this.rune.flatten());
+        const xshiftMax = runes[0].hollusionDistance;
+        const period = 2e3;
+        const frameCount = 50;
+        const frameBuffer = [];
+        const renderFrame = framePos => {
+          const fb = initFramebufferObject(gl);
+          const cameraMatrix = mat4_exports.create();
+          let xshift = framePos * (period / frameCount) % period;
           if (xshift > period / 2) {
             xshift = period - xshift;
           }
           xshift = xshiftMax * (2 * (2 * xshift / period) - 1);
-          lookAt(cameraMatrix, fromValues(xshift, 0, 0), fromValues(0, 0, -0.4), fromValues(0, 1, 0));
+          mat4_exports.lookAt(cameraMatrix, vec3_exports.fromValues(xshift, 0, 0), vec3_exports.fromValues(0, 0, -0.4), vec3_exports.fromValues(0, 1, 0));
           drawRunesToFrameBuffer(gl, runes, cameraMatrix, new Float32Array([1, 1, 1, 1]), fb.framebuffer, true);
           return fb;
         };
-        for (var i = 0; i < frameCount; i += 1) {
+        for (let i = 0; i < frameCount; i += 1) {
           frameBuffer.push(renderFrame(i));
         }
-        var copyShaderProgram = initShaderProgram(gl, HollusionRune.copyVertexShader, HollusionRune.copyFragmentShader);
+        const copyShaderProgram = initShaderProgram(gl, _HollusionRune.copyVertexShader, _HollusionRune.copyFragmentShader);
         gl.useProgram(copyShaderProgram);
-        var texturePt = gl.getUniformLocation(copyShaderProgram, "uTexture");
-        var vertexPositionPointer = gl.getAttribLocation(copyShaderProgram, "a_position");
+        const texturePt = gl.getUniformLocation(copyShaderProgram, "uTexture");
+        const vertexPositionPointer = gl.getAttribLocation(copyShaderProgram, "a_position");
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        var positionBuffer = gl.createBuffer();
+        const positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW);
         gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(vertexPositionPointer);
-        var lastTime = 0;
+        let lastTime = 0;
         function render(timeInMs) {
           if (timeInMs - lastTime < period / frameCount) return;
           lastTime = timeInMs;
-          var framePos = Math.floor(timeInMs / (period / frameCount)) % frameCount;
-          var fbObject = frameBuffer[framePos];
+          const framePos = Math.floor(timeInMs / (period / frameCount)) % frameCount;
+          const fbObject = frameBuffer[framePos];
           gl.clearColor(1, 1, 1, 1);
           gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
           gl.activeTexture(gl.TEXTURE0);
@@ -1486,13 +2587,29 @@
         }
         return render;
       };
-      _this.rune.hollusionDistance = magnitude;
-      return _this;
+      this.rune.hollusionDistance = magnitude;
     }
-    HollusionRune.copyVertexShader = "\n    precision mediump float;\n    attribute vec4 a_position;\n    varying highp vec2 v_texturePosition;\n    void main() {\n        gl_Position = a_position;\n        // texture position is in [0,1], vertex position is in [-1,1]\n        v_texturePosition.x = (a_position.x + 1.0) / 2.0;\n        v_texturePosition.y = (a_position.y + 1.0) / 2.0;\n    }\n    ";
-    HollusionRune.copyFragmentShader = "\n    precision mediump float;\n    uniform sampler2D uTexture;\n    varying highp vec2 v_texturePosition;\n    void main() {\n        gl_FragColor = texture2D(uTexture, v_texturePosition);\n    }\n    ";
-    return HollusionRune;
-  })(DrawnRune);
+  };
+  var HollusionRune = _HollusionRune;
+  HollusionRune.copyVertexShader = `
+    precision mediump float;
+    attribute vec4 a_position;
+    varying highp vec2 v_texturePosition;
+    void main() {
+        gl_Position = a_position;
+        // texture position is in [0,1], vertex position is in [-1,1]
+        v_texturePosition.x = (a_position.x + 1.0) / 2.0;
+        v_texturePosition.y = (a_position.y + 1.0) / 2.0;
+    }
+    `;
+  HollusionRune.copyFragmentShader = `
+    precision mediump float;
+    uniform sampler2D uTexture;
+    varying highp vec2 v_texturePosition;
+    void main() {
+        gl_FragColor = texture2D(uTexture, v_texturePosition);
+    }
+    `;
   function hollusion_magnitude(rune, magnitude) {
     throwIfNotRune("hollusion_magnitude", rune);
     drawnRunes.push(new HollusionRune(rune, magnitude));
@@ -1503,8 +2620,8 @@
     return hollusion_magnitude(rune, 0.1);
   }
   function animate_rune(duration, fps, func) {
-    var anim = new AnimatedRune(duration, fps, function (n) {
-      var rune = func(n);
+    const anim = new AnimatedRune(duration, fps, n => {
+      const rune = func(n);
       throwIfNotRune("animate_rune", rune);
       return new NormalRune(rune);
     });
@@ -1512,65 +2629,13 @@
     return anim;
   }
   function animate_anaglyph(duration, fps, func) {
-    var anim = new AnimatedRune(duration, fps, function (n) {
-      var rune = func(n);
+    const anim = new AnimatedRune(duration, fps, n => {
+      const rune = func(n);
       throwIfNotRune("animate_anaglyph", rune);
       return new AnaglyphRune(rune);
     });
     drawnRunes.push(anim);
     return anim;
   }
-  exports.anaglyph = anaglyph;
-  exports.animate_anaglyph = animate_anaglyph;
-  exports.animate_rune = animate_rune;
-  exports.beside = beside;
-  exports.beside_frac = beside_frac;
-  exports.black = black;
-  exports.blank = blank;
-  exports.blue = blue;
-  exports.brown = brown;
-  exports.circle = circle;
-  exports.color = color;
-  exports.corner = corner;
-  exports.flip_horiz = flip_horiz;
-  exports.flip_vert = flip_vert;
-  exports.from_url = from_url;
-  exports.green = green;
-  exports.heart = heart;
-  exports.hollusion = hollusion;
-  exports.hollusion_magnitude = hollusion_magnitude;
-  exports.indigo = indigo;
-  exports.make_cross = make_cross;
-  exports.nova = nova;
-  exports.orange = orange;
-  exports.overlay = overlay;
-  exports.overlay_frac = overlay_frac;
-  exports.pentagram = pentagram;
-  exports.pink = pink;
-  exports.purple = purple;
-  exports.quarter_turn_left = quarter_turn_left;
-  exports.quarter_turn_right = quarter_turn_right;
-  exports.random_color = random_color;
-  exports.rcross = rcross;
-  exports.red = red;
-  exports.repeat_pattern = repeat_pattern;
-  exports.ribbon = ribbon;
-  exports.rotate = rotate;
-  exports.sail = sail;
-  exports.scale = scale;
-  exports.scale_independent = scale_independent;
-  exports.show = show;
-  exports.square = square;
-  exports.stack = stack;
-  exports.stack_frac = stack_frac;
-  exports.stackn = stackn;
-  exports.translate = translate;
-  exports.triangle = triangle;
-  exports.turn_upside_down = turn_upside_down;
-  exports.white = white;
-  exports.yellow = yellow;
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  return exports;
-})
+  return __toCommonJS(rune_exports);
+}

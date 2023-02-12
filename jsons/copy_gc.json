@@ -1,0 +1,22 @@
+{
+  "allHeap": "<div><h4>allHeap(newHeap: undefined) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "doneShowRoot": "<div><h4>doneShowRoot(heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "endFlip": "<div><h4>endFlip(left: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "generateMemory": "<div><h4>generateMemory() → {void}</h4><div class=\"description\">No description available</div></div>",
+  "init": "<div><h4>init() → {undefined}</h4><div class=\"description\">No description available</div></div>",
+  "initialize_memory": "<div><h4>initialize_memory(memorySize: number) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "initialize_tag": "<div><h4>initialize_tag(allTag: undefined, types: undefined) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newAssign": "<div><h4>newAssign(res: any, left: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newCommand": "<div><h4>newCommand(type: any, toSpace: any, fromSpace: any, left: any, right: any, sizeLeft: any, sizeRight: any, heap: any, description: any, firstDesc: any, lastDesc: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newCopy": "<div><h4>newCopy(left: any, right: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newNew": "<div><h4>newNew(left: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newPop": "<div><h4>newPop(res: any, left: any, right: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "newPush": "<div><h4>newPush(left: any, right: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "resetFromSpace": "<div><h4>resetFromSpace(fromSpace: any, heap: any) → {undefined}</h4><div class=\"description\">No description available</div></div>",
+  "resetRoots": "<div><h4>resetRoots() → {void}</h4><div class=\"description\">No description available</div></div>",
+  "scanFlip": "<div><h4>scanFlip(left: any, right: any, scan: any, free: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "showRoots": "<div><h4>showRoots(left: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "startFlip": "<div><h4>startFlip(toSpace: any, fromSpace: any, heap: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "updateRoots": "<div><h4>updateRoots(array: any) → {void}</h4><div class=\"description\">No description available</div></div>",
+  "updateSlotSegment": "<div><h4>updateSlotSegment(tag: number, size: number, first: number, last: number) → {void}</h4><div class=\"description\">No description available</div></div>"
+}

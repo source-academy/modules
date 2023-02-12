@@ -1,30 +1,55 @@
-(function () {
-  'use strict';
-  var exports = {};
-  (function () {
-    const env = {};
-    try {
-      if (process) {
-        process.env = Object.assign({}, process.env);
-        Object.assign(process.env, env);
-        return;
-      }
-    } catch (e) {}
-    globalThis.process = {
-      env: env
-    };
-  })();
-  var COMMAND;
-  (function (COMMAND) {
-    COMMAND["FLIP"] = "Flip";
-    COMMAND["PUSH"] = "Push";
-    COMMAND["POP"] = "Pop";
-    COMMAND["COPY"] = "Copy";
-    COMMAND["ASSIGN"] = "Assign";
-    COMMAND["NEW"] = "New";
-    COMMAND["SCAN"] = "Scan";
-    COMMAND["INIT"] = "Initialize Memory";
-  })(COMMAND || (COMMAND = {}));
+function (moduleHelpers) {
+  function require(x) {
+    const result = ({
+      "js-slang/moduleHelpers": moduleHelpers
+    })[x];
+    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
+  }
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all) __defProp(target, name, {
+      get: all[name],
+      enumerable: true
+    });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+        get: () => from[key],
+        enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+      });
+    }
+    return to;
+  };
+  var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
+    value: true
+  }), mod);
+  var copy_gc_exports = {};
+  __export(copy_gc_exports, {
+    allHeap: () => allHeap,
+    doneShowRoot: () => doneShowRoot,
+    endFlip: () => endFlip,
+    generateMemory: () => generateMemory,
+    init: () => init,
+    initialize_memory: () => initialize_memory,
+    initialize_tag: () => initialize_tag,
+    newAssign: () => newAssign,
+    newCommand: () => newCommand,
+    newCopy: () => newCopy,
+    newNew: () => newNew,
+    newPop: () => newPop,
+    newPush: () => newPush,
+    resetFromSpace: () => resetFromSpace,
+    resetRoots: () => resetRoots,
+    scanFlip: () => scanFlip,
+    showRoots: () => showRoots,
+    startFlip: () => startFlip,
+    updateRoots: () => updateRoots,
+    updateSlotSegment: () => updateSlotSegment
+  });
   var ROW = 10;
   var COLUMN = 32;
   var MEMORY_SIZE = -99;
@@ -55,23 +80,23 @@
   }
   function generateMemory() {
     toMemoryMatrix = [];
-    for (var i = 0; i < ROW / 2; i += 1) {
+    for (let i = 0; i < ROW / 2; i += 1) {
       memory = [];
-      for (var j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE / 2; j += 1) {
+      for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE / 2; j += 1) {
         memory.push(i * COLUMN + j);
       }
       toMemoryMatrix.push(memory);
     }
     fromMemoryMatrix = [];
-    for (var i = ROW / 2; i < ROW; i += 1) {
+    for (let i = ROW / 2; i < ROW; i += 1) {
       memory = [];
-      for (var j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
+      for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
         memory.push(i * COLUMN + j);
       }
       fromMemoryMatrix.push(memory);
     }
-    var obj = {
-      type: COMMAND.INIT,
+    const obj = {
+      type: "Initialize Memory",
       to: TO_SPACE,
       from: FROM_SPACE,
       heap: [],
@@ -88,19 +113,19 @@
     commandHeap.push(obj);
   }
   function resetFromSpace(fromSpace, heap) {
-    var newHeap = [];
+    const newHeap = [];
     if (fromSpace > 0) {
-      for (var i = 0; i < MEMORY_SIZE / 2; i += 1) {
+      for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
         newHeap.push(heap[i]);
       }
-      for (var i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
+      for (let i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
         newHeap.push(0);
       }
     } else {
-      for (var i = 0; i < MEMORY_SIZE / 2; i += 1) {
+      for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
         newHeap.push(0);
       }
-      for (var i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
+      for (let i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
         newHeap.push(heap[i]);
       }
     }
@@ -114,21 +139,21 @@
     generateMemory();
   }
   function newCommand(type, toSpace, fromSpace, left, right, sizeLeft, sizeRight, heap, description, firstDesc, lastDesc) {
-    var newType = type;
-    var newToSpace = toSpace;
-    var newFromSpace = fromSpace;
-    var newLeft = left;
-    var newRight = right;
-    var newSizeLeft = sizeLeft;
-    var newSizeRight = sizeRight;
-    var newDesc = description;
-    var newFirstDesc = firstDesc;
-    var newLastDesc = lastDesc;
+    const newType = type;
+    const newToSpace = toSpace;
+    const newFromSpace = fromSpace;
+    const newLeft = left;
+    const newRight = right;
+    const newSizeLeft = sizeLeft;
+    const newSizeRight = sizeRight;
+    const newDesc = description;
+    const newFirstDesc = firstDesc;
+    const newLastDesc = lastDesc;
     memory = [];
-    for (var j = 0; j < heap.length; j += 1) {
+    for (let j = 0; j < heap.length; j += 1) {
       memory.push(heap[j]);
     }
-    var obj = {
+    const obj = {
       type: newType,
       to: newToSpace,
       from: newFromSpace,
@@ -146,25 +171,25 @@
     commandHeap.push(obj);
   }
   function newCopy(left, right, heap) {
-    var length = commandHeap.length;
-    var toSpace = commandHeap[length - 1].to;
-    var fromSpace = commandHeap[length - 1].from;
-    var newSizeLeft = heap[left + SIZE_SLOT];
-    var newSizeRight = heap[right + SIZE_SLOT];
-    var desc = ("Copying node ").concat(left, " to ").concat(right);
-    newCommand(COMMAND.COPY, toSpace, fromSpace, left, right, newSizeLeft, newSizeRight, heap, desc, "index", "free");
+    const {length} = commandHeap;
+    const toSpace = commandHeap[length - 1].to;
+    const fromSpace = commandHeap[length - 1].from;
+    const newSizeLeft = heap[left + SIZE_SLOT];
+    const newSizeRight = heap[right + SIZE_SLOT];
+    const desc = `Copying node ${left} to ${right}`;
+    newCommand("Copy", toSpace, fromSpace, left, right, newSizeLeft, newSizeRight, heap, desc, "index", "free");
   }
   function endFlip(left, heap) {
-    var length = commandHeap.length;
-    var fromSpace = commandHeap[length - 1].from;
-    var toSpace = commandHeap[length - 1].to;
-    var newSizeLeft = heap[left + SIZE_SLOT];
-    var desc = "Flip finished";
-    newCommand(COMMAND.FLIP, toSpace, fromSpace, left, -1, newSizeLeft, 0, heap, desc, "free", "");
+    const {length} = commandHeap;
+    const fromSpace = commandHeap[length - 1].from;
+    const toSpace = commandHeap[length - 1].to;
+    const newSizeLeft = heap[left + SIZE_SLOT];
+    const desc = "Flip finished";
+    newCommand("Flip", toSpace, fromSpace, left, -1, newSizeLeft, 0, heap, desc, "free", "");
     updateFlip();
   }
   function updateRoots(array) {
-    for (var i = 0; i < array.length; i += 1) {
+    for (let i = 0; i < array.length; i += 1) {
       ROOTS.push(array[i]);
     }
   }
@@ -172,79 +197,79 @@
     ROOTS = [];
   }
   function startFlip(toSpace, fromSpace, heap) {
-    var desc = "Memory is exhausted. Start stop and copy garbage collector.";
+    const desc = "Memory is exhausted. Start stop and copy garbage collector.";
     newCommand("Start of Cheneys", toSpace, fromSpace, -1, -1, 0, 0, heap, desc, "", "");
     updateFlip();
   }
   function newPush(left, right, heap) {
-    var length = commandHeap.length;
-    var toSpace = commandHeap[length - 1].to;
-    var fromSpace = commandHeap[length - 1].from;
-    var desc = ("Push OS update memory ").concat(left, " and ").concat(right, ".");
-    newCommand(COMMAND.PUSH, toSpace, fromSpace, left, right, 1, 1, heap, desc, "last child address slot", "new child pushed");
+    const {length} = commandHeap;
+    const toSpace = commandHeap[length - 1].to;
+    const fromSpace = commandHeap[length - 1].from;
+    const desc = `Push OS update memory ${left} and ${right}.`;
+    newCommand("Push", toSpace, fromSpace, left, right, 1, 1, heap, desc, "last child address slot", "new child pushed");
   }
   function newPop(res, left, right, heap) {
-    var length = commandHeap.length;
-    var toSpace = commandHeap[length - 1].to;
-    var fromSpace = commandHeap[length - 1].from;
-    var newRes = res;
-    var desc = ("Pop OS from memory ").concat(left, ", with value ").concat(newRes, ".");
-    newCommand(COMMAND.POP, toSpace, fromSpace, left, right, 1, 1, heap, desc, "popped memory", "last child address slot");
+    const {length} = commandHeap;
+    const toSpace = commandHeap[length - 1].to;
+    const fromSpace = commandHeap[length - 1].from;
+    const newRes = res;
+    const desc = `Pop OS from memory ${left}, with value ${newRes}.`;
+    newCommand("Pop", toSpace, fromSpace, left, right, 1, 1, heap, desc, "popped memory", "last child address slot");
   }
   function doneShowRoot(heap) {
-    var toSpace = 0;
-    var fromSpace = 0;
-    var desc = "All root nodes are copied";
+    const toSpace = 0;
+    const fromSpace = 0;
+    const desc = "All root nodes are copied";
     newCommand("Copied Roots", toSpace, fromSpace, -1, -1, 0, 0, heap, desc, "", "");
   }
   function showRoots(left, heap) {
-    var length = commandHeap.length;
-    var toSpace = commandHeap[length - 1].to;
-    var fromSpace = commandHeap[length - 1].from;
-    var newSizeLeft = heap[left + SIZE_SLOT];
-    var desc = ("Roots: node ").concat(left);
+    const {length} = commandHeap;
+    const toSpace = commandHeap[length - 1].to;
+    const fromSpace = commandHeap[length - 1].from;
+    const newSizeLeft = heap[left + SIZE_SLOT];
+    const desc = `Roots: node ${left}`;
     newCommand("Showing Roots", toSpace, fromSpace, left, -1, newSizeLeft, 0, heap, desc, "roots", "");
   }
   function newAssign(res, left, heap) {
-    var length = commandHeap.length;
-    var toSpace = commandHeap[length - 1].to;
-    var fromSpace = commandHeap[length - 1].from;
-    var newRes = res;
-    var desc = ("Assign memory [").concat(left, "] with ").concat(newRes, ".");
-    newCommand(COMMAND.ASSIGN, toSpace, fromSpace, left, -1, 1, 1, heap, desc, "assigned memory", "");
+    const {length} = commandHeap;
+    const toSpace = commandHeap[length - 1].to;
+    const fromSpace = commandHeap[length - 1].from;
+    const newRes = res;
+    const desc = `Assign memory [${left}] with ${newRes}.`;
+    newCommand("Assign", toSpace, fromSpace, left, -1, 1, 1, heap, desc, "assigned memory", "");
   }
   function newNew(left, heap) {
-    var length = commandHeap.length;
-    var toSpace = commandHeap[length - 1].to;
-    var fromSpace = commandHeap[length - 1].from;
-    var newSizeLeft = heap[left + SIZE_SLOT];
-    var desc = ("New node starts in [").concat(left, "].");
-    newCommand(COMMAND.NEW, toSpace, fromSpace, left, -1, newSizeLeft, 0, heap, desc, "new memory allocated", "");
+    const {length} = commandHeap;
+    const toSpace = commandHeap[length - 1].to;
+    const fromSpace = commandHeap[length - 1].from;
+    const newSizeLeft = heap[left + SIZE_SLOT];
+    const desc = `New node starts in [${left}].`;
+    newCommand("New", toSpace, fromSpace, left, -1, newSizeLeft, 0, heap, desc, "new memory allocated", "");
   }
   function scanFlip(left, right, scan, free, heap) {
-    var length = commandHeap.length;
-    var toSpace = commandHeap[length - 1].to;
-    var fromSpace = commandHeap[length - 1].from;
+    const {length} = commandHeap;
+    const toSpace = commandHeap[length - 1].to;
+    const fromSpace = commandHeap[length - 1].from;
     memory = [];
-    for (var j = 0; j < heap.length; j += 1) {
+    for (let j = 0; j < heap.length; j += 1) {
       memory.push(heap[j]);
     }
-    var newLeft = left;
-    var newRight = right;
-    var newScan = scan;
-    var newFree = free;
-    var newDesc = ("Scanning node at ").concat(left, " for children node ").concat(scan, " and ").concat(free);
+    const newLeft = left;
+    const newRight = right;
+    const newScan = scan;
+    const newFree = free;
+    let newDesc = `Scanning node at ${left} for children node ${scan} and ${free}`;
     if (scan) {
       if (free) {
-        newDesc = ("Scanning node at ").concat(left, " for children node ").concat(scan, " and ").concat(free);
+        newDesc = `Scanning node at ${left} for children node ${scan} and ${free}`;
       } else {
-        newDesc = ("Scanning node at ").concat(left, " for children node ").concat(scan);
+        newDesc = `Scanning node at ${left} for children node ${scan}`;
       }
     } else if (free) {
-      newDesc = ("Scanning node at ").concat(left, " for children node ").concat(free);
+      newDesc = `Scanning node at ${left} for children node ${free}`;
     }
-    var obj = {
-      type: COMMAND.SCAN,
+    const obj = {
+      type: "Scan",
       to: toSpace,
       from: fromSpace,
       heap: memory,
@@ -318,47 +343,22 @@
   }
   function init() {
     return {
-      toReplString: function () {
-        return "<REDACTED>";
-      },
-      get_memory_size: get_memory_size,
-      get_from_space: get_from_space,
-      get_to_space: get_to_space,
-      get_memory_heap: get_memory_heap,
-      get_tags: get_tags,
-      get_types: get_types,
-      get_column_size: get_column_size,
-      get_row_size: get_row_size,
-      get_from_memory_matrix: get_from_memory_matrix,
-      get_to_memory_matrix: get_to_memory_matrix,
-      get_flips: get_flips,
-      get_slots: get_slots,
-      get_command: get_command,
-      get_roots: get_roots
+      toReplString: () => "<REDACTED>",
+      get_memory_size,
+      get_from_space,
+      get_to_space,
+      get_memory_heap,
+      get_tags,
+      get_types,
+      get_column_size,
+      get_row_size,
+      get_from_memory_matrix,
+      get_to_memory_matrix,
+      get_flips,
+      get_slots,
+      get_command,
+      get_roots
     };
   }
-  exports.allHeap = allHeap;
-  exports.doneShowRoot = doneShowRoot;
-  exports.endFlip = endFlip;
-  exports.generateMemory = generateMemory;
-  exports.init = init;
-  exports.initialize_memory = initialize_memory;
-  exports.initialize_tag = initialize_tag;
-  exports.newAssign = newAssign;
-  exports.newCommand = newCommand;
-  exports.newCopy = newCopy;
-  exports.newNew = newNew;
-  exports.newPop = newPop;
-  exports.newPush = newPush;
-  exports.resetFromSpace = resetFromSpace;
-  exports.resetRoots = resetRoots;
-  exports.scanFlip = scanFlip;
-  exports.showRoots = showRoots;
-  exports.startFlip = startFlip;
-  exports.updateRoots = updateRoots;
-  exports.updateSlotSegment = updateSlotSegment;
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  return exports;
-})
+  return __toCommonJS(copy_gc_exports);
+}

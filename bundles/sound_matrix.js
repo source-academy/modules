@@ -1,34 +1,55 @@
-(function () {
-  'use strict';
-  var exports = {};
-  (function () {
-    const env = {};
-    try {
-      if (process) {
-        process.env = Object.assign({}, process.env);
-        Object.assign(process.env, env);
-        return;
-      }
-    } catch (e) {}
-    globalThis.process = {
-      env: env
-    };
-  })();
+function (moduleHelpers) {
+  function require(x) {
+    const result = ({
+      "js-slang/moduleHelpers": moduleHelpers
+    })[x];
+    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
+  }
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all) __defProp(target, name, {
+      get: all[name],
+      enumerable: true
+    });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+        get: () => from[key],
+        enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+      });
+    }
+    return to;
+  };
+  var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
+    value: true
+  }), mod);
+  var sound_matrix_exports = {};
+  __export(sound_matrix_exports, {
+    ToneMatrix: () => ToneMatrix,
+    clear_all_timeout: () => clear_all_timeout,
+    clear_matrix: () => clear_matrix,
+    get_matrix: () => get_matrix,
+    set_timeout: () => set_timeout
+  });
   function pair(x, xs) {
     return [x, xs];
   }
   function vector_to_list(vector) {
-    var result = null;
-    for (var i = vector.length - 1; i >= 0; i = i - 1) {
+    let result = null;
+    for (let i = vector.length - 1; i >= 0; i = i - 1) {
       result = pair(vector[i], result);
     }
     return result;
   }
   var ToneMatrix = {
-    initialise_matrix: initialise_matrix,
-    clear_matrix: clear_matrix,
-    randomise_matrix: randomise_matrix,
-    bindMatrixButtons: bindMatrixButtons
+    initialise_matrix,
+    clear_matrix,
+    randomise_matrix,
+    bindMatrixButtons
   };
   var $tone_matrix;
   var color_on = "#cccccc";
@@ -39,8 +60,8 @@
   var matrix;
   var timeout_objects = [];
   function x_y_to_row_column(x, y) {
-    var row = Math.floor((y - margin_length) / (square_side_length + distance_between_squares));
-    var column = Math.floor((x - margin_length) / (square_side_length + distance_between_squares));
+    const row = Math.floor((y - margin_length) / (square_side_length + distance_between_squares));
+    const column = Math.floor((x - margin_length) / (square_side_length + distance_between_squares));
     return [row, column];
   }
   function row_to_y(row) {
@@ -53,7 +74,7 @@
     if (row < 0 || row > 15 || column < 0 || column > 15) {
       return;
     }
-    var ctx = $tone_matrix.getContext("2d");
+    const ctx = $tone_matrix.getContext("2d");
     ctx.fillStyle = color;
     ctx.fillRect(column_to_x(column), row_to_y(row), square_side_length, square_side_length);
   }
@@ -63,10 +84,10 @@
       $tone_matrix.width = 420;
       $tone_matrix.height = 420;
       matrix = new Array(16);
-      $tone_matrix.getContext("2d");
-      for (var i = 15; i >= 0; i--) {
+      const ctx = $tone_matrix.getContext("2d");
+      for (let i = 15; i >= 0; i--) {
         matrix[i] = new Array(16);
-        for (var j = 15; j >= 0; j--) {
+        for (let j = 15; j >= 0; j--) {
           set_color(i, j, color_off);
           matrix[i][j] = false;
         }
@@ -78,19 +99,19 @@
   }
   ToneMatrix.initialise_matrix = initialise_matrix;
   function bind_events_to_rect(c) {
-    c.addEventListener("click", function (event) {
-      var rect = c.getBoundingClientRect();
-      var offset_top = rect.top + document.documentElement.scrollTop;
-      var offset_left = rect.left + document.documentElement.scrollLeft;
-      var x = event.pageX - offset_left;
-      var y = event.pageY - offset_top;
-      var row_column = x_y_to_row_column(x, y);
-      var row = row_column[0];
-      var column = row_column[1];
+    c.addEventListener("click", event => {
+      const rect = c.getBoundingClientRect();
+      const offset_top = rect.top + document.documentElement.scrollTop;
+      const offset_left = rect.left + document.documentElement.scrollLeft;
+      const x = event.pageX - offset_left;
+      const y = event.pageY - offset_top;
+      const row_column = x_y_to_row_column(x, y);
+      const row = row_column[0];
+      const column = row_column[1];
       if (row < 0 || row > 15 || column < 0 || column > 15) {
         return;
       }
-      if (matrix[row][column] === undefined || !matrix[row][column]) {
+      if (matrix[row][column] === void 0 || !matrix[row][column]) {
         matrix[row][column] = true;
         set_color(row, column, color_on);
       } else {
@@ -100,11 +121,11 @@
     }, false);
   }
   function randomise_matrix() {
-    $tone_matrix.getContext("2d");
-    var on;
+    const ctx = $tone_matrix.getContext("2d");
+    let on;
     clear_matrix();
-    for (var i = 15; i >= 0; i--) {
-      for (var j = 15; j >= 0; j--) {
+    for (let i = 15; i >= 0; i--) {
+      for (let j = 15; j >= 0; j--) {
         on = Math.random() > 0.9;
         if (on) {
           set_color(i, j, color_on);
@@ -118,11 +139,11 @@
   }
   ToneMatrix.randomise_matrix = randomise_matrix;
   function bindMatrixButtons() {
-    var clear = document.getElementById("clear-matrix");
+    const clear = document.getElementById("clear-matrix");
     if (clear) {
-      clear.addEventListener("click", function () {
+      clear.addEventListener("click", () => {
         clear_matrix();
-        var play = document.getElementById("play-matrix");
+        const play = document.getElementById("play-matrix");
         if (play) {
           play.setAttribute("value", "Play");
         }
@@ -134,19 +155,19 @@
     if (!matrix) {
       throw new Error("Please activate the tone matrix first by clicking on the tab!");
     }
-    var matrix_list = matrix.slice(0);
-    var result = [];
-    for (var i = 0; i <= 15; i++) {
+    const matrix_list = matrix.slice(0);
+    const result = [];
+    for (let i = 0; i <= 15; i++) {
       result[i] = vector_to_list(matrix_list[15 - i]);
     }
     return vector_to_list(result);
   }
   function clear_matrix() {
     matrix = new Array(16);
-    $tone_matrix.getContext("2d");
-    for (var i = 15; i >= 0; i--) {
+    const ctx = $tone_matrix.getContext("2d");
+    for (let i = 15; i >= 0; i--) {
       matrix[i] = new Array(16);
-      for (var j = 15; j >= 0; j--) {
+      for (let j = 15; j >= 0; j--) {
         set_color(i, j, color_off);
         matrix[i][j] = false;
       }
@@ -156,25 +177,17 @@
   var set_time_out_renamed = window.setTimeout;
   function set_timeout(f, t) {
     if (typeof f === "function" && typeof t === "number") {
-      var timeoutObj = set_time_out_renamed(f, t);
+      const timeoutObj = set_time_out_renamed(f, t);
       timeout_objects.push(timeoutObj);
     } else {
       throw new Error("set_timeout(f, t) expects a function and a number respectively.");
     }
   }
   function clear_all_timeout() {
-    for (var i = timeout_objects.length - 1; i >= 0; i--) {
+    for (let i = timeout_objects.length - 1; i >= 0; i--) {
       clearTimeout(timeout_objects[i]);
     }
     timeout_objects = [];
   }
-  exports.ToneMatrix = ToneMatrix;
-  exports.clear_all_timeout = clear_all_timeout;
-  exports.clear_matrix = clear_matrix;
-  exports.get_matrix = get_matrix;
-  exports.set_timeout = set_timeout;
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  return exports;
-})
+  return __toCommonJS(sound_matrix_exports);
+}
