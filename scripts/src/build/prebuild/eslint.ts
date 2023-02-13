@@ -4,7 +4,7 @@ import { ESLint } from 'eslint';
 import pathlib from 'path';
 
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { divideAndRound, exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
 import type { AssetInfo, BuildCommandInputs, Severity } from '../types.js';
 
 export type LintCommandInputs = ({
@@ -100,4 +100,5 @@ export const lintCommand = new Command('lint')
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const result = await runEslint(opts, assets);
     logLintResult(result);
+    exitOnError([], result.result);
   });

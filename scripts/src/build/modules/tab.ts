@@ -13,15 +13,14 @@ import type {
   ReturnStatement,
   VariableDeclaration,
 } from 'estree';
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
 import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 
 import { printList } from '../../scriptUtils.js';
-import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
-import { type LintCommandInputs, logLintResult } from '../prebuild/eslint.js';
-import { preBuild } from '../prebuild/index.js';
-import { logTscResults } from '../prebuild/tsc.js';
+import { copyManifest, createBuildCommand, exitOnError, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
+import type { LintCommandInputs } from '../prebuild/eslint.js';
+import { prebuild } from '../prebuild/index.js';
 import type { BuildCommandInputs, BuildOptions, BuildResult, UnreducedResult } from '../types';
 
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
@@ -119,12 +118,8 @@ const buildTabsCommand = createBuildCommand('tabs', true)
   .description('Build only tabs')
   .action(async (tabs: string[] | null, opts: BuildCommandInputs & LintCommandInputs) => {
     const assets = await retrieveBundlesAndTabs(opts.manifest, [], tabs);
-    const { lintResult, tscResult, proceed } = await preBuild(opts, assets);
 
-    logLintResult(lintResult);
-    logTscResults(tscResult, opts.srcDir);
-
-    if (!proceed) return;
+    await prebuild(opts, assets);
 
     printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
     const startTime = performance.now();
@@ -134,6 +129,7 @@ const buildTabsCommand = createBuildCommand('tabs', true)
       copyManifest(opts),
     ]);
     logResult(reducedRes, opts.verbose);
+    exitOnError(reducedRes);
   });
 
 

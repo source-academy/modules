@@ -1,13 +1,21 @@
 import chalk from 'chalk';
 import { context as esbuild } from 'esbuild';
-import fs from 'fs/promises';
 import type { Application } from 'typedoc';
 
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
 import { reduceBundleOutputFiles } from './modules/bundle.js';
 import { esbuildOptions } from './modules/moduleUtils.js';
 import { reduceTabOutputFiles } from './modules/tab.js';
-import { bundleNameExpander, copyManifest, createBuildCommand, divideAndRound, logResult, retrieveBundlesAndTabs, tabNameExpander } from './buildUtils.js';
+import {
+  bundleNameExpander,
+  copyManifest,
+  createBuildCommand,
+  createBuildDirs,
+  divideAndRound,
+  logResult,
+  retrieveBundlesAndTabs,
+  tabNameExpander,
+} from './buildUtils.js';
 import type { BuildCommandInputs, UnreducedResult } from './types.js';
 
 /**
@@ -112,10 +120,8 @@ export const watchCommand = createBuildCommand('watch', false)
   .action(async (opts: WatchCommandInputs) => {
     const [{ bundles, tabs }] = await Promise.all([
       retrieveBundlesAndTabs(opts.manifest, null, null),
-      fs.mkdir(`${opts.outDir}/bundles/`, { recursive: true }),
-      fs.mkdir(`${opts.outDir}/tabs/`, { recursive: true }),
-      fs.mkdir(`${opts.outDir}/jsons/`, { recursive: true }),
-      fs.copyFile(opts.manifest, `${opts.outDir}/${opts.manifest}`),
+      createBuildDirs(opts.outDir),
+      copyManifest(opts),
     ]);
 
     let app: Application | null = null;

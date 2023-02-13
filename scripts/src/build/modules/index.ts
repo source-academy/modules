@@ -2,9 +2,16 @@ import chalk from 'chalk';
 import { promises as fs } from 'fs';
 
 import { printList } from '../../scriptUtils.js';
-import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import {
+  copyManifest,
+  createBuildCommand,
+  createOutDir,
+  exitOnError,
+  logResult,
+  retrieveBundlesAndTabs,
+} from '../buildUtils.js';
 import type { LintCommandInputs } from '../prebuild/eslint.js';
-import { autoLogPrebuild } from '../prebuild/index.js';
+import { prebuild } from '../prebuild/index.js';
 import type { AssetInfo, BuildCommandInputs, BuildOptions } from '../types';
 
 import { buildBundles, reduceBundleOutputFiles } from './bundle.js';
@@ -56,12 +63,14 @@ const buildModulesCommand = createBuildCommand('modules', true)
   .argument('[modules...]', 'Manually specify which modules to build', null)
   .description('Build modules and their tabs')
   .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
-    const assets = await retrieveBundlesAndTabs(manifest, modules, []);
+    const [assets] = await Promise.all([
+      retrieveBundlesAndTabs(manifest, modules, []),
+      createOutDir(opts.outDir),
+    ]);
+
+    await prebuild(opts, assets);
 
     printList(`${chalk.magentaBright('Building bundles and tabs for the following bundles:')}\n`, assets.bundles);
-
-    const proceed = await autoLogPrebuild(opts, assets);
-    if (!proceed) return;
 
     const [results] = await Promise.all([
       buildModules(opts, assets),
@@ -71,6 +80,7 @@ const buildModulesCommand = createBuildCommand('modules', true)
       }),
     ]);
     logResult(results, opts.verbose);
+    exitOnError(results);
   })
   .description('Build only bundles and tabs');
 

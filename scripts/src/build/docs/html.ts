@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import type { Application, ProjectReflection } from 'typedoc';
 
 import { wrapWithTimer } from '../../scriptUtils.js';
-import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { divideAndRound, exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import type { BuildCommandInputs, BuildResult } from '../types';
 
@@ -77,7 +77,7 @@ const buildHtmlCommand = new Command('html')
     if (opts.tsc) {
       const tscResult = await runTsc(opts.srcDir, assets);
       logTscResults(tscResult, opts.srcDir);
-      if (tscResult.result.severity === 'error') return;
+      if (tscResult.result.severity === 'error') process.exit(1);
     }
 
     const { elapsed: typedoctime, result: [app, project] } = await initTypedoc({
@@ -92,6 +92,7 @@ const buildHtmlCommand = new Command('html')
       modulesSpecified: false,
     });
     logHtmlResult(htmlResult);
+    exitOnError([], htmlResult.result);
   });
 
 export default buildHtmlCommand;

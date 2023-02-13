@@ -17,16 +17,18 @@ import buildModulesCommand, {
   buildTabsCommand,
 } from './modules/index.js';
 import type { LintCommandInputs } from './prebuild/eslint.js';
-import { autoLogPrebuild } from './prebuild/index.js';
-import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
+import { prebuild } from './prebuild/index.js';
+import { copyManifest, createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
 import type { BuildCommandInputs } from './types.js';
 
-const buildAllCommand = createBuildCommand('all', true)
+export const buildAllCommand = createBuildCommand('all', true)
   .argument('[modules...]', 'Manually specify which modules to build', null)
   .action(async (modules: string[] | null, opts: BuildCommandInputs & LintCommandInputs) => {
-    const assets = await retrieveBundlesAndTabs(opts.manifest, modules, null);
-    const proceed = await autoLogPrebuild(opts, assets);
-    if (!proceed) return;
+    const [assets] = await Promise.all([
+      retrieveBundlesAndTabs(opts.manifest, modules, null),
+      createOutDir(opts.outDir),
+    ]);
+    await prebuild(opts, assets);
 
     printList(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n`, assets.bundles);
 
@@ -64,6 +66,7 @@ const buildAllCommand = createBuildCommand('all', true)
 
     logResult(results.concat(jsonResults), opts.verbose);
     logHtmlResult(htmlResult);
+    exitOnError(results, ...jsonResults, htmlResult.result);
   })
   .description('Build bundles, tabs, jsons and HTML documentation');
 

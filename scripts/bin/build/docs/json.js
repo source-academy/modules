@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { createBuildCommand, logResult, retrieveBundlesAndTabs, } from '../buildUtils.js';
+import { createBuildCommand, createOutDir, logResult, retrieveBundlesAndTabs, } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import drawdown from './drawdown.js';
@@ -147,7 +147,10 @@ const jsonCommand = createBuildCommand('jsons', false)
     .option('--tsc', 'Run tsc before building')
     .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
     .action(async (modules, { manifest, srcDir, outDir, verbose, tsc }) => {
-    const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
+    const [{ bundles }] = await Promise.all([
+        retrieveBundlesAndTabs(manifest, modules, [], false),
+        createOutDir(outDir),
+    ]);
     if (bundles.length === 0)
         return;
     if (tsc) {
