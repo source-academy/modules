@@ -1,65 +1,57 @@
 /**
  * Tab for Source Academy Programmable REPL module
- * @module programmable_repl
+ * @module repl
  * @author Wang Zihan
  */
 
-
-/*
-Requires Node Modules:
-ace-builds
-react-ace
-diff-match-patch
-lodash.isequal
-lodash.get
-*/
-
 import React from 'react';
-import { type DebuggerContext } from '../../typings/type_helpers';
-import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
+import { DebuggerContext } from '../../typings/type_helpers';
+import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { type ProgrammableRepl } from '../../bundles/programmable_repl/programmable_repl';
-// import './ace-builds/src-noconflict/ace';
-// import AceEditor from './react-ace';
-// import { Ace } from 'ace-builds';
-import AceEditor from 'react-ace';
+import { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
+//If I use import for AceEditor it will cause runtime error and crash Source Academy when spawning tab in the new module building system.
+//import AceEditor from 'react-ace';
+const AceEditor = require('react-ace').default;
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
 import 'ace-builds/src-noconflict/ext-language_tools';
-// import './styles.css';
 
 
-type GUI_Data = {
+type Props = {
   programmableReplInstance: ProgrammableRepl;
 };
 
-class ProgrammableReplGUI extends React.Component<GUI_Data> {
+class ProgrammableReplGUI extends React.Component<Props> {
   public replInstance : ProgrammableRepl;
-  // private _editorInstance : any;
-  constructor(data: GUI_Data) {
+  constructor(data: Props) {
     super(data);
     this.replInstance = data.programmableReplInstance;
     this.replInstance.setTabReactComponentInstance(this);
-    // this._editorInstance = null;
   }
   public render() {
     const outputDivs : JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
-      // outputDivs.push( <div style={{ color: this.replInstance.outputStrings[i].color }} >{this.replInstance.outputStrings[i].content}</div> );
-      outputDivs.push(<div style={{ color: this.replInstance.outputStrings[i].color }} dangerouslySetInnerHTML={ { __html: this.replInstance.outputStrings[i].content }} />);
+      const str = this.replInstance.outputStrings[i];
+      if (str.outputMethod === 'richtext') {
+        if (str.color === '') {
+          outputDivs.push(<div dangerouslySetInnerHTML={ { __html: str.content }} />);
+        } else {
+          outputDivs.push(<div style={{ color: str.color }} dangerouslySetInnerHTML={ { __html: str.content }} />);
+        }
+      } else if (str.color === '') {
+        outputDivs.push(<div>{ str.content }</div>);
+      } else {
+        outputDivs.push(<div style={{ color: str.color }}>{ str.content }</div>);
+      }
     }
-    /*  const styles=CSS`.ace_gutter-cell.ace_breakpoint{
-    border-radius: 20px 0px 0px 20px;
-    box-shadow: 0px 0px 1px 1px #248c46 inset;
-    }`;*/
     return (
       <div>
         <Button
           className="programmable-repl-button"
           icon={IconNames.PLAY}
           active={true}
-          onClick={() => this.replInstance.RunCode()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
+          onClick={() => this.replInstance.runCode()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Run"
         />
         <Button
@@ -70,11 +62,11 @@ class ProgrammableReplGUI extends React.Component<GUI_Data> {
           text="Save"
         />
         <AceEditor
-          ref={ (e) => this.replInstance.SetEditorInstance(e?.editor)}
+          ref={ (e) => this.replInstance.setEditorInstance(e?.editor)}
           style= { {
             width: '100%',
             height: '375px',
-            ...(this.replInstance.customizedEditorProps.backgroundImageUrl != 'no-background-image' && {
+            ...(this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
               backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
               backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
               backgroundSize: '100%',
@@ -82,16 +74,12 @@ class ProgrammableReplGUI extends React.Component<GUI_Data> {
             }),
           } }
           mode="javascript" theme="twilight"
-          onChange={ (newValue) => this.replInstance.UpdateUserCode(newValue) }
+          onChange={ (newValue) => this.replInstance.updateUserCode(newValue) }
           value={this.replInstance.userCodeInEditor.toString()}
-          // editorProps = { {fontSize: 17} }
         />
         <div id="output_strings">{outputDivs}</div>
       </div>
     );
-    // <AceEditor style= { { width: '720px', height: '375px' } } mode='javascript' theme='twilight' onChange={ newValue => this.replInstance.UpdateUserCode(newValue) } value={this.replInstance.userCodeInEditor.toString()} />;
-    // value={this.replInstance.userCodeInEditor.toString()}
-    // <textarea style= { { width: '720px', height: '375px' } } onChange={e => this.replInstance.UpdateUserCode(e.target.value) } />
   }
 }
 
@@ -103,7 +91,7 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn(context: DebuggerContext) {
+  toSpawn(_context: DebuggerContext) {
     return true;
   },
 
@@ -113,13 +101,13 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    return <ProgrammableReplGUI programmableReplInstance={context.context.moduleContexts.programmable_repl.state} />;
+    return <ProgrammableReplGUI programmableReplInstance={context.context.moduleContexts.repl.state} />;
   },
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
    */
-  label: 'Programmable REPL Tab',
+  label: 'Programmable Repl Tab',
 
   /**
    * BlueprintJS IconName element's name, used to render the icon which will be
