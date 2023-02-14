@@ -28,17 +28,17 @@ const typeToName = (type?: SomeType, alt: string = 'unknown') => (type ? (type a
 /**
  * Parsers to convert typedoc elements into strings
  */
-const parsers: Record<string, (docs: DeclarationReflection) => Record<'header' | 'desc', string>> = {
+export const parsers: Record<string, (docs: DeclarationReflection) => Record<'header' | 'desc', string>> = {
   Variable(element) {
     let desc: string;
     if (!element.comment) desc = 'No description available';
     else {
-      desc = drawdown(element.comment.summary.map(({ text }) => text)
-        .join(''));
+      desc = element.comment.summary.map(({ text }) => text)
+        .join('');
     }
     return {
       header: `${element.name}: ${typeToName(element.type)}`,
-      desc,
+      desc: drawdown(desc),
     };
   },
   Function({ name: elementName, signatures: [signature] }) {
@@ -57,12 +57,12 @@ const parsers: Record<string, (docs: DeclarationReflection) => Record<'header' |
     let desc: string;
     if (!signature.comment) desc = 'No description available';
     else {
-      desc = drawdown(signature.comment.summary.map(({ text }) => text)
-        .join(''));
+      desc = signature.comment.summary.map(({ text }) => text)
+        .join('');
     }
     return {
       header: `${elementName}${paramStr} → {${resultStr}}`,
-      desc,
+      desc: drawdown(desc),
     };
   },
 };
@@ -193,9 +193,10 @@ export const buildJsons = async (project: ProjectReflection, { outDir, bundles }
 };
 
 /**
- * Console command for building jsons
+ * Get console command for building jsons
+ *
  */
-const jsonCommand = createBuildCommand('jsons', false)
+const getJsonCommand = () => createBuildCommand('jsons', false)
   .option('--tsc', 'Run tsc before building')
   .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
   .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose, tsc }: Omit<BuildCommandInputs, 'modules' | 'tabs'>) => {
@@ -212,7 +213,10 @@ const jsonCommand = createBuildCommand('jsons', false)
         tabs: [],
       });
       logTscResults(tscResult, srcDir);
-      if (tscResult.result.severity === 'error') process.exit(1);
+      if (tscResult.result.severity === 'error') {
+        process.exit(1);
+        return; // kept for when running jest
+      }
     }
 
     const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
@@ -220,6 +224,7 @@ const jsonCommand = createBuildCommand('jsons', false)
       srcDir,
       verbose,
     });
+
 
     logTypedocTime(typedocTime);
     printList(chalk.magentaBright('Building jsons for the following modules:\n'), bundles);
@@ -232,4 +237,4 @@ const jsonCommand = createBuildCommand('jsons', false)
   })
   .description('Build only jsons');
 
-export default jsonCommand;
+export default getJsonCommand;

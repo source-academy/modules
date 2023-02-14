@@ -1,36 +1,23 @@
-import buildModulesCommand, * as modules from '..';
+import getBuildModulesCommand, * as modules from '..';
 import fs from 'fs/promises';
 import pathlib from 'path';
 
-jest.mock('../../../scriptUtils', () => ({
-  ...jest.requireActual('../../../scriptUtils'),
-  retrieveManifest: jest.fn((_manifest: string) => Promise.resolve({
-    test0: {
-      tabs: ['tab0'],
-    },
-    test1: { tabs: [] },
-    test2: {
-      tabs: ['tab1'],
-    },
-  })),
-}));
-
 jest.spyOn(modules, 'buildModules');
-
-jest.mock('fs/promises', () => ({
-  copyFile: jest.fn(() => Promise.resolve()),
-  mkdir: jest.fn(() => Promise.resolve()),
-  stat: jest.fn().mockResolvedValue({ size: 10 }),
-  writeFile: jest.fn(() => Promise.resolve()),
-}))
 
 jest.mock('esbuild', () => ({
   build: jest.fn().mockResolvedValue({ outputFiles: [] }),
 }));
 
-const runCommand = (...args: string[]) => buildModulesCommand.parseAsync(args, { from: 'user' });
+jest.mock('../../prebuild/tsc');
+
+const runCommand = (...args: string[]) => getBuildModulesCommand().parseAsync(args, { from: 'user' });
+const buildModulesMock = modules.buildModules as jest.MockedFunction<typeof modules.buildModules>
 
 describe('test modules command', () => {
+  beforeEach(() => {
+    buildModulesMock.mockReset();
+  })
+  
   it('should create the output directories, and copy the manifest', async () => {
     await runCommand();
 
@@ -45,14 +32,29 @@ describe('test modules command', () => {
     await runCommand('test0');
 
     expect(modules.buildModules)
-      .toHaveBeenCalledTimes(2);
+      .toHaveBeenCalledTimes(1);
 
-    const buildModulesCall = (modules.buildModules as jest.MockedFunction<typeof modules.buildModules>).mock.calls[1];
+    const buildModulesCall = buildModulesMock.mock.calls[0];
     expect(buildModulesCall[1])
       .toMatchObject({
         bundles: ['test0'],
         tabs: ['tab0'],
         modulesSpecified: true,
       })
+  });
+
+  it('should exit with code 1 if tsc returns with an error', async () => {
+    try {
+      await runCommand('--tsc');
+    } catch (error) {
+      expect(error)
+        .toEqual(new Error('Exiting for jest'));
+    }
+
+    expect(modules.buildModules)
+      .toHaveBeenCalledTimes(0);
+
+    expect(process.exit)
+      .toHaveBeenCalledWith(1);
   });
 })

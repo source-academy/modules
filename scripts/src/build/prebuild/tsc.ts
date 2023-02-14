@@ -121,7 +121,7 @@ export const logTscResults = (input: Awaited<ReturnType<typeof runTsc>> | null, 
 
 export type TscCommandInputs = CommandInputs;
 
-export const tscCommand = new Command('typecheck')
+const getTscCommand = () => new Command('typecheck')
   .description('Run tsc to perform type checking')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
@@ -134,3 +134,5 @@ export const tscCommand = new Command('typecheck')
     logTscResults(tscResults, srcDir);
     exitOnError([], tscResults.result);
   });
+
+export default getTscCommand;

@@ -1,66 +1,226 @@
 import type { MockedFunction } from "jest-mock";
-import { buildJsonCommand, buildJsons } from "..";
-import * as jsonModule from '../json';
+import getJsonCommand, * as jsonModule from '../json';
+import * as tscModule from '../../prebuild/tsc';
 import fs from 'fs/promises';
-import pathlib from 'path';
-
-jest.mock('../../../scriptUtils', () => ({
-  ...jest.requireActual('../../../scriptUtils'),
-  retrieveManifest: jest.fn((_manifest: string) => Promise.resolve({
-    test0: {
-      tabs: ['tab0'],
-    },
-    test1: { tabs: [] },
-    test2: {
-      tabs: ['tab1'],
-    },
-  })),
-}));
-
-jest.mock('../docUtils');
-
-jest.mock('../../prebuild/tsc', () => ({
-  logTscResults: jest.fn(),
-  runTsc: jest.fn().mockResolvedValue({ result: {
-    severity: 'error',
-    results: [],
-  }})
-}));
-
-jest.mock('fs/promises', () => ({
-  copyFile: jest.fn(() => Promise.resolve()),
-  mkdir: jest.fn(() => Promise.resolve()),
-  stat: jest.fn().mockResolvedValue({ size: 10 }),
-  writeFile: jest.fn(() => Promise.resolve()),
-}))
-
-// @ts-ignore
-jest.spyOn(process, 'exit').mockImplementation(code => code);
+import type { DeclarationReflection } from "typedoc";
 
 jest.spyOn(jsonModule, 'buildJsons');
+jest.spyOn(tscModule, 'runTsc')
+  .mockResolvedValue({
+    elapsed: 0,
+    result: {
+      severity: 'error',
+      results: [],
+    }
+  })
 
-const runCommand = (...args: string[]) => buildJsonCommand.parseAsync(args, { from: 'user' });
+const mockBuildJson = jsonModule.buildJsons as MockedFunction<typeof jsonModule.buildJsons>;
+const runCommand = (...args: string[]) => getJsonCommand().parseAsync(args, { from: 'user' });
+
 describe('test json command', () => {
-  it('should create the output directory', async () => {
+  beforeEach(() => {
+    mockBuildJson.mockReset();
+  });
+
+  test('normal function', async () => {
     await runCommand();
 
     expect(fs.mkdir)
       .toBeCalledWith('build', { recursive: true })
+
+    expect(jsonModule.buildJsons)
+      .toHaveBeenCalledTimes(1);
   })
 
   it('should exit with code 1 if tsc returns with an error', async () => {
-    await runCommand('--tsc');
+    await runCommand('--tsc'); 
+
+    expect(jsonModule.buildJsons)
+      .toHaveBeenCalledTimes(0);
 
     expect(process.exit)
       .toHaveBeenCalledWith(1);
-  })
+  });
 
   it('should exit with code 1 if buildJsons returns with an error', async () => {
+    mockBuildJson.mockResolvedValueOnce([['json', 'test0', { severity: 'error' }]])
     await runCommand();
 
-    (buildJsons as MockedFunction<typeof buildJsons>).mockResolvedValueOnce([['json', 'test0', { severity: 'error' }]])
+    expect(jsonModule.buildJsons)
+      .toHaveBeenCalledTimes(1);
 
     expect(process.exit)
       .toHaveBeenCalledWith(1);
   })
+});
+
+describe('test parsers', () => {
+  const { Variable: variableParser, Function: functionParser } = jsonModule.parsers;
+
+  describe('test function parser', () => {
+    test('normal function with parameters', () => {
+      const element = {
+        name: 'foo',
+        signatures: [{
+          parameters: [{
+            name: 'x',
+            type: {
+              name: 'number',
+            },
+          }, {
+            name: 'y',
+            type: {
+              name: 'string',
+            },
+          }],
+          type: {
+            name: 'string',
+          },
+          comment: {
+            summary: [{
+              text: 'Test'
+            }, {
+              text: ' Description'
+            }]
+          }
+        }]
+      } as DeclarationReflection;
+
+      const { header, desc } = functionParser(element);
+
+      expect(header)
+        .toEqual(`${element.name}(x: number, y: string) → {string}`);
+
+      expect(desc)
+        .toEqual('<p>Test Description</p>');
+    });
+
+    test('normal function without parameters', () => {
+      const element = {
+        name: 'foo',
+        signatures: [{
+          type: {
+            name: 'string',
+          },
+          comment: {
+            summary: [{
+              text: 'Test'
+            }, {
+              text: ' Description'
+            }]
+          }
+        }]
+      } as DeclarationReflection;
+
+      const { header, desc } = functionParser(element);
+
+      expect(header)
+        .toEqual(`${element.name}() → {string}`);
+
+      expect(desc)
+        .toEqual('<p>Test Description</p>');
+    });
+
+    test('normal function without return type', () => {
+      const element = {
+        name: 'foo',
+        signatures: [{
+          comment: {
+            summary: [{
+              text: 'Test'
+            }, {
+              text: ' Description'
+            }]
+          }
+        }]
+      } as DeclarationReflection;
+
+      const { header, desc } = functionParser(element);
+
+      expect(header)
+        .toEqual(`${element.name}() → {void}`);
+
+      expect(desc)
+        .toEqual('<p>Test Description</p>');
+    });
+
+    it('should provide \'No description available\' when description is missing', () => {
+      const element = {
+        name: 'foo',
+        signatures: [{}]
+      } as DeclarationReflection;
+
+      const { header, desc } = functionParser(element);
+
+      expect(header)
+        .toEqual(`${element.name}() → {void}`);
+
+      expect(desc)
+        .toEqual('<p>No description available</p>');
+    });
+  });
+
+  describe('test variable parser', () => {
+    test('normal function', () => {
+      const element = {
+        name: 'test_variable',
+        type: {
+          name: 'number'
+        },
+        comment: {
+          summary: [{
+            text: 'Test'
+          }, {
+            text: ' Description'
+          }]
+        }
+      } as DeclarationReflection;
+
+      const { header, desc } = variableParser(element);
+
+      expect(header)
+        .toEqual(`${element.name}: number`);
+
+      expect(desc)
+        .toEqual('<p>Test Description</p>');
+    })
+
+    it('should provide \'No description available\' when description is missing', () => {
+      const element = {
+        name: 'test_variable',
+        type: {
+          name: 'number'
+        },
+      } as DeclarationReflection;
+
+      const { header, desc } = variableParser(element);
+
+      expect(header)
+        .toEqual(`${element.name}: number`);
+
+      expect(desc)
+        .toEqual('<p>No description available</p>');
+    })
+
+    it("should provide 'unknown' if type information is unavailable", () => {
+      const element = {
+        name: 'test_variable',
+        comment: {
+          summary: [{
+            text: 'Test'
+          }, {
+            text: 'Description'
+          }]
+        }
+      } as DeclarationReflection;
+
+      const { header, desc } = variableParser(element);
+
+      expect(header)
+        .toEqual(`${element.name}: unknown`);
+
+      expect(desc)
+        .toEqual('<p>TestDescription</p>');
+    });
+  });
 });

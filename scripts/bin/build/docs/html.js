@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { wrapWithTimer } from '../../scriptUtils.js';
-import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { divideAndRound, exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 /**
@@ -46,9 +46,9 @@ export const logHtmlResult = (htmlResult) => {
     }
 };
 /**
- * CLI command to only build HTML documentation
+ * Get CLI command to only build HTML documentation
  */
-const buildHtmlCommand = new Command('html')
+const getBuildHtmlCommand = () => new Command('html')
     .option('--outDir <outdir>', 'Output directory', 'build')
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
@@ -61,7 +61,7 @@ const buildHtmlCommand = new Command('html')
         const tscResult = await runTsc(opts.srcDir, assets);
         logTscResults(tscResult, opts.srcDir);
         if (tscResult.result.severity === 'error')
-            return;
+            process.exit(1);
     }
     const { elapsed: typedoctime, result: [app, project] } = await initTypedoc({
         bundles: assets.bundles,
@@ -74,5 +74,6 @@ const buildHtmlCommand = new Command('html')
         modulesSpecified: false,
     });
     logHtmlResult(htmlResult);
+    exitOnError([], htmlResult.result);
 });
-export default buildHtmlCommand;
+export default getBuildHtmlCommand;

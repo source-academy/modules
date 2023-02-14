@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import { promises as fs } from 'fs';
 import { printList } from '../../scriptUtils.js';
-import { copyManifest, createBuildCommand, createOutDir, logResult, retrieveBundlesAndTabs, } from '../buildUtils.js';
-import { autoLogPrebuild } from '../prebuild/index.js';
+import { copyManifest, createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundlesAndTabs, } from '../buildUtils.js';
+import { prebuild } from '../prebuild/index.js';
 import { buildBundles, reduceBundleOutputFiles } from './bundle.js';
 import { buildTabs, reduceTabOutputFiles } from './tab.js';
 // export const processOutputFiles = async (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
@@ -39,7 +39,7 @@ export const buildModules = async (opts, { bundles, tabs }) => {
     ]);
     return bundleResults.concat(tabResults);
 };
-const buildModulesCommand = createBuildCommand('modules', true)
+const getBuildModulesCommand = () => createBuildCommand('modules', true)
     .argument('[modules...]', 'Manually specify which modules to build', null)
     .description('Build modules and their tabs')
     .action(async (modules, { manifest, ...opts }) => {
@@ -47,10 +47,8 @@ const buildModulesCommand = createBuildCommand('modules', true)
         retrieveBundlesAndTabs(manifest, modules, []),
         createOutDir(opts.outDir),
     ]);
+    await prebuild(opts, assets);
     printList(`${chalk.magentaBright('Building bundles and tabs for the following bundles:')}\n`, assets.bundles);
-    const proceed = await autoLogPrebuild(opts, assets);
-    if (!proceed)
-        return;
     const [results] = await Promise.all([
         buildModules(opts, assets),
         copyManifest({
@@ -59,7 +57,8 @@ const buildModulesCommand = createBuildCommand('modules', true)
         }),
     ]);
     logResult(results, opts.verbose);
+    exitOnError(results);
 })
     .description('Build only bundles and tabs');
-export { default as buildTabsCommand } from './tab.js';
-export default buildModulesCommand;
+export { default as getBuildTabsCommand } from './tab.js';
+export default getBuildModulesCommand;

@@ -88,7 +88,7 @@ export const logLintResult = (input: Awaited<ReturnType<typeof runEslint>> | nul
   console.log(`${chalk.cyanBright(`Linting completed in ${divideAndRound(elapsed, 1000)}s ${errStr}:`)}\n${formatted}`);
 };
 
-export const lintCommand = new Command('lint')
+const getLintCommand = () => new Command('lint')
   .description('Run eslint')
   .option('--fix', 'Ask eslint to autofix linting errors', false)
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
@@ -102,3 +102,5 @@ export const lintCommand = new Command('lint')
     logLintResult(result);
     exitOnError([], result.result);
   });
+
+export default getLintCommand;

@@ -59,7 +59,7 @@ export const buildModules = async (opts: BuildOptions, { bundles, tabs }: AssetI
   return bundleResults.concat(tabResults);
 };
 
-const buildModulesCommand = createBuildCommand('modules', true)
+const getBuildModulesCommand = () => createBuildCommand('modules', true)
   .argument('[modules...]', 'Manually specify which modules to build', null)
   .description('Build modules and their tabs')
   .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
@@ -84,5 +84,5 @@ const buildModulesCommand = createBuildCommand('modules', true)
   })
   .description('Build only bundles and tabs');
 
-export { default as buildTabsCommand } from './tab.js';
-export default buildModulesCommand;
+export { default as getBuildTabsCommand } from './tab.js';
+export default getBuildModulesCommand;

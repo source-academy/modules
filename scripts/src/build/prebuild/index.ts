@@ -63,11 +63,14 @@ export const prebuild = async (opts: PreBuildOpts, assets: AssetInfo) => {
   logTscResults(tscResult, opts.srcDir);
 
   exitOnError([], lintResult?.result, tscResult?.result);
+  if (lintResult?.result.severity === 'error' || tscResult?.result.severity === 'error') {
+    throw new Error('Exiting for jest');
+  }
 };
 
 type PrebuildCommandInputs = LintCommandInputs & TscCommandInputs;
 
-const prebuildCommand = new Command('prebuild')
+const getPrebuildCommand = () => new Command('prebuild')
   .description('Run both tsc and eslint')
   .option('--fix', 'Ask eslint to autofix linting errors', false)
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
@@ -83,6 +86,6 @@ const prebuildCommand = new Command('prebuild')
     }, assets);
   });
 
-export default prebuildCommand;
-export { lintCommand } from './eslint.js';
-export { tscCommand } from './tsc.js';
+export default getPrebuildCommand;
+export { default as getLintCommand } from './eslint.js';
+export { default as getTscCommand } from './tsc.js';

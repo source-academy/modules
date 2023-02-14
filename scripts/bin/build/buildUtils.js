@@ -120,6 +120,23 @@ export const logResult = (unreduced, verbose) => {
         .join('\n'));
 };
 /**
+ * Call this function to exit with code 1 when there are errors with the build command that ran
+ */
+export const exitOnError = (results, ...others) => {
+    results.concat(others)
+        .forEach((entry) => {
+        if (!entry)
+            return;
+        if (Array.isArray(entry)) {
+            const [, , { severity }] = entry;
+            if (severity === 'error')
+                process.exit(1);
+        }
+        else if (entry.severity === 'error')
+            process.exit(1);
+    });
+};
+/**
  * Function to determine which bundles and tabs to build based on the user's input.
  *
  * @param modules

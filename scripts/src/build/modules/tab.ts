@@ -113,7 +113,7 @@ export const reduceTabOutputFiles = (outputFiles: OutputFile[], startTime: numbe
   }] as UnreducedResult;
 }));
 
-const buildTabsCommand = createBuildCommand('tabs', true)
+const getBuildTabsCommand = () => createBuildCommand('tabs', true)
   .argument('[tabs...]', 'Manually specify which tabs to build', null)
   .description('Build only tabs')
   .action(async (tabs: string[] | null, opts: BuildCommandInputs & LintCommandInputs) => {
@@ -133,4 +133,4 @@ const buildTabsCommand = createBuildCommand('tabs', true)
   });
 
 
-export default buildTabsCommand;
+export default getBuildTabsCommand;

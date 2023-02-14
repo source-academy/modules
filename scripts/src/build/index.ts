@@ -4,24 +4,24 @@ import { Command } from 'commander';
 import { printList } from '../scriptUtils.js';
 
 import { logTypedocTime } from './docs/docUtils.js';
-import buildDocsCommand, {
+import getBuildDocsCommand, {
   buildHtml,
-  buildHtmlCommand,
-  buildJsonCommand,
   buildJsons,
+  getBuildHtmlCommand,
+  getBuildJsonCommand,
   initTypedoc,
   logHtmlResult,
 } from './docs/index.js';
-import buildModulesCommand, {
+import getBuildModulesCommand, {
   buildModules,
-  buildTabsCommand,
+  getBuildTabsCommand,
 } from './modules/index.js';
 import type { LintCommandInputs } from './prebuild/eslint.js';
 import { prebuild } from './prebuild/index.js';
 import { copyManifest, createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
 import type { BuildCommandInputs } from './types.js';
 
-export const buildAllCommand = createBuildCommand('all', true)
+export const getBuildAllCommand = () => createBuildCommand('all', true)
   .argument('[modules...]', 'Manually specify which modules to build', null)
   .action(async (modules: string[] | null, opts: BuildCommandInputs & LintCommandInputs) => {
     const [assets] = await Promise.all([
@@ -72,9 +72,9 @@ export const buildAllCommand = createBuildCommand('all', true)
 
 export default new Command('build')
   .description('Run without arguments to build all, or use a specific build subcommand')
-  .addCommand(buildAllCommand, { isDefault: true })
-  .addCommand(buildDocsCommand)
-  .addCommand(buildHtmlCommand)
-  .addCommand(buildJsonCommand)
-  .addCommand(buildModulesCommand)
-  .addCommand(buildTabsCommand);
+  .addCommand(getBuildAllCommand(), { isDefault: true })
+  .addCommand(getBuildDocsCommand())
+  .addCommand(getBuildHtmlCommand())
+  .addCommand(getBuildJsonCommand())
+  .addCommand(getBuildModulesCommand())
+  .addCommand(getBuildTabsCommand());

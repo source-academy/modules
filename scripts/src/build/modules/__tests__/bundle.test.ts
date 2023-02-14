@@ -3,11 +3,6 @@ import fs from 'fs/promises';
 import { outputBundle } from '../bundle';
 import { esbuildOptions } from '../moduleUtils';
 
-jest.mock('fs/promises', () => ({
-  writeFile: jest.fn(() => Promise.resolve()),
-  stat: jest.fn().mockResolvedValue({ size: 10 })
-}))
-
 const testBundle = `
   import { context } from 'js-slang/moduleHelpers';
 

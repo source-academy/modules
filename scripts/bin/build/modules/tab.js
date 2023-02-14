@@ -6,8 +6,8 @@ import fs from 'fs/promises';
 import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 import { printList } from '../../scriptUtils.js';
-import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
-import { autoLogPrebuild } from '../prebuild/index.js';
+import { copyManifest, createBuildCommand, exitOnError, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
+import { prebuild } from '../prebuild/index.js';
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
 /**
  * Imports that are provided at runtime
@@ -90,14 +90,12 @@ export const reduceTabOutputFiles = (outputFiles, startTime, outDir) => Promise.
             ...result,
         }];
 }));
-const buildTabsCommand = createBuildCommand('tabs', true)
+const getBuildTabsCommand = () => createBuildCommand('tabs', true)
     .argument('[tabs...]', 'Manually specify which tabs to build', null)
     .description('Build only tabs')
     .action(async (tabs, opts) => {
     const assets = await retrieveBundlesAndTabs(opts.manifest, [], tabs);
-    const proceed = await autoLogPrebuild(opts, assets);
-    if (!proceed)
-        return;
+    await prebuild(opts, assets);
     printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
     const startTime = performance.now();
     const [reducedRes] = await Promise.all([
@@ -106,5 +104,6 @@ const buildTabsCommand = createBuildCommand('tabs', true)
         copyManifest(opts),
     ]);
     logResult(reducedRes, opts.verbose);
+    exitOnError(reducedRes);
 });
-export default buildTabsCommand;
+export default getBuildTabsCommand;

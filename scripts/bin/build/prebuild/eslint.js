@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import { ESLint } from 'eslint';
 import pathlib from 'path';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { divideAndRound, exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
 /**
  * Run eslint programmatically
  * Refer to https://eslint.org/docs/latest/integrate/nodejs-api for documentation
@@ -60,7 +60,7 @@ export const logLintResult = (input) => {
         errStr = chalk.greenBright('successfully');
     console.log(`${chalk.cyanBright(`Linting completed in ${divideAndRound(elapsed, 1000)}s ${errStr}:`)}\n${formatted}`);
 };
-export const lintCommand = new Command('lint')
+const getLintCommand = () => new Command('lint')
     .description('Run eslint')
     .option('--fix', 'Ask eslint to autofix linting errors', false)
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
@@ -72,4 +72,6 @@ export const lintCommand = new Command('lint')
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const result = await runEslint(opts, assets);
     logLintResult(result);
+    exitOnError([], result.result);
 });
+export default getLintCommand;

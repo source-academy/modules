@@ -41,4 +41,5 @@ export default {
   testMatch: [
     '<rootDir>/scripts/src/**/__tests__/**/*.test.ts',
   ],
+  setupFilesAfterEnv: ["<rootDir>/scripts/src/jest.setup.ts"]
 };

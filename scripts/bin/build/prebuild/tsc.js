@@ -4,7 +4,7 @@ import { existsSync, promises as fs } from 'fs';
 import pathlib from 'path';
 import ts from 'typescript';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { bundleNameExpander, divideAndRound, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
+import { bundleNameExpander, divideAndRound, exitOnError, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
 const getTsconfig = async (srcDir) => {
     // Step 1: Read the text from tsconfig.json
     const tsconfigLocation = pathlib.join(srcDir, 'tsconfig.json');
@@ -85,7 +85,7 @@ export const logTscResults = (input, srcDir) => {
         console.log(`${diagStr}\n${chalk.cyanBright(`tsc completed ${chalk.greenBright('successfully')} in ${divideAndRound(elapsed, 1000)}s`)}`);
     }
 };
-export const tscCommand = new Command('typecheck')
+const getTscCommand = () => new Command('typecheck')
     .description('Run tsc to perform type checking')
     .option('--srcDir <srcdir>', 'Source directory for files', 'src')
     .option('--manifest <file>', 'Manifest file', 'modules.json')
@@ -96,4 +96,6 @@ export const tscCommand = new Command('typecheck')
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const tscResults = await runTsc(srcDir, assets);
     logTscResults(tscResults, srcDir);
+    exitOnError([], tscResults.result);
 });
+export default getTscCommand;

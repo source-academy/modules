@@ -62,9 +62,9 @@ export const logHtmlResult = (htmlResult: Awaited<ReturnType<typeof buildHtml>> 
 type HTMLCommandInputs = Omit<BuildCommandInputs, 'modules' | 'tabs'>;
 
 /**
- * CLI command to only build HTML documentation
+ * Get CLI command to only build HTML documentation
  */
-const buildHtmlCommand = new Command('html')
+const getBuildHtmlCommand = () => new Command('html')
   .option('--outDir <outdir>', 'Output directory', 'build')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
@@ -95,4 +95,4 @@ const buildHtmlCommand = new Command('html')
     exitOnError([], htmlResult.result);
   });
 
-export default buildHtmlCommand;
+export default getBuildHtmlCommand;
