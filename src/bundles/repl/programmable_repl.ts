@@ -7,7 +7,7 @@
 
 import { context } from 'js-slang/moduleHelpers';
 import { default_js_slang } from './functions';
-import { IOptions } from 'js-slang';
+import { type IOptions } from 'js-slang';
 
 
 
