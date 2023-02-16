@@ -28,6 +28,20 @@ describe('test json command', () => {
       .toHaveBeenCalledTimes(1);
   })
 
+  it('should only build the jsons for specified modules', async () => {
+    await runCommand('test0', 'test1')
+
+    expect(jsonModule.buildJsons)
+      .toHaveBeenCalledTimes(1);
+
+    const buildJsonCall = mockBuildJson.mock.calls[0];
+    expect(buildJsonCall[1])
+      .toMatchObject({
+        outDir: 'build',
+        bundles: ['test0', 'test1']
+      })
+  });
+
   it('should exit with code 1 if tsc returns with an error', async () => {
     try {
       await runCommand('--tsc'); 

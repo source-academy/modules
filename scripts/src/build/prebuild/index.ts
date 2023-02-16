@@ -56,7 +56,7 @@ const prebuildInternal = async (opts: PreBuildOpts, assets: AssetInfo): Promise<
  * Run eslint and tsc based on the provided options, and exit with code 1
  * if either returns with an error status
  */
-export const prebuild = async (opts: PreBuildOpts, assets: Omit<AssetInfo, 'modulesSpecified'>) => {
+export const prebuild = async (opts: PreBuildOpts, assets: AssetInfo) => {
   const { lintResult, tscResult } = await prebuildInternal(opts, assets);
   logLintResult(lintResult);
   logTscResults(tscResult, opts.srcDir);

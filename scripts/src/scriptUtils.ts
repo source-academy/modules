@@ -42,7 +42,7 @@ export const printList = <T = string>(header: string, lst: T[], mapper?: (each: 
     return `${each}`;
   });
 
-  return console.log(`${header}\n${
+  console.log(`${header}\n${
     lst.map((str, i) => `${i + 1}. ${mappingFunction(str)}`)
       .join(sep)
   }`);

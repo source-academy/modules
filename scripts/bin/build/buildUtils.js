@@ -154,14 +154,13 @@ export const retrieveTabs = async (manifestFile, tabs) => {
 export const retrieveBundles = async (manifestFile, modules) => {
     const manifest = await retrieveManifest(manifestFile);
     const knownBundles = Object.keys(manifest);
-    let bundles;
     if (modules !== null) {
         // Some modules were specified
         const unknownModules = modules.filter((m) => !knownBundles.includes(m));
         if (unknownModules.length > 0) {
             throw new Error(`Unknown modules: ${unknownModules.join(', ')}`);
         }
-        return bundles;
+        return modules;
     }
     return knownBundles;
 };

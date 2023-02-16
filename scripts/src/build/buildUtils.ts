@@ -177,7 +177,6 @@ export const retrieveBundles = async (manifestFile: string, modules: string[] | 
   const manifest = await retrieveManifest(manifestFile);
   const knownBundles = Object.keys(manifest);
 
-  let bundles: string[];
   if (modules !== null) {
     // Some modules were specified
     const unknownModules = modules.filter((m) => !knownBundles.includes(m));
@@ -185,7 +184,7 @@ export const retrieveBundles = async (manifestFile: string, modules: string[] | 
     if (unknownModules.length > 0) {
       throw new Error(`Unknown modules: ${unknownModules.join(', ')}`);
     }
-    return bundles;
+    return modules;
   }
   return knownBundles;
 };

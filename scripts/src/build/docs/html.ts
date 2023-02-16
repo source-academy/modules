@@ -5,7 +5,7 @@ import type { Application, ProjectReflection } from 'typedoc';
 import { wrapWithTimer } from '../../scriptUtils.js';
 import { divideAndRound, exitOnError, retrieveBundles } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
-import type { BuildCommandInputs, BuildResult } from '../types';
+import type { BuildCommandInputs, OperationResult } from '../types';
 
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 
@@ -21,7 +21,7 @@ export const buildHtml = wrapWithTimer(async (app: Application,
   project: ProjectReflection, {
     outDir,
     modulesSpecified,
-  }: HTMLOptions): Promise<BuildResult> => {
+  }: HTMLOptions): Promise<OperationResult> => {
   if (modulesSpecified) {
     return {
       severity: 'warn',
