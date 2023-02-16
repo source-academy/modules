@@ -1,15 +1,6 @@
-/**
- * Source Academy Programmable REPL module
- * @module repl
- * @author Wang Zihan
- */
-
-
 import { context } from 'js-slang/moduleHelpers';
 import { default_js_slang } from './functions';
-import { type IOptions } from 'js-slang';
-
-
+import type { IOptions } from 'js-slang';
 
 export class ProgrammableRepl {
   public evalFunction : Function;
@@ -174,7 +165,7 @@ export class ProgrammableRepl {
     Directly invoking Source Academy's builtin js-slang runner.
     Needs hard-coded support from js-slang part for the "sourceRunner" function and "backupContext" property in the content object for this to work.
   */
-  runInJsSlang(code : string) : string {
+  runInJsSlang(code: string) : string {
     const options : Partial<IOptions> = {
       originalMaxExecTime: 1000,
       scheduler: 'preemptive',
@@ -211,7 +202,7 @@ export class ProgrammableRepl {
     return 'Async run in js-slang';
   }
 
-  setTabReactComponentInstance(tab : any) {
+  setTabReactComponentInstance(tab: any) {
     this._tabReactComponent = tab;
   }
 

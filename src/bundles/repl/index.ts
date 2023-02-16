@@ -2,9 +2,6 @@
  * Bundle for Source Academy Programmable REPL module
  * @module repl
  * @author Wang Zihan
- */
-
-/*
 
 Example on usage:
   <*> Use with metacircular evaluator:

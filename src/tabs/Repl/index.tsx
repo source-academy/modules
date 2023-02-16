@@ -5,10 +5,10 @@
  */
 
 import React from 'react';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { type ProgrammableRepl } from '../../bundles/repl/programmable_repl';
+import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
 // If I use import for AceEditor it will cause runtime error and crash Source Academy when spawning tab in the new module building system.
 // import AceEditor from 'react-ace';
 const AceEditor = require('react-ace').default;

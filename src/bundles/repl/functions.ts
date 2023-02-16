@@ -4,7 +4,6 @@
  * @author Wang Zihan
  */
 
-
 import { context } from 'js-slang/moduleHelpers';
 import { ProgrammableRepl } from './programmable_repl';
 
@@ -12,7 +11,7 @@ const INSTANCE = new ProgrammableRepl();
 context.moduleContexts.repl.state = INSTANCE;
 /**
  * Setup the programmable REPL with given metacircular evaulator entrance function
- * @param {evalFunc} evalFunc - metacircular evaulator entrance function
+ * @param evalFunc - metacircular evaulator entrance function
  *
  * @category Main
  */
@@ -27,14 +26,13 @@ export function invoke_repl(evalFunc: Function) {
   };
 }
 
-
 /**
  * Redirects the display message into Programmable REPL Tab and returns the string parameter
- * @param {content} the content you want to display
+ * @param content the content you want to display
  *
  * @category Main
  */
-export function module_display(content : any) : any {
+export function module_display(content: any) : any {
   INSTANCE.pushOutputString(content.toString(), 'white', 'plaintext');// students may set the value of the parameter "str" to types other than a string (for example "module_display(1)" ). So here I need to first convert the parameter "str" into a string before preceding.
   return content;
 }
@@ -42,11 +40,11 @@ export function module_display(content : any) : any {
 
 /**
  * Output rich text based on pairs to Programmable Repl Tab (Note: This function returns undefined)
- * @param {pair} the rich text you want to display represented as pairs
+ * @param pair the rich text you want to display represented as pairs
  *
  * @category Main
  */
-export function rich_display(pair : any) : void {
+export function rich_display(pair: any) : void {
   INSTANCE.richDisplayInternal(pair);
 }
 
