@@ -59,10 +59,11 @@ export const runTsc = wrapWithTimer((async (srcDir, { bundles, tabs }) => {
     }
     const tsc = ts.createProgram(fileNames, tsconfigRes.results);
     const results = tsc.emit();
+    const diagnostics = ts.getPreEmitDiagnostics(tsc)
+        .concat(results.diagnostics);
     return {
-        severity: 'success',
-        results: ts.getPreEmitDiagnostics(tsc)
-            .concat(results.diagnostics),
+        severity: diagnostics.length > 0 ? 'error' : 'success',
+        results: diagnostics,
     };
 }));
 export const logTscResults = (input, srcDir) => {

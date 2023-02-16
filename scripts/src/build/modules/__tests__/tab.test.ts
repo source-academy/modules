@@ -25,9 +25,9 @@ describe('test tab command', () => {
     await runCommand('tab0');
 
     expect(tabModule.buildTabs)
-      .toHaveBeenCalledTimes(2);
+      .toHaveBeenCalledTimes(1);
 
-    const buildModulesCall = (tabModule.buildTabs as jest.MockedFunction<typeof tabModule.buildTabs>).mock.calls[1];
+    const buildModulesCall = (tabModule.buildTabs as jest.MockedFunction<typeof tabModule.buildTabs>).mock.calls[0];
     expect(buildModulesCall[0])
       .toEqual(['tab0']);
   });

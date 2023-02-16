@@ -45,6 +45,9 @@ module.exports = {
   "overrides": [{
     "extends": ["../../.eslintrc.test.cjs", "airbnb-typescript"],
     "files": ["**/__tests__/**/*", "**/__mocks__/**/*", "**/jest*"],
+    env: {
+      jest: true,
+    }
   }, {
     extends: ["../../.eslintrc.base.cjs"],
     files: ["**/*.*js"],

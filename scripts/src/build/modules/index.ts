@@ -17,26 +17,6 @@ import type { AssetInfo, BuildCommandInputs, BuildOptions } from '../types';
 import { buildBundles, reduceBundleOutputFiles } from './bundle.js';
 import { buildTabs, reduceTabOutputFiles } from './tab.js';
 
-// export const processOutputFiles = async (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
-//   outputFiles.map(async ({ path, text }) => {
-//     const [rawType, name] = path.split(pathlib.sep)
-//       .slice(-3, -1);
-//     const type = rawType.slice(0, -1);
-
-//     if (type !== 'bundle' && type !== 'tab') {
-//       throw new Error(`Unknown type found for: ${type}: ${path}`);
-//     }
-
-//     const result = await (type === 'bundle' ? outputBundle : outputTab)(name, text, outDir);
-//     const endTime = performance.now() - startTime;
-
-//     return [type, name, {
-//       elapsed: endTime,
-//       ...result,
-//     }] as UnreducedResult;
-//   }),
-// );
-
 export const buildModules = async (opts: BuildOptions, { bundles, tabs }: AssetInfo) => {
   const startPromises: Promise<string>[] = [];
   if (bundles.length > 0) {

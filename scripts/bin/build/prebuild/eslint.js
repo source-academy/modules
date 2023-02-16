@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import { ESLint } from 'eslint';
 import pathlib from 'path';
-import { printList, wrapWithTimer } from '../../scriptUtils.js';
+import { findSeverity, printList, wrapWithTimer } from '../../scriptUtils.js';
 import { divideAndRound, exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
 /**
  * Run eslint programmatically
@@ -32,13 +32,13 @@ export const runEslint = wrapWithTimer(async (opts, { bundles, tabs }) => {
         console.log(chalk.magentaBright('Running eslint autofix...'));
         await ESLint.outputFixes(lintResults);
     }
-    const lintSeverity = lintResults.reduce((res, { errorCount, warningCount }) => {
-        if (errorCount > 0 || res === 'error')
+    const lintSeverity = findSeverity(lintResults, ({ errorCount, warningCount }) => {
+        if (errorCount > 0)
             return 'error';
         if (warningCount > 0)
             return 'warn';
-        return res;
-    }, 'success');
+        return 'success';
+    });
     const outputFormatter = await linter.loadFormatter('stylish');
     const formatterOutput = outputFormatter.format(lintResults);
     return {

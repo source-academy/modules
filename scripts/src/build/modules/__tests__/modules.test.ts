@@ -14,10 +14,6 @@ const runCommand = (...args: string[]) => getBuildModulesCommand().parseAsync(ar
 const buildModulesMock = modules.buildModules as jest.MockedFunction<typeof modules.buildModules>
 
 describe('test modules command', () => {
-  beforeEach(() => {
-    buildModulesMock.mockReset();
-  })
-  
   it('should create the output directories, and copy the manifest', async () => {
     await runCommand();
 
@@ -48,7 +44,7 @@ describe('test modules command', () => {
       await runCommand('--tsc');
     } catch (error) {
       expect(error)
-        .toEqual(new Error('Exiting for jest'));
+        .toEqual(new Error('process.exit called with 1'));
     }
 
     expect(modules.buildModules)

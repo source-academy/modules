@@ -6,7 +6,7 @@ import fs from 'fs/promises';
 import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 import { printList } from '../../scriptUtils.js';
-import { copyManifest, createBuildCommand, exitOnError, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
+import { copyManifest, createBuildCommand, exitOnError, logResult, retrieveTabs, tabNameExpander, } from '../buildUtils.js';
 import { prebuild } from '../prebuild/index.js';
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
 /**
@@ -93,15 +93,21 @@ export const reduceTabOutputFiles = (outputFiles, startTime, outDir) => Promise.
 const getBuildTabsCommand = () => createBuildCommand('tabs', true)
     .argument('[tabs...]', 'Manually specify which tabs to build', null)
     .description('Build only tabs')
-    .action(async (tabs, opts) => {
-    const assets = await retrieveBundlesAndTabs(opts.manifest, [], tabs);
-    await prebuild(opts, assets);
-    printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
+    .action(async (tabsOpt, { manifest, ...opts }) => {
+    const tabs = await retrieveTabs(manifest, tabsOpt);
+    await prebuild(opts, {
+        tabs,
+        bundles: [],
+    });
+    printList(`${chalk.magentaBright('Building the following tabs:')}\n`, tabs);
     const startTime = performance.now();
     const [reducedRes] = await Promise.all([
-        buildTabs(assets.tabs, opts)
+        buildTabs(tabs, opts)
             .then((results) => reduceTabOutputFiles(results, startTime, opts.outDir)),
-        copyManifest(opts),
+        copyManifest({
+            outDir: opts.outDir,
+            manifest,
+        }),
     ]);
     logResult(reducedRes, opts.verbose);
     exitOnError(reducedRes);

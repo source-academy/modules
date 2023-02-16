@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundlesAndTabs, } from '../buildUtils.js';
+import { createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundles, } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 import drawdown from './drawdown.js';
@@ -148,8 +148,8 @@ const getJsonCommand = () => createBuildCommand('jsons', false)
     .option('--tsc', 'Run tsc before building')
     .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
     .action(async (modules, { manifest, srcDir, outDir, verbose, tsc }) => {
-    const [{ bundles }] = await Promise.all([
-        retrieveBundlesAndTabs(manifest, modules, [], false),
+    const [bundles] = await Promise.all([
+        retrieveBundles(manifest, modules),
         createOutDir(outDir),
     ]);
     if (bundles.length === 0)
@@ -160,10 +160,8 @@ const getJsonCommand = () => createBuildCommand('jsons', false)
             tabs: [],
         });
         logTscResults(tscResult, srcDir);
-        if (tscResult.result.severity === 'error') {
+        if (tscResult.result.severity === 'error')
             process.exit(1);
-            return; // kept for when running jest
-        }
     }
     const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
         bundles,

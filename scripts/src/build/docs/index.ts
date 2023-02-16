@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 
 import { printList } from '../../scriptUtils.js';
-import { createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundles } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import type { BuildCommandInputs } from '../types.js';
 
@@ -12,8 +12,8 @@ import { buildJsons } from './json.js';
 export const getBuildDocsCommand = () => createBuildCommand('docs', true)
   .argument('[modules...]', 'Manually specify which modules to build documentation', null)
   .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose, tsc }: Omit<BuildCommandInputs, 'modules' | 'tabs'>) => {
-    const [{ bundles }] = await Promise.all([
-      retrieveBundlesAndTabs(manifest, modules, [], false),
+    const [bundles] = await Promise.all([
+      retrieveBundles(manifest, modules),
       createOutDir(outDir),
     ]);
 
@@ -25,10 +25,7 @@ export const getBuildDocsCommand = () => createBuildCommand('docs', true)
         tabs: [],
       });
       logTscResults(tscResult, srcDir);
-      if (tscResult.result.severity === 'error') {
-        process.exit(1);
-        return; // keep for when running jest
-      }
+      if (tscResult.result.severity === 'error') process.exit(1);
     }
 
     printList(`${chalk.cyanBright('Building HTML documentation and jsons for the following bundles:')}\n`, bundles);

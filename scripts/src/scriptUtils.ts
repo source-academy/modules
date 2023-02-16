@@ -2,6 +2,8 @@ import { readFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
+import type { Severity } from './build/types';
+
 export type ModuleManifest = Record<string, {
   tabs: string[]
 }>;
@@ -44,4 +46,14 @@ export const printList = <T = string>(header: string, lst: T[], mapper?: (each: 
     lst.map((str, i) => `${i + 1}. ${mappingFunction(str)}`)
       .join(sep)
   }`);
+};
+
+export const findSeverity = <T>(items: T[], converter: (item: T) => Severity) => {
+  let output: Severity = 'success';
+  for (const item of items) {
+    const severity = converter(item);
+    if (severity === 'error') return 'error';
+    if (severity === 'warn') output = 'warn';
+  }
+  return output;
 };

@@ -6,8 +6,7 @@ import { logTscResults, runTsc } from './tsc.js';
  * Run both `tsc` and `eslint` in parallel if `--fix` was not specified. Otherwise, run eslint
  * to fix linting errors first, then run tsc for type checking
  *
- * @returns An object that contains the results from linting and typechecking, as well
- * as a boolean `proceed` to indicate if either eslint or tsc encountered a fatal error
+ * @returns An object that contains the results from linting and typechecking
  */
 const prebuildInternal = async (opts, assets) => {
     if (opts.fix) {

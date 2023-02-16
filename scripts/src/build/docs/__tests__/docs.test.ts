@@ -10,11 +10,8 @@ jest.mock('../../prebuild/tsc');
 jest.spyOn(jsonModule, 'buildJsons');
 jest.spyOn(htmlModule, 'buildHtml');
 
-const mockBuildJson = jsonModule.buildJsons as MockedFunction<typeof jsonModule.buildJsons>
-
-beforeEach(() => {
-  mockBuildJson.mockReset()
-})
+const asMock = <T extends (...any: any[]) => any>(func: T) => func as MockedFunction<typeof func>;
+const mockBuildJson = asMock(jsonModule.buildJsons);
 
 const runCommand = (...args: string[]) => getBuildDocsCommand().parseAsync(args, { from: 'user' });
 describe('test the docs command', () => {
@@ -35,7 +32,12 @@ describe('test the docs command', () => {
   });
 
   it('should exit with code 1 if tsc returns with an error', async () => {
-    await runCommand('--tsc'); 
+    try {
+      await runCommand('--tsc'); 
+    } catch (error) {
+      expect(error)
+        .toEqual(new Error('process.exit called with 1'))
+    }
 
     expect(jsonModule.buildJsons)
       .toHaveBeenCalledTimes(0);
@@ -47,7 +49,12 @@ describe('test the docs command', () => {
   it("should exit with code 1 when there are errors", async () => {
     mockBuildJson.mockResolvedValueOnce([['json', 'test0', { severity: 'error' }]])
 
-    await runCommand();
+    try {
+      await runCommand(); 
+    } catch (error) {
+      expect(error)
+        .toEqual(new Error('process.exit called with 1'))
+    }
 
     expect(jsonModule.buildJsons)
       .toHaveBeenCalledTimes(1);

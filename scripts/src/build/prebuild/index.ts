@@ -19,8 +19,7 @@ type PreBuildResult = {
  * Run both `tsc` and `eslint` in parallel if `--fix` was not specified. Otherwise, run eslint
  * to fix linting errors first, then run tsc for type checking
  *
- * @returns An object that contains the results from linting and typechecking, as well
- * as a boolean `proceed` to indicate if either eslint or tsc encountered a fatal error
+ * @returns An object that contains the results from linting and typechecking
  */
 const prebuildInternal = async (opts: PreBuildOpts, assets: AssetInfo): Promise<PreBuildResult> => {
   if (opts.fix) {
@@ -57,7 +56,7 @@ const prebuildInternal = async (opts: PreBuildOpts, assets: AssetInfo): Promise<
  * Run eslint and tsc based on the provided options, and exit with code 1
  * if either returns with an error status
  */
-export const prebuild = async (opts: PreBuildOpts, assets: AssetInfo) => {
+export const prebuild = async (opts: PreBuildOpts, assets: Omit<AssetInfo, 'modulesSpecified'>) => {
   const { lintResult, tscResult } = await prebuildInternal(opts, assets);
   logLintResult(lintResult);
   logTscResults(tscResult, opts.srcDir);

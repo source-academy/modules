@@ -155,6 +155,41 @@ export const exitOnError = (
     });
 };
 
+export const retrieveTabs = async (manifestFile: string, tabs: string[] | null) => {
+  const manifest = await retrieveManifest(manifestFile);
+  const knownTabs = Object.values(manifest)
+    .flatMap((x) => x.tabs);
+
+  if (tabs === null) {
+    tabs = knownTabs;
+  } else {
+    const unknownTabs = tabs.filter((t) => !knownTabs.includes(t));
+
+    if (unknownTabs.length > 0) {
+      throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
+    }
+  }
+
+  return tabs;
+};
+
+export const retrieveBundles = async (manifestFile: string, modules: string[] | null) => {
+  const manifest = await retrieveManifest(manifestFile);
+  const knownBundles = Object.keys(manifest);
+
+  let bundles: string[];
+  if (modules !== null) {
+    // Some modules were specified
+    const unknownModules = modules.filter((m) => !knownBundles.includes(m));
+
+    if (unknownModules.length > 0) {
+      throw new Error(`Unknown modules: ${unknownModules.join(', ')}`);
+    }
+    return bundles;
+  }
+  return knownBundles;
+};
+
 /**
  * Function to determine which bundles and tabs to build based on the user's input.
  *

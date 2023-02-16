@@ -20,4 +20,6 @@ jest.mock('./scriptUtils', () => ({
 
 jest.mock('./build/docs/docUtils');
 
-jest.spyOn(process, 'exit').mockImplementation();
+jest.spyOn(process, 'exit').mockImplementation(code => {
+  throw new Error(`process.exit called with ${code}`)
+});

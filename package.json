@@ -34,7 +34,7 @@
     "scripts": "node --no-warnings --max-old-space-size=8192 scripts/bin/index.js",
     "prepare": "husky install",
     "test": "jest --verbose --config=src/jest.config.js",
-    "test:scripts": "jest --verbose --config=scripts/src/jest.config.js",
+    "test:scripts": "jest --config=scripts/src/jest.config.js",
     "test:watch": "jest --watch",
     "dev": "yarn scripts build modules && yarn serve",
     "watch": "yarn scripts watch"
@@ -57,7 +57,7 @@
     "console-table-printer": "^2.11.1",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.17.3",
+    "esbuild": "^0.17.8",
     "eslint": "^8.21.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
@@ -95,8 +95,7 @@
     "react-ace": "^10.1.0",
     "react-dom": "^17.0.2",
     "regl": "^2.1.0",
-    "tslib": "^2.3.1",
-    "typedoc-default-themes": "^0.12.10"
+    "tslib": "^2.3.1"
   },
   "jest": {
     "projects": [

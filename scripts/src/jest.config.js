@@ -7,6 +7,7 @@ const [[transformKey, [, transforms]]] = Object.entries(preset.transform);
  * @type {import('jest').config}
  */
 export default {
+  clearMocks: true,
   displayName: 'Scripts',
   testEnvironment: 'node',
   extensionsToTreatAsEsm: ['.ts'],

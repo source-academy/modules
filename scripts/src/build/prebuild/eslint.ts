@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import { ESLint } from 'eslint';
 import pathlib from 'path';
 
-import { printList, wrapWithTimer } from '../../scriptUtils.js';
+import { findSeverity, printList, wrapWithTimer } from '../../scriptUtils.js';
 import { divideAndRound, exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
 import type { AssetInfo, BuildCommandInputs, Severity } from '../types.js';
 
@@ -29,7 +29,7 @@ type LintResults = {
  * Run eslint programmatically
  * Refer to https://eslint.org/docs/latest/integrate/nodejs-api for documentation
  */
-export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: Omit<AssetInfo, 'modulesSpecified'>): Promise<LintResults> => {
+export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: AssetInfo): Promise<LintResults> => {
   const linter = new ESLint({
     cwd: pathlib.resolve(opts.srcDir),
     overrideConfigFile: '.eslintrc.cjs',
@@ -59,11 +59,11 @@ export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }:
     await ESLint.outputFixes(lintResults);
   }
 
-  const lintSeverity = lintResults.reduce((res, { errorCount, warningCount }) => {
-    if (errorCount > 0 || res === 'error') return 'error';
+  const lintSeverity = findSeverity(lintResults, ({ errorCount, warningCount }) => {
+    if (errorCount > 0) return 'error';
     if (warningCount > 0) return 'warn';
-    return res;
-  }, 'success' as Severity);
+    return 'success';
+  });
 
   const outputFormatter = await linter.loadFormatter('stylish');
   const formatterOutput = outputFormatter.format(lintResults);

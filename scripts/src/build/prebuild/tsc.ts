@@ -66,7 +66,7 @@ const getTsconfig = async (srcDir: string): Promise<TsconfigResult> => {
 /**
  * @param params_0 Source Directory
  */
-export const runTsc = wrapWithTimer((async (srcDir: string, { bundles, tabs }: Omit<AssetInfo, 'modulesSpecified'>): Promise<TscResult> => {
+export const runTsc = wrapWithTimer((async (srcDir: string, { bundles, tabs }: AssetInfo): Promise<TscResult> => {
   const fileNames: string[] = [];
 
   if (bundles.length > 0) {
@@ -89,11 +89,12 @@ export const runTsc = wrapWithTimer((async (srcDir: string, { bundles, tabs }: O
 
   const tsc = ts.createProgram(fileNames, tsconfigRes.results);
   const results = tsc.emit();
+  const diagnostics = ts.getPreEmitDiagnostics(tsc)
+    .concat(results.diagnostics);
 
   return {
-    severity: 'success',
-    results: ts.getPreEmitDiagnostics(tsc)
-      .concat(results.diagnostics),
+    severity: diagnostics.length > 0 ? 'error' : 'success',
+    results: diagnostics,
   };
 }));
 

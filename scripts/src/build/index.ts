@@ -50,7 +50,7 @@ export const getBuildAllCommand = () => createBuildCommand('all', true)
             }),
             buildHtml(app, project, {
               outDir: opts.outDir,
-              modulesSpecified: assets.modulesSpecified,
+              modulesSpecified: modules !== null,
             }),
           ]);
           return {
