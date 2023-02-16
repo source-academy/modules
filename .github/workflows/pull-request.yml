@@ -1,0 +1,19 @@
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+        - name: Use Node.js 💻
+          uses: actions/setup-node@v1
+          with:
+            node-version: '16.x'
+        
+        - name: Install dependencies
+          run: yarn install --frozen-lockfile
+
+        - name: Run tests 
+          run: yarn test && yarn test:scripts
