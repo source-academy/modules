@@ -7,8 +7,6 @@
 
 import { context } from 'js-slang/moduleHelpers';
 import { ProgrammableRepl } from './programmable_repl';
-//import { runInContext, IOptions } from 'js-slang';
-//import { sourceRunner } from 'js-slang';
 
 const INSTANCE = new ProgrammableRepl();
 context.moduleContexts.programmable_repl.state = INSTANCE;
@@ -21,7 +19,6 @@ context.moduleContexts.programmable_repl.state = INSTANCE;
 export function invoke_repl( evalFunc: Function ) {
   if (!(evalFunc instanceof Function)) {
     const typeName = typeof(evalFunc);
-    //INSTANCE.OutputString('<span style=\'font-style:italic;\'>You know what? One day, a ' + typeName + ' told me that it has a dream of being evaulated as a function one day! Is its dream coming true today?</span>', 'cyan');//Small Easter Egg  :)
     throw new Error('Wrong parameter type "' + typeName + "' in function \"invoke_repl\". It supposed to be a function and it's the entrance function of your metacircular evaulator.");
   }
   INSTANCE.evalFunction = evalFunc;
@@ -64,7 +61,6 @@ export function set_editor_background_image( img_url : string, background_color_
  */
 export function set_editor_font_size(font_size_px : number){
   INSTANCE.customizedEditorProps.fontSize = parseInt( font_size_px.toString() );//The TypeScript type checker will throw an error as "parseInt" in TypeScript only accepts one string as parameter.
-  //INSTANCE.setFontSize(parseInt( font_size_px.toString() ) ); //The TypeScript type checker will throw an error as "parseInt" in TypeScript only accepts one string as parameter.
 }
 
 
