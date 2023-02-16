@@ -1,12 +1,12 @@
 /* [Imports] */
 import { IconName } from '@blueprintjs/icons';
-import { CsgModuleState } from '../../bundles/csg/utilities.js';
+
+
 
 /* [Exports] */
 
 // React Component Props for the CSG canvas holder
 export type CanvasHolderProps = {
-  moduleState: CsgModuleState;
   componentNumber: number;
 };
 

@@ -2,7 +2,7 @@ import { Button, Icon, Slider, Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { AnimatedCurve } from '../../bundles/curve/types';
+import { type AnimatedCurve } from '../../bundles/curve/types';
 import WebGLCanvas from '../common/webgl_canvas';
 
 type Props = {

@@ -7,7 +7,7 @@
     /* See https://www.typescriptlang.org/tsconfig#esModuleInterop */
     "esModuleInterop": true,
     /* Controls how JSX constructs are emitted in JavaScript files. This only affects output of JS files that started in .tsx files. */
-    "jsx": "preserve",
+    "jsx": "react",
     /* See https://www.typescriptlang.org/tsconfig#lib */
     "lib": ["es6", "dom", "es2016", "ESNext", "scripthost"],
     /* Sets the module system for the program. See the Modules reference page for more information. */
@@ -22,10 +22,12 @@
     "rootDir": "./",
     /* Enables the generation of sourcemap files. These files allow debuggers and other tools to display the original TypeScript source code when actually working with the emitted JavaScript files. */
     "sourceMap": false,
+    /* Skip running typescript on declaration files. This option is needed due to a known bug in react-ace */
+    "skipLibCheck": true,
     /* The strict flag enables a wide range of type checking behavior that results in stronger guarantees of program correctness. */
     "strict": true,
     /* The target setting changes which JS features are downleveled and which are left intact. */
-    "target": "es5",
+    "target": "es6",
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
@@ -40,5 +42,5 @@
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
   "include": ["."],
   /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
-  // "exclude": []
+  "exclude": [".eslintrc.cjs", "jest.config.js"]
 }

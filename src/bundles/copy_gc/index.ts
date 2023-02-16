@@ -1,4 +1,4 @@
-import { MemoryHeaps, Memory, Tag, COMMAND, CommandHeapObject } from './types';
+import { COMMAND, type CommandHeapObject, type Memory, type MemoryHeaps, type Tag } from './types';
 
 // Global Variables
 let ROW: number = 10;
