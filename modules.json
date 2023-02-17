@@ -63,9 +63,9 @@
       "Csg"
     ]
   },
-  "arcade_two_d": {
+  "repl": {
     "tabs": [
-      "ArcadeTwod"
+      "Repl"
     ]
   }
 }
