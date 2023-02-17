@@ -20,6 +20,7 @@ type Props = {
  */
 type State = {
   counter: number;
+  time: number;
 };
 
 /**
@@ -30,13 +31,25 @@ class Repeat extends React.Component<Props, State> {
     super(props);
     this.state = {
       counter: 0,
+      time: Date.now(),
     };
+    console.log('inside repeat react component');
+    if (this.props.context?.result?.value?.init !== undefined) {
+      this.props.context.result.value.init(); // pass the initialized GameObjects and the update function to the phaser canvas
+    }
+    if (this.props.context?.result?.value?.update !== undefined) {
+      this.props.context.result.value.update(); // the actual update function that can be specified in the SA program
+    }
   }
+
+  // timer
 
   public render() {
     const { counter } = this.state;
     return (
-      <div>This is spawned from the repeat package. Counter is {counter}</div>
+      <div>
+        <div>This is spawned from the repeat package. Counter is {counter}</div>
+      </div>
     );
   }
 }
@@ -48,8 +61,18 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: any) => context.result.value === 'test',
-
+  // toReplString() may not exist, which causes the page to crash
+  toSpawn(context: any) {
+    // testing
+    console.log(context);
+    if (context.result.value !== undefined && context.result.value.toReplString !== undefined) {
+      console.log('successful detection of repl string'); // works
+      console.log(context.result.value.toReplString());
+      return context.result.value.toReplString() === '[Arcade 2D]';
+    }
+    console.log('undefined: buildGame not last function');
+    return false;
+  },
   /**
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.

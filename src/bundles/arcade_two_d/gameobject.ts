@@ -4,12 +4,16 @@
 import type { ReplResult } from '../../typings/type_helpers';
 import { InteractableProps, RenderedImage, RenderProps, TransformProps, DisplayText, PhaserType } from './types';
 
+// =============================================================================
+// Classes
+// =============================================================================
+
 /**
  * Encapsulates the basic data-representation of a GameObject.
  */
 export abstract class GameObject implements Transformable, ReplResult {
   private static gameObjectCount: number = 0;
-  private static gameObjectsArray: GameObject[] = [];
+  private static gameObjectsArray: GameObject[] = []; // Stores all the created GameObjects
   protected transformNotUpdated: boolean = false;
   public readonly id: number;
 
@@ -69,19 +73,22 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
     public readonly phaserType?: PhaserType,
   ) {
     super(transformProps);
-    if (renderProps.renderedImage.phaserType === null) {
-      throw new Error('GameObject\'s render image type is undefined');
+    if (renderProps.renderedImage === undefined || phaserType === undefined) {
+      throw new Error('GameObject\'s render image is undefined');
     }
-    if (renderProps.renderedImage.phaserType !== phaserType) {
-      throw new Error('Unable to set GameObject with image type that does not match');
+
+    if (phaserType in renderProps.renderedImage) {
+      throw new Error('Error setting GameObject\'s phaser type');
     }
+
+    // console.log('Set phaser type success'); // Debug
   }
 
   setRenderState(renderProps: RenderProps) {
-    if (renderProps.renderedImage.phaserType === null) {
+    if (renderProps.renderedImage === undefined || this.phaserType === undefined) {
       throw new Error('GameObject\'s render image type is undefined');
     }
-    if (renderProps.renderedImage.phaserType !== this.phaserType) {
+    if (this.phaserType in renderProps.renderedImage) {
       throw new Error('Unable to update GameObject with image type that does not match');
     }
     this.renderProps = renderProps;
@@ -95,6 +102,14 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
   }
   updatedRender() {
     this.renderNotUpdated = false;
+  }
+  getColor(): [number, number, number, number] {
+    return [
+      this.renderProps.color.red,
+      this.renderProps.color.blue,
+      this.renderProps.color.green,
+      this.renderProps.color.alpha,
+    ];
   }
 }
 
@@ -138,7 +153,7 @@ export class ShapeGameObject extends InteractableGameObject {
     renderProps: RenderProps,
     interactableProps: InteractableProps,
   ) {
-    super(transformProps, renderProps, interactableProps, 'Shape');
+    super(transformProps, renderProps, interactableProps, 'Shape' as PhaserType);
   }
 
   /** @override */
@@ -154,7 +169,7 @@ export class SpriteGameObject extends InteractableGameObject {
     renderProps: RenderProps,
     interactableProps: InteractableProps,
   ) {
-    super(transformProps, renderProps, interactableProps, 'Sprite');
+    super(transformProps, renderProps, interactableProps, 'Sprite' as PhaserType);
   }
 
   /** @override */
@@ -170,7 +185,7 @@ export class TextGameObject extends InteractableGameObject {
     renderProps: RenderProps,
     interactableProps: InteractableProps,
   ) {
-    super(transformProps, renderProps, interactableProps, 'Text');
+    super(transformProps, renderProps, interactableProps, 'Text' as PhaserType);
   }
   /**
    * Sets the text displayed by the GameObject in the canvas.

@@ -53,6 +53,7 @@ export type RenderedImage = Shape | DisplayText | Sprite;
 
 /**
  * Represents a simplied representation of the phaser type of the GameObject.
+ * Which is represented as a void property on the types.
  */
 export type PhaserType = 'Shape' | 'Sprite' | 'Text';
 
@@ -60,7 +61,7 @@ export type PhaserType = 'Shape' | 'Sprite' | 'Text';
  * Represents the shape of a GameObject
  */
 export type Shape = {
-  phaserType: 'Shape';
+  Shape: void;
   baseShape: BaseShape;
 };
 
@@ -94,7 +95,7 @@ export type Ellipse = {
  * Represents the rendered text of a GameObject.
  */
 export type DisplayText = {
-  phaserType: 'Text';
+  Text: void;
   text: string;
 };
 
@@ -102,6 +103,43 @@ export type DisplayText = {
  * Represents the rendered sprite of a GameObject.
  */
 export type Sprite = {
-  phaserType: 'Sprite';
+  Sprite: void;
   image_url: string;
 };
+
+// =============================================================================
+// Other types
+// =============================================================================
+
+/**
+ * Represent the return type of build_game(), which is accessed in the debuggerContext.result.value.
+ */
+export type BuildGame = {
+  toReplString: () => string;
+  config: Config;
+  init: () => void;
+  update: UpdateFunction;
+};
+
+/**
+ * Represents the configuration for the Phaser Game.
+ * @property {number} width - The width of the Phaser canvas.
+ * @property {number} height - The height of the Phaser canvas.
+ * @property {number} scale - The scale of the Phaser canvas.
+ * @property {number} volume - The volume of the Phaser canvas.
+ * @property {number} fps - The width of the Phaser canvas.
+ */
+export type Config = {
+  width: number,
+  height: number,
+  scale: number,
+  volume: number,
+  fps: number,
+};
+
+/**
+ * Represents an update function that is user-defined.
+ * userSuppliedState is an array that stores whatever the user sets it to be,
+ * which can be assessed and modified on the next frame.
+ */
+export type UpdateFunction = (userSuppliedState: []) => void;
