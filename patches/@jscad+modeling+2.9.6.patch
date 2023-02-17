@@ -1,0 +1,61 @@
+diff --git a/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.d.ts b/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.d.ts
+index 85720f4..9ef2a9d 100644
+--- a/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.d.ts
++++ b/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.d.ts
+@@ -3,4 +3,4 @@ import Poly3 from '../poly3/type'
+ 
+ export default toPolygons
+ 
+-declare function toPolygons(geometry: Geom3): Array<Poly3>
++declare function toPolygons(geometry: Geom3, colorizePolygons: boolean): Array<Poly3>
+diff --git a/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js b/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js
+index 25f9f50..7ce31ec 100644
+--- a/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js
++++ b/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js
+@@ -1,5 +1,14 @@
++const poly3 = require("../poly3")
+ const applyTransforms = require('./applyTransforms')
+ 
++// Colorize poly3 (to be reorganized later)
++const colorPoly3 = (color, object) => {
++    const newpoly = poly3.clone(object)
++    newpoly.color = color
++    return newpoly
++}
++
++
+ /**
+  * Produces an array of polygons from the given geometry, after applying transforms.
+  * The returned array should not be modified as the polygons are shared with the geometry.
+@@ -10,6 +19,12 @@ const applyTransforms = require('./applyTransforms')
+  * @example
+  * let sharedpolygons = toPolygons(geometry)
+  */
+-const toPolygons = (geometry) => applyTransforms(geometry).polygons
++const toPolygons = (geometry, colorizePolygons = false) => {
++    const newPolygons = applyTransforms(geometry).polygons
++    return colorizePolygons && geometry.color
++            ? newPolygons.map(polygon => colorPoly3(geometry.color, polygon))
++            : newPolygons
++}
++
+ 
+ module.exports = toPolygons
+diff --git a/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js b/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
+index a4026e3..f8cf8f5 100644
+--- a/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
++++ b/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
+@@ -14,8 +14,11 @@ const unionSub = (geometry1, geometry2) => {
+     return unionForNonIntersecting(geometry1, geometry2)
+   }
+ 
+-  const a = new Tree(geom3.toPolygons(geometry1))
+-  const b = new Tree(geom3.toPolygons(geometry2))
++  console.log(geom3.toPolygons(geometry2, colorizePolygons = true))
++  const a = new Tree(geom3.toPolygons(geometry1, colorizePolygons = true))
++  const b = new Tree(geom3.toPolygons(geometry2, colorizePolygons = true))
++  console.log(a)
++  console.log(b)
+ 
+   a.clipTo(b, false)
+   // b.clipTo(a, true); // ERROR: doesn't work

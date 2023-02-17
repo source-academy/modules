@@ -10,7 +10,7 @@
 
 /* [Imports] */
 import { primitives } from '@jscad/modeling';
-import { colorize } from '@jscad/modeling/src/colors';
+import { colorize as _colorize } from '@jscad/modeling/src/colors';
 import {
   type BoundingBox,
   measureArea,
@@ -64,10 +64,12 @@ export const sphere: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const cylinder: Shape = shapeSetOrigin(
-  new Shape(primitives.cylinder({
-    radius: 0.5,
-    height: 1,
-  })),
+  new Shape(
+    primitives.cylinder({
+      radius: 0.5,
+      height: 1,
+    }),
+  ),
 );
 
 /**
@@ -125,10 +127,12 @@ export const cone: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const torus: Shape = shapeSetOrigin(
-  new Shape(primitives.torus({
-    innerRadius: 0.125,
-    outerRadius: 0.375,
-  })),
+  new Shape(
+    primitives.torus({
+      innerRadius: 0.125,
+      outerRadius: 0.375,
+    }),
+  ),
 );
 
 /**
@@ -146,10 +150,12 @@ export const rounded_cube: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const rounded_cylinder: Shape = shapeSetOrigin(
-  new Shape(primitives.roundedCylinder({
-    height: 1,
-    radius: 0.5,
-  })),
+  new Shape(
+    primitives.roundedCylinder({
+      height: 1,
+      radius: 0.5,
+    }),
+  ),
 );
 
 /**
@@ -398,7 +404,7 @@ export function shape_center(shape: Shape): (axis: String) => number {
   return (axis: String): number => {
     let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
     if (i === -1) {
-      throw Error('shape_center\'s returned function expects a proper axis.');
+      throw Error("shape_center's returned function expects a proper axis.");
     } else {
       return centerCoords[i];
     }
@@ -742,6 +748,19 @@ export function clone(shape: Shape): Shape {
 }
 
 /**
+ * Colour the shape using the specified hex colour code.
+ *
+ * @param {Shape} shape - The Shape to be coloured and returned
+ * @param {string} hex - The colour code to use.
+ * @returns {Shape} The colorized shape
+ */
+export function colorize(shape: Shape, hex: string) {
+  let color: Color = hexToColor(hex);
+  let coloredSolid: Solid = _colorize(color, shape.solid);
+  return new Shape(coloredSolid);
+}
+
+/**
  * Stores a clone of the specified Shape for later rendering. Its colour
  * defaults to the module's provided silver colour variable.
  *
@@ -766,7 +785,7 @@ export function store(shape: Shape) {
  */
 export function store_as_color(shape: Shape, hex: string) {
   let color: Color = hexToColor(hex);
-  let coloredSolid: Solid = colorize(color, shape.solid);
+  let coloredSolid: Solid = _colorize(color, shape.solid);
   Core.getRenderGroupManager()
     .storeShape(new Shape(coloredSolid));
 }
@@ -792,7 +811,7 @@ export function store_as_rgb(
   greenComponent = clamp(greenComponent, 0, 1);
   blueComponent = clamp(blueComponent, 0, 1);
 
-  let coloredSolid: Solid = colorize(
+  let coloredSolid: Solid = _colorize(
     [redComponent, greenComponent, blueComponent],
     shape.solid,
   );

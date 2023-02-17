@@ -19,7 +19,8 @@
     "test": "Run unit tests",
     "test:watch": "Watch files for changes and rerun tests related to changed files",
     "dev": "Build bundles and tabs only, then serve. Skips linting / type checking, does not build jsons and HTML docs. For rapid testing during development",
-    "watch": "Watch files for changes and rebuild on those changes"
+    "watch": "Watch files for changes and rebuild on those changes",
+    "postinstall": "patch-package"
   },
   "type": "module",
   "scripts": {
@@ -90,7 +91,9 @@
     "gl-matrix": "^3.3.0",
     "js-slang": "^0.5.38",
     "lodash": "^4.17.21",
+    "patch-package": "^6.5.1",
     "phaser": "^3.54.0",
+    "postinstall-postinstall": "^2.1.0",
     "react": "^17.0.2",
     "react-ace": "^10.1.0",
     "react-dom": "^17.0.2",
