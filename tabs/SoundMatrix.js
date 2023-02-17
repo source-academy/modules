@@ -65,7 +65,6 @@
         (function () {
           "use strict";
           var hasOwn = ({}).hasOwnProperty;
-          var nativeCodeString = "[native code]";
           function classNames5() {
             var classes = [];
             for (var i = 0; i < arguments.length; i++) {
@@ -82,14 +81,14 @@
                   }
                 }
               } else if (argType === "object") {
-                if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes("[native code]")) {
-                  classes.push(arg.toString());
-                  continue;
-                }
-                for (var key in arg) {
-                  if (hasOwn.call(arg, key) && arg[key]) {
-                    classes.push(key);
+                if (arg.toString === Object.prototype.toString) {
+                  for (var key in arg) {
+                    if (hasOwn.call(arg, key) && arg[key]) {
+                      classes.push(key);
+                    }
                   }
+                } else {
+                  classes.push(arg.toString());
                 }
               }
             }
@@ -1024,7 +1023,6 @@
       COLLAPSE: () => COLLAPSE,
       COLLAPSE_BODY: () => COLLAPSE_BODY,
       COLLAPSIBLE_LIST: () => COLLAPSIBLE_LIST,
-      COMPACT: () => COMPACT,
       CONTEXT_MENU: () => CONTEXT_MENU,
       CONTEXT_MENU_POPOVER_TARGET: () => CONTEXT_MENU_POPOVER_TARGET,
       CONTROL: () => CONTROL,
@@ -1034,13 +1032,10 @@
       DARK: () => DARK,
       DIALOG: () => DIALOG,
       DIALOG_BODY: () => DIALOG_BODY,
-      DIALOG_BODY_SCROLL_CONTAINER: () => DIALOG_BODY_SCROLL_CONTAINER,
       DIALOG_CLOSE_BUTTON: () => DIALOG_CLOSE_BUTTON,
       DIALOG_CONTAINER: () => DIALOG_CONTAINER,
       DIALOG_FOOTER: () => DIALOG_FOOTER,
       DIALOG_FOOTER_ACTIONS: () => DIALOG_FOOTER_ACTIONS,
-      DIALOG_FOOTER_FIXED: () => DIALOG_FOOTER_FIXED,
-      DIALOG_FOOTER_MAIN_SECTION: () => DIALOG_FOOTER_MAIN_SECTION,
       DIALOG_HEADER: () => DIALOG_HEADER,
       DIALOG_STEP: () => DIALOG_STEP,
       DIALOG_STEP_CONTAINER: () => DIALOG_STEP_CONTAINER,
@@ -1178,7 +1173,6 @@
       PROGRESS_NO_ANIMATION: () => PROGRESS_NO_ANIMATION,
       PROGRESS_NO_STRIPES: () => PROGRESS_NO_STRIPES,
       RADIO: () => RADIO,
-      READ_ONLY: () => READ_ONLY,
       ROUND: () => ROUND,
       RTL: () => RTL,
       RUNNING_TEXT: () => RUNNING_TEXT,
@@ -1294,7 +1288,6 @@
     var ACTIVE = ("").concat(NS, "-active");
     var ALIGN_LEFT = ("").concat(NS, "-align-left");
     var ALIGN_RIGHT = ("").concat(NS, "-align-right");
-    var COMPACT = ("").concat(NS, "-compact");
     var DARK = ("").concat(NS, "-dark");
     var DISABLED = ("").concat(NS, "-disabled");
     var FILL = ("").concat(NS, "-fill");
@@ -1307,7 +1300,6 @@
     var MINIMAL = ("").concat(NS, "-minimal");
     var OUTLINED = ("").concat(NS, "-outlined");
     var MULTILINE = ("").concat(NS, "-multiline");
-    var READ_ONLY = ("").concat(NS, "-read-only");
     var ROUND = ("").concat(NS, "-round");
     var SELECTED = ("").concat(NS, "-selected");
     var SMALL = ("").concat(NS, "-small");
@@ -1365,14 +1357,11 @@
     var CONTROL_GROUP = ("").concat(NS, "-control-group");
     var DIALOG = ("").concat(NS, "-dialog");
     var DIALOG_CONTAINER = ("").concat(DIALOG, "-container");
-    var DIALOG_HEADER = ("").concat(DIALOG, "-header");
     var DIALOG_BODY = ("").concat(DIALOG, "-body");
-    var DIALOG_BODY_SCROLL_CONTAINER = ("").concat(DIALOG, "-body-scroll-container");
     var DIALOG_CLOSE_BUTTON = ("").concat(DIALOG, "-close-button");
     var DIALOG_FOOTER = ("").concat(DIALOG, "-footer");
-    var DIALOG_FOOTER_FIXED = ("").concat(DIALOG, "-footer-fixed");
-    var DIALOG_FOOTER_MAIN_SECTION = ("").concat(DIALOG, "-footer-main-section");
     var DIALOG_FOOTER_ACTIONS = ("").concat(DIALOG, "-footer-actions");
+    var DIALOG_HEADER = ("").concat(DIALOG, "-header");
     var DIALOG_STEP = ("").concat(NS, "-dialog-step");
     var DIALOG_STEP_CONTAINER = ("").concat(DIALOG_STEP, "-container");
     var DIALOG_STEP_TITLE = ("").concat(DIALOG_STEP, "-title");
@@ -2054,7 +2043,7 @@
     })(React2.PureComponent);
     init_define_process();
     var DISPLAYNAME_PREFIX = "Blueprint4";
-    var INVALID_PROPS = ["active", "alignText", "asyncControl", "containerRef", "current", "elementRef", "fill", "icon", "inputClassName", "inputRef", "intent", "inline", "large", "loading", "leftElement", "leftIcon", "minimal", "onRemove", "outlined", "panel", "panelClassName", "popoverProps", "rightElement", "rightIcon", "round", "small", "tagName", "text"];
+    var INVALID_PROPS = ["active", "alignText", "asyncControl", "containerRef", "current", "elementRef", "fill", "icon", "inputRef", "intent", "inline", "large", "loading", "leftElement", "leftIcon", "minimal", "onRemove", "outlined", "panel", "panelClassName", "popoverProps", "rightElement", "rightIcon", "round", "small", "text"];
     function removeNonHTMLProps(props, invalidProps, shouldMerge) {
       if (invalidProps === void 0) {
         invalidProps = INVALID_PROPS;
@@ -2181,7 +2170,6 @@
       AddRowTop: () => add_row_top_default,
       AddToArtifact: () => add_to_artifact_default,
       AddToFolder: () => add_to_folder_default,
-      AimpointsTarget: () => aimpoints_target_default,
       Airplane: () => airplane_default,
       AlignCenter: () => align_center_default,
       AlignJustify: () => align_justify_default,
@@ -2193,7 +2181,6 @@
       AlignmentRight: () => alignment_right_default,
       AlignmentTop: () => alignment_top_default,
       AlignmentVerticalCenter: () => alignment_vertical_center_default,
-      Anchor: () => anchor_default,
       Annotation: () => annotation_default,
       Antenna: () => antenna_default,
       AppHeader: () => app_header_default,
@@ -2219,7 +2206,6 @@
       ArrowsHorizontal: () => arrows_horizontal_default,
       ArrowsVertical: () => arrows_vertical_default,
       Asterisk: () => asterisk_default,
-      At: () => at_default,
       AutomaticUpdates: () => automatic_updates_default,
       Backlink: () => backlink_default,
       Badge: () => badge_default,
@@ -2234,7 +2220,6 @@
       Box: () => box_default,
       Briefcase: () => briefcase_default,
       BringData: () => bring_data_default,
-      Bug: () => bug_default,
       Buggy: () => buggy_default,
       Build: () => build_default,
       Calculator: () => calculator_default,
@@ -2283,7 +2268,6 @@
       Control: () => control_default,
       CreditCard: () => credit_card_default,
       Cross: () => cross_default,
-      CrossCircle: () => cross_circle_default,
       Crown: () => crown_default,
       Cube: () => cube_default,
       CubeAdd: () => cube_add_default,
@@ -2420,7 +2404,6 @@
       Help: () => help_default,
       HelperManagement: () => helper_management_default,
       HighPriority: () => high_priority_default,
-      HighVoltagePole: () => high_voltage_pole_default,
       Highlight: () => highlight_default,
       History: () => history_default,
       Home: () => home_default,
@@ -2444,7 +2427,6 @@
       InheritedGroup: () => inherited_group_default,
       InnerJoin: () => inner_join_default,
       Insert: () => insert_default,
-      Intelligence: () => intelligence_default,
       Intersection: () => intersection_default,
       IpAddress: () => ip_address_default,
       Issue: () => issue_default,
@@ -2493,7 +2475,6 @@
       Lock: () => lock_default,
       LogIn: () => log_in_default,
       LogOut: () => log_out_default,
-      LowVoltagePole: () => low_voltage_pole_default,
       Manual: () => manual_default,
       ManuallyEnteredData: () => manually_entered_data_default,
       ManyToMany: () => many_to_many_default,
@@ -2584,7 +2565,6 @@
       Rectangle: () => rectangle_default,
       Redo: () => redo_default,
       Refresh: () => refresh_default,
-      Regex: () => regex_default,
       RegressionChart: () => regression_chart_default,
       Remove: () => remove_default,
       RemoveColumn: () => remove_column_default,
@@ -2634,7 +2614,6 @@
       SimCard: () => sim_card_default,
       Slash: () => slash_default,
       SmallCross: () => small_cross_default,
-      SmallInfoSign: () => small_info_sign_default,
       SmallMinus: () => small_minus_default,
       SmallPlus: () => small_plus_default,
       SmallSquare: () => small_square_default,
@@ -2760,8 +2739,6 @@
     init_define_process();
     var add_to_folder_default = ["M.01 7V5H16v7c0 .55-.45 1-1 1H9.005v-2.99C8.974 8.332 7.644 7 5.996 7H.01zM15 2H7.416L5.706.29a.996.996 0 00-.71-.29H1C.45 0 0 .45 0 1v3h15.99V3c.01-.55-.44-1-.99-1zM5.997 9H2c-.55 0-1 .45-1 1s.45 1 1 1h1.589L.3 14.29a1.003 1.003 0 001.42 1.42l3.287-3.29v1.59c0 .55.45 1 1 1 .549 0 .999-.45.999-1v-4A1.02 1.02 0 005.996 9z"];
     init_define_process();
-    var aimpoints_target_default = ["M2.1 9.101a3.99 3.99 0 00-1.828.974A8 8 0 0110.075.272 3.99 3.99 0 009.1 2.1a6 6 0 00-7 7zM14 8a6.03 6.03 0 00-.1-1.101 3.99 3.99 0 001.828-.974 8 8 0 01-9.803 9.803A3.99 3.99 0 006.9 13.9 6 6 0 0014 8z", "M8 3a1 1 0 00-1 1v2a1 1 0 002 0V4a1 1 0 00-1-1zM9 8a1 1 0 011-1h2a1 1 0 010 2h-2a1 1 0 01-1-1zM3 8a1 1 0 011-1h2a1 1 0 010 2H4a1 1 0 01-1-1zM7 10a1 1 0 012 0v2a1 1 0 01-2 0v-2zM5 13a2 2 0 11-4 0 2 2 0 014 0zM13 5a2 2 0 100-4 2 2 0 000 4z"];
-    init_define_process();
     var airplane_default = ["M16 1.5A1.498 1.498 0 0013.44.44L9.91 3.97 2 1 1 3l5.93 3.95L3.88 10H1l-1 1 3 2 2 3 1-1v-2.88l3.05-3.05L13 15l2-1-2.97-7.91 3.53-3.53c.27-.27.44-.65.44-1.06z"];
     init_define_process();
     var align_center_default = ["M4 4c-.55 0-1 .45-1 1s.45 1 1 1h8c.55 0 1-.45 1-1s-.45-1-1-1H4zM1 3h14c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1zm13 10H2c-.55 0-1 .45-1 1s.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1zm1-6H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm-5 5c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1s.45 1 1 1h4z"];
@@ -2783,8 +2760,6 @@
     var alignment_top_default = ["M15 0H1C.45 0 0 .45 0 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zM6 4H3c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm7 0h-3c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1z"];
     init_define_process();
     var alignment_vertical_center_default = ["M13 2H9V1c0-.55-.45-1-1-1S7 .45 7 1v1H3c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1h4v2H6c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1h1v1c0 .55.45 1 1 1s1-.45 1-1v-1h1c.55 0 1-.45 1-1v-3c0-.55-.45-1-1-1H9V7h4c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1z"];
-    init_define_process();
-    var anchor_default = ["M10 2a2 2 0 01-1 1.732V5h2v2H9v6.874a4.004 4.004 0 002.976-3.436l-.269.27a1 1 0 01-1.414-1.415l2-2a1 1 0 011.414 0l2 2a1 1 0 01-1.414 1.414l-.306-.306a6 6 0 01-11.974 0l-.306.306A1 1 0 01.293 9.293l2-2a1 1 0 011.414 0l2 2a1 1 0 01-1.414 1.414l-.27-.27A4.003 4.003 0 007 13.875V7H5V5h2V3.732A2 2 0 1110 2z"];
     init_define_process();
     var annotation_default = ["M15.52 2.77c.3-.29.48-.7.48-1.15C16 .73 15.27 0 14.38 0c-.45 0-.85.18-1.15.48l-1.34 1.34 2.3 2.3 1.33-1.35zM7.4 10.9l6.21-6.21-2.3-2.3L5.1 8.6l2.3 2.3zM14 14H2V2h6.34l2-2H1C.45 0 0 .45 0 1v14c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V5.66l-2 2V14zM3 13l3.58-1.29-2.29-2.27L3 13z"];
     init_define_process();
@@ -2836,8 +2811,6 @@
     init_define_process();
     var asterisk_default = ["M14.54 11.18l.01-.02L9.8 8l4.75-3.17-.01-.02c.27-.17.46-.46.46-.81 0-.55-.45-1-1-1-.21 0-.39.08-.54.18l-.01-.02L9 6.13V1c0-.55-.45-1-1-1S7 .45 7 1v5.13L2.55 3.17l-.01.01A.969.969 0 002 3c-.55 0-1 .45-1 1 0 .35.19.64.46.82l-.01.01L6.2 8l-4.75 3.17.01.02c-.27.17-.46.46-.46.81 0 .55.45 1 1 1 .21 0 .39-.08.54-.18l.01.02L7 9.87V15c0 .55.45 1 1 1s1-.45 1-1V9.87l4.45 2.96.01-.02c.15.11.33.19.54.19.55 0 1-.45 1-1 0-.35-.19-.64-.46-.82z"];
     init_define_process();
-    var at_default = ["M5.816 8.371c0 1.515.603 2.274 1.814 2.274 1.273 0 1.971-.954 2.089-2.86l.12-2.331a5.298 5.298 0 00-1.337-.165c-.848 0-1.507.276-1.979.828-.472.554-.707 1.305-.707 2.254M16 7.133c0 .93-.149 1.78-.446 2.55-.297.77-.714 1.372-1.253 1.802a2.913 2.913 0 01-1.868.642c-.521 0-.975-.137-1.356-.41a1.989 1.989 0 01-.773-1.111h-.12c-.323.506-.723.887-1.198 1.14a3.35 3.35 0 01-1.605.38c-1.076 0-1.924-.34-2.541-1.023-.618-.682-.926-1.607-.926-2.77 0-1.341.41-2.428 1.229-3.264.818-.835 1.918-1.253 3.298-1.253.502 0 1.058.043 1.669.13.61.088 1.155.21 1.63.367l-.218 4.536v.234c0 1.04.344 1.562 1.031 1.562.521 0 .935-.332 1.241-.996.308-.664.463-1.508.463-2.537 0-1.112-.232-2.09-.695-2.931a4.762 4.762 0 00-1.97-1.947c-.851-.456-1.83-.682-2.934-.682-1.405 0-2.628.286-3.67.858a5.736 5.736 0 00-2.382 2.455c-.549 1.062-.822 2.296-.822 3.7 0 1.888.512 3.339 1.535 4.353 1.024 1.015 2.492 1.52 4.409 1.52 1.46 0 2.982-.29 4.567-.877v1.6c-1.386.56-2.896.839-4.527.839-2.446 0-4.35-.65-5.717-1.945C.685 12.757 0 10.947 0 8.625c0-1.698.37-3.209 1.11-4.532a7.556 7.556 0 013.076-3.038C5.497.35 6.982 0 8.64 0c1.433 0 2.71.294 3.827.878a6.294 6.294 0 012.607 2.504c.619 1.082.926 2.332.926 3.75"];
-    init_define_process();
     var automatic_updates_default = ["M8 14c-3.31 0-6-2.69-6-6 0-1.77.78-3.36 2-4.46V5c0 .55.45 1 1 1s1-.45 1-1V1c0-.55-.45-1-1-1H1C.45 0 0 .45 0 1s.45 1 1 1h1.74A7.95 7.95 0 000 8c0 4.42 3.58 8 8 8 .55 0 1-.45 1-1s-.45-1-1-1zM8 2a5.9 5.9 0 012.95.81l1.47-1.47A7.893 7.893 0 008 0c-.55 0-1 .45-1 1s.45 1 1 1zm2.71 6.71l5-5a1.003 1.003 0 00-1.42-1.42L10 6.59l-1.29-1.3a1.003 1.003 0 00-1.42 1.42l2 2c.18.18.43.29.71.29s.53-.11.71-.29zM16 8c0-.55-.06-1.08-.16-1.6l-1.87 1.87A5.966 5.966 0 0112 12.45V11c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .55.45 1 1 1h4c.55 0 1-.45 1-1s-.45-1-1-1h-1.74A7.95 7.95 0 0016 8z"];
     init_define_process();
     var backlink_default = ["M14 10a1 1 0 110 2h-.585l2.292 2.293a1 1 0 01-1.32 1.497l-.094-.083L12 13.415V14a1 1 0 11-2 0l.003-3.075.012-.1.012-.059.033-.108.034-.081.052-.098.067-.096.08-.09a1.01 1.01 0 01.112-.097l.11-.071.143-.065.076-.024.091-.02.116-.014L14 10zM6.036 6.136l-3.45 3.45-.117.127a2 2 0 002.818 2.818l.127-.117 3.45-3.449a4 4 0 01-.885 3.704l-.15.16-1 1A4 4 0 011.02 8.33l.15-.16 1-1a3.998 3.998 0 013.865-1.035zm4.671-1.843a1 1 0 01.083 1.32l-.083.094-5 5a1 1 0 01-1.497-1.32l.083-.094 5-5a1 1 0 011.414 0zm3.121-3.121a4 4 0 01.151 5.497l-.15.16-1 1a3.998 3.998 0 01-3.864 1.036l3.45-3.45.116-.128a2 2 0 00-2.818-2.818l-.127.117-3.45 3.45A4 4 0 017.02 2.33l.15-.16 1-1a4 4 0 015.657 0z"];
@@ -2866,8 +2839,6 @@
     var briefcase_default = ["M15 3.98h-3v-2c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v2H1c-.55 0-1 .45-1 1v4h3v-1h2v1h6v-1h2v1h3v-4c0-.55-.45-1-1-1zm-5 0H6v-1h4v1zm3 7h-2v-1H5v1H3v-1H0v4c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-4h-3v1z"];
     init_define_process();
     var bring_data_default = ["M14 14a1 1 0 010 2H2a1 1 0 010-2h12zM7.995 3.005c.55 0 1 .45 1 .999v5.584l1.29-1.288a1.002 1.002 0 011.42 1.419l-3 2.996a1.015 1.015 0 01-1.42 0l-3-2.997A1.002 1.002 0 015.705 8.3l1.29 1.29V4.013c0-.55.45-1.009 1-1.009zM14 0a1 1 0 110 2 1 1 0 010-2zm-3 0a1 1 0 110 2 1 1 0 010-2zM8 0a1 1 0 110 2 1 1 0 010-2zM5 0a1 1 0 110 2 1 1 0 010-2zM2 0a1 1 0 110 2 1 1 0 010-2z"];
-    init_define_process();
-    var bug_default = ["M5 3a3 3 0 016 0 5.022 5.022 0 011.425 1.67L13 4.382V3a1 1 0 112 0v2a1 1 0 01-.553.894l-1.46.731c.008.124.013.249.013.375v1h2a1 1 0 110 2h-2a5 5 0 01-.21 1.439l1.581.633A1 1 0 0115 13v2a1 1 0 11-2 0v-1.323l-1.167-.467A4.99 4.99 0 018 15a4.99 4.99 0 01-3.833-1.79L3 13.677V15a1 1 0 11-2 0v-2a1 1 0 01.629-.928l1.581-.633A5 5 0 013 10H1a1 1 0 110-2h2V7c0-.126.005-.251.014-.375l-1.461-.73A1 1 0 011 5V3a1 1 0 012 0v1.382l.575.288A5.023 5.023 0 015 3zm0 6v1a3 3 0 106 0V7a3 3 0 00-6 0v2z"];
     init_define_process();
     var buggy_default = ["M13.928.629A1 1 0 0012.89.006l-9 1a1 1 0 00-.747.48L.431 6.005A.5.5 0 000 6.5v3a.5.5 0 00.5.5h2.798c.341 0 .672.116.938.329l1.952 1.561A.5.5 0 006.5 12H10a.5.5 0 00.4-.2l.9-1.2a1.5 1.5 0 011.2-.6h3a.5.5 0 00.5-.5v-4a.5.5 0 00-.308-.462L13.928.628zM12.36 2.094l-.006-.016-3.166.352 1.121 3.083 2.052-3.419zm.467 1.166l-1.649 2.748 2.51-.594-.861-2.154zM9.603 6.496L8.166 2.543l-3.563.396L2.766 6H3.5a.5.5 0 01.367.16L6.218 8.7h1.914l1.452-2.177a.5.5 0 01.019-.027zM2.5 16a2.5 2.5 0 100-5 2.5 2.5 0 000 5zm11 0a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"];
     init_define_process();
@@ -2964,8 +2935,6 @@
     var credit_card_default = ["M14.99 2.95h-14c-.55 0-1 .45-1 1v1h16v-1c0-.55-.45-1-1-1zm-15 10c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-6h-16v6zm5.5-2h5c.28 0 .5.22.5.5s-.22.5-.5.5h-5c-.28 0-.5-.22-.5-.5s.23-.5.5-.5zm-3 0h1c.28 0 .5.22.5.5s-.22.5-.5.5h-1c-.28 0-.5-.22-.5-.5s.23-.5.5-.5z"];
     init_define_process();
     var cross_default = ["M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"];
-    init_define_process();
-    var cross_circle_default = ["M8 16A8 8 0 108 0a8 8 0 000 16zm3.7-10.29L9.41 8l2.3 2.29A1.003 1.003 0 0111 12c-.28 0-.53-.11-.71-.3L8 9.41l-2.29 2.3A1.003 1.003 0 014 11c0-.28.11-.53.3-.71L6.59 8l-2.3-2.29a1.003 1.003 0 011.42-1.42L8 6.59l2.29-2.3A1.003 1.003 0 0112 5c0 .28-.11.53-.3.71z"];
     init_define_process();
     var crown_default = ["M2 6l3 2 3-4 3 4 3-2-1 6H3L2 6zm6-5a1 1 0 110 2 1 1 0 010-2zM1 3a1 1 0 110 2 1 1 0 010-2zm14 0a1 1 0 110 2 1 1 0 010-2zM3 13h10v2H3v-2z"];
     init_define_process();
@@ -3239,8 +3208,6 @@
     init_define_process();
     var high_priority_default = ["M9 14v2H7v-2h2zm1-14L9 12H7L6 0h4z"];
     init_define_process();
-    var high_voltage_pole_default = ["M6 0a1 1 0 00-1 1v3H3V3h.5a.5.5 0 000-1h-2a.5.5 0 000 1H2v1a1 1 0 000 2v1h-.5a.5.5 0 000 1h2a.5.5 0 000-1H3V6h2v9a1 1 0 102 0V6h2v9a1 1 0 102 0V6h2v1h-.5a.5.5 0 000 1h2a.5.5 0 000-1H14V6a1 1 0 100-2V3h.5a.5.5 0 000-1h-2a.5.5 0 000 1h.5v1h-2V1a1 1 0 00-1-1H6zm1 2v2h2V2H7z"];
-    init_define_process();
     var highlight_default = ["M9.12 11.07l2-2.02.71.71 4-4.04L10.17 0l-4 4.04.71.71-2 2.02 4.24 4.3zM2 12.97h4c.28 0 .53-.11.71-.3l1-1.01-3.42-3.45-3 3.03c-.18.18-.29.44-.29.72 0 .55.45 1.01 1 1.01zm13 1.01H1c-.55 0-1 .45-1 1.01S.45 16 1 16h14c.55 0 1-.45 1-1.01s-.45-1.01-1-1.01z"];
     init_define_process();
     var history_default = ["M8 3c-.55 0-1 .45-1 1v4c0 .28.11.53.29.71l2 2a1.003 1.003 0 001.42-1.42L9 7.59V4c0-.55-.45-1-1-1zm0-3a7.95 7.95 0 00-6 2.74V1c0-.55-.45-1-1-1S0 .45 0 1v4c0 .55.45 1 1 1h4c.55 0 1-.45 1-1s-.45-1-1-1H3.54C4.64 2.78 6.23 2 8 2c3.31 0 6 2.69 6 6 0 2.61-1.67 4.81-4 5.63v-.01c-.63.23-1.29.38-2 .38-3.31 0-6-2.69-6-6 0-.55-.45-1-1-1s-1 .45-1 1c0 4.42 3.58 8 8 8 .34 0 .67-.03 1-.07.02 0 .04-.01.06-.01C12.98 15.4 16 12.06 16 8c0-4.42-3.58-8-8-8z"];
@@ -3257,7 +3224,7 @@
     init_define_process();
     var horizontal_inbetween_default = ["M0 16V0h1a1 1 0 011 1v14a1 1 0 01-1 1H0zM15 0h1v16h-1a1 1 0 01-1-1V1a1 1 0 011-1zM6.707 6.707a1 1 0 00-1.414-1.414l-2 2a1 1 0 000 1.414l2 2a1 1 0 001.414-1.414L5.414 8l1.293-1.293zm4-1.414a1 1 0 00-1.414 1.414L10.586 8 9.293 9.293a1 1 0 101.414 1.414l2-2a1 1 0 000-1.414l-2-2z"];
     init_define_process();
-    var hurricane_default = ["M3.5 12c-.86 0-2.5-.5-3.5-1 1 3.5 4.506 4 7 4a7 7 0 007-7l-.006-.004a5.974 5.974 0 00-1.29-3.988c.896.066 2.37.53 3.296.992-1-3.5-4.506-4-7-4a6.998 6.998 0 00-6.14 3.635 5.972 5.972 0 00-.859 3.226L2 8l.006.005a5.98 5.98 0 001.771 3.99A7.469 7.469 0 013.5 12zM8 6a2 2 0 100 4 2 2 0 000-4z"];
+    var hurricane_default = ["M3.5 12c-.86 0-2.5-.5-3.5-1 1 3.5 4.506 4 7 4a7 7 0 007-7l-.006-.004a5.974 5.974 0 00-1.29-3.988c.896.066 2.37.53 3.296.992-1-3.5-4.506-4-7-4a6.998 6.998 0 00-6.14 3.635 5.972 5.972 0 00-.859 3.226L2 8l.006.005a5.98 5.98 0 001.771 3.99A7.469 7.469 0 013.5 12zM8 6a2 2 0 100 4 2 2 0 000-4z", "M0 0h16v16H0z"];
     init_define_process();
     var id_number_default = ["M2 5v7h12V5H2zm0-2h12c1.1 0 2 .9 2 2v7c0 1.1-.9 2-2 2H2c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2z", "M7.9 10.48c-.14-.33-.84-.55-1.3-.75-.46-.2-.4-.33-.42-.5v-.07c.16-.14.29-.33.37-.56 0 0 0-.01.01-.02.02-.05.03-.1.05-.15.1-.01.16-.13.19-.23.03-.04.07-.15.06-.27-.02-.16-.08-.24-.15-.26v-.03c0-.2-.02-.48-.05-.67-.01-.05-.02-.1-.03-.16-.07-.23-.21-.44-.4-.58-.2-.15-.48-.23-.73-.23s-.53.08-.72.23c-.19.14-.33.35-.4.58-.02.05-.03.1-.03.16-.05.18-.06.47-.06.67v.03c-.07.03-.14.1-.15.26-.02.12.03.22.06.27.02.1.09.22.2.24.01.05.03.1.05.15v.01c.08.23.22.42.38.56v.07c-.02.17.03.29-.43.5-.46.2-1.16.42-1.3.75s-.09.52-.09.52H8c-.01 0 .05-.19-.1-.52zM10 6h2c.55 0 1 .45 1 1s-.45 1-1 1h-2c-.55 0-1-.45-1-1s.45-1 1-1zM10 9h2c.55 0 1 .45 1 1s-.45 1-1 1h-2c-.55 0-1-.45-1-1s.45-1 1-1z"];
     init_define_process();
@@ -3286,8 +3253,6 @@
     var inner_join_default = ["M6.6 3.3C5.3 4.4 4.5 6.1 4.5 8s.8 3.6 2.1 4.7c-.5.2-1 .3-1.6.3-2.8 0-5-2.2-5-5s2.2-5 5-5c.6 0 1.1.1 1.6.3zm-1.96 8.68C3.92 10.83 3.5 9.46 3.5 8s.42-2.83 1.14-3.98C2.6 4.2 1 5.91 1 8s1.6 3.8 3.64 3.98zM8 4c-1.2.9-2 2.4-2 4s.8 3.1 2 4c1.2-.9 2-2.3 2-4s-.8-3.1-2-4zm3-1c2.8 0 5 2.2 5 5s-2.2 5-5 5c-.6 0-1.1-.1-1.6-.3 1.3-1.1 2.1-2.9 2.1-4.7s-.8-3.5-2.1-4.7c.5-.2 1-.3 1.6-.3zm.35 1.02c.73 1.15 1.14 2.52 1.14 3.98s-.42 2.83-1.14 3.98c2.04-.18 3.64-1.9 3.64-3.98s-1.6-3.8-3.64-3.98z"];
     init_define_process();
     var insert_default = ["M5 9h2v2c0 .6.4 1 1 1s1-.4 1-1V9h2c.6 0 1-.4 1-1s-.4-1-1-1H9V5c0-.6-.4-1-1-1s-1 .4-1 1v2H5c-.6 0-1 .4-1 1s.4 1 1 1zm10-9H1C.4 0 0 .4 0 1v14c0 .6.4 1 1 1h14c.6 0 1-.4 1-1V1c0-.6-.4-1-1-1zm-1 14H2V2h12v12z"];
-    init_define_process();
-    var intelligence_default = ["M8 7c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.46-1-1-1zm4.988.976v-.042a.398.398 0 00-.107-.216 7.57 7.57 0 00-1.087-1.082c-.83-.703-1.78-1.292-2.824-1.527a4.315 4.315 0 00-1.818-.024 5.578 5.578 0 00-1.593.595c-.781.427-1.5 1.01-2.125 1.665-.112.12-.225.246-.33.379a.43.43 0 000 .558c.318.403.699.758 1.086 1.082.831.703 1.78 1.292 2.824 1.527a4.37 4.37 0 001.831.024c.556-.108 1.087-.325 1.593-.595a8.695 8.695 0 002.118-1.665c.113-.12.232-.246.338-.379A.42.42 0 0013 8.06V8c-.012-.012-.012-.018-.012-.024zM8 10c-1.107 0-2-.893-2-2s.893-2 2-2 2 .893 2 2-.893 2-2 2zM7 1a1 1 0 00-1-1H1a1 1 0 00-1 1v5a1 1 0 002 0V2h4a1 1 0 001-1zm2 0a1 1 0 011-1h5a1 1 0 011 1v5a1 1 0 11-2 0V2h-4a1 1 0 01-1-1zm0 14a1 1 0 001 1h5a1 1 0 001-1v-5a1 1 0 10-2 0v4h-4a1 1 0 00-1 1zm-2 0a1 1 0 01-1 1H1a1 1 0 01-1-1v-5a1 1 0 012 0v4h4a1 1 0 011 1z"];
     init_define_process();
     var intersection_default = ["M10 3c-.92 0-1.76.26-2.5.69C6.76 3.26 5.92 3 5 3 2.24 3 0 5.24 0 8s2.24 5 5 5c.92 0 1.76-.26 2.5-.69.74.43 1.58.69 2.5.69 2.76 0 5-2.24 5-5s-2.24-5-5-5zm-4.1 7.85c-.29.09-.59.15-.9.15-1.66 0-3-1.34-3-3s1.34-3 3-3c.31 0 .61.06.9.15C5.33 5.96 5 6.94 5 8s.33 2.04.9 2.85zM10 11c-.31 0-.61-.06-.9-.15.57-.81.9-1.79.9-2.85s-.33-2.04-.9-2.85c.29-.09.59-.15.9-.15 1.66 0 3 1.34 3 3s-1.34 3-3 3z"];
     init_define_process();
@@ -3384,8 +3349,6 @@
     var log_in_default = ["M11 8c0-.28-.11-.53-.29-.71l-3-3a1.003 1.003 0 00-1.42 1.42L7.59 7H1c-.55 0-1 .45-1 1s.45 1 1 1h6.59L6.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3-3c.18-.18.29-.43.29-.71zm4-8H9c-.55 0-1 .45-1 1s.45 1 1 1h5v12H9c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1z"];
     init_define_process();
     var log_out_default = ["M7 14H2V2h5c.55 0 1-.45 1-1s-.45-1-1-1H1C.45 0 0 .45 0 1v14c0 .55.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1zm8.71-6.71l-3-3a1.003 1.003 0 00-1.42 1.42L12.59 7H6c-.55 0-1 .45-1 1s.45 1 1 1h6.59l-1.29 1.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3-3c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"];
-    init_define_process();
-    var low_voltage_pole_default = ["M8 0a1 1 0 00-1 1v1H3v-.5a.5.5 0 00-1 0V2a1 1 0 000 2v1h-.5a.5.5 0 000 1h2a.5.5 0 000-1H3V4h4v11a1 1 0 102 0V4h4v1h-.5a.5.5 0 000 1h2a.5.5 0 000-1H14V4a1 1 0 100-2v-.5a.5.5 0 00-1 0V2H9V1a1 1 0 00-1-1z"];
     init_define_process();
     var manual_default = ["M15.99 1.13c-.02-.41-.33-.77-.78-.87C12.26-.36 9.84.13 8 1.7 6.16.13 3.74-.36.78.26.33.35.03.72.01 1.13H0v12c0 .08 0 .17.02.26.12.51.65.82 1.19.71 2.63-.55 4.59-.04 6.01 1.57.02.03.06.04.08.06.02.02.03.04.05.06.04.03.09.04.13.07.05.03.09.05.14.07.11.04.23.07.35.07h.04c.12 0 .24-.03.35-.07.05-.02.09-.05.14-.07.04-.02.09-.04.13-.07.02-.02.03-.04.05-.06.03-.02.06-.03.08-.06 1.42-1.6 3.39-2.12 6.01-1.57.54.11 1.07-.21 1.19-.71.04-.09.04-.18.04-.26l-.01-12zM7 12.99c-1.4-.83-3.07-1.14-5-.93V1.96c2.11-.28 3.75.2 5 1.46v9.57zm7-.92c-1.93-.21-3.6.1-5 .93V3.42c1.25-1.26 2.89-1.74 5-1.46v10.11z"];
     init_define_process();
@@ -3567,8 +3530,6 @@
     init_define_process();
     var refresh_default = ["M14.99 6.99c-.55 0-1 .45-1 1 0 3.31-2.69 6-6 6-1.77 0-3.36-.78-4.46-2h1.46c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-1.74a7.95 7.95 0 006 2.74c4.42 0 8-3.58 8-8 0-.55-.45-1-1-1zm0-7c-.55 0-1 .45-1 1v1.74a7.95 7.95 0 00-6-2.74c-4.42 0-8 3.58-8 8 0 .55.45 1 1 1s1-.45 1-1c0-3.31 2.69-6 6-6 1.77 0 3.36.78 4.46 2h-1.46c-.55 0-1 .45-1 1s.45 1 1 1h4c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1z"];
     init_define_process();
-    var regex_default = ["M0 14a2 2 0 114 0 2 2 0 01-4 0zM11 0a1 1 0 00-1 1v2.768L7.603 2.384a1 1 0 10-1 1.732L9 5.5 6.603 6.884a1 1 0 001 1.732L10 7.232V10a1 1 0 102 0V7.232l2.397 1.384a1 1 0 101-1.732L13 5.5l2.397-1.384a1 1 0 10-1-1.732L12 3.768V1a1 1 0 00-1-1z"];
-    init_define_process();
     var regression_chart_default = ["M13 6.5c0 .83.67 1.5 1.5 1.5S16 7.33 16 6.5 15.33 5 14.5 5 13 5.67 13 6.5zM8.5 5c.83 0 1.5-.67 1.5-1.5S9.33 2 8.5 2 7 2.67 7 3.5 7.67 5 8.5 5zM9 9.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5S11.33 8 10.5 8 9 8.67 9 9.5zM4.5 8C5.33 8 6 7.33 6 6.5S5.33 5 4.5 5 3 5.67 3 6.5 3.67 8 4.5 8zM15 12H3.26l12.03-8.59-.58-.81L2 11.67V3c0-.55-.45-1-1-1s-1 .45-1 1v10c0 .55.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1z"];
     init_define_process();
     var remove_default = ["M10.99 6.99h-6c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1zm-3-7c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.68 6-6 6z"];
@@ -3666,8 +3627,6 @@
     var slash_default = ["M10 2a.99.99 0 00-.96.73l-2.99 9.96A1.003 1.003 0 007 14c.46 0 .85-.31.96-.73l2.99-9.96A1.003 1.003 0 0010 2z"];
     init_define_process();
     var small_cross_default = ["M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"];
-    init_define_process();
-    var small_info_sign_default = ["M14 8A6 6 0 112 8a6 6 0 0112 0zM9 4v2H7V4h2zm0 3v4h1v1H6v-1h1V8H6V7h3z"];
     init_define_process();
     var small_minus_default = ["M11 7H5c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1z"];
     init_define_process();
@@ -3887,7 +3846,6 @@
       AddRowTop: () => add_row_top_default2,
       AddToArtifact: () => add_to_artifact_default2,
       AddToFolder: () => add_to_folder_default2,
-      AimpointsTarget: () => aimpoints_target_default2,
       Airplane: () => airplane_default2,
       AlignCenter: () => align_center_default2,
       AlignJustify: () => align_justify_default2,
@@ -3899,7 +3857,6 @@
       AlignmentRight: () => alignment_right_default2,
       AlignmentTop: () => alignment_top_default2,
       AlignmentVerticalCenter: () => alignment_vertical_center_default2,
-      Anchor: () => anchor_default2,
       Annotation: () => annotation_default2,
       Antenna: () => antenna_default2,
       AppHeader: () => app_header_default2,
@@ -3925,7 +3882,6 @@
       ArrowsHorizontal: () => arrows_horizontal_default2,
       ArrowsVertical: () => arrows_vertical_default2,
       Asterisk: () => asterisk_default2,
-      At: () => at_default2,
       AutomaticUpdates: () => automatic_updates_default2,
       Backlink: () => backlink_default2,
       Badge: () => badge_default2,
@@ -3940,7 +3896,6 @@
       Box: () => box_default2,
       Briefcase: () => briefcase_default2,
       BringData: () => bring_data_default2,
-      Bug: () => bug_default2,
       Buggy: () => buggy_default2,
       Build: () => build_default2,
       Calculator: () => calculator_default2,
@@ -3989,7 +3944,6 @@
       Control: () => control_default2,
       CreditCard: () => credit_card_default2,
       Cross: () => cross_default2,
-      CrossCircle: () => cross_circle_default2,
       Crown: () => crown_default2,
       Cube: () => cube_default2,
       CubeAdd: () => cube_add_default2,
@@ -4126,7 +4080,6 @@
       Help: () => help_default2,
       HelperManagement: () => helper_management_default2,
       HighPriority: () => high_priority_default2,
-      HighVoltagePole: () => high_voltage_pole_default2,
       Highlight: () => highlight_default2,
       History: () => history_default2,
       Home: () => home_default2,
@@ -4150,7 +4103,6 @@
       InheritedGroup: () => inherited_group_default2,
       InnerJoin: () => inner_join_default2,
       Insert: () => insert_default2,
-      Intelligence: () => intelligence_default2,
       Intersection: () => intersection_default2,
       IpAddress: () => ip_address_default2,
       Issue: () => issue_default2,
@@ -4199,7 +4151,6 @@
       Lock: () => lock_default2,
       LogIn: () => log_in_default2,
       LogOut: () => log_out_default2,
-      LowVoltagePole: () => low_voltage_pole_default2,
       Manual: () => manual_default2,
       ManuallyEnteredData: () => manually_entered_data_default2,
       ManyToMany: () => many_to_many_default2,
@@ -4290,7 +4241,6 @@
       Rectangle: () => rectangle_default2,
       Redo: () => redo_default2,
       Refresh: () => refresh_default2,
-      Regex: () => regex_default2,
       RegressionChart: () => regression_chart_default2,
       Remove: () => remove_default2,
       RemoveColumn: () => remove_column_default2,
@@ -4340,7 +4290,6 @@
       SimCard: () => sim_card_default2,
       Slash: () => slash_default2,
       SmallCross: () => small_cross_default2,
-      SmallInfoSign: () => small_info_sign_default2,
       SmallMinus: () => small_minus_default2,
       SmallPlus: () => small_plus_default2,
       SmallSquare: () => small_square_default2,
@@ -4466,8 +4415,6 @@
     init_define_process();
     var add_to_folder_default2 = ["M.01 10V6H20v10c0 .55-.45 1-1 1H9.995v-3.99C9.965 11.332 8.635 10 6.987 10H.01zM19 3c.55 0 1 .45.99 1v1H0V2c0-.55.45-1 1-1h5.997c.28 0 .53.11.71.29L9.414 3H19zM6.987 12c.55 0 .999.45 1.009 1.01v5c0 .55-.45 1-1 1s-.999-.45-.999-1v-2.59l-4.288 4.29a1.003 1.003 0 01-1.42-1.42L4.579 14H1.989c-.55 0-1-.45-1-1s.45-1 1-1h4.998z"];
     init_define_process();
-    var aimpoints_target_default2 = ["M2.296 12.163a4.492 4.492 0 00-1.792.98A9.99 9.99 0 010 10C0 4.477 4.477 0 10 0a9.99 9.99 0 013.143.504 4.492 4.492 0 00-.98 1.792 8 8 0 00-9.867 9.867zM18 10c0-.75-.103-1.475-.296-2.163a4.491 4.491 0 001.792-.98C19.823 7.847 20 8.903 20 10c0 5.523-4.477 10-10 10a9.992 9.992 0 01-3.142-.504 4.491 4.491 0 00.98-1.792A8 8 0 0018 10zM19 3.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM6 16.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z", "M10 4a1 1 0 00-1 1v3a1 1 0 002 0V5a1 1 0 00-1-1zM11 10a1 1 0 011-1h3a1 1 0 010 2h-3a1 1 0 01-1-1zM4 10a1 1 0 011-1h3a1 1 0 010 2H5a1 1 0 01-1-1zM9 12a1 1 0 012 0v3a1 1 0 01-2 0v-3z"];
-    init_define_process();
     var airplane_default2 = ["M20 2c0-1.1-.9-2-2-2-.55 0-1.05.22-1.41.59l-4.84 4.84L2 1 1 3l7.53 5.64L4.17 13H1l-1 1 4 2 2 4 1-1v-3.17l4.36-4.36L17 19l2-1-4.43-9.74 4.84-4.84c.37-.37.59-.87.59-1.42z"];
     init_define_process();
     var align_center_default2 = ["M5 5c-.55 0-1 .45-1 1s.45 1 1 1h10c.55 0 1-.45 1-1s-.45-1-1-1H5zM1 3h18c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1zm12 12c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h6zm4 2H3c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm2-8H1c-.55 0-1 .45-1 1s.45 1 1 1h18c.55 0 1-.45 1-1s-.45-1-1-1z"];
@@ -4489,8 +4436,6 @@
     var alignment_top_default2 = ["M8 4H4c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm11-4H1C.45 0 0 .45 0 1s.45 1 1 1h18c.55 0 1-.45 1-1s-.45-1-1-1zm-3 4h-4c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1z"];
     init_define_process();
     var alignment_vertical_center_default2 = ["M17 3h-6V1c0-.55-.45-1-1-1S9 .45 9 1v2H3c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h6v2H7c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1h-2V9h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"];
-    init_define_process();
-    var anchor_default2 = ["M11 5.83a3.001 3.001 0 10-2 0V7H6v2h3v8.917a6.003 6.003 0 01-4.985-5.488l.278.278a1 1 0 001.414-1.414l-2-2a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414l.303-.303a8 8 0 0015.98 0l.303.303a1 1 0 001.414-1.414l-2-2a1 1 0 00-1.414 0l-2 2a1 1 0 001.414 1.414l.278-.278A6.003 6.003 0 0111 17.917V9h3V7h-3V5.83zM11 3a1 1 0 11-2 0 1 1 0 012 0z"];
     init_define_process();
     var annotation_default2 = ["M9.41 13.41l7.65-7.65-2.83-2.83-7.65 7.65 2.83 2.83zm10-10c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2-.55 0-1.05.22-1.41.59l-1.65 1.65 2.83 2.83 1.64-1.66zM18 18H2V2h8.93l2-2H1C.45 0 0 .45 0 1v18c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V7.07l-2 2V18zM4 16l4.41-1.59-2.81-2.79L4 16z"];
     init_define_process();
@@ -4542,8 +4487,6 @@
     init_define_process();
     var asterisk_default2 = ["M18.52 14.17l.01-.02L11.89 10l6.64-4.15-.01-.02A.97.97 0 0019 5c0-.55-.45-1-1-1-.2 0-.37.07-.52.17l-.01-.02L11 8.2V1c0-.55-.45-1-1-1S9 .45 9 1v7.2L2.53 4.15l-.01.02A.922.922 0 002 4c-.55 0-1 .45-1 1 0 .36.2.66.48.83l-.01.02L8.11 10l-6.64 4.15.01.02A.97.97 0 001 15c0 .55.45 1 1 1 .2 0 .37-.07.52-.17l.01.02L9 11.8V19c0 .55.45 1 1 1s1-.45 1-1v-7.2l6.47 4.04.01-.02c.15.11.32.18.52.18.55 0 1-.45 1-1 0-.36-.2-.66-.48-.83z"];
     init_define_process();
-    var at_default2 = ["M12.298 6.818a6.507 6.507 0 00-1.672-.207c-1.057 0-1.881.345-2.472 1.036-.589.691-.884 1.63-.884 2.817 0 1.894.755 2.842 2.266 2.842 1.593 0 2.464-1.192 2.614-3.574l.148-2.914zm6.544-2.592C19.614 5.58 20 7.142 20 8.916c0 1.163-.186 2.224-.556 3.189-.374.963-.894 1.713-1.569 2.25a3.64 3.64 0 01-2.333.803c-.651 0-1.218-.17-1.696-.512a2.486 2.486 0 01-.967-1.39h-.148c-.405.635-.904 1.11-1.498 1.427-.596.318-1.264.475-2.007.475-1.345 0-2.405-.425-3.175-1.279-.774-.854-1.159-2.008-1.159-3.463 0-1.676.512-3.036 1.537-4.08 1.021-1.043 2.396-1.567 4.122-1.567.628 0 1.322.055 2.086.164.764.11 1.443.262 2.037.458l-.272 5.67v.294c0 1.3.43 1.951 1.289 1.951.652 0 1.169-.414 1.553-1.245.384-.829.577-1.886.577-3.171 0-1.39-.291-2.611-.868-3.664a5.948 5.948 0 00-2.463-2.433c-1.065-.569-2.287-.853-3.667-.853-1.757 0-3.287.357-4.588 1.072a7.19 7.19 0 00-2.978 3.069C2.571 7.408 2.23 8.953 2.23 10.708c0 2.358.639 4.172 1.92 5.438 1.279 1.27 3.115 1.902 5.509 1.902 1.826 0 3.729-.365 5.71-1.096v2.001c-1.734.698-3.62 1.047-5.66 1.047-3.056 0-5.437-.811-7.144-2.432C.855 15.945 0 13.683 0 10.781 0 8.659.462 6.77 1.388 5.116c.923-1.653 2.206-2.919 3.845-3.798C6.871.44 8.727 0 10.799 0c1.791 0 3.388.367 4.786 1.098a7.865 7.865 0 013.257 3.128z"];
-    init_define_process();
     var automatic_updates_default2 = ["M10 18c-4.42 0-8-3.58-8-8 0-2.52 1.18-4.76 3-6.22V5c0 .55.45 1 1 1s1-.45 1-1V1c0-.55-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1h2.06C1.61 3.82 0 6.71 0 10c0 5.52 4.48 10 10 10 .55 0 1-.45 1-1s-.45-1-1-1zm0-16c1.64 0 3.15.49 4.42 1.34l1.43-1.43A9.869 9.869 0 0010 0c-.55 0-1 .45-1 1s.45 1 1 1zm10 8c0-1.13-.2-2.21-.54-3.22L17.84 8.4A7.962 7.962 0 0115 16.22V15c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .55.45 1 1 1h4c.55 0 1-.45 1-1s-.45-1-1-1h-2.06c2.45-1.82 4.06-4.71 4.06-8zm0-7a1.003 1.003 0 00-1.71-.71L12 8.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7c.18-.18.29-.43.29-.71z"];
     init_define_process();
     var backlink_default2 = ["M18.387 19.79l-.094-.083L14 15.415V18a1 1 0 01-2 0l.003-5.075.017-.126.03-.111.044-.111.052-.098.067-.096.08-.09a1.01 1.01 0 01.112-.097l.11-.071.114-.054.105-.035.15-.03L13 12h5a1 1 0 110 2h-2.585l4.292 4.293a1 1 0 01-1.32 1.497zM7.036 9.136l-4.45 4.45-.117.127a2 2 0 002.818 2.818l.127-.117 4.45-4.449a4 4 0 01-.885 3.704l-.15.16-2 2A4 4 0 011.02 12.33l.15-.16 2-2a3.998 3.998 0 013.865-1.035zm6.671-3.843a1 1 0 01.083 1.32l-.083.094-7 7a1 1 0 01-1.497-1.32l.083-.094 7-7a1 1 0 011.414 0zm4.121-4.121a4 4 0 01.151 5.497l-.15.16-2 2a3.998 3.998 0 01-3.864 1.036l4.45-4.45.116-.128a2 2 0 00-2.818-2.818l-.127.117-4.45 4.45a4 4 0 01.885-3.705l.15-.16 2-2a4 4 0 015.657 0z"];
@@ -4572,8 +4515,6 @@
     var briefcase_default2 = ["M19 5h-4V2c0-.55-.45-1-1-1H6c-.55 0-1 .45-1 1v3H1c-.55 0-1 .45-1 1v5h4v-1h2v1h8v-1h2v1h4V6c0-.55-.45-1-1-1zm-6 0H7V3h6v2zm3 8h-2v-1H6v1H4v-1H0v6c0 .55.45 1 1 1h18c.55 0 1-.45 1-1v-6h-4v1z"];
     init_define_process();
     var bring_data_default2 = ["M18 18a1 1 0 010 2H2a1 1 0 010-2h16zM9.995 3.005c.55 0 1 .45 1 .999v9.584l1.29-1.288a1.002 1.002 0 011.42 1.419l-3 2.996a1.015 1.015 0 01-1.42 0l-3-2.997a1.002 1.002 0 011.42-1.419l1.29 1.29V4.013c0-.55.45-1.009 1-1.009zM16 0a1 1 0 110 2 1 1 0 010-2zm-3 0a1 1 0 110 2 1 1 0 010-2zm-3 0a1 1 0 110 2 1 1 0 010-2zM7 0a1 1 0 110 2 1 1 0 010-2zM4 0a1 1 0 110 2 1 1 0 010-2z"];
-    init_define_process();
-    var bug_default2 = ["M6.006 4.272C6.124 2.136 7.866 0 10 0c2.133 0 3.877 2.136 3.994 4.272.49.438.909.956 1.234 1.532L17 5.017V3a1 1 0 112 0v2.667a1 1 0 01-.594.913l-2.5 1.111c.062.344.094.698.094 1.059V10h3a1 1 0 110 2h-3v.5c0 .604-.09 1.187-.255 1.737l2.661 1.182a1 1 0 01.594.914V19a1 1 0 11-2 0v-2.017l-2.147-.954A5.992 5.992 0 0110 18.5a5.992 5.992 0 01-4.853-2.471L3 16.983V19a1 1 0 11-2 0v-2.667a1 1 0 01.594-.913l2.661-1.183A6 6 0 014 12.5V12H1a1 1 0 110-2h3V8.75c0-.361.032-.715.093-1.059l-2.5-1.11A1 1 0 011 5.666V3a1 1 0 012 0v2.017l1.772.787a6.026 6.026 0 011.234-1.532zM6 11v1.5a4 4 0 008 0V8.75a4 4 0 00-8 0V11z"];
     init_define_process();
     var buggy_default2 = ["M15.836 1.014a1 1 0 011.058.539l2.482 4.962.02-.004a.5.5 0 01.604.49v4.5a.5.5 0 01-.5.5h-3.93a1.5 1.5 0 00-1.248.667l-1.406 2.11A.5.5 0 0112.5 15H8a.5.5 0 01-.354-.146l-2.414-2.415A1.5 1.5 0 004.172 12H.5a.5.5 0 01-.5-.5v-3A.5.5 0 01.5 8h.823L3.072 3.63a1 1 0 01.764-.615l12-2zm.289 3.472l1.231 2.462-2.758.591 1.527-3.053zM14.5 3.264l-1.56 3.12-.252-.638-.825-2.043 2.637-.44zm-9.78 1.63l5.122-.854.988 2.445.899 2.27L10.232 11H7.707L4.854 8.147A.5.5 0 004.5 8H3.477l1.242-3.106zM3 19a3 3 0 100-6 3 3 0 000 6zm14 0a3 3 0 100-6 3 3 0 000 6z"];
     init_define_process();
@@ -4670,8 +4611,6 @@
     var credit_card_default2 = ["M19 3H1c-.55 0-1 .45-1 1v2h20V4c0-.55-.45-1-1-1zM0 16c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V8H0v8zm6.5-2h7c.28 0 .5.22.5.5s-.22.5-.5.5h-7c-.28 0-.5-.22-.5-.5s.22-.5.5-.5zm-4 0h2c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"];
     init_define_process();
     var cross_default2 = ["M11.41 10l4.29-4.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L10 8.59l-4.29-4.3a1.003 1.003 0 00-1.42 1.42L8.59 10 4.3 14.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4.29-4.3 4.29 4.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L11.41 10z"];
-    init_define_process();
-    var cross_circle_default2 = ["M10 20c5.523 0 10-4.477 10-10S15.523 0 10 0 0 4.477 0 10s4.477 10 10 10zm4.7-13.29L11.41 10l3.3 3.29A1.003 1.003 0 0114 15c-.28 0-.53-.11-.71-.3L10 11.41l-3.29 3.3A1.003 1.003 0 015 14c0-.28.11-.53.3-.71L8.59 10l-3.3-3.29a1.003 1.003 0 011.42-1.42L10 8.59l3.29-3.3A1.003 1.003 0 0115 6c0 .28-.11.53-.3.71z"];
     init_define_process();
     var crown_default2 = ["M2 8l4 2 4-5 4 5 4-2-1 7H3L2 8zm8-6a1 1 0 110 2 1 1 0 010-2zM1 5a1 1 0 110 2 1 1 0 010-2zm18 0a1 1 0 110 2 1 1 0 010-2zM3 16h14v2H3v-2z"];
     init_define_process();
@@ -4945,8 +4884,6 @@
     init_define_process();
     var high_priority_default2 = ["M12 16v4H8v-4h4zm1-16l-1 14H8L7 0h6z"];
     init_define_process();
-    var high_voltage_pole_default2 = ["M7 0a1 1 0 00-1 1v3H4V2a1 1 0 000-2H1a1 1 0 100 2h1v2H1a1 1 0 000 2h1v2H1a1 1 0 100 2h3a1 1 0 000-2V6h2v13a1 1 0 001.928.374L10 14.54l2.073 4.836A1 1 0 0014 19V6h2v2a1 1 0 100 2h3a1 1 0 100-2h-1V6h1a1 1 0 100-2h-1V2h1a1 1 0 100-2h-3a1 1 0 100 2v2h-2V1a1 1 0 00-1-1H7zm1 2v2h4V2H8zm4 12.128L11.088 12 12 9.872v4.256zM8.516 6L10 9.462 11.483 6H8.516zm.396 6L8 9.872v4.256L8.912 12z"];
-    init_define_process();
     var highlight_default2 = ["M11.22 14.09l3.03-3.03.71.71L20 6.73l-5.71-5.71-5.04 5.04.71.71-3.02 3.04 4.28 4.28zm6.8 3.91h-16c-.55 0-1 .45-1 1s.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1zm-15-1h4.04c.28 0 .53-.11.71-.3l2.02-2.02-3.44-3.45-4.04 4.04c-.18.18-.3.44-.3.71.01.57.46 1.02 1.01 1.02z"];
     init_define_process();
     var history_default2 = ["M10 0C6.71 0 3.82 1.6 2 4.05V2c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .55.45 1 1 1h4c.55 0 1-.45 1-1s-.45-1-1-1H3.76C5.23 3.17 7.47 2 10 2c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8c0-.55-.45-1-1-1s-1 .45-1 1c0 5.52 4.48 10 10 10s10-4.48 10-10S15.52 0 10 0zm0 3c-.55 0-1 .45-1 1v6c0 .28.11.53.29.71l3 3a1.003 1.003 0 001.42-1.42L11 9.59V4c0-.55-.45-1-1-1z"];
@@ -4992,8 +4929,6 @@
     var inner_join_default2 = ["M8.7 4.7C7.4 6 6.5 7.9 6.5 10s.8 4 2.2 5.3c-.8.5-1.7.7-2.7.7-3.3 0-6-2.7-6-6s2.7-6 6-6c1 0 1.9.2 2.7.7zm-3.34 9.25c-.55-1.2-.86-2.54-.86-3.95s.31-2.75.86-3.95a4.001 4.001 0 000 7.9zM14 4c3.3 0 6 2.7 6 6s-2.7 6-6 6c-1 0-1.9-.2-2.7-.7 1.3-1.3 2.2-3.2 2.2-5.3s-.8-3.9-2.2-5.3C12.1 4.2 13 4 14 4zm.6 2.05c.55 1.2.86 2.54.86 3.95s-.31 2.75-.86 3.95c1.9-.31 3.36-1.96 3.36-3.95S16.5 6.36 14.6 6.05zM10 5.5C8.8 6.7 8 8.2 8 10s.8 3.3 2 4.4c1.2-1.1 2-2.7 2-4.5s-.8-3.3-2-4.4z"];
     init_define_process();
     var insert_default2 = ["M19 0H1C.4 0 0 .4 0 1v18c0 .5.4 1 1 1h18c.5 0 1-.5 1-1V1c0-.6-.5-1-1-1zm-1 18H2V2h16v16zM5 11h4v4c0 .6.4 1 1 1s1-.4 1-1v-4h4c.6 0 1-.4 1-1s-.4-1-1-1h-4V5c0-.6-.4-1-1-1s-1 .4-1 1v4H5c-.6 0-1 .4-1 1s.4 1 1 1z"];
-    init_define_process();
-    var intelligence_default2 = ["M10 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.46-1-1-1zm4.992.975v-.044a.42.42 0 00-.106-.225 7.726 7.726 0 00-1.087-1.125c-.831-.731-1.78-1.343-2.824-1.587a4.153 4.153 0 00-1.819-.025c-.562.112-1.093.337-1.593.619-.78.443-1.5 1.05-2.124 1.73a6.88 6.88 0 00-.331.395.461.461 0 000 .58c.318.42.7.788 1.087 1.126.83.731 1.78 1.343 2.824 1.587.606.144 1.218.15 1.83.025.557-.112 1.088-.337 1.594-.619.78-.443 1.5-1.05 2.118-1.73.113-.126.231-.257.337-.395a.442.442 0 00.107-.225V10c-.013-.012-.013-.019-.013-.025zM10 12c-1.107 0-2-.893-2-2s.893-2 2-2 2 .893 2 2-.893 2-2 2zM7 1a1 1 0 00-1-1H1a1 1 0 00-1 1v5a1 1 0 002 0V2h4a1 1 0 001-1zm6 0a1 1 0 011-1h5a1 1 0 011 1v5a1 1 0 11-2 0V2h-4a1 1 0 01-1-1zm0 18a1 1 0 001 1h5a1 1 0 001-1v-5a1 1 0 10-2 0v4h-4a1 1 0 00-1 1zm-6 0a1 1 0 01-1 1H1a1 1 0 01-1-1v-5a1 1 0 112 0v4h4a1 1 0 011 1z"];
     init_define_process();
     var intersection_default2 = ["M13 4c-1.31 0-2.51.43-3.5 1.14A5.977 5.977 0 006 4c-3.31 0-6 2.69-6 6s2.69 6 6 6c1.31 0 2.51-.43 3.5-1.14.99.71 2.19 1.14 3.5 1.14 3.31 0 6-2.69 6-6s-2.69-6-6-6zm-4.93 9.41c-.61.37-1.31.59-2.07.59-2.21 0-4-1.79-4-4s1.79-4 4-4c.76 0 1.46.22 2.07.59C7.4 7.56 7 8.73 7 10s.4 2.44 1.07 3.41zM13 14c-.76 0-1.46-.22-2.07-.59C11.6 12.44 12 11.27 12 10s-.4-2.44-1.07-3.41C11.54 6.22 12.24 6 13 6c2.21 0 4 1.79 4 4s-1.79 4-4 4z"];
     init_define_process();
@@ -5090,8 +5025,6 @@
     var log_in_default2 = ["M19 0h-8c-.55 0-1 .45-1 1s.45 1 1 1h7v16h-7c-.55 0-1 .45-1 1s.45 1 1 1h8c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-4 10c0-.28-.11-.53-.29-.71l-5-5a1.003 1.003 0 00-1.42 1.42L11.59 9H1c-.55 0-1 .45-1 1s.45 1 1 1h10.59L8.3 14.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l5-5c.18-.18.29-.43.29-.71z"];
     init_define_process();
     var log_out_default2 = ["M19.71 9.29l-5-5a1.003 1.003 0 00-1.42 1.42L16.59 9H6c-.55 0-1 .45-1 1s.45 1 1 1h10.59l-3.29 3.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l5-5c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71zM9 18H2V2h7c.55 0 1-.45 1-1s-.45-1-1-1H1C.45 0 0 .45 0 1v18c0 .55.45 1 1 1h8c.55 0 1-.45 1-1s-.45-1-1-1z"];
-    init_define_process();
-    var low_voltage_pole_default2 = ["M10 0a1 1 0 00-1 1v2H5V2a1 1 0 00-2 0v1H2a1 1 0 000 2h1v2H2a1 1 0 000 2h4a1 1 0 000-2H5V5h4v14a1 1 0 102 0V5h4v2h-1a1 1 0 100 2h4a1 1 0 100-2h-1V5h1a1 1 0 100-2h-1V2a1 1 0 10-2 0v1h-4V1a1 1 0 00-1-1z"];
     init_define_process();
     var manual_default2 = ["M20 1.1a.976.976 0 00-.83-.88C15.15-.43 12.07.34 10 2.5 7.93.34 4.85-.43.84.22.37.3.03.67 0 1.1v15.01c0 .07 0 .14.01.21.09.52.61.88 1.15.79 3.85-.62 6.4.16 8 2.46.02.02.03.04.05.07.02.02.04.04.06.07l.01.01a1.07 1.07 0 00.28.19c.01 0 .01.01.02.01.03.01.07.03.1.04.01 0 .02.01.04.01.03.01.07.02.1.02.01 0 .02 0 .04.01H10c.04 0 .09 0 .13-.01.01 0 .03 0 .04-.01.03-.01.06-.01.1-.02.01 0 .03-.01.04-.01.03-.01.07-.02.1-.04.01 0 .02-.01.03-.01.07-.03.13-.07.19-.11.01 0 .01-.01.02-.01.02-.02.04-.03.06-.05.01-.01.02-.02.03-.02l.05-.05c.01-.01.02-.02.02-.03.01-.02.02-.03.04-.05 1.61-2.3 4.15-3.09 8-2.46.54.09 1.06-.26 1.15-.79-.01-.05 0-.09 0-.13V1.1zM9 16.63c-1.78-1.31-4.12-1.83-7-1.55V2c3.26-.37 5.51.39 7 2.35v12.28zm9-1.56c-2.88-.28-5.22.24-7 1.55V4.34c1.49-1.96 3.74-2.71 7-2.35v13.08z"];
     init_define_process();
@@ -5273,8 +5206,6 @@
     init_define_process();
     var refresh_default2 = ["M19 1c-.55 0-1 .45-1 1v2.06C16.18 1.61 13.29 0 10 0 4.48 0 0 4.48 0 10c0 .55.45 1 1 1s1-.45 1-1c0-4.42 3.58-8 8-8 2.52 0 4.76 1.18 6.22 3H15c-.55 0-1 .45-1 1s.45 1 1 1h4c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zm0 8c-.55 0-1 .45-1 1 0 4.42-3.58 8-8 8-2.52 0-4.76-1.18-6.22-3H5c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-2.06C3.82 18.39 6.71 20 10 20c5.52 0 10-4.48 10-10 0-.55-.45-1-1-1z"];
     init_define_process();
-    var regex_default2 = ["M0 17.5a2.5 2.5 0 115 0 2.5 2.5 0 01-5 0zM14 0a1 1 0 00-1 1v3.768L9.737 2.884a1 1 0 10-1 1.732L12 6.5 8.737 8.384a1 1 0 001 1.732L13 8.232V12a1 1 0 102 0V8.232l3.263 1.884a1 1 0 001-1.732L16 6.5l3.263-1.884a1 1 0 10-1-1.732L15 4.768V1a1 1 0 00-1-1z"];
-    init_define_process();
     var regression_chart_default2 = ["M19 16H3.1L19.31 3.39l-.61-.79L2 15.59V3c0-.55-.45-1-1-1s-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1s-.45-1-1-1zm-9-9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-5 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm10-2c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2-2 .9-2 2zm-5 4c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2-2 .9-2 2z"];
     init_define_process();
     var remove_default2 = ["M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm5-9H5c-.55 0-1 .45-1 1s.45 1 1 1h10c.55 0 1-.45 1-1s-.45-1-1-1z"];
@@ -5372,8 +5303,6 @@
     var slash_default2 = ["M12 2c-.46 0-.85.32-.97.74L7.04 16.7c-.02.1-.04.2-.04.3 0 .55.45 1 1 1 .46 0 .85-.32.97-.74L12.96 3.3c.02-.1.04-.2.04-.3 0-.55-.45-1-1-1z"];
     init_define_process();
     var small_cross_default2 = ["M11.41 10l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L10 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L8.59 10 5.3 13.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3.29-3.3 3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L11.41 10z"];
-    init_define_process();
-    var small_info_sign_default2 = ["M17 10a7 7 0 11-14 0 7 7 0 0114 0zm-6-5v2H9V5h2zm0 3v6h1v1H8v-1h1V9H8V8h3z"];
     init_define_process();
     var small_minus_default2 = ["M14 9H6c-.55 0-1 .45-1 1s.45 1 1 1h8c.55 0 1-.45 1-1s-.45-1-1-1z"];
     init_define_process();

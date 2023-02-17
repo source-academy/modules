@@ -1,6 +1,6 @@
 {
-  "ToneMatrix": "<div><h4>ToneMatrix: undefined</h4><div class=\"description\">No description available</div></div>",
-  "clear_all_timeout": "<div><h4>clear_all_timeout() → {void}</h4><div class=\"description\">No description available</div></div>",
-  "get_matrix": "<div><h4>get_matrix() → {List}</h4><div class=\"description\">No description available</div></div>",
-  "set_timeout": "<div><h4>set_timeout(f: any, t: any) → {void}</h4><div class=\"description\">No description available</div></div>"
+  "ToneMatrix": "<div><h4>ToneMatrix: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "clear_all_timeout": "<div><h4>clear_all_timeout() → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "get_matrix": "<div><h4>get_matrix() → {List}</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "set_timeout": "<div><h4>set_timeout(f: any, t: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>"
 }
