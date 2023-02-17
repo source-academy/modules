@@ -22,18 +22,18 @@
 
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
-  type CanvasElement,
-  type VideoElement,
-  type ErrorLogger,
-  type StartPacket,
-  type Pixel,
-  type Pixels,
-  type Filter,
-  type Queue,
-  type TabsPacket,
-  type BundlePacket,
+  CanvasElement,
+  VideoElement,
+  ErrorLogger,
+  StartPacket,
+  Pixel,
+  Pixels,
+  Filter,
+  Queue,
+  TabsPacket,
+  BundlePacket,
   InputFeed,
-  type ImageElement,
+  ImageElement,
 } from './types';
 
 import {
@@ -325,13 +325,14 @@ function loadAlternative(): void {
   videoElement.crossOrigin = 'anonymous';
   videoElement.onended = () => {
     playCount++;
-    if (playCount >= LOOP_COUNT) {
-      playCount = 0;
-
+    if (playCount == LOOP_COUNT) {
       tabsPackage.onClickStill();
-    } else {
+      playCount = 0;
+    } else if (playCount < LOOP_COUNT) {
       stopVideo();
       startVideo();
+    } else {
+      playCount = 0;
     }
   };
   videoElement.onloadedmetadata = () => {

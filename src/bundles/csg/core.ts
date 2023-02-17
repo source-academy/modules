@@ -1,25 +1,20 @@
 /* [Imports] */
-import type { CsgModuleState, RenderGroupManager } from './utilities.js';
+import { CsgModuleState, RenderGroupManager } from './utilities.js';
 
 /* [Exports] */
-// After bundle initialises, tab will need to re-init on its end, as they run
-// independently and are different versions of Core
+// After bundle initialises, tab will need to reinit on its end, as they run
+// independently and are different versions of Core. Same reason why we need
+// looseInstanceof()
 export class Core {
   private static moduleState: CsgModuleState | null = null;
 
-  public static initialize(csgModuleState: CsgModuleState): void {
+  static initialize(csgModuleState: CsgModuleState) {
     Core.moduleState = csgModuleState;
   }
 
-  public static getRenderGroupManager(): RenderGroupManager {
+  static getRenderGroupManager(): RenderGroupManager {
     let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
 
     return moduleState.renderGroupManager;
-  }
-
-  public static nextComponent(): number {
-    let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
-
-    return moduleState.nextComponent();
   }
 }

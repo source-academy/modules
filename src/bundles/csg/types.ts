@@ -1,13 +1,13 @@
 /* [Imports] */
-import type { RGB, RGBA } from '@jscad/modeling/src/colors';
-import type { Geom3 } from '@jscad/modeling/src/geometries/types';
+import { RGB, RGBA } from '@jscad/modeling/src/colors';
+import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
   controls as _controls,
-  type drawCommands,
+  drawCommands,
 } from '@jscad/regl-renderer';
-import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
-import type { InitializationOptions } from 'regl';
+import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
+import { InitializationOptions } from 'regl';
 
 /* [Main] */
 let orthographicCamera = cameras.orthographic;

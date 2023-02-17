@@ -20,8 +20,8 @@ import {
   X_FACTOR,
   Y_FACTOR,
 } from '../constants.js';
-import { hexToAlphaColor, type RenderGroup, type Shape } from '../utilities.js';
-import type {
+import { hexToAlphaColor, RenderGroup, Shape } from '../utilities.js';
+import {
   AlphaColor,
   AxisEntityType,
   BoundingBox,

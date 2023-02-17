@@ -37,15 +37,15 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 import { context } from 'js-slang/moduleHelpers';
-import { type Curve, type CurveDrawn, generateCurve, Point } from './curves_webgl';
+import { Curve, CurveDrawn, generateCurve, Point } from './curves_webgl';
 import {
   AnimatedCurve,
-  type CurveAnimation,
-  type CurveSpace,
-  type CurveTransformer,
-  type DrawMode,
-  type RenderFunction,
-  type ScaleMode,
+  CurveAnimation,
+  CurveSpace,
+  CurveTransformer,
+  DrawMode,
+  RenderFunction,
+  ScaleMode,
 } from './types';
 
 const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];

@@ -10,7 +10,7 @@
 */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { List } from './types';
+import { List } from './types';
 import { list_to_vector, vector_to_list } from './list';
 
 export const ToneMatrix = {

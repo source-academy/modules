@@ -1,6 +1,6 @@
-import { glAnimation, type AnimFrame } from '../../typings/anim_types';
+import { glAnimation, AnimFrame } from '../../typings/anim_types';
 import type { ReplResult } from '../../typings/type_helpers';
-import type { Curve, CurveDrawn } from './curves_webgl';
+import { Curve, CurveDrawn } from './curves_webgl';
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
 export type CurveTransformer = (c: Curve) => Curve;

@@ -10,7 +10,7 @@ import {
   SA_TAB_BUTTON_WIDTH,
   SA_TAB_ICON_SIZE,
 } from '../../bundles/csg/constants.js';
-import type { HintProps, HintState } from './types';
+import { HintProps, HintState } from './types';
 
 /* [Main] */
 

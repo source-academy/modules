@@ -9,7 +9,7 @@ import {
   updateStates,
   zoomToFit,
 } from './jscad/renderer.js';
-import type {
+import {
   ControlsState,
   GeometryEntity,
   PerspectiveCameraState,
