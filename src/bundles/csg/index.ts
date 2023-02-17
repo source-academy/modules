@@ -12,8 +12,6 @@ context.moduleContexts.csg.state = moduleState;
 // We initialise Core for the first time over on the bundles' end here
 Core.initialize(moduleState);
 
-
-
 /* [Exports] */
 export {
   area,
@@ -24,6 +22,7 @@ export {
   blue,
   bounding_box,
   clone,
+  colorize,
   cone,
   crimson,
   cube,
