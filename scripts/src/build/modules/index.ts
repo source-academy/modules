@@ -2,33 +2,20 @@ import chalk from 'chalk';
 import { promises as fs } from 'fs';
 
 import { printList } from '../../scriptUtils.js';
-import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs } from '../buildUtils.js';
+import {
+  copyManifest,
+  createBuildCommand,
+  createOutDir,
+  exitOnError,
+  logResult,
+  retrieveBundlesAndTabs,
+} from '../buildUtils.js';
 import type { LintCommandInputs } from '../prebuild/eslint.js';
-import { autoLogPrebuild } from '../prebuild/index.js';
+import { prebuild } from '../prebuild/index.js';
 import type { AssetInfo, BuildCommandInputs, BuildOptions } from '../types';
 
 import { buildBundles, reduceBundleOutputFiles } from './bundle.js';
 import { buildTabs, reduceTabOutputFiles } from './tab.js';
-
-// export const processOutputFiles = async (outputFiles: OutputFile[], outDir: string, startTime: number) => Promise.all(
-//   outputFiles.map(async ({ path, text }) => {
-//     const [rawType, name] = path.split(pathlib.sep)
-//       .slice(-3, -1);
-//     const type = rawType.slice(0, -1);
-
-//     if (type !== 'bundle' && type !== 'tab') {
-//       throw new Error(`Unknown type found for: ${type}: ${path}`);
-//     }
-
-//     const result = await (type === 'bundle' ? outputBundle : outputTab)(name, text, outDir);
-//     const endTime = performance.now() - startTime;
-
-//     return [type, name, {
-//       elapsed: endTime,
-//       ...result,
-//     }] as UnreducedResult;
-//   }),
-// );
 
 export const buildModules = async (opts: BuildOptions, { bundles, tabs }: AssetInfo) => {
   const startPromises: Promise<string>[] = [];
@@ -52,16 +39,18 @@ export const buildModules = async (opts: BuildOptions, { bundles, tabs }: AssetI
   return bundleResults.concat(tabResults);
 };
 
-const buildModulesCommand = createBuildCommand('modules', true)
+const getBuildModulesCommand = () => createBuildCommand('modules', true)
   .argument('[modules...]', 'Manually specify which modules to build', null)
   .description('Build modules and their tabs')
   .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
-    const assets = await retrieveBundlesAndTabs(manifest, modules, []);
+    const [assets] = await Promise.all([
+      retrieveBundlesAndTabs(manifest, modules, []),
+      createOutDir(opts.outDir),
+    ]);
+
+    await prebuild(opts, assets);
 
     printList(`${chalk.magentaBright('Building bundles and tabs for the following bundles:')}\n`, assets.bundles);
-
-    const proceed = await autoLogPrebuild(opts, assets);
-    if (!proceed) return;
 
     const [results] = await Promise.all([
       buildModules(opts, assets),
@@ -71,8 +60,9 @@ const buildModulesCommand = createBuildCommand('modules', true)
       }),
     ]);
     logResult(results, opts.verbose);
+    exitOnError(results);
   })
   .description('Build only bundles and tabs');
 
-export { default as buildTabsCommand } from './tab.js';
-export default buildModulesCommand;
+export { default as getBuildTabsCommand } from './tab.js';
+export default getBuildModulesCommand;

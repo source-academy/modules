@@ -3,9 +3,9 @@ import { Command } from 'commander';
 import type { Application, ProjectReflection } from 'typedoc';
 
 import { wrapWithTimer } from '../../scriptUtils.js';
-import { divideAndRound, retrieveBundlesAndTabs } from '../buildUtils.js';
+import { divideAndRound, exitOnError, retrieveBundles } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
-import type { BuildCommandInputs, BuildResult } from '../types';
+import type { BuildCommandInputs, OperationResult } from '../types';
 
 import { initTypedoc, logTypedocTime } from './docUtils.js';
 
@@ -21,7 +21,7 @@ export const buildHtml = wrapWithTimer(async (app: Application,
   project: ProjectReflection, {
     outDir,
     modulesSpecified,
-  }: HTMLOptions): Promise<BuildResult> => {
+  }: HTMLOptions): Promise<OperationResult> => {
   if (modulesSpecified) {
     return {
       severity: 'warn',
@@ -62,9 +62,9 @@ export const logHtmlResult = (htmlResult: Awaited<ReturnType<typeof buildHtml>> 
 type HTMLCommandInputs = Omit<BuildCommandInputs, 'modules' | 'tabs'>;
 
 /**
- * CLI command to only build HTML documentation
+ * Get CLI command to only build HTML documentation
  */
-const buildHtmlCommand = new Command('html')
+const getBuildHtmlCommand = () => new Command('html')
   .option('--outDir <outdir>', 'Output directory', 'build')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
@@ -72,16 +72,19 @@ const buildHtmlCommand = new Command('html')
   .option('--tsc', 'Run tsc before building')
   .description('Build only HTML documentation')
   .action(async (opts: HTMLCommandInputs) => {
-    const assets = await retrieveBundlesAndTabs(opts.manifest, null, null);
+    const bundles = await retrieveBundles(opts.manifest, null);
 
     if (opts.tsc) {
-      const tscResult = await runTsc(opts.srcDir, assets);
+      const tscResult = await runTsc(opts.srcDir, {
+        bundles,
+        tabs: [],
+      });
       logTscResults(tscResult, opts.srcDir);
-      if (tscResult.result.severity === 'error') return;
+      if (tscResult.result.severity === 'error') process.exit(1);
     }
 
     const { elapsed: typedoctime, result: [app, project] } = await initTypedoc({
-      bundles: assets.bundles,
+      bundles,
       srcDir: opts.srcDir,
       verbose: opts.verbose,
     });
@@ -92,6 +95,7 @@ const buildHtmlCommand = new Command('html')
       modulesSpecified: false,
     });
     logHtmlResult(htmlResult);
+    exitOnError([], htmlResult.result);
   });
 
-export default buildHtmlCommand;
+export default getBuildHtmlCommand;

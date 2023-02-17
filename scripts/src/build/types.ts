@@ -99,5 +99,4 @@ export type BuildOptions = Omit<BuildCommandInputs, 'lint' | 'tsc' | 'manifest' 
 export type AssetInfo = {
   bundles: string[];
   tabs: string[];
-  modulesSpecified: boolean;
 };

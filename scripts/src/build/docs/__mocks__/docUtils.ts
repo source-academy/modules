@@ -17,3 +17,5 @@ export const initTypedoc = jest.fn(() => {
     }, proj],
   });
 });
+
+export const logTypedocTime = jest.fn();

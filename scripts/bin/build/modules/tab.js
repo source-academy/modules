@@ -2,14 +2,12 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
 import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 import { printList } from '../../scriptUtils.js';
-import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
-import { logLintResult } from '../prebuild/eslint.js';
-import { preBuild } from '../prebuild/index.js';
-import { logTscResults } from '../prebuild/tsc.js';
+import { copyManifest, createBuildCommand, exitOnError, logResult, retrieveTabs, tabNameExpander, } from '../buildUtils.js';
+import { prebuild } from '../prebuild/index.js';
 import { esbuildOptions, requireCreator } from './moduleUtils.js';
 /**
  * Imports that are provided at runtime
@@ -92,23 +90,26 @@ export const reduceTabOutputFiles = (outputFiles, startTime, outDir) => Promise.
             ...result,
         }];
 }));
-const buildTabsCommand = createBuildCommand('tabs', true)
+const getBuildTabsCommand = () => createBuildCommand('tabs', true)
     .argument('[tabs...]', 'Manually specify which tabs to build', null)
     .description('Build only tabs')
-    .action(async (tabs, opts) => {
-    const assets = await retrieveBundlesAndTabs(opts.manifest, [], tabs);
-    const { lintResult, tscResult, proceed } = await preBuild(opts, assets);
-    logLintResult(lintResult);
-    logTscResults(tscResult, opts.srcDir);
-    if (!proceed)
-        return;
-    printList(`${chalk.magentaBright('Building the following tabs:')}\n`, assets.tabs);
+    .action(async (tabsOpt, { manifest, ...opts }) => {
+    const tabs = await retrieveTabs(manifest, tabsOpt);
+    await prebuild(opts, {
+        tabs,
+        bundles: [],
+    });
+    printList(`${chalk.magentaBright('Building the following tabs:')}\n`, tabs);
     const startTime = performance.now();
     const [reducedRes] = await Promise.all([
-        buildTabs(assets.tabs, opts)
+        buildTabs(tabs, opts)
             .then((results) => reduceTabOutputFiles(results, startTime, opts.outDir)),
-        copyManifest(opts),
+        copyManifest({
+            outDir: opts.outDir,
+            manifest,
+        }),
     ]);
     logResult(reducedRes, opts.verbose);
+    exitOnError(reducedRes);
 });
-export default buildTabsCommand;
+export default getBuildTabsCommand;

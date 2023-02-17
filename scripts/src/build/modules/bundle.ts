@@ -25,8 +25,15 @@ const HELPER_NAME = 'moduleHelpers';
 export const outputBundle = async (name: string, bundleText: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
     const parsed = parse(bundleText, { ecmaVersion: 6 }) as unknown as Program;
-    const exprStatement = parsed.body[1] as unknown as VariableDeclaration;
-    const varDeclarator = exprStatement.declarations[0];
+
+    // Account for 'use strict'; directives
+    let declStatement: VariableDeclaration;
+    if (parsed.body[0].type === 'VariableDeclaration') {
+      declStatement = parsed.body[0];
+    } else {
+      declStatement = parsed.body[1] as unknown as VariableDeclaration;
+    }
+    const varDeclarator = declStatement.declarations[0];
     const callExpression = varDeclarator.init as CallExpression;
     const moduleCode = callExpression.callee as ArrowFunctionExpression;
 
@@ -65,6 +72,7 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
       fileSize: size,
     };
   } catch (error) {
+    console.log(error);
     return {
       severity: 'error',
       error,
