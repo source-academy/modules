@@ -19,3 +19,5 @@ export class DrawnPlot implements ReplResult {
 }
 
 export type ListOfPairs = (ListOfPairs | any)[] | null;
+export type Data_2d = number[];
+export type Data_Transformer = (c: Data_2d[]) => Data_2d[];
