@@ -1,8 +1,8 @@
 /* [Import] */
-import { RGB, RGBA } from '@jscad/modeling/src/colors/types.js';
-import { Geom3 } from '@jscad/modeling/src/geometries/types.js';
-import { cameras, controls, drawCommands } from '@jscad/regl-renderer';
-import makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
+import type { RGB, RGBA } from '@jscad/modeling/src/colors/types.js';
+import type { Geom3 } from '@jscad/modeling/src/geometries/types.js';
+import { type cameras, type drawCommands, controls } from '@jscad/regl-renderer';
+import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 
 /* [Main] */
 let { orbit } = controls;

@@ -5,7 +5,7 @@
  * Click on a function name in the index below to see how the function is defined and used.
  * @module binary_tree
  */
-import { BinaryTree } from './types';
+import type { BinaryTree } from './types';
 
 /**
  * Returns an empty binary tree, represented by the empty list null
@@ -56,13 +56,13 @@ export function is_tree(
 ): boolean {
   return value === null
          || (Array.isArray(value)
-	  && value.length === 2
-	  && Array.isArray(value[1])
-  	  && value[1].length === 2
-	  && is_tree(value[1][0])
-	  && value[1][1].length === 2
-	  && is_tree(value[1][1][0])
-	  && value[1][1][1] === null);
+    && value.length === 2
+    && Array.isArray(value[1])
+      && value[1].length === 2
+    && is_tree(value[1][0])
+    && value[1][1].length === 2
+    && is_tree(value[1][1][0])
+    && value[1][1][1] === null);
 }
 
 /**

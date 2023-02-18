@@ -67,5 +67,10 @@
     "tabs": [
       "Csg"
     ]
+  },
+  "repl": {
+    "tabs": [
+      "Repl"
+    ]
   }
 }
