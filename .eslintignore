@@ -1,6 +1,0 @@
-.github/
-.husky/
-build/
-
-**/.eslintrc*.js
-scripts/templates/templates

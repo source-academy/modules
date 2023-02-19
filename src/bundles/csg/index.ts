@@ -3,10 +3,18 @@ import { context } from 'js-slang/moduleHelpers';
 import { Core } from './core.js';
 import { CsgModuleState } from './utilities.js';
 
-const moduleContext = new CsgModuleState();
-context.moduleContexts.csg.state = moduleContext;
-Core.initialize(moduleContext);
 
+
+/* [Main] */
+let moduleState = new CsgModuleState();
+
+context.moduleContexts.csg.state = moduleState;
+// We initialise Core for the first time over on the bundles' end here
+Core.initialize(moduleState);
+
+
+
+/* [Exports] */
 export {
   area,
   beside_x,

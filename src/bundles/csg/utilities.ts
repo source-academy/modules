@@ -1,5 +1,5 @@
 /* [Imports] */
-import { clone, Geom3 } from '@jscad/modeling/src/geometries/geom3';
+import { clone, type Geom3 } from '@jscad/modeling/src/geometries/geom3';
 import type { ModuleContext } from 'js-slang';
 import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';
@@ -81,14 +81,14 @@ export class RenderGroupManager {
 export class CsgModuleState {
   private componentCounter: number = 0;
 
-  readonly renderGroupManager: RenderGroupManager;
+  public readonly renderGroupManager: RenderGroupManager;
 
-  constructor() {
+  public constructor() {
     this.renderGroupManager = new RenderGroupManager();
   }
 
   // Returns the new component number
-  nextComponent() {
+  public nextComponent(): number {
     return ++this.componentCounter;
   }
 }
@@ -129,20 +129,4 @@ export function clamp(value: number, lowest: number, highest: number): number {
   value = Math.max(value, lowest);
   value = Math.min(value, highest);
   return value;
-}
-
-// When the object's class and the class used for comparison are from different
-// contexts, they may appear identical, but are not recognised as such.
-// This check acts as a useful yet not foolproof instanceof
-export function looseInstanceof(
-  object: object | null | undefined,
-  c: any,
-): boolean {
-  const objectName: string | undefined = object?.constructor?.name;
-  const className: string | undefined = c?.name;
-  return (
-    objectName !== undefined
-    && className !== undefined
-    && objectName === className
-  );
 }

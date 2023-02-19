@@ -4,9 +4,7 @@
  * A *Rune* is defined by its vertices (x,y,z,t), the colors on its vertices (r,g,b,a), a transformation matrix for rendering the Rune and a (could be empty) list of its sub-Runes. In this module, runes are represented as strings that approximate the way they are created. No graphical output is generated.
  * @module rune_in_words
  */
-import {
-  Rune,
-} from './rune';
+import type { Rune } from './rune';
 import {
   getSquare,
   getBlank,

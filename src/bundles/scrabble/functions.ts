@@ -5,7 +5,7 @@
  * @module scrabble
  */
 
-import { List } from './types';
+import type { List } from './types';
 
 /**
  * `scrabble_array` is an array of strings, each representing

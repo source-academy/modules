@@ -2,7 +2,7 @@ import { Button, Icon, Slider, Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { glAnimation } from '../../typings/anim_types';
+import { type glAnimation } from '../../typings/anim_types';
 import WebGLCanvas from './webgl_canvas';
 
 type AnimCanvasProps = {

@@ -1,6 +1,6 @@
 import { mat4, vec3 } from 'gl-matrix';
-import { ReplResult } from '../../typings/type_helpers';
-import { CurveSpace, DrawMode, ScaleMode } from './types';
+import type { ReplResult } from '../../typings/type_helpers';
+import type { CurveSpace, DrawMode, ScaleMode } from './types';
 
 /** @hidden */
 export const drawnCurves: CurveDrawn[] = [];
