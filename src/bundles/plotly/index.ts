@@ -3,4 +3,4 @@
  * @author Sourabh Raj Jaiswal
  */
 
-export { new_plot } from './functions';
+export { new_plot, new_plot_json } from './functions';

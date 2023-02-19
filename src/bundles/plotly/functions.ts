@@ -40,18 +40,20 @@ context.moduleContexts.plotly.state = {
  * @Types
  * ``` typescript
  * // The data format for input [{field_name}, value] from among the following fields
- *  type: PlotType;
- *  x: Datum[] | Datum[][];
- *  y: Datum[] | Datum[][]; 
- *  z: Datum[] | Datum[][] | Datum[][][];
- *  mode:
- *      | 'lines'
- *      | 'markers'
- *      | 'text'
- *      | 'lines+markers'
- *      | 'text+markers'
- *      | 'text+lines'
- *      | 'text+lines+markers'
+ *  data = {
+ *    type: PlotType;
+ *    x: Datum[] | Datum[][];
+ *    y: Datum[] | Datum[][]; 
+ *    z: Datum[] | Datum[][] | Datum[][][];
+ *    mode:
+ *       | 'lines'
+ *       | 'markers'
+ *       | 'text'
+ *       | 'lines+markers'
+ *       | 'text+markers'
+ *       | 'text+lines'
+ *       | 'text+lines+markers'
+ *  }
  * 
  * 
  *  type Datum = string | number | Date | null;
@@ -106,9 +108,125 @@ context.moduleContexts.plotly.state = {
  * ```
  * @param data The data in the form of list of pair, with the first term in the pair is
  *             the name of the field as a string and the second term is the value of the field
+ *             among the fields mentioned above
  */
 export function new_plot(data: ListOfPairs): void {
   drawnPlots.push(new DrawnPlot(draw_new_plot, data));
+}
+
+
+/**
+ * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
+ * @example
+ * ```typescript 
+ *    
+ * const z1 = [
+ *   [8.83,8.89,8.81,8.87,8.9,8.87],
+ *   [8.89,8.94,8.85,8.94,8.96,8.92],
+ *   [8.84,8.9,8.82,8.92,8.93,8.91],
+ *   [8.79,8.85,8.79,8.9,8.94,8.92],
+ *   [8.79,8.88,8.81,8.9,8.95,8.92],
+ *   [8.8,8.82,8.78,8.91,8.94,8.92],
+ *   [8.75,8.78,8.77,8.91,8.95,8.92],
+ *   [8.8,8.8,8.77,8.91,8.95,8.94],
+ *   [8.74,8.81,8.76,8.93,8.98,8.99],
+ *   [8.89,8.99,8.92,9.1,9.13,9.11],
+ *   [8.97,8.97,8.91,9.09,9.11,9.11],
+ *   [9.04,9.08,9.05,9.25,9.28,9.27],
+ *   [9,9.01,9,9.2,9.23,9.2],
+ *   [8.99,8.99,8.98,9.18,9.2,9.19],
+ *   [8.93,8.97,8.97,9.18,9.2,9.18]
+ *  ];
+ *
+ * let z2 = [];
+ * for (var i=0;i<z1.length;i++ ) { 
+ *   let z2_row = [];
+ *     for(var j=0;j<z1[i].length;j++) { 
+ *       z2_row.push(z1[i][j]+1);
+ *     }
+ *     z2.push(z2_row);
+ * }
+ * const data = [{z: z1, type: 'surface'}, {z: z2 , type: 'surface'}];
+ * new_plot_json(data) // creates a surface plot in Plotly Tab
+ * 
+ * 
+ * 
+ * ```
+ * 
+ * 
+ * @Types
+ * ``` typescript
+ * // The data format for input [{field_name}, value] from among the following fields
+ *  data = {
+ *    type: PlotType;
+ *    x: Datum[] | Datum[][];
+ *    y: Datum[] | Datum[][]; 
+ *    z: Datum[] | Datum[][] | Datum[][][];
+ *    mode:
+ *       | 'lines'
+ *       | 'markers'
+ *       | 'text'
+ *       | 'lines+markers'
+ *       | 'text+markers'
+ *       | 'text+lines'
+ *       | 'text+lines+markers'
+ *  }[]
+ * 
+ * 
+ *  type Datum = string | number | Date | null;
+ *  type PlotType =
+ *  | 'bar'
+ *  | 'barpolar'
+ *  | 'box'
+ *  | 'candlestick'
+ *  | 'carpet'
+ *  | 'choropleth'
+ *  | 'choroplethmapbox'
+ *  | 'cone'
+ *  | 'contour'
+ *  | 'contourcarpet'
+ *  | 'densitymapbox'
+ *  | 'funnel'
+ *  | 'funnelarea'
+ *  | 'heatmap'
+ *  | 'heatmapgl'
+ *  | 'histogram'
+ *  | 'histogram2d'
+ *  | 'histogram2dcontour'
+ *  | 'image'
+ *  | 'indicator'
+ *  | 'isosurface'
+ *  | 'mesh3d'
+ *  | 'ohlc'
+ *  | 'parcats'
+ *  | 'parcoords'
+ *  | 'pie'
+ *  | 'pointcloud'
+ *  | 'sankey'
+ *  | 'scatter'
+ *  | 'scatter3d'
+ *  | 'scattercarpet'
+ *  | 'scattergeo'
+ *  | 'scattergl'
+ *  | 'scattermapbox'
+ *  | 'scatterpolar'
+ *  | 'scatterpolargl'
+ *  | 'scatterternary'
+ *  | 'splom'
+ *  | 'streamtube'
+ *  | 'sunburst'
+ *  | 'surface'
+ *  | 'table'
+ *  | 'treemap'
+ *  | 'violin'
+ *  | 'volume'
+ *  | 'waterfall';
+ * 
+ * ```
+ * @param data The data as an array of json objects having some or all of the given fields
+ */
+export function new_plot_json(data: any): void {
+  drawnPlots.push(new DrawnPlot(draw_new_plot_json, data));
 }
 
 
@@ -119,6 +237,15 @@ export function new_plot(data: ListOfPairs): void {
 function draw_new_plot(data: ListOfPairs, divId: string) {
   const plotlyData = convert_to_plotly_data(data);
   Plotly.newPlot(divId, [plotlyData]);
+}
+
+/**
+ * 
+ * @param data The data object in json to be used by plotly
+ * @param divId The id of the div element on which the plot will be displayed
+ */
+function draw_new_plot_json(data: any, divId: string) {
+  Plotly.newPlot(divId, data);
 }
 
 /**
