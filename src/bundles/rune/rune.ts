@@ -1,5 +1,5 @@
 import { mat4 } from 'gl-matrix';
-import { AnimFrame, glAnimation } from '../../typings/anim_types';
+import { type AnimFrame, glAnimation } from '../../typings/anim_types';
 import type { ReplResult } from '../../typings/type_helpers';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 

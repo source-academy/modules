@@ -1,12 +1,12 @@
 import React from 'react';
-import { HollusionRune } from '../../bundles/rune/functions';
+import { type HollusionRune } from '../../bundles/rune/functions';
 import type {
   AnimatedRune,
   DrawnRune,
 } from '../../bundles/rune/rune';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../common/multi_item_display';
-import { DebuggerContext } from '../../typings/type_helpers';
+import { type DebuggerContext } from '../../typings/type_helpers';
 import AnimationCanvas from '../common/animation_canvas';
 import HollusionCanvas from './hollusion_canvas';
 import WebGLCanvas from '../common/webgl_canvas';

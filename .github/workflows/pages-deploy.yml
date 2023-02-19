@@ -22,8 +22,7 @@ jobs:
           yarn --frozen-lockfile
           
       - name: Build Modules 🔧
-        run: |
-          yarn run build --single-thread
+        run: yarn run build --tsc --lint
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
