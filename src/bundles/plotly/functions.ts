@@ -35,7 +35,77 @@ context.moduleContexts.plotly.state = {
  *  ];
  *  new_plot(list(pair("z", z1), pair("type", "surface"))) // creates a surface plot in Plotly Tab
  * ```
- * @param data The data in the form of list of pair which is used to generate the plot
+ * 
+ * 
+ * @Types
+ * ``` typescript
+ * // The data format for input [{field_name}, value] from among the following fields
+ *  type: PlotType;
+ *  x: Datum[] | Datum[][];
+ *  y: Datum[] | Datum[][]; 
+ *  z: Datum[] | Datum[][] | Datum[][][];
+ *  mode:
+ *      | 'lines'
+ *      | 'markers'
+ *      | 'text'
+ *      | 'lines+markers'
+ *      | 'text+markers'
+ *      | 'text+lines'
+ *      | 'text+lines+markers'
+ * 
+ * 
+ *  type Datum = string | number | Date | null;
+ *  type PlotType =
+ *  | 'bar'
+ *  | 'barpolar'
+ *  | 'box'
+ *  | 'candlestick'
+ *  | 'carpet'
+ *  | 'choropleth'
+ *  | 'choroplethmapbox'
+ *  | 'cone'
+ *  | 'contour'
+ *  | 'contourcarpet'
+ *  | 'densitymapbox'
+ *  | 'funnel'
+ *  | 'funnelarea'
+ *  | 'heatmap'
+ *  | 'heatmapgl'
+ *  | 'histogram'
+ *  | 'histogram2d'
+ *  | 'histogram2dcontour'
+ *  | 'image'
+ *  | 'indicator'
+ *  | 'isosurface'
+ *  | 'mesh3d'
+ *  | 'ohlc'
+ *  | 'parcats'
+ *  | 'parcoords'
+ *  | 'pie'
+ *  | 'pointcloud'
+ *  | 'sankey'
+ *  | 'scatter'
+ *  | 'scatter3d'
+ *  | 'scattercarpet'
+ *  | 'scattergeo'
+ *  | 'scattergl'
+ *  | 'scattermapbox'
+ *  | 'scatterpolar'
+ *  | 'scatterpolargl'
+ *  | 'scatterternary'
+ *  | 'splom'
+ *  | 'streamtube'
+ *  | 'sunburst'
+ *  | 'surface'
+ *  | 'table'
+ *  | 'treemap'
+ *  | 'violin'
+ *  | 'volume'
+ *  | 'waterfall';
+ * 
+ * ```
+ * @param data The data in the form of list of pair, with the first term in the pair is
+ *             the name of the field as a string and the second term is the value of the field
  */
 export function new_plot(data: ListOfPairs): void {
   drawnPlots.push(new DrawnPlot(draw_new_plot, data));
