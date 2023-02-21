@@ -30,6 +30,17 @@ export const printList = (header, lst, mapper, sep = '\n') => {
             return each;
         return `${each}`;
     });
-    return console.log(`${header}\n${lst.map((str, i) => `${i + 1}. ${mappingFunction(str)}`)
+    console.log(`${header}\n${lst.map((str, i) => `${i + 1}. ${mappingFunction(str)}`)
         .join(sep)}`);
+};
+export const findSeverity = (items, converter) => {
+    let output = 'success';
+    for (const item of items) {
+        const severity = converter(item);
+        if (severity === 'error')
+            return 'error';
+        if (severity === 'warn')
+            output = 'warn';
+    }
+    return output;
 };

@@ -11,8 +11,10 @@ import type {
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import {
   createBuildCommand,
+  createOutDir,
+  exitOnError,
   logResult,
-  retrieveBundlesAndTabs,
+  retrieveBundles,
 } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
 import type { BuildCommandInputs, BuildResult, Severity, UnreducedResult } from '../types';
@@ -26,17 +28,17 @@ const typeToName = (type?: SomeType, alt: string = 'unknown') => (type ? (type a
 /**
  * Parsers to convert typedoc elements into strings
  */
-const parsers: Record<string, (docs: DeclarationReflection) => Record<'header' | 'desc', string>> = {
+export const parsers: Record<string, (docs: DeclarationReflection) => Record<'header' | 'desc', string>> = {
   Variable(element) {
     let desc: string;
     if (!element.comment) desc = 'No description available';
     else {
-      desc = drawdown(element.comment.summary.map(({ text }) => text)
-        .join(''));
+      desc = element.comment.summary.map(({ text }) => text)
+        .join('');
     }
     return {
       header: `${element.name}: ${typeToName(element.type)}`,
-      desc,
+      desc: drawdown(desc),
     };
   },
   Function({ name: elementName, signatures: [signature] }) {
@@ -55,12 +57,12 @@ const parsers: Record<string, (docs: DeclarationReflection) => Record<'header' |
     let desc: string;
     if (!signature.comment) desc = 'No description available';
     else {
-      desc = drawdown(signature.comment.summary.map(({ text }) => text)
-        .join(''));
+      desc = signature.comment.summary.map(({ text }) => text)
+        .join('');
     }
     return {
       header: `${elementName}${paramStr} → {${resultStr}}`,
-      desc,
+      desc: drawdown(desc),
     };
   },
 };
@@ -191,13 +193,18 @@ export const buildJsons = async (project: ProjectReflection, { outDir, bundles }
 };
 
 /**
- * Console command for building jsons
+ * Get console command for building jsons
+ *
  */
-const jsonCommand = createBuildCommand('jsons', false)
+const getJsonCommand = () => createBuildCommand('jsons', false)
   .option('--tsc', 'Run tsc before building')
   .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
   .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose, tsc }: Omit<BuildCommandInputs, 'modules' | 'tabs'>) => {
-    const { bundles } = await retrieveBundlesAndTabs(manifest, modules, [], false);
+    const [bundles] = await Promise.all([
+      retrieveBundles(manifest, modules),
+      createOutDir(outDir),
+    ]);
+
     if (bundles.length === 0) return;
 
     if (tsc) {
@@ -206,7 +213,7 @@ const jsonCommand = createBuildCommand('jsons', false)
         tabs: [],
       });
       logTscResults(tscResult, srcDir);
-      if (tscResult.result.severity === 'error') return;
+      if (tscResult.result.severity === 'error') process.exit(1);
     }
 
     const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
@@ -215,6 +222,7 @@ const jsonCommand = createBuildCommand('jsons', false)
       verbose,
     });
 
+
     logTypedocTime(typedocTime);
     printList(chalk.magentaBright('Building jsons for the following modules:\n'), bundles);
     const jsonResults = await buildJsons(project, {
@@ -222,7 +230,8 @@ const jsonCommand = createBuildCommand('jsons', false)
       outDir,
     });
     logResult(jsonResults, verbose);
+    exitOnError(jsonResults);
   })
   .description('Build only jsons');
 
-export default jsonCommand;
+export default getJsonCommand;

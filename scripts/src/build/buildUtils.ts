@@ -6,7 +6,14 @@ import path from 'path';
 
 import { retrieveManifest } from '../scriptUtils.js';
 
-import type { AssetTypes, BuildResult, OverallResult, UnreducedResult } from './types';
+import {
+  type AssetTypes,
+  type BuildResult,
+  type OperationResult,
+  type OverallResult,
+  type UnreducedResult,
+  Assets,
+} from './types.js';
 
 export const divideAndRound = (dividend: number, divisor: number, round: number = 2) => (dividend / divisor).toFixed(round);
 
@@ -131,6 +138,58 @@ export const logResult = (
 };
 
 /**
+ * Call this function to exit with code 1 when there are errors with the build command that ran
+ */
+export const exitOnError = (
+  results: (UnreducedResult | OperationResult | null)[],
+  ...others: (UnreducedResult | OperationResult | null)[]
+) => {
+  results.concat(others)
+    .forEach((entry) => {
+      if (!entry) return;
+
+      if (Array.isArray(entry)) {
+        const [,,{ severity }] = entry;
+        if (severity === 'error') process.exit(1);
+      } else if (entry.severity === 'error') process.exit(1);
+    });
+};
+
+export const retrieveTabs = async (manifestFile: string, tabs: string[] | null) => {
+  const manifest = await retrieveManifest(manifestFile);
+  const knownTabs = Object.values(manifest)
+    .flatMap((x) => x.tabs);
+
+  if (tabs === null) {
+    tabs = knownTabs;
+  } else {
+    const unknownTabs = tabs.filter((t) => !knownTabs.includes(t));
+
+    if (unknownTabs.length > 0) {
+      throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
+    }
+  }
+
+  return tabs;
+};
+
+export const retrieveBundles = async (manifestFile: string, modules: string[] | null) => {
+  const manifest = await retrieveManifest(manifestFile);
+  const knownBundles = Object.keys(manifest);
+
+  if (modules !== null) {
+    // Some modules were specified
+    const unknownModules = modules.filter((m) => !knownBundles.includes(m));
+
+    if (unknownModules.length > 0) {
+      throw new Error(`Unknown modules: ${unknownModules.join(', ')}`);
+    }
+    return modules;
+  }
+  return knownBundles;
+};
+
+/**
  * Function to determine which bundles and tabs to build based on the user's input.
  *
  * @param modules
@@ -221,4 +280,23 @@ export const createBuildCommand = (label: string, addLint: boolean) => {
   return cmd;
 };
 
-export const copyManifest = (opts: { manifest: string, outDir: string }) => fs.copyFile(opts.manifest, path.join(opts.outDir, opts.manifest));
+/**
+ * Create the output directory's root folder
+ */
+export const createOutDir = (outDir: string) => fs.mkdir(outDir, { recursive: true });
+
+/**
+ * Copy the manifest to the output folder. The root output folder will be created
+ * if it does not already exist.
+ */
+export const copyManifest = ({ manifest, outDir }: { manifest: string, outDir: string }) => createOutDir(outDir)
+  .then(() => fs.copyFile(
+    manifest, path.join(outDir, manifest),
+  ));
+
+/**
+ * Create the output directories for each type of asset.
+ */
+export const createBuildDirs = (outDir: string) => Promise.all(
+  Assets.map((asset) => fs.mkdir(path.join(outDir, `${asset}s`), { recursive: true })),
+);

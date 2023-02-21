@@ -5,7 +5,7 @@ import pathlib from 'path';
 import ts, { type CompilerOptions } from 'typescript';
 
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { bundleNameExpander, divideAndRound, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
+import { bundleNameExpander, divideAndRound, exitOnError, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
 import type { AssetInfo, CommandInputs, Severity } from '../types.js';
 
 type TscResult = {
@@ -66,7 +66,7 @@ const getTsconfig = async (srcDir: string): Promise<TsconfigResult> => {
 /**
  * @param params_0 Source Directory
  */
-export const runTsc = wrapWithTimer((async (srcDir: string, { bundles, tabs }: Omit<AssetInfo, 'modulesSpecified'>): Promise<TscResult> => {
+export const runTsc = wrapWithTimer((async (srcDir: string, { bundles, tabs }: AssetInfo): Promise<TscResult> => {
   const fileNames: string[] = [];
 
   if (bundles.length > 0) {
@@ -89,11 +89,12 @@ export const runTsc = wrapWithTimer((async (srcDir: string, { bundles, tabs }: O
 
   const tsc = ts.createProgram(fileNames, tsconfigRes.results);
   const results = tsc.emit();
+  const diagnostics = ts.getPreEmitDiagnostics(tsc)
+    .concat(results.diagnostics);
 
   return {
-    severity: 'success',
-    results: ts.getPreEmitDiagnostics(tsc)
-      .concat(results.diagnostics),
+    severity: diagnostics.length > 0 ? 'error' : 'success',
+    results: diagnostics,
   };
 }));
 
@@ -121,7 +122,7 @@ export const logTscResults = (input: Awaited<ReturnType<typeof runTsc>> | null, 
 
 export type TscCommandInputs = CommandInputs;
 
-export const tscCommand = new Command('typecheck')
+const getTscCommand = () => new Command('typecheck')
   .description('Run tsc to perform type checking')
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('--manifest <file>', 'Manifest file', 'modules.json')
@@ -132,4 +133,7 @@ export const tscCommand = new Command('typecheck')
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const tscResults = await runTsc(srcDir, assets);
     logTscResults(tscResults, srcDir);
+    exitOnError([], tscResults.result);
   });
+
+export default getTscCommand;

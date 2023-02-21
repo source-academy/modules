@@ -7,6 +7,7 @@ const [[transformKey, [, transforms]]] = Object.entries(preset.transform);
  * @type {import('jest').config}
  */
 export default {
+  clearMocks: true,
   displayName: 'Scripts',
   testEnvironment: 'node',
   extensionsToTreatAsEsm: ['.ts'],
@@ -35,10 +36,11 @@ export default {
   },
   // Module Name settings required to make chalk work with jest
   moduleNameMapper: {
-    'chalk': '<rootDir>/scripts/src/__mocks__/chalk.js',
+    'chalk': '<rootDir>/scripts/src/__mocks__/chalk.cjs',
     '(.+)\\.js': '$1',
   },
   testMatch: [
     '<rootDir>/scripts/src/**/__tests__/**/*.test.ts',
   ],
+  setupFilesAfterEnv: ["<rootDir>/scripts/src/jest.setup.ts"]
 };

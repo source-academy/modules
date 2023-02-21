@@ -1,7 +1,5 @@
 import { retrieveBundlesAndTabs } from '../buildUtils';
 
-jest.mock('../../scriptUtils');
-
 describe('Test retrieveBundlesAndTabs', () => {
   it('should return all bundles and tabs when null is passed for modules', async () => {
     const result = await retrieveBundlesAndTabs('', null, null);

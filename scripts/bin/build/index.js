@@ -2,17 +2,18 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import { printList } from '../scriptUtils.js';
 import { logTypedocTime } from './docs/docUtils.js';
-import buildDocsCommand, { buildHtml, buildHtmlCommand, buildJsonCommand, buildJsons, initTypedoc, logHtmlResult, } from './docs/index.js';
-import buildModulesCommand, { buildModules, buildTabsCommand, } from './modules/index.js';
-import { autoLogPrebuild } from './prebuild/index.js';
-import { copyManifest, createBuildCommand, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
-const buildAllCommand = createBuildCommand('all', true)
+import getBuildDocsCommand, { buildHtml, buildJsons, getBuildHtmlCommand, getBuildJsonCommand, initTypedoc, logHtmlResult, } from './docs/index.js';
+import getBuildModulesCommand, { buildModules, getBuildTabsCommand, } from './modules/index.js';
+import { prebuild } from './prebuild/index.js';
+import { copyManifest, createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
+export const getBuildAllCommand = () => createBuildCommand('all', true)
     .argument('[modules...]', 'Manually specify which modules to build', null)
     .action(async (modules, opts) => {
-    const assets = await retrieveBundlesAndTabs(opts.manifest, modules, null);
-    const proceed = await autoLogPrebuild(opts, assets);
-    if (!proceed)
-        return;
+    const [assets] = await Promise.all([
+        retrieveBundlesAndTabs(opts.manifest, modules, null),
+        createOutDir(opts.outDir),
+    ]);
+    await prebuild(opts, assets);
     printList(`${chalk.cyanBright('Building bundles, tabs, jsons and HTML for the following bundles:')}\n`, assets.bundles);
     const [results, { typedoctime, html: htmlResult, json: jsonResults, }] = await Promise.all([
         buildModules(opts, assets),
@@ -28,7 +29,7 @@ const buildAllCommand = createBuildCommand('all', true)
                 }),
                 buildHtml(app, project, {
                     outDir: opts.outDir,
-                    modulesSpecified: assets.modulesSpecified,
+                    modulesSpecified: modules !== null,
                 }),
             ]);
             return {
@@ -42,13 +43,14 @@ const buildAllCommand = createBuildCommand('all', true)
     logTypedocTime(typedoctime);
     logResult(results.concat(jsonResults), opts.verbose);
     logHtmlResult(htmlResult);
+    exitOnError(results, ...jsonResults, htmlResult.result);
 })
     .description('Build bundles, tabs, jsons and HTML documentation');
 export default new Command('build')
     .description('Run without arguments to build all, or use a specific build subcommand')
-    .addCommand(buildAllCommand, { isDefault: true })
-    .addCommand(buildDocsCommand)
-    .addCommand(buildHtmlCommand)
-    .addCommand(buildJsonCommand)
-    .addCommand(buildModulesCommand)
-    .addCommand(buildTabsCommand);
+    .addCommand(getBuildAllCommand(), { isDefault: true })
+    .addCommand(getBuildDocsCommand())
+    .addCommand(getBuildHtmlCommand())
+    .addCommand(getBuildJsonCommand())
+    .addCommand(getBuildModulesCommand())
+    .addCommand(getBuildTabsCommand());

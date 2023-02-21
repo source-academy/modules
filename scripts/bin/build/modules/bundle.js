@@ -9,8 +9,15 @@ const HELPER_NAME = 'moduleHelpers';
 export const outputBundle = async (name, bundleText, outDir) => {
     try {
         const parsed = parse(bundleText, { ecmaVersion: 6 });
-        const exprStatement = parsed.body[1];
-        const varDeclarator = exprStatement.declarations[0];
+        // Account for 'use strict'; directives
+        let declStatement;
+        if (parsed.body[0].type === 'VariableDeclaration') {
+            declStatement = parsed.body[0];
+        }
+        else {
+            declStatement = parsed.body[1];
+        }
+        const varDeclarator = declStatement.declarations[0];
         const callExpression = varDeclarator.init;
         const moduleCode = callExpression.callee;
         const output = {
@@ -48,6 +55,7 @@ export const outputBundle = async (name, bundleText, outDir) => {
         };
     }
     catch (error) {
+        console.log(error);
         return {
             severity: 'error',
             error,
