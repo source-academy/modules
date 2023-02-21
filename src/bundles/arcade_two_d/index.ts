@@ -1,7 +1,7 @@
 /**
- * A single sentence summarising the module (this sentence is displayed larger).
+ * Bundle for Source Academy Arcade2D module.
  *
- * Sentences describing the module. More sentences about the module.
+ * Arcade2D allows users to create their own games.
  *
  * @module arcade_two_d
  * @author Xenos Fiorenzo Anong
@@ -22,10 +22,10 @@ import { context } from 'js-slang/moduleHelpers';
  */
 export function sample_function(x: number): number {
   return ++x;
-} // Then any functions or variables you want to expose to the user is exported from the bundle's index.ts file
+}
 
 /**
- * Sample function. Displays sample game canvas.
+ * Displays sample game canvas. For testing purposes.
  */
 export function display_hello_world(): void {
   const gameConfig = {
