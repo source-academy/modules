@@ -6,8 +6,8 @@ import { DebuggerContext } from '../../typings/type_helpers';
  * Game display tab for user-created games made with the Arcade2D module.
  *
  * @module arcade_two_d
- * @author Xenos Fiorenzo Anong
  * @author Titus Chew Xuan Jun
+ * @author Xenos Fiorenzo Anong
  */
 
 /**
@@ -24,14 +24,30 @@ type Props = {
  */
 type State = {
   counter: number;
+  time: number;
 };
 
 /**
  * The main React Component of the Tab.
  */
 class GameCanvas extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      counter: 0,
+      time: Date.now(),
+    };
+    if (this.props.context?.result?.value?.init !== undefined) {
+      this.props.context.result.value.init(); // pass the initialized GameObjects and the update function to the phaser canvas
+    }
+    if (this.props.context?.result?.value?.update !== undefined) {
+      this.props.context.result.value.update(); // the actual update function that can be specified in the SA program
+    }
+  }
+
   componentDidMount() {
     const config = this.props.context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
+    // Initialise game
     const game = new Phaser.Game(config);
   }
 
@@ -50,13 +66,27 @@ class GameCanvas extends React.Component<Props, State> {
 export default {
   /**
    * This function will be called to determine if the component will be
-   * rendered.
+   * rendered. Currently spawns when there is a stored game config, or if
+   * the string in the REPL is "[Arcade2D]".
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
     const config = context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
-    return config !== null;
+    if (config !== null) {
+      return true;
+    }
+
+    // toReplString() may not exist, which causes the page to crash
+    // testing
+    console.log(context);
+    if (context.result.value !== undefined && context.result.value.toReplString !== undefined) {
+      console.log('successful detection of repl string'); // works
+      console.log(context.result.value.toReplString());
+      return context.result.value.toReplString() === '[Arcade 2D]';
+    }
+    console.log('undefined: buildGame not last function');
+    return false;
   },
 
   /**
