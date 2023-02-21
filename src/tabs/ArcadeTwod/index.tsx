@@ -1,9 +1,13 @@
 import React from 'react';
+import Phaser from 'phaser';
+import { DebuggerContext } from '../../typings/type_helpers';
 
 /**
- * <Brief description of the tab>
- * @author <Author Name>
- * @author <Author Name>
+ * Game display tab for user-created games made with the Arcade2D module.
+ *
+ * @module arcade_two_d
+ * @author Titus Chew Xuan Jun
+ * @author Xenos Fiorenzo Anong
  */
 
 /**
@@ -26,14 +30,13 @@ type State = {
 /**
  * The main React Component of the Tab.
  */
-class Repeat extends React.Component<Props, State> {
+class GameCanvas extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
       counter: 0,
       time: Date.now(),
     };
-    console.log('inside repeat react component');
     if (this.props.context?.result?.value?.init !== undefined) {
       this.props.context.result.value.init(); // pass the initialized GameObjects and the update function to the phaser canvas
     }
@@ -42,14 +45,20 @@ class Repeat extends React.Component<Props, State> {
     }
   }
 
-  // timer
+  componentDidMount() {
+    const config = this.props.context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
+    // Initialise game
+    const game = new Phaser.Game(config);
+  }
+
+  shouldComponentUpdate() {
+    // Component itself is a wrapper & should not update - Phaser handles the game updates
+    return false;
+  }
 
   public render() {
-    const { counter } = this.state;
     return (
-      <div>
-        <div>This is spawned from the repeat package. Counter is {counter}</div>
-      </div>
+      <div id="phaser-game" />
     );
   }
 }
@@ -57,12 +66,18 @@ class Repeat extends React.Component<Props, State> {
 export default {
   /**
    * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
+   * rendered. Currently spawns when there is a stored game config, or if
+   * the string in the REPL is "[Arcade2D]".
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  // toReplString() may not exist, which causes the page to crash
-  toSpawn(context: any) {
+  toSpawn(context: DebuggerContext) {
+    const config = context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
+    if (config !== null) {
+      return true;
+    }
+
+    // toReplString() may not exist, which causes the page to crash
     // testing
     console.log(context);
     if (context.result.value !== undefined && context.result.value.toReplString !== undefined) {
@@ -73,22 +88,23 @@ export default {
     console.log('undefined: buildGame not last function');
     return false;
   },
+
   /**
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <Repeat context={context} />,
+  body: (context: any) => <GameCanvas context={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
    */
-  label: 'Sample Tab',
+  label: 'Arcade2D Tab',
 
   /**
    * BlueprintJS IconName element's name, used to render the icon which will be
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'build',
+  iconName: 'shapes',
 };
