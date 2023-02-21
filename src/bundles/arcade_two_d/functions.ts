@@ -3,10 +3,14 @@
  * It provides functions for manipulating GameObjects in a canvas.
  *
  * A *GameObject* is defined by its transform and rendered object.
+ *
  * @module arcade_two_d
  * @author Titus Chew Xuan Jun
  * @author Xenos Fiorenzo Anong
  */
+
+import { context } from 'js-slang/moduleHelpers';
+import HelloWorld from './example_games/helloWorld';
 
 import {
   GameObject, RenderableGameObject, ShapeGameObject, SpriteGameObject, TextGameObject,
@@ -489,6 +493,27 @@ export const build_game: () => BuildGame = () => {
     update,
   };
 };
+
+
+// =============================================================================
+// Display game
+// =============================================================================
+
+/**
+ * Displays sample game canvas. For demonstration purposes.
+ */
+export function display_hello_world(): void {
+  const gameConfig = {
+    type: Phaser.AUTO,
+    parent: 'phaser-game',
+    width: 600,
+    height: 600,
+    scene: HelloWorld,
+  };
+  context.moduleContexts.arcade_two_d.state = {
+    gameConfig,
+  };
+}
 
 // =============================================================================
 // Private functions
