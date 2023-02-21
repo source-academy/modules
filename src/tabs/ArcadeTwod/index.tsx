@@ -4,7 +4,7 @@ import { DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * Game display tab for user-created games made with the Arcade2D module.
- * 
+ *
  * @module arcade_two_d
  * @author Xenos Fiorenzo Anong
  * @author Titus Chew Xuan Jun
@@ -36,6 +36,7 @@ class GameCanvas extends React.Component<Props, State> {
   }
 
   shouldComponentUpdate() {
+    // Component itself is a wrapper & should not update - Phaser handles the game updates
     return false;
   }
 
