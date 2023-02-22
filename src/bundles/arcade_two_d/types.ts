@@ -116,9 +116,9 @@ export type Sprite = {
  */
 export type BuildGame = {
   toReplString: () => string;
-  config: Config;
-  init: () => void;
-  update: UpdateFunction;
+  // config: Config;
+  // init: () => void;
+  // update: UpdateFunction;
 };
 
 /**

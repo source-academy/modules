@@ -10,23 +10,29 @@
  */
 
 import { context } from 'js-slang/moduleHelpers';
+import Phaser from 'phaser';
 import HelloWorld from './example_games/helloWorld';
+import PhaserScene from './phaserScene';
 
 import {
-  GameObject, RenderableGameObject, ShapeGameObject, SpriteGameObject, TextGameObject,
+  GameObject,
+  type RenderableGameObject,
+  ShapeGameObject,
+  SpriteGameObject,
+  TextGameObject,
 } from './gameobject';
 
 import {
-  BaseShape,
-  DisplayText,
-  InteractableProps,
-  RenderProps,
-  Shape,
-  BuildGame,
-  TransformProps,
-  Sprite,
-  UpdateFunction,
-  Config,
+  type BaseShape,
+  type DisplayText,
+  type InteractableProps,
+  type RenderProps,
+  type Shape,
+  type BuildGame,
+  type TransformProps,
+  type Sprite,
+  type UpdateFunction,
+  type Config,
 } from './types';
 
 import {
@@ -57,7 +63,7 @@ let VOLUME: number = DEFAULT_VOLUME;
 let prevTime: number | null = null;
 let totalElapsedTime: number = 0;
 
-let update: UpdateFunction;
+export let userUpdateFunction: UpdateFunction;
 
 // =============================================================================
 // Shape references
@@ -240,9 +246,6 @@ export const updateGameObjectRotation: (gameObject: GameObject, radians: number)
  */
 export const updateGameObjectText: (textGameObject: TextGameObject, text: string) => void
 = (textGameObject: TextGameObject, text: string) => {
-  console.log(textGameObject);
-  console.log(textGameObject instanceof GameObject);
-  console.log(textGameObject instanceof TextGameObject);
   if (textGameObject instanceof TextGameObject) {
     textGameObject.setText({
       text,
@@ -419,9 +422,9 @@ export const set_volume: (volume: number) => void = (volume: number) => {
 
 /**
  * Detects if a key input is pressed down.
- * This function must be called in the update function for it to properly detect inputs.
+ * This function must be called in your update function to detect inputs.
  *
- * @param keycode The keycode of the key.
+ * @param key_name The key name of the key.
  * @returns True, in the frame the key is pressed down.
  * @example
  * ```
@@ -430,29 +433,18 @@ export const set_volume: (volume: number) => void = (volume: number) => {
  * ```
  * @catagory Input
  */
-export const input_down: (keycode: string) => boolean = (keycode: string) => {
-  // TODO
+export const input_down: (key_name: string) => boolean = (key_name: string) => {
+  // #TODO
   // Phaser.Input.Keyboard can be accessed from within a Scene.
   return false;
 };
 
 /**
- * Private function to initialise the Phaser Game.
- *
- * @hidden
- */
-function init() {
-  // this should allow Phaser to preload assets and create the GameObjects.
-  // this could return a list of gameObjects to create?
-  // TODO
-  console.log('GameObjects Array: to be created in Phaser');
-  console.log(GameObject.getGameObjectsArray);
-}
-
-/**
- * The function that sets the update loop.
+ * This sets the update loop in the canvas.
+ * Important note:
+ * Calling display() within this function will only output when rerun.
+ * Generally, a bad idea to call display() inside this function.
  * (This function could be redundant if update_function is supplied as a param to build_game.)
- * Sets the update function that is used in build_game.
  *
  * @param update_function A user-defined update_function, that takes in an array as a parameter.
  * @example
@@ -464,14 +456,19 @@ function init() {
  * @category Misc
  */
 export const update_loop: (update_function: UpdateFunction) => void = (update_function: UpdateFunction) => {
-  update = update_function;
+  // this causes TypeError, is there any other way to check for the arity of the function? #BUG
+  // if (update_function.length !== 1) {
+  //   throw new Error('User-defined update function has wrong number of arguments.');
+  // }
+  userUpdateFunction = update_function;
 };
 
 /**
  * Builds the game.
  * Processes the initialization and updating of the game.
  * All GameObjects and their properties are passed into the game.
- * This should be the last function called in the Source program.
+ * (This should be the last function called in the Source program.)
+ * This doesn't need to be the last function that is called now.
  * @example
  * ```
  * build_game();
@@ -479,18 +476,45 @@ export const update_loop: (update_function: UpdateFunction) => void = (update_fu
  * @category Misc
  */
 export const build_game: () => BuildGame = () => {
-  const config = {
-    width: WIDTH,
-    height: HEIGHT,
-    scale: SCALE,
-    volume: VOLUME,
-    fps: FPS,
-  } as Config;
+  // https://photonstorm.github.io/phaser3-docs/Phaser.Types.Core.html#.InputConfig
+  const inputConfig = {
+    keyboard: true,
+    mouse: true,
+  };
+
+  // https://photonstorm.github.io/phaser3-docs/Phaser.Types.Core.html#.FPSConfig
+  const fpsConfig = {
+    min: MIN_FPS,
+    target: FPS,
+  };
+
+  // https://photonstorm.github.io/phaser3-docs/Phaser.Types.Core.html#.GameConfig
+  const gameConfig = {
+    width: WIDTH / SCALE,
+    height: HEIGHT / SCALE,
+    zoom: SCALE,
+    // Setting to Phaser.WEBGL can lead to WebGL: INVALID_OPERATION errors, so Phaser.CANVAS is used instead.
+    // Phaser.WEBGL crashes: Uncaught TypeError: Cannot set properties of null (setting 'isAlphaPremultiplied')
+    type: Phaser.CANVAS,
+    parent: 'phaser-game',
+    scene: PhaserScene,
+    input: inputConfig,
+    fps: fpsConfig,
+  }; // as Config
+
+  // context.moduleContexts.arcade_two_d.state = {
+  //   type: Phaser.AUTO,
+  //   parent: 'phaser-game',
+  //   gameConfig,
+  //   scene: HelloWorld,
+  //   init,
+  //   update,
+  // }
+  GameObject.getGameObjectsArray()
+    .forEach(x => console.log(x));
   return {
     toReplString: () => '[Arcade 2D]',
-    config,
-    init,
-    update,
+    gameConfig,
   };
 };
 
@@ -513,6 +537,7 @@ export function display_hello_world(): void {
   context.moduleContexts.arcade_two_d.state = {
     gameConfig,
   };
+  // this doesn't return anything...
 }
 
 // =============================================================================

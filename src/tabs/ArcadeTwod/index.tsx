@@ -1,6 +1,6 @@
 import React from 'react';
 import Phaser from 'phaser';
-import { DebuggerContext } from '../../typings/type_helpers';
+import { type DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * Game display tab for user-created games made with the Arcade2D module.
@@ -25,6 +25,7 @@ type Props = {
 type State = {
   counter: number;
   time: number;
+  game?: Phaser.Game;
 };
 
 /**
@@ -36,19 +37,24 @@ class GameCanvas extends React.Component<Props, State> {
     this.state = {
       counter: 0,
       time: Date.now(),
+      game: undefined,
     };
-    if (this.props.context?.result?.value?.init !== undefined) {
-      this.props.context.result.value.init(); // pass the initialized GameObjects and the update function to the phaser canvas
-    }
-    if (this.props.context?.result?.value?.update !== undefined) {
-      this.props.context.result.value.update(); // the actual update function that can be specified in the SA program
-    }
   }
 
   componentDidMount() {
-    const config = this.props.context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
-    // Initialise game
-    const game = new Phaser.Game(config);
+    if (this.state.game) {
+      // Stop the previous game instance if any
+      this.state.game.destroy(false, false);
+    }
+
+    // Config will exist since it is checked in toSpawn
+    // const config = this.props.context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
+    const config = this.props.context.result?.value?.gameConfig;
+
+    // Set the new instance
+    this.setState({
+      game: new Phaser.Game(config),
+    });
   }
 
   shouldComponentUpdate() {
@@ -72,20 +78,12 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const config = context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
-    if (config !== null) {
+    // const config = context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
+    const config = context.result?.value?.gameConfig;
+    console.log(config);
+    if (config) {
       return true;
     }
-
-    // toReplString() may not exist, which causes the page to crash
-    // testing
-    console.log(context);
-    if (context.result.value !== undefined && context.result.value.toReplString !== undefined) {
-      console.log('successful detection of repl string'); // works
-      console.log(context.result.value.toReplString());
-      return context.result.value.toReplString() === '[Arcade 2D]';
-    }
-    console.log('undefined: buildGame not last function');
     return false;
   },
 

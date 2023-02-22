@@ -2,7 +2,7 @@
  * This file contains the bundle's representation of GameObjects.
  */
 import type { ReplResult } from '../../typings/type_helpers';
-import { InteractableProps, RenderedImage, RenderProps, TransformProps, DisplayText, PhaserType } from './types';
+import { type InteractableProps, type RenderedImage, type RenderProps, type TransformProps, type DisplayText, type PhaserType } from './types';
 
 // =============================================================================
 // Classes
@@ -80,8 +80,6 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
     if (phaserType in renderProps.renderedImage) {
       throw new Error('Error setting GameObject\'s phaser type');
     }
-
-    // console.log('Set phaser type success'); // Debug
   }
 
   setRenderState(renderProps: RenderProps) {
