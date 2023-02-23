@@ -1,6 +1,15 @@
+/**
+ * Source Academy Programmable REPL module
+ * @module repl
+ * @author Wang Zihan
+ */
+
+
 import { context } from 'js-slang/moduleHelpers';
 import { default_js_slang } from './functions';
-import type { IOptions } from 'js-slang';
+import { type IOptions } from 'js-slang';
+
+
 
 export class ProgrammableRepl {
   public evalFunction : Function;
@@ -80,9 +89,11 @@ export class ProgrammableRepl {
   }
 
   richDisplayInternal(pair_rich_text) {
+    developmentLog(pair_rich_text);
     const head = (pair) => pair[0];
     const tail = (pair) => pair[1];
     const is_pair = (obj) => obj instanceof Array && obj.length === 2;
+    if (!is_pair(pair_rich_text)) return 'not_rich_text_pair';
     function checkColorStringValidity(htmlColor:string) {
       if (htmlColor.length !== 7) return false;
       if (htmlColor[0] !== '#') return false;
@@ -98,7 +109,7 @@ export class ProgrammableRepl {
     function recursiveHelper(thisInstance, param) : string {
       if (typeof (param) === 'string') {
         // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
-        const safeCheckResult = thisInstance.userStringSafeCheck(head(param));
+        const safeCheckResult = thisInstance.userStringSafeCheck(param);
         if (safeCheckResult !== 'safe') {
           throw new Error(`For safety matters, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
         }
@@ -145,10 +156,12 @@ export class ProgrammableRepl {
       }
     }
     this.pushOutputString(`<span style="${recursiveHelper(this, pair_rich_text)}`, '', 'richtext');
+    return undefined;// Add this line to pass lint check "consistent-return"
   }
 
   // Returns the forbidden word present in the string "str" if it contains at least one unsafe word. Returns "safe" if the string is considered to be safe to output directly into innerHTML.
   userStringSafeCheck(str) {
+    developmentLog(`Safe check on ${str}`);
     const tmp = str.toLowerCase();
     let forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
     for (let word of forbiddenWords) {
@@ -165,7 +178,7 @@ export class ProgrammableRepl {
     Directly invoking Source Academy's builtin js-slang runner.
     Needs hard-coded support from js-slang part for the "sourceRunner" function and "backupContext" property in the content object for this to work.
   */
-  runInJsSlang(code: string) : string {
+  runInJsSlang(code : string) : string {
     const options : Partial<IOptions> = {
       originalMaxExecTime: 1000,
       scheduler: 'preemptive',
@@ -202,7 +215,7 @@ export class ProgrammableRepl {
     return 'Async run in js-slang';
   }
 
-  setTabReactComponentInstance(tab: any) {
+  setTabReactComponentInstance(tab : any) {
     this._tabReactComponent = tab;
   }
 
@@ -238,5 +251,5 @@ export class ProgrammableRepl {
 // Comment all the codes inside this function before merging the code to github as production version.
 // Because console.log() can expose the sandboxed VM location to students thus may cause security concerns.
 function developmentLog(_content) {
-//  console.log(`[Programmable Repl Log] ${_content}`);
+  // console.log(`[Programmable Repl Log] ${_content}`);
 }

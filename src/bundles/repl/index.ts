@@ -2,6 +2,9 @@
  * Bundle for Source Academy Programmable REPL module
  * @module repl
  * @author Wang Zihan
+ */
+
+/*
 
 Example on usage:
   <*> Use with metacircular evaluator:
@@ -32,20 +35,20 @@ Example on usage:
   =*=*=*=*=*= I'm the deluxe split line :) =*=*=*=*=*=
 
   <*> Customize Editor Appearance
-      import { set_editor_background_image, set_font_size } from "repl";
-      set_editor_background_image("https://some_image_website.123/your_favorite_image.png");  // Set the background image of the editor in repl tab
+      import { set_background_image, set_font_size } from "repl";
+      set_background_image("https://www.some_image_website.xyz/your_favorite_image.png");  // Set the background image of the editor in repl tab
       set_font_size(20.5);  // Set the font size of the editor in repl tab
 
   =*=*=*=*=*= I'm the deluxe split line :) =*=*=*=*=*=
 
   <*> Rich Text Display
-      first import { rich_display } from "repl";
+      first import { module_display } from "repl";
       Format: pair(pair("string",style),style)...
 
       Examples:
-          rich_display(pair(pair(pair(pair("Hello World","underline"),"italic"),"bold"),"gigantic"));
-          rich_display(pair(pair(pair(pair(pair(pair("Hello World","underline"),"italic"),"bold"),"gigantic"),"clrb#FF00B9"),"clrt#ff9700"));
-          rich_display(pair(pair(pair(pair(pair("Hello World","underline"),"italic"),"bold"),"gigantic"),"clrt#0ff1ed"));
+          module_display(pair(pair(pair(pair("Hello World","underline"),"italic"),"bold"),"gigantic"));
+          module_display(pair(pair(pair(pair(pair(pair("Hello World","underline"),"italic"),"bold"),"gigantic"),"clrb#FF00B9"),"clrt#ff9700"));
+          module_display(pair(pair(pair(pair(pair("Hello World","underline"),"italic"),"bold"),"gigantic"),"clrt#0ff1ed"));
 
       Coloring: "clrt" stands for text color, "clrb" stands for background color. The color string are in hexadecimal begin with "#" and followed by 6 hexadecimal digits.
         Example:  pair("123","clrt#ff0000") will produce a red "123";  pair("456","clrb#00ff00") will produce a green "456".
@@ -58,13 +61,13 @@ Example on usage:
         gigantic: Make the text in very large size.
         underline: Underline the text.
       Note that if you apply the conflicting attributes together, only one conflicted style will take effect and other conflicting styles will be discarded, like  " pair(pair(pair("123",small),medium),large) "  (Set conflicting font size for the same text)
+      Also note that for safety matters, certain words and characters are not allowed to appear under rich text display mode.
 */
 
 export {
   invoke_repl,
   module_display,
-  rich_display,
-  set_editor_background_image,
-  set_editor_font_size,
+  set_background_image,
+  set_font_size,
   // default_js_slang, // Commented because this is currently not supported in production version. Need changes in js-slang side to make it work.
 } from './functions';
