@@ -37,9 +37,8 @@ function (moduleHelpers) {
   __export(repl_exports, {
     invoke_repl: () => invoke_repl,
     module_display: () => module_display,
-    rich_display: () => rich_display,
-    set_editor_background_image: () => set_editor_background_image,
-    set_editor_font_size: () => set_editor_font_size
+    set_background_image: () => set_background_image,
+    set_font_size: () => set_font_size
   });
   var import_moduleHelpers2 = __require("js-slang/moduleHelpers");
   var import_moduleHelpers = __require("js-slang/moduleHelpers");
@@ -107,9 +106,11 @@ function (moduleHelpers) {
       });
     }
     richDisplayInternal(pair_rich_text) {
+      developmentLog(pair_rich_text);
       const head = pair => pair[0];
       const tail = pair => pair[1];
       const is_pair = obj => obj instanceof Array && obj.length === 2;
+      if (!is_pair(pair_rich_text)) return "not_rich_text_pair";
       function checkColorStringValidity(htmlColor) {
         if (htmlColor.length !== 7) return false;
         if (htmlColor[0] !== "#") return false;
@@ -124,7 +125,7 @@ function (moduleHelpers) {
       }
       function recursiveHelper(thisInstance, param) {
         if (typeof param === "string") {
-          const safeCheckResult = thisInstance.userStringSafeCheck(head(param));
+          const safeCheckResult = thisInstance.userStringSafeCheck(param);
           if (safeCheckResult !== "safe") {
             throw new Error(`For safety matters, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
           }
@@ -165,8 +166,10 @@ function (moduleHelpers) {
         }
       }
       this.pushOutputString(`<span style="${recursiveHelper(this, pair_rich_text)}`, "", "richtext");
+      return void 0;
     }
     userStringSafeCheck(str) {
+      developmentLog(`Safe check on ${str}`);
       const tmp = str.toLowerCase();
       let forbiddenWords = ["\\", "<", ">", "script", "javascript", "eval", "document", "window", "console", "location"];
       for (let word of forbiddenWords) {
@@ -250,17 +253,17 @@ function (moduleHelpers) {
     };
   }
   function module_display(content) {
-    INSTANCE.pushOutputString(content.toString(), "white", "plaintext");
-    return content;
+    if (INSTANCE.richDisplayInternal(content) === "not_rich_text_pair") {
+      INSTANCE.pushOutputString(content.toString(), "white", "plaintext");
+      return content;
+    }
+    return void 0;
   }
-  function rich_display(pair) {
-    INSTANCE.richDisplayInternal(pair);
-  }
-  function set_editor_background_image(img_url, background_color_alpha) {
+  function set_background_image(img_url, background_color_alpha) {
     INSTANCE.customizedEditorProps.backgroundImageUrl = img_url;
     INSTANCE.customizedEditorProps.backgroundColorAlpha = background_color_alpha;
   }
-  function set_editor_font_size(font_size_px) {
+  function set_font_size(font_size_px) {
     INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());
   }
   function default_js_slang(program, safeKey) {

@@ -1,7 +1,6 @@
 {
   "invoke_repl": "<div><h4>invoke_repl(evalFunc: Function) → {undefined}</h4><div class=\"description\"><p>Setup the programmable REPL with given metacircular evaulator entrance function</p></div></div>",
-  "module_display": "<div><h4>module_display(content: any) → {any}</h4><div class=\"description\"><p>Redirects the display message into Programmable REPL Tab and returns the string parameter</p></div></div>",
-  "rich_display": "<div><h4>rich_display(pair: any) → {void}</h4><div class=\"description\"><p>Output rich text based on pairs to Programmable Repl Tab (Note: This function returns undefined)</p></div></div>",
-  "set_editor_background_image": "<div><h4>set_editor_background_image(img_url: string, background_color_alpha: number) → {void}</h4><div class=\"description\"><p>Set Programmable Repl editor background image with a customized image URL</p></div></div>",
-  "set_editor_font_size": "<div><h4>set_editor_font_size(font_size_px: number) → {void}</h4><div class=\"description\"><p>Set Programmable Repl editor font size</p></div></div>"
+  "module_display": "<div><h4>module_display(content: any) → {any}</h4><div class=\"description\"><p>Redirects the display message into Programmable Repl Tab  \nIf you give a pair as the parameter, it will use the given pair to generate rich text and use rich text display mode to display the string in Programmable Repl Tab with undefined return value (see module description for more information).  \nIf you give other things as the parameter, it will simply display the toString value of the parameter in Programmable Repl Tab and returns the displayed string itself.</p></div></div>",
+  "set_background_image": "<div><h4>set_background_image(img_url: string, background_color_alpha: number) → {void}</h4><div class=\"description\"><p>Set Programmable Repl editor background image with a customized image URL</p></div></div>",
+  "set_font_size": "<div><h4>set_font_size(font_size_px: number) → {void}</h4><div class=\"description\"><p>Set Programmable Repl editor font size</p></div></div>"
 }
