@@ -1,0 +1,4 @@
+{
+  "new_plot": "<div><h4>new_plot(data: ListOfPairs) → {void}</h4><div class=\"description\"><p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p></div></div>",
+  "new_plot_json": "<div><h4>new_plot_json(data: any) → {void}</h4><div class=\"description\"><p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p></div></div>"
+}

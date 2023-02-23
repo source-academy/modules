@@ -1,4 +1,9 @@
 {
+  "plotly": {
+    "tabs": [
+      "Plotly"
+    ]
+  },
   "repeat": {
     "tabs": [
       "Repeat"
