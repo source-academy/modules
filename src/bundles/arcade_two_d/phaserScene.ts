@@ -2,13 +2,19 @@ import Phaser from 'phaser';
 import { GameObject, TextGameObject } from './gameobject';
 import {
   userUpdateFunction,
+  inputKeysDown,
 } from './functions';
+import { type TransformProps } from './types';
+
+export let gameTime: number;
+export let gameDelta: number;
+let startTime: number;
 
 /**
  * The Phaser scene that parses the GameObjects and update loop created by the user,
  * into Phaser GameObjects, and Phaser updates.
  */
-export default class PhaserScene extends Phaser.Scene {
+export class PhaserScene extends Phaser.Scene {
   constructor() {
     super('PhaserScene');
   }
@@ -39,6 +45,10 @@ export default class PhaserScene extends Phaser.Scene {
           transformProps.position[1],
           text,
         ));
+
+        // const color = gameObject.getColor();
+        // const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
+        // this.phaserGameObjects[gameObject.id].setTint(intColor);
       }
       // else is another type of GameObject
     });
@@ -51,24 +61,43 @@ export default class PhaserScene extends Phaser.Scene {
         return;
       }
       if (event.keyCode === 8 && textObject.text.length > 0) {
-        textObject.text = textObject.text.substr(0, textObject.text.length - 1);
+        // textObject.text = textObject.text.substr(0, textObject.text.length - 1);
       } else if (event.keyCode === 32 || (event.keyCode >= 48 && event.keyCode < 90)) {
-        textObject.text += event.key;
+        inputKeysDown.add(event.key);
+        // textObject.text += event.key;
       }
     });
   }
 
-  update() {
+  update(time, delta) {
+    // Set the time and delta #BUG: Game time doesn't reset when rerun
+    gameTime = Math.trunc(time);
+    gameDelta = delta;
+
     // Run the user-defined update function
     userUpdateFunction(this.userGameStateArray);
     // Loop through each GameObject in the array and determine which needs to update.
     this.sourceGameObjects.forEach((gameObject) => {
+      const phaserGameObject = this.phaserGameObjects[gameObject.id] as Phaser.GameObjects.GameObject;
       if (gameObject.hasTransformUpdates) {
         // update the transform of Phaser GameObject
-        const transformProps = gameObject.getTransform();
-        Phaser.Actions.SetXY([this.phaserGameObjects[gameObject.id]], transformProps.position[0], transformProps.position[1]);
-        // #TODO
+        const transformProps = gameObject.getTransform() as TransformProps;
+        Phaser.Actions.SetXY([phaserGameObject], transformProps.position[0], transformProps.position[1]);
+        Phaser.Actions.SetScale([phaserGameObject], transformProps.scale[0], transformProps.scale[1]);
+        Phaser.Actions.SetRotation([phaserGameObject], transformProps.rotation);
+      }
+      if (gameObject.hasRenderUpdates) {
+        // update the image of PhaserGameObject
+        if (gameObject instanceof TextGameObject) {
+          const color = gameObject.getColor();
+          const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
+          (phaserGameObject as Phaser.GameObjects.Text).setTint(intColor);
+          (phaserGameObject as Phaser.GameObjects.Text).setText(gameObject.getText().text);
+        }
       }
     });
+
+    // reset the keysDown array:
+    inputKeysDown.clear();
   }
 }

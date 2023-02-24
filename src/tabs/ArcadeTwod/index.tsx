@@ -42,10 +42,16 @@ class GameCanvas extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    if (this.state.game) {
-      // Stop the previous game instance if any
-      this.state.game.destroy(false, false);
-    }
+    // if (this.state.game) {
+    //   // Stop the previous game instance if any
+    //   this.state.game.destroy(false, false);
+    // }
+    // don't create a new game instance if it exists
+    // console.log(this.state.game);
+    // if (this.state.game !== undefined) {
+    //   console.log('is not undefined');
+    //   return;
+    // }
 
     // Config will exist since it is checked in toSpawn
     // const config = this.props.context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
@@ -55,11 +61,28 @@ class GameCanvas extends React.Component<Props, State> {
     this.setState({
       game: new Phaser.Game(config),
     });
+
+    // if (this.props.context.moduleContexts.arcade_two_d?.state?.phaserGameInstance !== null) {
+    //   this.props.context.moduleContexts.arcade_two_d.state.phaserGameInstance.gameConfig = config;
+    // } else {
+    //   this.props.context.moduleContexts.arcade_two_d.state = {
+    //     phaserGameInstance: new Phaser.Game(config),
+    //   };
+    // }
   }
 
   shouldComponentUpdate() {
     // Component itself is a wrapper & should not update - Phaser handles the game updates
     return false;
+  }
+
+  componentWillUnmount(): void {
+    // Remove the current WEBGL context, to prevent multiple webgl contexts from causing problems.
+    // Note that spamming run will still cause multiple webgl contexts, as they take time to be removed.
+    const canvas = document.querySelector('#phaser-game canvas') as HTMLCanvasElement;
+    const gl = canvas?.getContext('webgl');
+    gl?.getExtension('WEBGL_lose_context')
+      ?.loseContext();
   }
 
   public render() {
@@ -92,7 +115,7 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <GameCanvas context={context} />,
+  body: (context: DebuggerContext) => <GameCanvas context={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.

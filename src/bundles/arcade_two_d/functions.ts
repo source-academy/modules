@@ -12,11 +12,14 @@
 import { context } from 'js-slang/moduleHelpers';
 import Phaser from 'phaser';
 import HelloWorld from './example_games/helloWorld';
-import PhaserScene from './phaserScene';
+import {
+  PhaserScene,
+  gameTime,
+  gameDelta,
+} from './phaserScene';
 
 import {
-  GameObject,
-  type RenderableGameObject,
+  GameObject, RenderableGameObject,
   ShapeGameObject,
   SpriteGameObject,
   TextGameObject,
@@ -33,6 +36,7 @@ import {
   type Sprite,
   type UpdateFunction,
   type Config,
+  type Color,
 } from './types';
 
 import {
@@ -60,8 +64,9 @@ let SCALE: number = DEFAULT_SCALE;
 let FPS: number = DEFAULT_FPS;
 let VOLUME: number = DEFAULT_VOLUME;
 
-let prevTime: number | null = null;
-let totalElapsedTime: number = 0;
+// Store keys that are down in the Phaser Scene
+// By default, this is empty, unless a key is down
+export let inputKeysDown = new Set<string>();
 
 export let userUpdateFunction: UpdateFunction;
 
@@ -83,7 +88,7 @@ export let userUpdateFunction: UpdateFunction;
 export const createShapeGameObject: (baseShape: BaseShape) => ShapeGameObject = (baseShape: BaseShape) => {
   const transform: TransformProps = {
     position: [0, 0],
-    scale: [0, 0],
+    scale: [1, 1],
     rotation: 0,
   };
   const renderProps: RenderProps = {
@@ -117,7 +122,7 @@ export const createShapeGameObject: (baseShape: BaseShape) => ShapeGameObject = 
 export const createTextGameObject: (text: string) => TextGameObject = (text: string) => {
   const transform: TransformProps = {
     position: [0, 0],
-    scale: [0, 0],
+    scale: [1, 1],
     rotation: 0,
   };
   const renderProps: RenderProps = {
@@ -151,7 +156,7 @@ export const createTextGameObject: (text: string) => TextGameObject = (text: str
 export const createSpriteGameObject: (image_url: string) => SpriteGameObject = (image_url: string) => {
   const transform: TransformProps = {
     position: [0, 0],
-    scale: [0, 0],
+    scale: [1, 1],
     rotation: 0,
   };
   const renderProps: RenderProps = {
@@ -185,6 +190,7 @@ export const createSpriteGameObject: (image_url: string) => SpriteGameObject = (
  *
  * @param gameObject GameObject reference
  * @param coordinates [x, y] coordinates of new position
+ * @returns the GameObject reference passed in
  * @example
  * ```
  * updateGameObjectPosition(createTextGameObject(""), [1, 1]);
@@ -197,6 +203,7 @@ export const updateGameObjectPosition: (gameObject: GameObject, [x, y]: [number,
     ...gameObject.getTransform(),
     position: [x, y],
   });
+  return gameObject;
 };
 
 /**
@@ -204,6 +211,7 @@ export const updateGameObjectPosition: (gameObject: GameObject, [x, y]: [number,
  *
  * @param gameObject GameObject reference
  * @param scale [x, y] scale of the size of the GameObject
+ * @returns the GameObject reference passed in
  * @example
  * ```
  * updateGameObjectScale(createTextGameObject(""), [1, 1]);
@@ -216,13 +224,15 @@ export const updateGameObjectScale: (gameObject: GameObject, [x, y]: [number, nu
     ...gameObject.getTransform(),
     scale: [x, y],
   });
+  return gameObject;
 };
 
 /**
  * Updates the rotation transform of the GameObject.
  *
  * @param gameObject GameObject reference
- * @param radians The value in radians to rotate the GameObject counter-clockwise by
+ * @param radians The value in radians to rotate the GameObject clockwise by
+ * @returns the GameObject reference passed in
  * @example
  * ```
  * updateGameObjectRotation(createTextGameObject(""), math_PI);
@@ -235,6 +245,35 @@ export const updateGameObjectRotation: (gameObject: GameObject, radians: number)
     ...gameObject.getTransform(),
     rotation: radians,
   });
+  return gameObject;
+};
+
+/**
+ * Updates the color of the GameObject.
+ *
+ * @param gameObject GameObject reference
+ * @param color The color as an RGBA array, with RGBA values ranging from 0 to 255.
+ * @returns the GameObject reference passed in
+ * @example
+ * ```
+ * updateGameObjectColor(createTextGameObject(""), [255, 0, 0, 255]);
+ * ```
+ * @category Update
+ */
+export const updateGameObjectColor: (gameObject: GameObject, color: [number, number, number, number]) => void
+= (gameObject: GameObject, color: [number, number, number, number]) => {
+  if (gameObject instanceof RenderableGameObject) {
+    gameObject.setRenderState({
+      ...gameObject.getRenderState(),
+      color: {
+        red: color[0],
+        green: color[1],
+        blue: color[2],
+        alpha: color[3],
+      } as Color,
+    });
+  }
+  return gameObject;
 };
 
 /**
@@ -242,6 +281,7 @@ export const updateGameObjectRotation: (gameObject: GameObject, radians: number)
  *
  * @param textGameObject TextGameObject reference
  * @param text The updated text of the TextGameObject
+ * @returns the GameObject reference passed in
  * @category Update
  */
 export const updateGameObjectText: (textGameObject: TextGameObject, text: string) => void
@@ -250,7 +290,7 @@ export const updateGameObjectText: (textGameObject: TextGameObject, text: string
     textGameObject.setText({
       text,
     } as DisplayText);
-    return;
+    return textGameObject;
   }
   throw new Error('Cannot update text onto a non TextGameObject');
 };
@@ -434,10 +474,16 @@ export const set_volume: (volume: number) => void = (volume: number) => {
  * @catagory Input
  */
 export const input_down: (key_name: string) => boolean = (key_name: string) => {
-  // #TODO
-  // Phaser.Input.Keyboard can be accessed from within a Scene.
-  return false;
+  return inputKeysDown.has(key_name);
 };
+
+/**
+ * Gets the current in-game time.
+ *
+ * @returns a number specifying the time in milliseconds
+ * @category Query
+ */
+export const get_game_time: () => number = () => gameTime;
 
 /**
  * This sets the update loop in the canvas.
@@ -495,23 +541,24 @@ export const build_game: () => BuildGame = () => {
     zoom: SCALE,
     // Setting to Phaser.WEBGL can lead to WebGL: INVALID_OPERATION errors, so Phaser.CANVAS is used instead.
     // Phaser.WEBGL crashes: Uncaught TypeError: Cannot set properties of null (setting 'isAlphaPremultiplied')
-    type: Phaser.CANVAS,
+    // However: WEBGL is generally more performant, and allows for tinting of gameobjects, so we have to solve this problem
+    // The issue is that there are multiple webgl contexts, and exceeding a limit will cause the oldest context to be lost
+    // which will cause more problems, as the object doesn't belong in the context anymore.
+    type: Phaser.WEBGL,
     parent: 'phaser-game',
     scene: PhaserScene,
     input: inputConfig,
     fps: fpsConfig,
   }; // as Config
 
-  // context.moduleContexts.arcade_two_d.state = {
-  //   type: Phaser.AUTO,
-  //   parent: 'phaser-game',
-  //   gameConfig,
-  //   scene: HelloWorld,
-  //   init,
-  //   update,
+  // if (context.moduleContexts.arcade_two_d?.state?.phaserGameInstance !== undefined) {
+  //   context.moduleContexts.arcade_two_d.state.phaserGameInstance.gameConfig = gameConfig;
+  // } else {
+  //   context.moduleContexts.arcade_two_d.state = {
+  //     phaserGameInstance: new Phaser.Game(gameConfig),
+  //   };
   // }
-  GameObject.getGameObjectsArray()
-    .forEach(x => console.log(x));
+
   return {
     toReplString: () => '[Arcade 2D]',
     gameConfig,
