@@ -188,13 +188,14 @@ export class ProgrammableRepl {
       throwInfiniteLoops: true,
       useSubst: false,
     };
-    let jsslangContext = context.moduleContexts.repl.js_slang.context;
+    const jsSlangStorage : any = (context.moduleContexts.repl as any).js_slang;
+    const jsslangContext = jsSlangStorage.context;
     jsslangContext.prelude = 'const display=(x)=>module_display(x);';
     jsslangContext.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
     const sourceFile : Record<string, string> = {
       '/ReplModuleUserCode.js': code,
     };
-    let result : Promise<any> = context.moduleContexts.repl.js_slang.sourceFilesRunner(sourceFile, '/ReplModuleUserCode.js', jsslangContext, options);
+    let result : Promise<any> = jsSlangStorage.sourceFilesRunner(sourceFile, '/ReplModuleUserCode.js', jsslangContext, options);
     result.then((evalResult) => {
       if (evalResult.status !== 'error') {
         this.pushOutputString('js-slang program finished with value:', 'cyan');
