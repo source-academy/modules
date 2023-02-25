@@ -3,14 +3,23 @@
  * @module plotly
  */
 
-import { context } from 'js-slang/moduleHelpers';
-import Plotly, { Data } from 'plotly.js-dist';
-import { Data_Transformer, DrawnPlot, ListOfPairs } from './plotly';
+import { context } from 'js-slang/moduleHelpers'
+import Plotly, { Config, Data, Layout } from 'plotly.js-dist'
+import {
+  Curve,
+  CurvePlot,
+  CurvePlotFunction,
+  DataTransformer,
+  DrawnPlot,
+  ListOfPairs,
+  Point,
+} from './plotly'
+import { generatePlot } from './curve_functions'
 
-const drawnPlots: (DrawnPlot)[] = [];
+const drawnPlots: (DrawnPlot | CurvePlot)[] = []
 context.moduleContexts.plotly.state = {
   drawnPlots,
-};
+}
 
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
@@ -38,9 +47,8 @@ context.moduleContexts.plotly.state = {
  * @param data The data in the form of list of pair which is used to generate the plot
  */
 export function new_plot(data: ListOfPairs): void {
-  drawnPlots.push(new DrawnPlot(draw_new_plot, data));
+  drawnPlots.push(new DrawnPlot(draw_new_plot, data))
 }
-
 
 /**
  * Rotates the given 2d points in data about the point given with the given angle
@@ -49,35 +57,43 @@ export function new_plot(data: ListOfPairs): void {
  * @param point the point about which the data is to be rotated
  * @returns the rotated data points
  */
-export function rotate_around_point_2d(angle: number,  point: number[]): Data_Transformer {
+export function rotate_around_point_2d(
+  angle: number,
+  point: number[],
+): DataTransformer {
   return (data) => {
-    const transformation = (dt: number[][]) => {      
-        const rotated_data = data.map((cur_data:number[]) => {
-          if(cur_data.length == 2) {
-            const nx = (cur_data[0]-point[0]) * Math.cos(angle) - (cur_data[1]-point[1]) * Math.sin(angle) + point[0];
-            const ny = (cur_data[1] - point[1]) * Math.cos(angle) + (cur_data[0] - point[0]) * Math.sin(angle) + point[1];
-            return [nx,ny]
-          } else {
-            throw new Error("Invalid input type, make sure to have 2d data points" + cur_data);
-          }
-        })
-        return rotated_data;
-     
-      
+    const transformation = (dt: number[][]) => {
+      const rotated_data = data.map((cur_data: number[]) => {
+        if (cur_data.length == 2) {
+          const nx =
+            (cur_data[0] - point[0]) * Math.cos(angle) -
+            (cur_data[1] - point[1]) * Math.sin(angle) +
+            point[0]
+          const ny =
+            (cur_data[1] - point[1]) * Math.cos(angle) +
+            (cur_data[0] - point[0]) * Math.sin(angle) +
+            point[1]
+          return [nx, ny]
+        } else {
+          throw new Error(
+            'Invalid input type, make sure to have 2d data points' + cur_data,
+          )
+        }
+      })
+      return rotated_data
     }
-    return transformation(data);
+    return transformation(data)
   }
 }
 
-
 /**
  * Merge the 2d data points
- * @param points_1 
- * @param points_2 
- * @returns 
+ * @param points_1
+ * @param points_2
+ * @returns
  */
 export function combine_2d_points(points_1: number[][], points_2: number[][]) {
-  return [...points_1, ...points_2];
+  return [...points_1, ...points_2]
 }
 
 /**
@@ -86,21 +102,31 @@ export function combine_2d_points(points_1: number[][], points_2: number[][]) {
  * @param point_2_in_line second point for reflection line
  * @return reflected_data about the line
  */
-export function reflect_along_line( point_1_in_line: number[], point_2_in_line: number[]): Data_Transformer { 
+export function reflect_along_line(
+  point_1_in_line: number[],
+  point_2_in_line: number[],
+): DataTransformer {
   return (data) => {
     const transformation = (dt: number[][]) => {
-      const dx = point_1_in_line[0] - point_2_in_line[0];
-      const dy = point_1_in_line[1] - point_2_in_line[1];
-      const slope = dy/dx;
-      const y_intercept = point_1_in_line[1] - slope * point_1_in_line[0];
+      const dx = point_1_in_line[0] - point_2_in_line[0]
+      const dy = point_1_in_line[1] - point_2_in_line[1]
+      const slope = dy / dx
+      const y_intercept = point_1_in_line[1] - slope * point_1_in_line[0]
       const reflected_data = data.map((cur_data: number[]) => {
-        const nx = ((1 - slope**2) * cur_data[0] + 2 * slope * (cur_data[1] - y_intercept)) / (1 + slope**2);
-        const ny = (2 * slope * cur_data[0] + (slope**2 - 1) * cur_data[1] + 2 * y_intercept) / (1 + slope**2);
-        return [nx, ny];
+        const nx =
+          ((1 - slope ** 2) * cur_data[0] +
+            2 * slope * (cur_data[1] - y_intercept)) /
+          (1 + slope ** 2)
+        const ny =
+          (2 * slope * cur_data[0] +
+            (slope ** 2 - 1) * cur_data[1] +
+            2 * y_intercept) /
+          (1 + slope ** 2)
+        return [nx, ny]
       })
-      return reflected_data;
+      return reflected_data
     }
-    return transformation(data);
+    return transformation(data)
   }
 }
 
@@ -110,38 +136,38 @@ export function reflect_along_line( point_1_in_line: number[], point_2_in_line: 
  * @param value value by which to scale
  * @returns the scaled down value;
  */
-export function scale_2d(x:number, y:number): Data_Transformer {
+export function scale_2d(x: number, y: number): DataTransformer {
   return (data) => {
     const transformation = (dt: number[][]) => {
       return dt.map((cur_data) => {
-        return [cur_data[0]*x, cur_data[1]*y];
+        return [cur_data[0] * x, cur_data[1] * y]
       })
     }
-    return transformation(data);
+    return transformation(data)
   }
 }
 
-export function translate(dx:number, dy:number): Data_Transformer {
+export function translate(dx: number, dy: number): DataTransformer {
   return (data) => {
     const transformation = (dt: number[][]) => {
       return dt.map((cur_data) => {
-        return [cur_data[0]+dx, cur_data[1]+dy];
+        return [cur_data[0] + dx, cur_data[1] + dy]
       })
     }
-    return transformation(data);
+    return transformation(data)
   }
 }
 
 export function convert_list_to_array(data: any) {
-  let array: any = [];
-  let cur_data = data;
-  let i = 0;
-  while(cur_data && cur_data.length == 2) {
-    i+=1;
-    array.push(cur_data[0]);
-    cur_data = cur_data[1];
+  let array: any = []
+  let cur_data = data
+  let i = 0
+  while (cur_data && cur_data.length == 2) {
+    i += 1
+    array.push(cur_data[0])
+    cur_data = cur_data[1]
   }
-  return array;
+  return array
 }
 
 /**
@@ -149,8 +175,8 @@ export function convert_list_to_array(data: any) {
  * @param divId The id of the div element on which the plot will be displayed
  */
 function draw_new_plot(data: ListOfPairs, divId: string) {
-  const plotlyData = convert_to_plotly_data(data);
-  Plotly.newPlot(divId, [plotlyData]);
+  const plotlyData = convert_to_plotly_data(data)
+  Plotly.newPlot(divId, [plotlyData])
 }
 
 /**
@@ -158,11 +184,11 @@ function draw_new_plot(data: ListOfPairs, divId: string) {
  * @returns The converted data that can be used by the plotly.js function
  */
 function convert_to_plotly_data(data: ListOfPairs): Data {
-  let convertedData: Data = {};
+  let convertedData: Data = {}
   if (Array.isArray(data) && data.length === 2) {
-    add_fields_to_data(convertedData, data);
+    add_fields_to_data(convertedData, data)
   }
-  return convertedData;
+  return convertedData
 }
 
 /**
@@ -172,9 +198,54 @@ function convert_to_plotly_data(data: ListOfPairs): Data {
 
 function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
   if (Array.isArray(data) && data.length === 2 && data[0].length === 2) {
-    const field = data[0][0];
-    const value = data[0][1];
-    convertedData[field] = value;
-    add_fields_to_data(convertedData, data[1]);
-  } 
+    const field = data[0][0]
+    const value = data[0][1]
+    convertedData[field] = value
+    add_fields_to_data(convertedData, data[1])
+  }
 }
+
+function createPlotFunction(
+  type: string,
+  config: Data,
+  layout: Partial<Layout>,
+): (numPoints: number) => CurvePlotFunction {
+  return (numPoints: number) => {
+    const func = (curveFunction: Curve) => {
+      const plotDrawn = generatePlot(
+        type,
+        numPoints,
+        config,
+        layout,
+        curveFunction,
+      )
+
+      drawnPlots.push(plotDrawn)
+      return plotDrawn
+    }
+
+    return func
+  }
+}
+
+/**
+ * Returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at `num` sample points and connecting each pair with a line.
+ * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.
+ *
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @return function of type Curve → Drawing
+ * @example
+ * ```
+ * draw_connected(100)(t => make_point(t, t));
+ * ```
+ */
+export const draw_connected_2d = createPlotFunction(
+  'scatter',
+  { mode: 'lines' },
+  {
+    xaxis: { visible: false },
+    yaxis: { visible: false, scaleanchor: "x" },
+  },
+)
