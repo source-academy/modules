@@ -14,8 +14,11 @@ import Phaser from 'phaser';
 import HelloWorld from './example_games/helloWorld';
 import {
   PhaserScene,
+  inputKeysDown,
   gameTime,
   gameDelta,
+  pointerPosition,
+  pointerPrimaryDown,
 } from './phaserScene';
 
 import {
@@ -63,10 +66,6 @@ let HEIGHT: number = DEFAULT_HEIGHT;
 let SCALE: number = DEFAULT_SCALE;
 let FPS: number = DEFAULT_FPS;
 let VOLUME: number = DEFAULT_VOLUME;
-
-// Store keys that are down in the Phaser Scene
-// By default, this is empty, unless a key is down
-export let inputKeysDown = new Set<string>();
 
 export let userUpdateFunction: UpdateFunction;
 
@@ -367,6 +366,9 @@ export const queryGameObjectText: (textGameObject: TextGameObject) => string
   throw new Error('Cannot query text from non TextGameObject');
 };
 
+export const queryPointerPosition: () => [number, number]
+= () => pointerPosition;
+
 // =============================================================================
 // Game configuration
 // =============================================================================
@@ -393,6 +395,7 @@ const withinRange: (num: number, min: number, max: number) => number
 /**
  * Sets the frames per second of the canvas, which should be between the
  * MIN_FPS and MAX_FPS.
+ * It ranges between 1 and 120, with the default target as 30.
  * This function should not be called in the update function.
  *
  * @param fps The frames per second of canvas to set.
@@ -463,6 +466,7 @@ export const set_volume: (volume: number) => void = (volume: number) => {
 /**
  * Detects if a key input is pressed down.
  * This function must be called in your update function to detect inputs.
+ * To get specific keys, go to https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key#result
  *
  * @param key_name The key name of the key.
  * @returns True, in the frame the key is pressed down.
@@ -473,9 +477,15 @@ export const set_volume: (volume: number) => void = (volume: number) => {
  * ```
  * @catagory Input
  */
-export const input_down: (key_name: string) => boolean = (key_name: string) => {
-  return inputKeysDown.has(key_name);
-};
+export const input_key_down: (key_name: string) => boolean = (key_name: string) => inputKeysDown.has(key_name);
+
+/**
+ * Detects if the left mouse button is pressed down.
+ * This function must be called in your update function to detect inputs.
+ * @returns True, if the left mouse button is pressed down.
+ * @category Input
+ */
+export const input_left_mouse_down: () => boolean = () => pointerPrimaryDown;
 
 /**
  * Gets the current in-game time.
@@ -487,15 +497,15 @@ export const get_game_time: () => number = () => gameTime;
 
 /**
  * This sets the update loop in the canvas.
+ * The update loop is run once per frame, so it depends on the fps set for the number of times this loop is run.
  * Important note:
  * Calling display() within this function will only output when rerun.
- * Generally, a bad idea to call display() inside this function.
  * (This function could be redundant if update_function is supplied as a param to build_game.)
  *
  * @param update_function A user-defined update_function, that takes in an array as a parameter.
  * @example
  * ```
- * update_loop((update_function) => {
+ * update_loop((game_state) => {
  *   // your code here
  * })
  * ```
@@ -522,42 +532,41 @@ export const update_loop: (update_function: UpdateFunction) => void = (update_fu
  * @category Misc
  */
 export const build_game: () => BuildGame = () => {
-  // https://photonstorm.github.io/phaser3-docs/Phaser.Types.Core.html#.InputConfig
   const inputConfig = {
     keyboard: true,
     mouse: true,
   };
 
-  // https://photonstorm.github.io/phaser3-docs/Phaser.Types.Core.html#.FPSConfig
   const fpsConfig = {
     min: MIN_FPS,
     target: FPS,
+    forceSetTimeOut: true,
   };
 
-  // https://photonstorm.github.io/phaser3-docs/Phaser.Types.Core.html#.GameConfig
+  const physicsConfig = {
+    'default': 'arcade',
+    'arcade': {
+      debug: true,
+    },
+  };
+
   const gameConfig = {
     width: WIDTH / SCALE,
     height: HEIGHT / SCALE,
     zoom: SCALE,
     // Setting to Phaser.WEBGL can lead to WebGL: INVALID_OPERATION errors, so Phaser.CANVAS is used instead.
-    // Phaser.WEBGL crashes: Uncaught TypeError: Cannot set properties of null (setting 'isAlphaPremultiplied')
-    // However: WEBGL is generally more performant, and allows for tinting of gameobjects, so we have to solve this problem
+    // Also: Phaser.WEBGL can crash when there are too many contexts
+    // WEBGL is generally more performant, and allows for tinting of gameobjects.
     // The issue is that there are multiple webgl contexts, and exceeding a limit will cause the oldest context to be lost
-    // which will cause more problems, as the object doesn't belong in the context anymore.
+    // which will cause more problems, as the object doesn't belong in the context anymore. (Solved by removing contexts when unmounted)
     type: Phaser.WEBGL,
     parent: 'phaser-game',
+    // This is used to detect pointer interactions and overlapping GameObjects
+    physics: physicsConfig,
     scene: PhaserScene,
     input: inputConfig,
     fps: fpsConfig,
-  }; // as Config
-
-  // if (context.moduleContexts.arcade_two_d?.state?.phaserGameInstance !== undefined) {
-  //   context.moduleContexts.arcade_two_d.state.phaserGameInstance.gameConfig = gameConfig;
-  // } else {
-  //   context.moduleContexts.arcade_two_d.state = {
-  //     phaserGameInstance: new Phaser.Game(gameConfig),
-  //   };
-  // }
+  };
 
   return {
     toReplString: () => '[Arcade 2D]',
@@ -584,7 +593,6 @@ export function display_hello_world(): void {
   context.moduleContexts.arcade_two_d.state = {
     gameConfig,
   };
-  // this doesn't return anything...
 }
 
 // =============================================================================

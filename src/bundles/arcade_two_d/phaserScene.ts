@@ -2,13 +2,24 @@ import Phaser from 'phaser';
 import { GameObject, TextGameObject } from './gameobject';
 import {
   userUpdateFunction,
-  inputKeysDown,
 } from './functions';
 import { type TransformProps } from './types';
 
+// Store keys that are down in the Phaser Scene
+// By default, this is empty, unless a key is down
+export let inputKeysDown = new Set<string>();
+
+// the current in-game time
 export let gameTime: number;
+
+// the time between frames
 export let gameDelta: number;
-let startTime: number;
+
+// the current (mouse) pointer position in the canvas
+export let pointerPosition: [number, number];
+
+// true if (left mouse button) pointer down, false otherwise
+export let pointerPrimaryDown: boolean;
 
 /**
  * The Phaser scene that parses the GameObjects and update loop created by the user,
@@ -25,7 +36,6 @@ export class PhaserScene extends Phaser.Scene {
 
   init() {
     // Assign values to constants here
-    // this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.sourceGameObjects = GameObject.getGameObjectsArray();
     this.phaserGameObjects = [];
     this.userGameStateArray = [];
@@ -45,27 +55,16 @@ export class PhaserScene extends Phaser.Scene {
           transformProps.position[1],
           text,
         ));
-
-        // const color = gameObject.getColor();
-        // const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
-        // this.phaserGameObjects[gameObject.id].setTint(intColor);
+        if (gameObject.getHitboxState().hitboxActive) {
+          this.phaserGameObjects[gameObject.id].setInteractive();
+        }
       }
       // else is another type of GameObject
     });
 
     // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
-    this.input.keyboard.on('keydown', (event) => {
-      const textObject = this.phaserGameObjects[0]; // placeholder
-      if (textObject === undefined) {
-        console.log('textObject undefined');
-        return;
-      }
-      if (event.keyCode === 8 && textObject.text.length > 0) {
-        // textObject.text = textObject.text.substr(0, textObject.text.length - 1);
-      } else if (event.keyCode === 32 || (event.keyCode >= 48 && event.keyCode < 90)) {
-        inputKeysDown.add(event.key);
-        // textObject.text += event.key;
-      }
+    this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
+      inputKeysDown.add(event.key);
     });
   }
 
@@ -73,6 +72,10 @@ export class PhaserScene extends Phaser.Scene {
     // Set the time and delta #BUG: Game time doesn't reset when rerun
     gameTime = Math.trunc(time);
     gameDelta = delta;
+
+    // Set the pointer
+    pointerPosition = [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)];
+    pointerPrimaryDown = this.input.activePointer.primaryDown;
 
     // Run the user-defined update function
     userUpdateFunction(this.userGameStateArray);
@@ -85,15 +88,26 @@ export class PhaserScene extends Phaser.Scene {
         Phaser.Actions.SetXY([phaserGameObject], transformProps.position[0], transformProps.position[1]);
         Phaser.Actions.SetScale([phaserGameObject], transformProps.scale[0], transformProps.scale[1]);
         Phaser.Actions.SetRotation([phaserGameObject], transformProps.rotation);
+        gameObject.updatedTransform();
       }
       if (gameObject.hasRenderUpdates) {
         // update the image of PhaserGameObject
         if (gameObject instanceof TextGameObject) {
           const color = gameObject.getColor();
           const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
-          (phaserGameObject as Phaser.GameObjects.Text).setTint(intColor);
+          (phaserGameObject as Phaser.GameObjects.Text).setTintFill(intColor);
           (phaserGameObject as Phaser.GameObjects.Text).setText(gameObject.getText().text);
+          gameObject.updatedRender();
         }
+      }
+      if (gameObject.hasHitboxUpdates) {
+        // update the hitbox of PhaserGameObject
+        if (gameObject.getHitboxState().hitboxActive) {
+          this.phaserGameObjects[gameObject.id].setInteractive();
+        } else {
+          this.phaserGameObjects[gameObject.id].disableInteractive();
+        }
+        gameObject.updatedHitbox();
       }
     });
 
