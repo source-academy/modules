@@ -2,7 +2,7 @@
  * This file contains the bundle's representation of GameObjects.
  */
 import type { ReplResult } from '../../typings/type_helpers';
-import { InteractableProps, RenderedImage, RenderProps, TransformProps, DisplayText, PhaserType } from './types';
+import { type InteractableProps, type RenderedImage, type RenderProps, type TransformProps, type DisplayText, type PhaserType } from './types';
 
 // =============================================================================
 // Classes
@@ -14,7 +14,7 @@ import { InteractableProps, RenderedImage, RenderProps, TransformProps, DisplayT
 export abstract class GameObject implements Transformable, ReplResult {
   private static gameObjectCount: number = 0;
   private static gameObjectsArray: GameObject[] = []; // Stores all the created GameObjects
-  protected transformNotUpdated: boolean = false;
+  protected transformNotUpdated: boolean = true;
   public readonly id: number;
 
   constructor(
@@ -52,7 +52,7 @@ export abstract class GameObject implements Transformable, ReplResult {
  * Encapsulates the basic data-representation of a RenderableGameObject.
  */
 export abstract class RenderableGameObject extends GameObject implements Renderable {
-  protected renderNotUpdated: boolean = false;
+  protected renderNotUpdated: boolean = true;
 
   /**
    * @param {PhaserType} phaserType - The phaser type defines the representation of the GameObject in Phaser.
@@ -80,8 +80,6 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
     if (phaserType in renderProps.renderedImage) {
       throw new Error('Error setting GameObject\'s phaser type');
     }
-
-    // console.log('Set phaser type success'); // Debug
   }
 
   setRenderState(renderProps: RenderProps) {
@@ -117,7 +115,7 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
  * Encapsulates the basic data-representation of a InteractableGameObject.
  */
 export abstract class InteractableGameObject extends RenderableGameObject implements Interactable {
-  protected hitboxNotUpdated: boolean = false;
+  protected hitboxNotUpdated: boolean = true;
 
   constructor(
     transformProps: TransformProps,

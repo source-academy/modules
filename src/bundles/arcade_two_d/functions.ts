@@ -10,23 +10,36 @@
  */
 
 import { context } from 'js-slang/moduleHelpers';
+import Phaser from 'phaser';
 import HelloWorld from './example_games/helloWorld';
+import {
+  PhaserScene,
+  inputKeysDown,
+  gameTime,
+  gameDelta,
+  pointerPosition,
+  pointerPrimaryDown,
+} from './phaserScene';
 
 import {
-  GameObject, RenderableGameObject, ShapeGameObject, SpriteGameObject, TextGameObject,
+  GameObject, RenderableGameObject,
+  ShapeGameObject,
+  SpriteGameObject,
+  TextGameObject,
 } from './gameobject';
 
 import {
-  BaseShape,
-  DisplayText,
-  InteractableProps,
-  RenderProps,
-  Shape,
-  BuildGame,
-  TransformProps,
-  Sprite,
-  UpdateFunction,
-  Config,
+  type BaseShape,
+  type DisplayText,
+  type InteractableProps,
+  type RenderProps,
+  type Shape,
+  type BuildGame,
+  type TransformProps,
+  type Sprite,
+  type UpdateFunction,
+  type Config,
+  type Color,
 } from './types';
 
 import {
@@ -54,10 +67,7 @@ let SCALE: number = DEFAULT_SCALE;
 let FPS: number = DEFAULT_FPS;
 let VOLUME: number = DEFAULT_VOLUME;
 
-let prevTime: number | null = null;
-let totalElapsedTime: number = 0;
-
-let update: UpdateFunction;
+export let userUpdateFunction: UpdateFunction;
 
 // =============================================================================
 // Shape references
@@ -77,7 +87,7 @@ let update: UpdateFunction;
 export const createShapeGameObject: (baseShape: BaseShape) => ShapeGameObject = (baseShape: BaseShape) => {
   const transform: TransformProps = {
     position: [0, 0],
-    scale: [0, 0],
+    scale: [1, 1],
     rotation: 0,
   };
   const renderProps: RenderProps = {
@@ -111,7 +121,7 @@ export const createShapeGameObject: (baseShape: BaseShape) => ShapeGameObject = 
 export const createTextGameObject: (text: string) => TextGameObject = (text: string) => {
   const transform: TransformProps = {
     position: [0, 0],
-    scale: [0, 0],
+    scale: [1, 1],
     rotation: 0,
   };
   const renderProps: RenderProps = {
@@ -145,7 +155,7 @@ export const createTextGameObject: (text: string) => TextGameObject = (text: str
 export const createSpriteGameObject: (image_url: string) => SpriteGameObject = (image_url: string) => {
   const transform: TransformProps = {
     position: [0, 0],
-    scale: [0, 0],
+    scale: [1, 1],
     rotation: 0,
   };
   const renderProps: RenderProps = {
@@ -179,6 +189,7 @@ export const createSpriteGameObject: (image_url: string) => SpriteGameObject = (
  *
  * @param gameObject GameObject reference
  * @param coordinates [x, y] coordinates of new position
+ * @returns the GameObject reference passed in
  * @example
  * ```
  * updateGameObjectPosition(createTextGameObject(""), [1, 1]);
@@ -191,6 +202,7 @@ export const updateGameObjectPosition: (gameObject: GameObject, [x, y]: [number,
     ...gameObject.getTransform(),
     position: [x, y],
   });
+  return gameObject;
 };
 
 /**
@@ -198,6 +210,7 @@ export const updateGameObjectPosition: (gameObject: GameObject, [x, y]: [number,
  *
  * @param gameObject GameObject reference
  * @param scale [x, y] scale of the size of the GameObject
+ * @returns the GameObject reference passed in
  * @example
  * ```
  * updateGameObjectScale(createTextGameObject(""), [1, 1]);
@@ -210,13 +223,15 @@ export const updateGameObjectScale: (gameObject: GameObject, [x, y]: [number, nu
     ...gameObject.getTransform(),
     scale: [x, y],
   });
+  return gameObject;
 };
 
 /**
  * Updates the rotation transform of the GameObject.
  *
  * @param gameObject GameObject reference
- * @param radians The value in radians to rotate the GameObject counter-clockwise by
+ * @param radians The value in radians to rotate the GameObject clockwise by
+ * @returns the GameObject reference passed in
  * @example
  * ```
  * updateGameObjectRotation(createTextGameObject(""), math_PI);
@@ -229,6 +244,35 @@ export const updateGameObjectRotation: (gameObject: GameObject, radians: number)
     ...gameObject.getTransform(),
     rotation: radians,
   });
+  return gameObject;
+};
+
+/**
+ * Updates the color of the GameObject.
+ *
+ * @param gameObject GameObject reference
+ * @param color The color as an RGBA array, with RGBA values ranging from 0 to 255.
+ * @returns the GameObject reference passed in
+ * @example
+ * ```
+ * updateGameObjectColor(createTextGameObject(""), [255, 0, 0, 255]);
+ * ```
+ * @category Update
+ */
+export const updateGameObjectColor: (gameObject: GameObject, color: [number, number, number, number]) => void
+= (gameObject: GameObject, color: [number, number, number, number]) => {
+  if (gameObject instanceof RenderableGameObject) {
+    gameObject.setRenderState({
+      ...gameObject.getRenderState(),
+      color: {
+        red: color[0],
+        green: color[1],
+        blue: color[2],
+        alpha: color[3],
+      } as Color,
+    });
+  }
+  return gameObject;
 };
 
 /**
@@ -236,18 +280,16 @@ export const updateGameObjectRotation: (gameObject: GameObject, radians: number)
  *
  * @param textGameObject TextGameObject reference
  * @param text The updated text of the TextGameObject
+ * @returns the GameObject reference passed in
  * @category Update
  */
 export const updateGameObjectText: (textGameObject: TextGameObject, text: string) => void
 = (textGameObject: TextGameObject, text: string) => {
-  console.log(textGameObject);
-  console.log(textGameObject instanceof GameObject);
-  console.log(textGameObject instanceof TextGameObject);
   if (textGameObject instanceof TextGameObject) {
     textGameObject.setText({
       text,
     } as DisplayText);
-    return;
+    return textGameObject;
   }
   throw new Error('Cannot update text onto a non TextGameObject');
 };
@@ -324,6 +366,9 @@ export const queryGameObjectText: (textGameObject: TextGameObject) => string
   throw new Error('Cannot query text from non TextGameObject');
 };
 
+export const queryPointerPosition: () => [number, number]
+= () => pointerPosition;
+
 // =============================================================================
 // Game configuration
 // =============================================================================
@@ -350,6 +395,7 @@ const withinRange: (num: number, min: number, max: number) => number
 /**
  * Sets the frames per second of the canvas, which should be between the
  * MIN_FPS and MAX_FPS.
+ * It ranges between 1 and 120, with the default target as 30.
  * This function should not be called in the update function.
  *
  * @param fps The frames per second of canvas to set.
@@ -419,9 +465,10 @@ export const set_volume: (volume: number) => void = (volume: number) => {
 
 /**
  * Detects if a key input is pressed down.
- * This function must be called in the update function for it to properly detect inputs.
+ * This function must be called in your update function to detect inputs.
+ * To get specific keys, go to https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key#result
  *
- * @param keycode The keycode of the key.
+ * @param key_name The key name of the key.
  * @returns True, in the frame the key is pressed down.
  * @example
  * ```
@@ -430,48 +477,54 @@ export const set_volume: (volume: number) => void = (volume: number) => {
  * ```
  * @catagory Input
  */
-export const input_down: (keycode: string) => boolean = (keycode: string) => {
-  // TODO
-  // Phaser.Input.Keyboard can be accessed from within a Scene.
-  return false;
-};
+export const input_key_down: (key_name: string) => boolean = (key_name: string) => inputKeysDown.has(key_name);
 
 /**
- * Private function to initialise the Phaser Game.
- *
- * @hidden
+ * Detects if the left mouse button is pressed down.
+ * This function must be called in your update function to detect inputs.
+ * @returns True, if the left mouse button is pressed down.
+ * @category Input
  */
-function init() {
-  // this should allow Phaser to preload assets and create the GameObjects.
-  // this could return a list of gameObjects to create?
-  // TODO
-  console.log('GameObjects Array: to be created in Phaser');
-  console.log(GameObject.getGameObjectsArray);
-}
+export const input_left_mouse_down: () => boolean = () => pointerPrimaryDown;
 
 /**
- * The function that sets the update loop.
+ * Gets the current in-game time.
+ *
+ * @returns a number specifying the time in milliseconds
+ * @category Query
+ */
+export const get_game_time: () => number = () => gameTime;
+
+/**
+ * This sets the update loop in the canvas.
+ * The update loop is run once per frame, so it depends on the fps set for the number of times this loop is run.
+ * Important note:
+ * Calling display() within this function will only output when rerun.
  * (This function could be redundant if update_function is supplied as a param to build_game.)
- * Sets the update function that is used in build_game.
  *
  * @param update_function A user-defined update_function, that takes in an array as a parameter.
  * @example
  * ```
- * update_loop((update_function) => {
+ * update_loop((game_state) => {
  *   // your code here
  * })
  * ```
  * @category Misc
  */
 export const update_loop: (update_function: UpdateFunction) => void = (update_function: UpdateFunction) => {
-  update = update_function;
+  // this causes TypeError, is there any other way to check for the arity of the function? #BUG
+  // if (update_function.length !== 1) {
+  //   throw new Error('User-defined update function has wrong number of arguments.');
+  // }
+  userUpdateFunction = update_function;
 };
 
 /**
  * Builds the game.
  * Processes the initialization and updating of the game.
  * All GameObjects and their properties are passed into the game.
- * This should be the last function called in the Source program.
+ * (This should be the last function called in the Source program.)
+ * This doesn't need to be the last function that is called now.
  * @example
  * ```
  * build_game();
@@ -479,18 +532,45 @@ export const update_loop: (update_function: UpdateFunction) => void = (update_fu
  * @category Misc
  */
 export const build_game: () => BuildGame = () => {
-  const config = {
-    width: WIDTH,
-    height: HEIGHT,
-    scale: SCALE,
-    volume: VOLUME,
-    fps: FPS,
-  } as Config;
+  const inputConfig = {
+    keyboard: true,
+    mouse: true,
+  };
+
+  const fpsConfig = {
+    min: MIN_FPS,
+    target: FPS,
+    forceSetTimeOut: true,
+  };
+
+  const physicsConfig = {
+    'default': 'arcade',
+    'arcade': {
+      debug: true,
+    },
+  };
+
+  const gameConfig = {
+    width: WIDTH / SCALE,
+    height: HEIGHT / SCALE,
+    zoom: SCALE,
+    // Setting to Phaser.WEBGL can lead to WebGL: INVALID_OPERATION errors, so Phaser.CANVAS is used instead.
+    // Also: Phaser.WEBGL can crash when there are too many contexts
+    // WEBGL is generally more performant, and allows for tinting of gameobjects.
+    // The issue is that there are multiple webgl contexts, and exceeding a limit will cause the oldest context to be lost
+    // which will cause more problems, as the object doesn't belong in the context anymore. (Solved by removing contexts when unmounted)
+    type: Phaser.WEBGL,
+    parent: 'phaser-game',
+    // This is used to detect pointer interactions and overlapping GameObjects
+    physics: physicsConfig,
+    scene: PhaserScene,
+    input: inputConfig,
+    fps: fpsConfig,
+  };
+
   return {
     toReplString: () => '[Arcade 2D]',
-    config,
-    init,
-    update,
+    gameConfig,
   };
 };
 
