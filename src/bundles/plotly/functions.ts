@@ -54,7 +54,7 @@ export function rotate_around_point_2d(angle: number,  point: number[]): Data_Tr
     const transformation = (dt: number[][]) => {      
         const rotated_data = data.map((cur_data:number[]) => {
           if(cur_data.length == 2) {
-            const nx = (cur_data[0]-point[0]) * Math.cos(angle) + (cur_data[1]-point[1]) * Math.sin(angle) + point[0];
+            const nx = (cur_data[0]-point[0]) * Math.cos(angle) - (cur_data[1]-point[1]) * Math.sin(angle) + point[0];
             const ny = (cur_data[1] - point[1]) * Math.cos(angle) + (cur_data[0] - point[0]) * Math.sin(angle) + point[1];
             return [nx,ny]
           } else {
@@ -82,7 +82,6 @@ export function combine_2d_points(points_1: number[][], points_2: number[][]) {
 
 /**
  * Reflect point p along line through points p0 and p1
- * @param data points to reflect
  * @param point_1_in_line first point for reflection line
  * @param point_2_in_line second point for reflection line
  * @return reflected_data about the line
