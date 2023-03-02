@@ -9,7 +9,7 @@
 Example on usage:
   <*> Use with metacircular evaluator:
 
-      import { invoke_repl, module_display } from "repl";
+      import { set_evaluator, module_display } from "repl";
 
       const primitive_functions = list(
          ......
@@ -21,16 +21,16 @@ Example on usage:
         (your metacircular evaluator entry function)
       }
 
-      invoke_repl(parse_and_evaluate); // This can invoke the repl with your metacircular evaluator's evaluation entry
+      set_evaluator(parse_and_evaluate); // This can invoke the repl with your metacircular evaluator's evaluation entry
 
   =*=*=*=*=*= I'm the deluxe split line :) =*=*=*=*=*=
 
-  <*> Use with Source Academy's builtin js-slang (CURRENTLY NOT SUPPORTED IN PRODUCTION)
-      import { invoke_repl, default_js_slang, module_display } from "repl";  // Here you also need to import "module_display" to let the display result goes to the repl tab.
+  <*> Use with Source Academy's builtin js-slang
+      import { set_evaluator, default_js_slang, module_display } from "repl";  // Here you also need to import "module_display" along with "set_evaluator" and "default_js_slang".
 
-      invoke_repl(default_js_slang); // This can invoke the repl with Source Academy's builtin js-slang evaluation entry
+      set_evaluator(default_js_slang); // This can invoke the repl with Source Academy's builtin js-slang evaluation entry
 
-      (Note that you can't directly call "default_js_slang" in your own code. It should only be used as the parameter of "invoke_repl")
+      (Note that you can't directly call "default_js_slang" in your own code. It should only be used as the parameter of "set_evaluator")
 
   =*=*=*=*=*= I'm the deluxe split line :) =*=*=*=*=*=
 
@@ -65,9 +65,9 @@ Example on usage:
 */
 
 export {
-  invoke_repl,
+  set_evaluator,
   module_display,
   set_background_image,
   set_font_size,
-  // default_js_slang, // Commented because this is currently not supported in production version. Need changes in js-slang side to make it work.
+  default_js_slang,
 } from './functions';

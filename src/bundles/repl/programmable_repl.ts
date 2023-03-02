@@ -179,6 +179,8 @@ export class ProgrammableRepl {
     Needs hard-coded support from js-slang part for the "sourceRunner" function and "backupContext" property in the content object for this to work.
   */
   runInJsSlang(code : string) : string {
+    developmentLog('js-slang context:');
+    // console.log(context);
     const options : Partial<IOptions> = {
       originalMaxExecTime: 1000,
       scheduler: 'preemptive',
@@ -186,17 +188,14 @@ export class ProgrammableRepl {
       throwInfiniteLoops: true,
       useSubst: false,
     };
-    let jsslangContext = (context as any).backupContext;
-    const prelude = 'const display=(x)=>module_display(x);';
-    (context as any).sourceRunner(prelude, jsslangContext, true, options)
-      .then((preludeEvalResult) => {
-        developmentLog(preludeEvalResult);
-        if (preludeEvalResult.status === 'error') {
-          this.pushOutputString('[Warning] It seems that you havn\'t import the function "module_display" correctly when calling "invoke_repl". The runner will use the default js-slang builtin display function.', 'yellow');
-        }
-      });
-    let result : Promise<any> = (context as any).sourceRunner(code, jsslangContext, true, options);
-    developmentLog(result);
+    const jsSlangStorage : any = (context.moduleContexts.repl as any).js_slang;
+    const jsslangContext = jsSlangStorage.context;
+    jsslangContext.prelude = 'const display=(x)=>module_display(x);';
+    jsslangContext.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
+    const sourceFile : Record<string, string> = {
+      '/ReplModuleUserCode.js': code,
+    };
+    let result : Promise<any> = jsSlangStorage.sourceFilesRunner(sourceFile, '/ReplModuleUserCode.js', jsslangContext, options);
     result.then((evalResult) => {
       if (evalResult.status !== 'error') {
         this.pushOutputString('js-slang program finished with value:', 'cyan');
@@ -207,7 +206,10 @@ export class ProgrammableRepl {
         const errorCount = errors.length;
         for (let i = 0; i < errorCount; i++) {
           const error = errors[i];
-          this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, 'red');
+          if (error.explain()
+            .indexOf('Name module_display not declared.') !== -1) {
+            this.pushOutputString('[Error] It seems that you havn\'t import the function "module_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', 'red');
+          } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, 'red');
         }
       }
       this.reRenderTab();
