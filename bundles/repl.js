@@ -35,9 +35,10 @@ function (moduleHelpers) {
   }), mod);
   var repl_exports = {};
   __export(repl_exports, {
-    invoke_repl: () => invoke_repl,
+    default_js_slang: () => default_js_slang,
     module_display: () => module_display,
     set_background_image: () => set_background_image,
+    set_evaluator: () => set_evaluator,
     set_font_size: () => set_font_size
   });
   var import_moduleHelpers2 = __require("js-slang/moduleHelpers");
@@ -180,6 +181,7 @@ function (moduleHelpers) {
       return "safe";
     }
     runInJsSlang(code) {
+      developmentLog("js-slang context:");
       const options = {
         originalMaxExecTime: 1e3,
         scheduler: "preemptive",
@@ -187,16 +189,14 @@ function (moduleHelpers) {
         throwInfiniteLoops: true,
         useSubst: false
       };
-      let jsslangContext = import_moduleHelpers.context.backupContext;
-      const prelude = "const display=(x)=>module_display(x);";
-      import_moduleHelpers.context.sourceRunner(prelude, jsslangContext, true, options).then(preludeEvalResult => {
-        developmentLog(preludeEvalResult);
-        if (preludeEvalResult.status === "error") {
-          this.pushOutputString(`[Warning] It seems that you havn't import the function "module_display" correctly when calling "invoke_repl". The runner will use the default js-slang builtin display function.`, "yellow");
-        }
-      });
-      let result = import_moduleHelpers.context.sourceRunner(code, jsslangContext, true, options);
-      developmentLog(result);
+      const jsSlangStorage = import_moduleHelpers.context.moduleContexts.repl.js_slang;
+      const jsslangContext = jsSlangStorage.context;
+      jsslangContext.prelude = "const display=(x)=>module_display(x);";
+      jsslangContext.errors = [];
+      const sourceFile = {
+        "/ReplModuleUserCode.js": code
+      };
+      let result = jsSlangStorage.sourceFilesRunner(sourceFile, "/ReplModuleUserCode.js", jsslangContext, options);
       result.then(evalResult => {
         if (evalResult.status !== "error") {
           this.pushOutputString("js-slang program finished with value:", "cyan");
@@ -206,7 +206,9 @@ function (moduleHelpers) {
           const errorCount = errors.length;
           for (let i = 0; i < errorCount; i++) {
             const error = errors[i];
-            this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, "red");
+            if (error.explain().indexOf("Name module_display not declared.") !== -1) {
+              this.pushOutputString(`[Error] It seems that you havn't import the function "module_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, "red");
+            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, "red");
           }
         }
         this.reRenderTab();
@@ -242,10 +244,10 @@ function (moduleHelpers) {
   function developmentLog(_content) {}
   var INSTANCE = new ProgrammableRepl();
   import_moduleHelpers2.context.moduleContexts.repl.state = INSTANCE;
-  function invoke_repl(evalFunc) {
+  function set_evaluator(evalFunc) {
     if (!(evalFunc instanceof Function)) {
       const typeName = typeof evalFunc;
-      throw new Error(`Wrong parameter type "${typeName}' in function "invoke_repl". It supposed to be a function and it's the entrance function of your metacircular evaulator.`);
+      throw new Error(`Wrong parameter type "${typeName}' in function "set_evaluator". It supposed to be a function and it's the entrance function of your metacircular evaulator.`);
     }
     INSTANCE.evalFunction = evalFunc;
     return {
@@ -268,7 +270,7 @@ function (moduleHelpers) {
   }
   function default_js_slang(program, safeKey) {
     if (!(safeKey instanceof Element)) {
-      throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "invoke_repl"`);
+      throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
     }
     return INSTANCE.runInJsSlang(program);
   }
