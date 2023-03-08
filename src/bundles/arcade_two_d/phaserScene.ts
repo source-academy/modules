@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GameObject, TextGameObject } from './gameobject';
+import { GameObject, SpriteGameObject, TextGameObject } from './gameobject';
 import {
   userUpdateFunction,
 } from './functions';
@@ -33,6 +33,7 @@ export class PhaserScene extends Phaser.Scene {
   private sourceGameObjects;
   private phaserGameObjects;
   private userGameStateArray;
+  private corsAssets;
 
   init() {
     // Assign values to constants here
@@ -40,14 +41,29 @@ export class PhaserScene extends Phaser.Scene {
     this.phaserGameObjects = [];
     this.userGameStateArray = [];
     // And get assets
+    this.corsAssets = new Set();
+  }
+
+  preload() {
+    this.sourceGameObjects.forEach((gameObject) => {
+      if (gameObject instanceof SpriteGameObject) {
+        this.corsAssets.add(gameObject.getSprite().image_url);
+      }
+    });
+
+    this.load.setPath('https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/');
+    this.corsAssets.forEach((url) => {
+      // preload assets for sprites (through Cross-Origin resource sharing (CORS))
+      this.load.image(url, url);
+    });
   }
 
   create() {
     this.sourceGameObjects.forEach((gameObject) => {
+      const transformProps = gameObject.getTransform();
       // Create TextGameObject
       if (gameObject instanceof TextGameObject) {
         // gameObject = gameObject as TextGameObject;
-        const transformProps = gameObject.getTransform();
         const text = gameObject.getText().text;
 
         this.phaserGameObjects.push(this.add.text(
@@ -60,6 +76,14 @@ export class PhaserScene extends Phaser.Scene {
         }
       }
       // else is another type of GameObject
+      if (gameObject instanceof SpriteGameObject) {
+        const url = gameObject.getSprite().image_url;
+        this.phaserGameObjects.push(this.add.sprite(
+          transformProps.position[0],
+          transformProps.position[1],
+          url,
+        ));
+      }
     });
 
     // Keyboard events can be detected inside the Source editor, which is not intended. #BUG

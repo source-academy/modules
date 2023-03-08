@@ -2,7 +2,7 @@
  * This file contains the bundle's representation of GameObjects.
  */
 import type { ReplResult } from '../../typings/type_helpers';
-import { type InteractableProps, type RenderedImage, type RenderProps, type TransformProps, type DisplayText, type PhaserType } from './types';
+import { type InteractableProps, type RenderedImage, type RenderProps, type TransformProps, type DisplayText, type PhaserType, Sprite } from './types';
 
 // =============================================================================
 // Classes
@@ -168,6 +168,13 @@ export class SpriteGameObject extends InteractableGameObject {
     interactableProps: InteractableProps,
   ) {
     super(transformProps, renderProps, interactableProps, 'Sprite' as PhaserType);
+  }
+  /**
+   * Gets the sprite displayed by the SpriteGameObject.
+   * @returns The sprite as a Sprite.
+   */
+  getSprite(): Sprite {
+    return this.getRenderState().renderedImage as Sprite;
   }
 
   /** @override */

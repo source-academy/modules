@@ -148,11 +148,22 @@ export const createTextGameObject: (text: string) => TextGameObject = (text: str
 
 /**
  * Creates a GameObject that contains a Sprite image reference.
+ * Source Academy assets can be used by specifying path without the prepend.
+ * Source Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/{image_url}.
+ * Assets from other websites can also be used if they support Cross-Origin Resource Sharing (CORS), but the full path must be specified.
  *
- * @param image_url The image URL of the sprite.
+ * @param image_url The image URL of the sprite
+ * @example
+ * ```
+ * createSpriteGameObject("objects/cmr/splendall.png");
+ * ```
  * @category Create
  */
 export const createSpriteGameObject: (image_url: string) => SpriteGameObject = (image_url: string) => {
+  if (image_url === '') {
+    throw new Error('image_url cannot be empty');
+  }
+
   const transform: TransformProps = {
     position: [0, 0],
     scale: [1, 1],
