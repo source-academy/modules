@@ -48,14 +48,14 @@ export function make_3D_point(x: number, y: number, z: number): Point {
  * const redPoint = make_color_point(0.5, 0.5, 255, 0, 0);
  * ```
  */
- export function make_color_point(
+export function make_color_point(
   x: number,
   y: number,
   r: number,
   g: number,
   b: number,
 ): Point {
-  return new Point(x, y, 0, {r: r / 255, g: g / 255, b: b / 255});
+  return new Point(x, y, 0, { r: r / 255, g: g / 255, b: b / 255 })
 }
 
 /**
@@ -83,9 +83,8 @@ export function make_3D_color_point(
   g: number,
   b: number,
 ): Point {
-  return new Point(x, y, z, {r: r / 255, g: g / 255, b: b / 255});
+  return new Point(x, y, z, { r: r / 255, g: g / 255, b: b / 255 })
 }
-
 
 /**
  * Retrieves the x-coordinate of a given Point.
@@ -190,7 +189,6 @@ export function invert(curve: Curve): Curve {
   return (t: number) => curve(1 - t)
 }
 
-
 /**
  * This function returns a Curve transformation: It takes an x-value x0, a
  * y-value y0 and a z-value z0, as arguments and
@@ -203,17 +201,17 @@ export function invert(curve: Curve): Curve {
  * @param z0 z-value
  * @returns Curve transformation
  */
- export function translate(
+export function translate(
   x0: number,
   y0: number,
   z0: number,
 ): CurveTransformer {
   return (curve: Curve) => {
     const transformation = (cf: Curve) => (t: number) => {
-      const a = x0 === undefined ? 0 : x0;
-      const b = y0 === undefined ? 0 : y0;
-      const c = z0 === undefined ? 0 : z0;
-      const ct: Point = cf(t);
+      const a = x0 === undefined ? 0 : x0
+      const b = y0 === undefined ? 0 : y0
+      const c = z0 === undefined ? 0 : z0
+      const ct: Point = cf(t)
       return make_3D_color_point(
         a + x_of(ct),
         b + y_of(ct),
@@ -221,10 +219,10 @@ export function invert(curve: Curve): Curve {
         r_of(ct),
         g_of(ct),
         b_of(ct),
-      );
-    };
-    return transformation(curve);
-  };
+      )
+    }
+    return transformation(curve)
+  }
 }
 
 /**
@@ -239,28 +237,28 @@ export function invert(curve: Curve): Curve {
  * @param c given angle
  * @returns function that takes a Curve and returns a Curve
  */
- export function rotate_around_origin(
+export function rotate_around_origin(
   theta1: number,
   theta2: number,
   theta3: number,
 ): CurveTransformer {
   if (theta3 === undefined && theta1 !== undefined && theta2 !== undefined) {
     // 2 args
-    throw new Error('Expected 1 or 3 arguments, but received 2');
+    throw new Error('Expected 1 or 3 arguments, but received 2')
   } else if (
-    theta1 !== undefined
-    && theta2 === undefined
-    && theta3 === undefined
+    theta1 !== undefined &&
+    theta2 === undefined &&
+    theta3 === undefined
   ) {
     // 1 args
-    const cth = Math.cos(theta1);
-    const sth = Math.sin(theta1);
+    const cth = Math.cos(theta1)
+    const sth = Math.sin(theta1)
     return (curve: Curve) => {
       const transformation = (c: Curve) => (t: number) => {
-        const ct = c(t);
-        const x = x_of(ct);
-        const y = y_of(ct);
-        const z = z_of(ct);
+        const ct = c(t)
+        const x = x_of(ct)
+        const y = y_of(ct)
+        const z = z_of(ct)
         return make_3D_color_point(
           cth * x - sth * y,
           sth * x + cth * y,
@@ -268,21 +266,21 @@ export function invert(curve: Curve): Curve {
           r_of(ct),
           g_of(ct),
           b_of(ct),
-        );
-      };
-      return transformation(curve);
-    };
+        )
+      }
+      return transformation(curve)
+    }
   } else {
-    const cthx = Math.cos(theta1);
-    const sthx = Math.sin(theta1);
-    const cthy = Math.cos(theta2);
-    const sthy = Math.sin(theta2);
-    const cthz = Math.cos(theta3);
-    const sthz = Math.sin(theta3);
+    const cthx = Math.cos(theta1)
+    const sthx = Math.sin(theta1)
+    const cthy = Math.cos(theta2)
+    const sthy = Math.sin(theta2)
+    const cthz = Math.cos(theta3)
+    const sthz = Math.sin(theta3)
     return (curve: Curve) => {
       const transformation = (c: Curve) => (t: number) => {
-        const ct = c(t);
-        const coord = [x_of(ct), y_of(ct), z_of(ct)];
+        const ct = c(t)
+        const coord = [x_of(ct), y_of(ct), z_of(ct)]
         const mat = [
           [
             cthz * cthy,
@@ -295,19 +293,19 @@ export function invert(curve: Curve): Curve {
             sthz * sthy * cthx - cthz * sthx,
           ],
           [-sthy, cthy * sthx, cthy * cthx],
-        ];
-        let xf = 0;
-        let yf = 0;
-        let zf = 0;
+        ]
+        let xf = 0
+        let yf = 0
+        let zf = 0
         for (let i = 0; i < 3; i += 1) {
-          xf += mat[0][i] * coord[i];
-          yf += mat[1][i] * coord[i];
-          zf += mat[2][i] * coord[i];
+          xf += mat[0][i] * coord[i]
+          yf += mat[1][i] * coord[i]
+          zf += mat[2][i] * coord[i]
         }
-        return make_3D_color_point(xf, yf, zf, r_of(ct), g_of(ct), b_of(ct));
-      };
-      return transformation(curve);
-    };
+        return make_3D_color_point(xf, yf, zf, r_of(ct), g_of(ct), b_of(ct))
+      }
+      return transformation(curve)
+    }
   }
 }
 
@@ -325,10 +323,10 @@ export function invert(curve: Curve): Curve {
 export function scale(a: number, b: number, c: number): CurveTransformer {
   return (curve) => {
     const transformation = (cf: Curve) => (t: number) => {
-      const ct = cf(t);
-      const a1 = a === undefined ? 1 : a;
-      const b1 = b === undefined ? 1 : b;
-      const c1 = c === undefined ? 1 : c;
+      const ct = cf(t)
+      const a1 = a === undefined ? 1 : a
+      const b1 = b === undefined ? 1 : b
+      const c1 = c === undefined ? 1 : c
       return make_3D_color_point(
         a1 * x_of(ct),
         b1 * y_of(ct),
@@ -336,10 +334,10 @@ export function scale(a: number, b: number, c: number): CurveTransformer {
         r_of(ct),
         g_of(ct),
         b_of(ct),
-      );
-    };
-    return transformation(curve);
-  };
+      )
+    }
+    return transformation(curve)
+  }
 }
 
 /**
@@ -350,9 +348,8 @@ export function scale(a: number, b: number, c: number): CurveTransformer {
  * @returns function that takes a Curve and returns a Curve
  */
 export function scale_proportional(s: number): CurveTransformer {
-  return scale(s, s, s);
+  return scale(s, s, s)
 }
-
 
 /**
  * This function is a Curve transformation: It takes a Curve as argument and
@@ -366,22 +363,22 @@ export function scale_proportional(s: number): CurveTransformer {
  * @param curve given Curve
  * @returns result Curve
  */
- export function put_in_standard_position(curve: Curve): Curve {
-  const start_point = curve(0);
+export function put_in_standard_position(curve: Curve): Curve {
+  const start_point = curve(0)
   const curve_started_at_origin = translate(
     -x_of(start_point),
     -y_of(start_point),
     0,
-  )(curve);
-  const new_end_point = curve_started_at_origin(1);
-  const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
+  )(curve)
+  const new_end_point = curve_started_at_origin(1)
+  const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point))
   const curve_ended_at_x_axis = rotate_around_origin(
     0,
     0,
     -theta,
-  )(curve_started_at_origin);
-  const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
-  return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
+  )(curve_started_at_origin)
+  const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1))
+  return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis)
 }
 
 /**
@@ -396,7 +393,7 @@ export function scale_proportional(s: number): CurveTransformer {
  * @returns result Curve
  */
 export function connect_rigidly(curve1: Curve, curve2: Curve): Curve {
-  return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
+  return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1))
 }
 
 /**
@@ -412,8 +409,8 @@ export function connect_rigidly(curve1: Curve, curve2: Curve): Curve {
  * @returns result Curve
  */
 export function connect_ends(curve1: Curve, curve2: Curve): Curve {
-  const startPointOfCurve2 = curve2(0);
-  const endPointOfCurve1 = curve1(1);
+  const startPointOfCurve2 = curve2(0)
+  const endPointOfCurve1 = curve1(1)
   return connect_rigidly(
     curve1,
     translate(
@@ -421,9 +418,8 @@ export function connect_ends(curve1: Curve, curve2: Curve): Curve {
       y_of(endPointOfCurve1) - y_of(startPointOfCurve2),
       z_of(endPointOfCurve1) - z_of(startPointOfCurve2),
     )(curve2),
-  );
+  )
 }
-
 
 /**
  * This function is a curve: a function from a fraction t to a point. The points
@@ -478,21 +474,30 @@ export function generatePlot(
   numPoints: number,
   config: Data,
   layout: Partial<Layout>,
+  is_colored: boolean,
   func: Curve,
 ): CurvePlot {
-  console.log("Generating Plot");
+  console.log('Generating Plot')
   let x_s: number[] = []
   let y_s: number[] = []
   let z_s: number[] = []
+  let color_s: string[] = []
   for (let i = 0; i <= numPoints; i += 1) {
     const point = func(i / numPoints)
     x_s.push(x_of(point))
     y_s.push(y_of(point))
     z_s.push(z_of(point))
+    color_s.push(`rgb(${r_of(point)},${g_of(point)},${b_of(point)})`)
   }
-
-  const plotlyData: Data = { x: x_s, y: y_s, z: z_s }
-
+  const plotlyData: Data = {
+    x: x_s,
+    y: y_s,
+    z: z_s,
+    marker: {
+      size: 2,
+      color: color_s
+    }
+  }
   return new CurvePlot(
     draw_new_curve,
     { ...plotlyData, ...config, type } as Data,

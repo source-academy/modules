@@ -8,6 +8,7 @@ export {
     combine_2d_points, 
     convert_list_to_array,
     draw_connected_2d,
+    draw_3D_points,
     reflect_along_line, 
     rotate_around_point_2d, 
     scale_2d  } from './functions';
@@ -36,3 +37,7 @@ export {
     y_of,
     z_of,
 } from './curve_functions'
+
+export {
+  draw_sound_2d,
+} from './sound_functions'

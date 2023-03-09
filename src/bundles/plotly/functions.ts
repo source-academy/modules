@@ -209,6 +209,7 @@ function createPlotFunction(
   type: string,
   config: Data,
   layout: Partial<Layout>,
+  is_colored: boolean = false
 ): (numPoints: number) => CurvePlotFunction {
   return (numPoints: number) => {
     const func = (curveFunction: Curve) => {
@@ -217,6 +218,7 @@ function createPlotFunction(
         numPoints,
         config,
         layout,
+        is_colored,
         curveFunction,
       )
 
@@ -248,4 +250,14 @@ export const draw_connected_2d = createPlotFunction(
     xaxis: { visible: false },
     yaxis: { visible: false, scaleanchor: "x" },
   },
+
+)
+
+export const draw_3D_points = createPlotFunction (
+  'scatter3d',
+  {mode: 'markers'},
+  {
+    
+  },
+  true
 )
