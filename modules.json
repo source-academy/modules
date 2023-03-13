@@ -1,4 +1,9 @@
 {
+  "painter": {
+    "tabs": [
+      "Painter"
+    ]
+  },
   "plotly": {
     "tabs": [
       "Plotly"
