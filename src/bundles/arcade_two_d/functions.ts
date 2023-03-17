@@ -9,37 +9,42 @@
  * @author Xenos Fiorenzo Anong
  */
 
-import { context } from 'js-slang/moduleHelpers';
+// import { context } from 'js-slang/moduleHelpers';
 import Phaser from 'phaser';
-import HelloWorld from './example_games/helloWorld';
+// import HelloWorld from './example_games/helloWorld';
 import {
   PhaserScene,
   inputKeysDown,
   gameTime,
-  gameDelta,
   pointerPosition,
   pointerPrimaryDown,
+  pointerOverGameObjectsId,
+  loopCount,
+  pointerSecondaryDown,
 } from './phaserScene';
 
 import {
-  GameObject, RenderableGameObject,
-  ShapeGameObject,
+  type GameObject, RenderableGameObject,
+  type ShapeGameObject,
   SpriteGameObject,
   TextGameObject,
+  RectangleGameObject,
+  CircleGameObject,
+  TriangleGameObject,
 } from './gameobject';
 
 import {
-  type BaseShape,
   type DisplayText,
   type InteractableProps,
   type RenderProps,
-  type Shape,
   type BuildGame,
   type TransformProps,
   type Sprite,
   type UpdateFunction,
-  type Config,
   type Color,
+  type RectangleProps,
+  type CircleProps,
+  type TriangleProps,
 } from './types';
 
 import {
@@ -59,6 +64,7 @@ import {
   MAX_VOLUME,
   MIN_VOLUME,
 } from './constants';
+import { AudioClip } from './audio';
 
 // Global Variables
 let WIDTH: number = DEFAULT_WIDTH;
@@ -66,116 +72,143 @@ let HEIGHT: number = DEFAULT_HEIGHT;
 let SCALE: number = DEFAULT_SCALE;
 let FPS: number = DEFAULT_FPS;
 let VOLUME: number = DEFAULT_VOLUME;
+export let DEBUG: boolean = false;
 
+// Audio
+export const audioClips = new Set();
+
+// User update function
 export let userUpdateFunction: UpdateFunction;
 
 // =============================================================================
-// Shape references
+// Default values
 // =============================================================================
 
+const defaultTransform: TransformProps = {
+  position: [0, 0],
+  scale: [1, 1],
+  rotation: 0,
+};
+
+const defaultRenderProps: RenderProps = {
+  color: {
+    red: 255,
+    green: 255,
+    blue: 255,
+    alpha: 255,
+  },
+  flip: [false, false],
+  visible: true,
+};
+
+const defaultInteractableProps: InteractableProps = {
+  hitboxActive: true,
+};
 
 // =============================================================================
 // Creation of GameObjects
 // =============================================================================
 
 /**
- * Creates a GameObject that contains a shape reference.
+ * Creates a RectangleGameObject that takes in rectangle shape properties.
  *
- * @param shape Shape reference
- * @category Create
+ * @param width The width of the rectangle
+ * @param height The height of the rectangle
+ * @example
+ * ```
+ * create_rectangle(100, 100);
+ * ```
+ * @category Create GameObject
  */
-export const createShapeGameObject: (baseShape: BaseShape) => ShapeGameObject = (baseShape: BaseShape) => {
-  const transform: TransformProps = {
-    position: [0, 0],
-    scale: [1, 1],
-    rotation: 0,
-  };
-  const renderProps: RenderProps = {
-    color: {
-      red: 255,
-      green: 255,
-      blue: 255,
-      alpha: 255,
-    },
-    flip: [false, false],
-    visible: true,
-    renderedImage: {
-      baseShape,
-    } as Shape,
-  };
-  const interactableProps: InteractableProps = {
-    hitboxActive: true,
-  };
+export const create_rectangle: (width: number, height: number) => ShapeGameObject = (width: number, height: number) => {
+  const rectangle = {
+    width,
+    height,
+  } as RectangleProps;
+  return new RectangleGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, rectangle);
+};
 
-  const gameObject = new ShapeGameObject(transform, renderProps, interactableProps);
+/**
+ * Creates a CircleGameObject that takes in circle shape properties.
+ *
+ * @param width The width of the rectangle
+ * @param height The height of the rectangle
+ * ```
+ * create_circle(100);
+ * ```
+ * @category Create GameObject
+ */
+export const create_circle: (radius: number) => ShapeGameObject = (radius: number) => {
+  const circle = {
+    radius,
+  } as CircleProps;
+  return new CircleGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, circle);
+};
 
-  return gameObject;
+/**
+ * Creates a TriangleGameObject that takes in an downright isosceles triangle shape properties.
+ *
+ * @param width The width of the isosceles triangle
+ * @param height The height of the isosceles triangle
+ * ```
+ * create_triangle(100, 100);
+ * ```
+ * @category Create GameObject
+ */
+export const create_triangle: (width: number, height: number) => ShapeGameObject = (width: number, height: number) => {
+  const triangle = {
+    x1: 0,
+    y1: 0,
+    x2: width,
+    y2: 0,
+    x3: width / 2,
+    y3: height,
+  } as TriangleProps;
+  return new TriangleGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, triangle);
 };
 
 /**
  * Creates a GameObject that contains a text reference.
  *
  * @param text Text string displayed
- * @category Create
+ * @example
+ * ```
+ * create_text("Hello\nworld!");
+ * ```
+ * @category Create GameObject
  */
-export const createTextGameObject: (text: string) => TextGameObject = (text: string) => {
-  const transform: TransformProps = {
-    position: [0, 0],
-    scale: [1, 1],
-    rotation: 0,
-  };
-  const renderProps: RenderProps = {
-    color: {
-      red: 255,
-      green: 255,
-      blue: 255,
-      alpha: 255,
-    },
-    flip: [false, false],
-    visible: true,
-    renderedImage: {
-      text,
-    } as DisplayText,
-  };
-  const interactableProps: InteractableProps = {
-    hitboxActive: true,
-  };
-
-  const gameObject = new TextGameObject(transform, renderProps, interactableProps);
-
-  return gameObject;
+export const create_text: (text: string) => TextGameObject = (text: string) => {
+  const displayText = {
+    text,
+  } as DisplayText;
+  return new TextGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, displayText);
 };
 
 /**
  * Creates a GameObject that contains a Sprite image reference.
+ * Source Academy assets can be used by specifying path without the prepend.
+ * Source Academy assets can be found at `https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/{image_url}`.
+ * Phaser assets can be found at `https://labs.phaser.io/assets/`.
+ * Assets from other websites can also be used if they support Cross-Origin Resource Sharing (CORS), but the full path must be specified.
  *
- * @param image_url The image URL of the sprite.
- * @category Create
+ * @param image_url The image URL of the sprite
+ * @example
+ * ```
+ * create_sprite("objects/cmr/splendall.png");
+ * create_sprite("https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/objects/cmr/splendall.png");
+ * ```
+ * @category Create GameObject
  */
-export const createSpriteGameObject: (image_url: string) => SpriteGameObject = (image_url: string) => {
-  const transform: TransformProps = {
-    position: [0, 0],
-    scale: [1, 1],
-    rotation: 0,
-  };
-  const renderProps: RenderProps = {
-    color: {
-      red: 255,
-      green: 255,
-      blue: 255,
-      alpha: 255,
-    },
-    flip: [false, false],
-    visible: true,
-    renderedImage: {
-      image_url,
-    } as Sprite,
-  };
-  const interactableProps: InteractableProps = {
-    hitboxActive: true,
-  };
+export const create_sprite: (image_url: string) => SpriteGameObject = (image_url: string) => {
+  if (image_url === '') {
+    throw new Error('image_url cannot be empty');
+  }
 
-  const gameObject = new SpriteGameObject(transform, renderProps, interactableProps);
+  const sprite: Sprite = {
+    image_url,
+  } as Sprite;
+
+  const gameObject = new SpriteGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, sprite);
 
   return gameObject;
 };
@@ -192,11 +225,11 @@ export const createSpriteGameObject: (image_url: string) => SpriteGameObject = (
  * @returns the GameObject reference passed in
  * @example
  * ```
- * updateGameObjectPosition(createTextGameObject(""), [1, 1]);
+ * update_position(create_text("Hello world!"), [1, 2]);
  * ```
- * @category Update
+ * @category Update GameObject
  */
-export const updateGameObjectPosition: (gameObject: GameObject, [x, y]: [number, number]) => void
+export const update_position: (gameObject: GameObject, [x, y]: [number, number]) => GameObject
 = (gameObject: GameObject, [x, y]: [number, number]) => {
   gameObject.setTransform({
     ...gameObject.getTransform(),
@@ -213,11 +246,11 @@ export const updateGameObjectPosition: (gameObject: GameObject, [x, y]: [number,
  * @returns the GameObject reference passed in
  * @example
  * ```
- * updateGameObjectScale(createTextGameObject(""), [1, 1]);
+ * update_scale(create_text("Hello world!"), [2, 0.5]);
  * ```
- * @category Update
+ * @category Update GameObject
  */
-export const updateGameObjectScale: (gameObject: GameObject, [x, y]: [number, number]) => void
+export const update_scale: (gameObject: GameObject, [x, y]: [number, number]) => GameObject
 = (gameObject: GameObject, [x, y]: [number, number]) => {
   gameObject.setTransform({
     ...gameObject.getTransform(),
@@ -234,11 +267,11 @@ export const updateGameObjectScale: (gameObject: GameObject, [x, y]: [number, nu
  * @returns the GameObject reference passed in
  * @example
  * ```
- * updateGameObjectRotation(createTextGameObject(""), math_PI);
+ * update_rotation(create_text("Hello world!"), math_PI);
  * ```
- * @category Update
+ * @category Update GameObject
  */
-export const updateGameObjectRotation: (gameObject: GameObject, radians: number) => void
+export const update_rotation: (gameObject: GameObject, radians: number) => GameObject
 = (gameObject: GameObject, radians: number) => {
   gameObject.setTransform({
     ...gameObject.getTransform(),
@@ -255,11 +288,11 @@ export const updateGameObjectRotation: (gameObject: GameObject, radians: number)
  * @returns the GameObject reference passed in
  * @example
  * ```
- * updateGameObjectColor(createTextGameObject(""), [255, 0, 0, 255]);
+ * update_color(create_rectangle(100, 100), [255, 0, 0, 255]);
  * ```
- * @category Update
+ * @category Update GameObject
  */
-export const updateGameObjectColor: (gameObject: GameObject, color: [number, number, number, number]) => void
+export const update_color: (gameObject: GameObject, color: [number, number, number, number]) => GameObject
 = (gameObject: GameObject, color: [number, number, number, number]) => {
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
@@ -276,14 +309,41 @@ export const updateGameObjectColor: (gameObject: GameObject, color: [number, num
 };
 
 /**
+ * Updates the flip state of the GameObject.
+ *
+ * @param gameObject GameObject reference
+ * @param flip The [x, y] flip state as a boolean array
+ * @returns the GameObject reference passed in
+ * @example
+ * ```
+ * update_flip(create_triangle(100, 100), [false, true]);
+ * ```
+ * @category Update GameObject
+ */
+export const update_flip: (gameObject: GameObject, flip: [boolean, boolean]) => GameObject
+= (gameObject: GameObject, flip: [boolean, boolean]) => {
+  if (gameObject instanceof RenderableGameObject) {
+    gameObject.setRenderState({
+      ...gameObject.getRenderState(),
+      flip,
+    });
+  }
+  return gameObject;
+};
+
+/**
  * Updates the text of the TextGameObject.
  *
  * @param textGameObject TextGameObject reference
  * @param text The updated text of the TextGameObject
  * @returns the GameObject reference passed in
- * @category Update
+ * @example
+ * ```
+ * update_text(create_text("Hello world!"), "Goodbye world!");
+ * ```
+ * @category Update GameObject
  */
-export const updateGameObjectText: (textGameObject: TextGameObject, text: string) => void
+export const update_text: (textGameObject: TextGameObject, text: string) => GameObject
 = (textGameObject: TextGameObject, text: string) => {
   if (textGameObject instanceof TextGameObject) {
     textGameObject.setText({
@@ -292,6 +352,24 @@ export const updateGameObjectText: (textGameObject: TextGameObject, text: string
     return textGameObject;
   }
   throw new Error('Cannot update text onto a non TextGameObject');
+};
+
+/**
+ * Renders this GameObject in front of all other GameObjects.
+ *
+ * @param gameObject GameObject reference
+ * @example
+ * ```
+ * update_to_top(create_text("Hello world!"));
+ * ```
+ * @category Update GameObject
+ */
+export const update_to_top: (gameObject: GameObject) => GameObject
+= (gameObject: GameObject) => {
+  if (gameObject instanceof RenderableGameObject) {
+    gameObject.bringToTop();
+  }
+  return gameObject;
 };
 
 // =============================================================================
@@ -307,28 +385,36 @@ export const updateGameObjectText: (textGameObject: TextGameObject, text: string
  * ```
  * queryGameObjectId(createTextGameObject(""));
  * ```
- * @category Query
+ * @category Query GameObject
  */
-export const queryGameObjectId: (gameObject: GameObject) => number = (gameObject: GameObject) => gameObject.id;
+export const query_id: (gameObject: GameObject) => number = (gameObject: GameObject) => gameObject.id;
 
 /**
  * Queries the [x, y] position transform of the GameObject.
  *
  * @param gameObject GameObject reference
  * @returns [x, y] position as an array
- * @category Query
+ * @example
+ * ```
+ * query_position(create_circle(100));
+ * ```
+ * @category Query GameObject
  */
-export const queryGameObjectPosition: (gameObject: GameObject) => [number, number]
+export const query_position: (gameObject: GameObject) => [number, number]
 = (gameObject: GameObject) => gameObject.getTransform().position;
 
 /**
- * Queries the z rotation transform of the GameObject.
+ * Queries the z-rotation transform of the GameObject.
  *
  * @param gameObject GameObject reference
- * @returns z rotation as a number
- * @category Query
+ * @returns z-rotation as a number in radians
+ * @example
+ * ```
+ * query_rotation(update_rotation(create_rectangle(100, 200), math_PI / 4)) === math_PI / 4;
+ * ```
+ * @category Query GameObject
  */
-export const queryGameObjectRotation: (gameObject: GameObject) => number
+export const query_rotation: (gameObject: GameObject) => number
 = (gameObject: GameObject) => gameObject.getTransform().rotation;
 
 /**
@@ -336,9 +422,13 @@ export const queryGameObjectRotation: (gameObject: GameObject) => number
  *
  * @param gameObject GameObject reference
  * @returns [x, y] scale as an array
- * @category Query
+ * @example
+ * ```
+ * query_scale(update_scale(create_circle(100), [2, 0.5]));
+ * ```
+ * @category Query GameObject
  */
-export const queryGameObjectScale: (gameObject: GameObject) => [number, number]
+export const query_scale: (gameObject: GameObject) => [number, number]
 = (gameObject: GameObject) => gameObject.getTransform().scale;
 
 /**
@@ -346,19 +436,41 @@ export const queryGameObjectScale: (gameObject: GameObject) => [number, number]
  *
  * @param gameObject GameObject reference
  * @returns [r, g, b, a] color as an array
- * @category Query
+ * @example
+ * ```
+ * query_color(update_color(create_circle(100), [255, 127, 127, 255]);
+ * ```
+ * @category Query GameObject
  */
-export const queryGameObjectColor: (gameObject: RenderableGameObject) => [number, number, number, number]
+export const query_color: (gameObject: RenderableGameObject) => [number, number, number, number]
 = (gameObject: RenderableGameObject) => gameObject.getColor();
+
+/**
+ * Queries the [x, y] flip property of the GameObject.
+ *
+ * @param gameObject GameObject reference
+ * @returns [x, y] flip state as an array
+ * @example
+ * ```
+ * query_flip(update_flip(create_circle(100), [true, false]));
+ * ```
+ * @category Query GameObject
+ */
+export const query_flip: (gameObject: RenderableGameObject) => [boolean, boolean]
+= (gameObject: RenderableGameObject) => gameObject.getFlipState();
 
 /**
  * Queries the text of a Text GameObject.
  *
  * @param textGameObject TextGameObject reference
- * @returns text string
- * @category Query
+ * @returns text string associated with the Text GameObject
+ * @example
+ * ```
+ * query_text(create_text("Hello World!")) === "Hello World!";
+ * ```
+ * @category Query GameObject
  */
-export const queryGameObjectText: (textGameObject: TextGameObject) => string
+export const query_text: (textGameObject: TextGameObject) => string
 = (textGameObject: TextGameObject) => {
   if (textGameObject instanceof TextGameObject) {
     return textGameObject.getText().text;
@@ -366,7 +478,18 @@ export const queryGameObjectText: (textGameObject: TextGameObject) => string
   throw new Error('Cannot query text from non TextGameObject');
 };
 
-export const queryPointerPosition: () => [number, number]
+/**
+ * Queries the (mouse) pointer position.
+ * @returns [x, y] coordinates of the pointer as an array
+ * @example
+ * ```
+ * const position = query_pointer_position();
+ * position[0];
+ * position[1];
+ * ```
+ * @category Input
+ */
+export const query_pointer_position: () => [number, number]
 = () => pointerPosition;
 
 // =============================================================================
@@ -378,7 +501,7 @@ export const queryPointerPosition: () => [number, number]
  * @param num the number
  * @param min the minimum value allowed for that number
  * @param max the maximum value allowed for that number
- * @returns a number within the range.
+ * @returns a number within the interval.
  * @hidden
  */
 const withinRange: (num: number, min: number, max: number) => number
@@ -429,6 +552,7 @@ export const set_dimensions: (dimensions: [number, number]) => void = (dimension
  * Sets the scale of the pixels in the canvas.
  * Scale is like the zoom level.
  * If scale is doubled, then the number of units across would be halved.
+ * This has a side effect of making the game pixelated if scale > 1.
  *
  * @param scale The scale of the canvas to set.
  * @example
@@ -459,6 +583,10 @@ export const set_volume: (volume: number) => void = (volume: number) => {
   VOLUME = withinRange(volume, MIN_VOLUME, MAX_VOLUME);
 };
 
+export const enable_debug: () => void = () => {
+  DEBUG = true;
+};
+
 // =============================================================================
 // Game loop
 // =============================================================================
@@ -483,17 +611,66 @@ export const input_key_down: (key_name: string) => boolean = (key_name: string) 
  * Detects if the left mouse button is pressed down.
  * This function must be called in your update function to detect inputs.
  * @returns True, if the left mouse button is pressed down.
+ * @example
+ * ```
+ * input_left_mouse_down();
+ * ```
  * @category Input
  */
 export const input_left_mouse_down: () => boolean = () => pointerPrimaryDown;
 
 /**
+ * Detects if the right mouse button is pressed down.
+ * This function must be called in your update function to detect inputs.
+ * @returns True, if the right mouse button is pressed down.
+ * @example
+ * ```
+ * input_right_mouse_down();
+ * ```
+ * @category Input
+ */
+export const input_right_mouse_down: () => boolean = () => pointerSecondaryDown;
+
+/**
+ * Detects if the pointer is over the gameobject.
+ * @param gameObject the gameobject reference.
+ * @returns True, if the pointer is over the gameobject.
+ * @example
+ * ```
+ * if (pointer_over_gameobject(createTextGameObject("[]"))) {
+ *  // do something
+ * }
+ * ```
+ * @category Input
+ */
+export const pointer_over_gameobject = (gameObject: GameObject) => pointerOverGameObjectsId.has(gameObject.id);
+
+/**
  * Gets the current in-game time.
  *
  * @returns a number specifying the time in milliseconds
+ * @example
+ * ```
+ * if (get_game_time() > 100) {
+ *   // do something after 100 seconds
+ * }
+ * ```
  * @category Query
  */
 export const get_game_time: () => number = () => gameTime;
+
+/**
+ * Gets the current loop count, which is the number of frames that have run.
+ * Depends on the framerate set for how fast this grows.
+ *
+ * @returns a number specifying number of loops that have been run.
+ * @example
+ * ```
+ * const loop_count = get_loop_count();
+ * ```
+ * @category Query
+ */
+export const get_loop_count: () => number = () => loopCount;
 
 /**
  * This sets the update loop in the canvas.
@@ -546,9 +723,11 @@ export const build_game: () => BuildGame = () => {
   const physicsConfig = {
     'default': 'arcade',
     'arcade': {
-      debug: true,
+      debug: DEBUG,
     },
   };
+
+  // const offscreenCanvas = new OffscreenCanvas(WIDTH / SCALE, HEIGHT / SCALE);
 
   const gameConfig = {
     width: WIDTH / SCALE,
@@ -563,14 +742,19 @@ export const build_game: () => BuildGame = () => {
     parent: 'phaser-game',
     // This is used to detect pointer interactions and overlapping GameObjects
     physics: physicsConfig,
+    // canvas: offscreenCanvas,
     scene: PhaserScene,
     input: inputConfig,
+    disableContextMenu: true,
     fps: fpsConfig,
   };
 
   return {
     toReplString: () => '[Arcade 2D]',
     gameConfig,
+    phaserGameInstance: undefined,
+    loadedGame: false,
+    gameEnded: false,
   };
 };
 
@@ -582,19 +766,57 @@ export const build_game: () => BuildGame = () => {
 /**
  * Displays sample game canvas. For demonstration purposes.
  */
-export function display_hello_world(): void {
-  const gameConfig = {
-    type: Phaser.AUTO,
-    parent: 'phaser-game',
-    width: 600,
-    height: 600,
-    scene: HelloWorld,
-  };
-  context.moduleContexts.arcade_two_d.state = {
-    gameConfig,
-  };
-}
+// export function display_hello_world(): void {
+//   const gameConfig = {
+//     type: Phaser.AUTO,
+//     parent: 'phaser-game',
+//     width: 600,
+//     height: 600,
+//     scene: HelloWorld,
+//   };
+//   context.moduleContexts.arcade_two_d.state = {
+//     gameConfig,
+//   };
+// }
 
 // =============================================================================
-// Private functions
+// Audio functions
 // =============================================================================
+
+/**
+ * Create an audio clip that can be referenced.
+ * @param audio_url The URL of the audio clip.
+ * @returns The AudioClip reference
+ */
+export const create_audio: (audio_url: string) => AudioClip = (audio_url: string) => AudioClip.of(audio_url);
+
+/**
+ * Loops the audio clip provided, which will play the audio clip indefinitely.
+ * Setting whether an audio clip should be done outside the update function.
+ * @param audio_clip The AudioClip reference
+ * @returns The AudioClip reference
+ */
+export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
+  audio_clip.loopAudioClip(true);
+  return audio_clip;
+};
+
+/**
+ * Plays the audio clip, and stops when the audio clip is over.
+ * @param audio_clip The AudioClip reference
+ * @returns The AudioClip reference
+ */
+export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
+  audio_clip.playAudioClip(true);
+  return audio_clip;
+};
+
+/**
+ * Stops the audio clip immediately.
+ * @param audio_clip The AudioClip reference
+ * @returns The AudioClip reference
+ */
+export const stop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
+  audio_clip.playAudioClip(false);
+  return audio_clip;
+};

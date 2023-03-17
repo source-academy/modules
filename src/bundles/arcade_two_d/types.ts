@@ -19,13 +19,11 @@ export type TransformProps = {
  * @property {Color} color - The color associated with the GameObject tint.
  * @property {[number, number]} flip - The (x,y) flip state of the GameObject.
  * @property {boolean} visible - The render-visibility of the GameObject.
- * @property {RenderedImage} renderedImage - The property that is rendered in the canvas.
  */
 export type RenderProps = {
   color: Color;
   flip: [boolean, boolean];
   visible: boolean;
-  renderedImage: RenderedImage;
 };
 
 /**
@@ -46,10 +44,10 @@ export type Color = {
   alpha: number,
 };
 
-/**
- * Represents the rendered image of a GameObject.
- */
-export type RenderedImage = Shape | DisplayText | Sprite;
+// /**
+//  * Represents the rendered image of a GameObject.
+//  */
+// export type RenderedImage = Shape | DisplayText | Sprite;
 
 /**
  * Represents a simplied representation of the phaser type of the GameObject.
@@ -68,26 +66,30 @@ export type Shape = {
 /**
  * Represents the base shape of a GameObject
  */
-export type BaseShape = Points | Polygon | Ellipse;
+export type BaseShape = CircleProps | RectangleProps | TriangleProps;
 
-/**
- * Represents a GameObject's shape by its points.
- */
-export type Points = {
-  points: [number, number][];
+export type RectangleProps = {
+  width: number;
+  height: number;
 };
 
+
 /**
- * Represents the a regular polygon of a GameObject's shape.
+ * Represents a isosceles triangular shape of a GameObject's shape.
  */
-export type Polygon = {
-  numberOfSides: number;
+export type TriangleProps = {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  x3: number;
+  y3: number;
 };
 
 /**
  * Represents a circular shape of a GameObject's shape.
  */
-export type Ellipse = {
+export type CircleProps = {
   radius: number;
 };
 

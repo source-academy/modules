@@ -1,25 +1,36 @@
 import Phaser from 'phaser';
-import { GameObject, TextGameObject } from './gameobject';
+import { CircleGameObject, GameObject, type InteractableGameObject, RectangleGameObject, ShapeGameObject, SpriteGameObject, TextGameObject, TriangleGameObject } from './gameobject';
 import {
+  DEBUG,
   userUpdateFunction,
 } from './functions';
 import { type TransformProps } from './types';
+import { AudioClip } from './audio';
 
 // Store keys that are down in the Phaser Scene
 // By default, this is empty, unless a key is down
 export let inputKeysDown = new Set<string>();
 
+// the start time for the game
+let startTime: number;
+
 // the current in-game time
 export let gameTime: number;
 
 // the time between frames
-export let gameDelta: number;
+// export let gameDelta: number;
 
 // the current (mouse) pointer position in the canvas
 export let pointerPosition: [number, number];
 
 // true if (left mouse button) pointer down, false otherwise
 export let pointerPrimaryDown: boolean;
+export let pointerSecondaryDown: boolean;
+
+// Stores the IDs of the GameObjects that the pointer is over
+export let pointerOverGameObjectsId = new Set<number>();
+
+export let loopCount: number;
 
 /**
  * The Phaser scene that parses the GameObjects and update loop created by the user,
@@ -29,25 +40,48 @@ export class PhaserScene extends Phaser.Scene {
   constructor() {
     super('PhaserScene');
   }
-  // private spacebar;
   private sourceGameObjects;
-  private phaserGameObjects;
+  private phaserGameObjects = [] as (Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Phaser.GameObjects.Shape)[];
   private userGameStateArray;
+  private corsAssets;
+  private sourceAudioClips;
+  private phaserAudioClips;
 
   init() {
-    // Assign values to constants here
+    console.log('phaser scene init()');
     this.sourceGameObjects = GameObject.getGameObjectsArray();
-    this.phaserGameObjects = [];
     this.userGameStateArray = [];
-    // And get assets
+    this.sourceAudioClips = AudioClip.getAudioClipsArray();
+    this.phaserAudioClips = [];
+    this.corsAssets = new Set();
+    startTime = Date.now();
+    loopCount = 0;
+  }
+
+  preload() {
+    // Set the default path prefix
+    this.load.setPath('https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/');
+    this.sourceGameObjects.forEach((gameObject) => {
+      if (gameObject instanceof SpriteGameObject) {
+        this.corsAssets.add(gameObject.getSprite().image_url);
+      }
+    });
+    // Preload sprites (through Cross-Origin resource sharing (CORS))
+    this.corsAssets.forEach((url) => {
+      this.load.image(url, url);
+    });
+    // Preload audio
+    this.sourceAudioClips.forEach((audioClip: AudioClip) => {
+      this.load.audio(audioClip.getUrl(), audioClip.getUrl());
+    });
   }
 
   create() {
     this.sourceGameObjects.forEach((gameObject) => {
+      // Handle Creation of GameObjects
+      const transformProps = gameObject.getTransform();
       // Create TextGameObject
       if (gameObject instanceof TextGameObject) {
-        // gameObject = gameObject as TextGameObject;
-        const transformProps = gameObject.getTransform();
         const text = gameObject.getText().text;
 
         this.phaserGameObjects.push(this.add.text(
@@ -55,52 +89,167 @@ export class PhaserScene extends Phaser.Scene {
           transformProps.position[1],
           text,
         ));
+        this.physics.world.enable([this.phaserGameObjects[gameObject.id]]);
+      }
+      // Create SpriteGameObject
+      if (gameObject instanceof SpriteGameObject) {
+        const url = gameObject.getSprite().image_url;
+        this.phaserGameObjects.push(this.physics.add.sprite(
+          transformProps.position[0],
+          transformProps.position[1],
+          url,
+        ));
         if (gameObject.getHitboxState().hitboxActive) {
           this.phaserGameObjects[gameObject.id].setInteractive();
         }
       }
-      // else is another type of GameObject
+      // Create ShapeGameObject
+      if (gameObject instanceof ShapeGameObject) {
+        if (gameObject instanceof RectangleGameObject) {
+          const shape = gameObject.getShape();
+          this.phaserGameObjects.push(this.add.rectangle(
+            transformProps.position[0],
+            transformProps.position[1],
+            shape.width,
+            shape.height,
+          ));
+          if (gameObject.getHitboxState().hitboxActive) {
+            this.phaserGameObjects[gameObject.id].setInteractive();
+          }
+        }
+        if (gameObject instanceof CircleGameObject) {
+          const shape = gameObject.getShape();
+          this.phaserGameObjects.push(this.add.circle(
+            transformProps.position[0],
+            transformProps.position[1],
+            shape.radius,
+          ));
+          if (gameObject.getHitboxState().hitboxActive) {
+            this.phaserGameObjects[gameObject.id].setInteractive(
+              new Phaser.Geom.Circle(
+                shape.radius,
+                shape.radius,
+                shape.radius,
+              ), Phaser.Geom.Circle.Contains,
+            );
+          }
+        }
+        if (gameObject instanceof TriangleGameObject) {
+          const shape = gameObject.getShape();
+          this.phaserGameObjects.push(this.add.triangle(
+            transformProps.position[0],
+            transformProps.position[1],
+            shape.x1,
+            shape.y1,
+            shape.x2,
+            shape.y2,
+            shape.x3,
+            shape.y3,
+          ));
+          if (gameObject.getHitboxState().hitboxActive) {
+            this.phaserGameObjects[gameObject.id].setInteractive(
+              new Phaser.Geom.Triangle(
+                shape.x1,
+                shape.y1,
+                shape.x2,
+                shape.y2,
+                shape.x3,
+                shape.y3,
+              ), Phaser.Geom.Triangle.Contains,
+            );
+          }
+        }
+      }
+
+      const phaserGameObject = this.phaserGameObjects[gameObject.id];
+      // Handle pointer over GameObjects
+      phaserGameObject.on('pointerover', () => {
+        pointerOverGameObjectsId.add(gameObject.id);
+      });
+      phaserGameObject.on('pointerout', () => {
+        pointerOverGameObjectsId.delete(gameObject.id);
+      });
+
+      // Enter debug mode
+      if (DEBUG) {
+        this.input.enableDebug(this.phaserGameObjects[gameObject.id]);
+      }
     });
 
+    // Create audio
+    this.sourceAudioClips.forEach((audioClip: AudioClip) => {
+      this.phaserAudioClips.push(this.sound.add(audioClip.getUrl(), {
+        loop: audioClip.getLoop(),
+        volume: 1,
+      }));
+    });
+
+    // Handle keyboard inputs
     // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
     this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
       inputKeysDown.add(event.key);
     });
+    this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
+      inputKeysDown.delete(event.key);
+    });
   }
 
-  update(time, delta) {
-    // Set the time and delta #BUG: Game time doesn't reset when rerun
-    gameTime = Math.trunc(time);
-    gameDelta = delta;
+  update() {
+    // Set the time and delta
+    gameTime = Date.now() - startTime;
+    loopCount++;
+    // gameDelta = delta;
 
     // Set the pointer
     pointerPosition = [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)];
     pointerPrimaryDown = this.input.activePointer.primaryDown;
+    pointerSecondaryDown = this.input.activePointer.rightButtonDown();
 
     // Run the user-defined update function
     userUpdateFunction(this.userGameStateArray);
     // Loop through each GameObject in the array and determine which needs to update.
-    this.sourceGameObjects.forEach((gameObject) => {
-      const phaserGameObject = this.phaserGameObjects[gameObject.id] as Phaser.GameObjects.GameObject;
-      if (gameObject.hasTransformUpdates) {
-        // update the transform of Phaser GameObject
+    this.sourceGameObjects.forEach((gameObject: InteractableGameObject) => {
+      const phaserGameObject = this.phaserGameObjects[gameObject.id];
+
+      // Update the transform of Phaser GameObject
+      if (gameObject.hasTransformUpdates()) {
         const transformProps = gameObject.getTransform() as TransformProps;
-        Phaser.Actions.SetXY([phaserGameObject], transformProps.position[0], transformProps.position[1]);
-        Phaser.Actions.SetScale([phaserGameObject], transformProps.scale[0], transformProps.scale[1]);
-        Phaser.Actions.SetRotation([phaserGameObject], transformProps.rotation);
+        phaserGameObject.setPosition(transformProps.position[0], transformProps.position[1]);
+        phaserGameObject.setRotation(transformProps.rotation);
+        phaserGameObject.setScale(transformProps.scale[0], transformProps.scale[1]);
         gameObject.updatedTransform();
       }
-      if (gameObject.hasRenderUpdates) {
-        // update the image of PhaserGameObject
+
+      // Update the image of Phaser GameObject
+      if (gameObject.hasRenderUpdates()) {
+        const color = gameObject.getColor();
+        // eslint-disable-next-line new-cap
+        const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
+        const flip = gameObject.getFlipState();
         if (gameObject instanceof TextGameObject) {
-          const color = gameObject.getColor();
-          const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
-          (phaserGameObject as Phaser.GameObjects.Text).setTintFill(intColor);
+          (phaserGameObject as Phaser.GameObjects.Text).setTint(intColor);
+          (phaserGameObject as Phaser.GameObjects.Text).setAlpha(color[3] / 255);
+          (phaserGameObject as Phaser.GameObjects.Text).setFlip(flip[0], flip[1]);
           (phaserGameObject as Phaser.GameObjects.Text).setText(gameObject.getText().text);
-          gameObject.updatedRender();
         }
+        if (gameObject instanceof SpriteGameObject) {
+          (phaserGameObject as Phaser.GameObjects.Sprite).setTint(intColor);
+          (phaserGameObject as Phaser.GameObjects.Sprite).setAlpha(color[3] / 255);
+          (phaserGameObject as Phaser.GameObjects.Sprite).setFlip(flip[0], flip[1]);
+        }
+        if (gameObject instanceof ShapeGameObject) {
+          (phaserGameObject as Phaser.GameObjects.Shape).setFillStyle(intColor, color[3] / 255);
+          // #BUG cannot flip shape?
+        }
+        // Update the z-index (rendering order), to the top.
+        if (gameObject.getShouldBringToTop()) {
+          this.children.bringToTop(phaserGameObject);
+        }
+        gameObject.updatedRender();
       }
-      if (gameObject.hasHitboxUpdates) {
+
+      // Update the interactivity of Phaser GameObject
+      if (gameObject.hasHitboxUpdates()) {
         // update the hitbox of PhaserGameObject
         if (gameObject.getHitboxState().hitboxActive) {
           this.phaserGameObjects[gameObject.id].setInteractive();
@@ -111,7 +260,20 @@ export class PhaserScene extends Phaser.Scene {
       }
     });
 
-    // reset the keysDown array:
-    inputKeysDown.clear();
+    // Handle audio updates
+    this.sourceAudioClips.forEach((audioClip: AudioClip) => {
+      if (audioClip.hasAudioClipUpdates()) {
+        const phaserAudioClip = this.phaserAudioClips[audioClip.id] as Phaser.Sound.BaseSound;
+        if (audioClip.shouldPlayClip()) {
+          phaserAudioClip.play();
+        } else {
+          phaserAudioClip.stop();
+        }
+      }
+    });
   }
+
+  // render() {
+  //   this.game.debug.text(`Loop Count: ${loopCount}`, 32, 64);
+  // }
 }
