@@ -1,9 +1,7 @@
 /* [Imports] */
-import { context } from 'js-slang/moduleHelpers';
-import { Core } from './core.js';
-import { CsgModuleState } from './utilities.js';
-
-
+import { context } from "js-slang/moduleHelpers";
+import { Core } from "./core.js";
+import { CsgModuleState } from "./utilities.js";
 
 /* [Main] */
 let moduleState = new CsgModuleState();
@@ -34,6 +32,7 @@ export {
   geodesic_sphere,
   gray,
   green,
+  group,
   intersect,
   is_shape,
   lime,
@@ -77,4 +76,5 @@ export {
   volume,
   white,
   yellow,
-} from './functions';
+  transformAndStore,
+} from "./functions";
