@@ -1,5 +1,5 @@
 /* [Imports] */
-import { IconName } from '@blueprintjs/icons';
+import { type IconName } from '@blueprintjs/icons';
 
 
 

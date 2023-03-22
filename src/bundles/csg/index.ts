@@ -1,7 +1,7 @@
 /* [Imports] */
-import { context } from "js-slang/moduleHelpers";
-import { Core } from "./core.js";
-import { CsgModuleState } from "./utilities.js";
+import { context } from 'js-slang/moduleHelpers';
+import { Core } from './core.js';
+import { CsgModuleState } from './utilities.js';
 
 /* [Main] */
 let moduleState = new CsgModuleState();
@@ -77,4 +77,4 @@ export {
   white,
   yellow,
   transformAndStore,
-} from "./functions";
+} from './functions';

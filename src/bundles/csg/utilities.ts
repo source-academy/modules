@@ -3,22 +3,21 @@ import {
   clone as _clone,
   transform as _transform,
   type Geom3,
-} from "@jscad/modeling/src/geometries/geom3";
-import mat4, { type Mat4 } from "@jscad/modeling/src/maths/mat4";
-import type { ModuleContext } from "js-slang";
-import type { ModuleContexts, ReplResult } from "../../typings/type_helpers.js";
-import type { AlphaColor, Color, Solid } from "./jscad/types.js";
-import { Core } from "./core.js";
+} from '@jscad/modeling/src/geometries/geom3';
+import mat4, { type Mat4 } from '@jscad/modeling/src/maths/mat4';
+import type { ModuleContext } from 'js-slang';
+import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
+import type { AlphaColor, Color, Solid } from './jscad/types.js';
+import { Core } from './core.js';
 
 /* [Exports] */
-
 export class Group implements ReplResult {
   constructor(public children: (Group | Shape)[]) {}
 
   transforms: Mat4 = mat4.create();
 
   toReplString(): string {
-    return "<Group>";
+    return '<Group>';
   }
 
   clone(): Group {
@@ -29,7 +28,7 @@ export class Group implements ReplResult {
     this.transforms = mat4.multiply(
       mat4.create(),
       newTransforms,
-      this.transforms
+      this.transforms,
     );
   }
 
@@ -48,7 +47,7 @@ export class Shape implements ReplResult {
   constructor(public solid: Solid) {}
 
   toReplString(): string {
-    return "<Shape>";
+    return '<Shape>';
   }
 
   clone(): Shape {
@@ -57,7 +56,8 @@ export class Shape implements ReplResult {
 
   transformAndStore(newTransforms: Mat4): void {
     this.solid = _transform(newTransforms, this.solid);
-    Core.getRenderGroupManager().storeShape(this.clone());
+    Core.getRenderGroupManager()
+      .storeShape(this.clone());
   }
 }
 
@@ -95,7 +95,7 @@ export class RenderGroupManager {
   // Returns the old render group
   nextRenderGroup(
     oldHasGrid: boolean = false,
-    oldHasAxis: boolean = false
+    oldHasAxis: boolean = false,
   ): RenderGroup {
     let oldRenderGroup: RenderGroup = this.getCurrentRenderGroup();
     oldRenderGroup.render = true;
@@ -117,7 +117,7 @@ export class RenderGroupManager {
 
   getGroupsToRender(): RenderGroup[] {
     return this.renderGroups.filter(
-      (renderGroup: RenderGroup) => renderGroup.render
+      (renderGroup: RenderGroup) => renderGroup.render,
     );
   }
 }
@@ -138,17 +138,16 @@ export class CsgModuleState {
 }
 
 export function getModuleContext(
-  moduleContexts: ModuleContexts
+  moduleContexts: ModuleContexts,
 ): ModuleContext | null {
   let potentialModuleContext: ModuleContext | undefined = moduleContexts.csg;
   return potentialModuleContext ?? null;
 }
 
 export function hexToColor(hex: string): Color {
-  let regex: RegExp =
-    /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
-  let potentialGroups: { [key: string]: string } | undefined =
-    hex.match(regex)?.groups;
+  let regex: RegExp = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
+  let potentialGroups: { [key: string]: string } | undefined = hex.match(regex)
+    ?.groups;
   if (potentialGroups === undefined) return [0, 0, 0];
   let groups: { [key: string]: string } = potentialGroups;
 
@@ -161,7 +160,7 @@ export function hexToColor(hex: string): Color {
 
 export function colorToAlphaColor(
   color: Color,
-  opacity: number = 1
+  opacity: number = 1,
 ): AlphaColor {
   return [...color, opacity];
 }

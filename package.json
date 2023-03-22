@@ -20,7 +20,7 @@
     "test:watch": "Watch files for changes and rerun tests related to changed files",
     "dev": "Build bundles and tabs only, then serve. Skips linting / type checking, does not build jsons and HTML docs. For rapid testing during development",
     "watch": "Watch files for changes and rebuild on those changes",
-    "postinstall": "patch-package"
+    "postinstall": "Install all patches to node_modules packages"
   },
   "type": "module",
   "scripts": {
@@ -38,7 +38,8 @@
     "test:scripts": "jest --config=scripts/src/jest.config.js",
     "test:watch": "jest --watch",
     "dev": "yarn scripts build modules && yarn serve",
-    "watch": "yarn scripts watch"
+    "watch": "yarn scripts watch",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "@types/dom-mediacapture-record": "^1.0.11",

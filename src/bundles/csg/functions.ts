@@ -9,20 +9,20 @@
  */
 
 /* [Imports] */
-import { primitives } from "@jscad/modeling";
-import { colorize as _colorize } from "@jscad/modeling/src/colors";
+import { primitives } from '@jscad/modeling';
+import { colorize as _colorize } from '@jscad/modeling/src/colors';
 import {
   type BoundingBox,
   measureArea,
   measureBoundingBox,
   measureVolume,
-} from "@jscad/modeling/src/measurements";
+} from '@jscad/modeling/src/measurements';
 import {
   intersect as _intersect,
   subtract as _subtract,
   union as _union,
-} from "@jscad/modeling/src/operations/booleans";
-import { extrudeLinear } from "@jscad/modeling/src/operations/extrusions";
+} from '@jscad/modeling/src/operations/booleans';
+import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import {
   align,
   center,
@@ -30,11 +30,11 @@ import {
   rotate as _rotate,
   scale as _scale,
   translate as _translate,
-} from "@jscad/modeling/src/operations/transforms";
-import { SILVER } from "./constants.js";
-import { Core } from "./core.js";
-import type { Color, Coordinates, Solid } from "./jscad/types.js";
-import { clamp, hexToColor, Shape, Group, type RenderGroup } from "./utilities";
+} from '@jscad/modeling/src/operations/transforms';
+import { SILVER } from './constants.js';
+import { Core } from './core.js';
+import type { Color, Coordinates, Solid } from './jscad/types.js';
+import { clamp, hexToColor, Shape, Group, type RenderGroup } from './utilities';
 
 /* [Exports] */
 
@@ -46,7 +46,7 @@ import { clamp, hexToColor, Shape, Group, type RenderGroup } from "./utilities";
  * @category Primitive
  */
 export const cube: Shape = shapeSetOrigin(
-  new Shape(primitives.cube({ size: 1 }))
+  new Shape(primitives.cube({ size: 1 })),
 );
 
 /**
@@ -55,7 +55,7 @@ export const cube: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const sphere: Shape = shapeSetOrigin(
-  new Shape(primitives.sphere({ radius: 0.5 }))
+  new Shape(primitives.sphere({ radius: 0.5 })),
 );
 
 /**
@@ -68,8 +68,8 @@ export const cylinder: Shape = shapeSetOrigin(
     primitives.cylinder({
       radius: 0.5,
       height: 1,
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -78,7 +78,7 @@ export const cylinder: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const prism: Shape = shapeSetOrigin(
-  new Shape(extrudeLinear({ height: 1 }, primitives.triangle()))
+  new Shape(extrudeLinear({ height: 1 }, primitives.triangle())),
 );
 
 /**
@@ -87,7 +87,7 @@ export const prism: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const star: Shape = shapeSetOrigin(
-  new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 })))
+  new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))),
 );
 
 /**
@@ -102,8 +102,8 @@ export const pyramid: Shape = shapeSetOrigin(
       startRadius: [0.5, 0.5],
       endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
       segments: 4,
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -117,8 +117,8 @@ export const cone: Shape = shapeSetOrigin(
       height: 1,
       startRadius: [0.5, 0.5],
       endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -131,8 +131,8 @@ export const torus: Shape = shapeSetOrigin(
     primitives.torus({
       innerRadius: 0.125,
       outerRadius: 0.375,
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -141,7 +141,7 @@ export const torus: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const rounded_cube: Shape = shapeSetOrigin(
-  new Shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
+  new Shape(primitives.roundedCuboid({ size: [1, 1, 1] })),
 );
 
 /**
@@ -154,8 +154,8 @@ export const rounded_cylinder: Shape = shapeSetOrigin(
     primitives.roundedCylinder({
       height: 1,
       radius: 0.5,
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -164,7 +164,7 @@ export const rounded_cylinder: Shape = shapeSetOrigin(
  * @category Primitive
  */
 export const geodesic_sphere: Shape = shapeSetOrigin(
-  new Shape(primitives.geodesicSphere({ radius: 0.5 }))
+  new Shape(primitives.geodesicSphere({ radius: 0.5 })),
 );
 
 // [Variables - Colours]
@@ -174,49 +174,49 @@ export const geodesic_sphere: Shape = shapeSetOrigin(
  *
  * @category Colour
  */
-export const black: string = "#000000";
+export const black: string = '#000000';
 
 /**
  * A hex colour code for dark blue (#0000AA).
  *
  * @category Colour
  */
-export const navy: string = "#0000AA";
+export const navy: string = '#0000AA';
 
 /**
  * A hex colour code for green (#00AA00).
  *
  * @category Colour
  */
-export const green: string = "#00AA00";
+export const green: string = '#00AA00';
 
 /**
  * A hex colour code for dark cyan (#00AAAA).
  *
  * @category Colour
  */
-export const teal: string = "#00AAAA";
+export const teal: string = '#00AAAA';
 
 /**
  * A hex colour code for dark red (#AA0000).
  *
  * @category Colour
  */
-export const crimson: string = "#AA0000";
+export const crimson: string = '#AA0000';
 
 /**
  * A hex colour code for purple (#AA00AA).
  *
  * @category Colour
  */
-export const purple: string = "#AA00AA";
+export const purple: string = '#AA00AA';
 
 /**
  * A hex colour code for orange (#FFAA00).
  *
  * @category Colour
  */
-export const orange: string = "#FFAA00";
+export const orange: string = '#FFAA00';
 
 /**
  * A hex colour code for light grey (#AAAAAA). This is the default colour used
@@ -231,56 +231,56 @@ export const silver: string = SILVER;
  *
  * @category Colour
  */
-export const gray: string = "#555555";
+export const gray: string = '#555555';
 
 /**
  * A hex colour code for blue (#5555FF).
  *
  * @category Colour
  */
-export const blue: string = "#5555FF";
+export const blue: string = '#5555FF';
 
 /**
  * A hex colour code for light green (#55FF55).
  *
  * @category Colour
  */
-export const lime: string = "#55FF55";
+export const lime: string = '#55FF55';
 
 /**
  * A hex colour code for cyan (#55FFFF).
  *
  * @category Colour
  */
-export const cyan: string = "#55FFFF";
+export const cyan: string = '#55FFFF';
 
 /**
  * A hex colour code for light red (#FF5555).
  *
  * @category Colour
  */
-export const rose: string = "#FF5555";
+export const rose: string = '#FF5555';
 
 /**
  * A hex colour code for pink (#FF55FF).
  *
  * @category Colour
  */
-export const pink: string = "#FF55FF";
+export const pink: string = '#FF55FF';
 
 /**
  * A hex colour code for yellow (#FFFF55).
  *
  * @category Colour
  */
-export const yellow: string = "#FFFF55";
+export const yellow: string = '#FFFF55';
 
 /**
  * A hex colour code for white (#FFFFFF).
  *
  * @category Colour
  */
-export const white: string = "#FFFFFF";
+export const white: string = '#FFFFFF';
 
 // [Functions]
 
@@ -402,7 +402,7 @@ export function shape_center(shape: Shape): (axis: String) => number {
     bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
   ];
   return (axis: String): number => {
-    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
+    let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
     if (i === -1) {
       throw Error("shape_center's returned function expects a proper axis.");
     } else {
@@ -424,7 +424,7 @@ export function shape_set_center(
   shape: Shape,
   x: number,
   y: number,
-  z: number
+  z: number,
 ): Shape {
   let newSolid: Solid = center({ relativeTo: [x, y, z] }, shape.solid);
   return new Shape(newSolid);
@@ -510,7 +510,7 @@ export function translate(
   shape: Shape,
   x: number,
   y: number,
-  z: number
+  z: number,
 ): Shape {
   let newSolid: Solid = _translate([x, y, z], shape.solid);
   return new Shape(newSolid);
@@ -569,11 +569,11 @@ export function beside_x(a: Shape, b: Shape): Shape {
     a.solid,
     align(
       {
-        modes: ["min", "center", "center"],
+        modes: ['min', 'center', 'center'],
         relativeTo: [newX, newY, newZ],
       },
-      b.solid
-    )
+      b.solid,
+    ),
   );
   return new Shape(newSolid);
 }
@@ -595,11 +595,11 @@ export function beside_y(a: Shape, b: Shape): Shape {
     a.solid,
     align(
       {
-        modes: ["center", "min", "center"],
+        modes: ['center', 'min', 'center'],
         relativeTo: [newX, newY, newZ],
       },
-      b.solid
-    )
+      b.solid,
+    ),
   );
   return new Shape(newSolid);
 }
@@ -621,11 +621,11 @@ export function beside_z(a: Shape, b: Shape): Shape {
     a.solid,
     align(
       {
-        modes: ["center", "center", "min"],
+        modes: ['center', 'center', 'min'],
         relativeTo: [newX, newY, newZ],
       },
-      b.solid
-    )
+      b.solid,
+    ),
   );
   return new Shape(newSolid);
 }
@@ -647,15 +647,15 @@ export function beside_z(a: Shape, b: Shape): Shape {
  */
 
 export function bounding_box(
-  shape: Shape
+  shape: Shape,
 ): (axis: String, min: String) => number {
   let bounds: BoundingBox = measureBoundingBox(shape.solid);
   return (axis: String, min: String): number => {
-    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
-    let j: number = min === "min" ? 0 : min === "max" ? 1 : -1;
+    let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
+    let j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
     if (i === -1 || j === -1) {
       throw Error(
-        "bounding_box returned function expects a proper axis and min String."
+        'bounding_box returned function expects a proper axis and min String.',
       );
     } else {
       return bounds[j][i];
@@ -723,7 +723,7 @@ export function rotate_z(shape: Shape, z: number): Shape {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  let newSolid: Solid = align({ modes: ["min", "min", "min"] }, shape.solid);
+  let newSolid: Solid = align({ modes: ['min', 'min', 'min'] }, shape.solid);
   return new Shape(newSolid);
 }
 
@@ -785,7 +785,8 @@ export function transformAndStore(group: Group): void {
 export function store(shape: Shape): void {
   console.log(shape);
   console.log(shape.clone());
-  Core.getRenderGroupManager().storeShape(shape.clone());
+  Core.getRenderGroupManager()
+    .storeShape(shape.clone());
 }
 
 /**
@@ -803,7 +804,8 @@ export function store(shape: Shape): void {
 export function store_as_color(shape: Shape, hex: string): void {
   let color: Color = hexToColor(hex);
   let coloredSolid: Solid = _colorize(color, shape.solid);
-  Core.getRenderGroupManager().storeShape(new Shape(coloredSolid));
+  Core.getRenderGroupManager()
+    .storeShape(new Shape(coloredSolid));
 }
 
 /**
@@ -821,7 +823,7 @@ export function store_as_rgb(
   shape: Shape,
   redComponent: number,
   greenComponent: number,
-  blueComponent: number
+  blueComponent: number,
 ): void {
   redComponent = clamp(redComponent, 0, 1);
   greenComponent = clamp(greenComponent, 0, 1);
@@ -829,9 +831,10 @@ export function store_as_rgb(
 
   let coloredSolid: Solid = _colorize(
     [redComponent, greenComponent, blueComponent],
-    shape.solid
+    shape.solid,
   );
-  Core.getRenderGroupManager().storeShape(new Shape(coloredSolid));
+  Core.getRenderGroupManager()
+    .storeShape(new Shape(coloredSolid));
 }
 
 /**
@@ -840,7 +843,8 @@ export function store_as_rgb(
  */
 export function render_grid_axis(): RenderGroup {
   // Render group is returned for REPL text only; do not document
-  return Core.getRenderGroupManager().nextRenderGroup(true, true);
+  return Core.getRenderGroupManager()
+    .nextRenderGroup(true, true);
 }
 
 /**
@@ -848,7 +852,8 @@ export function render_grid_axis(): RenderGroup {
  * then not be included in any subsequent renders.
  */
 export function render_grid(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup(true);
+  return Core.getRenderGroupManager()
+    .nextRenderGroup(true);
 }
 
 /**
@@ -856,7 +861,8 @@ export function render_grid(): RenderGroup {
  * then not be included in any subsequent renders.
  */
 export function render_axis(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup(undefined, true);
+  return Core.getRenderGroupManager()
+    .nextRenderGroup(undefined, true);
 }
 
 /**
@@ -864,5 +870,6 @@ export function render_axis(): RenderGroup {
  * included in any subsequent renders.
  */
 export function render(): RenderGroup {
-  return Core.getRenderGroupManager().nextRenderGroup();
+  return Core.getRenderGroupManager()
+    .nextRenderGroup();
 }
