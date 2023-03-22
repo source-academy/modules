@@ -58,7 +58,7 @@
     "console-table-printer": "^2.11.1",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.17.8",
+    "esbuild": "0.17.11",
     "eslint": "^8.21.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
