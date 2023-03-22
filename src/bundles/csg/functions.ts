@@ -12,10 +12,10 @@
 import { primitives } from '@jscad/modeling';
 import { colorize as _colorize } from '@jscad/modeling/src/colors';
 import {
-  type BoundingBox,
   measureArea,
   measureBoundingBox,
   measureVolume,
+  type BoundingBox,
 } from '@jscad/modeling/src/measurements';
 import {
   intersect as _intersect,
@@ -26,15 +26,12 @@ import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import {
   align,
   center,
-  mirror,
-  rotate as _rotate,
-  scale as _scale,
-  translate as _translate,
+  mirror
 } from '@jscad/modeling/src/operations/transforms';
 import { SILVER } from './constants.js';
 import { Core } from './core.js';
 import type { Color, Coordinates, Solid } from './jscad/types.js';
-import { clamp, hexToColor, Shape, Group, type RenderGroup } from './utilities';
+import { Group, Shape, clamp, hexToColor, type RenderGroup } from './utilities';
 
 /* [Exports] */
 
@@ -515,7 +512,7 @@ export function translate(
   entity: Group | Shape,
   x: number,
   y: number,
-  z: number,
+  z: number,,
 ): Group | Shape {
   // let newSolid: Solid = _translate([x, y, z], shape.solid);
   return entity.translate([x, y, z]);
@@ -788,7 +785,8 @@ export function group(children: (Group | Shape)[]): Group {
  * @param {Shape} shape - The Shape to be stored.
  */
 export function store(entity: Group | Shape): void {
-  entity.store();
+  entity
+    .store();
 }
 
 /**
@@ -807,6 +805,7 @@ export function store_as_color(shape: Shape, hex: string): void {
   let color: Color = hexToColor(hex);
   let coloredSolid: Solid = _colorize(color, shape.solid);
   Core.getRenderGroupManager()
+    
     .storeShape(new Shape(coloredSolid));
   //   store(colorize())
 }
