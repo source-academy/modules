@@ -26,14 +26,13 @@ import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import {
   align,
   center,
-  mirror,
   rotate as _rotate,
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
 import { SILVER } from './constants.js';
 import { Core } from './core.js';
-import type { Color, Coordinates, Solid } from './jscad/types.js';
+import type { Coordinates, Solid } from './jscad/types.js';
 import { clamp, hexToColor, Shape, Group, type RenderGroup } from './utilities';
 
 /* [Exports] */
@@ -343,48 +342,6 @@ export function scale(
 } //TODO : update
 
 /**
- * Scales the shape in the x direction with the specified factor,
- * ranging from 0 to infinity.
- * For example scaling the shape by 1 in x direction results in the
- * original shape.
- *
- * @param {Shape} shape - The shape to be scaled
- * @param {number} x - Scaling in the x direction
- * @returns {Shape} Resulting Shape
- */
-export function scale_x(shape: Shape, x: number): Shape {
-  return scale(shape, x, 1, 1);
-}
-
-/**
- * Scales the shape in the y direction with the specified factor,
- * ranging from 0 to infinity.
- * For example scaling the shape by 1 in y direction results in the
- * original shape.
- *
- * @param {Shape} shape - The shape to be scaled
- * @param {number} y - Scaling in the y direction
- * @returns {Shape} Resulting Shape
- */
-export function scale_y(shape: Shape, y: number): Shape {
-  return scale(shape, 1, y, 1);
-}
-
-/**
- * Scales the shape in the z direction with the specified factor,
- * ranging from 0 to infinity.
- * For example scaling the shape by 1 in z direction results in the
- * original shape.
- *
- * @param {Shape} shape - The shape to be scaled
- * @param {number} z - Scaling in the z direction
- * @returns {Shape} Resulting Shape
- */
-export function scale_z(shape: Shape, z: number): Shape {
-  return scale(shape, 1, 1, z);
-}
-
-/**
  * Returns a lambda function that contains the center of the given shape in the
  * x, y and z direction. Providing 'x', 'y', 'z' as input would return x, y and
  * z coordinates of shape's center
@@ -455,52 +412,6 @@ export function volume(shape: Shape): number {
   return measureVolume(shape.solid);
 }
 
-//TODO
-/**
- * Mirror / Flip the provided shape by the plane with normal direction vector
- * given by the x, y and z components.
- *
- * @param {Shape} shape - The shape to mirror / flip
- * @param {number} x - The x coordinate of the direction vector
- * @param {number} y - The y coordinate of the direction vector
- * @param {number} z - The z coordinate of the direction vector
- * @returns {Shape} The mirrored / flipped shape
- */
-function shape_mirror(shape: Shape, x: number, y: number, z: number): Shape {
-  let newSolid: Solid = mirror({ normal: [x, y, z] }, shape.solid);
-  return new Shape(newSolid);
-}
-
-/**
- * Mirror / Flip the provided shape in the x direction.
- *
- * @param {Shape} shape - The shape to mirror / flip
- * @returns {Shape} The mirrored / flipped shape
- */
-export function flip_x(shape: Shape): Shape {
-  return shape_mirror(shape, 1, 0, 0);
-}
-
-/**
- * Mirror / Flip the provided shape in the y direction.
- *
- * @param {Shape} shape - The shape to mirror / flip
- * @returns {Shape} The mirrored / flipped shape
- */
-export function flip_y(shape: Shape): Shape {
-  return shape_mirror(shape, 0, 1, 0);
-}
-
-/**
- * Mirror / Flip the provided shape in the z direction.
- *
- * @param {Shape} shape - The shape to mirror / flip
- * @returns {Shape} The mirrored / flipped shape
- */
-export function flip_z(shape: Shape): Shape {
-  return shape_mirror(shape, 0, 0, 1);
-}
-
 /**
  * Translate / Move the shape by the provided x, y and z units from negative
  * infinity to infinity.
@@ -522,156 +433,10 @@ export function translate(
 }
 
 /**
- * Translate / Move the shape by the provided x units from negative infinity
- * to infinity.
- *
- * @param {Shape} shape
- * @param {number} x - The number to shift the shape in the x direction
- * @returns {Shape} The translated shape
- */
-export function translate_x(shape: Shape, x: number): Shape {
-  return translate(shape, x, 0, 0);
-}
-
-/**
- * Translate / Move the shape by the provided y units from negative infinity
- * to infinity.
- *
- * @param {Shape} shape
- * @param {number} y - The number to shift the shape in the y direction
- * @returns {Shape} The translated shape
- */
-export function translate_y(shape: Shape, y: number): Shape {
-  return translate(shape, 0, y, 0);
-}
-
-/**
- * Translate / Move the shape by the provided z units from negative infinity
- * to infinity.
- *
- * @param {Shape} shape
- * @param {number} z - The number to shift the shape in the z direction
- * @returns {Shape} The translated shape
- */
-export function translate_z(shape: Shape, z: number): Shape {
-  return translate(shape, 0, 0, z);
-}
-
-/**
- * Places the second shape `b` beside the first shape `a` in the positive x direction,
- * centering the `b`'s y and z on the `a`'s y and z center.
- *
- * @param {Shape} a - The shape to be placed beside with
- * @param {Shape} b - The shape placed beside
- * @returns {Shape} The final shape
- */
-export function beside_x(a: Shape, b: Shape): Shape {
-  let aBounds: BoundingBox = measureBoundingBox(a.solid);
-  let newX: number = aBounds[1][0];
-  let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
-  let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
-  let newSolid: Solid = _union(
-    a.solid,
-    align(
-      {
-        modes: ['min', 'center', 'center'],
-        relativeTo: [newX, newY, newZ],
-      },
-      b.solid,
-    ),
-  );
-  return new Shape(newSolid);
-}
-
-/**
- * Places the second shape `b` beside the first shape `a` in the positive y direction,
- * centering the `b`'s x and z on the `a`'s x and z center.
- *
- * @param {Shape} a - The shape to be placed beside with
- * @param {Shape} b - The shape placed beside
- * @returns {Shape} The final shape
- */
-export function beside_y(a: Shape, b: Shape): Shape {
-  let aBounds: BoundingBox = measureBoundingBox(a.solid);
-  let newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
-  let newY: number = aBounds[1][1];
-  let newZ: number = aBounds[0][2] + (aBounds[1][2] - aBounds[0][2]) / 2;
-  let newSolid: Solid = _union(
-    a.solid,
-    align(
-      {
-        modes: ['center', 'min', 'center'],
-        relativeTo: [newX, newY, newZ],
-      },
-      b.solid,
-    ),
-  );
-  return new Shape(newSolid);
-}
-
-/**
- * Places the second shape `b` beside the first shape `a` in the positive z direction,
- * centering the `b`'s x and y on the `a`'s x and y center.
- *
- * @param {Shape} a - The shape to be placed beside with
- * @param {Shape} b - The shape placed beside
- * @returns {Shape} The final shape
- */
-export function beside_z(a: Shape, b: Shape): Shape {
-  let aBounds: BoundingBox = measureBoundingBox(a.solid);
-  let newX: number = aBounds[0][0] + (aBounds[1][0] - aBounds[0][0]) / 2;
-  let newY: number = aBounds[0][1] + (aBounds[1][1] - aBounds[0][1]) / 2;
-  let newZ: number = aBounds[1][2];
-  let newSolid: Solid = _union(
-    a.solid,
-    align(
-      {
-        modes: ['center', 'center', 'min'],
-        relativeTo: [newX, newY, newZ],
-      },
-      b.solid,
-    ),
-  );
-  return new Shape(newSolid);
-}
-
-/**
- * Returns a lambda function that contains the coordinates of the bounding box.
- * Provided with the axis 'x', 'y' or 'z' and value 'min' for minimum and 'max'
- * for maximum, it returns the coordinates of the bounding box.
- *
- * For example
- * ````
- * const a = bounding_box(sphere);
- * a('x', 'min'); // Returns the maximum x coordinate of the bounding box
- * ````
- *
- * @param {Shape} shape - The scale to be measured
- * @returns {(String, String) => number} A lambda function providing the
- * shape's bounding box coordinates
- */
-
-export function bounding_box(
-  shape: Shape,
-): (axis: String, min: String) => number {
-  let bounds: BoundingBox = measureBoundingBox(shape.solid);
-  return (axis: String, min: String): number => {
-    let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
-    let j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
-    if (i === -1 || j === -1) {
-      throw Error(
-        'bounding_box returned function expects a proper axis and min String.',
-      );
-    } else {
-      return bounds[j][i];
-    }
-  };
-}
-
-/**
  * Rotate the shape by the provided angles in the x, y and z direction.
  * Angles provided are in the form of radians (i.e. 2π represent 360
- * degrees)
+ * degrees). Note that the order of rotation is from the x direction first,
+ * followed by the y and z directions.
  *
  * @param {Shape} shape - The shape to be rotated
  * @param {number} x - Angle of rotation in the x direction
@@ -688,42 +453,6 @@ export function rotate(
   // let newSolid: Solid = _rotate([x, y, z], shape.solid);
   return entity.rotate([x, y, z]);
 } //TODO : update
-
-/**
- * Rotate the shape by the provided angles in the x direction. Angles
- * provided are in the form of radians (i.e. 2π represent 360 degrees)
- *
- * @param {Shape} shape - The shape to be rotated
- * @param {number} x - Angle of rotation in the x direction
- * @returns {Shape} The rotated shape
- */
-export function rotate_x(shape: Shape, x: number): Shape {
-  return rotate(shape, x, 0, 0);
-}
-
-/**
- * Rotate the shape by the provided angles in the y direction. Angles
- * provided are in the form of radians (i.e. 2π represent 360 degrees)
- *
- * @param {Shape} shape - The shape to be rotated
- * @param {number} y - Angle of rotation in the y direction
- * @returns {Shape} The rotated shape
- */
-export function rotate_y(shape: Shape, y: number): Shape {
-  return rotate(shape, 0, y, 0);
-}
-
-/**
- * Rotate the shape by the provided angles in the z direction. Angles
- * provided are in the form of radians (i.e. 2π represent 360 degrees)
- *
- * @param {Shape} shape - The shape to be rotated
- * @param {number} z - Angle of rotation in the z direction
- * @returns {Shape} The rotated shape
- */
-export function rotate_z(shape: Shape, z: number): Shape {
-  return rotate(shape, 0, 0, z);
-}
 
 /**
  * Center the provided shape with the middle base of the shape at (0, 0, 0).
@@ -747,29 +476,6 @@ export function is_shape(argument: unknown): boolean {
 }
 
 /**
- * Creates a clone of the specified Shape.
- *
- * @param {Shape} shape - The Shape to be cloned.
- * @returns {Shape} The cloned Shape.
- */
-export function clone(shape: Shape): Shape {
-  return shape.clone();
-}
-
-/**
- * Colour the shape using the specified hex colour code.
- *
- * @param {Shape} shape - The Shape to be coloured and returned
- * @param {string} hex - The colour code to use.
- * @returns {Shape} The colorized shape
- */
-export function colorize(shape: Shape, hex: string) {
-  let color: Color = hexToColor(hex);
-  let coloredSolid: Solid = _colorize(color, shape.solid);
-  return new Shape(coloredSolid);
-}
-
-/**
  * Initializes a group of shapes, which is represented
  * as a hierarchical tree structure, with groups as
  * internal nodes and shapes as leaf nodes.
@@ -789,55 +495,6 @@ export function group(children: (Group | Shape)[]): Group {
  */
 export function store(entity: Group | Shape): void {
   entity.store();
-}
-
-/**
- * Colours a clone of the specified Shape using the specified hex colour code,
- * then stores it for later rendering. You may use one of the colour variables
- * provided by the module, or you may specify your own custom colour code.
- *
- * Colour codes must be of the form "#XXXXXX" or "XXXXXX", where each X
- * represents a non-case sensitive hexadecimal number. Invalid colour codes
- * default to black.
- *
- * @param {Shape} shape - The Shape to be coloured and stored.
- * @param {string} hex - The colour code to use.
- */
-export function store_as_color(shape: Shape, hex: string): void {
-  let color: Color = hexToColor(hex);
-  let coloredSolid: Solid = _colorize(color, shape.solid);
-  Core.getRenderGroupManager()
-    .storeShape(new Shape(coloredSolid));
-  //   store(colorize())
-}
-
-/**
- * Colours a clone of the specified Shape using the specified RGB values, then
- * stores it for later rendering.
- *
- * RGB values are clamped between 0 and 1.
- *
- * @param {Shape} shape - The Shape to be coloured and stored.
- * @param {number} redComponent - The colour's red component.
- * @param {number} greenComponent - The colour's green component.
- * @param {number} blueComponent - The colour's blue component.
- */
-export function store_as_rgb(
-  shape: Shape,
-  redComponent: number,
-  greenComponent: number,
-  blueComponent: number,
-): void {
-  redComponent = clamp(redComponent, 0, 1);
-  greenComponent = clamp(greenComponent, 0, 1);
-  blueComponent = clamp(blueComponent, 0, 1);
-
-  let coloredSolid: Solid = _colorize(
-    [redComponent, greenComponent, blueComponent],
-    shape.solid,
-  );
-  Core.getRenderGroupManager()
-    .storeShape(new Shape(coloredSolid));
 }
 
 /**
