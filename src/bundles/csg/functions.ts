@@ -332,10 +332,15 @@ export function intersect(a: Shape, b: Shape): Shape {
  * @param {number} z - Scaling in the z direction
  * @returns {Shape} Resulting Shape
  */
-export function scale(shape: Shape, x: number, y: number, z: number): Shape {
-  let newSolid: Solid = _scale([x, y, z], shape.solid);
-  return new Shape(newSolid);
-}
+export function scale(
+  entity: Group | Shape,
+  x: number,
+  y: number,
+  z: number,
+): Group | Shape {
+  // let newSolid: Solid = _scale([x, y, z], shape.solid);
+  return entity.scale([x, y, z]);
+} //TODO : update
 
 /**
  * Scales the shape in the x direction with the specified factor,
@@ -507,13 +512,13 @@ export function flip_z(shape: Shape): Shape {
  * @returns {Shape} The translated shape
  */
 export function translate(
-  shape: Shape,
+  entity: Group | Shape,
   x: number,
   y: number,
   z: number,
-): Shape {
-  let newSolid: Solid = _translate([x, y, z], shape.solid);
-  return new Shape(newSolid);
+): Group | Shape {
+  // let newSolid: Solid = _translate([x, y, z], shape.solid);
+  return entity.translate([x, y, z]);
 }
 
 /**
@@ -674,10 +679,15 @@ export function bounding_box(
  * @param {number} z - Angle of rotation in the z direction
  * @returns {Shape} The rotated shape
  */
-export function rotate(shape: Shape, x: number, y: number, z: number): Shape {
-  let newSolid: Solid = _rotate([x, y, z], shape.solid);
-  return new Shape(newSolid);
-}
+export function rotate(
+  entity: Group | Shape,
+  x: number,
+  y: number,
+  z: number,
+): Group | Shape {
+  // let newSolid: Solid = _rotate([x, y, z], shape.solid);
+  return entity.rotate([x, y, z]);
+} //TODO : update
 
 /**
  * Rotate the shape by the provided angles in the x direction. Angles
@@ -715,7 +725,6 @@ export function rotate_z(shape: Shape, z: number): Shape {
   return rotate(shape, 0, 0, z);
 }
 
-//TODO
 /**
  * Center the provided shape with the middle base of the shape at (0, 0, 0).
  *
@@ -772,21 +781,14 @@ export function group(children: (Group | Shape)[]): Group {
   return new Group(children);
 }
 
-export function transformAndStore(group: Group): void {
-  group.transformAndStore();
-}
-
 /**
  * Stores a clone of the specified Shape for later rendering. Its colour
  * defaults to the module's provided silver colour variable.
  *
  * @param {Shape} shape - The Shape to be stored.
  */
-export function store(shape: Shape): void {
-  console.log(shape);
-  console.log(shape.clone());
-  Core.getRenderGroupManager()
-    .storeShape(shape.clone());
+export function store(entity: Group | Shape): void {
+  entity.store();
 }
 
 /**
@@ -806,6 +808,7 @@ export function store_as_color(shape: Shape, hex: string): void {
   let coloredSolid: Solid = _colorize(color, shape.solid);
   Core.getRenderGroupManager()
     .storeShape(new Shape(coloredSolid));
+  //   store(colorize())
 }
 
 /**

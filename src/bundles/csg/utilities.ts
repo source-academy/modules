@@ -9,6 +9,14 @@ import type { ModuleContext } from 'js-slang';
 import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';
 import { Core } from './core.js';
+import {
+  align,
+  center,
+  mirror,
+  rotate as _rotate,
+  scale as _scale,
+  translate as _translate,
+} from '@jscad/modeling/src/operations/transforms';
 
 /* [Exports] */
 export class Group implements ReplResult {
@@ -32,15 +40,33 @@ export class Group implements ReplResult {
     );
   }
 
-  transformAndStore(newTransforms?: Mat4): void {
+  store(newTransforms?: Mat4): void {
     if (newTransforms) {
       this.transform(newTransforms);
     }
 
     this.children.forEach((child) => {
-      child.transformAndStore(this.transforms);
+      child.store(this.transforms);
     });
   }
+
+  translate(offset:[number, number, number]): Group {
+    this.transform(mat4.fromTranslation(mat4.create(), offset));
+    return this;
+  }
+
+  rotate(offset:[number, number, number]): Group {
+    this.transform(mat4.fromRotation(mat4.create(), offset[0], [1, 0, 0]));
+    this.transform(mat4.fromRotation(mat4.create(), offset[1], [0, 1, 0]));
+    this.transform(mat4.fromRotation(mat4.create(), offset[2], [0, 0, 1]));
+    return this;
+  }
+
+  scale(offset:[number, number, number]): Group {
+    this.transform(mat4.fromScaling(mat4.create(), offset));
+    return this;
+  }
+  //TODO : rotate and scale
 }
 
 export class Shape implements ReplResult {
@@ -54,11 +80,24 @@ export class Shape implements ReplResult {
     return new Shape(_clone(this.solid as Geom3));
   }
 
-  transformAndStore(newTransforms: Mat4): void {
-    this.solid = _transform(newTransforms, this.solid);
+  store(newTransforms?: Mat4): void {
+    this.solid = _transform(newTransforms || mat4.create(), this.solid);
     Core.getRenderGroupManager()
       .storeShape(this.clone());
   }
+
+  translate(offset: [number, number, number]): Shape {
+    return new Shape(_translate(offset, this.solid));
+  }
+
+  rotate(offset: [number, number, number]): Shape {
+    return new Shape(_rotate(offset, this.solid));
+  }
+
+  scale(offset: [number, number, number]): Shape {
+    return new Shape(_scale(offset, this.solid));
+  }
+  //TODO : rotate and scale
 }
 
 export class RenderGroup implements ReplResult {
@@ -145,9 +184,10 @@ export function getModuleContext(
 }
 
 export function hexToColor(hex: string): Color {
-  let regex: RegExp = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
-  let potentialGroups: { [key: string]: string } | undefined = hex.match(regex)
-    ?.groups;
+  let regex: RegExp
+    = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
+  let potentialGroups: { [key: string]: string } | undefined
+    = hex.match(regex)?.groups;
   if (potentialGroups === undefined) return [0, 0, 0];
   let groups: { [key: string]: string } = potentialGroups;
 
