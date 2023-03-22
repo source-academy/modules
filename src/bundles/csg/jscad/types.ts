@@ -243,7 +243,6 @@ export type UpdatedStates = {
     thetaDelta: number;
     phiDelta: number;
     scale: number;
-
     changed: boolean;
   };
 };

@@ -17,9 +17,10 @@ import type { AlphaColor, Color, Solid } from "./jscad/types.js";
 
 /* [Exports] */
 export class Group implements ReplResult {
-  constructor(public children: (Group | Shape)[]) {}
-
-  transforms: Mat4 = mat4.create();
+  constructor(
+    private children: (Group | Shape)[],
+    private transforms: Mat4 = mat4.create()
+  ) {}
 
   toReplString(): string {
     return "<Group>";
@@ -29,18 +30,12 @@ export class Group implements ReplResult {
     return new Group(this.children.map((child) => child.clone()));
   }
 
-  transform(newTransforms: Mat4): void {
+  store(newTransforms?: Mat4): void {
     this.transforms = mat4.multiply(
       mat4.create(),
-      newTransforms,
+      newTransforms || mat4.create(),
       this.transforms
     );
-  }
-
-  store(newTransforms?: Mat4): void {
-    if (newTransforms) {
-      this.transform(newTransforms);
-    }
 
     this.children.forEach((child) => {
       child.store(this.transforms);
@@ -48,22 +43,26 @@ export class Group implements ReplResult {
   }
 
   translate(offset: [number, number, number]): Group {
-    this.transform(mat4.fromTranslation(mat4.create(), offset));
-    return this;
+    return new Group(
+      this.children,
+      mat4.fromTranslation(mat4.create(), offset)
+    );
   }
 
   rotate(offset: [number, number, number]): Group {
-    this.transform(mat4.fromRotation(mat4.create(), offset[0], [1, 0, 0]));
-    this.transform(mat4.fromRotation(mat4.create(), offset[1], [0, 1, 0]));
-    this.transform(mat4.fromRotation(mat4.create(), offset[2], [0, 0, 1]));
-    return this;
+    const yaw = offset[2];
+    const pitch = offset[1];
+    const roll = offset[0];
+
+    return new Group(
+      this.children,
+      mat4.fromTaitBryanRotation(mat4.create(), yaw, pitch, roll)
+    );
   }
 
   scale(offset: [number, number, number]): Group {
-    this.transform(mat4.fromScaling(mat4.create(), offset));
-    return this;
+    return new Group(this.children, mat4.fromScaling(mat4.create(), offset));
   }
-  //TODO : rotate and scale
 }
 
 export class Shape implements ReplResult {
@@ -78,8 +77,9 @@ export class Shape implements ReplResult {
   }
 
   store(newTransforms?: Mat4): void {
-    this.solid = _transform(newTransforms || mat4.create(), this.solid);
-    Core.getRenderGroupManager().storeShape(this.clone());
+    Core.getRenderGroupManager().storeShape(
+      new Shape(_transform(newTransforms || mat4.create(), this.solid))
+    );
   }
 
   translate(offset: [number, number, number]): Shape {
@@ -93,7 +93,6 @@ export class Shape implements ReplResult {
   scale(offset: [number, number, number]): Shape {
     return new Shape(_scale(offset, this.solid));
   }
-  //TODO : rotate and scale
 }
 
 export class RenderGroup implements ReplResult {
