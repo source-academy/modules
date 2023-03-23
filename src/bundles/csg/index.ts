@@ -50,6 +50,7 @@ export {
   scale_z,
   shape_center,
   shape_set_center,
+  shape_to_stl,
   silver,
   sphere,
   star,

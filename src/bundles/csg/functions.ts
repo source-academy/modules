@@ -23,6 +23,8 @@ import {
 } from "@jscad/modeling/src/operations/booleans";
 import { extrudeLinear } from "@jscad/modeling/src/operations/extrusions";
 import { align, center } from "@jscad/modeling/src/operations/transforms";
+import { serialize } from "@jscad/stl-serializer";
+import save from "save-file";
 import { SILVER } from "./constants.js";
 import { Core } from "./core.js";
 import type { Coordinates, Solid } from "./jscad/types.js";
@@ -521,4 +523,14 @@ export function render_axis(): RenderGroup {
  */
 export function render(): RenderGroup {
   return Core.getRenderGroupManager().nextRenderGroup();
+}
+
+/**
+ * Converts a shape to an downloadable STL file, which can be used for 3D printing.
+ */
+export async function shape_to_stl(shape: Shape): Promise<void> {
+  await save(
+    new Blob(serialize({ binary: true }, shape.solid)),
+    "Source Academy CSG" + ".stl"
+  );
 }

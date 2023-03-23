@@ -191,7 +191,7 @@ index cf9c591..af1842c 100644
  }
  
 diff --git a/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js b/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
-index a4026e3..6dc9d2c 100644
+index a4026e3..f8cf8f5 100644
 --- a/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
 +++ b/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
 @@ -14,8 +14,11 @@ const unionSub = (geometry1, geometry2) => {

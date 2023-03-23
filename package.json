@@ -89,6 +89,7 @@
     "@box2d/debug-draw": "^0.10.0",
     "@jscad/modeling": "^2.9.5",
     "@jscad/regl-renderer": "^2.6.1",
+    "@jscad/stl-serializer": "^2.1.13",
     "ace-builds": "^1.4.14",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.4",
@@ -103,6 +104,7 @@
     "react-ace": "^10.1.0",
     "react-dom": "^17.0.2",
     "regl": "^2.1.0",
+    "save-file": "^2.3.1",
     "source-academy-utils": "^1.0.0",
     "source-academy-wabt": "^1.0.4",
     "tslib": "^2.3.1"
