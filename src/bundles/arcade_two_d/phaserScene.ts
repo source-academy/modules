@@ -46,6 +46,7 @@ export class PhaserScene extends Phaser.Scene {
   private corsAssets;
   private sourceAudioClips;
   private phaserAudioClips;
+  private phaserDebugHitAreas;
 
   init() {
     console.log('phaser scene init()');
@@ -54,8 +55,11 @@ export class PhaserScene extends Phaser.Scene {
     this.sourceAudioClips = AudioClip.getAudioClipsArray();
     this.phaserAudioClips = [];
     this.corsAssets = new Set();
+    this.phaserDebugHitAreas = [];
     startTime = Date.now();
     loopCount = 0;
+    // Disable context menu within the canvas
+    this.game.canvas.oncontextmenu = (e) => e.preventDefault();
   }
 
   preload() {
@@ -89,12 +93,16 @@ export class PhaserScene extends Phaser.Scene {
           transformProps.position[1],
           text,
         ));
-        this.physics.world.enable([this.phaserGameObjects[gameObject.id]]);
+        this.phaserGameObjects[gameObject.id].setOrigin(0.5, 0.5);
+        // this.physics.world.enable([this.phaserGameObjects[gameObject.id]]); // This is related to physics hitbox, not wanted...
+        if (gameObject.getHitboxState().hitboxActive) {
+          this.phaserGameObjects[gameObject.id].setInteractive();
+        }
       }
       // Create SpriteGameObject
       if (gameObject instanceof SpriteGameObject) {
         const url = gameObject.getSprite().image_url;
-        this.phaserGameObjects.push(this.physics.add.sprite(
+        this.phaserGameObjects.push(this.add.sprite(
           transformProps.position[0],
           transformProps.position[1],
           url,
@@ -172,15 +180,19 @@ export class PhaserScene extends Phaser.Scene {
 
       // Enter debug mode
       if (DEBUG) {
-        this.input.enableDebug(this.phaserGameObjects[gameObject.id]);
+        this.input.enableDebug(phaserGameObject);
+        // phaserGameObject.input.hitAreaDebug.strokeColor = 0;
       }
+
+      // Store the phaserGameObject in the source representation
+      gameObject.setPhaserGameObject(phaserGameObject);
     });
 
-    // Create audio
+    // Create audio clips
     this.sourceAudioClips.forEach((audioClip: AudioClip) => {
       this.phaserAudioClips.push(this.sound.add(audioClip.getUrl(), {
         loop: audioClip.getLoop(),
-        volume: 1,
+        volume: audioClip.getVolume(),
       }));
     });
 
@@ -248,16 +260,17 @@ export class PhaserScene extends Phaser.Scene {
         gameObject.updatedRender();
       }
 
-      // Update the interactivity of Phaser GameObject
-      if (gameObject.hasHitboxUpdates()) {
-        // update the hitbox of PhaserGameObject
-        if (gameObject.getHitboxState().hitboxActive) {
-          this.phaserGameObjects[gameObject.id].setInteractive();
-        } else {
-          this.phaserGameObjects[gameObject.id].disableInteractive();
-        }
-        gameObject.updatedHitbox();
-      }
+      // Update the interactivity of Phaser GameObject. This doesn't work.
+      // if (gameObject.hasHitboxUpdates()) {
+      //   // update the hitbox of PhaserGameObject
+      //   // this doesn't work once the game starts.
+      //   if (gameObject.getHitboxState().hitboxActive) {
+      //     this.phaserGameObjects[gameObject.id].setInteractive();
+      //   } else {
+      //     this.phaserGameObjects[gameObject.id].disableInteractive();
+      //   }
+      //   gameObject.updatedHitbox();
+      // }
     });
 
     // Handle audio updates
