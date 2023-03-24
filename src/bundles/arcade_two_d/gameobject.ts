@@ -125,6 +125,7 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
  */
 export abstract class InteractableGameObject extends RenderableGameObject implements Interactable {
   protected hitboxNotUpdated: boolean = true;
+  protected phaserGameObject: Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | undefined;
 
   constructor(
     transformProps: types.TransformProps,
@@ -147,6 +148,28 @@ export abstract class InteractableGameObject extends RenderableGameObject implem
   }
   updatedHitbox() {
     this.hitboxNotUpdated = false;
+  }
+  /**
+   * Stores the phaser GameObject reference.
+   * @param phaserGameObject The phaser GameObject reference.
+   */
+  setPhaserGameObject(phaserGameObject: Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text) {
+    this.phaserGameObject = phaserGameObject;
+  }
+  /**
+   * Checks if two Source GameObjects are overlapping, using their Phaser GameObjects to check.
+   * This method needs to be overriden if the hit area of the Phaser GameObject is not a rectangle.
+   * @param other The other GameObject
+   * @returns True, if both GameObjects overlap in the phaser game.
+   */
+  isOverlapping(other: InteractableGameObject): boolean {
+    if (this.phaserGameObject === undefined || other.phaserGameObject === undefined) {
+      return false;
+    }
+    // Use getBounds to check if two objects overlap, checking the shape of the area before checking overlap.
+    // Since getBounds() returns a Rectangle, it will be unable to check the actual intersection of non-rectangular shapes.
+    // eslint-disable-next-line new-cap
+    return Phaser.Geom.Intersects.RectangleToRectangle(this.phaserGameObject.getBounds(), other.phaserGameObject.getBounds());
   }
 }
 

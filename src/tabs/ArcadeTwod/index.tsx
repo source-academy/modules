@@ -87,10 +87,10 @@ class GameCanvas extends React.Component<Props, State> {
     // this.props.context.result.value.phaserGameInstance = this.state.game;
     // this.props.context.result.value.offscreenCanvas = config.canvas.transferControlToOffscreen();
     this.props.context.result.value.loadedGame = true;
-    const canvas = document.getElementById('myCanvas');
-    if (canvas) {
-      canvas.oncontextmenu = () => false;
-    }
+    // const canvas = document.getElementById('myCanvas');
+    // if (canvas) {
+    //   canvas.oncontextmenu = () => false;
+    // }
   }
 
   shouldComponentUpdate() {

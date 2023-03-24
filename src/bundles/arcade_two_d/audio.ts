@@ -20,6 +20,7 @@ export class AudioClip {
 
   private constructor(
     private url: string,
+    private volumeLevel: number,
   ) {
     this.id = AudioClip.audioClipCount++;
     AudioClip.audioClips.set(url, this.id);
@@ -30,17 +31,20 @@ export class AudioClip {
    * Factory method to create new AudioClip if unique URL provided.
    * Otherwise returns the previously created AudioClip.
    */
-  public static of(url: string): AudioClip {
+  public static of(url: string, volumeLevel: number): AudioClip {
     if (url === '') {
       throw new Error('AudioClip URL cannot be empty');
     }
     if (AudioClip.audioClips.has(url)) {
       return AudioClip.audioClipsArray[AudioClip.audioClips.get(url) as number];
     }
-    return new AudioClip(url);
+    return new AudioClip(url, volumeLevel);
   }
   public getUrl() {
     return this.url;
+  }
+  public getVolume() {
+    return this.volumeLevel;
   }
   public getLoop() {
     return this.loop;
