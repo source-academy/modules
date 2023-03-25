@@ -1,81 +1,56 @@
 {
+  "vector_calculus": {
+    "tabs": ["VectorCalculus"]
+  },
   "painter": {
-    "tabs": [
-      "Painter"
-    ]
+    "tabs": ["Painter"]
   },
   "plotly": {
-    "tabs": [
-      "Plotly"
-    ]
+    "tabs": ["Plotly"]
   },
   "repeat": {
-    "tabs": [
-      "Repeat"
-    ]
+    "tabs": ["Repeat"]
   },
   "pix_n_flix": {
-    "tabs": [
-      "Pixnflix"
-    ]
+    "tabs": ["Pixnflix"]
   },
   "binary_tree": {
     "tabs": []
   },
   "copy_gc": {
-    "tabs": [
-      "CopyGc"
-    ]
+    "tabs": ["CopyGc"]
   },
   "curve": {
-    "tabs": [
-      "Curve"
-    ]
+    "tabs": ["Curve"]
   },
   "mark_sweep": {
-    "tabs": [
-      "MarkSweep"
-    ]
+    "tabs": ["MarkSweep"]
   },
   "sound": {
-    "tabs": [
-      "Sound"
-    ]
+    "tabs": ["Sound"]
   },
   "scrabble": {
     "tabs": []
   },
   "stereo_sound": {
-    "tabs": [
-      "StereoSound"
-    ]
+    "tabs": ["StereoSound"]
   },
   "game": {
-    "tabs": [
-      "Game"
-    ]
+    "tabs": ["Game"]
   },
   "rune": {
-    "tabs": [
-      "Rune"
-    ]
+    "tabs": ["Rune"]
   },
   "rune_in_words": {
     "tabs": []
   },
   "sound_matrix": {
-    "tabs": [
-      "SoundMatrix"
-    ]
+    "tabs": ["SoundMatrix"]
   },
   "csg": {
-    "tabs": [
-      "Csg"
-    ]
+    "tabs": ["Csg"]
   },
   "repl": {
-    "tabs": [
-      "Repl"
-    ]
+    "tabs": ["Repl"]
   }
 }
