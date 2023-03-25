@@ -27,37 +27,63 @@ import { serialize } from "@jscad/stl-serializer";
 import save from "save-file";
 import { SILVER } from "./constants.js";
 import { Core } from "./core.js";
-import type { Coordinates, Solid } from "./jscad/types.js";
+import type { Color, Coordinates, Solid } from "./jscad/types.js";
 import { Group, Shape, type RenderGroup } from "./utilities";
 
+const defaultColor: string = "#default";
 /* [Exports] */
 
 // [Variables - Primitive shapes]
-
 /**
  * Primitive Shape of a cube.
  *
  * @category Primitive
  */
-export const cube: Shape = shapeSetOrigin(
+const primitiveCube: Shape = shapeSetOrigin(
   new Shape(primitives.cube({ size: 1 }))
 );
+
+/**
+ * Returns a Shape of a cube of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function cube(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveCube;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
 
 /**
  * Primitive Shape of a sphere.
  *
  * @category Primitive
  */
-export const sphere: Shape = shapeSetOrigin(
+const primitiveSphere: Shape = shapeSetOrigin(
   new Shape(primitives.sphere({ radius: 0.5 }))
 );
+
+/**
+ * Returns a Shape of a sphere of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function sphere(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveSphere;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
 
 /**
  * Primitive Shape of a cylinder.
  *
  * @category Primitive
  */
-export const cylinder: Shape = shapeSetOrigin(
+const primitiveCylinder: Shape = shapeSetOrigin(
   new Shape(
     primitives.cylinder({
       radius: 0.5,
@@ -67,29 +93,68 @@ export const cylinder: Shape = shapeSetOrigin(
 );
 
 /**
+ * Returns a Shape of a cylinder of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function cylinder(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveCylinder;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
+
+/**
  * Primitive Shape of a prism.
  *
  * @category Primitive
  */
-export const prism: Shape = shapeSetOrigin(
+const primitivePrism: Shape = shapeSetOrigin(
   new Shape(extrudeLinear({ height: 1 }, primitives.triangle()))
 );
+
+/**
+ * Returns a Shape of a prism of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function prism(hex: string = defaultColor): Shape {
+  const shape: Shape = primitivePrism;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
 
 /**
  * Primitive Shape of an extruded star.
  *
  * @category Primitive
  */
-export const star: Shape = shapeSetOrigin(
+const primitiveStar: Shape = shapeSetOrigin(
   new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 })))
 );
+
+/**
+ * Returns a Shape of an extruded star of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function star(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveStar;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
 
 /**
  * Primitive Shape of a square pyramid.
  *
  * @category Primitive
  */
-export const pyramid: Shape = shapeSetOrigin(
+const primitivePyramid: Shape = shapeSetOrigin(
   new Shape(
     primitives.cylinderElliptic({
       height: 1,
@@ -101,11 +166,24 @@ export const pyramid: Shape = shapeSetOrigin(
 );
 
 /**
+ * Returns a Shape of a square pyramid of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function pyramid(hex: string = defaultColor): Shape {
+  const shape: Shape = primitivePyramid;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
+
+/**
  * Primitive Shape of a cone.
  *
  * @category Primitive
  */
-export const cone: Shape = shapeSetOrigin(
+const primitiveCone: Shape = shapeSetOrigin(
   new Shape(
     primitives.cylinderElliptic({
       height: 1,
@@ -116,11 +194,24 @@ export const cone: Shape = shapeSetOrigin(
 );
 
 /**
+ * Returns a Shape of a cone of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function cone(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveCone;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
+
+/**
  * Primitive Shape of a torus.
  *
  * @category Primitive
  */
-export const torus: Shape = shapeSetOrigin(
+const primitiveTorus: Shape = shapeSetOrigin(
   new Shape(
     primitives.torus({
       innerRadius: 0.125,
@@ -130,20 +221,46 @@ export const torus: Shape = shapeSetOrigin(
 );
 
 /**
+ * Returns a Shape of a torus of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function torus(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveTorus;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
+
+/**
  * Primitive Shape of a rounded cube.
  *
  * @category Primitive
  */
-export const rounded_cube: Shape = shapeSetOrigin(
+const primitiveRoundedCube: Shape = shapeSetOrigin(
   new Shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
 );
+
+/**
+ * Returns a Shape of a rounded cube of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function rounded_cube(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveRoundedCube;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
 
 /**
  * Primitive Shape of a rounded cylinder.
  *
  * @category Primitive
  */
-export const rounded_cylinder: Shape = shapeSetOrigin(
+const primitiveRoundedCylinder: Shape = shapeSetOrigin(
   new Shape(
     primitives.roundedCylinder({
       height: 1,
@@ -153,14 +270,39 @@ export const rounded_cylinder: Shape = shapeSetOrigin(
 );
 
 /**
+ * Returns a Shape of a rounded cylinder of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function rounded_cylinder(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveRoundedCylinder;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
+
+/**
  * Primitive Shape of a geodesic sphere.
  *
  * @category Primitive
  */
-export const geodesic_sphere: Shape = shapeSetOrigin(
+const primitiveGeodesicSphere: Shape = shapeSetOrigin(
   new Shape(primitives.geodesicSphere({ radius: 0.5 }))
 );
 
+/**
+ * Returns a Shape of a geodesic sphere of a set colour or the default colour when
+ * colour information is omitted.
+ *
+ * @param {string} hex A hex colour code
+ */
+export function geodesic_sphere(hex: string = defaultColor): Shape {
+  const shape: Shape = primitiveGeodesicSphere;
+  return hex === defaultColor
+    ? shape
+    : new Shape(_colorize(hexToColor(hex), shape.solid));
+}
 // [Variables - Colours]
 
 /**
@@ -320,7 +462,7 @@ export function intersect(a: Shape, b: Shape): Shape {
  * For example scaling the shape by 1 in x, y and z direction results in
  * the original shape.
  *
- * @param {Shape} shape - The shape to be scaled
+ * @param {Group | Shape} entity - The Group or Shape to be scaled
  * @param {number} x - Scaling in the x direction
  * @param {number} y - Scaling in the y direction
  * @param {number} z - Scaling in the z direction
@@ -334,7 +476,7 @@ export function scale(
 ): Group | Shape {
   // let newSolid: Solid = _scale([x, y, z], shape.solid);
   return entity.scale([x, y, z]);
-} //TODO : update
+}
 
 /**
  * Returns a lambda function that contains the center of the given shape in the
@@ -372,9 +514,9 @@ export function shape_center(shape: Shape): (axis: String) => number {
  * Set the center of the shape with the provided x, y and z coordinates.
  *
  * @param {Shape} shape - The scale to have the center set
- * @param {nunber} x - The center with the x coordinate
- * @param {nunber} y - The center with the y coordinate
- * @param {nunber} z - The center with the z coordinate
+ * @param {number} x - The center with the x coordinate
+ * @param {number} y - The center with the y coordinate
+ * @param {number} z - The center with the z coordinate
  * @returns {Shape} The shape with the new center
  */
 export function shape_set_center(
@@ -411,7 +553,7 @@ export function volume(shape: Shape): number {
  * Translate / Move the shape by the provided x, y and z units from negative
  * infinity to infinity.
  *
- * @param {Shape} shape
+ * @param {Group | Shape} entity - The Group or Shape to be translated
  * @param {number} x - The number to shift the shape in the x direction
  * @param {number} y - The number to shift the shape in the y direction
  * @param {number} z - The number to shift the shape in the z direction
@@ -433,7 +575,7 @@ export function translate(
  * degrees). Note that the order of rotation is from the x direction first,
  * followed by the y and z directions.
  *
- * @param {Shape} shape - The shape to be rotated
+ * @param {Group | Shape} entity - The Group or Shape to be rotated
  * @param {number} x - Angle of rotation in the x direction
  * @param {number} y - Angle of rotation in the y direction
  * @param {number} z - Angle of rotation in the z direction
@@ -447,7 +589,7 @@ export function rotate(
 ): Group | Shape {
   // let newSolid: Solid = _rotate([x, y, z], shape.solid);
   return entity.rotate([x, y, z]);
-} //TODO : update
+}
 
 /**
  * Center the provided shape with the middle base of the shape at (0, 0, 0).
@@ -471,6 +613,19 @@ export function is_shape(argument: unknown): boolean {
 }
 
 /**
+ * Colour the shape using the specified hex colour code.
+ *
+ * @param {Shape} shape - The Shape to be coloured and returned
+ * @param {string} hex - The colour code to use.
+ * @returns {Shape} The colorized shape
+ */
+function colorize(shape: Shape, hex: string) {
+  let color: Color = hexToColor(hex);
+  let coloredSolid: Solid = _colorize(color, shape.solid);
+  return new Shape(coloredSolid);
+}
+
+/**
  * Initializes a group of shapes, which is represented
  * as a hierarchical tree structure, with groups as
  * internal nodes and shapes as leaf nodes.
@@ -486,7 +641,7 @@ export function group(children: (Group | Shape)[]): Group {
  * Stores a clone of the specified Shape for later rendering. Its colour
  * defaults to the module's provided silver colour variable.
  *
- * @param {Shape} shape - The Shape to be stored.
+ * @param {Group | Shape} entity - The Group or Shape to be stored.
  */
 export function store(entity: Group | Shape): void {
   entity.store();
