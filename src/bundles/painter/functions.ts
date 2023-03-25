@@ -1,6 +1,6 @@
 /**
  * The module `painter` provides functions for visualizing painters in SICP JS 2.2.4 plots using the plotly.js library.
- * @module plotly
+ * @module painter
  */
 
 import { context } from 'js-slang/moduleHelpers'
@@ -19,7 +19,13 @@ const y_s: (number | null)[] = []
 /**
  * Draw a line from v_start to v_end
  * @param v_start vector of the first point
- * @param v_end vector of the second point
+ * @param v_end vector of the second point 
+ * @example
+ * ```
+ * const v1 = pair(1,2);
+ * const v2 = pair(2,3);
+ * draw_line(v1, v2);
+ * ```
  */
 export function draw_line(v_start: number[], v_end: number[]) {
   console.log(x_s, y_s, v_start, v_end)
@@ -32,19 +38,26 @@ export function draw_line(v_start: number[], v_end: number[]) {
 }
 
 /**
- * Displays the lines created by the painter on the given frame
- * @param painter the painter function
- * @param frame the frame on which the painter works on
+ * Returns a function that turns a given Frame into a Drawing, given the
+ * painter
+ * @param painter the painter to transform the frame
+ * @returns function of type Frame → Drawing
+ *  * @example
+ * ```
+ * display_painter(flipped_outline_painter)(unit_frame);
+ * ```
  */
-export function display_painter(painter: (frame: Frame) => void, frame: Frame) {
-  painter(frame)
-  data = { x: x_s, y: y_s }
-  drawnPainters.push(
-    new LinePlot(draw_new_painter, { ...data, mode: 'lines' } as Data, {
-      xaxis: { visible: true },
-      yaxis: { visible: true, scaleanchor: 'x' },
-    }),
-  )
+export function display_painter(painter: (frame: Frame) => void) {
+  return (frame: Frame) => {
+    painter(frame)
+    data = { x: x_s, y: y_s }
+    drawnPainters.push(
+      new LinePlot(draw_new_painter, { ...data, mode: 'lines' } as Data, {
+        xaxis: { visible: true },
+        yaxis: { visible: true, scaleanchor: 'x' },
+      }),
+    )
+  }
 }
 
 function draw_new_painter(divId: string, data: Data, layout: Partial<Layout>) {
