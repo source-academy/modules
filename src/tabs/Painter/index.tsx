@@ -1,6 +1,6 @@
 import React from 'react';
-import { LinePlot } from '../../bundles/painter/painter';
-import { DebuggerContext } from '../../typings/type_helpers';
+import { type LinePlot } from '../../bundles/painter/painter';
+import { type DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/modal_div';
 
 type Props = {
@@ -42,13 +42,16 @@ class Painter extends React.Component<Props, State> {
           handleClose={() => this.setState({ modalOpen: false })}
         >
           <div
-            id='modalDiv'
+            id="modalDiv"
             ref={() => {
               if (this.state.selectedPainter) {
                 this.state.selectedPainter.draw('modalDiv');
               }
             }}
-            style={{ height: '20rem', width: '20rem' }}
+            style={{
+              height: '20rem',
+              width: '20rem',
+            }}
           ></div>
         </Modal>
         {
@@ -82,5 +85,5 @@ export default {
   },
   body: (debuggerContext: any) => <Painter debuggerContext={debuggerContext} />,
   label: 'Painter Test Tab',
-  iconName: 'scatter-plot'
+  iconName: 'scatter-plot',
 };

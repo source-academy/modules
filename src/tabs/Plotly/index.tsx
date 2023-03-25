@@ -1,6 +1,6 @@
 import React from 'react';
-import { DrawnPlot } from '../../bundles/plotly/plotly';
-import { DebuggerContext } from '../../typings/type_helpers';
+import { type DrawnPlot } from '../../bundles/plotly/plotly';
+import { type DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/modal_div';
 
 type Props = {
@@ -42,13 +42,16 @@ class Plotly extends React.Component<Props, State> {
           handleClose={() => this.setState({ modalOpen: false })}
         >
           <div
-            id='modalDiv'
+            id="modalDiv"
             ref={() => {
               if (this.state.selectedPlot) {
                 this.state.selectedPlot.draw('modalDiv');
               }
             }}
-            style={{ height: '20rem', width: '20rem' }}
+            style={{
+              height: '20rem',
+              width: '20rem',
+            }}
           ></div>
         </Modal>
         {
