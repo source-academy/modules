@@ -1,6 +1,15 @@
+/**
+ * Source Academy Programmable REPL module
+ * @module repl
+ * @author Wang Zihan
+ */
+
+
 import { context } from 'js-slang/moduleHelpers';
 import { default_js_slang } from './functions';
-import type { IOptions } from 'js-slang';
+import { type IOptions } from 'js-slang';
+
+
 
 export class ProgrammableRepl {
   public evalFunction : Function;
@@ -80,9 +89,11 @@ export class ProgrammableRepl {
   }
 
   richDisplayInternal(pair_rich_text) {
+    developmentLog(pair_rich_text);
     const head = (pair) => pair[0];
     const tail = (pair) => pair[1];
     const is_pair = (obj) => obj instanceof Array && obj.length === 2;
+    if (!is_pair(pair_rich_text)) return 'not_rich_text_pair';
     function checkColorStringValidity(htmlColor:string) {
       if (htmlColor.length !== 7) return false;
       if (htmlColor[0] !== '#') return false;
@@ -98,7 +109,7 @@ export class ProgrammableRepl {
     function recursiveHelper(thisInstance, param) : string {
       if (typeof (param) === 'string') {
         // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
-        const safeCheckResult = thisInstance.userStringSafeCheck(head(param));
+        const safeCheckResult = thisInstance.userStringSafeCheck(param);
         if (safeCheckResult !== 'safe') {
           throw new Error(`For safety matters, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
         }
@@ -145,10 +156,12 @@ export class ProgrammableRepl {
       }
     }
     this.pushOutputString(`<span style="${recursiveHelper(this, pair_rich_text)}`, '', 'richtext');
+    return undefined;// Add this line to pass lint check "consistent-return"
   }
 
   // Returns the forbidden word present in the string "str" if it contains at least one unsafe word. Returns "safe" if the string is considered to be safe to output directly into innerHTML.
   userStringSafeCheck(str) {
+    developmentLog(`Safe check on ${str}`);
     const tmp = str.toLowerCase();
     let forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
     for (let word of forbiddenWords) {
@@ -165,7 +178,9 @@ export class ProgrammableRepl {
     Directly invoking Source Academy's builtin js-slang runner.
     Needs hard-coded support from js-slang part for the "sourceRunner" function and "backupContext" property in the content object for this to work.
   */
-  runInJsSlang(code: string) : string {
+  runInJsSlang(code : string) : string {
+    developmentLog('js-slang context:');
+    // console.log(context);
     const options : Partial<IOptions> = {
       originalMaxExecTime: 1000,
       scheduler: 'preemptive',
@@ -173,17 +188,14 @@ export class ProgrammableRepl {
       throwInfiniteLoops: true,
       useSubst: false,
     };
-    let jsslangContext = (context as any).backupContext;
-    const prelude = 'const display=(x)=>module_display(x);';
-    (context as any).sourceRunner(prelude, jsslangContext, true, options)
-      .then((preludeEvalResult) => {
-        developmentLog(preludeEvalResult);
-        if (preludeEvalResult.status === 'error') {
-          this.pushOutputString('[Warning] It seems that you havn\'t import the function "module_display" correctly when calling "invoke_repl". The runner will use the default js-slang builtin display function.', 'yellow');
-        }
-      });
-    let result : Promise<any> = (context as any).sourceRunner(code, jsslangContext, true, options);
-    developmentLog(result);
+    const jsSlangStorage : any = (context.moduleContexts.repl as any).js_slang;
+    const jsslangContext = jsSlangStorage.context;
+    jsslangContext.prelude = 'const display=(x)=>module_display(x);';
+    jsslangContext.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
+    const sourceFile : Record<string, string> = {
+      '/ReplModuleUserCode.js': code,
+    };
+    let result : Promise<any> = jsSlangStorage.sourceFilesRunner(sourceFile, '/ReplModuleUserCode.js', jsslangContext, options);
     result.then((evalResult) => {
       if (evalResult.status !== 'error') {
         this.pushOutputString('js-slang program finished with value:', 'cyan');
@@ -194,7 +206,10 @@ export class ProgrammableRepl {
         const errorCount = errors.length;
         for (let i = 0; i < errorCount; i++) {
           const error = errors[i];
-          this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, 'red');
+          if (error.explain()
+            .indexOf('Name module_display not declared.') !== -1) {
+            this.pushOutputString('[Error] It seems that you havn\'t import the function "module_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', 'red');
+          } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, 'red');
         }
       }
       this.reRenderTab();
@@ -202,7 +217,7 @@ export class ProgrammableRepl {
     return 'Async run in js-slang';
   }
 
-  setTabReactComponentInstance(tab: any) {
+  setTabReactComponentInstance(tab : any) {
     this._tabReactComponent = tab;
   }
 
@@ -238,5 +253,5 @@ export class ProgrammableRepl {
 // Comment all the codes inside this function before merging the code to github as production version.
 // Because console.log() can expose the sandboxed VM location to students thus may cause security concerns.
 function developmentLog(_content) {
-//  console.log(`[Programmable Repl Log] ${_content}`);
+  // console.log(`[Programmable Repl Log] ${_content}`);
 }

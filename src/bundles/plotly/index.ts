@@ -5,6 +5,7 @@
 
 export {
   new_plot,
+  new_plot_json,
   draw_connected_2d,
   draw_3D_points,
 } from './functions';
