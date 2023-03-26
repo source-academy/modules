@@ -1,7 +1,6 @@
-import { timingSafeEqual } from 'crypto';
-import { Config, Data, Layout } from 'plotly.js-dist';
-import { ReplOptions } from 'repl';
-import { ReplResult } from '../../typings/type_helpers';
+
+import { type Data, type Layout } from 'plotly.js-dist';
+import { type ReplResult } from '../../typings/type_helpers';
 
 /**
  * Represents plots with a draw method attached
@@ -9,13 +8,13 @@ import { ReplResult } from '../../typings/type_helpers';
 export class DrawnPlot implements ReplResult {
   drawFn: any;
   data: ListOfPairs;
-  constructor(drawFn: any, data: ListOfPairs) {  
-    this.drawFn = drawFn; 
-    this.data = data; 
+  constructor(drawFn: any, data: ListOfPairs) {
+    this.drawFn = drawFn;
+    this.data = data;
   }
 
   public toReplString = () => '<Plot>';
-  
+
   public draw = (divId: string) => {
     this.drawFn(this.data, divId);
   };
@@ -33,18 +32,18 @@ export class CurvePlot implements ReplResult {
   public toReplString = () => '<CurvePlot>';
 
   public draw = (divId: string) => {
-    this.plotlyDrawFn(divId, this.data, this.layout );
-  }
+    this.plotlyDrawFn(divId, this.data, this.layout);
+  };
 }
 
 export type ListOfPairs = (ListOfPairs | any)[] | null;
 export type Data2d = number[];
-export type Color = {r: number, g: number, b: number}
+export type Color = { r: number, g: number, b: number };
 
 export type DataTransformer = (c: Data2d[]) => Data2d[];
-export type CurvePlotFunction = ((func: Curve) => CurvePlot)
+export type CurvePlotFunction = ((func: Curve) => CurvePlot);
 
-export type Curve = ((n: number) => Point )
+export type Curve = ((n: number) => Point);
 export type CurveTransformer = (c: Curve) => Curve;
 
 

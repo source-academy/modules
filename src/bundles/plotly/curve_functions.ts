@@ -1,8 +1,8 @@
-import Plotly, { Data, Layout } from 'plotly.js-dist'
-import { Curve, CurvePlot, Point } from './plotly'
+import Plotly, { type Data, type Layout } from 'plotly.js-dist';
+import { type Curve, CurvePlot, type Point } from './plotly';
 
 export function x_of(pt: Point): number {
-  return pt.x
+  return pt.x;
 }
 
 /**
@@ -17,7 +17,7 @@ export function x_of(pt: Point): number {
  * ```
  */
 export function y_of(pt: Point): number {
-  return pt.y
+  return pt.y;
 }
 
 /**
@@ -32,7 +32,7 @@ export function y_of(pt: Point): number {
  * ```
  */
 export function z_of(pt: Point): number {
-  return pt.z
+  return pt.z;
 }
 
 /**
@@ -47,7 +47,7 @@ export function z_of(pt: Point): number {
  * ```
  */
 export function r_of(pt: Point): number {
-  return pt.color.r * 255
+  return pt.color.r * 255;
 }
 
 /**
@@ -62,7 +62,7 @@ export function r_of(pt: Point): number {
  * ```
  */
 export function g_of(pt: Point): number {
-  return pt.color.g * 255
+  return pt.color.g * 255;
 }
 
 /**
@@ -77,7 +77,7 @@ export function g_of(pt: Point): number {
  * ```
  */
 export function b_of(pt: Point): number {
-  return pt.color.b * 255
+  return pt.color.b * 255;
 }
 export function generatePlot(
   type: string,
@@ -87,16 +87,16 @@ export function generatePlot(
   is_colored: boolean,
   func: Curve,
 ): CurvePlot {
-  let x_s: number[] = []
-  let y_s: number[] = []
-  let z_s: number[] = []
-  let color_s: string[] = []
+  let x_s: number[] = [];
+  let y_s: number[] = [];
+  let z_s: number[] = [];
+  let color_s: string[] = [];
   for (let i = 0; i <= numPoints; i += 1) {
-    const point = func(i / numPoints)
-    x_s.push(x_of(point))
-    y_s.push(y_of(point))
-    z_s.push(z_of(point))
-    color_s.push(`rgb(${r_of(point)},${g_of(point)},${b_of(point)})`)
+    const point = func(i / numPoints);
+    x_s.push(x_of(point));
+    y_s.push(y_of(point));
+    z_s.push(z_of(point));
+    color_s.push(`rgb(${r_of(point)},${g_of(point)},${b_of(point)})`);
   }
   const plotlyData: Data = {
     x: x_s,
@@ -106,14 +106,18 @@ export function generatePlot(
       size: 2,
       color: color_s,
     },
-  }
+  };
   return new CurvePlot(
     draw_new_curve,
-    { ...plotlyData, ...config, type } as Data,
+    {
+      ...plotlyData,
+      ...config,
+      type,
+    } as Data,
     layout,
-  )
+  );
 }
 
 function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
-  Plotly.newPlot(divId, [data], layout)
+  Plotly.newPlot(divId, [data], layout);
 }
