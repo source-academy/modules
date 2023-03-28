@@ -98,15 +98,15 @@ class GameTab extends React.Component<Props, GameState> {
 
   componentDidMount() {
     console.log('componentDidMount');
-    // only mount the component when the Arcade2D tab is active
+    // Only mount the component when the Arcade2D tab is active
     if (document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')?.ariaHidden === 'true') {
       console.log('Arcade2D tab not active');
       return;
     }
     // Check if there is already a canvas, then do nothing.
-    if (this.props.context.result?.value?.loadedGame) {
-      console.log('Run the Source program to reload the game.');
-      return;
+    // if (this.props.context.result?.value?.loadedGame) {
+    //   console.log('Run the Source program to reload the game.');
+    //   return;
     // console.log(this.props.context.result?.value?.phaserGameInstance);
     //   console.log(this.props.context.result?.value?.phaserGameInstance?.canvas);
     //   console.log(this.props.context.result?.value?.offscreenCanvas);
@@ -117,7 +117,7 @@ class GameTab extends React.Component<Props, GameState> {
     //     canvas.transferFromImageBitmap(bitmap);
     //     console.log('image transfered 3 ');
     //     console.log(bitmap);
-    }
+    // }
 
     // if (canvas) {
     //   const ctx = canvas.getContext('webgl');
@@ -169,7 +169,11 @@ class GameTab extends React.Component<Props, GameState> {
 
   componentWillUnmount(): void {
     console.log('componentWillUnmount');
+    // console.log(this.state.game?.getTime());
+    // console.log(this.state.game?.getFrame());
     this.state.game?.sound.stopAll();
+    // Prevents multiple scene loops being run at the same time
+    this.state.game?.destroy(false, false);
     // this.props.context.result.value.gameEnded = true;
 
     // Remove the current WEBGL context, to prevent multiple webgl contexts from causing problems.
