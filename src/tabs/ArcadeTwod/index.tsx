@@ -1,6 +1,8 @@
 import React from 'react';
 import Phaser from 'phaser';
 import { type DebuggerContext } from '../../typings/type_helpers';
+import { Button, ButtonGroup } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 
 /**
  * Game display tab for user-created games made with the Arcade2D module.
@@ -20,18 +22,71 @@ type Props = {
 };
 
 /**
- * React Component state for the Tab.
+ * React Component state for the Game.
  */
-type State = {
+type GameState = {
   counter: number;
   time: number;
   game?: Phaser.Game;
 };
 
 /**
+ * React component state for the UI buttons.
+ */
+type UiState = {
+  paused: boolean;
+};
+
+/**
+ * React component props for the UI buttons.
+ */
+type UiProps = {
+  children?: never;
+  className?: never;
+  context?: any;
+  onClick: (b: boolean) => void;
+};
+
+/**
+ * Component for UI buttons within tab e.g play/pause.
+ */
+class A2dUiButtons extends React.Component<UiProps, UiState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      paused: false,
+    };
+  }
+
+  toggleGamePause(): void {
+    if (this.state.paused) {
+      this.props.onClick(false);
+      this.setState({ paused: false });
+    } else {
+      this.props.onClick(true);
+      this.setState({ paused: true });
+    }
+  }
+
+  public render() {
+    return (
+      <ButtonGroup>
+        <Button
+          className="a2d-play-toggle-button"
+          icon={this.state.paused ? IconNames.PLAY : IconNames.PAUSE}
+          active={false}
+          onClick={() => this.toggleGamePause()}
+          text={this.state.paused ? 'Resume Game' : 'Pause Game'}
+        />
+      </ButtonGroup>
+    );
+  }
+}
+
+/**
  * The main React Component of the Tab.
  */
-class GameCanvas extends React.Component<Props, State> {
+class GameTab extends React.Component<Props, GameState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -86,7 +141,9 @@ class GameCanvas extends React.Component<Props, State> {
     });
     // this.props.context.result.value.phaserGameInstance = this.state.game;
     // this.props.context.result.value.offscreenCanvas = config.canvas.transferControlToOffscreen();
-    this.props.context.result.value.loadedGame = true;
+
+    // !! below line causes error - this.props.context.result is undefined
+    //this.props.context.result.value.loadedGame = true;
     const canvas = document.getElementById('myCanvas');
     if (canvas) {
       canvas.oncontextmenu = () => false;
@@ -96,6 +153,16 @@ class GameCanvas extends React.Component<Props, State> {
   shouldComponentUpdate() {
     // Component itself is a wrapper & should not update - Phaser handles the game updates
     return false;
+  }
+
+  toggleGamePause(pause: boolean): void {
+    if (pause) {
+      console.log('Game paused');
+      this.state.game?.loop.sleep();
+    } else {
+      this.state.game?.loop.wake();
+      console.log('Game resumed');
+    }
   }
 
   componentWillUnmount(): void {
@@ -116,7 +183,10 @@ class GameCanvas extends React.Component<Props, State> {
 
   public render() {
     return (
-      <div id="phaser-game"/>
+      <div id="a2d-tab">
+        <div id="phaser-game"/>
+        <A2dUiButtons onClick={(p) => this.toggleGamePause(p)} />
+      </div>
     );
   }
 }
@@ -144,7 +214,7 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: DebuggerContext) => <GameCanvas context={context} />,
+  body: (context: DebuggerContext) => <GameTab context={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
@@ -156,5 +226,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'shapes',
+  iconName: IconNames.SHAPES,
 };
