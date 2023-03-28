@@ -183,8 +183,16 @@ class GameTab extends React.Component<Props, GameState> {
 
   public render() {
     return (
-      <div id="a2d-tab">
-        <div id="phaser-game"/>
+      <div
+        id="a2d-tab"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        <div id="phaser-game" />
         <A2dUiButtons onClick={(p) => this.toggleGamePause(p)} />
       </div>
     );
