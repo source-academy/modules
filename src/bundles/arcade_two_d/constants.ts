@@ -5,7 +5,7 @@ export const DEFAULT_WIDTH: number = 600;
 export const DEFAULT_HEIGHT: number = 600;
 export const DEFAULT_SCALE: number = 1;
 export const DEFAULT_FPS: number = 30;
-export const DEFAULT_VOLUME: number = 0.5;
+export const DEFAULT_VOLUME: number = 0.5; // Unused
 
 // Maximum allowed values for canvas
 export const MAX_HEIGHT: number = 1000;

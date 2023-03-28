@@ -68,6 +68,9 @@ export type Shape = {
  */
 export type BaseShape = CircleProps | RectangleProps | TriangleProps;
 
+/**
+ * Represents a rectangle of a GameObject's shape.
+ */
 export type RectangleProps = {
   width: number;
   height: number;

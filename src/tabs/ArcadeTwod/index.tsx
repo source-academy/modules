@@ -144,10 +144,10 @@ class GameTab extends React.Component<Props, GameState> {
 
     // !! below line causes error - this.props.context.result is undefined
     //this.props.context.result.value.loadedGame = true;
-    const canvas = document.getElementById('myCanvas');
-    if (canvas) {
-      canvas.oncontextmenu = () => false;
-    }
+    // const canvas = document.getElementById('myCanvas');
+    // if (canvas) {
+    //   canvas.oncontextmenu = () => false;
+    // }
   }
 
   shouldComponentUpdate() {

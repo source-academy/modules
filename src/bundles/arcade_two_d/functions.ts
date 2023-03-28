@@ -31,6 +31,7 @@ import {
   RectangleGameObject,
   CircleGameObject,
   TriangleGameObject,
+  type InteractableGameObject,
 } from './gameobject';
 
 import {
@@ -52,7 +53,6 @@ import {
   DEFAULT_HEIGHT,
   DEFAULT_SCALE,
   DEFAULT_FPS,
-  DEFAULT_VOLUME,
   MAX_HEIGHT,
   MIN_HEIGHT,
   MAX_WIDTH,
@@ -71,7 +71,6 @@ let WIDTH: number = DEFAULT_WIDTH;
 let HEIGHT: number = DEFAULT_HEIGHT;
 let SCALE: number = DEFAULT_SCALE;
 let FPS: number = DEFAULT_FPS;
-let VOLUME: number = DEFAULT_VOLUME;
 export let DEBUG: boolean = false;
 
 // Audio
@@ -567,22 +566,9 @@ export const set_scale: (scale: number) => void = (scale: number) => {
 };
 
 /**
- * Sets the sound volume in the canvas.
- * Scale is like the zoom level.
- * If scale is doubled, then the number of units across would be halved.
- *
- * @param volume The volume of the canvas to set.
- * @example
- * ```
- * // sets the scale of the canvas to 2.
- * set_volume(0.5);
- * ```
- * @category Configuration
+ * Enables debug mode.
+ * The hit box of GameObjects are shown in this mode.
  */
-export const set_volume: (volume: number) => void = (volume: number) => {
-  VOLUME = withinRange(volume, MIN_VOLUME, MAX_VOLUME);
-};
-
 export const enable_debug: () => void = () => {
   DEBUG = true;
 };
@@ -633,7 +619,7 @@ export const input_right_mouse_down: () => boolean = () => pointerSecondaryDown;
 
 /**
  * Detects if the pointer is over the gameobject.
- * @param gameObject the gameobject reference.
+ * @param gameObject The gameobject reference.
  * @returns True, if the pointer is over the gameobject.
  * @example
  * ```
@@ -644,6 +630,17 @@ export const input_right_mouse_down: () => boolean = () => pointerSecondaryDown;
  * @category Input
  */
 export const pointer_over_gameobject = (gameObject: GameObject) => pointerOverGameObjectsId.has(gameObject.id);
+
+
+/**
+ * Checks if two gameobjects overlap with each other.
+ * @param gameObject1 The first gameobject reference.
+ * @param gameObject2 The second gameobject reference.
+ * @returns True, if both gameobjects overlap with each other.
+ * @category Query
+ */
+export const gameobjects_overlap: (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => boolean
+= (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => gameObject1.isOverlapping(gameObject2);
 
 /**
  * Gets the current in-game time.
@@ -723,7 +720,7 @@ export const build_game: () => BuildGame = () => {
   const physicsConfig = {
     'default': 'arcade',
     'arcade': {
-      debug: DEBUG,
+      // debug: DEBUG,
     },
   };
 
@@ -745,7 +742,6 @@ export const build_game: () => BuildGame = () => {
     // canvas: offscreenCanvas,
     scene: PhaserScene,
     input: inputConfig,
-    disableContextMenu: true,
     fps: fpsConfig,
   };
 
@@ -758,27 +754,6 @@ export const build_game: () => BuildGame = () => {
   };
 };
 
-
-// =============================================================================
-// Display game
-// =============================================================================
-
-/**
- * Displays sample game canvas. For demonstration purposes.
- */
-// export function display_hello_world(): void {
-//   const gameConfig = {
-//     type: Phaser.AUTO,
-//     parent: 'phaser-game',
-//     width: 600,
-//     height: 600,
-//     scene: HelloWorld,
-//   };
-//   context.moduleContexts.arcade_two_d.state = {
-//     gameConfig,
-//   };
-// }
-
 // =============================================================================
 // Audio functions
 // =============================================================================
@@ -786,9 +761,11 @@ export const build_game: () => BuildGame = () => {
 /**
  * Create an audio clip that can be referenced.
  * @param audio_url The URL of the audio clip.
+ * @param volume_level A number between 0 to 1, representing the volume level of the audio clip.
  * @returns The AudioClip reference
  */
-export const create_audio: (audio_url: string) => AudioClip = (audio_url: string) => AudioClip.of(audio_url);
+export const create_audio: (audio_url: string, volume_level: number) => AudioClip
+= (audio_url: string, volume_level: number) => AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME));
 
 /**
  * Loops the audio clip provided, which will play the audio clip indefinitely.
