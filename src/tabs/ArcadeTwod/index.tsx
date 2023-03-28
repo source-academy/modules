@@ -143,7 +143,7 @@ class GameTab extends React.Component<Props, GameState> {
     // this.props.context.result.value.offscreenCanvas = config.canvas.transferControlToOffscreen();
 
     // !! below line causes error - this.props.context.result is undefined
-    //this.props.context.result.value.loadedGame = true;
+    // this.props.context.result.value.loadedGame = true;
     // const canvas = document.getElementById('myCanvas');
     // if (canvas) {
     //   canvas.oncontextmenu = () => false;
@@ -159,8 +159,10 @@ class GameTab extends React.Component<Props, GameState> {
     if (pause) {
       console.log('Game paused');
       this.state.game?.loop.sleep();
+      this.state.game?.sound.pauseAll();
     } else {
       this.state.game?.loop.wake();
+      this.state.game?.sound.resumeAll();
       console.log('Game resumed');
     }
   }
