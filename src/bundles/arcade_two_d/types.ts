@@ -56,7 +56,7 @@ export type Color = {
 export type PhaserType = 'Shape' | 'Sprite' | 'Text';
 
 /**
- * Represents the shape of a GameObject
+ * Represents the shape of a GameObject.
  */
 export type Shape = {
   Shape: void;
@@ -64,7 +64,7 @@ export type Shape = {
 };
 
 /**
- * Represents the base shape of a GameObject
+ * Represents the base shape of a GameObject.
  */
 export type BaseShape = CircleProps | RectangleProps | TriangleProps;
 

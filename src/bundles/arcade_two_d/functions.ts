@@ -115,7 +115,7 @@ const defaultInteractableProps: InteractableProps = {
  * @param height The height of the rectangle
  * @example
  * ```
- * create_rectangle(100, 100);
+ * const rectangle = create_rectangle(100, 100);
  * ```
  * @category Create GameObject
  */
@@ -133,7 +133,7 @@ export const create_rectangle: (width: number, height: number) => ShapeGameObjec
  * @param width The width of the rectangle
  * @param height The height of the rectangle
  * ```
- * create_circle(100);
+ * const circle = create_circle(100);
  * ```
  * @category Create GameObject
  */
@@ -150,7 +150,7 @@ export const create_circle: (radius: number) => ShapeGameObject = (radius: numbe
  * @param width The width of the isosceles triangle
  * @param height The height of the isosceles triangle
  * ```
- * create_triangle(100, 100);
+ * const triangle = create_triangle(100, 100);
  * ```
  * @category Create GameObject
  */
@@ -172,7 +172,7 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
  * @param text Text string displayed
  * @example
  * ```
- * create_text("Hello\nworld!");
+ * const helloworld = create_text("Hello\nworld!");
  * ```
  * @category Create GameObject
  */
@@ -193,8 +193,8 @@ export const create_text: (text: string) => TextGameObject = (text: string) => {
  * @param image_url The image URL of the sprite
  * @example
  * ```
- * create_sprite("objects/cmr/splendall.png");
- * create_sprite("https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/objects/cmr/splendall.png");
+ * const shortpath = create_sprite("objects/cmr/splendall.png");
+ * const fullpath = create_sprite("https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/objects/cmr/splendall.png");
  * ```
  * @category Create GameObject
  */
@@ -336,6 +336,7 @@ export const update_flip: (gameObject: GameObject, flip: [boolean, boolean]) => 
  * @param textGameObject TextGameObject reference
  * @param text The updated text of the TextGameObject
  * @returns the GameObject reference passed in
+ * @throws Error if not a TextGameObject is passed in
  * @example
  * ```
  * update_text(create_text("Hello world!"), "Goodbye world!");
@@ -463,6 +464,7 @@ export const query_flip: (gameObject: RenderableGameObject) => [boolean, boolean
  *
  * @param textGameObject TextGameObject reference
  * @returns text string associated with the Text GameObject
+ * @throws Error if not a TextGameObject is passed in
  * @example
  * ```
  * query_text(create_text("Hello World!")) === "Hello World!";
@@ -568,6 +570,10 @@ export const set_scale: (scale: number) => void = (scale: number) => {
 /**
  * Enables debug mode.
  * The hit box of GameObjects are shown in this mode.
+ * Note that the hit box shown is the hit box of the interaction with the mouse.
+ * Hit box interaction between objects is based off a rectangular area instead.
+ *
+ * @ category Configuration
  */
 export const enable_debug: () => void = () => {
   DEBUG = true;
@@ -633,10 +639,15 @@ export const pointer_over_gameobject = (gameObject: GameObject) => pointerOverGa
 
 
 /**
- * Checks if two gameobjects overlap with each other.
+ * Checks if two gameobjects overlap with each other, using a rectangular bounding box.
  * @param gameObject1 The first gameobject reference.
  * @param gameObject2 The second gameobject reference.
  * @returns True, if both gameobjects overlap with each other.
+ * @example
+ * ```
+ * 
+ * if (gameobjects_overlap())
+ * ```
  * @category Query
  */
 export const gameobjects_overlap: (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => boolean
@@ -672,15 +683,16 @@ export const get_loop_count: () => number = () => loopCount;
 /**
  * This sets the update loop in the canvas.
  * The update loop is run once per frame, so it depends on the fps set for the number of times this loop is run.
- * Important note:
+ * Important notes:
  * Calling display() within this function will only output when rerun.
  * (This function could be redundant if update_function is supplied as a param to build_game.)
  *
  * @param update_function A user-defined update_function, that takes in an array as a parameter.
  * @example
  * ```
+ * // create gameobjects outside the update_loop
  * update_loop((game_state) => {
- *   // your code here
+ *   // update gameobjects inside the update_loop
  * })
  * ```
  * @category Misc
@@ -763,6 +775,11 @@ export const build_game: () => BuildGame = () => {
  * @param audio_url The URL of the audio clip.
  * @param volume_level A number between 0 to 1, representing the volume level of the audio clip.
  * @returns The AudioClip reference
+ * @example
+ * ```
+ * const audioClip = create_audio("bgm/GalacticHarmony.mp3", 0.5);
+ * ```
+ * @category Audio
  */
 export const create_audio: (audio_url: string, volume_level: number) => AudioClip
 = (audio_url: string, volume_level: number) => AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME));
@@ -772,6 +789,11 @@ export const create_audio: (audio_url: string, volume_level: number) => AudioCli
  * Setting whether an audio clip should be done outside the update function.
  * @param audio_clip The AudioClip reference
  * @returns The AudioClip reference
+ * @example
+ * ```
+ * const audioClip = loop_audio(create_audio("bgm/GalacticHarmony.mp3", 0.5));
+ * ```
+ * @category Audio
  */
 export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   audio_clip.loopAudioClip(true);
@@ -782,6 +804,11 @@ export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  * Plays the audio clip, and stops when the audio clip is over.
  * @param audio_clip The AudioClip reference
  * @returns The AudioClip reference
+ * @example
+ * ```
+ * const audioClip = play_audio(create_audio("bgm/GalacticHarmony.mp3", 0.5));
+ * ```
+ * @category Audio
  */
 export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   audio_clip.playAudioClip(true);
@@ -792,6 +819,11 @@ export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  * Stops the audio clip immediately.
  * @param audio_clip The AudioClip reference
  * @returns The AudioClip reference
+ * @example
+ * ```
+ * const audioClip = play_audio(create_audio("bgm/GalacticHarmony.mp3", 0.5));
+ * ```
+ * @category Audio
  */
 export const stop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   audio_clip.playAudioClip(false);

@@ -150,7 +150,7 @@ export abstract class InteractableGameObject extends RenderableGameObject implem
     this.hitboxNotUpdated = false;
   }
   /**
-   * Stores the phaser GameObject reference.
+   * This stores the GameObject within the phaser game, which can only be set after the game has started.
    * @param phaserGameObject The phaser GameObject reference.
    */
   setPhaserGameObject(phaserGameObject: Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text) {
