@@ -25,7 +25,7 @@ import type {
   RawInputObject,
 } from './types';
 
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 
 /** @hidden */
 export default function gameFuncs(): { [name: string]: any } {

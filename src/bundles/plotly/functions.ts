@@ -3,9 +3,9 @@
  * @module plotly
  */
 
-import { context } from 'js-slang/moduleHelpers';
-import Plotly, { Data } from 'plotly.js-dist';
-import { DrawnPlot, ListOfPairs } from './plotly';
+import context from 'js-slang/context';
+import Plotly, { type Data } from 'plotly.js-dist';
+import { DrawnPlot, type ListOfPairs } from './plotly';
 
 const drawnPlots: (DrawnPlot)[] = [];
 context.moduleContexts.plotly.state = {
@@ -35,15 +35,15 @@ context.moduleContexts.plotly.state = {
  *  ];
  *  new_plot(list(pair("z", z1), pair("type", "surface"))) // creates a surface plot in Plotly Tab
  * ```
- * 
- * 
+ *
+ *
  * @Types
  * ``` typescript
  * // The data format for input [{field_name}, value] from among the following fields
  *  data = {
  *    type: PlotType;
  *    x: Datum[] | Datum[][];
- *    y: Datum[] | Datum[][]; 
+ *    y: Datum[] | Datum[][];
  *    z: Datum[] | Datum[][] | Datum[][][];
  *    mode:
  *       | 'lines'
@@ -54,8 +54,8 @@ context.moduleContexts.plotly.state = {
  *       | 'text+lines'
  *       | 'text+lines+markers'
  *  }
- * 
- * 
+ *
+ *
  *  type Datum = string | number | Date | null;
  *  type PlotType =
  *  | 'bar'
@@ -104,7 +104,7 @@ context.moduleContexts.plotly.state = {
  *  | 'violin'
  *  | 'volume'
  *  | 'waterfall';
- * 
+ *
  * ```
  * @param data The data in the form of list of pair, with the first term in the pair is
  *             the name of the field as a string and the second term is the value of the field
@@ -118,8 +118,8 @@ export function new_plot(data: ListOfPairs): void {
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
  * @example
- * ```typescript 
- *    
+ * ```typescript
+ *
  * const z1 = [
  *   [8.83,8.89,8.81,8.87,8.9,8.87],
  *   [8.89,8.94,8.85,8.94,8.96,8.92],
@@ -139,28 +139,28 @@ export function new_plot(data: ListOfPairs): void {
  *  ];
  *
  * let z2 = [];
- * for (var i=0;i<z1.length;i++ ) { 
+ * for (var i=0;i<z1.length;i++ ) {
  *   let z2_row = [];
- *     for(var j=0;j<z1[i].length;j++) { 
+ *     for(var j=0;j<z1[i].length;j++) {
  *       z2_row.push(z1[i][j]+1);
  *     }
  *     z2.push(z2_row);
  * }
  * const data = [{z: z1, type: 'surface'}, {z: z2 , type: 'surface'}];
  * new_plot_json(data) // creates a surface plot in Plotly Tab
- * 
- * 
- * 
+ *
+ *
+ *
  * ```
- * 
- * 
+ *
+ *
  * @Types
  * ``` typescript
  * // The data format for input [{field_name}, value] from among the following fields
  *  data = {
  *    type: PlotType;
  *    x: Datum[] | Datum[][];
- *    y: Datum[] | Datum[][]; 
+ *    y: Datum[] | Datum[][];
  *    z: Datum[] | Datum[][] | Datum[][][];
  *    mode:
  *       | 'lines'
@@ -171,8 +171,8 @@ export function new_plot(data: ListOfPairs): void {
  *       | 'text+lines'
  *       | 'text+lines+markers'
  *  }[]
- * 
- * 
+ *
+ *
  *  type Datum = string | number | Date | null;
  *  type PlotType =
  *  | 'bar'
@@ -221,7 +221,7 @@ export function new_plot(data: ListOfPairs): void {
  *  | 'violin'
  *  | 'volume'
  *  | 'waterfall';
- * 
+ *
  * ```
  * @param data The data as an array of json objects having some or all of the given fields
  */
@@ -240,7 +240,7 @@ function draw_new_plot(data: ListOfPairs, divId: string) {
 }
 
 /**
- * 
+ *
  * @param data The data object in json to be used by plotly
  * @param divId The id of the div element on which the plot will be displayed
  */
@@ -271,5 +271,5 @@ function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
     const value = data[0][1];
     convertedData[field] = value;
     add_fields_to_data(convertedData, data[1]);
-  } 
+  }
 }

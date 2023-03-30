@@ -5,18 +5,16 @@
  */
 
 
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 import { default_js_slang } from './functions';
-import { type IOptions } from 'js-slang';
-
-
+import { runFilesInContext, type IOptions } from 'js-slang';
 
 export class ProgrammableRepl {
-  public evalFunction : Function;
-  public userCodeInEditor : String;
-  public outputStrings : any[];
+  public evalFunction: Function;
+  public userCodeInEditor: string;
+  public outputStrings: any[];
   private _editorInstance;
-  private _tabReactComponent : any;
+  private _tabReactComponent: any;
 
   public customizedEditorProps = {
     backgroundImageUrl: 'no-background-image',
@@ -32,20 +30,21 @@ export class ProgrammableRepl {
     developmentLog(this);
   }
 
-  InvokeREPL_Internal(evalFunc : Function) {
+  InvokeREPL_Internal(evalFunc: Function) {
     this.evalFunction = evalFunc;
   }
 
   runCode() {
     this.outputStrings = [];
-    let retVal : any;
+    let retVal: any;
     try {
-      if (this.evalFunction === default_js_slang) {
-        retVal = this.evalFunction(this.userCodeInEditor, document.body);
+      if (Object.is(this.evalFunction, default_js_slang)) {
+        retVal = this.runInJsSlang(this.userCodeInEditor);
       } else {
         retVal = this.evalFunction(this.userCodeInEditor);
       }
-    } catch (exception : any) {
+    } catch (exception: any) {
+      console.log(exception);
       this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, 'red');
       this.reRenderTab();
       return;
@@ -77,7 +76,7 @@ export class ProgrammableRepl {
     this.outputStrings.push(tmp);
   }
 
-  setEditorInstance(instance : any) {
+  setEditorInstance(instance: any) {
     if (instance === undefined) return; // It seems that when calling this function in gui->render->ref, the React internal calls this function for multiple times (at least two times) , and in at least one call the parameter 'instance' is set to 'undefined'. If I don't add this if statement, the program will throw a runtime error when rendering tab.
     this._editorInstance = instance;
     this._editorInstance.on('guttermousedown', (e) => {
@@ -106,7 +105,7 @@ export class ProgrammableRepl {
       }
       return true;
     }
-    function recursiveHelper(thisInstance, param) : string {
+    function recursiveHelper(thisInstance, param): string {
       if (typeof (param) === 'string') {
         // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
         const safeCheckResult = thisInstance.userStringSafeCheck(param);
@@ -172,13 +171,11 @@ export class ProgrammableRepl {
     return 'safe';
   }
 
-
-
   /*
     Directly invoking Source Academy's builtin js-slang runner.
     Needs hard-coded support from js-slang part for the "sourceRunner" function and "backupContext" property in the content object for this to work.
   */
-  runInJsSlang(code : string) : string {
+  runInJsSlang(code: string): string {
     developmentLog('js-slang context:');
     // console.log(context);
     const options : Partial<IOptions> = {
@@ -188,32 +185,36 @@ export class ProgrammableRepl {
       throwInfiniteLoops: true,
       useSubst: false,
     };
-    const jsSlangStorage : any = (context.moduleContexts.repl as any).js_slang;
-    const jsslangContext = jsSlangStorage.context;
-    jsslangContext.prelude = 'const display=(x)=>module_display(x);';
-    jsslangContext.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
+    context.prelude = 'const display=(x)=>module_display(x);';
+    context.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
     const sourceFile : Record<string, string> = {
       '/ReplModuleUserCode.js': code,
     };
-    let result : Promise<any> = jsSlangStorage.sourceFilesRunner(sourceFile, '/ReplModuleUserCode.js', jsslangContext, options);
-    result.then((evalResult) => {
-      if (evalResult.status !== 'error') {
-        this.pushOutputString('js-slang program finished with value:', 'cyan');
-        // Here must use plain text output mode because evalResult.value contains strings from the users.
-        this.pushOutputString(evalResult.value === undefined ? 'undefined' : evalResult.value.toString(), 'cyan');
-      } else {
-        const errors = jsslangContext.errors;
-        const errorCount = errors.length;
-        for (let i = 0; i < errorCount; i++) {
-          const error = errors[i];
-          if (error.explain()
-            .indexOf('Name module_display not declared.') !== -1) {
-            this.pushOutputString('[Error] It seems that you havn\'t import the function "module_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', 'red');
-          } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, 'red');
+
+    runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options)
+      .then((evalResult) => {
+        if (evalResult.status === 'suspended' || evalResult.status === 'suspended-ec-eval') {
+          throw new Error('This should not happen');
         }
-      }
-      this.reRenderTab();
-    });
+        if (evalResult.status !== 'error') {
+          this.pushOutputString('js-slang program finished with value:', 'cyan');
+          // Here must use plain text output mode because evalResult.value contains strings from the users.
+          this.pushOutputString(evalResult.value === undefined ? 'undefined' : evalResult.value.toString(), 'cyan');
+        } else {
+          const errors = context.errors;
+          console.log(errors);
+          const errorCount = errors.length;
+          for (let i = 0; i < errorCount; i++) {
+            const error = errors[i];
+            if (error.explain()
+              .indexOf('Name module_display not declared.') !== -1) {
+              this.pushOutputString('[Error] It seems that you haven\'t import the function "module_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', 'red');
+            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, 'red');
+          }
+        }
+        this.reRenderTab();
+      });
+
     return 'Async run in js-slang';
   }
 

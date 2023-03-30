@@ -30,7 +30,6 @@ import type {
   Sound,
   SoundProducer,
   SoundTransformer,
-  List,
   AudioPlayed,
 } from './types';
 import {
@@ -42,9 +41,10 @@ import {
   is_null,
   is_pair,
   accumulate,
-} from './list';
+  type List,
+} from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 
 // Global Constants and Variables
 const FS: number = 44100; // Output sample rate
