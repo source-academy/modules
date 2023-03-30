@@ -1,20 +1,20 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
-import { type OutputFile, build as esbuild } from 'esbuild';
+import {
+  type BuildOptions as ESBuildOptions,
+  type OutputFile,
+  build as esbuild,
+} from 'esbuild';
 import type {
-  BlockStatement,
-  ExpressionStatement,
-  FunctionExpression,
+  ArrowFunctionExpression,
   Identifier,
   Literal,
   MemberExpression,
   Program,
-  ReturnStatement,
   VariableDeclaration,
 } from 'estree';
 import fs from 'fs/promises';
-import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 
 import { printList } from '../../scriptUtils.js';
@@ -30,15 +30,7 @@ import type { LintCommandInputs } from '../prebuild/eslint.js';
 import { prebuild } from '../prebuild/index.js';
 import type { BuildCommandInputs, BuildOptions, BuildResult, UnreducedResult } from '../types';
 
-import { esbuildOptions, requireCreator } from './moduleUtils.js';
-
-/**
- * Imports that are provided at runtime
- */
-const externals = {
-  'react': '_react',
-  'react-dom': 'ReactDOM',
-};
+import { esbuildOptions } from './moduleUtils.js';
 
 const outputTab = async (tabName: string, text: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
@@ -46,34 +38,21 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
     const declStatement = parsed.body[1] as VariableDeclaration;
 
     const newTab = {
-      type: 'ExpressionStatement',
-      expression: {
-        type: 'FunctionExpression',
-        params: uniq(Object.values(externals))
-          .map((name) => ({
-            type: 'Identifier',
-            name,
-          }) as Identifier),
-        body: {
-          type: 'BlockStatement',
-          body: [
-            requireCreator(externals),
-            {
-              type: 'ReturnStatement',
-              argument: {
-                type: 'MemberExpression',
-                object: declStatement.declarations[0].init,
-                property: {
-                  type: 'Literal',
-                  value: 'default',
-                } as Literal,
-                computed: true,
-              } as MemberExpression,
-            } as ReturnStatement,
-          ],
-        } as BlockStatement,
-      } as FunctionExpression,
-    } as ExpressionStatement;
+      type: 'ArrowFunctionExpression',
+      body: {
+        type: 'MemberExpression',
+        object: declStatement.declarations[0].init,
+        property: {
+          type: 'Literal',
+          value: 'default',
+        } as Literal,
+        computed: true,
+      } as MemberExpression,
+      params: [{
+        type: 'Identifier',
+        name: 'require',
+      } as Identifier],
+    } as ArrowFunctionExpression;
 
     let newCode = generate(newTab);
     if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
@@ -93,14 +72,19 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
   }
 };
 
+export const tabOptions: ESBuildOptions = {
+  ...esbuildOptions,
+  jsx: 'transform',
+  external: ['react', 'react-dom', 'react/jsx-runtime'],
+};
+
 export const buildTabs = async (tabs: string[], { srcDir, outDir }: BuildOptions) => {
+  const nameExpander = tabNameExpander(srcDir);
   const { outputFiles } = await esbuild({
-    ...esbuildOptions,
-    entryPoints: tabs.map(tabNameExpander(srcDir)),
+    ...tabOptions,
+    entryPoints: tabs.map(nameExpander),
     outbase: outDir,
     outdir: outDir,
-    external: Object.keys(externals),
-    jsx: 'transform',
   });
   return outputFiles;
 };

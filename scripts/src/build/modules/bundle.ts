@@ -1,12 +1,15 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
-import { type OutputFile, build as esbuild } from 'esbuild';
+import {
+  type BuildOptions as ESBuildOptions,
+  type OutputFile,
+  build as esbuild,
+} from 'esbuild';
 import type {
   ArrowFunctionExpression,
   BlockStatement,
   CallExpression,
   ExpressionStatement,
-  FunctionExpression,
   Identifier,
   Program,
   VariableDeclaration,
@@ -17,10 +20,7 @@ import pathlib from 'path';
 import { bundleNameExpander } from '../buildUtils.js';
 import type { BuildOptions, BuildResult, UnreducedResult } from '../types.js';
 
-import { esbuildOptions, requireCreator } from './moduleUtils.js';
-
-
-const HELPER_NAME = 'moduleHelpers';
+import { esbuildOptions } from './moduleUtils.js';
 
 export const outputBundle = async (name: string, bundleText: string, outDir: string): Promise<Omit<BuildResult, 'elapsed'>> => {
   try {
@@ -38,28 +38,23 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
     const moduleCode = callExpression.callee as ArrowFunctionExpression;
 
     const output = {
-      type: 'FunctionExpression',
+      type: 'ArrowFunctionExpression',
       body: {
         type: 'BlockStatement',
-        body: [
-          requireCreator({
-            'js-slang/moduleHelpers': HELPER_NAME,
-          }),
-          ...(moduleCode.body.type === 'BlockStatement'
-            ? (moduleCode.body as BlockStatement).body
-            : [{
-              type: 'ExpressionStatement',
-              expression: moduleCode.body,
-            } as ExpressionStatement]),
-        ],
+        body: moduleCode.body.type === 'BlockStatement'
+          ? (moduleCode.body as BlockStatement).body
+          : [{
+            type: 'ExpressionStatement',
+            expression: moduleCode.body,
+          } as ExpressionStatement],
       },
       params: [
         {
           type: 'Identifier',
-          name: HELPER_NAME,
+          name: 'require',
         } as Identifier,
       ],
-    } as FunctionExpression;
+    } as ArrowFunctionExpression;
 
     let newCode = generate(output);
     if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
@@ -80,13 +75,18 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
   }
 };
 
+export const bundleOptions: ESBuildOptions = {
+  ...esbuildOptions,
+  external: ['js-slang*'],
+};
+
 export const buildBundles = async (bundles: string[], { srcDir, outDir }: BuildOptions) => {
+  const nameExpander = bundleNameExpander(srcDir);
   const { outputFiles } = await esbuild({
-    ...esbuildOptions,
-    entryPoints: bundles.map(bundleNameExpander(srcDir)),
+    ...bundleOptions,
+    entryPoints: bundles.map(nameExpander),
     outbase: outDir,
     outdir: outDir,
-    external: ['js-slang/moduleHelpers'],
   });
   return outputFiles;
 };

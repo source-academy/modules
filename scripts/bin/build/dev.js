@@ -1,9 +1,8 @@
 import chalk from 'chalk';
 import { context as esbuild } from 'esbuild';
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
-import { reduceBundleOutputFiles } from './modules/bundle.js';
-import { esbuildOptions } from './modules/moduleUtils.js';
-import { reduceTabOutputFiles } from './modules/tab.js';
+import { bundleOptions, reduceBundleOutputFiles } from './modules/bundle.js';
+import { reduceTabOutputFiles, tabOptions } from './modules/tab.js';
 import { bundleNameExpander, copyManifest, createBuildCommand, createBuildDirs, divideAndRound, logResult, retrieveBundlesAndTabs, tabNameExpander, } from './buildUtils.js';
 /**
  * Wait until the user presses 'ctrl+c' on the keyboard
@@ -21,11 +20,10 @@ const waitForQuit = () => new Promise((resolve, reject) => {
     process.stdin.on('error', reject);
 });
 const getBundleContext = ({ srcDir, outDir }, bundles, app) => esbuild({
-    ...esbuildOptions,
+    ...bundleOptions,
     outbase: outDir,
     outdir: outDir,
     entryPoints: bundles.map(bundleNameExpander(srcDir)),
-    external: ['js-slang/moduleHelpers'],
     plugins: [{
             name: 'Bundle Compiler',
             async setup(pluginBuild) {
@@ -56,11 +54,11 @@ const getBundleContext = ({ srcDir, outDir }, bundles, app) => esbuild({
         }],
 });
 const getTabContext = ({ srcDir, outDir }, tabs) => esbuild({
-    ...esbuildOptions,
+    ...tabOptions,
     outbase: outDir,
     outdir: outDir,
     entryPoints: tabs.map(tabNameExpander(srcDir)),
-    external: ['react', 'react-dom'],
+    external: ['react*', 'react-dom'],
     plugins: [{
             name: 'Tab Compiler',
             setup(pluginBuild) {

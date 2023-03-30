@@ -4,7 +4,7 @@ import { outputBundle } from '../bundle';
 import { esbuildOptions } from '../moduleUtils';
 
 const testBundle = `
-  import { context } from 'js-slang/moduleHelpers';
+  import context from 'js-slang/context';
 
   export const foo = () => 'foo';
   export const bar = () => {
@@ -20,7 +20,7 @@ test('building a bundle', async () => {
     },
     outdir: '.',
     outbase: '.',
-    external: ['js-slang/moduleHelpers'],
+    external: ['js-slang*'],
   });
 
   const [{ text: compiledBundle }] = outputFiles!;
@@ -48,7 +48,9 @@ test('building a bundle', async () => {
       }
     }
   }
-  const bundleFuncs = eval(bundleText)({ context: mockContext });
+  const bundleFuncs = eval(bundleText)(x => ({
+    'js-slang/context': mockContext,
+  }[x]));
   expect(bundleFuncs.foo()).toEqual('foo');
   expect(bundleFuncs.bar()).toEqual(undefined);
   expect(mockContext.moduleContexts).toMatchObject({
