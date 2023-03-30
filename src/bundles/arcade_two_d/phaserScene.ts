@@ -47,6 +47,7 @@ export class PhaserScene extends Phaser.Scene {
   private sourceAudioClips;
   private phaserAudioClips;
   private phaserDebugHitAreas;
+  private rerenderGameObjects = true;
 
   init() {
     console.log('phaser scene init()');
@@ -224,7 +225,7 @@ export class PhaserScene extends Phaser.Scene {
       const phaserGameObject = this.phaserGameObjects[gameObject.id];
 
       // Update the transform of Phaser GameObject
-      if (gameObject.hasTransformUpdates()) {
+      if (gameObject.hasTransformUpdates() || this.rerenderGameObjects) {
         const transformProps = gameObject.getTransform() as TransformProps;
         phaserGameObject.setPosition(transformProps.position[0], transformProps.position[1]);
         phaserGameObject.setRotation(transformProps.rotation);
@@ -233,7 +234,7 @@ export class PhaserScene extends Phaser.Scene {
       }
 
       // Update the image of Phaser GameObject
-      if (gameObject.hasRenderUpdates()) {
+      if (gameObject.hasRenderUpdates() || this.rerenderGameObjects) {
         const color = gameObject.getColor();
         // eslint-disable-next-line new-cap
         const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
@@ -284,6 +285,9 @@ export class PhaserScene extends Phaser.Scene {
         }
       }
     });
+
+    // Remove rerendering once game has been reloaded.
+    this.rerenderGameObjects = false;
   }
 
   // render() {
