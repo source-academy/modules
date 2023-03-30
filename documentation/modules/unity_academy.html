@@ -1,0 +1,216 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>unity_academy | Source Academy Modules</title><meta name="description" content="Documentation for Source Academy Modules"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Source Academy Modules</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../modules.html">Source Academy Modules</a></li>
+<li><a href="unity_academy.html">unity_academy</a></li></ul>
+<h1>Module unity_academy</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p><b>A module that allows students to program with Unity Engine in either <u>2-D</u> or <u>3-D</u> scene in Source Academy.</b>
+<br>
+Requires 3rd party application &quot;<b>Unity Academy</b>&quot; (also made by me) to work together.<br>
+<br>
+<br>
+<b>Lifecycle Event Functions</b><br>
+● Unity Academy has its own internal loop on students&#39; GameObject lifecycle.<br>
+● <u>Lifecycle event functions</u> are functions that are not supposed to be called by Source Academy&#39;s default evaluator, instead they are called by Unity Academy at certain time in the GameObject&#39;s lifecycle.<br>
+● Currently there are five types of Unity Academy lifecycle event function: <code>Start</code>, <code>Update</code> and three collision detaction functions.<br>
+● Both <code>Start</code> and <code>Update</code> functions should be a student-side function object with only one parameter, which automatically refers to the GameObject that is binded with the function when Unity Academy calls the function. So different GameObject instances can share the same lifecycle event function together.<br>
+For example:</p>
+<pre><code><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-6">my_start</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">){...};</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">my_update</span><span class="hl-1"> = (</span><span class="hl-0">gameObject</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {...};</span>
+</code></pre>
+<p>● The functions <code>set_start</code> and <code>set_update</code> in this module can be used to set one GameObject&#39;s <code>Start</code> and <code>Update</code> functions<br>
+● ===&gt;<code>Start</code> is called only for one time after the GameObject is created (instantiated) and before its first <code>Update</code> call.<br>
+● ===&gt;<code>Update</code> is called on every GameObject once in every frame after <code>Start</code> have been called. <br>
+● For the three collision detaction lifecycle event functions, please refer to <code>on_collision_enter</code>, <code>on_collision_stay</code> and <code>on_collision_exit</code> functions under the <code>Physics - Collision</code> category.<br>
+● You can not bind multiple lifecycle functions of the same type to the same GameObject. For example, you can&#39;t bind two <code>Update</code> functions to the same GameObject. In this case, previously binded <code>Update</code> functions will be overwritten by the latest binded <code>Update</code> function.<br><br>
+<u><b>[IMPORTANT]</b> All functions in this module that is NOT under the &quot;<b>Outside Lifecycle</b>&quot; category need to call by Unity Academy lifecycle event functions (Start or Update) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u><br>
+For example:</p>
+<pre><code><span class="hl-10">import</span><span class="hl-1"> {</span><span class="hl-0">init_unity_academy_3d</span><span class="hl-1">, </span><span class="hl-0">instantiate</span><span class="hl-1">, </span><span class="hl-0">set_start</span><span class="hl-1">, </span><span class="hl-0">set_update</span><span class="hl-1">, </span><span class="hl-0">set_position</span><span class="hl-1">} </span><span class="hl-10">from</span><span class="hl-1"> </span><span class="hl-8">&#39;unity_academy&#39;</span><span class="hl-1">;</span><br/><span class="hl-6">init_unity_academy_3d</span><span class="hl-1">(); </span><span class="hl-3">// Correct, since this function is under the &quot;Outside Lifecycle&quot; category and it can be called outside lifecycle event functions.</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">cube</span><span class="hl-1"> = </span><span class="hl-6">instantiate</span><span class="hl-1">(</span><span class="hl-8">&quot;cube&quot;</span><span class="hl-1">); </span><span class="hl-3">// Correct</span><br/><span class="hl-6">set_position</span><span class="hl-1">(</span><span class="hl-0">cube</span><span class="hl-1">, </span><span class="hl-7">1</span><span class="hl-1">, </span><span class="hl-7">2</span><span class="hl-1">, </span><span class="hl-7">3</span><span class="hl-1">); </span><span class="hl-3">// WRONG, since set_position should ONLY be called inside a lifecycle event function</span><br/><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-6">my_start</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">){ </span><span class="hl-3">// A sample Start event function which will be binded to cube by my_start later.</span><br/><span class="hl-1">    </span><span class="hl-6">set_position</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">, </span><span class="hl-7">1</span><span class="hl-1">, </span><span class="hl-7">2</span><span class="hl-1">, </span><span class="hl-7">3</span><span class="hl-1">); </span><span class="hl-3">// Correct, since the call to set_position is inside a lifecycle event function</span><br/><span class="hl-1">}</span><br/><span class="hl-6">set_start</span><span class="hl-1">(</span><span class="hl-0">cube</span><span class="hl-1">, </span><span class="hl-0">my_start</span><span class="hl-1">); </span><span class="hl-3">// Correct</span>
+</code></pre>
+<br>
+When any runtime errors happen in lifecycle event functions, they will be displayed in Unity Academy's information page and the lifecycle event function that caused the errors will automatically unbind from the GameObject.
+<br>
+<br>
+<b>Input Function Key Codes</b> Accepts A-Z, a-z and "LeftMouseBtn" / "RightMouseBtn" / "MiddleMouseBtn" / "LeftShift" / "RightShift"
+<br>
+<br>
+<b>Key differences between 2D and 3D mode</b><br>
+● In 2D mode the main camera renders the scene in <b>orthographic</b> mode (Z position is used to determine sequence when sprites overlapping), whereas in 3D mode the camera renders the scene in <b>perspective</b> mode. Moreover, 3D mode and 2D mode have different kinds of default camera controller.<br>
+● In 2D mode, due to the loss of one dimension, for some values and axis in 3D coordinate system, they sometimes behaves differently with 3D mode. For example, some coordinate values is ignored in 2D mode. Whereas in 3D mode you can use the fully-supported 3D coordinate system. (Actually, in general, Unity Academy just simply uses 3D space and an orthographic camera to simulate 2D space.)<br>
+● In 2D mode you need to use <b>instantiate_sprite</b> to create new GameObjects, whereas in 3D mode you need to use <b>instantiate</b> to create new GameObjects.<br>
+● In 2D mode Unity Academy will use Rigidbody2D and 2D colliders like BoxCollider2D for physics engine (certain values for 3D physics engine in 2D physics engine is ignored and will always be zero), whereas in 3D mode Unity Academy use regular 3D rigidbody and 3D colliders to simulate 3D physics.<br>
+● In 2D mode playing frame animations for sprite GameObjects is currently unavailable, whereas in 3D mode you need to use <b>play_animator_state</b> to play 3D animations.<br>
+<br>
+<br>
+<b>Unity Academy Hotkeys</b><br>
+● In 2D mode:<br>
+● 'W'/'A'/'S'/'D' : Moves the main camera around<br>
+● '=' (equals key) : Resets the main camera to its original position<br>
+<h3>Author</h3><p>Wang Zihan</p>
+</div></section><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/3421861/src/bundles/unity_academy/index.ts#L58">unity_academy/index.ts:58</a></li></ul></aside>
+<section class="tsd-panel-group">
+<section class="tsd-panel tsd-typography"></section></section>
+<section class="tsd-panel-group tsd-index-group">
+<section class="tsd-panel tsd-index-panel">
+<h3 class="tsd-index-heading uppercase">Index</h3>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Functions - Application Initialization</h3>
+<div class="tsd-index-list"><a href="../functions/unity_academy.init_unity_academy_2d.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg><span>init_<wbr/>unity_<wbr/>academy_<wbr/>2d</span></a>
+<a href="../functions/unity_academy.init_unity_academy_3d.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>init_<wbr/>unity_<wbr/>academy_<wbr/>3d</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Functions - Common</h3>
+<div class="tsd-index-list"><a href="../functions/unity_academy.delta_time.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>delta_<wbr/>time</span></a>
+<a href="../functions/unity_academy.destroy.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>destroy</span></a>
+<a href="../functions/unity_academy.get_main_camera_following_target.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target</span></a>
+<a href="../functions/unity_academy.instantiate.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>instantiate</span></a>
+<a href="../functions/unity_academy.instantiate_sprite.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>instantiate_<wbr/>sprite</span></a>
+<a href="../functions/unity_academy.play_animator_state.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>play_<wbr/>animator_<wbr/>state</span></a>
+<a href="../functions/unity_academy.same_gameobject.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>same_<wbr/>gameobject</span></a>
+<a href="../functions/unity_academy.set_start.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>start</span></a>
+<a href="../functions/unity_academy.set_update.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>update</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Functions - Input</h3>
+<div class="tsd-index-list"><a href="../functions/unity_academy.get_key.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>key</span></a>
+<a href="../functions/unity_academy.get_key_down.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>key_<wbr/>down</span></a>
+<a href="../functions/unity_academy.get_key_up.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>key_<wbr/>up</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Functions - Outside Lifecycle</h3>
+<div class="tsd-index-list"><a href="../functions/unity_academy.get_main_camera_following_target.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target</span></a>
+<a href="../functions/unity_academy.init_unity_academy_2d.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>init_<wbr/>unity_<wbr/>academy_<wbr/>2d</span></a>
+<a href="../functions/unity_academy.init_unity_academy_3d.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>init_<wbr/>unity_<wbr/>academy_<wbr/>3d</span></a>
+<a href="../functions/unity_academy.instantiate.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>instantiate</span></a>
+<a href="../functions/unity_academy.instantiate_sprite.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>instantiate_<wbr/>sprite</span></a>
+<a href="../functions/unity_academy.on_collision_enter.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>enter</span></a>
+<a href="../functions/unity_academy.on_collision_exit.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>exit</span></a>
+<a href="../functions/unity_academy.on_collision_stay.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>stay</span></a>
+<a href="../functions/unity_academy.set_start.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>start</span></a>
+<a href="../functions/unity_academy.set_update.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>update</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Functions - Physics - Collision</h3>
+<div class="tsd-index-list"><a href="../functions/unity_academy.on_collision_enter.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>enter</span></a>
+<a href="../functions/unity_academy.on_collision_exit.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>exit</span></a>
+<a href="../functions/unity_academy.on_collision_stay.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>stay</span></a>
+<a href="../functions/unity_academy.remove_collider_components.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>remove_<wbr/>collider_<wbr/>components</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Functions - Physics - Rigidbody</h3>
+<div class="tsd-index-list"><a href="../functions/unity_academy.add_impulse_force.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>add_<wbr/>impulse_<wbr/>force</span></a>
+<a href="../functions/unity_academy.apply_rigidbody.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>apply_<wbr/>rigidbody</span></a>
+<a href="../functions/unity_academy.get_angular_velocity.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>angular_<wbr/>velocity</span></a>
+<a href="../functions/unity_academy.get_mass.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>mass</span></a>
+<a href="../functions/unity_academy.get_velocity.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>velocity</span></a>
+<a href="../functions/unity_academy.set_angular_drag.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>angular_<wbr/>drag</span></a>
+<a href="../functions/unity_academy.set_angular_velocity.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>angular_<wbr/>velocity</span></a>
+<a href="../functions/unity_academy.set_drag.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>drag</span></a>
+<a href="../functions/unity_academy.set_mass.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>mass</span></a>
+<a href="../functions/unity_academy.set_use_gravity.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>use_<wbr/>gravity</span></a>
+<a href="../functions/unity_academy.set_velocity.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>velocity</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Functions - Transform</h3>
+<div class="tsd-index-list"><a href="../functions/unity_academy.get_position.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>position</span></a>
+<a href="../functions/unity_academy.get_rotation_euler.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>rotation_<wbr/>euler</span></a>
+<a href="../functions/unity_academy.get_scale.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>scale</span></a>
+<a href="../functions/unity_academy.rotate_world.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>rotate_<wbr/>world</span></a>
+<a href="../functions/unity_academy.set_position.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>position</span></a>
+<a href="../functions/unity_academy.set_rotation_euler.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>rotation_<wbr/>euler</span></a>
+<a href="../functions/unity_academy.set_scale.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>scale</span></a>
+<a href="../functions/unity_academy.translate_world.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>translate_<wbr/>world</span></a>
+</div></section></section></section></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current"><a href="../modules.html">Source <wbr/>Academy <wbr/>Modules</a>
+<ul>
+<li class="tsd-kind-module"><a href="binary_tree.html">binary_<wbr/>tree</a></li>
+<li class="tsd-kind-module"><a href="copy_gc.html">copy_<wbr/>gc</a></li>
+<li class="tsd-kind-module"><a href="csg.html">csg</a></li>
+<li class="tsd-kind-module"><a href="curve.html">curve</a></li>
+<li class="tsd-kind-module"><a href="game.html">game</a></li>
+<li class="tsd-kind-module"><a href="mark_sweep.html">mark_<wbr/>sweep</a></li>
+<li class="tsd-kind-module"><a href="pix_n_flix.html">pix_<wbr/>n_<wbr/>flix</a></li>
+<li class="tsd-kind-module"><a href="plotly.html">plotly</a></li>
+<li class="tsd-kind-module"><a href="repeat.html">repeat</a></li>
+<li class="tsd-kind-module"><a href="repl.html">repl</a></li>
+<li class="tsd-kind-module"><a href="rune.html">rune</a></li>
+<li class="tsd-kind-module"><a href="rune_in_words.html">rune_<wbr/>in_<wbr/>words</a></li>
+<li class="tsd-kind-module"><a href="scrabble.html">scrabble</a></li>
+<li class="tsd-kind-module"><a href="sound.html">sound</a></li>
+<li class="tsd-kind-module"><a href="sound_matrix.html">sound_<wbr/>matrix</a></li>
+<li class="tsd-kind-module"><a href="stereo_sound.html">stereo_<wbr/>sound</a></li>
+<li class="current selected tsd-kind-module"><a href="unity_academy.html">unity_<wbr/>academy</a></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.add_impulse_force.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>add_<wbr/>impulse_<wbr/>force</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.apply_rigidbody.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>apply_<wbr/>rigidbody</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.delta_time.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>delta_<wbr/>time</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.destroy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>destroy</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_angular_velocity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>angular_<wbr/>velocity</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_key.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>key</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_key_down.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>key_<wbr/>down</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_key_up.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>key_<wbr/>up</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_main_camera_following_target.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_mass.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>mass</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_position.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>position</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_rotation_euler.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>rotation_<wbr/>euler</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_scale.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>scale</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_velocity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>velocity</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.init_unity_academy_2d.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>init_<wbr/>unity_<wbr/>academy_<wbr/>2d</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.init_unity_academy_3d.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>init_<wbr/>unity_<wbr/>academy_<wbr/>3d</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.instantiate.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>instantiate</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.instantiate_sprite.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>instantiate_<wbr/>sprite</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.on_collision_enter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>on_<wbr/>collision_<wbr/>enter</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.on_collision_exit.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>on_<wbr/>collision_<wbr/>exit</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.on_collision_stay.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>on_<wbr/>collision_<wbr/>stay</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.play_animator_state.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>play_<wbr/>animator_<wbr/>state</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.remove_collider_components.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>remove_<wbr/>collider_<wbr/>components</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.rotate_world.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>rotate_<wbr/>world</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.same_gameobject.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>same_<wbr/>gameobject</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_angular_drag.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>angular_<wbr/>drag</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_angular_velocity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>angular_<wbr/>velocity</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_drag.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>drag</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_mass.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>mass</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_position.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>position</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_rotation_euler.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>rotation_<wbr/>euler</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_scale.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>scale</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_start.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>start</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_update.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>update</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_use_gravity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>use_<wbr/>gravity</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_velocity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>velocity</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.translate_world.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>translate_<wbr/>world</a></li></ul></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>
