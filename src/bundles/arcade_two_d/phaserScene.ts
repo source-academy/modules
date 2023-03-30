@@ -9,7 +9,7 @@ import { AudioClip } from './audio';
 
 // Store keys that are down in the Phaser Scene
 // By default, this is empty, unless a key is down
-export let inputKeysDown = new Set<string>();
+export const inputKeysDown = new Set<string>();
 
 // the start time for the game
 let startTime: number;
@@ -28,9 +28,12 @@ export let pointerPrimaryDown: boolean;
 export let pointerSecondaryDown: boolean;
 
 // Stores the IDs of the GameObjects that the pointer is over
-export let pointerOverGameObjectsId = new Set<number>();
+export const pointerOverGameObjectsId = new Set<number>();
 
 export let loopCount: number;
+
+// Stores the debug information, which is reset every iteration of the update loop.
+export const debugLogArray: Array<string> = Array.of();
 
 /**
  * The Phaser scene that parses the GameObjects and update loop created by the user,
@@ -48,6 +51,8 @@ export class PhaserScene extends Phaser.Scene {
   private phaserAudioClips;
   private phaserDebugHitAreas;
   private rerenderGameObjects = true;
+  // Handle debug information
+  private debugLogText: Phaser.GameObjects.Text | undefined = undefined;
 
   init() {
     console.log('phaser scene init()');
@@ -205,6 +210,13 @@ export class PhaserScene extends Phaser.Scene {
     this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
       inputKeysDown.delete(event.key);
     });
+
+    // Handle debug info
+    if (DEBUG) {
+      this.debugLogText = this.add.text(0, 0, debugLogArray)
+        .setBackgroundColor('black')
+        .setAlpha(0.8);
+    }
   }
 
   update() {
@@ -288,9 +300,12 @@ export class PhaserScene extends Phaser.Scene {
 
     // Remove rerendering once game has been reloaded.
     this.rerenderGameObjects = false;
-  }
 
-  // render() {
-  //   this.game.debug.text(`Loop Count: ${loopCount}`, 32, 64);
-  // }
+    // Set and clear debug info
+    if (DEBUG && this.debugLogText) {
+      this.debugLogText.setText(debugLogArray);
+      this.children.bringToTop(this.debugLogText);
+      debugLogArray.length = 0;
+    }
+  }
 }

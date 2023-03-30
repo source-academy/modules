@@ -35,6 +35,7 @@ export {
   get_game_time,
   get_loop_count,
   enable_debug,
+  debug_log,
   input_key_down,
   input_left_mouse_down,
   input_right_mouse_down,

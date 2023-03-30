@@ -184,6 +184,9 @@ export abstract class ShapeGameObject extends InteractableGameObject {
   public abstract getShape();
 
   /** @override */
+  public toString = () => '<ShapeGameObject>';
+
+  /** @override */
   public toReplString = () => '<ShapeGameObject>';
 }
 
@@ -262,6 +265,9 @@ export class SpriteGameObject extends InteractableGameObject {
   }
 
   /** @override */
+  public toString = () => '<SpriteGameObject>';
+
+  /** @override */
   public toReplString = () => '<SpriteGameObject>';
 }
 
@@ -292,6 +298,9 @@ export class TextGameObject extends InteractableGameObject {
   getText(): types.DisplayText {
     return this.displayText;
   }
+
+  /** @override */
+  public toString = () => '<TextGameObject>';
 
   /** @override */
   public toReplString = () => '<TextGameObject>';

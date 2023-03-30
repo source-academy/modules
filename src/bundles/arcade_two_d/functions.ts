@@ -21,6 +21,7 @@ import {
   pointerOverGameObjectsId,
   loopCount,
   pointerSecondaryDown,
+  debugLogArray,
 } from './phaserScene';
 
 import {
@@ -569,14 +570,27 @@ export const set_scale: (scale: number) => void = (scale: number) => {
 
 /**
  * Enables debug mode.
- * The hit box of GameObjects are shown in this mode.
- * Note that the hit box shown is the hit box of the interaction with the mouse.
- * Hit box interaction between objects is based off a rectangular area instead.
+ * Hit box interaction between pointer and GameObjects are shown with a green outline in debug mode.
+ * Hit box interaction between GameObjects is based off a rectangular area instead, which is not reflected.
+ * debug_log(...) information is shown on the top-left corner of the canvas.
  *
- * @ category Configuration
+ * @category Configuration
  */
 export const enable_debug: () => void = () => {
   DEBUG = true;
+};
+
+
+/**
+ * Logs any information passed into it within the update_loop(...).
+ * Displays the information in the top-left corner of the canvas only if debug mode is enabled.
+ * Calling display(...) within this function will not work as intended, so use debug_log(...) instead.
+ * @param info The information to log.
+ */
+export const debug_log: (info: string) => void = (info: string) => {
+  if (DEBUG) {
+    debugLogArray.push(info);
+  }
 };
 
 // =============================================================================
@@ -683,8 +697,7 @@ export const get_loop_count: () => number = () => loopCount;
 /**
  * This sets the update loop in the canvas.
  * The update loop is run once per frame, so it depends on the fps set for the number of times this loop is run.
- * Important notes:
- * Calling display() within this function will only output when rerun.
+ * There should only be one update_loop called.
  * (This function could be redundant if update_function is supplied as a param to build_game.)
  *
  * @param update_function A user-defined update_function, that takes in an array as a parameter.
