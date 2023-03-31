@@ -283,6 +283,7 @@ export const update_rotation: (gameObject: GameObject, radians: number) => GameO
 
 /**
  * Updates the color of the GameObject.
+ * Note that the value is modulo 256, so passing values greater than 255 is allowed.
  *
  * @param gameObject GameObject reference
  * @param color The color as an RGBA array, with RGBA values ranging from 0 to 255.
