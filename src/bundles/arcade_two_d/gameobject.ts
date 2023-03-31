@@ -42,10 +42,8 @@ export abstract class GameObject implements Transformable, ReplResult {
   }
 
   /**
-   * Clones the array of GameObjects, so that the values are reset
-   * when the game is reset, when the module tab switches back.
-   * This method is called when init() Phaser Scene. #todo
-   * @returns a deep copy of the GameObjects.
+   * This method is called when init() Phaser Scene.
+   * @returns The GameObjects as an array.
    */
   public static getGameObjectsArray() {
     return GameObject.gameObjectsArray;

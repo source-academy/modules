@@ -2,23 +2,18 @@ import Phaser from 'phaser';
 import { CircleGameObject, GameObject, type InteractableGameObject, RectangleGameObject, ShapeGameObject, SpriteGameObject, TextGameObject, TriangleGameObject } from './gameobject';
 import {
   DEBUG,
+  gameTime,
+  loopCount,
   userUpdateFunction,
 } from './functions';
 import { type TransformProps } from './types';
 import { AudioClip } from './audio';
 
+type PhaserGameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Phaser.GameObjects.Shape;
+
 // Store keys that are down in the Phaser Scene
 // By default, this is empty, unless a key is down
 export const inputKeysDown = new Set<string>();
-
-// the start time for the game
-let startTime: number;
-
-// the current in-game time
-export let gameTime: number;
-
-// the time between frames
-// export let gameDelta: number;
 
 // the current (mouse) pointer position in the canvas
 export let pointerPosition: [number, number];
@@ -30,10 +25,10 @@ export let pointerSecondaryDown: boolean;
 // Stores the IDs of the GameObjects that the pointer is over
 export const pointerOverGameObjectsId = new Set<number>();
 
-export let loopCount: number;
-
 // Stores the debug information, which is reset every iteration of the update loop.
 export const debugLogArray: Array<string> = Array.of();
+
+const userGameStateArray: Array<any> = Array.of();
 
 /**
  * The Phaser scene that parses the GameObjects and update loop created by the user,
@@ -44,26 +39,23 @@ export class PhaserScene extends Phaser.Scene {
     super('PhaserScene');
   }
   private sourceGameObjects;
-  private phaserGameObjects = [] as (Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Phaser.GameObjects.Shape)[];
-  private userGameStateArray;
+  private phaserGameObjects = [] as (PhaserGameObject)[];
   private corsAssets;
   private sourceAudioClips;
   private phaserAudioClips;
-  private phaserDebugHitAreas;
   private rerenderGameObjects = true;
+  private delayedKeyUpEvents = new Set<Function>();
+  private runtimeError: boolean = false;
   // Handle debug information
   private debugLogText: Phaser.GameObjects.Text | undefined = undefined;
+
 
   init() {
     console.log('phaser scene init()');
     this.sourceGameObjects = GameObject.getGameObjectsArray();
-    this.userGameStateArray = [];
     this.sourceAudioClips = AudioClip.getAudioClipsArray();
     this.phaserAudioClips = [];
     this.corsAssets = new Set();
-    this.phaserDebugHitAreas = [];
-    startTime = Date.now();
-    loopCount = 0;
     // Disable context menu within the canvas
     this.game.canvas.oncontextmenu = (e) => e.preventDefault();
   }
@@ -100,7 +92,6 @@ export class PhaserScene extends Phaser.Scene {
           text,
         ));
         this.phaserGameObjects[gameObject.id].setOrigin(0.5, 0.5);
-        // this.physics.world.enable([this.phaserGameObjects[gameObject.id]]); // This is related to physics hitbox, not wanted...
         if (gameObject.getHitboxState().hitboxActive) {
           this.phaserGameObjects[gameObject.id].setInteractive();
         }
@@ -187,7 +178,6 @@ export class PhaserScene extends Phaser.Scene {
       // Enter debug mode
       if (DEBUG) {
         this.input.enableDebug(phaserGameObject);
-        // phaserGameObject.input.hitAreaDebug.strokeColor = 0;
       }
 
       // Store the phaserGameObject in the source representation
@@ -208,21 +198,22 @@ export class PhaserScene extends Phaser.Scene {
       inputKeysDown.add(event.key);
     });
     this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
-      inputKeysDown.delete(event.key);
+      this.delayedKeyUpEvents.add(() => inputKeysDown.delete(event.key));
     });
 
     // Handle debug info
-    if (DEBUG) {
-      this.debugLogText = this.add.text(0, 0, debugLogArray)
-        .setBackgroundColor('black')
-        .setAlpha(0.8);
+    if (!DEBUG) {
+      debugLogArray.length = 0;
     }
+    this.debugLogText = this.add.text(0, 0, debugLogArray)
+      .setBackgroundColor('black')
+      .setAlpha(0.8);
   }
 
-  update() {
+  update(time, delta) {
     // Set the time and delta
-    gameTime = Date.now() - startTime;
-    loopCount++;
+    gameTime[0] += delta;
+    loopCount[0]++;
     // gameDelta = delta;
 
     // Set the pointer
@@ -230,18 +221,30 @@ export class PhaserScene extends Phaser.Scene {
     pointerPrimaryDown = this.input.activePointer.primaryDown;
     pointerSecondaryDown = this.input.activePointer.rightButtonDown();
 
-    // Run the user-defined update function
-    userUpdateFunction(this.userGameStateArray);
+    // Run the user-defined update function, and prevent runtime errors.
+    try {
+      if (!this.runtimeError) {
+        userUpdateFunction(userGameStateArray);
+      }
+    } catch (error) {
+      debugLogArray.push('Runtime error occured');
+      this.runtimeError = true;
+      console.log(error);
+    }
     // Loop through each GameObject in the array and determine which needs to update.
     this.sourceGameObjects.forEach((gameObject: InteractableGameObject) => {
-      const phaserGameObject = this.phaserGameObjects[gameObject.id];
+      const phaserGameObject = this.phaserGameObjects[gameObject.id] as PhaserGameObject;
 
       // Update the transform of Phaser GameObject
       if (gameObject.hasTransformUpdates() || this.rerenderGameObjects) {
         const transformProps = gameObject.getTransform() as TransformProps;
-        phaserGameObject.setPosition(transformProps.position[0], transformProps.position[1]);
-        phaserGameObject.setRotation(transformProps.rotation);
-        phaserGameObject.setScale(transformProps.scale[0], transformProps.scale[1]);
+        phaserGameObject.setPosition(transformProps.position[0], transformProps.position[1])
+          .setRotation(transformProps.rotation)
+          .setScale(transformProps.scale[0], transformProps.scale[1]);
+        if (gameObject instanceof TriangleGameObject) {
+          // The only shape that requires flipping is the triangle, as the rest are symmetric about their origin.
+          phaserGameObject.setRotation(transformProps.rotation + (gameObject.getFlipState()[1] ? Math.PI : 0));
+        }
         gameObject.updatedTransform();
       }
 
@@ -252,19 +255,19 @@ export class PhaserScene extends Phaser.Scene {
         const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
         const flip = gameObject.getFlipState();
         if (gameObject instanceof TextGameObject) {
-          (phaserGameObject as Phaser.GameObjects.Text).setTint(intColor);
-          (phaserGameObject as Phaser.GameObjects.Text).setAlpha(color[3] / 255);
-          (phaserGameObject as Phaser.GameObjects.Text).setFlip(flip[0], flip[1]);
-          (phaserGameObject as Phaser.GameObjects.Text).setText(gameObject.getText().text);
-        }
-        if (gameObject instanceof SpriteGameObject) {
-          (phaserGameObject as Phaser.GameObjects.Sprite).setTint(intColor);
-          (phaserGameObject as Phaser.GameObjects.Sprite).setAlpha(color[3] / 255);
-          (phaserGameObject as Phaser.GameObjects.Sprite).setFlip(flip[0], flip[1]);
-        }
-        if (gameObject instanceof ShapeGameObject) {
-          (phaserGameObject as Phaser.GameObjects.Shape).setFillStyle(intColor, color[3] / 255);
-          // #BUG cannot flip shape?
+          (phaserGameObject as Phaser.GameObjects.Text).setTint(intColor)
+            .setAlpha(color[3] / 255)
+            .setFlip(flip[0], flip[1])
+            .setText(gameObject.getText().text);
+        } else if (gameObject instanceof SpriteGameObject) {
+          (phaserGameObject as Phaser.GameObjects.Sprite).setTint(intColor)
+            .setAlpha(color[3] / 255)
+            .setFlip(flip[0], flip[1]);
+        } else if (gameObject instanceof ShapeGameObject) {
+          (phaserGameObject as Phaser.GameObjects.Shape).setFillStyle(intColor, color[3] / 255)
+          // Phaser.GameObjects.Shape does not have setFlip, so flipping is done with rotations.
+          // The only shape that requires flipping is the triangle, as the rest are symmetric about their origin.
+            .setRotation(gameObject.getTransform().rotation + (flip[1] ? Math.PI : 0));
         }
         // Update the z-index (rendering order), to the top.
         if (gameObject.getShouldBringToTop()) {
@@ -272,18 +275,6 @@ export class PhaserScene extends Phaser.Scene {
         }
         gameObject.updatedRender();
       }
-
-      // Update the interactivity of Phaser GameObject. This doesn't work.
-      // if (gameObject.hasHitboxUpdates()) {
-      //   // update the hitbox of PhaserGameObject
-      //   // this doesn't work once the game starts.
-      //   if (gameObject.getHitboxState().hitboxActive) {
-      //     this.phaserGameObjects[gameObject.id].setInteractive();
-      //   } else {
-      //     this.phaserGameObjects[gameObject.id].disableInteractive();
-      //   }
-      //   gameObject.updatedHitbox();
-      // }
     });
 
     // Handle audio updates
@@ -298,14 +289,23 @@ export class PhaserScene extends Phaser.Scene {
       }
     });
 
+    // Delay KeyUp events, so that low FPS can still detect KeyDown.
+    // eslint-disable-next-line array-callback-return
+    this.delayedKeyUpEvents.forEach((event: Function) => event());
+    this.delayedKeyUpEvents.clear();
+
     // Remove rerendering once game has been reloaded.
     this.rerenderGameObjects = false;
 
     // Set and clear debug info
-    if (DEBUG && this.debugLogText) {
+    if (this.debugLogText) {
       this.debugLogText.setText(debugLogArray);
       this.children.bringToTop(this.debugLogText);
-      debugLogArray.length = 0;
+      if (this.runtimeError) {
+        this.debugLogText.setColor('orange');
+      } else {
+        debugLogArray.length = 0;
+      }
     }
   }
 }

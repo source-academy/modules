@@ -103,51 +103,12 @@ class GameTab extends React.Component<Props, GameState> {
       console.log('Arcade2D tab not active');
       return;
     }
-    // Check if there is already a canvas, then do nothing.
-    // if (this.props.context.result?.value?.loadedGame) {
-    //   console.log('Run the Source program to reload the game.');
-    //   return;
-    // console.log(this.props.context.result?.value?.phaserGameInstance);
-    //   console.log(this.props.context.result?.value?.phaserGameInstance?.canvas);
-    //   console.log(this.props.context.result?.value?.offscreenCanvas);
-    //   // need to store an instance of the canvas here to rebuild
-    //   const canvas = (document.querySelector('#phaser-game canvas') as HTMLCanvasElement)?.getContext('bitmaprenderer') as ImageBitmapRenderingContext;
-    //   const bitmap = this.props.context.result?.value?.offscreenCanvas?.transferToImageBitmap();
-    //   if (canvas) {
-    //     canvas.transferFromImageBitmap(bitmap);
-    //     console.log('image transfered 3 ');
-    //     console.log(bitmap);
-    // }
-
-    // if (canvas) {
-    //   const ctx = canvas.getContext('webgl');
-    //   const image = this.props.context.result.value.phaserGameInstance.canvas;
-    //   if (ctx) {
-    //     ctx.drawImage(image, 33, 71, 104, 124, 21, 20, 87, 104);
-    //   }
-    // }
-    // Use an offscreen canvas
-
-    // const canvas = this.props.context.result?.value?.phaserGameInstance?.canvas;
-    // return;
-    // }
 
     // Config will exist since it is checked in toSpawn
     const config = this.props.context.result?.value?.gameConfig;
-    // Modify the canvas in Phaser config to use existing canvas.
-    // config.canvas = document.querySelector('#phaser-game canvas');
     this.setState({
       game: new Phaser.Game(config),
     });
-    // this.props.context.result.value.phaserGameInstance = this.state.game;
-    // this.props.context.result.value.offscreenCanvas = config.canvas.transferControlToOffscreen();
-
-    // !! below line causes error - this.props.context.result is undefined
-    // this.props.context.result.value.loadedGame = true;
-    // const canvas = document.getElementById('myCanvas');
-    // if (canvas) {
-    //   canvas.oncontextmenu = () => false;
-    // }
   }
 
   shouldComponentUpdate() {
@@ -158,10 +119,11 @@ class GameTab extends React.Component<Props, GameState> {
   toggleGamePause(pause: boolean): void {
     if (pause) {
       console.log('Game paused');
-      this.state.game?.loop.sleep();
+      // Default scene since there is only one scene.
+      this.state.game?.scene.pause('default');
       this.state.game?.sound.pauseAll();
     } else {
-      this.state.game?.loop.wake();
+      this.state.game?.scene.resume('default');
       this.state.game?.sound.resumeAll();
       console.log('Game resumed');
     }
@@ -169,12 +131,9 @@ class GameTab extends React.Component<Props, GameState> {
 
   componentWillUnmount(): void {
     console.log('componentWillUnmount');
-    // console.log(this.state.game?.getTime());
-    // console.log(this.state.game?.getFrame());
     this.state.game?.sound.stopAll();
-    // Prevents multiple scene loops being run at the same time
+    // Prevents multiple update loops being run at the same time
     this.state.game?.destroy(false, false);
-    // this.props.context.result.value.gameEnded = true;
 
     // Remove the current WEBGL context, to prevent multiple webgl contexts from causing problems.
     // Note that spamming run will still cause multiple webgl contexts, as they take time to be removed.
