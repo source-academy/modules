@@ -79,8 +79,8 @@ export class AudioClip {
     return AudioClip.audioClipsArray;
   }
 
-  /** @override */
-  public toString = () => '<AudioClip>';
-
   public toReplString = () => '<AudioClip>';
+
+  /** @override */
+  public toString = () => this.toReplString();
 }

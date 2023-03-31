@@ -184,10 +184,10 @@ export abstract class ShapeGameObject extends InteractableGameObject {
   public abstract getShape();
 
   /** @override */
-  public toString = () => '<ShapeGameObject>';
+  public toReplString = () => '<ShapeGameObject>';
 
   /** @override */
-  public toReplString = () => '<ShapeGameObject>';
+  public toString = () => this.toReplString();
 }
 
 /**
@@ -265,10 +265,10 @@ export class SpriteGameObject extends InteractableGameObject {
   }
 
   /** @override */
-  public toString = () => '<SpriteGameObject>';
+  public toReplString = () => '<SpriteGameObject>';
 
   /** @override */
-  public toReplString = () => '<SpriteGameObject>';
+  public toString = () => this.toReplString();
 }
 
 /**
@@ -300,10 +300,10 @@ export class TextGameObject extends InteractableGameObject {
   }
 
   /** @override */
-  public toString = () => '<TextGameObject>';
+  public toReplString = () => '<TextGameObject>';
 
   /** @override */
-  public toReplString = () => '<TextGameObject>';
+  public toString = () => this.toReplString();
 }
 
 // =============================================================================
