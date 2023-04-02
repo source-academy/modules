@@ -56,7 +56,7 @@ export type Color = {
 export type PhaserType = 'Shape' | 'Sprite' | 'Text';
 
 /**
- * Represents the shape of a GameObject
+ * Represents the shape of a GameObject.
  */
 export type Shape = {
   Shape: void;
@@ -64,7 +64,7 @@ export type Shape = {
 };
 
 /**
- * Represents the base shape of a GameObject
+ * Represents the base shape of a GameObject.
  */
 export type BaseShape = CircleProps | RectangleProps | TriangleProps;
 
@@ -121,25 +121,7 @@ export type Sprite = {
  */
 export type BuildGame = {
   toReplString: () => string;
-  // config: Config;
-  // init: () => void;
-  // update: UpdateFunction;
-};
-
-/**
- * Represents the configuration for the Phaser Game.
- * @property {number} width - The width of the Phaser canvas.
- * @property {number} height - The height of the Phaser canvas.
- * @property {number} scale - The scale of the Phaser canvas.
- * @property {number} volume - The volume of the Phaser canvas.
- * @property {number} fps - The width of the Phaser canvas.
- */
-export type Config = {
-  width: number,
-  height: number,
-  scale: number,
-  volume: number,
-  fps: number,
+  gameConfig;
 };
 
 /**
@@ -147,4 +129,4 @@ export type Config = {
  * userSuppliedState is an array that stores whatever the user sets it to be,
  * which can be assessed and modified on the next frame.
  */
-export type UpdateFunction = (userSuppliedState: []) => void;
+export type UpdateFunction = (userSuppliedState: Array<any>) => void;

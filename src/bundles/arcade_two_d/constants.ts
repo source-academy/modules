@@ -20,5 +20,5 @@ export const MAX_VOLUME: number = 1;
 export const MIN_VOLUME: number = 0;
 
 // A mode where the hitboxes is shown in the canvas for debugging purposes,
-// and possibly other debug information
+// and debug log information
 export const DEFAULT_DEBUG: boolean = false;

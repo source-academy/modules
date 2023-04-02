@@ -59,10 +59,8 @@ export class AudioClip {
     }
   }
   public playAudioClip(play: boolean) {
-    if (this.playClip !== play) {
-      this.playClip = play;
-      this.audioClipNotUpdated = true;
-    }
+    this.playClip = play;
+    this.audioClipNotUpdated = true;
   }
   /**
    * Checks if the Audio Clip needs to update. Updates the flag if true.
@@ -78,5 +76,9 @@ export class AudioClip {
   public static getAudioClipsArray() {
     return AudioClip.audioClipsArray;
   }
+
   public toReplString = () => '<AudioClip>';
+
+  /** @override */
+  public toString = () => this.toReplString();
 }

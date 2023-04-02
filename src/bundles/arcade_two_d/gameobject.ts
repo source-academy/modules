@@ -42,10 +42,8 @@ export abstract class GameObject implements Transformable, ReplResult {
   }
 
   /**
-   * Clones the array of GameObjects, so that the values are reset
-   * when the game is reset, when the module tab switches back.
-   * This method is called when init() Phaser Scene. #todo
-   * @returns a deep copy of the GameObjects.
+   * This method is called when init() Phaser Scene.
+   * @returns The GameObjects as an array.
    */
   public static getGameObjectsArray() {
     return GameObject.gameObjectsArray;
@@ -150,7 +148,7 @@ export abstract class InteractableGameObject extends RenderableGameObject implem
     this.hitboxNotUpdated = false;
   }
   /**
-   * Stores the phaser GameObject reference.
+   * This stores the GameObject within the phaser game, which can only be set after the game has started.
    * @param phaserGameObject The phaser GameObject reference.
    */
   setPhaserGameObject(phaserGameObject: Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text) {
@@ -185,6 +183,9 @@ export abstract class ShapeGameObject extends InteractableGameObject {
 
   /** @override */
   public toReplString = () => '<ShapeGameObject>';
+
+  /** @override */
+  public toString = () => this.toReplString();
 }
 
 /**
@@ -263,6 +264,9 @@ export class SpriteGameObject extends InteractableGameObject {
 
   /** @override */
   public toReplString = () => '<SpriteGameObject>';
+
+  /** @override */
+  public toString = () => this.toReplString();
 }
 
 /**
@@ -295,6 +299,9 @@ export class TextGameObject extends InteractableGameObject {
 
   /** @override */
   public toReplString = () => '<TextGameObject>';
+
+  /** @override */
+  public toString = () => this.toReplString();
 }
 
 // =============================================================================
