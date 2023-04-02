@@ -308,7 +308,7 @@ export function get_duration(sound: Sound): number {
  * @return true if x is a Sound, false otherwise
  * @example is_sound(make_sound(t => 0, 2)); // Returns true
  */
-export function is_sound(x: any): boolean {
+export function is_sound(x: any): x is Sound {
   return (
     is_pair(x)
     && typeof get_wave(x) === 'function'
