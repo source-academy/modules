@@ -75,7 +75,7 @@ let FPS: number = DEFAULT_FPS;
 export let DEBUG: boolean = false;
 
 // User update function
-export let userUpdateFunction: UpdateFunction;
+export let userUpdateFunction: UpdateFunction = () => {};
 
 // The current in-game time and frame count.
 export let gameTime: [number] = [0];
@@ -804,13 +804,12 @@ export const build_game: () => BuildGame = () => {
     // Setting to Phaser.WEBGL can lead to WebGL: INVALID_OPERATION errors, so Phaser.CANVAS is used instead.
     // Also: Phaser.WEBGL can crash when there are too many contexts
     // WEBGL is generally more performant, and allows for tinting of gameobjects.
-    // The issue is that there are multiple webgl contexts, and exceeding a limit will cause the oldest context to be lost
-    // which will cause more problems, as the object doesn't belong in the context anymore. (Solved by removing contexts when unmounted)
     type: Phaser.WEBGL,
     parent: 'phaser-game',
     scene: PhaserScene,
     input: inputConfig,
     fps: fpsConfig,
+    banner: false,
   };
 
   return {

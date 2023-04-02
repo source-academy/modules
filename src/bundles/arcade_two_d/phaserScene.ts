@@ -51,7 +51,7 @@ export class PhaserScene extends Phaser.Scene {
 
 
   init() {
-    console.log('phaser scene init()');
+    // console.log('phaser scene init()');
     this.sourceGameObjects = GameObject.getGameObjectsArray();
     this.sourceAudioClips = AudioClip.getAudioClipsArray();
     this.phaserAudioClips = [];
@@ -185,12 +185,17 @@ export class PhaserScene extends Phaser.Scene {
     });
 
     // Create audio clips
-    this.sourceAudioClips.forEach((audioClip: AudioClip) => {
-      this.phaserAudioClips.push(this.sound.add(audioClip.getUrl(), {
-        loop: audioClip.getLoop(),
-        volume: audioClip.getVolume(),
-      }));
-    });
+    try {
+      this.sourceAudioClips.forEach((audioClip: AudioClip) => {
+        this.phaserAudioClips.push(this.sound.add(audioClip.getUrl(), {
+          loop: audioClip.getLoop(),
+          volume: audioClip.getVolume(),
+        }));
+      });
+    } catch {
+      this.runtimeError = true;
+      debugLogArray.push('Runtime Error: Cannot load audio file');
+    }
 
     // Handle keyboard inputs
     // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
@@ -227,53 +232,57 @@ export class PhaserScene extends Phaser.Scene {
         userUpdateFunction(userGameStateArray);
       }
     } catch (error) {
-      debugLogArray.push('Runtime error occured');
+      debugLogArray.push('Runtime Error: Error in user update function');
       this.runtimeError = true;
       console.log(error);
     }
     // Loop through each GameObject in the array and determine which needs to update.
     this.sourceGameObjects.forEach((gameObject: InteractableGameObject) => {
       const phaserGameObject = this.phaserGameObjects[gameObject.id] as PhaserGameObject;
+      if (phaserGameObject) {
+        // Update the transform of Phaser GameObject
+        if (gameObject.hasTransformUpdates() || this.rerenderGameObjects) {
+          const transformProps = gameObject.getTransform() as TransformProps;
+          phaserGameObject.setPosition(transformProps.position[0], transformProps.position[1])
+            .setRotation(transformProps.rotation)
+            .setScale(transformProps.scale[0], transformProps.scale[1]);
+          if (gameObject instanceof TriangleGameObject) {
+            // The only shape that requires flipping is the triangle, as the rest are symmetric about their origin.
+            phaserGameObject.setRotation(transformProps.rotation + (gameObject.getFlipState()[1] ? Math.PI : 0));
+          }
+          gameObject.updatedTransform();
+        }
 
-      // Update the transform of Phaser GameObject
-      if (gameObject.hasTransformUpdates() || this.rerenderGameObjects) {
-        const transformProps = gameObject.getTransform() as TransformProps;
-        phaserGameObject.setPosition(transformProps.position[0], transformProps.position[1])
-          .setRotation(transformProps.rotation)
-          .setScale(transformProps.scale[0], transformProps.scale[1]);
-        if (gameObject instanceof TriangleGameObject) {
-          // The only shape that requires flipping is the triangle, as the rest are symmetric about their origin.
-          phaserGameObject.setRotation(transformProps.rotation + (gameObject.getFlipState()[1] ? Math.PI : 0));
+        // Update the image of Phaser GameObject
+        if (gameObject.hasRenderUpdates() || this.rerenderGameObjects) {
+          const color = gameObject.getColor();
+          // eslint-disable-next-line new-cap
+          const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
+          const flip = gameObject.getFlipState();
+          if (gameObject instanceof TextGameObject) {
+            (phaserGameObject as Phaser.GameObjects.Text).setTint(intColor)
+              .setAlpha(color[3] / 255)
+              .setFlip(flip[0], flip[1])
+              .setText(gameObject.getText().text);
+          } else if (gameObject instanceof SpriteGameObject) {
+            (phaserGameObject as Phaser.GameObjects.Sprite).setTint(intColor)
+              .setAlpha(color[3] / 255)
+              .setFlip(flip[0], flip[1]);
+          } else if (gameObject instanceof ShapeGameObject) {
+            (phaserGameObject as Phaser.GameObjects.Shape).setFillStyle(intColor, color[3] / 255)
+            // Phaser.GameObjects.Shape does not have setFlip, so flipping is done with rotations.
+            // The only shape that requires flipping is the triangle, as the rest are symmetric about their origin.
+              .setRotation(gameObject.getTransform().rotation + (flip[1] ? Math.PI : 0));
+          }
+          // Update the z-index (rendering order), to the top.
+          if (gameObject.getShouldBringToTop()) {
+            this.children.bringToTop(phaserGameObject);
+          }
+          gameObject.updatedRender();
         }
-        gameObject.updatedTransform();
-      }
-
-      // Update the image of Phaser GameObject
-      if (gameObject.hasRenderUpdates() || this.rerenderGameObjects) {
-        const color = gameObject.getColor();
-        // eslint-disable-next-line new-cap
-        const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
-        const flip = gameObject.getFlipState();
-        if (gameObject instanceof TextGameObject) {
-          (phaserGameObject as Phaser.GameObjects.Text).setTint(intColor)
-            .setAlpha(color[3] / 255)
-            .setFlip(flip[0], flip[1])
-            .setText(gameObject.getText().text);
-        } else if (gameObject instanceof SpriteGameObject) {
-          (phaserGameObject as Phaser.GameObjects.Sprite).setTint(intColor)
-            .setAlpha(color[3] / 255)
-            .setFlip(flip[0], flip[1]);
-        } else if (gameObject instanceof ShapeGameObject) {
-          (phaserGameObject as Phaser.GameObjects.Shape).setFillStyle(intColor, color[3] / 255)
-          // Phaser.GameObjects.Shape does not have setFlip, so flipping is done with rotations.
-          // The only shape that requires flipping is the triangle, as the rest are symmetric about their origin.
-            .setRotation(gameObject.getTransform().rotation + (flip[1] ? Math.PI : 0));
-        }
-        // Update the z-index (rendering order), to the top.
-        if (gameObject.getShouldBringToTop()) {
-          this.children.bringToTop(phaserGameObject);
-        }
-        gameObject.updatedRender();
+      } else {
+        this.runtimeError = true;
+        debugLogArray.push('Runtime Error: Cannot create GameObject in update_loop');
       }
     });
 
@@ -281,10 +290,15 @@ export class PhaserScene extends Phaser.Scene {
     this.sourceAudioClips.forEach((audioClip: AudioClip) => {
       if (audioClip.hasAudioClipUpdates()) {
         const phaserAudioClip = this.phaserAudioClips[audioClip.id] as Phaser.Sound.BaseSound;
-        if (audioClip.shouldPlayClip()) {
-          phaserAudioClip.play();
+        if (phaserAudioClip) {
+          if (audioClip.shouldPlayClip()) {
+            phaserAudioClip.play();
+          } else {
+            phaserAudioClip.stop();
+          }
         } else {
-          phaserAudioClip.stop();
+          this.runtimeError = true;
+          debugLogArray.push('Runtime Error: Cannot create Audio in update_loop');
         }
       }
     });
@@ -303,6 +317,8 @@ export class PhaserScene extends Phaser.Scene {
       this.children.bringToTop(this.debugLogText);
       if (this.runtimeError) {
         this.debugLogText.setColor('orange');
+        this.sound.stopAll();
+        this.scene.pause();
       } else {
         debugLogArray.length = 0;
       }

@@ -42,61 +42,40 @@ build_game();
  *
  * ### Draggable objects example
  * ```
-import { create_rectangle, query_position, update_position, update_color, pointer_over_gameobject, input_left_mouse_down, update_to_top, query_pointer_position, update_loop, build_game } from "arcade_two_d";
+import { create_sprite, update_position, update_scale, pointer_over_gameobject, input_left_mouse_down, update_to_top, query_pointer_position, update_loop, build_game } from "arcade_two_d";
 
-const gameobjects = [];
-for (let i = 0; i < 6; i = i + 1) {
-    gameobjects[i] = update_color(update_position(create_rectangle(50, 50),
-        [50 + i * 100, 300]),
-        [256 * math_random(), 256 * math_random(), 256 * math_random(), 255]);
-}
+// Using assets
+const gameobjects = [
+    update_position(create_sprite("objects/cmr/splendall.png"), [200, 400]),
+    update_position(update_scale(create_sprite("avatars/beat/beat.happy.png"), [0.3, 0.3]), [300, 200]),
+    update_position(update_scale(create_sprite("avatars/chieftain/chieftain.happy.png"), [0.2, 0.2]), [400, 300])];
 
-// Function to drag
-let dragging = -1;
-function drag_gameobject(i) {
-    const gameobject = gameobjects[i];
-    if (dragging === -1 && input_left_mouse_down() && pointer_over_gameobject(gameobject)) {
-        dragging = i;
-    }
-    if (dragging === i) {
-        update_to_top(update_position(gameobject , query_pointer_position()));
-    }
-    if (!input_left_mouse_down()) {
-        dragging = -1;
-    }
+// Simple dragging function
+function drag_gameobject(gameobject) {
+   if (input_left_mouse_down() && pointer_over_gameobject(gameobject)) {
+       update_to_top(update_position(gameobject, query_pointer_position()));
+   }
 }
 
 update_loop(game_state => {
-    for (let i = 0; i < 6; i = i + 1) {
-        drag_gameobject(i);
-    }
+   for (let i = 0; i < 3; i = i + 1) {
+       drag_gameobject(gameobjects[i]);
+   }
 });
 build_game();
  * ```
  *
- * ### Grid coloring example
+ * ### Playing audio example
  * ```
-import { create_rectangle, update_position, update_color, get_loop_count, set_scale, update_loop, build_game } from "arcade_two_d";
+import { input_key_down, create_audio, play_audio, update_loop, build_game } from "arcade_two_d";
 
-// It can handle 10000 GameObjects
-const gameobjects = [];
-for (let i = 0; i < 100; i = i + 1) {
-   gameobjects[i] = [];
-   for (let j = 0; j < 100; j = j + 1) {
-       gameobjects[i][j] = update_position(create_rectangle(1, 1), [i, j]);
-   }
-}
-
+const audio = create_audio("https://labs.phaser.io/assets/audio/SoundEffects/key.wav", 1);
 update_loop(game_state => {
-   const k = get_loop_count();
-   for (let i = 0; i < 100; i = i + 1) {
-       for (let j = 0; j < 100; j = j + 1) {
-           update_color(gameobjects[i][j],
-       [k * i * j * 7, k * j * i * 2, i * j * k * 3, i * j * k * 5]);
-       }
-   }
+    // Press space to play audio
+    if (input_key_down(" ")) {
+        play_audio(audio);
+    }
 });
-set_scale(6);
 build_game();
  * ```
  *

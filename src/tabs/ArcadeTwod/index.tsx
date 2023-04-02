@@ -97,10 +97,10 @@ class GameTab extends React.Component<Props, GameState> {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
+    // console.log('componentDidMount');
     // Only mount the component when the Arcade2D tab is active
     if (document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')?.ariaHidden === 'true') {
-      console.log('Arcade2D tab not active');
+      // console.log('Arcade2D tab not active');
       return;
     }
 
@@ -118,32 +118,23 @@ class GameTab extends React.Component<Props, GameState> {
 
   toggleGamePause(pause: boolean): void {
     if (pause) {
-      console.log('Game paused');
+      // console.log('Game paused');
       // Default scene since there is only one scene.
       this.state.game?.scene.pause('default');
       this.state.game?.sound.pauseAll();
     } else {
       this.state.game?.scene.resume('default');
       this.state.game?.sound.resumeAll();
-      console.log('Game resumed');
+      // console.log('Game resumed');
     }
   }
 
   componentWillUnmount(): void {
-    console.log('componentWillUnmount');
+    // console.log('componentWillUnmount');
     this.state.game?.sound.stopAll();
+
     // Prevents multiple update loops being run at the same time
     this.state.game?.destroy(false, false);
-
-    // Remove the current WEBGL context, to prevent multiple webgl contexts from causing problems.
-    // Note that spamming run will still cause multiple webgl contexts, as they take time to be removed.
-    // const canvas = document.querySelector('#phaser-game canvas') as HTMLCanvasElement;
-    // const gl = canvas?.getContext('webgl');
-    // const gl = this.state.game?.context;
-    // if (gl instanceof WebGLRenderingContext) {
-    //   gl?.getExtension('WEBGL_lose_context')
-    //     ?.loseContext();
-    // }
   }
 
   public render() {
@@ -175,7 +166,7 @@ export default {
   toSpawn(context: DebuggerContext) {
     // const config = context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
     const config = context.result?.value?.gameConfig;
-    console.log(config);
+    // console.log(config);
     if (config) {
       return true;
     }
