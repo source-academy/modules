@@ -11,9 +11,7 @@
 /* [Imports] */
 import { primitives } from "@jscad/modeling";
 import {
-  measureArea,
   measureBoundingBox,
-  measureVolume,
   type BoundingBox,
 } from "@jscad/modeling/src/measurements";
 import {
@@ -22,15 +20,75 @@ import {
   union as _union,
 } from "@jscad/modeling/src/operations/booleans";
 import { extrudeLinear } from "@jscad/modeling/src/operations/extrusions";
-import { align, center } from "@jscad/modeling/src/operations/transforms";
-import { serialize } from "@jscad/stl-serializer";
-import save from "save-file";
+import { align } from "@jscad/modeling/src/operations/transforms";
 import { SILVER } from "./constants.js";
 import { Core } from "./core.js";
 import type { Color, Coordinates, Solid } from "./jscad/types.js";
-import { Group, Shape, type RenderGroup } from "./utilities";
+import { type List } from "./types";
+import {
+  Group,
+  Shape,
+  hexToColor,
+  type Entity,
+  type RenderGroup,
+} from "./utilities";
 
-const defaultColor: string = "#default";
+/**
+ * Colour the shape using the specified hex colour code.
+ *
+ * @param {Shape} shape - The Shape to be coloured and returned
+ * @param {string} hex - The colour code to use
+ * @returns {Shape} The colorized shape
+ */
+function colorize(shape: Shape, hex: string) {
+  let color: Color = hexToColor(hex);
+  let coloredSolid: Solid = _colorize(color, shape.solid);
+  return new Shape(coloredSolid);
+}
+
+/**
+ * Returns a lambda function that contains the center of the given shape in the
+ * x, y and z direction. Providing 'x', 'y', 'z' as input would return x, y and
+ * z coordinates of shape's center
+ *
+ * For example
+ * ````
+ * const a = shape_center(sphere);
+ * a('x'); // Returns the x coordinate of the shape's center
+ * ````
+ *
+ * @param {Shape} shape - The scale to be measured
+ * @returns {(String) => number} A lambda function providing the shape's center
+ * coordinates
+ */
+function shape_center(shape: Shape): (axis: String) => number {
+  let bounds: BoundingBox = measureBoundingBox(shape.solid);
+  let centerCoords: Coordinates = [
+    bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
+    bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
+    bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
+  ];
+  return (axis: String): number => {
+    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
+    if (i === -1) {
+      throw Error("shape_center's returned function expects a proper axis.");
+    } else {
+      return centerCoords[i];
+    }
+  };
+}
+
+/**
+ * Center the provided shape with the middle base of the shape at (0, 0, 0).
+ *
+ * @param {Shape} shape - The shape to be centered
+ * @returns {Shape} The shape that is centered
+ */
+function shapeSetOrigin(shape: Shape) {
+  let newSolid: Solid = align({ modes: ["min", "min", "min"] }, shape.solid);
+  return new Shape(newSolid);
+}
+
 /* [Exports] */
 
 // [Variables - Primitive shapes]
@@ -49,11 +107,9 @@ const primitiveCube: Shape = shapeSetOrigin(
  *
  * @param {string} hex A hex colour code
  */
-export function cube(hex: string = defaultColor): Shape {
+export function cube(hex: string): Shape {
   const shape: Shape = primitiveCube;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -66,16 +122,13 @@ const primitiveSphere: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a sphere of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a sphere of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function sphere(hex: string = defaultColor): Shape {
+export function sphere(hex: string): Shape {
   const shape: Shape = primitiveSphere;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -93,16 +146,13 @@ const primitiveCylinder: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a cylinder of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a cylinder of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function cylinder(hex: string = defaultColor): Shape {
+export function cylinder(hex: string): Shape {
   const shape: Shape = primitiveCylinder;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -115,16 +165,13 @@ const primitivePrism: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a prism of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a prism of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function prism(hex: string = defaultColor): Shape {
+export function prism(hex: string): Shape {
   const shape: Shape = primitivePrism;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -137,16 +184,13 @@ const primitiveStar: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of an extruded star of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of an extruded star of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function star(hex: string = defaultColor): Shape {
+export function star(hex: string): Shape {
   const shape: Shape = primitiveStar;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -166,16 +210,13 @@ const primitivePyramid: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a square pyramid of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a square pyramid of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function pyramid(hex: string = defaultColor): Shape {
+export function pyramid(hex: string): Shape {
   const shape: Shape = primitivePyramid;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -194,16 +235,13 @@ const primitiveCone: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a cone of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a cone of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function cone(hex: string = defaultColor): Shape {
+export function cone(hex: string): Shape {
   const shape: Shape = primitiveCone;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -221,16 +259,13 @@ const primitiveTorus: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a torus of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a torus of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function torus(hex: string = defaultColor): Shape {
+export function torus(hex: string): Shape {
   const shape: Shape = primitiveTorus;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -243,16 +278,13 @@ const primitiveRoundedCube: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a rounded cube of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a rounded cube of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function rounded_cube(hex: string = defaultColor): Shape {
+export function rounded_cube(hex: string): Shape {
   const shape: Shape = primitiveRoundedCube;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -270,16 +302,13 @@ const primitiveRoundedCylinder: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a rounded cylinder of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a rounded cylinder of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function rounded_cylinder(hex: string = defaultColor): Shape {
+export function rounded_cylinder(hex: string): Shape {
   const shape: Shape = primitiveRoundedCylinder;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 
 /**
@@ -292,16 +321,13 @@ const primitiveGeodesicSphere: Shape = shapeSetOrigin(
 );
 
 /**
- * Returns a Shape of a geodesic sphere of a set colour or the default colour when
- * colour information is omitted.
+ * Returns a Shape of a geodesic sphere of a set colour.
  *
  * @param {string} hex A hex colour code
  */
-export function geodesic_sphere(hex: string = defaultColor): Shape {
+export function geodesic_sphere(hex: string): Shape {
   const shape: Shape = primitiveGeodesicSphere;
-  return hex === defaultColor
-    ? shape
-    : new Shape(_colorize(hexToColor(hex), shape.solid));
+  return new Shape(_colorize(hexToColor(hex), shape.solid));
 }
 // [Variables - Colours]
 
@@ -457,115 +483,42 @@ export function intersect(a: Shape, b: Shape): Shape {
 }
 
 /**
- * Scales the shape in the x, y and z direction with the specified factor,
- * ranging from 0 to infinity.
- * For example scaling the shape by 1 in x, y and z direction results in
+ * Scales the shape in the x, y and z direction with the specified factor.
+ * Factors must be non-zero.
+ * For example, scaling the shape by 1 in x, y and z directions results in
  * the original shape.
+ * Scaling the shape by -1 in x direction and 1 in y and z directions results
+ * in the reflection
  *
- * @param {Group | Shape} entity - The Group or Shape to be scaled
+ * @param {Entity} entity - The Group or Shape to be scaled
  * @param {number} x - Scaling in the x direction
  * @param {number} y - Scaling in the y direction
  * @param {number} z - Scaling in the z direction
  * @returns {Shape} Resulting Shape
  */
-export function scale(
-  entity: Group | Shape,
-  x: number,
-  y: number,
-  z: number
-): Group | Shape {
-  // let newSolid: Solid = _scale([x, y, z], shape.solid);
+export function scale(entity: Entity, x: number, y: number, z: number): Entity {
+  if (x === 0 || y === 0 || z === 0) {
+    throw new Error("factors must be non-zero");
+  }
   return entity.scale([x, y, z]);
-}
-
-/**
- * Returns a lambda function that contains the center of the given shape in the
- * x, y and z direction. Providing 'x', 'y', 'z' as input would return x, y and
- * z coordinates of shape's center
- *
- * For example
- * ````
- * const a = shape_center(sphere);
- * a('x'); // Returns the x coordinate of the shape's center
- * ````
- *
- * @param {Shape} shape - The scale to be measured
- * @returns {(String) => number} A lambda function providing the shape's center
- * coordinates
- */
-export function shape_center(shape: Shape): (axis: String) => number {
-  let bounds: BoundingBox = measureBoundingBox(shape.solid);
-  let centerCoords: Coordinates = [
-    bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
-    bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
-    bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
-  ];
-  return (axis: String): number => {
-    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
-    if (i === -1) {
-      throw Error("shape_center's returned function expects a proper axis.");
-    } else {
-      return centerCoords[i];
-    }
-  };
-}
-
-/**
- * Set the center of the shape with the provided x, y and z coordinates.
- *
- * @param {Shape} shape - The scale to have the center set
- * @param {number} x - The center with the x coordinate
- * @param {number} y - The center with the y coordinate
- * @param {number} z - The center with the z coordinate
- * @returns {Shape} The shape with the new center
- */
-export function shape_set_center(
-  shape: Shape,
-  x: number,
-  y: number,
-  z: number
-): Shape {
-  let newSolid: Solid = center({ relativeTo: [x, y, z] }, shape.solid);
-  return new Shape(newSolid);
-}
-
-/**
- * Measure the area of the provided shape.
- *
- * @param {Shape} shape - The shape to measure the area from
- * @returns {number} The area of the shape
- */
-export function area(shape: Shape): number {
-  return measureArea(shape.solid);
-}
-
-/**
- * Measure the volume of the provided shape.
- *
- * @param {Shape} shape - The shape to measure the volume from
- * @returns {number} The volume of the shape
- */
-export function volume(shape: Shape): number {
-  return measureVolume(shape.solid);
 }
 
 /**
  * Translate / Move the shape by the provided x, y and z units from negative
  * infinity to infinity.
  *
- * @param {Group | Shape} entity - The Group or Shape to be translated
+ * @param {Entity} entity - The Group or Shape to be translated
  * @param {number} x - The number to shift the shape in the x direction
  * @param {number} y - The number to shift the shape in the y direction
  * @param {number} z - The number to shift the shape in the z direction
  * @returns {Shape} The translated shape
  */
 export function translate(
-  entity: Group | Shape,
+  entity: Entity,
   x: number,
   y: number,
   z: number
-): Group | Shape {
-  // let newSolid: Solid = _translate([x, y, z], shape.solid);
+): Entity {
   return entity.translate([x, y, z]);
 }
 
@@ -575,108 +528,151 @@ export function translate(
  * degrees). Note that the order of rotation is from the x direction first,
  * followed by the y and z directions.
  *
- * @param {Group | Shape} entity - The Group or Shape to be rotated
+ * @param {Entity} entity - The Group or Shape to be rotated
  * @param {number} x - Angle of rotation in the x direction
  * @param {number} y - Angle of rotation in the y direction
  * @param {number} z - Angle of rotation in the z direction
  * @returns {Shape} The rotated shape
  */
 export function rotate(
-  entity: Group | Shape,
+  entity: Entity,
   x: number,
   y: number,
   z: number
-): Group | Shape {
-  // let newSolid: Solid = _rotate([x, y, z], shape.solid);
+): Entity {
   return entity.rotate([x, y, z]);
 }
 
 /**
- * Center the provided shape with the middle base of the shape at (0, 0, 0).
+ * Returns a lambda function that contains the coordinates of the bounding box.
+ * Provided with the axis 'x', 'y' or 'z' and value 'min' for minimum and 'max'
+ * for maximum, it returns the coordinates of the bounding box.
  *
- * @param {Shape} shape - The shape to be centered
- * @returns {Shape} The shape that is centered
+ * For example,
+ * ````
+ * const a = bounding_box(sphere);
+ * a('x', 'min'); // Returns the minimum x coordinate of the bounding box
+ * ````
+ *
+ * @param {Shape} shape - The scale to be measured
+ * @returns {(String, String) => number} A lambda function providing the
+ * shape's bounding box coordinates
  */
-function shapeSetOrigin(shape: Shape) {
-  let newSolid: Solid = align({ modes: ["min", "min", "min"] }, shape.solid);
-  return new Shape(newSolid);
+
+export function bounding_box(
+  shape: Shape
+): (axis: String, min: String) => number {
+  let bounds: BoundingBox = measureBoundingBox(shape.solid);
+  return (axis: String, min: String): number => {
+    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
+    let j: number = min === "min" ? 0 : min === "max" ? 1 : -1;
+    if (i === -1 || j === -1) {
+      throw Error(
+        "bounding_box returned function expects a proper axis and min String."
+      );
+    } else {
+      return bounds[j][i];
+    }
+  };
 }
 
 /**
- * Checks if the specified argument is a Shape.
- *
- * @param {unknown} argument - The value to check.
- * @returns {boolean} Whether the argument is a Shape.
+ * Returns a hex colour code representing the colour specified by the given RGB values.
+ * @param {number} redComponent Red component of the colour
+ * @param {number} greenComponent Green component of the colour
+ * @param {number} blueComponent Blue component of the colour
+ * @returns {string} The hex colour code
  */
-export function is_shape(argument: unknown): boolean {
-  return argument instanceof Shape;
+export function rgb(
+  redComponent: number,
+  greenComponent: number,
+  blueComponent: number
+): string {
+  if (
+    redComponent < 0 ||
+    redComponent > 255 ||
+    greenComponent < 0 ||
+    greenComponent > 255 ||
+    blueComponent < 0 ||
+    blueComponent > 255
+  ) {
+    throw new Error("invalid argument value: expects [0, 255]");
+  }
+  return `#${redComponent.toString(16)}${greenComponent.toString(
+    16
+  )}${blueComponent.toString(16)}`;
 }
 
 /**
- * Colour the shape using the specified hex colour code.
+ * Checks if the specified entity is a Shape.
  *
- * @param {Shape} shape - The Shape to be coloured and returned
- * @param {string} hex - The colour code to use.
- * @returns {Shape} The colorized shape
+ * @param {unknown} entity - The entity to check
+ * @returns {boolean} Whether the entity is a Shape
  */
-function colorize(shape: Shape, hex: string) {
-  let color: Color = hexToColor(hex);
-  let coloredSolid: Solid = _colorize(color, shape.solid);
-  return new Shape(coloredSolid);
+export function is_shape(entity: unknown): boolean {
+  return entity instanceof Shape;
+}
+
+/**
+ * Checks if the specified entity is a Group.
+ *
+ * @param {unknown} entity - The entity to check
+ * @returns {boolean} Whether the entity is a Group
+ */
+export function is_group(entity: unknown): boolean {
+  return entity instanceof Group;
 }
 
 /**
  * Initializes a group of shapes, which is represented
  * as a hierarchical tree structure, with groups as
  * internal nodes and shapes as leaf nodes.
- * @param {(Group|Shape)[]} children - The Groups and/or Shapes
+ * @param {List} children - The Groups and/or Shapes
  * to be placed inside this new Group
  * @returns {Group} The newly created Group
  */
-export function group(children: (Group | Shape)[]): Group {
+export function group(children: List): Group {
   return new Group(children);
 }
 
 /**
- * Stores a clone of the specified Shape for later rendering. Its colour
- * defaults to the module's provided silver colour variable.
+ * Renders a Group of Shapes, along with a grid and axes.
  *
- * @param {Group | Shape} entity - The Group or Shape to be stored.
+ * @param {Group} groupToRender The Group to be rendered
  */
-export function store(entity: Group | Shape): void {
-  entity.store();
-}
-
-/**
- * Renders using any Shapes stored thus far, along with a grid and axis. The
- * Shapes will then not be included in any subsequent renders.
- */
-export function render_grid_axis(): RenderGroup {
+export function render_grid_axes(groupToRender: Group): RenderGroup {
+  groupToRender.store();
   // Render group is returned for REPL text only; do not document
   return Core.getRenderGroupManager().nextRenderGroup(true, true);
 }
 
 /**
- * Renders using any Shapes stored thus far, along with a grid. The Shapes will
- * then not be included in any subsequent renders.
+ * Renders a Group of Shapes, along with a grid.
+ *
+ * @param {Group} groupToRender The Group to be rendered
  */
-export function render_grid(): RenderGroup {
+export function render_grid(groupToRender: Group): RenderGroup {
+  groupToRender.store();
   return Core.getRenderGroupManager().nextRenderGroup(true);
 }
 
 /**
- * Renders using any Shapes stored thus far, along with an axis. The Shapes will
- * then not be included in any subsequent renders.
+ * Renders a Group of Shapes, along with X, Y and Z axes.
+ *
+ * @param {Group} groupToRender The Group to be rendered
  */
-export function render_axis(): RenderGroup {
+export function render_axes(groupToRender: Group): RenderGroup {
+  groupToRender.store();
   return Core.getRenderGroupManager().nextRenderGroup(undefined, true);
 }
 
 /**
- * Renders using any Shapes stored thus far. The Shapes will then not be
- * included in any subsequent renders.
+ * Renders a Group of Shapes.
+ *
+ * @param {Group} groupToRender The Group to be rendered
  */
-export function render(): RenderGroup {
+export function render(groupToRender: Group): RenderGroup {
+  groupToRender.store();
   return Core.getRenderGroupManager().nextRenderGroup();
 }
 
