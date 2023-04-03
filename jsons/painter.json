@@ -1,0 +1,4 @@
+{
+  "display_painter": "<div><h4>display_painter(painter: undefined) → {undefined}</h4><div class=\"description\"><p>Returns a function that turns a given Frame into a Drawing, given the  \npainter</p></div></div>",
+  "draw_line": "<div><h4>draw_line(v_start: undefined, v_end: undefined) → {void}</h4><div class=\"description\"><p>Draw a line from v_start to v_end</p></div></div>"
+}
