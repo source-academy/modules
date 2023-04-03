@@ -1,4 +1,4 @@
-import { context } from 'js-slang/moduleHelpers';
+import context  from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { get_duration, get_wave, is_sound } from '../sound';
 import { type Sound } from '../sound/types';
