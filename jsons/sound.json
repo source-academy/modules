@@ -6,7 +6,7 @@
   "get_duration": "<div><h4>get_duration(sound: Sound) → {number}</h4><div class=\"description\"><p>Accesses the duration of a given Sound.</p></div></div>",
   "get_wave": "<div><h4>get_wave(sound: Sound) → {Wave}</h4><div class=\"description\"><p>Accesses the wave function of a given Sound.</p></div></div>",
   "init_record": "<div><h4>init_record() → {string}</h4><div class=\"description\"><p>Initialize recording by obtaining permission  \nto use the default device microphone</p></div></div>",
-  "is_sound": "<div><h4>is_sound(x: any) → {boolean}</h4><div class=\"description\"><p>Checks if the argument is a Sound</p></div></div>",
+  "is_sound": "<div><h4>is_sound(x: any) → {x}</h4><div class=\"description\"><p>Checks if the argument is a Sound</p></div></div>",
   "letter_name_to_frequency": "<div><h4>letter_name_to_frequency(note: string) → {number}</h4><div class=\"description\"><p>Converts a letter name to its corresponding frequency.</p></div></div>",
   "letter_name_to_midi_note": "<div><h4>letter_name_to_midi_note(note: string) → {number}</h4><div class=\"description\"><p>Converts a letter name to its corresponding MIDI note.  \nThe letter name is represented in standard pitch notation.  \nExamples are \"A5\", \"Db3\", \"C#7\".  \nRefer to &lt;a href=\"https://i.imgur.com/qGQgmYr.png\"&gt;this mapping from  \nletter name to midi notes.</p></div></div>",
   "make_sound": "<div><h4>make_sound(wave: Wave, duration: number) → {Sound}</h4><div class=\"description\"><p>Makes a Sound with given wave function and duration.  \nThe wave function is a function: number -&gt; number  \nthat takes in a non-negative input time and returns an amplitude  \nbetween -1 and 1.</p></div></div>",

@@ -1,13 +1,9 @@
-function (moduleHelpers) {
-  function require(x) {
-    const result = ({
-      "js-slang/moduleHelpers": moduleHelpers
-    })[x];
-    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
-  }
+require => {
+  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
@@ -30,6 +26,10 @@ function (moduleHelpers) {
     }
     return to;
   };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+    value: mod,
+    enumerable: true
+  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
@@ -41,8 +41,9 @@ function (moduleHelpers) {
     set_evaluator: () => set_evaluator,
     set_font_size: () => set_font_size
   });
-  var import_moduleHelpers2 = __require("js-slang/moduleHelpers");
-  var import_moduleHelpers = __require("js-slang/moduleHelpers");
+  var import_context2 = __toESM(__require("js-slang/context"), 1);
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  var import_js_slang = __require("js-slang");
   var ProgrammableRepl = class {
     constructor() {
       this.customizedEditorProps = {
@@ -63,12 +64,13 @@ function (moduleHelpers) {
       this.outputStrings = [];
       let retVal;
       try {
-        if (this.evalFunction === default_js_slang) {
-          retVal = this.evalFunction(this.userCodeInEditor, document.body);
+        if (Object.is(this.evalFunction, default_js_slang)) {
+          retVal = this.runInJsSlang(this.userCodeInEditor);
         } else {
           retVal = this.evalFunction(this.userCodeInEditor);
         }
       } catch (exception) {
+        console.log(exception);
         this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, "red");
         this.reRenderTab();
         return;
@@ -189,25 +191,26 @@ function (moduleHelpers) {
         throwInfiniteLoops: true,
         useSubst: false
       };
-      const jsSlangStorage = import_moduleHelpers.context.moduleContexts.repl.js_slang;
-      const jsslangContext = jsSlangStorage.context;
-      jsslangContext.prelude = "const display=(x)=>module_display(x);";
-      jsslangContext.errors = [];
+      import_context.default.prelude = "const display=(x)=>module_display(x);";
+      import_context.default.errors = [];
       const sourceFile = {
         "/ReplModuleUserCode.js": code
       };
-      let result = jsSlangStorage.sourceFilesRunner(sourceFile, "/ReplModuleUserCode.js", jsslangContext, options);
-      result.then(evalResult => {
+      (0, import_js_slang.runFilesInContext)(sourceFile, "/ReplModuleUserCode.js", import_context.default, options).then(evalResult => {
+        if (evalResult.status === "suspended" || evalResult.status === "suspended-ec-eval") {
+          throw new Error("This should not happen");
+        }
         if (evalResult.status !== "error") {
           this.pushOutputString("js-slang program finished with value:", "cyan");
           this.pushOutputString(evalResult.value === void 0 ? "undefined" : evalResult.value.toString(), "cyan");
         } else {
-          const errors = jsslangContext.errors;
+          const errors = import_context.default.errors;
+          console.log(errors);
           const errorCount = errors.length;
           for (let i = 0; i < errorCount; i++) {
             const error = errors[i];
             if (error.explain().indexOf("Name module_display not declared.") !== -1) {
-              this.pushOutputString(`[Error] It seems that you havn't import the function "module_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, "red");
+              this.pushOutputString(`[Error] It seems that you haven't import the function "module_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, "red");
             } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, "red");
           }
         }
@@ -243,7 +246,7 @@ function (moduleHelpers) {
   };
   function developmentLog(_content) {}
   var INSTANCE = new ProgrammableRepl();
-  import_moduleHelpers2.context.moduleContexts.repl.state = INSTANCE;
+  import_context2.default.moduleContexts.repl.state = INSTANCE;
   function set_evaluator(evalFunc) {
     if (!(evalFunc instanceof Function)) {
       const typeName = typeof evalFunc;
@@ -268,11 +271,8 @@ function (moduleHelpers) {
   function set_font_size(font_size_px) {
     INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());
   }
-  function default_js_slang(program, safeKey) {
-    if (!(safeKey instanceof Element)) {
-      throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
-    }
-    return INSTANCE.runInJsSlang(program);
+  function default_js_slang(_program) {
+    throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
   }
   return __toCommonJS(repl_exports);
 }

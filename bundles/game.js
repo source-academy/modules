@@ -1,14 +1,10 @@
-function (moduleHelpers) {
-  function require(x) {
-    const result = ({
-      "js-slang/moduleHelpers": moduleHelpers
-    })[x];
-    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
-  }
+require => {
+  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __propIsEnum = Object.prototype.propertyIsEnumerable;
   var __defNormalProp = (obj, key, value) => (key in obj) ? __defProp(obj, key, {
@@ -45,6 +41,10 @@ function (moduleHelpers) {
     }
     return to;
   };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+    value: mod,
+    enumerable: true
+  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
@@ -112,9 +112,9 @@ function (moduleHelpers) {
     set_rotation: () => set_rotation,
     set_scale: () => set_scale
   });
-  var import_moduleHelpers = __require("js-slang/moduleHelpers");
+  var import_context = __toESM(__require("js-slang/context"), 1);
   function gameFuncs() {
-    const {scene, preloadImageMap, preloadSoundMap, preloadSpritesheetMap, remotePath, screenSize, createAward} = import_moduleHelpers.context.moduleContexts.game.state || ({});
+    const {scene, preloadImageMap, preloadSoundMap, preloadSpritesheetMap, remotePath, screenSize, createAward} = import_context.default.moduleContexts.game.state || ({});
     let ListenerTypes;
     (ListenerTypes2 => {
       ListenerTypes2["InputPlugin"] = "input_plugin";

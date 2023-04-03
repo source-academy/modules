@@ -1,13 +1,9 @@
-function (moduleHelpers) {
-  function require(x) {
-    const result = ({
-      "js-slang/moduleHelpers": moduleHelpers
-    })[x];
-    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
-  }
+require => {
+  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __pow = Math.pow;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
@@ -31,6 +27,10 @@ function (moduleHelpers) {
     }
     return to;
   };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+    value: mod,
+    enumerable: true
+  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
@@ -67,58 +67,7 @@ function (moduleHelpers) {
     trombone: () => trombone,
     violin: () => violin
   });
-  function array_test(x) {
-    if (Array.isArray === void 0) {
-      return x instanceof Array;
-    } else {
-      return Array.isArray(x);
-    }
-  }
-  function pair(x, xs) {
-    return [x, xs];
-  }
-  function is_pair(x) {
-    return array_test(x) && x.length === 2;
-  }
-  function head(xs) {
-    if (is_pair(xs)) {
-      return xs[0];
-    } else {
-      throw new Error("head(xs) expects a pair as argument xs, but encountered " + xs);
-    }
-  }
-  function tail(xs) {
-    if (is_pair(xs)) {
-      return xs[1];
-    } else {
-      throw new Error("tail(xs) expects a pair as argument xs, but encountered " + xs);
-    }
-  }
-  function is_null(xs) {
-    return xs === null;
-  }
-  function list(...args) {
-    let the_list = null;
-    for (let i = args.length - 1; i >= 0; i--) {
-      the_list = pair(args[i], the_list);
-    }
-    return the_list;
-  }
-  function length(xs) {
-    let i = 0;
-    while (!is_null(xs)) {
-      i += 1;
-      xs = tail(xs);
-    }
-    return i;
-  }
-  function accumulate(op, initial, sequence) {
-    if (is_null(sequence)) {
-      return initial;
-    } else {
-      return op(head(sequence), accumulate(op, initial, tail(sequence)));
-    }
-  }
+  var import_list = __require("js-slang/dist/stdlib/list");
   var FastBase64 = {
     chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
     encLookup: String,
@@ -202,11 +151,11 @@ function (moduleHelpers) {
     };
     if (data instanceof Array) this.Make(data);
   }
-  var import_moduleHelpers = __require("js-slang/moduleHelpers");
+  var import_context = __toESM(__require("js-slang/context"), 1);
   var FS = 44100;
   var fourier_expansion_level = 5;
   var audioPlayed = [];
-  import_moduleHelpers.context.moduleContexts.sound.state = {
+  import_context.default.moduleContexts.sound.state = {
     audioPlayed
   };
   var audioplayer;
@@ -326,16 +275,16 @@ function (moduleHelpers) {
     };
   }
   function make_sound(wave, duration) {
-    return pair(t => t >= duration ? 0 : wave(t), duration);
+    return (0, import_list.pair)(t => t >= duration ? 0 : wave(t), duration);
   }
   function get_wave(sound) {
-    return head(sound);
+    return (0, import_list.head)(sound);
   }
   function get_duration(sound) {
-    return tail(sound);
+    return (0, import_list.tail)(sound);
   }
   function is_sound(x) {
-    return is_pair(x) && typeof get_wave(x) === "function" && typeof get_duration(x) === "number";
+    return (0, import_list.is_pair)(x) && typeof get_wave(x) === "function" && typeof get_duration(x) === "number";
   }
   function play_wave(wave, duration) {
     return play(make_sound(wave, duration));
@@ -475,7 +424,7 @@ function (moduleHelpers) {
       const new_wave = t => t < dur1 ? wave1(t) : wave2(t - dur1);
       return make_sound(new_wave, dur1 + dur2);
     }
-    return accumulate(consec_two, silence_sound(0), list_of_sounds);
+    return (0, import_list.accumulate)(consec_two, silence_sound(0), list_of_sounds);
   }
   function simultaneously(list_of_sounds) {
     function simul_two(ss1, ss2) {
@@ -487,9 +436,9 @@ function (moduleHelpers) {
       const new_dur = dur1 < dur2 ? dur2 : dur1;
       return make_sound(new_wave, new_dur);
     }
-    const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
-    const normalised_wave = t => head(mushed_sounds)(t) / length(list_of_sounds);
-    const highest_duration = tail(mushed_sounds);
+    const mushed_sounds = (0, import_list.accumulate)(simul_two, silence_sound(0), list_of_sounds);
+    const normalised_wave = t => (0, import_list.head)(mushed_sounds)(t) / (0, import_list.length)(list_of_sounds);
+    const highest_duration = (0, import_list.tail)(mushed_sounds);
     return make_sound(normalised_wave, highest_duration);
   }
   function adsr(attack_ratio, decay_ratio, sustain_level, release_ratio) {
@@ -515,12 +464,12 @@ function (moduleHelpers) {
   }
   function stacking_adsr(waveform, base_frequency, duration, envelopes) {
     function zip(lst, n) {
-      if (is_null(lst)) {
+      if ((0, import_list.is_null)(lst)) {
         return lst;
       }
-      return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
+      return (0, import_list.pair)((0, import_list.pair)(n, (0, import_list.head)(lst)), zip((0, import_list.tail)(lst), n + 1));
     }
-    return simultaneously(accumulate((x, y) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y), null, zip(envelopes, 1)));
+    return simultaneously((0, import_list.accumulate)((x, y) => (0, import_list.pair)((0, import_list.tail)(x)(waveform(base_frequency * (0, import_list.head)(x), duration)), y), null, zip(envelopes, 1)));
   }
   function phase_mod(freq, duration, amount) {
     return modulator => make_sound(t => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)), duration);
@@ -574,19 +523,19 @@ function (moduleHelpers) {
     return midi_note_to_frequency(letter_name_to_midi_note(note));
   }
   function bell(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, list(adsr(0, 0.6, 0, 0.05), adsr(0, 0.6618, 0, 0.05), adsr(0, 0.7618, 0, 0.05), adsr(0, 0.9071, 0, 0.05)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0, 0.6, 0, 0.05), adsr(0, 0.6618, 0, 0.05), adsr(0, 0.7618, 0, 0.05), adsr(0, 0.9071, 0, 0.05)));
   }
   function cello(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, list(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)));
   }
   function piano(note, duration) {
-    return stacking_adsr(triangle_sound, midi_note_to_frequency(note), duration, list(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)));
+    return stacking_adsr(triangle_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)));
   }
   function trombone(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, list(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)));
   }
   function violin(note, duration) {
-    return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, list(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
+    return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
   }
   return __toCommonJS(sound_exports);
 }

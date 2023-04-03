@@ -1,10 +1,4 @@
-function (moduleHelpers) {
-  function require(x) {
-    const result = ({
-      "js-slang/moduleHelpers": moduleHelpers
-    })[x];
-    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
-  }
+require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -14607,7 +14601,7 @@ ${nonManifold.join("\n")}`);
     yellow: () => yellow
   });
   init_define_process();
-  var import_moduleHelpers = __require("js-slang/moduleHelpers");
+  var import_context = __toESM(__require("js-slang/context"), 1);
   init_define_process();
   var _Core = class {
     static initialize(csgModuleState) {
@@ -19156,7 +19150,7 @@ ${nonManifold.join("\n")}`);
     return Core.getRenderGroupManager().nextRenderGroup();
   }
   var moduleState = new CsgModuleState();
-  import_moduleHelpers.context.moduleContexts.csg.state = moduleState;
+  import_context.default.moduleContexts.csg.state = moduleState;
   Core.initialize(moduleState);
   return __toCommonJS(csg_exports);
 }

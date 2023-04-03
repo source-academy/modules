@@ -1,10 +1,4 @@
-function (moduleHelpers) {
-  function require(x) {
-    const result = ({
-      "js-slang/moduleHelpers": moduleHelpers
-    })[x];
-    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
-  }
+require => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;

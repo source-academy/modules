@@ -1,13 +1,9 @@
-function (moduleHelpers) {
-  function require(x) {
-    const result = ({
-      "js-slang/moduleHelpers": moduleHelpers
-    })[x];
-    if (result === undefined) throw new Error(`Internal Error: Unknown import "${x}"!`); else return result;
-  }
+require => {
+  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
@@ -30,6 +26,10 @@ function (moduleHelpers) {
     }
     return to;
   };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+    value: mod,
+    enumerable: true
+  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
@@ -72,7 +72,7 @@ function (moduleHelpers) {
     y_of: () => y_of,
     z_of: () => z_of
   });
-  var import_moduleHelpers = __require("js-slang/moduleHelpers");
+  var import_context = __toESM(__require("js-slang/context"), 1);
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
@@ -2006,7 +2006,7 @@ void main() {
     }
   };
   var drawnCurves = [];
-  import_moduleHelpers.context.moduleContexts.curve.state = {
+  import_context.default.moduleContexts.curve.state = {
     drawnCurves
   };
   function createDrawFunction(scaleMode, drawMode, space, isFullView) {
