@@ -3,9 +3,8 @@ import { context as esbuild } from 'esbuild';
 import type { Application } from 'typedoc';
 
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
-import { reduceBundleOutputFiles } from './modules/bundle.js';
-import { esbuildOptions } from './modules/moduleUtils.js';
-import { reduceTabOutputFiles } from './modules/tab.js';
+import { bundleOptions, reduceBundleOutputFiles } from './modules/bundle.js';
+import { reduceTabOutputFiles, tabOptions } from './modules/tab.js';
 import {
   bundleNameExpander,
   copyManifest,
@@ -36,11 +35,10 @@ const waitForQuit = () => new Promise<void>((resolve, reject) => {
 
 type ContextOptions = Record<'srcDir' | 'outDir', string>;
 const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[], app?: Application) => esbuild({
-  ...esbuildOptions,
+  ...bundleOptions,
   outbase: outDir,
   outdir: outDir,
   entryPoints: bundles.map(bundleNameExpander(srcDir)),
-  external: ['js-slang/moduleHelpers'],
   plugins: [{
     name: 'Bundle Compiler',
     async setup(pluginBuild) {
@@ -75,11 +73,11 @@ const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[],
 });
 
 const getTabContext = ({ srcDir, outDir }: ContextOptions, tabs: string[]) => esbuild({
-  ...esbuildOptions,
+  ...tabOptions,
   outbase: outDir,
   outdir: outDir,
   entryPoints: tabs.map(tabNameExpander(srcDir)),
-  external: ['react', 'react-dom'],
+  external: ['react*', 'react-dom'],
   plugins: [{
     name: 'Tab Compiler',
     setup(pluginBuild) {

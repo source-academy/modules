@@ -43,7 +43,7 @@ const prebuildInternal = async (opts, assets) => {
 export const prebuild = async (opts, assets) => {
     const { lintResult, tscResult } = await prebuildInternal(opts, assets);
     logLintResult(lintResult);
-    logTscResults(tscResult, opts.srcDir);
+    logTscResults(tscResult);
     exitOnError([], lintResult?.result, tscResult?.result);
     if (lintResult?.result.severity === 'error' || tscResult?.result.severity === 'error') {
         throw new Error('Exiting for jest');

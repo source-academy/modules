@@ -1,53 +1,32 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
-import { build as esbuild } from 'esbuild';
+import { build as esbuild, } from 'esbuild';
 import fs from 'fs/promises';
-import uniq from 'lodash/uniq.js';
 import pathlib from 'path';
 import { printList } from '../../scriptUtils.js';
 import { copyManifest, createBuildCommand, exitOnError, logResult, retrieveTabs, tabNameExpander, } from '../buildUtils.js';
 import { prebuild } from '../prebuild/index.js';
-import { esbuildOptions, requireCreator } from './moduleUtils.js';
-/**
- * Imports that are provided at runtime
- */
-const externals = {
-    'react': '_react',
-    'react-dom': 'ReactDOM',
-};
+import { esbuildOptions } from './moduleUtils.js';
 const outputTab = async (tabName, text, outDir) => {
     try {
         const parsed = parse(text, { ecmaVersion: 6 });
         const declStatement = parsed.body[1];
         const newTab = {
-            type: 'ExpressionStatement',
-            expression: {
-                type: 'FunctionExpression',
-                params: uniq(Object.values(externals))
-                    .map((name) => ({
-                    type: 'Identifier',
-                    name,
-                })),
-                body: {
-                    type: 'BlockStatement',
-                    body: [
-                        requireCreator(externals),
-                        {
-                            type: 'ReturnStatement',
-                            argument: {
-                                type: 'MemberExpression',
-                                object: declStatement.declarations[0].init,
-                                property: {
-                                    type: 'Literal',
-                                    value: 'default',
-                                },
-                                computed: true,
-                            },
-                        },
-                    ],
+            type: 'ArrowFunctionExpression',
+            body: {
+                type: 'MemberExpression',
+                object: declStatement.declarations[0].init,
+                property: {
+                    type: 'Literal',
+                    value: 'default',
                 },
+                computed: true,
             },
+            params: [{
+                    type: 'Identifier',
+                    name: 'require',
+                }],
         };
         let newCode = generate(newTab);
         if (newCode.endsWith(';'))
@@ -67,14 +46,18 @@ const outputTab = async (tabName, text, outDir) => {
         };
     }
 };
+export const tabOptions = {
+    ...esbuildOptions,
+    jsx: 'automatic',
+    external: ['react', 'react-dom', 'react/jsx-runtime'],
+};
 export const buildTabs = async (tabs, { srcDir, outDir }) => {
+    const nameExpander = tabNameExpander(srcDir);
     const { outputFiles } = await esbuild({
-        ...esbuildOptions,
-        entryPoints: tabs.map(tabNameExpander(srcDir)),
+        ...tabOptions,
+        entryPoints: tabs.map(nameExpander),
         outbase: outDir,
         outdir: outDir,
-        external: Object.keys(externals),
-        jsx: 'transform',
     });
     return outputFiles;
 };

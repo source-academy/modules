@@ -1,4 +1,14 @@
 {
+  "painter": {
+    "tabs": [
+      "Painter"
+    ]
+  },
+  "unity_academy": {
+    "tabs": [
+      "UnityAcademy"
+    ]
+  },
   "plotly": {
     "tabs": [
       "Plotly"

@@ -1,5 +1,5 @@
 /* [Imports] */
-import React, { type ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { IconNames } from '@blueprintjs/icons';
 import { Core } from '../../bundles/csg/core.js';
 import {
