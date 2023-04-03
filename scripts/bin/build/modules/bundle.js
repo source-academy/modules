@@ -1,11 +1,10 @@
 import { parse } from 'acorn';
 import { generate } from 'astring';
-import { build as esbuild } from 'esbuild';
+import { build as esbuild, } from 'esbuild';
 import fs from 'fs/promises';
 import pathlib from 'path';
 import { bundleNameExpander } from '../buildUtils.js';
-import { esbuildOptions, requireCreator } from './moduleUtils.js';
-const HELPER_NAME = 'moduleHelpers';
+import { esbuildOptions } from './moduleUtils.js';
 export const outputBundle = async (name, bundleText, outDir) => {
     try {
         const parsed = parse(bundleText, { ecmaVersion: 6 });
@@ -21,25 +20,20 @@ export const outputBundle = async (name, bundleText, outDir) => {
         const callExpression = varDeclarator.init;
         const moduleCode = callExpression.callee;
         const output = {
-            type: 'FunctionExpression',
+            type: 'ArrowFunctionExpression',
             body: {
                 type: 'BlockStatement',
-                body: [
-                    requireCreator({
-                        'js-slang/moduleHelpers': HELPER_NAME,
-                    }),
-                    ...(moduleCode.body.type === 'BlockStatement'
-                        ? moduleCode.body.body
-                        : [{
-                                type: 'ExpressionStatement',
-                                expression: moduleCode.body,
-                            }]),
-                ],
+                body: moduleCode.body.type === 'BlockStatement'
+                    ? moduleCode.body.body
+                    : [{
+                            type: 'ExpressionStatement',
+                            expression: moduleCode.body,
+                        }],
             },
             params: [
                 {
                     type: 'Identifier',
-                    name: HELPER_NAME,
+                    name: 'require',
                 },
             ],
         };
@@ -62,13 +56,17 @@ export const outputBundle = async (name, bundleText, outDir) => {
         };
     }
 };
+export const bundleOptions = {
+    ...esbuildOptions,
+    external: ['js-slang*'],
+};
 export const buildBundles = async (bundles, { srcDir, outDir }) => {
+    const nameExpander = bundleNameExpander(srcDir);
     const { outputFiles } = await esbuild({
-        ...esbuildOptions,
-        entryPoints: bundles.map(bundleNameExpander(srcDir)),
+        ...bundleOptions,
+        entryPoints: bundles.map(nameExpander),
         outbase: outDir,
         outdir: outDir,
-        external: ['js-slang/moduleHelpers'],
     });
     return outputFiles;
 };

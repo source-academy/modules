@@ -1,5 +1,5 @@
-import { type ReplResult } from '../../typings/type_helpers';
-import { type Data, type Layout } from 'plotly.js-dist';
+import type { ReplResult } from '../../typings/type_helpers';
+import type { Data, Layout } from 'plotly.js-dist';
 
 export class LinePlot implements ReplResult {
   plotlyDrawFn: any;

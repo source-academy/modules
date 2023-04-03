@@ -1,4 +1,4 @@
-import { type ReplResult } from '../../typings/type_helpers';
+import type { ReplResult } from '../../typings/type_helpers';
 
 /**
  * Represents plots with a draw method attached

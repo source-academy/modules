@@ -1,6 +1,6 @@
 import React from 'react';
-import { type DrawnPlot } from '../../bundles/plotly/plotly';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DrawnPlot } from '../../bundles/plotly/plotly';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/modal_div';
 
 type Props = {

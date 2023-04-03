@@ -3,7 +3,7 @@
  * @module painter
  */
 
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { type Frame, LinePlot } from './painter';
 

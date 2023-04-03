@@ -1,7 +1,5 @@
-export type Pair<H, T> = [H, T];
-export type EmptyList = null;
-export type NonEmptyList = Pair<any, any>;
-export type List = EmptyList | NonEmptyList;
+import type { Pair } from 'js-slang/dist/stdlib/list';
+
 export type Wave = (...t: any) => number;
 export type Sound = Pair<Pair<Wave, Wave>, number>;
 export type SoundProducer = (...t: any) => Sound;

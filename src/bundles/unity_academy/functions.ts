@@ -5,7 +5,7 @@
  */
 
 
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 import { initializeModule, getInstance, type GameObjectIdentifier } from './UnityAcademy';
 
 context.moduleContexts.unity_academy.state = null;

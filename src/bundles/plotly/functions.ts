@@ -3,7 +3,7 @@
  * @module plotly
  */
 
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 import Plotly, { type Data } from 'plotly.js-dist';
 import { DrawnPlot, type ListOfPairs } from './plotly';
 
