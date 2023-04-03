@@ -66,7 +66,7 @@ export const runTsc = wrapWithTimer((async (srcDir, { bundles, tabs }) => {
         results: diagnostics,
     };
 }));
-export const logTscResults = (input, srcDir) => {
+export const logTscResults = (input) => {
     if (!input)
         return;
     const { elapsed, result: { severity, results, error } } = input;
@@ -76,7 +76,7 @@ export const logTscResults = (input, srcDir) => {
     }
     const diagStr = ts.formatDiagnosticsWithColorAndContext(results, {
         getNewLine: () => '\n',
-        getCurrentDirectory: () => srcDir,
+        getCurrentDirectory: () => pathlib.resolve('.'),
         getCanonicalFileName: (name) => pathlib.basename(name),
     });
     if (severity === 'error') {
@@ -96,7 +96,7 @@ const getTscCommand = () => new Command('typecheck')
     .action(async ({ modules, tabs, manifest, srcDir }) => {
     const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
     const tscResults = await runTsc(srcDir, assets);
-    logTscResults(tscResults, srcDir);
+    logTscResults(tscResults);
     exitOnError([], tscResults.result);
 });
 export default getTscCommand;

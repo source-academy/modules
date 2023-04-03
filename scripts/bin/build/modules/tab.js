@@ -48,7 +48,7 @@ const outputTab = async (tabName, text, outDir) => {
 };
 export const tabOptions = {
     ...esbuildOptions,
-    jsx: 'transform',
+    jsx: 'automatic',
     external: ['react', 'react-dom', 'react/jsx-runtime'],
 };
 export const buildTabs = async (tabs, { srcDir, outDir }) => {

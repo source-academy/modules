@@ -74,7 +74,7 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
 
 export const tabOptions: ESBuildOptions = {
   ...esbuildOptions,
-  jsx: 'transform',
+  jsx: 'automatic',
   external: ['react', 'react-dom', 'react/jsx-runtime'],
 };
 
