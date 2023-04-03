@@ -1,5 +1,5 @@
 import React from 'react';
-import { type DrawnPlot } from '../../bundles/plotly/plotly';
+import { type LinePlot } from '../../bundles/painter/painter';
 import { type DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/modal_div';
 
@@ -11,27 +11,27 @@ type Props = {
 
 type State = {
   modalOpen: boolean
-  selectedPlot: any | null
+  selectedPainter: any | null
 };
 
-class Plotly extends React.Component<Props, State> {
+class Painter extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       modalOpen: false,
-      selectedPlot: null,
+      selectedPainter: null,
     };
   }
 
-  handleOpen = (selectedPlot: DrawnPlot) => {
+  handleOpen = (selectedPainter: LinePlot) => {
     this.setState({
       modalOpen: true,
-      selectedPlot,
+      selectedPainter,
     });
   };
 
   public render() {
-    const { context: { moduleContexts: { plotly: { state: { drawnPlots } } } } } = this.props.debuggerContext;
+    const { context: { moduleContexts: { painter: { state: { drawnPainters } } } } } = this.props.debuggerContext;
 
     return (
       <div>
@@ -44,8 +44,8 @@ class Plotly extends React.Component<Props, State> {
           <div
             id="modalDiv"
             ref={() => {
-              if (this.state.selectedPlot) {
-                this.state.selectedPlot.draw('modalDiv');
+              if (this.state.selectedPainter) {
+                this.state.selectedPainter.draw('modalDiv');
               }
             }}
             style={{
@@ -55,15 +55,16 @@ class Plotly extends React.Component<Props, State> {
           ></div>
         </Modal>
         {
-          drawnPlots.map((drawnPlot: any, id:number) => {
+          drawnPainters.map((drawnPainter: any, id:number) => {
             const divId = `plotDiv${id}`;
             return (
               <>
-                <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
+                <div onClick={() => this.handleOpen(drawnPainter)}>Click here to open Modal</div>
                 <div
                   id={divId}
                   ref={() => {
-                    drawnPlot.draw(divId);
+                    console.log(drawnPainter);
+                    drawnPainter.draw(divId);
                   }}
                 ></div>
               </>
@@ -78,10 +79,11 @@ class Plotly extends React.Component<Props, State> {
 
 export default {
   toSpawn(context: DebuggerContext) {
-    const drawnPlots = context.context?.moduleContexts?.plotly.state.drawnPlots;
-    return drawnPlots.length > 0;
+    const drawnPainters = context.context?.moduleContexts?.painter.state.drawnPainters;
+    console.log(drawnPainters);
+    return drawnPainters.length > 0;
   },
-  body: (debuggerContext: any) => <Plotly debuggerContext={debuggerContext} />,
-  label: 'Plotly Test Tab',
+  body: (debuggerContext: any) => <Painter debuggerContext={debuggerContext} />,
+  label: 'Painter Test Tab',
   iconName: 'scatter-plot',
 };
