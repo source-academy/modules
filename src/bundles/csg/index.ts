@@ -1,5 +1,5 @@
 /* [Imports] */
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 import { Core } from './core.js';
 import { CsgModuleState } from './utilities.js';
 

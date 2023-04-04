@@ -59,7 +59,7 @@ const prebuildInternal = async (opts: PreBuildOpts, assets: AssetInfo): Promise<
 export const prebuild = async (opts: PreBuildOpts, assets: AssetInfo) => {
   const { lintResult, tscResult } = await prebuildInternal(opts, assets);
   logLintResult(lintResult);
-  logTscResults(tscResult, opts.srcDir);
+  logTscResults(tscResult);
 
   exitOnError([], lintResult?.result, tscResult?.result);
   if (lintResult?.result.severity === 'error' || tscResult?.result.severity === 'error') {

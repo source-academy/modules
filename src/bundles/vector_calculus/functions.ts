@@ -1,4 +1,4 @@
-import { context } from 'js-slang/moduleHelpers'
+import context  from 'js-slang/context'
 import Plotly, { Data, Layout } from 'plotly.js-dist'
 import {
   ConePlot,

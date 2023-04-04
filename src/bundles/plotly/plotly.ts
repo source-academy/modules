@@ -1,4 +1,4 @@
-import { ReplResult } from '../../typings/type_helpers';
+import type { ReplResult } from '../../typings/type_helpers';
 
 /**
  * Represents plots with a draw method attached
@@ -6,13 +6,13 @@ import { ReplResult } from '../../typings/type_helpers';
 export class DrawnPlot implements ReplResult {
   drawFn: any;
   data: ListOfPairs;
-  constructor(drawFn: any, data: ListOfPairs) {  
-    this.drawFn = drawFn; 
-    this.data = data; 
+  constructor(drawFn: any, data: ListOfPairs) {
+    this.drawFn = drawFn;
+    this.data = data;
   }
 
   public toReplString = () => '<Plot>';
-  
+
   public draw = (divId: string) => {
     this.drawFn(this.data, divId);
   };

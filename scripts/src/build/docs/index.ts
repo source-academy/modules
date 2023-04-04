@@ -24,7 +24,7 @@ export const getBuildDocsCommand = () => createBuildCommand('docs', true)
         bundles,
         tabs: [],
       });
-      logTscResults(tscResult, srcDir);
+      logTscResults(tscResult);
       if (tscResult.result.severity === 'error') process.exit(1);
     }
 

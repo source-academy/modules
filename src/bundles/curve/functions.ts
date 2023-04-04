@@ -36,7 +36,7 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 import { type Curve, type CurveDrawn, generateCurve, Point } from './curves_webgl';
 import {
   AnimatedCurve,
