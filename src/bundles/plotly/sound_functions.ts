@@ -17,10 +17,10 @@ context.moduleContexts.plotly.state = {
  */
 export function draw_sound_2d(sound: Sound) {
   if (!is_sound(sound)) {
-    throw new Error(`play is expecting sound, but encountered ${sound}`);
-    // If a sound is already playing, terminate execution.
+    throw new Error(`draw_sound_2d is expecting sound, but encountered ${sound}`);
+    // If a sound is already displayed, terminate execution.
   } else if (get_duration(sound) < 0) {
-    throw new Error('play: duration of sound is negative');
+    throw new Error('draw_sound_2d: duration of sound is negative');
   } else {
     // Instantiate audio context if it has not been instantiated.
 
@@ -36,20 +36,20 @@ export function draw_sound_2d(sound: Sound) {
     for (let i = 0; i < len; i += 1) {
       temp = wave(i / FS);
       time_stamps[i] = i / FS;
-      // clip amplitude
-      // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
-      if (temp > 1) {
-        channel[i] = 1;
-      } else if (temp < -1) {
-        channel[i] = -1;
-      } else {
-        channel[i] = temp;
-      }
+      // // clip amplitude
+      // // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
+      // if (temp > 1) {
+      //   channel[i] = 1;
+      // } else if (temp < -1) {
+      //   channel[i] = -1;
+      // } else {
+      //   channel[i] = temp;
+      // }
 
-      // smoothen out sudden cut-outs
-      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
-      }
+      // // smoothen out sudden cut-outs
+      // if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+      //   channel[i] = prev_value * 0.999;
+      // }
 
       prev_value = channel[i];
     }
