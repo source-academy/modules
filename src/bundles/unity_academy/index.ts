@@ -3,6 +3,10 @@
  * <br>
  * Requires 3rd party application "<b>Unity Academy</b>" (also made by me) to work together.<br>
  * <br>
+ * <b><u>Note that you need to use this module with a 'Native' variant of Source language, otherwise you may get strange errors.</u></b>
+ * <br>
+ * <b>Code Examples: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/code_examples.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
+ * <br>
  * <br>
  * <b>Lifecycle Event Functions</b><br>
  * ● Unity Academy has its own internal loop on students' GameObject lifecycle.<br>
@@ -46,10 +50,19 @@
  * ● In 2D mode playing frame animations for sprite GameObjects is currently unavailable, whereas in 3D mode you need to use <b>play_animator_state</b> to play 3D animations.<br>
  * <br>
  * <br>
- * <b>Unity Academy Hotkeys</b><br>
+ * <b>Space and Coordinates</b><br>
+ * ● 3D: Uses <b>left-hand coordinate system</b>: +X denotes rightward, +Y denotes upward, +Z denotes forward.<br>
+ * ● 2D: +X denotes rightward, +Y denotes upward, Z value actually still exists and usually used for determining sequence of overlapping 2D GameObjects like sprites.
+ * <br>
+ * <br>
+ * <b>Unity Academy Camera Control (only available when the default camera controllers are being used)</b><br>
  * ● In 2D mode:<br>
  * ● 'W'/'A'/'S'/'D' : Moves the main camera around<br>
- * ● '=' (equals key) : Resets the main camera to its original position<br>
+ * ● '=' (equals key) : Resets the main camera to its initial position<br>
+ * ● In 3D mode:<br>
+ * ● '=' (equals key) : Resets the main camera to its initial position and rotation<br>
+ * ● Left Mouse Button : Hold to rotate the main camera in a faster speed<br>
+ * ● Mouse Scrollwheel : Zoom in / out
  * @module unity_academy
  * @author Wang Zihan
  */
@@ -72,6 +85,7 @@ export {
   get_scale,
   set_scale,
   translate_world,
+  translate_local,
   rotate_world,
   get_key_down,
   get_key,
@@ -95,4 +109,7 @@ export {
   //  gui_label,
   //  gui_button,
   get_main_camera_following_target,
+  request_for_main_camera_control,
+  set_custom_prop,
+  get_custom_prop,
 } from './functions';
