@@ -62,15 +62,17 @@ export function threepointStencilDerivative(
   f: FunctionalVector,
 ): (v: Vector) => Vector {
   return function (v: Vector): Vector {
-    const h = 1e-9
+    const h = 1e-7
     const dfdv: Vector = new Vector(0, 0, 0)
     for (let dim in v) {
+      if(dim === "toReplString") continue;
       const xPlus = new Vector(v.x, v.y, v.z)
       const xMinus = new Vector(v.x, v.y, v.z)
       xPlus[dim] += h
       xMinus[dim] -= h
       dfdv[dim] = subtract(f(xPlus), f(xMinus))[dim] / (2 * h)
     }
+
     return dfdv
   }
 }
@@ -106,7 +108,7 @@ export function display_field(f: FunctionalVector) {
   drawnVectors.push(
     new ConePlot(
       draw_new_cone_plot,
-      { ...data, type: 'cone', hoverinfo: 'x+y+z+u+v+w+name' },
+      { ...data, type: 'cone', hoverinfo: 'x+y+z+u+v+w+name', colorscale: "Blackbody", sizeref: 1.25},
       {},
     ),
   )

@@ -42,24 +42,16 @@ class Painter extends React.Component<Props, State> {
           handleClose={() => this.setState({ modalOpen: false })}
         >
           <div
-<<<<<<< HEAD
-            id='modalDiv'
-=======
             id="modalDiv"
->>>>>>> master
             ref={() => {
               if (this.state.selectedPainter) {
                 this.state.selectedPainter.draw('modalDiv');
               }
             }}
-<<<<<<< HEAD
-            style={{ height: '20rem', width: '20rem' }}
-=======
             style={{
               height: '20rem',
               width: '20rem',
             }}
->>>>>>> master
           ></div>
         </Modal>
         {
@@ -93,9 +85,5 @@ export default {
   },
   body: (debuggerContext: any) => <Painter debuggerContext={debuggerContext} />,
   label: 'Painter Test Tab',
-<<<<<<< HEAD
-  iconName: 'scatter-plot'
-=======
   iconName: 'scatter-plot',
->>>>>>> master
 };
