@@ -586,12 +586,12 @@ class UnityAcademyJsInteropContext {
     this.targetFrameRate = newTargetFrameRate;
   }
 
-  setCustomPropertyInternal(gameObjectIdentifier : GameObjectIdentifier, propName : string, value : any) : void{
+  setCustomPropertyInternal(gameObjectIdentifier : GameObjectIdentifier, propName : string, value : any) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.customProperties[propName] = value;
   }
 
-  getCustomPropertyInternal(gameObjectIdentifier : GameObjectIdentifier, propName : string) : any{
+  getCustomPropertyInternal(gameObjectIdentifier : GameObjectIdentifier, propName : string) : any {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     return gameObject.customProperties[propName];
   }

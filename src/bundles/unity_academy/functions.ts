@@ -5,10 +5,8 @@
  */
 
 
-// import { context } from 'js-slang/moduleHelpers';
 import { initializeModule, getInstance, type GameObjectIdentifier } from './UnityAcademy';
 
-// context.moduleContexts.unity_academy.state = null;
 
 /**
  * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions in this module requires calling this function or init_unity_academy_3d first.<br>
@@ -818,11 +816,11 @@ export function request_for_main_camera_control() : GameObjectIdentifier {
 
 /**
  * Set a custom property with name and value on a GameObject
- * 
+ *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to set the custom property on.
  * @param propName The name (a string) of the custom property
  * @param value The value of the custom property, can be anything you want
- * 
+ *
  * @category Common
  */
 export function set_custom_prop(gameObjectIdentifier : GameObjectIdentifier, propName : string, value : any) : void {
@@ -835,12 +833,12 @@ export function set_custom_prop(gameObjectIdentifier : GameObjectIdentifier, pro
 
 /**
  * Get the value of a custom property with its name on a GameObject
- * 
+ *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get the custom property on.
  * @param propName The name (a string) of the custom property
- * 
+ *
  * @return The value of the custom property with the given name on the given GameObject. If the property value is not set, this function will return `undefined`.
- * 
+ *
  * @category Common
  */
 export function get_custom_prop(gameObjectIdentifier : GameObjectIdentifier, propName : string) : any {
