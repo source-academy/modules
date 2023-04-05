@@ -87,5 +87,8 @@
     "tabs": [
       "Repl"
     ]
+  },
+  "remote_execution": {
+    "tabs": []
   }
 }
