@@ -1,11 +1,12 @@
 /**
  * <b>A module that allows students to program with Unity Engine in either <u>2-D</u> or <u>3-D</u> scene in Source Academy.</b>
  * <br>
- * Requires 3rd party application "<b>Unity Academy</b>" (also made by me) to work together.<br>
- * <br>
- * <b><u>Note that you need to use this module with a 'Native' variant of Source language, otherwise you may get strange errors.</u></b>
+ * Makes use of "<b>Unity Academy Embedded WebGL Frontend</b>" (also made by me) to work together.<br>
  * <br>
  * <b>Code Examples: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/code_examples.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
+ * <b>Prefab Information: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
+ * <br>
+ * <b><u>Note that you need to use this module with a 'Native' variant of Source language, otherwise you may get strange errors.</u></b>
  * <br>
  * <br>
  * <b>Lifecycle Event Functions</b><br>
@@ -56,10 +57,10 @@
  * <br>
  * <br>
  * <b>Unity Academy Camera Control (only available when the default camera controllers are being used)</b><br>
- * ● In 2D mode:<br>
+ * ● <u>In 2D mode:</u><br>
  * ● 'W'/'A'/'S'/'D' : Moves the main camera around<br>
  * ● '=' (equals key) : Resets the main camera to its initial position<br>
- * ● In 3D mode:<br>
+ * ● <u>In 3D mode:</u><br>
  * ● '=' (equals key) : Resets the main camera to its initial position and rotation<br>
  * ● Left Mouse Button : Hold to rotate the main camera in a faster speed<br>
  * ● Mouse Scrollwheel : Zoom in / out
@@ -76,6 +77,7 @@ export {
   set_update,
   instantiate,
   instantiate_sprite,
+  instantiate_empty,
   destroy,
   delta_time,
   get_position,
@@ -87,6 +89,9 @@ export {
   translate_world,
   translate_local,
   rotate_world,
+  copy_position,
+  copy_rotation,
+  copy_scale,
   get_key_down,
   get_key,
   get_key_up,

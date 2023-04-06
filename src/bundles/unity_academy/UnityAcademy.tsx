@@ -309,7 +309,7 @@ class UnityAcademyJsInteropContext {
     return this.unityInstanceState === 'Ready';
   }
 
-  instantiateInternal(prefabName : string) {
+  instantiateInternal(prefabName : string) : GameObjectIdentifier {
     let prefabExists = false;
     const len = this.prefabInfo.prefab_info.length;
     for (let i = 0; i < len; i++) {
@@ -328,11 +328,19 @@ class UnityAcademyJsInteropContext {
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
-  instantiate2DSpriteUrlInternal(sourceImageUrl : string) {
+  instantiate2DSpriteUrlInternal(sourceImageUrl : string) : GameObjectIdentifier {
     const gameObjectIdentifier = `2DSprite_${this.gameObjectIdentifierSerialCounter}`;
     this.gameObjectIdentifierSerialCounter++;
     this.makeGameObjectDataStorage(gameObjectIdentifier);
     this.dispatchStudentAction(`instantiate2DSpriteUrl|${sourceImageUrl}|${gameObjectIdentifier}`);
+    return new GameObjectIdentifier(gameObjectIdentifier);
+  }
+
+  instantiateEmptyGameObjectInternal() : GameObjectIdentifier {
+    const gameObjectIdentifier = `EmptyGameObject_${this.gameObjectIdentifierSerialCounter}`;
+    this.gameObjectIdentifierSerialCounter++;
+    this.makeGameObjectDataStorage(gameObjectIdentifier);
+    this.dispatchStudentAction(`instantiateEmptyGameObject|${gameObjectIdentifier}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
@@ -450,6 +458,14 @@ class UnityAcademyJsInteropContext {
     gameObject.transform.rotation.x += x;
     gameObject.transform.rotation.y += y;
     gameObject.transform.rotation.z += z;
+  }
+
+  copyTransformPropertiesInternal(propName : string, from : GameObjectIdentifier, to : GameObjectIdentifier, delta_x : number, delta_y : number, delta_z : number) : void {
+    const fromGameObject = this.getStudentGameObject(from);
+    const toGameObject = this.getStudentGameObject(to);
+    if (Math.abs(delta_x) !== Infinity) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + delta_x;
+    if (Math.abs(delta_y) !== Infinity) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + delta_y;
+    if (Math.abs(delta_z) !== Infinity) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + delta_z;
   }
 
   getKeyState(keyCode : string) : number {
