@@ -1,13 +1,14 @@
 import { createContext, useContext, useState } from 'react';
 
 import {
+  Alignment,
   Button,
   Card,
   Checkbox,
-  Divider,
   Icon,
   Menu,
   MenuDivider,
+  Navbar,
 } from '@blueprintjs/core';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 
@@ -174,39 +175,19 @@ const MatrixInstance = ({ matrix, index }: DisplayProps) => {
         direction="column"
         alignItems="center"
       >
-        <Card
-          className="bp4-navbar bp4-dark"
-          elevation={1}
-          style={{
-            width: '100%',
-          }}
-        >
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-          }}>
-            <div style={{
-              alignSelf: 'flex-start',
-              marginLeft: '2px',
-              marginRight: '2px',
-            }}>
-              {settingsMenu}
-              <Divider />
-            </div>
+        <Navbar>
+          <Navbar.Group align={Alignment.LEFT}>
+            {settingsMenu}
+            <Navbar.Divider />
+          </Navbar.Group>
+          <Navbar.Group>
             {userButtons}
-            <div style={{
-              alignSelf: 'flex-end',
-              marginLeft: '2px',
-              marginRight: '2px',
-            }} >
-              <Divider />
-              {coordIndicator}
-            </div>
-          </div>
-        </Card>
+          </Navbar.Group>
+          <Navbar.Group align={Alignment.RIGHT}>
+            <Navbar.Divider />
+            {coordIndicator}
+          </Navbar.Group>
+        </Navbar>
         <div style={{
           marginTop: '10px',
           marginBottom: '10px',

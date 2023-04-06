@@ -10,7 +10,7 @@ const checkDimensions = (matrix: Matrix, row: number, col: number) => {
   // if (!(matrix instanceof Matrix)) throw new Error(`Expected a matrix, got: ${typeof matrix}`);
 
   if (row < 0 || row >= matrix.rows) {
-    throw new Error(`Row index of ${row} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols}`);
+    throw new Error(`Row index of ${row} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
   }
 
   if (col < 0 || col >= matrix.cols) {
