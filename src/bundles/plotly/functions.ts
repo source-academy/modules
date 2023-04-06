@@ -4,10 +4,17 @@
  */
 
 import context from 'js-slang/context';
-import Plotly, { type Data } from 'plotly.js-dist';
-import { DrawnPlot, type ListOfPairs } from './plotly';
+import Plotly, { type Data, type Layout } from 'plotly.js-dist';
+import {
+  type Curve,
+  type CurvePlot,
+  type CurvePlotFunction,
+  DrawnPlot,
+  type ListOfPairs,
+} from './plotly';
+import { generatePlot } from './curve_functions';
 
-const drawnPlots: (DrawnPlot)[] = [];
+const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 context.moduleContexts.plotly.state = {
   drawnPlots,
 };
@@ -273,3 +280,63 @@ function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
     add_fields_to_data(convertedData, data[1]);
   }
 }
+
+function createPlotFunction(
+  type: string,
+  config: Data,
+  layout: Partial<Layout>,
+  is_colored: boolean = false,
+): (numPoints: number) => CurvePlotFunction {
+  return (numPoints: number) => {
+    const func = (curveFunction: Curve) => {
+      const plotDrawn = generatePlot(
+        type,
+        numPoints,
+        config,
+        layout,
+        is_colored,
+        curveFunction,
+      );
+
+      drawnPlots.push(plotDrawn);
+      return plotDrawn;
+    };
+
+    return func;
+  };
+}
+
+/**
+ * Returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at `num` sample points and connecting each pair with a line.
+ * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.
+ *
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @return function of type Curve → Drawing
+ * @example
+ * ```
+ * draw_connected(100)(t => make_point(t, t));
+ * ```
+ */
+export const draw_connected_2d = createPlotFunction(
+  'scatter',
+  { mode: 'lines' },
+  {
+    xaxis: { visible: false },
+    yaxis: {
+      visible: false,
+      scaleanchor: 'x',
+    },
+  },
+
+);
+
+export const draw_3D_points = createPlotFunction(
+  'scatter3d',
+  { mode: 'markers' },
+  {
+
+  },
+  true,
+);
