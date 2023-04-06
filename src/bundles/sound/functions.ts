@@ -127,7 +127,7 @@ const recording_signal_ms = 100;
 const pre_recording_signal_pause_ms = 200;
 
 function play_recording_signal() {
-  play(sine_sound(1200, recording_signal_ms / 1000));
+  play_concurrently(sine_sound(1200, recording_signal_ms / 1000));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -310,7 +310,7 @@ export function get_duration(sound: Sound): number {
  */
 export function is_sound(x: any): x is Sound {
   return (
-    is_pair(x)
+    is_pair<any, any>(x)
     && typeof get_wave(x) === 'function'
     && typeof get_duration(x) === 'number'
   );
