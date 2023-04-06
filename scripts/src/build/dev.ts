@@ -77,7 +77,6 @@ const getTabContext = ({ srcDir, outDir }: ContextOptions, tabs: string[]) => es
   outbase: outDir,
   outdir: outDir,
   entryPoints: tabs.map(tabNameExpander(srcDir)),
-  external: ['react*', 'react-dom'],
   plugins: [{
     name: 'Tab Compiler',
     setup(pluginBuild) {
