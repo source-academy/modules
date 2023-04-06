@@ -29,29 +29,11 @@ export function draw_sound_2d(sound: Sound) {
     const time_stamps: number[] = [];
     const len = Math.ceil(FS * get_duration(sound));
 
-    let temp: number;
-    let prev_value = 0;
 
     const wave = get_wave(sound);
     for (let i = 0; i < len; i += 1) {
-      temp = wave(i / FS);
       time_stamps[i] = i / FS;
-      // // clip amplitude
-      // // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
-      // if (temp > 1) {
-      //   channel[i] = 1;
-      // } else if (temp < -1) {
-      //   channel[i] = -1;
-      // } else {
-      //   channel[i] = temp;
-      // }
-
-      // // smoothen out sudden cut-outs
-      // if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-      //   channel[i] = prev_value * 0.999;
-      // }
-
-      prev_value = channel[i];
+      channel[i] = wave( i / FS );
     }
 
     let x_s: number[] = [];
