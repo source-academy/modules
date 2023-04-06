@@ -20,6 +20,10 @@
 <br>
 Requires 3rd party application &quot;<b>Unity Academy</b>&quot; (also made by me) to work together.<br>
 <br>
+<b><u>Note that you need to use this module with a &#39;Native&#39; variant of Source language, otherwise you may get strange errors.</u></b>
+<br>
+<b>Code Examples: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/code_examples.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
+<br>
 <br>
 <b>Lifecycle Event Functions</b><br>
 ● Unity Academy has its own internal loop on students&#39; GameObject lifecycle.<br>
@@ -53,14 +57,23 @@ When any runtime errors happen in lifecycle event functions, they will be displa
 ● In 2D mode playing frame animations for sprite GameObjects is currently unavailable, whereas in 3D mode you need to use <b>play_animator_state</b> to play 3D animations.<br>
 <br>
 <br>
-<b>Unity Academy Hotkeys</b><br>
+<b>Space and Coordinates</b><br>
+● 3D: Uses <b>left-hand coordinate system</b>: +X denotes rightward, +Y denotes upward, +Z denotes forward.<br>
+● 2D: +X denotes rightward, +Y denotes upward, Z value actually still exists and usually used for determining sequence of overlapping 2D GameObjects like sprites.
+<br>
+<br>
+<b>Unity Academy Camera Control (only available when the default camera controllers are being used)</b><br>
 ● In 2D mode:<br>
 ● 'W'/'A'/'S'/'D' : Moves the main camera around<br>
-● '=' (equals key) : Resets the main camera to its original position<br>
+● '=' (equals key) : Resets the main camera to its initial position<br>
+● In 3D mode:<br>
+● '=' (equals key) : Resets the main camera to its initial position and rotation<br>
+● Left Mouse Button : Hold to rotate the main camera in a faster speed<br>
+● Mouse Scrollwheel : Zoom in / out
 <h3>Author</h3><p>Wang Zihan</p>
 </div></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/9cbd539/src/bundles/unity_academy/index.ts#L58">unity_academy/index.ts:58</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/491a842/src/bundles/unity_academy/index.ts#L71">unity_academy/index.ts:71</a></li></ul></aside>
 <section class="tsd-panel-group">
 <section class="tsd-panel tsd-typography"></section></section>
 <section class="tsd-panel-group tsd-index-group">
@@ -72,14 +85,20 @@ When any runtime errors happen in lifecycle event functions, they will be displa
 <a href="../functions/unity_academy.init_unity_academy_3d.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>init_<wbr/>unity_<wbr/>academy_<wbr/>3d</span></a>
 </div></section>
 <section class="tsd-index-section">
+<h3 class="tsd-index-heading">Functions - Camera</h3>
+<div class="tsd-index-list"><a href="../functions/unity_academy.get_main_camera_following_target.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target</span></a>
+<a href="../functions/unity_academy.request_for_main_camera_control.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>request_<wbr/>for_<wbr/>main_<wbr/>camera_<wbr/>control</span></a>
+</div></section>
+<section class="tsd-index-section">
 <h3 class="tsd-index-heading">Functions - Common</h3>
 <div class="tsd-index-list"><a href="../functions/unity_academy.delta_time.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>delta_<wbr/>time</span></a>
 <a href="../functions/unity_academy.destroy.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>destroy</span></a>
-<a href="../functions/unity_academy.get_main_camera_following_target.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target</span></a>
+<a href="../functions/unity_academy.get_custom_prop.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>custom_<wbr/>prop</span></a>
 <a href="../functions/unity_academy.instantiate.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>instantiate</span></a>
 <a href="../functions/unity_academy.instantiate_sprite.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>instantiate_<wbr/>sprite</span></a>
 <a href="../functions/unity_academy.play_animator_state.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>play_<wbr/>animator_<wbr/>state</span></a>
 <a href="../functions/unity_academy.same_gameobject.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>same_<wbr/>gameobject</span></a>
+<a href="../functions/unity_academy.set_custom_prop.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>custom_<wbr/>prop</span></a>
 <a href="../functions/unity_academy.set_start.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>start</span></a>
 <a href="../functions/unity_academy.set_update.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>update</span></a>
 </div></section>
@@ -99,6 +118,7 @@ When any runtime errors happen in lifecycle event functions, they will be displa
 <a href="../functions/unity_academy.on_collision_enter.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>enter</span></a>
 <a href="../functions/unity_academy.on_collision_exit.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>exit</span></a>
 <a href="../functions/unity_academy.on_collision_stay.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>on_<wbr/>collision_<wbr/>stay</span></a>
+<a href="../functions/unity_academy.request_for_main_camera_control.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>request_<wbr/>for_<wbr/>main_<wbr/>camera_<wbr/>control</span></a>
 <a href="../functions/unity_academy.set_start.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>start</span></a>
 <a href="../functions/unity_academy.set_update.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>update</span></a>
 </div></section>
@@ -132,6 +152,7 @@ When any runtime errors happen in lifecycle event functions, they will be displa
 <a href="../functions/unity_academy.set_position.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>position</span></a>
 <a href="../functions/unity_academy.set_rotation_euler.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>rotation_<wbr/>euler</span></a>
 <a href="../functions/unity_academy.set_scale.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>scale</span></a>
+<a href="../functions/unity_academy.translate_local.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>translate_<wbr/>local</span></a>
 <a href="../functions/unity_academy.translate_world.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>translate_<wbr/>world</span></a>
 </div></section></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -181,6 +202,7 @@ When any runtime errors happen in lifecycle event functions, they will be displa
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.delta_time.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>delta_<wbr/>time</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.destroy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>destroy</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_angular_velocity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>angular_<wbr/>velocity</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_custom_prop.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>custom_<wbr/>prop</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_key.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>key</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_key_down.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>key_<wbr/>down</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.get_key_up.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>get_<wbr/>key_<wbr/>up</a></li>
@@ -199,10 +221,12 @@ When any runtime errors happen in lifecycle event functions, they will be displa
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.on_collision_stay.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>on_<wbr/>collision_<wbr/>stay</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.play_animator_state.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>play_<wbr/>animator_<wbr/>state</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.remove_collider_components.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>remove_<wbr/>collider_<wbr/>components</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.request_for_main_camera_control.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>request_<wbr/>for_<wbr/>main_<wbr/>camera_<wbr/>control</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.rotate_world.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>rotate_<wbr/>world</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.same_gameobject.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>same_<wbr/>gameobject</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_angular_drag.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>angular_<wbr/>drag</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_angular_velocity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>angular_<wbr/>velocity</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_custom_prop.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>custom_<wbr/>prop</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_drag.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>drag</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_mass.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>mass</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_position.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>position</a></li>
@@ -212,6 +236,7 @@ When any runtime errors happen in lifecycle event functions, they will be displa
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_update.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>update</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_use_gravity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>use_<wbr/>gravity</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.set_velocity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>set_<wbr/>velocity</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.translate_local.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>translate_<wbr/>local</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.translate_world.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>translate_<wbr/>world</a></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>

@@ -7212,6 +7212,7 @@ require => (() => {
   })(AbstractPureComponent2);
   init_define_process();
   var UNITY_ACADEMY_BACKEND_URL = "https://unity-academy.s3.ap-southeast-1.amazonaws.com/";
+  var BUILD_NAME = "ua-frontend-prod";
   init_define_process();
   var import_react = __toESM(__require("react"), 1);
   var import_react_dom = __toESM(__require("react-dom"), 1);
@@ -7292,12 +7293,11 @@ require => (() => {
       getInstance().firstTimeLoadUnityApplication();
     }
   };
-  var buildName = "ua-frontend-prod";
   var UNITY_CONFIG = {
-    loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.loader.js`,
-    dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.data`,
-    frameworkUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.framework.js`,
-    codeUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.wasm`,
+    loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.loader.js`,
+    dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.data.gz`,
+    frameworkUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.framework.js.gz`,
+    codeUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.wasm.gz`,
     streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
     companyName: "Wang Zihan @ NUS SoC 2026",
     productName: "Unity Academy (Source Academy Embedding Version)",
@@ -7313,14 +7313,14 @@ require => (() => {
           style: {
             color: "yellow"
           },
-          children: "[Warning] You are trying to set target fps higher than default value (30). Higher FPS will lead to more cost in your device's resources such as GPU, increace device temperature and battery usage and may even lead to browser not responding, crash the browser or even crash your operation system if your device really can not endure the high resource cost."
+          children: "[Warning] You are using a target fps higher than default value (30). Higher FPS will lead to more cost in your device's resources such as GPU, increace device temperature and battery usage and may even lead to browser not responding, crash the browser or even crash your operation system if your device really can not endure the high resource cost."
         });
       } else if (currentTargetFrameRate > 60 && currentTargetFrameRate <= 120) {
         highFPSWarning = (0, import_jsx_runtime2.jsxs)("div", {
           style: {
             color: "red"
           },
-          children: ["[!!WARNING!!] You are trying to set target fps that is extremely high. This FPS may lead to large cost in your device's resources such as GPU, significantly increace device temperature and battery usage and have a large chance of making browser not responding, crash the browser or even crash your operation system if your device's performance is not enough.", (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), " ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***"]
+          children: ["[!!WARNING!!] You are using a target fps that is extremely high. This FPS may lead to large cost in your device's resources such as GPU, significantly increace device temperature and battery usage and have a large chance of making browser not responding, crash the browser or even crash your operation system if your device's performance is not enough.", (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), " ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***"]
         });
       } else {
         highFPSWarning = (0, import_jsx_runtime2.jsx)("div", {});
@@ -7339,6 +7339,8 @@ require => (() => {
           }), " to clean up the engine and free up memory."]
         }), (0, import_jsx_runtime2.jsx)("p", {
           children: "Otherwise it may lead to a potential waste to your device's resources (such as RAM) and battery."
+        }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("p", {
+          children: "Note that you need to use a 'Native' variant of Source language in order to use this module. If any strange error happens when using this module, please check whether you are using the 'Native' variant of Source language or not."
         }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("p", {
           children: "100% resolution will display Unity Academy in a larger area with more detailed graphics but requires higher GPU performance than 50% resolution."
         }), (0, import_jsx_runtime2.jsx)(Button, {
@@ -7364,19 +7366,58 @@ require => (() => {
           text: "Open Unity Academy (100% Resolution / Best quality and high GPU performance cost)"
         }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("p", {
           children: "Target Frame Rate: "
-        }), (0, import_jsx_runtime2.jsx)(NumericInput, {
+        }), (0, import_jsx_runtime2.jsxs)("div", {
           style: {
-            width: 100
+            display: "inline-flex"
           },
-          leftIcon: IconNames.REFRESH,
-          value: currentTargetFrameRate,
-          max: 120,
-          min: 15,
-          onValueChange: x => {
-            getInstance().setTargetFrameRate(x);
-            this.setState({});
-          },
-          stepSize: 1
+          children: [(0, import_jsx_runtime2.jsx)(NumericInput, {
+            style: {
+              width: 100
+            },
+            leftIcon: IconNames.REFRESH,
+            value: currentTargetFrameRate,
+            max: 120,
+            min: 15,
+            onValueChange: x => {
+              getInstance().setTargetFrameRate(x);
+              this.setState({});
+            },
+            stepSize: 1
+          }), (0, import_jsx_runtime2.jsx)(Button, {
+            active: true,
+            onClick: () => {
+              getInstance().setTargetFrameRate(30);
+              this.setState({});
+            },
+            text: "30"
+          }), (0, import_jsx_runtime2.jsx)(Button, {
+            active: true,
+            onClick: () => {
+              if (confirm("Set the target frame rate higher than the default recommended value (30) ?")) {
+                getInstance().setTargetFrameRate(60);
+                this.setState({});
+              }
+            },
+            text: "60"
+          }), (0, import_jsx_runtime2.jsx)(Button, {
+            active: true,
+            onClick: () => {
+              if (confirm("Set the target frame rate higher than the default recommended value (30) ?")) {
+                getInstance().setTargetFrameRate(90);
+                this.setState({});
+              }
+            },
+            text: "90"
+          }), (0, import_jsx_runtime2.jsx)(Button, {
+            active: true,
+            onClick: () => {
+              if (confirm("Set the target frame rate higher than the default recommended value (30) ?")) {
+                getInstance().setTargetFrameRate(120);
+                this.setState({});
+              }
+            },
+            text: "120"
+          })]
         }), highFPSWarning, (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsxs)("div", {
           children: ["3D Prefab Information: ", (0, import_jsx_runtime2.jsx)("a", {
             href: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html`,
