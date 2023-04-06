@@ -128,8 +128,8 @@ require => (() => {
       return (0, import_jsx_runtime2.jsxs)("div", {
         children: [(0, import_jsx_runtime2.jsx)(modal_div_default, {
           open: this.state.modalOpen,
-          height: "20rem",
-          width: "20rem",
+          height: "90vh",
+          width: "80vw",
           handleClose: () => this.setState({
             modalOpen: false
           }),
@@ -141,23 +141,28 @@ require => (() => {
               }
             },
             style: {
-              height: "20rem",
-              width: "20rem"
+              height: "80vh"
             }
           })
         }), drawnPlots.map((drawnPlot, id) => {
           const divId = `plotDiv${id}`;
-          return (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, {
+          return (0, import_jsx_runtime2.jsxs)("div", {
+            style: {
+              height: "80vh"
+            },
             children: [(0, import_jsx_runtime2.jsx)("div", {
               onClick: () => this.handleOpen(drawnPlot),
               children: "Click here to open Modal"
             }), (0, import_jsx_runtime2.jsx)("div", {
               id: divId,
+              style: {
+                height: "80vh"
+              },
               ref: () => {
                 drawnPlot.draw(divId);
               }
             })]
-          });
+          }, divId);
         })]
       });
     }

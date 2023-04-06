@@ -1,4 +1,7 @@
 {
+  "draw_3D_points": "<div><h4>draw_3D_points(numPoints: number) → {CurvePlotFunction}</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "draw_connected_2d": "<div><h4>draw_connected_2d(numPoints: number) → {CurvePlotFunction}</h4><div class=\"description\"><p>Returns a function that turns a given Curve into a Drawing, by sampling the  \nCurve at <code>num</code> sample points and connecting each pair with a line.  \nThe parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.</p></div></div>",
+  "draw_sound_2d": "<div><h4>draw_sound_2d(sound: Sound) → {void}</h4><div class=\"description\"><p>Visualizes the sound on a 2d line graph</p></div></div>",
   "new_plot": "<div><h4>new_plot(data: ListOfPairs) → {void}</h4><div class=\"description\"><p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p></div></div>",
   "new_plot_json": "<div><h4>new_plot_json(data: any) → {void}</h4><div class=\"description\"><p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p></div></div>"
 }
