@@ -5,10 +5,8 @@
  */
 
 
-import context from 'js-slang/context';
 import { initializeModule, getInstance, type GameObjectIdentifier } from './UnityAcademy';
 
-context.moduleContexts.unity_academy.state = null;
 
 /**
  * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions in this module requires calling this function or init_unity_academy_3d first.<br>
@@ -32,7 +30,7 @@ export function init_unity_academy_3d() : void {
   initializeModule('3d');
 }
 
-function checkUnityEngineStatus() {
+function checkUnityAcademyExistence() {
   if (getInstance() === undefined) {
     throw new Error('Unity module is not initialized, please call init_unity_academy_3d / init_unity_academy_2d first before calling this function');
   }
@@ -75,7 +73,7 @@ function checkParameterType(parameter : any, expectedType : string) {
  * @category Common
  */
 export function same_gameobject(first : GameObjectIdentifier, second : GameObjectIdentifier) : boolean {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   const instance = getInstance();
   if (!(first instanceof instance.gameObjectIdentifierWrapperClass) || !(second instanceof instance.gameObjectIdentifierWrapperClass)) {
     return false;
@@ -92,7 +90,7 @@ export function same_gameobject(first : GameObjectIdentifier, second : GameObjec
  * @category Outside Lifecycle
  */
 export function set_start(gameObjectIdentifier : GameObjectIdentifier, startFunction : Function) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(startFunction, 'function');
   getInstance()
@@ -109,7 +107,7 @@ export function set_start(gameObjectIdentifier : GameObjectIdentifier, startFunc
  * @category Outside Lifecycle
  */
 export function set_update(gameObjectIdentifier : GameObjectIdentifier, updateFunction : Function) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(updateFunction, 'function');
   getInstance()
@@ -128,7 +126,7 @@ export function set_update(gameObjectIdentifier : GameObjectIdentifier, updateFu
  * @category Outside Lifecycle
  */
 export function instantiate(prefab_name : string) : GameObjectIdentifier {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkIs3DMode();
   checkParameterType(prefab_name, 'string');
   return getInstance()
@@ -148,7 +146,7 @@ export function instantiate(prefab_name : string) : GameObjectIdentifier {
  * @category Outside Lifecycle
  */
 export function instantiate_sprite(sourceImageUrl : string) {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkIs2DMode();
   checkParameterType(sourceImageUrl, 'string');
   return getInstance()
@@ -174,7 +172,7 @@ export function instantiate_sprite(sourceImageUrl : string) {
  * @category Common
  */
 export function delta_time() {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   return getInstance()
     .getDeltaTime();
 }
@@ -189,7 +187,7 @@ export function delta_time() {
  * @category Common
  */
 export function destroy(gameObjectIdentifier : GameObjectIdentifier) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   getInstance()
     .destroyGameObjectInternal(gameObjectIdentifier);
@@ -215,7 +213,7 @@ export function destroy(gameObjectIdentifier : GameObjectIdentifier) : void {
  * @category Transform
  */
 export function get_position(gameObjectIdentifier : GameObjectIdentifier) : Array<Number> {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   return getInstance()
     .getGameObjectTransformProp('position', gameObjectIdentifier);
@@ -231,7 +229,7 @@ export function get_position(gameObjectIdentifier : GameObjectIdentifier) : Arra
  * @category Transform
  */
 export function set_position(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
@@ -248,7 +246,7 @@ export function set_position(gameObjectIdentifier : GameObjectIdentifier, x : nu
  * @category Transform
  */
 export function get_rotation_euler(gameObjectIdentifier : GameObjectIdentifier) : Array<Number> {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   return getInstance()
     .getGameObjectTransformProp('rotation', gameObjectIdentifier);
@@ -264,7 +262,7 @@ export function get_rotation_euler(gameObjectIdentifier : GameObjectIdentifier) 
  * @category Transform
  */
 export function set_rotation_euler(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
@@ -281,7 +279,7 @@ export function set_rotation_euler(gameObjectIdentifier : GameObjectIdentifier, 
  * @category Transform
  */
 export function get_scale(gameObjectIdentifier : GameObjectIdentifier) : Array<Number> {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   return getInstance()
     .getGameObjectTransformProp('scale', gameObjectIdentifier);
@@ -298,7 +296,7 @@ export function get_scale(gameObjectIdentifier : GameObjectIdentifier) : Array<N
  * @category Transform
  */
 export function set_scale(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
@@ -306,6 +304,7 @@ export function set_scale(gameObjectIdentifier : GameObjectIdentifier, x : numbe
   return getInstance()
     .setGameObjectTransformProp('scale', gameObjectIdentifier, x, y, z);
 }
+
 /**
  * Moves a GameObject with given x, y and z values
  *
@@ -317,13 +316,35 @@ export function set_scale(gameObjectIdentifier : GameObjectIdentifier, x : numbe
  * @category Transform
  */
 export function translate_world(gameObjectIdentifier : GameObjectIdentifier, x: number, y : number, z : number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
   checkParameterType(z, 'number');
   return getInstance()
     .translateWorldInternal(gameObjectIdentifier, x, y, z);
+}
+
+/**
+ * Moves a GameObject with given x, y and z values, <b>with respect to its local space</b>.<br>
+ * The current rotation of the GameObject will affect the real direction of movement.<br>
+ * In Unity, usually, the direction of +Z axis denotes forward.
+ *
+ * @param gameObjectIdentifier The GameObject identifier that you want to translate.
+ * @param x The value you want to move along X-axis in the local space
+ * @param y The value you want to move along Y-axis in the local space
+ * @param z The value you want to move along Z-axis in the local space
+ *
+ * @category Transform
+ */
+export function translate_local(gameObjectIdentifier : GameObjectIdentifier, x: number, y : number, z : number) : void {
+  checkUnityAcademyExistence();
+  checkGameObjectIdentifierParameter(gameObjectIdentifier);
+  checkParameterType(x, 'number');
+  checkParameterType(y, 'number');
+  checkParameterType(z, 'number');
+  return getInstance()
+    .translateLocalInternal(gameObjectIdentifier, x, y, z);
 }
 
 /**
@@ -337,7 +358,7 @@ export function translate_world(gameObjectIdentifier : GameObjectIdentifier, x: 
  * @category Transform
  */
 export function rotate_world(gameObjectIdentifier : GameObjectIdentifier, x: number, y : number, z : number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
@@ -369,7 +390,7 @@ function checkKeyCodeValidityAndToLowerCase(keyCode : string) : string {
  * @category Input
  */
 export function get_key_down(keyCode : string) : boolean {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
   return getInstance()
     .getKeyState(keyCode) === 1;
@@ -386,7 +407,7 @@ export function get_key_down(keyCode : string) : boolean {
  * @category Input
  */
 export function get_key(keyCode : string) : boolean {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
   const keyState = getInstance()
     .getKeyState(keyCode);
@@ -405,7 +426,7 @@ export function get_key(keyCode : string) : boolean {
  * @category Input
  */
 export function get_key_up(keyCode : string) : boolean {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
   return getInstance()
     .getKeyState(keyCode) === 3;
@@ -421,8 +442,8 @@ export function get_key_up(keyCode : string) : boolean {
  * @param animatorStateName The name for the animator state to play.
  * @category Common
  */
-export function play_animator_state(gameObjectIdentifier : GameObjectIdentifier, animatorStateName : string) {
-  checkUnityEngineStatus();
+export function play_animator_state(gameObjectIdentifier : GameObjectIdentifier, animatorStateName : string) : void {
+  checkUnityAcademyExistence();
   checkIs3DMode();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(animatorStateName, 'string');
@@ -443,7 +464,7 @@ export function play_animator_state(gameObjectIdentifier : GameObjectIdentifier,
  * @category Physics - Rigidbody
  */
 export function apply_rigidbody(gameObjectIdentifier : GameObjectIdentifier) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   getInstance()
     .applyRigidbodyInternal(gameObjectIdentifier);
@@ -454,10 +475,11 @@ export function apply_rigidbody(gameObjectIdentifier : GameObjectIdentifier) : v
  * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get mass for.
+ * @return The mass of the rigidbody attached on the GameObject
  * @category Physics - Rigidbody
  */
 export function get_mass(gameObjectIdentifier : GameObjectIdentifier) : number {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   return getInstance()
     .getRigidbodyNumericalProp('mass', gameObjectIdentifier);
@@ -472,7 +494,7 @@ export function get_mass(gameObjectIdentifier : GameObjectIdentifier) : number {
  * @category Physics - Rigidbody
  */
 export function set_mass(gameObjectIdentifier : GameObjectIdentifier, mass : number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(mass, 'number');
   getInstance()
@@ -488,7 +510,7 @@ export function set_mass(gameObjectIdentifier : GameObjectIdentifier, mass : num
  * @category Physics - Rigidbody
  */
 export function get_velocity(gameObjectIdentifier : GameObjectIdentifier) : Array<number> {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   return getInstance()
     .getRigidbodyVelocityVector3Prop('velocity', gameObjectIdentifier);
@@ -505,7 +527,7 @@ export function get_velocity(gameObjectIdentifier : GameObjectIdentifier) : Arra
  * @category Physics - Rigidbody
  */
 export function set_velocity(gameObjectIdentifier : GameObjectIdentifier, x: number, y: number, z: number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
@@ -524,7 +546,7 @@ export function set_velocity(gameObjectIdentifier : GameObjectIdentifier, x: num
  * @category Physics - Rigidbody
  */
 export function get_angular_velocity(gameObjectIdentifier : GameObjectIdentifier) : Array<number> {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   return getInstance()
     .getRigidbodyVelocityVector3Prop('angularVelocity', gameObjectIdentifier);
@@ -542,7 +564,7 @@ export function get_angular_velocity(gameObjectIdentifier : GameObjectIdentifier
  * @category Physics - Rigidbody
  */
 export function set_angular_velocity(gameObjectIdentifier : GameObjectIdentifier, x: number, y: number, z: number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
@@ -561,7 +583,7 @@ export function set_angular_velocity(gameObjectIdentifier : GameObjectIdentifier
  * @category Physics - Rigidbody
  */
 export function set_drag(gameObjectIdentifier : GameObjectIdentifier, value: number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(value, 'number');
   getInstance()
@@ -578,7 +600,7 @@ export function set_drag(gameObjectIdentifier : GameObjectIdentifier, value: num
  * @category Physics - Rigidbody
  */
 export function set_angular_drag(gameObjectIdentifier : GameObjectIdentifier, value: number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(value, 'number');
   getInstance()
@@ -594,7 +616,7 @@ export function set_angular_drag(gameObjectIdentifier : GameObjectIdentifier, va
  * @category Physics - Rigidbody
  */
 export function set_use_gravity(gameObjectIdentifier : GameObjectIdentifier, useGravity : boolean) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(useGravity, 'boolean');
   getInstance()
@@ -613,7 +635,7 @@ export function set_use_gravity(gameObjectIdentifier : GameObjectIdentifier, use
  * @category Physics - Rigidbody
  */
 export function add_impulse_force(gameObjectIdentifier : GameObjectIdentifier, x: number, y: number, z: number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
@@ -631,8 +653,8 @@ export function add_impulse_force(gameObjectIdentifier : GameObjectIdentifier, x
  * @param gameObjectIdentifier The identifier for the GameObject that you want to remove colliders for.
  * @category Physics - Collision
  */
-export function remove_collider_components(gameObjectIdentifier : GameObjectIdentifier) {
-  checkUnityEngineStatus();
+export function remove_collider_components(gameObjectIdentifier : GameObjectIdentifier) : void {
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   getInstance()
     .removeColliderComponentsInternal(gameObjectIdentifier);
@@ -657,7 +679,7 @@ export function remove_collider_components(gameObjectIdentifier : GameObjectIden
  * @category Outside Lifecycle
  */
 export function on_collision_enter(gameObjectIdentifier : GameObjectIdentifier, eventFunction : Function) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(eventFunction, 'function');
   getInstance()
@@ -683,7 +705,7 @@ export function on_collision_enter(gameObjectIdentifier : GameObjectIdentifier, 
  * @category Outside Lifecycle
  */
 export function on_collision_stay(gameObjectIdentifier : GameObjectIdentifier, eventFunction : Function) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(eventFunction, 'function');
   getInstance()
@@ -709,7 +731,7 @@ export function on_collision_stay(gameObjectIdentifier : GameObjectIdentifier, e
  * @category Outside Lifecycle
  */
 export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, eventFunction : Function) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkGameObjectIdentifierParameter(gameObjectIdentifier);
   checkParameterType(eventFunction, 'function');
   getInstance()
@@ -728,7 +750,7 @@ export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, e
  * @category Graphical User Interface
  */
 export function gui_label(content : string, x : number, y : number) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
   getInstance()
@@ -748,7 +770,7 @@ export function gui_label(content : string, x : number, y : number) : void {
  * @category Graphical User Interface
  */
 export function gui_button(text : string, x: number, y : number, onClick : Function) : void {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
   checkParameterType(onClick, 'function');
@@ -758,16 +780,71 @@ export function gui_button(text : string, x: number, y : number, onClick : Funct
 
 /**
  * Get the main camera following target GameObject (an invisible GameObject) to use it to control the position of the main camera with the default camera controller.<br><br>
- * <b>In 3D mode</b>, the default camera controller behaves as third-person camera controller, and the center to follow is the following target GameObject.<br>
+ * <b>In 3D mode</b>, the default camera controller behaves as third-person camera controller, and the center to follow is the following target GameObject. Also, Unity Academy will automatically set the rotation of this "following target" to the same rotation as the current main camera's rotation to let you get the main camera's rotation.<br>
  * <b>In 2D mode</b>, the default camera controller will follow the target GameObject to move, along with a position delta value that you can adjust with the arrow keys on your keyboard.<br><br>
- * The main camera following target GameObject is a primitive GameObject. This means that you are not allowed to destroy it and/or instantiate it during runtime. Multiple calls to this function will return GameObject identifiers that refer to the same primitive GameObject.
+ * The main camera following target GameObject is a primitive GameObject. This means that you are not allowed to destroy it and/or instantiate it during runtime. Multiple calls to this function will return GameObject identifiers that refer to the same primitive GameObject.<br>
+ * <br>
+ * <br><b>If default main camera controllers are disabled (you have called `request_for_main_camera_control`), then the following target GameObject is useless.</b>
  *
  * @return The GameObject idenfitier for the main camera following target GameObject.
- * @category Common
+ * @category Camera
  * @category Outside Lifecycle
  */
 export function get_main_camera_following_target() : GameObjectIdentifier {
-  checkUnityEngineStatus();
+  checkUnityAcademyExistence();
   return getInstance()
     .getGameObjectIdentifierForPrimitiveGameObject('MainCameraFollowingTarget');
+}
+
+
+/**
+ * Request for main camera control and get a GameObject identifier that can directly be used to control the main camera's position and rotation.<br>
+ * <br>
+ * When you request for the direct control over main camera with this function, the default camera controllers will be disabled, thus the GameObject identifier returned by `get_main_camera_following_target` will become useless, as you can no longer use the default main camera controllers.<br>
+ * <br>
+ * This function is for totally customizing the position and rotation of the main camera. If you'd like to simplify the camera controlling with the help of the default camera controllers in Unity Academy, please consider use `get_main_camera_following_target` function.<br>
+ *
+ * @return The GameObject identifier that can directly be used to control the main camera's position and rotation
+ * @category Camera
+ * @category Outside Lifecycle
+ */
+export function request_for_main_camera_control() : GameObjectIdentifier {
+  checkUnityAcademyExistence();
+  return getInstance()
+    .requestForMainCameraControlInternal();
+}
+
+/**
+ * Set a custom property with name and value on a GameObject
+ *
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to set the custom property on.
+ * @param propName The name (a string) of the custom property
+ * @param value The value of the custom property, can be anything you want
+ *
+ * @category Common
+ */
+export function set_custom_prop(gameObjectIdentifier : GameObjectIdentifier, propName : string, value : any) : void {
+  checkUnityAcademyExistence();
+  checkGameObjectIdentifierParameter(gameObjectIdentifier);
+  checkParameterType(propName, 'string');
+  getInstance()
+    .setCustomPropertyInternal(gameObjectIdentifier, propName, value);
+}
+
+/**
+ * Get the value of a custom property with its name on a GameObject
+ *
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to get the custom property on.
+ * @param propName The name (a string) of the custom property
+ *
+ * @return The value of the custom property with the given name on the given GameObject. If the property value is not set, this function will return `undefined`.
+ *
+ * @category Common
+ */
+export function get_custom_prop(gameObjectIdentifier : GameObjectIdentifier, propName : string) : any {
+  checkUnityAcademyExistence();
+  checkGameObjectIdentifierParameter(gameObjectIdentifier);
+  checkParameterType(propName, 'string');
+  return getInstance()
+    .getCustomPropertyInternal(gameObjectIdentifier, propName);
 }

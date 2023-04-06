@@ -5,7 +5,7 @@
  * @author Wang Zihan
  */
 
-import { UNITY_ACADEMY_BACKEND_URL } from './config';
+import { UNITY_ACADEMY_BACKEND_URL, BUILD_NAME } from './config';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from '@blueprintjs/core';
@@ -31,6 +31,7 @@ type StudentGameObject = {
   onCollisionExitMethod : Function | null;
   transform : Transform;
   rigidbody : RigidbodyData | null;
+  customProperties : any;
   isDestroyed : boolean; // [set by interop]
 };
 
@@ -137,13 +138,13 @@ class UnityComponent extends React.Component<any> {
   }
 }
 
-const buildName = 'ua-frontend-prod';
+
 
 const UNITY_CONFIG = {
-  loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.loader.js`,
-  dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.data`,
-  frameworkUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.framework.js`,
-  codeUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.wasm`,
+  loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.loader.js`,
+  dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.data.gz`,
+  frameworkUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.framework.js.gz`,
+  codeUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.wasm.gz`,
   streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
   companyName: 'Wang Zihan @ NUS SoC 2026',
   productName: 'Unity Academy (Source Academy Embedding Version)',
@@ -290,7 +291,7 @@ class UnityAcademyJsInteropContext {
     if (this.unityInstance !== null) {
       const sendMessageFunctionName = 'SendMessage';
       // Reset Unity Academy app
-      this.unityInstance[sendMessageFunctionName]('GameManager', 'ResetApplication');
+      this.unityInstance[sendMessageFunctionName]('GameManager', 'ResetSession');
     }
   }
 
@@ -364,6 +365,7 @@ class UnityAcademyJsInteropContext {
         },
       },
       rigidbody: null,
+      customProperties: {},
       isDestroyed: false,
     };
   }
@@ -416,6 +418,31 @@ class UnityAcademyJsInteropContext {
     gameObject.transform.position.x += x;
     gameObject.transform.position.y += y;
     gameObject.transform.position.z += z;
+  }
+
+
+  translateLocalInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    const rotation = gameObject.transform.rotation;
+
+    // Some methematical stuff here for calcuating the actual world position displacement from local translate vector and current Euler rotation.
+    const rx = rotation.x * Math.PI / 180;
+    const ry = rotation.y * Math.PI / 180;
+    const rz = rotation.z * Math.PI / 180;
+    const cos = Math.cos;
+    const sin = Math.sin;
+    const rotationMatrix
+      = [[cos(ry) * cos(rz), -cos(ry) * sin(rz), sin(ry)],
+        [cos(rx) * sin(rz) + sin(rx) * sin(ry) * cos(rz), cos(rx) * cos(rz) - sin(rx) * sin(ry) * sin(rz), -sin(rx) * cos(ry)],
+        [sin(rx) * sin(rz) - cos(rx) * sin(ry) * cos(rz), cos(rx) * sin(ry) * sin(rz) + sin(rx) * cos(rz), cos(rx) * cos(ry)]];
+    const finalWorldTranslateVector = [
+      rotationMatrix[0][0] * x + rotationMatrix[0][1] * y + rotationMatrix[0][2] * z,
+      rotationMatrix[1][0] * x + rotationMatrix[1][1] * y + rotationMatrix[1][2] * z,
+      rotationMatrix[2][0] * x + rotationMatrix[2][1] * y + rotationMatrix[2][2] * z,
+    ];
+    gameObject.transform.position.x += finalWorldTranslateVector[0];
+    gameObject.transform.position.y += finalWorldTranslateVector[1];
+    gameObject.transform.position.z += finalWorldTranslateVector[2];
   }
 
   rotateWorldInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
@@ -519,6 +546,16 @@ class UnityAcademyJsInteropContext {
     gameObject.onCollisionExitMethod = eventFunction;
   }
 
+  requestForMainCameraControlInternal() : GameObjectIdentifier {
+    const name = 'MainCamera';
+    if (this.studentGameObjectStorage[name] !== undefined) {
+      return this.getGameObjectIdentifierForPrimitiveGameObject('MainCamera');
+    }
+    this.makeGameObjectDataStorage(name);
+    this.dispatchStudentAction('requestMainCameraControl');
+    return this.getGameObjectIdentifierForPrimitiveGameObject('MainCamera');
+  }
+
   onGUI_Label(content : string, x : number, y : number) : void {
     content = content.replaceAll('|', ''); // operator '|' is reserved as gui data separator in Unity Academy
     const newLabel = {
@@ -542,11 +579,21 @@ class UnityAcademyJsInteropContext {
     this.guiData.push(newButton);
   }
 
-  setTargetFrameRate(newTargetFrameRate : number) {
+  setTargetFrameRate(newTargetFrameRate : number) : void {
     newTargetFrameRate = Math.floor(newTargetFrameRate);
     if (newTargetFrameRate < 15) return;
     if (newTargetFrameRate > 120) return;
     this.targetFrameRate = newTargetFrameRate;
+  }
+
+  setCustomPropertyInternal(gameObjectIdentifier : GameObjectIdentifier, propName : string, value : any) : void {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    gameObject.customProperties[propName] = value;
+  }
+
+  getCustomPropertyInternal(gameObjectIdentifier : GameObjectIdentifier, propName : string) : any {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    return gameObject.customProperties[propName];
   }
 
   getTargetFrameRate() {
@@ -561,12 +608,10 @@ export function initializeModule(dimensionMode : string) {
       throw new Error('Unity instance is not ready to accept a new Source program now. Please try again later.');
     }
     if (INSTANCE.unityInstance === null) {
-      // throw new Error('Unity Academy application has been terminated. Please refresh this page before using it again.');
       INSTANCE.reloadUnityAcademyInstanceAfterTermination();
     }
     INSTANCE.dimensionMode = dimensionMode;
     INSTANCE.reset();
-    // console.log('Reset existing unity player');
     return;
   }
 
