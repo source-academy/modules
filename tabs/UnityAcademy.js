@@ -7339,8 +7339,12 @@ require => (() => {
           }), " to clean up the engine and free up memory."]
         }), (0, import_jsx_runtime2.jsx)("p", {
           children: "Otherwise it may lead to a potential waste to your device's resources (such as RAM) and battery."
-        }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("p", {
-          children: "Note that you need to use a 'Native' variant of Source language in order to use this module. If any strange error happens when using this module, please check whether you are using the 'Native' variant of Source language or not."
+        }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsxs)("p", {
+          children: [(0, import_jsx_runtime2.jsxs)("b", {
+            children: ["Note that you need to use a ", (0, import_jsx_runtime2.jsx)("u", {
+              children: "'Native'"
+            }), " variant of Source language in order to use this module."]
+          }), " If any strange error happens when using this module, please check whether you are using the 'Native' variant of Source language or not."]
         }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("p", {
           children: "100% resolution will display Unity Academy in a larger area with more detailed graphics but requires higher GPU performance than 50% resolution."
         }), (0, import_jsx_runtime2.jsx)(Button, {

@@ -28928,6 +28928,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   __export(unity_academy_exports, {
     add_impulse_force: () => add_impulse_force,
     apply_rigidbody: () => apply_rigidbody,
+    copy_position: () => copy_position,
+    copy_rotation: () => copy_rotation,
+    copy_scale: () => copy_scale,
     delta_time: () => delta_time,
     destroy: () => destroy,
     get_angular_velocity: () => get_angular_velocity,
@@ -28944,6 +28947,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     init_unity_academy_2d: () => init_unity_academy_2d,
     init_unity_academy_3d: () => init_unity_academy_3d,
     instantiate: () => instantiate,
+    instantiate_empty: () => instantiate_empty,
     instantiate_sprite: () => instantiate_sprite,
     on_collision_enter: () => on_collision_enter,
     on_collision_exit: () => on_collision_exit,
@@ -34701,6 +34705,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.dispatchStudentAction(`instantiate2DSpriteUrl|${sourceImageUrl}|${gameObjectIdentifier}`);
       return new GameObjectIdentifier(gameObjectIdentifier);
     }
+    instantiateEmptyGameObjectInternal() {
+      const gameObjectIdentifier = `EmptyGameObject_${this.gameObjectIdentifierSerialCounter}`;
+      this.gameObjectIdentifierSerialCounter++;
+      this.makeGameObjectDataStorage(gameObjectIdentifier);
+      this.dispatchStudentAction(`instantiateEmptyGameObject|${gameObjectIdentifier}`);
+      return new GameObjectIdentifier(gameObjectIdentifier);
+    }
     destroyGameObjectInternal(gameObjectIdentifier) {
       this.dispatchStudentAction(`destroyGameObject|${gameObjectIdentifier.gameObjectIdentifier}`);
     }
@@ -34793,6 +34804,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       gameObject.transform.rotation.x += x;
       gameObject.transform.rotation.y += y;
       gameObject.transform.rotation.z += z;
+    }
+    copyTransformPropertiesInternal(propName, from, to, delta_x, delta_y, delta_z) {
+      const fromGameObject = this.getStudentGameObject(from);
+      const toGameObject = this.getStudentGameObject(to);
+      if (Math.abs(delta_x) !== Infinity) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + delta_x;
+      if (Math.abs(delta_y) !== Infinity) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + delta_y;
+      if (Math.abs(delta_z) !== Infinity) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + delta_z;
     }
     getKeyState(keyCode) {
       return this.input.keyboardInputInfo[keyCode];
@@ -34964,10 +34982,15 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       throw new Error("Trying to use a GameObject that is already destroyed.");
     }
   }
-  function checkParameterType(parameter, expectedType) {
+  function checkParameterType(parameter, expectedType, numberAllowInfinity = false) {
     const actualType = typeof parameter;
     if (actualType !== expectedType) {
       throw new Error(`Wrong parameter type: expected ${expectedType}, but got ${actualType}`);
+    }
+    if (actualType.toString() === "number") {
+      if (!numberAllowInfinity && (parameter === Infinity || parameter === -Infinity)) {
+        throw new Error("Wrong parameter type: expected a finite number, but got Infinity or -Infinity");
+      }
     }
   }
   function same_gameobject(first, second) {
@@ -35001,6 +35024,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkIs2DMode();
     checkParameterType(sourceImageUrl, "string");
     return getInstance().instantiate2DSpriteUrlInternal(sourceImageUrl);
+  }
+  function instantiate_empty() {
+    checkUnityAcademyExistence();
+    checkIs3DMode();
+    return getInstance().instantiateEmptyGameObjectInternal();
   }
   function delta_time() {
     checkUnityAcademyExistence();
@@ -35073,6 +35101,33 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkParameterType(y, "number");
     checkParameterType(z, "number");
     return getInstance().rotateWorldInternal(gameObjectIdentifier, x, y, z);
+  }
+  function copy_position(from, to, delta_x, delta_y, delta_z) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(from);
+    checkGameObjectIdentifierParameter(to);
+    checkParameterType(delta_x, "number", true);
+    checkParameterType(delta_y, "number", true);
+    checkParameterType(delta_z, "number", true);
+    return getInstance().copyTransformPropertiesInternal("position", from, to, delta_x, delta_y, delta_z);
+  }
+  function copy_rotation(from, to, delta_x, delta_y, delta_z) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(from);
+    checkGameObjectIdentifierParameter(to);
+    checkParameterType(delta_x, "number", true);
+    checkParameterType(delta_y, "number", true);
+    checkParameterType(delta_z, "number", true);
+    return getInstance().copyTransformPropertiesInternal("rotation", from, to, delta_x, delta_y, delta_z);
+  }
+  function copy_scale(from, to, delta_x, delta_y, delta_z) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(from);
+    checkGameObjectIdentifierParameter(to);
+    checkParameterType(delta_x, "number", true);
+    checkParameterType(delta_y, "number", true);
+    checkParameterType(delta_z, "number", true);
+    return getInstance().copyTransformPropertiesInternal("scale", from, to, delta_x, delta_y, delta_z);
   }
   function checkKeyCodeValidityAndToLowerCase(keyCode) {
     if (typeof keyCode !== "string") throw new Error(`Key code must be a string! Given type: ${typeof keyCode}`);
