@@ -34,7 +34,7 @@ class Unity3DTab extends React.Component<Props> {
         <p><b>Remember always terminate the Unity Academy application when you completely finish programming with this module</b> to clean up the engine and free up memory.</p>
         <p>Otherwise it may lead to a potential waste to your device's resources (such as RAM) and battery.</p>
         <br/>
-        <p>Note that you need to use a 'Native' variant of Source language in order to use this module. If any strange error happens when using this module, please check whether you are using the 'Native' variant of Source language or not.</p>
+        <p><b>Note that you need to use a <u>'Native'</u> variant of Source language in order to use this module.</b> If any strange error happens when using this module, please check whether you are using the 'Native' variant of Source language or not.</p>
         <br/>
         <p>100% resolution will display Unity Academy in a larger area with more detailed graphics but requires higher GPU performance than 50% resolution.</p>
         <Button

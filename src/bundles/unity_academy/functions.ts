@@ -57,15 +57,20 @@ function checkGameObjectIdentifierParameter(gameObjectIdentifier : any) {
   }
 }
 
-function checkParameterType(parameter : any, expectedType : string) {
+function checkParameterType(parameter : any, expectedType : string, numberAllowInfinity = false) {
   const actualType = typeof (parameter);
   if (actualType !== expectedType) {
     throw new Error(`Wrong parameter type: expected ${expectedType}, but got ${actualType}`);
   }
+  if (actualType.toString() === 'number') {
+    if (!numberAllowInfinity && (parameter === Infinity || parameter === -Infinity)) {
+      throw new Error('Wrong parameter type: expected a finite number, but got Infinity or -Infinity');
+    }
+  }
 }
 
 /**
- * Determine whether two GameObject identifiers refers to the same GameObject.
+ * Determines whether two GameObject identifiers refers to the same GameObject.
  *
  * @param first The first GameObject identifier to compare with.
  * @param second The second GameObject identifier to compare with.
@@ -82,8 +87,8 @@ export function same_gameobject(first : GameObjectIdentifier, second : GameObjec
 }
 
 /**
- * Set the Start function of a given GameObject
- * @param gameObjectIdentifier The GameObject identifier that you want to bind the Start function on.
+ * Sets the Start function of a given GameObject
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to bind the Start function on.
  * @param startFunction The Start function you want to assign to this GameObject. The Start function should contain one parameter, that Unity will pass the owner GameObject's identifier to this parameter.
  *
  * @category Common
@@ -98,9 +103,9 @@ export function set_start(gameObjectIdentifier : GameObjectIdentifier, startFunc
 }
 
 /**
- * Set the Update function of a given GameObject
+ * Sets the Update function of a given GameObject
  *
- * @param gameObjectIdentifier The GameObject identifier that you want to bind the Update function on.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to bind the Update function on.
  * @param updateFunction The Update function you want to assign to this GameObject. The Update function should contain one parameter, that Unity will pass the owner GameObject's identifier to this parameter.
  *
  * @category Common
@@ -116,7 +121,7 @@ export function set_update(gameObjectIdentifier : GameObjectIdentifier, updateFu
 
 
 /**
- * Create a new GameObject from an existing Prefab
+ * Creates a new GameObject from an existing Prefab
  * <br><b>3D mode only</b>
  *
  * @param prefab_name The prefab name
@@ -134,7 +139,7 @@ export function instantiate(prefab_name : string) : GameObjectIdentifier {
 }
 
 /**
- * Create a new 2D Sprite GameObject from an online image.<br>
+ * Creates a new 2D Sprite GameObject from an online image.<br>
  * The Sprite GameObject has a BoxCollider2D that matches its size by default. You may use `remove_collider_components` function to remove the default collider.<br><br>
  * Note that Unity Academy will use a HTTP GET request to download the image, which means that the HTTP response from the URL must allows CORS.<br><br>
  * <br><b>2D mode only</b>
@@ -151,6 +156,24 @@ export function instantiate_sprite(sourceImageUrl : string) {
   checkParameterType(sourceImageUrl, 'string');
   return getInstance()
     .instantiate2DSpriteUrlInternal(sourceImageUrl);
+}
+
+/**
+ * Creates a new empty GameObject.<br>
+ * <br>
+ * An empty GameObject is invisible and only have transform properties by default.<br>
+ * You may use the empty GameObject to run some general game management code or use the position of the empty GameObject to represent a point in the scene that the rest of your codes can access and utilize.
+ *
+ * @return the identifier of the newly created GameObject
+ *
+ * @category Common
+ * @category Outside Lifecycle
+ */
+export function instantiate_empty() : GameObjectIdentifier {
+  checkUnityAcademyExistence();
+  checkIs3DMode();
+  return getInstance()
+    .instantiateEmptyGameObjectInternal();
 }
 
 /**
@@ -183,7 +206,7 @@ export function delta_time() {
  * <br>
  * For more information, see https://docs.unity3d.com/ScriptReference/Object.Destroy.html
  *
- * @param gameObjectIdentifier The GameObject identifier that you want to destroy.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to destroy.
  * @category Common
  */
 export function destroy(gameObjectIdentifier : GameObjectIdentifier) : void {
@@ -207,7 +230,7 @@ export function destroy(gameObjectIdentifier : GameObjectIdentifier) : void {
 
 /**
  * Returns the world position of a given GameObject
- * @param gameObjectIdentifier The GameObject identifier that you want to get position for.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to get position for.
  * @return the position represented in an array with three elements: [x, y, z]
  *
  * @category Transform
@@ -221,7 +244,7 @@ export function get_position(gameObjectIdentifier : GameObjectIdentifier) : Arra
 
 /**
  * Set the world position of a given GameObject
- * @param gameObjectIdentifier The GameObject identifier that you want to change position for.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to change position for.
  * @param x The x component for the position.
  * @param y The y component for the position.
  * @param z The z component for the position.
@@ -240,7 +263,7 @@ export function set_position(gameObjectIdentifier : GameObjectIdentifier, x : nu
 
 /**
  * Returns the world Euler angle rotation of a given GameObject
- * @param gameObjectIdentifier The GameObject identifier that you want to get rotation for.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to get rotation for.
  * @return the Euler angle rotation represented in an array with three elements: [x, y, z]
  *
  * @category Transform
@@ -254,10 +277,10 @@ export function get_rotation_euler(gameObjectIdentifier : GameObjectIdentifier) 
 
 /**
  * Set the world rotation of a given GameObject with given Euler angle rotation.
- * @param gameObjectIdentifier The GameObject identifier that you want to change rotation for.
- * @param x The x component (euler angle) for the rotation.
- * @param y The y component (euler angle) for the rotation.
- * @param z The z component (euler angle) for the rotation.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to change rotation for.
+ * @param x The x component (Euler angle) for the rotation.
+ * @param y The y component (Euler angle) for the rotation.
+ * @param z The z component (Euler angle) for the rotation.
  *
  * @category Transform
  */
@@ -273,7 +296,7 @@ export function set_rotation_euler(gameObjectIdentifier : GameObjectIdentifier, 
 
 /**
  * Returns the scale of a given GameObject
- * @param gameObjectIdentifier The GameObject identifier that you want to get scale for.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to get scale for.
  * @return the scale represented in an array with three elements: [x, y, z]
  *
  * @category Transform
@@ -288,7 +311,7 @@ export function get_scale(gameObjectIdentifier : GameObjectIdentifier) : Array<N
 /**
  * Set the scale of a given GameObject
  *
- * @param gameObjectIdentifier The GameObject identifier that you want to change scale for.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to change scale for.
  * @param x The x component for the scale.
  * @param y The y component for the scale.
  * @param z The z component for the scale.
@@ -308,7 +331,7 @@ export function set_scale(gameObjectIdentifier : GameObjectIdentifier, x : numbe
 /**
  * Moves a GameObject with given x, y and z values
  *
- * @param gameObjectIdentifier The GameObject identifier that you want to translate.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to translate.
  * @param x The value you want to move along X-axis in the world space
  * @param y The value you want to move along Y-axis in the world space
  * @param z The value you want to move along Z-axis in the world space
@@ -330,7 +353,7 @@ export function translate_world(gameObjectIdentifier : GameObjectIdentifier, x: 
  * The current rotation of the GameObject will affect the real direction of movement.<br>
  * In Unity, usually, the direction of +Z axis denotes forward.
  *
- * @param gameObjectIdentifier The GameObject identifier that you want to translate.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to translate.
  * @param x The value you want to move along X-axis in the local space
  * @param y The value you want to move along Y-axis in the local space
  * @param z The value you want to move along Z-axis in the local space
@@ -350,7 +373,7 @@ export function translate_local(gameObjectIdentifier : GameObjectIdentifier, x: 
 /**
  * Rotates a GameObject with given x, y and z values (Euler angle)
  *
- * @param gameObjectIdentifier The GameObject identifier that you want to rotate.
+ * @param gameObjectIdentifier The identifier for the GameObject that you want to rotate.
  * @param x The value you want to rotate along X-axis in the world space
  * @param y The value you want to rotate along Y-axis in the world space
  * @param z The value you want to rotate along Z-axis in the world space
@@ -365,6 +388,75 @@ export function rotate_world(gameObjectIdentifier : GameObjectIdentifier, x: num
   checkParameterType(z, 'number');
   return getInstance()
     .rotateWorldInternal(gameObjectIdentifier, x, y, z);
+}
+
+/**
+ * Copy the position values from one GameObject to another GameObject along with delta values.<br><br>
+ * Set the delta parameters to `Infinity` or `-Infinity` to remain the position of the destination GameObject on the corresponding axis unaffected.<br>
+ *
+ * @param from The identifier for the GameObject that you want to copy position from.
+ * @param to The identifier for the GameObject that you want to copy position to.
+ * @param delta_x This value will be added to the copied value when coping the X-coordinate position value to the destination GameObject
+ * @param delta_y This value will be added to the copied value when coping the Y-coordinate position value to the destination GameObject
+ * @param delta_z This value will be added to the copied value when coping the Z-coordinate position value to the destination GameObject
+ *
+ * @category Transform
+ */
+export function copy_position(from : GameObjectIdentifier, to : GameObjectIdentifier, delta_x : number, delta_y : number, delta_z : number) : void {
+  checkUnityAcademyExistence();
+  checkGameObjectIdentifierParameter(from);
+  checkGameObjectIdentifierParameter(to);
+  checkParameterType(delta_x, 'number', true);
+  checkParameterType(delta_y, 'number', true);
+  checkParameterType(delta_z, 'number', true);
+  return getInstance()
+    .copyTransformPropertiesInternal('position', from, to, delta_x, delta_y, delta_z);
+}
+
+/**
+ * Copy the rotation values (Euler angles) from one GameObject to another GameObject along with delta values.<br><br>
+ * Set the delta parameters to `Infinity` or `-Infinity` to remain the rotation of the destination GameObject on the corresponding axis unaffected.<br>
+ *
+ * @param from The identifier for the GameObject that you want to copy rotation from.
+ * @param to The identifier for the GameObject that you want to copy rotation to.
+ * @param delta_x This value will be added to the copied value when coping the X-coordinate rotation value to the destination GameObject
+ * @param delta_y This value will be added to the copied value when coping the Y-coordinate rotation value to the destination GameObject
+ * @param delta_z This value will be added to the copied value when coping the Z-coordinate rotation value to the destination GameObject
+ *
+ * @category Transform
+ */
+export function copy_rotation(from : GameObjectIdentifier, to : GameObjectIdentifier, delta_x : number, delta_y : number, delta_z : number) : void {
+  checkUnityAcademyExistence();
+  checkGameObjectIdentifierParameter(from);
+  checkGameObjectIdentifierParameter(to);
+  checkParameterType(delta_x, 'number', true);
+  checkParameterType(delta_y, 'number', true);
+  checkParameterType(delta_z, 'number', true);
+  return getInstance()
+    .copyTransformPropertiesInternal('rotation', from, to, delta_x, delta_y, delta_z);
+}
+
+/**
+ * Copy the scale values from one GameObject to another GameObject along with delta values.<br><br>
+ * Set the delta parameters to `Infinity` or `-Infinity` to remain the scale of the destination GameObject on the corresponding axis unaffected.<br>
+ *
+ * @param from The identifier for the GameObject that you want to copy scale from.
+ * @param to The identifier for the GameObject that you want to copy scale to.
+ * @param delta_x This value will be added to the copied value when coping the X-coordinate scale value to the destination GameObject
+ * @param delta_y This value will be added to the copied value when coping the Y-coordinate scale value to the destination GameObject
+ * @param delta_z This value will be added to the copied value when coping the Z-coordinate scale value to the destination GameObject
+ *
+ * @category Transform
+ */
+export function copy_scale(from : GameObjectIdentifier, to : GameObjectIdentifier, delta_x : number, delta_y : number, delta_z : number) : void {
+  checkUnityAcademyExistence();
+  checkGameObjectIdentifierParameter(from);
+  checkGameObjectIdentifierParameter(to);
+  checkParameterType(delta_x, 'number', true);
+  checkParameterType(delta_y, 'number', true);
+  checkParameterType(delta_z, 'number', true);
+  return getInstance()
+    .copyTransformPropertiesInternal('scale', from, to, delta_x, delta_y, delta_z);
 }
 
 function checkKeyCodeValidityAndToLowerCase(keyCode : string) : string {
