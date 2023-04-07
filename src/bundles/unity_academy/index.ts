@@ -24,7 +24,7 @@
  * ● ===>`Update` is called on every GameObject once in every frame after `Start` have been called. <br>
  * ● For the three collision detaction lifecycle event functions, please refer to `on_collision_enter`, `on_collision_stay` and `on_collision_exit` functions under the `Physics - Collision` category.<br>
  * ● You can not bind multiple lifecycle functions of the same type to the same GameObject. For example, you can't bind two `Update` functions to the same GameObject. In this case, previously binded `Update` functions will be overwritten by the latest binded `Update` function.<br><br>
- * <u><b>[IMPORTANT]</b> All functions in this module that is NOT under the "<b>Outside Lifecycle</b>" category need to call by Unity Academy lifecycle event functions (Start or Update) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u><br>
+ * <u><b>[IMPORTANT]</b> All functions in this module that is NOT under the "<b>Outside Lifecycle</b>" or "Maths" category need to call by Unity Academy lifecycle event functions (Start or Update) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u><br>
  * For example:
  * ```
  * import {init_unity_academy_3d, instantiate, set_start, set_update, set_position} from 'unity_academy';
@@ -92,6 +92,8 @@ export {
   copy_position,
   copy_rotation,
   copy_scale,
+  look_at,
+  gameobject_distance,
   get_key_down,
   get_key,
   get_key_up,
@@ -117,4 +119,16 @@ export {
   request_for_main_camera_control,
   set_custom_prop,
   get_custom_prop,
+  vector3,
+  get_x,
+  get_y,
+  get_z,
+  scale_vector,
+  add_vector,
+  dot,
+  cross,
+  normalize,
+  magnitude,
+  zero_vector,
+  point_distance,
 } from './functions';
