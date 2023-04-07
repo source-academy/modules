@@ -1,29 +1,3 @@
-/**
- * The sounds library provides functions for constructing and playing sounds.
- *
- * A wave is a function that takes in a number `t` and returns
- * a number representing the amplitude at time `t`.
- * The amplitude should fall within the range of [-1, 1].
- *
- * A Sound is a pair(wave, duration) where duration is the length of the sound in seconds.
- * The constructor make_sound and accessors get_wave and get_duration are provided.
- *
- * Sound Discipline:
- * For all sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:
- * `(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.
- *
- * Two functions which combine Sounds, `consecutively` and `simultaneously` are given.
- * Additionally, we provide sound transformation functions `adsr` and `phase_mod`
- * which take in a Sound and return a Sound.
- *
- * Finally, the provided `play` function takes in a Sound and plays it using your
- * computer's sound system.
- *
- * @module sound
- * @author Koh Shang Hui
- * @author Samyukta Sounderraman
- */
-
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import type {
   Wave,
@@ -45,6 +19,7 @@ import {
 } from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
 import context from 'js-slang/context';
+import { midi_note_to_frequency } from './midi';
 
 // Global Constants and Variables
 const FS: number = 44100; // Output sample rate
@@ -752,94 +727,6 @@ export function phase_mod(
     (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
     duration,
   );
-}
-
-// MIDI conversion functions
-
-/**
- * Converts a letter name to its corresponding MIDI note.
- * The letter name is represented in standard pitch notation.
- * Examples are "A5", "Db3", "C#7".
- * Refer to <a href="https://i.imgur.com/qGQgmYr.png">this mapping from
- * letter name to midi notes.
- *
- * @param letter_name given letter name
- * @return the corresponding midi note
- * @example letter_name_to_midi_note("C4"); // Returns 60
- */
-export function letter_name_to_midi_note(note: string): number {
-  let res = 12; // C0 is midi note 12
-  const n = note[0].toUpperCase();
-  switch (n) {
-    case 'D':
-      res += 2;
-      break;
-
-    case 'E':
-      res += 4;
-      break;
-
-    case 'F':
-      res += 5;
-      break;
-
-    case 'G':
-      res += 7;
-      break;
-
-    case 'A':
-      res += 9;
-      break;
-
-    case 'B':
-      res += 11;
-      break;
-
-    default:
-      break;
-  }
-
-  if (note.length === 2) {
-    res += parseInt(note[1]) * 12;
-  } else if (note.length === 3) {
-    switch (note[1]) {
-      case '#':
-        res += 1;
-        break;
-
-      case 'b':
-        res -= 1;
-        break;
-
-      default:
-        break;
-    }
-    res += parseInt(note[2]) * 12;
-  }
-  return res;
-}
-
-/**
- * Converts a MIDI note to its corresponding frequency.
- *
- * @param note given MIDI note
- * @return the frequency of the MIDI note
- * @example midi_note_to_frequency(69); // Returns 440
- */
-export function midi_note_to_frequency(note: number): number {
-  // A4 = 440Hz = midi note 69
-  return 440 * 2 ** ((note - 69) / 12);
-}
-
-/**
- * Converts a letter name to its corresponding frequency.
- *
- * @param letter_name given letter name
- * @return the corresponding frequency
- * @example letter_name_to_frequency("A4"); // Returns 440
- */
-export function letter_name_to_frequency(note: string): number {
-  return midi_note_to_frequency(letter_name_to_midi_note(note));
 }
 
 // Instruments
