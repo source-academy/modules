@@ -6,10 +6,14 @@
 
 
 import { initializeModule, getInstance, type GameObjectIdentifier } from './UnityAcademy';
+import {
+  type Vector3, checkVector3Parameter, makeVector3D, scaleVector, addVector, dotProduct, crossProduct,
+  normalizeVector, vectorMagnitude, zeroVector, pointDistance,
+} from './UnityAcademyMaths';
 
 
 /**
- * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions in this module requires calling this function or init_unity_academy_3d first.<br>
+ * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions (except Maths functions) in this module requires calling this function or init_unity_academy_3d first.<br>
  * I recommand you just call this function at the beginning of your Source Unity program under the 'import' statements.
  *
  * @category Application Initialization
@@ -20,7 +24,7 @@ export function init_unity_academy_2d() : void {
 }
 
 /**
- * Load and initialize Unity Academy WebGL player and set it to 3D mode. All other functions in this module requires calling this function or init_unity_academy_2d first.<br>
+ * Load and initialize Unity Academy WebGL player and set it to 3D mode. All other functions (except Maths functions) in this module requires calling this function or init_unity_academy_2d first.<br>
  * I recommand you just call this function at the beginning of your Source Unity program under the 'import' statements.
  *
  * @category Application Initialization
@@ -457,6 +461,49 @@ export function copy_scale(from : GameObjectIdentifier, to : GameObjectIdentifie
   checkParameterType(delta_z, 'number', true);
   return getInstance()
     .copyTransformPropertiesInternal('scale', from, to, delta_x, delta_y, delta_z);
+}
+
+/**
+ * Makes the GameObject "Look At" a given position.<br>
+ * <b>3D mode only</b><br>
+ * <br>
+ * The +Z direction of the GameObject (which denotes forward in Unity's conventions) will pointing to the given position.<br>
+ * <br>
+ * For more information, see https://docs.unity3d.com/ScriptReference/Transform.LookAt.html<br>
+ *
+ * @param gameObjectIdentifier The identifier for the GameObject that you need to make it "look at" a position
+ * @param x The X value of the "look at" position
+ * @param y The Y value of the "look at" position
+ * @param z The Z value of the "look at" position
+ *
+ * @category Transform
+ */
+export function look_at(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+  checkUnityAcademyExistence();
+  checkIs3DMode();
+  checkGameObjectIdentifierParameter(gameObjectIdentifier);
+  checkParameterType(x, 'number');
+  checkParameterType(y, 'number');
+  checkParameterType(z, 'number');
+  getInstance()
+    .lookAtPositionInternal(gameObjectIdentifier, x, y, z);
+}
+
+/**
+ * Calcuate the distance between two GameObjects, based on each other's position
+ * @param gameObjectIdentifier_A The identifier for the first GameObject
+ * @param gameObjectIdentifier_B The identifier for the second GameObject
+ *
+ *
+ * @return The value of the distance between these two GameObjects
+ * @category Transform
+ */
+export function gameobject_distance(gameObjectIdentifier_A : GameObjectIdentifier, gameObjectIdentifier_B : GameObjectIdentifier) : number {
+  checkUnityAcademyExistence();
+  checkGameObjectIdentifierParameter(gameObjectIdentifier_A);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier_B);
+  return getInstance()
+    .gameObjectDistanceInternal(gameObjectIdentifier_A, gameObjectIdentifier_B);
 }
 
 function checkKeyCodeValidityAndToLowerCase(keyCode : string) : string {
@@ -939,4 +986,166 @@ export function get_custom_prop(gameObjectIdentifier : GameObjectIdentifier, pro
   checkParameterType(propName, 'string');
   return getInstance()
     .getCustomPropertyInternal(gameObjectIdentifier, propName);
+}
+
+/**
+ * Create a 3D vector
+ * @param x The x component of the new vector
+ * @param y The y component of the new vector
+ * @param z The z component of the new vector
+ *
+ * @return The 3D vector (x, y, z)
+ *
+ * @category Maths
+ */
+export function vector3(x : number, y : number, z : number) : Vector3 {
+  checkParameterType(x, 'number');
+  checkParameterType(y, 'number');
+  checkParameterType(z, 'number');
+  return makeVector3D(x, y, z);
+}
+
+/**
+ * Get the X component of a 3D vector
+ * @param vector The 3D vector
+ *
+ * @return The X component of the given vector
+ *
+ * @category Maths
+ */
+export function get_x(vector : Vector3) : number {
+  checkVector3Parameter(vector);
+  return vector.x;
+}
+
+/**
+ * Get the Y component of a 3D vector
+ * @param vector The 3D vector
+ *
+ * @return The Y component of the given vector
+ *
+ * @category Maths
+ */
+export function get_y(vector : Vector3) : number {
+  checkVector3Parameter(vector);
+  return vector.y;
+}
+
+/**
+ * Get the Z component of a 3D vector
+ * @param vector The 3D vector
+ *
+ * @return The Z component of the given vector
+ *
+ * @category Maths
+ */
+export function get_z(vector : Vector3) : number {
+  checkVector3Parameter(vector);
+  return vector.z;
+}
+
+/**
+ * Scales a 3D vector with the given factor.
+ * @param vector The original vector
+ * @param factor The scaling factor.
+ * @return The scaled vector
+ *
+ * @category Maths
+ */
+export function scale_vector(vector : Vector3, factor : number) : Vector3 {
+  checkVector3Parameter(vector);
+  checkParameterType(factor, 'number');
+  return scaleVector(vector, factor);
+}
+
+/**
+ * Add two 3D vectors together.
+ * @param vectorA The first vector
+ * @param vectorB The second vector.
+ * @return The sum of the two vectors
+ *
+ * @category Maths
+ */
+export function add_vector(vectorA : Vector3, vectorB : Vector3) : Vector3 {
+  checkVector3Parameter(vectorA);
+  checkVector3Parameter(vectorB);
+  return addVector(vectorA, vectorB);
+}
+
+/**
+ * Calcuate the dot product of two 3D vectors.
+ * @param vectorA The first vector
+ * @param vectorB The second vector.
+ * @return The dot product
+ *
+ * @category Maths
+ */
+export function dot(vectorA : Vector3, vectorB : Vector3) : number {
+  checkVector3Parameter(vectorA);
+  checkVector3Parameter(vectorB);
+  return dotProduct(vectorA, vectorB);
+}
+
+/**
+ * Calcuate the cross product of two 3D vectors.
+ * @param vectorA The first vector
+ * @param vectorB The second vector.
+ * @return The cross product
+ *
+ * @category Maths
+ */
+export function cross(vectorA : Vector3, vectorB : Vector3) : Vector3 {
+  checkVector3Parameter(vectorA);
+  checkVector3Parameter(vectorB);
+  return crossProduct(vectorA, vectorB);
+}
+
+/**
+ * Normalize a vector. The returned vector will have the same direction as the original vector but have a magnitude of 1.
+ * @param vector The original vector
+ * @return The normalized vector. This function will return a zero vector if the original vector is a zero vector.
+ *
+ * @category Maths
+ */
+export function normalize(vector : Vector3) : Vector3 {
+  checkVector3Parameter(vector);
+  return normalizeVector(vector);
+}
+
+/**
+ * Calcuate the magnitude of a vector
+ * @param vector The vector
+ * @return The magnitude of the vector
+ *
+ * @category Maths
+ */
+export function magnitude(vector : Vector3) : number {
+  checkVector3Parameter(vector);
+  return vectorMagnitude(vector);
+}
+
+/**
+ * Get the zero vector
+ * @return The zero vector
+ *
+ * @category Maths
+ */
+export function zero_vector() : Vector3 {
+  return zeroVector();
+}
+
+/**
+ * Calcuate the distance between two 3D points
+ *
+ * @param pointA The first point
+ * @param pointB The second point
+ *
+ * @return The value of the distance between the two points
+ *
+ * @category Maths
+ */
+export function point_distance(pointA : Vector3, pointB : Vector3) : number {
+  checkVector3Parameter(pointA);
+  checkVector3Parameter(pointB);
+  return pointDistance(pointA, pointB);
 }

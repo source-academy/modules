@@ -10,12 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-
-type Vector3 = {
-  x : number;
-  y : number;
-  z : number;
-};
+import { Vector3, normalizeVector, zeroVector, pointDistance } from './UnityAcademyMaths';
 
 type Transform = {
   position : Vector3;
@@ -48,7 +43,7 @@ type RigidbodyData = {
   angularDrag : number;
 };
 
-declare const createUnityInstance : Function; // This function comes from Build.loader.js in Unity Academy Application
+declare const createUnityInstance : Function; // This function comes from {BUILD_NAME}.loader.js in Unity Academy Application (For Example: ua-frontend-prod.loader.js)
 
 export function getInstance() : UnityAcademyJsInteropContext {
   return (window as any).unityAcademyContext as UnityAcademyJsInteropContext;
@@ -356,21 +351,9 @@ class UnityAcademyJsInteropContext {
       onCollisionStayMethod: null,
       onCollisionExitMethod: null,
       transform: {
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
+        position: zeroVector(),
+        rotation: zeroVector(),
+        scale: new Vector3(1, 1, 1),
       },
       rigidbody: null,
       customProperties: {},
@@ -453,6 +436,21 @@ class UnityAcademyJsInteropContext {
     gameObject.transform.position.z += finalWorldTranslateVector[2];
   }
 
+  lookAtPositionInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    const deltaVector = normalizeVector(new Vector3(x - gameObject.transform.position.x, y - gameObject.transform.position.y, z - gameObject.transform.position.z));
+    const eulerX = Math.asin(-deltaVector.y);
+    const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
+    gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
+    gameObject.transform.rotation.y = eulerY * 180 / Math.PI;
+  }
+
+  gameObjectDistanceInternal(gameObjectIdentifier_A : GameObjectIdentifier, gameObjectIdentifier_B : GameObjectIdentifier) : number {
+    const gameObjectA = this.getStudentGameObject(gameObjectIdentifier_A);
+    const gameObjectB = this.getStudentGameObject(gameObjectIdentifier_B);
+    return pointDistance(gameObjectA.transform.position, gameObjectB.transform.position);
+  }
+
   rotateWorldInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.transform.rotation.x += x;
@@ -484,16 +482,8 @@ class UnityAcademyJsInteropContext {
       throw new Error(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
     }
     gameObject.rigidbody = {
-      velocity: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-      angularVelocity: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
+      velocity: zeroVector(),
+      angularVelocity: zeroVector(),
       mass: 1,
       useGravity: true,
       drag: 0,
