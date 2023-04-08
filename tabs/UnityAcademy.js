@@ -7216,6 +7216,7 @@ require => (() => {
   init_define_process();
   var import_react = __toESM(__require("react"), 1);
   var import_react_dom = __toESM(__require("react-dom"), 1);
+  init_define_process();
   var import_jsx_runtime = __require("react/jsx-runtime");
   function getInstance() {
     return window.unityAcademyContext;

@@ -5,6 +5,7 @@ require => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __pow = Math.pow;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
@@ -13432,9 +13433,9 @@ require => {
                 if (!Interface.hasOwnProperty(_propName)) {
                   continue;
                 }
-                var normalize = Interface[_propName];
-                if (normalize) {
-                  this[_propName] = normalize(nativeEvent);
+                var normalize2 = Interface[_propName];
+                if (normalize2) {
+                  this[_propName] = normalize2(nativeEvent);
                 } else {
                   this[_propName] = nativeEvent[_propName];
                 }
@@ -28927,12 +28928,16 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var unity_academy_exports = {};
   __export(unity_academy_exports, {
     add_impulse_force: () => add_impulse_force,
+    add_vector: () => add_vector,
     apply_rigidbody: () => apply_rigidbody,
     copy_position: () => copy_position,
     copy_rotation: () => copy_rotation,
     copy_scale: () => copy_scale,
+    cross: () => cross,
     delta_time: () => delta_time,
     destroy: () => destroy,
+    dot: () => dot,
+    gameobject_distance: () => gameobject_distance,
     get_angular_velocity: () => get_angular_velocity,
     get_custom_prop: () => get_custom_prop,
     get_key: () => get_key,
@@ -28944,19 +28949,27 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     get_rotation_euler: () => get_rotation_euler,
     get_scale: () => get_scale,
     get_velocity: () => get_velocity,
+    get_x: () => get_x,
+    get_y: () => get_y,
+    get_z: () => get_z,
     init_unity_academy_2d: () => init_unity_academy_2d,
     init_unity_academy_3d: () => init_unity_academy_3d,
     instantiate: () => instantiate,
     instantiate_empty: () => instantiate_empty,
     instantiate_sprite: () => instantiate_sprite,
+    look_at: () => look_at,
+    magnitude: () => magnitude,
+    normalize: () => normalize,
     on_collision_enter: () => on_collision_enter,
     on_collision_exit: () => on_collision_exit,
     on_collision_stay: () => on_collision_stay,
     play_animator_state: () => play_animator_state,
+    point_distance: () => point_distance,
     remove_collider_components: () => remove_collider_components,
     request_for_main_camera_control: () => request_for_main_camera_control,
     rotate_world: () => rotate_world,
     same_gameobject: () => same_gameobject,
+    scale_vector: () => scale_vector,
     set_angular_drag: () => set_angular_drag,
     set_angular_velocity: () => set_angular_velocity,
     set_custom_prop: () => set_custom_prop,
@@ -28970,7 +28983,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     set_use_gravity: () => set_use_gravity,
     set_velocity: () => set_velocity,
     translate_local: () => translate_local,
-    translate_world: () => translate_world
+    translate_world: () => translate_world,
+    vector3: () => vector3,
+    zero_vector: () => zero_vector
   });
   init_define_process();
   init_define_process();
@@ -34474,6 +34489,57 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     AnchorButton2.displayName = ("").concat(DISPLAYNAME_PREFIX, ".AnchorButton");
     return AnchorButton2;
   })(AbstractButton);
+  init_define_process();
+  var Vector3 = class {
+    constructor(x, y, z) {
+      this.x = 0;
+      this.y = 0;
+      this.z = 0;
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    }
+    toString() {
+      return `(${this.x}, ${this.y}, ${this.z})`;
+    }
+  };
+  function checkVector3Parameter(parameter) {
+    if (typeof parameter !== "object") {
+      throw new Error(`The given parameter is not a valid 3D vector! Wrong parameter type: ${typeof parameter}`);
+    }
+    if (typeof parameter.x !== "number" || typeof parameter.y !== "number" || typeof parameter.z !== "number") {
+      throw new Error("The given parameter is not a valid 3D vector!");
+    }
+  }
+  function makeVector3D(x, y, z) {
+    return new Vector3(x, y, z);
+  }
+  function scaleVector(vector, factor) {
+    return new Vector3(vector.x * factor, vector.y * factor, vector.z * factor);
+  }
+  function addVector(vectorA, vectorB) {
+    return new Vector3(vectorA.x + vectorB.x, vectorA.y + vectorB.y, vectorA.z + vectorB.z);
+  }
+  function dotProduct(vectorA, vectorB) {
+    return vectorA.x * vectorB.x + vectorA.y * vectorB.y + vectorA.z * vectorB.z;
+  }
+  function crossProduct(vectorA, vectorB) {
+    return new Vector3(vectorA.y * vectorB.z - vectorB.y * vectorA.z, vectorB.x * vectorA.z - vectorA.x * vectorB.z, vectorA.x * vectorB.y - vectorB.x * vectorA.y);
+  }
+  function vectorMagnitude(vector) {
+    return Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+  }
+  function normalizeVector(vector) {
+    const magnitude2 = vectorMagnitude(vector);
+    if (magnitude2 === 0) return new Vector3(0, 0, 0);
+    return new Vector3(vector.x / magnitude2, vector.y / magnitude2, vector.z / magnitude2);
+  }
+  function zeroVector() {
+    return new Vector3(0, 0, 0);
+  }
+  function pointDistance(pointA, pointB) {
+    return Math.sqrt(__pow(pointB.x - pointA.x, 2) + __pow(pointB.y - pointA.y, 2) + __pow(pointB.z - pointA.z, 2));
+  }
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   function getInstance() {
     return window.unityAcademyContext;
@@ -34723,21 +34789,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         onCollisionStayMethod: null,
         onCollisionExitMethod: null,
         transform: {
-          position: {
-            x: 0,
-            y: 0,
-            z: 0
-          },
-          rotation: {
-            x: 0,
-            y: 0,
-            z: 0
-          },
-          scale: {
-            x: 1,
-            y: 1,
-            z: 1
-          }
+          position: zeroVector(),
+          rotation: zeroVector(),
+          scale: new Vector3(1, 1, 1)
         },
         rigidbody: null,
         customProperties: {},
@@ -34799,6 +34853,19 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       gameObject.transform.position.y += finalWorldTranslateVector[1];
       gameObject.transform.position.z += finalWorldTranslateVector[2];
     }
+    lookAtPositionInternal(gameObjectIdentifier, x, y, z) {
+      const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+      const deltaVector = normalizeVector(new Vector3(x - gameObject.transform.position.x, y - gameObject.transform.position.y, z - gameObject.transform.position.z));
+      const eulerX = Math.asin(-deltaVector.y);
+      const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
+      gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
+      gameObject.transform.rotation.y = eulerY * 180 / Math.PI;
+    }
+    gameObjectDistanceInternal(gameObjectIdentifier_A, gameObjectIdentifier_B) {
+      const gameObjectA = this.getStudentGameObject(gameObjectIdentifier_A);
+      const gameObjectB = this.getStudentGameObject(gameObjectIdentifier_B);
+      return pointDistance(gameObjectA.transform.position, gameObjectB.transform.position);
+    }
     rotateWorldInternal(gameObjectIdentifier, x, y, z) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
       gameObject.transform.rotation.x += x;
@@ -34826,16 +34893,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         throw new Error(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
       }
       gameObject.rigidbody = {
-        velocity: {
-          x: 0,
-          y: 0,
-          z: 0
-        },
-        angularVelocity: {
-          x: 0,
-          y: 0,
-          z: 0
-        },
+        velocity: zeroVector(),
+        angularVelocity: zeroVector(),
         mass: 1,
         useGravity: true,
         drag: 0,
@@ -35129,6 +35188,21 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkParameterType(delta_z, "number", true);
     return getInstance().copyTransformPropertiesInternal("scale", from, to, delta_x, delta_y, delta_z);
   }
+  function look_at(gameObjectIdentifier, x, y, z) {
+    checkUnityAcademyExistence();
+    checkIs3DMode();
+    checkGameObjectIdentifierParameter(gameObjectIdentifier);
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(z, "number");
+    getInstance().lookAtPositionInternal(gameObjectIdentifier, x, y, z);
+  }
+  function gameobject_distance(gameObjectIdentifier_A, gameObjectIdentifier_B) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(gameObjectIdentifier_A);
+    checkGameObjectIdentifierParameter(gameObjectIdentifier_B);
+    return getInstance().gameObjectDistanceInternal(gameObjectIdentifier_A, gameObjectIdentifier_B);
+  }
   function checkKeyCodeValidityAndToLowerCase(keyCode) {
     if (typeof keyCode !== "string") throw new Error(`Key code must be a string! Given type: ${typeof keyCode}`);
     if (keyCode === "LeftMouseBtn" || keyCode === "RightMouseBtn" || keyCode === "MiddleMouseBtn" || keyCode === "LeftShift" || keyCode === "RightShift") return keyCode;
@@ -35273,6 +35347,60 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(propName, "string");
     return getInstance().getCustomPropertyInternal(gameObjectIdentifier, propName);
+  }
+  function vector3(x, y, z) {
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(z, "number");
+    return makeVector3D(x, y, z);
+  }
+  function get_x(vector) {
+    checkVector3Parameter(vector);
+    return vector.x;
+  }
+  function get_y(vector) {
+    checkVector3Parameter(vector);
+    return vector.y;
+  }
+  function get_z(vector) {
+    checkVector3Parameter(vector);
+    return vector.z;
+  }
+  function scale_vector(vector, factor) {
+    checkVector3Parameter(vector);
+    checkParameterType(factor, "number");
+    return scaleVector(vector, factor);
+  }
+  function add_vector(vectorA, vectorB) {
+    checkVector3Parameter(vectorA);
+    checkVector3Parameter(vectorB);
+    return addVector(vectorA, vectorB);
+  }
+  function dot(vectorA, vectorB) {
+    checkVector3Parameter(vectorA);
+    checkVector3Parameter(vectorB);
+    return dotProduct(vectorA, vectorB);
+  }
+  function cross(vectorA, vectorB) {
+    checkVector3Parameter(vectorA);
+    checkVector3Parameter(vectorB);
+    return crossProduct(vectorA, vectorB);
+  }
+  function normalize(vector) {
+    checkVector3Parameter(vector);
+    return normalizeVector(vector);
+  }
+  function magnitude(vector) {
+    checkVector3Parameter(vector);
+    return vectorMagnitude(vector);
+  }
+  function zero_vector() {
+    return zeroVector();
+  }
+  function point_distance(pointA, pointB) {
+    checkVector3Parameter(pointA);
+    checkVector3Parameter(pointB);
+    return pointDistance(pointA, pointB);
   }
   return __toCommonJS(unity_academy_exports);
 }
