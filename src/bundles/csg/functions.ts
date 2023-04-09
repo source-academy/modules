@@ -1,13 +1,3 @@
-/**
- * The module `csg` provides functions for drawing Constructive Solid Geometry (CSG) called `Shape`.
- *
- * A *Shape* is defined by its polygons and vertices.
- *
- * @module csg
- * @author Liu Muchen
- * @author Joel Leow
- */
-
 /* [Imports] */
 import { primitives } from '@jscad/modeling';
 import { colorize } from '@jscad/modeling/src/colors';

@@ -1,9 +1,4 @@
 /**
- * This is the official documentation for the repeat module.
- * @module repeat
- */
-
-/**
  * Returns a new function which when applied to an argument, has the same effect
  * as applying the specified function to the same argument n times.
  * @example

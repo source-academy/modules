@@ -1,19 +1,3 @@
-/**
- * Game library that translates Phaser 3 API into Source.
- *
- * More in-depth explanation of the Phaser 3 API can be found at
- * Phaser 3 documentation itself.
- *
- * For Phaser 3 API Documentation, check:
- * https://photonstorm.github.io/phaser3-docs/
- *
- * @module game
- * @author Anthony Halim
- * @author Chi Xu
- * @author Chong Sia Tiffany
- * @author Gokul Rajiv
- */
-
 /* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
 import type {
   GameObject,

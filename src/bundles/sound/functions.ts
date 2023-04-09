@@ -1,7 +1,7 @@
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import type {
   Wave,
-  Sound,
+  MonoSound,
   SoundProducer,
   SoundTransformer,
   AudioPlayed,
@@ -61,7 +61,7 @@ function linear_decay(decay_period: number): (t: number) => number {
 // set to false by denying microphone permission
 let permission: boolean | undefined;
 
-let recorded_sound: Sound | undefined;
+let recorded_sound: MonoSound | undefined;
 
 // check_permission is called whenever we try
 // to record a sound
@@ -165,7 +165,7 @@ export function init_record(): string {
  * <CODE>stop()</CODE> stops the recording and
  * returns a sound promise: a nullary function that returns the recorded sound
  */
-export function record(buffer: number): () => () => Sound {
+export function record(buffer: number): () => () => MonoSound {
   check_permission();
   const mediaRecorder = new MediaRecorder(globalStream);
   setTimeout(() => {
@@ -198,7 +198,7 @@ export function record(buffer: number): () => () => Sound {
  * @param buffer pause before recording, in seconds
  * @return <CODE>promise</CODE>: nullary function which returns recorded sound
  */
-export function record_for(duration: number, buffer: number): () => Sound {
+export function record_for(duration: number, buffer: number): () => MonoSound {
   recorded_sound = undefined;
   const recording_ms = duration * 1000;
   const pre_recording_pause_ms = buffer * 1000;
@@ -250,7 +250,7 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * @return with wave as wave function and duration as duration
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
-export function make_sound(wave: Wave, duration: number): Sound {
+export function make_sound(wave: Wave, duration: number): MonoSound {
   return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
 }
 
@@ -261,7 +261,7 @@ export function make_sound(wave: Wave, duration: number): Sound {
  * @return the wave function of the Sound
  * @example get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
  */
-export function get_wave(sound: Sound): Wave {
+export function get_wave(sound: MonoSound): Wave {
   return head(sound);
 }
 
@@ -272,7 +272,7 @@ export function get_wave(sound: Sound): Wave {
  * @return the duration of the Sound
  * @example get_duration(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns 5
  */
-export function get_duration(sound: Sound): number {
+export function get_duration(sound: MonoSound): number {
   return tail(sound);
 }
 
@@ -283,7 +283,7 @@ export function get_duration(sound: Sound): number {
  * @return true if x is a Sound, false otherwise
  * @example is_sound(make_sound(t => 0, 2)); // Returns true
  */
-export function is_sound(x: any): x is Sound {
+export function is_sound(x: any): x is MonoSound {
   return (
     is_pair<any, any>(x)
     && typeof get_wave(x) === 'function'
@@ -312,7 +312,7 @@ export function play_wave(wave: Wave, duration: number): AudioPlayed {
  * @return the given sound
  * @example play(sine_sound(440, 5));
  */
-export function play(sound: Sound): AudioPlayed {
+export function play(sound: MonoSound): AudioPlayed {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(`play is expecting sound, but encountered ${sound}`);
@@ -395,7 +395,7 @@ export function play(sound: Sound): AudioPlayed {
  * @param sound the sound to play
  * @example play_concurrently(sine_sound(440, 5));
  */
-export function play_concurrently(sound: Sound): void {
+export function play_concurrently(sound: MonoSound): void {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
@@ -470,7 +470,7 @@ export function stop(): void {
  * @return resulting noise sound
  * @example noise_sound(5);
  */
-export function noise_sound(duration: number): Sound {
+export function noise_sound(duration: number): MonoSound {
   return make_sound((_t) => Math.random() * 2 - 1, duration);
 }
 
@@ -481,7 +481,7 @@ export function noise_sound(duration: number): Sound {
  * @return resulting silence sound
  * @example silence_sound(5);
  */
-export function silence_sound(duration: number): Sound {
+export function silence_sound(duration: number): MonoSound {
   return make_sound((_t) => 0, duration);
 }
 
@@ -493,7 +493,7 @@ export function silence_sound(duration: number): Sound {
  * @return resulting sine wave sound
  * @example sine_sound(440, 5);
  */
-export function sine_sound(freq: number, duration: number): Sound {
+export function sine_sound(freq: number, duration: number): MonoSound {
   return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
 }
 
@@ -505,7 +505,7 @@ export function sine_sound(freq: number, duration: number): Sound {
  * @return resulting square wave sound
  * @example square_sound(440, 5);
  */
-export function square_sound(f: number, duration: number): Sound {
+export function square_sound(f: number, duration: number): MonoSound {
   function fourier_expansion_square(t: number) {
     let answer = 0;
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -527,7 +527,7 @@ export function square_sound(f: number, duration: number): Sound {
  * @return resulting triangle wave sound
  * @example triangle_sound(440, 5);
  */
-export function triangle_sound(freq: number, duration: number): Sound {
+export function triangle_sound(freq: number, duration: number): MonoSound {
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
@@ -551,7 +551,7 @@ export function triangle_sound(freq: number, duration: number): Sound {
  * @return resulting sawtooth wave sound
  * @example sawtooth_sound(440, 5);
  */
-export function sawtooth_sound(freq: number, duration: number): Sound {
+export function sawtooth_sound(freq: number, duration: number): MonoSound {
   function fourier_expansion_sawtooth(t: number) {
     let answer = 0;
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -577,8 +577,8 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  * @return the combined Sound
  * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
  */
-export function consecutively(list_of_sounds: List): Sound {
-  function consec_two(ss1: Sound, ss2: Sound) {
+export function consecutively(list_of_sounds: List): MonoSound {
+  function consec_two(ss1: MonoSound, ss2: MonoSound) {
     const wave1 = get_wave(ss1);
     const wave2 = get_wave(ss2);
     const dur1 = get_duration(ss1);
@@ -597,8 +597,8 @@ export function consecutively(list_of_sounds: List): Sound {
  * @return the combined Sound
  * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))
  */
-export function simultaneously(list_of_sounds: List): Sound {
-  function simul_two(ss1: Sound, ss2: Sound) {
+export function simultaneously(list_of_sounds: List): MonoSound {
+  function simul_two(ss1: MonoSound, ss2: MonoSound) {
     const wave1 = get_wave(ss1);
     const wave2 = get_wave(ss2);
     const dur1 = get_duration(ss1);
@@ -687,7 +687,7 @@ export function stacking_adsr(
   base_frequency: number,
   duration: number,
   envelopes: List,
-): Sound {
+): MonoSound {
   function zip(lst: List, n: number) {
     if (is_null(lst)) {
       return lst;
@@ -723,7 +723,7 @@ export function phase_mod(
   duration: number,
   amount: number,
 ): SoundTransformer {
-  return (modulator: Sound) => make_sound(
+  return (modulator: MonoSound) => make_sound(
     (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
     duration,
   );
@@ -739,7 +739,7 @@ export function phase_mod(
  * @return Sound resulting bell Sound with given pitch and duration
  * @example bell(40, 1);
  */
-export function bell(note: number, duration: number): Sound {
+export function bell(note: number, duration: number): MonoSound {
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -761,7 +761,7 @@ export function bell(note: number, duration: number): Sound {
  * @return Sound resulting cello Sound with given pitch and duration
  * @example cello(36, 5);
  */
-export function cello(note: number, duration: number): Sound {
+export function cello(note: number, duration: number): MonoSound {
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -778,7 +778,7 @@ export function cello(note: number, duration: number): Sound {
  * @return Sound resulting piano Sound with given pitch and duration
  * @example piano(48, 5);
  */
-export function piano(note: number, duration: number): Sound {
+export function piano(note: number, duration: number): MonoSound {
   return stacking_adsr(
     triangle_sound,
     midi_note_to_frequency(note),
@@ -795,7 +795,7 @@ export function piano(note: number, duration: number): Sound {
  * @return Sound resulting trombone Sound with given pitch and duration
  * @example trombone(60, 2);
  */
-export function trombone(note: number, duration: number): Sound {
+export function trombone(note: number, duration: number): MonoSound {
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -812,7 +812,7 @@ export function trombone(note: number, duration: number): Sound {
  * @return Sound resulting violin Sound with given pitch and duration
  * @example violin(53, 4);
  */
-export function violin(note: number, duration: number): Sound {
+export function violin(note: number, duration: number): MonoSound {
   return stacking_adsr(
     sawtooth_sound,
     midi_note_to_frequency(note),

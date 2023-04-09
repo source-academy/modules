@@ -1,9 +1,17 @@
+/**
+ * The module `csg` provides functions for drawing Constructive Solid Geometry (CSG) called `Shape`.
+ *
+ * A *Shape* is defined by its polygons and vertices.
+ *
+ * @module csg
+ * @author Liu Muchen
+ * @author Joel Leow
+ */
+
 /* [Imports] */
 import context from 'js-slang/context';
 import { Core } from './core.js';
 import { CsgModuleState } from './utilities.js';
-
-
 
 /* [Main] */
 let moduleState = new CsgModuleState();
@@ -11,8 +19,6 @@ let moduleState = new CsgModuleState();
 context.moduleContexts.csg.state = moduleState;
 // We initialise Core for the first time over on the bundles' end here
 Core.initialize(moduleState);
-
-
 
 /* [Exports] */
 export {

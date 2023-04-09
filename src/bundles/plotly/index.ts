@@ -1,5 +1,6 @@
 /**
- * Bundle for Source Academy Plotly repository
+ * The module `plotly` provides functions for drawing plots using the plotly.js library.
+ * @module plotly
  * @author Sourabh Raj Jaiswal
  */
 
