@@ -25,15 +25,19 @@
  * ● ===>`Update` is called on every GameObject once in every frame after `Start` have been called. <br>
  * ● For the three collision detaction lifecycle event functions, please refer to `on_collision_enter`, `on_collision_stay` and `on_collision_exit` functions under the `Physics - Collision` category.<br>
  * ● You can not bind multiple lifecycle functions of the same type to the same GameObject. For example, you can't bind two `Update` functions to the same GameObject. In this case, previously binded `Update` functions will be overwritten by the latest binded `Update` function.<br><br>
- * <u><b>[IMPORTANT]</b> All functions in this module that is NOT under the "<b>Outside Lifecycle</b>" or "Maths" category need to call by Unity Academy lifecycle event functions (Start or Update) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u><br>
+ * <u><b>[IMPORTANT]</b> All functions in this module that is NOT under the "<b>Outside Lifecycle</b>" or "Maths" category need to call by Unity Academy lifecycle event functions (directly or intermediately) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u><br>
  * For example:
  * ```
- * import {init_unity_academy_3d, instantiate, set_start, set_update, set_position} from 'unity_academy';
+ * import {init_unity_academy_3d, instantiate, set_start, set_update, set_position, set_rotation_euler} from 'unity_academy';
  * init_unity_academy_3d(); // Correct, since this function is under the "Outside Lifecycle" category and it can be called outside lifecycle event functions.
  * const cube = instantiate("cube"); // Correct
  * set_position(cube, 1, 2, 3); // WRONG, since set_position should ONLY be called inside a lifecycle event function
  * function my_start(gameObject){ // A sample Start event function which will be binded to cube by my_start later.
  *     set_position(gameObject, 1, 2, 3); // Correct, since the call to set_position is inside a lifecycle event function
+ *     something_else(gameObject);
+ * }
+ * function something_else(obj){
+ *    set_rotation_euler(obj, 0, 45, 45);  // Correct, since the function "set_rotation_euler" is intermediately called by the lifecycle event function "my_start" through "something_else"
  * }
  * set_start(cube, my_start); // Correct
  * ```

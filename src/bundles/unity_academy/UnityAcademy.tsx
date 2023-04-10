@@ -603,24 +603,26 @@ class UnityAcademyJsInteropContext {
     return this.getGameObjectIdentifierForPrimitiveGameObject('MainCamera');
   }
 
-  onGUI_Label(content : string, x : number, y : number) : void {
+  onGUI_Label(content : string, x : number, y : number, fontSize : number) : void {
     content = content.replaceAll('|', ''); // operator '|' is reserved as gui data separator in Unity Academy
     const newLabel = {
       type: 'label',
       content,
       x,
       y,
+      fontSize,
     };
     this.guiData.push(newLabel);
   }
 
-  onGUI_Button(text : string, x: number, y : number, onClick : Function) : void {
+  onGUI_Button(text : string, x: number, y : number, fontSize : number, onClick : Function) : void {
     text = text.replaceAll('|', ''); // operator '|' is reserved as gui data separator in Unity Academy
     const newButton = {
       type: 'button',
       text,
       x,
       y,
+      fontSize,
       onClick,
     };
     this.guiData.push(newButton);

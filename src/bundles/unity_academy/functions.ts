@@ -893,15 +893,17 @@ export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, e
  * @param content The string you want to display on screen.
  * @param x The x coordinate of the text (in screen position).
  * @param y The y coordinate of the text (in screen position).
+ * @param fontSize The size of the text
  * @category Graphical User Interface
  */
-export function gui_label(content : string, x : number, y : number) : void {
+export function gui_label(content : string, x : number, y : number, fontSize : number) : void {
   checkUnityAcademyExistence();
   checkParameterType(content, 'string');
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
+  checkParameterType(fontSize, 'number');
   getInstance()
-    .onGUI_Label(content, x, y);
+    .onGUI_Label(content, x, y, fontSize);
 }
 
 
@@ -909,21 +911,44 @@ export function gui_label(content : string, x : number, y : number) : void {
  * Make a button on the screen with given screen position. When user clicks the button, the `onClick` function will be called.<br>
  * The origin of screen space is upper-left corner and the positive Y axis is downward.<br>
  * You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the button in every frame.
+ * <br>
+ * <br>
+ * If this function is called by a lifecycle event function, then the `onClick` function in the fourth parameter could also be considered as a lifecycle event function.<br>
+ * This means that you can use other functions from this module inside the `onClick` function, even though the functions are not under the `Outside Lifecycle` category.<br>
+ * For example, the code piece below
+ * ```
+ * import {init_unity_academy_3d, set_start, set_update, instantiate, gui_button, set_position }
+ * from "unity_academy";
+ * init_unity_academy_3d();
+ *
+ * const cube = instantiate("cube");
+ *
+ * const cube_update = (gameObject) => {
+ *   gui_button("Button", 1000, 300, ()=>
+ *     set_position(gameObject, 0, 10, 6) // calling set_position inside the onClick function
+ *   );
+ * };
+
+ * set_update(cube, cube_update);
+ * ```
+ * is correct.
  *
  * @param text The text you want to display on the button.
  * @param x The x coordinate of the button (in screen position).
  * @param y The y coordinate of the button (in screen position).
  * @param onClick The function that will be called when user clicks the button on screen.
+ * @param fontSize The size of the text inside the button.
  * @category Graphical User Interface
  */
-export function gui_button(text : string, x: number, y : number, onClick : Function) : void {
+export function gui_button(text : string, x: number, y : number, fontSize : number, onClick : Function) : void {
   checkUnityAcademyExistence();
   checkParameterType(text, 'string');
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
+  checkParameterType(fontSize, 'number');
   checkParameterType(onClick, 'function');
   getInstance()
-    .onGUI_Button(text, x, y, onClick);
+    .onGUI_Button(text, x, y, fontSize, onClick);
 }
 
 /**
