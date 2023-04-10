@@ -1,10 +1,10 @@
 /**
- * The module `arcade_two_d` is a wrapper for the Phaser.io game engine.
+ * The module `arcade_2d` is a wrapper for the Phaser.io game engine.
  * It provides functions for manipulating GameObjects in a canvas.
  *
  * A *GameObject* is defined by its transform and rendered object.
  *
- * @module arcade_two_d
+ * @module arcade_2d
  * @author Titus Chew Xuan Jun
  * @author Xenos Fiorenzo Anong
  */

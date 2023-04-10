@@ -7,7 +7,7 @@ import { IconNames } from '@blueprintjs/icons';
 /**
  * Game display tab for user-created games made with the Arcade2D module.
  *
- * @module arcade_two_d
+ * @module arcade_2d
  * @author Titus Chew Xuan Jun
  * @author Xenos Fiorenzo Anong
  */
@@ -164,7 +164,7 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    // const config = context.context?.moduleContexts?.arcade_two_d?.state?.gameConfig;
+    // const config = context.context?.moduleContexts?.arcade_2d?.state?.gameConfig;
     const config = context.result?.value?.gameConfig;
     // console.log(config);
     if (config) {

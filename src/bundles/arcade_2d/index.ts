@@ -7,7 +7,7 @@
  *
  * ### WASD input example
  * ```
-import { create_rectangle, query_position, update_position, update_loop, build_game, input_key_down } from "arcade_two_d";
+import { create_rectangle, query_position, update_position, update_loop, build_game, input_key_down } from "arcade_2d";
 
 // Create GameObjects outside update_loop(...)
 const player = update_position(create_rectangle(100, 100), [300, 300]);
@@ -42,7 +42,7 @@ build_game();
  *
  * ### Draggable objects example
  * ```
-import { create_sprite, update_position, update_scale, pointer_over_gameobject, input_left_mouse_down, update_to_top, query_pointer_position, update_loop, build_game } from "arcade_two_d";
+import { create_sprite, update_position, update_scale, pointer_over_gameobject, input_left_mouse_down, update_to_top, query_pointer_position, update_loop, build_game } from "arcade_2d";
 
 // Using assets
 const gameobjects = [
@@ -67,7 +67,7 @@ build_game();
  *
  * ### Playing audio example
  * ```
-import { input_key_down, create_audio, play_audio, update_loop, build_game } from "arcade_two_d";
+import { input_key_down, create_audio, play_audio, update_loop, build_game } from "arcade_2d";
 
 const audio = create_audio("https://labs.phaser.io/assets/audio/SoundEffects/key.wav", 1);
 update_loop(game_state => {
@@ -79,7 +79,7 @@ update_loop(game_state => {
 build_game();
  * ```
  *
- * @module arcade_two_d
+ * @module arcade_2d
  * @author Titus Chew Xuan Jun
  * @author Xenos Fiorenzo Anong
  */
