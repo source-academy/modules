@@ -886,9 +886,9 @@ export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, e
 
 
 /**
- * Draw a text (string) on the screen with given screen position.<br>
- * The origin of screen space is upper-left corner and the positive Y axis is downward.<br>
- * You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the text in every frame.
+ * Draw a text (string) on the screen with given <b>screen space position</b> in the current frame.<br>
+ * The origin of screen space is upper-left corner and the positive Y direction is downward.<br>
+ * The drawn text will only last for one frame. You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the text stays in every frame.<br>
  *
  * @param content The string you want to display on screen.
  * @param x The x coordinate of the text (in screen position).
@@ -908,9 +908,9 @@ export function gui_label(content : string, x : number, y : number, fontSize : n
 
 
 /**
- * Make a button on the screen with given screen position. When user clicks the button, the `onClick` function will be called.<br>
- * The origin of screen space is upper-left corner and the positive Y axis is downward.<br>
- * You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the button in every frame.
+ * Make a button on the screen with given <b>screen space position</b> in the current frame. When user clicks the button, the `onClick` function will be called.<br>
+ * The origin of screen space is upper-left corner and the positive Y direction is downward.<br>
+ * The drawn button will only last for one frame. You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the button stays in every frame.
  * <br>
  * <br>
  * If this function is called by a lifecycle event function, then the `onClick` function in the fourth parameter could also be considered as a lifecycle event function.<br>
@@ -931,7 +931,7 @@ export function gui_label(content : string, x : number, y : number, fontSize : n
 
  * set_update(cube, cube_update);
  * ```
- * is correct.
+ * is correct.<br>
  *
  * @param text The text you want to display on the button.
  * @param x The x coordinate of the button (in screen position).
