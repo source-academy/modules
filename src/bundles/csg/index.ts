@@ -14,6 +14,7 @@ Core.initialize(moduleState);
 export {
   black,
   blue,
+  bounding_box,
   cone,
   crimson,
   cube,
