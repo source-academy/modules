@@ -897,6 +897,7 @@ export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, e
  */
 export function gui_label(content : string, x : number, y : number) : void {
   checkUnityAcademyExistence();
+  checkParameterType(content, 'string');
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
   getInstance()
@@ -917,6 +918,7 @@ export function gui_label(content : string, x : number, y : number) : void {
  */
 export function gui_button(text : string, x: number, y : number, onClick : Function) : void {
   checkUnityAcademyExistence();
+  checkParameterType(text, 'string');
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
   checkParameterType(onClick, 'function');
