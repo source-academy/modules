@@ -52,37 +52,40 @@ import {
 // Source 4
 
 let colours = [
-    black,
-    navy,
-    green,
-    teal,
-    crimson,
-    purple,
-    orange,
-    silver,
-    gray,
-    blue,
-    lime,
-    cyan,
-    rose,
-    pink,
-    yellow,
-    white
+  black,
+  navy,
+  green,
+  teal,
+  crimson,
+  purple,
+  orange,
+  silver,
+  gray,
+  blue,
+  lime,
+  cyan,
+  rose,
+  pink,
+  yellow,
+  white
 ];
-let index = 0;
-for (let yOffset = 0; yOffset <= 6; yOffset = yOffset + 2) {
-    for (let xOffset = 0; xOffset <= 6; xOffset = xOffset + 2) {
-        store_as_color(
-            translate_y(
-                translate_x(sphere, xOffset),
-                yOffset
-            ),
-            colours[index]
-        );
-        index = index + 1;
-    }
+
+
+function translate_x(entity, factor) {
+  return translate(entity, factor, 0, 0);
 }
-render_grid();
+
+function translate_y(entity, factor) {
+  return translate(entity, 0, factor, 0);
+}
+
+let lst = build_list(x => 
+  translate_y(
+    translate_x(sphere(colours[x]), x % 4 * 2), 
+    math_floor(x / 4) * 2), 
+  16);
+
+render_grid(group(lst));
 ```
 
 ```js

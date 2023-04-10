@@ -454,7 +454,8 @@ export const white: string = '#FFFFFF';
  * @returns {Shape} The resulting unioned shape
  */
 export function union(a: Shape, b: Shape): Shape {
-  let newSolid: Solid = _union(a.solid, b.solid);
+  // Warning: not adding clone() will cause the shapes to lose colour
+  let newSolid: Solid = _union(a.clone().solid, b.clone().solid);
   return new Shape(newSolid);
 }
 
@@ -466,7 +467,8 @@ export function union(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting subtracted shape
  */
 export function subtract(a: Shape, b: Shape): Shape {
-  let newSolid: Solid = _subtract(a.solid, b.solid);
+  // Warning: not adding clone() will cause the shapes to lose colour
+  let newSolid: Solid = _subtract(a.clone().solid, b.clone().solid);
   return new Shape(newSolid);
 }
 
@@ -478,7 +480,8 @@ export function subtract(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting intersection shape
  */
 export function intersect(a: Shape, b: Shape): Shape {
-  let newSolid: Solid = _intersect(a.solid, b.solid);
+  // Warning: not adding clone() will cause the shapes to lose colour
+  let newSolid: Solid = _intersect(a.clone().solid, b.clone().solid);
   return new Shape(newSolid);
 }
 
@@ -569,7 +572,7 @@ export function rotate(
 export function bounding_box(
   shape: Shape,
 ): (axis: String, min: String) => number {
-  let bounds: BoundingBox = measureBoundingBox(shape.solid);
+  let bounds: BoundingBox = measureBoundingBox(shape.clone().solid);
   return (axis: String, min: String): number => {
     let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
     let j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
