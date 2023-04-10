@@ -141,6 +141,7 @@ class Unity3DTab extends React.Component<Props> {
             if (e.input !== null) {
               e.input.checked = (getInstance()
                 .getUserAgreementStatus() === 'agreed');
+              this.userAgreementCheckboxChecked = e.input.checked;
             }
           }
         }} onChange = {(event : React.ChangeEvent<HTMLInputElement>) => {
