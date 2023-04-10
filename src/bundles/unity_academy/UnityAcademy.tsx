@@ -483,7 +483,7 @@ class UnityAcademyJsInteropContext {
     const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
     gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
     gameObject.transform.rotation.y = eulerY * 180 / Math.PI;
-    gameObject.transform.position.z = 0;
+    gameObject.transform.rotation.z = 0;
   }
 
   gameObjectDistanceInternal(gameObjectIdentifier_A : GameObjectIdentifier, gameObjectIdentifier_B : GameObjectIdentifier) : number {
