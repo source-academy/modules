@@ -162,6 +162,8 @@ class UnityAcademyJsInteropContext {
   private unityInstanceState; // [set by interop]
   private guiData : any[]; // [get / clear by interop]
   public dimensionMode;
+  private isShowingUnityAcademy : boolean; // [get by interop]
+  private latestUserAgreementVersion : string;
 
   constructor() {
     this.unityInstance = null;
@@ -180,6 +182,8 @@ class UnityAcademyJsInteropContext {
     };
     this.targetFrameRate = 30;
 
+    this.latestUserAgreementVersion = 'unknown';
+    this.getLatestUserAgreementVersion();
 
     // [ Why I don't put this into my module's own context? ]
     // Since Unity Academy application needs to access this from the WASM side, and the Unity Academy WASM side can not access the module context under the js-slang evaluation scope since Unity Academy app is running totally separated from js-slang in the WASM virtual machine.
@@ -191,6 +195,7 @@ class UnityAcademyJsInteropContext {
     document.body.appendChild(this.unityContainerElement);
     ReactDOM.render(<UnityComponent />, this.unityContainerElement);
     this.setShowUnityComponent(0);
+    this.isShowingUnityAcademy = false;
 
     this.gameObjectIdentifierWrapperClass = GameObjectIdentifier;
 
@@ -243,6 +248,7 @@ class UnityAcademyJsInteropContext {
 
   setShowUnityComponent(resolution: number) {
     const toShow = resolution > 0;
+    this.isShowingUnityAcademy = toShow;
     const sendMessageFunctionName = 'SendMessage';
     if (toShow) {
       (this.unityContainerElement as any).style.visibility = 'visible';
@@ -302,6 +308,40 @@ class UnityAcademyJsInteropContext {
 
   isUnityInstanceReady() {
     return this.unityInstanceState === 'Ready';
+  }
+
+  private getLatestUserAgreementVersion() : void {
+    const jsonUrl = `${UNITY_ACADEMY_BACKEND_URL}user_agreement.json`;
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        this.latestUserAgreementVersion = JSON.parse(xhr.responseText).version;
+      }
+    };
+    xhr.open('GET', jsonUrl, true);
+    xhr.send();
+  }
+
+  getUserAgreementStatus() : string {
+    const agreedUserAgreementVersion = localStorage.getItem('unity_academy_agreed_user_agreement_version');
+    if (agreedUserAgreementVersion === null || agreedUserAgreementVersion === 'unagreed' || agreedUserAgreementVersion === 'unknown') {
+      return 'unagreed';
+    }
+    if (this.latestUserAgreementVersion === 'unknown') {
+      return 'unagreed';
+    }
+    if (agreedUserAgreementVersion !== this.latestUserAgreementVersion) {
+      return 'new_user_agreement';
+    }
+    return 'agreed';
+  }
+
+  setUserAgreementStatus(agree : boolean) : void {
+    if (agree) {
+      localStorage.setItem('unity_academy_agreed_user_agreement_version', this.latestUserAgreementVersion);
+    } else {
+      localStorage.setItem('unity_academy_agreed_user_agreement_version', 'unagreed');
+    }
   }
 
   instantiateInternal(prefabName : string) : GameObjectIdentifier {
@@ -443,6 +483,7 @@ class UnityAcademyJsInteropContext {
     const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
     gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
     gameObject.transform.rotation.y = eulerY * 180 / Math.PI;
+    gameObject.transform.position.z = 0;
   }
 
   gameObjectDistanceInternal(gameObjectIdentifier_A : GameObjectIdentifier, gameObjectIdentifier_B : GameObjectIdentifier) : number {
@@ -608,19 +649,19 @@ class UnityAcademyJsInteropContext {
 }
 
 export function initializeModule(dimensionMode : string) {
-  let INSTANCE = getInstance();
-  if (INSTANCE !== undefined) {
-    if (!INSTANCE.isUnityInstanceReady()) {
+  let instance = getInstance();
+  if (instance !== undefined) {
+    if (!instance.isUnityInstanceReady()) {
       throw new Error('Unity instance is not ready to accept a new Source program now. Please try again later.');
     }
-    if (INSTANCE.unityInstance === null) {
-      INSTANCE.reloadUnityAcademyInstanceAfterTermination();
+    if (instance.unityInstance === null) {
+      instance.reloadUnityAcademyInstanceAfterTermination();
     }
-    INSTANCE.dimensionMode = dimensionMode;
-    INSTANCE.reset();
+    instance.dimensionMode = dimensionMode;
+    instance.reset();
     return;
   }
 
-  INSTANCE = new UnityAcademyJsInteropContext();
-  INSTANCE.dimensionMode = dimensionMode;
+  instance = new UnityAcademyJsInteropContext();
+  instance.dimensionMode = dimensionMode;
 }

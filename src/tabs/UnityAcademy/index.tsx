@@ -6,14 +6,19 @@
 
 import React from 'react';
 import { type DebuggerContext } from '../../typings/type_helpers';
-import { Button, NumericInput } from '@blueprintjs/core';
+import { Button, NumericInput, Checkbox } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { UNITY_ACADEMY_BACKEND_URL } from '../../bundles/unity_academy/config';
 import { getInstance } from '../../bundles/unity_academy/UnityAcademy';
 
-type Props = { };
+type Props = {};
 
 class Unity3DTab extends React.Component<Props> {
+  private userAgreementCheckboxChecked : boolean;
+  constructor(props : Props) {
+    super(props);
+    this.userAgreementCheckboxChecked = false;
+  }
   render() {
     let highFPSWarning;
     const currentTargetFrameRate = getInstance()
@@ -124,14 +129,34 @@ class Unity3DTab extends React.Component<Props> {
         </div>
         {highFPSWarning}
         <br/>
-        <br/>
-        <div>3D Prefab Information: <a href = {`${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html`} rel="noopener noreferrer" target="_blank" >Click Here</a>{dimensionMode === '2d' && ' (You need 3D mode to use prefabs.)'}</div>
         <div>Code Examples: <a href = {`${UNITY_ACADEMY_BACKEND_URL}code_examples.html`} rel="noopener noreferrer" target="_blank" >Click Here</a></div>
+        <div>3D Prefab Information: <a href = {`${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html`} rel="noopener noreferrer" target="_blank" >Click Here</a>{dimensionMode === '2d' && ' (You need 3D mode to use prefabs.)'}</div>
+        <br/>
+        <div>Please note that before using Unity Academy and this module, you must agree to our <a href = {`${UNITY_ACADEMY_BACKEND_URL}user_agreement.html`} rel="noopener noreferrer" target="_blank" >User Agreement</a></div>
+        <br/>
+        {getInstance()
+          .getUserAgreementStatus() === 'new_user_agreement' && <div><b>The User Agreement has updated.</b><br/></div>}
+        <Checkbox label = "I agree to the User Agreement" ref = {(e) => {
+          if (e !== null) {
+            if (e.input !== null) {
+              e.input.checked = (getInstance()
+                .getUserAgreementStatus() === 'agreed');
+            }
+          }
+        }} onChange = {(event : React.ChangeEvent<HTMLInputElement>) => {
+          this.userAgreementCheckboxChecked = event.target.checked;
+          getInstance()
+            .setUserAgreementStatus(this.userAgreementCheckboxChecked);
+        }} />
       </div>
     );
   }
 
-  openUnityWindow(resolution) {
+  openUnityWindow(resolution : number) : void {
+    if (!this.userAgreementCheckboxChecked) {
+      alert('You must agree to the our User Agreement before using Unity Academy and this module!');
+      return;
+    }
     const INSTANCE = getInstance();
     if (INSTANCE === undefined) {
       alert('No running Unity application found. Please rerun your code and try again.');

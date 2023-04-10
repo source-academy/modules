@@ -5,6 +5,7 @@
  * <br>
  * <b>Code Examples: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/code_examples.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
  * <b>Prefab Information: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
+ * <b>User Agreement: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/user_agreement.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
  * <br>
  * <b><u>Note that you need to use this module with a 'Native' variant of Source language, otherwise you may get strange errors.</u></b>
  * <br>

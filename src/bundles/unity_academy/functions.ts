@@ -125,8 +125,11 @@ export function set_update(gameObjectIdentifier : GameObjectIdentifier, updateFu
 
 
 /**
- * Creates a new GameObject from an existing Prefab
- * <br><b>3D mode only</b>
+ * Creates a new GameObject from an existing Prefab<br>
+ * <br>
+ * <b>3D mode only</b><br>
+ * <br>
+ * Available Prefab Information: <a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a>
  *
  * @param prefab_name The prefab name
  * @return the identifier of the newly created GameObject
@@ -299,7 +302,9 @@ export function set_rotation_euler(gameObjectIdentifier : GameObjectIdentifier, 
 }
 
 /**
- * Returns the scale of a given GameObject
+ * Returns the scale (size factor) of a given GameObject
+ * <br>
+ * By default the scale of a GameObject is (1, 1, 1)
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get scale for.
  * @return the scale represented in an array with three elements: [x, y, z]
  *
@@ -313,7 +318,9 @@ export function get_scale(gameObjectIdentifier : GameObjectIdentifier) : Array<N
 }
 
 /**
- * Set the scale of a given GameObject
+ * Set the scale (size) of a given GameObject
+ * <br>
+ * By default the scale of a GameObject is (1, 1, 1). Changing the scale of a GameObject along one axis will lead to a stretch or squeeze of the GameObject along that axis.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change scale for.
  * @param x The x component for the scale.
