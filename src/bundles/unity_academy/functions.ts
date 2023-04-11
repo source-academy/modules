@@ -125,8 +125,11 @@ export function set_update(gameObjectIdentifier : GameObjectIdentifier, updateFu
 
 
 /**
- * Creates a new GameObject from an existing Prefab
- * <br><b>3D mode only</b>
+ * Creates a new GameObject from an existing Prefab<br>
+ * <br>
+ * <b>3D mode only</b><br>
+ * <br>
+ * Available Prefab Information: <a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a>
  *
  * @param prefab_name The prefab name
  * @return the identifier of the newly created GameObject
@@ -299,7 +302,9 @@ export function set_rotation_euler(gameObjectIdentifier : GameObjectIdentifier, 
 }
 
 /**
- * Returns the scale of a given GameObject
+ * Returns the scale (size factor) of a given GameObject
+ * <br>
+ * By default the scale of a GameObject is (1, 1, 1)
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get scale for.
  * @return the scale represented in an array with three elements: [x, y, z]
  *
@@ -313,7 +318,9 @@ export function get_scale(gameObjectIdentifier : GameObjectIdentifier) : Array<N
 }
 
 /**
- * Set the scale of a given GameObject
+ * Set the scale (size) of a given GameObject
+ * <br>
+ * By default the scale of a GameObject is (1, 1, 1). Changing the scale of a GameObject along one axis will lead to a stretch or squeeze of the GameObject along that axis.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change scale for.
  * @param x The x component for the scale.
@@ -879,42 +886,69 @@ export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, e
 
 
 /**
- * Draw a text (string) on the screen with given screen position.<br>
- * The origin of screen space is upper-left corner and the positive Y axis is downward.<br>
- * You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the text in every frame.
+ * Draw a text (string) on the screen with given <b>screen space position</b> in the current frame.<br>
+ * The origin of screen space is upper-left corner and the positive Y direction is downward.<br>
+ * The drawn text will only last for one frame. You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the text stays in every frame.<br>
  *
  * @param content The string you want to display on screen.
  * @param x The x coordinate of the text (in screen position).
  * @param y The y coordinate of the text (in screen position).
+ * @param fontSize The size of the text
  * @category Graphical User Interface
  */
-export function gui_label(content : string, x : number, y : number) : void {
+export function gui_label(content : string, x : number, y : number, fontSize : number) : void {
   checkUnityAcademyExistence();
+  checkParameterType(content, 'string');
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
+  checkParameterType(fontSize, 'number');
   getInstance()
-    .onGUI_Label(content, x, y);
+    .onGUI_Label(content, x, y, fontSize);
 }
 
 
 /**
- * Make a button on the screen with given screen position. When user clicks the button, the `onClick` function will be called.<br>
- * The origin of screen space is upper-left corner and the positive Y axis is downward.<br>
- * You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the button in every frame.
+ * Make a button on the screen with given <b>screen space position</b> in the current frame. When user clicks the button, the `onClick` function will be called.<br>
+ * The origin of screen space is upper-left corner and the positive Y direction is downward.<br>
+ * The drawn button will only last for one frame. You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the button stays in every frame.
+ * <br>
+ * <br>
+ * If this function is called by a lifecycle event function, then the `onClick` function in the fourth parameter could also be considered as a lifecycle event function.<br>
+ * This means that you can use other functions from this module inside the `onClick` function, even though the functions are not under the `Outside Lifecycle` category.<br>
+ * For example, the code piece below
+ * ```
+ * import {init_unity_academy_3d, set_start, set_update, instantiate, gui_button, set_position }
+ * from "unity_academy";
+ * init_unity_academy_3d();
+ *
+ * const cube = instantiate("cube");
+ *
+ * const cube_update = (gameObject) => {
+ *   gui_button("Button", 1000, 300, ()=>
+ *     set_position(gameObject, 0, 10, 6) // calling set_position inside the onClick function
+ *   );
+ * };
+
+ * set_update(cube, cube_update);
+ * ```
+ * is correct.<br>
  *
  * @param text The text you want to display on the button.
  * @param x The x coordinate of the button (in screen position).
  * @param y The y coordinate of the button (in screen position).
  * @param onClick The function that will be called when user clicks the button on screen.
+ * @param fontSize The size of the text inside the button.
  * @category Graphical User Interface
  */
-export function gui_button(text : string, x: number, y : number, onClick : Function) : void {
+export function gui_button(text : string, x: number, y : number, fontSize : number, onClick : Function) : void {
   checkUnityAcademyExistence();
+  checkParameterType(text, 'string');
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
+  checkParameterType(fontSize, 'number');
   checkParameterType(onClick, 'function');
   getInstance()
-    .onGUI_Button(text, x, y, onClick);
+    .onGUI_Button(text, x, y, fontSize, onClick);
 }
 
 /**
