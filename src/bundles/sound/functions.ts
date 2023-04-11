@@ -30,7 +30,6 @@ import type {
   Sound,
   SoundProducer,
   SoundTransformer,
-  List,
   AudioPlayed,
 } from './types';
 import {
@@ -42,9 +41,10 @@ import {
   is_null,
   is_pair,
   accumulate,
-} from './list';
+  type List,
+} from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 
 // Global Constants and Variables
 const FS: number = 44100; // Output sample rate
@@ -308,7 +308,7 @@ export function get_duration(sound: Sound): number {
  * @return true if x is a Sound, false otherwise
  * @example is_sound(make_sound(t => 0, 2)); // Returns true
  */
-export function is_sound(x: any): boolean {
+export function is_sound(x: any): x is Sound {
   return (
     is_pair(x)
     && typeof get_wave(x) === 'function'

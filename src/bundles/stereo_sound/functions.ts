@@ -22,17 +22,17 @@ import {
   list,
   pair,
   tail,
-} from './list';
+  type List,
+} from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
 import type {
   AudioPlayed,
-  List,
   Sound,
   SoundProducer,
   SoundTransformer,
   Wave,
 } from './types';
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 
 // Global Constants and Variables
 
@@ -772,7 +772,7 @@ export function consecutively(list_of_sounds: List): Sound {
     const new_right = (t: number) => (t < dur1 ? Rwave1(t) : Rwave2(t - dur1));
     return make_stereo_sound(new_left, new_right, dur1 + dur2);
   }
-  return accumulate(stereo_cons_two, silence_sound(0), list_of_sounds);
+  return accumulate<Sound, Sound>(stereo_cons_two, silence_sound(0), list_of_sounds);
 }
 
 /**

@@ -212,7 +212,7 @@ const getJsonCommand = () => createBuildCommand('jsons', false)
         bundles,
         tabs: [],
       });
-      logTscResults(tscResult, srcDir);
+      logTscResults(tscResult);
       if (tscResult.result.severity === 'error') process.exit(1);
     }
 

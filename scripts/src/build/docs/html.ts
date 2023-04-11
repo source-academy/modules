@@ -79,7 +79,7 @@ const getBuildHtmlCommand = () => new Command('html')
         bundles,
         tabs: [],
       });
-      logTscResults(tscResult, opts.srcDir);
+      logTscResults(tscResult);
       if (tscResult.result.severity === 'error') process.exit(1);
     }
 

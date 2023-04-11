@@ -1,4 +1,19 @@
 {
+  "painter": {
+    "tabs": [
+      "Painter"
+    ]
+  },
+  "unity_academy": {
+    "tabs": [
+      "UnityAcademy"
+    ]
+  },
+  "plotly": {
+    "tabs": [
+      "Plotly"
+    ]
+  },
   "repeat": {
     "tabs": [
       "Repeat"
@@ -67,6 +82,9 @@
     "tabs": [
       "Repl"
     ]
+  },
+  "remote_execution": {
+    "tabs": []
   },
   "arcade_2d": {
     "tabs": [
