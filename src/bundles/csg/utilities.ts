@@ -17,20 +17,24 @@ import type { AlphaColor, Color, Solid } from "./jscad/types.js";
 import { type List } from "./types";
 
 /* [Exports] */
+
 export interface Entity {
+
   clone: () => Entity;
+
   store: (newTransforms?: Mat4) => void;
-  translate: (offset: [number, number, number]) => Entity;
-  rotate: (offset: [number, number, number]) => Entity;
-  scale: (offset: [number, number, number]) => Entity;
+
+  translate: (offset:[number, number, number]) => Entity;
+
+  rotate: (offset:[number, number, number]) => Entity;
+
+  scale: (offset:[number, number, number]) => Entity;
 }
+
 export class Group implements ReplResult, Entity {
   children: Entity[];
-  constructor(
-    public childrenList: List,
-    public transforms: Mat4 = mat4.create()
-  ) {
-    this.children = listToArray(childrenList); // Room for optimisation
+  constructor(public childrenList: List, public transforms:Mat4 = mat4.create()) {
+    this.children = listToArray(childrenList);
   }
 
   toReplString(): string {
@@ -55,7 +59,7 @@ export class Group implements ReplResult, Entity {
 
   translate(offset: [number, number, number]): Group {
     return new Group(
-      this.childrenList,
+      this.childrenListList,
       mat4.multiply(
         mat4.create(),
         mat4.fromTranslation(mat4.create(), offset)
@@ -70,7 +74,7 @@ export class Group implements ReplResult, Entity {
     const roll = offset[0];
 
     return new Group(
-      this.childrenList,
+      this.childrenListList,
       mat4.multiply(
         mat4.create(),
         mat4.fromTaitBryanRotation(mat4.create(), yaw, pitch, roll)
@@ -81,7 +85,7 @@ export class Group implements ReplResult, Entity {
 
   scale(offset: [number, number, number]): Group {
     return new Group(
-      this.childrenList,
+      this.childrenListList,
       mat4.multiply(
         mat4.create(),
         mat4.fromScaling(mat4.create(), offset)
