@@ -5205,14 +5205,14 @@ socks@^2.6.2:
     smart-buffer "^4.2.0"
 
 source-academy-utils@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/source-academy-utils/-/source-academy-utils-1.0.1.tgz#5fb596c952c86a6751207de6df5f5d01213d1054"
-  integrity sha512-xcY9kHeS+E5XY/29KPDKxWcdO3858I7Kb/IxuetNSGCrfhkIi3rVE69lsCkY1WwK6x2AwiqX2qHxrq/htfsPRQ==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/source-academy-utils/-/source-academy-utils-1.0.2.tgz#fc35a4e21e6e6a14743ed560978a9701af1a8bdc"
+  integrity sha512-cSx/Rxr0CEOr+KJKILKicOVSVknG82fMEozaituD5mjh92przLW8C4kafzXrfGMjPVb6p7lxFMk5S6QyiYI2/g==
 
 source-academy-wabt@^1.0.4:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/source-academy-wabt/-/source-academy-wabt-1.0.6.tgz#1b221a23fe526a77c79e84fd0ddc102b3d37c15a"
-  integrity sha512-encnYj7gAYslqdz/DG/JCR3GkBzpo0E78gXmgyfRUZrqpgc7j/scQnxnSrBHXS2XFVF+JjvN/asIhaZ+/peXLQ==
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/source-academy-wabt/-/source-academy-wabt-1.0.8.tgz#2c07f4aeba392fe3bf258a1cc1e37d1c47696363"
+  integrity sha512-gYPLVuBjQ+Qrv9srFq5aRundsJh0hG3ZkJL1YETiIDK/mrSmU79a5rTD3+aFdpNlQOT35ZIe86iD1ZdiOrF62Q==
   dependencies:
     class-transformer "^0.5.1"
     lodash "^4.17.21"
