@@ -13,7 +13,7 @@ import {
 
 
 /**
- * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions (except Maths functions) in this module requires calling this function or init_unity_academy_3d first.<br>
+ * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions (except Maths functions) in this module requires calling this function or `init_unity_academy_3d` first.<br>
  * I recommand you just call this function at the beginning of your Source Unity program under the 'import' statements.
  *
  * @category Application Initialization
@@ -24,7 +24,7 @@ export function init_unity_academy_2d() : void {
 }
 
 /**
- * Load and initialize Unity Academy WebGL player and set it to 3D mode. All other functions (except Maths functions) in this module requires calling this function or init_unity_academy_2d first.<br>
+ * Load and initialize Unity Academy WebGL player and set it to 3D mode. All other functions (except Maths functions) in this module requires calling this function or `init_unity_academy_2d` first.<br>
  * I recommand you just call this function at the beginning of your Source Unity program under the 'import' statements.
  *
  * @category Application Initialization
@@ -129,6 +129,7 @@ export function set_update(gameObjectIdentifier : GameObjectIdentifier, updateFu
  * <br>
  * <b>3D mode only</b><br>
  * <br>
+ * A prefab is something that is pre-built and can be created and used as a whole.<br>
  * Available Prefab Information: <a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a>
  *
  * @param prefab_name The prefab name
@@ -222,18 +223,6 @@ export function destroy(gameObjectIdentifier : GameObjectIdentifier) : void {
   getInstance()
     .destroyGameObjectInternal(gameObjectIdentifier);
 }
-
-
-/**
- * Set the target frame rate of Unity Academy. The frame rate should be an integer between 1 and 30. The default value is 30.
- *
- * @category Basics
- */
-/* export function set_target_fps(frameRate : number) {
-  checkUnityEngineStatus();
-  return getInstance()
-    .setTargetFrameRate(frameRate);
-}*/
 
 /**
  * Returns the world position of a given GameObject
@@ -924,7 +913,7 @@ export function gui_label(content : string, x : number, y : number, fontSize : n
  * const cube = instantiate("cube");
  *
  * const cube_update = (gameObject) => {
- *   gui_button("Button", 1000, 300, ()=>
+ *   gui_button("Button", 1000, 300, 20, ()=>
  *     set_position(gameObject, 0, 10, 6) // calling set_position inside the onClick function
  *   );
  * };
