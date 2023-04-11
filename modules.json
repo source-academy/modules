@@ -90,5 +90,8 @@
     "tabs": [
       "ArcadeTwod"
     ]
+  },
+  "remote_execution": {
+    "tabs": []
   }
 }
