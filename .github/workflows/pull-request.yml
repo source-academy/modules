@@ -7,7 +7,7 @@ on:
 jobs:
   test:
     name: Verify all tests pass and build success
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
         - name: Check out source code
           uses: actions/checkout@v2
