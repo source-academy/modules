@@ -28952,6 +28952,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     get_x: () => get_x,
     get_y: () => get_y,
     get_z: () => get_z,
+    gui_button: () => gui_button,
+    gui_label: () => gui_label,
     init_unity_academy_2d: () => init_unity_academy_2d,
     init_unity_academy_3d: () => init_unity_academy_3d,
     instantiate: () => instantiate,
@@ -34650,10 +34652,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         keyboardInputInfo: {}
       };
       this.targetFrameRate = 30;
+      this.latestUserAgreementVersion = "unknown";
+      this.getLatestUserAgreementVersion();
       window.unityAcademyContext = this;
       document.body.appendChild(this.unityContainerElement);
       import_react_dom.default.render((0, import_jsx_runtime.jsx)(UnityComponent, {}), this.unityContainerElement);
       this.setShowUnityComponent(0);
+      this.isShowingUnityAcademy = false;
       this.gameObjectIdentifierWrapperClass = GameObjectIdentifier;
       this.makeGameObjectDataStorage("MainCameraFollowingTarget");
     }
@@ -34693,6 +34698,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
     setShowUnityComponent(resolution) {
       const toShow = resolution > 0;
+      this.isShowingUnityAcademy = toShow;
       const sendMessageFunctionName = "SendMessage";
       if (toShow) {
         this.unityContainerElement.style.visibility = "visible";
@@ -34745,6 +34751,37 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
     isUnityInstanceReady() {
       return this.unityInstanceState === "Ready";
+    }
+    getLatestUserAgreementVersion() {
+      const jsonUrl = `${UNITY_ACADEMY_BACKEND_URL}user_agreement.json`;
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          this.latestUserAgreementVersion = JSON.parse(xhr.responseText).version;
+        }
+      };
+      xhr.open("GET", jsonUrl, true);
+      xhr.send();
+    }
+    getUserAgreementStatus() {
+      const agreedUserAgreementVersion = localStorage.getItem("unity_academy_agreed_user_agreement_version");
+      if (agreedUserAgreementVersion === null || agreedUserAgreementVersion === "unagreed" || agreedUserAgreementVersion === "unknown") {
+        return "unagreed";
+      }
+      if (this.latestUserAgreementVersion === "unknown") {
+        return "unagreed";
+      }
+      if (agreedUserAgreementVersion !== this.latestUserAgreementVersion) {
+        return "new_user_agreement";
+      }
+      return "agreed";
+    }
+    setUserAgreementStatus(agree) {
+      if (agree) {
+        localStorage.setItem("unity_academy_agreed_user_agreement_version", this.latestUserAgreementVersion);
+      } else {
+        localStorage.setItem("unity_academy_agreed_user_agreement_version", "unagreed");
+      }
     }
     instantiateInternal(prefabName) {
       let prefabExists = false;
@@ -34860,6 +34897,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
       gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
       gameObject.transform.rotation.y = eulerY * 180 / Math.PI;
+      gameObject.transform.rotation.z = 0;
     }
     gameObjectDistanceInternal(gameObjectIdentifier_A, gameObjectIdentifier_B) {
       const gameObjectA = this.getStudentGameObject(gameObjectIdentifier_A);
@@ -34960,23 +34998,25 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.dispatchStudentAction("requestMainCameraControl");
       return this.getGameObjectIdentifierForPrimitiveGameObject("MainCamera");
     }
-    onGUI_Label(content, x, y) {
+    onGUI_Label(content, x, y, fontSize) {
       content = content.replaceAll("|", "");
       const newLabel = {
         type: "label",
         content,
         x,
-        y
+        y,
+        fontSize
       };
       this.guiData.push(newLabel);
     }
-    onGUI_Button(text, x, y, onClick) {
+    onGUI_Button(text, x, y, fontSize, onClick) {
       text = text.replaceAll("|", "");
       const newButton = {
         type: "button",
         text,
         x,
         y,
+        fontSize,
         onClick
       };
       this.guiData.push(newButton);
@@ -35000,20 +35040,20 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
   };
   function initializeModule(dimensionMode) {
-    let INSTANCE = getInstance();
-    if (INSTANCE !== void 0) {
-      if (!INSTANCE.isUnityInstanceReady()) {
+    let instance = getInstance();
+    if (instance !== void 0) {
+      if (!instance.isUnityInstanceReady()) {
         throw new Error("Unity instance is not ready to accept a new Source program now. Please try again later.");
       }
-      if (INSTANCE.unityInstance === null) {
-        INSTANCE.reloadUnityAcademyInstanceAfterTermination();
+      if (instance.unityInstance === null) {
+        instance.reloadUnityAcademyInstanceAfterTermination();
       }
-      INSTANCE.dimensionMode = dimensionMode;
-      INSTANCE.reset();
+      instance.dimensionMode = dimensionMode;
+      instance.reset();
       return;
     }
-    INSTANCE = new UnityAcademyJsInteropContext();
-    INSTANCE.dimensionMode = dimensionMode;
+    instance = new UnityAcademyJsInteropContext();
+    instance.dimensionMode = dimensionMode;
   }
   function init_unity_academy_2d() {
     initializeModule("2d");
@@ -35327,6 +35367,23 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(eventFunction, "function");
     getInstance().setOnCollisionExitInternal(gameObjectIdentifier, eventFunction);
+  }
+  function gui_label(content, x, y, fontSize) {
+    checkUnityAcademyExistence();
+    checkParameterType(content, "string");
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(fontSize, "number");
+    getInstance().onGUI_Label(content, x, y, fontSize);
+  }
+  function gui_button(text, x, y, fontSize, onClick) {
+    checkUnityAcademyExistence();
+    checkParameterType(text, "string");
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(fontSize, "number");
+    checkParameterType(onClick, "function");
+    getInstance().onGUI_Button(text, x, y, fontSize, onClick);
   }
   function get_main_camera_following_target() {
     checkUnityAcademyExistence();

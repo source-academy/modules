@@ -59,7 +59,7 @@ require => (() => {
         function createDocumentFragment() {
           return document2.createDocumentFragment();
         }
-        function createElement11(nodeName) {
+        function createElement12(nodeName) {
           return document2.createElement(nodeName);
         }
         function enoughArguments(length, name) {
@@ -122,7 +122,7 @@ require => (() => {
             this.add(token);
           }
           return !!force;
-        }, DocumentFragmentPrototype = window2.DocumentFragment && DocumentFragment.prototype, Node = window2.Node, NodePrototype = (Node || Element).prototype, CharacterData = window2.CharacterData || Node, CharacterDataPrototype = CharacterData && CharacterData.prototype, DocumentType = window2.DocumentType, DocumentTypePrototype = DocumentType && DocumentType.prototype, ElementPrototype = (window2.Element || Node || window2.HTMLElement).prototype, HTMLSelectElement = window2.HTMLSelectElement || createElement11("select").constructor, selectRemove = HTMLSelectElement.prototype.remove, SVGElement = window2.SVGElement, properties = ["matches", ElementPrototype.matchesSelector || ElementPrototype.webkitMatchesSelector || ElementPrototype.khtmlMatchesSelector || ElementPrototype.mozMatchesSelector || ElementPrototype.msMatchesSelector || ElementPrototype.oMatchesSelector || (function matches(selector) {
+        }, DocumentFragmentPrototype = window2.DocumentFragment && DocumentFragment.prototype, Node = window2.Node, NodePrototype = (Node || Element).prototype, CharacterData = window2.CharacterData || Node, CharacterDataPrototype = CharacterData && CharacterData.prototype, DocumentType = window2.DocumentType, DocumentTypePrototype = DocumentType && DocumentType.prototype, ElementPrototype = (window2.Element || Node || window2.HTMLElement).prototype, HTMLSelectElement = window2.HTMLSelectElement || createElement12("select").constructor, selectRemove = HTMLSelectElement.prototype.remove, SVGElement = window2.SVGElement, properties = ["matches", ElementPrototype.matchesSelector || ElementPrototype.webkitMatchesSelector || ElementPrototype.khtmlMatchesSelector || ElementPrototype.mozMatchesSelector || ElementPrototype.msMatchesSelector || ElementPrototype.oMatchesSelector || (function matches(selector) {
           var parentNode = this.parentNode;
           return !!parentNode && -1 < indexOf.call(parentNode.querySelectorAll(selector), this);
         }), "closest", function closest(selector) {
@@ -202,7 +202,7 @@ require => (() => {
             }
           }
         }
-        if (!createElement11("a").matches("a")) {
+        if (!createElement12("a").matches("a")) {
           ElementPrototype[property] = (function (matches) {
             return function (selector) {
               return matches.call(this.parentNode ? this : createDocumentFragment().appendChild(this), selector);
@@ -261,7 +261,7 @@ require => (() => {
         if (!((CLASS_LIST in document2.documentElement))) {
           defineProperty(ElementPrototype, CLASS_LIST, classListDescriptor);
         } else {
-          TemporaryTokenList = createElement11("div")[CLASS_LIST];
+          TemporaryTokenList = createElement12("div")[CLASS_LIST];
           TemporaryTokenList.add("a", "b", "a");
           if ("a b" != TemporaryTokenList) {
             TemporaryPrototype = TemporaryTokenList.constructor.prototype;
@@ -940,7 +940,7 @@ require => (() => {
         "use strict";
         var hasOwn = ({}).hasOwnProperty;
         var nativeCodeString = "[native code]";
-        function classNames8() {
+        function classNames9() {
           var classes = [];
           for (var i = 0; i < arguments.length; i++) {
             var arg = arguments[i];
@@ -950,7 +950,7 @@ require => (() => {
               classes.push(arg);
             } else if (Array.isArray(arg)) {
               if (arg.length) {
-                var inner = classNames8.apply(null, arg);
+                var inner = classNames9.apply(null, arg);
                 if (inner) {
                   classes.push(inner);
                 }
@@ -970,14 +970,14 @@ require => (() => {
           return classes.join(" ");
         }
         if (typeof module !== "undefined" && module.exports) {
-          classNames8.default = classNames8;
-          module.exports = classNames8;
+          classNames9.default = classNames9;
+          module.exports = classNames9;
         } else if (typeof define === "function" && typeof define.amd === "object" && define.amd) {
           define("classnames", [], function () {
-            return classNames8;
+            return classNames9;
           });
         } else {
-          window.classNames = classNames8;
+          window.classNames = classNames9;
         }
       })();
     }
@@ -6524,9 +6524,125 @@ require => (() => {
   })(AbstractPureComponent2);
   init_define_process();
   var import_classnames6 = __toESM(require_classnames());
-  var React10 = __toESM(__require("react"));
-  init_define_process();
   var React9 = __toESM(__require("react"));
+  var Control = function (_a3) {
+    var _b2;
+    var alignIndicator = _a3.alignIndicator, children = _a3.children, className = _a3.className, indicatorChildren = _a3.indicatorChildren, inline = _a3.inline, inputRef = _a3.inputRef, label = _a3.label, labelElement = _a3.labelElement, large = _a3.large, style = _a3.style, type = _a3.type, typeClassName = _a3.typeClassName, _c2 = _a3.tagName, tagName = _c2 === void 0 ? "label" : _c2, htmlProps = __rest(_a3, ["alignIndicator", "children", "className", "indicatorChildren", "inline", "inputRef", "label", "labelElement", "large", "style", "type", "typeClassName", "tagName"]);
+    var classes = (0, import_classnames6.default)(classes_exports.CONTROL, typeClassName, (_b2 = {}, _b2[classes_exports.DISABLED] = htmlProps.disabled, _b2[classes_exports.INLINE] = inline, _b2[classes_exports.LARGE] = large, _b2), classes_exports.alignmentClass(alignIndicator), className);
+    return React9.createElement(tagName, {
+      className: classes,
+      style
+    }, React9.createElement("input", __assign({}, htmlProps, {
+      ref: inputRef,
+      type
+    })), React9.createElement("span", {
+      className: classes_exports.CONTROL_INDICATOR
+    }, indicatorChildren), label, labelElement, children);
+  };
+  var Switch = (function (_super) {
+    __extends(Switch2, _super);
+    function Switch2() {
+      return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Switch2.prototype.render = function () {
+      var _a3 = this.props, innerLabelChecked = _a3.innerLabelChecked, innerLabel = _a3.innerLabel, controlProps = __rest(_a3, ["innerLabelChecked", "innerLabel"]);
+      var switchLabels = innerLabel || innerLabelChecked ? [React9.createElement("div", {
+        key: "checked",
+        className: classes_exports.CONTROL_INDICATOR_CHILD
+      }, React9.createElement("div", {
+        className: classes_exports.SWITCH_INNER_TEXT
+      }, innerLabelChecked ? innerLabelChecked : innerLabel)), React9.createElement("div", {
+        key: "unchecked",
+        className: classes_exports.CONTROL_INDICATOR_CHILD
+      }, React9.createElement("div", {
+        className: classes_exports.SWITCH_INNER_TEXT
+      }, innerLabel))] : null;
+      return React9.createElement(Control, __assign({}, controlProps, {
+        type: "checkbox",
+        typeClassName: classes_exports.SWITCH,
+        indicatorChildren: switchLabels
+      }));
+    };
+    Switch2.displayName = ("").concat(DISPLAYNAME_PREFIX, ".Switch");
+    return Switch2;
+  })(AbstractPureComponent2);
+  var Radio = (function (_super) {
+    __extends(Radio2, _super);
+    function Radio2() {
+      return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Radio2.prototype.render = function () {
+      return React9.createElement(Control, __assign({}, this.props, {
+        type: "radio",
+        typeClassName: classes_exports.RADIO
+      }));
+    };
+    Radio2.displayName = ("").concat(DISPLAYNAME_PREFIX, ".Radio");
+    return Radio2;
+  })(AbstractPureComponent2);
+  var Checkbox = (function (_super) {
+    __extends(Checkbox2, _super);
+    function Checkbox2() {
+      var _this = _super !== null && _super.apply(this, arguments) || this;
+      _this.state = {
+        indeterminate: _this.props.indeterminate || _this.props.defaultIndeterminate || false
+      };
+      _this.input = null;
+      _this.handleInputRef = refHandler(_this, "input", _this.props.inputRef);
+      _this.handleChange = function (evt) {
+        var _a3, _b2;
+        var indeterminate = evt.target.indeterminate;
+        if (_this.props.indeterminate == null) {
+          _this.setState({
+            indeterminate
+          });
+        }
+        (_b2 = (_a3 = _this.props).onChange) === null || _b2 === void 0 ? void 0 : _b2.call(_a3, evt);
+      };
+      return _this;
+    }
+    Checkbox2.getDerivedStateFromProps = function (_a3) {
+      var indeterminate = _a3.indeterminate;
+      if (indeterminate != null) {
+        return {
+          indeterminate
+        };
+      }
+      return null;
+    };
+    Checkbox2.prototype.render = function () {
+      var _a3 = this.props, defaultIndeterminate = _a3.defaultIndeterminate, indeterminate = _a3.indeterminate, controlProps = __rest(_a3, ["defaultIndeterminate", "indeterminate"]);
+      return React9.createElement(Control, __assign({}, controlProps, {
+        inputRef: this.handleInputRef,
+        onChange: this.handleChange,
+        type: "checkbox",
+        typeClassName: classes_exports.CHECKBOX
+      }));
+    };
+    Checkbox2.prototype.componentDidMount = function () {
+      this.updateIndeterminate();
+    };
+    Checkbox2.prototype.componentDidUpdate = function (prevProps) {
+      this.updateIndeterminate();
+      if (prevProps.inputRef !== this.props.inputRef) {
+        setRef(prevProps.inputRef, null);
+        this.handleInputRef = refHandler(this, "input", this.props.inputRef);
+        setRef(this.props.inputRef, this.input);
+      }
+    };
+    Checkbox2.prototype.updateIndeterminate = function () {
+      if (this.input != null) {
+        this.input.indeterminate = this.state.indeterminate;
+      }
+    };
+    Checkbox2.displayName = ("").concat(DISPLAYNAME_PREFIX, ".Checkbox");
+    return Checkbox2;
+  })(AbstractPureComponent2);
+  init_define_process();
+  var import_classnames7 = __toESM(require_classnames());
+  var React11 = __toESM(__require("react"));
+  init_define_process();
+  var React10 = __toESM(__require("react"));
   var AsyncControllableInput = (function (_super) {
     __extends(AsyncControllableInput2, _super);
     function AsyncControllableInput2() {
@@ -6605,7 +6721,7 @@ require => (() => {
     AsyncControllableInput2.prototype.render = function () {
       var _a3 = this.state, isComposing = _a3.isComposing, hasPendingUpdate = _a3.hasPendingUpdate, value = _a3.value, nextValue = _a3.nextValue;
       var _b2 = this.props, inputRef = _b2.inputRef, restProps = __rest(_b2, ["inputRef"]);
-      return React9.createElement("input", __assign({}, restProps, {
+      return React10.createElement("input", __assign({}, restProps, {
         ref: inputRef,
         value: isComposing || hasPendingUpdate ? nextValue : value,
         onCompositionStart: this.handleCompositionStart,
@@ -6637,7 +6753,7 @@ require => (() => {
     InputGroup2.prototype.render = function () {
       var _a3;
       var _b2 = this.props, _c2 = _b2.asyncControl, asyncControl = _c2 === void 0 ? false : _c2, className = _b2.className, disabled = _b2.disabled, fill = _b2.fill, inputClassName = _b2.inputClassName, inputRef = _b2.inputRef, intent = _b2.intent, large = _b2.large, readOnly = _b2.readOnly, round = _b2.round, small = _b2.small, _d2 = _b2.tagName, tagName = _d2 === void 0 ? "div" : _d2;
-      var inputGroupClasses = (0, import_classnames6.default)(classes_exports.INPUT_GROUP, classes_exports.intentClass(intent), (_a3 = {}, _a3[classes_exports.DISABLED] = disabled, _a3[classes_exports.READ_ONLY] = readOnly, _a3[classes_exports.FILL] = fill, _a3[classes_exports.LARGE] = large, _a3[classes_exports.SMALL] = small, _a3[classes_exports.ROUND] = round, _a3), className);
+      var inputGroupClasses = (0, import_classnames7.default)(classes_exports.INPUT_GROUP, classes_exports.intentClass(intent), (_a3 = {}, _a3[classes_exports.DISABLED] = disabled, _a3[classes_exports.READ_ONLY] = readOnly, _a3[classes_exports.FILL] = fill, _a3[classes_exports.LARGE] = large, _a3[classes_exports.SMALL] = small, _a3[classes_exports.ROUND] = round, _a3), className);
       var style = __assign(__assign({}, this.props.style), {
         paddingLeft: this.state.leftElementWidth,
         paddingRight: this.state.rightElementWidth
@@ -6645,15 +6761,15 @@ require => (() => {
       var inputProps = __assign(__assign({
         type: "text"
       }, removeNonHTMLProps(this.props)), {
-        className: (0, import_classnames6.default)(classes_exports.INPUT, inputClassName),
+        className: (0, import_classnames7.default)(classes_exports.INPUT, inputClassName),
         style
       });
-      var inputElement = asyncControl ? React10.createElement(AsyncControllableInput, __assign({}, inputProps, {
+      var inputElement = asyncControl ? React11.createElement(AsyncControllableInput, __assign({}, inputProps, {
         inputRef
-      })) : React10.createElement("input", __assign({}, inputProps, {
+      })) : React11.createElement("input", __assign({}, inputProps, {
         ref: inputRef
       }));
-      return React10.createElement(tagName, {
+      return React11.createElement(tagName, {
         className: inputGroupClasses
       }, this.maybeRenderLeftElement(), inputElement, this.maybeRenderRightElement());
     };
@@ -6674,12 +6790,12 @@ require => (() => {
     InputGroup2.prototype.maybeRenderLeftElement = function () {
       var _a3 = this.props, leftElement = _a3.leftElement, leftIcon = _a3.leftIcon;
       if (leftElement != null) {
-        return React10.createElement("span", {
+        return React11.createElement("span", {
           className: classes_exports.INPUT_LEFT_CONTAINER,
           ref: this.refHandlers.leftElement
         }, leftElement);
       } else if (leftIcon != null) {
-        return React10.createElement(Icon, {
+        return React11.createElement(Icon, {
           icon: leftIcon,
           "aria-hidden": true,
           tabIndex: -1
@@ -6692,7 +6808,7 @@ require => (() => {
       if (rightElement == null) {
         return void 0;
       }
-      return React10.createElement("span", {
+      return React11.createElement("span", {
         className: classes_exports.INPUT_ACTION,
         ref: this.refHandlers.rightElement
       }, rightElement);
@@ -6728,8 +6844,8 @@ require => (() => {
     return InputGroup2;
   })(AbstractPureComponent2);
   init_define_process();
-  var import_classnames7 = __toESM(require_classnames());
-  var React11 = __toESM(__require("react"));
+  var import_classnames8 = __toESM(require_classnames());
+  var React12 = __toESM(__require("react"));
   init_define_process();
   function getDecimalSeparator(locale) {
     var testNumber = 1.9;
@@ -7013,9 +7129,9 @@ require => (() => {
     NumericInput2.prototype.render = function () {
       var _a3;
       var _b2 = this.props, buttonPosition = _b2.buttonPosition, className = _b2.className, fill = _b2.fill, large = _b2.large;
-      var containerClasses = (0, import_classnames7.default)(classes_exports.NUMERIC_INPUT, (_a3 = {}, _a3[classes_exports.LARGE] = large, _a3), className);
+      var containerClasses = (0, import_classnames8.default)(classes_exports.NUMERIC_INPUT, (_a3 = {}, _a3[classes_exports.LARGE] = large, _a3), className);
       var buttons = this.renderButtons();
-      return React11.createElement(ControlGroup, {
+      return React12.createElement(ControlGroup, {
         className: containerClasses,
         fill
       }, buttonPosition === Position.LEFT && buttons, this.renderInput(), buttonPosition === Position.RIGHT && buttons);
@@ -7080,17 +7196,17 @@ require => (() => {
       var disabled = this.props.disabled || this.props.readOnly;
       var isIncrementDisabled = max !== void 0 && value !== "" && +value >= max;
       var isDecrementDisabled = min !== void 0 && value !== "" && +value <= min;
-      return React11.createElement(ButtonGroup, {
+      return React12.createElement(ButtonGroup, {
         className: classes_exports.FIXED,
         key: "button-group",
         vertical: true
-      }, React11.createElement(Button, __assign({
+      }, React12.createElement(Button, __assign({
         "aria-label": "increment",
         "aria-controls": this.numericInputId,
         disabled: disabled || isIncrementDisabled,
         icon: "chevron-up",
         intent
-      }, this.incrementButtonHandlers)), React11.createElement(Button, __assign({
+      }, this.incrementButtonHandlers)), React12.createElement(Button, __assign({
         "aria-label": "decrement",
         "aria-controls": this.numericInputId,
         disabled: disabled || isDecrementDisabled,
@@ -7101,7 +7217,7 @@ require => (() => {
     NumericInput2.prototype.renderInput = function () {
       var inputGroupHtmlProps = removeNonHTMLProps(this.props, NON_HTML_PROPS, true);
       var valueAsNumber = this.getCurrentValueAsNumber();
-      return React11.createElement(InputGroup, __assign({
+      return React12.createElement(InputGroup, __assign({
         asyncControl: this.props.asyncControl,
         autoComplete: "off",
         id: this.numericInputId,
@@ -7306,6 +7422,10 @@ require => (() => {
   };
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var Unity3DTab = class extends import_react2.default.Component {
+    constructor(props) {
+      super(props);
+      this.userAgreementCheckboxChecked = false;
+    }
     render() {
       let highFPSWarning;
       const currentTargetFrameRate = getInstance().getTargetFrameRate();
@@ -7423,24 +7543,53 @@ require => (() => {
             },
             text: "120"
           })]
-        }), highFPSWarning, (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsxs)("div", {
-          children: ["3D Prefab Information: ", (0, import_jsx_runtime2.jsx)("a", {
-            href: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html`,
-            rel: "noopener noreferrer",
-            target: "_blank",
-            children: "Click Here"
-          }), dimensionMode === "2d" && " (You need 3D mode to use prefabs.)"]
-        }), (0, import_jsx_runtime2.jsxs)("div", {
+        }), highFPSWarning, (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsxs)("div", {
           children: ["Code Examples: ", (0, import_jsx_runtime2.jsx)("a", {
             href: `${UNITY_ACADEMY_BACKEND_URL}code_examples.html`,
             rel: "noopener noreferrer",
             target: "_blank",
             children: "Click Here"
           })]
+        }), (0, import_jsx_runtime2.jsxs)("div", {
+          children: ["3D Prefab Information: ", (0, import_jsx_runtime2.jsx)("a", {
+            href: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html`,
+            rel: "noopener noreferrer",
+            target: "_blank",
+            children: "Click Here"
+          }), dimensionMode === "2d" && " (You need 3D mode to use prefabs.)"]
+        }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsxs)("div", {
+          children: ["Please note that before using Unity Academy and this module, you must agree to our ", (0, import_jsx_runtime2.jsx)("a", {
+            href: `${UNITY_ACADEMY_BACKEND_URL}user_agreement.html`,
+            rel: "noopener noreferrer",
+            target: "_blank",
+            children: "User Agreement"
+          })]
+        }), (0, import_jsx_runtime2.jsx)("br", {}), getInstance().getUserAgreementStatus() === "new_user_agreement" && (0, import_jsx_runtime2.jsxs)("div", {
+          children: [(0, import_jsx_runtime2.jsx)("b", {
+            children: "The User Agreement has updated."
+          }), (0, import_jsx_runtime2.jsx)("br", {})]
+        }), (0, import_jsx_runtime2.jsx)(Checkbox, {
+          label: "I agree to the User Agreement",
+          ref: e => {
+            if (e !== null) {
+              if (e.input !== null) {
+                e.input.checked = getInstance().getUserAgreementStatus() === "agreed";
+                this.userAgreementCheckboxChecked = e.input.checked;
+              }
+            }
+          },
+          onChange: event => {
+            this.userAgreementCheckboxChecked = event.target.checked;
+            getInstance().setUserAgreementStatus(this.userAgreementCheckboxChecked);
+          }
         })]
       });
     }
     openUnityWindow(resolution) {
+      if (!this.userAgreementCheckboxChecked) {
+        alert("You must agree to the our User Agreement before using Unity Academy and this module!");
+        return;
+      }
       const INSTANCE = getInstance();
       if (INSTANCE === void 0) {
         alert("No running Unity application found. Please rerun your code and try again.");
