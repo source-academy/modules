@@ -44,7 +44,6 @@ export {
   rounded_cube,
   rounded_cylinder,
   scale,
-  shape_center,
   shape_to_stl,
   silver,
   sphere,

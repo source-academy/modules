@@ -63,7 +63,7 @@ function colorize(shape: Shape, hex: string) {
  * @returns {(String) => number} A lambda function providing the shape's center
  * coordinates
  */
-export function shape_center(shape: Shape): (axis: String) => number {
+function shape_center(shape: Shape): (axis: String) => number {
   let bounds: BoundingBox = measureBoundingBox(shape.solid);
   let centerCoords: Coordinates = [
     bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
@@ -456,7 +456,8 @@ export const white: string = '#FFFFFF';
  * @returns {Shape} The resulting unioned shape
  */
 export function union(a: Shape, b: Shape): Shape {
-  let newSolid: Solid = _union(a.solid, b.solid);
+  // Warning: not adding clone() will cause the shapes to lose colour
+  let newSolid: Solid = _union(a.clone().solid, b.clone().solid);
   return new Shape(newSolid);
 }
 
@@ -468,7 +469,8 @@ export function union(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting subtracted shape
  */
 export function subtract(a: Shape, b: Shape): Shape {
-  let newSolid: Solid = _subtract(a.solid, b.solid);
+  // Warning: not adding clone() will cause the shapes to lose colour
+  let newSolid: Solid = _subtract(a.clone().solid, b.clone().solid);
   return new Shape(newSolid);
 }
 
@@ -480,7 +482,8 @@ export function subtract(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting intersection shape
  */
 export function intersect(a: Shape, b: Shape): Shape {
-  let newSolid: Solid = _intersect(a.solid, b.solid);
+  // Warning: not adding clone() will cause the shapes to lose colour
+  let newSolid: Solid = _intersect(a.clone().solid, b.clone().solid);
   return new Shape(newSolid);
 }
 

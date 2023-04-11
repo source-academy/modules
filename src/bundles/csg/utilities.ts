@@ -60,7 +60,11 @@ export class Group implements ReplResult, Entity {
   translate(offset:[number, number, number]): Group {
     return new Group(
       this.childrenList,
-      mat4.fromTranslation(mat4.create(), offset),
+      mat4.multiply(
+        mat4.create(),
+        mat4.fromTranslation(mat4.create(), offset),
+        this.transforms,
+      ),
     );
   }
 
@@ -71,14 +75,22 @@ export class Group implements ReplResult, Entity {
 
     return new Group(
       this.childrenList,
-      mat4.fromTaitBryanRotation(mat4.create(), yaw, pitch, roll),
+      mat4.multiply(
+        mat4.create(),
+        mat4.fromTaitBryanRotation(mat4.create(), yaw, pitch, roll),
+        this.transforms,
+      ),
     );
   }
 
   scale(offset:[number, number, number]): Group {
     return new Group(
       this.childrenList,
-      mat4.fromScaling(mat4.create(), offset),
+      mat4.multiply(
+        mat4.create(),
+        mat4.fromScaling(mat4.create(), offset),
+        this.transforms,
+      ),
     );
   }
 }
