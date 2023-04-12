@@ -1,4 +1,7 @@
 /* eslint-disable new-cap */
+// We have to disable linting rules since Box2D functions do not
+// follow the same guidelines as the rest of the codebase.
+
 import {
   type b2Body,
   type b2Fixture,
@@ -13,7 +16,6 @@ import {
 } from '@box2d/core';
 import { type PhysicsObject } from './PhysicsObject';
 import { Timer } from './types';
-
 
 export class PhysicsWorld {
   private b2World: b2World;

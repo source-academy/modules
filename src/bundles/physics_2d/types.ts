@@ -1,7 +1,8 @@
 /* eslint-disable new-cap */
-import {
-  b2Vec2,
-} from '@box2d/core';
+// We have to disable linting rules since Box2D functions do not
+// follow the same guidelines as the rest of the codebase.
+
+import { b2Vec2 } from '@box2d/core';
 import { type ReplResult } from '../../typings/type_helpers';
 
 export const ACCURACY = 2;

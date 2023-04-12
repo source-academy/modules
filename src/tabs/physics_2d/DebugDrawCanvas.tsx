@@ -1,4 +1,7 @@
 /* eslint-disable new-cap */
+// We have to disable linting rules since Box2D functions do not
+// follow the same guidelines as the rest of the codebase.
+
 import { Button, Icon, Slider } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
@@ -65,7 +68,7 @@ DebugDrawCanvasState
       isPlaying: false,
       zoomLevel: 1,
       camX: 0,
-      updateStep: 0.01,
+      updateStep: 1 / 60,
     };
 
     this.canvas = null;
@@ -173,10 +176,7 @@ DebugDrawCanvasState
    * @param newValue new zoom level
    */
   private onZoomSliderChangeHandler = (newValue: number) => {
-    this.setState(
-      { zoomLevel: newValue },
-      () => {},
-    );
+    this.setState({ zoomLevel: newValue }, () => {});
   };
 
   /**
@@ -186,10 +186,7 @@ DebugDrawCanvasState
    * @param newValue new camera x coordinate
    */
   private onCameraSliderChangeHandler = (newValue: number) => {
-    this.setState(
-      { camX: newValue },
-      () => {},
-    );
+    this.setState({ camX: newValue }, () => {});
   };
 
   /**
@@ -199,10 +196,7 @@ DebugDrawCanvasState
    * @param newValue new camera x coordinate
    */
   private onUpdateStepSliderChangeHandler = (newValue: number) => {
-    this.setState(
-      { updateStep: newValue },
-      () => {},
-    );
+    this.setState({ updateStep: newValue }, () => {});
   };
 
   public render() {
@@ -311,7 +305,8 @@ DebugDrawCanvasState
         <div
           style={{
             whiteSpace: 'pre-wrap',
-          }}>
+          }}
+        >
           {this.world.getWorldStatus()}
         </div>
       </>

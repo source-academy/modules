@@ -1,4 +1,7 @@
 /* eslint-disable new-cap */
+// We have to disable linting rules since Box2D functions do not
+// follow the same guidelines as the rest of the codebase.
+
 import {
   type b2Body,
   type b2Shape,
@@ -168,8 +171,12 @@ export class PhysicsObject implements ReplResult {
       let centroid: b2Vec2 = this.shape.m_centroid;
       let arr: b2Vec2[] = [];
       this.shape.m_vertices.forEach((vec) => {
-        arr.push(new b2Vec2(centroid.x + scale * (vec.x - centroid.x),
-          centroid.y + scale * (vec.y - centroid.y)));
+        arr.push(
+          new b2Vec2(
+            centroid.x + scale * (vec.x - centroid.x),
+            centroid.y + scale * (vec.y - centroid.y),
+          ),
+        );
       });
       this.shape = new b2PolygonShape()
         .Set(arr);
