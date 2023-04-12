@@ -37,7 +37,7 @@
  * @author Yu Jiali
  */
 
-import { context } from 'js-slang/moduleHelpers';
+import context from 'js-slang/context';
 
 import { b2CircleShape, b2PolygonShape } from '@box2d/core';
 
