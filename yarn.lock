@@ -5210,9 +5210,9 @@ source-academy-utils@^1.0.0:
   integrity sha512-cSx/Rxr0CEOr+KJKILKicOVSVknG82fMEozaituD5mjh92przLW8C4kafzXrfGMjPVb6p7lxFMk5S6QyiYI2/g==
 
 source-academy-wabt@^1.0.4:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/source-academy-wabt/-/source-academy-wabt-1.0.8.tgz#2c07f4aeba392fe3bf258a1cc1e37d1c47696363"
-  integrity sha512-gYPLVuBjQ+Qrv9srFq5aRundsJh0hG3ZkJL1YETiIDK/mrSmU79a5rTD3+aFdpNlQOT35ZIe86iD1ZdiOrF62Q==
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/source-academy-wabt/-/source-academy-wabt-1.0.10.tgz#4187804a10b8233dc0f3498b49d07523940b4789"
+  integrity sha512-eRm9Q+wm9rNKpaX3X+ykKjcLyrV2O6elAIG3qmkuOeOLk3f26QEFfroBvNxLtvVokkItWRHek9T/d5Gqrqo5tQ==
   dependencies:
     class-transformer "^0.5.1"
     lodash "^4.17.21"
