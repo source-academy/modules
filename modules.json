@@ -88,5 +88,10 @@
   },
   "wasm": {
     "tabs": []
+  },
+  "physics_2d": {
+    "tabs": [
+      "physics_2d"
+    ]
   }
 }
