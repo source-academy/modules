@@ -34,7 +34,7 @@
  * }
  * ```
  *
- *
+ * @module physics_2d
  * @author Muhammad Fikri Bin Abdul Kalam
  * @author Yu Jiali
  */
