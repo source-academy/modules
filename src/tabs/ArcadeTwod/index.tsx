@@ -34,7 +34,7 @@ type GameState = {
  * React component state for the UI buttons.
  */
 type UiState = {
-  paused: boolean;
+  isPaused: boolean;
 };
 
 /**
@@ -54,17 +54,17 @@ class A2dUiButtons extends React.Component<UiProps, UiState> {
   constructor(props) {
     super(props);
     this.state = {
-      paused: false,
+      isPaused: false,
     };
   }
 
   toggleGamePause(): void {
-    if (this.state.paused) {
+    if (this.state.isPaused) {
       this.props.onClick(false);
-      this.setState({ paused: false });
+      this.setState({ isPaused: false });
     } else {
       this.props.onClick(true);
-      this.setState({ paused: true });
+      this.setState({ isPaused: true });
     }
   }
 
@@ -73,10 +73,10 @@ class A2dUiButtons extends React.Component<UiProps, UiState> {
       <ButtonGroup>
         <Button
           className="a2d-play-toggle-button"
-          icon={this.state.paused ? IconNames.PLAY : IconNames.PAUSE}
+          icon={this.state.isPaused ? IconNames.PLAY : IconNames.PAUSE}
           active={false}
           onClick={() => this.toggleGamePause()}
-          text={this.state.paused ? 'Resume Game' : 'Pause Game'}
+          text={this.state.isPaused ? 'Resume Game' : 'Pause Game'}
         />
       </ButtonGroup>
     );
