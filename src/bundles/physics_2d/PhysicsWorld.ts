@@ -112,7 +112,6 @@ export class PhysicsWorld {
   Objects:
       `;
     this.physicsObjects.forEach((obj) => {
-      console.log(obj.getMass());
       world_status += `
   ------------------------
   ${obj.toReplString()}
