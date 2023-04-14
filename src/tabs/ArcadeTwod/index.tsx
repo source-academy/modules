@@ -59,13 +59,9 @@ class A2dUiButtons extends React.Component<UiProps, UiState> {
   }
 
   toggleGamePause(): void {
-    if (this.state.isPaused) {
-      this.props.onClick(false);
-      this.setState({ isPaused: false });
-    } else {
-      this.props.onClick(true);
-      this.setState({ isPaused: true });
-    }
+    const currentState = this.state.isPaused;
+    this.props.onClick(!currentState);
+    this.setState({ isPaused: !currentState });
   }
 
   public render() {
