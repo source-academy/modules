@@ -1,5 +1,14 @@
 import Phaser from 'phaser';
-import { CircleGameObject, GameObject, type InteractableGameObject, RectangleGameObject, ShapeGameObject, SpriteGameObject, TextGameObject, TriangleGameObject } from './gameobject';
+import {
+  CircleGameObject,
+  GameObject,
+  type InteractableGameObject,
+  RectangleGameObject,
+  ShapeGameObject,
+  SpriteGameObject,
+  TextGameObject,
+  TriangleGameObject,
+} from './gameobject';
 import {
   DEBUG,
   gameTime,
