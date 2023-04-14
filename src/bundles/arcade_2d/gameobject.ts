@@ -110,7 +110,7 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
       this.renderProps.color.alpha,
     ];
   }
-  getFlipState(): [boolean, boolean] {
+  getFlipState(): types.FlipXY {
     return this.renderProps.flip;
   }
   getShouldBringToTop(): boolean {

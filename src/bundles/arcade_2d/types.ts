@@ -2,27 +2,36 @@
  * This file contains the types used to represent GameObjects
  */
 
+/** Represents (x,y) worldspace position of GameObject. */
+export type PositionXY = [number, number];
+
+/** Represents (x,y) worldspace  scale of GameObject. */
+export type ScaleXY = [number, number];
+
 /**
  * Represents transform properties of a GameObject in worldspace.
- * @property {[number, number]} position - The (x,y) worldspace position of the GameObject.
- * @property {[number, number]} xScale - The (x,y) worldspace scale of the GameObject.
+ * @property {PositionXY} position - The (x,y) worldspace position of the GameObject.
+ * @property {ScaleXY} xScale - The (x,y) worldspace scale of the GameObject.
  * @property {number} rotation - The worldspace rotation of the GameObject, in radians counter-clockwise.
  */
 export type TransformProps = {
-  position: [number, number];
-  scale: [number, number];
+  position: PositionXY;
+  scale: ScaleXY;
   rotation: number;
 };
+
+/** Represents (x,y) flip state of GameObject. */
+export type FlipXY = [boolean, boolean];
 
 /**
  * Represents the render properties of a GameObject.
  * @property {Color} color - The color associated with the GameObject tint.
- * @property {[number, number]} flip - The (x,y) flip state of the GameObject.
+ * @property {FlipXY} flip - The (x,y) flip state of the GameObject.
  * @property {boolean} visible - The render-visibility of the GameObject.
  */
 export type RenderProps = {
   color: Color;
-  flip: [boolean, boolean];
+  flip: FlipXY;
   visible: boolean;
 };
 
@@ -130,3 +139,6 @@ export type BuildGame = {
  * which can be assessed and modified on the next frame.
  */
 export type UpdateFunction = (userSuppliedState: Array<any>) => void;
+
+/** Represents the (width, height) dimensions of the game canvas. */
+export type DimensionsXY = [number, number];

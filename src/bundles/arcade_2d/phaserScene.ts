@@ -15,7 +15,10 @@ import {
   loopCount,
   userUpdateFunction,
 } from './functions';
-import { type TransformProps } from './types';
+import {
+  type TransformProps,
+  type PositionXY,
+} from './types';
 import { AudioClip } from './audio';
 
 type PhaserGameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Phaser.GameObjects.Shape;
@@ -25,7 +28,7 @@ type PhaserGameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Ph
 export const inputKeysDown = new Set<string>();
 
 // the current (mouse) pointer position in the canvas
-export let pointerPosition: [number, number];
+export let pointerPosition: PositionXY;
 
 // true if (left mouse button) pointer down, false otherwise
 export let pointerPrimaryDown: boolean;

@@ -44,6 +44,10 @@ import {
   type RectangleProps,
   type CircleProps,
   type TriangleProps,
+  type FlipXY,
+  type ScaleXY,
+  type PositionXY,
+  type DimensionsXY,
 } from './types';
 
 import {
@@ -230,8 +234,8 @@ export const create_sprite: (image_url: string) => SpriteGameObject = (image_url
  * ```
  * @category GameObject
  */
-export const update_position: (gameObject: GameObject, [x, y]: [number, number]) => GameObject
-= (gameObject: GameObject, [x, y]: [number, number]) => {
+export const update_position: (gameObject: GameObject, [x, y]: PositionXY) => GameObject
+= (gameObject: GameObject, [x, y]: PositionXY) => {
   gameObject.setTransform({
     ...gameObject.getTransform(),
     position: [x, y],
@@ -251,8 +255,8 @@ export const update_position: (gameObject: GameObject, [x, y]: [number, number])
  * ```
  * @category GameObject
  */
-export const update_scale: (gameObject: GameObject, [x, y]: [number, number]) => GameObject
-= (gameObject: GameObject, [x, y]: [number, number]) => {
+export const update_scale: (gameObject: GameObject, [x, y]: ScaleXY) => GameObject
+= (gameObject: GameObject, [x, y]: ScaleXY) => {
   gameObject.setTransform({
     ...gameObject.getTransform(),
     scale: [x, y],
@@ -322,8 +326,8 @@ export const update_color: (gameObject: GameObject, color: [number, number, numb
  * ```
  * @category GameObject
  */
-export const update_flip: (gameObject: GameObject, flip: [boolean, boolean]) => GameObject
-= (gameObject: GameObject, flip: [boolean, boolean]) => {
+export const update_flip: (gameObject: GameObject, flip: FlipXY) => GameObject
+= (gameObject: GameObject, flip: FlipXY) => {
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
@@ -408,7 +412,7 @@ export const query_id: (gameObject: GameObject) => number = (gameObject: GameObj
  * ```
  * @category GameObject
  */
-export const query_position: (gameObject: GameObject) => [number, number]
+export const query_position: (gameObject: GameObject) => PositionXY
 = (gameObject: GameObject) => gameObject.getTransform().position;
 
 /**
@@ -438,7 +442,7 @@ export const query_rotation: (gameObject: GameObject) => number
  * ```
  * @category GameObject
  */
-export const query_scale: (gameObject: GameObject) => [number, number]
+export const query_scale: (gameObject: GameObject) => ScaleXY
 = (gameObject: GameObject) => gameObject.getTransform().scale;
 
 /**
@@ -503,7 +507,7 @@ export const query_text: (textGameObject: TextGameObject) => string
  * position[1]; // y
  * ```
  */
-export const query_pointer_position: () => [number, number]
+export const query_pointer_position: () => PositionXY
 = () => pointerPosition;
 
 // =============================================================================
@@ -557,7 +561,7 @@ export const set_fps: (fps: number) => void = (fps: number) => {
  * set_dimensions([500, 400]);
  * ```
  */
-export const set_dimensions: (dimensions: [number, number]) => void = (dimensions: [number, number]) => {
+export const set_dimensions: (dimensions: DimensionsXY) => void = (dimensions: DimensionsXY) => {
   if (dimensions.length !== 2) {
     throw new Error('Dimensions must be a 2-element array');
   }
