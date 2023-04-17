@@ -20,23 +20,28 @@ import { AudioClip } from './audio';
 
 type PhaserGameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Phaser.GameObjects.Shape;
 
-// Store keys that are down in the Phaser Scene
-// By default, this is empty, unless a key is down
-export const inputKeysDown = new Set<string>();
+// Game state information, that changes every frame.
+export const gameState = {
+  // Stores the debug information, which is reset every iteration of the update loop.
+  debugLogArray: Array.of() as Array<string>,
+  // The current in-game time and frame count.
+  gameTime: 0,
+  loopCount: 0,
+  // Store keys that are down in the Phaser Scene
+  // By default, this is empty, unless a key is down
+  inputKeysDown: new Set<string>(),
+  pointerProps: {
+    // the current (mouse) pointer position in the canvas
+    pointerPosition: [0, 0] as PositionXY,
+    // true if (left mouse button) pointer down, false otherwise
+    pointerPrimaryDown: false,
+    pointerSecondaryDown: false,
+    // Stores the IDs of the GameObjects that the pointer is over
+    pointerOverGameObjectsId: new Set<number>(),
+  },
+};
 
-// the current (mouse) pointer position in the canvas
-export let pointerPosition: PositionXY = [0, 0];
-
-// true if (left mouse button) pointer down, false otherwise
-export let pointerPrimaryDown: boolean = false;
-export let pointerSecondaryDown: boolean = false;
-
-// Stores the IDs of the GameObjects that the pointer is over
-export const pointerOverGameObjectsId = new Set<number>();
-
-// Stores the debug information, which is reset every iteration of the update loop.
-export const debugLogArray: Array<string> = Array.of();
-
+// The game state which the user can modify, through their update function.
 const userGameStateArray: Array<any> = Array.of();
 
 /**
@@ -65,7 +70,7 @@ export class PhaserScene extends Phaser.Scene {
     this.sourceAudioClips = AudioClip.getAudioClipsArray();
     this.phaserAudioClips = [];
     this.corsAssets = new Set();
-    debugLogArray.length = 0;
+    gameState.debugLogArray.length = 0;
     // Disable context menu within the canvas
     this.game.canvas.oncontextmenu = (e) => e.preventDefault();
   }
@@ -90,7 +95,7 @@ export class PhaserScene extends Phaser.Scene {
     // Checks if loaded assets success
     this.load.on('loaderror', (file: Phaser.Loader.File) => {
       this.preDebugLogCount++;
-      debugLogArray.push(`LoadError: "${file.key}" failed`);
+      gameState.debugLogArray.push(`LoadError: "${file.key}" failed`);
     });
   }
 
@@ -185,10 +190,10 @@ export class PhaserScene extends Phaser.Scene {
       const phaserGameObject = this.phaserGameObjects[gameObject.id];
       // Handle pointer over GameObjects
       phaserGameObject.on('pointerover', () => {
-        pointerOverGameObjectsId.add(gameObject.id);
+        gameState.pointerProps.pointerOverGameObjectsId.add(gameObject.id);
       });
       phaserGameObject.on('pointerout', () => {
-        pointerOverGameObjectsId.delete(gameObject.id);
+        gameState.pointerProps.pointerOverGameObjectsId.delete(gameObject.id);
       });
 
       // Enter debug mode
@@ -211,9 +216,9 @@ export class PhaserScene extends Phaser.Scene {
     } catch (error) {
       this.runtimeError = true;
       if (error instanceof Error) {
-        debugLogArray.push(`${error.name}: ${error.message}`);
+        gameState.debugLogArray.push(`${error.name}: ${error.message}`);
       } else {
-        debugLogArray.push('LoadError: Cannot load audio file');
+        gameState.debugLogArray.push('LoadError: Cannot load audio file');
         console.log(error);
       }
     }
@@ -221,17 +226,17 @@ export class PhaserScene extends Phaser.Scene {
     // Handle keyboard inputs
     // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
     this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
-      inputKeysDown.add(event.key);
+      gameState.inputKeysDown.add(event.key);
     });
     this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
-      this.delayedKeyUpEvents.add(() => inputKeysDown.delete(event.key));
+      this.delayedKeyUpEvents.add(() => gameState.inputKeysDown.delete(event.key));
     });
 
     // Handle debug info
     if (!CONFIG.DEBUG && !this.runtimeError) {
-      debugLogArray.length = 0;
+      gameState.debugLogArray.length = 0;
     }
-    this.debugLogText = this.add.text(0, 0, debugLogArray)
+    this.debugLogText = this.add.text(0, 0, gameState.debugLogArray)
       .setWordWrapWidth(this.renderer.width)
       .setBackgroundColor('black')
       .setAlpha(0.8);
@@ -239,14 +244,14 @@ export class PhaserScene extends Phaser.Scene {
 
   update(time, delta) {
     // Set the time and delta
-    CONFIG.gameTime += delta;
-    CONFIG.loopCount++;
+    gameState.gameTime += delta;
+    gameState.loopCount++;
     // gameDelta = delta;
 
     // Set the pointer
-    pointerPosition = [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)];
-    pointerPrimaryDown = this.input.activePointer.primaryDown;
-    pointerSecondaryDown = this.input.activePointer.rightButtonDown();
+    gameState.pointerProps.pointerPosition = [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)];
+    gameState.pointerProps.pointerPrimaryDown = this.input.activePointer.primaryDown;
+    gameState.pointerProps.pointerSecondaryDown = this.input.activePointer.rightButtonDown();
 
     // Run the user-defined update function, and prevent runtime errors.
     try {
@@ -256,9 +261,9 @@ export class PhaserScene extends Phaser.Scene {
     } catch (error) {
       this.runtimeError = true;
       if (error instanceof Error) {
-        debugLogArray.push(`${error.name}: ${error.message}`);
+        gameState.debugLogArray.push(`${error.name}: ${error.message}`);
       } else {
-        debugLogArray.push('RuntimeError: Error in user update function');
+        gameState.debugLogArray.push('RuntimeError: Error in user update function');
         console.log(error);
       }
     }
@@ -308,7 +313,7 @@ export class PhaserScene extends Phaser.Scene {
         }
       } else {
         this.runtimeError = true;
-        debugLogArray.push('RuntimeError: GameObject error in update_loop');
+        gameState.debugLogArray.push('RuntimeError: GameObject error in update_loop');
       }
     });
 
@@ -324,7 +329,7 @@ export class PhaserScene extends Phaser.Scene {
           }
         } else {
           this.runtimeError = true;
-          debugLogArray.push('RuntimeError: Audio error in update_loop');
+          gameState.debugLogArray.push('RuntimeError: Audio error in update_loop');
         }
       }
     });
@@ -339,14 +344,14 @@ export class PhaserScene extends Phaser.Scene {
 
     // Set and clear debug info
     if (this.debugLogText) {
-      this.debugLogText.setText(debugLogArray);
+      this.debugLogText.setText(gameState.debugLogArray);
       this.children.bringToTop(this.debugLogText);
       if (this.runtimeError) {
         this.debugLogText.setColor('orange');
         this.sound.stopAll();
         this.scene.pause();
       } else {
-        debugLogArray.length = this.preDebugLogCount;
+        gameState.debugLogArray.length = this.preDebugLogCount;
       }
     }
   }

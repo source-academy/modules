@@ -9,16 +9,10 @@
  * @author Xenos Fiorenzo Anong
  */
 
-// import { context } from 'js-slang/moduleHelpers';
 import Phaser from 'phaser';
 import {
   PhaserScene,
-  inputKeysDown,
-  pointerPosition,
-  pointerPrimaryDown,
-  pointerOverGameObjectsId,
-  pointerSecondaryDown,
-  debugLogArray,
+  gameState,
 } from './phaserScene';
 
 import {
@@ -73,6 +67,7 @@ import { AudioClip } from './audio';
 // Global Variables
 // =============================================================================
 
+// Configuration for game initialization.
 export const CONFIG = {
   WIDTH: DEFAULT_WIDTH,
   HEIGHT: DEFAULT_HEIGHT,
@@ -81,9 +76,6 @@ export const CONFIG = {
   DEBUG: false,
   // User update function
   userUpdateFunction: (() => {}) as UpdateFunction,
-  // The current in-game time and frame count.
-  gameTime: 0,
-  loopCount: 0,
 };
 
 // =============================================================================
@@ -559,7 +551,7 @@ export const query_text: (textGameObject: TextGameObject) => string
  * ```
  */
 export const query_pointer_position: () => PositionXY
-= () => pointerPosition;
+= () => gameState.pointerProps.pointerPosition;
 
 // =============================================================================
 // Game configuration
@@ -672,7 +664,7 @@ export const enable_debug: () => void = () => {
  */
 export const debug_log: (info: string) => void = (info: string) => {
   if (CONFIG.DEBUG) {
-    debugLogArray.push(info);
+    gameState.debugLogArray.push(info);
   }
 };
 
@@ -695,7 +687,7 @@ export const debug_log: (info: string) => void = (info: string) => {
  * ```
  * @category Logic
  */
-export const input_key_down: (key_name: string) => boolean = (key_name: string) => inputKeysDown.has(key_name);
+export const input_key_down: (key_name: string) => boolean = (key_name: string) => gameState.inputKeysDown.has(key_name);
 
 /**
  * Detects if the left mouse button is pressed down.
@@ -710,7 +702,7 @@ export const input_key_down: (key_name: string) => boolean = (key_name: string) 
  * ```
  * @category Logic
  */
-export const input_left_mouse_down: () => boolean = () => pointerPrimaryDown;
+export const input_left_mouse_down: () => boolean = () => gameState.pointerProps.pointerPrimaryDown;
 
 /**
  * Detects if the right mouse button is pressed down.
@@ -725,7 +717,7 @@ export const input_left_mouse_down: () => boolean = () => pointerPrimaryDown;
  * ```
  * @category Logic
  */
-export const input_right_mouse_down: () => boolean = () => pointerSecondaryDown;
+export const input_right_mouse_down: () => boolean = () => gameState.pointerProps.pointerSecondaryDown;
 
 /**
  * Detects if the (mouse) pointer is over the gameobject.
@@ -746,7 +738,7 @@ export const input_right_mouse_down: () => boolean = () => pointerSecondaryDown;
  */
 export const pointer_over_gameobject = (gameObject: GameObject) => {
   if (gameObject instanceof GameObject) {
-    return pointerOverGameObjectsId.has(gameObject.id);
+    return gameState.pointerProps.pointerOverGameObjectsId.has(gameObject.id);
   }
   throw new TypeError('Cannot check pointer over non-GameObject');
 };
@@ -787,7 +779,7 @@ export const gameobjects_overlap: (gameObject1: InteractableGameObject, gameObje
  * }
  * ```
  */
-export const get_game_time: () => number = () => CONFIG.gameTime;
+export const get_game_time: () => number = () => gameState.gameTime;
 
 /**
  * Gets the current loop count, which is the number of frames that have run.
@@ -802,7 +794,7 @@ export const get_game_time: () => number = () => CONFIG.gameTime;
  * }
  * ```
  */
-export const get_loop_count: () => number = () => CONFIG.loopCount;
+export const get_loop_count: () => number = () => gameState.loopCount;
 
 /**
  * This sets the update loop in the canvas.
@@ -828,10 +820,10 @@ export const get_loop_count: () => number = () => CONFIG.loopCount;
  * ```
  */
 export const update_loop: (update_function: UpdateFunction) => void = (update_function: UpdateFunction) => {
-  CONFIG.userUpdateFunction = update_function;
   // Test for error in user update function
   // This cannot not check for errors inside a block that is not run.
   update_function([]);
+  CONFIG.userUpdateFunction = update_function;
 };
 
 /**
@@ -847,8 +839,8 @@ export const update_loop: (update_function: UpdateFunction) => void = (update_fu
  */
 export const build_game: () => BuildGame = () => {
   // Reset frame and time counters.
-  CONFIG.loopCount = 0;
-  CONFIG.gameTime = 0;
+  gameState.loopCount = 0;
+  gameState.gameTime = 0;
 
   const inputConfig = {
     keyboard: true,
