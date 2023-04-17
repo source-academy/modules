@@ -8,6 +8,12 @@ export type PositionXY = [number, number];
 /** Represents (x,y) worldspace  scale of GameObject. */
 export type ScaleXY = [number, number];
 
+/** Represents the (width, height) dimensions of the game canvas. */
+export type DimensionsXY = [number, number];
+
+/** Represents the (red, green, blue, alpha) of a color. */
+export type ColorRGBA = [number, number, number, number];
+
 /**
  * Represents transform properties of a GameObject in worldspace.
  * @property {PositionXY} position - The (x,y) worldspace position of the GameObject.
@@ -52,11 +58,6 @@ export type Color = {
   blue: number,
   alpha: number,
 };
-
-// /**
-//  * Represents the rendered image of a GameObject.
-//  */
-// export type RenderedImage = Shape | DisplayText | Sprite;
 
 /**
  * Represents a simplied representation of the phaser type of the GameObject.
@@ -139,6 +140,3 @@ export type BuildGame = {
  * which can be assessed and modified on the next frame.
  */
 export type UpdateFunction = (userSuppliedState: Array<any>) => void;
-
-/** Represents the (width, height) dimensions of the game canvas. */
-export type DimensionsXY = [number, number];

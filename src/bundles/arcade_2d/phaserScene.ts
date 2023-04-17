@@ -10,10 +10,7 @@ import {
   TriangleGameObject,
 } from './gameobject';
 import {
-  DEBUG,
-  gameTime,
-  loopCount,
-  userUpdateFunction,
+  CONFIG,
 } from './functions';
 import {
   type TransformProps,
@@ -23,23 +20,28 @@ import { AudioClip } from './audio';
 
 type PhaserGameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Phaser.GameObjects.Shape;
 
-// Store keys that are down in the Phaser Scene
-// By default, this is empty, unless a key is down
-export const inputKeysDown = new Set<string>();
+// Game state information, that changes every frame.
+export const gameState = {
+  // Stores the debug information, which is reset every iteration of the update loop.
+  debugLogArray: Array.of() as Array<string>,
+  // The current in-game time and frame count.
+  gameTime: 0,
+  loopCount: 0,
+  // Store keys that are down in the Phaser Scene
+  // By default, this is empty, unless a key is down
+  inputKeysDown: new Set<string>(),
+  pointerProps: {
+    // the current (mouse) pointer position in the canvas
+    pointerPosition: [0, 0] as PositionXY,
+    // true if (left mouse button) pointer down, false otherwise
+    pointerPrimaryDown: false,
+    pointerSecondaryDown: false,
+    // Stores the IDs of the GameObjects that the pointer is over
+    pointerOverGameObjectsId: new Set<number>(),
+  },
+};
 
-// the current (mouse) pointer position in the canvas
-export let pointerPosition: PositionXY;
-
-// true if (left mouse button) pointer down, false otherwise
-export let pointerPrimaryDown: boolean;
-export let pointerSecondaryDown: boolean;
-
-// Stores the IDs of the GameObjects that the pointer is over
-export const pointerOverGameObjectsId = new Set<number>();
-
-// Stores the debug information, which is reset every iteration of the update loop.
-export const debugLogArray: Array<string> = Array.of();
-
+// The game state which the user can modify, through their update function.
 const userGameStateArray: Array<any> = Array.of();
 
 /**
@@ -58,16 +60,17 @@ export class PhaserScene extends Phaser.Scene {
   private rerenderGameObjects = true;
   private delayedKeyUpEvents = new Set<Function>();
   private runtimeError: boolean = false;
+  private preDebugLogCount: number = 0;
   // Handle debug information
   private debugLogText: Phaser.GameObjects.Text | undefined = undefined;
 
 
   init() {
-    // console.log('phaser scene init()');
     this.sourceGameObjects = GameObject.getGameObjectsArray();
     this.sourceAudioClips = AudioClip.getAudioClipsArray();
     this.phaserAudioClips = [];
     this.corsAssets = new Set();
+    gameState.debugLogArray.length = 0;
     // Disable context menu within the canvas
     this.game.canvas.oncontextmenu = (e) => e.preventDefault();
   }
@@ -87,6 +90,12 @@ export class PhaserScene extends Phaser.Scene {
     // Preload audio
     this.sourceAudioClips.forEach((audioClip: AudioClip) => {
       this.load.audio(audioClip.getUrl(), audioClip.getUrl());
+    });
+
+    // Checks if loaded assets success
+    this.load.on('loaderror', (file: Phaser.Loader.File) => {
+      this.preDebugLogCount++;
+      gameState.debugLogArray.push(`LoadError: "${file.key}" failed`);
     });
   }
 
@@ -181,14 +190,14 @@ export class PhaserScene extends Phaser.Scene {
       const phaserGameObject = this.phaserGameObjects[gameObject.id];
       // Handle pointer over GameObjects
       phaserGameObject.on('pointerover', () => {
-        pointerOverGameObjectsId.add(gameObject.id);
+        gameState.pointerProps.pointerOverGameObjectsId.add(gameObject.id);
       });
       phaserGameObject.on('pointerout', () => {
-        pointerOverGameObjectsId.delete(gameObject.id);
+        gameState.pointerProps.pointerOverGameObjectsId.delete(gameObject.id);
       });
 
       // Enter debug mode
-      if (DEBUG) {
+      if (CONFIG.DEBUG) {
         this.input.enableDebug(phaserGameObject);
       }
 
@@ -204,49 +213,59 @@ export class PhaserScene extends Phaser.Scene {
           volume: audioClip.getVolume(),
         }));
       });
-    } catch {
+    } catch (error) {
       this.runtimeError = true;
-      debugLogArray.push('Runtime Error: Cannot load audio file');
+      if (error instanceof Error) {
+        gameState.debugLogArray.push(`${error.name}: ${error.message}`);
+      } else {
+        gameState.debugLogArray.push('LoadError: Cannot load audio file');
+        console.log(error);
+      }
     }
 
     // Handle keyboard inputs
     // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
     this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
-      inputKeysDown.add(event.key);
+      gameState.inputKeysDown.add(event.key);
     });
     this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
-      this.delayedKeyUpEvents.add(() => inputKeysDown.delete(event.key));
+      this.delayedKeyUpEvents.add(() => gameState.inputKeysDown.delete(event.key));
     });
 
     // Handle debug info
-    if (!DEBUG) {
-      debugLogArray.length = 0;
+    if (!CONFIG.DEBUG && !this.runtimeError) {
+      gameState.debugLogArray.length = 0;
     }
-    this.debugLogText = this.add.text(0, 0, debugLogArray)
+    this.debugLogText = this.add.text(0, 0, gameState.debugLogArray)
+      .setWordWrapWidth(this.renderer.width)
       .setBackgroundColor('black')
       .setAlpha(0.8);
   }
 
   update(time, delta) {
     // Set the time and delta
-    gameTime[0] += delta;
-    loopCount[0]++;
+    gameState.gameTime += delta;
+    gameState.loopCount++;
     // gameDelta = delta;
 
     // Set the pointer
-    pointerPosition = [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)];
-    pointerPrimaryDown = this.input.activePointer.primaryDown;
-    pointerSecondaryDown = this.input.activePointer.rightButtonDown();
+    gameState.pointerProps.pointerPosition = [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)];
+    gameState.pointerProps.pointerPrimaryDown = this.input.activePointer.primaryDown;
+    gameState.pointerProps.pointerSecondaryDown = this.input.activePointer.rightButtonDown();
 
     // Run the user-defined update function, and prevent runtime errors.
     try {
       if (!this.runtimeError) {
-        userUpdateFunction(userGameStateArray);
+        CONFIG.userUpdateFunction(userGameStateArray);
       }
     } catch (error) {
-      debugLogArray.push('Runtime Error: Error in user update function');
       this.runtimeError = true;
-      console.log(error);
+      if (error instanceof Error) {
+        gameState.debugLogArray.push(`${error.name}: ${error.message}`);
+      } else {
+        gameState.debugLogArray.push('RuntimeError: Error in user update function');
+        console.log(error);
+      }
     }
     // Loop through each GameObject in the array and determine which needs to update.
     this.sourceGameObjects.forEach((gameObject: InteractableGameObject) => {
@@ -294,7 +313,7 @@ export class PhaserScene extends Phaser.Scene {
         }
       } else {
         this.runtimeError = true;
-        debugLogArray.push('Runtime Error: Cannot create GameObject in update_loop');
+        gameState.debugLogArray.push('RuntimeError: GameObject error in update_loop');
       }
     });
 
@@ -310,7 +329,7 @@ export class PhaserScene extends Phaser.Scene {
           }
         } else {
           this.runtimeError = true;
-          debugLogArray.push('Runtime Error: Cannot create Audio in update_loop');
+          gameState.debugLogArray.push('RuntimeError: Audio error in update_loop');
         }
       }
     });
@@ -325,14 +344,14 @@ export class PhaserScene extends Phaser.Scene {
 
     // Set and clear debug info
     if (this.debugLogText) {
-      this.debugLogText.setText(debugLogArray);
+      this.debugLogText.setText(gameState.debugLogArray);
       this.children.bringToTop(this.debugLogText);
       if (this.runtimeError) {
         this.debugLogText.setColor('orange');
         this.sound.stopAll();
         this.scene.pause();
       } else {
-        debugLogArray.length = 0;
+        gameState.debugLogArray.length = this.preDebugLogCount;
       }
     }
   }

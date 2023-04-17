@@ -9,27 +9,21 @@
  * @author Xenos Fiorenzo Anong
  */
 
-// import { context } from 'js-slang/moduleHelpers';
 import Phaser from 'phaser';
 import {
   PhaserScene,
-  inputKeysDown,
-  pointerPosition,
-  pointerPrimaryDown,
-  pointerOverGameObjectsId,
-  pointerSecondaryDown,
-  debugLogArray,
+  gameState,
 } from './phaserScene';
 
 import {
-  type GameObject, RenderableGameObject,
+  GameObject,
+  RenderableGameObject,
   type ShapeGameObject,
   SpriteGameObject,
   TextGameObject,
   RectangleGameObject,
   CircleGameObject,
-  TriangleGameObject,
-  type InteractableGameObject,
+  TriangleGameObject, InteractableGameObject,
 } from './gameobject';
 
 import {
@@ -48,6 +42,7 @@ import {
   type ScaleXY,
   type PositionXY,
   type DimensionsXY,
+  type ColorRGBA,
 } from './types';
 
 import {
@@ -72,18 +67,16 @@ import { AudioClip } from './audio';
 // Global Variables
 // =============================================================================
 
-let WIDTH: number = DEFAULT_WIDTH;
-let HEIGHT: number = DEFAULT_HEIGHT;
-let SCALE: number = DEFAULT_SCALE;
-let FPS: number = DEFAULT_FPS;
-export let DEBUG: boolean = false;
-
-// User update function
-export let userUpdateFunction: UpdateFunction = () => {};
-
-// The current in-game time and frame count.
-export let gameTime: [number] = [0];
-export let loopCount: [number] = [0];
+// Configuration for game initialization.
+export const CONFIG = {
+  WIDTH: DEFAULT_WIDTH,
+  HEIGHT: DEFAULT_HEIGHT,
+  SCALE: DEFAULT_SCALE,
+  FPS: DEFAULT_FPS,
+  DEBUG: false,
+  // User update function
+  userUpdateFunction: (() => {}) as UpdateFunction,
+};
 
 // =============================================================================
 // Default values
@@ -208,7 +201,9 @@ export const create_sprite: (image_url: string) => SpriteGameObject = (image_url
   if (image_url === '') {
     throw new Error('image_url cannot be empty');
   }
-
+  if (typeof image_url !== 'string') {
+    throw new Error('image_url must be a string');
+  }
   const sprite: Sprite = {
     image_url,
   } as Sprite;
@@ -236,11 +231,14 @@ export const create_sprite: (image_url: string) => SpriteGameObject = (image_url
  */
 export const update_position: (gameObject: GameObject, [x, y]: PositionXY) => GameObject
 = (gameObject: GameObject, [x, y]: PositionXY) => {
-  gameObject.setTransform({
-    ...gameObject.getTransform(),
-    position: [x, y],
-  });
-  return gameObject;
+  if (gameObject instanceof GameObject) {
+    gameObject.setTransform({
+      ...gameObject.getTransform(),
+      position: [x, y],
+    });
+    return gameObject;
+  }
+  throw new TypeError('Cannot update position of a non-GameObject');
 };
 
 /**
@@ -257,11 +255,14 @@ export const update_position: (gameObject: GameObject, [x, y]: PositionXY) => Ga
  */
 export const update_scale: (gameObject: GameObject, [x, y]: ScaleXY) => GameObject
 = (gameObject: GameObject, [x, y]: ScaleXY) => {
-  gameObject.setTransform({
-    ...gameObject.getTransform(),
-    scale: [x, y],
-  });
-  return gameObject;
+  if (gameObject instanceof GameObject) {
+    gameObject.setTransform({
+      ...gameObject.getTransform(),
+      scale: [x, y],
+    });
+    return gameObject;
+  }
+  throw new TypeError('Cannot update scale of a non-GameObject');
 };
 
 /**
@@ -278,11 +279,14 @@ export const update_scale: (gameObject: GameObject, [x, y]: ScaleXY) => GameObje
  */
 export const update_rotation: (gameObject: GameObject, radians: number) => GameObject
 = (gameObject: GameObject, radians: number) => {
-  gameObject.setTransform({
-    ...gameObject.getTransform(),
-    rotation: radians,
-  });
-  return gameObject;
+  if (gameObject instanceof GameObject) {
+    gameObject.setTransform({
+      ...gameObject.getTransform(),
+      rotation: radians,
+    });
+    return gameObject;
+  }
+  throw new TypeError('Cannot update rotation of a non-GameObject');
 };
 
 /**
@@ -298,8 +302,11 @@ export const update_rotation: (gameObject: GameObject, radians: number) => GameO
  * ```
  * @category GameObject
  */
-export const update_color: (gameObject: GameObject, color: [number, number, number, number]) => GameObject
-= (gameObject: GameObject, color: [number, number, number, number]) => {
+export const update_color: (gameObject: GameObject, color: ColorRGBA) => GameObject
+= (gameObject: GameObject, color: ColorRGBA) => {
+  if (color.length !== 4) {
+    throw new Error('color must be a 4-element array');
+  }
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
@@ -310,8 +317,9 @@ export const update_color: (gameObject: GameObject, color: [number, number, numb
         alpha: color[3],
       } as Color,
     });
+    return gameObject;
   }
-  return gameObject;
+  throw new TypeError('Cannot update color of a non-GameObject');
 };
 
 /**
@@ -328,13 +336,17 @@ export const update_color: (gameObject: GameObject, color: [number, number, numb
  */
 export const update_flip: (gameObject: GameObject, flip: FlipXY) => GameObject
 = (gameObject: GameObject, flip: FlipXY) => {
+  if (flip.length !== 2) {
+    throw new Error('flip must be a 2-element array');
+  }
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
       flip,
     });
+    return gameObject;
   }
-  return gameObject;
+  throw new TypeError('Cannot update flip of a non-GameObject');
 };
 
 /**
@@ -358,7 +370,7 @@ export const update_text: (textGameObject: TextGameObject, text: string) => Game
     } as DisplayText);
     return textGameObject;
   }
-  throw new Error('Cannot update text onto a non TextGameObject');
+  throw new TypeError('Cannot update text onto a non-TextGameObject');
 };
 
 /**
@@ -375,8 +387,9 @@ export const update_to_top: (gameObject: GameObject) => GameObject
 = (gameObject: GameObject) => {
   if (gameObject instanceof RenderableGameObject) {
     gameObject.bringToTop();
+    return gameObject;
   }
-  return gameObject;
+  throw new TypeError('Cannot update to top a non-GameObject');
 };
 
 // =============================================================================
@@ -398,7 +411,12 @@ export const update_to_top: (gameObject: GameObject) => GameObject
  * ```
  * @category GameObject
  */
-export const query_id: (gameObject: GameObject) => number = (gameObject: GameObject) => gameObject.id;
+export const query_id: (gameObject: GameObject) => number = (gameObject: GameObject) => {
+  if (gameObject instanceof GameObject) {
+    return gameObject.id;
+  }
+  throw new TypeError('Cannot query id of non-GameObject');
+};
 
 /**
  * Queries the [x, y] position transform of the GameObject.
@@ -413,7 +431,12 @@ export const query_id: (gameObject: GameObject) => number = (gameObject: GameObj
  * @category GameObject
  */
 export const query_position: (gameObject: GameObject) => PositionXY
-= (gameObject: GameObject) => gameObject.getTransform().position;
+= (gameObject: GameObject) => {
+  if (gameObject instanceof GameObject) {
+    return [...gameObject.getTransform().position];
+  }
+  throw new TypeError('Cannot query position of non-GameObject');
+};
 
 /**
  * Queries the z-rotation transform of the GameObject.
@@ -428,7 +451,12 @@ export const query_position: (gameObject: GameObject) => PositionXY
  * @category GameObject
  */
 export const query_rotation: (gameObject: GameObject) => number
-= (gameObject: GameObject) => gameObject.getTransform().rotation;
+= (gameObject: GameObject) => {
+  if (gameObject instanceof GameObject) {
+    return gameObject.getTransform().rotation;
+  }
+  throw new TypeError('Cannot query rotation of non-GameObject');
+};
 
 /**
  * Queries the [x, y] scale transform of the GameObject.
@@ -443,7 +471,12 @@ export const query_rotation: (gameObject: GameObject) => number
  * @category GameObject
  */
 export const query_scale: (gameObject: GameObject) => ScaleXY
-= (gameObject: GameObject) => gameObject.getTransform().scale;
+= (gameObject: GameObject) => {
+  if (gameObject instanceof GameObject) {
+    return [...gameObject.getTransform().scale];
+  }
+  throw new TypeError('Cannot query scale of non-GameObject');
+};
 
 /**
  * Queries the [r, g, b, a] color property of the GameObject.
@@ -457,8 +490,13 @@ export const query_scale: (gameObject: GameObject) => ScaleXY
  * ```
  * @category GameObject
  */
-export const query_color: (gameObject: RenderableGameObject) => [number, number, number, number]
-= (gameObject: RenderableGameObject) => gameObject.getColor();
+export const query_color: (gameObject: RenderableGameObject) => ColorRGBA
+= (gameObject: RenderableGameObject) => {
+  if (gameObject instanceof RenderableGameObject) {
+    return gameObject.getColor();
+  }
+  throw new TypeError('Cannot query color of non-GameObject');
+};
 
 /**
  * Queries the [x, y] flip property of the GameObject.
@@ -472,8 +510,13 @@ export const query_color: (gameObject: RenderableGameObject) => [number, number,
  * ```
  * @category GameObject
  */
-export const query_flip: (gameObject: RenderableGameObject) => [boolean, boolean]
-= (gameObject: RenderableGameObject) => gameObject.getFlipState();
+export const query_flip: (gameObject: RenderableGameObject) => FlipXY
+= (gameObject: RenderableGameObject) => {
+  if (gameObject instanceof RenderableGameObject) {
+    return [...gameObject.getFlipState()];
+  }
+  throw new TypeError('Cannot query flip of non-GameObject');
+};
 
 /**
  * Queries the text of a Text GameObject.
@@ -493,7 +536,7 @@ export const query_text: (textGameObject: TextGameObject) => string
   if (textGameObject instanceof TextGameObject) {
     return textGameObject.getText().text;
   }
-  throw new Error('Cannot query text from non TextGameObject');
+  throw new TypeError('Cannot query text of non-TextGameObject');
 };
 
 /**
@@ -508,7 +551,7 @@ export const query_text: (textGameObject: TextGameObject) => string
  * ```
  */
 export const query_pointer_position: () => PositionXY
-= () => pointerPosition;
+= () => gameState.pointerProps.pointerPosition;
 
 // =============================================================================
 // Game configuration
@@ -547,7 +590,7 @@ const withinRange: (num: number, min: number, max: number) => number
  * ```
  */
 export const set_fps: (fps: number) => void = (fps: number) => {
-  FPS = withinRange(fps, MIN_FPS, MAX_FPS);
+  CONFIG.FPS = withinRange(fps, MIN_FPS, MAX_FPS);
 };
 
 /**
@@ -563,10 +606,10 @@ export const set_fps: (fps: number) => void = (fps: number) => {
  */
 export const set_dimensions: (dimensions: DimensionsXY) => void = (dimensions: DimensionsXY) => {
   if (dimensions.length !== 2) {
-    throw new Error('Dimensions must be a 2-element array');
+    throw new Error('dimensions must be a 2-element array');
   }
-  WIDTH = withinRange(dimensions[0], MIN_WIDTH, MAX_WIDTH);
-  HEIGHT = withinRange(dimensions[1], MIN_HEIGHT, MAX_HEIGHT);
+  CONFIG.WIDTH = withinRange(dimensions[0], MIN_WIDTH, MAX_WIDTH);
+  CONFIG.HEIGHT = withinRange(dimensions[1], MIN_HEIGHT, MAX_HEIGHT);
 };
 
 /**
@@ -583,7 +626,7 @@ export const set_dimensions: (dimensions: DimensionsXY) => void = (dimensions: D
  * ```
  */
 export const set_scale: (scale: number) => void = (scale: number) => {
-  SCALE = withinRange(scale, MIN_SCALE, MAX_SCALE);
+  CONFIG.SCALE = withinRange(scale, MIN_SCALE, MAX_SCALE);
 };
 
 /**
@@ -601,7 +644,7 @@ export const set_scale: (scale: number) => void = (scale: number) => {
  * ```
  */
 export const enable_debug: () => void = () => {
-  DEBUG = true;
+  CONFIG.DEBUG = true;
 };
 
 
@@ -620,8 +663,8 @@ export const enable_debug: () => void = () => {
  * ```
  */
 export const debug_log: (info: string) => void = (info: string) => {
-  if (DEBUG) {
-    debugLogArray.push(info);
+  if (CONFIG.DEBUG) {
+    gameState.debugLogArray.push(info);
   }
 };
 
@@ -644,7 +687,7 @@ export const debug_log: (info: string) => void = (info: string) => {
  * ```
  * @category Logic
  */
-export const input_key_down: (key_name: string) => boolean = (key_name: string) => inputKeysDown.has(key_name);
+export const input_key_down: (key_name: string) => boolean = (key_name: string) => gameState.inputKeysDown.has(key_name);
 
 /**
  * Detects if the left mouse button is pressed down.
@@ -659,7 +702,7 @@ export const input_key_down: (key_name: string) => boolean = (key_name: string) 
  * ```
  * @category Logic
  */
-export const input_left_mouse_down: () => boolean = () => pointerPrimaryDown;
+export const input_left_mouse_down: () => boolean = () => gameState.pointerProps.pointerPrimaryDown;
 
 /**
  * Detects if the right mouse button is pressed down.
@@ -674,7 +717,7 @@ export const input_left_mouse_down: () => boolean = () => pointerPrimaryDown;
  * ```
  * @category Logic
  */
-export const input_right_mouse_down: () => boolean = () => pointerSecondaryDown;
+export const input_right_mouse_down: () => boolean = () => gameState.pointerProps.pointerSecondaryDown;
 
 /**
  * Detects if the (mouse) pointer is over the gameobject.
@@ -693,9 +736,12 @@ export const input_right_mouse_down: () => boolean = () => pointerSecondaryDown;
  * ```
  * @category Logic
  */
-export const pointer_over_gameobject = (gameObject: GameObject) => pointerOverGameObjectsId.has(gameObject.id);
-
-
+export const pointer_over_gameobject = (gameObject: GameObject) => {
+  if (gameObject instanceof GameObject) {
+    return gameState.pointerProps.pointerOverGameObjectsId.has(gameObject.id);
+  }
+  throw new TypeError('Cannot check pointer over non-GameObject');
+};
 /**
  * Checks if two gameobjects overlap with each other, using a rectangular bounding box.
  * This bounding box is rectangular, for all GameObjects.
@@ -715,8 +761,12 @@ export const pointer_over_gameobject = (gameObject: GameObject) => pointerOverGa
  * @category Logic
  */
 export const gameobjects_overlap: (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => boolean
-= (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => gameObject1.isOverlapping(gameObject2);
-
+= (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => {
+  if (gameObject1 instanceof InteractableGameObject && gameObject2 instanceof InteractableGameObject) {
+    return gameObject1.isOverlapping(gameObject2);
+  }
+  throw new TypeError('Cannot check overlap of non-GameObject');
+};
 /**
  * Gets the current in-game time, which is based off the start time.
  * This function should be called in your update function.
@@ -729,7 +779,7 @@ export const gameobjects_overlap: (gameObject1: InteractableGameObject, gameObje
  * }
  * ```
  */
-export const get_game_time: () => number = () => gameTime[0];
+export const get_game_time: () => number = () => gameState.gameTime;
 
 /**
  * Gets the current loop count, which is the number of frames that have run.
@@ -744,7 +794,7 @@ export const get_game_time: () => number = () => gameTime[0];
  * }
  * ```
  */
-export const get_loop_count: () => number = () => loopCount[0];
+export const get_loop_count: () => number = () => gameState.loopCount;
 
 /**
  * This sets the update loop in the canvas.
@@ -770,7 +820,10 @@ export const get_loop_count: () => number = () => loopCount[0];
  * ```
  */
 export const update_loop: (update_function: UpdateFunction) => void = (update_function: UpdateFunction) => {
-  userUpdateFunction = update_function;
+  // Test for error in user update function
+  // This cannot not check for errors inside a block that is not run.
+  update_function([]);
+  CONFIG.userUpdateFunction = update_function;
 };
 
 /**
@@ -786,8 +839,8 @@ export const update_loop: (update_function: UpdateFunction) => void = (update_fu
  */
 export const build_game: () => BuildGame = () => {
   // Reset frame and time counters.
-  loopCount[0] = 0;
-  gameTime[0] = 0;
+  gameState.loopCount = 0;
+  gameState.gameTime = 0;
 
   const inputConfig = {
     keyboard: true,
@@ -797,14 +850,14 @@ export const build_game: () => BuildGame = () => {
 
   const fpsConfig = {
     min: MIN_FPS,
-    target: FPS,
+    target: CONFIG.FPS,
     forceSetTimeOut: true,
   };
 
   const gameConfig = {
-    width: WIDTH / SCALE,
-    height: HEIGHT / SCALE,
-    zoom: SCALE,
+    width: CONFIG.WIDTH / CONFIG.SCALE,
+    height: CONFIG.HEIGHT / CONFIG.SCALE,
+    zoom: CONFIG.SCALE,
     // Setting to Phaser.WEBGL can lead to WebGL: INVALID_OPERATION errors, so Phaser.CANVAS is used instead.
     // Also: Phaser.WEBGL can crash when there are too many contexts
     // WEBGL is generally more performant, and allows for tinting of gameobjects.
@@ -843,7 +896,15 @@ export const build_game: () => BuildGame = () => {
  * @category Audio
  */
 export const create_audio: (audio_url: string, volume_level: number) => AudioClip
-= (audio_url: string, volume_level: number) => AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME));
+= (audio_url: string, volume_level: number) => {
+  if (typeof audio_url !== 'string') {
+    throw new Error('audio_url must be a string');
+  }
+  if (typeof volume_level !== 'number') {
+    throw new Error('volume_level must be a number');
+  }
+  return AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME));
+};
 
 /**
  * Loops the audio clip provided, which will play the audio clip indefinitely.
@@ -858,8 +919,11 @@ export const create_audio: (audio_url: string, volume_level: number) => AudioCli
  * @category Audio
  */
 export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
-  audio_clip.loopAudioClip(true);
-  return audio_clip;
+  if (audio_clip instanceof AudioClip) {
+    audio_clip.loopAudioClip(true);
+    return audio_clip;
+  }
+  throw new TypeError('Cannot loop a non-AudioClip');
 };
 
 /**
@@ -874,8 +938,11 @@ export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  * @category Audio
  */
 export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
-  audio_clip.playAudioClip(true);
-  return audio_clip;
+  if (audio_clip instanceof AudioClip) {
+    audio_clip.playAudioClip(true);
+    return audio_clip;
+  }
+  throw new TypeError('Cannot play a non-AudioClip');
 };
 
 /**
@@ -890,6 +957,9 @@ export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  * @category Audio
  */
 export const stop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
-  audio_clip.playAudioClip(false);
-  return audio_clip;
+  if (audio_clip instanceof AudioClip) {
+    audio_clip.playAudioClip(false);
+    return audio_clip;
+  }
+  throw new TypeError('Cannot stop a non-AudioClip');
 };
