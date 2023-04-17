@@ -93,10 +93,8 @@ class GameTab extends React.Component<Props, GameState> {
   }
 
   componentDidMount() {
-    // console.log('componentDidMount');
     // Only mount the component when the Arcade2D tab is active
     if (document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')?.ariaHidden === 'true') {
-      // console.log('Arcade2D tab not active');
       return;
     }
 
@@ -114,19 +112,16 @@ class GameTab extends React.Component<Props, GameState> {
 
   toggleGamePause(pause: boolean): void {
     if (pause) {
-      // console.log('Game paused');
       // Default scene since there is only one scene.
       this.state.game?.scene.pause('default');
       this.state.game?.sound.pauseAll();
     } else {
       this.state.game?.scene.resume('default');
       this.state.game?.sound.resumeAll();
-      // console.log('Game resumed');
     }
   }
 
   componentWillUnmount(): void {
-    // console.log('componentWillUnmount');
     this.state.game?.sound.stopAll();
 
     // Prevents multiple update loops being run at the same time
@@ -156,13 +151,12 @@ export default {
    * This function will be called to determine if the component will be
    * rendered. Currently spawns when there is a stored game config, or if
    * the string in the REPL is "[Arcade2D]".
+   * context.result.value is the return value from the playground code.
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    // const config = context.context?.moduleContexts?.arcade_2d?.state?.gameConfig;
     const config = context.result?.value?.gameConfig;
-    // console.log(config);
     if (config) {
       return true;
     }

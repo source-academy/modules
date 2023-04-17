@@ -10,10 +10,7 @@ import {
   TriangleGameObject,
 } from './gameobject';
 import {
-  DEBUG,
-  gameTime,
-  loopCount,
-  userUpdateFunction,
+  CONFIG,
 } from './functions';
 import {
   type TransformProps,
@@ -28,11 +25,11 @@ type PhaserGameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Ph
 export const inputKeysDown = new Set<string>();
 
 // the current (mouse) pointer position in the canvas
-export let pointerPosition: PositionXY;
+export let pointerPosition: PositionXY = [0, 0];
 
 // true if (left mouse button) pointer down, false otherwise
-export let pointerPrimaryDown: boolean;
-export let pointerSecondaryDown: boolean;
+export let pointerPrimaryDown: boolean = false;
+export let pointerSecondaryDown: boolean = false;
 
 // Stores the IDs of the GameObjects that the pointer is over
 export const pointerOverGameObjectsId = new Set<number>();
@@ -58,16 +55,17 @@ export class PhaserScene extends Phaser.Scene {
   private rerenderGameObjects = true;
   private delayedKeyUpEvents = new Set<Function>();
   private runtimeError: boolean = false;
+  private preDebugLogCount: number = 0;
   // Handle debug information
   private debugLogText: Phaser.GameObjects.Text | undefined = undefined;
 
 
   init() {
-    // console.log('phaser scene init()');
     this.sourceGameObjects = GameObject.getGameObjectsArray();
     this.sourceAudioClips = AudioClip.getAudioClipsArray();
     this.phaserAudioClips = [];
     this.corsAssets = new Set();
+    debugLogArray.length = 0;
     // Disable context menu within the canvas
     this.game.canvas.oncontextmenu = (e) => e.preventDefault();
   }
@@ -87,6 +85,12 @@ export class PhaserScene extends Phaser.Scene {
     // Preload audio
     this.sourceAudioClips.forEach((audioClip: AudioClip) => {
       this.load.audio(audioClip.getUrl(), audioClip.getUrl());
+    });
+
+    // Checks if loaded assets success
+    this.load.on('loaderror', (file: Phaser.Loader.File) => {
+      this.preDebugLogCount++;
+      debugLogArray.push(`LoadError: "${file.key}" failed`);
     });
   }
 
@@ -188,7 +192,7 @@ export class PhaserScene extends Phaser.Scene {
       });
 
       // Enter debug mode
-      if (DEBUG) {
+      if (CONFIG.DEBUG) {
         this.input.enableDebug(phaserGameObject);
       }
 
@@ -204,9 +208,14 @@ export class PhaserScene extends Phaser.Scene {
           volume: audioClip.getVolume(),
         }));
       });
-    } catch {
+    } catch (error) {
       this.runtimeError = true;
-      debugLogArray.push('Runtime Error: Cannot load audio file');
+      if (error instanceof Error) {
+        debugLogArray.push(`${error.name}: ${error.message}`);
+      } else {
+        debugLogArray.push('LoadError: Cannot load audio file');
+        console.log(error);
+      }
     }
 
     // Handle keyboard inputs
@@ -219,18 +228,19 @@ export class PhaserScene extends Phaser.Scene {
     });
 
     // Handle debug info
-    if (!DEBUG) {
+    if (!CONFIG.DEBUG && !this.runtimeError) {
       debugLogArray.length = 0;
     }
     this.debugLogText = this.add.text(0, 0, debugLogArray)
+      .setWordWrapWidth(this.renderer.width)
       .setBackgroundColor('black')
       .setAlpha(0.8);
   }
 
   update(time, delta) {
     // Set the time and delta
-    gameTime[0] += delta;
-    loopCount[0]++;
+    CONFIG.gameTime += delta;
+    CONFIG.loopCount++;
     // gameDelta = delta;
 
     // Set the pointer
@@ -241,12 +251,16 @@ export class PhaserScene extends Phaser.Scene {
     // Run the user-defined update function, and prevent runtime errors.
     try {
       if (!this.runtimeError) {
-        userUpdateFunction(userGameStateArray);
+        CONFIG.userUpdateFunction(userGameStateArray);
       }
     } catch (error) {
-      debugLogArray.push('Runtime Error: Error in user update function');
       this.runtimeError = true;
-      console.log(error);
+      if (error instanceof Error) {
+        debugLogArray.push(`${error.name}: ${error.message}`);
+      } else {
+        debugLogArray.push('RuntimeError: Error in user update function');
+        console.log(error);
+      }
     }
     // Loop through each GameObject in the array and determine which needs to update.
     this.sourceGameObjects.forEach((gameObject: InteractableGameObject) => {
@@ -294,7 +308,7 @@ export class PhaserScene extends Phaser.Scene {
         }
       } else {
         this.runtimeError = true;
-        debugLogArray.push('Runtime Error: Cannot create GameObject in update_loop');
+        debugLogArray.push('RuntimeError: GameObject error in update_loop');
       }
     });
 
@@ -310,7 +324,7 @@ export class PhaserScene extends Phaser.Scene {
           }
         } else {
           this.runtimeError = true;
-          debugLogArray.push('Runtime Error: Cannot create Audio in update_loop');
+          debugLogArray.push('RuntimeError: Audio error in update_loop');
         }
       }
     });
@@ -332,7 +346,7 @@ export class PhaserScene extends Phaser.Scene {
         this.sound.stopAll();
         this.scene.pause();
       } else {
-        debugLogArray.length = 0;
+        debugLogArray.length = this.preDebugLogCount;
       }
     }
   }

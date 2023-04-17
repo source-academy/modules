@@ -90,10 +90,10 @@ import { create_rectangle, update_position, update_color, get_loop_count, set_sc
 
 const gameobjects = [];
 for (let i = 0; i < 100; i = i + 1) {
- gameobjects[i] = [];
- for (let j = 0; j < 100; j = j + 1) {
-     gameobjects[i][j] = update_position(create_rectangle(1, 1), [i, j]);
- }
+    gameobjects[i] = [];
+    for (let j = 0; j < 100; j = j + 1) {
+        gameobjects[i][j] = update_position(create_rectangle(1, 1), [i, j]);
+    }
 }
 
 update_loop(game_state => {
