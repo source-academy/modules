@@ -53,6 +53,7 @@ context.moduleContexts.curve.state = {
   drawnCurves,
 };
 
+
 function createDrawFunction(
   scaleMode: ScaleMode,
   drawMode: DrawMode,

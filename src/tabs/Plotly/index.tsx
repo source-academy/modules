@@ -78,6 +78,7 @@ class Plotly extends React.Component<Props, State> {
 
 export default {
   toSpawn(context: DebuggerContext) {
+    console.log(context);
     const drawnPlots = context.context?.moduleContexts?.plotly.state.drawnPlots;
     return drawnPlots.length > 0;
   },
