@@ -36,9 +36,9 @@ export class PhysicsWorld {
 
     const contactListener: b2ContactListener = new b2ContactListener();
     contactListener.BeginContact = (contact: b2Contact) => {
-      let m = this.touchingObjects.get(contact.GetFixtureA());
+      const m = this.touchingObjects.get(contact.GetFixtureA());
       if (m === undefined) {
-        let newMap = new Map<b2Fixture, number>();
+        const newMap = new Map<b2Fixture, number>();
         newMap.set(contact.GetFixtureB(), this.timer.getTime());
         this.touchingObjects.set(contact.GetFixtureA(), newMap);
       } else {
@@ -87,7 +87,7 @@ export class PhysicsWorld {
   }
 
   public update(dt: number) {
-    for (let obj of this.physicsObjects) {
+    for (const obj of this.physicsObjects) {
       obj.applyForces(this.timer.getTime());
     }
     this.b2World.Step(dt, this.iterationsConfig);
@@ -112,7 +112,6 @@ export class PhysicsWorld {
   Objects:
       `;
     this.physicsObjects.forEach((obj) => {
-      console.log(obj.getMass());
       world_status += `
   ------------------------
   ${obj.toReplString()}
@@ -123,11 +122,11 @@ export class PhysicsWorld {
   }
 
   public findImpact(obj1: PhysicsObject, obj2: PhysicsObject) {
-    let m = this.touchingObjects.get(obj1.getFixture());
+    const m = this.touchingObjects.get(obj1.getFixture());
     if (m === undefined) {
       return -1;
     }
-    let time = m.get(obj2.getFixture());
+    const time = m.get(obj2.getFixture());
     if (time === undefined) {
       return -1;
     }

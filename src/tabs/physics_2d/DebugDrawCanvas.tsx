@@ -33,12 +33,6 @@ type DebugDrawCanvasState = {
   updateStep: number;
 };
 
-/**
- * Canvas to display glAnimations
- */
-// For some reason, I can't get this component to build
-// with the blueprint/js components if it's located in
-// another file so it's here for now
 export default class DebugDrawCanvas extends React.Component<
 DebugDrawCanvasProps,
 DebugDrawCanvasState

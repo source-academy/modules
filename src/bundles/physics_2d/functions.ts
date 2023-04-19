@@ -25,7 +25,7 @@ const MULTIPLE_WORLDS = new Error('You may only call set_gravity once!');
 // Module's Exposed Functions
 
 /**
- * Make a 2d vector with the given x and y components.
+ * Makes a 2d vector with the given x and y components.
  *
  * @param x x-component of new vector
  * @param y y-component of new vector
@@ -38,7 +38,7 @@ export function make_vector(x: number, y: number): Vector2 {
 }
 
 /**
- * Make a force with direction vector, magnitude, force duration and start time.
+ * Makes a force with direction vector, magnitude, force duration and start time.
  *
  * @param dir direction of force
  * @param mag magnitude of force
@@ -64,7 +64,7 @@ export function make_force(
 }
 
 /**
- * Create a new physics world and set gravity of world.
+ * Creates a new physics world and sets the gravity of the world.
  *
  * @param v gravity vector
  * @example
@@ -87,7 +87,7 @@ export function set_gravity(v: Vector2) {
 }
 
 /**
- * Make the ground body of the world.
+ * Makes the ground body of the world.
  *
  * @param height height of ground
  * @param friction friction of ground
@@ -103,7 +103,7 @@ export function make_ground(height: number, friction: number) {
 }
 
 /**
- * Make a wall (static box object with no velocity).
+ * Makes a wall (static box object with no velocity).
  *
  * @param pos position of the wall
  * @param rot rotation of the wall
@@ -130,7 +130,7 @@ export function add_wall(pos: Vector2, rot: number, size: Vector2) {
 }
 
 /**
- * Make a box object with given initial position, rotation, velocity, size and add it to the world.
+ * Makes a box object with given initial position, rotation, velocity, size and add it to the world.
  *
  * @param pos initial position vector of center
  * @param rot initial rotation
@@ -163,7 +163,7 @@ export function add_box_object(
 }
 
 /**
- * Make a circle object with given initial position, rotation, velocity, radius and add it to the world.
+ * Makes a circle object with given initial position, rotation, velocity, radius and add it to the world.
  *
  * @param pos initial position vector of center
  * @param rot initial rotation
@@ -196,7 +196,7 @@ export function add_circle_object(
 }
 
 /**
- * Make a triangle object with given initial position, rotation, velocity, base, height and add it to the world.
+ * Makes a triangle object with given initial position, rotation, velocity, base, height and add it to the world.
  *
  * @param pos initial position vector of center
  * @param rot initial rotation
@@ -235,7 +235,7 @@ export function add_triangle_object(
 }
 
 /**
- * Update the world with a fixed time step.
+ * Updates the world once with the given time step.
  *
  * @param dt value of fixed time step
  *
@@ -250,7 +250,7 @@ export function update_world(dt: number) {
 }
 
 /**
- * Simulate the world.
+ * Simulates the world for given duration.
  *
  * @param total_time total time to simulate
  *
@@ -265,7 +265,7 @@ export function simulate_world(total_time: number) {
 }
 
 /**
- * Get position of the object at current world time.
+ * Gets position of the object at current world time.
  *
  * @param obj existing object
  * @returns position of center
@@ -277,7 +277,7 @@ export function get_position(obj: PhysicsObject): Vector2 {
 }
 
 /**
- * Get rotation of the object at current world time.
+ * Gets rotation of the object at current world time.
  *
  * @param obj existing object
  * @returns rotation of object
@@ -289,7 +289,7 @@ export function get_rotation(obj: PhysicsObject): number {
 }
 
 /**
- * Get current velocity of the object.
+ * Gets velocity of the object at current world time.
  *
  * @param obj exisiting object
  * @returns velocity vector
@@ -301,7 +301,7 @@ export function get_velocity(obj: PhysicsObject): Vector2 {
 }
 
 /**
- * Get current angular velocity of the object.
+ * Gets angular velocity of the object at current world time.
  *
  * @param obj exisiting object
  * @returns angular velocity vector
@@ -349,7 +349,7 @@ export function set_velocity(obj: PhysicsObject, velc: Vector2): void {
 }
 
 /**
- * Get current angular velocity of the object.
+ * Sets current angular velocity of the object.
  *
  * @param obj exisiting object
  * @param velc angular velocity number
@@ -373,7 +373,7 @@ export function set_density(obj: PhysicsObject, density: number) {
 }
 
 /**
- * Resize the object.
+ * Resizes the object with given scale factor.
  *
  * @param obj existinig object
  * @param scale scaling size
@@ -388,7 +388,7 @@ export function scale_size(obj: PhysicsObject, scale: number) {
 }
 
 /**
- * Set friction of the object.
+ * Sets the friction value of the object.
  *
  * @param obj
  * @param friction
@@ -400,7 +400,7 @@ export function set_friction(obj: PhysicsObject, friction: number) {
 }
 
 /**
- * Check if two objects is touching.
+ * Checks if two objects are touching at current world time.
  *
  * @param obj1
  * @param obj2
@@ -413,7 +413,8 @@ export function is_touching(obj1: PhysicsObject, obj2: PhysicsObject) {
 }
 
 /**
- * Impact start time of two currently touching objects.
+ * Gets the impact start time of two currently touching objects.
+ * Returns -1 if they are not touching.
  *
  * @param obj1
  * @param obj2
@@ -430,7 +431,7 @@ export function impact_start_time(obj1: PhysicsObject, obj2: PhysicsObject) {
 }
 
 /**
- * Apply force to an object.
+ * Applies a force to given object at its center.
  *
  * @param force existing force
  * @param obj existing object the force applies on
@@ -442,7 +443,7 @@ export function apply_force_to_center(force: Force, obj: PhysicsObject) {
 }
 
 /**
- * Apply force to an object at a given world point.
+ * Apllies force to given object at given world point.
  *
  * @param force existing force
  * @param pos world point the force is applied on
@@ -478,10 +479,26 @@ export function array_to_vector([x, y]: [number, number]) {
   return new Vector2(x, y);
 }
 
+/**
+ * Adds two vectors together and returns the resultant vector.
+ *
+ * @param arr array with [x, y]
+ * @returns vector 2d
+ *
+ * @category Main
+ */
 export function add_vector(vec1: Vector2, vec2: Vector2) {
   return new Vector2(vec1.x + vec2.x, vec1.y + vec2.y);
 }
 
+/**
+ * Subtract the second vector from the first and returns the resultant vector.
+ *
+ * @param arr array with [x, y]
+ * @returns vector 2d
+ *
+ * @category Main
+ */
 export function subtract_vector(vec1: Vector2, vec2: Vector2) {
   return new Vector2(vec1.x - vec2.x, vec1.y - vec2.y);
 }
