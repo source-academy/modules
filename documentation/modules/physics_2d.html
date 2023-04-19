@@ -14,9 +14,70 @@
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">Source Academy Modules</a></li>
 <li><a href="physics_2d.html">physics_2d</a></li></ul>
-<h1>Module physics_2d</h1></div><aside class="tsd-sources">
+<h1>Module physics_2d</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>2D Phyiscs simulation module for Source Academy.</p>
+<p>A <b>vector</b> is defined by its coordinates (x and y). The 2D vector is used to
+represent direction, size, position, velocity and other physical attributes in
+the physics world. Vector manipulation and transformations between vector and array
+types are supported.</p>
+<br>
+
+<p>A <b>force</b> is defined by its direction (a vector), its magnitude, duration and
+start time. A force is only actively applied if:</p>
+<pre><code><span class="hl-0">diff</span><span class="hl-1"> &gt; </span><span class="hl-7">0</span><span class="hl-1"> &amp;&amp; </span><span class="hl-0">diff</span><span class="hl-1"> &lt; </span><span class="hl-0">duration</span><span class="hl-1">, </span><span class="hl-0">where</span><span class="hl-1"> </span><span class="hl-0">diff</span><span class="hl-1"> </span><span class="hl-0">is</span><span class="hl-1"> </span><span class="hl-0">world</span><span class="hl-1"> </span><span class="hl-0">time</span><span class="hl-1"> - </span><span class="hl-0">start</span><span class="hl-1"> </span><span class="hl-0">time</span>
+</code></pre>
+<br>
+
+<p>A <b>world</b> is the single physics world the module is based on.</p>
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/ef08557/src/bundles/physics_2d/index.ts#L41">physics_2d/index.ts:41</a></li></ul></aside>
+<li><code>set_gravity</code> needs to be called once at the start of the program to initialize the world
+and set the gravity.</li>
+<li><code>make_ground</code> and <code>add_wall</code> are optional but recommended to be used to set boundaries
+in the world.</li>
+</ul>
+<br>
+
+<p>An <b>object</b> is initially defined in the add function by:</p>
+<ul>
+<li>shape: which add function was used (e.g. <code>add_box_object</code>)</li>
+<li>position: initial position</li>
+<li>velocity: initial velocity</li>
+<li>size: initial size (depends on the shape of the object)</li>
+<li>rotation: initial rotation</li>
+<li>isStatic (whether it is affected by physics)</li>
+</ul>
+<p>There are also additional attributes that can be set after an object has been added:</p>
+<ul>
+<li>density: mass per area of object</li>
+<li>friction: how much friction the object surface has</li>
+</ul>
+<p>There are two ways to apply a force on a given object:</p>
+<ul>
+<li><code>apply_force</code>: applies a force to an object at a given object</li>
+<li><code>apply_force_to_center</code>: applies a force to an object directly at its center</li>
+</ul>
+<p>Detection of collision and precise starting time are provided by:</p>
+<ul>
+<li><code>is_touching</code></li>
+<li><code>impact_start_time</code></li>
+</ul>
+<br>
+
+<p>After adding objects to the world, calling <code>update_world</code> will simulate the world.<br>The suggested time step is 1/60 (seconds).</p>
+<p>Visualization of the physics world can also be seen in the display tab.</p>
+<br>
+
+<p>The following example simulates a free fall of a circle object.</p>
+<pre><code><span class="hl-9">import</span><span class="hl-1"> { </span><span class="hl-0">set_gravity</span><span class="hl-1">, </span><span class="hl-0">make_vector</span><span class="hl-1">, </span><span class="hl-0">add_circle_object</span><span class="hl-1">, </span><span class="hl-0">update_world</span><span class="hl-1"> } </span><span class="hl-9">from</span><span class="hl-1"> </span><span class="hl-8">&quot;physics_2d&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">gravity</span><span class="hl-1"> = </span><span class="hl-6">make_vector</span><span class="hl-1">(</span><span class="hl-7">0</span><span class="hl-1">, -</span><span class="hl-7">9.8</span><span class="hl-1">);</span><br/><span class="hl-6">set_gravity</span><span class="hl-1">(</span><span class="hl-0">gravity</span><span class="hl-1">);</span><br/><br/><span class="hl-6">make_ground</span><span class="hl-1">(</span><span class="hl-7">0</span><span class="hl-1">, </span><span class="hl-7">1</span><span class="hl-1">);</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">pos</span><span class="hl-1"> = </span><span class="hl-6">make_vector</span><span class="hl-1">(</span><span class="hl-7">0</span><span class="hl-1">, </span><span class="hl-7">100</span><span class="hl-1">);</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">velc</span><span class="hl-1"> = </span><span class="hl-6">make_vector</span><span class="hl-1">(</span><span class="hl-7">0</span><span class="hl-1">, </span><span class="hl-7">0</span><span class="hl-1">);</span><br/><span class="hl-6">add_circle_object</span><span class="hl-1">(</span><span class="hl-0">pos</span><span class="hl-1">, </span><span class="hl-7">0</span><span class="hl-1">, </span><span class="hl-0">velc</span><span class="hl-1">, </span><span class="hl-7">10</span><span class="hl-1">, </span><span class="hl-4">false</span><span class="hl-1">);</span><br/><br/><span class="hl-9">for</span><span class="hl-1"> (</span><span class="hl-4">let</span><span class="hl-1"> </span><span class="hl-0">i</span><span class="hl-1"> = </span><span class="hl-7">0</span><span class="hl-1">; </span><span class="hl-0">i</span><span class="hl-1"> &lt; </span><span class="hl-7">10</span><span class="hl-1">; </span><span class="hl-0">i</span><span class="hl-1"> = </span><span class="hl-0">i</span><span class="hl-1"> + </span><span class="hl-7">1</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-6">update_world</span><span class="hl-1">(</span><span class="hl-7">1</span><span class="hl-1">/</span><span class="hl-7">60</span><span class="hl-1">);</span><br/><span class="hl-1">}</span>
+</code></pre>
+<br>
+<h3>Author</h3><p>Muhammad Fikri Bin Abdul Kalam</p>
+
+<h3>Author</h3><p>Yu Jiali</p>
+</div></section><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/83f0a58/src/bundles/physics_2d/index.ts#L80">physics_2d/index.ts:80</a></li></ul></aside>
 <section class="tsd-panel-group">
 <section class="tsd-panel tsd-typography"></section></section>
 <section class="tsd-panel-group tsd-index-group">
@@ -49,19 +110,16 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Functions - Main</h3>
-<div class="tsd-index-list"><a href="../functions/physics_2d.add_wall.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>add_<wbr/>wall</span></a>
+<div class="tsd-index-list"><a href="../functions/physics_2d.add_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>add_<wbr/>vector</span></a>
+<a href="../functions/physics_2d.add_wall.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>add_<wbr/>wall</span></a>
 <a href="../functions/physics_2d.array_to_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>array_<wbr/>to_<wbr/>vector</span></a>
 <a href="../functions/physics_2d.make_ground.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>make_<wbr/>ground</span></a>
 <a href="../functions/physics_2d.make_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>make_<wbr/>vector</span></a>
 <a href="../functions/physics_2d.set_gravity.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>set_<wbr/>gravity</span></a>
 <a href="../functions/physics_2d.simulate_world.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>simulate_<wbr/>world</span></a>
+<a href="../functions/physics_2d.subtract_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>subtract_<wbr/>vector</span></a>
 <a href="../functions/physics_2d.update_world.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>update_<wbr/>world</span></a>
 <a href="../functions/physics_2d.vector_to_array.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>vector_<wbr/>to_<wbr/>array</span></a>
-</div></section>
-<section class="tsd-index-section">
-<h3 class="tsd-index-heading">Functions - Other</h3>
-<div class="tsd-index-list"><a href="../functions/physics_2d.add_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>add_<wbr/>vector</span></a>
-<a href="../functions/physics_2d.subtract_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>subtract_<wbr/>vector</span></a>
 </div></section></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">

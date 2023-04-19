@@ -12061,14 +12061,14 @@ require => {
       if (this.shape instanceof import_core2.b2CircleShape) {
         this.shape.m_radius *= scale;
       } else if (this.shape instanceof import_core2.b2PolygonShape) {
-        let centroid = this.shape.m_centroid;
-        let arr = [];
+        const centroid = this.shape.m_centroid;
+        const arr = [];
         this.shape.m_vertices.forEach(vec => {
           arr.push(new import_core2.b2Vec2(centroid.x + scale * (vec.x - centroid.x), centroid.y + scale * (vec.y - centroid.y)));
         });
         this.shape = new import_core2.b2PolygonShape().Set(arr);
       }
-      let f = this.fixture;
+      const f = this.fixture;
       this.body.DestroyFixture(this.fixture);
       this.fixture = this.body.CreateFixture({
         shape: this.shape,
@@ -12091,9 +12091,9 @@ require => {
       this.touchingObjects = new Map();
       const contactListener = new import_core3.b2ContactListener();
       contactListener.BeginContact = contact => {
-        let m = this.touchingObjects.get(contact.GetFixtureA());
+        const m = this.touchingObjects.get(contact.GetFixtureA());
         if (m === void 0) {
-          let newMap = new Map();
+          const newMap = new Map();
           newMap.set(contact.GetFixtureB(), this.timer.getTime());
           this.touchingObjects.set(contact.GetFixtureA(), newMap);
         } else {
@@ -12131,7 +12131,7 @@ require => {
       });
     }
     update(dt) {
-      for (let obj of this.physicsObjects) {
+      for (const obj of this.physicsObjects) {
         obj.applyForces(this.timer.getTime());
       }
       this.b2World.Step(dt, this.iterationsConfig);
@@ -12153,7 +12153,6 @@ require => {
   Objects:
       `;
       this.physicsObjects.forEach(obj => {
-        console.log(obj.getMass());
         world_status += `
   ------------------------
   ${obj.toReplString()}
@@ -12163,11 +12162,11 @@ require => {
       return world_status;
     }
     findImpact(obj1, obj2) {
-      let m = this.touchingObjects.get(obj1.getFixture());
+      const m = this.touchingObjects.get(obj1.getFixture());
       if (m === void 0) {
         return -1;
       }
-      let time = m.get(obj2.getFixture());
+      const time = m.get(obj2.getFixture());
       if (time === void 0) {
         return -1;
       }
