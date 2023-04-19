@@ -354,6 +354,18 @@
     react-popper "^2.3.0"
     tslib "~2.3.1"
 
+"@box2d/core@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@box2d/core/-/core-0.10.0.tgz#99c8893970b33f68ab22a426ca8d23166b9d7de5"
+  integrity sha512-rVawB+VokPnE2IarLPXE9blbpV26KOEYdadsnXf7ToyXzceXMADPrSIvYIyTzXLteiLE9i+UTMmTcCvYXl+QEA==
+
+"@box2d/debug-draw@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@box2d/debug-draw/-/debug-draw-0.10.0.tgz#53f57523be4ab1c9c6922c268b938271f4b789a2"
+  integrity sha512-cPkgwRD2Na/p/lIUjeBFXiMpAebbiE3PL+SpSGyrILfeJqF/WEZW3J+mzPNougwezcc8HKKHcd5B0jZZFUQhIA==
+  dependencies:
+    "@box2d/core" "^0.10.0"
+
 "@esbuild/android-arm64@0.17.8":
   version "0.17.8"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.17.8.tgz#b3d5b65a3b2e073a6c7ee36b1f3c30c8f000315b"

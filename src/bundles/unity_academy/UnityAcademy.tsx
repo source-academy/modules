@@ -5,17 +5,12 @@
  * @author Wang Zihan
  */
 
-import { UNITY_ACADEMY_BACKEND_URL } from './config';
+import { UNITY_ACADEMY_BACKEND_URL, BUILD_NAME } from './config';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-
-type Vector3 = {
-  x : number;
-  y : number;
-  z : number;
-};
+import { Vector3, normalizeVector, zeroVector, pointDistance } from './UnityAcademyMaths';
 
 type Transform = {
   position : Vector3;
@@ -31,6 +26,7 @@ type StudentGameObject = {
   onCollisionExitMethod : Function | null;
   transform : Transform;
   rigidbody : RigidbodyData | null;
+  customProperties : any;
   isDestroyed : boolean; // [set by interop]
 };
 
@@ -47,7 +43,7 @@ type RigidbodyData = {
   angularDrag : number;
 };
 
-declare const createUnityInstance : Function; // This function comes from Build.loader.js in Unity Academy Application
+declare const createUnityInstance : Function; // This function comes from {BUILD_NAME}.loader.js in Unity Academy Application (For Example: ua-frontend-prod.loader.js)
 
 export function getInstance() : UnityAcademyJsInteropContext {
   return (window as any).unityAcademyContext as UnityAcademyJsInteropContext;
@@ -137,13 +133,13 @@ class UnityComponent extends React.Component<any> {
   }
 }
 
-const buildName = 'ua-frontend-prod';
+
 
 const UNITY_CONFIG = {
-  loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.loader.js`,
-  dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.data`,
-  frameworkUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.framework.js`,
-  codeUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.wasm`,
+  loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.loader.js`,
+  dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.data.gz`,
+  frameworkUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.framework.js.gz`,
+  codeUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.wasm.gz`,
   streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
   companyName: 'Wang Zihan @ NUS SoC 2026',
   productName: 'Unity Academy (Source Academy Embedding Version)',
@@ -166,6 +162,8 @@ class UnityAcademyJsInteropContext {
   private unityInstanceState; // [set by interop]
   private guiData : any[]; // [get / clear by interop]
   public dimensionMode;
+  private isShowingUnityAcademy : boolean; // [get by interop]
+  private latestUserAgreementVersion : string;
 
   constructor() {
     this.unityInstance = null;
@@ -184,6 +182,8 @@ class UnityAcademyJsInteropContext {
     };
     this.targetFrameRate = 30;
 
+    this.latestUserAgreementVersion = 'unknown';
+    this.getLatestUserAgreementVersion();
 
     // [ Why I don't put this into my module's own context? ]
     // Since Unity Academy application needs to access this from the WASM side, and the Unity Academy WASM side can not access the module context under the js-slang evaluation scope since Unity Academy app is running totally separated from js-slang in the WASM virtual machine.
@@ -195,6 +195,7 @@ class UnityAcademyJsInteropContext {
     document.body.appendChild(this.unityContainerElement);
     ReactDOM.render(<UnityComponent />, this.unityContainerElement);
     this.setShowUnityComponent(0);
+    this.isShowingUnityAcademy = false;
 
     this.gameObjectIdentifierWrapperClass = GameObjectIdentifier;
 
@@ -247,6 +248,7 @@ class UnityAcademyJsInteropContext {
 
   setShowUnityComponent(resolution: number) {
     const toShow = resolution > 0;
+    this.isShowingUnityAcademy = toShow;
     const sendMessageFunctionName = 'SendMessage';
     if (toShow) {
       (this.unityContainerElement as any).style.visibility = 'visible';
@@ -290,7 +292,7 @@ class UnityAcademyJsInteropContext {
     if (this.unityInstance !== null) {
       const sendMessageFunctionName = 'SendMessage';
       // Reset Unity Academy app
-      this.unityInstance[sendMessageFunctionName]('GameManager', 'ResetApplication');
+      this.unityInstance[sendMessageFunctionName]('GameManager', 'ResetSession');
     }
   }
 
@@ -308,7 +310,41 @@ class UnityAcademyJsInteropContext {
     return this.unityInstanceState === 'Ready';
   }
 
-  instantiateInternal(prefabName : string) {
+  private getLatestUserAgreementVersion() : void {
+    const jsonUrl = `${UNITY_ACADEMY_BACKEND_URL}user_agreement.json`;
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        this.latestUserAgreementVersion = JSON.parse(xhr.responseText).version;
+      }
+    };
+    xhr.open('GET', jsonUrl, true);
+    xhr.send();
+  }
+
+  getUserAgreementStatus() : string {
+    const agreedUserAgreementVersion = localStorage.getItem('unity_academy_agreed_user_agreement_version');
+    if (agreedUserAgreementVersion === null || agreedUserAgreementVersion === 'unagreed' || agreedUserAgreementVersion === 'unknown') {
+      return 'unagreed';
+    }
+    if (this.latestUserAgreementVersion === 'unknown') {
+      return 'unagreed';
+    }
+    if (agreedUserAgreementVersion !== this.latestUserAgreementVersion) {
+      return 'new_user_agreement';
+    }
+    return 'agreed';
+  }
+
+  setUserAgreementStatus(agree : boolean) : void {
+    if (agree) {
+      localStorage.setItem('unity_academy_agreed_user_agreement_version', this.latestUserAgreementVersion);
+    } else {
+      localStorage.setItem('unity_academy_agreed_user_agreement_version', 'unagreed');
+    }
+  }
+
+  instantiateInternal(prefabName : string) : GameObjectIdentifier {
     let prefabExists = false;
     const len = this.prefabInfo.prefab_info.length;
     for (let i = 0; i < len; i++) {
@@ -327,11 +363,19 @@ class UnityAcademyJsInteropContext {
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
-  instantiate2DSpriteUrlInternal(sourceImageUrl : string) {
+  instantiate2DSpriteUrlInternal(sourceImageUrl : string) : GameObjectIdentifier {
     const gameObjectIdentifier = `2DSprite_${this.gameObjectIdentifierSerialCounter}`;
     this.gameObjectIdentifierSerialCounter++;
     this.makeGameObjectDataStorage(gameObjectIdentifier);
     this.dispatchStudentAction(`instantiate2DSpriteUrl|${sourceImageUrl}|${gameObjectIdentifier}`);
+    return new GameObjectIdentifier(gameObjectIdentifier);
+  }
+
+  instantiateEmptyGameObjectInternal() : GameObjectIdentifier {
+    const gameObjectIdentifier = `EmptyGameObject_${this.gameObjectIdentifierSerialCounter}`;
+    this.gameObjectIdentifierSerialCounter++;
+    this.makeGameObjectDataStorage(gameObjectIdentifier);
+    this.dispatchStudentAction(`instantiateEmptyGameObject|${gameObjectIdentifier}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
@@ -347,23 +391,12 @@ class UnityAcademyJsInteropContext {
       onCollisionStayMethod: null,
       onCollisionExitMethod: null,
       transform: {
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
+        position: zeroVector(),
+        rotation: zeroVector(),
+        scale: new Vector3(1, 1, 1),
       },
       rigidbody: null,
+      customProperties: {},
       isDestroyed: false,
     };
   }
@@ -418,11 +451,60 @@ class UnityAcademyJsInteropContext {
     gameObject.transform.position.z += z;
   }
 
+
+  translateLocalInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    const rotation = gameObject.transform.rotation;
+
+    // Some methematical stuff here for calcuating the actual world position displacement from local translate vector and current Euler rotation.
+    const rx = rotation.x * Math.PI / 180;
+    const ry = rotation.y * Math.PI / 180;
+    const rz = rotation.z * Math.PI / 180;
+    const cos = Math.cos;
+    const sin = Math.sin;
+    const rotationMatrix
+      = [[cos(ry) * cos(rz), -cos(ry) * sin(rz), sin(ry)],
+        [cos(rx) * sin(rz) + sin(rx) * sin(ry) * cos(rz), cos(rx) * cos(rz) - sin(rx) * sin(ry) * sin(rz), -sin(rx) * cos(ry)],
+        [sin(rx) * sin(rz) - cos(rx) * sin(ry) * cos(rz), cos(rx) * sin(ry) * sin(rz) + sin(rx) * cos(rz), cos(rx) * cos(ry)]];
+    const finalWorldTranslateVector = [
+      rotationMatrix[0][0] * x + rotationMatrix[0][1] * y + rotationMatrix[0][2] * z,
+      rotationMatrix[1][0] * x + rotationMatrix[1][1] * y + rotationMatrix[1][2] * z,
+      rotationMatrix[2][0] * x + rotationMatrix[2][1] * y + rotationMatrix[2][2] * z,
+    ];
+    gameObject.transform.position.x += finalWorldTranslateVector[0];
+    gameObject.transform.position.y += finalWorldTranslateVector[1];
+    gameObject.transform.position.z += finalWorldTranslateVector[2];
+  }
+
+  lookAtPositionInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    const deltaVector = normalizeVector(new Vector3(x - gameObject.transform.position.x, y - gameObject.transform.position.y, z - gameObject.transform.position.z));
+    const eulerX = Math.asin(-deltaVector.y);
+    const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
+    gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
+    gameObject.transform.rotation.y = eulerY * 180 / Math.PI;
+    gameObject.transform.rotation.z = 0;
+  }
+
+  gameObjectDistanceInternal(gameObjectIdentifier_A : GameObjectIdentifier, gameObjectIdentifier_B : GameObjectIdentifier) : number {
+    const gameObjectA = this.getStudentGameObject(gameObjectIdentifier_A);
+    const gameObjectB = this.getStudentGameObject(gameObjectIdentifier_B);
+    return pointDistance(gameObjectA.transform.position, gameObjectB.transform.position);
+  }
+
   rotateWorldInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.transform.rotation.x += x;
     gameObject.transform.rotation.y += y;
     gameObject.transform.rotation.z += z;
+  }
+
+  copyTransformPropertiesInternal(propName : string, from : GameObjectIdentifier, to : GameObjectIdentifier, delta_x : number, delta_y : number, delta_z : number) : void {
+    const fromGameObject = this.getStudentGameObject(from);
+    const toGameObject = this.getStudentGameObject(to);
+    if (Math.abs(delta_x) !== Infinity) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + delta_x;
+    if (Math.abs(delta_y) !== Infinity) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + delta_y;
+    if (Math.abs(delta_z) !== Infinity) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + delta_z;
   }
 
   getKeyState(keyCode : string) : number {
@@ -441,16 +523,8 @@ class UnityAcademyJsInteropContext {
       throw new Error(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
     }
     gameObject.rigidbody = {
-      velocity: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-      angularVelocity: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
+      velocity: zeroVector(),
+      angularVelocity: zeroVector(),
       mass: 1,
       useGravity: true,
       drag: 0,
@@ -519,34 +593,56 @@ class UnityAcademyJsInteropContext {
     gameObject.onCollisionExitMethod = eventFunction;
   }
 
-  onGUI_Label(content : string, x : number, y : number) : void {
+  requestForMainCameraControlInternal() : GameObjectIdentifier {
+    const name = 'MainCamera';
+    if (this.studentGameObjectStorage[name] !== undefined) {
+      return this.getGameObjectIdentifierForPrimitiveGameObject('MainCamera');
+    }
+    this.makeGameObjectDataStorage(name);
+    this.dispatchStudentAction('requestMainCameraControl');
+    return this.getGameObjectIdentifierForPrimitiveGameObject('MainCamera');
+  }
+
+  onGUI_Label(content : string, x : number, y : number, fontSize : number) : void {
     content = content.replaceAll('|', ''); // operator '|' is reserved as gui data separator in Unity Academy
     const newLabel = {
       type: 'label',
       content,
       x,
       y,
+      fontSize,
     };
     this.guiData.push(newLabel);
   }
 
-  onGUI_Button(text : string, x: number, y : number, onClick : Function) : void {
+  onGUI_Button(text : string, x: number, y : number, fontSize : number, onClick : Function) : void {
     text = text.replaceAll('|', ''); // operator '|' is reserved as gui data separator in Unity Academy
     const newButton = {
       type: 'button',
       text,
       x,
       y,
+      fontSize,
       onClick,
     };
     this.guiData.push(newButton);
   }
 
-  setTargetFrameRate(newTargetFrameRate : number) {
+  setTargetFrameRate(newTargetFrameRate : number) : void {
     newTargetFrameRate = Math.floor(newTargetFrameRate);
     if (newTargetFrameRate < 15) return;
     if (newTargetFrameRate > 120) return;
     this.targetFrameRate = newTargetFrameRate;
+  }
+
+  setCustomPropertyInternal(gameObjectIdentifier : GameObjectIdentifier, propName : string, value : any) : void {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    gameObject.customProperties[propName] = value;
+  }
+
+  getCustomPropertyInternal(gameObjectIdentifier : GameObjectIdentifier, propName : string) : any {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    return gameObject.customProperties[propName];
   }
 
   getTargetFrameRate() {
@@ -555,21 +651,19 @@ class UnityAcademyJsInteropContext {
 }
 
 export function initializeModule(dimensionMode : string) {
-  let INSTANCE = getInstance();
-  if (INSTANCE !== undefined) {
-    if (!INSTANCE.isUnityInstanceReady()) {
+  let instance = getInstance();
+  if (instance !== undefined) {
+    if (!instance.isUnityInstanceReady()) {
       throw new Error('Unity instance is not ready to accept a new Source program now. Please try again later.');
     }
-    if (INSTANCE.unityInstance === null) {
-      // throw new Error('Unity Academy application has been terminated. Please refresh this page before using it again.');
-      INSTANCE.reloadUnityAcademyInstanceAfterTermination();
+    if (instance.unityInstance === null) {
+      instance.reloadUnityAcademyInstanceAfterTermination();
     }
-    INSTANCE.dimensionMode = dimensionMode;
-    INSTANCE.reset();
-    // console.log('Reset existing unity player');
+    instance.dimensionMode = dimensionMode;
+    instance.reset();
     return;
   }
 
-  INSTANCE = new UnityAcademyJsInteropContext();
-  INSTANCE.dimensionMode = dimensionMode;
+  instance = new UnityAcademyJsInteropContext();
+  instance.dimensionMode = dimensionMode;
 }

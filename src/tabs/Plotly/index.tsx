@@ -1,6 +1,6 @@
 import React from 'react';
-import type { DrawnPlot } from '../../bundles/plotly/plotly';
-import type { DebuggerContext } from '../../typings/type_helpers';
+import { type DrawnPlot } from '../../bundles/plotly/plotly';
+import { type DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/modal_div';
 
 type Props = {
@@ -37,8 +37,8 @@ class Plotly extends React.Component<Props, State> {
       <div>
         <Modal
           open={this.state.modalOpen}
-          height={'20rem'}
-          width={'20rem'}
+          height={'90vh'}
+          width={'80vw'}
           handleClose={() => this.setState({ modalOpen: false })}
         >
           <div
@@ -48,25 +48,23 @@ class Plotly extends React.Component<Props, State> {
                 this.state.selectedPlot.draw('modalDiv');
               }
             }}
-            style={{
-              height: '20rem',
-              width: '20rem',
-            }}
+            style={{ height: '80vh' }}
           ></div>
         </Modal>
         {
           drawnPlots.map((drawnPlot: any, id:number) => {
             const divId = `plotDiv${id}`;
             return (
-              <>
+              <div style={{ height: '80vh' }} key={divId}>
                 <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
                 <div
                   id={divId}
+                  style={{ height: '80vh' }}
                   ref={() => {
                     drawnPlot.draw(divId);
                   }}
                 ></div>
-              </>
+              </div>
             );
           })
         }
