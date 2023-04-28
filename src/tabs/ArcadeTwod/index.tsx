@@ -25,8 +25,6 @@ type Props = {
  * React Component state for the Game.
  */
 type GameState = {
-  counter: number;
-  time: number;
   game?: Phaser.Game;
 };
 
@@ -86,8 +84,6 @@ class GameTab extends React.Component<Props, GameState> {
   constructor(props) {
     super(props);
     this.state = {
-      counter: 0,
-      time: Date.now(),
       game: undefined,
     };
   }

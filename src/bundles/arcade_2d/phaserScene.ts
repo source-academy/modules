@@ -10,20 +10,21 @@ import {
   TriangleGameObject,
 } from './gameobject';
 import {
-  CONFIG,
+  config,
 } from './functions';
 import {
   type TransformProps,
   type PositionXY,
+  type ExceptionError,
+  type PhaserGameObject,
 } from './types';
 import { AudioClip } from './audio';
-
-type PhaserGameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Phaser.GameObjects.Shape;
+import { DEFAULT_PATH_PREFIX } from './constants';
 
 // Game state information, that changes every frame.
 export const gameState = {
   // Stores the debug information, which is reset every iteration of the update loop.
-  debugLogArray: Array.of() as Array<string>,
+  debugLogArray: new Array<string>(),
   // The current in-game time and frame count.
   gameTime: 0,
   loopCount: 0,
@@ -34,8 +35,8 @@ export const gameState = {
     // the current (mouse) pointer position in the canvas
     pointerPosition: [0, 0] as PositionXY,
     // true if (left mouse button) pointer down, false otherwise
-    pointerPrimaryDown: false,
-    pointerSecondaryDown: false,
+    isPointerPrimaryDown: false,
+    isPointerSecondaryDown: false,
     // Stores the IDs of the GameObjects that the pointer is over
     pointerOverGameObjectsId: new Set<number>(),
   },
@@ -52,24 +53,19 @@ export class PhaserScene extends Phaser.Scene {
   constructor() {
     super('PhaserScene');
   }
-  private sourceGameObjects;
+  private sourceGameObjects: Array<InteractableGameObject> = GameObject.getGameObjectsArray();
   private phaserGameObjects: Array<PhaserGameObject> = [];
-  private corsAssets;
-  private sourceAudioClips;
-  private phaserAudioClips;
-  private rerenderGameObjects = true;
-  private delayedKeyUpEvents = new Set<Function>();
-  private runtimeError: boolean = false;
-  private preDebugLogCount: number = 0;
+  private corsAssetsUrl: Set<string> = new Set();
+  private sourceAudioClips: Array<AudioClip> = AudioClip.getAudioClipsArray();
+  private phaserAudioClips: Array<Phaser.Sound.BaseSound> = [];
+  private shouldRerenderGameObjects: boolean = true;
+  private delayedKeyUpEvents: Set<Function> = new Set<Function>();
+  private hasRuntimeError: boolean = false;
+  private debugLogInitialErrorCount: number = 0;
   // Handle debug information
   private debugLogText: Phaser.GameObjects.Text | undefined = undefined;
 
-
   init() {
-    this.sourceGameObjects = GameObject.getGameObjectsArray();
-    this.sourceAudioClips = AudioClip.getAudioClipsArray();
-    this.phaserAudioClips = [];
-    this.corsAssets = new Set();
     gameState.debugLogArray.length = 0;
     // Disable context menu within the canvas
     this.game.canvas.oncontextmenu = (e) => e.preventDefault();
@@ -77,55 +73,115 @@ export class PhaserScene extends Phaser.Scene {
 
   preload() {
     // Set the default path prefix
-    this.load.setPath('https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/');
+    this.load.setPath(DEFAULT_PATH_PREFIX);
     this.sourceGameObjects.forEach((gameObject) => {
       if (gameObject instanceof SpriteGameObject) {
-        this.corsAssets.add(gameObject.getSprite().image_url);
+        this.corsAssetsUrl.add(gameObject.getSprite().imageUrl);
       }
     });
     // Preload sprites (through Cross-Origin resource sharing (CORS))
-    this.corsAssets.forEach((url) => {
+    this.corsAssetsUrl.forEach((url) => {
       this.load.image(url, url);
     });
     // Preload audio
     this.sourceAudioClips.forEach((audioClip: AudioClip) => {
       this.load.audio(audioClip.getUrl(), audioClip.getUrl());
     });
-
     // Checks if loaded assets success
     this.load.on('loaderror', (file: Phaser.Loader.File) => {
-      this.preDebugLogCount++;
+      this.debugLogInitialErrorCount++;
       gameState.debugLogArray.push(`LoadError: "${file.key}" failed`);
     });
   }
 
   create() {
+    this.createPhaserGameObjects();
+    this.createAudioClips();
+
+    // Handle keyboard inputs
+    // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
+    this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
+      gameState.inputKeysDown.add(event.key);
+    });
+    this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
+      this.delayedKeyUpEvents.add(() => gameState.inputKeysDown.delete(event.key));
+    });
+
+    // Handle debug info
+    if (!config.isDebugEnabled && !this.hasRuntimeError) {
+      gameState.debugLogArray.length = 0;
+    }
+    this.debugLogText = this.add.text(0, 0, gameState.debugLogArray)
+      .setWordWrapWidth(config.scale < 1 ? this.renderer.width * config.scale : this.renderer.width)
+      .setBackgroundColor('black')
+      .setAlpha(0.8)
+      .setScale(config.scale < 1 ? 1 / config.scale : 1);
+  }
+
+  update(time, delta) {
+    // Set the time and delta
+    gameState.gameTime += delta;
+    gameState.loopCount++;
+
+    // Set the pointer properties
+    gameState.pointerProps = {
+      ...gameState.pointerProps,
+      pointerPosition: [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)],
+      isPointerPrimaryDown: this.input.activePointer.primaryDown,
+      isPointerSecondaryDown: this.input.activePointer.rightButtonDown(),
+    };
+
+    this.handleUserDefinedUpdateFunction();
+    this.handleGameObjectUpdates();
+    this.handleAudioUpdates();
+
+    // Delay KeyUp events, so that low FPS can still detect KeyDown.
+    // eslint-disable-next-line array-callback-return
+    this.delayedKeyUpEvents.forEach((event: Function) => event());
+    this.delayedKeyUpEvents.clear();
+
+    // Remove rerendering once game has been reloaded.
+    this.shouldRerenderGameObjects = false;
+
+    // Set and clear debug info
+    if (this.debugLogText) {
+      this.debugLogText.setText(gameState.debugLogArray);
+      this.children.bringToTop(this.debugLogText);
+      if (this.hasRuntimeError) {
+        this.debugLogText.setColor('orange');
+        this.sound.stopAll();
+        this.scene.pause();
+      } else {
+        gameState.debugLogArray.length = this.debugLogInitialErrorCount;
+      }
+    }
+  }
+
+  private createPhaserGameObjects() {
     this.sourceGameObjects.forEach((gameObject) => {
-      // Handle Creation of GameObjects
       const transformProps = gameObject.getTransform();
       // Create TextGameObject
       if (gameObject instanceof TextGameObject) {
         const text = gameObject.getText().text;
-
         this.phaserGameObjects.push(this.add.text(
           transformProps.position[0],
           transformProps.position[1],
           text,
         ));
         this.phaserGameObjects[gameObject.id].setOrigin(0.5, 0.5);
-        if (gameObject.getHitboxState().hitboxActive) {
+        if (gameObject.getHitboxState().isHitboxActive) {
           this.phaserGameObjects[gameObject.id].setInteractive();
         }
       }
       // Create SpriteGameObject
       if (gameObject instanceof SpriteGameObject) {
-        const url = gameObject.getSprite().image_url;
+        const url = gameObject.getSprite().imageUrl;
         this.phaserGameObjects.push(this.add.sprite(
           transformProps.position[0],
           transformProps.position[1],
           url,
         ));
-        if (gameObject.getHitboxState().hitboxActive) {
+        if (gameObject.getHitboxState().isHitboxActive) {
           this.phaserGameObjects[gameObject.id].setInteractive();
         }
       }
@@ -139,7 +195,7 @@ export class PhaserScene extends Phaser.Scene {
             shape.width,
             shape.height,
           ));
-          if (gameObject.getHitboxState().hitboxActive) {
+          if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive();
           }
         }
@@ -150,7 +206,7 @@ export class PhaserScene extends Phaser.Scene {
             transformProps.position[1],
             shape.radius,
           ));
-          if (gameObject.getHitboxState().hitboxActive) {
+          if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive(
               new Phaser.Geom.Circle(
                 shape.radius,
@@ -172,7 +228,7 @@ export class PhaserScene extends Phaser.Scene {
             shape.x3,
             shape.y3,
           ));
-          if (gameObject.getHitboxState().hitboxActive) {
+          if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive(
               new Phaser.Geom.Triangle(
                 shape.x1,
@@ -197,24 +253,25 @@ export class PhaserScene extends Phaser.Scene {
       });
 
       // Enter debug mode
-      if (CONFIG.DEBUG) {
+      if (config.isDebugEnabled) {
         this.input.enableDebug(phaserGameObject);
       }
 
       // Store the phaserGameObject in the source representation
       gameObject.setPhaserGameObject(phaserGameObject);
     });
+  }
 
-    // Create audio clips
+  private createAudioClips() {
     try {
       this.sourceAudioClips.forEach((audioClip: AudioClip) => {
         this.phaserAudioClips.push(this.sound.add(audioClip.getUrl(), {
-          loop: audioClip.getLoop(),
-          volume: audioClip.getVolume(),
+          loop: audioClip.shouldAudioClipLoop(),
+          volume: audioClip.getVolumeLevel(),
         }));
       });
     } catch (error) {
-      this.runtimeError = true;
+      this.hasRuntimeError = true;
       if (error instanceof Error) {
         gameState.debugLogArray.push(`${error.name}: ${error.message}`);
       } else {
@@ -222,57 +279,34 @@ export class PhaserScene extends Phaser.Scene {
         console.log(error);
       }
     }
-
-    // Handle keyboard inputs
-    // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
-    this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
-      gameState.inputKeysDown.add(event.key);
-    });
-    this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
-      this.delayedKeyUpEvents.add(() => gameState.inputKeysDown.delete(event.key));
-    });
-
-    // Handle debug info
-    if (!CONFIG.DEBUG && !this.runtimeError) {
-      gameState.debugLogArray.length = 0;
-    }
-    this.debugLogText = this.add.text(0, 0, gameState.debugLogArray)
-      .setWordWrapWidth(this.renderer.width)
-      .setBackgroundColor('black')
-      .setAlpha(0.8);
   }
 
-  update(time, delta) {
-    // Set the time and delta
-    gameState.gameTime += delta;
-    gameState.loopCount++;
-    // gameDelta = delta;
-
-    // Set the pointer
-    gameState.pointerProps.pointerPosition = [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)];
-    gameState.pointerProps.pointerPrimaryDown = this.input.activePointer.primaryDown;
-    gameState.pointerProps.pointerSecondaryDown = this.input.activePointer.rightButtonDown();
-
-    // Run the user-defined update function, and prevent runtime errors.
+  /** Run the user-defined update function, and catch runtime errors. */
+  private handleUserDefinedUpdateFunction() {
     try {
-      if (!this.runtimeError) {
-        CONFIG.userUpdateFunction(userGameStateArray);
+      if (!this.hasRuntimeError) {
+        config.userUpdateFunction(userGameStateArray);
       }
     } catch (error) {
-      this.runtimeError = true;
+      this.hasRuntimeError = true;
       if (error instanceof Error) {
         gameState.debugLogArray.push(`${error.name}: ${error.message}`);
       } else {
-        gameState.debugLogArray.push('RuntimeError: Error in user update function');
-        console.log(error);
+        const exceptionError = error as ExceptionError;
+        gameState.debugLogArray.push(
+          `Line ${exceptionError.location.start.line}: ${exceptionError.error.name}: ${exceptionError.error.message}`,
+        );
       }
     }
-    // Loop through each GameObject in the array and determine which needs to update.
+  }
+
+  /**  Loop through each GameObject in the array and determine which needs to update. */
+  private handleGameObjectUpdates() {
     this.sourceGameObjects.forEach((gameObject: InteractableGameObject) => {
       const phaserGameObject = this.phaserGameObjects[gameObject.id] as PhaserGameObject;
       if (phaserGameObject) {
         // Update the transform of Phaser GameObject
-        if (gameObject.hasTransformUpdates() || this.rerenderGameObjects) {
+        if (gameObject.hasTransformUpdates() || this.shouldRerenderGameObjects) {
           const transformProps = gameObject.getTransform() as TransformProps;
           phaserGameObject.setPosition(transformProps.position[0], transformProps.position[1])
             .setRotation(transformProps.rotation)
@@ -281,11 +315,11 @@ export class PhaserScene extends Phaser.Scene {
             // The only shape that requires flipping is the triangle, as the rest are symmetric about their origin.
             phaserGameObject.setRotation(transformProps.rotation + (gameObject.getFlipState()[1] ? Math.PI : 0));
           }
-          gameObject.updatedTransform();
+          gameObject.setTransformUpdated();
         }
 
         // Update the image of Phaser GameObject
-        if (gameObject.hasRenderUpdates() || this.rerenderGameObjects) {
+        if (gameObject.hasRenderUpdates() || this.shouldRerenderGameObjects) {
           const color = gameObject.getColor();
           // eslint-disable-next-line new-cap
           const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
@@ -309,50 +343,30 @@ export class PhaserScene extends Phaser.Scene {
           if (gameObject.getShouldBringToTop()) {
             this.children.bringToTop(phaserGameObject);
           }
-          gameObject.updatedRender();
+          gameObject.setRenderUpdated();
         }
       } else {
-        this.runtimeError = true;
+        this.hasRuntimeError = true;
         gameState.debugLogArray.push('RuntimeError: GameObject error in update_loop');
       }
     });
+  }
 
-    // Handle audio updates
+  private handleAudioUpdates() {
     this.sourceAudioClips.forEach((audioClip: AudioClip) => {
       if (audioClip.hasAudioClipUpdates()) {
         const phaserAudioClip = this.phaserAudioClips[audioClip.id] as Phaser.Sound.BaseSound;
         if (phaserAudioClip) {
-          if (audioClip.shouldPlayClip()) {
+          if (audioClip.shouldAudioClipPlay()) {
             phaserAudioClip.play();
           } else {
             phaserAudioClip.stop();
           }
         } else {
-          this.runtimeError = true;
+          this.hasRuntimeError = true;
           gameState.debugLogArray.push('RuntimeError: Audio error in update_loop');
         }
       }
     });
-
-    // Delay KeyUp events, so that low FPS can still detect KeyDown.
-    // eslint-disable-next-line array-callback-return
-    this.delayedKeyUpEvents.forEach((event: Function) => event());
-    this.delayedKeyUpEvents.clear();
-
-    // Remove rerendering once game has been reloaded.
-    this.rerenderGameObjects = false;
-
-    // Set and clear debug info
-    if (this.debugLogText) {
-      this.debugLogText.setText(gameState.debugLogArray);
-      this.children.bringToTop(this.debugLogText);
-      if (this.runtimeError) {
-        this.debugLogText.setColor('orange');
-        this.sound.stopAll();
-        this.scene.pause();
-      } else {
-        gameState.debugLogArray.length = this.preDebugLogCount;
-      }
-    }
   }
 }
