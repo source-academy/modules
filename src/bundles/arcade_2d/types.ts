@@ -1,18 +1,21 @@
 /**
- * This file contains the types used to represent GameObjects
+ * This file contains the types used to represent GameObjects.
  */
 
-/** Represents (x,y) worldspace position of GameObject. */
+/** Represents (x,y) worldspace position of a GameObject. */
 export type PositionXY = [number, number];
 
-/** Represents (x,y) worldspace  scale of GameObject. */
+/** Represents (x,y) worldspace  scale of a GameObject. */
 export type ScaleXY = [number, number];
 
 /** Represents the (width, height) dimensions of the game canvas. */
 export type DimensionsXY = [number, number];
 
-/** Represents the (red, green, blue, alpha) of a color. */
+/** Represents the (red, green, blue, alpha) of a color of a GameObject. */
 export type ColorRGBA = [number, number, number, number];
+
+/** Represents (x,y) flip state of GameObject. */
+export type FlipXY = [boolean, boolean];
 
 /**
  * Represents transform properties of a GameObject in worldspace.
@@ -26,57 +29,25 @@ export type TransformProps = {
   rotation: number;
 };
 
-/** Represents (x,y) flip state of GameObject. */
-export type FlipXY = [boolean, boolean];
-
 /**
  * Represents the render properties of a GameObject.
- * @property {Color} color - The color associated with the GameObject tint.
+ * @property {ColorRGBA} color - The color associated with the GameObject tint.
  * @property {FlipXY} flip - The (x,y) flip state of the GameObject.
  * @property {boolean} visible - The render-visibility of the GameObject.
  */
 export type RenderProps = {
-  color: Color;
+  color: ColorRGBA;
   flip: FlipXY;
-  visible: boolean;
+  isVisible: boolean;
 };
 
 /**
  * Represents the interactable properties of a GameObject.
- * @property {boolean} hitboxActive - The interactable state of the hitbox associated with the GameObject in the canvas.
+ * @property {boolean} isHitboxActive - The interactable state of the hitbox associated with the GameObject in the canvas.
  */
 export type InteractableProps = {
-  hitboxActive: boolean;
+  isHitboxActive: boolean;
 };
-
-/**
- * Represents the RGBA color properties of a GameObject.
- */
-export type Color = {
-  red: number,
-  green: number,
-  blue: number,
-  alpha: number,
-};
-
-/**
- * Represents a simplied representation of the phaser type of the GameObject.
- * Which is represented as a void property on the types.
- */
-export type PhaserType = 'Shape' | 'Sprite' | 'Text';
-
-/**
- * Represents the shape of a GameObject.
- */
-export type Shape = {
-  Shape: void;
-  baseShape: BaseShape;
-};
-
-/**
- * Represents the base shape of a GameObject.
- */
-export type BaseShape = CircleProps | RectangleProps | TriangleProps;
 
 /**
  * Represents a rectangle of a GameObject's shape.
@@ -85,7 +56,6 @@ export type RectangleProps = {
   width: number;
   height: number;
 };
-
 
 /**
  * Represents a isosceles triangular shape of a GameObject's shape.
@@ -110,7 +80,6 @@ export type CircleProps = {
  * Represents the rendered text of a GameObject.
  */
 export type DisplayText = {
-  Text: void;
   text: string;
 };
 
@@ -118,8 +87,7 @@ export type DisplayText = {
  * Represents the rendered sprite of a GameObject.
  */
 export type Sprite = {
-  Sprite: void;
-  image_url: string;
+  imageUrl: string;
 };
 
 // =============================================================================
@@ -140,3 +108,20 @@ export type BuildGame = {
  * which can be assessed and modified on the next frame.
  */
 export type UpdateFunction = (userSuppliedState: Array<any>) => void;
+
+/**
+ * Represents a runtime error, that is not an instance of Error.
+ */
+export type ExceptionError = {
+  error: Error;
+  location: {
+    start: {
+      line: number;
+    };
+  };
+};
+
+/**
+ * Represents the Phaser Game Object types that are used.
+ */
+export type PhaserGameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text | Phaser.GameObjects.Shape;

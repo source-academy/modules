@@ -14,7 +14,6 @@ import {
   PhaserScene,
   gameState,
 } from './phaserScene';
-
 import {
   GameObject,
   RenderableGameObject,
@@ -25,16 +24,11 @@ import {
   CircleGameObject,
   TriangleGameObject, InteractableGameObject,
 } from './gameobject';
-
 import {
   type DisplayText,
-  type InteractableProps,
-  type RenderProps,
   type BuildGame,
-  type TransformProps,
   type Sprite,
   type UpdateFunction,
-  type Color,
   type RectangleProps,
   type CircleProps,
   type TriangleProps,
@@ -44,7 +38,6 @@ import {
   type DimensionsXY,
   type ColorRGBA,
 } from './types';
-
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
@@ -60,6 +53,10 @@ import {
   MIN_FPS,
   MAX_VOLUME,
   MIN_VOLUME,
+  DEFAULT_DEBUG_STATE,
+  DEFAULT_TRANSFORM_PROPS,
+  DEFAULT_RENDER_PROPS,
+  DEFAULT_INTERACTABLE_PROPS,
 } from './constants';
 import { AudioClip } from './audio';
 
@@ -68,39 +65,14 @@ import { AudioClip } from './audio';
 // =============================================================================
 
 // Configuration for game initialization.
-export const CONFIG = {
-  WIDTH: DEFAULT_WIDTH,
-  HEIGHT: DEFAULT_HEIGHT,
-  SCALE: DEFAULT_SCALE,
-  FPS: DEFAULT_FPS,
-  DEBUG: false,
+export const config = {
+  width: DEFAULT_WIDTH,
+  height: DEFAULT_HEIGHT,
+  scale: DEFAULT_SCALE,
+  fps: DEFAULT_FPS,
+  isDebugEnabled: DEFAULT_DEBUG_STATE,
   // User update function
   userUpdateFunction: (() => {}) as UpdateFunction,
-};
-
-// =============================================================================
-// Default values
-// =============================================================================
-
-const defaultTransform: TransformProps = {
-  position: [0, 0],
-  scale: [1, 1],
-  rotation: 0,
-};
-
-const defaultRenderProps: RenderProps = {
-  color: {
-    red: 255,
-    green: 255,
-    blue: 255,
-    alpha: 255,
-  },
-  flip: [false, false],
-  visible: true,
-};
-
-const defaultInteractableProps: InteractableProps = {
-  hitboxActive: true,
 };
 
 // =============================================================================
@@ -123,7 +95,7 @@ export const create_rectangle: (width: number, height: number) => ShapeGameObjec
     width,
     height,
   } as RectangleProps;
-  return new RectangleGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, rectangle);
+  return new RectangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, rectangle);
 };
 
 /**
@@ -140,7 +112,7 @@ export const create_circle: (radius: number) => ShapeGameObject = (radius: numbe
   const circle = {
     radius,
   } as CircleProps;
-  return new CircleGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, circle);
+  return new CircleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, circle);
 };
 
 /**
@@ -162,7 +134,7 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
     x3: width / 2,
     y3: height,
   } as TriangleProps;
-  return new TriangleGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, triangle);
+  return new TriangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, triangle);
 };
 
 /**
@@ -179,14 +151,16 @@ export const create_text: (text: string) => TextGameObject = (text: string) => {
   const displayText = {
     text,
   } as DisplayText;
-  return new TextGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, displayText);
+  return new TextGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, displayText);
 };
 
 /**
  * Creates a GameObject that contains a Sprite image reference.
  * Source Academy assets can be used by specifying path without the prepend.
- * Source Academy assets can be found at `https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/` with Ctrl+f "png".
- * Phaser assets can be found at `https://labs.phaser.io/assets/`.
+ * Source Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/ with Ctrl+f ".png".
+ * Phaser assets can be found at https://labs.phaser.io/assets/.
+ * If Phaser assets are unavailable, go to https://github.com/photonstorm/phaser3-examples/tree/master/public/assets
+ * to get the asset path and append it to `https://labs.phaser.io/assets/`.
  * Assets from other websites can also be used if they support Cross-Origin Resource Sharing (CORS), but the full path must be specified.
  *
  * @param image_url The image URL of the sprite
@@ -205,12 +179,9 @@ export const create_sprite: (image_url: string) => SpriteGameObject = (image_url
     throw new Error('image_url must be a string');
   }
   const sprite: Sprite = {
-    image_url,
+    imageUrl: image_url,
   } as Sprite;
-
-  const gameObject = new SpriteGameObject(defaultTransform, defaultRenderProps, defaultInteractableProps, sprite);
-
-  return gameObject;
+  return new SpriteGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, sprite);
 };
 
 // =============================================================================
@@ -310,12 +281,7 @@ export const update_color: (gameObject: GameObject, color: ColorRGBA) => GameObj
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
-      color: {
-        red: color[0],
-        green: color[1],
-        blue: color[2],
-        alpha: color[3],
-      } as Color,
+      color,
     });
     return gameObject;
   }
@@ -386,7 +352,7 @@ export const update_text: (textGameObject: TextGameObject, text: string) => Game
 export const update_to_top: (gameObject: GameObject) => GameObject
 = (gameObject: GameObject) => {
   if (gameObject instanceof RenderableGameObject) {
-    gameObject.bringToTop();
+    gameObject.setBringToTopFlag();
     return gameObject;
   }
   throw new TypeError('Cannot update to top a non-GameObject');
@@ -493,7 +459,7 @@ export const query_scale: (gameObject: GameObject) => ScaleXY
 export const query_color: (gameObject: RenderableGameObject) => ColorRGBA
 = (gameObject: RenderableGameObject) => {
   if (gameObject instanceof RenderableGameObject) {
-    return gameObject.getColor();
+    return [...gameObject.getColor()];
   }
   throw new TypeError('Cannot query color of non-GameObject');
 };
@@ -590,7 +556,7 @@ const withinRange: (num: number, min: number, max: number) => number
  * ```
  */
 export const set_fps: (fps: number) => void = (fps: number) => {
-  CONFIG.FPS = withinRange(fps, MIN_FPS, MAX_FPS);
+  config.fps = withinRange(fps, MIN_FPS, MAX_FPS);
 };
 
 /**
@@ -608,8 +574,8 @@ export const set_dimensions: (dimensions: DimensionsXY) => void = (dimensions: D
   if (dimensions.length !== 2) {
     throw new Error('dimensions must be a 2-element array');
   }
-  CONFIG.WIDTH = withinRange(dimensions[0], MIN_WIDTH, MAX_WIDTH);
-  CONFIG.HEIGHT = withinRange(dimensions[1], MIN_HEIGHT, MAX_HEIGHT);
+  config.width = withinRange(dimensions[0], MIN_WIDTH, MAX_WIDTH);
+  config.height = withinRange(dimensions[1], MIN_HEIGHT, MAX_HEIGHT);
 };
 
 /**
@@ -626,7 +592,7 @@ export const set_dimensions: (dimensions: DimensionsXY) => void = (dimensions: D
  * ```
  */
 export const set_scale: (scale: number) => void = (scale: number) => {
-  CONFIG.SCALE = withinRange(scale, MIN_SCALE, MAX_SCALE);
+  config.scale = withinRange(scale, MIN_SCALE, MAX_SCALE);
 };
 
 /**
@@ -644,14 +610,14 @@ export const set_scale: (scale: number) => void = (scale: number) => {
  * ```
  */
 export const enable_debug: () => void = () => {
-  CONFIG.DEBUG = true;
+  config.isDebugEnabled = true;
 };
 
 
 /**
- * Logs any information passed into it within the update_loop(...).
+ * Logs any information passed into it within the `update_loop`.
  * Displays the information in the top-left corner of the canvas only if debug mode is enabled.
- * Calling display(...) within this function will not work as intended, so use debug_log(...) instead.
+ * Calling `display` within the `update_loop` function will not work as intended, so use `debug_log` instead.
  *
  * @param info The information to log.
  * @example
@@ -663,7 +629,7 @@ export const enable_debug: () => void = () => {
  * ```
  */
 export const debug_log: (info: string) => void = (info: string) => {
-  if (CONFIG.DEBUG) {
+  if (config.isDebugEnabled) {
     gameState.debugLogArray.push(info);
   }
 };
@@ -675,7 +641,7 @@ export const debug_log: (info: string) => void = (info: string) => {
 /**
  * Detects if a key input is pressed down.
  * This function must be called in your update function to detect inputs.
- * To get specific keys, go to https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key#result
+ * To get specific keys, go to https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key#result.
  *
  * @param key_name The key name of the key.
  * @returns True, in the frame the key is pressed down.
@@ -702,7 +668,7 @@ export const input_key_down: (key_name: string) => boolean = (key_name: string) 
  * ```
  * @category Logic
  */
-export const input_left_mouse_down: () => boolean = () => gameState.pointerProps.pointerPrimaryDown;
+export const input_left_mouse_down: () => boolean = () => gameState.pointerProps.isPointerPrimaryDown;
 
 /**
  * Detects if the right mouse button is pressed down.
@@ -717,7 +683,7 @@ export const input_left_mouse_down: () => boolean = () => gameState.pointerProps
  * ```
  * @category Logic
  */
-export const input_right_mouse_down: () => boolean = () => gameState.pointerProps.pointerSecondaryDown;
+export const input_right_mouse_down: () => boolean = () => gameState.pointerProps.isPointerSecondaryDown;
 
 /**
  * Detects if the (mouse) pointer is over the gameobject.
@@ -802,7 +768,7 @@ export const get_loop_count: () => number = () => gameState.loopCount;
  * There should only be one update_loop called.
  * All game logic should be handled within your update_function.
  * You cannot create GameObjects inside the update_loop.
- * game_state is an array that can store anything.
+ * game_state is an array that can be modified to store anything.
  *
  * @param update_function A user-defined update_function, that takes in an array as a parameter.
  * @example
@@ -823,7 +789,7 @@ export const update_loop: (update_function: UpdateFunction) => void = (update_fu
   // Test for error in user update function
   // This cannot not check for errors inside a block that is not run.
   update_function([]);
-  CONFIG.userUpdateFunction = update_function;
+  config.userUpdateFunction = update_function;
 };
 
 /**
@@ -850,14 +816,14 @@ export const build_game: () => BuildGame = () => {
 
   const fpsConfig = {
     min: MIN_FPS,
-    target: CONFIG.FPS,
+    target: config.fps,
     forceSetTimeOut: true,
   };
 
   const gameConfig = {
-    width: CONFIG.WIDTH / CONFIG.SCALE,
-    height: CONFIG.HEIGHT / CONFIG.SCALE,
-    zoom: CONFIG.SCALE,
+    width: config.width / config.scale,
+    height: config.height / config.scale,
+    zoom: config.scale,
     // Setting to Phaser.WEBGL can lead to WebGL: INVALID_OPERATION errors, so Phaser.CANVAS is used instead.
     // Also: Phaser.WEBGL can crash when there are too many contexts
     // WEBGL is generally more performant, and allows for tinting of gameobjects.
@@ -881,9 +847,11 @@ export const build_game: () => BuildGame = () => {
 
 /**
  * Create an audio clip that can be referenced.
- * Source Academy assets can be found at `https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/` with Ctrl+f "mp3".
- * Phaser audio assets can be found at `https://labs.phaser.io/assets/audio`.
- * Phaser sound effects assets can be found at `https://labs.phaser.io/assets/audio/SoundEffects/`.
+ * Source Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/ with Ctrl+f ".mp3".
+ * Phaser audio assets can be found at https://labs.phaser.io/assets/audio.
+ * Phaser sound effects assets can be found at https://labs.phaser.io/assets/audio/SoundEffects/.
+ * If Phaser assets are unavailable, go to https://github.com/photonstorm/phaser3-examples/tree/master/public/assets
+ * to get the asset path and append it to `https://labs.phaser.io/assets/`.
  * This function should not be called in your update function.
  *
  * @param audio_url The URL of the audio clip.
@@ -920,7 +888,7 @@ export const create_audio: (audio_url: string, volume_level: number) => AudioCli
  */
 export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   if (audio_clip instanceof AudioClip) {
-    audio_clip.loopAudioClip(true);
+    audio_clip.setShouldAudioClipLoop(true);
     return audio_clip;
   }
   throw new TypeError('Cannot loop a non-AudioClip');
@@ -939,7 +907,7 @@ export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  */
 export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   if (audio_clip instanceof AudioClip) {
-    audio_clip.playAudioClip(true);
+    audio_clip.setShouldAudioClipPlay(true);
     return audio_clip;
   }
   throw new TypeError('Cannot play a non-AudioClip');
@@ -958,7 +926,7 @@ export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  */
 export const stop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   if (audio_clip instanceof AudioClip) {
-    audio_clip.playAudioClip(false);
+    audio_clip.setShouldAudioClipPlay(false);
     return audio_clip;
   }
   throw new TypeError('Cannot stop a non-AudioClip');

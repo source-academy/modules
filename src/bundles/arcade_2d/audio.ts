@@ -9,21 +9,21 @@
 export class AudioClip {
   private static audioClipCount: number = 0;
   // Stores AudioClip index with the URL as a unique key.
-  private static audioClips: Map<string, number> = new Map<string, number>();
+  private static audioClipsIndexMap: Map<string, number> = new Map<string, number>();
   // Stores all the created AudioClips
-  private static audioClipsArray: AudioClip[] = [];
-  protected audioClipNotUpdated: boolean = true;
+  private static audioClipsArray: Array<AudioClip> = [];
   public readonly id: number;
 
-  private playClip: boolean = false;
-  private loop: boolean = false;
+  private isUpdated: boolean = false;
+  private shouldPlay: boolean = false;
+  private shouldLoop: boolean = false;
 
   private constructor(
     private url: string,
     private volumeLevel: number,
   ) {
     this.id = AudioClip.audioClipCount++;
-    AudioClip.audioClips.set(url, this.id);
+    AudioClip.audioClipsIndexMap.set(url, this.id);
     AudioClip.audioClipsArray.push(this);
   }
 
@@ -35,43 +35,47 @@ export class AudioClip {
     if (url === '') {
       throw new Error('AudioClip URL cannot be empty');
     }
-    if (AudioClip.audioClips.has(url)) {
-      return AudioClip.audioClipsArray[AudioClip.audioClips.get(url) as number];
+    if (AudioClip.audioClipsIndexMap.has(url)) {
+      return AudioClip.audioClipsArray[AudioClip.audioClipsIndexMap.get(url) as number];
     }
     return new AudioClip(url, volumeLevel);
   }
   public getUrl() {
     return this.url;
   }
-  public getVolume() {
+  public getVolumeLevel() {
     return this.volumeLevel;
   }
-  public getLoop() {
-    return this.loop;
+  public shouldAudioClipLoop() {
+    return this.shouldLoop;
   }
-  public shouldPlayClip() {
-    return this.playClip;
+  public shouldAudioClipPlay() {
+    return this.shouldPlay;
   }
-  public loopAudioClip(loop: boolean) {
-    if (this.loop !== loop) {
-      this.loop = loop;
-      this.audioClipNotUpdated = true;
+  public setShouldAudioClipLoop(loop: boolean) {
+    if (this.shouldLoop !== loop) {
+      this.shouldLoop = loop;
+      this.isUpdated = false;
     }
   }
-  public playAudioClip(play: boolean) {
-    this.playClip = play;
-    this.audioClipNotUpdated = true;
+  /**
+   * Updates the play/pause state.
+   * @param play When true, the Audio Clip has a playing state.
+   */
+  public setShouldAudioClipPlay(play: boolean) {
+    this.shouldPlay = play;
+    this.isUpdated = false;
   }
   /**
    * Checks if the Audio Clip needs to update. Updates the flag if true.
    */
   public hasAudioClipUpdates() {
-    const temp = this.audioClipNotUpdated;
-    this.updatedAudioClip();
+    const temp = !this.isUpdated;
+    this.setAudioClipUpdated();
     return temp;
   }
-  public updatedAudioClip() {
-    this.audioClipNotUpdated = false;
+  public setAudioClipUpdated() {
+    this.isUpdated = true;
   }
   public static getAudioClipsArray() {
     return AudioClip.audioClipsArray;
