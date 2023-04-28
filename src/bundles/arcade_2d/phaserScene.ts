@@ -53,7 +53,7 @@ export class PhaserScene extends Phaser.Scene {
     super('PhaserScene');
   }
   private sourceGameObjects;
-  private phaserGameObjects = [] as (PhaserGameObject)[];
+  private phaserGameObjects: Array<PhaserGameObject> = [];
   private corsAssets;
   private sourceAudioClips;
   private phaserAudioClips;
