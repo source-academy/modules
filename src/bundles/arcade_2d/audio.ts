@@ -10,7 +10,7 @@ export class AudioClip {
   private static audioClipCount: number = 0;
   // Stores AudioClip index with the URL as a unique key.
   private static audioClips: Map<string, number> = new Map<string, number>();
-  // storea all the created AudioClips
+  // Stores all the created AudioClips
   private static audioClipsArray: AudioClip[] = [];
   protected audioClipNotUpdated: boolean = true;
   public readonly id: number;
