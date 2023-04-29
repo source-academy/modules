@@ -70,9 +70,9 @@ export class AudioClip {
    * Checks if the Audio Clip needs to update. Updates the flag if true.
    */
   public hasAudioClipUpdates() {
-    const temp = !this.isUpdated;
+    const prevValue = !this.isUpdated;
     this.setAudioClipUpdated();
-    return temp;
+    return prevValue;
   }
   public setAudioClipUpdated() {
     this.isUpdated = true;

@@ -524,12 +524,12 @@ export const query_pointer_position: () => PositionXY
 // =============================================================================
 
 /**
- * Private function.
+ * Private function to set the allowed range for a value.
  *
- * @param num the number
+ * @param num the numeric value
  * @param min the minimum value allowed for that number
  * @param max the maximum value allowed for that number
- * @returns a number within the interval.
+ * @returns a number within the interval
  * @hidden
  */
 const withinRange: (num: number, min: number, max: number) => number
