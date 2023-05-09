@@ -7,3 +7,6 @@
 *.js text eof=crlf
 *.ts text eof=crlf
 *.tsx text eof=crlf
+*.md text eof=crlf
+*.cjs text eof=crlf
+*.json text eof=crlf
