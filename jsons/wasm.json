@@ -1,0 +1,4 @@
+{
+  "wcompile": "<div><h4>wcompile(program: string) → {undefined}</h4><div class=\"description\"><p>Compile a (hopefully valid) WebAssembly Text module to binary.</p></div></div>",
+  "wrun": "<div><h4>wrun(buffer: undefined) → {AlternatingLinkedList}</h4><div class=\"description\"><p>Run a compiled WebAssembly Binary Buffer.</p></div></div>"
+}

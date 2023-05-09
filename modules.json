@@ -86,6 +86,9 @@
   "remote_execution": {
     "tabs": []
   },
+  "wasm": {
+    "tabs": []
+  },
   "arcade_2d": {
     "tabs": [
       "ArcadeTwod"
