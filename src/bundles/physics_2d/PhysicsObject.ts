@@ -168,8 +168,8 @@ export class PhysicsObject implements ReplResult {
     if (this.shape instanceof b2CircleShape) {
       this.shape.m_radius *= scale;
     } else if (this.shape instanceof b2PolygonShape) {
-      let centroid: b2Vec2 = this.shape.m_centroid;
-      let arr: b2Vec2[] = [];
+      const centroid: b2Vec2 = this.shape.m_centroid;
+      const arr: b2Vec2[] = [];
       this.shape.m_vertices.forEach((vec) => {
         arr.push(
           new b2Vec2(
@@ -181,7 +181,7 @@ export class PhysicsObject implements ReplResult {
       this.shape = new b2PolygonShape()
         .Set(arr);
     }
-    let f: b2Fixture = this.fixture;
+    const f: b2Fixture = this.fixture;
     this.body.DestroyFixture(this.fixture);
     this.fixture = this.body.CreateFixture({
       shape: this.shape,

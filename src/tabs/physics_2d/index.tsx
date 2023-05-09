@@ -1,16 +1,11 @@
-import React from 'react';
-
-
 import type { DebuggerContext } from '../../typings/type_helpers';
 import DebugDrawCanvas from './DebugDrawCanvas';
 
 /**
- * <Brief description of the tab>
- * @author <Author Name>
- * @author <Author Name>
+ * Debug draw visualization for the physics world.
+ * @author Muhammad Fikri Bin Abdul Kalam
+ * @author Yu Jiali
  */
-
-
 
 export default {
   /**

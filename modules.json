@@ -89,6 +89,11 @@
   "wasm": {
     "tabs": []
   },
+  "arcade_2d": {
+    "tabs": [
+      "ArcadeTwod"
+    ]
+  },
   "physics_2d": {
     "tabs": [
       "physics_2d"
