@@ -21,21 +21,19 @@ import {
 } from "@jscad/modeling/src/operations/booleans";
 import { extrudeLinear } from "@jscad/modeling/src/operations/extrusions";
 import { align } from "@jscad/modeling/src/operations/transforms";
+import { serialize } from "@jscad/stl-serializer";
+import save from "save-file";
 import { SILVER } from "./constants.js";
 import { Core } from "./core.js";
 import type { Color, Coordinates, Solid } from "./jscad/types.js";
 import { type List } from "./types";
 import {
-  align,
-} from '@jscad/modeling/src/operations/transforms';
-import { serialize } from '@jscad/stl-serializer';
-import save from 'save-file';
-import { SILVER } from './constants.js';
-import { Core } from './core.js';
-import type { Color, Coordinates, Solid } from './jscad/types.js';
-import { hexToColor, type Entity, Shape, Group, type RenderGroup } from './utilities';
-import { type List } from './types';
-
+  Group,
+  Shape,
+  hexToColor,
+  type Entity,
+  type RenderGroup,
+} from "./utilities";
 
 /**
  * Colour the shape using the specified hex colour code.
@@ -73,7 +71,7 @@ export function shape_center(shape: Shape): (axis: String) => number {
     bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
   ];
   return (axis: String): number => {
-    let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
+    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
     if (i === -1) {
       throw Error("shape_center's returned function expects a proper axis.");
     } else {
@@ -89,7 +87,7 @@ export function shape_center(shape: Shape): (axis: String) => number {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  let newSolid: Solid = align({ modes: ['min', 'min', 'min'] }, shape.solid);
+  let newSolid: Solid = align({ modes: ["min", "min", "min"] }, shape.solid);
   return new Shape(newSolid);
 }
 
@@ -458,8 +456,7 @@ export const white: string = "#FFFFFF";
  * @returns {Shape} The resulting unioned shape
  */
 export function union(a: Shape, b: Shape): Shape {
-  // Warning: not adding clone() will cause the shapes to lose colour
-  let newSolid: Solid = _union(a.clone().solid, b.clone().solid);
+  let newSolid: Solid = _union(a.solid, b.solid);
   return new Shape(newSolid);
 }
 
@@ -471,8 +468,7 @@ export function union(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting subtracted shape
  */
 export function subtract(a: Shape, b: Shape): Shape {
-  // Warning: not adding clone() will cause the shapes to lose colour
-  let newSolid: Solid = _subtract(a.clone().solid, b.clone().solid);
+  let newSolid: Solid = _subtract(a.solid, b.solid);
   return new Shape(newSolid);
 }
 
@@ -484,8 +480,7 @@ export function subtract(a: Shape, b: Shape): Shape {
  * @returns {Shape} The resulting intersection shape
  */
 export function intersect(a: Shape, b: Shape): Shape {
-  // Warning: not adding clone() will cause the shapes to lose colour
-  let newSolid: Solid = _intersect(a.clone().solid, b.clone().solid);
+  let newSolid: Solid = _intersect(a.solid, b.solid);
   return new Shape(newSolid);
 }
 
@@ -503,16 +498,9 @@ export function intersect(a: Shape, b: Shape): Shape {
  * @param {number} z - Scaling in the z direction
  * @returns {Shape} Resulting Shape
  */
-export function scale(
-  entity: Entity,
-  x: number,
-  y: number,
-  z: number,
-): Entity {
+export function scale(entity: Entity, x: number, y: number, z: number): Entity {
   if (x === 0 || y === 0 || z === 0) {
-    throw new Error(
-      'factors must be non-zero',
-    );
+    throw new Error("factors must be non-zero");
   }
   return entity.scale([x, y, z]);
 }
@@ -574,15 +562,15 @@ export function rotate(
  */
 
 export function bounding_box(
-  shape: Shape,
+  shape: Shape
 ): (axis: String, min: String) => number {
-  let bounds: BoundingBox = measureBoundingBox(shape.clone().solid);
+  let bounds: BoundingBox = measureBoundingBox(shape.solid);
   return (axis: String, min: String): number => {
-    let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
-    let j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
+    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
+    let j: number = min === "min" ? 0 : min === "max" ? 1 : -1;
     if (i === -1 || j === -1) {
       throw Error(
-        'bounding_box returned function expects a proper axis and min String.',
+        "bounding_box returned function expects a proper axis and min String."
       );
     } else {
       return bounds[j][i];
@@ -600,18 +588,21 @@ export function bounding_box(
 export function rgb(
   redComponent: number,
   greenComponent: number,
-  blueComponent: number,
+  blueComponent: number
 ): string {
-  if (redComponent < 0 || redComponent > 255
-      || greenComponent < 0 || greenComponent > 255
-      || blueComponent < 0 || blueComponent > 255) {
-    throw new Error(
-      'invalid argument value: expects [0, 255]',
-    );
+  if (
+    redComponent < 0 ||
+    redComponent > 255 ||
+    greenComponent < 0 ||
+    greenComponent > 255 ||
+    blueComponent < 0 ||
+    blueComponent > 255
+  ) {
+    throw new Error("invalid argument value: expects [0, 255]");
   }
-  return `#${redComponent.toString(16)
-  }${greenComponent.toString(16)
-  }${blueComponent.toString(16)}`;
+  return `#${redComponent.toString(16)}${greenComponent.toString(
+    16
+  )}${blueComponent.toString(16)}`;
 }
 
 /**
@@ -693,6 +684,6 @@ export function render(groupToRender: Group): RenderGroup {
 export async function shape_to_stl(shape: Shape): Promise<void> {
   await save(
     new Blob(serialize({ binary: true }, shape.solid)),
-    'Source Academy CSG' + '.stl',
+    "Source Academy CSG" + ".stl"
   );
 }
