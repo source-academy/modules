@@ -25,7 +25,7 @@ import { serialize } from "@jscad/stl-serializer";
 import save from "save-file";
 import { SILVER } from "./constants.js";
 import { Core } from "./core.js";
-import type { Color, Coordinates, Solid } from "./jscad/types.js";
+import type { Solid } from "./jscad/types.js";
 import { type List } from "./types";
 import {
   Group,
@@ -34,51 +34,6 @@ import {
   type Entity,
   type RenderGroup,
 } from "./utilities";
-
-/**
- * Colour the shape using the specified hex colour code.
- *
- * @param {Shape} shape - The Shape to be coloured and returned
- * @param {string} hex - The colour code to use
- * @returns {Shape} The colorized shape
- */
-function colorize(shape: Shape, hex: string) {
-  let color: Color = hexToColor(hex);
-  let coloredSolid: Solid = _colorize(color, shape.solid);
-  return new Shape(coloredSolid);
-}
-
-/**
- * Returns a lambda function that contains the center of the given shape in the
- * x, y and z direction. Providing 'x', 'y', 'z' as input would return x, y and
- * z coordinates of shape's center
- *
- * For example
- * ````
- * const a = shape_center(sphere);
- * a('x'); // Returns the x coordinate of the shape's center
- * ````
- *
- * @param {Shape} shape - The scale to be measured
- * @returns {(String) => number} A lambda function providing the shape's center
- * coordinates
- */
-export function shape_center(shape: Shape): (axis: String) => number {
-  let bounds: BoundingBox = measureBoundingBox(shape.solid);
-  let centerCoords: Coordinates = [
-    bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2,
-    bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2,
-    bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2,
-  ];
-  return (axis: String): number => {
-    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
-    if (i === -1) {
-      throw Error("shape_center's returned function expects a proper axis.");
-    } else {
-      return centerCoords[i];
-    }
-  };
-}
 
 /**
  * Center the provided shape with the middle base of the shape at (0, 0, 0).
@@ -499,7 +454,7 @@ export function intersect(a: Shape, b: Shape): Shape {
  * @returns {Shape} Resulting Shape
  */
 export function scale(entity: Entity, x: number, y: number, z: number): Entity {
-  if (x === 0 || y === 0 || z === 0) {
+  if (x <= 0 || y <= 0 || z <= 0) {
     throw new Error("factors must be non-zero");
   }
   return entity.scale([x, y, z]);
