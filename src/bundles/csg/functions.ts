@@ -9,31 +9,31 @@
  */
 
 /* [Imports] */
-import { primitives } from "@jscad/modeling";
+import { primitives } from '@jscad/modeling';
 import {
   measureBoundingBox,
   type BoundingBox,
-} from "@jscad/modeling/src/measurements";
+} from '@jscad/modeling/src/measurements';
 import {
   intersect as _intersect,
   subtract as _subtract,
   union as _union,
-} from "@jscad/modeling/src/operations/booleans";
-import { extrudeLinear } from "@jscad/modeling/src/operations/extrusions";
-import { align } from "@jscad/modeling/src/operations/transforms";
-import { serialize } from "@jscad/stl-serializer";
-import save from "save-file";
-import { SILVER } from "./constants.js";
-import { Core } from "./core.js";
-import type { Solid } from "./jscad/types.js";
-import { type List } from "./types";
+} from '@jscad/modeling/src/operations/booleans';
+import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
+import { align } from '@jscad/modeling/src/operations/transforms';
+import { serialize } from '@jscad/stl-serializer';
+import save from 'save-file';
+import { SILVER } from './constants.js';
+import { Core } from './core.js';
+import type { Solid } from './jscad/types.js';
+import { type List } from './types';
 import {
   Group,
   Shape,
   hexToColor,
   type Entity,
   type RenderGroup,
-} from "./utilities";
+} from './utilities';
 
 /**
  * Center the provided shape with the middle base of the shape at (0, 0, 0).
@@ -42,7 +42,7 @@ import {
  * @returns {Shape} The shape that is centered
  */
 function shapeSetOrigin(shape: Shape) {
-  let newSolid: Solid = align({ modes: ["min", "min", "min"] }, shape.solid);
+  let newSolid: Solid = align({ modes: ['min', 'min', 'min'] }, shape.solid);
   return new Shape(newSolid);
 }
 
@@ -55,7 +55,7 @@ function shapeSetOrigin(shape: Shape) {
  * @category Primitive
  */
 const primitiveCube: Shape = shapeSetOrigin(
-  new Shape(primitives.cube({ size: 1 }))
+  new Shape(primitives.cube({ size: 1 })),
 );
 
 /**
@@ -75,7 +75,7 @@ export function cube(hex: string): Shape {
  * @category Primitive
  */
 const primitiveSphere: Shape = shapeSetOrigin(
-  new Shape(primitives.sphere({ radius: 0.5 }))
+  new Shape(primitives.sphere({ radius: 0.5 })),
 );
 
 /**
@@ -98,8 +98,8 @@ const primitiveCylinder: Shape = shapeSetOrigin(
     primitives.cylinder({
       radius: 0.5,
       height: 1,
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -118,7 +118,7 @@ export function cylinder(hex: string): Shape {
  * @category Primitive
  */
 const primitivePrism: Shape = shapeSetOrigin(
-  new Shape(extrudeLinear({ height: 1 }, primitives.triangle()))
+  new Shape(extrudeLinear({ height: 1 }, primitives.triangle())),
 );
 
 /**
@@ -137,7 +137,7 @@ export function prism(hex: string): Shape {
  * @category Primitive
  */
 const primitiveStar: Shape = shapeSetOrigin(
-  new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 })))
+  new Shape(extrudeLinear({ height: 1 }, primitives.star({ outerRadius: 0.5 }))),
 );
 
 /**
@@ -162,8 +162,8 @@ const primitivePyramid: Shape = shapeSetOrigin(
       startRadius: [0.5, 0.5],
       endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
       segments: 4,
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -187,8 +187,8 @@ const primitiveCone: Shape = shapeSetOrigin(
       height: 1,
       startRadius: [0.5, 0.5],
       endRadius: [Number.MIN_VALUE, Number.MIN_VALUE],
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -211,8 +211,8 @@ const primitiveTorus: Shape = shapeSetOrigin(
     primitives.torus({
       innerRadius: 0.125,
       outerRadius: 0.375,
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -231,7 +231,7 @@ export function torus(hex: string): Shape {
  * @category Primitive
  */
 const primitiveRoundedCube: Shape = shapeSetOrigin(
-  new Shape(primitives.roundedCuboid({ size: [1, 1, 1] }))
+  new Shape(primitives.roundedCuboid({ size: [1, 1, 1] })),
 );
 
 /**
@@ -254,8 +254,8 @@ const primitiveRoundedCylinder: Shape = shapeSetOrigin(
     primitives.roundedCylinder({
       height: 1,
       radius: 0.5,
-    })
-  )
+    }),
+  ),
 );
 
 /**
@@ -274,7 +274,7 @@ export function rounded_cylinder(hex: string): Shape {
  * @category Primitive
  */
 const primitiveGeodesicSphere: Shape = shapeSetOrigin(
-  new Shape(primitives.geodesicSphere({ radius: 0.5 }))
+  new Shape(primitives.geodesicSphere({ radius: 0.5 })),
 );
 
 /**
@@ -293,49 +293,49 @@ export function geodesic_sphere(hex: string): Shape {
  *
  * @category Colour
  */
-export const black: string = "#000000";
+export const black: string = '#000000';
 
 /**
  * A hex colour code for dark blue (#0000AA).
  *
  * @category Colour
  */
-export const navy: string = "#0000AA";
+export const navy: string = '#0000AA';
 
 /**
  * A hex colour code for green (#00AA00).
  *
  * @category Colour
  */
-export const green: string = "#00AA00";
+export const green: string = '#00AA00';
 
 /**
  * A hex colour code for dark cyan (#00AAAA).
  *
  * @category Colour
  */
-export const teal: string = "#00AAAA";
+export const teal: string = '#00AAAA';
 
 /**
  * A hex colour code for dark red (#AA0000).
  *
  * @category Colour
  */
-export const crimson: string = "#AA0000";
+export const crimson: string = '#AA0000';
 
 /**
  * A hex colour code for purple (#AA00AA).
  *
  * @category Colour
  */
-export const purple: string = "#AA00AA";
+export const purple: string = '#AA00AA';
 
 /**
  * A hex colour code for orange (#FFAA00).
  *
  * @category Colour
  */
-export const orange: string = "#FFAA00";
+export const orange: string = '#FFAA00';
 
 /**
  * A hex colour code for light grey (#AAAAAA). This is the default colour used
@@ -350,56 +350,56 @@ export const silver: string = SILVER;
  *
  * @category Colour
  */
-export const gray: string = "#555555";
+export const gray: string = '#555555';
 
 /**
  * A hex colour code for blue (#5555FF).
  *
  * @category Colour
  */
-export const blue: string = "#5555FF";
+export const blue: string = '#5555FF';
 
 /**
  * A hex colour code for light green (#55FF55).
  *
  * @category Colour
  */
-export const lime: string = "#55FF55";
+export const lime: string = '#55FF55';
 
 /**
  * A hex colour code for cyan (#55FFFF).
  *
  * @category Colour
  */
-export const cyan: string = "#55FFFF";
+export const cyan: string = '#55FFFF';
 
 /**
  * A hex colour code for light red (#FF5555).
  *
  * @category Colour
  */
-export const rose: string = "#FF5555";
+export const rose: string = '#FF5555';
 
 /**
  * A hex colour code for pink (#FF55FF).
  *
  * @category Colour
  */
-export const pink: string = "#FF55FF";
+export const pink: string = '#FF55FF';
 
 /**
  * A hex colour code for yellow (#FFFF55).
  *
  * @category Colour
  */
-export const yellow: string = "#FFFF55";
+export const yellow: string = '#FFFF55';
 
 /**
  * A hex colour code for white (#FFFFFF).
  *
  * @category Colour
  */
-export const white: string = "#FFFFFF";
+export const white: string = '#FFFFFF';
 
 // [Functions]
 
@@ -455,7 +455,7 @@ export function intersect(a: Shape, b: Shape): Shape {
  */
 export function scale(entity: Entity, x: number, y: number, z: number): Entity {
   if (x <= 0 || y <= 0 || z <= 0) {
-    throw new Error("factors must be non-zero");
+    throw new Error('factors must be non-zero');
   }
   return entity.scale([x, y, z]);
 }
@@ -474,7 +474,7 @@ export function translate(
   entity: Entity,
   x: number,
   y: number,
-  z: number
+  z: number,
 ): Entity {
   return entity.translate([x, y, z]);
 }
@@ -495,7 +495,7 @@ export function rotate(
   entity: Entity,
   x: number,
   y: number,
-  z: number
+  z: number,
 ): Entity {
   return entity.rotate([x, y, z]);
 }
@@ -517,15 +517,15 @@ export function rotate(
  */
 
 export function bounding_box(
-  shape: Shape
+  shape: Shape,
 ): (axis: String, min: String) => number {
   let bounds: BoundingBox = measureBoundingBox(shape.solid);
   return (axis: String, min: String): number => {
-    let i: number = axis === "x" ? 0 : axis === "y" ? 1 : axis === "z" ? 2 : -1;
-    let j: number = min === "min" ? 0 : min === "max" ? 1 : -1;
+    let i: number = axis === 'x' ? 0 : axis === 'y' ? 1 : axis === 'z' ? 2 : -1;
+    let j: number = min === 'min' ? 0 : min === 'max' ? 1 : -1;
     if (i === -1 || j === -1) {
       throw Error(
-        "bounding_box returned function expects a proper axis and min String."
+        'bounding_box returned function expects a proper axis and min String.',
       );
     } else {
       return bounds[j][i];
@@ -543,20 +543,20 @@ export function bounding_box(
 export function rgb(
   redComponent: number,
   greenComponent: number,
-  blueComponent: number
+  blueComponent: number,
 ): string {
   if (
-    redComponent < 0 ||
-    redComponent > 255 ||
-    greenComponent < 0 ||
-    greenComponent > 255 ||
-    blueComponent < 0 ||
-    blueComponent > 255
+    redComponent < 0
+    || redComponent > 255
+    || greenComponent < 0
+    || greenComponent > 255
+    || blueComponent < 0
+    || blueComponent > 255
   ) {
-    throw new Error("invalid argument value: expects [0, 255]");
+    throw new Error('invalid argument value: expects [0, 255]');
   }
   return `#${redComponent.toString(16)}${greenComponent.toString(
-    16
+    16,
   )}${blueComponent.toString(16)}`;
 }
 
@@ -600,7 +600,8 @@ export function group(children: List): Group {
 export function render_grid_axes(groupToRender: Group): RenderGroup {
   groupToRender.store();
   // Render group is returned for REPL text only; do not document
-  return Core.getRenderGroupManager().nextRenderGroup(true, true);
+  return Core.getRenderGroupManager()
+    .nextRenderGroup(true, true);
 }
 
 /**
@@ -610,7 +611,8 @@ export function render_grid_axes(groupToRender: Group): RenderGroup {
  */
 export function render_grid(groupToRender: Group): RenderGroup {
   groupToRender.store();
-  return Core.getRenderGroupManager().nextRenderGroup(true);
+  return Core.getRenderGroupManager()
+    .nextRenderGroup(true);
 }
 
 /**
@@ -620,7 +622,8 @@ export function render_grid(groupToRender: Group): RenderGroup {
  */
 export function render_axes(groupToRender: Group): RenderGroup {
   groupToRender.store();
-  return Core.getRenderGroupManager().nextRenderGroup(undefined, true);
+  return Core.getRenderGroupManager()
+    .nextRenderGroup(undefined, true);
 }
 
 /**
@@ -630,7 +633,8 @@ export function render_axes(groupToRender: Group): RenderGroup {
  */
 export function render(groupToRender: Group): RenderGroup {
   groupToRender.store();
-  return Core.getRenderGroupManager().nextRenderGroup();
+  return Core.getRenderGroupManager()
+    .nextRenderGroup();
 }
 
 /**
@@ -639,6 +643,6 @@ export function render(groupToRender: Group): RenderGroup {
 export async function shape_to_stl(shape: Shape): Promise<void> {
   await save(
     new Blob(serialize({ binary: true }, shape.solid)),
-    "Source Academy CSG" + ".stl"
+    'Source Academy CSG' + '.stl',
   );
 }
