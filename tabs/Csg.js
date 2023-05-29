@@ -414,14 +414,14 @@ require => (() => {
     "node_modules/@jscad/modeling/src/maths/vec3/clone.js"(exports, module) {
       init_define_process();
       var create = require_create();
-      var clone2 = vector => {
+      var clone = vector => {
         const out = create();
         out[0] = vector[0];
         out[1] = vector[1];
         out[2] = vector[2];
         return out;
       };
-      module.exports = clone2;
+      module.exports = clone;
     }
   });
   var require_copy = __commonJS({
@@ -872,13 +872,13 @@ require => (() => {
     "node_modules/@jscad/modeling/src/maths/vec2/clone.js"(exports, module) {
       init_define_process();
       var create = require_create2();
-      var clone2 = vector => {
+      var clone = vector => {
         const out = create();
         out[0] = vector[0];
         out[1] = vector[1];
         return out;
       };
-      module.exports = clone2;
+      module.exports = clone;
     }
   });
   var require_copy2 = __commonJS({
@@ -1236,8 +1236,8 @@ require => (() => {
   var require_clone3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
       init_define_process();
-      var clone2 = geometry => Object.assign({}, geometry);
-      module.exports = clone2;
+      var clone = geometry => Object.assign({}, geometry);
+      module.exports = clone;
     }
   });
   var require_add3 = __commonJS({
@@ -1276,7 +1276,7 @@ require => (() => {
     "node_modules/@jscad/modeling/src/maths/mat4/clone.js"(exports, module) {
       init_define_process();
       var create = require_create3();
-      var clone2 = matrix => {
+      var clone = matrix => {
         const out = create();
         out[0] = matrix[0];
         out[1] = matrix[1];
@@ -1296,7 +1296,7 @@ require => (() => {
         out[15] = matrix[15];
         return out;
       };
-      module.exports = clone2;
+      module.exports = clone;
     }
   });
   var require_copy3 = __commonJS({
@@ -2126,14 +2126,14 @@ require => (() => {
   var require_create4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/create.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var create = sides => {
         if (sides === void 0) {
           sides = [];
         }
         return {
           sides,
-          transforms: mat4.create()
+          transforms: mat42.create()
         };
       };
       module.exports = create;
@@ -2168,13 +2168,13 @@ require => (() => {
   var require_fromCompactBinary = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/fromCompactBinary.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var vec2 = require_vec2();
       var create = require_create4();
       var fromCompactBinary = data => {
         if (data[0] !== 0) throw new Error("invalid compact binary data");
         const created = create();
-        created.transforms = mat4.clone(data.slice(1, 17));
+        created.transforms = mat42.clone(data.slice(1, 17));
         for (let i = 21; i < data.length; i += 4) {
           const point0 = vec2.fromValues(data[i + 0], data[i + 1]);
           const point1 = vec2.fromValues(data[i + 2], data[i + 3]);
@@ -2207,16 +2207,16 @@ require => (() => {
   var require_applyTransforms = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/applyTransforms.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var vec2 = require_vec2();
       var applyTransforms = geometry => {
-        if (mat4.isIdentity(geometry.transforms)) return geometry;
+        if (mat42.isIdentity(geometry.transforms)) return geometry;
         geometry.sides = geometry.sides.map(side => {
           const p0 = vec2.transform(vec2.create(), side[0], geometry.transforms);
           const p1 = vec2.transform(vec2.create(), side[1], geometry.transforms);
           return [p0, p1];
         });
-        geometry.transforms = mat4.create();
+        geometry.transforms = mat42.create();
         return geometry;
       };
       module.exports = applyTransforms;
@@ -2416,9 +2416,9 @@ require => (() => {
   var require_transform3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/transform.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var transform = (matrix, geometry) => {
-        const transforms = mat4.multiply(mat4.create(), matrix, geometry.transforms);
+        const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
         return Object.assign({}, geometry, {
           transforms
         });
@@ -2472,21 +2472,21 @@ require => (() => {
   var require_clone5 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
       init_define_process();
-      var clone2 = geometry => Object.assign({}, geometry);
-      module.exports = clone2;
+      var clone = geometry => Object.assign({}, geometry);
+      module.exports = clone;
     }
   });
   var require_create5 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var create = polygons => {
         if (polygons === void 0) {
           polygons = [];
         }
         return {
           polygons,
-          transforms: mat4.create()
+          transforms: mat42.create()
         };
       };
       module.exports = create;
@@ -2511,7 +2511,7 @@ require => (() => {
       init_define_process();
       var create = require_create6();
       var vec32 = require_vec3();
-      var clone2 = (...params) => {
+      var clone = (...params) => {
         let out;
         let poly3;
         if (params.length === 1) {
@@ -2524,7 +2524,7 @@ require => (() => {
         out.vertices = poly3.vertices.map(vec => vec32.clone(vec));
         return out;
       };
-      module.exports = clone2;
+      module.exports = clone;
     }
   });
   var require_fromPoints2 = __commonJS({
@@ -2543,10 +2543,12 @@ require => (() => {
     "node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
       init_define_process();
       var create = require_create6();
-      var fromPointsAndPlane = (vertices, plane) => {
+      var fromPointsAndPlane = (vertices, plane, color = void 0) => {
         const poly = create(vertices);
         poly.plane = plane;
-        return poly;
+        return color ? __spreadProps(__spreadValues({}, poly), {
+          color
+        }) : poly;
       };
       module.exports = fromPointsAndPlane;
     }
@@ -2562,7 +2564,7 @@ require => (() => {
     "node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
       init_define_process();
       var create = require_create7();
-      var clone2 = vector => {
+      var clone = vector => {
         const out = create();
         out[0] = vector[0];
         out[1] = vector[1];
@@ -2570,7 +2572,7 @@ require => (() => {
         out[3] = vector[3];
         return out;
       };
-      module.exports = clone2;
+      module.exports = clone;
     }
   });
   var require_copy4 = __commonJS({
@@ -2734,12 +2736,12 @@ require => (() => {
   var require_transform4 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var vec32 = require_vec3();
       var fromPoints = require_fromPoints3();
       var flip = require_flip();
       var transform = (out, plane, matrix) => {
-        const ismirror = mat4.isMirroring(matrix);
+        const ismirror = mat42.isMirroring(matrix);
         const r = vec32.orthogonal(vec32.create(), plane);
         const u = vec32.cross(r, plane, r);
         const v = vec32.cross(vec32.create(), plane, u);
@@ -2789,6 +2791,9 @@ require => (() => {
         const inverted = create(vertices);
         if (polygon.plane) {
           inverted.plane = plane.flip(plane.create(), polygon.plane);
+        }
+        if (polygon.color) {
+          inverted.color = polygon.color;
         }
         return inverted;
       };
@@ -3073,15 +3078,18 @@ require => (() => {
   var require_transform6 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var vec32 = require_vec3();
       var create = require_create6();
       var transform = (matrix, polygon) => {
         const vertices = polygon.vertices.map(vertex => vec32.transform(vec32.create(), vertex, matrix));
-        if (mat4.isMirroring(matrix)) {
+        if (mat42.isMirroring(matrix)) {
           vertices.reverse();
         }
-        return create(vertices);
+        const transformedVertices = create(vertices);
+        return polygon.color ? __spreadValues({
+          color: polygon.color
+        }, transformedVertices) : transformedVertices;
       };
       module.exports = transform;
     }
@@ -3178,13 +3186,13 @@ require => (() => {
     "node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
       init_define_process();
       var vec32 = require_vec3();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var poly3 = require_poly3();
       var create = require_create5();
       var fromCompactBinary = data => {
         if (data[0] !== 1) throw new Error("invalid compact binary data");
         const created = create();
-        created.transforms = mat4.clone(data.slice(1, 17));
+        created.transforms = mat42.clone(data.slice(1, 17));
         const numberOfVertices = data[21];
         let ci = 22;
         let vi = data.length - numberOfVertices * 3;
@@ -3209,12 +3217,12 @@ require => (() => {
   var require_applyTransforms2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var poly3 = require_poly3();
       var applyTransforms = geometry => {
-        if (mat4.isIdentity(geometry.transforms)) return geometry;
+        if (mat42.isIdentity(geometry.transforms)) return geometry;
         geometry.polygons = geometry.polygons.map(polygon => poly3.transform(geometry.transforms, polygon));
-        geometry.transforms = mat4.create();
+        geometry.transforms = mat42.create();
         return geometry;
       };
       module.exports = applyTransforms;
@@ -3223,8 +3231,18 @@ require => (() => {
   var require_toPolygons = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
       init_define_process();
+      var poly3 = require_poly3();
       var applyTransforms = require_applyTransforms2();
-      var toPolygons = geometry => applyTransforms(geometry).polygons;
+      var colorPoly3 = (color, object) => {
+        if (!object.color) {
+          object.color = color;
+        }
+        return object;
+      };
+      var toPolygons = (geometry, colorizePolygons = false) => {
+        const newPolygons = applyTransforms(geometry).polygons;
+        return colorizePolygons && geometry.color ? newPolygons.map(polygon => colorPoly3(geometry.color, polygon)) : newPolygons;
+      };
       module.exports = toPolygons;
     }
   });
@@ -3343,9 +3361,9 @@ require => (() => {
   var require_transform7 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var transform = (matrix, geometry) => {
-        const transforms = mat4.multiply(mat4.create(), matrix, geometry.transforms);
+        const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
         return Object.assign({}, geometry, {
           transforms
         });
@@ -3417,8 +3435,8 @@ ${nonManifold.join("\n")}`);
   var require_clone8 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/clone.js"(exports, module) {
       init_define_process();
-      var clone2 = geometry => Object.assign({}, geometry);
-      module.exports = clone2;
+      var clone = geometry => Object.assign({}, geometry);
+      module.exports = clone;
     }
   });
   var require_close = __commonJS({
@@ -3426,10 +3444,10 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {EPS} = require_constants();
       var vec2 = require_vec2();
-      var clone2 = require_clone8();
+      var clone = require_clone8();
       var close = geometry => {
         if (geometry.isClosed) return geometry;
-        const cloned = clone2(geometry);
+        const cloned = clone(geometry);
         cloned.isClosed = true;
         if (cloned.points.length > 1) {
           const points = cloned.points;
@@ -3449,7 +3467,7 @@ ${nonManifold.join("\n")}`);
   var require_create8 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/create.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var create = points => {
         if (points === void 0) {
           points = [];
@@ -3457,7 +3475,7 @@ ${nonManifold.join("\n")}`);
         return {
           points,
           isClosed: false,
-          transforms: mat4.create()
+          transforms: mat42.create()
         };
       };
       module.exports = create;
@@ -3493,12 +3511,12 @@ ${nonManifold.join("\n")}`);
   var require_applyTransforms3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/applyTransforms.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var vec2 = require_vec2();
       var applyTransforms = geometry => {
-        if (mat4.isIdentity(geometry.transforms)) return geometry;
+        if (mat42.isIdentity(geometry.transforms)) return geometry;
         geometry.points = geometry.points.map(point => vec2.transform(vec2.create(), point, geometry.transforms));
-        geometry.transforms = mat4.create();
+        geometry.transforms = mat42.create();
         return geometry;
       };
       module.exports = applyTransforms;
@@ -3792,13 +3810,13 @@ ${nonManifold.join("\n")}`);
   var require_fromCompactBinary3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/fromCompactBinary.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var vec2 = require_vec2();
       var create = require_create8();
       var fromCompactBinary = data => {
         if (data[0] !== 2) throw new Error("invalid compact binary data");
         const created = create();
-        created.transforms = mat4.clone(data.slice(1, 17));
+        created.transforms = mat42.clone(data.slice(1, 17));
         created.isClosed = !!data[17];
         for (let i = 22; i < data.length; i += 2) {
           const point = vec2.fromValues(data[i], data[i + 1]);
@@ -3831,9 +3849,9 @@ ${nonManifold.join("\n")}`);
   var require_reverse2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/reverse.js"(exports, module) {
       init_define_process();
-      var clone2 = require_clone8();
+      var clone = require_clone8();
       var reverse = geometry => {
-        const cloned = clone2(geometry);
+        const cloned = clone(geometry);
         cloned.points = geometry.points.slice().reverse();
         return cloned;
       };
@@ -3902,9 +3920,9 @@ ${nonManifold.join("\n")}`);
   var require_transform8 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/transform.js"(exports, module) {
       init_define_process();
-      var mat4 = require_mat4();
+      var mat42 = require_mat4();
       var transform = (matrix, geometry) => {
-        const transforms = mat4.multiply(mat4.create(), matrix, geometry.transforms);
+        const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
         return Object.assign({}, geometry, {
           transforms
         });
@@ -4082,8 +4100,8 @@ ${nonManifold.join("\n")}`);
   var require_clone9 = __commonJS({
     "node_modules/gl-mat4/clone.js"(exports, module) {
       init_define_process();
-      module.exports = clone2;
-      function clone2(a) {
+      module.exports = clone;
+      function clone(a) {
         var out = new Float32Array(16);
         out[0] = a[0];
         out[1] = a[1];
@@ -4952,7 +4970,7 @@ ${nonManifold.join("\n")}`);
   var require_renderContext = __commonJS({
     "node_modules/@jscad/regl-renderer/src/rendering/renderContext.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var renderWrapper = (regl, params = {}) => {
         const {fbo} = params;
         const commandParams = {
@@ -4968,11 +4986,11 @@ ${nonManifold.join("\n")}`);
             projection: (context, props) => props.camera.projection,
             camNear: (context, props) => props.camera.near,
             camFar: (context, props) => props.camera.far,
-            invertedView: (context, props) => mat4.invert([], props.camera.view),
+            invertedView: (context, props) => mat42.invert([], props.camera.view),
             lightPosition: (context, props) => props && props.rendering && props.rendering.lightPosition ? props.rendering.lightPosition : [100, 200, 100],
             lightDirection: (context, props) => props && props.rendering && props.rendering.lightDirection ? props.rendering.lightDirection : context.lightDirection || [0, 0, 0],
-            lightView: context => mat4.lookAt([], context.lightDirection, [0, 0, 0], [0, 0, 1]),
-            lightProjection: mat4.ortho([], -25, -25, -20, 20, -25, 25),
+            lightView: context => mat42.lookAt([], context.lightDirection, [0, 0, 0], [0, 0, 1]),
+            lightProjection: mat42.ortho([], -25, -25, -20, 20, -25, 25),
             lightColor: (context, props) => props && props.rendering && props.rendering.lightColor ? props.rendering.lightColor : [1, 0.8, 0],
             ambientLightAmount: (context, props) => props && props.rendering && props.rendering.ambientLightAmount ? props.rendering.ambientLightAmount : 0.3,
             diffuseLightAmount: (context, props) => props && props.rendering && props.rendering.diffuseLightAmount ? props && props.rendering && props.rendering.diffuseLightAmount : 0.89,
@@ -12776,7 +12794,7 @@ ${nonManifold.join("\n")}`);
   var require_drawGrid = __commonJS({
     "node_modules/@jscad/regl-renderer/src/rendering/commands/drawGrid/index.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var makeDrawGrid = (regl, params = {}) => {
         const positions = [];
         const defaults = {
@@ -12869,7 +12887,7 @@ ${nonManifold.join("\n")}`);
           },
           count: positions.length / 3,
           uniforms: {
-            model: (context, props) => props && props.model ? props.model : mat4.identity([]),
+            model: (context, props) => props && props.model ? props.model : mat42.identity([]),
             color: (context, props) => props && props.color ? props.color : color,
             fogColor: (context, props) => props && props.color ? [props.color[0], props.color[1], props.color[2], 0] : [color[0], color[1], color[2], 0],
             fadeOut: (context, props) => props && props.fadeOut !== void 0 ? props.fadeOut : fadeOut
@@ -12931,7 +12949,7 @@ ${nonManifold.join("\n")}`);
   var require_drawAxis = __commonJS({
     "node_modules/@jscad/regl-renderer/src/rendering/commands/drawAxis/index.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var drawAxis = (regl, params) => {
         const defaults = {
           xColor: [1, 0, 0, 1],
@@ -12960,7 +12978,7 @@ ${nonManifold.join("\n")}`);
       gl_Position = projection * view * model * vec4(position, 1);
     }`,
           uniforms: {
-            model: (context, props) => props && props.model ? props.model : mat4.identity([]),
+            model: (context, props) => props && props.model ? props.model : mat42.identity([]),
             color: (context, props) => props.color,
             angle: (contet, props) => props.angle
           },
@@ -12974,24 +12992,24 @@ ${nonManifold.join("\n")}`);
             enable: !alwaysVisible
           }
         };
-        const xAxisModel = mat4.identity([]);
-        const yAxisModel = mat4.rotateZ(mat4.create(), mat4.identity([]), Math.PI / 2);
-        const zAxisModel = mat4.rotateY(mat4.create(), mat4.identity([]), -Math.PI / 2);
+        const xAxisModel = mat42.identity([]);
+        const yAxisModel = mat42.rotateZ(mat42.create(), mat42.identity([]), Math.PI / 2);
+        const zAxisModel = mat42.rotateY(mat42.create(), mat42.identity([]), -Math.PI / 2);
         const single = regl(commandParams);
         return props => {
           const defaults2 = {
-            model: mat4.identity([])
+            model: mat42.identity([])
           };
           props = Object.assign({}, defaults2, props);
           return single([{
             color: xColor,
-            model: mat4.multiply(mat4.create(), props.model, xAxisModel)
+            model: mat42.multiply(mat42.create(), props.model, xAxisModel)
           }, {
             color: yColor,
-            model: mat4.multiply(mat4.create(), props.model, yAxisModel)
+            model: mat42.multiply(mat42.create(), props.model, yAxisModel)
           }, {
             color: zColor,
-            model: mat4.multiply(mat4.create(), props.model, zAxisModel)
+            model: mat42.multiply(mat42.create(), props.model, zAxisModel)
           }]);
         };
       };
@@ -13144,7 +13162,7 @@ void main() {
   var require_drawMesh = __commonJS({
     "node_modules/@jscad/regl-renderer/src/rendering/commands/drawMesh/index.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var {meshColor} = require_renderDefaults();
       var drawMesh = (regl, params = {
         extras: {}
@@ -13162,12 +13180,12 @@ void main() {
         const hasNormals = !!(geometry.normals && geometry.normals.length > 0);
         const transparent = ("transparent" in visuals) ? visuals.transparent : false;
         const hasVertexColors = !!(useVertexColors && geometry.colors && geometry.colors.length > 0);
-        const transforms = geometry.transforms || mat4.create();
-        const flip = mat4.determinant(transforms) < 0;
+        const transforms = geometry.transforms || mat42.create();
+        const flip = mat42.determinant(transforms) < 0;
         const cullFace = dynamicCulling ? flip ? "front" : "back" : "back";
         const vert = hasVertexColors ? require_vColorShaders().vert : require_meshShaders().vert;
         const frag = hasVertexColors ? require_vColorShaders().frag : require_meshShaders().frag;
-        const modelMatrixInv = mat4.invert(mat4.create(), transforms);
+        const modelMatrixInv = mat42.invert(mat42.create(), transforms);
         let commandParams = {
           primitive: "triangles",
           vert,
@@ -13177,9 +13195,9 @@ void main() {
             ucolor: (context, props) => props && props.color ? props.color : color,
             vColorToggler: (context, props) => props && props.useVertexColors && props.useVertexColors === true ? 1 : 0,
             unormal: (context, props) => {
-              const modelViewMatrix = mat4.invert(mat4.create(), props.camera.view);
-              mat4.multiply(modelViewMatrix, modelMatrixInv, modelViewMatrix);
-              mat4.transpose(modelViewMatrix, modelViewMatrix);
+              const modelViewMatrix = mat42.invert(mat42.create(), props.camera.view);
+              mat42.multiply(modelViewMatrix, modelMatrixInv, modelViewMatrix);
+              mat42.transpose(modelViewMatrix, modelViewMatrix);
               return modelViewMatrix;
             }
           },
@@ -13363,7 +13381,7 @@ void main () {
   var require_drawLines = __commonJS({
     "node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/index.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var {meshColor} = require_renderDefaults();
       var drawLines = (regl, params = {}) => {
         const defaults = {
@@ -13382,7 +13400,7 @@ void main () {
           vert,
           frag,
           uniforms: {
-            model: (context, props) => props.model || geometry.transforms || mat4.create(),
+            model: (context, props) => props.model || geometry.transforms || mat42.create(),
             ucolor: (context, props) => props && props.color ? props.color : color
           },
           attributes: {
@@ -13450,8 +13468,8 @@ void main () {
   var require_clone10 = __commonJS({
     "node_modules/gl-vec3/clone.js"(exports, module) {
       init_define_process();
-      module.exports = clone2;
-      function clone2(a) {
+      module.exports = clone;
+      function clone(a) {
         var out = new Float32Array(3);
         out[0] = a[0];
         out[1] = a[1];
@@ -14029,12 +14047,12 @@ void main () {
   var require_perspectiveCamera = __commonJS({
     "node_modules/@jscad/regl-renderer/src/cameras/perspectiveCamera.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var vec32 = require_gl_vec3();
       var cameraState = {
-        view: mat4.identity(new Float32Array(16)),
-        projection: mat4.identity(new Float32Array(16)),
-        matrix: mat4.identity(new Float32Array(16)),
+        view: mat42.identity(new Float32Array(16)),
+        projection: mat42.identity(new Float32Array(16)),
+        matrix: mat42.identity(new Float32Array(16)),
         near: 1,
         far: 18e3,
         up: [0, 0, 1],
@@ -14050,7 +14068,7 @@ void main () {
       var defaults = Object.assign({}, cameraState, cameraProps);
       var setProjection = (output, camera, input) => {
         const aspect = input.width / input.height;
-        const projection = mat4.perspective(mat4.identity([]), camera.fov, aspect, camera.near, camera.far);
+        const projection = mat42.perspective(mat42.identity([]), camera.fov, aspect, camera.near, camera.far);
         const viewport = [0, 0, input.width, input.height];
         const out = output || ({});
         out.projection = projection;
@@ -14065,7 +14083,7 @@ void main () {
         const {position, target, up} = camera;
         const offset = vec32.subtract([], position, target);
         const newPosition = vec32.add(vec32.create(), target, offset);
-        const newView = mat4.lookAt(mat4.create(), newPosition, target, up);
+        const newView = mat42.lookAt(mat42.create(), newPosition, target, up);
         const out = output || ({});
         out.position = newPosition;
         out.view = newView;
@@ -14083,11 +14101,11 @@ void main () {
   var require_orthographicCamera = __commonJS({
     "node_modules/@jscad/regl-renderer/src/cameras/orthographicCamera.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var cameraState = {
-        view: mat4.identity(new Float32Array(16)),
-        projection: mat4.identity(new Float32Array(16)),
-        matrix: mat4.identity(new Float32Array(16)),
+        view: mat42.identity(new Float32Array(16)),
+        projection: mat42.identity(new Float32Array(16)),
+        matrix: mat42.identity(new Float32Array(16)),
         near: 1,
         far: 1300,
         up: [0, 0, 1],
@@ -14110,7 +14128,7 @@ void main () {
         const right = width * multiplier;
         const bottom = -height * multiplier;
         const top = height * multiplier;
-        const projection = mat4.ortho([], left, right, bottom, top, camera.near, camera.far);
+        const projection = mat42.ortho([], left, right, bottom, top, camera.near, camera.far);
         return {
           projection,
           aspect,
@@ -14128,7 +14146,7 @@ void main () {
     "node_modules/@jscad/regl-renderer/src/cameras/camera.js"(exports, module) {
       init_define_process();
       var vec32 = require_gl_vec3();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var fromOrthographicToPerspective = orthographicCamera => {
         const {near, far, fov, zoom} = orthographicCamera;
         const {viewport} = orthographicCamera;
@@ -14170,7 +14188,7 @@ void main () {
         const offsetToTarget = vec32.distance(camera.position, camera.target);
         const distance = offsetToTarget;
         const position = [distance, distance, distance];
-        const view = mat4.lookAt(mat4.create(), position, camera.target, camera.up);
+        const view = mat42.lookAt(mat42.create(), position, camera.target, camera.up);
         return {
           view,
           position
@@ -14188,7 +14206,7 @@ void main () {
         };
         const offsetToTarget = vec32.distance(camera.position, camera.target);
         const position = vec32.add(vec32.create(), presets[viewName].map(x => x * offsetToTarget), camera.target);
-        const view = mat4.lookAt(mat4.create(), position, camera.target, camera.up);
+        const view = mat42.lookAt(mat42.create(), position, camera.target, camera.up);
         return {
           view,
           position
@@ -14410,7 +14428,7 @@ void main () {
     "node_modules/@jscad/regl-renderer/src/controls/orbitControls.js"(exports, module) {
       init_define_process();
       var vec32 = require_gl_vec3();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var {max, min, sqrt, PI, sin, cos, atan2} = Math;
       var computeBounds = require_computeBounds();
       var controlsProps = {
@@ -14479,7 +14497,7 @@ void main () {
           offset[2] = radius * sin(phi) * cos(theta);
         }
         const newPosition = vec32.add(vec32.create(), target, offset);
-        const newView = mat4.lookAt(mat4.create(), newPosition, target, up);
+        const newView = mat42.lookAt(mat42.create(), newPosition, target, up);
         const dragEffect = 1 - max(min(drag, 1), 0.01);
         const positionChanged = vec32.distance(position, newPosition) > 1e-3;
         return {
@@ -14540,8 +14558,8 @@ void main () {
       var pan2 = ({controls: controls2, camera, speed = 1}, delta) => {
         const unproject = require_camera_unproject();
         const {projection, view, viewport} = camera;
-        const combinedProjView = mat4.multiply([], projection, view);
-        const invProjView = mat4.invert([], combinedProjView);
+        const combinedProjView = mat42.multiply([], projection, view);
+        const invProjView = mat42.invert([], combinedProjView);
         const panStart = [viewport[2], viewport[3], 0];
         const panEnd = [viewport[2] - delta[0], viewport[3] + delta[1], 0];
         const unPanStart = unproject([], panStart, viewport, invProjView);
@@ -14589,7 +14607,7 @@ void main () {
           camera: {
             position: desiredState.camera.position,
             target: desiredState.camera.target,
-            projection: mat4.perspective([], camera.fov, camera.aspect, camera.near, camera.far),
+            projection: mat42.perspective([], camera.fov, camera.aspect, camera.near, camera.far),
             view: desiredState.camera.view
           },
           controls: {
@@ -14616,7 +14634,7 @@ void main () {
   var require_geom2ToGeometries = __commonJS({
     "node_modules/@jscad/regl-renderer/src/geometry-utils-V2/geom2ToGeometries.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var maxIndex = Math.floor(65535 / 2);
       var geom2ToGeometries = (options, solid) => {
         let {color} = options;
@@ -14652,7 +14670,7 @@ void main () {
           }
           const normals = positions.map(x => [0, 0, -1]);
           const indices = positions.map((x, i) => i);
-          const transforms = solid.transforms ? mat4.clone(solid.transforms) : mat4.create();
+          const transforms = solid.transforms ? mat42.clone(solid.transforms) : mat42.create();
           geometries.push({
             type: "2d",
             positions,
@@ -14673,13 +14691,13 @@ void main () {
     "node_modules/@jscad/regl-renderer/src/geometry-utils-V2/geom3ToGeometries.js"(exports, module) {
       init_define_process();
       var vec32 = require_gl_vec3();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var maxIndex = 65535;
       var geom3ToGeometries = (options, solid) => {
         let {color, smoothLighting} = options;
         if (("color" in solid)) color = solid.color;
         const polygons = solid.polygons;
-        const transforms = solid.transforms ? mat4.clone(solid.transforms) : mat4.create();
+        const transforms = solid.transforms ? mat42.clone(solid.transforms) : mat42.create();
         const geometries = [];
         let setstart = 0;
         while (setstart < polygons.length) {
@@ -14755,7 +14773,7 @@ void main () {
   var require_path2ToGeometries = __commonJS({
     "node_modules/@jscad/regl-renderer/src/geometry-utils-V2/path2ToGeometries.js"(exports, module) {
       init_define_process();
-      var mat4 = require_gl_mat4();
+      var mat42 = require_gl_mat4();
       var maxIndex = Math.floor(65535 / 2) - 2;
       var path2ToGeometries = (options, solid) => {
         let {color} = options;
@@ -14785,7 +14803,7 @@ void main () {
           }
           const normals = positions.map(x => [0, 0, -1]);
           const indices = positions.map((x, i) => i);
-          const transforms = solid.transforms ? mat4.clone(solid.transforms) : mat4.create();
+          const transforms = solid.transforms ? mat42.clone(solid.transforms) : mat42.create();
           geometries.push({
             type: "2d",
             positions,
@@ -14878,6 +14896,375 @@ void main () {
           orbit: require_orbitControls()
         },
         entitiesFromSolids: require_entitiesFromSolids()
+      };
+    }
+  });
+  var require_padArrayToLength = __commonJS({
+    "node_modules/@jscad/modeling/src/utils/padArrayToLength.js"(exports, module) {
+      init_define_process();
+      var padArrayToLength = (anArray, padding, targetLength) => {
+        anArray = anArray.slice();
+        while (anArray.length < targetLength) {
+          anArray.push(padding);
+        }
+        return anArray;
+      };
+      module.exports = padArrayToLength;
+    }
+  });
+  var require_measureAggregateBoundingBox = __commonJS({
+    "node_modules/@jscad/modeling/src/measurements/measureAggregateBoundingBox.js"(exports, module) {
+      init_define_process();
+      var flatten = require_flatten();
+      var vec3min = require_min();
+      var vec3max = require_max();
+      var measureBoundingBox2 = require_measureBoundingBox2();
+      var measureAggregateBoundingBox = (...geometries) => {
+        geometries = flatten(geometries);
+        if (geometries.length === 0) throw new Error("measureAggregateBoundingBox: no geometries supplied");
+        const bounds = measureBoundingBox2(geometries);
+        if (geometries.length === 1) {
+          return bounds;
+        }
+        const result = [[Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE], [-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE]];
+        return bounds.reduce((result2, item) => {
+          result2 = [vec3min(result2[0], result2[0], item[0]), vec3max(result2[1], result2[1], item[1])];
+          return result2;
+        }, result);
+      };
+      module.exports = measureAggregateBoundingBox;
+    }
+  });
+  var require_translate3 = __commonJS({
+    "node_modules/@jscad/modeling/src/operations/transforms/translate.js"(exports, module) {
+      init_define_process();
+      var flatten = require_flatten();
+      var mat42 = require_mat4();
+      var geom2 = require_geom2();
+      var geom3 = require_geom3();
+      var path2 = require_path2();
+      var translate = (offset, ...objects) => {
+        if (!Array.isArray(offset)) throw new Error("offset must be an array");
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        offset = offset.slice();
+        while (offset.length < 3) offset.push(0);
+        const matrix = mat42.fromTranslation(mat42.create(), offset);
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var translateX = (offset, ...objects) => translate([offset, 0, 0], objects);
+      var translateY = (offset, ...objects) => translate([0, offset, 0], objects);
+      var translateZ = (offset, ...objects) => translate([0, 0, offset], objects);
+      module.exports = {
+        translate,
+        translateX,
+        translateY,
+        translateZ
+      };
+    }
+  });
+  var require_align = __commonJS({
+    "node_modules/@jscad/modeling/src/operations/transforms/align.js"(exports, module) {
+      init_define_process();
+      var flatten = require_flatten();
+      var padArrayToLength = require_padArrayToLength();
+      var measureAggregateBoundingBox = require_measureAggregateBoundingBox();
+      var {translate} = require_translate3();
+      var validateOptions = options => {
+        if (!Array.isArray(options.modes) || options.modes.length > 3) throw new Error("align(): modes must be an array of length <= 3");
+        options.modes = padArrayToLength(options.modes, "none", 3);
+        if (options.modes.filter(mode => ["center", "max", "min", "none"].includes(mode)).length !== 3) throw new Error('align(): all modes must be one of "center", "max" or "min"');
+        if (!Array.isArray(options.relativeTo) || options.relativeTo.length > 3) throw new Error("align(): relativeTo must be an array of length <= 3");
+        options.relativeTo = padArrayToLength(options.relativeTo, 0, 3);
+        if (options.relativeTo.filter(alignVal => Number.isFinite(alignVal) || alignVal == null).length !== 3) throw new Error("align(): all relativeTo values must be a number, or null.");
+        if (typeof options.grouped !== "boolean") throw new Error("align(): grouped must be a boolean value.");
+        return options;
+      };
+      var populateRelativeToFromBounds = (relativeTo, modes, bounds) => {
+        for (let i = 0; i < 3; i++) {
+          if (relativeTo[i] == null) {
+            if (modes[i] === "center") {
+              relativeTo[i] = (bounds[0][i] + bounds[1][i]) / 2;
+            } else if (modes[i] === "max") {
+              relativeTo[i] = bounds[1][i];
+            } else if (modes[i] === "min") {
+              relativeTo[i] = bounds[0][i];
+            }
+          }
+        }
+        return relativeTo;
+      };
+      var alignGeometries = (geometry, modes, relativeTo) => {
+        const bounds = measureAggregateBoundingBox(geometry);
+        const translation = [0, 0, 0];
+        for (let i = 0; i < 3; i++) {
+          if (modes[i] === "center") {
+            translation[i] = relativeTo[i] - (bounds[0][i] + bounds[1][i]) / 2;
+          } else if (modes[i] === "max") {
+            translation[i] = relativeTo[i] - bounds[1][i];
+          } else if (modes[i] === "min") {
+            translation[i] = relativeTo[i] - bounds[0][i];
+          }
+        }
+        return translate(translation, geometry);
+      };
+      var align = (options, ...geometries) => {
+        const defaults = {
+          modes: ["center", "center", "min"],
+          relativeTo: [0, 0, 0],
+          grouped: false
+        };
+        options = Object.assign({}, defaults, options);
+        options = validateOptions(options);
+        let {modes, relativeTo, grouped} = options;
+        geometries = flatten(geometries);
+        if (geometries.length === 0) throw new Error("align(): No geometries were provided to act upon");
+        if (relativeTo.filter(val => val == null).length) {
+          const bounds = measureAggregateBoundingBox(geometries);
+          relativeTo = populateRelativeToFromBounds(relativeTo, modes, bounds);
+        }
+        if (grouped) {
+          geometries = alignGeometries(geometries, modes, relativeTo);
+        } else {
+          geometries = geometries.map(geometry => alignGeometries(geometry, modes, relativeTo));
+        }
+        return geometries.length === 1 ? geometries[0] : geometries;
+      };
+      module.exports = align;
+    }
+  });
+  var require_center = __commonJS({
+    "node_modules/@jscad/modeling/src/operations/transforms/center.js"(exports, module) {
+      init_define_process();
+      var flatten = require_flatten();
+      var geom2 = require_geom2();
+      var geom3 = require_geom3();
+      var path2 = require_path2();
+      var measureBoundingBox2 = require_measureBoundingBox2();
+      var {translate} = require_translate3();
+      var centerGeometry = (options, object) => {
+        const defaults = {
+          axes: [true, true, true],
+          relativeTo: [0, 0, 0]
+        };
+        const {axes, relativeTo} = Object.assign({}, defaults, options);
+        const bounds = measureBoundingBox2(object);
+        const offset = [0, 0, 0];
+        if (axes[0]) offset[0] = relativeTo[0] - (bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2);
+        if (axes[1]) offset[1] = relativeTo[1] - (bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2);
+        if (axes[2]) offset[2] = relativeTo[2] - (bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2);
+        return translate(offset, object);
+      };
+      var center = (options, ...objects) => {
+        const defaults = {
+          axes: [true, true, true],
+          relativeTo: [0, 0, 0]
+        };
+        const {axes, relativeTo} = Object.assign({}, defaults, options);
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        if (relativeTo.length !== 3) throw new Error("relativeTo must be an array of length 3");
+        options = {
+          axes,
+          relativeTo
+        };
+        const results = objects.map(object => {
+          if (path2.isA(object)) return centerGeometry(options, object);
+          if (geom2.isA(object)) return centerGeometry(options, object);
+          if (geom3.isA(object)) return centerGeometry(options, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var centerX = (...objects) => center({
+        axes: [true, false, false]
+      }, objects);
+      var centerY = (...objects) => center({
+        axes: [false, true, false]
+      }, objects);
+      var centerZ = (...objects) => center({
+        axes: [false, false, true]
+      }, objects);
+      module.exports = {
+        center,
+        centerX,
+        centerY,
+        centerZ
+      };
+    }
+  });
+  var require_mirror = __commonJS({
+    "node_modules/@jscad/modeling/src/operations/transforms/mirror.js"(exports, module) {
+      init_define_process();
+      var flatten = require_flatten();
+      var mat42 = require_mat4();
+      var plane = require_plane();
+      var geom2 = require_geom2();
+      var geom3 = require_geom3();
+      var path2 = require_path2();
+      var mirror = (options, ...objects) => {
+        const defaults = {
+          origin: [0, 0, 0],
+          normal: [0, 0, 1]
+        };
+        const {origin, normal} = Object.assign({}, defaults, options);
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        const planeOfMirror = plane.fromNormalAndPoint(plane.create(), normal, origin);
+        if (Number.isNaN(planeOfMirror[0])) {
+          throw new Error("the given origin and normal do not define a proper plane");
+        }
+        const matrix = mat42.mirrorByPlane(mat42.create(), planeOfMirror);
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var mirrorX = (...objects) => mirror({
+        normal: [1, 0, 0]
+      }, objects);
+      var mirrorY = (...objects) => mirror({
+        normal: [0, 1, 0]
+      }, objects);
+      var mirrorZ = (...objects) => mirror({
+        normal: [0, 0, 1]
+      }, objects);
+      module.exports = {
+        mirror,
+        mirrorX,
+        mirrorY,
+        mirrorZ
+      };
+    }
+  });
+  var require_rotate4 = __commonJS({
+    "node_modules/@jscad/modeling/src/operations/transforms/rotate.js"(exports, module) {
+      init_define_process();
+      var flatten = require_flatten();
+      var mat42 = require_mat4();
+      var geom2 = require_geom2();
+      var geom3 = require_geom3();
+      var path2 = require_path2();
+      var rotate2 = (angles, ...objects) => {
+        if (!Array.isArray(angles)) throw new Error("angles must be an array");
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        angles = angles.slice();
+        while (angles.length < 3) angles.push(0);
+        const yaw = angles[2];
+        const pitch = angles[1];
+        const roll = angles[0];
+        const matrix = mat42.fromTaitBryanRotation(mat42.create(), yaw, pitch, roll);
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var rotateX = (angle, ...objects) => rotate2([angle, 0, 0], objects);
+      var rotateY = (angle, ...objects) => rotate2([0, angle, 0], objects);
+      var rotateZ = (angle, ...objects) => rotate2([0, 0, angle], objects);
+      module.exports = {
+        rotate: rotate2,
+        rotateX,
+        rotateY,
+        rotateZ
+      };
+    }
+  });
+  var require_scale6 = __commonJS({
+    "node_modules/@jscad/modeling/src/operations/transforms/scale.js"(exports, module) {
+      init_define_process();
+      var flatten = require_flatten();
+      var mat42 = require_mat4();
+      var geom2 = require_geom2();
+      var geom3 = require_geom3();
+      var path2 = require_path2();
+      var scale = (factors, ...objects) => {
+        if (!Array.isArray(factors)) throw new Error("factors must be an array");
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        factors = factors.slice();
+        while (factors.length < 3) factors.push(1);
+        if (factors[0] <= 0 || factors[1] <= 0 || factors[2] <= 0) throw new Error("factors must be positive");
+        const matrix = mat42.fromScaling(mat42.create(), factors);
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var scaleX = (factor, ...objects) => scale([factor, 1, 1], objects);
+      var scaleY = (factor, ...objects) => scale([1, factor, 1], objects);
+      var scaleZ = (factor, ...objects) => scale([1, 1, factor], objects);
+      module.exports = {
+        scale,
+        scaleX,
+        scaleY,
+        scaleZ
+      };
+    }
+  });
+  var require_transform9 = __commonJS({
+    "node_modules/@jscad/modeling/src/operations/transforms/transform.js"(exports, module) {
+      init_define_process();
+      var flatten = require_flatten();
+      var geom2 = require_geom2();
+      var geom3 = require_geom3();
+      var path2 = require_path2();
+      var transform = (matrix, ...objects) => {
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_transforms = __commonJS({
+    "node_modules/@jscad/modeling/src/operations/transforms/index.js"(exports, module) {
+      init_define_process();
+      module.exports = {
+        align: require_align(),
+        center: require_center().center,
+        centerX: require_center().centerX,
+        centerY: require_center().centerY,
+        centerZ: require_center().centerZ,
+        mirror: require_mirror().mirror,
+        mirrorX: require_mirror().mirrorX,
+        mirrorY: require_mirror().mirrorY,
+        mirrorZ: require_mirror().mirrorZ,
+        rotate: require_rotate4().rotate,
+        rotateX: require_rotate4().rotateX,
+        rotateY: require_rotate4().rotateY,
+        rotateZ: require_rotate4().rotateZ,
+        scale: require_scale6().scale,
+        scaleX: require_scale6().scaleX,
+        scaleY: require_scale6().scaleY,
+        scaleZ: require_scale6().scaleZ,
+        transform: require_transform9(),
+        translate: require_translate3().translate,
+        translateX: require_translate3().translateX,
+        translateY: require_translate3().translateY,
+        translateZ: require_translate3().translateZ
       };
     }
   });
@@ -19900,6 +20287,8 @@ void main () {
   var import_regl_renderer = __toESM(require_src2(), 1);
   init_define_process();
   var import_geom3 = __toESM(require_geom3(), 1);
+  var import_mat4 = __toESM(require_mat4(), 1);
+  var import_transforms = __toESM(require_transforms(), 1);
   function hexToColor(hex) {
     var _a3;
     let regex = new RegExp("^#?(?<red>[\\da-f]{2})(?<green>[\\da-f]{2})(?<blue>[\\da-f]{2})$", "iu");
