@@ -10,6 +10,7 @@
 
 /* [Imports] */
 import { primitives } from '@jscad/modeling';
+import { colorize as _colorize } from '@jscad/modeling/src/colors';
 import {
   measureBoundingBox,
   type BoundingBox,
