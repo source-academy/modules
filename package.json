@@ -19,7 +19,8 @@
     "test": "Run unit tests",
     "test:watch": "Watch files for changes and rerun tests related to changed files",
     "dev": "Build bundles and tabs only, then serve. Skips linting / type checking, does not build jsons and HTML docs. For rapid testing during development",
-    "watch": "Watch files for changes and rebuild on those changes"
+    "watch": "Watch files for changes and rebuild on those changes",
+    "postinstall": "Install all patches to node_modules packages"
   },
   "type": "module",
   "scripts": {
@@ -37,7 +38,8 @@
     "test:scripts": "jest --config=scripts/src/jest.config.js",
     "test:watch": "jest --watch",
     "dev": "yarn scripts build modules && yarn serve",
-    "watch": "yarn scripts watch"
+    "watch": "yarn scripts watch",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "@types/dom-mediacapture-record": "^1.0.11",
@@ -58,7 +60,7 @@
     "console-table-printer": "^2.11.1",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.17.8",
+    "esbuild": "^0.17.19",
     "eslint": "^8.21.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
@@ -87,18 +89,22 @@
     "@box2d/debug-draw": "^0.10.0",
     "@jscad/modeling": "^2.9.5",
     "@jscad/regl-renderer": "^2.6.1",
+    "@jscad/stl-serializer": "^2.1.13",
     "ace-builds": "^1.4.14",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.4",
     "gl-matrix": "^3.3.0",
     "js-slang": "^1.0.20",
     "lodash": "^4.17.21",
+    "patch-package": "^6.5.1",
     "phaser": "^3.54.0",
     "plotly.js-dist": "^2.17.1",
+    "postinstall-postinstall": "^2.1.0",
     "react": "^17.0.2",
     "react-ace": "^10.1.0",
     "react-dom": "^17.0.2",
     "regl": "^2.1.0",
+    "save-file": "^2.3.1",
     "source-academy-utils": "^1.0.0",
     "source-academy-wabt": "^1.0.4",
     "tslib": "^2.3.1"
