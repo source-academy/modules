@@ -6,15 +6,11 @@
  * the physics world. Vector manipulation and transformations between vector and array
  * types are supported.
  *
- * <br>
- *
  * A <b>force</b> is defined by its direction (a vector), its magnitude, duration and
  * start time. A force is only actively applied if:
  * ```
  * diff > 0 && diff < duration, where diff is world time - start time
  * ```
- *
- * <br>
  *
  * A <b>world</b> is the single physics world the module is based on.
  *
@@ -22,8 +18,6 @@
  * and set the gravity.
  * - `make_ground` and `add_wall` are optional but recommended to be used to set boundaries
  * in the world.
- *
- * <br>
  *
  * An <b>object</b> is initially defined in the add function by:
  * - shape: which add function was used (e.g. `add_box_object`)
@@ -45,15 +39,11 @@
  * - `is_touching`
  * - `impact_start_time`
  *
- * <br>
- *
  * After adding objects to the world, calling `update_world` will simulate the world.\
  * The suggested time step is 1/60 (seconds).
  *
  * Visualization of the physics world can also be seen in the display tab.
 *
- * <br>
- *
  * The following example simulates a free fall of a circle object.
  * ```
  * import { set_gravity, make_vector, add_circle_object, update_world } from "physics_2d";
@@ -71,7 +61,6 @@
  *   update_world(1/60);
  * }
  * ```
- * <br>
  *
  * @module physics_2d
  * @author Muhammad Fikri Bin Abdul Kalam
