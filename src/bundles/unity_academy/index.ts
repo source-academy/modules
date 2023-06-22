@@ -10,20 +10,20 @@
  * <b><u>Note that you need to use this module with a '<i>Native</i>' variant of Source language, otherwise you may get strange errors.</u></b>
  *
  * <b>Lifecycle Event Functions</b><br>
- * ● Unity Academy has its own internal loop on students' GameObject lifecycle.<br>
- * ● <u>Lifecycle event functions</u> are functions that are not supposed to be called by Source Academy's default evaluator, instead they are called by Unity Academy at certain time in the GameObject's lifecycle.<br>
- * ● Currently there are five types of Unity Academy lifecycle event function: `Start`, `Update` and three collision detaction functions.<br>
- * ● Both `Start` and `Update` functions should be a student-side function object with only one parameter, which automatically refers to the GameObject that is binded with the function when Unity Academy calls the function. So different GameObject instances can share the same lifecycle event function together.<br>
+ * - Unity Academy has its own internal loop on students' GameObject lifecycle.<br>
+ * - <u>Lifecycle event functions</u> are functions that are not supposed to be called by Source Academy's default evaluator, instead they are called by Unity Academy at certain time in the GameObject's lifecycle.<br>
+ * - Currently there are five types of Unity Academy lifecycle event function: `Start`, `Update` and three collision detaction functions.<br>
+ * - Both `Start` and `Update` functions should be a student-side function object with only one parameter, which automatically refers to the GameObject that is binded with the function when Unity Academy calls the function. So different GameObject instances can share the same lifecycle event function together.<br>
  * For example:
  * ```
  * function my_start(gameObject){...};
  * const my_update = (gameObject) => {...};
  * ```
- * ● The functions `set_start` and `set_update` in this module can be used to set one GameObject's `Start` and `Update` functions<br>
- * ● ===>`Start` is called only for one time after the GameObject is created (instantiated) and before its first `Update` call.<br>
- * ● ===>`Update` is called on every GameObject once in every frame after `Start` have been called. <br>
- * ● For the three collision detaction lifecycle event functions, please refer to `on_collision_enter`, `on_collision_stay` and `on_collision_exit` functions under the `Physics - Collision` category.<br>
- * ● You can not bind multiple lifecycle functions of the same type to the same GameObject. For example, you can't bind two `Update` functions to the same GameObject. In this case, previously binded `Update` functions will be overwritten by the latest binded `Update` function.<br><br>
+ * - The functions `set_start` and `set_update` in this module can be used to set one GameObject's `Start` and `Update` functions<br>
+ * - ===>`Start` is called only for one time after the GameObject is created (instantiated) and before its first `Update` call.<br>
+ * - ===>`Update` is called on every GameObject once in every frame after `Start` have been called. <br>
+ * - For the three collision detaction lifecycle event functions, please refer to `on_collision_enter`, `on_collision_stay` and `on_collision_exit` functions under the `Physics - Collision` category.<br>
+ * - You can not bind multiple lifecycle functions of the same type to the same GameObject. For example, you can't bind two `Update` functions to the same GameObject. In this case, previously binded `Update` functions will be overwritten by the latest binded `Update` function.<br><br>
  * <u><b>[IMPORTANT]</b> All functions in this module that is NOT under the "<b>Outside Lifecycle</b>" or "Maths" category need to call by Unity Academy lifecycle event functions (directly or intermediately) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u><br>
  * For example:
  * ```
@@ -46,25 +46,25 @@
  * <b>Input Function Key Codes</b> Accepts A-Z, a-z and "LeftMouseBtn" / "RightMouseBtn" / "MiddleMouseBtn" / "LeftShift" / "RightShift"
  *
  * <b>Key differences between 2D and 3D mode</b><br>
- * ● <u>In 2D mode</u> the main camera renders the scene in <b>orthographic</b> mode (Z position is used to determine sequence when sprites overlapping), whereas <u>in 3D mode</u> the camera renders the scene in <b>perspective</b> mode. Moreover, 3D mode and 2D mode have different kinds of default camera controller.<br>
- * ● <u>In 2D mode</u>, due to the loss of one dimension, for some values and axis in 3D coordinate system, they sometimes behaves differently with 3D mode. For example, some coordinate values is ignored in 2D mode. Whereas <u>in 3D mode</u> you can use the fully-supported 3D coordinate system. (Actually, in general, Unity Academy just simply uses 3D space and an orthographic camera to simulate 2D space.)<br>
- * ● <u>In 2D mode</u> you need to use <b>instantiate_sprite</b> to create new GameObjects, whereas <u>in 3D mode</u> you need to use <b>instantiate</b> to create new GameObjects.<br>
- * ● <u>In 2D mode</u> Unity Academy will use Rigidbody2D and 2D colliders like BoxCollider2D for physics engine (certain values for 3D physics engine in 2D physics engine is ignored and will always be zero), whereas <u>in 3D mode</u> Unity Academy use regular 3D rigidbody and 3D colliders to simulate 3D physics.<br>
- * ● <u>In 2D mode</u> playing frame animations for sprite GameObjects is currently unavailable, whereas <u>in 3D mode</u> you need to use <b>play_animator_state</b> to play 3D animations.<br>
+ * - <u>In 2D mode</u> the main camera renders the scene in <b>orthographic</b> mode (Z position is used to determine sequence when sprites overlapping), whereas <u>in 3D mode</u> the camera renders the scene in <b>perspective</b> mode. Moreover, 3D mode and 2D mode have different kinds of default camera controller.<br>
+ * - <u>In 2D mode</u>, due to the loss of one dimension, for some values and axis in 3D coordinate system, they sometimes behaves differently with 3D mode. For example, some coordinate values is ignored in 2D mode. Whereas <u>in 3D mode</u> you can use the fully-supported 3D coordinate system. (Actually, in general, Unity Academy just simply uses 3D space and an orthographic camera to simulate 2D space.)<br>
+ * - <u>In 2D mode</u> you need to use <b>instantiate_sprite</b> to create new GameObjects, whereas <u>in 3D mode</u> you need to use <b>instantiate</b> to create new GameObjects.<br>
+ * - <u>In 2D mode</u> Unity Academy will use Rigidbody2D and 2D colliders like BoxCollider2D for physics engine (certain values for 3D physics engine in 2D physics engine is ignored and will always be zero), whereas <u>in 3D mode</u> Unity Academy use regular 3D rigidbody and 3D colliders to simulate 3D physics.<br>
+ * - <u>In 2D mode</u> playing frame animations for sprite GameObjects is currently unavailable, whereas <u>in 3D mode</u> you need to use <b>play_animator_state</b> to play 3D animations.<br>
  *
  *
  * <b>Space and Coordinates</b><br>
- * ● <u>3D:</u> Uses <b>left-hand coordinate system</b>: +X denotes rightward, +Y denotes upward, +Z denotes forward.<br>
- * ● <u>2D:</u> +X denotes rightward, +Y denotes upward, Z value actually still exists and usually used for determining sequence of overlapping 2D GameObjects like sprites.
+ * - <u>3D:</u> Uses <b>left-hand coordinate system</b>: +X denotes rightward, +Y denotes upward, +Z denotes forward.<br>
+ * - <u>2D:</u> +X denotes rightward, +Y denotes upward, Z value actually still exists and usually used for determining sequence of overlapping 2D GameObjects like sprites.
  *
  * <b>Unity Academy Camera Control (only available when the default camera controllers are being used)</b><br>
- * ● <u>In 2D mode:</u><br>
- * ● 'W'/'A'/'S'/'D' : Moves the main camera around<br>
- * ● '=' (equals key) : Resets the main camera to its initial position<br>
- * ● <u>In 3D mode:</u><br>
- * ● '=' (equals key) : Resets the main camera to its initial position and rotation<br>
- * ● Left Mouse Button : Hold to rotate the main camera in a faster speed<br>
- * ● Mouse Scrollwheel : Zoom in / out
+ * - <u>In 2D mode:</u><br>
+ * - 'W'/'A'/'S'/'D' : Moves the main camera around<br>
+ * - '=' (equals key) : Resets the main camera to its initial position<br>
+ * - <u>In 3D mode:</u><br>
+ * - '=' (equals key) : Resets the main camera to its initial position and rotation<br>
+ * - Left Mouse Button : Hold to rotate the main camera in a faster speed<br>
+ * - Mouse Scrollwheel : Zoom in / out
  * @module unity_academy
  * @author Wang Zihan
  */
