@@ -17,28 +17,22 @@
 <h1>Module physics_2d</h1></div>
 <section class="tsd-panel tsd-comment">
 <div class="tsd-comment tsd-typography"><p>2D Phyiscs simulation module for Source Academy.</p>
-<p>A <b>vector</b> is defined by its coordinates (x and y). The 2D vector is used to
+<p>A <strong>vector</strong> is defined by its coordinates (x and y). The 2D vector is used to
 represent direction, size, position, velocity and other physical attributes in
 the physics world. Vector manipulation and transformations between vector and array
 types are supported.</p>
-<br>
-
-<p>A <b>force</b> is defined by its direction (a vector), its magnitude, duration and
+<p>A <strong>force</strong> is defined by its direction (a vector), its magnitude, duration and
 start time. A force is only actively applied if:</p>
 <pre><code><span class="hl-0">diff</span><span class="hl-1"> &gt; </span><span class="hl-9">0</span><span class="hl-1"> &amp;&amp; </span><span class="hl-0">diff</span><span class="hl-1"> &lt; </span><span class="hl-0">duration</span><span class="hl-1">, </span><span class="hl-0">where</span><span class="hl-1"> </span><span class="hl-0">diff</span><span class="hl-1"> </span><span class="hl-0">is</span><span class="hl-1"> </span><span class="hl-0">world</span><span class="hl-1"> </span><span class="hl-0">time</span><span class="hl-1"> - </span><span class="hl-0">start</span><span class="hl-1"> </span><span class="hl-0">time</span>
 </code></pre>
-<br>
-
-<p>A <b>world</b> is the single physics world the module is based on.</p>
+<p>A <strong>world</strong> is the single physics world the module is based on.</p>
 <ul>
 <li><code>set_gravity</code> needs to be called once at the start of the program to initialize the world
 and set the gravity.</li>
 <li><code>make_ground</code> and <code>add_wall</code> are optional but recommended to be used to set boundaries
 in the world.</li>
 </ul>
-<br>
-
-<p>An <b>object</b> is initially defined in the add function by:</p>
+<p>An <strong>object</strong> is initially defined in the add function by:</p>
 <ul>
 <li>shape: which add function was used (e.g. <code>add_box_object</code>)</li>
 <li>position: initial position</li>
@@ -62,22 +56,18 @@ in the world.</li>
 <li><code>is_touching</code></li>
 <li><code>impact_start_time</code></li>
 </ul>
-<br>
-
 <p>After adding objects to the world, calling <code>update_world</code> will simulate the world.<br>The suggested time step is 1/60 (seconds).</p>
 <p>Visualization of the physics world can also be seen in the display tab.</p>
-<br>
-
 <p>The following example simulates a free fall of a circle object.</p>
 <pre><code><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-0">set_gravity</span><span class="hl-1">, </span><span class="hl-0">make_vector</span><span class="hl-1">, </span><span class="hl-0">add_circle_object</span><span class="hl-1">, </span><span class="hl-0">update_world</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-5">&quot;physics_2d&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">gravity</span><span class="hl-1"> = </span><span class="hl-8">make_vector</span><span class="hl-1">(</span><span class="hl-9">0</span><span class="hl-1">, -</span><span class="hl-9">9.8</span><span class="hl-1">);</span><br/><span class="hl-8">set_gravity</span><span class="hl-1">(</span><span class="hl-0">gravity</span><span class="hl-1">);</span><br/><br/><span class="hl-8">make_ground</span><span class="hl-1">(</span><span class="hl-9">0</span><span class="hl-1">, </span><span class="hl-9">1</span><span class="hl-1">);</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">pos</span><span class="hl-1"> = </span><span class="hl-8">make_vector</span><span class="hl-1">(</span><span class="hl-9">0</span><span class="hl-1">, </span><span class="hl-9">100</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">velc</span><span class="hl-1"> = </span><span class="hl-8">make_vector</span><span class="hl-1">(</span><span class="hl-9">0</span><span class="hl-1">, </span><span class="hl-9">0</span><span class="hl-1">);</span><br/><span class="hl-8">add_circle_object</span><span class="hl-1">(</span><span class="hl-0">pos</span><span class="hl-1">, </span><span class="hl-9">0</span><span class="hl-1">, </span><span class="hl-0">velc</span><span class="hl-1">, </span><span class="hl-9">10</span><span class="hl-1">, </span><span class="hl-6">false</span><span class="hl-1">);</span><br/><br/><span class="hl-4">for</span><span class="hl-1"> (</span><span class="hl-6">let</span><span class="hl-1"> </span><span class="hl-0">i</span><span class="hl-1"> = </span><span class="hl-9">0</span><span class="hl-1">; </span><span class="hl-0">i</span><span class="hl-1"> &lt; </span><span class="hl-9">10</span><span class="hl-1">; </span><span class="hl-0">i</span><span class="hl-1"> = </span><span class="hl-0">i</span><span class="hl-1"> + </span><span class="hl-9">1</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-8">update_world</span><span class="hl-1">(</span><span class="hl-9">1</span><span class="hl-1">/</span><span class="hl-9">60</span><span class="hl-1">);</span><br/><span class="hl-1">}</span>
 </code></pre>
-<br>
+
 <h3>Author</h3><p>Muhammad Fikri Bin Abdul Kalam</p>
 
 <h3>Author</h3><p>Yu Jiali</p>
 </div></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/f72e5a1/src/bundles/physics_2d/index.ts#L80">physics_2d/index.ts:80</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/813a8ee/src/bundles/physics_2d/index.ts#L75">physics_2d/index.ts:75</a></li></ul></aside>
 <section class="tsd-panel-group">
 <section class="tsd-panel tsd-typography"></section></section>
 <section class="tsd-panel-group tsd-index-group">

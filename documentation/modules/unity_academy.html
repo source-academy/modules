@@ -16,66 +16,69 @@
 <li><a href="unity_academy.html">unity_academy</a></li></ul>
 <h1>Module unity_academy</h1></div>
 <section class="tsd-panel tsd-comment">
-<div class="tsd-comment tsd-typography"><p><b>A module that allows students to program with Unity Engine in either <u>2-D</u> or <u>3-D</u> scene in Source Academy.</b>
-<br>
-Makes use of &quot;<b>Unity Academy Embedded WebGL Frontend</b>&quot; (also made by me) to work together.<br>
-<br>
-<b>Code Examples: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/code_examples.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
-<b>Prefab Information: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
-<b>User Agreement: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/user_agreement.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
-<br>
-<b><u>Note that you need to use this module with a &#39;<i>Native</i>&#39; variant of Source language, otherwise you may get strange errors.</u></b>
-<br>
-<br>
-<b>Lifecycle Event Functions</b><br>
-● Unity Academy has its own internal loop on students&#39; GameObject lifecycle.<br>
-● <u>Lifecycle event functions</u> are functions that are not supposed to be called by Source Academy&#39;s default evaluator, instead they are called by Unity Academy at certain time in the GameObject&#39;s lifecycle.<br>
-● Currently there are five types of Unity Academy lifecycle event function: <code>Start</code>, <code>Update</code> and three collision detaction functions.<br>
-● Both <code>Start</code> and <code>Update</code> functions should be a student-side function object with only one parameter, which automatically refers to the GameObject that is binded with the function when Unity Academy calls the function. So different GameObject instances can share the same lifecycle event function together.<br>
-For example:</p>
+<div class="tsd-comment tsd-typography"><p><strong>A module that allows students to program with Unity Engine in either <u>2-D</u> or <u>3-D</u> scene in Source Academy.</strong></p>
+<p>Makes use of &quot;<strong>Unity Academy Embedded WebGL Frontend</strong>&quot; (also made by me) to work together.</p>
+<p><strong>Code Examples:</strong> <a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/code_examples.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
+<strong>Prefab Information:</strong> <a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
+<strong>User Agreement:</strong> <a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/user_agreement.html' rel="noopener noreferrer" target="_blank">Click Here</a><br></p>
+<p><strong><u>Note that you need to use this module with a &#39;<i>Native</i>&#39; variant of Source language, otherwise you may get strange errors.</u></strong></p>
+<p><strong>Lifecycle Event Functions</strong></p>
+<ul>
+<li>Unity Academy has its own internal loop on students&#39; GameObject lifecycle.</li>
+<li><u>Lifecycle event functions</u> are functions that are not supposed to be called by Source Academy&#39;s default evaluator, instead they are called by Unity Academy at certain time in the GameObject&#39;s lifecycle.</li>
+<li>Currently there are five types of Unity Academy lifecycle event function: <code>Start</code>, <code>Update</code> and three collision detaction functions.</li>
+<li>Both <code>Start</code> and <code>Update</code> functions should be a student-side function object with only one parameter, which automatically refers to the GameObject that is binded with the function when Unity Academy calls the function. So different GameObject instances can share the same lifecycle event function together.</li>
+</ul>
+<p>For example:</p>
 <pre><code><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-8">my_start</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">){...};</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-8">my_update</span><span class="hl-1"> = (</span><span class="hl-0">gameObject</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> {...};</span>
 </code></pre>
-<p>● The functions <code>set_start</code> and <code>set_update</code> in this module can be used to set one GameObject&#39;s <code>Start</code> and <code>Update</code> functions<br>
-● ===&gt;<code>Start</code> is called only for one time after the GameObject is created (instantiated) and before its first <code>Update</code> call.<br>
-● ===&gt;<code>Update</code> is called on every GameObject once in every frame after <code>Start</code> have been called. <br>
-● For the three collision detaction lifecycle event functions, please refer to <code>on_collision_enter</code>, <code>on_collision_stay</code> and <code>on_collision_exit</code> functions under the <code>Physics - Collision</code> category.<br>
-● You can not bind multiple lifecycle functions of the same type to the same GameObject. For example, you can&#39;t bind two <code>Update</code> functions to the same GameObject. In this case, previously binded <code>Update</code> functions will be overwritten by the latest binded <code>Update</code> function.<br><br>
-<u><b>[IMPORTANT]</b> All functions in this module that is NOT under the &quot;<b>Outside Lifecycle</b>&quot; or &quot;Maths&quot; category need to call by Unity Academy lifecycle event functions (directly or intermediately) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u><br>
-For example:</p>
+<ul>
+<li>The functions <code>set_start</code> and <code>set_update</code> in this module can be used to set one GameObject&#39;s <code>Start</code> and <code>Update</code> functions<ul>
+<li><code>Start</code> is called only for one time after the GameObject is created (instantiated) and before its first <code>Update</code> call.</li>
+<li><code>Update</code> is called on every GameObject once in every frame after <code>Start</code> have been called.</li>
+</ul>
+</li>
+<li>For the three collision detaction lifecycle event functions, please refer to <code>on_collision_enter</code>, <code>on_collision_stay</code> and <code>on_collision_exit</code> functions under the <code>Physics - Collision</code> category.</li>
+<li>You can not bind multiple lifecycle functions of the same type to the same GameObject. For example, you can&#39;t bind two <code>Update</code> functions to the same GameObject. In this case, previously binded <code>Update</code> functions will be overwritten by the latest binded <code>Update</code> function.</li>
+</ul>
+<p><u><strong>[IMPORTANT]</strong> All functions in this module that is NOT under the &quot;<strong>Outside Lifecycle</strong>&quot; or &quot;Maths&quot; category need to call by Unity Academy lifecycle event functions (directly or intermediately) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u></p>
+<p>For example:</p>
 <pre><code><span class="hl-4">import</span><span class="hl-1"> {</span><span class="hl-0">init_unity_academy_3d</span><span class="hl-1">, </span><span class="hl-0">instantiate</span><span class="hl-1">, </span><span class="hl-0">set_start</span><span class="hl-1">, </span><span class="hl-0">set_update</span><span class="hl-1">, </span><span class="hl-0">set_position</span><span class="hl-1">, </span><span class="hl-0">set_rotation_euler</span><span class="hl-1">} </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-5">&#39;unity_academy&#39;</span><span class="hl-1">;</span><br/><span class="hl-8">init_unity_academy_3d</span><span class="hl-1">(); </span><span class="hl-3">// Correct, since this function is under the &quot;Outside Lifecycle&quot; category and it can be called outside lifecycle event functions.</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">cube</span><span class="hl-1"> = </span><span class="hl-8">instantiate</span><span class="hl-1">(</span><span class="hl-5">&quot;cube&quot;</span><span class="hl-1">); </span><span class="hl-3">// Correct</span><br/><span class="hl-8">set_position</span><span class="hl-1">(</span><span class="hl-0">cube</span><span class="hl-1">, </span><span class="hl-9">1</span><span class="hl-1">, </span><span class="hl-9">2</span><span class="hl-1">, </span><span class="hl-9">3</span><span class="hl-1">); </span><span class="hl-3">// WRONG, since set_position should ONLY be called inside a lifecycle event function</span><br/><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-8">my_start</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">){ </span><span class="hl-3">// A sample Start event function which will be binded to cube by my_start later.</span><br/><span class="hl-1">    </span><span class="hl-8">set_position</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">, </span><span class="hl-9">1</span><span class="hl-1">, </span><span class="hl-9">2</span><span class="hl-1">, </span><span class="hl-9">3</span><span class="hl-1">); </span><span class="hl-3">// Correct, since the call to set_position is inside a lifecycle event function</span><br/><span class="hl-1">    </span><span class="hl-8">something_else</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">);</span><br/><span class="hl-1">}</span><br/><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-8">something_else</span><span class="hl-1">(</span><span class="hl-0">obj</span><span class="hl-1">){</span><br/><span class="hl-1">   </span><span class="hl-8">set_rotation_euler</span><span class="hl-1">(</span><span class="hl-0">obj</span><span class="hl-1">, </span><span class="hl-9">0</span><span class="hl-1">, </span><span class="hl-9">45</span><span class="hl-1">, </span><span class="hl-9">45</span><span class="hl-1">);  </span><span class="hl-3">// Correct, since the function &quot;set_rotation_euler&quot; is intermediately called by the lifecycle event function &quot;my_start&quot; through &quot;something_else&quot;</span><br/><span class="hl-1">}</span><br/><span class="hl-8">set_start</span><span class="hl-1">(</span><span class="hl-0">cube</span><span class="hl-1">, </span><span class="hl-0">my_start</span><span class="hl-1">); </span><span class="hl-3">// Correct</span>
 </code></pre>
-<br>
-When any runtime errors happen in lifecycle event functions, they will be displayed in Unity Academy's information page and the lifecycle event function that caused the errors will automatically unbind from the GameObject.
-<br>
-<br>
-<b>Input Function Key Codes</b> Accepts A-Z, a-z and "LeftMouseBtn" / "RightMouseBtn" / "MiddleMouseBtn" / "LeftShift" / "RightShift"
-<br>
-<br>
-<b>Key differences between 2D and 3D mode</b><br>
-● <u>In 2D mode</u> the main camera renders the scene in <b>orthographic</b> mode (Z position is used to determine sequence when sprites overlapping), whereas <u>in 3D mode</u> the camera renders the scene in <b>perspective</b> mode. Moreover, 3D mode and 2D mode have different kinds of default camera controller.<br>
-● <u>In 2D mode</u>, due to the loss of one dimension, for some values and axis in 3D coordinate system, they sometimes behaves differently with 3D mode. For example, some coordinate values is ignored in 2D mode. Whereas <u>in 3D mode</u> you can use the fully-supported 3D coordinate system. (Actually, in general, Unity Academy just simply uses 3D space and an orthographic camera to simulate 2D space.)<br>
-● <u>In 2D mode</u> you need to use <b>instantiate_sprite</b> to create new GameObjects, whereas <u>in 3D mode</u> you need to use <b>instantiate</b> to create new GameObjects.<br>
-● <u>In 2D mode</u> Unity Academy will use Rigidbody2D and 2D colliders like BoxCollider2D for physics engine (certain values for 3D physics engine in 2D physics engine is ignored and will always be zero), whereas <u>in 3D mode</u> Unity Academy use regular 3D rigidbody and 3D colliders to simulate 3D physics.<br>
-● <u>In 2D mode</u> playing frame animations for sprite GameObjects is currently unavailable, whereas <u>in 3D mode</u> you need to use <b>play_animator_state</b> to play 3D animations.<br>
-<br>
-<br>
-<b>Space and Coordinates</b><br>
-● <u>3D:</u> Uses <b>left-hand coordinate system</b>: +X denotes rightward, +Y denotes upward, +Z denotes forward.<br>
-● <u>2D:</u> +X denotes rightward, +Y denotes upward, Z value actually still exists and usually used for determining sequence of overlapping 2D GameObjects like sprites.
-<br>
-<br>
-<b>Unity Academy Camera Control (only available when the default camera controllers are being used)</b><br>
-● <u>In 2D mode:</u><br>
-● 'W'/'A'/'S'/'D' : Moves the main camera around<br>
-● '=' (equals key) : Resets the main camera to its initial position<br>
-● <u>In 3D mode:</u><br>
-● '=' (equals key) : Resets the main camera to its initial position and rotation<br>
-● Left Mouse Button : Hold to rotate the main camera in a faster speed<br>
-● Mouse Scrollwheel : Zoom in / out
+<p>When any runtime errors happen in lifecycle event functions, they will be displayed in Unity Academy&#39;s information page and the lifecycle event function that caused the errors will automatically unbind from the GameObject.</p>
+<p><strong>Input Function Key Codes</strong> Accepts A-Z, a-z and &quot;LeftMouseBtn&quot; / &quot;RightMouseBtn&quot; / &quot;MiddleMouseBtn&quot; / &quot;LeftShift&quot; / &quot;RightShift&quot;</p>
+<p><strong>Key differences between 2D and 3D mode</strong></p>
+<ul>
+<li><u>In 2D mode</u> the main camera renders the scene in <strong>orthographic</strong> mode (Z position is used to determine sequence when sprites overlapping), whereas <u>in 3D mode</u> the camera renders the scene in <strong>perspective</strong> mode. Moreover, 3D mode and 2D mode have different kinds of default camera controller.</li>
+<li><u>In 2D mode</u>, due to the loss of one dimension, for some values and axis in 3D coordinate system, they sometimes behaves differently with 3D mode. For example, some coordinate values is ignored in 2D mode. Whereas <u>in 3D mode</u> you can use the fully-supported 3D coordinate system. (Actually, in general, Unity Academy just simply uses 3D space and an orthographic camera to simulate 2D space.)</li>
+<li><u>In 2D mode</u> you need to use <strong>instantiate_sprite</strong> to create new GameObjects, whereas <u>in 3D mode</u> you need to use <strong>instantiate</strong> to create new GameObjects.</li>
+<li><u>In 2D mode</u> Unity Academy will use Rigidbody2D and 2D colliders like BoxCollider2D for physics engine (certain values for 3D physics engine in 2D physics engine is ignored and will always be zero), whereas <u>in 3D mode</u> Unity Academy use regular 3D rigidbody and 3D colliders to simulate 3D physics.</li>
+<li><u>In 2D mode</u> playing frame animations for sprite GameObjects is currently unavailable, whereas <u>in 3D mode</u> you need to use <strong>play_animator_state</strong> to play 3D animations.</li>
+</ul>
+<p><strong>Space and Coordinates</strong></p>
+<ul>
+<li><u>3D:</u> Uses <strong>left-hand coordinate system</strong>: +X denotes rightward, +Y denotes upward, +Z denotes forward.</li>
+<li><u>2D:</u> +X denotes rightward, +Y denotes upward, Z value actually still exists and usually used for determining sequence of overlapping 2D GameObjects like sprites.</li>
+</ul>
+<p><strong>Unity Academy Camera Control (only available when the default camera controllers are being used)</strong></p>
+<ul>
+<li><u>In 2D mode:</u><ul>
+<li>&#39;W&#39;/&#39;A&#39;/&#39;S&#39;/&#39;D&#39; : Moves the main camera around</li>
+<li>&#39;=&#39; (equals key) : Resets the main camera to its initial position</li>
+</ul>
+</li>
+<li><u>In 3D mode:</u><ul>
+<li>&#39;=&#39; (equals key) : Resets the main camera to its initial position and rotation</li>
+<li>Left Mouse Button : Hold to rotate the main camera in a faster speed</li>
+<li>Mouse Scrollwheel : Zoom in / out</li>
+</ul>
+</li>
+</ul>
+
 <h3>Author</h3><p>Wang Zihan</p>
 </div></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/f72e5a1/src/bundles/unity_academy/index.ts#L77">unity_academy/index.ts:77</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/813a8ee/src/bundles/unity_academy/index.ts#L82">unity_academy/index.ts:82</a></li></ul></aside>
 <section class="tsd-panel-group">
 <section class="tsd-panel tsd-typography"></section></section>
 <section class="tsd-panel-group tsd-index-group">

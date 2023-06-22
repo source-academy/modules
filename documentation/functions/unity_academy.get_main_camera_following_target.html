@@ -20,18 +20,17 @@
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
 <li class="tsd-signature tsd-anchor-link" id="get_main_camera_following_target">get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GameObjectIdentifier</span><a href="#get_main_camera_following_target" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Get the main camera following target GameObject (an invisible GameObject) to use it to control the position of the main camera with the default camera controller.<br><br>
-<b>In 3D mode</b>, the default camera controller behaves as third-person camera controller, and the center to follow is the following target GameObject. Also, Unity Academy will automatically set the rotation of this &quot;following target&quot; to the same rotation as the current main camera&#39;s rotation to let you get the main camera&#39;s rotation.<br>
-<b>In 2D mode</b>, the default camera controller will follow the target GameObject to move, along with a position delta value that you can adjust with the arrow keys on your keyboard.<br><br>
-The main camera following target GameObject is a primitive GameObject. This means that you are not allowed to destroy it and/or instantiate it during runtime. Multiple calls to this function will return GameObject identifiers that refer to the same primitive GameObject.<br>
-<br>
-<br><b>If default main camera controllers are disabled (you have called <code>request_for_main_camera_control</code>), then the following target GameObject is useless.</b></p>
+<div class="tsd-comment tsd-typography"><p>Get the main camera following target GameObject (an invisible GameObject) to use it to control the position of the main camera with the default camera controller.</p>
+<p><strong>In 3D mode</strong>, the default camera controller behaves as third-person camera controller, and the center to follow is the following target GameObject. Also, Unity Academy will automatically set the rotation of this &quot;following target&quot; to the same rotation as the current main camera&#39;s rotation to let you get the main camera&#39;s rotation.</p>
+<p><strong>In 2D mode</strong>, the default camera controller will follow the target GameObject to move, along with a position delta value that you can adjust with the arrow keys on your keyboard.</p>
+<p>The main camera following target GameObject is a primitive GameObject. This means that you are not allowed to destroy it and/or instantiate it during runtime. Multiple calls to this function will return GameObject identifiers that refer to the same primitive GameObject.</p>
+<p><strong>If default main camera controllers are disabled (you have called <code>request_for_main_camera_control</code>), then the following target GameObject is useless.</strong></p>
 
 <h3>Returns</h3><p>The GameObject idenfitier for the main camera following target GameObject.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">GameObjectIdentifier</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/f72e5a1/src/bundles/unity_academy/functions.ts#L966">unity_academy/functions.ts:966</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/813a8ee/src/bundles/unity_academy/functions.ts#L1019">unity_academy/functions.ts:1019</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
