@@ -13,7 +13,8 @@ import {
 
 
 /**
- * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions (except Maths functions) in this module requires calling this function or init_unity_academy_3d first.<br>
+ * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions (except Maths functions) in this module requires calling this function or init_unity_academy_3d first.
+ *
  * I recommand you just call this function at the beginning of your Source Unity program under the 'import' statements.
  *
  * @category Application Initialization
@@ -24,7 +25,8 @@ export function init_unity_academy_2d() : void {
 }
 
 /**
- * Load and initialize Unity Academy WebGL player and set it to 3D mode. All other functions (except Maths functions) in this module requires calling this function or init_unity_academy_2d first.<br>
+ * Load and initialize Unity Academy WebGL player and set it to 3D mode. All other functions (except Maths functions) in this module requires calling this function or init_unity_academy_2d first.
+ *
  * I recommand you just call this function at the beginning of your Source Unity program under the 'import' statements.
  *
  * @category Application Initialization
@@ -125,10 +127,10 @@ export function set_update(gameObjectIdentifier : GameObjectIdentifier, updateFu
 
 
 /**
- * Creates a new GameObject from an existing Prefab<br>
- * <br>
- * <b>3D mode only</b><br>
- * <br>
+ * Creates a new GameObject from an existing Prefab
+ *
+ * **3D mode only**
+ *
  * Available Prefab Information: <a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a>
  *
  * @param prefab_name The prefab name
@@ -146,10 +148,13 @@ export function instantiate(prefab_name : string) : GameObjectIdentifier {
 }
 
 /**
- * Creates a new 2D Sprite GameObject from an online image.<br>
- * The Sprite GameObject has a BoxCollider2D that matches its size by default. You may use `remove_collider_components` function to remove the default collider.<br><br>
- * Note that Unity Academy will use a HTTP GET request to download the image, which means that the HTTP response from the URL must allows CORS.<br><br>
- * <br><b>2D mode only</b>
+ * Creates a new 2D Sprite GameObject from an online image.
+ *
+ * The Sprite GameObject has a BoxCollider2D that matches its size by default. You may use `remove_collider_components` function to remove the default collider.
+ *
+ * Note that Unity Academy will use a HTTP GET request to download the image, which means that the HTTP response from the URL must allows CORS.
+ *
+ * **2D mode only**
  *
  * @param sourceImageUrl The image url for the sprite.
  * @return the identifier of the newly created GameObject
@@ -166,9 +171,10 @@ export function instantiate_sprite(sourceImageUrl : string) {
 }
 
 /**
- * Creates a new empty GameObject.<br>
- * <br>
- * An empty GameObject is invisible and only have transform properties by default.<br>
+ * Creates a new empty GameObject.
+ *
+ * An empty GameObject is invisible and only have transform properties by default.
+ *
  * You may use the empty GameObject to run some general game management code or use the position of the empty GameObject to represent a point in the scene that the rest of your codes can access and utilize.
  *
  * @return the identifier of the newly created GameObject
@@ -184,9 +190,12 @@ export function instantiate_empty() : GameObjectIdentifier {
 }
 
 /**
- * Returns the value of Time.deltaTime in Unity ( roughly saying it's about `1 / instant frame rate` )<br>
- * This should be useful when implementing timers or constant speed control in Update function.<br>
+ * Returns the value of Time.deltaTime in Unity ( roughly saying it's about `1 / instant frame rate` )
+ *
+ * This should be useful when implementing timers or constant speed control in Update function.
+ *
  * For example:
+ *
  * ```
  * function update(gameObject){
  *     const move_speed = 3;
@@ -194,9 +203,9 @@ export function instantiate_empty() : GameObjectIdentifier {
  * }
  * ```
  * By assigning the above code to a GameObject with `set_update`, that GameObject will move in a constant speed of 3 units along world +Z axis, ignoring the affect of unstable instant frame rate.
- * <br>
- * <br>
+ *
  * For more information, see https://docs.unity3d.com/ScriptReference/Time-deltaTime.html
+ *
  * @return the delta time value in decimal
  *
  * @category Common
@@ -208,9 +217,10 @@ export function delta_time() {
 }
 
 /**
- * Remove a GameObject<br>
- * Note that this won't remove the GameObject immediately, the actual removal will happen at the end of the current main cycle loop.<br>
- * <br>
+ * Remove a GameObject
+ *
+ * Note that this won't remove the GameObject immediately, the actual removal will happen at the end of the current main cycle loop.
+ *
  * For more information, see https://docs.unity3d.com/ScriptReference/Object.Destroy.html
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to destroy.
@@ -303,8 +313,9 @@ export function set_rotation_euler(gameObjectIdentifier : GameObjectIdentifier, 
 
 /**
  * Returns the scale (size factor) of a given GameObject
- * <br>
+ *
  * By default the scale of a GameObject is (1, 1, 1)
+ *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get scale for.
  * @return the scale represented in an array with three elements: [x, y, z]
  *
@@ -319,7 +330,7 @@ export function get_scale(gameObjectIdentifier : GameObjectIdentifier) : Array<N
 
 /**
  * Set the scale (size) of a given GameObject
- * <br>
+ *
  * By default the scale of a GameObject is (1, 1, 1). Changing the scale of a GameObject along one axis will lead to a stretch or squeeze of the GameObject along that axis.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change scale for.
@@ -360,8 +371,10 @@ export function translate_world(gameObjectIdentifier : GameObjectIdentifier, x: 
 }
 
 /**
- * Moves a GameObject with given x, y and z values, <b>with respect to its local space</b>.<br>
- * The current rotation of the GameObject will affect the real direction of movement.<br>
+ * Moves a GameObject with given x, y and z values, **with respect to its local space**.
+ *
+ * The current rotation of the GameObject will affect the real direction of movement.
+ *
  * In Unity, usually, the direction of +Z axis denotes forward.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to translate.
@@ -402,8 +415,10 @@ export function rotate_world(gameObjectIdentifier : GameObjectIdentifier, x: num
 }
 
 /**
- * Copy the position values from one GameObject to another GameObject along with delta values.<br><br>
- * Set the delta parameters to `Infinity` or `-Infinity` to remain the position of the destination GameObject on the corresponding axis unaffected.<br>
+ * Copy the position values from one GameObject to another GameObject along with delta values.
+ *
+ * Set the delta parameters to `Infinity` or `-Infinity` to remain the position of the destination GameObject on the corresponding axis unaffected.
+ *
  *
  * @param from The identifier for the GameObject that you want to copy position from.
  * @param to The identifier for the GameObject that you want to copy position to.
@@ -425,8 +440,10 @@ export function copy_position(from : GameObjectIdentifier, to : GameObjectIdenti
 }
 
 /**
- * Copy the rotation values (Euler angles) from one GameObject to another GameObject along with delta values.<br><br>
- * Set the delta parameters to `Infinity` or `-Infinity` to remain the rotation of the destination GameObject on the corresponding axis unaffected.<br>
+ * Copy the rotation values (Euler angles) from one GameObject to another GameObject along with delta values.
+ *
+ * Set the delta parameters to `Infinity` or `-Infinity` to remain the rotation of the destination GameObject on the corresponding axis unaffected.
+ *
  *
  * @param from The identifier for the GameObject that you want to copy rotation from.
  * @param to The identifier for the GameObject that you want to copy rotation to.
@@ -448,8 +465,10 @@ export function copy_rotation(from : GameObjectIdentifier, to : GameObjectIdenti
 }
 
 /**
- * Copy the scale values from one GameObject to another GameObject along with delta values.<br><br>
- * Set the delta parameters to `Infinity` or `-Infinity` to remain the scale of the destination GameObject on the corresponding axis unaffected.<br>
+ * Copy the scale values from one GameObject to another GameObject along with delta values.
+ *
+ * Set the delta parameters to `Infinity` or `-Infinity` to remain the scale of the destination GameObject on the corresponding axis unaffected.
+ *
  *
  * @param from The identifier for the GameObject that you want to copy scale from.
  * @param to The identifier for the GameObject that you want to copy scale to.
@@ -471,12 +490,13 @@ export function copy_scale(from : GameObjectIdentifier, to : GameObjectIdentifie
 }
 
 /**
- * Makes the GameObject "Look At" a given position.<br>
- * <b>3D mode only</b><br>
- * <br>
- * The +Z direction of the GameObject (which denotes forward in Unity's conventions) will pointing to the given position.<br>
- * <br>
- * For more information, see https://docs.unity3d.com/ScriptReference/Transform.LookAt.html<br>
+ * Makes the GameObject "Look At" a given position.
+ *
+ * **3D mode only**
+ *
+ * The +Z direction of the GameObject (which denotes forward in Unity's conventions) will pointing to the given position.
+ *
+ * For more information, see https://docs.unity3d.com/ScriptReference/Transform.LookAt.html
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you need to make it "look at" a position
  * @param x The X value of the "look at" position
@@ -527,9 +547,9 @@ function checkKeyCodeValidityAndToLowerCase(keyCode : string) : string {
 
 /**
  * When user presses a key on the keyboard or mouse button, this function will return true only at the frame when the key is just pressed down and return false afterwards.
- * <br>
- * <br>
+ *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKeyDown.html
+ *
  * @return A boolean value equivalent to Input.GetKeyDown(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
@@ -544,9 +564,9 @@ export function get_key_down(keyCode : string) : boolean {
 
 /**
  * When user presses a key on the keyboard or mouse button, this function will return true in every frame that the key is still being pressed and false otherwise.
- * <br>
- * <br>
+ *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKey.html
+ *
  * @return A boolean value equivalent to Input.GetKey(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
@@ -563,9 +583,9 @@ export function get_key(keyCode : string) : boolean {
 
 /**
  * When user releases a pressed key on the keyboard or mouse button, this function will return true only at the frame when the key is just released up and return false otherwise.
- * <br>
- * <br>
+ *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKeyUp.html
+ *
  * @return A boolean value equivalent to Input.GetKeyUp(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
@@ -579,10 +599,13 @@ export function get_key_up(keyCode : string) : boolean {
 }
 
 /**
- * Plays an Unity animation state with given name on the GameObject's animator. Note that not all game objects have Unity animations. You should ask the people who provided you the prefab asset bundle for available animation names assigned to the prefab.<br><br>
- * If you provide an invalid animator state name, this function will not take effect.<br><br>
- * <b>3D mode only</b><br><br>
- * [For Prefab Authors] Please follow these conventions if you are making humanoid prefabs (for example: any human-like characters): Name the standing animation state as "Idle" and name the walking animation state as "Walk" in Unity Animator.<br>
+ * Plays an Unity animation state with given name on the GameObject's animator. Note that not all game objects have Unity animations. You should ask the people who provided you the prefab asset bundle for available animation names assigned to the prefab.
+ *
+ * If you provide an invalid animator state name, this function will not take effect.
+ *
+ * **3D mode only**
+ *
+ * [For Prefab Authors] Please follow these conventions if you are making humanoid prefabs (for example: any human-like characters): Name the standing animation state as "Idle" and name the walking animation state as "Walk" in Unity Animator.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to play the animation on.
  * @param animatorStateName The name for the animator state to play.
@@ -598,13 +621,14 @@ export function play_animator_state(gameObjectIdentifier : GameObjectIdentifier,
 }
 
 /**
- * Apply rigidbody (2D or 3D based on the current dimension mode) to the given game object to use Unity's physics engine<br>
- * <br><br>All other functions under the Physics - Rigidbody category require calling this function first on the applied game objects.
- * <br>
- * <br>
+ * Apply rigidbody (2D or 3D based on the current dimension mode) to the given game object to use Unity's physics engine
+ *
+ * All other functions under the Physics - Rigidbody category require calling this function first on the applied game objects.
+ *
  * For more information, see
- * <br>https://docs.unity3d.com/ScriptReference/Rigidbody.html (For 3D Mode) or
- * <br>https://docs.unity3d.com/ScriptReference/Rigidbody2D.html (For 2D Mode)
+ *
+ * - https://docs.unity3d.com/ScriptReference/Rigidbody.html (For 3D Mode) or
+ * - https://docs.unity3d.com/ScriptReference/Rigidbody2D.html (For 2D Mode)
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to apply rigidbody on.
  * @category Physics - Rigidbody
@@ -618,7 +642,8 @@ export function apply_rigidbody(gameObjectIdentifier : GameObjectIdentifier) : v
 
 /**
  * Returns the mass of the rigidbody attached on the game object.
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get mass for.
  * @return The mass of the rigidbody attached on the GameObject
@@ -633,7 +658,8 @@ export function get_mass(gameObjectIdentifier : GameObjectIdentifier) : number {
 
 /**
  * Set the mass of the rigidbody attached on the game object.
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change mass for.
  * @param mass The value for the new mass.
@@ -649,7 +675,8 @@ export function set_mass(gameObjectIdentifier : GameObjectIdentifier, mass : num
 
 /**
  * Returns the velocity of the rigidbody attached on the game object.
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get velocity for.
  * @return the velocity at this moment represented in an array with three elements: [x, y, z]
@@ -664,7 +691,8 @@ export function get_velocity(gameObjectIdentifier : GameObjectIdentifier) : Arra
 
 /**
  * Set the (linear) velocity of the rigidbody attached on the game object.
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change velocity for.
  * @param x The x component of the velocity vector.
@@ -684,8 +712,10 @@ export function set_velocity(gameObjectIdentifier : GameObjectIdentifier, x: num
 
 /**
  * Returns the angular velocity of the rigidbody attached on the game object.
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
- * <br><br><b>2D Mode Special: </b>In 2D mode there is no angular velocity on X nor Y axis, so in the first two elements for the returned array will always be zero.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * **2D Mode Special: **In 2D mode there is no angular velocity on X nor Y axis, so in the first two elements for the returned array will always be zero.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get angular velocity for.
  * @return the angular velocity at this moment represented in an array with three elements: [x, y, z]
@@ -700,8 +730,10 @@ export function get_angular_velocity(gameObjectIdentifier : GameObjectIdentifier
 
 /**
  * Set the angular velocity of the rigidbody attached on the game object.
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
- * <br><br><b>2D Mode Special: </b>In 2D mode there is no angular velocity on X nor Y axis, so the value of the first two parameters for this function is ignored.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * **2D Mode Special: **In 2D mode there is no angular velocity on X nor Y axis, so the value of the first two parameters for this function is ignored.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change angular velocity for.
  * @param x The x component of the angular velocity vector.
@@ -720,9 +752,11 @@ export function set_angular_velocity(gameObjectIdentifier : GameObjectIdentifier
 }
 
 /**
- * Set the drag (similar to air resistance) the rigidbody attached on the game object.<br>
+ * Set the drag (similar to air resistance) the rigidbody attached on the game object.
+ *
  * By default the drag is zero
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change drag for.
  * @param value The value of the new drag.
@@ -737,9 +771,11 @@ export function set_drag(gameObjectIdentifier : GameObjectIdentifier, value: num
 }
 
 /**
- * Set the angular drag (similar to an air resistance that affects angular velocity) the rigidbody attached on the game object.<br>
+ * Set the angular drag (similar to an air resistance that affects angular velocity) the rigidbody attached on the game object.
+ *
  * By default the angular drag is 0.05
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change angular drag for.
  * @param value The value of the new angular drag.
@@ -755,7 +791,8 @@ export function set_angular_drag(gameObjectIdentifier : GameObjectIdentifier, va
 
 /**
  * Set whether the rigidbody attached on the game object should calculate for gravity.
- * <br><br>Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
+ *
+ * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to enable/disable gravity on its rigidbody.
  * @param {useGravity} Set to true if you want gravity to be applied on this rigidbody, false otherwise.
@@ -771,8 +808,9 @@ export function set_use_gravity(gameObjectIdentifier : GameObjectIdentifier, use
 
 
 /**
- * Add an impulse force on the Rigidbody attached on the GameObject, <b>using its mass</b>.
- * <br><br>Usage of all physics functions under the Physics category requires calling `apply_rigidbody` first on the applied game objects.
+ * Add an impulse force on the Rigidbody attached on the GameObject, **using its mass**.
+ *
+ * Usage of all physics functions under the Physics category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to add the force.
  * @param x The x component of the force vector.
@@ -791,9 +829,10 @@ export function add_impulse_force(gameObjectIdentifier : GameObjectIdentifier, x
 }
 
 /**
- * Removes all collider components directly attached on the given GameObject by default.<br>
- * <br>
- * You can use this function on GameObjects those you don't want them to collide with other GameObjects.<br>
+ * Removes all collider components directly attached on the given GameObject by default.
+ *
+ * You can use this function on GameObjects those you don't want them to collide with other GameObjects.
+ *
  * For example, you may use this on the background image sprite GameObject in 2D scene.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to remove colliders for.
@@ -807,17 +846,18 @@ export function remove_collider_components(gameObjectIdentifier : GameObjectIden
 }
 
 /**
- * Set the lifecycle event function that will be called when the collider on this GameObject just starting colliding with another collider.<br>
- * <br>
- * The given function should contain two parameters. The first parameter refers to the binded GameObject and the second parameter refers to the other GameObject that collides with the binded GameObject (both parameters are GameObject identifiers).<br>
+ * Set the lifecycle event function that will be called when the collider on this GameObject just starting colliding with another collider.
+ *
+ * The given function should contain two parameters. The first parameter refers to the binded GameObject and the second parameter refers to the other GameObject that collides with the binded GameObject (both parameters are GameObject identifiers).
+ *
  * For example: `const myFunction = (self, other) => {...};`
- * <br>
+ *
  * Note that for collision detaction to happen, for the two colliding GameObjects, at least one GameObject should have a Rigidbody / Rigidbody2D component (called `apply_rigidbody` on the GameObject).
- * <br>
- * <br>
+ *
  * For more information, see
- * <br>https://docs.unity3d.com/ScriptReference/Collider.OnCollisionEnter.html (For 3D Mode) or
- * <br>https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnCollisionEnter2D.html (For 2D Mode)
+ *
+ * - https://docs.unity3d.com/ScriptReference/Collider.OnCollisionEnter.html (For 3D Mode) or
+ * - https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnCollisionEnter2D.html (For 2D Mode)
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to bind the lifecycle event function on.
  * @param eventFunction The lifecycle event function for handling this event.
@@ -833,17 +873,18 @@ export function on_collision_enter(gameObjectIdentifier : GameObjectIdentifier, 
 }
 
 /**
- * Set the lifecycle event function that will be called per frame when the collider on this GameObject is colliding with another collider.<br>
- * <br>
- * The given function should contain two parameters. The first parameter refers to the binded GameObject and the second parameter refers to the other GameObject that collides with the binded GameObject (both parameters are GameObject identifiers).<br>
+ * Set the lifecycle event function that will be called per frame when the collider on this GameObject is colliding with another collider.
+ *
+ * The given function should contain two parameters. The first parameter refers to the binded GameObject and the second parameter refers to the other GameObject that collides with the binded GameObject (both parameters are GameObject identifiers).
+ *
  * For example: `const myFunction = (self, other) => {...};`
- * <br>
+ *
  * Note that for collision detaction to happen, for the two colliding GameObjects, at least one GameObject should have a Rigidbody / Rigidbody2D component (called `apply_rigidbody` on the GameObject).
- * <br>
- * <br>
+ *
  * For more information, see
- * <br>https://docs.unity3d.com/ScriptReference/Collider.OnCollisionStay.html (For 3D Mode) or
- * <br>https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnCollisionStay2D.html (For 2D Mode)
+ *
+ * - https://docs.unity3d.com/ScriptReference/Collider.OnCollisionStay.html (For 3D Mode) or
+ * - https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnCollisionStay2D.html (For 2D Mode)
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to bind the lifecycle event function on.
  * @param eventFunction The lifecycle event function for handling this event.
@@ -859,17 +900,18 @@ export function on_collision_stay(gameObjectIdentifier : GameObjectIdentifier, e
 }
 
 /**
- * Set the lifecycle event function that will be called when the collider on this GameObject just stops colliding with another collider.<br>
- * <br>
- * The given function should contain two parameters. The first parameter refers to the binded GameObject and the second parameter refers to the other GameObject that collides with the binded GameObject (both parameters are GameObject identifiers).<br>
+ * Set the lifecycle event function that will be called when the collider on this GameObject just stops colliding with another collider.
+ *
+ * The given function should contain two parameters. The first parameter refers to the binded GameObject and the second parameter refers to the other GameObject that collides with the binded GameObject (both parameters are GameObject identifiers).
+ *
  * For example: `const myFunction = (self, other) => {...};`
- * <br>
+ *
  * Note that for collision detaction to happen, for the two colliding GameObjects, at least one GameObject should have a Rigidbody / Rigidbody2D component (called `apply_rigidbody` on the GameObject).
- * <br>
- * <br>
+ *
  * For more information, see
- * <br>https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnCollisionExit.html (For 3D Mode) or
- * <br>https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnCollisionExit2D.html (For 2D Mode)
+ *
+ * - https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnCollisionExit.html (For 3D Mode) or
+ * - https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnCollisionExit2D.html (For 2D Mode)
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to bind the lifecycle event function on.
  * @param eventFunction The lifecycle event function for handling this event.
@@ -886,9 +928,12 @@ export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, e
 
 
 /**
- * Draw a text (string) on the screen with given <b>screen space position</b> in the current frame.<br>
- * The origin of screen space is upper-left corner and the positive Y direction is downward.<br>
- * The drawn text will only last for one frame. You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the text stays in every frame.<br>
+ * Draw a text (string) on the screen with given **screen space position** in the current frame.
+ *
+ * The origin of screen space is upper-left corner and the positive Y direction is downward.
+ *
+ * The drawn text will only last for one frame. You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the text stays in every frame.
+ *
  *
  * @param content The string you want to display on screen.
  * @param x The x coordinate of the text (in screen position).
@@ -908,14 +953,18 @@ export function gui_label(content : string, x : number, y : number, fontSize : n
 
 
 /**
- * Make a button on the screen with given <b>screen space position</b> in the current frame. When user clicks the button, the `onClick` function will be called.<br>
- * The origin of screen space is upper-left corner and the positive Y direction is downward.<br>
+ * Make a button on the screen with given **screen space position** in the current frame. When user clicks the button, the `onClick` function will be called.
+ *
+ * The origin of screen space is upper-left corner and the positive Y direction is downward.
+ *
  * The drawn button will only last for one frame. You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the button stays in every frame.
- * <br>
- * <br>
- * If this function is called by a lifecycle event function, then the `onClick` function in the fourth parameter could also be considered as a lifecycle event function.<br>
- * This means that you can use other functions from this module inside the `onClick` function, even though the functions are not under the `Outside Lifecycle` category.<br>
+ *
+ * If this function is called by a lifecycle event function, then the `onClick` function in the fourth parameter could also be considered as a lifecycle event function.
+ *
+ * This means that you can use other functions from this module inside the `onClick` function, even though the functions are not under the `Outside Lifecycle` category.
+ *
  * For example, the code piece below
+ *
  * ```
  * import {init_unity_academy_3d, set_start, set_update, instantiate, gui_button, set_position }
  * from "unity_academy";
@@ -931,7 +980,8 @@ export function gui_label(content : string, x : number, y : number, fontSize : n
 
  * set_update(cube, cube_update);
  * ```
- * is correct.<br>
+ *
+ * is correct.
  *
  * @param text The text you want to display on the button.
  * @param x The x coordinate of the button (in screen position).
@@ -952,12 +1002,15 @@ export function gui_button(text : string, x: number, y : number, fontSize : numb
 }
 
 /**
- * Get the main camera following target GameObject (an invisible GameObject) to use it to control the position of the main camera with the default camera controller.<br><br>
- * <b>In 3D mode</b>, the default camera controller behaves as third-person camera controller, and the center to follow is the following target GameObject. Also, Unity Academy will automatically set the rotation of this "following target" to the same rotation as the current main camera's rotation to let you get the main camera's rotation.<br>
- * <b>In 2D mode</b>, the default camera controller will follow the target GameObject to move, along with a position delta value that you can adjust with the arrow keys on your keyboard.<br><br>
- * The main camera following target GameObject is a primitive GameObject. This means that you are not allowed to destroy it and/or instantiate it during runtime. Multiple calls to this function will return GameObject identifiers that refer to the same primitive GameObject.<br>
- * <br>
- * <br><b>If default main camera controllers are disabled (you have called `request_for_main_camera_control`), then the following target GameObject is useless.</b>
+ * Get the main camera following target GameObject (an invisible GameObject) to use it to control the position of the main camera with the default camera controller.
+ *
+ * **In 3D mode**, the default camera controller behaves as third-person camera controller, and the center to follow is the following target GameObject. Also, Unity Academy will automatically set the rotation of this "following target" to the same rotation as the current main camera's rotation to let you get the main camera's rotation.
+ *
+ * **In 2D mode**, the default camera controller will follow the target GameObject to move, along with a position delta value that you can adjust with the arrow keys on your keyboard.
+ *
+ * The main camera following target GameObject is a primitive GameObject. This means that you are not allowed to destroy it and/or instantiate it during runtime. Multiple calls to this function will return GameObject identifiers that refer to the same primitive GameObject.
+ *
+ * **If default main camera controllers are disabled (you have called `request_for_main_camera_control`), then the following target GameObject is useless.**
  *
  * @return The GameObject idenfitier for the main camera following target GameObject.
  * @category Camera
@@ -971,11 +1024,12 @@ export function get_main_camera_following_target() : GameObjectIdentifier {
 
 
 /**
- * Request for main camera control and get a GameObject identifier that can directly be used to control the main camera's position and rotation.<br>
- * <br>
- * When you request for the direct control over main camera with this function, the default camera controllers will be disabled, thus the GameObject identifier returned by `get_main_camera_following_target` will become useless, as you can no longer use the default main camera controllers.<br>
- * <br>
- * This function is for totally customizing the position and rotation of the main camera. If you'd like to simplify the camera controlling with the help of the default camera controllers in Unity Academy, please consider use `get_main_camera_following_target` function.<br>
+ * Request for main camera control and get a GameObject identifier that can directly be used to control the main camera's position and rotation.
+ *
+ * When you request for the direct control over main camera with this function, the default camera controllers will be disabled, thus the GameObject identifier returned by `get_main_camera_following_target` will become useless, as you can no longer use the default main camera controllers.
+ *
+ * This function is for totally customizing the position and rotation of the main camera. If you'd like to simplify the camera controlling with the help of the default camera controllers in Unity Academy, please consider use `get_main_camera_following_target` function.
+ *
  *
  * @return The GameObject identifier that can directly be used to control the main camera's position and rotation
  * @category Camera
