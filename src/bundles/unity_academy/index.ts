@@ -1,15 +1,14 @@
 /**
  * <b>A module that allows students to program with Unity Engine in either <u>2-D</u> or <u>3-D</u> scene in Source Academy.</b>
- * <br>
+ *
  * Makes use of "<b>Unity Academy Embedded WebGL Frontend</b>" (also made by me) to work together.<br>
- * <br>
+ *
  * <b>Code Examples: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/code_examples.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
  * <b>Prefab Information: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
  * <b>User Agreement: </b><a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/user_agreement.html' rel="noopener noreferrer" target="_blank">Click Here</a><br>
- * <br>
+ *
  * <b><u>Note that you need to use this module with a '<i>Native</i>' variant of Source language, otherwise you may get strange errors.</u></b>
- * <br>
- * <br>
+ *
  * <b>Lifecycle Event Functions</b><br>
  * ● Unity Academy has its own internal loop on students' GameObject lifecycle.<br>
  * ● <u>Lifecycle event functions</u> are functions that are not supposed to be called by Source Academy's default evaluator, instead they are called by Unity Academy at certain time in the GameObject's lifecycle.<br>
@@ -41,26 +40,23 @@
  * }
  * set_start(cube, my_start); // Correct
  * ```
- * <br>
+ *
  * When any runtime errors happen in lifecycle event functions, they will be displayed in Unity Academy's information page and the lifecycle event function that caused the errors will automatically unbind from the GameObject.
- * <br>
- * <br>
+ *
  * <b>Input Function Key Codes</b> Accepts A-Z, a-z and "LeftMouseBtn" / "RightMouseBtn" / "MiddleMouseBtn" / "LeftShift" / "RightShift"
- * <br>
- * <br>
+ *
  * <b>Key differences between 2D and 3D mode</b><br>
  * ● <u>In 2D mode</u> the main camera renders the scene in <b>orthographic</b> mode (Z position is used to determine sequence when sprites overlapping), whereas <u>in 3D mode</u> the camera renders the scene in <b>perspective</b> mode. Moreover, 3D mode and 2D mode have different kinds of default camera controller.<br>
  * ● <u>In 2D mode</u>, due to the loss of one dimension, for some values and axis in 3D coordinate system, they sometimes behaves differently with 3D mode. For example, some coordinate values is ignored in 2D mode. Whereas <u>in 3D mode</u> you can use the fully-supported 3D coordinate system. (Actually, in general, Unity Academy just simply uses 3D space and an orthographic camera to simulate 2D space.)<br>
  * ● <u>In 2D mode</u> you need to use <b>instantiate_sprite</b> to create new GameObjects, whereas <u>in 3D mode</u> you need to use <b>instantiate</b> to create new GameObjects.<br>
  * ● <u>In 2D mode</u> Unity Academy will use Rigidbody2D and 2D colliders like BoxCollider2D for physics engine (certain values for 3D physics engine in 2D physics engine is ignored and will always be zero), whereas <u>in 3D mode</u> Unity Academy use regular 3D rigidbody and 3D colliders to simulate 3D physics.<br>
  * ● <u>In 2D mode</u> playing frame animations for sprite GameObjects is currently unavailable, whereas <u>in 3D mode</u> you need to use <b>play_animator_state</b> to play 3D animations.<br>
- * <br>
- * <br>
+ *
+ *
  * <b>Space and Coordinates</b><br>
  * ● <u>3D:</u> Uses <b>left-hand coordinate system</b>: +X denotes rightward, +Y denotes upward, +Z denotes forward.<br>
  * ● <u>2D:</u> +X denotes rightward, +Y denotes upward, Z value actually still exists and usually used for determining sequence of overlapping 2D GameObjects like sprites.
- * <br>
- * <br>
+ *
  * <b>Unity Academy Camera Control (only available when the default camera controllers are being used)</b><br>
  * ● <u>In 2D mode:</u><br>
  * ● 'W'/'A'/'S'/'D' : Moves the main camera around<br>
