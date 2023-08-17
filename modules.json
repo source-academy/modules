@@ -98,5 +98,10 @@
     "tabs": [
       "physics_2d"
     ]
+  },
+  "robot_simulation": {
+    "tabs": [
+      "RobotSimulation"
+    ]
   }
 }
