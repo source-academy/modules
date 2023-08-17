@@ -1,4 +1,6 @@
 import React from 'react';
+import { type DebuggerContext } from '../../typings/type_helpers';
+import Main from './components/Main';
 
 /**
  * Robot Simulation
@@ -14,31 +16,7 @@ type Props = {
   context?: any;
 };
 
-/**
- * React Component state for the Tab.
- */
-type State = {
-  counter: number;
-};
 
-/**
- * The main React Component of the Tab.
- */
-class Repeat extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      counter: 0,
-    };
-  }
-
-  public render() {
-    const { counter } = this.state;
-    return (
-      <div>This is spawned from the repeat package. Counter is {counter}</div>
-    );
-  }
-}
 
 export default {
   /**
@@ -47,14 +25,16 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: any) => context.result.value === 'test',
+  toSpawn(context: any) {
+    return true;
+  },
 
   /**
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <Repeat context={context} />,
+  body: (context: any) => <Main/>,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
