@@ -15,13 +15,12 @@ import {
 import { generatePlot } from './curve_functions';
 
 const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
-
-console.log(drawnPlots);
-console.log(context.moduleContexts)
-
 context.moduleContexts.plotly.state = {
   drawnPlots,
 };
+
+console.log(context);
+
 
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
@@ -122,6 +121,7 @@ context.moduleContexts.plotly.state = {
  *             among the fields mentioned above
  */
 export function new_plot(data: ListOfPairs): void {
+  console.log("this was called");
   drawnPlots.push(new DrawnPlot(draw_new_plot, data));
 }
 
@@ -344,3 +344,4 @@ export const draw_3D_points = createPlotFunction(
   },
   true,
 );
+

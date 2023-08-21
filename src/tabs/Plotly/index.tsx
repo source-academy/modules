@@ -37,8 +37,8 @@ class Plotly extends React.Component<Props, State> {
       <div>
         <Modal
           open={this.state.modalOpen}
-          height={'20rem'}
-          width={'20rem'}
+          height={'80vh'}
+          width={'90vw'}
           handleClose={() => this.setState({ modalOpen: false })}
         >
           <div
@@ -49,8 +49,7 @@ class Plotly extends React.Component<Props, State> {
               }
             }}
             style={{
-              height: '20rem',
-              width: '20rem',
+              height: '80vh',
             }}
           ></div>
         </Modal>

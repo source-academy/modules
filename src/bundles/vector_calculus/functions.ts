@@ -1,4 +1,4 @@
-import context  from 'js-slang/context'
+import context from 'js-slang/context'
 import Plotly, { Data, Layout } from 'plotly.js-dist'
 import {
   ConePlot,
@@ -16,7 +16,6 @@ context.moduleContexts.vector_calculus.state = {
 }
 
 // Create PRs for modules
-
 
 /**
  * Makes a vector with the given x, y and z coordinates.
@@ -50,6 +49,10 @@ export function z_of(v: Vector): number {
   return v.z
 }
 
+export function add(v1: Vector, v2: Vector): Vector {
+  return new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z)
+}
+
 export function derivative(f: FunctionalVector): (x: Vector) => Vector {
   const d = n_order_stencil(2, 0.01)
   const df = d(f)
@@ -65,7 +68,7 @@ export function threepointStencilDerivative(
     const h = 1e-7
     const dfdv: Vector = new Vector(0, 0, 0)
     for (let dim in v) {
-      if(dim === "toReplString") continue;
+      if (dim === 'toReplString') continue
       const xPlus = new Vector(v.x, v.y, v.z)
       const xMinus = new Vector(v.x, v.y, v.z)
       xPlus[dim] += h
@@ -108,10 +111,57 @@ export function display_field(f: FunctionalVector) {
   drawnVectors.push(
     new ConePlot(
       draw_new_cone_plot,
-      { ...data, type: 'cone', hoverinfo: 'x+y+z+u+v+w+name', colorscale: "Blackbody", sizeref: 1.25},
+      {
+        ...data,
+        type: 'cone',
+        hoverinfo: 'x+y+z+u+v+w+name',
+        colorscale: 'Blackbody',
+        sizeref: 1.25,
+      },
       {},
     ),
   )
+}
+
+export function display_field_curve(numPoints: number) {
+  return (curve: (number) => Vector) => {
+    const input_vectors: Vector[] = []
+    for (let i = 0; i <= numPoints; i += 1) {
+      const pos_vector = curve(i / numPoints)
+      input_vectors.push(pos_vector)
+    }
+    console.log(input_vectors);
+    return (func: FunctionalVector) => {
+      let results: Vector[] = []
+      input_vectors.forEach((input) => {
+        results.push(func(input))
+      })
+
+      const x_s = input_vectors.map((input) => x_of(input))
+      const y_s = input_vectors.map((input) => y_of(input))
+      const z_s = input_vectors.map((input) => z_of(input))
+
+      const u_s = results.map((res) => x_of(res))
+      const v_s = results.map((res) => y_of(res))
+      const w_s = results.map((res) => z_of(res))
+
+      const data = { x: x_s, y: y_s, z: z_s, u: u_s, v: v_s, w: w_s }
+      drawnVectors.push(
+        new ConePlot(
+          draw_new_cone_plot,
+          {
+            ...data,
+            type: 'cone',
+            hoverinfo: 'x+y+z+u+v+w+name',
+            colorscale: 'Blackbody',
+            sizeref: 'absolute',
+            vertexnormalepsilon: 1e-06,
+          },
+          {},
+        ),
+      )
+    }
+  }
 }
 
 function draw_new_cone_plot(
