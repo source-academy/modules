@@ -9,5 +9,6 @@ export {
   stringify_vector,
   display_field,
   display_field_curve,
+  display_field_surface,
   add
 } from './functions'

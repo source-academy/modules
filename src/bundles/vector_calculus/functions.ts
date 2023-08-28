@@ -85,7 +85,6 @@ export function stringify_vector(v: Vector) {
 }
 
 export function display_field(f: FunctionalVector) {
-  console.log(f)
   let inputs: Vector[] = []
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
@@ -130,7 +129,6 @@ export function display_field_curve(numPoints: number) {
       const pos_vector = curve(i / numPoints)
       input_vectors.push(pos_vector)
     }
-    console.log(input_vectors);
     return (func: FunctionalVector) => {
       let results: Vector[] = []
       input_vectors.forEach((input) => {
@@ -154,12 +152,58 @@ export function display_field_curve(numPoints: number) {
             type: 'cone',
             hoverinfo: 'x+y+z+u+v+w+name',
             colorscale: 'Blackbody',
-            sizeref: 'absolute',
-            vertexnormalepsilon: 1e-06,
+            sizeref: 1.25,
+            vertexnormalepsilon: 1e-6,
           },
           {},
         ),
       )
+    }
+  }
+}
+
+export function display_field_surface(numPoints1: number) {
+  return (numPoints2: number) => {
+    return (surface: (number) => (number) => Vector) => {
+      return (func: FunctionalVector) => {
+        const input_vectors: Vector[] = []
+        for (let i = 1; i < numPoints1; i += 1) {
+          const curve = surface(i / numPoints1)
+          for (let j = 0; j < numPoints2; j += 1) {
+            const pos_vector = curve(j / numPoints2)
+            input_vectors.push(pos_vector)
+          }
+        }
+        console.log(input_vectors);
+        let results: Vector[] = []
+        input_vectors.forEach((input) => {
+          results.push(func(input))
+        })
+
+        const x_s = input_vectors.map((input) => x_of(input))
+        const y_s = input_vectors.map((input) => y_of(input))
+        const z_s = input_vectors.map((input) => z_of(input))
+
+        const u_s = results.map((res) => x_of(res))
+        const v_s = results.map((res) => y_of(res))
+        const w_s = results.map((res) => z_of(res))
+
+        const data = { x: x_s, y: y_s, z: z_s, u: u_s, v: v_s, w: w_s }
+        drawnVectors.push(
+          new ConePlot(
+            draw_new_cone_plot,
+            {
+              ...data,
+              type: 'cone',
+              hoverinfo: 'x+y+z+u+v+w+name',
+              colorscale: 'Blackbody',
+              sizeref: 20, 
+              vertexnormalepsilon: 1e-6,
+            },
+            {},
+          ),
+        )
+      }
     }
   }
 }
