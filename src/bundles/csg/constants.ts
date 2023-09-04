@@ -1,10 +1,5 @@
 /* [Exports] */
 
-//NOTE Silver is in here to avoid circular dependencies, instead of in
-// functions.ts with the other colour strings
-export const SILVER: string = '#AAAAAA';
-export const DEFAULT_COLOR: string = SILVER;
-
 // Renderer grid constants
 export const MAIN_TICKS: number = 1;
 export const SUB_TICKS: number = MAIN_TICKS / 4;
