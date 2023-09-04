@@ -1,11 +1,24 @@
 import { ReplResult } from '../../typings/type_helpers'
 import { Data, Layout } from 'plotly.js-dist'
 
+/**
+ * TODO: figure out a nice demo of using the vector calculus
+ *
+ * QuadTree visualization complete.
+ *
+ * 1. Beam deflection in the field
+ * 2. show effect of the fiedl on a body
+ * 3. Show how lightning strikes work
+ * 4. Visualization of fluid dynamics (boat floating on the water against the wind)
+ * 5. Baseballs rotating in the air show the directions of the winds patterns
+ *
+ */
+
 export class ConePlot implements ReplResult {
   plotlyDrawFn: any
-  data: Data
+  data: Data | Data[]
   layout: Partial<Layout>
-  constructor(plotlyDrawFn: any, data: Data, layout: Partial<Layout>) {
+  constructor(plotlyDrawFn: any, data: Data | Data[], layout: Partial<Layout>) {
     this.plotlyDrawFn = plotlyDrawFn
     this.data = data
     this.layout = layout
@@ -16,7 +29,6 @@ export class ConePlot implements ReplResult {
     this.plotlyDrawFn(divId, this.data, this.layout)
   }
 }
-
 
 export type ParameterizedVector = (t: number) => Vector
 export type FunctionalVector = (v: Vector) => Vector
@@ -37,6 +49,10 @@ export function add(v1: Vector, v2: Vector): Vector {
 
 export function subtract(v1: Vector, v2: Vector): Vector {
   return new Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z)
+}
+
+export function divide(v1: Vector, k: number) {
+  return new Vector(v1.x/k, v1.y/k, v1.z/k);
 }
 
 export function cross_produce(v1: Vector, v2: Vector): Vector {
@@ -68,5 +84,3 @@ export function n_order_stencil(
     }
   }
 }
-
-

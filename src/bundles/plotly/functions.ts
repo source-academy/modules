@@ -6,13 +6,13 @@
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import {
-  type Curve,
-  type CurvePlot,
+  type Curve, CurvePlot,
   type CurvePlotFunction,
   DrawnPlot,
   type ListOfPairs,
 } from './plotly';
 import { generatePlot } from './curve_functions';
+import { Body, QuadTree } from './n_body_functions';
 
 const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 context.moduleContexts.plotly.state = {
@@ -121,7 +121,6 @@ console.log(context);
  *             among the fields mentioned above
  */
 export function new_plot(data: ListOfPairs): void {
-  console.log("this was called");
   drawnPlots.push(new DrawnPlot(draw_new_plot, data));
 }
 
@@ -345,3 +344,74 @@ export const draw_3D_points = createPlotFunction(
   true,
 );
 
+export const create_random_bodies = () => {
+  const bodies:Body[] = []
+  for(let i=0;i<1000;i++) {
+    bodies.push(new Body([Math.random()*10000, Math.random()*10000],100,[0,0],[0,0]))
+  }
+  return bodies
+}
+
+const bodies = create_random_bodies(); 
+
+export const simulate_points = () => {
+   const x_s = bodies.map(body => body.pos[0]);
+  const y_s = bodies.map(body => body.pos[1]);
+  const data = {x: x_s, y: y_s};
+  drawnPlots.push(
+    new CurvePlot(
+      draw_new_simulation,
+      {
+        ...data,
+        mode: 'markers'
+      },
+      {}
+    )
+  )
+
+}
+
+let animationId: number|null = null;
+
+
+function draw_new_simulation(
+  divId: string,
+  data: Data,
+  layout: Partial<Layout>
+) {
+  Plotly.newPlot(divId, [data], layout)
+  console.log(animationId);
+  if(animationId != null) return;
+  const canvas = document.getElementById(divId) as HTMLCanvasElement
+  const qt = new QuadTree(10000)
+  let count = 0;
+  function update() {
+    count++;
+    const dt = 0.16;
+
+  qt.build_tree(bodies);
+    qt.bodies.forEach((body, i) => {
+      body.updateBodyState(dt);
+    });
+
+
+    const new_x = qt.bodies.map(body => body.pos[0]);
+    const new_y = qt.bodies.map(body => body.pos[1]);
+
+    qt.simulateForces();
+
+    Plotly.animate(divId, {
+      data: [{x:new_x, y:new_y}]
+    }, {
+      transition: {
+        duration: 0
+      },
+      frame:{
+        duration: 0,
+        redraw: false
+      }
+    })
+    animationId = requestAnimationFrame(update);
+  }
+  animationId = requestAnimationFrame(update)
+}

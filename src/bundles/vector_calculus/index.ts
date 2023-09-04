@@ -10,5 +10,6 @@ export {
   display_field,
   display_field_curve,
   display_field_surface,
-  add
+  add,
+  simulate_body_in_field,
 } from './functions'

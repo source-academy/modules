@@ -1,40 +1,48 @@
-import React from 'react';
-import type { DrawnPlot } from '../../bundles/plotly/plotly';
-import type { DebuggerContext } from '../../typings/type_helpers';
-import Modal from '../common/modal_div';
+import React from 'react'
+import type { DrawnPlot } from '../../bundles/plotly/plotly'
+import type { DebuggerContext } from '../../typings/type_helpers'
+import Modal from '../common/modal_div'
 
 type Props = {
   children?: never
   className?: string
   debuggerContext: any
-};
+}
 
 type State = {
   modalOpen: boolean
   selectedPlot: any | null
-};
+}
 
 class Plotly extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       modalOpen: false,
       selectedPlot: null,
-    };
+    }
   }
 
   handleOpen = (selectedPlot: DrawnPlot) => {
     this.setState({
       modalOpen: true,
       selectedPlot,
-    });
-  };
+    })
+  }
 
   public render() {
-    const { context: { moduleContexts: { plotly: { state: { drawnPlots } } } } } = this.props.debuggerContext;
+    const {
+      context: {
+        moduleContexts: {
+          plotly: {
+            state: { drawnPlots },
+          },
+        },
+      },
+    } = this.props.debuggerContext
 
     return (
-      <div>
+      <div className="mainBody">
         <Modal
           open={this.state.modalOpen}
           height={'80vh'}
@@ -45,7 +53,7 @@ class Plotly extends React.Component<Props, State> {
             id="modalDiv"
             ref={() => {
               if (this.state.selectedPlot) {
-                this.state.selectedPlot.draw('modalDiv');
+                this.state.selectedPlot.draw('modalDiv')
               }
             }}
             style={{
@@ -53,35 +61,38 @@ class Plotly extends React.Component<Props, State> {
             }}
           ></div>
         </Modal>
-        {
-          drawnPlots.map((drawnPlot: any, id:number) => {
-            const divId = `plotDiv${id}`;
-            return (
-              <>
-                <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
-                <div
-                  id={divId}
-                  ref={() => {
-                    drawnPlot.draw(divId);
-                  }}
-                ></div>
-              </>
-            );
-          })
-        }
-
+        {drawnPlots.map((drawnPlot: any, id: number) => {
+          const divId = `plotDiv${id}${Date.now().toString()}`
+          return (
+            <>
+              <div onClick={() => this.handleOpen(drawnPlot)}>
+                Click here to open Modal
+              </div>
+              <div
+                id={divId}
+                ref={() => {
+                  drawnPlot.draw(divId)
+                }}
+              ></div>
+            </>
+          )
+        })}
+        <div id="n-body">
+          this is the canvas for nice
+          <canvas></canvas>
+        </div>
       </div>
-    );
+    )
   }
 }
 
 export default {
   toSpawn(context: DebuggerContext) {
-    console.log(context);
-    const drawnPlots = context.context?.moduleContexts?.plotly.state.drawnPlots;
-    return drawnPlots.length > 0;
+    console.log(context)
+    const drawnPlots = context.context?.moduleContexts?.plotly.state.drawnPlots
+    return drawnPlots.length > 0
   },
   body: (debuggerContext: any) => <Plotly debuggerContext={debuggerContext} />,
   label: 'Plotly Test Tab',
   iconName: 'scatter-plot',
-};
+}

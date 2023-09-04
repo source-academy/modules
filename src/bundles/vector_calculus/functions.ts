@@ -2,6 +2,7 @@ import context from 'js-slang/context'
 import Plotly, { Data, Layout } from 'plotly.js-dist'
 import {
   ConePlot,
+  divide,
   FunctionalVector,
   FunctionMapping,
   n_order_stencil,
@@ -9,6 +10,7 @@ import {
   subtract,
   Vector,
 } from './vector_calculus'
+import { Body } from '../plotly/n_body_functions'
 
 const drawnVectors: ConePlot[] = []
 context.moduleContexts.vector_calculus.state = {
@@ -174,7 +176,7 @@ export function display_field_surface(numPoints1: number) {
             input_vectors.push(pos_vector)
           }
         }
-        console.log(input_vectors);
+        console.log(input_vectors)
         let results: Vector[] = []
         input_vectors.forEach((input) => {
           results.push(func(input))
@@ -197,7 +199,7 @@ export function display_field_surface(numPoints1: number) {
               type: 'cone',
               hoverinfo: 'x+y+z+u+v+w+name',
               colorscale: 'Blackbody',
-              sizeref: 20, 
+              sizeref: 20,
               vertexnormalepsilon: 1e-6,
             },
             {},
@@ -208,10 +210,109 @@ export function display_field_surface(numPoints1: number) {
   }
 }
 
+export const simulate_body_in_field = (f: FunctionalVector) => {
+  let inputs: Vector[] = []
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      for (let k = 0; k < 10; k++) {
+        inputs.push(new Vector(i / 10, j / 10, k / 10))
+      }
+    }
+  }
+  let results: Vector[] = []
+  inputs.forEach((input) => {
+    results.push(f(input))
+  })
+
+  const x_s = inputs.map((input) => x_of(input))
+  const y_s = inputs.map((input) => y_of(input))
+  const z_s = inputs.map((input) => z_of(input))
+
+  const u_s = results.map((res) => x_of(res))
+  const v_s = results.map((res) => y_of(res))
+  const w_s = results.map((res) => z_of(res))
+  const body: Body = new Body([0.5, 0.5, 0.0], 2, [0, 0, 0], [0, 0, 0])
+  const data1 = { x: x_s, y: y_s, z: z_s, u: u_s, v: v_s, w: w_s }
+  const data2 = { x: [body.pos[0]], y: [body.pos[1]], z: [body.pos[2]] }
+  drawnVectors.push(
+    new ConePlot(
+      draw_new_simulation(f, body),
+      [
+        {
+          ...data1,
+          type: 'cone',
+          hoverinfo: 'x+y+z+u+v+w+name',
+          colorscale: 'Blackbody',
+          sizeref: 0.5,
+          vertexnormalepsilon: 1e-6,
+        },
+        {
+          ...data2,
+          type: 'scatter3d',
+          mode: 'markers',
+        },
+      ],
+      {},
+    ),
+  )
+}
+
+let animationId: number | null = null
+function draw_new_simulation(func: FunctionalVector, body: Body) {
+  return (divId: string, data: Data[], layout: Partial<Layout>) => {
+    Plotly.newPlot(divId, data, layout)
+    const fieldData = data[0]
+    console.log(animationId)
+    console.log(data)
+    if (animationId != null) return
+
+    function update() {
+      const dt = 0.00016
+      const forceActed: Vector = func(
+        make_vector(body.pos[0], body.pos[1], body.pos[2]),
+      )
+      const acceleration = divide(forceActed, body.mass)
+      const new_pos = body.pos.map((p, i) => p + body.velocity[i] * dt)
+
+      const new_velocity = body.velocity.map(
+        (vel, i) => vel + body.acceleration[i] * dt,
+      )
+
+      const new_body_accleration = [
+        body.acceleration[0] + acceleration.x,
+        body.acceleration[1] + acceleration.y,
+        body.acceleration[2] + acceleration.z,
+      ]
+      body.pos = new_pos
+      body.velocity = new_velocity
+      body.acceleration = new_body_accleration
+
+      console.log(divId)
+      console.log(body.pos)
+      Plotly.react(divId, [
+        fieldData,
+        {
+          x: [body.pos[0]],
+          y: [body.pos[1]],
+          z: [body.pos[2]],
+          type: 'scatter3d',
+          mode: 'markers',
+        },
+      ])
+      animationId = requestAnimationFrame(update)
+    }
+    animationId = requestAnimationFrame(update)
+  }
+}
+
 function draw_new_cone_plot(
   divId: string,
   data: Data,
   layout: Partial<Layout>,
 ) {
-  Plotly.newPlot(divId, [data], layout)
+  if (Array.isArray(data)) {
+    Plotly.newPlot(divId, data, layout)
+  } else {
+    Plotly.newPlot(divId, [data], layout)
+  }
 }
