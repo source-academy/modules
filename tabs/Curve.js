@@ -12713,42 +12713,43 @@ require => (() => {
           })
         })]
       });
-      return (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, {
-        children: [(0, import_jsx_runtime3.jsx)("div", {
+      return (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, {
+        children: (0, import_jsx_runtime3.jsxs)("div", {
           style: {
             display: "flex",
+            flexDirection: "column",
             alignContent: "center",
             justifyContent: "center"
           },
-          children: (0, import_jsx_runtime3.jsx)(webgl_canvas_default, {
+          children: [(0, import_jsx_runtime3.jsxs)("div", {
+            style: {
+              display: "flex",
+              marginTop: "10px",
+              padding: "10px",
+              flexDirection: "row",
+              justifyContent: "stretch",
+              alignContent: "center"
+            },
+            children: [buttons, sliders, (0, import_jsx_runtime3.jsx)(Switch, {
+              style: {
+                marginLeft: "20px",
+                marginRight: "20px",
+                marginTop: "10px",
+                whiteSpace: "nowrap"
+              },
+              label: "Auto Play",
+              onChange: this.autoPlaySwitchChanged,
+              checked: this.state.autoPlay
+            })]
+          }), (0, import_jsx_runtime3.jsx)(webgl_canvas_default, {
             style: {
               flexGrow: 1
             },
             ref: r => {
               this.canvas = r;
             }
-          })
-        }), (0, import_jsx_runtime3.jsxs)("div", {
-          style: {
-            display: "flex",
-            marginTop: "10px",
-            padding: "10px",
-            flexDirection: "row",
-            justifyContent: "stretch",
-            alignContent: "center"
-          },
-          children: [buttons, sliders, (0, import_jsx_runtime3.jsx)(Switch, {
-            style: {
-              marginLeft: "20px",
-              marginRight: "20px",
-              marginTop: "10px",
-              whiteSpace: "nowrap"
-            },
-            label: "Auto Play",
-            onChange: this.autoPlaySwitchChanged,
-            checked: this.state.autoPlay
           })]
-        })]
+        })
       });
     }
   };
