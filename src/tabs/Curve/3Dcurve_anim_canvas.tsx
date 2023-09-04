@@ -302,39 +302,43 @@ State
     );
 
     return (
-      <>
+      <div
+        style={{
+          width: '100%',
+        }}
+      >
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
+            marginTop: '10px',
+            padding: '10px',
+            flexDirection: 'row',
+            justifyContent: 'stretch',
+            alignContent: 'center',
+          }}
+        >
+          {buttons}
+          {sliders}
+          <Switch
+            style={{
+              marginLeft: '20px',
+              marginRight: '20px',
+              marginTop: '10px',
+              whiteSpace: 'nowrap',
+            }}
+            label="Auto Play"
+            onChange={this.autoPlaySwitchChanged}
+            checked={this.state.autoPlay}
+          />
+        </div>
+        <div
+          style={{
+            marginTop: '15px',
+            display: 'flex',
             alignContent: 'center',
             justifyContent: 'center',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              marginTop: '10px',
-              padding: '10px',
-              flexDirection: 'row',
-              justifyContent: 'stretch',
-              alignContent: 'center',
-            }}
-          >
-            {buttons}
-            {sliders}
-            <Switch
-              style={{
-                marginLeft: '20px',
-                marginRight: '20px',
-                marginTop: '10px',
-                whiteSpace: 'nowrap',
-              }}
-              label="Auto Play"
-              onChange={this.autoPlaySwitchChanged}
-              checked={this.state.autoPlay}
-            />
-          </div>
           <WebGLCanvas
             style={{
               flexGrow: 1,
@@ -344,7 +348,7 @@ State
             }}
           />
         </div>
-      </>
+      </div>
     );
   }
 }
