@@ -2,17 +2,12 @@
 import { Spinner, SpinnerSize } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-import {
-  BP_BORDER_RADIUS,
-  BP_TAB_BUTTON_MARGIN,
-  BP_TAB_PANEL_MARGIN,
-  STANDARD_MARGIN,
-} from '../../bundles/csg/constants.js';
 import { Core } from '../../bundles/csg/core.js';
 import StatefulRenderer from '../../bundles/csg/stateful_renderer.js';
 import type { RenderGroup } from '../../bundles/csg/utilities.js';
 import HoverControlHint from './hover_control_hint';
 import type { CanvasHolderProps, CanvasHolderState } from './types';
+import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN } from '../common/css_constants.js';
 
 
 
@@ -29,7 +24,7 @@ CanvasHolderState
     super(props);
 
     this.state = {
-      contextLost: false,
+      isContextLost: false,
     };
   }
 
@@ -49,8 +44,8 @@ CanvasHolderState
       lastRenderGroup,
       this.props.componentNumber,
 
-      () => this.setState({ contextLost: true }),
-      () => this.setState({ contextLost: false }),
+      () => this.setState({ isContextLost: true }),
+      () => this.setState({ isContextLost: false }),
     );
     this.statefulRenderer.start(true);
   }
@@ -70,7 +65,7 @@ CanvasHolderState
       <>
         <div
           style={{
-            display: this.state.contextLost ? 'none' : 'flex',
+            display: this.state.isContextLost ? 'none' : 'flex',
             // Centre content when sidebar is wider than it
             justifyContent: 'center',
           }}
@@ -131,7 +126,7 @@ CanvasHolderState
                 width: '100%',
                 height: '100%',
 
-                borderRadius: BP_BORDER_RADIUS,
+                borderRadius: BP_CARD_BORDER_RADIUS,
               }}
               // These get set on the fly by the dynamic resizer in
               // StatefulRenderer's InputTracker
@@ -145,14 +140,14 @@ CanvasHolderState
           // spinner
           className="bp3-dark"
           style={{
-            display: this.state.contextLost ? 'block' : 'none',
+            display: this.state.isContextLost ? 'block' : 'none',
 
             textAlign: 'center',
           }}
         >
           <h2
             style={{
-              margin: `0px 0px ${STANDARD_MARGIN} 0px`,
+              margin: `0px 0px ${BP_TEXT_MARGIN} 0px`,
             }}
           >
             WebGL Context Lost
@@ -160,7 +155,7 @@ CanvasHolderState
           <Spinner intent="warning" size={SpinnerSize.LARGE} />
           <p
             style={{
-              margin: `${STANDARD_MARGIN} 0px 0px 0px`,
+              margin: `${BP_TEXT_MARGIN} 0px 0px 0px`,
             }}
           >
             Your GPU is probably busy. Waiting for browser to re-establish connection...
