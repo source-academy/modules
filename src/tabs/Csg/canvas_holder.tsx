@@ -42,7 +42,6 @@ CanvasHolderState
     let renderGroups: RenderGroup[] = Core
       .getRenderGroupManager()
       .getGroupsToRender();
-    //TODO Issue #35
     let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
 
     this.statefulRenderer = new StatefulRenderer(
