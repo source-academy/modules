@@ -46,19 +46,20 @@ const outputTab = async (tabName, text, outDir) => {
         };
     }
 };
-export const tabOptions = {
-    ...esbuildOptions,
-    jsx: 'automatic',
-    external: ['react', 'react-dom', 'react/jsx-runtime'],
-};
-export const buildTabs = async (tabs, { srcDir, outDir }) => {
+export const getTabOptions = (tabs, { srcDir, outDir }) => {
     const nameExpander = tabNameExpander(srcDir);
-    const { outputFiles } = await esbuild({
-        ...tabOptions,
+    return {
+        ...esbuildOptions,
         entryPoints: tabs.map(nameExpander),
+        external: ['react', 'react-dom', 'react/jsx-runtime', '@blueprintjs/*', 'js-slang*'],
+        jsx: 'automatic',
         outbase: outDir,
         outdir: outDir,
-    });
+        tsconfig: `${srcDir}/tsconfig.json`,
+    };
+};
+export const buildTabs = async (tabs, options) => {
+    const { outputFiles } = await esbuild(getTabOptions(tabs, options));
     return outputFiles;
 };
 export const reduceTabOutputFiles = (outputFiles, startTime, outDir) => Promise.all(outputFiles.map(async ({ path, text }) => {

@@ -56,18 +56,19 @@ export const outputBundle = async (name, bundleText, outDir) => {
         };
     }
 };
-export const bundleOptions = {
-    ...esbuildOptions,
-    external: ['js-slang*'],
-};
-export const buildBundles = async (bundles, { srcDir, outDir }) => {
+export const getBundleOptions = (bundles, { srcDir, outDir }) => {
     const nameExpander = bundleNameExpander(srcDir);
-    const { outputFiles } = await esbuild({
-        ...bundleOptions,
+    return {
+        ...esbuildOptions,
         entryPoints: bundles.map(nameExpander),
+        external: ['js-slang*'],
         outbase: outDir,
         outdir: outDir,
-    });
+        tsconfig: `${srcDir}/tsconfig.json`,
+    };
+};
+export const buildBundles = async (bundles, options) => {
+    const { outputFiles } = await esbuild(getBundleOptions(bundles, options));
     return outputFiles;
 };
 export const reduceBundleOutputFiles = (outputFiles, startTime, outDir) => Promise.all(outputFiles.map(async ({ path, text }) => {

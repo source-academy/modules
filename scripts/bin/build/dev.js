@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import { context as esbuild } from 'esbuild';
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
-import { bundleOptions, reduceBundleOutputFiles } from './modules/bundle.js';
-import { reduceTabOutputFiles, tabOptions } from './modules/tab.js';
-import { bundleNameExpander, copyManifest, createBuildCommand, createBuildDirs, divideAndRound, logResult, retrieveBundlesAndTabs, tabNameExpander, } from './buildUtils.js';
+import { getBundleOptions, reduceBundleOutputFiles } from './modules/bundle.js';
+import { getTabOptions, reduceTabOutputFiles } from './modules/tab.js';
+import { copyManifest, createBuildCommand, createBuildDirs, divideAndRound, logResult, retrieveBundlesAndTabs, } from './buildUtils.js';
 /**
  * Wait until the user presses 'ctrl+c' on the keyboard
  */
@@ -19,11 +19,8 @@ const waitForQuit = () => new Promise((resolve, reject) => {
     });
     process.stdin.on('error', reject);
 });
-const getBundleContext = ({ srcDir, outDir }, bundles, app) => esbuild({
-    ...bundleOptions,
-    outbase: outDir,
-    outdir: outDir,
-    entryPoints: bundles.map(bundleNameExpander(srcDir)),
+const getBundleContext = (options, bundles, app) => esbuild({
+    ...getBundleOptions(bundles, options),
     plugins: [{
             name: 'Bundle Compiler',
             async setup(pluginBuild) {
@@ -32,7 +29,7 @@ const getBundleContext = ({ srcDir, outDir }, bundles, app) => esbuild({
                     app.convertAndWatch(async (project) => {
                         console.log(chalk.magentaBright('Beginning jsons build...'));
                         jsonPromise = buildJsons(project, {
-                            outDir,
+                            outDir: options.outDir,
                             bundles,
                         });
                     });
@@ -44,7 +41,7 @@ const getBundleContext = ({ srcDir, outDir }, bundles, app) => esbuild({
                 });
                 pluginBuild.onEnd(async ({ outputFiles }) => {
                     const [mainResults, jsonResults] = await Promise.all([
-                        reduceBundleOutputFiles(outputFiles, startTime, outDir),
+                        reduceBundleOutputFiles(outputFiles, startTime, options.outDir),
                         jsonPromise || Promise.resolve([]),
                     ]);
                     logResult(mainResults.concat(jsonResults), false);
@@ -53,12 +50,8 @@ const getBundleContext = ({ srcDir, outDir }, bundles, app) => esbuild({
             },
         }],
 });
-const getTabContext = ({ srcDir, outDir }, tabs) => esbuild({
-    ...tabOptions,
-    outbase: outDir,
-    outdir: outDir,
-    entryPoints: tabs.map(tabNameExpander(srcDir)),
-    external: ['react*', 'react-dom'],
+const getTabContext = (options, tabs) => esbuild({
+    ...getTabOptions(tabs, options),
     plugins: [{
             name: 'Tab Compiler',
             setup(pluginBuild) {
@@ -68,7 +61,7 @@ const getTabContext = ({ srcDir, outDir }, tabs) => esbuild({
                     startTime = performance.now();
                 });
                 pluginBuild.onEnd(async ({ outputFiles }) => {
-                    const mainResults = await reduceTabOutputFiles(outputFiles, startTime, outDir);
+                    const mainResults = await reduceTabOutputFiles(outputFiles, startTime, options.outDir);
                     logResult(mainResults, false);
                     console.log(chalk.gray(`Tabs took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
                 });
