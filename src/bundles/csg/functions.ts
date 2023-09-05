@@ -74,6 +74,7 @@ import {
   list,
   tail,
   type List,
+  is_list,
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
 import { Core } from './core.js';
@@ -654,6 +655,10 @@ export function scale(
  * @category Utilities
  */
 export function group(operables: List): Group {
+  if (!is_list(operables)) {
+    throw new Error('Only lists of Operables can be grouped');
+  }
+
   return new Group(listToArray(operables));
 }
 
@@ -811,6 +816,10 @@ export async function download_shape_stl(shape: Shape): Promise<void> {
  * @category Rendering
  */
 export function render(operable: Operable): RenderGroup {
+  if (!(operable instanceof Shape || operable instanceof Group)) {
+    throw new Error('Only Operables can be rendered');
+  }
+
   operable.store();
 
   // Trigger a new render group for use with subsequent renders.
@@ -827,6 +836,10 @@ export function render(operable: Operable): RenderGroup {
  * @category Rendering
  */
 export function render_grid(operable: Operable): RenderGroup {
+  if (!(operable instanceof Shape || operable instanceof Group)) {
+    throw new Error('Only Operables can be rendered');
+  }
+
   operable.store();
 
   return Core.getRenderGroupManager()
@@ -841,6 +854,10 @@ export function render_grid(operable: Operable): RenderGroup {
  * @category Rendering
  */
 export function render_axes(operable: Operable): RenderGroup {
+  if (!(operable instanceof Shape || operable instanceof Group)) {
+    throw new Error('Only Operables can be rendered');
+  }
+
   operable.store();
 
   return Core.getRenderGroupManager()
@@ -855,6 +872,10 @@ export function render_axes(operable: Operable): RenderGroup {
  * @category Rendering
  */
 export function render_grid_axes(operable: Operable): RenderGroup {
+  if (!(operable instanceof Shape || operable instanceof Group)) {
+    throw new Error('Only Operables can be rendered');
+  }
+
   operable.store();
 
   return Core.getRenderGroupManager()
