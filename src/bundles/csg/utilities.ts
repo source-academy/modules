@@ -18,6 +18,7 @@ import type { AlphaColor, Color, Solid } from './jscad/types.js';
 
 /* [Exports] */
 export interface Operable {
+  applyTransforms: (newTransforms: Mat4) => Operable;
   store: (newTransforms?: Mat4) => void;
 
   translate: (offsets: [number, number, number]) => Operable;
@@ -37,17 +38,25 @@ export class Group implements Operable, ReplResult {
     this.children = [..._children];
   }
 
-  store(newTransforms: Mat4 = mat4.create()): void {
-    // Update own transforms
-    this.transforms = mat4.multiply(
+  applyTransforms(newTransforms: Mat4): Operable {
+    let appliedTransforms: Mat4 = mat4.multiply(
       mat4.create(),
       newTransforms,
       this.transforms,
     );
 
-    // Apply own transforms to all children
+    // Return a new object for statelessness
+    return new Group(
+      this.children,
+      appliedTransforms,
+    );
+  }
+
+  store(newTransforms: Mat4 = mat4.create()): void {
+    let appliedGroup: Group = this.applyTransforms(newTransforms) as Group;
+
     this.children.forEach((child: Operable) => {
-      child.store(this.transforms);
+      child.store(appliedGroup.transforms);
     });
   }
 
@@ -91,15 +100,28 @@ export class Group implements Operable, ReplResult {
   toReplString(): string {
     return '<Group>';
   }
+
+  ungroup(): Operable[] {
+    // Return all children, but we need to account for this Group's unresolved
+    // transforms by applying them to each child
+    return this.children.map(
+      (child: Operable) => child.applyTransforms(this.transforms),
+    );
+  }
 }
 
 export class Shape implements Operable, ReplResult {
   constructor(public solid: Solid) {}
 
+  applyTransforms(newTransforms: Mat4): Operable {
+    // Return a new object for statelessness
+    return new Shape(_transform(newTransforms, this.solid));
+  }
+
   store(newTransforms: Mat4 = mat4.create()): void {
     Core.getRenderGroupManager()
       .storeShape(
-        new Shape(_transform(newTransforms, this.solid)),
+        this.applyTransforms(newTransforms) as Shape,
       );
   }
 

@@ -667,12 +667,11 @@ export function group(operables: List): Group {
  * @category Utilities
  */
 export function ungroup(g: Group): List {
-  //FIXME
   if (!is_group(g)) {
     throw new Error('Only Groups can be ungrouped');
   }
 
-  return arrayToList(g.children);
+  return arrayToList(g.ungroup());
 }
 
 /**
