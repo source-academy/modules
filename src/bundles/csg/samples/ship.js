@@ -4,22 +4,6 @@
 // Source Academy ship at home:
 
 /* [Convenience Functions] */
-function scale_all(entity, factor) {
-    return scale(entity, factor, factor, factor);
-}
-
-function scale_x(entity, factor) {
-    return scale(entity, factor, 1, 1);
-}
-
-function scale_y(entity, factor) {
-    return scale(entity, 1, factor, 1);
-}
-
-function scale_z(entity, factor) {
-    return scale(entity, 1, 1, factor);
-}
-
 function translate_x(entity, factor) {
     return translate(entity, factor, 0, 0);
 }
@@ -42,6 +26,22 @@ function rotate_y(entity, factor) {
 
 function rotate_z(entity, factor) {
     return rotate(entity, 0, 0, factor);
+}
+
+function scale_all(entity, factor) {
+    return scale(entity, factor, factor, factor);
+}
+
+function scale_x(entity, factor) {
+    return scale(entity, factor, 1, 1);
+}
+
+function scale_y(entity, factor) {
+    return scale(entity, 1, factor, 1);
+}
+
+function scale_z(entity, factor) {
+    return scale(entity, 1, 1, factor);
 }
 
 /* [Utility Functions] */

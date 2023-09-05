@@ -1,16 +1,16 @@
 // Source §3
 // Classic boolean operations demo
 
-function scale_all(entity, factor) {
-    return scale(entity, factor, factor, factor);
-}
-
 function rotate_x(entity, factor) {
     return rotate(entity, factor, 0, 0);
 }
 
 function rotate_y(entity, factor) {
     return rotate(entity, 0, factor, 0);
+}
+
+function scale_all(entity, factor) {
+    return scale(entity, factor, factor, factor);
 }
 
 function _get_shape_middle(shape, axis) {

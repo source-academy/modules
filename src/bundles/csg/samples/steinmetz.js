@@ -1,8 +1,12 @@
 // Source §3
 // Cylinder intersects - Steinmetz solid
 
-function scale_all(entity, factor) {
-    return scale(entity, factor, factor, factor);
+function rotate_x(entity, factor) {
+    return rotate(entity, factor, 0, 0);
+}
+
+function rotate_y(entity, factor) {
+    return rotate(entity, 0, factor, 0);
 }
 
 function translate_y(entity, factor) {
@@ -13,12 +17,8 @@ function translate_z(entity, factor) {
     return translate(entity, 0, 0, factor);
 }
 
-function rotate_x(entity, factor) {
-    return rotate(entity, factor, 0, 0);
-}
-
-function rotate_y(entity, factor) {
-    return rotate(entity, 0, factor, 0);
+function scale_all(entity, factor) {
+    return scale(entity, factor, factor, factor);
 }
 
 const A_ = cylinder(blue);
