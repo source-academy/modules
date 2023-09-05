@@ -2,6 +2,10 @@ import { glAnimation, type AnimFrame } from '../../typings/anim_types';
 import type { ReplResult } from '../../typings/type_helpers';
 import type { Curve, CurveDrawn } from './curves_webgl';
 
+export type CurveModuleState = {
+  drawnCurves: (CurveDrawn | AnimatedCurve)[]
+};
+
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
 export type CurveTransformer = (c: Curve) => Curve;
 
