@@ -516,6 +516,10 @@ export function torus(hex: string): Shape {
  * @category Operations
  */
 export function union(first: Shape, second: Shape): Shape {
+  if (!is_shape(first) || !is_shape(second)) {
+    throw new Error('Failed to union, only Shapes can be operated on');
+  }
+
   let solid: Solid = _union(first.solid, second.solid);
   return new Shape(solid);
 }
@@ -531,6 +535,10 @@ export function union(first: Shape, second: Shape): Shape {
  * @category Operations
  */
 export function subtract(target: Shape, subtractedShape: Shape): Shape {
+  if (!is_shape(target) || !is_shape(subtractedShape)) {
+    throw new Error('Failed to subtract, only Shapes can be operated on');
+  }
+
   let solid: Solid = _subtract(target.solid, subtractedShape.solid);
   return new Shape(solid);
 }
@@ -545,6 +553,10 @@ export function subtract(target: Shape, subtractedShape: Shape): Shape {
  * @category Operations
  */
 export function intersect(first: Shape, second: Shape): Shape {
+  if (!is_shape(first) || !is_shape(second)) {
+    throw new Error('Failed to intersect, only Shapes can be operated on');
+  }
+
   let solid: Solid = _intersect(first.solid, second.solid);
   return new Shape(solid);
 }
@@ -655,6 +667,7 @@ export function group(operables: List): Group {
  * @category Utilities
  */
 export function ungroup(g: Group): List {
+  //FIXME
   if (!is_group(g)) {
     throw new Error('Only Groups can be ungrouped');
   }
@@ -779,6 +792,10 @@ export function rgb(
  * @category Utilities
  */
 export async function download_shape_stl(shape: Shape): Promise<void> {
+  if (!is_shape(shape)) {
+    throw new Error('Failed to export, only Shapes can be converted to STL');
+  }
+
   await save(
     new Blob(serialize({ binary: true }, shape.solid)),
     'Source Academy CSG Shape.stl',
