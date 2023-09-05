@@ -16,7 +16,7 @@ Core.initialize(moduleState);
 
 /* [Exports] */
 export {
-  // Color
+  // Colors
   black,
   navy,
   green,
@@ -34,7 +34,7 @@ export {
   yellow,
   white,
 
-  // Primitive
+  // Primitives
   cube,
   rounded_cube,
   cylinder,
@@ -47,17 +47,17 @@ export {
   star,
   torus,
 
-  // Operation
+  // Operations
   union,
   subtract,
   intersect,
 
-  // Transformation
+  // Transformations
   translate,
   rotate,
   scale,
 
-  // Utility
+  // Utilities
   group,
   ungroup,
   is_shape,
@@ -66,7 +66,7 @@ export {
   rgb,
   download_shape_stl,
 
-  // Render
+  // Rendering
   render,
   render_grid,
   render_axes,

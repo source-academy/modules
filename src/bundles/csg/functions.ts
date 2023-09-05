@@ -27,7 +27,7 @@
  * (right-handed coordinate system).
  *
  * ```js
- * // Example
+ * // Sample usage
  * import {
  *     silver, crimson, cyan,
  *     cube, cone, sphere,
@@ -126,112 +126,112 @@ export function arrayToList(array: Operable[]): List {
 /**
  * A hex color code for black (#000000).
  *
- * @category Color
+ * @category Colors
  */
 export const black: string = '#000000';
 
 /**
  * A hex color code for dark blue (#0000AA).
  *
- * @category Color
+ * @category Colors
  */
 export const navy: string = '#0000AA';
 
 /**
  * A hex color code for green (#00AA00).
  *
- * @category Color
+ * @category Colors
  */
 export const green: string = '#00AA00';
 
 /**
  * A hex color code for dark cyan (#00AAAA).
  *
- * @category Color
+ * @category Colors
  */
 export const teal: string = '#00AAAA';
 
 /**
  * A hex color code for dark red (#AA0000).
  *
- * @category Color
+ * @category Colors
  */
 export const crimson: string = '#AA0000';
 
 /**
  * A hex color code for purple (#AA00AA).
  *
- * @category Color
+ * @category Colors
  */
 export const purple: string = '#AA00AA';
 
 /**
  * A hex color code for orange (#FFAA00).
  *
- * @category Color
+ * @category Colors
  */
 export const orange: string = '#FFAA00';
 
 /**
  * A hex color code for light gray (#AAAAAA).
  *
- * @category Color
+ * @category Colors
  */
 export const silver: string = '#AAAAAA';
 
 /**
  * A hex color code for dark gray (#555555).
  *
- * @category Color
+ * @category Colors
  */
 export const gray: string = '#555555';
 
 /**
  * A hex color code for blue (#5555FF).
  *
- * @category Color
+ * @category Colors
  */
 export const blue: string = '#5555FF';
 
 /**
  * A hex color code for light green (#55FF55).
  *
- * @category Color
+ * @category Colors
  */
 export const lime: string = '#55FF55';
 
 /**
  * A hex color code for cyan (#55FFFF).
  *
- * @category Color
+ * @category Colors
  */
 export const cyan: string = '#55FFFF';
 
 /**
  * A hex color code for light red (#FF5555).
  *
- * @category Color
+ * @category Colors
  */
 export const rose: string = '#FF5555';
 
 /**
  * A hex color code for pink (#FF55FF).
  *
- * @category Color
+ * @category Colors
  */
 export const pink: string = '#FF55FF';
 
 /**
  * A hex color code for yellow (#FFFF55).
  *
- * @category Color
+ * @category Colors
  */
 export const yellow: string = '#FFFF55';
 
 /**
  * A hex color code for white (#FFFFFF).
  *
- * @category Color
+ * @category Colors
  */
 export const white: string = '#FFFFFF';
 
@@ -240,12 +240,12 @@ export const white: string = '#FFFFFF';
 /**
  * Returns a cube Shape in the specified color.
  *
- * Side length: 1
- * Center: (0.5, 0.5, 0.5)
+ * - Side length: 1
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function cube(hex: string): Shape {
   let solid: Solid = primitives.cube({ size: 1 });
@@ -261,12 +261,12 @@ export function cube(hex: string): Shape {
 /**
  * Returns a rounded cube Shape in the specified color.
  *
- * Side length: 1
- * Center: (0.5, 0.5, 0.5)
+ * - Side length: 1
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function rounded_cube(hex: string): Shape {
   let solid: Solid = primitives.roundedCuboid({ size: [1, 1, 1] });
@@ -282,13 +282,13 @@ export function rounded_cube(hex: string): Shape {
 /**
  * Returns an upright cylinder Shape in the specified color.
  *
- * Height: 1
- * Radius: 0.5
- * Center: (0.5, 0.5, 0.5)
+ * - Height: 1
+ * - Radius: 0.5
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function cylinder(hex: string): Shape {
   let solid: Solid = primitives.cylinder({
@@ -307,13 +307,13 @@ export function cylinder(hex: string): Shape {
 /**
  * Returns a rounded, upright cylinder Shape in the specified color.
  *
- * Height: 1
- * Radius: 0.5
- * Center: (0.5, 0.5, 0.5)
+ * - Height: 1
+ * - Radius: 0.5
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function rounded_cylinder(hex: string): Shape {
   let solid: Solid = primitives.roundedCylinder({
@@ -332,12 +332,12 @@ export function rounded_cylinder(hex: string): Shape {
 /**
  * Returns a sphere Shape in the specified color.
  *
- * Radius: 0.5
- * Center: (0.5, 0.5, 0.5)
+ * - Radius: 0.5
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function sphere(hex: string): Shape {
   let solid: Solid = primitives.sphere({ radius: 0.5 });
@@ -353,12 +353,12 @@ export function sphere(hex: string): Shape {
 /**
  * Returns a geodesic sphere Shape in the specified color.
  *
- * Radius: 0.5
- * Center: Floating at (0.5, 0.5, 0.5)
+ * - Radius: 0.5
+ * - Center: Floating at (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function geodesic_sphere(hex: string): Shape {
   let solid: Solid = primitives.geodesicSphere({ radius: 0.5 });
@@ -374,13 +374,13 @@ export function geodesic_sphere(hex: string): Shape {
 /**
  * Returns a square pyramid Shape in the specified color.
  *
- * Height: 1
- * Side length: 1
- * Center: (0.5, 0.5, 0.5)
+ * - Height: 1
+ * - Side length: 1
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function pyramid(hex: string): Shape {
   let pythagorasSide: number = Math.sqrt(2); // sqrt(1^2 + 1^2)
@@ -406,13 +406,13 @@ export function pyramid(hex: string): Shape {
 /**
  * Returns a cone Shape in the specified color.
  *
- * Height: 1
- * Radius: 0.5
- * Center: (0.5, 0.5, 0.5)
+ * - Height: 1
+ * - Radius: 0.5
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function cone(hex: string): Shape {
   let solid: Solid = primitives.cylinderElliptic({
@@ -432,13 +432,13 @@ export function cone(hex: string): Shape {
 /**
  * Returns an upright triangular prism Shape in the specified color.
  *
- * Height: 1
- * Side length: 1
- * Center: (0.5, 0.5, 0.5)
+ * - Height: 1
+ * - Side length: 1
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function prism(hex: string): Shape {
   let solid: Solid = extrudeLinear(
@@ -458,12 +458,12 @@ export function prism(hex: string): Shape {
 /**
  * Returns an upright extruded star Shape in the specified color.
  *
- * Height: 1
- * Center: (0.5, 0.5, 0.5)
+ * - Height: 1
+ * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function star(hex: string): Shape {
   let solid: Solid = extrudeLinear(
@@ -482,13 +482,13 @@ export function star(hex: string): Shape {
 /**
  * Returns a torus (donut) Shape in the specified color.
  *
- * Inner radius: 0.15 (ring is 0.3 thick)
- * Total radius: 0.5 (from the hole to "outside")
- * Center: Floating at (0.5, 0.5, 0.5)
+ * - Inner radius: 0.15 (ring is 0.3 thick)
+ * - Total radius: 0.5 (from the centre of the hole to "outside")
+ * - Center: Floating at (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
  *
- * @category Primitive
+ * @category Primitives
  */
 export function torus(hex: string): Shape {
   let solid: Solid = primitives.torus({
@@ -513,7 +513,7 @@ export function torus(hex: string): Shape {
  * @param second second Shape
  * @returns unioned Shape
  *
- * @category Operation
+ * @category Operations
  */
 export function union(first: Shape, second: Shape): Shape {
   let solid: Solid = _union(first.solid, second.solid);
@@ -528,7 +528,7 @@ export function union(first: Shape, second: Shape): Shape {
  * @param subtractedShape Shape to remove from the first Shape
  * @returns subtracted Shape
  *
- * @category Operation
+ * @category Operations
  */
 export function subtract(target: Shape, subtractedShape: Shape): Shape {
   let solid: Solid = _subtract(target.solid, subtractedShape.solid);
@@ -542,7 +542,7 @@ export function subtract(target: Shape, subtractedShape: Shape): Shape {
  * @param second second Shape
  * @returns intersected Shape
  *
- * @category Operation
+ * @category Operations
  */
 export function intersect(first: Shape, second: Shape): Shape {
   let solid: Solid = _intersect(first.solid, second.solid);
@@ -561,7 +561,7 @@ export function intersect(first: Shape, second: Shape): Shape {
  * @param zOffset z offset
  * @returns translated Shape
  *
- * @category Transformation
+ * @category Transformations
  */
 export function translate(
   operable: Operable,
@@ -586,7 +586,7 @@ export function translate(
  * @param zAngle z angle in radians
  * @returns rotated Shape
  *
- * @category Transformation
+ * @category Transformations
  */
 export function rotate(
   operable: Operable,
@@ -611,7 +611,7 @@ export function rotate(
  * @param zFactor z scaling factor
  * @returns scaled Shape
  *
- * @category Transformation
+ * @category Transformations
  */
 export function scale(
   operable: Operable,
@@ -639,7 +639,7 @@ export function scale(
  * @param operables list of Shapes and/or Groups
  * @returns new Group
  *
- * @category Utility
+ * @category Utilities
  */
 export function group(operables: List): Group {
   return new Group(listToArray(operables));
@@ -652,7 +652,7 @@ export function group(operables: List): Group {
  * @param g Group to ungroup
  * @returns ungrouped list of Shapes and/or Groups
  *
- * @category Utility
+ * @category Utilities
  */
 export function ungroup(g: Group): List {
   if (!is_group(g)) {
@@ -668,7 +668,7 @@ export function ungroup(g: Group): List {
  * @param parameter parameter to check
  * @returns whether parameter is a Shape
  *
- * @category Utility
+ * @category Utilities
  */
 export function is_shape(parameter: unknown): boolean {
   return parameter instanceof Shape;
@@ -680,7 +680,7 @@ export function is_shape(parameter: unknown): boolean {
  * @param parameter parameter to check
  * @returns whether parameter is a Group
  *
- * @category Utility
+ * @category Utilities
  */
 export function is_group(parameter: unknown): boolean {
   return parameter instanceof Group;
@@ -700,7 +700,7 @@ export function is_group(parameter: unknown): boolean {
  * coordinates will be (1, 1, 1).
  *
  * ```js
- * // Example
+ * // Sample usage
  * const getter_function = bounding_box(sphere(silver));
  * display(getter_function("y", "max")); // Displays 1, the maximum y coordinate
  * ```
@@ -708,7 +708,7 @@ export function is_group(parameter: unknown): boolean {
  * @param shape Shape to measure
  * @returns bounding box getter function
  *
- * @category Utility
+ * @category Utilities
  */
 export function bounding_box(
   shape: Shape,
@@ -747,7 +747,7 @@ export function bounding_box(
  * @param blueComponent blue component of the color
  * @returns hex color code
  *
- * @category Utility
+ * @category Utilities
  */
 export function rgb(
   redComponent: number,
@@ -775,6 +775,8 @@ export function rgb(
  * The file can be used for purposes such as 3D printing.
  *
  * @param shape Shape to export
+ *
+ * @category Utilities
  */
 export async function download_shape_stl(shape: Shape): Promise<void> {
   await save(
@@ -790,7 +792,7 @@ export async function download_shape_stl(shape: Shape): Promise<void> {
  *
  * @param operable Shape or Group to render
  *
- * @category Render
+ * @category Rendering
  */
 export function render(operable: Operable): RenderGroup {
   operable.store();
@@ -806,7 +808,7 @@ export function render(operable: Operable): RenderGroup {
  *
  * @param operable Shape or Group to render
  *
- * @category Render
+ * @category Rendering
  */
 export function render_grid(operable: Operable): RenderGroup {
   operable.store();
@@ -820,7 +822,7 @@ export function render_grid(operable: Operable): RenderGroup {
  *
  * @param operable Shape or Group to render
  *
- * @category Render
+ * @category Rendering
  */
 export function render_axes(operable: Operable): RenderGroup {
   operable.store();
@@ -834,7 +836,7 @@ export function render_axes(operable: Operable): RenderGroup {
  *
  * @param operable Shape or Group to render
  *
- * @category Render
+ * @category Rendering
  */
 export function render_grid_axes(operable: Operable): RenderGroup {
   operable.store();
