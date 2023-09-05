@@ -72,20 +72,21 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
   }
 };
 
-export const tabOptions: ESBuildOptions = {
-  ...esbuildOptions,
-  jsx: 'automatic',
-  external: ['react', 'react-dom', 'react/jsx-runtime'],
-};
-
-export const buildTabs = async (tabs: string[], { srcDir, outDir }: BuildOptions) => {
+export const getTabOptions = (tabs: string[], { srcDir, outDir }: Record<'srcDir' | 'outDir', string>): ESBuildOptions => {
   const nameExpander = tabNameExpander(srcDir);
-  const { outputFiles } = await esbuild({
-    ...tabOptions,
+  return {
+    ...esbuildOptions,
     entryPoints: tabs.map(nameExpander),
+    external: ['react', 'react-dom', 'react/jsx-runtime', '@blueprintjs/*', 'js-slang*'],
+    jsx: 'automatic',
     outbase: outDir,
     outdir: outDir,
-  });
+    tsconfig: `${srcDir}/tsconfig.json`,
+  };
+};
+
+export const buildTabs = async (tabs: string[], options: BuildOptions) => {
+  const { outputFiles } = await esbuild(getTabOptions(tabs, options));
   return outputFiles;
 };
 

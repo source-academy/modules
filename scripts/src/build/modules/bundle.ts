@@ -75,19 +75,19 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
   }
 };
 
-export const bundleOptions: ESBuildOptions = {
-  ...esbuildOptions,
-  external: ['js-slang*'],
-};
-
-export const buildBundles = async (bundles: string[], { srcDir, outDir }: BuildOptions) => {
+export const getBundleOptions = (bundles: string[], { srcDir, outDir }: Record<'srcDir' | 'outDir', string>): ESBuildOptions => {
   const nameExpander = bundleNameExpander(srcDir);
-  const { outputFiles } = await esbuild({
-    ...bundleOptions,
+  return {
+    ...esbuildOptions,
     entryPoints: bundles.map(nameExpander),
     outbase: outDir,
     outdir: outDir,
-  });
+    tsconfig: `${srcDir}/tsconfig.json`,
+  };
+};
+
+export const buildBundles = async (bundles: string[], options: BuildOptions) => {
+  const { outputFiles } = await esbuild(getBundleOptions(bundles, options));
   return outputFiles;
 };
 
