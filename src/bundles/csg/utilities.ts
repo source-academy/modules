@@ -1,17 +1,16 @@
 /* [Imports] */
-import * as _ from 'lodash';
 import {
-  clone as _clone,
   transform as _transform,
-  type Geom3,
 } from '@jscad/modeling/src/geometries/geom3';
 import mat4, { type Mat4 } from '@jscad/modeling/src/maths/mat4';
 import {
+  center as _center,
   rotate as _rotate,
   scale as _scale,
   translate as _translate,
   align,
 } from '@jscad/modeling/src/operations/transforms';
+import _ from 'lodash';
 import type { ReplResult } from '../../typings/type_helpers.js';
 import { Core } from './core.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';
@@ -19,16 +18,17 @@ import type { AlphaColor, Color, Solid } from './jscad/types.js';
 
 
 /* [Exports] */
+//TODO rename params etc
 export interface Operable {
-  clone: () => Operable;
   store: (newTransforms?: Mat4) => void;
+
   translate: (offset: [number, number, number]) => Operable;
   rotate: (offset: [number, number, number]) => Operable;
   scale: (offset: [number, number, number]) => Operable;
 }
 
 export class Group implements Operable, ReplResult {
-  private children: Operable[];
+  children: Operable[];
 
   constructor(
     _children: Operable[],
@@ -37,14 +37,6 @@ export class Group implements Operable, ReplResult {
     // Duplicate the array to avoid modifying the original, maintaining
     // stateless Operables for the user
     this.children = _.cloneDeep(_children);
-  }
-
-  toReplString(): string {
-    return '<Group>';
-  }
-
-  clone(): Group {
-    return new Group(this.children);
   }
 
   store(newTransforms?: Mat4): void {
@@ -95,18 +87,14 @@ export class Group implements Operable, ReplResult {
       ),
     );
   }
+
+  toReplString(): string {
+    return '<Group>';
+  }
 }
 
 export class Shape implements Operable, ReplResult {
   constructor(public solid: Solid) {}
-
-  toReplString(): string {
-    return '<Shape>';
-  }
-
-  clone(): Shape {
-    return new Shape(_clone(this.solid as Geom3));
-  }
 
   store(newTransforms?: Mat4): void {
     Core.getRenderGroupManager()
@@ -126,16 +114,20 @@ export class Shape implements Operable, ReplResult {
   scale(offset: [number, number, number]): Shape {
     return new Shape(_scale(offset, this.solid));
   }
+
+  toReplString(): string {
+    return '<Shape>';
+  }
 }
 
 export class RenderGroup implements ReplResult {
-  constructor(public canvasNumber: number) {}
-
   render: boolean = false;
   hasGrid: boolean = true;
   hasAxis: boolean = true;
 
   shapes: Shape[] = [];
+
+  constructor(public canvasNumber: number) {}
 
   toReplString(): string {
     return `<Render #${this.canvasNumber}>`;
@@ -204,10 +196,21 @@ export class CsgModuleState {
   }
 }
 
+export function centerPrimitive(shape: Shape) {
+  // Move centre of Shape to 0.5, 0.5, 0.5
+  let solid: Solid = _center(
+    {
+      relativeTo: [0.5, 0.5, 0.5],
+    },
+    shape.solid,
+  );
+  return new Shape(solid);
+}
+
 export function alignOrigin(shape: Shape) {
   // Align minimum bounds of Shape to 0 0 0
-  let newSolid: Solid = align({ modes: ['min', 'min', 'min'] }, shape.solid);
-  return new Shape(newSolid);
+  let solid: Solid = align({ modes: ['min', 'min', 'min'] }, shape.solid);
+  return new Shape(solid);
 }
 
 export function hexToColor(hex: string): Color {
