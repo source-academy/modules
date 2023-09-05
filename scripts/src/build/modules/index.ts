@@ -44,7 +44,7 @@ const getBuildModulesCommand = () => createBuildCommand('modules', true)
   .description('Build modules and their tabs')
   .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
     const [assets] = await Promise.all([
-      retrieveBundlesAndTabs(manifest, modules, []),
+      retrieveBundlesAndTabs(manifest, modules, null),
       createOutDir(opts.outDir),
     ]);
 

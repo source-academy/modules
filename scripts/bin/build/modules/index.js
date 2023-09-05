@@ -28,7 +28,7 @@ const getBuildModulesCommand = () => createBuildCommand('modules', true)
     .description('Build modules and their tabs')
     .action(async (modules, { manifest, ...opts }) => {
     const [assets] = await Promise.all([
-        retrieveBundlesAndTabs(manifest, modules, []),
+        retrieveBundlesAndTabs(manifest, modules, null),
         createOutDir(opts.outDir),
     ]);
     await prebuild(opts, assets);
