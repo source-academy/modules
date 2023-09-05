@@ -87,7 +87,7 @@
     "@blueprintjs/popover2": "^1.4.3",
     "@box2d/core": "^0.10.0",
     "@box2d/debug-draw": "^0.10.0",
-    "@jscad/modeling": "^2.9.5",
+    "@jscad/modeling": "2.9.6",
     "@jscad/regl-renderer": "^2.6.1",
     "@jscad/stl-serializer": "^2.1.13",
     "ace-builds": "^1.4.14",
