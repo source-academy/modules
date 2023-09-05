@@ -1,17 +1,6 @@
 
 import {
-    cube,
-    sphere,
-    cylinder,
-    prism,
-    star,
-    pyramid,
-    cone,
-    torus,
-    rounded_cube,
-    rounded_cylinder,
-    geodesic_sphere,
-
+    // Color
     black,
     navy,
     green,
@@ -29,20 +18,41 @@ import {
     yellow,
     white,
 
+    // Primitive
+    cube,
+    rounded_cube,
+    cylinder,
+    rounded_cylinder,
+    sphere,
+    geodesic_sphere,
+    pyramid,
+    cone,
+    prism,
+    star,
+    torus,
+
+    // Operation
     union,
     subtract,
     intersect,
-    scale,
+
+    // Transformation
     translate,
     rotate,
+    scale,
+
+    // Utility
     group,
-    rgb,
-    bounding_box,
+    ungroup,
     is_shape,
     is_group,
-    render_grid_axes,
+    bounding_box,
+    rgb,
+    download_shape_stl,
+
+    // Render
+    render,
     render_grid,
     render_axes,
-    render,
-    shape_to_stl
+    render_grid_axes
 } from 'csg';
