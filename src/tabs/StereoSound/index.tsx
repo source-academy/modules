@@ -1,6 +1,6 @@
-import React from 'react';
-import type { DebuggerContext } from '../../typings/type_helpers';
-import MultiItemDisplay from '../common/multi_item_display';
+import type { StereoSoundModuleState } from '../../bundles/stereo_sound/types';
+import { getModuleState, type DebuggerContext } from '../../typings/type_helpers';
+import { SoundTab } from '../Sound';
 
 /**
  * Tab for Source Academy Sounds Module
@@ -24,28 +24,29 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    const audioPlayed = context.context?.moduleContexts.stereo_sound.state.audioPlayed;
-    const elements = audioPlayed.map((audio) => (
-      <audio
-        src={audio.dataUri}
-        controls
-        id="sound-tab-player"
-        style={{ width: '100%' }}
-      />
-    ));
+    return <SoundTab getAudioPlayed={() => getModuleState<StereoSoundModuleState>(context, 'stereo_sound').audioPlayed} />;
+    // const audioPlayed = context.context?.moduleContexts.stereo_sound.state.audioPlayed;
+    // const elements = audioPlayed.map((audio) => (
+    //   <audio
+    //     src={audio.dataUri}
+    //     controls
+    //     id="sound-tab-player"
+    //     style={{ width: '100%' }}
+    //   />
+    // ));
 
-    return (
-      <div>
-        <p id="sound-default-text">
-          The sound tab gives you control over your custom sounds. You can play,
-          pause, adjust the volume and download your sounds.
-          <br />
-          <br />
-          <MultiItemDisplay elements={elements} />
-          <br />
-        </p>
-      </div>
-    );
+    // return (
+    //   <div>
+    //     <p id="sound-default-text">
+    //       The sound tab gives you control over your custom sounds. You can play,
+    //       pause, adjust the volume and download your sounds.
+    //       <br />
+    //       <br />
+    //       <MultiItemDisplay elements={elements} />
+    //       <br />
+    //     </p>
+    //   </div>
+    // );
   },
 
   /**

@@ -1,12 +1,40 @@
-import React from 'react';
-import type { DebuggerContext } from '../../typings/type_helpers';
+import type { AudioPlayed, SoundModuleState } from '../../bundles/sound/types';
+import { getModuleState, type DebuggerContext } from '../../typings/type_helpers';
 import MultiItemDisplay from '../common/multi_item_display';
+
+export type SoundTabProps<T> = {
+  getAudioPlayed: () => T[]
+};
 
 /**
  * Tab for Source Academy Sounds Module
  * @author Koh Shang Hui
  * @author Samyukta Sounderraman
  */
+export const SoundTab = ({ getAudioPlayed }: SoundTabProps<AudioPlayed>) => {
+  const audioPlayed = getAudioPlayed();
+  const elements = audioPlayed.map((audio) => (
+    <audio
+      src={audio.dataUri}
+      controls
+      id="sound-tab-player"
+      style={{ width: '100%' }}
+    />
+  ));
+
+  return (
+    <div>
+      <p id="sound-default-text">
+          The sound tab gives you control over your custom sounds. You can play,
+          pause, adjust the volume and download your sounds.
+        <br />
+        <br />
+        <MultiItemDisplay elements={elements} />
+        <br />
+      </p>
+    </div>
+  );
+};
 
 export default {
   /**
@@ -24,28 +52,7 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    const audioPlayed = context.context.moduleContexts.sound.state.audioPlayed;
-    const elements = audioPlayed.map((audio) => (
-      <audio
-        src={audio.dataUri}
-        controls
-        id="sound-tab-player"
-        style={{ width: '100%' }}
-      />
-    ));
-
-    return (
-      <div>
-        <p id="sound-default-text">
-          The sound tab gives you control over your custom sounds. You can play,
-          pause, adjust the volume and download your sounds.
-          <br />
-          <br />
-          <MultiItemDisplay elements={elements} />
-          <br />
-        </p>
-      </div>
-    );
+    return <SoundTab getAudioPlayed={() => getModuleState<SoundModuleState>(context, 'sound').audioPlayed} />;
   },
 
   /**
