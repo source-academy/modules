@@ -1,4 +1,5 @@
 /* [Imports] */
+import * as _ from 'lodash';
 import {
   clone as _clone,
   transform as _transform,
@@ -9,33 +10,33 @@ import {
   rotate as _rotate,
   scale as _scale,
   translate as _translate,
+  align,
 } from '@jscad/modeling/src/operations/transforms';
-import type { ModuleContext } from 'js-slang';
-import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
+import type { ReplResult } from '../../typings/type_helpers.js';
 import { Core } from './core.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';
-import {
-  type List,
-} from 'js-slang/dist/stdlib/list';
 
 
 
 /* [Exports] */
-export interface Entity {
-  clone: () => Entity;
+export interface Operable {
+  clone: () => Operable;
   store: (newTransforms?: Mat4) => void;
-  translate: (offset: [number, number, number]) => Entity;
-  rotate: (offset: [number, number, number]) => Entity;
-  scale: (offset: [number, number, number]) => Entity;
+  translate: (offset: [number, number, number]) => Operable;
+  rotate: (offset: [number, number, number]) => Operable;
+  scale: (offset: [number, number, number]) => Operable;
 }
 
-export class Group implements ReplResult, Entity {
-  children: Entity[];
+export class Group implements Operable, ReplResult {
+  private children: Operable[];
+
   constructor(
-    public childrenList: List,
+    _children: Operable[],
     public transforms: Mat4 = mat4.create(),
   ) {
-    this.children = listToArray(childrenList);
+    // Duplicate the array to avoid modifying the original, maintaining
+    // stateless Operables for the user
+    this.children = _.cloneDeep(_children);
   }
 
   toReplString(): string {
@@ -43,7 +44,7 @@ export class Group implements ReplResult, Entity {
   }
 
   clone(): Group {
-    return new Group(arrayToList(this.children.map((child) => child.clone())));
+    return new Group(this.children);
   }
 
   store(newTransforms?: Mat4): void {
@@ -60,7 +61,7 @@ export class Group implements ReplResult, Entity {
 
   translate(offset: [number, number, number]): Group {
     return new Group(
-      this.childrenList,
+      this.children,
       mat4.multiply(
         mat4.create(),
         mat4.fromTranslation(mat4.create(), offset),
@@ -75,7 +76,7 @@ export class Group implements ReplResult, Entity {
     const roll = offset[0];
 
     return new Group(
-      this.childrenList,
+      this.children,
       mat4.multiply(
         mat4.create(),
         mat4.fromTaitBryanRotation(mat4.create(), yaw, pitch, roll),
@@ -86,7 +87,7 @@ export class Group implements ReplResult, Entity {
 
   scale(offset: [number, number, number]): Group {
     return new Group(
-      this.childrenList,
+      this.children,
       mat4.multiply(
         mat4.create(),
         mat4.fromScaling(mat4.create(), offset),
@@ -96,7 +97,7 @@ export class Group implements ReplResult, Entity {
   }
 }
 
-export class Shape implements ReplResult, Entity {
+export class Shape implements Operable, ReplResult {
   constructor(public solid: Solid) {}
 
   toReplString(): string {
@@ -203,11 +204,10 @@ export class CsgModuleState {
   }
 }
 
-export function getModuleContext(
-  moduleContexts: ModuleContexts,
-): ModuleContext | null {
-  let potentialModuleContext: ModuleContext | undefined = moduleContexts.csg;
-  return potentialModuleContext ?? null;
+export function alignOrigin(shape: Shape) {
+  // Align minimum bounds of Shape to 0 0 0
+  let newSolid: Solid = align({ modes: ['min', 'min', 'min'] }, shape.solid);
+  return new Shape(newSolid);
 }
 
 export function hexToColor(hex: string): Color {
@@ -240,31 +240,4 @@ export function clamp(value: number, lowest: number, highest: number): number {
   value = Math.max(value, lowest);
   value = Math.min(value, highest);
   return value;
-}
-
-function length(list: List): number {
-  let counter = 0;
-  while (!(list === null)) {
-    list = list[1];
-    counter++;
-  }
-  return counter;
-}
-
-function listToArray(list: List): Entity[] {
-  let retArr = new Array(length(list));
-  let pointer = 0;
-  while (!(list === null)) {
-    retArr[pointer++] = list[0];
-    list = list[1];
-  }
-  return retArr;
-}
-
-function arrayToList(arr: Entity[]): List {
-  let retList: List = null;
-  for (let i = arr.length - 1; i >= 0; --i) {
-    retList = [arr[i], retList];
-  }
-  return retList;
 }
