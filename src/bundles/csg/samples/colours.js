@@ -29,12 +29,12 @@ function translate_y(entity, factor) {
 }
 
 let l = build_list(
-    x => translate_y(
+    i => translate_y(
         translate_x(
-            sphere(colours[x]),
-            x % 4 * 2
+            sphere(colours[i]),
+            ((i % 4) - 2) * 2
         ),
-        math_floor(x / 4) * 2
+        (math_floor(i / 4) - 2) * 2
     ),
     16
 );
