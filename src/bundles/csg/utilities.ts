@@ -14,10 +14,13 @@ import type { ModuleContext } from 'js-slang';
 import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
 import { Core } from './core.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';
-import { type List } from './types';
+import {
+  type List,
+} from 'js-slang/dist/stdlib/list';
+
+
 
 /* [Exports] */
-
 export interface Entity {
   clone: () => Entity;
   store: (newTransforms?: Mat4) => void;
