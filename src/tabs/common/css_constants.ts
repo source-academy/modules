@@ -20,3 +20,6 @@ export const BP_ICON_COLOR: string = '#A7B6C2';
 // Values extracted from the Ace editor
 export const ACE_GUTTER_TEXT_COLOR: string = '#8091A0';
 export const ACE_GUTTER_BACKGROUND_COLOR: string = '#34495E';
+
+// Commonly reused values
+export const CANVAS_MAX_WIDTH: string = 'max(70vh, 30vw)';

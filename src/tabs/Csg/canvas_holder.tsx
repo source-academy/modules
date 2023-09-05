@@ -7,7 +7,7 @@ import StatefulRenderer from '../../bundles/csg/stateful_renderer.js';
 import type { RenderGroup } from '../../bundles/csg/utilities.js';
 import HoverControlHint from './hover_control_hint';
 import type { CanvasHolderProps, CanvasHolderState } from './types';
-import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN } from '../common/css_constants.js';
+import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants.js';
 
 
 
@@ -61,107 +61,105 @@ CanvasHolderState
   // canvasReference via the ref attribute, for imperatively modifying the
   // canvas
   render() {
-    return (
-      <>
+    return <>
+      <div
+        style={{
+          display: this.state.isContextLost ? 'none' : 'flex',
+          // Centre content when sidebar is wider than it
+          justifyContent: 'center',
+        }}
+      >
         <div
           style={{
-            display: this.state.isContextLost ? 'none' : 'flex',
-            // Centre content when sidebar is wider than it
-            justifyContent: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: BP_TAB_BUTTON_MARGIN,
+
+            marginRight: BP_TAB_PANEL_MARGIN,
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: BP_TAB_BUTTON_MARGIN,
+          <HoverControlHint
+            tooltipText="Zoom in • Scroll up"
+            iconName={IconNames.ZOOM_IN}
+          />
+          <HoverControlHint
+            tooltipText="Zoom out • Scroll down"
+            iconName={IconNames.ZOOM_OUT}
+          />
+          <HoverControlHint
+            tooltipText="Zoom to fit • Double left-click"
+            iconName={IconNames.ZOOM_TO_FIT}
+          />
+          <HoverControlHint
+            tooltipText="Rotate • Left-click"
+            iconName={IconNames.REPEAT}
+          />
+          <HoverControlHint
+            tooltipText="Pan • Middle-click OR shift + left-click"
+            iconName={IconNames.MOVE}
+          />
+        </div>
 
-              marginRight: BP_TAB_PANEL_MARGIN,
-            }}
-          >
-            <HoverControlHint
-              tooltipText="Zoom in • Scroll up"
-              iconName={IconNames.ZOOM_IN}
-            />
-            <HoverControlHint
-              tooltipText="Zoom out • Scroll down"
-              iconName={IconNames.ZOOM_OUT}
-            />
-            <HoverControlHint
-              tooltipText="Zoom to fit • Double left-click"
-              iconName={IconNames.ZOOM_TO_FIT}
-            />
-            <HoverControlHint
-              tooltipText="Rotate • Left-click"
-              iconName={IconNames.REPEAT}
-            />
-            <HoverControlHint
-              tooltipText="Pan • Middle-click OR shift + left-click"
-              iconName={IconNames.MOVE}
-            />
-          </div>
-
-          <div
+        <div
+          style={{
+            // Expand to take as much space as possible, otherwise this will
+            // have no height
+            width: '100%',
+            // Prevent canvas from becoming too large when the sidebar is
+            // wide, which would require lots of scrolling or never fit
+            // entirely on screen. Tall but skinny sidebar maxes width at 70vh
+            // (eg portrait mobile view). Short but wide maxes width at 30vw
+            // (eg wide desktop view)
+            maxWidth: CANVAS_MAX_WIDTH,
+            // Force square aspect ratio, otherwise this will have no height
+            aspectRatio: '1',
+          }}
+        >
+          <canvas
+            ref={this.canvasReference}
             style={{
-              // Expand to take as much space as possible, otherwise this will
-              // have no height
+              // Inline element would try to align to text baseline, with
+              // space below for descender. This prevents that
+              display: 'block',
+
               width: '100%',
-              // Prevent canvas from becoming too large when the sidebar is
-              // wide, which would require lots of scrolling or never fit
-              // entirely on screen. Tall but skinny sidebar maxes width at 70vh
-              // (eg portrait mobile view). Short but wide maxes width at 30vw
-              // (eg wide desktop view)
-              maxWidth: 'max(70vh, 30vw)',
-              // Force square aspect ratio, otherwise this will have no height
-              aspectRatio: '1',
+              height: '100%',
+
+              borderRadius: BP_CARD_BORDER_RADIUS,
             }}
-          >
-            <canvas
-              ref={this.canvasReference}
-              style={{
-                // Inline element would try to align to text baseline, with
-                // space below for descender. This prevents that
-                display: 'block',
-
-                width: '100%',
-                height: '100%',
-
-                borderRadius: BP_CARD_BORDER_RADIUS,
-              }}
-              // These get set on the fly by the dynamic resizer in
-              // StatefulRenderer's InputTracker
-              width="0"
-              height="0"
-            />
-          </div>
+            // These get set on the fly by the dynamic resizer in
+            // StatefulRenderer's InputTracker
+            width="0"
+            height="0"
+          />
         </div>
-        <div
-          // Explicit dark theme as mobile view switches to dark text with light
-          // spinner
-          className="bp3-dark"
-          style={{
-            display: this.state.isContextLost ? 'block' : 'none',
+      </div>
+      <div
+        // Explicit dark theme as mobile view switches to dark text with light
+        // spinner
+        className="bp3-dark"
+        style={{
+          display: this.state.isContextLost ? 'block' : 'none',
 
-            textAlign: 'center',
+          textAlign: 'center',
+        }}
+      >
+        <h2
+          style={{
+            margin: `0px 0px ${BP_TEXT_MARGIN} 0px`,
           }}
         >
-          <h2
-            style={{
-              margin: `0px 0px ${BP_TEXT_MARGIN} 0px`,
-            }}
-          >
-            WebGL Context Lost
-          </h2>
-          <Spinner intent="warning" size={SpinnerSize.LARGE} />
-          <p
-            style={{
-              margin: `${BP_TEXT_MARGIN} 0px 0px 0px`,
-            }}
-          >
-            Your GPU is probably busy. Waiting for browser to re-establish connection...
-          </p>
-        </div>
-      </>
-    );
+          WebGL Context Lost
+        </h2>
+        <Spinner intent="warning" size={SpinnerSize.LARGE} />
+        <p
+          style={{
+            margin: `${BP_TEXT_MARGIN} 0px 0px 0px`,
+          }}
+        >
+          Your GPU is probably busy. Waiting for browser to re-establish connection...
+        </p>
+      </div>
+    </>;
   }
 }

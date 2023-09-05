@@ -1,9 +1,12 @@
-import { Button, Icon, Slider, Switch } from '@blueprintjs/core';
+import { Button, Icon, Slider } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type glAnimation } from '../../typings/anim_types';
-import WebGLCanvas from './webgl_canvas';
+import AutoLoopSwitch from './auto_loop_switch';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
+import PlayButton from './play_button';
+import WebGLCanvas from './web_gl_canvas';
 
 type AnimCanvasProps = {
   animation: glAnimation;
@@ -19,16 +22,15 @@ type AnimCanvasState = {
   /** Previous value of `isPlaying` */
   wasPlaying: boolean;
 
-  /** Boolean value indicating if auto play is selected */
-  autoPlay: boolean;
+  /** Whether auto loop is enabled */
+  isAutoLooping: boolean;
 };
 
 /**
- * Canvas to display glAnimations
+ * Canvas to display glAnimations.
+ *
+ * Uses WebGLCanvas internally.
  */
-// For some reason, I can't get this component to build
-// with the blueprint/js components if it's located in
-// another file so it's here for now
 export default class AnimationCanvas extends React.Component<
 AnimCanvasProps,
 AnimCanvasState
@@ -57,7 +59,7 @@ AnimCanvasState
       animTimestamp: 0,
       isPlaying: false,
       wasPlaying: false,
-      autoPlay: true,
+      isAutoLooping: true,
     };
 
     this.canvas = null;
@@ -124,8 +126,8 @@ AnimCanvasState
     this.callbackTimestamp = timeInMs;
     if (this.state.animTimestamp >= this.animationDuration) {
       // Animation has ended
-      if (this.state.autoPlay) {
-        // If autoplay is active, reset the animation
+      if (this.state.isAutoLooping) {
+        // If auto loop is active, restart the animation
         this.setState(
           {
             animTimestamp: 0,
@@ -154,11 +156,8 @@ AnimCanvasState
    * Play button click handler
    */
   private onPlayButtonClick = () => {
-    if (this.state.isPlaying) {
-      this.stopAnimation();
-    } else {
-      this.startAnimation();
-    }
+    if (this.state.isPlaying) this.stopAnimation();
+    else this.startAnimation();
   };
 
   /**
@@ -166,11 +165,14 @@ AnimCanvasState
    */
   private onResetButtonClick = () => {
     this.setState(
-      {
-        animTimestamp: 0,
-      },
+      { animTimestamp: 0 },
       () => {
-        if (!this.state.isPlaying) this.drawFrame();
+        if (this.state.isPlaying) {
+          // Force stop
+          this.onPlayButtonClick();
+        }
+
+        this.drawFrame();
       },
     );
   };
@@ -210,108 +212,80 @@ AnimCanvasState
   };
 
   /**
-   * Auto play switch handler
+   * Auto loop switch onChange callback
    */
-  private autoPlaySwitchChanged = () => {
+  private onSwitchChange = () => {
     this.setState((prev) => ({
-      autoPlay: !prev.autoPlay,
+      isAutoLooping: !prev.isAutoLooping,
     }));
   };
 
   public render() {
-    const buttons = (
+    return <div
+      style={{
+        width: '100%',
+      }}
+    >
       <div
         style={{
-          marginLeft: '20px',
-          marginRight: '20px',
           display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
         }}
       >
         <div
           style={{
-            marginRight: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: BP_TAB_BUTTON_MARGIN,
+
+            width: '100%',
+            maxWidth: CANVAS_MAX_WIDTH,
+
+            paddingTop: BP_TEXT_MARGIN,
+            paddingBottom: BP_TEXT_MARGIN,
           }}
         >
-          <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
-            <Button onClick={this.onPlayButtonClick}>
-              <Icon
-                icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
-              />
+          <PlayButton
+            isPlaying={ this.state.isPlaying }
+            onClickCallback={ this.onPlayButtonClick }
+          />
+          <Tooltip2
+            content="Reset"
+            placement="top"
+          >
+            <Button onClick={ this.onResetButtonClick }>
+              <Icon icon={ IconNames.RESET } />
             </Button>
           </Tooltip2>
-        </div>
-        <Tooltip2 content="Reset">
-          <Button onClick={this.onResetButtonClick}>
-            <Icon icon={IconNames.RESET} />
-          </Button>
-        </Tooltip2>
-      </div>
-    );
+          <Slider
+            value={ this.state.animTimestamp }
+            min={ 0 }
+            max={ this.animationDuration }
+            stepSize={ 1 }
 
-    const animSlider = (
+            labelRenderer={ false }
+
+            onChange={ this.onSliderChange }
+            onRelease={ this.onSliderRelease }
+          />
+          <AutoLoopSwitch
+            isAutoLooping={ this.state.isAutoLooping }
+            onChangeCallback={ this.onSwitchChange }
+          />
+        </div>
+      </div>
       <div
         style={{
-          marginTop: '7px',
-          flexGrow: 1,
+          display: 'flex',
+          justifyContent: 'center',
         }}
       >
-        <Slider
-          value={this.state.animTimestamp}
-          onChange={this.onSliderChange}
-          onRelease={this.onSliderRelease}
-          stepSize={1}
-          labelRenderer={false}
-          min={0}
-          max={this.animationDuration}
+        <WebGLCanvas
+          ref={(r) => {
+            this.canvas = r;
+          }}
         />
       </div>
-    );
-
-    return (
-      <>
-        <div
-          style={{
-            display: 'flex',
-            alignContent: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <WebGLCanvas
-            style={{
-              flexGrow: 1,
-            }}
-            ref={(r) => {
-              this.canvas = r;
-            }}
-          />
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            marginTop: '10px',
-            padding: '10px',
-            flexDirection: 'row',
-            justifyContent: 'stretch',
-            alignContent: 'center',
-          }}
-        >
-          {buttons}
-          {animSlider}
-          <Switch
-            style={{
-              marginLeft: '20px',
-              marginRight: '20px',
-              marginTop: '5px',
-              whiteSpace: 'nowrap',
-            }}
-            label="Auto Play"
-            onChange={this.autoPlaySwitchChanged}
-            checked={this.state.autoPlay}
-          />
-        </div>
-      </>
-    );
+    </div>;
   }
 }
