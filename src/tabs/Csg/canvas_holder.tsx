@@ -79,23 +79,23 @@ CanvasHolderState
           }}
         >
           <HoverControlHint
-            tooltipText="Zoom in • Scroll up"
+            tooltipText="Zoom in: Scroll up"
             iconName={IconNames.ZOOM_IN}
           />
           <HoverControlHint
-            tooltipText="Zoom out • Scroll down"
+            tooltipText="Zoom out: Scroll down"
             iconName={IconNames.ZOOM_OUT}
           />
           <HoverControlHint
-            tooltipText="Zoom to fit • Double left-click"
+            tooltipText="Zoom to fit: Double left-click"
             iconName={IconNames.ZOOM_TO_FIT}
           />
           <HoverControlHint
-            tooltipText="Rotate • Left-click"
+            tooltipText="Rotate: Left-click"
             iconName={IconNames.REPEAT}
           />
           <HoverControlHint
-            tooltipText="Pan • Middle-click OR shift + left-click"
+            tooltipText="Pan: Middle-click OR shift + left-click"
             iconName={IconNames.MOVE}
           />
         </div>
