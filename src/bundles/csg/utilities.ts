@@ -10,7 +10,6 @@ import {
   translate as _translate,
   align,
 } from '@jscad/modeling/src/operations/transforms';
-import _ from 'lodash';
 import type { ReplResult } from '../../typings/type_helpers.js';
 import { Core } from './core.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';
@@ -18,13 +17,12 @@ import type { AlphaColor, Color, Solid } from './jscad/types.js';
 
 
 /* [Exports] */
-//TODO rename params etc
 export interface Operable {
   store: (newTransforms?: Mat4) => void;
 
-  translate: (offset: [number, number, number]) => Operable;
-  rotate: (offset: [number, number, number]) => Operable;
-  scale: (offset: [number, number, number]) => Operable;
+  translate: (offsets: [number, number, number]) => Operable;
+  rotate: (angles: [number, number, number]) => Operable;
+  scale: (factors: [number, number, number]) => Operable;
 }
 
 export class Group implements Operable, ReplResult {
@@ -36,36 +34,38 @@ export class Group implements Operable, ReplResult {
   ) {
     // Duplicate the array to avoid modifying the original, maintaining
     // stateless Operables for the user
-    this.children = _.cloneDeep(_children);
+    this.children = [..._children];
   }
 
-  store(newTransforms?: Mat4): void {
+  store(newTransforms: Mat4 = mat4.create()): void {
+    // Update own transforms
     this.transforms = mat4.multiply(
       mat4.create(),
-      newTransforms || mat4.create(),
+      newTransforms,
       this.transforms,
     );
 
-    this.children.forEach((child) => {
+    // Apply own transforms to all children
+    this.children.forEach((child: Operable) => {
       child.store(this.transforms);
     });
   }
 
-  translate(offset: [number, number, number]): Group {
+  translate(offsets: [number, number, number]): Group {
     return new Group(
       this.children,
       mat4.multiply(
         mat4.create(),
-        mat4.fromTranslation(mat4.create(), offset),
+        mat4.fromTranslation(mat4.create(), offsets),
         this.transforms,
       ),
     );
   }
 
-  rotate(offset: [number, number, number]): Group {
-    const yaw = offset[2];
-    const pitch = offset[1];
-    const roll = offset[0];
+  rotate(angles: [number, number, number]): Group {
+    let yaw = angles[2];
+    let pitch = angles[1];
+    let roll = angles[0];
 
     return new Group(
       this.children,
@@ -77,12 +77,12 @@ export class Group implements Operable, ReplResult {
     );
   }
 
-  scale(offset: [number, number, number]): Group {
+  scale(factors: [number, number, number]): Group {
     return new Group(
       this.children,
       mat4.multiply(
         mat4.create(),
-        mat4.fromScaling(mat4.create(), offset),
+        mat4.fromScaling(mat4.create(), factors),
         this.transforms,
       ),
     );
@@ -96,23 +96,23 @@ export class Group implements Operable, ReplResult {
 export class Shape implements Operable, ReplResult {
   constructor(public solid: Solid) {}
 
-  store(newTransforms?: Mat4): void {
+  store(newTransforms: Mat4 = mat4.create()): void {
     Core.getRenderGroupManager()
       .storeShape(
-        new Shape(_transform(newTransforms || mat4.create(), this.solid)),
+        new Shape(_transform(newTransforms, this.solid)),
       );
   }
 
-  translate(offset: [number, number, number]): Shape {
-    return new Shape(_translate(offset, this.solid));
+  translate(offsets: [number, number, number]): Shape {
+    return new Shape(_translate(offsets, this.solid));
   }
 
-  rotate(offset: [number, number, number]): Shape {
-    return new Shape(_rotate(offset, this.solid));
+  rotate(angles: [number, number, number]): Shape {
+    return new Shape(_rotate(angles, this.solid));
   }
 
-  scale(offset: [number, number, number]): Shape {
-    return new Shape(_scale(offset, this.solid));
+  scale(factors: [number, number, number]): Shape {
+    return new Shape(_scale(factors, this.solid));
   }
 
   toReplString(): string {
