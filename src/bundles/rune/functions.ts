@@ -43,6 +43,10 @@ context.moduleContexts.rune.state = {
   drawnRunes,
 };
 
+export type RuneModuleState = {
+  drawnRunes: (DrawnRune | AnimatedRune)[]
+};
+
 // =============================================================================
 // Basic Runes
 // =============================================================================
@@ -950,6 +954,9 @@ export class HollusionRune extends DrawnRune {
     return render;
   };
 }
+
+/** @hidden */
+export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune.isHollusion;
 
 /**
  * Renders the specified Rune in a tab as a hollusion, using the specified
