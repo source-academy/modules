@@ -9,7 +9,7 @@ export abstract class glAnimation {
 
   public abstract getFrame(timestamp: number): AnimFrame;
 
-  public static isAnimation = (obj: any) => obj.fps !== undefined;
+  public static isAnimation = (obj: any): obj is glAnimation => obj.fps !== undefined;
 }
 
 export interface AnimFrame {
