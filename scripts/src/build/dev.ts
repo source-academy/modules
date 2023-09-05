@@ -36,9 +36,9 @@ const waitForQuit = () => new Promise<void>((resolve, reject) => {
 type ContextOptions = Record<'srcDir' | 'outDir', string>;
 const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[], app?: Application) => esbuild({
   ...bundleOptions,
+  entryPoints: bundles.map(bundleNameExpander(srcDir)),
   outbase: outDir,
   outdir: outDir,
-  entryPoints: bundles.map(bundleNameExpander(srcDir)),
   plugins: [{
     name: 'Bundle Compiler',
     async setup(pluginBuild) {
@@ -74,9 +74,10 @@ const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[],
 
 const getTabContext = ({ srcDir, outDir }: ContextOptions, tabs: string[]) => esbuild({
   ...tabOptions,
+  tsconfig: `${srcDir}/tsconfig.json`,
+  entryPoints: tabs.map(tabNameExpander(srcDir)),
   outbase: outDir,
   outdir: outDir,
-  entryPoints: tabs.map(tabNameExpander(srcDir)),
   external: ['react*', 'react-dom'],
   plugins: [{
     name: 'Tab Compiler',
