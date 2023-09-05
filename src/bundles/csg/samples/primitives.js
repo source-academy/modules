@@ -12,7 +12,7 @@ let primitives = [
     cone,
     prism,
     star,
-    torus,
+    torus
 ];
 
 function translate_x(entity, factor) {
