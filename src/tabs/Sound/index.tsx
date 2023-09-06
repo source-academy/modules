@@ -1,18 +1,15 @@
-import type { AudioPlayed, SoundModuleState } from '../../bundles/sound/types';
-import { getModuleState, type DebuggerContext } from '../../typings/type_helpers';
+import type { SoundModuleState } from '../../bundles/sound/types';
+import { getModuleState, type DebuggerContext, type TabProps } from '../../typings/type_helpers';
 import MultiItemDisplay from '../common/multi_item_display';
-
-export type SoundTabProps<T> = {
-  getAudioPlayed: () => T[]
-};
 
 /**
  * Tab for Source Academy Sounds Module
  * @author Koh Shang Hui
  * @author Samyukta Sounderraman
  */
-export const SoundTab = ({ getAudioPlayed }: SoundTabProps<AudioPlayed>) => {
-  const audioPlayed = getAudioPlayed();
+const SoundTab = ({ context }: TabProps) => {
+  const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound');
+
   const elements = audioPlayed.map((audio) => (
     <audio
       src={audio.dataUri}
@@ -52,7 +49,7 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    return <SoundTab getAudioPlayed={() => getModuleState<SoundModuleState>(context, 'sound').audioPlayed} />;
+    return <SoundTab context={context} />;
   },
 
   /**
