@@ -1,29 +1,3 @@
-/**
- * The sounds library provides functions for constructing and playing sounds.
- *
- * A wave is a function that takes in a number `t` and returns
- * a number representing the amplitude at time `t`.
- * The amplitude should fall within the range of [-1, 1].
- *
- * A Sound is a pair(wave, duration) where duration is the length of the sound in seconds.
- * The constructor make_sound and accessors get_wave and get_duration are provided.
- *
- * Sound Discipline:
- * For all sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:
- * `(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.
- *
- * Two functions which combine Sounds, `consecutively` and `simultaneously` are given.
- * Additionally, we provide sound transformation functions `adsr` and `phase_mod`
- * which take in a Sound and return a Sound.
- *
- * Finally, the provided `play` function takes in a Sound and plays it using your
- * computer's sound system.
- *
- * @module sound
- * @author Koh Shang Hui
- * @author Samyukta Sounderraman
- */
-
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import type {
   Wave,
