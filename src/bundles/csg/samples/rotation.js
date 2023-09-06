@@ -1,26 +1,6 @@
 // Source §3
 // Showcase of all 11 primitive Shapes provided by default
 
-function translate_x(entity, factor) {
-    return translate(entity, factor, 0, 0);
-}
-
-function rotate_x(entity, factor) {
-    return rotate(entity, factor, 0, 0);
-}
-
-function rotate_y(entity, factor) {
-    return rotate(entity, 0, factor, 0);
-}
-
-function rotate_z(entity, factor) {
-    return rotate(entity, 0, 0, factor);
-}
-
-function degrees_to_radians(degrees) {
-    return (degrees / 360) * (2 * math_PI);
-}
-
 let a = cube(green);
 let b = cube(blue);
 

@@ -20,14 +20,6 @@ let colours = [
     white
 ];
 
-function translate_x(entity, factor) {
-    return translate(entity, factor, 0, 0);
-}
-
-function translate_y(entity, factor) {
-    return translate(entity, 0, factor, 0);
-}
-
 let l = build_list(
     i => translate_y(
         translate_x(
