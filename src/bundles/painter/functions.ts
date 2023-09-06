@@ -1,8 +1,3 @@
-/**
- * The module `painter` provides functions for visualizing painters in SICP JS 2.2.4 plots using the plotly.js library.
- * @module painter
- */
-
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { type Frame, LinePlot } from './painter';
