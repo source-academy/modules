@@ -41,7 +41,9 @@ import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } fro
 let { orbit } = controls;
 
 function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
-  let options: EntitiesFromSolidsOptions = {};
+  let options: EntitiesFromSolidsOptions = {
+    color: hexToAlphaColor('#55ffaa'),
+  };
   return (entitiesFromSolids(
     options,
     ...solids,
