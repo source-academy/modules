@@ -55,7 +55,6 @@ const getBundleContext = ({ srcDir, outDir }, bundles, app) => esbuild({
 });
 const getTabContext = ({ srcDir, outDir }, tabs) => esbuild({
     ...tabOptions,
-    tsconfig: `${srcDir}/tsconfig.json`,
     entryPoints: tabs.map(tabNameExpander(srcDir)),
     outbase: outDir,
     outdir: outDir,
