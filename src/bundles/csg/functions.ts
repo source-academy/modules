@@ -378,7 +378,7 @@ export function geodesic_sphere(hex: string): Shape {
  * Returns a square pyramid Shape in the specified color.
  *
  * - Height: 1
- * - Side length: 1
+ * - Base length: 1
  * - Center: (0.5, 0.5, 0.5)
  *
  * @param hex hex color code
