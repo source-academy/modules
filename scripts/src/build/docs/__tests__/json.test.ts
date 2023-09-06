@@ -2,7 +2,7 @@ import type { MockedFunction } from "jest-mock";
 import getJsonCommand, * as jsonModule from '../json';
 import * as tscModule from '../../prebuild/tsc';
 import fs from 'fs/promises';
-import type { DeclarationReflection } from "typedoc";
+import { ReflectionKind, type DeclarationReflection } from "typedoc";
 
 jest.spyOn(jsonModule, 'buildJsons');
 jest.spyOn(tscModule, 'runTsc')
@@ -75,7 +75,7 @@ describe('test json command', () => {
 });
 
 describe('test parsers', () => {
-  const { Variable: variableParser, Function: functionParser } = jsonModule.parsers;
+  const { [ReflectionKind.Variable]: variableParser, [ReflectionKind.Function]: functionParser } = jsonModule.parsers;
 
   describe('test function parser', () => {
     test('normal function with parameters', () => {
@@ -106,7 +106,7 @@ describe('test parsers', () => {
         }]
       } as DeclarationReflection;
 
-      const { header, desc } = functionParser(element);
+      const { header, desc } = functionParser!(element);
 
       expect(header)
         .toEqual(`${element.name}(x: number, y: string) → {string}`);
@@ -132,7 +132,7 @@ describe('test parsers', () => {
         }]
       } as DeclarationReflection;
 
-      const { header, desc } = functionParser(element);
+      const { header, desc } = functionParser!(element);
 
       expect(header)
         .toEqual(`${element.name}() → {string}`);
@@ -155,7 +155,7 @@ describe('test parsers', () => {
         }]
       } as DeclarationReflection;
 
-      const { header, desc } = functionParser(element);
+      const { header, desc } = functionParser!(element);
 
       expect(header)
         .toEqual(`${element.name}() → {void}`);
@@ -170,7 +170,7 @@ describe('test parsers', () => {
         signatures: [{}]
       } as DeclarationReflection;
 
-      const { header, desc } = functionParser(element);
+      const { header, desc } = functionParser!(element);
 
       expect(header)
         .toEqual(`${element.name}() → {void}`);
@@ -196,7 +196,7 @@ describe('test parsers', () => {
         }
       } as DeclarationReflection;
 
-      const { header, desc } = variableParser(element);
+      const { header, desc } = variableParser!(element);
 
       expect(header)
         .toEqual(`${element.name}: number`);
@@ -213,7 +213,7 @@ describe('test parsers', () => {
         },
       } as DeclarationReflection;
 
-      const { header, desc } = variableParser(element);
+      const { header, desc } = variableParser!(element);
 
       expect(header)
         .toEqual(`${element.name}: number`);
@@ -234,7 +234,7 @@ describe('test parsers', () => {
         }
       } as DeclarationReflection;
 
-      const { header, desc } = variableParser(element);
+      const { header, desc } = variableParser!(element);
 
       expect(header)
         .toEqual(`${element.name}: unknown`);

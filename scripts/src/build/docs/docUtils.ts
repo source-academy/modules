@@ -16,39 +16,36 @@ type TypedocOpts = {
  * @param watch Pass true to initialize typedoc in watch mode. `app.convert()` will not be called.
  */
 export const initTypedoc = wrapWithTimer(
-  ({
+  async ({
     srcDir,
     bundles,
     verbose,
   }: TypedocOpts,
-  watch?: boolean) => new Promise<[Application, ProjectReflection]>((resolve, reject) => {
-    try {
-      const app = new Application();
-      app.options.addReader(new TSConfigReader());
+  watch?: boolean): Promise<[Application, ProjectReflection | null]> => {
+    // const app = new Application();
 
-      app.bootstrap({
-        categorizeByGroup: true,
-        entryPoints: bundles.map(bundleNameExpander(srcDir)),
-        excludeInternal: true,
-        logger: watch ? 'none' : undefined,
-        logLevel: verbose ? 'Info' : 'Error',
-        name: 'Source Academy Modules',
-        readme: `${srcDir}/README.md`,
-        tsconfig: `${srcDir}/tsconfig.json`,
-        skipErrorChecking: true,
-        watch,
-      });
+    const app = await Application.bootstrap({
+      categorizeByGroup: true,
+      entryPoints: bundles.map(bundleNameExpander(srcDir)),
+      excludeInternal: true,
+      // logger: watch ? 'none' : undefined,
+      logLevel: verbose ? 'Info' : 'Error',
+      name: 'Source Academy Modules',
+      readme: `${srcDir}/README.md`,
+      tsconfig: `${srcDir}/tsconfig.json`,
+      skipErrorChecking: true,
+      watch,
+    });
 
-      if (watch) resolve([app, null]);
+    app.options.addReader(new TSConfigReader());
 
-      const project = app.convert();
-      if (!project) {
-        reject(new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'));
-      } else resolve([app, project]);
-    } catch (error) {
-      reject(error);
-    }
-  }),
+    if (watch) return [app, null];
+
+    const project = await app.convert();
+    if (!project) {
+      throw new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!');
+    } else return [app, project];
+  },
 );
 
 export const logTypedocTime = (elapsed: number) => console.log(

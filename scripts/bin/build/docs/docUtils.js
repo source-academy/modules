@@ -7,33 +7,28 @@ import { bundleNameExpander, divideAndRound } from '../buildUtils.js';
  *
  * @param watch Pass true to initialize typedoc in watch mode. `app.convert()` will not be called.
  */
-export const initTypedoc = wrapWithTimer(({ srcDir, bundles, verbose, }, watch) => new Promise((resolve, reject) => {
-    try {
-        const app = new Application();
-        app.options.addReader(new TSConfigReader());
-        app.bootstrap({
-            categorizeByGroup: true,
-            entryPoints: bundles.map(bundleNameExpander(srcDir)),
-            excludeInternal: true,
-            logger: watch ? 'none' : undefined,
-            logLevel: verbose ? 'Info' : 'Error',
-            name: 'Source Academy Modules',
-            readme: `${srcDir}/README.md`,
-            tsconfig: `${srcDir}/tsconfig.json`,
-            skipErrorChecking: true,
-            watch,
-        });
-        if (watch)
-            resolve([app, null]);
-        const project = app.convert();
-        if (!project) {
-            reject(new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'));
-        }
-        else
-            resolve([app, project]);
+export const initTypedoc = wrapWithTimer(async ({ srcDir, bundles, verbose, }, watch) => {
+    // const app = new Application();
+    const app = await Application.bootstrap({
+        categorizeByGroup: true,
+        entryPoints: bundles.map(bundleNameExpander(srcDir)),
+        excludeInternal: true,
+        // logger: watch ? 'none' : undefined,
+        logLevel: verbose ? 'Info' : 'Error',
+        name: 'Source Academy Modules',
+        readme: `${srcDir}/README.md`,
+        tsconfig: `${srcDir}/tsconfig.json`,
+        skipErrorChecking: true,
+        watch,
+    });
+    app.options.addReader(new TSConfigReader());
+    if (watch)
+        return [app, null];
+    const project = await app.convert();
+    if (!project) {
+        throw new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!');
     }
-    catch (error) {
-        reject(error);
-    }
-}));
+    else
+        return [app, project];
+});
 export const logTypedocTime = (elapsed) => console.log(`${chalk.cyanBright('Took')} ${divideAndRound(elapsed, 1000)}s ${chalk.cyanBright('to initialize typedoc')}`);

@@ -93,13 +93,15 @@ export const watchCommand = createBuildCommand('watch', false)
     await Promise.all([bundlesContext.watch(), tabsContext.watch()]);
     await waitForQuit();
     console.log(chalk.yellowBright('Stopping...'));
+    const htmlPromise = !opts.docs
+        ? Promise.resolve(null)
+        : app.convert()
+            .then((proj) => buildHtml(app, proj, {
+            outDir: opts.outDir,
+            modulesSpecified: false,
+        }));
     const [htmlResult] = await Promise.all([
-        opts.docs
-            ? buildHtml(app, app.convert(), {
-                outDir: opts.outDir,
-                modulesSpecified: false,
-            })
-            : Promise.resolve(null),
+        htmlPromise,
         bundlesContext.cancel()
             .then(() => bundlesContext.dispose()),
         tabsContext.cancel()

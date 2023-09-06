@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import fs from 'fs/promises';
+import { ReflectionKind, } from 'typedoc';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundles, } from '../buildUtils.js';
 import { logTscResults, runTsc } from '../prebuild/tsc.js';
@@ -10,7 +11,7 @@ const typeToName = (type, alt = 'unknown') => (type ? type.name : alt);
  * Parsers to convert typedoc elements into strings
  */
 export const parsers = {
-    Variable(element) {
+    [ReflectionKind.Variable](element) {
         let desc;
         if (!element.comment)
             desc = 'No description available';
@@ -23,7 +24,7 @@ export const parsers = {
             desc: drawdown(desc),
         };
     },
-    Function({ name: elementName, signatures: [signature] }) {
+    [ReflectionKind.Function]({ name: elementName, signatures: [signature] }) {
         // Form the parameter string for the function
         let paramStr;
         if (!signature.parameters)
@@ -63,11 +64,11 @@ const buildJson = wrapWithTimer(async (bundle, moduleDocs, outDir) => {
         }
         const [sevRes, result] = moduleDocs.children.reduce(([{ severity, errors }, decls], decl) => {
             try {
-                const parser = parsers[decl.kindString];
+                const parser = parsers[decl.kind];
                 if (!parser) {
                     return [{
                             severity: 'warn',
-                            errors: [...errors, `Symbol '${decl.name}': Could not find parser for type ${decl.kindString}`],
+                            errors: [...errors, `Symbol '${decl.name}': Could not find parser for type ${decl.getFriendlyFullName()}`],
                         }, decls];
                 }
                 const { header, desc } = parser(decl);

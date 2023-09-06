@@ -1,11 +1,12 @@
 import chalk from 'chalk';
 import fs from 'fs/promises';
-import type {
-  DeclarationReflection,
-  IntrinsicType,
-  ProjectReflection,
-  ReferenceType,
-  SomeType,
+import {
+  type DeclarationReflection,
+  type IntrinsicType,
+  type ProjectReflection,
+  type ReferenceType,
+  type SomeType,
+  ReflectionKind,
 } from 'typedoc';
 
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
@@ -25,11 +26,14 @@ import drawdown from './drawdown.js';
 
 const typeToName = (type?: SomeType, alt: string = 'unknown') => (type ? (type as ReferenceType | IntrinsicType).name : alt);
 
+type ReflectionParser = (docs: DeclarationReflection) => Record<'header' | 'desc', string>;
+type ReflectionParsers = Partial<Record<ReflectionKind, ReflectionParser>>;
+
 /**
  * Parsers to convert typedoc elements into strings
  */
-export const parsers: Record<string, (docs: DeclarationReflection) => Record<'header' | 'desc', string>> = {
-  Variable(element) {
+export const parsers: ReflectionParsers = {
+  [ReflectionKind.Variable](element) {
     let desc: string;
     if (!element.comment) desc = 'No description available';
     else {
@@ -41,7 +45,7 @@ export const parsers: Record<string, (docs: DeclarationReflection) => Record<'he
       desc: drawdown(desc),
     };
   },
-  Function({ name: elementName, signatures: [signature] }) {
+  [ReflectionKind.Function]({ name: elementName, signatures: [signature] }) {
     // Form the parameter string for the function
     let paramStr: string;
     if (!signature.parameters) paramStr = '()';
@@ -85,11 +89,11 @@ const buildJson = wrapWithTimer(async (
 
     const [sevRes, result] = moduleDocs.children.reduce(([{ severity, errors }, decls], decl) => {
       try {
-        const parser = parsers[decl.kindString];
+        const parser = parsers[decl.kind];
         if (!parser) {
           return [{
             severity: 'warn' as Severity,
-            errors: [...errors, `Symbol '${decl.name}': Could not find parser for type ${decl.kindString}`],
+            errors: [...errors, `Symbol '${decl.name}': Could not find parser for type ${decl.getFriendlyFullName()}`],
           }, decls];
         }
         const { header, desc } = parser(decl);
@@ -229,6 +233,7 @@ const getJsonCommand = () => createBuildCommand('jsons', false)
       bundles,
       outDir,
     });
+
     logResult(jsonResults, verbose);
     exitOnError(jsonResults);
   })

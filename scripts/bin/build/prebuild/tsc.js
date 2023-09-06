@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import { existsSync, promises as fs } from 'fs';
 import pathlib from 'path';
-import ts from 'typescript';
+import ts, {} from 'typescript';
 import { printList, wrapWithTimer } from '../../scriptUtils.js';
 import { bundleNameExpander, divideAndRound, exitOnError, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
 const getTsconfig = async (srcDir) => {
