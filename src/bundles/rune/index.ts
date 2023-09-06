@@ -1,5 +1,8 @@
 /**
- * Bundle for Source Academy Runes module
+ * The module `rune` provides functions for drawing runes.
+ *
+ * A *Rune* is defined by its vertices (x,y,z,t), the colors on its vertices (r,g,b,a), a transformation matrix for rendering the Rune and a (could be empty) list of its sub-Runes.
+ * @module rune
  * @author Hou Ruomu
  */
 export {
