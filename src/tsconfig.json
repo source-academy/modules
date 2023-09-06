@@ -31,6 +31,7 @@
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
+    "verbatimModuleSyntax": true,
     // "typeRoots": [
     //   "typings/@types",
     //   "node_modules/@types"
