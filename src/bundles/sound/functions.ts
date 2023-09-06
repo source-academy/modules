@@ -276,6 +276,10 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
+  if (duration <= 0) {
+    throw new Error('Sound duration must be greater than 0');
+  }
+
   return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
 }
 
