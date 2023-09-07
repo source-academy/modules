@@ -24,7 +24,6 @@ const MultiItemDisplay = (props: { elements: JSX.Element[] }) => {
               alignItems: 'center',
               flexDirection: 'row',
               position: 'relative',
-              marginBottom: 10,
             }}
           >
             <Button
@@ -62,8 +61,6 @@ const MultiItemDisplay = (props: { elements: JSX.Element[] }) => {
       <div
         style={{
           width: '100%',
-          paddingLeft: '20px',
-          paddingRight: '20px',
           display: 'flex',
           alignContent: 'center',
           justifyContent: 'center',
