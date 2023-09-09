@@ -201,7 +201,7 @@ require => {
   var recording_signal_ms = 100;
   var pre_recording_signal_pause_ms = 200;
   function play_recording_signal() {
-    play(sine_sound(1200, recording_signal_ms / 1e3));
+    play_concurrently(sine_sound(1200, recording_signal_ms / 1e3));
   }
   function process(data) {
     const audioContext = new AudioContext();
