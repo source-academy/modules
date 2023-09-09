@@ -114,7 +114,7 @@ function start_recording(mediaRecorder: MediaRecorder) {
 const recording_signal_duration_ms = 100;
 
 function play_recording_signal() {
-  play(sine_sound(1200, recording_signal_duration_ms / 1000));
+  play_concurrently(sine_sound(1200, recording_signal_duration_ms / 1000));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
