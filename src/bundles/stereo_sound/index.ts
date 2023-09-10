@@ -10,10 +10,10 @@ export {
   pan,
   pan_mod,
   // Play-related
-  play,
+  play_in_tab,
   play_wave,
   play_waves,
-  play_concurrently,
+  play,
   stop,
   // Recording
   init_record,
