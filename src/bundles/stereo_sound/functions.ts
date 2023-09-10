@@ -337,13 +337,13 @@ export function is_sound(x: any): boolean {
 /**
  * Plays the given Wave using the computer’s sound device, for the duration
  * given in seconds.
- * The sound is only played if no other sounds are currently being played.
+ * The Sound is only played if no other Sounds are currently being played.
  *
  * @param wave the wave function to play, starting at 0
- * @return the given sound
+ * @return the given Sound
  * @example play_wave(t => math_sin(t * 3000), 5);
  */
-export function play_wave(wave: Wave, duration: number): AudioPlayed {
+export function play_wave(wave: Wave, duration: number): Sound {
   return play(make_sound(wave, duration));
 }
 
