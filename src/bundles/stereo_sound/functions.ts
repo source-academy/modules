@@ -366,11 +366,11 @@ export function play_waves(
 
 /**
  * Plays the given Sound using the computer’s sound device.
- * The sound is added to a list of Sounds to be played one-at-a-time
+ * The Sound is added to a list of Sounds to be played one-at-a-time
  * in a Source Academy tab.
  *
- * @param sound the sound to play
- * @return the given sound
+ * @param sound the Sound to play
+ * @return the given Sound
  * @example play_in_tab(sine_sound(440, 5));
  */
 export function play_in_tab(sound: Sound): Sound {
@@ -463,7 +463,7 @@ export function play_in_tab(sound: Sound): Sound {
 
 /**
  * Plays the given Sound using the computer’s sound device
- * on top of any sounds that are currently playing.
+ * on top of any Sounds that are currently playing.
  *
  * @param sound the Sound to play
  * @return the given Sound
