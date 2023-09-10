@@ -1,9 +1,10 @@
 /**
  *
- * The stereo sounds library build on the sounds library by accommodating stereo sounds.
- * Within this library, all sounds are represented in stereo, with two waves, left and right.
+ * The `stereo_sound` module build on the `sound` module by accommodating stereo sounds.
+ * Within this module, all Sounds are represented in stereo, with two waves, left and right.
  *
- * A Stereo Sound is a `pair(pair(left_wave, right_wave), duration)` where duration is the length of the sound in seconds.
+ * A Stereo Sound (just denoted as "Sound" in this document) is
+ a `pair(pair(left_wave, right_wave), duration)` where duration is the length of the Sound in seconds.
  * The constructor `make_stereo_sound` and accessors `get_left_wave`, `get_right_wave`, and `get_duration` are provided.
  * The `make_sound` constructor from sounds is syntatic sugar for `make_stereo_sounds` with equal waves.
  *
@@ -162,20 +163,21 @@ export function init_record(): string {
 }
 
 /**
- * takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
+ * Records a sound until the returned stop function is called.
+ * Takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
  * returns a nullary stop function <CODE>stop</CODE>. A call
- * <CODE>stop()</CODE> returns a sound promise: a nullary function
- * that returns a sound. Example: <PRE><CODE>init_record();
+ * <CODE>stop()</CODE> returns a Sound promise: a nullary function
+ * that returns a Sound. Example: <PRE><CODE>init_record();
  * const stop = record(0.5);
  * // record after 0.5 seconds. Then in next query:
  * const promise = stop();
- * // In next query, you can play the promised sound, by
+ * // In next query, you can play the promised Sound, by
  * // applying the promise:
  * play(promise());</CODE></PRE>
  * @param buffer - pause before recording, in seconds
  * @returns nullary <CODE>stop</CODE> function;
  * <CODE>stop()</CODE> stops the recording and
- * returns a sound promise: a nullary function that returns the recorded sound
+ * returns a sound promise: a nullary function that returns the recorded Sound
  */
 export function record(buffer: number): () => () => Sound {
   check_permission();
@@ -200,8 +202,8 @@ export function record(buffer: number): () => () => Sound {
 /**
  * Records a sound of given <CODE>duration</CODE> in seconds, after
  * a <CODE>buffer</CODE> also in seconds, and
- * returns a sound promise: a nullary function
- * that returns a sound. Example: <PRE><CODE>init_record();
+ * returns a Sound promise: a nullary function
+ * that returns a Sound. Example: <PRE><CODE>init_record();
  * const promise = record_for(2, 0.5);
  * // In next query, you can play the promised sound, by
  * // applying the promise:
@@ -349,7 +351,6 @@ export function play_wave(wave: Wave, duration: number): AudioPlayed {
  * Plays the given two Waves using the computer’s sound device, for the duration
  * given in seconds. The first Wave is for the left channel, the second for the
  * right channel.
- * The sound is only played if no other sounds are currently being played.
  *
  * @param wave1 the wave function to play on the left channel, starting at 0
  * @param wave2 the wave function to play on the right channel, starting at 0
@@ -360,7 +361,7 @@ export function play_waves(
   wave1: Wave,
   wave2: Wave,
   duration: number,
-): AudioPlayed {
+): Sound {
   return play(make_stereo_sound(wave1, wave2, duration));
 }
 
@@ -373,7 +374,7 @@ export function play_waves(
  * @return the given sound
  * @example play_in_tab(sine_sound(440, 5));
  */
-export function play_in_tab(sound: Sound): AudioPlayed {
+export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
@@ -457,7 +458,7 @@ export function play_in_tab(sound: Sound): AudioPlayed {
     };
 
     audioPlayed.push(audio);
-    return audio;
+    return sound;
   }
 }
 
@@ -466,9 +467,10 @@ export function play_in_tab(sound: Sound): AudioPlayed {
  * on top of any sounds that are currently playing.
  *
  * @param sound the sound to play
+ * @return the given sound
  * @example play(sine_sound(440, 5));
  */
-export function play(sound: Sound): void {
+export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
@@ -556,6 +558,7 @@ export function play(sound: Sound): void {
       source2.disconnect(audioplayer.destination);
       isPlaying = false;
     };
+    return sound;
   }
 }
 

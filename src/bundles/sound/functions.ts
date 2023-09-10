@@ -1,19 +1,19 @@
 /**
- * The sounds library provides functions for constructing and playing sounds.
+ * The `sound` module provides functions for constructing and playing sounds.
  *
  * A wave is a function that takes in a number `t` and returns
  * a number representing the amplitude at time `t`.
  * The amplitude should fall within the range of [-1, 1].
  *
- * A Sound is a pair(wave, duration) where duration is the length of the sound in seconds.
+ * A Sound is a pair(wave, duration) where duration is the length of the Sound in seconds.
  * The constructor make_sound and accessors get_wave and get_duration are provided.
  *
  * Sound Discipline:
- * For all sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:
+ * For all Sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:
  * `(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.
  *
  * Two functions which combine Sounds, `consecutively` and `simultaneously` are given.
- * Additionally, we provide sound transformation functions `adsr` and `phase_mod`
+ * Additionally, we provide Sound transformation functions `adsr` and `phase_mod`
  * which take in a Sound and return a Sound.
  *
  * Finally, the provided `play` function takes in a Sound and plays it using your
@@ -175,10 +175,11 @@ export function init_record(): string {
 }
 
 /**
- * takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
+ * Records a sound until the returned stop function is called.
+ * Takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
  * returns a nullary stop function <CODE>stop</CODE>. A call
- * <CODE>stop()</CODE> returns a sound promise: a nullary function
- * that returns a sound. Example: <PRE><CODE>init_record();
+ * <CODE>stop()</CODE> returns a Sound promise: a nullary function
+ * that returns a Sound. Example: <PRE><CODE>init_record();
  * const stop = record(0.5);
  * // record after 0.5 seconds. Then in next query:
  * const promise = stop();
@@ -188,7 +189,7 @@ export function init_record(): string {
  * @param buffer - pause before recording, in seconds
  * @returns nullary <CODE>stop</CODE> function;
  * <CODE>stop()</CODE> stops the recording and
- * returns a sound promise: a nullary function that returns the recorded sound
+ * returns a Sound promise: a nullary function that returns the recorded Sound
  */
 export function record(buffer: number): () => () => Sound {
   check_permission();
@@ -213,15 +214,15 @@ export function record(buffer: number): () => () => Sound {
 /**
  * Records a sound of given <CODE>duration</CODE> in seconds, after
  * a <CODE>buffer</CODE> also in seconds, and
- * returns a sound promise: a nullary function
- * that returns a sound. Example: <PRE><CODE>init_record();
+ * returns a Sound promise: a nullary function
+ * that returns a Sound. Example: <PRE><CODE>init_record();
  * const promise = record_for(2, 0.5);
- * // In next query, you can play the promised sound, by
+ * // In next query, you can play the promised Sound, by
  * // applying the promise:
  * play(promise());</CODE></PRE>
  * @param duration duration in seconds
  * @param buffer pause before recording, in seconds
- * @return <CODE>promise</CODE>: nullary function which returns recorded sound
+ * @return <CODE>promise</CODE>: nullary function which returns recorded Sound
  */
 export function record_for(duration: number, buffer: number): () => Sound {
   recorded_sound = undefined;
@@ -270,8 +271,8 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * that takes in a non-negative input time and returns an amplitude
  * between -1 and 1.
  *
- * @param wave wave function of the sound
- * @param duration duration of the sound
+ * @param wave wave function of the Sound
+ * @param duration duration of the Sound
  * @return with wave as wave function and duration as duration
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
@@ -319,25 +320,25 @@ export function is_sound(x: any): x is Sound {
 /**
  * Plays the given Wave using the computer’s sound device, for the duration
  * given in seconds.
- * The sound is only played if no other sounds are currently being played.
+ * The Sound is only played if no other sounds are currently being played.
  *
  * @param wave the wave function to play, starting at 0
- * @return the given sound
+ * @return the resulting Sound
  * @example play_wave(t => math_sin(t * 3000), 5);
  */
-export function play_wave(wave: Wave, duration: number): AudioPlayed {
+export function play_wave(wave: Wave, duration: number): Sound {
   return play(make_sound(wave, duration));
 }
 
 /**
  * Plays the given Sound using the computer’s sound device.
- * The sound is only played if no other sounds are currently being played.
+ * The Sound is only played if no other sounds are currently being played.
  *
- * @param sound the sound to play
- * @return the given sound
+ * @param sound the Sound to play
+ * @return the given Sound
  * @example play(sine_sound(440, 5));
  */
-export function play_in_tab(sound: Sound): AudioPlayed {
+export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
@@ -409,18 +410,19 @@ export function play_in_tab(sound: Sound): AudioPlayed {
       dataUri: riffwave.dataURI,
     };
     audioPlayed.push(soundToPlay);
-    return soundToPlay;
+    return sound;
   }
 }
 
 /**
  * Plays the given Sound using the computer’s sound device
- * on top of any sounds that are currently playing.
+ * on top of any Sounds that are currently playing.
  *
- * @param sound the sound to play
+ * @param sound the Sound to play
+ * @return the given Sound
  * @example play_concurrently(sine_sound(440, 5));
  */
-export function play(sound: Sound): void {
+export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
@@ -475,6 +477,7 @@ export function play(sound: Sound): void {
       source.disconnect(audioplayer.destination);
       isPlaying = false;
     };
+    return sound;
   }
 }
 
@@ -489,10 +492,10 @@ export function stop(): void {
 // Primitive sounds
 
 /**
- * Makes a noise sound with given duration
+ * Makes a noise Sound with given duration
  *
  * @param duration the duration of the noise sound
- * @return resulting noise sound
+ * @return resulting noise Sound
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
@@ -500,10 +503,10 @@ export function noise_sound(duration: number): Sound {
 }
 
 /**
- * Makes a silence sound with given duration
+ * Makes a silence Sound with given duration
  *
- * @param duration the duration of the silence sound
- * @return resulting silence sound
+ * @param duration the duration of the silence Sound
+ * @return resulting silence Sound
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
@@ -511,10 +514,10 @@ export function silence_sound(duration: number): Sound {
 }
 
 /**
- * Makes a sine wave sound with given frequency and duration
+ * Makes a sine wave Sound with given frequency and duration
  *
- * @param freq the frequency of the sine wave sound
- * @param duration the duration of the sine wave sound
+ * @param freq the frequency of the sine wave Sound
+ * @param duration the duration of the sine wave Sound
  * @return resulting sine wave sound
  * @example sine_sound(440, 5);
  */
@@ -523,11 +526,11 @@ export function sine_sound(freq: number, duration: number): Sound {
 }
 
 /**
- * Makes a square wave sound with given frequency and duration
+ * Makes a square wave Sound with given frequency and duration
  *
- * @param freq the frequency of the square wave sound
- * @param duration the duration of the square wave sound
- * @return resulting square wave sound
+ * @param freq the frequency of the square wave Sound
+ * @param duration the duration of the square wave Sound
+ * @return resulting square wave Sound
  * @example square_sound(440, 5);
  */
 export function square_sound(f: number, duration: number): Sound {
@@ -545,11 +548,11 @@ export function square_sound(f: number, duration: number): Sound {
 }
 
 /**
- * Makes a triangle wave sound with given frequency and duration
+ * Makes a triangle wave Sound with given frequency and duration
  *
- * @param freq the frequency of the triangle wave sound
- * @param duration the duration of the triangle wave sound
- * @return resulting triangle wave sound
+ * @param freq the frequency of the triangle wave Sound
+ * @param duration the duration of the triangle wave Sound
+ * @return resulting triangle wave Sound
  * @example triangle_sound(440, 5);
  */
 export function triangle_sound(freq: number, duration: number): Sound {
@@ -569,11 +572,11 @@ export function triangle_sound(freq: number, duration: number): Sound {
 }
 
 /**
- * Makes a sawtooth wave sound with given frequency and duration
+ * Makes a sawtooth wave Sound with given frequency and duration
  *
- * @param freq the frequency of the sawtooth wave sound
- * @param duration the duration of the sawtooth wave sound
- * @return resulting sawtooth wave sound
+ * @param freq the frequency of the sawtooth wave Sound
+ * @param duration the duration of the sawtooth wave Sound
+ * @return resulting sawtooth wave Sound
  * @example sawtooth_sound(440, 5);
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
@@ -594,11 +597,11 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
 
 /**
  * Makes a new Sound by combining the sounds in a given list
- * where the second sound is appended to the end of the first sound,
- * the third sound is appended to the end of the second sound, and
- * so on. The effect is that the sounds in the list are joined end-to-end
+ * where the second Sound is appended to the end of the first Sound,
+ * the third Sound is appended to the end of the second Sound, and
+ * so on. The effect is that the Sounds in the list are joined end-to-end
  *
- * @param list_of_sounds given list of sounds
+ * @param list_of_sounds given list of Sounds
  * @return the combined Sound
  * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
  */
@@ -615,10 +618,10 @@ export function consecutively(list_of_sounds: List): Sound {
 }
 
 /**
- * Makes a new Sound by combining the sounds in a given list
- * where all the sounds are overlapped on top of each other.
+ * Makes a new Sound by combining the Sounds in a given list
+ * where all the Sounds are overlapped on top of each other.
  *
- * @param list_of_sounds given list of sounds
+ * @param list_of_sounds given list of Sounds
  * @return the combined Sound
  * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))
  */
@@ -730,7 +733,7 @@ export function stacking_adsr(
 }
 
 /**
- * Returns a SoundTransformer which uses its argument
+ * Returns a Sound transformer which uses its argument
  * to modulate the phase of a (carrier) sine wave
  * of given frequency and duration with a given Sound.
  * Modulating with a low frequency Sound results in a vibrato effect.
@@ -738,7 +741,7 @@ export function stacking_adsr(
  * the sine wave frequency results in more complex wave forms.
  *
  * @param freq the frequency of the sine wave to be modulated
- * @param duration the duration of the output soud
+ * @param duration the duration of the output Sound
  * @param amount the amount of modulation to apply to the carrier sine wave
  * @return function which takes in a Sound and returns a Sound
  * @example phase_mod(440, 5, 1)(sine_sound(220, 5));
