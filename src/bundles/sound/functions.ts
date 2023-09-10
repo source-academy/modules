@@ -426,8 +426,8 @@ export function play(sound: Sound): void {
     throw new Error(
       `${play.name} is expecting sound, but encountered ${sound}`,
     );
-  } else if (get_duration(sound) <= 0) {
-    // Do nothing
+  } else if (get_duration(sound) < 0) {
+    throw new Error(`${play.name}: duration of sound is negative`);
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
