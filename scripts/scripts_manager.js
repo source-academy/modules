@@ -1,3 +1,12 @@
+/**
+ * Due to the increasing complexity of the module build system, we have yet more code here
+ * to manage the build scripts.
+ * 
+ * The build scripts are configured to be compiled down to a single file upon initialization
+ * of the workspace. If the `scripts/bin.js` file isn't present, then run `yarn scripts:build`
+ * to have it built.
+ */
+
 import { context as esbuild } from 'esbuild'
 import { ESLint } from 'eslint';
 import chalk from 'chalk';
@@ -143,12 +152,14 @@ const mainCommand = new Command()
   .addCommand(typeCheckCommand)
   .action(async () => {
     const tasks = {
-      typecheck: runTypecheck,
+      // Jest will also run tsc, so no need to run an extra tsc check
+      // typecheck: runTypecheck,
       eslint: () => runEslint({ fix: false }),
       jest: runJest,
       esbuild: () => runEsbuild({ watch: false })
     }
 
+    // Perhaps there might be a better way to parallelize this?
     for (const [name, func] of Object.entries(tasks)) {
       console.log(chalk.blueBright(`Running ${name}`))
       if (await func() === -1) return -1;
