@@ -3,7 +3,7 @@ import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type glAnimation } from '../../typings/anim_types';
-import WebGLCanvas from './webgl_canvas';
+import WebGLCanvas from './WebglCanvas';
 import ButtonComponent from './ButtonComponent';
 
 
