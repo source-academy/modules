@@ -23,40 +23,40 @@ const eslintConfig = {
         checkForEach: true,
       },
     ],
-    'for-direction': 1, // Was 2
-    'getter-return': 1, // Was 2
-    'no-async-promise-executor': 1, // Was 2
+    'for-direction': "warn",
+    'getter-return': "warn",
+    'no-async-promise-executor': "warn",
     'no-await-in-loop': 1,
-    'no-class-assign': 1, // Was 2
-    'no-compare-neg-zero': 1, // Was 2
+    'no-class-assign': "warn",
+    'no-compare-neg-zero': "warn",
     'no-cond-assign': [
-      1, // Was 2
+      "warn",
       'always', // Was "except-parens"
     ],
     // "no-const-assign": 2,
     'no-constant-condition': [
-      1, // Was 2
+      "warn",
       { checkLoops: false },
     ],
     'no-constructor-return': 1,
-    'no-control-regex': 1, // Was 2
-    'no-debugger': 1, // Was 2
+    'no-control-regex': "warn",
+    'no-debugger': "warn",
     // "no-dupe-args": 2,
-    'no-dupe-class-members': 1, // Was 2
-    'no-dupe-else-if': 1, // Was 2
-    'no-dupe-keys': 1, // Was 2
-    'no-duplicate-case': 1, // Was 2
+    'no-dupe-class-members': "warn",
+    'no-dupe-else-if': "warn",
+    'no-dupe-keys': "warn",
+    'no-duplicate-case': "warn",
     'no-duplicate-imports': 1,
-    'no-empty-character-class': 1, // Was 2
-    'no-empty-pattern': 1, // Was 2
-    'no-ex-assign': 1, // Was 2
-    'no-fallthrough': 1, // Was 2
-    'no-func-assign': 1, // Was 2
+    'no-empty-character-class': "warn",
+    'no-empty-pattern': "warn",
+    'no-ex-assign': "warn",
+    'no-fallthrough': "warn",
+    'no-func-assign': "warn",
     // "no-import-assign": 2,
     'no-inner-declarations': 0, // Was 2
     // "no-invalid-regexp": 2,
     'no-irregular-whitespace': [
-      1, // Was 2
+      "warn",
       {
         // skipStrings: true,
         // skipComments: false,
@@ -64,33 +64,33 @@ const eslintConfig = {
         skipTemplates: true,
       },
     ],
-    'no-loss-of-precision': 1, // Was 2
-    'no-misleading-character-class': 1, // Was 2
+    'no-loss-of-precision': "warn",
+    'no-misleading-character-class': "warn",
     // "no-new-symbol": 2,
     // "no-obj-calls": 2,
     'no-promise-executor-return': 1,
     // "no-prototype-builtins": 2,
-    'no-self-assign': 1, // Was 2
+    'no-self-assign': "warn",
     'no-self-compare': 1,
-    'no-setter-return': 1, // Was 2
-    'no-sparse-arrays': 1, // Was 2
+    'no-setter-return': "warn",
+    'no-sparse-arrays': "warn",
     'no-template-curly-in-string': 1,
     // "no-this-before-super": 2,
     'no-undef': [2, { typeof: true }],
-    'no-unexpected-multiline': 1, // Was 2
+    'no-unexpected-multiline': "warn",
     'no-unmodified-loop-condition': 1,
-    'no-unreachable': 1, // Was 2
+    'no-unreachable': "warn",
     'no-unreachable-loop': 1,
-    'no-unsafe-finally': 1, // Was 2
+    'no-unsafe-finally': "warn",
     // FIXME: Investigate type error
     // 'no-unsafe-negation': [
-    //   1, // Was 2
+    //   "warn",
     //   { enforceForOrderingRelations: true },
     // ],
     'no-unsafe-optional-chaining': [2, { disallowArithmeticOperators: true }],
     'no-unused-private-class-members': 1,
     'no-unused-vars': [
-      1, // Was 2
+      "warn",
       {
         // vars: "all",
         // args: "after-used",
@@ -113,14 +113,14 @@ const eslintConfig = {
     'require-atomic-updates': 1,
     // FIXME: Investigate type error
     // 'use-isnan': [
-    //   1, // Was 2
+    //   "warn",
     //   {
     //     // enforceForSwitchCase: true,
     //     enforceForIndexOf: true,
     //   },
     // ],
     'valid-typeof': [
-      1, // Was 2
+      "warn",
       { requireStringLiterals: true },
     ],
 
@@ -178,7 +178,7 @@ const eslintConfig = {
     'no-array-constructor': 1,
     'no-bitwise': 1,
     'no-caller': 2,
-    'no-case-declarations': 1, // Was 2
+    'no-case-declarations': "warn",
     'no-confusing-arrow': 1,
     // "no-console": 0,
     // "no-continue": 0,
@@ -186,7 +186,7 @@ const eslintConfig = {
     // "no-div-regex": 0,
     'no-else-return': [1, { allowElseIf: false }],
     'no-empty': [
-      1, // Was 2
+      "warn",
       { allowEmptyCatch: true },
     ],
     'no-empty-function': 1,
@@ -196,11 +196,11 @@ const eslintConfig = {
     'no-extra-bind': 1,
     // FIXME: Investigate type error
     // 'no-extra-boolean-cast': [
-    //   1, // Was 2
+    //   "warn",
     //   { enforceForLogicalOperands: true },
     // ],
     'no-extra-label': 1,
-    'no-extra-semi': 1, // Was 2
+    'no-extra-semi': "warn",
     'no-floating-decimal': 1,
     // "no-global-assign": 2,
     'no-implicit-coercion': 1,
@@ -230,8 +230,8 @@ const eslintConfig = {
     // "no-param-reassign": 0,
     // "no-plusplus": 0,
     'no-proto': 1,
-    'no-redeclare': 1, // Was 2
-    'no-regex-spaces': 1, // Was 2
+    'no-redeclare': "warn",
+    'no-regex-spaces': "warn",
     // "no-restricted-exports": 0,
     // "no-restricted-globals": 0,
     // "no-restricted-imports": 0,
@@ -261,13 +261,13 @@ const eslintConfig = {
       },
     ],
     'no-unused-expressions': 1,
-    'no-unused-labels': 1, // Was 2
+    'no-unused-labels': "warn",
     'no-useless-call': 1,
-    'no-useless-catch': 1, // Was 2
+    'no-useless-catch': "warn",
     'no-useless-computed-key': [1, { enforceForClassMembers: true }],
     'no-useless-concat': 1,
     'no-useless-constructor': 1,
-    'no-useless-escape': 1, // Was 2
+    'no-useless-escape': "warn",
     'no-useless-rename': 1,
     'no-useless-return': 1,
     'no-var': 1,
@@ -322,7 +322,7 @@ const eslintConfig = {
       'as-needed', // Was "always"
     ],
     'require-unicode-regexp': 1,
-    'require-yield': 1, // Was 2
+    'require-yield': "warn",
     // "sort-keys": 0,
     // "sort-vars": 0,
     'spaced-comment': [
@@ -429,11 +429,11 @@ const eslintConfig = {
     'newline-per-chained-call': [
       1,
       {
-        ignoreChainWithDepth: 1, // Was 2
+        ignoreChainWithDepth: "warn",
       },
     ],
     // "no-extra-parens": 0, // Limitation: No exception for ternary conditions
-    'no-mixed-spaces-and-tabs': 1, // Was 2
+    'no-mixed-spaces-and-tabs': "warn",
     'no-multi-spaces': 1,
     'no-multiple-empty-lines': [
       1,
