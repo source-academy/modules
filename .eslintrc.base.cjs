@@ -91,9 +91,6 @@ const eslintConfig = {
     'no-unused-vars': [
       "warn",
       {
-        // vars: "all",
-        // args: "after-used",
-        // ignoreRestSiblings: false,
         argsIgnorePattern: '^_',
         caughtErrors: 'all', // Was "none"
         caughtErrorsIgnorePattern: '^_',
@@ -103,8 +100,6 @@ const eslintConfig = {
       1,
       {
         functions: false,
-        // classes: true,
-        // variables: true
       },
     ],
     'no-useless-backreference': 1,
@@ -147,7 +142,6 @@ const eslintConfig = {
       'always', // Same
       {
         considerPropertyDescriptor: true,
-        // includeCommonJSModuleExports: false
       },
     ],
     // "func-names": 0,
@@ -233,23 +227,8 @@ const eslintConfig = {
     'no-useless-return': 1,
     'no-var': 1,
     'no-void': 1,
-    'no-warning-comments': [
-      1,
-      {
-        terms: todoTreeKeywordsWarning,
-        // location: "start"
-      },
-    ],
-    // "no-with": 2,
-    'object-shorthand': [
-      1,
-      'always', // Same
-      {
-        // avoidQuotes: false,
-        // ignoreConstructors: false,
-        avoidExplicitReturnArrows: true,
-      },
-    ],
+    'no-warning-comments': [1, { terms: todoTreeKeywordsWarning }],
+    'object-shorthand': ["warn", 'always', { avoidExplicitReturnArrows: true }],
     'one-var': [
       1,
       'never', // Was "always"
@@ -434,7 +413,6 @@ const eslintConfig = {
     'switch-colon-spacing': 1,
     'template-curly-spacing': 1,
     'template-tag-spacing': 1,
-    
     'unicode-bom': 1,
     'wrap-iife': [
       1,
