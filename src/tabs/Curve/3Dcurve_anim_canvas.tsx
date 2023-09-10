@@ -3,7 +3,7 @@ import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type AnimatedCurve } from '../../bundles/curve/types';
-import WebGLCanvas from '../common/webgl_canvas';
+import WebGLCanvas from '../common/WebglCanvas';
 import ButtonComponent from '../common/ButtonComponent';
 
 type Props = {

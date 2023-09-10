@@ -1,6 +1,6 @@
 import type { SoundModuleState } from '../../bundles/sound/types';
 import { getModuleState, type DebuggerContext, type TabProps } from '../../typings/type_helpers';
-import MultiItemDisplay from '../common/multi_item_display';
+import MultiItemDisplay from '../common/MultItemDisplay';
 
 /**
  * Tab for Source Academy Sounds Module

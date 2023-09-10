@@ -2,7 +2,7 @@ import { Slider, Button, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import type { CurveDrawn } from '../../bundles/curve/curves_webgl';
-import WebGLCanvas from '../common/webgl_canvas';
+import WebGLCanvas from '../common/WebglCanvas';
 
 type State = {
   /**
