@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 
-import { type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils.js';
+import { type ModuleManifest, retrieveManifest } from '../scriptUtils.js';
 
 import { askQuestion, success, warn } from './print.js';
 import { type Options, isSnakeCase } from './utilities.js';
@@ -31,7 +31,7 @@ export async function addNew(buildOpts: Options) {
   const bundleDestination = `${buildOpts.srcDir}/bundles/${moduleName}`;
   await fs.mkdir(bundleDestination, { recursive: true });
   await fs.copyFile(
-    `${cjsDirname(import.meta.url)}/templates/__bundle__.ts`,
+    './scripts/src/templates/templates/__bundle__.ts',
     `${bundleDestination}/index.ts`,
   );
   await fs.writeFile(

@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { promises as fs } from 'fs';
 
-import { type ModuleManifest, cjsDirname, retrieveManifest } from '../scriptUtils.js';
+import { type ModuleManifest, retrieveManifest } from '../scriptUtils.js';
 
 import { check as _check } from './module.js';
 import { askQuestion, success, warn } from './print.js';
@@ -49,7 +49,7 @@ export async function addNew(buildOpts: Options) {
   const tabDestination = `${buildOpts.srcDir}/tabs/${tabName}`;
   await fs.mkdir(tabDestination, { recursive: true });
   await fs.copyFile(
-    `${cjsDirname(import.meta.url)}/templates/__tab__.tsx`,
+    './scripts/src/templates/templates/__tab__.tsx',
     `${tabDestination}/index.tsx`,
   );
   await fs.writeFile(
