@@ -10,9 +10,7 @@ const eslintConfig = {
 
   env: {
     node: true,
-    //NOTE Set to es2022 once VSCode eslint extension updates
-    // https://github.com/eslint/eslint/pull/15587
-    es2021: true,
+    es2022: true,
   },
 
   /** @type {Partial<import('eslint/rules').ESLintRules>} */
