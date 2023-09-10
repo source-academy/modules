@@ -1,19 +1,19 @@
 module.exports = {
-  "extends": ["../.eslintrc.base.cjs", "airbnb-typescript"],
-  "ignorePatterns": ["**/__tests__/**", "**/__mocks__/**", "**/*.*js"],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json",
-    "tsconfigRootDir": __dirname,
+  extends: ["../.eslintrc.base.cjs", "airbnb-typescript"],
+  ignorePatterns: ["**/__tests__/**", "**/__mocks__/**", "**/*.*js"],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
   },
-  "plugins": ["import", "react", "jsx-a11y", "@typescript-eslint"],
-  "rules": {
+  plugins: ["import", "react", "jsx-a11y", "@typescript-eslint"],
+  rules: {
     "func-style": 0,
-    "indent": [
+    indent: [
       1,
       2, // Was "tabs"
       {
-        "SwitchCase": 1 // Same
+        SwitchCase: 1, // Same
         // VariableDeclarator: 1,
         // outerIIFEBody: 1,
         // MemberExpression: 1,
@@ -37,15 +37,15 @@ module.exports = {
         // flatTernaryExpressions: false,
         // offsetTernaryExpressions: false,
         // ignoreComments: false
-      }
+      },
     ],
-    "quotes": [
+    quotes: [
       1,
       "single", // Was "double"
       {
-        "avoidEscape": true // Same
+        avoidEscape: true, // Same
         // allowTemplateLiterals: false
-      }
+      },
     ],
 
     // [typescript-eslint Extension Rules]
@@ -66,31 +66,31 @@ module.exports = {
         // vars: "all",
         // args: "after-used",
         // ignoreRestSiblings: false,
-        "argsIgnorePattern": "^_",
-        "caughtErrors": "all", // Was "none"
-        "caughtErrorsIgnorePattern": "^_"
-      }
+        argsIgnorePattern: "^_",
+        caughtErrors: "all", // Was "none"
+        caughtErrorsIgnorePattern: "^_",
+      },
     ],
     "@typescript-eslint/no-use-before-define": [
       1, // Was 2
       {
-        "functions": false
+        functions: false,
         // classes: true,
         // variables: true,
         // enums: true, // TS
         // typedefs: true, // TS
         // ignoreTypeReferences: true, // TS
-      }
+      },
     ],
     "@typescript-eslint/default-param-last": 1, // Was 2
     "@typescript-eslint/no-shadow": [
       1, // Was 2
       {
-        "builtinGlobals": true
+        builtinGlobals: true,
         // hoist: "functions",
         // ignoreTypeValueShadow: true, // TS
         // ignoreFunctionTypeParameterNameValueShadow: true, // TS
-      }
+      },
     ],
     "@typescript-eslint/lines-between-class-members": 0, // Was 2
     // "@typescript-eslint/consistent-type-imports": 1,
@@ -106,28 +106,31 @@ module.exports = {
     "@typescript-eslint/naming-convention": [
       1,
       {
-        "selector": "variable",
+        selector: "variable",
         // Was ["camelCase", "PascalCase", "UPPER_CASE"].
         // Add snake case to let exported module variables match Source
-        "format": ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"]
+        format: ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"],
       },
       {
-        "selector": "function",
+        selector: "function",
         // Was ["camelCase", "PascalCase"].
         // Add snake case to let exported module functions match Source
-        "format": ["camelCase", "PascalCase", "snake_case"]
+        format: ["camelCase", "PascalCase", "snake_case"],
       },
       {
-        "selector": "typeLike",
-        "format": ["PascalCase"]
-      }
-    ]
+        selector: "typeLike",
+        format: ["PascalCase"],
+      },
+    ],
   },
-  "overrides": [{
-    "extends": ["../.eslintrc.test.cjs"],
-    "files": ["**/__tests__/**", "**/__mocks__/**"],
-  }, {
-    extends: ["../.eslintrc.base.cjs"],
-    files: ["**/*.*.js"]
-  }]
-}
+  overrides: [
+    {
+      extends: ["../.eslintrc.test.cjs"],
+      files: ["**/__tests__/**", "**/__mocks__/**"],
+    },
+    {
+      extends: ["../.eslintrc.base.cjs"],
+      files: ["**/*.*.js"],
+    },
+  ],
+};
