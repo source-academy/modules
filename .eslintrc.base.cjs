@@ -1,7 +1,10 @@
+// @ts-check
 let todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 let todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
-module.exports = {
+
+/** @type {import('eslint').Linter.Config} */
+const eslintConfig = {
   extends: ['eslint:recommended'],
 
   env: {
@@ -502,3 +505,5 @@ module.exports = {
     'yield-star-spacing': 1,
   },
 };
+
+module.exports = eslintConfig;
