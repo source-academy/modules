@@ -353,7 +353,7 @@ export function play_wave(wave: Wave, duration: number): Sound {
  *
  * @param wave1 the wave function to play on the left channel, starting at 0
  * @param wave2 the wave function to play on the right channel, starting at 0
- * @return the given sound
+ * @return the given Sound
  * @example play_waves(t => math_sin(t * 3000), t => math_sin(t * 6000), 5);
  */
 export function play_waves(
