@@ -302,11 +302,11 @@ require => {
   }
   function play(sound) {
     if (!is_sound(sound)) {
-      throw new Error(`play is expecting sound, but encountered ${sound}`);
+      throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
     } else if (isPlaying) {
-      throw new Error("play: audio system still playing previous sound");
+      throw new Error(`${play.name}: audio system still playing previous sound`);
     } else if (get_duration(sound) < 0) {
-      throw new Error("play: duration of sound is negative");
+      throw new Error(`${play.name}: duration of sound is negative`);
     } else {
       if (!audioplayer) {
         init_audioCtx();
@@ -363,7 +363,7 @@ require => {
   }
   function play_concurrently(sound) {
     if (!is_sound(sound)) {
-      throw new Error(`play_concurrently is expecting sound, but encountered ${sound}`);
+      throw new Error(`${play_concurrently.name} is expecting sound, but encountered ${sound}`);
     } else if (get_duration(sound) <= 0) {} else {
       if (!audioplayer) {
         init_audioCtx();
