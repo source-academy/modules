@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @type {import('eslint').Linter.Config} */
 const eslintConfig = {
   extends: ["../.eslintrc.base.cjs", "airbnb-typescript"],
