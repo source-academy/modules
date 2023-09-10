@@ -16,15 +16,13 @@ const eslintConfig = {
 
   /** @type {Partial<import('eslint/rules').ESLintRules>} */
   rules: {
-    // [Possible Problems]
     'array-callback-return': [
-      1,
+      "warn",
       {
-        // allowImplicit: false,
+        // @ts-ignore incorrect type definition
         checkForEach: true,
       },
     ],
-    // "constructor-super": 2,
     'for-direction': 1, // Was 2
     'getter-return': 1, // Was 2
     'no-async-promise-executor': 1, // Was 2
