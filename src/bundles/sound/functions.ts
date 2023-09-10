@@ -127,7 +127,7 @@ const recording_signal_ms = 100;
 const pre_recording_signal_pause_ms = 200;
 
 function play_recording_signal() {
-  play_concurrently(sine_sound(1200, recording_signal_ms / 1000));
+  play(sine_sound(1200, recording_signal_ms / 1000));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -337,15 +337,15 @@ export function play_wave(wave: Wave, duration: number): AudioPlayed {
  * @return the given sound
  * @example play(sine_sound(440, 5));
  */
-export function play(sound: Sound): AudioPlayed {
+export function play_in_tab(sound: Sound): AudioPlayed {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
-    throw new Error(`${play.name}: audio system still playing previous sound`);
+    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
-    throw new Error(`${play.name}: duration of sound is negative`);
+    throw new Error(`${play_in_tab.name}: duration of sound is negative`);
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
@@ -420,11 +420,11 @@ export function play(sound: Sound): AudioPlayed {
  * @param sound the sound to play
  * @example play_concurrently(sine_sound(440, 5));
  */
-export function play_concurrently(sound: Sound): void {
+export function play(sound: Sound): void {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
-      `${play_concurrently.name} is expecting sound, but encountered ${sound}`,
+      `${play.name} is expecting sound, but encountered ${sound}`,
     );
   } else if (get_duration(sound) <= 0) {
     // Do nothing
