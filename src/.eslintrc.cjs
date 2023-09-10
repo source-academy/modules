@@ -8,6 +8,7 @@ const eslintConfig = {
     tsconfigRootDir: __dirname,
   },
   plugins: ["import", "react", "jsx-a11y", "@typescript-eslint"],
+  /** @type {import('@types/eslint/rules').ESLintRules} */
   rules: {
     "func-style": "off",
     indent: [
