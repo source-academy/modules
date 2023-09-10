@@ -5,6 +5,7 @@ let todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
 /** @type {import('eslint').Linter.Config} */
 const eslintConfig = {
+  /** @see https://eslint.org/docs/latest/rules/ */
   extends: ['eslint:recommended'],
 
   env: {
@@ -160,30 +161,12 @@ const eslintConfig = {
       1,
       'getBeforeSet', // Was "anyOrder"
     ],
-    // "guard-for-in": 0,
-    // "id-denylist": 0,
-    // "id-length": 0,
-    // "id-match": 0,
-    // "init-declarations": 0,
-    // "max-classes-per-file": 0,
-    // "max-depth": 0,
-    // "max-lines": 0,
-    // "max-lines-per-function": 0,
-    // "max-nested-callbacks": 0,
-    // "max-params": 0,
-    // "max-statements": 0,
-    // "multiline-comment-style": 0,
     'new-cap': 1,
-    // "no-alert": 0,
     'no-array-constructor': 1,
     'no-bitwise': 1,
     'no-caller': 2,
     'no-case-declarations': "warn",
     'no-confusing-arrow': 1,
-    // "no-console": 0,
-    // "no-continue": 0,
-    // "no-delete-var": 2,
-    // "no-div-regex": 0,
     'no-else-return': [1, { allowElseIf: false }],
     'no-empty': [
       "warn",
@@ -191,7 +174,6 @@ const eslintConfig = {
     ],
     'no-empty-function': 1,
     'no-eq-null': 1,
-    // "no-eval": 0,
     'no-extend-native': 1,
     'no-extra-bind': 1,
     // FIXME: Investigate type error
@@ -202,41 +184,26 @@ const eslintConfig = {
     'no-extra-label': 1,
     'no-extra-semi': "warn",
     'no-floating-decimal': 1,
-    // "no-global-assign": 2,
     'no-implicit-coercion': 1,
     'no-implicit-globals': [1, { lexicalBindings: true }],
     'no-implied-eval': 1,
-    // "no-inline-comments": 0,
     'no-invalid-this': 2,
     'no-iterator': 1,
     'no-label-var': 1,
-    // "no-labels": 0,
     'no-lone-blocks': 1,
     'no-lonely-if': 1,
     'no-loop-func': 1,
-    // "no-magic-numbers": 0,
     'no-mixed-operators': 0,
     'no-multi-assign': 1,
     'no-multi-str': 1,
-    // "no-negated-condition": 0,
-    // "no-nested-ternary": 0,
     'no-new': 1,
     'no-new-func': 1,
     'no-new-object': 1,
     'no-new-wrappers': 1,
-    // "no-nonoctal-decimal-escape": 2,
-    // "no-octal": 2,
     'no-octal-escape': 2,
-    // "no-param-reassign": 0,
-    // "no-plusplus": 0,
     'no-proto': 1,
     'no-redeclare': "warn",
     'no-regex-spaces': "warn",
-    // "no-restricted-exports": 0,
-    // "no-restricted-globals": 0,
-    // "no-restricted-imports": 0,
-    // "no-restricted-properties": 0,
-    // "no-restricted-syntax": 0,
     'no-return-assign': 1,
     'no-return-await': 1,
     'no-script-url': 1,
@@ -248,12 +215,8 @@ const eslintConfig = {
         // hoist: "functions"
       },
     ],
-    // "no-shadow-restricted-names": 2,
-    // "no-ternary": 0,
     'no-throw-literal': 1,
     'no-undef-init': 1,
-    // "no-undefined": 0,
-    // "no-underscore-dangle": 0,
     'no-unneeded-ternary': [
       1,
       {
@@ -297,7 +260,6 @@ const eslintConfig = {
     'operator-assignment': 1,
     'prefer-arrow-callback': 1,
     // "prefer-const": 0,
-    // "prefer-destructuring": 0,
     'prefer-exponentiation-operator': 1,
     'prefer-named-capture-group': 1,
     'prefer-numeric-literals': 1,
@@ -323,8 +285,6 @@ const eslintConfig = {
     ],
     'require-unicode-regexp': 1,
     'require-yield': "warn",
-    // "sort-keys": 0,
-    // "sort-vars": 0,
     'spaced-comment': [
       1,
       'always', // Same
@@ -384,29 +344,10 @@ const eslintConfig = {
       'tab', // Was 4
       {
         SwitchCase: 1, // Was 0
-        // VariableDeclarator: 1,
-        // outerIIFEBody: 1,
-        // MemberExpression: 1,
-        // FunctionDeclaration: {
-        // 	parameters: 1,
-        // 	body: 1
-        // },
-        // FunctionExpression: {
-        // 	parameters: 1,
-        // 	body: 1
-        // },
         // StaticBlock: {
         // 	body: 1
         // },
-        // CallExpression: {
-        // 	arguments: 1,
-        // },
-        // ArrayExpression: 1,
-        // ObjectExpression: 1,
-        // ImportDeclaration: 1,
-        // flatTernaryExpressions: false,
         // offsetTernaryExpressions: false,
-        // ignoreComments: false
       },
     ],
     'jsx-quotes': 1,
