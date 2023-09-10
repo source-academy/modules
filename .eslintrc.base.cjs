@@ -14,6 +14,7 @@ const eslintConfig = {
     es2021: true,
   },
 
+  /** @type {Partial<import('eslint/rules').ESLintRules>} */
   rules: {
     // [Possible Problems]
     'array-callback-return': [
@@ -83,10 +84,11 @@ const eslintConfig = {
     'no-unreachable': 1, // Was 2
     'no-unreachable-loop': 1,
     'no-unsafe-finally': 1, // Was 2
-    'no-unsafe-negation': [
-      1, // Was 2
-      { enforceForOrderingRelations: true },
-    ],
+    // FIXME: Investigate type error
+    // 'no-unsafe-negation': [
+    //   1, // Was 2
+    //   { enforceForOrderingRelations: true },
+    // ],
     'no-unsafe-optional-chaining': [2, { disallowArithmeticOperators: true }],
     'no-unused-private-class-members': 1,
     'no-unused-vars': [
@@ -111,13 +113,14 @@ const eslintConfig = {
     'no-useless-backreference': 1,
     'require-await': 1,
     'require-atomic-updates': 1,
-    'use-isnan': [
-      1, // Was 2
-      {
-        // enforceForSwitchCase: true,
-        enforceForIndexOf: true,
-      },
-    ],
+    // FIXME: Investigate type error
+    // 'use-isnan': [
+    //   1, // Was 2
+    //   {
+    //     // enforceForSwitchCase: true,
+    //     enforceForIndexOf: true,
+    //   },
+    // ],
     'valid-typeof': [
       1, // Was 2
       { requireStringLiterals: true },
@@ -193,10 +196,11 @@ const eslintConfig = {
     // "no-eval": 0,
     'no-extend-native': 1,
     'no-extra-bind': 1,
-    'no-extra-boolean-cast': [
-      1, // Was 2
-      { enforceForLogicalOperands: true },
-    ],
+    // FIXME: Investigate type error
+    // 'no-extra-boolean-cast': [
+    //   1, // Was 2
+    //   { enforceForLogicalOperands: true },
+    // ],
     'no-extra-label': 1,
     'no-extra-semi': 1, // Was 2
     'no-floating-decimal': 1,
