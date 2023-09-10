@@ -1,4 +1,6 @@
 import { mat4, vec3 } from 'gl-matrix';
+import { stringify } from 'js-slang/dist/utils/stringify';
+
 import type { ReplResult } from '../../typings/type_helpers';
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
 
@@ -336,7 +338,7 @@ export function generateCurve(
     const point = func(i / numPoints);
 
     if (!(point instanceof Point)) {
-      throw new Error(`Expected curve to return a point, got '${point}' at t=${i / numPoints}`);
+      throw new Error(`Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`);
     }
 
     const x = point.x * 2 - 1;
