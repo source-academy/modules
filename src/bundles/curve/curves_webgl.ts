@@ -334,6 +334,11 @@ export function generateCurve(
 
   for (let i = 0; i <= numPoints; i += 1) {
     const point = func(i / numPoints);
+
+    if (!(point instanceof Point)) {
+      throw new Error(`Expected curve to return a point, got '${point}' at t=${i / numPoints}`);
+    }
+
     const x = point.x * 2 - 1;
     const y = point.y * 2 - 1;
     const z = point.z * 2 - 1;
