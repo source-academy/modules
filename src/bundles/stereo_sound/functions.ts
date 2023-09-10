@@ -465,8 +465,8 @@ export function play_in_tab(sound: Sound): Sound {
  * Plays the given Sound using the computer’s sound device
  * on top of any sounds that are currently playing.
  *
- * @param sound the sound to play
- * @return the given sound
+ * @param sound the Sound to play
+ * @return the given Sound
  * @example play(sine_sound(440, 5));
  */
 export function play(sound: Sound): Sound {
