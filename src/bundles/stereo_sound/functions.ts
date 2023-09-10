@@ -250,10 +250,10 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * that takes in a non-negative input time and returns an amplitude
  * between -1 and 1.
  *
- * @param left_wave wave function of the left channel of the sound
- * @param right_wave wave function of the right channel of the sound
- * @param duration duration of the sound
- * @return resulting stereo sound
+ * @param left_wave wave function of the left channel of the Sound
+ * @param right_wave wave function of the right channel of the Sound
+ * @param duration duration of the Sound
+ * @return resulting stereo Sound
  * @example const s = make_stereo_sound(t => math_sin(2 * math_PI * 440 * t), t => math_sin(2 * math_PI * 300 * t), 5);
  */
 export function make_stereo_sound(
@@ -276,9 +276,9 @@ export function make_stereo_sound(
  * that takes in a non-negative input time and returns an amplitude
  * between -1 and 1.
  *
- * @param wave wave function of the sound
- * @param duration duration of the sound
- * @return with wave as wave function and duration as duration
+ * @param wave wave function of the Sound
+ * @param duration duration of the Sound
+ * @return Sound with the given `wave` function for both channels and `duration` as duration
  * @example const s = make_sound(t => math_sin(2 * math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
@@ -366,7 +366,7 @@ export function play_waves(
 
 /**
  * Plays the given Sound using the computer’s sound device.
- * The sound is added to a list of sounds to be played one-at-a-time
+ * The sound is added to a list of Sounds to be played one-at-a-time
  * in a Source Academy tab.
  *
  * @param sound the sound to play

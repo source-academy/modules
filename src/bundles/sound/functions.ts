@@ -336,7 +336,7 @@ export function play_wave(wave: Wave, duration: number): Sound {
  *
  * @param sound the Sound to play
  * @return the given Sound
- * @example play(sine_sound(440, 5));
+ * @example play_in_tab(sine_sound(440, 5));
  */
 export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
@@ -392,19 +392,6 @@ export function play_in_tab(sound: Sound): Sound {
     riffwave.header.bitsPerSample = 16;
     riffwave.Make(channel);
 
-    /*
-    const audio = new Audio(riffwave.dataURI);
-    const source2 = audioplayer.createMediaElementSource(audio);
-    source2.connect(audioplayer.destination);
-
-    // Connect data to output destination
-    isPlaying = true;
-    audio.play();
-    audio.onended = () => {
-      source2.disconnect(audioplayer.destination);
-      isPlaying = false;
-    }; */
-
     const soundToPlay = {
       toReplString: () => '<AudioPlayed>',
       dataUri: riffwave.dataURI,
@@ -420,7 +407,7 @@ export function play_in_tab(sound: Sound): Sound {
  *
  * @param sound the Sound to play
  * @return the given Sound
- * @example play_concurrently(sine_sound(440, 5));
+ * @example play(sine_sound(440, 5));
  */
 export function play(sound: Sound): Sound {
   // Type-check sound
@@ -518,7 +505,7 @@ export function silence_sound(duration: number): Sound {
  *
  * @param freq the frequency of the sine wave Sound
  * @param duration the duration of the sine wave Sound
- * @return resulting sine wave sound
+ * @return resulting sine wave Sound
  * @example sine_sound(440, 5);
  */
 export function sine_sound(freq: number, duration: number): Sound {
