@@ -1,9 +1,10 @@
-import { Button, Icon, Slider, Switch } from '@blueprintjs/core';
+import { Icon, Slider, Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type AnimatedCurve } from '../../bundles/curve/types';
 import WebGLCanvas from '../common/webgl_canvas';
+import ButtonComponent from '../common/ButtonComponent';
 
 type Props = {
   animation: AnimatedCurve;
@@ -24,6 +25,8 @@ type State = {
 
   /** Curve Angle */
   curveAngle: number;
+
+  errored?: any;
 };
 
 export default class Curve3DAnimationCanvas extends React.Component<
@@ -41,6 +44,8 @@ State
    * The duration of the entire animation
    */
   private readonly animationDuration: number;
+
+  private animationFrameId: number | null;
 
   /**
    * Last timestamp since the previous `requestAnimationFrame` call
@@ -62,6 +67,7 @@ State
     this.frameDuration = 1000 / props.animation.fps;
     this.animationDuration = Math.round(props.animation.duration * 1000);
     this.callbackTimestamp = null;
+    this.animationFrameId = null;
   }
 
   public componentDidMount() {
@@ -72,15 +78,28 @@ State
    * Call this to actually draw a frame onto the canvas
    */
   private drawFrame = () => {
-    if (this.canvas) {
-      const frame = this.props.animation.getFrame(
-        this.state.animTimestamp / 1000,
-      );
-      frame.draw(this.canvas);
+    try {
+      if (this.canvas) {
+        const frame = this.props.animation.getFrame(
+          this.state.animTimestamp / 1000,
+        );
+        frame.draw(this.canvas);
+      }
+    } catch (error) {
+      if (this.animationFrameId !== null) {
+        cancelAnimationFrame(this.animationFrameId);
+      }
+      this.setState({
+        isPlaying: false,
+        autoPlay: false,
+        errored: error,
+      });
     }
   };
 
-  private reqFrame = () => requestAnimationFrame(this.animationCallback);
+  private reqFrame = () => {
+    this.animationFrameId = requestAnimationFrame(this.animationCallback);
+  };
 
   /**
    * Callback to use with `requestAnimationFrame`
@@ -249,17 +268,17 @@ State
           }}
         >
           <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
-            <Button onClick={this.onPlayButtonClick}>
+            <ButtonComponent disabled={Boolean(this.state.errored)} onClick={this.onPlayButtonClick}>
               <Icon
                 icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
               />
-            </Button>
+            </ButtonComponent>
           </Tooltip2>
         </div>
         <Tooltip2 content="Reset">
-          <Button onClick={this.onResetButtonClick}>
+          <ButtonComponent disabled={Boolean(this.state.errored)} onClick={this.onResetButtonClick}>
             <Icon icon={IconNames.RESET} />
-          </Button>
+          </ButtonComponent>
         </Tooltip2>
       </div>
     );
@@ -274,6 +293,7 @@ State
         }}
       >
         <Slider
+          disabled={Boolean(this.state.errored)}
           value={this.state.animTimestamp}
           onChange={this.onTimeSliderChange}
           onRelease={this.onTimeSliderRelease}
@@ -289,6 +309,7 @@ State
             }}
           >
             <Slider
+              disabled={Boolean(this.state.errored)}
               value={this.state.curveAngle}
               onChange={this.onAngleSliderChange}
               stepSize={0.01}
@@ -320,6 +341,7 @@ State
           {buttons}
           {sliders}
           <Switch
+            disabled={Boolean(this.state.errored)}
             style={{
               marginLeft: '20px',
               marginRight: '20px',
@@ -339,14 +361,45 @@ State
             justifyContent: 'center',
           }}
         >
-          <WebGLCanvas
-            style={{
-              flexGrow: 1,
-            }}
-            ref={(r) => {
-              this.canvas = r;
-            }}
-          />
+          {this.state.errored
+            ? <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+                <Icon icon={IconNames.WARNING_SIGN} size={90} />
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginBottom: 20,
+                }}>
+                  <h3>An error occurred while running your animation!</h3>
+                  <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
+                </div>
+              </div>
+              <code style={{
+                color: 'red',
+              }}>
+                {this.state.errored.toString()}
+              </code>
+            </div>
+            : (
+              <WebGLCanvas
+                style={{
+                  flexGrow: 1,
+                }}
+                ref={(r) => {
+                  this.canvas = r;
+                }}
+              />
+            )}
+
         </div>
       </div>
     );

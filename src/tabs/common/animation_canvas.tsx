@@ -1,11 +1,11 @@
-import { Button, Icon, Slider, Switch, type ButtonProps, AnchorButton } from '@blueprintjs/core';
+import { Icon, Slider, Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type glAnimation } from '../../typings/anim_types';
 import WebGLCanvas from './webgl_canvas';
+import ButtonComponent from './ButtonComponent';
 
-const ButtonComponent = (props: Omit<ButtonProps, 'elementRef'>) => (props.disabled ? <AnchorButton {...props} /> : <Button {...props} />);
 
 type AnimCanvasProps = {
   animation: glAnimation;
