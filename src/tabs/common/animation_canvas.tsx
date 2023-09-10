@@ -92,7 +92,6 @@ AnimCanvasState
       if (this.animationFrameId !== null) {
         cancelAnimationFrame(this.animationFrameId);
       }
-      console.log(error);
       this.setState({
         isPlaying: false,
         errored: error,
@@ -297,7 +296,10 @@ AnimCanvasState
     );
 
     return (
-      <>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
         <div
           style={{
             display: 'flex',
@@ -349,7 +351,7 @@ AnimCanvasState
             disabled={Boolean(this.state.errored)}
           />
         </div>
-      </>
+      </div>
     );
   }
 }
