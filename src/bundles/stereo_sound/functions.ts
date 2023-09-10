@@ -375,12 +375,12 @@ export function play_waves(
 export function play(sound: Sound): AudioPlayed {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`play is expecting sound, but encountered ${sound}`);
+    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
-    throw new Error('play: audio system still playing previous sound');
+    throw new Error(`${play.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
-    throw new Error('play: duration of sound is negative');
+    throw new Error(`${play.name}: duration of sound is negative`);
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
@@ -484,7 +484,7 @@ export function play_concurrently(sound: Sound): void {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
-      `play_concurrently is expecting sound, but encountered ${sound}`,
+      `${play_concurrently.name} is expecting sound, but encountered ${sound}`,
     );
   } else if (get_duration(sound) <= 0) {
     // Do nothing
