@@ -11,7 +11,8 @@ type TypedocOpts = {
 };
 
 /**
- * Offload running typedoc into async code to increase parallelism
+ * Typedoc initialization: Use this to get an instance of typedoc which can then be used to
+ * generate both json and html documentation
  *
  * @param watch Pass true to initialize typedoc in watch mode. `app.convert()` will not be called.
  */
@@ -22,8 +23,6 @@ export const initTypedoc = wrapWithTimer(
     verbose,
   }: TypedocOpts,
   watch?: boolean): Promise<[Application, ProjectReflection | null]> => {
-    // const app = new Application();
-
     const app = await Application.bootstrap({
       categorizeByGroup: true,
       entryPoints: bundles.map(bundleNameExpander(srcDir)),
@@ -31,7 +30,7 @@ export const initTypedoc = wrapWithTimer(
       // logger: watch ? 'none' : undefined,
       logLevel: verbose ? 'Info' : 'Error',
       name: 'Source Academy Modules',
-      readme: `${srcDir}/README.md`,
+      readme: './scripts/src/build/docs/docsreadme.md',
       tsconfig: `${srcDir}/tsconfig.json`,
       skipErrorChecking: true,
       watch,
