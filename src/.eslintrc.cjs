@@ -15,42 +15,16 @@ const eslintConfig = {
     "func-style": "off",
     indent: [
       "warn",
-      2, // Was "tabs"
+      2,
       {
-        SwitchCase: 1, // Same
-        // VariableDeclarator: 1,
-        // outerIIFEBody: 1,
-        // MemberExpression: 1,
-        // FunctionDeclaration: {
-        // 	parameters: 1,
-        // 	body: 1
-        // },
-        // FunctionExpression: {
-        // 	parameters: 1,
-        // 	body: 1
-        // },
+        SwitchCase: 1,
         // StaticBlock: {
         // 	body: 1
         // },
-        // CallExpression: {
-        // 	arguments: 1,
-        // },
-        // ArrayExpression: 1,
-        // ObjectExpression: 1,
-        // ImportDeclaration: 1,
-        // flatTernaryExpressions: false,
         // offsetTernaryExpressions: false,
-        // ignoreComments: false
       },
     ],
-    quotes: [
-      "warn",
-      "single", // Was "double"
-      {
-        avoidEscape: true, // Same
-        // allowTemplateLiterals: false
-      },
-    ],
+    quotes: ["warn", "single", { avoidEscape: true }],
 
     // [typescript-eslint Extension Rules]
     /* NOTE
