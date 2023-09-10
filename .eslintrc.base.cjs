@@ -368,7 +368,7 @@ const eslintConfig = {
     'newline-per-chained-call': [
       1,
       {
-        ignoreChainWithDepth: "warn",
+        ignoreChainWithDepth: 1,
       },
     ],
     // "no-extra-parens": 0, // Limitation: No exception for ternary conditions
