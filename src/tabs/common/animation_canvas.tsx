@@ -1,9 +1,11 @@
-import { Button, Icon, Slider, Switch } from '@blueprintjs/core';
+import { Button, Icon, Slider, Switch, type ButtonProps, AnchorButton } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type glAnimation } from '../../typings/anim_types';
 import WebGLCanvas from './webgl_canvas';
+
+const ButtonComponent = (props: Omit<ButtonProps, 'elementRef'>) => (props.disabled ? <AnchorButton {...props} /> : <Button {...props} />);
 
 type AnimCanvasProps = {
   animation: glAnimation;
@@ -21,6 +23,8 @@ type AnimCanvasState = {
 
   /** Boolean value indicating if auto play is selected */
   autoPlay: boolean;
+
+  errored?: any;
 };
 
 /**
@@ -50,6 +54,8 @@ AnimCanvasState
    */
   private callbackTimestamp: number | null;
 
+  private animationFrameId: number | null;
+
   constructor(props: AnimCanvasProps | Readonly<AnimCanvasProps>) {
     super(props);
 
@@ -64,6 +70,7 @@ AnimCanvasState
     this.frameDuration = 1000 / props.animation.fps;
     this.animationDuration = Math.round(props.animation.duration * 1000);
     this.callbackTimestamp = null;
+    this.animationFrameId = null;
   }
 
   public componentDidMount() {
@@ -74,15 +81,28 @@ AnimCanvasState
    * Call this to actually draw a frame onto the canvas
    */
   private drawFrame = () => {
-    if (this.canvas) {
-      const frame = this.props.animation.getFrame(
-        this.state.animTimestamp / 1000,
-      );
-      frame.draw(this.canvas);
+    try {
+      if (this.canvas) {
+        const frame = this.props.animation.getFrame(
+          this.state.animTimestamp / 1000,
+        );
+        frame.draw(this.canvas);
+      }
+    } catch (error) {
+      if (this.animationFrameId !== null) {
+        cancelAnimationFrame(this.animationFrameId);
+      }
+      console.log(error);
+      this.setState({
+        isPlaying: false,
+        errored: error,
+      });
     }
   };
 
-  private reqFrame = () => requestAnimationFrame(this.animationCallback);
+  private reqFrame = () => {
+    this.animationFrameId = requestAnimationFrame(this.animationCallback);
+  };
 
   private startAnimation = () => this.setState(
     {
@@ -235,17 +255,23 @@ AnimCanvasState
           }}
         >
           <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
-            <Button onClick={this.onPlayButtonClick}>
+            <ButtonComponent
+              onClick={this.onPlayButtonClick}
+              disabled={Boolean(this.state.errored)}
+            >
               <Icon
                 icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
               />
-            </Button>
+            </ButtonComponent>
           </Tooltip2>
         </div>
         <Tooltip2 content="Reset">
-          <Button onClick={this.onResetButtonClick}>
+          <ButtonComponent
+            onClick={this.onResetButtonClick}
+            disabled={Boolean(this.state.errored)}
+          >
             <Icon icon={IconNames.RESET} />
-          </Button>
+          </ButtonComponent>
         </Tooltip2>
       </div>
     );
@@ -258,6 +284,7 @@ AnimCanvasState
         }}
       >
         <Slider
+          disabled={Boolean(this.state.errored)}
           value={this.state.animTimestamp}
           onChange={this.onSliderChange}
           onRelease={this.onSliderRelease}
@@ -278,14 +305,24 @@ AnimCanvasState
             justifyContent: 'center',
           }}
         >
-          <WebGLCanvas
-            style={{
-              flexGrow: 1,
-            }}
-            ref={(r) => {
-              this.canvas = r;
-            }}
-          />
+          {this.state.errored
+            ? (
+              <div>
+                <h3>An error occurred while running your animation!</h3>
+                Here's the details: <code>
+                  {this.state.errored.toString()}
+                </code>
+              </div>)
+            : (
+              <WebGLCanvas
+                style={{
+                  flexGrow: 1,
+                }}
+                ref={(r) => {
+                  this.canvas = r;
+                }}
+              />
+            )}
         </div>
         <div
           style={{
@@ -309,6 +346,7 @@ AnimCanvasState
             label="Auto Play"
             onChange={this.autoPlaySwitchChanged}
             checked={this.state.autoPlay}
+            disabled={Boolean(this.state.errored)}
           />
         </div>
       </>
