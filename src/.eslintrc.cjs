@@ -1,4 +1,5 @@
-module.exports = {
+/** @type {import('eslint').Linter.Config} */
+const eslintConfig = {
   extends: ["../.eslintrc.base.cjs", "airbnb-typescript"],
   ignorePatterns: ["**/__tests__/**", "**/__mocks__/**", "**/*.*js"],
   parser: "@typescript-eslint/parser",
@@ -134,3 +135,5 @@ module.exports = {
     },
   ],
 };
+
+module.exports = eslintConfig;
