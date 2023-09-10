@@ -16,7 +16,7 @@ import getBuildModulesCommand, {
   buildModules,
   getBuildTabsCommand,
 } from './modules/index.js';
-import type { LintCommandInputs } from './prebuild/eslint.js';
+import type { LintCommandInputs } from './prebuild/lint.js';
 import { prebuild } from './prebuild/index.js';
 import { copyManifest, createBuildCommand, createOutDir, exitOnError, logResult, retrieveBundlesAndTabs } from './buildUtils.js';
 import type { BuildCommandInputs } from './types.js';
