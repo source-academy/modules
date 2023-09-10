@@ -156,7 +156,7 @@ export function scale_independent(
   ratio_y: number,
   rune: Rune,
 ): Rune {
-  throwIfNotRune('scale_independent', rune);
+  throwIfNotRune(scale_independent.name, rune);
   const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
   const scaleMat = mat4.create();
   mat4.scale(scaleMat, scaleMat, scaleVec);
@@ -178,7 +178,7 @@ export function scale_independent(
  * @category Main
  */
 export function scale(ratio: number, rune: Rune): Rune {
-  throwIfNotRune('scale', rune);
+  throwIfNotRune(scale.name, rune);
   return scale_independent(ratio, ratio, rune);
 }
 
@@ -192,7 +192,7 @@ export function scale(ratio: number, rune: Rune): Rune {
  * @category Main
  */
 export function translate(x: number, y: number, rune: Rune): Rune {
-  throwIfNotRune('translate', rune);
+  throwIfNotRune(translate.name, rune);
   const translateVec = vec3.fromValues(x, -y, 0);
   const translateMat = mat4.create();
   mat4.translate(translateMat, translateMat, translateVec);
@@ -217,7 +217,7 @@ export function translate(x: number, y: number, rune: Rune): Rune {
  * @category Main
  */
 export function rotate(rad: number, rune: Rune): Rune {
-  throwIfNotRune('rotate', rune);
+  throwIfNotRune(rotate.name, rune);
   const rotateMat = mat4.create();
   mat4.rotateZ(rotateMat, rotateMat, rad);
 
@@ -243,8 +243,8 @@ export function rotate(rad: number, rune: Rune): Rune {
  * @category Main
  */
 export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune('stack_frac', rune1);
-  throwIfNotRune('stack_frac', rune2);
+  throwIfNotRune(stack_frac.name, rune1);
+  throwIfNotRune(stack_frac.name, rune2);
 
   if (!(frac >= 0 && frac <= 1)) {
     throw Error('stack_frac can only take fraction in [0,1].');
@@ -269,7 +269,7 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function stack(rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune('stack', rune1, rune2);
+  throwIfNotRune(stack.name, rune1, rune2);
   return stack_frac(1 / 2, rune1, rune2);
 }
 
@@ -283,7 +283,7 @@ export function stack(rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function stackn(n: number, rune: Rune): Rune {
-  throwIfNotRune('stackn', rune);
+  throwIfNotRune(stackn.name, rune);
   if (n === 1) {
     return rune;
   }
@@ -300,7 +300,7 @@ export function stackn(n: number, rune: Rune): Rune {
  * @category Main
  */
 export function quarter_turn_right(rune: Rune): Rune {
-  throwIfNotRune('quarter_turn_right', rune);
+  throwIfNotRune(quarter_turn_right.name, rune);
   return rotate(-Math.PI / 2, rune);
 }
 
@@ -314,7 +314,7 @@ export function quarter_turn_right(rune: Rune): Rune {
  * @category Main
  */
 export function quarter_turn_left(rune: Rune): Rune {
-  throwIfNotRune('quarter_turn_left', rune);
+  throwIfNotRune(quarter_turn_left.name, rune);
   return rotate(Math.PI / 2, rune);
 }
 
@@ -327,7 +327,7 @@ export function quarter_turn_left(rune: Rune): Rune {
  * @category Main
  */
 export function turn_upside_down(rune: Rune): Rune {
-  throwIfNotRune('turn_upside_down', rune);
+  throwIfNotRune(turn_upside_down.name, rune);
   return rotate(Math.PI, rune);
 }
 
@@ -345,7 +345,7 @@ export function turn_upside_down(rune: Rune): Rune {
  * @category Main
  */
 export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune('beside_frac', rune1, rune2);
+  throwIfNotRune(beside_frac.name, rune1, rune2);
 
   if (!(frac >= 0 && frac <= 1)) {
     throw Error('beside_frac can only take fraction in [0,1].');
@@ -370,7 +370,7 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function beside(rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune('beside', rune1, rune2);
+  throwIfNotRune(beside.name, rune1, rune2);
   return beside_frac(1 / 2, rune1, rune2);
 }
 
@@ -384,7 +384,7 @@ export function beside(rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function flip_vert(rune: Rune): Rune {
-  throwIfNotRune('flip_vert', rune);
+  throwIfNotRune(flip_vert.name, rune);
   return scale_independent(1, -1, rune);
 }
 
@@ -398,7 +398,7 @@ export function flip_vert(rune: Rune): Rune {
  * @category Main
  */
 export function flip_horiz(rune: Rune): Rune {
-  throwIfNotRune('flip_horiz', rune);
+  throwIfNotRune(flip_horiz.name, rune);
   return scale_independent(-1, 1, rune);
 }
 
@@ -412,7 +412,7 @@ export function flip_horiz(rune: Rune): Rune {
  * @category Main
  */
 export function make_cross(rune: Rune): Rune {
-  throwIfNotRune('make_cross', rune);
+  throwIfNotRune(make_cross.name, rune);
   return stack(
     beside(quarter_turn_right(rune), rotate(Math.PI, rune)),
     beside(rune, rotate(Math.PI / 2, rune)),
@@ -456,8 +456,8 @@ export function repeat_pattern(
 export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation.
   // The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
-  throwIfNotRune('overlay_frac', rune1);
-  throwIfNotRune('overlay_frac', rune2);
+  throwIfNotRune(overlay_frac.name, rune1);
+  throwIfNotRune(overlay_frac.name, rune2);
   if (!(frac >= 0 && frac <= 1)) {
     throw Error('overlay_frac can only take fraction in [0,1].');
   }
@@ -506,8 +506,8 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function overlay(rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune('overlay', rune1);
-  throwIfNotRune('overlay', rune2);
+  throwIfNotRune(overlay.name, rune1);
+  throwIfNotRune(overlay.name, rune2);
   return overlay_frac(0.5, rune1, rune2);
 }
 
@@ -529,7 +529,7 @@ export function overlay(rune1: Rune, rune2: Rune): Rune {
  * @category Color
  */
 export function color(rune: Rune, r: number, g: number, b: number): Rune {
-  throwIfNotRune('color', rune);
+  throwIfNotRune(color.name, rune);
 
   const colorVector = [r, g, b, 1];
   return Rune.of({
@@ -548,7 +548,7 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
  * @category Color
  */
 export function random_color(rune: Rune): Rune {
-  throwIfNotRune('random_color', rune);
+  throwIfNotRune(random_color.name, rune);
   const randomColor = hexToColor(
     colorPalette[Math.floor(Math.random() * colorPalette.length)],
   );
@@ -567,7 +567,7 @@ export function random_color(rune: Rune): Rune {
  * @category Color
  */
 export function red(rune: Rune): Rune {
-  throwIfNotRune('red', rune);
+  throwIfNotRune(red.name, rune);
   return addColorFromHex(rune, '#F44336');
 }
 
@@ -579,7 +579,7 @@ export function red(rune: Rune): Rune {
  * @category Color
  */
 export function pink(rune: Rune): Rune {
-  throwIfNotRune('pink', rune);
+  throwIfNotRune(pink.name, rune);
   return addColorFromHex(rune, '#E91E63');
 }
 
@@ -591,7 +591,7 @@ export function pink(rune: Rune): Rune {
  * @category Color
  */
 export function purple(rune: Rune): Rune {
-  throwIfNotRune('purple', rune);
+  throwIfNotRune(purple.name, rune);
   return addColorFromHex(rune, '#AA00FF');
 }
 
@@ -603,7 +603,7 @@ export function purple(rune: Rune): Rune {
  * @category Color
  */
 export function indigo(rune: Rune): Rune {
-  throwIfNotRune('indigo', rune);
+  throwIfNotRune(indigo.name, rune);
   return addColorFromHex(rune, '#3F51B5');
 }
 
@@ -615,7 +615,7 @@ export function indigo(rune: Rune): Rune {
  * @category Color
  */
 export function blue(rune: Rune): Rune {
-  throwIfNotRune('blue', rune);
+  throwIfNotRune(blue.name, rune);
   return addColorFromHex(rune, '#2196F3');
 }
 
@@ -627,7 +627,7 @@ export function blue(rune: Rune): Rune {
  * @category Color
  */
 export function green(rune: Rune): Rune {
-  throwIfNotRune('green', rune);
+  throwIfNotRune(green.name, rune);
   return addColorFromHex(rune, '#4CAF50');
 }
 
@@ -639,7 +639,7 @@ export function green(rune: Rune): Rune {
  * @category Color
  */
 export function yellow(rune: Rune): Rune {
-  throwIfNotRune('yellow', rune);
+  throwIfNotRune(yellow.name, rune);
   return addColorFromHex(rune, '#FFEB3B');
 }
 
@@ -651,7 +651,7 @@ export function yellow(rune: Rune): Rune {
  * @category Color
  */
 export function orange(rune: Rune): Rune {
-  throwIfNotRune('orange', rune);
+  throwIfNotRune(orange.name, rune);
   return addColorFromHex(rune, '#FF9800');
 }
 
@@ -663,7 +663,7 @@ export function orange(rune: Rune): Rune {
  * @category Color
  */
 export function brown(rune: Rune): Rune {
-  throwIfNotRune('brown', rune);
+  throwIfNotRune(brown.name, rune);
   return addColorFromHex(rune, '#795548');
 }
 
@@ -675,7 +675,7 @@ export function brown(rune: Rune): Rune {
  * @category Color
  */
 export function black(rune: Rune): Rune {
-  throwIfNotRune('black', rune);
+  throwIfNotRune(black.name, rune);
   return addColorFromHex(rune, '#000000');
 }
 
@@ -687,7 +687,7 @@ export function black(rune: Rune): Rune {
  * @category Color
  */
 export function white(rune: Rune): Rune {
-  throwIfNotRune('white', rune);
+  throwIfNotRune(white.name, rune);
   return addColorFromHex(rune, '#FFFFFF');
 }
 
@@ -703,7 +703,7 @@ export function white(rune: Rune): Rune {
  * @category Main
  */
 export function show(rune: Rune): Rune {
-  throwIfNotRune('show', rune);
+  throwIfNotRune(show.name, rune);
   drawnRunes.push(new NormalRune(rune));
   return rune;
 }
@@ -827,7 +827,7 @@ export class AnaglyphRune extends DrawnRune {
  * @category Main
  */
 export function anaglyph(rune: Rune): Rune {
-  throwIfNotRune('anaglyph', rune);
+  throwIfNotRune(anaglyph.name, rune);
   drawnRunes.push(new AnaglyphRune(rune));
   return rune;
 }
@@ -962,7 +962,7 @@ export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune.
  * @category Main
  */
 export function hollusion_magnitude(rune: Rune, magnitude: number): Rune {
-  throwIfNotRune('hollusion_magnitude', rune);
+  throwIfNotRune(hollusion_magnitude.name, rune);
   drawnRunes.push(new HollusionRune(rune, magnitude));
   return rune;
 }
@@ -976,7 +976,7 @@ export function hollusion_magnitude(rune: Rune, magnitude: number): Rune {
  * @category Main
  */
 export function hollusion(rune: Rune): Rune {
-  throwIfNotRune('hollusion', rune);
+  throwIfNotRune(hollusion.name, rune);
   return hollusion_magnitude(rune, 0.1);
 }
 
@@ -996,7 +996,7 @@ export function animate_rune(
 ) {
   const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);
-    throwIfNotRune('animate_rune', rune);
+    throwIfNotRune(animate_rune.name, rune);
     return new NormalRune(rune);
   });
   drawnRunes.push(anim);
@@ -1019,7 +1019,7 @@ export function animate_anaglyph(
 ) {
   const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);
-    throwIfNotRune('animate_anaglyph', rune);
+    throwIfNotRune(animate_anaglyph.name, rune);
     return new AnaglyphRune(rune);
   });
   drawnRunes.push(anim);
