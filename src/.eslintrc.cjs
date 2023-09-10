@@ -9,9 +9,9 @@ const eslintConfig = {
   },
   plugins: ["import", "react", "jsx-a11y", "@typescript-eslint"],
   rules: {
-    "func-style": 0,
+    "func-style": "off",
     indent: [
-      1,
+      "warn",
       2, // Was "tabs"
       {
         SwitchCase: 1, // Same
@@ -41,7 +41,7 @@ const eslintConfig = {
       },
     ],
     quotes: [
-      1,
+      "warn",
       "single", // Was "double"
       {
         avoidEscape: true, // Same
@@ -62,7 +62,7 @@ const eslintConfig = {
       equivalents, to make them match the behaviour in .eslintrc.base.js
     */
     "@typescript-eslint/no-unused-vars": [
-      1, // Was 2
+      "warn",
       {
         // vars: "all",
         // args: "after-used",
@@ -73,7 +73,7 @@ const eslintConfig = {
       },
     ],
     "@typescript-eslint/no-use-before-define": [
-      1, // Was 2
+      "warn",
       {
         functions: false,
         // classes: true,
@@ -83,9 +83,9 @@ const eslintConfig = {
         // ignoreTypeReferences: true, // TS
       },
     ],
-    "@typescript-eslint/default-param-last": 1, // Was 2
+    "@typescript-eslint/default-param-last": "warn",
     "@typescript-eslint/no-shadow": [
-      1, // Was 2
+      "warn",
       {
         builtinGlobals: true,
         // hoist: "functions",
@@ -93,7 +93,7 @@ const eslintConfig = {
         // ignoreFunctionTypeParameterNameValueShadow: true, // TS
       },
     ],
-    "@typescript-eslint/lines-between-class-members": 0, // Was 2
+    "@typescript-eslint/lines-between-class-members": "off",
     // "@typescript-eslint/consistent-type-imports": 1,
 
     // [Error → Warn]
@@ -105,7 +105,7 @@ const eslintConfig = {
 
     // [Other]
     "@typescript-eslint/naming-convention": [
-      1,
+      "warn",
       {
         selector: "variable",
         // Was ["camelCase", "PascalCase", "UPPER_CASE"].
