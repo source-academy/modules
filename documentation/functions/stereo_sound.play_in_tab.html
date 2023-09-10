@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>play_concurrently | Source Academy Modules</title><meta name="description" content="Documentation for Source Academy Modules"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>play_in_tab | Source Academy Modules</title><meta name="description" content="Documentation for Source Academy Modules"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -14,16 +14,19 @@
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">Source Academy Modules</a></li>
 <li><a href="../modules/stereo_sound.html">stereo_sound</a></li>
-<li><a href="stereo_sound.play_concurrently.html">play_concurrently</a></li></ul>
-<h1>Function play_concurrently</h1></div>
+<li><a href="stereo_sound.play_in_tab.html">play_in_tab</a></li></ul>
+<h1>Function play_in_tab</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-<li class="tsd-signature tsd-anchor-link" id="play_concurrently">play_<wbr/>concurrently<span class="tsd-signature-symbol">(</span>sound<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Sound</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#play_concurrently" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="play_in_tab">play_<wbr/>in_<wbr/>tab<span class="tsd-signature-symbol">(</span>sound<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Sound</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Sound</span><a href="#play_in_tab" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Plays the given Sound using the computer’s sound device
-on top of any sounds that are currently playing.</p>
+<div class="tsd-comment tsd-typography"><p>Plays the given Sound using the computer’s sound device.
+The Sound is added to a list of Sounds to be played one-at-a-time
+in a Source Academy tab.</p>
 
-<h3>Example</h3><pre><code class="language-ts"><span class="hl-8">play_concurrently</span><span class="hl-1">(</span><span class="hl-8">sine_sound</span><span class="hl-1">(</span><span class="hl-9">440</span><span class="hl-1">, </span><span class="hl-9">5</span><span class="hl-1">));</span>
+<h3>Returns</h3><p>the given Sound</p>
+
+<h3>Example</h3><pre><code class="language-ts"><span class="hl-8">play_in_tab</span><span class="hl-1">(</span><span class="hl-8">sine_sound</span><span class="hl-1">(</span><span class="hl-9">440</span><span class="hl-1">, </span><span class="hl-9">5</span><span class="hl-1">));</span>
 </code></pre>
 </div>
 <div class="tsd-parameters">
@@ -31,11 +34,11 @@ on top of any sounds that are currently playing.</p>
 <ul class="tsd-parameter-list">
 <li>
 <h5>sound: <span class="tsd-signature-type">Sound</span></h5>
-<div class="tsd-comment tsd-typography"><p>the sound to play</p>
+<div class="tsd-comment tsd-typography"><p>the Sound to play</p>
 </div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Sound</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/a7deb51/src/bundles/stereo_sound/functions.ts#L483">stereo_sound/functions.ts:483</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/1560bc1/src/bundles/stereo_sound/functions.ts#L376">stereo_sound/functions.ts:376</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -101,7 +104,7 @@ on top of any sounds that are currently playing.</p>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="stereo_sound.phase_mod.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>phase_<wbr/>mod</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="stereo_sound.piano.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>piano</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="stereo_sound.play.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>play</a></li>
-<li class="current tsd-kind-function tsd-parent-kind-module"><a href="stereo_sound.play_concurrently.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>play_<wbr/>concurrently</a></li>
+<li class="current tsd-kind-function tsd-parent-kind-module"><a href="stereo_sound.play_in_tab.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>play_<wbr/>in_<wbr/>tab</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="stereo_sound.play_wave.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>play_<wbr/>wave</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="stereo_sound.play_waves.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>play_<wbr/>waves</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="stereo_sound.record.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>record</a></li>

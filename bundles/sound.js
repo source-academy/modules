@@ -52,7 +52,7 @@ require => {
     phase_mod: () => phase_mod,
     piano: () => piano,
     play: () => play,
-    play_concurrently: () => play_concurrently,
+    play_in_tab: () => play_in_tab,
     play_wave: () => play_wave,
     record: () => record,
     record_for: () => record_for,
@@ -201,7 +201,7 @@ require => {
   var recording_signal_ms = 100;
   var pre_recording_signal_pause_ms = 200;
   function play_recording_signal() {
-    play_concurrently(sine_sound(1200, recording_signal_ms / 1e3));
+    play(sine_sound(1200, recording_signal_ms / 1e3));
   }
   function process(data) {
     const audioContext = new AudioContext();
@@ -289,13 +289,13 @@ require => {
   function play_wave(wave, duration) {
     return play(make_sound(wave, duration));
   }
-  function play(sound) {
+  function play_in_tab(sound) {
     if (!is_sound(sound)) {
-      throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+      throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
     } else if (isPlaying) {
-      throw new Error(`${play.name}: audio system still playing previous sound`);
+      throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
     } else if (get_duration(sound) < 0) {
-      throw new Error(`${play.name}: duration of sound is negative`);
+      throw new Error(`${play_in_tab.name}: duration of sound is negative`);
     } else {
       if (!audioplayer) {
         init_audioCtx();
@@ -332,13 +332,15 @@ require => {
         dataUri: riffwave.dataURI
       };
       audioPlayed.push(soundToPlay);
-      return soundToPlay;
+      return sound;
     }
   }
-  function play_concurrently(sound) {
+  function play(sound) {
     if (!is_sound(sound)) {
-      throw new Error(`${play_concurrently.name} is expecting sound, but encountered ${sound}`);
-    } else if (get_duration(sound) <= 0) {} else {
+      throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+    } else if (get_duration(sound) < 0) {
+      throw new Error(`${play.name}: duration of sound is negative`);
+    } else {
       if (!audioplayer) {
         init_audioCtx();
       }
@@ -370,6 +372,7 @@ require => {
         source.disconnect(audioplayer.destination);
         isPlaying = false;
       };
+      return sound;
     }
   }
   function stop() {
