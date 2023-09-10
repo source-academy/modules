@@ -319,7 +319,6 @@ const eslintConfig = {
       1,
       'as-needed', // Was "always"
     ],
-    'require-await': 1,
     'require-unicode-regexp': 1,
     'require-yield': 1, // Was 2
     // "sort-keys": 0,
