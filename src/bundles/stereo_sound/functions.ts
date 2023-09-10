@@ -337,7 +337,6 @@ export function is_sound(x: any): boolean {
 /**
  * Plays the given Wave using the computer’s sound device, for the duration
  * given in seconds.
- * The Sound is only played if no other Sounds are currently being played.
  *
  * @param wave the wave function to play, starting at 0
  * @return the given Sound

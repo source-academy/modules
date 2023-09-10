@@ -320,7 +320,6 @@ export function is_sound(x: any): x is Sound {
 /**
  * Plays the given Wave using the computer’s sound device, for the duration
  * given in seconds.
- * The Sound is only played if no other sounds are currently being played.
  *
  * @param wave the wave function to play, starting at 0
  * @return the resulting Sound
@@ -332,7 +331,8 @@ export function play_wave(wave: Wave, duration: number): Sound {
 
 /**
  * Plays the given Sound using the computer’s sound device.
- * The Sound is only played if no other sounds are currently being played.
+ * The sound is added to a list of sounds to be played one-at-a-time
+ * in a Source Academy tab.
  *
  * @param sound the Sound to play
  * @return the given Sound
