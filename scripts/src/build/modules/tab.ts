@@ -7,7 +7,7 @@ import {
   build as esbuild,
 } from 'esbuild';
 import type {
-  ArrowFunctionExpression,
+  ExportDefaultDeclaration,
   Identifier,
   Literal,
   MemberExpression,
@@ -37,28 +37,29 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
     const declStatement = parsed.body[1] as VariableDeclaration;
 
-    const newTab = {
-      type: 'ArrowFunctionExpression',
-      body: {
-        type: 'MemberExpression',
-        object: declStatement.declarations[0].init,
-        property: {
-          type: 'Literal',
-          value: 'default',
-        } as Literal,
-        computed: true,
-      } as MemberExpression,
-      params: [{
-        type: 'Identifier',
-        name: 'require',
-      } as Identifier],
-    } as ArrowFunctionExpression;
-
-    let newCode = generate(newTab);
-    if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
+    const newTab: ExportDefaultDeclaration = {
+      type: 'ExportDefaultDeclaration',
+      declaration: {
+        type: 'ArrowFunctionExpression',
+        expression: true,
+        body: {
+          type: 'MemberExpression',
+          object: declStatement.declarations[0].init,
+          property: {
+            type: 'Literal',
+            value: 'default',
+          } as Literal,
+          computed: true,
+        } as MemberExpression,
+        params: [{
+          type: 'Identifier',
+          name: 'require',
+        } as Identifier],
+      },
+    };
 
     const outFile = `${outDir}/tabs/${tabName}.js`;
-    await fs.writeFile(outFile, newCode);
+    await fs.writeFile(outFile, generate(newTab));
     const { size } = await fs.stat(outFile);
     return {
       severity: 'success',
@@ -77,7 +78,14 @@ export const getTabOptions = (tabs: string[], { srcDir, outDir }: Record<'srcDir
   return {
     ...esbuildOptions,
     entryPoints: tabs.map(nameExpander),
-    external: ['react', 'react-dom', 'react/jsx-runtime', '@blueprintjs/*', 'js-slang*'],
+    external: [
+      'react',
+      'react-ace',
+      'react-dom',
+      'react/jsx-runtime',
+      '@blueprintjs/*',
+      'js-slang*',
+    ],
     jsx: 'automatic',
     outbase: outDir,
     outdir: outDir,
