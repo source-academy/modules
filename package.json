@@ -34,7 +34,7 @@
     "postinstall": "patch-package",
     "scripts": "yarn node scripts/bin.js",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
-    "test": "jest --verbose --config=src/jest.config.js",
+    "test": "yarn scripts test",
     "test:watch": "jest --watch",
     "watch": "yarn scripts watch",
 
