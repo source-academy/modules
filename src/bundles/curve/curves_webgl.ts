@@ -139,7 +139,7 @@ export class CurveDrawn implements ReplResult {
 
   constructor(
     private readonly drawMode: DrawMode,
-    private readonly numPoints: number,
+    public readonly numPoints: number,
     private readonly space: CurveSpace,
     private readonly drawCubeArray: number[],
     private readonly curvePosArray: number[],

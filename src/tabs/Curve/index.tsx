@@ -7,7 +7,7 @@ import CurveCanvas3D from './curve_canvas3d';
 import AnimationCanvas from '../common/AnimationCanvas';
 import WebGLCanvas from '../common/WebglCanvas';
 
-const CurveTab = ({ context }: TabProps) => {
+export const CurveTab = ({ context }: TabProps) => {
   const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve');
   const canvases = drawnCurves.map((curve, i) => {
     const elemKey = i.toString();

@@ -6,7 +6,7 @@ import AnimationCanvas from '../common/AnimationCanvas';
 import HollusionCanvas from './hollusion_canvas';
 import WebGLCanvas from '../common/WebglCanvas';
 
-const RuneTab = ({ context }: TabProps) => {
+export const RuneTab = ({ context }: TabProps) => {
   const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
   const runeCanvases = drawnRunes.map((rune, i) => {
     const elemKey = i.toString();
