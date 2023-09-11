@@ -9,7 +9,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 
 jest.mock('../prebuild/tsc');
-jest.mock('../prebuild/eslint');
+jest.mock('../prebuild/lint');
 
 jest.mock('esbuild', () => ({
   build: jest.fn().mockResolvedValue({ outputFiles: [] }),
