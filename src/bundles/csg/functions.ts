@@ -616,9 +616,9 @@ export function rotate(
  * Scales the specified Operable in the x, y, and z directions using the
  * specified factors. Scaling is done about the origin (0, 0, 0).
  *
- * For example, a factor of 1 results in the original Shape, while a factor of
- * -1 results in a reflection of the Shape. A factor of 0.5 results in a smaller
- * Shape, while a factor of 2 results in a larger Shape. Factors cannot be 0.
+ * For example, a factor of 0.5 results in a smaller Shape, while a factor of 2
+ * results in a larger Shape. A factor of 1 results in the original Shape.
+ * Factors must be greater than 0.
  *
  * @param operable Shape or Group
  * @param xFactor x scaling factor
@@ -634,8 +634,9 @@ export function scale(
   yFactor: number,
   zFactor: number,
 ): Operable {
-  if (xFactor === 0 || yFactor === 0 || zFactor === 0) {
-    throw new Error('Scaling factor cannot be 0');
+  if (xFactor <= 0 || yFactor <= 0 || zFactor <= 0) {
+    // JSCAD library does not allow factors <= 0
+    throw new Error('Scaling factor must be greater than 0');
   }
 
   return operable.scale([xFactor, yFactor, zFactor]);
