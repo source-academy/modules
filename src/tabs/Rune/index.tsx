@@ -1,12 +1,12 @@
 import { type RuneModuleState, isHollusionRune } from '../../bundles/rune/functions';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../common/MultItemDisplay';
-import { getModuleState, type DebuggerContext, type TabProps } from '../../typings/type_helpers';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
 import AnimationCanvas from '../common/AnimationCanvas';
 import HollusionCanvas from './hollusion_canvas';
 import WebGLCanvas from '../common/WebglCanvas';
 
-export const RuneTab = ({ context }: TabProps) => {
+export const RuneTab: ModuleTab = ({ context }) => {
   const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
   const runeCanvases = drawnRunes.map((rune, i) => {
     const elemKey = i.toString();

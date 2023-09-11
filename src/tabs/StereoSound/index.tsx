@@ -1,5 +1,5 @@
 import type { StereoSoundModuleState } from '../../bundles/stereo_sound/types';
-import { getModuleState, type DebuggerContext, type TabProps } from '../../typings/type_helpers';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
 import MultiItemDisplay from '../common/MultItemDisplay';
 
 /**
@@ -8,7 +8,7 @@ import MultiItemDisplay from '../common/MultItemDisplay';
  * @author Samyukta Sounderraman
  */
 
-const SoundTab = ({ context }: TabProps) => {
+const SoundTab: ModuleTab = ({ context }) => {
   const { audioPlayed } = getModuleState<StereoSoundModuleState>(context, 'sound');
 
   const elements = audioPlayed.map((audio) => (
