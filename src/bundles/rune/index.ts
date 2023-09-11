@@ -6,9 +6,6 @@
  * @author Hou Ruomu
  */
 export {
-  anaglyph,
-  animate_anaglyph,
-  animate_rune,
   beside,
   beside_frac,
   black,
@@ -23,8 +20,6 @@ export {
   from_url,
   green,
   heart,
-  hollusion,
-  hollusion_magnitude,
   indigo,
   make_cross,
   nova,
@@ -45,7 +40,6 @@ export {
   sail,
   scale,
   scale_independent,
-  show,
   square,
   stack,
   stackn,
@@ -56,3 +50,12 @@ export {
   white,
   yellow,
 } from './functions';
+
+export {
+  anaglyph,
+  animate_anaglyph,
+  animate_rune,
+  hollusion,
+  hollusion_magnitude,
+  show,
+} from './display';
