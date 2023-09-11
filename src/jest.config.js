@@ -17,8 +17,8 @@ export default {
       isolatedModules: true,
     }]
   },
-  // Module Name settings required to make chalk work with jest
   moduleNameMapper: {
+    // Module Name settings required to make chalk work with jest
     '#(.*)': '<rootDir>/node_modules/$1',
     '^js-slang/context': '<rootDir>/__mocks__/context.ts'
     // 'lowdb': '<rootDir>/node_modules/lowdb/lib',
