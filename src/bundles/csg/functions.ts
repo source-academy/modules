@@ -762,31 +762,31 @@ export function bounding_box(
 /**
  * Returns a hex color code representing the specified RGB values.
  *
- * @param redComponent red component of the color
- * @param greenComponent green component of the color
- * @param blueComponent blue component of the color
+ * @param redValue red value of the color
+ * @param greenValue green value of the color
+ * @param blueValue blue value of the color
  * @returns hex color code
  *
  * @category Utilities
  */
 export function rgb(
-  redComponent: number,
-  greenComponent: number,
-  blueComponent: number,
+  redValue: number,
+  greenValue: number,
+  blueValue: number,
 ): string {
   if (
-    redComponent < 0
-    || redComponent > 255
-    || greenComponent < 0
-    || greenComponent > 255
-    || blueComponent < 0
-    || blueComponent > 255
+    redValue < 0
+    || redValue > 255
+    || greenValue < 0
+    || greenValue > 255
+    || blueValue < 0
+    || blueValue > 255
   ) {
-    throw new Error('RGB components must be between 0 and 255 (inclusive)');
+    throw new Error('RGB values must be between 0 and 255 (inclusive)');
   }
 
-  return `#${redComponent.toString(16)}${greenComponent.toString(16)}
-    ${blueComponent.toString(16)}`;
+  return `#${redValue.toString(16)}${greenValue.toString(16)}
+    ${blueValue.toString(16)}`;
 }
 
 /**

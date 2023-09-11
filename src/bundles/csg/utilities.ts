@@ -229,12 +229,6 @@ export function centerPrimitive(shape: Shape) {
   return new Shape(solid);
 }
 
-export function alignOrigin(shape: Shape) {
-  // Align minimum bounds of Shape to 0 0 0
-  let solid: Solid = align({ modes: ['min', 'min', 'min'] }, shape.solid);
-  return new Shape(solid);
-}
-
 export function hexToColor(hex: string): Color {
   let regex: RegExp
     = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
@@ -259,10 +253,4 @@ export function colorToAlphaColor(
 
 export function hexToAlphaColor(hex: string): AlphaColor {
   return colorToAlphaColor(hexToColor(hex));
-}
-
-export function clamp(value: number, lowest: number, highest: number): number {
-  value = Math.max(value, lowest);
-  value = Math.min(value, highest);
-  return value;
 }
