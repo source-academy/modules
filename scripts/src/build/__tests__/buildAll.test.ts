@@ -1,7 +1,7 @@
 import { getBuildAllCommand } from '..';
 import * as modules from '../modules';
 import * as docsModule from '../docs';
-import * as lintModule from '../prebuild/eslint';
+import * as lintModule from '../prebuild/lint';
 import * as tscModule from '../prebuild/tsc';
 import { MockedFunction } from 'jest-mock';
 
