@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import {
   type BuildOptions as ESBuildOptions,
   type OutputFile,
+  type Plugin as ESBuildPlugin,
   build as esbuild,
 } from 'esbuild';
 import type {
@@ -26,8 +27,8 @@ import {
   retrieveTabs,
   tabNameExpander,
 } from '../buildUtils.js';
-import type { LintCommandInputs } from '../prebuild/lint.js';
 import { prebuild } from '../prebuild/index.js';
+import type { LintCommandInputs } from '../prebuild/lint.js';
 import type { BuildCommandInputs, BuildOptions, BuildResult, UnreducedResult } from '../types';
 
 import { esbuildOptions } from './moduleUtils.js';
@@ -73,6 +74,17 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
   }
 };
 
+const tabContextPlugin: ESBuildPlugin = {
+  name: 'Tab Context',
+  setup(build) {
+    build.onResolve({ filter: /^js-slang\/context/u }, () => ({
+      errors: [{
+        text: 'If you see this message, it means that your tab code is importing js-slang/context directly or indirectly. Do not do this',
+      }],
+    }));
+  },
+};
+
 export const getTabOptions = (tabs: string[], { srcDir, outDir }: Record<'srcDir' | 'outDir', string>): ESBuildOptions => {
   const nameExpander = tabNameExpander(srcDir);
   return {
@@ -90,6 +102,7 @@ export const getTabOptions = (tabs: string[], { srcDir, outDir }: Record<'srcDir
     outbase: outDir,
     outdir: outDir,
     tsconfig: `${srcDir}/tsconfig.json`,
+    plugins: [tabContextPlugin],
   };
 };
 

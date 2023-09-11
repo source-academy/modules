@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { context as esbuild } from 'esbuild';
+import lodash from 'lodash';
 import type { Application } from 'typedoc';
 
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
@@ -67,8 +68,7 @@ const getBundleContext = (options: ContextOptions, bundles: string[], app?: Appl
   }],
 });
 
-const getTabContext = (options: ContextOptions, tabs: string[]) => esbuild({
-  ...getTabOptions(tabs, options),
+const getTabContext = (options: ContextOptions, tabs: string[]) => esbuild(lodash.merge({
   plugins: [{
     name: 'Tab Compiler',
     setup(pluginBuild) {
@@ -86,7 +86,7 @@ const getTabContext = (options: ContextOptions, tabs: string[]) => esbuild({
       });
     },
   }],
-});
+}, getTabOptions(tabs, options)));
 
 // const serveContext = async (context: Awaited<ReturnType<typeof esbuild>>) => {
 //   const { port } = await context.serve({
