@@ -126,6 +126,7 @@ module.exports = {
   "overrides": [{
     "extends": ["../.eslintrc.test.cjs"],
     "files": ["**/__tests__/**", "**/__mocks__/**"],
+    "ignorePatterns": ["**/__snapshots__/**"]
   }, {
     extends: ["../.eslintrc.base.cjs"],
     files: ["**/*.*.js"]
