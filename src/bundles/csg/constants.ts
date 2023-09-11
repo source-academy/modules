@@ -1,5 +1,8 @@
 /* [Exports] */
 
+// Renderer default colour. Bright aquamarine makes bugs easier to spot
+export const DEFAULT_COLOR = '#55ffaa';
+
 // Renderer grid constants
 export const MAIN_TICKS: number = 1;
 export const SUB_TICKS: number = MAIN_TICKS / 4;

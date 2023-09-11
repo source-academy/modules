@@ -8,6 +8,7 @@ import {
   prepareRender,
 } from '@jscad/regl-renderer';
 import {
+  DEFAULT_COLOR,
   GRID_PADDING,
   MAIN_TICKS,
   ROTATION_SPEED,
@@ -37,12 +38,14 @@ import type {
 } from './types.js';
 import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '../../../tabs/common/css_constants.js';
 
+
+
 /* [Main] */
 let { orbit } = controls;
 
 function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
   let options: EntitiesFromSolidsOptions = {
-    color: hexToAlphaColor('#55ffaa'),
+    color: hexToAlphaColor(DEFAULT_COLOR),
   };
   return (entitiesFromSolids(
     options,
