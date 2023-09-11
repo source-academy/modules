@@ -37,7 +37,6 @@
     "test": "yarn scripts test",
     "test:watch": "jest --watch",
     "watch": "yarn scripts watch",
-
     "scripts:all": "yarn node scripts/scripts_manager.js",
     "scripts:build": "yarn node scripts/scripts_manager.js build",
     "scripts:lint": "yarn node scripts/scripts_manager.js lint",
@@ -52,8 +51,8 @@
     "@types/node": "16",
     "@types/plotly.js-dist": "npm:@types/plotly.js",
     "@types/react": "^17.0.43",
-    "@typescript-eslint/eslint-plugin": "^5.47.1",
-    "@typescript-eslint/parser": "^5.47.1",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
     "acorn": "^8.8.1",
     "acorn-jsx": "^5.3.2",
     "astring": "^1.8.4",
