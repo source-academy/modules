@@ -1,0 +1,45 @@
+import { HighlightRulesSelector, ModeSelector } from 'js-slang/dist/editors/ace/modes/source';
+import { Chapter, Variant } from 'js-slang/dist/types';
+
+/**
+ * This _modifies global state_ and defines a new Ace mode globally, if it does not already exist.
+ *
+ * You can call this directly in render functions.
+ */
+export const selectMode = (chapter: Chapter, variant: Variant, library: string) => {
+  if (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    typeof ace.define.modules[`ace/mode/${getModeString(chapter, variant, library)}`]?.Mode ===
+    'function'
+  ) {
+    return;
+  }
+
+  HighlightRulesSelector(chapter, variant, library);
+  ModeSelector(chapter, variant, library);
+};
+
+export const getModeString = (chapter: Chapter, variant: Variant, library: string) => {
+  // TODO: Create our own highlighting rules for the different sublanguages
+  switch (chapter) {
+    case Chapter.HTML:
+      return 'html';
+    case Chapter.FULL_TS:
+      return 'typescript';
+    case Chapter.PYTHON_1:
+    case Chapter.PYTHON_2:
+    case Chapter.PYTHON_3:
+    case Chapter.PYTHON_4:
+    case Chapter.FULL_PYTHON:
+      return 'python';
+    case Chapter.SCHEME_1:
+    case Chapter.SCHEME_2:
+    case Chapter.SCHEME_3:
+    case Chapter.SCHEME_4:
+    case Chapter.FULL_SCHEME:
+      return 'scheme';
+    default:
+      return `source${chapter}${variant}${library}`;
+  }
+};
