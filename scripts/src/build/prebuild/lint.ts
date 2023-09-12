@@ -29,30 +29,33 @@ type LintResults = {
  * Run eslint programmatically
  * Refer to https://eslint.org/docs/latest/integrate/nodejs-api for documentation
  */
-export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: AssetInfo): Promise<LintResults> => {
-  if (bundles.length > 0) {
-    printList(`${chalk.magentaBright('Running eslint on the following bundles')}:\n`, bundles);
-  }
-
-  if (tabs.length > 0) {
-    printList(`${chalk.magentaBright('Running eslint on the following tabs')}:\n`, tabs);
-  }
-
+export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: Partial<AssetInfo>): Promise<LintResults> => {
   const linter = new ESLint({
     cwd: pathlib.resolve(opts.srcDir),
-    overrideConfigFile: '.eslintrc.cjs',
     extensions: ['ts', 'tsx'],
     fix: opts.fix,
-    useEslintrc: false,
   });
 
-  const promises: Promise<ESLint.LintResult[]>[] = [
-    bundles.length > 0 ? linter.lintFiles(bundles.map((bundle) => pathlib.join('bundles', bundle))) : Promise.resolve([]),
-    tabs.length > 0 ? linter.lintFiles(tabs.map((tabName) => pathlib.join('tabs', tabName))) : Promise.resolve([]),
-  ];
+  const promises: Promise<ESLint.LintResult[]>[] = [];
+  if (bundles?.length > 0 || tabs?.length > 0) {
+    // Lint specific bundles and tabs
+    if (bundles.length > 0) {
+      printList(`${chalk.magentaBright('Running eslint on the following bundles')}:\n`, bundles);
+      bundles.forEach((bundle) => promises.push(linter.lintFiles(pathlib.join('bundles', bundle))));
+    }
 
-  const [lintBundles, lintTabs] = await Promise.all(promises);
-  const lintResults = [...lintBundles, ...lintTabs];
+    if (tabs.length > 0) {
+      printList(`${chalk.magentaBright('Running eslint on the following tabs')}:\n`, tabs);
+      tabs.forEach((tabName) => promises.push(linter.lintFiles(pathlib.join('tabs', tabName))));
+    }
+  } else {
+    // Glob all source files, then lint files based on eslint configuration
+    promises.push(linter.lintFiles('**/*.ts'));
+    console.log(`${chalk.magentaBright('Linting all files in')} ${opts.srcDir}`);
+  }
+
+  // const [lintBundles, lintTabs, lintMisc] = await Promise.all(promises);
+  const lintResults = (await Promise.all(promises)).flat();
 
   if (opts.fix) {
     console.log(chalk.magentaBright('Running eslint autofix...'));
@@ -97,7 +100,13 @@ const getLintCommand = () => new Command('lint')
   .option('-t, --tabs <tabs...>', 'Manually specify which tabs to check', null)
   .option('-v, --verbose', 'Display more information about the build results', false)
   .action(async ({ modules, tabs, manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
-    const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
+    const assets = modules !== null || tabs !== null
+      ? await retrieveBundlesAndTabs(manifest, modules, tabs)
+      : {
+        modules: undefined,
+        tabs: undefined,
+      };
+
     const result = await runEslint(opts, assets);
     logLintResult(result);
     exitOnError([], result.result);
