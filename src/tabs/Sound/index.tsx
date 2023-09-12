@@ -1,5 +1,5 @@
 import type { SoundModuleState } from '../../bundles/sound/types';
-import { getModuleState, type DebuggerContext, type ModuleTab} from '../../typings/type_helpers';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
 import MultiItemDisplay from '../common/MultItemDisplay';
 
 /**
