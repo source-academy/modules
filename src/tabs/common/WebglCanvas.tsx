@@ -1,15 +1,15 @@
 import React from 'react';
+import { CANVAS_MAX_WIDTH } from './css_constants';
 
 const defaultStyle = {
   width: '100%',
-  maxWidth: 'max(70vh, 30vw)',
+  maxWidth: CANVAS_MAX_WIDTH,
   aspectRatio: '1',
 } as React.CSSProperties;
 
 /**
- * Canvas type used for the Curves and Runes modules.
- * Standardizes the appearances of canvases
- * for the tabs of both modules
+ * Canvas component used by the curve and rune modules. Standardizes the
+ * appearances of canvases for both modules.
  */
 const WebGLCanvas = React.forwardRef<HTMLCanvasElement, any>(
   (props: any, ref) => {

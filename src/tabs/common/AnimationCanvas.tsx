@@ -1,11 +1,13 @@
-import { Icon, Slider, Switch } from '@blueprintjs/core';
+import { Icon, Slider } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type glAnimation } from '../../typings/anim_types';
+import AutoLoopSwitch from './AutoLoopSwitch';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
+import PlayButton from './PlayButton';
 import WebGLCanvas from './WebglCanvas';
 import ButtonComponent from './ButtonComponent';
-
 
 type AnimCanvasProps = {
   animation: glAnimation;
@@ -21,18 +23,17 @@ type AnimCanvasState = {
   /** Previous value of `isPlaying` */
   wasPlaying: boolean;
 
-  /** Boolean value indicating if auto play is selected */
-  autoPlay: boolean;
+  /** Whether auto loop is enabled */
+  isAutoLooping: boolean;
 
   errored?: any;
 };
 
 /**
- * Canvas to display glAnimations
+ * Canvas to display glAnimations.
+ *
+ * Uses WebGLCanvas internally.
  */
-// For some reason, I can't get this component to build
-// with the blueprint/js components if it's located in
-// another file so it's here for now
 export default class AnimationCanvas extends React.Component<
 AnimCanvasProps,
 AnimCanvasState
@@ -54,7 +55,7 @@ AnimCanvasState
    */
   private callbackTimestamp: number | null;
 
-  private animationFrameId: number | null;
+  private reqframeId: number | null;
 
   constructor(props: AnimCanvasProps | Readonly<AnimCanvasProps>) {
     super(props);
@@ -63,14 +64,14 @@ AnimCanvasState
       animTimestamp: 0,
       isPlaying: false,
       wasPlaying: false,
-      autoPlay: true,
+      isAutoLooping: true,
     };
 
     this.canvas = null;
     this.frameDuration = 1000 / props.animation.fps;
     this.animationDuration = Math.round(props.animation.duration * 1000);
     this.callbackTimestamp = null;
-    this.animationFrameId = null;
+    this.reqframeId = null;
   }
 
   public componentDidMount() {
@@ -81,26 +82,27 @@ AnimCanvasState
    * Call this to actually draw a frame onto the canvas
    */
   private drawFrame = () => {
-    try {
-      if (this.canvas) {
+    if (this.canvas) {
+      try {
         const frame = this.props.animation.getFrame(
           this.state.animTimestamp / 1000,
         );
         frame.draw(this.canvas);
+      } catch (error) {
+        if (this.reqframeId !== null) {
+          cancelAnimationFrame(this.reqframeId);
+        }
+
+        this.setState({
+          isPlaying: false,
+          errored: error,
+        });
       }
-    } catch (error) {
-      if (this.animationFrameId !== null) {
-        cancelAnimationFrame(this.animationFrameId);
-      }
-      this.setState({
-        isPlaying: false,
-        errored: error,
-      });
     }
   };
 
   private reqFrame = () => {
-    this.animationFrameId = requestAnimationFrame(this.animationCallback);
+    this.reqframeId = requestAnimationFrame(this.animationCallback);
   };
 
   private startAnimation = () => this.setState(
@@ -143,8 +145,8 @@ AnimCanvasState
     this.callbackTimestamp = timeInMs;
     if (this.state.animTimestamp >= this.animationDuration) {
       // Animation has ended
-      if (this.state.autoPlay) {
-        // If autoplay is active, reset the animation
+      if (this.state.isAutoLooping) {
+        // If auto loop is active, restart the animation
         this.setState(
           {
             animTimestamp: 0,
@@ -173,11 +175,8 @@ AnimCanvasState
    * Play button click handler
    */
   private onPlayButtonClick = () => {
-    if (this.state.isPlaying) {
-      this.stopAnimation();
-    } else {
-      this.startAnimation();
-    }
+    if (this.state.isPlaying) this.stopAnimation();
+    else this.startAnimation();
   };
 
   /**
@@ -185,11 +184,14 @@ AnimCanvasState
    */
   private onResetButtonClick = () => {
     this.setState(
-      {
-        animTimestamp: 0,
-      },
+      { animTimestamp: 0 },
       () => {
-        if (!this.state.isPlaying) this.drawFrame();
+        if (this.state.isPlaying) {
+          // Force stop
+          this.onPlayButtonClick();
+        }
+
+        this.drawFrame();
       },
     );
   };
@@ -229,151 +231,121 @@ AnimCanvasState
   };
 
   /**
-   * Auto play switch handler
+   * Auto loop switch onChange callback
    */
-  private autoPlaySwitchChanged = () => {
+  private onSwitchChange = () => {
     this.setState((prev) => ({
-      autoPlay: !prev.autoPlay,
+      isAutoLooping: !prev.isAutoLooping,
     }));
   };
 
   public render() {
-    const buttons = (
+    return <div
+      style={{
+        width: '100%',
+      }}
+    >
       <div
         style={{
-          marginLeft: '20px',
-          marginRight: '20px',
           display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
         }}
       >
-        <div
-          style={{
-            marginRight: '20px',
-          }}
-        >
-          <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
-            <ButtonComponent
-              onClick={this.onPlayButtonClick}
-              disabled={Boolean(this.state.errored)}
-            >
-              <Icon
-                icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
-              />
-            </ButtonComponent>
-          </Tooltip2>
-        </div>
-        <Tooltip2 content="Reset">
-          <ButtonComponent
-            onClick={this.onResetButtonClick}
-            disabled={Boolean(this.state.errored)}
-          >
-            <Icon icon={IconNames.RESET} />
-          </ButtonComponent>
-        </Tooltip2>
-      </div>
-    );
-
-    const animSlider = (
-      <div
-        style={{
-          marginTop: '7px',
-          flexGrow: 1,
-        }}
-      >
-        <Slider
-          disabled={Boolean(this.state.errored)}
-          value={this.state.animTimestamp}
-          onChange={this.onSliderChange}
-          onRelease={this.onSliderRelease}
-          stepSize={1}
-          labelRenderer={false}
-          min={0}
-          max={this.animationDuration}
-        />
-      </div>
-    );
-
-    return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            gap: BP_TAB_BUTTON_MARGIN,
+
+            width: '100%',
+            maxWidth: CANVAS_MAX_WIDTH,
+
+            paddingTop: BP_TEXT_MARGIN,
+            paddingBottom: BP_TEXT_MARGIN,
           }}
         >
-          {this.state.errored
-            ? (
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                  <Icon icon={IconNames.WARNING_SIGN} size={90} />
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    marginBottom: 20,
-                  }}>
-                    <h3>An error occurred while running your animation!</h3>
-                    <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
-                  </div>
-                </div>
-                <code style={{
-                  color: 'red',
-                }}>
-                  {this.state.errored.toString()}
-                </code>
-              </div>)
-            : (
-              <WebGLCanvas
-                style={{
-                  flexGrow: 1,
-                }}
-                ref={(r) => {
-                  this.canvas = r;
-                }}
-              />
-            )}
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            marginTop: '10px',
-            padding: '10px',
-            flexDirection: 'row',
-            justifyContent: 'stretch',
-            alignContent: 'center',
-          }}
-        >
-          {buttons}
-          {animSlider}
-          <Switch
-            style={{
-              marginLeft: '20px',
-              marginRight: '20px',
-              marginTop: '5px',
-              whiteSpace: 'nowrap',
-            }}
-            label="Auto Play"
-            onChange={this.autoPlaySwitchChanged}
-            checked={this.state.autoPlay}
+          <PlayButton
+            isPlaying={this.state.isPlaying}
             disabled={Boolean(this.state.errored)}
+            onClick={this.onPlayButtonClick}
+          />
+          <Tooltip2
+            content="Reset"
+            placement="top"
+          >
+            <ButtonComponent
+              disabled={Boolean(this.state.errored)}
+              onClick={this.onResetButtonClick}
+            >
+              <Icon icon={ IconNames.RESET } />
+            </ButtonComponent>
+          </Tooltip2>
+          <Slider
+            value={ this.state.animTimestamp }
+            min={ 0 }
+            max={ this.animationDuration }
+            stepSize={ 1 }
+
+            labelRenderer={ false }
+
+            disabled={Boolean(this.state.errored)}
+
+            onChange={ this.onSliderChange }
+            onRelease={ this.onSliderRelease }
+          />
+          <AutoLoopSwitch
+            isAutoLooping={ this.state.isAutoLooping }
+            disabled={Boolean(this.state.errored)}
+            onChange={ this.onSwitchChange }
           />
         </div>
       </div>
-    );
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        {this.state.errored
+          ? (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+                <Icon icon={IconNames.WARNING_SIGN} size={90} />
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginBottom: 20,
+                }}>
+                  <h3>An error occurred while running your animation!</h3>
+                  <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
+                </div>
+              </div>
+              <code style={{
+                color: 'red',
+              }}>
+                {this.state.errored.toString()}
+              </code>
+            </div>)
+          : (
+            <WebGLCanvas
+              style={{
+                flexGrow: 1,
+              }}
+              ref={(r) => {
+                this.canvas = r;
+              }}
+            />
+          )}
+      </div>
+    </div>;
   }
 }
