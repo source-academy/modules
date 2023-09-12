@@ -382,6 +382,8 @@ export function play_in_tab(sound: Sound): Sound {
     throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
@@ -478,6 +480,8 @@ export function play(sound: Sound): Sound {
     throw new Error(`${play.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
