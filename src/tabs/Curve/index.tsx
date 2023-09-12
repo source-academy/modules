@@ -4,10 +4,10 @@ import type { AnimatedCurve } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../common/multi_item_display';
 import type { DebuggerContext } from '../../typings/type_helpers';
-import Curve3DAnimationCanvas from './3Dcurve_anim_canvas';
-import CurveCanvas3D from './curve_canvas3d';
+import AnimationCanvas3dCurve from './animation_canvas_3d_curve';
+import Canvas3dCurve from './canvas_3d_curve';
 import AnimationCanvas from '../common/animation_canvas';
-import WebGLCanvas from '../common/webgl_canvas';
+import WebGLCanvas from '../common/web_gl_canvas';
 
 export default {
   toSpawn(context: DebuggerContext) {
@@ -24,7 +24,7 @@ export default {
         const anim = curve as AnimatedCurve;
         return anim.is3D
           ? (
-            <Curve3DAnimationCanvas animation={anim} key={elemKey} />
+            <AnimationCanvas3dCurve animation={anim} key={elemKey} />
           )
           : (
             <AnimationCanvas animation={anim} key={elemKey} />
@@ -33,7 +33,7 @@ export default {
       const curveDrawn = curve as CurveDrawn;
       return curveDrawn.is3D()
         ? (
-          <CurveCanvas3D curve={curveDrawn} key={elemKey} />
+          <Canvas3dCurve curve={curveDrawn} key={elemKey} />
         )
         : (
           <WebGLCanvas

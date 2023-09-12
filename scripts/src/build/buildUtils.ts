@@ -190,67 +190,77 @@ export const retrieveBundles = async (manifestFile: string, modules: string[] | 
 };
 
 /**
- * Function to determine which bundles and tabs to build based on the user's input.
+ * Determines which bundles and tabs to build based on the user's input.
  *
- * @param modules
- * - Pass `null` to indicate that the user did not specify any modules. This
- *   will add all bundles currently registered in the manifest
- * - Pass `[]` to indicate not to add any modules
- * - Pass an array of strings to manually specify modules to process
- * @param tabOpts
- * - Pass `null` to indicate that the user did not specify any tabs. This
- *   will add all tabs currently registered in the manifest
- * - Pass `[]` to indicate not to add any tabs
- * - Pass an array of strings to manually specify tabs to process
- * @param addTabs If `true`, then all tabs of selected bundles will be added to
- * the list of tabs to build.
+ * If no modules and no tabs are specified, it is assumed the user wants to
+ * build everything.
+ *
+ * If modules but no tabs are specified, it is assumed the user only wants to
+ * build those bundles (and possibly those modules' tabs based on
+ * shouldAddModuleTabs).
+ *
+ * If tabs but no modules are specified, it is assumed the user only wants to
+ * build those tabs.
+ *
+ * If both modules and tabs are specified, both of the above apply and are
+ * combined.
+ *
+ * @param modules module names specified by the user
+ * @param tabOptions tab names specified by the user
+ * @param shouldAddModuleTabs whether to also automatically include the tabs of
+ * specified modules
  */
 export const retrieveBundlesAndTabs = async (
   manifestFile: string,
   modules: string[] | null,
-  tabOpts: string[] | null,
-  addTabs: boolean = true,
+  tabOptions: string[] | null,
+  shouldAddModuleTabs: boolean = true,
 ) => {
   const manifest = await retrieveManifest(manifestFile);
   const knownBundles = Object.keys(manifest);
-  const knownTabs = Object.values(manifest)
+  const knownTabs = Object
+    .values(manifest)
     .flatMap((x) => x.tabs);
 
-  let bundles: string[];
-  let tabs: string[];
+  let bundles: string[] = [];
+  let tabs: string[] = [];
 
-  if (modules !== null) {
-    // Some modules were specified
+  function addSpecificModules() {
+    // If unknown modules were specified, error
     const unknownModules = modules.filter((m) => !knownBundles.includes(m));
-
     if (unknownModules.length > 0) {
       throw new Error(`Unknown modules: ${unknownModules.join(', ')}`);
     }
-    bundles = modules;
 
-    if (addTabs) {
-    // If a bundle is being rebuilt, add its tabs
-      tabs = modules.flatMap((bundle) => manifest[bundle].tabs);
-    } else {
-      tabs = [];
+    bundles = bundles.concat(modules);
+
+    if (shouldAddModuleTabs) {
+      // Add the modules' tabs too
+      tabs = [...tabs, ...modules.flatMap((bundle) => manifest[bundle].tabs)];
     }
-  } else {
-    // No modules were specified
-    bundles = knownBundles;
-    tabs = [];
   }
-
-  if (tabOpts !== null) {
-    // Tabs were specified
-    const unknownTabs = tabOpts.filter((t) => !knownTabs.includes(t));
-
+  function addSpecificTabs() {
+    // If unknown tabs were specified, error
+    const unknownTabs = tabOptions.filter((t) => !knownTabs.includes(t));
     if (unknownTabs.length > 0) {
       throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
     }
-    tabs = tabs.concat(tabOpts);
-  } else {
-    // No tabs were specified
+
+    tabs = tabs.concat(tabOptions);
+  }
+  function addAllBundles() {
+    bundles = bundles.concat(knownBundles);
+  }
+  function addAllTabs() {
     tabs = tabs.concat(knownTabs);
+  }
+
+  if (modules === null && tabOptions === null) {
+    addAllBundles();
+    addAllTabs();
+  } else {
+    if (modules !== null) addSpecificModules();
+    if (tabOptions !== null) addSpecificTabs();
   }
 
   return {

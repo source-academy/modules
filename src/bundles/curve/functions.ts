@@ -216,7 +216,7 @@ export const draw_points_full_view_proportional = createDrawFunction(
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @return function of type 3D Curve → Drawing
  * @example
  * ```
  * draw_3D_connected(100)(t => make_3D_point(t, t, t));
@@ -237,7 +237,7 @@ export const draw_3D_connected = createDrawFunction(
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @return function of type 3D Curve → Drawing
  * @example
  * ```
  * draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
@@ -258,7 +258,7 @@ export const draw_3D_connected_full_view = createDrawFunction(
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @return function of type 3D Curve → Drawing
  * @example
  * ```
  * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
@@ -279,7 +279,7 @@ export const draw_3D_connected_full_view_proportional = createDrawFunction(
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @return function of type 3D Curve → Drawing
  * @example
  * ```
  * draw_3D_points(100)(t => make_3D_point(t, t, t));
@@ -295,7 +295,7 @@ export const draw_3D_points = createDrawFunction('none', 'points', '3D', false);
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @return function of type 3D Curve → Drawing
  * @example
  * ```
  * draw_3D_points_full_view(100)(t => make_3D_point(t, t, t));
@@ -316,7 +316,7 @@ export const draw_3D_points_full_view = createDrawFunction(
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @return function of type 3D Curve → Drawing
  * @example
  * ```
  * draw_3D_points_full_view_proportional(100)(t => make_3D_point(t, t, t));
@@ -798,12 +798,22 @@ export function arc(t: number): Point {
 }
 
 /**
- * Create a animation of curves using a curve generating function.
- * @param duration The duration of the animation in seconds
- * @param fps Framerate of the animation in frames per second
- * @param drawer Draw function to the generated curves with
- * @param func Curve generating function. Takes in a timestamp value and returns a curve
- * @return Curve Animation
+ * This function creates an animated Curve using the specified drawer function
+ * and Curve generator.
+ *
+ * The Curve generator should take a number and return a Curve. The number is
+ * the timestamp value of the animation, given in seconds. For example, when
+ * this function wants to request the Curve that should be used 7.5 seconds into
+ * the animation, it will pass in a timestamp of 7.5.
+ *
+ * The generated Curves are drawn using the specified drawer function of type
+ * Curve → Drawing.
+ *
+ * @param duration animation duration in seconds
+ * @param fps frame rate of the animation in frames per second
+ * @param drawer drawer function
+ * @param func Curve generator function
+ * @returns animated Curve
  */
 export function animate_curve(
   duration: number,
@@ -821,12 +831,22 @@ export function animate_curve(
 }
 
 /**
- * Create a animation of curves using a curve generating function.
- * @param duration The duration of the animation in seconds
- * @param fps Framerate of the animation in frames per second
- * @param drawer Draw function to the generated curves with
- * @param func Curve generating function. Takes in a timestamp value and returns a curve
- * @return 3D Curve Animation
+ * This function creates an animated 3D Curve using the specified 3D drawer
+ * function and 3D Curve generator.
+ *
+ * The 3D Curve generator should take a number and return a 3D Curve. The number
+ * is the timestamp value of the animation, given in seconds. For example, when
+ * this function wants to request the 3D Curve that should be used 7.5 seconds
+ * into the animation, it will pass in a timestamp of 7.5.
+ *
+ * The generated 3D Curves are drawn using the specified 3D drawer function of
+ * type 3D Curve → Drawing.
+ *
+ * @param duration animation duration in seconds
+ * @param fps frame rate of the animation in frames per second
+ * @param drawer 3D drawer function
+ * @param func 3D Curve generator function
+ * @returns animated 3D Curve
  */
 export function animate_3D_curve(
   duration: number,

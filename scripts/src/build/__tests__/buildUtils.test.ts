@@ -23,7 +23,7 @@ describe('Test retrieveBundlesAndTabs', () => {
       .toEqual(expect.arrayContaining(['tab0']));
   });
 
-  it('should return only tabs when an empty array is passed for modules', async () => {
+  it('should return nothing when an empty array is passed for modules', async () => {
     const result = await retrieveBundlesAndTabs('', [], null);
 
     expect(result.bundles)
@@ -31,7 +31,7 @@ describe('Test retrieveBundlesAndTabs', () => {
     expect(result.modulesSpecified)
       .toBe(true);
     expect(result.tabs)
-      .toEqual(expect.arrayContaining(['tab0', 'tab1']));
+      .toEqual([]);
   });
 
   it('should return tabs from the specified modules, and concatenate specified tabs', async () => {
