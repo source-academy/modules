@@ -307,6 +307,8 @@ require => {
       throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
     } else if (get_duration(sound) < 0) {
       throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+    } else if (get_duration(sound) === 0) {
+      return sound;
     } else {
       if (!audioplayer) {
         init_audioCtx();
@@ -368,6 +370,8 @@ require => {
       throw new Error(`${play.name}: audio system still playing previous sound`);
     } else if (get_duration(sound) < 0) {
       throw new Error(`${play.name}: duration of sound is negative`);
+    } else if (get_duration(sound) === 0) {
+      return sound;
     } else {
       if (!audioplayer) {
         init_audioCtx();
