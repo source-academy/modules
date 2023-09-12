@@ -6,15 +6,17 @@ type TestCommandOptions = {
   srcDir: string
   verbose: boolean
   watch: boolean
+  update: boolean
 };
 
 const testCommand = new Command('test')
   .description('Run jest')
   .argument('[patterns...]', null)
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
-  .option('--verbose, -v', 'Source directory for files', false)
+  .option('-v, --verbose', 'Run Jest in verbose mode', false)
   .option('-w, --watch', 'Run jest in watch mode', false)
-  .action(async (patterns: string[] | null, { srcDir, verbose, watch }: TestCommandOptions) => {
+  .option('-u, --updateSnapshot', 'Update snapshots', false)
+  .action(async (patterns: string[] | null, { srcDir, ...others }: TestCommandOptions) => {
     // A wrapper around running jest to convert windows paths to posix paths
     // since jest doesn't know how to match windows paths
     const jestArgs = patterns === null
@@ -22,8 +24,10 @@ const testCommand = new Command('test')
       : patterns.map((pattern) => pattern.split(pathlib.sep)
         .join(pathlib.posix.sep));
 
-    if (verbose) jestArgs.push('--verbose');
-    if (watch) jestArgs.push('--watch');
+    Object.entries(others)
+      .forEach(([optName, value]) => {
+        if (value) jestArgs.push(`--${optName}`);
+      });
 
     await jest.run(jestArgs, pathlib.join(srcDir, 'jest.config.js'));
   });
