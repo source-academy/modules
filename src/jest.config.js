@@ -26,5 +26,6 @@ export default {
   },
   transformIgnorePatterns: [
     'node_modules/(?!=chalk)/',
+    '.+\\.js'
   ],
 };
