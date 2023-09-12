@@ -6500,8 +6500,7 @@ require => (() => {
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "row",
-          position: "relative",
-          marginBottom: 10
+          position: "relative"
         },
         children: [(0, import_jsx_runtime.jsx)(Button, {
           style: {
@@ -6532,8 +6531,6 @@ require => (() => {
       }) : null, (0, import_jsx_runtime.jsx)("div", {
         style: {
           width: "100%",
-          paddingLeft: "20px",
-          paddingRight: "20px",
           display: "flex",
           alignContent: "center",
           justifyContent: "center"

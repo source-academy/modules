@@ -1222,7 +1222,7 @@ require => (() => {
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element2 = REACT_ELEMENT_TYPE;
           var ForwardRef = REACT_FORWARD_REF_TYPE;
-          var Fragment2 = REACT_FRAGMENT_TYPE;
+          var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
           var Portal2 = REACT_PORTAL_TYPE;
@@ -1281,7 +1281,7 @@ require => (() => {
           exports.ContextProvider = ContextProvider;
           exports.Element = Element2;
           exports.ForwardRef = ForwardRef;
-          exports.Fragment = Fragment2;
+          exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
           exports.Portal = Portal2;
@@ -9945,8 +9945,7 @@ require => (() => {
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "row",
-          position: "relative",
-          marginBottom: 10
+          position: "relative"
         },
         children: [(0, import_jsx_runtime.jsx)(Button, {
           style: {
@@ -9977,8 +9976,6 @@ require => (() => {
       }) : null, (0, import_jsx_runtime.jsx)("div", {
         style: {
           width: "100%",
-          paddingLeft: "20px",
-          paddingRight: "20px",
           display: "flex",
           alignContent: "center",
           justifyContent: "center"
@@ -12518,27 +12515,65 @@ require => (() => {
     return Popover22;
   })(AbstractPureComponent2);
   function noop2() {}
-  var import_react8 = __toESM(__require("react"), 1);
+  var import_react10 = __toESM(__require("react"), 1);
   init_define_process();
   var import_react7 = __toESM(__require("react"), 1);
   var import_jsx_runtime2 = __require("react/jsx-runtime");
+  var AutoLoopSwitch = class extends import_react7.default.Component {
+    render() {
+      return (0, import_jsx_runtime2.jsx)(Switch, {
+        style: {
+          marginBottom: "0px",
+          whiteSpace: "nowrap"
+        },
+        label: "Auto Loop",
+        checked: this.props.isAutoLooping,
+        onChange: this.props.onChangeCallback
+      });
+    }
+  };
+  init_define_process();
+  var SA_TAB_ICON_SIZE = IconSize.LARGE;
+  var BP_TAB_BUTTON_MARGIN = "20px";
+  var BP_TEXT_MARGIN = "10px";
+  var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
+  init_define_process();
+  var import_react8 = __toESM(__require("react"), 1);
+  var import_jsx_runtime3 = __require("react/jsx-runtime");
+  var PlayButton = class extends import_react8.default.Component {
+    render() {
+      return (0, import_jsx_runtime3.jsx)(Tooltip2, {
+        content: this.props.isPlaying ? "Pause" : "Play",
+        placement: "top",
+        children: (0, import_jsx_runtime3.jsx)(Button, {
+          onClick: this.props.onClickCallback,
+          children: (0, import_jsx_runtime3.jsx)(Icon, {
+            icon: this.props.isPlaying ? IconNames.PAUSE : IconNames.PLAY
+          })
+        })
+      });
+    }
+  };
+  init_define_process();
+  var import_react9 = __toESM(__require("react"), 1);
+  var import_jsx_runtime4 = __require("react/jsx-runtime");
   var defaultStyle = {
     width: "100%",
-    maxWidth: "max(70vh, 30vw)",
+    maxWidth: CANVAS_MAX_WIDTH,
     aspectRatio: "1"
   };
-  var WebGLCanvas = import_react7.default.forwardRef((props, ref) => {
+  var WebGLCanvas = import_react9.default.forwardRef((props, ref) => {
     const style = props.style !== void 0 ? __spreadValues(__spreadValues({}, defaultStyle), props.style) : defaultStyle;
-    return (0, import_jsx_runtime2.jsx)("canvas", __spreadProps(__spreadValues({}, props), {
+    return (0, import_jsx_runtime4.jsx)("canvas", __spreadProps(__spreadValues({}, props), {
       style,
       ref,
       height: 512,
       width: 512
     }));
   });
-  var webgl_canvas_default = WebGLCanvas;
-  var import_jsx_runtime3 = __require("react/jsx-runtime");
-  var Curve3DAnimationCanvas = class extends import_react8.default.Component {
+  var web_gl_canvas_default = WebGLCanvas;
+  var import_jsx_runtime5 = __require("react/jsx-runtime");
+  var AnimationCanvas3dCurve = class extends import_react10.default.Component {
     constructor(props) {
       super(props);
       this.drawFrame = () => {
@@ -12563,7 +12598,7 @@ require => (() => {
         }
         this.callbackTimestamp = timeInMs;
         if (this.state.animTimestamp >= this.animationDuration) {
-          if (this.state.autoPlay) {
+          if (this.state.isAutoLooping) {
             this.setState({
               animTimestamp: 0
             }, this.reqFrame);
@@ -12598,7 +12633,10 @@ require => (() => {
         this.setState({
           animTimestamp: 0
         }, () => {
-          if (this.state.isPlaying) this.reqFrame(); else this.drawFrame();
+          if (this.state.isPlaying) {
+            this.onPlayButtonClick();
+          }
+          this.drawFrame();
         });
       };
       this.onTimeSliderChange = newValue => {
@@ -12622,23 +12660,23 @@ require => (() => {
       };
       this.onAngleSliderChange = newAngle => {
         this.setState({
-          curveAngle: newAngle
+          displayAngle: newAngle
         }, () => {
           this.props.animation.angle = newAngle;
           if (this.state.isPlaying) this.reqFrame(); else this.drawFrame();
         });
       };
-      this.autoPlaySwitchChanged = () => {
+      this.onSwitchChange = () => {
         this.setState(prev => ({
-          autoPlay: !prev.autoPlay
+          isAutoLooping: !prev.isAutoLooping
         }));
       };
       this.state = {
         animTimestamp: 0,
         isPlaying: false,
         wasPlaying: false,
-        autoPlay: true,
-        curveAngle: 0
+        isAutoLooping: true,
+        displayAngle: 0
       };
       this.canvas = null;
       this.frameDuration = 1e3 / props.animation.fps;
@@ -12649,105 +12687,75 @@ require => (() => {
       this.drawFrame();
     }
     render() {
-      const buttons = (0, import_jsx_runtime3.jsxs)("div", {
-        style: {
-          marginLeft: "20px",
-          marginRight: "20px",
-          marginTop: "5px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between"
-        },
-        children: [(0, import_jsx_runtime3.jsx)("div", {
-          style: {
-            marginRight: "20px"
-          },
-          children: (0, import_jsx_runtime3.jsx)(Tooltip2, {
-            content: this.state.isPlaying ? "Pause" : "Play",
-            children: (0, import_jsx_runtime3.jsx)(Button, {
-              onClick: this.onPlayButtonClick,
-              children: (0, import_jsx_runtime3.jsx)(Icon, {
-                icon: this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY
-              })
-            })
-          })
-        }), (0, import_jsx_runtime3.jsx)(Tooltip2, {
-          content: "Reset",
-          children: (0, import_jsx_runtime3.jsx)(Button, {
-            onClick: this.onResetButtonClick,
-            children: (0, import_jsx_runtime3.jsx)(Icon, {
-              icon: IconNames.RESET
-            })
-          })
-        })]
-      });
-      const sliders = (0, import_jsx_runtime3.jsxs)("div", {
-        style: {
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "stretch"
-        },
-        children: [(0, import_jsx_runtime3.jsx)(Slider, {
-          value: this.state.animTimestamp,
-          onChange: this.onTimeSliderChange,
-          onRelease: this.onTimeSliderRelease,
-          stepSize: 1,
-          labelRenderer: false,
-          min: 0,
-          max: this.animationDuration
-        }), (0, import_jsx_runtime3.jsx)(Tooltip2, {
-          content: "Display Angle",
-          children: (0, import_jsx_runtime3.jsx)("div", {
-            style: {
-              marginTop: "5px"
-            },
-            children: (0, import_jsx_runtime3.jsx)(Slider, {
-              value: this.state.curveAngle,
-              onChange: this.onAngleSliderChange,
-              stepSize: 0.01,
-              min: 0,
-              max: 2 * Math.PI,
-              labelRenderer: false
-            })
-          })
-        })]
-      });
-      return (0, import_jsx_runtime3.jsxs)("div", {
+      return (0, import_jsx_runtime5.jsxs)("div", {
         style: {
           width: "100%"
         },
-        children: [(0, import_jsx_runtime3.jsxs)("div", {
+        children: [(0, import_jsx_runtime5.jsx)("div", {
           style: {
             display: "flex",
-            marginTop: "10px",
-            padding: "10px",
-            flexDirection: "row",
-            justifyContent: "stretch",
-            alignContent: "center"
-          },
-          children: [buttons, sliders, (0, import_jsx_runtime3.jsx)(Switch, {
-            style: {
-              marginLeft: "20px",
-              marginRight: "20px",
-              marginTop: "10px",
-              whiteSpace: "nowrap"
-            },
-            label: "Auto Play",
-            onChange: this.autoPlaySwitchChanged,
-            checked: this.state.autoPlay
-          })]
-        }), (0, import_jsx_runtime3.jsx)("div", {
-          style: {
-            marginTop: "15px",
-            display: "flex",
-            alignContent: "center",
             justifyContent: "center"
           },
-          children: (0, import_jsx_runtime3.jsx)(webgl_canvas_default, {
+          children: (0, import_jsx_runtime5.jsxs)("div", {
             style: {
-              flexGrow: 1
+              display: "flex",
+              alignItems: "center",
+              gap: BP_TAB_BUTTON_MARGIN,
+              width: "100%",
+              maxWidth: CANVAS_MAX_WIDTH,
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
             },
+            children: [(0, import_jsx_runtime5.jsx)(PlayButton, {
+              isPlaying: this.state.isPlaying,
+              onClickCallback: this.onPlayButtonClick
+            }), (0, import_jsx_runtime5.jsx)(Tooltip2, {
+              content: "Reset",
+              placement: "top",
+              children: (0, import_jsx_runtime5.jsx)(Button, {
+                onClick: this.onResetButtonClick,
+                children: (0, import_jsx_runtime5.jsx)(Icon, {
+                  icon: IconNames.RESET
+                })
+              })
+            }), (0, import_jsx_runtime5.jsxs)("div", {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                gap: BP_TEXT_MARGIN,
+                width: "100%"
+              },
+              children: [(0, import_jsx_runtime5.jsx)(Slider, {
+                value: this.state.animTimestamp,
+                min: 0,
+                max: this.animationDuration,
+                stepSize: 1,
+                labelRenderer: false,
+                onChange: this.onTimeSliderChange,
+                onRelease: this.onTimeSliderRelease
+              }), (0, import_jsx_runtime5.jsx)(Tooltip2, {
+                content: "Display Angle",
+                placement: "top",
+                children: (0, import_jsx_runtime5.jsx)(Slider, {
+                  value: this.state.displayAngle,
+                  min: 0,
+                  max: 2 * Math.PI,
+                  stepSize: 0.01,
+                  labelRenderer: false,
+                  onChange: this.onAngleSliderChange
+                })
+              })]
+            }), (0, import_jsx_runtime5.jsx)(AutoLoopSwitch, {
+              isAutoLooping: this.state.isAutoLooping,
+              onChangeCallback: this.onSwitchChange
+            })]
+          })
+        }), (0, import_jsx_runtime5.jsx)("div", {
+          style: {
+            display: "flex",
+            justifyContent: "center"
+          },
+          children: (0, import_jsx_runtime5.jsx)(web_gl_canvas_default, {
             ref: r => {
               this.canvas = r;
             }
@@ -12757,24 +12765,27 @@ require => (() => {
     }
   };
   init_define_process();
-  var import_react9 = __toESM(__require("react"), 1);
-  var import_jsx_runtime4 = __require("react/jsx-runtime");
-  var CurveCanvas3D = class extends import_react9.default.Component {
+  var import_react11 = __toESM(__require("react"), 1);
+  init_define_process();
+  function degreesToRadians(degrees) {
+    return degrees / 360 * (2 * Math.PI);
+  }
+  var import_jsx_runtime6 = __require("react/jsx-runtime");
+  var Canvas3dCurve = class extends import_react11.default.Component {
     constructor(props) {
       super(props);
       this.onSliderChangeHandler = newValue => {
         this.setState({
-          rotationAngle: newValue,
-          isRotating: false,
-          displayAngle: true
+          displayAngle: newValue,
+          isRotating: false
         }, () => {
-          if (this.$canvas) {
-            this.props.curve.redraw(newValue / 180 * Math.PI);
+          if (this.canvas) {
+            this.props.curve.redraw(degreesToRadians(newValue));
           }
         });
       };
       this.onClickHandler = () => {
-        if (!this.$canvas) return;
+        if (!this.canvas) return;
         this.setState(prevState => ({
           isRotating: !prevState.isRotating
         }), () => {
@@ -12784,11 +12795,11 @@ require => (() => {
         });
       };
       this.autoRotate = () => {
-        if (this.$canvas && this.state.isRotating) {
+        if (this.canvas && this.state.isRotating) {
           this.setState(prevState => __spreadProps(__spreadValues({}, prevState), {
-            rotationAngle: prevState.rotationAngle >= 360 ? 0 : prevState.rotationAngle + 2
+            displayAngle: prevState.displayAngle >= 360 ? 0 : prevState.displayAngle + 2
           }), () => {
-            this.props.curve.redraw(this.state.rotationAngle / 180 * Math.PI);
+            this.props.curve.redraw(degreesToRadians(this.state.displayAngle));
             window.requestAnimationFrame(this.autoRotate);
           });
         }
@@ -12796,81 +12807,85 @@ require => (() => {
       this.onTextBoxChange = event => {
         const angle = parseFloat(event.target.value);
         this.setState(() => ({
-          rotationAngle: angle
+          displayAngle: angle
         }), () => {
-          if (this.$canvas) {
-            this.props.curve.redraw(angle / 180 * Math.PI);
+          if (this.canvas) {
+            this.props.curve.redraw(degreesToRadians(angle));
           }
         });
       };
-      this.$canvas = null;
+      this.canvas = null;
       this.state = {
-        rotationAngle: 0,
-        isRotating: false,
-        displayAngle: false
+        displayAngle: 0,
+        isRotating: false
       };
     }
     componentDidMount() {
-      if (this.$canvas) {
-        this.props.curve.init(this.$canvas);
-        this.props.curve.redraw(this.state.rotationAngle / 180 * Math.PI);
+      if (this.canvas) {
+        this.props.curve.init(this.canvas);
+        this.props.curve.redraw(degreesToRadians(this.state.displayAngle));
       }
     }
     render() {
-      return (0, import_jsx_runtime4.jsxs)("div", {
+      return (0, import_jsx_runtime6.jsxs)("div", {
         style: {
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "center"
+          width: "100%"
         },
-        children: [(0, import_jsx_runtime4.jsx)(webgl_canvas_default, {
-          ref: r => {
-            this.$canvas = r;
-          }
-        }), (0, import_jsx_runtime4.jsxs)("div", {
+        children: [(0, import_jsx_runtime6.jsx)("div", {
           style: {
             display: "flex",
-            padding: "10px",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center"
+            justifyContent: "center"
           },
-          children: [(0, import_jsx_runtime4.jsx)(Slider, {
-            value: this.state.rotationAngle,
-            stepSize: 1,
-            labelValues: [],
-            labelRenderer: false,
-            min: 0,
-            max: 360,
-            onChange: this.onSliderChangeHandler
-          }), (0, import_jsx_runtime4.jsx)(Button, {
+          children: (0, import_jsx_runtime6.jsxs)("div", {
             style: {
-              marginLeft: "20px"
+              display: "flex",
+              alignItems: "center",
+              gap: BP_TAB_BUTTON_MARGIN,
+              width: "100%",
+              maxWidth: CANVAS_MAX_WIDTH,
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
             },
-            onClick: this.onClickHandler,
-            children: (0, import_jsx_runtime4.jsx)(Icon, {
-              icon: this.state.isRotating ? IconNames.PAUSE : IconNames.PLAY
-            })
-          }), (0, import_jsx_runtime4.jsx)("input", {
-            style: {
-              marginLeft: "20px"
-            },
-            type: "number",
-            min: 0,
-            max: 360,
-            step: 1,
-            disabled: this.state.isRotating,
-            onChange: this.onTextBoxChange,
-            value: this.state.rotationAngle
-          })]
+            children: [(0, import_jsx_runtime6.jsx)(PlayButton, {
+              isPlaying: this.state.isRotating,
+              onClickCallback: this.onClickHandler
+            }), (0, import_jsx_runtime6.jsx)(Slider, {
+              value: this.state.displayAngle,
+              min: 0,
+              max: 360,
+              labelRenderer: false,
+              onChange: this.onSliderChangeHandler
+            }), (0, import_jsx_runtime6.jsx)("input", {
+              style: {
+                height: "100%"
+              },
+              type: "number",
+              value: this.state.displayAngle,
+              min: 0,
+              max: 360,
+              step: 1,
+              disabled: this.state.isRotating,
+              onChange: this.onTextBoxChange
+            })]
+          })
+        }), (0, import_jsx_runtime6.jsx)("div", {
+          style: {
+            display: "flex",
+            justifyContent: "center"
+          },
+          children: (0, import_jsx_runtime6.jsx)(web_gl_canvas_default, {
+            ref: r => {
+              this.canvas = r;
+            }
+          })
         })]
       });
     }
   };
   init_define_process();
-  var import_react10 = __toESM(__require("react"), 1);
-  var import_jsx_runtime5 = __require("react/jsx-runtime");
-  var AnimationCanvas = class extends import_react10.default.Component {
+  var import_react12 = __toESM(__require("react"), 1);
+  var import_jsx_runtime7 = __require("react/jsx-runtime");
+  var AnimationCanvas = class extends import_react12.default.Component {
     constructor(props) {
       super(props);
       this.drawFrame = () => {
@@ -12903,7 +12918,7 @@ require => (() => {
         }
         this.callbackTimestamp = timeInMs;
         if (this.state.animTimestamp >= this.animationDuration) {
-          if (this.state.autoPlay) {
+          if (this.state.isAutoLooping) {
             this.setState({
               animTimestamp: 0
             }, this.reqFrame);
@@ -12920,17 +12935,16 @@ require => (() => {
         }
       };
       this.onPlayButtonClick = () => {
-        if (this.state.isPlaying) {
-          this.stopAnimation();
-        } else {
-          this.startAnimation();
-        }
+        if (this.state.isPlaying) this.stopAnimation(); else this.startAnimation();
       };
       this.onResetButtonClick = () => {
         this.setState({
           animTimestamp: 0
         }, () => {
-          if (!this.state.isPlaying) this.drawFrame();
+          if (this.state.isPlaying) {
+            this.onPlayButtonClick();
+          }
+          this.drawFrame();
         });
       };
       this.onSliderChange = newValue => {
@@ -12952,16 +12966,16 @@ require => (() => {
           }
         });
       };
-      this.autoPlaySwitchChanged = () => {
+      this.onSwitchChange = () => {
         this.setState(prev => ({
-          autoPlay: !prev.autoPlay
+          isAutoLooping: !prev.isAutoLooping
         }));
       };
       this.state = {
         animTimestamp: 0,
         isPlaying: false,
         wasPlaying: false,
-        autoPlay: true
+        isAutoLooping: true
       };
       this.canvas = null;
       this.frameDuration = 1e3 / props.animation.fps;
@@ -12972,92 +12986,65 @@ require => (() => {
       this.drawFrame();
     }
     render() {
-      const buttons = (0, import_jsx_runtime5.jsxs)("div", {
+      return (0, import_jsx_runtime7.jsxs)("div", {
         style: {
-          marginLeft: "20px",
-          marginRight: "20px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between"
+          width: "100%"
         },
-        children: [(0, import_jsx_runtime5.jsx)("div", {
-          style: {
-            marginRight: "20px"
-          },
-          children: (0, import_jsx_runtime5.jsx)(Tooltip2, {
-            content: this.state.isPlaying ? "Pause" : "Play",
-            children: (0, import_jsx_runtime5.jsx)(Button, {
-              onClick: this.onPlayButtonClick,
-              children: (0, import_jsx_runtime5.jsx)(Icon, {
-                icon: this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY
-              })
-            })
-          })
-        }), (0, import_jsx_runtime5.jsx)(Tooltip2, {
-          content: "Reset",
-          children: (0, import_jsx_runtime5.jsx)(Button, {
-            onClick: this.onResetButtonClick,
-            children: (0, import_jsx_runtime5.jsx)(Icon, {
-              icon: IconNames.RESET
-            })
-          })
-        })]
-      });
-      const animSlider = (0, import_jsx_runtime5.jsx)("div", {
-        style: {
-          marginTop: "7px",
-          flexGrow: 1
-        },
-        children: (0, import_jsx_runtime5.jsx)(Slider, {
-          value: this.state.animTimestamp,
-          onChange: this.onSliderChange,
-          onRelease: this.onSliderRelease,
-          stepSize: 1,
-          labelRenderer: false,
-          min: 0,
-          max: this.animationDuration
-        })
-      });
-      return (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, {
-        children: [(0, import_jsx_runtime5.jsx)("div", {
+        children: [(0, import_jsx_runtime7.jsx)("div", {
           style: {
             display: "flex",
-            alignContent: "center",
             justifyContent: "center"
           },
-          children: (0, import_jsx_runtime5.jsx)(webgl_canvas_default, {
+          children: (0, import_jsx_runtime7.jsxs)("div", {
             style: {
-              flexGrow: 1
+              display: "flex",
+              alignItems: "center",
+              gap: BP_TAB_BUTTON_MARGIN,
+              width: "100%",
+              maxWidth: CANVAS_MAX_WIDTH,
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
             },
+            children: [(0, import_jsx_runtime7.jsx)(PlayButton, {
+              isPlaying: this.state.isPlaying,
+              onClickCallback: this.onPlayButtonClick
+            }), (0, import_jsx_runtime7.jsx)(Tooltip2, {
+              content: "Reset",
+              placement: "top",
+              children: (0, import_jsx_runtime7.jsx)(Button, {
+                onClick: this.onResetButtonClick,
+                children: (0, import_jsx_runtime7.jsx)(Icon, {
+                  icon: IconNames.RESET
+                })
+              })
+            }), (0, import_jsx_runtime7.jsx)(Slider, {
+              value: this.state.animTimestamp,
+              min: 0,
+              max: this.animationDuration,
+              stepSize: 1,
+              labelRenderer: false,
+              onChange: this.onSliderChange,
+              onRelease: this.onSliderRelease
+            }), (0, import_jsx_runtime7.jsx)(AutoLoopSwitch, {
+              isAutoLooping: this.state.isAutoLooping,
+              onChangeCallback: this.onSwitchChange
+            })]
+          })
+        }), (0, import_jsx_runtime7.jsx)("div", {
+          style: {
+            display: "flex",
+            justifyContent: "center"
+          },
+          children: (0, import_jsx_runtime7.jsx)(web_gl_canvas_default, {
             ref: r => {
               this.canvas = r;
             }
           })
-        }), (0, import_jsx_runtime5.jsxs)("div", {
-          style: {
-            display: "flex",
-            marginTop: "10px",
-            padding: "10px",
-            flexDirection: "row",
-            justifyContent: "stretch",
-            alignContent: "center"
-          },
-          children: [buttons, animSlider, (0, import_jsx_runtime5.jsx)(Switch, {
-            style: {
-              marginLeft: "20px",
-              marginRight: "20px",
-              marginTop: "5px",
-              whiteSpace: "nowrap"
-            },
-            label: "Auto Play",
-            onChange: this.autoPlaySwitchChanged,
-            checked: this.state.autoPlay
-          })]
         })]
       });
     }
   };
-  var import_jsx_runtime6 = __require("react/jsx-runtime");
+  var import_jsx_runtime8 = __require("react/jsx-runtime");
   var Curve_default = {
     toSpawn(context) {
       var _a3, _b2, _c2, _d2;
@@ -13070,16 +13057,16 @@ require => (() => {
         const elemKey = i.toString();
         if (glAnimation.isAnimation(curve)) {
           const anim = curve;
-          return anim.is3D ? (0, import_jsx_runtime6.jsx)(Curve3DAnimationCanvas, {
+          return anim.is3D ? (0, import_jsx_runtime8.jsx)(AnimationCanvas3dCurve, {
             animation: anim
-          }, elemKey) : (0, import_jsx_runtime6.jsx)(AnimationCanvas, {
+          }, elemKey) : (0, import_jsx_runtime8.jsx)(AnimationCanvas, {
             animation: anim
           }, elemKey);
         }
         const curveDrawn = curve;
-        return curveDrawn.is3D() ? (0, import_jsx_runtime6.jsx)(CurveCanvas3D, {
+        return curveDrawn.is3D() ? (0, import_jsx_runtime8.jsx)(Canvas3dCurve, {
           curve: curveDrawn
-        }, elemKey) : (0, import_jsx_runtime6.jsx)(webgl_canvas_default, {
+        }, elemKey) : (0, import_jsx_runtime8.jsx)(web_gl_canvas_default, {
           ref: r => {
             if (r) {
               curveDrawn.init(r);
@@ -13088,7 +13075,7 @@ require => (() => {
           }
         }, elemKey);
       });
-      return (0, import_jsx_runtime6.jsx)(multi_item_display_default, {
+      return (0, import_jsx_runtime8.jsx)(multi_item_display_default, {
         elements: canvases
       });
     },

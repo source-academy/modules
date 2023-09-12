@@ -2156,7 +2156,7 @@ void main(void) {
     const root2 = Math.sqrt(2);
     const r = 4 / (2 + 3 * root2);
     const scaleX = 1 / (r * (1 + root2 / 2));
-    const numPoints = 10;
+    const numPoints = 100;
     const rightCenterX = r / root2;
     const rightCenterY = 1 - r;
     for (let i = 0; i < numPoints; i += 1) {

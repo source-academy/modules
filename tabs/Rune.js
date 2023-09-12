@@ -1222,7 +1222,7 @@ require => (() => {
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element2 = REACT_ELEMENT_TYPE;
           var ForwardRef = REACT_FORWARD_REF_TYPE;
-          var Fragment2 = REACT_FRAGMENT_TYPE;
+          var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
           var Portal2 = REACT_PORTAL_TYPE;
@@ -1281,7 +1281,7 @@ require => (() => {
           exports.ContextProvider = ContextProvider;
           exports.Element = Element2;
           exports.ForwardRef = ForwardRef;
-          exports.Fragment = Fragment2;
+          exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
           exports.Portal = Portal2;
@@ -9945,8 +9945,7 @@ require => (() => {
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "row",
-          position: "relative",
-          marginBottom: 10
+          position: "relative"
         },
         children: [(0, import_jsx_runtime.jsx)(Button, {
           style: {
@@ -9977,8 +9976,6 @@ require => (() => {
       }) : null, (0, import_jsx_runtime.jsx)("div", {
         style: {
           width: "100%",
-          paddingLeft: "20px",
-          paddingRight: "20px",
           display: "flex",
           alignContent: "center",
           justifyContent: "center"
@@ -12518,27 +12515,65 @@ require => (() => {
     return Popover22;
   })(AbstractPureComponent2);
   function noop2() {}
-  var import_react8 = __toESM(__require("react"), 1);
+  var import_react10 = __toESM(__require("react"), 1);
   init_define_process();
   var import_react7 = __toESM(__require("react"), 1);
   var import_jsx_runtime2 = __require("react/jsx-runtime");
+  var AutoLoopSwitch = class extends import_react7.default.Component {
+    render() {
+      return (0, import_jsx_runtime2.jsx)(Switch, {
+        style: {
+          marginBottom: "0px",
+          whiteSpace: "nowrap"
+        },
+        label: "Auto Loop",
+        checked: this.props.isAutoLooping,
+        onChange: this.props.onChangeCallback
+      });
+    }
+  };
+  init_define_process();
+  var SA_TAB_ICON_SIZE = IconSize.LARGE;
+  var BP_TAB_BUTTON_MARGIN = "20px";
+  var BP_TEXT_MARGIN = "10px";
+  var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
+  init_define_process();
+  var import_react8 = __toESM(__require("react"), 1);
+  var import_jsx_runtime3 = __require("react/jsx-runtime");
+  var PlayButton = class extends import_react8.default.Component {
+    render() {
+      return (0, import_jsx_runtime3.jsx)(Tooltip2, {
+        content: this.props.isPlaying ? "Pause" : "Play",
+        placement: "top",
+        children: (0, import_jsx_runtime3.jsx)(Button, {
+          onClick: this.props.onClickCallback,
+          children: (0, import_jsx_runtime3.jsx)(Icon, {
+            icon: this.props.isPlaying ? IconNames.PAUSE : IconNames.PLAY
+          })
+        })
+      });
+    }
+  };
+  init_define_process();
+  var import_react9 = __toESM(__require("react"), 1);
+  var import_jsx_runtime4 = __require("react/jsx-runtime");
   var defaultStyle = {
     width: "100%",
-    maxWidth: "max(70vh, 30vw)",
+    maxWidth: CANVAS_MAX_WIDTH,
     aspectRatio: "1"
   };
-  var WebGLCanvas = import_react7.default.forwardRef((props, ref) => {
+  var WebGLCanvas = import_react9.default.forwardRef((props, ref) => {
     const style = props.style !== void 0 ? __spreadValues(__spreadValues({}, defaultStyle), props.style) : defaultStyle;
-    return (0, import_jsx_runtime2.jsx)("canvas", __spreadProps(__spreadValues({}, props), {
+    return (0, import_jsx_runtime4.jsx)("canvas", __spreadProps(__spreadValues({}, props), {
       style,
       ref,
       height: 512,
       width: 512
     }));
   });
-  var webgl_canvas_default = WebGLCanvas;
-  var import_jsx_runtime3 = __require("react/jsx-runtime");
-  var AnimationCanvas = class extends import_react8.default.Component {
+  var web_gl_canvas_default = WebGLCanvas;
+  var import_jsx_runtime5 = __require("react/jsx-runtime");
+  var AnimationCanvas = class extends import_react10.default.Component {
     constructor(props) {
       super(props);
       this.drawFrame = () => {
@@ -12571,7 +12606,7 @@ require => (() => {
         }
         this.callbackTimestamp = timeInMs;
         if (this.state.animTimestamp >= this.animationDuration) {
-          if (this.state.autoPlay) {
+          if (this.state.isAutoLooping) {
             this.setState({
               animTimestamp: 0
             }, this.reqFrame);
@@ -12588,17 +12623,16 @@ require => (() => {
         }
       };
       this.onPlayButtonClick = () => {
-        if (this.state.isPlaying) {
-          this.stopAnimation();
-        } else {
-          this.startAnimation();
-        }
+        if (this.state.isPlaying) this.stopAnimation(); else this.startAnimation();
       };
       this.onResetButtonClick = () => {
         this.setState({
           animTimestamp: 0
         }, () => {
-          if (!this.state.isPlaying) this.drawFrame();
+          if (this.state.isPlaying) {
+            this.onPlayButtonClick();
+          }
+          this.drawFrame();
         });
       };
       this.onSliderChange = newValue => {
@@ -12620,16 +12654,16 @@ require => (() => {
           }
         });
       };
-      this.autoPlaySwitchChanged = () => {
+      this.onSwitchChange = () => {
         this.setState(prev => ({
-          autoPlay: !prev.autoPlay
+          isAutoLooping: !prev.isAutoLooping
         }));
       };
       this.state = {
         animTimestamp: 0,
         isPlaying: false,
         wasPlaying: false,
-        autoPlay: true
+        isAutoLooping: true
       };
       this.canvas = null;
       this.frameDuration = 1e3 / props.animation.fps;
@@ -12640,103 +12674,76 @@ require => (() => {
       this.drawFrame();
     }
     render() {
-      const buttons = (0, import_jsx_runtime3.jsxs)("div", {
+      return (0, import_jsx_runtime5.jsxs)("div", {
         style: {
-          marginLeft: "20px",
-          marginRight: "20px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between"
+          width: "100%"
         },
-        children: [(0, import_jsx_runtime3.jsx)("div", {
-          style: {
-            marginRight: "20px"
-          },
-          children: (0, import_jsx_runtime3.jsx)(Tooltip2, {
-            content: this.state.isPlaying ? "Pause" : "Play",
-            children: (0, import_jsx_runtime3.jsx)(Button, {
-              onClick: this.onPlayButtonClick,
-              children: (0, import_jsx_runtime3.jsx)(Icon, {
-                icon: this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY
-              })
-            })
-          })
-        }), (0, import_jsx_runtime3.jsx)(Tooltip2, {
-          content: "Reset",
-          children: (0, import_jsx_runtime3.jsx)(Button, {
-            onClick: this.onResetButtonClick,
-            children: (0, import_jsx_runtime3.jsx)(Icon, {
-              icon: IconNames.RESET
-            })
-          })
-        })]
-      });
-      const animSlider = (0, import_jsx_runtime3.jsx)("div", {
-        style: {
-          marginTop: "7px",
-          flexGrow: 1
-        },
-        children: (0, import_jsx_runtime3.jsx)(Slider, {
-          value: this.state.animTimestamp,
-          onChange: this.onSliderChange,
-          onRelease: this.onSliderRelease,
-          stepSize: 1,
-          labelRenderer: false,
-          min: 0,
-          max: this.animationDuration
-        })
-      });
-      return (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, {
-        children: [(0, import_jsx_runtime3.jsx)("div", {
+        children: [(0, import_jsx_runtime5.jsx)("div", {
           style: {
             display: "flex",
-            alignContent: "center",
             justifyContent: "center"
           },
-          children: (0, import_jsx_runtime3.jsx)(webgl_canvas_default, {
+          children: (0, import_jsx_runtime5.jsxs)("div", {
             style: {
-              flexGrow: 1
+              display: "flex",
+              alignItems: "center",
+              gap: BP_TAB_BUTTON_MARGIN,
+              width: "100%",
+              maxWidth: CANVAS_MAX_WIDTH,
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
             },
+            children: [(0, import_jsx_runtime5.jsx)(PlayButton, {
+              isPlaying: this.state.isPlaying,
+              onClickCallback: this.onPlayButtonClick
+            }), (0, import_jsx_runtime5.jsx)(Tooltip2, {
+              content: "Reset",
+              placement: "top",
+              children: (0, import_jsx_runtime5.jsx)(Button, {
+                onClick: this.onResetButtonClick,
+                children: (0, import_jsx_runtime5.jsx)(Icon, {
+                  icon: IconNames.RESET
+                })
+              })
+            }), (0, import_jsx_runtime5.jsx)(Slider, {
+              value: this.state.animTimestamp,
+              min: 0,
+              max: this.animationDuration,
+              stepSize: 1,
+              labelRenderer: false,
+              onChange: this.onSliderChange,
+              onRelease: this.onSliderRelease
+            }), (0, import_jsx_runtime5.jsx)(AutoLoopSwitch, {
+              isAutoLooping: this.state.isAutoLooping,
+              onChangeCallback: this.onSwitchChange
+            })]
+          })
+        }), (0, import_jsx_runtime5.jsx)("div", {
+          style: {
+            display: "flex",
+            justifyContent: "center"
+          },
+          children: (0, import_jsx_runtime5.jsx)(web_gl_canvas_default, {
             ref: r => {
               this.canvas = r;
             }
           })
-        }), (0, import_jsx_runtime3.jsxs)("div", {
-          style: {
-            display: "flex",
-            marginTop: "10px",
-            padding: "10px",
-            flexDirection: "row",
-            justifyContent: "stretch",
-            alignContent: "center"
-          },
-          children: [buttons, animSlider, (0, import_jsx_runtime3.jsx)(Switch, {
-            style: {
-              marginLeft: "20px",
-              marginRight: "20px",
-              marginTop: "5px",
-              whiteSpace: "nowrap"
-            },
-            label: "Auto Play",
-            onChange: this.autoPlaySwitchChanged,
-            checked: this.state.autoPlay
-          })]
         })]
       });
     }
   };
   init_define_process();
-  var import_react9 = __toESM(__require("react"), 1);
-  var import_jsx_runtime4 = __require("react/jsx-runtime");
+  var import_react11 = __toESM(__require("react"), 1);
+  var import_jsx_runtime6 = __require("react/jsx-runtime");
   function HollusionCanvas({rune}) {
-    const canvasRef = import_react9.default.useRef(null);
-    const renderFuncRef = import_react9.default.useRef();
-    const animId = import_react9.default.useRef(null);
+    const canvasRef = import_react11.default.useRef(null);
+    const renderFuncRef = import_react11.default.useRef();
+    const animId = import_react11.default.useRef(null);
     const animCallback = timeInMs => {
       renderFuncRef.current(timeInMs);
       animId.current = requestAnimationFrame(animCallback);
     };
-    import_react9.default.useEffect(() => {
+    import_react11.default.useEffect(() => {
       if (canvasRef.current) {
         renderFuncRef.current = rune.draw(canvasRef.current);
         animCallback(0);
@@ -12748,11 +12755,11 @@ require => (() => {
       }
       return void 0;
     }, []);
-    return (0, import_jsx_runtime4.jsx)(webgl_canvas_default, {
+    return (0, import_jsx_runtime6.jsx)(web_gl_canvas_default, {
       ref: canvasRef
     });
   }
-  var import_jsx_runtime5 = __require("react/jsx-runtime");
+  var import_jsx_runtime7 = __require("react/jsx-runtime");
   var Rune_default = {
     toSpawn(context) {
       var _a3, _b2, _c2, _d2;
@@ -12764,17 +12771,17 @@ require => (() => {
       const runeCanvases = drawnRunes.map((rune, i) => {
         const elemKey = i.toString();
         if (glAnimation.isAnimation(rune)) {
-          return (0, import_jsx_runtime5.jsx)(AnimationCanvas, {
+          return (0, import_jsx_runtime7.jsx)(AnimationCanvas, {
             animation: rune
           }, elemKey);
         }
         const drawnRune = rune;
         if (drawnRune.isHollusion) {
-          return (0, import_jsx_runtime5.jsx)(HollusionCanvas, {
+          return (0, import_jsx_runtime7.jsx)(HollusionCanvas, {
             rune: drawnRune
           }, elemKey);
         }
-        return (0, import_jsx_runtime5.jsx)(webgl_canvas_default, {
+        return (0, import_jsx_runtime7.jsx)(web_gl_canvas_default, {
           ref: r => {
             if (r) {
               drawnRune.draw(r);
@@ -12782,7 +12789,7 @@ require => (() => {
           }
         }, elemKey);
       });
-      return (0, import_jsx_runtime5.jsx)(multi_item_display_default, {
+      return (0, import_jsx_runtime7.jsx)(multi_item_display_default, {
         elements: runeCanvases
       });
     },

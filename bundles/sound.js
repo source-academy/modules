@@ -275,6 +275,9 @@ require => {
     };
   }
   function make_sound(wave, duration) {
+    if (duration <= 0) {
+      throw new Error("Sound duration must be greater than 0");
+    }
     return (0, import_list.pair)(t => t >= duration ? 0 : wave(t), duration);
   }
   function get_wave(sound) {

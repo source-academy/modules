@@ -24334,13 +24334,16 @@ require => (() => {
   function noop2() {}
   var import_react7 = __toESM(__require("react"), 1);
   var import_debug_draw = __toESM(require_dist2(), 1);
-  var import_core9 = __toESM(require_dist(), 1);
+  var import_core10 = __toESM(require_dist(), 1);
   init_define_process();
   var import_react6 = __toESM(__require("react"), 1);
+  init_define_process();
+  var SA_TAB_ICON_SIZE = IconSize.LARGE;
+  var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
   var import_jsx_runtime = __require("react/jsx-runtime");
   var defaultStyle = {
     width: "100%",
-    maxWidth: "max(70vh, 30vw)",
+    maxWidth: CANVAS_MAX_WIDTH,
     aspectRatio: "1"
   };
   var WebGLCanvas = import_react6.default.forwardRef((props, ref) => {
@@ -24352,7 +24355,7 @@ require => (() => {
       width: 512
     }));
   });
-  var webgl_canvas_default = WebGLCanvas;
+  var web_gl_canvas_default = WebGLCanvas;
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var DebugDrawCanvas = class extends import_react7.default.Component {
     constructor(props) {
@@ -24367,7 +24370,7 @@ require => (() => {
           }
           if (this.debugDraw && this.world) {
             this.debugDraw.Prepare(this.state.camX, 0, this.state.zoomLevel, true);
-            (0, import_core9.DrawShapes)(this.debugDraw, this.b2World);
+            (0, import_core10.DrawShapes)(this.debugDraw, this.b2World);
             this.debugDraw.Finish();
           }
         }
@@ -24524,7 +24527,7 @@ require => (() => {
             alignContent: "center",
             justifyContent: "center"
           },
-          children: (0, import_jsx_runtime2.jsx)(webgl_canvas_default, {
+          children: (0, import_jsx_runtime2.jsx)(web_gl_canvas_default, {
             style: {
               flexGrow: 1
             },

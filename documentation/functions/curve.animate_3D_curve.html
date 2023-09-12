@@ -20,32 +20,39 @@
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
 <li class="tsd-signature tsd-anchor-link" id="animate_3D_curve">animate_<wbr/>3<wbr/>D_<wbr/>curve<span class="tsd-signature-symbol">(</span>duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, fps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, drawer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderFunction</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CurveAnimation</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AnimatedCurve</span><a href="#animate_3D_curve" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Create a animation of curves using a curve generating function.</p>
+<div class="tsd-comment tsd-typography"><p>This function creates an animated 3D Curve using the specified 3D drawer
+function and 3D Curve generator.</p>
+<p>The 3D Curve generator should take a number and return a 3D Curve. The number
+is the timestamp value of the animation, given in seconds. For example, when
+this function wants to request the 3D Curve that should be used 7.5 seconds
+into the animation, it will pass in a timestamp of 7.5.</p>
+<p>The generated 3D Curves are drawn using the specified 3D drawer function of
+type 3D Curve → Drawing.</p>
 
-<h3>Returns</h3><p>3D Curve Animation</p>
+<h3>Returns</h3><p>animated 3D Curve</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>duration: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>The duration of the animation in seconds</p>
+<div class="tsd-comment tsd-typography"><p>animation duration in seconds</p>
 </div></li>
 <li>
 <h5>fps: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>Framerate of the animation in frames per second</p>
+<div class="tsd-comment tsd-typography"><p>frame rate of the animation in frames per second</p>
 </div></li>
 <li>
 <h5>drawer: <span class="tsd-signature-type">RenderFunction</span></h5>
-<div class="tsd-comment tsd-typography"><p>Draw function to the generated curves with</p>
+<div class="tsd-comment tsd-typography"><p>3D drawer function</p>
 </div></li>
 <li>
 <h5>func: <span class="tsd-signature-type">CurveAnimation</span></h5>
-<div class="tsd-comment tsd-typography"><p>Curve generating function. Takes in a timestamp value and returns a curve</p>
+<div class="tsd-comment tsd-typography"><p>3D Curve generator function</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AnimatedCurve</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/c9ce9df/src/bundles/curve/functions.ts#L831">curve/functions.ts:831</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/87dcf69/src/bundles/curve/functions.ts#L851">curve/functions.ts:851</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
