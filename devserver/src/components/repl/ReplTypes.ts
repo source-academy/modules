@@ -1,4 +1,4 @@
-import { InterpreterOutput } from '../application/ApplicationTypes';
+import type { InterpreterOutput } from "../../types";
 
 export type OutputProps = {
   output: InterpreterOutput;

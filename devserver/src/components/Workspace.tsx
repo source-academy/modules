@@ -1,29 +1,32 @@
 import { FocusStyleManager } from '@blueprintjs/core';
-import { Enable, Resizable, ResizableProps, ResizeCallback } from 're-resizable';
-import * as React from 'react';
+import { Enable, Resizable, type ResizeCallback } from 're-resizable';
+import React from 'react';
 
-import ControlBar, { ControlBarProps } from './controlBar/ControlBar';
-import EditorContainer, { EditorContainerProps } from './EditorContainer';
-import Repl, { ReplProps } from '../repl/Repl';
-import SideContent, { SideContentProps } from '../sideContent/SideContent';
+import ControlBar, { type ControlBarProps } from './controlBar/ControlBar';
+import Editor from './editor/Editor';
+import Repl, { type ReplProps } from './repl/Repl';
+import SideContent, { type SideContentProps } from './sideContent/SideContent';
 import { useDimensions } from './utils/Hooks';
 
 export type WorkspaceProps = DispatchProps & StateProps;
 
 type DispatchProps = {
-  handleSideContentHeightChange: (height: number) => void;
+  handleEditorEval: () => void;
+  handleEditorValueChange: (newValue: string) => void
 };
 
 type StateProps = {
   // Either editorProps or mcqProps must be provided
   controlBarProps: ControlBarProps;
-  editorContainerProps?: EditorContainerProps;
   hasUnsavedChanges?: boolean;
   replProps: ReplProps;
   sideContentHeight?: number;
-  sideContentProps: SideContentProps;
   sideContentIsResizeable?: boolean;
+  editorValue: string
+
+  sideContentProps: SideContentProps
 };
+
 
 const Workspace: React.FC<WorkspaceProps> = props => {
   const contentContainerDiv = React.useRef<HTMLDivElement | null>(null);
@@ -31,7 +34,10 @@ const Workspace: React.FC<WorkspaceProps> = props => {
   const leftParentResizable = React.useRef<Resizable | null>(null);
   const maxDividerHeight = React.useRef<number | null>(null);
   const sideDividerDiv = React.useRef<HTMLDivElement | null>(null);
+
   const [contentContainerWidth] = useDimensions(contentContainerDiv);
+
+  const [sideContentHeight, setSideContentHeight] = React.useState<number | undefined>(undefined);
 
   FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -40,30 +46,6 @@ const Workspace: React.FC<WorkspaceProps> = props => {
       maxDividerHeight.current = sideDividerDiv.current!.clientHeight;
     }
   });
-
-  const editorResizableProps = () => {
-    return {
-      className: 'resize-editor left-parent',
-      enable: rightResizeOnly,
-      minWidth: 0,
-      onResize: toggleEditorDividerDisplay,
-      ref: leftParentResizable,
-      defaultSize: { width: '50%', height: '100%' },
-      as: undefined as any // re-resizable bug - wrong typedef
-    } as ResizableProps;
-  };
-
-  const sideContentResizableProps = () => {
-    const onResizeStop: ResizeCallback = (_a, _b, ref) =>
-      props.handleSideContentHeightChange(ref.clientHeight);
-    return {
-      bounds: 'parent',
-      className: 'resize-side-content',
-      enable: bottomResizeOnly,
-      onResize: toggleDividerDisplay,
-      onResizeStop
-    } as ResizableProps;
-  };
 
   /**
    * Snaps the left-parent resizable to 100% or 0% when percentage width goes
@@ -101,27 +83,44 @@ const Workspace: React.FC<WorkspaceProps> = props => {
     }
   };
 
-  const sideContent = <SideContent {...props.sideContentProps} />;
-  const resizableSideContent = (
-    <Resizable {...sideContentResizableProps()}>
-      {sideContent}
-      <div className="side-content-divider" ref={sideDividerDiv} />
-    </Resizable>
-  );
-
   return (
     <div className="workspace">
       <ControlBar {...props.controlBarProps} />
       <div className="workspace-parent">
         <div className="row content-parent" ref={contentContainerDiv}>
           <div className="editor-divider" ref={editorDividerDiv} />
-          <Resizable {...editorResizableProps()}>
-            <EditorContainer {...props.editorContainerProps} />;
+          <Resizable
+            className='resize-editor left-parent'
+            enable={rightResizeOnly}
+            minWidth={0}
+            onResize={toggleEditorDividerDisplay}
+            ref={leftParentResizable}
+            defaultSize={{ width: '50%', height: '100%' }}
+            as={undefined as any} // re-resizable bug - wrong typedef
+          >
+            <Editor
+              handleEditorValueChange={props.handleEditorValueChange}
+              handleEditorEval={props.handleEditorEval}
+              handleDeclarationNavigate={() => {}}
+              handlePromptAutocomplete={() => {}}
+              handleSendReplInputToOutput={() => {}}
+              editorValue={props.editorValue}
+            />
           </Resizable>
           <div className="right-parent">
-            {props.sideContentIsResizeable === undefined || props.sideContentIsResizeable
-              ? resizableSideContent
-              : sideContent}
+            <Resizable 
+              bounds='parent'
+              className='resize-side-content'
+              enable={bottomResizeOnly}
+              onResize={toggleDividerDisplay}
+              onResizeStop={(_a, _b, ref) => setSideContentHeight(ref.clientHeight)}
+            >
+              <SideContent
+                sideContentHeight={sideContentHeight}
+                {...props.sideContentProps}
+              />
+              <div className="side-content-divider" ref={sideDividerDiv} />
+            </Resizable>
             <Repl {...props.replProps} />
           </div>
         </div>
@@ -132,6 +131,5 @@ const Workspace: React.FC<WorkspaceProps> = props => {
 
 const rightResizeOnly: Enable = { right: true };
 const bottomResizeOnly: Enable = { bottom: true };
-const noResize: Enable = {};
 
 export default Workspace;

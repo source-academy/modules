@@ -1,5 +1,13 @@
+import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App.tsx'
-import './index.css'
 
-ReactDOM.render(<App />, document.getElementById('root')!)
+import './styles/index.scss'
+import Playground from './components/Playground'
+
+ReactDOM.render(<React.StrictMode>
+  <div className="Application">
+    <div className="Application__main">
+      <Playground />
+    </div>
+  </div>
+</React.StrictMode>, document.getElementById('root')!)

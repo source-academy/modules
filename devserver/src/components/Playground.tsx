@@ -1,354 +1,136 @@
-import { Classes } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-import { Ace, Range } from 'ace-builds';
-import { FSModule } from 'browserfs/dist/node/core/FS';
+import { Classes, Intent, OverlayToaster, type ToastProps, Toaster } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { Chapter, Variant } from 'js-slang/dist/types';
-import { isEqual } from 'lodash';
-import { decompressFromEncodedURIComponent } from 'lz-string';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { HotKeys } from 'react-hotkeys';
-import { useDispatch, useStore } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
-import { AnyAction, Dispatch } from 'redux';
-import {
-  beginDebuggerPause,
-  beginInterruptExecution,
-  debuggerReset,
-  debuggerResume
-} from 'src/commons/application/actions/InterpreterActions';
-import {
-  loginGitHub,
-  logoutGitHub,
-  logoutGoogle
-} from 'src/commons/application/actions/SessionActions';
-import {
-  setEditorSessionId,
-  setSharedbConnected
-} from 'src/commons/collabEditing/CollabEditingActions';
-import { useResponsive, useTypedSelector } from 'src/commons/utils/Hooks';
-import {
-  showFullJSWarningOnUrlLoad,
-  showFulTSWarningOnUrlLoad,
-  showHTMLDisclaimer
-} from 'src/commons/utils/WarningDialogHelper';
-import {
-  addEditorTab,
-  addHtmlConsoleError,
-  browseReplHistoryDown,
-  browseReplHistoryUp,
-  changeExecTime,
-  changeSideContentHeight,
-  changeStepLimit,
-  chapterSelect,
-  clearReplOutput,
-  evalEditor,
-  evalRepl,
-  navigateToDeclaration,
-  promptAutocomplete,
-  removeEditorTab,
-  removeEditorTabsForDirectory,
-  sendReplInputToOutput,
-  setEditorBreakpoint,
-  setEditorHighlightedLines,
-  setFolderMode,
-  toggleEditorAutorun,
-  toggleFolderMode,
-  toggleUpdateEnv,
-  toggleUsingEnv,
-  toggleUsingSubst,
-  updateActiveEditorTabIndex,
-  updateEditorValue,
-  updateEnvSteps,
-  updateEnvStepsTotal,
-  updateReplValue
-} from 'src/commons/workspace/WorkspaceActions';
-import { WorkspaceLocation } from 'src/commons/workspace/WorkspaceTypes';
-import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
-import {
-  githubOpenFile,
-  githubSaveFile,
-  githubSaveFileAs
-} from 'src/features/github/GitHubActions';
-import {
-  persistenceInitialise,
-  persistenceOpenPicker,
-  persistenceSaveFile,
-  persistenceSaveFileAs
-} from 'src/features/persistence/PersistenceActions';
-import {
-  generateLzString,
-  playgroundConfigLanguage,
-  shortenURL,
-  updateShortURL
-} from 'src/features/playground/PlaygroundActions';
 
-import {
-  getDefaultFilePath,
-  getLanguageConfig,
-  isSourceLanguage,
-  OverallState,
-  ResultOutput,
-  SALanguage
-} from '../../commons/application/ApplicationTypes';
-import { ExternalLibraryName } from '../../commons/application/types/ExternalTypes';
-import { ControlBarAutorunButtons } from '../../commons/controlBar/ControlBarAutorunButtons';
-import { ControlBarChapterSelect } from '../../commons/controlBar/ControlBarChapterSelect';
-import { ControlBarClearButton } from '../../commons/controlBar/ControlBarClearButton';
-import { ControlBarEvalButton } from '../../commons/controlBar/ControlBarEvalButton';
-import { ControlBarExecutionTime } from '../../commons/controlBar/ControlBarExecutionTime';
-import { ControlBarGoogleDriveButtons } from '../../commons/controlBar/ControlBarGoogleDriveButtons';
-import { ControlBarSessionButtons } from '../../commons/controlBar/ControlBarSessionButton';
-import { ControlBarShareButton } from '../../commons/controlBar/ControlBarShareButton';
-import { ControlBarStepLimit } from '../../commons/controlBar/ControlBarStepLimit';
-import { ControlBarToggleFolderModeButton } from '../../commons/controlBar/ControlBarToggleFolderModeButton';
-import { ControlBarGitHubButtons } from '../../commons/controlBar/github/ControlBarGitHubButtons';
-import {
-  convertEditorTabStateToProps,
-  NormalEditorContainerProps
-} from '../../commons/editor/EditorContainer';
-import { Position } from '../../commons/editor/EditorTypes';
-import { overwriteFilesInWorkspace } from '../../commons/fileSystem/utils';
-import FileSystemView from '../../commons/fileSystemView/FileSystemView';
-import MobileWorkspace, {
-  MobileWorkspaceProps
-} from '../../commons/mobileWorkspace/MobileWorkspace';
-import { SideBarTab } from '../../commons/sideBar/SideBar';
-import { SideContentTab, SideContentType } from '../../commons/sideContent/SideContentTypes';
-import { Links } from '../../commons/utils/Constants';
-import { generateLanguageIntroduction } from '../../commons/utils/IntroductionHelper';
-import { convertParamToBoolean, convertParamToInt } from '../../commons/utils/ParamParseHelper';
-import { IParsedQuery, parseQuery } from '../../commons/utils/QueryHelper';
-import Workspace, { WorkspaceProps } from '../../commons/workspace/Workspace';
-import { initSession, log } from '../../features/eventLogging';
-import {
-  CodeDelta,
-  Input,
-  SelectionRange
-} from '../../features/sourceRecorder/SourceRecorderTypes';
-import { WORKSPACE_BASE_PATHS } from '../fileSystem/createInBrowserFileSystem';
-import {
-  dataVisualizerTab,
-  desktopOnlyTabIds,
-  makeEnvVisualizerTabFrom,
-  makeHtmlDisplayTabFrom,
-  makeIntroductionTabFrom,
-  makeRemoteExecutionTabFrom,
-  makeSubstVisualizerTabFrom,
-  mobileOnlyTabIds
-} from './PlaygroundTabs';
+import Workspace, { type WorkspaceProps } from './Workspace';
+import { ControlBarRunButton } from './controlBar/ControlBarRunButton';
+import { type Context, createContext, runInContext } from 'js-slang';
+import { getDynamicTabs } from './sideContent/utils';
+import type { SideContentTab } from './sideContent/types';
+import testTabContent from './sideContent/TestTab';
+import { ControlBarClearButton } from './controlBar/ControlBarClearButton';
+import { ControlBarRefreshButton } from './controlBar/ControlBarRefreshButton';
 
-export type PlaygroundProps = {
-  isSicpEditor?: boolean;
-  initialEditorValueHash?: string;
-  prependLength?: number;
-  handleCloseEditor?: () => void;
-};
+const refreshSuccessToast: ToastProps = {
+  intent: Intent.SUCCESS,
+  message: 'Refresh Successful!',
+}
 
-const keyMap = { goGreen: 'h u l k' };
+const errorToast: ToastProps = {
+  intent: Intent.DANGER,
+  message: 'An error occurred!',
+}
 
-const Playground: React.FC<PlaygroundProps> = props => {
-  const { isSicpEditor } = props;
-  const workspaceLocation: WorkspaceLocation = isSicpEditor ? 'sicp' : 'playground';
+const evalSuccessToast: ToastProps = {
+  intent: Intent.SUCCESS,
+  message: 'Code evaluated successfully!'
+}
 
-  const [lastEdit, setLastEdit] = useState(new Date());
-  const [isGreen, setIsGreen] = useState(false);
-  const [selectedTab, setSelectedTab] = useState();
+const createContextHelper = () => createContext(Chapter.SOURCE_4, Variant.DEFAULT);
 
+const Playground: React.FC<{}> = () => {
+  const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
+  const [selectedTabId, setSelectedTab] = React.useState(testTabContent.id)
+  const [codeContext, setCodeContext] = React.useState<Context>(createContextHelper())
+  const [editorValue, setEditorValue] = React.useState(localStorage.getItem('editorValue') ?? '');
 
+  const toaster = React.useRef<Toaster | null>(null);
 
-  const playgroundIntroductionTab: SideContentTab = useMemo(
-    () => makeIntroductionTabFrom(generateLanguageIntroduction(languageConfig)),
-    [languageConfig]
-  );
-  // const tabs = useMemo(() => {
-  //   const tabs: SideContentTab[] = [playgroundIntroductionTab];
+  const loadTabs = () => getDynamicTabs(codeContext)
+    .then((tabs) => {
+      setDynamicTabs(tabs)
+      
+      // If the currently selected tab no longer exists,
+      // switch to the default test tab
+      const ids = tabs.map(({ id }) => id)
+      if (!ids.includes(selectedTabId)) {
+        setSelectedTab(testTabContent.id)
+      }
+    })
+    .catch(() => showToast(errorToast))
 
-  //   const currentLang = languageConfig.chapter;
-  //   if (currentLang === Chapter.HTML) {
-  //     // For HTML Chapter, HTML Display tab is added only after code is run
-  //     if (output.length > 0 && output[0].type === 'result') {
-  //       tabs.push(
-  //         makeHtmlDisplayTabFrom(output[0] as ResultOutput, errorMsg =>
-  //           dispatch(addHtmlConsoleError(errorMsg, workspaceLocation))
-  //         )
-  //       );
-  //     }
-  //     return tabs;
-  //   }
+  const evalCode = () => {
+    runInContext(editorValue, codeContext).then(() => {
+      if (codeContext.errors.length > 0) {
+        showToast(errorToast);
+      } else {
+        loadTabs().then(() => showToast(evalSuccessToast))
+      }
+    })
+  }
 
-  //   if (!usingRemoteExecution) {
-  //     // Don't show the following when using remote execution
-  //     if (shouldShowDataVisualizer) {
-  //       tabs.push(dataVisualizerTab);
-  //     }
-  //     if (shouldShowEnvVisualizer) {
-  //       tabs.push(makeEnvVisualizerTabFrom(workspaceLocation));
-  //     }
-  //     if (shouldShowSubstVisualizer) {
-  //       tabs.push(makeSubstVisualizerTabFrom(output));
-  //     }
-  //   }
+  const resetEditor = () => {
+    setCodeContext(createContextHelper())
+    setEditorValue('')
+    localStorage.setItem('editorValue', '')
+    setDynamicTabs([])
+    setSelectedTab(testTabContent.id)
+  }
 
-  //   if (!isSicpEditor) {
-  //     tabs.push(remoteExecutionTab);
-  //   }
+  const showToast = (props: ToastProps) => {
+    if (toaster.current) toaster.current.show({
+      ...props,
+      timeout: 1500,
+    })
+  }
 
-  //   return tabs;
-  // }, [
-  //   playgroundIntroductionTab,
-  //   languageConfig.chapter,
-  //   output,
-  //   usingRemoteExecution,
-  //   isSicpEditor,
-  //   dispatch,
-  //   workspaceLocation,
-  //   shouldShowDataVisualizer,
-  //   shouldShowEnvVisualizer,
-  //   shouldShowSubstVisualizer,
-  //   remoteExecutionTab
-  // ]);
+  const onRefresh = () => {
+    loadTabs()
+      .then(() => showToast(refreshSuccessToast))
+      .catch(() => showToast(errorToast))
+  }
 
-  const onLoadMethod = useCallback(
-    (editor: Ace.Editor) => {
-      const addFold = () => {
-        editor.getSession().addFold('    ', new Range(1, 0, props.prependLength!, 0));
-        editor.renderer.off('afterRender', addFold);
-      };
-
-      editor.renderer.on('afterRender', addFold);
-    },
-    [props.prependLength]
-  );
-
-
-  const replDisabled = !languageConfig.supports.repl || usingRemoteExecution;
-
-  const editorContainerHandlers = useMemo(() => {
-    return {
-      handleDeclarationNavigate: (cursorPosition: Position) =>
-        dispatch(navigateToDeclaration(workspaceLocation, cursorPosition)),
-      handlePromptAutocomplete: (row: number, col: number, callback: any) =>
-        dispatch(promptAutocomplete(workspaceLocation, row, col, callback)),
-      handleSendReplInputToOutput: (code: string) =>
-        dispatch(sendReplInputToOutput(code, workspaceLocation)),
-      handleSetSharedbConnected: (connected: boolean) =>
-        dispatch(setSharedbConnected(workspaceLocation, connected)),
-      setActiveEditorTabIndex: (activeEditorTabIndex: number | null) =>
-        dispatch(updateActiveEditorTabIndex(workspaceLocation, activeEditorTabIndex)),
-      removeEditorTabByIndex: (editorTabIndex: number) =>
-        dispatch(removeEditorTab(workspaceLocation, editorTabIndex))
-    };
-  }, [dispatch, workspaceLocation]);
-
-  const editorContainerProps: NormalEditorContainerProps = {
-    editorSessionId,
-    isEditorAutorun,
-    editorVariant: 'normal',
-    baseFilePath: WORKSPACE_BASE_PATHS[workspaceLocation],
-    isFolderModeEnabled,
-    activeEditorTabIndex,
-    setActiveEditorTabIndex: editorContainerHandlers.setActiveEditorTabIndex,
-    removeEditorTabByIndex: editorContainerHandlers.removeEditorTabByIndex,
-    editorTabs: editorTabs.map(convertEditorTabStateToProps),
-    handleDeclarationNavigate: editorContainerHandlers.handleDeclarationNavigate,
-    handleEditorEval: autorunButtonHandlers.handleEditorEval,
-    handlePromptAutocomplete: editorContainerHandlers.handlePromptAutocomplete,
-    handleSendReplInputToOutput: editorContainerHandlers.handleSendReplInputToOutput,
-    handleSetSharedbConnected: editorContainerHandlers.handleSetSharedbConnected,
-    onChange: onChangeMethod,
-    onCursorChange: onCursorChangeMethod,
-    onSelectionChange: onSelectionChangeMethod,
-    onLoad: isSicpEditor && props.prependLength ? onLoadMethod : undefined,
-    sourceChapter: languageConfig.chapter,
-    externalLibraryName,
-    sourceVariant: languageConfig.variant,
-    handleEditorValueChange: onEditorValueChange,
-    handleEditorUpdateBreakpoints: handleEditorUpdateBreakpoints
-  };
-
-  const replHandlers = useMemo(() => {
-    return {
-      handleBrowseHistoryDown: () => dispatch(browseReplHistoryDown(workspaceLocation)),
-      handleBrowseHistoryUp: () => dispatch(browseReplHistoryUp(workspaceLocation)),
-      handleReplValueChange: (newValue: string) =>
-        dispatch(updateReplValue(newValue, workspaceLocation))
-    };
-  }, [dispatch, workspaceLocation]);
-  const replProps = {
-    output,
-    replValue,
-    handleReplEval,
-    usingSubst,
-    handleBrowseHistoryDown: replHandlers.handleBrowseHistoryDown,
-    handleBrowseHistoryUp: replHandlers.handleBrowseHistoryUp,
-    handleReplValueChange: replHandlers.handleReplValueChange,
-    sourceChapter: languageConfig.chapter,
-    sourceVariant: languageConfig.variant,
-    externalLibrary: ExternalLibraryName.NONE, // temporary placeholder as we phase out libraries
-    hidden:
-      selectedTab === SideContentType.substVisualizer ||
-      selectedTab === SideContentType.envVisualizer,
-    inputHidden: replDisabled,
-    replButtons: [replDisabled ? null : evalButton, clearButton],
-    disableScrolling: isSicpEditor
-  };
-
+  // const replHandlers = useMemo(() => {
+  //   return {
+  //     handleBrowseHistoryDown: () => dispatch(browseReplHistoryDown(workspaceLocation)),
+  //     handleBrowseHistoryUp: () => dispatch(browseReplHistoryUp(workspaceLocation)),
+  //     handleReplValueChange: (newValue: string) =>
+  //       dispatch(updateReplValue(newValue, workspaceLocation))
+  //   };
+  // }, [dispatch, workspaceLocation]);
 
   const workspaceProps: WorkspaceProps = {
     controlBarProps: {
       editorButtons: [
-        autorunButtons,
-        languageConfig.chapter === Chapter.FULL_JS ? null : shareButton,
-        chapterSelectButton,
-        isSicpEditor ? null : sessionButtons,
-        languageConfig.supports.multiFile ? toggleFolderModeButton : null,
-        persistenceButtons,
-        githubButtons,
-        usingRemoteExecution || !isSourceLanguage(languageConfig.chapter)
-          ? null
-          : usingSubst || usingEnv
-          ? stepperStepLimit
-          : executionTime
+        <ControlBarRunButton handleEditorEval={evalCode} key='eval' />,
+        <ControlBarClearButton onClick={resetEditor}
+          key="clear"
+        />,
+        <ControlBarRefreshButton
+          onClick={onRefresh}
+          key="refresh"
+        />
       ]
     },
-    editorContainerProps: editorContainerProps,
-    handleSideContentHeightChange: useCallback(
-      change => dispatch(changeSideContentHeight(change, workspaceLocation)),
-      [dispatch, workspaceLocation]
-    ),
-    replProps: replProps,
-    sideBarProps: sideBarProps,
-    sideContentHeight: sideContentHeight,
-    sideContentProps: {
-      selectedTabId: selectedTab,
-      onChange: onChangeTabs,
-      tabs: {
-        beforeDynamicTabs: tabs,
-        afterDynamicTabs: []
-      },
-      workspaceLocation: workspaceLocation,
-      sideContentHeight: sideContentHeight
+    replProps: {
+      handleBrowseHistoryDown: () => {},
+      handleBrowseHistoryUp: () => {},
+      replButtons: [],
+      output: [],
     },
-    sideContentIsResizeable:
-      selectedTab !== SideContentType.substVisualizer &&
-      selectedTab !== SideContentType.envVisualizer
+    handleEditorEval: evalCode,
+    handleEditorValueChange: (newValue) => {
+      setEditorValue(newValue)
+      localStorage.setItem('editorValue', newValue);
+    },
+    editorValue,
+    sideContentProps: {
+      dynamicTabs: [testTabContent, ...dynamicTabs],
+      selectedTabId,
+      onChange: setSelectedTab,
+    }
   };
 
   return (
     <HotKeys
-      className={classNames('Playground', Classes.DARK, isGreen ? 'GreenScreen' : undefined)}
-      keyMap={keyMap}
-      // handlers={handlers}
+      className={classNames('Playground', Classes.DARK)}
     >
+      <OverlayToaster ref={toaster} />
       <Workspace {...workspaceProps} />
     </HotKeys>
   );
 };
-
-// react-router lazy loading
-// https://reactrouter.com/en/main/route/lazy
-export const Component = Playground;
-Component.displayName = 'Playground';
 
 export default Playground;

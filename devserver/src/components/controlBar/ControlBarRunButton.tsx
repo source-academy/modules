@@ -13,15 +13,12 @@ type DispatchProps = {
 
 type StateProps = {
   key: string;
-  isEntrypointFileDefined: boolean;
   color?: string;
   className?: string;
 };
 
 export const ControlBarRunButton: React.FC<ControlButtonRunButtonProps> = props => {
-  const tooltipContent = props.isEntrypointFileDefined
-    ? '...or press shift-enter in the editor'
-    : 'Open a file to evaluate the program with the file as the entrypoint';
+  const tooltipContent = 'Evaluate the program';
   return (
     <Tooltip2 content={tooltipContent} placement={Position.TOP}>
       <ControlButton
@@ -29,7 +26,6 @@ export const ControlBarRunButton: React.FC<ControlButtonRunButtonProps> = props 
         icon={IconNames.PLAY}
         onClick={props.handleEditorEval}
         options={{ iconColor: props.color, className: props.className }}
-        isDisabled={!props.isEntrypointFileDefined}
       />
     </Tooltip2>
   );

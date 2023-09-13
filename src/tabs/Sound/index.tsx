@@ -24,11 +24,11 @@ const SoundTab: ModuleTab = ({ context }) => {
       <p id="sound-default-text">
           The sound tab gives you control over your custom sounds. You can play,
           pause, adjust the volume and download your sounds.
-        <br />
-        <br />
-        <MultiItemDisplay elements={elements} />
-        <br />
       </p>
+      <br />
+      <br />
+      <MultiItemDisplay elements={elements} />
+      <br />
     </div>
   );
 };
