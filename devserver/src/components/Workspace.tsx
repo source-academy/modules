@@ -13,6 +13,7 @@ export type WorkspaceProps = DispatchProps & StateProps;
 type DispatchProps = {
   handleEditorEval: () => void;
   handleEditorValueChange: (newValue: string) => void
+  handlePromptAutocomplete: (row: number, col: number, callback: any) => void
 };
 
 type StateProps = {
@@ -102,7 +103,7 @@ const Workspace: React.FC<WorkspaceProps> = props => {
               handleEditorValueChange={props.handleEditorValueChange}
               handleEditorEval={props.handleEditorEval}
               handleDeclarationNavigate={() => {}}
-              handlePromptAutocomplete={() => {}}
+              handlePromptAutocomplete={props.handlePromptAutocomplete}
               handleSendReplInputToOutput={() => {}}
               editorValue={props.editorValue}
             />

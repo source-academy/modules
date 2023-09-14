@@ -25,18 +25,20 @@ export type SideContentProps = {
   dynamicTabs: SideContentTab[]
 
   selectedTabId: string
+  alerts: string[]
   onChange?: (newId: string, oldId: string) => void
 };
 
 const renderTab = (
   tab: SideContentTab,
+  shouldAlert: boolean,
   _editorWidth?: string,
   _sideContentHeight?: number
 ) => {
   const iconSize = 20;
   const tabTitle = (
     <Tooltip2 content={tab.label}>
-      <div className="side-content-tooltip">
+      <div className={!shouldAlert ? "side-content-tooltip" : "side-content-tooltip side-content-tab-alert"}>
         <Icon icon={tab.iconName} iconSize={iconSize} />
       </div>
     </Tooltip2>
@@ -74,7 +76,8 @@ const SideContent: React.FC<SideContentProps> = ({
   sideContentHeight,
   dynamicTabs,
   selectedTabId,
-  onChange
+  onChange,
+  alerts
 }) => {
   return (
     <div className="side-content">
@@ -89,7 +92,7 @@ const SideContent: React.FC<SideContentProps> = ({
             }}
           >
             {dynamicTabs.map(tab =>
-              renderTab(tab, editorWidth, sideContentHeight)
+              renderTab(tab, alerts.includes(tab.id), editorWidth, sideContentHeight)
             )}
           </Tabs>
         </div>

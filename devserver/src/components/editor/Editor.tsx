@@ -2,9 +2,7 @@ import { Ace, require as acequire } from 'ace-builds';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-searchbox';
 import 'ace-builds/src-noconflict/ace';
-
-// For webpack to resolve properly during lazy loading (see https://github.com/source-academy/frontend/issues/2543)
-// import 'ace-builds/webpack-resolver';
+import 'ace-builds/esm-resolver'
 
 import 'js-slang/dist/editors/ace/theme/source';
 
