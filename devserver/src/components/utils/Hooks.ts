@@ -13,7 +13,7 @@ export const useDimensions = (ref: RefObject<HTMLElement>): [width: number, heig
 
   const resizeObserver = React.useMemo(
     () =>
-      new ResizeObserver((entries: ResizeObserverEntry[], observer: ResizeObserver) => {
+      new ResizeObserver((entries: ResizeObserverEntry[], _observer: ResizeObserver) => {
         if (entries.length !== 1) {
           throw new Error(
             'Expected only a single HTML element to be observed by the ResizeObserver.'

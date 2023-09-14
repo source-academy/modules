@@ -1,8 +1,19 @@
 import pathlib from 'path'
-import { defineConfig } from 'vite'
+import { type ProxyOptions, defineConfig, searchForWorkspaceRoot } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+const port = 8022
+const proxyConfig = ['bundles', 'tabs', 'jsons', 'documentation'].reduce((res, asset) => ({
+  ...res,
+  [`/${asset}`]: {
+    target: `http://localhost:${port}`,
+    rewrite: path => {
+      const newPath = `/@fs/${path.replace(`/${asset}`, pathlib.resolve(`./build/${asset}`))}`
+      return newPath;
+    }
+  }
+}), {} as Record<string, ProxyOptions>)
+
 export default defineConfig({
   plugins: [react()],
   root: 'devserver',
@@ -16,4 +27,14 @@ export default defineConfig({
   define: {
     'process.env.NODE_ENV': "'development'",
   },
+  server: {
+    port,
+    proxy: proxyConfig,
+    fs: {
+      allow: [
+        searchForWorkspaceRoot(process.cwd()),
+        '../build'
+      ]
+    }
+  }
 })
