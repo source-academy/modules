@@ -1,5 +1,5 @@
 import { IconNames } from "@blueprintjs/icons"
-import { SideContentTab } from "./types"
+import type { SideContentTab } from "./types"
 
 const TestTab = () => <div style={{
   display: 'flex',

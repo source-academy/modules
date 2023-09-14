@@ -1,5 +1,5 @@
-import { IconName } from "@blueprintjs/icons"
-import { Context } from "js-slang"
+import type { IconName } from "@blueprintjs/icons"
+import type { Context } from "js-slang"
 
 export type DebuggerContext = {
   context: Context

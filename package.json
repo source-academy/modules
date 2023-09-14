@@ -37,6 +37,10 @@
     "test": "yarn scripts test",
     "test:watch": "jest --watch",
     "watch": "yarn scripts watch",
+
+    "devserver": "yarn vite",
+    "devserver:lint": "yarn eslint -c devserver/.eslintrc.cjs --ext \".js,.jsx,.ts,.tsx\"",
+
     "scripts:all": "yarn node scripts/scripts_manager.js",
     "scripts:build": "yarn node scripts/scripts_manager.js build",
     "scripts:lint": "yarn node scripts/scripts_manager.js lint",

@@ -10,7 +10,7 @@ import React from 'react';
 import AceEditor, { type IAceEditorProps } from 'react-ace';
 import { HotKeys } from 'react-hotkeys';
 
-import { KeyFunction } from './EditorHotkeys';
+import type { KeyFunction } from './EditorHotkeys';
 
 import { getModeString, selectMode } from '../utils/AceHelper';
 

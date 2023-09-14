@@ -1,5 +1,5 @@
 import { FocusStyleManager } from '@blueprintjs/core';
-import { Enable, Resizable, type ResizeCallback } from 're-resizable';
+import { type Enable, Resizable, type ResizeCallback } from 're-resizable';
 import React from 'react';
 
 import ControlBar, { type ControlBarProps } from './controlBar/ControlBar';
