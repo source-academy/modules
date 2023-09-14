@@ -18,6 +18,7 @@ import testTabContent from './sideContent/TestTab';
 import { ControlBarClearButton } from './controlBar/ControlBarClearButton';
 import { ControlBarRefreshButton } from './controlBar/ControlBarRefreshButton';
 import type { InterpreterOutput } from '../types';
+import mockModuleContext from '../mockModuleContext';
 
 const refreshSuccessToast: ToastProps = {
   intent: Intent.SUCCESS,
@@ -34,7 +35,10 @@ const evalSuccessToast: ToastProps = {
   message: 'Code evaluated successfully!'
 }
 
-const createContextHelper = () => createContext(Chapter.SOURCE_4, Variant.DEFAULT);
+const createContextHelper = () => {
+  const tempContext = createContext(Chapter.SOURCE_4, Variant.DEFAULT);
+  return tempContext
+};
 
 const Playground: React.FC<{}> = () => {
   const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
@@ -91,16 +95,21 @@ const Playground: React.FC<{}> = () => {
       }
       setAlerts(newIds)
     })
-    .catch(() => showToast(errorToast))
+    .catch(error => {
+      showToast(errorToast);
+      console.log(error)
+    })
 
   const evalCode = () => {
     codeContext.errors = []
+    codeContext.moduleContexts = mockModuleContext.moduleContexts = {}
 
     runInContext(editorValue, codeContext).then(result => {
       if (codeContext.errors.length > 0) {
         showToast(errorToast);
       } else {
-        loadTabs().then(() => showToast(evalSuccessToast))
+        loadTabs()
+          .then(() => showToast(evalSuccessToast))
       }
 
       // TODO: Add support for console.log?
