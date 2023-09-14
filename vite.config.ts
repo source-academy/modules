@@ -29,7 +29,16 @@ export default defineConfig({
   },
   server: {
     port,
-    proxy: proxyConfig,
+    proxy: {
+      ...proxyConfig,
+      '/modules.json': {
+        target: `http://localhost:${port}`,
+        rewrite: path => {
+          const newPath = `/@fs/${pathlib.resolve('./build/modules.json')}`
+          return newPath;
+        }
+      }
+    },
     fs: {
       allow: [
         searchForWorkspaceRoot(process.cwd()),
