@@ -3,7 +3,14 @@ import { Data, Layout } from 'plotly.js-dist'
 
 /**
  * TODO: figure out a nice demo of using the vector calculus
- *
+ * 
+ * 1. Lagrange points for Sun, Earth and Moon
+ * 2. 3 Body orbits
+ * 3. A good case of introducing plotly
+ * 4. Points to Shape
+ * 5. Documentation 
+ * 6. Visualize the quad trees
+ * 
  * QuadTree visualization complete.
  *
  * 1. Beam deflection in the field
@@ -55,7 +62,7 @@ export function divide(v1: Vector, k: number) {
   return new Vector(v1.x/k, v1.y/k, v1.z/k);
 }
 
-export function cross_produce(v1: Vector, v2: Vector): Vector {
+export function cross_product(v1: Vector, v2: Vector): Vector {
   return new Vector(
     v1.y * v2.z - v1.z * v2.y,
     v1.z * v2.x - v1.x * v2.z,

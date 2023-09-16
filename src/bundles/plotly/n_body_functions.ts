@@ -1,6 +1,6 @@
 var MINMASS = 1e2
 var MAXMASS = 1e10
-var G = 1e-11 // Gravitational Constant
+export var G_const = 6.67e-11 // Gravitational Constant
 var ETA = 10 // Softening constant
 
 var DISTANCE_MULTIPLE = 2
@@ -10,17 +10,20 @@ var MAXDEPTH = 50 // BN tree max depth ( one less than actual, example with maxd
 var BN_THETA = 0.5
 
 export class Body {
+  id: string
   pos: number[] = []
   mass: number = 0
   velocity: number[] = []
   acceleration: number[] = []
 
   constructor(
+    id: string,
     pos: number[],
     mass: number,
     velocity: number[],
     acceleration: number[],
   ) {
+    this.id = id
     this.pos = pos
     this.mass = mass
     this.velocity = velocity
@@ -48,13 +51,11 @@ export class Body {
   }
 
   isEqual(other: Body) {
-    return (
-      this.pos.toString() == other.pos.toString() && this.mass == other.mass
-    )
+    return this.id === other.id
   }
 }
 
-class BoundingBox {
+export class BoundingBox {
   bottomLeft: number[] = []
   topRight: number[] = []
 
@@ -222,16 +223,24 @@ class QuadTreeNode {
     let y2 = this.center_of_mass[1]
     let m2 = this.total_mass_in_center
 
-    const rx = x2 - x1
-    const ry = y2 - y1
-    const r3 = Math.pow(Math.sqrt(rx * rx + ry * ry) + eps, 3)
+    const dx = x2 - x1
+    const dy = y2 - y1
 
-    let fx = (m1 * m2 * rx) / r3
-    let fy = (m1 * m2 * ry) / r3
+    const r = Math.sqrt(dx * dx + dy * dy)
+    const rx = dx / r
+    const ry = dy / r
+    const r3 = Math.min(
+      Math.max(Math.pow(Math.sqrt(dx * dx + dy * dy), 2), 625),
+      1e9,
+    )
+
+    let fx = (G_const * m1 * m2 * rx) / r3
+    let fy = (G_const * m1 * m2 * ry) / r3
     return { fx, fy }
   }
 
   public netForceOnBody(body: Body, theta = 0.5) {
+    console.log(this, body)
     // force on the body
     let force = { fx: 0, fy: 0 }
 
@@ -254,7 +263,7 @@ class QuadTreeNode {
             (this.center_of_mass[1] - body.pos[1]),
       )
 
-      if (s / d < theta) {
+      if (s / d < theta && this.body.length > 0) {
         return this._calcForceOnBody(body)
       }
 
@@ -324,12 +333,31 @@ export class QuadTree {
     }
   }
 
+  public getBoundingBoxes = () => {
+    const bounding_boxes: BoundingBox[] = []
+    let queue = [this.root]
+    while (queue.length != 0) {
+      const cur: QuadTreeNode = queue.shift() as QuadTreeNode
+      bounding_boxes.push(cur.bounding_box)
+      for (let i = 0; i < 4; i++) {
+        if (cur.children[i] != null) {
+          queue.push(cur.children[i])
+        }
+      }
+    }
+    return bounding_boxes
+  }
+
   public simulateForces = () => {
     this.bodies.forEach((body) => {
       // how much force the entire tree applies to the body
       const totalForceOnBody = this.root.netForceOnBody(body)
-      console.log(body)
-      console.log(totalForceOnBody);
+
+      console.log(body.id)
+      console.log(body.pos[0], body.pos[1])
+      console.log(body.velocity[0], body.velocity[1])
+      console.log(body.acceleration[0], body.acceleration[1])
+      console.log(totalForceOnBody)
       body.resultOfForce(totalForceOnBody)
     })
   }
@@ -350,3 +378,5 @@ export class QuadTree {
     this.bodies = []
   }
 }
+
+export function combineCollidingBodies(bodies: Body[]) {}

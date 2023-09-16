@@ -62,7 +62,7 @@ class Plotly extends React.Component<Props, State> {
           ></div>
         </Modal>
         {drawnPlots.map((drawnPlot: any, id: number) => {
-          const divId = `plotDiv${id}${Date.now().toString()}`
+          const divId = `plotDiv${id}}`
           return (
             <>
               <div onClick={() => this.handleOpen(drawnPlot)}>

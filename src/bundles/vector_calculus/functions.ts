@@ -115,6 +115,7 @@ export function display_field(f: FunctionalVector) {
       {
         ...data,
         type: 'cone',
+        //@ts-ignore
         hoverinfo: 'x+y+z+u+v+w+name',
         colorscale: 'Blackbody',
         sizeref: 1.25,
@@ -152,6 +153,7 @@ export function display_field_curve(numPoints: number) {
           {
             ...data,
             type: 'cone',
+            //@ts-ignore
             hoverinfo: 'x+y+z+u+v+w+name',
             colorscale: 'Blackbody',
             sizeref: 1.25,
@@ -197,6 +199,7 @@ export function display_field_surface(numPoints1: number) {
             {
               ...data,
               type: 'cone',
+              //@ts-ignore
               hoverinfo: 'x+y+z+u+v+w+name',
               colorscale: 'Blackbody',
               sizeref: 20,
@@ -241,6 +244,7 @@ export const simulate_body_in_field = (f: FunctionalVector) => {
         {
           ...data1,
           type: 'cone',
+          //@ts-ignore
           hoverinfo: 'x+y+z+u+v+w+name',
           colorscale: 'Blackbody',
           sizeref: 0.5,

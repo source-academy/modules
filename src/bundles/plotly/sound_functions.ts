@@ -12,6 +12,10 @@ context.moduleContexts.plotly.state = {
 };
 
 /**
+ * TODO: Fix the rangeslider for the sound curves 
+ */
+
+/**
  * Visualizes the sound on a 2d line graph
  * @param sound the sound which is to be visualized on plotly
  */

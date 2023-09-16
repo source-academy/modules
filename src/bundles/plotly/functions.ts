@@ -12,7 +12,7 @@ import {
   type ListOfPairs,
 } from './plotly';
 import { generatePlot } from './curve_functions';
-import { Body, QuadTree } from './n_body_functions';
+import { Body, BoundingBox, G_const, QuadTree } from './n_body_functions';
 
 const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 context.moduleContexts.plotly.state = {
@@ -344,15 +344,31 @@ export const draw_3D_points = createPlotFunction(
   true,
 );
 
-export const create_random_bodies = () => {
-  const bodies:Body[] = []
-  for(let i=0;i<1000;i++) {
-    bodies.push(new Body([Math.random()*10000, Math.random()*10000],100,[0,0],[0,0]))
-  }
-  return bodies
+export const create_random_bodies = (): Body[] => {
+  const G = G_const
+  let b1 = new Body("m1", [0,0], 1e20,[0,0],[0,0])
+  let b2 = new Body("m2", [0,1e5], 1e16, [Math.sqrt(G*1e20/1e5),0],[0,0])
+  return [b1,b2]; 
+}
+
+export const solar_system_bodies = () => {
+let sun:Body = new Body("sun",[0,0], 2e30, [0,0], [0,0])
+let mercury:Body = new Body("mercury",[0,5.7e10], 2e30, [47000,0], [0,0])
+// let venus:Body = new Body([0,1.1e11], 4.8e24, [35000,0], [0,0])
+let earth:Body = new Body("earth",[0,1.5e11], 6e24, [30000,0], [0,0])
+// let mars:Body = new Body([0,2.2e11], 2.4e24, [24000,0], [0,0])
+// let mars = {"location":point(0,2.2e11,0), "mass":2.4e24, "velocity":point(24000,0,0)}
+// let jupiter = {"location":point(0,7.7e11,0), "mass":1e28, "velocity":point(13000,0,0)}
+// let saturn = {"location":point(0,1.4e12,0), "mass":5.7e26, "velocity":point(9000,0,0)}
+// let uranus = {"location":point(0,2.8e12,0), "mass":8.7e25, "velocity":point(6835,0,0)}
+// let neptune = {"location":point(0,4.5e12,0), "mass":1e26, "velocity":point(5477,0,0)}
+// let pluto = {"location":point(0,3.7e12,0), "mass":1.3e22, "velocity":point(4748,0,0)}
+// return [sun,mercury,venus,earth,mars];
+return [sun,earth]
 }
 
 const bodies = create_random_bodies(); 
+// const bodies = solar_system_bodies();
 
 export const simulate_points = () => {
    const x_s = bodies.map(body => body.pos[0]);
@@ -382,14 +398,12 @@ function draw_new_simulation(
   Plotly.newPlot(divId, [data], layout)
   console.log(animationId);
   if(animationId != null) return;
-  const canvas = document.getElementById(divId) as HTMLCanvasElement
-  const qt = new QuadTree(10000)
-  let count = 0;
+  const qt = new QuadTree(1e6)
   function update() {
-    count++;
-    const dt = 0.16;
+    const dt = 0.1;
 
   qt.build_tree(bodies);
+    qt.simulateForces();
     qt.bodies.forEach((body, i) => {
       body.updateBodyState(dt);
     });
@@ -398,10 +412,26 @@ function draw_new_simulation(
     const new_x = qt.bodies.map(body => body.pos[0]);
     const new_y = qt.bodies.map(body => body.pos[1]);
 
-    qt.simulateForces();
+    const bounding_boxes: BoundingBox[] = qt.getBoundingBoxes();
+    const shapes = bounding_boxes.map(box=>{
+      return {
+        type: 'rect' as const,
+        x0: box.bottomLeft[0],
+        y0: box.bottomLeft[1],
+        x1: box.topRight[0],
+        y1: box.topRight[1],
+        line: {
+          width: 0.2,
+          color: 'rgba(128,0,128,1)'
+        }
+      }
+    })
 
+
+    //@ts-ignore
     Plotly.animate(divId, {
-      data: [{x:new_x, y:new_y}]
+      data: [{x:new_x, y:new_y}],
+
     }, {
       transition: {
         duration: 0
@@ -411,7 +441,8 @@ function draw_new_simulation(
         redraw: false
       }
     })
+    Plotly.relayout(divId, {shapes: shapes})
     animationId = requestAnimationFrame(update);
   }
-  animationId = requestAnimationFrame(update)
+  update();
 }
