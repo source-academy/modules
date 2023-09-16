@@ -80,7 +80,6 @@ export const getBundleOptions = (bundles: string[], { srcDir, outDir }: Record<'
   return {
     ...esbuildOptions,
     entryPoints: bundles.map(nameExpander),
-    external: ['js-slang*'],
     outbase: outDir,
     outdir: outDir,
     tsconfig: `${srcDir}/tsconfig.json`,
