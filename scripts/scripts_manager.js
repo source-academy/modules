@@ -91,7 +91,7 @@ function runJest(patterns, args) {
 const testCommand = new Command('test')
   .description('Run tests for script files')
   .argument('[patterns...]', 'Run tests matching the given patterns', null)
-  .allowUnknownOption
+  .allowUnknownOption()
   .action(runJest)
 
 async function runEsbuild({ watch }) {
