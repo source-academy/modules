@@ -108,7 +108,6 @@ export const getTabOptions = (tabs: string[], { srcDir, outDir }: Record<'srcDir
 };
 
 export const buildTabs = async (tabs: string[], options: BuildOptions) => {
-  console.log(getTabOptions(tabs, options));
   const { outputFiles } = await esbuild(getTabOptions(tabs, options));
   return outputFiles;
 };
