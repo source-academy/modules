@@ -11,6 +11,7 @@ type TestCommandOptions = {
 
 const testCommand = new Command('test')
   .description('Run jest')
+  .allowUnknownOption()
   .argument('[patterns...]', null)
   .option('--srcDir <srcdir>', 'Source directory for files', 'src')
   .option('-v, --verbose', 'Run Jest in verbose mode', false)
