@@ -43,5 +43,5 @@
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
   "include": ["."],
   /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
-  "exclude": [".eslintrc.cjs", "jest.config.js"]
+  "exclude": [".eslintrc.cjs", "jest.config.js", "**/__tests__"]
 }
