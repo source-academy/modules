@@ -16,6 +16,7 @@ const testCommand = new Command('test')
   .option('-v, --verbose', 'Run Jest in verbose mode', false)
   .option('-w, --watch', 'Run jest in watch mode', false)
   .option('-u, --updateSnapshot', 'Update snapshots', false)
+  .allowUnknownOption()
   .action(async (patterns: string[] | null, { srcDir, ...others }: TestCommandOptions) => {
     // A wrapper around running jest to convert windows paths to posix paths
     // since jest doesn't know how to match windows paths
