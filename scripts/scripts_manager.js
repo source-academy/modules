@@ -76,16 +76,22 @@ const typeCheckCommand = new Command('typecheck')
   .description('Run tsc for test files')
   .action(runTypecheck)
 
-function runJest(pattern) {
+function runJest(patterns, args) {
   // Convert windows style paths to posix paths
   // Jest doesn't like windows style paths
-  const posixPattern = pattern === undefined ? undefined : pattern.split(pathlib.sep).join(pathlib.posix.sep)
-  return jest.run(posixPattern, './scripts/src/jest.config.js')
+  const jestArgs = patterns === null ? null : patterns.map(pattern => pattern.split(pathlib.sep).join(pathlib.posix.sep))
+
+  Object.entries(args).forEach(([name, value]) => {
+    if (value) jestArgs.push(`--${name}`);
+  })
+
+  return jest.run(jestArgs, './scripts/src/jest.config.js')
 }
 
 const testCommand = new Command('test')
   .description('Run tests for script files')
-  .argument('[pattern]', 'Run tests matching the given pattern', undefined)
+  .argument('[patterns...]', 'Run tests matching the given patterns', null)
+  .allowUnknownOption
   .action(runJest)
 
 async function runEsbuild({ watch }) {
