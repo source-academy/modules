@@ -501,6 +501,7 @@ require => {
     const finalFunctions = {};
     Object.entries(functions).forEach(([key, fn]) => {
       finalFunctions[key] = !scene ? nullFn : fn;
+      finalFunctions[key].minArgsNeeded = fn.length;
     });
     return finalFunctions;
   }
