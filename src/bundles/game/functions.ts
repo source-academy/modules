@@ -761,6 +761,7 @@ export default function gameFuncs(): { [name: string]: any } {
   Object.entries(functions)
     .forEach(([key, fn]) => {
       finalFunctions[key] = !scene ? nullFn : fn;
+      finalFunctions[key].minArgsNeeded = fn.length;
     });
 
   return finalFunctions;
