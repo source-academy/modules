@@ -1,15 +1,15 @@
-import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { get_duration, get_wave, is_sound } from '../sound';
 import { type Sound } from '../sound/types';
 import { CurvePlot, type DrawnPlot } from './plotly';
+import context from 'js-slang/context';
 
 const FS: number = 44100; // Output sample rate
-
 const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 context.moduleContexts.plotly.state = {
   drawnPlots,
 };
+console.log(context, "from sound")
 
 /**
  * Visualizes the sound on a 2d line graph
