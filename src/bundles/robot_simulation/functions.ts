@@ -1,3 +1,3 @@
 export function show() {
-  console.log('bro');
+  console.log('show function called');
 }
