@@ -447,7 +447,8 @@ require => {
       return make_sound(new_wave, new_dur);
     }
     const mushed_sounds = (0, import_list.accumulate)(simul_two, silence_sound(0), list_of_sounds);
-    const normalised_wave = t => (0, import_list.head)(mushed_sounds)(t) / (0, import_list.length)(list_of_sounds);
+    const len = (0, import_list.length)(list_of_sounds);
+    const normalised_wave = t => (0, import_list.head)(mushed_sounds)(t) / len;
     const highest_duration = (0, import_list.tail)(mushed_sounds);
     return make_sound(normalised_wave, highest_duration);
   }
