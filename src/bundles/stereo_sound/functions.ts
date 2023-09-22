@@ -775,8 +775,11 @@ export function consecutively(list_of_sounds: List): Sound {
 }
 
 /**
- * Makes a new Sound by combining the sounds in a given list
- * where all the sounds are overlapped on top of each other.
+ * Makes a new Sound by combining the sounds in a given list.
+ * In the result sound, the component sounds overlap such that
+ * they start at the beginning of the result sound. To achieve
+ * this, the amplitudes of the component sounds are added together
+ * and then divided by the length of the list.
  *
  * @param list_of_sounds given list of sounds
  * @return the combined Sound
