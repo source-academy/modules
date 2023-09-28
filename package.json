@@ -7,6 +7,9 @@
   "scripts-info": {
     "//NOTE": "Run `npm i npm-scripts-info -g` to install once globally, then run `npm-scripts-info` as needed to list these descriptions",
     "create": "Interactively initialise a new bundle or tab from their templates",
+    "devserver": "Start the tab development server",
+    "devserver:lint": "Lint code related to the dev server",
+    "devserver:tsc": "Run tsc over dev server code",
     "docs": "Build only documentation",
     "lint": "Lint bundle and tab code",
     "build": "Lint code, then build modules and documentation",
@@ -37,13 +40,13 @@
     "test": "yarn scripts test",
     "test:watch": "jest --watch",
     "watch": "yarn scripts watch",
-    "devserver": "yarn vite",
-    "devserver:lint": "yarn eslint -c devserver/.eslintrc.cjs --ext \".js,.jsx,.ts,.tsx\"",
-    "devserver:tsc": "yarn tsc --project devserver/tsconfig.json",
-    "scripts:all": "yarn node scripts/scripts_manager.js",
-    "scripts:build": "yarn node scripts/scripts_manager.js build",
-    "scripts:lint": "yarn node scripts/scripts_manager.js lint",
-    "scripts:test": "yarn node scripts/scripts_manager.js test"
+    "devserver": "vite",
+    "devserver:lint": "eslint -c devserver/.eslintrc.json --ext \".js,.jsx,.ts,.tsx\"",
+    "devserver:tsc": "tsc --project devserver/tsconfig.json",
+    "scripts:all": "node scripts/scripts_manager.js",
+    "scripts:build": "node scripts/scripts_manager.js build",
+    "scripts:lint": "node scripts/scripts_manager.js lint",
+    "scripts:test": "node scripts/scripts_manager.js test"
   },
   "devDependencies": {
     "@types/dom-mediacapture-record": "^1.0.11",

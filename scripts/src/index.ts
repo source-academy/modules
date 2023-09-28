@@ -4,7 +4,7 @@ import { watchCommand } from './build/dev.js';
 import buildAllCommand from './build/index.js';
 import getPrebuildCommand, { getLintCommand, getTscCommand } from './build/prebuild/index.js';
 import createCommand from './templates/index.js';
-import testCommand from './testing.js';
+import getTestCommand from './testing/index.js';
 
 const parser = new Command()
   .addCommand(buildAllCommand)
@@ -12,7 +12,7 @@ const parser = new Command()
   .addCommand(getLintCommand())
   .addCommand(getPrebuildCommand())
   .addCommand(getTscCommand())
-  .addCommand(testCommand)
+  .addCommand(getTestCommand())
   .addCommand(watchCommand);
 
 await parser.parseAsync();

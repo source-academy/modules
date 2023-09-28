@@ -13,6 +13,7 @@ import chalk from 'chalk';
 import { Command } from "commander";
 import { readFile } from 'fs/promises';
 import jest from 'jest'
+import lodash from 'lodash'
 import pathlib from 'path';
 import ts from 'typescript'
 
@@ -29,6 +30,10 @@ const waitForQuit = () => new Promise((resolve, reject) => {
   process.stdin.on('error', reject);
 });
 
+/**
+ * Run the typescript compiler programmatically
+ * @returns {Promise<number>} Resolves to 0 on success, -1 on error
+ */
 async function runTypecheck() {
   const parseDiagnostics = (diagnostics) => {
     const diagStr = ts.formatDiagnosticsWithColorAndContext(diagnostics, {
@@ -76,23 +81,31 @@ const typeCheckCommand = new Command('typecheck')
   .description('Run tsc for test files')
   .action(runTypecheck)
 
-function runJest(patterns, args) {
-  // Convert windows style paths to posix paths
-  // Jest doesn't like windows style paths
-  const jestArgs = patterns === null ? null : patterns.map(pattern => pattern.split(pathlib.sep).join(pathlib.posix.sep))
+/**
+ * Run Jest programmatically
+ * @param {string[]} patterns 
+ * @returns {Promise<void>}
+ */
+function runJest(patterns) {
+  const [args, filePatterns] = lodash.partition(patterns ?? [], (arg) => arg.startsWith('-'));
 
-  Object.entries(args).forEach(([name, value]) => {
-    if (value) jestArgs.push(`--${name}`);
-  })
+  // command.args automatically includes the source directory option
+  // which is not supported by Jest, so we need to remove it
+  const toRemove = args.findIndex((arg) => arg.startsWith('--srcDir'));
+  if (toRemove !== -1) {
+    args.splice(toRemove, 1);
+  }
+
+  const jestArgs = args.concat(filePatterns.map((pattern) => pattern.split(pathlib.sep)
+    .join(pathlib.posix.sep)));
 
   return jest.run(jestArgs, './scripts/src/jest.config.js')
 }
 
 const testCommand = new Command('test')
   .description('Run tests for script files')
-  .argument('[patterns...]', 'Run tests matching the given patterns', null)
   .allowUnknownOption()
-  .action(runJest)
+  .action((_, command) => runJest(command.args))
 
 async function runEsbuild({ watch }) {
   const buildContext = await esbuild({
@@ -161,7 +174,7 @@ const mainCommand = new Command()
       // Jest will also run tsc, so no need to run an extra tsc check
       // typecheck: runTypecheck,
       eslint: () => runEslint({ fix: false }),
-      jest: runJest,
+      jest: () => runJest([]),
       esbuild: () => runEsbuild({ watch: false })
     }
 
