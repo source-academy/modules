@@ -58,9 +58,6 @@ export const init_meshes = () => {
 
   const scene = simulation.scene;
 
-  const light = new THREE.AmbientLight(0xffffff);
-  scene.add(light);
-
   const cube = getCubeMesh(new THREE.Vector3(0, 0, 0));
   scene.add(cube);
 

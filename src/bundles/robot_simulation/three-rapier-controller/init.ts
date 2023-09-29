@@ -15,9 +15,9 @@ import { init_meshes } from './mesh/init_meshes';
 let RAPIER: typeof Rapier;
 
 export type RobotSimulation = {
-  state: Extract<SimulationStates, 'idle' | 'loading'>;
+  state: Extract<SimulationStates, 'idle' | 'loading' | 'error'>;
 } | {
-  state: 'ready'
+  state: Exclude<SimulationStates, 'idle' | 'loading' | 'error'>,
   scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
   renderer: THREE.WebGLRenderer,
@@ -52,6 +52,8 @@ export const initEngines = async () => {
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
+  const light = new THREE.AmbientLight(0xffffff);
+  scene.add(light);
 
   const renderWidth = sceneOptions.width;
   const renderHeight = sceneOptions.height;
