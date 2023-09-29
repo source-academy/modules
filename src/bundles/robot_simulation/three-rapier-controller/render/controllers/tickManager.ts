@@ -1,4 +1,4 @@
-import { getSimulation } from '../../../functions';
+import { getSimulation } from '../../init';
 
 // animation params
 type Frame = XRFrame | null;
@@ -75,6 +75,7 @@ class TickManager extends EventTarget {
           const collider = po.collider;
           mesh.position.copy(collider.translation() as THREE.Vector3);
           mesh.quaternion.copy(collider.rotation() as THREE.Quaternion);
+          console.log(mesh.position);
         }
 
         const fn = po.fn;

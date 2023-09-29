@@ -1,12 +1,16 @@
 import * as THREE from 'three';
+// @ts-ignore-next-line
 
 import type Rapier from '@dimforge/rapier3d-compat';
+import context from 'js-slang/context';
+
 import initRapier from './render/physics/RAPIER';
 import { physicsOptions, sceneOptions } from './options';
 import { type PhysicsObject } from './render/physics/physics';
 import { type SimulationStates } from './constants/states';
 import TickManager from './render/controllers/tickManager';
-import { setSimulation } from '../functions';
+import { init_meshes } from './mesh/init_meshes';
+
 
 let RAPIER: typeof Rapier;
 
@@ -23,6 +27,18 @@ export type RobotSimulation = {
   RAPIER: typeof Rapier,
   physicsWorld: Rapier.World,
   physicsObjects: Array<PhysicsObject>,
+};
+
+const initial_simulation: RobotSimulation = { state: 'idle' };
+const contextState = context.moduleContexts.robot_simulation.state;
+if (contextState === null) {
+  context.moduleContexts.robot_simulation.state = { simulation: initial_simulation };
+}
+
+export const getSimulation = ():RobotSimulation => context.moduleContexts.robot_simulation.state.simulation;
+export const setSimulation = (newSimulation:RobotSimulation):void => {
+  context.moduleContexts.robot_simulation.state.simulation = newSimulation;
+  console.log('Setting new value into simulation', newSimulation);
 };
 
 export const initEngines = async () => {
@@ -42,7 +58,6 @@ export const initEngines = async () => {
   const renderAspectRatio = renderWidth / renderHeight;
 
   const camera = new THREE.PerspectiveCamera(75, renderAspectRatio, 0.01, 1000);
-  camera.position.z = 7;
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(renderWidth, renderHeight);
@@ -64,6 +79,8 @@ export const initEngines = async () => {
   setSimulation(robotSimulation);
 
   renderTickManager.startLoop();
+
+  init_meshes();
 };
 
 export { RAPIER };

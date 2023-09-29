@@ -1,7 +1,6 @@
 import type Rapier from '@dimforge/rapier3d-compat';
 
-import { RAPIER } from '../../init';
-import { getSimulation } from '../../../functions';
+import { RAPIER, getSimulation } from '../../init';
 
 export type PhysicsObject = {
   mesh: THREE.Mesh
