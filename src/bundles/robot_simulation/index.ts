@@ -1,1 +1,1 @@
-export { show } from './functions';
+export { show, init_simulation } from './functions';

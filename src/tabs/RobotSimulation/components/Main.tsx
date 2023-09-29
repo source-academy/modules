@@ -2,8 +2,9 @@ import TabUi from './TabUi';
 import { Modal } from './Modal';
 import { useState } from 'react';
 import SimulationCanvas from './Simulation';
+import { type DebuggerContext } from '../../../typings/type_helpers';
 
-export default function Main(): JSX.Element {
+export default function Main({ context }: { context:DebuggerContext }): JSX.Element {
   const [isCanvasShowing, setIsCanvasShowing] = useState<boolean>(false);
 
   return (
@@ -19,7 +20,7 @@ export default function Main(): JSX.Element {
           setIsCanvasShowing(false);
         }}
       >
-        <SimulationCanvas/>
+        <SimulationCanvas context={context}/>
       </Modal>
     </div>
   );

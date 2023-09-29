@@ -1,6 +1,7 @@
 import type Rapier from '@dimforge/rapier3d-compat';
 
-import { RAPIER, getPhysicsWorld, getPhysicsObjects } from '../../init';
+import { RAPIER } from '../../init';
+import { getSimulation } from '../../../functions';
 
 export type PhysicsObject = {
   mesh: THREE.Mesh
@@ -18,8 +19,13 @@ export const addPhysics = (
   colliderType?: string,
   colliderSettings?: any,
 ) => {
-  const physics = getPhysicsWorld();
-  const physicsObjects = getPhysicsObjects();
+  const simulation = getSimulation();
+  if (simulation.state !== 'ready') {
+    throw new Error('Tried to add a physic object before initializing the simulation.');
+  }
+
+  const physics = simulation.physicsWorld;
+  const physicsObjects = simulation.physicsObjects;
 
   const rigidBodyDesc = (RAPIER.RigidBodyDesc as any)[rigidBodyType]();
   rigidBodyDesc.setTranslation(mesh.position.x, mesh.position.y, mesh.position.z);

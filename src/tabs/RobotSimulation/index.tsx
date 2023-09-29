@@ -25,8 +25,8 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn(context: any) {
-    return true;
+  toSpawn(context: DebuggerContext) {
+    return context.context.moduleContexts.robot_simulation.state.simulation?.state !== 'idle';
   },
 
   /**
@@ -34,7 +34,7 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <Main/>,
+  body: (context: DebuggerContext) => <Main context={context}/>,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.

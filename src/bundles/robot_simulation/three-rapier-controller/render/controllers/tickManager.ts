@@ -1,11 +1,4 @@
-import { BufferAttribute, LineSegments } from 'three';
-import {
-  getPhysicsWorld,
-  getPhysicsObjects,
-  getRenderer,
-  getScene,
-  getCamera,
-} from '../../init';
+import { getSimulation } from '../../../functions';
 
 // animation params
 type Frame = XRFrame | null;
@@ -48,12 +41,15 @@ class TickManager extends EventTarget {
   }
 
   startLoop() {
-    const renderer = getRenderer();
-    const physics = getPhysicsWorld();
-    const physicsObjects = getPhysicsObjects();
-    const scene = getScene();
-    const camera = getCamera();
-
+    const simulation = getSimulation();
+    if (simulation.state !== 'ready') {
+      throw new Error('Tried to start a loop before starting simulation');
+    }
+    const renderer = simulation.renderer;
+    const physics = simulation.physicsWorld;
+    const physicsObjects = simulation.physicsObjects;
+    const scene = simulation.scene;
+    const camera = simulation.camera;
 
 
     if (!renderer) {
@@ -79,7 +75,6 @@ class TickManager extends EventTarget {
           const collider = po.collider;
           mesh.position.copy(collider.translation() as THREE.Vector3);
           mesh.quaternion.copy(collider.rotation() as THREE.Quaternion);
-          console.log(collider.translation());
         }
 
         const fn = po.fn;
