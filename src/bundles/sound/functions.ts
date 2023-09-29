@@ -613,8 +613,11 @@ export function consecutively(list_of_sounds: List): Sound {
 }
 
 /**
- * Makes a new Sound by combining the Sounds in a given list
- * where all the Sounds are overlapped on top of each other.
+ * Makes a new Sound by combining the Sounds in a given list.
+ * In the result sound, the component sounds overlap such that
+ * they start at the beginning of the result sound. To achieve
+ * this, the amplitudes of the component sounds are added together
+ * and then divided by the length of the list.
  *
  * @param list_of_sounds given list of Sounds
  * @return the combined Sound
@@ -634,7 +637,8 @@ export function simultaneously(list_of_sounds: List): Sound {
   }
 
   const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
-  const normalised_wave = (t: number) => head(mushed_sounds)(t) / length(list_of_sounds);
+  const len = length(list_of_sounds);
+  const normalised_wave = (t: number) => head(mushed_sounds)(t) / len;
   const highest_duration = tail(mushed_sounds);
   return make_sound(normalised_wave, highest_duration);
 }
