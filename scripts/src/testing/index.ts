@@ -22,7 +22,7 @@ const getTestCommand = () => new Command('test')
       args.splice(toRemove, 1);
     }
 
-    const jestArgs = args.concat(filePatterns.map((pattern) => pattern.split(pathlib.sep)
+    const jestArgs = args.concat(filePatterns.map((pattern) => pattern.split(pathlib.win32.sep)
       .join(pathlib.posix.sep)));
     return runJest(jestArgs, srcDir);
   });

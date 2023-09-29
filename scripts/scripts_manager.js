@@ -96,7 +96,7 @@ function runJest(patterns) {
     args.splice(toRemove, 1);
   }
 
-  const jestArgs = args.concat(filePatterns.map((pattern) => pattern.split(pathlib.sep)
+  const jestArgs = args.concat(filePatterns.map((pattern) => pattern.split(pathlib.win32.sep)
     .join(pathlib.posix.sep)));
 
   return jest.run(jestArgs, './scripts/src/jest.config.js')
