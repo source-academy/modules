@@ -2,32 +2,49 @@ import type Rapier from '@dimforge/rapier3d-compat';
 
 import { RAPIER, getSimulation } from '../../init';
 
+export type UpdateFunction = ({
+  mesh,
+  collider,
+  rigidBody,
+}: {
+  mesh: THREE.Mesh;
+  collider: Rapier.Collider;
+  rigidBody: Rapier.RigidBody;
+}) => void;
+
 export type PhysicsObject = {
-  mesh: THREE.Mesh
-  collider: Rapier.Collider
-  rigidBody: Rapier.RigidBody
-  fn?: Function
-  autoAnimate: boolean
+  mesh: THREE.Mesh;
+  collider: Rapier.Collider;
+  rigidBody: Rapier.RigidBody;
+  fn?: UpdateFunction;
+  autoAnimate: boolean;
 };
 
 export const addPhysics = (
   mesh: THREE.Mesh,
   rigidBodyType: string,
   autoAnimate: boolean = true, // update the mesh's position and quaternion based on the physics world every frame
-  postPhysicsFn?: Function,
+  postPhysicsFn?: UpdateFunction,
   colliderType?: string,
   colliderSettings?: any,
 ) => {
   const simulation = getSimulation();
   if (simulation.state !== 'ready') {
-    throw new Error('Tried to add a physic object before initializing the simulation.');
+    throw new Error(
+      'Tried to add a physic object before initializing the simulation.',
+    );
   }
 
   const physics = simulation.physicsWorld;
   const physicsObjects = simulation.physicsObjects;
+  const scene = simulation.scene;
 
   const rigidBodyDesc = (RAPIER.RigidBodyDesc as any)[rigidBodyType]();
-  rigidBodyDesc.setTranslation(mesh.position.x, mesh.position.y, mesh.position.z);
+  rigidBodyDesc.setTranslation(
+    mesh.position.x,
+    mesh.position.y,
+    mesh.position.z,
+  );
 
   // * Responsible for collision response
   const rigidBody = physics.createRigidBody(rigidBodyDesc);
@@ -80,6 +97,7 @@ export const addPhysics = (
   };
 
   physicsObjects.push(physicsObject);
+  scene.add(mesh);
 
   return physicsObject;
 };

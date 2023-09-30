@@ -75,18 +75,18 @@ class TickManager extends EventTarget {
           const collider = po.collider;
           mesh.position.copy(collider.translation() as THREE.Vector3);
           mesh.quaternion.copy(collider.rotation() as THREE.Quaternion);
-          console.log(mesh.position);
         }
 
         const fn = po.fn;
         if (fn) {
-          fn();
+          fn(po);
         }
       }
 
       // performance tracker start
       this.fps = 1000 / this.timeDiff;
       this.lastTimestamp = this.timestamp;
+
       renderer.render(scene, camera);
       this.tick(timestamp, timeDiffCapped, this.fps, frame);
     };
