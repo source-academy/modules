@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { addPhysics } from '../render/physics/physics';
 import { getSimulation } from '../init';
-import { RayCastedVehicleController } from '../render/controllers/RayCastedVehicleController';
-import { carSettings } from '../render/controllers/RayCastedVehicleController/carTuning';
 
 const addFloor = () => {
   const size = 100;
@@ -30,8 +28,6 @@ export const init_meshes = () => {
   if (simulation.state !== 'ready') {
     throw new Error('Cannot initialized mesh before simulation is ready');
   }
-
-  const vehicleController = new RayCastedVehicleController(carSettings);
 
   addFloor();
 };
