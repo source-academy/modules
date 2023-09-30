@@ -3,7 +3,7 @@
  * @module robot_simulation
  */
 
-import { initEngines } from './three-rapier-controller/init';
+import { getSimulation, initEngines } from './three-rapier-controller/init';
 
 export function show() {
   console.log('show function called');
@@ -11,4 +11,10 @@ export function show() {
 
 export function init_simulation() {
   initEngines();
+}
+
+
+export function getRobot() {
+  const simulation = getSimulation();
+  return simulation.state;
 }
