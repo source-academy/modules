@@ -17,31 +17,28 @@ let RAPIER: typeof Rapier;
 
 export type RobotSimulation = {
   state: Extract<SimulationStates, 'idle' | 'loading' | 'error'>;
-}
-| {
-  state: Exclude<SimulationStates, 'idle' | 'loading' | 'error'>;
-  scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
-  renderer: THREE.WebGLRenderer;
-  renderWidth: number;
-  renderHeight: number;
-  renderAspectRatio: number;
-  RAPIER: typeof Rapier;
-  physicsWorld: Rapier.World;
-  physicsObjects: Array<PhysicsObject>;
-  robot?: RayCastedVehicleController;
+} | {
+  state: Exclude<SimulationStates, 'idle' | 'loading' | 'error'>,
+  scene: THREE.Scene,
+  camera: THREE.PerspectiveCamera,
+  renderer: THREE.WebGLRenderer,
+  renderWidth: number,
+  renderHeight: number,
+  renderAspectRatio: number,
+  RAPIER: typeof Rapier,
+  physicsWorld: Rapier.World,
+  physicsObjects: Array<PhysicsObject>,
+  robot?: RayCastedVehicleController
 };
 
 const initial_simulation: RobotSimulation = { state: 'idle' };
 const contextState = context.moduleContexts.robot_simulation.state;
 if (contextState === null) {
-  context.moduleContexts.robot_simulation.state = {
-    simulation: initial_simulation,
-  };
+  context.moduleContexts.robot_simulation.state = { simulation: initial_simulation };
 }
 
-export const getSimulation = (): RobotSimulation => context.moduleContexts.robot_simulation.state.simulation;
-export const setSimulation = (newSimulation: RobotSimulation): void => {
+export const getSimulation = ():RobotSimulation => context.moduleContexts.robot_simulation.state.simulation;
+export const setSimulation = (newSimulation:RobotSimulation):void => {
   context.moduleContexts.robot_simulation.state.simulation = newSimulation;
   console.log('Setting new value into simulation', newSimulation);
 };
@@ -53,7 +50,7 @@ export const initEngines = async () => {
   const renderTickManager = new TickManager();
   const physicsWorld = new RAPIER.World(physicsOptions.GRAVITY);
 
-  const physicsObjects: Array<PhysicsObject> = [];
+  const physicsObjects:Array<PhysicsObject> = [];
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
@@ -70,7 +67,7 @@ export const initEngines = async () => {
   renderer.setSize(renderWidth, renderHeight);
   renderer.setPixelRatio(window.devicePixelRatio * 1.5);
 
-  const robotSimulation: RobotSimulation = {
+  const robotSimulation :RobotSimulation = {
     state: 'ready',
     scene,
     camera,
