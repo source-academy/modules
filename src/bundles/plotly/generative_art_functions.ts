@@ -1,47 +1,50 @@
-import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import { type Curve, CurvePlot, type Point } from './plotly';
-import { x_of, y_of, z_of } from './curve_functions';
-import context from 'js-slang/context';
+import Plotly, { type Data, type Layout } from "plotly.js-dist";
+import { type Curve, CurvePlot, type Point, AnimatedPlot } from "./plotly";
+import { x_of, y_of, z_of } from "./curve_functions";
+import context from "js-slang/context";
 
-
-const drawnPlots: (CurvePlot)[] = [];
+const drawnPlots: AnimatedPlot[] = [];
 context.moduleContexts.plotly.state = {
-  drawnPlots,
+    drawnPlots,
 };
 
-
 /**
- * 
+ *
  * @param frames number of frames used in the animation.
  * The initialState defines the current frames to be rendered for the given curves
  * and the next_frame_logic defines how to generate the next frames in the animation
  * @returns function of type Curve[] -> (initialState: number[]) -> (next_frame_logic: (state:number[])->any)
  * @example
  * ```
- * 
+ *
  * ```
  */
 
-export const generate_art = (frames: number) => (curves: Curve[])  => {
+export const generate_art = (frames: number) => (curves: Curve[]) => {
+    intervalIds.map((id) => {
+        console.log(id);
+        clearInterval(id);
+    });
     return (initialState: any[]) => {
-        const generate_next_frame =  (next_frame_logic: (state:any[]) => any[]) => {
-            let points: Point[][] = []
-            for(let i = 0;i < initialState.length;++i) {
+        const generate_next_frame = (
+            next_frame_logic: (state: any[]) => any[]
+        ) => {
+            let points: Point[][] = [];
+            for (let i = 0; i < initialState.length; ++i) {
                 points.push([]);
-                for(let j = 0; j < initialState[i].length; ++j) {
-                const point: Point = curves[i](initialState[i][j]/frames)
-                points[i].push(point);
+                for (let j = 0; j < initialState[i].length; ++j) {
+                    const point: Point = curves[i](initialState[i][j] / frames);
+                    points[i].push(point);
                 }
             }
-            let xs: any[] = []
-            let ys: any[] = []
-            let zs: any[] = []
-            for(let i = 0; i < points[0].length; ++i) {
-                for(let j = 0; j < points.length; ++j) {
+            let xs: any[] = [];
+            let ys: any[] = [];
+            let zs: any[] = [];
+            for (let i = 0; i < points[0].length; ++i) {
+                for (let j = 0; j < points.length; ++j) {
                     xs.push(x_of(points[j][i]));
                     ys.push(y_of(points[j][i]));
                     zs.push(z_of(points[j][i]));
-    
                 }
                 xs.push(null);
                 ys.push(null);
@@ -51,23 +54,22 @@ export const generate_art = (frames: number) => (curves: Curve[])  => {
                 x: xs,
                 y: ys,
                 z: zs,
-            }
+            };
 
-            const plotDrawn = new CurvePlot(
+            const plotDrawn = new AnimatedPlot(
                 draw_new_art(frames, initialState, curves, next_frame_logic),
                 {
-                    ...plotlyData
+                    ...plotlyData,
                 },
                 {}
-            )
+            );
             drawnPlots.push(plotDrawn);
-        } 
+        };
         return generate_next_frame;
-    }
-}
+    };
+};
 
-let intervalId;
-let intervalIds = {}
+var intervalIds: NodeJS.Timer[] = [];
 
 // TODO: will try to stop animation if required
 //
@@ -77,59 +79,83 @@ let intervalIds = {}
 // Make the curves plotly better lol
 
 /**
- * 
- * @param frames 
- * @param initialState 
- * @param curves 
- * @param next_frame_logic 
- * @returns 
+ *
+ * @param frames
+ * @param initialState
+ * @param curves
+ * @param next_frame_logic
+ * @returns
  */
 
-const draw_new_art = (frames:number, initialState :any[], curves: Curve[], next_frame_logic:(state:any[])=>any[]) => (divId: string, data: Data, layout: Partial<Layout>) => {
-    Plotly.react(divId, [data], layout);
-    clearInterval(intervalIds[divId])
-    let curState = initialState
-    const draw_and_upate_frames = ():void => {
-        let points: Point[][] = []
-        for(let i = 0;i < curState.length;++i) {
-            points.push([]);
-            for(let j = 0; j < curState[i].length; ++j) {
-            const point: Point = curves[i](curState[i][j]/frames)
-            points[i].push(point);
-            }
-        }
-        let xs: any[] = []
-        let ys: any[] = []
-        let zs: any[] = []
-        for(let i = 0; i < points[0].length; ++i) {
-            for(let j = 0; j < points.length; ++j) {
-                xs.push(x_of(points[j][i]));
-                ys.push(y_of(points[j][i]));
-                zs.push(z_of(points[j][i]));
+const draw_new_art =
+    (
+        frames: number,
+        initialState: any[],
+        curves: Curve[],
+        next_frame_logic: (state: any[]) => any[]
+    ) =>
+    (divId: string, data: Data, layout: Partial<Layout>) => {
+        Plotly.newPlot(divId, [data], layout);
+        clearInterval(intervalIds[divId]);
 
+        intervalIds.map((id) => {
+            console.log(id);
+            clearInterval(id);
+        });
+        intervalIds = [];
+
+        let curState = initialState;
+        const draw_and_upate_frames = (): void => {
+            if (document.getElementById(divId) == null) {
+                clearInterval(intervalId);
+                return;
             }
-            xs.push(null);
-            ys.push(null);
-            zs.push(null);
-        }
-        const plotlyData: Data = {
-            x: xs,
-            y: ys,
-            z: zs,
-        }
-        curState = next_frame_logic(curState);
-        //@ts-ignore
-        Plotly.animate(divId, 
-            {data: [plotlyData]},{
-            transition: {
-              duration: 0,
-            },
-              frame: {
-                  duration: 0
-              }
-          })
-    }
-    draw_and_upate_frames()
-    intervalId = setInterval(draw_and_upate_frames, 100);
-    intervalIds[divId] = intervalId
-}
+            let points: Point[][] = [];
+            for (let i = 0; i < curState.length; ++i) {
+                points.push([]);
+                for (let j = 0; j < curState[i].length; ++j) {
+                    const point: Point = curves[i](curState[i][j] / frames);
+                    points[i].push(point);
+                }
+            }
+            let xs: any[] = [];
+            let ys: any[] = [];
+            let zs: any[] = [];
+            for (let i = 0; i < points[0].length; ++i) {
+                for (let j = 0; j < points.length; ++j) {
+                    xs.push(x_of(points[j][i]));
+                    ys.push(y_of(points[j][i]));
+                    zs.push(z_of(points[j][i]));
+                }
+                xs.push(null);
+                ys.push(null);
+                zs.push(null);
+            }
+            const plotlyData: Data = {
+                x: xs,
+                y: ys,
+                z: zs,
+            };
+            curState = next_frame_logic(curState);
+            //@ts-ignore
+            Plotly.animate(
+                divId,
+                { data: [plotlyData] },
+                {
+                    transition: {
+                        duration: 100,
+                    },
+                    frame: {
+                        duration: 0,
+                        redraw: false,
+                    },
+                }
+            );
+        };
+        draw_and_upate_frames();
+        const intervalId: NodeJS.Timer = setInterval(
+            draw_and_upate_frames,
+            100
+        );
+        intervalIds.push(intervalId);
+    };

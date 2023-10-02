@@ -2,6 +2,7 @@ import React from 'react';
 import { type DrawnPlot } from '../../bundles/plotly/plotly';
 import { type DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/modal_div';
+import { uniqueId } from '@blueprintjs/core/lib/esm/common/utils';
 
 type Props = {
   children?: never
@@ -53,7 +54,8 @@ class Plotly extends React.Component<Props, State> {
         </Modal>
         {
           drawnPlots.map((drawnPlot: any, id:number) => {
-            const divId = `plotDiv${id}`;
+            console.log("this got called ")
+            const divId = `plotDiv${id}${uniqueId('plotly')}`;
             return (
               <div style={{ height: '80vh' }} key={divId}>
                 <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
@@ -61,6 +63,7 @@ class Plotly extends React.Component<Props, State> {
                   id={divId}
                   style={{ height: '80vh' }}
                   ref={() => {
+                    drawnPlot.stop(divId);
                     drawnPlot.draw(divId);
                   }}
                 ></div>
@@ -76,7 +79,6 @@ class Plotly extends React.Component<Props, State> {
 
 export default {
   toSpawn(context: DebuggerContext) {
-    console.log(context.context?.moduleContexts?.plotly.state.drawnPlots, "this is the context one in tabs")
     const drawnPlots = context.context?.moduleContexts?.plotly.state.drawnPlots;
     return drawnPlots.length > 0;
   },

@@ -1,4 +1,4 @@
-import { type Data, type Layout } from 'plotly.js-dist';
+import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { type ReplResult } from '../../typings/type_helpers';
 
 /**
@@ -34,7 +34,16 @@ export class CurvePlot implements ReplResult {
     this.plotlyDrawFn(divId, this.data, this.layout);
   };
 }
+export class AnimatedPlot extends CurvePlot {
+  constructor(plotlyDrawFn: any, data: Data, layout: Partial<Layout>) {
+    super(plotlyDrawFn, data, layout)
+  }
+  public toReplString = () => '<AnimatedPlot>';
 
+  public stop = (divId: string) => {
+    Plotly.newPlot(divId,[],{})
+  }
+}
 export type ListOfPairs = (ListOfPairs | any)[] | null;
 export type Data2d = number[];
 export type Color = { r: number, g: number, b: number };
