@@ -4,7 +4,7 @@
  */
 
 import context from 'js-slang/context';
-import Plotly, { type Data, type Layout } from 'plotly.js-dist';
+import Plotly, { SliderStep, type Data, type Layout } from 'plotly.js-dist';
 import {
   type Curve, CurvePlot,
   type CurvePlotFunction,
@@ -347,28 +347,28 @@ export const draw_3D_points = createPlotFunction(
 export const create_random_bodies = (): Body[] => {
   const G = G_const
   let b1 = new Body("m1", [0,0], 1e20,[0,0],[0,0])
-  let b2 = new Body("m2", [0,1e5], 1e16, [Math.sqrt(G*1e20/1e5),0],[0,0])
+  let b2 = new Body("m2", [0,-1e5], 1e16, [Math.sqrt(G*1e20/1e5),0],[0,0])
   return [b1,b2]; 
 }
 
 export const solar_system_bodies = () => {
 let sun:Body = new Body("sun",[0,0], 2e30, [0,0], [0,0])
 let mercury:Body = new Body("mercury",[0,5.7e10], 2e30, [47000,0], [0,0])
-// let venus:Body = new Body([0,1.1e11], 4.8e24, [35000,0], [0,0])
+let venus:Body = new Body("venus",[0,1.1e11], 4.8e24, [35000,0], [0,0])
 let earth:Body = new Body("earth",[0,1.5e11], 6e24, [30000,0], [0,0])
-// let mars:Body = new Body([0,2.2e11], 2.4e24, [24000,0], [0,0])
+let mars:Body = new Body("mercury",[0,2.2e11], 2.4e24, [24000,0], [0,0])
 // let mars = {"location":point(0,2.2e11,0), "mass":2.4e24, "velocity":point(24000,0,0)}
 // let jupiter = {"location":point(0,7.7e11,0), "mass":1e28, "velocity":point(13000,0,0)}
 // let saturn = {"location":point(0,1.4e12,0), "mass":5.7e26, "velocity":point(9000,0,0)}
 // let uranus = {"location":point(0,2.8e12,0), "mass":8.7e25, "velocity":point(6835,0,0)}
 // let neptune = {"location":point(0,4.5e12,0), "mass":1e26, "velocity":point(5477,0,0)}
 // let pluto = {"location":point(0,3.7e12,0), "mass":1.3e22, "velocity":point(4748,0,0)}
-// return [sun,mercury,venus,earth,mars];
+return [sun,mercury,venus,earth,mars];
 return [sun,earth]
 }
 
-const bodies = create_random_bodies(); 
-// const bodies = solar_system_bodies();
+// const bodies = create_random_bodies(); 
+const bodies = solar_system_bodies();
 
 export const simulate_points = () => {
    const x_s = bodies.map(body => body.pos[0]);
@@ -395,14 +395,23 @@ function draw_new_simulation(
   data: Data,
   layout: Partial<Layout>
 ) {
+  var steps: Partial<SliderStep>[] = [];
+  for (var i = 1; i <= 100; i++)
+    steps.push({
+      label: i.toString(),
+      method: "skip"
+    });
+  layout = {...layout, sliders: [{steps,active: 10}]}
   Plotly.newPlot(divId, [data], layout)
   console.log(animationId);
   if(animationId != null) return;
-  const qt = new QuadTree(1e6)
+  const qt = new QuadTree(1e14)
   function update() {
-    const dt = 0.1;
+    const dt = 100
+    console.log(document.getElementById(divId)?.layout?.sliders[0].active);
 
-  qt.build_tree(bodies);
+    qt.build_tree(bodies);
+    console.log(bodies)
     qt.simulateForces();
     qt.bodies.forEach((body, i) => {
       body.updateBodyState(dt);
@@ -434,7 +443,8 @@ function draw_new_simulation(
 
     }, {
       transition: {
-        duration: 0
+        duration: 0,
+        easing: 'cubic-in-out'
       },
       frame:{
         duration: 0,
@@ -442,7 +452,7 @@ function draw_new_simulation(
       }
     })
     Plotly.relayout(divId, {shapes: shapes})
-    animationId = requestAnimationFrame(update);
+      animationId = requestAnimationFrame(update);
   }
   update();
 }

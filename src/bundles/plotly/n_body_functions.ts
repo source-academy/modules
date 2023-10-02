@@ -31,13 +31,13 @@ export class Body {
   }
 
   resultOfForce(force: { fx: number; fy: number }) {
-    this.acceleration[0] += force.fx / this.mass
-    this.acceleration[1] += force.fy / this.mass
+    this.acceleration[0] = force.fx / this.mass
+    this.acceleration[1] = force.fy / this.mass
   }
 
   updateBodyState(dt: number) {
-    this.updatePos(dt)
     this.updateVelocity(dt)
+    this.updatePos(dt)
   }
 
   updatePos(dt: number) {
@@ -223,26 +223,30 @@ class QuadTreeNode {
     let y2 = this.center_of_mass[1]
     let m2 = this.total_mass_in_center
 
-    const dx = x2 - x1
-    const dy = y2 - y1
+    let dx = x2 - x1
+    let dy = y2 - y1
 
-    const r = Math.sqrt(dx * dx + dy * dy)
-    const rx = dx / r
-    const ry = dy / r
-    const r3 = Math.min(
-      Math.max(Math.pow(Math.sqrt(dx * dx + dy * dy), 2), 625),
-      1e9,
-    )
+    let r = Math.sqrt(dx * dx + dy * dy)
+    if (r === 0) {
+      // Poor man's protection against zero distance.
+      dx = (100 - 0.5) / 50
+      dy = (100 - 0.5) / 50
+      r = Math.sqrt(dx * dx + dy * dy)
+    }
+    const rx = dx
+    const ry = dy
+    const r3 = r * r * r
 
     let fx = (G_const * m1 * m2 * rx) / r3
     let fy = (G_const * m1 * m2 * ry) / r3
     return { fx, fy }
   }
 
-  public netForceOnBody(body: Body, theta = 0.5) {
-    console.log(this, body)
+  public netForceOnBody(body: Body, theta = 0.05) {
     // force on the body
     let force = { fx: 0, fy: 0 }
+
+    if (this.total_mass_in_center == 0) return force
 
     if (this.is_leaf) {
       for (var i = 0; i < this.body.length; i++) {
@@ -265,13 +269,13 @@ class QuadTreeNode {
 
       if (s / d < theta && this.body.length > 0) {
         return this._calcForceOnBody(body)
-      }
-
-      for (let i = 0; i < 4; i++) {
-        if (this.children[i] != null) {
-          const forceActed = this.children[i].netForceOnBody(body)
-          force.fx += forceActed.fx
-          force.fy += forceActed.fy
+      } else {
+        for (let i = 0; i < 4; i++) {
+          if (this.children[i] != null) {
+            const forceActed = this.children[i].netForceOnBody(body)
+            force.fx += forceActed.fx
+            force.fy += forceActed.fy
+          }
         }
       }
     }
@@ -326,6 +330,7 @@ export class QuadTree {
   public build_tree = (bodies: Body[]) => {
     this.clear_tree()
     this.bodies = bodies
+    console.log(bodies)
     for (var i = 0; i < this.bodies.length; i++) {
       if (this.root.bounding_box.contains_point(this.bodies[i].pos)) {
         this.root.insert_body(this.bodies[i])
@@ -353,11 +358,6 @@ export class QuadTree {
       // how much force the entire tree applies to the body
       const totalForceOnBody = this.root.netForceOnBody(body)
 
-      console.log(body.id)
-      console.log(body.pos[0], body.pos[1])
-      console.log(body.velocity[0], body.velocity[1])
-      console.log(body.acceleration[0], body.acceleration[1])
-      console.log(totalForceOnBody)
       body.resultOfForce(totalForceOnBody)
     })
   }
