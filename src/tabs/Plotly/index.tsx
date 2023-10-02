@@ -2,6 +2,7 @@ import React from 'react'
 import type { DrawnPlot } from '../../bundles/plotly/plotly'
 import type { DebuggerContext } from '../../typings/type_helpers'
 import Modal from '../common/modal_div'
+import { uniqueId } from '@blueprintjs/core/lib/esm/common/utils'
 
 type Props = {
   children?: never
@@ -62,7 +63,7 @@ class Plotly extends React.Component<Props, State> {
           ></div>
         </Modal>
         {drawnPlots.map((drawnPlot: any, id: number) => {
-          const divId = `plotDiv${id}}`
+          const divId = `plotDiv${id}${uniqueId("plotly")}}`
           return (
             <>
               <div onClick={() => this.handleOpen(drawnPlot)}>
