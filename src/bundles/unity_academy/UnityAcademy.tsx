@@ -650,7 +650,7 @@ class UnityAcademyJsInteropContext {
     return this.getGameObjectIdentifierForPrimitiveGameObject('MainCamera');
   }
 
-  onGUI_Label(content : string, x : number, y : number, fontSize : number) : void {
+  onGUI_Label(content : string, x : number, y : number) : void {
     // Temporarily use "<%7C>" to replace all '|' characters as '|' is used as the data separator in GUI data in Unity Academy Embedded Frontend.
     // In Unity Academy Embedded Frontend, "<%7C>" will be replaced back to '|' when displaying the text in GUI
     content = content.replaceAll('|', '<%7C>');
@@ -659,12 +659,11 @@ class UnityAcademyJsInteropContext {
       content,
       x,
       y,
-      fontSize,
     };
     this.guiData.push(newLabel);
   }
 
-  onGUI_Button(text : string, x: number, y : number, fontSize : number, onClick : Function) : void {
+  onGUI_Button(text : string, x: number, y : number, width : number, height : number, onClick : Function) : void {
     // Temporarily use "<%7C>" to replace all '|' characters as '|' is used as the data separator in GUI data in Unity Academy Embedded Frontend.
     // In Unity Academy Embedded Frontend, "<%7C>" will be replaced back to '|' when displaying the text in GUI
     text = text.replaceAll('|', '<%7C>');
@@ -673,7 +672,8 @@ class UnityAcademyJsInteropContext {
       text,
       x,
       y,
-      fontSize,
+      width,
+      height,
       onClick,
     };
     this.guiData.push(newButton);

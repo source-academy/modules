@@ -861,20 +861,20 @@ export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, e
  *
  * The drawn text will only last for one frame. You should put this under the `Update` function (or a function that is called by the `Update` function) to keep the text stays in every frame.
  *
- * @param content The string you want to display on screen.
+ * You can use rich text for the parameter `text`. For example: `gui_label("<color=#AA00FF>Hello World</color>", 100, 100);`
+ *
+ * @param text The string you want to display on screen.
  * @param x The x coordinate of the text (in screen position).
  * @param y The y coordinate of the text (in screen position).
- * @param fontSize The size of the text
  * @category Graphical User Interface
  */
-export function gui_label(content : string, x : number, y : number, fontSize : number) : void {
+export function gui_label(text : string, x : number, y : number) : void {
   checkUnityAcademyExistence();
-  checkParameterType(content, 'string');
+  checkParameterType(text, 'string');
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
-  checkParameterType(fontSize, 'number');
   getInstance()
-    .onGUI_Label(content, x, y, fontSize);
+    .onGUI_Label(text, x, y);
 }
 
 
@@ -898,7 +898,7 @@ export function gui_label(content : string, x : number, y : number, fontSize : n
  * const cube = instantiate("cube");
  *
  * const cube_update = (gameObject) => {
- *   gui_button("Button", 1000, 300, 20, ()=>
+ *   gui_button("Button", 1000, 300, 200, 50, ()=>
  *     set_position(gameObject, 0, 10, 6) // calling set_position inside the onClick function
  *   );
  * };
@@ -907,22 +907,26 @@ export function gui_label(content : string, x : number, y : number, fontSize : n
  * ```
  * is correct.
  *
+ * You can use rich text for the parameter `text`. For example: `gui_button("<color=#AA00FF>Hello World</color>", 100, 100, 200, 50, my_onclick_function);`
+ *
  * @param text The text you want to display on the button.
  * @param x The x coordinate of the button (in screen position).
  * @param y The y coordinate of the button (in screen position).
+ * @param width The width for the button.
+ * @param height The height for the button.
  * @param onClick The function that will be called when user clicks the button on screen.
- * @param fontSize The size of the text inside the button.
  * @category Graphical User Interface
  */
-export function gui_button(text : string, x: number, y : number, fontSize : number, onClick : Function) : void {
+export function gui_button(text : string, x: number, y : number, width : number, height : number, onClick : Function) : void {
   checkUnityAcademyExistence();
   checkParameterType(text, 'string');
   checkParameterType(x, 'number');
   checkParameterType(y, 'number');
-  checkParameterType(fontSize, 'number');
+  checkParameterType(width, 'number');
+  checkParameterType(height, 'number');
   checkParameterType(onClick, 'function');
   getInstance()
-    .onGUI_Button(text, x, y, fontSize, onClick);
+    .onGUI_Button(text, x, y, width, height, onClick);
 }
 
 /**
@@ -1354,6 +1358,8 @@ export function is_audio_playing(audioSrc : GameObjectIdentifier) : boolean {
  *
  * Log to Unity Academy Embedded Frontend's console.
  *
+ * You can use rich text for the parameter `content`.
+ *
  * @param content The content of the log message.
  *
  * @category Common
@@ -1369,6 +1375,8 @@ export function debug_log(content : any) : void {
 /**
  *
  * Log to Unity Academy Embedded Frontend's console, with yellow font color as highlighting.
+ *
+ * You can use rich text for the parameter `content`.
  *
  * @param content The content of the log message.
  *
@@ -1387,6 +1395,8 @@ export function debug_logwarning(content : any) : void {
  * Log to Unity Academy Embedded Frontend's console, with red font color as highlighting.
  *
  * Note that this function does not "really" throw any error. It just logs a message with red font color and the student code will continue running normally after calling this function to log the error.
+ *
+ * You can use rich text for the parameter `content`.
  *
  * @param content The content of the log message.
  *

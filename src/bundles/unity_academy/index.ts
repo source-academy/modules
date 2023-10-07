@@ -78,6 +78,14 @@
  *   - '=' (equals key) : Resets the main camera to its initial position and rotation
  *   - Left Mouse Button : Hold to rotate the main camera in a faster speed
  *   - Mouse Scrollwheel : Zoom in / out
+ *
+ * **Rich Text**
+ *  - You can use Unity's rich text feature in the `text` parameter for functions `gui_label` and `gui_button`,
+ *    and the `content` paramater for functions `debug_log`, `debug_logwarning` and `debug_logerror` to customize
+ *    font color, font size and display your text in boldface and italics.
+ *  - See https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html for more information about how to use this feature.
+ *  - In Unity Academy, only tags `b`, `i`, `size` and `color` are supported.
+ *
  * @module unity_academy
  * @author Wang Zihan
  */
@@ -145,7 +153,7 @@ export {
   magnitude,
   zero_vector,
   point_distance,
-  /* I will uncomment these when audio features are totally done
+  /* I will uncomment these audio functions when I totally finish audio support.
   load_audio_clip_mp3,
   load_audio_clip_ogg,
   load_audio_clip_wav,
