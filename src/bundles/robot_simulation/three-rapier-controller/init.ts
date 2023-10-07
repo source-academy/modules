@@ -12,8 +12,11 @@ import TickManager from './render/controllers/tickManager';
 import { init_meshes } from './mesh/init_meshes';
 import { RayCastedVehicleController } from './render/controllers/RayCastedVehicleController';
 import { carSettings } from './render/controllers/RayCastedVehicleController/carTuning';
+import { runECEvaluatorByJoel, type IOptions } from 'js-slang';
+import { getSimulation, setSimulation } from './render/simulation';
 
 let RAPIER: typeof Rapier;
+
 
 export type RobotSimulation = {
   state: Extract<SimulationStates, 'idle' | 'loading' | 'error'>;
@@ -28,22 +31,27 @@ export type RobotSimulation = {
   RAPIER: typeof Rapier,
   physicsWorld: Rapier.World,
   physicsObjects: Array<PhysicsObject>,
-  robot?: RayCastedVehicleController
+  robot?: RayCastedVehicleController,
+  EceIterator: Generator<number, void, undefined>
 };
 
-const initial_simulation: RobotSimulation = { state: 'idle' };
-const contextState = context.moduleContexts.robot_simulation.state;
-if (contextState === null) {
-  context.moduleContexts.robot_simulation.state = { simulation: initial_simulation };
-}
+export const initEngines = async (code:string) => {
+  const currentSimulation = getSimulation();
 
-export const getSimulation = ():RobotSimulation => context.moduleContexts.robot_simulation.state.simulation;
-export const setSimulation = (newSimulation:RobotSimulation):void => {
-  context.moduleContexts.robot_simulation.state.simulation = newSimulation;
-  console.log('Setting new value into simulation', newSimulation);
-};
+  if (currentSimulation.state !== 'idle') {
+    console.log('Engine already initialized. Skipping initialization');
+    return;
+  }
 
-export const initEngines = async () => {
+  const options : Partial<IOptions> = {
+    originalMaxExecTime: 1000,
+    scheduler: 'preemptive',
+    stepLimit: 1000,
+    throwInfiniteLoops: false,
+    useSubst: false,
+  };
+  const it = runECEvaluatorByJoel(code, context, options);
+
   setSimulation({ state: 'loading' });
   RAPIER = await initRapier();
 
@@ -78,6 +86,7 @@ export const initEngines = async () => {
     RAPIER,
     physicsWorld,
     physicsObjects,
+    EceIterator: it,
   };
 
   setSimulation(robotSimulation);

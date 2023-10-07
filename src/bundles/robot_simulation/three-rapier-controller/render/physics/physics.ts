@@ -1,6 +1,7 @@
 import type Rapier from '@dimforge/rapier3d-compat';
 
-import { RAPIER, getSimulation } from '../../init';
+import { RAPIER } from '../../init';
+import { getSimulation } from '../simulation';
 
 export type UpdateFunction = ({
   mesh,

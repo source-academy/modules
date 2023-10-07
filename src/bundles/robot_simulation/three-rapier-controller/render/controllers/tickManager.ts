@@ -1,6 +1,5 @@
-import { getSimulation } from '../../init';
+import { getSimulation } from '../simulation';
 
-// animation params
 type Frame = XRFrame | null;
 
 export type TickData = {
@@ -50,6 +49,7 @@ class TickManager extends EventTarget {
     const physicsObjects = simulation.physicsObjects;
     const scene = simulation.scene;
     const camera = simulation.camera;
+    const ece = simulation.EceIterator;
 
 
     if (!renderer) {
@@ -89,6 +89,7 @@ class TickManager extends EventTarget {
 
       renderer.render(scene, camera);
       this.tick(timestamp, timeDiffCapped, this.fps, frame);
+      console.log(ece.next());
     };
 
     renderer.setAnimationLoop(animate);

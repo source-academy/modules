@@ -7,7 +7,8 @@ import {
 } from '../../physics/physics';
 import { carSettings, type CarSettings } from './carTuning';
 import { quat, vec3 } from '../../physics/helpers';
-import { getSimulation, RAPIER } from '../../../init';
+import { RAPIER } from '../../../init';
+import { getSimulation } from '../../simulation';
 
 const getWheelDisplacements = (settings: CarSettings) => {
   const rayDisplacements = [

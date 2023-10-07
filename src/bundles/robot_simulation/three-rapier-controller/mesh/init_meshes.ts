@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { addPhysics } from '../render/physics/physics';
-import { getSimulation } from '../init';
+import { getSimulation } from '../render/simulation';
 
 const addFloor = () => {
   const size = 100;
