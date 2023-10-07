@@ -16,6 +16,7 @@
  * - Currently there are five types of Unity Academy lifecycle event function: `Start`, `Update` and three collision detaction functions.
  * - Both `Start` and `Update` functions should be a student-side function object with only one parameter, which automatically refers to the GameObject that is binded with the function when Unity Academy calls the function. So different GameObject instances can share the same lifecycle event function together.
  * For example:
+ *
  * ```
  * function my_start(gameObject){...};
  * const my_update = (gameObject) => {...};
@@ -28,6 +29,7 @@
  *
  * <u>**[IMPORTANT]** All functions in this module that is NOT under the "**Outside Lifecycle**" or "Maths" category need to call by Unity Academy lifecycle event functions (directly or intermediately) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u>
  * For example:
+ *
  * ```
  * import {init_unity_academy_3d, instantiate, set_start, set_update, set_position, set_rotation_euler} from 'unity_academy';
  * init_unity_academy_3d(); // Correct, since this function is under the "Outside Lifecycle" category and it can be called outside lifecycle event functions.

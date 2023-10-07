@@ -1,5 +1,5 @@
 /* [Imports] */
-import type { IconName } from '@blueprintjs/icons';
+import { type IconName } from '@blueprintjs/icons';
 
 
 
@@ -12,16 +12,11 @@ export type CanvasHolderProps = {
 
 // React Component State for the CSG canvas holder
 export type CanvasHolderState = {
-  contextLost: boolean;
+  isContextLost: boolean;
 };
 
 // React Component Props for a control hint
 export type HintProps = {
   tooltipText: string;
   iconName: IconName;
-};
-
-// React Component State for a control hint
-export type HintState = {
-  showTooltip: boolean;
 };

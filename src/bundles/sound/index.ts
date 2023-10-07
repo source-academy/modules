@@ -21,8 +21,8 @@ export {
   phase_mod,
   piano,
   // Play-related
+  play_in_tab,
   play,
-  play_concurrently,
   play_wave,
   record,
   record_for,

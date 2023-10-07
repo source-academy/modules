@@ -9,7 +9,7 @@ import MultiItemDisplay from '../common/multi_item_display';
 import { type DebuggerContext } from '../../typings/type_helpers';
 import AnimationCanvas from '../common/animation_canvas';
 import HollusionCanvas from './hollusion_canvas';
-import WebGLCanvas from '../common/webgl_canvas';
+import WebGLCanvas from '../common/web_gl_canvas';
 
 export default {
   /**

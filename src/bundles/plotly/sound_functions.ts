@@ -1,4 +1,4 @@
-import context  from 'js-slang/context';
+import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { get_duration, get_wave, is_sound } from '../sound';
 import { type Sound } from '../sound/types';
@@ -33,7 +33,7 @@ export function draw_sound_2d(sound: Sound) {
     const wave = get_wave(sound);
     for (let i = 0; i < len; i += 1) {
       time_stamps[i] = i / FS;
-      channel[i] = wave( i / FS );
+      channel[i] = wave(i / FS);
     }
 
     let x_s: number[] = [];

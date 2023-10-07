@@ -196,6 +196,7 @@ export function instantiate_empty() : GameObjectIdentifier {
  * This should be useful when implementing timers or constant speed control in Update function.
  *
  * For example:
+ *
  * ```
  * function update(gameObject){
  *     const move_speed = 3;
@@ -205,6 +206,7 @@ export function instantiate_empty() : GameObjectIdentifier {
  * By assigning the above code to a GameObject with `set_update`, that GameObject will move in a constant speed for about 3 units per second along world +Z axis.
  *
  * For more information, see https://docs.unity3d.com/ScriptReference/Time-deltaTime.html
+ *
  * @return the delta time value in decimal
  *
  * @category Common
@@ -294,6 +296,7 @@ export function set_rotation_euler(gameObjectIdentifier : GameObjectIdentifier, 
  * Returns the scale (size factor) of a given GameObject
  *
  * By default the scale of a GameObject is (1, 1, 1)
+ *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get scale for.
  * @return The scale represented in a Vector3.
  *
@@ -491,6 +494,7 @@ function checkKeyCodeValidityAndToLowerCase(keyCode : string) : string {
  * When user presses a key on the keyboard or mouse button, this function will return true only at the frame when the key is just pressed down and return false afterwards.
  *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKeyDown.html
+ *
  * @return A boolean value equivalent to Input.GetKeyDown(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
@@ -507,6 +511,7 @@ export function get_key_down(keyCode : string) : boolean {
  * When user presses a key on the keyboard or mouse button, this function will return true in every frame that the key is still being pressed and false otherwise.
  *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKey.html
+ *
  * @return A boolean value equivalent to Input.GetKey(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
@@ -525,6 +530,7 @@ export function get_key(keyCode : string) : boolean {
  * When user releases a pressed key on the keyboard or mouse button, this function will return true only at the frame when the key is just released up and return false otherwise.
  *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKeyUp.html
+ *
  * @return A boolean value equivalent to Input.GetKeyUp(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
@@ -890,6 +896,7 @@ export function gui_label(content : string, x : number, y : number, fontSize : n
  * This means that you can use other functions from this module inside the `onClick` function, even though the functions are not under the `Outside Lifecycle` category.
  *
  * For example, the code piece below
+ *
  * ```
  * import {init_unity_academy_3d, set_start, set_update, instantiate, gui_button, set_position }
  * from "unity_academy";
