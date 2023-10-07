@@ -7,8 +7,8 @@
 
 import { initializeModule, getInstance, type GameObjectIdentifier, type AudioClipIdentifier } from './UnityAcademy';
 import {
-  type Vector3, checkVector3Parameter, makeVector3D, scaleVector, addVector, dotProduct, crossProduct,
-  normalizeVector, vectorMagnitude, zeroVector, pointDistance,
+  type Vector3, checkVector3Parameter, makeVector3D, scaleVector, addVectors, vectorDifference, dotProduct,
+  crossProduct, normalizeVector, vectorMagnitude, zeroVector, pointDistance,
 } from './UnityAcademyMaths';
 
 
@@ -1079,10 +1079,24 @@ export function scale_vector(vector : Vector3, factor : number) : Vector3 {
  *
  * @category Maths
  */
-export function add_vector(vectorA : Vector3, vectorB : Vector3) : Vector3 {
+export function add_vectors(vectorA : Vector3, vectorB : Vector3) : Vector3 {
   checkVector3Parameter(vectorA);
   checkVector3Parameter(vectorB);
-  return addVector(vectorA, vectorB);
+  return addVectors(vectorA, vectorB);
+}
+
+/**
+ * Calcuate the vector difference between two vectors (vectorA - vectorB).
+ * @param vectorA The minuend vector.
+ * @param vectorB The subtrahend vector.
+ * @return The result for vectorA - vectorB
+ *
+ * @category Maths
+ */
+export function vector_difference(vectorA : Vector3, vectorB : Vector3) : Vector3 {
+  checkVector3Parameter(vectorA);
+  checkVector3Parameter(vectorB);
+  return vectorDifference(vectorA, vectorB);
 }
 
 /**
