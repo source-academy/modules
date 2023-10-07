@@ -12,6 +12,7 @@ test('Check that the test command properly passes options to jest', async () => 
 
   const [call] = mockRunJest.mock.calls
   expect(call[0]).toEqual(['-u', '-w', './src/folder'])
+  expect(call[1]).toEqual('gg');
 })
 
 test('Check that the test command handles windows paths as posix paths', async () => {
