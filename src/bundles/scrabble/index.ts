@@ -3,5 +3,5 @@
  * @author Martin Henz
  */
 export {
-  scrabble_words
+  scrabble_words,
 } from './functions';
