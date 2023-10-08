@@ -21,8 +21,10 @@
 <li class="tsd-signature tsd-anchor-link" id="get_main_camera_following_target">get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GameObjectIdentifier</span><a href="#get_main_camera_following_target" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the main camera following target GameObject (an invisible GameObject) to use it to control the position of the main camera with the default camera controller.</p>
-<p><strong>In 3D mode</strong>, the default camera controller behaves as third-person camera controller, and the center to follow is the following target GameObject. Also, Unity Academy will automatically set the rotation of this &quot;following target&quot; to the same rotation as the current main camera&#39;s rotation to let you get the main camera&#39;s rotation.</p>
-<p><strong>In 2D mode</strong>, the default camera controller will follow the target GameObject to move, along with a position delta value that you can adjust with the arrow keys on your keyboard.</p>
+<ul>
+<li><strong>In 3D mode</strong>, the default camera controller behaves as third-person camera controller, and the center to follow is the following target GameObject. Also, Unity Academy will automatically set the rotation of this &quot;following target&quot; to the same rotation as the current main camera&#39;s rotation to let you get the main camera&#39;s rotation.</li>
+<li><strong>In 2D mode</strong>, the default camera controller will follow the target GameObject to move, along with a position delta value that you can adjust with the arrow keys on your keyboard.</li>
+</ul>
 <p>The main camera following target GameObject is a primitive GameObject. This means that you are not allowed to destroy it and/or instantiate it during runtime. Multiple calls to this function will return GameObject identifiers that refer to the same primitive GameObject.</p>
 <p><strong>If default main camera controllers are disabled (you have called <code>request_for_main_camera_control</code>), then the following target GameObject is useless.</strong></p>
 
@@ -30,7 +32,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">GameObjectIdentifier</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/ddb1767/src/bundles/unity_academy/functions.ts#L1019">unity_academy/functions.ts:1019</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/518c0ab/src/bundles/unity_academy/functions.ts#L945">unity_academy/functions.ts:945</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -77,12 +79,15 @@
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.add_impulse_force.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>add_<wbr/>impulse_<wbr/>force</a></li>
-<li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.add_vector.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>add_<wbr/>vector</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.add_vectors.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>add_<wbr/>vectors</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.apply_rigidbody.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>apply_<wbr/>rigidbody</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.copy_position.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>copy_<wbr/>position</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.copy_rotation.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>copy_<wbr/>rotation</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.copy_scale.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>copy_<wbr/>scale</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.cross.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>cross</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.debug_log.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>debug_<wbr/>log</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.debug_logerror.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>debug_<wbr/>logerror</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.debug_logwarning.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>debug_<wbr/>logwarning</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.delta_time.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>delta_<wbr/>time</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.destroy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>destroy</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.dot.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>dot</a></li>
@@ -136,6 +141,7 @@
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.translate_local.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>translate_<wbr/>local</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.translate_world.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>translate_<wbr/>world</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.vector3.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>vector3</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.vector_difference.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>vector_<wbr/>difference</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="unity_academy.zero_vector.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>zero_<wbr/>vector</a></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>

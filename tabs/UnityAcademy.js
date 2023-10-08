@@ -7418,7 +7418,7 @@ require => (() => {
     streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
     companyName: "Wang Zihan @ NUS SoC 2026",
     productName: "Unity Academy (Source Academy Embedding Version)",
-    productVersion: "prod-2023.4"
+    productVersion: "See 'About' in the embedded frontend."
   };
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var Unity3DTab = class extends import_react2.default.Component {
@@ -7434,14 +7434,14 @@ require => (() => {
           style: {
             color: "yellow"
           },
-          children: "[Warning] You are using a target fps higher than default value (30). Higher FPS will lead to more cost in your device's resources such as GPU, increace device temperature and battery usage and may even lead to browser not responding, crash the browser or even crash your operation system if your device really can not endure the high resource cost."
+          children: "[Warning] You are using a target FPS higher than default value (30). Higher FPS will lead to more cost in your device's resources such as GPU, increace device temperature and battery usage and may even lead to browser not responding, crash the browser or even crash your operation system if your device really can not endure the high resource cost."
         });
       } else if (currentTargetFrameRate > 60 && currentTargetFrameRate <= 120) {
         highFPSWarning = (0, import_jsx_runtime2.jsxs)("div", {
           style: {
             color: "red"
           },
-          children: ["[!!WARNING!!] You are using a target fps that is extremely high. This FPS may lead to large cost in your device's resources such as GPU, significantly increace device temperature and battery usage and have a large chance of making browser not responding, crash the browser or even crash your operation system if your device's performance is not enough.", (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), " ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***"]
+          children: ["[!!WARNING!!] You are using a target FPS that is extremely high. This FPS may lead to large cost in your device's resources such as GPU, significantly increace device temperature and battery usage and have a large chance of making browser not responding, crash the browser or even crash your operation system if your device's performance is not enough.", (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), " ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***"]
         });
       } else {
         highFPSWarning = (0, import_jsx_runtime2.jsx)("div", {});
@@ -7466,31 +7466,26 @@ require => (() => {
               children: "'Native'"
             }), " variant of Source language in order to use this module."]
           }), " If any strange error happens when using this module, please check whether you are using the 'Native' variant of Source language or not."]
-        }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("p", {
-          children: "100% resolution will display Unity Academy in a larger area with more detailed graphics but requires higher GPU performance than 50% resolution."
-        }), (0, import_jsx_runtime2.jsx)(Button, {
-          icon: IconNames.SEND_TO,
-          active: true,
-          onClick: () => {
-            this.openUnityWindow(25);
-          },
-          text: "Open Unity Academy (25% Resolution / Recommended for low GPU performance devices)"
-        }), (0, import_jsx_runtime2.jsx)(Button, {
-          icon: IconNames.SEND_TO,
-          active: true,
-          onClick: () => {
-            this.openUnityWindow(50);
-          },
-          text: "Open Unity Academy (50% Resolution / Recommended for average GPU performance devices)"
         }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)(Button, {
           icon: IconNames.SEND_TO,
           active: true,
           onClick: () => {
             this.openUnityWindow(100);
           },
-          text: "Open Unity Academy (100% Resolution / Best quality and high GPU performance cost)"
+          text: "Open Unity Academy Embedded Frontend"
         }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("p", {
-          children: "Target Frame Rate: "
+          children: "If the frame rate is low when you are using Unity Academy with the default resolution, try using Unity Academy with 50% resolution here:"
+        }), (0, import_jsx_runtime2.jsx)("p", {
+          children: "50% resolution will display Unity Academy in a smaller area with lower quality and less detailed graphics but requires less device (especially GPU) performance than the default resolution."
+        }), (0, import_jsx_runtime2.jsx)(Button, {
+          icon: IconNames.SEND_TO,
+          active: true,
+          onClick: () => {
+            this.openUnityWindow(50);
+          },
+          text: "Open with 50% resolution"
+        }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)("p", {
+          children: "Target (Maximum) Frame Rate (Frames Per Second): "
         }), (0, import_jsx_runtime2.jsxs)("div", {
           style: {
             display: "inline-flex"
@@ -7543,6 +7538,8 @@ require => (() => {
             },
             text: "120"
           })]
+        }), (0, import_jsx_runtime2.jsx)("p", {
+          children: "The actual frame rate depends on your device's performance."
         }), highFPSWarning, (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsxs)("div", {
           children: ["Code Examples: ", (0, import_jsx_runtime2.jsx)("a", {
             href: `${UNITY_ACADEMY_BACKEND_URL}code_examples.html`,

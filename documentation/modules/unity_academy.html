@@ -27,13 +27,13 @@
 <li>Unity Academy has its own internal loop on students&#39; GameObject lifecycle.</li>
 <li><u>Lifecycle event functions</u> are functions that are not supposed to be called by Source Academy&#39;s default evaluator, instead they are called by Unity Academy at certain time in the GameObject&#39;s lifecycle.</li>
 <li>Currently there are five types of Unity Academy lifecycle event function: <code>Start</code>, <code>Update</code> and three collision detaction functions.</li>
-<li>Both <code>Start</code> and <code>Update</code> functions should be a student-side function object with only one parameter, which automatically refers to the GameObject that is binded with the function when Unity Academy calls the function. So different GameObject instances can share the same lifecycle event function together.</li>
+<li>Both <code>Start</code> and <code>Update</code> functions should be a student-side function object with only one parameter, which automatically refers to the GameObject that is binded with the function when Unity Academy calls the function. So different GameObject instances can share the same lifecycle event function together.
+For example:</li>
 </ul>
-<p>For example:</p>
 <pre><code><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-8">my_start</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">){...};</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-8">my_update</span><span class="hl-1"> = (</span><span class="hl-0">gameObject</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> {...};</span>
 </code></pre>
 <ul>
-<li>The functions <code>set_start</code> and <code>set_update</code> in this module can be used to set one GameObject&#39;s <code>Start</code> and <code>Update</code> functions<ul>
+<li>The functions <code>set_start</code> and <code>set_update</code> in this module can be used to set one GameObject&#39;s <code>Start</code> and <code>Update</code> functions.<ul>
 <li><code>Start</code> is called only for one time after the GameObject is created (instantiated) and before its first <code>Update</code> call.</li>
 <li><code>Update</code> is called on every GameObject once in every frame after <code>Start</code> have been called.</li>
 </ul>
@@ -41,12 +41,15 @@
 <li>For the three collision detaction lifecycle event functions, please refer to <code>on_collision_enter</code>, <code>on_collision_stay</code> and <code>on_collision_exit</code> functions under the <code>Physics - Collision</code> category.</li>
 <li>You can not bind multiple lifecycle functions of the same type to the same GameObject. For example, you can&#39;t bind two <code>Update</code> functions to the same GameObject. In this case, previously binded <code>Update</code> functions will be overwritten by the latest binded <code>Update</code> function.</li>
 </ul>
-<p><u><strong>[IMPORTANT]</strong> All functions in this module that is NOT under the &quot;<strong>Outside Lifecycle</strong>&quot; or &quot;Maths&quot; category need to call by Unity Academy lifecycle event functions (directly or intermediately) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u></p>
-<p>For example:</p>
+<p><u><strong>[IMPORTANT]</strong> All functions in this module that is NOT under the &quot;<strong>Outside Lifecycle</strong>&quot; or &quot;Maths&quot; category need to call by Unity Academy lifecycle event functions (directly or intermediately) to work correctly. Failure to follow this rule may lead to noneffective or incorrect behaviors of the functions and may crash the Unity Academy instance.</u>
+For example:</p>
 <pre><code><span class="hl-4">import</span><span class="hl-1"> {</span><span class="hl-0">init_unity_academy_3d</span><span class="hl-1">, </span><span class="hl-0">instantiate</span><span class="hl-1">, </span><span class="hl-0">set_start</span><span class="hl-1">, </span><span class="hl-0">set_update</span><span class="hl-1">, </span><span class="hl-0">set_position</span><span class="hl-1">, </span><span class="hl-0">set_rotation_euler</span><span class="hl-1">} </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-5">&#39;unity_academy&#39;</span><span class="hl-1">;</span><br/><span class="hl-8">init_unity_academy_3d</span><span class="hl-1">(); </span><span class="hl-3">// Correct, since this function is under the &quot;Outside Lifecycle&quot; category and it can be called outside lifecycle event functions.</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">cube</span><span class="hl-1"> = </span><span class="hl-8">instantiate</span><span class="hl-1">(</span><span class="hl-5">&quot;cube&quot;</span><span class="hl-1">); </span><span class="hl-3">// Correct</span><br/><span class="hl-8">set_position</span><span class="hl-1">(</span><span class="hl-0">cube</span><span class="hl-1">, </span><span class="hl-9">1</span><span class="hl-1">, </span><span class="hl-9">2</span><span class="hl-1">, </span><span class="hl-9">3</span><span class="hl-1">); </span><span class="hl-3">// WRONG, since set_position should ONLY be called inside a lifecycle event function</span><br/><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-8">my_start</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">){ </span><span class="hl-3">// A sample Start event function which will be binded to cube by my_start later.</span><br/><span class="hl-1">    </span><span class="hl-8">set_position</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">, </span><span class="hl-9">1</span><span class="hl-1">, </span><span class="hl-9">2</span><span class="hl-1">, </span><span class="hl-9">3</span><span class="hl-1">); </span><span class="hl-3">// Correct, since the call to set_position is inside a lifecycle event function</span><br/><span class="hl-1">    </span><span class="hl-8">something_else</span><span class="hl-1">(</span><span class="hl-0">gameObject</span><span class="hl-1">);</span><br/><span class="hl-1">}</span><br/><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-8">something_else</span><span class="hl-1">(</span><span class="hl-0">obj</span><span class="hl-1">){</span><br/><span class="hl-1">   </span><span class="hl-8">set_rotation_euler</span><span class="hl-1">(</span><span class="hl-0">obj</span><span class="hl-1">, </span><span class="hl-9">0</span><span class="hl-1">, </span><span class="hl-9">45</span><span class="hl-1">, </span><span class="hl-9">45</span><span class="hl-1">);  </span><span class="hl-3">// Correct, since the function &quot;set_rotation_euler&quot; is intermediately called by the lifecycle event function &quot;my_start&quot; through &quot;something_else&quot;</span><br/><span class="hl-1">}</span><br/><span class="hl-8">set_start</span><span class="hl-1">(</span><span class="hl-0">cube</span><span class="hl-1">, </span><span class="hl-0">my_start</span><span class="hl-1">); </span><span class="hl-3">// Correct</span>
 </code></pre>
-<p>When any runtime errors happen in lifecycle event functions, they will be displayed in Unity Academy&#39;s information page and the lifecycle event function that caused the errors will automatically unbind from the GameObject.</p>
-<p><strong>Input Function Key Codes</strong> Accepts A-Z, a-z and &quot;LeftMouseBtn&quot; / &quot;RightMouseBtn&quot; / &quot;MiddleMouseBtn&quot; / &quot;LeftShift&quot; / &quot;RightShift&quot;</p>
+<p>When any runtime errors happen in lifecycle event functions, they will be displayed in Unity Academy&#39;s console and the lifecycle event function that caused the errors will automatically unbind from the GameObject.</p>
+<p><strong>Input Function Key Codes</strong></p>
+<ul>
+<li>Accepts A-Z, a-z, 0-9 and &quot;LeftMouseBtn&quot; / &quot;RightMouseBtn&quot; / &quot;MiddleMouseBtn&quot; / &quot;Space&quot; / &quot;LeftShift&quot; / &quot;RightShift&quot;</li>
+</ul>
 <p><strong>Key differences between 2D and 3D mode</strong></p>
 <ul>
 <li><u>In 2D mode</u> the main camera renders the scene in <strong>orthographic</strong> mode (Z position is used to determine sequence when sprites overlapping), whereas <u>in 3D mode</u> the camera renders the scene in <strong>perspective</strong> mode. Moreover, 3D mode and 2D mode have different kinds of default camera controller.</li>
@@ -59,6 +62,16 @@
 <ul>
 <li><u>3D:</u> Uses <strong>left-hand coordinate system</strong>: +X denotes rightward, +Y denotes upward, +Z denotes forward.</li>
 <li><u>2D:</u> +X denotes rightward, +Y denotes upward, Z value actually still exists and usually used for determining sequence of overlapping 2D GameObjects like sprites.</li>
+<li>About <strong>Vector3</strong><ul>
+<li><code>Vector3</code> is an object that can represent either a 3D vector or simply a combination of three coordinate values (X, Y and Z) depends on where it is used. It can be created through <code>vector3(x, y, z);</code>.</li>
+<li>For example:<ul>
+<li>In function <code>set_velocity</code>, the <code>Vector3</code> parameter represents the 3D vector for the velocity of the rigidbody.</li>
+<li>In function <code>set_position</code>, the <code>Vector3</code> parameter represents a point defined by (X, Y, Z) in the space.</li>
+<li>In function <code>set_scale</code>, the <code>Vector3</code> parameter represents the scale of the GameObject along each of the three axes (X, Y, Z).</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p><strong>Unity Academy Camera Control (only available when the default camera controllers are being used)</strong></p>
 <ul>
@@ -74,11 +87,19 @@
 </ul>
 </li>
 </ul>
+<p><strong>Rich Text</strong></p>
+<ul>
+<li>You can use Unity&#39;s rich text feature in the <code>text</code> parameter for functions <code>gui_label</code> and <code>gui_button</code>,
+and the <code>content</code> paramater for functions <code>debug_log</code>, <code>debug_logwarning</code> and <code>debug_logerror</code> to customize
+font color, font size and display your text in boldface and italics.</li>
+<li>See <a href="https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html">https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html</a> for more information about how to use this feature.</li>
+<li>In Unity Academy, only tags <code>b</code>, <code>i</code>, <code>size</code> and <code>color</code> are supported.</li>
+</ul>
 
 <h3>Author</h3><p>Wang Zihan</p>
 </div></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/ddb1767/src/bundles/unity_academy/index.ts#L82">unity_academy/index.ts:82</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/518c0ab/src/bundles/unity_academy/index.ts#L94">unity_academy/index.ts:94</a></li></ul></aside>
 <section class="tsd-panel-group">
 <section class="tsd-panel tsd-typography"></section></section>
 <section class="tsd-panel-group tsd-index-group">
@@ -96,7 +117,10 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Functions - Common</h3>
-<div class="tsd-index-list"><a href="../functions/unity_academy.delta_time.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>delta_<wbr/>time</span></a>
+<div class="tsd-index-list"><a href="../functions/unity_academy.debug_log.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>debug_<wbr/>log</span></a>
+<a href="../functions/unity_academy.debug_logerror.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>debug_<wbr/>logerror</span></a>
+<a href="../functions/unity_academy.debug_logwarning.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>debug_<wbr/>logwarning</span></a>
+<a href="../functions/unity_academy.delta_time.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>delta_<wbr/>time</span></a>
 <a href="../functions/unity_academy.destroy.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>destroy</span></a>
 <a href="../functions/unity_academy.get_custom_prop.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>custom_<wbr/>prop</span></a>
 <a href="../functions/unity_academy.instantiate.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>instantiate</span></a>
@@ -121,7 +145,7 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Functions - Maths</h3>
-<div class="tsd-index-list"><a href="../functions/unity_academy.add_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>add_<wbr/>vector</span></a>
+<div class="tsd-index-list"><a href="../functions/unity_academy.add_vectors.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>add_<wbr/>vectors</span></a>
 <a href="../functions/unity_academy.cross.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>cross</span></a>
 <a href="../functions/unity_academy.dot.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>dot</span></a>
 <a href="../functions/unity_academy.get_x.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>x</span></a>
@@ -132,11 +156,15 @@
 <a href="../functions/unity_academy.point_distance.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>point_<wbr/>distance</span></a>
 <a href="../functions/unity_academy.scale_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>scale_<wbr/>vector</span></a>
 <a href="../functions/unity_academy.vector3.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>vector3</span></a>
+<a href="../functions/unity_academy.vector_difference.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>vector_<wbr/>difference</span></a>
 <a href="../functions/unity_academy.zero_vector.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>zero_<wbr/>vector</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Functions - Outside Lifecycle</h3>
-<div class="tsd-index-list"><a href="../functions/unity_academy.get_main_camera_following_target.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target</span></a>
+<div class="tsd-index-list"><a href="../functions/unity_academy.debug_log.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>debug_<wbr/>log</span></a>
+<a href="../functions/unity_academy.debug_logerror.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>debug_<wbr/>logerror</span></a>
+<a href="../functions/unity_academy.debug_logwarning.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>debug_<wbr/>logwarning</span></a>
+<a href="../functions/unity_academy.get_main_camera_following_target.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>get_<wbr/>main_<wbr/>camera_<wbr/>following_<wbr/>target</span></a>
 <a href="../functions/unity_academy.init_unity_academy_2d.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>init_<wbr/>unity_<wbr/>academy_<wbr/>2d</span></a>
 <a href="../functions/unity_academy.init_unity_academy_3d.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>init_<wbr/>unity_<wbr/>academy_<wbr/>3d</span></a>
 <a href="../functions/unity_academy.instantiate.html" class="tsd-index-link tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>instantiate</span></a>
@@ -233,12 +261,15 @@
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.add_impulse_force.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>add_<wbr/>impulse_<wbr/>force</a></li>
-<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.add_vector.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>add_<wbr/>vector</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.add_vectors.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>add_<wbr/>vectors</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.apply_rigidbody.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>apply_<wbr/>rigidbody</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.copy_position.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>copy_<wbr/>position</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.copy_rotation.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>copy_<wbr/>rotation</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.copy_scale.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>copy_<wbr/>scale</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.cross.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>cross</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.debug_log.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>debug_<wbr/>log</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.debug_logerror.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>debug_<wbr/>logerror</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.debug_logwarning.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>debug_<wbr/>logwarning</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.delta_time.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>delta_<wbr/>time</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.destroy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>destroy</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.dot.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>dot</a></li>
@@ -292,6 +323,7 @@
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.translate_local.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>translate_<wbr/>local</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.translate_world.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>translate_<wbr/>world</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.vector3.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>vector3</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.vector_difference.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>vector_<wbr/>difference</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="../functions/unity_academy.zero_vector.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>zero_<wbr/>vector</a></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>

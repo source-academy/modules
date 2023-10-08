@@ -28928,12 +28928,15 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var unity_academy_exports = {};
   __export(unity_academy_exports, {
     add_impulse_force: () => add_impulse_force,
-    add_vector: () => add_vector,
+    add_vectors: () => add_vectors,
     apply_rigidbody: () => apply_rigidbody,
     copy_position: () => copy_position,
     copy_rotation: () => copy_rotation,
     copy_scale: () => copy_scale,
     cross: () => cross,
+    debug_log: () => debug_log,
+    debug_logerror: () => debug_logerror,
+    debug_logwarning: () => debug_logwarning,
     delta_time: () => delta_time,
     destroy: () => destroy,
     dot: () => dot,
@@ -28987,6 +28990,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     translate_local: () => translate_local,
     translate_world: () => translate_world,
     vector3: () => vector3,
+    vector_difference: () => vector_difference,
     zero_vector: () => zero_vector
   });
   init_define_process();
@@ -34519,8 +34523,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   function scaleVector(vector, factor) {
     return new Vector3(vector.x * factor, vector.y * factor, vector.z * factor);
   }
-  function addVector(vectorA, vectorB) {
+  function addVectors(vectorA, vectorB) {
     return new Vector3(vectorA.x + vectorB.x, vectorA.y + vectorB.y, vectorA.z + vectorB.z);
+  }
+  function vectorDifference(vectorA, vectorB) {
+    return new Vector3(vectorA.x - vectorB.x, vectorA.y - vectorB.y, vectorA.z - vectorB.z);
   }
   function dotProduct(vectorA, vectorB) {
     return vectorA.x * vectorB.x + vectorA.y * vectorB.y + vectorA.z * vectorB.z;
@@ -34546,6 +34553,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   function getInstance() {
     return window.unityAcademyContext;
   }
+  var AudioClipIdentifier = class {
+    constructor(audioClipInternalName) {
+      this.audioClipInternalName = audioClipInternalName;
+    }
+  };
   var GameObjectIdentifier = class {
     constructor(gameObjectIdentifier) {
       this.gameObjectIdentifier = gameObjectIdentifier;
@@ -34632,12 +34644,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
     companyName: "Wang Zihan @ NUS SoC 2026",
     productName: "Unity Academy (Source Academy Embedding Version)",
-    productVersion: "prod-2023.4"
+    productVersion: "See 'About' in the embedded frontend."
   };
   var UnityAcademyJsInteropContext = class {
     constructor() {
       this.gameObjectIdentifierSerialCounter = 0;
       this.deltaTime = 0;
+      this.audioClipIdentifierSerialCounter = 0;
       this.unityInstance = null;
       this.unityContainerElement = document.getElementById("unity_container");
       if (this.unityContainerElement === void 0 || this.unityContainerElement === null) {
@@ -34647,6 +34660,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.loadPrefabInfo();
       this.studentActionQueue = [];
       this.studentGameObjectStorage = {};
+      this.audioClipStorage = [];
       this.guiData = [];
       this.input = {
         keyboardInputInfo: {}
@@ -34744,6 +34758,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     resetModuleData() {
       this.studentActionQueue = [];
       this.studentGameObjectStorage = {};
+      this.audioClipStorage = [];
       this.gameObjectIdentifierSerialCounter = 0;
       this.input.keyboardInputInfo = {};
       this.guiData = [];
@@ -34802,6 +34817,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       return new GameObjectIdentifier(gameObjectIdentifier);
     }
     instantiate2DSpriteUrlInternal(sourceImageUrl) {
+      sourceImageUrl = sourceImageUrl.replaceAll("|", "%7C");
       const gameObjectIdentifier = `2DSprite_${this.gameObjectIdentifierSerialCounter}`;
       this.gameObjectIdentifierSerialCounter++;
       this.makeGameObjectDataStorage(gameObjectIdentifier);
@@ -34813,6 +34829,21 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.gameObjectIdentifierSerialCounter++;
       this.makeGameObjectDataStorage(gameObjectIdentifier);
       this.dispatchStudentAction(`instantiateEmptyGameObject|${gameObjectIdentifier}`);
+      return new GameObjectIdentifier(gameObjectIdentifier);
+    }
+    instantiateAudioSourceInternal(audioClipIdentifier) {
+      const gameObjectIdentifier = `AudioSource_${this.gameObjectIdentifierSerialCounter}`;
+      this.gameObjectIdentifierSerialCounter++;
+      this.makeGameObjectDataStorage(gameObjectIdentifier);
+      this.studentGameObjectStorage[gameObjectIdentifier].audioSource = {
+        audioClipIdentifier,
+        playSpeed: 1,
+        playProgress: 0,
+        volume: 1,
+        isLooping: false,
+        isPlaying: false
+      };
+      this.dispatchStudentAction(`instantiateAudioSourceGameObject|${gameObjectIdentifier}|${audioClipIdentifier.audioClipInternalName}`);
       return new GameObjectIdentifier(gameObjectIdentifier);
     }
     destroyGameObjectInternal(gameObjectIdentifier) {
@@ -34831,6 +34862,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           scale: new Vector3(1, 1, 1)
         },
         rigidbody: null,
+        audioSource: null,
         customProperties: {},
         isDestroyed: false
       };
@@ -34859,24 +34891,24 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
     getGameObjectTransformProp(propName, gameObjectIdentifier) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-      return [gameObject.transform[propName].x, gameObject.transform[propName].y, gameObject.transform[propName].z];
+      return new Vector3(gameObject.transform[propName].x, gameObject.transform[propName].y, gameObject.transform[propName].z);
     }
-    setGameObjectTransformProp(propName, gameObjectIdentifier, x, y, z) {
+    setGameObjectTransformProp(propName, gameObjectIdentifier, newValue) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-      gameObject.transform[propName].x = x;
-      gameObject.transform[propName].y = y;
-      gameObject.transform[propName].z = z;
+      gameObject.transform[propName].x = newValue.x;
+      gameObject.transform[propName].y = newValue.y;
+      gameObject.transform[propName].z = newValue.z;
     }
     getDeltaTime() {
       return this.deltaTime;
     }
-    translateWorldInternal(gameObjectIdentifier, x, y, z) {
+    translateWorldInternal(gameObjectIdentifier, deltaPosition) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-      gameObject.transform.position.x += x;
-      gameObject.transform.position.y += y;
-      gameObject.transform.position.z += z;
+      gameObject.transform.position.x += deltaPosition.x;
+      gameObject.transform.position.y += deltaPosition.y;
+      gameObject.transform.position.z += deltaPosition.z;
     }
-    translateLocalInternal(gameObjectIdentifier, x, y, z) {
+    translateLocalInternal(gameObjectIdentifier, deltaPosition) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
       const rotation = gameObject.transform.rotation;
       const rx = rotation.x * Math.PI / 180;
@@ -34885,14 +34917,14 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       const cos = Math.cos;
       const sin = Math.sin;
       const rotationMatrix = [[cos(ry) * cos(rz), -cos(ry) * sin(rz), sin(ry)], [cos(rx) * sin(rz) + sin(rx) * sin(ry) * cos(rz), cos(rx) * cos(rz) - sin(rx) * sin(ry) * sin(rz), -sin(rx) * cos(ry)], [sin(rx) * sin(rz) - cos(rx) * sin(ry) * cos(rz), cos(rx) * sin(ry) * sin(rz) + sin(rx) * cos(rz), cos(rx) * cos(ry)]];
-      const finalWorldTranslateVector = [rotationMatrix[0][0] * x + rotationMatrix[0][1] * y + rotationMatrix[0][2] * z, rotationMatrix[1][0] * x + rotationMatrix[1][1] * y + rotationMatrix[1][2] * z, rotationMatrix[2][0] * x + rotationMatrix[2][1] * y + rotationMatrix[2][2] * z];
+      const finalWorldTranslateVector = [rotationMatrix[0][0] * deltaPosition.x + rotationMatrix[0][1] * deltaPosition.y + rotationMatrix[0][2] * deltaPosition.z, rotationMatrix[1][0] * deltaPosition.x + rotationMatrix[1][1] * deltaPosition.y + rotationMatrix[1][2] * deltaPosition.z, rotationMatrix[2][0] * deltaPosition.x + rotationMatrix[2][1] * deltaPosition.y + rotationMatrix[2][2] * deltaPosition.z];
       gameObject.transform.position.x += finalWorldTranslateVector[0];
       gameObject.transform.position.y += finalWorldTranslateVector[1];
       gameObject.transform.position.z += finalWorldTranslateVector[2];
     }
-    lookAtPositionInternal(gameObjectIdentifier, x, y, z) {
+    lookAtPositionInternal(gameObjectIdentifier, position) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-      const deltaVector = normalizeVector(new Vector3(x - gameObject.transform.position.x, y - gameObject.transform.position.y, z - gameObject.transform.position.z));
+      const deltaVector = normalizeVector(new Vector3(position.x - gameObject.transform.position.x, position.y - gameObject.transform.position.y, position.z - gameObject.transform.position.z));
       const eulerX = Math.asin(-deltaVector.y);
       const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
       gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
@@ -34904,18 +34936,21 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       const gameObjectB = this.getStudentGameObject(gameObjectIdentifier_B);
       return pointDistance(gameObjectA.transform.position, gameObjectB.transform.position);
     }
-    rotateWorldInternal(gameObjectIdentifier, x, y, z) {
+    rotateWorldInternal(gameObjectIdentifier, angles) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-      gameObject.transform.rotation.x += x;
-      gameObject.transform.rotation.y += y;
-      gameObject.transform.rotation.z += z;
+      gameObject.transform.rotation.x += angles.x;
+      gameObject.transform.rotation.y += angles.y;
+      gameObject.transform.rotation.z += angles.z;
     }
-    copyTransformPropertiesInternal(propName, from, to, delta_x, delta_y, delta_z) {
+    copyTransformPropertiesInternal(propName, from, to, deltaValues) {
       const fromGameObject = this.getStudentGameObject(from);
       const toGameObject = this.getStudentGameObject(to);
-      if (Math.abs(delta_x) !== Infinity) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + delta_x;
-      if (Math.abs(delta_y) !== Infinity) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + delta_y;
-      if (Math.abs(delta_z) !== Infinity) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + delta_z;
+      const deltaX = deltaValues.x;
+      const deltaY = deltaValues.y;
+      const deltaZ = deltaValues.z;
+      if (Math.abs(deltaX) !== 999999) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + deltaX;
+      if (Math.abs(deltaY) !== 999999) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + deltaY;
+      if (Math.abs(deltaZ) !== 999999) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + deltaZ;
     }
     getKeyState(keyCode) {
       return this.input.keyboardInputInfo[keyCode];
@@ -34947,14 +34982,14 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     getRigidbodyVelocityVector3Prop(propName, gameObjectIdentifier) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
       const rigidbody = this.getRigidbody(gameObject);
-      return [rigidbody[propName].x, rigidbody[propName].y, rigidbody[propName].z];
+      return new Vector3(rigidbody[propName].x, rigidbody[propName].y, rigidbody[propName].z);
     }
-    setRigidbodyVelocityVector3Prop(propName, gameObjectIdentifier, x, y, z) {
+    setRigidbodyVelocityVector3Prop(propName, gameObjectIdentifier, newValue) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
       const rigidbody = this.getRigidbody(gameObject);
-      rigidbody[propName].x = x;
-      rigidbody[propName].y = y;
-      rigidbody[propName].z = z;
+      rigidbody[propName].x = newValue.x;
+      rigidbody[propName].y = newValue.y;
+      rigidbody[propName].z = newValue.z;
     }
     getRigidbodyNumericalProp(propName, gameObjectIdentifier) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
@@ -34971,8 +35006,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       const rigidbody = this.getRigidbody(gameObject);
       rigidbody.useGravity = useGravity;
     }
-    addImpulseForceInternal(gameObjectIdentifier, x, y, z) {
-      this.dispatchStudentAction(`addImpulseForce|${gameObjectIdentifier.gameObjectIdentifier}|${x.toString()}|${y.toString()}|${z.toString()}`);
+    addImpulseForceInternal(gameObjectIdentifier, force) {
+      this.dispatchStudentAction(`addImpulseForce|${gameObjectIdentifier.gameObjectIdentifier}|${force.x.toString()}|${force.y.toString()}|${force.z.toString()}`);
     }
     removeColliderComponentsInternal(gameObjectIdentifier) {
       this.dispatchStudentAction(`removeColliderComponents|${gameObjectIdentifier.gameObjectIdentifier}`);
@@ -34998,28 +35033,55 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.dispatchStudentAction("requestMainCameraControl");
       return this.getGameObjectIdentifierForPrimitiveGameObject("MainCamera");
     }
-    onGUI_Label(content, x, y, fontSize) {
-      content = content.replaceAll("|", "");
+    onGUI_Label(content, x, y) {
+      content = content.replaceAll("|", "<%7C>");
       const newLabel = {
         type: "label",
         content,
         x,
-        y,
-        fontSize
+        y
       };
       this.guiData.push(newLabel);
     }
-    onGUI_Button(text, x, y, fontSize, onClick) {
-      text = text.replaceAll("|", "");
+    onGUI_Button(text, x, y, width, height, onClick) {
+      text = text.replaceAll("|", "<%7C>");
       const newButton = {
         type: "button",
         text,
         x,
         y,
-        fontSize,
+        width,
+        height,
         onClick
       };
       this.guiData.push(newButton);
+    }
+    loadAudioClipInternal(audioClipUrl, audioType) {
+      const audioClipInternalName = `AudioClip_${this.audioClipIdentifierSerialCounter}`;
+      this.audioClipIdentifierSerialCounter++;
+      this.audioClipStorage[this.audioClipStorage.length] = audioClipInternalName;
+      this.dispatchStudentAction(`loadAudioClip|${audioClipUrl}|${audioType}|${audioClipInternalName}`);
+      return new AudioClipIdentifier(audioClipInternalName);
+    }
+    getAudioSourceData(gameObjectIdentifier) {
+      const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+      const retVal = gameObject.audioSource;
+      if (retVal === null) {
+        throw new Error("The given GameObject is not a valid audio source.");
+      }
+      return retVal;
+    }
+    setAudioSourceProp(propName, audioSrc, value) {
+      const audioSourceData = this.getAudioSourceData(audioSrc);
+      audioSourceData[propName] = value;
+    }
+    getAudioSourceProp(propName, audioSrc) {
+      const audioSourceData = this.getAudioSourceData(audioSrc);
+      return audioSourceData[propName];
+    }
+    studentLogger(contentStr, severity) {
+      contentStr = contentStr.replaceAll("|", "<%7C>");
+      this.dispatchStudentAction(`studentLogger|${severity}|${contentStr}`);
     }
     setTargetFrameRate(newTargetFrameRate) {
       newTargetFrameRate = Math.floor(newTargetFrameRate);
@@ -35043,7 +35105,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     let instance = getInstance();
     if (instance !== void 0) {
       if (!instance.isUnityInstanceReady()) {
-        throw new Error("Unity instance is not ready to accept a new Source program now. Please try again later.");
+        throw new Error("Unity Academy Embedded Frontend is not ready to accept a new Source program now, please try again later. If you just successfully ran your code before but haven't open Unity Academy Embedded Frontend before running your code again, please try open the frontend first. If this error persists or you can not open Unity Academy Embedded Frontend, please try to refresh your browser's page.");
       }
       if (instance.unityInstance === null) {
         instance.reloadUnityAcademyInstanceAfterTermination();
@@ -35126,7 +35188,6 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   }
   function instantiate_empty() {
     checkUnityAcademyExistence();
-    checkIs3DMode();
     return getInstance().instantiateEmptyGameObjectInternal();
   }
   function delta_time() {
@@ -35143,99 +35204,78 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getGameObjectTransformProp("position", gameObjectIdentifier);
   }
-  function set_position(gameObjectIdentifier, x, y, z) {
+  function set_position(gameObjectIdentifier, position) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    return getInstance().setGameObjectTransformProp("position", gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(position);
+    return getInstance().setGameObjectTransformProp("position", gameObjectIdentifier, position);
   }
   function get_rotation_euler(gameObjectIdentifier) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getGameObjectTransformProp("rotation", gameObjectIdentifier);
   }
-  function set_rotation_euler(gameObjectIdentifier, x, y, z) {
+  function set_rotation_euler(gameObjectIdentifier, rotation) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    return getInstance().setGameObjectTransformProp("rotation", gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(rotation);
+    return getInstance().setGameObjectTransformProp("rotation", gameObjectIdentifier, rotation);
   }
   function get_scale(gameObjectIdentifier) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getGameObjectTransformProp("scale", gameObjectIdentifier);
   }
-  function set_scale(gameObjectIdentifier, x, y, z) {
+  function set_scale(gameObjectIdentifier, scale) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    return getInstance().setGameObjectTransformProp("scale", gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(scale);
+    return getInstance().setGameObjectTransformProp("scale", gameObjectIdentifier, scale);
   }
-  function translate_world(gameObjectIdentifier, x, y, z) {
+  function translate_world(gameObjectIdentifier, deltaPosition) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    return getInstance().translateWorldInternal(gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(deltaPosition);
+    return getInstance().translateWorldInternal(gameObjectIdentifier, deltaPosition);
   }
-  function translate_local(gameObjectIdentifier, x, y, z) {
+  function translate_local(gameObjectIdentifier, deltaPosition) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    return getInstance().translateLocalInternal(gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(deltaPosition);
+    return getInstance().translateLocalInternal(gameObjectIdentifier, deltaPosition);
   }
-  function rotate_world(gameObjectIdentifier, x, y, z) {
+  function rotate_world(gameObjectIdentifier, angles) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    return getInstance().rotateWorldInternal(gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(angles);
+    return getInstance().rotateWorldInternal(gameObjectIdentifier, angles);
   }
-  function copy_position(from, to, delta_x, delta_y, delta_z) {
+  function copy_position(from, to, deltaPosition) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(from);
     checkGameObjectIdentifierParameter(to);
-    checkParameterType(delta_x, "number", true);
-    checkParameterType(delta_y, "number", true);
-    checkParameterType(delta_z, "number", true);
-    return getInstance().copyTransformPropertiesInternal("position", from, to, delta_x, delta_y, delta_z);
+    checkVector3Parameter(deltaPosition);
+    return getInstance().copyTransformPropertiesInternal("position", from, to, deltaPosition);
   }
-  function copy_rotation(from, to, delta_x, delta_y, delta_z) {
+  function copy_rotation(from, to, deltaRotation) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(from);
     checkGameObjectIdentifierParameter(to);
-    checkParameterType(delta_x, "number", true);
-    checkParameterType(delta_y, "number", true);
-    checkParameterType(delta_z, "number", true);
-    return getInstance().copyTransformPropertiesInternal("rotation", from, to, delta_x, delta_y, delta_z);
+    checkVector3Parameter(deltaRotation);
+    return getInstance().copyTransformPropertiesInternal("rotation", from, to, deltaRotation);
   }
-  function copy_scale(from, to, delta_x, delta_y, delta_z) {
+  function copy_scale(from, to, deltaScale) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(from);
     checkGameObjectIdentifierParameter(to);
-    checkParameterType(delta_x, "number", true);
-    checkParameterType(delta_y, "number", true);
-    checkParameterType(delta_z, "number", true);
-    return getInstance().copyTransformPropertiesInternal("scale", from, to, delta_x, delta_y, delta_z);
+    checkVector3Parameter(deltaScale);
+    return getInstance().copyTransformPropertiesInternal("scale", from, to, deltaScale);
   }
-  function look_at(gameObjectIdentifier, x, y, z) {
+  function look_at(gameObjectIdentifier, position) {
     checkUnityAcademyExistence();
-    checkIs3DMode();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    getInstance().lookAtPositionInternal(gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(position);
+    getInstance().lookAtPositionInternal(gameObjectIdentifier, position);
   }
   function gameobject_distance(gameObjectIdentifier_A, gameObjectIdentifier_B) {
     checkUnityAcademyExistence();
@@ -35245,12 +35285,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   }
   function checkKeyCodeValidityAndToLowerCase(keyCode) {
     if (typeof keyCode !== "string") throw new Error(`Key code must be a string! Given type: ${typeof keyCode}`);
-    if (keyCode === "LeftMouseBtn" || keyCode === "RightMouseBtn" || keyCode === "MiddleMouseBtn" || keyCode === "LeftShift" || keyCode === "RightShift") return keyCode;
+    if (keyCode === "LeftMouseBtn" || keyCode === "RightMouseBtn" || keyCode === "MiddleMouseBtn" || keyCode === "Space" || keyCode === "LeftShift" || keyCode === "RightShift") return keyCode;
     keyCode = keyCode.toLowerCase();
-    if (keyCode.length !== 1) throw new Error(`Key code must be either a string of length 1 or one among 'LeftMouseBtn', 'RightMouseBtn', 'MiddleMouseBtn', 'LeftShift' or 'RightShift'! Given length: ${keyCode.length}`);
+    if (keyCode.length !== 1) throw new Error(`Key code must be either a string of length 1 or one among 'LeftMouseBtn', 'RightMouseBtn', 'MiddleMouseBtn', 'Space', 'LeftShift' or 'RightShift'! Given length: ${keyCode.length}`);
     const char2 = keyCode.charAt(0);
     if (!(char2 >= "a" && char2 <= "z" || char2 >= "0" && char2 <= "9")) {
-      throw new Error(`Key code must be either a letter between A-Z or a-z or 0-9 or one among 'LeftMouseBtn', 'RightMouseBtn', 'MiddleMouseBtn', 'LeftShift' or 'RightShift'! Given: ${keyCode}`);
+      throw new Error(`Key code must be either a letter between A-Z or a-z or 0-9 or one among 'LeftMouseBtn', 'RightMouseBtn', 'MiddleMouseBtn', 'Space', 'LeftShift' or 'RightShift'! Given: ${keyCode}`);
     }
     return keyCode;
   }
@@ -35298,26 +35338,22 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getRigidbodyVelocityVector3Prop("velocity", gameObjectIdentifier);
   }
-  function set_velocity(gameObjectIdentifier, x, y, z) {
+  function set_velocity(gameObjectIdentifier, velocity) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    getInstance().setRigidbodyVelocityVector3Prop("velocity", gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(velocity);
+    getInstance().setRigidbodyVelocityVector3Prop("velocity", gameObjectIdentifier, velocity);
   }
   function get_angular_velocity(gameObjectIdentifier) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getRigidbodyVelocityVector3Prop("angularVelocity", gameObjectIdentifier);
   }
-  function set_angular_velocity(gameObjectIdentifier, x, y, z) {
+  function set_angular_velocity(gameObjectIdentifier, angularVelocity) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    getInstance().setRigidbodyVelocityVector3Prop("angularVelocity", gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(angularVelocity);
+    getInstance().setRigidbodyVelocityVector3Prop("angularVelocity", gameObjectIdentifier, angularVelocity);
   }
   function set_drag(gameObjectIdentifier, value) {
     checkUnityAcademyExistence();
@@ -35337,13 +35373,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkParameterType(useGravity, "boolean");
     getInstance().setUseGravityInternal(gameObjectIdentifier, useGravity);
   }
-  function add_impulse_force(gameObjectIdentifier, x, y, z) {
+  function add_impulse_force(gameObjectIdentifier, force) {
     checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(z, "number");
-    getInstance().addImpulseForceInternal(gameObjectIdentifier, x, y, z);
+    checkVector3Parameter(force);
+    getInstance().addImpulseForceInternal(gameObjectIdentifier, force);
   }
   function remove_collider_components(gameObjectIdentifier) {
     checkUnityAcademyExistence();
@@ -35368,22 +35402,22 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkParameterType(eventFunction, "function");
     getInstance().setOnCollisionExitInternal(gameObjectIdentifier, eventFunction);
   }
-  function gui_label(content, x, y, fontSize) {
-    checkUnityAcademyExistence();
-    checkParameterType(content, "string");
-    checkParameterType(x, "number");
-    checkParameterType(y, "number");
-    checkParameterType(fontSize, "number");
-    getInstance().onGUI_Label(content, x, y, fontSize);
-  }
-  function gui_button(text, x, y, fontSize, onClick) {
+  function gui_label(text, x, y) {
     checkUnityAcademyExistence();
     checkParameterType(text, "string");
     checkParameterType(x, "number");
     checkParameterType(y, "number");
-    checkParameterType(fontSize, "number");
+    getInstance().onGUI_Label(text, x, y);
+  }
+  function gui_button(text, x, y, width, height, onClick) {
+    checkUnityAcademyExistence();
+    checkParameterType(text, "string");
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(width, "number");
+    checkParameterType(height, "number");
     checkParameterType(onClick, "function");
-    getInstance().onGUI_Button(text, x, y, fontSize, onClick);
+    getInstance().onGUI_Button(text, x, y, width, height, onClick);
   }
   function get_main_camera_following_target() {
     checkUnityAcademyExistence();
@@ -35428,10 +35462,15 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkParameterType(factor, "number");
     return scaleVector(vector, factor);
   }
-  function add_vector(vectorA, vectorB) {
+  function add_vectors(vectorA, vectorB) {
     checkVector3Parameter(vectorA);
     checkVector3Parameter(vectorB);
-    return addVector(vectorA, vectorB);
+    return addVectors(vectorA, vectorB);
+  }
+  function vector_difference(vectorA, vectorB) {
+    checkVector3Parameter(vectorA);
+    checkVector3Parameter(vectorB);
+    return vectorDifference(vectorA, vectorB);
   }
   function dot(vectorA, vectorB) {
     checkVector3Parameter(vectorA);
@@ -35458,6 +35497,21 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     checkVector3Parameter(pointA);
     checkVector3Parameter(pointB);
     return pointDistance(pointA, pointB);
+  }
+  function debug_log(content) {
+    checkUnityAcademyExistence();
+    const contentStr = content.toString();
+    getInstance().studentLogger(contentStr, "log");
+  }
+  function debug_logwarning(content) {
+    checkUnityAcademyExistence();
+    const contentStr = content.toString();
+    getInstance().studentLogger(contentStr, "warning");
+  }
+  function debug_logerror(content) {
+    checkUnityAcademyExistence();
+    const contentStr = content.toString();
+    getInstance().studentLogger(contentStr, "error");
   }
   return __toCommonJS(unity_academy_exports);
 }
