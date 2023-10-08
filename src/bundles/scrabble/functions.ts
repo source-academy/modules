@@ -8,11 +8,11 @@
 import type { List } from './types';
 
 /**
- * `scrabble_array` is an array of strings, each representing
+ * `scrabble_words` is an array of strings, each representing
  * an allowed word in Scrabble.
  */
 
-export const scrabble_array = [
+export const scrabble_words = [
     "aa",
     "aah",
     "aahed",
@@ -172835,25 +172835,3 @@ export const scrabble_array = [
     "zyzzyvas"
 ];
 
-const len = scrabble_array.length;
-let current_list: List = null;
-
-for (let i = len - 1; i >= 0; i -= 1) {
-  current_list = [scrabble_array[i], current_list];
-}
-
-/**
- * `scrabble_list` is a list of strings, each representing
- * an allowed word in Scrabble.
- */
-
-export const scrabble_list = current_list;
-
-export function charAt(s: string, i: number): any {
-  const result = s.charAt(i);
-  return result === '' ? undefined : result;
-}
-
-export function arrayLength(x: any): number {
-  return x.length;
-}
