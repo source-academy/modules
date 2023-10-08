@@ -1,6 +1,3 @@
 {
-  "scrabble_array": "<div><h4>scrabble_array: undefined</h4><div class=\"description\"><p><code>scrabble_array</code> is an array of strings, each representing  \nan allowed word in Scrabble.</p></div></div>",
-  "scrabble_list": "<div><h4>scrabble_list: List</h4><div class=\"description\"><p><code>scrabble_list</code> is a list of strings, each representing  \nan allowed word in Scrabble.</p></div></div>",
-  "arrayLength": "<div><h4>arrayLength(x: any) → {number}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "charAt": "<div><h4>charAt(s: string, i: number) → {any}</h4><div class=\"description\"><p>No description available</p></div></div>"
+  "scrabble_words": "<div><h4>scrabble_words: undefined</h4><div class=\"description\"><p><code>scrabble_words</code> is an array of strings, each representing  \nan allowed word in Scrabble.</p></div></div>"
 }
