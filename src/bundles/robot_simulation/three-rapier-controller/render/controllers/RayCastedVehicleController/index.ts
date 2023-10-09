@@ -114,7 +114,7 @@ const createUpdateFunction = (settings: CarSettings): UpdateFunction => {
 
       const force
         = carSettings.wheel.suspension.stiffness
-          * (carSettings.wheel.diameter - toiResult.toi)
+          * (carSettings.wheel.restHeight - toiResult.toi + (carSettings.chassis.height / 2))
         - carSettings.wheel.suspension.damping * velocity.y;
 
       const direction = vec3({
@@ -163,7 +163,6 @@ const createChassis = (setting: CarSettings) => {
     side: THREE.DoubleSide,
   });
   const chassis = new THREE.Mesh(geometry, material);
-  chassis.position.z -= 7;
 
   const chassisPhysicsObject = addPhysics(
     chassis,
@@ -178,13 +177,14 @@ const createChassis = (setting: CarSettings) => {
     },
   );
 
+  chassisPhysicsObject.collider.setMass(carSettings.chassis.weight);
   return chassisPhysicsObject;
 };
 
 
 export class RayCastedVehicleController {
   carSettings: CarSettings;
-  chassisPhysicsObject: PhysicsObject | null;
+  chassisPhysicsObject: PhysicsObject;
   constructor(settings: CarSettings) {
     this.carSettings = settings;
     this.chassisPhysicsObject = createChassis(settings);

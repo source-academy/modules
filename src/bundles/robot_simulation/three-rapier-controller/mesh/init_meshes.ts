@@ -15,9 +15,9 @@ const addFloor = () => {
   cube.position.set(0, -2, 0);
 
   addPhysics(cube, 'fixed', true, undefined, 'cuboid', {
-    width: size,
-    height,
-    depth: size,
+    width: size / 2,
+    height: height / 2,
+    depth: size / 2,
   });
 
   return cube;

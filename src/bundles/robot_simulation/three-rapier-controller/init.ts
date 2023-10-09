@@ -44,9 +44,9 @@ export const initEngines = async (code:string) => {
   }
 
   const options : Partial<IOptions> = {
-    originalMaxExecTime: 1000,
+    originalMaxExecTime: Infinity,
     scheduler: 'preemptive',
-    stepLimit: 1000,
+    stepLimit: Infinity,
     throwInfiniteLoops: false,
     useSubst: false,
   };
@@ -70,6 +70,10 @@ export const initEngines = async (code:string) => {
   const renderAspectRatio = renderWidth / renderHeight;
 
   const camera = new THREE.PerspectiveCamera(75, renderAspectRatio, 0.01, 1000);
+  // camera.translateY(5);
+  camera.translateX(2);
+  camera.translateY(-1.5);
+  camera.lookAt(new THREE.Vector3(0, -1.5, 0));
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(renderWidth, renderHeight);
