@@ -64,7 +64,6 @@ const ObjTypes = Object.values(ObjectTypes);
 const nullFn = () => {};
 
 const mandatory = (obj, errMsg: string) => {
-  console.log(obj);
   if (!obj) {
     throw_error(errMsg);
   }
@@ -1188,7 +1187,6 @@ const gameFunctions = [
   set_position,
   set_rotation,
   set_scale,
-  run_scene,
 ];
 
 gameFunctions.forEach((fn) => {
