@@ -1189,6 +1189,8 @@ const gameFunctions = [
   set_scale,
 ];
 
+// Inject minArgsNeeded to allow module varargs
+// Remove if module varargs is fixed on js-slang side
 gameFunctions.forEach((fn) => {
   const dummy = fn as any;
   dummy.minArgsNeeded = fn.length;
