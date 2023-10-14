@@ -17,7 +17,6 @@
 /* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
 import {
   type GameObject,
-  type List,
   type ObjectConfig,
   type RawContainer,
   type RawGameElement,
@@ -27,6 +26,7 @@ import {
 } from './types';
 
 import context from 'js-slang/context';
+import { type List, head, tail, is_pair, accumulate } from 'js-slang/dist/stdlib/list';
 
 if (!context.moduleContexts.game.state) {
   context.moduleContexts.game.state = defaultGameParams;
@@ -152,87 +152,8 @@ function set_type(
  * @hidden
  */
 function throw_error(message: string) {
-  // eslint-disable-next-line no-caller, @typescript-eslint/no-throw-literal
+  // eslint-disable-next-line no-caller
   throw new Error(`${arguments.callee.caller.name}: ${message}`);
-}
-
-// List processing
-// Original Author: Martin Henz
-
-/**
- * array test works differently for Rhino and
- * the Firefox environment (especially Web Console)
- */
-function array_test(x: any): boolean {
-  if (Array.isArray === undefined) {
-    return x instanceof Array;
-  }
-  return Array.isArray(x);
-}
-
-/**
- * pair constructs a pair using a two-element array
- * LOW-LEVEL FUNCTION, NOT SOURCE
- */
-function pair(x: any, xs: any): [any, any] {
-  return [x, xs];
-}
-
-/**
- * is_pair returns true iff arg is a two-element array
- * LOW-LEVEL FUNCTION, NOT SOURCE
- */
-function is_pair(x: any): boolean {
-  return array_test(x) && x.length === 2;
-}
-
-/**
- * head returns the first component of the given pair,
- * throws an exception if the argument is not a pair
- * LOW-LEVEL FUNCTION, NOT SOURCE
- */
-function head(xs: List): any {
-  if (is_pair(xs)) {
-    return xs![0];
-  }
-  throw new Error(
-    `head(xs) expects a pair as argument xs, but encountered ${xs}`,
-  );
-}
-
-/**
- *  tail returns the second component of the given pair
- * throws an exception if the argument is not a pair
- * LOW-LEVEL FUNCTION, NOT SOURCE
- */
-function tail(xs: List) {
-  if (is_pair(xs)) {
-    return xs![1];
-  }
-  throw new Error(
-    `tail(xs) expects a pair as argument xs, but encountered ${xs}`,
-  );
-}
-
-/**
- * is_null returns true if arg is exactly null
- * LOW-LEVEL FUNCTION, NOT SOURCE
- */
-function is_null(xs: any) {
-  return xs === null;
-}
-
-/**
- * map applies first arg f to the elements of the second argument,
- * assumed to be a list.
- * f is applied element-by-element:
- * map(f,[1,[2,[]]]) results in [f(1),[f(2),[]]]
- * map throws an exception if the second argument is not a list,
- * and if the second argument is a non-empty list and the first
- * argument is not a function.
- */
-function map(f: (x: any) => any, xs: List) {
-  return is_null(xs) ? null : pair(f(head(xs)), map(f, tail(xs)));
 }
 
 // =============================================================================
@@ -252,22 +173,22 @@ export function prepend_remote_url(asset_key: string): string {
 }
 
 /**
- * Transforms the given list into an object config. The list follows
- * the format of list([key1, value1], [key2, value2]).
+ * Transforms the given list of pairs into an object config. The list follows
+ * the format of list(pair(key1, value1), pair(key2, value2), ...).
  *
- * e.g list(["alpha", 0], ["duration", 1000])
+ * e.g list(pair("alpha", 0), pair("duration", 1000))
  *
  * @param lst the list to be turned into object config.
  * @returns object config
  */
 export function create_config(lst: List): ObjectConfig {
   const config = {};
-  map((xs: [any, any]) => {
+  accumulate((xs: [any, any], _) => {
     if (!is_pair(xs)) {
-      throw_error('xs is not pair!');
+      throw_error('config element is not a pair!');
     }
     config[head(xs)] = tail(xs);
-  }, lst);
+  }, null, lst);
   return config;
 }
 
