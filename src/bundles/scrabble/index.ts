@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * The `scrabble` Source Module provides the allowable
  * words in Scrabble in a list and in an array, according to
@@ -11,3 +12,12 @@ export {
   charAt,
   arrayLength,
 } from './functions';
+=======
+/**
+ * Scrabble words for Source Academy
+ * @author Martin Henz
+ */
+export {
+  scrabble_words,
+} from './functions';
+>>>>>>> origin/master

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { scrabble_array, scrabble_list } from '../functions';
 
 function list_ref(list, n) {
@@ -15,3 +16,14 @@ test('get the first word in the list', () => {
   expect(list_ref(scrabble_list, 0))
     .toBe('aardwolves');
 });
+=======
+import { scrabble_words } from '../functions';
+
+// Test functions
+
+test('get the word in the array at index 12', () => {
+  expect(scrabble_words[12])
+    .toBe('aardwolves');
+});
+
+>>>>>>> origin/master

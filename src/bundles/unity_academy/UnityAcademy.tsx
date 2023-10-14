@@ -26,6 +26,7 @@ type StudentGameObject = {
   onCollisionExitMethod : Function | null;
   transform : Transform;
   rigidbody : RigidbodyData | null;
+  audioSource : AudioSourceData | null;
   customProperties : any;
   isDestroyed : boolean; // [set by interop]
 };
@@ -43,11 +44,31 @@ type RigidbodyData = {
   angularDrag : number;
 };
 
+type AudioSourceData = {
+  audioClipIdentifier : AudioClipIdentifier;
+  playSpeed : number;
+  playProgress : number;
+  volume : number;
+  isLooping : boolean;
+  isPlaying : boolean;
+};
+
+
 declare const createUnityInstance : Function; // This function comes from {BUILD_NAME}.loader.js in Unity Academy Application (For Example: ua-frontend-prod.loader.js)
 
 export function getInstance() : UnityAcademyJsInteropContext {
   return (window as any).unityAcademyContext as UnityAcademyJsInteropContext;
 }
+
+type AudioClipInternalName = string;
+
+export class AudioClipIdentifier { // A wrapper class to store identifier string and prevent users from using arbitrary string for idenfitier
+  audioClipInternalName : AudioClipInternalName;
+  constructor(audioClipInternalName : string) {
+    this.audioClipInternalName = audioClipInternalName;
+  }
+}
+
 
 export class GameObjectIdentifier { // A wrapper class to store identifier string and prevent users from using arbitrary string for idenfitier
   gameObjectIdentifier : string;
@@ -143,7 +164,7 @@ const UNITY_CONFIG = {
   streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
   companyName: 'Wang Zihan @ NUS SoC 2026',
   productName: 'Unity Academy (Source Academy Embedding Version)',
-  productVersion: 'prod-2023.4',
+  productVersion: 'See \'About\' in the embedded frontend.',
 };
 
 
@@ -164,6 +185,8 @@ class UnityAcademyJsInteropContext {
   public dimensionMode;
   private isShowingUnityAcademy : boolean; // [get by interop]
   private latestUserAgreementVersion : string;
+  private audioClipStorage : AudioClipInternalName[];
+  private audioClipIdentifierSerialCounter = 0;
 
   constructor() {
     this.unityInstance = null;
@@ -176,6 +199,7 @@ class UnityAcademyJsInteropContext {
     this.loadPrefabInfo();
     this.studentActionQueue = [];
     this.studentGameObjectStorage = {};
+    this.audioClipStorage = [];
     this.guiData = [];
     this.input = {
       keyboardInputInfo: {},
@@ -299,6 +323,7 @@ class UnityAcademyJsInteropContext {
   private resetModuleData() {
     this.studentActionQueue = [];
     this.studentGameObjectStorage = {};
+    this.audioClipStorage = [];
     this.gameObjectIdentifierSerialCounter = 0;
     this.input.keyboardInputInfo = {};
     this.guiData = [];
@@ -364,6 +389,8 @@ class UnityAcademyJsInteropContext {
   }
 
   instantiate2DSpriteUrlInternal(sourceImageUrl : string) : GameObjectIdentifier {
+    // Use percent-encoding "%7C" to replace all '|' characters as '|' is used as the data separator in student action strings in Unity Academy Embedded Frontend.
+    sourceImageUrl = sourceImageUrl.replaceAll('|', '%7C');
     const gameObjectIdentifier = `2DSprite_${this.gameObjectIdentifierSerialCounter}`;
     this.gameObjectIdentifierSerialCounter++;
     this.makeGameObjectDataStorage(gameObjectIdentifier);
@@ -376,6 +403,22 @@ class UnityAcademyJsInteropContext {
     this.gameObjectIdentifierSerialCounter++;
     this.makeGameObjectDataStorage(gameObjectIdentifier);
     this.dispatchStudentAction(`instantiateEmptyGameObject|${gameObjectIdentifier}`);
+    return new GameObjectIdentifier(gameObjectIdentifier);
+  }
+
+  instantiateAudioSourceInternal(audioClipIdentifier : AudioClipIdentifier) {
+    const gameObjectIdentifier = `AudioSource_${this.gameObjectIdentifierSerialCounter}`;
+    this.gameObjectIdentifierSerialCounter++;
+    this.makeGameObjectDataStorage(gameObjectIdentifier);
+    this.studentGameObjectStorage[gameObjectIdentifier].audioSource = {
+      audioClipIdentifier,
+      playSpeed: 1,
+      playProgress: 0,
+      volume: 1,
+      isLooping: false,
+      isPlaying: false,
+    };
+    this.dispatchStudentAction(`instantiateAudioSourceGameObject|${gameObjectIdentifier}|${audioClipIdentifier.audioClipInternalName}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
@@ -396,6 +439,7 @@ class UnityAcademyJsInteropContext {
         scale: new Vector3(1, 1, 1),
       },
       rigidbody: null,
+      audioSource: null,
       customProperties: {},
       isDestroyed: false,
     };
@@ -428,31 +472,31 @@ class UnityAcademyJsInteropContext {
     return new this[propName](name);
   }
 
-  getGameObjectTransformProp(propName : string, gameObjectIdentifier : GameObjectIdentifier) : Array<number> {
+  getGameObjectTransformProp(propName : string, gameObjectIdentifier : GameObjectIdentifier) : Vector3 {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-    return [gameObject.transform[propName].x, gameObject.transform[propName].y, gameObject.transform[propName].z];
+    return new Vector3(gameObject.transform[propName].x, gameObject.transform[propName].y, gameObject.transform[propName].z);
   }
 
-  setGameObjectTransformProp(propName : string, gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+  setGameObjectTransformProp(propName : string, gameObjectIdentifier : GameObjectIdentifier, newValue : Vector3) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-    gameObject.transform[propName].x = x;
-    gameObject.transform[propName].y = y;
-    gameObject.transform[propName].z = z;
+    gameObject.transform[propName].x = newValue.x;
+    gameObject.transform[propName].y = newValue.y;
+    gameObject.transform[propName].z = newValue.z;
   }
 
   getDeltaTime() : number {
     return this.deltaTime;
   }
 
-  translateWorldInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+  translateWorldInternal(gameObjectIdentifier : GameObjectIdentifier, deltaPosition : Vector3) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-    gameObject.transform.position.x += x;
-    gameObject.transform.position.y += y;
-    gameObject.transform.position.z += z;
+    gameObject.transform.position.x += deltaPosition.x;
+    gameObject.transform.position.y += deltaPosition.y;
+    gameObject.transform.position.z += deltaPosition.z;
   }
 
 
-  translateLocalInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+  translateLocalInternal(gameObjectIdentifier : GameObjectIdentifier, deltaPosition : Vector3) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rotation = gameObject.transform.rotation;
 
@@ -467,18 +511,18 @@ class UnityAcademyJsInteropContext {
         [cos(rx) * sin(rz) + sin(rx) * sin(ry) * cos(rz), cos(rx) * cos(rz) - sin(rx) * sin(ry) * sin(rz), -sin(rx) * cos(ry)],
         [sin(rx) * sin(rz) - cos(rx) * sin(ry) * cos(rz), cos(rx) * sin(ry) * sin(rz) + sin(rx) * cos(rz), cos(rx) * cos(ry)]];
     const finalWorldTranslateVector = [
-      rotationMatrix[0][0] * x + rotationMatrix[0][1] * y + rotationMatrix[0][2] * z,
-      rotationMatrix[1][0] * x + rotationMatrix[1][1] * y + rotationMatrix[1][2] * z,
-      rotationMatrix[2][0] * x + rotationMatrix[2][1] * y + rotationMatrix[2][2] * z,
+      rotationMatrix[0][0] * deltaPosition.x + rotationMatrix[0][1] * deltaPosition.y + rotationMatrix[0][2] * deltaPosition.z,
+      rotationMatrix[1][0] * deltaPosition.x + rotationMatrix[1][1] * deltaPosition.y + rotationMatrix[1][2] * deltaPosition.z,
+      rotationMatrix[2][0] * deltaPosition.x + rotationMatrix[2][1] * deltaPosition.y + rotationMatrix[2][2] * deltaPosition.z,
     ];
     gameObject.transform.position.x += finalWorldTranslateVector[0];
     gameObject.transform.position.y += finalWorldTranslateVector[1];
     gameObject.transform.position.z += finalWorldTranslateVector[2];
   }
 
-  lookAtPositionInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+  lookAtPositionInternal(gameObjectIdentifier : GameObjectIdentifier, position : Vector3) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-    const deltaVector = normalizeVector(new Vector3(x - gameObject.transform.position.x, y - gameObject.transform.position.y, z - gameObject.transform.position.z));
+    const deltaVector = normalizeVector(new Vector3(position.x - gameObject.transform.position.x, position.y - gameObject.transform.position.y, position.z - gameObject.transform.position.z));
     const eulerX = Math.asin(-deltaVector.y);
     const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
     gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
@@ -492,19 +536,22 @@ class UnityAcademyJsInteropContext {
     return pointDistance(gameObjectA.transform.position, gameObjectB.transform.position);
   }
 
-  rotateWorldInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+  rotateWorldInternal(gameObjectIdentifier : GameObjectIdentifier, angles : Vector3) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-    gameObject.transform.rotation.x += x;
-    gameObject.transform.rotation.y += y;
-    gameObject.transform.rotation.z += z;
+    gameObject.transform.rotation.x += angles.x;
+    gameObject.transform.rotation.y += angles.y;
+    gameObject.transform.rotation.z += angles.z;
   }
 
-  copyTransformPropertiesInternal(propName : string, from : GameObjectIdentifier, to : GameObjectIdentifier, delta_x : number, delta_y : number, delta_z : number) : void {
+  copyTransformPropertiesInternal(propName : string, from : GameObjectIdentifier, to : GameObjectIdentifier, deltaValues : Vector3) : void {
     const fromGameObject = this.getStudentGameObject(from);
     const toGameObject = this.getStudentGameObject(to);
-    if (Math.abs(delta_x) !== Infinity) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + delta_x;
-    if (Math.abs(delta_y) !== Infinity) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + delta_y;
-    if (Math.abs(delta_z) !== Infinity) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + delta_z;
+    const deltaX = deltaValues.x;
+    const deltaY = deltaValues.y;
+    const deltaZ = deltaValues.z;
+    if (Math.abs(deltaX) !== 999999) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + deltaX;
+    if (Math.abs(deltaY) !== 999999) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + deltaY;
+    if (Math.abs(deltaZ) !== 999999) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + deltaZ;
   }
 
   getKeyState(keyCode : string) : number {
@@ -538,18 +585,18 @@ class UnityAcademyJsInteropContext {
     return gameObject.rigidbody;
   }
 
-  getRigidbodyVelocityVector3Prop(propName : string, gameObjectIdentifier : GameObjectIdentifier) : Array<number> {
+  getRigidbodyVelocityVector3Prop(propName : string, gameObjectIdentifier : GameObjectIdentifier) : Vector3 {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rigidbody = this.getRigidbody(gameObject);
-    return [rigidbody[propName].x, rigidbody[propName].y, rigidbody[propName].z];
+    return new Vector3(rigidbody[propName].x, rigidbody[propName].y, rigidbody[propName].z);
   }
 
-  setRigidbodyVelocityVector3Prop(propName : string, gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
+  setRigidbodyVelocityVector3Prop(propName : string, gameObjectIdentifier : GameObjectIdentifier, newValue : Vector3) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rigidbody = this.getRigidbody(gameObject);
-    rigidbody[propName].x = x;
-    rigidbody[propName].y = y;
-    rigidbody[propName].z = z;
+    rigidbody[propName].x = newValue.x;
+    rigidbody[propName].y = newValue.y;
+    rigidbody[propName].z = newValue.z;
   }
 
   getRigidbodyNumericalProp(propName : string, gameObjectIdentifier : GameObjectIdentifier) : number {
@@ -570,8 +617,8 @@ class UnityAcademyJsInteropContext {
     rigidbody.useGravity = useGravity;
   }
 
-  addImpulseForceInternal(gameObjectIdentifier : GameObjectIdentifier, x : number, y : number, z : number) : void {
-    this.dispatchStudentAction(`addImpulseForce|${gameObjectIdentifier.gameObjectIdentifier}|${x.toString()}|${y.toString()}|${z.toString()}`);
+  addImpulseForceInternal(gameObjectIdentifier : GameObjectIdentifier, force : Vector3) : void {
+    this.dispatchStudentAction(`addImpulseForce|${gameObjectIdentifier.gameObjectIdentifier}|${force.x.toString()}|${force.y.toString()}|${force.z.toString()}`);
   }
 
   removeColliderComponentsInternal(gameObjectIdentifier : GameObjectIdentifier) : void {
@@ -603,29 +650,67 @@ class UnityAcademyJsInteropContext {
     return this.getGameObjectIdentifierForPrimitiveGameObject('MainCamera');
   }
 
-  onGUI_Label(content : string, x : number, y : number, fontSize : number) : void {
-    content = content.replaceAll('|', ''); // operator '|' is reserved as gui data separator in Unity Academy
+  onGUI_Label(content : string, x : number, y : number) : void {
+    // Temporarily use "<%7C>" to replace all '|' characters as '|' is used as the data separator in GUI data in Unity Academy Embedded Frontend.
+    // In Unity Academy Embedded Frontend, "<%7C>" will be replaced back to '|' when displaying the text in GUI
+    content = content.replaceAll('|', '<%7C>');
     const newLabel = {
       type: 'label',
       content,
       x,
       y,
-      fontSize,
     };
     this.guiData.push(newLabel);
   }
 
-  onGUI_Button(text : string, x: number, y : number, fontSize : number, onClick : Function) : void {
-    text = text.replaceAll('|', ''); // operator '|' is reserved as gui data separator in Unity Academy
+  onGUI_Button(text : string, x: number, y : number, width : number, height : number, onClick : Function) : void {
+    // Temporarily use "<%7C>" to replace all '|' characters as '|' is used as the data separator in GUI data in Unity Academy Embedded Frontend.
+    // In Unity Academy Embedded Frontend, "<%7C>" will be replaced back to '|' when displaying the text in GUI
+    text = text.replaceAll('|', '<%7C>');
     const newButton = {
       type: 'button',
       text,
       x,
       y,
-      fontSize,
+      width,
+      height,
       onClick,
     };
     this.guiData.push(newButton);
+  }
+
+  loadAudioClipInternal(audioClipUrl : string, audioType : string) : AudioClipIdentifier {
+    const audioClipInternalName = `AudioClip_${this.audioClipIdentifierSerialCounter}`;
+    this.audioClipIdentifierSerialCounter++;
+    this.audioClipStorage[this.audioClipStorage.length] = audioClipInternalName;
+    this.dispatchStudentAction(`loadAudioClip|${audioClipUrl}|${audioType}|${audioClipInternalName}`);
+    return new AudioClipIdentifier(audioClipInternalName);
+  }
+
+  private getAudioSourceData(gameObjectIdentifier : GameObjectIdentifier) : AudioSourceData {
+    const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+    const retVal = gameObject.audioSource;
+    if (retVal === null) {
+      throw new Error('The given GameObject is not a valid audio source.');
+    }
+    return retVal;
+  }
+
+  setAudioSourceProp(propName : string, audioSrc : GameObjectIdentifier, value : any) : void {
+    const audioSourceData = this.getAudioSourceData(audioSrc);
+    audioSourceData[propName] = value;
+  }
+
+  getAudioSourceProp(propName : string, audioSrc : GameObjectIdentifier) : any {
+    const audioSourceData = this.getAudioSourceData(audioSrc);
+    return audioSourceData[propName];
+  }
+
+  studentLogger(contentStr : string, severity : string) {
+    // Temporarily use "<%7C>" to replace all '|' characters as '|' is used as the data separator in student action strings in Unity Academy Embedded Frontend.
+    // In Unity Academy Embedded Frontend, "<%7C>" will be replaced back to '|' when displaying the log message.
+    contentStr = contentStr.replaceAll('|', '<%7C>');
+    this.dispatchStudentAction(`studentLogger|${severity}|${contentStr}`);
   }
 
   setTargetFrameRate(newTargetFrameRate : number) : void {
@@ -654,7 +739,7 @@ export function initializeModule(dimensionMode : string) {
   let instance = getInstance();
   if (instance !== undefined) {
     if (!instance.isUnityInstanceReady()) {
-      throw new Error('Unity instance is not ready to accept a new Source program now. Please try again later.');
+      throw new Error('Unity Academy Embedded Frontend is not ready to accept a new Source program now, please try again later. If you just successfully ran your code before but haven\'t open Unity Academy Embedded Frontend before running your code again, please try open the frontend first. If this error persists or you can not open Unity Academy Embedded Frontend, please try to refresh your browser\'s page.');
     }
     if (instance.unityInstance === null) {
       instance.reloadUnityAcademyInstanceAfterTermination();
