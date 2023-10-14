@@ -77,24 +77,24 @@ const scene = () => mandatory(context.moduleContexts.game.state.scene, 'No scene
 // =============================================================================
 
 /** @hidden */
-export function get_obj(
+function get_obj(
   obj: GameObject,
 ): RawGameObject | RawInputObject | RawContainer {
   return obj.object!;
 }
 
 /** @hidden */
-export function get_game_obj(obj: GameObject): RawGameObject | RawContainer {
+function get_game_obj(obj: GameObject): RawGameObject | RawContainer {
   return obj.object as RawGameObject | RawContainer;
 }
 
 /** @hidden */
-export function get_input_obj(obj: GameObject): RawInputObject {
+function get_input_obj(obj: GameObject): RawInputObject {
   return obj.object as RawInputObject;
 }
 
 /** @hidden */
-export function get_container(obj: GameObject): RawContainer {
+function get_container(obj: GameObject): RawContainer {
   return obj.object as RawContainer;
 }
 
