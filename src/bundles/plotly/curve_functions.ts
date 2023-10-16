@@ -99,7 +99,6 @@ export function generatePlot(
         color_s.push(`rgb(${r_of(point)},${g_of(point)},${b_of(point)})`);
     }
 
-
     const plotlyData: Data = {
         x: x_s,
         y: y_s,
@@ -124,5 +123,5 @@ export function generatePlot(
 }
 
 function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
-    Plotly.newPlot(divId, [data], layout);
+    Plotly.react(divId, [data], layout);
 }

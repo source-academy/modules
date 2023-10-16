@@ -10,6 +10,5 @@ export {
     draw_connected_3d,
     draw_points_2d,
     draw_points_3d,
+    draw_sound_2d,
 } from "./functions";
-
-// export { draw_sound_2d } from './sound_functions';
