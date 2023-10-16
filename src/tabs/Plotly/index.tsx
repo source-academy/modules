@@ -63,10 +63,13 @@ class Plotly extends React.Component<Props, State> {
           ></div>
         </Modal>
         {drawnPlots.map((drawnPlot: any, id: number) => {
-          const divId = `plotDiv${id}${uniqueId("plotly")}}`
+          const divId = `plotDiv${id}}`
           return (
             <>
-              <div onClick={() => this.handleOpen(drawnPlot)}>
+              <div
+                id={id.toString()}
+                onClick={() => this.handleOpen(drawnPlot)}
+              >
                 Click here to open Modal
               </div>
               <div
@@ -78,10 +81,6 @@ class Plotly extends React.Component<Props, State> {
             </>
           )
         })}
-        <div id="n-body">
-          this is the canvas for nice
-          <canvas></canvas>
-        </div>
       </div>
     )
   }

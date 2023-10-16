@@ -9,6 +9,7 @@ import Plotly, {
     type Data,
     type Layout,
     UpdateMenuButton,
+    PlotData,
 } from "plotly.js-dist";
 import {
     type Curve,
@@ -25,7 +26,10 @@ context.moduleContexts.plotly.state = {
     drawnPlots,
 };
 
-console.log(context);
+/**
+ * TODO: figure out a dataset,
+ * figure out how to change coordinate systems to fit the lagrange points
+ */
 
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
@@ -344,17 +348,60 @@ export const draw_3D_points = createPlotFunction(
     true
 );
 
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max) + 1;
+}
+
 export const create_random_bodies = (): Body[] => {
-    const G = G_const;
-    let b1 = new Body("m1", [0, 0], 1e20, [0, 0], [0, 0]);
-    let b2 = new Body(
-        "m2",
-        [0, -1e5],
-        1e16,
-        [Math.sqrt((G * 1e20) / 1e5), 0],
+    // const G = G_const;
+    // let b1 = new Body("m1", [0, 0], 1e20, [0, 0], [0, 0]);
+    // let b2 = new Body(
+    //     "m2",
+    //     [0, -1e5],
+    //     1e16,
+    //     [Math.sqrt((G * 1e20) / 1e5), 0],
+    //     [0, 0]
+    // );
+    // return [b1, b2];
+    let body: Body[] = [];
+    for (var i = 0; i < 1000; i++) {
+        body.push(
+            new Body(
+                i.toString(),
+                [getRandomInt(1e2), getRandomInt(1e2)],
+                getRandomInt(1),
+                [0, 0],
+                [0, 0]
+            )
+        );
+    }
+    return body;
+};
+
+export const figure_eight_system = () => {
+    // for G = 1;
+    let b1 = new Body(
+        "m1",
+        [-0.97000436, 0.24308753],
+        1,
+        [0.466203685, 0.43236573],
         [0, 0]
     );
-    return [b1, b2];
+    let b2 = new Body(
+        "m2",
+        [0.97000436, -0.24308753],
+        1,
+        [0.466203685, 0.43236573],
+        [0, 0]
+    );
+    let b3 = new Body(
+        "m3",
+        [0, 0],
+        1,
+        [-2 * 0.466203685, -2 * 0.43236573],
+        [0, 0]
+    );
+    return [b1, b2, b3];
 };
 
 export const solar_system_bodies = () => {
@@ -392,24 +439,26 @@ export const solar_system_bodies = () => {
 };
 
 // const bodies = create_random_bodies();
-const bodies = solar_system_bodies();
+// const bodies = solar_system_bodies();
+const bodies = figure_eight_system();
 
 let animationId: number | null = null;
 
 export const simulate_points = () => {
     const x_s = bodies.map((body) => body.pos[0]);
     const y_s = bodies.map((body) => body.pos[1]);
+    const mass_s = bodies.map((body) => body.mass);
     const data = { x: x_s, y: y_s };
-    if (animationId != null) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-    }
+
     drawnPlots.push(
         new CurvePlot(
             draw_new_simulation,
             {
                 ...data,
                 mode: "markers",
+                marker: {
+                    color: "rgba(17, 157, 255,0.5)",
+                },
             },
             {
                 yaxis: {
@@ -423,38 +472,21 @@ export const simulate_points = () => {
 
 function draw_new_simulation(
     divId: string,
-    data: Data,
+    data: PlotData,
     layout: Partial<Layout>
 ) {
+    const line_data_x: (number | null)[] = [];
+    const line_data_y: (number | null)[] = [];
+    for (let i = 0; i < data.x.length; ++i) {
+        line_data_x.push(data.x[i] as number);
+        line_data_x.push(data.x[i] as number);
+        line_data_y.push(data.y[i] as number);
+        line_data_y.push(data.y[i] as number);
+        line_data_x.push(null);
+        line_data_y.push(null);
+    }
     var steps: Partial<SliderStep>[] = [];
-    const buttons: Partial<UpdateMenuButton>[] = [
-        {
-            method: "animate",
-            args: [
-                null,
-                {
-                    mode: "immediate",
-                    fromcurrent: true,
-                    transition: { duration: 300 },
-                    frame: { duration: 500, redraw: false },
-                },
-            ],
-            label: "Play",
-        },
-        {
-            method: "animate",
-            args: [
-                [null],
-                {
-                    mode: "immediate",
-                    transition: { duration: 0 },
-                    frame: { duration: 0, redraw: false },
-                },
-            ],
-            label: "Pause",
-        },
-    ];
-    for (var i = 1; i <= 10000; i *= 10)
+    for (var i = 0.01; i <= 10000; i *= 10)
         steps.push({
             label: i.toString(),
             method: "skip",
@@ -462,24 +494,32 @@ function draw_new_simulation(
     layout = {
         ...layout,
         sliders: [{ steps, active: 0 }],
-        updatemenus: [{ buttons, direction: "left", type: "buttons" }],
     };
-    Plotly.newPlot(divId, [data], layout);
-    const qt = new QuadTree(1e12);
+    Plotly.newPlot(
+        divId,
+        [data, { x: line_data_x, y: line_data_y, mode: "lines" }],
+        layout
+    );
+    const qt = new QuadTree(1e2);
+    const framesPerSecond = 60;
+    if (animationId != null) return;
     function update() {
-        console.log(animationId);
-        if(animationId != null && document.getElementById(divId) == null) {
-            cancelAnimationFrame(animationId);
-            return;
-        }
-        const dt = Math.pow(
-            10,
-            parseInt(document.getElementById(divId)?.layout?.sliders[0].active)
-        );
+        const dt =
+            0.01 *
+            Math.pow(
+                10,
+                parseInt(
+                    // @ts-ignore
+                    document.getElementById(divId)?.layout?.sliders[0].active
+                )
+            );
+        // const dt = 0.01;
         qt.build_tree(bodies);
+        const prev_x = qt.bodies.map((body) => body.pos[0]);
+        const prev_y = qt.bodies.map((body) => body.pos[1]);
         qt.simulateForces();
         qt.bodies.forEach((body, i) => {
-            body.updateBodyState(dt);
+            body.updateBodyState(dt / framesPerSecond);
         });
 
         const new_x = qt.bodies.map((body) => body.pos[0]);
@@ -494,22 +534,42 @@ function draw_new_simulation(
                 x1: box.topRight[0],
                 y1: box.topRight[1],
                 line: {
-                    width: 0.2,
+                    width: 0.1,
                     color: "rgba(128,0,128,1)",
                 },
             };
         });
 
+        if (line_data_x.length > 100 * 3 * bodies.length) {
+            for (let i = 0; i < bodies.length; ++i) {
+                for (let j = 0; j < 3; ++j) {
+                    line_data_x.shift();
+                    line_data_y.shift();
+                }
+            }
+        }
+
+        for (let i = 0; i < new_x.length; ++i) {
+            line_data_x.push(prev_x[i]);
+            line_data_x.push(new_x[i]);
+            line_data_y.push(prev_y[i]);
+            line_data_y.push(new_y[i]);
+            line_data_x.push(null);
+            line_data_y.push(null);
+        }
         //@ts-ignore
         Plotly.animate(
             divId,
             {
-                data: [{ x: new_x, y: new_y }],
+                data: [
+                    { x: new_x, y: new_y },
+                    { x: line_data_x, y: line_data_y, mode: "lines" },
+                ],
+                traces: [0, 1],
             },
             {
                 transition: {
                     duration: 0,
-                    easing: "cubic-in-out",
                 },
                 frame: {
                     duration: 0,
