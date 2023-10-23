@@ -3,23 +3,23 @@
  * @module plotly
  */
 
-import context from "js-slang/context";
-import Plotly, { type Data, type Layout } from "plotly.js-dist";
+import context from 'js-slang/context';
+import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import {
-    type Curve,
-    CurvePlot,
-    type CurvePlotFunction,
-    DrawnPlot,
-    type ListOfPairs,
-    type Sound,
-} from "./plotly";
-import { generatePlot } from "./curve_functions";
-import { get_duration, get_wave, is_sound } from "./sound_functions";
+  type Curve,
+  CurvePlot,
+  type CurvePlotFunction,
+  DrawnPlot,
+  type ListOfPairs,
+  type Sound,
+} from './plotly';
+import { generatePlot } from './curve_functions';
+import { get_duration, get_wave, is_sound } from './sound_functions';
 
 let drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 
 context.moduleContexts.plotly.state = {
-    drawnPlots,
+  drawnPlots,
 };
 
 /**
@@ -121,7 +121,7 @@ context.moduleContexts.plotly.state = {
  *             among the fields mentioned above
  */
 export function new_plot(data: ListOfPairs): void {
-    drawnPlots.push(new DrawnPlot(draw_new_plot, data));
+  drawnPlots.push(new DrawnPlot(draw_new_plot, data));
 }
 
 /**
@@ -235,7 +235,7 @@ export function new_plot(data: ListOfPairs): void {
  * @param data The data as an array of json objects having some or all of the given fields
  */
 export function new_plot_json(data: any): void {
-    drawnPlots.push(new DrawnPlot(draw_new_plot_json, data));
+  drawnPlots.push(new DrawnPlot(draw_new_plot_json, data));
 }
 
 /**
@@ -243,8 +243,8 @@ export function new_plot_json(data: any): void {
  * @param divId The id of the div element on which the plot will be displayed
  */
 function draw_new_plot(data: ListOfPairs, divId: string) {
-    const plotlyData = convert_to_plotly_data(data);
-    Plotly.newPlot(divId, [plotlyData]);
+  const plotlyData = convert_to_plotly_data(data);
+  Plotly.newPlot(divId, [plotlyData]);
 }
 
 /**
@@ -253,7 +253,7 @@ function draw_new_plot(data: ListOfPairs, divId: string) {
  * @param divId The id of the div element on which the plot will be displayed
  */
 function draw_new_plot_json(data: any, divId: string) {
-    Plotly.newPlot(divId, data);
+  Plotly.newPlot(divId, data);
 }
 
 /**
@@ -261,11 +261,11 @@ function draw_new_plot_json(data: any, divId: string) {
  * @returns The converted data that can be used by the plotly.js function
  */
 function convert_to_plotly_data(data: ListOfPairs): Data {
-    let convertedData: Data = {};
-    if (Array.isArray(data) && data.length === 2) {
-        add_fields_to_data(convertedData, data);
-    }
-    return convertedData;
+  let convertedData: Data = {};
+  if (Array.isArray(data) && data.length === 2) {
+    add_fields_to_data(convertedData, data);
+  }
+  return convertedData;
 }
 
 /**
@@ -274,37 +274,37 @@ function convert_to_plotly_data(data: ListOfPairs): Data {
  */
 
 function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
-    if (Array.isArray(data) && data.length === 2 && data[0].length === 2) {
-        const field = data[0][0];
-        const value = data[0][1];
-        convertedData[field] = value;
-        add_fields_to_data(convertedData, data[1]);
-    }
+  if (Array.isArray(data) && data.length === 2 && data[0].length === 2) {
+    const field = data[0][0];
+    const value = data[0][1];
+    convertedData[field] = value;
+    add_fields_to_data(convertedData, data[1]);
+  }
 }
 
 function createPlotFunction(
-    type: string,
-    config: Data,
-    layout: Partial<Layout>,
-    is_colored: boolean = false
+  type: string,
+  config: Data,
+  layout: Partial<Layout>,
+  is_colored: boolean = false,
 ): (numPoints: number) => CurvePlotFunction {
-    return (numPoints: number) => {
-        const func = (curveFunction: Curve) => {
-            const plotDrawn = generatePlot(
-                type,
-                numPoints,
-                config,
-                layout,
-                is_colored,
-                curveFunction
-            );
+  return (numPoints: number) => {
+    const func = (curveFunction: Curve) => {
+      const plotDrawn = generatePlot(
+        type,
+        numPoints,
+        config,
+        layout,
+        is_colored,
+        curveFunction,
+      );
 
-            drawnPlots.push(plotDrawn);
-            return plotDrawn;
-        };
-
-        return func;
+      drawnPlots.push(plotDrawn);
+      return plotDrawn;
     };
+
+    return func;
+  };
 }
 
 /**
@@ -320,18 +320,18 @@ function createPlotFunction(
  * ```
  */
 export const draw_connected_2d = createPlotFunction(
-    "scattergl",
-    {
-        mode: "lines",
+  'scattergl',
+  {
+    mode: 'lines',
+  },
+  {
+    xaxis: { visible: false },
+    yaxis: {
+      visible: false,
+      scaleanchor: 'x',
     },
-    {
-        xaxis: { visible: false },
-        yaxis: {
-            visible: false,
-            scaleanchor: "x",
-        },
-    },
-    true
+  },
+  true,
 );
 
 /**
@@ -347,10 +347,10 @@ export const draw_connected_2d = createPlotFunction(
  * ```
  */
 export const draw_connected_3d = createPlotFunction(
-    "scatter3d",
-    { mode: "lines" },
-    {},
-    true
+  'scatter3d',
+  { mode: 'lines' },
+  {},
+  true,
 );
 
 /**
@@ -366,16 +366,16 @@ export const draw_connected_3d = createPlotFunction(
  * draw_points_2d(100)(t => make_point(t, t));
  */
 export const draw_points_2d = createPlotFunction(
-    "scatter",
-    { mode: "markers" },
-    {
-        xaxis: { visible: false },
-        yaxis: {
-            visible: false,
-            scaleanchor: "x",
-        },
+  'scatter',
+  { mode: 'markers' },
+  {
+    xaxis: { visible: false },
+    yaxis: {
+      visible: false,
+      scaleanchor: 'x',
     },
-    true
+  },
+  true,
 );
 
 /**
@@ -391,9 +391,9 @@ export const draw_points_2d = createPlotFunction(
  * draw_points_3d(100)(t => make_point(t, t));
  */
 export const draw_points_3d = createPlotFunction(
-    "scatter3d",
-    { mode: "markers" },
-    {}
+  'scatter3d',
+  { mode: 'markers' },
+  {},
 );
 
 /**
@@ -401,68 +401,68 @@ export const draw_points_3d = createPlotFunction(
  * @param sound the sound which is to be visualized on plotly
  */
 export const draw_sound_2d = (sound: Sound) => {
-    const FS: number = 44100; // Output sample rate
-    if (!is_sound(sound)) {
-        throw new Error(
-            `draw_sound_2d is expecting sound, but encountered ${sound}`
-        );
-        // If a sound is already displayed, terminate execution.
-    } else if (get_duration(sound) < 0) {
-        throw new Error("draw_sound_2d: duration of sound is negative");
-    } else {
-        // Instantiate audio context if it has not been instantiated.
+  const FS: number = 44100; // Output sample rate
+  if (!is_sound(sound)) {
+    throw new Error(
+      `draw_sound_2d is expecting sound, but encountered ${sound}`,
+    );
+    // If a sound is already displayed, terminate execution.
+  } else if (get_duration(sound) < 0) {
+    throw new Error('draw_sound_2d: duration of sound is negative');
+  } else {
+    // Instantiate audio context if it has not been instantiated.
 
-        // Create mono buffer
-        const channel: number[] = [];
-        const time_stamps: number[] = [];
-        const len = Math.ceil(FS * get_duration(sound));
+    // Create mono buffer
+    const channel: number[] = [];
+    const time_stamps: number[] = [];
+    const len = Math.ceil(FS * get_duration(sound));
 
-        const wave = get_wave(sound);
-        for (let i = 0; i < len; i += 1) {
-            time_stamps[i] = i / FS;
-            channel[i] = wave(i / FS);
-        }
-
-        let x_s: number[] = [];
-        let y_s: number[] = [];
-
-        for (let i = 0; i < channel.length; i += 1) {
-            x_s.push(time_stamps[i]);
-            y_s.push(channel[i]);
-        }
-
-        const plotlyData: Data = {
-            x: x_s,
-            y: y_s,
-        };
-        const plot = new CurvePlot(
-            draw_new_curve,
-            {
-                ...plotlyData,
-                type: "scattergl",
-                mode: "lines",
-                line: { width: 0.5 },
-            } as Data,
-            {
-                xaxis: {
-                    type: "linear",
-                    title: "Time",
-                    anchor: "y",
-                    position: 0,
-                    rangeslider: { visible: true },
-                },
-                yaxis: {
-                    type: "linear",
-                    visible: false,
-                },
-                bargap: 0.2,
-                barmode: "stack",
-            }
-        );
-        if (drawnPlots) drawnPlots.push(plot);
+    const wave = get_wave(sound);
+    for (let i = 0; i < len; i += 1) {
+      time_stamps[i] = i / FS;
+      channel[i] = wave(i / FS);
     }
+
+    let x_s: number[] = [];
+    let y_s: number[] = [];
+
+    for (let i = 0; i < channel.length; i += 1) {
+      x_s.push(time_stamps[i]);
+      y_s.push(channel[i]);
+    }
+
+    const plotlyData: Data = {
+      x: x_s,
+      y: y_s,
+    };
+    const plot = new CurvePlot(
+      draw_new_curve,
+      {
+        ...plotlyData,
+        type: 'scattergl',
+        mode: 'lines',
+        line: { width: 0.5 },
+      } as Data,
+      {
+        xaxis: {
+          type: 'linear',
+          title: 'Time',
+          anchor: 'y',
+          position: 0,
+          rangeslider: { visible: true },
+        },
+        yaxis: {
+          type: 'linear',
+          visible: false,
+        },
+        bargap: 0.2,
+        barmode: 'stack',
+      },
+    );
+    if (drawnPlots) drawnPlots.push(plot);
+  }
 };
 
 function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
-    Plotly.react(divId, [data], layout);
+  Plotly.react(divId, [data], layout);
 }

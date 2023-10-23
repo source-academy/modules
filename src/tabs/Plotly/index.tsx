@@ -55,7 +55,10 @@ class Plotly extends React.Component<Props, State> {
           drawnPlots.map((drawnPlot: any, id:number) => {
             const divId = `plotDiv${id}`;
             return (
-              <div style={{ height: '80vh', marginBottom: '5vh' }} key={divId}>
+              <div style={{
+                height: '80vh',
+                marginBottom: '5vh',
+              }} key={divId}>
                 <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
                 <div
                   id={divId}
