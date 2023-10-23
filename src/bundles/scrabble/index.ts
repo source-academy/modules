@@ -3,8 +3,6 @@
  * @author Martin Henz
  */
 export {
-  scrabble_array,
-  scrabble_list,
-  charAt,
-  arrayLength,
+  scrabble_words,
+  scrabble_letters,
 } from './functions';
