@@ -35,7 +35,7 @@
     "lint": "yarn scripts lint",
     "prepare": "husky install",
     "postinstall": "patch-package && yarn scripts:build",
-    "scripts": "yarn node scripts/bin.js",
+    "scripts": "node --max-old-space-size=4096 scripts/bin.js",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "test": "yarn scripts test",
     "test:watch": "jest --watch",
