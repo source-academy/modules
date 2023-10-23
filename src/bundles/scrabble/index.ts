@@ -4,4 +4,5 @@
  */
 export {
   scrabble_words,
+  scrabble_letters,
 } from './functions';
