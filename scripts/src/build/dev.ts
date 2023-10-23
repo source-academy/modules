@@ -3,6 +3,8 @@ import { context as esbuild } from 'esbuild';
 import lodash from 'lodash';
 import type { Application } from 'typedoc';
 
+import { waitForQuit } from '../scriptUtils.js';
+
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
 import { getBundleOptions, reduceBundleOutputFiles } from './modules/bundle.js';
 import { getTabOptions, reduceTabOutputFiles } from './modules/tab.js';
@@ -15,22 +17,6 @@ import {
   retrieveBundlesAndTabs,
 } from './buildUtils.js';
 import type { BuildCommandInputs, UnreducedResult } from './types.js';
-
-/**
- * Wait until the user presses 'ctrl+c' on the keyboard
- */
-const waitForQuit = () => new Promise<void>((resolve, reject) => {
-  process.stdin.setRawMode(true);
-  process.stdin.on('data', (data) => {
-    const byteArray = [...data];
-    if (byteArray.length > 0 && byteArray[0] === 3) {
-      console.log('^C');
-      process.stdin.setRawMode(false);
-      resolve();
-    }
-  });
-  process.stdin.on('error', reject);
-});
 
 type ContextOptions = Record<'srcDir' | 'outDir', string>;
 const getBundleContext = (options: ContextOptions, bundles: string[], app?: Application) => esbuild({

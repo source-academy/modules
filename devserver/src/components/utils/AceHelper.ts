@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import { HighlightRulesSelector, ModeSelector } from "js-slang/dist/editors/ace/modes/source";
 import { Chapter, Variant } from "js-slang/dist/types";
 import ace from "react-ace";

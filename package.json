@@ -41,7 +41,7 @@
     "test:watch": "jest --watch",
     "watch": "yarn scripts watch",
     "devserver": "vite",
-    "devserver:lint": "eslint -c devserver/.eslintrc.json --ext \".js,.jsx,.ts,.tsx\"",
+    "devserver:lint": "yarn scripts devserver lint",
     "devserver:tsc": "tsc --project devserver/tsconfig.json",
     "scripts:all": "node scripts/scripts_manager.js",
     "scripts:build": "node scripts/scripts_manager.js build",
