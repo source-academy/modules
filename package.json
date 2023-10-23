@@ -38,7 +38,8 @@
     "scripts": "node --max-old-space-size=4096 scripts/bin.js",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "test": "yarn scripts test",
-    "test:watch": "jest --watch",
+    "test:all": "yarn test && yarn scripts:test",
+    "test:watch": "yarn scripts test --watch",
     "watch": "yarn scripts watch",
     "devserver": "vite",
     "devserver:lint": "yarn scripts devserver lint",
@@ -46,6 +47,7 @@
     "scripts:all": "node scripts/scripts_manager.js",
     "scripts:build": "node scripts/scripts_manager.js build",
     "scripts:lint": "node scripts/scripts_manager.js lint",
+    "scripts:tsc": "tsc --project scripts/src/tsconfig.json",
     "scripts:test": "node scripts/scripts_manager.js test"
   },
   "devDependencies": {
