@@ -97,7 +97,7 @@ export const getTabOptions = (tabs: string[], { srcDir, outDir }: Record<'srcDir
       'react-dom',
       'react/jsx-runtime',
       '@blueprintjs/*',
-      'phaser',
+      // 'phaser',
     ],
     jsx: 'automatic',
     outbase: outDir,

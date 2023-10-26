@@ -4,7 +4,6 @@
  * @author Wang Zihan
  */
 
-
 import { initializeModule, getInstance, type GameObjectIdentifier, type AudioClipIdentifier } from './UnityAcademy';
 import {
   type Vector3, checkVector3Parameter, makeVector3D, scaleVector, addVectors, vectorDifference, dotProduct,

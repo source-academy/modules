@@ -26,6 +26,9 @@ type StateProps = {
   sideContentProps: SideContentProps
 };
 
+const rightResizeOnly: Enable = { right: true };
+const bottomResizeOnly: Enable = { bottom: true };
+
 export type WorkspaceProps = DispatchProps & StateProps;
 
 const Workspace: React.FC<WorkspaceProps> = (props) => {
@@ -137,8 +140,5 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
 		</div>
 	);
 };
-
-const rightResizeOnly: Enable = { right: true };
-const bottomResizeOnly: Enable = { bottom: true };
 
 export default Workspace;

@@ -50,6 +50,15 @@ const Playground: React.FC<{}> = () => {
 
 	const toaster = React.useRef<Toaster | null>(null);
 
+	const showToast = (props: ToastProps) => {
+		if (toaster.current) {
+			toaster.current.show({
+				...props,
+				timeout: 1500
+			});
+		}
+	};
+
 	const getAutoComplete = useCallback((row: number, col: number, callback: any) => {
 		getNames(editorValue, row, col, codeContext)
 			.then(([editorNames, displaySuggestions]) => {
@@ -58,22 +67,22 @@ const Playground: React.FC<{}> = () => {
 					return;
 				}
 
-				const editorSuggestions = editorNames.map((name: any) => ({
-					...name,
-					caption: name.name,
-					value: name.name,
-					score: name.score ? name.score + 1000 : 1000,
+				const editorSuggestions = editorNames.map((editorName: any) => ({
+					...editorName,
+					caption: editorName.name,
+					value: editorName.name,
+					score: editorName.score ? editorName.score + 1000 : 1000,
 					name: undefined
 				}));
 
 				const builtins: Record<string, any> = SourceDocumentation.builtins[Chapter.SOURCE_4];
 				const builtinSuggestions = Object.entries(builtins)
-					.map(([name, thing]) => ({
+					.map(([builtin, thing]) => ({
 						...thing,
-						caption: name,
-						value: name,
+						caption: builtin,
+						value: builtin,
 						score: 100,
-						name,
+						name: builtin,
 						docHTML: thing.description
 					}));
 
@@ -103,6 +112,7 @@ const Playground: React.FC<{}> = () => {
 
 	const evalCode = () => {
 		codeContext.errors = [];
+		// eslint-disable-next-line no-multi-assign
 		codeContext.moduleContexts = mockModuleContext.moduleContexts = {};
 
 		runInContext(editorValue, codeContext)
@@ -139,15 +149,6 @@ const Playground: React.FC<{}> = () => {
 		setDynamicTabs([]);
 		setSelectedTab(testTabContent.id);
 		setReplOutput(null);
-	};
-
-	const showToast = (props: ToastProps) => {
-		if (toaster.current) {
-			toaster.current.show({
-				...props,
-				timeout: 1500
-			});
-		}
 	};
 
 	const onRefresh = () => {
