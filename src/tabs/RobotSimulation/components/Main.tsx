@@ -20,7 +20,7 @@ export default function Main({ context }: { context:DebuggerContext }): JSX.Elem
           setIsCanvasShowing(false);
         }}
       >
-        <SimulationCanvas context={context}/>
+        <SimulationCanvas context={context} isOpen={isCanvasShowing}/>
       </Modal>
     </div>
   );

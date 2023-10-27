@@ -1,6 +1,10 @@
 import { useRef, type CSSProperties, useEffect, useState } from 'react';
-import { type SimulationStates } from '../../../../bundles/robot_simulation/three-rapier-controller/constants/states';
 import type { DebuggerContext } from '../../../../typings/type_helpers';
+
+import {
+  type SimulationStates,
+  type World,
+} from '../../../../bundles/robot_simulation/simulation/world';
 
 const CanvasWrapperStyle: CSSProperties = {
   width: 800,
@@ -8,43 +12,57 @@ const CanvasWrapperStyle: CSSProperties = {
   backgroundColor: 'black',
 };
 
-
-export default function SimulationCanvas({ context }: { context:DebuggerContext }) {
+export default function SimulationCanvas({
+  context,
+  isOpen,
+}: {
+  context: DebuggerContext;
+  isOpen: boolean;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const [currentState, setCurrentState] = useState<SimulationStates>('idle');
-  const simulation = context.context.moduleContexts.robot_simulation.state.simulation;
+  const [currentState, setCurrentState]
+    = useState<SimulationStates>('unintialized');
+  const world = context.context.moduleContexts.robot_simulation.state
+    .world as World;
 
   useEffect(() => {
     const startThreeAndRapierEngines = async () => {
-      console.log(simulation.state, currentState);
-      setCurrentState(simulation.state);
+      setCurrentState(world.state);
     };
 
     const attachRenderDom = () => {
-      if (simulation.state !== 'ready') {
-        throw new Error('Tried to attach dom to an unavailable simulation');
-      }
-      const renderer = simulation.renderer;
-      if (ref.current && renderer) {
-        ref.current.replaceChildren(renderer.domElement);
+      if (ref.current) {
+        world.setRendererOutput(ref.current);
       }
     };
 
-    if (currentState === 'idle') {
+    if (currentState === 'unintialized') {
       startThreeAndRapierEngines();
     }
 
-    if (currentState === 'ready') {
+    if (currentState === 'ready' || currentState === 'running') {
       attachRenderDom();
     }
     if (currentState === 'loading') {
       setTimeout(() => {
-        setCurrentState('idle');
+        setCurrentState('unintialized');
       }, 500);
     }
   }, [currentState]);
 
-  return <>
-    <div style={CanvasWrapperStyle} ref={ref}>{currentState}</div>
-  </>;
+  useEffect(() => {
+    if (isOpen) {
+      world.startSimulation();
+    } else {
+      world.stopSimulation();
+    }
+  }, [isOpen]);
+
+  return (
+    <>
+      <div style={CanvasWrapperStyle} ref={ref}>
+        {currentState}
+      </div>
+    </>
+  );
 }

@@ -26,7 +26,8 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    return context.context.moduleContexts.robot_simulation.state.simulation?.state !== 'idle';
+    console.log(context.context.moduleContexts.robot_simulation.state.world);
+    return context.context.moduleContexts.robot_simulation.state.world?.state !== 'idle';
   },
 
   /**
