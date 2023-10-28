@@ -5,10 +5,10 @@
  */
 
 import React from 'react';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { type ProgrammableRepl } from '../../bundles/repl/programmable_repl';
+import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
 import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/mode-javascript';
