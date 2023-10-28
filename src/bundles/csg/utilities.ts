@@ -8,7 +8,6 @@ import {
   rotate as _rotate,
   scale as _scale,
   translate as _translate,
-  align,
 } from '@jscad/modeling/src/operations/transforms';
 import type { ReplResult } from '../../typings/type_helpers.js';
 import { Core } from './core.js';

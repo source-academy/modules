@@ -2,8 +2,8 @@ import { Slider } from '@blueprintjs/core';
 import React from 'react';
 import type { CurveDrawn } from '../../bundles/curve/curves_webgl';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
-import PlayButton from '../common/play_button';
-import WebGLCanvas from '../common/web_gl_canvas';
+import PlayButton from '../common/PlayButton';
+import WebGLCanvas from '../common/WebglCanvas';
 import { degreesToRadians } from '../../common/utilities';
 
 type State = {
@@ -148,7 +148,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
         >
           <PlayButton
             isPlaying={ this.state.isRotating }
-            onClickCallback={ this.onClickHandler }
+            onClick={ this.onClickHandler }
           ></PlayButton>
           <Slider
             value={ this.state.displayAngle }

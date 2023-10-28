@@ -1,7 +1,7 @@
 import React from 'react';
 import type { LinePlot } from '../../bundles/painter/painter';
 import type { DebuggerContext } from '../../typings/type_helpers';
-import Modal from '../common/modal_div';
+import Modal from '../common/ModalDiv';
 
 type Props = {
   children?: never

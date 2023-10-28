@@ -12,3 +12,7 @@ export type AudioPlayed = {
   toReplString: () => string;
   dataUri: string;
 };
+
+export type SoundModuleState = {
+  audioPlayed: AudioPlayed[]
+};

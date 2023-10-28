@@ -11,44 +11,40 @@ type TypedocOpts = {
 };
 
 /**
- * Offload running typedoc into async code to increase parallelism
+ * Typedoc initialization: Use this to get an instance of typedoc which can then be used to
+ * generate both json and html documentation
  *
  * @param watch Pass true to initialize typedoc in watch mode. `app.convert()` will not be called.
  */
 export const initTypedoc = wrapWithTimer(
-  ({
+  async ({
     srcDir,
     bundles,
     verbose,
   }: TypedocOpts,
-  watch?: boolean) => new Promise<[Application, ProjectReflection]>((resolve, reject) => {
-    try {
-      const app = new Application();
-      app.options.addReader(new TSConfigReader());
+  watch?: boolean): Promise<[Application, ProjectReflection | null]> => {
+    const app = await Application.bootstrap({
+      categorizeByGroup: true,
+      entryPoints: bundles.map(bundleNameExpander(srcDir)),
+      excludeInternal: true,
+      // logger: watch ? 'none' : undefined,
+      logLevel: verbose ? 'Info' : 'Error',
+      name: 'Source Academy Modules',
+      readme: './scripts/src/build/docs/docsreadme.md',
+      tsconfig: `${srcDir}/tsconfig.json`,
+      skipErrorChecking: true,
+      watch,
+    });
 
-      app.bootstrap({
-        categorizeByGroup: true,
-        entryPoints: bundles.map(bundleNameExpander(srcDir)),
-        excludeInternal: true,
-        logger: watch ? 'none' : undefined,
-        logLevel: verbose ? 'Info' : 'Error',
-        name: 'Source Academy Modules',
-        readme: `${srcDir}/README.md`,
-        tsconfig: `${srcDir}/tsconfig.json`,
-        skipErrorChecking: true,
-        watch,
-      });
+    app.options.addReader(new TSConfigReader());
 
-      if (watch) resolve([app, null]);
+    if (watch) return [app, null];
 
-      const project = app.convert();
-      if (!project) {
-        reject(new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'));
-      } else resolve([app, project]);
-    } catch (error) {
-      reject(error);
-    }
-  }),
+    const project = await app.convert();
+    if (!project) {
+      throw new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!');
+    } else return [app, project];
+  },
 );
 
 export const logTypedocTime = (elapsed: number) => console.log(
