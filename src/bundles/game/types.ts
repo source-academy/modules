@@ -1,4 +1,4 @@
-import type * as Phaser from 'phaser';
+import * as Phaser from 'phaser';
 
 export type ObjectConfig = { [attr: string]: any };
 
