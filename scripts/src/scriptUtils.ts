@@ -8,6 +8,10 @@ export type ModuleManifest = Record<string, {
   tabs: string[]
 }>;
 
+/**
+ * Function to replicate `__dirname` in CommonJS modules
+ * Use with `import.meta.url`
+ */
 export function cjsDirname(url: string) {
   return join(dirname(fileURLToPath(url)));
 }
@@ -57,3 +61,19 @@ export const findSeverity = <T>(items: T[], converter: (item: T) => Severity) =>
   }
   return output;
 };
+
+/**
+ * Wait until the user presses 'ctrl+c' on the keyboard
+ */
+export const waitForQuit = () => new Promise<void>((resolve, reject) => {
+  process.stdin.setRawMode(true);
+  process.stdin.on('data', (data) => {
+    const byteArray = [...data];
+    if (byteArray.length > 0 && byteArray[0] === 3) {
+      console.log('^C');
+      process.stdin.setRawMode(false);
+      resolve();
+    }
+  });
+  process.stdin.on('error', reject);
+});

@@ -20,3 +20,7 @@ export type ModuleContexts = Context['moduleContexts'];
 export interface ReplResult {
   toReplString: () => string;
 }
+
+export type ModuleTab = React.FC<{ context: DebuggerContext }>;
+
+export const getModuleState = <T>({ context: { moduleContexts } }: DebuggerContext, moduleName: string) => moduleContexts[moduleName].state as T;

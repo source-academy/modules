@@ -4,9 +4,8 @@
  * @author Wang Zihan
  */
 
-
 import context from 'js-slang/context';
-import { default_js_slang } from './functions';
+import { default_js_slang } from './evaluators';
 import { runFilesInContext, type IOptions } from 'js-slang';
 
 export class ProgrammableRepl {

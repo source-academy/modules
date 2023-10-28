@@ -10,8 +10,8 @@ import {
   logResult,
   retrieveBundlesAndTabs,
 } from '../buildUtils.js';
-import type { LintCommandInputs } from '../prebuild/eslint.js';
 import { prebuild } from '../prebuild/index.js';
+import type { LintCommandInputs } from '../prebuild/lint.js';
 import type { AssetInfo, BuildCommandInputs, BuildOptions } from '../types';
 
 import { buildBundles, reduceBundleOutputFiles } from './bundle.js';
@@ -44,7 +44,7 @@ const getBuildModulesCommand = () => createBuildCommand('modules', true)
   .description('Build modules and their tabs')
   .action(async (modules: string[] | null, { manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
     const [assets] = await Promise.all([
-      retrieveBundlesAndTabs(manifest, modules, null),
+      retrieveBundlesAndTabs(manifest, modules, []),
       createOutDir(opts.outDir),
     ]);
 

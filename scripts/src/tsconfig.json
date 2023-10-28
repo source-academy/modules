@@ -5,9 +5,10 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "target": "ES2020",
+    "target": "ESNext",
     "outDir": "../bin",
-    
+    "verbatimModuleSyntax": true,
+    "noEmit": true
   },
   "exclude": ["./**/__tests__/**/*", "./**/__mocks__/**/*", "./templates/templates/**/*", "./**/jest*"]
 }

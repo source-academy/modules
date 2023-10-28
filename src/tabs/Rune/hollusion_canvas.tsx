@@ -1,6 +1,6 @@
 import React from 'react';
 import type { HollusionRune } from '../../bundles/rune/functions';
-import WebGLCanvas from '../common/web_gl_canvas';
+import WebGLCanvas from '../common/WebglCanvas';
 
 /**
  * Canvas used to display Hollusion runes

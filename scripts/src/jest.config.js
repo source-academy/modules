@@ -1,5 +1,8 @@
 import presets from 'ts-jest/presets/index.js';
 
+/* For some reason, using the preset and giving the tsconfig as a config option
+ * doesn't work, hence the very complicated code here for configuring jest
+ */
 const preset = presets.jsWithTsESM;
 const [[transformKey, [, transforms]]] = Object.entries(preset.transform);
 

@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Ensure that rune animations error gracefully 1`] = `
+<RuneTab
+  context={
+    {
+      "context": {
+        "moduleContexts": {
+          "rune": {
+            "state": {
+              "drawnRunes": [
+                AnimatedRune {
+                  "duration": 1,
+                  "fps": 60,
+                  "func": [Function],
+                  "toReplString": [Function],
+                },
+              ],
+            },
+          },
+        },
+      },
+    }
+  }
+/>
+`;
