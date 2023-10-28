@@ -1,4 +1,4 @@
-require => (() => {
+export default require => (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -24,7 +24,7 @@ require => (() => {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw new Error('Dynamic require of "' + x + '" is not supported');
+    throw Error('Dynamic require of "' + x + '" is not supported');
   });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
@@ -107,7 +107,7 @@ require => (() => {
       })]
     })
   });
-  var modal_div_default = Modal;
+  var ModalDiv_default = Modal;
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var Painter = class extends import_react.default.Component {
     constructor(props) {
@@ -126,7 +126,7 @@ require => (() => {
     render() {
       const {context: {moduleContexts: {painter: {state: {drawnPainters}}}}} = this.props.debuggerContext;
       return (0, import_jsx_runtime2.jsxs)("div", {
-        children: [(0, import_jsx_runtime2.jsx)(modal_div_default, {
+        children: [(0, import_jsx_runtime2.jsx)(ModalDiv_default, {
           open: this.state.modalOpen,
           height: "20rem",
           width: "20rem",
@@ -177,4 +177,4 @@ require => (() => {
     iconName: "scatter-plot"
   };
   return __toCommonJS(Painter_exports);
-})()["default"]
+})()["default"];

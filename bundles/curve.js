@@ -9,7 +9,7 @@ require => {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw new Error('Dynamic require of "' + x + '" is not supported');
+    throw Error('Dynamic require of "' + x + '" is not supported');
   });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
@@ -1716,6 +1716,7 @@ require => {
       return a;
     };
   })();
+  var import_stringify = __require("js-slang/dist/utils/stringify");
   var vsS = `
 attribute vec4 aFragColor;
 attribute vec4 aVertexPosition;
@@ -1877,6 +1878,9 @@ void main() {
     let max_z = -Infinity;
     for (let i = 0; i <= numPoints; i += 1) {
       const point = func(i / numPoints);
+      if (!(point instanceof Point)) {
+        throw new Error(`Expected curve to return a point, got '${(0, import_stringify.stringify)(point)}' at t=${i / numPoints}`);
+      }
       const x = point.x * 2 - 1;
       const y = point.y * 2 - 1;
       const z = point.z * 2 - 1;

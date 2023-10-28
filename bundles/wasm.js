@@ -8709,6 +8709,7 @@ require => {
   });
   var require_source_academy_utils = __commonJS({
     "node_modules/source-academy-utils/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       var __defProp2 = Object.defineProperty;
       var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;

@@ -9,7 +9,7 @@ require => {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw new Error('Dynamic require of "' + x + '" is not supported');
+    throw Error('Dynamic require of "' + x + '" is not supported');
   });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
@@ -85,7 +85,6 @@ require => {
     white: () => white,
     yellow: () => yellow
   });
-  var import_context = __toESM(__require("js-slang/context"), 1);
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
@@ -1852,7 +1851,7 @@ void main(void) {
   gl_FragColor.a = 1.0;
 }
 `;
-  var _Rune = class {
+  var _Rune = class _Rune {
     constructor(vertices, colors, transformMatrix, subRunes, texture, hollusionDistance) {
       this.vertices = vertices;
       this.colors = colors;
@@ -1885,11 +1884,11 @@ void main(void) {
       this.toReplString = () => "<Rune>";
     }
   };
-  var Rune = _Rune;
-  Rune.of = (params = {}) => {
+  _Rune.of = (params = {}) => {
     const paramGetter = (name, defaultValue) => params[name] === void 0 ? defaultValue() : params[name];
     return new _Rune(paramGetter("vertices", () => new Float32Array()), paramGetter("colors", () => null), paramGetter("transformMatrix", mat4_exports.create), paramGetter("subRunes", () => []), paramGetter("texture", () => null), paramGetter("hollusionDistance", () => 0.1));
   };
+  var Rune = _Rune;
   function drawRunesToFrameBuffer(gl, runes, cameraMatrix, colorFilter, framebuffer = null, depthSwitch = false) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     const shaderProgram = initShaderProgram(gl, normalVertexShader, normalFragmentShader);
@@ -2236,16 +2235,12 @@ void main(void) {
     return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255, 1];
   }
   function addColorFromHex(rune, hex) {
-    throwIfNotRune("addColorFromHex", rune);
+    throwIfNotRune(addColorFromHex.name, rune);
     return Rune.of({
       subRunes: [rune],
       colors: new Float32Array(hexToColor(hex))
     });
   }
-  var drawnRunes = [];
-  import_context.default.moduleContexts.rune.state = {
-    drawnRunes
-  };
   var square = getSquare();
   var blank = getBlank();
   var rcross = getRcross();
@@ -2265,7 +2260,7 @@ void main(void) {
     return rune;
   }
   function scale_independent(ratio_x, ratio_y, rune) {
-    throwIfNotRune("scale_independent", rune);
+    throwIfNotRune(scale_independent.name, rune);
     const scaleVec = vec3_exports.fromValues(ratio_x, ratio_y, 1);
     const scaleMat = mat4_exports.create();
     mat4_exports.scale(scaleMat, scaleMat, scaleVec);
@@ -2277,11 +2272,11 @@ void main(void) {
     });
   }
   function scale3(ratio, rune) {
-    throwIfNotRune("scale", rune);
+    throwIfNotRune(scale3.name, rune);
     return scale_independent(ratio, ratio, rune);
   }
   function translate2(x, y, rune) {
-    throwIfNotRune("translate", rune);
+    throwIfNotRune(translate2.name, rune);
     const translateVec = vec3_exports.fromValues(x, -y, 0);
     const translateMat = mat4_exports.create();
     mat4_exports.translate(translateMat, translateMat, translateVec);
@@ -2293,7 +2288,7 @@ void main(void) {
     });
   }
   function rotate2(rad, rune) {
-    throwIfNotRune("rotate", rune);
+    throwIfNotRune(rotate2.name, rune);
     const rotateMat = mat4_exports.create();
     mat4_exports.rotateZ(rotateMat, rotateMat, rad);
     const wrapperMat = mat4_exports.create();
@@ -2304,8 +2299,8 @@ void main(void) {
     });
   }
   function stack_frac(frac, rune1, rune2) {
-    throwIfNotRune("stack_frac", rune1);
-    throwIfNotRune("stack_frac", rune2);
+    throwIfNotRune(stack_frac.name, rune1);
+    throwIfNotRune(stack_frac.name, rune2);
     if (!(frac >= 0 && frac <= 1)) {
       throw Error("stack_frac can only take fraction in [0,1].");
     }
@@ -2316,30 +2311,30 @@ void main(void) {
     });
   }
   function stack(rune1, rune2) {
-    throwIfNotRune("stack", rune1, rune2);
+    throwIfNotRune(stack.name, rune1, rune2);
     return stack_frac(1 / 2, rune1, rune2);
   }
   function stackn(n, rune) {
-    throwIfNotRune("stackn", rune);
+    throwIfNotRune(stackn.name, rune);
     if (n === 1) {
       return rune;
     }
     return stack_frac(1 / n, rune, stackn(n - 1, rune));
   }
   function quarter_turn_right(rune) {
-    throwIfNotRune("quarter_turn_right", rune);
+    throwIfNotRune(quarter_turn_right.name, rune);
     return rotate2(-Math.PI / 2, rune);
   }
   function quarter_turn_left(rune) {
-    throwIfNotRune("quarter_turn_left", rune);
+    throwIfNotRune(quarter_turn_left.name, rune);
     return rotate2(Math.PI / 2, rune);
   }
   function turn_upside_down(rune) {
-    throwIfNotRune("turn_upside_down", rune);
+    throwIfNotRune(turn_upside_down.name, rune);
     return rotate2(Math.PI, rune);
   }
   function beside_frac(frac, rune1, rune2) {
-    throwIfNotRune("beside_frac", rune1, rune2);
+    throwIfNotRune(beside_frac.name, rune1, rune2);
     if (!(frac >= 0 && frac <= 1)) {
       throw Error("beside_frac can only take fraction in [0,1].");
     }
@@ -2350,19 +2345,19 @@ void main(void) {
     });
   }
   function beside(rune1, rune2) {
-    throwIfNotRune("beside", rune1, rune2);
+    throwIfNotRune(beside.name, rune1, rune2);
     return beside_frac(1 / 2, rune1, rune2);
   }
   function flip_vert(rune) {
-    throwIfNotRune("flip_vert", rune);
+    throwIfNotRune(flip_vert.name, rune);
     return scale_independent(1, -1, rune);
   }
   function flip_horiz(rune) {
-    throwIfNotRune("flip_horiz", rune);
+    throwIfNotRune(flip_horiz.name, rune);
     return scale_independent(-1, 1, rune);
   }
   function make_cross(rune) {
-    throwIfNotRune("make_cross", rune);
+    throwIfNotRune(make_cross.name, rune);
     return stack(beside(quarter_turn_right(rune), rotate2(Math.PI, rune)), beside(rune, rotate2(Math.PI / 2, rune)));
   }
   function repeat_pattern(n, pattern, initial) {
@@ -2372,8 +2367,8 @@ void main(void) {
     return pattern(repeat_pattern(n - 1, pattern, initial));
   }
   function overlay_frac(frac, rune1, rune2) {
-    throwIfNotRune("overlay_frac", rune1);
-    throwIfNotRune("overlay_frac", rune2);
+    throwIfNotRune(overlay_frac.name, rune1);
+    throwIfNotRune(overlay_frac.name, rune2);
     if (!(frac >= 0 && frac <= 1)) {
       throw Error("overlay_frac can only take fraction in [0,1].");
     }
@@ -2404,12 +2399,12 @@ void main(void) {
     });
   }
   function overlay(rune1, rune2) {
-    throwIfNotRune("overlay", rune1);
-    throwIfNotRune("overlay", rune2);
+    throwIfNotRune(overlay.name, rune1);
+    throwIfNotRune(overlay.name, rune2);
     return overlay_frac(0.5, rune1, rune2);
   }
   function color(rune, r, g, b) {
-    throwIfNotRune("color", rune);
+    throwIfNotRune(color.name, rune);
     const colorVector = [r, g, b, 1];
     return Rune.of({
       colors: new Float32Array(colorVector),
@@ -2417,7 +2412,7 @@ void main(void) {
     });
   }
   function random_color(rune) {
-    throwIfNotRune("random_color", rune);
+    throwIfNotRune(random_color.name, rune);
     const randomColor = hexToColor(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
     return Rune.of({
       colors: new Float32Array(randomColor),
@@ -2425,55 +2420,50 @@ void main(void) {
     });
   }
   function red(rune) {
-    throwIfNotRune("red", rune);
+    throwIfNotRune(red.name, rune);
     return addColorFromHex(rune, "#F44336");
   }
   function pink(rune) {
-    throwIfNotRune("pink", rune);
+    throwIfNotRune(pink.name, rune);
     return addColorFromHex(rune, "#E91E63");
   }
   function purple(rune) {
-    throwIfNotRune("purple", rune);
+    throwIfNotRune(purple.name, rune);
     return addColorFromHex(rune, "#AA00FF");
   }
   function indigo(rune) {
-    throwIfNotRune("indigo", rune);
+    throwIfNotRune(indigo.name, rune);
     return addColorFromHex(rune, "#3F51B5");
   }
   function blue(rune) {
-    throwIfNotRune("blue", rune);
+    throwIfNotRune(blue.name, rune);
     return addColorFromHex(rune, "#2196F3");
   }
   function green(rune) {
-    throwIfNotRune("green", rune);
+    throwIfNotRune(green.name, rune);
     return addColorFromHex(rune, "#4CAF50");
   }
   function yellow(rune) {
-    throwIfNotRune("yellow", rune);
+    throwIfNotRune(yellow.name, rune);
     return addColorFromHex(rune, "#FFEB3B");
   }
   function orange(rune) {
-    throwIfNotRune("orange", rune);
+    throwIfNotRune(orange.name, rune);
     return addColorFromHex(rune, "#FF9800");
   }
   function brown(rune) {
-    throwIfNotRune("brown", rune);
+    throwIfNotRune(brown.name, rune);
     return addColorFromHex(rune, "#795548");
   }
   function black(rune) {
-    throwIfNotRune("black", rune);
+    throwIfNotRune(black.name, rune);
     return addColorFromHex(rune, "#000000");
   }
   function white(rune) {
-    throwIfNotRune("white", rune);
+    throwIfNotRune(white.name, rune);
     return addColorFromHex(rune, "#FFFFFF");
   }
-  function show(rune) {
-    throwIfNotRune("show", rune);
-    drawnRunes.push(new NormalRune(rune));
-    return rune;
-  }
-  var _AnaglyphRune = class extends DrawnRune {
+  var _AnaglyphRune = class _AnaglyphRune extends DrawnRune {
     constructor(rune) {
       super(rune, false);
       this.draw = canvas => {
@@ -2509,8 +2499,7 @@ void main(void) {
       };
     }
   };
-  var AnaglyphRune = _AnaglyphRune;
-  AnaglyphRune.anaglyphVertexShader = `
+  _AnaglyphRune.anaglyphVertexShader = `
     precision mediump float;
     attribute vec4 a_position;
     varying highp vec2 v_texturePosition;
@@ -2521,7 +2510,7 @@ void main(void) {
         v_texturePosition.y = (a_position.y + 1.0) / 2.0;
     }
     `;
-  AnaglyphRune.anaglyphFragmentShader = `
+  _AnaglyphRune.anaglyphFragmentShader = `
     precision mediump float;
     uniform sampler2D u_sampler_red;
     uniform sampler2D u_sampler_cyan;
@@ -2532,12 +2521,8 @@ void main(void) {
         gl_FragColor.a = 1.0;
     }
     `;
-  function anaglyph(rune) {
-    throwIfNotRune("anaglyph", rune);
-    drawnRunes.push(new AnaglyphRune(rune));
-    return rune;
-  }
-  var _HollusionRune = class extends DrawnRune {
+  var AnaglyphRune = _AnaglyphRune;
+  var _HollusionRune = class _HollusionRune extends DrawnRune {
     constructor(rune, magnitude) {
       super(rune, true);
       this.draw = canvas => {
@@ -2590,8 +2575,7 @@ void main(void) {
       this.rune.hollusionDistance = magnitude;
     }
   };
-  var HollusionRune = _HollusionRune;
-  HollusionRune.copyVertexShader = `
+  _HollusionRune.copyVertexShader = `
     precision mediump float;
     attribute vec4 a_position;
     varying highp vec2 v_texturePosition;
@@ -2602,7 +2586,7 @@ void main(void) {
         v_texturePosition.y = (a_position.y + 1.0) / 2.0;
     }
     `;
-  HollusionRune.copyFragmentShader = `
+  _HollusionRune.copyFragmentShader = `
     precision mediump float;
     uniform sampler2D uTexture;
     varying highp vec2 v_texturePosition;
@@ -2610,19 +2594,35 @@ void main(void) {
         gl_FragColor = texture2D(uTexture, v_texturePosition);
     }
     `;
+  var HollusionRune = _HollusionRune;
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  var drawnRunes = [];
+  import_context.default.moduleContexts.rune.state = {
+    drawnRunes
+  };
+  function show(rune) {
+    throwIfNotRune(show.name, rune);
+    drawnRunes.push(new NormalRune(rune));
+    return rune;
+  }
+  function anaglyph(rune) {
+    throwIfNotRune(anaglyph.name, rune);
+    drawnRunes.push(new AnaglyphRune(rune));
+    return rune;
+  }
   function hollusion_magnitude(rune, magnitude) {
-    throwIfNotRune("hollusion_magnitude", rune);
+    throwIfNotRune(hollusion_magnitude.name, rune);
     drawnRunes.push(new HollusionRune(rune, magnitude));
     return rune;
   }
   function hollusion(rune) {
-    throwIfNotRune("hollusion", rune);
+    throwIfNotRune(hollusion.name, rune);
     return hollusion_magnitude(rune, 0.1);
   }
   function animate_rune(duration, fps, func) {
     const anim = new AnimatedRune(duration, fps, n => {
       const rune = func(n);
-      throwIfNotRune("animate_rune", rune);
+      throwIfNotRune(animate_rune.name, rune);
       return new NormalRune(rune);
     });
     drawnRunes.push(anim);
@@ -2631,7 +2631,7 @@ void main(void) {
   function animate_anaglyph(duration, fps, func) {
     const anim = new AnimatedRune(duration, fps, n => {
       const rune = func(n);
-      throwIfNotRune("animate_anaglyph", rune);
+      throwIfNotRune(animate_anaglyph.name, rune);
       return new AnaglyphRune(rune);
     });
     drawnRunes.push(anim);

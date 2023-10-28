@@ -27,7 +27,7 @@ require => {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw new Error('Dynamic require of "' + x + '" is not supported');
+    throw Error('Dynamic require of "' + x + '" is not supported');
   });
   var __esm = (fn, res) => function __init() {
     return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
@@ -84,6 +84,7 @@ require => {
   });
   var require_clone = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
       module.exports = clone;
@@ -91,6 +92,7 @@ require => {
   });
   var require_add = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/add.js"(exports, module) {
+      "use strict";
       init_define_process();
       var add = (out, a, b) => {
         out[0] = a[0] + b[0];
@@ -116,6 +118,7 @@ require => {
   });
   var require_create = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
       module.exports = create;
@@ -123,6 +126,7 @@ require => {
   });
   var require_clone2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create();
       var clone = matrix => {
@@ -150,6 +154,7 @@ require => {
   });
   var require_copy = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, matrix) => {
         out[0] = matrix[0];
@@ -175,6 +180,7 @@ require => {
   });
   var require_invert = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/invert.js"(exports, module) {
+      "use strict";
       init_define_process();
       var invert = (out, matrix) => {
         const a00 = matrix[0];
@@ -233,6 +239,7 @@ require => {
   });
   var require_equals = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
       module.exports = equals;
@@ -240,6 +247,7 @@ require => {
   });
   var require_constants = __commonJS({
     "node_modules/@jscad/modeling/src/maths/constants.js"(exports, module) {
+      "use strict";
       init_define_process();
       var spatialResolution = 1e5;
       var EPS = 1e-5;
@@ -253,6 +261,7 @@ require => {
   });
   var require_trigonometry = __commonJS({
     "node_modules/@jscad/modeling/src/maths/utils/trigonometry.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {NEPS} = require_constants();
       var rezero = n => Math.abs(n) < NEPS ? 0 : n;
@@ -266,6 +275,7 @@ require => {
   });
   var require_identity = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/identity.js"(exports, module) {
+      "use strict";
       init_define_process();
       var identity = out => {
         out[0] = 1;
@@ -291,6 +301,7 @@ require => {
   });
   var require_fromRotation = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var {sin, cos} = require_trigonometry();
@@ -331,6 +342,7 @@ require => {
   });
   var require_fromScaling = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromScaling.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromScaling = (out, vector) => {
         out[0] = vector[0];
@@ -356,6 +368,7 @@ require => {
   });
   var require_fromTaitBryanRotation = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromTaitBryanRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromTaitBryanRotation = (out, yaw, pitch, roll) => {
@@ -388,6 +401,7 @@ require => {
   });
   var require_fromTranslation = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromTranslation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromTranslation = (out, vector) => {
         out[0] = 1;
@@ -413,6 +427,7 @@ require => {
   });
   var require_fromValues = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create();
       var fromValues = (m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) => {
@@ -440,6 +455,7 @@ require => {
   });
   var require_abs = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/abs.js"(exports, module) {
+      "use strict";
       init_define_process();
       var abs = (out, vector) => {
         out[0] = Math.abs(vector[0]);
@@ -452,6 +468,7 @@ require => {
   });
   var require_add2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/add.js"(exports, module) {
+      "use strict";
       init_define_process();
       var add = (out, a, b) => {
         out[0] = a[0] + b[0];
@@ -464,6 +481,7 @@ require => {
   });
   var require_dot = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/dot.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
       module.exports = dot;
@@ -471,6 +489,7 @@ require => {
   });
   var require_angle = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/angle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = require_dot();
       var angle = (a, b) => {
@@ -491,6 +510,7 @@ require => {
   });
   var require_create2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [0, 0, 0];
       module.exports = create;
@@ -498,6 +518,7 @@ require => {
   });
   var require_clone3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create2();
       var clone = vector => {
@@ -512,6 +533,7 @@ require => {
   });
   var require_copy2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, vector) => {
         out[0] = vector[0];
@@ -524,6 +546,7 @@ require => {
   });
   var require_cross = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/cross.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cross = (out, a, b) => {
         const ax = a[0];
@@ -542,6 +565,7 @@ require => {
   });
   var require_distance = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/distance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var distance = (a, b) => {
         const x = b[0] - a[0];
@@ -554,6 +578,7 @@ require => {
   });
   var require_divide = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/divide.js"(exports, module) {
+      "use strict";
       init_define_process();
       var divide = (out, a, b) => {
         out[0] = a[0] / b[0];
@@ -566,6 +591,7 @@ require => {
   });
   var require_equals2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
       module.exports = equals;
@@ -573,6 +599,7 @@ require => {
   });
   var require_fromScalar = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/fromScalar.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
         out[0] = scalar;
@@ -585,6 +612,7 @@ require => {
   });
   var require_fromValues2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create2();
       var fromValues = (x, y, z) => {
@@ -599,6 +627,7 @@ require => {
   });
   var require_fromVec2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/fromVec2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromVector2 = (out, vector, z = 0) => {
         out[0] = vector[0];
@@ -611,6 +640,7 @@ require => {
   });
   var require_length = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/length.js"(exports, module) {
+      "use strict";
       init_define_process();
       var length = vector => {
         const x = vector[0];
@@ -623,6 +653,7 @@ require => {
   });
   var require_lerp = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/lerp.js"(exports, module) {
+      "use strict";
       init_define_process();
       var lerp = (out, a, b, t) => {
         out[0] = a[0] + t * (b[0] - a[0]);
@@ -635,6 +666,7 @@ require => {
   });
   var require_max = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/max.js"(exports, module) {
+      "use strict";
       init_define_process();
       var max = (out, a, b) => {
         out[0] = Math.max(a[0], b[0]);
@@ -647,6 +679,7 @@ require => {
   });
   var require_min = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/min.js"(exports, module) {
+      "use strict";
       init_define_process();
       var min = (out, a, b) => {
         out[0] = Math.min(a[0], b[0]);
@@ -659,6 +692,7 @@ require => {
   });
   var require_multiply = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/multiply.js"(exports, module) {
+      "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
         out[0] = a[0] * b[0];
@@ -671,6 +705,7 @@ require => {
   });
   var require_negate = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/negate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var negate = (out, vector) => {
         out[0] = -vector[0];
@@ -683,6 +718,7 @@ require => {
   });
   var require_normalize = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/normalize.js"(exports, module) {
+      "use strict";
       init_define_process();
       var normalize = (out, vector) => {
         const x = vector[0];
@@ -702,6 +738,7 @@ require => {
   });
   var require_orthogonal = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/orthogonal.js"(exports, module) {
+      "use strict";
       init_define_process();
       var abs = require_abs();
       var create = require_create2();
@@ -718,6 +755,7 @@ require => {
   });
   var require_rotateX = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/rotateX.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rotateX = (out, vector, origin, radians) => {
         const p = [];
@@ -738,6 +776,7 @@ require => {
   });
   var require_rotateY = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/rotateY.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rotateY = (out, vector, origin, radians) => {
         const p = [];
@@ -758,6 +797,7 @@ require => {
   });
   var require_rotateZ = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/rotateZ.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rotateZ = (out, vector, origin, radians) => {
         const p = [];
@@ -776,6 +816,7 @@ require => {
   });
   var require_scale = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/scale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var scale2 = (out, vector, amount) => {
         out[0] = vector[0] * amount;
@@ -788,6 +829,7 @@ require => {
   });
   var require_snap = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/snap.js"(exports, module) {
+      "use strict";
       init_define_process();
       var snap = (out, vector, epsilon) => {
         out[0] = Math.round(vector[0] / epsilon) * epsilon + 0;
@@ -800,6 +842,7 @@ require => {
   });
   var require_squaredDistance = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/squaredDistance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var squaredDistance = (a, b) => {
         const x = b[0] - a[0];
@@ -812,6 +855,7 @@ require => {
   });
   var require_squaredLength = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/squaredLength.js"(exports, module) {
+      "use strict";
       init_define_process();
       var squaredLength = vector => {
         const x = vector[0];
@@ -824,6 +868,7 @@ require => {
   });
   var require_subtract = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/subtract.js"(exports, module) {
+      "use strict";
       init_define_process();
       var subtract2 = (out, a, b) => {
         out[0] = a[0] - b[0];
@@ -836,6 +881,7 @@ require => {
   });
   var require_toString = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = vec => `[${vec[0].toFixed(7)}, ${vec[1].toFixed(7)}, ${vec[2].toFixed(7)}]`;
       module.exports = toString;
@@ -843,6 +889,7 @@ require => {
   });
   var require_transform = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
         const x = vector[0];
@@ -860,6 +907,7 @@ require => {
   });
   var require_vec3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec3/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         abs: require_abs(),
@@ -899,6 +947,7 @@ require => {
   });
   var require_fromVectorRotation = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromVectorRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var fromRotation = require_fromRotation();
@@ -932,6 +981,7 @@ require => {
   });
   var require_fromXRotation = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromXRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromXRotation = (out, radians) => {
@@ -960,6 +1010,7 @@ require => {
   });
   var require_fromYRotation = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromYRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromYRotation = (out, radians) => {
@@ -988,6 +1039,7 @@ require => {
   });
   var require_fromZRotation = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/fromZRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromZRotation = (out, radians) => {
@@ -1016,6 +1068,7 @@ require => {
   });
   var require_isIdentity = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/isIdentity.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isIdentity = matrix => matrix[0] === 1 && matrix[1] === 0 && matrix[2] === 0 && matrix[3] === 0 && matrix[4] === 0 && matrix[5] === 1 && matrix[6] === 0 && matrix[7] === 0 && matrix[8] === 0 && matrix[9] === 0 && matrix[10] === 1 && matrix[11] === 0 && matrix[12] === 0 && matrix[13] === 0 && matrix[14] === 0 && matrix[15] === 1;
       module.exports = isIdentity;
@@ -1023,6 +1076,7 @@ require => {
   });
   var require_isOnlyTransformScale = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/isOnlyTransformScale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isOnlyTransformScale = matrix => isZero(matrix[1]) && isZero(matrix[2]) && isZero(matrix[3]) && isZero(matrix[4]) && isZero(matrix[6]) && isZero(matrix[7]) && isZero(matrix[8]) && isZero(matrix[9]) && isZero(matrix[11]) && matrix[15] === 1;
       var isZero = num => Math.abs(num) < Number.EPSILON;
@@ -1031,6 +1085,7 @@ require => {
   });
   var require_isMirroring = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/isMirroring.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isMirroring = matrix => {
         const x = matrix[4] * matrix[9] - matrix[8] * matrix[5];
@@ -1044,6 +1099,7 @@ require => {
   });
   var require_mirrorByPlane = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/mirrorByPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mirrorByPlane = (out, plane) => {
         const [nx, ny, nz, w] = plane;
@@ -1070,6 +1126,7 @@ require => {
   });
   var require_multiply2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/multiply.js"(exports, module) {
+      "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
         const a00 = a[0];
@@ -1127,6 +1184,7 @@ require => {
   });
   var require_rotate = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/rotate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var {sin, cos} = require_trigonometry();
@@ -1190,6 +1248,7 @@ require => {
   });
   var require_rotateX2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/rotateX.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateX = (out, matrix, radians) => {
@@ -1228,6 +1287,7 @@ require => {
   });
   var require_rotateY2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/rotateY.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateY = (out, matrix, radians) => {
@@ -1266,6 +1326,7 @@ require => {
   });
   var require_rotateZ2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/rotateZ.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateZ = (out, matrix, radians) => {
@@ -1304,6 +1365,7 @@ require => {
   });
   var require_scale2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/scale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var scale2 = (out, matrix, dimensions) => {
         const x = dimensions[0];
@@ -1332,6 +1394,7 @@ require => {
   });
   var require_subtract2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/subtract.js"(exports, module) {
+      "use strict";
       init_define_process();
       var subtract2 = (out, a, b) => {
         out[0] = a[0] - b[0];
@@ -1357,6 +1420,7 @@ require => {
   });
   var require_toString2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = mat => mat.map(n => n.toFixed(7)).toString();
       module.exports = toString;
@@ -1364,6 +1428,7 @@ require => {
   });
   var require_translate = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/translate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var translate2 = (out, matrix, offsets) => {
         const x = offsets[0];
@@ -1423,6 +1488,7 @@ require => {
   });
   var require_mat4 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/mat4/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         add: require_add(),
@@ -1459,6 +1525,7 @@ require => {
   });
   var require_create3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var create = polygons => {
@@ -1475,6 +1542,7 @@ require => {
   });
   var require_create4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = vertices => {
         if (vertices === void 0 || vertices.length < 3) {
@@ -1489,6 +1557,7 @@ require => {
   });
   var require_clone4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create4();
       var vec3 = require_vec3();
@@ -1510,6 +1579,7 @@ require => {
   });
   var require_fromPoints = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var create = require_create4();
@@ -1522,6 +1592,7 @@ require => {
   });
   var require_fromPointsAndPlane = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create4();
       var fromPointsAndPlane = (vertices, plane, color = void 0) => {
@@ -1536,6 +1607,7 @@ require => {
   });
   var require_create5 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [0, 0, 0, 0];
       module.exports = create;
@@ -1543,6 +1615,7 @@ require => {
   });
   var require_clone5 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create5();
       var clone = vector => {
@@ -1558,6 +1631,7 @@ require => {
   });
   var require_copy3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, vector) => {
         out[0] = vector[0];
@@ -1571,6 +1645,7 @@ require => {
   });
   var require_equals3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
       module.exports = equals;
@@ -1578,6 +1653,7 @@ require => {
   });
   var require_flip = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/flip.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flip = (out, plane) => {
         out[0] = -plane[0];
@@ -1591,6 +1667,7 @@ require => {
   });
   var require_fromNormalAndPoint = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/fromNormalAndPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var fromNormalAndPoint = (out, normal, point) => {
@@ -1607,6 +1684,7 @@ require => {
   });
   var require_fromValues3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create5();
       var fromValues = (x, y, z, w) => {
@@ -1622,6 +1700,7 @@ require => {
   });
   var require_fromPoints2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var fromPoints = (out, ...vertices) => {
@@ -1657,6 +1736,7 @@ require => {
   });
   var require_fromPointsRandom = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/fromPointsRandom.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec3 = require_vec3();
@@ -1687,6 +1767,7 @@ require => {
   });
   var require_projectionOfPoint = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/projectionOfPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var projectionOfPoint = (plane, point) => {
@@ -1701,6 +1782,7 @@ require => {
   });
   var require_signedDistanceToPoint = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/signedDistanceToPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var signedDistanceToPoint = (plane, point) => vec3.dot(plane, point) - plane[3];
@@ -1709,6 +1791,7 @@ require => {
   });
   var require_toString3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = vec => `(${vec[0].toFixed(9)}, ${vec[1].toFixed(9)}, ${vec[2].toFixed(9)}, ${vec[3].toFixed(9)})`;
       module.exports = toString;
@@ -1716,6 +1799,7 @@ require => {
   });
   var require_transform2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec3 = require_vec3();
@@ -1744,6 +1828,7 @@ require => {
   });
   var require_plane = __commonJS({
     "node_modules/@jscad/modeling/src/maths/plane/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone5(),
@@ -1764,6 +1849,7 @@ require => {
   });
   var require_invert2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane();
       var create = require_create4();
@@ -1783,6 +1869,7 @@ require => {
   });
   var require_isA = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -1799,6 +1886,7 @@ require => {
   });
   var require_isConvex = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane();
       var vec3 = require_vec3();
@@ -1830,6 +1918,7 @@ require => {
   });
   var require_plane2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mplane = require_plane();
       var plane = polygon => {
@@ -1843,6 +1932,7 @@ require => {
   });
   var require_measureArea = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane2();
       var measureArea = polygon => {
@@ -1905,6 +1995,7 @@ require => {
   });
   var require_measureBoundingBox = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var measureBoundingBox2 = polygon => {
@@ -1923,6 +2014,7 @@ require => {
   });
   var require_dot2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
       module.exports = dot;
@@ -1930,6 +2022,7 @@ require => {
   });
   var require_fromScalar2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/fromScalar.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
         out[0] = scalar;
@@ -1943,6 +2036,7 @@ require => {
   });
   var require_transform3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
         const [x, y, z, w] = vector;
@@ -1957,6 +2051,7 @@ require => {
   });
   var require_vec4 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec4/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone5(),
@@ -1973,6 +2068,7 @@ require => {
   });
   var require_measureBoundingSphere = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var vec4 = require_vec4();
@@ -2018,6 +2114,7 @@ require => {
   });
   var require_measureSignedVolume = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var measureSignedVolume = polygon => {
@@ -2036,6 +2133,7 @@ require => {
   });
   var require_toPoints = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toPoints = polygon => polygon.vertices;
       module.exports = toPoints;
@@ -2043,6 +2141,7 @@ require => {
   });
   var require_toString4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var toString = polygon => {
@@ -2058,6 +2157,7 @@ require => {
   });
   var require_transform4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec3 = require_vec3();
@@ -2077,6 +2177,7 @@ require => {
   });
   var require_validate = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/validate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var signedDistanceToPoint = require_signedDistanceToPoint();
       var {NEPS} = require_constants();
@@ -2123,6 +2224,7 @@ require => {
   });
   var require_poly3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly3/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone4(),
@@ -2146,6 +2248,7 @@ require => {
   });
   var require_fromPoints3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly3();
       var create = require_create3();
@@ -2165,6 +2268,7 @@ require => {
   });
   var require_fromCompactBinary = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var mat42 = require_mat4();
@@ -2197,6 +2301,7 @@ require => {
   });
   var require_applyTransforms = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var poly3 = require_poly3();
@@ -2211,6 +2316,7 @@ require => {
   });
   var require_toPolygons = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly3();
       var applyTransforms = require_applyTransforms();
@@ -2229,6 +2335,7 @@ require => {
   });
   var require_invert3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/invert.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly3();
       var create = require_create3();
@@ -2243,6 +2350,7 @@ require => {
   });
   var require_isA2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -2259,6 +2367,7 @@ require => {
   });
   var require_toPoints2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/toPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly3();
       var toPolygons = require_toPolygons();
@@ -2272,6 +2381,7 @@ require => {
   });
   var require_toString5 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly3();
       var toPolygons = require_toPolygons();
@@ -2288,6 +2398,7 @@ require => {
   });
   var require_toCompactBinary = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/toCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly3();
       var toCompactBinary = geometry => {
@@ -2341,6 +2452,7 @@ require => {
   });
   var require_transform5 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var transform = (matrix, geometry) => {
@@ -2354,6 +2466,7 @@ require => {
   });
   var require_validate2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/validate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly3();
       var isA = require_isA2();
@@ -2396,6 +2509,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_geom3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom3/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone(),
@@ -2415,6 +2529,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_flatten = __commonJS({
     "node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
       module.exports = flatten;
@@ -2422,6 +2537,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_padArrayToLength = __commonJS({
     "node_modules/@jscad/modeling/src/utils/padArrayToLength.js"(exports, module) {
+      "use strict";
       init_define_process();
       var padArrayToLength = (anArray, padding, targetLength) => {
         anArray = anArray.slice();
@@ -2435,6 +2551,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_abs2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/abs.js"(exports, module) {
+      "use strict";
       init_define_process();
       var abs = (out, vector) => {
         out[0] = Math.abs(vector[0]);
@@ -2446,6 +2563,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_add3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/add.js"(exports, module) {
+      "use strict";
       init_define_process();
       var add = (out, a, b) => {
         out[0] = a[0] + b[0];
@@ -2457,6 +2575,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_angleRadians = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/angleRadians.js"(exports, module) {
+      "use strict";
       init_define_process();
       var angleRadians = vector => Math.atan2(vector[1], vector[0]);
       module.exports = angleRadians;
@@ -2464,12 +2583,14 @@ ${nonManifold.join("\n")}`);
   });
   var require_angle2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/angle.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = require_angleRadians();
     }
   });
   var require_angleDegrees = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/angleDegrees.js"(exports, module) {
+      "use strict";
       init_define_process();
       var angleRadians = require_angleRadians();
       var angleDegrees = vector => angleRadians(vector) * 57.29577951308232;
@@ -2478,6 +2599,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create6 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [0, 0];
       module.exports = create;
@@ -2485,6 +2607,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone6 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create6();
       var clone = vector => {
@@ -2498,6 +2621,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy4 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, vector) => {
         out[0] = vector[0];
@@ -2509,6 +2633,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cross2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/cross.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cross = (out, a, b) => {
         out[0] = 0;
@@ -2521,6 +2646,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_distance2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/distance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var distance = (a, b) => {
         const x = b[0] - a[0];
@@ -2532,6 +2658,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_divide2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/divide.js"(exports, module) {
+      "use strict";
       init_define_process();
       var divide = (out, a, b) => {
         out[0] = a[0] / b[0];
@@ -2543,6 +2670,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_dot3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/dot.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1];
       module.exports = dot;
@@ -2550,6 +2678,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals4 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1];
       module.exports = equals;
@@ -2557,6 +2686,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromAngleRadians = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/fromAngleRadians.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromAngleRadians = (out, radians) => {
@@ -2569,6 +2699,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromAngleDegrees = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/fromAngleDegrees.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromAngleRadians = require_fromAngleRadians();
       var fromAngleDegrees = (out, degrees) => fromAngleRadians(out, Math.PI * degrees / 180);
@@ -2577,6 +2708,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromScalar3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/fromScalar.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
         out[0] = scalar;
@@ -2588,6 +2720,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromValues4 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create6();
       var fromValues = (x, y) => {
@@ -2601,6 +2734,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_length2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/length.js"(exports, module) {
+      "use strict";
       init_define_process();
       var length = vector => Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
       module.exports = length;
@@ -2608,6 +2742,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_lerp2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/lerp.js"(exports, module) {
+      "use strict";
       init_define_process();
       var lerp = (out, a, b, t) => {
         const ax = a[0];
@@ -2621,6 +2756,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_max2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/max.js"(exports, module) {
+      "use strict";
       init_define_process();
       var max = (out, a, b) => {
         out[0] = Math.max(a[0], b[0]);
@@ -2632,6 +2768,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_min2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/min.js"(exports, module) {
+      "use strict";
       init_define_process();
       var min = (out, a, b) => {
         out[0] = Math.min(a[0], b[0]);
@@ -2643,6 +2780,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_multiply3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/multiply.js"(exports, module) {
+      "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
         out[0] = a[0] * b[0];
@@ -2654,6 +2792,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_negate2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/negate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var negate = (out, vector) => {
         out[0] = -vector[0];
@@ -2665,6 +2804,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotate2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/rotate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rotate2 = (out, vector, origin, radians) => {
         const x = vector[0] - origin[0];
@@ -2680,6 +2820,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_normal = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/normal.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create6();
       var rotate2 = require_rotate2();
@@ -2689,6 +2830,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_normalize2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/normalize.js"(exports, module) {
+      "use strict";
       init_define_process();
       var normalize = (out, vector) => {
         const x = vector[0];
@@ -2706,6 +2848,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scale3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/scale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var scale2 = (out, vector, amount) => {
         out[0] = vector[0] * amount;
@@ -2717,6 +2860,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_snap2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/snap.js"(exports, module) {
+      "use strict";
       init_define_process();
       var snap = (out, vector, epsilon) => {
         out[0] = Math.round(vector[0] / epsilon) * epsilon + 0;
@@ -2728,6 +2872,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_squaredDistance2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/squaredDistance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var squaredDistance = (a, b) => {
         const x = b[0] - a[0];
@@ -2739,6 +2884,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_squaredLength2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/squaredLength.js"(exports, module) {
+      "use strict";
       init_define_process();
       var squaredLength = vector => {
         const x = vector[0];
@@ -2750,6 +2896,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtract3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/subtract.js"(exports, module) {
+      "use strict";
       init_define_process();
       var subtract2 = (out, a, b) => {
         out[0] = a[0] - b[0];
@@ -2761,6 +2908,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString6 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = vector => `[${vector[0].toFixed(7)}, ${vector[1].toFixed(7)}]`;
       module.exports = toString;
@@ -2768,6 +2916,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform6 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
         const x = vector[0];
@@ -2781,6 +2930,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vec2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/vec2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         abs: require_abs2(),
@@ -2821,6 +2971,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone7 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
       module.exports = clone;
@@ -2828,6 +2979,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create7 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var create = sides => {
@@ -2844,6 +2996,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var create = require_create7();
@@ -2870,6 +3023,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromCompactBinary2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/fromCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec2 = require_vec2();
@@ -2893,6 +3047,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isA3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -2909,6 +3064,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_applyTransforms2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/applyTransforms.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec2 = require_vec2();
@@ -2927,6 +3083,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toSides = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/toSides.js"(exports, module) {
+      "use strict";
       init_define_process();
       var applyTransforms = require_applyTransforms2();
       var toSides = geometry => applyTransforms(geometry).sides;
@@ -2935,6 +3092,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create7();
       var toSides = require_toSides();
@@ -2949,6 +3107,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toOutlines = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/toOutlines.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var toSides = require_toSides();
@@ -3042,6 +3201,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPoints3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/toPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toSides = require_toSides();
       var toPoints = geometry => {
@@ -3057,6 +3217,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString7 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var toSides = require_toSides();
@@ -3074,6 +3235,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toCompactBinary2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/toCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toCompactBinary = geometry => {
         const sides = geometry.sides;
@@ -3118,6 +3280,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform7 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var transform = (matrix, geometry) => {
@@ -3131,6 +3294,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_validate3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/validate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var isA = require_isA3();
@@ -3154,6 +3318,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_geom2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/geom2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone7(),
@@ -3174,6 +3339,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone8 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
       module.exports = clone;
@@ -3181,6 +3347,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_close = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/close.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec2 = require_vec2();
@@ -3206,6 +3373,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create8 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var create = points => {
@@ -3223,6 +3391,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints5 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec2 = require_vec2();
@@ -3250,6 +3419,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_applyTransforms3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/applyTransforms.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec2 = require_vec2();
@@ -3264,6 +3434,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPoints4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/toPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var applyTransforms = require_applyTransforms3();
       var toPoints = geometry => applyTransforms(geometry).points;
@@ -3272,6 +3443,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_appendArc = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/appendArc.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var fromPoints = require_fromPoints5();
@@ -3366,6 +3538,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_concat = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/concat.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromPoints = require_fromPoints5();
       var toPoints = require_toPoints4();
@@ -3391,6 +3564,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_appendPoints = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/appendPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var concat = require_concat();
       var create = require_create8();
@@ -3400,6 +3574,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_appendBezier = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/appendBezier.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var vec3 = require_vec2();
@@ -3511,6 +3686,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals5 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var toPoints = require_toPoints4();
@@ -3547,6 +3723,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromCompactBinary3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/fromCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec2 = require_vec2();
@@ -3570,6 +3747,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isA4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -3586,6 +3764,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var clone = require_clone8();
       var reverse = geometry => {
@@ -3598,6 +3777,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString8 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var toPoints = require_toPoints4();
@@ -3615,6 +3795,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toCompactBinary3 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/toCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toCompactBinary = geometry => {
         const points = geometry.points;
@@ -3657,6 +3838,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform8 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var transform = (matrix, geometry) => {
@@ -3670,6 +3852,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_validate4 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/validate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var isA = require_isA4();
@@ -3698,6 +3881,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_path2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/path2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         appendArc: require_appendArc(),
@@ -3722,6 +3906,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureBoundingBox2 = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureBoundingBox.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var vec2 = require_vec2();
@@ -3811,6 +3996,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureAggregateBoundingBox = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureAggregateBoundingBox.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var vec3min = require_min();
@@ -3834,6 +4020,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_translate2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/transforms/translate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var mat42 = require_mat4();
@@ -3868,6 +4055,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_align = __commonJS({
     "node_modules/@jscad/modeling/src/operations/transforms/align.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var padArrayToLength = require_padArrayToLength();
@@ -3911,7 +4099,7 @@ ${nonManifold.join("\n")}`);
         }
         return translate2(translation, geometry);
       };
-      var align2 = (options, ...geometries) => {
+      var align = (options, ...geometries) => {
         const defaults = {
           modes: ["center", "center", "min"],
           relativeTo: [0, 0, 0],
@@ -3933,11 +4121,12 @@ ${nonManifold.join("\n")}`);
         }
         return geometries.length === 1 ? geometries[0] : geometries;
       };
-      module.exports = align2;
+      module.exports = align;
     }
   });
   var require_center = __commonJS({
     "node_modules/@jscad/modeling/src/operations/transforms/center.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -3998,6 +4187,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_mirror = __commonJS({
     "node_modules/@jscad/modeling/src/operations/transforms/mirror.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var mat42 = require_mat4();
@@ -4045,6 +4235,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotate3 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/transforms/rotate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var mat42 = require_mat4();
@@ -4082,6 +4273,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scale4 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/transforms/scale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var mat42 = require_mat4();
@@ -4117,6 +4309,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform9 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/transforms/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -4138,6 +4331,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transforms = __commonJS({
     "node_modules/@jscad/modeling/src/operations/transforms/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         align: require_align(),
@@ -4167,6 +4361,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_colorize = __commonJS({
     "node_modules/@jscad/modeling/src/colors/colorize.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -4214,6 +4409,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cssColors = __commonJS({
     "node_modules/@jscad/modeling/src/colors/cssColors.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cssColors = {
         black: [0 / 255, 0 / 255, 0 / 255],
@@ -4369,6 +4565,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_colorNameToRgb = __commonJS({
     "node_modules/@jscad/modeling/src/colors/colorNameToRgb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cssColors = require_cssColors();
       var colorNameToRgb = s => cssColors[s.toLowerCase()];
@@ -4377,6 +4574,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hexToRgb = __commonJS({
     "node_modules/@jscad/modeling/src/colors/hexToRgb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var hexToRgb = notation => {
         notation = notation.replace("#", "");
@@ -4395,6 +4593,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hueToColorComponent = __commonJS({
     "node_modules/@jscad/modeling/src/colors/hueToColorComponent.js"(exports, module) {
+      "use strict";
       init_define_process();
       var hueToColorComponent = (p, q, t) => {
         if (t < 0) t += 1;
@@ -4409,6 +4608,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hslToRgb = __commonJS({
     "node_modules/@jscad/modeling/src/colors/hslToRgb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var hueToColorComponent = require_hueToColorComponent();
@@ -4439,6 +4639,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hsvToRgb = __commonJS({
     "node_modules/@jscad/modeling/src/colors/hsvToRgb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var hsvToRgb = (...values) => {
@@ -4498,6 +4699,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rgbToHex = __commonJS({
     "node_modules/@jscad/modeling/src/colors/rgbToHex.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var rgbToHex = (...values) => {
@@ -4517,6 +4719,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rgbToHsl = __commonJS({
     "node_modules/@jscad/modeling/src/colors/rgbToHsl.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var rgbToHsl = (...values) => {
@@ -4559,6 +4762,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rgbToHsv = __commonJS({
     "node_modules/@jscad/modeling/src/colors/rgbToHsv.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var rgbToHsv = (...values) => {
@@ -4600,6 +4804,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_colors = __commonJS({
     "node_modules/@jscad/modeling/src/colors/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         colorize: require_colorize(),
@@ -4617,6 +4822,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create9 = __commonJS({
     "node_modules/@jscad/modeling/src/curves/bezier/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = points => {
         if (!Array.isArray(points)) throw new Error("Bezier points must be a valid array/");
@@ -4671,6 +4877,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_valueAt = __commonJS({
     "node_modules/@jscad/modeling/src/curves/bezier/valueAt.js"(exports, module) {
+      "use strict";
       init_define_process();
       var valueAt = (t, bezier) => {
         if (t < 0 || t > 1) {
@@ -4703,6 +4910,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_tangentAt = __commonJS({
     "node_modules/@jscad/modeling/src/curves/bezier/tangentAt.js"(exports, module) {
+      "use strict";
       init_define_process();
       var tangentAt = (t, bezier) => {
         if (t < 0 || t > 1) {
@@ -4736,6 +4944,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_bezier = __commonJS({
     "node_modules/@jscad/modeling/src/curves/bezier/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         create: require_create9(),
@@ -4746,6 +4955,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_curves = __commonJS({
     "node_modules/@jscad/modeling/src/curves/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         bezier: require_bezier()
@@ -4754,6 +4964,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_area = __commonJS({
     "node_modules/@jscad/modeling/src/maths/utils/area.js"(exports, module) {
+      "use strict";
       init_define_process();
       var area = points => {
         let area2 = 0;
@@ -4769,6 +4980,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureArea2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly2/measureArea.js"(exports, module) {
+      "use strict";
       init_define_process();
       var area = require_area();
       var measureArea = polygon => area(polygon.vertices);
@@ -4777,6 +4989,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create10 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = vertices => {
         if (vertices === void 0 || vertices.length < 3) {
@@ -4791,6 +5004,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_flip2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly2/flip.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create10();
       var flip = polygon => {
@@ -4802,6 +5016,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_arePointsInside = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly2/arePointsInside.js"(exports, module) {
+      "use strict";
       init_define_process();
       var measureArea = require_measureArea2();
       var flip = require_flip2();
@@ -4848,6 +5063,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_poly2 = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/poly2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         arePointsInside: require_arePointsInside(),
@@ -4859,6 +5075,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_geometries = __commonJS({
     "node_modules/@jscad/modeling/src/geometries/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         geom2: require_geom2(),
@@ -4871,6 +5088,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create11 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [0, 1, 0];
       module.exports = create;
@@ -4878,6 +5096,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone9 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create11();
       var clone = line => {
@@ -4892,6 +5111,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_direction = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/direction.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var direction = line => {
@@ -4904,6 +5124,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_origin = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/origin.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var origin = line => vec2.scale(vec2.create(), line, line[2]);
@@ -4912,6 +5133,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_closestPoint = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/closestPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var direction = require_direction();
@@ -4933,6 +5155,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy5 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, line) => {
         out[0] = line[0];
@@ -4945,6 +5168,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_distanceToPoint = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/distanceToPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var distanceToPoint = (line, point) => {
@@ -4957,6 +5181,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals6 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (line1, line2) => line1[0] === line2[0] && (line1[1] === line2[1] && line1[2] === line2[2]);
       module.exports = equals;
@@ -4964,6 +5189,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints6 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var fromPoints = (out, point1, point2) => {
@@ -4981,6 +5207,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromValues5 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create11();
       var fromValues = (x, y, d) => {
@@ -4995,6 +5222,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_aboutEqualNormals = __commonJS({
     "node_modules/@jscad/modeling/src/maths/utils/aboutEqualNormals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {NEPS} = require_constants();
       var aboutEqualNormals = (a, b) => Math.abs(a[0] - b[0]) <= NEPS && Math.abs(a[1] - b[1]) <= NEPS && Math.abs(a[2] - b[2]) <= NEPS;
@@ -5003,6 +5231,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_interpolateBetween2DPointsForY = __commonJS({
     "node_modules/@jscad/modeling/src/maths/utils/interpolateBetween2DPointsForY.js"(exports, module) {
+      "use strict";
       init_define_process();
       var interpolateBetween2DPointsForY = (point1, point2, y) => {
         let f1 = y - point1[1];
@@ -5029,6 +5258,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersect = __commonJS({
     "node_modules/@jscad/modeling/src/maths/utils/intersect.js"(exports, module) {
+      "use strict";
       init_define_process();
       var intersect2 = (p1, p2, p3, p4) => {
         if (p1[0] === p2[0] && p1[1] === p2[1] || p3[0] === p4[0] && p3[1] === p4[1]) {
@@ -5052,6 +5282,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_solve2Linear = __commonJS({
     "node_modules/@jscad/modeling/src/maths/utils/solve2Linear.js"(exports, module) {
+      "use strict";
       init_define_process();
       var solve2Linear = (a, b, c, d, u, v) => {
         const det = a * d - b * c;
@@ -5067,6 +5298,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_utils = __commonJS({
     "node_modules/@jscad/modeling/src/maths/utils/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         aboutEqualNormals: require_aboutEqualNormals(),
@@ -5081,6 +5313,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectPointOfLines = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/intersectPointOfLines.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var {solve2Linear} = require_utils();
@@ -5093,6 +5326,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var copy = require_copy5();
@@ -5107,6 +5341,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString9 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = line => `line2: (${line[0].toFixed(7)}, ${line[1].toFixed(7)}, ${line[2].toFixed(7)})`;
       module.exports = toString;
@@ -5114,6 +5349,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform10 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var fromPoints = require_fromPoints6();
@@ -5131,6 +5367,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_xAtY = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/xAtY.js"(exports, module) {
+      "use strict";
       init_define_process();
       var origin = require_origin();
       var xAtY = (line, y) => {
@@ -5146,6 +5383,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_line2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone9(),
@@ -5168,6 +5406,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create12 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var create = () => [vec3.fromValues(0, 0, 0), vec3.fromValues(0, 0, 1)];
@@ -5176,6 +5415,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone10 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var create = require_create12();
@@ -5190,6 +5430,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_closestPoint2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/closestPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var closestPoint = (line, point) => {
@@ -5207,6 +5448,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy6 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var copy = (out, line) => {
@@ -5219,6 +5461,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_direction2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/direction.js"(exports, module) {
+      "use strict";
       init_define_process();
       var direction = line => line[1];
       module.exports = direction;
@@ -5226,6 +5469,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_distanceToPoint2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/distanceToPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var closestPoint = require_closestPoint2();
@@ -5239,6 +5483,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals7 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var equals = (line1, line2) => {
@@ -5251,6 +5496,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPointAndDirection = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/fromPointAndDirection.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var fromPointAndDirection = (out, point, direction) => {
@@ -5264,6 +5510,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPlanes = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/fromPlanes.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var {solve2Linear} = require_utils();
@@ -5299,6 +5546,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints7 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var fromPointAndDirection = require_fromPointAndDirection();
@@ -5311,6 +5559,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectPointOfLineAndPlane = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/intersectPointOfLineAndPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var intersectToPlane = (line, plane) => {
@@ -5327,6 +5576,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_origin2 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/origin.js"(exports, module) {
+      "use strict";
       init_define_process();
       var origin = line => line[0];
       module.exports = origin;
@@ -5334,6 +5584,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse4 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var fromPointAndDirection = require_fromPointAndDirection();
@@ -5347,6 +5598,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString10 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = line => {
         const point = line[0];
@@ -5358,6 +5610,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform11 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var fromPointAndDirection = require_fromPointAndDirection();
@@ -5375,6 +5628,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_line3 = __commonJS({
     "node_modules/@jscad/modeling/src/maths/line3/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone10(),
@@ -5397,6 +5651,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_maths = __commonJS({
     "node_modules/@jscad/modeling/src/maths/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         constants: require_constants(),
@@ -5413,6 +5668,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureArea3 = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureArea.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -5454,6 +5710,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureAggregateArea = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureAggregateArea.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var measureArea = require_measureArea3();
@@ -5472,6 +5729,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_calculateEpsilonFromBounds = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/calculateEpsilonFromBounds.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var calculateEpsilonFromBounds = (bounds, dimensions) => {
@@ -5486,6 +5744,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureAggregateEpsilon = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureAggregateEpsilon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var measureAggregateBoundingBox = require_measureAggregateBoundingBox();
@@ -5508,6 +5767,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureVolume = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureVolume.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -5541,6 +5801,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureAggregateVolume = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureAggregateVolume.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var measureVolume = require_measureVolume();
@@ -5559,6 +5820,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureBoundingSphere2 = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureBoundingSphere.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var vec2 = require_vec2();
@@ -5655,6 +5917,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureCenter = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureCenter.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var measureBoundingBox2 = require_measureBoundingBox2();
@@ -5671,6 +5934,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureCenterOfMass = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureCenterOfMass.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var vec3 = require_vec3();
@@ -5740,6 +6004,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureDimensions = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureDimensions.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var measureBoundingBox2 = require_measureBoundingBox2();
@@ -5756,6 +6021,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureEpsilon = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/measureEpsilon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var {geom2, geom3, path2} = require_geometries();
@@ -5780,6 +6046,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measurements = __commonJS({
     "node_modules/@jscad/modeling/src/measurements/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         measureAggregateArea: require_measureAggregateArea(),
@@ -5799,6 +6066,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_commonChecks = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/commonChecks.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isNumberArray = (array, dimension) => {
         if (Array.isArray(array) && array.length >= dimension) {
@@ -5817,6 +6085,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_arc = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/arc.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec2 = require_vec2();
@@ -5883,6 +6152,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_ellipse = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/ellipse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec2 = require_vec2();
@@ -5935,6 +6205,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_circle = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/circle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var ellipse = require_ellipse();
       var {isGT} = require_commonChecks();
@@ -5962,6 +6233,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cuboid = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/cuboid.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom3();
       var poly3 = require_poly3();
@@ -5989,6 +6261,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cube = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/cube.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cuboid = require_cuboid();
       var {isGT} = require_commonChecks();
@@ -6010,6 +6283,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cylinderElliptic = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/cylinderElliptic.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec3 = require_vec3();
@@ -6110,6 +6384,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cylinder = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/cylinder.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cylinderElliptic = require_cylinderElliptic();
       var {isGT} = require_commonChecks();
@@ -6136,6 +6411,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_ellipsoid = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/ellipsoid.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var geom3 = require_geom3();
@@ -6212,6 +6488,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_polyhedron = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/polyhedron.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom3();
       var poly3 = require_poly3();
@@ -6263,6 +6540,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_geodesicSphere = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/geodesicSphere.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec3 = require_vec3();
@@ -6360,6 +6638,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_line = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/line.js"(exports, module) {
+      "use strict";
       init_define_process();
       var path2 = require_path2();
       var line = points => {
@@ -6371,6 +6650,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_polygon = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/polygon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom2();
       var polygon = options => {
@@ -6414,6 +6694,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rectangle = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/rectangle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var geom2 = require_geom2();
@@ -6437,6 +6718,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_roundedCuboid = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/roundedCuboid.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec2 = require_vec2();
@@ -6579,6 +6861,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_roundedCylinder = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/roundedCylinder.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec3 = require_vec3();
@@ -6687,6 +6970,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_roundedRectangle = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/roundedRectangle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec2 = require_vec2();
@@ -6735,6 +7019,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_sphere = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/sphere.js"(exports, module) {
+      "use strict";
       init_define_process();
       var ellipsoid = require_ellipsoid();
       var {isGT} = require_commonChecks();
@@ -6760,6 +7045,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_square = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/square.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rectangle = require_rectangle();
       var {isGT} = require_commonChecks();
@@ -6781,6 +7067,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_star = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/star.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var geom2 = require_geom2();
@@ -6839,6 +7126,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_calculatePlane = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/calculatePlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane();
       var vec3 = require_vec3();
@@ -6866,6 +7154,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create13 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = edges => {
         if (!edges) {
@@ -6880,6 +7169,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone11 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create13();
       var vec3 = require_vec3();
@@ -6901,6 +7191,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals8 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var equals = (a, b) => {
@@ -6921,6 +7212,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints8 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var create = require_create13();
@@ -6941,6 +7233,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromSides = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/fromSides.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var create = require_create13();
@@ -6957,6 +7250,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isA5 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -6973,6 +7267,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse5 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create13();
       var reverse = (...params) => {
@@ -6993,6 +7288,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toEdges = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/toEdges.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toEdges = slice => slice.edges;
       module.exports = toEdges;
@@ -7000,6 +7296,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_linkedListSort = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/earcut/linkedListSort.js"(exports, module) {
+      "use strict";
       init_define_process();
       var sortLinked = (list2, fn) => {
         let i, p, q, e, numMerges;
@@ -7045,6 +7342,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_linkedList = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/earcut/linkedList.js"(exports, module) {
+      "use strict";
       init_define_process();
       var sortLinked = require_linkedListSort();
       var Node = class {
@@ -7089,6 +7387,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_triangle = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/earcut/triangle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var pointInTriangle = (ax, ay, bx, by, cx, cy, px, py) => (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 && (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 && (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
       var area = (p, q, r) => (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
@@ -7100,6 +7399,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_linkedPolygon = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/earcut/linkedPolygon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {Node, insertNode, removeNode} = require_linkedList();
       var {area} = require_triangle();
@@ -7227,6 +7527,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_eliminateHoles = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/earcut/eliminateHoles.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {filterPoints, linkedPolygon, locallyInside, splitPolygon} = require_linkedPolygon();
       var {area, pointInTriangle} = require_triangle();
@@ -7310,6 +7611,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_earcut = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/earcut/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       var eliminateHoles = require_eliminateHoles();
       var {removeNode, sortLinked} = require_linkedList();
@@ -7463,6 +7765,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_assignHoles = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/earcut/assignHoles.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {area} = require_utils();
       var {toOutlines} = require_geom2();
@@ -7527,6 +7830,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_polygonHierarchy = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/earcut/polygonHierarchy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom2();
       var plane = require_plane();
@@ -7570,6 +7874,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPolygons2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/toPolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly3();
       var earcut = require_earcut();
@@ -7600,6 +7905,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString11 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var edgesToString = edges => edges.reduce((result, edge) => result += `[${vec3.toString(edge[0])}, ${vec3.toString(edge[1])}], `, "");
@@ -7609,6 +7915,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform12 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var create = require_create13();
@@ -7621,6 +7928,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_slice = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         calculatePlane: require_calculatePlane(),
@@ -7640,6 +7948,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_repair = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/slice/repair.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var create = require_create13();
@@ -7689,6 +7998,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeWalls = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeWalls.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec3 = require_vec3();
@@ -7755,6 +8065,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeFromSlices = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeFromSlices.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
@@ -7822,6 +8133,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeRotate = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeRotate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var {mirrorX} = require_mirror();
@@ -7907,6 +8219,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_torus = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/torus.js"(exports, module) {
+      "use strict";
       init_define_process();
       var extrudeRotate = require_extrudeRotate();
       var {rotate: rotate2} = require_rotate3();
@@ -7951,6 +8264,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_triangle2 = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/triangle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {NEPS} = require_constants();
       var vec2 = require_vec2();
@@ -8064,6 +8378,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_primitives = __commonJS({
     "node_modules/@jscad/modeling/src/primitives/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         arc: require_arc(),
@@ -8092,6 +8407,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_simplex = __commonJS({
     "node_modules/@jscad/modeling/src/text/fonts/single-line/hershey/simplex.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         height: 14,
@@ -8195,6 +8511,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vectorParams = __commonJS({
     "node_modules/@jscad/modeling/src/text/vectorParams.js"(exports, module) {
+      "use strict";
       init_define_process();
       var defaultFont = require_simplex();
       var defaultsVectorParams = {
@@ -8224,6 +8541,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vectorChar = __commonJS({
     "node_modules/@jscad/modeling/src/text/vectorChar.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vectorParams = require_vectorParams();
       var vectorChar = (options, char) => {
@@ -8263,6 +8581,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vectorText = __commonJS({
     "node_modules/@jscad/modeling/src/text/vectorText.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vectorChar = require_vectorChar();
       var vectorParams = require_vectorParams();
@@ -8284,7 +8603,7 @@ ${nonManifold.join("\n")}`);
         return line;
       };
       var vectorText = (options, text) => {
-        const {xOffset, yOffset, input, font, height, align: align2, extrudeOffset, lineSpacing, letterSpacing} = vectorParams(options, text);
+        const {xOffset, yOffset, input, font, height, align, extrudeOffset, lineSpacing, letterSpacing} = vectorParams(options, text);
         let [x, y] = [xOffset, yOffset];
         let i, il, char, vect, width, diff;
         let line = {
@@ -8332,11 +8651,11 @@ ${nonManifold.join("\n")}`);
           line = lines[i];
           if (maxWidth > line.width) {
             diff = maxWidth - line.width;
-            if (align2 === "right") {
+            if (align === "right") {
               line = translateLine({
                 x: diff
               }, line);
-            } else if (align2 === "center") {
+            } else if (align === "center") {
               line = translateLine({
                 x: diff / 2
               }, line);
@@ -8351,6 +8670,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_text = __commonJS({
     "node_modules/@jscad/modeling/src/text/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         vectorChar: require_vectorChar(),
@@ -8360,6 +8680,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_areAllShapesTheSameType = __commonJS({
     "node_modules/@jscad/modeling/src/utils/areAllShapesTheSameType.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom2();
       var geom3 = require_geom3();
@@ -8381,6 +8702,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_degToRad = __commonJS({
     "node_modules/@jscad/modeling/src/utils/degToRad.js"(exports, module) {
+      "use strict";
       init_define_process();
       var degToRad = degrees => degrees * 0.017453292519943295;
       module.exports = degToRad;
@@ -8388,6 +8710,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fnNumberSort = __commonJS({
     "node_modules/@jscad/modeling/src/utils/fnNumberSort.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fnNumberSort = (a, b) => a - b;
       module.exports = fnNumberSort;
@@ -8395,6 +8718,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_insertSorted = __commonJS({
     "node_modules/@jscad/modeling/src/utils/insertSorted.js"(exports, module) {
+      "use strict";
       init_define_process();
       var insertSorted = (array, element, comparefunc) => {
         let leftbound = 0;
@@ -8416,6 +8740,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_radiusToSegments = __commonJS({
     "node_modules/@jscad/modeling/src/utils/radiusToSegments.js"(exports, module) {
+      "use strict";
       init_define_process();
       var radiusToSegments = (radius, minimumLength, minimumAngle) => {
         const ss = minimumLength > 0 ? radius * 2 * Math.PI / minimumLength : 0;
@@ -8427,6 +8752,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_radToDeg = __commonJS({
     "node_modules/@jscad/modeling/src/utils/radToDeg.js"(exports, module) {
+      "use strict";
       init_define_process();
       var radToDeg = radians => radians * 57.29577951308232;
       module.exports = radToDeg;
@@ -8434,6 +8760,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_utils2 = __commonJS({
     "node_modules/@jscad/modeling/src/utils/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         areAllShapesTheSameType: require_areAllShapesTheSameType(),
@@ -8448,6 +8775,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromFakePolygons = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/fromFakePolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var geom2 = require_geom2();
@@ -8491,6 +8819,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_to3DWalls = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/to3DWalls.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var geom2 = require_geom2();
@@ -8511,6 +8840,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_OrthoNormalBasis = __commonJS({
     "node_modules/@jscad/modeling/src/maths/OrthoNormalBasis.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec2 = require_vec2();
@@ -8654,6 +8984,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reTesselateCoplanarPolygons = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/reTesselateCoplanarPolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var line2 = require_line2();
@@ -8935,6 +9266,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_retessellate = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/retessellate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom3();
       var poly3 = require_poly3();
@@ -8976,6 +9308,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_mayOverlap = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/mayOverlap.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var measureBoundingBox2 = require_measureBoundingBox2();
@@ -9002,10 +9335,11 @@ ${nonManifold.join("\n")}`);
   });
   var require_Node = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/trees/Node.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane();
       var poly3 = require_poly3();
-      var Node = class {
+      var Node = class _Node {
         constructor(parent) {
           this.plane = null;
           this.front = null;
@@ -9107,7 +9441,7 @@ ${nonManifold.join("\n")}`);
               polygontreenodes[i].splitByPlane(node.plane, node.polygontreenodes, backnodes, frontnodes, backnodes);
             }
             if (frontnodes.length > 0) {
-              if (!node.front) node.front = new Node(node);
+              if (!node.front) node.front = new _Node(node);
               const stopCondition = n === frontnodes.length && backnodes.length === 0;
               if (stopCondition) node.front.polygontreenodes = frontnodes; else stack.push({
                 node: node.front,
@@ -9115,7 +9449,7 @@ ${nonManifold.join("\n")}`);
               });
             }
             if (backnodes.length > 0) {
-              if (!node.back) node.back = new Node(node);
+              if (!node.back) node.back = new _Node(node);
               const stopCondition = n === backnodes.length && frontnodes.length === 0;
               if (stopCondition) node.back.polygontreenodes = backnodes; else stack.push({
                 node: node.back,
@@ -9131,6 +9465,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_splitLineSegmentByPlane = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/trees/splitLineSegmentByPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var splitLineSegmentByPlane = (plane, p1, p2) => {
@@ -9148,6 +9483,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_splitPolygonByPlane = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/trees/splitPolygonByPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var plane = require_plane();
@@ -9253,12 +9589,13 @@ ${nonManifold.join("\n")}`);
   });
   var require_PolygonTreeNode = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/trees/PolygonTreeNode.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var vec3 = require_vec3();
       var poly3 = require_poly3();
       var splitPolygonByPlane = require_splitPolygonByPlane();
-      var PolygonTreeNode = class {
+      var PolygonTreeNode = class _PolygonTreeNode {
         constructor(parent, polygon) {
           this.parent = parent;
           this.children = [];
@@ -9379,7 +9716,7 @@ ${nonManifold.join("\n")}`);
           }
         }
         addChild(polygon) {
-          const newchild = new PolygonTreeNode(this, polygon);
+          const newchild = new _PolygonTreeNode(this, polygon);
           this.children.push(newchild);
           return newchild;
         }
@@ -9452,6 +9789,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_Tree = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/trees/Tree.js"(exports, module) {
+      "use strict";
       init_define_process();
       var Node = require_Node();
       var PolygonTreeNode = require_PolygonTreeNode();
@@ -9493,6 +9831,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_trees = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/trees/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         Tree: require_Tree()
@@ -9501,6 +9840,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectGeom3Sub = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3Sub.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom3();
       var mayOverlap = require_mayOverlap();
@@ -9526,6 +9866,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectGeom3 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var retessellate = require_retessellate();
@@ -9543,6 +9884,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectGeom2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/intersectGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom3 = require_geom3();
@@ -9565,6 +9907,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersect2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/intersect.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var areAllShapesTheSameType = require_areAllShapesTheSameType();
@@ -9588,6 +9931,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scissionGeom3 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/scissionGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var measureEpsilon = require_measureEpsilon();
@@ -9666,6 +10010,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scission = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/scission.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom3 = require_geom3();
@@ -9684,6 +10029,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtractGeom3Sub = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3Sub.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom3();
       var mayOverlap = require_mayOverlap();
@@ -9707,6 +10053,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtractGeom3 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var retessellate = require_retessellate();
@@ -9724,6 +10071,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtractGeom2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/subtractGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom3 = require_geom3();
@@ -9746,6 +10094,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtract4 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/subtract.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var areAllShapesTheSameType = require_areAllShapesTheSameType();
@@ -9769,6 +10118,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_unionGeom3Sub = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom3();
       var mayOverlap = require_mayOverlap();
@@ -9798,6 +10148,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_unionGeom3 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/unionGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var retessellate = require_retessellate();
@@ -9816,6 +10167,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_unionGeom2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/unionGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom3 = require_geom3();
@@ -9838,6 +10190,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_union = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/union.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var areAllShapesTheSameType = require_areAllShapesTheSameType();
@@ -9861,6 +10214,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_booleans = __commonJS({
     "node_modules/@jscad/modeling/src/operations/booleans/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         intersect: require_intersect2(),
@@ -9872,6 +10226,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_offsetFromPoints = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/offsetFromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var intersect2 = require_intersect();
@@ -10012,6 +10367,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expandGeom2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/expandGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom2();
       var offsetFromPoints = require_offsetFromPoints();
@@ -10043,6 +10399,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudePolygon = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/extrudePolygon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec3 = require_vec3();
@@ -10069,6 +10426,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expandShell = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/expandShell.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var mat42 = require_mat4();
@@ -10235,6 +10593,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expandGeom3 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/expandGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom3();
       var union2 = require_union();
@@ -10264,6 +10623,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expandPath2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/expandPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var area = require_area();
       var vec2 = require_vec2();
@@ -10357,6 +10717,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expand = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/expand.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -10381,6 +10742,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_offsetGeom2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/offsetGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom2();
       var poly2 = require_poly2();
@@ -10415,6 +10777,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_offsetPath2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/offsetPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var path2 = require_path2();
       var offsetFromPoints = require_offsetFromPoints();
@@ -10445,6 +10808,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_offset = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/offset.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -10466,6 +10830,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expansions = __commonJS({
     "node_modules/@jscad/modeling/src/operations/expansions/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         expand: require_expand(),
@@ -10475,6 +10840,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeLinearGeom2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeLinearGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec3 = require_vec3();
@@ -10519,6 +10885,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeLinearPath2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeLinearPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom2();
       var path2 = require_path2();
@@ -10534,6 +10901,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeLinear = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeLinear.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -10568,6 +10936,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeRectangularPath2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeRectangularPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var path2 = require_path2();
       var expand = require_expand();
@@ -10590,6 +10959,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeRectangularGeom2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeRectangularGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {area} = require_utils();
       var geom2 = require_geom2();
@@ -10621,6 +10991,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeRectangular = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/extrudeRectangular.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -10649,6 +11020,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_project = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/project.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var aboutEqualNormals = require_aboutEqualNormals();
@@ -10708,6 +11080,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrusions = __commonJS({
     "node_modules/@jscad/modeling/src/operations/extrusions/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         extrudeFromSlices: require_extrudeFromSlices(),
@@ -10721,6 +11094,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullPoints2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/hullPoints2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec2();
       var hullPoints2 = uniquePoints => {
@@ -10765,6 +11139,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toUniquePoints = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/toUniquePoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom2();
       var geom3 = require_geom3();
@@ -10795,6 +11170,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullPath2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/hullPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var path2 = require_path2();
@@ -10813,6 +11189,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullGeom2 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/hullGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
@@ -10830,6 +11207,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_point_line_distance = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/quickhull/point-line-distance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cross = require_cross();
       var subtract2 = require_subtract();
@@ -10853,6 +11231,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_get_plane_normal = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/quickhull/get-plane-normal.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cross = require_cross();
       var normalize = require_normalize();
@@ -10869,6 +11248,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_VertexList = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/quickhull/VertexList.js"(exports, module) {
+      "use strict";
       init_define_process();
       var VertexList = class {
         constructor() {
@@ -10956,6 +11336,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_Vertex = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/quickhull/Vertex.js"(exports, module) {
+      "use strict";
       init_define_process();
       var Vertex = class {
         constructor(point, index) {
@@ -10971,6 +11352,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_HalfEdge = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/quickhull/HalfEdge.js"(exports, module) {
+      "use strict";
       init_define_process();
       var distance = require_distance();
       var squaredDistance = require_squaredDistance();
@@ -11010,6 +11392,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_Face = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/quickhull/Face.js"(exports, module) {
+      "use strict";
       init_define_process();
       var add = require_add2();
       var copy = require_copy2();
@@ -11023,7 +11406,7 @@ ${nonManifold.join("\n")}`);
       var VISIBLE = 0;
       var NON_CONVEX = 1;
       var DELETED = 2;
-      var Face = class {
+      var Face = class _Face {
         constructor() {
           this.normal = [];
           this.centroid = [];
@@ -11187,7 +11570,7 @@ ${nonManifold.join("\n")}`);
           return indices;
         }
         static createTriangle(v0, v1, v2, minArea = 0) {
-          const face = new Face();
+          const face = new _Face();
           const e0 = new HalfEdge(v0, face);
           const e1 = new HalfEdge(v1, face);
           const e2 = new HalfEdge(v2, face);
@@ -11209,6 +11592,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_QuickHull = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/quickhull/QuickHull.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = require_dot();
       var pointLineDistance = require_point_line_distance();
@@ -11589,6 +11973,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_quickhull = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/quickhull/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       var QuickHull = require_QuickHull();
       var runner = (points, options = {}) => {
@@ -11601,6 +11986,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullGeom3 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/hullGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var geom3 = require_geom3();
@@ -11625,6 +12011,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hull = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/hull.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var areAllShapesTheSameType = require_areAllShapesTheSameType();
@@ -11651,6 +12038,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullChain = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/hullChain.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var union2 = require_union();
@@ -11669,6 +12057,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hulls = __commonJS({
     "node_modules/@jscad/modeling/src/operations/hulls/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         hull: require_hull(),
@@ -11678,6 +12067,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_snapPolygons = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/snapPolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var poly3 = require_poly3();
@@ -11706,6 +12096,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_mergePolygons = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/mergePolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var aboutEqualNormals = require_aboutEqualNormals();
       var vec3 = require_vec3();
@@ -11873,6 +12264,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_insertTjunctions = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/insertTjunctions.js"(exports, module) {
+      "use strict";
       init_define_process();
       var constants = require_constants();
       var vec3 = require_vec3();
@@ -12112,6 +12504,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_triangulatePolygons = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/triangulatePolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec3();
       var poly3 = require_poly3();
@@ -12152,6 +12545,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_generalize = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/generalize.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var measureEpsilon = require_measureEpsilon();
@@ -12203,6 +12597,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_snap3 = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/snap.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten();
       var vec2 = require_vec2();
@@ -12246,6 +12641,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_modifiers = __commonJS({
     "node_modules/@jscad/modeling/src/operations/modifiers/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         generalize: require_generalize(),
@@ -12255,6 +12651,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_src = __commonJS({
     "node_modules/@jscad/modeling/src/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         colors: require_colors(),
@@ -12276,6 +12673,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_flatten2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
       module.exports = flatten;
@@ -12283,6 +12681,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone12 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
       module.exports = clone;
@@ -12290,6 +12689,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_add4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/add.js"(exports, module) {
+      "use strict";
       init_define_process();
       var add = (out, a, b) => {
         out[0] = a[0] + b[0];
@@ -12315,6 +12715,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create14 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
       module.exports = create;
@@ -12322,6 +12723,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone13 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create14();
       var clone = matrix => {
@@ -12349,6 +12751,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy7 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, matrix) => {
         out[0] = matrix[0];
@@ -12374,6 +12777,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_invert4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/invert.js"(exports, module) {
+      "use strict";
       init_define_process();
       var invert = (out, matrix) => {
         const a00 = matrix[0];
@@ -12432,6 +12836,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals9 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
       module.exports = equals;
@@ -12439,6 +12844,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_constants2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/constants.js"(exports, module) {
+      "use strict";
       init_define_process();
       var spatialResolution = 1e5;
       var EPS = 1e-5;
@@ -12454,6 +12860,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_trigonometry2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/utils/trigonometry.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {NEPS} = require_constants2();
       var rezero = n => Math.abs(n) < NEPS ? 0 : n;
@@ -12467,6 +12874,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_identity2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/identity.js"(exports, module) {
+      "use strict";
       init_define_process();
       var identity = out => {
         out[0] = 1;
@@ -12492,6 +12900,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromRotation2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var {sin, cos} = require_trigonometry2();
@@ -12532,6 +12941,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromScaling2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromScaling.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromScaling = (out, vector) => {
         out[0] = vector[0];
@@ -12557,6 +12967,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromTaitBryanRotation2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromTaitBryanRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var fromTaitBryanRotation = (out, yaw, pitch, roll) => {
@@ -12589,6 +13000,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromTranslation2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromTranslation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromTranslation = (out, vector) => {
         out[0] = 1;
@@ -12614,6 +13026,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromValues6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create14();
       var fromValues = (m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) => {
@@ -12641,6 +13054,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_abs3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/abs.js"(exports, module) {
+      "use strict";
       init_define_process();
       var abs = (out, vector) => {
         out[0] = Math.abs(vector[0]);
@@ -12653,6 +13067,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_add5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/add.js"(exports, module) {
+      "use strict";
       init_define_process();
       var add = (out, a, b) => {
         out[0] = a[0] + b[0];
@@ -12665,6 +13080,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_dot4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/dot.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
       module.exports = dot;
@@ -12672,6 +13088,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_angle3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/angle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = require_dot4();
       var angle = (a, b) => {
@@ -12692,6 +13109,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create15 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [0, 0, 0];
       module.exports = create;
@@ -12699,6 +13117,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone14 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create15();
       var clone = vector => {
@@ -12713,6 +13132,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy8 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, vector) => {
         out[0] = vector[0];
@@ -12725,6 +13145,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cross3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/cross.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cross = (out, a, b) => {
         const ax = a[0];
@@ -12743,6 +13164,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_distance3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/distance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var distance = (a, b) => {
         const x = b[0] - a[0];
@@ -12755,6 +13177,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_divide3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/divide.js"(exports, module) {
+      "use strict";
       init_define_process();
       var divide = (out, a, b) => {
         out[0] = a[0] / b[0];
@@ -12767,6 +13190,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals10 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
       module.exports = equals;
@@ -12774,6 +13198,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromScalar4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/fromScalar.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
         out[0] = scalar;
@@ -12786,6 +13211,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromValues7 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create15();
       var fromValues = (x, y, z) => {
@@ -12800,6 +13226,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromVec22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/fromVec2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromVector2 = (out, vector, z = 0) => {
         out[0] = vector[0];
@@ -12812,6 +13239,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_length3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/length.js"(exports, module) {
+      "use strict";
       init_define_process();
       var length = vector => {
         const x = vector[0];
@@ -12824,6 +13252,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_lerp3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/lerp.js"(exports, module) {
+      "use strict";
       init_define_process();
       var lerp = (out, a, b, t) => {
         out[0] = a[0] + t * (b[0] - a[0]);
@@ -12836,6 +13265,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_max3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/max.js"(exports, module) {
+      "use strict";
       init_define_process();
       var max = (out, a, b) => {
         out[0] = Math.max(a[0], b[0]);
@@ -12848,6 +13278,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_min3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/min.js"(exports, module) {
+      "use strict";
       init_define_process();
       var min = (out, a, b) => {
         out[0] = Math.min(a[0], b[0]);
@@ -12860,6 +13291,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_multiply4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/multiply.js"(exports, module) {
+      "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
         out[0] = a[0] * b[0];
@@ -12872,6 +13304,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_negate3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/negate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var negate = (out, vector) => {
         out[0] = -vector[0];
@@ -12884,6 +13317,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_normalize3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/normalize.js"(exports, module) {
+      "use strict";
       init_define_process();
       var normalize = (out, vector) => {
         const x = vector[0];
@@ -12903,6 +13337,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_orthogonal2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/orthogonal.js"(exports, module) {
+      "use strict";
       init_define_process();
       var abs = require_abs3();
       var create = require_create15();
@@ -12919,6 +13354,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotateX3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/rotateX.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rotateX = (out, vector, origin, radians) => {
         const p = [];
@@ -12939,6 +13375,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotateY3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/rotateY.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rotateY = (out, vector, origin, radians) => {
         const p = [];
@@ -12959,6 +13396,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotateZ3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/rotateZ.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rotateZ = (out, vector, origin, radians) => {
         const p = [];
@@ -12977,6 +13415,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scale5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/scale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var scale2 = (out, vector, amount) => {
         out[0] = vector[0] * amount;
@@ -12989,6 +13428,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_snap4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/snap.js"(exports, module) {
+      "use strict";
       init_define_process();
       var snap = (out, vector, epsilon) => {
         out[0] = Math.round(vector[0] / epsilon) * epsilon + 0;
@@ -13001,6 +13441,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_squaredDistance3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/squaredDistance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var squaredDistance = (a, b) => {
         const x = b[0] - a[0];
@@ -13013,6 +13454,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_squaredLength3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/squaredLength.js"(exports, module) {
+      "use strict";
       init_define_process();
       var squaredLength = vector => {
         const x = vector[0];
@@ -13025,6 +13467,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtract5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/subtract.js"(exports, module) {
+      "use strict";
       init_define_process();
       var subtract2 = (out, a, b) => {
         out[0] = a[0] - b[0];
@@ -13037,6 +13480,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString12 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = vec => `[${vec[0].toFixed(7)}, ${vec[1].toFixed(7)}, ${vec[2].toFixed(7)}]`;
       module.exports = toString;
@@ -13044,6 +13488,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform13 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
         const x = vector[0];
@@ -13061,6 +13506,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vec32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         abs: require_abs3(),
@@ -13100,6 +13546,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromVectorRotation2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromVectorRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var fromRotation = require_fromRotation2();
@@ -13133,6 +13580,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromXRotation2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromXRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var fromXRotation = (out, radians) => {
@@ -13161,6 +13609,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromYRotation2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromYRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var fromYRotation = (out, radians) => {
@@ -13189,6 +13638,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromZRotation2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/fromZRotation.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var fromZRotation = (out, radians) => {
@@ -13217,6 +13667,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isIdentity2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/isIdentity.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isIdentity = matrix => matrix[0] === 1 && matrix[1] === 0 && matrix[2] === 0 && matrix[3] === 0 && matrix[4] === 0 && matrix[5] === 1 && matrix[6] === 0 && matrix[7] === 0 && matrix[8] === 0 && matrix[9] === 0 && matrix[10] === 1 && matrix[11] === 0 && matrix[12] === 0 && matrix[13] === 0 && matrix[14] === 0 && matrix[15] === 1;
       module.exports = isIdentity;
@@ -13224,6 +13675,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isOnlyTransformScale2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/isOnlyTransformScale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isOnlyTransformScale = matrix => isZero(matrix[1]) && isZero(matrix[2]) && isZero(matrix[3]) && isZero(matrix[4]) && isZero(matrix[6]) && isZero(matrix[7]) && isZero(matrix[8]) && isZero(matrix[9]) && isZero(matrix[11]) && matrix[15] === 1;
       var isZero = num => Math.abs(num) < Number.EPSILON;
@@ -13232,6 +13684,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isMirroring2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/isMirroring.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isMirroring = matrix => {
         const x = matrix[4] * matrix[9] - matrix[8] * matrix[5];
@@ -13245,6 +13698,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_mirrorByPlane2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/mirrorByPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mirrorByPlane = (out, plane) => {
         const [nx, ny, nz, w] = plane;
@@ -13271,6 +13725,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_multiply5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/multiply.js"(exports, module) {
+      "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
         const a00 = a[0];
@@ -13328,6 +13783,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotate4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/rotate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var {sin, cos} = require_trigonometry2();
@@ -13391,6 +13847,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotateX4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/rotateX.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var rotateX = (out, matrix, radians) => {
@@ -13429,6 +13886,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotateY4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/rotateY.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var rotateY = (out, matrix, radians) => {
@@ -13467,6 +13925,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotateZ4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/rotateZ.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var rotateZ = (out, matrix, radians) => {
@@ -13505,6 +13964,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scale6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/scale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var scale2 = (out, matrix, dimensions) => {
         const x = dimensions[0];
@@ -13533,6 +13993,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtract6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/subtract.js"(exports, module) {
+      "use strict";
       init_define_process();
       var subtract2 = (out, a, b) => {
         out[0] = a[0] - b[0];
@@ -13558,6 +14019,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString13 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = mat => mat.map(n => n.toFixed(7)).toString();
       module.exports = toString;
@@ -13565,6 +14027,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_translate3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/translate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var translate2 = (out, matrix, offsets) => {
         const x = offsets[0];
@@ -13624,6 +14087,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_mat42 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         add: require_add4(),
@@ -13660,6 +14124,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create16 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var create = sides => {
@@ -13676,6 +14141,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_abs4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/abs.js"(exports, module) {
+      "use strict";
       init_define_process();
       var abs = (out, vector) => {
         out[0] = Math.abs(vector[0]);
@@ -13687,6 +14153,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_add6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/add.js"(exports, module) {
+      "use strict";
       init_define_process();
       var add = (out, a, b) => {
         out[0] = a[0] + b[0];
@@ -13698,6 +14165,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_angleRadians2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/angleRadians.js"(exports, module) {
+      "use strict";
       init_define_process();
       var angleRadians = vector => Math.atan2(vector[1], vector[0]);
       module.exports = angleRadians;
@@ -13705,12 +14173,14 @@ ${nonManifold.join("\n")}`);
   });
   var require_angle4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/angle.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = require_angleRadians2();
     }
   });
   var require_angleDegrees2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/angleDegrees.js"(exports, module) {
+      "use strict";
       init_define_process();
       var angleRadians = require_angleRadians2();
       var angleDegrees = vector => angleRadians(vector) * 57.29577951308232;
@@ -13719,6 +14189,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create17 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [0, 0];
       module.exports = create;
@@ -13726,6 +14197,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone15 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create17();
       var clone = vector => {
@@ -13739,6 +14211,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy9 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, vector) => {
         out[0] = vector[0];
@@ -13750,6 +14223,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cross4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/cross.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cross = (out, a, b) => {
         out[0] = 0;
@@ -13762,6 +14236,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_distance4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/distance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var distance = (a, b) => {
         const x = b[0] - a[0];
@@ -13773,6 +14248,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_divide4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/divide.js"(exports, module) {
+      "use strict";
       init_define_process();
       var divide = (out, a, b) => {
         out[0] = a[0] / b[0];
@@ -13784,6 +14260,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_dot5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/dot.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1];
       module.exports = dot;
@@ -13791,6 +14268,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals11 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1];
       module.exports = equals;
@@ -13798,6 +14276,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromAngleRadians2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/fromAngleRadians.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var fromAngleRadians = (out, radians) => {
@@ -13810,6 +14289,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromAngleDegrees2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/fromAngleDegrees.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromAngleRadians = require_fromAngleRadians2();
       var fromAngleDegrees = (out, degrees) => fromAngleRadians(out, degrees * 0.017453292519943295);
@@ -13818,6 +14298,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromScalar5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/fromScalar.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
         out[0] = scalar;
@@ -13829,6 +14310,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromValues8 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create17();
       var fromValues = (x, y) => {
@@ -13842,6 +14324,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_length4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/length.js"(exports, module) {
+      "use strict";
       init_define_process();
       var length = vector => Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
       module.exports = length;
@@ -13849,6 +14332,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_lerp4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/lerp.js"(exports, module) {
+      "use strict";
       init_define_process();
       var lerp = (out, a, b, t) => {
         const ax = a[0];
@@ -13862,6 +14346,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_max4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/max.js"(exports, module) {
+      "use strict";
       init_define_process();
       var max = (out, a, b) => {
         out[0] = Math.max(a[0], b[0]);
@@ -13873,6 +14358,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_min4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/min.js"(exports, module) {
+      "use strict";
       init_define_process();
       var min = (out, a, b) => {
         out[0] = Math.min(a[0], b[0]);
@@ -13884,6 +14370,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_multiply6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/multiply.js"(exports, module) {
+      "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
         out[0] = a[0] * b[0];
@@ -13895,6 +14382,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_negate4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/negate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var negate = (out, vector) => {
         out[0] = -vector[0];
@@ -13906,6 +14394,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotate5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/rotate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rotate2 = (out, vector, origin, radians) => {
         const x = vector[0] - origin[0];
@@ -13921,6 +14410,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_normal2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/normal.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var create = require_create17();
@@ -13931,6 +14421,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_normalize4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/normalize.js"(exports, module) {
+      "use strict";
       init_define_process();
       var normalize = (out, vector) => {
         const x = vector[0];
@@ -13948,6 +14439,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scale7 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/scale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var scale2 = (out, vector, amount) => {
         out[0] = vector[0] * amount;
@@ -13959,6 +14451,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_snap5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/snap.js"(exports, module) {
+      "use strict";
       init_define_process();
       var snap = (out, vector, epsilon) => {
         out[0] = Math.round(vector[0] / epsilon) * epsilon + 0;
@@ -13970,6 +14463,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_squaredDistance4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/squaredDistance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var squaredDistance = (a, b) => {
         const x = b[0] - a[0];
@@ -13981,6 +14475,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_squaredLength4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/squaredLength.js"(exports, module) {
+      "use strict";
       init_define_process();
       var squaredLength = vector => {
         const x = vector[0];
@@ -13992,6 +14487,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtract7 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/subtract.js"(exports, module) {
+      "use strict";
       init_define_process();
       var subtract2 = (out, a, b) => {
         out[0] = a[0] - b[0];
@@ -14003,6 +14499,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString14 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = vector => `[${vector[0].toFixed(7)}, ${vector[1].toFixed(7)}]`;
       module.exports = toString;
@@ -14010,6 +14507,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform14 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
         const x = vector[0];
@@ -14023,6 +14521,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vec22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         abs: require_abs4(),
@@ -14063,6 +14562,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints9 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var create = require_create16();
@@ -14089,6 +14589,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromCompactBinary4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/fromCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec2 = require_vec22();
@@ -14112,6 +14613,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isA6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -14128,6 +14630,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_applyTransforms4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/applyTransforms.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec2 = require_vec22();
@@ -14146,6 +14649,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toSides2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/toSides.js"(exports, module) {
+      "use strict";
       init_define_process();
       var applyTransforms = require_applyTransforms4();
       var toSides = geometry => applyTransforms(geometry).sides;
@@ -14154,6 +14658,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create16();
       var toSides = require_toSides2();
@@ -14168,6 +14673,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toOutlines2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/toOutlines.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var toSides = require_toSides2();
@@ -14261,6 +14767,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPoints5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/toPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toSides = require_toSides2();
       var toPoints = geometry => {
@@ -14276,6 +14783,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString15 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var toSides = require_toSides2();
@@ -14293,6 +14801,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toCompactBinary4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/toCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toCompactBinary = geometry => {
         const sides = geometry.sides;
@@ -14337,6 +14846,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform15 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var transform = (matrix, geometry) => {
@@ -14350,6 +14860,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_validate5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/validate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var isA = require_isA6();
@@ -14373,6 +14884,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_geom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone12(),
@@ -14393,6 +14905,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone16 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
       module.exports = clone;
@@ -14400,6 +14913,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create18 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var create = polygons => {
@@ -14416,6 +14930,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create19 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = vertices => {
         if (vertices === void 0 || vertices.length < 3) {
@@ -14430,6 +14945,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone17 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create19();
       var vec3 = require_vec32();
@@ -14451,6 +14967,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints10 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var create = require_create19();
@@ -14463,6 +14980,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPointsAndPlane2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create19();
       var fromPointsAndPlane = (vertices, plane) => {
@@ -14475,6 +14993,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create20 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [0, 0, 0, 0];
       module.exports = create;
@@ -14482,6 +15001,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone18 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create20();
       var clone = vector => {
@@ -14497,6 +15017,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy10 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, vector) => {
         out[0] = vector[0];
@@ -14510,6 +15031,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals12 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
       module.exports = equals;
@@ -14517,6 +15039,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_flip3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/flip.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flip = (out, plane) => {
         out[0] = -plane[0];
@@ -14530,6 +15053,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromNormalAndPoint2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/fromNormalAndPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var fromNormalAndPoint = (out, normal, point) => {
@@ -14546,6 +15070,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromValues9 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create20();
       var fromValues = (x, y, z, w) => {
@@ -14561,6 +15086,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints11 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var fromPoints = (out, ...vertices) => {
@@ -14596,6 +15122,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPointsRandom2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/fromPointsRandom.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var vec3 = require_vec32();
@@ -14626,6 +15153,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_projectionOfPoint2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/projectionOfPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var projectionOfPoint = (plane, point) => {
@@ -14640,6 +15168,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_signedDistanceToPoint2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/signedDistanceToPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var signedDistanceToPoint = (plane, point) => vec3.dot(plane, point) - plane[3];
@@ -14648,6 +15177,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString16 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = vec => `(${vec[0].toFixed(9)}, ${vec[1].toFixed(9)}, ${vec[2].toFixed(9)}, ${vec[3].toFixed(9)})`;
       module.exports = toString;
@@ -14655,6 +15185,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform16 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec3 = require_vec32();
@@ -14683,6 +15214,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_plane3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone18(),
@@ -14703,6 +15235,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_invert5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane3();
       var create = require_create19();
@@ -14719,6 +15252,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isA7 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -14735,6 +15269,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isConvex2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane3();
       var vec3 = require_vec32();
@@ -14766,6 +15301,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_plane4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mplane = require_plane3();
       var plane = polygon => {
@@ -14779,6 +15315,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureArea4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane4();
       var measureArea = polygon => {
@@ -14841,6 +15378,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureBoundingBox3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var measureBoundingBox2 = polygon => {
@@ -14859,6 +15397,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_dot6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
       module.exports = dot;
@@ -14866,6 +15405,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromScalar6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/fromScalar.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
         out[0] = scalar;
@@ -14879,6 +15419,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform17 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
         const [x, y, z, w] = vector;
@@ -14893,6 +15434,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vec42 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone18(),
@@ -14909,6 +15451,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureBoundingSphere3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var vec4 = require_vec42();
@@ -14954,6 +15497,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureSignedVolume2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var measureSignedVolume = polygon => {
@@ -14972,6 +15516,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPoints6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toPoints = polygon => polygon.vertices;
       module.exports = toPoints;
@@ -14979,6 +15524,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString17 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var toString = polygon => {
@@ -14994,6 +15540,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform18 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec3 = require_vec32();
@@ -15010,6 +15557,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_validate6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/validate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var signedDistanceToPoint = require_signedDistanceToPoint2();
       var {NEPS} = require_constants2();
@@ -15056,6 +15604,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_poly32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone17(),
@@ -15079,6 +15628,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints12 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly32();
       var create = require_create18();
@@ -15098,6 +15648,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromCompactBinary5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var mat42 = require_mat42();
@@ -15130,6 +15681,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_applyTransforms5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var poly3 = require_poly32();
@@ -15144,6 +15696,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPolygons3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var applyTransforms = require_applyTransforms5();
       var toPolygons = geometry => applyTransforms(geometry).polygons;
@@ -15152,6 +15705,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_invert6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/invert.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly32();
       var create = require_create18();
@@ -15166,6 +15720,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isA8 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -15182,6 +15737,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPoints7 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/toPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly32();
       var toPolygons = require_toPolygons3();
@@ -15195,6 +15751,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString18 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly32();
       var toPolygons = require_toPolygons3();
@@ -15211,6 +15768,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toCompactBinary5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/toCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly32();
       var toCompactBinary = geometry => {
@@ -15264,6 +15822,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform19 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var transform = (matrix, geometry) => {
@@ -15277,6 +15836,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_validate7 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/validate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly32();
       var isA = require_isA8();
@@ -15319,6 +15879,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_geom32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone16(),
@@ -15338,6 +15899,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone19 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
       module.exports = clone;
@@ -15345,6 +15907,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_close2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/close.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var vec2 = require_vec22();
@@ -15370,6 +15933,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create21 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var create = points => {
@@ -15387,6 +15951,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints13 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var vec2 = require_vec22();
@@ -15414,6 +15979,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_applyTransforms6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/applyTransforms.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec2 = require_vec22();
@@ -15428,6 +15994,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPoints8 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/toPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var applyTransforms = require_applyTransforms6();
       var toPoints = geometry => applyTransforms(geometry).points;
@@ -15436,6 +16003,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_appendArc2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/appendArc.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var vec2 = require_vec22();
@@ -15531,6 +16099,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_concat2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/concat.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fromPoints = require_fromPoints13();
       var toPoints = require_toPoints8();
@@ -15556,6 +16125,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_appendPoints2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/appendPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var concat = require_concat2();
       var create = require_create21();
@@ -15565,6 +16135,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_appendBezier2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/appendBezier.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var vec2 = require_vec22();
@@ -15677,6 +16248,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals13 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var toPoints = require_toPoints8();
@@ -15713,6 +16285,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromCompactBinary6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/fromCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec2 = require_vec22();
@@ -15736,6 +16309,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isA9 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -15752,6 +16326,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse7 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var clone = require_clone19();
       var reverse = geometry => {
@@ -15764,6 +16339,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString19 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var toPoints = require_toPoints8();
@@ -15781,6 +16357,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toCompactBinary6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/toCompactBinary.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toCompactBinary = geometry => {
         const points = geometry.points;
@@ -15823,6 +16400,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform20 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var transform = (matrix, geometry) => {
@@ -15836,6 +16414,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_validate8 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/validate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var isA = require_isA9();
@@ -15864,6 +16443,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_path22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         appendArc: require_appendArc2(),
@@ -15888,6 +16468,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_colorize2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/colorize.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -15935,6 +16516,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cssColors2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/cssColors.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cssColors = {
         black: [0 / 255, 0 / 255, 0 / 255],
@@ -16090,6 +16672,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_colorNameToRgb2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/colorNameToRgb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cssColors = require_cssColors2();
       var colorNameToRgb = s => cssColors[s.toLowerCase()];
@@ -16098,6 +16681,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hexToRgb2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/hexToRgb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var hexToRgb = notation => {
         notation = notation.replace("#", "");
@@ -16116,6 +16700,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hueToColorComponent2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/hueToColorComponent.js"(exports, module) {
+      "use strict";
       init_define_process();
       var hueToColorComponent = (p, q, t) => {
         if (t < 0) t += 1;
@@ -16130,6 +16715,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hslToRgb2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/hslToRgb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var hueToColorComponent = require_hueToColorComponent2();
@@ -16160,6 +16746,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hsvToRgb2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/hsvToRgb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var hsvToRgb = (...values) => {
@@ -16219,6 +16806,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rgbToHex2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/rgbToHex.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var rgbToHex = (...values) => {
@@ -16238,6 +16826,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rgbToHsl2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/rgbToHsl.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var rgbToHsl = (...values) => {
@@ -16280,6 +16869,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rgbToHsv2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/rgbToHsv.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var rgbToHsv = (...values) => {
@@ -16321,6 +16911,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_colors2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         colorize: require_colorize2(),
@@ -16338,6 +16929,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = points => {
         if (!Array.isArray(points)) throw new Error("Bezier points must be a valid array/");
@@ -16392,6 +16984,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_valueAt2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/valueAt.js"(exports, module) {
+      "use strict";
       init_define_process();
       var valueAt = (t, bezier) => {
         if (t < 0 || t > 1) {
@@ -16424,6 +17017,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_tangentAt2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/tangentAt.js"(exports, module) {
+      "use strict";
       init_define_process();
       var tangentAt = (t, bezier) => {
         if (t < 0 || t > 1) {
@@ -16457,6 +17051,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_lengths = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/lengths.js"(exports, module) {
+      "use strict";
       init_define_process();
       var valueAt = require_valueAt2();
       var lengths = (segments, bezier) => {
@@ -16492,6 +17087,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_length5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/length.js"(exports, module) {
+      "use strict";
       init_define_process();
       var lengths = require_lengths();
       var length = (segments, bezier) => {
@@ -16502,6 +17098,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_arcLengthToT = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/arcLengthToT.js"(exports, module) {
+      "use strict";
       init_define_process();
       var lengths = require_lengths();
       var arcLengthToT = (options, bezier) => {
@@ -16540,6 +17137,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_bezier2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         create: require_create22(),
@@ -16553,6 +17151,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_curves2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         bezier: require_bezier2()
@@ -16561,6 +17160,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_area2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/utils/area.js"(exports, module) {
+      "use strict";
       init_define_process();
       var area = points => {
         let area2 = 0;
@@ -16576,6 +17176,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureArea5 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly2/measureArea.js"(exports, module) {
+      "use strict";
       init_define_process();
       var area = require_area2();
       var measureArea = polygon => area(polygon.vertices);
@@ -16584,6 +17185,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create23 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = vertices => {
         if (vertices === void 0 || vertices.length < 3) {
@@ -16598,6 +17200,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_flip4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly2/flip.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create23();
       var flip = polygon => {
@@ -16609,6 +17212,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_arePointsInside2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly2/arePointsInside.js"(exports, module) {
+      "use strict";
       init_define_process();
       var measureArea = require_measureArea5();
       var flip = require_flip4();
@@ -16655,6 +17259,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_poly22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         arePointsInside: require_arePointsInside2(),
@@ -16666,6 +17271,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_geometries2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         geom2: require_geom22(),
@@ -16678,6 +17284,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create24 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = () => [0, 1, 0];
       module.exports = create;
@@ -16685,6 +17292,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone20 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create24();
       var clone = line => {
@@ -16699,6 +17307,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_direction3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/direction.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var direction = line => {
@@ -16711,6 +17320,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_origin3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/origin.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var origin = line => vec2.scale(vec2.create(), line, line[2]);
@@ -16719,6 +17329,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_closestPoint3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/closestPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var direction = require_direction3();
@@ -16737,6 +17348,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy11 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var copy = (out, line) => {
         out[0] = line[0];
@@ -16749,6 +17361,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_distanceToPoint3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/distanceToPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var distanceToPoint = (line, point) => {
@@ -16761,6 +17374,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals14 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var equals = (line1, line2) => line1[0] === line2[0] && (line1[1] === line2[1] && line1[2] === line2[2]);
       module.exports = equals;
@@ -16768,6 +17382,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints14 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var fromPoints = (out, point1, point2) => {
@@ -16785,6 +17400,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromValues10 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/fromValues.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create24();
       var fromValues = (x, y, d) => {
@@ -16799,6 +17415,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_aboutEqualNormals2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/utils/aboutEqualNormals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {NEPS} = require_constants2();
       var aboutEqualNormals = (a, b) => Math.abs(a[0] - b[0]) <= NEPS && Math.abs(a[1] - b[1]) <= NEPS && Math.abs(a[2] - b[2]) <= NEPS;
@@ -16807,6 +17424,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_interpolateBetween2DPointsForY2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/utils/interpolateBetween2DPointsForY.js"(exports, module) {
+      "use strict";
       init_define_process();
       var interpolateBetween2DPointsForY = (point1, point2, y) => {
         let f1 = y - point1[1];
@@ -16833,6 +17451,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersect3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/utils/intersect.js"(exports, module) {
+      "use strict";
       init_define_process();
       var intersect2 = (p1, p2, p3, p4) => {
         if (p1[0] === p2[0] && p1[1] === p2[1] || p3[0] === p4[0] && p3[1] === p4[1]) {
@@ -16856,6 +17475,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_solve2Linear2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/utils/solve2Linear.js"(exports, module) {
+      "use strict";
       init_define_process();
       var solve2Linear = (a, b, c, d, u, v) => {
         const det = a * d - b * c;
@@ -16871,6 +17491,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_utils3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/utils/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         aboutEqualNormals: require_aboutEqualNormals2(),
@@ -16885,6 +17506,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectPointOfLines2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/intersectPointOfLines.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var {solve2Linear} = require_utils3();
@@ -16897,6 +17519,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse8 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var copy = require_copy11();
@@ -16911,6 +17534,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString20 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = line => `line2: (${line[0].toFixed(7)}, ${line[1].toFixed(7)}, ${line[2].toFixed(7)})`;
       module.exports = toString;
@@ -16918,6 +17542,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform21 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var fromPoints = require_fromPoints14();
@@ -16935,6 +17560,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_xAtY2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/xAtY.js"(exports, module) {
+      "use strict";
       init_define_process();
       var origin = require_origin3();
       var xAtY = (line, y) => {
@@ -16950,6 +17576,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_line22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line2/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone20(),
@@ -16972,6 +17599,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create25 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var create = () => [vec3.fromValues(0, 0, 0), vec3.fromValues(0, 0, 1)];
@@ -16980,6 +17608,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone21 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var create = require_create25();
@@ -16994,6 +17623,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_closestPoint4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/closestPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var closestPoint = (line, point) => {
@@ -17011,6 +17641,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_copy12 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/copy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var copy = (out, line) => {
@@ -17023,6 +17654,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_direction4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/direction.js"(exports, module) {
+      "use strict";
       init_define_process();
       var direction = line => line[1];
       module.exports = direction;
@@ -17030,6 +17662,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_distanceToPoint4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/distanceToPoint.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var closestPoint = require_closestPoint4();
@@ -17043,6 +17676,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals15 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var equals = (line1, line2) => {
@@ -17055,6 +17689,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPointAndDirection2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/fromPointAndDirection.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var fromPointAndDirection = (out, point, direction) => {
@@ -17068,6 +17703,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPlanes2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/fromPlanes.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var {solve2Linear} = require_utils3();
@@ -17103,6 +17739,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints15 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var fromPointAndDirection = require_fromPointAndDirection2();
@@ -17115,6 +17752,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectPointOfLineAndPlane2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/intersectPointOfLineAndPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var intersectToPlane = (line, plane) => {
@@ -17131,6 +17769,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_origin4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/origin.js"(exports, module) {
+      "use strict";
       init_define_process();
       var origin = line => line[0];
       module.exports = origin;
@@ -17138,6 +17777,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse9 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var fromPointAndDirection = require_fromPointAndDirection2();
@@ -17151,6 +17791,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString21 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toString = line => {
         const point = line[0];
@@ -17162,6 +17803,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var fromPointAndDirection = require_fromPointAndDirection2();
@@ -17179,6 +17821,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_line32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/line3/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         clone: require_clone21(),
@@ -17201,6 +17844,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_maths2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         constants: require_constants2(),
@@ -17217,6 +17861,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureArea6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureArea.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -17258,6 +17903,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureAggregateArea2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureAggregateArea.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var measureArea = require_measureArea6();
@@ -17276,6 +17922,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureBoundingBox4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureBoundingBox.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var vec2 = require_vec22();
@@ -17365,6 +18012,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureAggregateBoundingBox2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureAggregateBoundingBox.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var vec3min = require_min3();
@@ -17388,6 +18036,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_calculateEpsilonFromBounds2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/calculateEpsilonFromBounds.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var calculateEpsilonFromBounds = (bounds, dimensions) => {
@@ -17402,6 +18051,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureAggregateEpsilon2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureAggregateEpsilon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var measureAggregateBoundingBox = require_measureAggregateBoundingBox2();
@@ -17424,6 +18074,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureVolume2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureVolume.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -17457,6 +18108,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureAggregateVolume2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureAggregateVolume.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var measureVolume = require_measureVolume2();
@@ -17475,6 +18127,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureBoundingSphere4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureBoundingSphere.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var vec2 = require_vec22();
@@ -17571,6 +18224,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureCenter2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureCenter.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var measureBoundingBox2 = require_measureBoundingBox4();
@@ -17587,6 +18241,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureCenterOfMass2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureCenterOfMass.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var vec3 = require_vec32();
@@ -17656,6 +18311,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureDimensions2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureDimensions.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var measureBoundingBox2 = require_measureBoundingBox4();
@@ -17672,6 +18328,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measureEpsilon2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/measureEpsilon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var {geom2, geom3, path2} = require_geometries2();
@@ -17696,6 +18353,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_measurements2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/measurements/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         measureAggregateArea: require_measureAggregateArea2(),
@@ -17715,6 +18373,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_commonChecks2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/commonChecks.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isNumberArray = (array, dimension) => {
         if (Array.isArray(array) && array.length >= dimension) {
@@ -17733,6 +18392,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_arc2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/arc.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS, TAU} = require_constants2();
       var vec2 = require_vec22();
@@ -17799,6 +18459,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_ellipse2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/ellipse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS, TAU} = require_constants2();
       var vec2 = require_vec22();
@@ -17851,6 +18512,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_circle2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/circle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var ellipse = require_ellipse2();
@@ -17879,6 +18541,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cuboid2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/cuboid.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom32();
       var poly3 = require_poly32();
@@ -17906,6 +18569,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cube2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/cube.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cuboid = require_cuboid2();
       var {isGT} = require_commonChecks2();
@@ -17927,6 +18591,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cylinderElliptic2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/cylinderElliptic.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS, TAU} = require_constants2();
       var vec3 = require_vec32();
@@ -18027,6 +18692,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_cylinder2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/cylinder.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cylinderElliptic = require_cylinderElliptic2();
       var {isGT} = require_commonChecks2();
@@ -18053,6 +18719,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_ellipsoid2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/ellipsoid.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var vec3 = require_vec32();
@@ -18130,6 +18797,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_polyhedron2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/polyhedron.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom32();
       var poly3 = require_poly32();
@@ -18181,6 +18849,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_geodesicSphere2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/geodesicSphere.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec3 = require_vec32();
@@ -18278,6 +18947,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_line4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/line.js"(exports, module) {
+      "use strict";
       init_define_process();
       var path2 = require_path22();
       var line = points => {
@@ -18289,6 +18959,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_polygon2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/polygon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom22();
       var polygon = options => {
@@ -18332,6 +19003,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rectangle2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/rectangle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var geom2 = require_geom22();
@@ -18355,6 +19027,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_roundedCuboid2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/roundedCuboid.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS, TAU} = require_constants2();
       var vec2 = require_vec22();
@@ -18497,6 +19170,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_roundedCylinder2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/roundedCylinder.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS, TAU} = require_constants2();
       var vec3 = require_vec32();
@@ -18605,6 +19279,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_roundedRectangle2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/roundedRectangle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS, TAU} = require_constants2();
       var vec2 = require_vec22();
@@ -18653,6 +19328,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_sphere2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/sphere.js"(exports, module) {
+      "use strict";
       init_define_process();
       var ellipsoid = require_ellipsoid2();
       var {isGT} = require_commonChecks2();
@@ -18678,6 +19354,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_square2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/square.js"(exports, module) {
+      "use strict";
       init_define_process();
       var rectangle = require_rectangle2();
       var {isGT} = require_commonChecks2();
@@ -18699,6 +19376,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_star2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/star.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var vec2 = require_vec22();
@@ -18758,6 +19436,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_mirror2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/transforms/mirror.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var mat42 = require_mat42();
@@ -18805,6 +19484,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_calculatePlane2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/calculatePlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane3();
       var vec3 = require_vec32();
@@ -18832,6 +19512,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_create26 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/create.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = edges => {
         if (!edges) {
@@ -18846,6 +19527,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_clone22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/clone.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create26();
       var vec3 = require_vec32();
@@ -18867,6 +19549,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_equals16 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/equals.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var equals = (a, b) => {
@@ -18887,6 +19570,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromPoints16 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/fromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var create = require_create26();
@@ -18907,6 +19591,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromSides2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/fromSides.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var create = require_create26();
@@ -18923,6 +19608,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_isA10 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/isA.js"(exports, module) {
+      "use strict";
       init_define_process();
       var isA = object => {
         if (object && typeof object === "object") {
@@ -18939,6 +19625,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reverse10 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/reverse.js"(exports, module) {
+      "use strict";
       init_define_process();
       var create = require_create26();
       var reverse = (...params) => {
@@ -18959,6 +19646,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toEdges2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/toEdges.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toEdges = slice => slice.edges;
       module.exports = toEdges;
@@ -18966,6 +19654,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_linkedListSort2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/linkedListSort.js"(exports, module) {
+      "use strict";
       init_define_process();
       var sortLinked = (list2, fn) => {
         let i, p, q, e, numMerges;
@@ -19011,6 +19700,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_linkedList2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/linkedList.js"(exports, module) {
+      "use strict";
       init_define_process();
       var sortLinked = require_linkedListSort2();
       var Node = class {
@@ -19055,6 +19745,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_triangle3 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/triangle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var pointInTriangle = (ax, ay, bx, by, cx, cy, px, py) => (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 && (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 && (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
       var area = (p, q, r) => (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
@@ -19066,6 +19757,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_linkedPolygon2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/linkedPolygon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {Node, insertNode, removeNode} = require_linkedList2();
       var {area} = require_triangle3();
@@ -19193,6 +19885,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_eliminateHoles2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/eliminateHoles.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {filterPoints, linkedPolygon, locallyInside, splitPolygon} = require_linkedPolygon2();
       var {area, pointInTriangle} = require_triangle3();
@@ -19276,6 +19969,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_earcut2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       var eliminateHoles = require_eliminateHoles2();
       var {removeNode, sortLinked} = require_linkedList2();
@@ -19429,6 +20123,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_assignHoles2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/assignHoles.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {area} = require_utils3();
       var {toOutlines} = require_geom22();
@@ -19493,6 +20188,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_polygonHierarchy2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/polygonHierarchy.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom22();
       var plane = require_plane3();
@@ -19536,6 +20232,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toPolygons4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/toPolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var poly3 = require_poly32();
       var earcut = require_earcut2();
@@ -19566,6 +20263,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toString22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/toString.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var edgesToString = edges => edges.reduce((result, edge) => result += `[${vec3.toString(edge[0])}, ${vec3.toString(edge[1])}], `, "");
@@ -19575,6 +20273,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform23 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var create = require_create26();
@@ -19587,6 +20286,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_slice2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         calculatePlane: require_calculatePlane2(),
@@ -19606,6 +20306,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_repair2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/slice/repair.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var create = require_create26();
@@ -19655,6 +20356,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeWalls2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeWalls.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var vec3 = require_vec32();
@@ -19721,6 +20423,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeFromSlices2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeFromSlices.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var geom2 = require_geom22();
@@ -19788,6 +20491,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeRotate2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeRotate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var mat42 = require_mat42();
@@ -19874,6 +20578,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_rotate6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/transforms/rotate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var mat42 = require_mat42();
@@ -19911,6 +20616,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_translate4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/transforms/translate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var mat42 = require_mat42();
@@ -19945,6 +20651,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_torus2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/torus.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var extrudeRotate = require_extrudeRotate2();
@@ -19990,6 +20697,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_triangle4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/triangle.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {NEPS} = require_constants2();
       var vec2 = require_vec22();
@@ -20103,6 +20811,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_primitives2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         arc: require_arc2(),
@@ -20131,6 +20840,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_simplex2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/text/fonts/single-line/hershey/simplex.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         height: 14,
@@ -20234,6 +20944,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vectorParams2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/text/vectorParams.js"(exports, module) {
+      "use strict";
       init_define_process();
       var defaultFont = require_simplex2();
       var defaultsVectorParams = {
@@ -20263,6 +20974,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vectorChar2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/text/vectorChar.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vectorParams = require_vectorParams2();
       var vectorChar = (options, char) => {
@@ -20302,6 +21014,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_vectorText2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/text/vectorText.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vectorChar = require_vectorChar2();
       var vectorParams = require_vectorParams2();
@@ -20323,7 +21036,7 @@ ${nonManifold.join("\n")}`);
         return line;
       };
       var vectorText = (options, text) => {
-        const {xOffset, yOffset, input, font, height, align: align2, extrudeOffset, lineSpacing, letterSpacing} = vectorParams(options, text);
+        const {xOffset, yOffset, input, font, height, align, extrudeOffset, lineSpacing, letterSpacing} = vectorParams(options, text);
         let [x, y] = [xOffset, yOffset];
         let i, il, char, vect, width, diff;
         let line = {
@@ -20371,11 +21084,11 @@ ${nonManifold.join("\n")}`);
           line = lines[i];
           if (maxWidth > line.width) {
             diff = maxWidth - line.width;
-            if (align2 === "right") {
+            if (align === "right") {
               line = translateLine({
                 x: diff
               }, line);
-            } else if (align2 === "center") {
+            } else if (align === "center") {
               line = translateLine({
                 x: diff / 2
               }, line);
@@ -20390,6 +21103,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_text2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/text/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         vectorChar: require_vectorChar2(),
@@ -20399,6 +21113,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_areAllShapesTheSameType2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/areAllShapesTheSameType.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom22();
       var geom3 = require_geom32();
@@ -20420,6 +21135,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_degToRad2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/degToRad.js"(exports, module) {
+      "use strict";
       init_define_process();
       var degToRad = degrees => degrees * 0.017453292519943295;
       module.exports = degToRad;
@@ -20427,6 +21143,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fnNumberSort2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/fnNumberSort.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fnNumberSort = (a, b) => a - b;
       module.exports = fnNumberSort;
@@ -20434,6 +21151,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_insertSorted2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/insertSorted.js"(exports, module) {
+      "use strict";
       init_define_process();
       var insertSorted = (array, element, comparefunc) => {
         let leftbound = 0;
@@ -20455,6 +21173,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_radiusToSegments2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/radiusToSegments.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var radiusToSegments = (radius, minimumLength, minimumAngle) => {
@@ -20467,6 +21186,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_radToDeg2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/radToDeg.js"(exports, module) {
+      "use strict";
       init_define_process();
       var radToDeg = radians => radians * 57.29577951308232;
       module.exports = radToDeg;
@@ -20474,6 +21194,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_utils4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         areAllShapesTheSameType: require_areAllShapesTheSameType2(),
@@ -20488,6 +21209,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fromFakePolygons2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/fromFakePolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var geom2 = require_geom22();
@@ -20531,6 +21253,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_to3DWalls2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/to3DWalls.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var geom2 = require_geom22();
@@ -20551,6 +21274,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_OrthoNormalBasis2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/OrthoNormalBasis.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec2 = require_vec22();
@@ -20694,6 +21418,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_reTesselateCoplanarPolygons2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/reTesselateCoplanarPolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var line2 = require_line22();
@@ -20975,6 +21700,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_retessellate2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/retessellate.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom32();
       var poly3 = require_poly32();
@@ -21016,6 +21742,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_mayOverlap2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/mayOverlap.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var measureBoundingBox2 = require_measureBoundingBox4();
@@ -21042,10 +21769,11 @@ ${nonManifold.join("\n")}`);
   });
   var require_Node2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/trees/Node.js"(exports, module) {
+      "use strict";
       init_define_process();
       var plane = require_plane3();
       var poly3 = require_poly32();
-      var Node = class {
+      var Node = class _Node {
         constructor(parent) {
           this.plane = null;
           this.front = null;
@@ -21147,7 +21875,7 @@ ${nonManifold.join("\n")}`);
               polygontreenodes[i].splitByPlane(node.plane, node.polygontreenodes, backnodes, frontnodes, backnodes);
             }
             if (frontnodes.length > 0) {
-              if (!node.front) node.front = new Node(node);
+              if (!node.front) node.front = new _Node(node);
               const stopCondition = n === frontnodes.length && backnodes.length === 0;
               if (stopCondition) node.front.polygontreenodes = frontnodes; else stack.push({
                 node: node.front,
@@ -21155,7 +21883,7 @@ ${nonManifold.join("\n")}`);
               });
             }
             if (backnodes.length > 0) {
-              if (!node.back) node.back = new Node(node);
+              if (!node.back) node.back = new _Node(node);
               const stopCondition = n === backnodes.length && frontnodes.length === 0;
               if (stopCondition) node.back.polygontreenodes = backnodes; else stack.push({
                 node: node.back,
@@ -21171,6 +21899,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_splitLineSegmentByPlane2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/trees/splitLineSegmentByPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var splitLineSegmentByPlane = (plane, p1, p2) => {
@@ -21188,6 +21917,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_splitPolygonByPlane2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/trees/splitPolygonByPlane.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var plane = require_plane3();
@@ -21293,12 +22023,13 @@ ${nonManifold.join("\n")}`);
   });
   var require_PolygonTreeNode2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/trees/PolygonTreeNode.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS} = require_constants2();
       var vec3 = require_vec32();
       var poly3 = require_poly32();
       var splitPolygonByPlane = require_splitPolygonByPlane2();
-      var PolygonTreeNode = class {
+      var PolygonTreeNode = class _PolygonTreeNode {
         constructor(parent, polygon) {
           this.parent = parent;
           this.children = [];
@@ -21419,7 +22150,7 @@ ${nonManifold.join("\n")}`);
           }
         }
         addChild(polygon) {
-          const newchild = new PolygonTreeNode(this, polygon);
+          const newchild = new _PolygonTreeNode(this, polygon);
           this.children.push(newchild);
           return newchild;
         }
@@ -21492,6 +22223,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_Tree2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/trees/Tree.js"(exports, module) {
+      "use strict";
       init_define_process();
       var Node = require_Node2();
       var PolygonTreeNode = require_PolygonTreeNode2();
@@ -21533,6 +22265,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_trees2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/trees/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         Tree: require_Tree2()
@@ -21541,6 +22274,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectGeom3Sub2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3Sub.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom32();
       var mayOverlap = require_mayOverlap2();
@@ -21566,6 +22300,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectGeom32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var retessellate = require_retessellate2();
@@ -21584,6 +22319,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersectGeom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/intersectGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom3 = require_geom32();
@@ -21606,6 +22342,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_intersect4 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/intersect.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var areAllShapesTheSameType = require_areAllShapesTheSameType2();
@@ -21629,6 +22366,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scissionGeom32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/scissionGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var measureEpsilon = require_measureEpsilon2();
@@ -21707,6 +22445,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scission2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/scission.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom3 = require_geom32();
@@ -21725,6 +22464,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtractGeom3Sub2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3Sub.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom32();
       var mayOverlap = require_mayOverlap2();
@@ -21748,6 +22488,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtractGeom32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var retessellate = require_retessellate2();
@@ -21766,6 +22507,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtractGeom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/subtractGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom3 = require_geom32();
@@ -21788,6 +22530,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_subtract8 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/subtract.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var areAllShapesTheSameType = require_areAllShapesTheSameType2();
@@ -21811,6 +22554,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_unionGeom3Sub2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom32();
       var mayOverlap = require_mayOverlap2();
@@ -21840,6 +22584,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_unionGeom32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var retessellate = require_retessellate2();
@@ -21859,6 +22604,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_unionGeom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/unionGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom3 = require_geom32();
@@ -21881,6 +22627,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_union2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/union.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var areAllShapesTheSameType = require_areAllShapesTheSameType2();
@@ -21904,6 +22651,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_booleans2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         intersect: require_intersect4(),
@@ -21915,6 +22663,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_offsetFromPoints2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/offsetFromPoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS, TAU} = require_constants2();
       var intersect2 = require_intersect3();
@@ -22055,6 +22804,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expandGeom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/expandGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom22();
       var offsetFromPoints = require_offsetFromPoints2();
@@ -22086,6 +22836,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudePolygon2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/extrudePolygon.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec3 = require_vec32();
@@ -22112,6 +22863,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expandShell2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/expandShell.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {EPS, TAU} = require_constants2();
       var mat42 = require_mat42();
@@ -22278,6 +23030,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expandGeom32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/expandGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom3 = require_geom32();
       var union2 = require_union2();
@@ -22307,6 +23060,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expandPath22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/expandPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var area = require_area2();
       var vec2 = require_vec22();
@@ -22400,6 +23154,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expand2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/expand.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -22424,6 +23179,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_offsetGeom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/offsetGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom22();
       var poly2 = require_poly22();
@@ -22458,6 +23214,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_offsetPath22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/offsetPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var path2 = require_path22();
       var offsetFromPoints = require_offsetFromPoints2();
@@ -22488,6 +23245,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_offset2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/offset.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -22509,6 +23267,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_expansions2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         expand: require_expand2(),
@@ -22518,6 +23277,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeLinearGeom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeLinearGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var mat42 = require_mat42();
       var vec3 = require_vec32();
@@ -22562,6 +23322,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeLinearPath22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeLinearPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom22();
       var path2 = require_path22();
@@ -22577,6 +23338,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeLinear2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeLinear.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -22611,6 +23373,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeRectangularPath22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeRectangularPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var path2 = require_path22();
       var expand = require_expand2();
@@ -22633,6 +23396,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeRectangularGeom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeRectangularGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {area} = require_utils3();
       var geom2 = require_geom22();
@@ -22664,6 +23428,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeRectangular2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeRectangular.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -22692,6 +23457,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrudeHelical = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeHelical.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {TAU} = require_constants2();
       var slice = require_slice2();
@@ -22745,6 +23511,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_project2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/project.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var aboutEqualNormals = require_aboutEqualNormals2();
@@ -22804,6 +23571,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_extrusions2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         extrudeFromSlices: require_extrudeFromSlices2(),
@@ -22818,6 +23586,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullPoints22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/hullPoints2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec2 = require_vec22();
       var hullPoints2 = uniquePoints => {
@@ -22862,6 +23631,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toUniquePoints2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/toUniquePoints.js"(exports, module) {
+      "use strict";
       init_define_process();
       var geom2 = require_geom22();
       var geom3 = require_geom32();
@@ -22892,6 +23662,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullPath22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/hullPath2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var path2 = require_path22();
@@ -22910,6 +23681,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullGeom22 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/hullGeom2.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -22927,6 +23699,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_point_line_distance2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/point-line-distance.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cross = require_cross3();
       var subtract2 = require_subtract5();
@@ -22950,6 +23723,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_get_plane_normal2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/get-plane-normal.js"(exports, module) {
+      "use strict";
       init_define_process();
       var cross = require_cross3();
       var normalize = require_normalize3();
@@ -22966,6 +23740,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_VertexList2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/VertexList.js"(exports, module) {
+      "use strict";
       init_define_process();
       var VertexList = class {
         constructor() {
@@ -23053,6 +23828,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_Vertex2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/Vertex.js"(exports, module) {
+      "use strict";
       init_define_process();
       var Vertex = class {
         constructor(point, index) {
@@ -23068,6 +23844,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_HalfEdge2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/HalfEdge.js"(exports, module) {
+      "use strict";
       init_define_process();
       var distance = require_distance3();
       var squaredDistance = require_squaredDistance3();
@@ -23107,6 +23884,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_Face2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/Face.js"(exports, module) {
+      "use strict";
       init_define_process();
       var add = require_add5();
       var copy = require_copy8();
@@ -23120,7 +23898,7 @@ ${nonManifold.join("\n")}`);
       var VISIBLE = 0;
       var NON_CONVEX = 1;
       var DELETED = 2;
-      var Face = class {
+      var Face = class _Face {
         constructor() {
           this.normal = [];
           this.centroid = [];
@@ -23284,7 +24062,7 @@ ${nonManifold.join("\n")}`);
           return indices;
         }
         static createTriangle(v0, v1, v2, minArea = 0) {
-          const face = new Face();
+          const face = new _Face();
           const e0 = new HalfEdge(v0, face);
           const e1 = new HalfEdge(v1, face);
           const e2 = new HalfEdge(v2, face);
@@ -23306,6 +24084,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_QuickHull2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/QuickHull.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dot = require_dot4();
       var pointLineDistance = require_point_line_distance2();
@@ -23686,6 +24465,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_quickhull2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       var QuickHull = require_QuickHull2();
       var runner = (points, options = {}) => {
@@ -23698,6 +24478,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullGeom32 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/hullGeom3.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom3 = require_geom32();
@@ -23722,6 +24503,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hull2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/hull.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var areAllShapesTheSameType = require_areAllShapesTheSameType2();
@@ -23748,6 +24530,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hullChain2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/hullChain.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var union2 = require_union2();
@@ -23766,6 +24549,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_hulls2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         hull: require_hull2(),
@@ -23775,6 +24559,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_snapPolygons2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/snapPolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var poly3 = require_poly32();
@@ -23803,6 +24588,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_mergePolygons2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/mergePolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var aboutEqualNormals = require_aboutEqualNormals2();
       var vec3 = require_vec32();
@@ -23970,6 +24756,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_insertTjunctions2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/insertTjunctions.js"(exports, module) {
+      "use strict";
       init_define_process();
       var constants = require_constants2();
       var vec3 = require_vec32();
@@ -24209,6 +24996,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_triangulatePolygons2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/triangulatePolygons.js"(exports, module) {
+      "use strict";
       init_define_process();
       var vec3 = require_vec32();
       var poly3 = require_poly32();
@@ -24249,6 +25037,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_generalize2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/generalize.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var measureEpsilon = require_measureEpsilon2();
@@ -24300,6 +25089,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_snap6 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/snap.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var vec2 = require_vec22();
@@ -24343,6 +25133,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_modifiers2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/modifiers/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         generalize: require_generalize2(),
@@ -24353,6 +25144,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_padArrayToLength2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/padArrayToLength.js"(exports, module) {
+      "use strict";
       init_define_process();
       var padArrayToLength = (anArray, padding, targetLength) => {
         anArray = anArray.slice();
@@ -24366,6 +25158,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_align2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/transforms/align.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var padArrayToLength = require_padArrayToLength2();
@@ -24409,7 +25202,7 @@ ${nonManifold.join("\n")}`);
         }
         return translate2(translation, geometry);
       };
-      var align2 = (options, ...geometries) => {
+      var align = (options, ...geometries) => {
         const defaults = {
           modes: ["center", "center", "min"],
           relativeTo: [0, 0, 0],
@@ -24431,11 +25224,12 @@ ${nonManifold.join("\n")}`);
         }
         return geometries.length === 1 ? geometries[0] : geometries;
       };
-      module.exports = align2;
+      module.exports = align;
     }
   });
   var require_center2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/transforms/center.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -24496,6 +25290,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_scale8 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/transforms/scale.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var mat42 = require_mat42();
@@ -24531,6 +25326,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transform24 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/transforms/transform.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom2 = require_geom22();
@@ -24552,6 +25348,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_transforms2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/transforms/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         align: require_align2(),
@@ -24581,6 +25378,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_src2 = __commonJS({
     "node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         colors: require_colors2(),
@@ -24602,6 +25400,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_flatten3 = __commonJS({
     "node_modules/@jscad/array-utils/src/flatten.js"(exports, module) {
+      "use strict";
       init_define_process();
       var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
       module.exports = flatten;
@@ -24609,6 +25408,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_fnNumberSort3 = __commonJS({
     "node_modules/@jscad/array-utils/src/fnNumberSort.js"(exports, module) {
+      "use strict";
       init_define_process();
       var fnNumberSort = (a, b) => a - b;
       module.exports = fnNumberSort;
@@ -24616,6 +25416,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_head = __commonJS({
     "node_modules/@jscad/array-utils/src/head.js"(exports, module) {
+      "use strict";
       init_define_process();
       var head2 = array => {
         if (!Array.isArray(array) || array.length === 0) {
@@ -24628,6 +25429,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_insertSorted3 = __commonJS({
     "node_modules/@jscad/array-utils/src/insertSorted.js"(exports, module) {
+      "use strict";
       init_define_process();
       var insertSorted = (array, element, compareFunction) => {
         let leftbound = 0;
@@ -24650,6 +25452,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_nth = __commonJS({
     "node_modules/@jscad/array-utils/src/nth.js"(exports, module) {
+      "use strict";
       init_define_process();
       var nth = (array, index) => {
         if (!Array.isArray(array) || array.length < index) {
@@ -24662,6 +25465,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_padToLength = __commonJS({
     "node_modules/@jscad/array-utils/src/padToLength.js"(exports, module) {
+      "use strict";
       init_define_process();
       var padToLength = (anArray, padding, targetLength) => {
         anArray = anArray.slice();
@@ -24675,6 +25479,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_toArray = __commonJS({
     "node_modules/@jscad/array-utils/src/toArray.js"(exports, module) {
+      "use strict";
       init_define_process();
       var toArray = array => {
         if (Array.isArray(array)) return array;
@@ -24686,6 +25491,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_src3 = __commonJS({
     "node_modules/@jscad/array-utils/src/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = {
         flatten: require_flatten3(),
@@ -24700,6 +25506,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_CSGToStlb = __commonJS({
     "node_modules/@jscad/stl-serializer/CSGToStlb.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {geometries} = require_src2();
       var serializeBinary = (objects, options) => {
@@ -24776,6 +25583,7 @@ ${nonManifold.join("\n")}`);
   });
   var require_CSGToStla = __commonJS({
     "node_modules/@jscad/stl-serializer/CSGToStla.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {geometries} = require_src2();
       var serializeText = (objects, options) => {
@@ -24835,6 +25643,7 @@ endfacet`;
   });
   var require_stl_serializer = __commonJS({
     "node_modules/@jscad/stl-serializer/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       var {geometries, modifiers} = require_src2();
       var {flatten, toArray} = require_src3();
@@ -24865,6 +25674,7 @@ endfacet`;
   });
   var require_FileSaver_min = __commonJS({
     "node_modules/file-saver/dist/FileSaver.min.js"(exports, module) {
+      "use strict";
       init_define_process();
       (function (a, b) {
         if ("function" == typeof define && define.amd) define([], b); else if ("undefined" != typeof exports) b(); else {
@@ -24943,6 +25753,7 @@ endfacet`;
   });
   var require_atob_browser = __commonJS({
     "node_modules/atob-lite/atob-browser.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = function _atob(str) {
         return atob(str);
@@ -24951,6 +25762,7 @@ endfacet`;
   });
   var require_is_base64 = __commonJS({
     "node_modules/is-base64/is-base64.js"(exports, module) {
+      "use strict";
       init_define_process();
       (function (root) {
         "use strict";
@@ -25032,6 +25844,7 @@ endfacet`;
   });
   var require_dtype = __commonJS({
     "node_modules/dtype/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       module.exports = function (dtype) {
         switch (dtype) {
@@ -25061,6 +25874,7 @@ endfacet`;
   });
   var require_flatten_vertex_data = __commonJS({
     "node_modules/flatten-vertex-data/index.js"(exports, module) {
+      "use strict";
       init_define_process();
       var dtype = require_dtype();
       module.exports = flattenVertexData;
@@ -25145,6 +25959,7 @@ endfacet`;
   });
   var require_simple_mime = __commonJS({
     "node_modules/simple-mime/simple-mime.js"(exports, module) {
+      "use strict";
       init_define_process();
       var types;
       module.exports = function setup(defaultMime) {
@@ -25464,7 +26279,7 @@ endfacet`;
   init_define_process();
   var import_context = __toESM(__require("js-slang/context"), 1);
   init_define_process();
-  var _Core = class {
+  var _Core = class _Core {
     static initialize(csgModuleState) {
       _Core.moduleState = csgModuleState;
     }
@@ -25477,20 +26292,20 @@ endfacet`;
       return moduleState2.nextComponent();
     }
   };
+  _Core.moduleState = null;
   var Core = _Core;
-  Core.moduleState = null;
   init_define_process();
   var import_geom3 = __toESM(require_geom3(), 1);
   var import_mat4 = __toESM(require_mat4(), 1);
   var import_transforms = __toESM(require_transforms(), 1);
-  var Group = class {
+  var Group = class _Group {
     constructor(_children, transforms = import_mat4.default.create()) {
       this.transforms = transforms;
       this.children = [..._children];
     }
     applyTransforms(newTransforms) {
       let appliedTransforms = import_mat4.default.multiply(import_mat4.default.create(), newTransforms, this.transforms);
-      return new Group(this.children, appliedTransforms);
+      return new _Group(this.children, appliedTransforms);
     }
     store(newTransforms = import_mat4.default.create()) {
       let appliedGroup = this.applyTransforms(newTransforms);
@@ -25499,16 +26314,16 @@ endfacet`;
       });
     }
     translate(offsets) {
-      return new Group(this.children, import_mat4.default.multiply(import_mat4.default.create(), import_mat4.default.fromTranslation(import_mat4.default.create(), offsets), this.transforms));
+      return new _Group(this.children, import_mat4.default.multiply(import_mat4.default.create(), import_mat4.default.fromTranslation(import_mat4.default.create(), offsets), this.transforms));
     }
     rotate(angles) {
       let yaw = angles[2];
       let pitch = angles[1];
       let roll = angles[0];
-      return new Group(this.children, import_mat4.default.multiply(import_mat4.default.create(), import_mat4.default.fromTaitBryanRotation(import_mat4.default.create(), yaw, pitch, roll), this.transforms));
+      return new _Group(this.children, import_mat4.default.multiply(import_mat4.default.create(), import_mat4.default.fromTaitBryanRotation(import_mat4.default.create(), yaw, pitch, roll), this.transforms));
     }
     scale(factors) {
-      return new Group(this.children, import_mat4.default.multiply(import_mat4.default.create(), import_mat4.default.fromScaling(import_mat4.default.create(), factors), this.transforms));
+      return new _Group(this.children, import_mat4.default.multiply(import_mat4.default.create(), import_mat4.default.fromScaling(import_mat4.default.create(), factors), this.transforms));
     }
     toReplString() {
       return "<Group>";
@@ -25517,24 +26332,24 @@ endfacet`;
       return this.children.map(child => child.applyTransforms(this.transforms));
     }
   };
-  var Shape = class {
+  var Shape = class _Shape {
     constructor(solid) {
       this.solid = solid;
     }
     applyTransforms(newTransforms) {
-      return new Shape((0, import_geom3.transform)(newTransforms, this.solid));
+      return new _Shape((0, import_geom3.transform)(newTransforms, this.solid));
     }
     store(newTransforms = import_mat4.default.create()) {
       Core.getRenderGroupManager().storeShape(this.applyTransforms(newTransforms));
     }
     translate(offsets) {
-      return new Shape((0, import_transforms.translate)(offsets, this.solid));
+      return new _Shape((0, import_transforms.translate)(offsets, this.solid));
     }
     rotate(angles) {
-      return new Shape((0, import_transforms.rotate)(angles, this.solid));
+      return new _Shape((0, import_transforms.rotate)(angles, this.solid));
     }
     scale(factors) {
-      return new Shape((0, import_transforms.scale)(factors, this.solid));
+      return new _Shape((0, import_transforms.scale)(factors, this.solid));
     }
     toReplString() {
       return "<Shape>";

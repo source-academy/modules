@@ -28,7 +28,7 @@ require => {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw new Error('Dynamic require of "' + x + '" is not supported');
+    throw Error('Dynamic require of "' + x + '" is not supported');
   });
   var __esm = (fn, res) => function __init() {
     return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
@@ -190,13 +190,13 @@ require => {
         return Math.round((hi - lo) * Math.random() + lo);
       }
       exports.b2RandomInt = b2RandomInt;
-      var b2Vec24 = class {
+      var b2Vec24 = class _b2Vec2 {
         constructor(x = 0, y = 0) {
           this.x = x;
           this.y = y;
         }
         Clone() {
-          return new b2Vec24(this.x, this.y);
+          return new _b2Vec2(this.x, this.y);
         }
         SetZero() {
           this.x = 0;
@@ -446,14 +446,14 @@ require => {
       b2Vec24.s_t1 = new b2Vec24();
       b2Vec24.s_t2 = new b2Vec24();
       b2Vec24.s_t3 = new b2Vec24();
-      var b2Vec3 = class {
+      var b2Vec3 = class _b2Vec3 {
         constructor(x = 0, y = 0, z = 0) {
           this.x = x;
           this.y = y;
           this.z = z;
         }
         Clone() {
-          return new b2Vec3(this.x, this.y, this.z);
+          return new _b2Vec3(this.x, this.y, this.z);
         }
         SetZero() {
           this.x = 0;
@@ -528,22 +528,22 @@ require => {
       exports.b2Vec3 = b2Vec3;
       b2Vec3.ZERO = new b2Vec3(0, 0, 0);
       b2Vec3.s_t0 = new b2Vec3();
-      var b2Mat22 = class {
+      var b2Mat22 = class _b2Mat22 {
         constructor() {
           this.ex = new b2Vec24(1, 0);
           this.ey = new b2Vec24(0, 1);
         }
         Clone() {
-          return new b2Mat22().Copy(this);
+          return new _b2Mat22().Copy(this);
         }
         static FromColumns(c1, c2) {
-          return new b2Mat22().SetColumns(c1, c2);
+          return new _b2Mat22().SetColumns(c1, c2);
         }
         static FromScalars(r1c1, r1c2, r2c1, r2c2) {
-          return new b2Mat22().SetScalars(r1c1, r1c2, r2c1, r2c2);
+          return new _b2Mat22().SetScalars(r1c1, r1c2, r2c1, r2c2);
         }
         static FromAngle(radians) {
-          return new b2Mat22().SetAngle(radians);
+          return new _b2Mat22().SetAngle(radians);
         }
         SetScalars(r1c1, r1c2, r2c1, r2c2) {
           this.ex.Set(r1c1, r2c1);
@@ -688,14 +688,14 @@ require => {
       };
       exports.b2Mat22 = b2Mat22;
       b2Mat22.IDENTITY = new b2Mat22();
-      var b2Mat33 = class {
+      var b2Mat33 = class _b2Mat33 {
         constructor() {
           this.ex = new b2Vec3(1, 0, 0);
           this.ey = new b2Vec3(0, 1, 0);
           this.ez = new b2Vec3(0, 0, 1);
         }
         Clone() {
-          return new b2Mat33().Copy(this);
+          return new _b2Mat33().Copy(this);
         }
         SetColumns(c1, c2, c3) {
           this.ex.Copy(c1);
@@ -815,7 +815,7 @@ require => {
       };
       exports.b2Mat33 = b2Mat33;
       b2Mat33.IDENTITY = new b2Mat33();
-      var b2Rot = class {
+      var b2Rot = class _b2Rot {
         constructor(angle = 0) {
           this.s = 0;
           this.c = 1;
@@ -825,7 +825,7 @@ require => {
           }
         }
         Clone() {
-          return new b2Rot().Copy(this);
+          return new _b2Rot().Copy(this);
         }
         Copy(other) {
           this.s = other.s;
@@ -886,13 +886,13 @@ require => {
       };
       exports.b2Rot = b2Rot;
       b2Rot.IDENTITY = new b2Rot();
-      var b2Transform = class {
+      var b2Transform = class _b2Transform {
         constructor() {
           this.p = new b2Vec24();
           this.q = new b2Rot();
         }
         Clone() {
-          return new b2Transform().Copy(this);
+          return new _b2Transform().Copy(this);
         }
         Copy(other) {
           this.p.Copy(other.p);
@@ -966,7 +966,7 @@ require => {
       };
       exports.b2Transform = b2Transform;
       b2Transform.IDENTITY = new b2Transform();
-      var b2Sweep = class {
+      var b2Sweep = class _b2Sweep {
         constructor() {
           this.localCenter = new b2Vec24();
           this.c0 = new b2Vec24();
@@ -976,7 +976,7 @@ require => {
           this.alpha0 = 0;
         }
         Clone() {
-          return new b2Sweep().Copy(this);
+          return new _b2Sweep().Copy(this);
         }
         Copy(other) {
           this.localCenter.Copy(other.localCenter);
@@ -1020,7 +1020,7 @@ require => {
         value: true
       });
       exports.debugColors = exports.b2Color = void 0;
-      var b2Color = class {
+      var b2Color = class _b2Color {
         constructor(r = 0.5, g = 0.5, b = 0.5, a = 1) {
           this.r = r;
           this.g = g;
@@ -1028,7 +1028,7 @@ require => {
           this.a = a;
         }
         Clone() {
-          return new b2Color(this.r, this.g, this.b, this.a);
+          return new _b2Color(this.r, this.g, this.b, this.a);
         }
         Copy(other) {
           this.r = other.r;
@@ -1091,7 +1091,7 @@ require => {
           return this;
         }
         Mix(mixColor, strength) {
-          b2Color.MixColors(this, mixColor, strength);
+          _b2Color.MixColors(this, mixColor, strength);
         }
         static Add(colorA, colorB, out) {
           out.r = colorA.r + colorB.r;
@@ -1373,7 +1373,7 @@ require => {
           return this;
         }
       };
-      var b2Simplex = class {
+      var b2Simplex = class _b2Simplex {
         constructor() {
           this.m_v1 = new b2SimplexVertex();
           this.m_v2 = new b2SimplexVertex();
@@ -1494,7 +1494,7 @@ require => {
         Solve2() {
           const w1 = this.m_v1.w;
           const w2 = this.m_v2.w;
-          const e12 = b2_math_1.b2Vec2.Subtract(w2, w1, b2Simplex.s_e12);
+          const e12 = b2_math_1.b2Vec2.Subtract(w2, w1, _b2Simplex.s_e12);
           const d12_2 = -b2_math_1.b2Vec2.Dot(w1, e12);
           if (d12_2 <= 0) {
             this.m_v1.a = 1;
@@ -1517,17 +1517,17 @@ require => {
           const w1 = this.m_v1.w;
           const w2 = this.m_v2.w;
           const w3 = this.m_v3.w;
-          const e12 = b2_math_1.b2Vec2.Subtract(w2, w1, b2Simplex.s_e12);
+          const e12 = b2_math_1.b2Vec2.Subtract(w2, w1, _b2Simplex.s_e12);
           const w1e12 = b2_math_1.b2Vec2.Dot(w1, e12);
           const w2e12 = b2_math_1.b2Vec2.Dot(w2, e12);
           const d12_1 = w2e12;
           const d12_2 = -w1e12;
-          const e13 = b2_math_1.b2Vec2.Subtract(w3, w1, b2Simplex.s_e13);
+          const e13 = b2_math_1.b2Vec2.Subtract(w3, w1, _b2Simplex.s_e13);
           const w1e13 = b2_math_1.b2Vec2.Dot(w1, e13);
           const w3e13 = b2_math_1.b2Vec2.Dot(w3, e13);
           const d13_1 = w3e13;
           const d13_2 = -w1e13;
-          const e23 = b2_math_1.b2Vec2.Subtract(w3, w2, b2Simplex.s_e23);
+          const e23 = b2_math_1.b2Vec2.Subtract(w3, w2, _b2Simplex.s_e23);
           const w2e23 = b2_math_1.b2Vec2.Dot(w2, e23);
           const w3e23 = b2_math_1.b2Vec2.Dot(w3, e23);
           const d23_1 = w3e23;
@@ -1839,7 +1839,7 @@ require => {
         }
       };
       exports.b2ContactFeature = b2ContactFeature;
-      var b2ContactID = class {
+      var b2ContactID = class _b2ContactID {
         constructor() {
           this.cf = new b2ContactFeature();
         }
@@ -1848,7 +1848,7 @@ require => {
           return this;
         }
         Clone() {
-          return new b2ContactID().Copy(this);
+          return new _b2ContactID().Copy(this);
         }
         get key() {
           return this.cf.key;
@@ -1886,7 +1886,7 @@ require => {
         b2ManifoldType2[b2ManifoldType2["e_faceA"] = 1] = "e_faceA";
         b2ManifoldType2[b2ManifoldType2["e_faceB"] = 2] = "e_faceB";
       })(b2ManifoldType = exports.b2ManifoldType || (exports.b2ManifoldType = {}));
-      var b2Manifold = class {
+      var b2Manifold = class _b2Manifold {
         constructor() {
           this.points = (0, b2_common_1.b2MakeArray)(b2_common_1.b2_maxManifoldPoints, b2ManifoldPoint);
           this.localNormal = new b2_math_1.b2Vec2();
@@ -1914,11 +1914,11 @@ require => {
           return this;
         }
         Clone() {
-          return new b2Manifold().Copy(this);
+          return new _b2Manifold().Copy(this);
         }
       };
       exports.b2Manifold = b2Manifold;
-      var b2WorldManifold = class {
+      var b2WorldManifold = class _b2WorldManifold {
         constructor() {
           this.normal = new b2_math_1.b2Vec2();
           this.points = (0, b2_common_1.b2MakeArray)(b2_common_1.b2_maxManifoldPoints, b2_math_1.b2Vec2);
@@ -1932,13 +1932,13 @@ require => {
             case b2ManifoldType.e_circles:
               {
                 this.normal.Set(1, 0);
-                const pointA = b2_math_1.b2Transform.MultiplyVec2(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_pointA);
-                const pointB = b2_math_1.b2Transform.MultiplyVec2(xfB, manifold.points[0].localPoint, b2WorldManifold.Initialize_s_pointB);
+                const pointA = b2_math_1.b2Transform.MultiplyVec2(xfA, manifold.localPoint, _b2WorldManifold.Initialize_s_pointA);
+                const pointB = b2_math_1.b2Transform.MultiplyVec2(xfB, manifold.points[0].localPoint, _b2WorldManifold.Initialize_s_pointB);
                 if (b2_math_1.b2Vec2.DistanceSquared(pointA, pointB) > b2_common_1.b2_epsilon_sq) {
                   b2_math_1.b2Vec2.Subtract(pointB, pointA, this.normal).Normalize();
                 }
-                const cA = b2_math_1.b2Vec2.AddScaled(pointA, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
-                const cB = b2_math_1.b2Vec2.SubtractScaled(pointB, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
+                const cA = b2_math_1.b2Vec2.AddScaled(pointA, radiusA, this.normal, _b2WorldManifold.Initialize_s_cA);
+                const cB = b2_math_1.b2Vec2.SubtractScaled(pointB, radiusB, this.normal, _b2WorldManifold.Initialize_s_cB);
                 b2_math_1.b2Vec2.Mid(cA, cB, this.points[0]);
                 this.separations[0] = b2_math_1.b2Vec2.Dot(b2_math_1.b2Vec2.Subtract(cB, cA, b2_math_1.b2Vec2.s_t0), this.normal);
                 break;
@@ -1946,12 +1946,12 @@ require => {
             case b2ManifoldType.e_faceA:
               {
                 b2_math_1.b2Rot.MultiplyVec2(xfA.q, manifold.localNormal, this.normal);
-                const planePoint = b2_math_1.b2Transform.MultiplyVec2(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
+                const planePoint = b2_math_1.b2Transform.MultiplyVec2(xfA, manifold.localPoint, _b2WorldManifold.Initialize_s_planePoint);
                 for (let i = 0; i < manifold.pointCount; ++i) {
-                  const clipPoint = b2_math_1.b2Transform.MultiplyVec2(xfB, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
+                  const clipPoint = b2_math_1.b2Transform.MultiplyVec2(xfB, manifold.points[i].localPoint, _b2WorldManifold.Initialize_s_clipPoint);
                   const s = radiusA - b2_math_1.b2Vec2.Dot(b2_math_1.b2Vec2.Subtract(clipPoint, planePoint, b2_math_1.b2Vec2.s_t0), this.normal);
-                  const cA = b2_math_1.b2Vec2.AddScaled(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cA);
-                  const cB = b2_math_1.b2Vec2.SubtractScaled(clipPoint, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
+                  const cA = b2_math_1.b2Vec2.AddScaled(clipPoint, s, this.normal, _b2WorldManifold.Initialize_s_cA);
+                  const cB = b2_math_1.b2Vec2.SubtractScaled(clipPoint, radiusB, this.normal, _b2WorldManifold.Initialize_s_cB);
                   b2_math_1.b2Vec2.Mid(cA, cB, this.points[i]);
                   this.separations[i] = b2_math_1.b2Vec2.Dot(b2_math_1.b2Vec2.Subtract(cB, cA, b2_math_1.b2Vec2.s_t0), this.normal);
                 }
@@ -1960,12 +1960,12 @@ require => {
             case b2ManifoldType.e_faceB:
               {
                 b2_math_1.b2Rot.MultiplyVec2(xfB.q, manifold.localNormal, this.normal);
-                const planePoint = b2_math_1.b2Transform.MultiplyVec2(xfB, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
+                const planePoint = b2_math_1.b2Transform.MultiplyVec2(xfB, manifold.localPoint, _b2WorldManifold.Initialize_s_planePoint);
                 for (let i = 0; i < manifold.pointCount; ++i) {
-                  const clipPoint = b2_math_1.b2Transform.MultiplyVec2(xfA, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
+                  const clipPoint = b2_math_1.b2Transform.MultiplyVec2(xfA, manifold.points[i].localPoint, _b2WorldManifold.Initialize_s_clipPoint);
                   const s = radiusB - b2_math_1.b2Vec2.Dot(b2_math_1.b2Vec2.Subtract(clipPoint, planePoint, b2_math_1.b2Vec2.s_t0), this.normal);
-                  const cB = b2_math_1.b2Vec2.AddScaled(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cB);
-                  const cA = b2_math_1.b2Vec2.SubtractScaled(clipPoint, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
+                  const cB = b2_math_1.b2Vec2.AddScaled(clipPoint, s, this.normal, _b2WorldManifold.Initialize_s_cB);
+                  const cA = b2_math_1.b2Vec2.SubtractScaled(clipPoint, radiusA, this.normal, _b2WorldManifold.Initialize_s_cA);
                   b2_math_1.b2Vec2.Mid(cA, cB, this.points[i]);
                   this.separations[i] = b2_math_1.b2Vec2.Dot(b2_math_1.b2Vec2.Subtract(cA, cB, b2_math_1.b2Vec2.s_t0), this.normal);
                 }
@@ -2428,7 +2428,7 @@ require => {
         b2BodyType4[b2BodyType4["b2_kinematicBody"] = 1] = "b2_kinematicBody";
         b2BodyType4[b2BodyType4["b2_dynamicBody"] = 2] = "b2_dynamicBody";
       })(b2BodyType3 = exports.b2BodyType || (exports.b2BodyType = {}));
-      var b2Body = class {
+      var b2Body = class _b2Body {
         constructor(bd, world2) {
           var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
           this.m_type = b2BodyType3.b2_staticBody;
@@ -2706,7 +2706,7 @@ require => {
             this.m_I = massData.I - this.m_mass * b2_math_1.b2Vec2.Dot(massData.center, massData.center);
             this.m_invI = 1 / this.m_I;
           }
-          const oldCenter = b2Body.SetMassData_s_oldCenter.Copy(this.m_sweep.c);
+          const oldCenter = _b2Body.SetMassData_s_oldCenter.Copy(this.m_sweep.c);
           this.m_sweep.localCenter.Copy(massData.center);
           b2_math_1.b2Transform.MultiplyVec2(this.m_xf, this.m_sweep.localCenter, this.m_sweep.c);
           this.m_sweep.c0.Copy(this.m_sweep.c);
@@ -2724,12 +2724,12 @@ require => {
             this.m_sweep.a0 = this.m_sweep.a;
             return;
           }
-          const localCenter = b2Body.ResetMassData_s_localCenter.SetZero();
+          const localCenter = _b2Body.ResetMassData_s_localCenter.SetZero();
           for (let f = this.m_fixtureList; f; f = f.m_next) {
             if (f.m_density === 0) {
               continue;
             }
-            const massData = f.GetMassData(b2Body.ResetMassData_s_massData);
+            const massData = f.GetMassData(_b2Body.ResetMassData_s_massData);
             this.m_mass += massData.mass;
             localCenter.AddScaled(massData.mass, massData.center);
             this.m_I += massData.I;
@@ -2745,7 +2745,7 @@ require => {
             this.m_I = 0;
             this.m_invI = 0;
           }
-          const oldCenter = b2Body.ResetMassData_s_oldCenter.Copy(this.m_sweep.c);
+          const oldCenter = _b2Body.ResetMassData_s_oldCenter.Copy(this.m_sweep.c);
           this.m_sweep.localCenter.Copy(localCenter);
           b2_math_1.b2Transform.MultiplyVec2(this.m_xf, this.m_sweep.localCenter, this.m_sweep.c);
           this.m_sweep.c0.Copy(this.m_sweep.c);
@@ -2919,7 +2919,7 @@ require => {
         SynchronizeFixtures() {
           const broadPhase = this.m_world.m_contactManager.m_broadPhase;
           if (this.m_awakeFlag) {
-            const xf1 = b2Body.SynchronizeFixtures_s_xf1;
+            const xf1 = _b2Body.SynchronizeFixtures_s_xf1;
             xf1.q.Set(this.m_sweep.a0);
             b2_math_1.b2Rot.MultiplyVec2(xf1.q, this.m_sweep.localCenter, xf1.p);
             b2_math_1.b2Vec2.Subtract(this.m_sweep.c0, xf1.p, xf1.p);
@@ -4689,7 +4689,7 @@ require => {
       var b2_common_1 = require_b2_common();
       var b2_math_1 = require_b2_math();
       var b2_shape_1 = require_b2_shape();
-      var b2CircleShape3 = class extends b2_shape_1.b2Shape {
+      var b2CircleShape3 = class _b2CircleShape extends b2_shape_1.b2Shape {
         constructor(radius = 0) {
           super(b2_shape_1.b2ShapeType.e_circle, radius);
           this.m_p = new b2_math_1.b2Vec2();
@@ -4700,7 +4700,7 @@ require => {
           return this;
         }
         Clone() {
-          return new b2CircleShape3().Copy(this);
+          return new _b2CircleShape().Copy(this);
         }
         Copy(other) {
           super.Copy(other);
@@ -4711,15 +4711,15 @@ require => {
           return 1;
         }
         TestPoint(transform, p) {
-          const center = b2_math_1.b2Transform.MultiplyVec2(transform, this.m_p, b2CircleShape3.TestPoint_s_center);
-          const d = b2_math_1.b2Vec2.Subtract(p, center, b2CircleShape3.TestPoint_s_d);
+          const center = b2_math_1.b2Transform.MultiplyVec2(transform, this.m_p, _b2CircleShape.TestPoint_s_center);
+          const d = b2_math_1.b2Vec2.Subtract(p, center, _b2CircleShape.TestPoint_s_d);
           return b2_math_1.b2Vec2.Dot(d, d) <= __pow(this.m_radius, 2);
         }
         RayCast(output, input, transform, _childIndex) {
-          const position = b2_math_1.b2Transform.MultiplyVec2(transform, this.m_p, b2CircleShape3.RayCast_s_position);
-          const s = b2_math_1.b2Vec2.Subtract(input.p1, position, b2CircleShape3.RayCast_s_s);
+          const position = b2_math_1.b2Transform.MultiplyVec2(transform, this.m_p, _b2CircleShape.RayCast_s_position);
+          const s = b2_math_1.b2Vec2.Subtract(input.p1, position, _b2CircleShape.RayCast_s_s);
           const b = b2_math_1.b2Vec2.Dot(s, s) - __pow(this.m_radius, 2);
-          const r = b2_math_1.b2Vec2.Subtract(input.p2, input.p1, b2CircleShape3.RayCast_s_r);
+          const r = b2_math_1.b2Vec2.Subtract(input.p2, input.p1, _b2CircleShape.RayCast_s_r);
           const c = b2_math_1.b2Vec2.Dot(s, r);
           const rr = b2_math_1.b2Vec2.Dot(r, r);
           const sigma = c * c - rr * b;
@@ -4736,7 +4736,7 @@ require => {
           return false;
         }
         ComputeAABB(aabb, transform, _childIndex) {
-          const p = b2_math_1.b2Transform.MultiplyVec2(transform, this.m_p, b2CircleShape3.ComputeAABB_s_p);
+          const p = b2_math_1.b2Transform.MultiplyVec2(transform, this.m_p, _b2CircleShape.ComputeAABB_s_p);
           aabb.lowerBound.Set(p.x - this.m_radius, p.y - this.m_radius);
           aabb.upperBound.Set(p.x + this.m_radius, p.y + this.m_radius);
         }
@@ -4843,7 +4843,7 @@ require => {
         c.y = f * c.y + s.y;
         return c;
       }
-      var b2PolygonShape4 = class extends b2_shape_1.b2Shape {
+      var b2PolygonShape4 = class _b2PolygonShape extends b2_shape_1.b2Shape {
         constructor() {
           super(b2_shape_1.b2ShapeType.e_polygon, b2_common_1.b2_polygonRadius);
           this.m_centroid = new b2_math_1.b2Vec2();
@@ -4852,7 +4852,7 @@ require => {
           this.m_count = 0;
         }
         Clone() {
-          return new b2PolygonShape4().Copy(this);
+          return new _b2PolygonShape().Copy(this);
         }
         Copy(other) {
           super.Copy(other);
@@ -5089,7 +5089,7 @@ require => {
       var b2_common_1 = require_b2_common();
       var b2_math_1 = require_b2_math();
       var b2_shape_1 = require_b2_shape();
-      var b2EdgeShape = class extends b2_shape_1.b2Shape {
+      var b2EdgeShape = class _b2EdgeShape extends b2_shape_1.b2Shape {
         constructor() {
           super(b2_shape_1.b2ShapeType.e_edge, b2_common_1.b2_polygonRadius);
           this.m_vertex1 = new b2_math_1.b2Vec2();
@@ -5113,7 +5113,7 @@ require => {
           return this;
         }
         Clone() {
-          return new b2EdgeShape().Copy(this);
+          return new _b2EdgeShape().Copy(this);
         }
         Copy(other) {
           super.Copy(other);
@@ -5131,12 +5131,12 @@ require => {
           return false;
         }
         RayCast(output, input, xf, _childIndex) {
-          const p1 = b2_math_1.b2Transform.TransposeMultiplyVec2(xf, input.p1, b2EdgeShape.RayCast_s_p1);
-          const p2 = b2_math_1.b2Transform.TransposeMultiplyVec2(xf, input.p2, b2EdgeShape.RayCast_s_p2);
-          const d = b2_math_1.b2Vec2.Subtract(p2, p1, b2EdgeShape.RayCast_s_d);
+          const p1 = b2_math_1.b2Transform.TransposeMultiplyVec2(xf, input.p1, _b2EdgeShape.RayCast_s_p1);
+          const p2 = b2_math_1.b2Transform.TransposeMultiplyVec2(xf, input.p2, _b2EdgeShape.RayCast_s_p2);
+          const d = b2_math_1.b2Vec2.Subtract(p2, p1, _b2EdgeShape.RayCast_s_d);
           const v1 = this.m_vertex1;
           const v2 = this.m_vertex2;
-          const e = b2_math_1.b2Vec2.Subtract(v2, v1, b2EdgeShape.RayCast_s_e);
+          const e = b2_math_1.b2Vec2.Subtract(v2, v1, _b2EdgeShape.RayCast_s_e);
           const {normal} = output;
           normal.Set(e.y, -e.x).Normalize();
           const numerator = b2_math_1.b2Vec2.Dot(normal, b2_math_1.b2Vec2.Subtract(v1, p1, b2_math_1.b2Vec2.s_t0));
@@ -5151,8 +5151,8 @@ require => {
           if (t < 0 || input.maxFraction < t) {
             return false;
           }
-          const q = b2_math_1.b2Vec2.AddScaled(p1, t, d, b2EdgeShape.RayCast_s_q);
-          const r = b2_math_1.b2Vec2.Subtract(v2, v1, b2EdgeShape.RayCast_s_r);
+          const q = b2_math_1.b2Vec2.AddScaled(p1, t, d, _b2EdgeShape.RayCast_s_q);
+          const r = b2_math_1.b2Vec2.Subtract(v2, v1, _b2EdgeShape.RayCast_s_r);
           const rr = b2_math_1.b2Vec2.Dot(r, r);
           if (rr === 0) {
             return false;
@@ -5169,8 +5169,8 @@ require => {
           return true;
         }
         ComputeAABB(aabb, xf, _childIndex) {
-          const v1 = b2_math_1.b2Transform.MultiplyVec2(xf, this.m_vertex1, b2EdgeShape.ComputeAABB_s_v1);
-          const v2 = b2_math_1.b2Transform.MultiplyVec2(xf, this.m_vertex2, b2EdgeShape.ComputeAABB_s_v2);
+          const v1 = b2_math_1.b2Transform.MultiplyVec2(xf, this.m_vertex1, _b2EdgeShape.ComputeAABB_s_v1);
+          const v2 = b2_math_1.b2Transform.MultiplyVec2(xf, this.m_vertex2, _b2EdgeShape.ComputeAABB_s_v2);
           b2_math_1.b2Vec2.Min(v1, v2, aabb.lowerBound);
           b2_math_1.b2Vec2.Max(v1, v2, aabb.upperBound);
           const r = this.m_radius;
@@ -5222,7 +5222,7 @@ require => {
       var b2_math_1 = require_b2_math();
       var b2_shape_1 = require_b2_shape();
       var b2_edge_shape_1 = require_b2_edge_shape();
-      var b2ChainShape = class extends b2_shape_1.b2Shape {
+      var b2ChainShape = class _b2ChainShape extends b2_shape_1.b2Shape {
         constructor() {
           super(b2_shape_1.b2ShapeType.e_chain, b2_common_1.b2_polygonRadius);
           this.m_vertices = [];
@@ -5254,7 +5254,7 @@ require => {
           return this;
         }
         Clone() {
-          return new b2ChainShape().Copy(this);
+          return new _b2ChainShape().Copy(this);
         }
         Copy(other) {
           super.Copy(other);
@@ -5283,7 +5283,7 @@ require => {
           return false;
         }
         RayCast(output, input, xf, childIndex) {
-          const edgeShape = b2ChainShape.RayCast_s_edgeShape;
+          const edgeShape = _b2ChainShape.RayCast_s_edgeShape;
           const i1 = childIndex;
           let i2 = childIndex + 1;
           if (i2 === this.m_vertices.length) {
@@ -5299,10 +5299,10 @@ require => {
           if (i2 === this.m_vertices.length) {
             i2 = 0;
           }
-          const v1 = b2_math_1.b2Transform.MultiplyVec2(xf, this.m_vertices[i1], b2ChainShape.ComputeAABB_s_v1);
-          const v2 = b2_math_1.b2Transform.MultiplyVec2(xf, this.m_vertices[i2], b2ChainShape.ComputeAABB_s_v2);
-          const lower = b2_math_1.b2Vec2.Min(v1, v2, b2ChainShape.ComputeAABB_s_lower);
-          const upper = b2_math_1.b2Vec2.Max(v1, v2, b2ChainShape.ComputeAABB_s_upper);
+          const v1 = b2_math_1.b2Transform.MultiplyVec2(xf, this.m_vertices[i1], _b2ChainShape.ComputeAABB_s_v1);
+          const v2 = b2_math_1.b2Transform.MultiplyVec2(xf, this.m_vertices[i2], _b2ChainShape.ComputeAABB_s_v2);
+          const lower = b2_math_1.b2Vec2.Min(v1, v2, _b2ChainShape.ComputeAABB_s_lower);
+          const upper = b2_math_1.b2Vec2.Max(v1, v2, _b2ChainShape.ComputeAABB_s_upper);
           aabb.lowerBound.x = lower.x - this.m_radius;
           aabb.lowerBound.y = lower.y - this.m_radius;
           aabb.upperBound.x = upper.x + this.m_radius;
@@ -9208,9 +9208,9 @@ require => {
       var b2_collide_edge_1 = require_b2_collide_edge();
       var b2_edge_shape_1 = require_b2_edge_shape();
       var b2_contact_1 = require_b2_contact();
-      var b2ChainAndCircleContact = class extends b2_contact_1.b2Contact {
+      var b2ChainAndCircleContact = class _b2ChainAndCircleContact extends b2_contact_1.b2Contact {
         Evaluate(manifold, xfA, xfB) {
-          const edge = b2ChainAndCircleContact.Evaluate_s_edge;
+          const edge = _b2ChainAndCircleContact.Evaluate_s_edge;
           this.GetShapeA().GetChildEdge(edge, this.m_indexA);
           (0, b2_collide_edge_1.b2CollideEdgeAndCircle)(manifold, edge, xfA, this.GetShapeB(), xfB);
         }
@@ -9230,9 +9230,9 @@ require => {
       var b2_collide_edge_1 = require_b2_collide_edge();
       var b2_edge_shape_1 = require_b2_edge_shape();
       var b2_contact_1 = require_b2_contact();
-      var b2ChainAndPolygonContact = class extends b2_contact_1.b2Contact {
+      var b2ChainAndPolygonContact = class _b2ChainAndPolygonContact extends b2_contact_1.b2Contact {
         Evaluate(manifold, xfA, xfB) {
-          const edge = b2ChainAndPolygonContact.Evaluate_s_edge;
+          const edge = _b2ChainAndPolygonContact.Evaluate_s_edge;
           this.GetShapeA().GetChildEdge(edge, this.m_indexA);
           (0, b2_collide_edge_1.b2CollideEdgeAndPolygon)(manifold, edge, xfA, this.GetShapeB(), xfB);
         }
@@ -9560,7 +9560,7 @@ require => {
         }
       };
       exports.b2Profile = b2Profile;
-      var b2TimeStep = class {
+      var b2TimeStep = class _b2TimeStep {
         constructor() {
           this.dt = 0;
           this.inv_dt = 0;
@@ -9572,7 +9572,7 @@ require => {
           this.warmStarting = false;
         }
         static Create() {
-          return new b2TimeStep();
+          return new _b2TimeStep();
         }
         Copy(step) {
           this.dt = step.dt;
@@ -9686,17 +9686,17 @@ require => {
         }
       };
       exports.b2ContactSolverDef = b2ContactSolverDef;
-      var b2PositionSolverManifold = class {
+      var b2PositionSolverManifold = class _b2PositionSolverManifold {
         constructor() {
           this.normal = new b2_math_1.b2Vec2();
           this.point = new b2_math_1.b2Vec2();
           this.separation = 0;
         }
         Initialize(pc, xfA, xfB, index) {
-          const pointA = b2PositionSolverManifold.Initialize_s_pointA;
-          const pointB = b2PositionSolverManifold.Initialize_s_pointB;
-          const planePoint = b2PositionSolverManifold.Initialize_s_planePoint;
-          const clipPoint = b2PositionSolverManifold.Initialize_s_clipPoint;
+          const pointA = _b2PositionSolverManifold.Initialize_s_pointA;
+          const pointB = _b2PositionSolverManifold.Initialize_s_pointB;
+          const planePoint = _b2PositionSolverManifold.Initialize_s_planePoint;
+          const clipPoint = _b2PositionSolverManifold.Initialize_s_clipPoint;
           switch (pc.type) {
             case b2_collision_1.b2ManifoldType.e_circles:
               b2_math_1.b2Transform.MultiplyVec2(xfA, pc.localPoint, pointA);
@@ -9727,7 +9727,7 @@ require => {
       b2PositionSolverManifold.Initialize_s_pointB = new b2_math_1.b2Vec2();
       b2PositionSolverManifold.Initialize_s_planePoint = new b2_math_1.b2Vec2();
       b2PositionSolverManifold.Initialize_s_clipPoint = new b2_math_1.b2Vec2();
-      var b2ContactSolver = class {
+      var b2ContactSolver = class _b2ContactSolver {
         constructor() {
           this.m_step = b2_time_step_1.b2TimeStep.Create();
           this.m_positionConstraints = (0, b2_common_1.b2MakeArray)(1024, b2ContactPositionConstraint);
@@ -9815,9 +9815,9 @@ require => {
           return this;
         }
         InitializeVelocityConstraints() {
-          const xfA = b2ContactSolver.InitializeVelocityConstraints_s_xfA;
-          const xfB = b2ContactSolver.InitializeVelocityConstraints_s_xfB;
-          const worldManifold = b2ContactSolver.InitializeVelocityConstraints_s_worldManifold;
+          const xfA = _b2ContactSolver.InitializeVelocityConstraints_s_xfA;
+          const xfB = _b2ContactSolver.InitializeVelocityConstraints_s_xfB;
+          const worldManifold = _b2ContactSolver.InitializeVelocityConstraints_s_worldManifold;
           const k_maxConditionNumber = 1e3;
           for (let i = 0; i < this.m_count; ++i) {
             const vc = this.m_velocityConstraints[i];
@@ -9883,7 +9883,7 @@ require => {
           }
         }
         WarmStart() {
-          const P = b2ContactSolver.WarmStart_s_P;
+          const P = _b2ContactSolver.WarmStart_s_P;
           for (let i = 0; i < this.m_count; ++i) {
             const vc = this.m_velocityConstraints[i];
             const {indexA, indexB, pointCount, normal, tangent} = vc;
@@ -9908,17 +9908,17 @@ require => {
           }
         }
         SolveVelocityConstraints() {
-          const dv = b2ContactSolver.SolveVelocityConstraints_s_dv;
-          const dv1 = b2ContactSolver.SolveVelocityConstraints_s_dv1;
-          const dv2 = b2ContactSolver.SolveVelocityConstraints_s_dv2;
-          const P = b2ContactSolver.SolveVelocityConstraints_s_P;
-          const a = b2ContactSolver.SolveVelocityConstraints_s_a;
-          const b = b2ContactSolver.SolveVelocityConstraints_s_b;
-          const x = b2ContactSolver.SolveVelocityConstraints_s_x;
-          const d = b2ContactSolver.SolveVelocityConstraints_s_d;
-          const P1 = b2ContactSolver.SolveVelocityConstraints_s_P1;
-          const P2 = b2ContactSolver.SolveVelocityConstraints_s_P2;
-          const P1P2 = b2ContactSolver.SolveVelocityConstraints_s_P1P2;
+          const dv = _b2ContactSolver.SolveVelocityConstraints_s_dv;
+          const dv1 = _b2ContactSolver.SolveVelocityConstraints_s_dv1;
+          const dv2 = _b2ContactSolver.SolveVelocityConstraints_s_dv2;
+          const P = _b2ContactSolver.SolveVelocityConstraints_s_P;
+          const a = _b2ContactSolver.SolveVelocityConstraints_s_a;
+          const b = _b2ContactSolver.SolveVelocityConstraints_s_b;
+          const x = _b2ContactSolver.SolveVelocityConstraints_s_x;
+          const d = _b2ContactSolver.SolveVelocityConstraints_s_d;
+          const P1 = _b2ContactSolver.SolveVelocityConstraints_s_P1;
+          const P2 = _b2ContactSolver.SolveVelocityConstraints_s_P2;
+          const P1P2 = _b2ContactSolver.SolveVelocityConstraints_s_P1P2;
           for (let i = 0; i < this.m_count; ++i) {
             const vc = this.m_velocityConstraints[i];
             const {indexA, indexB, pointCount, normal, tangent, friction} = vc;
@@ -10055,12 +10055,12 @@ require => {
           }
         }
         SolvePositionConstraints() {
-          const xfA = b2ContactSolver.SolvePositionConstraints_s_xfA;
-          const xfB = b2ContactSolver.SolvePositionConstraints_s_xfB;
-          const psm = b2ContactSolver.SolvePositionConstraints_s_psm;
-          const rA = b2ContactSolver.SolvePositionConstraints_s_rA;
-          const rB = b2ContactSolver.SolvePositionConstraints_s_rB;
-          const P = b2ContactSolver.SolvePositionConstraints_s_P;
+          const xfA = _b2ContactSolver.SolvePositionConstraints_s_xfA;
+          const xfB = _b2ContactSolver.SolvePositionConstraints_s_xfB;
+          const psm = _b2ContactSolver.SolvePositionConstraints_s_psm;
+          const rA = _b2ContactSolver.SolvePositionConstraints_s_rA;
+          const rB = _b2ContactSolver.SolvePositionConstraints_s_rB;
+          const P = _b2ContactSolver.SolvePositionConstraints_s_P;
           let minSeparation = 0;
           for (let i = 0; i < this.m_count; ++i) {
             const pc = this.m_positionConstraints[i];
@@ -10102,12 +10102,12 @@ require => {
           return minSeparation >= -3 * b2_common_1.b2_linearSlop;
         }
         SolveTOIPositionConstraints(toiIndexA, toiIndexB) {
-          const xfA = b2ContactSolver.SolveTOIPositionConstraints_s_xfA;
-          const xfB = b2ContactSolver.SolveTOIPositionConstraints_s_xfB;
-          const psm = b2ContactSolver.SolveTOIPositionConstraints_s_psm;
-          const rA = b2ContactSolver.SolveTOIPositionConstraints_s_rA;
-          const rB = b2ContactSolver.SolveTOIPositionConstraints_s_rB;
-          const P = b2ContactSolver.SolveTOIPositionConstraints_s_P;
+          const xfA = _b2ContactSolver.SolveTOIPositionConstraints_s_xfA;
+          const xfB = _b2ContactSolver.SolveTOIPositionConstraints_s_xfB;
+          const psm = _b2ContactSolver.SolveTOIPositionConstraints_s_psm;
+          const rA = _b2ContactSolver.SolveTOIPositionConstraints_s_rA;
+          const rB = _b2ContactSolver.SolveTOIPositionConstraints_s_rB;
+          const P = _b2ContactSolver.SolveTOIPositionConstraints_s_P;
           let minSeparation = 0;
           for (let i = 0; i < this.m_count; ++i) {
             const pc = this.m_positionConstraints[i];
@@ -10200,7 +10200,7 @@ require => {
       var b2_body_1 = require_b2_body();
       var b2_time_step_1 = require_b2_time_step();
       var b2_world_callbacks_1 = require_b2_world_callbacks();
-      var b2Island = class {
+      var b2Island = class _b2Island {
         constructor(bodyCapacity, contactCapacity, jointCapacity, listener) {
           this.m_bodyCount = 0;
           this.m_jointCount = 0;
@@ -10238,7 +10238,7 @@ require => {
           this.m_joints[this.m_jointCount++] = joint;
         }
         Solve(profile, step, gravity, allowSleep) {
-          const timer = b2Island.s_timer.Reset();
+          const timer = _b2Island.s_timer.Reset();
           const h = step.dt;
           for (let i = 0; i < this.m_bodyCount; ++i) {
             const b = this.m_bodies[i];
@@ -10259,17 +10259,17 @@ require => {
             this.m_velocities[i].w = w;
           }
           timer.Reset();
-          const solverData = b2Island.s_solverData;
+          const solverData = _b2Island.s_solverData;
           solverData.step.Copy(step);
           solverData.positions = this.m_positions;
           solverData.velocities = this.m_velocities;
-          const contactSolverDef = b2Island.s_contactSolverDef;
+          const contactSolverDef = _b2Island.s_contactSolverDef;
           contactSolverDef.step.Copy(step);
           contactSolverDef.contacts = this.m_contacts;
           contactSolverDef.count = this.m_contactCount;
           contactSolverDef.positions = this.m_positions;
           contactSolverDef.velocities = this.m_velocities;
-          const contactSolver = b2Island.s_contactSolver.Initialize(contactSolverDef);
+          const contactSolver = _b2Island.s_contactSolver.Initialize(contactSolverDef);
           contactSolver.InitializeVelocityConstraints();
           if (step.warmStarting) {
             contactSolver.WarmStart();
@@ -10292,7 +10292,7 @@ require => {
             let {a} = this.m_positions[i];
             const {v} = this.m_velocities[i];
             let {w} = this.m_velocities[i];
-            const translation = b2_math_1.b2Vec2.Scale(h, v, b2Island.s_translation);
+            const translation = b2_math_1.b2Vec2.Scale(h, v, _b2Island.s_translation);
             if (b2_math_1.b2Vec2.Dot(translation, translation) > b2_common_1.b2_maxTranslationSquared) {
               const ratio = b2_common_1.b2_maxTranslation / translation.Length();
               v.Scale(ratio);
@@ -10364,13 +10364,13 @@ require => {
             this.m_velocities[i].v.Copy(b.m_linearVelocity);
             this.m_velocities[i].w = b.m_angularVelocity;
           }
-          const contactSolverDef = b2Island.s_contactSolverDef;
+          const contactSolverDef = _b2Island.s_contactSolverDef;
           contactSolverDef.contacts = this.m_contacts;
           contactSolverDef.count = this.m_contactCount;
           contactSolverDef.step.Copy(subStep);
           contactSolverDef.positions = this.m_positions;
           contactSolverDef.velocities = this.m_velocities;
-          const contactSolver = b2Island.s_contactSolver.Initialize(contactSolverDef);
+          const contactSolver = _b2Island.s_contactSolver.Initialize(contactSolverDef);
           for (let i = 0; i < subStep.config.positionIterations; ++i) {
             const contactsOkay = contactSolver.SolveTOIPositionConstraints(toiIndexA, toiIndexB);
             if (contactsOkay) {
@@ -10391,7 +10391,7 @@ require => {
             let {a} = this.m_positions[i];
             const {v} = this.m_velocities[i];
             let {w} = this.m_velocities[i];
-            const translation = b2_math_1.b2Vec2.Scale(h, v, b2Island.s_translation);
+            const translation = b2_math_1.b2Vec2.Scale(h, v, _b2Island.s_translation);
             if (b2_math_1.b2Vec2.Dot(translation, translation) > b2_common_1.b2_maxTranslationSquared) {
               const ratio = b2_common_1.b2_maxTranslation / translation.Length();
               v.Scale(ratio);
@@ -10418,7 +10418,7 @@ require => {
           for (let i = 0; i < this.m_contactCount; ++i) {
             const c = this.m_contacts[i];
             const vc = constraints[i];
-            const impulse = b2Island.s_impulse;
+            const impulse = _b2Island.s_impulse;
             impulse.count = vc.pointCount;
             for (let j = 0; j < vc.pointCount; ++j) {
               impulse.normalImpulses[j] = vc.points[j].normalImpulse;
@@ -10466,7 +10466,7 @@ require => {
       var b2_contact_manager_1 = require_b2_contact_manager();
       var b2_island_1 = require_b2_island();
       var b2_time_step_1 = require_b2_time_step();
-      var b2World2 = class {
+      var b2World2 = class _b2World {
         constructor(gravity) {
           this.m_contactManager = new b2_contact_manager_1.b2ContactManager();
           this.m_bodyList = null;
@@ -10490,7 +10490,7 @@ require => {
           this.m_gravity.Copy(gravity);
         }
         static Create(gravity) {
-          return new b2World2(gravity);
+          return new _b2World(gravity);
         }
         SetDestructionListener(listener) {
           this.m_destructionListener = listener;
@@ -10588,7 +10588,7 @@ require => {
         }
         CreateJoint(def) {
           (0, b2_common_1.b2Assert)(!this.IsLocked());
-          const j = b2World2.Joint_Create(def);
+          const j = _b2World.Joint_Create(def);
           j.m_prev = null;
           j.m_next = this.m_jointList;
           if (this.m_jointList) {
@@ -10667,13 +10667,13 @@ require => {
           }
         }
         Step(dt, iterations) {
-          const stepTimer = b2World2.Step_s_stepTimer.Reset();
+          const stepTimer = _b2World.Step_s_stepTimer.Reset();
           if (this.m_newContacts) {
             this.m_contactManager.FindNewContacts();
             this.m_newContacts = false;
           }
           this.m_locked = true;
-          const step = b2World2.Step_s_step;
+          const step = _b2World.Step_s_step;
           step.dt = dt;
           step.config = __spreadValues({}, iterations);
           if (dt > 0) {
@@ -10684,17 +10684,17 @@ require => {
           step.dtRatio = this.m_inv_dt0 * dt;
           step.warmStarting = this.m_warmStarting;
           {
-            const timer = b2World2.Step_s_timer.Reset();
+            const timer = _b2World.Step_s_timer.Reset();
             this.m_contactManager.Collide();
             this.m_profile.collide = timer.GetMilliseconds();
           }
           if (this.m_stepComplete && step.dt > 0) {
-            const timer = b2World2.Step_s_timer.Reset();
+            const timer = _b2World.Step_s_timer.Reset();
             this.Solve(step);
             this.m_profile.solve = timer.GetMilliseconds();
           }
           if (this.m_continuousPhysics && step.dt > 0) {
-            const timer = b2World2.Step_s_timer.Reset();
+            const timer = _b2World.Step_s_timer.Reset();
             this.SolveTOI(step);
             this.m_profile.solveTOI = timer.GetMilliseconds();
           }
@@ -10740,7 +10740,7 @@ require => {
           return out;
         }
         QueryFixtureShape(shape, index, transform, callback) {
-          const aabb = b2World2.QueryFixtureShape_s_aabb;
+          const aabb = _b2World.QueryFixtureShape_s_aabb;
           shape.ComputeAABB(aabb, transform, index);
           this.m_contactManager.m_broadPhase.Query(aabb, proxy => {
             const fixture_proxy = (0, b2_common_1.b2Verify)(proxy.userData);
@@ -10772,7 +10772,7 @@ require => {
           return out;
         }
         RayCast(point1, point2, callback) {
-          const input = b2World2.RayCast_s_input;
+          const input = _b2World.RayCast_s_input;
           input.maxFraction = 1;
           input.p1.Copy(point1);
           input.p2.Copy(point2);
@@ -10780,11 +10780,11 @@ require => {
             const fixture_proxy = (0, b2_common_1.b2Verify)(proxy.userData);
             const {fixture} = fixture_proxy;
             const index = fixture_proxy.childIndex;
-            const output = b2World2.RayCast_s_output;
+            const output = _b2World.RayCast_s_output;
             const hit = fixture.RayCast(output, input2, index);
             if (hit) {
               const {fraction} = output;
-              const point = b2World2.RayCast_s_point;
+              const point = _b2World.RayCast_s_point;
               point.Set((1 - fraction) * point1.x + fraction * point2.x, (1 - fraction) * point1.y + fraction * point2.y);
               return callback(fixture, point, output.normal, fraction);
             }
@@ -11072,13 +11072,13 @@ require => {
                 }
                 const indexA = c.GetChildIndexA();
                 const indexB = c.GetChildIndexB();
-                const input = b2World2.SolveTOI_s_toi_input;
+                const input = _b2World.SolveTOI_s_toi_input;
                 input.proxyA.SetShape(fA2.GetShape(), indexA);
                 input.proxyB.SetShape(fB2.GetShape(), indexB);
                 input.sweepA.Copy(bA2.m_sweep);
                 input.sweepB.Copy(bB2.m_sweep);
                 input.tMax = 1;
-                const output = b2World2.SolveTOI_s_toi_output;
+                const output = _b2World.SolveTOI_s_toi_output;
                 (0, b2_time_of_impact_1.b2TimeOfImpact)(output, input);
                 const beta = output.t;
                 if (output.state === b2_time_of_impact_1.b2TOIOutputState.e_touching) {
@@ -11102,8 +11102,8 @@ require => {
             const fB = minContact.GetFixtureB();
             const bA = fA.GetBody();
             const bB = fB.GetBody();
-            const backup1 = b2World2.SolveTOI_s_backup1.Copy(bA.m_sweep);
-            const backup2 = b2World2.SolveTOI_s_backup2.Copy(bB.m_sweep);
+            const backup1 = _b2World.SolveTOI_s_backup1.Copy(bA.m_sweep);
+            const backup2 = _b2World.SolveTOI_s_backup2.Copy(bB.m_sweep);
             bA.Advance(minAlpha);
             bB.Advance(minAlpha);
             minContact.Update(this.m_contactManager.m_contactListener);
@@ -11149,7 +11149,7 @@ require => {
                   if (sensorA || sensorB) {
                     continue;
                   }
-                  const backup = b2World2.SolveTOI_s_backup.Copy(other.m_sweep);
+                  const backup = _b2World.SolveTOI_s_backup.Copy(other.m_sweep);
                   if (!other.m_islandFlag) {
                     other.Advance(minAlpha);
                   }
@@ -11177,7 +11177,7 @@ require => {
                 }
               }
             }
-            const subStep = b2World2.SolveTOI_s_subStep;
+            const subStep = _b2World.SolveTOI_s_subStep;
             subStep.dt = (1 - minAlpha) * step.dt;
             subStep.inv_dt = 1 / subStep.dt;
             subStep.dtRatio = 1;
@@ -11938,6 +11938,7 @@ require => {
   var import_core4 = __toESM(require_dist(), 1);
   init_define_process();
   var import_core = __toESM(require_dist(), 1);
+  init_define_process();
   var ACCURACY = 2;
   var Vector2 = class extends import_core.b2Vec2 {
     constructor() {
@@ -11961,7 +11962,103 @@ require => {
     }
   };
   init_define_process();
+  var import_core3 = __toESM(require_dist(), 1);
+  init_define_process();
   var import_core2 = __toESM(require_dist(), 1);
+  var PhysicsWorld = class {
+    constructor() {
+      this.iterationsConfig = {
+        velocityIterations: 8,
+        positionIterations: 3
+      };
+      this.b2World = import_core2.b2World.Create(new import_core2.b2Vec2());
+      this.physicsObjects = [];
+      this.timer = new Timer();
+      this.touchingObjects = new Map();
+      const contactListener = new import_core2.b2ContactListener();
+      contactListener.BeginContact = contact => {
+        const m = this.touchingObjects.get(contact.GetFixtureA());
+        if (m === void 0) {
+          const newMap = new Map();
+          newMap.set(contact.GetFixtureB(), this.timer.getTime());
+          this.touchingObjects.set(contact.GetFixtureA(), newMap);
+        } else {
+          m.set(contact.GetFixtureB(), this.timer.getTime());
+        }
+      };
+      contactListener.EndContact = contact => {
+        const contacts = this.touchingObjects.get(contact.GetFixtureA());
+        if (contacts) {
+          contacts.delete(contact.GetFixtureB());
+        }
+      };
+      this.b2World.SetContactListener(contactListener);
+    }
+    setGravity(gravity) {
+      this.b2World.SetGravity(gravity);
+    }
+    addObject(obj) {
+      this.physicsObjects.push(obj);
+      return obj;
+    }
+    createBody(bodyDef) {
+      return this.b2World.CreateBody(bodyDef);
+    }
+    makeGround(height, friction) {
+      const groundBody = this.createBody({
+        type: import_core2.b2BodyType.b2_staticBody,
+        position: new import_core2.b2Vec2(0, height - 10)
+      });
+      const groundShape = new import_core2.b2PolygonShape().SetAsBox(1e4, 10);
+      groundBody.CreateFixture({
+        shape: groundShape,
+        density: 1,
+        friction
+      });
+    }
+    update(dt) {
+      for (const obj of this.physicsObjects) {
+        obj.applyForces(this.timer.getTime());
+      }
+      this.b2World.Step(dt, this.iterationsConfig);
+      this.timer.step(dt);
+    }
+    simulate(total_time) {
+      const dt = 0.01;
+      for (let i = 0; i < total_time; i += dt) {
+        this.update(dt);
+      }
+    }
+    getB2World() {
+      return this.b2World;
+    }
+    getWorldStatus() {
+      let world_status = `
+  World time: ${this.timer.toString()}
+  
+  Objects:
+      `;
+      this.physicsObjects.forEach(obj => {
+        world_status += `
+  ------------------------
+  ${obj.toReplString()}
+  ------------------------
+        `;
+      });
+      return world_status;
+    }
+    findImpact(obj1, obj2) {
+      const m = this.touchingObjects.get(obj1.getFixture());
+      if (m === void 0) {
+        return -1;
+      }
+      const time = m.get(obj2.getFixture());
+      if (time === void 0) {
+        return -1;
+      }
+      return time;
+    }
+  };
   var PhysicsObject = class {
     constructor(position, rotation, shape, isStatic, world2) {
       this.forcesCentered = [];
@@ -11974,7 +12071,7 @@ require => {
   Rotation: ${this.getRotation().toFixed(ACCURACY)}
   AngularVelocity: [${this.getAngularVelocity().toFixed(ACCURACY)}]`;
       this.body = world2.createBody({
-        type: isStatic ? import_core2.b2BodyType.b2_staticBody : import_core2.b2BodyType.b2_dynamicBody,
+        type: isStatic ? import_core3.b2BodyType.b2_staticBody : import_core3.b2BodyType.b2_dynamicBody,
         position,
         angle: rotation
       });
@@ -12033,7 +12130,7 @@ require => {
     }
     applyForcesToCenter(world_time) {
       this.forcesCentered = this.forcesCentered.filter(force => force.start_time + force.duration > world_time);
-      const resForce = this.forcesCentered.filter(force => force.start_time < world_time).reduce((res, force) => res.Add(force.direction.Scale(force.magnitude)), new import_core2.b2Vec2());
+      const resForce = this.forcesCentered.filter(force => force.start_time < world_time).reduce((res, force) => res.Add(force.direction.Scale(force.magnitude)), new import_core3.b2Vec2());
       this.body.ApplyForceToCenter(resForce);
     }
     applyForcesAtAPoint(world_time) {
@@ -12058,15 +12155,15 @@ require => {
       return false;
     }
     scale_size(scale) {
-      if (this.shape instanceof import_core2.b2CircleShape) {
+      if (this.shape instanceof import_core3.b2CircleShape) {
         this.shape.m_radius *= scale;
-      } else if (this.shape instanceof import_core2.b2PolygonShape) {
+      } else if (this.shape instanceof import_core3.b2PolygonShape) {
         const centroid = this.shape.m_centroid;
         const arr = [];
         this.shape.m_vertices.forEach(vec => {
-          arr.push(new import_core2.b2Vec2(centroid.x + scale * (vec.x - centroid.x), centroid.y + scale * (vec.y - centroid.y)));
+          arr.push(new import_core3.b2Vec2(centroid.x + scale * (vec.x - centroid.x), centroid.y + scale * (vec.y - centroid.y)));
         });
-        this.shape = new import_core2.b2PolygonShape().Set(arr);
+        this.shape = new import_core3.b2PolygonShape().Set(arr);
       }
       const f = this.fixture;
       this.body.DestroyFixture(this.fixture);
@@ -12075,102 +12172,6 @@ require => {
         density: f.GetDensity(),
         friction: f.GetFriction()
       });
-    }
-  };
-  init_define_process();
-  var import_core3 = __toESM(require_dist(), 1);
-  var PhysicsWorld = class {
-    constructor() {
-      this.iterationsConfig = {
-        velocityIterations: 8,
-        positionIterations: 3
-      };
-      this.b2World = import_core3.b2World.Create(new import_core3.b2Vec2());
-      this.physicsObjects = [];
-      this.timer = new Timer();
-      this.touchingObjects = new Map();
-      const contactListener = new import_core3.b2ContactListener();
-      contactListener.BeginContact = contact => {
-        const m = this.touchingObjects.get(contact.GetFixtureA());
-        if (m === void 0) {
-          const newMap = new Map();
-          newMap.set(contact.GetFixtureB(), this.timer.getTime());
-          this.touchingObjects.set(contact.GetFixtureA(), newMap);
-        } else {
-          m.set(contact.GetFixtureB(), this.timer.getTime());
-        }
-      };
-      contactListener.EndContact = contact => {
-        const contacts = this.touchingObjects.get(contact.GetFixtureA());
-        if (contacts) {
-          contacts.delete(contact.GetFixtureB());
-        }
-      };
-      this.b2World.SetContactListener(contactListener);
-    }
-    setGravity(gravity) {
-      this.b2World.SetGravity(gravity);
-    }
-    addObject(obj) {
-      this.physicsObjects.push(obj);
-      return obj;
-    }
-    createBody(bodyDef) {
-      return this.b2World.CreateBody(bodyDef);
-    }
-    makeGround(height, friction) {
-      const groundBody = this.createBody({
-        type: import_core3.b2BodyType.b2_staticBody,
-        position: new import_core3.b2Vec2(0, height - 10)
-      });
-      const groundShape = new import_core3.b2PolygonShape().SetAsBox(1e4, 10);
-      groundBody.CreateFixture({
-        shape: groundShape,
-        density: 1,
-        friction
-      });
-    }
-    update(dt) {
-      for (const obj of this.physicsObjects) {
-        obj.applyForces(this.timer.getTime());
-      }
-      this.b2World.Step(dt, this.iterationsConfig);
-      this.timer.step(dt);
-    }
-    simulate(total_time) {
-      const dt = 0.01;
-      for (let i = 0; i < total_time; i += dt) {
-        this.update(dt);
-      }
-    }
-    getB2World() {
-      return this.b2World;
-    }
-    getWorldStatus() {
-      let world_status = `
-  World time: ${this.timer.toString()}
-  
-  Objects:
-      `;
-      this.physicsObjects.forEach(obj => {
-        world_status += `
-  ------------------------
-  ${obj.toReplString()}
-  ------------------------
-        `;
-      });
-      return world_status;
-    }
-    findImpact(obj1, obj2) {
-      const m = this.touchingObjects.get(obj1.getFixture());
-      if (m === void 0) {
-        return -1;
-      }
-      const time = m.get(obj2.getFixture());
-      if (time === void 0) {
-        return -1;
-      }
-      return time;
     }
   };
   var world = null;

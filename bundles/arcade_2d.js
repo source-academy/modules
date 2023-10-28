@@ -58,6 +58,7 @@ require => {
   });
   var require_phaser = __commonJS({
     "node_modules/phaser/dist/phaser.js"(exports, module) {
+      "use strict";
       init_define_process();
       (function webpackUniversalModuleDefinition(root, factory) {
         if (typeof exports === "object" && typeof module === "object") module.exports = factory(); else if (typeof define === "function" && define.amd) define("Phaser", [], factory); else if (typeof exports === "object") exports["Phaser"] = factory(); else root["Phaser"] = factory();
@@ -69775,6 +69776,7 @@ require => {
   var import_phaser = __toESM(require_phaser(), 1);
   init_define_process();
   init_define_process();
+  init_define_process();
   var DEFAULT_WIDTH = 600;
   var DEFAULT_HEIGHT = 600;
   var DEFAULT_SCALE = 1;
@@ -69804,7 +69806,7 @@ require => {
     isHitboxActive: true
   };
   var DEFAULT_PATH_PREFIX = "https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/";
-  var _GameObject = class {
+  var _GameObject = class _GameObject {
     constructor(transformProps = DEFAULT_TRANSFORM_PROPS) {
       this.transformProps = transformProps;
       this.isTransformUpdated = false;
@@ -69828,9 +69830,9 @@ require => {
       return _GameObject.gameObjectsArray;
     }
   };
+  _GameObject.gameObjectCount = 0;
+  _GameObject.gameObjectsArray = [];
   var GameObject = _GameObject;
-  GameObject.gameObjectCount = 0;
-  GameObject.gameObjectsArray = [];
   var RenderableGameObject = class extends GameObject {
     constructor(transformProps, renderProps = DEFAULT_RENDER_PROPS) {
       super(transformProps);
@@ -69957,7 +69959,7 @@ require => {
     }
   };
   init_define_process();
-  var _AudioClip = class {
+  var _AudioClip = class _AudioClip {
     constructor(url, volumeLevel) {
       this.url = url;
       this.volumeLevel = volumeLevel;
@@ -70013,10 +70015,10 @@ require => {
       return _AudioClip.audioClipsArray;
     }
   };
+  _AudioClip.audioClipCount = 0;
+  _AudioClip.audioClipsIndexMap = new Map();
+  _AudioClip.audioClipsArray = [];
   var AudioClip = _AudioClip;
-  AudioClip.audioClipCount = 0;
-  AudioClip.audioClipsIndexMap = new Map();
-  AudioClip.audioClipsArray = [];
   var gameState = {
     debugLogArray: new Array(),
     gameTime: 0,

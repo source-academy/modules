@@ -9,7 +9,7 @@ require => {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw new Error('Dynamic require of "' + x + '" is not supported');
+    throw Error('Dynamic require of "' + x + '" is not supported');
   });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
@@ -43,6 +43,9 @@ require => {
   });
   var import_context2 = __toESM(__require("js-slang/context"), 1);
   var import_context = __toESM(__require("js-slang/context"), 1);
+  function default_js_slang(_program) {
+    throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
+  }
   var import_js_slang = __require("js-slang");
   var ProgrammableRepl = class {
     constructor() {
@@ -270,9 +273,6 @@ require => {
   }
   function set_font_size(font_size_px) {
     INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());
-  }
-  function default_js_slang(_program) {
-    throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
   }
   return __toCommonJS(repl_exports);
 }
