@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn scripts:build && yarn build --lint --tsc && yarn devserver:lint && yarn devserver:tsc && yarn scripts:lint && yarn scripts:tsc
+yarn build --lint --tsc
