@@ -32,6 +32,7 @@ const BOX_PADDING_VALUE = 4;
 class ProgrammableReplGUI extends React.Component<Props, State> {
   public replInstance : ProgrammableRepl;
   private editorAreaRect;
+  private editorInstance;
   constructor(data: Props) {
     super(data);
     this.replInstance = data.programmableReplInstance;
@@ -50,6 +51,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       const height = Math.max(e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
       this.replInstance.editorHeight = height;
       this.setState({ editorHeight: height });
+      this.editorInstance.resize();
     }
   };
   private onMouseUp = (_e) => {
@@ -108,7 +110,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           border: '2px solid #6f8194',
         }}>
           <AceEditor
-            ref={ (e) => this.replInstance.setEditorInstance(e?.editor)}
+            ref={ (e) => { this.editorInstance = e?.editor; this.replInstance.setEditorInstance(e?.editor); }}
             style= { {
               width: '100%',
               height: `${editorHeight}px`,
