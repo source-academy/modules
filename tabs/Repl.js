@@ -3177,6 +3177,7 @@ export default require => (() => {
           this.setState({
             editorHeight: height
           });
+          this.editorInstance.resize();
         }
       };
       this.onMouseUp = _e => {
@@ -3259,7 +3260,10 @@ export default require => (() => {
             border: "2px solid #6f8194"
           },
           children: (0, import_jsx_runtime.jsx)(AceEditor, {
-            ref: e => this.replInstance.setEditorInstance(e == null ? void 0 : e.editor),
+            ref: e => {
+              this.editorInstance = e == null ? void 0 : e.editor;
+              this.replInstance.setEditorInstance(e == null ? void 0 : e.editor);
+            },
             style: __spreadValues({
               width: "100%",
               height: `${editorHeight}px`
