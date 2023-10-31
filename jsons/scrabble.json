@@ -1,4 +1,6 @@
 {
   "scrabble_letters": "<div><h4>scrabble_letters: undefined</h4><div class=\"description\"><p><code>scrabble_letters</code> is an array of arrays of strings. Each array  \nof strings represents an allowed word in Scrabble and contains  \nthe letters of that word as single-character strings in the  \norder in which the letters appear in the word.</p></div></div>",
-  "scrabble_words": "<div><h4>scrabble_words: undefined</h4><div class=\"description\"><p><code>scrabble_words</code> is an array of strings, each representing  \nan allowed word in Scrabble.</p></div></div>"
+  "scrabble_letters_tiny": "<div><h4>scrabble_letters_tiny: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "scrabble_words": "<div><h4>scrabble_words: undefined</h4><div class=\"description\"><p><code>scrabble_words</code> is an array of strings, each representing  \nan allowed word in Scrabble.</p></div></div>",
+  "scrabble_words_tiny": "<div><h4>scrabble_words_tiny: undefined</h4><div class=\"description\"><p>No description available</p></div></div>"
 }
