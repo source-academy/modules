@@ -4,10 +4,8 @@
  * @author Wang Zihan
  */
 
-
 import context from 'js-slang/context';
 import { ProgrammableRepl } from './programmable_repl';
-import { COLOR_REPL_DISPLAY_DEFAULT } from './config';
 
 const INSTANCE = new ProgrammableRepl();
 context.moduleContexts.repl.state = INSTANCE;
@@ -65,7 +63,7 @@ export function set_evaluator(evalFunc: Function) {
  */
 export function repl_display(content: any) : any {
   if (INSTANCE.richDisplayInternal(content) === 'not_rich_text_pair') {
-    INSTANCE.pushOutputString(content.toString(), COLOR_REPL_DISPLAY_DEFAULT, 'plaintext');// students may set the value of the parameter "str" to types other than a string (for example "repl_display(1)" ). So here I need to first convert the parameter "str" into a string before preceding.
+    INSTANCE.pushOutputString(content.toString(), 'white', 'plaintext');// students may set the value of the parameter "str" to types other than a string (for example "module_display(1)" ). So here I need to first convert the parameter "str" into a string before preceding.
     return content;
   }
   return undefined;
@@ -94,7 +92,6 @@ export function set_background_image(img_url: string, background_color_alpha: nu
 export function set_font_size(font_size_px: number) {
   INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());// The TypeScript type checker will throw an error as "parseInt" in TypeScript only accepts one string as parameter.
 }
-
 
 /**
  * When use this function as the entrance function in the parameter of "set_evaluator", the Programmable Repl will directly use the default js-slang interpreter to run your program in Programmable Repl editor. Do not directly call this function in your own code.

@@ -5,18 +5,16 @@
  */
 
 import React from 'react';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { type ProgrammableRepl } from '../../bundles/repl/programmable_repl';
+import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '../../bundles/repl/config';
-// If I use import for AceEditor it will cause runtime error and crash Source Academy when spawning tab in the new module building system.
-// import AceEditor from 'react-ace';
-const AceEditor = require('react-ace').default;
+import AceEditor from 'react-ace';
+
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
 import 'ace-builds/src-noconflict/ext-language_tools';
-
 
 type Props = {
   programmableReplInstance: ProgrammableRepl;
@@ -31,9 +29,7 @@ const BOX_PADDING_VALUE = 4;
 
 class ProgrammableReplGUI extends React.Component<Props, State> {
   public replInstance : ProgrammableRepl;
-
   private editorAreaRect;
-
   constructor(data: Props) {
     super(data);
     this.replInstance = data.programmableReplInstance;
@@ -43,12 +39,10 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       isDraggingDragBar: false,
     };
   }
-
   private dragBarOnMouseDown = (e) => {
     e.preventDefault();
     this.setState({ isDraggingDragBar: true });
   };
-
   private onMouseMove = (e) => {
     if (this.state.isDraggingDragBar) {
       const height = Math.max(e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
@@ -56,23 +50,18 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       this.setState({ editorHeight: height });
     }
   };
-
   private onMouseUp = (_e) => {
     this.setState({ isDraggingDragBar: false });
   };
-
   componentDidMount() {
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
   }
-
   componentWillUnmount() {
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
   }
-
-  render() {
-    const { editorHeight } = this.state;
+  public render() {
     const outputDivs : JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
@@ -84,12 +73,9 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           outputDivs.push(<div style={{ color: str.color }} dangerouslySetInnerHTML={ { __html: str.content }} />);
         }
       } else if (str.color === '') {
-        outputDivs.push(<div style = { FONT_MESSAGE } >{ str.content }</div>);
+        outputDivs.push(<div>{ str.content }</div>);
       } else {
-        outputDivs.push(<div style={{
-          ...FONT_MESSAGE,
-          ...{ color: str.color },
-        }}>{ str.content }</div>);
+        outputDivs.push(<div style={{ color: str.color }}>{ str.content }</div>);
       }
     }
     return (
@@ -113,10 +99,10 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           border: '2px solid #6f8194',
         }}>
           <AceEditor
-            ref={ (e) => { this.replInstance.setEditorInstance(e?.editor); }}
+            ref={ (e) => this.replInstance.setEditorInstance(e?.editor)}
             style= { {
               width: '100%',
-              height: `${editorHeight}px`,
+              height: '375px',
               ...(this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
@@ -129,10 +115,6 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
             value={this.replInstance.userCodeInEditor.toString()}
           />
         </div>
-        <div onMouseDown = {this.dragBarOnMouseDown} style = {{
-          cursor: 'row-resize',
-          height: '8px',
-        }} />
         <div style = {{
           padding: `${BOX_PADDING_VALUE}px`,
           border: '2px solid #6f8194',
