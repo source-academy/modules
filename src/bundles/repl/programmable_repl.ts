@@ -249,7 +249,7 @@ export class ProgrammableRepl {
     this.pushOutputString('<span style=\'font-style:italic;\'>Showing my love to my favorite girls through a SA module, is that the so-called "romance of a programmer"?</span>', 'gray', 'richtext');
     this.pushOutputString('❤❤❤❤❤', 'pink');
     this.pushOutputString('<br>', 'white', 'richtext');
-    this.pushOutputString('If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>invoke_repl</span> function with the correct parameter before using the Programmable Repl Tab.', 'yellow', 'richtext');
+    this.pushOutputString('If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.', 'yellow', 'richtext');
     return 'Easter Egg!';
   }
 }
