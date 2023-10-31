@@ -1,7 +1,7 @@
 /**
  * ## Example of usage:
  * ### Use with metacircular evaluator:
- * ```
+ * ```js
  * import { set_evaluator, repl_display } from "repl";
  *
  * const primitive_functions = list(
@@ -18,7 +18,7 @@
  * ```
  *
  * ### Use with Source Academy's builtin js-slang
- * ```
+ * ```js
  * import { set_evaluator, default_js_slang, repl_display } from "repl";  // Here you also need to import "repl_display" along with "set_evaluator" and "default_js_slang".
  *
  * set_evaluator(default_js_slang); // This can invoke the repl with Source Academy's builtin js-slang evaluation entry
@@ -27,7 +27,7 @@
  *
  *
  * ### Customize Editor Appearance
- * ```
+ * ```js
  * import { set_background_image, set_font_size } from "repl";
  * set_background_image("https://www.some_image_website.xyz/your_favorite_image.png");  // Set the background image of the editor in repl tab
  * set_font_size(20.5);  // Set the font size of the editor in repl tab
