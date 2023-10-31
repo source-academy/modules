@@ -10,7 +10,9 @@ import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '../../bundles/repl/config';
-import AceEditor from 'react-ace';
+// If I use import for AceEditor it will cause runtime error and crash Source Academy when spawning tab in the new module building system.
+// import AceEditor from 'react-ace';
+const AceEditor = require('react-ace').default;
 
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
@@ -62,20 +64,27 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
     document.removeEventListener('mouseup', this.onMouseUp);
   }
   public render() {
+    const { editorHeight } = this.state;
     const outputDivs : JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
       const str = this.replInstance.outputStrings[i];
       if (str.outputMethod === 'richtext') {
         if (str.color === '') {
-          outputDivs.push(<div dangerouslySetInnerHTML={ { __html: str.content }} />);
+          outputDivs.push(<div style={ FONT_MESSAGE } dangerouslySetInnerHTML={ { __html: str.content }} />);
         } else {
-          outputDivs.push(<div style={{ color: str.color }} dangerouslySetInnerHTML={ { __html: str.content }} />);
+          outputDivs.push(<div style={{
+            ...FONT_MESSAGE,
+            ...{ color: str.color },
+          }} dangerouslySetInnerHTML={ { __html: str.content }} />);
         }
       } else if (str.color === '') {
-        outputDivs.push(<div>{ str.content }</div>);
+        outputDivs.push(<div style={ FONT_MESSAGE }>{ str.content }</div>);
       } else {
-        outputDivs.push(<div style={{ color: str.color }}>{ str.content }</div>);
+        outputDivs.push(<div style={{
+          ...FONT_MESSAGE,
+          ...{ color: str.color },
+        }}>{ str.content }</div>);
       }
     }
     return (
@@ -102,7 +111,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
             ref={ (e) => this.replInstance.setEditorInstance(e?.editor)}
             style= { {
               width: '100%',
-              height: '375px',
+              height: `${editorHeight}px`,
               ...(this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
@@ -115,6 +124,10 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
             value={this.replInstance.userCodeInEditor.toString()}
           />
         </div>
+        <div onMouseDown = {this.dragBarOnMouseDown} style = {{
+          cursor: 'row-resize',
+          height: '8px',
+        }} />
         <div style = {{
           padding: `${BOX_PADDING_VALUE}px`,
           border: '2px solid #6f8194',

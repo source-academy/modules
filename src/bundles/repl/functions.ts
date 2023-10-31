@@ -6,6 +6,7 @@
 
 import context from 'js-slang/context';
 import { ProgrammableRepl } from './programmable_repl';
+import { COLOR_REPL_DISPLAY_DEFAULT } from './config';
 
 const INSTANCE = new ProgrammableRepl();
 context.moduleContexts.repl.state = INSTANCE;
@@ -37,12 +38,16 @@ export function set_evaluator(evalFunc: Function) {
  *  - Format: pair(pair("string",style),style)...
  *  - Examples:
  *
- * `repl_display(pair(pair(pair(pair("Hello World", "underline"), "italic"), "bold"), "gigantic"));` (A large italic underlined "Hello World")
+ * ```js
+ * // A large italic underlined "Hello World"
+ * repl_display(pair(pair(pair(pair("Hello World", "underline"), "italic"), "bold"), "gigantic"));
  *
- * `repl_display(pair(pair(pair(pair(pair("Hello World", "underline"),"italic"), "bold"), "gigantic"), "clrt#0000ff"));` (A large italic underlined "Hello World" in blue)
+ * // A large italic underlined "Hello World" in blue
+ * repl_display(pair(pair(pair(pair(pair("Hello World", "underline"),"italic"), "bold"), "gigantic"), "clrt#0000ff"));
  *
- * `repl_display(pair(pair(pair(pair(pair(pair("Hello World", "underline"), "italic"), "bold"), "gigantic"), "clrb#A000A0"),"clrt#ff9700"));` (A large italic underlined "Hello World" with orange foreground and purple background)
- *
+ * // A large italic underlined "Hello World" with orange foreground and purple background
+ * repl_display(pair(pair(pair(pair(pair(pair("Hello World", "underline"), "italic"), "bold"), "gigantic"), "clrb#A000A0"),"clrt#ff9700"));
+ * ```
  *
  *  - Coloring:
  *    - `clrt` stands for text color, `clrb` stands for background color. The color string are in hexadecimal begin with "#" and followed by 6 hexadecimal digits.
@@ -55,7 +60,7 @@ export function set_evaluator(evalFunc: Function) {
  *    - `large`: Make the text in large size.
  *    - `gigantic`: Make the text in very large size.
  *    - `underline`: Underline the text.
- *  - Note that if you apply the conflicting attributes together, only one conflicted style will take effect and other conflicting styles will be discarded, like  "pair(pair(pair("123",small),medium),large) "  (Set conflicting font size for the same text)
+ *  - Note that if you apply the conflicting attributes together, only one conflicted style will take effect and other conflicting styles will be discarded, like  "pair(pair(pair("123", small), medium), large) "  (Set conflicting font size for the same text)
  *  - Also note that for safety matters, certain words and characters are not allowed to appear under rich text display mode.
  *
  * @param {content} the content you want to display
@@ -63,7 +68,7 @@ export function set_evaluator(evalFunc: Function) {
  */
 export function repl_display(content: any) : any {
   if (INSTANCE.richDisplayInternal(content) === 'not_rich_text_pair') {
-    INSTANCE.pushOutputString(content.toString(), 'white', 'plaintext');// students may set the value of the parameter "str" to types other than a string (for example "module_display(1)" ). So here I need to first convert the parameter "str" into a string before preceding.
+    INSTANCE.pushOutputString(content.toString(), COLOR_REPL_DISPLAY_DEFAULT, 'plaintext');// students may set the value of the parameter "str" to types other than a string (for example "repl_display(1)" ). So here I need to first convert the parameter "str" into a string before preceding.
     return content;
   }
   return undefined;

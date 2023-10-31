@@ -55,13 +55,13 @@ export class ProgrammableRepl {
       return;
     }
     if (retVal === undefined) {
-      this.pushOutputString('Program exit with undefined return value.', COLOR_RUN_CODE_RESULT);
+      this.pushOutputString('Program exited with undefined return value.', COLOR_RUN_CODE_RESULT);
     } else {
       if (typeof (retVal) === 'string') {
         retVal = `"${retVal}"`;
       }
       // Here must use plain text output mode because retVal contains strings from the users.
-      this.pushOutputString(`Program exit with return value ${retVal}`, COLOR_RUN_CODE_RESULT);
+      this.pushOutputString(`Program exited with return value ${retVal}`, COLOR_RUN_CODE_RESULT);
     }
     this.reRenderTab();
     developmentLog('RunCode finished');
@@ -119,7 +119,6 @@ export class ProgrammableRepl {
         }
         developmentLog(head(param));
         return `">${param}</span>`;
-        // return param;
       }
       if (!is_pair(param)) {
         throw new Error(`Unexpected data type ${typeof (param)} when processing rich text. It should be a pair.`);
@@ -155,7 +154,6 @@ export class ProgrammableRepl {
             throw new Error(`Found undefined style ${tail(param)} during processing rich text.`);
           }
         }
-        // return `<span style = "${style}">${recursiveHelper(thisInstance, head(param))}</span>`;
         return style + recursiveHelper(thisInstance, head(param));
       }
     }
@@ -213,7 +211,7 @@ export class ProgrammableRepl {
             const error = errors[i];
             if (error.explain()
               .indexOf('Name repl_display not declared.') !== -1) {
-              this.pushOutputString('[Error] It seems that you haven\'t import the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', 'red');
+              this.pushOutputString('[Error] It seems that you haven\'t import the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', COLOR_ERROR_MESSAGE);
             } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
           }
         }
