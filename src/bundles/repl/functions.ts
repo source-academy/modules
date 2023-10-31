@@ -11,8 +11,15 @@ import { COLOR_REPL_DISPLAY_DEFAULT } from './config';
 const INSTANCE = new ProgrammableRepl();
 context.moduleContexts.repl.state = INSTANCE;
 /**
- * Setup the programmable REPL with given metacircular evaulator entrance function
- * @param {evalFunc} evalFunc - metacircular evaulator entrance function
+ * Setup the programmable REPL with given evaulator's entrance function
+ *
+ * The function should take one parameter as the code from the module's editor, for example:
+ * ```js
+ * function parse_and_evaluate(code) {
+ *   // ...
+ * }
+ * ```
+ * @param {evalFunc} evalFunc - evaulator entrance function
  *
  * @category Main
  */
