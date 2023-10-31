@@ -4,9 +4,11 @@
  * @author Wang Zihan
  */
 
+
 import context from 'js-slang/context';
-import { default_js_slang } from './evaluators';
+import { default_js_slang } from './functions';
 import { runFilesInContext, type IOptions } from 'js-slang';
+import { COLOR_RUN_CODE_RESULT, COLOR_ERROR_MESSAGE, DEFAULT_EDITOR_HEIGHT } from './config';
 
 export class ProgrammableRepl {
   public evalFunction: Function;
@@ -14,6 +16,9 @@ export class ProgrammableRepl {
   public outputStrings: any[];
   private _editorInstance;
   private _tabReactComponent: any;
+  // I store editorHeight value separately in here although it is already stored in the module's Tab React component state because I need to keep the editor height
+  // when the Tab component is re-mounted due to the user drags the area between the module's Tab and Source Academy's original REPL to resize the module's Tab height.
+  public editorHeight : number;
 
   public customizedEditorProps = {
     backgroundImageUrl: 'no-background-image',
@@ -26,6 +31,7 @@ export class ProgrammableRepl {
     this.userCodeInEditor = this.getSavedEditorContent();
     this.outputStrings = [];
     this._editorInstance = null;// To be set when calling "SetEditorInstance" in the ProgrammableRepl Tab React Component render function.
+    this.editorHeight = DEFAULT_EDITOR_HEIGHT;
     developmentLog(this);
   }
 
@@ -44,18 +50,18 @@ export class ProgrammableRepl {
       }
     } catch (exception: any) {
       console.log(exception);
-      this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, 'red');
+      this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, COLOR_ERROR_MESSAGE);
       this.reRenderTab();
       return;
     }
     if (retVal === undefined) {
-      this.pushOutputString('Program exit with undefined return value.', 'cyan');
+      this.pushOutputString('Program exited with undefined return value.', COLOR_RUN_CODE_RESULT);
     } else {
       if (typeof (retVal) === 'string') {
         retVal = `"${retVal}"`;
       }
       // Here must use plain text output mode because retVal contains strings from the users.
-      this.pushOutputString(`Program exit with return value ${retVal}`, 'cyan');
+      this.pushOutputString(`Program exited with return value ${retVal}`, COLOR_RUN_CODE_RESULT);
     }
     this.reRenderTab();
     developmentLog('RunCode finished');
@@ -113,7 +119,6 @@ export class ProgrammableRepl {
         }
         developmentLog(head(param));
         return `">${param}</span>`;
-        // return param;
       }
       if (!is_pair(param)) {
         throw new Error(`Unexpected data type ${typeof (param)} when processing rich text. It should be a pair.`);
@@ -149,7 +154,6 @@ export class ProgrammableRepl {
             throw new Error(`Found undefined style ${tail(param)} during processing rich text.`);
           }
         }
-        // return `<span style = "${style}">${recursiveHelper(thisInstance, head(param))}</span>`;
         return style + recursiveHelper(thisInstance, head(param));
       }
     }
@@ -184,7 +188,7 @@ export class ProgrammableRepl {
       throwInfiniteLoops: true,
       useSubst: false,
     };
-    context.prelude = 'const display=(x)=>module_display(x);';
+    context.prelude = 'const display=(x)=>repl_display(x);';
     context.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
     const sourceFile : Record<string, string> = {
       '/ReplModuleUserCode.js': code,
@@ -196,9 +200,9 @@ export class ProgrammableRepl {
           throw new Error('This should not happen');
         }
         if (evalResult.status !== 'error') {
-          this.pushOutputString('js-slang program finished with value:', 'cyan');
+          this.pushOutputString('js-slang program finished with value:', COLOR_RUN_CODE_RESULT);
           // Here must use plain text output mode because evalResult.value contains strings from the users.
-          this.pushOutputString(evalResult.value === undefined ? 'undefined' : evalResult.value.toString(), 'cyan');
+          this.pushOutputString(evalResult.value === undefined ? 'undefined' : evalResult.value.toString(), COLOR_RUN_CODE_RESULT);
         } else {
           const errors = context.errors;
           console.log(errors);
@@ -206,9 +210,9 @@ export class ProgrammableRepl {
           for (let i = 0; i < errorCount; i++) {
             const error = errors[i];
             if (error.explain()
-              .indexOf('Name module_display not declared.') !== -1) {
-              this.pushOutputString('[Error] It seems that you haven\'t import the function "module_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', 'red');
-            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, 'red');
+              .indexOf('Name repl_display not declared.') !== -1) {
+              this.pushOutputString('[Error] It seems that you haven\'t import the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', COLOR_ERROR_MESSAGE);
+            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
           }
         }
         this.reRenderTab();
