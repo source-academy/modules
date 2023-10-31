@@ -36,17 +36,18 @@ require => {
   var repl_exports = {};
   __export(repl_exports, {
     default_js_slang: () => default_js_slang,
-    module_display: () => module_display,
+    repl_display: () => repl_display,
     set_background_image: () => set_background_image,
     set_evaluator: () => set_evaluator,
     set_font_size: () => set_font_size
   });
   var import_context2 = __toESM(__require("js-slang/context"), 1);
   var import_context = __toESM(__require("js-slang/context"), 1);
-  function default_js_slang(_program) {
-    throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
-  }
   var import_js_slang = __require("js-slang");
+  var COLOR_REPL_DISPLAY_DEFAULT = "cyan";
+  var COLOR_RUN_CODE_RESULT = "white";
+  var COLOR_ERROR_MESSAGE = "red";
+  var DEFAULT_EDITOR_HEIGHT = 375;
   var ProgrammableRepl = class {
     constructor() {
       this.customizedEditorProps = {
@@ -58,6 +59,7 @@ require => {
       this.userCodeInEditor = this.getSavedEditorContent();
       this.outputStrings = [];
       this._editorInstance = null;
+      this.editorHeight = DEFAULT_EDITOR_HEIGHT;
       developmentLog(this);
     }
     InvokeREPL_Internal(evalFunc) {
@@ -74,17 +76,17 @@ require => {
         }
       } catch (exception) {
         console.log(exception);
-        this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, "red");
+        this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, COLOR_ERROR_MESSAGE);
         this.reRenderTab();
         return;
       }
       if (retVal === void 0) {
-        this.pushOutputString("Program exit with undefined return value.", "cyan");
+        this.pushOutputString("Program exited with undefined return value.", COLOR_RUN_CODE_RESULT);
       } else {
         if (typeof retVal === "string") {
           retVal = `"${retVal}"`;
         }
-        this.pushOutputString(`Program exit with return value ${retVal}`, "cyan");
+        this.pushOutputString(`Program exited with return value ${retVal}`, COLOR_RUN_CODE_RESULT);
       }
       this.reRenderTab();
       developmentLog("RunCode finished");
@@ -194,7 +196,7 @@ require => {
         throwInfiniteLoops: true,
         useSubst: false
       };
-      import_context.default.prelude = "const display=(x)=>module_display(x);";
+      import_context.default.prelude = "const display=(x)=>repl_display(x);";
       import_context.default.errors = [];
       const sourceFile = {
         "/ReplModuleUserCode.js": code
@@ -204,17 +206,17 @@ require => {
           throw new Error("This should not happen");
         }
         if (evalResult.status !== "error") {
-          this.pushOutputString("js-slang program finished with value:", "cyan");
-          this.pushOutputString(evalResult.value === void 0 ? "undefined" : evalResult.value.toString(), "cyan");
+          this.pushOutputString("js-slang program finished with value:", COLOR_RUN_CODE_RESULT);
+          this.pushOutputString(evalResult.value === void 0 ? "undefined" : evalResult.value.toString(), COLOR_RUN_CODE_RESULT);
         } else {
           const errors = import_context.default.errors;
           console.log(errors);
           const errorCount = errors.length;
           for (let i = 0; i < errorCount; i++) {
             const error = errors[i];
-            if (error.explain().indexOf("Name module_display not declared.") !== -1) {
-              this.pushOutputString(`[Error] It seems that you haven't import the function "module_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, "red");
-            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, "red");
+            if (error.explain().indexOf("Name repl_display not declared.") !== -1) {
+              this.pushOutputString(`[Error] It seems that you haven't import the function "repl_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, COLOR_ERROR_MESSAGE);
+            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
           }
         }
         this.reRenderTab();
@@ -260,9 +262,9 @@ require => {
       toReplString: () => "<Programmable Repl Initialized>"
     };
   }
-  function module_display(content) {
+  function repl_display(content) {
     if (INSTANCE.richDisplayInternal(content) === "not_rich_text_pair") {
-      INSTANCE.pushOutputString(content.toString(), "white", "plaintext");
+      INSTANCE.pushOutputString(content.toString(), COLOR_REPL_DISPLAY_DEFAULT, "plaintext");
       return content;
     }
     return void 0;
@@ -273,6 +275,9 @@ require => {
   }
   function set_font_size(font_size_px) {
     INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());
+  }
+  function default_js_slang(_program) {
+    throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
   }
   return __toCommonJS(repl_exports);
 }

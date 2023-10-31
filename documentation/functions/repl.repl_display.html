@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>module_display | Source Academy Modules</title><meta name="description" content="Documentation for Source Academy Modules"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>repl_display | Source Academy Modules</title><meta name="description" content="Documentation for Source Academy Modules"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -14,15 +14,42 @@
 <ul class="tsd-breadcrumb">
 <li><a href="../index.html">Source Academy Modules</a></li>
 <li><a href="../modules/repl.html">repl</a></li>
-<li><a href="repl.module_display.html">module_display</a></li></ul>
-<h1>Function module_display</h1></div>
+<li><a href="repl.repl_display.html">repl_display</a></li></ul>
+<h1>Function repl_display</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="module_display"><span class="tsd-kind-call-signature">module_<wbr/>display</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">content</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><a href="#module_display" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="repl_display"><span class="tsd-kind-call-signature">repl_<wbr/>display</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">content</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><a href="#repl_display" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Redirects the display message into Programmable Repl Tab
+<div class="tsd-comment tsd-typography"><p>Display message in Programmable Repl Tab
 If you give a pair as the parameter, it will use the given pair to generate rich text and use rich text display mode to display the string in Programmable Repl Tab with undefined return value (see module description for more information).
 If you give other things as the parameter, it will simply display the toString value of the parameter in Programmable Repl Tab and returns the displayed string itself.</p>
+<p><strong>Rich Text Display</strong></p>
+<ul>
+<li>First you need to <code>import { repl_display } from &quot;repl&quot;;</code></li>
+<li>Format: pair(pair(&quot;string&quot;,style),style)...</li>
+<li>Examples:</li>
+</ul>
+<pre><code class="language-js"><span class="hl-6">// A large italic underlined &quot;Hello World&quot;</span><br/><span class="hl-4">repl_display</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-3">&quot;Hello World&quot;</span><span class="hl-1">, </span><span class="hl-3">&quot;underline&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;italic&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;bold&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;gigantic&quot;</span><span class="hl-1">));</span><br/><br/><span class="hl-6">// A large italic underlined &quot;Hello World&quot; in blue</span><br/><span class="hl-4">repl_display</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-3">&quot;Hello World&quot;</span><span class="hl-1">, </span><span class="hl-3">&quot;underline&quot;</span><span class="hl-1">),</span><span class="hl-3">&quot;italic&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;bold&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;gigantic&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;clrt#0000ff&quot;</span><span class="hl-1">));</span><br/><br/><span class="hl-6">// A large italic underlined &quot;Hello World&quot; with orange foreground and purple background</span><br/><span class="hl-4">repl_display</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-4">pair</span><span class="hl-1">(</span><span class="hl-3">&quot;Hello World&quot;</span><span class="hl-1">, </span><span class="hl-3">&quot;underline&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;italic&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;bold&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;gigantic&quot;</span><span class="hl-1">), </span><span class="hl-3">&quot;clrb#A000A0&quot;</span><span class="hl-1">),</span><span class="hl-3">&quot;clrt#ff9700&quot;</span><span class="hl-1">));</span>
+</code><button>Copy</button></pre>
+<ul>
+<li>Coloring:<ul>
+<li><code>clrt</code> stands for text color, <code>clrb</code> stands for background color. The color string are in hexadecimal begin with &quot;#&quot; and followed by 6 hexadecimal digits.</li>
+<li>Example:  <code>pair(&quot;123&quot;,&quot;clrt#ff0000&quot;)</code> will produce a red &quot;123&quot;;  <code>pair(&quot;456&quot;,&quot;clrb#00ff00&quot;)</code> will produce a green &quot;456&quot;.</li>
+</ul>
+</li>
+<li>Besides coloring, the following styles are also supported:<ul>
+<li><code>bold</code>: Make the text bold.</li>
+<li><code>italic</code>: Make the text italic.</li>
+<li><code>small</code>: Make the text in small size.</li>
+<li><code>medium</code>: Make the text in medium size.</li>
+<li><code>large</code>: Make the text in large size.</li>
+<li><code>gigantic</code>: Make the text in very large size.</li>
+<li><code>underline</code>: Underline the text.</li>
+</ul>
+</li>
+<li>Note that if you apply the conflicting attributes together, only one conflicted style will take effect and other conflicting styles will be discarded, like  &quot;pair(pair(pair(&quot;123&quot;, small), medium), large) &quot;  (Set conflicting font size for the same text)</li>
+<li>Also note that for safety matters, certain words and characters are not allowed to appear under rich text display mode.</li>
+</ul>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -32,7 +59,7 @@ If you give other things as the parameter, it will simply display the toString v
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/d2c14bb/src/bundles/repl/functions.ts#L38">repl/functions.ts:38</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/62da4a7/src/bundles/repl/functions.ts#L69">repl/functions.ts:69</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

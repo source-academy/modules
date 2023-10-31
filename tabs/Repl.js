@@ -3148,18 +3148,59 @@ export default require => (() => {
   var import_react = __toESM(__require("react"), 1);
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
-  var import_react_ace = __toESM(__require("react-ace"), 1);
+  init_define_process();
+  var FONT_MESSAGE = {
+    fontFamily: "Inconsolata, Consolas, monospace",
+    fontSize: "16px",
+    fontWeight: "normal"
+  };
+  var MINIMUM_EDITOR_HEIGHT = 40;
   var import_mode_javascript = __toESM(require_mode_javascript(), 1);
   var import_theme_twilight = __toESM(require_theme_twilight(), 1);
   var import_ext_language_tools = __toESM(require_ext_language_tools(), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
+  var AceEditor = __require("react-ace").default;
+  var BOX_PADDING_VALUE = 4;
   var ProgrammableReplGUI = class extends import_react.default.Component {
     constructor(data) {
       super(data);
+      this.dragBarOnMouseDown = e => {
+        e.preventDefault();
+        this.setState({
+          isDraggingDragBar: true
+        });
+      };
+      this.onMouseMove = e => {
+        if (this.state.isDraggingDragBar) {
+          const height = Math.max(e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
+          this.replInstance.editorHeight = height;
+          this.setState({
+            editorHeight: height
+          });
+        }
+      };
+      this.onMouseUp = _e => {
+        this.setState({
+          isDraggingDragBar: false
+        });
+      };
       this.replInstance = data.programmableReplInstance;
       this.replInstance.setTabReactComponentInstance(this);
+      this.state = {
+        editorHeight: this.replInstance.editorHeight,
+        isDraggingDragBar: false
+      };
+    }
+    componentDidMount() {
+      document.addEventListener("mousemove", this.onMouseMove);
+      document.addEventListener("mouseup", this.onMouseUp);
+    }
+    componentWillUnmount() {
+      document.removeEventListener("mousemove", this.onMouseMove);
+      document.removeEventListener("mouseup", this.onMouseUp);
     }
     render() {
+      const {editorHeight} = this.state;
       const outputDivs = [];
       const outputStringCount = this.replInstance.outputStrings.length;
       for (let i = 0; i < outputStringCount; i++) {
@@ -3167,15 +3208,16 @@ export default require => (() => {
         if (str.outputMethod === "richtext") {
           if (str.color === "") {
             outputDivs.push((0, import_jsx_runtime.jsx)("div", {
+              style: FONT_MESSAGE,
               dangerouslySetInnerHTML: {
                 __html: str.content
               }
             }));
           } else {
             outputDivs.push((0, import_jsx_runtime.jsx)("div", {
-              style: {
+              style: __spreadValues(__spreadValues({}, FONT_MESSAGE), {
                 color: str.color
-              },
+              }),
               dangerouslySetInnerHTML: {
                 __html: str.content
               }
@@ -3183,13 +3225,14 @@ export default require => (() => {
           }
         } else if (str.color === "") {
           outputDivs.push((0, import_jsx_runtime.jsx)("div", {
+            style: FONT_MESSAGE,
             children: str.content
           }));
         } else {
           outputDivs.push((0, import_jsx_runtime.jsx)("div", {
-            style: {
+            style: __spreadValues(__spreadValues({}, FONT_MESSAGE), {
               color: str.color
-            },
+            }),
             children: str.content
           }));
         }
@@ -3207,24 +3250,45 @@ export default require => (() => {
           active: true,
           onClick: () => this.replInstance.saveEditorContent(),
           text: "Save"
-        }), (0, import_jsx_runtime.jsx)(import_react_ace.default, {
-          ref: e => this.replInstance.setEditorInstance(e == null ? void 0 : e.editor),
-          style: __spreadValues({
-            width: "100%",
-            height: "375px"
-          }, this.replInstance.customizedEditorProps.backgroundImageUrl !== "no-background-image" && ({
-            backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
-            backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
-            backgroundSize: "100%",
-            backgroundRepeat: "no-repeat"
-          })),
-          mode: "javascript",
-          theme: "twilight",
-          onChange: newValue => this.replInstance.updateUserCode(newValue),
-          value: this.replInstance.userCodeInEditor.toString()
         }), (0, import_jsx_runtime.jsx)("div", {
-          id: "output_strings",
-          children: outputDivs
+          ref: e => {
+            this.editorAreaRect = e == null ? void 0 : e.getBoundingClientRect();
+          },
+          style: {
+            padding: `${BOX_PADDING_VALUE}px`,
+            border: "2px solid #6f8194"
+          },
+          children: (0, import_jsx_runtime.jsx)(AceEditor, {
+            ref: e => this.replInstance.setEditorInstance(e == null ? void 0 : e.editor),
+            style: __spreadValues({
+              width: "100%",
+              height: `${editorHeight}px`
+            }, this.replInstance.customizedEditorProps.backgroundImageUrl !== "no-background-image" && ({
+              backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
+              backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
+              backgroundSize: "100%",
+              backgroundRepeat: "no-repeat"
+            })),
+            mode: "javascript",
+            theme: "twilight",
+            onChange: newValue => this.replInstance.updateUserCode(newValue),
+            value: this.replInstance.userCodeInEditor.toString()
+          })
+        }), (0, import_jsx_runtime.jsx)("div", {
+          onMouseDown: this.dragBarOnMouseDown,
+          style: {
+            cursor: "row-resize",
+            height: "8px"
+          }
+        }), (0, import_jsx_runtime.jsx)("div", {
+          style: {
+            padding: `${BOX_PADDING_VALUE}px`,
+            border: "2px solid #6f8194"
+          },
+          children: (0, import_jsx_runtime.jsx)("div", {
+            id: "output_strings",
+            children: outputDivs
+          })
         })]
       });
     }
