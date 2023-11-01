@@ -110,7 +110,10 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           border: '2px solid #6f8194',
         }}>
           <AceEditor
-            ref={ (e) => { this.editorInstance = e?.editor; this.replInstance.setEditorInstance(e?.editor); }}
+            ref={ (e) => {
+              this.editorInstance = e?.editor;
+              this.replInstance.setEditorInstance(e?.editor);
+            }}
             style= { {
               width: '100%',
               height: `${editorHeight}px`,
