@@ -59,17 +59,11 @@ export class ProgrammableRepl {
       this.reRenderTab();
       return;
     }
-    if (retVal === undefined) {
-      this.pushOutputString('undefined', COLOR_RUN_CODE_RESULT);
-    } else if (retVal === null) {
-      this.pushOutputString('null', COLOR_RUN_CODE_RESULT);
-    } else {
-      if (typeof (retVal) === 'string') {
-        retVal = `"${retVal}"`;
-      }
-      // Here must use plain text output mode because retVal contains strings from the users.
-      this.pushOutputString(retVal, COLOR_RUN_CODE_RESULT);
+    if (typeof (retVal) === 'string') {
+      retVal = `"${retVal}"`;
     }
+    // Here must use plain text output mode because retVal contains strings from the users.
+    this.pushOutputString(retVal, COLOR_RUN_CODE_RESULT);
     this.reRenderTab();
     developmentLog('RunCode finished');
   }
@@ -81,7 +75,7 @@ export class ProgrammableRepl {
   // Rich text output method allow output strings to have html tags and css styles.
   pushOutputString(content : string, textColor : string, outputMethod : string = 'plaintext') {
     let tmp = {
-      content,
+      content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
       outputMethod,
     };
