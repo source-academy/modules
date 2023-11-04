@@ -66,6 +66,7 @@ require => {
       this.evalFunction = evalFunc;
     }
     runCode() {
+      var _a;
       this.outputStrings = [];
       let retVal;
       try {
@@ -75,19 +76,19 @@ require => {
           retVal = this.evalFunction(this.userCodeInEditor);
         }
       } catch (exception) {
-        console.log(exception);
-        this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, COLOR_ERROR_MESSAGE);
+        developmentLog(exception);
+        if (exception.location.start.line === -1 && exception.error === void 0) {
+          this.pushOutputString("Error: Unable to use your evaluator to run the code. Does your evaluator entry function contain and only contain exactly one parameter?", COLOR_ERROR_MESSAGE);
+        } else {
+          this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${(_a = exception.error) == null ? void 0 : _a.message}`, COLOR_ERROR_MESSAGE);
+        }
         this.reRenderTab();
         return;
       }
-      if (retVal === void 0) {
-        this.pushOutputString("Program exited with undefined return value.", COLOR_RUN_CODE_RESULT);
-      } else {
-        if (typeof retVal === "string") {
-          retVal = `"${retVal}"`;
-        }
-        this.pushOutputString(`Program exited with return value ${retVal}`, COLOR_RUN_CODE_RESULT);
+      if (typeof retVal === "string") {
+        retVal = `"${retVal}"`;
       }
+      this.pushOutputString(retVal, COLOR_RUN_CODE_RESULT);
       this.reRenderTab();
       developmentLog("RunCode finished");
     }
@@ -96,7 +97,7 @@ require => {
     }
     pushOutputString(content, textColor, outputMethod = "plaintext") {
       let tmp = {
-        content,
+        content: content === void 0 ? "undefined" : content === null ? "null" : content,
         color: textColor,
         outputMethod
       };
@@ -245,7 +246,7 @@ require => {
       this.pushOutputString(`<span style='font-style:italic;'>Showing my love to my favorite girls through a SA module, is that the so-called "romance of a programmer"?</span>`, "gray", "richtext");
       this.pushOutputString("\u2764\u2764\u2764\u2764\u2764", "pink");
       this.pushOutputString("<br>", "white", "richtext");
-      this.pushOutputString("If you see this, please check whether you have called <span style='font-weight:bold;font-style:italic;'>invoke_repl</span> function with the correct parameter before using the Programmable Repl Tab.", "yellow", "richtext");
+      this.pushOutputString("If you see this, please check whether you have called <span style='font-weight:bold;font-style:italic;'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.", "yellow", "richtext");
       return "Easter Egg!";
     }
   };
