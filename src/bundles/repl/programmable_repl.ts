@@ -49,20 +49,21 @@ export class ProgrammableRepl {
         retVal = this.evalFunction(this.userCodeInEditor);
       }
     } catch (exception: any) {
-      console.log(exception);
-      this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, COLOR_ERROR_MESSAGE);
+      developmentLog(exception);
+      // If the exception has a start line of -1 and an undefined error property, then this exception is most likely to be "incorrect number of arguments" caused by incorrect number of parameters in the evaluator entry function provided by students with set_evaluator.
+      if (exception.location.start.line === -1 && exception.error === undefined) {
+        this.pushOutputString('Error: Unable to use your evaluator to run the code. Does your evaluator entry function contain and only contain exactly one parameter?', COLOR_ERROR_MESSAGE);
+      } else {
+        this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error?.message}`, COLOR_ERROR_MESSAGE);
+      }
       this.reRenderTab();
       return;
     }
-    if (retVal === undefined) {
-      this.pushOutputString('Program exited with undefined return value.', COLOR_RUN_CODE_RESULT);
-    } else {
-      if (typeof (retVal) === 'string') {
-        retVal = `"${retVal}"`;
-      }
-      // Here must use plain text output mode because retVal contains strings from the users.
-      this.pushOutputString(`Program exited with return value ${retVal}`, COLOR_RUN_CODE_RESULT);
+    if (typeof (retVal) === 'string') {
+      retVal = `"${retVal}"`;
     }
+    // Here must use plain text output mode because retVal contains strings from the users.
+    this.pushOutputString(retVal, COLOR_RUN_CODE_RESULT);
     this.reRenderTab();
     developmentLog('RunCode finished');
   }
@@ -74,7 +75,7 @@ export class ProgrammableRepl {
   // Rich text output method allow output strings to have html tags and css styles.
   pushOutputString(content : string, textColor : string, outputMethod : string = 'plaintext') {
     let tmp = {
-      content,
+      content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
       outputMethod,
     };
@@ -249,7 +250,7 @@ export class ProgrammableRepl {
     this.pushOutputString('<span style=\'font-style:italic;\'>Showing my love to my favorite girls through a SA module, is that the so-called "romance of a programmer"?</span>', 'gray', 'richtext');
     this.pushOutputString('❤❤❤❤❤', 'pink');
     this.pushOutputString('<br>', 'white', 'richtext');
-    this.pushOutputString('If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>invoke_repl</span> function with the correct parameter before using the Programmable Repl Tab.', 'yellow', 'richtext');
+    this.pushOutputString('If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.', 'yellow', 'richtext');
     return 'Easter Egg!';
   }
 }
