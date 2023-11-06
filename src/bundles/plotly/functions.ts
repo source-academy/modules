@@ -19,7 +19,13 @@ import {
     type ListOfPairs,
 } from "./plotly";
 import { generatePlot } from "./curve_functions";
-import { Body, BoundingBox, G_const, QuadTree } from "./n_body_functions";
+import {
+    Body,
+    BoundingBox,
+    G_const,
+    QuadTree,
+    euclidean_distance,
+} from "./n_body_functions";
 
 const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 context.moduleContexts.plotly.state = {
@@ -444,7 +450,7 @@ const bodies = figure_eight_system();
 
 let animationId: number | null = null;
 
-export const simulate_points = () => {
+export const simulate_points = (is_lagrange: boolean) => {
     const x_s = bodies.map((body) => body.pos[0]);
     const y_s = bodies.map((body) => body.pos[1]);
     const mass_s = bodies.map((body) => body.mass);
@@ -452,7 +458,7 @@ export const simulate_points = () => {
 
     drawnPlots.push(
         new CurvePlot(
-            draw_new_simulation,
+            draw_new_simulation(is_lagrange),
             {
                 ...data,
                 mode: "markers",
@@ -470,115 +476,140 @@ export const simulate_points = () => {
     );
 };
 
-function draw_new_simulation(
-    divId: string,
-    data: PlotData,
-    layout: Partial<Layout>
-) {
-    const line_data_x: (number | null)[] = [];
-    const line_data_y: (number | null)[] = [];
-    for (let i = 0; i < data.x.length; ++i) {
-        line_data_x.push(data.x[i] as number);
-        line_data_x.push(data.x[i] as number);
-        line_data_y.push(data.y[i] as number);
-        line_data_y.push(data.y[i] as number);
-        line_data_x.push(null);
-        line_data_y.push(null);
-    }
-    var steps: Partial<SliderStep>[] = [];
-    for (var i = 0.01; i <= 10000; i *= 10)
-        steps.push({
-            label: i.toString(),
-            method: "skip",
-        });
-    layout = {
-        ...layout,
-        sliders: [{ steps, active: 0 }],
-    };
-    Plotly.newPlot(
-        divId,
-        [data, { x: line_data_x, y: line_data_y, mode: "lines" }],
-        layout
-    );
-    const qt = new QuadTree(1e2);
-    const framesPerSecond = 60;
-    if (animationId != null) return;
-    function update() {
-        const dt =
-            0.01 *
-            Math.pow(
-                10,
-                parseInt(
-                    // @ts-ignore
-                    document.getElementById(divId)?.layout?.sliders[0].active
-                )
-            );
-        // const dt = 0.01;
-        qt.build_tree(bodies);
-        const prev_x = qt.bodies.map((body) => body.pos[0]);
-        const prev_y = qt.bodies.map((body) => body.pos[1]);
-        qt.simulateForces();
-        qt.bodies.forEach((body, i) => {
-            body.updateBodyState(dt / framesPerSecond);
-        });
-
-        const new_x = qt.bodies.map((body) => body.pos[0]);
-        const new_y = qt.bodies.map((body) => body.pos[1]);
-
-        const bounding_boxes: BoundingBox[] = qt.getBoundingBoxes();
-        const shapes = bounding_boxes.map((box) => {
-            return {
-                type: "rect" as const,
-                x0: box.bottomLeft[0],
-                y0: box.bottomLeft[1],
-                x1: box.topRight[0],
-                y1: box.topRight[1],
-                line: {
-                    width: 0.1,
-                    color: "rgba(128,0,128,1)",
-                },
-            };
-        });
-
-        if (line_data_x.length > 100 * 3 * bodies.length) {
-            for (let i = 0; i < bodies.length; ++i) {
-                for (let j = 0; j < 3; ++j) {
-                    line_data_x.shift();
-                    line_data_y.shift();
-                }
-            }
-        }
-
-        for (let i = 0; i < new_x.length; ++i) {
-            line_data_x.push(prev_x[i]);
-            line_data_x.push(new_x[i]);
-            line_data_y.push(prev_y[i]);
-            line_data_y.push(new_y[i]);
+const draw_new_simulation =
+    (is_lagrange: boolean) =>
+    (divId: string, data: PlotData, layout: Partial<Layout>) => {
+        const line_data_x: (number | null)[] = [];
+        const line_data_y: (number | null)[] = [];
+        for (let i = 0; i < data.x.length; ++i) {
+            line_data_x.push(data.x[i] as number);
+            line_data_x.push(data.x[i] as number);
+            line_data_y.push(data.y[i] as number);
+            line_data_y.push(data.y[i] as number);
             line_data_x.push(null);
             line_data_y.push(null);
         }
-        //@ts-ignore
-        Plotly.animate(
+        var steps: Partial<SliderStep>[] = [];
+        for (var i = 0.01; i <= 10000; i *= 10)
+            steps.push({
+                label: i.toString(),
+                method: "skip",
+            });
+        layout = {
+            ...layout,
+            sliders: [{ steps, active: 0 }],
+        };
+        Plotly.react(
             divId,
-            {
-                data: [
-                    { x: new_x, y: new_y },
-                    { x: line_data_x, y: line_data_y, mode: "lines" },
-                ],
-                traces: [0, 1],
-            },
-            {
-                transition: {
-                    duration: 0,
-                },
-                frame: {
-                    duration: 0,
-                    redraw: false,
-                },
-            }
+            [data, { x: line_data_x, y: line_data_y, mode: "lines" }],
+            layout
         );
-        Plotly.relayout(divId, { shapes: shapes });
-        animationId = requestAnimationFrame(update);
-    }
-    update();
-}
+        // logic for quad
+        const qt = new QuadTree(1e2);
+        const framesPerSecond = 60;
+        if (animationId != null) return;
+        function update() {
+            const dt =
+                0.01 *
+                Math.pow(
+                    10,
+                    parseInt(
+                        // @ts-ignore
+                        document.getElementById(divId)?.layout?.sliders[0]
+                            .active
+                    )
+                );
+            // const dt = 0.01;
+            qt.build_tree(bodies);
+            let prev_x = qt.bodies.map((body) => body.pos[0]);
+            let prev_y = qt.bodies.map((body) => body.pos[1]);
+            qt.simulateForces();
+            qt.bodies.forEach((body, i) => {
+                body.updateBodyState(dt / framesPerSecond);
+            });
+
+            let new_x = qt.bodies.map((body) => body.pos[0]);
+            let new_y = qt.bodies.map((body) => body.pos[1]);
+
+            // add logic for transformation
+            const change_frame = (x_s: number[], y_s: number[]) => {
+                const x_t = Array(x_s.length);
+                const y_t = Array(y_s.length);
+                x_t[0] = y_t[0] = 0;
+                y_t[1] = 0;
+                x_t[1] = euclidean_distance([x_s[0], y_s[0]], [x_s[1], y_s[1]]);
+                const theta_1 = Math.atan2(y_s[1] - y_s[0], x_s[1] - x_s[0]);
+                const theta_2 = Math.atan2(y_s[2] - y_s[0], x_s[2] - x_s[0]);
+                const d = euclidean_distance(
+                    [x_s[0], y_s[0]],
+                    [x_s[2], y_s[2]]
+                );
+
+                x_t[2] = d * Math.cos(theta_2 - theta_1);
+                y_t[2] = d * Math.sin(theta_2 - theta_1);
+
+                return { x_s: x_t, y_s: y_t };
+            };
+
+            if (is_lagrange) {
+                ({ x_s: new_x, y_s: new_y } = change_frame(new_x, new_y));
+                ({ x_s: prev_x, y_s: prev_y } = change_frame(prev_x, prev_y));
+            }
+
+            const bounding_boxes: BoundingBox[] = qt.getBoundingBoxes();
+            const shapes = bounding_boxes.map((box) => {
+                return {
+                    type: "rect" as const,
+                    x0: box.bottomLeft[0],
+                    y0: box.bottomLeft[1],
+                    x1: box.topRight[0],
+                    y1: box.topRight[1],
+                    line: {
+                        width: 0.1,
+                        color: "rgba(128,0,128,1)",
+                    },
+                };
+            });
+
+            if (line_data_x.length > 50 * 3 * bodies.length) {
+                for (let i = 0; i < bodies.length; ++i) {
+                    for (let j = 0; j < 3; ++j) {
+                        line_data_x.shift();
+                        line_data_y.shift();
+                    }
+                }
+            }
+
+            for (let i = 0; i < new_x.length; ++i) {
+                line_data_x.push(prev_x[i]);
+                line_data_x.push(new_x[i]);
+                line_data_y.push(prev_y[i]);
+                line_data_y.push(new_y[i]);
+                line_data_x.push(null);
+                line_data_y.push(null);
+            }
+            //@ts-ignore
+            Plotly.animate(
+                divId,
+                {
+                    data: [
+                        { x: new_x, y: new_y },
+                        { x: line_data_x, y: line_data_y, mode: "lines" },
+                    ],
+                    traces: [0, 1],
+                },
+                {
+                    transition: {
+                        duration: 0,
+                    },
+                    frame: {
+                        duration: 0,
+                        redraw: false,
+                    },
+                }
+            );
+            // Plotly.relayout(divId, { shapes: shapes });
+            animationId = requestAnimationFrame(update);
+        }
+        update();
+    };

@@ -10,6 +10,17 @@ var INTERACTION_METHOD = "BN"; // BN or BRUTE, type of tree search to use
 var MAXDEPTH = 50; // BN tree max depth ( one less than actual, example with maxdepth = 2, the levels are [0 1 2] )
 var BN_THETA = 0.5;
 
+export const euclidean_distance = (a: number[], b: number[]) => {
+    return Math.sqrt(
+        new Array(a.length)
+            .fill(0)
+            .map((_, i) => {
+                return (a[i] - b[i]) * (a[i] - b[i]);
+            })
+            .reduce((prev, curr) => prev + curr, 0)
+    );
+};
+
 export class Body {
     id: string;
     pos: number[] = [];
@@ -59,17 +70,20 @@ export class Body {
     }
 
     updateBodyState(dt: number) {
-        console.log(dt);
         this.updateVelocity(dt);
         this.updatePos(dt);
     }
 
     updatePos(dt: number) {
-        this.rungeKuttaCalculation(dt, this.pos, this.velocity);
+        this.pos[0] += dt * this.velocity[0];
+        this.pos[1] += dt * this.velocity[1];
+        // this.rungeKuttaCalculation(dt, this.pos, this.velocity);
     }
 
     updateVelocity(dt: number) {
-        this.rungeKuttaCalculation(dt, this.velocity, this.acceleration);
+        this.velocity[0] += dt * this.acceleration[0];
+        this.velocity[1] += dt * this.acceleration[1];
+        // this.rungeKuttaCalculation(dt, this.velocity, this.acceleration);
     }
 
     isEqual(other: Body) {
@@ -403,5 +417,3 @@ export class QuadTree {
         this.bodies = [];
     }
 }
-
-export function combineCollidingBodies(bodies: Body[]) {}
