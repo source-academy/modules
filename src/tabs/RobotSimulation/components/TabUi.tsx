@@ -5,12 +5,13 @@ type TabUiProps = {
 export default function TabUi({ onOpenCanvas }: TabUiProps) {
   return (
     <div>
+      <p>Welcome to robot simulator.</p>
       <button
         onClick={() => {
           onOpenCanvas();
         }}
       >
-        Open canvas
+        Open simulation
       </button>
     </div>
   );

@@ -1,17 +1,24 @@
+import * as THREE from 'three';
+
 import {
   type Ray,
   type ColliderDesc,
   type RigidBodyDesc,
 } from '@dimforge/rapier3d-compat';
-import { PhysicsController } from './controllers/physics/physics_controller';
-import { ProgramController } from './controllers/program_controller';
-import { RenderController } from './controllers/render_controller';
+
 import {
   PhysicsObject,
   addCuboidPhysicsObject,
 } from './primitives/physics_object';
-import * as THREE from 'three';
-import { settings, CarController } from './controllers/car_controller';
+
+import { PhysicsController } from './controllers/physics/physics_controller';
+import { ProgramController } from './controllers/program_controller';
+import { RenderController } from './controllers/render_controller';
+import {
+  TimeController,
+  type TimeoutFunction,
+} from './controllers/time_controller';
+import { settings, CarController } from './controllers/car/car_controller';
 
 export const simulationStates = [
   'unintialized',
@@ -26,6 +33,7 @@ export type Internals = {
   renderController: RenderController;
   programController: ProgramController;
   physicsObjects: Array<PhysicsObject>;
+  timeController: TimeController;
 };
 
 let instance: World;
@@ -49,6 +57,7 @@ export class World {
       renderController: new RenderController(),
       programController: new ProgramController(),
       physicsObjects: [],
+      timeController: new TimeController(),
     };
     this.carController = new CarController(settings);
   }
@@ -58,14 +67,10 @@ export class World {
       return;
     }
 
-
     this.state = 'loading';
 
-    const {
-      physicsController,
-      renderController,
-      programController,
-    } = this.#internals;
+    const { physicsController, renderController, programController }
+      = this.#internals;
 
     await physicsController.init();
     renderController.init();
@@ -73,22 +78,6 @@ export class World {
     this.carController.init();
     this.addFloor();
     this.state = 'ready';
-  }
-
-  addFloor() {
-    addCuboidPhysicsObject({
-      width: 20,
-      height: 1,
-      length: 20,
-      color: new THREE.Color('white'),
-      dynamic: false,
-      position: new THREE.Vector3(0, 0, 0),
-    });
-  }
-
-  setRendererOutput(domElement: HTMLDivElement) {
-    console.log('Setting renderer output');
-    this.#internals.renderController.setRendererOutput(domElement);
   }
 
   startSimulation() {
@@ -101,7 +90,20 @@ export class World {
   stopSimulation() {
     if (this.state === 'running') {
       this.state = 'ready';
+      this.#internals.timeController.pause();
     }
+  }
+
+  // Physics Controller
+  addFloor() {
+    addCuboidPhysicsObject({
+      width: 20,
+      height: 1,
+      length: 20,
+      color: new THREE.Color('white'),
+      dynamic: false,
+      position: new THREE.Vector3(0, 0, 0),
+    });
   }
 
   castRay(ray: Ray, maxDistance: number) {
@@ -125,12 +127,33 @@ export class World {
     return physicsObject;
   }
 
-  #step(timestamp:number): void {
+  // Render Controller
+  setRendererOutput(domElement: HTMLDivElement) {
+    console.log('Setting renderer output');
+    this.#internals.renderController.setRendererOutput(domElement);
+  }
+
+  // Time controller
+  getElapsedTime() {
+    return this.#internals.timeController.getElapsedTime();
+  }
+
+  setTimeout(callback: TimeoutFunction, delay: number) {
+    return this.#internals.timeController.setTimeout(callback, delay);
+  }
+
+  // Program Controller
+  pauseProgramController(time: number) {
+    this.#internals.programController.pause(time);
+  }
+
+  #step(timestamp: number): void {
     const {
       programController,
       physicsController,
       renderController,
       physicsObjects,
+      timeController,
     } = this.#internals;
 
     programController.step(timestamp);
@@ -150,6 +173,7 @@ export class World {
     renderController.step(timestamp);
 
     if (this.state === 'running') {
+      timeController.step(timestamp);
       window.requestAnimationFrame(this.#step.bind(this));
     }
   }

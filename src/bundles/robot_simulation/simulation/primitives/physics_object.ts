@@ -5,20 +5,10 @@ import { RAPIER } from '../controllers/physics/physics_controller';
 import { instance } from '../world';
 import { nullVector, quat, vec3 } from '../controllers/physics/helpers';
 
-type PhysicsObjectCache = {
-  rotation?: THREE.Quaternion;
-  linearVelocity?: THREE.Vector3;
-  translation?: THREE.Vector3;
-  worldVelocity?: THREE.Vector3;
-  angularVelocity?: THREE.Vector3;
-};
-
-
 export class PhysicsObject {
   #rigidBody: Rapier.RigidBody;
   #mesh: THREE.Mesh;
   #collider: Rapier.Collider;
-  #cache: PhysicsObjectCache = {};
 
   constructor(
     mesh: THREE.Mesh,
@@ -38,7 +28,7 @@ export class PhysicsObject {
     this.#collider.setMass(mass);
   }
 
-  getMass():number {
+  getMass(): number {
     return this.#collider.mass();
   }
 
@@ -48,42 +38,24 @@ export class PhysicsObject {
   }
 
   rotation(): THREE.Quaternion {
-    if (this.#cache.rotation) {
-      return this.#cache.rotation;
-    }
-    this.#cache.rotation = quat(this.#rigidBody.rotation());
-    return this.#cache.rotation;
+    return quat(this.#rigidBody.rotation());
   }
 
   velocity(): THREE.Vector3 {
-    if (this.#cache.linearVelocity) {
-      return this.#cache.linearVelocity;
-    }
-    this.#cache.linearVelocity = vec3(this.#rigidBody.linvel());
-    return this.#cache.linearVelocity;
+    return vec3(this.#rigidBody.linvel());
   }
 
   angularVelocity(): THREE.Vector3 {
-    if (this.#cache.angularVelocity) {
-      return this.#cache.angularVelocity;
-    }
-    this.#cache.angularVelocity = vec3(this.#rigidBody.angvel());
-    return this.#cache.angularVelocity;
+    return vec3(this.#rigidBody.angvel());
   }
 
   translation(): THREE.Vector3 {
-    if (this.#cache.translation) {
-      return this.#cache.translation;
-    }
-    this.#cache.translation = vec3(this.#rigidBody.translation());
-    return this.#cache.translation;
+    return vec3(this.#rigidBody.translation());
   }
 
-  invalidateCache() {
-    this.#cache = {};
-  }
-
-  worldTranslation(localTranslation: THREE.Vector3 = nullVector.THREE): THREE.Vector3 {
+  worldTranslation(
+    localTranslation: THREE.Vector3 = nullVector.THREE,
+  ): THREE.Vector3 {
     const rotation = this.rotation();
     const translation = this.translation();
 
@@ -97,19 +69,24 @@ export class PhysicsObject {
     return localDirection.applyQuaternion(rotation);
   }
 
-  distanceVectorOfPointToRotationalAxis(localPoint: THREE.Vector3 = nullVector.THREE) {
-    // TODO: Rewrite this such that it doesn't use clone()!
-
-    return localPoint.clone()
+  distanceVectorOfPointToRotationalAxis(
+    localPoint: THREE.Vector3 = nullVector.THREE,
+  ) {
+    return localPoint
+      .clone()
       .projectOnVector(this.angularVelocity())
       .negate()
       .add(localPoint);
   }
 
-  tangentialVelocityOfPoint(localPoint: THREE.Vector3 = nullVector.THREE): THREE.Vector3 {
-    const distanceVector = this.distanceVectorOfPointToRotationalAxis(localPoint);
+  tangentialVelocityOfPoint(
+    localPoint: THREE.Vector3 = nullVector.THREE,
+  ): THREE.Vector3 {
+    const distanceVector
+      = this.distanceVectorOfPointToRotationalAxis(localPoint);
     const angularVelocity = this.angularVelocity();
-    const velocityMagnitude = distanceVector.length() * angularVelocity.length();
+    const velocityMagnitude
+      = distanceVector.length() * angularVelocity.length();
 
     const tangentialVelocity = this.worldDirection(localPoint)
       .cross(angularVelocity)
@@ -119,7 +96,6 @@ export class PhysicsObject {
 
     return tangentialVelocity;
   }
-
 
   worldVelocity(localPoint: THREE.Vector3 = nullVector.THREE): THREE.Vector3 {
     return this.tangentialVelocityOfPoint(localPoint)
@@ -137,7 +113,6 @@ export class PhysicsObject {
   step(_: number) {
     this.#mesh.position.copy(this.#collider.translation() as THREE.Vector3);
     this.#mesh.quaternion.copy(this.#collider.rotation() as THREE.Quaternion);
-    this.invalidateCache();
   }
 }
 
@@ -145,7 +120,7 @@ type Cuboid = {
   width: number;
   height: number;
   length: number;
-  position? : THREE.Vector3;
+  position?: THREE.Vector3;
   color?: THREE.Color;
   dynamic?: boolean;
 };
@@ -167,7 +142,9 @@ export const addCuboidPhysicsObject = ({
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.copy(position);
 
-  const rigidBodyDesc = dynamic ? RAPIER.RigidBodyDesc.dynamic() : Rapier.RigidBodyDesc.fixed();
+  const rigidBodyDesc = dynamic
+    ? RAPIER.RigidBodyDesc.dynamic()
+    : Rapier.RigidBodyDesc.fixed();
 
   rigidBodyDesc.translation.x = mesh.position.x;
   rigidBodyDesc.translation.y = mesh.position.y;

@@ -1,4 +1,8 @@
 import * as THREE from 'three';
+// eslint-disable-next-line import/extensions
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+import { type Steppable } from '../types';
 
 
 export const sceneOptions = {
@@ -7,10 +11,11 @@ export const sceneOptions = {
 } as const;
 
 
-export class RenderController {
+export class RenderController implements Steppable {
   #scene: THREE.Scene;
   #camera: THREE.Camera;
   #renderer: THREE.WebGLRenderer;
+  #controls: OrbitControls;
 
   constructor() {
     this.#scene = new THREE.Scene();
@@ -19,6 +24,7 @@ export class RenderController {
     this.#camera = new THREE.PerspectiveCamera(75, renderAspectRatio, 0.01, 1000);
 
     this.#renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
   }
 
   init() {
@@ -26,7 +32,7 @@ export class RenderController {
     const light = new THREE.AmbientLight(0xffffff);
     this.#scene.add(light);
 
-    this.#camera.translateY(3);
+    this.#camera.translateY(2);
     this.#camera.lookAt(new THREE.Vector3(0, -1.5, 0));
 
     // this.#camera.translateX(0.8);
@@ -47,5 +53,8 @@ export class RenderController {
 
   step(_: number) {
     this.#renderer.render(this.#scene, this.#camera);
+    this.#controls.update();
   }
 }
+
+export { THREE };

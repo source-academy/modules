@@ -1,13 +1,26 @@
 import { type IOptions, runECEvaluatorByJoel } from 'js-slang';
 import context from 'js-slang/context';
+import { type Steppable } from '../types';
 
-export class ProgramController {
+import { instance } from '../world';
+
+export class ProgramController implements Steppable {
   #code: string;
   #iterator: Generator | null;
+  #isPaused:boolean;
 
   constructor() {
     this.#code = '';
     this.#iterator = null;
+    this.#isPaused = false;
+  }
+
+  pause(time: number) {
+    this.#isPaused = true;
+
+    instance.setTimeout(() => {
+      this.#isPaused = false;
+    }, time);
   }
 
   init(code: string) {
@@ -20,10 +33,14 @@ export class ProgramController {
       throwInfiniteLoops: false,
       useSubst: false,
     };
-    this.#iterator = runECEvaluatorByJoel(code, context, options);
+
+    this.#iterator = runECEvaluatorByJoel(this.#code, context, options);
   }
 
   step(_: number) {
-    return this.#iterator!.next();
+    if (this.#isPaused) {
+      return;
+    }
+    this.#iterator!.next();
   }
 }

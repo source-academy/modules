@@ -1,13 +1,13 @@
 import Rapier, { type Ray, type RigidBody } from '@dimforge/rapier3d-compat';
+import { type Steppable } from '../../types';
 
 let RAPIER: typeof Rapier;
-
 
 export const physicsOptions = {
   GRAVITY: new Rapier.Vector3(0.0, -9.81, 0.0),
 } as const;
 
-export class PhysicsController {
+export class PhysicsController implements Steppable {
   isInitialized = false;
 
   RAPIER: typeof Rapier | null;
@@ -36,7 +36,7 @@ export class PhysicsController {
     return this.#world!.createRigidBody(rigidBodyDesc);
   }
 
-  castRay(ray:Ray, maxDistance:number):number | null {
+  castRay(ray: Ray, maxDistance: number): number | null {
     const result = this.#world!.castRay(ray, maxDistance, true);
     if (result === null) {
       return null;

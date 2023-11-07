@@ -1,4 +1,10 @@
-export { show, init_simulation, is_ready, forward, in_simulation, backward, ev3_move_forward, ev3_runToRelativePosition } from './functions';
-
-
-export { init_new_simulation, new_ev3_runToRelativePosition } from './functions';
+export {
+  show,
+  ev3_motorA,
+  ev3_motorB,
+  ev3_motorC,
+  ev3_motorD,
+  init_simulation,
+  ev3_runToRelativePosition,
+  ev3_pause,
+} from './functions';
