@@ -1,15 +1,20 @@
 import { type PhysicsObject } from '../../primitives/physics_object';
 import { vec3 } from '../physics/helpers';
-import { type Vector } from '../physics/types';
 
-import { instance } from '../../world';
 import { type Steppable } from '../../types';
+import { type Vector } from '../../primitives/cachedVector';
+import { instance } from '../../world';
 
-export class SpeedController implements Steppable {
+
+export class MotorController implements Steppable {
   physicsObject: PhysicsObject;
   displacement: Vector;
 
   speed: number;
+  distance: number;
+
+  distanceTraveled: number;
+  previousLocation: THREE.Vector3;
 
   displacementVector: THREE.Vector3;
   targetVelocity: THREE.Vector3;
@@ -18,6 +23,7 @@ export class SpeedController implements Steppable {
     this.physicsObject = physicsObject;
     this.displacement = displacement;
     this.speed = 0;
+    this.distance = 0;
 
     this.displacementVector = vec3(this.displacement);
     this.targetVelocity = vec3({
@@ -25,14 +31,35 @@ export class SpeedController implements Steppable {
       y: 0,
       z: this.speed,
     });
+
+    this.distanceTraveled = 0;
+    this.previousLocation = this.physicsObject
+      .worldTranslation(vec3(this.displacementVector.clone()))
+      .clone();
   }
 
-  setSpeed(speed: number, duration: number) {
+  setSpeedDistance(speed: number, distance: number) {
+    this.distance = distance;
     this.speed = speed;
-
+    console.log(distance);
+    const beforeDistance = this.distanceTraveled;
     instance.setTimeout(() => {
       this.speed = 0;
-    }, duration);
+      console.log(this.distanceTraveled - beforeDistance);
+    }, distance / speed * 1000);
+  }
+
+  #updateDistance() {
+    const worldTranslation = this.physicsObject.worldTranslation(
+      this.displacementVector.clone(),
+    );
+
+    const translationDelta = worldTranslation
+      .clone()
+      .sub(this.previousLocation);
+    this.previousLocation.copy(worldTranslation);
+    translationDelta.y = 0;
+    this.distanceTraveled += translationDelta.length();
   }
 
   step(_: number) {
@@ -43,16 +70,18 @@ export class SpeedController implements Steppable {
       z: this.speed,
     } as THREE.Vector3);
 
+    this.#updateDistance();
+
     const worldVelocity = this.physicsObject.worldVelocity(
       this.displacementVector.clone(),
     );
 
     const velocityDelta = this.physicsObject
-      .worldDirection(this.targetVelocity.clone())
+      .transformDirection(this.targetVelocity.clone())
       .sub(worldVelocity);
 
     const impulse = velocityDelta
-      .multiplyScalar(this.physicsObject.getMass() / 5)
+      .multiplyScalar(this.physicsObject.getMass() / 4)
       .projectOnPlane(
         vec3({
           x: 0,

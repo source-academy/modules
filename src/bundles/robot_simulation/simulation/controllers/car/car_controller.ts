@@ -5,16 +5,12 @@ import {
   addCuboidPhysicsObject,
   type PhysicsObject,
 } from '../../primitives/physics_object';
-import { type Vector } from '../physics/types';
-import { type Ray } from '@dimforge/rapier3d-compat';
-import { RAPIER } from '../physics/physics_controller';
-import { nullVector, vec3 } from '../physics/helpers';
-import { SpeedController } from './speed_controller';
 
 import { instance } from '../../world';
 import { type Steppable } from '../../types';
-
-
+import { type Vector } from '../../primitives/cachedVector';
+import { MotorController } from './motor_controller';
+import { WheelController } from './wheel_controller';
 
 export type CarSettings = {
   chassis: {
@@ -29,7 +25,6 @@ export type CarSettings = {
     maxSuspensionLength: number;
     suspension: { stiffness: number; damping: number };
     buffer: number;
-    sideForceMultiplier: number;
   };
   turning: { sensitivity: number };
 };
@@ -43,14 +38,13 @@ export const settings: CarSettings = {
   },
   wheel: {
     restHeight: 0.03,
-    diameter: 0.055,
+    diameter: 0.056,
     maxSuspensionLength: 0.1,
     suspension: {
       stiffness: 70,
-      damping: 10,
+      damping: 3,
     },
     buffer: 0.02,
-    sideForceMultiplier: -20,
   },
   turning: {
     sensitivity: 0.5,
@@ -64,94 +58,29 @@ const motors = {
   D: 3,
 } as const;
 
+const motorDisplacements = [
+  {
+    x: 0.058,
+    y: 0,
+    z: 0.055,
+  },
+  {
+    x: -0.058,
+    y: 0,
+    z: 0.055,
+  },
+];
+
 export type MotorsOptions = (typeof motors)[keyof typeof motors];
-
-class Wheel implements Steppable {
-  static downDirection = {
-    x: 0,
-    y: -1,
-    z: 0,
-  };
-
-  carSettings: CarSettings;
-  displacement: Vector;
-  ray: Ray;
-  chassis: PhysicsObject;
-
-  displacementVector: THREE.Vector3;
-  downVector: THREE.Vector3;
-  forceVector: THREE.Vector3;
-
-  constructor(
-    displacement: Vector,
-    chassis: PhysicsObject,
-    carSettings: CarSettings,
-  ) {
-    this.carSettings = carSettings;
-    this.displacement = displacement;
-    this.ray = new RAPIER.Ray(nullVector.RAPIER, nullVector.RAPIER);
-    this.chassis = chassis;
-
-    this.displacementVector = vec3(this.displacement);
-    this.downVector = vec3(Wheel.downDirection);
-    this.forceVector = vec3(nullVector.RAPIER);
-  }
-
-  step() {
-    const velocityY = this.chassis.velocity().y;
-
-    // Reset vectors for memory efficiency
-    this.displacementVector.copy(this.displacement as THREE.Vector3);
-    this.downVector.copy(Wheel.downDirection as THREE.Vector3);
-    this.forceVector.set(0, 0, 0);
-
-    // Convert local vectors to global/world space
-    const globalDisplacement = this.chassis.worldTranslation(
-      this.displacementVector,
-    );
-    const globalDownDirection = this.chassis.worldDirection(this.downVector);
-
-    this.ray.origin = globalDisplacement;
-    this.ray.dir = globalDownDirection;
-
-    const result = instance.castRay(
-      this.ray,
-      settings.wheel.maxSuspensionLength,
-    );
-
-    if (result === null) {
-      return;
-    }
-
-    const wheelDistance = result;
-    const wheelSettings = this.carSettings.wheel;
-
-    // Calculate suspension force
-    const force
-      = wheelSettings.suspension.stiffness
-        * (wheelSettings.restHeight
-          - wheelDistance
-          + this.carSettings.chassis.height / 2)
-      - wheelSettings.suspension.damping * velocityY;
-
-    this.forceVector.y = force;
-
-    // Apply force at the wheel's global displacement
-    this.chassis.addForce(
-      this.chassis.worldDirection(this.forceVector),
-      globalDisplacement,
-    );
-  }
-}
 
 export class CarController implements Steppable {
   carSettings: CarSettings;
   chassis: PhysicsObject | null;
   wheelDisplacements: Vector[];
 
-  wheels: Wheel[];
-  leftMotor: SpeedController | null;
-  rightMotor: SpeedController | null;
+  wheels: WheelController[];
+  leftMotor: MotorController | null;
+  rightMotor: MotorController | null;
 
   constructor(carSettings: CarSettings) {
     this.carSettings = carSettings;
@@ -165,13 +94,13 @@ export class CarController implements Steppable {
   init() {
     this.chassis = this.#createChassis();
     this.#createWheels(this.chassis);
-    this.rightMotor = new SpeedController(
+    this.rightMotor = new MotorController(
       this.chassis,
-      this.wheelDisplacements[0],
+      motorDisplacements[0],
     );
-    this.leftMotor = new SpeedController(
+    this.leftMotor = new MotorController(
       this.chassis,
-      this.wheelDisplacements[1],
+      motorDisplacements[1],
     );
   }
 
@@ -193,7 +122,7 @@ export class CarController implements Steppable {
   #createWheels(chassis: PhysicsObject) {
     const wheelDisplacements = this.wheelDisplacements;
     this.wheels = wheelDisplacements.map(
-      (d) => new Wheel(d, chassis, this.carSettings),
+      (d) => new WheelController(d, chassis, this.carSettings),
     );
   }
 
@@ -225,8 +154,8 @@ export class CarController implements Steppable {
     ];
   }
 
-  #getMotor(motor: MotorsOptions): SpeedController | null {
-    const motorMapping: Record<MotorsOptions, SpeedController | null> = {
+  #getMotor(motor: MotorsOptions): MotorController | null {
+    const motorMapping: Record<MotorsOptions, MotorController | null> = {
       0: null,
       1: this.leftMotor,
       2: this.rightMotor,
@@ -265,14 +194,15 @@ export class CarController implements Steppable {
       return;
     }
 
-    const tuningAmount = 3;
-
-    const time = Math.abs(position / speed) * 1000;
-
     const speedInMetersPerSecond
-      = (speed / 360) * Math.PI * this.carSettings.wheel.diameter * tuningAmount;
+      = (speed / 360) * Math.PI * this.carSettings.wheel.diameter;
+    const distanceInMetersPerSecond
+      = (position / 360) * Math.PI * this.carSettings.wheel.diameter;
 
-    selectedMotor!.setSpeed(speedInMetersPerSecond, time);
+    selectedMotor!.setSpeedDistance(
+      speedInMetersPerSecond,
+      distanceInMetersPerSecond,
+    );
   }
 
   motorGetSpeed(motor: MotorsOptions) {

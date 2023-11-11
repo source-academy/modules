@@ -63,9 +63,8 @@ export class PhysicsObject {
       .add(translation);
   }
 
-  worldDirection(localDirection: THREE.Vector3): THREE.Vector3 {
+  transformDirection(localDirection: THREE.Vector3): THREE.Vector3 {
     const rotation = this.rotation();
-
     return localDirection.applyQuaternion(rotation);
   }
 
@@ -88,7 +87,7 @@ export class PhysicsObject {
     const velocityMagnitude
       = distanceVector.length() * angularVelocity.length();
 
-    const tangentialVelocity = this.worldDirection(localPoint)
+    const tangentialVelocity = this.transformDirection(localPoint)
       .cross(angularVelocity)
       .negate()
       .normalize()

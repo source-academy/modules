@@ -142,6 +142,10 @@ export class World {
     return this.#internals.timeController.setTimeout(callback, delay);
   }
 
+  getFrameTime() {
+    return this.#internals.timeController.dt / 1000;
+  }
+
   // Program Controller
   pauseProgramController(time: number) {
     this.#internals.programController.pause(time);

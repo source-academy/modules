@@ -9,6 +9,7 @@ export class TimeController implements Steppable {
   isPaused:boolean;
   elapsedTime:number;
   timeoutCallbacks:Array<{ callback:TimeoutFunction, simulatedTime: number }>;
+  dt: number;
 
   constructor() {
     this.startTime = null;
@@ -17,6 +18,7 @@ export class TimeController implements Steppable {
     this.pausedTime = 0;
     this.elapsedTime = 0;
     this.timeoutCallbacks = [];
+    this.dt = 0;
   }
 
   hasStarted() {
@@ -83,7 +85,10 @@ export class TimeController implements Steppable {
     }
 
     // Not paused, so update elapsed time
-    this.elapsedTime = timestamp - this.startTime - this.pausedTime;
+    const new_elapsed_time = timestamp - this.startTime - this.pausedTime;
+    this.dt = new_elapsed_time - this.elapsedTime;
+    this.elapsedTime = new_elapsed_time;
+
     this.checkTimeouts();
   }
 }
