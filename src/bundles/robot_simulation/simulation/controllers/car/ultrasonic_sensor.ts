@@ -1,9 +1,8 @@
-import { type PhysicsObject } from '../../primitives/physics_object';
+import { type PhysicsObject } from '../physics/physics_object_controller';
 import { type Vector } from '../../primitives/cachedVector';
-import { type Steppable } from '../../types';
 
 
-export class UltrasonicSensor implements Steppable {
+export class UltrasonicSensor {
   physicsObject: PhysicsObject;
   displacement: Vector;
   direction:Vector;
@@ -14,8 +13,7 @@ export class UltrasonicSensor implements Steppable {
     this.direction = direction;
   }
 
-
-  step(timstamp: number):void {
+  sense() {
 
   }
 }

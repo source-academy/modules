@@ -4,11 +4,12 @@ import * as THREE from 'three';
 import {
   addCuboidPhysicsObject,
   type PhysicsObject,
-} from '../../primitives/physics_object';
+} from '../physics/physics_object_controller';
+import { type Vector } from '../physics/helpers';
+
 
 import { instance } from '../../world';
 import { type Steppable } from '../../types';
-import { type Vector } from '../../primitives/cachedVector';
 import { MotorController } from './motor_controller';
 import { WheelController } from './wheel_controller';
 

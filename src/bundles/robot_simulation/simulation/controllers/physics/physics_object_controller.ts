@@ -1,14 +1,21 @@
-import Rapier, { type Vector3 } from '@dimforge/rapier3d-compat';
+import type Rapier from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
-import { RAPIER } from '../controllers/physics/physics_controller';
+import { RAPIER } from './physics_controller';
 
-import { instance } from '../world';
-import { nullVector, quat, vec3 } from '../controllers/physics/helpers';
+import { instance } from '../../world';
+import { quat, vec3 } from './helpers';
+import { type Steppable } from '../../types';
+
+type Orientation = {
+  translation: THREE.Vector3;
+  rotation: THREE.Quaternion;
+};
 
 export class PhysicsObject {
   #rigidBody: Rapier.RigidBody;
   #mesh: THREE.Mesh;
   #collider: Rapier.Collider;
+  #previousState?: Orientation;
 
   constructor(
     mesh: THREE.Mesh,
@@ -20,6 +27,7 @@ export class PhysicsObject {
     this.#collider = collider;
   }
 
+  // This is a bypass for development.
   getRigidBody() {
     return this.#rigidBody;
   }
@@ -30,6 +38,20 @@ export class PhysicsObject {
 
   getMass(): number {
     return this.#collider.mass();
+  }
+
+  addForce(
+    force: THREE.Vector3,
+    point: THREE.Vector3 = new THREE.Vector3(),
+  ): void {
+    return this.#rigidBody.addForceAtPoint(force, point, true);
+  }
+
+  applyImpulse(
+    impulse: THREE.Vector3,
+    point: THREE.Vector3 = new THREE.Vector3(),
+  ) {
+    return this.#rigidBody.applyImpulseAtPoint(impulse, point, true);
   }
 
   removeForcesAndTorques() {
@@ -54,7 +76,7 @@ export class PhysicsObject {
   }
 
   worldTranslation(
-    localTranslation: THREE.Vector3 = nullVector.THREE,
+    localTranslation: THREE.Vector3 = new THREE.Vector3(),
   ): THREE.Vector3 {
     const rotation = this.rotation();
     const translation = this.translation();
@@ -69,7 +91,7 @@ export class PhysicsObject {
   }
 
   distanceVectorOfPointToRotationalAxis(
-    localPoint: THREE.Vector3 = nullVector.THREE,
+    localPoint: THREE.Vector3 = new THREE.Vector3(),
   ) {
     return localPoint
       .clone()
@@ -78,31 +100,75 @@ export class PhysicsObject {
       .add(localPoint);
   }
 
-  tangentialVelocityOfPoint(
-    localPoint: THREE.Vector3 = nullVector.THREE,
-  ): THREE.Vector3 {
+  /**
+   * Calculates the tangential velocity of a point in a rotating system.
+   * @param {THREE.Vector3} localPoint - The point for which to calculate the tangential velocity.
+   * @returns {THREE.Vector3} The tangential velocity vector of the point.
+   */
+  tangentialVelocityOfPoint(localPoint = new THREE.Vector3()): THREE.Vector3 {
+    // Calculate the distance vector from the point to the rotational axis
     const distanceVector
       = this.distanceVectorOfPointToRotationalAxis(localPoint);
+
+    // Retrieve the angular velocity of the system
     const angularVelocity = this.angularVelocity();
+
+    // Calculate the magnitude of the tangential velocity
     const velocityMagnitude
       = distanceVector.length() * angularVelocity.length();
 
+    // Calculate the tangential velocity vector
     const tangentialVelocity = this.transformDirection(localPoint)
       .cross(angularVelocity)
       .negate()
       .normalize()
       .multiplyScalar(velocityMagnitude);
 
+    // Return the tangential velocity vector
     return tangentialVelocity;
   }
 
-  worldVelocity(localPoint: THREE.Vector3 = nullVector.THREE): THREE.Vector3 {
+  worldVelocity(
+    localPoint: THREE.Vector3 = new THREE.Vector3(),
+  ): THREE.Vector3 {
     return this.tangentialVelocityOfPoint(localPoint)
       .add(this.velocity());
   }
 
-  addForce(force: Vector3, point: Vector3 = nullVector.RAPIER) {
-    return this.#rigidBody.addForceAtPoint(force, point, true);
+  setMeshPosition(newPosition: THREE.Vector3) {
+    this.#mesh.position.copy(newPosition);
+  }
+
+  setMeshRotation(newRotation: THREE.Quaternion) {
+    this.#mesh.quaternion.copy(newRotation);
+  }
+
+
+  savePreviousState() {
+    this.#previousState = {
+      translation: this.translation()
+        .clone(),
+      rotation: this.rotation()
+        .clone(),
+    };
+  }
+
+  getLerpedState(): Orientation {
+    if (!this.#previousState) {
+      return {
+        translation: this.translation(),
+        rotation: this.rotation(),
+      };
+    }
+
+    const alpha = instance.getResidualTime();
+
+    return {
+      translation: this.#previousState.translation.clone()
+        .lerp(this.translation(), alpha),
+      rotation: this.#previousState.rotation.clone()
+        .slerp(this.rotation(), alpha),
+    };
   }
 
   /**
@@ -110,8 +176,33 @@ export class PhysicsObject {
    * Usually called after a physics step
    */
   step(_: number) {
-    this.#mesh.position.copy(this.#collider.translation() as THREE.Vector3);
-    this.#mesh.quaternion.copy(this.#collider.rotation() as THREE.Quaternion);
+    const lerpedState = this.getLerpedState();
+    this.#mesh.position.copy(lerpedState.translation);
+    this.#mesh.quaternion.copy(lerpedState.rotation);
+  }
+}
+
+export class PhysicsObjectController implements Steppable {
+  physicsObjects: Array<PhysicsObject>;
+
+  constructor() {
+    this.physicsObjects = [];
+  }
+
+  add(physicsObject: PhysicsObject) {
+    this.physicsObjects.push(physicsObject);
+  }
+
+  saveLocation() {
+    for (const physicsObject of this.physicsObjects) {
+      physicsObject.savePreviousState();
+    }
+  }
+
+  step(_) {
+    for (const physicsObject of this.physicsObjects) {
+      physicsObject.step(_);
+    }
   }
 }
 
@@ -143,7 +234,7 @@ export const addCuboidPhysicsObject = ({
 
   const rigidBodyDesc = dynamic
     ? RAPIER.RigidBodyDesc.dynamic()
-    : Rapier.RigidBodyDesc.fixed();
+    : RAPIER.RigidBodyDesc.fixed();
 
   rigidBodyDesc.translation.x = mesh.position.x;
   rigidBodyDesc.translation.y = mesh.position.y;

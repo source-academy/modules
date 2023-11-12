@@ -7,9 +7,9 @@ import {
 } from '@dimforge/rapier3d-compat';
 
 import {
-  PhysicsObject,
+  PhysicsObject, PhysicsObjectController,
   addCuboidPhysicsObject,
-} from './primitives/physics_object';
+} from './controllers/physics/physics_object_controller';
 
 import { PhysicsController } from './controllers/physics/physics_controller';
 import { ProgramController } from './controllers/program_controller';
@@ -32,7 +32,7 @@ export type Internals = {
   physicsController: PhysicsController;
   renderController: RenderController;
   programController: ProgramController;
-  physicsObjects: Array<PhysicsObject>;
+  physicsObjects: PhysicsObjectController;
   timeController: TimeController;
 };
 
@@ -56,13 +56,13 @@ export class World {
       physicsController: new PhysicsController(),
       renderController: new RenderController(),
       programController: new ProgramController(),
-      physicsObjects: [],
+      physicsObjects: new PhysicsObjectController(),
       timeController: new TimeController(),
     };
     this.carController = new CarController(settings);
   }
 
-  async init(code: string) {
+  async init(code: string): Promise<void> {
     if (this.state === 'running') {
       return;
     }
@@ -80,14 +80,14 @@ export class World {
     this.state = 'ready';
   }
 
-  startSimulation() {
+  startSimulation(): void {
     if (this.state === 'ready') {
       this.state = 'running';
     }
     window.requestAnimationFrame(this.#step.bind(this));
   }
 
-  stopSimulation() {
+  stopSimulation(): void {
     if (this.state === 'running') {
       this.state = 'ready';
       this.#internals.timeController.pause();
@@ -95,7 +95,7 @@ export class World {
   }
 
   // Physics Controller
-  addFloor() {
+  addFloor(): void {
     addCuboidPhysicsObject({
       width: 20,
       height: 1,
@@ -106,7 +106,7 @@ export class World {
     });
   }
 
-  castRay(ray: Ray, maxDistance: number) {
+  castRay(ray: Ray, maxDistance: number): number | null {
     const { physicsController } = this.#internals;
     return physicsController.castRay(ray, maxDistance);
   }
@@ -115,7 +115,7 @@ export class World {
     mesh: THREE.Mesh,
     rigidBodyDesc: RigidBodyDesc,
     colliderDesc: ColliderDesc,
-  ) {
+  ): PhysicsObject {
     const { physicsController, renderController, physicsObjects }
       = this.#internals;
 
@@ -123,8 +123,12 @@ export class World {
     const rigidBody = physicsController.createRigidBody(rigidBodyDesc);
     const collider = physicsController.createCollider(colliderDesc, rigidBody);
     const physicsObject = new PhysicsObject(mesh, rigidBody, collider);
-    physicsObjects.push(physicsObject);
+    physicsObjects.add(physicsObject);
     return physicsObject;
+  }
+
+  getResidualTime(): number {
+    return this.#internals.physicsController.getResidualTime();
   }
 
   // Render Controller
@@ -134,21 +138,26 @@ export class World {
   }
 
   // Time controller
-  getElapsedTime() {
+  getElapsedTime(): number {
     return this.#internals.timeController.getElapsedTime();
   }
 
-  setTimeout(callback: TimeoutFunction, delay: number) {
-    return this.#internals.timeController.setTimeout(callback, delay);
+  setTimeout(callback: TimeoutFunction, delay: number): void {
+    this.#internals.timeController.setTimeout(callback, delay);
   }
 
-  getFrameTime() {
+  getFrameTime(): number {
     return this.#internals.timeController.dt / 1000;
   }
 
   // Program Controller
-  pauseProgramController(time: number) {
+  pauseProgramController(time: number): void {
     this.#internals.programController.pause(time);
+  }
+
+  // Physic Object Controller
+  savePhysicsObjectState() {
+    this.#internals.physicsObjects.saveLocation();
   }
 
   #step(timestamp: number): void {
@@ -169,9 +178,7 @@ export class World {
     physicsController.step(timestamp);
 
     // Update the location of the mesh
-    for (const physicsObject of physicsObjects) {
-      physicsObject.step(timestamp);
-    }
+    physicsObjects.step(timestamp);
 
     // Render the scene
     renderController.step(timestamp);

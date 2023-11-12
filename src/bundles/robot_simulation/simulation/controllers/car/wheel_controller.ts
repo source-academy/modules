@@ -1,11 +1,11 @@
-import { type Ray } from '@dimforge/rapier3d-compat';
-import { type Vector } from '../../primitives/cachedVector';
+import { Vector3, type Ray } from '@dimforge/rapier3d-compat';
 import { type Steppable } from '../../types';
 import { type CarSettings } from './car_controller';
-import { type PhysicsObject } from '../../primitives/physics_object';
+import { type PhysicsObject } from '../physics/physics_object_controller';
 import { RAPIER } from '../physics/physics_controller';
-import { nullVector, vec3 } from '../physics/helpers';
+import { vec3, type Vector } from '../physics/helpers';
 import { instance } from '../../world';
+import * as THREE from 'three';
 
 export class WheelController implements Steppable {
   static downDirection = {
@@ -30,12 +30,12 @@ export class WheelController implements Steppable {
   ) {
     this.carSettings = carSettings;
     this.displacement = displacement;
-    this.ray = new RAPIER.Ray(nullVector.RAPIER, nullVector.RAPIER);
+    this.ray = new RAPIER.Ray(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
     this.chassis = chassis;
 
     this.displacementVector = vec3(this.displacement);
     this.downVector = vec3(WheelController.downDirection);
-    this.forceVector = vec3(nullVector.RAPIER);
+    this.forceVector = new THREE.Vector3();
   }
 
   step() {

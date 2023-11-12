@@ -1,8 +1,7 @@
-import { type PhysicsObject } from '../../primitives/physics_object';
-import { vec3 } from '../physics/helpers';
+import { type PhysicsObject } from '../physics/physics_object_controller';
+import { vec3, type Vector } from '../physics/helpers';
 
 import { type Steppable } from '../../types';
-import { type Vector } from '../../primitives/cachedVector';
 import { instance } from '../../world';
 
 
@@ -91,11 +90,9 @@ export class MotorController implements Steppable {
       );
 
     this.physicsObject
-      .getRigidBody()
-      .applyImpulseAtPoint(
+      .applyImpulse(
         impulse,
         this.physicsObject.worldTranslation(this.displacementVector.clone()),
-        true,
       );
   }
 }

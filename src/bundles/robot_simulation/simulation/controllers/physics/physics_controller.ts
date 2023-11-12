@@ -9,19 +9,18 @@ export const physicsOptions = {
   timestep: 1 / 60,
 } as const;
 
-
-// Heavily inspired by https://gafferongames.com/post/fix_your_timestep/
 export class PhysicsController implements Steppable {
-  isInitialized = false;
-  accumulator: number;
-
   RAPIER: typeof Rapier | null;
+
   #world: Rapier.World | null;
+  #accumulator: number;
+  #residual: number;
 
   constructor() {
     this.RAPIER = null;
     this.#world = null;
-    this.accumulator = 0;
+    this.#accumulator = 0;
+    this.#residual = 0;
   }
 
   async init() {
@@ -30,7 +29,7 @@ export class PhysicsController implements Steppable {
 
     this.RAPIER = r;
     RAPIER = r;
-    this.isInitialized = true;
+
     this.#world = new r.World(physicsOptions.GRAVITY);
     this.#world.timestep = physicsOptions.timestep;
   }
@@ -51,13 +50,29 @@ export class PhysicsController implements Steppable {
     return result.toi;
   }
 
-  step(_: number) {
-    this.accumulator += Math.min(instance.getFrameTime(), 0.05);
+  getResidualTime() {
+    return this.#residual;
+  }
 
-    while (this.accumulator >= physicsOptions.timestep) {
-      this.#world!.step();
-      this.accumulator -= physicsOptions.timestep;
+  /**
+   * Advances the physics simulation in discrete steps based on the frame time.
+   * Inspired by: https://gafferongames.com/post/fix_your_timestep/
+   * @param {number} _ - Unused parameter, can be removed if not required elsewhere.
+   */
+  step(_) {
+    // Limit the frame time to a maximum value to avoid spiral of death.
+    const maxFrameTime = 0.05;
+    this.#accumulator += Math.min(instance.getFrameTime(), maxFrameTime);
+
+    // Update the physics world in fixed time steps
+    while (this.#accumulator >= physicsOptions.timestep) {
+      instance.savePhysicsObjectState();
+      this.#world!.step(); // Advance the physics simulation
+      this.#accumulator -= physicsOptions.timestep;
     }
+
+    // Calculate the residual for interpolations
+    this.#residual = this.#accumulator / physicsOptions.timestep;
   }
 }
 
