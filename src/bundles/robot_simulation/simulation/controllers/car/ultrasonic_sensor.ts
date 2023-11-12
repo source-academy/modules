@@ -1,5 +1,5 @@
+import { type Vector } from '../physics/helpers';
 import { type PhysicsObject } from '../physics/physics_object_controller';
-import { type Vector } from '../../primitives/cachedVector';
 
 
 export class UltrasonicSensor {
