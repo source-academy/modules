@@ -11,10 +11,11 @@ type Orientation = {
   rotation: THREE.Quaternion;
 };
 
-export class PhysicsObject {
+export class PhysicsObject implements Steppable {
   #rigidBody: Rapier.RigidBody;
   #mesh: THREE.Mesh;
   #collider: Rapier.Collider;
+
   #previousState?: Orientation;
 
   constructor(
@@ -135,15 +136,6 @@ export class PhysicsObject {
       .add(this.velocity());
   }
 
-  setMeshPosition(newPosition: THREE.Vector3) {
-    this.#mesh.position.copy(newPosition);
-  }
-
-  setMeshRotation(newRotation: THREE.Quaternion) {
-    this.#mesh.quaternion.copy(newRotation);
-  }
-
-
   savePreviousState() {
     this.#previousState = {
       translation: this.translation()
@@ -153,7 +145,7 @@ export class PhysicsObject {
     };
   }
 
-  getLerpedState(): Orientation {
+  getInterpolatedState(): Orientation {
     if (!this.#previousState) {
       return {
         translation: this.translation(),
@@ -161,13 +153,13 @@ export class PhysicsObject {
       };
     }
 
-    const alpha = instance.getResidualTime();
+    const interpolationFactor = instance.getResidualTime();
 
     return {
       translation: this.#previousState.translation.clone()
-        .lerp(this.translation(), alpha),
+        .lerp(this.translation(), interpolationFactor),
       rotation: this.#previousState.rotation.clone()
-        .slerp(this.rotation(), alpha),
+        .slerp(this.rotation(), interpolationFactor),
     };
   }
 
@@ -176,9 +168,9 @@ export class PhysicsObject {
    * Usually called after a physics step
    */
   step(_: number) {
-    const lerpedState = this.getLerpedState();
-    this.#mesh.position.copy(lerpedState.translation);
-    this.#mesh.quaternion.copy(lerpedState.rotation);
+    const interpolatedState = this.getInterpolatedState();
+    this.#mesh.position.copy(interpolatedState.translation);
+    this.#mesh.quaternion.copy(interpolatedState.rotation);
   }
 }
 

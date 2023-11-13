@@ -16,9 +16,10 @@ import { ProgramController } from './controllers/program_controller';
 import { RenderController } from './controllers/render_controller';
 import {
   TimeController,
-  type TimeoutFunction,
+  type TimeoutCallback,
 } from './controllers/time_controller';
 import { settings, CarController } from './controllers/car/car_controller';
+import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export const simulationStates = [
   'unintialized',
@@ -137,17 +138,21 @@ export class World {
     this.#internals.renderController.setRendererOutput(domElement);
   }
 
+  loadGTLF(url: string): Promise<GLTF> {
+    return this.#internals.renderController.loadGTLF(url);
+  }
+
   // Time controller
   getElapsedTime(): number {
     return this.#internals.timeController.getElapsedTime();
   }
 
-  setTimeout(callback: TimeoutFunction, delay: number): void {
+  setTimeout(callback: TimeoutCallback, delay: number): void {
     this.#internals.timeController.setTimeout(callback, delay);
   }
 
   getFrameTime(): number {
-    return this.#internals.timeController.dt / 1000;
+    return this.#internals.timeController.getDeltaTime() / 1000;
   }
 
   // Program Controller
@@ -189,4 +194,5 @@ export class World {
     }
   }
 }
+
 export { instance };

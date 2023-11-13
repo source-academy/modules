@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import {
   addCuboidPhysicsObject,
@@ -76,12 +75,12 @@ export type MotorsOptions = (typeof motors)[keyof typeof motors];
 
 export class CarController implements Steppable {
   carSettings: CarSettings;
-  chassis: PhysicsObject | null;
   wheelDisplacements: Vector[];
 
   wheels: WheelController[];
   leftMotor: MotorController | null;
   rightMotor: MotorController | null;
+  chassis: PhysicsObject | null;
 
   constructor(carSettings: CarSettings) {
     this.carSettings = carSettings;

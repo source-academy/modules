@@ -1,34 +1,41 @@
 import { type Steppable } from '../types';
 
-export type TimeoutFunction = () => void;
+export type TimeoutCallback = () => void;
 
 export class TimeController implements Steppable {
-  startTime: number | null;
-  pauseTime: number | null; // Time of the last pause
-  pausedTime: number; // Total time spent paused
-  isPaused: boolean;
-  elapsedTime: number;
-  timeoutCallbacks: Array<{ callback: TimeoutFunction; simulatedTime: number }>;
-  dt: number;
+  private startTime: number | null;
+  private pauseTime: number | null; // Time when the last pause occurred
+  private totalPausedTime: number; // Total duration of pauses
+  private isPaused: boolean;
+  private elapsedTime: number; // Time since start excluding paused durations
+  private timeoutEvents: Array<{ callback: TimeoutCallback; triggerTime: number }>;
+  private deltaTime: number; // Time difference between the current and last step
 
   constructor() {
     this.startTime = null;
     this.pauseTime = null;
     this.isPaused = false;
-    this.pausedTime = 0;
+    this.totalPausedTime = 0;
     this.elapsedTime = 0;
-    this.timeoutCallbacks = [];
-    this.dt = 0;
+    this.timeoutEvents = [];
+    this.deltaTime = 0;
   }
 
+  // Check if the simulation has started
   hasStarted(): boolean {
     return this.startTime !== null;
   }
 
+  // Get the total elapsed time excluding paused durations
   getElapsedTime(): number {
     return this.elapsedTime;
   }
 
+  getDeltaTime(): number {
+    return this.deltaTime;
+  }
+
+  // Pause the simulation
   pause(): void {
     if (!this.isPaused && this.hasStarted()) {
       this.pauseTime = performance.now();
@@ -36,61 +43,54 @@ export class TimeController implements Steppable {
     }
   }
 
-  setTimeout(callback: TimeoutFunction, delay: number): void {
+  // Schedule a callback function to execute after a delay
+  setTimeout(callback: TimeoutCallback, delay: number): void {
     if (!this.hasStarted()) {
       throw new Error('Cannot set timeout before starting simulation');
     }
 
-    const simulatedTime = this.elapsedTime + delay;
-    this.timeoutCallbacks.push({
+    const triggerTime = this.elapsedTime + delay;
+    this.timeoutEvents.push({
       callback,
-      simulatedTime,
+      triggerTime,
     });
   }
 
-  #checkTimeouts(): void {
-    if (!this.hasStarted()) {
-      return;
-    }
+  // Check and execute expired timeout events
+  private checkTimeouts(): void {
+    if (!this.hasStarted() || this.isPaused) return;
 
-    if (this.isPaused) {
-      return;
-    }
-
-    // Filter out expired timeouts
-    // Could be done with a priority queue but this is simpler
-    const expiredTimeouts = this.timeoutCallbacks.filter(
-      (timeout) => timeout.simulatedTime <= this.elapsedTime,
-    );
-    for (const expiredTimeout of expiredTimeouts) {
-      const index = this.timeoutCallbacks.indexOf(expiredTimeout);
-      if (index !== -1) {
-        this.timeoutCallbacks.splice(index, 1);
-        expiredTimeout.callback();
+    const currentTime = this.elapsedTime;
+    this.timeoutEvents = this.timeoutEvents.filter((timeoutEvent) => {
+      if (timeoutEvent.triggerTime <= currentTime) {
+        timeoutEvent.callback();
+        return false; // Remove from the array
       }
-    }
+      return true; // Keep in the array
+    });
   }
 
+  // Update the state for each step in the simulation
   step(timestamp: number): void {
-    // First step called
+    // Initialize start time on first step
     if (this.startTime === null) {
       this.startTime = timestamp;
     }
 
-    // If paused,
+    // Resume from pause
     if (this.isPaused && this.pauseTime !== null) {
-      // Update paused time
-      this.pausedTime += timestamp - this.pauseTime;
-      // unpause
+      this.totalPausedTime += timestamp - this.pauseTime;
       this.pauseTime = null;
       this.isPaused = false;
     }
 
-    // Not paused, so update elapsed time
-    const new_elapsed_time = timestamp - this.startTime - this.pausedTime;
-    this.dt = new_elapsed_time - this.elapsedTime;
+
+    // Update elapsed and delta time
+    const new_elapsed_time = timestamp - this.startTime - this.totalPausedTime;
+    this.deltaTime = new_elapsed_time - this.elapsedTime;
     this.elapsedTime = new_elapsed_time;
 
-    this.#checkTimeouts();
+    // Process timeout events
+    this.checkTimeouts();
   }
 }
