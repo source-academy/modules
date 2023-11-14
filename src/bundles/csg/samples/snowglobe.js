@@ -1,5 +1,5 @@
 // Source §1
-// Snowglobe example used in the functions.ts summary at the top of the file
+// Snowglobe example used in the index.ts summary at the top of the file
 
 import {
     silver, crimson, cyan,
