@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>draw_3D_points | Source Academy Modules</title><meta name="description" content="Documentation for Source Academy Modules"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>draw_points_3d | Source Academy Modules</title><meta name="description" content="Documentation for Source Academy Modules"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -14,20 +14,32 @@
 <ul class="tsd-breadcrumb">
 <li><a href="../index.html">Source Academy Modules</a></li>
 <li><a href="../modules/plotly.html">plotly</a></li>
-<li><a href="plotly.draw_3D_points.html">draw_3D_points</a></li></ul>
-<h1>Function draw_3D_points</h1></div>
+<li><a href="plotly.draw_points_3d.html">draw_points_3d</a></li></ul>
+<h1>Function draw_points_3d</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="draw_3D_points"><span class="tsd-kind-call-signature">draw_<wbr/>3<wbr/>D_<wbr/>points</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">numPoints</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">CurvePlotFunction</span><a href="#draw_3D_points" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="draw_points_3d"><span class="tsd-kind-call-signature">draw_<wbr/>points_<wbr/>3d</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">numPoints</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">CurvePlotFunction</span><a href="#draw_points_3d" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Returns a function that turns a given 3D Curve into a Drawing, by sampling the
+3D Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
+When a program evaluates to a Drawing, the Source system displays it graphically, in a window,</p>
+<ul>
+<li></li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5><span class="tsd-kind-parameter">numPoints</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">CurvePlotFunction</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">CurvePlotFunction</span></h4><p>function of type 3D Curve → Drawing</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Example</h4><pre><code><span class="hl-4">draw_points_3d</span><span class="hl-1">(</span><span class="hl-5">100</span><span class="hl-1">)(</span><span class="hl-2">t</span><span class="hl-1"> </span><span class="hl-7">=&gt;</span><span class="hl-1"> </span><span class="hl-4">make_point</span><span class="hl-1">(</span><span class="hl-2">t</span><span class="hl-1">, </span><span class="hl-2">t</span><span class="hl-1">));</span>
+</code><button>Copy</button></pre>
+</div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/source-academy/modules/blob/05f5791/src/bundles/plotly/functions.ts#L289">plotly/functions.ts:289</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/source-academy/modules/blob/419f242/src/bundles/plotly/functions.ts#L290">plotly/functions.ts:290</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
