@@ -7,14 +7,17 @@ import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import {
   type Curve,
-  type CurvePlot,
+  CurvePlot,
   type CurvePlotFunction,
   DrawnPlot,
   type ListOfPairs,
 } from './plotly';
 import { generatePlot } from './curve_functions';
+import { get_duration, get_wave, is_sound } from './sound_functions';
+import { type Sound } from '../sound/types';
 
-const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
+let drawnPlots: (DrawnPlot | CurvePlot)[] = [];
+
 context.moduleContexts.plotly.state = {
   drawnPlots,
 };
@@ -120,7 +123,6 @@ context.moduleContexts.plotly.state = {
 export function new_plot(data: ListOfPairs): void {
   drawnPlots.push(new DrawnPlot(draw_new_plot, data));
 }
-
 
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
@@ -236,7 +238,6 @@ export function new_plot_json(data: any): void {
   drawnPlots.push(new DrawnPlot(draw_new_plot_json, data));
 }
 
-
 /**
  * @param data The data which plotly will use
  * @param divId The id of the div element on which the plot will be displayed
@@ -309,19 +310,20 @@ function createPlotFunction(
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points and connecting each pair with a line.
- * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.
  *
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
  * @example
  * ```
- * draw_connected(100)(t => make_point(t, t));
+ * draw_connected_2d(100)(t => make_point(t, t));
  * ```
  */
 export const draw_connected_2d = createPlotFunction(
-  'scatter',
-  { mode: 'lines' },
+  'scattergl',
+  {
+    mode: 'lines',
+  },
   {
     xaxis: { visible: false },
     yaxis: {
@@ -329,14 +331,138 @@ export const draw_connected_2d = createPlotFunction(
       scaleanchor: 'x',
     },
   },
-
+  true,
 );
 
-export const draw_3D_points = createPlotFunction(
+/**
+ * Returns a function that turns a given 3D Curve into a Drawing, by sampling the
+ * 3D Curve at `num` sample points and connecting each pair with a line.
+ *
+ * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @return function of type 3D Curve → Drawing
+ * @example
+ * ```
+ * draw_connected_3d(100)(t => make_point(t, t));
+ * ```
+ */
+export const draw_connected_3d = createPlotFunction(
   'scatter3d',
+  { mode: 'lines' },
+  {},
+  true,
+);
+
+/**
+ * Returns a function that turns a given Curve into a Drawing, by sampling the
+ * Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
+ * When a program evaluates to a Drawing, the Source system displays it graphically, in a window,
+ *
+ * * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @return function of type 2D Curve → Drawing
+ * @example
+ * ```
+ * draw_points_2d(100)(t => make_point(t, t));
+ */
+export const draw_points_2d = createPlotFunction(
+  'scatter',
   { mode: 'markers' },
   {
-
+    xaxis: { visible: false },
+    yaxis: {
+      visible: false,
+      scaleanchor: 'x',
+    },
   },
   true,
 );
+
+/**
+ * Returns a function that turns a given 3D Curve into a Drawing, by sampling the
+ * 3D Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
+ * When a program evaluates to a Drawing, the Source system displays it graphically, in a window,
+ *
+ * * @param num determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @return function of type 3D Curve → Drawing
+ * @example
+ * ```
+ * draw_points_3d(100)(t => make_point(t, t));
+ */
+export const draw_points_3d = createPlotFunction(
+  'scatter3d',
+  { mode: 'markers' },
+  {},
+);
+
+/**
+ * Visualizes the sound on a 2d line graph
+ * @param sound the sound which is to be visualized on plotly
+ */
+export const draw_sound_2d = (sound: Sound) => {
+  const FS: number = 44100; // Output sample rate
+  if (!is_sound(sound)) {
+    throw new Error(
+      `draw_sound_2d is expecting sound, but encountered ${sound}`,
+    );
+    // If a sound is already displayed, terminate execution.
+  } else if (get_duration(sound) < 0) {
+    throw new Error('draw_sound_2d: duration of sound is negative');
+  } else {
+    // Instantiate audio context if it has not been instantiated.
+
+    // Create mono buffer
+    const channel: number[] = [];
+    const time_stamps: number[] = [];
+    const len = Math.ceil(FS * get_duration(sound));
+
+    const wave = get_wave(sound);
+    for (let i = 0; i < len; i += 1) {
+      time_stamps[i] = i / FS;
+      channel[i] = wave(i / FS);
+    }
+
+    let x_s: number[] = [];
+    let y_s: number[] = [];
+
+    for (let i = 0; i < channel.length; i += 1) {
+      x_s.push(time_stamps[i]);
+      y_s.push(channel[i]);
+    }
+
+    const plotlyData: Data = {
+      x: x_s,
+      y: y_s,
+    };
+    const plot = new CurvePlot(
+      draw_new_curve,
+      {
+        ...plotlyData,
+        type: 'scattergl',
+        mode: 'lines',
+        line: { width: 0.5 },
+      } as Data,
+      {
+        xaxis: {
+          type: 'linear',
+          title: 'Time',
+          anchor: 'y',
+          position: 0,
+          rangeslider: { visible: true },
+        },
+        yaxis: {
+          type: 'linear',
+          visible: false,
+        },
+        bargap: 0.2,
+        barmode: 'stack',
+      },
+    );
+    if (drawnPlots) drawnPlots.push(plot);
+  }
+};
+
+function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
+  Plotly.react(divId, [data], layout);
+}
