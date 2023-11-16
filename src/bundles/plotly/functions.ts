@@ -14,7 +14,7 @@ import {
 } from './plotly';
 import { generatePlot } from './curve_functions';
 import { get_duration, get_wave, is_sound } from './sound_functions';
-import { type Sound } from '../sound/types';
+import { Sound } from '../sound/types';
 
 let drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 

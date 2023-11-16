@@ -31,3 +31,5 @@ export function get_wave(sound: Sound): Wave {
 export function get_duration(sound: Sound): number {
   return tail(sound);
 }
+
+export type Sound;
