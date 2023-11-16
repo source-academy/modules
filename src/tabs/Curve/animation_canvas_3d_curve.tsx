@@ -1,12 +1,13 @@
-import { Button, Icon, Slider } from '@blueprintjs/core';
+import { Icon, Slider } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type AnimatedCurve } from '../../bundles/curve/types';
-import AutoLoopSwitch from '../common/auto_loop_switch';
+import AutoLoopSwitch from '../common/AutoLoopSwitch';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
-import PlayButton from '../common/play_button';
-import WebGLCanvas from '../common/web_gl_canvas';
+import PlayButton from '../common/PlayButton';
+import WebGLCanvas from '../common/WebglCanvas';
+import ButtonComponent from '../common/ButtonComponent';
 
 type Props = {
   animation: AnimatedCurve;
@@ -21,6 +22,8 @@ type State = {
 
   /** Previous value of `isPlaying` */
   wasPlaying: boolean;
+
+  errored?: any;
 
   /** Whether auto loop is enabled */
   isAutoLooping: boolean;
@@ -51,6 +54,8 @@ State
    */
   private readonly animationDuration: number;
 
+  private animationFrameId: number | null;
+
   /**
    * Last timestamp since the previous `requestAnimationFrame` call
    */
@@ -71,21 +76,40 @@ State
     this.frameDuration = 1000 / props.animation.fps;
     this.animationDuration = Math.round(props.animation.duration * 1000);
     this.callbackTimestamp = null;
+    this.animationFrameId = null;
+  }
+
+  public componentDidMount() {
+    this.drawFrame();
   }
 
   /**
    * Call this to actually draw a frame onto the canvas
    */
   private drawFrame = () => {
-    if (this.canvas) {
-      const frame = this.props.animation.getFrame(
-        this.state.animTimestamp / 1000,
-      );
-      frame.draw(this.canvas);
+    try {
+      if (this.canvas) {
+        const frame = this.props.animation.getFrame(
+          this.state.animTimestamp / 1000,
+        );
+        frame.draw(this.canvas);
+      }
+    } catch (error) {
+      if (this.animationFrameId !== null) {
+        cancelAnimationFrame(this.animationFrameId);
+      }
+      this.setState({
+        isPlaying: false,
+        errored: error,
+      });
     }
   };
 
-  private reqFrame = () => requestAnimationFrame(this.animationCallback);
+  private reqFrame = () => {
+    if (!this.state.errored) {
+      this.animationFrameId = requestAnimationFrame(this.animationCallback);
+    }
+  };
 
   /**
    * Callback to use with `requestAnimationFrame`
@@ -148,14 +172,18 @@ State
   private onPlayButtonClick = () => {
     if (this.state.isPlaying) {
       this.setState(
-        { isPlaying: false },
+        {
+          isPlaying: false,
+        },
         () => {
           this.callbackTimestamp = null;
         },
       );
     } else {
       this.setState(
-        { isPlaying: true },
+        {
+          isPlaying: true,
+        },
         this.reqFrame,
       );
     }
@@ -234,10 +262,6 @@ State
     }));
   };
 
-  public componentDidMount() {
-    this.drawFrame();
-  }
-
   public render() {
     return <div
       style={{
@@ -265,15 +289,19 @@ State
         >
           <PlayButton
             isPlaying={ this.state.isPlaying }
-            onClickCallback={ this.onPlayButtonClick }
+            disabled={Boolean(this.state.errored)}
+            onClick={ this.onPlayButtonClick }
           />
           <Tooltip2
             content="Reset"
             placement="top"
           >
-            <Button onClick={ this.onResetButtonClick }>
+            <ButtonComponent
+              disabled={Boolean(this.state.errored)}
+              onClick={ this.onResetButtonClick }
+            >
               <Icon icon={ IconNames.RESET } />
-            </Button>
+            </ButtonComponent>
           </Tooltip2>
           <div
             style={{
@@ -291,6 +319,7 @@ State
               stepSize={ 1 }
 
               labelRenderer={ false }
+              disabled={Boolean(this.state.errored)}
 
               onChange={ this.onTimeSliderChange }
               onRelease={ this.onTimeSliderRelease }
@@ -306,6 +335,7 @@ State
                 stepSize={ 0.01 }
 
                 labelRenderer={ false }
+                disabled={Boolean(this.state.errored)}
 
                 onChange={ this.onAngleSliderChange }
               />
@@ -313,7 +343,8 @@ State
           </div>
           <AutoLoopSwitch
             isAutoLooping={ this.state.isAutoLooping }
-            onChangeCallback={ this.onSwitchChange }
+            disabled={Boolean(this.state.errored)}
+            onChange={ this.onSwitchChange }
           />
         </div>
       </div>
@@ -323,11 +354,45 @@ State
           justifyContent: 'center',
         }}
       >
-        <WebGLCanvas
-          ref={(r) => {
-            this.canvas = r;
-          }}
-        />
+        {this.state.errored
+          ? (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+                <Icon icon={IconNames.WARNING_SIGN} size={90} />
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginBottom: 20,
+                }}>
+                  <h3>An error occurred while running your animation!</h3>
+                  <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
+                </div>
+              </div>
+              <code style={{
+                color: 'red',
+              }}>
+                {this.state.errored.toString()}
+              </code>
+            </div>)
+          : (
+            <WebGLCanvas
+              style={{
+                flexGrow: 1,
+              }}
+              ref={(r) => {
+                this.canvas = r;
+              }}
+            />
+          )}
       </div>
     </div>;
   }

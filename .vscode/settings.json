@@ -1,7 +1,8 @@
 {
   "eslint.workingDirectories": [
     "src",
-    "scripts/src"
+    "scripts/src",
+    "devserver"
   ],
   "files.eol": "\r\n",
 }

@@ -5,8 +5,6 @@ import React from 'react';
 import { BP_ICON_COLOR, SA_TAB_BUTTON_WIDTH, SA_TAB_ICON_SIZE } from '../common/css_constants';
 import type { HintProps } from './types';
 
-
-
 /* [Main] */
 export default class HoverControlHint extends React.Component<HintProps> {
   render() {

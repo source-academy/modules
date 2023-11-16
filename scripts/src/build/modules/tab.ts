@@ -4,10 +4,11 @@ import chalk from 'chalk';
 import {
   type BuildOptions as ESBuildOptions,
   type OutputFile,
+  type Plugin as ESBuildPlugin,
   build as esbuild,
 } from 'esbuild';
 import type {
-  ArrowFunctionExpression,
+  ExportDefaultDeclaration,
   Identifier,
   Literal,
   MemberExpression,
@@ -26,8 +27,8 @@ import {
   retrieveTabs,
   tabNameExpander,
 } from '../buildUtils.js';
-import type { LintCommandInputs } from '../prebuild/eslint.js';
 import { prebuild } from '../prebuild/index.js';
+import type { LintCommandInputs } from '../prebuild/lint.js';
 import type { BuildCommandInputs, BuildOptions, BuildResult, UnreducedResult } from '../types';
 
 import { esbuildOptions } from './moduleUtils.js';
@@ -37,28 +38,29 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
     const declStatement = parsed.body[1] as VariableDeclaration;
 
-    const newTab = {
-      type: 'ArrowFunctionExpression',
-      body: {
-        type: 'MemberExpression',
-        object: declStatement.declarations[0].init,
-        property: {
-          type: 'Literal',
-          value: 'default',
-        } as Literal,
-        computed: true,
-      } as MemberExpression,
-      params: [{
-        type: 'Identifier',
-        name: 'require',
-      } as Identifier],
-    } as ArrowFunctionExpression;
-
-    let newCode = generate(newTab);
-    if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
+    const newTab: ExportDefaultDeclaration = {
+      type: 'ExportDefaultDeclaration',
+      declaration: {
+        type: 'ArrowFunctionExpression',
+        expression: true,
+        body: {
+          type: 'MemberExpression',
+          object: declStatement.declarations[0].init,
+          property: {
+            type: 'Literal',
+            value: 'default',
+          } as Literal,
+          computed: true,
+        } as MemberExpression,
+        params: [{
+          type: 'Identifier',
+          name: 'require',
+        } as Identifier],
+      },
+    };
 
     const outFile = `${outDir}/tabs/${tabName}.js`;
-    await fs.writeFile(outFile, newCode);
+    await fs.writeFile(outFile, generate(newTab));
     const { size } = await fs.stat(outFile);
     return {
       severity: 'success',
@@ -72,20 +74,41 @@ const outputTab = async (tabName: string, text: string, outDir: string): Promise
   }
 };
 
-export const tabOptions: ESBuildOptions = {
-  ...esbuildOptions,
-  jsx: 'automatic',
-  external: ['react', 'react-dom', 'react/jsx-runtime'],
+const tabContextPlugin: ESBuildPlugin = {
+  name: 'Tab Context',
+  setup(build) {
+    build.onResolve({ filter: /^js-slang\/context/u }, () => ({
+      errors: [{
+        text: 'If you see this message, it means that your tab code is importing js-slang/context directly or indirectly. Do not do this',
+      }],
+    }));
+  },
 };
 
-export const buildTabs = async (tabs: string[], { srcDir, outDir }: BuildOptions) => {
+export const getTabOptions = (tabs: string[], { srcDir, outDir }: Record<'srcDir' | 'outDir', string>): ESBuildOptions => {
   const nameExpander = tabNameExpander(srcDir);
-  const { outputFiles } = await esbuild({
-    ...tabOptions,
+  return {
+    ...esbuildOptions,
     entryPoints: tabs.map(nameExpander),
+    external: [
+      ...esbuildOptions.external,
+      'react',
+      'react-ace',
+      'react-dom',
+      'react/jsx-runtime',
+      '@blueprintjs/*',
+      // 'phaser',
+    ],
+    jsx: 'automatic',
     outbase: outDir,
     outdir: outDir,
-  });
+    tsconfig: `${srcDir}/tsconfig.json`,
+    plugins: [tabContextPlugin],
+  };
+};
+
+export const buildTabs = async (tabs: string[], options: BuildOptions) => {
+  const { outputFiles } = await esbuild(getTabOptions(tabs, options));
   return outputFiles;
 };
 

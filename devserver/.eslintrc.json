@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "env": { "browser": true, "es2020": true },
+  "extends": [ "../.eslintrc.base.cjs" ],
+  "ignorePatterns": ["dist", ".eslintrc.cjs"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["react", "@typescript-eslint"],
+  "rules": {
+    "func-style": 0,
+    "no-empty-function": 0,
+    "@typescript-eslint/no-unused-vars": [
+      1, // Was 2
+      {
+        // vars: "all",
+        // args: "after-used",
+        // ignoreRestSiblings: false,
+        "argsIgnorePattern": "^_",
+        "caughtErrors": "all", // Was "none"
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
+  }
+}

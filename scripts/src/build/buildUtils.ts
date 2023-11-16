@@ -189,6 +189,47 @@ export const retrieveBundles = async (manifestFile: string, modules: string[] | 
   return knownBundles;
 };
 
+export const bundleNameExpander = (srcdir: string) => (name: string) => path.join(srcdir, 'bundles', name, 'index.ts');
+export const tabNameExpander = (srcdir: string) => (name: string) => path.join(srcdir, 'tabs', name, 'index.tsx');
+
+export const createBuildCommand = (label: string, addLint: boolean) => {
+  const cmd = new Command(label)
+    .option('--outDir <outdir>', 'Output directory', 'build')
+    .option('--srcDir <srcdir>', 'Source directory for files', 'src')
+    .option('--manifest <file>', 'Manifest file', 'modules.json')
+    .option('-v, --verbose', 'Display more information about the build results', false);
+
+  if (addLint) {
+    cmd.option('--tsc', 'Run tsc before building')
+      .option('--lint', 'Run eslint before building')
+      .addOption(new Option('--fix', 'Ask eslint to autofix linting errors')
+        .implies({ lint: true }));
+  }
+
+  return cmd;
+};
+
+/**
+ * Create the output directory's root folder
+ */
+export const createOutDir = (outDir: string) => fs.mkdir(outDir, { recursive: true });
+
+/**
+ * Copy the manifest to the output folder. The root output folder will be created
+ * if it does not already exist.
+ */
+export const copyManifest = ({ manifest, outDir }: { manifest: string, outDir: string }) => createOutDir(outDir)
+  .then(() => fs.copyFile(
+    manifest, path.join(outDir, manifest),
+  ));
+
+/**
+ * Create the output directories for each type of asset.
+ */
+export const createBuildDirs = (outDir: string) => Promise.all(
+  Assets.map((asset) => fs.mkdir(path.join(outDir, `${asset}s`), { recursive: true })),
+);
+
 /**
  * Determines which bundles and tabs to build based on the user's input.
  *
@@ -269,44 +310,3 @@ export const retrieveBundlesAndTabs = async (
     modulesSpecified: modules !== null,
   };
 };
-
-export const bundleNameExpander = (srcdir: string) => (name: string) => path.join(srcdir, 'bundles', name, 'index.ts');
-export const tabNameExpander = (srcdir: string) => (name: string) => path.join(srcdir, 'tabs', name, 'index.tsx');
-
-export const createBuildCommand = (label: string, addLint: boolean) => {
-  const cmd = new Command(label)
-    .option('--outDir <outdir>', 'Output directory', 'build')
-    .option('--srcDir <srcdir>', 'Source directory for files', 'src')
-    .option('--manifest <file>', 'Manifest file', 'modules.json')
-    .option('-v, --verbose', 'Display more information about the build results', false);
-
-  if (addLint) {
-    cmd.option('--tsc', 'Run tsc before building')
-      .option('--lint', 'Run eslint before building')
-      .addOption(new Option('--fix', 'Ask eslint to autofix linting errors')
-        .implies({ lint: true }));
-  }
-
-  return cmd;
-};
-
-/**
- * Create the output directory's root folder
- */
-export const createOutDir = (outDir: string) => fs.mkdir(outDir, { recursive: true });
-
-/**
- * Copy the manifest to the output folder. The root output folder will be created
- * if it does not already exist.
- */
-export const copyManifest = ({ manifest, outDir }: { manifest: string, outDir: string }) => createOutDir(outDir)
-  .then(() => fs.copyFile(
-    manifest, path.join(outDir, manifest),
-  ));
-
-/**
- * Create the output directories for each type of asset.
- */
-export const createBuildDirs = (outDir: string) => Promise.all(
-  Assets.map((asset) => fs.mkdir(path.join(outDir, `${asset}s`), { recursive: true })),
-);

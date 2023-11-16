@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import { exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
 import type { AssetInfo } from '../types.js';
 
-import { type LintCommandInputs, type LintOpts, logLintResult, runEslint } from './eslint.js';
+import { type LintCommandInputs, type LintOpts, logLintResult, runEslint } from './lint.js';
 import { type TscCommandInputs, type TscOpts, logTscResults, runTsc } from './tsc.js';
 
 type PreBuildOpts = TscOpts & LintOpts & {
@@ -86,5 +86,5 @@ const getPrebuildCommand = () => new Command('prebuild')
   });
 
 export default getPrebuildCommand;
-export { default as getLintCommand } from './eslint.js';
+export { default as getLintCommand } from './lint.js';
 export { default as getTscCommand } from './tsc.js';
