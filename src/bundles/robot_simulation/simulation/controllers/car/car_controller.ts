@@ -134,22 +134,22 @@ export class CarController implements Steppable {
       {
         x: width / 2 + buffer,
         y: 0,
-        z: length / 2,
+        z: length / 2 - buffer,
       },
       {
         x: -(width / 2 + buffer),
         y: 0,
-        z: length / 2,
+        z: length / 2 - buffer,
       },
       {
         x: width / 2 + buffer,
         y: 0,
-        z: -length / 2,
+        z: -(length / 2 - buffer),
       },
       {
         x: -(width / 2 + buffer),
         y: 0,
-        z: -length / 2,
+        z: -(length / 2 - buffer),
       },
     ];
   }
