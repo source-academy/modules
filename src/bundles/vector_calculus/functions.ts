@@ -218,7 +218,7 @@ export function display_field_surface(numPoints1: number) {
 let animationId: number | null = null
 function draw_new_simulation(func: FunctionalVector, body: Body) {
   return (divId: string, data: Data[], layout: Partial<Layout>) => {
-    Plotly.newPlot(divId, data, layout)
+    Plotly.react(divId, data, layout)
     const fieldData = data[0]
     console.log(animationId)
     console.log(data)
@@ -269,8 +269,8 @@ function draw_new_cone_plot(
   layout: Partial<Layout>,
 ) {
   if (Array.isArray(data)) {
-    Plotly.newPlot(divId, data, layout)
+    Plotly.react(divId, data, layout)
   } else {
-    Plotly.newPlot(divId, [data], layout)
+    Plotly.react(divId, [data], layout)
   }
 }

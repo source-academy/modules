@@ -11,5 +11,4 @@ export {
   display_field_curve,
   display_field_surface,
   add,
-  simulate_body_in_field,
 } from './functions'
