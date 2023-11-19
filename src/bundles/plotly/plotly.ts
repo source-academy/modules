@@ -1,6 +1,6 @@
-
 import { type Data, type Layout } from 'plotly.js-dist';
 import { type ReplResult } from '../../typings/type_helpers';
+import type { Pair } from 'js-slang/dist/stdlib/list';
 
 /**
  * Represents plots with a draw method attached
@@ -38,14 +38,13 @@ export class CurvePlot implements ReplResult {
 
 export type ListOfPairs = (ListOfPairs | any)[] | null;
 export type Data2d = number[];
-export type Color = { r: number, g: number, b: number };
+export type Color = { r: number; g: number; b: number };
 
 export type DataTransformer = (c: Data2d[]) => Data2d[];
-export type CurvePlotFunction = ((func: Curve) => CurvePlot);
+export type CurvePlotFunction = (func: Curve) => CurvePlot;
 
-export type Curve = ((n: number) => Point);
+export type Curve = (n: number) => Point;
 export type CurveTransformer = (c: Curve) => Curve;
-
 
 /** Encapsulates 3D point with RGB values. */
 export class Point implements ReplResult {
@@ -58,3 +57,6 @@ export class Point implements ReplResult {
 
   public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
 }
+
+export type Wave = (...t: any) => number;
+export type Sound = Pair<Wave, number>;

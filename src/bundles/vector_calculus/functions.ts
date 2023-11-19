@@ -1,12 +1,12 @@
 import context from 'js-slang/context'
-import Plotly, { Data, Layout } from 'plotly.js-dist'
+import Plotly, { type Data, type Layout } from 'plotly.js-dist'
 import {
   ConePlot,
   divide,
-  FunctionalVector,
-  FunctionMapping,
+  type FunctionalVector,
+  type FunctionMapping,
   n_order_stencil,
-  ParameterizedVector,
+  type ParameterizedVector,
   subtract,
   Vector,
 } from './vector_calculus'
@@ -213,53 +213,7 @@ export function display_field_surface(numPoints1: number) {
   }
 }
 
-export const simulate_body_in_field = (f: FunctionalVector) => {
-  let inputs: Vector[] = []
-  for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 10; j++) {
-      for (let k = 0; k < 10; k++) {
-        inputs.push(new Vector(i / 10, j / 10, k / 10))
-      }
-    }
-  }
-  let results: Vector[] = []
-  inputs.forEach((input) => {
-    results.push(f(input))
-  })
 
-  const x_s = inputs.map((input) => x_of(input))
-  const y_s = inputs.map((input) => y_of(input))
-  const z_s = inputs.map((input) => z_of(input))
-
-  const u_s = results.map((res) => x_of(res))
-  const v_s = results.map((res) => y_of(res))
-  const w_s = results.map((res) => z_of(res))
-  const body: Body = new Body([0.5, 0.5, 0.0], 2, [0, 0, 0], [0, 0, 0])
-  const data1 = { x: x_s, y: y_s, z: z_s, u: u_s, v: v_s, w: w_s }
-  const data2 = { x: [body.pos[0]], y: [body.pos[1]], z: [body.pos[2]] }
-  drawnVectors.push(
-    new ConePlot(
-      draw_new_simulation(f, body),
-      [
-        {
-          ...data1,
-          type: 'cone',
-          //@ts-ignore
-          hoverinfo: 'x+y+z+u+v+w+name',
-          colorscale: 'Blackbody',
-          sizeref: 0.5,
-          vertexnormalepsilon: 1e-6,
-        },
-        {
-          ...data2,
-          type: 'scatter3d',
-          mode: 'markers',
-        },
-      ],
-      {},
-    ),
-  )
-}
 
 let animationId: number | null = null
 function draw_new_simulation(func: FunctionalVector, body: Body) {

@@ -31,6 +31,7 @@
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
+    "verbatimModuleSyntax": true,
     // "typeRoots": [
     //   "typings/@types",
     //   "node_modules/@types"
@@ -42,5 +43,5 @@
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
   "include": ["."],
   /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
-  "exclude": [".eslintrc.cjs", "jest.config.js"]
+  "exclude": [".eslintrc.cjs", "jest.config.js", "**/__tests__"]
 }

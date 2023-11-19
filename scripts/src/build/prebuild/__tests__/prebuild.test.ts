@@ -1,6 +1,6 @@
 import type { MockedFunction } from 'jest-mock';
 
-import getLintCommand, * as lintModule from '../eslint';
+import getLintCommand, * as lintModule from '../lint';
 import getTscCommand, * as tscModule from '../tsc';
 import getPrebuildCommand from '..';
 

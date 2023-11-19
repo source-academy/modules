@@ -1,7 +1,7 @@
 import React from 'react'
 import { ConePlot } from '../../bundles/vector_calculus/vector_calculus'
-import { DebuggerContext } from '../../typings/type_helpers'
-import Modal from '../common/modal_div'
+import {type  DebuggerContext } from '../../typings/type_helpers'
+import Modal from '../common/ModalDiv'
 
 type Props = {
   children?: never

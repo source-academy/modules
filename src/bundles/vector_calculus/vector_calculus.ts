@@ -1,5 +1,5 @@
-import { ReplResult } from '../../typings/type_helpers'
-import { Data, Layout } from 'plotly.js-dist'
+import { type ReplResult } from '../../typings/type_helpers'
+import { type Data, type Layout } from 'plotly.js-dist'
 
 /**
  * TODO: figure out a nice demo of using the vector calculus
