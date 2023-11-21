@@ -41,23 +41,11 @@ export class PhysicsObject implements Steppable {
     return this.#collider.mass();
   }
 
-  addForce(
-    force: THREE.Vector3,
-    point: THREE.Vector3 = new THREE.Vector3(),
-  ): void {
-    return this.#rigidBody.addForceAtPoint(force, point, true);
-  }
-
   applyImpulse(
     impulse: THREE.Vector3,
     point: THREE.Vector3 = new THREE.Vector3(),
   ) {
     return this.#rigidBody.applyImpulseAtPoint(impulse, point, true);
-  }
-
-  removeForcesAndTorques() {
-    this.#rigidBody.resetForces(true);
-    this.#rigidBody.resetTorques(true);
   }
 
   rotation(): THREE.Quaternion {

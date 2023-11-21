@@ -5,14 +5,11 @@ import { type PhysicsObject } from '../physics/physics_object_controller';
 import { RAPIER } from '../physics/physics_controller';
 import { vec3, type Vector } from '../physics/helpers';
 import { instance } from '../../world';
-import * as THREE from 'three';
+import type * as THREE from 'three';
+import { NumberPidController } from './pid_controller';
 
 export class WheelController implements Steppable {
-  static downDirection = {
-    x: 0,
-    y: -1,
-    z: 0,
-  };
+  pidController: NumberPidController;
 
   carSettings: CarSettings;
   displacement: Vector;
@@ -21,7 +18,6 @@ export class WheelController implements Steppable {
 
   displacementVector: THREE.Vector3;
   downVector: THREE.Vector3;
-  forceVector: THREE.Vector3;
 
   constructor(
     displacement: Vector,
@@ -34,53 +30,45 @@ export class WheelController implements Steppable {
     this.chassis = chassis;
 
     this.displacementVector = vec3(this.displacement);
-    this.downVector = vec3(WheelController.downDirection);
-    this.forceVector = new THREE.Vector3();
+    this.downVector = vec3({
+      x: 0,
+      y: -1,
+      z: 0,
+    });
+    this.pidController = new NumberPidController({
+      proportionalGain: 0.7,
+      derivativeGain: 3,
+      integralGain: 0.002,
+    });
   }
 
   step() {
-    // Reset vectors for memory efficiency
-    this.displacementVector.copy(this.displacement as THREE.Vector3);
-    this.downVector.copy(WheelController.downDirection as THREE.Vector3);
-    this.forceVector.set(0, 0, 0);
+    const wheelSettings = this.carSettings.wheel;
 
-    const velocityY = this.chassis.worldVelocity(this.displacementVector.clone()).y;
-
-    // Convert local vectors to global/world space
     const globalDisplacement = this.chassis.worldTranslation(
-      this.displacementVector,
+      this.displacementVector.clone(),
     );
-    const globalDownDirection = this.chassis.transformDirection(this.downVector);
+    const globalDownDirection = this.chassis.transformDirection(this.downVector.clone());
 
     this.ray.origin = globalDisplacement;
     this.ray.dir = globalDownDirection;
 
-    const result = instance.castRay(
-      this.ray,
-      this.carSettings.wheel.maxSuspensionLength,
-    );
+    const result = instance.castRay(this.ray, wheelSettings.maxSuspensionLength);
 
     // Wheels are not touching the ground
     if (result === null) {
       return;
     }
 
-    const wheelDistance = result;
-    const wheelSettings = this.carSettings.wheel;
+    const { distance: wheelDistance, normal } = result;
+    const error = this.pidController.calculate(wheelDistance, wheelSettings.restHeight + this.carSettings.chassis.height / 2);
 
-    // Calculate suspension force
-    const force
-        = wheelSettings.suspension.stiffness
-          * (wheelSettings.restHeight
-            - wheelDistance
-            + this.carSettings.chassis.height / 2)
-        - wheelSettings.suspension.damping * velocityY;
+    const force = vec3(normal)
+      .normalize()
+      .multiplyScalar(error * this.chassis.getMass());
 
-    this.forceVector.y = force;
-
-    // Apply force at the wheel's global displacement
-    this.chassis.addForce(
-      this.chassis.transformDirection(this.forceVector),
+    this.chassis.applyImpulse(
+      force,
       globalDisplacement,
     );
   }

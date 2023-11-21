@@ -1,4 +1,4 @@
-import Rapier, { type Ray, type RigidBody } from '@dimforge/rapier3d-compat';
+import Rapier, { type Vector, type Ray, type RigidBody } from '@dimforge/rapier3d-compat';
 import { type Steppable } from '../../types';
 import { instance } from '../../world';
 
@@ -42,12 +42,17 @@ export class PhysicsController implements Steppable {
     return this.#world!.createRigidBody(rigidBodyDesc);
   }
 
-  castRay(ray: Ray, maxDistance: number): number | null {
-    const result = this.#world!.castRay(ray, maxDistance, true);
+  castRay(ray: Ray, maxDistance: number): { distance:number, normal: Vector } | null {
+    const result = this.#world!.castRayAndGetNormal(ray, maxDistance, true);
+
     if (result === null) {
       return null;
     }
-    return result.toi;
+
+    return {
+      distance: result.toi,
+      normal: result.normal,
+    };
   }
 
   getResidualTime() {

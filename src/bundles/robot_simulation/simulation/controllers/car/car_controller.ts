@@ -218,7 +218,6 @@ export class CarController implements Steppable {
   }
 
   step(timestamp: number) {
-    this.chassis!.removeForcesAndTorques();
     this.wheels.forEach((wheel) => {
       wheel.step();
     });

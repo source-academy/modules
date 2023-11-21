@@ -107,7 +107,7 @@ export class World {
     });
   }
 
-  castRay(ray: Ray, maxDistance: number): number | null {
+  castRay(ray: Ray, maxDistance: number): ReturnType<typeof physicsController.castRay> {
     const { physicsController } = this.#internals;
     return physicsController.castRay(ray, maxDistance);
   }
