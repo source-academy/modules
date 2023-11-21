@@ -18,6 +18,9 @@ export function init_simulation() {
   const code = context.unTypecheckedCode[0];
   const world = getWorld();
   world.init(code);
+  if (world.state === 'loading') {
+    throw new Error('Interrupt execution by module');
+  }
 }
 
 export function ev3_motorA() {

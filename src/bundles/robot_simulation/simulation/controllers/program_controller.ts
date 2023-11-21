@@ -34,6 +34,8 @@ export class ProgramController implements Steppable {
       useSubst: false,
     };
 
+    context.errors = [];
+
     this.#iterator = runECEvaluatorByJoel(this.#code, context, options);
   }
 
