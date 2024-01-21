@@ -10,8 +10,8 @@ import context from 'js-slang/context';
 import { getWorld } from './simulation';
 import { type MotorsOptions } from './simulation/controllers/car/car_controller';
 
-export function show() {
-  console.log('This is the show function');
+export async function show() {
+  throw new Error('Interrupt execution by module');
 }
 
 export function init_simulation() {

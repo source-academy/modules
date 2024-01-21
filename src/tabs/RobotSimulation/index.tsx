@@ -16,8 +16,6 @@ type Props = {
   context?: any;
 };
 
-
-
 export default {
   /**
    * This function will be called to determine if the component will be
@@ -26,8 +24,10 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    console.log(context.context.moduleContexts.robot_simulation.state.world);
-    return context.context.moduleContexts.robot_simulation.state.world?.state !== 'idle';
+    const worldState = context.context.moduleContexts.robot_simulation.state?.world?.state;
+    return (
+      worldState !== undefined
+    );
   },
 
   /**
@@ -35,7 +35,7 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: DebuggerContext) => <Main context={context}/>,
+  body: (context: DebuggerContext) => <Main context={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
