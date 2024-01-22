@@ -60,7 +60,7 @@ export class ColorSensor implements Sensor<Color> {
 
   fixedUpdate(fixedDeltaTime: number) {
     this.accumulator += fixedDeltaTime;
-    if (this.accumulator < 1) {
+    if (this.accumulator < 1 / 30) {
       return;
     }
     this.accumulator -= 1;
@@ -78,7 +78,8 @@ export class ColorSensor implements Sensor<Color> {
 
     tempCanvas.width = rendererCanvas.width;
     tempCanvas.height = rendererCanvas.height;
-    const tempCtx = tempCanvas.getContext('2d')!;
+
+    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })!;
 
     tempCtx.drawImage(rendererCanvas, 0, 0);
 

@@ -23,6 +23,8 @@ type MotorFunctionReturnType = Motor | null;
 
 const storedWorld = context.moduleContexts.robot_simulation.state?.world;
 
+// Helpers
+
 export function getWorld(): World {
   const world = context.moduleContexts.robot_simulation.state?.world;
   if (world === undefined) {
@@ -38,6 +40,8 @@ export function getEv3(): DefaultEv3 {
   }
   return ev3 as DefaultEv3;
 }
+
+// Initialization
 
 export function init_simulation() {
   console.log(storedWorld, 'storedWorld');
@@ -93,6 +97,16 @@ export function init_simulation() {
   throw new Error('Interrupt');
 }
 
+// Utility
+export function ev3_pause(duration: number): void {
+  const world = getWorld();
+  // TODO: Fix the way we get reference to the program, Maybe use ControllerMap
+  const program = world.controllers.controllers[1] as Program;
+  console.log(world.controllers, program, duration);
+  program.pause(duration);
+}
+
+// Motor
 export function ev3_motorA(): MotorFunctionReturnType {
   const ev3 = getEv3();
   return ev3.get('leftMotor');
@@ -122,6 +136,8 @@ export function ev3_runToRelativePosition(
 
   motor.setVelocity(speed);
 }
+
+// Color Sensor
 
 export function ev3_colorSensor() {
   const ev3 = getEv3();

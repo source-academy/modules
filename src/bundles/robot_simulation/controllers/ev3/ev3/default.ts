@@ -69,6 +69,7 @@ export const createDefaultEv3 = (
   const frontLeftWheel = new Wheel(
     chassis,
     physics,
+    render,
     config.wheel.displacements.frontLeftWheel,
     wheelPidConfig,
   );
@@ -76,6 +77,7 @@ export const createDefaultEv3 = (
   const frontRightWheel = new Wheel(
     chassis,
     physics,
+    render,
     config.wheel.displacements.frontRightWheel,
     wheelPidConfig,
   );
@@ -83,12 +85,14 @@ export const createDefaultEv3 = (
   const backLeftWheel = new Wheel(
     chassis,
     physics,
+    render,
     config.wheel.displacements.backLeftWheel,
     wheelPidConfig,
   );
   const backRightWheel = new Wheel(
     chassis,
     physics,
+    render,
     config.wheel.displacements.backRightWheel,
     wheelPidConfig,
   );

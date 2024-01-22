@@ -55,7 +55,7 @@ export class Renderer {
 
   static sensorCamera(): THREE.Camera {
     const renderAspectRatio = 1;
-    return new THREE.PerspectiveCamera(10, renderAspectRatio, 0.01, 1000);
+    return new THREE.PerspectiveCamera(10, renderAspectRatio, 0.01, 1);
   }
 
   static loadGTLF(url: string): Promise<GLTF> {

@@ -48,11 +48,11 @@ export class World extends TypedEventTarget<WorldEventMap> {
 
     this.addEventListener('beforeRender', (e) => {
       controllers.forEach((controller) => {
-        controller.update?.(e.frameTimingInfo.frameDuration);
+        controller.update?.(e.frameTimingInfo);
       });
     });
 
-    this.addEventListener('beforePhysicsUpdate', () => {
+    this.addEventListener('beforePhysicsUpdate', (e) => {
       controllers.forEach((controller) => {
         controller.fixedUpdate?.(this.physics.configuration.timestep);
       });
@@ -96,6 +96,7 @@ export class World extends TypedEventTarget<WorldEventMap> {
       'beforePhysicsUpdate',
       new TimeStampedEvent('beforePhysicsUpdate', frameTimingInfo),
     );
+
     this.physics.step(frameTimingInfo);
     this.dispatchTypedEvent(
       'afterPhysicsUpdate',

@@ -1,13 +1,14 @@
+import { type FrameTimingInfo } from './Timer';
+
 export interface Controller {
   start?(): Promise<void> | void;
-  update?(deltaTime: number): void;
+  update?(deltaTime: FrameTimingInfo): void;
   fixedUpdate?(fixedDeltaTime: number): void;
   onDestroy?(): void;
 }
 
-
-
-export class ControllerMap<M extends Record<string, Controller>> implements Controller {
+export class ControllerMap<M extends Record<string, Controller>>
+implements Controller {
   map: M;
   callbacks?: Partial<Controller>;
 
@@ -22,13 +23,15 @@ export class ControllerMap<M extends Record<string, Controller>> implements Cont
 
   async start(): Promise<void> {
     await this.callbacks?.start?.();
-    await Promise.all(Object.values(this.map)
-      .map(async (controller) => {
-        await controller.start?.();
-      }));
+    await Promise.all(
+      Object.values(this.map)
+        .map(async (controller) => {
+          await controller.start?.();
+        }),
+    );
   }
 
-  update(deltaTime: number): void {
+  update(deltaTime: FrameTimingInfo): void {
     this.callbacks?.update?.(deltaTime);
     Object.values(this.map)
       .forEach((controller) => {
@@ -53,9 +56,8 @@ export class ControllerMap<M extends Record<string, Controller>> implements Cont
   }
 }
 
-
 export class ControllerGroup implements Controller {
-  private controllers: Controller[] = [];
+  controllers: Controller[] = [];
 
   public addController(...controllers: Controller[]): void {
     this.controllers.push(...controllers);
@@ -67,7 +69,7 @@ export class ControllerGroup implements Controller {
     });
   }
 
-  update(deltaTime: number): void {
+  update(deltaTime: FrameTimingInfo): void {
     this.controllers.forEach((controller) => {
       controller.update?.(deltaTime);
     });

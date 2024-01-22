@@ -1,4 +1,4 @@
-import { type Controller, type Physics } from '../../../engine';
+import { type Controller, type Physics, type Renderer } from '../../../engine';
 import { type SimpleVector } from '../../../engine/Math/Vector';
 import { vec3 } from '../../../engine/Math/Convert';
 import { NumberPidController } from '../feedback_control/PidController';
@@ -10,8 +10,8 @@ type WheelConfig = {
     proportionalGain: number;
     derivativeGain: number;
     integralGain: number;
-  },
-  debug: boolean,
+  };
+  debug: boolean;
 };
 
 export class Wheel implements Controller {
@@ -23,7 +23,13 @@ export class Wheel implements Controller {
   physics: Physics;
   arrowHelper: THREE.ArrowHelper;
 
-  constructor(chassisWrapper: ChassisWrapper, physics: Physics, displacement: SimpleVector, config: WheelConfig) {
+  constructor(
+    chassisWrapper: ChassisWrapper,
+    physics: Physics,
+    render: Renderer,
+    displacement: SimpleVector,
+    config: WheelConfig,
+  ) {
     this.chassisWrapper = chassisWrapper;
     this.physics = physics;
     this.pid = new NumberPidController(config.pid);
@@ -36,6 +42,8 @@ export class Wheel implements Controller {
     });
     this.arrowHelper = new THREE.ArrowHelper();
     this.arrowHelper.visible = config.debug;
+    this.arrowHelper.setColor('red');
+    render.add(this.arrowHelper);
   }
 
   fixedUpdate(_: number): void {
@@ -45,8 +53,14 @@ export class Wheel implements Controller {
       this.displacementVector.clone(),
     );
 
-    const globalDownDirection = chassis.transformDirection(this.downVector.clone());
-    const result = this.physics.castRay(globalDisplacement, globalDownDirection, 0.2);
+    const globalDownDirection = chassis.transformDirection(
+      this.downVector.clone(),
+    );
+    const result = this.physics.castRay(
+      globalDisplacement,
+      globalDownDirection,
+      0.2,
+    );
 
     // Wheels are not touching the ground
     if (result === null) {
@@ -60,9 +74,11 @@ export class Wheel implements Controller {
       .normalize()
       .multiplyScalar(error * chassis.getMass());
 
-    chassis.applyImpulse(
-      force,
-      globalDisplacement,
-    );
+
+    chassis.applyImpulse(force, globalDisplacement);
+
+    this.arrowHelper.setLength(force.length() * 5000);
+    this.arrowHelper.setDirection(force.normalize());
+    this.arrowHelper.position.copy(globalDisplacement);
   }
 }

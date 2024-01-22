@@ -1,27 +1,29 @@
 import { type IOptions, runECEvaluatorByJoel } from 'js-slang';
 import context from 'js-slang/context';
-import { type Controller } from '../../engine';
+import { type FrameTimingInfo, type Controller } from '../../engine';
+import { CallbackHandler } from '../../engine/Core/CallbackHandler';
 
 
 export class Program implements Controller {
-  #code: string;
-  #iterator: Generator | null;
-  #isPaused:boolean;
+  code: string;
+  iterator: Generator | null;
+  isPaused:boolean;
+  callbackHandler = new CallbackHandler();
 
   constructor(code: string) {
-    this.#code = code;
-    this.#iterator = null;
-    this.#isPaused = false;
-    console.log(code);
+    this.code = code;
+    this.iterator = null;
+    this.isPaused = false;
   }
 
-  pause(time: number) {
-    this.#isPaused = true;
+  pause(pauseDuration: number) {
+    this.isPaused = true;
+    this.callbackHandler.addCallback(() => {
+      this.isPaused = false;
+    }, pauseDuration);
   }
 
   start() {
-    console.log('start');
-
     const options: Partial<IOptions> = {
       originalMaxExecTime: Infinity,
       scheduler: 'preemptive',
@@ -32,13 +34,17 @@ export class Program implements Controller {
 
     context.errors = [];
 
-    this.#iterator = runECEvaluatorByJoel(this.#code, context, options);
+    this.iterator = runECEvaluatorByJoel(this.code, context, options);
   }
 
   fixedUpdate(_: number) {
-    if (this.#isPaused) {
+    if (this.isPaused) {
       return;
     }
-    const __ = this.#iterator!.next();
+    this.iterator!.next();
+  }
+
+  update(frameTiming: FrameTimingInfo): void {
+    this.callbackHandler.checkCallbacks(frameTiming);
   }
 }
