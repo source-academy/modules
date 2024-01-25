@@ -1,7 +1,6 @@
 import { useRef, type CSSProperties, useEffect, useState } from 'react';
 import type { DebuggerContext } from '../../../../typings/type_helpers';
 
-import { type SimulationStates } from '../../../../bundles/robot_simulation/simulation/world';
 import { type World } from '../../../../bundles/robot_simulation/engine';
 import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers';
 import { Tab, Tabs } from '@blueprintjs/core';
@@ -9,6 +8,7 @@ import { WheelPidPanel } from '../TabPanels/WheelPidPanel';
 import { MotorPidPanel } from '../TabPanels/MotorPidPanel';
 import { ColorSensorPanel } from '../TabPanels/ColorSensorPanel';
 import { MonitoringPanel } from '../TabPanels/MonitoringPanel';
+import { type WorldState } from '../../../../bundles/robot_simulation/engine/World';
 
 const WrapperStyle: CSSProperties = {
   display: 'flex',
@@ -43,7 +43,7 @@ export default function SimulationCanvas({
   const ref = useRef<HTMLDivElement>(null);
   const sensorRef = useRef<HTMLDivElement>(null);
   const [currentState, setCurrentState]
-    = useState<SimulationStates>('unintialized');
+    = useState<WorldState>('unintialized');
   const world = context.context.moduleContexts.robot_simulation.state
     .world as World;
 

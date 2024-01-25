@@ -8,6 +8,7 @@ import { Motor } from '../components/Motor';
 import { ColorSensor } from '../sensor/ColorSensor';
 import { Mesh, type MeshConfig } from '../components/Mesh';
 import { ChassisWrapper } from '../components/Chassis';
+import { UltrasonicSensor } from '../sensor/UltrasonicSensor';
 
 type WheelControllers = {
   frontLeftWheel: Wheel;
@@ -23,6 +24,7 @@ type MotorControllers = {
 
 type SensorControllers = {
   colorSensor: ColorSensor;
+  ultrasonicSensor: UltrasonicSensor;
 };
 
 type ChassisControllers = {
@@ -47,6 +49,10 @@ type Ev3Config = {
   };
   colorSensor: {
     displacement: SimpleVector;
+  },
+  ultrasonicSensor: {
+    displacement: SimpleVector;
+    direction: SimpleVector;
   }
   mesh: MeshConfig;
 };
@@ -119,6 +125,8 @@ export const createDefaultEv3 = (
   // Sensors
   const colorSensor = new ColorSensor(chassis, render.scene(), config.colorSensor.displacement, { debug: true });
 
+  const ultrasonicSensor = new UltrasonicSensor(chassis, physics, config.ultrasonicSensor.displacement, config.ultrasonicSensor.direction);
+
   const ev3: DefaultEv3 = new ControllerMap<DefaultEv3Controller>({
     frontLeftWheel,
     frontRightWheel,
@@ -127,6 +135,7 @@ export const createDefaultEv3 = (
     leftMotor,
     rightMotor,
     colorSensor,
+    ultrasonicSensor,
     mesh,
     chassis,
   });

@@ -1,5 +1,4 @@
 export {
-  init_simulation,
   ev3_motorA,
   ev3_motorB,
   ev3_motorC,
@@ -9,4 +8,17 @@ export {
   ev3_colorSensorGreen,
   ev3_pause,
   ev3_colorSensorBlue,
-} from './main';
+} from './ev3_functions';
+
+export {
+  init_simulation,
+  createRenderer,
+  createPhysics,
+  createTimer,
+  createWorld,
+  createEv3,
+  createFloor,
+  createCSE,
+  addControllerToWorld,
+  saveToContext,
+} from './helper_functions';

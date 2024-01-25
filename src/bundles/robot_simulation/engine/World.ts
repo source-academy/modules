@@ -52,7 +52,7 @@ export class World extends TypedEventTarget<WorldEventMap> {
       });
     });
 
-    this.addEventListener('beforePhysicsUpdate', (e) => {
+    this.addEventListener('beforePhysicsUpdate', (_) => {
       controllers.forEach((controller) => {
         controller.fixedUpdate?.(this.physics.configuration.timestep);
       });

@@ -35,6 +35,7 @@ export class Motor implements Controller {
   }
 
   fixedUpdate(_: number): void {
+    console.log('THIS IS VELOCITY', this.motorVelocity);
     const chassis = this.chassisWrapper.getEntity();
     const targetMotorVelocity = vec3({
       x: 0,
@@ -55,6 +56,8 @@ export class Motor implements Controller {
       z: 0,
     }))
       .multiplyScalar(chassis.getMass());
+
+    console.log(impulse);
 
     chassis.applyImpulse(impulse, motorGlobalPosition);
   }

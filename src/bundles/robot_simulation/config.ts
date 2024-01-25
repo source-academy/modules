@@ -120,3 +120,16 @@ export const colorSensorConfig = {
     z: 0.01,
   },
 };
+
+export const ultrasonicSensorConfig = {
+  displacement: {
+    x: 0.04,
+    y: -(chassisConfig.height / 2),
+    z: 0.01,
+  },
+  direction: {
+    x: 0,
+    y: 0,
+    z: 1,
+  },
+};
