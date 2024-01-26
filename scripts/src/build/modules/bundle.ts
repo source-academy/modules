@@ -9,7 +9,6 @@ import type {
   ArrowFunctionExpression,
   CallExpression,
   ExportDefaultDeclaration,
-  ExpressionStatement,
   Identifier,
   Program,
   VariableDeclaration,
