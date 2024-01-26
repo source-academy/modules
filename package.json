@@ -131,6 +131,7 @@
   },
   "resolutions": {
     "@types/react": "^18.2.0",
-    "esbuild": "^0.18.20"
+    "esbuild": "^0.18.20",
+    "**/gl": "^6.0.2"
   }
 }
