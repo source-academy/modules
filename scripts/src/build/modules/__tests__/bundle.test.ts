@@ -40,8 +40,7 @@ test('building a bundle', async () => {
   const call = (fs.writeFile as jest.MockedFunction<typeof fs.writeFile>).mock.calls[0];
 
   expect(call[0]).toEqual('build/bundles/test0.js')
-  const removeExports = (call[1] as string).slice("export default".length, -1);
-  const bundleText = `(${removeExports})`;
+  const bundleText = `(${call[1]})`;
   const mockContext = {
     moduleContexts: {
       test0: {
