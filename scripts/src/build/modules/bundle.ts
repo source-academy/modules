@@ -40,14 +40,14 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
     const output: ExportDefaultDeclaration = {
       type: 'ExportDefaultDeclaration',
       declaration: {
-      ...moduleCode,
+        ...moduleCode,
         params: [
           {
             type: 'Identifier',
             name: 'require',
           } as Identifier,
         ],
-      }
+      },
     };
 
     const outFile = `${outDir}/bundles/${name}.js`;
