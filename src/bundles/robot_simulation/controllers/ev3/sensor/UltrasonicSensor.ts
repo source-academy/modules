@@ -52,12 +52,10 @@ export class UltrasonicSensor implements Sensor<number> {
     const result = this.physics.castRay(
       globalDisplacement,
       globalDirection,
-      0.2,
+      1,
       this.chassisWrapper.getEntity()
         .getCollider(),
     );
-
-    // console.log(result);
 
     if (this.config.debug) {
       this.debugArrow.visible = true;

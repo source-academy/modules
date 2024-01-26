@@ -85,7 +85,7 @@ export class Physics {
     const result = this.internals.world.castRayAndGetNormal(
       ray,
       maxDistance,
-      false,
+      true,
       undefined,
       undefined,
       excludeCollider,
