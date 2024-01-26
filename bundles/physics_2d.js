@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
@@ -12311,4 +12311,4 @@ require => {
     return new Vector2(vec1.x - vec2.x, vec1.y - vec2.y);
   }
   return __toCommonJS(physics_2d_exports);
-}
+};

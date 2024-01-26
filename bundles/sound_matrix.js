@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -184,4 +184,4 @@ require => {
     timeout_objects = [];
   }
   return __toCommonJS(sound_matrix_exports);
-}
+};

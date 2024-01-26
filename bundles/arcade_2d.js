@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
@@ -70518,4 +70518,4 @@ require => {
     throw new TypeError("Cannot stop a non-AudioClip");
   };
   return __toCommonJS(arcade_2d_exports);
-}
+};

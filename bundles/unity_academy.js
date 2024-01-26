@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38545,4 +38545,4 @@ require => {
     getInstance().studentLogger(contentStr, "error");
   }
   return __toCommonJS(unity_academy_exports);
-}
+};
