@@ -12,7 +12,7 @@ import {
   ultrasonicSensorConfig,
 } from './config';
 
-import { Environment, type DefaultEv3, Program } from './controllers';
+import { Floor, type DefaultEv3, Program, Wall } from './controllers';
 import { createDefaultEv3 } from './controllers/ev3/ev3/default';
 import { type Controller, Physics, Renderer, Timer, World } from './engine';
 
@@ -88,7 +88,12 @@ export function createEv3(physics: Physics, renderer: Renderer): DefaultEv3 {
 }
 
 export function createFloor(physics: Physics, renderer: Renderer) {
-  const environment = new Environment(physics, renderer);
+  const environment = new Floor(physics, renderer);
+  return environment;
+}
+
+export function createWall(physics: Physics, renderer: Renderer) {
+  const environment = new Wall(physics, renderer);
   return environment;
 }
 

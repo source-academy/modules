@@ -28,7 +28,7 @@ export const floorConfig: EntityCuboidOptions & RenderCuboidOptions = {
 };
 
 
-export class Environment implements Controller {
+export class Floor implements Controller {
   private physics: Physics;
   private renderer: Renderer;
   private mesh: THREE.Mesh;

@@ -22,6 +22,14 @@ export class Entity {
     this.#rapierCollider = configuration.rapierCollider;
   }
 
+  getCollider(): Rapier.Collider {
+    return this.#rapierCollider;
+  }
+
+  getRigidBody(): Rapier.RigidBody {
+    return this.#rapierRigidBody;
+  }
+
   getPosition(): SimpleVector {
     return this.#rapierRigidBody.translation();
   }

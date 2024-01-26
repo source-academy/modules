@@ -1,4 +1,4 @@
-import rapier from '@dimforge/rapier3d-compat';
+import rapier, { QueryFilterFlags } from '@dimforge/rapier3d-compat';
 
 import { type SimpleVector } from './Math/Vector';
 import { type FrameTimingInfo } from './Core/Timer';
@@ -70,7 +70,8 @@ export class Physics {
     globalPosition: THREE.Vector3,
     globalDirection: THREE.Vector3,
     maxDistance: number,
-  ) : {
+    excludeCollider?: rapier.Collider,
+  ): {
       distance: number;
       normal: SimpleVector;
     } | null {
@@ -79,7 +80,16 @@ export class Physics {
     }
 
     const ray = new this.RAPIER.Ray(globalPosition, globalDirection);
-    const result = this.internals.world.castRayAndGetNormal(ray, maxDistance, false);
+
+    // https://rapier.rs/javascript3d/classes/World.html#castRayAndGetNormal
+    const result = this.internals.world.castRayAndGetNormal(
+      ray,
+      maxDistance,
+      false,
+      undefined,
+      undefined,
+      excludeCollider,
+    );
 
     this.internals.world.castRay(ray, maxDistance, false);
 
@@ -93,7 +103,7 @@ export class Physics {
     };
   }
 
-  step(timing: FrameTimingInfo) : void {
+  step(timing: FrameTimingInfo): void {
     if (this.internals.initialized === false) {
       throw Error("Physics engine hasn't been initialized yet");
     }

@@ -11,7 +11,8 @@ type MotorFunctionReturnType = Motor | null;
 // Utility
 export function ev3_pause(duration: number): void {
   const world = getWorldFromContext();
-  const program = world.controllers.controllers[1] as Program;
+  // TODO: FIX THIS! CAUSES BUGS
+  const program = world.controllers.controllers[2] as Program;
   console.log(world.controllers, program, duration);
   program.pause(duration);
 }

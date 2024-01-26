@@ -49,11 +49,12 @@ type Ev3Config = {
   };
   colorSensor: {
     displacement: SimpleVector;
-  },
+  };
   ultrasonicSensor: {
     displacement: SimpleVector;
     direction: SimpleVector;
-  }
+    debug: boolean;
+  };
   mesh: MeshConfig;
 };
 
@@ -123,9 +124,21 @@ export const createDefaultEv3 = (
   );
 
   // Sensors
-  const colorSensor = new ColorSensor(chassis, render.scene(), config.colorSensor.displacement, { debug: true });
+  const colorSensor = new ColorSensor(
+    chassis,
+    render.scene(),
+    config.colorSensor.displacement,
+    { debug: true },
+  );
 
-  const ultrasonicSensor = new UltrasonicSensor(chassis, physics, config.ultrasonicSensor.displacement, config.ultrasonicSensor.direction);
+  const ultrasonicSensor = new UltrasonicSensor(
+    chassis,
+    physics,
+    render,
+    config.ultrasonicSensor.displacement,
+    config.ultrasonicSensor.direction,
+    { debug: config.ultrasonicSensor.debug },
+  );
 
   const ev3: DefaultEv3 = new ControllerMap<DefaultEv3Controller>({
     frontLeftWheel,

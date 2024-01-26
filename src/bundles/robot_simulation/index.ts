@@ -16,6 +16,7 @@ export {
   createPhysics,
   createTimer,
   createWorld,
+  createWall,
   createEv3,
   createFloor,
   createCSE,
