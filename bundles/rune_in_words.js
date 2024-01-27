@@ -1,4 +1,4 @@
-export default require => {
+require => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -244,4 +244,4 @@ export default require => {
     return rune;
   }
   return __toCommonJS(rune_in_words_exports);
-};
+}

@@ -1,4 +1,4 @@
-export default require => {
+require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -2186,4 +2186,4 @@ void main() {
     return anim;
   }
   return __toCommonJS(curve_exports);
-};
+}

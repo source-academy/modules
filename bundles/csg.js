@@ -1,4 +1,4 @@
-export default require => {
+require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
@@ -26666,4 +26666,4 @@ endfacet`;
   import_context.default.moduleContexts.csg.state = moduleState;
   Core.initialize(moduleState);
   return __toCommonJS(csg_exports);
-};
+}

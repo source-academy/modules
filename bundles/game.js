@@ -1,4 +1,4 @@
-export default require => {
+require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -70147,4 +70147,4 @@ export default require => {
     dummy.minArgsNeeded = fn.length;
   });
   return __toCommonJS(game_exports);
-};
+}

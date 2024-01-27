@@ -1,4 +1,4 @@
-export default require => {
+require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -8777,4 +8777,4 @@ export default require => {
     return (0, import_source_academy_utils.objectToLinkedList)(exps);
   };
   return __toCommonJS(wasm_exports);
-};
+}

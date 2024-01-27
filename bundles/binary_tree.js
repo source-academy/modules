@@ -1,4 +1,4 @@
-export default require => {
+require => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -62,4 +62,4 @@ export default require => {
     throw new Error(`function right_branch expects binary tree, received: ${t}`);
   }
   return __toCommonJS(binary_tree_exports);
-};
+}
