@@ -8,7 +8,7 @@ import {
 import type {
   ArrowFunctionExpression,
   CallExpression,
-  ExportDefaultDeclaration,
+  ExpressionStatement,
   Identifier,
   Program,
   VariableDeclaration,
@@ -36,21 +36,30 @@ export const outputBundle = async (name: string, bundleText: string, outDir: str
     const callExpression = varDeclarator.init as CallExpression;
     const moduleCode = callExpression.callee as ArrowFunctionExpression;
 
-    const output: ExportDefaultDeclaration = {
-      type: 'ExportDefaultDeclaration',
-      declaration: {
-        ...moduleCode,
-        params: [
-          {
-            type: 'Identifier',
-            name: 'require',
-          } as Identifier,
-        ],
+    const output = {
+      type: 'ArrowFunctionExpression',
+      body: {
+        type: 'BlockStatement',
+        body: moduleCode.body.type === 'BlockStatement'
+          ? moduleCode.body.body
+          : [{
+            type: 'ExpressionStatement',
+            expression: moduleCode.body,
+          } as ExpressionStatement],
       },
-    };
+      params: [
+        {
+          type: 'Identifier',
+          name: 'require',
+        } as Identifier,
+      ],
+    } as ArrowFunctionExpression;
+
+    let newCode = generate(output);
+    if (newCode.endsWith(';')) newCode = newCode.slice(0, -1);
 
     const outFile = `${outDir}/bundles/${name}.js`;
-    await fs.writeFile(outFile, generate(output));
+    await fs.writeFile(outFile, newCode);
     const { size } = await fs.stat(outFile);
     return {
       severity: 'success',
