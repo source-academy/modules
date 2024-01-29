@@ -1,7 +1,13 @@
-import rapier, { QueryFilterFlags } from '@dimforge/rapier3d-compat';
+import rapier from '@dimforge/rapier3d-compat';
 
 import { type SimpleVector } from './Math/Vector';
 import { type FrameTimingInfo } from './Core/Timer';
+import { TimeStampedEvent, TypedEventTarget } from './Core/Events';
+
+type PhysicsEventMap = {
+  beforePhysicsUpdate: TimeStampedEvent;
+  afterPhysicsUpdate: TimeStampedEvent;
+};
 
 export type PhysicsConfig = {
   gravity: SimpleVector;
@@ -20,12 +26,13 @@ type InitializedInternals = {
 
 type PhysicsInternals = NotInitializedInternals | InitializedInternals;
 
-export class Physics {
+export class Physics extends TypedEventTarget<PhysicsEventMap> {
   RAPIER: typeof rapier;
   configuration: PhysicsConfig;
   internals: PhysicsInternals;
 
   constructor(configuration: PhysicsConfig) {
+    super();
     this.configuration = configuration;
     this.RAPIER = rapier;
 
@@ -113,7 +120,16 @@ export class Physics {
     this.internals.accumulator += Math.min(frameDuration, maxFrameTime);
 
     while (this.internals.accumulator >= this.configuration.timestep) {
+      this.dispatchTypedEvent(
+        'beforePhysicsUpdate',
+        new TimeStampedEvent('beforePhysicsUpdate', timing),
+      );
       this.internals.world.step();
+      this.dispatchTypedEvent(
+        'afterPhysicsUpdate',
+        new TimeStampedEvent('afterPhysicsUpdate', timing),
+      );
+
       this.internals.accumulator -= this.configuration.timestep;
     }
   }

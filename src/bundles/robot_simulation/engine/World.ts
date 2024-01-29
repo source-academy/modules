@@ -15,8 +15,6 @@ export type WorldState = (typeof worldStates)[number];
 type WorldEventMap = {
   worldStart: Event;
   worldStateChange: Event;
-  beforePhysicsUpdate: TimeStampedEvent;
-  afterPhysicsUpdate: TimeStampedEvent;
   beforeRender: TimeStampedEvent;
   afterRender: TimeStampedEvent;
 };
@@ -52,7 +50,7 @@ export class World extends TypedEventTarget<WorldEventMap> {
       });
     });
 
-    this.addEventListener('beforePhysicsUpdate', (_) => {
+    this.physics.addEventListener('beforePhysicsUpdate', (_) => {
       controllers.forEach((controller) => {
         controller.fixedUpdate?.(this.physics.configuration.timestep);
       });
@@ -92,17 +90,7 @@ export class World extends TypedEventTarget<WorldEventMap> {
     const frameTimingInfo = this.timer.step(timestamp);
 
     // Update physics
-    this.dispatchTypedEvent(
-      'beforePhysicsUpdate',
-      new TimeStampedEvent('beforePhysicsUpdate', frameTimingInfo),
-    );
-
     this.physics.step(frameTimingInfo);
-    this.dispatchTypedEvent(
-      'afterPhysicsUpdate',
-      new TimeStampedEvent('afterPhysicsUpdate', frameTimingInfo),
-    );
-
 
     // Update render
     this.dispatchTypedEvent(

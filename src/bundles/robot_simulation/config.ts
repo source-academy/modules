@@ -15,7 +15,7 @@ export const physicsConfig: PhysicsConfig = {
     y: -9.81,
     z: 0,
   },
-  timestep: 1 / 60,
+  timestep: 1 / 20,
 };
 
 export const renderConfig: RenderConfig = {
@@ -36,7 +36,7 @@ export const chassisConfig: EntityCuboidOptions = {
   orientation: {
     position: {
       x: 0,
-      y: 2,
+      y: 0.2,
       z: 0,
     },
     rotation: {
@@ -88,9 +88,9 @@ export const wheelDisplacements: Record<string, SimpleVector> = {
 };
 
 export const wheelPidConfig = {
-  proportionalGain: 3,
-  integralGain: 0.01,
-  derivativeGain: 2.5,
+  proportionalGain: 90,
+  integralGain: 0.58,
+  derivativeGain: 12,
 };
 
 export const motorDisplacements = {

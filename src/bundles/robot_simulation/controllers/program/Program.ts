@@ -41,7 +41,9 @@ export class Program implements Controller {
     if (this.isPaused) {
       return;
     }
-    this.iterator!.next();
+    for (let i = 0; i < 4; i++) {
+      this.iterator!.next();
+    }
   }
 
   update(frameTiming: FrameTimingInfo): void {

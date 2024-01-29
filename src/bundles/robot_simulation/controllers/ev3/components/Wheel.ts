@@ -46,7 +46,7 @@ export class Wheel implements Controller {
     render.add(this.arrowHelper);
   }
 
-  fixedUpdate(_: number): void {
+  fixedUpdate(timestep: number): void {
     const chassis = this.chassisWrapper.getEntity();
 
     const globalDisplacement = chassis.worldTranslation(
@@ -59,7 +59,7 @@ export class Wheel implements Controller {
     const result = this.physics.castRay(
       globalDisplacement,
       globalDownDirection,
-      0.2,
+      0.1,
     );
 
     // Wheels are not touching the ground
@@ -72,12 +72,12 @@ export class Wheel implements Controller {
 
     const force = vec3(normal)
       .normalize()
-      .multiplyScalar(error * chassis.getMass());
+      .multiplyScalar(error * chassis.getMass() * timestep);
 
 
     chassis.applyImpulse(force, globalDisplacement);
 
-    this.arrowHelper.setLength(force.length() * 5000);
+    this.arrowHelper.setLength(force.length() * 1000);
     this.arrowHelper.setDirection(force.normalize());
     this.arrowHelper.position.copy(globalDisplacement);
   }

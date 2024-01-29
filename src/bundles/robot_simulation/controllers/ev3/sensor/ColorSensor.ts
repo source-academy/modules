@@ -18,8 +18,8 @@ export class ColorSensor implements Sensor<Color> {
   chassisWrapper: ChassisWrapper;
 
   accumulator = 0;
-
   colorSensed:Color;
+  tempCanvas: HTMLCanvasElement;
 
   constructor(chassisWrapper: ChassisWrapper, scene: THREE.Scene, displacement: SimpleVector, config: ColorSensorConfig) {
     this.chassisWrapper = chassisWrapper;
@@ -36,6 +36,7 @@ export class ColorSensor implements Sensor<Color> {
       height: 16,
       control: 'none',
     });
+    this.tempCanvas = document.createElement('canvas');
 
 
     if (config.debug) {
@@ -60,7 +61,7 @@ export class ColorSensor implements Sensor<Color> {
 
   fixedUpdate(fixedDeltaTime: number) {
     this.accumulator += fixedDeltaTime;
-    if (this.accumulator < 1 / 30) {
+    if (this.accumulator < 1) {
       return;
     }
     this.accumulator -= 1;
@@ -74,12 +75,11 @@ export class ColorSensor implements Sensor<Color> {
     this.camera.lookAt(lookAt);
 
     const rendererCanvas = this.getElement();
-    const tempCanvas = document.createElement('canvas');
 
-    tempCanvas.width = rendererCanvas.width;
-    tempCanvas.height = rendererCanvas.height;
+    this.tempCanvas.width = rendererCanvas.width;
+    this.tempCanvas.height = rendererCanvas.height;
 
-    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })!;
+    const tempCtx = this.tempCanvas.getContext('2d', { willReadFrequently: true })!;
 
     tempCtx.drawImage(rendererCanvas, 0, 0);
 
