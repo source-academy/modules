@@ -8,6 +8,8 @@ export {
   ev3_colorSensorGreen,
   ev3_pause,
   ev3_colorSensorBlue,
+  ev3_ultrasonicSensor,
+  ev3_ultrasonicSensorDistance,
 } from './ev3_functions';
 
 export {

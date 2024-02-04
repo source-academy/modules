@@ -1,4 +1,5 @@
-import { type IOptions, runECEvaluatorByJoel } from 'js-slang';
+import { type IOptions } from 'js-slang';
+import { runECEvaluatorByJoel } from './evaluate';
 import context from 'js-slang/context';
 import { type FrameTimingInfo, type Controller } from '../../engine';
 import { CallbackHandler } from '../../engine/Core/CallbackHandler';

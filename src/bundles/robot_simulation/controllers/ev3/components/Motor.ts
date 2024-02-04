@@ -1,9 +1,10 @@
-import { type Controller, type Physics } from '../../../engine';
+import { type FrameTimingInfo, type Controller, type Physics } from '../../../engine';
 import { type SimpleVector } from '../../../engine/Math/Vector';
 import { vec3 } from '../../../engine/Math/Convert';
 import { VectorPidController } from '../feedback_control/PidController';
 import type * as THREE from 'three';
 import { type ChassisWrapper } from './Chassis';
+import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
 
 
 type MotorConfig = {
@@ -18,6 +19,7 @@ export class Motor implements Controller {
   pid: VectorPidController;
   displacementVector: THREE.Vector3;
   motorVelocity: number;
+  callbackHandler = new CallbackHandler();
 
   physics: Physics;
   chassisWrapper: ChassisWrapper;
@@ -32,6 +34,14 @@ export class Motor implements Controller {
 
   setVelocity(velocity: number) {
     this.motorVelocity = velocity;
+  }
+
+  setSpeedDistance(speed: number, distance: number) {
+    // TODO: Tune this
+    this.motorVelocity = speed * 500;
+    this.callbackHandler.addCallback(() => {
+      this.motorVelocity = 0;
+    }, distance / speed * 1000);
   }
 
   fixedUpdate(_: number): void {
@@ -57,6 +67,10 @@ export class Motor implements Controller {
       .multiplyScalar(chassis.getMass());
 
     chassis.applyImpulse(impulse, motorGlobalPosition);
+  }
+
+  update(deltaTime: FrameTimingInfo): void {
+    this.callbackHandler.checkCallbacks(deltaTime);
   }
 
   toString() {

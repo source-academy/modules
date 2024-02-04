@@ -9,6 +9,7 @@ import { MotorPidPanel } from '../TabPanels/MotorPidPanel';
 import { ColorSensorPanel } from '../TabPanels/ColorSensorPanel';
 import { MonitoringPanel } from '../TabPanels/MonitoringPanel';
 import { type WorldState } from '../../../../bundles/robot_simulation/engine/World';
+import { UltrasonicSensorPanel } from '../TabPanels/UltrasonicSensorPanel';
 
 const WrapperStyle: CSSProperties = {
   display: 'flex',
@@ -99,6 +100,7 @@ export default function SimulationCanvas({
           <Tab id="suspensionPid" title="Suspension PID" panel={<WheelPidPanel ev3={ev3}/>} />
           <Tab id="motorPid" title="Motor PID" panel={<MotorPidPanel ev3={ev3}/>} />
           <Tab id="colorSensor" title="Color Sensor" panel={<ColorSensorPanel ev3={ev3}/>}/>
+          <Tab id="ultrasonicSensor" title="Ultrasonic Sensor" panel={<UltrasonicSensorPanel ev3={ev3}/>}/>
         </Tabs>
       </div>
     </div>
