@@ -1,7 +1,7 @@
 {
   "entry": "<div><h4>entry(t: BinaryTree) → {boolean}</h4><div class=\"description\"><p>Returns the entry of a given binary tree.</p></div></div>",
-  "is_empty_tree": "<div><h4>is_empty_tree(value: any) → {boolean}</h4><div class=\"description\"><p>Returns a boolean value, indicating whether the given  \nvalue is an empty binary tree.</p></div></div>",
-  "is_tree": "<div><h4>is_tree(value: any) → {boolean}</h4><div class=\"description\"><p>Returns a boolean value, indicating whether the given  \nvalue is a binary tree.</p></div></div>",
+  "is_empty_tree": "<div><h4>is_empty_tree(value: any) → {boolean}</h4><div class=\"description\"><p>Returns a boolean value, indicating whether the given\nvalue is an empty binary tree.</p></div></div>",
+  "is_tree": "<div><h4>is_tree(value: any) → {boolean}</h4><div class=\"description\"><p>Returns a boolean value, indicating whether the given\nvalue is a binary tree.</p></div></div>",
   "left_branch": "<div><h4>left_branch(t: BinaryTree) → {BinaryTree}</h4><div class=\"description\"><p>Returns the left branch of a given binary tree.</p></div></div>",
   "make_empty_tree": "<div><h4>make_empty_tree() → {BinaryTree}</h4><div class=\"description\"><p>Returns an empty binary tree, represented by the empty list null</p></div></div>",
   "make_tree": "<div><h4>make_tree(value: any, left: BinaryTree, right: BinaryTree) → {BinaryTree}</h4><div class=\"description\"><p>Returns a binary tree node composed of the specified left subtree, value and right subtree.</p></div></div>",

@@ -11,7 +11,7 @@
   "get_position": "<div><h4>get_position(obj: PhysicsObject) → {Vector2}</h4><div class=\"description\"><p>Gets position of the object at current world time.</p></div></div>",
   "get_rotation": "<div><h4>get_rotation(obj: PhysicsObject) → {number}</h4><div class=\"description\"><p>Gets rotation of the object at current world time.</p></div></div>",
   "get_velocity": "<div><h4>get_velocity(obj: PhysicsObject) → {Vector2}</h4><div class=\"description\"><p>Gets velocity of the object at current world time.</p></div></div>",
-  "impact_start_time": "<div><h4>impact_start_time(obj1: PhysicsObject, obj2: PhysicsObject) → {number}</h4><div class=\"description\"><p>Gets the impact start time of two currently touching objects.  \nReturns -1 if they are not touching.</p></div></div>",
+  "impact_start_time": "<div><h4>impact_start_time(obj1: PhysicsObject, obj2: PhysicsObject) → {number}</h4><div class=\"description\"><p>Gets the impact start time of two currently touching objects.\nReturns -1 if they are not touching.</p></div></div>",
   "is_touching": "<div><h4>is_touching(obj1: PhysicsObject, obj2: PhysicsObject) → {boolean}</h4><div class=\"description\"><p>Checks if two objects are touching at current world time.</p></div></div>",
   "make_force": "<div><h4>make_force(dir: Vector2, mag: number, dur: number, start: number) → {Force}</h4><div class=\"description\"><p>Makes a force with direction vector, magnitude, force duration and start time.</p></div></div>",
   "make_ground": "<div><h4>make_ground(height: number, friction: number) → {void}</h4><div class=\"description\"><p>Makes the ground body of the world.</p></div></div>",
