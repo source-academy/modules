@@ -1,42 +1,33 @@
-import React from 'react';
+import React from "react";
+import { getModuleState } from "../../bundles/ar/AR";
+import ARComponent from "../../bundles/ar/ARComponent";
 
 /**
- * <Brief description of the tab>
- * @author <Author Name>
- * @author <Author Name>
+ * Tab for viewing augmented reality content
+ * @module ar
+ * @author Chong Wen Hao
  */
 
 /**
  * React Component props for the Tab.
  */
-type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
-};
-
-/**
- * React Component state for the Tab.
- */
-type State = {
-  counter: number;
-};
+type Props = {};
 
 /**
  * The main React Component of the Tab.
  */
-class Repeat extends React.Component<Props, State> {
+class ARMainComponent extends React.Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {
-      counter: 0,
-    };
   }
 
   public render() {
-    const { counter } = this.state;
     return (
-      <div>This is spawned from the repeat package. Counter is {counter}</div>
+      <div>
+        <p>Instructions:</p>
+        <p>Click on the toggle below to enter AR mode.</p>
+        <ARComponent {...getModuleState()}></ARComponent>
+      </div>
     );
   }
 }
@@ -48,24 +39,24 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: any) => context.result.value === 'test',
+  toSpawn: (context: any) => getModuleState() !== undefined,
 
   /**
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <Repeat context={context} />,
+  body: (_context: any) => <ARMainComponent />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
    */
-  label: 'Sample Tab',
+  label: "AR Tab",
 
   /**
    * BlueprintJS IconName element's name, used to render the icon which will be
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'build',
+  iconName: "intelligence",
 };

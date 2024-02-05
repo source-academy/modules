@@ -14,6 +14,7 @@
  */
 
 export {
+  initAR,
   setLeftToggle,
   setCentreToggle,
   setRightToggle,
