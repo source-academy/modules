@@ -18,9 +18,8 @@ import {
   TextModel,
 } from "./Behaviour";
 import { Mesh, Vector3 } from "three";
-import { useFrame, extend } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import ErrorBoundary from "./ErrorBoundary";
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import GltfComponent from "./model_components/GltfComponent";
 import TextComponent from "./model_components/TextComponent";
 import ImageComponent from "./model_components/ImageComponent";
@@ -28,8 +27,6 @@ import ShapeComponent from "./model_components/ShapeComponent";
 import { useSpring, SpringValue } from "@react-spring/three";
 import LightComponent from "./model_components/LightComponent";
 import InterfaceComponent from "./model_components/InterfaceComponent";
-
-extend({ TextGeometry });
 
 type Props = {
   arObject: ARObject;
@@ -217,4 +214,3 @@ function handleRotation(
     mesh.rotation.y = 0;
   }
 }
-

@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils";
+import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import { Object3D, type Object3DEventMap, AnimationMixer } from "three";
 import { GltfModel } from "../Behaviour";
 import { ARObject } from "../ARObject";
@@ -64,4 +64,3 @@ export default function GltfComponent(props: GltfProps) {
     </animated.mesh>
   );
 }
-
