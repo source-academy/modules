@@ -12,7 +12,7 @@ import {
   ControlsContext,
   useControls,
 } from "./libraries/controls_library/ControlsContext";
-import { ARState } from "./AR";
+import { ARState, getModuleState } from "./AR";
 import { OverlayHelper } from "./OverlayHelper";
 import {
   CubeObject,
@@ -130,6 +130,11 @@ function AugmentedContent(props: ARState) {
         }
       }
     });
+    (window as any).arControllerCallback = () => {
+      let newState = getModuleState();
+      updateObjects(newState);
+    };
+    updateObjects(props);
   }, []);
 
   useEffect(() => {
@@ -140,10 +145,9 @@ function AugmentedContent(props: ARState) {
     props.overlay.toggleRight,
   ]);
 
-  useEffect(() => {
-    console.log("Updated");
+  function updateObjects(state: ARState) {
     let newObjects: ARObject[] = [];
-    props.arObjects.forEach((object) => {
+    state.arObjects.forEach((object) => {
       if (!object) return;
       let newObject = CubeObject.parseObject(object);
       if (newObject) {
@@ -162,7 +166,7 @@ function AugmentedContent(props: ARState) {
       }
     });
     setObjects(newObjects);
-  }, [props, props.arObjects]);
+  }
 
   return (
     <group>

@@ -15,6 +15,13 @@ export function getModuleState(): ARState {
   return (window as any).arController as ARState;
 }
 
+export function callARCallback() {
+  let f = (window as any).arControllerCallback as Function;
+  if (f) {
+    f();
+  }
+}
+
 // Overlay
 
 export function setLeftToggle(text: string, callback: () => void) {
@@ -72,6 +79,7 @@ export function addARObject(object: ARObject) {
   let newArray = Object.assign([], moduleState.arObjects);
   newArray.push(object);
   moduleState.arObjects = newArray;
+  callARCallback();
 }
 
 export function removeARObject(object: ARObject) {
@@ -80,10 +88,13 @@ export function removeARObject(object: ARObject) {
   moduleState.arObjects = moduleState.arObjects.filter((item) => {
     return item.id !== object.id;
   });
+  callARCallback();
 }
 
 export function clearARObjects() {
   let moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.arObjects = [];
+  callARCallback();
 }
+
