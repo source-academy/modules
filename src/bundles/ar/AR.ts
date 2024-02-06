@@ -72,7 +72,6 @@ export function addARObject(object: ARObject) {
   let newArray = Object.assign([], moduleState.arObjects);
   newArray.push(object);
   moduleState.arObjects = newArray;
-  console.log("Adding Objects", newArray);
 }
 
 export function removeARObject(object: ARObject) {

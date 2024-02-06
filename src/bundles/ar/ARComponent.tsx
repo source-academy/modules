@@ -185,7 +185,9 @@ function setupToggles(
     if (overlayHelper.toggleLeft) {
       leftToggle.style.display = "block";
       leftToggle.textContent = overlayHelper.toggleLeft.text;
-      leftToggle.onclick = overlayHelper.toggleLeft.callback;
+      leftToggle.onclick = () => {
+        overlayHelper.toggleLeft?.callback();
+      };
     } else {
       leftToggle.style.display = "none";
       leftToggle.textContent = "";
@@ -198,7 +200,9 @@ function setupToggles(
     if (overlayHelper.toggleCentre) {
       centreToggle.style.display = "block";
       centreToggle.textContent = overlayHelper.toggleCentre.text;
-      centreToggle.onclick = overlayHelper.toggleCentre.callback;
+      centreToggle.onclick = () => {
+        overlayHelper.toggleCentre?.callback();
+      };
     } else {
       centreToggle.style.display = "none";
       centreToggle.textContent = "";
@@ -211,7 +215,9 @@ function setupToggles(
     if (overlayHelper.toggleRight) {
       rightToggle.style.display = "block";
       rightToggle.textContent = overlayHelper.toggleRight.text;
-      rightToggle.onclick = overlayHelper.toggleRight.callback;
+      rightToggle.onclick = () => {
+        overlayHelper.toggleRight?.callback();
+      };
     } else {
       rightToggle.style.display = "none";
       rightToggle.textContent = "";
