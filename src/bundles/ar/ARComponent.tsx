@@ -3,7 +3,7 @@ import {
   ScreenStateContext,
   useScreenState,
 } from "./libraries/screen_state_library/ScreenStateContext";
-import { type RefObject, useEffect, useMemo } from "react";
+import { type RefObject, useEffect, useState } from "react";
 import {
   PlayAreaContext,
   usePlayArea,
@@ -14,6 +14,12 @@ import {
 } from "./libraries/controls_library/ControlsContext";
 import { ARState } from "./AR";
 import { OverlayHelper } from "./OverlayHelper";
+import {
+  CubeObject,
+  type ARObject,
+  UIObject,
+  LightObject,
+} from "./libraries/object_state_library/ARObject";
 
 export default function ARComponent(props: ARState) {
   return (
@@ -55,6 +61,7 @@ function Overlay() {
           bottom: 30,
           left: 20,
           background: "#fafafa",
+          color: "#212121",
           borderRadius: 30,
           padding: "15px 30px",
         }}
@@ -66,6 +73,7 @@ function Overlay() {
           position: "absolute",
           bottom: 30,
           background: "#fafafa",
+          color: "#212121",
           borderRadius: 30,
           padding: "15px 30px",
         }}
@@ -78,6 +86,7 @@ function Overlay() {
           bottom: 30,
           right: 20,
           background: "#fafafa",
+          color: "#212121",
           borderRadius: 30,
           padding: "15px 30px",
         }}
@@ -100,10 +109,7 @@ function AugmentedContent(props: ARState) {
   const screenState = useScreenState();
   const playArea = usePlayArea();
   const controls = useControls();
-
-  const objects = useMemo(() => props.arObjects, [props.arObjects]);
-
-  console.log("Objects", objects);
+  const [objects, setObjects] = useState<ARObject[]>([]);
 
   useEffect(() => {
     controls.setCallback((prev, current) => {
@@ -134,11 +140,35 @@ function AugmentedContent(props: ARState) {
     props.overlay.toggleRight,
   ]);
 
+  useEffect(() => {
+    console.log("Updated");
+    let newObjects: ARObject[] = [];
+    props.arObjects.forEach((object) => {
+      if (!object) return;
+      let newObject = CubeObject.parseObject(object);
+      if (newObject) {
+        newObjects.push(newObject);
+        return;
+      }
+      newObject = UIObject.parseObject(object);
+      if (newObject) {
+        newObjects.push(newObject);
+        return;
+      }
+      newObject = LightObject.parseObject(object);
+      if (newObject) {
+        newObjects.push(newObject);
+        return;
+      }
+    });
+    setObjects(newObjects);
+  }, [props, props.arObjects]);
+
   return (
     <group>
-      {/* {objects.map((item) => {
+      {objects.map((item) => {
         return item.getComponent(playArea.getCameraRelativePosition);
-      })} */}
+      })}
     </group>
   );
 }
@@ -189,4 +219,3 @@ function setupToggles(
     }
   }
 }
-
