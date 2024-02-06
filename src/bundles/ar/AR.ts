@@ -64,7 +64,7 @@ export function addARObject(object: ARObject) {
   if (!moduleState) return;
   if (
     moduleState.arObjects.find((item) => {
-      item.id === object.id;
+      return item.id === object.id;
     })
   ) {
     return; // Already in array
@@ -78,7 +78,7 @@ export function removeARObject(object: ARObject) {
   let moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.arObjects = moduleState.arObjects.filter((item) => {
-    item.id !== object.id;
+    return item.id !== object.id;
   });
 }
 
