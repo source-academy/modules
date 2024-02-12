@@ -1,4 +1,4 @@
-import { Color, Vector3 } from "three";
+import { Vector3 } from "three";
 import {
   ARObject,
   CubeObject,
@@ -26,6 +26,7 @@ import UIColumnComponent, {
   HorizontalAlignment,
 } from "./libraries/object_state_library/ui_component/UIColumnComponent";
 import UITextComponent from "./libraries/object_state_library/ui_component/UITextComponent";
+import UIImageComponent from "./libraries/object_state_library/ui_component/UIImageComponent";
 
 // Objects
 
@@ -143,6 +144,29 @@ export function createInterfaceText(
       paddingBottom: paddingBottom,
     },
     color: color,
+    id: uniqid(),
+  });
+}
+
+export function createInterfaceImage(
+  src: string,
+  imageWidth: number,
+  imageHeight: number,
+  paddingLeft: number,
+  paddingRight: number,
+  paddingTop: number,
+  paddingBottom: number
+): UIImageComponent {
+  return new UIImageComponent({
+    src: src,
+    imageWidth: imageWidth,
+    imageHeight: imageHeight,
+    padding: {
+      paddingLeft: paddingLeft,
+      paddingRight: paddingRight,
+      paddingTop: paddingTop,
+      paddingBottom: paddingBottom,
+    },
     id: uniqid(),
   });
 }

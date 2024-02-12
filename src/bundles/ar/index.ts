@@ -37,6 +37,7 @@ export {
   createInterfaceRow,
   createInterfaceColumn,
   createInterfaceText,
+  createInterfaceImage,
   setFixedRotation,
   setRotateToUser,
   setRotateAroundY,
