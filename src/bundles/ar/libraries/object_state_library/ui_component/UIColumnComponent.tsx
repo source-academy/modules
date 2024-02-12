@@ -88,8 +88,10 @@ function ColumnUIComponent(
     }
     return <group key={"children_" + component.id}>{children}</group>;
   }
+
   return (
     <mesh key={"component_" + component.id} position={position}>
+      <ambientLight intensity={5} />
       <mesh position={new Vector3(0, 0, -component.layer / 1000)}>
         <boxGeometry args={[width, height, 0]} />
         <meshStandardMaterial color={new Color(component.background)} />

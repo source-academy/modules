@@ -9,7 +9,7 @@ import UIColumnComponent, {
   HorizontalAlignment,
 } from "../ui_component/UIColumnComponent";
 import UITextComponent from "../ui_component/UITextComponent";
-import { Color, Vector3 } from "three";
+import { Vector3 } from "three";
 import UIImageComponent from "../ui_component/UIImageComponent";
 
 type InterfaceProps = {
@@ -134,7 +134,7 @@ export function parseJsonInterface(uiJson: any) {
           textSize: textSize,
           textWidth: textWidth,
           textAlign: textAlign,
-          color: new Color(color),
+          color: color,
           padding: {
             paddingLeft: paddingLeft,
             paddingRight: paddingRight,

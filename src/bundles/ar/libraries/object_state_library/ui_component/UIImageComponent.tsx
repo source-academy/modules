@@ -1,6 +1,7 @@
 import { Vector3 } from "three";
 import { UIBasicComponent, type PaddingType } from "./UIComponent";
 import { Image } from "@react-three/drei";
+import { useEffect } from "react";
 
 type UIImageProps = {
   src: string;
@@ -34,8 +35,10 @@ export default class UIImageComponent extends UIBasicComponent {
 function ImageUIComponent(component: UIImageComponent, position: Vector3) {
   return (
     <mesh key={"component_" + component.id} position={position}>
-      <Image url={component.src} scale={[component.width, component.height]} />
+      <Image
+        url={component.src}
+        scale={[component.getWidth(), component.getHeight()]}
+      />
     </mesh>
   );
 }
-
