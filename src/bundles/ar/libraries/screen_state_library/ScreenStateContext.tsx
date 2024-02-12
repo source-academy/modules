@@ -44,6 +44,7 @@ type Props = {
 export function ScreenStateContext(props: Props) {
   const [arState, setArState] = useState<ReactNode>(<group></group>);
   const [overlayState, setOverlayState] = useState<ReactNode>(<></>);
+  const isXRSession = useRef<boolean>(false);
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const [domOverlay, setDomOverlay] = useState<HTMLDivElement | undefined>();
@@ -70,10 +71,25 @@ export function ScreenStateContext(props: Props) {
   }, [overlayRef, component]);
 
   useEffect(() => {
+    updateComponent();
+  }, [arState, overlayState, isXRSession.current]);
+
+  function updateComponent() {
     setComponent(
       <>
         <Canvas>
-          <XR>{arState}</XR>
+          <XR
+            onSessionStart={() => {
+              isXRSession.current = true;
+              updateComponent();
+            }}
+            onSessionEnd={() => {
+              isXRSession.current = false;
+              updateComponent();
+            }}
+          >
+            {isXRSession.current ? arState : <></>}
+          </XR>
         </Canvas>
         <div
           ref={overlayRef}
@@ -87,11 +103,11 @@ export function ScreenStateContext(props: Props) {
             userSelect: "none",
           }}
         >
-          {overlayState}
+          {isXRSession.current ? overlayState : <></>}
         </div>
       </>
     );
-  }, [arState, overlayState]);
+  }
 
   function setStates(
     newArState: ReactNode | undefined,
@@ -126,4 +142,3 @@ export function ScreenStateContext(props: Props) {
 export function useScreenState() {
   return useContext(Context);
 }
-
