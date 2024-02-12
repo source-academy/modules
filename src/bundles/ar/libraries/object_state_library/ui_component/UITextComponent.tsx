@@ -8,7 +8,7 @@ type UITextProps = {
   textSize: number;
   textWidth: number;
   textAlign?: number;
-  color?: Color;
+  color?: number;
   padding?: number | PaddingType;
   id?: string;
 };
@@ -19,14 +19,14 @@ export default class UITextComponent extends UIBasicComponent {
   textWidth: number;
   textHeight = 0;
   textAlign: number;
-  color: Color;
+  color: number;
   constructor(props: UITextProps) {
     super(props.padding, props.id);
     this.text = props.text;
     this.textSize = props.textSize;
     this.textWidth = props.textWidth;
     this.textAlign = props.textAlign ?? 0;
-    this.color = props.color ?? new Color(0x000000);
+    this.color = props.color ?? 0;
   }
   getWidth = () => {
     return this.textWidth + this.paddingTop + this.paddingBottom;
@@ -117,7 +117,7 @@ function TextUIComponent(
         fontSize={component.textSize}
         maxWidth={component.textWidth}
         textAlign={getTextAlign(component.textAlign)}
-        color={component.color}
+        color={new Color(component.color)}
         overflowWrap="normal"
       >
         {component.text}

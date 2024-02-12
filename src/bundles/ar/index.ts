@@ -8,6 +8,9 @@
  * @author Chong Wen Hao
  */
 
+import { HorizontalAlignment } from "./libraries/object_state_library/ui_component/UIColumnComponent";
+import { VerticalAlignment } from "./libraries/object_state_library/ui_component/UIRowComponent";
+
 /*
   To access things like the context or module state you can just import the context
   using the import below
@@ -31,6 +34,9 @@ export {
   createCubeObject,
   createInterfaceObject,
   createLightObject,
+  createInterfaceRow,
+  createInterfaceColumn,
+  createInterfaceText,
   setFixedRotation,
   setRotateToUser,
   setRotateAroundY,
@@ -41,3 +47,11 @@ export {
   setOrbitMovement,
   setSpringMovement,
 } from "./ObjectsHelper";
+
+export const alignmentTop = VerticalAlignment.Top;
+export const alignmentMiddle = VerticalAlignment.Middle;
+export const alignmentBottom = VerticalAlignment.Bottom;
+
+export const alignmentLeft = HorizontalAlignment.Left;
+export const alignmentCenter = HorizontalAlignment.Center;
+export const alignmentRight = HorizontalAlignment.Right;

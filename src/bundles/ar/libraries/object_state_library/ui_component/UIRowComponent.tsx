@@ -10,20 +10,16 @@ type UIRowProps = {
   children?: UIBasicComponent[];
   verticalAlignment?: VerticalAlignment;
   padding?: number | PaddingType;
-  background?: Color;
+  background?: number;
   id?: string;
 };
 
 export default class UIRowComponent extends LayoutComponent {
   verticalAlignment: VerticalAlignment;
-  background: Color;
+  background: number;
   constructor(props: UIRowProps) {
     super(props.padding, props.id);
-    if (props.background) {
-      this.background = props.background;
-    } else {
-      this.background = new Color(0xffffff);
-    }
+    this.background = props.background ?? 0xffffff;
     if (props.children) {
       this.children = props.children;
     }
@@ -97,7 +93,7 @@ function RowUIComponent(
     <mesh key={"component_" + component.id} position={position}>
       <mesh position={new Vector3(0, 0, -component.layer / 1000)}>
         <boxGeometry args={[width, height, 0]} />
-        <meshStandardMaterial color={component.background} />
+        <meshStandardMaterial color={new Color(component.background)} />
       </mesh>
       <ChildrenComponents />
     </mesh>

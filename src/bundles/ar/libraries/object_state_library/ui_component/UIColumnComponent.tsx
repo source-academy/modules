@@ -10,20 +10,16 @@ type UIColumnProps = {
   children?: UIBasicComponent[];
   horizontalAlignment?: HorizontalAlignment;
   padding?: number | PaddingType;
-  background?: Color;
+  background?: number;
   id?: string;
 };
 
 export default class UIColumnComponent extends LayoutComponent {
   horizontalAlignment: HorizontalAlignment;
-  background: Color;
+  background: number;
   constructor(props: UIColumnProps) {
     super(props.padding, props.id);
-    if (props.background) {
-      this.background = props.background;
-    } else {
-      this.background = new Color(0xffffff);
-    }
+    this.background = props.background ?? 0xffffff;
     if (props.children) {
       this.children = props.children;
     }
@@ -96,7 +92,7 @@ function ColumnUIComponent(
     <mesh key={"component_" + component.id} position={position}>
       <mesh position={new Vector3(0, 0, -component.layer / 1000)}>
         <boxGeometry args={[width, height, 0]} />
-        <meshStandardMaterial color={component.background} />
+        <meshStandardMaterial color={new Color(component.background)} />
       </mesh>
       <ChildrenComponents />
     </mesh>
@@ -108,4 +104,3 @@ export enum HorizontalAlignment {
   Center,
   Right,
 }
-

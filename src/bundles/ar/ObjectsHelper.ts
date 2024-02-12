@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { Color, Vector3 } from "three";
 import {
   ARObject,
   CubeObject,
@@ -18,6 +18,14 @@ import {
   SpringMovement,
 } from "./libraries/object_state_library/Behaviour";
 import uniqid from "uniqid";
+import type { UIBasicComponent } from "./libraries/object_state_library/ui_component/UIComponent";
+import UIRowComponent, {
+  VerticalAlignment,
+} from "./libraries/object_state_library/ui_component/UIRowComponent";
+import UIColumnComponent, {
+  HorizontalAlignment,
+} from "./libraries/object_state_library/ui_component/UIColumnComponent";
+import UITextComponent from "./libraries/object_state_library/ui_component/UITextComponent";
 
 // Objects
 
@@ -45,13 +53,13 @@ export function createCubeObject(
 
 export function createInterfaceObject(
   position: Vector3,
-  uiJson: any,
+  rootComponent: UIBasicComponent,
   onSelect?: (object: ARObject) => {}
 ): UIObject {
   return new UIObject(
     uniqid(),
     position,
-    uiJson,
+    rootComponent.toJSON(),
     undefined,
     undefined,
     undefined,
@@ -64,6 +72,79 @@ export function createLightObject(
   intensity: number
 ): LightObject {
   return new LightObject(uniqid(), position, intensity);
+}
+
+// Interface
+
+export function createInterfaceRow(
+  children: UIBasicComponent[],
+  verticalAlignment: VerticalAlignment,
+  paddingLeft: number,
+  paddingRight: number,
+  paddingTop: number,
+  paddingBottom: number,
+  backgroundColor: number
+): UIRowComponent {
+  return new UIRowComponent({
+    children: children,
+    verticalAlignment: verticalAlignment,
+    padding: {
+      paddingLeft: paddingLeft,
+      paddingRight: paddingRight,
+      paddingTop: paddingTop,
+      paddingBottom: paddingBottom,
+    },
+    background: backgroundColor,
+    id: uniqid(),
+  });
+}
+
+export function createInterfaceColumn(
+  children: UIBasicComponent[],
+  horizontalAlignment: HorizontalAlignment,
+  paddingLeft: number,
+  paddingRight: number,
+  paddingTop: number,
+  paddingBottom: number,
+  backgroundColor: number
+): UIColumnComponent {
+  return new UIColumnComponent({
+    children: children,
+    horizontalAlignment: horizontalAlignment,
+    padding: {
+      paddingLeft: paddingLeft,
+      paddingRight: paddingRight,
+      paddingTop: paddingTop,
+      paddingBottom: paddingBottom,
+    },
+    background: backgroundColor,
+    id: uniqid(),
+  });
+}
+
+export function createInterfaceText(
+  text: string,
+  textSize: number,
+  textWidth: number,
+  paddingLeft: number,
+  paddingRight: number,
+  paddingTop: number,
+  paddingBottom: number,
+  color: number
+): UITextComponent {
+  return new UITextComponent({
+    text: text,
+    textSize: textSize,
+    textWidth: textWidth,
+    padding: {
+      paddingLeft: paddingLeft,
+      paddingRight: paddingRight,
+      paddingTop: paddingTop,
+      paddingBottom: paddingBottom,
+    },
+    color: color,
+    id: uniqid(),
+  });
 }
 
 // Rotation
@@ -120,4 +201,3 @@ export function setOrbitMovement(
 export function setSpringMovement(object: ARObject) {
   object.behaviours.model = new SpringMovement();
 }
-
