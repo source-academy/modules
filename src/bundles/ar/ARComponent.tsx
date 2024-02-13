@@ -37,7 +37,7 @@ function ButtonComponent(props: ARState) {
   }, []);
 
   return (
-    <div>
+    <div style={{ height: 500 }}>
       <ARButton
         sessionInit={{
           requiredFeatures: ["hit-test"],
@@ -57,16 +57,18 @@ function Overlay() {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-evenly",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: "0px 20px 60px 20px",
       }}
     >
       <button
         id="left-toggle"
         style={{
           display: "none",
-          position: "absolute",
           width: 100,
-          bottom: 30,
-          left: 20,
           background: "#fafafa",
           color: "#212121",
           borderRadius: 30,
@@ -77,9 +79,7 @@ function Overlay() {
         id="center-toggle"
         style={{
           display: "none",
-          position: "absolute",
           width: 100,
-          bottom: 30,
           background: "#fafafa",
           color: "#212121",
           borderRadius: 30,
@@ -90,10 +90,7 @@ function Overlay() {
         id="right-toggle"
         style={{
           display: "none",
-          position: "absolute",
           width: 100,
-          bottom: 30,
-          right: 20,
           background: "#fafafa",
           color: "#212121",
           borderRadius: 30,
