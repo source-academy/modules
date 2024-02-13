@@ -52,12 +52,19 @@ function ButtonComponent(props: ARState) {
 
 function Overlay() {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+      }}
+    >
       <button
         id="left-toggle"
         style={{
           display: "none",
           position: "absolute",
+          width: 100,
           bottom: 30,
           left: 20,
           background: "#fafafa",
@@ -67,10 +74,11 @@ function Overlay() {
         }}
       />
       <button
-        id="centre-toggle"
+        id="center-toggle"
         style={{
           display: "none",
           position: "absolute",
+          width: 100,
           bottom: 30,
           background: "#fafafa",
           color: "#212121",
@@ -83,6 +91,7 @@ function Overlay() {
         style={{
           display: "none",
           position: "absolute",
+          width: 100,
           bottom: 30,
           right: 20,
           background: "#fafafa",
@@ -140,7 +149,7 @@ function AugmentedContent(props: ARState) {
   useEffect(() => {
     setupToggles(props.overlay, screenState.overlayRef);
   }, [
-    props.overlay.toggleCentre,
+    props.overlay.toggleCenter,
     props.overlay.toggleLeft,
     props.overlay.toggleRight,
   ]);
@@ -198,19 +207,19 @@ function setupToggles(
       leftToggle.onclick = () => {};
     }
   }
-  // Centre
-  let centreToggle = overlay?.querySelector("#centre-toggle") as HTMLElement;
-  if (centreToggle) {
-    if (overlayHelper.toggleCentre) {
-      centreToggle.style.display = "block";
-      centreToggle.textContent = overlayHelper.toggleCentre.text;
-      centreToggle.onclick = () => {
-        overlayHelper.toggleCentre?.callback();
+  // Center
+  let centerToggle = overlay?.querySelector("#center-toggle") as HTMLElement;
+  if (centerToggle) {
+    if (overlayHelper.toggleCenter) {
+      centerToggle.style.display = "block";
+      centerToggle.textContent = overlayHelper.toggleCenter.text;
+      centerToggle.onclick = () => {
+        overlayHelper.toggleCenter?.callback();
       };
     } else {
-      centreToggle.style.display = "none";
-      centreToggle.textContent = "";
-      centreToggle.onclick = () => {};
+      centerToggle.style.display = "none";
+      centerToggle.textContent = "";
+      centerToggle.onclick = () => {};
     }
   }
   // Right
@@ -229,3 +238,4 @@ function setupToggles(
     }
   }
 }
+

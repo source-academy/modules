@@ -30,10 +30,10 @@ export function setLeftToggle(text: string, callback: () => void) {
   moduleState.overlay.toggleLeft = new Toggle(text, callback);
 }
 
-export function setCentreToggle(text: string, callback: () => void) {
+export function setCenterToggle(text: string, callback: () => void) {
   let moduleState = getModuleState();
   if (!moduleState) return;
-  moduleState.overlay.toggleCentre = new Toggle(text, callback);
+  moduleState.overlay.toggleCenter = new Toggle(text, callback);
 }
 
 export function setRightToggle(text: string, callback: () => void) {
@@ -48,10 +48,10 @@ export function removeLeftToggle() {
   moduleState.overlay.toggleLeft = undefined;
 }
 
-export function removeCentreToggle() {
+export function removeCenterToggle() {
   let moduleState = getModuleState();
   if (!moduleState) return;
-  moduleState.overlay.toggleCentre = undefined;
+  moduleState.overlay.toggleCenter = undefined;
 }
 
 export function removeRightToggle() {

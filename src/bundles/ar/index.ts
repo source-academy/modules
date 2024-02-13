@@ -19,10 +19,10 @@ import { VerticalAlignment } from "./libraries/object_state_library/ui_component
 export {
   initAR,
   setLeftToggle,
-  setCentreToggle,
+  setCenterToggle,
   setRightToggle,
   removeLeftToggle,
-  removeCentreToggle,
+  removeCenterToggle,
   removeRightToggle,
   createVector3,
   addARObject,
@@ -56,3 +56,4 @@ export const alignmentBottom = VerticalAlignment.Bottom;
 export const alignmentLeft = HorizontalAlignment.Left;
 export const alignmentCenter = HorizontalAlignment.Center;
 export const alignmentRight = HorizontalAlignment.Right;
+
