@@ -48,15 +48,24 @@ export default class UIRowComponent extends LayoutComponent {
     return height + maxChildHeight;
   };
   getComponent = (position: Vector3, updateParent: () => void) => {
-    return RowUIComponent(this, position, updateParent);
+    return (
+      <RowUIComponent
+        key={this.id}
+        component={this}
+        position={position}
+        updateParent={updateParent}
+      />
+    );
   };
 }
 
-function RowUIComponent(
-  component: UIRowComponent,
-  position: Vector3,
-  updateParent: () => void
-) {
+function RowUIComponent(props: {
+  component: UIRowComponent;
+  position: Vector3;
+  updateParent: () => void;
+}) {
+  let { component, position, updateParent } = props;
+
   const [width, setWidth] = useState(component.width);
   const [height, setHeight] = useState(component.height);
 

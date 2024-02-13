@@ -48,15 +48,24 @@ export default class UIColumnComponent extends LayoutComponent {
     return height;
   };
   getComponent = (position: Vector3, updateParent: () => void) => {
-    return ColumnUIComponent(this, position, updateParent);
+    return (
+      <ColumnUIComponent
+        key={this.id}
+        component={this}
+        position={position}
+        updateParent={updateParent}
+      />
+    );
   };
 }
 
-function ColumnUIComponent(
-  component: UIColumnComponent,
-  position: Vector3,
-  updateParent: () => void
-) {
+function ColumnUIComponent(props: {
+  component: UIColumnComponent;
+  position: Vector3;
+  updateParent: () => void;
+}) {
+  let { component, position, updateParent } = props;
+
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
@@ -106,3 +115,4 @@ export enum HorizontalAlignment {
   Center,
   Right,
 }
+

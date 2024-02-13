@@ -1,6 +1,11 @@
 import { SpringValue, animated } from "@react-spring/three";
 import { InterfaceModel as InterfaceModel } from "../Behaviour";
-import { type MutableRefObject } from "react";
+import {
+  useEffect,
+  type MutableRefObject,
+  useState,
+  type ReactNode,
+} from "react";
 import { UIBasicComponent } from "../ui_component/UIComponent";
 import UIRowComponent, {
   VerticalAlignment,
@@ -19,12 +24,20 @@ type InterfaceProps = {
 };
 
 export default function InterfaceComponent(props: InterfaceProps) {
-  return (
-    <animated.mesh ref={props.meshRef} position={props.springPosition}>
-      {parseJsonInterface(props.interfaceModel.uiJson)?.getComponent(
+  const [components, setComponents] = useState<ReactNode>();
+
+  useEffect(() => {
+    setComponents(
+      parseJsonInterface(props.interfaceModel.uiJson)?.getComponent(
         new Vector3(0),
         () => {}
-      )}
+      )
+    );
+  }, [props.interfaceModel.uiJson]);
+
+  return (
+    <animated.mesh ref={props.meshRef} position={props.springPosition}>
+      {components}
     </animated.mesh>
   );
 }

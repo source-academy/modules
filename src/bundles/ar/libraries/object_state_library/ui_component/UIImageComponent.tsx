@@ -28,11 +28,17 @@ export default class UIImageComponent extends UIBasicComponent {
     return this.imageHeight + this.paddingTop + this.paddingBottom;
   };
   getComponent = (position: Vector3, updateParent: () => void) => {
-    return ImageUIComponent(this, position);
+    return (
+      <ImageUIComponent key={this.id} component={this} position={position} />
+    );
   };
 }
 
-function ImageUIComponent(component: UIImageComponent, position: Vector3) {
+function ImageUIComponent(props: {
+  component: UIImageComponent;
+  position: Vector3;
+}) {
+  let { component, position } = props;
   return (
     <mesh key={"component_" + component.id} position={position}>
       <Image
@@ -42,3 +48,4 @@ function ImageUIComponent(component: UIImageComponent, position: Vector3) {
     </mesh>
   );
 }
+

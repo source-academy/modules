@@ -47,15 +47,24 @@ export default class UITextComponent extends UIBasicComponent {
     }
   };
   getComponent = (position: Vector3, updateParent: () => void) => {
-    return TextUIComponent(this, position, updateParent);
+    return (
+      <TextUIComponent
+        key={this.id}
+        component={this}
+        position={position}
+        updateParent={updateParent}
+      />
+    );
   };
 }
 
-function TextUIComponent(
-  component: UITextComponent,
-  position: Vector3,
-  updateParent: () => void
-) {
+function TextUIComponent(props: {
+  component: UITextComponent;
+  position: Vector3;
+  updateParent: () => void;
+}) {
+  let { component, position, updateParent } = props;
+
   const [offsetX, setOffsetX] = useState(0);
   let ref = useRef<Mesh>(null);
 
