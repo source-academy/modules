@@ -37,7 +37,7 @@ function ButtonComponent(props: ARState) {
   }, []);
 
   return (
-    <div style={{ height: 500 }}>
+    <div style={{ height: "50vh" }}>
       <ARButton
         sessionInit={{
           requiredFeatures: ["hit-test"],
@@ -72,7 +72,7 @@ function Overlay() {
           background: "#fafafa",
           color: "#212121",
           borderRadius: 30,
-          padding: "15px 30px",
+          padding: "15px",
         }}
       />
       <button
@@ -83,7 +83,7 @@ function Overlay() {
           background: "#fafafa",
           color: "#212121",
           borderRadius: 30,
-          padding: "15px 30px",
+          padding: "15px",
         }}
       />
       <button
@@ -94,7 +94,7 @@ function Overlay() {
           background: "#fafafa",
           color: "#212121",
           borderRadius: 30,
-          padding: "15px 30px",
+          padding: "15px",
         }}
       />
     </div>
@@ -235,4 +235,3 @@ function setupToggles(
     }
   }
 }
-
