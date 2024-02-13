@@ -98,3 +98,21 @@ export function clearARObjects() {
   callARCallback();
 }
 
+export function getXPosition(object: ARObject): number {
+  return object.position.x;
+}
+
+export function getYPosition(object: ARObject): number {
+  return object.position.y;
+}
+
+export function getZPosition(object: ARObject): number {
+  return object.position.z;
+}
+
+export function moveARObject(object: ARObject, position: Vector3) {
+  let moduleState = getModuleState();
+  if (!moduleState) return;
+  object.position = position;
+  callARCallback();
+}

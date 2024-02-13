@@ -67,7 +67,10 @@ export function createSphereObject(
     undefined,
     undefined,
     undefined,
-    onSelect
+    (object: ARObject) => {
+      console.log("Selected", onSelect);
+      onSelect?.(object);
+    }
   );
 }
 

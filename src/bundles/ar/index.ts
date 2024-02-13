@@ -28,6 +28,10 @@ export {
   addARObject,
   removeARObject,
   clearARObjects,
+  getXPosition,
+  getYPosition,
+  getZPosition,
+  moveARObject,
 } from "./AR";
 
 export {
