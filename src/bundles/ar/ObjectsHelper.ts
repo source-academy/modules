@@ -245,5 +245,5 @@ export function setOrbitMovement(
 }
 
 export function setSpringMovement(object: ARObject) {
-  object.behaviours.model = new SpringMovement();
+  object.behaviours.movement = new SpringMovement();
 }
