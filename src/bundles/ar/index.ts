@@ -32,6 +32,7 @@ export {
 
 export {
   createCubeObject,
+  createSphereObject,
   createInterfaceObject,
   createLightObject,
   createInterfaceRow,
@@ -56,4 +57,3 @@ export const alignmentBottom = VerticalAlignment.Bottom;
 export const alignmentLeft = HorizontalAlignment.Left;
 export const alignmentCenter = HorizontalAlignment.Center;
 export const alignmentRight = HorizontalAlignment.Right;
-

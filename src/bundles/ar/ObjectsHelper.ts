@@ -3,6 +3,7 @@ import {
   ARObject,
   CubeObject,
   LightObject,
+  SphereObject,
   UIObject,
 } from "./libraries/object_state_library/ARObject";
 import {
@@ -44,6 +45,24 @@ export function createCubeObject(
     width,
     height,
     depth,
+    color,
+    undefined,
+    undefined,
+    undefined,
+    onSelect
+  );
+}
+
+export function createSphereObject(
+  position: Vector3,
+  radius: number,
+  color: number,
+  onSelect?: (object: ARObject) => {}
+): SphereObject {
+  return new SphereObject(
+    uniqid(),
+    position,
+    radius,
     color,
     undefined,
     undefined,

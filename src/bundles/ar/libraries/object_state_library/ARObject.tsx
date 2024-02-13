@@ -1,4 +1,9 @@
-import { BoxGeometry, MeshStandardMaterial, Vector3 } from "three";
+import {
+  BoxGeometry,
+  MeshStandardMaterial,
+  SphereGeometry,
+  Vector3,
+} from "three";
 import {
   type Behaviours,
   LightModel,
@@ -137,6 +142,68 @@ export class CubeObject extends ARObject {
   }
 }
 
+const SPHERE_OBJECT_TYPE = "SphereObject";
+export class SphereObject extends ARObject {
+  type = SPHERE_OBJECT_TYPE;
+  radius: number;
+  color: number;
+  constructor(
+    id: string,
+    position: Vector3,
+    radius: number,
+    color: number,
+    render?: RenderClass,
+    rotation?: RotationClass,
+    movement?: MovementClass,
+    onSelect?: (object: ARObject) => void
+  ) {
+    super(
+      id,
+      position,
+      {
+        model: new ShapeModel(
+          new SphereGeometry(radius, 20, 20),
+          new MeshStandardMaterial({ color: color })
+        ),
+        render: render,
+        rotation: rotation,
+        movement: movement,
+      },
+      onSelect
+    );
+    this.radius = radius;
+    this.color = color;
+  }
+  static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
+    if (!object || object.type !== SPHERE_OBJECT_TYPE) return undefined;
+    let id = object.id;
+    let position = parseVector3(object.position);
+    let render = parseRender(object.behaviours?.render);
+    let rotation = parseRotation(object.behaviours?.rotation);
+    let movement = parseMovement(object.behaviours?.movement);
+    let radius = object.radius;
+    let color = object.color;
+    if (
+      typeof id === "string" &&
+      position instanceof Vector3 &&
+      typeof radius === "number" &&
+      typeof color === "number"
+    ) {
+      return new SphereObject(
+        id,
+        position,
+        radius,
+        color,
+        render,
+        rotation,
+        movement,
+        onSelect
+      );
+    }
+    return undefined;
+  }
+}
+
 const UI_OBJECT_TYPE = "UIObject";
 export class UIObject extends ARObject {
   type = UI_OBJECT_TYPE;
@@ -216,4 +283,3 @@ export class LightObject extends ARObject {
     return undefined;
   }
 }
-

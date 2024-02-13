@@ -19,6 +19,7 @@ import {
   type ARObject,
   UIObject,
   LightObject,
+  SphereObject,
 } from "./libraries/object_state_library/ARObject";
 
 export default function ARComponent(props: ARState) {
@@ -156,6 +157,11 @@ function AugmentedContent(props: ARState) {
     state.arObjects.forEach((object) => {
       if (!object) return;
       let newObject = CubeObject.parseObject(object);
+      if (newObject) {
+        newObjects.push(newObject);
+        return;
+      }
+      newObject = SphereObject.parseObject(object);
       if (newObject) {
         newObjects.push(newObject);
         return;
