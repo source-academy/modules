@@ -11,6 +11,7 @@ const defaultOptions = {
 type Props = {
   onClick?: React.MouseEventHandler<HTMLElement>,
   disabled?: boolean,
+  children?: React.ReactNode,
 };
 
 const ButtonComponent = (props: Props) => {
