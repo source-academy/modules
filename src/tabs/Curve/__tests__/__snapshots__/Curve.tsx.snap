@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Curve 3D animations error gracefully 1`] = `
+<CurveTab
+  context={
+    {
+      "context": {
+        "moduleContexts": {
+          "curve": {
+            "state": {
+              "drawnCurves": [
+                AnimatedCurve {
+                  "angle": 0,
+                  "drawer": [Function],
+                  "duration": 1,
+                  "fps": 60,
+                  "func": [Function],
+                  "is3D": true,
+                  "toReplString": [Function],
+                },
+              ],
+            },
+          },
+        },
+      },
+    }
+  }
+/>
+`;
+
+exports[`Curve animations error gracefully 1`] = `
+<CurveTab
+  context={
+    {
+      "context": {
+        "moduleContexts": {
+          "curve": {
+            "state": {
+              "drawnCurves": [
+                AnimatedCurve {
+                  "angle": 0,
+                  "drawer": [Function],
+                  "duration": 1,
+                  "fps": 60,
+                  "func": [Function],
+                  "is3D": false,
+                  "toReplString": [Function],
+                },
+              ],
+            },
+          },
+        },
+      },
+    }
+  }
+/>
+`;

@@ -8,9 +8,6 @@ import {
   prepareRender,
 } from '@jscad/regl-renderer';
 import {
-  ACE_GUTTER_BACKGROUND_COLOR,
-  ACE_GUTTER_TEXT_COLOR,
-  BP_TEXT_COLOR,
   DEFAULT_COLOR,
   GRID_PADDING,
   MAIN_TICKS,
@@ -39,6 +36,9 @@ import type {
   WrappedRendererData,
   ZoomToFitStates,
 } from './types.js';
+import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '../../../tabs/common/css_constants.js';
+
+
 
 /* [Main] */
 let { orbit } = controls;

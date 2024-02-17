@@ -27,11 +27,6 @@ export type Color = RGB;
 
 export type Mat4 = Float32Array;
 
-// Pair and List
-export type Pair<H, T> = [H, T];
-export type NonEmptyList = Pair<any, any>;
-export type List = null | NonEmptyList;
-
 //  @jscad\regl-renderer\src\cameras\perspectiveCamera.js
 //  @jscad\regl-renderer\src\cameras\orthographicCamera.js
 export type PerspectiveCamera = typeof perspectiveCamera;

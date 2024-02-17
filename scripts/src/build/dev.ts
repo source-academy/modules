@@ -1,44 +1,26 @@
 import chalk from 'chalk';
 import { context as esbuild } from 'esbuild';
+import lodash from 'lodash';
 import type { Application } from 'typedoc';
 
+import { waitForQuit } from '../scriptUtils.js';
+
 import { buildHtml, buildJsons, initTypedoc, logHtmlResult } from './docs/index.js';
-import { bundleOptions, reduceBundleOutputFiles } from './modules/bundle.js';
-import { reduceTabOutputFiles, tabOptions } from './modules/tab.js';
+import { getBundleOptions, reduceBundleOutputFiles } from './modules/bundle.js';
+import { getTabOptions, reduceTabOutputFiles } from './modules/tab.js';
 import {
-  bundleNameExpander,
   copyManifest,
   createBuildCommand,
   createBuildDirs,
   divideAndRound,
   logResult,
   retrieveBundlesAndTabs,
-  tabNameExpander,
 } from './buildUtils.js';
 import type { BuildCommandInputs, UnreducedResult } from './types.js';
 
-/**
- * Wait until the user presses 'ctrl+c' on the keyboard
- */
-const waitForQuit = () => new Promise<void>((resolve, reject) => {
-  process.stdin.setRawMode(true);
-  process.stdin.on('data', (data) => {
-    const byteArray = [...data];
-    if (byteArray.length > 0 && byteArray[0] === 3) {
-      console.log('^C');
-      process.stdin.setRawMode(false);
-      resolve();
-    }
-  });
-  process.stdin.on('error', reject);
-});
-
 type ContextOptions = Record<'srcDir' | 'outDir', string>;
-const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[], app?: Application) => esbuild({
-  ...bundleOptions,
-  outbase: outDir,
-  outdir: outDir,
-  entryPoints: bundles.map(bundleNameExpander(srcDir)),
+const getBundleContext = (options: ContextOptions, bundles: string[], app?: Application) => esbuild({
+  ...getBundleOptions(bundles, options),
   plugins: [{
     name: 'Bundle Compiler',
     async setup(pluginBuild) {
@@ -47,7 +29,7 @@ const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[],
         app.convertAndWatch(async (project) => {
           console.log(chalk.magentaBright('Beginning jsons build...'));
           jsonPromise = buildJsons(project, {
-            outDir,
+            outDir: options.outDir,
             bundles,
           });
         });
@@ -61,7 +43,7 @@ const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[],
 
       pluginBuild.onEnd(async ({ outputFiles }) => {
         const [mainResults, jsonResults] = await Promise.all([
-          reduceBundleOutputFiles(outputFiles, startTime, outDir),
+          reduceBundleOutputFiles(outputFiles, startTime, options.outDir),
           jsonPromise || Promise.resolve([]),
         ]);
         logResult(mainResults.concat(jsonResults), false);
@@ -72,12 +54,7 @@ const getBundleContext = ({ srcDir, outDir }: ContextOptions, bundles: string[],
   }],
 });
 
-const getTabContext = ({ srcDir, outDir }: ContextOptions, tabs: string[]) => esbuild({
-  ...tabOptions,
-  outbase: outDir,
-  outdir: outDir,
-  entryPoints: tabs.map(tabNameExpander(srcDir)),
-  external: ['react*', 'react-dom'],
+const getTabContext = (options: ContextOptions, tabs: string[]) => esbuild(lodash.merge({
   plugins: [{
     name: 'Tab Compiler',
     setup(pluginBuild) {
@@ -88,14 +65,14 @@ const getTabContext = ({ srcDir, outDir }: ContextOptions, tabs: string[]) => es
       });
 
       pluginBuild.onEnd(async ({ outputFiles }) => {
-        const mainResults = await reduceTabOutputFiles(outputFiles, startTime, outDir);
+        const mainResults = await reduceTabOutputFiles(outputFiles, startTime, options.outDir);
         logResult(mainResults, false);
 
         console.log(chalk.gray(`Tabs took ${divideAndRound(performance.now() - startTime, 1000, 2)}s to complete\n`));
       });
     },
   }],
-});
+}, getTabOptions(tabs, options)));
 
 // const serveContext = async (context: Awaited<ReturnType<typeof esbuild>>) => {
 //   const { port } = await context.serve({
@@ -141,13 +118,16 @@ export const watchCommand = createBuildCommand('watch', false)
     await waitForQuit();
     console.log(chalk.yellowBright('Stopping...'));
 
-    const [htmlResult] = await Promise.all([
-      opts.docs
-        ? buildHtml(app, app.convert(), {
+    const htmlPromise = !opts.docs
+      ? Promise.resolve(null)
+      : app.convert()
+        .then((proj) => buildHtml(app, proj, {
           outDir: opts.outDir,
           modulesSpecified: false,
-        })
-        : Promise.resolve(null),
+        }));
+
+    const [htmlResult] = await Promise.all([
+      htmlPromise,
       bundlesContext.cancel()
         .then(() => bundlesContext.dispose()),
       tabsContext.cancel()

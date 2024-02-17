@@ -35,7 +35,6 @@ export default class StatefulRenderer {
     private loseCallback: Function,
     private restoreCallback: Function,
   ) {
-    //FIXME Issue #7
     this.cameraState.position = [1000, 1000, 1500];
 
     this.webGlListenerTracker = new ListenerTracker(canvas);

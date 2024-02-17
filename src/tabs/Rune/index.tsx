@@ -1,15 +1,40 @@
-import React from 'react';
-import { type HollusionRune } from '../../bundles/rune/functions';
-import type {
-  AnimatedRune,
-  DrawnRune,
-} from '../../bundles/rune/rune';
+import { type RuneModuleState, isHollusionRune } from '../../bundles/rune/functions';
 import { glAnimation } from '../../typings/anim_types';
-import MultiItemDisplay from '../common/multi_item_display';
-import { type DebuggerContext } from '../../typings/type_helpers';
-import AnimationCanvas from '../common/animation_canvas';
+import MultiItemDisplay from '../common/MultItemDisplay';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
+import AnimationCanvas from '../common/AnimationCanvas';
 import HollusionCanvas from './hollusion_canvas';
-import WebGLCanvas from '../common/webgl_canvas';
+import WebGLCanvas from '../common/WebglCanvas';
+
+export const RuneTab: ModuleTab = ({ context }) => {
+  const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
+  const runeCanvases = drawnRunes.map((rune, i) => {
+    const elemKey = i.toString();
+
+    if (glAnimation.isAnimation(rune)) {
+      return (
+        <AnimationCanvas animation={rune} key={elemKey} />
+      );
+    }
+    if (isHollusionRune(rune)) {
+      return (
+        <HollusionCanvas rune={rune} key={elemKey} />
+      );
+    }
+    return (
+      <WebGLCanvas
+        ref={(r) => {
+          if (r) {
+            rune.draw(r);
+          }
+        }}
+        key={elemKey}
+      />
+    );
+  });
+
+  return <MultiItemDisplay elements={runeCanvases} />;
+};
 
 export default {
   /**
@@ -30,37 +55,7 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    const { context: { moduleContexts: { rune: { state: { drawnRunes } } } } } = context;
-
-    // Based on the toSpawn conditions, it should be safe to assume
-    // that neither moduleContext or moduleState are null
-    const runeCanvases = drawnRunes.map((rune, i) => {
-      const elemKey = i.toString();
-
-      if (glAnimation.isAnimation(rune)) {
-        return (
-          <AnimationCanvas animation={rune as AnimatedRune} key={elemKey} />
-        );
-      }
-      const drawnRune = rune as DrawnRune;
-      if (drawnRune.isHollusion) {
-        return (
-          <HollusionCanvas rune={drawnRune as HollusionRune} key={elemKey} />
-        );
-      }
-      return (
-        <WebGLCanvas
-          ref={(r) => {
-            if (r) {
-              drawnRune.draw(r);
-            }
-          }}
-          key={elemKey}
-        />
-      );
-    });
-
-    return <MultiItemDisplay elements={runeCanvases} />;
+    return <RuneTab context={context} />;
   },
 
   /**

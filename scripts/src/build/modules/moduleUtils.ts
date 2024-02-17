@@ -152,4 +152,5 @@ export const esbuildOptions: ESBuildOptions = {
   platform: 'browser',
   target: 'es6',
   write: false,
+  external: ['js-slang*'],
 };

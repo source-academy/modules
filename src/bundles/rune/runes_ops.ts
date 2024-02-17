@@ -6,7 +6,7 @@ import { Rune } from './rune';
 // =============================================================================
 // Utility Functions
 // =============================================================================
-export function throwIfNotRune(name, ...runes) {
+export function throwIfNotRune(name: string, ...runes: any) {
   runes.forEach((rune) => {
     if (!(rune instanceof Rune)) {
       throw Error(`${name} expects a rune as argument.`);
@@ -194,7 +194,7 @@ export const getHeart: () => Rune = () => {
   const root2 = Math.sqrt(2);
   const r = 4 / (2 + 3 * root2);
   const scaleX = 1 / (r * (1 + root2 / 2));
-  const numPoints = 10;
+  const numPoints = 100;
 
   // right semi-circle
   const rightCenterX = r / root2;
@@ -337,7 +337,7 @@ export const colorPalette = [
   '#795548',
 ];
 
-export function hexToColor(hex): number[] {
+export function hexToColor(hex: string): number[] {
   const result = /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(
     hex,
   );
@@ -352,8 +352,8 @@ export function hexToColor(hex): number[] {
   ];
 }
 
-export function addColorFromHex(rune, hex) {
-  throwIfNotRune('addColorFromHex', rune);
+export function addColorFromHex(rune: Rune, hex: string) {
+  throwIfNotRune(addColorFromHex.name, rune);
   return Rune.of({
     subRunes: [rune],
     colors: new Float32Array(hexToColor(hex)),

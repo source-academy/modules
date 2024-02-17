@@ -16,12 +16,19 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: '16.x'
-        
+
         - name: Install dependencies
           run: yarn install --frozen-lockfile
 
-        - name: Run tests
-          run: yarn test && yarn test:scripts
-        
-        - name: Build all
+        - name: Build bundles and tabs
           run: yarn build --tsc --lint
+
+        - name: Test bundles and tabs
+          run: yarn test --color
+
+        - name: Test and lint scripts
+          run: yarn scripts:tsc && yarn scripts:lint && yarn scripts:test --color
+
+        - name: Check and Lint Devserver
+          run: yarn devserver:tsc && yarn devserver:lint
+        

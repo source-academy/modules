@@ -331,10 +331,10 @@ const eslintConfig = {
     'key-spacing': 1,
     'keyword-spacing': 1,
     // "line-comment-position": 0,
-    'linebreak-style': [
-      1,
-      'windows', // Was "unix"
-    ],
+    // 'linebreak-style': [
+    //   1,
+    //   'windows', // Was "unix"
+    // ],
     // "lines-around-comment": 0,
     // "lines-between-class-members": 0,
     // "max-len": 0,

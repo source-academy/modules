@@ -36,8 +36,12 @@ export function scaleVector(vector : Vector3, factor : number) : Vector3 {
   return new Vector3(vector.x * factor, vector.y * factor, vector.z * factor);
 }
 
-export function addVector(vectorA : Vector3, vectorB : Vector3) : Vector3 {
+export function addVectors(vectorA : Vector3, vectorB : Vector3) : Vector3 {
   return new Vector3(vectorA.x + vectorB.x, vectorA.y + vectorB.y, vectorA.z + vectorB.z);
+}
+
+export function vectorDifference(vectorA : Vector3, vectorB : Vector3) : Vector3 {
+  return new Vector3(vectorA.x - vectorB.x, vectorA.y - vectorB.y, vectorA.z - vectorB.z);
 }
 
 export function dotProduct(vectorA : Vector3, vectorB : Vector3) : number {

@@ -1,29 +1,3 @@
-/**
- * The `sound` module provides functions for constructing and playing sounds.
- *
- * A wave is a function that takes in a number `t` and returns
- * a number representing the amplitude at time `t`.
- * The amplitude should fall within the range of [-1, 1].
- *
- * A Sound is a pair(wave, duration) where duration is the length of the Sound in seconds.
- * The constructor make_sound and accessors get_wave and get_duration are provided.
- *
- * Sound Discipline:
- * For all Sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:
- * `(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.
- *
- * Two functions which combine Sounds, `consecutively` and `simultaneously` are given.
- * Additionally, we provide Sound transformation functions `adsr` and `phase_mod`
- * which take in a Sound and return a Sound.
- *
- * Finally, the provided `play` function takes in a Sound and plays it using your
- * computer's sound system.
- *
- * @module sound
- * @author Koh Shang Hui
- * @author Samyukta Sounderraman
- */
-
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import type {
   Wave,
@@ -277,6 +251,10 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
+  if (duration < 0) {
+    throw new Error('Sound duration must be greater than or equal to 0');
+  }
+
   return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
 }
 
@@ -347,6 +325,8 @@ export function play_in_tab(sound: Sound): Sound {
     throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
@@ -417,6 +397,8 @@ export function play(sound: Sound): Sound {
     );
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
@@ -605,8 +587,11 @@ export function consecutively(list_of_sounds: List): Sound {
 }
 
 /**
- * Makes a new Sound by combining the Sounds in a given list
- * where all the Sounds are overlapped on top of each other.
+ * Makes a new Sound by combining the Sounds in a given list.
+ * In the result sound, the component sounds overlap such that
+ * they start at the beginning of the result sound. To achieve
+ * this, the amplitudes of the component sounds are added together
+ * and then divided by the length of the list.
  *
  * @param list_of_sounds given list of Sounds
  * @return the combined Sound
@@ -626,7 +611,8 @@ export function simultaneously(list_of_sounds: List): Sound {
   }
 
   const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
-  const normalised_wave = (t: number) => head(mushed_sounds)(t) / length(list_of_sounds);
+  const len = length(list_of_sounds);
+  const normalised_wave = (t: number) => head(mushed_sounds)(t) / len;
   const highest_duration = tail(mushed_sounds);
   return make_sound(normalised_wave, highest_duration);
 }
