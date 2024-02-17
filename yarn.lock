@@ -517,15 +517,6 @@
     classnames "^2.3.1"
     tslib "~2.6.2"
 
-"@blueprintjs/popover2@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/popover2/-/popover2-2.1.1.tgz#b1e2dee9fd4679f70c7337ab03327d863eec4e42"
-  integrity sha512-8bPzPQH6uROCsghXCUbiolH3pe6rOVxvsSWEnnJrztAUQa4BGBOpUje32J5EDKYZqhdiiKKa+HpDa06lShFcww==
-  dependencies:
-    "@blueprintjs/core" "^5.9.1"
-    classnames "^2.3.1"
-    tslib "~2.6.2"
-
 "@box2d/core@^0.10.0":
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@box2d/core/-/core-0.10.0.tgz#99c8893970b33f68ab22a426ca8d23166b9d7de5"

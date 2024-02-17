@@ -98,7 +98,6 @@
   "dependencies": {
     "@blueprintjs/core": "^5.9.1",
     "@blueprintjs/icons": "^5.7.1",
-    "@blueprintjs/popover2": "^2.1.1",
     "@box2d/core": "^0.10.0",
     "@box2d/debug-draw": "^0.10.0",
     "@jscad/modeling": "2.9.6",
