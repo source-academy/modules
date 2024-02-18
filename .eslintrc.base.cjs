@@ -69,7 +69,6 @@ const eslintConfig = {
     'no-setter-return': 'warn',
     'no-sparse-arrays': 'warn',
     // "no-this-before-super": 2,
-    'no-undef': [2, { typeof: true }],
     'no-unexpected-multiline': 'warn',
     'no-unreachable': 'warn',
     'no-unsafe-finally': 'warn',
@@ -124,7 +123,7 @@ const eslintConfig = {
     ],
     'no-invalid-this': 'error',
     'no-octal-escape': 'error',
-    'no-shadow': ['error', { builtinGlobals: true }],
+    'no-shadow': 'warn',
     'no-unneeded-ternary': [
       'error',
       {
@@ -231,54 +230,11 @@ const eslintConfig = {
       1,
       'after' // Was "before"
     ],
-    'implicit-arrow-linebreak': 1,
-    indent: [
-      1,
-      'tab', // Was 4
-      {
-        SwitchCase: 1 // Was 0
-        // StaticBlock: {
-        // 	body: 1
-        // },
-        // offsetTernaryExpressions: false,
-      }
-    ],
-    'jsx-quotes': 1,
-    'key-spacing': 1,
-    'keyword-spacing': 1,
-    // "line-comment-position": 0,
-    // 'linebreak-style': [
-    //   1,
-    //   'windows', // Was "unix"
-    // ],
-    // "lines-around-comment": 0,
-    // "lines-between-class-members": 0,
-    // "max-len": 0,
+    'jsx-quotes': 'error',
+    'key-spacing': 'error',
+    'keyword-spacing': 'error',
     'max-statements-per-line': 1,
-    'multiline-ternary': [
-      1,
-      'always-multiline' // Was "always"
-    ],
-    'new-parens': 1,
-    'newline-per-chained-call': [
-      1,
-      {
-        ignoreChainWithDepth: 1 // warn
-      }
-    ],
-    // "no-extra-parens": 0, // Limitation: No exception for ternary conditions
-    'no-mixed-spaces-and-tabs': 'warn',
-    'no-multi-spaces': 1,
-    'no-multiple-empty-lines': [
-      1,
-      {
-        max: 3, // Was 2
-        maxEOF: 0,
-        maxBOF: 0
-      }
-    ],
-    // "no-tabs": 0, // Limitation: allowIndentationTabs doesn't allow partial tabs from commenting a block with deeper indentation
-    'no-trailing-spaces': 1,
+    'no-trailing-spaces': 'error',
     'no-whitespace-before-property': 1,
     'nonblock-statement-body-position': 1,
     'object-curly-newline': [
@@ -293,23 +249,11 @@ const eslintConfig = {
       'always' // Was "never"
     ],
     'object-property-newline': 1,
-    'operator-linebreak': [
-      1,
-      'before' // Was "after"
-    ],
     'padded-blocks': [
       1,
       'never' // Was "always"
     ],
     // "padding-line-between-statements": 0,
-    quotes: [
-      1,
-      'double', // Same
-      {
-        avoidEscape: true
-        // allowTemplateLiterals: false
-      }
-    ],
     'rest-spread-spacing': 1,
     semi: 1,
     'semi-spacing': 1,

@@ -13,20 +13,19 @@ const eslintConfig = {
   /** @type {Partial<import('eslint/rules').ESLintRules>} */
   rules: {
     'func-style': 'off',
-    indent: [
-      'warn',
-      2,
-      {
-        SwitchCase: 1
-        // StaticBlock: {
-        // 	body: 1
-        // },
-        // offsetTernaryExpressions: false,
-      }
-    ],
-    quotes: ['warn', 'single', { avoidEscape: true }],
 
     // [typescript-eslint Extension Rules]
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        extendDefaults: true,
+        types: {
+          // TODO: Fix later
+          Function: false,
+          '{}': false
+        }
+      }
+    ],
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-use-before-define': 'warn',
     '@typescript-eslint/no-unused-vars': [
