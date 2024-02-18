@@ -81,7 +81,4 @@
  * @module wasm
  * @author Kim Yongbeom
  */
-export {
-  wcompile,
-  wrun,
-} from './wabt';
+export { wcompile, wrun } from './wabt';

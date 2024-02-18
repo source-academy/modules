@@ -173,7 +173,7 @@ export abstract class InteractableGameObject extends RenderableGameObject implem
     }
     // Use getBounds to check if two objects overlap, checking the shape of the area before checking overlap.
     // Since getBounds() returns a Rectangle, it will be unable to check the actual intersection of non-rectangular shapes.
-    // eslint-disable-next-line new-cap
+
     return Phaser.Geom.Intersects.RectangleToRectangle(
       this.phaserGameObject.getBounds(),
       other.phaserGameObject.getBounds()
