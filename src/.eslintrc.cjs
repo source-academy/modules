@@ -2,7 +2,7 @@
 
 /** @type {import('eslint').Linter.Config} */
 const eslintConfig = {
-  extends: ['../.eslintrc.base.cjs', 'airbnb-typescript'],
+  extends: ['../.eslintrc.base.cjs'],
   ignorePatterns: ['**/__tests__/**', '**/__mocks__/**', '**/*.*js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -40,13 +40,6 @@ const eslintConfig = {
       }
     ],
     '@typescript-eslint/consistent-type-imports': 'error',
-
-    // [Error → Warn]
-    /* NOTE
-      This section is for reducing the severity of rules configured by
-      airbnb-typescript from 2 to 1, if the problems they point out do not
-      have the possibility of directly leading to errors
-    */
 
     // [Other]
     '@typescript-eslint/naming-convention': [

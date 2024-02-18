@@ -4,7 +4,7 @@
 module.exports = {
   // Need react here because otherwise we get undefined rule errors
   plugins: ['import', 'react', 'simple-import-sort', '@typescript-eslint'],
-  extends: ['../../.eslintrc.base.cjs', 'airbnb-typescript'],
+  extends: ['../../.eslintrc.base.cjs'],
   ignorePatterns: [
     'templates/templates/**',
     '**/__tests__/**',
@@ -50,7 +50,7 @@ module.exports = {
   },
   overrides: [
     {
-      extends: ['../../.eslintrc.test.cjs', 'airbnb-typescript'],
+      extends: ['../../.eslintrc.test.cjs'],
       files: ['**/__tests__/**/*', '**/__mocks__/**/*', '**/jest*'],
       env: {
         jest: true
