@@ -11,7 +11,7 @@ import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '../../bundles/repl/config';
 import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
 import type { DebuggerContext } from '../../typings/type_helpers';
 // If I use import for AceEditor it will cause runtime error and crash Source Academy when spawning tab in the new module building system.
-// import AceEditor from 'react-ace';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const AceEditor = require('react-ace').default;
 
 import 'ace-builds/src-noconflict/ext-language_tools';
