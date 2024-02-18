@@ -48,7 +48,7 @@
  * The suggested time step is 1/60 (seconds).
  *
  * Visualization of the physics world can also be seen in the display tab.
-*
+ *
  * The following example simulates a free fall of a circle object.
  *
  * ```
@@ -73,41 +73,33 @@
  * @author Yu Jiali
  */
 export {
-  set_gravity,
-  make_ground,
-  add_wall,
-
-  make_vector,
-  make_force,
-
   add_box_object,
   add_circle_object,
   add_triangle_object,
-
-  set_density,
-  set_friction,
-  scale_size,
-
-  get_position,
-  set_position,
-  get_rotation,
-  set_rotation,
-  get_velocity,
-  set_velocity,
-  get_angular_velocity,
-  set_angular_velocity,
-
+  add_vector,
+  add_wall,
   apply_force,
   apply_force_to_center,
-
-  is_touching,
-  impact_start_time,
-
-  update_world,
-  simulate_world,
-
-  vector_to_array,
   array_to_vector,
-  add_vector,
+  get_angular_velocity,
+  get_position,
+  get_rotation,
+  get_velocity,
+  impact_start_time,
+  is_touching,
+  make_force,
+  make_ground,
+  make_vector,
+  scale_size,
+  set_angular_velocity,
+  set_density,
+  set_friction,
+  set_gravity,
+  set_position,
+  set_rotation,
+  set_velocity,
+  simulate_world,
   subtract_vector,
+  update_world,
+  vector_to_array
 } from './functions';

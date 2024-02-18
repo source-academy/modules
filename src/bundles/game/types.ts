@@ -2,21 +2,15 @@ import * as Phaser from 'phaser';
 
 export type ObjectConfig = { [attr: string]: any };
 
-export type RawGameElement =
-  | Phaser.GameObjects.Sprite
-  | Phaser.GameObjects.Text;
+export type RawGameElement = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;
 
-export type RawGameShape =
-  | Phaser.GameObjects.Rectangle
-  | Phaser.GameObjects.Ellipse;
+export type RawGameShape = Phaser.GameObjects.Rectangle | Phaser.GameObjects.Ellipse;
 
 export type RawGameObject = RawGameElement | RawGameShape;
 
 export type RawContainer = Phaser.GameObjects.Container;
 
-export type RawInputObject =
-  | Phaser.Input.InputPlugin
-  | Phaser.Input.Keyboard.Key;
+export type RawInputObject = Phaser.Input.InputPlugin | Phaser.Input.Keyboard.Key;
 
 export type GameObject = {
   type: string;
@@ -50,13 +44,14 @@ export const defaultGameParams: GameParams = {
   lifecycleFuncs: {
     preload() {},
     create() {},
-    update() {},
+    update() {}
   },
   renderPreview: false,
   remotePath: (path: string) => sourceAcademyAssets + (path[0] === '/' ? '' : '/') + path,
   screenSize: {
     x: 1920,
-    y: 1080,
+    y: 1080
   },
-  createAward: (x: number, y: number, key: string) => new Phaser.GameObjects.Sprite(defaultGameParams.scene!, x, y, key),
+  createAward: (x: number, y: number, key: string) =>
+    new Phaser.GameObjects.Sprite(defaultGameParams.scene!, x, y, key)
 };

@@ -1,10 +1,10 @@
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import { type Frame, LinePlot } from './painter';
+import { LinePlot, type Frame } from './painter';
 
 const drawnPainters: LinePlot[] = [];
 context.moduleContexts.painter.state = {
-  drawnPainters,
+  drawnPainters
 };
 
 let data: Data = {};
@@ -47,19 +47,23 @@ export function display_painter(painter: (frame: Frame) => void) {
     painter(frame);
     data = {
       x: x_s,
-      y: y_s,
+      y: y_s
     };
     drawnPainters.push(
-      new LinePlot(draw_new_painter, {
-        ...data,
-        mode: 'lines',
-      } as Data, {
-        xaxis: { visible: true },
-        yaxis: {
-          visible: true,
-          scaleanchor: 'x',
-        },
-      }),
+      new LinePlot(
+        draw_new_painter,
+        {
+          ...data,
+          mode: 'lines'
+        } as Data,
+        {
+          xaxis: { visible: true },
+          yaxis: {
+            visible: true,
+            scaleanchor: 'x'
+          }
+        }
+      )
     );
   };
 }

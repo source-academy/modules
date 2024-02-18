@@ -1,30 +1,30 @@
 import {
+  InputFeed,
+  type BundlePacket,
   type CanvasElement,
-  type VideoElement,
   type ErrorLogger,
-  type StartPacket,
+  type Filter,
+  type ImageElement,
   type Pixel,
   type Pixels,
-  type Filter,
   type Queue,
+  type StartPacket,
   type TabsPacket,
-  type BundlePacket,
-  InputFeed,
-  type ImageElement,
+  type VideoElement
 } from './types';
 
 import {
-  DEFAULT_WIDTH,
-  DEFAULT_HEIGHT,
   DEFAULT_FPS,
-  DEFAULT_VOLUME,
-  MAX_HEIGHT,
-  MIN_HEIGHT,
-  MAX_WIDTH,
-  MIN_WIDTH,
-  MAX_FPS,
-  MIN_FPS,
+  DEFAULT_HEIGHT,
   DEFAULT_LOOP,
+  DEFAULT_VOLUME,
+  DEFAULT_WIDTH,
+  MAX_FPS,
+  MAX_HEIGHT,
+  MAX_WIDTH,
+  MIN_FPS,
+  MIN_HEIGHT,
+  MIN_WIDTH
 } from './constants';
 
 // Global Variables
@@ -110,8 +110,7 @@ function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   }
 
   if (!ok) {
-    const warningMessage
-      = 'You have invalid values for some pixels! Reseting them to default (0)';
+    const warningMessage = 'You have invalid values for some pixels! Reseting them to default (0)';
     console.warn(warningMessage);
     errorLogger(warningMessage, false);
   }
@@ -122,12 +121,7 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
       const p = i * WIDTH * 4 + j * 4;
-      src[i][j] = [
-        pixelData[p],
-        pixelData[p + 1],
-        pixelData[p + 2],
-        pixelData[p + 3],
-      ];
+      src[i][j] = [pixelData[p], pixelData[p + 1], pixelData[p + 2], pixelData[p + 3]];
     }
   }
 }
@@ -146,7 +140,7 @@ function drawImage(source: VideoElement | ImageElement): void {
       (WIDTH - displayWidth) / 2,
       (HEIGHT - displayHeight) / 2,
       displayWidth,
-      displayHeight,
+      displayHeight
     );
   } else canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
 
@@ -164,7 +158,7 @@ function drawImage(source: VideoElement | ImageElement): void {
 
     if (!e.name) {
       errorLogger(
-        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.',
+        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.'
       );
 
       errorLogger([e], true);
@@ -265,10 +259,8 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
-      videoElement.onloadedmetadata = () => setAspectRatioDimensions(
-        videoElement.videoWidth,
-        videoElement.videoHeight,
-      );
+      videoElement.onloadedmetadata = () =>
+        setAspectRatioDimensions(videoElement.videoWidth, videoElement.videoHeight);
       toRunLateQueue = true;
     })
     .catch((error) => {
@@ -318,10 +310,7 @@ function loadAlternative(): void {
   /** Setting Up imageElement */
   imageElement.crossOrigin = 'anonymous';
   imageElement.onload = () => {
-    setAspectRatioDimensions(
-      imageElement.naturalWidth,
-      imageElement.naturalHeight,
-    );
+    setAspectRatioDimensions(imageElement.naturalWidth, imageElement.naturalHeight);
     drawImage(imageElement);
   };
 }
@@ -344,11 +333,11 @@ function updateFPS(fps: number): void {
 function updateDimensions(w: number, h: number): void {
   // ignore if no change or bad inputs
   if (
-    (w === WIDTH && h === HEIGHT)
-    || w > MAX_WIDTH
-    || w < MIN_WIDTH
-    || h > MAX_HEIGHT
-    || h < MIN_HEIGHT
+    (w === WIDTH && h === HEIGHT) ||
+    w > MAX_WIDTH ||
+    w < MIN_WIDTH ||
+    h > MAX_HEIGHT ||
+    h < MIN_HEIGHT
   ) {
     return;
   }
@@ -430,7 +419,7 @@ function init(
   video: VideoElement,
   canvas: CanvasElement,
   _errorLogger: ErrorLogger,
-  _tabsPackage: TabsPacket,
+  _tabsPackage: TabsPacket
 ): BundlePacket {
   imageElement = image;
   videoElement = video;
@@ -452,7 +441,7 @@ function init(
     WIDTH,
     FPS,
     VOLUME,
-    inputFeed,
+    inputFeed
   };
 }
 
@@ -467,10 +456,9 @@ function deinit(): void {
   if (!stream) {
     return;
   }
-  stream.getTracks()
-    .forEach((track) => {
-      track.stop();
-    });
+  stream.getTracks().forEach((track) => {
+    track.stop();
+  });
 }
 
 // =============================================================================
@@ -489,7 +477,7 @@ export function start(): StartPacket {
     stopVideo,
     updateFPS,
     updateVolume,
-    updateDimensions,
+    updateDimensions
   };
 }
 
@@ -547,13 +535,7 @@ export function alpha_of(pixel: Pixel): number {
  * @param b The blue component as a number between 0 and 255
  * @param a The alpha component as a number between 0 and 255
  */
-export function set_rgba(
-  pixel: Pixel,
-  r: number,
-  g: number,
-  b: number,
-  a: number,
-): void {
+export function set_rgba(pixel: Pixel, r: number, g: number, b: number, a: number): void {
   // assigns the r,g,b values to this pixel
   pixel[0] = r;
   pixel[1] = g;
@@ -658,10 +640,7 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
 export function pause_at(pause_time: number): void {
   // prevent negative pause_time
   lateEnqueue(() => {
-    setTimeout(
-      tabsPackage.onClickStill,
-      pause_time >= 0 ? pause_time : -pause_time,
-    );
+    setTimeout(tabsPackage.onClickStill, pause_time >= 0 ? pause_time : -pause_time);
   });
 }
 

@@ -1,6 +1,6 @@
 import context from 'js-slang/context';
 import { AnaglyphRune, HollusionRune } from './functions';
-import { type DrawnRune, AnimatedRune, type Rune, NormalRune, type RuneAnimation } from './rune';
+import { AnimatedRune, NormalRune, type DrawnRune, type Rune, type RuneAnimation } from './rune';
 import { throwIfNotRune } from './runes_ops';
 
 // =============================================================================
@@ -9,7 +9,7 @@ import { throwIfNotRune } from './runes_ops';
 
 const drawnRunes: (DrawnRune | AnimatedRune)[] = [];
 context.moduleContexts.rune.state = {
-  drawnRunes,
+  drawnRunes
 };
 
 /**
@@ -76,11 +76,7 @@ export function hollusion(rune: Rune): Rune {
  *
  * @category Main
  */
-export function animate_rune(
-  duration: number,
-  fps: number,
-  func: RuneAnimation,
-) {
+export function animate_rune(duration: number, fps: number, func: RuneAnimation) {
   const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);
     throwIfNotRune(animate_rune.name, rune);
@@ -99,11 +95,7 @@ export function animate_rune(
  *
  * @category Main
  */
-export function animate_anaglyph(
-  duration: number,
-  fps: number,
-  func: RuneAnimation,
-) {
+export function animate_anaglyph(duration: number, fps: number, func: RuneAnimation) {
   const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);
     throwIfNotRune(animate_anaglyph.name, rune);

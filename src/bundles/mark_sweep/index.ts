@@ -1,4 +1,4 @@
-import { type MemoryHeaps, type Memory, type Tag, COMMAND, type CommandHeapObject } from './types';
+import { COMMAND, type CommandHeapObject, type Memory, type MemoryHeaps, type Tag } from './types';
 
 // Global Variables
 let ROW: number = 10;
@@ -40,7 +40,7 @@ function generateMemory(): void {
     desc: 'Memory initially empty.',
     leftDesc: '',
     rightDesc: '',
-    queue: [],
+    queue: []
   };
 
   commandHeap.push(obj);
@@ -52,12 +52,7 @@ function updateRoots(array): void {
   }
 }
 
-function initialize_memory(
-  memorySize: number,
-  nodeSize,
-  marked,
-  unmarked,
-): void {
+function initialize_memory(memorySize: number, nodeSize, marked, unmarked): void {
   MEMORY_SIZE = memorySize;
   NODE_SIZE = nodeSize;
   const excess = MEMORY_SIZE % NODE_SIZE;
@@ -91,7 +86,7 @@ function newCommand(
   description,
   firstDesc,
   lastDesc,
-  queue = [],
+  queue = []
 ): void {
   const newType = type;
   const newLeft = left;
@@ -121,7 +116,7 @@ function newCommand(
     desc: newDesc,
     leftDesc: newFirstDesc,
     rightDesc: newLastDesc,
-    queue: newQueue,
+    queue: newQueue
   };
 
   commandHeap.push(obj);
@@ -130,34 +125,13 @@ function newCommand(
 function newSweep(left, heap): void {
   const newSizeLeft = NODE_SIZE;
   const desc = `Freeing node ${left}`;
-  newCommand(
-    COMMAND.SWEEP,
-    left,
-    -1,
-    newSizeLeft,
-    0,
-    heap,
-    desc,
-    'freed node',
-    '',
-  );
+  newCommand(COMMAND.SWEEP, left, -1, newSizeLeft, 0, heap, desc, 'freed node', '');
 }
 
 function newMark(left, heap, queue): void {
   const newSizeLeft = NODE_SIZE;
   const desc = `Marking node ${left} to be live memory`;
-  newCommand(
-    COMMAND.MARK,
-    left,
-    -1,
-    newSizeLeft,
-    0,
-    heap,
-    desc,
-    'marked node',
-    '',
-    queue,
-  );
+  newCommand(COMMAND.MARK, left, -1, newSizeLeft, 0, heap, desc, 'marked node', '', queue);
 }
 
 function addRoots(arr): void {
@@ -180,17 +154,7 @@ function showRoots(heap): void {
 
 function newUpdateSweep(right, heap): void {
   const desc = `Set node ${right} to freelist`;
-  newCommand(
-    COMMAND.RESET,
-    -1,
-    right,
-    0,
-    NODE_SIZE,
-    heap,
-    desc,
-    'free node',
-    '',
-  );
+  newCommand(COMMAND.RESET, -1, right, 0, NODE_SIZE, heap, desc, 'free node', '');
 }
 
 function newPush(left, right, heap): void {
@@ -204,7 +168,7 @@ function newPush(left, right, heap): void {
     heap,
     desc,
     'last child address slot',
-    'new child pushed',
+    'new child pushed'
   );
 }
 
@@ -220,7 +184,7 @@ function newPop(res, left, right, heap): void {
     heap,
     desc,
     'popped memory',
-    'last child address slot',
+    'last child address slot'
   );
 }
 
@@ -233,17 +197,7 @@ function newAssign(res, left, heap): void {
 function newNew(left, heap): void {
   const newSizeLeft = NODE_SIZE;
   const desc = `New node starts in [${left}].`;
-  newCommand(
-    COMMAND.NEW,
-    left,
-    -1,
-    newSizeLeft,
-    0,
-    heap,
-    desc,
-    'new memory allocated',
-    '',
-  );
+  newCommand(COMMAND.NEW, left, -1, newSizeLeft, 0, heap, desc, 'new memory allocated', '');
 }
 
 function newGC(heap): void {
@@ -258,12 +212,7 @@ function endGC(heap): void {
   updateFlip();
 }
 
-function updateSlotSegment(
-  tag: number,
-  size: number,
-  first: number,
-  last: number,
-): void {
+function updateSlotSegment(tag: number, size: number, first: number, last: number): void {
   if (tag >= 0) {
     TAG_SLOT = tag;
   }
@@ -345,30 +294,30 @@ function init() {
     get_command,
     get_unmarked,
     get_marked,
-    get_roots,
+    get_roots
   };
 }
 
 export {
+  addRoots,
+  allHeap,
+  endGC,
+  generateMemory,
   init,
   // initialisation
   initialize_memory,
   initialize_tag,
-  generateMemory,
-  allHeap,
-  updateSlotSegment,
-  newCommand,
-  newMark,
-  newPush,
-  newPop,
   newAssign,
-  newNew,
+  newCommand,
   newGC,
+  newMark,
+  newNew,
+  newPop,
+  newPush,
   newSweep,
-  updateRoots,
   newUpdateSweep,
-  showRoots,
-  endGC,
-  addRoots,
   showRoot,
+  showRoots,
+  updateRoots,
+  updateSlotSegment
 };

@@ -47,9 +47,9 @@ const ev3DeviceType = {
     'ev3_ledRightGreen',
     'ev3_ledRightRed',
     'ev3_ledGetBrightness',
-    'ev3_ledSetBrightness',
+    'ev3_ledSetBrightness'
   ],
-  languageChapter: Chapter.SOURCE_3,
+  languageChapter: Chapter.SOURCE_3
 };
 
 export default ev3DeviceType;

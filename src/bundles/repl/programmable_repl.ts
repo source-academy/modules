@@ -27,7 +27,7 @@ export class ProgrammableRepl {
   public customizedEditorProps = {
     backgroundImageUrl: 'no-background-image',
     backgroundColorAlpha: 1,
-    fontSize: 17,
+    fontSize: 17
   };
 
   constructor() {
@@ -87,7 +87,7 @@ export class ProgrammableRepl {
     const tmp = {
       content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
-      outputMethod,
+      outputMethod
     };
     this.outputStrings.push(tmp);
   }
@@ -101,7 +101,7 @@ export class ProgrammableRepl {
     });
 
     this._editorInstance.setOptions({
-      fontSize: `${this.customizedEditorProps.fontSize.toString()}pt`,
+      fontSize: `${this.customizedEditorProps.fontSize.toString()}pt`
     });
   }
 
@@ -153,7 +153,7 @@ export class ProgrammableRepl {
           medium: 'font-size: 20px;',
           large: 'font-size: 25px;',
           gigantic: 'font-size: 50px;',
-          underline: 'text-decoration: underline;',
+          underline: 'text-decoration: underline;'
         };
         if (typeof tail(param) !== 'string') {
           throw new Error(
@@ -200,7 +200,7 @@ export class ProgrammableRepl {
       'document',
       'window',
       'console',
-      'location',
+      'location'
     ];
     for (const word of forbiddenWords) {
       if (tmp.indexOf(word) !== -1) {
@@ -222,12 +222,12 @@ export class ProgrammableRepl {
       scheduler: 'preemptive',
       stepLimit: 1000,
       throwInfiniteLoops: true,
-      useSubst: false,
+      useSubst: false
     };
     context.prelude = 'const display=(x)=>repl_display(x);';
     context.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
     const sourceFile: Record<string, string> = {
-      '/ReplModuleUserCode.js': code,
+      '/ReplModuleUserCode.js': code
     };
 
     runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options).then((evalResult) => {

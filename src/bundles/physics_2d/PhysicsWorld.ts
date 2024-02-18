@@ -1,18 +1,18 @@
-/* eslint-disable new-cap */
+
 // We have to disable linting rules since Box2D functions do not
 // follow the same guidelines as the rest of the codebase.
 
 import {
-  type b2Body,
-  type b2Fixture,
-  type b2BodyDef,
   b2BodyType,
+  b2ContactListener,
   b2PolygonShape,
-  type b2StepConfig,
   b2Vec2,
   b2World,
-  b2ContactListener,
+  type b2Body,
+  type b2BodyDef,
   type b2Contact,
+  type b2Fixture,
+  type b2StepConfig
 } from '@box2d/core';
 import { type PhysicsObject } from './PhysicsObject';
 import { Timer } from './types';
@@ -28,7 +28,7 @@ export class PhysicsWorld {
 
   private iterationsConfig: b2StepConfig = {
     velocityIterations: 8,
-    positionIterations: 3,
+    positionIterations: 3
   };
 
   constructor() {
@@ -74,18 +74,14 @@ export class PhysicsWorld {
   public makeGround(height: number, friction: number) {
     const groundBody: b2Body = this.createBody({
       type: b2BodyType.b2_staticBody,
-      position: new b2Vec2(0, height - 10),
+      position: new b2Vec2(0, height - 10)
     });
-    const groundShape: b2PolygonShape = new b2PolygonShape()
-      .SetAsBox(
-        10000,
-        10,
-      );
+    const groundShape: b2PolygonShape = new b2PolygonShape().SetAsBox(10000, 10);
 
     groundBody.CreateFixture({
       shape: groundShape,
       density: 1,
-      friction,
+      friction
     });
   }
 

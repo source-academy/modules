@@ -1,6 +1,6 @@
+import type { Pair } from 'js-slang/dist/stdlib/list';
 import { type Data, type Layout } from 'plotly.js-dist';
 import { type ReplResult } from '../../typings/type_helpers';
-import type { Pair } from 'js-slang/dist/stdlib/list';
 
 /**
  * Represents plots with a draw method attached
@@ -58,7 +58,7 @@ export class Point implements ReplResult {
     public readonly x: number,
     public readonly y: number,
     public readonly z: number,
-    public readonly color: Color,
+    public readonly color: Color
   ) {}
 
   public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
