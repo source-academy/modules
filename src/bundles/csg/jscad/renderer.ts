@@ -41,10 +41,10 @@ import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } fro
 
 
 /* [Main] */
-let { orbit } = controls;
+const { orbit } = controls;
 
 function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
-  let options: EntitiesFromSolidsOptions = {
+  const options: EntitiesFromSolidsOptions = {
     color: hexToAlphaColor(DEFAULT_COLOR),
   };
   return (entitiesFromSolids(
@@ -54,8 +54,8 @@ function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
 }
 
 function neatGridDistance(rawDistance: number) {
-  let paddedDistance: number = rawDistance + GRID_PADDING;
-  let roundedDistance: number
+  const paddedDistance: number = rawDistance + GRID_PADDING;
+  const roundedDistance: number
     = Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
   return roundedDistance;
 }
@@ -102,28 +102,28 @@ function makeExtraEntities(
   renderGroup: RenderGroup,
   solids: Solid[],
 ): Entity[] {
-  let { hasGrid, hasAxis } = renderGroup;
+  const { hasGrid, hasAxis } = renderGroup;
   // Run calculations for grid and/or axis only if needed
   if (!(hasAxis || hasGrid)) return [];
 
-  let boundingBoxes: BoundingBox[] = solids.map(
+  const boundingBoxes: BoundingBox[] = solids.map(
     (solid: Solid): BoundingBox => measureBoundingBox(solid),
   );
-  let minMaxXys: number[][] = boundingBoxes.map(
+  const minMaxXys: number[][] = boundingBoxes.map(
     (boundingBox: BoundingBox): number[] => {
-      let minX = boundingBox[0][0];
-      let minY = boundingBox[0][1];
-      let maxX = boundingBox[1][0];
-      let maxY = boundingBox[1][1];
+      const minX = boundingBox[0][0];
+      const minY = boundingBox[0][1];
+      const maxX = boundingBox[1][0];
+      const maxY = boundingBox[1][1];
       return [minX, minY, maxX, maxY];
     },
   );
-  let xys: number[] = minMaxXys.flat(1);
-  let distancesFromOrigin: number[] = xys.map(Math.abs);
-  let furthestDistance: number = Math.max(...distancesFromOrigin);
-  let neatDistance: number = neatGridDistance(furthestDistance);
+  const xys: number[] = minMaxXys.flat(1);
+  const distancesFromOrigin: number[] = xys.map(Math.abs);
+  const furthestDistance: number = Math.max(...distancesFromOrigin);
+  const neatDistance: number = neatGridDistance(furthestDistance);
 
-  let extraEntities: Entity[] = [];
+  const extraEntities: Entity[] = [];
   if (hasGrid) extraEntities.push(new MultiGridEntity(neatDistance * 2));
   if (hasAxis) extraEntities.push(new AxisEntity(neatDistance));
   return extraEntities;
@@ -134,12 +134,12 @@ export function makeWrappedRendererData(
   renderGroup: RenderGroup,
   cameraState: PerspectiveCameraState,
 ): WrappedRendererData {
-  let solids: Solid[] = renderGroup.shapes.map(
+  const solids: Solid[] = renderGroup.shapes.map(
     (shape: Shape): Solid => shape.solid,
   );
-  let geometryEntities: GeometryEntity[] = solidsToGeometryEntities(solids);
-  let extraEntities: Entity[] = makeExtraEntities(renderGroup, solids);
-  let allEntities: Entity[] = [...geometryEntities, ...extraEntities];
+  const geometryEntities: GeometryEntity[] = solidsToGeometryEntities(solids);
+  const extraEntities: Entity[] = makeExtraEntities(renderGroup, solids);
+  const allEntities: Entity[] = [...geometryEntities, ...extraEntities];
 
   return {
     entities: allEntities,
@@ -188,7 +188,7 @@ export function updateStates(
   cameraState: PerspectiveCameraState,
   controlsState: ControlsState,
 ) {
-  let states: UpdatedStates = (orbit.update({
+  const states: UpdatedStates = (orbit.update({
     camera: cameraState,
     controls: controlsState,
   }) as unknown) as UpdatedStates;
@@ -206,7 +206,7 @@ export function zoomToFit(
   controlsState: ControlsState,
   geometryEntities: GeometryEntity[],
 ) {
-  let states: ZoomToFitStates = (orbit.zoomToFit({
+  const states: ZoomToFitStates = (orbit.zoomToFit({
     camera: cameraState,
     controls: controlsState,
     entities: geometryEntities as any,
@@ -223,7 +223,7 @@ export function rotate(
   rotateX: number,
   rotateY: number,
 ) {
-  let states: RotateStates = (orbit.rotate(
+  const states: RotateStates = (orbit.rotate(
     {
       camera: cameraState,
       controls: controlsState,
@@ -242,7 +242,7 @@ export function pan(
   panX: number,
   panY: number,
 ) {
-  let states: PanStates = (orbit.pan(
+  const states: PanStates = (orbit.pan(
     {
       camera: cameraState,
       controls: controlsState,

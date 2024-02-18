@@ -8,14 +8,19 @@
  */
 export class AudioClip {
   private static audioClipCount: number = 0;
+
   // Stores AudioClip index with the URL as a unique key.
   private static audioClipsIndexMap: Map<string, number> = new Map<string, number>();
+
   // Stores all the created AudioClips
   private static audioClipsArray: Array<AudioClip> = [];
+
   public readonly id: number;
 
   private isUpdated: boolean = false;
+
   private shouldPlay: boolean = false;
+
   private shouldLoop: boolean = false;
 
   private constructor(
@@ -40,24 +45,30 @@ export class AudioClip {
     }
     return new AudioClip(url, volumeLevel);
   }
+
   public getUrl() {
     return this.url;
   }
+
   public getVolumeLevel() {
     return this.volumeLevel;
   }
+
   public shouldAudioClipLoop() {
     return this.shouldLoop;
   }
+
   public shouldAudioClipPlay() {
     return this.shouldPlay;
   }
+
   public setShouldAudioClipLoop(loop: boolean) {
     if (this.shouldLoop !== loop) {
       this.shouldLoop = loop;
       this.isUpdated = false;
     }
   }
+
   /**
    * Updates the play/pause state.
    * @param play When true, the Audio Clip has a playing state.
@@ -66,6 +77,7 @@ export class AudioClip {
     this.shouldPlay = play;
     this.isUpdated = false;
   }
+
   /**
    * Checks if the Audio Clip needs to update. Updates the flag if true.
    */
@@ -74,9 +86,11 @@ export class AudioClip {
     this.setAudioClipUpdated();
     return prevValue;
   }
+
   public setAudioClipUpdated() {
     this.isUpdated = true;
   }
+
   public static getAudioClipsArray() {
     return AudioClip.audioClipsArray;
   }

@@ -5,7 +5,7 @@ import { type cameras, type drawCommands, controls } from '@jscad/regl-renderer'
 import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 
 /* [Main] */
-let { orbit } = controls;
+const { orbit } = controls;
 
 /* [Exports] */
 export type Color = RGB;

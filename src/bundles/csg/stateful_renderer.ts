@@ -17,6 +17,7 @@ import type { RenderGroup } from './utilities.js';
 /* [Exports] */
 export default class StatefulRenderer {
   private isStarted: boolean = false;
+
   private currentRequestId: number | null = null;
 
   private cameraState: PerspectiveCameraState = cloneCameraState();
@@ -100,12 +101,12 @@ export default class StatefulRenderer {
 
     // Creating the WrappedRenderer already involves REGL. Losing WebGL context
     // requires repeating this step (ie, with each start())
-    let wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
+    const wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
 
     if (firstStart) this.addWebGlListeners();
     this.inputTracker.addListeners();
 
-    let frameCallback: FrameRequestCallback = (
+    const frameCallback: FrameRequestCallback = (
       _timestamp: DOMHighResTimeStamp,
     ) => {
       this.inputTracker.respondToInput();

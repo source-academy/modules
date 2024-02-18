@@ -14,7 +14,7 @@
  * @author Gokul Rajiv
  */
 
-/* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
+/* eslint-disable consistent-return */
 import {
   type GameObject,
   type ObjectConfig,

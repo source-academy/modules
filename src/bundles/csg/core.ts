@@ -12,13 +12,13 @@ export class Core {
   }
 
   public static getRenderGroupManager(): RenderGroupManager {
-    let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
+    const moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
 
     return moduleState.renderGroupManager;
   }
 
   public static nextComponent(): number {
-    let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
+    const moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
 
     return moduleState.nextComponent();
   }

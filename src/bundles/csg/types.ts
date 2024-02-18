@@ -10,10 +10,10 @@ import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/command
 import type { InitializationOptions } from 'regl';
 
 /* [Main] */
-let orthographicCamera = cameras.orthographic;
-let perspectiveCamera = cameras.perspective;
+const orthographicCamera = cameras.orthographic;
+const perspectiveCamera = cameras.perspective;
 
-let controls = _controls.orbit;
+const controls = _controls.orbit;
 
 /* [Exports] */
 

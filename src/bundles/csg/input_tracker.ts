@@ -41,11 +41,15 @@ export default class InputTracker {
   private heldPointer: MousePointer = MousePointer.NONE;
 
   private lastX: number | null = null;
+
   private lastY: number | null = null;
 
   private rotateX: number = 0;
+
   private rotateY: number = 0;
+
   private panX: number = 0;
+
   private panY: number = 0;
 
   private listenerTracker: ListenerTracker;
@@ -102,13 +106,13 @@ export default class InputTracker {
   }
 
   private tryDynamicResize() {
-    let { width: oldWidth, height: oldHeight } = this.canvas;
+    const { width: oldWidth, height: oldHeight } = this.canvas;
 
     // Account for display scaling
-    let canvasBounds: DOMRect = this.canvas.getBoundingClientRect();
-    let { devicePixelRatio } = window;
-    let newWidth: number = Math.floor(canvasBounds.width * devicePixelRatio);
-    let newHeight: number = Math.floor(canvasBounds.height * devicePixelRatio);
+    const canvasBounds: DOMRect = this.canvas.getBoundingClientRect();
+    const { devicePixelRatio } = window;
+    const newWidth: number = Math.floor(canvasBounds.width * devicePixelRatio);
+    const newHeight: number = Math.floor(canvasBounds.height * devicePixelRatio);
 
     if (oldWidth === newWidth && oldHeight === newHeight) return;
     this.frameDirty = true;
@@ -132,12 +136,12 @@ export default class InputTracker {
     if (this.zoomTicks === 0) return;
 
     while (this.zoomTicks !== 0) {
-      let currentTick: number = Math.sign(this.zoomTicks);
+      const currentTick: number = Math.sign(this.zoomTicks);
       this.zoomTicks -= currentTick;
 
-      let scaledChange: number = currentTick * ZOOM_TICK_SCALE;
-      let potentialNewScale: number = this.controlsState.scale + scaledChange;
-      let potentialNewDistance: number
+      const scaledChange: number = currentTick * ZOOM_TICK_SCALE;
+      const potentialNewScale: number = this.controlsState.scale + scaledChange;
+      const potentialNewDistance: number
         = vec3.distance(this.cameraState.position, this.cameraState.target)
         * potentialNewScale;
 
@@ -222,13 +226,13 @@ export default class InputTracker {
       (pointerEvent: PointerEvent) => {
         if (this.shouldIgnorePointerMove()) return;
 
-        let currentX = pointerEvent.pageX;
-        let currentY = pointerEvent.pageY;
+        const currentX = pointerEvent.pageX;
+        const currentY = pointerEvent.pageY;
 
         if (this.lastX !== null && this.lastY !== null) {
           // If tracked before, use differences to react to input
-          let differenceX = this.lastX - currentX;
-          let differenceY = this.lastY - currentY;
+          const differenceX = this.lastX - currentX;
+          const differenceY = this.lastY - currentY;
 
           if (this.isPointerPan(pointerEvent.shiftKey)) {
             // Drag right (X increases)

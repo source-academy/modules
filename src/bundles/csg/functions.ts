@@ -48,9 +48,9 @@ import { degreesToRadians } from '../../common/utilities.js';
   the underlying code is free to operate with arrays.
 */
 export function listToArray(l: List): Operable[] {
-  let operables: Operable[] = [];
+  const operables: Operable[] = [];
   while (l !== null) {
-    let operable: Operable = head(l);
+    const operable: Operable = head(l);
     operables.push(operable);
     l = tail(l);
   }
@@ -192,8 +192,8 @@ export const white: string = '#FFFFFF';
  * @category Primitives
  */
 export function cube(hex: string): Shape {
-  let solid: Solid = primitives.cube({ size: 1 });
-  let shape: Shape = new Shape(
+  const solid: Solid = primitives.cube({ size: 1 });
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -213,8 +213,8 @@ export function cube(hex: string): Shape {
  * @category Primitives
  */
 export function rounded_cube(hex: string): Shape {
-  let solid: Solid = primitives.roundedCuboid({ size: [1, 1, 1] });
-  let shape: Shape = new Shape(
+  const solid: Solid = primitives.roundedCuboid({ size: [1, 1, 1] });
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -235,11 +235,11 @@ export function rounded_cube(hex: string): Shape {
  * @category Primitives
  */
 export function cylinder(hex: string): Shape {
-  let solid: Solid = primitives.cylinder({
+  const solid: Solid = primitives.cylinder({
     height: 1,
     radius: 0.5,
   });
-  let shape: Shape = new Shape(
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -260,11 +260,11 @@ export function cylinder(hex: string): Shape {
  * @category Primitives
  */
 export function rounded_cylinder(hex: string): Shape {
-  let solid: Solid = primitives.roundedCylinder({
+  const solid: Solid = primitives.roundedCylinder({
     height: 1,
     radius: 0.5,
   });
-  let shape: Shape = new Shape(
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -284,8 +284,8 @@ export function rounded_cylinder(hex: string): Shape {
  * @category Primitives
  */
 export function sphere(hex: string): Shape {
-  let solid: Solid = primitives.sphere({ radius: 0.5 });
-  let shape: Shape = new Shape(
+  const solid: Solid = primitives.sphere({ radius: 0.5 });
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -305,8 +305,8 @@ export function sphere(hex: string): Shape {
  * @category Primitives
  */
 export function geodesic_sphere(hex: string): Shape {
-  let solid: Solid = primitives.geodesicSphere({ radius: 0.5 });
-  let shape: Shape = new Shape(
+  const solid: Solid = primitives.geodesicSphere({ radius: 0.5 });
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -327,9 +327,9 @@ export function geodesic_sphere(hex: string): Shape {
  * @category Primitives
  */
 export function pyramid(hex: string): Shape {
-  let pythagorasSide: number = Math.sqrt(2); // sqrt(1^2 + 1^2)
-  let radius = pythagorasSide / 2;
-  let solid: Solid = primitives.cylinderElliptic({
+  const pythagorasSide: number = Math.sqrt(2); // sqrt(1^2 + 1^2)
+  const radius = pythagorasSide / 2;
+  const solid: Solid = primitives.cylinderElliptic({
     height: 1,
     // Base starting radius
     startRadius: [radius, radius],
@@ -359,12 +359,12 @@ export function pyramid(hex: string): Shape {
  * @category Primitives
  */
 export function cone(hex: string): Shape {
-  let solid: Solid = primitives.cylinderElliptic({
+  const solid: Solid = primitives.cylinderElliptic({
     height: 1,
     startRadius: [0.5, 0.5],
     endRadius: [0, 0],
   });
-  let shape: Shape = new Shape(
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -385,7 +385,7 @@ export function cone(hex: string): Shape {
  * @category Primitives
  */
 export function prism(hex: string): Shape {
-  let solid: Solid = extrudeLinear(
+  const solid: Solid = extrudeLinear(
     { height: 1 },
     primitives.triangle(),
   );
@@ -410,11 +410,11 @@ export function prism(hex: string): Shape {
  * @category Primitives
  */
 export function star(hex: string): Shape {
-  let solid: Solid = extrudeLinear(
+  const solid: Solid = extrudeLinear(
     { height: 1 },
     primitives.star({ outerRadius: 0.5 }),
   );
-  let shape: Shape = new Shape(
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -435,11 +435,11 @@ export function star(hex: string): Shape {
  * @category Primitives
  */
 export function torus(hex: string): Shape {
-  let solid: Solid = primitives.torus({
+  const solid: Solid = primitives.torus({
     innerRadius: 0.15,
     outerRadius: 0.35,
   });
-  let shape: Shape = new Shape(
+  const shape: Shape = new Shape(
     colorSolid(
       hexToColor(hex),
       solid,
@@ -464,7 +464,7 @@ export function union(first: Shape, second: Shape): Shape {
     throw new Error('Failed to union, only Shapes can be operated on');
   }
 
-  let solid: Solid = _union(first.solid, second.solid);
+  const solid: Solid = _union(first.solid, second.solid);
   return new Shape(solid);
 }
 
@@ -483,7 +483,7 @@ export function subtract(target: Shape, subtractedShape: Shape): Shape {
     throw new Error('Failed to subtract, only Shapes can be operated on');
   }
 
-  let solid: Solid = _subtract(target.solid, subtractedShape.solid);
+  const solid: Solid = _subtract(target.solid, subtractedShape.solid);
   return new Shape(solid);
 }
 
@@ -501,7 +501,7 @@ export function intersect(first: Shape, second: Shape): Shape {
     throw new Error('Failed to intersect, only Shapes can be operated on');
   }
 
-  let solid: Solid = _intersect(first.solid, second.solid);
+  const solid: Solid = _intersect(first.solid, second.solid);
   return new Shape(solid);
 }
 
@@ -674,7 +674,7 @@ export function is_group(parameter: unknown): boolean {
 export function bounding_box(
   shape: Shape,
 ): (axis: string, minMax: string) => number {
-  let bounds: BoundingBox = measureBoundingBox(shape.solid);
+  const bounds: BoundingBox = measureBoundingBox(shape.solid);
 
   return (axis: string, minMax: string): number => {
     let j: number;

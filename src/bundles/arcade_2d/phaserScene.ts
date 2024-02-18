@@ -53,15 +53,25 @@ export class PhaserScene extends Phaser.Scene {
   constructor() {
     super('PhaserScene');
   }
+
   private sourceGameObjects: Array<InteractableGameObject> = GameObject.getGameObjectsArray();
+
   private phaserGameObjects: Array<PhaserGameObject> = [];
+
   private corsAssetsUrl: Set<string> = new Set();
+
   private sourceAudioClips: Array<AudioClip> = AudioClip.getAudioClipsArray();
+
   private phaserAudioClips: Array<Phaser.Sound.BaseSound> = [];
+
   private shouldRerenderGameObjects: boolean = true;
+
   private delayedKeyUpEvents: Set<Function> = new Set<Function>();
+
   private hasRuntimeError: boolean = false;
+
   private debugLogInitialErrorCount: number = 0;
+
   // Handle debug information
   private debugLogText: Phaser.GameObjects.Text | undefined = undefined;
 
