@@ -1,11 +1,7 @@
 /* [Imports] */
 import type { RGB, RGBA } from '@jscad/modeling/src/colors';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
-import {
-  cameras,
-  controls as _controls,
-  type drawCommands,
-} from '@jscad/regl-renderer';
+import { controls as _controls, cameras, type drawCommands } from '@jscad/regl-renderer';
 import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 import type { InitializationOptions } from 'regl';
 
@@ -34,7 +30,7 @@ export type OrthographicCamera = typeof orthographicCamera;
 
 export type PerspectiveCameraState = Omit<
   typeof perspectiveCamera.cameraState,
-'target' | 'position' | 'view'
+  'target' | 'position' | 'view'
 > & {
   target: CoordinatesXYZ;
 
@@ -45,10 +41,7 @@ export type OrthographicCameraState = typeof orthographicCamera.cameraState;
 export type CameraState = PerspectiveCameraState | OrthographicCameraState;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
-export type Controls = Omit<
-  typeof controls,
-'update' | 'zoomToFit' | 'rotate' | 'pan'
-> & {
+export type Controls = Omit<typeof controls, 'update' | 'zoomToFit' | 'rotate' | 'pan'> & {
   update: ControlsUpdate.Function;
   zoomToFit: ControlsZoomToFit.Function;
   rotate: ControlsRotate;
@@ -124,14 +117,14 @@ export type ControlsPan = (
 
 export type ControlsState = Omit<
   typeof controls.controlsState,
-'scale' | 'thetaDelta' | 'phiDelta'
+  'scale' | 'thetaDelta' | 'phiDelta'
 > &
   typeof controls.controlsProps & {
-  scale: number;
+    scale: number;
 
-  thetaDelta: number;
-  phiDelta: number;
-};
+    thetaDelta: number;
+    phiDelta: number;
+  };
 
 export type Solid = Geom3;
 
@@ -326,18 +319,13 @@ export namespace WrappedRenderer {
   // drawExps appears abandoned.
   // Only once passed Regl & an Entity do they return an actual DrawCommand
   export type PrepareDrawCommands = Record<string, PrepareDrawCommandFunction>;
-  export type PrepareDrawCommandFunction =
-    | typeof drawCommands
-    | typeof makeDrawMultiGrid;
+  export type PrepareDrawCommandFunction = typeof drawCommands | typeof makeDrawMultiGrid;
 }
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 // Converts Solids into Geometries and then into Entities
 export namespace EntitiesFromSolids {
-  export type Function = (
-    options?: Options,
-    ...solids: Solid[]
-  ) => GeometryEntity[];
+  export type Function = (options?: Options, ...solids: Solid[]) => GeometryEntity[];
 
   export type Options = {
     // Default colour for entity rendering if the solid does not have one

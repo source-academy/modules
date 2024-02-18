@@ -4,25 +4,18 @@ export default class ListenerTracker {
 
   constructor(private element: Element) {}
 
-  addListener(
-    eventType: string,
-    listener: Function,
-    options?: AddEventListenerOptions,
-  ) {
+  addListener(eventType: string, listener: Function, options?: AddEventListenerOptions) {
     this.listeners.push([eventType, listener]);
     this.element.addEventListener(
       eventType,
       listener as EventListenerOrEventListenerObject,
-      options,
+      options
     );
   }
 
   removeListeners() {
     this.listeners.forEach(([eventType, listener]) => {
-      this.element.removeEventListener(
-        eventType,
-        listener as EventListenerOrEventListenerObject,
-      );
+      this.element.removeEventListener(eventType, listener as EventListenerOrEventListenerObject);
     });
   }
 }

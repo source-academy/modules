@@ -5,21 +5,21 @@
 
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import {
-  type Curve,
-  CurvePlot,
-  type CurvePlotFunction,
-  DrawnPlot,
-  type ListOfPairs,
-} from './plotly';
-import { generatePlot } from './curve_functions';
-import { get_duration, get_wave, is_sound } from './sound_functions';
 import { type Sound } from '../sound/types';
+import { generatePlot } from './curve_functions';
+import {
+  CurvePlot,
+  DrawnPlot,
+  type Curve,
+  type CurvePlotFunction,
+  type ListOfPairs
+} from './plotly';
+import { get_duration, get_wave, is_sound } from './sound_functions';
 
 const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 
 context.moduleContexts.plotly.state = {
-  drawnPlots,
+  drawnPlots
 };
 
 /**
@@ -286,18 +286,11 @@ function createPlotFunction(
   type: string,
   config: Data,
   layout: Partial<Layout>,
-  is_colored: boolean = false,
+  is_colored: boolean = false
 ): (numPoints: number) => CurvePlotFunction {
   return (numPoints: number) => {
     const func = (curveFunction: Curve) => {
-      const plotDrawn = generatePlot(
-        type,
-        numPoints,
-        config,
-        layout,
-        is_colored,
-        curveFunction,
-      );
+      const plotDrawn = generatePlot(type, numPoints, config, layout, is_colored, curveFunction);
 
       drawnPlots.push(plotDrawn);
       return plotDrawn;
@@ -322,16 +315,16 @@ function createPlotFunction(
 export const draw_connected_2d = createPlotFunction(
   'scattergl',
   {
-    mode: 'lines',
+    mode: 'lines'
   },
   {
     xaxis: { visible: false },
     yaxis: {
       visible: false,
-      scaleanchor: 'x',
-    },
+      scaleanchor: 'x'
+    }
   },
-  true,
+  true
 );
 
 /**
@@ -346,12 +339,7 @@ export const draw_connected_2d = createPlotFunction(
  * draw_connected_3d(100)(t => make_point(t, t));
  * ```
  */
-export const draw_connected_3d = createPlotFunction(
-  'scatter3d',
-  { mode: 'lines' },
-  {},
-  true,
-);
+export const draw_connected_3d = createPlotFunction('scatter3d', { mode: 'lines' }, {}, true);
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -372,10 +360,10 @@ export const draw_points_2d = createPlotFunction(
     xaxis: { visible: false },
     yaxis: {
       visible: false,
-      scaleanchor: 'x',
-    },
+      scaleanchor: 'x'
+    }
   },
-  true,
+  true
 );
 
 /**
@@ -390,11 +378,7 @@ export const draw_points_2d = createPlotFunction(
  * ```
  * draw_points_3d(100)(t => make_point(t, t));
  */
-export const draw_points_3d = createPlotFunction(
-  'scatter3d',
-  { mode: 'markers' },
-  {},
-);
+export const draw_points_3d = createPlotFunction('scatter3d', { mode: 'markers' }, {});
 
 /**
  * Visualizes the sound on a 2d line graph
@@ -403,9 +387,7 @@ export const draw_points_3d = createPlotFunction(
 export const draw_sound_2d = (sound: Sound) => {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
-    throw new Error(
-      `draw_sound_2d is expecting sound, but encountered ${sound}`,
-    );
+    throw new Error(`draw_sound_2d is expecting sound, but encountered ${sound}`);
     // If a sound is already displayed, terminate execution.
   } else if (get_duration(sound) < 0) {
     throw new Error('draw_sound_2d: duration of sound is negative');
@@ -433,7 +415,7 @@ export const draw_sound_2d = (sound: Sound) => {
 
     const plotlyData: Data = {
       x: x_s,
-      y: y_s,
+      y: y_s
     };
     const plot = new CurvePlot(
       draw_new_curve,
@@ -441,7 +423,7 @@ export const draw_sound_2d = (sound: Sound) => {
         ...plotlyData,
         type: 'scattergl',
         mode: 'lines',
-        line: { width: 0.5 },
+        line: { width: 0.5 }
       } as Data,
       {
         xaxis: {
@@ -449,15 +431,15 @@ export const draw_sound_2d = (sound: Sound) => {
           title: 'Time',
           anchor: 'y',
           position: 0,
-          rangeslider: { visible: true },
+          rangeslider: { visible: true }
         },
         yaxis: {
           type: 'linear',
-          visible: false,
+          visible: false
         },
         bargap: 0.2,
-        barmode: 'stack',
-      },
+        barmode: 'stack'
+      }
     );
     if (drawnPlots) drawnPlots.push(plot);
   }
