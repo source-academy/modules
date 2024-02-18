@@ -2,29 +2,29 @@
 
 /** @type {import('eslint').Linter.Config} */
 const eslintConfig = {
-  extends: ["../.eslintrc.base.cjs", "airbnb-typescript"],
-  ignorePatterns: ["**/__tests__/**", "**/__mocks__/**", "**/*.*js"],
-  parser: "@typescript-eslint/parser",
+  extends: ['../.eslintrc.base.cjs', 'airbnb-typescript'],
+  ignorePatterns: ['**/__tests__/**', '**/__mocks__/**', '**/*.*js'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: "./tsconfig.json",
-    tsconfigRootDir: __dirname,
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname
   },
-  plugins: ["import", "react", "jsx-a11y", "@typescript-eslint"],
+  plugins: ['import', 'react', 'jsx-a11y', '@typescript-eslint'],
   /** @type {Partial<import('eslint/rules').ESLintRules>} */
   rules: {
-    "func-style": "off",
+    'func-style': 'off',
     indent: [
-      "warn",
+      'warn',
       2,
       {
-        SwitchCase: 1,
+        SwitchCase: 1
         // StaticBlock: {
         // 	body: 1
         // },
         // offsetTernaryExpressions: false,
-      },
+      }
     ],
-    quotes: ["warn", "single", { avoidEscape: true }],
+    quotes: ['warn', 'single', { avoidEscape: true }],
 
     // [typescript-eslint Extension Rules]
     /* NOTE
@@ -38,39 +38,39 @@ const eslintConfig = {
       rules configured by airbnb-typescript that have replaced their eslint
       equivalents, to make them match the behaviour in .eslintrc.base.js
     */
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
       {
         // vars: "all",
         // args: "after-used",
         // ignoreRestSiblings: false,
-        argsIgnorePattern: "^_",
-        caughtErrors: "all", // Was "none"
-        caughtErrorsIgnorePattern: "^_",
-      },
+        argsIgnorePattern: '^_',
+        caughtErrors: 'all', // Was "none"
+        caughtErrorsIgnorePattern: '^_'
+      }
     ],
-    "@typescript-eslint/no-use-before-define": [
-      "warn",
+    '@typescript-eslint/no-use-before-define': [
+      'warn',
       {
-        functions: false,
+        functions: false
         // classes: true,
         // variables: true,
         // enums: true, // TS
         // typedefs: true, // TS
         // ignoreTypeReferences: true, // TS
-      },
+      }
     ],
-    "@typescript-eslint/default-param-last": "warn",
-    "@typescript-eslint/no-shadow": [
-      "warn",
+    '@typescript-eslint/default-param-last': 'warn',
+    '@typescript-eslint/no-shadow': [
+      'warn',
       {
-        builtinGlobals: true,
+        builtinGlobals: true
         // hoist: "functions",
         // ignoreTypeValueShadow: true, // TS
         // ignoreFunctionTypeParameterNameValueShadow: true, // TS
-      },
+      }
     ],
-    "@typescript-eslint/lines-between-class-members": "off",
+    '@typescript-eslint/lines-between-class-members': 'off',
     // "@typescript-eslint/consistent-type-imports": 1,
 
     // [Error → Warn]
@@ -81,36 +81,36 @@ const eslintConfig = {
     */
 
     // [Other]
-    "@typescript-eslint/naming-convention": [
-      "warn",
+    '@typescript-eslint/naming-convention': [
+      'warn',
       {
-        selector: "variable",
+        selector: 'variable',
         // Was ["camelCase", "PascalCase", "UPPER_CASE"].
         // Add snake case to let exported module variables match Source
-        format: ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"],
+        format: ['camelCase', 'PascalCase', 'UPPER_CASE', 'snake_case']
       },
       {
-        selector: "function",
+        selector: 'function',
         // Was ["camelCase", "PascalCase"].
         // Add snake case to let exported module functions match Source
-        format: ["camelCase", "PascalCase", "snake_case"],
+        format: ['camelCase', 'PascalCase', 'snake_case']
       },
       {
-        selector: "typeLike",
-        format: ["PascalCase"],
-      },
-    ],
+        selector: 'typeLike',
+        format: ['PascalCase']
+      }
+    ]
   },
   overrides: [
     {
-      extends: ["../.eslintrc.test.cjs"],
-      files: ["**/__tests__/**", "**/__mocks__/**"],
+      extends: ['../.eslintrc.test.cjs'],
+      files: ['**/__tests__/**', '**/__mocks__/**']
     },
     {
-      extends: ["../.eslintrc.base.cjs"],
-      files: ["**/*.*.js"],
-    },
-  ],
+      extends: ['../.eslintrc.base.cjs'],
+      files: ['**/*.*.js']
+    }
+  ]
 };
 
 module.exports = eslintConfig;
