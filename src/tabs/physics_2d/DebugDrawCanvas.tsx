@@ -5,12 +5,12 @@
 import { Button, Icon, Slider } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import React from 'react';
-import { DebugDraw } from '@box2d/debug-draw';
 import { DrawShapes, type b2World } from '@box2d/core';
+import { DebugDraw } from '@box2d/debug-draw';
+import React from 'react';
 
-import WebGLCanvas from '../common/WebglCanvas';
 import { type PhysicsWorld } from '../../bundles/physics_2d/PhysicsWorld';
+import WebGLCanvas from '../common/WebglCanvas';
 
 type DebugDrawCanvasProps = {
   world: PhysicsWorld;
@@ -34,8 +34,8 @@ type DebugDrawCanvasState = {
 };
 
 export default class DebugDrawCanvas extends React.Component<
-DebugDrawCanvasProps,
-DebugDrawCanvasState
+  DebugDrawCanvasProps,
+  DebugDrawCanvasState
 > {
   private canvas: HTMLCanvasElement | null;
 
@@ -63,7 +63,7 @@ DebugDrawCanvasState
       isPlaying: false,
       zoomLevel: 1,
       camX: 0,
-      updateStep: 1 / 60,
+      updateStep: 1 / 60
     };
 
     this.canvas = null;
@@ -84,8 +84,7 @@ DebugDrawCanvasState
   private drawFrame = () => {
     if (this.canvas) {
       if (!this.debugDraw) {
-        const ctx: CanvasRenderingContext2D | null
-          = this.canvas.getContext('2d');
+        const ctx: CanvasRenderingContext2D | null = this.canvas.getContext('2d');
         if (ctx) {
           this.debugDraw = new DebugDraw(ctx);
         }
@@ -101,21 +100,23 @@ DebugDrawCanvasState
 
   private reqFrame = () => requestAnimationFrame(this.animationCallback);
 
-  private startAnimation = () => this.setState(
-    {
-      isPlaying: true,
-    },
-    this.reqFrame,
-  );
+  private startAnimation = () =>
+    this.setState(
+      {
+        isPlaying: true
+      },
+      this.reqFrame
+    );
 
-  private stopAnimation = () => this.setState(
-    {
-      isPlaying: false,
-    },
-    () => {
-      this.callbackTimestamp = null;
-    },
-  );
+  private stopAnimation = () =>
+    this.setState(
+      {
+        isPlaying: false
+      },
+      () => {
+        this.callbackTimestamp = null;
+      }
+    );
 
   /**
    * Callback to use with `requestAnimationFrame`
@@ -142,12 +143,12 @@ DebugDrawCanvasState
 
     this.setState(
       (prev) => ({
-        animTimestamp: prev.animTimestamp + currentFrame,
+        animTimestamp: prev.animTimestamp + currentFrame
       }),
       () => {
         this.drawFrame();
         this.reqFrame();
-      },
+      }
     );
 
     this.world.update(this.state.updateStep);
@@ -202,19 +203,17 @@ DebugDrawCanvasState
           marginRight: '20px',
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'space-between'
         }}
       >
         <div
           style={{
-            marginRight: '20px',
+            marginRight: '20px'
           }}
         >
           <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
             <Button onClick={this.onPlayButtonClick}>
-              <Icon
-                icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
-              />
+              <Icon icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY} />
             </Button>
           </Tooltip2>
         </div>
@@ -224,7 +223,7 @@ DebugDrawCanvasState
             marginRight: '20px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
+            justifyContent: 'space-between'
           }}
         >
           <div>
@@ -273,12 +272,12 @@ DebugDrawCanvasState
           style={{
             display: 'flex',
             alignContent: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <WebGLCanvas
             style={{
-              flexGrow: 1,
+              flexGrow: 1
             }}
             ref={(r) => {
               this.canvas = r;
@@ -292,14 +291,14 @@ DebugDrawCanvasState
             padding: '10px',
             flexDirection: 'row',
             justifyContent: 'stretch',
-            alignContent: 'center',
+            alignContent: 'center'
           }}
         >
           {buttons}
         </div>
         <div
           style={{
-            whiteSpace: 'pre-wrap',
+            whiteSpace: 'pre-wrap'
           }}
         >
           {this.world.getWorldStatus()}

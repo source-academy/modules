@@ -1,10 +1,10 @@
 import { Slider } from '@blueprintjs/core';
 import React from 'react';
 import type { CurveDrawn } from '../../bundles/curve/curves_webgl';
-import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
+import { degreesToRadians } from '../../common/utilities';
 import PlayButton from '../common/PlayButton';
 import WebGLCanvas from '../common/WebglCanvas';
-import { degreesToRadians } from '../../common/utilities';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
 
 type State = {
   /**
@@ -40,7 +40,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
     this.canvas = null;
     this.state = {
       displayAngle: 0,
-      isRotating: false,
+      isRotating: false
     };
   }
 
@@ -54,13 +54,13 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
     this.setState(
       {
         displayAngle: newValue,
-        isRotating: false,
+        isRotating: false
       },
       () => {
         if (this.canvas) {
           this.props.curve.redraw(degreesToRadians(newValue));
         }
-      },
+      }
     );
   };
 
@@ -73,13 +73,13 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
 
     this.setState(
       (prevState) => ({
-        isRotating: !prevState.isRotating,
+        isRotating: !prevState.isRotating
       }),
       () => {
         if (this.state.isRotating) {
           this.autoRotate();
         }
-      },
+      }
     );
   };
 
@@ -91,13 +91,12 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
       this.setState(
         (prevState) => ({
           ...prevState,
-          displayAngle:
-            prevState.displayAngle >= 360 ? 0 : prevState.displayAngle + 2,
+          displayAngle: prevState.displayAngle >= 360 ? 0 : prevState.displayAngle + 2
         }),
         () => {
           this.props.curve.redraw(degreesToRadians(this.state.displayAngle));
           window.requestAnimationFrame(this.autoRotate);
-        },
+        }
       );
     }
   };
@@ -110,7 +109,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
         if (this.canvas) {
           this.props.curve.redraw(degreesToRadians(angle));
         }
-      },
+      }
     );
   };
 
@@ -122,72 +121,69 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
   }
 
   public render() {
-    return <div
-      style={{
-        width: '100%',
-      }}
-    >
+    return (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
+          width: '100%'
         }}
       >
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            gap: BP_TAB_BUTTON_MARGIN,
-
-            width: '100%',
-            maxWidth: CANVAS_MAX_WIDTH,
-
-            paddingTop: BP_TEXT_MARGIN,
-            paddingBottom: BP_TEXT_MARGIN,
+            justifyContent: 'center'
           }}
         >
-          <PlayButton
-            isPlaying={ this.state.isRotating }
-            onClick={ this.onClickHandler }
-          ></PlayButton>
-          <Slider
-            value={ this.state.displayAngle }
-            min={ 0 }
-            max={ 360 }
-
-            labelRenderer={ false }
-
-            onChange={ this.onSliderChangeHandler }
-          />
-          <input
+          <div
             style={{
-              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: BP_TAB_BUTTON_MARGIN,
+
+              width: '100%',
+              maxWidth: CANVAS_MAX_WIDTH,
+
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
             }}
-
-            type="number"
-            value={ this.state.displayAngle }
-            min={ 0 }
-            max={ 360 }
-            step={ 1 }
-
-            disabled={ this.state.isRotating }
-
-            onChange={ this.onTextBoxChange }
+          >
+            <PlayButton
+              isPlaying={this.state.isRotating}
+              onClick={this.onClickHandler}
+            ></PlayButton>
+            <Slider
+              value={this.state.displayAngle}
+              min={0}
+              max={360}
+              labelRenderer={false}
+              onChange={this.onSliderChangeHandler}
+            />
+            <input
+              style={{
+                height: '100%'
+              }}
+              type="number"
+              value={this.state.displayAngle}
+              min={0}
+              max={360}
+              step={1}
+              disabled={this.state.isRotating}
+              onChange={this.onTextBoxChange}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          <WebGLCanvas
+            ref={(r) => {
+              this.canvas = r;
+            }}
           />
         </div>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <WebGLCanvas
-          ref={(r) => {
-            this.canvas = r;
-          }}
-        />
-      </div>
-    </div>;
+    );
   }
 }

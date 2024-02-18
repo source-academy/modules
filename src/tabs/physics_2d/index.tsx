@@ -22,11 +22,19 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    const { context: { moduleContexts: { physics_2d: { state: { world } } } } } = context;
+    const {
+      context: {
+        moduleContexts: {
+          physics_2d: {
+            state: { world }
+          }
+        }
+      }
+    } = context;
 
     return (
       <div>
-        <DebugDrawCanvas world={world}/>
+        <DebugDrawCanvas world={world} />
       </div>
     );
   },
@@ -41,5 +49,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'wind',
+  iconName: 'wind'
 };

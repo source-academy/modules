@@ -4,10 +4,10 @@ import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type glAnimation } from '../../typings/anim_types';
 import AutoLoopSwitch from './AutoLoopSwitch';
-import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
+import ButtonComponent from './ButtonComponent';
 import PlayButton from './PlayButton';
 import WebGLCanvas from './WebglCanvas';
-import ButtonComponent from './ButtonComponent';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
 
 type AnimCanvasProps = {
   animation: glAnimation;
@@ -34,10 +34,7 @@ type AnimCanvasState = {
  *
  * Uses WebGLCanvas internally.
  */
-export default class AnimationCanvas extends React.Component<
-AnimCanvasProps,
-AnimCanvasState
-> {
+export default class AnimationCanvas extends React.Component<AnimCanvasProps, AnimCanvasState> {
   private canvas: HTMLCanvasElement | null;
 
   /**
@@ -64,7 +61,7 @@ AnimCanvasState
       animTimestamp: 0,
       isPlaying: false,
       wasPlaying: false,
-      isAutoLooping: true,
+      isAutoLooping: true
     };
 
     this.canvas = null;
@@ -84,9 +81,7 @@ AnimCanvasState
   private drawFrame = () => {
     if (this.canvas) {
       try {
-        const frame = this.props.animation.getFrame(
-          this.state.animTimestamp / 1000,
-        );
+        const frame = this.props.animation.getFrame(this.state.animTimestamp / 1000);
         frame.draw(this.canvas);
       } catch (error) {
         if (this.reqframeId !== null) {
@@ -95,7 +90,7 @@ AnimCanvasState
 
         this.setState({
           isPlaying: false,
-          errored: error,
+          errored: error
         });
       }
     }
@@ -105,21 +100,23 @@ AnimCanvasState
     this.reqframeId = requestAnimationFrame(this.animationCallback);
   };
 
-  private startAnimation = () => this.setState(
-    {
-      isPlaying: true,
-    },
-    this.reqFrame,
-  );
+  private startAnimation = () =>
+    this.setState(
+      {
+        isPlaying: true
+      },
+      this.reqFrame
+    );
 
-  private stopAnimation = () => this.setState(
-    {
-      isPlaying: false,
-    },
-    () => {
-      this.callbackTimestamp = null;
-    },
-  );
+  private stopAnimation = () =>
+    this.setState(
+      {
+        isPlaying: false
+      },
+      () => {
+        this.callbackTimestamp = null;
+      }
+    );
 
   /**
    * Callback to use with `requestAnimationFrame`
@@ -149,9 +146,9 @@ AnimCanvasState
         // If auto loop is active, restart the animation
         this.setState(
           {
-            animTimestamp: 0,
+            animTimestamp: 0
           },
-          this.reqFrame,
+          this.reqFrame
         );
       } else {
         // Otherwise, stop the animation
@@ -161,12 +158,12 @@ AnimCanvasState
       // Animation hasn't ended, so just draw the next frame
       this.setState(
         (prev) => ({
-          animTimestamp: prev.animTimestamp + currentFrame,
+          animTimestamp: prev.animTimestamp + currentFrame
         }),
         () => {
           this.drawFrame();
           this.reqFrame();
-        },
+        }
       );
     }
   };
@@ -183,17 +180,14 @@ AnimCanvasState
    * Reset button click handler
    */
   private onResetButtonClick = () => {
-    this.setState(
-      { animTimestamp: 0 },
-      () => {
-        if (this.state.isPlaying) {
-          // Force stop
-          this.onPlayButtonClick();
-        }
+    this.setState({ animTimestamp: 0 }, () => {
+      if (this.state.isPlaying) {
+        // Force stop
+        this.onPlayButtonClick();
+      }
 
-        this.drawFrame();
-      },
-    );
+      this.drawFrame();
+    });
   };
 
   /**
@@ -206,9 +200,9 @@ AnimCanvasState
       (prev) => ({
         wasPlaying: prev.isPlaying,
         isPlaying: false,
-        animTimestamp: newValue,
+        animTimestamp: newValue
       }),
-      this.drawFrame,
+      this.drawFrame
     );
   };
 
@@ -218,7 +212,7 @@ AnimCanvasState
   private onSliderRelease = () => {
     this.setState(
       (prev) => ({
-        isPlaying: prev.wasPlaying,
+        isPlaying: prev.wasPlaying
       }),
       () => {
         if (!this.state.isPlaying) {
@@ -226,7 +220,7 @@ AnimCanvasState
         } else {
           this.reqFrame();
         }
-      },
+      }
     );
   };
 
@@ -235,117 +229,120 @@ AnimCanvasState
    */
   private onSwitchChange = () => {
     this.setState((prev) => ({
-      isAutoLooping: !prev.isAutoLooping,
+      isAutoLooping: !prev.isAutoLooping
     }));
   };
 
   public render() {
-    return <div
-      style={{
-        width: '100%',
-      }}
-    >
+    return (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
+          width: '100%'
         }}
       >
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            gap: BP_TAB_BUTTON_MARGIN,
-
-            width: '100%',
-            maxWidth: CANVAS_MAX_WIDTH,
-
-            paddingTop: BP_TEXT_MARGIN,
-            paddingBottom: BP_TEXT_MARGIN,
+            justifyContent: 'center'
           }}
         >
-          <PlayButton
-            isPlaying={this.state.isPlaying}
-            disabled={Boolean(this.state.errored)}
-            onClick={this.onPlayButtonClick}
-          />
-          <Tooltip2
-            content="Reset"
-            placement="top"
-          >
-            <ButtonComponent
-              disabled={Boolean(this.state.errored)}
-              onClick={this.onResetButtonClick}
-            >
-              <Icon icon={ IconNames.RESET } />
-            </ButtonComponent>
-          </Tooltip2>
-          <Slider
-            value={ this.state.animTimestamp }
-            min={ 0 }
-            max={ this.animationDuration }
-            stepSize={ 1 }
-
-            labelRenderer={ false }
-
-            disabled={Boolean(this.state.errored)}
-
-            onChange={ this.onSliderChange }
-            onRelease={ this.onSliderRelease }
-          />
-          <AutoLoopSwitch
-            isAutoLooping={ this.state.isAutoLooping }
-            disabled={Boolean(this.state.errored)}
-            onChange={ this.onSwitchChange }
-          />
-        </div>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        {this.state.errored
-          ? (
-            <div style={{
+          <div
+            style={{
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
-            }}>
-              <div style={{
+              gap: BP_TAB_BUTTON_MARGIN,
+
+              width: '100%',
+              maxWidth: CANVAS_MAX_WIDTH,
+
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
+            }}
+          >
+            <PlayButton
+              isPlaying={this.state.isPlaying}
+              disabled={Boolean(this.state.errored)}
+              onClick={this.onPlayButtonClick}
+            />
+            <Tooltip2 content="Reset" placement="top">
+              <ButtonComponent
+                disabled={Boolean(this.state.errored)}
+                onClick={this.onResetButtonClick}
+              >
+                <Icon icon={IconNames.RESET} />
+              </ButtonComponent>
+            </Tooltip2>
+            <Slider
+              value={this.state.animTimestamp}
+              min={0}
+              max={this.animationDuration}
+              stepSize={1}
+              labelRenderer={false}
+              disabled={Boolean(this.state.errored)}
+              onChange={this.onSliderChange}
+              onRelease={this.onSliderRelease}
+            />
+            <AutoLoopSwitch
+              isAutoLooping={this.state.isAutoLooping}
+              disabled={Boolean(this.state.errored)}
+              onChange={this.onSwitchChange}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          {this.state.errored ? (
+            <div
+              style={{
                 display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-                <Icon icon={IconNames.WARNING_SIGN} size={90} />
-                <div style={{
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}
+            >
+              <div
+                style={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginBottom: 20,
-                }}>
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}
+              >
+                <Icon icon={IconNames.WARNING_SIGN} size={90} />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginBottom: 20
+                  }}
+                >
                   <h3>An error occurred while running your animation!</h3>
                   <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
                 </div>
               </div>
-              <code style={{
-                color: 'red',
-              }}>
+              <code
+                style={{
+                  color: 'red'
+                }}
+              >
                 {this.state.errored.toString()}
               </code>
-            </div>)
-          : (
+            </div>
+          ) : (
             <WebGLCanvas
               style={{
-                flexGrow: 1,
+                flexGrow: 1
               }}
               ref={(r) => {
                 this.canvas = r;
               }}
             />
           )}
+        </div>
       </div>
-    </div>;
+    );
   }
 }

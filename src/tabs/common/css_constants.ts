@@ -1,8 +1,6 @@
 /* [Imports] */
 import { IconSize } from '@blueprintjs/core';
 
-
-
 /* [Exports] */
 // Values extracted from the styling of the Source Academy frontend
 export const SA_TAB_BUTTON_WIDTH: string = '40px';

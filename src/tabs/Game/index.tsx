@@ -11,16 +11,12 @@ class Game extends React.PureComponent<Props> {
   public render() {
     return (
       <div>
-        Info: You need to visit the game to see the effect of your program.
-        Remember to save your work first!
+        Info: You need to visit the game to see the effect of your program. Remember to save your
+        work first!
         <br />
         <br />
         You may find the game module{' '}
-        <a
-          href={Links.gameAPIDocumentation}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
+        <a href={Links.gameAPIDocumentation} rel="noopener noreferrer" target="_blank">
           documentation{' '}
         </a>
         and{' '}
@@ -37,5 +33,5 @@ export default {
   toSpawn: () => true,
   body: (debuggerContext: any) => <Game debuggerContext={debuggerContext} />,
   label: 'Game Info Tab',
-  iconName: 'info-sign',
+  iconName: 'info-sign'
 };

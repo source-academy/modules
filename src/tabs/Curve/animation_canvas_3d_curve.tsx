@@ -4,10 +4,10 @@ import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type AnimatedCurve } from '../../bundles/curve/types';
 import AutoLoopSwitch from '../common/AutoLoopSwitch';
-import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
+import ButtonComponent from '../common/ButtonComponent';
 import PlayButton from '../common/PlayButton';
 import WebGLCanvas from '../common/WebglCanvas';
-import ButtonComponent from '../common/ButtonComponent';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
 
 type Props = {
   animation: AnimatedCurve;
@@ -38,10 +38,7 @@ type State = {
  *
  * Uses WebGLCanvas internally.
  */
-export default class AnimationCanvas3dCurve extends React.Component<
-Props,
-State
-> {
+export default class AnimationCanvas3dCurve extends React.Component<Props, State> {
   private canvas: HTMLCanvasElement | null;
 
   /**
@@ -69,7 +66,7 @@ State
       isPlaying: false,
       wasPlaying: false,
       isAutoLooping: true,
-      displayAngle: 0,
+      displayAngle: 0
     };
 
     this.canvas = null;
@@ -89,9 +86,7 @@ State
   private drawFrame = () => {
     try {
       if (this.canvas) {
-        const frame = this.props.animation.getFrame(
-          this.state.animTimestamp / 1000,
-        );
+        const frame = this.props.animation.getFrame(this.state.animTimestamp / 1000);
         frame.draw(this.canvas);
       }
     } catch (error) {
@@ -100,7 +95,7 @@ State
       }
       this.setState({
         isPlaying: false,
-        errored: error,
+        errored: error
       });
     }
   };
@@ -139,19 +134,19 @@ State
         // If auto loop is active, restart the animation
         this.setState(
           {
-            animTimestamp: 0,
+            animTimestamp: 0
           },
-          this.reqFrame,
+          this.reqFrame
         );
       } else {
         // Otherwise, stop the animation
         this.setState(
           {
-            isPlaying: false,
+            isPlaying: false
           },
           () => {
             this.callbackTimestamp = null;
-          },
+          }
         );
       }
     } else {
@@ -159,9 +154,9 @@ State
       this.drawFrame();
       this.setState(
         (prev) => ({
-          animTimestamp: prev.animTimestamp + currentFrame,
+          animTimestamp: prev.animTimestamp + currentFrame
         }),
-        this.reqFrame,
+        this.reqFrame
       );
     }
   };
@@ -173,18 +168,18 @@ State
     if (this.state.isPlaying) {
       this.setState(
         {
-          isPlaying: false,
+          isPlaying: false
         },
         () => {
           this.callbackTimestamp = null;
-        },
+        }
       );
     } else {
       this.setState(
         {
-          isPlaying: true,
+          isPlaying: true
         },
-        this.reqFrame,
+        this.reqFrame
       );
     }
   };
@@ -193,17 +188,14 @@ State
    * Reset button click handler
    */
   private onResetButtonClick = () => {
-    this.setState(
-      { animTimestamp: 0 },
-      () => {
-        if (this.state.isPlaying) {
-          // Force stop
-          this.onPlayButtonClick();
-        }
+    this.setState({ animTimestamp: 0 }, () => {
+      if (this.state.isPlaying) {
+        // Force stop
+        this.onPlayButtonClick();
+      }
 
-        this.drawFrame();
-      },
-    );
+      this.drawFrame();
+    });
   };
 
   /**
@@ -216,9 +208,9 @@ State
       (prev) => ({
         wasPlaying: prev.isPlaying,
         isPlaying: false,
-        animTimestamp: newValue,
+        animTimestamp: newValue
       }),
-      this.drawFrame,
+      this.drawFrame
     );
   };
 
@@ -228,7 +220,7 @@ State
   private onTimeSliderRelease = () => {
     this.setState(
       (prev) => ({
-        isPlaying: prev.wasPlaying,
+        isPlaying: prev.wasPlaying
       }),
       () => {
         if (!this.state.isPlaying) {
@@ -236,20 +228,20 @@ State
         } else {
           this.reqFrame();
         }
-      },
+      }
     );
   };
 
   private onAngleSliderChange = (newAngle: number) => {
     this.setState(
       {
-        displayAngle: newAngle,
+        displayAngle: newAngle
       },
       () => {
         this.props.animation.angle = newAngle;
         if (this.state.isPlaying) this.reqFrame();
         else this.drawFrame();
-      },
+      }
     );
   };
 
@@ -258,142 +250,141 @@ State
    */
   private onSwitchChange = () => {
     this.setState((prev) => ({
-      isAutoLooping: !prev.isAutoLooping,
+      isAutoLooping: !prev.isAutoLooping
     }));
   };
 
   public render() {
-    return <div
-      style={{
-        width: '100%',
-      }}
-    >
+    return (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
+          width: '100%'
         }}
       >
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            gap: BP_TAB_BUTTON_MARGIN,
-
-            width: '100%',
-            maxWidth: CANVAS_MAX_WIDTH,
-
-            paddingTop: BP_TEXT_MARGIN,
-            paddingBottom: BP_TEXT_MARGIN,
+            justifyContent: 'center'
           }}
         >
-          <PlayButton
-            isPlaying={ this.state.isPlaying }
-            disabled={Boolean(this.state.errored)}
-            onClick={ this.onPlayButtonClick }
-          />
-          <Tooltip2
-            content="Reset"
-            placement="top"
-          >
-            <ButtonComponent
-              disabled={Boolean(this.state.errored)}
-              onClick={ this.onResetButtonClick }
-            >
-              <Icon icon={ IconNames.RESET } />
-            </ButtonComponent>
-          </Tooltip2>
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              gap: BP_TEXT_MARGIN,
+              alignItems: 'center',
+              gap: BP_TAB_BUTTON_MARGIN,
 
               width: '100%',
+              maxWidth: CANVAS_MAX_WIDTH,
+
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
             }}
           >
-            <Slider
-              value={ this.state.animTimestamp }
-              min={ 0 }
-              max={ this.animationDuration }
-              stepSize={ 1 }
-
-              labelRenderer={ false }
+            <PlayButton
+              isPlaying={this.state.isPlaying}
               disabled={Boolean(this.state.errored)}
-
-              onChange={ this.onTimeSliderChange }
-              onRelease={ this.onTimeSliderRelease }
+              onClick={this.onPlayButtonClick}
             />
-            <Tooltip2
-              content="Display Angle"
-              placement="top"
+            <Tooltip2 content="Reset" placement="top">
+              <ButtonComponent
+                disabled={Boolean(this.state.errored)}
+                onClick={this.onResetButtonClick}
+              >
+                <Icon icon={IconNames.RESET} />
+              </ButtonComponent>
+            </Tooltip2>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: BP_TEXT_MARGIN,
+
+                width: '100%'
+              }}
             >
               <Slider
-                value={ this.state.displayAngle }
-                min={ 0 }
-                max={ 2 * Math.PI }
-                stepSize={ 0.01 }
-
-                labelRenderer={ false }
+                value={this.state.animTimestamp}
+                min={0}
+                max={this.animationDuration}
+                stepSize={1}
+                labelRenderer={false}
                 disabled={Boolean(this.state.errored)}
-
-                onChange={ this.onAngleSliderChange }
+                onChange={this.onTimeSliderChange}
+                onRelease={this.onTimeSliderRelease}
               />
-            </Tooltip2>
+              <Tooltip2 content="Display Angle" placement="top">
+                <Slider
+                  value={this.state.displayAngle}
+                  min={0}
+                  max={2 * Math.PI}
+                  stepSize={0.01}
+                  labelRenderer={false}
+                  disabled={Boolean(this.state.errored)}
+                  onChange={this.onAngleSliderChange}
+                />
+              </Tooltip2>
+            </div>
+            <AutoLoopSwitch
+              isAutoLooping={this.state.isAutoLooping}
+              disabled={Boolean(this.state.errored)}
+              onChange={this.onSwitchChange}
+            />
           </div>
-          <AutoLoopSwitch
-            isAutoLooping={ this.state.isAutoLooping }
-            disabled={Boolean(this.state.errored)}
-            onChange={ this.onSwitchChange }
-          />
         </div>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        {this.state.errored
-          ? (
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}>
-              <div style={{
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          {this.state.errored ? (
+            <div
+              style={{
                 display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-                <Icon icon={IconNames.WARNING_SIGN} size={90} />
-                <div style={{
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}
+            >
+              <div
+                style={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginBottom: 20,
-                }}>
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}
+              >
+                <Icon icon={IconNames.WARNING_SIGN} size={90} />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginBottom: 20
+                  }}
+                >
                   <h3>An error occurred while running your animation!</h3>
                   <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
                 </div>
               </div>
-              <code style={{
-                color: 'red',
-              }}>
+              <code
+                style={{
+                  color: 'red'
+                }}
+              >
                 {this.state.errored.toString()}
               </code>
-            </div>)
-          : (
+            </div>
+          ) : (
             <WebGLCanvas
               style={{
-                flexGrow: 1,
+                flexGrow: 1
               }}
               ref={(r) => {
                 this.canvas = r;
               }}
             />
           )}
+        </div>
       </div>
-    </div>;
+    );
   }
 }

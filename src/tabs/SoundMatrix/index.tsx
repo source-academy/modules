@@ -1,6 +1,6 @@
+import { Button, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 import React from 'react';
-import { Button, Classes } from '@blueprintjs/core';
 
 /**
  * Tab for Sound Matrix
@@ -55,14 +55,7 @@ class SoundMatrix extends React.Component<Props, State> {
     return (
       <div className="sa-tone-matrix">
         <div className="row">
-          <div
-            className={classNames(
-              'controls',
-              'col-xs-12',
-              Classes.DARK,
-              Classes.BUTTON_GROUP,
-            )}
-          >
+          <div className={classNames('controls', 'col-xs-12', Classes.DARK, Classes.BUTTON_GROUP)}>
             <Button id="clear-matrix" onClick={this.handleClear}>
               Clear
             </Button>
@@ -110,5 +103,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'music',
+  iconName: 'music'
 };

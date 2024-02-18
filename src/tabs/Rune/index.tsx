@@ -1,10 +1,10 @@
-import { type RuneModuleState, isHollusionRune } from '../../bundles/rune/functions';
+import { isHollusionRune, type RuneModuleState } from '../../bundles/rune/functions';
 import { glAnimation } from '../../typings/anim_types';
-import MultiItemDisplay from '../common/MultItemDisplay';
 import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
 import AnimationCanvas from '../common/AnimationCanvas';
-import HollusionCanvas from './hollusion_canvas';
+import MultiItemDisplay from '../common/MultItemDisplay';
 import WebGLCanvas from '../common/WebglCanvas';
+import HollusionCanvas from './hollusion_canvas';
 
 export const RuneTab: ModuleTab = ({ context }) => {
   const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
@@ -12,14 +12,10 @@ export const RuneTab: ModuleTab = ({ context }) => {
     const elemKey = i.toString();
 
     if (glAnimation.isAnimation(rune)) {
-      return (
-        <AnimationCanvas animation={rune} key={elemKey} />
-      );
+      return <AnimationCanvas animation={rune} key={elemKey} />;
     }
     if (isHollusionRune(rune)) {
-      return (
-        <HollusionCanvas rune={rune} key={elemKey} />
-      );
+      return <HollusionCanvas rune={rune} key={elemKey} />;
     }
     return (
       <WebGLCanvas
@@ -68,5 +64,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'group-objects',
+  iconName: 'group-objects'
 };

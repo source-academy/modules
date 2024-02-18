@@ -4,7 +4,7 @@ import { clamp } from 'lodash';
 import { useState } from 'react';
 
 type MultiItemDisplayProps = {
-  elements: JSX.Element[]
+  elements: JSX.Element[];
 };
 
 const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
@@ -25,7 +25,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignContent: 'center',
-        height: '100%',
+        height: '100%'
       }}
     >
       <div
@@ -35,13 +35,13 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
           alignItems: 'center',
           flexDirection: 'row',
           position: 'relative',
-          marginBottom: 10,
+          marginBottom: 10
         }}
       >
         <Button
           style={{
             position: 'absolute',
-            left: 0,
+            left: 0
           }}
           large
           outlined
@@ -59,13 +59,18 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
             style={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
+              justifyContent: 'space-around'
+            }}
+          >
             Call&nbsp;
             {/* When the text box is focused, it shows a little up and down bar, which needs a little bit
-              * more space to be shown
-              */}
-            <div style={{ width: `${stepEditorFocused ? elementsDigitCount + 2 : elementsDigitCount}ch` }}>
+             * more space to be shown
+             */}
+            <div
+              style={{
+                width: `${stepEditorFocused ? elementsDigitCount + 2 : elementsDigitCount}ch`
+              }}
+            >
               <EditableText
                 value={stepEditorValue}
                 disabled={elements.length === 1}
@@ -109,7 +114,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
         <Button
           style={{
             position: 'absolute',
-            right: 0,
+            right: 0
           }}
           large
           outlined
@@ -130,7 +135,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
           paddingRight: '20px',
           display: 'flex',
           alignContent: 'center',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         {elements[currentStep]}

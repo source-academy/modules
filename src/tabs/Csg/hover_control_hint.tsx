@@ -8,26 +8,21 @@ import type { HintProps } from './types';
 /* [Main] */
 export default class HoverControlHint extends React.Component<HintProps> {
   render() {
-    return <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        // Centre icon within hint's height
-        justifyContent: 'center',
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          // Centre icon within hint's height
+          justifyContent: 'center',
 
-        height: SA_TAB_BUTTON_WIDTH,
-      }}
-    >
-      <Tooltip2
-        content={this.props.tooltipText}
-        placement="left"
+          height: SA_TAB_BUTTON_WIDTH
+        }}
       >
-        <Icon
-          icon={this.props.iconName}
-          size={SA_TAB_ICON_SIZE}
-          color={BP_ICON_COLOR}
-        />
-      </Tooltip2>
-    </div>;
+        <Tooltip2 content={this.props.tooltipText} placement="left">
+          <Icon icon={this.props.iconName} size={SA_TAB_ICON_SIZE} color={BP_ICON_COLOR} />
+        </Tooltip2>
+      </div>
+    );
   }
 }
