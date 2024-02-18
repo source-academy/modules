@@ -206,13 +206,13 @@ export const getHeart: () => Rune = () => {
       (Math.cos(angle1) * r + rightCenterX) * scaleX,
       Math.sin(angle1) * r + rightCenterY,
       0,
-      1,
+      1
     );
     vertexList.push(
       (Math.cos(angle2) * r + rightCenterX) * scaleX,
       Math.sin(angle2) * r + rightCenterY,
       0,
-      1,
+      1
     );
     vertexList.push(0, -1, 0, 1);
   }
@@ -226,13 +226,13 @@ export const getHeart: () => Rune = () => {
       (Math.cos(angle1) * r + leftCenterX) * scaleX,
       Math.sin(angle1) * r + leftCenterY,
       0,
-      1,
+      1
     );
     vertexList.push(
       (Math.cos(angle2) * r + leftCenterX) * scaleX,
       Math.sin(angle2) * r + leftCenterY,
       0,
-      1,
+      1
     );
     vertexList.push(0, -1, 0, 1);
   }
@@ -293,12 +293,7 @@ export const getRibbon: () => Rune = () => {
 
   const vertices: number[][] = [];
   for (let i = 0; i < thetaMax; i += unit) {
-    vertices.push([
-      (i / thetaMax) * Math.cos(i),
-      (i / thetaMax) * Math.sin(i),
-      0,
-      1,
-    ]);
+    vertices.push([(i / thetaMax) * Math.cos(i), (i / thetaMax) * Math.sin(i), 0, 1]);
     vertices.push([
       Math.abs(Math.cos(i) * thickness) + (i / thetaMax) * Math.cos(i),
       Math.abs(Math.sin(i) * thickness) + (i / thetaMax) * Math.sin(i),
@@ -338,9 +333,7 @@ export const colorPalette = [
 ];
 
 export function hexToColor(hex: string): number[] {
-  const result = /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(
-    hex,
-  );
+  const result = /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(hex);
   if (result === null || result.length < 4) {
     return [0, 0, 0];
   }

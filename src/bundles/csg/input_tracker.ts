@@ -9,11 +9,7 @@ import {
   updateStates,
   zoomToFit,
 } from './jscad/renderer.js';
-import type {
-  ControlsState,
-  GeometryEntity,
-  PerspectiveCameraState,
-} from './jscad/types.js';
+import type { ControlsState, GeometryEntity, PerspectiveCameraState } from './jscad/types.js';
 import ListenerTracker from './listener_tracker.js';
 
 /* [Main] */
@@ -61,7 +57,7 @@ export default class InputTracker {
   constructor(
     private canvas: HTMLCanvasElement,
     private cameraState: PerspectiveCameraState,
-    private geometryEntities: GeometryEntity[],
+    private geometryEntities: GeometryEntity[]
   ) {
     this.listenerTracker = new ListenerTracker(canvas);
   }
@@ -95,8 +91,8 @@ export default class InputTracker {
 
   private isPointerPan(isShiftKey: boolean): boolean {
     return (
-      this.heldPointer === MousePointer.MIDDLE
-      || (this.heldPointer === MousePointer.LEFT && isShiftKey)
+      this.heldPointer === MousePointer.MIDDLE ||
+      (this.heldPointer === MousePointer.LEFT && isShiftKey)
     );
   }
 
@@ -141,13 +137,12 @@ export default class InputTracker {
 
       const scaledChange: number = currentTick * ZOOM_TICK_SCALE;
       const potentialNewScale: number = this.controlsState.scale + scaledChange;
-      const potentialNewDistance: number
-        = vec3.distance(this.cameraState.position, this.cameraState.target)
-        * potentialNewScale;
+      const potentialNewDistance: number =
+        vec3.distance(this.cameraState.position, this.cameraState.target) * potentialNewScale;
 
       if (
-        potentialNewDistance > this.controlsState.limits.minDistance
-        && potentialNewDistance < this.controlsState.limits.maxDistance
+        potentialNewDistance > this.controlsState.limits.minDistance &&
+        potentialNewDistance < this.controlsState.limits.maxDistance
       ) {
         this.frameDirty = true;
         this.controlsState.scale = potentialNewScale;
@@ -191,7 +186,7 @@ export default class InputTracker {
         this.changeZoomTicks(wheelEvent.deltaY);
       },
       // Force wait for our potential preventDefault()
-      { passive: false },
+      { passive: false }
     );
 
     this.listenerTracker.addListener(
@@ -208,59 +203,53 @@ export default class InputTracker {
         this.canvas.setPointerCapture(pointerEvent.pointerId);
       },
       // Force wait for our potential preventDefault()
-      { passive: false },
+      { passive: false }
     );
 
-    this.listenerTracker.addListener(
-      'pointerup',
-      (pointerEvent: PointerEvent) => {
-        this.unsetHeldPointer();
-        this.unsetLastCoordinates();
+    this.listenerTracker.addListener('pointerup', (pointerEvent: PointerEvent) => {
+      this.unsetHeldPointer();
+      this.unsetLastCoordinates();
 
-        this.canvas.releasePointerCapture(pointerEvent.pointerId);
-      },
-    );
+      this.canvas.releasePointerCapture(pointerEvent.pointerId);
+    });
 
-    this.listenerTracker.addListener(
-      'pointermove',
-      (pointerEvent: PointerEvent) => {
-        if (this.shouldIgnorePointerMove()) return;
+    this.listenerTracker.addListener('pointermove', (pointerEvent: PointerEvent) => {
+      if (this.shouldIgnorePointerMove()) return;
 
-        const currentX = pointerEvent.pageX;
-        const currentY = pointerEvent.pageY;
+      const currentX = pointerEvent.pageX;
+      const currentY = pointerEvent.pageY;
 
-        if (this.lastX !== null && this.lastY !== null) {
-          // If tracked before, use differences to react to input
-          const differenceX = this.lastX - currentX;
-          const differenceY = this.lastY - currentY;
+      if (this.lastX !== null && this.lastY !== null) {
+        // If tracked before, use differences to react to input
+        const differenceX = this.lastX - currentX;
+        const differenceY = this.lastY - currentY;
 
-          if (this.isPointerPan(pointerEvent.shiftKey)) {
-            // Drag right (X increases)
-            // Camera right (still +)
-            // Viewport left (invert to -)
-            this.panX += differenceX;
+        if (this.isPointerPan(pointerEvent.shiftKey)) {
+          // Drag right (X increases)
+          // Camera right (still +)
+          // Viewport left (invert to -)
+          this.panX += differenceX;
 
-            // Drag down (Y increases)
-            // Camera down (invert to -)
-            // Viewport up (still -)
-            this.panY -= differenceY;
-          } else {
-            // Else default to rotate
+          // Drag down (Y increases)
+          // Camera down (invert to -)
+          // Viewport up (still -)
+          this.panY -= differenceY;
+        } else {
+          // Else default to rotate
 
-            // Drag right (X increases)
-            // Camera angle from origin left (invert to -)
-            this.rotateX -= differenceX;
+          // Drag right (X increases)
+          // Camera angle from origin left (invert to -)
+          this.rotateX -= differenceX;
 
-            // Drag down (Y increases)
-            // Camera angle from origin up (still +)
-            this.rotateY += differenceY;
-          }
+          // Drag down (Y increases)
+          // Camera angle from origin up (still +)
+          this.rotateY += differenceY;
         }
+      }
 
-        this.lastX = currentX;
-        this.lastY = currentY;
-      },
-    );
+      this.lastX = currentX;
+      this.lastY = currentY;
+    });
   }
 
   removeListeners() {

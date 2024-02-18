@@ -46,11 +46,7 @@ void main() {
  * @param source - source code of the shader
  * @returns WebGLShader used to initialize shader program
  */
-function loadShader(
-  gl: WebGLRenderingContext,
-  type: number,
-  source: string,
-): WebGLShader {
+function loadShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
     throw new Error('WebGLShader not available.');
@@ -71,7 +67,7 @@ function loadShader(
 function initShaderProgram(
   gl: WebGLRenderingContext,
   vsSource: string,
-  fsSource: string,
+  fsSource: string
 ): WebGLProgram {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
@@ -120,7 +116,7 @@ export class Point implements ReplResult {
     public readonly x: number,
     public readonly y: number,
     public readonly z: number,
-    public readonly color: Color,
+    public readonly color: Color
   ) {}
 
   public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
@@ -143,7 +139,7 @@ export class CurveDrawn implements ReplResult {
     private readonly space: CurveSpace,
     private readonly drawCubeArray: number[],
     private readonly curvePosArray: number[],
-    private readonly curveColorArray: number[],
+    private readonly curveColorArray: number[]
   ) {
     this.renderingContext = null;
     this.programs = null;
@@ -160,59 +156,44 @@ export class CurveDrawn implements ReplResult {
       throw new Error('Rendering context cannot be null.');
     }
     const cubeBuffer = this.renderingContext.createBuffer();
-    this.renderingContext.bindBuffer(
-      this.renderingContext.ARRAY_BUFFER,
-      cubeBuffer,
-    );
+    this.renderingContext.bindBuffer(this.renderingContext.ARRAY_BUFFER, cubeBuffer);
     this.renderingContext.bufferData(
       this.renderingContext.ARRAY_BUFFER,
       new Float32Array(this.drawCubeArray),
-      this.renderingContext.STATIC_DRAW,
+      this.renderingContext.STATIC_DRAW
     );
 
     const curveBuffer = this.renderingContext.createBuffer();
-    this.renderingContext.bindBuffer(
-      this.renderingContext.ARRAY_BUFFER,
-      curveBuffer,
-    );
+    this.renderingContext.bindBuffer(this.renderingContext.ARRAY_BUFFER, curveBuffer);
     this.renderingContext.bufferData(
       this.renderingContext.ARRAY_BUFFER,
       new Float32Array(this.curvePosArray),
-      this.renderingContext.STATIC_DRAW,
+      this.renderingContext.STATIC_DRAW
     );
 
     const curveColorBuffer = this.renderingContext.createBuffer();
-    this.renderingContext.bindBuffer(
-      this.renderingContext.ARRAY_BUFFER,
-      curveColorBuffer,
-    );
+    this.renderingContext.bindBuffer(this.renderingContext.ARRAY_BUFFER, curveColorBuffer);
     this.renderingContext.bufferData(
       this.renderingContext.ARRAY_BUFFER,
       new Float32Array(this.curveColorArray),
-      this.renderingContext.STATIC_DRAW,
+      this.renderingContext.STATIC_DRAW
     );
 
     const shaderProgram = initShaderProgram(this.renderingContext, vsS, fsS);
     this.programs = {
       program: shaderProgram,
       attribLocations: {
-        vertexPosition: this.renderingContext.getAttribLocation(
-          shaderProgram,
-          'aVertexPosition',
-        ),
-        vertexColor: this.renderingContext.getAttribLocation(
-          shaderProgram,
-          'aFragColor',
-        ),
+        vertexPosition: this.renderingContext.getAttribLocation(shaderProgram, 'aVertexPosition'),
+        vertexColor: this.renderingContext.getAttribLocation(shaderProgram, 'aFragColor'),
       },
       uniformLocations: {
         projectionMatrix: this.renderingContext.getUniformLocation(
           shaderProgram,
-          'uProjectionMatrix',
+          'uProjectionMatrix'
         ),
         modelViewMatrix: this.renderingContext.getUniformLocation(
           shaderProgram,
-          'uModelViewMatrix',
+          'uModelViewMatrix'
         ),
       },
     };
@@ -242,11 +223,7 @@ export class CurveDrawn implements ReplResult {
 
     if (this.space === '3D') {
       const padding = Math.sqrt(1 / 3.1);
-      mat4.scale(
-        transMat,
-        transMat,
-        vec3.fromValues(padding, padding, padding),
-      );
+      mat4.scale(transMat, transMat, vec3.fromValues(padding, padding, padding));
       mat4.translate(transMat, transMat, [0, 0, -5]);
       mat4.rotate(transMat, transMat, -(Math.PI / 2), [1, 0, 0]); // axis to rotate around X (static)
       mat4.rotate(transMat, transMat, angle, [0, 0, 1]); // axis to rotate around Z (dynamic)
@@ -259,16 +236,8 @@ export class CurveDrawn implements ReplResult {
     }
 
     gl.useProgram(this.programs!.program);
-    gl.uniformMatrix4fv(
-      this.programs!.uniformLocations.projectionMatrix,
-      false,
-      projMat,
-    );
-    gl.uniformMatrix4fv(
-      this.programs!.uniformLocations.modelViewMatrix,
-      false,
-      transMat,
-    );
+    gl.uniformMatrix4fv(this.programs!.uniformLocations.projectionMatrix, false, projMat);
+    gl.uniformMatrix4fv(this.programs!.uniformLocations.modelViewMatrix, false, transMat);
     gl.enableVertexAttribArray(this.programs!.attribLocations.vertexPosition);
     gl.enableVertexAttribArray(this.programs!.attribLocations.vertexColor);
 
@@ -281,7 +250,7 @@ export class CurveDrawn implements ReplResult {
         gl.FLOAT,
         false,
         0,
-        0,
+        0
       );
       const colors: number[] = [];
       for (let i = 0; i < 16; i += 1) {
@@ -301,7 +270,7 @@ export class CurveDrawn implements ReplResult {
       gl.FLOAT,
       false,
       0,
-      0,
+      0
     );
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffersInfo!.curveColorBuffer);
     gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
@@ -320,7 +289,7 @@ export function generateCurve(
   numPoints: number,
   func: Curve,
   space: CurveSpace,
-  isFullView: boolean,
+  isFullView: boolean
 ) {
   const curvePosArray: number[] = [];
   const curveColorArray: number[] = [];
@@ -338,7 +307,9 @@ export function generateCurve(
     const point = func(i / numPoints);
 
     if (!(point instanceof Point)) {
-      throw new Error(`Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`);
+      throw new Error(
+        `Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`
+      );
     }
 
     const x = point.x * 2 - 1;
@@ -388,11 +359,7 @@ export function generateCurve(
   }
 
   if (scaleMode === 'fit') {
-    const center = [
-      (min_x + max_x) / 2,
-      (min_y + max_y) / 2,
-      (min_z + max_z) / 2,
-    ];
+    const center = [(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2];
     let scale = Math.max(max_x - min_x, max_y - min_y, max_z - min_z);
     scale = scale === 0 ? 1 : scale;
     if (space === '3D') {
@@ -420,11 +387,7 @@ export function generateCurve(
       }
     }
   } else if (scaleMode === 'stretch') {
-    const center = [
-      (min_x + max_x) / 2,
-      (min_y + max_y) / 2,
-      (min_z + max_z) / 2,
-    ];
+    const center = [(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2];
     const x_scale = max_x === min_x ? 1 : max_x - min_x;
     const y_scale = max_y === min_y ? 1 : max_y - min_y;
     const z_scale = max_z === min_z ? 1 : max_z - min_z;
@@ -454,12 +417,5 @@ export function generateCurve(
     }
   }
 
-  return new CurveDrawn(
-    drawMode,
-    numPoints,
-    space,
-    drawCubeArray,
-    curvePosArray,
-    curveColorArray,
-  );
+  return new CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
 }

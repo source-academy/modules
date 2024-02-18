@@ -4,11 +4,10 @@
  * @author Wang Zihan
  */
 
-
-import context from 'js-slang/context';
-import { default_js_slang } from './functions';
 import { runFilesInContext, type IOptions } from 'js-slang';
-import { COLOR_RUN_CODE_RESULT, COLOR_ERROR_MESSAGE, DEFAULT_EDITOR_HEIGHT } from './config';
+import context from 'js-slang/context';
+import { COLOR_ERROR_MESSAGE, COLOR_RUN_CODE_RESULT, DEFAULT_EDITOR_HEIGHT } from './config';
+import { default_js_slang } from './functions';
 
 export class ProgrammableRepl {
   public evalFunction: Function;
@@ -23,7 +22,7 @@ export class ProgrammableRepl {
 
   // I store editorHeight value separately in here although it is already stored in the module's Tab React component state because I need to keep the editor height
   // when the Tab component is re-mounted due to the user drags the area between the module's Tab and Source Academy's original REPL to resize the module's Tab height.
-  public editorHeight : number;
+  public editorHeight: number;
 
   public customizedEditorProps = {
     backgroundImageUrl: 'no-background-image',
@@ -35,7 +34,7 @@ export class ProgrammableRepl {
     this.evalFunction = (_placeholder) => this.easterEggFunction();
     this.userCodeInEditor = this.getSavedEditorContent();
     this.outputStrings = [];
-    this._editorInstance = null;// To be set when calling "SetEditorInstance" in the ProgrammableRepl Tab React Component render function.
+    this._editorInstance = null; // To be set when calling "SetEditorInstance" in the ProgrammableRepl Tab React Component render function.
     this.editorHeight = DEFAULT_EDITOR_HEIGHT;
     developmentLog(this);
   }
@@ -57,14 +56,20 @@ export class ProgrammableRepl {
       developmentLog(exception);
       // If the exception has a start line of -1 and an undefined error property, then this exception is most likely to be "incorrect number of arguments" caused by incorrect number of parameters in the evaluator entry function provided by students with set_evaluator.
       if (exception.location.start.line === -1 && exception.error === undefined) {
-        this.pushOutputString('Error: Unable to use your evaluator to run the code. Does your evaluator entry function contain and only contain exactly one parameter?', COLOR_ERROR_MESSAGE);
+        this.pushOutputString(
+          'Error: Unable to use your evaluator to run the code. Does your evaluator entry function contain and only contain exactly one parameter?',
+          COLOR_ERROR_MESSAGE
+        );
       } else {
-        this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error?.message}`, COLOR_ERROR_MESSAGE);
+        this.pushOutputString(
+          `Line ${exception.location.start.line.toString()}: ${exception.error?.message}`,
+          COLOR_ERROR_MESSAGE
+        );
       }
       this.reRenderTab();
       return;
     }
-    if (typeof (retVal) === 'string') {
+    if (typeof retVal === 'string') {
       retVal = `"${retVal}"`;
     }
     // Here must use plain text output mode because retVal contains strings from the users.
@@ -78,7 +83,7 @@ export class ProgrammableRepl {
   }
 
   // Rich text output method allow output strings to have html tags and css styles.
-  pushOutputString(content : string, textColor : string, outputMethod : string = 'plaintext') {
+  pushOutputString(content: string, textColor: string, outputMethod: string = 'plaintext') {
     const tmp = {
       content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
@@ -95,7 +100,9 @@ export class ProgrammableRepl {
       developmentLog(breakpointLine);
     });
 
-    this._editorInstance.setOptions({ fontSize: `${this.customizedEditorProps.fontSize.toString()}pt` });
+    this._editorInstance.setOptions({
+      fontSize: `${this.customizedEditorProps.fontSize.toString()}pt`,
+    });
   }
 
   richDisplayInternal(pair_rich_text) {
@@ -104,32 +111,42 @@ export class ProgrammableRepl {
     const tail = (pair) => pair[1];
     const is_pair = (obj) => obj instanceof Array && obj.length === 2;
     if (!is_pair(pair_rich_text)) return 'not_rich_text_pair';
-    function checkColorStringValidity(htmlColor:string) {
+    function checkColorStringValidity(htmlColor: string) {
       if (htmlColor.length !== 7) return false;
       if (htmlColor[0] !== '#') return false;
       for (let i = 1; i < 7; i++) {
         const char = htmlColor[i];
         developmentLog(`   ${char}`);
-        if (!((char >= '0' && char <= '9') || (char >= 'A' && char <= 'F') || (char >= 'a' && char <= 'f'))) {
+        if (
+          !(
+            (char >= '0' && char <= '9') ||
+            (char >= 'A' && char <= 'F') ||
+            (char >= 'a' && char <= 'f')
+          )
+        ) {
           return false;
         }
       }
       return true;
     }
     function recursiveHelper(thisInstance, param): string {
-      if (typeof (param) === 'string') {
+      if (typeof param === 'string') {
         // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
         const safeCheckResult = thisInstance.userStringSafeCheck(param);
         if (safeCheckResult !== 'safe') {
-          throw new Error(`For safety matters, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
+          throw new Error(
+            `For safety matters, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`
+          );
         }
         developmentLog(head(param));
         return `">${param}</span>`;
       }
       if (!is_pair(param)) {
-        throw new Error(`Unexpected data type ${typeof (param)} when processing rich text. It should be a pair.`);
+        throw new Error(
+          `Unexpected data type ${typeof param} when processing rich text. It should be a pair.`
+        );
       } else {
-        const pairStyleToCssStyle : { [pairStyle : string] : string } = {
+        const pairStyleToCssStyle: { [pairStyle: string]: string } = {
           bold: 'font-weight:bold;',
           italic: 'font-style:italic;',
           small: 'font-size: 14px;',
@@ -138,20 +155,22 @@ export class ProgrammableRepl {
           gigantic: 'font-size: 50px;',
           underline: 'text-decoration: underline;',
         };
-        if (typeof (tail(param)) !== 'string') {
-          throw new Error(`The tail in style pair should always be a string, but got ${typeof (tail(param))}.`);
+        if (typeof tail(param) !== 'string') {
+          throw new Error(
+            `The tail in style pair should always be a string, but got ${typeof tail(param)}.`
+          );
         }
         let style = '';
-        if (tail(param)
-          .substring(0, 3) === 'clr') {
+        if (tail(param).substring(0, 3) === 'clr') {
           let prefix = '';
           if (tail(param)[3] === 't') prefix = 'color:';
           else if (tail(param)[3] === 'b') prefix = 'background-color:';
           else throw new Error('Error when decoding rich text color data');
-          const colorHex = tail(param)
-            .substring(4);
+          const colorHex = tail(param).substring(4);
           if (!checkColorStringValidity(colorHex)) {
-            throw new Error(`Invalid html color string ${colorHex}. It should start with # and followed by 6 characters representing a hex number.`);
+            throw new Error(
+              `Invalid html color string ${colorHex}. It should start with # and followed by 6 characters representing a hex number.`
+            );
           }
           style = `${prefix + colorHex};`;
         } else {
@@ -164,14 +183,25 @@ export class ProgrammableRepl {
       }
     }
     this.pushOutputString(`<span style="${recursiveHelper(this, pair_rich_text)}`, '', 'richtext');
-    return undefined;// Add this line to pass lint check "consistent-return"
+    return undefined; // Add this line to pass lint check "consistent-return"
   }
 
   // Returns the forbidden word present in the string "str" if it contains at least one unsafe word. Returns "safe" if the string is considered to be safe to output directly into innerHTML.
   userStringSafeCheck(str) {
     developmentLog(`Safe check on ${str}`);
     const tmp = str.toLowerCase();
-    const forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
+    const forbiddenWords = [
+      '\\',
+      '<',
+      '>',
+      'script',
+      'javascript',
+      'eval',
+      'document',
+      'window',
+      'console',
+      'location',
+    ];
     for (const word of forbiddenWords) {
       if (tmp.indexOf(word) !== -1) {
         return word;
@@ -187,7 +217,7 @@ export class ProgrammableRepl {
   runInJsSlang(code: string): string {
     developmentLog('js-slang context:');
     // console.log(context);
-    const options : Partial<IOptions> = {
+    const options: Partial<IOptions> = {
       originalMaxExecTime: 1000,
       scheduler: 'preemptive',
       stepLimit: 1000,
@@ -196,49 +226,64 @@ export class ProgrammableRepl {
     };
     context.prelude = 'const display=(x)=>repl_display(x);';
     context.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
-    const sourceFile : Record<string, string> = {
+    const sourceFile: Record<string, string> = {
       '/ReplModuleUserCode.js': code,
     };
 
-    runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options)
-      .then((evalResult) => {
-        if (evalResult.status === 'suspended' || evalResult.status === 'suspended-ec-eval') {
-          throw new Error('This should not happen');
-        }
-        if (evalResult.status !== 'error') {
-          this.pushOutputString('js-slang program finished with value:', COLOR_RUN_CODE_RESULT);
-          // Here must use plain text output mode because evalResult.value contains strings from the users.
-          this.pushOutputString(evalResult.value === undefined ? 'undefined' : evalResult.value.toString(), COLOR_RUN_CODE_RESULT);
-        } else {
-          const errors = context.errors;
-          console.log(errors);
-          const errorCount = errors.length;
-          for (let i = 0; i < errorCount; i++) {
-            const error = errors[i];
-            if (error.explain()
-              .indexOf('Name repl_display not declared.') !== -1) {
-              this.pushOutputString('[Error] It seems that you haven\'t import the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', COLOR_ERROR_MESSAGE);
-            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
+    runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options).then((evalResult) => {
+      if (evalResult.status === 'suspended' || evalResult.status === 'suspended-ec-eval') {
+        throw new Error('This should not happen');
+      }
+      if (evalResult.status !== 'error') {
+        this.pushOutputString('js-slang program finished with value:', COLOR_RUN_CODE_RESULT);
+        // Here must use plain text output mode because evalResult.value contains strings from the users.
+        this.pushOutputString(
+          evalResult.value === undefined ? 'undefined' : evalResult.value.toString(),
+          COLOR_RUN_CODE_RESULT
+        );
+      } else {
+        const errors = context.errors;
+        console.log(errors);
+        const errorCount = errors.length;
+        for (let i = 0; i < errorCount; i++) {
+          const error = errors[i];
+          if (error.explain().indexOf('Name repl_display not declared.') !== -1) {
+            this.pushOutputString(
+              '[Error] It seems that you haven\'t import the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.',
+              COLOR_ERROR_MESSAGE
+            );
+          } else {
+            this.pushOutputString(
+              `Line ${error.location.start.line}: ${
+                error.type
+              } Error: ${error.explain()}  (${error.elaborate()})`,
+              COLOR_ERROR_MESSAGE
+            );
           }
         }
-        this.reRenderTab();
-      });
+      }
+      this.reRenderTab();
+    });
 
     return 'Async run in js-slang';
   }
 
-  setTabReactComponentInstance(tab : any) {
+  setTabReactComponentInstance(tab: any) {
     this._tabReactComponent = tab;
   }
 
   private reRenderTab() {
-    this._tabReactComponent.setState({});// Forces the tab React Component to re-render using setState
+    this._tabReactComponent.setState({}); // Forces the tab React Component to re-render using setState
   }
 
   saveEditorContent() {
     localStorage.setItem('programmable_repl_saved_editor_code', this.userCodeInEditor.toString());
     this.pushOutputString('Saved', 'lightgreen');
-    this.pushOutputString('<span style=\'font-style:italic;\'>The saved code is stored locally in your browser. You may lose the saved code if you clear browser data or use another device.</span>', 'gray', 'richtext');
+    this.pushOutputString(
+      "<span style='font-style:italic;'>The saved code is stored locally in your browser. You may lose the saved code if you clear browser data or use another device.</span>",
+      'gray',
+      'richtext'
+    );
     this.reRenderTab();
   }
 
@@ -251,11 +296,12 @@ export class ProgrammableRepl {
   // Small Easter Egg that doesn't affect module functionality and normal user experience :)
   // Please don't modify these text! Thanks!  :)
   private easterEggFunction() {
-    this.pushOutputString('[Author (Wang Zihan)] ❤<span style=\'font-weight:bold;\'>I love Keqing and Ganyu.</span>❤', 'pink', 'richtext');
-    this.pushOutputString('<span style=\'font-style:italic;\'>Showing my love to my favorite girls through a SA module, is that the so-called "romance of a programmer"?</span>', 'gray', 'richtext');
-    this.pushOutputString('❤❤❤❤❤', 'pink');
     this.pushOutputString('<br>', 'white', 'richtext');
-    this.pushOutputString('If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.', 'yellow', 'richtext');
+    this.pushOutputString(
+      "If you see this, please check whether you have called <span style='font-weight:bold;font-style:italic;'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.",
+      'yellow',
+      'richtext'
+    );
     return 'Easter Egg!';
   }
 }

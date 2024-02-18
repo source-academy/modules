@@ -16,11 +16,7 @@ export type FrameBufferWithTexture = {
  * @param source - Source code of the shader
  * @returns WebGLShader used to initialize shader program
  */
-function loadShader(
-  gl: WebGLRenderingContext,
-  type: number,
-  source: string,
-): WebGLShader {
+function loadShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
     throw new Error('WebGLShader not available.');
@@ -46,7 +42,7 @@ function loadShader(
 export function initShaderProgram(
   gl: WebGLRenderingContext,
   vsSource: string,
-  fsSource: string,
+  fsSource: string
 ): WebGLProgram {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
@@ -65,9 +61,7 @@ export function initShaderProgram(
  * @param canvas WebGLRenderingContext
  * @returns
  */
-export function getWebGlFromCanvas(
-  canvas: HTMLCanvasElement,
-): WebGLRenderingContext {
+export function getWebGlFromCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
   const gl: WebGLRenderingContext | null = canvas.getContext('webgl');
   if (!gl) {
     throw Error('Unable to initialize WebGL.');
@@ -85,9 +79,7 @@ export function getWebGlFromCanvas(
  * @param gl WebGLRenderingContext
  * @returns FrameBufferWithTexture
  */
-export function initFramebufferObject(
-  gl: WebGLRenderingContext,
-): FrameBufferWithTexture {
+export function initFramebufferObject(gl: WebGLRenderingContext): FrameBufferWithTexture {
   // create a framebuffer object
   const framebuffer = gl.createFramebuffer();
   if (!framebuffer) {
@@ -109,7 +101,7 @@ export function initFramebufferObject(
     0,
     gl.RGBA,
     gl.UNSIGNED_BYTE,
-    null,
+    null
   );
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
@@ -125,25 +117,14 @@ export function initFramebufferObject(
     gl.RENDERBUFFER,
     gl.DEPTH_COMPONENT16,
     gl.drawingBufferWidth,
-    gl.drawingBufferHeight,
+    gl.drawingBufferHeight
   );
 
   // set the texture object to the framebuffer object
   gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer); // bind to target
-  gl.framebufferTexture2D(
-    gl.FRAMEBUFFER,
-    gl.COLOR_ATTACHMENT0,
-    gl.TEXTURE_2D,
-    texture,
-    0,
-  );
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
   // set the renderbuffer object to the framebuffer object
-  gl.framebufferRenderbuffer(
-    gl.FRAMEBUFFER,
-    gl.DEPTH_ATTACHMENT,
-    gl.RENDERBUFFER,
-    depthBuffer,
-  );
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
 
   // check whether the framebuffer is configured correctly
   const e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);

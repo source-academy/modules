@@ -23,10 +23,7 @@ export class AudioClip {
 
   private shouldLoop: boolean = false;
 
-  private constructor(
-    private url: string,
-    private volumeLevel: number,
-  ) {
+  private constructor(private url: string, private volumeLevel: number) {
     this.id = AudioClip.audioClipCount++;
     AudioClip.audioClipsIndexMap.set(url, this.id);
     AudioClip.audioClipsArray.push(this);

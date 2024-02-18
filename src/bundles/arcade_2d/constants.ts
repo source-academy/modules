@@ -43,4 +43,5 @@ export const DEFAULT_INTERACTABLE_PROPS: InteractableProps = {
 };
 
 // Default values of Phaser scene
-export const DEFAULT_PATH_PREFIX: string = 'https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/';
+export const DEFAULT_PATH_PREFIX: string =
+  'https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/';
