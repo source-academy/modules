@@ -27,12 +27,14 @@ const eslintConfig = {
       }
     ],
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-use-before-define': 'warn',
+    '@typescript-eslint/no-use-before-define': ['warn', { functions: false }],
+    '@typescript-eslint/no-namespace': 'off',
+    'no-unused-vars': 'off', // disable base rule, as it can report incorrect errors
     '@typescript-eslint/no-unused-vars': [
       'error',
       {
         vars: 'all',
-        args: 'all',
+        args: 'none',
         ignoreRestSiblings: false,
         varsIgnorePattern: '^_',
         argsIgnorePattern: '^_'

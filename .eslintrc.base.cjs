@@ -78,20 +78,6 @@ const eslintConfig = {
     //   { enforceForOrderingRelations: true },
     // ],
     'no-unsafe-optional-chaining': [2, { disallowArithmeticOperators: true }],
-    'no-unused-vars': [
-      'warn',
-      {
-        argsIgnorePattern: '^_',
-        caughtErrors: 'all', // Was "none"
-        caughtErrorsIgnorePattern: '^_'
-      }
-    ],
-    'no-use-before-define': [
-      1,
-      {
-        functions: false
-      }
-    ],
     // FIXME: Investigate type error
     // 'use-isnan': [
     //   "warn",
@@ -136,7 +122,7 @@ const eslintConfig = {
     'no-useless-catch': 'error',
     'no-useless-computed-key': ['error', { enforceForClassMembers: true }],
     'no-useless-concat': 'error',
-    'no-useless-constructor': 'error',
+    'no-useless-constructor': 'warn',
     'no-useless-escape': 'error',
     'no-useless-rename': 'error',
     'no-useless-return': 'error',
