@@ -1,15 +1,13 @@
-import { Tooltip2 } from "@blueprintjs/popover2";
-import ControlButton from "../ControlButton";
-import { IconNames } from "@blueprintjs/icons";
+import { IconNames } from '@blueprintjs/icons';
+import { Tooltip2 } from '@blueprintjs/popover2';
+import ControlButton from '../ControlButton';
 
 type Props = {
-  onClick: () => void
-}
+  onClick: () => void;
+};
 
-export const ControlBarClearButton = (props: Props) => <Tooltip2 content="Clear the editor and context">
-	<ControlButton
-		label="Clear"
-		icon={IconNames.Trash}
-		onClick={props.onClick}
-	/>
-</Tooltip2>;
+export const ControlBarClearButton = (props: Props) => (
+  <Tooltip2 content="Clear the editor and context">
+    <ControlButton label="Clear" icon={IconNames.Trash} onClick={props.onClick} />
+  </Tooltip2>
+);

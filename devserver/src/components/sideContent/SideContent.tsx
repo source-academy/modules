@@ -1,7 +1,7 @@
-import { Card, Icon, Tab, type TabProps, Tabs } from "@blueprintjs/core";
-import { Tooltip2 } from "@blueprintjs/popover2";
-import React from "react";
-import type { SideContentTab } from "./types";
+import { Card, Icon, Tab, Tabs, type TabProps } from '@blueprintjs/core';
+import { Tooltip2 } from '@blueprintjs/popover2';
+import React from 'react';
+import type { SideContentTab } from './types';
 
 /**
  * @property onChange A function that is called whenever the
@@ -22,79 +22,85 @@ export type SideContentProps = {
   renderActiveTabPanelOnly?: boolean;
   editorWidth?: string;
   sideContentHeight?: number;
-  dynamicTabs: SideContentTab[]
+  dynamicTabs: SideContentTab[];
 
-  selectedTabId: string
-  alerts: string[]
-  onChange?: (newId: string, oldId: string) => void
+  selectedTabId: string;
+  alerts: string[];
+  onChange?: (newId: string, oldId: string) => void;
 };
 
 const renderTab = (
-	tab: SideContentTab,
-	shouldAlert: boolean,
-	_editorWidth?: string,
-	_sideContentHeight?: number
+  tab: SideContentTab,
+  shouldAlert: boolean,
+  _editorWidth?: string,
+  _sideContentHeight?: number
 ) => {
-	const iconSize = 20;
-	const tabTitle = (
-		<Tooltip2 content={tab.label}>
-			<div className={!shouldAlert ? "side-content-tooltip" : "side-content-tooltip side-content-tab-alert"}>
-				<Icon icon={tab.iconName} iconSize={iconSize} />
-			</div>
-		</Tooltip2>
-	);
-	const tabProps: TabProps = {
-		id: tab.id,
-		title: tabTitle,
-		// disabled: tab.disabled,
-		className: "side-content-tab"
-	};
+  const iconSize = 20;
+  const tabTitle = (
+    <Tooltip2 content={tab.label}>
+      <div
+        className={
+          !shouldAlert ? 'side-content-tooltip' : 'side-content-tooltip side-content-tab-alert'
+        }
+      >
+        <Icon icon={tab.iconName} iconSize={iconSize} />
+      </div>
+    </Tooltip2>
+  );
+  const tabProps: TabProps = {
+    id: tab.id,
+    title: tabTitle,
+    // disabled: tab.disabled,
+    className: 'side-content-tab'
+  };
 
-	if (!tab.body) {
-		return <Tab key={tab.id} {...tabProps} />;
-	}
+  if (!tab.body) {
+    return <Tab key={tab.id} {...tabProps} />;
+  }
 
-	// const tabBody: JSX.Element = workspaceLocation
-	//   ? {
-	//       ...tab.body,
-	//       props: {
-	//         ...tab.body.props,
-	//         workspaceLocation,
-	//         editorWidth,
-	//         sideContentHeight
-	//       }
-	//     }
-	//   : tab.body;
-	const tabPanel: React.JSX.Element = <div className="side-content-text">{tab.body}</div>;
+  // const tabBody: JSX.Element = workspaceLocation
+  //   ? {
+  //       ...tab.body,
+  //       props: {
+  //         ...tab.body.props,
+  //         workspaceLocation,
+  //         editorWidth,
+  //         sideContentHeight
+  //       }
+  //     }
+  //   : tab.body;
+  const tabPanel: React.JSX.Element = <div className="side-content-text">{tab.body}</div>;
 
-	return <Tab key={tab.id} {...tabProps} panel={tabPanel} />;
+  return <Tab key={tab.id} {...tabProps} panel={tabPanel} />;
 };
 
 const SideContent: React.FC<SideContentProps> = ({
-	renderActiveTabPanelOnly,
-	editorWidth,
-	sideContentHeight,
-	dynamicTabs,
-	selectedTabId,
-	onChange,
-	alerts
+  renderActiveTabPanelOnly,
+  editorWidth,
+  sideContentHeight,
+  dynamicTabs,
+  selectedTabId,
+  onChange,
+  alerts
 }) => (
-	<div className="side-content">
-		<Card>
-			<div className="side-content-tabs">
-				<Tabs
-					id="side-content-tabs"
-					renderActiveTabPanelOnly={renderActiveTabPanelOnly}
-					selectedTabId={selectedTabId}
-					onChange={(newId: string, oldId: string) => {
-						if (onChange) onChange(newId, oldId);
-					}}
-				>
-					{dynamicTabs.map((tab) => renderTab(tab, alerts.includes(tab.id), editorWidth, sideContentHeight))}
-				</Tabs>
-			</div>
-		</Card>
-	</div>
+  <div className="side-content">
+    <Card>
+      <div className="side-content-tabs">
+        <Tabs
+          id="side-content-tabs"
+          renderActiveTabPanelOnly={renderActiveTabPanelOnly}
+          selectedTabId={selectedTabId}
+          onChange={(newId: string, oldId: string) => {
+            if (onChange) onChange(newId, oldId);
+          }}
+        >
+          {dynamicTabs.map((tab) =>
+            renderTab(tab, alerts.includes(tab.id), editorWidth, sideContentHeight)
+          )}
+        </Tabs>
+      </div>
+    </Card>
+  </div>
 );
 
 export default SideContent;
