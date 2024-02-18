@@ -28,7 +28,6 @@ const eslintConfig = {
     'for-direction': 'warn',
     'getter-return': 'warn',
     'no-async-promise-executor': 'warn',
-    'no-await-in-loop': 1,
     'no-class-assign': 'warn',
     'no-compare-neg-zero': 'warn',
     'no-cond-assign': [
@@ -37,7 +36,6 @@ const eslintConfig = {
     ],
     // "no-const-assign": 2,
     'no-constant-condition': ['warn', { checkLoops: false }],
-    'no-constructor-return': 1,
     'no-control-regex': 'warn',
     'no-debugger': 'warn',
     // "no-dupe-args": 2,
@@ -45,7 +43,6 @@ const eslintConfig = {
     'no-dupe-else-if': 'warn',
     'no-dupe-keys': 'warn',
     'no-duplicate-case': 'warn',
-    'no-duplicate-imports': 1,
     'no-empty-character-class': 'warn',
     'no-empty-pattern': 'warn',
     'no-ex-assign': 'warn',
@@ -67,19 +64,14 @@ const eslintConfig = {
     'no-misleading-character-class': 'warn',
     // "no-new-symbol": 2,
     // "no-obj-calls": 2,
-    'no-promise-executor-return': 1,
     // "no-prototype-builtins": 2,
     'no-self-assign': 'warn',
-    'no-self-compare': 1,
     'no-setter-return': 'warn',
     'no-sparse-arrays': 'warn',
-    'no-template-curly-in-string': 1,
     // "no-this-before-super": 2,
     'no-undef': [2, { typeof: true }],
     'no-unexpected-multiline': 'warn',
-    'no-unmodified-loop-condition': 1,
     'no-unreachable': 'warn',
-    'no-unreachable-loop': 1,
     'no-unsafe-finally': 'warn',
     // FIXME: Investigate type error
     // 'no-unsafe-negation': [
@@ -87,7 +79,6 @@ const eslintConfig = {
     //   { enforceForOrderingRelations: true },
     // ],
     'no-unsafe-optional-chaining': [2, { disallowArithmeticOperators: true }],
-    'no-unused-private-class-members': 1,
     'no-unused-vars': [
       'warn',
       {
@@ -102,9 +93,6 @@ const eslintConfig = {
         functions: false
       }
     ],
-    'no-useless-backreference': 1,
-    'require-await': 1,
-    'require-atomic-updates': 1,
     // FIXME: Investigate type error
     // 'use-isnan': [
     //   "warn",
@@ -116,110 +104,44 @@ const eslintConfig = {
     'valid-typeof': ['warn', { requireStringLiterals: true }],
 
     // [Suggestions]
-    'accessor-pairs': 1,
-    'arrow-body-style': 1,
-    'block-scoped-var': 1,
-    camelcase: 1,
     // "capitalized-comments": 0, // Allow commented code
     // "class-methods-use-this": 0,
-    complexity: 1,
-    'consistent-return': 1,
-    'consistent-this': 1,
     curly: [
       1,
       'multi-line' // Was "all"
     ],
     // "default-case": 0,
-    'default-case-last': 1,
-    'default-param-last': 1,
-    'dot-notation': 1,
-    eqeqeq: 1,
-    'func-name-matching': [
-      1,
-      'always', // Same
-      {
-        considerPropertyDescriptor: true
-      }
-    ],
-    // "func-names": 0,
-    'func-style': [
-      1,
-      'declaration' // Was "expression"
-    ],
-    'grouped-accessor-pairs': [
-      1,
-      'getBeforeSet' // Was "anyOrder"
-    ],
-    'new-cap': 1,
-    'no-array-constructor': 1,
-    'no-bitwise': 1,
+    eqeqeq: 'error',
     'no-caller': 2,
     'no-case-declarations': 'warn',
-    'no-confusing-arrow': 1,
     'no-else-return': [1, { allowElseIf: false }],
     'no-empty': ['warn', { allowEmptyCatch: true }],
-    'no-empty-function': 1,
-    'no-eq-null': 1,
-    'no-extend-native': 1,
-    'no-extra-bind': 1,
-    // FIXME: Investigate type error
-    // 'no-extra-boolean-cast': [
-    //   "warn",
-    //   { enforceForLogicalOperands: true },
-    // ],
-    'no-extra-label': 1,
-    'no-extra-semi': 'warn',
-    'no-floating-decimal': 1,
-    'no-implicit-coercion': 1,
-    'no-implicit-globals': [1, { lexicalBindings: true }],
-    'no-implied-eval': 1,
-    'no-invalid-this': 2,
-    'no-iterator': 1,
-    'no-label-var': 1,
-    'no-lone-blocks': 1,
-    'no-lonely-if': 1,
-    'no-loop-func': 1,
-    'no-mixed-operators': 0,
-    'no-multi-assign': 1,
-    'no-multi-str': 1,
-    'no-new': 1,
-    'no-new-func': 1,
-    'no-new-object': 1,
-    'no-new-wrappers': 1,
-    'no-octal-escape': 2,
-    'no-proto': 1,
-    'no-redeclare': 'warn',
-    'no-regex-spaces': 'warn',
-    'no-return-assign': 1,
-    'no-return-await': 1,
-    'no-script-url': 1,
-    'no-sequences': 1,
-    'no-shadow': [
-      1,
+    'no-implicit-globals': [
+      'error',
       {
-        builtinGlobals: true
-        // hoist: "functions"
+        lexicalBindings: true
       }
     ],
-    'no-throw-literal': 1,
-    'no-undef-init': 1,
+    'no-invalid-this': 'error',
+    'no-octal-escape': 'error',
+    'no-shadow': ['error', { builtinGlobals: true }],
     'no-unneeded-ternary': [
-      1,
+      'error',
       {
         defaultAssignment: false // Use || or ?? instead
       }
     ],
-    'no-unused-expressions': 1,
-    'no-unused-labels': 'warn',
-    'no-useless-call': 1,
-    'no-useless-catch': 'warn',
-    'no-useless-computed-key': [1, { enforceForClassMembers: true }],
-    'no-useless-concat': 1,
-    'no-useless-constructor': 1,
-    'no-useless-escape': 'warn',
-    'no-useless-rename': 1,
-    'no-useless-return': 1,
-    'no-var': 1,
+    'no-unused-expressions': 'error',
+    'no-unused-labels': 'error',
+    'no-useless-call': 'error',
+    'no-useless-catch': 'error',
+    'no-useless-computed-key': ['error', { enforceForClassMembers: true }],
+    'no-useless-concat': 'error',
+    'no-useless-constructor': 'error',
+    'no-useless-escape': 'error',
+    'no-useless-rename': 'error',
+    'no-useless-return': 'error',
+    'no-var': 'error',
     'no-void': 1,
     'no-warning-comments': [1, { terms: todoTreeKeywordsWarning }],
     'object-shorthand': ['warn', 'always', { avoidExplicitReturnArrows: true }],
@@ -257,7 +179,7 @@ const eslintConfig = {
     'require-unicode-regexp': 1,
     'require-yield': 'warn',
     'spaced-comment': [
-      1,
+      'error',
       'always', // Same
       { markers: todoTreeKeywordsAll }
     ],

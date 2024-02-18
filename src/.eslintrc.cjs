@@ -28,6 +28,7 @@ const eslintConfig = {
 
     // [typescript-eslint Extension Rules]
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-use-before-define': 'warn',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {
