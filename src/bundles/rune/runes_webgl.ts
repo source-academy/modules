@@ -69,7 +69,7 @@ export function getWebGlFromCanvas(canvas: HTMLCanvasElement): WebGLRenderingCon
   gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
   gl.depthFunc(gl.LESS); // Near things obscure far things (this is default setting can omit)
-  // eslint-disable-next-line no-bitwise
+
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
   return gl;
 }

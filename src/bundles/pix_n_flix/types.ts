@@ -1,10 +1,7 @@
 export type VideoElement = HTMLVideoElement & { srcObject?: MediaStream };
 export type ImageElement = HTMLImageElement;
 export type CanvasElement = HTMLCanvasElement;
-export type ErrorLogger = (
-  error: string | string[],
-  isSlangError?: boolean
-) => void;
+export type ErrorLogger = (error: string | string[], isSlangError?: boolean) => void;
 export type TabsPacket = {
   onClickStill: () => void;
 };
@@ -12,7 +9,7 @@ export enum InputFeed {
   Camera,
   ImageURL,
   VideoURL,
-  Local,
+  Local
 }
 
 export type BundlePacket = {

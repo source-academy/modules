@@ -637,12 +637,9 @@ class UnityAcademyJsInteropContext {
     const deltaX = deltaValues.x;
     const deltaY = deltaValues.y;
     const deltaZ = deltaValues.z;
-    if (Math.abs(deltaX) !== 999999)
-      toGameObject.transform[propName].x = fromGameObject.transform[propName].x + deltaX;
-    if (Math.abs(deltaY) !== 999999)
-      toGameObject.transform[propName].y = fromGameObject.transform[propName].y + deltaY;
-    if (Math.abs(deltaZ) !== 999999)
-      toGameObject.transform[propName].z = fromGameObject.transform[propName].z + deltaZ;
+    if (Math.abs(deltaX) !== 999999) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + deltaX;
+    if (Math.abs(deltaY) !== 999999) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + deltaY;
+    if (Math.abs(deltaZ) !== 999999) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + deltaZ;
   }
 
   getKeyState(keyCode: string): number {

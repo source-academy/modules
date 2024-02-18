@@ -65,7 +65,7 @@ function generateMemory(): void {
     leftDesc: '',
     rightDesc: '',
     scan: -1,
-    free: -1,
+    free: -1
   };
 
   commandHeap.push(obj);
@@ -111,7 +111,7 @@ function newCommand(
   heap,
   description,
   firstDesc,
-  lastDesc,
+  lastDesc
 ): void {
   const newType = type;
   const newToSpace = toSpace;
@@ -142,7 +142,7 @@ function newCommand(
     leftDesc: newFirstDesc,
     rightDesc: newLastDesc,
     scan: -1,
-    free: -1,
+    free: -1
   };
 
   commandHeap.push(obj);
@@ -166,7 +166,7 @@ function newCopy(left, right, heap): void {
     heap,
     desc,
     'index',
-    'free',
+    'free'
   );
 }
 
@@ -176,19 +176,7 @@ function endFlip(left, heap): void {
   const toSpace = commandHeap[length - 1].to;
   const newSizeLeft = heap[left + SIZE_SLOT];
   const desc = 'Flip finished';
-  newCommand(
-    COMMAND.FLIP,
-    toSpace,
-    fromSpace,
-    left,
-    -1,
-    newSizeLeft,
-    0,
-    heap,
-    desc,
-    'free',
-    '',
-  );
+  newCommand(COMMAND.FLIP, toSpace, fromSpace, left, -1, newSizeLeft, 0, heap, desc, 'free', '');
   updateFlip();
 }
 
@@ -204,19 +192,7 @@ function resetRoots(): void {
 
 function startFlip(toSpace, fromSpace, heap): void {
   const desc = 'Memory is exhausted. Start stop and copy garbage collector.';
-  newCommand(
-    'Start of Cheneys',
-    toSpace,
-    fromSpace,
-    -1,
-    -1,
-    0,
-    0,
-    heap,
-    desc,
-    '',
-    '',
-  );
+  newCommand('Start of Cheneys', toSpace, fromSpace, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
 }
 
@@ -236,7 +212,7 @@ function newPush(left, right, heap): void {
     heap,
     desc,
     'last child address slot',
-    'new child pushed',
+    'new child pushed'
   );
 }
 
@@ -257,7 +233,7 @@ function newPop(res, left, right, heap): void {
     heap,
     desc,
     'popped memory',
-    'last child address slot',
+    'last child address slot'
   );
 }
 
@@ -265,19 +241,7 @@ function doneShowRoot(heap): void {
   const toSpace = 0;
   const fromSpace = 0;
   const desc = 'All root nodes are copied';
-  newCommand(
-    'Copied Roots',
-    toSpace,
-    fromSpace,
-    -1,
-    -1,
-    0,
-    0,
-    heap,
-    desc,
-    '',
-    '',
-  );
+  newCommand('Copied Roots', toSpace, fromSpace, -1, -1, 0, 0, heap, desc, '', '');
 }
 
 function showRoots(left, heap): void {
@@ -297,7 +261,7 @@ function showRoots(left, heap): void {
     heap,
     desc,
     'roots',
-    '',
+    ''
   );
 }
 
@@ -307,19 +271,7 @@ function newAssign(res, left, heap): void {
   const fromSpace = commandHeap[length - 1].from;
   const newRes = res;
   const desc = `Assign memory [${left}] with ${newRes}.`;
-  newCommand(
-    COMMAND.ASSIGN,
-    toSpace,
-    fromSpace,
-    left,
-    -1,
-    1,
-    1,
-    heap,
-    desc,
-    'assigned memory',
-    '',
-  );
+  newCommand(COMMAND.ASSIGN, toSpace, fromSpace, left, -1, 1, 1, heap, desc, 'assigned memory', '');
 }
 
 function newNew(left, heap): void {
@@ -339,7 +291,7 @@ function newNew(left, heap): void {
     heap,
     desc,
     'new memory allocated',
-    '',
+    ''
   );
 }
 
@@ -380,18 +332,13 @@ function scanFlip(left, right, scan, free, heap): void {
     free: newFree,
     desc: newDesc,
     leftDesc: 'scan',
-    rightDesc: 'free',
+    rightDesc: 'free'
   };
 
   commandHeap.push(obj);
 }
 
-function updateSlotSegment(
-  tag: number,
-  size: number,
-  first: number,
-  last: number,
-): void {
+function updateSlotSegment(tag: number, size: number, first: number, last: number): void {
   if (tag >= 0) {
     TAG_SLOT = tag;
   }
@@ -478,10 +425,9 @@ function init() {
     get_flips,
     get_slots,
     get_command,
-    get_roots,
+    get_roots
   };
 }
-
 export {
   init,
   // initialisation
@@ -503,5 +449,5 @@ export {
   updateRoots,
   resetRoots,
   showRoots,
-  doneShowRoot,
+  doneShowRoot
 };

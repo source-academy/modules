@@ -3,13 +3,13 @@ import InputTracker from './input_tracker.js';
 import {
   cloneCameraState,
   makeWrappedRenderer,
-  makeWrappedRendererData,
+  makeWrappedRendererData
 } from './jscad/renderer.js';
 import type {
   Entity,
   PerspectiveCameraState,
   WrappedRenderer,
-  WrappedRendererData,
+  WrappedRendererData
 } from './jscad/types.js';
 import ListenerTracker from './listener_tracker.js';
 import type { RenderGroup } from './utilities.js';
@@ -34,38 +34,32 @@ export default class StatefulRenderer {
     private componentNumber: number,
 
     private loseCallback: Function,
-    private restoreCallback: Function,
+    private restoreCallback: Function
   ) {
     this.cameraState.position = [1000, 1000, 1500];
 
     this.webGlListenerTracker = new ListenerTracker(canvas);
 
-    this.wrappedRendererData = makeWrappedRendererData(
-      renderGroup,
-      this.cameraState,
-    );
+    this.wrappedRendererData = makeWrappedRendererData(renderGroup, this.cameraState);
 
     this.inputTracker = new InputTracker(
       canvas,
       this.cameraState,
-      this.wrappedRendererData.geometryEntities,
+      this.wrappedRendererData.geometryEntities
     );
   }
 
   private addWebGlListeners() {
-    this.webGlListenerTracker.addListener(
-      'webglcontextlost',
-      (contextEvent: WebGLContextEvent) => {
-        // Allow restoration of context
-        contextEvent.preventDefault();
+    this.webGlListenerTracker.addListener('webglcontextlost', (contextEvent: WebGLContextEvent) => {
+      // Allow restoration of context
+      contextEvent.preventDefault();
 
-        console.debug(`>>> CONTEXT LOST FOR #${this.componentNumber}`);
+      console.debug(`>>> CONTEXT LOST FOR #${this.componentNumber}`);
 
-        this.loseCallback();
+      this.loseCallback();
 
-        this.stop();
-      },
-    );
+      this.stop();
+    });
 
     this.webGlListenerTracker.addListener(
       'webglcontextrestored',
@@ -75,7 +69,7 @@ export default class StatefulRenderer {
         this.start();
 
         this.restoreCallback();
-      },
+      }
     );
   }
 
@@ -106,9 +100,7 @@ export default class StatefulRenderer {
     if (firstStart) this.addWebGlListeners();
     this.inputTracker.addListeners();
 
-    const frameCallback: FrameRequestCallback = (
-      _timestamp: DOMHighResTimeStamp,
-    ) => {
+    const frameCallback: FrameRequestCallback = (_timestamp: DOMHighResTimeStamp) => {
       this.inputTracker.respondToInput();
 
       if (this.inputTracker.frameDirty) {

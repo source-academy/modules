@@ -10,14 +10,14 @@
 */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { List } from './types';
 import { list_to_vector, vector_to_list } from './list';
+import type { List } from './types';
 
 export const ToneMatrix = {
   initialise_matrix,
   clear_matrix,
   randomise_matrix,
-  bindMatrixButtons,
+  bindMatrixButtons
 };
 
 let $tone_matrix: HTMLCanvasElement; // canvas container for tone matrix
@@ -48,12 +48,8 @@ let timeout_objects: number[] = []; // set_timeout_renamed return type
 // given the x, y coordinates of a "click" event
 // return the row and column numbers of the clicked square in an array
 function x_y_to_row_column(x: number, y: number): number[] {
-  const row = Math.floor(
-    (y - margin_length) / (square_side_length + distance_between_squares),
-  );
-  const column = Math.floor(
-    (x - margin_length) / (square_side_length + distance_between_squares),
-  );
+  const row = Math.floor((y - margin_length) / (square_side_length + distance_between_squares));
+  const column = Math.floor((x - margin_length) / (square_side_length + distance_between_squares));
   return [row, column];
 }
 
@@ -64,9 +60,7 @@ function row_to_y(row: number): number {
 
 // given the column number of a square, return the topmost coordinate
 function column_to_x(column: number): number {
-  return (
-    margin_length + column * (square_side_length + distance_between_squares)
-  );
+  return margin_length + column * (square_side_length + distance_between_squares);
 }
 
 // return a list representing a particular row
@@ -99,12 +93,7 @@ function set_color(row: number, column: number, color: string): void {
   const ctx = $tone_matrix.getContext('2d') as CanvasRenderingContext2D;
   ctx.fillStyle = color;
 
-  ctx.fillRect(
-    column_to_x(column),
-    row_to_y(row),
-    square_side_length,
-    square_side_length,
-  );
+  ctx.fillRect(column_to_x(column), row_to_y(row), square_side_length, square_side_length);
 }
 
 // highlight a given square
@@ -113,11 +102,7 @@ function highlight_color(row: number, column: number, color: string): void {
 }
 
 // given the square that we are supposed to highlight, color the neighboring squares
-function set_adjacent_color_1(
-  row: number,
-  column: number,
-  color: string,
-): void {
+function set_adjacent_color_1(row: number, column: number, color: string): void {
   if (!is_on(row, column - 1)) {
     set_color(row, column - 1, color);
   }
@@ -136,11 +121,7 @@ function set_adjacent_color_1(
 }
 
 // given the square that we are supposed to highlight, color the squares 2 units from it
-function set_adjacent_color_2(
-  row: number,
-  column: number,
-  color: string,
-): void {
+function set_adjacent_color_2(row: number, column: number, color: string): void {
   if (!is_on(row, column - 2)) {
     set_color(row, column - 2, color);
   }
@@ -244,7 +225,7 @@ function bind_events_to_rect(c) {
         set_color(row, column, color_off);
       }
     },
-    false,
+    false
   );
 }
 
@@ -341,9 +322,7 @@ ToneMatrix.bindMatrixButtons = bindMatrixButtons;
 // return the current state of the matrix, represented by a list of lists of bits
 export function get_matrix(): List {
   if (!matrix) {
-    throw new Error(
-      'Please activate the tone matrix first by clicking on the tab!',
-    );
+    throw new Error('Please activate the tone matrix first by clicking on the tab!');
   }
   const matrix_list = matrix.slice(0);
   const result: List[] = [];
@@ -378,9 +357,7 @@ export function set_timeout(f, t) {
     const timeoutObj = set_time_out_renamed(f, t);
     timeout_objects.push(timeoutObj);
   } else {
-    throw new Error(
-      'set_timeout(f, t) expects a function and a number respectively.',
-    );
+    throw new Error('set_timeout(f, t) expects a function and a number respectively.');
   }
 }
 

@@ -45,11 +45,11 @@ export {
   show,
   square,
   stack,
-  stackn,
   stack_frac,
+  stackn,
   translate,
   triangle,
   turn_upside_down,
   white,
-  yellow,
+  yellow
 } from './functions';
