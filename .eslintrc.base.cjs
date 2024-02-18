@@ -5,7 +5,11 @@ let todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 /** @type {import('eslint').Linter.Config} */
 const eslintConfig = {
   /** @see https://eslint.org/docs/latest/rules/ */
-  extends: ['eslint:recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended'
+    //  'plugin:@typescript-eslint/recommended-type-checked'
+  ],
 
   env: {
     node: true,

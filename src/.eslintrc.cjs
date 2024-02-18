@@ -27,51 +27,18 @@ const eslintConfig = {
     quotes: ['warn', 'single', { avoidEscape: true }],
 
     // [typescript-eslint Extension Rules]
-    /* NOTE
-      .eslintrc.base.js has been configured for every rule off the
-      eslint:recommended config as of V8.
-      A similar complete config but for all typescript-eslint rules hasn't
-      been made, instead simply using airbnb-typescript's layers of
-      extended configs & plugins.
-
-      This section is for reconfiguring the typescript-eslint extension
-      rules configured by airbnb-typescript that have replaced their eslint
-      equivalents, to make them match the behaviour in .eslintrc.base.js
-    */
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': [
-      'warn',
+      'error',
       {
-        // vars: "all",
-        // args: "after-used",
-        // ignoreRestSiblings: false,
-        argsIgnorePattern: '^_',
-        caughtErrors: 'all', // Was "none"
-        caughtErrorsIgnorePattern: '^_'
+        vars: 'all',
+        args: 'all',
+        ignoreRestSiblings: false,
+        varsIgnorePattern: '^_',
+        argsIgnorePattern: '^_'
       }
     ],
-    '@typescript-eslint/no-use-before-define': [
-      'warn',
-      {
-        functions: false
-        // classes: true,
-        // variables: true,
-        // enums: true, // TS
-        // typedefs: true, // TS
-        // ignoreTypeReferences: true, // TS
-      }
-    ],
-    '@typescript-eslint/default-param-last': 'warn',
-    '@typescript-eslint/no-shadow': [
-      'warn',
-      {
-        builtinGlobals: true
-        // hoist: "functions",
-        // ignoreTypeValueShadow: true, // TS
-        // ignoreFunctionTypeParameterNameValueShadow: true, // TS
-      }
-    ],
-    '@typescript-eslint/lines-between-class-members': 'off',
-    // "@typescript-eslint/consistent-type-imports": 1,
+    '@typescript-eslint/consistent-type-imports': 'error',
 
     // [Error → Warn]
     /* NOTE
