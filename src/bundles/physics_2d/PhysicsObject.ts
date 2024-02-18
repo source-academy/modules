@@ -18,9 +18,13 @@ import { type PhysicsWorld } from './PhysicsWorld';
 
 export class PhysicsObject implements ReplResult {
   private body: b2Body;
+
   private shape: b2Shape;
+
   private fixture: b2Fixture;
+
   private forcesCentered: Force[] = [];
+
   private forcesAtAPoint: ForceWithPos[] = [];
 
   constructor(

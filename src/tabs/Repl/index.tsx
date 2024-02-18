@@ -31,8 +31,11 @@ const BOX_PADDING_VALUE = 4;
 
 class ProgrammableReplGUI extends React.Component<Props, State> {
   public replInstance : ProgrammableRepl;
+
   private editorAreaRect;
+
   private editorInstance;
+
   constructor(data: Props) {
     super(data);
     this.replInstance = data.programmableReplInstance;
@@ -42,10 +45,12 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       isDraggingDragBar: false,
     };
   }
+
   private dragBarOnMouseDown = (e) => {
     e.preventDefault();
     this.setState({ isDraggingDragBar: true });
   };
+
   private onMouseMove = (e) => {
     if (this.state.isDraggingDragBar) {
       const height = Math.max(e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
@@ -54,17 +59,21 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       this.editorInstance.resize();
     }
   };
+
   private onMouseUp = (_e) => {
     this.setState({ isDraggingDragBar: false });
   };
+
   componentDidMount() {
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
   }
+
   componentWillUnmount() {
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
   }
+
   public render() {
     const { editorHeight } = this.state;
     const outputDivs : JSX.Element[] = [];

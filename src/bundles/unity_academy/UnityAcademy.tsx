@@ -64,6 +64,7 @@ type AudioClipInternalName = string;
 
 export class AudioClipIdentifier { // A wrapper class to store identifier string and prevent users from using arbitrary string for idenfitier
   audioClipInternalName : AudioClipInternalName;
+
   constructor(audioClipInternalName : string) {
     this.audioClipInternalName = audioClipInternalName;
   }
@@ -72,6 +73,7 @@ export class AudioClipIdentifier { // A wrapper class to store identifier string
 
 export class GameObjectIdentifier { // A wrapper class to store identifier string and prevent users from using arbitrary string for idenfitier
   gameObjectIdentifier : string;
+
   constructor(gameObjectIdentifier : string) {
     this.gameObjectIdentifier = gameObjectIdentifier;
   }
@@ -171,21 +173,37 @@ const UNITY_CONFIG = {
 class UnityAcademyJsInteropContext {
   // private unityConfig : any;
   public unityInstance : any;
+
   private unityContainerElement : HTMLElement | null;
+
   private studentGameObjectStorage : { [gameObjectIdentifier : string] : StudentGameObject }; // [get by interop]
+
   private prefabInfo: any;
+
   private gameObjectIdentifierSerialCounter = 0;
+
   private studentActionQueue : any; // [get / clear by interop]
+
   private deltaTime = 0; // [set by interop]
+
   private input : InputData; // [set by interop] 0 = key idle, 1 = on key down, 2 = holding key, 3 = on key up
+
   public gameObjectIdentifierWrapperClass : any; // [get by interop] For interop to create the class instance with the correct type when calling users' Start and Update functions. Only the object with this class type can pass checkGameObjectIdentifierParameter in functions.ts
+
   private targetFrameRate : number;
+
   private unityInstanceState; // [set by interop]
+
   private guiData : any[]; // [get / clear by interop]
+
   public dimensionMode;
+
   private isShowingUnityAcademy : boolean; // [get by interop]
+
   private latestUserAgreementVersion : string;
+
   private audioClipStorage : AudioClipInternalName[];
+
   private audioClipIdentifierSerialCounter = 0;
 
   constructor() {

@@ -7,7 +7,9 @@ import type { Pair } from 'js-slang/dist/stdlib/list';
  */
 export class DrawnPlot implements ReplResult {
   drawFn: any;
+
   data: ListOfPairs;
+
   constructor(drawFn: any, data: ListOfPairs) {
     this.drawFn = drawFn;
     this.data = data;
@@ -22,13 +24,17 @@ export class DrawnPlot implements ReplResult {
 
 export class CurvePlot implements ReplResult {
   plotlyDrawFn: any;
+
   data: Data;
+
   layout: Partial<Layout>;
+
   constructor(plotlyDrawFn: any, data: Data, layout: Partial<Layout>) {
     this.plotlyDrawFn = plotlyDrawFn;
     this.data = data;
     this.layout = layout;
   }
+
   public toReplString = () => '<CurvePlot>';
 
   public draw = (divId: string) => {

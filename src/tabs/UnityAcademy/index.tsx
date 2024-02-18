@@ -15,10 +15,12 @@ type Props = {};
 
 class Unity3DTab extends React.Component<Props> {
   private userAgreementCheckboxChecked : boolean;
+
   constructor(props : Props) {
     super(props);
     this.userAgreementCheckboxChecked = false;
   }
+
   render() {
     let highFPSWarning;
     const currentTargetFrameRate = getInstance()

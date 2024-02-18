@@ -52,6 +52,7 @@ DebugDrawCanvasState
   private debugDraw: DebugDraw | null;
 
   private world: PhysicsWorld;
+
   private b2World: b2World;
 
   constructor(props: DebugDrawCanvasProps | Readonly<DebugDrawCanvasProps>) {

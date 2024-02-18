@@ -87,10 +87,10 @@ export function generatePlot(
   is_colored: boolean,
   func: Curve,
 ): CurvePlot {
-  let x_s: number[] = [];
-  let y_s: number[] = [];
-  let z_s: number[] = [];
-  let color_s: string[] = [];
+  const x_s: number[] = [];
+  const y_s: number[] = [];
+  const z_s: number[] = [];
+  const color_s: string[] = [];
   for (let i = 0; i <= numPoints; i += 1) {
     const point = func(i / numPoints);
     x_s.push(x_of(point));

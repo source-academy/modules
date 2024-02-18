@@ -19,8 +19,11 @@ import { Timer } from './types';
 
 export class PhysicsWorld {
   private b2World: b2World;
+
   private physicsObjects: PhysicsObject[];
+
   private timer: Timer;
+
   private touchingObjects: Map<b2Fixture, Map<b2Fixture, number>>;
 
   private iterationsConfig: b2StepConfig = {
@@ -105,8 +108,8 @@ export class PhysicsWorld {
     return this.b2World;
   }
 
-  public getWorldStatus(): String {
-    let world_status: String = `
+  public getWorldStatus(): string {
+    let world_status: string = `
   World time: ${this.timer.toString()}
   
   Objects:

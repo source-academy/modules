@@ -31,13 +31,13 @@ CanvasHolderState
   componentDidMount() {
     console.debug(`>>> MOUNT #${this.props.componentNumber}`);
 
-    let { current: canvas } = this.canvasReference;
+    const { current: canvas } = this.canvasReference;
     if (canvas === null) return;
 
-    let renderGroups: RenderGroup[] = Core
+    const renderGroups: RenderGroup[] = Core
       .getRenderGroupManager()
       .getGroupsToRender();
-    let lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
+    const lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
 
     this.statefulRenderer = new StatefulRenderer(
       canvas,

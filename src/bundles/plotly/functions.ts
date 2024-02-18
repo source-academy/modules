@@ -16,7 +16,7 @@ import { generatePlot } from './curve_functions';
 import { get_duration, get_wave, is_sound } from './sound_functions';
 import { type Sound } from '../sound/types';
 
-let drawnPlots: (DrawnPlot | CurvePlot)[] = [];
+const drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 
 context.moduleContexts.plotly.state = {
   drawnPlots,
@@ -261,7 +261,7 @@ function draw_new_plot_json(data: any, divId: string) {
  * @returns The converted data that can be used by the plotly.js function
  */
 function convert_to_plotly_data(data: ListOfPairs): Data {
-  let convertedData: Data = {};
+  const convertedData: Data = {};
   if (Array.isArray(data) && data.length === 2) {
     add_fields_to_data(convertedData, data);
   }
@@ -423,8 +423,8 @@ export const draw_sound_2d = (sound: Sound) => {
       channel[i] = wave(i / FS);
     }
 
-    let x_s: number[] = [];
-    let y_s: number[] = [];
+    const x_s: number[] = [];
+    const y_s: number[] = [];
 
     for (let i = 0; i < channel.length; i += 1) {
       x_s.push(time_stamps[i]);

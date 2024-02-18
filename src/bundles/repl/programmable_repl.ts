@@ -12,10 +12,15 @@ import { COLOR_RUN_CODE_RESULT, COLOR_ERROR_MESSAGE, DEFAULT_EDITOR_HEIGHT } fro
 
 export class ProgrammableRepl {
   public evalFunction: Function;
+
   public userCodeInEditor: string;
+
   public outputStrings: any[];
+
   private _editorInstance;
+
   private _tabReactComponent: any;
+
   // I store editorHeight value separately in here although it is already stored in the module's Tab React component state because I need to keep the editor height
   // when the Tab component is re-mounted due to the user drags the area between the module's Tab and Source Academy's original REPL to resize the module's Tab height.
   public editorHeight : number;
@@ -74,7 +79,7 @@ export class ProgrammableRepl {
 
   // Rich text output method allow output strings to have html tags and css styles.
   pushOutputString(content : string, textColor : string, outputMethod : string = 'plaintext') {
-    let tmp = {
+    const tmp = {
       content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
       outputMethod,
@@ -166,8 +171,8 @@ export class ProgrammableRepl {
   userStringSafeCheck(str) {
     developmentLog(`Safe check on ${str}`);
     const tmp = str.toLowerCase();
-    let forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
-    for (let word of forbiddenWords) {
+    const forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
+    for (const word of forbiddenWords) {
       if (tmp.indexOf(word) !== -1) {
         return word;
       }
@@ -238,7 +243,7 @@ export class ProgrammableRepl {
   }
 
   private getSavedEditorContent() {
-    let savedContent = localStorage.getItem('programmable_repl_saved_editor_code');
+    const savedContent = localStorage.getItem('programmable_repl_saved_editor_code');
     if (savedContent === null) return '';
     return savedContent;
   }
