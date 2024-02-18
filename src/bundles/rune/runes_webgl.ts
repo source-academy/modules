@@ -139,6 +139,6 @@ export function initFramebufferObject(gl: WebGLRenderingContext): FrameBufferWit
 
   return {
     framebuffer,
-    texture,
+    texture
   };
 }

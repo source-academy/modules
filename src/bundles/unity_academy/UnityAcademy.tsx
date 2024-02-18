@@ -100,7 +100,7 @@ class UnityComponent extends React.Component<any> {
           position: 'absolute',
           left: '0%',
           top: '0%',
-          zIndex: '9999',
+          zIndex: '9999'
         }}
       >
         <div
@@ -109,7 +109,7 @@ class UnityComponent extends React.Component<any> {
             width: '100%',
             height: '100%',
             position: 'absolute',
-            zIndex: '-1',
+            zIndex: '-1'
           }}
         >
           <p
@@ -118,7 +118,7 @@ class UnityComponent extends React.Component<any> {
               textAlign: 'center',
               lineHeight: '30',
               fontSize: '23px',
-              color: 'cyan',
+              color: 'cyan'
             }}
           >
             Preparing to load Unity Academy...
@@ -130,7 +130,7 @@ class UnityComponent extends React.Component<any> {
             style={{
               width: '100%',
               height: '100%',
-              position: 'absolute',
+              position: 'absolute'
             }}
           ></canvas>
         </div>
@@ -145,7 +145,7 @@ class UnityComponent extends React.Component<any> {
             position: 'absolute',
             left: '0%',
             top: '0%',
-            width: '15%',
+            width: '15%'
           }}
         />
         <Button
@@ -159,7 +159,7 @@ class UnityComponent extends React.Component<any> {
             position: 'absolute',
             left: '17%',
             top: '0%',
-            width: '20%',
+            width: '20%'
           }}
         />
       </div>
@@ -179,7 +179,7 @@ const UNITY_CONFIG = {
   streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
   companyName: 'Wang Zihan @ NUS SoC 2026',
   productName: 'Unity Academy (Source Academy Embedding Version)',
-  productVersion: "See 'About' in the embedded frontend.",
+  productVersion: "See 'About' in the embedded frontend."
 };
 
 class UnityAcademyJsInteropContext {
@@ -232,7 +232,7 @@ class UnityAcademyJsInteropContext {
     this.audioClipStorage = [];
     this.guiData = [];
     this.input = {
-      keyboardInputInfo: {},
+      keyboardInputInfo: {}
     };
     this.targetFrameRate = 30;
 
@@ -463,7 +463,7 @@ class UnityAcademyJsInteropContext {
       playProgress: 0,
       volume: 1,
       isLooping: false,
-      isPlaying: false,
+      isPlaying: false
     };
     this.dispatchStudentAction(
       `instantiateAudioSourceGameObject|${gameObjectIdentifier}|${audioClipIdentifier.audioClipInternalName}`
@@ -485,12 +485,12 @@ class UnityAcademyJsInteropContext {
       transform: {
         position: zeroVector(),
         rotation: zeroVector(),
-        scale: new Vector3(1, 1, 1),
+        scale: new Vector3(1, 1, 1)
       },
       rigidbody: null,
       audioSource: null,
       customProperties: {},
-      isDestroyed: false,
+      isDestroyed: false
     };
   }
 
@@ -570,13 +570,13 @@ class UnityAcademyJsInteropContext {
       [
         cos(rx) * sin(rz) + sin(rx) * sin(ry) * cos(rz),
         cos(rx) * cos(rz) - sin(rx) * sin(ry) * sin(rz),
-        -sin(rx) * cos(ry),
+        -sin(rx) * cos(ry)
       ],
       [
         sin(rx) * sin(rz) - cos(rx) * sin(ry) * cos(rz),
         cos(rx) * sin(ry) * sin(rz) + sin(rx) * cos(rz),
-        cos(rx) * cos(ry),
-      ],
+        cos(rx) * cos(ry)
+      ]
     ];
     const finalWorldTranslateVector = [
       rotationMatrix[0][0] * deltaPosition.x +
@@ -587,7 +587,7 @@ class UnityAcademyJsInteropContext {
         rotationMatrix[1][2] * deltaPosition.z,
       rotationMatrix[2][0] * deltaPosition.x +
         rotationMatrix[2][1] * deltaPosition.y +
-        rotationMatrix[2][2] * deltaPosition.z,
+        rotationMatrix[2][2] * deltaPosition.z
     ];
     gameObject.transform.position.x += finalWorldTranslateVector[0];
     gameObject.transform.position.y += finalWorldTranslateVector[1];
@@ -670,7 +670,7 @@ class UnityAcademyJsInteropContext {
       mass: 1,
       useGravity: true,
       drag: 0,
-      angularDrag: 0.05,
+      angularDrag: 0.05
     };
     this.dispatchStudentAction(`applyRigidbody|${gameObjectIdentifier.gameObjectIdentifier}`);
   }
@@ -774,7 +774,7 @@ class UnityAcademyJsInteropContext {
       type: 'label',
       content,
       x,
-      y,
+      y
     };
     this.guiData.push(newLabel);
   }
@@ -797,7 +797,7 @@ class UnityAcademyJsInteropContext {
       y,
       width,
       height,
-      onClick,
+      onClick
     };
     this.guiData.push(newButton);
   }

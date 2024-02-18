@@ -7,7 +7,7 @@ import {
   rotate,
   updateProjection,
   updateStates,
-  zoomToFit,
+  zoomToFit
 } from './jscad/renderer.js';
 import type { ControlsState, GeometryEntity, PerspectiveCameraState } from './jscad/types.js';
 import ListenerTracker from './listener_tracker.js';
@@ -22,7 +22,7 @@ enum MousePointer {
   FORWARD = 4,
 
   NONE = -1,
-  OTHER = 7050,
+  OTHER = 7050
 }
 
 /* [Exports] */

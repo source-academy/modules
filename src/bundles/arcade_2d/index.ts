@@ -255,5 +255,5 @@ export {
   update_rotation,
   update_scale,
   update_text,
-  update_to_top,
+  update_to_top
 } from './functions';

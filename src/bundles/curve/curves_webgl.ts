@@ -184,23 +184,20 @@ export class CurveDrawn implements ReplResult {
       program: shaderProgram,
       attribLocations: {
         vertexPosition: this.renderingContext.getAttribLocation(shaderProgram, 'aVertexPosition'),
-        vertexColor: this.renderingContext.getAttribLocation(shaderProgram, 'aFragColor'),
+        vertexColor: this.renderingContext.getAttribLocation(shaderProgram, 'aFragColor')
       },
       uniformLocations: {
         projectionMatrix: this.renderingContext.getUniformLocation(
           shaderProgram,
           'uProjectionMatrix'
         ),
-        modelViewMatrix: this.renderingContext.getUniformLocation(
-          shaderProgram,
-          'uModelViewMatrix'
-        ),
-      },
+        modelViewMatrix: this.renderingContext.getUniformLocation(shaderProgram, 'uModelViewMatrix')
+      }
     };
     this.buffersInfo = {
       cubeBuffer,
       curveBuffer,
-      curveColorBuffer,
+      curveColorBuffer
     };
   };
 

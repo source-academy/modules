@@ -29,7 +29,7 @@ import {
   MIN_HEIGHT,
   MIN_SCALE,
   MIN_VOLUME,
-  MIN_WIDTH,
+  MIN_WIDTH
 } from './constants';
 import {
   CircleGameObject,
@@ -40,7 +40,7 @@ import {
   SpriteGameObject,
   TextGameObject,
   TriangleGameObject,
-  type ShapeGameObject,
+  type ShapeGameObject
 } from './gameobject';
 import { PhaserScene, gameState } from './phaserScene';
 import {
@@ -55,7 +55,7 @@ import {
   type ScaleXY,
   type Sprite,
   type TriangleProps,
-  type UpdateFunction,
+  type UpdateFunction
 } from './types';
 
 // =============================================================================
@@ -70,7 +70,7 @@ export const config = {
   fps: DEFAULT_FPS,
   isDebugEnabled: DEFAULT_DEBUG_STATE,
   // User update function
-  userUpdateFunction: (() => {}) as UpdateFunction,
+  userUpdateFunction: (() => {}) as UpdateFunction
 };
 
 // =============================================================================
@@ -94,7 +94,7 @@ export const create_rectangle: (width: number, height: number) => ShapeGameObjec
 ) => {
   const rectangle = {
     width,
-    height,
+    height
   } as RectangleProps;
   return new RectangleGameObject(
     DEFAULT_TRANSFORM_PROPS,
@@ -116,7 +116,7 @@ export const create_rectangle: (width: number, height: number) => ShapeGameObjec
  */
 export const create_circle: (radius: number) => ShapeGameObject = (radius: number) => {
   const circle = {
-    radius,
+    radius
   } as CircleProps;
   return new CircleGameObject(
     DEFAULT_TRANSFORM_PROPS,
@@ -146,7 +146,7 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
     x2: width,
     y2: 0,
     x3: width / 2,
-    y3: height,
+    y3: height
   } as TriangleProps;
   return new TriangleGameObject(
     DEFAULT_TRANSFORM_PROPS,
@@ -168,7 +168,7 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
  */
 export const create_text: (text: string) => TextGameObject = (text: string) => {
   const displayText = {
-    text,
+    text
   } as DisplayText;
   return new TextGameObject(
     DEFAULT_TRANSFORM_PROPS,
@@ -203,7 +203,7 @@ export const create_sprite: (image_url: string) => SpriteGameObject = (image_url
     throw new Error('image_url must be a string');
   }
   const sprite: Sprite = {
-    imageUrl: image_url,
+    imageUrl: image_url
   } as Sprite;
   return new SpriteGameObject(
     DEFAULT_TRANSFORM_PROPS,
@@ -236,7 +236,7 @@ export const update_position: (gameObject: GameObject, [x, y]: PositionXY) => Ga
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
-      position: [x, y],
+      position: [x, y]
     });
     return gameObject;
   }
@@ -262,7 +262,7 @@ export const update_scale: (gameObject: GameObject, [x, y]: ScaleXY) => GameObje
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
-      scale: [x, y],
+      scale: [x, y]
     });
     return gameObject;
   }
@@ -288,7 +288,7 @@ export const update_rotation: (gameObject: GameObject, radians: number) => GameO
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
-      rotation: radians,
+      rotation: radians
     });
     return gameObject;
   }
@@ -318,7 +318,7 @@ export const update_color: (gameObject: GameObject, color: ColorRGBA) => GameObj
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
-      color,
+      color
     });
     return gameObject;
   }
@@ -347,7 +347,7 @@ export const update_flip: (gameObject: GameObject, flip: FlipXY) => GameObject =
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
-      flip,
+      flip
     });
     return gameObject;
   }
@@ -373,7 +373,7 @@ export const update_text: (textGameObject: TextGameObject, text: string) => Game
 ) => {
   if (textGameObject instanceof TextGameObject) {
     textGameObject.setText({
-      text,
+      text
     } as DisplayText);
     return textGameObject;
   }
@@ -863,13 +863,13 @@ export const build_game: () => BuildGame = () => {
   const inputConfig = {
     keyboard: true,
     mouse: true,
-    windowEvents: false,
+    windowEvents: false
   };
 
   const fpsConfig = {
     min: MIN_FPS,
     target: config.fps,
-    forceSetTimeOut: true,
+    forceSetTimeOut: true
   };
 
   const gameConfig = {
@@ -884,12 +884,12 @@ export const build_game: () => BuildGame = () => {
     scene: PhaserScene,
     input: inputConfig,
     fps: fpsConfig,
-    banner: false,
+    banner: false
   };
 
   return {
     toReplString: () => '[Arcade 2D]',
-    gameConfig,
+    gameConfig
   };
 };
 

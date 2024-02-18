@@ -5,7 +5,7 @@ import type { ReplResult } from '../../typings/type_helpers';
 import {
   DEFAULT_INTERACTABLE_PROPS,
   DEFAULT_RENDER_PROPS,
-  DEFAULT_TRANSFORM_PROPS,
+  DEFAULT_TRANSFORM_PROPS
 } from './constants';
 import type * as types from './types';
 

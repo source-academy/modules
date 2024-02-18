@@ -60,5 +60,5 @@ export {
   stop,
   triangle_sound,
   trombone,
-  violin,
+  violin
 } from './functions';

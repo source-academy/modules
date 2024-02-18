@@ -29,17 +29,17 @@ export const DEFAULT_DEBUG_STATE: boolean = false;
 export const DEFAULT_TRANSFORM_PROPS: TransformProps = {
   position: [0, 0],
   scale: [1, 1],
-  rotation: 0,
+  rotation: 0
 };
 
 export const DEFAULT_RENDER_PROPS: RenderProps = {
   color: [255, 255, 255, 255],
   flip: [false, false],
-  isVisible: true,
+  isVisible: true
 };
 
 export const DEFAULT_INTERACTABLE_PROPS: InteractableProps = {
-  isHitboxActive: true,
+  isHitboxActive: true
 };
 
 // Default values of Phaser scene

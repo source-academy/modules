@@ -36,7 +36,7 @@ export const getSquare: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -77,7 +77,7 @@ export const getRcross: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -96,7 +96,7 @@ export const getSail: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -115,7 +115,7 @@ export const getTriangle: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -134,7 +134,7 @@ export const getCorner: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -158,7 +158,7 @@ export const getNova: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -180,7 +180,7 @@ export const getCircle: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -241,7 +241,7 @@ export const getHeart: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -275,7 +275,7 @@ export const getPentagram: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -298,7 +298,7 @@ export const getRibbon: () => Rune = () => {
       Math.abs(Math.cos(i) * thickness) + (i / thetaMax) * Math.cos(i),
       Math.abs(Math.sin(i) * thickness) + (i / thetaMax) * Math.sin(i),
       0,
-      1,
+      1
     ]);
   }
   for (let i = 0; i < vertices.length - 2; i += 1) {
@@ -311,7 +311,7 @@ export const getRibbon: () => Rune = () => {
 
   return Rune.of({
     vertices: new Float32Array(vertexList),
-    colors: new Float32Array(colorList),
+    colors: new Float32Array(colorList)
   });
 };
 
@@ -329,7 +329,7 @@ export const colorPalette = [
   '#4CAF50',
   '#FFEB3B',
   '#FF9800',
-  '#795548',
+  '#795548'
 ];
 
 export function hexToColor(hex: string): number[] {
@@ -341,7 +341,7 @@ export function hexToColor(hex: string): number[] {
     parseInt(result[1], 16) / 255,
     parseInt(result[2], 16) / 255,
     parseInt(result[3], 16) / 255,
-    1,
+    1
   ];
 }
 
@@ -349,6 +349,6 @@ export function addColorFromHex(rune: Rune, hex: string) {
   throwIfNotRune(addColorFromHex.name, rune);
   return Rune.of({
     subRunes: [rune],
-    colors: new Float32Array(hexToColor(hex)),
+    colors: new Float32Array(hexToColor(hex))
   });
 }

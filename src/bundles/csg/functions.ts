@@ -5,7 +5,7 @@ import { measureBoundingBox, type BoundingBox } from '@jscad/modeling/src/measur
 import {
   intersect as _intersect,
   subtract as _subtract,
-  union as _union,
+  union as _union
 } from '@jscad/modeling/src/operations/booleans';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
@@ -20,7 +20,7 @@ import {
   centerPrimitive,
   hexToColor,
   type Operable,
-  type RenderGroup,
+  type RenderGroup
 } from './utilities';
 
 /* [Main] */
@@ -214,7 +214,7 @@ export function rounded_cube(hex: string): Shape {
 export function cylinder(hex: string): Shape {
   const solid: Solid = primitives.cylinder({
     height: 1,
-    radius: 0.5,
+    radius: 0.5
   });
   const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
@@ -234,7 +234,7 @@ export function cylinder(hex: string): Shape {
 export function rounded_cylinder(hex: string): Shape {
   const solid: Solid = primitives.roundedCylinder({
     height: 1,
-    radius: 0.5,
+    radius: 0.5
   });
   const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
@@ -292,7 +292,7 @@ export function pyramid(hex: string): Shape {
     startRadius: [radius, radius],
     // Radius by the time the top is reached
     endRadius: [0, 0],
-    segments: 4,
+    segments: 4
   });
   let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   shape = rotate(shape, 0, 0, degreesToRadians(45)) as Shape;
@@ -314,7 +314,7 @@ export function cone(hex: string): Shape {
   const solid: Solid = primitives.cylinderElliptic({
     height: 1,
     startRadius: [0.5, 0.5],
-    endRadius: [0, 0],
+    endRadius: [0, 0]
   });
   const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
@@ -368,7 +368,7 @@ export function star(hex: string): Shape {
 export function torus(hex: string): Shape {
   const solid: Solid = primitives.torus({
     innerRadius: 0.15,
-    outerRadius: 0.35,
+    outerRadius: 0.35
   });
   const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
