@@ -108,7 +108,7 @@ function ColumnUIComponent(props: {
   function ChildrenComponents(props: { componentPositions: Vector3[] }) {
     if (props.componentPositions.length !== component.children.length) {
       updateChildrenAlignment();
-      return;
+      return null;
     }
     let children: ReactNode[] = [];
     for (let i = 0; i < component.children.length; i++) {
@@ -140,4 +140,3 @@ export enum HorizontalAlignment {
   Center,
   Right,
 }
-
