@@ -1,7 +1,6 @@
 import { Vector3 } from "three";
 import { UIBasicComponent, type PaddingType } from "./UIComponent";
 import { Image } from "@react-three/drei";
-import { useEffect } from "react";
 
 type UIImageProps = {
   src: string;
@@ -48,4 +47,3 @@ function ImageUIComponent(props: {
     </mesh>
   );
 }
-

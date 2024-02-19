@@ -66,29 +66,54 @@ function ColumnUIComponent(props: {
 }) {
   let { component, position, updateParent } = props;
 
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(component.width);
+  const [height, setHeight] = useState(component.height);
+  const [componentPositions, setComponentPositions] = useState<Vector3[]>([]);
 
   function updateSize() {
+    let previousHeight = height;
+    let previousWidth = width;
     setHeight(component.height);
     setWidth(component.width);
-    updateParent();
+    updateChildrenAlignment();
+    if (
+      previousHeight != component.height ||
+      previousWidth != component.width
+    ) {
+      updateParent();
+    }
   }
 
-  function ChildrenComponents() {
-    let children: ReactNode[] = [];
-    let currentYPosition = -height / 2 + component.paddingTop;
+  function updateChildrenAlignment() {
+    let positions: Vector3[] = [];
+    let currentYPosition = -component.height / 2 + component.paddingTop;
     for (let i = 0; i < component.children.length; i++) {
       let child = component.children[i];
       let relativeYPosition = currentYPosition + child.height / 2;
       currentYPosition += child.height;
       let relativeXPosition = 0;
       if (component.horizontalAlignment === HorizontalAlignment.Left) {
-        relativeXPosition = -(width - child.width) / 2 + component.paddingLeft;
+        relativeXPosition =
+          -(component.width - child.width) / 2 + component.paddingLeft;
       } else if (component.horizontalAlignment === HorizontalAlignment.Right) {
-        relativeXPosition = (width - child.width) / 2 - component.paddingRight;
+        relativeXPosition =
+          (component.width - child.width) / 2 - component.paddingRight;
       }
       let childPosition = new Vector3(relativeXPosition, -relativeYPosition, 0);
+      positions.push(childPosition);
+    }
+    setComponentPositions(positions);
+  }
+
+  function ChildrenComponents(props: { componentPositions: Vector3[] }) {
+    if (props.componentPositions.length !== component.children.length) {
+      updateChildrenAlignment();
+      return;
+    }
+    let children: ReactNode[] = [];
+    for (let i = 0; i < component.children.length; i++) {
+      let child = component.children[i];
+      let childPosition = props.componentPositions[i];
       children.push(
         <group key={"component_" + component.id + "child_" + i}>
           {child.getComponent(childPosition, updateSize)}
@@ -105,7 +130,7 @@ function ColumnUIComponent(props: {
         <boxGeometry args={[width, height, 0]} />
         <meshStandardMaterial color={new Color(component.background)} />
       </mesh>
-      <ChildrenComponents />
+      <ChildrenComponents componentPositions={componentPositions} />
     </mesh>
   );
 }

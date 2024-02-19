@@ -34,17 +34,22 @@ export default class UITextComponent extends UIBasicComponent {
   getHeight = () => {
     return this.textHeight + this.paddingTop + this.paddingBottom;
   };
-  updateHeight = (newHeight: number) => {
-    if (newHeight === 0) {
-      return;
+  updateHeight = (newTextHeight: number): boolean => {
+    if (newTextHeight === 0) {
+      return false;
     }
-    this.textHeight = newHeight;
-    this.height = this.textHeight + this.paddingTop + this.paddingBottom;
-    let parent = this.parent;
-    while (parent) {
-      parent.calculateDimensions();
-      parent = parent.parent;
+    this.textHeight = newTextHeight;
+    let newHeight = this.getHeight();
+    if (this.height != newHeight) {
+      this.height = newHeight;
+      let parent = this.parent;
+      while (parent) {
+        parent.calculateDimensions();
+        parent = parent.parent;
+      }
+      return true;
     }
+    return false;
   };
   getComponent = (position: Vector3, updateParent: () => void) => {
     return (
@@ -66,10 +71,10 @@ function TextUIComponent(props: {
   let { component, position, updateParent } = props;
 
   const [offsetX, setOffsetX] = useState(0);
-  let ref = useRef<Mesh>(null);
+  const ref = useRef<Mesh>();
 
   useEffect(() => {
-    if (ref) {
+    if (ref.current) {
       getSize();
     }
   }, [ref]);
@@ -86,8 +91,9 @@ function TextUIComponent(props: {
         let maxX = geometry.boundingBox.max.x;
         let textWidth = maxX - minX;
         if (Number.isFinite(textHeight) && Number.isFinite(textWidth)) {
-          component.updateHeight(textHeight);
-          updateParent();
+          if (component.updateHeight(textHeight)) {
+            updateParent();
+          }
           let offsetMagnitude = (component.textWidth - textWidth) / 2;
           if (offsetMagnitude <= 0) return;
           if (component.textAlign == 0) {

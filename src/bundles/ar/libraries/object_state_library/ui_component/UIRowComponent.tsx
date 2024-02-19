@@ -68,28 +68,52 @@ function RowUIComponent(props: {
 
   const [width, setWidth] = useState(component.width);
   const [height, setHeight] = useState(component.height);
+  const [componentPositions, setComponentPositions] = useState<Vector3[]>([]);
 
   function updateSize() {
+    let previousHeight = height;
+    let previousWidth = width;
     setHeight(component.height);
     setWidth(component.width);
-    updateParent();
+    updateChildrenAlignment();
+    if (
+      previousHeight != component.height ||
+      previousWidth != component.width
+    ) {
+      updateParent();
+    }
   }
 
-  function ChildrenComponents() {
-    let children: ReactNode[] = [];
-    let currentXPosition = -width / 2 + component.paddingLeft;
+  function updateChildrenAlignment() {
+    let positions: Vector3[] = [];
+    let currentXPosition = -component.width / 2 + component.paddingLeft;
     for (let i = 0; i < component.children.length; i++) {
       let child = component.children[i];
       let relativeXPosition = currentXPosition + child.width / 2;
       currentXPosition += child.width;
       let relativeYPosition = 0;
       if (component.verticalAlignment === VerticalAlignment.Top) {
-        relativeYPosition = (height - child.height) / 2 - component.paddingTop;
+        relativeYPosition =
+          (component.height - child.height) / 2 - component.paddingTop;
       } else if (component.verticalAlignment === VerticalAlignment.Bottom) {
         relativeYPosition =
-          -(height - child.height) / 2 + component.paddingBottom;
+          -(component.height - child.height) / 2 + component.paddingBottom;
       }
       let childPosition = new Vector3(relativeXPosition, relativeYPosition, 0);
+      positions.push(childPosition);
+    }
+    setComponentPositions(positions);
+  }
+
+  function ChildrenComponents(props: { componentPositions: Vector3[] }) {
+    if (props.componentPositions.length !== component.children.length) {
+      updateChildrenAlignment();
+      return;
+    }
+    let children: ReactNode[] = [];
+    for (let i = 0; i < component.children.length; i++) {
+      let child = component.children[i];
+      let childPosition = props.componentPositions[i];
       children.push(
         <group key={"component_" + component.id + "child_" + i}>
           {child.getComponent(childPosition, updateSize)}
@@ -106,7 +130,7 @@ function RowUIComponent(props: {
         <boxGeometry args={[width, height, 0]} />
         <meshStandardMaterial color={new Color(component.background)} />
       </mesh>
-      <ChildrenComponents />
+      <ChildrenComponents componentPositions={componentPositions} />
     </mesh>
   );
 }
