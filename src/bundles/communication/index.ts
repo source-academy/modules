@@ -23,4 +23,6 @@ export {
     initRpc,
     expose,
     callFunction,
+    keepRunning,
+    stopRunning,
 } from "./Communications";

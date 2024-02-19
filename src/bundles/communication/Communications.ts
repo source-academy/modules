@@ -22,6 +22,21 @@ class CommunicationModuleState {
 let moduleState = new CommunicationModuleState("broker.hivemq.com", 8884);
 context.moduleContexts.communication.state = moduleState;
 
+// Loop
+
+let interval: number | undefined = undefined;
+
+export function keepRunning() {
+    interval = window.setInterval(() => {}, 20000);
+}
+
+export function stopRunning() {
+    if (interval) {
+        window.clearInterval(interval);
+        interval = undefined;
+    }
+}
+
 // Global State
 
 export function initGlobalState(
