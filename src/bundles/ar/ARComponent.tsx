@@ -31,6 +31,9 @@ export default function ARComponent(props: ARState) {
   );
 }
 
+/**
+ * Toggle to start AR context, for tab.
+ */
 function ButtonComponent(props: ARState) {
   const screenState = useScreenState();
 
@@ -52,6 +55,10 @@ function ButtonComponent(props: ARState) {
   );
 }
 
+/**
+ * Default overlay for AR in Source Academy.
+ * Toggles are hidden until defined.
+ */
 function Overlay() {
   return (
     <div
@@ -125,6 +132,9 @@ function AugmentedLayer(props: ARState) {
   );
 }
 
+/**
+ * Content to be shown on screen.
+ */
 function AugmentedContent(props: ARState) {
   const screenState = useScreenState();
   const playArea = usePlayArea();
