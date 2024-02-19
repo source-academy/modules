@@ -21,6 +21,7 @@ import {
   LightObject,
   SphereObject,
 } from "./libraries/object_state_library/ARObject";
+import { useThree } from "@react-three/fiber";
 
 export default function ARComponent(props: ARState) {
   return (
@@ -65,6 +66,18 @@ function Overlay() {
         padding: "0px 20px 60px 20px",
       }}
     >
+      <button
+        id="recalibrate-toggle"
+        style={{
+          background: "#212121",
+          color: "#fafafa",
+          borderRadius: 30,
+          fontSize: 20,
+          fontWeight: 500,
+        }}
+      >
+        ↻
+      </button>
       <button
         id="left-toggle"
         style={{
@@ -116,6 +129,7 @@ function AugmentedContent(props: ARState) {
   const screenState = useScreenState();
   const playArea = usePlayArea();
   const controls = useControls();
+  const three = useThree();
   const [objects, setObjects] = useState<ARObject[]>([]);
 
   useEffect(() => {
@@ -145,7 +159,9 @@ function AugmentedContent(props: ARState) {
   }, []);
 
   useEffect(() => {
-    setupToggles(props.overlay, screenState.overlayRef);
+    setupToggles(props.overlay, screenState.overlayRef, () => {
+      playArea.setPlayArea(three.camera.position, three.camera.rotation);
+    });
   }, [
     props.overlay.toggleCenter,
     props.overlay.toggleLeft,
@@ -199,10 +215,18 @@ function AugmentedContent(props: ARState) {
 
 function setupToggles(
   overlayHelper: OverlayHelper,
-  overlayRef: RefObject<HTMLDivElement> | null
+  overlayRef: RefObject<HTMLDivElement> | null,
+  recalibrate: () => void
 ) {
   if (!overlayRef || !overlayRef.current) return;
   let overlay = overlayRef.current;
+  // Recalibrate
+  let recalibrateToggle = overlay?.querySelector(
+    "#recalibrate-toggle"
+  ) as HTMLElement;
+  if (recalibrateToggle) {
+    recalibrateToggle.onclick = recalibrate;
+  }
   // Left
   let leftToggle = overlay?.querySelector("#left-toggle") as HTMLElement;
   if (leftToggle) {

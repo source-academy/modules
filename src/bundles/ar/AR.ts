@@ -21,7 +21,7 @@ export function getModuleState(): ARState {
   return (window as any).arController as ARState;
 }
 
-function callARCallback() {
+export function callARCallback() {
   let f = (window as any).arControllerCallback as Function;
   if (f) {
     f();

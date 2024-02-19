@@ -52,6 +52,7 @@ export {
   setPathMovement,
   setOrbitMovement,
   setSpringMovement,
+  clearMovement,
 } from "./ObjectsHelper";
 
 export const alignmentTop = VerticalAlignment.Top;

@@ -28,6 +28,7 @@ import UIColumnComponent, {
 } from "./libraries/object_state_library/ui_component/UIColumnComponent";
 import UITextComponent from "./libraries/object_state_library/ui_component/UITextComponent";
 import UIImageComponent from "./libraries/object_state_library/ui_component/UIImageComponent";
+import { callARCallback } from "./AR";
 
 // Objects
 
@@ -200,24 +201,29 @@ export function createInterfaceImage(
 
 export function setFixedRotation(object: ARObject, radians: number) {
   object.behaviours.rotation = new FixRotation(radians);
+  callARCallback();
 }
 
 export function setRotateToUser(object: ARObject) {
   object.behaviours.rotation = new RotateToUser();
+  callARCallback();
 }
 
 export function setRotateAroundY(object: ARObject) {
   object.behaviours.rotation = new RotateAroundY();
+  callARCallback();
 }
 
 // Render
 
 export function setAlwaysRender(object: ARObject) {
   object.behaviours.render = new AlwaysRender();
+  callARCallback();
 }
 
 export function setRenderDistance(object: ARObject, distance: number) {
   object.behaviours.render = new RenderWithinDistance(distance);
+  callARCallback();
 }
 
 // Movement
@@ -237,6 +243,7 @@ export function createPathItem(
 
 export function setPathMovement(object: ARObject, path: PathItem[]) {
   object.behaviours.movement = new PathMovement(path);
+  callARCallback();
 }
 
 export function setOrbitMovement(
@@ -245,8 +252,15 @@ export function setOrbitMovement(
   duration: number
 ) {
   object.behaviours.movement = new OrbitMovement(radius, duration);
+  callARCallback();
 }
 
 export function setSpringMovement(object: ARObject) {
   object.behaviours.movement = new SpringMovement();
+  callARCallback();
+}
+
+export function clearMovement(object: ARObject) {
+  object.behaviours.movement = undefined;
+  callARCallback();
 }
