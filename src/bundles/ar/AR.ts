@@ -5,17 +5,23 @@ import { OverlayHelper, Toggle } from "./OverlayHelper";
 export class ARState {
   arObjects: ARObject[] = [];
   overlay = new OverlayHelper();
+  clickCallbacks = new Map<string, () => void>();
 }
 
 export function initAR() {
-  (window as any).arController = new ARState();
+  let controller = new ARState();
+  (window as any).arController = controller;
+  (window as any).arOnClickCallback = (id: string) => {
+    let callback = controller.clickCallbacks.get(id);
+    callback?.();
+  };
 }
 
 export function getModuleState(): ARState {
   return (window as any).arController as ARState;
 }
 
-export function callARCallback() {
+function callARCallback() {
   let f = (window as any).arControllerCallback as Function;
   if (f) {
     f();
@@ -75,6 +81,12 @@ export function addARObject(object: ARObject) {
     })
   ) {
     return; // Already in array
+  }
+  if (object.onSelect) {
+    moduleState.clickCallbacks.set(object.id, () => {
+      console.log("Called", object);
+      object.onSelect?.(object);
+    });
   }
   let newArray = Object.assign([], moduleState.arObjects);
   newArray.push(object);

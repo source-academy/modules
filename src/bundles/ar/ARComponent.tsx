@@ -177,6 +177,14 @@ function AugmentedContent(props: ARState) {
         return;
       }
     });
+    newObjects.forEach((object) => {
+      object.onSelect = () => {
+        let callback = (window as any).arOnClickCallback as Function;
+        if (callback) {
+          callback(object.id);
+        }
+      };
+    });
     setObjects(newObjects);
   }
 

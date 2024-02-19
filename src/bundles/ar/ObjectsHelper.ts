@@ -37,7 +37,7 @@ export function createCubeObject(
   height: number,
   depth: number,
   color: number,
-  onSelect?: (object: ARObject) => {}
+  onSelect?: () => {}
 ): CubeObject {
   return new CubeObject(
     uniqid(),
@@ -49,7 +49,9 @@ export function createCubeObject(
     undefined,
     undefined,
     undefined,
-    onSelect
+    (_: ARObject) => {
+      onSelect?.();
+    }
   );
 }
 
@@ -57,7 +59,7 @@ export function createSphereObject(
   position: Vector3,
   radius: number,
   color: number,
-  onSelect?: (object: ARObject) => {}
+  onSelect?: () => {}
 ): SphereObject {
   return new SphereObject(
     uniqid(),
@@ -67,9 +69,8 @@ export function createSphereObject(
     undefined,
     undefined,
     undefined,
-    (object: ARObject) => {
-      console.log("Selected", onSelect);
-      onSelect?.(object);
+    (_: ARObject) => {
+      onSelect?.();
     }
   );
 }
@@ -77,7 +78,7 @@ export function createSphereObject(
 export function createInterfaceObject(
   position: Vector3,
   rootComponent: UIBasicComponent,
-  onSelect?: (object: ARObject) => {}
+  onSelect?: () => {}
 ): UIObject {
   return new UIObject(
     uniqid(),
@@ -86,7 +87,9 @@ export function createInterfaceObject(
     undefined,
     undefined,
     undefined,
-    onSelect
+    (_: ARObject) => {
+      onSelect?.();
+    }
   );
 }
 
