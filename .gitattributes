@@ -4,9 +4,9 @@
 * text=auto
 
 # Declare files that will always have CRLF line endings on checkout.
-*.js text eol=crlf
-*.ts text eol=crlf
-*.tsx text eol=crlf
-*.md text eol=crlf
-*.cjs text eol=crlf
-*.json text eol=crlf
+# *.js text eol=crlf
+# *.ts text eol=crlf
+# *.tsx text eol=crlf
+# *.md text eol=crlf
+# *.cjs text eol=crlf
+# *.json text eol=crlf
