@@ -8,15 +8,15 @@ import { GlobalStateController } from "./GlobalStateController";
 import { RpcController } from "./RpcController";
 
 class CommunicationModuleState {
-    multiUser: MultiUserController;
-    globalState: GlobalStateController | null = null;
-    rpc: RpcController | null = null;
+  multiUser: MultiUserController;
+  globalState: GlobalStateController | null = null;
+  rpc: RpcController | null = null;
 
-    constructor(address: string, port: number) {
-        let multiUser = new MultiUserController();
-        multiUser.setupController(address, port);
-        this.multiUser = multiUser;
-    }
+  constructor(address: string, port: number) {
+    let multiUser = new MultiUserController();
+    multiUser.setupController(address, port);
+    this.multiUser = multiUser;
+  }
 }
 
 let moduleState = new CommunicationModuleState("broker.hivemq.com", 8884);
@@ -27,56 +27,56 @@ context.moduleContexts.communication.state = moduleState;
 let interval: number | undefined = undefined;
 
 export function keepRunning() {
-    interval = window.setInterval(() => {}, 20000);
+  interval = window.setInterval(() => {}, 20000);
 }
 
 export function stopRunning() {
-    if (interval) {
-        window.clearInterval(interval);
-        interval = undefined;
-    }
+  if (interval) {
+    window.clearInterval(interval);
+    interval = undefined;
+  }
 }
 
 // Global State
 
 export function initGlobalState(
-    topicHeader: string,
-    callback: (state: any) => {}
+  topicHeader: string,
+  callback: (state: any) => void
 ) {
-    moduleState.globalState = new GlobalStateController(
-        topicHeader,
-        moduleState.multiUser,
-        callback
-    );
+  moduleState.globalState = new GlobalStateController(
+    topicHeader,
+    moduleState.multiUser,
+    callback
+  );
 }
 
 export function getGlobalState() {
-    return moduleState.globalState?.globalState;
+  return moduleState.globalState?.globalState;
 }
 
 export function updateGlobalState(path: string, updatedState: any) {
-    moduleState.globalState?.updateGlobalState(path, updatedState);
+  moduleState.globalState?.updateGlobalState(path, updatedState);
 }
 
 // Rpc
 
 export function initRpc(topicHeader: string, userId?: string) {
-    moduleState.rpc = new RpcController(
-        topicHeader,
-        moduleState.multiUser,
-        userId
-    );
+  moduleState.rpc = new RpcController(
+    topicHeader,
+    moduleState.multiUser,
+    userId
+  );
 }
 
 export function expose(name: string, func: (...args: any[]) => any) {
-    moduleState.rpc?.expose(name, func);
+  moduleState.rpc?.expose(name, func);
 }
 
 export function callFunction(
-    receiver: string,
-    name: string,
-    args: any[],
-    callback: (args: any[]) => void
+  receiver: string,
+  name: string,
+  args: any[],
+  callback: (args: any[]) => void
 ) {
-    moduleState.rpc?.callFunction(receiver, name, args, callback);
+  moduleState.rpc?.callFunction(receiver, name, args, callback);
 }
