@@ -1,4 +1,4 @@
-import { MultiUserController } from './MultiUserController';
+import { type MultiUserController } from './MultiUserController';
 
 /**
  * Controller for maintaining a global state across all devices.
@@ -55,7 +55,7 @@ export class GlobalStateController {
     }
     let splitTopic = preSplitTopic.split('/');
     try {
-      let newGlobalState = Object.assign({}, this.globalState);
+      let newGlobalState = { ...this.globalState };
       if (
         this.globalState instanceof Array ||
         typeof this.globalState === 'string'

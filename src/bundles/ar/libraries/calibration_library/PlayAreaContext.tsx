@@ -67,11 +67,11 @@ export function PlayAreaContext(props: Props) {
    * Converts camera rotation to angle around vertical axis.
    * Angle measured counterclockwise, starting from 12 o'clock.
    *
-   * @param origin Position of user in world coordinates
+   * @param cameraPosition Position of user in world coordinates
    * @param cameraRotation Camera rotation of user
    */
-  function setPlayArea(origin: Vector3, cameraRotation: Euler) {
-    setOrigin(origin);
+  function setPlayArea(cameraPosition: Vector3, cameraRotation: Euler) {
+    setOrigin(cameraPosition);
     setAngle(eulerToAngle(cameraRotation));
   }
 
@@ -91,12 +91,10 @@ export function PlayAreaContext(props: Props) {
       } else if (x < 0) {
         selectedAngle += Math.PI * 2;
       }
-    } else {
-      if (x > 0) {
-        selectedAngle = Math.PI / 2;
-      } else if (x < 0) {
-        selectedAngle = (Math.PI * 3) / 2;
-      }
+    } else if (x > 0) {
+      selectedAngle = Math.PI / 2;
+    } else if (x < 0) {
+      selectedAngle = (Math.PI * 3) / 2;
     }
     return selectedAngle;
   }

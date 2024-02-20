@@ -202,6 +202,12 @@ export abstract class MovementClass implements Behaviour {
   type: string = '';
 }
 
+export enum MovementStyle {
+  Linear,
+  FastToSlow,
+  SlowToFast,
+}
+
 /**
  * Defines movement in a straight line for a path.
  */
@@ -239,12 +245,6 @@ function parsePathItems(path: any[]) {
     }
   }
   return result;
-}
-
-export enum MovementStyle {
-  Linear,
-  FastToSlow,
-  SlowToFast,
 }
 
 /**
@@ -304,12 +304,12 @@ export class PathMovement extends MovementClass {
       );
       switch (currentItem.style) {
         case MovementStyle.SlowToFast: {
-          ratio = Math.pow(ratio, 5);
+          ratio = ratio ** 5;
           break;
         }
         case MovementStyle.FastToSlow: {
           let negative = 1 - ratio;
-          negative = Math.pow(negative, 5);
+          negative = negative ** 5;
           ratio = 1 - negative;
           break;
         }
@@ -357,12 +357,16 @@ export class OrbitMovement extends MovementClass {
     if (startTime) {
       this.startTime = startTime;
     } else {
-      this.startTime = new Date().getTime();
+      let currentDate = new Date();
+      this.startTime = currentDate.getTime();
     }
     if (getCurrentTime) {
       this.getCurrentTime = getCurrentTime;
     } else {
-      this.getCurrentTime = () => new Date().getTime();
+      this.getCurrentTime = () => {
+        let currentDate = new Date();
+        return currentDate.getTime();
+      };
     }
   }
   public getOffsetPosition(position: Vector3) {

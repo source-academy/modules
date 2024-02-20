@@ -1,4 +1,4 @@
-import { connect, MqttClient } from 'mqtt/dist/mqtt';
+import { connect, type MqttClient } from 'mqtt/dist/mqtt';
 
 export const STATE_CONNECTED = 'Connected';
 export const STATE_DISCONNECTED = 'Disconnected';
@@ -50,7 +50,8 @@ export class MqttController {
       this.connectionCallback(STATE_OFFLINE);
     });
     this.client.on('message', (topic, message) => {
-      this.messageCallback(topic, new TextDecoder('utf-8').decode(message));
+      let decoder = new TextDecoder('utf-8');
+      this.messageCallback(topic, decoder.decode(message));
     });
   }
 
@@ -58,8 +59,9 @@ export class MqttController {
    * Disconnects the MQTT client.
    */
   public disconnect() {
-    if (this.client == null) return;
-    this.client.end(true);
+    if (this.client) {
+      this.client.end(true);
+    }
     this.connectionCallback = () => {};
     this.messageCallback = () => {};
   }
@@ -85,8 +87,9 @@ export class MqttController {
    * @param topic Identifier for group of devices receiving the broadcast.
    */
   public subscribe(topic: string) {
-    if (this.client == null) return;
-    this.client.subscribe(topic);
+    if (this.client) {
+      this.client.subscribe(topic);
+    }
   }
 
   /**

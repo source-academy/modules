@@ -1,4 +1,4 @@
-import { MultiUserController } from './MultiUserController';
+import { type MultiUserController } from './MultiUserController';
 import uniqid from 'uniqid';
 
 type DeclaredFunction = {
@@ -79,15 +79,15 @@ export class RpcController {
       let callId = parsedMessage.callId;
       let sender = parsedMessage.sender;
       if (!callId || !sender) return;
-      let name = splitTopic[2];
-      let func = this.functions.get(name);
-      if (!func) {
+      let calledName = splitTopic[2];
+      let calledFunc = this.functions.get(calledName);
+      if (!calledFunc) {
         this.returnResponse(sender, callId, null);
         return;
       }
       try {
         let args = parsedMessage.args;
-        let result = func?.func(...args);
+        let result = calledFunc?.func(...args);
         this.returnResponse(sender, callId, result);
       } catch {
         this.returnResponse(sender, callId, null);

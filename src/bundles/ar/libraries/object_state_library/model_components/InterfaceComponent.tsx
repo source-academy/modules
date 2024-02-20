@@ -27,12 +27,8 @@ export default function InterfaceComponent(props: InterfaceProps) {
   const [components, setComponents] = useState<ReactNode>();
 
   useEffect(() => {
-    setComponents(
-      parseJsonInterface(props.interfaceModel.uiJson)?.getComponent(
-        new Vector3(0),
-        () => {},
-      ),
-    );
+    let parsedJson = parseJsonInterface(props.interfaceModel.uiJson);
+    setComponents(parsedJson?.getComponent(new Vector3(0), () => {}));
   }, [props.interfaceModel.uiJson]);
 
   return (
@@ -63,126 +59,198 @@ export function parseJsonInterface(uiJson: any) {
   }
   switch (componentType) {
     case 'UIColumnComponent': {
-      let horizontalAlignmentIndex = uiJson.horizontalAlignment;
-      let horizontalAlignment = HorizontalAlignment.Left;
-      if (typeof horizontalAlignmentIndex === 'number') {
-        let parsedIndex = Math.min(Math.max(0, horizontalAlignmentIndex), 2);
-        horizontalAlignment = parsedIndex;
-      }
-      let children: UIBasicComponent[] = [];
-      let jsonChildren = uiJson.children;
-      if (Array.isArray(jsonChildren)) {
-        jsonChildren.forEach((jsonChild) => {
-          let child = parseJsonInterface(jsonChild);
-          if (child) {
-            children.push(child);
-          }
-        });
-      }
-      let background = uiJson.background;
-      if (typeof background != 'number') {
-        background = undefined;
-      }
-      return new UIColumnComponent({
-        horizontalAlignment: horizontalAlignment,
-        padding: {
-          paddingLeft: paddingLeft,
-          paddingRight: paddingRight,
-          paddingTop: paddingTop,
-          paddingBottom: paddingBottom,
-        },
-        children: children,
-        background: background,
-        id: id,
-      });
+      return parseColumn(
+        uiJson,
+        id,
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
+      );
     }
     case 'UIRowComponent': {
-      let verticalAlignmentIndex = uiJson.verticalAlignment;
-      let verticalAlignment = VerticalAlignment.Top;
-      if (typeof verticalAlignmentIndex === 'number') {
-        let parsedIndex = Math.min(Math.max(0, verticalAlignmentIndex), 2);
-        verticalAlignment = parsedIndex;
-      }
-      let children: UIBasicComponent[] = [];
-      let jsonChildren = uiJson.children;
-      if (Array.isArray(jsonChildren)) {
-        jsonChildren.forEach((jsonChild) => {
-          let child = parseJsonInterface(jsonChild);
-          if (child) {
-            children.push(child);
-          }
-        });
-      }
-      let background = uiJson.background;
-      if (typeof background != 'number') {
-        background = undefined;
-      }
-      return new UIRowComponent({
-        verticalAlignment: verticalAlignment,
-        padding: {
-          paddingLeft: paddingLeft,
-          paddingRight: paddingRight,
-          paddingTop: paddingTop,
-          paddingBottom: paddingBottom,
-        },
-        children: children,
-        background: background,
-        id: id,
-      });
+      return parseRow(
+        uiJson,
+        id,
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
+      );
     }
     case 'UITextComponent': {
-      let text = uiJson.text;
-      let textSize = uiJson.textSize;
-      let textWidth = uiJson.textWidth;
-      let textAlign = uiJson.textAlign;
-      let color = uiJson.color;
-      if (
-        typeof text === 'string' &&
-        typeof textSize === 'number' &&
-        typeof textWidth === 'number' &&
-        typeof color === 'number'
-      ) {
-        return new UITextComponent({
-          text: text,
-          textSize: textSize,
-          textWidth: textWidth,
-          textAlign: textAlign,
-          color: color,
-          padding: {
-            paddingLeft: paddingLeft,
-            paddingRight: paddingRight,
-            paddingTop: paddingTop,
-            paddingBottom: paddingBottom,
-          },
-          id: id,
-        });
-      }
-      break;
+      return parseText(
+        uiJson,
+        id,
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
+      );
     }
     case 'UIImageComponent': {
-      let src = uiJson.src;
-      let imageWidth = uiJson.imageWidth;
-      let imageHeight = uiJson.imageHeight;
-      if (
-        typeof src === 'string' &&
-        typeof imageWidth === 'number' &&
-        typeof imageHeight === 'number'
-      ) {
-        return new UIImageComponent({
-          src: src,
-          imageWidth: imageWidth,
-          imageHeight: imageHeight,
-          padding: {
-            paddingLeft: paddingLeft,
-            paddingRight: paddingRight,
-            paddingTop: paddingTop,
-            paddingBottom: paddingBottom,
-          },
-          id: id,
-        });
-      }
-      break;
+      return parseImage(
+        uiJson,
+        id,
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
+      );
     }
+  }
+  return undefined;
+}
+
+function parseColumn(
+  uiJson: any,
+  id: string,
+  paddingLeft: number | undefined,
+  paddingRight: number | undefined,
+  paddingTop: number | undefined,
+  paddingBottom: number | undefined,
+) {
+  let horizontalAlignmentIndex = uiJson.horizontalAlignment;
+  let horizontalAlignment = HorizontalAlignment.Left;
+  if (typeof horizontalAlignmentIndex === 'number') {
+    let parsedIndex = Math.min(Math.max(0, horizontalAlignmentIndex), 2);
+    horizontalAlignment = parsedIndex;
+  }
+  let children: UIBasicComponent[] = [];
+  let jsonChildren = uiJson.children;
+  if (Array.isArray(jsonChildren)) {
+    jsonChildren.forEach((jsonChild) => {
+      let child = parseJsonInterface(jsonChild);
+      if (child) {
+        children.push(child);
+      }
+    });
+  }
+  let background = uiJson.background;
+  if (typeof background !== 'number') {
+    background = undefined;
+  }
+  return new UIColumnComponent({
+    horizontalAlignment: horizontalAlignment,
+    padding: {
+      paddingLeft: paddingLeft,
+      paddingRight: paddingRight,
+      paddingTop: paddingTop,
+      paddingBottom: paddingBottom,
+    },
+    children: children,
+    background: background,
+    id: id,
+  });
+}
+
+function parseRow(
+  uiJson: any,
+  id: string,
+  paddingLeft: number | undefined,
+  paddingRight: number | undefined,
+  paddingTop: number | undefined,
+  paddingBottom: number | undefined,
+) {
+  let verticalAlignmentIndex = uiJson.verticalAlignment;
+  let verticalAlignment = VerticalAlignment.Top;
+  if (typeof verticalAlignmentIndex === 'number') {
+    let parsedIndex = Math.min(Math.max(0, verticalAlignmentIndex), 2);
+    verticalAlignment = parsedIndex;
+  }
+  let children: UIBasicComponent[] = [];
+  let jsonChildren = uiJson.children;
+  if (Array.isArray(jsonChildren)) {
+    jsonChildren.forEach((jsonChild) => {
+      let child = parseJsonInterface(jsonChild);
+      if (child) {
+        children.push(child);
+      }
+    });
+  }
+  let background = uiJson.background;
+  if (typeof background !== 'number') {
+    background = undefined;
+  }
+  return new UIRowComponent({
+    verticalAlignment: verticalAlignment,
+    padding: {
+      paddingLeft: paddingLeft,
+      paddingRight: paddingRight,
+      paddingTop: paddingTop,
+      paddingBottom: paddingBottom,
+    },
+    children: children,
+    background: background,
+    id: id,
+  });
+}
+
+function parseText(
+  uiJson: any,
+  id: string,
+  paddingLeft: number | undefined,
+  paddingRight: number | undefined,
+  paddingTop: number | undefined,
+  paddingBottom: number | undefined,
+) {
+  let text = uiJson.text;
+  let textSize = uiJson.textSize;
+  let textWidth = uiJson.textWidth;
+  let textAlign = uiJson.textAlign;
+  let color = uiJson.color;
+  if (
+    typeof text === 'string' &&
+    typeof textSize === 'number' &&
+    typeof textWidth === 'number' &&
+    typeof color === 'number'
+  ) {
+    return new UITextComponent({
+      text: text,
+      textSize: textSize,
+      textWidth: textWidth,
+      textAlign: textAlign,
+      color: color,
+      padding: {
+        paddingLeft: paddingLeft,
+        paddingRight: paddingRight,
+        paddingTop: paddingTop,
+        paddingBottom: paddingBottom,
+      },
+      id: id,
+    });
+  }
+  return undefined;
+}
+
+function parseImage(
+  uiJson: any,
+  id: string,
+  paddingLeft: number | undefined,
+  paddingRight: number | undefined,
+  paddingTop: number | undefined,
+  paddingBottom: number | undefined,
+) {
+  let src = uiJson.src;
+  let imageWidth = uiJson.imageWidth;
+  let imageHeight = uiJson.imageHeight;
+  if (
+    typeof src === 'string' &&
+    typeof imageWidth === 'number' &&
+    typeof imageHeight === 'number'
+  ) {
+    return new UIImageComponent({
+      src: src,
+      imageWidth: imageWidth,
+      imageHeight: imageHeight,
+      padding: {
+        paddingLeft: paddingLeft,
+        paddingRight: paddingRight,
+        paddingTop: paddingTop,
+        paddingBottom: paddingBottom,
+      },
+      id: id,
+    });
   }
   return undefined;
 }

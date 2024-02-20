@@ -1,4 +1,4 @@
-import { Color, Mesh, Vector3 } from 'three';
+import { Color, type Mesh, Vector3 } from 'three';
 import { UIBasicComponent, type PaddingType } from './UIComponent';
 import { Text } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
@@ -41,7 +41,7 @@ export default class UITextComponent extends UIBasicComponent {
     }
     this.textHeight = newTextHeight;
     let newHeight = this.getHeight();
-    if (this.height != newHeight) {
+    if (this.height !== newHeight) {
       this.height = newHeight;
       let parent = this.parent;
       while (parent) {
@@ -97,9 +97,9 @@ function TextUIComponent(props: {
           }
           let offsetMagnitude = (component.textWidth - textWidth) / 2;
           if (offsetMagnitude <= 0) return;
-          if (component.textAlign == HorizontalAlignment.Left) {
+          if (component.textAlign === HorizontalAlignment.Left) {
             setOffsetX(-offsetMagnitude);
-          } else if (component.textAlign == HorizontalAlignment.Right) {
+          } else if (component.textAlign === HorizontalAlignment.Right) {
             setOffsetX(offsetMagnitude);
           }
         } else {

@@ -6,6 +6,12 @@ import {
 } from './UIComponent';
 import { Color, Vector3 } from 'three';
 
+export enum HorizontalAlignment {
+  Left,
+  Center,
+  Right,
+}
+
 type UIColumnProps = {
   children?: UIBasicComponent[];
   horizontalAlignment?: HorizontalAlignment;
@@ -47,16 +53,14 @@ export default class UIColumnComponent extends LayoutComponent {
     });
     return height;
   };
-  getComponent = (position: Vector3, updateParent: () => void) => {
-    return (
-      <ColumnUIComponent
-        key={this.id}
-        component={this}
-        position={position}
-        updateParent={updateParent}
-      />
-    );
-  };
+  getComponent = (position: Vector3, updateParent: () => void) => (
+    <ColumnUIComponent
+      key={this.id}
+      component={this}
+      position={position}
+      updateParent={updateParent}
+    />
+  );
 }
 
 function ColumnUIComponent(props: {
@@ -77,8 +81,8 @@ function ColumnUIComponent(props: {
     setWidth(component.width);
     updateChildrenAlignment();
     if (
-      previousHeight != component.height ||
-      previousWidth != component.width
+      previousHeight !== component.height ||
+      previousWidth !== component.width
     ) {
       updateParent();
     }
@@ -133,10 +137,4 @@ function ColumnUIComponent(props: {
       <ChildrenComponents componentPositions={componentPositions} />
     </mesh>
   );
-}
-
-export enum HorizontalAlignment {
-  Left,
-  Center,
-  Right,
 }

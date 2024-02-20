@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Vector3 } from 'three';
+import { type Vector3 } from 'three';
 import uniqid from 'uniqid';
 
 type UIComponentProps = {
@@ -79,16 +79,12 @@ export class UIBasicComponent {
       this.parent?.calculateDimensions();
     }
   };
-  getWidth = () => {
-    return this.paddingLeft + this.paddingRight;
-  };
-  getHeight = () => {
-    return this.paddingTop + this.paddingBottom;
-  };
+  getWidth = () => this.paddingLeft + this.paddingRight;
+  getHeight = () => this.paddingTop + this.paddingBottom;
   calculateLayer = () => {};
-  getComponent = (position: Vector3, _: () => void) => {
-    return <mesh key={'component_' + this.id} position={position}></mesh>;
-  };
+  getComponent = (position: Vector3, _: () => void) => (
+    <mesh key={'component_' + this.id} position={position}></mesh>
+  );
 }
 
 export class LayoutComponent extends UIBasicComponent {
