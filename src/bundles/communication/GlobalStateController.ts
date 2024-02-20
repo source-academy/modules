@@ -32,12 +32,16 @@ export class GlobalStateController {
   private setupGlobalState() {
     if (this.topicHeader.length <= 0) return;
     this.multiUser.addMessageCallback(this.topicHeader, (topic, message) => {
-      this.parseGlobalStateMessage(topic, message);
+      let shortenedTopic = topic.substring(
+        this.topicHeader.length,
+        topic.length
+      );
+      this.parseGlobalStateMessage(shortenedTopic, message);
     });
   }
 
-  public parseGlobalStateMessage(topic: string, message: string) {
-    let preSplitTopic = topic.trim();
+  public parseGlobalStateMessage(shortenedTopic: string, message: string) {
+    let preSplitTopic = shortenedTopic.trim();
     if (preSplitTopic.length === 0) {
       try {
         this.setGlobalState(JSON.parse(message));
