@@ -74,7 +74,7 @@ export class GlobalStateController {
         }
         currentJson = currentJson[subTopic];
       }
-      if (message === undefined) {
+      if (message === undefined || message.length === 0) {
         delete currentJson[splitTopic[splitTopic.length - 1]];
       } else {
         let jsonMessage = JSON.parse(message);
