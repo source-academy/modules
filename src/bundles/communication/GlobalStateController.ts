@@ -32,48 +32,52 @@ export class GlobalStateController {
   private setupGlobalState() {
     if (this.topicHeader.length <= 0) return;
     this.multiUser.addMessageCallback(this.topicHeader, (topic, message) => {
-      console.log("");
-      let splitTopic = topic.split("/");
-      if (splitTopic.length < 1) {
-        return;
-      }
-      if (splitTopic.length === 1) {
-        try {
-          this.setGlobalState(JSON.parse(message ?? "{}"));
-        } catch {
-          this.setGlobalState({});
-        }
-        return;
-      }
-      try {
-        let newGlobalState = Object.assign({}, this.globalState);
-        if (
-          this.globalState instanceof Array ||
-          typeof this.globalState === "string"
-        ) {
-          newGlobalState = {};
-        }
-        let currentJson = newGlobalState;
-        for (let i = 1; i < splitTopic.length - 1; i++) {
-          let subTopic = splitTopic[i];
-          if (
-            !(currentJson[subTopic] instanceof Object) ||
-            currentJson[subTopic] instanceof Array ||
-            typeof currentJson[subTopic] === "string"
-          ) {
-            currentJson[subTopic] = {};
-          }
-          currentJson = currentJson[subTopic];
-        }
-        let jsonMessage = JSON.parse(message ?? "{}");
-        if (!jsonMessage) {
-          delete currentJson[splitTopic[splitTopic.length - 1]];
-        } else {
-          currentJson[splitTopic[splitTopic.length - 1]] = jsonMessage;
-        }
-        this.setGlobalState(newGlobalState);
-      } catch {}
+      this.parseGlobalStateMessage(topic, message);
     });
+  }
+
+  public parseGlobalStateMessage(topic: string, message: string) {
+    let preSplitTopic = topic.trim();
+    if (preSplitTopic.length === 0) {
+      try {
+        this.setGlobalState(JSON.parse(message));
+      } catch {
+        this.setGlobalState(undefined);
+      }
+      return;
+    }
+    if (!preSplitTopic.startsWith("/")) {
+      preSplitTopic = "/" + preSplitTopic;
+    }
+    let splitTopic = preSplitTopic.split("/");
+    try {
+      let newGlobalState = Object.assign({}, this.globalState);
+      if (
+        this.globalState instanceof Array ||
+        typeof this.globalState === "string"
+      ) {
+        newGlobalState = {};
+      }
+      let currentJson = newGlobalState;
+      for (let i = 1; i < splitTopic.length - 1; i++) {
+        let subTopic = splitTopic[i];
+        if (
+          !(currentJson[subTopic] instanceof Object) ||
+          currentJson[subTopic] instanceof Array ||
+          typeof currentJson[subTopic] === "string"
+        ) {
+          currentJson[subTopic] = {};
+        }
+        currentJson = currentJson[subTopic];
+      }
+      if (message === undefined) {
+        delete currentJson[splitTopic[splitTopic.length - 1]];
+      } else {
+        let jsonMessage = JSON.parse(message);
+        currentJson[splitTopic[splitTopic.length - 1]] = jsonMessage;
+      }
+      this.setGlobalState(newGlobalState);
+    } catch {}
   }
 
   /**

@@ -1,9 +1,5 @@
 import { MqttController, STATE_DISCONNECTED } from "./MqttController";
 
-export function createMultiUser() {
-  return new MultiUserController();
-}
-
 /**
  * Controller with implementation of MQTT.
  * Required by both GlobalStateController and RpcController.
