@@ -216,6 +216,7 @@ export function createInterfaceColumn(
  * @param text Text to show.
  * @param textSize Size of text in metres.
  * @param textWidth Width of text.
+ * @param textAlign Horizontal alignment of text. Use `alignmentLeft`, `alignmentCenter` or `alignmentRight`.
  * @param paddingLeft Size of padding on the left.
  * @param paddingRight Size of padding on the right.
  * @param paddingTop Size of padding on the top.
@@ -227,6 +228,7 @@ export function createInterfaceText(
   text: string,
   textSize: number,
   textWidth: number,
+  textAlign: HorizontalAlignment,
   paddingLeft: number,
   paddingRight: number,
   paddingTop: number,
@@ -237,6 +239,7 @@ export function createInterfaceText(
     text: text,
     textSize: textSize,
     textWidth: textWidth,
+    textAlign: textAlign,
     padding: {
       paddingLeft: paddingLeft,
       paddingRight: paddingRight,

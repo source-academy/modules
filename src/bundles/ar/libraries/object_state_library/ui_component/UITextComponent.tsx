@@ -2,12 +2,13 @@ import { Color, Mesh, Vector3 } from "three";
 import { UIBasicComponent, type PaddingType } from "./UIComponent";
 import { Text } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
+import { HorizontalAlignment } from "./UIColumnComponent";
 
 type UITextProps = {
   text: string;
   textSize: number;
   textWidth: number;
-  textAlign?: number;
+  textAlign?: HorizontalAlignment;
   color?: number;
   padding?: number | PaddingType;
   id?: string;
@@ -18,14 +19,14 @@ export default class UITextComponent extends UIBasicComponent {
   textSize: number;
   textWidth: number;
   textHeight = 0;
-  textAlign: number;
+  textAlign: HorizontalAlignment;
   color: number;
   constructor(props: UITextProps) {
     super(props.padding, props.id);
     this.text = props.text;
     this.textSize = props.textSize;
     this.textWidth = props.textWidth;
-    this.textAlign = props.textAlign ?? 0;
+    this.textAlign = props.textAlign ?? HorizontalAlignment.Center;
     this.color = props.color ?? 0;
   }
   getWidth = () => {
@@ -96,9 +97,9 @@ function TextUIComponent(props: {
           }
           let offsetMagnitude = (component.textWidth - textWidth) / 2;
           if (offsetMagnitude <= 0) return;
-          if (component.textAlign == 0) {
+          if (component.textAlign == HorizontalAlignment.Left) {
             setOffsetX(-offsetMagnitude);
-          } else if (component.textAlign == 2) {
+          } else if (component.textAlign == HorizontalAlignment.Right) {
             setOffsetX(offsetMagnitude);
           }
         } else {
@@ -116,7 +117,7 @@ function TextUIComponent(props: {
 
   function getTextAlign(index: number) {
     switch (index) {
-      case 1:
+      case 0:
         return "left";
       case 2:
         return "right";
@@ -140,4 +141,3 @@ function TextUIComponent(props: {
     </mesh>
   );
 }
-
