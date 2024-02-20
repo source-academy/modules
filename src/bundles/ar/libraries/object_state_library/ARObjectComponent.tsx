@@ -1,5 +1,5 @@
 import { Interactive } from '@react-three/xr';
-import { ARObject } from './ARObject';
+import { type ARObject } from './ARObject';
 import { type MutableRefObject, type ReactNode, useRef, useState } from 'react';
 import {
   AlwaysRender,
@@ -24,7 +24,7 @@ import GltfComponent from './model_components/GltfComponent';
 import TextComponent from './model_components/TextComponent';
 import ImageComponent from './model_components/ImageComponent';
 import ShapeComponent from './model_components/ShapeComponent';
-import { useSpring, SpringValue } from '@react-spring/three';
+import { useSpring, type SpringValue } from '@react-spring/three';
 import LightComponent from './model_components/LightComponent';
 import InterfaceComponent from './model_components/InterfaceComponent';
 
@@ -65,14 +65,14 @@ export default function ARObjectComponent(props: Props) {
       props.arObject,
       ref,
       targetPosition,
-      setTargetPosition
+      setTargetPosition,
     );
     let userPosition = props.getUserPosition();
     handleVisibility(
       props.arObject,
       currentPosition,
       userPosition,
-      setShowComponent
+      setShowComponent,
     );
     handleRotation(props.arObject, currentPosition, userPosition, ref, delta);
   });
@@ -115,7 +115,7 @@ function updatePosition(
   arObject: ARObject,
   ref: MutableRefObject<Mesh | null>,
   targetPosition: Vector3,
-  setTargetPosition: React.Dispatch<React.SetStateAction<Vector3>>
+  setTargetPosition: React.Dispatch<React.SetStateAction<Vector3>>,
 ) {
   let position = arObject.position.clone();
   let movement = arObject.behaviours.movement;
@@ -177,12 +177,13 @@ function handleVisibility(
   arObject: ARObject,
   position: Vector3,
   userPosition: Vector3,
-  setShowComponent: React.Dispatch<React.SetStateAction<boolean>>
+  setShowComponent: React.Dispatch<React.SetStateAction<boolean>>,
 ) {
   let behaviour = arObject.behaviours.render ?? new RenderWithinDistance(5);
   if (behaviour instanceof RenderWithinDistance) {
     let distanceVector = new Vector3(0, 0, 0);
-    let distance = distanceVector.subVectors(position, userPosition).length();
+    distanceVector.subVectors(position, userPosition);
+    let distance = distanceVector.length();
     setShowComponent(distance <= behaviour.distance);
   } else if (behaviour instanceof AlwaysRender) {
     setShowComponent(true);
@@ -196,7 +197,7 @@ function handleRotation(
   position: Vector3,
   userPosition: Vector3,
   ref: MutableRefObject<Mesh | null>,
-  delta: number
+  delta: number,
 ) {
   let rotation = arObject.behaviours.rotation;
   let mesh = ref.current;
@@ -204,7 +205,7 @@ function handleRotation(
   if (rotation instanceof RotateToUser) {
     mesh.rotation.y = Math.atan2(
       userPosition.x - position.x,
-      userPosition.z - position.z
+      userPosition.z - position.z,
     );
   } else if (rotation instanceof RotateAroundY) {
     mesh.rotation.y += delta;

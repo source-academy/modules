@@ -105,13 +105,13 @@ export function ScreenStateContext(props: Props) {
         >
           {isXRSession.current ? overlayState : <></>}
         </div>
-      </>
+      </>,
     );
   }
 
   function setStates(
     newArState: ReactNode | undefined,
-    newOverlayState: ReactNode | undefined
+    newOverlayState: ReactNode | undefined,
   ) {
     if (newArState) {
       setArState(newArState);

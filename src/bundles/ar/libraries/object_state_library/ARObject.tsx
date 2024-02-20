@@ -10,12 +10,12 @@ import {
   RenderWithinDistance,
   ShapeModel,
   InterfaceModel,
-  RotationClass,
+  type RotationClass,
   parseRotation,
-  RenderClass,
+  type RenderClass,
   parseRender,
   parseMovement,
-  MovementClass,
+  type MovementClass,
 } from './Behaviour';
 import ARObjectComponent from './ARObjectComponent';
 import { parseVector3 } from '../calibration_library/Misc';
@@ -39,7 +39,7 @@ export class ARObject {
     id: string,
     position: Vector3,
     behaviours: Behaviours,
-    onSelect?: (object: ARObject) => void
+    onSelect?: (object: ARObject) => void,
   ) {
     this.id = id;
     this.position = position;
@@ -47,8 +47,8 @@ export class ARObject {
     this.onSelect = onSelect;
   }
   toJSON = () => {
-    let object = Object.assign({}, this) as any;
-    let behavioursClone = Object.assign({}, this.behaviours) as any;
+    let object = { ...this };
+    let behavioursClone = { ...this.behaviours } as any;
     delete behavioursClone.model;
     object.behaviours = behavioursClone;
     return object;
@@ -85,7 +85,7 @@ export class CubeObject extends ARObject {
     render?: RenderClass,
     rotation?: RotationClass,
     movement?: MovementClass,
-    onSelect?: (object: ARObject) => void
+    onSelect?: (object: ARObject) => void,
   ) {
     super(
       id,
@@ -93,13 +93,13 @@ export class CubeObject extends ARObject {
       {
         model: new ShapeModel(
           new BoxGeometry(width, height, depth),
-          new MeshStandardMaterial({ color: color })
+          new MeshStandardMaterial({ color: color }),
         ),
         render: render,
         rotation: rotation,
         movement: movement,
       },
-      onSelect
+      onSelect,
     );
     this.width = width;
     this.height = height;
@@ -135,7 +135,7 @@ export class CubeObject extends ARObject {
         render,
         rotation,
         movement,
-        onSelect
+        onSelect,
       );
     }
     return undefined;
@@ -155,7 +155,7 @@ export class SphereObject extends ARObject {
     render?: RenderClass,
     rotation?: RotationClass,
     movement?: MovementClass,
-    onSelect?: (object: ARObject) => void
+    onSelect?: (object: ARObject) => void,
   ) {
     super(
       id,
@@ -163,13 +163,13 @@ export class SphereObject extends ARObject {
       {
         model: new ShapeModel(
           new SphereGeometry(radius, 20, 20),
-          new MeshStandardMaterial({ color: color })
+          new MeshStandardMaterial({ color: color }),
         ),
         render: render,
         rotation: rotation,
         movement: movement,
       },
-      onSelect
+      onSelect,
     );
     this.radius = radius;
     this.color = color;
@@ -197,7 +197,7 @@ export class SphereObject extends ARObject {
         render,
         rotation,
         movement,
-        onSelect
+        onSelect,
       );
     }
     return undefined;
@@ -215,7 +215,7 @@ export class UIObject extends ARObject {
     render?: RenderClass,
     rotation?: RotationClass,
     movement?: MovementClass,
-    onSelect?: (object: ARObject) => void
+    onSelect?: (object: ARObject) => void,
   ) {
     super(
       id,
@@ -226,7 +226,7 @@ export class UIObject extends ARObject {
         rotation: rotation,
         movement: movement,
       },
-      onSelect
+      onSelect,
     );
     this.uiJson = uiJson;
   }
@@ -250,7 +250,7 @@ export class UIObject extends ARObject {
         render,
         rotation,
         movement,
-        onSelect
+        onSelect,
       );
     }
     return undefined;

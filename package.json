@@ -104,6 +104,7 @@
     "@jscad/modeling": "2.9.6",
     "@jscad/regl-renderer": "^2.6.1",
     "@jscad/stl-serializer": "^2.1.13",
+    "@react-spring/three": "^9.7.3",
     "@react-three/drei": "^9.97.0",
     "@react-three/fiber": "^8.15.16",
     "@react-three/xr": "^5.7.1",

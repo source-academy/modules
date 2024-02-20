@@ -45,9 +45,9 @@ export function PlayAreaContext(props: Props) {
       new Vector3(
         cameraPosition.x,
         cameraPosition.y - DEFAULT_HEIGHT,
-        cameraPosition.z
+        cameraPosition.z,
       ),
-      three.camera.rotation
+      three.camera.rotation,
     );
   }
 
@@ -134,9 +134,12 @@ export function PlayAreaContext(props: Props) {
   }
 
   function getRelativeRotation(rotation: Euler) {
-    let vector3 = new Vector3().setFromEuler(rotation);
+    let vector3 = new Vector3();
+    vector3.setFromEuler(rotation);
     vector3.applyAxisAngle(new Vector3(0, 1, 0), -angle);
-    return new Euler().setFromVector3(vector3);
+    let euler = new Euler();
+    euler.setFromVector3(vector3);
+    return euler;
   }
 
   return (

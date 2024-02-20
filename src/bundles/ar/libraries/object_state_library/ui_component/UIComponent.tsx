@@ -62,7 +62,7 @@ export class UIBasicComponent {
     }
   }
   toJSON = () => {
-    let object = Object.assign({}, this) as any;
+    let object = { ...this } as any;
     delete object.height;
     delete object.width;
     delete object.layer;
@@ -86,7 +86,7 @@ export class UIBasicComponent {
     return this.paddingTop + this.paddingBottom;
   };
   calculateLayer = () => {};
-  getComponent = (position: Vector3, updateParent: () => void) => {
+  getComponent = (position: Vector3, _: () => void) => {
     return <mesh key={'component_' + this.id} position={position}></mesh>;
   };
 }

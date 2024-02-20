@@ -1,6 +1,6 @@
 import { type MutableRefObject, type ReactNode } from 'react';
-import { ShapeModel } from '../Behaviour';
-import { SpringValue, animated } from '@react-spring/three';
+import { type ShapeModel } from '../Behaviour';
+import { type SpringValue, animated } from '@react-spring/three';
 import { Outlines } from '@react-three/drei';
 import { Color } from 'three';
 

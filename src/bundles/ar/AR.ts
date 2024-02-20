@@ -1,12 +1,18 @@
 import { Vector3 } from 'three';
 import { ARObject } from './libraries/object_state_library/ARObject';
 import { OverlayHelper, Toggle } from './OverlayHelper';
+import { Globals } from '@react-spring/three';
 
 export class ARState {
   arObjects: ARObject[] = [];
   overlay = new OverlayHelper();
   clickCallbacks = new Map<string, () => void>();
 }
+
+// Fix issue with React Spring
+Globals.assign({
+  frameLoop: 'always',
+});
 
 /**
  * Initialize AR.
@@ -126,16 +132,11 @@ export function createVector3(x: number, y: number, z: number): Vector3 {
 export function addARObject(object: ARObject) {
   let moduleState = getModuleState();
   if (!moduleState) return;
-  if (
-    moduleState.arObjects.find((item) => {
-      return item.id === object.id;
-    })
-  ) {
+  if (moduleState.arObjects.find((item) => item.id === object.id)) {
     return; // Already in array
   }
   if (object.onSelect) {
     moduleState.clickCallbacks.set(object.id, () => {
-      console.log('Called', object);
       object.onSelect?.(object);
     });
   }
@@ -153,9 +154,9 @@ export function addARObject(object: ARObject) {
 export function removeARObject(object: ARObject) {
   let moduleState = getModuleState();
   if (!moduleState) return;
-  moduleState.arObjects = moduleState.arObjects.filter((item) => {
-    return item.id !== object.id;
-  });
+  moduleState.arObjects = moduleState.arObjects.filter(
+    (item) => item.id !== object.id,
+  );
   callARCallback();
 }
 

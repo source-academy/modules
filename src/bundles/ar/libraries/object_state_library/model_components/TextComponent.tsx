@@ -1,8 +1,8 @@
 import { type MutableRefObject, type ReactNode, useRef, useState } from 'react';
-import { TextModel } from '../Behaviour';
-import { Mesh } from 'three';
+import { type TextModel } from '../Behaviour';
+import { type Mesh } from 'three';
 import { Text } from '@react-three/drei';
-import { SpringValue, animated } from '@react-spring/three';
+import { type SpringValue, animated } from '@react-spring/three';
 
 type TextProps = {
   textModel: TextModel;

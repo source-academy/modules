@@ -1,7 +1,7 @@
 import { type MutableRefObject, type ReactNode } from 'react';
-import { ARObject } from '../ARObject';
-import { LightModel } from '../Behaviour';
-import { SpringValue, animated } from '@react-spring/three';
+import { type ARObject } from '../ARObject';
+import { type LightModel } from '../Behaviour';
+import { type SpringValue, animated } from '@react-spring/three';
 
 type LightProps = {
   lightModel: LightModel;

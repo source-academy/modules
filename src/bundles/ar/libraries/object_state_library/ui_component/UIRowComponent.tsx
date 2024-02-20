@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import {
-  UIBasicComponent,
+  type UIBasicComponent,
   LayoutComponent,
   type PaddingType,
 } from './UIComponent';
@@ -117,7 +117,7 @@ function RowUIComponent(props: {
       children.push(
         <group key={'component_' + component.id + 'child_' + i}>
           {child.getComponent(childPosition, updateSize)}
-        </group>
+        </group>,
       );
     }
     return <group key={'children_' + component.id}>{children}</group>;

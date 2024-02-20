@@ -1,5 +1,5 @@
 import {
-  Camera,
+  type Camera,
   Group,
   Mesh,
   Object3D,
@@ -16,17 +16,12 @@ export function getIntersection(camera: Camera, coreObject: Object3D) {
   let cascadeChildren = getCascadeMeshs(coreObject.children);
   let items = raycaster.intersectObjects(cascadeChildren, true);
   let nearestItem = items
-    .filter((item) => {
-      return item.distance != 0;
-    })
-    .sort((item) => {
-      return item.distance;
-    });
+    .filter((item) => item.distance !== 0)
+    .sort((item) => item.distance);
   if (nearestItem.length > 0) {
     return getTopParent(nearestItem[0].object, coreObject);
-  } else {
-    return undefined;
   }
+  return undefined;
 }
 
 function getCascadeMeshs(children: Object3D<Object3DEventMap>[]) {
@@ -47,7 +42,7 @@ function getCascadeMeshs(children: Object3D<Object3DEventMap>[]) {
 
 function getTopParent(
   child: Object3D<Object3DEventMap>,
-  coreObject: Object3D
+  coreObject: Object3D,
 ): Mesh | undefined {
   let parent = child;
   let lastMesh = child;

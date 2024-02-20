@@ -12,8 +12,8 @@ import {
   ControlsContext,
   useControls,
 } from './libraries/controls_library/ControlsContext';
-import { ARState, getModuleState } from './AR';
-import { OverlayHelper } from './OverlayHelper';
+import { type ARState, getModuleState } from './AR';
+import { type OverlayHelper } from './OverlayHelper';
 import {
   CubeObject,
   type ARObject,
@@ -145,17 +145,13 @@ function AugmentedContent(props: ARState) {
   useEffect(() => {
     controls.setCallback((prev, current) => {
       if (prev) {
-        let object = objects.find((item) => {
-          return item.uuid === prev.uuid;
-        });
+        let object = objects.find((item) => item.uuid === prev.uuid);
         if (object) {
           object.isHighlighted = false;
         }
       }
       if (current) {
-        let object = objects.find((item) => {
-          return item.uuid === current.uuid;
-        });
+        let object = objects.find((item) => item.uuid === current.uuid);
         if (object) {
           object.isHighlighted = true;
         }
@@ -200,7 +196,6 @@ function AugmentedContent(props: ARState) {
       newObject = LightObject.parseObject(object);
       if (newObject) {
         newObjects.push(newObject);
-        return;
       }
     });
     newObjects.forEach((object) => {
@@ -216,9 +211,9 @@ function AugmentedContent(props: ARState) {
 
   return (
     <group>
-      {objects.map((item) => {
-        return item.getComponent(playArea.getCameraRelativePosition);
-      })}
+      {objects.map((item) =>
+        item.getComponent(playArea.getCameraRelativePosition),
+      )}
     </group>
   );
 }
@@ -226,13 +221,13 @@ function AugmentedContent(props: ARState) {
 function setupToggles(
   overlayHelper: OverlayHelper,
   overlayRef: RefObject<HTMLDivElement> | null,
-  recalibrate: () => void
+  recalibrate: () => void,
 ) {
   if (!overlayRef || !overlayRef.current) return;
   let overlay = overlayRef.current;
   // Recalibrate
   let recalibrateToggle = overlay?.querySelector(
-    '#recalibrate-toggle'
+    '#recalibrate-toggle',
   ) as HTMLElement;
   if (recalibrateToggle) {
     recalibrateToggle.onclick = recalibrate;

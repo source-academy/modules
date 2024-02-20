@@ -1,10 +1,10 @@
 import {
-  BufferGeometry,
-  Material,
+  type BufferGeometry,
+  type Material,
   type NormalBufferAttributes,
   Vector3,
 } from 'three';
-import { UIBasicComponent } from './ui_component/UIComponent';
+import { type UIBasicComponent } from './ui_component/UIComponent';
 import { parseVector3 } from '../calibration_library/Misc';
 
 export type Behaviours = {
@@ -50,7 +50,7 @@ export class ShapeModel implements ModelClass {
   material: Material | Material[] | undefined;
   constructor(
     geometry: BufferGeometry<NormalBufferAttributes> | undefined,
-    material: Material | Material[] | undefined
+    material: Material | Material[] | undefined,
   ) {
     this.geometry = geometry;
     this.material = material;
@@ -96,6 +96,22 @@ export class LightModel implements ModelClass {
 const RENDER_DISTANCE = 'RenderWithinDistance';
 const RENDER_ALWAYS = 'AlwaysRender';
 
+export abstract class RenderClass implements Behaviour {
+  type: string = '';
+}
+
+export class RenderWithinDistance implements RenderClass {
+  type = RENDER_DISTANCE;
+  distance: number;
+  constructor(distance: number) {
+    this.distance = distance;
+  }
+}
+
+export class AlwaysRender implements RenderClass {
+  type = RENDER_ALWAYS;
+}
+
 export function parseRender(render: any): RenderClass | undefined {
   if (!render) return undefined;
   switch (render.type) {
@@ -113,47 +129,11 @@ export function parseRender(render: any): RenderClass | undefined {
   return undefined;
 }
 
-export abstract class RenderClass implements Behaviour {
-  type: string = '';
-}
-
-export class RenderWithinDistance implements RenderClass {
-  type = RENDER_DISTANCE;
-  distance: number;
-  constructor(distance: number) {
-    this.distance = distance;
-  }
-}
-
-export class AlwaysRender implements RenderClass {
-  type = RENDER_ALWAYS;
-}
-
 // Rotation
 
 const ROTATION_USER = 'RotateToUser';
 const ROTATION_Y = 'RotateAroundY';
 const ROTATION_FIX = 'FixRotation';
-
-export function parseRotation(rotation: any): RotationClass | undefined {
-  if (!rotation) return undefined;
-  switch (rotation?.type) {
-    case ROTATION_USER: {
-      return new RotateToUser();
-    }
-    case ROTATION_Y: {
-      return new RotateAroundY();
-    }
-    case ROTATION_FIX: {
-      let angle = 0;
-      if (typeof rotation.rotation === 'number') {
-        angle = rotation.rotation as number;
-      }
-      return new FixRotation(angle);
-    }
-  }
-  return undefined;
-}
 
 /**
  * Base class for a rotation behaviour.
@@ -187,45 +167,31 @@ export class FixRotation implements RotationClass {
   }
 }
 
+export function parseRotation(rotation: any): RotationClass | undefined {
+  if (!rotation) return undefined;
+  switch (rotation?.type) {
+    case ROTATION_USER: {
+      return new RotateToUser();
+    }
+    case ROTATION_Y: {
+      return new RotateAroundY();
+    }
+    case ROTATION_FIX: {
+      let angle = 0;
+      if (typeof rotation.rotation === 'number') {
+        angle = rotation.rotation as number;
+      }
+      return new FixRotation(angle);
+    }
+  }
+  return undefined;
+}
+
 // Movement
 
 const MOVEMENT_PATH = 'PathMovement';
 const MOVEMENT_ORBIT = 'OrbitMovement';
 const MOVEMENT_SPRING = 'SpringMovement';
-
-export function parseMovement(movement: any, getCurrentTime?: () => number) {
-  if (!movement) return undefined;
-  switch (movement.type) {
-    case MOVEMENT_PATH: {
-      let startTime = movement.startTime;
-      let pathItems = movement.path;
-      if (
-        (startTime === undefined || typeof startTime === 'number') &&
-        Array.isArray(pathItems)
-      ) {
-        let parsedPathItems = parsePathItems(pathItems);
-        return new PathMovement(parsedPathItems, startTime, getCurrentTime);
-      }
-      break;
-    }
-    case MOVEMENT_ORBIT: {
-      let radius = movement.radius;
-      let duration = movement.duration;
-      let startTime = movement.startTime;
-      if (
-        typeof radius === 'number' &&
-        typeof duration === 'number' &&
-        (startTime === undefined || typeof startTime === 'number')
-      ) {
-        return new OrbitMovement(radius, duration, startTime, getCurrentTime);
-      }
-      break;
-    }
-    case MOVEMENT_SPRING:
-      return new SpringMovement();
-  }
-  return undefined;
-}
 
 /**
  * Base class for a movement behaviour.
@@ -297,7 +263,7 @@ export class PathMovement extends MovementClass {
   constructor(
     path: PathItem[],
     startTime?: number,
-    getCurrentTime?: () => number
+    getCurrentTime?: () => number,
   ) {
     super();
     this.path = path;
@@ -305,12 +271,16 @@ export class PathMovement extends MovementClass {
     if (startTime) {
       this.startTime = startTime;
     } else {
-      this.startTime = new Date().getTime();
+      let currentDate = new Date();
+      this.startTime = currentDate.getTime();
     }
     if (getCurrentTime) {
       this.getCurrentTime = getCurrentTime;
     } else {
-      this.getCurrentTime = () => new Date().getTime();
+      this.getCurrentTime = () => {
+        let currentDate = new Date();
+        return currentDate.getTime();
+      };
     }
     path.forEach((item) => {
       this.totalDuration += item.duration;
@@ -330,7 +300,7 @@ export class PathMovement extends MovementClass {
       }
       let ratio = Math.min(
         Math.max(0, currentFrame / (currentItem.duration * 1000)),
-        1
+        1,
       );
       switch (currentItem.style) {
         case MovementStyle.SlowToFast: {
@@ -379,7 +349,7 @@ export class OrbitMovement extends MovementClass {
     radius: number,
     duration: number,
     startTime?: number,
-    getCurrentTime?: () => number
+    getCurrentTime?: () => number,
   ) {
     super();
     this.radius = radius;
@@ -409,4 +379,38 @@ export class OrbitMovement extends MovementClass {
 
 export class SpringMovement extends MovementClass {
   type = MOVEMENT_SPRING;
+}
+
+export function parseMovement(movement: any, getCurrentTime?: () => number) {
+  if (!movement) return undefined;
+  switch (movement.type) {
+    case MOVEMENT_PATH: {
+      let startTime = movement.startTime;
+      let pathItems = movement.path;
+      if (
+        (startTime === undefined || typeof startTime === 'number') &&
+        Array.isArray(pathItems)
+      ) {
+        let parsedPathItems = parsePathItems(pathItems);
+        return new PathMovement(parsedPathItems, startTime, getCurrentTime);
+      }
+      break;
+    }
+    case MOVEMENT_ORBIT: {
+      let radius = movement.radius;
+      let duration = movement.duration;
+      let startTime = movement.startTime;
+      if (
+        typeof radius === 'number' &&
+        typeof duration === 'number' &&
+        (startTime === undefined || typeof startTime === 'number')
+      ) {
+        return new OrbitMovement(radius, duration, startTime, getCurrentTime);
+      }
+      break;
+    }
+    case MOVEMENT_SPRING:
+      return new SpringMovement();
+  }
+  return undefined;
 }

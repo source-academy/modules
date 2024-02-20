@@ -1,12 +1,12 @@
-import { SpringValue, animated } from '@react-spring/three';
-import { InterfaceModel as InterfaceModel } from '../Behaviour';
+import { type SpringValue, animated } from '@react-spring/three';
+import { type InterfaceModel } from '../Behaviour';
 import {
   useEffect,
   type MutableRefObject,
   useState,
   type ReactNode,
 } from 'react';
-import { UIBasicComponent } from '../ui_component/UIComponent';
+import { type UIBasicComponent } from '../ui_component/UIComponent';
 import UIRowComponent, {
   VerticalAlignment,
 } from '../ui_component/UIRowComponent';
@@ -30,8 +30,8 @@ export default function InterfaceComponent(props: InterfaceProps) {
     setComponents(
       parseJsonInterface(props.interfaceModel.uiJson)?.getComponent(
         new Vector3(0),
-        () => {}
-      )
+        () => {},
+      ),
     );
   }, [props.interfaceModel.uiJson]);
 

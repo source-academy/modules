@@ -6,13 +6,13 @@ import {
   useContext,
   useRef,
 } from 'react';
-import { Mesh } from 'three';
+import { type Mesh } from 'three';
 import { getIntersection } from './RayCast';
 
 type ContextType = {
   object: React.MutableRefObject<any>;
   setCallback: (
-    callback: (prev: Mesh | undefined, current: Mesh | undefined) => void
+    callback: (prev: Mesh | undefined, current: Mesh | undefined) => void,
   ) => void;
 };
 

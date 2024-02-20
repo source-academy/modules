@@ -22,7 +22,7 @@ export class MqttController {
 
   constructor(
     connectionCallback: (status: string) => void,
-    messageCallback: (topic: string, message: string) => void
+    messageCallback: (topic: string, message: string) => void,
   ) {
     this.connectionCallback = connectionCallback;
     this.messageCallback = messageCallback;

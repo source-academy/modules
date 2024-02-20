@@ -49,12 +49,12 @@ export function stopRunning() {
  */
 export function initGlobalState(
   topicHeader: string,
-  callback: (state: any) => void
+  callback: (state: any) => void,
 ) {
   moduleState.globalState = new GlobalStateController(
     topicHeader,
     moduleState.multiUser,
-    callback
+    callback,
   );
 }
 
@@ -90,7 +90,7 @@ export function initRpc(topicHeader: string, userId?: string) {
   moduleState.rpc = new RpcController(
     topicHeader,
     moduleState.multiUser,
-    userId
+    userId,
   );
 }
 
@@ -117,7 +117,7 @@ export function callFunction(
   receiver: string,
   name: string,
   args: any[],
-  callback: (args: any[]) => void
+  callback: (args: any[]) => void,
 ) {
   moduleState.rpc?.callFunction(receiver, name, args, callback);
 }

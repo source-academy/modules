@@ -1,6 +1,6 @@
-import { Vector3 } from 'three';
+import { type Vector3 } from 'three';
 import {
-  ARObject,
+  type ARObject,
   CubeObject,
   LightObject,
   SphereObject,
@@ -21,10 +21,10 @@ import {
 import uniqid from 'uniqid';
 import type { UIBasicComponent } from './libraries/object_state_library/ui_component/UIComponent';
 import UIRowComponent, {
-  VerticalAlignment,
+  type VerticalAlignment,
 } from './libraries/object_state_library/ui_component/UIRowComponent';
 import UIColumnComponent, {
-  HorizontalAlignment,
+  type HorizontalAlignment,
 } from './libraries/object_state_library/ui_component/UIColumnComponent';
 import UITextComponent from './libraries/object_state_library/ui_component/UITextComponent';
 import UIImageComponent from './libraries/object_state_library/ui_component/UIImageComponent';
@@ -49,7 +49,7 @@ export function createCubeObject(
   height: number,
   depth: number,
   color: number,
-  onSelect?: () => {}
+  onSelect?: () => {},
 ): CubeObject {
   return new CubeObject(
     uniqid(),
@@ -63,7 +63,7 @@ export function createCubeObject(
     undefined,
     (_: ARObject) => {
       onSelect?.();
-    }
+    },
   );
 }
 
@@ -80,7 +80,7 @@ export function createSphereObject(
   position: Vector3,
   radius: number,
   color: number,
-  onSelect?: () => {}
+  onSelect?: () => {},
 ): SphereObject {
   return new SphereObject(
     uniqid(),
@@ -92,7 +92,7 @@ export function createSphereObject(
     undefined,
     (_: ARObject) => {
       onSelect?.();
-    }
+    },
   );
 }
 
@@ -108,7 +108,7 @@ export function createSphereObject(
 export function createInterfaceObject(
   position: Vector3,
   rootComponent: UIBasicComponent,
-  onSelect?: () => {}
+  onSelect?: () => {},
 ): UIObject {
   return new UIObject(
     uniqid(),
@@ -119,7 +119,7 @@ export function createInterfaceObject(
     undefined,
     (_: ARObject) => {
       onSelect?.();
-    }
+    },
   );
 }
 
@@ -133,7 +133,7 @@ export function createInterfaceObject(
  */
 export function createLightObject(
   position: Vector3,
-  intensity: number
+  intensity: number,
 ): LightObject {
   return new LightObject(uniqid(), position, intensity);
 }
@@ -159,7 +159,7 @@ export function createInterfaceRow(
   paddingRight: number,
   paddingTop: number,
   paddingBottom: number,
-  backgroundColor: number
+  backgroundColor: number,
 ): UIRowComponent {
   return new UIRowComponent({
     children: children,
@@ -194,7 +194,7 @@ export function createInterfaceColumn(
   paddingRight: number,
   paddingTop: number,
   paddingBottom: number,
-  backgroundColor: number
+  backgroundColor: number,
 ): UIColumnComponent {
   return new UIColumnComponent({
     children: children,
@@ -233,7 +233,7 @@ export function createInterfaceText(
   paddingRight: number,
   paddingTop: number,
   paddingBottom: number,
-  color: number
+  color: number,
 ): UITextComponent {
   return new UITextComponent({
     text: text,
@@ -271,7 +271,7 @@ export function createInterfaceImage(
   paddingLeft: number,
   paddingRight: number,
   paddingTop: number,
-  paddingBottom: number
+  paddingBottom: number,
 ): UIImageComponent {
   return new UIImageComponent({
     src: src,
@@ -356,7 +356,7 @@ export function setRenderDistance(object: ARObject, distance: number) {
 export function createPathItem(
   start: Vector3,
   end: Vector3,
-  duration: number
+  duration: number,
 ): PathItem {
   return {
     start: start,
@@ -387,7 +387,7 @@ export function setPathMovement(object: ARObject, path: PathItem[]) {
 export function setOrbitMovement(
   object: ARObject,
   radius: number,
-  duration: number
+  duration: number,
 ) {
   object.behaviours.movement = new OrbitMovement(radius, duration);
   callARCallback();

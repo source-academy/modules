@@ -8,10 +8,10 @@ import {
   useState,
 } from 'react';
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
-import { Object3D, type Object3DEventMap, AnimationMixer } from 'three';
-import { GltfModel } from '../Behaviour';
-import { ARObject } from '../ARObject';
-import { SpringValue, animated } from '@react-spring/three';
+import { type Object3D, type Object3DEventMap, AnimationMixer } from 'three';
+import { type GltfModel } from '../Behaviour';
+import { type ARObject } from '../ARObject';
+import { type SpringValue, animated } from '@react-spring/three';
 import { useGLTF } from '@react-three/drei';
 
 type GltfProps = {
@@ -36,9 +36,9 @@ export default function GltfComponent(props: GltfProps) {
   useEffect(() => {
     if (model.animations.length > 0) {
       props.gltfModel.callAnimation = (actionName: string) => {
-        let selectedAction = model.animations.find((item) => {
-          return item.name === actionName;
-        });
+        let selectedAction = model.animations.find(
+          (item) => item.name === actionName,
+        );
         if (!selectedAction) return;
         mixer.current?.stopAllAction();
         let action = mixer.current?.clipAction(selectedAction);

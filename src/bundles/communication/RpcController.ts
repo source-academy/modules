@@ -24,7 +24,7 @@ export class RpcController {
   constructor(
     topicHeader: string,
     multiUser: MultiUserController,
-    userId?: string
+    userId?: string,
   ) {
     this.topicHeader = topicHeader;
     this.multiUser = multiUser;
@@ -107,7 +107,7 @@ export class RpcController {
     receiver: string,
     name: string,
     args: any[],
-    callback: (args: any[]) => void
+    callback: (args: any[]) => void,
   ) {
     let topic = this.topicHeader + '/' + receiver + '/' + name;
     let callId = uniqid();
