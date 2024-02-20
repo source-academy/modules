@@ -115,11 +115,11 @@ function TextUIComponent(props: {
     }
   }
 
-  function getTextAlign(index: number) {
-    switch (index) {
-      case 0:
+  function getTextAlign(alignment: HorizontalAlignment) {
+    switch (alignment) {
+      case HorizontalAlignment.Left:
         return "left";
-      case 2:
+      case HorizontalAlignment.Right:
         return "right";
     }
     return "center";
