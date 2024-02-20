@@ -6,7 +6,7 @@ import {
   type Object3DEventMap,
   Raycaster,
   Vector2,
-} from "three";
+} from 'three';
 
 const raycaster = new Raycaster();
 
@@ -65,4 +65,3 @@ function getTopParent(
   }
   return undefined;
 }
-

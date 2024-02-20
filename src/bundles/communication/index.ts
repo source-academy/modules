@@ -10,19 +10,19 @@
  */
 
 export {
-    STATE_CONNECTED,
-    STATE_DISCONNECTED,
-    STATE_OFFLINE,
-    STATE_RECONNECTED,
-} from "./MqttController";
+  STATE_CONNECTED,
+  STATE_DISCONNECTED,
+  STATE_OFFLINE,
+  STATE_RECONNECTED,
+} from './MqttController';
 
 export {
-    initGlobalState,
-    getGlobalState,
-    updateGlobalState,
-    initRpc,
-    expose,
-    callFunction,
-    keepRunning,
-    stopRunning,
-} from "./Communications";
+  initGlobalState,
+  getGlobalState,
+  updateGlobalState,
+  initRpc,
+  expose,
+  callFunction,
+  keepRunning,
+  stopRunning,
+} from './Communications';

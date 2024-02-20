@@ -1,13 +1,13 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from '@react-three/fiber';
 import {
   type ReactNode,
   createContext,
   createRef,
   useContext,
   useRef,
-} from "react";
-import { Mesh } from "three";
-import { getIntersection } from "./RayCast";
+} from 'react';
+import { Mesh } from 'three';
+import { getIntersection } from './RayCast';
 
 type ContextType = {
   object: React.MutableRefObject<any>;
@@ -62,4 +62,3 @@ export function ControlsContext(props: Props) {
 export function useControls() {
   return useContext(Context);
 }
-

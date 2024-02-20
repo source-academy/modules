@@ -1,7 +1,7 @@
-import context from "js-slang/context";
-import { MultiUserController } from "./MultiUserController";
-import { GlobalStateController } from "./GlobalStateController";
-import { RpcController } from "./RpcController";
+import context from 'js-slang/context';
+import { MultiUserController } from './MultiUserController';
+import { GlobalStateController } from './GlobalStateController';
+import { RpcController } from './RpcController';
 
 class CommunicationModuleState {
   multiUser: MultiUserController;
@@ -15,7 +15,7 @@ class CommunicationModuleState {
   }
 }
 
-let moduleState = new CommunicationModuleState("broker.hivemq.com", 8884);
+let moduleState = new CommunicationModuleState('broker.hivemq.com', 8884);
 context.moduleContexts.communication.state = moduleState;
 
 // Loop

@@ -1,8 +1,8 @@
-import { type MutableRefObject, type ReactNode, useRef, useState } from "react";
-import { TextModel } from "../Behaviour";
-import { Mesh } from "three";
-import { Text } from "@react-three/drei";
-import { SpringValue, animated } from "@react-spring/three";
+import { type MutableRefObject, type ReactNode, useRef, useState } from 'react';
+import { TextModel } from '../Behaviour';
+import { Mesh } from 'three';
+import { Text } from '@react-three/drei';
+import { SpringValue, animated } from '@react-spring/three';
 
 type TextProps = {
   textModel: TextModel;
@@ -49,4 +49,3 @@ export default function TextComponent(props: TextProps) {
     </animated.mesh>
   );
 }
-

@@ -12,4 +12,3 @@ export class OverlayHelper {
   toggleCenter: Toggle | undefined;
   toggleRight: Toggle | undefined;
 }
-

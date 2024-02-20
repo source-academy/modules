@@ -1,21 +1,21 @@
-import { SpringValue, animated } from "@react-spring/three";
-import { InterfaceModel as InterfaceModel } from "../Behaviour";
+import { SpringValue, animated } from '@react-spring/three';
+import { InterfaceModel as InterfaceModel } from '../Behaviour';
 import {
   useEffect,
   type MutableRefObject,
   useState,
   type ReactNode,
-} from "react";
-import { UIBasicComponent } from "../ui_component/UIComponent";
+} from 'react';
+import { UIBasicComponent } from '../ui_component/UIComponent';
 import UIRowComponent, {
   VerticalAlignment,
-} from "../ui_component/UIRowComponent";
+} from '../ui_component/UIRowComponent';
 import UIColumnComponent, {
   HorizontalAlignment,
-} from "../ui_component/UIColumnComponent";
-import UITextComponent from "../ui_component/UITextComponent";
-import { Vector3 } from "three";
-import UIImageComponent from "../ui_component/UIImageComponent";
+} from '../ui_component/UIColumnComponent';
+import UITextComponent from '../ui_component/UITextComponent';
+import { Vector3 } from 'three';
+import UIImageComponent from '../ui_component/UIImageComponent';
 
 type InterfaceProps = {
   interfaceModel: InterfaceModel;
@@ -53,19 +53,19 @@ export function parseJsonInterface(uiJson: any) {
   let paddingTop = uiJson.paddingTop;
   let paddingBottom = uiJson.paddingBottom;
   if (
-    typeof id !== "string" ||
-    typeof paddingLeft !== "number" ||
-    typeof paddingRight !== "number" ||
-    typeof paddingTop !== "number" ||
-    typeof paddingBottom !== "number"
+    typeof id !== 'string' ||
+    typeof paddingLeft !== 'number' ||
+    typeof paddingRight !== 'number' ||
+    typeof paddingTop !== 'number' ||
+    typeof paddingBottom !== 'number'
   ) {
     return;
   }
   switch (componentType) {
-    case "UIColumnComponent": {
+    case 'UIColumnComponent': {
       let horizontalAlignmentIndex = uiJson.horizontalAlignment;
       let horizontalAlignment = HorizontalAlignment.Left;
-      if (typeof horizontalAlignmentIndex === "number") {
+      if (typeof horizontalAlignmentIndex === 'number') {
         let parsedIndex = Math.min(Math.max(0, horizontalAlignmentIndex), 2);
         horizontalAlignment = parsedIndex;
       }
@@ -80,7 +80,7 @@ export function parseJsonInterface(uiJson: any) {
         });
       }
       let background = uiJson.background;
-      if (typeof background != "number") {
+      if (typeof background != 'number') {
         background = undefined;
       }
       return new UIColumnComponent({
@@ -96,10 +96,10 @@ export function parseJsonInterface(uiJson: any) {
         id: id,
       });
     }
-    case "UIRowComponent": {
+    case 'UIRowComponent': {
       let verticalAlignmentIndex = uiJson.verticalAlignment;
       let verticalAlignment = VerticalAlignment.Top;
-      if (typeof verticalAlignmentIndex === "number") {
+      if (typeof verticalAlignmentIndex === 'number') {
         let parsedIndex = Math.min(Math.max(0, verticalAlignmentIndex), 2);
         verticalAlignment = parsedIndex;
       }
@@ -114,7 +114,7 @@ export function parseJsonInterface(uiJson: any) {
         });
       }
       let background = uiJson.background;
-      if (typeof background != "number") {
+      if (typeof background != 'number') {
         background = undefined;
       }
       return new UIRowComponent({
@@ -130,17 +130,17 @@ export function parseJsonInterface(uiJson: any) {
         id: id,
       });
     }
-    case "UITextComponent": {
+    case 'UITextComponent': {
       let text = uiJson.text;
       let textSize = uiJson.textSize;
       let textWidth = uiJson.textWidth;
       let textAlign = uiJson.textAlign;
       let color = uiJson.color;
       if (
-        typeof text === "string" &&
-        typeof textSize === "number" &&
-        typeof textWidth === "number" &&
-        typeof color === "number"
+        typeof text === 'string' &&
+        typeof textSize === 'number' &&
+        typeof textWidth === 'number' &&
+        typeof color === 'number'
       ) {
         return new UITextComponent({
           text: text,
@@ -159,14 +159,14 @@ export function parseJsonInterface(uiJson: any) {
       }
       break;
     }
-    case "UIImageComponent": {
+    case 'UIImageComponent': {
       let src = uiJson.src;
       let imageWidth = uiJson.imageWidth;
       let imageHeight = uiJson.imageHeight;
       if (
-        typeof src === "string" &&
-        typeof imageWidth === "number" &&
-        typeof imageHeight === "number"
+        typeof src === 'string' &&
+        typeof imageWidth === 'number' &&
+        typeof imageHeight === 'number'
       ) {
         return new UIImageComponent({
           src: src,
@@ -186,4 +186,3 @@ export function parseJsonInterface(uiJson: any) {
   }
   return undefined;
 }
-

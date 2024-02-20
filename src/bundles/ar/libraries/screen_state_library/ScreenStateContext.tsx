@@ -5,9 +5,9 @@ import {
   useEffect,
   useRef,
   useState,
-} from "react";
-import { XR } from "@react-three/xr";
-import { Canvas } from "@react-three/fiber";
+} from 'react';
+import { XR } from '@react-three/xr';
+import { Canvas } from '@react-three/fiber';
 
 type ContextType = {
   overlayRef: React.RefObject<HTMLDivElement> | null;
@@ -55,7 +55,7 @@ export function ScreenStateContext(props: Props) {
           <></>
         </XR>
       </Canvas>
-      <div ref={overlayRef} style={{ userSelect: "none" }} />
+      <div ref={overlayRef} style={{ userSelect: 'none' }} />
     </>
   );
   const [component, setComponent] = useState<ReactNode>(defaultComponent);
@@ -94,13 +94,13 @@ export function ScreenStateContext(props: Props) {
         <div
           ref={overlayRef}
           style={{
-            position: "relative",
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            userSelect: "none",
+            position: 'relative',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            userSelect: 'none',
           }}
         >
           {isXRSession.current ? overlayState : <></>}

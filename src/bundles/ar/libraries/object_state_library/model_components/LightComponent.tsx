@@ -1,7 +1,7 @@
-import { type MutableRefObject, type ReactNode } from "react";
-import { ARObject } from "../ARObject";
-import { LightModel } from "../Behaviour";
-import { SpringValue, animated } from "@react-spring/three";
+import { type MutableRefObject, type ReactNode } from 'react';
+import { ARObject } from '../ARObject';
+import { LightModel } from '../Behaviour';
+import { SpringValue, animated } from '@react-spring/three';
 
 type LightProps = {
   lightModel: LightModel;
@@ -18,4 +18,3 @@ export default function LightComponent(props: LightProps) {
     </animated.mesh>
   );
 }
-

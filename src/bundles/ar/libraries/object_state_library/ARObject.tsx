@@ -3,7 +3,7 @@ import {
   MeshStandardMaterial,
   SphereGeometry,
   Vector3,
-} from "three";
+} from 'three';
 import {
   type Behaviours,
   LightModel,
@@ -16,9 +16,9 @@ import {
   parseRender,
   parseMovement,
   MovementClass,
-} from "./Behaviour";
-import ARObjectComponent from "./ARObjectComponent";
-import { parseVector3 } from "../calibration_library/Misc";
+} from './Behaviour';
+import ARObjectComponent from './ARObjectComponent';
+import { parseVector3 } from '../calibration_library/Misc';
 
 /**
  * Abstract class for an AR object.
@@ -28,7 +28,7 @@ import { parseVector3 } from "../calibration_library/Misc";
  * This can be used for identifying and restoring the object's class after parsing the JSON.
  */
 export class ARObject {
-  type: string = ""; // Unique identifier for class
+  type: string = ''; // Unique identifier for class
   id: string;
   position: Vector3;
   behaviours: Behaviours;
@@ -68,7 +68,7 @@ export class ARObject {
   }
 }
 
-const CUBE_OBJECT_TYPE = "CubeObject";
+const CUBE_OBJECT_TYPE = 'CubeObject';
 export class CubeObject extends ARObject {
   type = CUBE_OBJECT_TYPE;
   width: number;
@@ -118,12 +118,12 @@ export class CubeObject extends ARObject {
     let depth = object.depth;
     let color = object.color;
     if (
-      typeof id === "string" &&
+      typeof id === 'string' &&
       position instanceof Vector3 &&
-      typeof width === "number" &&
-      typeof height === "number" &&
-      typeof depth === "number" &&
-      typeof color === "number"
+      typeof width === 'number' &&
+      typeof height === 'number' &&
+      typeof depth === 'number' &&
+      typeof color === 'number'
     ) {
       return new CubeObject(
         id,
@@ -142,7 +142,7 @@ export class CubeObject extends ARObject {
   }
 }
 
-const SPHERE_OBJECT_TYPE = "SphereObject";
+const SPHERE_OBJECT_TYPE = 'SphereObject';
 export class SphereObject extends ARObject {
   type = SPHERE_OBJECT_TYPE;
   radius: number;
@@ -184,10 +184,10 @@ export class SphereObject extends ARObject {
     let radius = object.radius;
     let color = object.color;
     if (
-      typeof id === "string" &&
+      typeof id === 'string' &&
       position instanceof Vector3 &&
-      typeof radius === "number" &&
-      typeof color === "number"
+      typeof radius === 'number' &&
+      typeof color === 'number'
     ) {
       return new SphereObject(
         id,
@@ -204,7 +204,7 @@ export class SphereObject extends ARObject {
   }
 }
 
-const UI_OBJECT_TYPE = "UIObject";
+const UI_OBJECT_TYPE = 'UIObject';
 export class UIObject extends ARObject {
   type = UI_OBJECT_TYPE;
   uiJson: any;
@@ -239,7 +239,7 @@ export class UIObject extends ARObject {
     let movement = parseMovement(object.behaviours?.movement);
     let uiJson = object.uiJson;
     if (
-      typeof id === "string" &&
+      typeof id === 'string' &&
       position instanceof Vector3 &&
       uiJson !== undefined
     ) {
@@ -257,7 +257,7 @@ export class UIObject extends ARObject {
   }
 }
 
-const LIGHT_OBJECT_TYPE = "LightObject";
+const LIGHT_OBJECT_TYPE = 'LightObject';
 export class LightObject extends ARObject {
   type = LIGHT_OBJECT_TYPE;
   intensity: number;
@@ -274,9 +274,9 @@ export class LightObject extends ARObject {
     let position = parseVector3(object.position);
     let intensity = object.intensity;
     if (
-      typeof id === "string" &&
+      typeof id === 'string' &&
       position instanceof Vector3 &&
-      typeof intensity === "number"
+      typeof intensity === 'number'
     ) {
       return new LightObject(id, position, intensity);
     }

@@ -1,9 +1,9 @@
-import { connect, MqttClient } from "mqtt/dist/mqtt";
+import { connect, MqttClient } from 'mqtt/dist/mqtt';
 
-export const STATE_CONNECTED = "Connected";
-export const STATE_DISCONNECTED = "Disconnected";
-export const STATE_RECONNECTED = "Reconnected";
-export const STATE_OFFLINE = "Offline";
+export const STATE_CONNECTED = 'Connected';
+export const STATE_DISCONNECTED = 'Disconnected';
+export const STATE_RECONNECTED = 'Reconnected';
+export const STATE_OFFLINE = 'Offline';
 
 /**
  * Abstraction of MQTT.
@@ -17,7 +17,7 @@ export class MqttController {
   private connectionCallback: (status: string) => void;
   private messageCallback: (topic: string, message: string) => void;
 
-  address: string = "";
+  address: string = '';
   port: number = 8080;
 
   constructor(
@@ -34,23 +34,23 @@ export class MqttController {
    */
   public connectClient() {
     if (this.connected || this.address.length === 0) return;
-    let link = "wss://" + this.address + ":" + this.port + "/mqtt";
+    let link = 'wss://' + this.address + ':' + this.port + '/mqtt';
     this.client = connect(link);
     this.connected = true;
-    this.client.on("connect", () => {
+    this.client.on('connect', () => {
       this.connectionCallback(STATE_CONNECTED);
     });
-    this.client.on("disconnect", () => {
+    this.client.on('disconnect', () => {
       this.connectionCallback(STATE_DISCONNECTED);
     });
-    this.client.on("reconnect", () => {
+    this.client.on('reconnect', () => {
       this.connectionCallback(STATE_RECONNECTED);
     });
-    this.client.on("offline", () => {
+    this.client.on('offline', () => {
       this.connectionCallback(STATE_OFFLINE);
     });
-    this.client.on("message", (topic, message) => {
-      this.messageCallback(topic, new TextDecoder("utf-8").decode(message));
+    this.client.on('message', (topic, message) => {
+      this.messageCallback(topic, new TextDecoder('utf-8').decode(message));
     });
   }
 

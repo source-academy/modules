@@ -3,9 +3,9 @@ import {
   Material,
   type NormalBufferAttributes,
   Vector3,
-} from "three";
-import { UIBasicComponent } from "./ui_component/UIComponent";
-import { parseVector3 } from "../calibration_library/Misc";
+} from 'three';
+import { UIBasicComponent } from './ui_component/UIComponent';
+import { parseVector3 } from '../calibration_library/Misc';
 
 export type Behaviours = {
   model: ModelClass;
@@ -93,8 +93,8 @@ export class LightModel implements ModelClass {
 
 // Render
 
-const RENDER_DISTANCE = "RenderWithinDistance";
-const RENDER_ALWAYS = "AlwaysRender";
+const RENDER_DISTANCE = 'RenderWithinDistance';
+const RENDER_ALWAYS = 'AlwaysRender';
 
 export function parseRender(render: any): RenderClass | undefined {
   if (!render) return undefined;
@@ -104,7 +104,7 @@ export function parseRender(render: any): RenderClass | undefined {
     }
     case RENDER_DISTANCE: {
       let distance = 5;
-      if (typeof render.distance === "number") {
+      if (typeof render.distance === 'number') {
         distance = render.distance as number;
       }
       return new RenderWithinDistance(distance);
@@ -114,7 +114,7 @@ export function parseRender(render: any): RenderClass | undefined {
 }
 
 export abstract class RenderClass implements Behaviour {
-  type: string = "";
+  type: string = '';
 }
 
 export class RenderWithinDistance implements RenderClass {
@@ -131,9 +131,9 @@ export class AlwaysRender implements RenderClass {
 
 // Rotation
 
-const ROTATION_USER = "RotateToUser";
-const ROTATION_Y = "RotateAroundY";
-const ROTATION_FIX = "FixRotation";
+const ROTATION_USER = 'RotateToUser';
+const ROTATION_Y = 'RotateAroundY';
+const ROTATION_FIX = 'FixRotation';
 
 export function parseRotation(rotation: any): RotationClass | undefined {
   if (!rotation) return undefined;
@@ -146,7 +146,7 @@ export function parseRotation(rotation: any): RotationClass | undefined {
     }
     case ROTATION_FIX: {
       let angle = 0;
-      if (typeof rotation.rotation === "number") {
+      if (typeof rotation.rotation === 'number') {
         angle = rotation.rotation as number;
       }
       return new FixRotation(angle);
@@ -159,7 +159,7 @@ export function parseRotation(rotation: any): RotationClass | undefined {
  * Base class for a rotation behaviour.
  */
 export abstract class RotationClass implements Behaviour {
-  type: string = "";
+  type: string = '';
 }
 
 /**
@@ -189,9 +189,9 @@ export class FixRotation implements RotationClass {
 
 // Movement
 
-const MOVEMENT_PATH = "PathMovement";
-const MOVEMENT_ORBIT = "OrbitMovement";
-const MOVEMENT_SPRING = "SpringMovement";
+const MOVEMENT_PATH = 'PathMovement';
+const MOVEMENT_ORBIT = 'OrbitMovement';
+const MOVEMENT_SPRING = 'SpringMovement';
 
 export function parseMovement(movement: any, getCurrentTime?: () => number) {
   if (!movement) return undefined;
@@ -200,7 +200,7 @@ export function parseMovement(movement: any, getCurrentTime?: () => number) {
       let startTime = movement.startTime;
       let pathItems = movement.path;
       if (
-        (startTime === undefined || typeof startTime === "number") &&
+        (startTime === undefined || typeof startTime === 'number') &&
         Array.isArray(pathItems)
       ) {
         let parsedPathItems = parsePathItems(pathItems);
@@ -213,9 +213,9 @@ export function parseMovement(movement: any, getCurrentTime?: () => number) {
       let duration = movement.duration;
       let startTime = movement.startTime;
       if (
-        typeof radius === "number" &&
-        typeof duration === "number" &&
-        (startTime === undefined || typeof startTime === "number")
+        typeof radius === 'number' &&
+        typeof duration === 'number' &&
+        (startTime === undefined || typeof startTime === 'number')
       ) {
         return new OrbitMovement(radius, duration, startTime, getCurrentTime);
       }
@@ -233,7 +233,7 @@ export function parseMovement(movement: any, getCurrentTime?: () => number) {
  * @param startTime Reference time for the start of movement, for syncing
  */
 export abstract class MovementClass implements Behaviour {
-  type: string = "";
+  type: string = '';
 }
 
 /**
@@ -256,7 +256,7 @@ function parsePathItems(path: any[]) {
     if (
       start instanceof Vector3 &&
       end instanceof Vector3 &&
-      (duration === undefined || typeof duration === "number")
+      (duration === undefined || typeof duration === 'number')
     ) {
       let movementStyle = MovementStyle.Linear;
       if (item.style === MovementStyle.FastToSlow) {
@@ -410,4 +410,3 @@ export class OrbitMovement extends MovementClass {
 export class SpringMovement extends MovementClass {
   type = MOVEMENT_SPRING;
 }
-

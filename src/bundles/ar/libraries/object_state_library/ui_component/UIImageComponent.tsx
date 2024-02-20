@@ -1,6 +1,6 @@
-import { Vector3 } from "three";
-import { UIBasicComponent, type PaddingType } from "./UIComponent";
-import { Image } from "@react-three/drei";
+import { Vector3 } from 'three';
+import { UIBasicComponent, type PaddingType } from './UIComponent';
+import { Image } from '@react-three/drei';
 
 type UIImageProps = {
   src: string;
@@ -26,7 +26,7 @@ export default class UIImageComponent extends UIBasicComponent {
   getHeight = () => {
     return this.imageHeight + this.paddingTop + this.paddingBottom;
   };
-  getComponent = (position: Vector3, updateParent: () => void) => {
+  getComponent = (position: Vector3, _: () => void) => {
     return (
       <ImageUIComponent key={this.id} component={this} position={position} />
     );
@@ -39,7 +39,7 @@ function ImageUIComponent(props: {
 }) {
   let { component, position } = props;
   return (
-    <mesh key={"component_" + component.id} position={position}>
+    <mesh key={'component_' + component.id} position={position}>
       <Image
         url={component.src}
         scale={[component.getWidth(), component.getHeight()]}

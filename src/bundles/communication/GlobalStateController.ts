@@ -1,4 +1,4 @@
-import { MultiUserController } from "./MultiUserController";
+import { MultiUserController } from './MultiUserController';
 
 /**
  * Controller for maintaining a global state across all devices.
@@ -50,15 +50,15 @@ export class GlobalStateController {
       }
       return;
     }
-    if (!preSplitTopic.startsWith("/")) {
-      preSplitTopic = "/" + preSplitTopic;
+    if (!preSplitTopic.startsWith('/')) {
+      preSplitTopic = '/' + preSplitTopic;
     }
-    let splitTopic = preSplitTopic.split("/");
+    let splitTopic = preSplitTopic.split('/');
     try {
       let newGlobalState = Object.assign({}, this.globalState);
       if (
         this.globalState instanceof Array ||
-        typeof this.globalState === "string"
+        typeof this.globalState === 'string'
       ) {
         newGlobalState = {};
       }
@@ -68,7 +68,7 @@ export class GlobalStateController {
         if (
           !(currentJson[subTopic] instanceof Object) ||
           currentJson[subTopic] instanceof Array ||
-          typeof currentJson[subTopic] === "string"
+          typeof currentJson[subTopic] === 'string'
         ) {
           currentJson[subTopic] = {};
         }
@@ -104,8 +104,8 @@ export class GlobalStateController {
   public updateGlobalState(path: string, updatedState: any) {
     if (this.topicHeader.length === 0) return;
     let topic = this.topicHeader;
-    if (path.length !== 0 && !path.startsWith("/")) {
-      topic += "/";
+    if (path.length !== 0 && !path.startsWith('/')) {
+      topic += '/';
     }
     topic += path;
     this.multiUser.controller?.publish(

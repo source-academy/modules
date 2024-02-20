@@ -1,8 +1,8 @@
-import { Color, Mesh, Vector3 } from "three";
-import { UIBasicComponent, type PaddingType } from "./UIComponent";
-import { Text } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
-import { HorizontalAlignment } from "./UIColumnComponent";
+import { Color, Mesh, Vector3 } from 'three';
+import { UIBasicComponent, type PaddingType } from './UIComponent';
+import { Text } from '@react-three/drei';
+import { useEffect, useRef, useState } from 'react';
+import { HorizontalAlignment } from './UIColumnComponent';
 
 type UITextProps = {
   text: string;
@@ -118,15 +118,15 @@ function TextUIComponent(props: {
   function getTextAlign(alignment: HorizontalAlignment) {
     switch (alignment) {
       case HorizontalAlignment.Left:
-        return "left";
+        return 'left';
       case HorizontalAlignment.Right:
-        return "right";
+        return 'right';
     }
-    return "center";
+    return 'center';
   }
 
   return (
-    <mesh key={"component_" + component.id} position={position}>
+    <mesh key={'component_' + component.id} position={position}>
       <Text
         position={new Vector3(offsetX, 0, 0)}
         ref={ref}

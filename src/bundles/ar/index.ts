@@ -8,8 +8,8 @@
  * @author Chong Wen Hao
  */
 
-import { HorizontalAlignment } from "./libraries/object_state_library/ui_component/UIColumnComponent";
-import { VerticalAlignment } from "./libraries/object_state_library/ui_component/UIRowComponent";
+import { HorizontalAlignment } from './libraries/object_state_library/ui_component/UIColumnComponent';
+import { VerticalAlignment } from './libraries/object_state_library/ui_component/UIRowComponent';
 
 /*
   To access things like the context or module state you can just import the context
@@ -32,7 +32,7 @@ export {
   getYPosition,
   getZPosition,
   moveARObject,
-} from "./AR";
+} from './AR';
 
 export {
   createCubeObject,
@@ -53,7 +53,7 @@ export {
   setOrbitMovement,
   setSpringMovement,
   clearMovement,
-} from "./ObjectsHelper";
+} from './ObjectsHelper';
 
 export const alignmentTop = VerticalAlignment.Top;
 export const alignmentMiddle = VerticalAlignment.Middle;

@@ -1,7 +1,7 @@
-import { type MutableRefObject } from "react";
-import { ImageModel } from "../Behaviour";
-import { Image } from "@react-three/drei";
-import { SpringValue, animated } from "@react-spring/three";
+import { type MutableRefObject } from 'react';
+import { ImageModel } from '../Behaviour';
+import { Image } from '@react-three/drei';
+import { SpringValue, animated } from '@react-spring/three';
 
 type ImageProps = {
   imageModel: ImageModel;
@@ -19,4 +19,3 @@ export default function ImageComponent(props: ImageProps) {
     </animated.mesh>
   );
 }
-

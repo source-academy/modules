@@ -1,4 +1,4 @@
-import { Component, type ReactNode } from "react";
+import { Component, type ReactNode } from 'react';
 
 interface Props {
   fallback: ReactNode;
@@ -25,4 +25,3 @@ export default class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-

@@ -1,11 +1,11 @@
-import { Vector3 } from "three";
+import { Vector3 } from 'three';
 import {
   ARObject,
   CubeObject,
   LightObject,
   SphereObject,
   UIObject,
-} from "./libraries/object_state_library/ARObject";
+} from './libraries/object_state_library/ARObject';
 import {
   AlwaysRender,
   FixRotation,
@@ -17,18 +17,18 @@ import {
   RotateAroundY,
   RotateToUser,
   SpringMovement,
-} from "./libraries/object_state_library/Behaviour";
-import uniqid from "uniqid";
-import type { UIBasicComponent } from "./libraries/object_state_library/ui_component/UIComponent";
+} from './libraries/object_state_library/Behaviour';
+import uniqid from 'uniqid';
+import type { UIBasicComponent } from './libraries/object_state_library/ui_component/UIComponent';
 import UIRowComponent, {
   VerticalAlignment,
-} from "./libraries/object_state_library/ui_component/UIRowComponent";
+} from './libraries/object_state_library/ui_component/UIRowComponent';
 import UIColumnComponent, {
   HorizontalAlignment,
-} from "./libraries/object_state_library/ui_component/UIColumnComponent";
-import UITextComponent from "./libraries/object_state_library/ui_component/UITextComponent";
-import UIImageComponent from "./libraries/object_state_library/ui_component/UIImageComponent";
-import { callARCallback } from "./AR";
+} from './libraries/object_state_library/ui_component/UIColumnComponent';
+import UITextComponent from './libraries/object_state_library/ui_component/UITextComponent';
+import UIImageComponent from './libraries/object_state_library/ui_component/UIImageComponent';
+import { callARCallback } from './AR';
 
 // Objects
 

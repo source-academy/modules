@@ -1,6 +1,6 @@
-import { useThree } from "@react-three/fiber";
-import { type ReactNode, createContext, useContext, useState } from "react";
-import { Vector3, Euler } from "three";
+import { useThree } from '@react-three/fiber';
+import { type ReactNode, createContext, useContext, useState } from 'react';
+import { Vector3, Euler } from 'three';
 
 type ContextType = {
   setCameraAsOrigin: () => void;
@@ -158,4 +158,3 @@ export function PlayAreaContext(props: Props) {
 export function usePlayArea() {
   return useContext(Context);
 }
-

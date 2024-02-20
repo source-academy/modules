@@ -1,6 +1,6 @@
-import { Vector3 } from "three";
-import { ARObject } from "./libraries/object_state_library/ARObject";
-import { OverlayHelper, Toggle } from "./OverlayHelper";
+import { Vector3 } from 'three';
+import { ARObject } from './libraries/object_state_library/ARObject';
+import { OverlayHelper, Toggle } from './OverlayHelper';
 
 export class ARState {
   arObjects: ARObject[] = [];
@@ -135,7 +135,7 @@ export function addARObject(object: ARObject) {
   }
   if (object.onSelect) {
     moduleState.clickCallbacks.set(object.id, () => {
-      console.log("Called", object);
+      console.log('Called', object);
       object.onSelect?.(object);
     });
   }

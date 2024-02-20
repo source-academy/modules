@@ -1,4 +1,4 @@
-import { MqttController, STATE_DISCONNECTED } from "./MqttController";
+import { MqttController, STATE_DISCONNECTED } from './MqttController';
 
 /**
  * Controller with implementation of MQTT.
@@ -28,9 +28,9 @@ export class MultiUserController {
           this.connectionState = status;
         },
         (topic: string, message: string) => {
-          let splitTopic = topic.split("/");
+          let splitTopic = topic.split('/');
           this.messageCallbacks.forEach((callback, identifier) => {
-            let splitIdentifier = identifier.split("/");
+            let splitIdentifier = identifier.split('/');
             if (splitTopic.length < splitIdentifier.length) return;
             for (let i = 0; i < splitIdentifier.length; i++) {
               if (splitIdentifier[i] !== splitTopic[i]) return;
@@ -56,7 +56,7 @@ export class MultiUserController {
     identifier: string,
     callback: (topic: string, message: string) => void
   ) {
-    this.controller?.subscribe(identifier + "/#");
+    this.controller?.subscribe(identifier + '/#');
     this.messageCallbacks.set(identifier, callback);
   }
 }

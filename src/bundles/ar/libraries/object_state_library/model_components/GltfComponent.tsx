@@ -1,4 +1,4 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame } from '@react-three/fiber';
 import {
   type MutableRefObject,
   type ReactNode,
@@ -6,13 +6,13 @@ import {
   useEffect,
   useRef,
   useState,
-} from "react";
-import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
-import { Object3D, type Object3DEventMap, AnimationMixer } from "three";
-import { GltfModel } from "../Behaviour";
-import { ARObject } from "../ARObject";
-import { SpringValue, animated } from "@react-spring/three";
-import { useGLTF } from "@react-three/drei";
+} from 'react';
+import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
+import { Object3D, type Object3DEventMap, AnimationMixer } from 'three';
+import { GltfModel } from '../Behaviour';
+import { ARObject } from '../ARObject';
+import { SpringValue, animated } from '@react-spring/three';
+import { useGLTF } from '@react-three/drei';
 
 type GltfProps = {
   gltfModel: GltfModel;
