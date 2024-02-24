@@ -20,7 +20,7 @@ context.moduleContexts.communication.state = moduleState;
 
 // Loop
 
-let interval: number | undefined = undefined;
+let interval: number | undefined;
 
 /**
  * Keeps the program running so that messages can come in.

@@ -1,6 +1,6 @@
 import { Color, type Mesh, Vector3 } from 'three';
 import { UIBasicComponent, type PaddingType } from './UIComponent';
-import { Text } from '@react-three/drei';
+import { Text as ThreeText } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
 import { HorizontalAlignment } from './UIColumnComponent';
 
@@ -121,7 +121,7 @@ function TextUIComponent(props: {
 
   return (
     <mesh key={`component_${component.id}`} position={position}>
-      <Text
+      <ThreeText
         position={new Vector3(offsetX, 0, 0)}
         ref={ref}
         fontSize={component.textSize}
@@ -131,7 +131,7 @@ function TextUIComponent(props: {
         overflowWrap="normal"
       >
         {component.text}
-      </Text>
+      </ThreeText>
     </mesh>
   );
 }

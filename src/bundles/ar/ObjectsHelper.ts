@@ -201,7 +201,7 @@ export function createInterfaceRow(
       paddingTop,
       paddingBottom,
     },
-    backgroundColor: backgroundColor,
+    backgroundColor,
     id: uniqid(),
   });
 }
@@ -227,7 +227,6 @@ export function createInterfaceColumn(
   paddingBottom: number,
   backgroundColor: number,
 ): UIColumnComponent {
-  let id = uniqid();
   return new UIColumnComponent({
     children,
     horizontalAlignment,
@@ -238,7 +237,7 @@ export function createInterfaceColumn(
       paddingBottom,
     },
     backgroundColor,
-    id,
+    id: uniqid(),
   });
 }
 
