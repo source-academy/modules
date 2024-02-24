@@ -20,6 +20,7 @@ import {
   UIObject,
   LightObject,
   SphereObject,
+  GltfObject,
 } from './libraries/object_state_library/ARObject';
 import { useThree } from '@react-three/fiber';
 
@@ -184,6 +185,11 @@ function AugmentedContent(props: ARState) {
         return;
       }
       newObject = SphereObject.parseObject(object);
+      if (newObject) {
+        newObjects.push(newObject);
+        return;
+      }
+      newObject = GltfObject.parseObject(object);
       if (newObject) {
         newObjects.push(newObject);
         return;

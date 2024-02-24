@@ -5,6 +5,7 @@ import {
   LightObject,
   SphereObject,
   UIObject,
+  GltfObject,
 } from './libraries/object_state_library/ARObject';
 import {
   AlwaysRender,
@@ -87,6 +88,36 @@ export function createSphereObject(
     position,
     radius,
     color,
+    undefined,
+    undefined,
+    undefined,
+    (_: ARObject) => {
+      onSelect?.();
+    },
+  );
+}
+
+/**
+ * Creates an instance of 3D object with GLTF model.
+ * Build it with `createInterfaceRow`, `createInterfaceColumn`, `createInterfaceText` and `createInterfaceImage`.
+ *
+ * @param position Position of object in augmented world.
+ * @param src URL of GLTF resources.
+ * @param scale Scale of loaded object.
+ * @param onSelect Function to call when object is tapped.
+ * @returns Created AR interface object.
+ */
+export function createGltfObject(
+  position: Vector3,
+  src: string,
+  scale: number,
+  onSelect?: () => {},
+): GltfObject {
+  return new GltfObject(
+    uniqid(),
+    position,
+    src,
+    scale,
     undefined,
     undefined,
     undefined,

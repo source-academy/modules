@@ -37,6 +37,7 @@ export {
 export {
   createCubeObject,
   createSphereObject,
+  createGltfObject,
   createInterfaceObject,
   createLightObject,
   createInterfaceRow,

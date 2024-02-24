@@ -16,6 +16,7 @@ import {
   parseRender,
   parseMovement,
   type MovementClass,
+  GltfModel,
 } from './Behaviour';
 import ARObjectComponent from './ARObjectComponent';
 import { parseVector3 } from '../calibration_library/Misc';
@@ -194,6 +195,65 @@ export class SphereObject extends ARObject {
         position,
         radius,
         color,
+        render,
+        rotation,
+        movement,
+        onSelect,
+      );
+    }
+    return undefined;
+  }
+}
+
+const GLTF_OBJECT_TYPE = 'GltfObject';
+export class GltfObject extends ARObject {
+  type = GLTF_OBJECT_TYPE;
+  src: string;
+  scale: number;
+  constructor(
+    id: string,
+    position: Vector3,
+    src: string,
+    scale: number,
+    render?: RenderClass,
+    rotation?: RotationClass,
+    movement?: MovementClass,
+    onSelect?: (object: ARObject) => void,
+  ) {
+    super(
+      id,
+      position,
+      {
+        model: new GltfModel(src, scale),
+        render: render,
+        rotation: rotation,
+        movement: movement,
+      },
+      onSelect,
+    );
+    this.src = src;
+    this.scale = scale;
+  }
+  static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
+    if (!object || object.type !== GLTF_OBJECT_TYPE) return undefined;
+    let id = object.id;
+    let position = parseVector3(object.position);
+    let render = parseRender(object.behaviours?.render);
+    let rotation = parseRotation(object.behaviours?.rotation);
+    let movement = parseMovement(object.behaviours?.movement);
+    let src = object.src;
+    let scale = object.scale;
+    if (
+      typeof id === 'string' &&
+      position instanceof Vector3 &&
+      typeof src === 'string' &&
+      typeof scale === 'number'
+    ) {
+      return new GltfObject(
+        id,
+        position,
+        src,
+        scale,
         render,
         rotation,
         movement,

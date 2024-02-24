@@ -51,6 +51,7 @@ export default function GltfComponent(props: GltfProps) {
     mixer.current?.update(delta);
   });
 
+  // Issue with excessively deep animated mesh https://github.com/pmndrs/react-spring/issues/1515
   return (
     <animated.mesh
       position={props.springPosition}
