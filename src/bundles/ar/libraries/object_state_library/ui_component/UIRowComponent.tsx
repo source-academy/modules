@@ -53,16 +53,14 @@ export default class UIRowComponent extends LayoutComponent {
     });
     return height + maxChildHeight;
   };
-  getComponent = (position: Vector3, updateParent: () => void) => {
-    return (
-      <RowUIComponent
-        key={this.id}
-        component={this}
-        position={position}
-        updateParent={updateParent}
-      />
-    );
-  };
+  getComponent = (position: Vector3, updateParent: () => void) => (
+    <RowUIComponent
+      key={this.id}
+      component={this}
+      position={position}
+      updateParent={updateParent}
+    />
+  );
 }
 
 function RowUIComponent(props: {
@@ -121,16 +119,16 @@ function RowUIComponent(props: {
       let child = component.children[i];
       let childPosition = childProps.componentPositions[i];
       children.push(
-        <group key={'component_' + component.id + 'child_' + i}>
+        <group key={`component_${component.id}child_${i}`}>
           {child.getComponent(childPosition, updateSize)}
         </group>,
       );
     }
-    return <group key={'children_' + component.id}>{children}</group>;
+    return <group key={`children_${component.id}`}>{children}</group>;
   }
 
   return (
-    <mesh key={'component_' + component.id} position={position}>
+    <mesh key={`component_${component.id}`} position={position}>
       <ambientLight intensity={5} />
       <mesh position={new Vector3(0, 0, -component.layer / 1000)}>
         <boxGeometry args={[width, height, 0]} />

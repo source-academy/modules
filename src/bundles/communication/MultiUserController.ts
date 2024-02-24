@@ -56,7 +56,7 @@ export class MultiUserController {
     identifier: string,
     callback: (topic: string, message: string) => void,
   ) {
-    this.controller?.subscribe(identifier + '/#');
+    this.controller?.subscribe(`${identifier}/#`);
     this.messageCallbacks.set(identifier, callback);
   }
 }

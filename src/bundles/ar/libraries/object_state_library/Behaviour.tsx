@@ -304,12 +304,12 @@ export class PathMovement extends MovementClass {
       );
       switch (currentItem.style) {
         case MovementStyle.SlowToFast: {
-          ratio = ratio ** 5;
+          ratio **= 5;
           break;
         }
         case MovementStyle.FastToSlow: {
           let negative = 1 - ratio;
-          negative = negative ** 5;
+          negative **= 5;
           ratio = 1 - negative;
           break;
         }

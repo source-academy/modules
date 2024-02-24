@@ -51,7 +51,7 @@ export class GlobalStateController {
       return;
     }
     if (!preSplitTopic.startsWith('/')) {
-      preSplitTopic = '/' + preSplitTopic;
+      preSplitTopic = `/${preSplitTopic}`;
     }
     let splitTopic = preSplitTopic.split('/');
     try {

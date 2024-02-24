@@ -1,4 +1,4 @@
-import { Vector3 } from 'three';
+import { type Vector3 } from 'three';
 import { UIBasicComponent, type PaddingType } from './UIComponent';
 import { Image } from '@react-three/drei';
 
@@ -33,7 +33,7 @@ function ImageUIComponent(props: {
 }) {
   let { component, position } = props;
   return (
-    <mesh key={'component_' + component.id} position={position}>
+    <mesh key={`component_${component.id}`} position={position}>
       <Image
         url={component.src}
         scale={[component.getWidth(), component.getHeight()]}

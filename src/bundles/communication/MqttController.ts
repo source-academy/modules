@@ -34,7 +34,7 @@ export class MqttController {
    */
   public connectClient() {
     if (this.connected || this.address.length === 0) return;
-    let link = 'wss://' + this.address + ':' + this.port + '/mqtt';
+    let link = `wss://${this.address}:${this.port}/mqtt`;
     this.client = connect(link);
     this.connected = true;
     this.client.on('connect', () => {

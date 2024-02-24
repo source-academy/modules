@@ -119,16 +119,16 @@ function ColumnUIComponent(props: {
       let child = component.children[i];
       let childPosition = props.componentPositions[i];
       children.push(
-        <group key={'component_' + component.id + 'child_' + i}>
+        <group key={`component_${component.id}child_${i}`}>
           {child.getComponent(childPosition, updateSize)}
         </group>,
       );
     }
-    return <group key={'children_' + component.id}>{children}</group>;
+    return <group key={`children_${component.id}`}>{children}</group>;
   }
 
   return (
-    <mesh key={'component_' + component.id} position={position}>
+    <mesh key={`component_${component.id}`} position={position}>
       <ambientLight intensity={5} />
       <mesh position={new Vector3(0, 0, -component.layer / 1000)}>
         <boxGeometry args={[width, height, 0]} />

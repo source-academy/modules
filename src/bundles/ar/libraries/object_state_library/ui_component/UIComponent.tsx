@@ -83,7 +83,7 @@ export class UIBasicComponent {
   getHeight = () => this.paddingTop + this.paddingBottom;
   calculateLayer = () => {};
   getComponent = (position: Vector3, _: () => void) => (
-    <mesh key={'component_' + this.id} position={position}></mesh>
+    <mesh key={`component_${this.id}`} position={position}></mesh>
   );
 }
 

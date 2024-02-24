@@ -29,7 +29,7 @@ export class RpcController {
     this.topicHeader = topicHeader;
     this.multiUser = multiUser;
     this.userId = userId ?? uniqid();
-    this.returnTopic = this.topicHeader + '_return/' + this.userId;
+    this.returnTopic = `${this.topicHeader}_return/${this.userId}`;
     this.multiUser.addMessageCallback(this.returnTopic, (topic, message) => {
       let messageJson = JSON.parse(message);
       let callId = messageJson.callId;
@@ -53,7 +53,7 @@ export class RpcController {
       callId: callId,
       result: value,
     };
-    let topic = this.topicHeader + '_return/' + sender;
+    let topic = `${this.topicHeader}_return/${sender}`;
     this.multiUser.controller?.publish(topic, JSON.stringify(message), false);
   }
 
@@ -69,7 +69,7 @@ export class RpcController {
       func: func,
     };
     this.functions.set(name, item);
-    let functionTopic = this.topicHeader + '/' + this.userId + '/' + name;
+    let functionTopic = `${this.topicHeader}/${this.userId}/${name}`;
     this.multiUser.addMessageCallback(functionTopic, (topic, message) => {
       let splitTopic = topic.split('/');
       if (splitTopic.length !== 3) {
@@ -109,7 +109,7 @@ export class RpcController {
     args: any[],
     callback: (args: any[]) => void,
   ) {
-    let topic = this.topicHeader + '/' + receiver + '/' + name;
+    let topic = `${this.topicHeader}/${receiver}/${name}`;
     let callId = uniqid();
     this.pendingReturns.set(callId, callback);
     let messageJson = {

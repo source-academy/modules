@@ -126,7 +126,7 @@ function TextUIComponent(props: {
   }
 
   return (
-    <mesh key={'component_' + component.id} position={position}>
+    <mesh key={`component_${component.id}`} position={position}>
       <Text
         position={new Vector3(offsetX, 0, 0)}
         ref={ref}
