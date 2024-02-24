@@ -46,12 +46,12 @@ export class RpcController {
    *
    * @param sender ID of caller.
    * @param callId ID of function call.
-   * @param value Return value for function call.
+   * @param result Return value for function call.
    */
-  private returnResponse(sender: string, callId: string, value: any) {
+  private returnResponse(sender: string, callId: string, result: any) {
     let message = {
-      callId: callId,
-      result: value,
+      callId,
+      result,
     };
     let topic = `${this.topicHeader}_return/${sender}`;
     this.multiUser.controller?.publish(topic, JSON.stringify(message), false);
@@ -65,8 +65,8 @@ export class RpcController {
    */
   public expose(name: string, func: (...args: any[]) => any) {
     let item = {
-      name: name,
-      func: func,
+      name,
+      func,
     };
     this.functions.set(name, item);
     let functionTopic = `${this.topicHeader}/${this.userId}/${name}`;
@@ -114,8 +114,8 @@ export class RpcController {
     this.pendingReturns.set(callId, callback);
     let messageJson = {
       sender: this.userId,
-      callId: callId,
-      args: args,
+      callId,
+      args,
     };
     let messageString = JSON.stringify(messageJson);
     this.multiUser.controller?.publish(topic, messageString, false);

@@ -193,15 +193,15 @@ export function createInterfaceRow(
   backgroundColor: number,
 ): UIRowComponent {
   return new UIRowComponent({
-    children: children,
-    verticalAlignment: verticalAlignment,
+    children,
+    verticalAlignment,
     padding: {
-      paddingLeft: paddingLeft,
-      paddingRight: paddingRight,
-      paddingTop: paddingTop,
-      paddingBottom: paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
     },
-    background: backgroundColor,
+    backgroundColor: backgroundColor,
     id: uniqid(),
   });
 }
@@ -228,15 +228,15 @@ export function createInterfaceColumn(
   backgroundColor: number,
 ): UIColumnComponent {
   return new UIColumnComponent({
-    children: children,
-    horizontalAlignment: horizontalAlignment,
+    children,
+    horizontalAlignment,
     padding: {
-      paddingLeft: paddingLeft,
-      paddingRight: paddingRight,
-      paddingTop: paddingTop,
-      paddingBottom: paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
     },
-    background: backgroundColor,
+    backgroundColor,
     id: uniqid(),
   });
 }
@@ -267,17 +267,17 @@ export function createInterfaceText(
   color: number,
 ): UITextComponent {
   return new UITextComponent({
-    text: text,
-    textSize: textSize,
-    textWidth: textWidth,
-    textAlign: textAlign,
+    text,
+    textSize,
+    textWidth,
+    textAlign,
     padding: {
-      paddingLeft: paddingLeft,
-      paddingRight: paddingRight,
-      paddingTop: paddingTop,
-      paddingBottom: paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
     },
-    color: color,
+    color,
     id: uniqid(),
   });
 }
@@ -305,14 +305,14 @@ export function createInterfaceImage(
   paddingBottom: number,
 ): UIImageComponent {
   return new UIImageComponent({
-    src: src,
-    imageWidth: imageWidth,
-    imageHeight: imageHeight,
+    src,
+    imageWidth,
+    imageHeight,
     padding: {
-      paddingLeft: paddingLeft,
-      paddingRight: paddingRight,
-      paddingTop: paddingTop,
-      paddingBottom: paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
     },
     id: uniqid(),
   });
@@ -390,9 +390,9 @@ export function createPathItem(
   duration: number,
 ): PathItem {
   return {
-    start: start,
-    end: end,
-    duration: duration,
+    start,
+    end,
+    duration,
     style: MovementStyle.Linear,
   };
 }

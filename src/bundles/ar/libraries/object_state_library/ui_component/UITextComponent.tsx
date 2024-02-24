@@ -29,12 +29,8 @@ export default class UITextComponent extends UIBasicComponent {
     this.textAlign = props.textAlign ?? HorizontalAlignment.Center;
     this.color = props.color ?? 0;
   }
-  getWidth = () => {
-    return this.textWidth + this.paddingTop + this.paddingBottom;
-  };
-  getHeight = () => {
-    return this.textHeight + this.paddingTop + this.paddingBottom;
-  };
+  getWidth = () => this.textWidth + this.paddingTop + this.paddingBottom;
+  getHeight = () => this.textHeight + this.paddingTop + this.paddingBottom;
   updateHeight = (newTextHeight: number): boolean => {
     if (newTextHeight === 0) {
       return false;
@@ -52,16 +48,14 @@ export default class UITextComponent extends UIBasicComponent {
     }
     return false;
   };
-  getComponent = (position: Vector3, updateParent: () => void) => {
-    return (
-      <TextUIComponent
-        key={this.id}
-        component={this}
-        position={position}
-        updateParent={updateParent}
-      />
-    );
-  };
+  getComponent = (position: Vector3, updateParent: () => void) => (
+    <TextUIComponent
+      key={this.id}
+      component={this}
+      position={position}
+      updateParent={updateParent}
+    />
+  );
 }
 
 function TextUIComponent(props: {

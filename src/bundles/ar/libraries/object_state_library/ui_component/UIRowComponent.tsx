@@ -16,7 +16,7 @@ type UIRowProps = {
   children?: UIBasicComponent[];
   verticalAlignment?: VerticalAlignment;
   padding?: number | PaddingType;
-  background?: number;
+  backgroundColor?: number;
   id?: string;
 };
 
@@ -25,7 +25,7 @@ export default class UIRowComponent extends LayoutComponent {
   background: number;
   constructor(props: UIRowProps) {
     super(props.padding, props.id);
-    this.background = props.background ?? 0xffffff;
+    this.background = props.backgroundColor ?? 0xffffff;
     if (props.children) {
       this.children = props.children;
     }

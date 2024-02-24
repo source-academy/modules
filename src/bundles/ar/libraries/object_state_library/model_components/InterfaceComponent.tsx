@@ -126,21 +126,21 @@ function parseColumn(
       }
     });
   }
-  let background = uiJson.background;
-  if (typeof background !== 'number') {
-    background = undefined;
+  let backgroundColor = uiJson.background;
+  if (typeof backgroundColor !== 'number') {
+    backgroundColor = undefined;
   }
   return new UIColumnComponent({
-    horizontalAlignment: horizontalAlignment,
+    children,
+    horizontalAlignment,
     padding: {
-      paddingLeft: paddingLeft,
-      paddingRight: paddingRight,
-      paddingTop: paddingTop,
-      paddingBottom: paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
     },
-    children: children,
-    background: background,
-    id: id,
+    backgroundColor,
+    id,
   });
 }
 
@@ -168,21 +168,21 @@ function parseRow(
       }
     });
   }
-  let background = uiJson.background;
-  if (typeof background !== 'number') {
-    background = undefined;
+  let backgroundColor = uiJson.background;
+  if (typeof backgroundColor !== 'number') {
+    backgroundColor = undefined;
   }
   return new UIRowComponent({
-    verticalAlignment: verticalAlignment,
+    children,
+    verticalAlignment,
     padding: {
-      paddingLeft: paddingLeft,
-      paddingRight: paddingRight,
-      paddingTop: paddingTop,
-      paddingBottom: paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
     },
-    children: children,
-    background: background,
-    id: id,
+    backgroundColor,
+    id,
   });
 }
 
@@ -206,18 +206,18 @@ function parseText(
     typeof color === 'number'
   ) {
     return new UITextComponent({
-      text: text,
-      textSize: textSize,
-      textWidth: textWidth,
-      textAlign: textAlign,
-      color: color,
+      text,
+      textSize,
+      textWidth,
+      textAlign,
+      color,
       padding: {
-        paddingLeft: paddingLeft,
-        paddingRight: paddingRight,
-        paddingTop: paddingTop,
-        paddingBottom: paddingBottom,
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
       },
-      id: id,
+      id,
     });
   }
   return undefined;
@@ -240,16 +240,16 @@ function parseImage(
     typeof imageHeight === 'number'
   ) {
     return new UIImageComponent({
-      src: src,
-      imageWidth: imageWidth,
-      imageHeight: imageHeight,
+      src,
+      imageWidth,
+      imageHeight,
       padding: {
-        paddingLeft: paddingLeft,
-        paddingRight: paddingRight,
-        paddingTop: paddingTop,
-        paddingBottom: paddingBottom,
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
       },
-      id: id,
+      id,
     });
   }
   return undefined;

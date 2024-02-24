@@ -94,11 +94,11 @@ export class CubeObject extends ARObject {
       {
         model: new ShapeModel(
           new BoxGeometry(width, height, depth),
-          new MeshStandardMaterial({ color: color }),
+          new MeshStandardMaterial({ color }),
         ),
-        render: render,
-        rotation: rotation,
-        movement: movement,
+        render,
+        rotation,
+        movement,
       },
       onSelect,
     );
@@ -164,11 +164,11 @@ export class SphereObject extends ARObject {
       {
         model: new ShapeModel(
           new SphereGeometry(radius, 20, 20),
-          new MeshStandardMaterial({ color: color }),
+          new MeshStandardMaterial({ color }),
         ),
-        render: render,
-        rotation: rotation,
-        movement: movement,
+        render,
+        rotation,
+        movement,
       },
       onSelect,
     );
@@ -225,9 +225,9 @@ export class GltfObject extends ARObject {
       position,
       {
         model: new GltfModel(src, scale),
-        render: render,
-        rotation: rotation,
-        movement: movement,
+        render,
+        rotation,
+        movement,
       },
       onSelect,
     );
@@ -282,9 +282,9 @@ export class UIObject extends ARObject {
       position,
       {
         model: new InterfaceModel(uiJson),
-        render: render,
-        rotation: rotation,
-        movement: movement,
+        render,
+        rotation,
+        movement,
       },
       onSelect,
     );

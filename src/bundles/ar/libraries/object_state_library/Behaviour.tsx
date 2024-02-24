@@ -237,9 +237,9 @@ function parsePathItems(path: any[]) {
         movementStyle = MovementStyle.SlowToFast;
       }
       result.push({
-        start: start,
-        end: end,
-        duration: duration,
+        start,
+        end,
+        duration,
         style: movementStyle,
       });
     }
