@@ -10,10 +10,10 @@ type ContextType = {
 };
 
 const Context = createContext<ContextType>({
-  setCameraAsOrigin: () => {},
+  setCameraAsOrigin: () => undefined,
   getCameraRelativePosition: () => new Vector3(),
   getCameraRelativeRotation: () => new Euler(),
-  setPlayArea: () => {},
+  setPlayArea: () => undefined,
 });
 
 type Props = {

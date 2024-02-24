@@ -18,7 +18,7 @@ type ContextType = {
 
 const Context = createContext<ContextType>({
   object: createRef(),
-  setCallback: () => {},
+  setCallback: () => undefined,
 });
 
 type Props = {
@@ -49,9 +49,7 @@ export function ControlsContext(props: Props) {
     <Context.Provider
       value={{
         object: facingObject,
-        setCallback: (newCallback) => {
-          callback.current = newCallback;
-        },
+        setCallback: (newCallback) => (callback.current = newCallback),
       }}
     >
       {props.children}

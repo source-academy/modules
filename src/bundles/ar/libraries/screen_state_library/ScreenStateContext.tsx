@@ -19,7 +19,7 @@ type ContextType = {
 const Context = createContext<ContextType>({
   overlayRef: null,
   domOverlay: undefined,
-  setStates: () => {},
+  setStates: () => undefined,
   component: <></>,
 });
 

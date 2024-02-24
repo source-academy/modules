@@ -109,15 +109,15 @@ function ColumnUIComponent(props: {
     setComponentPositions(positions);
   }
 
-  function ChildrenComponents(props: { componentPositions: Vector3[] }) {
-    if (props.componentPositions.length !== component.children.length) {
+  function ChildrenComponents(childProps: { componentPositions: Vector3[] }) {
+    if (childProps.componentPositions.length !== component.children.length) {
       updateChildrenAlignment();
       return null;
     }
     let children: ReactNode[] = [];
     for (let i = 0; i < component.children.length; i++) {
       let child = component.children[i];
-      let childPosition = props.componentPositions[i];
+      let childPosition = childProps.componentPositions[i];
       children.push(
         <group key={`component_${component.id}child_${i}`}>
           {child.getComponent(childPosition, updateSize)}

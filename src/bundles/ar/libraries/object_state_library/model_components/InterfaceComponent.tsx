@@ -55,7 +55,7 @@ export function parseJsonInterface(uiJson: any) {
     typeof paddingTop !== 'number' ||
     typeof paddingBottom !== 'number'
   ) {
-    return;
+    return undefined;
   }
   switch (componentType) {
     case 'UIColumnComponent': {
