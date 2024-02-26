@@ -20,7 +20,7 @@ export default class UIImageComponent extends UIBasicComponent {
     this.imageWidth = props.imageWidth;
     this.imageHeight = props.imageHeight;
   }
-  getWidth = () => this.imageWidth + this.paddingTop + this.paddingBottom;
+  getWidth = () => this.imageWidth + this.paddingLeft + this.paddingRight;
   getHeight = () => this.imageHeight + this.paddingTop + this.paddingBottom;
   getComponent = (position: Vector3, _: () => void) => (
     <ImageUIComponent key={this.id} component={this} position={position} />

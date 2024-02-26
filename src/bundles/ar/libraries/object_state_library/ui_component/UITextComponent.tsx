@@ -29,7 +29,7 @@ export default class UITextComponent extends UIBasicComponent {
     this.textAlign = props.textAlign ?? HorizontalAlignment.Center;
     this.color = props.color ?? 0;
   }
-  getWidth = () => this.textWidth + this.paddingTop + this.paddingBottom;
+  getWidth = () => this.textWidth + this.paddingLeft + this.paddingRight;
   getHeight = () => this.textHeight + this.paddingTop + this.paddingBottom;
   updateHeight = (newTextHeight: number): boolean => {
     if (newTextHeight === 0) {

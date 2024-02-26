@@ -93,14 +93,17 @@ function ColumnUIComponent(props: {
     let currentYPosition = -component.height / 2 + component.paddingTop;
     for (let i = 0; i < component.children.length; i++) {
       let child = component.children[i];
-      let relativeYPosition = currentYPosition + child.height / 2;
+      let relativeYPosition =
+        currentYPosition +
+        child.height / 2 +
+        (child.paddingTop - child.paddingBottom) / 2;
       currentYPosition += child.height;
-      let relativeXPosition = 0;
+      let relativeXPosition = (child.paddingLeft - child.paddingRight) / 2;
       if (component.horizontalAlignment === HorizontalAlignment.Left) {
-        relativeXPosition =
+        relativeXPosition +=
           -(component.width - child.width) / 2 + component.paddingLeft;
       } else if (component.horizontalAlignment === HorizontalAlignment.Right) {
-        relativeXPosition =
+        relativeXPosition +=
           (component.width - child.width) / 2 - component.paddingRight;
       }
       let childPosition = new Vector3(relativeXPosition, -relativeYPosition, 0);

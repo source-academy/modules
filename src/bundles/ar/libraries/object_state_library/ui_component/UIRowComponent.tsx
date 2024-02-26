@@ -93,15 +93,18 @@ function RowUIComponent(props: {
     let currentXPosition = -component.width / 2 + component.paddingLeft;
     for (let i = 0; i < component.children.length; i++) {
       let child = component.children[i];
-      let relativeXPosition = currentXPosition + child.width / 2;
+      let relativeXPosition =
+        currentXPosition +
+        child.width / 2 +
+        (child.paddingLeft - child.paddingRight) / 2;
       currentXPosition += child.width;
-      let relativeYPosition = 0;
+      let relativeYPosition = -(child.paddingTop - child.paddingBottom) / 2;
       if (component.verticalAlignment === VerticalAlignment.Top) {
-        relativeYPosition =
+        relativeYPosition +=
           (component.height - child.height) / 2 - component.paddingTop;
       } else if (component.verticalAlignment === VerticalAlignment.Bottom) {
-        relativeYPosition =
-          -(component.height - child.height) / 2 + component.paddingBottom;
+        relativeYPosition +=
+          -(component.height - child.height) / 2 - component.paddingBottom;
       }
       let childPosition = new Vector3(relativeXPosition, relativeYPosition, 0);
       positions.push(childPosition);

@@ -9,7 +9,8 @@ export class ARState {
   clickCallbacks = new Map<string, () => void>();
 }
 
-// Fix issue with React Spring
+// Fix issue with React Spring, but spams console log.
+// https://github.com/pmndrs/react-spring/issues/1586#issuecomment-870778191
 Globals.assign({
   frameLoop: 'always',
 });
