@@ -1,78 +1,82 @@
 /* [Imports] */
 import {
-  clone as _clone,
   transform as _transform,
-  type Geom3,
 } from '@jscad/modeling/src/geometries/geom3';
 import mat4, { type Mat4 } from '@jscad/modeling/src/maths/mat4';
 import {
+  center as _center,
   rotate as _rotate,
   scale as _scale,
   translate as _translate,
 } from '@jscad/modeling/src/operations/transforms';
-import type { ModuleContext } from 'js-slang';
-import type { ModuleContexts, ReplResult } from '../../typings/type_helpers.js';
+import type { ReplResult } from '../../typings/type_helpers.js';
 import { Core } from './core.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';
-import { type List } from './types';
+
+
 
 /* [Exports] */
-
-export interface Entity {
-  clone: () => Entity;
+export interface Operable {
+  applyTransforms: (newTransforms: Mat4) => Operable;
   store: (newTransforms?: Mat4) => void;
-  translate: (offset: [number, number, number]) => Entity;
-  rotate: (offset: [number, number, number]) => Entity;
-  scale: (offset: [number, number, number]) => Entity;
+
+  translate: (offsets: [number, number, number]) => Operable;
+  rotate: (angles: [number, number, number]) => Operable;
+  scale: (factors: [number, number, number]) => Operable;
 }
 
-export class Group implements ReplResult, Entity {
-  children: Entity[];
+export class Group implements Operable, ReplResult {
+  children: Operable[];
+
   constructor(
-    public childrenList: List,
+    _children: Operable[],
     public transforms: Mat4 = mat4.create(),
   ) {
-    this.children = listToArray(childrenList);
+    // Duplicate the array to avoid modifying the original, maintaining
+    // stateless Operables for the user
+    this.children = [..._children];
   }
 
-  toReplString(): string {
-    return '<Group>';
-  }
-
-  clone(): Group {
-    return new Group(arrayToList(this.children.map((child) => child.clone())));
-  }
-
-  store(newTransforms?: Mat4): void {
-    this.transforms = mat4.multiply(
+  applyTransforms(newTransforms: Mat4): Operable {
+    let appliedTransforms: Mat4 = mat4.multiply(
       mat4.create(),
-      newTransforms || mat4.create(),
+      newTransforms,
       this.transforms,
     );
 
-    this.children.forEach((child) => {
-      child.store(this.transforms);
+    // Return a new object for statelessness
+    return new Group(
+      this.children,
+      appliedTransforms,
+    );
+  }
+
+  store(newTransforms: Mat4 = mat4.create()): void {
+    let appliedGroup: Group = this.applyTransforms(newTransforms) as Group;
+
+    this.children.forEach((child: Operable) => {
+      child.store(appliedGroup.transforms);
     });
   }
 
-  translate(offset: [number, number, number]): Group {
+  translate(offsets: [number, number, number]): Group {
     return new Group(
-      this.childrenList,
+      this.children,
       mat4.multiply(
         mat4.create(),
-        mat4.fromTranslation(mat4.create(), offset),
+        mat4.fromTranslation(mat4.create(), offsets),
         this.transforms,
       ),
     );
   }
 
-  rotate(offset: [number, number, number]): Group {
-    const yaw = offset[2];
-    const pitch = offset[1];
-    const roll = offset[0];
+  rotate(angles: [number, number, number]): Group {
+    let yaw = angles[2];
+    let pitch = angles[1];
+    let roll = angles[0];
 
     return new Group(
-      this.childrenList,
+      this.children,
       mat4.multiply(
         mat4.create(),
         mat4.fromTaitBryanRotation(mat4.create(), yaw, pitch, roll),
@@ -81,57 +85,70 @@ export class Group implements ReplResult, Entity {
     );
   }
 
-  scale(offset: [number, number, number]): Group {
+  scale(factors: [number, number, number]): Group {
     return new Group(
-      this.childrenList,
+      this.children,
       mat4.multiply(
         mat4.create(),
-        mat4.fromScaling(mat4.create(), offset),
+        mat4.fromScaling(mat4.create(), factors),
         this.transforms,
       ),
     );
   }
+
+  toReplString(): string {
+    return '<Group>';
+  }
+
+  ungroup(): Operable[] {
+    // Return all children, but we need to account for this Group's unresolved
+    // transforms by applying them to each child
+    return this.children.map(
+      (child: Operable) => child.applyTransforms(this.transforms),
+    );
+  }
 }
 
-export class Shape implements ReplResult, Entity {
+export class Shape implements Operable, ReplResult {
   constructor(public solid: Solid) {}
+
+  applyTransforms(newTransforms: Mat4): Operable {
+    // Return a new object for statelessness
+    return new Shape(_transform(newTransforms, this.solid));
+  }
+
+  store(newTransforms: Mat4 = mat4.create()): void {
+    Core.getRenderGroupManager()
+      .storeShape(
+        this.applyTransforms(newTransforms) as Shape,
+      );
+  }
+
+  translate(offsets: [number, number, number]): Shape {
+    return new Shape(_translate(offsets, this.solid));
+  }
+
+  rotate(angles: [number, number, number]): Shape {
+    return new Shape(_rotate(angles, this.solid));
+  }
+
+  scale(factors: [number, number, number]): Shape {
+    return new Shape(_scale(factors, this.solid));
+  }
 
   toReplString(): string {
     return '<Shape>';
   }
-
-  clone(): Shape {
-    return new Shape(_clone(this.solid as Geom3));
-  }
-
-  store(newTransforms?: Mat4): void {
-    Core.getRenderGroupManager()
-      .storeShape(
-        new Shape(_transform(newTransforms || mat4.create(), this.solid)),
-      );
-  }
-
-  translate(offset: [number, number, number]): Shape {
-    return new Shape(_translate(offset, this.solid));
-  }
-
-  rotate(offset: [number, number, number]): Shape {
-    return new Shape(_rotate(offset, this.solid));
-  }
-
-  scale(offset: [number, number, number]): Shape {
-    return new Shape(_scale(offset, this.solid));
-  }
 }
 
 export class RenderGroup implements ReplResult {
-  constructor(public canvasNumber: number) {}
-
   render: boolean = false;
   hasGrid: boolean = true;
   hasAxis: boolean = true;
 
   shapes: Shape[] = [];
+
+  constructor(public canvasNumber: number) {}
 
   toReplString(): string {
     return `<Render #${this.canvasNumber}>`;
@@ -200,11 +217,15 @@ export class CsgModuleState {
   }
 }
 
-export function getModuleContext(
-  moduleContexts: ModuleContexts,
-): ModuleContext | null {
-  let potentialModuleContext: ModuleContext | undefined = moduleContexts.csg;
-  return potentialModuleContext ?? null;
+export function centerPrimitive(shape: Shape) {
+  // Move centre of Shape to 0.5, 0.5, 0.5
+  let solid: Solid = _center(
+    {
+      relativeTo: [0.5, 0.5, 0.5],
+    },
+    shape.solid,
+  );
+  return new Shape(solid);
 }
 
 export function hexToColor(hex: string): Color {
@@ -231,37 +252,4 @@ export function colorToAlphaColor(
 
 export function hexToAlphaColor(hex: string): AlphaColor {
   return colorToAlphaColor(hexToColor(hex));
-}
-
-export function clamp(value: number, lowest: number, highest: number): number {
-  value = Math.max(value, lowest);
-  value = Math.min(value, highest);
-  return value;
-}
-
-function length(list: List): number {
-  let counter = 0;
-  while (!(list === null)) {
-    list = list[1];
-    counter++;
-  }
-  return counter;
-}
-
-function listToArray(list: List): Entity[] {
-  let retArr = new Array(length(list));
-  let pointer = 0;
-  while (!(list === null)) {
-    retArr[pointer++] = list[0];
-    list = list[1];
-  }
-  return retArr;
-}
-
-function arrayToList(arr: Entity[]): List {
-  let retList: List = null;
-  for (let i = arr.length - 1; i >= 0; --i) {
-    retList = [arr[i], retList];
-  }
-  return retList;
 }

@@ -1,17 +1,3 @@
-/**
- *
- * The stereo sounds library build on the sounds library by accommodating stereo sounds.
- * Within this library, all sounds are represented in stereo, with two waves, left and right.
- *
- * A Stereo Sound is a `pair(pair(left_wave, right_wave), duration)` where duration is the length of the sound in seconds.
- * The constructor `make_stereo_sound` and accessors `get_left_wave`, `get_right_wave`, and `get_duration` are provided.
- * The `make_sound` constructor from sounds is syntatic sugar for `make_stereo_sounds` with equal waves.
- *
- * @module stereo_sound
- * @author Koh Shang Hui
- * @author Samyukta Sounderraman
- */
-
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import {
   accumulate,
@@ -162,20 +148,21 @@ export function init_record(): string {
 }
 
 /**
- * takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
+ * Records a sound until the returned stop function is called.
+ * Takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
  * returns a nullary stop function <CODE>stop</CODE>. A call
- * <CODE>stop()</CODE> returns a sound promise: a nullary function
- * that returns a sound. Example: <PRE><CODE>init_record();
+ * <CODE>stop()</CODE> returns a Sound promise: a nullary function
+ * that returns a Sound. Example: <PRE><CODE>init_record();
  * const stop = record(0.5);
  * // record after 0.5 seconds. Then in next query:
  * const promise = stop();
- * // In next query, you can play the promised sound, by
+ * // In next query, you can play the promised Sound, by
  * // applying the promise:
  * play(promise());</CODE></PRE>
  * @param buffer - pause before recording, in seconds
  * @returns nullary <CODE>stop</CODE> function;
  * <CODE>stop()</CODE> stops the recording and
- * returns a sound promise: a nullary function that returns the recorded sound
+ * returns a sound promise: a nullary function that returns the recorded Sound
  */
 export function record(buffer: number): () => () => Sound {
   check_permission();
@@ -200,8 +187,8 @@ export function record(buffer: number): () => () => Sound {
 /**
  * Records a sound of given <CODE>duration</CODE> in seconds, after
  * a <CODE>buffer</CODE> also in seconds, and
- * returns a sound promise: a nullary function
- * that returns a sound. Example: <PRE><CODE>init_record();
+ * returns a Sound promise: a nullary function
+ * that returns a Sound. Example: <PRE><CODE>init_record();
  * const promise = record_for(2, 0.5);
  * // In next query, you can play the promised sound, by
  * // applying the promise:
@@ -248,11 +235,11 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * that takes in a non-negative input time and returns an amplitude
  * between -1 and 1.
  *
- * @param left_wave wave function of the left channel of the sound
- * @param right_wave wave function of the right channel of the sound
- * @param duration duration of the sound
- * @return resulting stereo sound
- * @example const s = make_stereo_sound(t => Math_sin(2 * Math_PI * 440 * t), t => Math_sin(2 * Math_PI * 300 * t), 5);
+ * @param left_wave wave function of the left channel of the Sound
+ * @param right_wave wave function of the right channel of the Sound
+ * @param duration duration of the Sound
+ * @return resulting stereo Sound
+ * @example const s = make_stereo_sound(t => math_sin(2 * math_PI * 440 * t), t => math_sin(2 * math_PI * 300 * t), 5);
  */
 export function make_stereo_sound(
   left_wave: Wave,
@@ -274,10 +261,10 @@ export function make_stereo_sound(
  * that takes in a non-negative input time and returns an amplitude
  * between -1 and 1.
  *
- * @param wave wave function of the sound
- * @param duration duration of the sound
- * @return with wave as wave function and duration as duration
- * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
+ * @param wave wave function of the Sound
+ * @param duration duration of the Sound
+ * @return Sound with the given `wave` function for both channels and `duration` as duration
+ * @example const s = make_sound(t => math_sin(2 * math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
   return make_stereo_sound(wave, wave, duration);
@@ -288,7 +275,7 @@ export function make_sound(wave: Wave, duration: number): Sound {
  *
  * @param sound given Sound
  * @return the wave function of the Sound
- * @example get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
+ * @example get_wave(make_sound(t => math_sin(2 * math_PI * 440 * t), 5)); // Returns t => math_sin(2 * math_PI * 440 * t)
  */
 export function get_left_wave(sound: Sound): Wave {
   return head(head(sound));
@@ -299,7 +286,7 @@ export function get_left_wave(sound: Sound): Wave {
  *
  * @param sound given Sound
  * @return the wave function of the Sound
- * @example get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
+ * @example get_wave(make_sound(t => math_sin(2 * math_PI * 440 * t), 5)); // Returns t => math_sin(2 * math_PI * 440 * t)
  */
 export function get_right_wave(sound: Sound): Wave {
   return tail(head(sound));
@@ -310,7 +297,7 @@ export function get_right_wave(sound: Sound): Wave {
  *
  * @param sound given Sound
  * @return the duration of the Sound
- * @example get_duration(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns 5
+ * @example get_duration(make_sound(t => math_sin(2 * math_PI * 440 * t), 5)); // Returns 5
  */
 export function get_duration(sound: Sound): number {
   return tail(sound);
@@ -335,13 +322,12 @@ export function is_sound(x: any): boolean {
 /**
  * Plays the given Wave using the computer’s sound device, for the duration
  * given in seconds.
- * The sound is only played if no other sounds are currently being played.
  *
  * @param wave the wave function to play, starting at 0
- * @return the given sound
+ * @return the given Sound
  * @example play_wave(t => math_sin(t * 3000), 5);
  */
-export function play_wave(wave: Wave, duration: number): AudioPlayed {
+export function play_wave(wave: Wave, duration: number): Sound {
   return play(make_sound(wave, duration));
 }
 
@@ -349,38 +335,40 @@ export function play_wave(wave: Wave, duration: number): AudioPlayed {
  * Plays the given two Waves using the computer’s sound device, for the duration
  * given in seconds. The first Wave is for the left channel, the second for the
  * right channel.
- * The sound is only played if no other sounds are currently being played.
  *
  * @param wave1 the wave function to play on the left channel, starting at 0
  * @param wave2 the wave function to play on the right channel, starting at 0
- * @return the given sound
+ * @return the given Sound
  * @example play_waves(t => math_sin(t * 3000), t => math_sin(t * 6000), 5);
  */
 export function play_waves(
   wave1: Wave,
   wave2: Wave,
   duration: number,
-): AudioPlayed {
+): Sound {
   return play(make_stereo_sound(wave1, wave2, duration));
 }
 
 /**
  * Plays the given Sound using the computer’s sound device.
- * The sound is only played if no other sounds are currently being played.
+ * The Sound is added to a list of Sounds to be played one-at-a-time
+ * in a Source Academy tab.
  *
- * @param sound the sound to play
- * @return the given sound
- * @example play(sine_sound(440, 5));
+ * @param sound the Sound to play
+ * @return the given Sound
+ * @example play_in_tab(sine_sound(440, 5));
  */
-export function play(sound: Sound): AudioPlayed {
+export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`play is expecting sound, but encountered ${sound}`);
+    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
-    throw new Error('play: audio system still playing previous sound');
+    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
-    throw new Error('play: duration of sound is negative');
+    throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
@@ -450,96 +438,91 @@ export function play(sound: Sound): AudioPlayed {
     riffwave.header.bitsPerSample = 16;
     riffwave.Make(channel);
 
-    /*
-    const audio = new Audio(riffwave.dataURI);
-    const source2 = audioplayer.createMediaElementSource(audio);
-    source2.connect(audioplayer.destination);
-
-    // Connect data to output destination
-    isPlaying = true;
-    audio.play();
-    audio.onended = () => {
-      source2.disconnect(audioplayer.destination);
-      isPlaying = false;
-    }; */
-
     const audio = {
       toReplString: () => '<AudioPlayed>',
       dataUri: riffwave.dataURI,
     };
 
     audioPlayed.push(audio);
-    return audio;
+    return sound;
   }
 }
 
 /**
  * Plays the given Sound using the computer’s sound device
- * on top of any sounds that are currently playing.
+ * on top of any Sounds that are currently playing.
  *
- * @param sound the sound to play
- * @example play_concurrently(sine_sound(440, 5));
+ * @param sound the Sound to play
+ * @return the given Sound
+ * @example play(sine_sound(440, 5));
  */
-export function play_concurrently(sound: Sound): void {
+export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(
-      `play_concurrently is expecting sound, but encountered ${sound}`,
-    );
-  } else if (get_duration(sound) <= 0) {
-    // Do nothing
+    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+    // If a sound is already playing, terminate execution.
+  } else if (isPlaying) {
+    throw new Error(`${play.name}: audio system still playing previous sound`);
+  } else if (get_duration(sound) < 0) {
+    throw new Error(`${play.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
       init_audioCtx();
     }
 
-    const channel: number[] = Array[2 * Math.ceil(FS * get_duration(sound))];
+    const channel: number[] = [];
+    const len = Math.ceil(FS * get_duration(sound));
 
     let Ltemp: number;
     let Rtemp: number;
-    let prev_value = 0;
+    let Lprev_value = 0;
+    let Rprev_value = 0;
 
     const left_wave = get_left_wave(sound);
-
-    for (let i = 0; i < channel.length; i += 2) {
+    const right_wave = get_right_wave(sound);
+    for (let i = 0; i < len; i += 1) {
       Ltemp = left_wave(i / FS);
       // clip amplitude
       if (Ltemp > 1) {
-        channel[i] = 1;
+        channel[2 * i] = 1;
       } else if (Ltemp < -1) {
-        channel[i] = -1;
+        channel[2 * i] = -1;
       } else {
-        channel[i] = Ltemp;
+        channel[2 * i] = Ltemp;
       }
 
       // smoothen out sudden cut-outs
-      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
+      if (
+        channel[2 * i] === 0
+        && Math.abs(channel[2 * i] - Lprev_value) > 0.01
+      ) {
+        channel[2 * i] = Lprev_value * 0.999;
       }
 
-      prev_value = channel[i];
-    }
+      Lprev_value = channel[2 * i];
 
-    prev_value = 0;
-    const right_wave = get_right_wave(sound);
-    for (let i = 1; i < channel.length; i += 2) {
       Rtemp = right_wave(i / FS);
       // clip amplitude
       if (Rtemp > 1) {
-        channel[i] = 1;
+        channel[2 * i + 1] = 1;
       } else if (Rtemp < -1) {
-        channel[i] = -1;
+        channel[2 * i + 1] = -1;
       } else {
-        channel[i] = Rtemp;
+        channel[2 * i + 1] = Rtemp;
       }
 
       // smoothen out sudden cut-outs
-      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
+      if (
+        channel[2 * i + 1] === 0
+        && Math.abs(channel[2 * i] - Rprev_value) > 0.01
+      ) {
+        channel[2 * i + 1] = Rprev_value * 0.999;
       }
 
-      prev_value = channel[i];
+      Rprev_value = channel[2 * i + 1];
     }
 
     // quantize
@@ -563,6 +546,7 @@ export function play_concurrently(sound: Sound): void {
       source2.disconnect(audioplayer.destination);
       isPlaying = false;
     };
+    return sound;
   }
 }
 
@@ -776,8 +760,11 @@ export function consecutively(list_of_sounds: List): Sound {
 }
 
 /**
- * Makes a new Sound by combining the sounds in a given list
- * where all the sounds are overlapped on top of each other.
+ * Makes a new Sound by combining the sounds in a given list.
+ * In the result sound, the component sounds overlap such that
+ * they start at the beginning of the result sound. To achieve
+ * this, the amplitudes of the component sounds are added together
+ * and then divided by the length of the list.
  *
  * @param list_of_sounds given list of sounds
  * @return the combined Sound

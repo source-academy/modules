@@ -47,7 +47,7 @@ export function z_of(pt: Point): number {
  * ```
  */
 export function r_of(pt: Point): number {
-  return pt.color.r * 255;
+  return ( pt.color[0] ?? 0 ) * 255;
 }
 
 /**
@@ -62,7 +62,7 @@ export function r_of(pt: Point): number {
  * ```
  */
 export function g_of(pt: Point): number {
-  return pt.color.g * 255;
+  return ( pt.color[1] ?? 0 ) * 255;
 }
 
 /**
@@ -77,7 +77,7 @@ export function g_of(pt: Point): number {
  * ```
  */
 export function b_of(pt: Point): number {
-  return pt.color.b * 255;
+  return ( pt.color[2] ?? 0 ) * 255;
 }
 export function generatePlot(
   type: string,
@@ -98,12 +98,16 @@ export function generatePlot(
     z_s.push(z_of(point));
     color_s.push(`rgb(${r_of(point)},${g_of(point)},${b_of(point)})`);
   }
+
   const plotlyData: Data = {
     x: x_s,
     y: y_s,
     z: z_s,
     marker: {
       size: 2,
+      color: color_s,
+    },
+    line: {
       color: color_s,
     },
   };
@@ -119,5 +123,5 @@ export function generatePlot(
 }
 
 function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
-  Plotly.newPlot(divId, [data], layout);
+  Plotly.react(divId, [data], layout);
 }

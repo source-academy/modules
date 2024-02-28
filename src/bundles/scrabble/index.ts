@@ -3,8 +3,8 @@
  * @author Martin Henz
  */
 export {
-  scrabble_array,
-  scrabble_list,
-  charAt,
-  arrayLength,
+  scrabble_words,
+  scrabble_letters,
+  scrabble_words_tiny,
+  scrabble_letters_tiny,
 } from './functions';

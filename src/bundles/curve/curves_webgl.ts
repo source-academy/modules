@@ -1,4 +1,6 @@
 import { mat4, vec3 } from 'gl-matrix';
+import { stringify } from 'js-slang/dist/utils/stringify';
+
 import type { ReplResult } from '../../typings/type_helpers';
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
 
@@ -137,7 +139,7 @@ export class CurveDrawn implements ReplResult {
 
   constructor(
     private readonly drawMode: DrawMode,
-    private readonly numPoints: number,
+    public readonly numPoints: number,
     private readonly space: CurveSpace,
     private readonly drawCubeArray: number[],
     private readonly curvePosArray: number[],
@@ -334,6 +336,11 @@ export function generateCurve(
 
   for (let i = 0; i <= numPoints; i += 1) {
     const point = func(i / numPoints);
+
+    if (!(point instanceof Point)) {
+      throw new Error(`Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`);
+    }
+
     const x = point.x * 2 - 1;
     const y = point.y * 2 - 1;
     const z = point.z * 2 - 1;

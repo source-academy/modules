@@ -9,7 +9,7 @@ import React from 'react';
 import { DebugDraw } from '@box2d/debug-draw';
 import { DrawShapes, type b2World } from '@box2d/core';
 
-import WebGLCanvas from '../common/webgl_canvas';
+import WebGLCanvas from '../common/WebglCanvas';
 import { type PhysicsWorld } from '../../bundles/physics_2d/PhysicsWorld';
 
 type DebugDrawCanvasProps = {
