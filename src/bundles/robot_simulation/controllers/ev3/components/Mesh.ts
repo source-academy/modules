@@ -6,7 +6,8 @@ import {
 } from '../../../engine';
 import * as THREE from 'three';
 import { type Orientation } from '../../../engine/Entity/Entity';
-import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+// eslint-disable-next-line import/extensions
+import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { type ChassisWrapper } from './Chassis';
 
 export type MeshConfig = {

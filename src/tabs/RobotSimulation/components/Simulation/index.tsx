@@ -3,15 +3,16 @@ import type { DebuggerContext } from '../../../../typings/type_helpers';
 
 import { type World } from '../../../../bundles/robot_simulation/engine';
 import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers';
+import { type WorldState } from '../../../../bundles/robot_simulation/engine/World';
+import { type RobotConsole } from '../../../../bundles/robot_simulation/engine/Core/RobotConsole';
+
 import { Tab, Tabs } from '@blueprintjs/core';
 import { WheelPidPanel } from '../TabPanels/WheelPidPanel';
 import { MotorPidPanel } from '../TabPanels/MotorPidPanel';
 import { ColorSensorPanel } from '../TabPanels/ColorSensorPanel';
 import { MonitoringPanel } from '../TabPanels/MonitoringPanel';
-import { type WorldState } from '../../../../bundles/robot_simulation/engine/World';
 import { UltrasonicSensorPanel } from '../TabPanels/UltrasonicSensorPanel';
 import { ConsolePanel } from '../TabPanels/ConsolePanel';
-import { type RobotConsole } from '../../../../bundles/robot_simulation/engine/Core/RobotConsole';
 
 const WrapperStyle: CSSProperties = {
   display: 'flex',

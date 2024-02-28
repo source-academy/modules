@@ -1,5 +1,7 @@
 import rapier from '@dimforge/rapier3d-compat';
 
+import type * as THREE from 'three';
+
 import { type SimpleVector } from './Math/Vector';
 import { type FrameTimingInfo } from './Core/Timer';
 import { TimeStampedEvent, TypedEventTarget } from './Core/Events';
