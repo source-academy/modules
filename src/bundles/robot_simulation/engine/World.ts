@@ -4,11 +4,15 @@ import { type Physics } from './Physics';
 import { type Renderer } from './Render/Renderer';
 import { type Timer } from './Core/Timer';
 
+import { type RobotConsole } from './Core/RobotConsole';
+
+
 export const worldStates = [
   'unintialized',
   'loading',
   'ready',
   'running',
+  'error',
 ] as const;
 export type WorldState = (typeof worldStates)[number];
 
@@ -24,15 +28,17 @@ export class World extends TypedEventTarget<WorldEventMap> {
   physics: Physics;
   render: Renderer;
   timer: Timer;
+  robotConsole: RobotConsole;
   controllers: ControllerGroup;
 
-  constructor(physics: Physics, render: Renderer, timer: Timer) {
+  constructor(physics: Physics, render: Renderer, timer: Timer, robotConsole: RobotConsole) {
     super();
     this.state = 'unintialized';
     this.physics = physics;
     this.render = render;
     this.timer = timer;
     this.controllers = new ControllerGroup();
+    this.robotConsole = robotConsole;
   }
 
   addController(...controllers: Controller[]) {
@@ -60,13 +66,13 @@ export class World extends TypedEventTarget<WorldEventMap> {
   async init() {
     this.setState('loading');
     await this.physics.start();
-    this.dispatchTypedEvent('worldStart', new Event('worldStart'));
+    this.dispatchEvent('worldStart', new Event('worldStart'));
     this.setState('ready');
   }
 
   private setState(newState: WorldState) {
     if (this.state !== newState) {
-      this.dispatchTypedEvent(
+      this.dispatchEvent(
         'worldStateChange',
         new Event('worldStateChange'),
       );
@@ -85,27 +91,32 @@ export class World extends TypedEventTarget<WorldEventMap> {
       window.requestAnimationFrame(this.step.bind(this));
     }
   }
-
   step(timestamp: number) {
-    const frameTimingInfo = this.timer.step(timestamp);
+    try {
+      const frameTimingInfo = this.timer.step(timestamp);
 
-    // Update physics
-    this.physics.step(frameTimingInfo);
-
-    // Update render
-    this.dispatchTypedEvent(
-      'beforeRender',
-      new TimeStampedEvent('beforeRender', frameTimingInfo),
-    );
-    this.render.step(frameTimingInfo);
-    this.dispatchTypedEvent(
-      'afterRender',
-      new TimeStampedEvent('afterRender', frameTimingInfo),
-    );
+      // Update physics
+      this.physics.step(frameTimingInfo);
 
 
-    if (this.state === 'running') {
-      window.requestAnimationFrame(this.step.bind(this));
+      // Update render
+      this.dispatchEvent(
+        'beforeRender',
+        new TimeStampedEvent('beforeRender', frameTimingInfo),
+      );
+      this.render.step(frameTimingInfo);
+      this.dispatchEvent(
+        'afterRender',
+        new TimeStampedEvent('afterRender', frameTimingInfo),
+      );
+
+
+      if (this.state === 'running') {
+        window.requestAnimationFrame(this.step.bind(this));
+      }
+    } catch (e) {
+      console.log('Error caught', e);
+      this.setState('error');
     }
   }
 }

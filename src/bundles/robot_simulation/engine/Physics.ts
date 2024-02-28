@@ -120,12 +120,12 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     this.internals.accumulator += Math.min(frameDuration, maxFrameTime);
 
     while (this.internals.accumulator >= this.configuration.timestep) {
-      this.dispatchTypedEvent(
+      this.dispatchEvent(
         'beforePhysicsUpdate',
         new TimeStampedEvent('beforePhysicsUpdate', timing),
       );
       this.internals.world.step();
-      this.dispatchTypedEvent(
+      this.dispatchEvent(
         'afterPhysicsUpdate',
         new TimeStampedEvent('afterPhysicsUpdate', timing),
       );

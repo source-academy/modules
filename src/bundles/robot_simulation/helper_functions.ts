@@ -18,6 +18,7 @@ import { type Controller, Physics, Renderer, Timer, World } from './engine';
 
 import context from 'js-slang/context';
 import { interrupt } from './interrupt';
+import { RobotConsole } from './engine/Core/RobotConsole';
 
 
 const storedWorld = context.moduleContexts.robot_simulation.state?.world;
@@ -60,8 +61,8 @@ export function createTimer(): Timer {
   return timer;
 }
 
-export function createWorld(physics: Physics, renderer: Renderer, timer: Timer) {
-  const world = new World(physics, renderer, timer);
+export function createWorld(physics: Physics, renderer: Renderer, timer: Timer, robotConsole: RobotConsole) {
+  const world = new World(physics, renderer, timer, robotConsole);
   return world;
 }
 
@@ -103,15 +104,20 @@ export function createCSE() {
   return program;
 }
 
+export function createRobotConsole() {
+  const robot_console = new RobotConsole();
+  return robot_console;
+}
+
 export function addControllerToWorld(controller: Controller, world:World) {
   world.addController(controller);
 }
 
-export function saveToContext(world: World, ev3: DefaultEv3) {
-  context.moduleContexts.robot_simulation.state = {
-    world,
-    ev3,
-  };
+export function saveToContext(key:string, value:any) {
+  if (!context.moduleContexts.robot_simulation.state) {
+    context.moduleContexts.robot_simulation.state = {};
+  }
+  context.moduleContexts.robot_simulation.state[key] = value;
 }
 
 // Initialization

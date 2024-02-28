@@ -14,7 +14,6 @@ export function ev3_pause(duration: number): void {
   const world = getWorldFromContext();
   // TODO: FIX THIS! CAUSES BUGS
   const program = world.controllers.controllers[0] as Program;
-  console.log(world.controllers, program, duration);
   program.pause(duration);
 }
 
@@ -79,15 +78,11 @@ export function ev3_colorSensorBlue(colorSensor: ColorSensor) {
 
 // Ultrasonic Sensor
 
-export function test() {
-  console.log('TEST');
-}
-
 export function ev3_ultrasonicSensor() {
   const ev3 = getEv3FromContext();
   return ev3.get('ultrasonicSensor');
 }
 
-export function ev3_ultrasonicSensorDistance(ultraSonicSensor: UltrasonicSensor) {
+export function ev3_ultrasonicSensorDistance(ultraSonicSensor: UltrasonicSensor): number {
   return ultraSonicSensor.sense();
 }

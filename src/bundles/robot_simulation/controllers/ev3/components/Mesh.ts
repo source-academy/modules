@@ -1,12 +1,16 @@
-import { type Entity, type Controller, MeshFactory, Renderer } from '../../../engine';
+import {
+  type Entity,
+  type Controller,
+  MeshFactory,
+  Renderer,
+} from '../../../engine';
 import * as THREE from 'three';
 import { type Orientation } from '../../../engine/Entity/Entity';
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { type ChassisWrapper } from './Chassis';
 
-
 export type MeshConfig = {
-  orientation: Orientation
+  orientation: Orientation;
   width: number;
   height: number;
   length: number;
@@ -22,7 +26,11 @@ export class Mesh implements Controller {
   chassisWrapper: ChassisWrapper;
   mesh: GLTF | null = null;
 
-  constructor(chassisWrapper: ChassisWrapper, render:Renderer, meshConfig: MeshConfig) {
+  constructor(
+    chassisWrapper: ChassisWrapper,
+    render: Renderer,
+    meshConfig: MeshConfig,
+  ) {
     this.chassisWrapper = chassisWrapper;
     this.debugMesh = MeshFactory.addCuboid(meshConfig);
     this.meshConfig = meshConfig;
@@ -31,7 +39,9 @@ export class Mesh implements Controller {
   }
 
   async start(): Promise<void> {
-    this.mesh = await Renderer.loadGTLF('https://keen-longma-3c1be1.netlify.app/try_one.gltf');
+    this.mesh = await Renderer.loadGTLF(
+      'https://keen-longma-3c1be1.netlify.app/2_colors_corrected.gltf',
+    );
 
     const box = new THREE.Box3()
       .setFromObject(this.mesh.scene);
@@ -56,11 +66,16 @@ export class Mesh implements Controller {
       this.debugMesh.visible = false;
     }
 
-    this.debugMesh.position.copy(chassisEntity
-      .getPosition() as THREE.Vector3);
-    this.debugMesh.quaternion.copy(chassisEntity.getRotation() as THREE.Quaternion);
+    this.debugMesh.position.copy(chassisEntity.getPosition() as THREE.Vector3);
+    this.debugMesh.quaternion.copy(
+      chassisEntity.getRotation() as THREE.Quaternion,
+    );
 
-    this.mesh?.scene.position.copy(chassisEntity.getPosition() as THREE.Vector3);
-    this.mesh?.scene.quaternion.copy(chassisEntity.getRotation() as THREE.Quaternion);
+    this.mesh?.scene.position.copy(
+      chassisEntity.getPosition() as THREE.Vector3,
+    );
+    this.mesh?.scene.quaternion.copy(
+      chassisEntity.getRotation() as THREE.Quaternion,
+    );
   }
 }

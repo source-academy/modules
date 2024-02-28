@@ -75,7 +75,7 @@ describe('Physics', () => {
       distance: expectedResult.toi,
       normal: expectedResult.normal,
     });
-    expect(physics.internals.world.castRayAndGetNormal).toHaveBeenCalledWith(expect.anything(), maxDistance, false);
+    expect(physics.internals.world.castRayAndGetNormal).toHaveBeenCalledWith(expect.anything(), maxDistance, true, undefined, undefined, undefined);
   });
 
   test('castRay returns null result castRayAndGetNormal returns null', async () => {

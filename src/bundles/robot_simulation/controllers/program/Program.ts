@@ -1,13 +1,17 @@
 import { type IOptions } from 'js-slang';
-import { runECEvaluatorByJoel } from './evaluate';
+import { runECEvaluator } from './evaluate';
 import context from 'js-slang/context';
 import { type FrameTimingInfo, type Controller } from '../../engine';
 import { CallbackHandler } from '../../engine/Core/CallbackHandler';
 
+type ProgramConfig = {
+  stepsPerTick: number;
+};
+
 
 export class Program implements Controller {
   code: string;
-  iterator: Generator | null;
+  iterator: ReturnType<typeof runECEvaluator> | null;
   isPaused:boolean;
   callbackHandler = new CallbackHandler();
 
@@ -35,15 +39,21 @@ export class Program implements Controller {
 
     context.errors = [];
 
-    this.iterator = runECEvaluatorByJoel(this.code, context, options);
+    this.iterator = runECEvaluator(this.code, context, options);
   }
 
   fixedUpdate(_: number) {
+    if (!this.iterator) {
+      throw Error('Program not started');
+    }
+
     if (this.isPaused) {
       return;
     }
-    for (let i = 0; i < 4; i++) {
-      this.iterator!.next();
+
+    // steps per tick
+    for (let i = 0; i < 10; i++) {
+      const result = this.iterator.next();
     }
   }
 

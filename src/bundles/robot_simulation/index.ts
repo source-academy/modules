@@ -23,5 +23,6 @@ export {
   createFloor,
   createCSE,
   addControllerToWorld,
+  createRobotConsole,
   saveToContext,
 } from './helper_functions';
