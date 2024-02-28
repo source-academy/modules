@@ -12,7 +12,8 @@ import {
   ultrasonicSensorConfig,
 } from './config';
 
-import { Floor, type DefaultEv3, Program, Wall } from './controllers';
+import { Program } from './controllers/program/Program';
+import { Floor, type DefaultEv3, Wall } from './controllers';
 import { createDefaultEv3 } from './controllers/ev3/ev3/default';
 import { type Controller, Physics, Renderer, Timer, World } from './engine';
 
