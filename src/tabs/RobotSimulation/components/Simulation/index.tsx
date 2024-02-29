@@ -4,7 +4,6 @@ import type { DebuggerContext } from '../../../../typings/type_helpers';
 import { type World } from '../../../../bundles/robot_simulation/engine';
 import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers';
 import { type WorldState } from '../../../../bundles/robot_simulation/engine/World';
-import { type RobotConsole } from '../../../../bundles/robot_simulation/engine/Core/RobotConsole';
 
 import { Tab, Tabs } from '@blueprintjs/core';
 import { WheelPidPanel } from '../TabPanels/WheelPidPanel';
@@ -54,7 +53,7 @@ export default function SimulationCanvas({
   const ev3 = context.context.moduleContexts.robot_simulation.state
     .ev3 as DefaultEv3;
 
-  const console = context.context.moduleContexts.robot_simulation.state.console as RobotConsole;
+  const robotConsole = world.robotConsole;
 
   useEffect(() => {
     const startThreeAndRapierEngines = async () => {
@@ -106,7 +105,7 @@ export default function SimulationCanvas({
           <Tab id="motorPid" title="Motor PID" panel={<MotorPidPanel ev3={ev3}/>} />
           <Tab id="colorSensor" title="Color Sensor" panel={<ColorSensorPanel ev3={ev3}/>}/>
           <Tab id="ultrasonicSensor" title="Ultrasonic Sensor" panel={<UltrasonicSensorPanel ev3={ev3}/>}/>
-          <Tab id="consolePanel" title="Console" panel= {<ConsolePanel console={console}/>} />
+          <Tab id="consolePanel" title="Console" panel= {<ConsolePanel robot_console={robotConsole}/>} />
         </Tabs>
       </div>
     </div>

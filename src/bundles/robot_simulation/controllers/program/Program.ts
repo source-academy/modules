@@ -3,11 +3,11 @@ import { runECEvaluator } from './evaluate';
 import context from 'js-slang/context';
 import { type FrameTimingInfo, type Controller } from '../../engine';
 import { CallbackHandler } from '../../engine/Core/CallbackHandler';
+import { ProgramError } from './error';
 
 type ProgramConfig = {
   stepsPerTick: number;
 };
-
 
 export class Program implements Controller {
   code: string;
@@ -43,17 +43,22 @@ export class Program implements Controller {
   }
 
   fixedUpdate(_: number) {
-    if (!this.iterator) {
-      throw Error('Program not started');
-    }
+    try {
+      if (!this.iterator) {
+        throw Error('Program not started');
+      }
 
-    if (this.isPaused) {
-      return;
-    }
+      if (this.isPaused) {
+        return;
+      }
 
-    // steps per tick
-    for (let i = 0; i < 10; i++) {
-      const result = this.iterator.next();
+      // steps per tick
+      for (let i = 0; i < 10; i++) {
+        const result = this.iterator.next();
+      }
+    } catch (e) {
+      console.error(e);
+      throw new ProgramError('Error in program execution. Please check your code and try again.');
     }
   }
 

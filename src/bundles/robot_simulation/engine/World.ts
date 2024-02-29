@@ -5,6 +5,7 @@ import { type Renderer } from './Render/Renderer';
 import { type Timer } from './Core/Timer';
 
 import { type RobotConsole } from './Core/RobotConsole';
+import { ProgramError } from '../controllers/program/error';
 
 
 export const worldStates = [
@@ -116,6 +117,14 @@ export class World extends TypedEventTarget<WorldEventMap> {
       }
     } catch (e) {
       console.log('Error caught', e);
+      if (e instanceof Error) {
+        this.robotConsole.log(e.message, 'error');
+      } else if (e instanceof ProgramError) {
+        this.robotConsole.log(e.message, 'source');
+      } else {
+        // e is not an error. Just log a generic error message
+        this.robotConsole.log('An error occurred', 'error');
+      }
       this.setState('error');
     }
   }
