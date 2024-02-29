@@ -41,7 +41,7 @@ export class Mesh implements Controller {
 
   async start(): Promise<void> {
     this.mesh = await Renderer.loadGTLF(
-      'https://keen-longma-3c1be1.netlify.app/2_colors_corrected.gltf',
+      'https://keen-longma-3c1be1.netlify.app/4_no_wheels.gltf',
     );
 
     const box = new THREE.Box3()
