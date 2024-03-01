@@ -43,7 +43,6 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
 
   async start() {
     await rapier.init();
-    console.log('Physics started');
 
     this.RAPIER = rapier;
 

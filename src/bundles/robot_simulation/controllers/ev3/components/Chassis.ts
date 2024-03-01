@@ -1,5 +1,13 @@
 import * as THREE from 'three';
-import { type Physics, type Controller, EntityFactory, type Entity, MeshFactory, type Renderer } from '../../../engine';
+
+import {
+  type Physics,
+  type Controller,
+  EntityFactory,
+  type Entity,
+  MeshFactory,
+  type Renderer,
+} from '../../../engine';
 import { type EntityCuboidOptions } from '../../../engine/Entity/EntityFactory';
 import type { MeshConfig } from './Mesh';
 
@@ -10,14 +18,12 @@ export class ChassisWrapper implements Controller {
   private chassis: Entity | null = null;
   debugMesh: THREE.Mesh;
 
-
   constructor(physics: Physics, render: Renderer, config: EntityCuboidOptions) {
     this.physics = physics;
     this.config = config;
 
-
     // Debug mesh
-    const meshConfig :MeshConfig = {
+    const meshConfig: MeshConfig = {
       orientation: config.orientation,
       width: config.width,
       height: config.height,

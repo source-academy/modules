@@ -33,7 +33,8 @@ export class TypedEventTarget<EventMap extends ValueIsEvent<EventMap>> {
     if (!this.listeners[type]) {
       this.listeners[type] = [];
     }
-    this.listeners[type]?.push(listener);
+    // Non-null assertion is safe because we just checked if it's undefined
+    this.listeners[type]!.push(listener);
   }
 
   public dispatchEvent<EventName extends keyof EventMap>(

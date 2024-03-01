@@ -30,7 +30,7 @@ export function getCamera(cameraOptions: CameraOptions): THREE.Camera {
     default: {
       // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
       const _: never = cameraOptions;
-      throw new Error(`Unknown camera type: ${cameraOptions}`);
+      throw new Error('Unknown camera type');
     }
   }
 }
