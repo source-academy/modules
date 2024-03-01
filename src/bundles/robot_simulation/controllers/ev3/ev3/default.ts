@@ -65,7 +65,7 @@ export const createDefaultEv3 = (
   render: Renderer,
   config: Ev3Config,
 ): DefaultEv3 => {
-  const chassis = new ChassisWrapper(physics, config.chassis);
+  const chassis = new ChassisWrapper(physics, render, config.chassis);
   const mesh = new Mesh(chassis, render, config.mesh);
 
   const wheelPidConfig = {
@@ -112,6 +112,7 @@ export const createDefaultEv3 = (
   const leftMotor = new Motor(
     chassis,
     physics,
+    render,
     config.motor.displacements.leftMotor,
     motorPidConfig,
   );
@@ -119,6 +120,7 @@ export const createDefaultEv3 = (
   const rightMotor = new Motor(
     chassis,
     physics,
+    render,
     config.motor.displacements.rightMotor,
     motorPidConfig,
   );

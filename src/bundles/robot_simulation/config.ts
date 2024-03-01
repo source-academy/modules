@@ -36,7 +36,7 @@ export const chassisConfig: EntityCuboidOptions = {
   orientation: {
     position: {
       x: 0,
-      y: 0.2,
+      y: 0.0775,
       z: 0,
     },
     rotation: {
@@ -56,7 +56,7 @@ export const chassisConfig: EntityCuboidOptions = {
 export const meshConfig: MeshConfig = {
   orientation: chassisConfig.orientation,
   width: chassisConfig.width,
-  height: chassisConfig.height,
+  height: chassisConfig.height + 0.02,
   length: chassisConfig.length,
   color: new THREE.Color('blue'),
   debug: true,
@@ -88,21 +88,21 @@ export const wheelDisplacements: Record<string, SimpleVector> = {
 };
 
 export const wheelPidConfig = {
-  proportionalGain: 90,
-  integralGain: 0.58,
-  derivativeGain: 12,
+  proportionalGain: 27,
+  integralGain: 8,
+  derivativeGain: 40,
 };
 
 export const motorDisplacements = {
   leftMotor: {
     x: 0.058,
     y: 0,
-    z: 0.055,
+    z: 0.03,
   },
   rightMotor: {
     x: -0.058,
     y: 0,
-    z: 0.055,
+    z: 0.03,
   },
 };
 

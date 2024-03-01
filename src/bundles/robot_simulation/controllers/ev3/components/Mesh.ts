@@ -23,7 +23,6 @@ export class Mesh implements Controller {
   chassis: Entity | null = null;
   render: Renderer;
   meshConfig: MeshConfig;
-  debugMesh: THREE.Mesh;
   chassisWrapper: ChassisWrapper;
   mesh: GLTF | null = null;
 
@@ -33,15 +32,13 @@ export class Mesh implements Controller {
     meshConfig: MeshConfig,
   ) {
     this.chassisWrapper = chassisWrapper;
-    this.debugMesh = MeshFactory.addCuboid(meshConfig);
     this.meshConfig = meshConfig;
     this.render = render;
-    render.add(this.debugMesh);
   }
 
   async start(): Promise<void> {
     this.mesh = await Renderer.loadGTLF(
-      'https://keen-longma-3c1be1.netlify.app/4_no_wheels.gltf',
+      'https://keen-longma-3c1be1.netlify.app/6_remove_wheels.gltf',
     );
 
     const box = new THREE.Box3()
@@ -61,20 +58,12 @@ export class Mesh implements Controller {
 
   update() {
     const chassisEntity = this.chassisWrapper.getEntity();
-    if (this.meshConfig.debug || this.mesh === null) {
-      this.debugMesh.visible = true;
-    } else {
-      this.debugMesh.visible = false;
-    }
 
-    this.debugMesh.position.copy(chassisEntity.getPosition() as THREE.Vector3);
-    this.debugMesh.quaternion.copy(
-      chassisEntity.getRotation() as THREE.Quaternion,
-    );
+    const chassisPosition = chassisEntity.getPosition() as THREE.Vector3;
 
-    this.mesh?.scene.position.copy(
-      chassisEntity.getPosition() as THREE.Vector3,
-    );
+    chassisPosition.y -= 0.02 / 2;
+
+    this.mesh?.scene.position.copy(chassisPosition);
     this.mesh?.scene.quaternion.copy(
       chassisEntity.getRotation() as THREE.Quaternion,
     );

@@ -1,11 +1,15 @@
-import { type FrameTimingInfo, type Controller, type Physics } from '../../../engine';
+import { type Controller, type Physics, Renderer } from '../../../engine';
 import { type SimpleVector } from '../../../engine/Math/Vector';
 import { vec3 } from '../../../engine/Math/Convert';
 import { VectorPidController } from '../feedback_control/PidController';
-import type * as THREE from 'three';
+import * as THREE from 'three';
 import { type ChassisWrapper } from './Chassis';
 import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
 
+// eslint-disable-next-line import/extensions
+import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+type WheelSide = 'left' | 'right';
 
 type MotorConfig = {
   pid: {
@@ -20,16 +24,22 @@ export class Motor implements Controller {
   displacementVector: THREE.Vector3;
   motorVelocity: number;
   callbackHandler = new CallbackHandler();
+  wheelSide: WheelSide;
 
   physics: Physics;
+  render: Renderer;
   chassisWrapper: ChassisWrapper;
 
-  constructor(chassisWrapper: ChassisWrapper, physics: Physics, displacement: SimpleVector, config: MotorConfig) {
+  mesh: GLTF | null = null;
+
+  constructor(chassisWrapper: ChassisWrapper, physics: Physics, renderer: Renderer, displacement: SimpleVector, config: MotorConfig) {
     this.chassisWrapper = chassisWrapper;
     this.physics = physics;
     this.pid = new VectorPidController(config.pid);
     this.displacementVector = vec3(displacement);
     this.motorVelocity = 0;
+    this.render = renderer;
+    this.wheelSide = displacement.x > 0 ? 'right' : 'left';
   }
 
   setVelocity(velocity: number) {
@@ -42,6 +52,27 @@ export class Motor implements Controller {
     this.callbackHandler.addCallback(() => {
       this.motorVelocity = 0;
     }, distance / speed * 1000);
+  }
+
+  async start(): Promise<void> {
+    this.mesh = await Renderer.loadGTLF(
+      'https://keen-longma-3c1be1.netlify.app/6_wheel.gltf',
+    );
+
+    const box = new THREE.Box3()
+      .setFromObject(this.mesh.scene);
+
+    const size = new THREE.Vector3();
+
+    box.getSize(size);
+
+    const scaleX = 0.028 / size.x;
+    const scaleY = 0.055 / size.y;
+    const scaleZ = 0.055 / size.z;
+
+    this.mesh.scene.scale.set(scaleX, scaleY, scaleZ);
+
+    this.render.add(this.mesh.scene);
   }
 
   fixedUpdate(_: number): void {
@@ -69,8 +100,22 @@ export class Motor implements Controller {
     chassis.applyImpulse(impulse, motorGlobalPosition);
   }
 
-  update(deltaTime: FrameTimingInfo): void {
+
+  update(deltaTime): void {
     this.callbackHandler.checkCallbacks(deltaTime);
+    const chassisEntity = this.chassisWrapper.getEntity();
+    const wheelPosition = chassisEntity.worldTranslation(this.displacementVector.clone()) as THREE.Vector3;
+    wheelPosition.y = 0.055 / 2;
+    this.mesh?.scene.position.copy(
+      wheelPosition,
+    );
+    this.mesh?.scene.quaternion.copy(
+      chassisEntity.getRotation() as THREE.Quaternion,
+    );
+    this.mesh?.scene.rotateX(90 / 180 * Math.PI);
+    if (this.wheelSide === 'left') {
+      this.mesh?.scene.rotateZ(Math.PI);
+    }
   }
 
   toString() {

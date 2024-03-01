@@ -1,4 +1,4 @@
-import { type Controller, type Physics, type Renderer } from '../../../engine';
+import { type Renderer, type Controller, type Physics } from '../../../engine';
 import { type SimpleVector } from '../../../engine/Math/Vector';
 import { vec3 } from '../../../engine/Math/Convert';
 import { NumberPidController } from '../feedback_control/PidController';
@@ -21,6 +21,7 @@ export class Wheel implements Controller {
   displacementVector: THREE.Vector3;
   downVector: THREE.Vector3;
   physics: Physics;
+  render: Renderer;
   arrowHelper: THREE.ArrowHelper;
 
   constructor(
@@ -44,6 +45,7 @@ export class Wheel implements Controller {
     this.arrowHelper.visible = config.debug;
     this.arrowHelper.setColor('red');
     render.add(this.arrowHelper);
+    this.render = render;
   }
 
   fixedUpdate(timestep: number): void {
@@ -59,7 +61,7 @@ export class Wheel implements Controller {
     const result = this.physics.castRay(
       globalDisplacement,
       globalDownDirection,
-      0.1,
+      0.5,
     );
 
     // Wheels are not touching the ground
@@ -68,6 +70,8 @@ export class Wheel implements Controller {
     }
 
     const { distance: wheelDistance, normal } = result;
+
+
     const error = this.pid.calculate(wheelDistance, 0.03 + 0.095 / 2);
 
     const force = vec3(normal)

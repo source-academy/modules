@@ -36,7 +36,7 @@ export const WheelPidPanel = ({ ev3 }: { ev3: DefaultEv3 }) => {
         <NumericInput
           defaultValue={ev3.get('backLeftWheel').pid.proportionalGain}
           onValueChange={onChangeProportional}
-          stepSize={0.01}
+          stepSize={1}
           minorStepSize={null}
         />
       </div>
