@@ -53,7 +53,7 @@ export class Program implements Controller {
       }
 
       // steps per tick
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 11; i++) {
         const result = this.iterator.next();
       }
     } catch (e) {

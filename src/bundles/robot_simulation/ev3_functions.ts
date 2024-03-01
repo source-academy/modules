@@ -46,7 +46,7 @@ export function ev3_runToRelativePosition(
     return;
   }
 
-  const wheelDiameter = 0.2;
+  const wheelDiameter = 0.055;
 
   const speedInMetersPerSecond
   = (speed / 360) * Math.PI * wheelDiameter;

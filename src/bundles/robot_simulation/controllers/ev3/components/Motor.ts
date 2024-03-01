@@ -47,8 +47,8 @@ export class Motor implements Controller {
   }
 
   setSpeedDistance(speed: number, distance: number) {
-    // TODO: Tune this
-    this.motorVelocity = speed * 500;
+    this.motorVelocity = speed;
+
     this.callbackHandler.addCallback(() => {
       this.motorVelocity = 0;
     }, distance / speed * 1000);
