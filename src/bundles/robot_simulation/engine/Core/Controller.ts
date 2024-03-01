@@ -1,9 +1,9 @@
-import { type FrameTimingInfo } from './Timer';
+import { type PhysicsTimingInfo } from '../Physics';
 
 export interface Controller {
   start?(): Promise<void> | void;
-  update?(deltaTime: FrameTimingInfo): void;
-  fixedUpdate?(fixedDeltaTime: number): void;
+  update?(timingInfo: PhysicsTimingInfo): void;
+  fixedUpdate?(timingInfo: PhysicsTimingInfo): void;
   onDestroy?(): void;
 }
 
@@ -31,19 +31,19 @@ implements Controller {
     );
   }
 
-  update(deltaTime: FrameTimingInfo): void {
-    this.callbacks?.update?.(deltaTime);
+  update(timingInfo: PhysicsTimingInfo): void {
+    this.callbacks?.update?.(timingInfo);
     Object.values(this.map)
       .forEach((controller) => {
-        controller.update?.(deltaTime);
+        controller.update?.(timingInfo);
       });
   }
 
-  fixedUpdate(fixedDeltaTime: number): void {
-    this.callbacks?.fixedUpdate?.(fixedDeltaTime);
+  fixedUpdate(timingInfo: PhysicsTimingInfo): void {
+    this.callbacks?.fixedUpdate?.(timingInfo);
     Object.values(this.map)
       .forEach((controller) => {
-        controller.fixedUpdate?.(fixedDeltaTime);
+        controller.fixedUpdate?.(timingInfo);
       });
   }
 
@@ -69,15 +69,15 @@ export class ControllerGroup implements Controller {
     });
   }
 
-  update(deltaTime: FrameTimingInfo): void {
+  update(timingInfo: PhysicsTimingInfo): void {
     this.controllers.forEach((controller) => {
-      controller.update?.(deltaTime);
+      controller.update?.(timingInfo);
     });
   }
 
-  fixedUpdate(fixedDeltaTime: number): void {
+  fixedUpdate(timingInfo: PhysicsTimingInfo): void {
     this.controllers.forEach((controller) => {
-      controller.fixedUpdate?.(fixedDeltaTime);
+      controller.fixedUpdate?.(timingInfo);
     });
   }
 

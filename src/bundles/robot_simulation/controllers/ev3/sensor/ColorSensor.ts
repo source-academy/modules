@@ -4,6 +4,7 @@ import { type Sensor } from './types';
 import { type ChassisWrapper } from '../components/Chassis';
 import { type SimpleVector } from '../../../engine/Math/Vector';
 import { vec3 } from '../../../engine/Math/Convert';
+import type { PhysicsTimingInfo } from '../../../engine/Physics';
 
 type Color = { r:number, g:number, b:number };
 
@@ -59,8 +60,10 @@ export class ColorSensor implements Sensor<Color> {
     return this.colorSensed;
   }
 
-  fixedUpdate(fixedDeltaTime: number) {
-    this.accumulator += fixedDeltaTime;
+  fixedUpdate(timingInfo: PhysicsTimingInfo) {
+    const { timeStep } = timingInfo;
+
+    this.accumulator += timeStep;
     if (this.accumulator < 1) {
       return;
     }

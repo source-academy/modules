@@ -4,7 +4,22 @@ import type * as THREE from 'three';
 
 import { type SimpleVector } from './Math/Vector';
 import { type FrameTimingInfo } from './Core/Timer';
-import { TimeStampedEvent, TypedEventTarget } from './Core/Events';
+import { TypedEventTarget } from './Core/Events';
+
+export type PhysicsTimingInfo = FrameTimingInfo & {
+  stepCount: number;
+  timeStep: number;
+  physicsTimeStamp: number;
+};
+
+export class TimeStampedEvent extends Event {
+  frameTimingInfo: PhysicsTimingInfo;
+
+  constructor(type: string, frameTimingInfo: PhysicsTimingInfo) {
+    super(type);
+    this.frameTimingInfo = frameTimingInfo;
+  }
+}
 
 type PhysicsEventMap = {
   beforePhysicsUpdate: TimeStampedEvent;
@@ -24,6 +39,7 @@ type InitializedInternals = {
   initialized: true;
   world: rapier.World;
   accumulator: number;
+  stepCount: number;
 };
 
 type PhysicsInternals = NotInitializedInternals | InitializedInternals;
@@ -53,6 +69,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
       initialized: true,
       world,
       accumulator: 0,
+      stepCount: 0,
     };
   }
 
@@ -111,27 +128,42 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     };
   }
 
-  step(timing: FrameTimingInfo): void {
+  step(timing: FrameTimingInfo): PhysicsTimingInfo {
     if (this.internals.initialized === false) {
       throw Error("Physics engine hasn't been initialized yet");
     }
 
     const maxFrameTime = 0.05;
     const frameDuration = timing.frameDuration / 1000;
-    this.internals.accumulator += Math.min(frameDuration, maxFrameTime);
+    this.internals.accumulator -= Math.min(frameDuration, maxFrameTime);
 
-    while (this.internals.accumulator >= this.configuration.timestep) {
+    const currentPhysicsTimingInfo = {
+      ...timing,
+      stepCount: this.internals.stepCount,
+      timeStep: this.configuration.timestep,
+      physicsTimeStamp: this.internals.stepCount * this.configuration.timestep,
+    };
+
+    while (this.internals.accumulator <= 0) {
       this.dispatchEvent(
         'beforePhysicsUpdate',
-        new TimeStampedEvent('beforePhysicsUpdate', timing),
-      );
-      this.internals.world.step();
-      this.dispatchEvent(
-        'afterPhysicsUpdate',
-        new TimeStampedEvent('afterPhysicsUpdate', timing),
+        new TimeStampedEvent('beforePhysicsUpdate', currentPhysicsTimingInfo),
       );
 
-      this.internals.accumulator -= this.configuration.timestep;
+      this.internals.world.step();
+
+      this.internals.stepCount += 1;
+      currentPhysicsTimingInfo.stepCount = this.internals.stepCount;
+      currentPhysicsTimingInfo.physicsTimeStamp += this.configuration.timestep;
+
+      this.dispatchEvent(
+        'afterPhysicsUpdate',
+        new TimeStampedEvent('afterPhysicsUpdate', currentPhysicsTimingInfo),
+      );
+
+      this.internals.accumulator += this.configuration.timestep;
     }
+
+    return currentPhysicsTimingInfo;
   }
 }

@@ -4,6 +4,7 @@ import { vec3 } from '../../../engine/Math/Convert';
 import { NumberPidController } from '../feedback_control/PidController';
 import * as THREE from 'three';
 import { type ChassisWrapper } from './Chassis';
+import type { PhysicsTimingInfo } from '../../../engine/Physics';
 
 type WheelConfig = {
   pid: {
@@ -48,7 +49,8 @@ export class Wheel implements Controller {
     this.render = render;
   }
 
-  fixedUpdate(timestep: number): void {
+  fixedUpdate(timingInfo: PhysicsTimingInfo): void {
+    const { timeStep } = timingInfo;
     const chassis = this.chassisWrapper.getEntity();
 
     const globalDisplacement = chassis.worldTranslation(
@@ -76,7 +78,7 @@ export class Wheel implements Controller {
 
     const force = vec3(normal)
       .normalize()
-      .multiplyScalar(error * chassis.getMass() * timestep);
+      .multiplyScalar(error * chassis.getMass() * timeStep);
 
 
     chassis.applyImpulse(force, globalDisplacement);

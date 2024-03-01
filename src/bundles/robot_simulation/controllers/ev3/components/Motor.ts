@@ -75,7 +75,7 @@ export class Motor implements Controller {
     this.render.add(this.mesh.scene);
   }
 
-  fixedUpdate(_: number): void {
+  fixedUpdate(): void {
     const chassis = this.chassisWrapper.getEntity();
     const targetMotorVelocity = vec3({
       x: 0,

@@ -1,7 +1,6 @@
 import {
   type Entity,
   type Controller,
-  MeshFactory,
   Renderer,
 } from '../../../engine';
 import * as THREE from 'three';

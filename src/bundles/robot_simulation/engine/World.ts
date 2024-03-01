@@ -1,6 +1,6 @@
 import { type Controller, ControllerGroup } from './Core/Controller';
-import { TimeStampedEvent, TypedEventTarget } from './Core/Events';
-import { type Physics } from './Physics';
+import { TypedEventTarget } from './Core/Events';
+import { TimeStampedEvent, type Physics } from './Physics';
 import { type Renderer } from './Render/Renderer';
 import { type Timer } from './Core/Timer';
 
@@ -57,9 +57,9 @@ export class World extends TypedEventTarget<WorldEventMap> {
       });
     });
 
-    this.physics.addEventListener('beforePhysicsUpdate', (_) => {
+    this.physics.addEventListener('beforePhysicsUpdate', (e) => {
       controllers.forEach((controller) => {
-        controller.fixedUpdate?.(this.physics.configuration.timestep);
+        controller.fixedUpdate?.(e.frameTimingInfo);
       });
     });
   }
@@ -96,19 +96,17 @@ export class World extends TypedEventTarget<WorldEventMap> {
     try {
       const frameTimingInfo = this.timer.step(timestamp);
 
-      // Update physics
-      this.physics.step(frameTimingInfo);
-
+      const physicsTimingInfo = this.physics.step(frameTimingInfo);
 
       // Update render
       this.dispatchEvent(
         'beforeRender',
-        new TimeStampedEvent('beforeRender', frameTimingInfo),
+        new TimeStampedEvent('beforeRender', physicsTimingInfo),
       );
       this.render.step(frameTimingInfo);
       this.dispatchEvent(
         'afterRender',
-        new TimeStampedEvent('afterRender', frameTimingInfo),
+        new TimeStampedEvent('afterRender', physicsTimingInfo),
       );
 
 

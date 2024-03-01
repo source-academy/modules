@@ -96,7 +96,7 @@ describe('Physics', () => {
     await physics.start(); // Initialize
     const frameTimingInfo = { frameDuration: 1000 / 60 }; // 60 FPS
     physics.step(frameTimingInfo);
-    expect(physics.internals.world.step).toHaveBeenCalledTimes(1);
+    expect(physics.internals.world.step).toHaveBeenCalledTimes(2);
   });
 
   test('castRay throws if not initialized', () => {

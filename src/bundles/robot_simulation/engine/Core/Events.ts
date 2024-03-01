@@ -1,14 +1,3 @@
-import { type FrameTimingInfo } from './Timer';
-
-export class TimeStampedEvent extends Event {
-  frameTimingInfo: FrameTimingInfo;
-
-  constructor(type: string, frameTimingInfo: FrameTimingInfo) {
-    super(type);
-    this.frameTimingInfo = frameTimingInfo;
-  }
-}
-
 export type Listener<EventMap, EventName extends keyof EventMap> = (
   event: EventMap[EventName]
 ) => void | Promise<void>;

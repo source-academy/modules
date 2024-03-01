@@ -42,7 +42,7 @@ export class UltrasonicSensor implements Sensor<number> {
     return this.distanceSensed;
   }
 
-  fixedUpdate(_: number): void {
+  fixedUpdate(): void {
     const chassis = this.chassisWrapper.getEntity();
     const globalDisplacement = chassis.worldTranslation(
       this.displacement.clone(),
