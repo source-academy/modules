@@ -23,7 +23,7 @@ export const wallConfig: EntityCuboidOptions & RenderCuboidOptions = {
   height: 2,
   width: 1,
   length: 0.1,
-  color: new THREE.Color('white'),
+  color: new THREE.Color('yellow'),
   type: 'fixed',
 };
 
