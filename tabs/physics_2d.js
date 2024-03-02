@@ -12070,7 +12070,6 @@ export default require => (() => {
   init_define_process();
   var import_core5 = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
-  var import_popover2 = __require("@blueprintjs/popover2");
   var import_react2 = __toESM(__require("react"), 1);
   var import_debug_draw = __toESM(require_dist2(), 1);
   var import_core6 = __toESM(require_dist(), 1);
@@ -12205,7 +12204,7 @@ export default require => (() => {
           style: {
             marginRight: "20px"
           },
-          children: (0, import_jsx_runtime2.jsx)(import_popover2.Tooltip2, {
+          children: (0, import_jsx_runtime2.jsx)(import_core5.Tooltip, {
             content: this.state.isPlaying ? "Pause" : "Play",
             children: (0, import_jsx_runtime2.jsx)(import_core5.Button, {
               onClick: this.onPlayButtonClick,

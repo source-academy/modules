@@ -280,12 +280,10 @@ export default require => (() => {
           }), (0, import_jsx_runtime2.jsx)("br", {})]
         }), (0, import_jsx_runtime2.jsx)(import_core2.Checkbox, {
           label: "I agree to the User Agreement",
-          ref: e => {
+          inputRef: e => {
             if (e !== null) {
-              if (e.input !== null) {
-                e.input.checked = getInstance().getUserAgreementStatus() === "agreed";
-                this.userAgreementCheckboxChecked = e.input.checked;
-              }
+              e.checked = getInstance().getUserAgreementStatus() === "agreed";
+              this.userAgreementCheckboxChecked = e.checked;
             }
           },
           onChange: event => {

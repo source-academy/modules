@@ -15713,7 +15713,6 @@ void main () {
   };
   init_define_process();
   var import_core3 = __require("@blueprintjs/core");
-  var import_popover2 = __require("@blueprintjs/popover2");
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var HoverControlHint = class extends import_react.default.Component {
@@ -15725,7 +15724,7 @@ void main () {
           justifyContent: "center",
           height: SA_TAB_BUTTON_WIDTH
         },
-        children: (0, import_jsx_runtime.jsx)(import_popover2.Tooltip2, {
+        children: (0, import_jsx_runtime.jsx)(import_core3.Tooltip, {
           content: this.props.tooltipText,
           placement: "left",
           children: (0, import_jsx_runtime.jsx)(import_core3.Icon, {

@@ -5543,7 +5543,6 @@ export default require => (() => {
   init_define_process();
   var import_core6 = __require("@blueprintjs/core");
   var import_icons3 = __require("@blueprintjs/icons");
-  var import_popover22 = __require("@blueprintjs/popover2");
   var import_react5 = __toESM(__require("react"), 1);
   init_define_process();
   init_define_process();
@@ -5570,18 +5569,27 @@ export default require => (() => {
   var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
   init_define_process();
   var import_core5 = __require("@blueprintjs/core");
-  var import_popover2 = __require("@blueprintjs/popover2");
   var import_react3 = __toESM(__require("react"), 1);
   var import_icons2 = __require("@blueprintjs/icons");
   init_define_process();
   var import_core4 = __require("@blueprintjs/core");
   var import_jsx_runtime3 = __require("react/jsx-runtime");
-  var ButtonComponent = props => props.disabled ? (0, import_jsx_runtime3.jsx)(import_core4.AnchorButton, __spreadValues({}, props)) : (0, import_jsx_runtime3.jsx)(import_core4.Button, __spreadValues({}, props));
+  var defaultOptions = {
+    className: "",
+    fullWidth: false,
+    iconOnRight: false,
+    intent: import_core4.Intent.NONE,
+    minimal: true
+  };
+  var ButtonComponent = props => {
+    const buttonProps = __spreadValues(__spreadValues({}, defaultOptions), props);
+    return props.disabled ? (0, import_jsx_runtime3.jsx)(import_core4.AnchorButton, __spreadValues({}, buttonProps)) : (0, import_jsx_runtime3.jsx)(import_core4.Button, __spreadValues({}, buttonProps));
+  };
   var ButtonComponent_default = ButtonComponent;
   var import_jsx_runtime4 = __require("react/jsx-runtime");
   var PlayButton = class extends import_react3.default.Component {
     render() {
-      return (0, import_jsx_runtime4.jsx)(import_popover2.Tooltip2, {
+      return (0, import_jsx_runtime4.jsx)(import_core5.Tooltip, {
         content: this.props.isPlaying ? "Pause" : "Play",
         placement: "top",
         children: (0, import_jsx_runtime4.jsx)(ButtonComponent_default, __spreadProps(__spreadValues({}, this.props), {
@@ -5763,7 +5771,7 @@ export default require => (() => {
               isPlaying: this.state.isPlaying,
               disabled: Boolean(this.state.errored),
               onClick: this.onPlayButtonClick
-            }), (0, import_jsx_runtime6.jsx)(import_popover22.Tooltip2, {
+            }), (0, import_jsx_runtime6.jsx)(import_core6.Tooltip, {
               content: "Reset",
               placement: "top",
               children: (0, import_jsx_runtime6.jsx)(ButtonComponent_default, {
@@ -5789,7 +5797,7 @@ export default require => (() => {
                 disabled: Boolean(this.state.errored),
                 onChange: this.onTimeSliderChange,
                 onRelease: this.onTimeSliderRelease
-              }), (0, import_jsx_runtime6.jsx)(import_popover22.Tooltip2, {
+              }), (0, import_jsx_runtime6.jsx)(import_core6.Tooltip, {
                 content: "Display Angle",
                 placement: "top",
                 children: (0, import_jsx_runtime6.jsx)(import_core6.Slider, {
@@ -5984,7 +5992,6 @@ export default require => (() => {
   init_define_process();
   var import_core8 = __require("@blueprintjs/core");
   var import_icons4 = __require("@blueprintjs/icons");
-  var import_popover23 = __require("@blueprintjs/popover2");
   var import_react7 = __toESM(__require("react"), 1);
   var import_jsx_runtime8 = __require("react/jsx-runtime");
   var AnimationCanvas = class extends import_react7.default.Component {
@@ -6124,7 +6131,7 @@ export default require => (() => {
               isPlaying: this.state.isPlaying,
               disabled: Boolean(this.state.errored),
               onClick: this.onPlayButtonClick
-            }), (0, import_jsx_runtime8.jsx)(import_popover23.Tooltip2, {
+            }), (0, import_jsx_runtime8.jsx)(import_core8.Tooltip, {
               content: "Reset",
               placement: "top",
               children: (0, import_jsx_runtime8.jsx)(ButtonComponent_default, {
