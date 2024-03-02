@@ -1,6 +1,5 @@
-import { Icon, Slider } from '@blueprintjs/core';
+import { Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type glAnimation } from '../../typings/anim_types';
 import AutoLoopSwitch from './AutoLoopSwitch';
@@ -269,7 +268,7 @@ AnimCanvasState
             disabled={Boolean(this.state.errored)}
             onClick={this.onPlayButtonClick}
           />
-          <Tooltip2
+          <Tooltip
             content="Reset"
             placement="top"
           >
@@ -279,7 +278,7 @@ AnimCanvasState
             >
               <Icon icon={ IconNames.RESET } />
             </ButtonComponent>
-          </Tooltip2>
+          </Tooltip>
           <Slider
             value={ this.state.animTimestamp }
             min={ 0 }
