@@ -50,7 +50,7 @@ export class Wheel implements Controller {
   }
 
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
-    const { timeStep } = timingInfo;
+    const { timestep } = timingInfo;
     const chassis = this.chassisWrapper.getEntity();
 
     const globalDisplacement = chassis.worldTranslation(
@@ -78,7 +78,7 @@ export class Wheel implements Controller {
 
     const force = vec3(normal)
       .normalize()
-      .multiplyScalar(error * chassis.getMass() * timeStep);
+      .multiplyScalar(error * chassis.getMass() * timestep / 1000);
 
 
     chassis.applyImpulse(force, globalDisplacement);

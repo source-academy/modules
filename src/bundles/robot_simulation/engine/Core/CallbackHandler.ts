@@ -1,33 +1,39 @@
-import { type FrameTimingInfo } from './Timer';
+import type { PhysicsTimingInfo } from '../Physics';
 
 export type TimeoutCallback = () => void;
+export type CallbackEntry = { callback: TimeoutCallback; delay: number };
 
 export class CallbackHandler {
-  callbackStore: Array<{ callback: TimeoutCallback; triggerTime: number }>;
-  currentTime: number;
+  callbackStore: Array<CallbackEntry>;
+  currentStepCount: number;
 
   constructor() {
     this.callbackStore = [];
-    this.currentTime = 0;
+    this.currentStepCount = 0;
   }
 
   addCallback(callback: TimeoutCallback, delay: number): void {
-    const triggerTime = this.currentTime + delay;
     this.callbackStore.push({
       callback,
-      triggerTime,
+      delay,
     });
   }
 
-  checkCallbacks(frameTimingInfo: FrameTimingInfo): void {
-    this.currentTime = frameTimingInfo.elapsedTimeSimulated;
+  checkCallbacks(frameTimingInfo: PhysicsTimingInfo): void {
+    if (frameTimingInfo.stepCount === this.currentStepCount) {
+      return;
+    }
 
-    this.callbackStore = this.callbackStore.filter((timeoutEvent) => {
-      if (timeoutEvent.triggerTime <= this.currentTime) {
-        timeoutEvent.callback();
-        return false; // Remove from the array
+    this.currentStepCount = frameTimingInfo.stepCount;
+
+    this.callbackStore = this.callbackStore.filter((callbackEntry) => {
+      callbackEntry.delay -= frameTimingInfo.timestep;
+
+      if (callbackEntry.delay <= 0) {
+        callbackEntry.callback();
+        return false;
       }
-      return true; // Keep in the array
+      return true;
     });
   }
 }

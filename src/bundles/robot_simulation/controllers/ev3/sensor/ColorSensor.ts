@@ -61,13 +61,13 @@ export class ColorSensor implements Sensor<Color> {
   }
 
   fixedUpdate(timingInfo: PhysicsTimingInfo) {
-    const { timeStep } = timingInfo;
+    const { timestep } = timingInfo;
 
-    this.accumulator += timeStep;
-    if (this.accumulator < 1) {
+    this.accumulator += timestep;
+    if (this.accumulator < 1000) {
       return;
     }
-    this.accumulator -= 1;
+    this.accumulator -= 1000;
 
     this.renderer.render();
 

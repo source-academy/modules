@@ -1,9 +1,10 @@
 import { type IOptions } from 'js-slang';
 import { runECEvaluator } from './evaluate';
 import context from 'js-slang/context';
-import { type FrameTimingInfo, type Controller } from '../../engine';
+import { type Controller } from '../../engine';
 import { CallbackHandler } from '../../engine/Core/CallbackHandler';
 import { ProgramError } from './error';
+import type { PhysicsTimingInfo } from '../../engine/Physics';
 
 type ProgramConfig = {
   stepsPerTick: number;
@@ -42,7 +43,7 @@ export class Program implements Controller {
     this.iterator = runECEvaluator(this.code, context, options);
   }
 
-  fixedUpdate(_: number) {
+  fixedUpdate() {
     try {
       if (!this.iterator) {
         throw Error('Program not started');
@@ -62,7 +63,7 @@ export class Program implements Controller {
     }
   }
 
-  update(frameTiming: FrameTimingInfo): void {
+  update(frameTiming: PhysicsTimingInfo): void {
     this.callbackHandler.checkCallbacks(frameTiming);
   }
 }

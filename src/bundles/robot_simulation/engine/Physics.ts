@@ -8,8 +8,7 @@ import { TypedEventTarget } from './Core/Events';
 
 export type PhysicsTimingInfo = FrameTimingInfo & {
   stepCount: number;
-  timeStep: number;
-  physicsTimeStamp: number;
+  timestep: number;
 };
 
 export class TimeStampedEvent extends Event {
@@ -140,8 +139,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     const currentPhysicsTimingInfo = {
       ...timing,
       stepCount: this.internals.stepCount,
-      timeStep: this.configuration.timestep,
-      physicsTimeStamp: this.internals.stepCount * this.configuration.timestep,
+      timestep: this.configuration.timestep * 1000,
     };
 
     while (this.internals.accumulator <= 0) {
@@ -154,7 +152,6 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
 
       this.internals.stepCount += 1;
       currentPhysicsTimingInfo.stepCount = this.internals.stepCount;
-      currentPhysicsTimingInfo.physicsTimeStamp += this.configuration.timestep;
 
       this.dispatchEvent(
         'afterPhysicsUpdate',
