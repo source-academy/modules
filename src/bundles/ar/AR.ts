@@ -167,7 +167,6 @@ export function removeARObject(object: ARObject) {
 export function getARObjectsJsonString(): string {
   let moduleState = getModuleState();
   if (!moduleState) return '';
-  console.log(JSON.stringify(moduleState.arObjects));
   return JSON.stringify(moduleState.arObjects);
 }
 

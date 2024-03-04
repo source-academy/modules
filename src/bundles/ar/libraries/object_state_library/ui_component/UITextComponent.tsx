@@ -26,7 +26,7 @@ export default class UITextComponent extends UIBasicComponent {
     this.text = props.text;
     this.textSize = props.textSize;
     this.textWidth = props.textWidth;
-    this.textAlign = props.textAlign ?? HorizontalAlignment.Center;
+    this.textAlign = props.textAlign ?? HorizontalAlignment.Left;
     this.color = props.color ?? 0;
   }
   getWidth = () => this.textWidth + this.paddingLeft + this.paddingRight;

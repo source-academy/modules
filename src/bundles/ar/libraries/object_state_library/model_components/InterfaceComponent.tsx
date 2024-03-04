@@ -28,8 +28,9 @@ export default function InterfaceComponent(props: InterfaceProps) {
   const [components, setComponents] = useState<ReactNode>();
 
   useEffect(() => {
-    let parsedJson = parseJsonInterface(props.interfaceModel.uiJson);
-    setComponents(parsedJson?.getComponent(new Vector3(0), () => {}));
+    setComponents(
+      props.interfaceModel.uiJson?.getComponent(new Vector3(0), () => {}),
+    );
   }, [props.interfaceModel.uiJson]);
 
   return (

@@ -21,6 +21,7 @@ import {
 import ARObjectComponent from './ARObjectComponent';
 import { parseVector3 } from '../calibration_library/Misc';
 import type { fromJSON } from 'tough-cookie';
+import { parseJsonInterface } from './model_components/InterfaceComponent';
 
 /**
  * Abstract class for an AR object.
@@ -322,7 +323,7 @@ export class UIObject extends ARObject {
     let render = parseRender(object.behaviours?.render);
     let rotation = parseRotation(object.behaviours?.rotation);
     let movement = parseMovement(object.behaviours?.movement);
-    let uiJson = object.uiJson;
+    let uiJson = parseJsonInterface(object.uiJson);
     if (
       typeof id === 'string' &&
       position instanceof Vector3 &&
