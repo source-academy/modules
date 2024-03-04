@@ -18,7 +18,7 @@ export class MqttController {
   private messageCallback: (topic: string, message: string) => void;
 
   address: string = '';
-  port: number = 8080;
+  port: number = 9001;
 
   constructor(
     connectionCallback: (status: string) => void,
