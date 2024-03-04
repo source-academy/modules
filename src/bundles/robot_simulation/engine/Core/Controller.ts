@@ -64,10 +64,12 @@ export class ControllerGroup implements Controller {
     this.controllers.push(...controllers);
   }
 
-  start(): void {
-    this.controllers.forEach((controller) => {
-      controller.start?.();
-    });
+  async start?(): Promise<void> {
+    await Promise.all(
+      this.controllers.map(async (controller) => {
+        await controller.start?.();
+      }),
+    );
   }
 
   update(timingInfo: PhysicsTimingInfo): void {
