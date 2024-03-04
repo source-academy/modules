@@ -19,7 +19,7 @@ export class MultiUserController {
    */
   public setupController(address: string, port: number) {
     let currentController = this.controller;
-    if (currentController !== null) {
+    if (currentController) {
       currentController.disconnect();
       this.connectionState = STATE_DISCONNECTED;
     } else {
@@ -28,9 +28,9 @@ export class MultiUserController {
           this.connectionState = status;
         },
         (topic: string, message: string) => {
-          let splitTopic = topic.split('/');
+          const splitTopic = topic.split('/');
           this.messageCallbacks.forEach((callback, identifier) => {
-            let splitIdentifier = identifier.split('/');
+            const splitIdentifier = identifier.split('/');
             if (splitTopic.length < splitIdentifier.length) return;
             for (let i = 0; i < splitIdentifier.length; i++) {
               if (splitIdentifier[i] !== splitTopic[i]) return;

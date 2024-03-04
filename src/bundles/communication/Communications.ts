@@ -9,14 +9,30 @@ class CommunicationModuleState {
   rpc: RpcController | null = null;
 
   constructor(address: string, port: number) {
-    let multiUser = new MultiUserController();
+    const multiUser = new MultiUserController();
     multiUser.setupController(address, port);
     this.multiUser = multiUser;
   }
 }
 
-let moduleState = new CommunicationModuleState('broker.hivemq.com', 8884);
-context.moduleContexts.communication.state = moduleState;
+/**
+ * Initializes connection with MQTT broker.
+ * Currently only supports WebSocket.
+ *
+ * @param address Address of broker.
+ * @param port WebSocket port number for broker.
+ */
+export function initCommunications(address: string, port: number) {
+  if (getGlobalState() instanceof CommunicationModuleState) {
+    return;
+  }
+  const newModuleState = new CommunicationModuleState(address, port);
+  context.moduleContexts.communication.state = newModuleState;
+}
+
+function getModuleState() {
+  return context.moduleContexts.communication.state;
+}
 
 // Loop
 
@@ -51,11 +67,19 @@ export function initGlobalState(
   topicHeader: string,
   callback: (state: any) => void,
 ) {
-  moduleState.globalState = new GlobalStateController(
-    topicHeader,
-    moduleState.multiUser,
-    callback,
-  );
+  const moduleState = getModuleState();
+  if (moduleState instanceof CommunicationModuleState) {
+    if (moduleState.globalState instanceof GlobalStateController) {
+      return;
+    }
+    moduleState.globalState = new GlobalStateController(
+      topicHeader,
+      moduleState.multiUser,
+      callback,
+    );
+    return;
+  }
+  throw new Error('Error: Communication module not initialized.');
 }
 
 /**
@@ -64,7 +88,11 @@ export function initGlobalState(
  * @returns Current global state.
  */
 export function getGlobalState() {
-  return moduleState.globalState?.globalState;
+  const moduleState = getModuleState();
+  if (moduleState instanceof CommunicationModuleState) {
+    return moduleState.globalState?.globalState;
+  }
+  throw new Error('Error: Communication module not initialized.');
 }
 
 /**
@@ -75,7 +103,12 @@ export function getGlobalState() {
  * @param updatedState Replacement value at specified path.
  */
 export function updateGlobalState(path: string, updatedState: any) {
-  moduleState.globalState?.updateGlobalState(path, updatedState);
+  const moduleState = getModuleState();
+  if (moduleState instanceof CommunicationModuleState) {
+    moduleState.globalState?.updateGlobalState(path, updatedState);
+    return;
+  }
+  throw new Error('Error: Communication module not initialized.');
 }
 
 // Rpc
@@ -87,11 +120,16 @@ export function updateGlobalState(path: string, updatedState: any) {
  * @param userId Identifier for this user.
  */
 export function initRpc(topicHeader: string, userId?: string) {
-  moduleState.rpc = new RpcController(
-    topicHeader,
-    moduleState.multiUser,
-    userId,
-  );
+  const moduleState = getModuleState();
+  if (moduleState instanceof CommunicationModuleState) {
+    moduleState.rpc = new RpcController(
+      topicHeader,
+      moduleState.multiUser,
+      userId,
+    );
+    return;
+  }
+  throw new Error('Error: Communication module not initialized.');
 }
 
 /**
@@ -102,7 +140,12 @@ export function initRpc(topicHeader: string, userId?: string) {
  * @param func Function to call when request received.
  */
 export function expose(name: string, func: (...args: any[]) => any) {
-  moduleState.rpc?.expose(name, func);
+  const moduleState = getModuleState();
+  if (moduleState instanceof CommunicationModuleState) {
+    moduleState.rpc?.expose(name, func);
+    return;
+  }
+  throw new Error('Error: Communication module not initialized.');
 }
 
 /**
@@ -119,5 +162,10 @@ export function callFunction(
   args: any[],
   callback: (args: any[]) => void,
 ) {
-  moduleState.rpc?.callFunction(receiver, name, args, callback);
+  const moduleState = getModuleState();
+  if (moduleState instanceof CommunicationModuleState) {
+    moduleState.rpc?.callFunction(receiver, name, args, callback);
+    return;
+  }
+  throw new Error('Error: Communication module not initialized.');
 }

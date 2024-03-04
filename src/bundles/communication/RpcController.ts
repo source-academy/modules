@@ -31,9 +31,9 @@ export class RpcController {
     this.userId = userId ?? uniqid();
     this.returnTopic = `${this.topicHeader}_return/${this.userId}`;
     this.multiUser.addMessageCallback(this.returnTopic, (topic, message) => {
-      let messageJson = JSON.parse(message);
-      let callId = messageJson.callId;
-      let callback = this.pendingReturns.get(callId);
+      const messageJson = JSON.parse(message);
+      const callId = messageJson.callId;
+      const callback = this.pendingReturns.get(callId);
       if (callback) {
         this.pendingReturns.delete(callId);
         callback(messageJson.result);
@@ -49,11 +49,11 @@ export class RpcController {
    * @param result Return value for function call.
    */
   private returnResponse(sender: string, callId: string, result: any) {
-    let message = {
+    const message = {
       callId,
       result,
     };
-    let topic = `${this.topicHeader}_return/${sender}`;
+    const topic = `${this.topicHeader}_return/${sender}`;
     this.multiUser.controller?.publish(topic, JSON.stringify(message), false);
   }
 
@@ -64,30 +64,29 @@ export class RpcController {
    * @param func Function to run.
    */
   public expose(name: string, func: (...args: any[]) => any) {
-    let item = {
+    const item = {
       name,
       func,
     };
     this.functions.set(name, item);
-    let functionTopic = `${this.topicHeader}/${this.userId}/${name}`;
+    const functionTopic = `${this.topicHeader}/${this.userId}/${name}`;
     this.multiUser.addMessageCallback(functionTopic, (topic, message) => {
-      let splitTopic = topic.split('/');
+      const splitTopic = topic.split('/');
       if (splitTopic.length !== 3) {
         return;
       }
-      let parsedMessage = JSON.parse(message);
-      let callId = parsedMessage.callId;
-      let sender = parsedMessage.sender;
+      const parsedMessage = JSON.parse(message);
+      const callId = parsedMessage.callId;
+      const sender = parsedMessage.sender;
       if (!callId || !sender) return;
-      let calledName = splitTopic[2];
-      let calledFunc = this.functions.get(calledName);
+      const calledName = splitTopic[2];
+      const calledFunc = this.functions.get(calledName);
       if (!calledFunc) {
         this.returnResponse(sender, callId, null);
         return;
       }
       try {
-        let args = parsedMessage.args;
-        let result = calledFunc?.func(...args);
+        const result = calledFunc?.func(...parsedMessage.args);
         this.returnResponse(sender, callId, result);
       } catch {
         this.returnResponse(sender, callId, null);
@@ -109,15 +108,15 @@ export class RpcController {
     args: any[],
     callback: (args: any[]) => void,
   ) {
-    let topic = `${this.topicHeader}/${receiver}/${name}`;
-    let callId = uniqid();
+    const topic = `${this.topicHeader}/${receiver}/${name}`;
+    const callId = uniqid();
     this.pendingReturns.set(callId, callback);
-    let messageJson = {
+    const messageJson = {
       sender: this.userId,
       callId,
       args,
     };
-    let messageString = JSON.stringify(messageJson);
+    const messageString = JSON.stringify(messageJson);
     this.multiUser.controller?.publish(topic, messageString, false);
   }
 }

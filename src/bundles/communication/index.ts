@@ -17,6 +17,7 @@ export {
 } from './MqttController';
 
 export {
+  initCommunications,
   initGlobalState,
   getGlobalState,
   updateGlobalState,

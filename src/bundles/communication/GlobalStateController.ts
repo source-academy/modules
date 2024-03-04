@@ -32,7 +32,7 @@ export class GlobalStateController {
   private setupGlobalState() {
     if (this.topicHeader.length <= 0) return;
     this.multiUser.addMessageCallback(this.topicHeader, (topic, message) => {
-      let shortenedTopic = topic.substring(
+      const shortenedTopic = topic.substring(
         this.topicHeader.length,
         topic.length,
       );
@@ -53,7 +53,7 @@ export class GlobalStateController {
     if (!preSplitTopic.startsWith('/')) {
       preSplitTopic = `/${preSplitTopic}`;
     }
-    let splitTopic = preSplitTopic.split('/');
+    const splitTopic = preSplitTopic.split('/');
     try {
       let newGlobalState = { ...this.globalState };
       if (
@@ -64,7 +64,7 @@ export class GlobalStateController {
       }
       let currentJson = newGlobalState;
       for (let i = 1; i < splitTopic.length - 1; i++) {
-        let subTopic = splitTopic[i];
+        const subTopic = splitTopic[i];
         if (
           !(currentJson[subTopic] instanceof Object) ||
           currentJson[subTopic] instanceof Array ||
@@ -77,7 +77,7 @@ export class GlobalStateController {
       if (message === undefined || message.length === 0) {
         delete currentJson[splitTopic[splitTopic.length - 1]];
       } else {
-        let jsonMessage = JSON.parse(message);
+        const jsonMessage = JSON.parse(message);
         currentJson[splitTopic[splitTopic.length - 1]] = jsonMessage;
       }
       this.setGlobalState(newGlobalState);
