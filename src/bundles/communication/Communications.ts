@@ -23,7 +23,7 @@ class CommunicationModuleState {
  * @param port WebSocket port number for broker.
  */
 export function initCommunications(address: string, port: number) {
-  if (getGlobalState() instanceof CommunicationModuleState) {
+  if (getModuleState() instanceof CommunicationModuleState) {
     return;
   }
   const newModuleState = new CommunicationModuleState(address, port);
