@@ -1,16 +1,11 @@
 import * as THREE from 'three';
 import type Rapier from '@dimforge/rapier3d-compat';
-import { type SimpleQuaternion, type SimpleVector } from '../Math/Vector';
+import { type Orientation, type SimpleQuaternion, type SimpleVector } from '../Math/Vector';
 import { vec3, quat } from '../Math/Convert';
 
 type BodyConfiguration = {
   rapierRigidBody: Rapier.RigidBody;
   rapierCollider: Rapier.Collider;
-};
-
-export type Orientation = {
-  position: SimpleVector;
-  rotation: SimpleQuaternion;
 };
 
 export class Entity {

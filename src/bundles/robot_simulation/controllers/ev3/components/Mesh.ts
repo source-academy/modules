@@ -4,10 +4,10 @@ import {
   Renderer,
 } from '../../../engine';
 import * as THREE from 'three';
-import { type Orientation } from '../../../engine/Entity/Entity';
 // eslint-disable-next-line import/extensions
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { type ChassisWrapper } from './Chassis';
+import type { Orientation } from '../../../engine/Math/Vector';
 
 export type MeshConfig = {
   orientation: Orientation;
@@ -58,13 +58,13 @@ export class Mesh implements Controller {
   update() {
     const chassisEntity = this.chassisWrapper.getEntity();
 
-    const chassisPosition = chassisEntity.getPosition() as THREE.Vector3;
+    const chassisPosition = chassisEntity.getPosition();
 
     chassisPosition.y -= 0.02 / 2;
 
     this.mesh?.scene.position.copy(chassisPosition);
     this.mesh?.scene.quaternion.copy(
-      chassisEntity.getRotation() as THREE.Quaternion,
+      chassisEntity.getRotation(),
     );
   }
 }

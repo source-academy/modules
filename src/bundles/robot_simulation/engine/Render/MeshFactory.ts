@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { type Orientation } from '../Entity/Entity';
+import { type Orientation } from '../Math/Vector';
 
 export type RenderCuboidOptions = {
   orientation: Orientation;
@@ -26,8 +26,8 @@ export function addCuboid(options: RenderCuboidOptions): THREE.Mesh {
 
   const mesh = new THREE.Mesh(geometry, material);
 
-  mesh.position.copy(orientation.position as THREE.Vector3);
-  mesh.quaternion.copy(orientation.rotation as THREE.Quaternion);
+  mesh.position.copy(orientation.position);
+  mesh.quaternion.copy(orientation.rotation);
 
   return mesh;
 }

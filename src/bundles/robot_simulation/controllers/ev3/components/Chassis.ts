@@ -49,9 +49,9 @@ export class ChassisWrapper implements Controller {
 
   update() {
     const chassisEntity = this.getEntity();
-    this.debugMesh.position.copy(chassisEntity.getPosition() as THREE.Vector3);
+    this.debugMesh.position.copy(chassisEntity.getPosition());
     this.debugMesh.quaternion.copy(
-      chassisEntity.getRotation() as THREE.Quaternion,
+      chassisEntity.getRotation(),
     );
   }
 }

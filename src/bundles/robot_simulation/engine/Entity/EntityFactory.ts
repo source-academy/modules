@@ -1,5 +1,6 @@
+import type { Orientation } from '../Math/Vector';
 import { type Physics } from '../Physics';
-import { Entity, type Orientation } from './Entity';
+import { Entity } from './Entity';
 
 type RigidBodyTypes = 'fixed' | 'dynamic';
 

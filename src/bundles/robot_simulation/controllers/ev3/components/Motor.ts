@@ -107,13 +107,13 @@ export class Motor implements Controller {
   update(timingInfo: PhysicsTimingInfo): void {
     this.callbackHandler.checkCallbacks(timingInfo);
     const chassisEntity = this.chassisWrapper.getEntity();
-    const wheelPosition = chassisEntity.worldTranslation(this.displacementVector.clone()) as THREE.Vector3;
+    const wheelPosition = chassisEntity.worldTranslation(this.displacementVector.clone());
     wheelPosition.y = 0.0575 / 2;
     this.mesh?.scene.position.copy(
       wheelPosition,
     );
     this.mesh?.scene.quaternion.copy(
-      chassisEntity.getRotation() as THREE.Quaternion,
+      chassisEntity.getRotation(),
     );
 
     const frameDuration = timingInfo.frameDuration;

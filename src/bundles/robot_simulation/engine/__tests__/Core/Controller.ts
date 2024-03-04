@@ -2,7 +2,7 @@ import {
   Controller,
   ControllerGroup,
   ControllerMap,
-} from "../../Core/Controller"; // Adjust the path as necessary
+} from "../../Core/Controller";
 import { PhysicsTimingInfo } from "../../Physics";
 
 // Helper function to create a PhysicsTimingInfo object
