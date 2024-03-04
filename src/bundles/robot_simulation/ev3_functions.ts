@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { type Program } from './controllers/program/Program';
+import {
+  program_controller_identifier,
+  type Program,
+} from './controllers/program/Program';
 
 import { type Motor } from './controllers/ev3/components/Motor';
 import { type ColorSensor } from './controllers/ev3/sensor/ColorSensor';
@@ -13,8 +16,9 @@ type MotorFunctionReturnType = Motor | null;
 // Utility
 export function ev3_pause(duration: number): void {
   const world = getWorldFromContext();
-  // TODO: FIX THIS! CAUSES BUGS
-  const program = world.controllers.controllers[0] as Program;
+  const program = world.controllers.controllers.find(
+    (controller) => controller.name === program_controller_identifier,
+  ) as Program;
   program.pause(duration);
 }
 
@@ -46,13 +50,11 @@ export function ev3_runToRelativePosition(
     return;
   }
 
-  const wheelDiameter = 0.055;
+  const wheelDiameter = 0.0575;
 
-  const speedInMetersPerSecond
-  = (speed / 360) * Math.PI * wheelDiameter;
+  const speedInMetersPerSecond = (speed / 360) * Math.PI * wheelDiameter;
 
-  const distanceInMetersPerSecond
-  = (position / 360) * Math.PI * wheelDiameter;
+  const distanceInMetersPerSecond = (position / 360) * Math.PI * wheelDiameter;
 
   motor.setSpeedDistance(speedInMetersPerSecond, distanceInMetersPerSecond);
 }
@@ -76,7 +78,6 @@ export function ev3_colorSensorBlue(colorSensor: ColorSensor) {
   return colorSensor.sense().b;
 }
 
-
 // Ultrasonic Sensor
 
 export function ev3_ultrasonicSensor() {
@@ -84,6 +85,8 @@ export function ev3_ultrasonicSensor() {
   return ev3.get('ultrasonicSensor');
 }
 
-export function ev3_ultrasonicSensorDistance(ultraSonicSensor: UltrasonicSensor): number {
+export function ev3_ultrasonicSensorDistance(
+  ultraSonicSensor: UltrasonicSensor,
+): number {
   return ultraSonicSensor.sense();
 }

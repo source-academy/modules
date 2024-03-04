@@ -1,6 +1,7 @@
 import { type PhysicsTimingInfo } from '../Physics';
 
 export interface Controller {
+  name?: string;
   start?(): Promise<void> | void;
   update?(timingInfo: PhysicsTimingInfo): void;
   fixedUpdate?(timingInfo: PhysicsTimingInfo): void;

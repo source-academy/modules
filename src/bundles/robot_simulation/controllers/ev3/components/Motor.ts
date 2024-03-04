@@ -8,6 +8,7 @@ import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
 
 // eslint-disable-next-line import/extensions
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import type { PhysicsTimingInfo } from '../../../engine/Physics';
 
 type WheelSide = 'left' | 'right';
 
@@ -29,6 +30,7 @@ export class Motor implements Controller {
   physics: Physics;
   render: Renderer;
   chassisWrapper: ChassisWrapper;
+  meshRotation: number;
 
   mesh: GLTF | null = null;
 
@@ -40,6 +42,7 @@ export class Motor implements Controller {
     this.motorVelocity = 0;
     this.render = renderer;
     this.wheelSide = displacement.x > 0 ? 'right' : 'left';
+    this.meshRotation = 0;
   }
 
   setVelocity(velocity: number) {
@@ -67,8 +70,8 @@ export class Motor implements Controller {
     box.getSize(size);
 
     const scaleX = 0.028 / size.x;
-    const scaleY = 0.055 / size.y;
-    const scaleZ = 0.055 / size.z;
+    const scaleY = 0.0575 / size.y;
+    const scaleZ = 0.0575 / size.z;
 
     this.mesh.scene.scale.set(scaleX, scaleY, scaleZ);
 
@@ -101,18 +104,24 @@ export class Motor implements Controller {
   }
 
 
-  update(deltaTime): void {
-    this.callbackHandler.checkCallbacks(deltaTime);
+  update(timingInfo: PhysicsTimingInfo): void {
+    this.callbackHandler.checkCallbacks(timingInfo);
     const chassisEntity = this.chassisWrapper.getEntity();
     const wheelPosition = chassisEntity.worldTranslation(this.displacementVector.clone()) as THREE.Vector3;
-    wheelPosition.y = 0.055 / 2;
+    wheelPosition.y = 0.0575 / 2;
     this.mesh?.scene.position.copy(
       wheelPosition,
     );
     this.mesh?.scene.quaternion.copy(
       chassisEntity.getRotation() as THREE.Quaternion,
     );
-    this.mesh?.scene.rotateX(90 / 180 * Math.PI);
+
+    const frameDuration = timingInfo.frameDuration;
+    const radiansPerSecond = this.motorVelocity / 0.0575 * 2 * frameDuration / 1000;
+
+    this.meshRotation += radiansPerSecond;
+
+    this.mesh?.scene.rotateX(this.meshRotation);
     if (this.wheelSide === 'left') {
       this.mesh?.scene.rotateZ(Math.PI);
     }

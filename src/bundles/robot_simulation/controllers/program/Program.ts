@@ -10,13 +10,17 @@ type ProgramConfig = {
   stepsPerTick: number;
 };
 
+export const program_controller_identifier = 'program_controller';
+
 export class Program implements Controller {
   code: string;
   iterator: ReturnType<typeof runECEvaluator> | null;
-  isPaused:boolean;
+  isPaused: boolean;
   callbackHandler = new CallbackHandler();
+  name: string;
 
   constructor(code: string) {
+    this.name = program_controller_identifier;
     this.code = code;
     this.iterator = null;
     this.isPaused = false;
@@ -59,7 +63,9 @@ export class Program implements Controller {
       }
     } catch (e) {
       console.error(e);
-      throw new ProgramError('Error in program execution. Please check your code and try again.');
+      throw new ProgramError(
+        'Error in program execution. Please check your code and try again.',
+      );
     }
   }
 

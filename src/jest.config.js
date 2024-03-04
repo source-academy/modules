@@ -28,4 +28,7 @@ export default {
     'node_modules/(?!=chalk)/',
     '.+\\.js'
   ],
+  setupFiles: [
+    "./jest.polyfills.js"
+  ]
 };
