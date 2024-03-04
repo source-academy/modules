@@ -16,6 +16,7 @@ import UIColumnComponent, {
 import UITextComponent from '../ui_component/UITextComponent';
 import { Vector3 } from 'three';
 import UIImageComponent from '../ui_component/UIImageComponent';
+import UIBase64ImageComponent from '../ui_component/UIBase64ImageComponent';
 
 type InterfaceProps = {
   interfaceModel: InterfaceModel;
@@ -90,6 +91,16 @@ export function parseJsonInterface(uiJson: any) {
     }
     case 'UIImageComponent': {
       return parseImage(
+        uiJson,
+        id,
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
+      );
+    }
+    case 'UIBase64ImageComponent': {
+      return parseBase64Image(
         uiJson,
         id,
         paddingLeft,
@@ -241,6 +252,38 @@ function parseImage(
   ) {
     return new UIImageComponent({
       src,
+      imageWidth,
+      imageHeight,
+      padding: {
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
+      },
+      id,
+    });
+  }
+  return undefined;
+}
+
+function parseBase64Image(
+  uiJson: any,
+  id: string,
+  paddingLeft: number | undefined,
+  paddingRight: number | undefined,
+  paddingTop: number | undefined,
+  paddingBottom: number | undefined,
+) {
+  let base64 = uiJson.base64;
+  let imageWidth = uiJson.imageWidth;
+  let imageHeight = uiJson.imageHeight;
+  if (
+    typeof base64 === 'string' &&
+    typeof imageWidth === 'number' &&
+    typeof imageHeight === 'number'
+  ) {
+    return new UIBase64ImageComponent({
+      base64,
       imageWidth,
       imageHeight,
       padding: {
