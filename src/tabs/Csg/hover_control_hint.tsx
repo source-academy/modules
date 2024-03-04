@@ -1,6 +1,5 @@
 /* [Imports] */
-import { Icon } from '@blueprintjs/core';
-import { Tooltip2 } from '@blueprintjs/popover2';
+import { Icon, Tooltip } from '@blueprintjs/core';
 import React from 'react';
 import { BP_ICON_COLOR, SA_TAB_BUTTON_WIDTH, SA_TAB_ICON_SIZE } from '../common/css_constants';
 import type { HintProps } from './types';
@@ -18,7 +17,7 @@ export default class HoverControlHint extends React.Component<HintProps> {
         height: SA_TAB_BUTTON_WIDTH,
       }}
     >
-      <Tooltip2
+      <Tooltip
         content={this.props.tooltipText}
         placement="left"
       >
@@ -27,7 +26,7 @@ export default class HoverControlHint extends React.Component<HintProps> {
           size={SA_TAB_ICON_SIZE}
           color={BP_ICON_COLOR}
         />
-      </Tooltip2>
+      </Tooltip>
     </div>;
   }
 }

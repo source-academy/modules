@@ -96,9 +96,8 @@
     "yarnhook": "^0.5.1"
   },
   "dependencies": {
-    "@blueprintjs/core": "^4.20.2",
-    "@blueprintjs/icons": "^4.4.0",
-    "@blueprintjs/popover2": "^1.4.3",
+    "@blueprintjs/core": "^5.9.1",
+    "@blueprintjs/icons": "^5.7.1",
     "@box2d/core": "^0.10.0",
     "@box2d/debug-draw": "^0.10.0",
     "@jscad/modeling": "2.9.6",
