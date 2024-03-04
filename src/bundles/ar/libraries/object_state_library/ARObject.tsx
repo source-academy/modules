@@ -20,6 +20,7 @@ import {
 } from './Behaviour';
 import ARObjectComponent from './ARObjectComponent';
 import { parseVector3 } from '../calibration_library/Misc';
+import type { fromJSON } from 'tough-cookie';
 
 /**
  * Abstract class for an AR object.
@@ -53,6 +54,30 @@ export class ARObject {
     delete behavioursClone.model;
     object.behaviours = behavioursClone;
     return object;
+  };
+  static fromObject = (object: any) => {
+    if (!object) return;
+    let newObject = CubeObject.parseObject(object);
+    if (newObject) {
+      return newObject;
+    }
+    newObject = SphereObject.parseObject(object);
+    if (newObject) {
+      return newObject;
+    }
+    newObject = GltfObject.parseObject(object);
+    if (newObject) {
+      return newObject;
+    }
+    newObject = UIObject.parseObject(object);
+    if (newObject) {
+      return newObject;
+    }
+    newObject = LightObject.parseObject(object);
+    if (newObject) {
+      return newObject;
+    }
+    return undefined;
   };
   getComponent(getUserPosition: () => Vector3) {
     return (

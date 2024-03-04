@@ -30,6 +30,7 @@ import UIColumnComponent, {
 import UITextComponent from './libraries/object_state_library/ui_component/UITextComponent';
 import UIImageComponent from './libraries/object_state_library/ui_component/UIImageComponent';
 import { callARCallback } from './AR';
+import UIBase64ImageComponent from './libraries/object_state_library/ui_component/UIBase64ImageComponent';
 
 // Objects
 
@@ -306,6 +307,42 @@ export function createInterfaceImage(
 ): UIImageComponent {
   return new UIImageComponent({
     src,
+    imageWidth,
+    imageHeight,
+    padding: {
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
+    },
+    id: uniqid(),
+  });
+}
+
+/**
+ * Creates an image component for UI object, using Base64 string.
+ * Crops the image to the specified size.
+ *
+ * @param base64 Base64 string containing the image.
+ * @param imageWidth Width of the image.
+ * @param imageHeight Height of the image.
+ * @param paddingLeft Size of padding on the left.
+ * @param paddingRight Size of padding on the right.
+ * @param paddingTop Size of padding on the top.
+ * @param paddingBottom Size of padding on the bottom.
+ * @returns Created interface component.
+ */
+export function createInterfaceBase64Image(
+  base64: string,
+  imageWidth: number,
+  imageHeight: number,
+  paddingLeft: number,
+  paddingRight: number,
+  paddingTop: number,
+  paddingBottom: number,
+): UIBase64ImageComponent {
+  return new UIBase64ImageComponent({
+    base64,
     imageWidth,
     imageHeight,
     padding: {

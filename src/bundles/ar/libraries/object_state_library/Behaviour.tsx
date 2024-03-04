@@ -31,9 +31,9 @@ export abstract class ModelClass implements Behaviour {}
  */
 export class GltfModel implements ModelClass {
   resource: string;
-  scale: Vector3;
+  scale: number;
   callAnimation?: (actionName: string) => void;
-  constructor(resource: string, scale: Vector3) {
+  constructor(resource: string, scale: number) {
     this.resource = resource;
     this.scale = scale;
   }

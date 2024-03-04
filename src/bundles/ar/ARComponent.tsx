@@ -16,7 +16,7 @@ import { type ARState, getModuleState } from './AR';
 import { type OverlayHelper } from './OverlayHelper';
 import {
   CubeObject,
-  type ARObject,
+  ARObject,
   UIObject,
   LightObject,
   SphereObject,
@@ -209,28 +209,7 @@ function AugmentedContent(props: ARState) {
   function updateObjects(state: ARState) {
     let newObjects: ARObject[] = [];
     state.arObjects.forEach((object) => {
-      if (!object) return;
-      let newObject = CubeObject.parseObject(object);
-      if (newObject) {
-        newObjects.push(newObject);
-        return;
-      }
-      newObject = SphereObject.parseObject(object);
-      if (newObject) {
-        newObjects.push(newObject);
-        return;
-      }
-      newObject = GltfObject.parseObject(object);
-      if (newObject) {
-        newObjects.push(newObject);
-        return;
-      }
-      newObject = UIObject.parseObject(object);
-      if (newObject) {
-        newObjects.push(newObject);
-        return;
-      }
-      newObject = LightObject.parseObject(object);
+      let newObject = ARObject.fromObject(object);
       if (newObject) {
         newObjects.push(newObject);
       }

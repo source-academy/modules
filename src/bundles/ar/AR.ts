@@ -1,5 +1,5 @@
 import { Vector3 } from 'three';
-import { type ARObject } from './libraries/object_state_library/ARObject';
+import { ARObject } from './libraries/object_state_library/ARObject';
 import { OverlayHelper, Toggle } from './OverlayHelper';
 import { Globals } from '@react-spring/three';
 
@@ -158,6 +158,37 @@ export function removeARObject(object: ARObject) {
   moduleState.arObjects = moduleState.arObjects.filter(
     (item) => item.id !== object.id,
   );
+  callARCallback();
+}
+
+/**
+ * Obtains the current ARObjects.
+ */
+export function getARObjectsJsonString(): string {
+  let moduleState = getModuleState();
+  if (!moduleState) return '';
+  console.log(JSON.stringify(moduleState.arObjects));
+  return JSON.stringify(moduleState.arObjects);
+}
+
+/**
+ * Sets the current ARObjects.
+ */
+export function setARObjectsFromJsonString(jsonString: string) {
+  let moduleState = getModuleState();
+  if (!moduleState) return;
+  let json = JSON.parse(jsonString);
+  if (!(json instanceof Object)) return;
+  let objects: ARObject[] = [];
+  let keys = Object.keys(json);
+  keys.forEach((key) => {
+    let item = json[key];
+    let parsedObject = ARObject.fromObject(item);
+    if (parsedObject) {
+      objects.push(parsedObject);
+    }
+  });
+  moduleState.arObjects = objects;
   callARCallback();
 }
 

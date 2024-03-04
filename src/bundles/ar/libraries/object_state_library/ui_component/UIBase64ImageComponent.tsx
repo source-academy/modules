@@ -9,7 +9,7 @@ type UIBase64ImageProps = {
   id?: string;
 };
 
-export default class UIImageComponent extends UIBasicComponent {
+export default class UIBase64ImageComponent extends UIBasicComponent {
   base64: string;
   imageWidth: number;
   imageHeight: number;
@@ -27,7 +27,7 @@ export default class UIImageComponent extends UIBasicComponent {
 }
 
 function ImageUIComponent(props: {
-  component: UIImageComponent;
+  component: UIBase64ImageComponent;
   position: Vector3;
 }) {
   let { component, position } = props;
@@ -37,7 +37,6 @@ function ImageUIComponent(props: {
   let texture = new Texture();
   texture.image = image;
   image.onload = () => {
-    console.log('Loaded');
     texture.needsUpdate = true;
   };
   let material = new MeshLambertMaterial({ map: texture });
