@@ -83,12 +83,13 @@ export class MqttController {
 
   /**
    * Subscribes to a topic.
+   * Qos of 1 to prevent downgrading.
    *
    * @param topic Identifier for group of devices receiving the broadcast.
    */
   public subscribe(topic: string) {
     if (this.client) {
-      this.client.subscribe(topic);
+      this.client.subscribe(topic, { qos: 1 });
     }
   }
 
