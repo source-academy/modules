@@ -175,7 +175,7 @@ function AugmentedContent(props: ARState) {
   const [objects, setObjects] = useState<ARObject[]>([]);
 
   useEffect(() => {
-    controls.setCallback((prev, current) => {
+    controls.setFacingObjectCallback((prev, current) => {
       if (prev) {
         let object = objects.find((item) => item.uuid === prev.uuid);
         if (object) {
