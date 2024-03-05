@@ -5,6 +5,7 @@ import { Globals } from '@react-spring/three';
 
 export class ARState {
   arObjects: ARObject[] = [];
+  highlightFrontObject: boolean = false;
   overlay = new OverlayHelper();
   clickCallbacks = new Map<string, () => void>();
 }
@@ -240,5 +241,24 @@ export function moveARObject(object: ARObject, position: Vector3) {
   let moduleState = getModuleState();
   if (!moduleState) return;
   object.position = position;
+  callARCallback();
+}
+
+// Highlight
+
+/**
+ * Turn on highlighting of object that the user is facing.
+ *
+ * @param isEnabled Whether to highlight object in front.
+ */
+export function setHighlightFrontObject(isEnabled: boolean) {
+  let moduleState = getModuleState();
+  if (!moduleState) return;
+  moduleState.highlightFrontObject = isEnabled;
+  callARCallback();
+}
+
+export function selectObject(object: ARObject, isSelected: boolean) {
+  object.isSelected = isSelected;
   callARCallback();
 }

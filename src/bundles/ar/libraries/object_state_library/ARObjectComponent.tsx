@@ -51,15 +51,15 @@ export default function ARObjectComponent(props: Props) {
   const spring: SpringProps = useSpring({
     position: vector3ToArray(targetPosition),
   });
-  const [isHighlighted, setHighlighted] = useState(false);
+  const [isInFront, setInFront] = useState(false);
 
   useFrame((state, delta) => {
     let uuid = ref.current?.uuid;
     if (uuid) {
       props.setUUID(uuid);
     }
-    if (isHighlighted !== props.arObject.isHighlighted) {
-      setHighlighted(props.arObject.isHighlighted);
+    if (isInFront !== props.arObject.isInFront) {
+      setInFront(props.arObject.isInFront);
     }
     const currentPosition = updatePosition(
       props.arObject,
@@ -98,7 +98,8 @@ export default function ARObjectComponent(props: Props) {
           meshRef={ref}
           children={props.children}
           springPosition={spring.position}
-          isHighlighted={isHighlighted}
+          isSelected={props.arObject.isSelected}
+          isInFront={isInFront}
         />
       </Interactive>
     </ErrorBoundary>
@@ -145,7 +146,8 @@ type ModelProps = {
   meshRef: MutableRefObject<any>;
   children: ReactNode | undefined;
   springPosition: SpringValue<[number, number, number]>;
-  isHighlighted: boolean;
+  isInFront: boolean;
+  isSelected: boolean;
 };
 
 function ModelComponent(props: ModelProps) {

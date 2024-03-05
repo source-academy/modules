@@ -1,14 +1,14 @@
 import { type MutableRefObject, type ReactNode } from 'react';
 import { type ShapeModel } from '../Behaviour';
 import { type SpringValue, animated } from '@react-spring/three';
-import { Outlines } from '@react-three/drei';
-import { Color } from 'three';
+import { Outline } from '../Outline';
 
 type ShapeProps = {
   shapeModel: ShapeModel;
   meshRef: MutableRefObject<any>;
   springPosition: SpringValue<[number, number, number]>;
-  isHighlighted: boolean;
+  isSelected: boolean;
+  isInFront: boolean;
   children: ReactNode | undefined;
 };
 
@@ -19,15 +19,7 @@ export default function ShapeComponent(props: ShapeProps) {
         geometry={props.shapeModel.geometry}
         material={props.shapeModel.material}
       >
-        <Outlines
-          visible={props.isHighlighted}
-          thickness={10}
-          color={new Color(0xffa500)}
-          screenspace={true}
-          opacity={1}
-          transparent={false}
-          angle={0}
-        />
+        <Outline isSelected={props.isSelected} isInFront={props.isInFront} />
       </mesh>
     </animated.mesh>
   );

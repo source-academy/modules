@@ -35,7 +35,8 @@ export class ARObject {
   position: Vector3;
   behaviours: Behaviours;
   uuid: string | undefined = undefined;
-  isHighlighted = false;
+  isInFront = false;
+  isSelected = false;
   onSelect?: (object: ARObject) => void;
   constructor(
     id: string,
@@ -53,28 +54,39 @@ export class ARObject {
     const behavioursClone = { ...this.behaviours } as any;
     delete behavioursClone.model;
     object.behaviours = behavioursClone;
+    object.isInFront = false;
     return object;
   };
   static fromObject = (object: any) => {
     if (!object) return;
+    let isSelected = false;
+    const tempSelected = object.isSelected;
+    if (typeof tempSelected == 'boolean') {
+      isSelected = tempSelected;
+    }
     let newObject = CubeObject.parseObject(object);
     if (newObject) {
+      newObject.isSelected = isSelected;
       return newObject;
     }
     newObject = SphereObject.parseObject(object);
     if (newObject) {
+      newObject.isSelected = isSelected;
       return newObject;
     }
     newObject = GltfObject.parseObject(object);
     if (newObject) {
+      newObject.isSelected = isSelected;
       return newObject;
     }
     newObject = UIObject.parseObject(object);
     if (newObject) {
+      newObject.isSelected = isSelected;
       return newObject;
     }
     newObject = LightObject.parseObject(object);
     if (newObject) {
+      newObject.isSelected = isSelected;
       return newObject;
     }
     return undefined;

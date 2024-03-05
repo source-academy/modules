@@ -14,16 +14,17 @@ import UIColumnComponent, {
   HorizontalAlignment,
 } from '../ui_component/UIColumnComponent';
 import UITextComponent from '../ui_component/UITextComponent';
-import { Color, Vector3 } from 'three';
+import { Vector3 } from 'three';
 import UIImageComponent from '../ui_component/UIImageComponent';
 import UIBase64ImageComponent from '../ui_component/UIBase64ImageComponent';
-import { Outlines } from '@react-three/drei';
+import { Outline } from '../Outline';
 
 type InterfaceProps = {
   interfaceModel: InterfaceModel;
   meshRef: MutableRefObject<any>;
   springPosition: SpringValue<[number, number, number]>;
-  isHighlighted: boolean;
+  isSelected: boolean;
+  isInFront: boolean;
 };
 
 export default function InterfaceComponent(props: InterfaceProps) {
@@ -43,15 +44,7 @@ export default function InterfaceComponent(props: InterfaceProps) {
   return (
     <animated.mesh ref={props.meshRef} position={props.springPosition}>
       <mesh position={new Vector3(0, 0, -1 / 1000)}>
-        <Outlines
-          visible={props.isHighlighted}
-          thickness={10}
-          color={new Color(0xffa500)}
-          screenspace={true}
-          opacity={1}
-          transparent={false}
-          angle={0}
-        />
+        <Outline isSelected={props.isSelected} isInFront={props.isInFront} />
         <boxGeometry args={[width + 0.01, height + 0.01, 0]} />
         <meshStandardMaterial transparent opacity={0} />
       </mesh>

@@ -34,6 +34,8 @@ export {
   getYPosition,
   getZPosition,
   moveARObject,
+  setHighlightFrontObject,
+  selectObject,
 } from './AR';
 
 export {

@@ -166,16 +166,20 @@ function AugmentedContent(props: ARState) {
   const controls = useControls();
   const three = useThree();
   const [objects, setObjects] = useState<ARObject[]>([]);
+  const highlightFrontObject = useRef(props.highlightFrontObject);
   const objectsRef = useRef<ARObject[]>();
 
   useEffect(() => {
     controls.setFacingObjectCallback((prev, current) => {
+      if (!highlightFrontObject.current) {
+        return;
+      }
       if (prev) {
         let object = objectsRef.current?.find(
           (item) => item.uuid === prev.uuid,
         );
         if (object) {
-          object.isHighlighted = false;
+          object.isInFront = false;
         }
       }
       if (current) {
@@ -183,13 +187,14 @@ function AugmentedContent(props: ARState) {
           (item) => item.uuid === current.uuid,
         );
         if (object) {
-          object.isHighlighted = true;
+          object.isInFront = true;
         }
       }
     });
     (window as any).arControllerCallback = () => {
       let newState = getModuleState();
       updateObjects(newState);
+      highlightFrontObject.current = newState.highlightFrontObject;
     };
     updateObjects(props);
   }, []);
