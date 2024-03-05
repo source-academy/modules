@@ -3,7 +3,7 @@ import {
   ScreenStateContext,
   useScreenState,
 } from './libraries/screen_state_library/ScreenStateContext';
-import { type RefObject, useEffect, useState } from 'react';
+import { type RefObject, useEffect, useState, useRef } from 'react';
 import {
   PlayAreaContext,
   usePlayArea,
@@ -14,14 +14,7 @@ import {
 } from './libraries/controls_library/ControlsContext';
 import { type ARState, getModuleState } from './AR';
 import { type OverlayHelper } from './OverlayHelper';
-import {
-  CubeObject,
-  ARObject,
-  UIObject,
-  LightObject,
-  SphereObject,
-  GltfObject,
-} from './libraries/object_state_library/ARObject';
+import { ARObject } from './libraries/object_state_library/ARObject';
 import { useThree } from '@react-three/fiber';
 
 export default function ARComponent(props: ARState) {
@@ -173,17 +166,22 @@ function AugmentedContent(props: ARState) {
   const controls = useControls();
   const three = useThree();
   const [objects, setObjects] = useState<ARObject[]>([]);
+  const objectsRef = useRef<ARObject[]>();
 
   useEffect(() => {
     controls.setFacingObjectCallback((prev, current) => {
       if (prev) {
-        let object = objects.find((item) => item.uuid === prev.uuid);
+        let object = objectsRef.current?.find(
+          (item) => item.uuid === prev.uuid,
+        );
         if (object) {
           object.isHighlighted = false;
         }
       }
       if (current) {
-        let object = objects.find((item) => item.uuid === current.uuid);
+        let object = objectsRef.current?.find(
+          (item) => item.uuid === current.uuid,
+        );
         if (object) {
           object.isHighlighted = true;
         }
@@ -223,6 +221,7 @@ function AugmentedContent(props: ARState) {
       };
     });
     setObjects(newObjects);
+    objectsRef.current = newObjects;
   }
 
   return (
