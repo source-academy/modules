@@ -1,18 +1,5 @@
-import { useEffect } from 'react';
 import { type Vector3 } from 'three';
 import uniqid from 'uniqid';
-
-type UIComponentProps = {
-  position: Vector3;
-  children: LayoutComponent;
-};
-
-export default function UIComponent(props: UIComponentProps) {
-  useEffect(() => {
-    props.children.calculateDimensions();
-  }, [props.children]);
-  return <mesh>{props.children.getComponent(props.position, () => {})}</mesh>;
-}
 
 export type PaddingType = {
   paddingLeft?: number;

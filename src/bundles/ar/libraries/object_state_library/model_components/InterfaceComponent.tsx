@@ -14,27 +14,47 @@ import UIColumnComponent, {
   HorizontalAlignment,
 } from '../ui_component/UIColumnComponent';
 import UITextComponent from '../ui_component/UITextComponent';
-import { Vector3 } from 'three';
+import { Color, Vector3 } from 'three';
 import UIImageComponent from '../ui_component/UIImageComponent';
 import UIBase64ImageComponent from '../ui_component/UIBase64ImageComponent';
+import { Outlines } from '@react-three/drei';
 
 type InterfaceProps = {
   interfaceModel: InterfaceModel;
   meshRef: MutableRefObject<any>;
   springPosition: SpringValue<[number, number, number]>;
+  isHighlighted: boolean;
 };
 
 export default function InterfaceComponent(props: InterfaceProps) {
   const [components, setComponents] = useState<ReactNode>();
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
 
   useEffect(() => {
     setComponents(
-      props.interfaceModel.uiJson?.getComponent(new Vector3(0), () => {}),
+      props.interfaceModel.rootComponent?.getComponent(new Vector3(0), () => {
+        setWidth(props.interfaceModel.rootComponent?.getWidth() ?? 0);
+        setHeight(props.interfaceModel.rootComponent?.getHeight() ?? 0);
+      }),
     );
-  }, [props.interfaceModel.uiJson]);
+  }, [props.interfaceModel.rootComponent]);
 
   return (
     <animated.mesh ref={props.meshRef} position={props.springPosition}>
+      <mesh position={new Vector3(0, 0, -1 / 1000)}>
+        <Outlines
+          visible={props.isHighlighted}
+          thickness={10}
+          color={new Color(0xffa500)}
+          screenspace={true}
+          opacity={1}
+          transparent={false}
+          angle={0}
+        />
+        <boxGeometry args={[width + 0.01, height + 0.01, 0]} />
+        <meshStandardMaterial transparent opacity={0} />
+      </mesh>
       {components}
     </animated.mesh>
   );

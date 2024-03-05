@@ -78,9 +78,9 @@ export class ImageModel implements ModelClass {
 }
 
 export class InterfaceModel implements ModelClass {
-  uiJson: UIBasicComponent | undefined;
-  constructor(uiJson: any) {
-    this.uiJson = uiJson;
+  rootComponent: UIBasicComponent | undefined;
+  constructor(rootComponent: any) {
+    this.rootComponent = rootComponent;
   }
 }
 
