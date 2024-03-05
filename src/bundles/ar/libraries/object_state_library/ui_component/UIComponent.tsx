@@ -71,8 +71,8 @@ export class UIBasicComponent {
   };
   calculateDimensions = () => {
     this.calculateLayer();
-    let newHeight = this.getHeight();
-    let newWidth = this.getWidth();
+    const newHeight = this.getHeight();
+    const newWidth = this.getWidth();
     if (this.height !== newHeight || this.width !== newWidth) {
       this.height = newHeight;
       this.width = newWidth;

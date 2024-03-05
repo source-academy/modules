@@ -20,7 +20,6 @@ import {
 } from './Behaviour';
 import ARObjectComponent from './ARObjectComponent';
 import { parseVector3 } from '../calibration_library/Misc';
-import type { fromJSON } from 'tough-cookie';
 import { parseJsonInterface } from './model_components/InterfaceComponent';
 
 /**
@@ -50,8 +49,8 @@ export class ARObject {
     this.onSelect = onSelect;
   }
   toJSON = () => {
-    let object = { ...this };
-    let behavioursClone = { ...this.behaviours } as any;
+    const object = { ...this };
+    const behavioursClone = { ...this.behaviours } as any;
     delete behavioursClone.model;
     object.behaviours = behavioursClone;
     return object;
@@ -135,15 +134,15 @@ export class CubeObject extends ARObject {
   }
   static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
     if (!object || object.type !== CUBE_OBJECT_TYPE) return undefined;
-    let id = object.id;
-    let position = parseVector3(object.position);
-    let render = parseRender(object.behaviours?.render);
-    let rotation = parseRotation(object.behaviours?.rotation);
-    let movement = parseMovement(object.behaviours?.movement);
-    let width = object.width;
-    let height = object.height;
-    let depth = object.depth;
-    let color = object.color;
+    const id = object.id;
+    const position = parseVector3(object.position);
+    const render = parseRender(object.behaviours?.render);
+    const rotation = parseRotation(object.behaviours?.rotation);
+    const movement = parseMovement(object.behaviours?.movement);
+    const width = object.width;
+    const height = object.height;
+    const depth = object.depth;
+    const color = object.color;
     if (
       typeof id === 'string' &&
       position instanceof Vector3 &&
@@ -203,13 +202,13 @@ export class SphereObject extends ARObject {
   }
   static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
     if (!object || object.type !== SPHERE_OBJECT_TYPE) return undefined;
-    let id = object.id;
-    let position = parseVector3(object.position);
-    let render = parseRender(object.behaviours?.render);
-    let rotation = parseRotation(object.behaviours?.rotation);
-    let movement = parseMovement(object.behaviours?.movement);
-    let radius = object.radius;
-    let color = object.color;
+    const id = object.id;
+    const position = parseVector3(object.position);
+    const render = parseRender(object.behaviours?.render);
+    const rotation = parseRotation(object.behaviours?.rotation);
+    const movement = parseMovement(object.behaviours?.movement);
+    const radius = object.radius;
+    const color = object.color;
     if (
       typeof id === 'string' &&
       position instanceof Vector3 &&
@@ -262,13 +261,13 @@ export class GltfObject extends ARObject {
   }
   static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
     if (!object || object.type !== GLTF_OBJECT_TYPE) return undefined;
-    let id = object.id;
-    let position = parseVector3(object.position);
-    let render = parseRender(object.behaviours?.render);
-    let rotation = parseRotation(object.behaviours?.rotation);
-    let movement = parseMovement(object.behaviours?.movement);
-    let src = object.src;
-    let scale = object.scale;
+    const id = object.id;
+    const position = parseVector3(object.position);
+    const render = parseRender(object.behaviours?.render);
+    const rotation = parseRotation(object.behaviours?.rotation);
+    const movement = parseMovement(object.behaviours?.movement);
+    const src = object.src;
+    const scale = object.scale;
     if (
       typeof id === 'string' &&
       position instanceof Vector3 &&
@@ -318,12 +317,12 @@ export class UIObject extends ARObject {
   }
   static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
     if (!object || object.type !== UI_OBJECT_TYPE) return undefined;
-    let id = object.id;
-    let position = parseVector3(object.position);
-    let render = parseRender(object.behaviours?.render);
-    let rotation = parseRotation(object.behaviours?.rotation);
-    let movement = parseMovement(object.behaviours?.movement);
-    let uiJson = parseJsonInterface(object.uiJson);
+    const id = object.id;
+    const position = parseVector3(object.position);
+    const render = parseRender(object.behaviours?.render);
+    const rotation = parseRotation(object.behaviours?.rotation);
+    const movement = parseMovement(object.behaviours?.movement);
+    const uiJson = parseJsonInterface(object.uiJson);
     if (
       typeof id === 'string' &&
       position instanceof Vector3 &&
@@ -356,9 +355,9 @@ export class LightObject extends ARObject {
   }
   static parseObject(object: any): ARObject | undefined {
     if (!object || object.type !== LIGHT_OBJECT_TYPE) return undefined;
-    let id = object.id;
-    let position = parseVector3(object.position);
-    let intensity = object.intensity;
+    const id = object.id;
+    const position = parseVector3(object.position);
+    const intensity = object.intensity;
     if (
       typeof id === 'string' &&
       position instanceof Vector3 &&

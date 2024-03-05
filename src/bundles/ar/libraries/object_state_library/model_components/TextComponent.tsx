@@ -12,18 +12,18 @@ type TextProps = {
 };
 
 export default function TextComponent(props: TextProps) {
-  let textRef = useRef<Mesh>(null);
-  let [height, setHeight] = useState(0);
+  const textRef = useRef<Mesh>(null);
+  const [height, setHeight] = useState(0);
 
   function getBoxHeight() {
     if (height > 0) return;
     if (textRef.current) {
-      let geometry = textRef.current.geometry;
+      const geometry = textRef.current.geometry;
       geometry.computeBoundingBox();
       if (geometry.boundingBox) {
-        let minY = geometry.boundingBox.min.y;
-        let maxY = geometry.boundingBox.max.y;
-        let newHeight = maxY - minY + 0.05;
+        const minY = geometry.boundingBox.min.y;
+        const maxY = geometry.boundingBox.max.y;
+        const newHeight = maxY - minY + 0.05;
         if (newHeight === Infinity) return;
         setHeight(newHeight);
       }

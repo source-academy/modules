@@ -8,9 +8,9 @@ import { Vector3 } from 'three';
  */
 export function parseVector3(object: any) {
   if (!object) return undefined;
-  let x = object.x;
-  let y = object.y;
-  let z = object.z;
+  const x = object.x;
+  const y = object.y;
+  const z = object.z;
   if (typeof x === 'number' && typeof y === 'number' && typeof z === 'number') {
     return new Vector3(x, y, z);
   }

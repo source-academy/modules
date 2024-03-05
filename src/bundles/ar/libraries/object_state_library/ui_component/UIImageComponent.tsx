@@ -31,7 +31,7 @@ function ImageUIComponent(props: {
   component: UIImageComponent;
   position: Vector3;
 }) {
-  let { component, position } = props;
+  const { component, position } = props;
   return (
     <mesh key={`component_${component.id}`} position={position}>
       <Image

@@ -11,24 +11,29 @@ import {
 const raycaster = new Raycaster();
 
 export function getIntersection(camera: Camera, coreObject: Object3D) {
-  let pointer = new Vector2(0, 0);
+  const pointer = new Vector2(0, 0);
   raycaster.setFromCamera(pointer, camera);
-  let cascadeChildren = getCascadeMeshs(coreObject.children);
-  let items = raycaster.intersectObjects(cascadeChildren, true);
-  let nearestItem = items
-    .filter((item) => item.distance !== 0)
-    .sort((item) => item.distance);
+  const cascadeChildren = getCascadeMeshs(coreObject.children);
+  const items = raycaster.intersectObjects(cascadeChildren, true);
+  const nearestItem = items
+    .filter((item) => {
+      return item.distance !== 0;
+    })
+    .sort((item) => {
+      return item.distance;
+    });
   if (nearestItem.length > 0) {
     return getTopParent(nearestItem[0].object, coreObject);
+  } else {
+    return undefined;
   }
-  return undefined;
 }
 
 function getCascadeMeshs(children: Object3D<Object3DEventMap>[]) {
-  let cascadeChildren: Object3D<Object3DEventMap>[] = [];
+  const cascadeChildren: Object3D<Object3DEventMap>[] = [];
   let queue = Array.from(children);
   while (queue.length > 0) {
-    let item = queue.pop();
+    const item = queue.pop();
     if (item) {
       if (item instanceof Mesh) {
         cascadeChildren.push(item);

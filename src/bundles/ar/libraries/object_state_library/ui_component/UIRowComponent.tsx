@@ -45,7 +45,7 @@ export default class UIRowComponent extends LayoutComponent {
     return width;
   };
   getHeight = () => {
-    let height = this.paddingTop + this.paddingBottom;
+    const height = this.paddingTop + this.paddingBottom;
     let maxChildHeight = 0;
     this.children.forEach((item) => {
       item.calculateDimensions();
@@ -68,15 +68,15 @@ function RowUIComponent(props: {
   position: Vector3;
   updateParent: () => void;
 }) {
-  let { component, position, updateParent } = props;
+  const { component, position, updateParent } = props;
 
   const [width, setWidth] = useState(component.width);
   const [height, setHeight] = useState(component.height);
   const [componentPositions, setComponentPositions] = useState<Vector3[]>([]);
 
   function updateSize() {
-    let previousHeight = height;
-    let previousWidth = width;
+    const previousHeight = height;
+    const previousWidth = width;
     setHeight(component.height);
     setWidth(component.width);
     updateChildrenAlignment();
@@ -89,11 +89,11 @@ function RowUIComponent(props: {
   }
 
   function updateChildrenAlignment() {
-    let positions: Vector3[] = [];
+    const positions: Vector3[] = [];
     let currentXPosition = -component.width / 2 + component.paddingLeft;
     for (let i = 0; i < component.children.length; i++) {
-      let child = component.children[i];
-      let relativeXPosition =
+      const child = component.children[i];
+      const relativeXPosition =
         currentXPosition +
         child.width / 2 +
         (child.paddingLeft - child.paddingRight) / 2;
@@ -106,7 +106,11 @@ function RowUIComponent(props: {
         relativeYPosition +=
           -(component.height - child.height) / 2 - component.paddingBottom;
       }
-      let childPosition = new Vector3(relativeXPosition, relativeYPosition, 0);
+      const childPosition = new Vector3(
+        relativeXPosition,
+        relativeYPosition,
+        0,
+      );
       positions.push(childPosition);
     }
     setComponentPositions(positions);
@@ -117,10 +121,10 @@ function RowUIComponent(props: {
       updateChildrenAlignment();
       return null;
     }
-    let children: ReactNode[] = [];
+    const children: ReactNode[] = [];
     for (let i = 0; i < component.children.length; i++) {
-      let child = component.children[i];
-      let childPosition = childProps.componentPositions[i];
+      const child = component.children[i];
+      const childPosition = childProps.componentPositions[i];
       children.push(
         <group key={`component_${component.id}child_${i}`}>
           {child.getComponent(childPosition, updateSize)}

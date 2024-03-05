@@ -19,7 +19,7 @@ type ContextType = {
 const Context = createContext<ContextType>({
   overlayRef: null,
   domOverlay: undefined,
-  setStates: () => undefined,
+  setStates: () => {},
   component: <></>,
 });
 
@@ -62,7 +62,7 @@ export function ScreenStateContext(props: Props) {
 
   useEffect(() => {
     if (!overlayRef) return;
-    let overlay = overlayRef.current;
+    const overlay = overlayRef.current;
     if (overlay) {
       setDomOverlay(overlay);
     } else {
@@ -72,7 +72,7 @@ export function ScreenStateContext(props: Props) {
 
   useEffect(() => {
     updateComponent();
-  }, [arState, overlayState, isXRSession.current]);
+  }, [arState, overlayState]);
 
   function updateComponent() {
     setComponent(
@@ -128,10 +128,10 @@ export function ScreenStateContext(props: Props) {
   return (
     <Context.Provider
       value={{
-        overlayRef,
+        overlayRef: overlayRef,
         domOverlay: domOverlay ? { root: domOverlay } : undefined,
-        setStates,
-        component,
+        setStates: setStates,
+        component: component,
       }}
     >
       {props.children}

@@ -219,12 +219,12 @@ export type PathItem = {
 };
 
 function parsePathItems(path: any[]) {
-  let result: PathItem[] = [];
+  const result: PathItem[] = [];
   for (let i = 0; i < path.length; i++) {
-    let item = path[i];
-    let start = parseVector3(item.start);
-    let end = parseVector3(item.end);
-    let duration = item.duration;
+    const item = path[i];
+    const start = parseVector3(item.start);
+    const end = parseVector3(item.end);
+    const duration = item.duration;
     if (
       start instanceof Vector3 &&
       end instanceof Vector3 &&
@@ -271,14 +271,14 @@ export class PathMovement extends MovementClass {
     if (startTime) {
       this.startTime = startTime;
     } else {
-      let currentDate = new Date();
+      const currentDate = new Date();
       this.startTime = currentDate.getTime();
     }
     if (getCurrentTime) {
       this.getCurrentTime = getCurrentTime;
     } else {
       this.getCurrentTime = () => {
-        let currentDate = new Date();
+        const currentDate = new Date();
         return currentDate.getTime();
       };
     }
@@ -314,15 +314,15 @@ export class PathMovement extends MovementClass {
           break;
         }
       }
-      let x =
+      const x =
         position.x +
         currentItem.start.x +
         ratio * (currentItem.end.x - currentItem.start.x);
-      let y =
+      const y =
         position.y +
         currentItem.start.y +
         ratio * (currentItem.end.y - currentItem.start.y);
-      let z =
+      const z =
         position.z +
         currentItem.start.z +
         ratio * (currentItem.end.z - currentItem.start.z);
@@ -370,13 +370,16 @@ export class OrbitMovement extends MovementClass {
     }
   }
   public getOffsetPosition(position: Vector3) {
-    let currentFrame =
+    const currentFrame =
       (this.getCurrentTime() - this.startTime) % (this.duration * 1000);
-    let ratio = Math.min(Math.max(0, currentFrame / (this.duration * 1000)), 1);
-    let angle = ratio * Math.PI * 2;
-    let x = position.x + this.radius * Math.sin(angle);
-    let y = position.y;
-    let z = position.z + this.radius * Math.cos(angle);
+    const ratio = Math.min(
+      Math.max(0, currentFrame / (this.duration * 1000)),
+      1,
+    );
+    const angle = ratio * Math.PI * 2;
+    const x = position.x + this.radius * Math.sin(angle);
+    const y = position.y;
+    const z = position.z + this.radius * Math.cos(angle);
     return new Vector3(x, y, z);
   }
 }
@@ -389,21 +392,21 @@ export function parseMovement(movement: any, getCurrentTime?: () => number) {
   if (!movement) return undefined;
   switch (movement.type) {
     case MOVEMENT_PATH: {
-      let startTime = movement.startTime;
-      let pathItems = movement.path;
+      const startTime = movement.startTime;
+      const pathItems = movement.path;
       if (
         (startTime === undefined || typeof startTime === 'number') &&
         Array.isArray(pathItems)
       ) {
-        let parsedPathItems = parsePathItems(pathItems);
+        const parsedPathItems = parsePathItems(pathItems);
         return new PathMovement(parsedPathItems, startTime, getCurrentTime);
       }
       break;
     }
     case MOVEMENT_ORBIT: {
-      let radius = movement.radius;
-      let duration = movement.duration;
-      let startTime = movement.startTime;
+      const radius = movement.radius;
+      const duration = movement.duration;
+      const startTime = movement.startTime;
       if (
         typeof radius === 'number' &&
         typeof duration === 'number' &&

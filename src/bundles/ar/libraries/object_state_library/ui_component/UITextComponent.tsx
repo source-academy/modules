@@ -36,7 +36,7 @@ export default class UITextComponent extends UIBasicComponent {
       return false;
     }
     this.textHeight = newTextHeight;
-    let newHeight = this.getHeight();
+    const newHeight = this.getHeight();
     if (this.height !== newHeight) {
       this.height = newHeight;
       let parent = this.parent;
@@ -76,20 +76,20 @@ function TextUIComponent(props: {
 
   async function getSize() {
     if (ref.current) {
-      let geometry = ref.current.geometry;
+      const geometry = ref.current.geometry;
       geometry.computeBoundingBox();
       if (geometry.boundingBox) {
-        let minY = geometry.boundingBox.min.y;
-        let maxY = geometry.boundingBox.max.y;
-        let textHeight = maxY - minY;
-        let minX = geometry.boundingBox.min.x;
-        let maxX = geometry.boundingBox.max.x;
-        let textWidth = maxX - minX;
+        const minY = geometry.boundingBox.min.y;
+        const maxY = geometry.boundingBox.max.y;
+        const textHeight = maxY - minY;
+        const minX = geometry.boundingBox.min.x;
+        const maxX = geometry.boundingBox.max.x;
+        const textWidth = maxX - minX;
         if (Number.isFinite(textHeight) && Number.isFinite(textWidth)) {
           if (component.updateHeight(textHeight)) {
             updateParent();
           }
-          let offsetMagnitude = (component.textWidth - textWidth) / 2;
+          const offsetMagnitude = (component.textWidth - textWidth) / 2;
           if (offsetMagnitude <= 0) return;
           if (component.textAlign === HorizontalAlignment.Left) {
             setOffsetX(-offsetMagnitude);

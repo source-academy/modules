@@ -37,7 +37,7 @@ export default class UIColumnComponent extends LayoutComponent {
     this.calculateDimensions();
   }
   getWidth = () => {
-    let width = this.paddingLeft + this.paddingRight;
+    const width = this.paddingLeft + this.paddingRight;
     let maxChildWidth = 0;
     this.children.forEach((item) => {
       item.calculateDimensions();
@@ -68,15 +68,15 @@ function ColumnUIComponent(props: {
   position: Vector3;
   updateParent: () => void;
 }) {
-  let { component, position, updateParent } = props;
+  const { component, position, updateParent } = props;
 
   const [width, setWidth] = useState(component.width);
   const [height, setHeight] = useState(component.height);
   const [componentPositions, setComponentPositions] = useState<Vector3[]>([]);
 
   function updateSize() {
-    let previousHeight = height;
-    let previousWidth = width;
+    const previousHeight = height;
+    const previousWidth = width;
     setHeight(component.height);
     setWidth(component.width);
     updateChildrenAlignment();
@@ -89,11 +89,11 @@ function ColumnUIComponent(props: {
   }
 
   function updateChildrenAlignment() {
-    let positions: Vector3[] = [];
+    const positions: Vector3[] = [];
     let currentYPosition = -component.height / 2 + component.paddingTop;
     for (let i = 0; i < component.children.length; i++) {
-      let child = component.children[i];
-      let relativeYPosition =
+      const child = component.children[i];
+      const relativeYPosition =
         currentYPosition +
         child.height / 2 +
         (child.paddingTop - child.paddingBottom) / 2;
@@ -106,7 +106,11 @@ function ColumnUIComponent(props: {
         relativeXPosition +=
           (component.width - child.width) / 2 - component.paddingRight;
       }
-      let childPosition = new Vector3(relativeXPosition, -relativeYPosition, 0);
+      const childPosition = new Vector3(
+        relativeXPosition,
+        -relativeYPosition,
+        0,
+      );
       positions.push(childPosition);
     }
     setComponentPositions(positions);
@@ -119,8 +123,8 @@ function ColumnUIComponent(props: {
     }
     let children: ReactNode[] = [];
     for (let i = 0; i < component.children.length; i++) {
-      let child = component.children[i];
-      let childPosition = childProps.componentPositions[i];
+      const child = component.children[i];
+      const childPosition = childProps.componentPositions[i];
       children.push(
         <group key={`component_${component.id}child_${i}`}>
           {child.getComponent(childPosition, updateSize)}

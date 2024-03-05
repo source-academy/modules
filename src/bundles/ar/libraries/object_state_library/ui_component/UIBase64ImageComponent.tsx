@@ -1,5 +1,11 @@
-import { MeshLambertMaterial, Texture, type Vector3 } from 'three';
+import {
+  type Material,
+  MeshLambertMaterial,
+  Texture,
+  type Vector3,
+} from 'three';
 import { UIBasicComponent, type PaddingType } from './UIComponent';
+import { useEffect, useState } from 'react';
 
 type UIBase64ImageProps = {
   base64: string;
@@ -30,21 +36,24 @@ function ImageUIComponent(props: {
   component: UIBase64ImageComponent;
   position: Vector3;
 }) {
-  let { component, position } = props;
+  const [material, setMaterial] = useState<Material>();
 
-  let image = new Image();
-  image.src = component.base64;
-  let texture = new Texture();
-  texture.image = image;
-  image.onload = () => {
-    texture.needsUpdate = true;
-  };
-  let material = new MeshLambertMaterial({ map: texture });
+  useEffect(() => {
+    const image = new Image();
+    image.src = props.component.base64;
+    const texture = new Texture();
+    texture.image = image;
+    image.onload = () => {
+      texture.needsUpdate = true;
+    };
+    const newMaterial = new MeshLambertMaterial({ map: texture });
+    setMaterial(newMaterial);
+  }, [props.component.base64]);
 
   return (
     <mesh
-      key={`component_${component.id}`}
-      position={position}
+      key={`component_${props.component.id}`}
+      position={props.position}
       material={material}
     >
       <planeGeometry

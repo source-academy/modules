@@ -28,7 +28,7 @@ export default function GltfComponent(props: GltfProps) {
   const mixer = useRef<AnimationMixer>();
 
   useEffect(() => {
-    let clonedScene = SkeletonUtils.clone(model.scene);
+    const clonedScene = SkeletonUtils.clone(model.scene);
     setScene(clonedScene);
     mixer.current = new AnimationMixer(clonedScene);
   }, [model.scene]);
@@ -36,12 +36,12 @@ export default function GltfComponent(props: GltfProps) {
   useEffect(() => {
     if (model.animations.length > 0) {
       props.gltfModel.callAnimation = (actionName: string) => {
-        let selectedAction = model.animations.find(
+        const selectedAction = model.animations.find(
           (item) => item.name === actionName,
         );
         if (!selectedAction) return;
         mixer.current?.stopAllAction();
-        let action = mixer.current?.clipAction(selectedAction);
+        const action = mixer.current?.clipAction(selectedAction);
         action?.play();
       };
     }

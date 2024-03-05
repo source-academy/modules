@@ -10,10 +10,10 @@ type ContextType = {
 };
 
 const Context = createContext<ContextType>({
-  setCameraAsOrigin: () => undefined,
+  setCameraAsOrigin: () => {},
   getCameraRelativePosition: () => new Vector3(),
   getCameraRelativeRotation: () => new Euler(),
-  setPlayArea: () => undefined,
+  setPlayArea: () => {},
 });
 
 type Props = {
@@ -40,7 +40,7 @@ export function PlayAreaContext(props: Props) {
   // Three
 
   function setCameraAsOrigin() {
-    let cameraPosition = three.camera.position;
+    const cameraPosition = three.camera.position;
     setPlayArea(
       new Vector3(
         cameraPosition.x,
@@ -67,11 +67,11 @@ export function PlayAreaContext(props: Props) {
    * Converts camera rotation to angle around vertical axis.
    * Angle measured counterclockwise, starting from 12 o'clock.
    *
-   * @param cameraPosition Position of user in world coordinates
+   * @param origin Position of user in world coordinates
    * @param cameraRotation Camera rotation of user
    */
-  function setPlayArea(cameraPosition: Vector3, cameraRotation: Euler) {
-    setOrigin(cameraPosition);
+  function setPlayArea(origin: Vector3, cameraRotation: Euler) {
+    setOrigin(origin);
     setAngle(eulerToAngle(cameraRotation));
   }
 
@@ -81,8 +81,8 @@ export function PlayAreaContext(props: Props) {
    * @returns Angle in radians
    */
   function eulerToAngle(euler: Euler) {
-    let x = Math.sin(euler.y);
-    let z = Math.cos(euler.y) * Math.cos(euler.x);
+    const x = Math.sin(euler.y);
+    const z = Math.cos(euler.y) * Math.cos(euler.x);
     let selectedAngle = 0;
     if (z !== 0) {
       selectedAngle = Math.atan(x / z);
@@ -91,10 +91,12 @@ export function PlayAreaContext(props: Props) {
       } else if (x < 0) {
         selectedAngle += Math.PI * 2;
       }
-    } else if (x > 0) {
-      selectedAngle = Math.PI / 2;
-    } else if (x < 0) {
-      selectedAngle = (Math.PI * 3) / 2;
+    } else {
+      if (x > 0) {
+        selectedAngle = Math.PI / 2;
+      } else if (x < 0) {
+        selectedAngle = (Math.PI * 3) / 2;
+      }
     }
     return selectedAngle;
   }
@@ -123,21 +125,18 @@ export function PlayAreaContext(props: Props) {
    * @returns Relative position of the object
    */
   function getRelativePosition(position: Vector3) {
-    let x = position.x - origin.x;
-    let y = position.y - origin.y;
-    let z = position.z - origin.z;
-    let relativePosition = new Vector3(x, y, z);
+    const x = position.x - origin.x;
+    const y = position.y - origin.y;
+    const z = position.z - origin.z;
+    const relativePosition = new Vector3(x, y, z);
     relativePosition.applyAxisAngle(new Vector3(0, 1, 0), -angle);
     return relativePosition;
   }
 
   function getRelativeRotation(rotation: Euler) {
-    let vector3 = new Vector3();
-    vector3.setFromEuler(rotation);
+    const vector3 = new Vector3().setFromEuler(rotation);
     vector3.applyAxisAngle(new Vector3(0, 1, 0), -angle);
-    let euler = new Euler();
-    euler.setFromVector3(vector3);
-    return euler;
+    return new Euler().setFromVector3(vector3);
   }
 
   return (

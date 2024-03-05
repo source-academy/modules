@@ -61,13 +61,13 @@ export default function ARObjectComponent(props: Props) {
     if (isHighlighted !== props.arObject.isHighlighted) {
       setHighlighted(props.arObject.isHighlighted);
     }
-    let currentPosition = updatePosition(
+    const currentPosition = updatePosition(
       props.arObject,
       ref,
       targetPosition,
       setTargetPosition,
     );
-    let userPosition = props.getUserPosition();
+    const userPosition = props.getUserPosition();
     handleVisibility(
       props.arObject,
       currentPosition,
@@ -118,7 +118,7 @@ function updatePosition(
   setTargetPosition: React.Dispatch<React.SetStateAction<Vector3>>,
 ) {
   let position = arObject.position.clone();
-  let movement = arObject.behaviours.movement;
+  const movement = arObject.behaviours.movement;
   if (movement instanceof PathMovement) {
     position = movement.getOffsetPosition(position);
   } else if (movement instanceof OrbitMovement) {
@@ -129,7 +129,7 @@ function updatePosition(
     }
     return ref?.current?.position ?? arObject.position;
   }
-  let mesh = ref.current;
+  const mesh = ref.current;
   if (mesh) {
     mesh.position.x = position.x;
     mesh.position.y = position.y;
@@ -179,11 +179,11 @@ function handleVisibility(
   userPosition: Vector3,
   setShowComponent: React.Dispatch<React.SetStateAction<boolean>>,
 ) {
-  let behaviour = arObject.behaviours.render ?? new RenderWithinDistance(5);
+  const behaviour = arObject.behaviours.render ?? new RenderWithinDistance(5);
   if (behaviour instanceof RenderWithinDistance) {
-    let distanceVector = new Vector3(0, 0, 0);
+    const distanceVector = new Vector3(0, 0, 0);
     distanceVector.subVectors(position, userPosition);
-    let distance = distanceVector.length();
+    const distance = distanceVector.length();
     setShowComponent(distance <= behaviour.distance);
   } else if (behaviour instanceof AlwaysRender) {
     setShowComponent(true);
@@ -199,8 +199,8 @@ function handleRotation(
   ref: MutableRefObject<Mesh | null>,
   delta: number,
 ) {
-  let rotation = arObject.behaviours.rotation;
-  let mesh = ref.current;
+  const rotation = arObject.behaviours.rotation;
+  const mesh = ref.current;
   if (!mesh) return;
   if (rotation instanceof RotateToUser) {
     mesh.rotation.y = Math.atan2(

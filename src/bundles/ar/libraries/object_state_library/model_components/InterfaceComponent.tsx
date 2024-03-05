@@ -44,12 +44,12 @@ export function parseJsonInterface(uiJson: any) {
   if (!uiJson) {
     return undefined;
   }
-  let componentType = uiJson.type as string;
-  let id = uiJson.id;
-  let paddingLeft = uiJson.paddingLeft;
-  let paddingRight = uiJson.paddingRight;
-  let paddingTop = uiJson.paddingTop;
-  let paddingBottom = uiJson.paddingBottom;
+  const componentType = uiJson.type as string;
+  const id = uiJson.id;
+  const paddingLeft = uiJson.paddingLeft;
+  const paddingRight = uiJson.paddingRight;
+  const paddingTop = uiJson.paddingTop;
+  const paddingBottom = uiJson.paddingBottom;
   if (
     typeof id !== 'string' ||
     typeof paddingLeft !== 'number' ||
@@ -122,17 +122,17 @@ function parseColumn(
   paddingTop: number | undefined,
   paddingBottom: number | undefined,
 ) {
-  let horizontalAlignmentIndex = uiJson.horizontalAlignment;
+  const horizontalAlignmentIndex = uiJson.horizontalAlignment;
   let horizontalAlignment = HorizontalAlignment.Left;
   if (typeof horizontalAlignmentIndex === 'number') {
-    let parsedIndex = Math.min(Math.max(0, horizontalAlignmentIndex), 2);
+    const parsedIndex = Math.min(Math.max(0, horizontalAlignmentIndex), 2);
     horizontalAlignment = parsedIndex;
   }
-  let children: UIBasicComponent[] = [];
-  let jsonChildren = uiJson.children;
+  const children: UIBasicComponent[] = [];
+  const jsonChildren = uiJson.children;
   if (Array.isArray(jsonChildren)) {
     jsonChildren.forEach((jsonChild) => {
-      let child = parseJsonInterface(jsonChild);
+      const child = parseJsonInterface(jsonChild);
       if (child) {
         children.push(child);
       }
@@ -164,17 +164,17 @@ function parseRow(
   paddingTop: number | undefined,
   paddingBottom: number | undefined,
 ) {
-  let verticalAlignmentIndex = uiJson.verticalAlignment;
+  const verticalAlignmentIndex = uiJson.verticalAlignment;
   let verticalAlignment = VerticalAlignment.Top;
   if (typeof verticalAlignmentIndex === 'number') {
-    let parsedIndex = Math.min(Math.max(0, verticalAlignmentIndex), 2);
+    const parsedIndex = Math.min(Math.max(0, verticalAlignmentIndex), 2);
     verticalAlignment = parsedIndex;
   }
-  let children: UIBasicComponent[] = [];
-  let jsonChildren = uiJson.children;
+  const children: UIBasicComponent[] = [];
+  const jsonChildren = uiJson.children;
   if (Array.isArray(jsonChildren)) {
     jsonChildren.forEach((jsonChild) => {
-      let child = parseJsonInterface(jsonChild);
+      const child = parseJsonInterface(jsonChild);
       if (child) {
         children.push(child);
       }
@@ -206,11 +206,11 @@ function parseText(
   paddingTop: number | undefined,
   paddingBottom: number | undefined,
 ) {
-  let text = uiJson.text;
-  let textSize = uiJson.textSize;
-  let textWidth = uiJson.textWidth;
-  let textAlign = uiJson.textAlign;
-  let color = uiJson.color;
+  const text = uiJson.text;
+  const textSize = uiJson.textSize;
+  const textWidth = uiJson.textWidth;
+  const textAlign = uiJson.textAlign;
+  const color = uiJson.color;
   if (
     typeof text === 'string' &&
     typeof textSize === 'number' &&
@@ -243,9 +243,9 @@ function parseImage(
   paddingTop: number | undefined,
   paddingBottom: number | undefined,
 ) {
-  let src = uiJson.src;
-  let imageWidth = uiJson.imageWidth;
-  let imageHeight = uiJson.imageHeight;
+  const src = uiJson.src;
+  const imageWidth = uiJson.imageWidth;
+  const imageHeight = uiJson.imageHeight;
   if (
     typeof src === 'string' &&
     typeof imageWidth === 'number' &&
@@ -275,9 +275,9 @@ function parseBase64Image(
   paddingTop: number | undefined,
   paddingBottom: number | undefined,
 ) {
-  let base64 = uiJson.base64;
-  let imageWidth = uiJson.imageWidth;
-  let imageHeight = uiJson.imageHeight;
+  const base64 = uiJson.base64;
+  const imageWidth = uiJson.imageWidth;
+  const imageHeight = uiJson.imageHeight;
   if (
     typeof base64 === 'string' &&
     typeof imageWidth === 'number' &&
