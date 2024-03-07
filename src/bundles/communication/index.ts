@@ -18,6 +18,7 @@ export {
 
 export {
   initCommunications,
+  initCommunicationsSecure,
   initGlobalState,
   getGlobalState,
   updateGlobalState,

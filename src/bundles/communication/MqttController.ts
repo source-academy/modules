@@ -19,6 +19,8 @@ export class MqttController {
 
   address: string = '';
   port: number = 9001;
+  user: string = '';
+  password: string = '';
 
   constructor(
     connectionCallback: (status: string) => void,
@@ -34,7 +36,7 @@ export class MqttController {
    */
   public connectClient() {
     if (this.connected || this.address.length === 0) return;
-    const link = `wss://${this.address}:${this.port}/mqtt`;
+    const link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
     this.client = connect(link);
     this.connected = true;
     this.client.on('connect', () => {

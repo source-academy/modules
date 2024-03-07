@@ -17,7 +17,12 @@ export class MultiUserController {
    * @param address Address to connect to.
    * @param port MQTT port number.
    */
-  public setupController(address: string, port: number) {
+  public setupController(
+    address: string,
+    port: number,
+    user: string,
+    password: string,
+  ) {
     let currentController = this.controller;
     if (currentController) {
       currentController.disconnect();
@@ -43,6 +48,8 @@ export class MultiUserController {
     }
     currentController.address = address;
     currentController.port = port;
+    currentController.user = user;
+    currentController.password = password;
     currentController.connectClient();
   }
 

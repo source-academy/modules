@@ -8,9 +8,14 @@ class CommunicationModuleState {
   globalState: GlobalStateController | null = null;
   rpc: RpcController | null = null;
 
-  constructor(address: string, port: number) {
+  constructor(
+    address: string,
+    port: number,
+    user: string = '',
+    password: string = '',
+  ) {
     const multiUser = new MultiUserController();
-    multiUser.setupController(address, port);
+    multiUser.setupController(address, port, user, password);
     this.multiUser = multiUser;
   }
 }
@@ -27,6 +32,31 @@ export function initCommunications(address: string, port: number) {
     return;
   }
   const newModuleState = new CommunicationModuleState(address, port);
+  context.moduleContexts.communication.state = newModuleState;
+}
+
+/**
+ * Initializes connection with MQTT broker.
+ * Currently only supports WebSocket.
+ *
+ * @param address Address of broker.
+ * @param port WebSocket port number for broker.
+ */
+export function initCommunicationsSecure(
+  address: string,
+  port: number,
+  user: string,
+  password: string,
+) {
+  if (getModuleState() instanceof CommunicationModuleState) {
+    return;
+  }
+  const newModuleState = new CommunicationModuleState(
+    address,
+    port,
+    user,
+    password,
+  );
   context.moduleContexts.communication.state = newModuleState;
 }
 
