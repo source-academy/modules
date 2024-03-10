@@ -175,7 +175,7 @@ function AugmentedContent(props: ARState) {
         return;
       }
       if (prev) {
-        let object = objectsRef.current?.find(
+        const object = objectsRef.current?.find(
           (item) => item.uuid === prev.uuid,
         );
         if (object) {
@@ -183,7 +183,7 @@ function AugmentedContent(props: ARState) {
         }
       }
       if (current) {
-        let object = objectsRef.current?.find(
+        const object = objectsRef.current?.find(
           (item) => item.uuid === current.uuid,
         );
         if (object) {
@@ -192,7 +192,7 @@ function AugmentedContent(props: ARState) {
       }
     });
     (window as any).arControllerCallback = () => {
-      let newState = getModuleState();
+      const newState = getModuleState();
       updateObjects(newState);
       highlightFrontObject.current = newState.highlightFrontObject;
     };
@@ -210,18 +210,19 @@ function AugmentedContent(props: ARState) {
   ]);
 
   function updateObjects(state: ARState) {
-    let newObjects: ARObject[] = [];
+    const newObjects: ARObject[] = [];
     state.arObjects.forEach((object) => {
-      let newObject = ARObject.fromObject(object);
+      const newObject = ARObject.fromObject(object);
       if (newObject) {
         newObjects.push(newObject);
       }
     });
     newObjects.forEach((object) => {
       object.onSelect = () => {
-        let callback = (window as any).arOnClickCallback as Function;
-        if (callback) {
-          callback(object.id);
+        const moduleState = getModuleState();
+        if (moduleState) {
+          const callback = moduleState.clickCallbacks.get(object.id);
+          callback?.();
         }
       };
     });
@@ -244,16 +245,16 @@ function setupToggles(
   recalibrate: () => void,
 ) {
   if (!overlayRef || !overlayRef.current) return;
-  let overlay = overlayRef.current;
+  const overlay = overlayRef.current;
   // Recalibrate
-  let recalibrateToggle = overlay?.querySelector(
+  const recalibrateToggle = overlay?.querySelector(
     '#recalibrate-toggle',
   ) as HTMLElement;
   if (recalibrateToggle) {
     recalibrateToggle.onclick = recalibrate;
   }
   // Left
-  let leftToggle = overlay?.querySelector('#left-toggle') as HTMLElement;
+  const leftToggle = overlay?.querySelector('#left-toggle') as HTMLElement;
   if (leftToggle) {
     if (overlayHelper.toggleLeft) {
       leftToggle.style.display = 'block';
@@ -268,7 +269,7 @@ function setupToggles(
     }
   }
   // Center
-  let centerToggle = overlay?.querySelector('#center-toggle') as HTMLElement;
+  const centerToggle = overlay?.querySelector('#center-toggle') as HTMLElement;
   if (centerToggle) {
     if (overlayHelper.toggleCenter) {
       centerToggle.style.display = 'block';
@@ -283,7 +284,7 @@ function setupToggles(
     }
   }
   // Right
-  let rightToggle = overlay?.querySelector('#right-toggle') as HTMLElement;
+  const rightToggle = overlay?.querySelector('#right-toggle') as HTMLElement;
   if (rightToggle) {
     if (overlayHelper.toggleRight) {
       rightToggle.style.display = 'block';

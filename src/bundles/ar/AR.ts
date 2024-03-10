@@ -8,6 +8,10 @@ export class ARState {
   highlightFrontObject: boolean = false;
   overlay = new OverlayHelper();
   clickCallbacks = new Map<string, () => void>();
+  onClickCallback = (id: string) => {
+    const callback = this.clickCallbacks.get(id);
+    callback?.();
+  };
 }
 
 // Fix issue with React Spring, but spams console log.
@@ -20,12 +24,7 @@ Globals.assign({
  * Initialize AR.
  */
 export function initAR() {
-  let controller = new ARState();
-  (window as any).arController = controller;
-  (window as any).arOnClickCallback = (id: string) => {
-    let callback = controller.clickCallbacks.get(id);
-    callback?.();
-  };
+  (window as any).arController = new ARState();
 }
 
 /**
@@ -41,7 +40,7 @@ export function getModuleState(): ARState {
  * Calls callback to update AR context in tab.
  */
 export function callARCallback() {
-  let f = (window as any).arControllerCallback as Function;
+  const f = (window as any).arControllerCallback as Function;
   if (f) {
     f();
   }
@@ -56,7 +55,7 @@ export function callARCallback() {
  * @param callback Function to call when toggle is clicked.
  */
 export function setLeftToggle(text: string, callback: () => void) {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.overlay.toggleLeft = new Toggle(text, callback);
 }
@@ -68,7 +67,7 @@ export function setLeftToggle(text: string, callback: () => void) {
  * @param callback Function to call when toggle is clicked.
  */
 export function setCenterToggle(text: string, callback: () => void) {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.overlay.toggleCenter = new Toggle(text, callback);
 }
@@ -80,7 +79,7 @@ export function setCenterToggle(text: string, callback: () => void) {
  * @param callback Function to call when toggle is clicked.
  */
 export function setRightToggle(text: string, callback: () => void) {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.overlay.toggleRight = new Toggle(text, callback);
 }
@@ -89,7 +88,7 @@ export function setRightToggle(text: string, callback: () => void) {
  * Resets and hides the left toggle.
  */
 export function removeLeftToggle() {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.overlay.toggleLeft = undefined;
 }
@@ -98,7 +97,7 @@ export function removeLeftToggle() {
  * Resets and hides the center toggle.
  */
 export function removeCenterToggle() {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.overlay.toggleCenter = undefined;
 }
@@ -107,7 +106,7 @@ export function removeCenterToggle() {
  * Resets and hides the right toggle.
  */
 export function removeRightToggle() {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.overlay.toggleRight = undefined;
 }
@@ -132,7 +131,7 @@ export function createVector3(x: number, y: number, z: number): Vector3 {
  * @param object ARObject to add. (E.g. cube, sphere, etc..)
  */
 export function addARObject(object: ARObject) {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   if (moduleState.arObjects.find((item) => item.id === object.id)) {
     return; // Already in array
@@ -142,7 +141,7 @@ export function addARObject(object: ARObject) {
       object.onSelect?.(object);
     });
   }
-  let newArray = Object.assign([], moduleState.arObjects);
+  const newArray = Object.assign([], moduleState.arObjects);
   newArray.push(object);
   moduleState.arObjects = newArray;
   callARCallback();
@@ -154,7 +153,7 @@ export function addARObject(object: ARObject) {
  * @param object ARObject to remove.
  */
 export function removeARObject(object: ARObject) {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.arObjects = moduleState.arObjects.filter(
     (item) => item.id !== object.id,
@@ -166,7 +165,7 @@ export function removeARObject(object: ARObject) {
  * Obtains the current ARObjects.
  */
 export function getARObjects(): ARObject[] {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return [];
   return moduleState.arObjects;
 }
@@ -175,14 +174,14 @@ export function getARObjects(): ARObject[] {
  * Sets AR objects from json.
  */
 export function setAsARObjects(json: any) {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   if (!(json instanceof Object)) return;
-  let objects: ARObject[] = [];
-  let keys = Object.keys(json);
+  const objects: ARObject[] = [];
+  const keys = Object.keys(json);
   keys.forEach((key) => {
-    let item = json[key];
-    let parsedObject = ARObject.fromObject(item);
+    const item = json[key];
+    const parsedObject = ARObject.fromObject(item);
     if (parsedObject) {
       objects.push(parsedObject);
     }
@@ -195,7 +194,7 @@ export function setAsARObjects(json: any) {
  * Removes all objects in the augmented world.
  */
 export function clearARObjects() {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.arObjects = [];
   callARCallback();
@@ -237,7 +236,7 @@ export function getZPosition(object: ARObject): number {
  * @param position Position to move to.
  */
 export function moveARObject(object: ARObject, position: Vector3) {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   object.position = position;
   callARCallback();
@@ -251,7 +250,7 @@ export function moveARObject(object: ARObject, position: Vector3) {
  * @param isEnabled Whether to highlight object in front.
  */
 export function setHighlightFrontObject(isEnabled: boolean) {
-  let moduleState = getModuleState();
+  const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.highlightFrontObject = isEnabled;
   callARCallback();
