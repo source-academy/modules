@@ -172,12 +172,11 @@ export function getARObjectsJsonString(): string {
 }
 
 /**
- * Sets the current ARObjects.
+ * Sets AR objects from json.
  */
-export function setARObjectsFromJsonString(jsonString: string) {
+export function setJsonAsARObjects(json: any) {
   let moduleState = getModuleState();
   if (!moduleState) return;
-  let json = JSON.parse(jsonString);
   if (!(json instanceof Object)) return;
   let objects: ARObject[] = [];
   let keys = Object.keys(json);
@@ -261,4 +260,21 @@ export function setHighlightFrontObject(isEnabled: boolean) {
 export function selectObject(object: ARObject, isSelected: boolean) {
   object.isSelected = isSelected;
   callARCallback();
+}
+
+// JSON
+
+/**
+ * Parses the json string.
+ */
+export function parseJsonString(jsonString: string) {
+  return JSON.parse(jsonString);
+}
+
+/**
+ * Obtains the value of a json object at the key.
+ */
+export function getObjectChild(object: any, key: string) {
+  if (!(object instanceof Object)) return undefined;
+  return object[key];
 }

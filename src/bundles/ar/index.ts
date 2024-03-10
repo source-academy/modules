@@ -28,7 +28,7 @@ export {
   addARObject,
   removeARObject,
   getARObjectsJsonString,
-  setARObjectsFromJsonString,
+  setJsonAsARObjects,
   clearARObjects,
   getXPosition,
   getYPosition,
@@ -36,6 +36,8 @@ export {
   moveARObject,
   setHighlightFrontObject,
   selectObject,
+  parseJsonString,
+  getObjectChild,
 } from './AR';
 
 export {
