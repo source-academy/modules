@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {addCuboid} from '../../Render/MeshFactory';
+import {addCuboid} from '../../Render/helpers/MeshFactory';
 
 
 // Mock the necessary Three.js methods and classes
