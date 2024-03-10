@@ -136,10 +136,9 @@ function ColumnUIComponent(props: {
 
   return (
     <mesh key={`component_${component.id}`} position={position}>
-      <ambientLight intensity={0.1} />
       <mesh position={new Vector3(0, 0, -component.layer / 1000)}>
         <boxGeometry args={[width, height, 0]} />
-        <meshStandardMaterial color={new Color(component.background)} />
+        <meshBasicMaterial color={new Color(component.background)} />
       </mesh>
       <ChildrenComponents componentPositions={componentPositions} />
     </mesh>
