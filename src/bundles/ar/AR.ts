@@ -165,16 +165,16 @@ export function removeARObject(object: ARObject) {
 /**
  * Obtains the current ARObjects.
  */
-export function getARObjectsJsonString(): string {
+export function getARObjects(): ARObject[] {
   let moduleState = getModuleState();
-  if (!moduleState) return '';
-  return JSON.stringify(moduleState.arObjects);
+  if (!moduleState) return [];
+  return moduleState.arObjects;
 }
 
 /**
  * Sets AR objects from json.
  */
-export function setJsonAsARObjects(json: any) {
+export function setAsARObjects(json: any) {
   let moduleState = getModuleState();
   if (!moduleState) return;
   if (!(json instanceof Object)) return;
@@ -263,13 +263,6 @@ export function selectObject(object: ARObject, isSelected: boolean) {
 }
 
 // JSON
-
-/**
- * Parses the json string.
- */
-export function parseJsonString(jsonString: string) {
-  return JSON.parse(jsonString);
-}
 
 /**
  * Obtains the value of a json object at the key.

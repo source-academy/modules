@@ -27,8 +27,8 @@ export {
   createVector3,
   addARObject,
   removeARObject,
-  getARObjectsJsonString,
-  setJsonAsARObjects,
+  getARObjects,
+  setAsARObjects,
   clearARObjects,
   getXPosition,
   getYPosition,
@@ -36,7 +36,6 @@ export {
   moveARObject,
   setHighlightFrontObject,
   selectObject,
-  parseJsonString,
   getObjectChild,
 } from './AR';
 
