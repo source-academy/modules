@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers/ev3/ev3/default';
+import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers/ev3/ev3/default/defaultEv3';
 
 export const UltrasonicSensorPanel = ({ ev3 }: { ev3: DefaultEv3 }) => {
   const ultrasonicSensor = ev3.get('ultrasonicSensor');

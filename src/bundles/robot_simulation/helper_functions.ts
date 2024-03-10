@@ -10,16 +10,19 @@ import {
   wheelDisplacements,
   wheelPidConfig,
   ultrasonicSensorConfig,
+  wheelMeshConfig,
 } from './config';
 
 import { Program } from './controllers/program/Program';
 import { Floor, type DefaultEv3, Wall } from './controllers';
-import { createDefaultEv3 } from './controllers/ev3/ev3/default';
+import { createDefaultEv3, type Ev3Config } from './controllers/ev3/ev3/default/defaultEv3';
 import { type Controller, Physics, Renderer, Timer, World } from './engine';
 
 import context from 'js-slang/context';
 import { interrupt } from './interrupt';
 import { RobotConsole } from './engine/Core/RobotConsole';
+import { getCamera } from './engine/Render/helpers/Camera';
+import { createScene } from './engine/Render/helpers/Scene';
 
 
 const storedWorld = context.moduleContexts.robot_simulation.state?.world;
@@ -41,13 +44,10 @@ export function getEv3FromContext(): DefaultEv3 {
   return ev3 as DefaultEv3;
 }
 
-
 // Initialization functions
 export function createRenderer(): Renderer {
-  const scene = Renderer.scene();
-  const camera = Renderer.camera(sceneCamera);
-  camera.translateY(2);
-  camera.translateZ(-2);
+  const scene = createScene();
+  const camera = getCamera(sceneCamera);
   const renderer = new Renderer(scene, camera, renderConfig);
   return renderer;
 }
@@ -68,21 +68,31 @@ export function createWorld(physics: Physics, renderer: Renderer, timer: Timer, 
 }
 
 export function createEv3(physics: Physics, renderer: Renderer): DefaultEv3 {
-  const config = {
+  const config:Ev3Config = {
     chassis: chassisConfig,
     motor: {
       displacements: motorDisplacements,
       pid: motorPidConfig,
+      mesh: {
+        ...wheelMeshConfig,
+        url: 'https://keen-longma-3c1be1.netlify.app/6_wheel.gltf',
+      },
     },
     wheel: {
       displacements: wheelDisplacements,
       pid: wheelPidConfig,
+      gapToFloor: 0.03,
+      maxRayDistance: 0.05,
     },
     colorSensor: {
       displacement: colorSensorConfig.displacement,
+      config: colorSensorConfig.config,
     },
     ultrasonicSensor: ultrasonicSensorConfig,
-    mesh: meshConfig,
+    mesh: {
+      ...meshConfig,
+      url: 'https://keen-longma-3c1be1.netlify.app/6_remove_wheels.gltf',
+    },
   };
 
   const ev3 = createDefaultEv3(physics, renderer, config);

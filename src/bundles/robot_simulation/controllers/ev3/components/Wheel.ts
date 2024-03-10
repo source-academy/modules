@@ -12,17 +12,20 @@ type WheelConfig = {
     derivativeGain: number;
     integralGain: number;
   };
+  gapToFloor: number;
+  maxRayDistance:number;
   debug: boolean;
 };
 
 export class Wheel implements Controller {
   chassisWrapper: ChassisWrapper;
-  pid: NumberPidController;
-  displacement: SimpleVector;
-  displacementVector: THREE.Vector3;
-  downVector: THREE.Vector3;
   physics: Physics;
   render: Renderer;
+  config: WheelConfig;
+
+  pid: NumberPidController;
+  displacementVector: THREE.Vector3;
+  downVector: THREE.Vector3;
   arrowHelper: THREE.ArrowHelper;
 
   constructor(
@@ -34,36 +37,39 @@ export class Wheel implements Controller {
   ) {
     this.chassisWrapper = chassisWrapper;
     this.physics = physics;
+    this.render = render;
+    this.displacementVector = vec3(displacement);
+    this.config = config;
+
     this.pid = new NumberPidController(config.pid);
-    this.displacement = displacement;
-    this.displacementVector = vec3(this.displacement);
     this.downVector = vec3({
       x: 0,
       y: -1,
       z: 0,
     });
+
+    // Debug arrow.
     this.arrowHelper = new THREE.ArrowHelper();
     this.arrowHelper.visible = config.debug;
     this.arrowHelper.setColor('red');
     render.add(this.arrowHelper);
-    this.render = render;
   }
 
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
-    const { timestep } = timingInfo;
     const chassis = this.chassisWrapper.getEntity();
 
     const globalDisplacement = chassis.worldTranslation(
       this.displacementVector.clone(),
     );
-
     const globalDownDirection = chassis.transformDirection(
       this.downVector.clone(),
     );
+
     const result = this.physics.castRay(
       globalDisplacement,
       globalDownDirection,
-      0.5,
+      this.config.maxRayDistance,
+      chassis.getCollider(),
     );
 
     // Wheels are not touching the ground
@@ -71,15 +77,23 @@ export class Wheel implements Controller {
       return;
     }
 
-    const { distance: wheelDistance, normal } = result;
+    let { distance: wheelDistance, normal } = result;
 
+    // If distance is zero, the ray originate from inside the floor/wall.
+    // If that is true, we assume the normal is pointing up.
+    if (wheelDistance === 0) {
+      normal = {
+        x: 0,
+        y: 1,
+        z: 0,
+      };
+    }
 
-    const error = this.pid.calculate(wheelDistance, 0.03 + 0.095 / 2);
+    const error = this.pid.calculate(wheelDistance, this.config.gapToFloor);
 
     const force = vec3(normal)
       .normalize()
-      .multiplyScalar(error * chassis.getMass() * timestep / 1000);
-
+      .multiplyScalar((error * chassis.getMass() * timingInfo.timestep) / 1000);
 
     chassis.applyImpulse(force, globalDisplacement);
 

@@ -2,7 +2,7 @@ import { type Physics, type Controller, type Renderer, EntityFactory, MeshFactor
 import * as THREE from 'three';
 
 import { type EntityCuboidOptions } from '../../engine/Entity/EntityFactory';
-import { type RenderCuboidOptions } from '../../engine/Render/MeshFactory';
+import { type RenderCuboidOptions } from '../../engine/Render/helpers/MeshFactory';
 
 export const wallConfig: EntityCuboidOptions & RenderCuboidOptions = {
   debug: false,

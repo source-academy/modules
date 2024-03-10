@@ -7,7 +7,6 @@ import {
   type GLTF,
   GLTFLoader,
 } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { getCamera, type CameraOptions } from './Camera';
 
 type ControlType = 'none' | 'orbit';
 
@@ -42,20 +41,6 @@ export class Renderer {
     const light = new THREE.AmbientLight(0xffffff);
     this.#scene.add(light);
     this.#scene.background = new THREE.Color(0xffffff);
-  }
-
-  static scene(): THREE.Scene {
-    return new THREE.Scene();
-  }
-
-  static camera(cameraOptions: CameraOptions): THREE.Camera {
-    const camera = getCamera(cameraOptions);
-    return camera;
-  }
-
-  static sensorCamera(): THREE.Camera {
-    const renderAspectRatio = 1;
-    return new THREE.PerspectiveCamera(10, renderAspectRatio, 0.01, 1);
   }
 
   static loadGTLF(url: string): Promise<GLTF> {

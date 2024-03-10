@@ -33,6 +33,8 @@ export class UltrasonicSensor implements Sensor<number> {
     this.displacement = vec3(displacement);
     this.direction = vec3(direction);
     this.config = config;
+
+    // Debug arrow
     this.debugArrow = new THREE.ArrowHelper();
     this.debugArrow.visible = false;
     this.render.add(this.debugArrow);
@@ -63,7 +65,6 @@ export class UltrasonicSensor implements Sensor<number> {
       this.debugArrow.setDirection(globalDirection.normalize());
     }
 
-    // TODO: Figure out what the sensor should return if it doesn't sense anything
     if (result === null) {
       return;
     }

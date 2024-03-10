@@ -1,13 +1,13 @@
-import * as THREE from 'three';
-
 import { type PhysicsConfig } from './engine/Physics';
-import { type CameraOptions } from './engine/Render/Camera';
+import { type CameraOptions } from './engine/Render/helpers/Camera';
 import { type RenderConfig } from './engine/Render/Renderer';
-import { type EntityCuboidOptions } from './engine/Entity/EntityFactory';
 import { type SimpleVector } from './engine/Math/Vector';
 import { type MeshConfig } from './controllers/ev3/components/Mesh';
+import type { ChassisWrapperConfig } from './controllers/ev3/components/Chassis';
+import type { MotorConfig } from './controllers/ev3/components/Motor';
+import type { ColorSensorConfig } from './controllers/ev3/sensor/ColorSensor';
 
-const tinyBuffer = 0.02;
+const tinyConstant = 0.012;
 
 export const physicsConfig: PhysicsConfig = {
   gravity: {
@@ -32,7 +32,7 @@ export const sceneCamera: CameraOptions = {
   far: 1000,
 };
 
-export const chassisConfig: EntityCuboidOptions = {
+export const chassisConfig: ChassisWrapperConfig = {
   orientation: {
     position: {
       x: 0,
@@ -51,39 +51,40 @@ export const chassisConfig: EntityCuboidOptions = {
   width: 0.145,
   length: 0.18,
   type: 'dynamic',
+  debug: true,
 };
 
-export const meshConfig: MeshConfig = {
-  orientation: chassisConfig.orientation,
+export const meshConfig: Omit<MeshConfig, 'url'> = {
   width: chassisConfig.width,
-  height: chassisConfig.height + 0.02,
+  height: chassisConfig.height,
   length: chassisConfig.length,
-  color: new THREE.Color('blue'),
-  debug: true,
+  offset: {
+    y: 0.02,
+  },
 };
 
 
 export const wheelDisplacements: Record<string, SimpleVector> = {
   frontLeftWheel: {
-    x: -(chassisConfig.width / 2 + tinyBuffer),
-    y: 0,
-    z: chassisConfig.length / 2 - tinyBuffer,
+    x: -(chassisConfig.width / 2),
+    y: -(chassisConfig.height / 2),
+    z: chassisConfig.length / 2 - tinyConstant,
   },
 
   frontRightWheel: {
-    x: chassisConfig.width / 2 + tinyBuffer,
-    y: 0,
-    z: chassisConfig.length / 2 - tinyBuffer,
+    x: chassisConfig.width / 2,
+    y: -(chassisConfig.height / 2),
+    z: chassisConfig.length / 2 - tinyConstant,
   },
   backLeftWheel: {
-    x: -(chassisConfig.width / 2 + tinyBuffer),
-    y: 0,
-    z: -(chassisConfig.length / 2 - tinyBuffer),
+    x: -(chassisConfig.width / 2),
+    y: -(chassisConfig.height / 2),
+    z: -(chassisConfig.length / 2 - tinyConstant),
   },
   backRightWheel: {
-    x: chassisConfig.width / 2 + tinyBuffer,
-    y: 0,
-    z: -(chassisConfig.length / 2 - tinyBuffer),
+    x: chassisConfig.width / 2,
+    y: -(chassisConfig.height / 2),
+    z: -(chassisConfig.length / 2 - tinyConstant),
   },
 };
 
@@ -91,6 +92,12 @@ export const wheelPidConfig = {
   proportionalGain: 27,
   integralGain: 8,
   derivativeGain: 40,
+};
+
+export const wheelMeshConfig: Omit<MotorConfig['mesh'], 'url'> = {
+  width: 0.028,
+  height: 0.0575,
+  length: 0.0575,
 };
 
 export const motorDisplacements = {
@@ -113,11 +120,26 @@ export const motorPidConfig = {
 };
 
 
-export const colorSensorConfig = {
+export const colorSensorConfig: { displacement: SimpleVector, config: ColorSensorConfig } = {
   displacement: {
     x: 0.04,
     y: -(chassisConfig.height / 2),
     z: 0.01,
+  },
+  config: {
+    size: {
+      height: 16,
+      width: 16,
+    },
+    camera: {
+      type: 'perspective',
+      aspect: 1,
+      fov: 10,
+      near: 0.01,
+      far: 1,
+    },
+    tickRateInSeconds: 0.1,
+    debug: true,
   },
 };
 

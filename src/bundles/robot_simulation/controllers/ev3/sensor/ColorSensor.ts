@@ -5,89 +5,127 @@ import { type ChassisWrapper } from '../components/Chassis';
 import { type SimpleVector } from '../../../engine/Math/Vector';
 import { vec3 } from '../../../engine/Math/Convert';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
+import {
+  getCamera,
+  type CameraOptions,
+} from '../../../engine/Render/helpers/Camera';
 
-type Color = { r:number, g:number, b:number };
+type Color = { r: number; g: number; b: number };
 
-type ColorSensorConfig = {
-  debug: boolean
+export type ColorSensorConfig = {
+  size: {
+    height: number;
+    width: number;
+  };
+  camera: CameraOptions;
+  tickRateInSeconds: number;
+  debug: boolean;
 };
 
 export class ColorSensor implements Sensor<Color> {
-  renderer: Renderer;
-  camera: THREE.Camera;
-  displacement: THREE.Vector3;
   chassisWrapper: ChassisWrapper;
+  displacement: THREE.Vector3;
+  config: ColorSensorConfig;
 
+  camera: THREE.Camera;
+  renderer: Renderer;
   accumulator = 0;
-  colorSensed:Color;
+  colorSensed: Color;
   tempCanvas: HTMLCanvasElement;
 
-  constructor(chassisWrapper: ChassisWrapper, scene: THREE.Scene, displacement: SimpleVector, config: ColorSensorConfig) {
+  constructor(
+    chassisWrapper: ChassisWrapper,
+    render: Renderer,
+    displacement: SimpleVector,
+    config: ColorSensorConfig,
+  ) {
     this.chassisWrapper = chassisWrapper;
-    this.camera = Renderer.sensorCamera();
     this.displacement = vec3(displacement);
+    this.config = config;
+
+    this.camera = getCamera(config.camera);
+    // We create a new renderer with the same scene. But we use a different camera.
+    this.renderer = new Renderer(render.scene(), this.camera, {
+      width: this.config.size.width,
+      height: this.config.size.height,
+      control: 'none',
+    });
+
     this.colorSensed = {
       r: 0,
       g: 0,
       b: 0,
     };
 
-    this.renderer = new Renderer(scene, this.camera, {
-      width: 16,
-      height: 16,
-      control: 'none',
-    });
     this.tempCanvas = document.createElement('canvas');
-
+    this.tempCanvas.width = this.config.size.width;
+    this.tempCanvas.height = this.config.size.height;
 
     if (config.debug) {
       const helper = new THREE.CameraHelper(this.camera);
-      scene.add(helper);
+      render.add(helper);
     }
   }
 
   getColorSensorPosition() {
     const chassis = this.chassisWrapper.getEntity();
-    const colorSensorPosition = chassis.worldTranslation(this.displacement.clone());
+    const colorSensorPosition = chassis.worldTranslation(
+      this.displacement.clone(),
+    );
     return colorSensorPosition;
-  }
-
-  getElement(): HTMLCanvasElement {
-    return this.renderer.getElement();
   }
 
   sense(): Color {
     return this.colorSensed;
   }
 
+  // Even though we are rendering, we use fixedUpdate because the student's code can be affected
+  // by the values of sense() and could affect the determinism of the simulation.
   fixedUpdate(timingInfo: PhysicsTimingInfo) {
-    const { timestep } = timingInfo;
+    this.accumulator += timingInfo.timestep;
 
-    this.accumulator += timestep;
-    if (this.accumulator < 1000) {
+    const tickRateInMilliseconds = this.config.tickRateInSeconds * 1000;
+
+    // We check the accumulator to see if it's time update the color sensor.
+    // If it's not time, we return early.
+    if (this.accumulator < tickRateInMilliseconds) {
       return;
     }
-    this.accumulator -= 1000;
+    this.accumulator -= tickRateInMilliseconds;
 
+    // We move the camera to the right position
+    this.camera.position.copy(this.getColorSensorPosition());
+    // Point it downwards
+    this.camera.lookAt(
+      this.camera.position.x,
+      this.camera.position.y - 1, // 1 unit below its current position
+      this.camera.position.z,
+    );
+
+    // We render to load the color sensor data into the renderer.
     this.renderer.render();
 
-    this.camera.position.copy(this.getColorSensorPosition());
+    // We get the HTMLCanvasElement from the renderer
+    const rendererCanvas = this.renderer.getElement();
 
-    const lookAt = this.getColorSensorPosition();
-    lookAt.y -= 1;
-    this.camera.lookAt(lookAt);
+    // Get the context from the temp canvas
+    const tempCtx = this.tempCanvas.getContext('2d', {
+      willReadFrequently: true,
+    })!;
 
-    const rendererCanvas = this.getElement();
-
-    this.tempCanvas.width = rendererCanvas.width;
-    this.tempCanvas.height = rendererCanvas.height;
-
-    const tempCtx = this.tempCanvas.getContext('2d', { willReadFrequently: true })!;
-
+    // Draw the renderer canvas to the temp canvas
     tempCtx.drawImage(rendererCanvas, 0, 0);
 
-    const imageData = tempCtx.getImageData(0, 0, 16, 16, {});
+    // Get the image data from the temp canvas
+    const imageData = tempCtx.getImageData(
+      0,
+      0,
+      this.config.size.width,
+      this.config.size.height,
+      {},
+    );
 
+    // Calculate the average color
     const averageColor = {
       r: 0,
       g: 0,
@@ -98,7 +136,6 @@ export class ColorSensor implements Sensor<Color> {
       const r = imageData.data[i];
       const g = imageData.data[i + 1];
       const b = imageData.data[i + 2];
-      // const a = imageData.data[i + 3];
       averageColor.r += r;
       averageColor.g += g;
       averageColor.b += b;
