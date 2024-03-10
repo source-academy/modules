@@ -1,6 +1,5 @@
-import { Icon, Slider } from '@blueprintjs/core';
+import { Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { type AnimatedCurve } from '../../bundles/curve/types';
 import AutoLoopSwitch from '../common/AutoLoopSwitch';
@@ -292,7 +291,7 @@ State
             disabled={Boolean(this.state.errored)}
             onClick={ this.onPlayButtonClick }
           />
-          <Tooltip2
+          <Tooltip
             content="Reset"
             placement="top"
           >
@@ -302,7 +301,7 @@ State
             >
               <Icon icon={ IconNames.RESET } />
             </ButtonComponent>
-          </Tooltip2>
+          </Tooltip>
           <div
             style={{
               display: 'flex',
@@ -324,7 +323,7 @@ State
               onChange={ this.onTimeSliderChange }
               onRelease={ this.onTimeSliderRelease }
             />
-            <Tooltip2
+            <Tooltip
               content="Display Angle"
               placement="top"
             >
@@ -339,7 +338,7 @@ State
 
                 onChange={ this.onAngleSliderChange }
               />
-            </Tooltip2>
+            </Tooltip>
           </div>
           <AutoLoopSwitch
             isAutoLooping={ this.state.isAutoLooping }
