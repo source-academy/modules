@@ -1,23 +1,27 @@
-import type { Orientation } from '../Math/Vector';
+import type { Dimension, Orientation } from '../Math/Vector';
 import { type Physics } from '../Physics';
 import { Entity } from './Entity';
 
-type RigidBodyTypes = 'fixed' | 'dynamic';
+export const rigidBodyTypes = ['fixed', 'dynamic'] as const;
+
+export type RigidBodyType = typeof rigidBodyTypes[number];
 
 export type EntityCuboidOptions = {
   orientation: Orientation;
-  width: number;
-  height: number;
-  length: number;
+  dimension: Dimension;
   mass: number;
-  type: RigidBodyTypes;
+  type: RigidBodyType;
 };
+
+export function isRigidBodyType(bodyType: string): bodyType is RigidBodyType {
+  return rigidBodyTypes.includes(bodyType as RigidBodyType);
+}
 
 export function addCuboid(
   physics: Physics,
   options: EntityCuboidOptions,
 ): Entity {
-  const { orientation, width, height, length, type, mass } = options;
+  const { orientation, dimension: { width, height, length }, type, mass } = options;
 
   const rigidBodyDesc = physics.RAPIER.RigidBodyDesc[type]();
   const colliderDesc = physics.RAPIER.ColliderDesc.cuboid(

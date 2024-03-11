@@ -13,9 +13,13 @@ export {
 } from './ev3_functions';
 
 export {
-  init_simulation,
-  createRenderer,
+  // Physics
+  createCustomPhysics,
   createPhysics,
+  // Renderer
+  createRenderer,
+  init_simulation,
+  createCuboid,
   createTimer,
   createWorld,
   createWall,

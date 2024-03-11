@@ -1,18 +1,20 @@
 import * as THREE from 'three';
-import { type Orientation } from '../../Math/Vector';
+import { type Dimension, type Orientation } from '../../Math/Vector';
 
 export type RenderCuboidOptions = {
   orientation: Orientation;
-  width: number;
-  height: number;
-  length: number;
+  dimension: Dimension;
   color: THREE.Color;
   debug: boolean;
 };
 
 export function addCuboid(options: RenderCuboidOptions): THREE.Mesh {
-  const { orientation, width, height, length, color } = options;
-  const geometry = new THREE.BoxGeometry(width, height, length);
+  const { orientation, dimension, color } = options;
+  const geometry = new THREE.BoxGeometry(
+    dimension.width,
+    dimension.height,
+    dimension.length,
+  );
   const material = options.debug
     ? new THREE.MeshPhysicalMaterial({
       color,
@@ -22,7 +24,6 @@ export function addCuboid(options: RenderCuboidOptions): THREE.Mesh {
       color,
       side: THREE.DoubleSide,
     });
-
 
   const mesh = new THREE.Mesh(geometry, material);
 

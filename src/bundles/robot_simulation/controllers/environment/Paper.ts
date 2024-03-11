@@ -4,7 +4,7 @@ import type { Renderer } from '../../engine';
 
 export type PaperConfig = {
   url: string;
-  mesh: {
+  dimension: {
     width: number;
     height: number;
   };
@@ -19,7 +19,7 @@ export class Paper {
     this.render = render;
     this.config = config;
 
-    const plane = new THREE.PlaneGeometry(this.config.mesh.width, this.config.mesh.height); // Creating a 1x1 plane for the carpet
+    const plane = new THREE.PlaneGeometry(this.config.dimension.width, this.config.dimension.height); // Creating a 1x1 plane for the carpet
     this.paper = new THREE.Mesh(plane);
   }
 

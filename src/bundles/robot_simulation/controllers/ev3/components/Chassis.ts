@@ -41,9 +41,7 @@ export class ChassisWrapper implements Controller {
     // Debug mesh.
     this.debugMesh = MeshFactory.addCuboid({
       orientation: config.orientation,
-      width: config.width,
-      height: config.height,
-      length: config.length,
+      dimension: config.dimension,
       color: new THREE.Color(0x00ff00),
       debug: true,
     });

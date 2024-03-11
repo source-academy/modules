@@ -5,7 +5,9 @@ import { vec3 } from '../../../engine/Math/Convert';
 import { type Renderer, type Physics } from '../../../engine';
 import * as THREE from 'three';
 
-type UltrasonicSensorConfig = {
+export type UltrasonicSensorConfig = {
+  displacement: SimpleVector;
+  direction: SimpleVector;
   debug: boolean;
 };
 
@@ -23,15 +25,13 @@ export class UltrasonicSensor implements Sensor<number> {
     chassis: ChassisWrapper,
     physics: Physics,
     render: Renderer,
-    displacement: SimpleVector,
-    direction: SimpleVector,
     config: UltrasonicSensorConfig,
   ) {
     this.chassisWrapper = chassis;
     this.physics = physics;
     this.render = render;
-    this.displacement = vec3(displacement);
-    this.direction = vec3(direction);
+    this.displacement = vec3(config.displacement);
+    this.direction = vec3(config.direction);
     this.config = config;
 
     // Debug arrow

@@ -7,12 +7,13 @@ import { type ChassisWrapper } from './Chassis';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
 import { DebugArrow } from '../../../engine/Render/debug/DebugArrow';
 
-type WheelConfig = {
+export type WheelConfig = {
   pid: {
     proportionalGain: number;
     derivativeGain: number;
     integralGain: number;
   };
+  displacement: SimpleVector;
   gapToFloor: number;
   maxRayDistance:number;
   debug: boolean;
@@ -33,13 +34,12 @@ export class Wheel implements Controller {
     chassisWrapper: ChassisWrapper,
     physics: Physics,
     render: Renderer,
-    displacement: SimpleVector,
     config: WheelConfig,
   ) {
     this.chassisWrapper = chassisWrapper;
     this.physics = physics;
     this.render = render;
-    this.displacementVector = vec3(displacement);
+    this.displacementVector = vec3(config.displacement);
     this.config = config;
 
     this.pid = new NumberPidController(config.pid);

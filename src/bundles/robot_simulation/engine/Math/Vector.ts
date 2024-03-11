@@ -1,9 +1,15 @@
-export type SimpleVector = { x: number, y: number, z: number };
-export type SimpleQuaternion = { x: number, y: number, z: number, w: number };
+export type SimpleVector = { x: number; y: number; z: number };
+export type SimpleQuaternion = { x: number; y: number; z: number; w: number };
 
 export type Orientation = {
   position: SimpleVector;
   rotation: SimpleQuaternion;
+};
+
+export type Dimension = {
+  height: number;
+  width: number;
+  length: number;
 };
 
 // Vector3 and Quaternion already extends SimpleVector and SimpleQuaternion

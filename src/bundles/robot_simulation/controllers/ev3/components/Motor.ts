@@ -1,5 +1,5 @@
 import { type Controller, type Physics, type Renderer } from '../../../engine';
-import { type SimpleVector } from '../../../engine/Math/Vector';
+import { type Dimension, type SimpleVector } from '../../../engine/Math/Vector';
 import { vec3 } from '../../../engine/Math/Convert';
 import { VectorPidController } from '../feedback_control/PidController';
 import type * as THREE from 'three';
@@ -14,6 +14,7 @@ import { loadGLTF } from '../../../engine/Render/helpers/GLTF';
 type WheelSide = 'left' | 'right';
 
 export type MotorConfig = {
+  displacement: SimpleVector;
   pid: {
     proportionalGain: number;
     derivativeGain: number;
@@ -21,9 +22,7 @@ export type MotorConfig = {
   };
   mesh: {
     url: string;
-    width: number;
-    height: number;
-    length: number;
+    dimension: Dimension;
   };
 };
 /**
@@ -50,19 +49,18 @@ export class Motor implements Controller {
     chassisWrapper: ChassisWrapper,
     physics: Physics,
     render: Renderer,
-    displacement: SimpleVector,
     config: MotorConfig,
   ) {
     this.chassisWrapper = chassisWrapper;
     this.physics = physics;
     this.render = render;
-    this.displacementVector = vec3(displacement);
+    this.displacementVector = vec3(config.displacement);
     this.config = config;
 
     this.pid = new VectorPidController(config.pid);
     this.motorVelocity = 0;
     this.meshRotation = 0;
-    this.wheelSide = displacement.x > 0 ? 'right' : 'left';
+    this.wheelSide = config.displacement.x > 0 ? 'right' : 'left';
   }
 
   setSpeedDistance(speed: number, distance: number) {
@@ -74,11 +72,7 @@ export class Motor implements Controller {
   }
 
   async start(): Promise<void> {
-    this.mesh = await loadGLTF(this.config.mesh.url, {
-      x: this.config.mesh.width,
-      y: this.config.mesh.height,
-      z: this.config.mesh.length,
-    });
+    this.mesh = await loadGLTF(this.config.mesh.url, this.config.mesh.dimension);
     this.render.add(this.mesh.scene);
   }
 
@@ -133,7 +127,7 @@ export class Motor implements Controller {
 
     // Calculate the new wheel position, adjusting the y-coordinate to half the mesh height
     const wheelPosition = chassisEntity.worldTranslation(this.displacementVector.clone());
-    wheelPosition.y = this.config.mesh.height / 2; // Ensure the wheel is placed correctly vertically
+    wheelPosition.y = this.config.mesh.dimension.height / 2; // Ensure the wheel is placed correctly vertically
 
     // If mesh is loaded, update its position and orientation
     if (this.mesh) {
@@ -141,7 +135,7 @@ export class Motor implements Controller {
       this.mesh.scene.quaternion.copy(chassisEntity.getRotation());
 
       // Calculate rotation adjustment based on motor velocity and frame duration
-      const radiansPerFrame = 2 * (this.motorVelocity / this.config.mesh.height) * timingInfo.frameDuration / 1000;
+      const radiansPerFrame = 2 * (this.motorVelocity / this.config.mesh.dimension.height) * timingInfo.frameDuration / 1000;
 
       // Apply rotation changes to simulate wheel turning
       this.meshRotation += radiansPerFrame;

@@ -17,6 +17,7 @@ export type ColorSensorConfig = {
     height: number;
     width: number;
   };
+  displacement: SimpleVector;
   camera: CameraOptions;
   tickRateInSeconds: number;
   debug: boolean;
@@ -36,11 +37,10 @@ export class ColorSensor implements Sensor<Color> {
   constructor(
     chassisWrapper: ChassisWrapper,
     render: Renderer,
-    displacement: SimpleVector,
     config: ColorSensorConfig,
   ) {
     this.chassisWrapper = chassisWrapper;
-    this.displacement = vec3(displacement);
+    this.displacement = vec3(config.displacement);
     this.config = config;
 
     this.camera = getCamera(config.camera);

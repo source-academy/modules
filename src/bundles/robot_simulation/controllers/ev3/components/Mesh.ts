@@ -3,13 +3,11 @@ import { type Controller, type Renderer } from '../../../engine';
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { type ChassisWrapper } from './Chassis';
 import { loadGLTF } from '../../../engine/Render/helpers/GLTF';
-import type { SimpleVector } from '../../../engine/Math/Vector';
+import type { Dimension, SimpleVector } from '../../../engine/Math/Vector';
 
 export type MeshConfig = {
   url: string;
-  width: number;
-  height: number;
-  length: number;
+  dimension: Dimension;
   offset?: Partial<SimpleVector>;
 };
 
@@ -41,11 +39,7 @@ export class Mesh implements Controller {
   }
 
   async start(): Promise<void> {
-    this.mesh = await loadGLTF(this.config.url, {
-      x: this.config.width + this.offset.x,
-      y: this.config.height + this.offset.y,
-      z: this.config.length + this.offset.z,
-    });
+    this.mesh = await loadGLTF(this.config.url, this.config.dimension);
 
     this.render.add(this.mesh.scene);
   }

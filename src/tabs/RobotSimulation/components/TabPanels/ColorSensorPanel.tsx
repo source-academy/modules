@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers/ev3/ev3/default/defaultEv3';
+import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers/ev3/ev3/default/ev3';
 
 export const ColorSensorPanel = ({ ev3 }: { ev3: DefaultEv3 }) => {
   const colorSensor = ev3.get('colorSensor');

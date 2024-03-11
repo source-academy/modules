@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 // eslint-disable-next-line import/extensions
 import { type GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { SimpleVector } from '../../Math/Vector';
+import type { Dimension } from '../../Math/Vector';
 
-type GLTFLoaderOptions = SimpleVector;
+type GLTFLoaderOptions = Dimension;
 
-export function loadGLTF(url: string, targetSize: GLTFLoaderOptions): Promise<GLTF> {
+export function loadGLTF(url: string, dimension: GLTFLoaderOptions): Promise<GLTF> {
   const loader = new GLTFLoader();
   return new Promise((resolve, reject) => {
     loader.load(
@@ -16,9 +16,9 @@ export function loadGLTF(url: string, targetSize: GLTFLoaderOptions): Promise<GL
         const meshSize = new THREE.Vector3();
         box.getSize(meshSize);
 
-        const scaleX = targetSize.x / meshSize.x;
-        const scaleY = targetSize.y / meshSize.y;
-        const scaleZ = targetSize.z / meshSize.z;
+        const scaleX = dimension.width / meshSize.x;
+        const scaleY = dimension.height / meshSize.y;
+        const scaleZ = dimension.length / meshSize.z;
 
         data.scene.scale.set(scaleX, scaleY, scaleZ);
 
