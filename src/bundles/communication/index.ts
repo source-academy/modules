@@ -13,12 +13,13 @@ export {
   STATE_CONNECTED,
   STATE_DISCONNECTED,
   STATE_OFFLINE,
-  STATE_RECONNECTED,
+  STATE_RECONNECTING as STATE_RECONNECTED,
 } from './MqttController';
 
 export {
   initCommunications,
   initCommunicationsSecure,
+  initCommunicationsPrivate,
   initGlobalState,
   getGlobalState,
   updateGlobalState,

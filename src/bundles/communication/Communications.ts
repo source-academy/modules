@@ -9,13 +9,14 @@ class CommunicationModuleState {
   rpc: RpcController | null = null;
 
   constructor(
-    address: string,
-    port: number,
+    isPrivate: boolean,
+    address: string = '',
+    port: number = 443,
     user: string = '',
     password: string = '',
   ) {
     const multiUser = new MultiUserController();
-    multiUser.setupController(address, port, user, password);
+    multiUser.setupController(isPrivate, address, port, user, password);
     this.multiUser = multiUser;
   }
 }
@@ -31,7 +32,7 @@ export function initCommunications(address: string, port: number) {
   if (getModuleState() instanceof CommunicationModuleState) {
     return;
   }
-  const newModuleState = new CommunicationModuleState(address, port);
+  const newModuleState = new CommunicationModuleState(false, address, port);
   context.moduleContexts.communication.state = newModuleState;
 }
 
@@ -52,11 +53,23 @@ export function initCommunicationsSecure(
     return;
   }
   const newModuleState = new CommunicationModuleState(
+    false,
     address,
     port,
     user,
     password,
   );
+  context.moduleContexts.communication.state = newModuleState;
+}
+
+/**
+ * Connects to NUS's private broker.
+ */
+export function initCommunicationsPrivate() {
+  if (getModuleState() instanceof CommunicationModuleState) {
+    return;
+  }
+  const newModuleState = new CommunicationModuleState(true);
   context.moduleContexts.communication.state = newModuleState;
 }
 

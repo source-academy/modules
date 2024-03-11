@@ -2,7 +2,7 @@ import { connect, type MqttClient } from 'mqtt/dist/mqtt';
 
 export const STATE_CONNECTED = 'Connected';
 export const STATE_DISCONNECTED = 'Disconnected';
-export const STATE_RECONNECTED = 'Reconnected';
+export const STATE_RECONNECTING = 'Reconnecting';
 export const STATE_OFFLINE = 'Offline';
 
 /**
@@ -18,9 +18,10 @@ export class MqttController {
   private messageCallback: (topic: string, message: string) => void;
 
   address: string = '';
-  port: number = 9001;
+  port: number = 443;
   user: string = '';
   password: string = '';
+  isPrivateBroker = false;
 
   constructor(
     connectionCallback: (status: string) => void,
@@ -34,10 +35,21 @@ export class MqttController {
    * Sets up MQTT client link and connects to it.
    * Also handles connection status callbacks.
    */
-  public connectClient() {
-    if (this.connected || this.address.length === 0) return;
-    const link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
-    this.client = connect(link);
+  public async connectClient() {
+    if (this.connected) return;
+    if (this.isPrivateBroker) {
+      const result = await fetch(
+        'https://api.sourceacademy.nus.edu.sg/v2/devices/random/mqtt_endpoint',
+      );
+      const host = await result.text();
+      const link = `wss://${host}`;
+      this.client = connect(link);
+      console.log(`Connecting to ${link}`);
+    } else {
+      if (this.address.length === 0) return;
+      const link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
+      this.client = connect(link);
+    }
     this.connected = true;
     this.client.on('connect', () => {
       this.connectionCallback(STATE_CONNECTED);
@@ -46,7 +58,7 @@ export class MqttController {
       this.connectionCallback(STATE_DISCONNECTED);
     });
     this.client.on('reconnect', () => {
-      this.connectionCallback(STATE_RECONNECTED);
+      this.connectionCallback(STATE_RECONNECTING);
     });
     this.client.on('offline', () => {
       this.connectionCallback(STATE_OFFLINE);

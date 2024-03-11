@@ -14,10 +14,14 @@ export class MultiUserController {
    * Sets up and connect to the MQTT link.
    * Uses websocket implementation.
    *
+   * @param isPrivate Whether to use NUS private broker.
    * @param address Address to connect to.
    * @param port MQTT port number.
+   * @param user Username of account, leave empty if not required.
+   * @param password Password of account, leave empty if not required.
    */
   public setupController(
+    isPrivate: boolean,
     address: string,
     port: number,
     user: string,
@@ -31,26 +35,41 @@ export class MultiUserController {
       currentController = new MqttController(
         (status: string) => {
           this.connectionState = status;
+          console.log(status);
         },
         (topic: string, message: string) => {
-          const splitTopic = topic.split('/');
-          this.messageCallbacks.forEach((callback, identifier) => {
-            const splitIdentifier = identifier.split('/');
-            if (splitTopic.length < splitIdentifier.length) return;
-            for (let i = 0; i < splitIdentifier.length; i++) {
-              if (splitIdentifier[i] !== splitTopic[i]) return;
-            }
-            callback(topic, message);
-          });
+          this.handleIncomingMessage(topic, message);
         },
       );
       this.controller = currentController;
     }
-    currentController.address = address;
-    currentController.port = port;
-    currentController.user = user;
-    currentController.password = password;
+    if (isPrivate) {
+      currentController.isPrivateBroker = true;
+    } else {
+      currentController.address = address;
+      currentController.port = port;
+      currentController.user = user;
+      currentController.password = password;
+    }
     currentController.connectClient();
+  }
+
+  /**
+   * Parses topic and calls relevant callbacks with message.
+   *
+   * @param topic Topic of incoming message.
+   * @param message Contents of incoming message.
+   */
+  handleIncomingMessage(topic: string, message: string) {
+    const splitTopic = topic.split('/');
+    this.messageCallbacks.forEach((callback, identifier) => {
+      const splitIdentifier = identifier.split('/');
+      if (splitTopic.length < splitIdentifier.length) return;
+      for (let i = 0; i < splitIdentifier.length; i++) {
+        if (splitIdentifier[i] !== splitTopic[i]) return;
+      }
+      callback(topic, message);
+    });
   }
 
   /**
