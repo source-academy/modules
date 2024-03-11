@@ -2,9 +2,10 @@ import { type Renderer, type Controller, type Physics } from '../../../engine';
 import { type SimpleVector } from '../../../engine/Math/Vector';
 import { vec3 } from '../../../engine/Math/Convert';
 import { NumberPidController } from '../feedback_control/PidController';
-import * as THREE from 'three';
+import type * as THREE from 'three';
 import { type ChassisWrapper } from './Chassis';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
+import { DebugArrow } from '../../../engine/Render/debug/DebugArrow';
 
 type WheelConfig = {
   pid: {
@@ -26,7 +27,7 @@ export class Wheel implements Controller {
   pid: NumberPidController;
   displacementVector: THREE.Vector3;
   downVector: THREE.Vector3;
-  arrowHelper: THREE.ArrowHelper;
+  arrowHelper: DebugArrow;
 
   constructor(
     chassisWrapper: ChassisWrapper,
@@ -49,10 +50,8 @@ export class Wheel implements Controller {
     });
 
     // Debug arrow.
-    this.arrowHelper = new THREE.ArrowHelper();
-    this.arrowHelper.visible = config.debug;
-    this.arrowHelper.setColor('red');
-    render.add(this.arrowHelper);
+    this.arrowHelper = new DebugArrow({ debug: config.debug });
+    render.add(this.arrowHelper.getMesh());
   }
 
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
@@ -97,8 +96,7 @@ export class Wheel implements Controller {
 
     chassis.applyImpulse(force, globalDisplacement);
 
-    this.arrowHelper.setLength(force.length() * 1000);
-    this.arrowHelper.setDirection(force.normalize());
-    this.arrowHelper.position.copy(globalDisplacement);
+    // Debug arrow.
+    this.arrowHelper.update(globalDisplacement, force.clone(), force.length() * 1000);
   }
 }

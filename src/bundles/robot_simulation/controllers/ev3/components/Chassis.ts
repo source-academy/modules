@@ -62,6 +62,7 @@ export class ChassisWrapper implements Controller {
   async start(): Promise<void> {
     this.chassis = EntityFactory.addCuboid(this.physics, this.config);
   }
+
   update(): void {
     const chassisEntity = this.getEntity();
     this.debugMesh.position.copy(chassisEntity.getPosition());

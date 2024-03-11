@@ -20,6 +20,7 @@ export {
   createWorld,
   createWall,
   createEv3,
+  createPaper,
   createFloor,
   createCSE,
   addControllerToWorld,

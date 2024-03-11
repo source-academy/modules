@@ -23,6 +23,7 @@ import { interrupt } from './interrupt';
 import { RobotConsole } from './engine/Core/RobotConsole';
 import { getCamera } from './engine/Render/helpers/Camera';
 import { createScene } from './engine/Render/helpers/Scene';
+import { Paper, type PaperConfig } from './controllers/environment/Paper';
 
 
 const storedWorld = context.moduleContexts.robot_simulation.state?.world;
@@ -107,6 +108,18 @@ export function createFloor(physics: Physics, renderer: Renderer) {
 export function createWall(physics: Physics, renderer: Renderer) {
   const environment = new Wall(physics, renderer);
   return environment;
+}
+
+export function createPaper(render:Renderer, url:string, width: number, height: number) {
+  const paperConfig: PaperConfig = {
+    url,
+    mesh: {
+      width,
+      height,
+    },
+  };
+  const paper = new Paper(render, paperConfig);
+  return paper;
 }
 
 export function createCSE() {

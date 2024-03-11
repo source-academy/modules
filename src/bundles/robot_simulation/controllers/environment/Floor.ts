@@ -32,34 +32,15 @@ export class Floor implements Controller {
   private physics: Physics;
   private renderer: Renderer;
   private mesh: THREE.Mesh;
-  private paper: THREE.Mesh;
 
   constructor(physics:Physics, renderer: Renderer) {
     this.physics = physics;
     this.renderer = renderer;
-
     this.mesh = MeshFactory.addCuboid(floorConfig);
-
-    const plane = new THREE.PlaneGeometry(1, 1); // Creating a 1x1 plane for the carpet
-    this.paper = new THREE.Mesh(plane);
   }
 
   async start(): Promise<void> {
     EntityFactory.addCuboid(this.physics, floorConfig);
-
-    // Load the texture
-    const texture = new THREE.TextureLoader()
-      .load('https://www.shutterstock.com/image-vector/black-white-stripes-260nw-785326606.jpg');
-
-    // Create a material with the texture
-    const material = new THREE.MeshStandardMaterial({ map: texture });
-    this.paper.scale.set(2, 2, 2); // Scale the plane to the size of the floor
-    this.paper.position.set(0, 0.001, 0); // Position the plane at the floor
-    this.paper.rotation.x = -Math.PI / 2; // Rotate the plane to be parallel to the floor
-    this.paper.material = material;
-
-    // Apply the material to the mesh
     this.renderer.add(this.mesh);
-    this.renderer.add(this.paper);
   }
 }

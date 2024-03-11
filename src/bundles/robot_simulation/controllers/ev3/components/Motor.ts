@@ -26,7 +26,10 @@ export type MotorConfig = {
     length: number;
   };
 };
-
+/**
+ * This represents the motor of the robot and is responsible for moving the robot. It is also
+ * responsible for the visual representation of the wheel and the friction.
+ */
 export class Motor implements Controller {
   chassisWrapper: ChassisWrapper;
   physics: Physics;
@@ -82,28 +85,36 @@ export class Motor implements Controller {
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
     this.callbackHandler.checkCallbacks(timingInfo);
     const chassis = this.chassisWrapper.getEntity();
+
+    // Calculate the target motor velocity from the chassis perspective
     const targetMotorVelocity = vec3({
       x: 0,
       y: 0,
       z: this.motorVelocity,
     });
 
+    // Transform it to the global perspective
     const targetMotorGlobalVelocity
       = chassis.transformDirection(targetMotorVelocity);
+
+    // Calculate the actual motor velocity from the global perspective
     const actualMotorGlobalVelocity = chassis.worldVelocity(
       this.displacementVector.clone(),
     );
 
-    const error = this.pid.calculate(
+    // Calculate the PID output with the PID controller
+    const pidOutput = this.pid.calculate(
       actualMotorGlobalVelocity,
       targetMotorGlobalVelocity,
     );
 
+    // Find the global position of the motor
     const motorGlobalPosition = chassis.worldTranslation(
       this.displacementVector.clone(),
     );
 
-    const impulse = error
+    // Calculate the impulse to apply to the chassis
+    const impulse = pidOutput
       .projectOnPlane(
         vec3({
           x: 0,
@@ -113,11 +124,11 @@ export class Motor implements Controller {
       )
       .multiplyScalar(chassis.getMass());
 
+    // Apply the impulse to the chassis
     chassis.applyImpulse(impulse, motorGlobalPosition);
   }
 
   update(timingInfo: PhysicsTimingInfo): void {
-  // Retrieve the chassis entity once to avoid multiple calls
     const chassisEntity = this.chassisWrapper.getEntity();
 
     // Calculate the new wheel position, adjusting the y-coordinate to half the mesh height
