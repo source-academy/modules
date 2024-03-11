@@ -22,7 +22,7 @@ type ContextType = {
 const Context = createContext<ContextType>({
   hitPointPosition: new Vector3(),
   facingObject: createRef(),
-  setFacingObjectCallback: () => {},
+  setFacingObjectCallback() {},
 });
 
 type Props = {
@@ -51,7 +51,7 @@ export function ControlsContext(props: Props) {
     }
   });
 
-  useHitTest((hitMatrix, hit) => {
+  useHitTest((hitMatrix, _) => {
     const newPosition = new Vector3();
     const newRotation = new Quaternion();
     const newScale = new Vector3();
@@ -62,9 +62,9 @@ export function ControlsContext(props: Props) {
   return (
     <Context.Provider
       value={{
-        hitPointPosition: hitPointPosition,
-        facingObject: facingObject,
-        setFacingObjectCallback: (newCallback) => {
+        hitPointPosition,
+        facingObject,
+        setFacingObjectCallback(newCallback) {
           callback.current = newCallback;
         },
       }}

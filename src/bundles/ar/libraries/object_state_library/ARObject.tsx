@@ -61,7 +61,7 @@ export class ARObject {
     if (!object) return;
     let isSelected = false;
     const tempSelected = object.isSelected;
-    if (typeof tempSelected == 'boolean') {
+    if (typeof tempSelected === 'boolean') {
       isSelected = tempSelected;
     }
     let newObject = CubeObject.parseObject(object);

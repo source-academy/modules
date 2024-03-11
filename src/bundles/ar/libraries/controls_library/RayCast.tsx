@@ -16,17 +16,12 @@ export function getIntersection(camera: Camera, coreObject: Object3D) {
   const cascadeChildren = getCascadeMeshs(coreObject.children);
   const items = raycaster.intersectObjects(cascadeChildren, true);
   const nearestItem = items
-    .filter((item) => {
-      return item.distance !== 0;
-    })
-    .sort((item) => {
-      return item.distance;
-    });
+    .filter((item) => item.distance !== 0)
+    .sort((item) => item.distance);
   if (nearestItem.length > 0) {
     return getTopParent(nearestItem[0].object, coreObject);
-  } else {
-    return undefined;
   }
+  return undefined;
 }
 
 function getCascadeMeshs(children: Object3D<Object3DEventMap>[]) {

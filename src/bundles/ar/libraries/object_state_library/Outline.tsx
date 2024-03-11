@@ -10,7 +10,8 @@ export function Outline(props: Props) {
   function getColor() {
     if (props.isSelected && props.isInFront) {
       return new Color(0x00ff73);
-    } else if (props.isSelected) {
+    }
+    if (props.isSelected) {
       return new Color(0xff5900);
     }
     return new Color(0xffa500);

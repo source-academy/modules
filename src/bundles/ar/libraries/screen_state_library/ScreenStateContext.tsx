@@ -19,7 +19,7 @@ type ContextType = {
 const Context = createContext<ContextType>({
   overlayRef: null,
   domOverlay: undefined,
-  setStates: () => {},
+  setStates() {},
   component: <></>,
 });
 
@@ -128,10 +128,10 @@ export function ScreenStateContext(props: Props) {
   return (
     <Context.Provider
       value={{
-        overlayRef: overlayRef,
+        overlayRef,
         domOverlay: domOverlay ? { root: domOverlay } : undefined,
-        setStates: setStates,
-        component: component,
+        setStates,
+        component,
       }}
     >
       {props.children}

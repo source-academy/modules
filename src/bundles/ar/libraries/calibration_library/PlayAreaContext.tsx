@@ -10,10 +10,10 @@ type ContextType = {
 };
 
 const Context = createContext<ContextType>({
-  setCameraAsOrigin: () => {},
+  setCameraAsOrigin() {},
   getCameraRelativePosition: () => new Vector3(),
   getCameraRelativeRotation: () => new Euler(),
-  setPlayArea: () => {},
+  setPlayArea() {},
 });
 
 type Props = {
@@ -67,11 +67,11 @@ export function PlayAreaContext(props: Props) {
    * Converts camera rotation to angle around vertical axis.
    * Angle measured counterclockwise, starting from 12 o'clock.
    *
-   * @param origin Position of user in world coordinates
+   * @param cameraPosition Position of user in world coordinates
    * @param cameraRotation Camera rotation of user
    */
-  function setPlayArea(origin: Vector3, cameraRotation: Euler) {
-    setOrigin(origin);
+  function setPlayArea(cameraPosition: Vector3, cameraRotation: Euler) {
+    setOrigin(cameraPosition);
     setAngle(eulerToAngle(cameraRotation));
   }
 
@@ -91,12 +91,10 @@ export function PlayAreaContext(props: Props) {
       } else if (x < 0) {
         selectedAngle += Math.PI * 2;
       }
-    } else {
-      if (x > 0) {
-        selectedAngle = Math.PI / 2;
-      } else if (x < 0) {
-        selectedAngle = (Math.PI * 3) / 2;
-      }
+    } else if (x > 0) {
+      selectedAngle = Math.PI / 2;
+    } else if (x < 0) {
+      selectedAngle = (Math.PI * 3) / 2;
     }
     return selectedAngle;
   }
@@ -134,9 +132,12 @@ export function PlayAreaContext(props: Props) {
   }
 
   function getRelativeRotation(rotation: Euler) {
-    const vector3 = new Vector3().setFromEuler(rotation);
+    const vector3 = new Vector3();
+    vector3.setFromEuler(rotation);
     vector3.applyAxisAngle(new Vector3(0, 1, 0), -angle);
-    return new Euler().setFromVector3(vector3);
+    const euler = new Euler();
+    euler.setFromVector3(vector3);
+    return euler;
   }
 
   return (
