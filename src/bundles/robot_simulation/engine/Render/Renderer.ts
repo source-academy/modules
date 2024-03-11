@@ -32,14 +32,18 @@ export class Renderer {
     this.#camera = camera;
     this.#scene = scene;
     this.#renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.#renderer.shadowMap.enabled = true;
 
     this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
 
     this.#renderer.setSize(configuration.width, configuration.height);
     this.#renderer.setPixelRatio(window.devicePixelRatio * 1.5);
 
-    const light = new THREE.AmbientLight(0xffffff);
+    const light = new THREE.PointLight(0xffffff, 1);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.20);
+    light.position.set(0, 1, 0);
     this.#scene.add(light);
+    this.#scene.add(ambient);
     this.#scene.background = new THREE.Color(0xffffff);
   }
 
