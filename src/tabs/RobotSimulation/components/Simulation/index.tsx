@@ -66,8 +66,7 @@ export default function SimulationCanvas({
       }
 
       if (sensorRef.current) {
-        sensorRef.current.replaceChildren(ev3.get('colorSensor')
-          .getElement());
+        sensorRef.current.replaceChildren(ev3.get('colorSensor').renderer.getElement());
       }
     };
 

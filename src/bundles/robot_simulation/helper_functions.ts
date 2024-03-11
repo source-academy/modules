@@ -12,7 +12,7 @@ import { getCamera, type CameraOptions } from './engine/Render/helpers/Camera';
 import { createScene } from './engine/Render/helpers/Scene';
 import { Paper, type PaperConfig } from './controllers/environment/Paper';
 import type { PhysicsConfig } from './engine/Physics';
-import { isRigidBodyType } from './engine/Entity/EntityFactory';
+import { isRigidBodyType, type RigidBodyType } from './engine/Entity/EntityFactory';
 import { Cuboid, type CuboidConfig } from './controllers/environment/Cuboid';
 import { ev3Config } from './controllers/ev3/ev3/default/config';
 import { sceneConfig } from './config';
@@ -121,6 +121,8 @@ export function createCuboid(
     throw new Error('Invalid body type');
   }
 
+  const narrowedBodyType = bodyType as RigidBodyType;
+
   const config: CuboidConfig = {
     position: {
       x: position_x,
@@ -134,7 +136,7 @@ export function createCuboid(
     },
     mass,
     color,
-    type: bodyType,
+    type: narrowedBodyType,
   };
 
   const cuboid = new Cuboid(physics, renderer, config);
