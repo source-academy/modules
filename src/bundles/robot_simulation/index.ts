@@ -1,3 +1,10 @@
+/**
+ * Robot simulator for EV3.
+ *
+ * @module robot_simulation
+ * @author Joel Chan
+ */
+
 export {
   ev3_motorA,
   ev3_motorB,
@@ -13,10 +20,8 @@ export {
 } from './ev3_functions';
 
 export {
-  // Physics
   createCustomPhysics,
   createPhysics,
-  // Renderer
   createRenderer,
   init_simulation,
   createCuboid,
