@@ -29,10 +29,27 @@ export function set_evaluator(evalFunc: Function) {
     throw new Error(`Wrong parameter type "${typeName}' in function "set_evaluator". It supposed to be a function and it's the entrance function of your metacircular evaulator.`);
   }
   INSTANCE.evalFunction = evalFunc;
+  INSTANCE.resultCallback = undefined;
   return {
     toReplString: () => '<Programmable Repl Initialized>',
   };
 }
+
+/**
+ * Sets evaluator with jslang, then calls callback when results received.
+ * 
+ * @param callback Callback with return value
+ */
+export function set_js_slang_evaluator_with_callback(
+  callback: (_: any) => void,
+) {
+  INSTANCE.evalFunction = default_js_slang;
+  INSTANCE.resultCallback = callback;
+  return {
+    toReplString: () => '<Programmable Repl Initialized>',
+  };
+}
+
 
 
 /**
