@@ -10139,8 +10139,8 @@ ${nonManifold.join("\n")}`);
         return result;
       };
       var unionForNonIntersecting = (geometry1, geometry2) => {
-        let newpolygons = geom3.toPolygons(geometry1);
-        newpolygons = newpolygons.concat(geom3.toPolygons(geometry2));
+        let newpolygons = geom3.toPolygons(geometry1, true);
+        newpolygons = newpolygons.concat(geom3.toPolygons(geometry2, true));
         return geom3.create(newpolygons);
       };
       module.exports = unionSub;
