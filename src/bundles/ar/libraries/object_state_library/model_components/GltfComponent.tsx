@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+// eslint-disable-next-line
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { type Object3D, type Object3DEventMap, AnimationMixer } from 'three';
 import { type GltfModel } from '../Behaviour';
