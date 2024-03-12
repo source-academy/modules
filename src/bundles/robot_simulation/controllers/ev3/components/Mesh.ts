@@ -46,7 +46,7 @@ export class Mesh implements Controller {
 
   update() {
     const chassisEntity = this.chassisWrapper.getEntity();
-    const chassisPosition = chassisEntity.getPosition();
+    const chassisPosition = chassisEntity.getTranslation();
 
     chassisPosition.x -= this.offset.x / 2;
     chassisPosition.y -= this.offset.y / 2;

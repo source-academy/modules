@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { CameraOptions, getCamera } from '../../Render/helpers/Camera';
+import { CameraOptions, getCamera } from '../../../Render/helpers/Camera';
 
 
 describe('getCamera', () => {

@@ -1,9 +1,14 @@
-import * as THREE from 'three';
+import type * as THREE from 'three';
 import type Rapier from '@dimforge/rapier3d-compat';
-import { type Orientation, type SimpleQuaternion, type SimpleVector } from '../Math/Vector';
-import { vec3, quat } from '../Math/Convert';
+import {
+  simpleVectorLength,
+  type Orientation,
+  type SimpleQuaternion,
+  type SimpleVector,
+} from '../Math/Vector';
+import { vec3 } from '../Math/Convert';
 
-type BodyConfiguration = {
+type EntityConfig = {
   rapierRigidBody: Rapier.RigidBody;
   rapierCollider: Rapier.Collider;
 };
@@ -12,7 +17,7 @@ export class Entity {
   #rapierRigidBody: Rapier.RigidBody;
   #rapierCollider: Rapier.Collider;
 
-  constructor(configuration: BodyConfiguration) {
+  constructor(configuration: EntityConfig) {
     this.#rapierRigidBody = configuration.rapierRigidBody;
     this.#rapierCollider = configuration.rapierCollider;
   }
@@ -25,7 +30,7 @@ export class Entity {
     return this.#rapierRigidBody;
   }
 
-  getPosition(): SimpleVector {
+  getTranslation(): SimpleVector {
     return this.#rapierRigidBody.translation();
   }
 
@@ -33,64 +38,52 @@ export class Entity {
     return this.#rapierRigidBody.rotation();
   }
 
-  setOrientation(orientation: Orientation) {
+  setOrientation(orientation: Orientation): void {
     this.#rapierRigidBody.setTranslation(orientation.position, true);
     this.#rapierRigidBody.setRotation(orientation.rotation, true);
   }
 
-  setMass(mass: number) {
+  setMass(mass: number): void {
     this.#rapierCollider.setMass(mass);
   }
 
   getMass(): number {
     return this.#rapierCollider.mass();
   }
+  getVelocity(): SimpleVector {
+    return this.#rapierRigidBody.linvel();
+  }
 
-  applyImpulse(
-    impulse: THREE.Vector3,
-    point: THREE.Vector3 = new THREE.Vector3(),
-  ) {
+  getAngularVelocity(): SimpleVector {
+    return this.#rapierRigidBody.angvel();
+  }
+
+  applyImpulse(impulse: SimpleVector, point: SimpleVector): void {
     return this.#rapierRigidBody.applyImpulseAtPoint(impulse, point, true);
   }
 
-  rotation(): THREE.Quaternion {
-    return quat(this.#rapierRigidBody.rotation());
-  }
-
-  velocity(): THREE.Vector3 {
-    return vec3(this.#rapierRigidBody.linvel());
-  }
-
-  angularVelocity(): THREE.Vector3 {
-    return vec3(this.#rapierRigidBody.angvel());
-  }
-
-  translation(): THREE.Vector3 {
-    return vec3(this.#rapierRigidBody.translation());
-  }
-
   worldTranslation(
-    localTranslation: THREE.Vector3 = new THREE.Vector3(),
+    localTranslation: THREE.Vector3,
   ): THREE.Vector3 {
-    const rotation = this.rotation();
-    const translation = this.translation();
+    const rotation = this.getRotation();
+    const translation = this.getTranslation();
 
     return localTranslation.applyQuaternion(rotation)
       .add(translation);
   }
 
   transformDirection(localDirection: THREE.Vector3): THREE.Vector3 {
-    const rotation = this.rotation();
+    const rotation = this.getRotation();
     return localDirection.clone()
       .applyQuaternion(rotation);
   }
 
   distanceVectorOfPointToRotationalAxis(
-    localPoint: THREE.Vector3 = new THREE.Vector3(),
-  ) {
+    localPoint: THREE.Vector3,
+  ): SimpleVector {
     return localPoint
       .clone()
-      .projectOnVector(this.angularVelocity())
+      .projectOnVector(vec3(this.getAngularVelocity()))
       .negate()
       .add(localPoint);
   }
@@ -100,17 +93,17 @@ export class Entity {
    * @param {THREE.Vector3} localPoint - The point for which to calculate the tangential velocity.
    * @returns {THREE.Vector3} The tangential velocity vector of the point.
    */
-  tangentialVelocityOfPoint(localPoint = new THREE.Vector3()): THREE.Vector3 {
+  tangentialVelocityOfPoint(localPoint): THREE.Vector3 {
     // Calculate the distance vector from the point to the rotational axis
     const distanceVector
       = this.distanceVectorOfPointToRotationalAxis(localPoint);
 
     // Retrieve the angular velocity of the system
-    const angularVelocity = this.angularVelocity();
+    const angularVelocity = this.getAngularVelocity();
 
     // Calculate the magnitude of the tangential velocity
     const velocityMagnitude
-      = distanceVector.length() * angularVelocity.length();
+      = simpleVectorLength(distanceVector) * simpleVectorLength(angularVelocity);
 
     // Calculate the tangential velocity vector
     const tangentialVelocity = this.transformDirection(localPoint)
@@ -124,9 +117,9 @@ export class Entity {
   }
 
   worldVelocity(
-    localPoint: THREE.Vector3 = new THREE.Vector3(),
+    localPoint: THREE.Vector3,
   ): THREE.Vector3 {
     return this.tangentialVelocityOfPoint(localPoint)
-      .add(this.velocity());
+      .add(this.getVelocity());
   }
 }

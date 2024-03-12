@@ -1,3 +1,3 @@
 import { type Controller } from '../../../engine';
 
-export type Sensor<T> = Controller & { sense: () => T };
+export type Sensor<T = any> = Controller & { sense: () => T };
