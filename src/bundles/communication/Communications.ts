@@ -9,14 +9,14 @@ class CommunicationModuleState {
   rpc: RpcController | null = null;
 
   constructor(
-    isPrivate: boolean,
-    address: string = '',
-    port: number = 443,
-    user: string = '',
-    password: string = '',
+    address: string,
+    port: number,
+    user: string,
+    password: string,
+    isSecure: boolean,
   ) {
     const multiUser = new MultiUserController();
-    multiUser.setupController(isPrivate, address, port, user, password);
+    multiUser.setupController(address, port, user, password, isSecure);
     this.multiUser = multiUser;
   }
 }
@@ -27,49 +27,27 @@ class CommunicationModuleState {
  *
  * @param address Address of broker.
  * @param port WebSocket port number for broker.
+ * @param user Username of account, use empty string if none.
+ * @param password Password of account, use empty string if none.
+ * @param isSecure Whether to use TLS.
  */
-export function initCommunications(address: string, port: number) {
-  if (getModuleState() instanceof CommunicationModuleState) {
-    return;
-  }
-  const newModuleState = new CommunicationModuleState(false, address, port);
-  context.moduleContexts.communication.state = newModuleState;
-}
-
-/**
- * Initializes connection with MQTT broker.
- * Currently only supports WebSocket.
- *
- * @param address Address of broker.
- * @param port WebSocket port number for broker.
- */
-export function initCommunicationsSecure(
+export function initCommunications(
   address: string,
   port: number,
   user: string,
   password: string,
+  isSecure: boolean,
 ) {
   if (getModuleState() instanceof CommunicationModuleState) {
     return;
   }
   const newModuleState = new CommunicationModuleState(
-    false,
     address,
     port,
     user,
     password,
+    isSecure,
   );
-  context.moduleContexts.communication.state = newModuleState;
-}
-
-/**
- * Connects to NUS's private broker.
- */
-export function initCommunicationsPrivate() {
-  if (getModuleState() instanceof CommunicationModuleState) {
-    return;
-  }
-  const newModuleState = new CommunicationModuleState(true);
   context.moduleContexts.communication.state = newModuleState;
 }
 

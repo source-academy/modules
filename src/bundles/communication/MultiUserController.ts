@@ -21,11 +21,11 @@ export class MultiUserController {
    * @param password Password of account, leave empty if not required.
    */
   public setupController(
-    isPrivate: boolean,
     address: string,
     port: number,
     user: string,
     password: string,
+    isSecure: boolean,
   ) {
     let currentController = this.controller;
     if (currentController) {
@@ -43,14 +43,11 @@ export class MultiUserController {
       );
       this.controller = currentController;
     }
-    if (isPrivate) {
-      currentController.isPrivateBroker = true;
-    } else {
-      currentController.address = address;
-      currentController.port = port;
-      currentController.user = user;
-      currentController.password = password;
-    }
+    currentController.address = address;
+    currentController.port = port;
+    currentController.user = user;
+    currentController.password = password;
+    currentController.isSecure = isSecure;
     currentController.connectClient();
   }
 

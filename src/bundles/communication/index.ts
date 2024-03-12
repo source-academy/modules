@@ -18,8 +18,6 @@ export {
 
 export {
   initCommunications,
-  initCommunicationsSecure,
-  initCommunicationsPrivate,
   initGlobalState,
   getGlobalState,
   updateGlobalState,
