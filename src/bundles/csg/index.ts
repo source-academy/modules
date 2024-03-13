@@ -56,9 +56,9 @@
  */
 
 /* [Imports] */
-import context from "js-slang/context";
-import { Core } from "./core.js";
-import { CsgModuleState } from "./utilities.js";
+import context from 'js-slang/context';
+import { Core } from './core.js';
+import { CsgModuleState } from './utilities.js';
 
 /* [Main] */
 let moduleState = new CsgModuleState();
@@ -125,4 +125,4 @@ export {
   render_grid,
   render_axes,
   render_grid_axes,
-} from "./functions";
+} from './functions';

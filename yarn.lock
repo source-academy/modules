@@ -773,11 +773,6 @@
   resolved "https://registry.yarnpkg.com/@jscad/array-utils/-/array-utils-2.1.4.tgz#05e93c7c0ccaab8fa5e81e3ec685aab9c41e7075"
   integrity sha512-c31r4zSKsE+4Xfwk2V8monDA0hx5G89QGzaakWVUvuGNowYS9WSsYCwHiTIXodjR+HEnDu4okQ7k/whmP0Ne2g==
 
-"@jscad/modeling@2.11.1":
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.11.1.tgz#a700417b7b768690a5bd21163642c79f597910ca"
-  integrity sha512-DPrbLcLHDJ1nbpB5FiMwy/DXCdJGkpDyDZQTYHwzK3Fq91x4iPOAABAKkX1QgJ7zlhitMNWo+j7+RmjMzqbYCw==
-
 "@jscad/modeling@2.9.6":
   version "2.9.6"
   resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.9.6.tgz#a107e0de932dcdf7777c1dc639a68a9a6e78b9e9"
@@ -794,13 +789,13 @@
     gl-vec3 "1.1.3"
     regl "2.1.0"
 
-"@jscad/stl-serializer@^2.1.13":
-  version "2.1.14"
-  resolved "https://registry.yarnpkg.com/@jscad/stl-serializer/-/stl-serializer-2.1.14.tgz#9ce9a95b6e636cee8d30608279266bd4d7d3ecd1"
-  integrity sha512-+q1DIX66iwx1wWLN4x0ASXbykqsIEeGzImZ7sG+xz6hMflaHIK1riiorTSMF8sF2uWZrTMOmODGlNxe3/fh35g==
+"@jscad/stl-serializer@2.1.11":
+  version "2.1.11"
+  resolved "https://registry.yarnpkg.com/@jscad/stl-serializer/-/stl-serializer-2.1.11.tgz#2732c41a79c0c97c396f639c6b13c752e65c3da9"
+  integrity sha512-WvqV4PyG36HS3x1BROg8MAX7s/M7wCgA3GeOUZ8jgpQATCBvvI845ds9njZBRHZNvNUkV35AiV5nwBnZB2A9Gw==
   dependencies:
     "@jscad/array-utils" "2.1.4"
-    "@jscad/modeling" "2.11.1"
+    "@jscad/modeling" "2.9.6"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
