@@ -56,9 +56,9 @@
  */
 
 /* [Imports] */
-import context from 'js-slang/context';
-import { Core } from './core.js';
-import { CsgModuleState } from './utilities.js';
+import context from "js-slang/context";
+import { Core } from "./core.js";
+import { CsgModuleState } from "./utilities.js";
 
 /* [Main] */
 let moduleState = new CsgModuleState();
@@ -66,8 +66,6 @@ let moduleState = new CsgModuleState();
 context.moduleContexts.csg.state = moduleState;
 // We initialise Core for the first time over on the bundles' end here
 Core.initialize(moduleState);
-
-
 
 /* [Exports] */
 export {
@@ -90,6 +88,7 @@ export {
   white,
 
   // Primitives
+  empty_shape,
   cube,
   rounded_cube,
   cylinder,
@@ -126,4 +125,4 @@ export {
   render_grid,
   render_axes,
   render_grid_axes,
-} from './functions';
+} from "./functions";
