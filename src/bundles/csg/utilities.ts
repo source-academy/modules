@@ -1,5 +1,5 @@
 /* [Imports] */
-import {
+import geom3, {
   transform as _transform,
 } from '@jscad/modeling/src/geometries/geom3';
 import mat4, { type Mat4 } from '@jscad/modeling/src/maths/mat4';
@@ -12,8 +12,6 @@ import {
 import type { ReplResult } from '../../typings/type_helpers.js';
 import { Core } from './core.js';
 import type { AlphaColor, Color, Solid } from './jscad/types.js';
-
-
 
 /* [Exports] */
 export interface Operable {
@@ -28,10 +26,7 @@ export interface Operable {
 export class Group implements Operable, ReplResult {
   children: Operable[];
 
-  constructor(
-    _children: Operable[],
-    public transforms: Mat4 = mat4.create(),
-  ) {
+  constructor(_children: Operable[], public transforms: Mat4 = mat4.create()) {
     // Duplicate the array to avoid modifying the original, maintaining
     // stateless Operables for the user
     this.children = [..._children];
@@ -45,10 +40,7 @@ export class Group implements Operable, ReplResult {
     );
 
     // Return a new object for statelessness
-    return new Group(
-      this.children,
-      appliedTransforms,
-    );
+    return new Group(this.children, appliedTransforms);
   }
 
   store(newTransforms: Mat4 = mat4.create()): void {
@@ -103,14 +95,12 @@ export class Group implements Operable, ReplResult {
   ungroup(): Operable[] {
     // Return all children, but we need to account for this Group's unresolved
     // transforms by applying them to each child
-    return this.children.map(
-      (child: Operable) => child.applyTransforms(this.transforms),
-    );
+    return this.children.map((child: Operable) => child.applyTransforms(this.transforms));
   }
 }
 
 export class Shape implements Operable, ReplResult {
-  constructor(public solid: Solid) {}
+  constructor(public solid: Solid = geom3.create()) {}
 
   applyTransforms(newTransforms: Mat4): Operable {
     // Return a new object for statelessness
