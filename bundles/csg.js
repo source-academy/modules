@@ -3912,7 +3912,7 @@ ${nonManifold.join("\n")}`);
       var vec2 = require_vec2();
       var vec3 = require_vec3();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var poly3 = require_poly3();
       var cache = new WeakMap();
@@ -3961,7 +3961,7 @@ ${nonManifold.join("\n")}`);
       var measureBoundingBoxOfGeom3 = geometry => {
         let boundingBox = cache.get(geometry);
         if (boundingBox) return boundingBox;
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         let minpoint = vec3.create();
         if (polygons.length > 0) {
           const points = poly3.toPoints(polygons[0]);
@@ -3986,7 +3986,7 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return measureBoundingBoxOfPath2(geometry);
           if (geom2.isA(geometry)) return measureBoundingBoxOfGeom2(geometry);
-          if (geom3.isA(geometry)) return measureBoundingBoxOfGeom3(geometry);
+          if (geom33.isA(geometry)) return measureBoundingBoxOfGeom3(geometry);
           return [[0, 0, 0], [0, 0, 0]];
         });
         return results.length === 1 ? results[0] : results;
@@ -4025,7 +4025,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var translate2 = (offset, ...objects) => {
         if (!Array.isArray(offset)) throw new Error("offset must be an array");
@@ -4037,7 +4037,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom33.isA(object)) return geom33.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4130,7 +4130,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var measureBoundingBox2 = require_measureBoundingBox2();
       var {translate: translate2} = require_translate2();
@@ -4163,7 +4163,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return centerGeometry(options, object);
           if (geom2.isA(object)) return centerGeometry(options, object);
-          if (geom3.isA(object)) return centerGeometry(options, object);
+          if (geom33.isA(object)) return centerGeometry(options, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4193,7 +4193,7 @@ ${nonManifold.join("\n")}`);
       var mat42 = require_mat4();
       var plane = require_plane();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var mirror = (options, ...objects) => {
         const defaults = {
@@ -4211,7 +4211,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom33.isA(object)) return geom33.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4240,7 +4240,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var rotate2 = (angles, ...objects) => {
         if (!Array.isArray(angles)) throw new Error("angles must be an array");
@@ -4255,7 +4255,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom33.isA(object)) return geom33.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4278,7 +4278,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var scale2 = (factors, ...objects) => {
         if (!Array.isArray(factors)) throw new Error("factors must be an array");
@@ -4291,7 +4291,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom33.isA(object)) return geom33.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4313,7 +4313,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var transform = (matrix, ...objects) => {
         objects = flatten(objects);
@@ -4321,7 +4321,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom33.isA(object)) return geom33.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4365,7 +4365,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var poly3 = require_poly3();
       var colorGeom2 = (color, object) => {
@@ -4374,7 +4374,7 @@ ${nonManifold.join("\n")}`);
         return newgeom2;
       };
       var colorGeom3 = (color, object) => {
-        const newgeom3 = geom3.clone(object);
+        const newgeom3 = geom33.clone(object);
         newgeom3.color = color;
         return newgeom3;
       };
@@ -4396,7 +4396,7 @@ ${nonManifold.join("\n")}`);
         if (objects.length === 0) throw new Error("wrong number of arguments");
         const results = objects.map(object => {
           if (geom2.isA(object)) return colorGeom2(color, object);
-          if (geom3.isA(object)) return colorGeom3(color, object);
+          if (geom33.isA(object)) return colorGeom3(color, object);
           if (path2.isA(object)) return colorPath2(color, object);
           if (poly3.isA(object)) return colorPoly3(color, object);
           object.color = color;
@@ -5672,7 +5672,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var poly3 = require_poly3();
       var cache = new WeakMap();
@@ -5689,7 +5689,7 @@ ${nonManifold.join("\n")}`);
       var measureAreaOfGeom3 = geometry => {
         let area = cache.get(geometry);
         if (area) return area;
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         area = polygons.reduce((area2, polygon) => area2 + poly3.measureArea(polygon), 0);
         cache.set(geometry, area);
         return area;
@@ -5700,7 +5700,7 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return measureAreaOfPath2(geometry);
           if (geom2.isA(geometry)) return measureAreaOfGeom2(geometry);
-          if (geom3.isA(geometry)) return measureAreaOfGeom3(geometry);
+          if (geom33.isA(geometry)) return measureAreaOfGeom3(geometry);
           return 0;
         });
         return results.length === 1 ? results[0] : results;
@@ -5749,7 +5749,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var measureAggregateBoundingBox = require_measureAggregateBoundingBox();
       var calculateEpsilonFromBounds = require_calculateEpsilonFromBounds();
-      var {geom2, geom3, path2} = require_geometries();
+      var {geom2, geom3: geom33, path2} = require_geometries();
       var measureAggregateEpsilon = (...geometries) => {
         geometries = flatten(geometries);
         if (geometries.length === 0) throw new Error("measureAggregateEpsilon: no geometries supplied");
@@ -5757,7 +5757,7 @@ ${nonManifold.join("\n")}`);
         let dimensions = 0;
         dimensions = geometries.reduce((dimensions2, geometry) => {
           if (path2.isA(geometry) || geom2.isA(geometry)) return Math.max(dimensions2, 2);
-          if (geom3.isA(geometry)) return Math.max(dimensions2, 3);
+          if (geom33.isA(geometry)) return Math.max(dimensions2, 3);
           return 0;
         }, dimensions);
         return calculateEpsilonFromBounds(bounds, dimensions);
@@ -5771,7 +5771,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var poly3 = require_poly3();
       var cache = new WeakMap();
@@ -5780,7 +5780,7 @@ ${nonManifold.join("\n")}`);
       var measureVolumeOfGeom3 = geometry => {
         let volume = cache.get(geometry);
         if (volume) return volume;
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         volume = polygons.reduce((volume2, polygon) => volume2 + poly3.measureSignedVolume(polygon), 0);
         cache.set(geometry, volume);
         return volume;
@@ -5791,7 +5791,7 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return measureVolumeOfPath2(geometry);
           if (geom2.isA(geometry)) return measureVolumeOfGeom2(geometry);
-          if (geom3.isA(geometry)) return measureVolumeOfGeom3(geometry);
+          if (geom33.isA(geometry)) return measureVolumeOfGeom3(geometry);
           return 0;
         });
         return results.length === 1 ? results[0] : results;
@@ -5826,7 +5826,7 @@ ${nonManifold.join("\n")}`);
       var vec2 = require_vec2();
       var vec3 = require_vec3();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var poly3 = require_poly3();
       var cacheOfBoundingSpheres = new WeakMap();
@@ -5881,7 +5881,7 @@ ${nonManifold.join("\n")}`);
         if (boundingSphere !== void 0) return boundingSphere;
         const centroid = vec3.create();
         let radius = 0;
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         if (polygons.length > 0) {
           let numPoints = 0;
           polygons.forEach(polygon => {
@@ -5907,7 +5907,7 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return measureBoundingSphereOfPath2(geometry);
           if (geom2.isA(geometry)) return measureBoundingSphereOfGeom2(geometry);
-          if (geom3.isA(geometry)) return measureBoundingSphereOfGeom3(geometry);
+          if (geom33.isA(geometry)) return measureBoundingSphereOfGeom3(geometry);
           return [[0, 0, 0], 0];
         });
         return results.length === 1 ? results[0] : results;
@@ -5939,7 +5939,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var vec3 = require_vec3();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var cacheOfCenterOfMass = new WeakMap();
       var measureCenterOfMassGeom2 = geometry => {
         let centerOfMass = cacheOfCenterOfMass.get(geometry);
@@ -5970,7 +5970,7 @@ ${nonManifold.join("\n")}`);
         let centerOfMass = cacheOfCenterOfMass.get(geometry);
         if (centerOfMass !== void 0) return centerOfMass;
         centerOfMass = vec3.create();
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         if (polygons.length === 0) return centerOfMass;
         let totalVolume = 0;
         const vector = vec3.create();
@@ -5994,7 +5994,7 @@ ${nonManifold.join("\n")}`);
         geometries = flatten(geometries);
         const results = geometries.map(geometry => {
           if (geom2.isA(geometry)) return measureCenterOfMassGeom2(geometry);
-          if (geom3.isA(geometry)) return measureCenterOfMassGeom3(geometry);
+          if (geom33.isA(geometry)) return measureCenterOfMassGeom3(geometry);
           return [0, 0, 0];
         });
         return results.length === 1 ? results[0] : results;
@@ -6024,7 +6024,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var flatten = require_flatten();
-      var {geom2, geom3, path2} = require_geometries();
+      var {geom2, geom3: geom33, path2} = require_geometries();
       var calculateEpsilonFromBounds = require_calculateEpsilonFromBounds();
       var measureBoundingBox2 = require_measureBoundingBox2();
       var measureEpsilonOfPath2 = geometry => calculateEpsilonFromBounds(measureBoundingBox2(geometry), 2);
@@ -6036,7 +6036,7 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return measureEpsilonOfPath2(geometry);
           if (geom2.isA(geometry)) return measureEpsilonOfGeom2(geometry);
-          if (geom3.isA(geometry)) return measureEpsilonOfGeom3(geometry);
+          if (geom33.isA(geometry)) return measureEpsilonOfGeom3(geometry);
           return 0;
         });
         return results.length === 1 ? results[0] : results;
@@ -6235,7 +6235,7 @@ ${nonManifold.join("\n")}`);
     "node_modules/@jscad/modeling/src/primitives/cuboid.js"(exports, module) {
       "use strict";
       init_define_process();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var {isNumberArray} = require_commonChecks();
       var cuboid = options => {
@@ -6247,7 +6247,7 @@ ${nonManifold.join("\n")}`);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(size, 3)) throw new Error("size must be an array of width, depth and height values");
         if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
-        const result = geom3.create([[[0, 4, 6, 2], [-1, 0, 0]], [[1, 3, 7, 5], [1, 0, 0]], [[0, 1, 5, 4], [0, -1, 0]], [[2, 6, 7, 3], [0, 1, 0]], [[0, 2, 3, 1], [0, 0, -1]], [[4, 5, 7, 6], [0, 0, 1]]].map(info => {
+        const result = geom33.create([[[0, 4, 6, 2], [-1, 0, 0]], [[1, 3, 7, 5], [1, 0, 0]], [[0, 1, 5, 4], [0, -1, 0]], [[2, 6, 7, 3], [0, 1, 0]], [[0, 2, 3, 1], [0, 0, -1]], [[4, 5, 7, 6], [0, 0, 1]]].map(info => {
           const points = info[0].map(i => {
             const pos = [center[0] + size[0] / 2 * (2 * !!(i & 1) - 1), center[1] + size[1] / 2 * (2 * !!(i & 2) - 1), center[2] + size[2] / 2 * (2 * !!(i & 4) - 1)];
             return pos;
@@ -6287,7 +6287,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {EPS} = require_constants();
       var vec3 = require_vec3();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var {sin, cos} = require_trigonometry();
       var {isGT, isGTE, isNumberArray} = require_commonChecks();
@@ -6376,7 +6376,7 @@ ${nonManifold.join("\n")}`);
           polygons.push(fromPoints(start, end, point(0, 1, startRadius)));
           polygons.push(fromPoints(point(0, 1, startRadius), end, point(1, 1, endRadius)));
         }
-        const result = geom3.create(polygons);
+        const result = geom33.create(polygons);
         return result;
       };
       module.exports = cylinderElliptic;
@@ -6414,7 +6414,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var vec3 = require_vec3();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var {sin, cos} = require_trigonometry();
       var {isGTE, isNumberArray} = require_commonChecks();
@@ -6481,7 +6481,7 @@ ${nonManifold.join("\n")}`);
           }
           prevcylinderpoint = cylinderpoint;
         }
-        return geom3.create(polygons);
+        return geom33.create(polygons);
       };
       module.exports = ellipsoid;
     }
@@ -6490,7 +6490,7 @@ ${nonManifold.join("\n")}`);
     "node_modules/@jscad/modeling/src/primitives/polyhedron.js"(exports, module) {
       "use strict";
       init_define_process();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var {isNumberArray} = require_commonChecks();
       var polyhedron = options => {
@@ -6533,7 +6533,7 @@ ${nonManifold.join("\n")}`);
           if (colors && colors[findex]) polygon.color = colors[findex];
           return polygon;
         });
-        return geom3.create(polygons);
+        return geom33.create(polygons);
       };
       module.exports = polyhedron;
     }
@@ -6544,7 +6544,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var mat42 = require_mat4();
       var vec3 = require_vec3();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var polyhedron = require_polyhedron();
       var {isGT, isGTE} = require_commonChecks();
       var geodesicSphere = options => {
@@ -6630,7 +6630,7 @@ ${nonManifold.join("\n")}`);
           faces,
           orientation: "inward"
         });
-        if (radius !== 1) geometry = geom3.transform(mat42.fromScaling(mat42.create(), [radius, radius, radius]), geometry);
+        if (radius !== 1) geometry = geom33.transform(mat42.fromScaling(mat42.create(), [radius, radius, radius]), geometry);
         return geometry;
       };
       module.exports = geodesicSphere;
@@ -6723,7 +6723,7 @@ ${nonManifold.join("\n")}`);
       var {EPS} = require_constants();
       var vec2 = require_vec2();
       var vec3 = require_vec3();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var {sin, cos} = require_trigonometry();
       var {isGT, isGTE, isNumberArray} = require_commonChecks();
@@ -6854,7 +6854,7 @@ ${nonManifold.join("\n")}`);
           prevCornersPos = cornersPos;
           prevCornersNeg = cornersNeg;
         }
-        return geom3.create(polygons);
+        return geom33.create(polygons);
       };
       module.exports = roundedCuboid;
     }
@@ -6865,7 +6865,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {EPS} = require_constants();
       var vec3 = require_vec3();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var {sin, cos} = require_trigonometry();
       var {isGT, isGTE, isNumberArray} = require_commonChecks();
@@ -6962,7 +6962,7 @@ ${nonManifold.join("\n")}`);
           }
           prevcylinderpoint = cylinderpoint;
         }
-        const result = geom3.create(polygons);
+        const result = geom33.create(polygons);
         return result;
       };
       module.exports = roundedCylinder;
@@ -8069,7 +8069,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var slice = require_slice();
       var repairSlice = require_repair();
@@ -8126,7 +8126,7 @@ ${nonManifold.join("\n")}`);
             polygons = polygons.concat(extrudeWalls(endSlice, startSlice));
           }
         }
-        return geom3.create(polygons);
+        return geom33.create(polygons);
       };
       module.exports = extrudeFromSlices;
     }
@@ -8683,14 +8683,14 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var areAllShapesTheSameType = shapes => {
         let previousType;
         for (const shape of shapes) {
           let currentType = 0;
           if (geom2.isA(shape)) currentType = 1;
-          if (geom3.isA(shape)) currentType = 2;
+          if (geom33.isA(shape)) currentType = 2;
           if (path2.isA(shape)) currentType = 3;
           if (previousType && currentType !== previousType) return false;
           previousType = currentType;
@@ -8823,7 +8823,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var vec3 = require_vec3();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var to3DWall = (z0, z1, side) => {
         const points = [vec3.fromVec2(vec3.create(), side[0], z0), vec3.fromVec2(vec3.create(), side[1], z0), vec3.fromVec2(vec3.create(), side[1], z1), vec3.fromVec2(vec3.create(), side[0], z1)];
@@ -8832,7 +8832,7 @@ ${nonManifold.join("\n")}`);
       var to3DWalls = (options, geometry) => {
         const sides = geom2.toSides(geometry);
         const polygons = sides.map(side => to3DWall(options.z0, options.z1, side));
-        const result = geom3.create(polygons);
+        const result = geom33.create(polygons);
         return result;
       };
       module.exports = to3DWalls;
@@ -9268,7 +9268,7 @@ ${nonManifold.join("\n")}`);
     "node_modules/@jscad/modeling/src/operations/modifiers/retessellate.js"(exports, module) {
       "use strict";
       init_define_process();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var aboutEqualNormals = require_aboutEqualNormals();
       var reTesselateCoplanarPolygons = require_reTesselateCoplanarPolygons();
@@ -9282,7 +9282,7 @@ ${nonManifold.join("\n")}`);
         if (geometry.isRetesselated) {
           return geometry;
         }
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         const polygonsPerPlane = [];
         polygons.forEach(polygon => {
           const mapping = polygonsPerPlane.find(element => coplanar(element[0], poly3.plane(polygon)));
@@ -9299,7 +9299,7 @@ ${nonManifold.join("\n")}`);
           const retesselayedpolygons = reTesselateCoplanarPolygons(sourcepolygons);
           destpolygons = destpolygons.concat(retesselayedpolygons);
         });
-        const result = geom3.create(destpolygons);
+        const result = geom33.create(destpolygons);
         result.isRetesselated = true;
         return result;
       };
@@ -9842,15 +9842,15 @@ ${nonManifold.join("\n")}`);
     "node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3Sub.js"(exports, module) {
       "use strict";
       init_define_process();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var mayOverlap = require_mayOverlap();
       var {Tree} = require_trees();
       var intersectGeom3Sub = (geometry1, geometry2) => {
         if (!mayOverlap(geometry1, geometry2)) {
-          return geom3.create();
+          return geom33.create();
         }
-        const a = new Tree(geom3.toPolygons(geometry1, true));
-        const b = new Tree(geom3.toPolygons(geometry2, true));
+        const a = new Tree(geom33.toPolygons(geometry1, true));
+        const b = new Tree(geom33.toPolygons(geometry2, true));
         a.invert();
         b.clipTo(a);
         b.invert();
@@ -9859,7 +9859,7 @@ ${nonManifold.join("\n")}`);
         a.addPolygons(b.allPolygons());
         a.invert();
         const newpolygons = a.allPolygons();
-        return geom3.create(newpolygons);
+        return geom33.create(newpolygons);
       };
       module.exports = intersectGeom3Sub;
     }
@@ -9887,7 +9887,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var flatten = require_flatten();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var measureEpsilon = require_measureEpsilon();
       var fromFakePolygons = require_fromFakePolygons();
       var to3DWalls = require_to3DWalls();
@@ -9900,7 +9900,7 @@ ${nonManifold.join("\n")}`);
         }, geometry));
         const newgeom3 = intersectGeom3(newgeometries);
         const epsilon = measureEpsilon(newgeom3);
-        return fromFakePolygons(epsilon, geom3.toPolygons(newgeom3));
+        return fromFakePolygons(epsilon, geom33.toPolygons(newgeom3));
       };
       module.exports = intersect2;
     }
@@ -9912,7 +9912,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var areAllShapesTheSameType = require_areAllShapesTheSameType();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var intersectGeom2 = require_intersectGeom2();
       var intersectGeom3 = require_intersectGeom3();
       var intersect2 = (...geometries) => {
@@ -9923,7 +9923,7 @@ ${nonManifold.join("\n")}`);
         }
         const geometry = geometries[0];
         if (geom2.isA(geometry)) return intersectGeom2(geometries);
-        if (geom3.isA(geometry)) return intersectGeom3(geometries);
+        if (geom33.isA(geometry)) return intersectGeom3(geometries);
         return geometry;
       };
       module.exports = intersect2;
@@ -9935,7 +9935,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var vec3 = require_vec3();
       var measureEpsilon = require_measureEpsilon();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var sortNb = array => array.sort((a, b) => a - b).filter((item, pos, ary) => !pos || item !== ary[pos - 1]);
       var insertMapping = (map, point, index) => {
         const key = `${point}`;
@@ -9952,7 +9952,7 @@ ${nonManifold.join("\n")}`);
       };
       var scissionGeom3 = geometry => {
         const eps = measureEpsilon(geometry);
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         const pl = polygons.length;
         const indexesPerPoint = new Map();
         const temp = vec3.create();
@@ -10000,7 +10000,7 @@ ${nonManifold.join("\n")}`);
           if (indexesPerPolygon[i].indexes) {
             const newpolygons = [];
             indexesPerPolygon[i].indexes.forEach((e, p) => newpolygons.push(polygons[p]));
-            newgeometries.push(geom3.create(newpolygons));
+            newgeometries.push(geom33.create(newpolygons));
           }
         }
         return newgeometries;
@@ -10013,13 +10013,13 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var flatten = require_flatten();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var scissionGeom3 = require_scissionGeom3();
       var scission = (...objects) => {
         objects = flatten(objects);
         if (objects.length === 0) throw new Error("wrong number of arguments");
         const results = objects.map(object => {
-          if (geom3.isA(object)) return scissionGeom3(object);
+          if (geom33.isA(object)) return scissionGeom3(object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -10031,22 +10031,22 @@ ${nonManifold.join("\n")}`);
     "node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3Sub.js"(exports, module) {
       "use strict";
       init_define_process();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var mayOverlap = require_mayOverlap();
       var {Tree} = require_trees();
       var subtractGeom3Sub = (geometry1, geometry2) => {
         if (!mayOverlap(geometry1, geometry2)) {
-          return geom3.clone(geometry1);
+          return geom33.clone(geometry1);
         }
-        const a = new Tree(geom3.toPolygons(geometry1, true));
-        const b = new Tree(geom3.toPolygons(geometry2, true));
+        const a = new Tree(geom33.toPolygons(geometry1, true));
+        const b = new Tree(geom33.toPolygons(geometry2, true));
         a.invert();
         a.clipTo(b);
         b.clipTo(a, true);
         a.addPolygons(b.allPolygons());
         a.invert();
         const newpolygons = a.allPolygons();
-        return geom3.create(newpolygons);
+        return geom33.create(newpolygons);
       };
       module.exports = subtractGeom3Sub;
     }
@@ -10074,7 +10074,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var flatten = require_flatten();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var measureEpsilon = require_measureEpsilon();
       var fromFakePolygons = require_fromFakePolygons();
       var to3DWalls = require_to3DWalls();
@@ -10087,7 +10087,7 @@ ${nonManifold.join("\n")}`);
         }, geometry));
         const newgeom3 = subtractGeom3(newgeometries);
         const epsilon = measureEpsilon(newgeom3);
-        return fromFakePolygons(epsilon, geom3.toPolygons(newgeom3));
+        return fromFakePolygons(epsilon, geom33.toPolygons(newgeom3));
       };
       module.exports = subtract2;
     }
@@ -10099,7 +10099,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var areAllShapesTheSameType = require_areAllShapesTheSameType();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var subtractGeom2 = require_subtractGeom2();
       var subtractGeom3 = require_subtractGeom3();
       var subtract2 = (...geometries) => {
@@ -10110,7 +10110,7 @@ ${nonManifold.join("\n")}`);
         }
         const geometry = geometries[0];
         if (geom2.isA(geometry)) return subtractGeom2(geometries);
-        if (geom3.isA(geometry)) return subtractGeom3(geometries);
+        if (geom33.isA(geometry)) return subtractGeom3(geometries);
         return geometry;
       };
       module.exports = subtract2;
@@ -10120,28 +10120,28 @@ ${nonManifold.join("\n")}`);
     "node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js"(exports, module) {
       "use strict";
       init_define_process();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var mayOverlap = require_mayOverlap();
       var {Tree} = require_trees();
       var unionSub = (geometry1, geometry2) => {
         if (!mayOverlap(geometry1, geometry2)) {
           return unionForNonIntersecting(geometry1, geometry2);
         }
-        const a = new Tree(geom3.toPolygons(geometry1, true));
-        const b = new Tree(geom3.toPolygons(geometry2, true));
+        const a = new Tree(geom33.toPolygons(geometry1, true));
+        const b = new Tree(geom33.toPolygons(geometry2, true));
         a.clipTo(b, false);
         b.clipTo(a);
         b.invert();
         b.clipTo(a);
         b.invert();
         const newpolygons = a.allPolygons().concat(b.allPolygons());
-        const result = geom3.create(newpolygons);
+        const result = geom33.create(newpolygons);
         return result;
       };
       var unionForNonIntersecting = (geometry1, geometry2) => {
-        let newpolygons = geom3.toPolygons(geometry1, true);
-        newpolygons = newpolygons.concat(geom3.toPolygons(geometry2, true));
-        return geom3.create(newpolygons);
+        let newpolygons = geom33.toPolygons(geometry1, true);
+        newpolygons = newpolygons.concat(geom33.toPolygons(geometry2, true));
+        return geom33.create(newpolygons);
       };
       module.exports = unionSub;
     }
@@ -10170,7 +10170,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var flatten = require_flatten();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var measureEpsilon = require_measureEpsilon();
       var fromFakePolygons = require_fromFakePolygons();
       var to3DWalls = require_to3DWalls();
@@ -10183,7 +10183,7 @@ ${nonManifold.join("\n")}`);
         }, geometry));
         const newgeom3 = unionGeom3(newgeometries);
         const epsilon = measureEpsilon(newgeom3);
-        return fromFakePolygons(epsilon, geom3.toPolygons(newgeom3));
+        return fromFakePolygons(epsilon, geom33.toPolygons(newgeom3));
       };
       module.exports = union2;
     }
@@ -10195,7 +10195,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var areAllShapesTheSameType = require_areAllShapesTheSameType();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var unionGeom2 = require_unionGeom2();
       var unionGeom3 = require_unionGeom3();
       var union2 = (...geometries) => {
@@ -10206,7 +10206,7 @@ ${nonManifold.join("\n")}`);
         }
         const geometry = geometries[0];
         if (geom2.isA(geometry)) return unionGeom2(geometries);
-        if (geom3.isA(geometry)) return unionGeom3(geometries);
+        if (geom33.isA(geometry)) return unionGeom3(geometries);
         return geometry;
       };
       module.exports = union2;
@@ -10403,7 +10403,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var mat42 = require_mat4();
       var vec3 = require_vec3();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var extrudePolygon = (offsetvector, polygon1) => {
         const direction = vec3.dot(poly3.plane(polygon1), offsetvector);
@@ -10419,7 +10419,7 @@ ${nonManifold.join("\n")}`);
           newpolygons.push(sideFacePolygon);
         }
         newpolygons.push(poly3.invert(polygon2));
-        return geom3.create(newpolygons);
+        return geom33.create(newpolygons);
       };
       module.exports = extrudePolygon;
     }
@@ -10432,7 +10432,7 @@ ${nonManifold.join("\n")}`);
       var mat42 = require_mat4();
       var vec3 = require_vec3();
       var fnNumberSort = require_fnNumberSort();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var sphere2 = require_sphere();
       var retessellate = require_retessellate();
@@ -10472,12 +10472,12 @@ ${nonManifold.join("\n")}`);
           segments: 12
         };
         const {delta, segments} = Object.assign({}, defaults, options);
-        let result = geom3.create();
+        let result = geom33.create();
         const vertices2planes = new Map();
         const edges2planes = new Map();
         const v1 = vec3.create();
         const v2 = vec3.create();
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         polygons.forEach((polygon, index) => {
           const extrudevector = vec3.scale(vec3.create(), poly3.plane(polygon), 2 * delta);
           const translatedpolygon = poly3.transform(mat42.fromTranslation(mat42.create(), vec3.scale(vec3.create(), extrudevector, -0.5)), polygon);
@@ -10552,7 +10552,7 @@ ${nonManifold.join("\n")}`);
           endfacevertices.reverse();
           polygons2.push(poly3.create(startfacevertices));
           polygons2.push(poly3.create(endfacevertices));
-          const cylinder2 = geom3.create(polygons2);
+          const cylinder2 = geom33.create(polygons2);
           result = unionGeom3Sub(result, cylinder2);
         });
         vertices2planes.forEach(item => {
@@ -10595,7 +10595,7 @@ ${nonManifold.join("\n")}`);
     "node_modules/@jscad/modeling/src/operations/expansions/expandGeom3.js"(exports, module) {
       "use strict";
       init_define_process();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var union2 = require_union();
       var expandShell = require_expandShell();
       var expandGeom3 = (options, geometry) => {
@@ -10608,7 +10608,7 @@ ${nonManifold.join("\n")}`);
         if (!(corners === "round")) {
           throw new Error('corners must be "round" for 3D geometries');
         }
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         if (polygons.length === 0) throw new Error("the given geometry cannot be empty");
         options = {
           delta,
@@ -10721,7 +10721,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var expandGeom2 = require_expandGeom2();
       var expandGeom3 = require_expandGeom3();
@@ -10732,7 +10732,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return expandPath2(options, object);
           if (geom2.isA(object)) return expandGeom2(options, object);
-          if (geom3.isA(object)) return expandGeom3(options, object);
+          if (geom33.isA(object)) return expandGeom3(options, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -11027,7 +11027,7 @@ ${nonManifold.join("\n")}`);
       var plane = require_plane();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var measureEpsilon = require_measureEpsilon();
       var unionGeom2 = require_unionGeom2();
@@ -11039,7 +11039,7 @@ ${nonManifold.join("\n")}`);
         const epsilon = measureEpsilon(geometry);
         const epsilonArea = epsilon * epsilon * Math.sqrt(3) / 4;
         if (epsilon === 0) return geom2.create();
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         let projpolys = [];
         for (let i = 0; i < polygons.length; i++) {
           const newpoints = polygons[i].vertices.map(v => plane.projectionOfPoint(projplane, v));
@@ -11070,7 +11070,7 @@ ${nonManifold.join("\n")}`);
           origin
         };
         const results = objects.map(object => {
-          if (geom3.isA(object)) return projectGeom3(options, object);
+          if (geom33.isA(object)) return projectGeom3(options, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -11142,7 +11142,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var toUniquePoints = geometries => {
         const found = new Set();
@@ -11157,8 +11157,8 @@ ${nonManifold.join("\n")}`);
         geometries.forEach(geometry => {
           if (geom2.isA(geometry)) {
             geom2.toPoints(geometry).forEach(addPoint);
-          } else if (geom3.isA(geometry)) {
-            geom3.toPoints(geometry).forEach(points => points.forEach(addPoint));
+          } else if (geom33.isA(geometry)) {
+            geom33.toPoints(geometry).forEach(points => points.forEach(addPoint));
           } else if (path2.isA(geometry)) {
             path2.toPoints(geometry).forEach(addPoint);
           }
@@ -11989,7 +11989,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var flatten = require_flatten();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var poly3 = require_poly3();
       var quickhull = require_quickhull();
       var toUniquePoints = require_toUniquePoints();
@@ -12004,7 +12004,7 @@ ${nonManifold.join("\n")}`);
           const vertices = face.map(index => unique[index]);
           return poly3.create(vertices);
         });
-        return geom3.create(polygons);
+        return geom33.create(polygons);
       };
       module.exports = hullGeom3;
     }
@@ -12016,7 +12016,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var areAllShapesTheSameType = require_areAllShapesTheSameType();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var hullPath2 = require_hullPath2();
       var hullGeom2 = require_hullGeom2();
@@ -12030,7 +12030,7 @@ ${nonManifold.join("\n")}`);
         const geometry = geometries[0];
         if (path2.isA(geometry)) return hullPath2(geometries);
         if (geom2.isA(geometry)) return hullGeom2(geometries);
-        if (geom3.isA(geometry)) return hullGeom3(geometries);
+        if (geom33.isA(geometry)) return hullGeom3(geometries);
         return geometry;
       };
       module.exports = hull;
@@ -12550,7 +12550,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var measureEpsilon = require_measureEpsilon();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var snapPolygons = require_snapPolygons();
       var mergePolygons = require_mergePolygons();
@@ -12566,7 +12566,7 @@ ${nonManifold.join("\n")}`);
         };
         const {snap, simplify, triangulate} = Object.assign({}, defaults, options);
         const epsilon = measureEpsilon(geometry);
-        let polygons = geom3.toPolygons(geometry);
+        let polygons = geom33.toPolygons(geometry);
         if (snap) {
           polygons = snapPolygons(epsilon, polygons);
         }
@@ -12587,7 +12587,7 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return generalizePath2(options, geometry);
           if (geom2.isA(geometry)) return generalizeGeom2(options, geometry);
-          if (geom3.isA(geometry)) return generalizeGeom3(options, geometry);
+          if (geom33.isA(geometry)) return generalizeGeom3(options, geometry);
           throw new Error("invalid geometry");
         });
         return results.length === 1 ? results[0] : results;
@@ -12602,7 +12602,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var vec2 = require_vec2();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom33 = require_geom3();
       var path2 = require_path2();
       var measureEpsilon = require_measureEpsilon();
       var snapPolygons = require_snapPolygons();
@@ -12621,9 +12621,9 @@ ${nonManifold.join("\n")}`);
       };
       var snapGeom3 = geometry => {
         const epsilon = measureEpsilon(geometry);
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom33.toPolygons(geometry);
         const newpolygons = snapPolygons(epsilon, polygons);
-        return geom3.create(newpolygons);
+        return geom33.create(newpolygons);
       };
       var snap = (...geometries) => {
         geometries = flatten(geometries);
@@ -12631,7 +12631,7 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return snapPath2(geometry);
           if (geom2.isA(geometry)) return snapGeom2(geometry);
-          if (geom3.isA(geometry)) return snapGeom3(geometry);
+          if (geom33.isA(geometry)) return snapGeom3(geometry);
           return geometry;
         });
         return results.length === 1 ? results[0] : results;
@@ -13513,6 +13513,7 @@ endfacet`;
     cyan: () => cyan,
     cylinder: () => cylinder,
     download_shape_stl: () => download_shape_stl,
+    empty_shape: () => empty_shape,
     geodesic_sphere: () => geodesic_sphere,
     gray: () => gray,
     green: () => green,
@@ -13606,7 +13607,7 @@ endfacet`;
     }
   };
   var Shape = class _Shape {
-    constructor(solid) {
+    constructor(solid = import_geom3.default.create()) {
       this.solid = solid;
     }
     applyTransforms(newTransforms) {
@@ -13698,6 +13699,7 @@ endfacet`;
   var import_colors = __toESM(require_colors(), 1);
   var import_measurements = __toESM(require_measurements(), 1);
   var import_booleans = __toESM(require_booleans(), 1);
+  var import_geometries = __toESM(require_geometries(), 1);
   var import_extrusions = __toESM(require_extrusions(), 1);
   var import_stl_serializer = __toESM(require_stl_serializer(), 1);
   var import_list = __require("js-slang/dist/stdlib/list");
@@ -13734,6 +13736,9 @@ endfacet`;
   var pink = "#FF55FF";
   var yellow = "#FFFF55";
   var white = "#FFFFFF";
+  function empty_shape() {
+    return new Shape();
+  }
   function cube(hex) {
     let solid = import_modeling.primitives.cube({
       size: 1

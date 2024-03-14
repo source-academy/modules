@@ -3892,7 +3892,7 @@ ${nonManifold.join("\n")}`);
       var vec2 = require_vec2();
       var vec32 = require_vec3();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom32 = require_geom3();
       var path2 = require_path2();
       var poly3 = require_poly3();
       var cache = new WeakMap();
@@ -3941,7 +3941,7 @@ ${nonManifold.join("\n")}`);
       var measureBoundingBoxOfGeom3 = geometry => {
         let boundingBox = cache.get(geometry);
         if (boundingBox) return boundingBox;
-        const polygons = geom3.toPolygons(geometry);
+        const polygons = geom32.toPolygons(geometry);
         let minpoint = vec32.create();
         if (polygons.length > 0) {
           const points = poly3.toPoints(polygons[0]);
@@ -3966,7 +3966,7 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return measureBoundingBoxOfPath2(geometry);
           if (geom2.isA(geometry)) return measureBoundingBoxOfGeom2(geometry);
-          if (geom3.isA(geometry)) return measureBoundingBoxOfGeom3(geometry);
+          if (geom32.isA(geometry)) return measureBoundingBoxOfGeom3(geometry);
           return [[0, 0, 0], [0, 0, 0]];
         });
         return results.length === 1 ? results[0] : results;
@@ -4005,7 +4005,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom32 = require_geom3();
       var path2 = require_path2();
       var translate = (offset, ...objects) => {
         if (!Array.isArray(offset)) throw new Error("offset must be an array");
@@ -4017,7 +4017,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4110,7 +4110,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom32 = require_geom3();
       var path2 = require_path2();
       var measureBoundingBox2 = require_measureBoundingBox2();
       var {translate} = require_translate2();
@@ -4143,7 +4143,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return centerGeometry(options, object);
           if (geom2.isA(object)) return centerGeometry(options, object);
-          if (geom3.isA(object)) return centerGeometry(options, object);
+          if (geom32.isA(object)) return centerGeometry(options, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4173,7 +4173,7 @@ ${nonManifold.join("\n")}`);
       var mat42 = require_mat4();
       var plane = require_plane();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom32 = require_geom3();
       var path2 = require_path2();
       var mirror = (options, ...objects) => {
         const defaults = {
@@ -4191,7 +4191,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4220,7 +4220,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom32 = require_geom3();
       var path2 = require_path2();
       var rotate2 = (angles, ...objects) => {
         if (!Array.isArray(angles)) throw new Error("angles must be an array");
@@ -4235,7 +4235,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4258,7 +4258,7 @@ ${nonManifold.join("\n")}`);
       var flatten = require_flatten();
       var mat42 = require_mat4();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom32 = require_geom3();
       var path2 = require_path2();
       var scale = (factors, ...objects) => {
         if (!Array.isArray(factors)) throw new Error("factors must be an array");
@@ -4271,7 +4271,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
@@ -4293,7 +4293,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var flatten = require_flatten();
       var geom2 = require_geom2();
-      var geom3 = require_geom3();
+      var geom32 = require_geom3();
       var path2 = require_path2();
       var transform = (matrix, ...objects) => {
         objects = flatten(objects);
@@ -4301,7 +4301,7 @@ ${nonManifold.join("\n")}`);
         const results = objects.map(object => {
           if (path2.isA(object)) return path2.transform(matrix, object);
           if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom3.isA(object)) return geom3.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
           return object;
         });
         return results.length === 1 ? results[0] : results;
