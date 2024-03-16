@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "paths": {
+      "@src/*": ["./src/*"]
+    },
+    "target": "ESNext",
+    "verbatimModuleSyntax": true
+  },
+  "include": ["./src"]
+}
