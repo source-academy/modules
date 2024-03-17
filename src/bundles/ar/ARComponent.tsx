@@ -32,7 +32,7 @@ function ButtonComponent(props: ARState) {
   const screenState = useScreenState();
 
   useEffect(() => {
-    screenState.setStates(<AugmentedLayer {...props} />, <Overlay />);
+    screenState.setState(<AugmentedLayer {...props} />, <Overlay />);
   }, []);
 
   return (
@@ -201,7 +201,7 @@ function AugmentedContent(props: ARState) {
 
   useEffect(() => {
     setupToggles(props.overlay, screenState.overlayRef, () => {
-      playArea.setPlayArea(three.camera.position, three.camera.rotation);
+      playArea.setPositionAsOrigin(three.camera.position, three.camera.rotation);
     });
   }, [
     props.overlay.toggleCenter,
@@ -233,7 +233,7 @@ function AugmentedContent(props: ARState) {
   return (
     <group>
       {objects.map((item) =>
-        item.getComponent(playArea.getCameraRelativePosition),
+        item.getComponent(playArea.getCameraPosition),
       )}
     </group>
   );

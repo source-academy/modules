@@ -4,16 +4,16 @@ import { Vector3, Euler } from 'three';
 
 type ContextType = {
   setCameraAsOrigin: () => void;
-  getCameraRelativePosition: () => Vector3;
-  getCameraRelativeRotation: () => Euler;
-  setPlayArea: (origin: Vector3, cameraRotation: Euler) => void;
+  setPositionAsOrigin: (origin: Vector3, cameraRotation: Euler) => void;
+  getCameraPosition: () => Vector3;
+  getCameraRotation: () => Euler;
 };
 
 const Context = createContext<ContextType>({
   setCameraAsOrigin() {},
-  getCameraRelativePosition: () => new Vector3(),
-  getCameraRelativeRotation: () => new Euler(),
-  setPlayArea() {},
+  setPositionAsOrigin() {},
+  getCameraPosition: () => new Vector3(),
+  getCameraRotation: () => new Euler(),
 });
 
 type Props = {
@@ -22,12 +22,12 @@ type Props = {
 
 /**
  * Parent component with play area context.
- * Allows for translation between world position and relative position.
+ * Allows for resetting the point and angle of origin.
+ * Also provides translated camera position and rotation.
  *
  * Steps to use:
- * 1. Call 'setPlayArea' to callibrate origin position and angle.
- * 2. To convert from relative position to world position, call 'getPosition'.
- * 3. To convert back to relative position, call 'getRelativePosition'.
+ * 1a. Call 'setCameraAsOrigin' to set current position as new origin position and angle.
+ * 1b. Alternatively, call 'setPlayArea' with the position + rotation to set as new origin position and angle.
  *
  * Components within it can call 'usePlayArea' to obtain this context.
  */
@@ -39,9 +39,12 @@ export function PlayAreaContext(props: Props) {
 
   // Three
 
+  /**
+   * Sets the current position as origin.
+   */
   function setCameraAsOrigin() {
     const cameraPosition = three.camera.position;
-    setPlayArea(
+    setPositionAsOrigin(
       new Vector3(
         cameraPosition.x,
         cameraPosition.y - DEFAULT_HEIGHT,
@@ -51,32 +54,39 @@ export function PlayAreaContext(props: Props) {
     );
   }
 
-  function getCameraRelativePosition() {
-    return getRelativePosition(three.camera.position);
-  }
-
-  function getCameraRelativeRotation() {
-    return getRelativeRotation(three.camera.rotation);
-  }
-
-  // Logic
-
   /**
    * Sets the origin position and angle for calibration.
    * Relative to actual world origin.
    * Converts camera rotation to angle around vertical axis.
    * Angle measured counterclockwise, starting from 12 o'clock.
    *
-   * @param cameraPosition Position of user in world coordinates
-   * @param cameraRotation Camera rotation of user
+   * @param position Position of user in world coordinates
+   * @param rotation Camera rotation of user
    */
-  function setPlayArea(cameraPosition: Vector3, cameraRotation: Euler) {
-    setOrigin(cameraPosition);
-    setAngle(eulerToAngle(cameraRotation));
+  function setPositionAsOrigin(position: Vector3, rotation: Euler) {
+    setOrigin(position);
+    setAngle(eulerToAngle(rotation));
   }
 
   /**
+   * Returns the current camera position relative to the origin.
+   */
+  function getCameraPosition() {
+    return getRelativePosition(three.camera.position);
+  }
+
+  /**
+   * Returns the current camera rotation relative to the origin.
+   */
+  function getCameraRotation() {
+    return getRelativeRotation(three.camera.rotation);
+  }
+
+  // Logic
+
+  /**
    * Converts euler to y-axis rotation angle.
+   *
    * @param euler Euler to convert
    * @returns Angle in radians
    */
@@ -99,38 +109,27 @@ export function PlayAreaContext(props: Props) {
     return selectedAngle;
   }
 
-  // /**
-  //  * Converts relative position to world position.
-  //  * Used for placing object into world.
-  //  *
-  //  * @param relativePosition Relative position of the object
-  //  * @returns Actual position of the object
-  //  */
-  // function getPosition(relativePosition: Vector3) {
-  //     var clonedPosition = relativePosition.clone();
-  //     clonedPosition.applyAxisAngle(new Vector3(0, 1, 0), rotation);
-  //     let x = clonedPosition.x + origin.x;
-  //     let y = clonedPosition.y + origin.y;
-  //     let z = clonedPosition.z + origin.z;
-  //     return new Vector3(x, y, z);
-  // }
-
   /**
-   * Converts world position to relative position.
-   * Used for saving object's current position in world.
+   * Converts actual position to position relative to the custom origin position.
    *
-   * @param position Actual position of the object
-   * @returns Relative position of the object
+   * @param position Actual position tracked by camera
+   * @returns Position relative to the custom origin
    */
   function getRelativePosition(position: Vector3) {
     const x = position.x - origin.x;
     const y = position.y - origin.y;
     const z = position.z - origin.z;
     const relativePosition = new Vector3(x, y, z);
-    relativePosition.applyAxisAngle(new Vector3(0, 1, 0), -angle);
+    relativePosition.applyAxisAngle(new Vector3(0, 1, 0), -angle); // Rotation fixed around vertical axis
     return relativePosition;
   }
 
+  /**
+   * Converts actual rotation to rotation relative to the custom origin angle.
+   *
+   * @param rotation Actual rotation tracked by camera
+   * @returns Rotation relative to the custom origin
+   */
   function getRelativeRotation(rotation: Euler) {
     const vector3 = new Vector3();
     vector3.setFromEuler(rotation);
@@ -144,9 +143,9 @@ export function PlayAreaContext(props: Props) {
     <Context.Provider
       value={{
         setCameraAsOrigin,
-        setPlayArea,
-        getCameraRelativePosition,
-        getCameraRelativeRotation,
+        setPositionAsOrigin,
+        getCameraPosition,
+        getCameraRotation,
       }}
     >
       <group position={origin} rotation={new Euler(0, angle, 0)}>

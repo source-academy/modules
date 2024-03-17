@@ -19,7 +19,7 @@ import {
   GltfModel,
 } from './Behaviour';
 import ARObjectComponent from './ARObjectComponent';
-import { parseVector3 } from '../calibration_library/Misc';
+import { parseVector3 } from './Misc';
 import { parseJsonInterface } from './model_components/InterfaceComponent';
 
 /**

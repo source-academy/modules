@@ -5,7 +5,7 @@ import {
   Vector3,
 } from 'three';
 import { type UIBasicComponent } from './ui_component/UIComponent';
-import { parseVector3 } from '../calibration_library/Misc';
+import { parseVector3 } from './Misc';
 
 export type Behaviours = {
   model: ModelClass;

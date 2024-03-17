@@ -12,14 +12,14 @@ import { Canvas } from '@react-three/fiber';
 type ContextType = {
   overlayRef: React.RefObject<HTMLDivElement> | null;
   domOverlay: XRDOMOverlayInit | undefined;
-  setStates: (arState: ReactNode, overlayState: ReactNode) => void;
+  setState: (arState: ReactNode, overlayState: ReactNode) => void;
   component: ReactNode;
 };
 
 const Context = createContext<ContextType>({
   overlayRef: null,
   domOverlay: undefined,
-  setStates() {},
+  setState() {},
   component: <></>,
 });
 
@@ -130,7 +130,7 @@ export function ScreenStateContext(props: Props) {
       value={{
         overlayRef,
         domOverlay: domOverlay ? { root: domOverlay } : undefined,
-        setStates,
+        setState: setStates,
         component,
       }}
     >
