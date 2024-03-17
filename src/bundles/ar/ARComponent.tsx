@@ -170,7 +170,7 @@ function AugmentedContent(props: ARState) {
   const objectsRef = useRef<ARObject[]>();
 
   useEffect(() => {
-    controls.setFacingObjectCallback((prev, current) => {
+    controls.setObjectInSightCallback((prev, current) => {
       if (!highlightFrontObject.current) {
         return;
       }
@@ -201,7 +201,10 @@ function AugmentedContent(props: ARState) {
 
   useEffect(() => {
     setupToggles(props.overlay, screenState.overlayRef, () => {
-      playArea.setPositionAsOrigin(three.camera.position, three.camera.rotation);
+      playArea.setPositionAsOrigin(
+        three.camera.position,
+        three.camera.rotation,
+      );
     });
   }, [
     props.overlay.toggleCenter,
@@ -232,9 +235,7 @@ function AugmentedContent(props: ARState) {
 
   return (
     <group>
-      {objects.map((item) =>
-        item.getComponent(playArea.getCameraPosition),
-      )}
+      {objects.map((item) => item.getComponent(playArea.getCameraPosition))}
     </group>
   );
 }

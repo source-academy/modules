@@ -4,6 +4,9 @@ type Props = {
   domOverlay: XRDOMOverlayInit | undefined;
 };
 
+/**
+ * An AR button with features specified, to allow hit testing.
+ */
 export function SimplifiedARButton(props: Props) {
   return (
     <ARButton

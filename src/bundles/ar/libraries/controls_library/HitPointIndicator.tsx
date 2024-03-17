@@ -7,6 +7,9 @@ type Props = {
   isVisible: boolean;
 };
 
+/**
+ * Basic indicator component for hit-test detected position.
+ */
 export function HitPointIndicator(props: Props) {
   const hitPointerRef = useRef<Mesh>(null);
   const controls = useControls();
@@ -14,7 +17,7 @@ export function HitPointIndicator(props: Props) {
   useEffect(() => {
     if (hitPointerRef.current) {
       hitPointerRef.current.visible = props.isVisible;
-      hitPointerRef.current.rotation.set(-Math.PI / 2, 0, 0);
+      hitPointerRef.current.rotation.set(-Math.PI / 2, 0, 0); // Ensure that the ring is in right orientation
     }
   }, [hitPointerRef, props.isVisible]);
 

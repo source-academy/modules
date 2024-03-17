@@ -37,8 +37,6 @@ export function PlayAreaContext(props: Props) {
   const three = useThree();
   const DEFAULT_HEIGHT = 1;
 
-  // Three
-
   /**
    * Sets the current position as origin.
    */
