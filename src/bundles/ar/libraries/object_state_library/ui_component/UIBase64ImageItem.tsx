@@ -73,6 +73,7 @@ function Component(props: { component: UIBase64ImageItem; position: Vector3 }) {
   const [material, setMaterial] = useState<Material>();
 
   useEffect(() => {
+    // Loads the image onto a texture, then use it on a plane
     const image = new Image();
     image.src = props.component.base64;
     const texture = new Texture();

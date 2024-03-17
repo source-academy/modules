@@ -6,6 +6,10 @@ type Props = {
   isInFront: boolean;
 };
 
+/**
+ * Outline for ARObject.
+ * Currently only works with UI and shape objects.
+ */
 export function Outline(props: Props) {
   function getColor() {
     if (props.isSelected && props.isInFront) {

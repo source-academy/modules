@@ -24,10 +24,7 @@ import { parseJsonInterface } from './model_components/InterfaceComponent';
 
 /**
  * Abstract class for an AR object.
- * Extend this class to create your AR object.
- *
- * When converting to JSON, the object's class name will be stored in the 'class' key.
- * This can be used for identifying and restoring the object's class after parsing the JSON.
+ * Extend this class to create your custom AR object.
  */
 export class ARObject {
   type: string = ''; // Unique identifier for class
@@ -106,6 +103,9 @@ export class ARObject {
   }
 }
 
+/**
+ * Predefined class for a cube AR object.
+ */
 const CUBE_OBJECT_TYPE = 'CubeObject';
 export class CubeObject extends ARObject {
   type = CUBE_OBJECT_TYPE;
@@ -180,6 +180,9 @@ export class CubeObject extends ARObject {
   }
 }
 
+/**
+ * Predefined class for a sphere AR object.
+ */
 const SPHERE_OBJECT_TYPE = 'SphereObject';
 export class SphereObject extends ARObject {
   type = SPHERE_OBJECT_TYPE;
@@ -242,6 +245,9 @@ export class SphereObject extends ARObject {
   }
 }
 
+/**
+ * Predefined class for a GLTF model AR object.
+ */
 const GLTF_OBJECT_TYPE = 'GltfObject';
 export class GltfObject extends ARObject {
   type = GLTF_OBJECT_TYPE;
@@ -301,6 +307,9 @@ export class GltfObject extends ARObject {
   }
 }
 
+/**
+ * Predefined class for a floating interface AR object.
+ */
 const UI_OBJECT_TYPE = 'UIObject';
 export class UIObject extends ARObject {
   type = UI_OBJECT_TYPE;
@@ -354,6 +363,9 @@ export class UIObject extends ARObject {
   }
 }
 
+/**
+ * Predefined class for a light source.
+ */
 const LIGHT_OBJECT_TYPE = 'LightObject';
 export class LightObject extends ARObject {
   type = LIGHT_OBJECT_TYPE;

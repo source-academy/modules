@@ -9,6 +9,9 @@ interface State {
   hasError: boolean;
 }
 
+/**
+ * Component to prevent crash when there is an issue with the AR object.
+ */
 export default class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,

@@ -37,6 +37,7 @@ export default class UITextItem extends UIBasicItem {
   getWidth = () => this.textWidth + this.paddingLeft + this.paddingRight;
   getHeight = () => this.textHeight + this.paddingTop + this.paddingBottom;
   updateHeight = (newTextHeight: number): boolean => {
+    // Returns whether height changed
     const oldHeight = this.getHeight();
     this.textHeight = newTextHeight;
     const newHeight = this.getHeight();
@@ -109,6 +110,10 @@ function Component(props: {
     }
   }, [ref]);
 
+  /**
+   * Obtains the actual size of text.
+   * Size is 0 until text is loaded.
+   */
   async function getSize() {
     if (ref.current) {
       const geometry = ref.current.geometry;
@@ -144,6 +149,9 @@ function Component(props: {
     }
   }
 
+  /**
+   * Converts alignment to equibalent text alignment string.
+   */
   function getTextAlign(alignment: HorizontalAlignment) {
     switch (alignment) {
       case HorizontalAlignment.Left:

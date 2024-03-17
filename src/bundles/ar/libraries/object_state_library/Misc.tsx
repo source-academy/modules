@@ -16,3 +16,13 @@ export function parseVector3(object: any) {
   }
   return undefined;
 }
+
+/**
+ * Converts Vector3 to array [x, y, z].
+ *
+ * @param vector Vector3 to convert
+ * @returns Vector in array form
+ */
+export function vector3ToArray(vector: Vector3) {
+  return [vector.x, vector.y, vector.z] as [number, number, number];
+}

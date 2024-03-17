@@ -5,7 +5,6 @@ import {
   AlwaysRender,
   FixRotation,
   GltfModel,
-  ImageModel,
   InterfaceModel,
   LightModel,
   OrbitMovement,
@@ -15,7 +14,6 @@ import {
   RotateToUser,
   ShapeModel,
   SpringMovement,
-  TextModel,
 } from './Behaviour';
 import { type Mesh, Vector3 } from 'three';
 import { useFrame } from '@react-three/fiber';
@@ -25,6 +23,7 @@ import ShapeComponent from './model_components/ShapeComponent';
 import { useSpring, type SpringValue } from '@react-spring/three';
 import LightComponent from './model_components/LightComponent';
 import InterfaceComponent from './model_components/InterfaceComponent';
+import { vector3ToArray } from './Misc';
 
 type Props = {
   arObject: ARObject;
@@ -51,14 +50,17 @@ export default function ARObjectComponent(props: Props) {
   });
   const [isInFront, setInFront] = useState(false);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
+    // Obtain mesh id once ref is ready
     let uuid = ref.current?.uuid;
     if (uuid) {
       props.setUUID(uuid);
     }
+    // Updates state of whether object is in front
     if (isInFront !== props.arObject.isInFront) {
       setInFront(props.arObject.isInFront);
     }
+    // Updates state of object every frame, based on selected behaviour
     const currentPosition = updatePosition(
       props.arObject,
       ref,
@@ -74,10 +76,6 @@ export default function ARObjectComponent(props: Props) {
     );
     handleRotation(props.arObject, currentPosition, userPosition, ref, delta);
   });
-
-  function vector3ToArray(vector: Vector3) {
-    return [vector.x, vector.y, vector.z] as [number, number, number];
-  }
 
   if (!showComponent) return null;
 
@@ -107,8 +105,9 @@ export default function ARObjectComponent(props: Props) {
 // Movement
 
 /**
- * Translates relative position to world position.
- * @returns World position.
+ * Updates the object's position if it has moved.
+ *
+ * @returns Position after updating
  */
 function updatePosition(
   arObject: ARObject,
@@ -148,6 +147,9 @@ type ModelProps = {
   isSelected: boolean;
 };
 
+/**
+ * Component with the model to show.
+ */
 function ModelComponent(props: ModelProps) {
   let modelClass = props.arObject.behaviours.model;
   if (modelClass instanceof GltfModel) {
@@ -167,6 +169,9 @@ function ModelComponent(props: ModelProps) {
 
 // Render
 
+/**
+ * Checks and updates visibility if render distance set.
+ */
 function handleVisibility(
   arObject: ARObject,
   position: Vector3,
@@ -186,6 +191,9 @@ function handleVisibility(
 
 // Rotation
 
+/**
+ * Updates the rotation of the object.
+ */
 function handleRotation(
   arObject: ARObject,
   position: Vector3,

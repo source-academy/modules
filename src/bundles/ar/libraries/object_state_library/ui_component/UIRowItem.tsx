@@ -118,6 +118,10 @@ function Component(props: {
   const [height, setHeight] = useState(component.getHeight());
   const [componentPositions, setComponentPositions] = useState<Vector3[]>([]);
 
+  /**
+   * Updates the height and width, to adapt to children size.
+   * Need to realign children items after updating.
+   */
   function updateSize() {
     const previousHeight = height;
     const previousWidth = width;
@@ -131,6 +135,9 @@ function Component(props: {
     }
   }
 
+  /**
+   * Realign children items depending on the specified alignment.
+   */
   function updateChildrenAlignment() {
     const positions: Vector3[] = [];
     const componentHeight = component.getHeight();
