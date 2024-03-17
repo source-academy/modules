@@ -1,9 +1,5 @@
 import { type ReactNode, useState } from 'react';
-import {
-  type UIBasicComponent,
-  LayoutComponent,
-  type PaddingType,
-} from './UIComponent';
+import { type UIBasicItem, UILayoutItem, type PaddingType } from './UIItem';
 import { Color, Vector3 } from 'three';
 
 export enum VerticalAlignment {
@@ -13,18 +9,23 @@ export enum VerticalAlignment {
 }
 
 type UIRowProps = {
-  children?: UIBasicComponent[];
+  children?: UIBasicItem[];
   verticalAlignment?: VerticalAlignment;
   padding?: number | PaddingType;
   backgroundColor?: number;
   id?: string;
 };
 
-export default class UIRowComponent extends LayoutComponent {
+const ROW_UI_TYPE = 'UIRowItem';
+
+/**
+ * Row layout subcomponent for InterfaceComponent.
+ */
+export default class UIRowItem extends UILayoutItem {
   verticalAlignment: VerticalAlignment;
   background: number;
   constructor(props: UIRowProps) {
-    super(props.padding, props.id);
+    super(ROW_UI_TYPE, props.padding, props.id);
     this.background = props.backgroundColor ?? 0xffffff;
     if (props.children) {
       this.children = props.children;
@@ -53,8 +54,51 @@ export default class UIRowComponent extends LayoutComponent {
     });
     return height + maxChildHeight;
   };
+  static parseJson(
+    uiJson: any,
+    id: string,
+    paddingLeft: number | undefined,
+    paddingRight: number | undefined,
+    paddingTop: number | undefined,
+    paddingBottom: number | undefined,
+    parseJsonInterface: (uiJson: any) => UIBasicItem | undefined,
+  ) {
+    if (!uiJson || uiJson.type !== ROW_UI_TYPE) return undefined;
+    const verticalAlignmentIndex = uiJson.verticalAlignment;
+    let verticalAlignment = VerticalAlignment.Top;
+    if (typeof verticalAlignmentIndex === 'number') {
+      const parsedIndex = Math.min(Math.max(0, verticalAlignmentIndex), 2);
+      verticalAlignment = parsedIndex;
+    }
+    const children: UIBasicItem[] = [];
+    const jsonChildren = uiJson.children;
+    if (Array.isArray(jsonChildren)) {
+      jsonChildren.forEach((jsonChild) => {
+        const child = parseJsonInterface(jsonChild);
+        if (child) {
+          children.push(child);
+        }
+      });
+    }
+    let backgroundColor = uiJson.background;
+    if (typeof backgroundColor !== 'number') {
+      backgroundColor = undefined;
+    }
+    return new UIRowItem({
+      children,
+      verticalAlignment,
+      padding: {
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
+      },
+      backgroundColor,
+      id,
+    });
+  }
   getComponent = (position: Vector3, updateParent: () => void) => (
-    <RowUIComponent
+    <Component
       key={this.id}
       component={this}
       position={position}
@@ -63,8 +107,8 @@ export default class UIRowComponent extends LayoutComponent {
   );
 }
 
-function RowUIComponent(props: {
-  component: UIRowComponent;
+function Component(props: {
+  component: UIRowItem;
   position: Vector3;
   updateParent: () => void;
 }) {

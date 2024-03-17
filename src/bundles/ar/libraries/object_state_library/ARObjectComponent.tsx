@@ -21,8 +21,6 @@ import { type Mesh, Vector3 } from 'three';
 import { useFrame } from '@react-three/fiber';
 import ErrorBoundary from './ErrorBoundary';
 import GltfComponent from './model_components/GltfComponent';
-import TextComponent from './model_components/TextComponent';
-import ImageComponent from './model_components/ImageComponent';
 import ShapeComponent from './model_components/ShapeComponent';
 import { useSpring, type SpringValue } from '@react-spring/three';
 import LightComponent from './model_components/LightComponent';
@@ -157,12 +155,6 @@ function ModelComponent(props: ModelProps) {
   }
   if (modelClass instanceof ShapeModel) {
     return <ShapeComponent shapeModel={modelClass} {...props} />;
-  }
-  if (modelClass instanceof TextModel) {
-    return <TextComponent textModel={modelClass} {...props} />;
-  }
-  if (modelClass instanceof ImageModel) {
-    return <ImageComponent imageModel={modelClass} {...props} />;
   }
   if (modelClass instanceof InterfaceModel) {
     return <InterfaceComponent interfaceModel={modelClass} {...props} />;

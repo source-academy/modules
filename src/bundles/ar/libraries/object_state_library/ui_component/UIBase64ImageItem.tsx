@@ -4,7 +4,7 @@ import {
   Texture,
   type Vector3,
 } from 'three';
-import { UIBasicComponent, type PaddingType } from './UIComponent';
+import { UIBasicItem, type PaddingType } from './UIItem';
 import { useEffect, useState } from 'react';
 
 type UIBase64ImageProps = {
@@ -15,27 +15,61 @@ type UIBase64ImageProps = {
   id?: string;
 };
 
-export default class UIBase64ImageComponent extends UIBasicComponent {
+const BASE64_IMAGE_UI_TYPE = 'UIBase64ImageItem';
+
+/**
+ * Subcomponent for InterfaceComponent that can display a Base64 encoded image.
+ */
+export default class UIBase64ImageItem extends UIBasicItem {
   base64: string;
   imageWidth: number;
   imageHeight: number;
   constructor(props: UIBase64ImageProps) {
-    super(props.padding, props.id);
+    super(BASE64_IMAGE_UI_TYPE, props.padding, props.id);
     this.base64 = props.base64;
     this.imageWidth = props.imageWidth;
     this.imageHeight = props.imageHeight;
   }
   getWidth = () => this.imageWidth + this.paddingLeft + this.paddingRight;
   getHeight = () => this.imageHeight + this.paddingTop + this.paddingBottom;
+  static parseJson(
+    uiJson: any,
+    id: string,
+    paddingLeft: number | undefined,
+    paddingRight: number | undefined,
+    paddingTop: number | undefined,
+    paddingBottom: number | undefined,
+  ) {
+    if (!uiJson || uiJson.type !== BASE64_IMAGE_UI_TYPE) return undefined;
+    const base64 = uiJson.base64;
+    const imageWidth = uiJson.imageWidth;
+    const imageHeight = uiJson.imageHeight;
+    if (
+      typeof base64 === 'string' &&
+      typeof imageWidth === 'number' &&
+      typeof imageHeight === 'number'
+    ) {
+      return new UIBase64ImageItem({
+        base64,
+        imageWidth,
+        imageHeight,
+        padding: {
+          paddingLeft,
+          paddingRight,
+          paddingTop,
+          paddingBottom,
+        },
+        id,
+      });
+    }
+    return undefined;
+  }
   getComponent = (position: Vector3, _: () => void) => (
-    <ImageUIComponent key={this.id} component={this} position={position} />
+    <Component key={this.id} component={this} position={position} />
   );
 }
 
-function ImageUIComponent(props: {
-  component: UIBase64ImageComponent;
-  position: Vector3;
-}) {
+function Component(props: { component: UIBase64ImageItem; position: Vector3 }) {
   const [material, setMaterial] = useState<Material>();
 
   useEffect(() => {

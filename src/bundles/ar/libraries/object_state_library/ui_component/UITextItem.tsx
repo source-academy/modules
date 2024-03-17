@@ -1,8 +1,8 @@
 import { Color, type Mesh, Vector3 } from 'three';
-import { UIBasicComponent, type PaddingType } from './UIComponent';
+import { UIBasicItem, type PaddingType } from './UIItem';
 import { Text as ThreeText } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
-import { HorizontalAlignment } from './UIColumnComponent';
+import { HorizontalAlignment } from './UIColumnItem';
 
 type UITextProps = {
   text: string;
@@ -14,7 +14,12 @@ type UITextProps = {
   id?: string;
 };
 
-export default class UITextComponent extends UIBasicComponent {
+const TEXT_UI_TYPE = 'UITextItem';
+
+/**
+ * Subcomponent for InterfaceComponent that can display text.
+ */
+export default class UITextItem extends UIBasicItem {
   text: string;
   textSize: number;
   textWidth: number;
@@ -22,7 +27,7 @@ export default class UITextComponent extends UIBasicComponent {
   textAlign: HorizontalAlignment;
   color: number;
   constructor(props: UITextProps) {
-    super(props.padding, props.id);
+    super(TEXT_UI_TYPE, props.padding, props.id);
     this.text = props.text;
     this.textSize = props.textSize;
     this.textWidth = props.textWidth;
@@ -40,8 +45,46 @@ export default class UITextComponent extends UIBasicComponent {
     }
     return false;
   };
+  static parseJson(
+    uiJson: any,
+    id: string,
+    paddingLeft: number | undefined,
+    paddingRight: number | undefined,
+    paddingTop: number | undefined,
+    paddingBottom: number | undefined,
+  ) {
+    if (!uiJson || uiJson.type !== TEXT_UI_TYPE) return undefined;
+    const text = uiJson.text;
+    const textSize = uiJson.textSize;
+    const textWidth = uiJson.textWidth;
+    const textAlign = uiJson.textAlign;
+    const color = uiJson.color;
+    if (
+      typeof text === 'string' &&
+      typeof textSize === 'number' &&
+      typeof textWidth === 'number' &&
+      typeof color === 'number'
+    ) {
+      return new UITextItem({
+        text,
+        textSize,
+        textWidth,
+        textAlign,
+        color,
+        padding: {
+          paddingLeft,
+          paddingRight,
+          paddingTop,
+          paddingBottom,
+        },
+        id,
+      });
+    }
+    return undefined;
+  }
+
   getComponent = (position: Vector3, updateParent: () => void) => (
-    <TextUIComponent
+    <Component
       key={this.id}
       component={this}
       position={position}
@@ -50,8 +93,8 @@ export default class UITextComponent extends UIBasicComponent {
   );
 }
 
-function TextUIComponent(props: {
-  component: UITextComponent;
+function Component(props: {
+  component: UITextItem;
   position: Vector3;
   updateParent: () => void;
 }) {

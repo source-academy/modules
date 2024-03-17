@@ -4,7 +4,7 @@ import {
   type NormalBufferAttributes,
   Vector3,
 } from 'three';
-import { type UIBasicComponent } from './ui_component/UIComponent';
+import { type UIBasicItem } from './ui_component/UIItem';
 import { parseVector3 } from './Misc';
 
 export type Behaviours = {
@@ -78,7 +78,7 @@ export class ImageModel implements ModelClass {
 }
 
 export class InterfaceModel implements ModelClass {
-  rootComponent: UIBasicComponent | undefined;
+  rootComponent: UIBasicItem | undefined;
   constructor(rootComponent: any) {
     this.rootComponent = rootComponent;
   }

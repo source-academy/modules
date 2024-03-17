@@ -8,7 +8,10 @@ export type PaddingType = {
   paddingBottom?: number;
 };
 
-export class UIBasicComponent {
+/**
+ * Base class for a subcomponent in InterfaceComponent.
+ */
+export class UIBasicItem {
   type: string;
   paddingLeft = 0;
   paddingRight = 0;
@@ -16,9 +19,9 @@ export class UIBasicComponent {
   paddingBottom = 0;
   id = '';
   layer = 1;
-  parent?: UIBasicComponent = undefined;
-  constructor(padding?: number | PaddingType, id?: string) {
-    this.type = this.constructor.name;
+  parent?: UIBasicItem = undefined;
+  constructor(type: string, padding?: number | PaddingType, id?: string) {
+    this.type = type;
     if (padding) {
       if (typeof padding === 'number') {
         this.paddingLeft = padding;
@@ -60,12 +63,15 @@ export class UIBasicComponent {
   );
 }
 
-export class LayoutComponent extends UIBasicComponent {
-  children: UIBasicComponent[] = [];
+/**
+ * Class for a layout subcomponent in InterfaceComponent.
+ */
+export class UILayoutItem extends UIBasicItem {
+  children: UIBasicItem[] = [];
   calculateLayer = () => {
     this.layer = 1;
     this.children.forEach((child) => {
-      if (child instanceof LayoutComponent && this.layer <= child.layer) {
+      if (child instanceof UILayoutItem && this.layer <= child.layer) {
         this.layer = child.layer + 1;
       }
     });

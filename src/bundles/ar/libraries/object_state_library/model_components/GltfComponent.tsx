@@ -23,12 +23,16 @@ type GltfProps = {
   children: ReactNode | undefined;
 };
 
+/**
+ * Component for showing GLTF model.
+ */
 export default function GltfComponent(props: GltfProps) {
   const model = useGLTF(props.gltfModel.resource);
   const [scene, setScene] = useState<Object3D<Object3DEventMap>>();
   const mixer = useRef<AnimationMixer>();
 
   useEffect(() => {
+    // Need to clone to prevent bug when the same GLTF model is used in multiple objects.
     const clonedScene = SkeletonUtils.clone(model.scene);
     setScene(clonedScene);
     mixer.current = new AnimationMixer(clonedScene);
@@ -36,6 +40,7 @@ export default function GltfComponent(props: GltfProps) {
 
   useEffect(() => {
     if (model.animations.length > 0) {
+      // Creates a function that starts an animation in the GLTF model asset.
       props.gltfModel.callAnimation = (actionName: string) => {
         const selectedAction = model.animations.find(
           (item) => item.name === actionName,
@@ -48,7 +53,7 @@ export default function GltfComponent(props: GltfProps) {
     }
   }, [props.gltfModel, model.animations, model.animations.length]);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     mixer.current?.update(delta);
   });
 

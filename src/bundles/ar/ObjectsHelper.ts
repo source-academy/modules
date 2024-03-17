@@ -20,17 +20,17 @@ import {
   SpringMovement,
 } from './libraries/object_state_library/Behaviour';
 import uniqid from 'uniqid';
-import type { UIBasicComponent } from './libraries/object_state_library/ui_component/UIComponent';
-import UIRowComponent, {
+import type { UIBasicItem } from './libraries/object_state_library/ui_component/UIItem';
+import UIRowItem, {
   type VerticalAlignment,
-} from './libraries/object_state_library/ui_component/UIRowComponent';
-import UIColumnComponent, {
+} from './libraries/object_state_library/ui_component/UIRowItem';
+import UIColumnItem, {
   type HorizontalAlignment,
-} from './libraries/object_state_library/ui_component/UIColumnComponent';
-import UITextComponent from './libraries/object_state_library/ui_component/UITextComponent';
-import UIImageComponent from './libraries/object_state_library/ui_component/UIImageComponent';
+} from './libraries/object_state_library/ui_component/UIColumnItem';
+import UITextItem from './libraries/object_state_library/ui_component/UITextItem';
+import UIImageItem from './libraries/object_state_library/ui_component/UIImageItem';
 import { callARCallback } from './AR';
-import UIBase64ImageComponent from './libraries/object_state_library/ui_component/UIBase64ImageComponent';
+import UIBase64ImageComponent from './libraries/object_state_library/ui_component/UIBase64ImageItem';
 
 // Objects
 
@@ -139,7 +139,7 @@ export function createGltfObject(
  */
 export function createInterfaceObject(
   position: Vector3,
-  rootComponent: UIBasicComponent,
+  rootComponent: UIBasicItem,
   onSelect?: () => {},
 ): UIObject {
   return new UIObject(
@@ -185,15 +185,15 @@ export function createLightObject(
  * @returns Created row component.
  */
 export function createInterfaceRow(
-  children: UIBasicComponent[],
+  children: UIBasicItem[],
   verticalAlignment: VerticalAlignment,
   paddingLeft: number,
   paddingRight: number,
   paddingTop: number,
   paddingBottom: number,
   backgroundColor: number,
-): UIRowComponent {
-  return new UIRowComponent({
+): UIRowItem {
+  return new UIRowItem({
     children,
     verticalAlignment,
     padding: {
@@ -220,15 +220,15 @@ export function createInterfaceRow(
  * @returns Created column component.
  */
 export function createInterfaceColumn(
-  children: UIBasicComponent[],
+  children: UIBasicItem[],
   horizontalAlignment: HorizontalAlignment,
   paddingLeft: number,
   paddingRight: number,
   paddingTop: number,
   paddingBottom: number,
   backgroundColor: number,
-): UIColumnComponent {
-  return new UIColumnComponent({
+): UIColumnItem {
+  return new UIColumnItem({
     children,
     horizontalAlignment,
     padding: {
@@ -266,8 +266,8 @@ export function createInterfaceText(
   paddingTop: number,
   paddingBottom: number,
   color: number,
-): UITextComponent {
-  return new UITextComponent({
+): UITextItem {
+  return new UITextItem({
     text,
     textSize,
     textWidth,
@@ -304,8 +304,8 @@ export function createInterfaceImage(
   paddingRight: number,
   paddingTop: number,
   paddingBottom: number,
-): UIImageComponent {
-  return new UIImageComponent({
+): UIImageItem {
+  return new UIImageItem({
     src,
     imageWidth,
     imageHeight,

@@ -1,9 +1,5 @@
 import { type ReactNode, useState } from 'react';
-import {
-  type UIBasicComponent,
-  LayoutComponent,
-  type PaddingType,
-} from './UIComponent';
+import { type UIBasicItem, UILayoutItem, type PaddingType } from './UIItem';
 import { Color, Vector3 } from 'three';
 
 export enum HorizontalAlignment {
@@ -13,18 +9,23 @@ export enum HorizontalAlignment {
 }
 
 type UIColumnProps = {
-  children?: UIBasicComponent[];
+  children?: UIBasicItem[];
   horizontalAlignment?: HorizontalAlignment;
   padding?: number | PaddingType;
   backgroundColor?: number;
   id?: string;
 };
 
-export default class UIColumnComponent extends LayoutComponent {
+const COLUMN_UI_TYPE = 'UIColumnItem';
+
+/**
+ * Column layout subcomponent for InterfaceComponent.
+ */
+export default class UIColumnItem extends UILayoutItem {
   horizontalAlignment: HorizontalAlignment;
   background: number;
   constructor(props: UIColumnProps) {
-    super(props.padding, props.id);
+    super(COLUMN_UI_TYPE, props.padding, props.id);
     this.background = props.backgroundColor ?? 0xffffff;
     if (props.children) {
       this.children = props.children;
@@ -53,8 +54,52 @@ export default class UIColumnComponent extends LayoutComponent {
     });
     return height;
   };
+  static parseJson(
+    uiJson: any,
+    id: string,
+    paddingLeft: number | undefined,
+    paddingRight: number | undefined,
+    paddingTop: number | undefined,
+    paddingBottom: number | undefined,
+    parseJsonInterface: (uiJson: any) => UIBasicItem | undefined,
+  ) {
+    if (!uiJson || uiJson.type !== COLUMN_UI_TYPE) return undefined;
+    const horizontalAlignmentIndex = uiJson.horizontalAlignment;
+    let horizontalAlignment = HorizontalAlignment.Left;
+    if (typeof horizontalAlignmentIndex === 'number') {
+      const parsedIndex = Math.min(Math.max(0, horizontalAlignmentIndex), 2);
+      horizontalAlignment = parsedIndex;
+    }
+    const children: UIBasicItem[] = [];
+    const jsonChildren = uiJson.children;
+    if (Array.isArray(jsonChildren)) {
+      jsonChildren.forEach((jsonChild) => {
+        const child = parseJsonInterface(jsonChild);
+        if (child) {
+          children.push(child);
+        }
+      });
+    }
+    let backgroundColor = uiJson.background;
+    if (typeof backgroundColor !== 'number') {
+      backgroundColor = undefined;
+    }
+    return new UIColumnItem({
+      children,
+      horizontalAlignment,
+      padding: {
+        paddingLeft,
+        paddingRight,
+        paddingTop,
+        paddingBottom,
+      },
+      backgroundColor,
+      id,
+    });
+  }
+
   getComponent = (position: Vector3, updateParent: () => void) => (
-    <ColumnUIComponent
+    <Component
       key={this.id}
       component={this}
       position={position}
@@ -63,8 +108,8 @@ export default class UIColumnComponent extends LayoutComponent {
   );
 }
 
-function ColumnUIComponent(props: {
-  component: UIColumnComponent;
+function Component(props: {
+  component: UIColumnItem;
   position: Vector3;
   updateParent: () => void;
 }) {

@@ -11,6 +11,9 @@ type LightProps = {
   children: ReactNode | undefined;
 };
 
+/**
+ * Component for a light source shining from a particular positon.
+ */
 export default function LightComponent(props: LightProps) {
   return (
     <animated.mesh ref={props.meshRef} position={props.springPosition}>
