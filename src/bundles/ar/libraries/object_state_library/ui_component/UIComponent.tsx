@@ -14,8 +14,6 @@ export class UIBasicComponent {
   paddingRight = 0;
   paddingTop = 0;
   paddingBottom = 0;
-  height = 0;
-  width = 0;
   id = '';
   layer = 1;
   parent?: UIBasicComponent = undefined;
@@ -50,21 +48,9 @@ export class UIBasicComponent {
   }
   toJSON = () => {
     let object = { ...this } as any;
-    delete object.height;
-    delete object.width;
     delete object.layer;
     delete object.parent;
     return object;
-  };
-  calculateDimensions = () => {
-    this.calculateLayer();
-    const newHeight = this.getHeight();
-    const newWidth = this.getWidth();
-    if (this.height !== newHeight || this.width !== newWidth) {
-      this.height = newHeight;
-      this.width = newWidth;
-      this.parent?.calculateDimensions();
-    }
   };
   getWidth = () => this.paddingLeft + this.paddingRight;
   getHeight = () => this.paddingTop + this.paddingBottom;

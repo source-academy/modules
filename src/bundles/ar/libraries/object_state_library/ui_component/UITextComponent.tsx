@@ -32,18 +32,10 @@ export default class UITextComponent extends UIBasicComponent {
   getWidth = () => this.textWidth + this.paddingLeft + this.paddingRight;
   getHeight = () => this.textHeight + this.paddingTop + this.paddingBottom;
   updateHeight = (newTextHeight: number): boolean => {
-    if (newTextHeight === 0) {
-      return false;
-    }
+    const oldHeight = this.getHeight();
     this.textHeight = newTextHeight;
     const newHeight = this.getHeight();
-    if (this.height !== newHeight) {
-      this.height = newHeight;
-      let parent = this.parent;
-      while (parent) {
-        parent.calculateDimensions();
-        parent = parent.parent;
-      }
+    if (oldHeight !== newHeight) {
       return true;
     }
     return false;

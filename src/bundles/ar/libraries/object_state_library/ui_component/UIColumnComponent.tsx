@@ -34,22 +34,22 @@ export default class UIColumnComponent extends LayoutComponent {
     } else {
       this.horizontalAlignment = HorizontalAlignment.Center;
     }
-    this.calculateDimensions();
+    this.calculateLayer();
   }
   getWidth = () => {
     const width = this.paddingLeft + this.paddingRight;
     let maxChildWidth = 0;
     this.children.forEach((item) => {
-      item.calculateDimensions();
-      maxChildWidth = Math.max(maxChildWidth, item.width);
+      item.calculateLayer();
+      maxChildWidth = Math.max(maxChildWidth, item.getWidth());
     });
     return width + maxChildWidth;
   };
   getHeight = () => {
     let height = this.paddingTop + this.paddingBottom;
     this.children.forEach((item) => {
-      item.calculateDimensions();
-      height += item.height;
+      item.calculateLayer();
+      height += item.getHeight();
     });
     return height;
   };
@@ -70,41 +70,44 @@ function ColumnUIComponent(props: {
 }) {
   const { component, position, updateParent } = props;
 
-  const [width, setWidth] = useState(component.width);
-  const [height, setHeight] = useState(component.height);
+  const [width, setWidth] = useState(component.getWidth());
+  const [height, setHeight] = useState(component.getHeight());
   const [componentPositions, setComponentPositions] = useState<Vector3[]>([]);
 
   function updateSize() {
     const previousHeight = height;
     const previousWidth = width;
-    setHeight(component.height);
-    setWidth(component.width);
+    const newHeight = component.getHeight();
+    const newWidth = component.getWidth();
+    setHeight(newHeight);
+    setWidth(newWidth);
     updateChildrenAlignment();
-    if (
-      previousHeight !== component.height ||
-      previousWidth !== component.width
-    ) {
+    if (previousHeight !== newHeight || previousWidth !== newWidth) {
       updateParent();
     }
   }
 
   function updateChildrenAlignment() {
     const positions: Vector3[] = [];
-    let currentYPosition = -component.height / 2 + component.paddingTop;
+    const componentHeight = component.getHeight();
+    const componentWidth = component.getWidth();
+    let currentYPosition = -componentHeight / 2 + component.paddingTop;
     for (let i = 0; i < component.children.length; i++) {
       const child = component.children[i];
+      const childHeight = child.getHeight();
+      const childWidth = child.getWidth();
       const relativeYPosition =
         currentYPosition +
-        child.height / 2 +
+        childHeight / 2 +
         (child.paddingTop - child.paddingBottom) / 2;
-      currentYPosition += child.height;
+      currentYPosition += childHeight;
       let relativeXPosition = (child.paddingLeft - child.paddingRight) / 2;
       if (component.horizontalAlignment === HorizontalAlignment.Left) {
         relativeXPosition +=
-          -(component.width - child.width) / 2 + component.paddingLeft;
+          -(componentWidth - childWidth) / 2 + component.paddingLeft;
       } else if (component.horizontalAlignment === HorizontalAlignment.Right) {
         relativeXPosition +=
-          (component.width - child.width) / 2 - component.paddingRight;
+          (componentWidth - childWidth) / 2 - component.paddingRight;
       }
       const childPosition = new Vector3(
         relativeXPosition,
