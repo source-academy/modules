@@ -67,8 +67,6 @@ context.moduleContexts.csg.state = moduleState;
 // We initialise Core for the first time over on the bundles' end here
 Core.initialize(moduleState);
 
-
-
 /* [Exports] */
 export {
   // Colors
@@ -90,6 +88,7 @@ export {
   white,
 
   // Primitives
+  empty_shape,
   cube,
   rounded_cube,
   cylinder,

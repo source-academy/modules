@@ -131,13 +131,11 @@ class Unity3DTab extends React.Component<Props> {
         <br/>
         {getInstance()
           .getUserAgreementStatus() === 'new_user_agreement' && <div><b>The User Agreement has updated.</b><br/></div>}
-        <Checkbox label = "I agree to the User Agreement" ref = {(e) => {
+        <Checkbox label = "I agree to the User Agreement" inputRef = {(e) => {
           if (e !== null) {
-            if (e.input !== null) {
-              e.input.checked = (getInstance()
-                .getUserAgreementStatus() === 'agreed');
-              this.userAgreementCheckboxChecked = e.input.checked;
-            }
+            e.checked = (getInstance()
+              .getUserAgreementStatus() === 'agreed');
+            this.userAgreementCheckboxChecked = e.checked;
           }
         }} onChange = {(event : React.ChangeEvent<HTMLInputElement>) => {
           this.userAgreementCheckboxChecked = event.target.checked;

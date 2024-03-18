@@ -1,24 +1,22 @@
-import { Classes, Intent, OverlayToaster, type ToastProps, type Toaster } from "@blueprintjs/core";
+import { Classes, Intent, OverlayToaster, type ToastProps } from "@blueprintjs/core";
 import classNames from "classnames";
+import { SourceDocumentation, getNames, runInContext, type Context } from "js-slang";
 import { Chapter, Variant } from "js-slang/dist/types";
 import { stringify } from "js-slang/dist/utils/stringify";
 import React, { useCallback } from "react";
 import { HotKeys } from "react-hotkeys";
-
+import mockModuleContext from "../mockModuleContext";
+import type { InterpreterOutput } from "../types";
 import Workspace, { type WorkspaceProps } from "./Workspace";
+import { ControlBarClearButton } from "./controlBar/ControlBarClearButton";
+import { ControlBarRefreshButton } from "./controlBar/ControlBarRefreshButton";
 import { ControlBarRunButton } from "./controlBar/ControlBarRunButton";
-import { type Context, runInContext, getNames, SourceDocumentation } from "js-slang";
+import testTabContent from "./sideContent/TestTab";
+import type { SideContentTab } from "./sideContent/types";
+import { getDynamicTabs } from "./sideContent/utils";
 
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from "js-slang/dist/createContext";
-
-import { getDynamicTabs } from "./sideContent/utils";
-import type { SideContentTab } from "./sideContent/types";
-import testTabContent from "./sideContent/TestTab";
-import { ControlBarClearButton } from "./controlBar/ControlBarClearButton";
-import { ControlBarRefreshButton } from "./controlBar/ControlBarRefreshButton";
-import type { InterpreterOutput } from "../types";
-import mockModuleContext from "../mockModuleContext";
 
 const refreshSuccessToast: ToastProps = {
 	intent: Intent.SUCCESS,
@@ -48,7 +46,7 @@ const Playground: React.FC<{}> = () => {
 	const [replOutput, setReplOutput] = React.useState<InterpreterOutput | null>(null);
 	const [alerts, setAlerts] = React.useState<string[]>([]);
 
-	const toaster = React.useRef<Toaster | null>(null);
+	const toaster = React.useRef<OverlayToaster>(null);
 
 	const showToast = (props: ToastProps) => {
 		if (toaster.current) {
