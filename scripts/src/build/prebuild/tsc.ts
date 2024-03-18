@@ -1,139 +1,116 @@
-import chalk from 'chalk';
-import { Command } from 'commander';
-import { existsSync, promises as fs } from 'fs';
-import pathlib from 'path';
-import ts, { type CompilerOptions } from 'typescript';
+import pathlib from 'path'
+import fs from 'fs/promises'
+import chalk from 'chalk'
+import { bundlesOption, manifestOption, retrieveBundlesAndTabs, srcDirOption, tabsOption, wrapWithTimer } from '@src/commandUtils'
+import ts from 'typescript'
+import { Command } from '@commander-js/extra-typings'
+import { expandBundleNames, type BuildInputs, type Severity, expandTabNames, divideAndRound } from '../utils'
 
-import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import { bundleNameExpander, divideAndRound, exitOnError, retrieveBundlesAndTabs, tabNameExpander } from '../buildUtils.js';
-import type { AssetInfo, CommandInputs, Severity } from '../types.js';
+type TsconfigResult = {
+  severity: 'success',
+  results: ts.CompilerOptions
+} | {
+  severity: 'error',
+  results: ts.Diagnostic[]
+}
 
 type TscResult = {
   severity: Severity,
-  results: ts.Diagnostic[];
-  error?: any;
-};
+  results: ts.Diagnostic[]
+}
 
-export type TscOpts = {
-  srcDir: string;
-};
+async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
+	// Step 1: Read the text from tsconfig.json
+	const tsconfigLocation = pathlib.join(srcDir, 'tsconfig.json')
+	try {
+		const configText = await fs.readFile(tsconfigLocation, 'utf-8')
 
-type TsconfigResult = {
-  severity: 'error';
-  error?: any;
-  results: ts.Diagnostic[];
-} | {
-  severity: 'success';
-  results: CompilerOptions;
-};
+		// Step 2: Parse the raw text into a json object
+		const { error: configJsonError, config: configJson } = ts.parseConfigFileTextToJson(tsconfigLocation, configText)
+		if (configJsonError) {
+			return {
+				severity: 'error',
+				results: [configJsonError]
+			}
+		}
 
-const getTsconfig = async (srcDir: string): Promise<TsconfigResult> => {
-  // Step 1: Read the text from tsconfig.json
-  const tsconfigLocation = pathlib.join(srcDir, 'tsconfig.json');
-  if (!existsSync(tsconfigLocation)) {
-    return {
-      severity: 'error',
-      results: [],
-      error: `Could not locate tsconfig.json at ${tsconfigLocation}`,
-    };
-  }
-  const configText = await fs.readFile(tsconfigLocation, 'utf-8');
+		// Step 3: Parse the json object into a config object for use by tsc
+		const { errors: parseErrors, options: tsconfig } = ts.parseJsonConfigFileContent(configJson, ts.sys, srcDir)
+		if (parseErrors.length > 0) {
+			return {
+				severity: 'error',
+				results: parseErrors
+			}
+		}
 
-  // Step 2: Parse the raw text into a json object
-  const { error: configJsonError, config: configJson } = ts.parseConfigFileTextToJson(tsconfigLocation, configText);
-  if (configJsonError) {
-    return {
-      severity: 'error',
-      results: [configJsonError],
-    };
-  }
+		return {
+			severity: 'success',
+			results: tsconfig
+		}
+	} catch (error) {
+		return {
+			severity: 'error',
+			results: [error]
+		}
+	}
+}
 
-  // Step 3: Parse the json object into a config object for use by tsc
-  const { errors: parseErrors, options: tsconfig } = ts.parseJsonConfigFileContent(configJson, ts.sys, srcDir);
-  if (parseErrors.length > 0) {
-    return {
-      severity: 'error',
-      results: parseErrors,
-    };
-  }
+export const runTsc = wrapWithTimer(async ({ bundles, tabs }: BuildInputs, srcDir: string): Promise<TscResult> => {
+	const tsconfigRes = await getTsconfig(srcDir)
+	if (tsconfigRes.severity === 'error') {
+		return {
+			severity: 'error',
+			results: tsconfigRes.results
+		}
+	}
 
-  return {
-    severity: 'success',
-    results: tsconfig,
-  };
-};
+	const fileNames: string[] = []
 
-/**
- * @param params_0 Source Directory
- */
-export const runTsc = wrapWithTimer((async (srcDir: string, { bundles, tabs }: AssetInfo): Promise<TscResult> => {
-  const fileNames: string[] = [];
+	if (bundles.length > 0) {
+		expandBundleNames(srcDir, bundles)
+			.forEach((name) => fileNames.push(name))
+	}
 
-  if (bundles.length > 0) {
-    printList(`${chalk.magentaBright('Running tsc on the following bundles')}:\n`, bundles);
-    bundles.forEach((bundle) => fileNames.push(bundleNameExpander(srcDir)(bundle)));
-  }
+	if (tabs.length > 0) {
+		expandTabNames(srcDir, tabs)
+			.forEach((name) => fileNames.push(name))
+	}
 
-  if (tabs.length > 0) {
-    printList(`${chalk.magentaBright('Running tsc on the following tabs')}:\n`, tabs);
-    tabs.forEach((tabName) => fileNames.push(tabNameExpander(srcDir)(tabName)));
-  }
+	const tsc = ts.createProgram(fileNames, tsconfigRes.results)
+	const results = tsc.emit()
+	const diagnostics = ts.getPreEmitDiagnostics(tsc)
+		.concat(results.diagnostics)
 
-  const tsconfigRes = await getTsconfig(srcDir);
-  if (tsconfigRes.severity === 'error') {
-    return {
-      severity: 'error',
-      results: tsconfigRes.results,
-    };
-  }
+	return {
+		severity: diagnostics.length > 0 ? 'error' : 'success',
+		results: diagnostics
+	}
+})
 
-  const tsc = ts.createProgram(fileNames, tsconfigRes.results);
-  const results = tsc.emit();
-  const diagnostics = ts.getPreEmitDiagnostics(tsc)
-    .concat(results.diagnostics);
+export function tscResultsLogger({ results, severity }: TscResult, elapsed: number) {
+	const diagStr = ts.formatDiagnosticsWithColorAndContext(results, {
+		getNewLine: () => '\n',
+		getCurrentDirectory: () => process.cwd(),
+		getCanonicalFileName: (name) => pathlib.basename(name)
+	})
 
-  return {
-    severity: diagnostics.length > 0 ? 'error' : 'success',
-    results: diagnostics,
-  };
-}));
+	if (severity === 'error') {
+		return `${diagStr}\n${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')} in ${divideAndRound(elapsed, 1000)}s`)}`
+	}
+	return `${diagStr}\n${chalk.cyanBright(`tsc completed ${chalk.greenBright('successfully')} in ${divideAndRound(elapsed, 1000)}s`)}`
+}
 
-export const logTscResults = (input: Awaited<ReturnType<typeof runTsc>> | null) => {
-  if (!input) return;
-
-  const { elapsed, result: { severity, results, error } } = input;
-  if (error) {
-    console.log(`${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')}:`)} ${error}`);
-    return;
-  }
-
-  const diagStr = ts.formatDiagnosticsWithColorAndContext(results, {
-    getNewLine: () => '\n',
-    getCurrentDirectory: () => pathlib.resolve('.'),
-    getCanonicalFileName: (name) => pathlib.basename(name),
-  });
-
-  if (severity === 'error') {
-    console.log(`${diagStr}\n${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')} in ${divideAndRound(elapsed, 1000)}s`)}`);
-  } else {
-    console.log(`${diagStr}\n${chalk.cyanBright(`tsc completed ${chalk.greenBright('successfully')} in ${divideAndRound(elapsed, 1000)}s`)}`);
-  }
-};
-
-export type TscCommandInputs = CommandInputs;
-
-const getTscCommand = () => new Command('typecheck')
-  .description('Run tsc to perform type checking')
-  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
-  .option('--manifest <file>', 'Manifest file', 'modules.json')
-  .option('-m, --modules [modules...]', 'Manually specify which modules to check', null)
-  .option('-t, --tabs [tabs...]', 'Manually specify which tabs to check', null)
-  .option('-v, --verbose', 'Display more information about the build results', false)
-  .action(async ({ modules, tabs, manifest, srcDir }: TscCommandInputs) => {
-    const assets = await retrieveBundlesAndTabs(manifest, modules, tabs);
-    const tscResults = await runTsc(srcDir, assets);
-    logTscResults(tscResults);
-    exitOnError([], tscResults.result);
-  });
-
-export default getTscCommand;
+export function getTscCommand() {
+	return new Command('tsc')
+		.description('Run tsc')
+		.addOption(srcDirOption)
+		.addOption(manifestOption)
+		.addOption(bundlesOption)
+		.addOption(tabsOption)
+		.action(async (opts) => {
+			const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs)
+			const { result, elapsed } = await runTsc(inputs, opts.srcDir)
+			const output = tscResultsLogger(result, elapsed)
+			console.log(output)
+		})
+}

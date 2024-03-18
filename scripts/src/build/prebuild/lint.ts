@@ -1,115 +1,87 @@
-import chalk from 'chalk';
-import { Command } from 'commander';
-import { ESLint } from 'eslint';
-import pathlib from 'path';
+import pathlib from 'path'
+import { bundlesOption, lintFixOption, manifestOption, retrieveBundlesAndTabs, srcDirOption, tabsOption, wrapWithTimer } from '@src/commandUtils'
+import { ESLint } from 'eslint'
+import chalk from 'chalk'
+import { Command } from '@commander-js/extra-typings'
+import { findSeverity, type BuildInputs, divideAndRound, type Severity } from '../utils'
 
-import { findSeverity, printList, wrapWithTimer } from '../../scriptUtils.js';
-import { divideAndRound, exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
-import type { AssetInfo, BuildCommandInputs, Severity } from '../types.js';
+const severityFinder = (results: ESLint.LintResult[]) => findSeverity(results, ({ warningCount, fatalErrorCount }) => {
+	if (fatalErrorCount > 0) return 'error'
+	if (warningCount > 0) return 'warn'
+	return 'success'
+})
 
-export type LintCommandInputs = ({
-  lint: false;
-  fix: false;
-} | {
-  lint: true;
-  fix: boolean;
-}) & {
-  srcDir: string;
-};
+interface LintOpts {
+  srcDir: string
+  fix?: boolean
+}
 
-export type LintOpts = Omit<LintCommandInputs, 'lint'>;
+interface LintResults {
+  results: ESLint.LintResult[]
+  formatter: ESLint.Formatter
+  severity: Severity
+}
 
-type LintResults = {
-  formatted: string;
-  results: ESLint.LintResult[],
-  severity: Severity;
-};
+export const runEslint = wrapWithTimer(async ({ bundles, tabs }: BuildInputs, { srcDir, fix }: LintOpts): Promise<LintResults> => {
+	const linter = new ESLint({
+		cwd: pathlib.resolve(srcDir),
+		extensions: ['ts', 'tsx'],
+		fix
+	})
 
-/**
- * Run eslint programmatically
- * Refer to https://eslint.org/docs/latest/integrate/nodejs-api for documentation
- */
-export const runEslint = wrapWithTimer(async (opts: LintOpts, { bundles, tabs }: Partial<AssetInfo>): Promise<LintResults> => {
-  const linter = new ESLint({
-    cwd: pathlib.resolve(opts.srcDir),
-    extensions: ['ts', 'tsx'],
-    fix: opts.fix,
-  });
+	let promise: Promise<ESLint.LintResult[]>
+	if (tabs === undefined && bundles === undefined) {
+		promise = linter.lintFiles('**/*.ts')
+	} else {
+		const fileNames: string[] = []
+		if (bundles?.length > 0) {
+			bundles.forEach((bundle) => `bundles/${bundle}/index.ts`)
+		}
 
-  const promises: Promise<ESLint.LintResult[]>[] = [];
-  if (bundles?.length > 0 || tabs?.length > 0) {
-    // Lint specific bundles and tabs
-    if (bundles.length > 0) {
-      printList(`${chalk.magentaBright('Running eslint on the following bundles')}:\n`, bundles);
-      bundles.forEach((bundle) => promises.push(linter.lintFiles(pathlib.join('bundles', bundle))));
-    }
+		if (tabs?.length > 0) {
+			tabs.forEach((tabName) => fileNames.push(`tabs/${tabName}/index.tsx`))
+		}
 
-    if (tabs.length > 0) {
-      printList(`${chalk.magentaBright('Running eslint on the following tabs')}:\n`, tabs);
-      tabs.forEach((tabName) => promises.push(linter.lintFiles(pathlib.join('tabs', tabName))));
-    }
-  } else {
-    // Glob all source files, then lint files based on eslint configuration
-    promises.push(linter.lintFiles('**/*.ts'));
-    console.log(`${chalk.magentaBright('Linting all files in')} ${opts.srcDir}`);
-  }
+		promise = linter.lintFiles(fileNames)
+	}
 
-  // const [lintBundles, lintTabs, lintMisc] = await Promise.all(promises);
-  const lintResults = (await Promise.all(promises)).flat();
+	const linterResults = await promise
+	if (fix) {
+		await ESLint.outputFixes(linterResults)
+	}
 
-  if (opts.fix) {
-    console.log(chalk.magentaBright('Running eslint autofix...'));
-    await ESLint.outputFixes(lintResults);
-  }
+	const outputFormatter = await linter.loadFormatter('stylish')
+	const severity = severityFinder(linterResults)
+	return {
+		results: linterResults,
+		formatter: outputFormatter,
+		severity
+	}
+})
 
-  const lintSeverity = findSeverity(lintResults, ({ errorCount, warningCount }) => {
-    if (errorCount > 0) return 'error';
-    if (warningCount > 0) return 'warn';
-    return 'success';
-  });
+export const eslintResultsLogger = async ({ results, formatter, severity }: LintResults, elapsed: number) => {
+	const formatted = await formatter.format(results)
+	let errStr: string
 
-  const outputFormatter = await linter.loadFormatter('stylish');
-  const formatterOutput = outputFormatter.format(lintResults);
+	if (severity === 'error') errStr = chalk.cyanBright('with ') + chalk.redBright('errors')
+	else if (severity === 'warn') errStr = chalk.cyanBright('with ') + chalk.yellowBright('warnings')
+	else errStr = chalk.greenBright('successfully')
 
-  return {
-    formatted: typeof formatterOutput === 'string' ? formatterOutput : await formatterOutput,
-    results: lintResults,
-    severity: lintSeverity,
-  };
-});
+	return `${chalk.cyanBright(`Linting completed in ${divideAndRound(elapsed, 1000)}s ${errStr}:`)}\n${formatted}`
+}
 
-export const logLintResult = (input: Awaited<ReturnType<typeof runEslint>> | null) => {
-  if (!input) return;
-
-  const { elapsed, result: { formatted, severity } } = input;
-  let errStr: string;
-
-  if (severity === 'error') errStr = chalk.cyanBright('with ') + chalk.redBright('errors');
-  else if (severity === 'warn') errStr = chalk.cyanBright('with ') + chalk.yellowBright('warnings');
-  else errStr = chalk.greenBright('successfully');
-
-  console.log(`${chalk.cyanBright(`Linting completed in ${divideAndRound(elapsed, 1000)}s ${errStr}:`)}\n${formatted}`);
-};
-
-const getLintCommand = () => new Command('lint')
-  .description('Run eslint')
-  .option('--fix', 'Ask eslint to autofix linting errors', false)
-  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
-  .option('--manifest <file>', 'Manifest file', 'modules.json')
-  .option('-m, --modules <modules...>', 'Manually specify which modules to check', null)
-  .option('-t, --tabs <tabs...>', 'Manually specify which tabs to check', null)
-  .option('-v, --verbose', 'Display more information about the build results', false)
-  .action(async ({ modules, tabs, manifest, ...opts }: BuildCommandInputs & LintCommandInputs) => {
-    const assets = modules !== null || tabs !== null
-      ? await retrieveBundlesAndTabs(manifest, modules, tabs)
-      : {
-        modules: undefined,
-        tabs: undefined,
-      };
-
-    const result = await runEslint(opts, assets);
-    logLintResult(result);
-    exitOnError([], result.result);
-  });
-
-export default getLintCommand;
+export function getLintCommand() {
+	return new Command('lint')
+		.description('Run eslint')
+		.addOption(srcDirOption)
+		.addOption(lintFixOption)
+		.addOption(manifestOption)
+		.addOption(bundlesOption)
+		.addOption(tabsOption)
+		.action(async (opts) => {
+			const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs)
+			const { result, elapsed } = await runEslint(inputs, opts)
+			const output = await eslintResultsLogger(result, elapsed)
+			console.log(output)
+		})
+}

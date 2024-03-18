@@ -1,21 +1,16 @@
-import { Command } from 'commander';
+import { Command } from '@commander-js/extra-typings'
+import templateCommand from './templates'
+import getBuildCommand from './build'
+import getTestCommand from './testing'
+import { getLintCommand } from './build/prebuild/lint'
+import { getTscCommand } from './build/prebuild/tsc'
 
-import { watchCommand } from './build/dev.js';
-import buildAllCommand from './build/index.js';
-import getPrebuildCommand, { getLintCommand, getTscCommand } from './build/prebuild/index.js';
-import devserverCommand from './devserver/index.js';
-import createCommand from './templates/index.js';
-import getTestCommand from './testing/index.js';
+await new Command('scripts')
+	.addCommand(getBuildCommand())
+	.addCommand(getLintCommand())
+	.addCommand(getTestCommand())
+	.addCommand(getTscCommand())
+	.addCommand(templateCommand)
+	.parseAsync()
 
-const parser = new Command()
-  .addCommand(buildAllCommand)
-  .addCommand(createCommand)
-  .addCommand(getLintCommand())
-  .addCommand(getPrebuildCommand())
-  .addCommand(getTscCommand())
-  .addCommand(getTestCommand())
-  .addCommand(watchCommand)
-  .addCommand(devserverCommand);
-
-await parser.parseAsync();
-process.exit();
+process.exit(0)

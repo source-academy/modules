@@ -1,242 +1,120 @@
-import chalk from 'chalk';
 import fs from 'fs/promises';
-import {
-  type DeclarationReflection,
-  type IntrinsicType,
-  type ProjectReflection,
-  type ReferenceType,
-  type SomeType,
-  ReflectionKind,
-} from 'typedoc';
+import * as td from 'typedoc';
+import { createBuildCommand, createBuildCommandHandler, type OperationResult } from '../utils';
+import drawdown from './drawdown';
+import { initTypedoc } from './docsUtils';
 
-import { printList, wrapWithTimer } from '../../scriptUtils.js';
-import {
-  createBuildCommand,
-  createOutDir,
-  exitOnError,
-  logResult,
-  retrieveBundles,
-} from '../buildUtils.js';
-import { logTscResults, runTsc } from '../prebuild/tsc.js';
-import type { BuildCommandInputs, BuildResult, Severity, UnreducedResult } from '../types';
+export const typeToName = (type?: td.SomeType, alt: string = 'unknown') => (type ? (type as td.ReferenceType | td.IntrinsicType).name : alt);
 
-import { initTypedoc, logTypedocTime } from './docUtils.js';
-import drawdown from './drawdown.js';
+export const parsers = {
+	[td.ReflectionKind.Function](obj) {
+		// Functions should have only 1 signature
+		const [signature] = obj.signatures;
 
+		let description: string;
+		if (obj.comment) {
+			description = drawdown(obj.comment.summary.map(({ text }) => text)
+				.join(''));
+		} else {
+			description = 'No description available';
+		}
 
-const typeToName = (type?: SomeType, alt: string = 'unknown') => (type ? (type as ReferenceType | IntrinsicType).name : alt);
+		const params = signature.parameters.reduce((res, { type, name }) => ({
+			...res,
+			[name]: typeToName(type)
+		}), {});
 
-type ReflectionParser = (docs: DeclarationReflection) => Record<'header' | 'desc', string>;
-type ReflectionParsers = Partial<Record<ReflectionKind, ReflectionParser>>;
+		return {
+			name: obj.name,
+			description,
+			params,
+			retType: typeToName(obj.type, 'void')
+		};
+	},
+	[td.ReflectionKind.Variable](obj) {
+		let description: string;
+		if (obj.comment) {
+			description = drawdown(obj.comment.summary.map(({ text }) => text)
+				.join(''));
+		} else {
+			description = 'No description available';
+		}
 
-/**
- * Parsers to convert typedoc elements into strings
- */
-export const parsers: ReflectionParsers = {
-  [ReflectionKind.Variable](element) {
-    let desc: string;
-    if (!element.comment) desc = 'No description available';
-    else {
-      desc = element.comment.summary.map(({ text }) => text)
-        .join('');
-    }
-    return {
-      header: `${element.name}: ${typeToName(element.type)}`,
-      desc: drawdown(desc),
-    };
-  },
-  [ReflectionKind.Function]({ name: elementName, signatures: [signature] }) {
-    // Form the parameter string for the function
-    let paramStr: string;
-    if (!signature.parameters) paramStr = '()';
-    else {
-      paramStr = `(${signature.parameters
-        .map(({ type, name }) => {
-          const typeStr = typeToName(type);
-          return `${name}: ${typeStr}`;
-        })
-        .join(', ')})`;
-    }
-    const resultStr = typeToName(signature.type, 'void');
-    let desc: string;
-    if (!signature.comment) desc = 'No description available';
-    else {
-      desc = signature.comment.summary.map(({ text }) => text)
-        .join('');
-    }
-    return {
-      header: `${elementName}${paramStr} → {${resultStr}}`,
-      desc: drawdown(desc),
-    };
-  },
-};
+		return {
+			name: obj.name,
+			description,
+			type: typeToName(obj.type)
+		};
+	}
+} satisfies Partial<Record<td.ReflectionKind, (element: td.DeclarationReflection) => any>>;
 
-/**
- * Build a single json
- */
-const buildJson = wrapWithTimer(async (
-  bundle: string,
-  moduleDocs: DeclarationReflection | undefined,
-  outDir: string,
-): Promise<BuildResult> => {
-  try {
-    if (!moduleDocs) {
-      return {
-        severity: 'error',
-        error: `Could not find generated docs for ${bundle}`,
-      };
-    }
+async function buildJson(name: string, reflection: td.DeclarationReflection, outDir: string): Promise<OperationResult> {
+	try {
+		const jsonData = reflection.children.reduce((res, element) => {
+			const parser = parsers[element.kind];
 
-    const [sevRes, result] = moduleDocs.children.reduce(([{ severity, errors }, decls], decl) => {
-      try {
-        const parser = parsers[decl.kind];
-        if (!parser) {
-          return [{
-            severity: 'warn' as Severity,
-            errors: [...errors, `Symbol '${decl.name}': Could not find parser for type ${decl.getFriendlyFullName()}`],
-          }, decls];
-        }
-        const { header, desc } = parser(decl);
+			if (!parser) return res;
 
-        return [{
-          severity,
-          errors,
-        }, {
-          ...decls,
-          [decl.name]: `<div><h4>${header}</h4><div class="description">${desc}</div></div>`,
+			return {
+				...res,
+				[element.name]: parser(element)
+			};
+		}, {});
 
-        }];
-      } catch (error) {
-        return [{
-          severity: 'warn' as Severity,
-          errors: [...errors, `Could not parse declaration for ${decl.name}: ${error}`],
-        }];
-      }
-    }, [
-      {
-        severity: 'success',
-        errors: [],
-      },
-      {},
-    ] as [
-      {
-        severity: Severity,
-        errors: any[]
-      },
-      Record<string, string>,
-      // Record<string, ({
-      //   description: string;
-      // } & ({
-      //   kind: 'function',
-      //   returnType: string;
-      //   parameters: {
-      //     name: string;
-      //     type: string;
-      //   }[],
-      // } | {
-      //   kind: 'variable',
-      //   type: string;
-      // }))>,
-    ]);
+		await fs.writeFile(`${outDir}/jsons/${name}.json`, JSON.stringify(jsonData, null, 2));
 
-    let size: number | undefined;
-    if (result) {
-      const outFile = `${outDir}/jsons/${bundle}.json`;
-      await fs.writeFile(outFile, JSON.stringify(result, null, 2));
-      ({ size } = await fs.stat(outFile));
-    } else {
-      if (sevRes.severity !== 'error') sevRes.severity = 'warn';
-      sevRes.errors.push(`No json generated for ${bundle}`);
-    }
+		return {
+			name,
+			severity: 'success'
+		}
+	} catch (error) {
+		return {
+			name,
+			severity: 'error',
+			error
+		};
+	}
+}
 
-    const errorStr = sevRes.errors.length > 1 ? `${sevRes.errors[0]} +${sevRes.errors.length - 1}` : sevRes.errors[0];
+export async function buildJsons(
+	bundles: string[],
+	outDir: string,
+	project: td.ProjectReflection
+): Promise<Record<'jsons', OperationResult[]>> {
+	await fs.mkdir(`${outDir}/jsons`, { recursive: true })
 
-    return {
-      severity: sevRes.severity,
-      fileSize: size,
-      error: errorStr,
-    };
-  } catch (error) {
-    return {
-      severity: 'error',
-      error,
-    };
-  }
-});
+	if (bundles.length === 1) {
+		const [bundle] = bundles;
+		const result = await buildJson(
+			bundle,
+      project as unknown as td.DeclarationReflection,
+      outDir
+		);
 
-type BuildJsonOpts = {
-  bundles: string[];
-  outDir: string;
-};
+		return {
+			jsons: [result]
+		}
+	}
 
-/**
- * Build all specified jsons
- */
-export const buildJsons = async (project: ProjectReflection, { outDir, bundles }: BuildJsonOpts): Promise<UnreducedResult[]> => {
-  await fs.mkdir(`${outDir}/jsons`, { recursive: true });
-  if (bundles.length === 1) {
-    // If only 1 bundle is provided, typedoc's output is different in structure
-    // So this new parser is used instead.
-    const [bundle] = bundles;
-    const { elapsed, result } = await buildJson(bundle, project as any, outDir);
-    return [['json', bundle, {
-      ...result,
-      elapsed,
-    }] as UnreducedResult];
-  }
+	const results = await Promise.all(bundles.map((bundle) => buildJson(
+		bundle,
+    project.getChildByName(bundle) as td.DeclarationReflection,
+    outDir
+	)));
 
-  return Promise.all(
-    bundles.map(async (bundle) => {
-      const { elapsed, result } = await buildJson(bundle, project.getChildByName(bundle) as DeclarationReflection, outDir);
-      return ['json', bundle, {
-        ...result,
-        elapsed,
-      }] as UnreducedResult;
-    }),
-  );
-};
+	return {
+		jsons: results
+	}
+}
 
-/**
- * Get console command for building jsons
- *
- */
-const getJsonCommand = () => createBuildCommand('jsons', false)
-  .option('--tsc', 'Run tsc before building')
-  .argument('[modules...]', 'Manually specify which modules to build jsons for', null)
-  .action(async (modules: string[] | null, { manifest, srcDir, outDir, verbose, tsc }: Omit<BuildCommandInputs, 'modules' | 'tabs'>) => {
-    const [bundles] = await Promise.all([
-      retrieveBundles(manifest, modules),
-      createOutDir(outDir),
-    ]);
+const jsonCommandHandler = createBuildCommandHandler(async ({ bundles }, { srcDir, outDir, verbose }) => {
+	const [project] = await initTypedoc(bundles, srcDir, verbose)
+	return buildJsons(bundles, outDir, project)
+})
 
-    if (bundles.length === 0) return;
-
-    if (tsc) {
-      const tscResult = await runTsc(srcDir, {
-        bundles,
-        tabs: [],
-      });
-      logTscResults(tscResult);
-      if (tscResult.result.severity === 'error') process.exit(1);
-    }
-
-    const { elapsed: typedocTime, result: [, project] } = await initTypedoc({
-      bundles,
-      srcDir,
-      verbose,
-    });
-
-
-    logTypedocTime(typedocTime);
-    printList(chalk.magentaBright('Building jsons for the following modules:\n'), bundles);
-    const jsonResults = await buildJsons(project, {
-      bundles,
-      outDir,
-    });
-
-    logResult(jsonResults, verbose);
-    exitOnError(jsonResults);
-  })
-  .description('Build only jsons');
-
-export default getJsonCommand;
+export const getBuildJsonsCommand = () => createBuildCommand('jsons', 'Build json documentation')
+	.argument('[bundles...]')
+	.action((bundles, opts) => jsonCommandHandler({
+		bundles,
+		tabs: []
+	}, opts))

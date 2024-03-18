@@ -21,5 +21,5 @@ import context from 'js-slang/context';
  * @returns The incremented value of the number.
  */
 export function sample_function(x: number): number {
-  return ++x;
+	return ++x;
 } // Then any functions or variables you want to expose to the user is exported from the bundle's index.ts file
