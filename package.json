@@ -102,7 +102,7 @@
     "@box2d/debug-draw": "^0.10.0",
     "@jscad/modeling": "2.9.6",
     "@jscad/regl-renderer": "^2.6.1",
-    "@jscad/stl-serializer": "^2.1.13",
+    "@jscad/stl-serializer": "2.1.11",
     "@react-spring/three": "^9.7.3",
     "@react-three/drei": "^9.97.0",
     "@react-three/fiber": "^8.15.16",
