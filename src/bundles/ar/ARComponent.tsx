@@ -168,6 +168,7 @@ function AugmentedContent(props: ARState) {
   const [objects, setObjects] = useState<ARObject[]>([]);
   const highlightFrontObject = useRef(props.highlightFrontObject);
   const objectsRef = useRef<ARObject[]>();
+  const [timeOffset, setTimeOffset] = useState(0);
 
   useEffect(() => {
     controls.setObjectInSightCallback((prev, current) => {
@@ -215,7 +216,7 @@ function AugmentedContent(props: ARState) {
   function updateObjects(state: ARState) {
     const newObjects: ARObject[] = [];
     state.arObjects.forEach((object) => {
-      const newObject = ARObject.fromObject(object);
+      const newObject = ARObject.fromObject(object, getCurrentTime);
       if (newObject) {
         newObjects.push(newObject);
       }
@@ -231,6 +232,34 @@ function AugmentedContent(props: ARState) {
     });
     setObjects(newObjects);
     objectsRef.current = newObjects;
+  }
+
+  // Time
+
+  useEffect(() => {
+    try {
+      fetch('https://worldtimeapi.org/api/timezone/Asia/Singapore')
+        .then((response) => response.json())
+        .then((data) => {
+          let time = new Date(data.datetime).getTime();
+          let offset = time - new Date().getTime();
+          setTimeOffset(offset);
+          console.log('Time offset', offset);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch {}
+  }, []);
+
+  /**
+   * Obtains the current time that is synced with other devices.
+   * Offset obtained via this free api: https://worldtimeapi.org/api/timezone/Asia/Singapore
+   *
+   * @returns Corrected current timing.
+   */
+  function getCurrentTime() {
+    return new Date().getTime() + timeOffset;
   }
 
   return (

@@ -54,29 +54,29 @@ export class ARObject {
     object.isInFront = false;
     return object;
   };
-  static fromObject = (object: any) => {
+  static fromObject = (object: any, getCurrentTime?: () => number) => {
     if (!object) return;
     let isSelected = false;
     const tempSelected = object.isSelected;
     if (typeof tempSelected === 'boolean') {
       isSelected = tempSelected;
     }
-    let newObject = CubeObject.parseObject(object);
+    let newObject = CubeObject.parseObject(object, getCurrentTime);
     if (newObject) {
       newObject.isSelected = isSelected;
       return newObject;
     }
-    newObject = SphereObject.parseObject(object);
+    newObject = SphereObject.parseObject(object, getCurrentTime);
     if (newObject) {
       newObject.isSelected = isSelected;
       return newObject;
     }
-    newObject = GltfObject.parseObject(object);
+    newObject = GltfObject.parseObject(object, getCurrentTime);
     if (newObject) {
       newObject.isSelected = isSelected;
       return newObject;
     }
-    newObject = UIObject.parseObject(object);
+    newObject = UIObject.parseObject(object, getCurrentTime);
     if (newObject) {
       newObject.isSelected = isSelected;
       return newObject;
@@ -144,13 +144,17 @@ export class CubeObject extends ARObject {
     this.depth = depth;
     this.color = color;
   }
-  static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
+  static parseObject(
+    object: any,
+    onSelect?: () => void,
+    getCurrentTime?: () => number,
+  ): ARObject | undefined {
     if (!object || object.type !== CUBE_OBJECT_TYPE) return undefined;
     const id = object.id;
     const position = parseVector3(object.position);
     const render = parseRender(object.behaviours?.render);
     const rotation = parseRotation(object.behaviours?.rotation);
-    const movement = parseMovement(object.behaviours?.movement);
+    const movement = parseMovement(object.behaviours?.movement, getCurrentTime);
     const width = object.width;
     const height = object.height;
     const depth = object.depth;
@@ -215,13 +219,17 @@ export class SphereObject extends ARObject {
     this.radius = radius;
     this.color = color;
   }
-  static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
+  static parseObject(
+    object: any,
+    onSelect?: () => void,
+    getCurrentTime?: () => number,
+  ): ARObject | undefined {
     if (!object || object.type !== SPHERE_OBJECT_TYPE) return undefined;
     const id = object.id;
     const position = parseVector3(object.position);
     const render = parseRender(object.behaviours?.render);
     const rotation = parseRotation(object.behaviours?.rotation);
-    const movement = parseMovement(object.behaviours?.movement);
+    const movement = parseMovement(object.behaviours?.movement, getCurrentTime);
     const radius = object.radius;
     const color = object.color;
     if (
@@ -277,13 +285,17 @@ export class GltfObject extends ARObject {
     this.src = src;
     this.scale = scale;
   }
-  static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
+  static parseObject(
+    object: any,
+    onSelect?: () => void,
+    getCurrentTime?: () => number,
+  ): ARObject | undefined {
     if (!object || object.type !== GLTF_OBJECT_TYPE) return undefined;
     const id = object.id;
     const position = parseVector3(object.position);
     const render = parseRender(object.behaviours?.render);
     const rotation = parseRotation(object.behaviours?.rotation);
-    const movement = parseMovement(object.behaviours?.movement);
+    const movement = parseMovement(object.behaviours?.movement, getCurrentTime);
     const src = object.src;
     const scale = object.scale;
     if (
@@ -336,13 +348,17 @@ export class UIObject extends ARObject {
     );
     this.uiJson = uiJson;
   }
-  static parseObject(object: any, onSelect?: () => void): ARObject | undefined {
+  static parseObject(
+    object: any,
+    onSelect?: () => void,
+    getCurrentTime?: () => number,
+  ): ARObject | undefined {
     if (!object || object.type !== UI_OBJECT_TYPE) return undefined;
     const id = object.id;
     const position = parseVector3(object.position);
     const render = parseRender(object.behaviours?.render);
     const rotation = parseRotation(object.behaviours?.rotation);
-    const movement = parseMovement(object.behaviours?.movement);
+    const movement = parseMovement(object.behaviours?.movement, getCurrentTime);
     const uiJson = parseJsonInterface(object.uiJson);
     if (
       typeof id === 'string' &&
