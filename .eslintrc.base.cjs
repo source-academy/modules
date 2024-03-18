@@ -4,6 +4,8 @@ let todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 module.exports = {
   extends: ['eslint:recommended'],
 
+  ignorePatterns: ['node_modules'],
+
   env: {
     node: true,
     //NOTE Set to es2022 once VSCode eslint extension updates
@@ -375,6 +377,11 @@ module.exports = {
       'after', // Was "before"
     ],
     'implicit-arrow-linebreak': 1,
+    'import/order': [1, {
+      alphabetize: {
+        orderImportKind: 'asc'
+      }
+    }],
     indent: [
       1,
       'tab', // Was 4
