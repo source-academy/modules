@@ -1,5 +1,4 @@
-import { Card, Icon, Tab, type TabProps, Tabs } from "@blueprintjs/core";
-import { Tooltip2 } from "@blueprintjs/popover2";
+import { Card, Icon, Tab, type TabProps, Tabs, Tooltip } from "@blueprintjs/core";
 import React from "react";
 import type { SideContentTab } from "./types";
 
@@ -37,11 +36,11 @@ const renderTab = (
 ) => {
 	const iconSize = 20;
 	const tabTitle = (
-		<Tooltip2 content={tab.label}>
+		<Tooltip content={tab.label}>
 			<div className={!shouldAlert ? "side-content-tooltip" : "side-content-tooltip side-content-tab-alert"}>
 				<Icon icon={tab.iconName} iconSize={iconSize} />
 			</div>
-		</Tooltip2>
+		</Tooltip>
 	);
 	const tabProps: TabProps = {
 		id: tab.id,

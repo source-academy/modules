@@ -188,6 +188,7 @@ export function create_config(lst: List): ObjectConfig {
       throw_error('config element is not a pair!');
     }
     config[head(xs)] = tail(xs);
+    return null;
   }, null, lst);
   return config;
 }

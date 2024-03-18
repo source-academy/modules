@@ -197,7 +197,7 @@ export class ProgrammableRepl {
 
     runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options)
       .then((evalResult) => {
-        if (evalResult.status === 'suspended' || evalResult.status === 'suspended-ec-eval') {
+        if (evalResult.status === 'suspended' || evalResult.status === 'suspended-cse-eval') {
           throw new Error('This should not happen');
         }
         if (evalResult.status !== 'error') {

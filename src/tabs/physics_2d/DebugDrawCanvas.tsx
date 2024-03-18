@@ -2,9 +2,8 @@
 // We have to disable linting rules since Box2D functions do not
 // follow the same guidelines as the rest of the codebase.
 
-import { Button, Icon, Slider } from '@blueprintjs/core';
+import { Button, Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { DebugDraw } from '@box2d/debug-draw';
 import { DrawShapes, type b2World } from '@box2d/core';
@@ -209,13 +208,13 @@ DebugDrawCanvasState
             marginRight: '20px',
           }}
         >
-          <Tooltip2 content={this.state.isPlaying ? 'Pause' : 'Play'}>
+          <Tooltip content={this.state.isPlaying ? 'Pause' : 'Play'}>
             <Button onClick={this.onPlayButtonClick}>
               <Icon
                 icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
               />
             </Button>
-          </Tooltip2>
+          </Tooltip>
         </div>
         <div
           style={{

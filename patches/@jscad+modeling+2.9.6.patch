@@ -19,20 +19,15 @@ index 85720f4..9ef2a9d 100644
 -declare function toPolygons(geometry: Geom3): Array<Poly3>
 +declare function toPolygons(geometry: Geom3, colorizePolygons: boolean): Array<Poly3>
 diff --git a/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js b/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js
-index 25f9f50..300aaa4 100644
+index 25f9f50..bdb9f16 100644
 --- a/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js
 +++ b/node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js
-@@ -1,5 +1,20 @@
+@@ -1,5 +1,15 @@
 +const poly3 = require("../poly3")
  const applyTransforms = require('./applyTransforms')
  
 +// Colorize poly3
 +const colorPoly3 = (color, object) => {
-+    // const newpoly = poly3.clone(object)
-+    // newpoly.color = color
-+    // return newpoly
-+    // console.log(object.color)
-+    // console.log(color)
 +    if(!object.color) {
 +        object.color = color
 +    }
@@ -43,7 +38,7 @@ index 25f9f50..300aaa4 100644
  /**
   * Produces an array of polygons from the given geometry, after applying transforms.
   * The returned array should not be modified as the polygons are shared with the geometry.
-@@ -10,6 +25,12 @@ const applyTransforms = require('./applyTransforms')
+@@ -10,6 +20,12 @@ const applyTransforms = require('./applyTransforms')
   * @example
   * let sharedpolygons = toPolygons(geometry)
   */
@@ -143,7 +138,7 @@ index a9370c9..14b674b 100644
  }
  
 diff --git a/node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3Sub.js b/node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3Sub.js
-index b43dd86..6ac481d 100644
+index b43dd86..0e45987 100644
 --- a/node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3Sub.js
 +++ b/node_modules/@jscad/modeling/src/operations/booleans/intersectGeom3Sub.js
 @@ -15,9 +15,8 @@ const intersectGeom3Sub = (geometry1, geometry2) => {
@@ -153,8 +148,8 @@ index b43dd86..6ac481d 100644
 -  const a = new Tree(geom3.toPolygons(geometry1))
 -  const b = new Tree(geom3.toPolygons(geometry2))
 -
-+  const a = new Tree(geom3.toPolygons(geometry1, colorizePolygons = true))
-+  const b = new Tree(geom3.toPolygons(geometry2, colorizePolygons = true))
++  const a = new Tree(geom3.toPolygons(geometry1, true))
++  const b = new Tree(geom3.toPolygons(geometry2, true))
    a.invert()
    b.clipTo(a)
    b.invert()
@@ -171,7 +166,7 @@ index df86fec..dba2983 100644
  }
  
 diff --git a/node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3Sub.js b/node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3Sub.js
-index 62eb4cd..815ab38 100644
+index 62eb4cd..196a7e0 100644
 --- a/node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3Sub.js
 +++ b/node_modules/@jscad/modeling/src/operations/booleans/subtractGeom3Sub.js
 @@ -15,8 +15,8 @@ const subtractGeom3Sub = (geometry1, geometry2) => {
@@ -180,8 +175,8 @@ index 62eb4cd..815ab38 100644
  
 -  const a = new Tree(geom3.toPolygons(geometry1))
 -  const b = new Tree(geom3.toPolygons(geometry2))
-+  const a = new Tree(geom3.toPolygons(geometry1, colorizePolygons = true))
-+  const b = new Tree(geom3.toPolygons(geometry2, colorizePolygons = true))
++  const a = new Tree(geom3.toPolygons(geometry1, true))
++  const b = new Tree(geom3.toPolygons(geometry2, true))
  
    a.invert()
    a.clipTo(b)
@@ -227,7 +222,7 @@ index cf9c591..af1842c 100644
  }
  
 diff --git a/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js b/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
-index a4026e3..2751e56 100644
+index a4026e3..2ac0689 100644
 --- a/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
 +++ b/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js
 @@ -14,8 +14,8 @@ const unionSub = (geometry1, geometry2) => {
@@ -236,8 +231,19 @@ index a4026e3..2751e56 100644
  
 -  const a = new Tree(geom3.toPolygons(geometry1))
 -  const b = new Tree(geom3.toPolygons(geometry2))
-+  const a = new Tree(geom3.toPolygons(geometry1, colorizePolygons = true))
-+  const b = new Tree(geom3.toPolygons(geometry2, colorizePolygons = true))
-   
++  const a = new Tree(geom3.toPolygons(geometry1, true))
++  const b = new Tree(geom3.toPolygons(geometry2, true))
+ 
    a.clipTo(b, false)
    // b.clipTo(a, true); // ERROR: doesn't work
+@@ -32,8 +32,8 @@ const unionSub = (geometry1, geometry2) => {
+ // Like union, but when we know that the two solids are not intersecting
+ // Do not use if you are not completely sure that the solids do not intersect!
+ const unionForNonIntersecting = (geometry1, geometry2) => {
+-  let newpolygons = geom3.toPolygons(geometry1)
+-  newpolygons = newpolygons.concat(geom3.toPolygons(geometry2))
++  let newpolygons = geom3.toPolygons(geometry1, true)
++  newpolygons = newpolygons.concat(geom3.toPolygons(geometry2, true))
+   return geom3.create(newpolygons)
+ }
+ 
