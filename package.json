@@ -107,7 +107,7 @@
     "classnames": "^2.3.1",
     "dayjs": "^1.10.4",
     "gl-matrix": "^3.3.0",
-    "js-slang": "^1.0.20",
+    "js-slang": "^1.0.48",
     "lodash": "^4.17.21",
     "patch-package": "^6.5.1",
     "phaser": "^3.54.0",
