@@ -47,7 +47,7 @@ export function z_of(pt: Point): number {
  * ```
  */
 export function r_of(pt: Point): number {
-  return ( pt.color[0] ?? 0 ) * 255;
+  return (pt.color[0] ?? 0) * 255;
 }
 
 /**
@@ -62,7 +62,7 @@ export function r_of(pt: Point): number {
  * ```
  */
 export function g_of(pt: Point): number {
-  return ( pt.color[1] ?? 0 ) * 255;
+  return (pt.color[1] ?? 0) * 255;
 }
 
 /**
@@ -77,7 +77,7 @@ export function g_of(pt: Point): number {
  * ```
  */
 export function b_of(pt: Point): number {
-  return ( pt.color[2] ?? 0 ) * 255;
+  return (pt.color[2] ?? 0) * 255;
 }
 export function generatePlot(
   type: string,

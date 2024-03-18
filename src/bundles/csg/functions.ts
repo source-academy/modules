@@ -10,6 +10,7 @@ import {
   subtract as _subtract,
   union as _union,
 } from '@jscad/modeling/src/operations/booleans';
+import { geom3 } from '@jscad/modeling/src/geometries';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
 import {
@@ -31,8 +32,6 @@ import {
   centerPrimitive,
 } from './utilities';
 import { degreesToRadians } from '../../common/utilities.js';
-
-
 
 /* [Main] */
 /* NOTE
@@ -60,8 +59,6 @@ export function listToArray(l: List): Operable[] {
 export function arrayToList(array: Operable[]): List {
   return list(...array);
 }
-
-
 
 /* [Exports] */
 
@@ -182,6 +179,15 @@ export const white: string = '#FFFFFF';
 // [Functions - Primitives]
 
 /**
+ * An empty Shape.
+ *
+ * @category Primitives
+ */
+export function empty_shape(): Shape {
+  return new Shape();
+}
+
+/**
  * Returns a cube Shape in the specified color.
  *
  * - Side length: 1
@@ -193,12 +199,7 @@ export const white: string = '#FFFFFF';
  */
 export function cube(hex: string): Shape {
   let solid: Solid = primitives.cube({ size: 1 });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -214,12 +215,7 @@ export function cube(hex: string): Shape {
  */
 export function rounded_cube(hex: string): Shape {
   let solid: Solid = primitives.roundedCuboid({ size: [1, 1, 1] });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -239,12 +235,7 @@ export function cylinder(hex: string): Shape {
     height: 1,
     radius: 0.5,
   });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -264,12 +255,7 @@ export function rounded_cylinder(hex: string): Shape {
     height: 1,
     radius: 0.5,
   });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -285,12 +271,7 @@ export function rounded_cylinder(hex: string): Shape {
  */
 export function sphere(hex: string): Shape {
   let solid: Solid = primitives.sphere({ radius: 0.5 });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -306,12 +287,7 @@ export function sphere(hex: string): Shape {
  */
 export function geodesic_sphere(hex: string): Shape {
   let solid: Solid = primitives.geodesicSphere({ radius: 0.5 });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -337,12 +313,7 @@ export function pyramid(hex: string): Shape {
     endRadius: [0, 0],
     segments: 4,
   });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   shape = rotate(shape, 0, 0, degreesToRadians(45)) as Shape;
   return centerPrimitive(shape);
 }
@@ -364,12 +335,7 @@ export function cone(hex: string): Shape {
     startRadius: [0.5, 0.5],
     endRadius: [0, 0],
   });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -385,16 +351,8 @@ export function cone(hex: string): Shape {
  * @category Primitives
  */
 export function prism(hex: string): Shape {
-  let solid: Solid = extrudeLinear(
-    { height: 1 },
-    primitives.triangle(),
-  );
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let solid: Solid = extrudeLinear({ height: 1 }, primitives.triangle());
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   shape = rotate(shape, 0, 0, degreesToRadians(-90)) as Shape;
   return centerPrimitive(shape);
 }
@@ -414,12 +372,7 @@ export function star(hex: string): Shape {
     { height: 1 },
     primitives.star({ outerRadius: 0.5 }),
   );
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -439,12 +392,7 @@ export function torus(hex: string): Shape {
     innerRadius: 0.15,
     outerRadius: 0.35,
   });
-  let shape: Shape = new Shape(
-    colorSolid(
-      hexToColor(hex),
-      solid,
-    ),
-  );
+  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
