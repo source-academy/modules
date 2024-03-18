@@ -203,7 +203,7 @@ require => {
         "/ReplModuleUserCode.js": code
       };
       (0, import_js_slang.runFilesInContext)(sourceFile, "/ReplModuleUserCode.js", import_context.default, options).then(evalResult => {
-        if (evalResult.status === "suspended" || evalResult.status === "suspended-ec-eval") {
+        if (evalResult.status === "suspended" || evalResult.status === "suspended-cse-eval") {
           throw new Error("This should not happen");
         }
         if (evalResult.status !== "error") {

@@ -69888,6 +69888,7 @@ require => {
         throw_error("config element is not a pair!");
       }
       config[(0, import_list.head)(xs)] = (0, import_list.tail)(xs);
+      return null;
     }, null, lst);
     return config;
   }
