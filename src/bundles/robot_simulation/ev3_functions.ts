@@ -14,7 +14,20 @@ import { motorConfig } from './controllers/ev3/ev3/default/config';
 
 type MotorFunctionReturnType = Motor | null;
 
-// Utility
+/**
+ * @categoryDescription EV3
+ * These functions are mocking the the normal EV3 functions found
+ * at https://docs.sourceacademy.org/EV3/global.html
+ * @module
+ */
+
+/**
+ * Pauses for a period of time.
+ *
+ * @param duration The time to wait, in milliseconds.
+ *
+ * @category EV3
+ */
 export function ev3_pause(duration: number): void {
   const world = getWorldFromContext();
   const program = world.controllers.controllers.find(
