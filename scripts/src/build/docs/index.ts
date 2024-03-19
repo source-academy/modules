@@ -34,3 +34,5 @@ export const getBuildDocsCommand = () => createBuildCommand(
 
 export { getBuildJsonsCommand } from './json'
 export { getBuildHtmlCommand } from './html'
+
+export { buildJsons, buildHtml }

@@ -12,8 +12,8 @@ export const parsers = {
 		const [signature] = obj.signatures;
 
 		let description: string;
-		if (obj.comment) {
-			description = drawdown(obj.comment.summary.map(({ text }) => text)
+		if (signature.comment) {
+			description = drawdown(signature.comment.summary.map(({ text }) => text)
 				.join(''));
 		} else {
 			description = 'No description available';
@@ -52,12 +52,9 @@ async function buildJson(name: string, reflection: td.DeclarationReflection, out
 	try {
 		const jsonData = reflection.children.reduce((res, element) => {
 			const parser = parsers[element.kind];
-
-			if (!parser) return res;
-
 			return {
 				...res,
-				[element.name]: parser(element)
+				[element.name]: parser ? parser(element) : {}
 			};
 		}, {});
 
