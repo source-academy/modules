@@ -82,7 +82,7 @@ export const getBuildBundlesCommand = () => createBuildCommand(
 	'bundles',
 	'Build bundles'
 )
-	.argument('[bundles...')
+	.argument('[bundles...]')
 	.action((bundles, opts) => bundlesCommandHandler({
 		bundles,
 		tabs: []

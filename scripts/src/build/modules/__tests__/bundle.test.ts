@@ -1,7 +1,6 @@
 import { build as esbuild } from 'esbuild';
-import fs from 'fs/promises';
-import { outputBundle } from '../commons';
-import { commonEsbuildOptions } from '../commons';
+import { commonEsbuildOptions, outputBundleOrTab } from '../commons';
+import { mockStream } from './streamMocker';
 
 const testBundle = `
   import context from 'js-slang/context';
@@ -23,19 +22,13 @@ test('building a bundle', async () => {
 		external: ['js-slang*']
 	});
 
+	const rawBundleTextPromise = mockStream()
 
-	const result = await outputBundle(file, 'build');
+	const result = await outputBundleOrTab(file, 'build');
 	expect(result.severity)
 		.toEqual('success')
 
-	expect(fs.writeFile)
-		.toHaveBeenCalledTimes(1)
-
-	const call = (fs.writeFile as jest.MockedFunction<typeof fs.writeFile>).mock.calls[0];
-
-	expect(call[0])
-		.toEqual('build/bundles/test0.js')
-	const bundleText = `(${call[1]})`;
+	const bundleText = (await rawBundleTextPromise).slice('export default'.length)
 	const mockContext = {
 		moduleContexts: {
 			test0: {

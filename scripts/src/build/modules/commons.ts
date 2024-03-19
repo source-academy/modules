@@ -25,7 +25,7 @@ export const commonEsbuildOptions: ESBuildOptions = {
 
 export async function outputBundleOrTab({ path, text }: OutputFile, outDir: string): Promise<OperationResult> {
 	const [type, name] = path.split(pathlib.sep)
-		.slice(-3)
+		.slice(-3, -1)
 	let file: fs.FileHandle | null = null
 	try {
 		const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program
@@ -41,7 +41,6 @@ export async function outputBundleOrTab({ path, text }: OutputFile, outDir: stri
 		const callExpression = varDeclarator.init as CallExpression;
 		const moduleCode = callExpression.callee as ArrowFunctionExpression;
 
-
 		const output: ExportDefaultDeclaration = {
 			type: 'ExportDefaultDeclaration',
 			declaration: {
@@ -53,8 +52,9 @@ export async function outputBundleOrTab({ path, text }: OutputFile, outDir: stri
 			}
 		}
 
-		file = await fs.open(`${outDir}/${type}/${name}.js`)
-		generate(output, { write: file })
+		file = await fs.open(`${outDir}/${type}/${name}.js`, 'w')
+		const writeStream = file.createWriteStream()
+		generate(output, { output: writeStream })
 		return {
 			severity: 'success',
 			name
@@ -66,6 +66,6 @@ export async function outputBundleOrTab({ path, text }: OutputFile, outDir: stri
 			error
 		}
 	} finally {
-		if (file) file.close()
+		if (file) await file.close()
 	}
 }
