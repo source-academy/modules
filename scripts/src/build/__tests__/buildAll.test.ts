@@ -1,22 +1,24 @@
 import getBuildAllCommand from '..';
-import * as docsModule from '../docs';
 import * as lintModule from '../prebuild/lint';
 import * as tscModule from '../prebuild/tsc';
-import { type MockedFunction } from 'jest-mock';
+import * as jsonModule from '../docs/json'
+import * as htmlModule from '../docs/html'
+import type { MockedFunction } from 'jest-mock';
 
 import fs from 'fs/promises';
 import pathlib from 'path';
 
 jest.mock('../prebuild/tsc');
 jest.mock('../prebuild/lint');
+jest.mock('../docs/docsUtils')
 
 jest.mock('esbuild', () => ({
 	build: jest.fn()
 		.mockResolvedValue({ outputFiles: [] })
 }));
 
-jest.spyOn(docsModule, 'buildJsons');
-jest.spyOn(docsModule, 'buildHtml');
+jest.spyOn(jsonModule, 'buildJsons');
+jest.spyOn(htmlModule, 'buildHtml');
 
 const asMock = <T extends (...any: any[]) => any>(func: T) => func as MockedFunction<typeof func>;
 const runCommand = (...args: string[]) => getBuildAllCommand()
@@ -26,19 +28,16 @@ describe('test build all command', () => {
 	it('should create the output directories, copy the manifest, and call all build functions', async () => {
 		await runCommand();
 
-		expect(fs.mkdir)
-			.toBeCalledWith('build', { recursive: true })
-
 		expect(fs.copyFile)
 			.toBeCalledWith('modules.json', pathlib.join('build', 'modules.json'));
 
 		// expect(docsModule.initTypedoc)
 		//   .toHaveBeenCalledTimes(1);
 
-		expect(docsModule.buildJsons)
+		expect(jsonModule.buildJsons)
 			.toHaveBeenCalledTimes(1);
 
-		expect(docsModule.buildHtml)
+		expect(htmlModule.buildHtml)
 			.toHaveBeenCalledTimes(1);
 
 		// expect(modules.buildModules)
@@ -76,14 +75,13 @@ describe('test build all command', () => {
 	});
 
 	it('should exit with code 1 if buildJsons returns with an error', async () => {
-		asMock(docsModule.buildJsons)
+		asMock(jsonModule.buildJsons)
 			.mockResolvedValueOnce({
-				results: [{
+				jsons: [{
 					severity: 'error',
 					name: 'test0',
 					error: {}
 				}],
-				severity: 'error'
 			})
 		try {
 			await runCommand();
@@ -98,14 +96,13 @@ describe('test build all command', () => {
 
 
 	it('should exit with code 1 if buildHtml returns with an error', async () => {
-		asMock(docsModule.buildHtml)
+		asMock(htmlModule.buildHtml)
 			.mockResolvedValueOnce({
-				results: [{
-					name: 'html',
+				elapsed: 0,
+				result: {
 					severity: 'error',
 					error: {}
-				}],
-				severity: 'error'
+				}
 			});
 
 		try {
@@ -118,7 +115,7 @@ describe('test build all command', () => {
 		expect(process.exit)
 			.toHaveBeenCalledWith(1);
 
-		expect(docsModule.buildHtml)
+		expect(htmlModule.buildHtml)
 			.toHaveBeenCalledTimes(1);
 	});
 });

@@ -1,4 +1,4 @@
-import { retrieveBundlesAndTabs } from '../utils';
+import { retrieveBundlesAndTabs } from "@src/commandUtils";
 
 describe('Test retrieveBundlesAndTabs', () => {
 	it('should return all bundles and tabs when null is passed for modules', async () => {

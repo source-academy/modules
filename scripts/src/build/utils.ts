@@ -1,8 +1,9 @@
+import { copyFile } from 'fs/promises'
 import { Command } from '@commander-js/extra-typings'
 import { lintFixOption, lintOption, manifestOption, objectEntries, outDirOption, retrieveBundlesAndTabs, srcDirOption } from '@src/commandUtils'
 import chalk from 'chalk'
 import { Table } from 'console-table-printer'
-import prebuild from './prebuild'
+import prebuild, { formatPrebuildResults } from './prebuild'
 import { htmlLogger, type buildHtml } from './docs/html'
 
 export interface BuildInputs {
@@ -153,13 +154,36 @@ function processResults(
 			return ['error', `${chalk.cyanBright(`${upperCaseLabel} build ${chalk.redBright('failed')} with errors`)}:\n${outputTable.render()}\n`];
 		});
 
-	const overallOveralSev = findSeverity(logs, ([sev]) => sev);
-	if (overallOveralSev === 'error') {
+	console.log(logs.map(x => x[1])
+		.join('\n'));
+
+	const overallOverallSev = findSeverity(logs, ([sev]) => sev);
+	if (overallOverallSev === 'error') {
 		process.exit(1);
 	}
+}
 
-	return logs.map(x => x[1])
-		.join('\n');
+export function logInputs({ bundles, tabs }: BuildInputs, { tsc, lint }: Partial<Record<'tsc' | 'lint', boolean>>) {
+	const output: string[] = []
+	if (tsc) {
+		output.push(chalk.yellowBright('--tsc specified, will run typescript checker'))
+	}
+
+	if (lint) {
+		output.push(chalk.yellowBright('Linting specified, will run ESlint'))
+	}
+
+	if (bundles.length > 0) {
+		output.push(chalk.magentaBright('Processing the following bundles:'))
+		bundles.forEach((bundle, i) => output.push(`${i + 1}: ${bundle}`))
+	}
+
+	if (tabs.length > 0) {
+		output.push(chalk.magentaBright('Processing the following tabs:'))
+		tabs.forEach((tab, i) => output.push(`${i + 1}: ${tab}`))
+	}
+
+	return output.join('\n')
 }
 
 export function createBuildCommandHandler(func: BuildTask) {
@@ -169,13 +193,19 @@ export function createBuildCommandHandler(func: BuildTask) {
 	) => {
 		const inputs = await retrieveBundlesAndTabs(opts.manifest, rawInputs.bundles, rawInputs.tabs)
 
-		const { severity } = await prebuild(inputs, opts)
-		if (severity === 'error') {
-			process.exit(1)
+		console.log(logInputs(inputs, opts))
+		const prebuildResult = await prebuild(inputs.bundles, inputs.tabs, opts)
+
+		if (prebuildResult !== null) {
+			const prebuildResultFormatted = formatPrebuildResults(prebuildResult)
+			console.log(prebuildResultFormatted)
+
+			if (prebuildResult.severity === 'error') process.exit(1)
 		}
 
 		const result = await func(inputs, opts)
-		console.log(processResults(result, opts.verbose))
+		processResults(result, opts.verbose)
+		await copyFile(opts.manifest, `${opts.outDir}/modules.json`)
 	}
 }
 
