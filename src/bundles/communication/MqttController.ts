@@ -21,7 +21,6 @@ export class MqttController {
   port: number = 443;
   user: string = '';
   password: string = '';
-  isSecure = false;
 
   constructor(
     connectionCallback: (status: string) => void,
@@ -38,12 +37,7 @@ export class MqttController {
   public async connectClient() {
     if (this.connected) return;
     if (this.address.length === 0) return;
-    var link = '';
-    if (this.isSecure) {
-      link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
-    } else {
-      link = `ws://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
-    }
+    var link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
     this.client = connect(link);
     this.connected = true;
     this.client.on('connect', () => {

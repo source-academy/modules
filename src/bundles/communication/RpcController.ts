@@ -58,6 +58,15 @@ export class RpcController {
   }
 
   /**
+   * Obtains user ID for RPC.
+   *
+   * @returns String user ID for the device.
+   */
+  public getUserId() {
+    return this.userId;
+  }
+
+  /**
    * Exposes a function to other callers.
    *
    * @param name Name for the function, cannot include '/'.

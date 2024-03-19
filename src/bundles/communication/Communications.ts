@@ -8,15 +8,9 @@ class CommunicationModuleState {
   globalState: GlobalStateController | null = null;
   rpc: RpcController | null = null;
 
-  constructor(
-    address: string,
-    port: number,
-    user: string,
-    password: string,
-    isSecure: boolean,
-  ) {
+  constructor(address: string, port: number, user: string, password: string) {
     const multiUser = new MultiUserController();
-    multiUser.setupController(address, port, user, password, isSecure);
+    multiUser.setupController(address, port, user, password);
     this.multiUser = multiUser;
   }
 }
@@ -29,14 +23,12 @@ class CommunicationModuleState {
  * @param port WebSocket port number for broker.
  * @param user Username of account, use empty string if none.
  * @param password Password of account, use empty string if none.
- * @param isSecure Whether to use TLS.
  */
 export function initCommunications(
   address: string,
   port: number,
   user: string,
   password: string,
-  isSecure: boolean,
 ) {
   if (getModuleState() instanceof CommunicationModuleState) {
     return;
@@ -46,7 +38,6 @@ export function initCommunications(
     port,
     user,
     password,
-    isSecure,
   );
   context.moduleContexts.communication.state = newModuleState;
 }
@@ -149,6 +140,18 @@ export function initRpc(topicHeader: string, userId?: string) {
       userId,
     );
     return;
+  }
+  throw new Error('Error: Communication module not initialized.');
+}
+
+export function getUserId(): string {
+  const moduleState = getModuleState();
+  if (moduleState instanceof CommunicationModuleState) {
+    let userId = moduleState.rpc?.getUserId();
+    if (userId) {
+      return userId;
+    }
+    throw new Error('Error: UserID not found.');
   }
   throw new Error('Error: Communication module not initialized.');
 }

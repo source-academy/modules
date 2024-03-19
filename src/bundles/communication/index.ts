@@ -22,6 +22,7 @@ export {
   getGlobalState,
   updateGlobalState,
   initRpc,
+  getUserId,
   expose,
   callFunction,
   keepRunning,

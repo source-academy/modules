@@ -25,7 +25,6 @@ export class MultiUserController {
     port: number,
     user: string,
     password: string,
-    isSecure: boolean,
   ) {
     let currentController = this.controller;
     if (currentController) {
@@ -47,7 +46,6 @@ export class MultiUserController {
     currentController.port = port;
     currentController.user = user;
     currentController.password = password;
-    currentController.isSecure = isSecure;
     currentController.connectClient();
   }
 
