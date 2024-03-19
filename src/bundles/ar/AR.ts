@@ -130,31 +130,31 @@ export function createVector3(x: number, y: number, z: number): Vector3 {
  *
  * @param object ARObject to add. (E.g. cube, sphere, etc..)
  */
-export function addARObject(object: ARObject) {
+export function addARObject(arObject: ARObject) {
   const moduleState = getModuleState();
   if (!moduleState) return;
-  if (moduleState.arObjects.find((item) => item.id === object.id)) {
+  if (moduleState.arObjects.find((item) => item.id === arObject.id)) {
     return; // Already in array
   }
-  if (object.onSelect) {
-    moduleState.clickCallbacks.set(object.id, () => {
-      object.onSelect?.(object);
+  if (arObject.onSelect) {
+    moduleState.clickCallbacks.set(arObject.id, () => {
+      arObject.onSelect?.(arObject);
     });
   }
-  moduleState.arObjects.push(object);
+  moduleState.arObjects.push(arObject);
   callARCallback();
 }
 
 /**
  * Removes the specified object from the augmented world.
  *
- * @param object ARObject to remove.
+ * @param arObject ARObject to remove.
  */
-export function removeARObject(object: ARObject) {
+export function removeARObject(arObject: ARObject) {
   const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.arObjects = moduleState.arObjects.filter(
-    (item) => item.id !== object.id,
+    (item) => item.id !== arObject.id,
   );
   callARCallback();
 }
@@ -199,42 +199,42 @@ export function clearARObjects() {
 /**
  * Obtains the position of the specified object on the x-axis.
  *
- * @param object AR object to check.
+ * @param arObject AR object to check.
  * @returns Value of position on the x-axis.
  */
-export function getXPosition(object: ARObject): number {
-  return object.position.x;
+export function getXPosition(arObject: ARObject): number {
+  return arObject.position.x;
 }
 /**
  * Obtains the position of the specified object on the y-axis.
  *
- * @param object AR object to check.
+ * @param arObject AR object to check.
  * @returns Value of position on the y-axis.
  */
-export function getYPosition(object: ARObject): number {
-  return object.position.y;
+export function getYPosition(arObject: ARObject): number {
+  return arObject.position.y;
 }
 
 /**
  * Obtains the position of the specified object on the z-axis.
  *
- * @param object AR object to check.
+ * @param arObject AR object to check.
  * @returns Value of position on the z-axis.
  */
-export function getZPosition(object: ARObject): number {
-  return object.position.z;
+export function getZPosition(arObject: ARObject): number {
+  return arObject.position.z;
 }
 
 /**
  * Moves the specified object to a new position.
  *
- * @param object AR object to move.
+ * @param arObject AR object to move.
  * @param position Position to move to.
  */
-export function moveARObject(object: ARObject, position: Vector3) {
+export function moveARObject(arObject: ARObject, position: Vector3) {
   const moduleState = getModuleState();
   if (!moduleState) return;
-  object.position = position;
+  arObject.position = position;
   callARCallback();
 }
 
@@ -252,8 +252,8 @@ export function setHighlightFrontObject(isEnabled: boolean) {
   callARCallback();
 }
 
-export function selectObject(object: ARObject, isSelected: boolean) {
-  object.isSelected = isSelected;
+export function selectObject(arObject: ARObject, isSelected: boolean) {
+  arObject.isSelected = isSelected;
   callARCallback();
 }
 

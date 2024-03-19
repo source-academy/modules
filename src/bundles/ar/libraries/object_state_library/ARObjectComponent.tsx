@@ -29,7 +29,7 @@ type Props = {
   arObject: ARObject;
   getUserPosition: () => Vector3;
   setUUID: (uuid: string) => void;
-  onSelect?: (object: ARObject) => void;
+  onSelect?: (arObject: ARObject) => void;
   children?: ReactNode;
 };
 

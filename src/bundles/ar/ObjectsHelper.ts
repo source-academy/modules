@@ -360,31 +360,31 @@ export function createInterfaceBase64Image(
 /**
  * Fix the rotation of the object at the specified angle around the vertical axis.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  * @param radians Rotation angle in radians.
  */
-export function setFixedRotation(object: ARObject, radians: number) {
-  object.behaviours.rotation = new FixRotation(radians);
+export function setFixedRotation(arObject: ARObject, radians: number) {
+  arObject.behaviours.rotation = new FixRotation(radians);
   callARCallback();
 }
 
 /**
  * Always rotate the object to where the user is facing.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  */
-export function setRotateToUser(object: ARObject) {
-  object.behaviours.rotation = new RotateToUser();
+export function setRotateToUser(arObject: ARObject) {
+  arObject.behaviours.rotation = new RotateToUser();
   callARCallback();
 }
 
 /**
  * Rotates the object continuously around the vertical axis.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  */
-export function setRotateAroundY(object: ARObject) {
-  object.behaviours.rotation = new RotateAroundY();
+export function setRotateAroundY(arObject: ARObject) {
+  arObject.behaviours.rotation = new RotateAroundY();
   callARCallback();
 }
 
@@ -393,21 +393,21 @@ export function setRotateAroundY(object: ARObject) {
 /**
  * Always render the object.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  */
-export function setAlwaysRender(object: ARObject) {
-  object.behaviours.render = new AlwaysRender();
+export function setAlwaysRender(arObject: ARObject) {
+  arObject.behaviours.render = new AlwaysRender();
   callARCallback();
 }
 
 /**
  * Only render the object when in range.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  * @param distance Range of object in metres.
  */
-export function setRenderDistance(object: ARObject, distance: number) {
-  object.behaviours.render = new RenderWithinDistance(distance);
+export function setRenderDistance(arObject: ARObject, distance: number) {
+  arObject.behaviours.render = new RenderWithinDistance(distance);
   callARCallback();
 }
 
@@ -437,46 +437,46 @@ export function createPathItem(
 /**
  * Moves object in the specified path, repeat when ended.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  * @param path Path to move. Use `createPathItem` to create a path segment.
  */
-export function setPathMovement(object: ARObject, path: PathItem[]) {
-  object.behaviours.movement = new PathMovement(path);
+export function setPathMovement(arObject: ARObject, path: PathItem[]) {
+  arObject.behaviours.movement = new PathMovement(path);
   callARCallback();
 }
 
 /**
  * Orbits the object around its current position.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  * @param radius Radius of orbit.
  * @param duration Duration per round of orbit.
  */
 export function setOrbitMovement(
-  object: ARObject,
+  arObject: ARObject,
   radius: number,
   duration: number,
 ) {
-  object.behaviours.movement = new OrbitMovement(radius, duration);
+  arObject.behaviours.movement = new OrbitMovement(radius, duration);
   callARCallback();
 }
 
 /**
  * Animates movement when the position of the object changes.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  */
-export function setSpringMovement(object: ARObject) {
-  object.behaviours.movement = new SpringMovement();
+export function setSpringMovement(arObject: ARObject) {
+  arObject.behaviours.movement = new SpringMovement();
   callARCallback();
 }
 
 /**
  * Removes the movement of the object.
  *
- * @param object Object to modifiy.
+ * @param arObject Object to modifiy.
  */
-export function clearMovement(object: ARObject) {
-  object.behaviours.movement = undefined;
+export function clearMovement(arObject: ARObject) {
+  arObject.behaviours.movement = undefined;
   callARCallback();
 }

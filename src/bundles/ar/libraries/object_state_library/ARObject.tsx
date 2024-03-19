@@ -34,12 +34,12 @@ export class ARObject {
   uuid: string | undefined = undefined;
   isInFront = false;
   isSelected = false;
-  onSelect?: (object: ARObject) => void;
+  onSelect?: (arObject: ARObject) => void;
   constructor(
     id: string,
     position: Vector3,
     behaviours: Behaviours,
-    onSelect?: (object: ARObject) => void,
+    onSelect?: (arObject: ARObject) => void,
   ) {
     this.id = id;
     this.position = position;
@@ -108,7 +108,7 @@ export class CubeObject extends ARObject {
     render?: RenderClass,
     rotation?: RotationClass,
     movement?: MovementClass,
-    onSelect?: (object: ARObject) => void,
+    onSelect?: (arObject: ARObject) => void,
   ) {
     super(
       id,
@@ -185,7 +185,7 @@ export class SphereObject extends ARObject {
     render?: RenderClass,
     rotation?: RotationClass,
     movement?: MovementClass,
-    onSelect?: (object: ARObject) => void,
+    onSelect?: (arObject: ARObject) => void,
   ) {
     super(
       id,
@@ -254,7 +254,7 @@ export class GltfObject extends ARObject {
     render?: RenderClass,
     rotation?: RotationClass,
     movement?: MovementClass,
-    onSelect?: (object: ARObject) => void,
+    onSelect?: (arObject: ARObject) => void,
   ) {
     super(
       id,
@@ -318,7 +318,7 @@ export class UIObject extends ARObject {
     render?: RenderClass,
     rotation?: RotationClass,
     movement?: MovementClass,
-    onSelect?: (object: ARObject) => void,
+    onSelect?: (arObject: ARObject) => void,
   ) {
     super(
       id,
