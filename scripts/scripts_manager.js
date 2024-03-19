@@ -1,7 +1,7 @@
 import { Command } from '@commander-js/extra-typings'
 import { build as esbuild } from 'esbuild'
 import jest from 'jest'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import pathlib from 'path'
 import { fileURLToPath } from 'url'
 import tsconfig from './tsconfig.json' assert { type: 'json' }
@@ -72,7 +72,7 @@ function runJest(patterns) {
   const jestArgs = args.concat(filePatterns.map((pattern) => pattern.split(pathlib.win32.sep)
     .join(pathlib.posix.sep)));
 
-  return jest.run(jestArgs, './scripts/src/jest.config.js')
+  return jest.run(jestArgs, './scripts/jest.config.js')
 }
 
 const testCommand = new Command('test')

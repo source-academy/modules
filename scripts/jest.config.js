@@ -9,9 +9,9 @@ const jestConfig = {
   displayName: 'Scripts',
   extensionsToTreatAsEsm: ['.ts'],
   testEnvironment: 'node',
-  moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths),
+  moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: "<rootDir>/" }),
   preset: 'ts-jest/presets/default-esm',
-  setupFilesAfterEnv: ["jest.setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.test.ts',
   ],
