@@ -1,8 +1,6 @@
-import fs from 'fs/promises';
 import { Option } from '@commander-js/extra-typings';
 import type { AwaitedReturn } from './build/utils';
-
-export type ModuleManifest = Record<string, { tabs: string[] }>
+import { retrieveManifest } from './manifest';
 
 class OptionNew<
   UsageT extends string = '',
@@ -38,16 +36,6 @@ export const bundlesOption = new OptionNew('-b, --bundles <bundles...>', 'Manual
 export const tabsOption = new OptionNew('-t, --tabs <tabs...>', 'Manually specify which tabs')
 	.default<string[] | null>(null);
 
-export const retrieveManifest = async (manifest: string) => {
-	try {
-		const rawManifest = await fs.readFile(manifest, 'utf-8');
-		return JSON.parse(rawManifest) as ModuleManifest;
-	} catch (error) {
-		if (error.code === 'ENOENT') throw new Error(`Could not locate manifest file at ${manifest}`);
-		throw error;
-	}
-};
-
 /**
  * Determines which bundles and tabs to build based on the user's input.
  *
@@ -69,12 +57,10 @@ export const retrieveManifest = async (manifest: string) => {
  * @param shouldAddModuleTabs whether to also automatically include the tabs of
  * specified modules
  */
-export const retrieveBundlesAndTabs = async (
-	manifestFile: string,
+export async function retrieveBundlesAndTabs(manifestFile: string,
 	modules: string[] | null,
 	tabOptions: string[] | null,
-	shouldAddModuleTabs: boolean = true
-) => {
+	shouldAddModuleTabs: boolean = true) {
 	const manifest = await retrieveManifest(manifestFile);
 	const knownBundles = Object.keys(manifest);
 	const knownTabs = Object
@@ -127,7 +113,7 @@ export const retrieveBundlesAndTabs = async (
 		tabs: [...new Set(tabs)],
 		modulesSpecified: modules !== null
 	};
-};
+}
 
 export function promiseAll<T extends Promise<any>[]>(...args: T): Promise<{ [K in keyof T]: Awaited<T[K]> }> {
 	return Promise.all(args);

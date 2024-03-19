@@ -1,7 +1,8 @@
 /* eslint-disable no-await-in-loop */
 import { promises as fs } from 'fs'
 
-import { type ModuleManifest, retrieveManifest } from '../commandUtils'
+import { type ModuleManifest } from '@src/manifest'
+import { retrieveManifest } from '@src/manifest'
 
 import { check as _check } from './module'
 import { askQuestion, success, warn } from './print'
