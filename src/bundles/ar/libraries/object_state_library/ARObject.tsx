@@ -61,27 +61,12 @@ export class ARObject {
     if (typeof tempSelected === 'boolean') {
       isSelected = tempSelected;
     }
-    let newObject = CubeObject.parseObject(object, getCurrentTime);
-    if (newObject) {
-      newObject.isSelected = isSelected;
-      return newObject;
-    }
-    newObject = SphereObject.parseObject(object, getCurrentTime);
-    if (newObject) {
-      newObject.isSelected = isSelected;
-      return newObject;
-    }
-    newObject = GltfObject.parseObject(object, getCurrentTime);
-    if (newObject) {
-      newObject.isSelected = isSelected;
-      return newObject;
-    }
-    newObject = UIObject.parseObject(object, getCurrentTime);
-    if (newObject) {
-      newObject.isSelected = isSelected;
-      return newObject;
-    }
-    newObject = LightObject.parseObject(object);
+    const newObject =
+      CubeObject.parseObject(object, getCurrentTime) ||
+      SphereObject.parseObject(object, getCurrentTime) ||
+      GltfObject.parseObject(object, getCurrentTime) ||
+      UIObject.parseObject(object, getCurrentTime) ||
+      LightObject.parseObject(object);
     if (newObject) {
       newObject.isSelected = isSelected;
       return newObject;

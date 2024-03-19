@@ -141,9 +141,7 @@ export function addARObject(object: ARObject) {
       object.onSelect?.(object);
     });
   }
-  const newArray = Object.assign([], moduleState.arObjects);
-  newArray.push(object);
-  moduleState.arObjects = newArray;
+  moduleState.arObjects.push(object);
   callARCallback();
 }
 
@@ -178,14 +176,12 @@ export function setAsARObjects(json: any) {
   if (!moduleState) return;
   if (!(json instanceof Object)) return;
   const objects: ARObject[] = [];
-  const keys = Object.keys(json);
-  keys.forEach((key) => {
-    const item = json[key];
+  for (const [_, item] of Object.entries(json)) {
     const parsedObject = ARObject.fromObject(item);
     if (parsedObject) {
       objects.push(parsedObject);
     }
-  });
+  }
   moduleState.arObjects = objects;
   callARCallback();
 }

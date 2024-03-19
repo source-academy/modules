@@ -1,6 +1,7 @@
 import React from 'react';
 import { getModuleState } from '../../bundles/ar/AR';
-import ARComponent from '../../bundles/ar/ARComponent';
+import { ScreenStateContext } from '../../bundles/ar/libraries/screen_state_library/ScreenStateContext';
+import { StartButton } from './StartButton';
 
 /**
  * Tab for viewing augmented reality content
@@ -22,7 +23,9 @@ class ARMainComponent extends React.Component<Props> {
       <div>
         <p>Instructions:</p>
         <p>Click on the toggle below to enter AR mode.</p>
-        <ARComponent {...getModuleState()}></ARComponent>
+        <ScreenStateContext>
+          <StartButton {...getModuleState()} />
+        </ScreenStateContext>
       </div>
     );
   }
