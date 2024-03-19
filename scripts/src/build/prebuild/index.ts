@@ -1,7 +1,7 @@
-import { type Severity, findSeverity, type BuildOptions, type BuildInputs } from '@src/build/utils'
+import { type Severity, findSeverity, type BuildOptions } from '@src/build/utils'
 import { promiseAll } from '@src/commandUtils'
-import { runTsc } from './tsc'
-import { runEslint } from './lint'
+import { runTsc, tscResultsLogger } from './tsc'
+import { eslintResultsLogger, runEslint } from './lint'
 
 interface PrebuildResult {
   lint?: Awaited<ReturnType<typeof runEslint>>
@@ -10,12 +10,19 @@ interface PrebuildResult {
 }
 
 export default async function prebuild(
-	inputs: BuildInputs,
+	bundles: string[],
+	tabs: string[],
 	{ tsc, lint, ...opts }: BuildOptions
-): Promise<PrebuildResult> {
+): Promise<PrebuildResult | null> {
+	const combinedOpts = {
+		...opts,
+		bundles,
+		tabs
+	}
+
 	if (tsc) {
 		if (!lint) {
-			const tsc = await runTsc(inputs, opts.srcDir)
+			const tsc = await runTsc(combinedOpts)
 			return {
 				tsc,
 				severity: tsc.result.severity
@@ -23,8 +30,8 @@ export default async function prebuild(
 		}
 
 		const [tscResult, lintResult] = await promiseAll(
-			runTsc(inputs, opts.srcDir),
-			runEslint(inputs, opts)
+			runTsc(combinedOpts),
+			runEslint(combinedOpts)
 		)
 
 		const overallSev = findSeverity([tscResult, lintResult], ({ result: { severity } }) => severity)
@@ -37,13 +44,25 @@ export default async function prebuild(
 	}
 
 	if (lint) {
-		const lintResult = await runEslint(inputs, opts)
+		const lintResult = await runEslint(combinedOpts)
 		return {
 			lint: lintResult,
 			severity: lintResult.result.severity
 		}
 	}
-	return {
-		severity: 'success'
+	return null
+}
+
+export function formatPrebuildResults(results: PrebuildResult) {
+	const output: string[] = []
+	if (results.tsc) {
+		output.push(tscResultsLogger(results.tsc))
 	}
+
+	if (results.lint) {
+		const lintResult = eslintResultsLogger(results.lint)
+		output.push(lintResult)
+	}
+
+	return output.length > 0 ? output.join('\n') : null
 }

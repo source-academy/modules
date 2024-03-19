@@ -1,9 +1,9 @@
 import pathlib from 'path'
-import { bundlesOption, lintFixOption, manifestOption, retrieveBundlesAndTabs, srcDirOption, tabsOption, wrapWithTimer } from '@src/commandUtils'
+import { lintFixOption, retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
 import { ESLint } from 'eslint'
 import chalk from 'chalk'
-import { Command } from '@commander-js/extra-typings'
-import { findSeverity, type BuildInputs, divideAndRound, type Severity } from '../utils'
+import { findSeverity, divideAndRound, type Severity, type AwaitedReturn } from '../utils'
+import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils'
 
 const severityFinder = (results: ESLint.LintResult[]) => findSeverity(results, ({ warningCount, fatalErrorCount }) => {
 	if (fatalErrorCount > 0) return 'error'
@@ -11,56 +11,42 @@ const severityFinder = (results: ESLint.LintResult[]) => findSeverity(results, (
 	return 'success'
 })
 
-interface LintOpts {
-  srcDir: string
-  fix?: boolean
-}
-
 interface LintResults {
-  results: ESLint.LintResult[]
-  formatter: ESLint.Formatter
+  formatted: string
   severity: Severity
 }
 
-export const runEslint = wrapWithTimer(async ({ bundles, tabs }: BuildInputs, { srcDir, fix }: LintOpts): Promise<LintResults> => {
+interface LintOptions extends PrebuildOptions {
+	fix?: boolean
+}
+
+export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: LintOptions): Promise<LintResults> => {
 	const linter = new ESLint({
 		cwd: pathlib.resolve(srcDir),
 		extensions: ['ts', 'tsx'],
 		fix
 	})
 
-	let promise: Promise<ESLint.LintResult[]>
-	if (tabs === undefined && bundles === undefined) {
-		promise = linter.lintFiles('**/*.ts')
-	} else {
-		const fileNames: string[] = []
-		if (bundles?.length > 0) {
-			bundles.forEach((bundle) => `bundles/${bundle}/index.ts`)
-		}
+	const fileNames = [
+		...bundles.map((bundle) => `bundles/${bundle}/**.ts*`),
+		...tabs.map(tabName => `tabs/${tabName}/**.ts*`)
+	]
 
-		if (tabs?.length > 0) {
-			tabs.forEach((tabName) => fileNames.push(`tabs/${tabName}/index.tsx`))
-		}
-
-		promise = linter.lintFiles(fileNames)
-	}
-
-	const linterResults = await promise
+	const linterResults = await linter.lintFiles(fileNames)
 	if (fix) {
 		await ESLint.outputFixes(linterResults)
 	}
 
 	const outputFormatter = await linter.loadFormatter('stylish')
+	const formatted = await outputFormatter.format(linterResults)
 	const severity = severityFinder(linterResults)
 	return {
-		results: linterResults,
-		formatter: outputFormatter,
+		formatted,
 		severity
 	}
 })
 
-export const eslintResultsLogger = async ({ results, formatter, severity }: LintResults, elapsed: number) => {
-	const formatted = await formatter.format(results)
+export function eslintResultsLogger({ elapsed, result: { formatted, severity } }: AwaitedReturn<typeof runEslint>) {
 	let errStr: string
 
 	if (severity === 'error') errStr = chalk.cyanBright('with ') + chalk.redBright('errors')
@@ -70,18 +56,13 @@ export const eslintResultsLogger = async ({ results, formatter, severity }: Lint
 	return `${chalk.cyanBright(`Linting completed in ${divideAndRound(elapsed, 1000)}s ${errStr}:`)}\n${formatted}`
 }
 
+const lintCommandHandler = createPrebuildCommandHandler(runEslint, eslintResultsLogger)
+
 export function getLintCommand() {
-	return new Command('lint')
-		.description('Run eslint')
-		.addOption(srcDirOption)
+	return createPrebuildCommand('lint', 'Run eslint')
 		.addOption(lintFixOption)
-		.addOption(manifestOption)
-		.addOption(bundlesOption)
-		.addOption(tabsOption)
-		.action(async (opts) => {
-			const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs)
-			const { result, elapsed } = await runEslint(inputs, opts)
-			const output = await eslintResultsLogger(result, elapsed)
-			console.log(output)
+		.action(async opts => {
+			const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs, false)
+			await lintCommandHandler({ ...opts, ...inputs })
 		})
 }

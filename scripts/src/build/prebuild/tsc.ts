@@ -1,10 +1,10 @@
 import pathlib from 'path'
 import fs from 'fs/promises'
 import chalk from 'chalk'
-import { bundlesOption, manifestOption, retrieveBundlesAndTabs, srcDirOption, tabsOption, wrapWithTimer } from '@src/commandUtils'
+import { retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
 import ts from 'typescript'
-import { Command } from '@commander-js/extra-typings'
-import { expandBundleNames, type BuildInputs, type Severity, expandTabNames, divideAndRound } from '../utils'
+import { expandBundleNames, type Severity, expandTabNames, divideAndRound, type AwaitedReturn } from '../utils'
+import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils'
 
 type TsconfigResult = {
   severity: 'success',
@@ -14,7 +14,7 @@ type TsconfigResult = {
   results: ts.Diagnostic[]
 }
 
-type TscResult = {
+interface TscResult {
   severity: Severity,
   results: ts.Diagnostic[]
 }
@@ -55,7 +55,7 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
 	}
 }
 
-export const runTsc = wrapWithTimer(async ({ bundles, tabs }: BuildInputs, srcDir: string): Promise<TscResult> => {
+export const runTsc = wrapWithTimer(async ({ bundles, tabs, srcDir }: PrebuildOptions): Promise<TscResult> => {
 	const tsconfigRes = await getTsconfig(srcDir)
 	if (tsconfigRes.severity === 'error') {
 		return {
@@ -87,7 +87,7 @@ export const runTsc = wrapWithTimer(async ({ bundles, tabs }: BuildInputs, srcDi
 	}
 })
 
-export function tscResultsLogger({ results, severity }: TscResult, elapsed: number) {
+export function tscResultsLogger({ elapsed, result: { results, severity } }: AwaitedReturn<typeof runTsc>) {
 	const diagStr = ts.formatDiagnosticsWithColorAndContext(results, {
 		getNewLine: () => '\n',
 		getCurrentDirectory: () => process.cwd(),
@@ -100,17 +100,13 @@ export function tscResultsLogger({ results, severity }: TscResult, elapsed: numb
 	return `${diagStr}\n${chalk.cyanBright(`tsc completed ${chalk.greenBright('successfully')} in ${divideAndRound(elapsed, 1000)}s`)}`
 }
 
-export function getTscCommand() {
-	return new Command('tsc')
-		.description('Run tsc')
-		.addOption(srcDirOption)
-		.addOption(manifestOption)
-		.addOption(bundlesOption)
-		.addOption(tabsOption)
-		.action(async (opts) => {
-			const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs)
-			const { result, elapsed } = await runTsc(inputs, opts.srcDir)
-			const output = tscResultsLogger(result, elapsed)
-			console.log(output)
-		})
-}
+const tscCommandHandler = createPrebuildCommandHandler(
+	runTsc,
+	tscResultsLogger
+)
+
+export const getTscCommand = () => createPrebuildCommand('tsc', 'Run the typescript compiler to perform type checking')
+	.action(async opts => {
+		const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs, false)
+		await tscCommandHandler({ ...opts, ...inputs })
+	})

@@ -3,9 +3,8 @@ export const runEslint = jest.fn()
 		elapsed: 0,
 		result: {
 			formatted: '',
-			results: [],
 			severity: 'error'
 		}
 	}))
 
-export const logLintResult = jest.fn();
+export const eslintResultsLogger = jest.fn();

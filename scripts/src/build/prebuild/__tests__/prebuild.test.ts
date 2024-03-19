@@ -1,7 +1,7 @@
 import type { MockedFunction } from 'jest-mock';
 
-import getLintCommand, * as lintModule from '../lint';
-import tscCommandHandler, * as tscModule from '../tsc';
+import * as lintModule from '../lint';
+import * as tscModule from '../tsc';
 
 jest.spyOn(lintModule, 'runEslint')
 jest.spyOn(tscModule, 'runTsc');
@@ -11,16 +11,16 @@ const mockedTsc = asMock(tscModule.runTsc);
 const mockedEslint = asMock(lintModule.runEslint);
 
 describe('test eslint command', () => {
-	const runCommand = (...args: string[]) => getLintCommand()
+	const runCommand = (...args: string[]) => lintModule.getLintCommand()
 		.parseAsync(args, { from: 'user' });
 
 	test('regular command function', async () => {
 		mockedEslint.mockResolvedValueOnce({
-			formatter: {
-				format: () => ''
-			},
-			results: [],
-			severity: 'success'
+			elapsed: 0,
+			result: {
+				formatted: '',
+				severity: 'success'
+			}
 		});
 
 		await runCommand();
@@ -31,11 +31,11 @@ describe('test eslint command', () => {
 
 	it('should only lint specified bundles and tabs', async () => {
 		mockedEslint.mockResolvedValueOnce({
-			formatter: {
-				format: () => ''
-			},
-			results: [],
-			severity: 'success'
+			elapsed: 0,
+			result: {
+				formatted: '',
+				severity: 'success'
+			}
 		});
 
 		await runCommand('-m', 'test0', '-t', 'tab0');
@@ -43,21 +43,22 @@ describe('test eslint command', () => {
 		expect(lintModule.runEslint)
 			.toHaveBeenCalledTimes(1);
 
-		const lintCall = mockedEslint.mock.calls[0];
-		expect(lintCall[1])
+		const [lintCall] = mockedEslint.mock.calls[0];
+		expect(lintCall)
 			.toMatchObject({
 				bundles: ['test0'],
-				tabs: ['tab0']
+				tabs: ['tab0'],
+				srcDir: 'src',
 			});
 	});
 
 	it('should exit with code 1 if there are linting errors', async () => {
 		mockedEslint.mockResolvedValueOnce({
-			formatter: {
-				format: () => ''
-			},
-			results: [],
-			severity: 'error'
+			elapsed: 0,
+			result: {
+				formatted: '',
+				severity: 'error'
+			}
 		});
 
 		try {
@@ -75,13 +76,16 @@ describe('test eslint command', () => {
 });
 
 describe('test tsc command', () => {
-	const runCommand = (...args: string[]) => tscCommandHandler()
+	const runCommand = (...args: string[]) => tscModule.getTscCommand()
 		.parseAsync(args, { from: 'user' });
 
 	test('regular command function', async () => {
 		mockedTsc.mockResolvedValueOnce({
-			results: [],
-			severity: 'success'
+			elapsed: 0,
+			result: {
+				results: [],
+				severity: 'success'
+			}
 		});
 
 		await runCommand();
@@ -92,8 +96,11 @@ describe('test tsc command', () => {
 
 	it('should only typecheck specified bundles and tabs', async () => {
 		mockedTsc.mockResolvedValueOnce({
-			results: [],
-			severity: 'success'
+			elapsed: 0,
+			result: {
+				results: [],
+				severity: 'success'
+			}
 		});
 
 		await runCommand('-m', 'test0', '-t', 'tab0');
@@ -101,18 +108,22 @@ describe('test tsc command', () => {
 		expect(tscModule.runTsc)
 			.toHaveBeenCalledTimes(1);
 
-		const tscCall = mockedTsc.mock.calls[0];
-		expect(tscCall[1])
+		const [tscCall] = mockedTsc.mock.calls[0];
+		expect(tscCall)
 			.toMatchObject({
 				bundles: ['test0'],
-				tabs: ['tab0']
+				tabs: ['tab0'],
+				srcDir: 'src'
 			});
 	});
 
 	it('should exit with code 1 if there are type check errors', async () => {
 		mockedTsc.mockResolvedValueOnce({
-			results: [],
-			severity: 'error'
+			elapsed: 0,
+			result: {
+				results: [],
+				severity: 'error'
+			}
 		});
 
 		try {
