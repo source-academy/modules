@@ -1,36 +1,26 @@
 import type { MockedFunction } from 'jest-mock';
-import * as docUtils from '../docsUtils';
 import * as html from '../html';
-import fs from 'fs/promises';
 import { getBuildDocsCommand } from '..';
 import * as json from '../json';
+import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 
-jest.mock('../../prebuild/tsc');
 jest.mock('../docsUtils')
 
 jest.spyOn(json, 'buildJsons')
+jest.spyOn(html, 'buildHtml')
 
 const asMock = <T extends (...any: any[]) => any>(func: T) => func as MockedFunction<T>;
 const mockBuildJson = asMock(json.buildJsons);
 
 const runCommand = (...args: string[]) => getBuildDocsCommand()
 	.parseAsync(args, { from: 'user' });
+
 describe('test the docs command', () => {
-	it('should create the output directories and call all doc build functions', async () => {
-		await runCommand();
-
-		expect(fs.mkdir)
-			.toBeCalledWith('build', { recursive: true })
-
-		expect(json.buildJsons)
-			.toHaveBeenCalledTimes(1);
-
-		expect(html.buildHtml)
-			.toHaveBeenCalledTimes(1);
-
-		expect(docUtils.initTypedoc)
-			.toHaveBeenCalledTimes(1);
-	});
+	testBuildCommand(
+		'buildDocs',
+		getBuildDocsCommand,
+		[json.buildJsons, html.buildHtml]
+	)
 
 	it('should only build the documentation for specified modules', async () => {
 		await runCommand('test0', 'test1')
@@ -56,42 +46,4 @@ describe('test the docs command', () => {
 				}
 			}))
 	});
-
-	it('should exit with code 1 if tsc returns with an error', async () => {
-		try {
-			await runCommand('--tsc');
-		} catch (error) {
-			expect(error)
-				.toEqual(new Error('process.exit called with 1'))
-		}
-
-		expect(json.buildJsons)
-			.toHaveBeenCalledTimes(0);
-
-		expect(process.exit)
-			.toHaveBeenCalledWith(1);
-	});
-
-	it('should exit with code 1 when there are errors', async () => {
-		mockBuildJson.mockResolvedValueOnce({ jsons:
-			[{
-				name: 'test0',
-				error: {},
-				severity: 'error'
-			}],
-		})
-
-		try {
-			await runCommand();
-		} catch (error) {
-			expect(error)
-				.toEqual(new Error('process.exit called with 1'))
-		}
-
-		expect(json.buildJsons)
-			.toHaveBeenCalledTimes(1);
-
-		expect(process.exit)
-			.toHaveBeenCalledWith(1);
-	})
 });

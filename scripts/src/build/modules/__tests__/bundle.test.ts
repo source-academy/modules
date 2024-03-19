@@ -1,6 +1,10 @@
 import { build as esbuild } from 'esbuild';
 import { commonEsbuildOptions, outputBundleOrTab } from '../commons';
 import { mockStream } from './streamMocker';
+import { testBuildCommand } from '@src/build/__tests__/testingUtils';
+import * as bundles from '../bundles'
+
+jest.spyOn(bundles, 'bundleBundles')
 
 const testBundle = `
   import context from 'js-slang/context';
@@ -10,6 +14,11 @@ const testBundle = `
     context.moduleContexts.test0.state = 'bar';
   };
 `
+testBuildCommand(
+	'buildBundles',
+	bundles.getBuildBundlesCommand,
+	[bundles.bundleBundles]
+)
 
 test('building a bundle', async () => {
 	const { outputFiles: [file] } = await esbuild({

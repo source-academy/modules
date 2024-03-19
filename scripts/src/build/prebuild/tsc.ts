@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import chalk from 'chalk'
 import { retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
 import ts from 'typescript'
-import { expandBundleNames, type Severity, expandTabNames, divideAndRound, type AwaitedReturn } from '../utils'
+import { expandBundleNames, expandTabNames, divideAndRound, type AwaitedReturn } from '../utils'
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils'
 
 type TsconfigResult = {
@@ -14,9 +14,13 @@ type TsconfigResult = {
   results: ts.Diagnostic[]
 }
 
-interface TscResult {
-  severity: Severity,
+type TscResult = {
+  severity: 'success',
   results: ts.Diagnostic[]
+} | {
+	severity: 'error'
+	results?: ts.Diagnostic[]
+	error?: any
 }
 
 async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
@@ -76,25 +80,36 @@ export const runTsc = wrapWithTimer(async ({ bundles, tabs, srcDir }: PrebuildOp
 			.forEach((name) => fileNames.push(name))
 	}
 
-	const tsc = ts.createProgram(fileNames, tsconfigRes.results)
-	const results = tsc.emit()
-	const diagnostics = ts.getPreEmitDiagnostics(tsc)
-		.concat(results.diagnostics)
+	try {
+		const tsc = ts.createProgram(fileNames, tsconfigRes.results)
+		const results = tsc.emit()
+		const diagnostics = ts.getPreEmitDiagnostics(tsc)
+			.concat(results.diagnostics)
 
-	return {
-		severity: diagnostics.length > 0 ? 'error' : 'success',
-		results: diagnostics
+		return {
+			severity: diagnostics.length > 0 ? 'error' : 'success',
+			results: diagnostics
+		}
+	} catch (error) {
+		return {
+			severity: 'error',
+			error
+		}
 	}
 })
 
-export function tscResultsLogger({ elapsed, result: { results, severity } }: AwaitedReturn<typeof runTsc>) {
-	const diagStr = ts.formatDiagnosticsWithColorAndContext(results, {
+export function tscResultsLogger({ elapsed, result: tscResult }: AwaitedReturn<typeof runTsc>) {
+	if (tscResult.severity === 'error' && tscResult.error) {
+		return `${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')} in ${divideAndRound(elapsed, 1000)}s: ${tscResult.error}`)}`
+	}
+
+	const diagStr = ts.formatDiagnosticsWithColorAndContext(tscResult.results, {
 		getNewLine: () => '\n',
 		getCurrentDirectory: () => process.cwd(),
 		getCanonicalFileName: (name) => pathlib.basename(name)
 	})
 
-	if (severity === 'error') {
+	if (tscResult.severity === 'error') {
 		return `${diagStr}\n${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')} in ${divideAndRound(elapsed, 1000)}s`)}`
 	}
 	return `${diagStr}\n${chalk.cyanBright(`tsc completed ${chalk.greenBright('successfully')} in ${divideAndRound(elapsed, 1000)}s`)}`

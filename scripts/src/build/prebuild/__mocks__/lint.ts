@@ -7,4 +7,4 @@ export const runEslint = jest.fn()
 		}
 	}))
 
-export const eslintResultsLogger = jest.fn();
+export const eslintResultsLogger = jest.fn(() => Promise.resolve(''));

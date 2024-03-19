@@ -1,6 +1,7 @@
 import type { MockedFunction } from 'jest-mock';
 import fs from 'fs/promises';
 import * as json from '../json';
+import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 
 jest.spyOn(json, 'buildJsons');
 jest.mock('../docsUtils')
@@ -10,6 +11,12 @@ const runCommand = (...args: string[]) => json.getBuildJsonsCommand()
 	.parseAsync(args, { from: 'user' });
 
 describe('test json command', () => {
+	testBuildCommand(
+		'buildJsons',
+		json.getBuildJsonsCommand,
+		[json.buildJsons]
+	)
+
 	test('normal function', async () => {
 		await runCommand();
 
@@ -33,41 +40,4 @@ describe('test json command', () => {
 				bundles: ['test0', 'test1']
 			})
 	});
-
-	it('should exit with code 1 if tsc returns with an error', async () => {
-		try {
-			await runCommand('--tsc');
-		} catch (error) {
-			expect(error)
-				.toEqual(new Error('process.exit called with 1'));
-		}
-
-		expect(json.buildJsons)
-			.toHaveBeenCalledTimes(0);
-
-		expect(process.exit)
-			.toHaveBeenCalledWith(1);
-	});
-
-	it('should exit with code 1 if buildJsons returns with an error', async () => {
-		mockBuildJson.mockResolvedValueOnce({
-			jsons: [{
-				name: 'test0',
-				error: {},
-				severity: 'error'
-			}],
-		})
-		try {
-			await runCommand();
-		} catch (error) {
-			expect(error)
-				.toEqual(new Error('process.exit called with 1'));
-		}
-
-		expect(json.buildJsons)
-			.toHaveBeenCalledTimes(1);
-
-		expect(process.exit)
-			.toHaveBeenCalledWith(1);
-	})
 });

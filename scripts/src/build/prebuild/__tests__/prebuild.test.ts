@@ -38,7 +38,8 @@ describe('test eslint command', () => {
 			}
 		});
 
-		await runCommand('-m', 'test0', '-t', 'tab0');
+		await expect(runCommand('-m', 'test0', '-t', 'tab0'))
+			.rejects.toThrow()
 
 		expect(lintModule.runEslint)
 			.toHaveBeenCalledTimes(1);

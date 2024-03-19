@@ -39,7 +39,7 @@ export const bundleTabs: BuildTask = async ({ tabs }, { srcDir, outDir }) => {
 	return { tabs: results }
 }
 
-const tabCommandHandler = createBuildCommandHandler(bundleTabs)
+const tabCommandHandler = createBuildCommandHandler((...args) => bundleTabs(...args))
 export const getBuildTabsCommand = () => createBuildCommand('tabs', 'Build tabs')
 	.argument('[tabs...]')
 	.action((tabs, opts) => tabCommandHandler({

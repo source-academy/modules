@@ -32,17 +32,24 @@ export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: Li
 		...tabs.map(tabName => `tabs/${tabName}/**.ts*`)
 	]
 
-	const linterResults = await linter.lintFiles(fileNames)
-	if (fix) {
-		await ESLint.outputFixes(linterResults)
-	}
+	try {
+		const linterResults = await linter.lintFiles(fileNames)
+		if (fix) {
+			await ESLint.outputFixes(linterResults)
+		}
 
-	const outputFormatter = await linter.loadFormatter('stylish')
-	const formatted = await outputFormatter.format(linterResults)
-	const severity = severityFinder(linterResults)
-	return {
-		formatted,
-		severity
+		const outputFormatter = await linter.loadFormatter('stylish')
+		const formatted = await outputFormatter.format(linterResults)
+		const severity = severityFinder(linterResults)
+		return {
+			formatted,
+			severity
+		}
+	} catch (error) {
+		return {
+			severity: 'error',
+			formatted: error.toString()
+		}
 	}
 })
 
@@ -56,7 +63,7 @@ export function eslintResultsLogger({ elapsed, result: { formatted, severity } }
 	return `${chalk.cyanBright(`Linting completed in ${divideAndRound(elapsed, 1000)}s ${errStr}:`)}\n${formatted}`
 }
 
-const lintCommandHandler = createPrebuildCommandHandler(runEslint, eslintResultsLogger)
+const lintCommandHandler = createPrebuildCommandHandler((...args) => runEslint(...args), eslintResultsLogger)
 
 export function getLintCommand() {
 	return createPrebuildCommand('lint', 'Run eslint')
