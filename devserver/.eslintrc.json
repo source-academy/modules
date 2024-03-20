@@ -4,7 +4,7 @@
   "extends": [ "../.eslintrc.base.cjs" ],
   "ignorePatterns": ["dist", ".eslintrc.cjs"],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["import", "react", "@typescript-eslint"],
   "rules": {
     "func-style": 0,
     "no-empty-function": 0,

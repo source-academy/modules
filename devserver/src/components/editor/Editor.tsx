@@ -10,9 +10,9 @@ import React from "react";
 import AceEditor, { type IAceEditorProps } from "react-ace";
 import { HotKeys } from "react-hotkeys";
 
+import { getModeString, selectMode } from "../utils/AceHelper";
 import type { KeyFunction } from "./EditorHotkeys";
 
-import { getModeString, selectMode } from "../utils/AceHelper";
 
 export type EditorKeyBindingHandlers = { [key in KeyFunction]?: () => void };
 

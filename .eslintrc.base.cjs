@@ -382,6 +382,7 @@ module.exports = {
         orderImportKind: 'asc'
       }
     }],
+    'import/extensions': [1, 'never', { json: 'always' }],
     indent: [
       1,
       'tab', // Was 4

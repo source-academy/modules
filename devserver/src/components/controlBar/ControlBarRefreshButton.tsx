@@ -1,6 +1,6 @@
 import { Tooltip } from "@blueprintjs/core";
-import ControlButton from "../ControlButton";
 import { IconNames } from "@blueprintjs/icons";
+import ControlButton from "../ControlButton";
 
 type Props = {
   onClick: () => void

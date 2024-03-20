@@ -5,6 +5,7 @@ import { Chapter, Variant } from "js-slang/dist/types";
 import { stringify } from "js-slang/dist/utils/stringify";
 import React, { useCallback } from "react";
 import { HotKeys } from "react-hotkeys";
+import createContext from "js-slang/dist/createContext";
 import mockModuleContext from "../mockModuleContext";
 import type { InterpreterOutput } from "../types";
 import Workspace, { type WorkspaceProps } from "./Workspace";
@@ -16,7 +17,6 @@ import type { SideContentTab } from "./sideContent/types";
 import { getDynamicTabs } from "./sideContent/utils";
 
 // Importing this straight from js-slang doesn't work for whatever reason
-import createContext from "js-slang/dist/createContext";
 
 const refreshSuccessToast: ToastProps = {
 	intent: Intent.SUCCESS,

@@ -42,11 +42,11 @@
     "test:watch": "yarn scripts test --watch",
     "watch": "yarn scripts watch",
     "devserver": "vite",
-    "devserver:lint": "yarn scripts devserver lint",
+    "devserver:lint": "eslint --ext \".ts,.tsx\" devserver/src",
     "devserver:tsc": "tsc --project devserver/tsconfig.json",
     "scripts:all": "node scripts/scripts_manager.js",
     "scripts:build": "node scripts/scripts_manager.js build",
-    "scripts:lint": "yarn eslint --ext \".ts\" scripts/src",
+    "scripts:lint": "eslint --ext \".ts\" scripts/src",
     "scripts:tsc": "tsc --project scripts/tsconfig.json",
     "scripts:test": "node scripts/scripts_manager.js test"
   },
