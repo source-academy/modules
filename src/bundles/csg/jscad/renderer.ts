@@ -18,6 +18,7 @@ import {
   Y_FACTOR,
 } from '../constants.js';
 import { hexToAlphaColor, type RenderGroup, type Shape } from '../utilities.js';
+import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '../../../tabs/common/css_constants.js';
 import type {
   AlphaColor,
   AxisEntityType,
@@ -36,7 +37,6 @@ import type {
   WrappedRendererData,
   ZoomToFitStates,
 } from './types.js';
-import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '../../../tabs/common/css_constants.js';
 
 
 

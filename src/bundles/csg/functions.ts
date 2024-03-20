@@ -21,6 +21,7 @@ import {
   is_list,
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
+import { degreesToRadians } from '../../common/utilities.js';
 import { Core } from './core.js';
 import type { Solid } from './jscad/types.js';
 import {
@@ -31,7 +32,6 @@ import {
   type RenderGroup,
   centerPrimitive,
 } from './utilities';
-import { degreesToRadians } from '../../common/utilities.js';
 
 /* [Main] */
 /* NOTE

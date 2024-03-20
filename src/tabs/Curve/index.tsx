@@ -2,10 +2,10 @@ import type { CurveModuleState } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
 import MultiItemDisplay from '../common/MultItemDisplay';
 import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
-import Curve3DAnimationCanvas from './animation_canvas_3d_curve';
-import CurveCanvas3D from './canvas_3d_curve';
 import AnimationCanvas from '../common/AnimationCanvas';
 import WebGLCanvas from '../common/WebglCanvas';
+import Curve3DAnimationCanvas from './animation_canvas_3d_curve';
+import CurveCanvas3D from './canvas_3d_curve';
 
 export const CurveTab: ModuleTab = ({ context }) => {
   const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve');

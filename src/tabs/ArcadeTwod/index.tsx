@@ -1,8 +1,8 @@
 import React from 'react';
 import Phaser from 'phaser';
-import { type DebuggerContext } from '../../typings/type_helpers';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { type DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * Game display tab for user-created games made with the Arcade2D module.

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Slider, Icon } from '@blueprintjs/core';
-import { ThemeColor } from './style';
 import { COMMAND } from '../../bundles/copy_gc/types';
+import { ThemeColor } from './style';
 
 type Props = {
   children?: never;

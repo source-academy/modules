@@ -1,11 +1,4 @@
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
-import type {
-  Wave,
-  Sound,
-  SoundProducer,
-  SoundTransformer,
-  AudioPlayed,
-} from './types';
 import {
   pair,
   head,
@@ -17,8 +10,15 @@ import {
   accumulate,
   type List,
 } from 'js-slang/dist/stdlib/list';
-import { RIFFWAVE } from './riffwave';
 import context from 'js-slang/context';
+import type {
+  Wave,
+  Sound,
+  SoundProducer,
+  SoundTransformer,
+  AudioPlayed,
+} from './types';
+import { RIFFWAVE } from './riffwave';
 
 // Global Constants and Variables
 const FS: number = 44100; // Output sample rate

@@ -5,11 +5,11 @@
  * @author Wang Zihan
  */
 
-import { UNITY_ACADEMY_BACKEND_URL, BUILD_NAME } from './config';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { UNITY_ACADEMY_BACKEND_URL, BUILD_NAME } from './config';
 import { Vector3, normalizeVector, zeroVector, pointDistance } from './UnityAcademyMaths';
 
 type Transform = {

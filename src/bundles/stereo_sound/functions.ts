@@ -10,6 +10,7 @@ import {
   tail,
   type List,
 } from 'js-slang/dist/stdlib/list';
+import context from 'js-slang/context';
 import { RIFFWAVE } from './riffwave';
 import type {
   AudioPlayed,
@@ -18,7 +19,6 @@ import type {
   SoundTransformer,
   Wave,
 } from './types';
-import context from 'js-slang/context';
 
 // Global Constants and Variables
 

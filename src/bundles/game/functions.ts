@@ -15,6 +15,9 @@
  */
 
 /* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
+
+import context from 'js-slang/context';
+import { type List, head, tail, is_pair, accumulate } from 'js-slang/dist/stdlib/list';
 import {
   type GameObject,
   type ObjectConfig,
@@ -24,9 +27,6 @@ import {
   type RawInputObject,
   defaultGameParams,
 } from './types';
-
-import context from 'js-slang/context';
-import { type List, head, tail, is_pair, accumulate } from 'js-slang/dist/stdlib/list';
 
 if (!context.moduleContexts.game.state) {
   context.moduleContexts.game.state = defaultGameParams;
@@ -151,7 +151,7 @@ function set_type(
  * @param {string} message error message
  * @hidden
  */
-function throw_error(message: string) {
+function throw_error(message: string): never {
   // eslint-disable-next-line no-caller
   throw new Error(`${arguments.callee.caller.name}: ${message}`);
 }
@@ -188,6 +188,7 @@ export function create_config(lst: List): ObjectConfig {
       throw_error('config element is not a pair!');
     }
     config[head(xs)] = tail(xs);
+    return null;
   }, null, lst);
   return config;
 }

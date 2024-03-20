@@ -1,6 +1,6 @@
 import { type Data, type Layout } from 'plotly.js-dist';
-import { type ReplResult } from '../../typings/type_helpers';
 import type { Pair } from 'js-slang/dist/stdlib/list';
+import { type ReplResult } from '../../typings/type_helpers';
 
 /**
  * Represents plots with a draw method attached

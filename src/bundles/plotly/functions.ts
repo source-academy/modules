@@ -5,6 +5,7 @@
 
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
+import { type Sound } from '../sound/types';
 import {
   type Curve,
   CurvePlot,
@@ -14,7 +15,6 @@ import {
 } from './plotly';
 import { generatePlot } from './curve_functions';
 import { get_duration, get_wave, is_sound } from './sound_functions';
-import { type Sound } from '../sound/types';
 
 let drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 

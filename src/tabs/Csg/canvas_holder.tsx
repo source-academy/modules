@@ -5,9 +5,9 @@ import React from 'react';
 import { Core } from '../../bundles/csg/core.js';
 import StatefulRenderer from '../../bundles/csg/stateful_renderer.js';
 import type { RenderGroup } from '../../bundles/csg/utilities.js';
+import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants.js';
 import HoverControlHint from './hover_control_hint';
 import type { CanvasHolderProps, CanvasHolderState } from './types';
-import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants.js';
 
 
 
