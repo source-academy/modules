@@ -25,6 +25,7 @@ const parsers = {
 		}), {});
 
 		return {
+			kind: 'function',
 			name: obj.name,
 			description,
 			params,
@@ -41,6 +42,7 @@ const parsers = {
 		}
 
 		return {
+			kind: 'variable',
 			name: obj.name,
 			description,
 			type: typeToName(obj.type)
