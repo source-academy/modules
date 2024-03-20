@@ -16,6 +16,10 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: '20.x'
+        - name: Install dependencies (apt)
+          run: |
+            sudo apt-get update && \
+            sudo apt-get install -y --no-install-recommends libxi-dev libgl1-mesa-dev
 
         - name: Install dependencies
           run: yarn install --frozen-lockfile
