@@ -29,7 +29,7 @@ const parsers = {
 			name: obj.name,
 			description,
 			params,
-			retType: typeToName(obj.type, 'void')
+			retType: typeToName(signature.type, 'void')
 		};
 	},
 	[td.ReflectionKind.Variable](obj) {
