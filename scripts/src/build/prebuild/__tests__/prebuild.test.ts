@@ -11,8 +11,10 @@ const mockedTsc = asMock(tscModule.runTsc);
 const mockedEslint = asMock(lintModule.runEslint);
 
 describe('test eslint command', () => {
-	const runCommand = (...args: string[]) => lintModule.getLintCommand()
-		.parseAsync(args, { from: 'user' });
+	const runCommand = async (...args: string[]) => {
+		await lintModule.getLintCommand()
+			.parseAsync(args, { from: 'user' });
+	};
 
 	test('regular command function', async () => {
 		mockedEslint.mockResolvedValueOnce({
@@ -38,8 +40,7 @@ describe('test eslint command', () => {
 			}
 		});
 
-		await expect(runCommand('-m', 'test0', '-t', 'tab0'))
-			.rejects.toThrow()
+		await runCommand('-b', 'test0', '-t', 'tab0')
 
 		expect(lintModule.runEslint)
 			.toHaveBeenCalledTimes(1);
@@ -104,7 +105,7 @@ describe('test tsc command', () => {
 			}
 		});
 
-		await runCommand('-m', 'test0', '-t', 'tab0');
+		await runCommand('-b', 'test0', '-t', 'tab0');
 
 		expect(tscModule.runTsc)
 			.toHaveBeenCalledTimes(1);

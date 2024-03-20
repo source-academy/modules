@@ -11,7 +11,8 @@ type TsconfigResult = {
   results: ts.CompilerOptions
 } | {
   severity: 'error',
-  results: ts.Diagnostic[]
+  results?: ts.Diagnostic[]
+	error?: any
 }
 
 type TscResult = {
@@ -54,7 +55,7 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
 	} catch (error) {
 		return {
 			severity: 'error',
-			results: [error]
+			error
 		}
 	}
 }
@@ -62,10 +63,7 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
 export const runTsc = wrapWithTimer(async ({ bundles, tabs, srcDir }: PrebuildOptions): Promise<TscResult> => {
 	const tsconfigRes = await getTsconfig(srcDir)
 	if (tsconfigRes.severity === 'error') {
-		return {
-			severity: 'error',
-			results: tsconfigRes.results
-		}
+		return tsconfigRes
 	}
 
 	const fileNames: string[] = []
@@ -116,7 +114,7 @@ export function tscResultsLogger({ elapsed, result: tscResult }: AwaitedReturn<t
 }
 
 const tscCommandHandler = createPrebuildCommandHandler(
-	runTsc,
+	(...args) => runTsc(...args),
 	tscResultsLogger
 )
 
