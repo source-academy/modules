@@ -1,5 +1,3 @@
-import { PassThrough } from "stream"
-
 jest.mock('chalk', () => ({
   cyanBright: x => x,
   greenBright: x => x,

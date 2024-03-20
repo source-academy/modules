@@ -1,7 +1,6 @@
 import { promises as fs } from 'fs'
 
-import { type ModuleManifest } from '@src/manifest'
-import { retrieveManifest } from '@src/manifest'
+import { type ModuleManifest, retrieveManifest } from '@src/manifest'
 
 import { askQuestion, success, warn } from './print'
 import { type Options, isSnakeCase } from './utilities'

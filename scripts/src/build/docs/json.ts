@@ -4,9 +4,9 @@ import { createBuildCommand, createBuildCommandHandler, type OperationResult } f
 import drawdown from './drawdown';
 import { initTypedoc } from './docsUtils';
 
-export const typeToName = (type?: td.SomeType, alt: string = 'unknown') => (type ? (type as td.ReferenceType | td.IntrinsicType).name : alt);
+const typeToName = (type?: td.SomeType, alt: string = 'unknown') => (type ? (type as td.ReferenceType | td.IntrinsicType).name : alt);
 
-export const parsers = {
+const parsers = {
 	[td.ReflectionKind.Function](obj) {
 		// Functions should have only 1 signature
 		const [signature] = obj.signatures;

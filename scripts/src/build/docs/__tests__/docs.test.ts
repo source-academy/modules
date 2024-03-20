@@ -29,11 +29,8 @@ describe('test the docs command', () => {
 			.toHaveBeenCalledTimes(1);
 
 		const buildJsonCall = mockBuildJson.mock.calls[0];
-		expect(buildJsonCall[1])
-			.toMatchObject({
-				outDir: 'build',
-				bundles: ['test0', 'test1']
-			})
+		expect(buildJsonCall[0])
+			.toEqual(['test0', 'test1'])
 
 		expect(html.buildHtml)
 			.toHaveBeenCalledTimes(1);
