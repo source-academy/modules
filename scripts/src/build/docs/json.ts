@@ -19,10 +19,7 @@ const parsers = {
 			description = 'No description available';
 		}
 
-		const params = signature.parameters.reduce((res, { type, name }) => ({
-			...res,
-			[name]: typeToName(type)
-		}), {});
+		const params = signature.parameters.map(({ type, name }) => [name, typeToName(type)] as [string, string])
 
 		return {
 			kind: 'function',
