@@ -56,7 +56,9 @@ async function buildJson(name: string, reflection: td.DeclarationReflection, out
 			const parser = parsers[element.kind];
 			return {
 				...res,
-				[element.name]: parser ? parser(element) : {}
+				[element.name]: parser
+					? parser(element)
+					: { kind: 'unknown' }
 			};
 		}, {});
 
