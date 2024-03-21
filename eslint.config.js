@@ -741,7 +741,7 @@ export default [
 		}
 	},
 	{
-		// Rules for bundles and tabs tests
+		// Rules for tests
 		files: [
 			"**/__tests__/**/*.ts",
 			"**/__mocks__/**/*.ts",
