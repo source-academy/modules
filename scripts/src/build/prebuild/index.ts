@@ -10,59 +10,59 @@ interface PrebuildResult {
 }
 
 export default async function prebuild(
-	bundles: string[],
-	tabs: string[],
-	{ tsc, lint, ...opts }: BuildOptions
+  bundles: string[],
+  tabs: string[],
+  { tsc, lint, ...opts }: BuildOptions
 ): Promise<PrebuildResult | null> {
-	const combinedOpts = {
-		...opts,
-		bundles,
-		tabs
-	}
+  const combinedOpts = {
+    ...opts,
+    bundles,
+    tabs
+  }
 
-	if (tsc) {
-		if (!lint) {
-			const tsc = await runTsc(combinedOpts)
-			return {
-				tsc,
-				severity: tsc.result.severity
-			}
-		}
+  if (tsc) {
+    if (!lint) {
+      const tsc = await runTsc(combinedOpts)
+      return {
+        tsc,
+        severity: tsc.result.severity
+      }
+    }
 
-		const [tscResult, lintResult] = await promiseAll(
-			runTsc(combinedOpts),
-			runEslint(combinedOpts)
-		)
+    const [tscResult, lintResult] = await promiseAll(
+      runTsc(combinedOpts),
+      runEslint(combinedOpts)
+    )
 
-		const overallSev = findSeverity([tscResult, lintResult], ({ result: { severity } }) => severity)
+    const overallSev = findSeverity([tscResult, lintResult], ({ result: { severity } }) => severity)
 
-		return {
-			tsc: tscResult,
-			lint: lintResult,
-			severity: overallSev
-		}
-	}
+    return {
+      tsc: tscResult,
+      lint: lintResult,
+      severity: overallSev
+    }
+  }
 
-	if (lint) {
-		const lintResult = await runEslint(combinedOpts)
-		return {
-			lint: lintResult,
-			severity: lintResult.result.severity
-		}
-	}
-	return null
+  if (lint) {
+    const lintResult = await runEslint(combinedOpts)
+    return {
+      lint: lintResult,
+      severity: lintResult.result.severity
+    }
+  }
+  return null
 }
 
 export function formatPrebuildResults(results: PrebuildResult) {
-	const output: string[] = []
-	if (results.tsc) {
-		output.push(tscResultsLogger(results.tsc))
-	}
+  const output: string[] = []
+  if (results.tsc) {
+    output.push(tscResultsLogger(results.tsc))
+  }
 
-	if (results.lint) {
-		const lintResult = eslintResultsLogger(results.lint)
-		output.push(lintResult)
-	}
+  if (results.lint) {
+    const lintResult = eslintResultsLogger(results.lint)
+    output.push(lintResult)
+  }
 
-	return output.length > 0 ? output.join('\n') : null
+  return output.length > 0 ? output.join('\n') : null
 }

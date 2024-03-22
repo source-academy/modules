@@ -12,27 +12,27 @@ export interface PrebuildOptions {
 export interface PrebuildResult<T extends { severity: Severity }> extends TimedResult<T> {}
 
 export function createPrebuildCommand(
-	commandName: string,
-	description: string
+  commandName: string,
+  description: string
 ) {
-	return new Command(commandName)
-		.description(description)
-		.addOption(srcDirOption)
-		.addOption(manifestOption)
-		.addOption(bundlesOption)
-		.addOption(tabsOption)
+  return new Command(commandName)
+    .description(description)
+    .addOption(srcDirOption)
+    .addOption(manifestOption)
+    .addOption(bundlesOption)
+    .addOption(tabsOption)
 }
 
 export function createPrebuildCommandHandler<T extends { severity: Severity }>(
-	func: (opts: PrebuildOptions) => Promise<PrebuildResult<T>>,
-	resultsProceesor: (results: PrebuildResult<T>) => string
+  func: (opts: PrebuildOptions) => Promise<PrebuildResult<T>>,
+  resultsProceesor: (results: PrebuildResult<T>) => string
 ) {
-	return async (opts: PrebuildOptions) => {
-		console.log(logInputs(opts, {}))
-		const results = await func(opts)
-		const toLog = resultsProceesor(results)
+  return async (opts: PrebuildOptions) => {
+    console.log(logInputs(opts, {}))
+    const results = await func(opts)
+    const toLog = resultsProceesor(results)
 
-		console.log(toLog)
-		if (results.result.severity === 'error') process.exit(1)
-	}
+    console.log(toLog)
+    if (results.result.severity === 'error') process.exit(1)
+  }
 }

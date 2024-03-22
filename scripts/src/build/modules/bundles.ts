@@ -5,19 +5,19 @@ import { expandBundleNames, type BuildTask, createBuildCommandHandler, createBui
 import { commonEsbuildOptions, outputBundleOrTab } from './commons';
 
 export const assertPolyfillPlugin: ESBuildPlugin = {
-	name: 'Assert Polyfill',
-	setup(build) {
-		// Polyfill the NodeJS assert module
-		build.onResolve({ filter: /^assert/u }, () => ({
-			path: 'assert',
-			namespace: 'bundleAssert'
-		}));
+  name: 'Assert Polyfill',
+  setup(build) {
+    // Polyfill the NodeJS assert module
+    build.onResolve({ filter: /^assert/u }, () => ({
+      path: 'assert',
+      namespace: 'bundleAssert'
+    }));
 
-		build.onLoad({
-			filter: /^assert/u,
-			namespace: 'bundleAssert'
-		}, () => ({
-			contents: `
+    build.onLoad({
+      filter: /^assert/u,
+      namespace: 'bundleAssert'
+    }, () => ({
+      contents: `
       export default function assert(condition, message) {
         if (condition) return;
 
@@ -28,8 +28,8 @@ export const assertPolyfillPlugin: ESBuildPlugin = {
         throw message;
       }
       `
-		}));
-	}
+    }));
+  }
 };
 
 // const jsslangExports = [
@@ -60,27 +60,27 @@ export const assertPolyfillPlugin: ESBuildPlugin = {
 // }
 
 export const bundleBundles: BuildTask = async ({ bundles }, { srcDir, outDir }) => {
-	const [{ outputFiles }] = await promiseAll(esbuild({
-		...commonEsbuildOptions,
-		entryPoints: expandBundleNames(srcDir, bundles),
-		outbase: outDir,
-		outdir: outDir,
-		plugins: [
-			assertPolyfillPlugin
-			// jsSlangExportCheckingPlugin,
-		],
-		tsconfig: `${srcDir}/tsconfig.json`
-	}), fs.mkdir(`${outDir}/bundles`, { recursive: true }));
+  const [{ outputFiles }] = await promiseAll(esbuild({
+    ...commonEsbuildOptions,
+    entryPoints: expandBundleNames(srcDir, bundles),
+    outbase: outDir,
+    outdir: outDir,
+    plugins: [
+      assertPolyfillPlugin
+      // jsSlangExportCheckingPlugin,
+    ],
+    tsconfig: `${srcDir}/tsconfig.json`
+  }), fs.mkdir(`${outDir}/bundles`, { recursive: true }));
 
-	const results = await Promise.all(outputFiles.map((file) => outputBundleOrTab(file, outDir)));
-	return { bundles: results }
+  const results = await Promise.all(outputFiles.map((file) => outputBundleOrTab(file, outDir)));
+  return { bundles: results }
 }
 
 const bundlesCommandHandler = createBuildCommandHandler((...args) => bundleBundles(...args), true)
 
 export const getBuildBundlesCommand = () => createBuildCommand(
-	'bundles',
-	'Build bundles'
+  'bundles',
+  'Build bundles'
 )
-	.addOption(bundlesOption)
-	.action(opts => bundlesCommandHandler({ ...opts, tabs: [] }))
+  .addOption(bundlesOption)
+  .action(opts => bundlesCommandHandler({ ...opts, tabs: [] }))

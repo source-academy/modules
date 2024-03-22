@@ -6,11 +6,11 @@ import { getLintCommand } from './build/prebuild/lint'
 import { getTscCommand } from './build/prebuild/tsc'
 
 await new Command('scripts')
-	.addCommand(getBuildCommand())
-	.addCommand(getLintCommand())
-	.addCommand(getTestCommand())
-	.addCommand(getTscCommand())
-	.addCommand(templateCommand)
-	.parseAsync()
+  .addCommand(getBuildCommand())
+  .addCommand(getLintCommand())
+  .addCommand(getTestCommand())
+  .addCommand(getTscCommand())
+  .addCommand(templateCommand)
+  .parseAsync()
 
 process.exit(0)
