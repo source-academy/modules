@@ -11,7 +11,7 @@ import {
   CurvePlot,
   type CurvePlotFunction,
   DrawnPlot,
-  type ListOfPairs,
+  type ListOfPairs
 } from './plotly';
 import { generatePlot } from './curve_functions';
 import { get_duration, get_wave, is_sound } from './sound_functions';
@@ -19,7 +19,7 @@ import { get_duration, get_wave, is_sound } from './sound_functions';
 let drawnPlots: (DrawnPlot | CurvePlot)[] = [];
 
 context.moduleContexts.plotly.state = {
-  drawnPlots,
+  drawnPlots
 };
 
 /**
@@ -286,7 +286,7 @@ function createPlotFunction(
   type: string,
   config: Data,
   layout: Partial<Layout>,
-  is_colored: boolean = false,
+  is_colored: boolean = false
 ): (numPoints: number) => CurvePlotFunction {
   return (numPoints: number) => {
     const func = (curveFunction: Curve) => {
@@ -296,7 +296,7 @@ function createPlotFunction(
         config,
         layout,
         is_colored,
-        curveFunction,
+        curveFunction
       );
 
       drawnPlots.push(plotDrawn);
@@ -322,16 +322,16 @@ function createPlotFunction(
 export const draw_connected_2d = createPlotFunction(
   'scattergl',
   {
-    mode: 'lines',
+    mode: 'lines'
   },
   {
     xaxis: { visible: false },
     yaxis: {
       visible: false,
-      scaleanchor: 'x',
-    },
+      scaleanchor: 'x'
+    }
   },
-  true,
+  true
 );
 
 /**
@@ -350,7 +350,7 @@ export const draw_connected_3d = createPlotFunction(
   'scatter3d',
   { mode: 'lines' },
   {},
-  true,
+  true
 );
 
 /**
@@ -372,10 +372,10 @@ export const draw_points_2d = createPlotFunction(
     xaxis: { visible: false },
     yaxis: {
       visible: false,
-      scaleanchor: 'x',
-    },
+      scaleanchor: 'x'
+    }
   },
-  true,
+  true
 );
 
 /**
@@ -393,7 +393,7 @@ export const draw_points_2d = createPlotFunction(
 export const draw_points_3d = createPlotFunction(
   'scatter3d',
   { mode: 'markers' },
-  {},
+  {}
 );
 
 /**
@@ -404,7 +404,7 @@ export const draw_sound_2d = (sound: Sound) => {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
     throw new Error(
-      `draw_sound_2d is expecting sound, but encountered ${sound}`,
+      `draw_sound_2d is expecting sound, but encountered ${sound}`
     );
     // If a sound is already displayed, terminate execution.
   } else if (get_duration(sound) < 0) {
@@ -433,7 +433,7 @@ export const draw_sound_2d = (sound: Sound) => {
 
     const plotlyData: Data = {
       x: x_s,
-      y: y_s,
+      y: y_s
     };
     const plot = new CurvePlot(
       draw_new_curve,
@@ -441,7 +441,7 @@ export const draw_sound_2d = (sound: Sound) => {
         ...plotlyData,
         type: 'scattergl',
         mode: 'lines',
-        line: { width: 0.5 },
+        line: { width: 0.5 }
       } as Data,
       {
         xaxis: {
@@ -449,15 +449,15 @@ export const draw_sound_2d = (sound: Sound) => {
           title: 'Time',
           anchor: 'y',
           position: 0,
-          rangeslider: { visible: true },
+          rangeslider: { visible: true }
         },
         yaxis: {
           type: 'linear',
-          visible: false,
+          visible: false
         },
         bargap: 0.2,
-        barmode: 'stack',
-      },
+        barmode: 'stack'
+      }
     );
     if (drawnPlots) drawnPlots.push(plot);
   }

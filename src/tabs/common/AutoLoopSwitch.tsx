@@ -15,7 +15,7 @@ export default class AutoLoopSwitch extends React.Component<AutoLoopSwitchProps>
         marginBottom: '0px',
 
         // Prevent label from wrapping at every letter when width is small
-        whiteSpace: 'nowrap',
+        whiteSpace: 'nowrap'
       }}
 
       label="Auto Loop"

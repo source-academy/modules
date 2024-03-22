@@ -64,5 +64,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'music',
+  iconName: 'music'
 };

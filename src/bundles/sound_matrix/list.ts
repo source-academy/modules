@@ -39,7 +39,7 @@ export function head(xs): any {
     return xs[0];
   } else {
     throw new Error(
-      'head(xs) expects a pair as argument xs, but encountered ' + xs,
+      'head(xs) expects a pair as argument xs, but encountered ' + xs
     );
   }
 }
@@ -52,7 +52,7 @@ export function tail(xs) {
     return xs[1];
   } else {
     throw new Error(
-      'tail(xs) expects a pair as argument xs, but encountered ' + xs,
+      'tail(xs) expects a pair as argument xs, but encountered ' + xs
     );
   }
 }
@@ -144,7 +144,7 @@ export function build_list(n, fun) {
     throw new Error(
       'build_list(n, fun) expects a positive integer as '
         + 'argument n, but encountered '
-        + n,
+        + n
     );
   }
 
@@ -171,7 +171,7 @@ export function build_list(n, fun) {
 export function for_each(fun, xs) {
   if (!is_list(xs)) {
     throw new Error(
-      'for_each expects a list as argument xs, but encountered ' + xs,
+      'for_each expects a list as argument xs, but encountered ' + xs
     );
   }
   for (; !is_null(xs); xs = tail(xs)) {
@@ -185,7 +185,7 @@ export function for_each(fun, xs) {
 export function reverse(xs) {
   if (!is_list(xs)) {
     throw new Error(
-      'reverse(xs) expects a list as argument xs, but encountered ' + xs,
+      'reverse(xs) expects a list as argument xs, but encountered ' + xs
     );
   }
   let result: any = null;
@@ -297,13 +297,13 @@ export function enum_list(start, end) {
   if (typeof start !== 'number') {
     throw new Error(
       'enum_list(start, end) expects a number as argument start, but encountered '
-        + start,
+        + start
     );
   }
   if (typeof end !== 'number') {
     throw new Error(
       'enum_list(start, end) expects a number as argument start, but encountered '
-        + end,
+        + end
     );
   }
   if (start > end) {
@@ -318,7 +318,7 @@ export function list_ref(xs, n) {
   if (typeof n !== 'number' || n < 0 || Math.floor(n) !== n) {
     throw new Error(
       'list_ref(xs, n) expects a positive integer as argument n, but encountered '
-        + n,
+        + n
     );
   }
   for (; n > 0; --n) {
@@ -352,7 +352,7 @@ export function set_head(xs, x) {
     return undefined;
   } else {
     throw new Error(
-      'set_head(xs,x) expects a pair as argument xs, but encountered ' + xs,
+      'set_head(xs,x) expects a pair as argument xs, but encountered ' + xs
     );
   }
 }
@@ -366,7 +366,7 @@ export function set_tail(xs, x) {
     return undefined;
   } else {
     throw new Error(
-      'set_tail(xs,x) expects a pair as argument xs, but encountered ' + xs,
+      'set_tail(xs,x) expects a pair as argument xs, but encountered ' + xs
     );
   }
 }

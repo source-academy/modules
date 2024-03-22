@@ -52,7 +52,7 @@ export class Point implements ReplResult {
     public readonly x: number,
     public readonly y: number,
     public readonly z: number,
-    public readonly color: Color,
+    public readonly color: Color
   ) {}
 
   public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;

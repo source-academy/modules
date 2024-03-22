@@ -19,14 +19,14 @@ class Plotly extends React.Component<Props, State> {
     super(props);
     this.state = {
       modalOpen: false,
-      selectedPlot: null,
+      selectedPlot: null
     };
   }
 
   handleOpen = (selectedPlot: DrawnPlot) => {
     this.setState({
       modalOpen: true,
-      selectedPlot,
+      selectedPlot
     });
   };
 
@@ -57,7 +57,7 @@ class Plotly extends React.Component<Props, State> {
             return (
               <div style={{
                 height: '80vh',
-                marginBottom: '5vh',
+                marginBottom: '5vh'
               }} key={divId}>
                 <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
                 <div
@@ -84,5 +84,5 @@ export default {
   },
   body: (debuggerContext: any) => <Plotly debuggerContext={debuggerContext} />,
   label: 'Plotly Test Tab',
-  iconName: 'scatter-plot',
+  iconName: 'scatter-plot'
 };

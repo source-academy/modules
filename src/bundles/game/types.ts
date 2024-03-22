@@ -50,13 +50,13 @@ export const defaultGameParams: GameParams = {
   lifecycleFuncs: {
     preload() {},
     create() {},
-    update() {},
+    update() {}
   },
   renderPreview: false,
   remotePath: (path: string) => sourceAcademyAssets + (path[0] === '/' ? '' : '/') + path,
   screenSize: {
     x: 1920,
-    y: 1080,
+    y: 1080
   },
-  createAward: (x: number, y: number, key: string) => new Phaser.GameObjects.Sprite(defaultGameParams.scene!, x, y, key),
+  createAward: (x: number, y: number, key: string) => new Phaser.GameObjects.Sprite(defaultGameParams.scene!, x, y, key)
 };

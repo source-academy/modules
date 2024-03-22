@@ -1,3 +1,4 @@
+import type Phaser from 'phaser';
 /**
  * This file contains the types used to represent GameObjects.
  */

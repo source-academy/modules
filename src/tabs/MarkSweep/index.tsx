@@ -50,7 +50,7 @@ class MarkSweep extends React.Component<Props, State> {
       unmarked: 0,
       marked: 1,
       queue: [],
-      running: false,
+      running: false
     };
   }
 
@@ -112,7 +112,7 @@ class MarkSweep extends React.Component<Props, State> {
       unmarked,
       marked,
       queue,
-      running: true,
+      running: true
     }));
   };
 
@@ -132,7 +132,7 @@ class MarkSweep extends React.Component<Props, State> {
           description: commandHeap[value].desc,
           leftDesc: commandHeap[value].leftDesc,
           rightDesc: commandHeap[value].rightDesc,
-          queue: commandHeap[value].queue,
+          queue: commandHeap[value].queue
         };
       });
     }
@@ -153,7 +153,7 @@ class MarkSweep extends React.Component<Props, State> {
           description: commandHeap[value].desc,
           leftDesc: commandHeap[value].leftDesc,
           rightDesc: commandHeap[value].rightDesc,
-          queue: commandHeap[value].queue,
+          queue: commandHeap[value].queue
         };
       });
     }
@@ -171,7 +171,7 @@ class MarkSweep extends React.Component<Props, State> {
         description: commandHeap[newValue].desc,
         leftDesc: commandHeap[newValue].leftDesc,
         rightDesc: commandHeap[newValue].rightDesc,
-        queue: commandHeap[newValue].queue,
+        queue: commandHeap[newValue].queue
       };
     });
   };
@@ -270,7 +270,7 @@ class MarkSweep extends React.Component<Props, State> {
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-                marginTop: 10,
+                marginTop: 10
               }}
             >
               {state.leftDesc && (
@@ -279,7 +279,7 @@ class MarkSweep extends React.Component<Props, State> {
                     width={10}
                     height={10}
                     style={{
-                      backgroundColor: ThemeColor.GREEN,
+                      backgroundColor: ThemeColor.GREEN
                     }}
                   />
                   <span> {state.leftDesc} </span>
@@ -292,7 +292,7 @@ class MarkSweep extends React.Component<Props, State> {
                       width={10}
                       height={10}
                       style={{
-                        backgroundColor: ThemeColor.YELLOW,
+                        backgroundColor: ThemeColor.YELLOW
                       }}
                     />
                     <span> {state.rightDesc} </span>
@@ -332,7 +332,7 @@ class MarkSweep extends React.Component<Props, State> {
                   && memoryMatrix.map((item, row) => (
                     <div style={{
                       display: 'flex',
-                      flexDirection: 'row',
+                      flexDirection: 'row'
                     }}>
                       <span style={{ width: 30 }}> {row * state.column} </span>
                       {item
@@ -344,14 +344,14 @@ class MarkSweep extends React.Component<Props, State> {
                             <div
                               style={{
                                 width: 14,
-                                backgroundColor: bgColor,
+                                backgroundColor: bgColor
                               }}
                             >
                               <canvas
                                 width={10}
                                 height={10}
                                 style={{
-                                  backgroundColor: color,
+                                  backgroundColor: color
                                 }}
                               />
                             </div>
@@ -377,7 +377,7 @@ class MarkSweep extends React.Component<Props, State> {
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-                marginTop: 10,
+                marginTop: 10
               }}
             >
               <div style={{ flex: 1 }}>
@@ -385,7 +385,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: ThemeColor.BLUE,
+                    backgroundColor: ThemeColor.BLUE
                   }}
                 />
                 <span> defined</span>
@@ -395,7 +395,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: ThemeColor.PINK,
+                    backgroundColor: ThemeColor.PINK
                   }}
                 />
                 <span> tag</span>
@@ -405,7 +405,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: ThemeColor.GREY,
+                    backgroundColor: ThemeColor.GREY
                   }}
                 />
                 <span> empty or undefined</span>
@@ -415,7 +415,7 @@ class MarkSweep extends React.Component<Props, State> {
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-                marginTop: 10,
+                marginTop: 10
               }}
             >
               <div style={{ flex: 1 }}>
@@ -426,7 +426,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: 'red',
+                    backgroundColor: 'red'
                   }}
                 />
                 <span> marked</span>
@@ -436,7 +436,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: 'black',
+                    backgroundColor: 'black'
                   }}
                 />
                 <span> unmarked</span>
@@ -469,5 +469,5 @@ export default {
     <MarkSweep debuggerContext={debuggerContext} />
   ),
   label: 'Mark Sweep Garbage Collector',
-  iconName: 'heat-grid',
+  iconName: 'heat-grid'
 };

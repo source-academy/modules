@@ -759,6 +759,7 @@ export default [
 			"camelcase": 0,
 			"func-style": 0,
 			"no-unused-vars": 0,
+			"object-property-newline": 0,
 			"@typescript-eslint/no-unused-vars": [1, {
 				argsIgnorePattern: "^_"
 			}]

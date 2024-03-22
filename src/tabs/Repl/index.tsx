@@ -39,7 +39,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
     this.replInstance.setTabReactComponentInstance(this);
     this.state = {
       editorHeight: this.replInstance.editorHeight,
-      isDraggingDragBar: false,
+      isDraggingDragBar: false
     };
   }
   private dragBarOnMouseDown = (e) => {
@@ -67,7 +67,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   }
   public render() {
     const { editorHeight } = this.state;
-    const outputDivs : JSX.Element[] = [];
+    const outputDivs : React.JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
       const str = this.replInstance.outputStrings[i];
@@ -77,7 +77,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
         } else {
           outputDivs.push(<div style={{
             ...FONT_MESSAGE,
-            ...{ color: str.color },
+            ...{ color: str.color }
           }} dangerouslySetInnerHTML={ { __html: str.content }} />);
         }
       } else if (str.color === '') {
@@ -85,7 +85,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       } else {
         outputDivs.push(<div style={{
           ...FONT_MESSAGE,
-          ...{ color: str.color },
+          ...{ color: str.color }
         }}>{ str.content }</div>);
       }
     }
@@ -105,9 +105,11 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           onClick={() => this.replInstance.saveEditorContent()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Save"
         />
-        <div ref = { (e) => { this.editorAreaRect = e?.getBoundingClientRect(); }} style = {{
+        <div ref = { (e) => {
+          this.editorAreaRect = e?.getBoundingClientRect();
+        }} style = {{
           padding: `${BOX_PADDING_VALUE}px`,
-          border: '2px solid #6f8194',
+          border: '2px solid #6f8194'
         }}>
           <AceEditor
             ref={ (e) => {
@@ -121,8 +123,8 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
                 backgroundSize: '100%',
-                backgroundRepeat: 'no-repeat',
-              }),
+                backgroundRepeat: 'no-repeat'
+              })
             } }
             mode="javascript" theme="twilight"
             onChange={ (newValue) => this.replInstance.updateUserCode(newValue) }
@@ -131,11 +133,11 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
         </div>
         <div onMouseDown = {this.dragBarOnMouseDown} style = {{
           cursor: 'row-resize',
-          height: '8px',
+          height: '8px'
         }} />
         <div style = {{
           padding: `${BOX_PADDING_VALUE}px`,
-          border: '2px solid #6f8194',
+          border: '2px solid #6f8194'
         }}>
           <div id="output_strings">{outputDivs}</div>
         </div>
@@ -175,5 +177,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'code',
+  iconName: 'code'
 };

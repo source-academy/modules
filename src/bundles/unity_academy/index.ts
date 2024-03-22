@@ -174,5 +174,5 @@ export {
   */
   debug_log,
   debug_logwarning,
-  debug_logerror,
+  debug_logerror
 } from './functions';

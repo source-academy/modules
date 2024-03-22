@@ -52,7 +52,7 @@ class A2dUiButtons extends React.Component<UiProps, UiState> {
   constructor(props) {
     super(props);
     this.state = {
-      isPaused: false,
+      isPaused: false
     };
   }
 
@@ -84,7 +84,7 @@ class GameTab extends React.Component<Props, GameState> {
   constructor(props) {
     super(props);
     this.state = {
-      game: undefined,
+      game: undefined
     };
   }
 
@@ -97,7 +97,7 @@ class GameTab extends React.Component<Props, GameState> {
     // Config will exist since it is checked in toSpawn
     const config = this.props.context.result?.value?.gameConfig;
     this.setState({
-      game: new Phaser.Game(config),
+      game: new Phaser.Game(config)
     });
   }
 
@@ -132,7 +132,7 @@ class GameTab extends React.Component<Props, GameState> {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          flexDirection: 'column',
+          flexDirection: 'column'
         }}
       >
         <div id="phaser-game" />
@@ -176,5 +176,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: IconNames.SHAPES,
+  iconName: IconNames.SHAPES
 };

@@ -50,5 +50,5 @@ export default {
     return <CurveTab context={context} />;
   },
   label: 'Curves Tab',
-  iconName: 'media', // See https://blueprintjs.com/docs/#icons for more options
+  iconName: 'media' // See https://blueprintjs.com/docs/#icons for more options
 };

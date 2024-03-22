@@ -50,7 +50,7 @@ class CopyGC extends React.Component<Props, State> {
       description: '',
       rightDesc: '',
       leftDesc: '',
-      running: false,
+      running: false
     };
   }
 
@@ -114,7 +114,7 @@ class CopyGC extends React.Component<Props, State> {
         description,
         leftDesc,
         rightDesc,
-        running,
+        running
       };
     });
   };
@@ -131,7 +131,7 @@ class CopyGC extends React.Component<Props, State> {
         lastChild: commandHeap[newValue].right,
         description: commandHeap[newValue].desc,
         leftDesc: commandHeap[newValue].leftDesc,
-        rightDesc: commandHeap[newValue].rightDesc,
+        rightDesc: commandHeap[newValue].rightDesc
       };
     });
   };
@@ -152,7 +152,7 @@ class CopyGC extends React.Component<Props, State> {
           lastChild: commandHeap[value].right,
           description: commandHeap[value].desc,
           leftDesc: commandHeap[value].leftDesc,
-          rightDesc: commandHeap[value].rightDesc,
+          rightDesc: commandHeap[value].rightDesc
         };
       });
     }
@@ -173,7 +173,7 @@ class CopyGC extends React.Component<Props, State> {
           lastChild: commandHeap[value].right,
           description: commandHeap[value].desc,
           leftDesc: commandHeap[value].leftDesc,
-          rightDesc: commandHeap[value].rightDesc,
+          rightDesc: commandHeap[value].rightDesc
         };
       });
     }
@@ -261,7 +261,7 @@ class CopyGC extends React.Component<Props, State> {
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-                marginTop: 10,
+                marginTop: 10
               }}
             >
               {state.leftDesc
@@ -271,7 +271,7 @@ class CopyGC extends React.Component<Props, State> {
                       width={10}
                       height={10}
                       style={{
-                        backgroundColor: ThemeColor.GREEN,
+                        backgroundColor: ThemeColor.GREEN
                       }}
                     />
                     <span> {state.leftDesc} </span>
@@ -287,7 +287,7 @@ class CopyGC extends React.Component<Props, State> {
                       width={10}
                       height={10}
                       style={{
-                        backgroundColor: ThemeColor.YELLOW,
+                        backgroundColor: ThemeColor.YELLOW
                       }}
                     />
                     <span> {state.rightDesc} </span>
@@ -328,7 +328,7 @@ class CopyGC extends React.Component<Props, State> {
                   && toMemoryMatrix.map((item, row) => (
                     <div style={{
                       display: 'flex',
-                      flexDirection: 'row',
+                      flexDirection: 'row'
                     }}>
                       <span style={{ width: 30 }}> {row * state.column} </span>
                       {item
@@ -340,14 +340,14 @@ class CopyGC extends React.Component<Props, State> {
                             <div
                               style={{
                                 width: 14,
-                                backgroundColor: bgColor,
+                                backgroundColor: bgColor
                               }}
                             >
                               <canvas
                                 width={10}
                                 height={10}
                                 style={{
-                                  backgroundColor: color,
+                                  backgroundColor: color
                                 }}
                               />
                             </div>
@@ -365,7 +365,7 @@ class CopyGC extends React.Component<Props, State> {
                   && fromMemoryMatrix.map((item, row) => (
                     <div style={{
                       display: 'flex',
-                      flexDirection: 'row',
+                      flexDirection: 'row'
                     }}>
                       <span style={{ width: 30 }}>
                         {row * state.column + state.memorySize / 2}
@@ -378,14 +378,14 @@ class CopyGC extends React.Component<Props, State> {
                             <div
                               style={{
                                 width: 14,
-                                backgroundColor: bgColor,
+                                backgroundColor: bgColor
                               }}
                             >
                               <canvas
                                 width={10}
                                 height={10}
                                 style={{
-                                  backgroundColor: color,
+                                  backgroundColor: color
                                 }}
                               />
                             </div>
@@ -400,14 +400,14 @@ class CopyGC extends React.Component<Props, State> {
           <div style={{
             display: 'flex',
             flexDirection: 'row',
-            marginTop: 10,
+            marginTop: 10
           }}>
             <div style={{ flex: 1 }}>
               <canvas
                 width={10}
                 height={10}
                 style={{
-                  backgroundColor: ThemeColor.BLUE,
+                  backgroundColor: ThemeColor.BLUE
                 }}
               />
               <span> defined</span>
@@ -417,7 +417,7 @@ class CopyGC extends React.Component<Props, State> {
                 width={10}
                 height={10}
                 style={{
-                  backgroundColor: ThemeColor.PINK,
+                  backgroundColor: ThemeColor.PINK
                 }}
               />
               <span> tag</span>
@@ -427,7 +427,7 @@ class CopyGC extends React.Component<Props, State> {
                 width={10}
                 height={10}
                 style={{
-                  backgroundColor: ThemeColor.GREY,
+                  backgroundColor: ThemeColor.GREY
                 }}
               />
               <span> empty or undefined</span>
@@ -457,5 +457,5 @@ export default {
   toSpawn: () => true,
   body: (debuggerContext: any) => <CopyGC debuggerContext={debuggerContext} />,
   label: 'Copying Garbage Collector',
-  iconName: 'duplicate',
+  iconName: 'duplicate'
 };

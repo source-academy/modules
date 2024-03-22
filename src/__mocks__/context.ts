@@ -1,5 +1,5 @@
 export default {
-  moduleContexts: new Proxy({}, {
-    get: () => ({ state: {} })
-  })
-}
+	moduleContexts: new Proxy({}, {
+		get: () => ({ state: {} })
+	})
+};

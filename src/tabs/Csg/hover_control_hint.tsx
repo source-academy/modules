@@ -14,7 +14,7 @@ export default class HoverControlHint extends React.Component<HintProps> {
         // Centre icon within hint's height
         justifyContent: 'center',
 
-        height: SA_TAB_BUTTON_WIDTH,
+        height: SA_TAB_BUTTON_WIDTH
       }}
     >
       <Tooltip

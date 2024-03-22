@@ -8,19 +8,19 @@ import {
   type CurveTransformer,
   type DrawMode,
   type RenderFunction,
-  type ScaleMode,
+  type ScaleMode
 } from './types';
 
 const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];
 context.moduleContexts.curve.state = {
-  drawnCurves,
+  drawnCurves
 };
 
 function createDrawFunction(
   scaleMode: ScaleMode,
   drawMode: DrawMode,
   space: CurveSpace,
-  isFullView: boolean,
+  isFullView: boolean
 ): (numPoints: number) => RenderFunction {
   return (numPoints: number) => {
     const func = (curve: Curve) => {
@@ -30,7 +30,7 @@ function createDrawFunction(
         numPoints,
         curve,
         space,
-        isFullView,
+        isFullView
       );
 
       if (!curve.shouldNotAppend) {
@@ -87,7 +87,7 @@ export const draw_connected_full_view = createDrawFunction(
   'stretch',
   'lines',
   '2D',
-  true,
+  true
 );
 
 /**
@@ -108,7 +108,7 @@ export const draw_connected_full_view_proportional = createDrawFunction(
   'fit',
   'lines',
   '2D',
-  true,
+  true
 );
 
 /**
@@ -146,7 +146,7 @@ export const draw_points_full_view = createDrawFunction(
   'stretch',
   'points',
   '2D',
-  true,
+  true
 );
 
 /**
@@ -168,7 +168,7 @@ export const draw_points_full_view_proportional = createDrawFunction(
   'fit',
   'points',
   '2D',
-  true,
+  true
 );
 
 /**
@@ -189,7 +189,7 @@ export const draw_3D_connected = createDrawFunction(
   'none',
   'lines',
   '3D',
-  false,
+  false
 );
 
 /**
@@ -210,7 +210,7 @@ export const draw_3D_connected_full_view = createDrawFunction(
   'stretch',
   'lines',
   '3D',
-  false,
+  false
 );
 
 /**
@@ -231,7 +231,7 @@ export const draw_3D_connected_full_view_proportional = createDrawFunction(
   'fit',
   'lines',
   '3D',
-  false,
+  false
 );
 
 /**
@@ -268,7 +268,7 @@ export const draw_3D_points_full_view = createDrawFunction(
   'stretch',
   'points',
   '3D',
-  false,
+  false
 );
 
 /**
@@ -289,7 +289,7 @@ export const draw_3D_points_full_view_proportional = createDrawFunction(
   'fit',
   'points',
   '3D',
-  false,
+  false
 );
 
 /**
@@ -344,7 +344,7 @@ export function make_color_point(
   y: number,
   r: number,
   g: number,
-  b: number,
+  b: number
 ): Point {
   return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
 }
@@ -372,7 +372,7 @@ export function make_3D_color_point(
   z: number,
   r: number,
   g: number,
-  b: number,
+  b: number
 ): Point {
   return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
 }
@@ -495,7 +495,7 @@ export function invert(curve: Curve): Curve {
 export function translate(
   x0: number,
   y0: number,
-  z0: number,
+  z0: number
 ): CurveTransformer {
   return (curve: Curve) => {
     const transformation = (cf: Curve) => (t: number) => {
@@ -509,7 +509,7 @@ export function translate(
         c + z_of(ct),
         r_of(ct),
         g_of(ct),
-        b_of(ct),
+        b_of(ct)
       );
     };
     return transformation(curve);
@@ -531,7 +531,7 @@ export function translate(
 export function rotate_around_origin(
   theta1: number,
   theta2: number,
-  theta3: number,
+  theta3: number
 ): CurveTransformer {
   if (theta3 === undefined && theta1 !== undefined && theta2 !== undefined) {
     // 2 args
@@ -556,7 +556,7 @@ export function rotate_around_origin(
           z,
           r_of(ct),
           g_of(ct),
-          b_of(ct),
+          b_of(ct)
         );
       };
       return transformation(curve);
@@ -576,14 +576,14 @@ export function rotate_around_origin(
           [
             cthz * cthy,
             cthz * sthy * sthx - sthz * cthx,
-            cthz * sthy * cthx + sthz * sthx,
+            cthz * sthy * cthx + sthz * sthx
           ],
           [
             sthz * cthy,
             sthz * sthy * sthx + cthz * cthx,
-            sthz * sthy * cthx - cthz * sthx,
+            sthz * sthy * cthx - cthz * sthx
           ],
-          [-sthy, cthy * sthx, cthy * cthx],
+          [-sthy, cthy * sthx, cthy * cthx]
         ];
         let xf = 0;
         let yf = 0;
@@ -624,7 +624,7 @@ export function scale(a: number, b: number, c: number): CurveTransformer {
         c1 * z_of(ct),
         r_of(ct),
         g_of(ct),
-        b_of(ct),
+        b_of(ct)
       );
     };
     return transformation(curve);
@@ -659,14 +659,14 @@ export function put_in_standard_position(curve: Curve): Curve {
   const curve_started_at_origin = translate(
     -x_of(start_point),
     -y_of(start_point),
-    0,
+    0
   )(curve);
   const new_end_point = curve_started_at_origin(1);
   const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
   const curve_ended_at_x_axis = rotate_around_origin(
     0,
     0,
-    -theta,
+    -theta
   )(curve_started_at_origin);
   const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
   return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
@@ -707,8 +707,8 @@ export function connect_ends(curve1: Curve, curve2: Curve): Curve {
     translate(
       x_of(endPointOfCurve1) - x_of(startPointOfCurve2),
       y_of(endPointOfCurve1) - y_of(startPointOfCurve2),
-      z_of(endPointOfCurve1) - z_of(startPointOfCurve2),
-    )(curve2),
+      z_of(endPointOfCurve1) - z_of(startPointOfCurve2)
+    )(curve2)
   );
 }
 
@@ -772,7 +772,7 @@ export function animate_curve(
   duration: number,
   fps: number,
   drawer: RenderFunction,
-  func: CurveAnimation,
+  func: CurveAnimation
 ): AnimatedCurve {
   if (drawer.is3D) {
     throw new Error('animate_curve cannot be used with 3D draw function!');
@@ -795,7 +795,7 @@ export function animate_3D_curve(
   duration: number,
   fps: number,
   drawer: RenderFunction,
-  func: CurveAnimation,
+  func: CurveAnimation
 ): AnimatedCurve {
   if (!drawer.is3D) {
     throw new Error('animate_3D_curve cannot be used with 2D draw function!');

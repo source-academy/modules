@@ -172831,7 +172831,7 @@ export const scrabble_words = [
   'zymurgies',
   'zymurgy',
   'zyzzyva',
-  'zyzzyvas',
+  'zyzzyvas'
 ];
 
 /**

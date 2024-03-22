@@ -4,7 +4,7 @@ import { CANVAS_MAX_WIDTH } from './css_constants';
 const defaultStyle = {
   width: '100%',
   maxWidth: CANVAS_MAX_WIDTH,
-  aspectRatio: '1',
+  aspectRatio: '1'
 } as React.CSSProperties;
 
 /**
@@ -17,14 +17,14 @@ const WebGLCanvas = React.forwardRef<HTMLCanvasElement, any>(
       = props.style !== undefined
         ? {
           ...defaultStyle,
-          ...props.style,
+          ...props.style
         }
         : defaultStyle;
 
     return (
       <canvas {...props} style={style} ref={ref} height={512} width={512} />
     );
-  },
+  }
 );
 
 export default WebGLCanvas;

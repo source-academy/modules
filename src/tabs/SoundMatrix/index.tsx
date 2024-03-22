@@ -60,7 +60,7 @@ class SoundMatrix extends React.Component<Props, State> {
               'controls',
               'col-xs-12',
               Classes.DARK,
-              Classes.BUTTON_GROUP,
+              Classes.BUTTON_GROUP
             )}
           >
             <Button id="clear-matrix" onClick={this.handleClear}>
@@ -110,5 +110,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'music',
+  iconName: 'music'
 };

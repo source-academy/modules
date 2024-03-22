@@ -97,51 +97,55 @@ class UnityComponent extends React.Component<any> {
         position: 'absolute',
         left: '0%',
         top: '0%',
-        zIndex: '9999',
+        zIndex: '9999'
       }}>
         <div style={{
           backgroundColor: 'rgba(100,100,100,0.75)',
           width: '100%',
           height: '100%',
           position: 'absolute',
-          zIndex: '-1',
+          zIndex: '-1'
         }}>
           <p id = "unity_load_info" style={{
             textAlign: 'center',
             lineHeight: '30',
             fontSize: '23px',
-            color: 'cyan',
+            color: 'cyan'
           }}>Preparing to load Unity Academy...</p>
         </div>
         <div id="unity-container">
           <canvas id="unity-canvas" style={{
             width: '100%',
             height: '100%',
-            position: 'absolute',
+            position: 'absolute'
           }}></canvas>
         </div>
         <Button
           icon={IconNames.CROSS}
           active={true}
-          onClick={() => { moduleInstance.setShowUnityComponent(0); }}// Note: Here if I directly use "this.moduleInstance......" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
+          onClick={() => {
+            moduleInstance.setShowUnityComponent(0);
+          }}// Note: Here if I directly use "this.moduleInstance......" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Hide Unity Academy Window"
           style={{
             position: 'absolute',
             left: '0%',
             top: '0%',
-            width: '15%',
+            width: '15%'
           }}
         />
         <Button
           icon={IconNames.DISABLE}
           active={true}
-          onClick={() => { moduleInstance.terminate(); }}
+          onClick={() => {
+            moduleInstance.terminate();
+          }}
           text="Terminate Unity Academy Instance"
           style={{
             position: 'absolute',
             left: '17%',
             top: '0%',
-            width: '20%',
+            width: '20%'
           }}
         />
       </div>
@@ -164,7 +168,7 @@ const UNITY_CONFIG = {
   streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
   companyName: 'Wang Zihan @ NUS SoC 2026',
   productName: 'Unity Academy (Source Academy Embedding Version)',
-  productVersion: 'See \'About\' in the embedded frontend.',
+  productVersion: 'See \'About\' in the embedded frontend.'
 };
 
 
@@ -202,7 +206,7 @@ class UnityAcademyJsInteropContext {
     this.audioClipStorage = [];
     this.guiData = [];
     this.input = {
-      keyboardInputInfo: {},
+      keyboardInputInfo: {}
     };
     this.targetFrameRate = 30;
 
@@ -416,7 +420,7 @@ class UnityAcademyJsInteropContext {
       playProgress: 0,
       volume: 1,
       isLooping: false,
-      isPlaying: false,
+      isPlaying: false
     };
     this.dispatchStudentAction(`instantiateAudioSourceGameObject|${gameObjectIdentifier}|${audioClipIdentifier.audioClipInternalName}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
@@ -436,12 +440,12 @@ class UnityAcademyJsInteropContext {
       transform: {
         position: zeroVector(),
         rotation: zeroVector(),
-        scale: new Vector3(1, 1, 1),
+        scale: new Vector3(1, 1, 1)
       },
       rigidbody: null,
       audioSource: null,
       customProperties: {},
-      isDestroyed: false,
+      isDestroyed: false
     };
   }
 
@@ -513,7 +517,7 @@ class UnityAcademyJsInteropContext {
     const finalWorldTranslateVector = [
       rotationMatrix[0][0] * deltaPosition.x + rotationMatrix[0][1] * deltaPosition.y + rotationMatrix[0][2] * deltaPosition.z,
       rotationMatrix[1][0] * deltaPosition.x + rotationMatrix[1][1] * deltaPosition.y + rotationMatrix[1][2] * deltaPosition.z,
-      rotationMatrix[2][0] * deltaPosition.x + rotationMatrix[2][1] * deltaPosition.y + rotationMatrix[2][2] * deltaPosition.z,
+      rotationMatrix[2][0] * deltaPosition.x + rotationMatrix[2][1] * deltaPosition.y + rotationMatrix[2][2] * deltaPosition.z
     ];
     gameObject.transform.position.x += finalWorldTranslateVector[0];
     gameObject.transform.position.y += finalWorldTranslateVector[1];
@@ -575,7 +579,7 @@ class UnityAcademyJsInteropContext {
       mass: 1,
       useGravity: true,
       drag: 0,
-      angularDrag: 0.05,
+      angularDrag: 0.05
     };
     this.dispatchStudentAction(`applyRigidbody|${gameObjectIdentifier.gameObjectIdentifier}`);
   }
@@ -658,7 +662,7 @@ class UnityAcademyJsInteropContext {
       type: 'label',
       content,
       x,
-      y,
+      y
     };
     this.guiData.push(newLabel);
   }
@@ -674,7 +678,7 @@ class UnityAcademyJsInteropContext {
       y,
       width,
       height,
-      onClick,
+      onClick
     };
     this.guiData.push(newButton);
   }

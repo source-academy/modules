@@ -4,7 +4,7 @@ import type { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
   controls as _controls,
-  type drawCommands,
+  type drawCommands
 } from '@jscad/regl-renderer';
 import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 import type { InitializationOptions } from 'regl';

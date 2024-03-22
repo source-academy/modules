@@ -1,14 +1,10 @@
 /* [Imports] */
 import type { ReactElement } from 'react';
 import { IconNames } from '@blueprintjs/icons';
-import { Core } from '../../bundles/csg/core.js';
-import {
-  type CsgModuleState,
-} from '../../bundles/csg/utilities.js';
+import { Core } from '../../bundles/csg/core';
+import type { CsgModuleState } from '../../bundles/csg/utilities';
 import { type DebuggerContext } from '../../typings/type_helpers';
 import CanvasHolder from './canvas_holder';
-
-
 
 /* [Exports] */
 export default {
@@ -35,5 +31,5 @@ export default {
   iconName: IconNames.SHAPES,
 
   // Icon tooltip in sidebar
-  label: 'CSG Tab',
+  label: 'CSG Tab'
 };

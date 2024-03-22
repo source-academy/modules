@@ -9,7 +9,7 @@ import { throwIfNotRune } from './runes_ops';
 
 const drawnRunes: (DrawnRune | AnimatedRune)[] = [];
 context.moduleContexts.rune.state = {
-  drawnRunes,
+  drawnRunes
 };
 
 /**
@@ -79,7 +79,7 @@ export function hollusion(rune: Rune): Rune {
 export function animate_rune(
   duration: number,
   fps: number,
-  func: RuneAnimation,
+  func: RuneAnimation
 ) {
   const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);
@@ -102,7 +102,7 @@ export function animate_rune(
 export function animate_anaglyph(
   duration: number,
   fps: number,
-  func: RuneAnimation,
+  func: RuneAnimation
 ) {
   const anim = new AnimatedRune(duration, fps, (n) => {
     const rune = func(n);

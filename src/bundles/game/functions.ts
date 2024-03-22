@@ -17,6 +17,7 @@
 /* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
 
 import context from 'js-slang/context';
+import Phaser from 'phaser';
 import { type List, head, tail, is_pair, accumulate } from 'js-slang/dist/stdlib/list';
 import {
   type GameObject,
@@ -25,7 +26,7 @@ import {
   type RawGameElement,
   type RawGameObject,
   type RawInputObject,
-  defaultGameParams,
+  defaultGameParams
 } from './types';
 
 if (!context.moduleContexts.game.state) {
@@ -38,7 +39,7 @@ const {
   preloadSpritesheetMap,
   remotePath,
   screenSize,
-  createAward,
+  createAward
 } = context.moduleContexts.game.state;
 
 // Listener ObjectTypes
@@ -78,7 +79,7 @@ const scene = () => mandatory(context.moduleContexts.game.state.scene, 'No scene
 
 /** @hidden */
 function get_obj(
-  obj: GameObject,
+  obj: GameObject
 ): RawGameObject | RawInputObject | RawContainer {
   return obj.object!;
 }
@@ -137,11 +138,11 @@ function is_any_type(obj: GameObject, types: string[]): boolean {
  */
 function set_type(
   object: RawGameObject | RawInputObject | RawContainer,
-  type: string,
+  type: string
 ): GameObject {
   return {
     type,
-    object,
+    object
   };
 }
 
@@ -218,7 +219,7 @@ export function create_text_config(
   color: string = '#fff',
   stroke: string = '#fff',
   stroke_thickness: number = 0,
-  align: string = 'left',
+  align: string = 'left'
 ): ObjectConfig {
   return {
     fontFamily: font_family,
@@ -226,7 +227,7 @@ export function create_text_config(
     color,
     stroke,
     strokeThickness: stroke_thickness,
-    align,
+    align
   };
 }
 
@@ -246,13 +247,13 @@ export function create_interactive_config(
   draggable: boolean = false,
   use_hand_cursor: boolean = false,
   pixel_perfect: boolean = false,
-  alpha_tolerance: number = 1,
+  alpha_tolerance: number = 1
 ): ObjectConfig {
   return {
     draggable,
     useHandCursor: use_hand_cursor,
     pixelPerfect: pixel_perfect,
-    alphaTolerance: alpha_tolerance,
+    alphaTolerance: alpha_tolerance
   };
 }
 
@@ -278,7 +279,7 @@ export function create_sound_config(
   detune: number = 0,
   seek: number = 0,
   loop: boolean = false,
-  delay: number = 0,
+  delay: number = 0
 ): ObjectConfig {
   return {
     mute,
@@ -287,7 +288,7 @@ export function create_sound_config(
     detune,
     seek,
     loop,
-    delay,
+    delay
   };
 }
 
@@ -319,7 +320,7 @@ export function create_tween_config(
   yoyo: boolean = false,
   loop: number = 0,
   loop_delay: number = 0,
-  on_loop: Function = nullFn,
+  on_loop: Function = nullFn
 ): ObjectConfig {
   return {
     [target_prop]: target_value,
@@ -330,7 +331,7 @@ export function create_tween_config(
     yoyo,
     loop,
     loopDelay: loop_delay,
-    onLoop: on_loop,
+    onLoop: on_loop
   };
 }
 
@@ -359,7 +360,7 @@ export function create_anim_config(
   repeat: number = -1,
   yoyo: boolean = false,
   show_on_start: boolean = true,
-  hide_on_complete: boolean = false,
+  hide_on_complete: boolean = false
 ): ObjectConfig {
   return {
     key: anims_key,
@@ -369,7 +370,7 @@ export function create_anim_config(
     repeat,
     yoyo,
     showOnStart: show_on_start,
-    hideOnComplete: hide_on_complete,
+    hideOnComplete: hide_on_complete
   };
 }
 
@@ -389,12 +390,12 @@ export function create_anim_config(
 export function create_anim_frame_config(
   key: string,
   duration: number = 0,
-  visible: boolean = true,
+  visible: boolean = true
 ): ObjectConfig {
   return {
     key,
     duration,
-    visible,
+    visible
   };
 }
 
@@ -415,7 +416,7 @@ export function create_anim_frame_config(
  * @returns animation frame configs
  */
 export function create_anim_spritesheet_frame_configs(
-  key: string,
+  key: string
 ): ObjectConfig[] | undefined {
   if (preloadSpritesheetMap.get(key)) {
     const configArr = scene().anims.generateFrameNumbers(key, {});
@@ -440,14 +441,14 @@ export function create_spritesheet_config(
   frame_height: number,
   start_frame: number = 0,
   margin: number = 0,
-  spacing: number = 0,
+  spacing: number = 0
 ): ObjectConfig {
   return {
     frameWidth: frame_width,
     frameHeight: frame_height,
     startFrame: start_frame,
     margin,
-    spacing,
+    spacing
   };
 }
 
@@ -524,7 +525,7 @@ export function load_sound(key: string, url: string) {
 export function load_spritesheet(
   key: string,
   url: string,
-  spritesheet_config: ObjectConfig,
+  spritesheet_config: ObjectConfig
 ) {
   preloadSpritesheetMap.set(key, [url, spritesheet_config]);
 }
@@ -591,7 +592,7 @@ export function create_anim(anim_config: ObjectConfig): boolean {
  */
 export function play_anim_on_image(
   image: GameObject,
-  anims_key: string,
+  anims_key: string
 ): GameObject | undefined {
   if (is_type(image, ObjectTypes.ImageType)) {
     (get_obj(image) as Phaser.GameObjects.Sprite).play(anims_key);
@@ -616,7 +617,7 @@ export function play_anim_on_image(
 export function create_image(
   x: number,
   y: number,
-  asset_key: string,
+  asset_key: string
 ): GameObject | undefined {
   if (
     preloadImageMap.get(asset_key)
@@ -667,7 +668,7 @@ export function create_text(
   x: number,
   y: number,
   text: string,
-  config: ObjectConfig = {},
+  config: ObjectConfig = {}
 ): GameObject {
   const txt = new Phaser.GameObjects.Text(scene(), x, y, text, config);
   return set_type(txt, ObjectTypes.TextType);
@@ -694,7 +695,7 @@ export function create_rect(
   width: number,
   height: number,
   fill: number = 0,
-  alpha: number = 1,
+  alpha: number = 1
 ): GameObject {
   const rect = new Phaser.GameObjects.Rectangle(
     scene(),
@@ -703,7 +704,7 @@ export function create_rect(
     width,
     height,
     fill,
-    alpha,
+    alpha
   );
   return set_type(rect, ObjectTypes.RectType);
 }
@@ -727,7 +728,7 @@ export function create_ellipse(
   width: number,
   height: number,
   fill: number = 0,
-  alpha: number = 1,
+  alpha: number = 1
 ): GameObject {
   const ellipse = new Phaser.GameObjects.Ellipse(
     scene(),
@@ -736,7 +737,7 @@ export function create_ellipse(
     width,
     height,
     fill,
-    alpha,
+    alpha
   );
   return set_type(ellipse, ObjectTypes.EllipseType);
 }
@@ -776,7 +777,7 @@ export function create_container(x: number, y: number): GameObject {
  */
 export function add_to_container(
   container: GameObject,
-  obj: GameObject,
+  obj: GameObject
 ): GameObject | undefined {
   if (
     is_type(container, ObjectTypes.ContainerType)
@@ -787,7 +788,7 @@ export function add_to_container(
     return container;
   }
   throw_error(
-    `${obj} is not of type ${ObjTypes} or ${container} is not of type ${ObjectTypes.ContainerType}`,
+    `${obj} is not of type ${ObjTypes} or ${container} is not of type ${ObjectTypes.ContainerType}`
   );
 }
 
@@ -821,7 +822,7 @@ export function destroy_obj(obj: GameObject) {
 export function set_display_size(
   obj: GameObject,
   x: number,
-  y: number,
+  y: number
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
@@ -861,7 +862,7 @@ export function set_alpha(obj: GameObject, alpha: number): GameObject | undefine
  */
 export function set_interactive(
   obj: GameObject,
-  config: ObjectConfig = {},
+  config: ObjectConfig = {}
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
@@ -884,7 +885,7 @@ export function set_interactive(
 export function set_origin(
   obj: GameObject,
   x: number,
-  y: number,
+  y: number
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     (get_game_obj(obj) as RawGameObject).setOrigin(x, y);
@@ -905,7 +906,7 @@ export function set_origin(
 export function set_position(
   obj: GameObject,
   x: number,
-  y: number,
+  y: number
 ): GameObject | undefined {
   if (obj && is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
@@ -927,7 +928,7 @@ export function set_position(
 export function set_scale(
   obj: GameObject,
   x: number,
-  y: number,
+  y: number
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
@@ -966,7 +967,7 @@ export function set_rotation(obj: GameObject, rad: number): GameObject | undefin
 export function set_flip(
   obj: GameObject,
   x: boolean,
-  y: boolean,
+  y: boolean
 ): GameObject | undefined {
   const GameElementType = [ObjectTypes.ImageType, ObjectTypes.TextType];
   if (is_any_type(obj, GameElementType)) {
@@ -986,12 +987,12 @@ export function set_flip(
  */
 export async function add_tween(
   obj: GameObject,
-  config: ObjectConfig = {},
+  config: ObjectConfig = {}
 ): Promise<GameObject | undefined> {
   if (is_any_type(obj, ObjTypes)) {
     scene().tweens.add({
       targets: get_game_obj(obj),
-      ...config,
+      ...config
     });
     return obj;
   }
@@ -1016,7 +1017,7 @@ export async function add_tween(
 export function add_listener(
   obj: GameObject,
   event: string,
-  callback: Function,
+  callback: Function
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     const listener = get_game_obj(obj)
@@ -1045,7 +1046,7 @@ export function add_listener(
 export function add_keyboard_listener(
   key: string | number,
   event: string,
-  callback: Function,
+  callback: Function
 ): GameObject {
   const keyObj = scene().input.keyboard.addKey(key);
   const keyboardListener = keyObj.addListener(event, callback);
@@ -1108,7 +1109,7 @@ const gameFunctions = [
   set_origin,
   set_position,
   set_rotation,
-  set_scale,
+  set_scale
 ];
 
 // Inject minArgsNeeded to allow module varargs

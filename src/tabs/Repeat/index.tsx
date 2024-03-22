@@ -16,5 +16,5 @@ export default {
   toSpawn: () => true,
   body: (debuggerContext: any) => <Repeat debuggerContext={debuggerContext} />,
   label: 'Repeat Test Tab',
-  iconName: 'build',
+  iconName: 'build'
 };

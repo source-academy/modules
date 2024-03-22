@@ -1,6 +1,7 @@
 /**
  * This file contains the bundle's representation of GameObjects.
  */
+import Phaser from 'phaser';
 import type { ReplResult } from '../../typings/type_helpers';
 import { DEFAULT_INTERACTABLE_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_TRANSFORM_PROPS } from './constants';
 import type * as types from './types';
@@ -19,7 +20,7 @@ export abstract class GameObject implements Transformable, ReplResult {
   public readonly id: number;
 
   constructor(
-    private transformProps: types.TransformProps = DEFAULT_TRANSFORM_PROPS,
+    private transformProps: types.TransformProps = DEFAULT_TRANSFORM_PROPS
   ) {
     this.id = GameObject.gameObjectCount++;
   }
@@ -57,7 +58,7 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
 
   constructor(
     transformProps: types.TransformProps,
-    private renderProps: types.RenderProps = DEFAULT_RENDER_PROPS,
+    private renderProps: types.RenderProps = DEFAULT_RENDER_PROPS
   ) {
     super(transformProps);
   }
@@ -110,7 +111,7 @@ export abstract class InteractableGameObject extends RenderableGameObject implem
   constructor(
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
-    private interactableProps: types.InteractableProps = DEFAULT_INTERACTABLE_PROPS,
+    private interactableProps: types.InteractableProps = DEFAULT_INTERACTABLE_PROPS
   ) {
     super(transformProps, renderProps);
     GameObject.gameObjectsArray.push(this);
@@ -177,7 +178,7 @@ export class RectangleGameObject extends ShapeGameObject {
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
     interactableProps: types.InteractableProps,
-    private rectangle: types.RectangleProps,
+    private rectangle: types.RectangleProps
   ) {
     super(transformProps, renderProps, interactableProps);
   }
@@ -195,7 +196,7 @@ export class CircleGameObject extends ShapeGameObject {
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
     interactableProps: types.InteractableProps,
-    private circle: types.CircleProps,
+    private circle: types.CircleProps
   ) {
     super(transformProps, renderProps, interactableProps);
   }
@@ -213,7 +214,7 @@ export class TriangleGameObject extends ShapeGameObject {
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
     interactableProps: types.InteractableProps,
-    private triangle: types.TriangleProps,
+    private triangle: types.TriangleProps
   ) {
     super(transformProps, renderProps, interactableProps);
   }
@@ -231,7 +232,7 @@ export class SpriteGameObject extends InteractableGameObject {
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
     interactableProps: types.InteractableProps,
-    private sprite: types.Sprite,
+    private sprite: types.Sprite
   ) {
     super(transformProps, renderProps, interactableProps);
   }
@@ -258,7 +259,7 @@ export class TextGameObject extends InteractableGameObject {
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
     interactableProps: types.InteractableProps,
-    private displayText: types.DisplayText,
+    private displayText: types.DisplayText
   ) {
     super(transformProps, renderProps, interactableProps);
   }

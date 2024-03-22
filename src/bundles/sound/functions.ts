@@ -8,7 +8,7 @@ import {
   is_null,
   is_pair,
   accumulate,
-  type List,
+  type List
 } from 'js-slang/dist/stdlib/list';
 import context from 'js-slang/context';
 import type {
@@ -16,7 +16,7 @@ import type {
   Sound,
   SoundProducer,
   SoundTransformer,
-  AudioPlayed,
+  AudioPlayed
 } from './types';
 import { RIFFWAVE } from './riffwave';
 
@@ -26,7 +26,7 @@ const fourier_expansion_level: number = 5; // fourier expansion level
 
 const audioPlayed: AudioPlayed[] = [];
 context.moduleContexts.sound.state = {
-  audioPlayed,
+  audioPlayed
 };
 
 // Singular audio context for all playback functions
@@ -67,7 +67,7 @@ let recorded_sound: Sound | undefined;
 function check_permission() {
   if (permission === undefined) {
     throw new Error(
-      'Call init_record(); to obtain permission to use microphone',
+      'Call init_record(); to obtain permission to use microphone'
     );
   } else if (permission === false) {
     throw new Error(`Permission has been denied.\n
@@ -374,7 +374,7 @@ export function play_in_tab(sound: Sound): Sound {
 
     const soundToPlay = {
       toReplString: () => '<AudioPlayed>',
-      dataUri: riffwave.dataURI,
+      dataUri: riffwave.dataURI
     };
     audioPlayed.push(soundToPlay);
     return sound;
@@ -393,7 +393,7 @@ export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
-      `${play.name} is expecting sound, but encountered ${sound}`,
+      `${play.name} is expecting sound, but encountered ${sound}`
     );
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play.name}: duration of sound is negative`);
@@ -409,7 +409,7 @@ export function play(sound: Sound): Sound {
     const theBuffer = audioplayer.createBuffer(
       1,
       Math.ceil(FS * get_duration(sound)),
-      FS,
+      FS
     );
     const channel = theBuffer.getChannelData(0);
 
@@ -512,7 +512,7 @@ export function square_sound(f: number, duration: number): Sound {
   }
   return make_sound(
     (t) => (4 / Math.PI) * fourier_expansion_square(t),
-    duration,
+    duration
   );
 }
 
@@ -536,7 +536,7 @@ export function triangle_sound(freq: number, duration: number): Sound {
   }
   return make_sound(
     (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
-    duration,
+    duration
   );
 }
 
@@ -558,7 +558,7 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
   }
   return make_sound(
     (t) => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
-    duration,
+    duration
   );
 }
 
@@ -636,7 +636,7 @@ export function adsr(
   attack_ratio: number,
   decay_ratio: number,
   sustain_level: number,
-  release_ratio: number,
+  release_ratio: number
 ): SoundTransformer {
   return (sound) => {
     const wave = get_wave(sound);
@@ -687,7 +687,7 @@ export function stacking_adsr(
   waveform: SoundProducer,
   base_frequency: number,
   duration: number,
-  envelopes: List,
+  envelopes: List
 ): Sound {
   function zip(lst: List, n: number) {
     if (is_null(lst)) {
@@ -700,8 +700,8 @@ export function stacking_adsr(
     accumulate(
       (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
       null,
-      zip(envelopes, 1),
-    ),
+      zip(envelopes, 1)
+    )
   );
 }
 
@@ -722,11 +722,11 @@ export function stacking_adsr(
 export function phase_mod(
   freq: number,
   duration: number,
-  amount: number,
+  amount: number
 ): SoundTransformer {
   return (modulator: Sound) => make_sound(
     (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
-    duration,
+    duration
   );
 }
 
@@ -837,8 +837,8 @@ export function bell(note: number, duration: number): Sound {
       adsr(0, 0.6, 0, 0.05),
       adsr(0, 0.6618, 0, 0.05),
       adsr(0, 0.7618, 0, 0.05),
-      adsr(0, 0.9071, 0, 0.05),
-    ),
+      adsr(0, 0.9071, 0, 0.05)
+    )
   );
 }
 
@@ -855,7 +855,7 @@ export function cello(note: number, duration: number): Sound {
     square_sound,
     midi_note_to_frequency(note),
     duration,
-    list(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)),
+    list(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15))
   );
 }
 
@@ -872,7 +872,7 @@ export function piano(note: number, duration: number): Sound {
     triangle_sound,
     midi_note_to_frequency(note),
     duration,
-    list(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)),
+    list(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05))
   );
 }
 
@@ -889,7 +889,7 @@ export function trombone(note: number, duration: number): Sound {
     square_sound,
     midi_note_to_frequency(note),
     duration,
-    list(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)),
+    list(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1))
   );
 }
 
@@ -910,7 +910,7 @@ export function violin(note: number, duration: number): Sound {
       adsr(0.35, 0, 1, 0.15),
       adsr(0.35, 0, 1, 0.15),
       adsr(0.45, 0, 1, 0.15),
-      adsr(0.45, 0, 1, 0.15),
-    ),
+      adsr(0.45, 0, 1, 0.15)
+    )
   );
 }

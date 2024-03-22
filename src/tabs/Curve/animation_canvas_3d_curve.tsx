@@ -68,7 +68,7 @@ State
       isPlaying: false,
       wasPlaying: false,
       isAutoLooping: true,
-      displayAngle: 0,
+      displayAngle: 0
     };
 
     this.canvas = null;
@@ -89,7 +89,7 @@ State
     try {
       if (this.canvas) {
         const frame = this.props.animation.getFrame(
-          this.state.animTimestamp / 1000,
+          this.state.animTimestamp / 1000
         );
         frame.draw(this.canvas);
       }
@@ -99,7 +99,7 @@ State
       }
       this.setState({
         isPlaying: false,
-        errored: error,
+        errored: error
       });
     }
   };
@@ -138,19 +138,19 @@ State
         // If auto loop is active, restart the animation
         this.setState(
           {
-            animTimestamp: 0,
+            animTimestamp: 0
           },
-          this.reqFrame,
+          this.reqFrame
         );
       } else {
         // Otherwise, stop the animation
         this.setState(
           {
-            isPlaying: false,
+            isPlaying: false
           },
           () => {
             this.callbackTimestamp = null;
-          },
+          }
         );
       }
     } else {
@@ -158,9 +158,9 @@ State
       this.drawFrame();
       this.setState(
         (prev) => ({
-          animTimestamp: prev.animTimestamp + currentFrame,
+          animTimestamp: prev.animTimestamp + currentFrame
         }),
-        this.reqFrame,
+        this.reqFrame
       );
     }
   };
@@ -172,18 +172,18 @@ State
     if (this.state.isPlaying) {
       this.setState(
         {
-          isPlaying: false,
+          isPlaying: false
         },
         () => {
           this.callbackTimestamp = null;
-        },
+        }
       );
     } else {
       this.setState(
         {
-          isPlaying: true,
+          isPlaying: true
         },
-        this.reqFrame,
+        this.reqFrame
       );
     }
   };
@@ -201,7 +201,7 @@ State
         }
 
         this.drawFrame();
-      },
+      }
     );
   };
 
@@ -215,9 +215,9 @@ State
       (prev) => ({
         wasPlaying: prev.isPlaying,
         isPlaying: false,
-        animTimestamp: newValue,
+        animTimestamp: newValue
       }),
-      this.drawFrame,
+      this.drawFrame
     );
   };
 
@@ -227,7 +227,7 @@ State
   private onTimeSliderRelease = () => {
     this.setState(
       (prev) => ({
-        isPlaying: prev.wasPlaying,
+        isPlaying: prev.wasPlaying
       }),
       () => {
         if (!this.state.isPlaying) {
@@ -235,20 +235,20 @@ State
         } else {
           this.reqFrame();
         }
-      },
+      }
     );
   };
 
   private onAngleSliderChange = (newAngle: number) => {
     this.setState(
       {
-        displayAngle: newAngle,
+        displayAngle: newAngle
       },
       () => {
         this.props.animation.angle = newAngle;
         if (this.state.isPlaying) this.reqFrame();
         else this.drawFrame();
-      },
+      }
     );
   };
 
@@ -257,20 +257,20 @@ State
    */
   private onSwitchChange = () => {
     this.setState((prev) => ({
-      isAutoLooping: !prev.isAutoLooping,
+      isAutoLooping: !prev.isAutoLooping
     }));
   };
 
   public render() {
     return <div
       style={{
-        width: '100%',
+        width: '100%'
       }}
     >
       <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         <div
@@ -283,7 +283,7 @@ State
             maxWidth: CANVAS_MAX_WIDTH,
 
             paddingTop: BP_TEXT_MARGIN,
-            paddingBottom: BP_TEXT_MARGIN,
+            paddingBottom: BP_TEXT_MARGIN
           }}
         >
           <PlayButton
@@ -308,7 +308,7 @@ State
               flexDirection: 'column',
               gap: BP_TEXT_MARGIN,
 
-              width: '100%',
+              width: '100%'
             }}
           >
             <Slider
@@ -350,7 +350,7 @@ State
       <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         {this.state.errored
@@ -358,26 +358,26 @@ State
             <div style={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
+              alignItems: 'center'
             }}>
               <div style={{
                 display: 'flex',
                 flexDirection: 'row',
-                alignItems: 'center',
+                alignItems: 'center'
               }}>
                 <Icon icon={IconNames.WARNING_SIGN} size={90} />
                 <div style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  marginBottom: 20,
+                  marginBottom: 20
                 }}>
                   <h3>An error occurred while running your animation!</h3>
                   <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
                 </div>
               </div>
               <code style={{
-                color: 'red',
+                color: 'red'
               }}>
                 {this.state.errored.toString()}
               </code>
@@ -385,7 +385,7 @@ State
           : (
             <WebGLCanvas
               style={{
-                flexGrow: 1,
+                flexGrow: 1
               }}
               ref={(r) => {
                 this.canvas = r;

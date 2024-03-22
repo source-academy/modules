@@ -1,20 +1,20 @@
 /* [Imports] */
 import vec3 from '@jscad/modeling/src/maths/vec3';
-import { ZOOM_TICK_SCALE } from './constants.js';
+import { ZOOM_TICK_SCALE } from './constants';
 import {
   cloneControlsState,
   pan,
   rotate,
   updateProjection,
   updateStates,
-  zoomToFit,
-} from './jscad/renderer.js';
+  zoomToFit
+} from './jscad/renderer';
 import type {
   ControlsState,
   GeometryEntity,
-  PerspectiveCameraState,
-} from './jscad/types.js';
-import ListenerTracker from './listener_tracker.js';
+  PerspectiveCameraState
+} from './jscad/types';
+import ListenerTracker from './listener_tracker';
 
 /* [Main] */
 enum MousePointer {
@@ -57,7 +57,7 @@ export default class InputTracker {
   constructor(
     private canvas: HTMLCanvasElement,
     private cameraState: PerspectiveCameraState,
-    private geometryEntities: GeometryEntity[],
+    private geometryEntities: GeometryEntity[]
   ) {
     this.listenerTracker = new ListenerTracker(canvas);
   }
@@ -187,7 +187,7 @@ export default class InputTracker {
         this.changeZoomTicks(wheelEvent.deltaY);
       },
       // Force wait for our potential preventDefault()
-      { passive: false },
+      { passive: false }
     );
 
     this.listenerTracker.addListener(
@@ -204,7 +204,7 @@ export default class InputTracker {
         this.canvas.setPointerCapture(pointerEvent.pointerId);
       },
       // Force wait for our potential preventDefault()
-      { passive: false },
+      { passive: false }
     );
 
     this.listenerTracker.addListener(
@@ -214,7 +214,7 @@ export default class InputTracker {
         this.unsetLastCoordinates();
 
         this.canvas.releasePointerCapture(pointerEvent.pointerId);
-      },
+      }
     );
 
     this.listenerTracker.addListener(
@@ -255,7 +255,7 @@ export default class InputTracker {
 
         this.lastX = currentX;
         this.lastY = currentY;
-      },
+      }
     );
   }
 

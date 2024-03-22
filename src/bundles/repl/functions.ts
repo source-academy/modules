@@ -30,7 +30,7 @@ export function set_evaluator(evalFunc: Function) {
   }
   INSTANCE.evalFunction = evalFunc;
   return {
-    toReplString: () => '<Programmable Repl Initialized>',
+    toReplString: () => '<Programmable Repl Initialized>'
   };
 }
 

@@ -2,10 +2,10 @@
 import { Spinner, SpinnerSize } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-import { Core } from '../../bundles/csg/core.js';
-import StatefulRenderer from '../../bundles/csg/stateful_renderer.js';
-import type { RenderGroup } from '../../bundles/csg/utilities.js';
-import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants.js';
+import { Core } from '../../bundles/csg/core';
+import StatefulRenderer from '../../bundles/csg/stateful_renderer';
+import type { RenderGroup } from '../../bundles/csg/utilities';
+import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
 import HoverControlHint from './hover_control_hint';
 import type { CanvasHolderProps, CanvasHolderState } from './types';
 
@@ -24,7 +24,7 @@ CanvasHolderState
     super(props);
 
     this.state = {
-      isContextLost: false,
+      isContextLost: false
     };
   }
 
@@ -45,7 +45,7 @@ CanvasHolderState
       this.props.componentNumber,
 
       () => this.setState({ isContextLost: true }),
-      () => this.setState({ isContextLost: false }),
+      () => this.setState({ isContextLost: false })
     );
     this.statefulRenderer.start(true);
   }
@@ -66,7 +66,7 @@ CanvasHolderState
         style={{
           display: this.state.isContextLost ? 'none' : 'flex',
           // Centre content when sidebar is wider than it
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         <div
@@ -75,7 +75,7 @@ CanvasHolderState
             flexDirection: 'column',
             gap: BP_TAB_BUTTON_MARGIN,
 
-            marginRight: BP_TAB_PANEL_MARGIN,
+            marginRight: BP_TAB_PANEL_MARGIN
           }}
         >
           <HoverControlHint
@@ -112,7 +112,7 @@ CanvasHolderState
             // (eg wide desktop view)
             maxWidth: CANVAS_MAX_WIDTH,
             // Force square aspect ratio, otherwise this will have no height
-            aspectRatio: '1',
+            aspectRatio: '1'
           }}
         >
           <canvas
@@ -125,7 +125,7 @@ CanvasHolderState
               width: '100%',
               height: '100%',
 
-              borderRadius: BP_CARD_BORDER_RADIUS,
+              borderRadius: BP_CARD_BORDER_RADIUS
             }}
             // These get set on the fly by the dynamic resizer in
             // StatefulRenderer's InputTracker
@@ -141,12 +141,12 @@ CanvasHolderState
         style={{
           display: this.state.isContextLost ? 'block' : 'none',
 
-          textAlign: 'center',
+          textAlign: 'center'
         }}
       >
         <h2
           style={{
-            margin: `0px 0px ${BP_TEXT_MARGIN} 0px`,
+            margin: `0px 0px ${BP_TEXT_MARGIN} 0px`
           }}
         >
           WebGL Context Lost
@@ -154,7 +154,7 @@ CanvasHolderState
         <Spinner intent="warning" size={SpinnerSize.LARGE} />
         <p
           style={{
-            margin: `${BP_TEXT_MARGIN} 0px 0px 0px`,
+            margin: `${BP_TEXT_MARGIN} 0px 0px 0px`
           }}
         >
           Your GPU is probably busy. Waiting for browser to re-establish connection...

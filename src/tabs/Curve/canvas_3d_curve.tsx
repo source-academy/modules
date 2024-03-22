@@ -40,7 +40,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
     this.canvas = null;
     this.state = {
       displayAngle: 0,
-      isRotating: false,
+      isRotating: false
     };
   }
 
@@ -54,13 +54,13 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
     this.setState(
       {
         displayAngle: newValue,
-        isRotating: false,
+        isRotating: false
       },
       () => {
         if (this.canvas) {
           this.props.curve.redraw(degreesToRadians(newValue));
         }
-      },
+      }
     );
   };
 
@@ -73,13 +73,13 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
 
     this.setState(
       (prevState) => ({
-        isRotating: !prevState.isRotating,
+        isRotating: !prevState.isRotating
       }),
       () => {
         if (this.state.isRotating) {
           this.autoRotate();
         }
-      },
+      }
     );
   };
 
@@ -92,12 +92,12 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
         (prevState) => ({
           ...prevState,
           displayAngle:
-            prevState.displayAngle >= 360 ? 0 : prevState.displayAngle + 2,
+            prevState.displayAngle >= 360 ? 0 : prevState.displayAngle + 2
         }),
         () => {
           this.props.curve.redraw(degreesToRadians(this.state.displayAngle));
           window.requestAnimationFrame(this.autoRotate);
-        },
+        }
       );
     }
   };
@@ -110,7 +110,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
         if (this.canvas) {
           this.props.curve.redraw(degreesToRadians(angle));
         }
-      },
+      }
     );
   };
 
@@ -124,13 +124,13 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
   public render() {
     return <div
       style={{
-        width: '100%',
+        width: '100%'
       }}
     >
       <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         <div
@@ -143,7 +143,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
             maxWidth: CANVAS_MAX_WIDTH,
 
             paddingTop: BP_TEXT_MARGIN,
-            paddingBottom: BP_TEXT_MARGIN,
+            paddingBottom: BP_TEXT_MARGIN
           }}
         >
           <PlayButton
@@ -161,7 +161,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
           />
           <input
             style={{
-              height: '100%',
+              height: '100%'
             }}
 
             type="number"
@@ -179,7 +179,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
       <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         <WebGLCanvas

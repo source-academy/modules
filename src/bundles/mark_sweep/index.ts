@@ -40,7 +40,7 @@ function generateMemory(): void {
     desc: 'Memory initially empty.',
     leftDesc: '',
     rightDesc: '',
-    queue: [],
+    queue: []
   };
 
   commandHeap.push(obj);
@@ -56,7 +56,7 @@ function initialize_memory(
   memorySize: number,
   nodeSize,
   marked,
-  unmarked,
+  unmarked
 ): void {
   MEMORY_SIZE = memorySize;
   NODE_SIZE = nodeSize;
@@ -91,7 +91,7 @@ function newCommand(
   description,
   firstDesc,
   lastDesc,
-  queue = [],
+  queue = []
 ): void {
   const newType = type;
   const newLeft = left;
@@ -121,7 +121,7 @@ function newCommand(
     desc: newDesc,
     leftDesc: newFirstDesc,
     rightDesc: newLastDesc,
-    queue: newQueue,
+    queue: newQueue
   };
 
   commandHeap.push(obj);
@@ -139,7 +139,7 @@ function newSweep(left, heap): void {
     heap,
     desc,
     'freed node',
-    '',
+    ''
   );
 }
 
@@ -156,7 +156,7 @@ function newMark(left, heap, queue): void {
     desc,
     'marked node',
     '',
-    queue,
+    queue
   );
 }
 
@@ -189,7 +189,7 @@ function newUpdateSweep(right, heap): void {
     heap,
     desc,
     'free node',
-    '',
+    ''
   );
 }
 
@@ -204,7 +204,7 @@ function newPush(left, right, heap): void {
     heap,
     desc,
     'last child address slot',
-    'new child pushed',
+    'new child pushed'
   );
 }
 
@@ -220,7 +220,7 @@ function newPop(res, left, right, heap): void {
     heap,
     desc,
     'popped memory',
-    'last child address slot',
+    'last child address slot'
   );
 }
 
@@ -242,7 +242,7 @@ function newNew(left, heap): void {
     heap,
     desc,
     'new memory allocated',
-    '',
+    ''
   );
 }
 
@@ -262,7 +262,7 @@ function updateSlotSegment(
   tag: number,
   size: number,
   first: number,
-  last: number,
+  last: number
 ): void {
   if (tag >= 0) {
     TAG_SLOT = tag;
@@ -345,7 +345,7 @@ function init() {
     get_command,
     get_unmarked,
     get_marked,
-    get_roots,
+    get_roots
   };
 }
 
@@ -370,5 +370,5 @@ export {
   showRoots,
   endGC,
   addRoots,
-  showRoot,
+  showRoot
 };

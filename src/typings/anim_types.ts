@@ -1,3 +1,7 @@
+export interface AnimFrame {
+  draw: (canvas: HTMLCanvasElement) => void;
+}
+
 /**
  * Represents an animation drawn using WebGL
  * @field duration Duration of the animation in secondss
@@ -10,8 +14,4 @@ export abstract class glAnimation {
   public abstract getFrame(timestamp: number): AnimFrame;
 
   public static isAnimation = (obj: any): obj is glAnimation => obj.fps !== undefined;
-}
-
-export interface AnimFrame {
-  draw: (canvas: HTMLCanvasElement) => void;
 }

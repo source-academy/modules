@@ -52,13 +52,13 @@ export function make_force(
   dir: Vector2,
   mag: number,
   dur: number,
-  start: number,
+  start: number
 ): Force {
   let force: Force = {
     direction: dir,
     magnitude: mag,
     duration: dur,
-    start_time: start,
+    start_time: start
   };
   return force;
 }
@@ -81,7 +81,7 @@ export function set_gravity(v: Vector2) {
 
   world = new PhysicsWorld();
   context.moduleContexts.physics_2d.state = {
-    world,
+    world
   };
   world.setGravity(v);
 }
@@ -124,8 +124,8 @@ export function add_wall(pos: Vector2, rot: number, size: Vector2) {
       new b2PolygonShape()
         .SetAsBox(size.x / 2, size.y / 2),
       true,
-      world,
-    ),
+      world
+    )
   );
 }
 
@@ -145,7 +145,7 @@ export function add_box_object(
   rot: number,
   velc: Vector2,
   size: Vector2,
-  isStatic: boolean,
+  isStatic: boolean
 ): PhysicsObject {
   if (!world) {
     throw NO_WORLD;
@@ -156,7 +156,7 @@ export function add_box_object(
     new b2PolygonShape()
       .SetAsBox(size.x / 2, size.y / 2),
     isStatic,
-    world,
+    world
   );
   newObj.setVelocity(velc);
   return world.addObject(newObj);
@@ -178,7 +178,7 @@ export function add_circle_object(
   rot: number,
   velc: Vector2,
   radius: number,
-  isStatic: boolean,
+  isStatic: boolean
 ): PhysicsObject {
   if (!world) {
     throw NO_WORLD;
@@ -189,7 +189,7 @@ export function add_circle_object(
     new b2CircleShape()
       .Set(new Vector2(), radius),
     isStatic,
-    world,
+    world
   );
   newObj.setVelocity(velc);
   return world.addObject(newObj);
@@ -213,7 +213,7 @@ export function add_triangle_object(
   velc: Vector2,
   base: number,
   height: number,
-  isStatic: boolean,
+  isStatic: boolean
 ): PhysicsObject {
   if (!world) {
     throw NO_WORLD;
@@ -225,10 +225,10 @@ export function add_triangle_object(
       .Set([
         new Vector2(-base / 2, -height / 2),
         new Vector2(base / 2, -height / 2),
-        new Vector2(0, height / 2),
+        new Vector2(0, height / 2)
       ]),
     isStatic,
-    world,
+    world
   );
   newObj.setVelocity(velc);
   return world.addObject(newObj);

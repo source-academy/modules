@@ -61,7 +61,7 @@ DebugDrawCanvasState
       isPlaying: false,
       zoomLevel: 1,
       camX: 0,
-      updateStep: 1 / 60,
+      updateStep: 1 / 60
     };
 
     this.canvas = null;
@@ -101,18 +101,18 @@ DebugDrawCanvasState
 
   private startAnimation = () => this.setState(
     {
-      isPlaying: true,
+      isPlaying: true
     },
-    this.reqFrame,
+    this.reqFrame
   );
 
   private stopAnimation = () => this.setState(
     {
-      isPlaying: false,
+      isPlaying: false
     },
     () => {
       this.callbackTimestamp = null;
-    },
+    }
   );
 
   /**
@@ -140,12 +140,12 @@ DebugDrawCanvasState
 
     this.setState(
       (prev) => ({
-        animTimestamp: prev.animTimestamp + currentFrame,
+        animTimestamp: prev.animTimestamp + currentFrame
       }),
       () => {
         this.drawFrame();
         this.reqFrame();
-      },
+      }
     );
 
     this.world.update(this.state.updateStep);
@@ -200,12 +200,12 @@ DebugDrawCanvasState
           marginRight: '20px',
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'space-between'
         }}
       >
         <div
           style={{
-            marginRight: '20px',
+            marginRight: '20px'
           }}
         >
           <Tooltip content={this.state.isPlaying ? 'Pause' : 'Play'}>
@@ -222,7 +222,7 @@ DebugDrawCanvasState
             marginRight: '20px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
+            justifyContent: 'space-between'
           }}
         >
           <div>
@@ -271,12 +271,12 @@ DebugDrawCanvasState
           style={{
             display: 'flex',
             alignContent: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <WebGLCanvas
             style={{
-              flexGrow: 1,
+              flexGrow: 1
             }}
             ref={(r) => {
               this.canvas = r;
@@ -290,14 +290,14 @@ DebugDrawCanvasState
             padding: '10px',
             flexDirection: 'row',
             justifyContent: 'stretch',
-            alignContent: 'center',
+            alignContent: 'center'
           }}
         >
           {buttons}
         </div>
         <div
           style={{
-            whiteSpace: 'pre-wrap',
+            whiteSpace: 'pre-wrap'
           }}
         >
           {this.world.getWorldStatus()}

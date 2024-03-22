@@ -85,7 +85,7 @@ export function generatePlot(
   config: Data,
   layout: Partial<Layout>,
   is_colored: boolean,
-  func: Curve,
+  func: Curve
 ): CurvePlot {
   let x_s: number[] = [];
   let y_s: number[] = [];
@@ -105,20 +105,20 @@ export function generatePlot(
     z: z_s,
     marker: {
       size: 2,
-      color: color_s,
+      color: color_s
     },
     line: {
-      color: color_s,
-    },
+      color: color_s
+    }
   };
   return new CurvePlot(
     draw_new_curve,
     {
       ...plotlyData,
       ...config,
-      type,
+      type
     } as Data,
-    layout,
+    layout
   );
 }
 
