@@ -1,15 +1,32 @@
+import type { MockedFunction } from "jest-mock";
+import { testBuildCommand } from "@src/build/__tests__/testingUtils";
 import * as tabs from "../tabs";
-import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 
-jest.mock('esbuild', () => ({
+jest.mock("esbuild", () => ({
 	build: jest.fn()
 		.mockResolvedValue({ outputFiles: [] })
 }));
 
-jest.spyOn(tabs, 'bundleTabs')
+jest.spyOn(tabs, "bundleTabs");
 
 testBuildCommand(
-	'buildTabs',
+	"buildTabs",
 	tabs.getBuildTabsCommand,
 	[tabs.bundleTabs]
-)
+);
+
+test("Normal command", async () => {
+	await tabs.getBuildTabsCommand()
+		.parseAsync(["-t", "tab0"], { from: "user" });
+
+	expect(tabs.bundleTabs)
+		.toHaveBeenCalledTimes(1);
+
+	const [args] = (tabs.bundleTabs as MockedFunction<typeof tabs.bundleTabs>).mock.calls[0];
+	expect(args)
+		.toMatchObject({
+			bundles: [],
+			tabs: ["tab0"],
+			modulesSpecified: true
+		});
+});

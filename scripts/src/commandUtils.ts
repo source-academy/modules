@@ -34,7 +34,66 @@ export const bundlesOption = new OptionNew('-b, --bundles <bundles...>', 'Manual
 	.default(null);
 
 export const tabsOption = new OptionNew('-t, --tabs <tabs...>', 'Manually specify which tabs')
-	.default<string[] | null>(null);
+	.default(null);
+
+export async function retrieveBundlesAndTabs(
+	{ bundles, tabs, manifest: manifestFile }: {
+		bundles?: string[] | null,
+		tabs?: string[] | null,
+		manifest: string
+	}, shouldAddModuleTabs: boolean
+) {
+	const manifest = await retrieveManifest(manifestFile);
+	const knownBundles = Object.keys(manifest);
+	const knownTabs = Object
+		.values(manifest)
+		.flatMap((x) => x.tabs);
+
+	const isUndefinedOrNull = (x: any): x is undefined | null => x === undefined || x === null
+
+	let bundlesOutput: string[]
+	let tabsOutput: string[]
+
+	if (isUndefinedOrNull(bundles)) {
+		// User did not specify any bundles, select all
+		bundlesOutput = knownBundles
+	} else {
+		const unknownBundles = bundles.filter(bundleName => !knownBundles.includes(bundleName))
+		if (unknownBundles.length > 0) {
+			throw new Error(`Unknown bundles: ${unknownBundles.join(', ')}`)
+		}
+
+		bundlesOutput = bundles
+	}
+
+	if (isUndefinedOrNull(tabs)) {
+		// User did not specify any tabs, select all
+		tabsOutput = knownTabs
+	} else {
+		const unknownTabs = tabs.filter(tabName => !knownTabs.includes(tabName))
+		if (unknownTabs.length > 0) {
+			throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`)
+		}
+
+		tabsOutput = tabs
+	}
+
+	if (shouldAddModuleTabs) {
+		// If certain bundles are being rebuilt, then their tabs
+		// should also be rebuilt
+		bundlesOutput.forEach(bundleName => {
+			manifest[bundleName].tabs.forEach(tabName => {
+				tabsOutput.push(tabName)
+			})
+		})
+	}
+
+	return {
+		bundles: [...new Set(bundlesOutput)],
+		tabs: [...new Set(tabsOutput)],
+		modulesSpecified: !isUndefinedOrNull(bundles)
+	}
+}
 
 /**
  * Determines which bundles and tabs to build based on the user's input.
@@ -57,7 +116,7 @@ export const tabsOption = new OptionNew('-t, --tabs <tabs...>', 'Manually specif
  * @param shouldAddModuleTabs whether to also automatically include the tabs of
  * specified modules
  */
-export async function retrieveBundlesAndTabs(manifestFile: string,
+export async function oldRetrieveBundlesAndTabs(manifestFile: string,
 	modules: string[] | null,
 	tabOptions: string[] | null,
 	shouldAddModuleTabs: boolean = true) {

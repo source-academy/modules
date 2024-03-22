@@ -1,8 +1,7 @@
-import pathlib from 'path'
 import { lintFixOption, retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
-import { ESLint } from 'eslint'
+import { loadESLint, type ESLint } from 'eslint'
 import chalk from 'chalk'
-import { findSeverity, divideAndRound, type Severity, type AwaitedReturn } from '../utils'
+import { findSeverity, divideAndRound, type Severity, type AwaitedReturn, expandBundleNames, expandTabNames } from '../utils'
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils'
 
 const severityFinder = (results: ESLint.LintResult[]) => findSeverity(results, ({ warningCount, fatalErrorCount }) => {
@@ -10,6 +9,13 @@ const severityFinder = (results: ESLint.LintResult[]) => findSeverity(results, (
 	if (warningCount > 0) return 'warn'
 	return 'success'
 })
+
+/*
+	Unfortunately, people like to leave parts of their API
+	undocumented, so using the FlatConfig linter with the
+	current version of eslint means we can't get any
+	typing for it
+*/
 
 interface LintResults {
   formatted: string
@@ -21,21 +27,18 @@ interface LintOptions extends PrebuildOptions {
 }
 
 export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: LintOptions): Promise<LintResults> => {
-	const linter = new ESLint({
-		cwd: pathlib.resolve(srcDir),
-		extensions: ['ts', 'tsx'],
-		fix
-	})
+	const ESlint = await loadESLint({ useFlatConfig: true })
+	const linter = new ESlint({ fix })
 
 	const fileNames = [
-		...bundles.map((bundle) => `bundles/${bundle}/**.ts*`),
-		...tabs.map(tabName => `tabs/${tabName}/**.ts*`)
+		...expandBundleNames(srcDir, bundles),
+		...expandTabNames(srcDir, tabs)
 	]
 
 	try {
 		const linterResults = await linter.lintFiles(fileNames)
 		if (fix) {
-			await ESLint.outputFixes(linterResults)
+			await ESlint.outputFixes(linterResults)
 		}
 
 		const outputFormatter = await linter.loadFormatter('stylish')
@@ -69,7 +72,7 @@ export function getLintCommand() {
 	return createPrebuildCommand('lint', 'Run eslint')
 		.addOption(lintFixOption)
 		.action(async opts => {
-			const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs, false)
+			const inputs = await retrieveBundlesAndTabs(opts, false)
 			await lintCommandHandler({ ...opts, ...inputs })
 		})
 }

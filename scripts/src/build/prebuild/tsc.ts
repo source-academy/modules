@@ -120,6 +120,6 @@ const tscCommandHandler = createPrebuildCommandHandler(
 
 export const getTscCommand = () => createPrebuildCommand('tsc', 'Run the typescript compiler to perform type checking')
 	.action(async opts => {
-		const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs, false)
+		const inputs = await retrieveBundlesAndTabs(opts, false)
 		await tscCommandHandler({ ...opts, ...inputs })
 	})

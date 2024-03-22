@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
-import { promiseAll } from '@src/commandUtils';
+import { promiseAll, tabsOption } from '@src/commandUtils';
 import { expandTabNames, createBuildCommandHandler, type BuildTask, createBuildCommand } from '../utils';
 import { commonEsbuildOptions, outputBundleOrTab } from './commons';
 
@@ -39,10 +39,7 @@ export const bundleTabs: BuildTask = async ({ tabs }, { srcDir, outDir }) => {
 	return { tabs: results }
 }
 
-const tabCommandHandler = createBuildCommandHandler((...args) => bundleTabs(...args))
+const tabCommandHandler = createBuildCommandHandler((...args) => bundleTabs(...args), false)
 export const getBuildTabsCommand = () => createBuildCommand('tabs', 'Build tabs')
-	.argument('[tabs...]')
-	.action((tabs, opts) => tabCommandHandler({
-		tabs,
-		bundles: []
-	}, opts))
+	.addOption(tabsOption)
+	.action(opts => tabCommandHandler({ ...opts, bundles: [] }))

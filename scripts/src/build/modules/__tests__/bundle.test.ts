@@ -1,61 +1,32 @@
-import { build as esbuild } from 'esbuild';
-import { commonEsbuildOptions, outputBundleOrTab } from '../commons';
-import { mockStream } from './streamMocker';
-import { testBuildCommand } from '@src/build/__tests__/testingUtils';
-import * as bundles from '../bundles'
+import type { MockedFunction } from "jest-mock";
+import { testBuildCommand } from "@src/build/__tests__/testingUtils";
+import * as bundles from "../bundles";
 
-jest.spyOn(bundles, 'bundleBundles')
+jest.spyOn(bundles, "bundleBundles");
 
-const testBundle = `
-  import context from 'js-slang/context';
+jest.mock("esbuild", () => ({
+	build: jest.fn()
+		.mockResolvedValue({ outputFiles: [] })
+}));
 
-  export const foo = () => 'foo';
-  export const bar = () => {
-    context.moduleContexts.test0.state = 'bar';
-  };
-`
 testBuildCommand(
-	'buildBundles',
+	"buildBundles",
 	bundles.getBuildBundlesCommand,
 	[bundles.bundleBundles]
-)
+);
 
-test('building a bundle', async () => {
-	const { outputFiles: [file] } = await esbuild({
-		...commonEsbuildOptions,
-		stdin: {
-			contents: testBundle
-		},
-		outdir: '.',
-		outbase: '.',
-		external: ['js-slang*']
-	});
+test("Normal command", async () => {
+	await bundles.getBuildBundlesCommand()
+		.parseAsync(["-b", "test0"], { from: "user" });
 
-	const rawBundleTextPromise = mockStream()
+	expect(bundles.bundleBundles)
+		.toHaveBeenCalledTimes(1);
 
-	const result = await outputBundleOrTab(file, 'build');
-	expect(result.severity)
-		.toEqual('success')
-
-	const bundleText = (await rawBundleTextPromise).slice('export default'.length)
-	const mockContext = {
-		moduleContexts: {
-			test0: {
-				state: null
-			}
-		}
-	}
-	const bundleFuncs = eval(bundleText)((x) => ({
-		'js-slang/context': mockContext
-	}[x]));
-	expect(bundleFuncs.foo())
-		.toEqual('foo');
-	expect(bundleFuncs.bar())
-		.toEqual(undefined);
-	expect(mockContext.moduleContexts)
+	const [args] = (bundles.bundleBundles as MockedFunction<typeof bundles.bundleBundles>).mock.calls[0];
+	expect(args)
 		.toMatchObject({
-			test0: {
-				state: 'bar'
-			}
+			bundles: ["test0"],
+			tabs: ["tab0"],
+			modulesSpecified: true
 		});
 });

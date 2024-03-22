@@ -54,7 +54,7 @@ export const getBuildHtmlCommand = () => new Command('html')
 	.addOption(manifestOption)
 	.option('-v, --verbose')
 	.action(async (opts) => {
-		const inputs = await retrieveBundlesAndTabs(opts.manifest, null, null, false);
+		const inputs = await retrieveBundlesAndTabs({ ...opts, tabs: [] }, false);
 		const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose)
 		const result = await buildHtml(inputs, opts.outDir, tdResult);
 		console.log(htmlLogger(result));

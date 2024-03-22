@@ -1,36 +1,40 @@
-import type { MockedFunction } from 'jest-mock';
-import * as html from '../html';
-import { getBuildDocsCommand } from '..';
-import * as json from '../json';
-import { testBuildCommand } from '@src/build/__tests__/testingUtils';
+import type { MockedFunction } from "jest-mock";
+import { testBuildCommand } from "@src/build/__tests__/testingUtils";
+import * as html from "../html";
+import { getBuildDocsCommand } from "..";
+import * as json from "../json";
 
-jest.mock('../docsUtils')
+jest.mock("../docsUtils");
 
-jest.spyOn(json, 'buildJsons')
-jest.spyOn(html, 'buildHtml')
+jest.spyOn(json, "buildJsons");
+jest.spyOn(html, "buildHtml");
 
 const asMock = <T extends (...any: any[]) => any>(func: T) => func as MockedFunction<T>;
 const mockBuildJson = asMock(json.buildJsons);
 
 const runCommand = (...args: string[]) => getBuildDocsCommand()
-	.parseAsync(args, { from: 'user' });
+	.parseAsync(args, { from: "user" });
 
-describe('test the docs command', () => {
+describe("test the docs command", () => {
 	testBuildCommand(
-		'buildDocs',
+		"buildDocs",
 		getBuildDocsCommand,
 		[json.buildJsons, html.buildHtml]
-	)
+	);
 
-	it('should only build the documentation for specified modules', async () => {
-		await runCommand('test0', 'test1')
+	it("should only build the documentation for specified modules", async () => {
+		await runCommand("-b", "test0", "test1");
 
 		expect(json.buildJsons)
 			.toHaveBeenCalledTimes(1);
 
 		const buildJsonCall = mockBuildJson.mock.calls[0];
 		expect(buildJsonCall[0])
-			.toEqual(['test0', 'test1'])
+			.toEqual({
+				bundles: ["test0", "test1"],
+				tabs: [],
+				modulesSpecified: true
+			});
 
 		expect(html.buildHtml)
 			.toHaveBeenCalledTimes(1);
@@ -39,8 +43,8 @@ describe('test the docs command', () => {
 			.toReturnWith(Promise.resolve({
 				elapsed: 0,
 				result: {
-					severity: 'warn'
+					severity: "warn"
 				}
-			}))
+			}));
 	});
 });

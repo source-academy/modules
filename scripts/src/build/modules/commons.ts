@@ -66,6 +66,6 @@ export async function outputBundleOrTab({ path, text }: OutputFile, outDir: stri
 			error
 		}
 	} finally {
-		if (file) await file.close()
+		await file?.close()
 	}
 }

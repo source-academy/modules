@@ -15,12 +15,12 @@ export const buildModules: BuildTask = async (inputs, opts) => {
 	}
 }
 
-const modulesCommandHandler = createBuildCommandHandler(buildModules)
+const modulesCommandHandler = createBuildCommandHandler(buildModules, true)
 
 export const getBuildModulesCommand = () => createBuildCommand('modules', 'Build bundles and tabs')
 	.addOption(bundlesOption)
 	.addOption(tabsOption)
-	.action((opts) => modulesCommandHandler(opts, opts))
+	.action(modulesCommandHandler)
 
 export { getBuildBundlesCommand } from './bundles'
 export { getBuildTabsCommand } from './tabs'

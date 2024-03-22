@@ -186,12 +186,14 @@ export function logInputs({ bundles, tabs }: BuildInputs, { tsc, lint }: Partial
 	return output.join('\n')
 }
 
-export function createBuildCommandHandler(func: BuildTask) {
+export function createBuildCommandHandler(
+	func: BuildTask,
+	shouldAddModuleTabs: boolean
+) {
 	return async (
-		rawInputs: { bundles: string[] | null, tabs: string[] | null },
-		opts: BuildOptions
+		opts: { bundles: string[] | null, tabs: string[] | null } & BuildOptions
 	) => {
-		const inputs = await retrieveBundlesAndTabs(opts.manifest, rawInputs.bundles, rawInputs.tabs)
+		const inputs = await retrieveBundlesAndTabs(opts, shouldAddModuleTabs)
 
 		console.log(logInputs(inputs, opts))
 		const prebuildResult = await prebuild(inputs.bundles, inputs.tabs, opts)

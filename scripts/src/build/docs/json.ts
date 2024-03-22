@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import * as td from 'typedoc';
-import { createBuildCommand, createBuildCommandHandler, type OperationResult } from '../utils';
+import { bundlesOption } from '@src/commandUtils';
+import { createBuildCommand, createBuildCommandHandler, type BuildInputs, type OperationResult } from '../utils';
 import drawdown from './drawdown';
 import { initTypedoc } from './docsUtils';
 
@@ -75,7 +76,7 @@ async function buildJson(name: string, reflection: td.DeclarationReflection, out
 }
 
 export async function buildJsons(
-	bundles: string[],
+	{ bundles }: BuildInputs,
 	outDir: string,
 	project: td.ProjectReflection
 ): Promise<Record<'jsons', OperationResult[]>> {
@@ -105,14 +106,11 @@ export async function buildJsons(
 	}
 }
 
-const jsonCommandHandler = createBuildCommandHandler(async ({ bundles }, { srcDir, outDir, verbose }) => {
-	const [project] = await initTypedoc(bundles, srcDir, verbose)
-	return buildJsons(bundles, outDir, project)
-})
+const jsonCommandHandler = createBuildCommandHandler(async (inputs, { srcDir, outDir, verbose }) => {
+	const [project] = await initTypedoc(inputs.bundles, srcDir, verbose)
+	return buildJsons(inputs, outDir, project)
+}, false)
 
 export const getBuildJsonsCommand = () => createBuildCommand('jsons', 'Build json documentation')
-	.argument('[bundles...]')
-	.action((bundles, opts) => jsonCommandHandler({
-		bundles,
-		tabs: []
-	}, opts))
+	.addOption(bundlesOption)
+	.action((opts) => jsonCommandHandler({ ...opts, tabs: [] }))
