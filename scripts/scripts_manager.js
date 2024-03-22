@@ -4,7 +4,7 @@ import jest from 'jest'
 import _ from 'lodash'
 import pathlib from 'path'
 import { fileURLToPath } from 'url'
-import tsconfig from './tsconfig.json' assert { type: 'json' }
+import tsconfig from './tsconfig.json' with { type: 'json' }
 import { pathsToModuleNameMapper } from 'ts-jest'
 
 function cjsDirname(url) {

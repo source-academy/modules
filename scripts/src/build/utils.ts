@@ -107,7 +107,7 @@ function processResults(
 					.filter(notSuccessFilter)
 					.map(({ name: bundle, error, severity }, i) => (severity === 'error'
 						? chalk.redBright(`${i + 1}. Error ${bundle}: ${error}`)
-						: chalk.yellowBright(`${i + 1}. Warning ${bundle}: +${error}`)))
+						: chalk.yellowBright(`${i + 1}. Warning ${bundle}: ${error}`)))
 					.join('\n')}\n`)];
 			}
 

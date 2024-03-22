@@ -508,8 +508,9 @@ export default [
 	{
 		// global ignores
 		ignores: [
-			"**/samples/**",
+			"src/**/samples/**",
 			"scripts/bin.js",
+			"build/**",
 
 			// TODO: Remove these when eslint supports import assertions
 			"scripts/scripts_manager.js",
