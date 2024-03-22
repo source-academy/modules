@@ -5,7 +5,7 @@ import { createBuildCommand, createBuildCommandHandler, type BuildInputs, type O
 import drawdown from './drawdown';
 import { initTypedoc } from './docsUtils';
 
-const typeToName = (type?: td.SomeType, alt: string = 'unknown') => (type ? (type as td.ReferenceType | td.IntrinsicType).name : alt);
+const typeToName = (type?: td.SomeType) => type.stringify(td.TypeContext.none)
 
 const parsers = {
 	[td.ReflectionKind.Function](obj) {
@@ -27,7 +27,7 @@ const parsers = {
 			name: obj.name,
 			description,
 			params,
-			retType: typeToName(signature.type, 'void')
+			retType: typeToName(signature.type)
 		};
 	},
 	[td.ReflectionKind.Variable](obj) {
