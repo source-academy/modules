@@ -1,7 +1,7 @@
 import { lintFixOption, retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
 import { loadESLint, type ESLint } from 'eslint'
 import chalk from 'chalk'
-import { findSeverity, divideAndRound, type Severity, type AwaitedReturn, expandBundleNames, expandTabNames } from '../utils'
+import { findSeverity, divideAndRound, type Severity, type AwaitedReturn } from '../utils'
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils'
 
 const severityFinder = (results: ESLint.LintResult[]) => findSeverity(results, ({ warningCount, fatalErrorCount }) => {
@@ -31,8 +31,8 @@ export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: Li
 	const linter = new ESlint({ fix })
 
 	const fileNames = [
-		...expandBundleNames(srcDir, bundles),
-		...expandTabNames(srcDir, tabs)
+		...bundles.map(bundleName => `${srcDir}/bundles/${bundleName}/**.ts`),
+		...tabs.map(tabName => `${srcDir}/tabs/${tabName}/**.ts*`)
 	]
 
 	try {
