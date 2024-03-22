@@ -6,14 +6,15 @@ export const STATE_RECONNECTING = 'Reconnecting';
 export const STATE_OFFLINE = 'Offline';
 
 /**
- * Abstraction of MQTT.
+ * Abstraction of MQTT for web.
+ * Simplifies connection process to allow only WebSocket, as web app does not support MQTT over TCP.
+ * Combines callbacks for status change and decodes message to utf8.
  *
  * @param connectionCallback Callback when the connection state changed.
  * @param messageCallback Callback when a message has been received.
  */
 export class MqttController {
   private client: MqttClient | null = null;
-  private connected: boolean = false;
   private connectionCallback: (status: string) => void;
   private messageCallback: (topic: string, message: string) => void;
 
@@ -35,11 +36,10 @@ export class MqttController {
    * Also handles connection status callbacks.
    */
   public async connectClient() {
-    if (this.connected) return;
+    if (this.client !== null) return;
     if (this.address.length === 0) return;
     var link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
     this.client = connect(link);
-    this.connected = true;
     this.client.on('connect', () => {
       this.connectionCallback(STATE_CONNECTED);
     });
@@ -65,21 +65,29 @@ export class MqttController {
     if (this.client) {
       this.client.end(true);
     }
+    this.client = null;
     this.connectionCallback = () => {};
     this.messageCallback = () => {};
   }
 
   /**
    * Broadcasts message to topic.
-   * QoS of 1, all listening devices receive the message at least once.
    *
    * @param topic Identifier for group of devices to broadcast to.
    * @param message Message to broadcast.
    * @param isRetain Whether the message should be retained.
+   * @param qos 0: Receiver might not receive
+   *            1: Receiver might receive more than once
+   *            2: Receiver will receive once and only once
    */
-  public publish(topic: string, message: string, isRetain: boolean) {
+  public publish(
+    topic: string,
+    message: string,
+    isRetain: boolean,
+    qos: number = 1,
+  ) {
     this.client?.publish(topic, message, {
-      qos: 1,
+      qos: qos,
       retain: isRetain,
     });
   }
@@ -89,10 +97,13 @@ export class MqttController {
    * Qos of 1 to prevent downgrading.
    *
    * @param topic Identifier for group of devices receiving the broadcast.
+   * @param qos 0: Not guaranteed to receive every message
+   *            1: Receive each message at least once
+   *            2: Receive each message once and only once
    */
-  public subscribe(topic: string) {
+  public subscribe(topic: string, qos: number = 1) {
     if (this.client) {
-      this.client.subscribe(topic, { qos: 1 });
+      this.client.subscribe(topic, { qos: qos });
     }
   }
 

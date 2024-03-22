@@ -81,7 +81,9 @@ export class GlobalStateController {
         currentJson[splitTopic[splitTopic.length - 1]] = jsonMessage;
       }
       this.setGlobalState(newGlobalState);
-    } catch {}
+    } catch (error) {
+      console.log('Failed to parse message', error);
+    }
   }
 
   /**
