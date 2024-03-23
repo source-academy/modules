@@ -122,7 +122,7 @@
     "save-file": "^2.3.1",
     "source-academy-utils": "^1.0.0",
     "source-academy-wabt": "^1.0.4",
-    "three": "^0.161.2",
+    "three": "^0.162.0",
     "tslib": "^2.3.1"
   },
   "jest": {
