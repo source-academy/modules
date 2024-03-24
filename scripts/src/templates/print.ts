@@ -1,7 +1,7 @@
-import { createInterface } from 'readline/promises'
+import { type Interface, createInterface } from 'readline/promises'
 import chalk from 'chalk'
 
-export const rl = createInterface({
+export const getRl = () => createInterface({
   input: process.stdin,
   output: process.stdout
 })
@@ -22,6 +22,6 @@ export function success(...args) {
   return console.log(...args.map((string) => chalk.green(string)))
 }
 
-export function askQuestion(question: string) {
+export function askQuestion(question: string, rl: Interface) {
   return rl.question(chalk.blueBright(`${question}\n`))
 }

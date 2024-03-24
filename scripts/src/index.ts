@@ -12,5 +12,3 @@ await new Command('scripts')
   .addCommand(getTscCommand())
   .addCommand(getCreateCommand())
   .parseAsync()
-
-process.exit(0)
