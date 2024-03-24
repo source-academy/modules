@@ -1,9 +1,9 @@
-jest.mock('chalk', () => ({
-  cyanBright: x => x,
-  greenBright: x => x,
-  magentaBright: x => x,
-  redBright: x => x,
-  yellowBright: x => x
+const chalkFunction = new Proxy((x: string) => x, {
+  get: () => chalkFunction
+})
+
+jest.mock('chalk', () => new Proxy({}, {
+  get: () => chalkFunction
 }))
 
 jest.mock('fs/promises', () => ({

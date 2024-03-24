@@ -11,7 +11,7 @@ function cjsDirname(url) {
 	return pathlib.join(pathlib.dirname(fileURLToPath(url)))
 }
 
-async function buildScripts() {
+async function buildScripts({ dev }) {
   const dirname = cjsDirname(import.meta.url)
 
   await esbuild({
@@ -19,7 +19,7 @@ async function buildScripts() {
     entryPoints: [pathlib.join(dirname, 'src', 'index.ts')],
     format: 'esm',
     logLevel: 'warning',
-    // minify: true,
+    minify: !dev,
     outfile: pathlib.join(dirname, 'bin.js'),
     packages: 'external',
     platform: 'node',
@@ -50,9 +50,8 @@ async function buildScripts() {
 
 const buildCommand = new Command('build')
   .description('Build scripts')
-  .action(async () => {
-    await buildScripts()
-  })
+  .option('--dev', 'Use for script development builds')
+  .action(buildScripts)
 
 /**
  * Run Jest programmatically

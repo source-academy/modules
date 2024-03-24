@@ -1,4 +1,4 @@
-import { createInterface } from 'readline'
+import { createInterface } from 'readline/promises'
 import chalk from 'chalk'
 
 export const rl = createInterface({
@@ -23,7 +23,5 @@ export function success(...args) {
 }
 
 export function askQuestion(question: string) {
-  return new Promise<string>((resolve) => {
-    rl.question(chalk.blueBright(`${question}\n`), resolve)
-  })
+  return rl.question(chalk.blueBright(`${question}\n`))
 }

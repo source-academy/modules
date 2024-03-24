@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs'
+import fs from 'fs/promises';
 
 import { type ModuleManifest, retrieveManifest } from '@src/manifest'
 
@@ -24,18 +24,18 @@ async function askModuleName(manifest: ModuleManifest) {
   }
 }
 
-export async function addNew(buildOpts: Options) {
-  const manifest = await retrieveManifest(buildOpts.manifest)
+export async function addNew({ srcDir, manifest: manifestFile }: Options) {
+  const manifest = await retrieveManifest(manifestFile)
   const moduleName = await askModuleName(manifest)
 
-  const bundleDestination = `${buildOpts.srcDir}/bundles/${moduleName}`
+  const bundleDestination = `${srcDir}/bundles/${moduleName}`
   await fs.mkdir(bundleDestination, { recursive: true })
   await fs.copyFile(
     './scripts/src/templates/templates/__bundle__.ts',
     `${bundleDestination}/index.ts`
   )
   await fs.writeFile(
-    'modules.json',
+    manifestFile,
     JSON.stringify({
       ...manifest,
       [moduleName]: { tabs: [] }

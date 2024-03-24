@@ -1,5 +1,5 @@
 import { Command } from '@commander-js/extra-typings'
-import templateCommand from './templates'
+import getCreateCommand from './templates'
 import getBuildCommand from './build'
 import getTestCommand from './testing'
 import { getLintCommand } from './build/prebuild/lint'
@@ -10,7 +10,7 @@ await new Command('scripts')
   .addCommand(getLintCommand())
   .addCommand(getTestCommand())
   .addCommand(getTscCommand())
-  .addCommand(templateCommand)
+  .addCommand(getCreateCommand())
   .parseAsync()
 
 process.exit(0)

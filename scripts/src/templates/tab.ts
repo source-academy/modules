@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { promises as fs } from 'fs'
+import fs from 'fs/promises'
 
 import { type ModuleManifest, retrieveManifest } from '@src/manifest'
 
@@ -29,31 +29,31 @@ async function askTabName(manifest: ModuleManifest) {
     const name = await askQuestion(
       'What is the name of your new tab? (eg. BinaryTree)'
     )
-    if (!isPascalCase(name)) {
-      warn('Tab names must be in pascal case. (eg. BinaryTree)')
-    } else if (check(manifest, name)) {
+    if (check(manifest, name)) {
       warn('A tab with the same name already exists.')
+    } else if (!isPascalCase(name)) {
+      warn('Tab names must be in pascal case. (eg. BinaryTree)')
     } else {
       return name
     }
   }
 }
 
-export async function addNew(buildOpts: Options) {
-  const manifest = await retrieveManifest(buildOpts.manifest)
+export async function addNew({ manifest: manifestFile, srcDir }: Options) {
+  const manifest = await retrieveManifest(manifestFile)
 
   const moduleName = await askModuleName(manifest)
   const tabName = await askTabName(manifest)
 
   // Copy module tab template into correct destination and show success message
-  const tabDestination = `${buildOpts.srcDir}/tabs/${tabName}`
+  const tabDestination = `${srcDir}/tabs/${tabName}`
   await fs.mkdir(tabDestination, { recursive: true })
   await fs.copyFile(
     './scripts/src/templates/templates/__tab__.tsx',
     `${tabDestination}/index.tsx`
   )
   await fs.writeFile(
-    'modules.json',
+    manifestFile,
     JSON.stringify(
       {
         ...manifest,

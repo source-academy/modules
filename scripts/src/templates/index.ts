@@ -19,19 +19,21 @@ async function askMode() {
   }
 }
 
-export default new Command('create')
-  .addOption(srcDirOption)
-  .addOption(manifestOption)
-  .description('Interactively create a new module or tab')
-  .action(async (buildOpts) => {
-    try {
-      const mode = await askMode()
-      if (mode === 'module') await addNewModule(buildOpts)
-      else if (mode === 'tab') await addNewTab(buildOpts)
-    } catch (error) {
-      _error(`ERROR: ${error.message}`)
-      info('Terminating module app...')
-    } finally {
-      rl.close()
-    }
-  })
+export default function getCreateCommand() {
+  return new Command('create')
+    .addOption(srcDirOption)
+    .addOption(manifestOption)
+    .description('Interactively create a new module or tab')
+    .action(async (buildOpts) => {
+      try {
+        const mode = await askMode()
+        if (mode === 'module') await addNewModule(buildOpts)
+        else if (mode === 'tab') await addNewTab(buildOpts)
+      } catch (error) {
+        _error(`ERROR: ${error.message}`)
+        info('Terminating module app...')
+      } finally {
+        rl.close()
+      }
+    })
+}
