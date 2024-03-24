@@ -100,12 +100,12 @@ export default class StatefulRenderer {
 
     // Creating the WrappedRenderer already involves REGL. Losing WebGL context
     // requires repeating this step (ie, with each start())
-    let wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
+    const wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
 
     if (firstStart) this.addWebGlListeners();
     this.inputTracker.addListeners();
 
-    let frameCallback: FrameRequestCallback = (
+    const frameCallback: FrameRequestCallback = (
       _timestamp: DOMHighResTimeStamp
     ) => {
       this.inputTracker.respondToInput();

@@ -10,7 +10,7 @@ import CanvasHolder from './canvas_holder';
 export default {
   // Called by the frontend to decide whether to spawn the CSG tab
   toSpawn(debuggerContext: DebuggerContext): boolean {
-    let moduleState: CsgModuleState = debuggerContext.context.moduleContexts.csg.state;
+    const moduleState: CsgModuleState = debuggerContext.context.moduleContexts.csg.state;
     // toSpawn() is checked before the frontend calls body() if needed, so we
     // initialise Core for the first time over on the tabs' end here
     Core.initialize(moduleState);

@@ -7,8 +7,7 @@ export type RawGameElement =
   | Phaser.GameObjects.Text;
 
 export type RawGameShape =
-  | Phaser.GameObjects.Rectangle
-  | Phaser.GameObjects.Ellipse;
+  Phaser.GameObjects.Ellipse | Phaser.GameObjects.Rectangle;
 
 export type RawGameObject = RawGameElement | RawGameShape;
 
@@ -20,7 +19,7 @@ export type RawInputObject =
 
 export type GameObject = {
   type: string;
-  object: RawGameObject | RawInputObject | RawContainer | undefined;
+  object: RawContainer | RawGameObject | RawInputObject | undefined;
 };
 
 export type GameParams = {

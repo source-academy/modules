@@ -47,6 +47,7 @@ function expectCall<T extends(...args: any) => any>(
 async function expectCommandFailure(snapshot: string) {
   await expect(runCommand())
     .rejects
+    // eslint-disable-next-line jest/no-interpolation-in-snapshots
     .toMatchInlineSnapshot(`[Error: ERROR: ${snapshot}]`);
 
   expect(fs.writeFile).not.toHaveBeenCalled();

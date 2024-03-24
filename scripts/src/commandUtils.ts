@@ -47,7 +47,7 @@ export async function retrieveBundlesAndTabs(
   const knownBundles = Object.keys(manifest);
   const knownTabs = Object
     .values(manifest)
-    .flatMap((x) => x.tabs);
+    .flatMap(x => x.tabs);
 
   const isUndefinedOrNull = (x: any): x is undefined | null => x === undefined || x === null
 
@@ -124,14 +124,14 @@ export async function oldRetrieveBundlesAndTabs(manifestFile: string,
   const knownBundles = Object.keys(manifest);
   const knownTabs = Object
     .values(manifest)
-    .flatMap((x) => x.tabs);
+    .flatMap(x => x.tabs);
 
   let bundles: string[] = [];
   let tabs: string[] = [];
 
   function addSpecificModules() {
     // If unknown modules were specified, error
-    const unknownModules = modules.filter((m) => !knownBundles.includes(m));
+    const unknownModules = modules.filter(m => !knownBundles.includes(m));
     if (unknownModules.length > 0) {
       throw new Error(`Unknown modules: ${unknownModules.join(', ')}`);
     }
@@ -140,12 +140,12 @@ export async function oldRetrieveBundlesAndTabs(manifestFile: string,
 
     if (shouldAddModuleTabs) {
       // Add the modules' tabs too
-      tabs = [...tabs, ...modules.flatMap((bundle) => manifest[bundle].tabs)];
+      tabs = [...tabs, ...modules.flatMap(bundle => manifest[bundle].tabs)];
     }
   }
   function addSpecificTabs() {
     // If unknown tabs were specified, error
-    const unknownTabs = tabOptions.filter((t) => !knownTabs.includes(t));
+    const unknownTabs = tabOptions.filter(t => !knownTabs.includes(t));
     if (unknownTabs.length > 0) {
       throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
     }

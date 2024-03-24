@@ -11,7 +11,7 @@ import {
   type ScaleMode
 } from './types';
 
-const drawnCurves: (CurveDrawn | AnimatedCurve)[] = [];
+const drawnCurves: (AnimatedCurve | CurveDrawn)[] = [];
 context.moduleContexts.curve.state = {
   drawnCurves
 };

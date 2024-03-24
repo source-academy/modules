@@ -95,7 +95,7 @@ export async function buildJsons(
     }
   }
 
-  const results = await Promise.all(bundles.map((bundle) => buildJson(
+  const results = await Promise.all(bundles.map(bundle => buildJson(
     bundle,
     project.getChildByName(bundle) as td.DeclarationReflection,
     outDir
@@ -113,4 +113,4 @@ const jsonCommandHandler = createBuildCommandHandler(async (inputs, { srcDir, ou
 
 export const getBuildJsonsCommand = () => createBuildCommand('jsons', 'Build json documentation')
   .addOption(bundlesOption)
-  .action((opts) => jsonCommandHandler({ ...opts, tabs: [] }))
+  .action(opts => jsonCommandHandler({ ...opts, tabs: [] }))

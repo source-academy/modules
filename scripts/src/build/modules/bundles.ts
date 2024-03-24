@@ -72,7 +72,7 @@ export const bundleBundles: BuildTask = async ({ bundles }, { srcDir, outDir }) 
     tsconfig: `${srcDir}/tsconfig.json`
   }), fs.mkdir(`${outDir}/bundles`, { recursive: true }));
 
-  const results = await Promise.all(outputFiles.map((file) => outputBundleOrTab(file, outDir)));
+  const results = await Promise.all(outputFiles.map(file => outputBundleOrTab(file, outDir)));
   return { bundles: results }
 }
 

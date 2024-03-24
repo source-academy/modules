@@ -10,7 +10,7 @@ import { type Options, isPascalCase } from './utilities'
 
 export function check(manifest: ModuleManifest, tabName: string) {
   return Object.values(manifest)
-    .flatMap((x) => x.tabs)
+    .flatMap(x => x.tabs)
     .includes(tabName)
 }
 

@@ -61,7 +61,7 @@ import { Core } from './core';
 import { CsgModuleState } from './utilities';
 
 /* [Main] */
-let moduleState = new CsgModuleState();
+const moduleState = new CsgModuleState();
 
 context.moduleContexts.csg.state = moduleState;
 // We initialise Core for the first time over on the bundles' end here

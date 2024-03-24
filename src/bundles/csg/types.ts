@@ -10,10 +10,10 @@ import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/command
 import type { InitializationOptions } from 'regl';
 
 /* [Main] */
-let orthographicCamera = cameras.orthographic;
-let perspectiveCamera = cameras.perspective;
+const orthographicCamera = cameras.orthographic;
+const perspectiveCamera = cameras.perspective;
 
-let controls = _controls.orbit;
+const controls = _controls.orbit;
 
 /* [Exports] */
 
@@ -34,7 +34,7 @@ export type OrthographicCamera = typeof orthographicCamera;
 
 export type PerspectiveCameraState = Omit<
   typeof perspectiveCamera.cameraState,
-'target' | 'position' | 'view'
+'position' | 'target' | 'view'
 > & {
   target: CoordinatesXYZ;
 
@@ -42,18 +42,19 @@ export type PerspectiveCameraState = Omit<
   view: Mat4;
 };
 export type OrthographicCameraState = typeof orthographicCamera.cameraState;
-export type CameraState = PerspectiveCameraState | OrthographicCameraState;
+export type CameraState = OrthographicCameraState | PerspectiveCameraState;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type Controls = Omit<
   typeof controls,
-'update' | 'zoomToFit' | 'rotate' | 'pan'
+'pan' | 'rotate' | 'update' | 'zoomToFit'
 > & {
   update: ControlsUpdate.Function;
   zoomToFit: ControlsZoomToFit.Function;
   rotate: ControlsRotate;
   pan: ControlsPan;
 };
+
 export namespace ControlsUpdate {
   export type Function = (options: Options) => Output;
 
@@ -124,7 +125,7 @@ export type ControlsPan = (
 
 export type ControlsState = Omit<
   typeof controls.controlsState,
-'scale' | 'thetaDelta' | 'phiDelta'
+'phiDelta' | 'scale' | 'thetaDelta'
 > &
   typeof controls.controlsProps & {
   scale: number;

@@ -14,16 +14,16 @@ const getTestCommand = () => new Command('test')
   .addOption(srcDirOption)
   .allowUnknownOption()
   .action(({ srcDir }, command) => {
-    const [args, filePatterns] = lodash.partition(command.args, (arg) => arg.startsWith('-'))
+    const [args, filePatterns] = lodash.partition(command.args, arg => arg.startsWith('-'))
 
     // command.args automatically includes the source directory option
     // which is not supported by Jest, so we need to remove it
-    const toRemove = args.findIndex((arg) => arg.startsWith('--srcDir'))
+    const toRemove = args.findIndex(arg => arg.startsWith('--srcDir'))
     if (toRemove !== -1) {
       args.splice(toRemove, 1)
     }
 
-    const jestArgs = args.concat(filePatterns.map((pattern) => pattern.split(pathlib.win32.sep)
+    const jestArgs = args.concat(filePatterns.map(pattern => pattern.split(pathlib.win32.sep)
       .join(pathlib.posix.sep)))
     return runJest(jestArgs, srcDir)
   })

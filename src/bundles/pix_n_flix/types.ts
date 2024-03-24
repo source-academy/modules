@@ -2,7 +2,7 @@ export type VideoElement = HTMLVideoElement & { srcObject?: MediaStream };
 export type ImageElement = HTMLImageElement;
 export type CanvasElement = HTMLCanvasElement;
 export type ErrorLogger = (
-  error: string | string[],
+  error: string[] | string,
   isSlangError?: boolean
 ) => void;
 export type TabsPacket = {

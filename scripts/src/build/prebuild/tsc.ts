@@ -70,12 +70,12 @@ export const runTsc = wrapWithTimer(async ({ bundles, tabs, srcDir }: PrebuildOp
 
   if (bundles.length > 0) {
     expandBundleNames(srcDir, bundles)
-      .forEach((name) => fileNames.push(name))
+      .forEach(name => fileNames.push(name))
   }
 
   if (tabs.length > 0) {
     expandTabNames(srcDir, tabs)
-      .forEach((name) => fileNames.push(name))
+      .forEach(name => fileNames.push(name))
   }
 
   try {
@@ -104,7 +104,7 @@ export function tscResultsLogger({ elapsed, result: tscResult }: AwaitedReturn<t
   const diagStr = ts.formatDiagnosticsWithColorAndContext(tscResult.results, {
     getNewLine: () => '\n',
     getCurrentDirectory: () => process.cwd(),
-    getCanonicalFileName: (name) => pathlib.basename(name)
+    getCanonicalFileName: name => pathlib.basename(name)
   })
 
   if (tscResult.severity === 'error') {

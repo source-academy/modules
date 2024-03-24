@@ -63,13 +63,13 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
     // update resizable size
     if (editorWidthPercentage > rightThreshold) {
       leftParentResizable.current!.updateSize({
-      	width: '100%',
-      	height: '100%'
+        width: '100%',
+        height: '100%'
       });
     } else if (editorWidthPercentage < leftThreshold) {
       leftParentResizable.current!.updateSize({
-      	width: '0%',
-      	height: '100%'
+        width: '0%',
+        height: '100%'
       });
     }
   };
@@ -81,8 +81,8 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
   const toggleDividerDisplay: ResizeCallback = (_a, _b, ref) => {
     maxDividerHeight.current
       = sideDividerDiv.current!.clientHeight > maxDividerHeight.current!
-      	? sideDividerDiv.current!.clientHeight
-      	: maxDividerHeight.current;
+        ? sideDividerDiv.current!.clientHeight
+        : maxDividerHeight.current;
     const resizableHeight = (ref as HTMLDivElement).clientHeight;
     const rightParentHeight = (ref.parentNode as HTMLDivElement).clientHeight;
     if (resizableHeight + maxDividerHeight.current! + 2 > rightParentHeight) {

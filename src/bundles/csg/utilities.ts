@@ -33,7 +33,7 @@ export class Group implements Operable, ReplResult {
   }
 
   applyTransforms(newTransforms: Mat4): Operable {
-    let appliedTransforms: Mat4 = mat4.multiply(
+    const appliedTransforms: Mat4 = mat4.multiply(
       mat4.create(),
       newTransforms,
       this.transforms
@@ -44,7 +44,7 @@ export class Group implements Operable, ReplResult {
   }
 
   store(newTransforms: Mat4 = mat4.create()): void {
-    let appliedGroup: Group = this.applyTransforms(newTransforms) as Group;
+    const appliedGroup: Group = this.applyTransforms(newTransforms) as Group;
 
     this.children.forEach((child: Operable) => {
       child.store(appliedGroup.transforms);
@@ -63,9 +63,9 @@ export class Group implements Operable, ReplResult {
   }
 
   rotate(angles: [number, number, number]): Group {
-    let yaw = angles[2];
-    let pitch = angles[1];
-    let roll = angles[0];
+    const yaw = angles[2];
+    const pitch = angles[1];
+    const roll = angles[0];
 
     return new Group(
       this.children,
@@ -167,7 +167,7 @@ export class RenderGroupManager {
     oldHasGrid: boolean = false,
     oldHasAxis: boolean = false
   ): RenderGroup {
-    let oldRenderGroup: RenderGroup = this.getCurrentRenderGroup();
+    const oldRenderGroup: RenderGroup = this.getCurrentRenderGroup();
     oldRenderGroup.render = true;
     oldRenderGroup.hasGrid = oldHasGrid;
     oldRenderGroup.hasAxis = oldHasAxis;
@@ -209,7 +209,7 @@ export class CsgModuleState {
 
 export function centerPrimitive(shape: Shape) {
   // Move centre of Shape to 0.5, 0.5, 0.5
-  let solid: Solid = _center(
+  const solid: Solid = _center(
     {
       relativeTo: [0.5, 0.5, 0.5]
     },
@@ -219,12 +219,12 @@ export function centerPrimitive(shape: Shape) {
 }
 
 export function hexToColor(hex: string): Color {
-  let regex: RegExp
+  const regex: RegExp
     = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
-  let potentialGroups: { [key: string]: string } | undefined
+  const potentialGroups: { [key: string]: string } | undefined
     = hex.match(regex)?.groups;
   if (potentialGroups === undefined) return [0, 0, 0];
-  let groups: { [key: string]: string } = potentialGroups;
+  const groups: { [key: string]: string } = potentialGroups;
 
   return [
     parseInt(groups.red, 16) / 0xff,

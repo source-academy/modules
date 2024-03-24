@@ -80,13 +80,13 @@ const scene = () => mandatory(context.moduleContexts.game.state.scene, 'No scene
 /** @hidden */
 function get_obj(
   obj: GameObject
-): RawGameObject | RawInputObject | RawContainer {
+): RawContainer | RawGameObject | RawInputObject {
   return obj.object!;
 }
 
 /** @hidden */
-function get_game_obj(obj: GameObject): RawGameObject | RawContainer {
-  return obj.object as RawGameObject | RawContainer;
+function get_game_obj(obj: GameObject): RawContainer | RawGameObject {
+  return obj.object as RawContainer | RawGameObject;
 }
 
 /** @hidden */
@@ -137,7 +137,7 @@ function is_any_type(obj: GameObject, types: string[]): boolean {
  * @hidden
  */
 function set_type(
-  object: RawGameObject | RawInputObject | RawContainer,
+  object: RawContainer | RawGameObject | RawInputObject,
   type: string
 ): GameObject {
   return {
@@ -312,7 +312,7 @@ export function create_sound_config(
  */
 export function create_tween_config(
   target_prop: string = 'x',
-  target_value: string | number = 0,
+  target_value: number | string = 0,
   delay: number = 0,
   duration: number = 1000,
   ease: Function | string = 'Power0',
@@ -1044,7 +1044,7 @@ export function add_listener(
  * @returns listener game object
  */
 export function add_keyboard_listener(
-  key: string | number,
+  key: number | string,
   event: string,
   callback: Function
 ): GameObject {

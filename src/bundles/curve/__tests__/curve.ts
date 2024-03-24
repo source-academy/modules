@@ -7,7 +7,7 @@ function evalCurve(curve: Curve, numPoints: number) {
 
 test('Ensure that invalid curves error gracefully', () => {
   expect(() => evalCurve((t) => 1 as any, 200))
-    .toThrowErrorMatchingInlineSnapshot("\"Expected curve to return a point, got '1' at t=0\"");
+    .toThrowErrorMatchingInlineSnapshot('"Expected curve to return a point, got \'1\' at t=0"');
 });
 
 test('Using 3D render functions with animate_curve should throw errors', () => {

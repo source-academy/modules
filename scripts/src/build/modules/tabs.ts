@@ -35,7 +35,7 @@ export const bundleTabs: BuildTask = async ({ tabs }, { srcDir, outDir }) => {
     plugins: [tabContextPlugin]
   }), fs.mkdir(`${outDir}/tabs`, { recursive: true }));
 
-  const results = await Promise.all(outputFiles.map((file) => outputBundleOrTab(file, outDir)));
+  const results = await Promise.all(outputFiles.map(file => outputBundleOrTab(file, outDir)));
   return { tabs: results }
 }
 

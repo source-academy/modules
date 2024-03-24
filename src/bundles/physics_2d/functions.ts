@@ -54,7 +54,7 @@ export function make_force(
   dur: number,
   start: number
 ): Force {
-  let force: Force = {
+  const force: Force = {
     direction: dir,
     magnitude: mag,
     duration: dur,

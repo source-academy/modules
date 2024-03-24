@@ -23,7 +23,7 @@ export default function getCreateCommand() {
     .addOption(srcDirOption)
     .addOption(manifestOption)
     .description('Interactively create a new module or tab')
-    .action(async (buildOpts) => {
+    .action(async buildOpts => {
       const rl = getRl()
       try {
         const mode = await askMode(rl)

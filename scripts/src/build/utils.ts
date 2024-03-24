@@ -66,8 +66,8 @@ export function findSeverity<T extends object>(results: T[], mapper?: (item: T) 
   return overallSev
 }
 
-export const expandBundleNames = (srcDir: string, bundles: string[]) => bundles.map((bundle) => `${srcDir}/bundles/${bundle}/index.ts`)
-export const expandTabNames = (srcDir: string, tabNames: string[]) => tabNames.map((tabName) => `${srcDir}/tabs/${tabName}/index.tsx`)
+export const expandBundleNames = (srcDir: string, bundles: string[]) => bundles.map(bundle => `${srcDir}/bundles/${bundle}/index.ts`)
+export const expandTabNames = (srcDir: string, tabNames: string[]) => tabNames.map(tabName => `${srcDir}/tabs/${tabName}/index.tsx`)
 
 export type AwaitedReturn<T> = T extends (...args: any) => Promise<infer U> ? U : never
 
@@ -125,7 +125,7 @@ function processResults(
           title: 'Errors'
         }]
       });
-      results.forEach((result) => {
+      results.forEach(result => {
         if (isWarnResult(result)) {
           outputTable.addRow({
             ...result,

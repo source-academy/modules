@@ -7,7 +7,7 @@ import { throwIfNotRune } from './runes_ops';
 // Drawing functions
 // =============================================================================
 
-const drawnRunes: (DrawnRune | AnimatedRune)[] = [];
+const drawnRunes: (AnimatedRune | DrawnRune)[] = [];
 context.moduleContexts.rune.state = {
   drawnRunes
 };

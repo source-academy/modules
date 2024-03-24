@@ -134,7 +134,7 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
 }
 
 /** @hidden */
-function drawImage(source: VideoElement | ImageElement): void {
+function drawImage(source: ImageElement | VideoElement): void {
   if (keepAspectRatio) {
     canvasRenderingContext.rect(0, 0, WIDTH, HEIGHT);
     canvasRenderingContext.fill();

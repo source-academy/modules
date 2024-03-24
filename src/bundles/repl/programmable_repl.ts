@@ -74,7 +74,7 @@ export class ProgrammableRepl {
 
   // Rich text output method allow output strings to have html tags and css styles.
   pushOutputString(content : string, textColor : string, outputMethod : string = 'plaintext') {
-    let tmp = {
+    const tmp = {
       content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
       outputMethod
@@ -166,8 +166,8 @@ export class ProgrammableRepl {
   userStringSafeCheck(str) {
     developmentLog(`Safe check on ${str}`);
     const tmp = str.toLowerCase();
-    let forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
-    for (let word of forbiddenWords) {
+    const forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
+    for (const word of forbiddenWords) {
       if (tmp.indexOf(word) !== -1) {
         return word;
       }
@@ -238,7 +238,7 @@ export class ProgrammableRepl {
   }
 
   private getSavedEditorContent() {
-    let savedContent = localStorage.getItem('programmable_repl_saved_editor_code');
+    const savedContent = localStorage.getItem('programmable_repl_saved_editor_code');
     if (savedContent === null) return '';
     return savedContent;
   }
@@ -246,7 +246,7 @@ export class ProgrammableRepl {
   private easterEggFunction() {
     this.pushOutputString('<br>', 'white', 'richtext');
     this.pushOutputString(
-      "If you see this, please check whether you have called <span style='font-weight:bold;font-style:italic;'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.",
+      'If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.',
       'yellow',
       'richtext'
     );
