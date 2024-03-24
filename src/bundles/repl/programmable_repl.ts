@@ -243,14 +243,13 @@ export class ProgrammableRepl {
     return savedContent;
   }
 
-  // Small Easter Egg that doesn't affect module functionality and normal user experience :)
-  // Please don't modify these text! Thanks!  :)
   private easterEggFunction() {
-    this.pushOutputString('[Author (Wang Zihan)] ❤<span style=\'font-weight:bold;\'>I love Keqing and Ganyu.</span>❤', 'pink', 'richtext');
-    this.pushOutputString('<span style=\'font-style:italic;\'>Showing my love to my favorite girls through a SA module, is that the so-called "romance of a programmer"?</span>', 'gray', 'richtext');
-    this.pushOutputString('❤❤❤❤❤', 'pink');
     this.pushOutputString('<br>', 'white', 'richtext');
-    this.pushOutputString('If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.', 'yellow', 'richtext');
+    this.pushOutputString(
+      "If you see this, please check whether you have called <span style='font-weight:bold;font-style:italic;'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.",
+      'yellow',
+      'richtext'
+    );
     return 'Easter Egg!';
   }
 }
