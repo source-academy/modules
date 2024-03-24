@@ -31,8 +31,8 @@ export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: Li
   const linter = new ESlint({ fix })
 
   const fileNames = [
-    ...bundles.map(bundleName => `${srcDir}/bundles/${bundleName}/**.ts`),
-    ...tabs.map(tabName => `${srcDir}/tabs/${tabName}/**.ts*`)
+    ...bundles.map(bundleName => `${srcDir}/bundles/${bundleName}/**/*.ts`),
+    ...tabs.map(tabName => `${srcDir}/tabs/${tabName}/**/*.ts*`)
   ]
 
   try {
