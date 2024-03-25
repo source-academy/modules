@@ -1,7 +1,10 @@
 import { Classes, Intent, OverlayToaster, type ToastProps } from '@blueprintjs/core'
 import classNames from 'classnames'
 import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang'
+
+// Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext'
+
 import { Chapter, Variant } from 'js-slang/dist/types'
 import { stringify } from 'js-slang/dist/utils/stringify'
 import React, { useCallback } from 'react'
@@ -15,8 +18,6 @@ import { ControlBarRunButton } from './controlBar/ControlBarRunButton'
 import testTabContent from './sideContent/TestTab'
 import type { SideContentTab } from './sideContent/types'
 import { getDynamicTabs } from './sideContent/utils'
-
-// Importing this straight from js-slang doesn't work for whatever reason
 
 const refreshSuccessToast: ToastProps = {
   intent: Intent.SUCCESS,
