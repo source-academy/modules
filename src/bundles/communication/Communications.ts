@@ -129,7 +129,7 @@ export function updateGlobalState(path: string, updatedState: any) {
  * Initializes RPC.
  *
  * @param topicHeader MQTT topic to use for rpc.
- * @param userId Identifier for this user.
+ * @param userId Identifier for this user, set undefined to generate a random ID.
  */
 export function initRpc(topicHeader: string, userId?: string) {
   const moduleState = getModuleState();
@@ -144,6 +144,11 @@ export function initRpc(topicHeader: string, userId?: string) {
   throw new Error('Error: Communication module not initialized.');
 }
 
+/**
+ * Obtains the user's ID.
+ *
+ * @returns String for user ID.
+ */
 export function getUserId(): string {
   const moduleState = getModuleState();
   if (moduleState instanceof CommunicationModuleState) {

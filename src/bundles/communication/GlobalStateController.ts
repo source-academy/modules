@@ -40,6 +40,12 @@ export class GlobalStateController {
     });
   }
 
+  /**
+   * Parses the message received via MQTT and updates the global state.
+   *
+   * @param shortenedTopic Path of JSON branch.
+   * @param message New value to set.
+   */
   public parseGlobalStateMessage(shortenedTopic: string, message: string) {
     let preSplitTopic = shortenedTopic.trim();
     if (preSplitTopic.length === 0) {
