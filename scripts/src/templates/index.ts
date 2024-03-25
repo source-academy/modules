@@ -1,5 +1,5 @@
-import { Command } from '@commander-js/extra-typings'
 import type { Interface } from 'readline/promises'
+import { Command } from '@commander-js/extra-typings'
 
 import { manifestOption, srcDirOption } from '@src/commandUtils'
 import { addNew as addNewModule } from './module'
