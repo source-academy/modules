@@ -1,4 +1,5 @@
 import { connect, type MqttClient } from 'mqtt/dist/mqtt';
+// Need to use "mqtt/dist/mqtt" as "mqtt" requires global, which SA's compiller does not define.
 
 export const STATE_CONNECTED = 'Connected';
 export const STATE_DISCONNECTED = 'Disconnected';
