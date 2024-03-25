@@ -1,9 +1,9 @@
-import type { Interface } from 'readline/promises'
 import { Command } from '@commander-js/extra-typings'
+import type { Interface } from 'readline/promises'
 
 import { manifestOption, srcDirOption } from '@src/commandUtils'
 import { addNew as addNewModule } from './module'
-import { askQuestion, error as _error, info, warn, getRl } from './print'
+import { error as _error, askQuestion, getRl, info, warn } from './print'
 import { addNew as addNewTab } from './tab'
 
 async function askMode(rl: Interface) {
@@ -11,7 +11,7 @@ async function askMode(rl: Interface) {
     // eslint-disable-next-line no-await-in-loop
     const mode = await askQuestion('What would you like to create? (module/tab)', rl)
     if (mode !== 'module' && mode !== 'tab') {
-      warn('Please answer with only \'module\' or \'tab\'.')
+      warn("Please answer with only 'module' or 'tab'.")
     } else {
       return mode
     }
