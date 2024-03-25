@@ -1,12 +1,13 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import importPlugin from 'eslint-plugin-import';
-import jestPlugin from 'eslint-plugin-jest';
-import reactPlugin from 'eslint-plugin-react';
+import js from '@eslint/js'
+import stylePlugin from '@stylistic/eslint-plugin'
+import importPlugin from 'eslint-plugin-import'
+import jestPlugin from 'eslint-plugin-jest'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
-const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
-const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
+const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP']
+const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST']
 
 /**
  * @type {import('eslint').Linter.FlatConfig[]}
@@ -36,21 +37,35 @@ export default [
       }
     },
     plugins: {
-      import: importPlugin
+      import: importPlugin,
+      '@stylistic': stylePlugin,
     },
     rules: {
-      'eol-last': 1,
       'import/no-duplicates': [1, { 'prefer-inline': true }],
-      'import/order': 1,
-      indent: [1, 2, { SwitchCase: 1 }],
-      'no-mixed-spaces-and-tabs': 1,
-      'spaced-comment': [
+      'import/order': [
         1,
-        'always', // Same
+        {
+          alphabetize: {
+            order: 'asc',
+            orderImportKind: 'asc'
+          }
+        }
+      ],
+
+      '@stylistic/brace-style': [1, '1tbs', { allowSingleLine: true }],
+      '@stylistic/eol-last': 1,
+      '@stylistic/indent': [1, 2, { SwitchCase: 1 }],
+      '@stylistic/no-mixed-spaces-and-tabs': 1,
+      '@stylistic/no-multi-spaces': 1,
+      '@stylistic/no-multiple-empty-lines': [1, { max: 1, maxEOF: 0 }],
+      '@stylistic/no-trailing-spaces': 1,
+      '@stylistic/quotes': [1, 'single', { avoidEscape: true }],
+      '@stylistic/semi': [1, 'never'],
+      '@stylistic/spaced-comment': [
+        1,
+        'always',
         { markers: todoTreeKeywordsAll }
-      ],     
-      quotes: [1, 'single', { avoidEscape: true }],
-      semi: 0,
+      ],
     }
   },
   ...tseslint.configs.recommended,
@@ -61,7 +76,7 @@ export default [
       parser: tseslint.parser
     },
     plugins: {
-      '@typescript-eslint': tseslint.plugin
+      '@typescript-eslint': tseslint.plugin,
     },
     rules: {
       'no-unused-vars': 0, // Use the typescript eslint rule instead
@@ -73,6 +88,21 @@ export default [
       '@typescript-eslint/no-unused-vars': [1, { argsIgnorePattern: '^_' }], // Was 2
       '@typescript-eslint/prefer-ts-expect-error': 1,
       '@typescript-eslint/sort-type-constituents': 1,
+    }
+  },
+  {
+    // global for TSX files
+    files: ['**/*.tsx'],
+    plugins: {
+      'react-hooks': reactHooksPlugin
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 2,
+
+      '@stylistic/jsx-equals-spacing': [1, 'never'],
+      '@stylistic/jsx-indent': [1, 2],
+      '@stylistic/jsx-indent-props': [1, 2],
+      '@stylistic/jsx-props-no-multi-spaces': 1,
     }
   },
   {
@@ -88,6 +118,8 @@ export default [
         project: './src/tsconfig.json'
       }
     },
+    plugins: {
+    },
     rules: {
       'prefer-const': 1, // Was 2
 
@@ -95,9 +127,6 @@ export default [
       '@typescript-eslint/no-var-requires': 1, // Was 2
       '@typescript-eslint/switch-exhaustiveness-check': 2,
     },
-    plugins: {
-      react: reactPlugin,
-    }
   },
   {
     // Rules for scripts
@@ -114,9 +143,9 @@ export default [
       }
     },
     rules: {
-      'arrow-parens': [1, 'as-needed'],
       'import/extensions': [2, 'never', { json: 'always' }],
       'no-constant-condition': 0, // Was 2,
+      '@stylistic/arrow-parens': [1, 'as-needed'],
 
       '@typescript-eslint/prefer-readonly': 1,
       '@typescript-eslint/require-await': 2,
