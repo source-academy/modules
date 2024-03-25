@@ -1,6 +1,6 @@
 /* [Exports] */
 export default class ListenerTracker {
-  private listeners: [string, Function][] = [];
+  private listeners: [string, Function][] = []
 
   constructor(private element: Element) {}
 
@@ -9,12 +9,12 @@ export default class ListenerTracker {
     listener: Function,
     options?: AddEventListenerOptions
   ) {
-    this.listeners.push([eventType, listener]);
+    this.listeners.push([eventType, listener])
     this.element.addEventListener(
       eventType,
       listener as EventListenerOrEventListenerObject,
       options
-    );
+    )
   }
 
   removeListeners() {
@@ -22,7 +22,7 @@ export default class ListenerTracker {
       this.element.removeEventListener(
         eventType,
         listener as EventListenerOrEventListenerObject
-      );
-    });
+      )
+    })
   }
 }

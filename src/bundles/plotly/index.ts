@@ -11,4 +11,4 @@ export {
   draw_points_2d,
   draw_points_3d,
   draw_sound_2d
-} from './functions';
+} from './functions'

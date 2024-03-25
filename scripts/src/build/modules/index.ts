@@ -1,7 +1,7 @@
-import { bundlesOption, tabsOption } from '@src/commandUtils';
-import { createBuildCommand, type BuildTask, createBuildCommandHandler } from '../utils';
-import { bundleBundles } from './bundles';
-import { bundleTabs } from './tabs';
+import { bundlesOption, tabsOption } from '@src/commandUtils'
+import { createBuildCommand, type BuildTask, createBuildCommandHandler } from '../utils'
+import { bundleBundles } from './bundles'
+import { bundleTabs } from './tabs'
 
 export const buildModules: BuildTask = async (inputs, opts) => {
   const [bundlesResult, tabsResult] = await Promise.all([

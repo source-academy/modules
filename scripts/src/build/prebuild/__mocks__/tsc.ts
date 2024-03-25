@@ -1,4 +1,4 @@
-export const tscResultsLogger = jest.fn(() => '');
+export const tscResultsLogger = jest.fn(() => '')
 
 export const runTsc = jest.fn()
   .mockResolvedValue({
@@ -7,4 +7,4 @@ export const runTsc = jest.fn()
       severity: 'error',
       results: []
     }
-  });
+  })

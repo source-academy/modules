@@ -1,4 +1,4 @@
-import { Chapter } from 'js-slang/dist/types';
+import { Chapter } from 'js-slang/dist/types'
 
 const ev3DeviceType = {
   id: 'EV3',
@@ -50,6 +50,6 @@ const ev3DeviceType = {
     'ev3_ledSetBrightness'
   ],
   languageChapter: Chapter.SOURCE_3
-};
+}
 
-export default ev3DeviceType;
+export default ev3DeviceType

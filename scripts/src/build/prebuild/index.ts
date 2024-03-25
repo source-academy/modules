@@ -1,7 +1,7 @@
 import { type Severity, findSeverity, type BuildOptions } from '@src/build/utils'
 import { promiseAll } from '@src/commandUtils'
-import { runTsc, tscResultsLogger } from './tsc'
 import { eslintResultsLogger, runEslint } from './lint'
+import { runTsc, tscResultsLogger } from './tsc'
 
 interface PrebuildResult {
   lint?: Awaited<ReturnType<typeof runEslint>>

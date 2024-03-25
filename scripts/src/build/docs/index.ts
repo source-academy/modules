@@ -1,8 +1,8 @@
-import { bundlesOption } from '@src/commandUtils';
-import { createBuildCommand, type BuildInputs, createBuildCommandHandler, type AwaitedReturn } from '../utils';
-import { initTypedoc, type TypedocResult } from './docsUtils';
-import { buildHtml } from './html';
-import { buildJsons } from './json';
+import { bundlesOption } from '@src/commandUtils'
+import { createBuildCommand, type BuildInputs, createBuildCommandHandler, type AwaitedReturn } from '../utils'
+import { initTypedoc, type TypedocResult } from './docsUtils'
+import { buildHtml } from './html'
+import { buildJsons } from './json'
 
 export async function buildDocs(inputs: BuildInputs, outDir: string, tdResult: TypedocResult): Promise<
   AwaitedReturn<typeof buildJsons> & { html: AwaitedReturn<typeof buildHtml> }

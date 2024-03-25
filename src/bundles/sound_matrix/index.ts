@@ -12,4 +12,4 @@ export {
   clear_matrix,
   set_timeout,
   clear_all_timeout
-} from './functions';
+} from './functions'

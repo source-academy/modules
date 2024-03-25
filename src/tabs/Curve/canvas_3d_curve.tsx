@@ -1,10 +1,10 @@
-import { Slider } from '@blueprintjs/core';
-import React from 'react';
-import type { CurveDrawn } from '../../bundles/curve/curves_webgl';
-import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
-import PlayButton from '../common/PlayButton';
-import WebGLCanvas from '../common/WebglCanvas';
-import { degreesToRadians } from '../../common/utilities';
+import { Slider } from '@blueprintjs/core'
+import React from 'react'
+import type { CurveDrawn } from '../../bundles/curve/curves_webgl'
+import { degreesToRadians } from '../../common/utilities'
+import PlayButton from '../common/PlayButton'
+import WebGLCanvas from '../common/WebglCanvas'
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants'
 
 type State = {
   /**
@@ -20,11 +20,11 @@ type State = {
    * button takes effect, for countering spam-clicking.
    */
   isRotating: boolean;
-};
+}
 
 type Props = {
   curve: CurveDrawn;
-};
+}
 
 /**
  * Canvas to display 3D Curves.
@@ -32,16 +32,16 @@ type Props = {
  * Uses WebGLCanvas internally.
  */
 export default class Canvas3dCurve extends React.Component<Props, State> {
-  private canvas: HTMLCanvasElement | null;
+  private canvas: HTMLCanvasElement | null
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.canvas = null;
+    this.canvas = null
     this.state = {
       displayAngle: 0,
       isRotating: false
-    };
+    }
   }
 
   /**
@@ -58,18 +58,18 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
       },
       () => {
         if (this.canvas) {
-          this.props.curve.redraw(degreesToRadians(newValue));
+          this.props.curve.redraw(degreesToRadians(newValue))
         }
       }
-    );
-  };
+    )
+  }
 
   /**
    * Event handler for play button. Starts automated rotation by calling
    * `autoRotate()`.
    */
   private onClickHandler = () => {
-    if (!this.canvas) return;
+    if (!this.canvas) return
 
     this.setState(
       (prevState) => ({
@@ -77,11 +77,11 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
       }),
       () => {
         if (this.state.isRotating) {
-          this.autoRotate();
+          this.autoRotate()
         }
       }
-    );
-  };
+    )
+  }
 
   /**
    * Environment where `requestAnimationFrame` is called.
@@ -95,29 +95,29 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
             prevState.displayAngle >= 360 ? 0 : prevState.displayAngle + 2
         }),
         () => {
-          this.props.curve.redraw(degreesToRadians(this.state.displayAngle));
-          window.requestAnimationFrame(this.autoRotate);
+          this.props.curve.redraw(degreesToRadians(this.state.displayAngle))
+          window.requestAnimationFrame(this.autoRotate)
         }
-      );
+      )
     }
-  };
+  }
 
   private onTextBoxChange = (event) => {
-    const angle = parseFloat(event.target.value);
+    const angle = parseFloat(event.target.value)
     this.setState(
       () => ({ displayAngle: angle }),
       () => {
         if (this.canvas) {
-          this.props.curve.redraw(degreesToRadians(angle));
+          this.props.curve.redraw(degreesToRadians(angle))
         }
       }
-    );
-  };
+    )
+  }
 
   public componentDidMount() {
     if (this.canvas) {
-      this.props.curve.init(this.canvas);
-      this.props.curve.redraw(degreesToRadians(this.state.displayAngle));
+      this.props.curve.init(this.canvas)
+      this.props.curve.redraw(degreesToRadians(this.state.displayAngle))
     }
   }
 
@@ -149,29 +149,25 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
           <PlayButton
             isPlaying={ this.state.isRotating }
             onClick={ this.onClickHandler }
-          ></PlayButton>
+          >
+          </PlayButton>
           <Slider
             value={ this.state.displayAngle }
             min={ 0 }
             max={ 360 }
-
             labelRenderer={ false }
-
             onChange={ this.onSliderChangeHandler }
           />
           <input
             style={{
               height: '100%'
             }}
-
             type="number"
             value={ this.state.displayAngle }
             min={ 0 }
             max={ 360 }
             step={ 1 }
-
             disabled={ this.state.isRotating }
-
             onChange={ this.onTextBoxChange }
           />
         </div>
@@ -184,10 +180,10 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
       >
         <WebGLCanvas
           ref={(r) => {
-            this.canvas = r;
+            this.canvas = r
           }}
         />
       </div>
-    </div>;
+    </div>
   }
 }

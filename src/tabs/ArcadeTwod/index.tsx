@@ -1,8 +1,8 @@
-import React from 'react';
-import Phaser from 'phaser';
-import { Button, ButtonGroup } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import { Button, ButtonGroup } from '@blueprintjs/core'
+import { IconNames } from '@blueprintjs/icons'
+import Phaser from 'phaser'
+import React from 'react'
+import { type DebuggerContext } from '../../typings/type_helpers'
 
 /**
  * Game display tab for user-created games made with the Arcade2D module.
@@ -19,21 +19,21 @@ type Props = {
   children?: never;
   className?: never;
   context?: any;
-};
+}
 
 /**
  * React Component state for the Game.
  */
 type GameState = {
   game?: Phaser.Game;
-};
+}
 
 /**
  * React component state for the UI buttons.
  */
 type UiState = {
   isPaused: boolean;
-};
+}
 
 /**
  * React component props for the UI buttons.
@@ -43,23 +43,23 @@ type UiProps = {
   className?: never;
   context?: any;
   onClick: (b: boolean) => void;
-};
+}
 
 /**
  * Component for UI buttons within tab e.g play/pause.
  */
 class A2dUiButtons extends React.Component<UiProps, UiState> {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isPaused: false
-    };
+    }
   }
 
   toggleGamePause(): void {
-    const currentState = this.state.isPaused;
-    this.props.onClick(!currentState);
-    this.setState({ isPaused: !currentState });
+    const currentState = this.state.isPaused
+    this.props.onClick(!currentState)
+    this.setState({ isPaused: !currentState })
   }
 
   public render() {
@@ -73,7 +73,7 @@ class A2dUiButtons extends React.Component<UiProps, UiState> {
           text={this.state.isPaused ? 'Resume Game' : 'Pause Game'}
         />
       </ButtonGroup>
-    );
+    )
   }
 }
 
@@ -82,46 +82,46 @@ class A2dUiButtons extends React.Component<UiProps, UiState> {
  */
 class GameTab extends React.Component<Props, GameState> {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       game: undefined
-    };
+    }
   }
 
   componentDidMount() {
     // Only mount the component when the Arcade2D tab is active
     if (document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')?.ariaHidden === 'true') {
-      return;
+      return
     }
 
     // Config will exist since it is checked in toSpawn
-    const config = this.props.context.result?.value?.gameConfig;
+    const config = this.props.context.result?.value?.gameConfig
     this.setState({
       game: new Phaser.Game(config)
-    });
+    })
   }
 
   shouldComponentUpdate() {
     // Component itself is a wrapper & should not update - Phaser handles the game updates
-    return false;
+    return false
   }
 
   toggleGamePause(pause: boolean): void {
     if (pause) {
       // Default scene since there is only one scene.
-      this.state.game?.scene.pause('default');
-      this.state.game?.sound.pauseAll();
+      this.state.game?.scene.pause('default')
+      this.state.game?.sound.pauseAll()
     } else {
-      this.state.game?.scene.resume('default');
-      this.state.game?.sound.resumeAll();
+      this.state.game?.scene.resume('default')
+      this.state.game?.sound.resumeAll()
     }
   }
 
   componentWillUnmount(): void {
-    this.state.game?.sound.stopAll();
+    this.state.game?.sound.stopAll()
 
     // Prevents multiple update loops being run at the same time
-    this.state.game?.destroy(false, false);
+    this.state.game?.destroy(false, false)
   }
 
   public render() {
@@ -138,7 +138,7 @@ class GameTab extends React.Component<Props, GameState> {
         <div id="phaser-game" />
         <A2dUiButtons onClick={(p) => this.toggleGamePause(p)} />
       </div>
-    );
+    )
   }
 }
 
@@ -152,11 +152,11 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const config = context.result?.value?.gameConfig;
+    const config = context.result?.value?.gameConfig
     if (config) {
-      return true;
+      return true
     }
-    return false;
+    return false
   },
 
   /**
@@ -177,4 +177,4 @@ export default {
    * @see https://blueprintjs.com/docs/#icons
    */
   iconName: IconNames.SHAPES
-};
+}

@@ -1,15 +1,15 @@
-import fs from 'fs/promises';
-import type { MockedFunction } from 'jest-mock';
-import type { Command } from '@commander-js/extra-typings';
+import fs from 'fs/promises'
+import type { Command } from '@commander-js/extra-typings'
+import type { MockedFunction } from 'jest-mock'
 
-import * as tsc from '../prebuild/tsc';
-jest.spyOn(tsc, 'runTsc');
+import * as lint from '../prebuild/lint'
+jest.spyOn(lint, 'runEslint')
 
-import * as lint from '../prebuild/lint';
-jest.spyOn(lint, 'runEslint');
+import * as tsc from '../prebuild/tsc'
+jest.spyOn(tsc, 'runTsc')
 
-const mockedTsc = tsc.runTsc as MockedFunction<typeof tsc.runTsc>;
-const mockedLint = lint.runEslint as MockedFunction<typeof lint.runEslint>;
+const mockedTsc = tsc.runTsc as MockedFunction<typeof tsc.runTsc>
+const mockedLint = lint.runEslint as MockedFunction<typeof lint.runEslint>
 
 export function testBuildCommand(
   commandName: string,
@@ -18,12 +18,12 @@ export function testBuildCommand(
 ) {
   function expectToBeCalled(times: number) {
     mockedFunctions.forEach((func) => expect(func)
-      .toHaveBeenCalledTimes(times));
+      .toHaveBeenCalledTimes(times))
   }
 
   function runCommand(...args: string[]) {
     return commandGetter()
-      .parseAsync(args, { from: 'user' });
+      .parseAsync(args, { from: 'user' })
   }
 
   test(`${commandName} should run tsc when --tsc is specified`, async () => {
@@ -33,13 +33,13 @@ export function testBuildCommand(
         severity: 'success',
         results: []
       }
-    });
+    })
 
-    await runCommand('--tsc');
+    await runCommand('--tsc')
     expect(tsc.runTsc)
-      .toHaveBeenCalledTimes(1);
-    expectToBeCalled(1);
-  });
+      .toHaveBeenCalledTimes(1)
+    expectToBeCalled(1)
+  })
 
   test(`${commandName} should not run if tsc throws an error`, async () => {
     mockedTsc.mockResolvedValueOnce({
@@ -48,16 +48,16 @@ export function testBuildCommand(
         severity: 'error',
         results: []
       }
-    });
+    })
 
     await expect(runCommand('--tsc'))
       .rejects
-      .toMatchInlineSnapshot('[Error: process.exit called with 1]');
+      .toMatchInlineSnapshot('[Error: process.exit called with 1]')
 
     expect(tsc.runTsc)
-      .toHaveBeenCalledTimes(1);
-    expectToBeCalled(0);
-  });
+      .toHaveBeenCalledTimes(1)
+    expectToBeCalled(0)
+  })
 
   test(`${commandName} should run linting when --lint is specified`, async () => {
     mockedLint.mockResolvedValueOnce({
@@ -66,12 +66,12 @@ export function testBuildCommand(
         severity: 'success',
         formatted: ''
       }
-    });
-    await runCommand('--lint');
+    })
+    await runCommand('--lint')
     expect(lint.runEslint)
-      .toHaveBeenCalledTimes(1);
-    expectToBeCalled(1);
-  });
+      .toHaveBeenCalledTimes(1)
+    expectToBeCalled(1)
+  })
 
   test(`${commandName} should not run if linting throws an error`, async () => {
     mockedLint.mockResolvedValueOnce({
@@ -80,21 +80,21 @@ export function testBuildCommand(
         severity: 'error',
         formatted: ''
       }
-    });
+    })
 
     await expect(runCommand('--lint'))
       .rejects
-      .toMatchInlineSnapshot('[Error: process.exit called with 1]');
+      .toMatchInlineSnapshot('[Error: process.exit called with 1]')
 
     expect(lint.runEslint)
-      .toHaveBeenCalledTimes(1);
-    expectToBeCalled(0);
-  });
+      .toHaveBeenCalledTimes(1)
+    expectToBeCalled(0)
+  })
 
   test(`${commandName} should copy the manifest if there are no errors`, async () => {
-    await runCommand();
-    expectToBeCalled(1);
+    await runCommand()
+    expectToBeCalled(1)
     expect(fs.copyFile)
-      .toHaveBeenCalledTimes(1);
-  });
+      .toHaveBeenCalledTimes(1)
+  })
 }

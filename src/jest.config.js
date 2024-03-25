@@ -28,4 +28,4 @@ export default {
     'node_modules/(?!=chalk)/',
     '.+\\.js'
   ]
-};
+}

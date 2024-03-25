@@ -1,4 +1,5 @@
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
+import context from 'js-slang/context'
 import {
   pair,
   head,
@@ -9,35 +10,34 @@ import {
   is_pair,
   accumulate,
   type List
-} from 'js-slang/dist/stdlib/list';
-import context from 'js-slang/context';
+} from 'js-slang/dist/stdlib/list'
+import { RIFFWAVE } from './riffwave'
 import type {
   Wave,
   Sound,
   SoundProducer,
   SoundTransformer,
   AudioPlayed
-} from './types';
-import { RIFFWAVE } from './riffwave';
+} from './types'
 
 // Global Constants and Variables
-const FS: number = 44100; // Output sample rate
-const fourier_expansion_level: number = 5; // fourier expansion level
+const FS: number = 44100 // Output sample rate
+const fourier_expansion_level: number = 5 // fourier expansion level
 
-const audioPlayed: AudioPlayed[] = [];
+const audioPlayed: AudioPlayed[] = []
 context.moduleContexts.sound.state = {
   audioPlayed
-};
+}
 
 // Singular audio context for all playback functions
-let audioplayer: AudioContext;
+let audioplayer: AudioContext
 
 // Track if a sound is currently playing
-let isPlaying: boolean;
+let isPlaying: boolean
 
 // Instantiates new audio context
 function init_audioCtx(): void {
-  audioplayer = new window.AudioContext();
+  audioplayer = new window.AudioContext()
   // audioplayer = new (window.AudioContext || window.webkitAudioContext)();
 }
 
@@ -45,10 +45,10 @@ function init_audioCtx(): void {
 function linear_decay(decay_period: number): (t: number) => number {
   return (t) => {
     if (t > decay_period || t < 0) {
-      return 0;
+      return 0
     }
-    return 1 - t / decay_period;
-  };
+    return 1 - t / decay_period
+  }
 }
 
 // // ---------------------------------------------
@@ -58,9 +58,9 @@ function linear_decay(decay_period: number): (t: number) => number {
 // permission initially undefined
 // set to true by granting microphone permission
 // set to false by denying microphone permission
-let permission: boolean | undefined;
+let permission: boolean | undefined
 
-let recorded_sound: Sound | undefined;
+let recorded_sound: Sound | undefined
 
 // check_permission is called whenever we try
 // to record a sound
@@ -68,71 +68,71 @@ function check_permission() {
   if (permission === undefined) {
     throw new Error(
       'Call init_record(); to obtain permission to use microphone'
-    );
+    )
   } else if (permission === false) {
     throw new Error(`Permission has been denied.\n
 		    Re-start browser and call init_record();\n
-		    to obtain permission to use microphone.`);
+		    to obtain permission to use microphone.`)
   } // (permission === true): do nothing
 }
 
-let globalStream: any;
+let globalStream: any
 
 function rememberStream(stream: any) {
-  permission = true;
-  globalStream = stream;
+  permission = true
+  globalStream = stream
 }
 
 function setPermissionToFalse() {
-  permission = false;
+  permission = false
 }
 
 function start_recording(mediaRecorder: MediaRecorder) {
-  const data: any[] = [];
-  mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
-  mediaRecorder.start();
-  mediaRecorder.onstop = () => process(data);
+  const data: any[] = []
+  mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data)
+  mediaRecorder.start()
+  mediaRecorder.onstop = () => process(data)
 }
 
 // duration of recording signal in milliseconds
-const recording_signal_ms = 100;
+const recording_signal_ms = 100
 
 // duration of pause after "run" before recording signal is played
-const pre_recording_signal_pause_ms = 200;
+const pre_recording_signal_pause_ms = 200
 
 function play_recording_signal() {
-  play(sine_sound(1200, recording_signal_ms / 1000));
+  play(sine_sound(1200, recording_signal_ms / 1000))
 }
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
 function process(data) {
-  const audioContext = new AudioContext();
-  const blob = new Blob(data);
+  const audioContext = new AudioContext()
+  const blob = new Blob(data)
 
   convertToArrayBuffer(blob)
     .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
-    .then(save);
+    .then(save)
 }
 
 // Converts input microphone sound (blob) into array format.
 function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-  const url = URL.createObjectURL(blob);
+  const url = URL.createObjectURL(blob)
   return fetch(url)
-    .then((response) => response.arrayBuffer());
+    .then((response) => response.arrayBuffer())
 }
 
 function save(audioBuffer: AudioBuffer) {
-  const array = audioBuffer.getChannelData(0);
-  const duration = array.length / FS;
+  const array = audioBuffer.getChannelData(0)
+  const duration = array.length / FS
   recorded_sound = make_sound((t) => {
-    const index = t * FS;
-    const lowerIndex = Math.floor(index);
-    const upperIndex = lowerIndex + 1;
-    const ratio = index - lowerIndex;
-    const upper = array[upperIndex] ? array[upperIndex] : 0;
-    const lower = array[lowerIndex] ? array[lowerIndex] : 0;
-    return lower * (1 - ratio) + upper * ratio;
-  }, duration);
+    const index = t * FS
+    const lowerIndex = Math.floor(index)
+    const upperIndex = lowerIndex + 1
+    const ratio = index - lowerIndex
+    const upper = array[upperIndex] ? array[upperIndex] : 0
+    const lower = array[lowerIndex] ? array[lowerIndex] : 0
+    return lower * (1 - ratio) + upper * ratio
+  }, duration)
 }
 
 /**
@@ -144,8 +144,8 @@ function save(audioBuffer: AudioBuffer) {
 export function init_record(): string {
   navigator.mediaDevices
     .getUserMedia({ audio: true })
-    .then(rememberStream, setPermissionToFalse);
-  return 'obtaining recording permission';
+    .then(rememberStream, setPermissionToFalse)
+  return 'obtaining recording permission'
 }
 
 /**
@@ -166,23 +166,23 @@ export function init_record(): string {
  * returns a Sound promise: a nullary function that returns the recorded Sound
  */
 export function record(buffer: number): () => () => Sound {
-  check_permission();
-  const mediaRecorder = new MediaRecorder(globalStream);
+  check_permission()
+  const mediaRecorder = new MediaRecorder(globalStream)
   setTimeout(() => {
-    play_recording_signal();
-    start_recording(mediaRecorder);
-  }, recording_signal_ms + buffer * 1000);
+    play_recording_signal()
+    start_recording(mediaRecorder)
+  }, recording_signal_ms + buffer * 1000)
   return () => {
-    mediaRecorder.stop();
-    play_recording_signal();
+    mediaRecorder.stop()
+    play_recording_signal()
     return () => {
       if (recorded_sound === undefined) {
-        throw new Error('recording still being processed');
+        throw new Error('recording still being processed')
       } else {
-        return recorded_sound;
+        return recorded_sound
       }
-    };
-  };
+    }
+  }
 }
 
 /**
@@ -199,34 +199,34 @@ export function record(buffer: number): () => () => Sound {
  * @return <CODE>promise</CODE>: nullary function which returns recorded Sound
  */
 export function record_for(duration: number, buffer: number): () => Sound {
-  recorded_sound = undefined;
-  const recording_ms = duration * 1000;
-  const pre_recording_pause_ms = buffer * 1000;
-  check_permission();
-  const mediaRecorder = new MediaRecorder(globalStream);
+  recorded_sound = undefined
+  const recording_ms = duration * 1000
+  const pre_recording_pause_ms = buffer * 1000
+  check_permission()
+  const mediaRecorder = new MediaRecorder(globalStream)
 
   // order of events for record_for:
   // pre-recording-signal pause | recording signal |
   // pre-recording pause | recording | recording signal
 
   setTimeout(() => {
-    play_recording_signal();
+    play_recording_signal()
     setTimeout(() => {
-      start_recording(mediaRecorder);
+      start_recording(mediaRecorder)
       setTimeout(() => {
-        mediaRecorder.stop();
-        play_recording_signal();
-      }, recording_ms);
-    }, recording_signal_ms + pre_recording_pause_ms);
-  }, pre_recording_signal_pause_ms);
+        mediaRecorder.stop()
+        play_recording_signal()
+      }, recording_ms)
+    }, recording_signal_ms + pre_recording_pause_ms)
+  }, pre_recording_signal_pause_ms)
 
   return () => {
     if (recorded_sound === undefined) {
-      throw new Error('recording still being processed');
+      throw new Error('recording still being processed')
     } else {
-      return recorded_sound;
+      return recorded_sound
     }
-  };
+  }
 }
 
 // =============================================================================
@@ -252,10 +252,10 @@ export function record_for(duration: number, buffer: number): () => Sound {
  */
 export function make_sound(wave: Wave, duration: number): Sound {
   if (duration < 0) {
-    throw new Error('Sound duration must be greater than or equal to 0');
+    throw new Error('Sound duration must be greater than or equal to 0')
   }
 
-  return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
+  return pair((t: number) => (t >= duration ? 0 : wave(t)), duration)
 }
 
 /**
@@ -266,7 +266,7 @@ export function make_sound(wave: Wave, duration: number): Sound {
  * @example get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
  */
 export function get_wave(sound: Sound): Wave {
-  return head(sound);
+  return head(sound)
 }
 
 /**
@@ -277,7 +277,7 @@ export function get_wave(sound: Sound): Wave {
  * @example get_duration(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns 5
  */
 export function get_duration(sound: Sound): number {
-  return tail(sound);
+  return tail(sound)
 }
 
 /**
@@ -292,7 +292,7 @@ export function is_sound(x: any): x is Sound {
     is_pair(x)
     && typeof get_wave(x) === 'function'
     && typeof get_duration(x) === 'number'
-  );
+  )
 }
 
 /**
@@ -304,7 +304,7 @@ export function is_sound(x: any): x is Sound {
  * @example play_wave(t => math_sin(t * 3000), 5);
  */
 export function play_wave(wave: Wave, duration: number): Sound {
-  return play(make_sound(wave, duration));
+  return play(make_sound(wave, duration))
 }
 
 /**
@@ -319,65 +319,65 @@ export function play_wave(wave: Wave, duration: number): Sound {
 export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`)
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
-    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
+    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`)
   } else if (get_duration(sound) < 0) {
-    throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+    throw new Error(`${play_in_tab.name}: duration of sound is negative`)
   } else if (get_duration(sound) === 0) {
-    return sound;
+    return sound
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
-      init_audioCtx();
+      init_audioCtx()
     }
 
     // Create mono buffer
-    const channel: number[] = [];
-    const len = Math.ceil(FS * get_duration(sound));
+    const channel: number[] = []
+    const len = Math.ceil(FS * get_duration(sound))
 
-    let temp: number;
-    let prev_value = 0;
+    let temp: number
+    let prev_value = 0
 
-    const wave = get_wave(sound);
+    const wave = get_wave(sound)
     for (let i = 0; i < len; i += 1) {
-      temp = wave(i / FS);
+      temp = wave(i / FS)
       // clip amplitude
       // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
       if (temp > 1) {
-        channel[i] = 1;
+        channel[i] = 1
       } else if (temp < -1) {
-        channel[i] = -1;
+        channel[i] = -1
       } else {
-        channel[i] = temp;
+        channel[i] = temp
       }
 
       // smoothen out sudden cut-outs
       if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
+        channel[i] = prev_value * 0.999
       }
 
-      prev_value = channel[i];
+      prev_value = channel[i]
     }
 
     // quantize
     for (let i = 0; i < channel.length; i += 1) {
-      channel[i] = Math.floor(channel[i] * 32767.999);
+      channel[i] = Math.floor(channel[i] * 32767.999)
     }
 
-    const riffwave = new RIFFWAVE([]);
-    riffwave.header.sampleRate = FS;
-    riffwave.header.numChannels = 1;
-    riffwave.header.bitsPerSample = 16;
-    riffwave.Make(channel);
+    const riffwave = new RIFFWAVE([])
+    riffwave.header.sampleRate = FS
+    riffwave.header.numChannels = 1
+    riffwave.header.bitsPerSample = 16
+    riffwave.Make(channel)
 
     const soundToPlay = {
       toReplString: () => '<AudioPlayed>',
       dataUri: riffwave.dataURI
-    };
-    audioPlayed.push(soundToPlay);
-    return sound;
+    }
+    audioPlayed.push(soundToPlay)
+    return sound
   }
 }
 
@@ -394,15 +394,15 @@ export function play(sound: Sound): Sound {
   if (!is_sound(sound)) {
     throw new Error(
       `${play.name} is expecting sound, but encountered ${sound}`
-    );
+    )
   } else if (get_duration(sound) < 0) {
-    throw new Error(`${play.name}: duration of sound is negative`);
+    throw new Error(`${play.name}: duration of sound is negative`)
   } else if (get_duration(sound) === 0) {
-    return sound;
+    return sound
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
-      init_audioCtx();
+      init_audioCtx()
     }
 
     // Create mono buffer
@@ -410,43 +410,43 @@ export function play(sound: Sound): Sound {
       1,
       Math.ceil(FS * get_duration(sound)),
       FS
-    );
-    const channel = theBuffer.getChannelData(0);
+    )
+    const channel = theBuffer.getChannelData(0)
 
-    let temp: number;
-    let prev_value = 0;
+    let temp: number
+    let prev_value = 0
 
-    const wave = get_wave(sound);
+    const wave = get_wave(sound)
     for (let i = 0; i < channel.length; i += 1) {
-      temp = wave(i / FS);
+      temp = wave(i / FS)
       // clip amplitude
       if (temp > 1) {
-        channel[i] = 1;
+        channel[i] = 1
       } else if (temp < -1) {
-        channel[i] = -1;
+        channel[i] = -1
       } else {
-        channel[i] = temp;
+        channel[i] = temp
       }
 
       // smoothen out sudden cut-outs
       if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
+        channel[i] = prev_value * 0.999
       }
 
-      prev_value = channel[i];
+      prev_value = channel[i]
     }
 
     // Connect data to output destination
-    const source = audioplayer.createBufferSource();
-    source.buffer = theBuffer;
-    source.connect(audioplayer.destination);
-    isPlaying = true;
-    source.start();
+    const source = audioplayer.createBufferSource()
+    source.buffer = theBuffer
+    source.connect(audioplayer.destination)
+    isPlaying = true
+    source.start()
     source.onended = () => {
-      source.disconnect(audioplayer.destination);
-      isPlaying = false;
-    };
-    return sound;
+      source.disconnect(audioplayer.destination)
+      isPlaying = false
+    }
+    return sound
   }
 }
 
@@ -454,8 +454,8 @@ export function play(sound: Sound): Sound {
  * Stops all currently playing sounds.
  */
 export function stop(): void {
-  audioplayer.close();
-  isPlaying = false;
+  audioplayer.close()
+  isPlaying = false
 }
 
 // Primitive sounds
@@ -468,7 +468,7 @@ export function stop(): void {
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
-  return make_sound((_t) => Math.random() * 2 - 1, duration);
+  return make_sound((_t) => Math.random() * 2 - 1, duration)
 }
 
 /**
@@ -479,7 +479,7 @@ export function noise_sound(duration: number): Sound {
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
-  return make_sound((_t) => 0, duration);
+  return make_sound((_t) => 0, duration)
 }
 
 /**
@@ -491,7 +491,7 @@ export function silence_sound(duration: number): Sound {
  * @example sine_sound(440, 5);
  */
 export function sine_sound(freq: number, duration: number): Sound {
-  return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
+  return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration)
 }
 
 /**
@@ -504,16 +504,16 @@ export function sine_sound(freq: number, duration: number): Sound {
  */
 export function square_sound(f: number, duration: number): Sound {
   function fourier_expansion_square(t: number) {
-    let answer = 0;
+    let answer = 0
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
-      answer += Math.sin(2 * Math.PI * (2 * i - 1) * f * t) / (2 * i - 1);
+      answer += Math.sin(2 * Math.PI * (2 * i - 1) * f * t) / (2 * i - 1)
     }
-    return answer;
+    return answer
   }
   return make_sound(
     (t) => (4 / Math.PI) * fourier_expansion_square(t),
     duration
-  );
+  )
 }
 
 /**
@@ -526,18 +526,18 @@ export function square_sound(f: number, duration: number): Sound {
  */
 export function triangle_sound(freq: number, duration: number): Sound {
   function fourier_expansion_triangle(t: number) {
-    let answer = 0;
+    let answer = 0
     for (let i = 0; i < fourier_expansion_level; i += 1) {
       answer
         += ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2))
-        / (2 * i + 1) ** 2;
+        / (2 * i + 1) ** 2
     }
-    return answer;
+    return answer
   }
   return make_sound(
     (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
     duration
-  );
+  )
 }
 
 /**
@@ -550,16 +550,16 @@ export function triangle_sound(freq: number, duration: number): Sound {
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
   function fourier_expansion_sawtooth(t: number) {
-    let answer = 0;
+    let answer = 0
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
-      answer += Math.sin(2 * Math.PI * i * freq * t) / i;
+      answer += Math.sin(2 * Math.PI * i * freq * t) / i
     }
-    return answer;
+    return answer
   }
   return make_sound(
     (t) => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
     duration
-  );
+  )
 }
 
 // Composition Operators
@@ -576,14 +576,14 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  */
 export function consecutively(list_of_sounds: List): Sound {
   function consec_two(ss1: Sound, ss2: Sound) {
-    const wave1 = get_wave(ss1);
-    const wave2 = get_wave(ss2);
-    const dur1 = get_duration(ss1);
-    const dur2 = get_duration(ss2);
-    const new_wave = (t: number) => (t < dur1 ? wave1(t) : wave2(t - dur1));
-    return make_sound(new_wave, dur1 + dur2);
+    const wave1 = get_wave(ss1)
+    const wave2 = get_wave(ss2)
+    const dur1 = get_duration(ss1)
+    const dur2 = get_duration(ss2)
+    const new_wave = (t: number) => (t < dur1 ? wave1(t) : wave2(t - dur1))
+    return make_sound(new_wave, dur1 + dur2)
   }
-  return accumulate(consec_two, silence_sound(0), list_of_sounds);
+  return accumulate(consec_two, silence_sound(0), list_of_sounds)
 }
 
 /**
@@ -599,22 +599,22 @@ export function consecutively(list_of_sounds: List): Sound {
  */
 export function simultaneously(list_of_sounds: List): Sound {
   function simul_two(ss1: Sound, ss2: Sound) {
-    const wave1 = get_wave(ss1);
-    const wave2 = get_wave(ss2);
-    const dur1 = get_duration(ss1);
-    const dur2 = get_duration(ss2);
+    const wave1 = get_wave(ss1)
+    const wave2 = get_wave(ss2)
+    const dur1 = get_duration(ss1)
+    const dur2 = get_duration(ss2)
     // new_wave assumes sound discipline (ie, wave(t) = 0 after t > dur)
-    const new_wave = (t: number) => wave1(t) + wave2(t);
+    const new_wave = (t: number) => wave1(t) + wave2(t)
     // new_dur is higher of the two dur
-    const new_dur = dur1 < dur2 ? dur2 : dur1;
-    return make_sound(new_wave, new_dur);
+    const new_dur = dur1 < dur2 ? dur2 : dur1
+    return make_sound(new_wave, new_dur)
   }
 
-  const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
-  const len = length(list_of_sounds);
-  const normalised_wave = (t: number) => head(mushed_sounds)(t) / len;
-  const highest_duration = tail(mushed_sounds);
-  return make_sound(normalised_wave, highest_duration);
+  const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds)
+  const len = length(list_of_sounds)
+  const normalised_wave = (t: number) => head(mushed_sounds)(t) / len
+  const highest_duration = tail(mushed_sounds)
+  return make_sound(normalised_wave, highest_duration)
 }
 
 /**
@@ -639,32 +639,32 @@ export function adsr(
   release_ratio: number
 ): SoundTransformer {
   return (sound) => {
-    const wave = get_wave(sound);
-    const duration = get_duration(sound);
-    const attack_time = duration * attack_ratio;
-    const decay_time = duration * decay_ratio;
-    const release_time = duration * release_ratio;
+    const wave = get_wave(sound)
+    const duration = get_duration(sound)
+    const attack_time = duration * attack_ratio
+    const decay_time = duration * decay_ratio
+    const release_time = duration * release_ratio
     return make_sound((x) => {
       if (x < attack_time) {
-        return wave(x) * (x / attack_time);
+        return wave(x) * (x / attack_time)
       }
       if (x < attack_time + decay_time) {
         return (
           ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
             + sustain_level)
           * wave(x)
-        );
+        )
       }
       if (x < duration - release_time) {
-        return wave(x) * sustain_level;
+        return wave(x) * sustain_level
       }
       return (
         wave(x)
         * sustain_level
         * linear_decay(release_time)(x - (duration - release_time))
-      );
-    }, duration);
-  };
+      )
+    }, duration)
+  }
 }
 
 /**
@@ -691,9 +691,9 @@ export function stacking_adsr(
 ): Sound {
   function zip(lst: List, n: number) {
     if (is_null(lst)) {
-      return lst;
+      return lst
     }
-    return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
+    return pair(pair(n, head(lst)), zip(tail(lst), n + 1))
   }
 
   return simultaneously(
@@ -702,7 +702,7 @@ export function stacking_adsr(
       null,
       zip(envelopes, 1)
     )
-  );
+  )
 }
 
 /**
@@ -727,7 +727,7 @@ export function phase_mod(
   return (modulator: Sound) => make_sound(
     (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
     duration
-  );
+  )
 }
 
 // MIDI conversion functions
@@ -744,55 +744,55 @@ export function phase_mod(
  * @example letter_name_to_midi_note("C4"); // Returns 60
  */
 export function letter_name_to_midi_note(note: string): number {
-  let res = 12; // C0 is midi note 12
-  const n = note[0].toUpperCase();
+  let res = 12 // C0 is midi note 12
+  const n = note[0].toUpperCase()
   switch (n) {
     case 'D':
-      res += 2;
-      break;
+      res += 2
+      break
 
     case 'E':
-      res += 4;
-      break;
+      res += 4
+      break
 
     case 'F':
-      res += 5;
-      break;
+      res += 5
+      break
 
     case 'G':
-      res += 7;
-      break;
+      res += 7
+      break
 
     case 'A':
-      res += 9;
-      break;
+      res += 9
+      break
 
     case 'B':
-      res += 11;
-      break;
+      res += 11
+      break
 
     default:
-      break;
+      break
   }
 
   if (note.length === 2) {
-    res += parseInt(note[1]) * 12;
+    res += parseInt(note[1]) * 12
   } else if (note.length === 3) {
     switch (note[1]) {
       case '#':
-        res += 1;
-        break;
+        res += 1
+        break
 
       case 'b':
-        res -= 1;
-        break;
+        res -= 1
+        break
 
       default:
-        break;
+        break
     }
-    res += parseInt(note[2]) * 12;
+    res += parseInt(note[2]) * 12
   }
-  return res;
+  return res
 }
 
 /**
@@ -804,7 +804,7 @@ export function letter_name_to_midi_note(note: string): number {
  */
 export function midi_note_to_frequency(note: number): number {
   // A4 = 440Hz = midi note 69
-  return 440 * 2 ** ((note - 69) / 12);
+  return 440 * 2 ** ((note - 69) / 12)
 }
 
 /**
@@ -815,7 +815,7 @@ export function midi_note_to_frequency(note: number): number {
  * @example letter_name_to_frequency("A4"); // Returns 440
  */
 export function letter_name_to_frequency(note: string): number {
-  return midi_note_to_frequency(letter_name_to_midi_note(note));
+  return midi_note_to_frequency(letter_name_to_midi_note(note))
 }
 
 // Instruments
@@ -839,7 +839,7 @@ export function bell(note: number, duration: number): Sound {
       adsr(0, 0.7618, 0, 0.05),
       adsr(0, 0.9071, 0, 0.05)
     )
-  );
+  )
 }
 
 /**
@@ -856,7 +856,7 @@ export function cello(note: number, duration: number): Sound {
     midi_note_to_frequency(note),
     duration,
     list(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15))
-  );
+  )
 }
 
 /**
@@ -873,7 +873,7 @@ export function piano(note: number, duration: number): Sound {
     midi_note_to_frequency(note),
     duration,
     list(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05))
-  );
+  )
 }
 
 /**
@@ -890,7 +890,7 @@ export function trombone(note: number, duration: number): Sound {
     midi_note_to_frequency(note),
     duration,
     list(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1))
-  );
+  )
 }
 
 /**
@@ -912,5 +912,5 @@ export function violin(note: number, duration: number): Sound {
       adsr(0.45, 0, 1, 0.15),
       adsr(0.45, 0, 1, 0.15)
     )
-  );
+  )
 }

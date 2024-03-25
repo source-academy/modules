@@ -3,8 +3,8 @@ import { Command } from '@commander-js/extra-typings'
 import { lintFixOption, lintOption, manifestOption, objectEntries, outDirOption, retrieveBundlesAndTabs, srcDirOption } from '@src/commandUtils'
 import chalk from 'chalk'
 import { Table } from 'console-table-printer'
-import prebuild, { formatPrebuildResults } from './prebuild'
 import { htmlLogger, type buildHtml } from './docs/html'
+import prebuild, { formatPrebuildResults } from './prebuild'
 
 export interface BuildInputs {
   bundles?: string[] | null
@@ -39,7 +39,7 @@ export interface ErrorResult {
   error: any
 }
 
-export type OperationResult = SuccessResult | WarnResult | ErrorResult
+export type OperationResult = ErrorResult | SuccessResult | WarnResult
 export type Severity = OperationResult['severity']
 
 export const isSuccessResult = (obj: OperationResult): obj is SuccessResult => obj.severity === 'success'
@@ -73,7 +73,7 @@ export type AwaitedReturn<T> = T extends (...args: any) => Promise<infer U> ? U 
 
 export const divideAndRound = (n: number, divisor: number) => (n / divisor).toFixed(2)
 
-type AssetType = 'bundles' | 'tabs' | 'jsons';
+type AssetType = 'bundles' | 'jsons' | 'tabs'
 type LogType = Partial<Record<AssetType, OperationResult[]> & { html: Awaited<ReturnType<typeof buildHtml>> }>
 
 export type BuildTask = (inputs: BuildInputs, opts: BuildOptions) => Promise<LogType>
@@ -82,25 +82,25 @@ function processResults(
   results: LogType,
   verbose: boolean
 ) {
-  const notSuccessFilter = (result: OperationResult): result is Exclude<OperationResult, SuccessResult> => result.severity !== 'success';
+  const notSuccessFilter = (result: OperationResult): result is Exclude<OperationResult, SuccessResult> => result.severity !== 'success'
 
   const logs = objectEntries(results)
     .map(([label, results]): [Severity, string] => {
       if (label === 'html') {
-        return [results.result.severity, htmlLogger(results)];
+        return [results.result.severity, htmlLogger(results)]
       }
 
-      const overallSev = findSeverity(results);
-      const upperCaseLabel = label[0].toUpperCase() + label.slice(1);
+      const overallSev = findSeverity(results)
+      const upperCaseLabel = label[0].toUpperCase() + label.slice(1)
       if (!verbose) {
         if (overallSev === 'success') {
-          return ['success', `${chalk.cyanBright(`${upperCaseLabel} built`)} ${chalk.greenBright('successfully')}\n`];
+          return ['success', `${chalk.cyanBright(`${upperCaseLabel} built`)} ${chalk.greenBright('successfully')}\n`]
         }
         if (overallSev === 'warn') {
           return ['warn', chalk.cyanBright(`${upperCaseLabel} built with ${chalk.yellowBright('warnings')}:\n${results
             .filter(isWarnResult)
             .map(({ name: bundle, error }, i) => chalk.yellowBright(`${i + 1}. ${bundle}: ${error}`))
-            .join('\n')}\n`)];
+            .join('\n')}\n`)]
         }
 
         return ['error', chalk.cyanBright(`${upperCaseLabel} build ${chalk.redBright('failed')} with errors:\n${results
@@ -108,7 +108,7 @@ function processResults(
           .map(({ name: bundle, error, severity }, i) => (severity === 'error'
             ? chalk.redBright(`${i + 1}. Error ${bundle}: ${error}`)
             : chalk.yellowBright(`${i + 1}. Warning ${bundle}: ${error}`)))
-          .join('\n')}\n`)];
+          .join('\n')}\n`)]
       }
 
       const outputTable = new Table({
@@ -124,46 +124,46 @@ function processResults(
           name: 'error',
           title: 'Errors'
         }]
-      });
+      })
       results.forEach(result => {
         if (isWarnResult(result)) {
           outputTable.addRow({
             ...result,
             severity: 'Warning'
-          }, { color: 'yellow' });
+          }, { color: 'yellow' })
         } else if (isSuccessResult(result)) {
           outputTable.addRow({
             ...result,
             error: '-',
             severity: 'Success'
-          }, { color: 'green' });
+          }, { color: 'green' })
         } else {
           outputTable.addRow({
             ...result,
             severity: 'Error'
-          }, { color: 'red' });
+          }, { color: 'red' })
         }
-      });
+      })
 
       if (overallSev === 'success') {
-        return ['success', `${chalk.cyanBright(`${upperCaseLabel} built`)} ${chalk.greenBright('successfully')}:\n${outputTable.render()}\n`];
+        return ['success', `${chalk.cyanBright(`${upperCaseLabel} built`)} ${chalk.greenBright('successfully')}:\n${outputTable.render()}\n`]
       }
       if (overallSev === 'warn') {
-        return ['warn', `${chalk.cyanBright(`${upperCaseLabel} built`)} with ${chalk.yellowBright('warnings')}:\n${outputTable.render()}\n`];
+        return ['warn', `${chalk.cyanBright(`${upperCaseLabel} built`)} with ${chalk.yellowBright('warnings')}:\n${outputTable.render()}\n`]
       }
-      return ['error', `${chalk.cyanBright(`${upperCaseLabel} build ${chalk.redBright('failed')} with errors`)}:\n${outputTable.render()}\n`];
-    });
+      return ['error', `${chalk.cyanBright(`${upperCaseLabel} build ${chalk.redBright('failed')} with errors`)}:\n${outputTable.render()}\n`]
+    })
 
   console.log(logs.map(x => x[1])
-    .join('\n'));
+    .join('\n'))
 
-  const overallOverallSev = findSeverity(logs, ([sev]) => sev);
+  const overallOverallSev = findSeverity(logs, ([sev]) => sev)
   if (overallOverallSev === 'error') {
-    process.exit(1);
+    process.exit(1)
   }
 }
 
-export function logInputs({ bundles, tabs }: BuildInputs, { tsc, lint }: Partial<Record<'tsc' | 'lint', boolean>>) {
+export function logInputs({ bundles, tabs }: BuildInputs, { tsc, lint }: Partial<Record<'lint' | 'tsc', boolean>>) {
   const output: string[] = []
   if (tsc) {
     output.push(chalk.yellowBright('--tsc specified, will run typescript checker'))
@@ -191,7 +191,7 @@ export function createBuildCommandHandler(
   shouldAddModuleTabs: boolean
 ) {
   return async (
-    opts: { bundles: string[] | null, tabs: string[] | null } & BuildOptions
+    opts: BuildOptions & { bundles: string[] | null, tabs: string[] | null }
   ) => {
     const inputs = await retrieveBundlesAndTabs(opts, shouldAddModuleTabs)
 

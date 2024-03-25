@@ -1,27 +1,27 @@
-import pathlib from 'path'
 import fs from 'fs/promises'
-import chalk from 'chalk'
+import pathlib from 'path'
 import { retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
+import chalk from 'chalk'
 import ts from 'typescript'
 import { expandBundleNames, expandTabNames, divideAndRound, type AwaitedReturn } from '../utils'
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils'
 
 type TsconfigResult = {
-  severity: 'success',
-  results: ts.CompilerOptions
-} | {
   severity: 'error',
   results?: ts.Diagnostic[]
-	error?: any
+  error?: any
+} | {
+  severity: 'success',
+  results: ts.CompilerOptions
 }
 
 type TscResult = {
+  severity: 'error'
+  results?: ts.Diagnostic[]
+  error?: any
+} | {
   severity: 'success',
   results: ts.Diagnostic[]
-} | {
-	severity: 'error'
-	results?: ts.Diagnostic[]
-	error?: any
 }
 
 async function getTsconfig(srcDir: string): Promise<TsconfigResult> {

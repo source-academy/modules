@@ -1,6 +1,6 @@
-import { Option } from '@commander-js/extra-typings';
-import type { AwaitedReturn } from './build/utils';
-import { retrieveManifest } from './manifest';
+import { Option } from '@commander-js/extra-typings'
+import type { AwaitedReturn } from './build/utils'
+import { retrieveManifest } from './manifest'
 
 class OptionNew<
   UsageT extends string = '',
@@ -12,44 +12,44 @@ class OptionNew<
 >
   extends Option<UsageT, PresetT, DefaultT, CoerceT, Mandatory, ChoicesT> {
   default<T>(value: T, description?: string): Option<UsageT, PresetT, T, CoerceT, true, ChoicesT> {
-    return super.default(value, description);
+    return super.default(value, description)
   }
 }
 
 export const srcDirOption = new OptionNew('--srcDir <srcDir>', 'Location of the source files')
-  .default('src');
+  .default('src')
 
 export const outDirOption = new OptionNew('--outDir <outDir>', 'Location of output directory')
-  .default('build');
+  .default('build')
 
 export const manifestOption = new OptionNew('--manifest <manifest>', 'Location of manifest')
-  .default('modules.json');
+  .default('modules.json')
 
-export const lintOption = new OptionNew('--lint', 'Run ESLint');
+export const lintOption = new OptionNew('--lint', 'Run ESLint')
 
 export const lintFixOption = new OptionNew('--fix', 'Fix automatically fixable linting errors')
-  .implies({ lint: true });
+  .implies({ lint: true })
 
 export const bundlesOption = new OptionNew('-b, --bundles <bundles...>', 'Manually specify which bundles')
-  .default(null);
+  .default(null)
 
 export const tabsOption = new OptionNew('-t, --tabs <tabs...>', 'Manually specify which tabs')
-  .default(null);
+  .default(null)
 
 export async function retrieveBundlesAndTabs(
   { bundles, tabs, manifest: manifestFile }: {
-		bundles?: string[] | null,
-		tabs?: string[] | null,
-		manifest: string
-	}, shouldAddModuleTabs: boolean
+    bundles?: string[] | null,
+    tabs?: string[] | null,
+    manifest: string
+  }, shouldAddModuleTabs: boolean
 ) {
-  const manifest = await retrieveManifest(manifestFile);
-  const knownBundles = Object.keys(manifest);
+  const manifest = await retrieveManifest(manifestFile)
+  const knownBundles = Object.keys(manifest)
   const knownTabs = Object
     .values(manifest)
-    .flatMap(x => x.tabs);
+    .flatMap(x => x.tabs)
 
-  const isUndefinedOrNull = (x: any): x is undefined | null => x === undefined || x === null
+  const isUndefinedOrNull = (x: any): x is null | undefined => x === undefined || x === null
 
   let bundlesOutput: string[]
   let tabsOutput: string[]
@@ -95,87 +95,8 @@ export async function retrieveBundlesAndTabs(
   }
 }
 
-/**
- * Determines which bundles and tabs to build based on the user's input.
- *
- * If no modules and no tabs are specified, it is assumed the user wants to
- * build everything.
- *
- * If modules but no tabs are specified, it is assumed the user only wants to
- * build those bundles (and possibly those modules' tabs based on
- * shouldAddModuleTabs).
- *
- * If tabs but no modules are specified, it is assumed the user only wants to
- * build those tabs.
- *
- * If both modules and tabs are specified, both of the above apply and are
- * combined.
- *
- * @param modules module names specified by the user
- * @param tabOptions tab names specified by the user
- * @param shouldAddModuleTabs whether to also automatically include the tabs of
- * specified modules
- */
-export async function oldRetrieveBundlesAndTabs(manifestFile: string,
-  modules: string[] | null,
-  tabOptions: string[] | null,
-  shouldAddModuleTabs: boolean = true) {
-  const manifest = await retrieveManifest(manifestFile);
-  const knownBundles = Object.keys(manifest);
-  const knownTabs = Object
-    .values(manifest)
-    .flatMap(x => x.tabs);
-
-  let bundles: string[] = [];
-  let tabs: string[] = [];
-
-  function addSpecificModules() {
-    // If unknown modules were specified, error
-    const unknownModules = modules.filter(m => !knownBundles.includes(m));
-    if (unknownModules.length > 0) {
-      throw new Error(`Unknown modules: ${unknownModules.join(', ')}`);
-    }
-
-    bundles = bundles.concat(modules);
-
-    if (shouldAddModuleTabs) {
-      // Add the modules' tabs too
-      tabs = [...tabs, ...modules.flatMap(bundle => manifest[bundle].tabs)];
-    }
-  }
-  function addSpecificTabs() {
-    // If unknown tabs were specified, error
-    const unknownTabs = tabOptions.filter(t => !knownTabs.includes(t));
-    if (unknownTabs.length > 0) {
-      throw new Error(`Unknown tabs: ${unknownTabs.join(', ')}`);
-    }
-
-    tabs = tabs.concat(tabOptions);
-  }
-  function addAllBundles() {
-    bundles = bundles.concat(knownBundles);
-  }
-  function addAllTabs() {
-    tabs = tabs.concat(knownTabs);
-  }
-
-  if (modules === null && tabOptions === null) {
-    addAllBundles();
-    addAllTabs();
-  } else {
-    if (modules !== null) addSpecificModules();
-    if (tabOptions !== null) addSpecificTabs();
-  }
-
-  return {
-    bundles: [...new Set(bundles)],
-    tabs: [...new Set(tabs)],
-    modulesSpecified: modules !== null
-  };
-}
-
 export function promiseAll<T extends Promise<any>[]>(...args: T): Promise<{ [K in keyof T]: Awaited<T[K]> }> {
-  return Promise.all(args);
+  return Promise.all(args)
 }
 
 export interface TimedResult<T> {
@@ -185,13 +106,13 @@ export interface TimedResult<T> {
 
 export function wrapWithTimer<T extends(...args: any[]) => Promise<any>>(func: T) {
   return async (...args: Parameters<T>): Promise<TimedResult<AwaitedReturn<T>>> => {
-    const startTime = performance.now();
-    const result = await func(...args);
+    const startTime = performance.now()
+    const result = await func(...args)
     return {
       result,
       elapsed: performance.now() - startTime
-    };
-  };
+    }
+  }
 }
 
 type ValuesOfRecord<T> = T extends Record<any, infer U> ? U : never
@@ -201,5 +122,5 @@ export type EntriesOfRecord<T extends Record<any, any>> = ValuesOfRecord<{
 }>
 
 export function objectEntries<T extends Record<any, any>>(obj: T) {
-  return Object.entries(obj) as EntriesOfRecord<T>[];
+  return Object.entries(obj) as EntriesOfRecord<T>[]
 }

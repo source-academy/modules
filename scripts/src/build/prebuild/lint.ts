@@ -1,6 +1,6 @@
 import { lintFixOption, retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
-import { loadESLint, type ESLint } from 'eslint'
 import chalk from 'chalk'
+import { loadESLint, type ESLint } from 'eslint'
 import { findSeverity, divideAndRound, type Severity, type AwaitedReturn } from '../utils'
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils'
 
@@ -23,7 +23,7 @@ interface LintResults {
 }
 
 interface LintOptions extends PrebuildOptions {
-	fix?: boolean
+  fix?: boolean
 }
 
 export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: LintOptions): Promise<LintResults> => {

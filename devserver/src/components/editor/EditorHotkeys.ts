@@ -19,6 +19,6 @@ export const keyBindings = {
     win: 'Ctrl-Shift-M',
     mac: 'Command-Shift-M'
   }
-};
+}
 
-export type KeyFunction = keyof typeof keyBindings;
+export type KeyFunction = keyof typeof keyBindings

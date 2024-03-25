@@ -1,6 +1,6 @@
-import fs from 'fs/promises';
+import fs from 'fs/promises'
 
-import type { Interface } from 'readline/promises';
+import type { Interface } from 'readline/promises'
 import { type ModuleManifest, retrieveManifest } from '@src/manifest'
 
 import { askQuestion, success, warn } from './print'

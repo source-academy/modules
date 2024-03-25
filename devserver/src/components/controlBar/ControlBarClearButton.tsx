@@ -1,6 +1,6 @@
-import { Tooltip } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-import ControlButton from '../ControlButton';
+import { Tooltip } from '@blueprintjs/core'
+import { IconNames } from '@blueprintjs/icons'
+import ControlButton from '../ControlButton'
 
 type Props = {
   onClick: () => void
@@ -12,4 +12,4 @@ export const ControlBarClearButton = (props: Props) => <Tooltip content="Clear t
     icon={IconNames.Trash}
     onClick={props.onClick}
   />
-</Tooltip>;
+</Tooltip>

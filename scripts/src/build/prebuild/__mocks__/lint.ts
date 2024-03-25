@@ -5,6 +5,6 @@ export const runEslint = jest.fn()
       formatted: '',
       severity: 'error'
     }
-  }));
+  }))
 
-export const eslintResultsLogger = jest.fn(() => '');
+export const eslintResultsLogger = jest.fn(() => '')

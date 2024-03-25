@@ -3,24 +3,24 @@
  * @module plotly
  */
 
-import context from 'js-slang/context';
-import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import { type Sound } from '../sound/types';
+import context from 'js-slang/context'
+import Plotly, { type Data, type Layout } from 'plotly.js-dist'
+import { type Sound } from '../sound/types'
+import { generatePlot } from './curve_functions'
 import {
   type Curve,
   CurvePlot,
   type CurvePlotFunction,
   DrawnPlot,
   type ListOfPairs
-} from './plotly';
-import { generatePlot } from './curve_functions';
-import { get_duration, get_wave, is_sound } from './sound_functions';
+} from './plotly'
+import { get_duration, get_wave, is_sound } from './sound_functions'
 
-const drawnPlots: (CurvePlot | DrawnPlot)[] = [];
+const drawnPlots: (CurvePlot | DrawnPlot)[] = []
 
 context.moduleContexts.plotly.state = {
   drawnPlots
-};
+}
 
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
@@ -121,7 +121,7 @@ context.moduleContexts.plotly.state = {
  *             among the fields mentioned above
  */
 export function new_plot(data: ListOfPairs): void {
-  drawnPlots.push(new DrawnPlot(draw_new_plot, data));
+  drawnPlots.push(new DrawnPlot(draw_new_plot, data))
 }
 
 /**
@@ -235,7 +235,7 @@ export function new_plot(data: ListOfPairs): void {
  * @param data The data as an array of json objects having some or all of the given fields
  */
 export function new_plot_json(data: any): void {
-  drawnPlots.push(new DrawnPlot(draw_new_plot_json, data));
+  drawnPlots.push(new DrawnPlot(draw_new_plot_json, data))
 }
 
 /**
@@ -243,8 +243,8 @@ export function new_plot_json(data: any): void {
  * @param divId The id of the div element on which the plot will be displayed
  */
 function draw_new_plot(data: ListOfPairs, divId: string) {
-  const plotlyData = convert_to_plotly_data(data);
-  Plotly.newPlot(divId, [plotlyData]);
+  const plotlyData = convert_to_plotly_data(data)
+  Plotly.newPlot(divId, [plotlyData])
 }
 
 /**
@@ -253,7 +253,7 @@ function draw_new_plot(data: ListOfPairs, divId: string) {
  * @param divId The id of the div element on which the plot will be displayed
  */
 function draw_new_plot_json(data: any, divId: string) {
-  Plotly.newPlot(divId, data);
+  Plotly.newPlot(divId, data)
 }
 
 /**
@@ -261,11 +261,11 @@ function draw_new_plot_json(data: any, divId: string) {
  * @returns The converted data that can be used by the plotly.js function
  */
 function convert_to_plotly_data(data: ListOfPairs): Data {
-  const convertedData: Data = {};
+  const convertedData: Data = {}
   if (Array.isArray(data) && data.length === 2) {
-    add_fields_to_data(convertedData, data);
+    add_fields_to_data(convertedData, data)
   }
-  return convertedData;
+  return convertedData
 }
 
 /**
@@ -275,10 +275,10 @@ function convert_to_plotly_data(data: ListOfPairs): Data {
 
 function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
   if (Array.isArray(data) && data.length === 2 && data[0].length === 2) {
-    const field = data[0][0];
-    const value = data[0][1];
-    convertedData[field] = value;
-    add_fields_to_data(convertedData, data[1]);
+    const field = data[0][0]
+    const value = data[0][1]
+    convertedData[field] = value
+    add_fields_to_data(convertedData, data[1])
   }
 }
 
@@ -297,14 +297,14 @@ function createPlotFunction(
         layout,
         is_colored,
         curveFunction
-      );
+      )
 
-      drawnPlots.push(plotDrawn);
-      return plotDrawn;
-    };
+      drawnPlots.push(plotDrawn)
+      return plotDrawn
+    }
 
-    return func;
-  };
+    return func
+  }
 }
 
 /**
@@ -332,7 +332,7 @@ export const draw_connected_2d = createPlotFunction(
     }
   },
   true
-);
+)
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling the
@@ -351,7 +351,7 @@ export const draw_connected_3d = createPlotFunction(
   { mode: 'lines' },
   {},
   true
-);
+)
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -376,7 +376,7 @@ export const draw_points_2d = createPlotFunction(
     }
   },
   true
-);
+)
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling the
@@ -394,47 +394,47 @@ export const draw_points_3d = createPlotFunction(
   'scatter3d',
   { mode: 'markers' },
   {}
-);
+)
 
 /**
  * Visualizes the sound on a 2d line graph
  * @param sound the sound which is to be visualized on plotly
  */
 export const draw_sound_2d = (sound: Sound) => {
-  const FS: number = 44100; // Output sample rate
+  const FS: number = 44100 // Output sample rate
   if (!is_sound(sound)) {
     throw new Error(
       `draw_sound_2d is expecting sound, but encountered ${sound}`
-    );
+    )
     // If a sound is already displayed, terminate execution.
   } else if (get_duration(sound) < 0) {
-    throw new Error('draw_sound_2d: duration of sound is negative');
+    throw new Error('draw_sound_2d: duration of sound is negative')
   } else {
     // Instantiate audio context if it has not been instantiated.
 
     // Create mono buffer
-    const channel: number[] = [];
-    const time_stamps: number[] = [];
-    const len = Math.ceil(FS * get_duration(sound));
+    const channel: number[] = []
+    const time_stamps: number[] = []
+    const len = Math.ceil(FS * get_duration(sound))
 
-    const wave = get_wave(sound);
+    const wave = get_wave(sound)
     for (let i = 0; i < len; i += 1) {
-      time_stamps[i] = i / FS;
-      channel[i] = wave(i / FS);
+      time_stamps[i] = i / FS
+      channel[i] = wave(i / FS)
     }
 
-    const x_s: number[] = [];
-    const y_s: number[] = [];
+    const x_s: number[] = []
+    const y_s: number[] = []
 
     for (let i = 0; i < channel.length; i += 1) {
-      x_s.push(time_stamps[i]);
-      y_s.push(channel[i]);
+      x_s.push(time_stamps[i])
+      y_s.push(channel[i])
     }
 
     const plotlyData: Data = {
       x: x_s,
       y: y_s
-    };
+    }
     const plot = new CurvePlot(
       draw_new_curve,
       {
@@ -458,11 +458,11 @@ export const draw_sound_2d = (sound: Sound) => {
         bargap: 0.2,
         barmode: 'stack'
       }
-    );
-    if (drawnPlots) drawnPlots.push(plot);
+    )
+    if (drawnPlots) drawnPlots.push(plot)
   }
-};
+}
 
 function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
-  Plotly.react(divId, [data], layout);
+  Plotly.react(divId, [data], layout)
 }

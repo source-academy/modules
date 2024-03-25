@@ -1,4 +1,4 @@
-import type { DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers'
 
 export const mockDebuggerContext = <T>(state: T, moduleName: string) => ({
   context: {
@@ -8,4 +8,4 @@ export const mockDebuggerContext = <T>(state: T, moduleName: string) => ({
       }
     }
   }
-}) as DebuggerContext;
+}) as DebuggerContext

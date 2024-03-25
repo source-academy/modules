@@ -1,22 +1,22 @@
-import { Button, EditableText } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-import { clamp } from 'lodash';
-import React from 'react';
+import { Button, EditableText } from '@blueprintjs/core'
+import { IconNames } from '@blueprintjs/icons'
+import { clamp } from 'lodash'
+import React from 'react'
 
 type MultiItemDisplayProps = {
   elements: React.JSX.Element[]
-};
+}
 
 const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
   // The actual index of the currently selected element
-  const [currentStep, setCurrentStep] = React.useState(0);
+  const [currentStep, setCurrentStep] = React.useState(0)
 
   // State for managing the value of the editor
-  const [stepEditorValue, setStepEditorValue] = React.useState('1');
-  const [stepEditorFocused, setStepEditorFocused] = React.useState(false);
+  const [stepEditorValue, setStepEditorValue] = React.useState('1')
+  const [stepEditorFocused, setStepEditorFocused] = React.useState(false)
 
-  const resetStepEditor = () => setStepEditorValue((currentStep + 1).toString());
-  const elementsDigitCount = Math.floor(Math.log10(Math.max(1, elements.length))) + 1;
+  const resetStepEditor = () => setStepEditorValue((currentStep + 1).toString())
+  const elementsDigitCount = Math.floor(Math.log10(Math.max(1, elements.length))) + 1
 
   return (
     <div
@@ -47,8 +47,8 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
           outlined
           icon={IconNames.ARROW_LEFT}
           onClick={() => {
-            setCurrentStep(currentStep - 1);
-            setStepEditorValue(currentStep.toString());
+            setCurrentStep(currentStep - 1)
+            setStepEditorValue(currentStep.toString())
           }}
           disabled={currentStep === 0}
         >
@@ -73,32 +73,32 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
                 type="number"
                 onChange={(newValue) => {
                   // Disallow non numeric inputs
-                  if (newValue && !/^[0-9]+$/u.test(newValue)) return;
+                  if (newValue && !/^[0-9]+$/u.test(newValue)) return
 
                   // Disallow numbers that have too many digits
-                  if (newValue.length > elementsDigitCount) return;
-                  setStepEditorValue(newValue);
+                  if (newValue.length > elementsDigitCount) return
+                  setStepEditorValue(newValue)
                 }}
                 onConfirm={(value) => {
                   if (value) {
-                    const newStep = Number.parseFloat(value);
-                    const clampedStep = clamp(newStep, 1, elements.length);
-                    setCurrentStep(clampedStep - 1);
-                    setStepEditorFocused(false);
-                    setStepEditorValue(clampedStep.toString());
-                    return;
+                    const newStep = Number.parseFloat(value)
+                    const clampedStep = clamp(newStep, 1, elements.length)
+                    setCurrentStep(clampedStep - 1)
+                    setStepEditorFocused(false)
+                    setStepEditorValue(clampedStep.toString())
+                    return
                   }
 
                   // If the input element is blank
                   // then reset it
-                  resetStepEditor();
+                  resetStepEditor()
 
                   // Indicate that the editor is no longer focused
-                  setStepEditorFocused(false);
+                  setStepEditorFocused(false)
                 }}
                 onCancel={() => {
-                  resetStepEditor();
-                  setStepEditorFocused(false);
+                  resetStepEditor()
+                  setStepEditorFocused(false)
                 }}
                 onEdit={() => setStepEditorFocused(true)}
               />
@@ -115,8 +115,8 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
           outlined
           icon={IconNames.ARROW_RIGHT}
           onClick={() => {
-            setCurrentStep(currentStep + 1);
-            setStepEditorValue((currentStep + 2).toString());
+            setCurrentStep(currentStep + 1)
+            setStepEditorValue((currentStep + 2).toString())
           }}
           disabled={currentStep === elements.length - 1}
         >
@@ -136,7 +136,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
         {elements[currentStep]}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MultiItemDisplay;
+export default MultiItemDisplay

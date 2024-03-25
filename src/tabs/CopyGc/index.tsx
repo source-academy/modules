@@ -1,13 +1,13 @@
-import React from 'react';
-import { Slider, Icon } from '@blueprintjs/core';
-import { COMMAND } from '../../bundles/copy_gc/types';
-import { ThemeColor } from './style';
+import { Slider, Icon } from '@blueprintjs/core'
+import React from 'react'
+import { COMMAND } from '../../bundles/copy_gc/types'
+import { ThemeColor } from './style'
 
 type Props = {
   children?: never;
   className?: string;
   debuggerContext: any;
-};
+}
 
 type State = {
   value: number;
@@ -27,11 +27,11 @@ type State = {
   leftDesc: String;
   rightDesc: String;
   running: boolean;
-};
+}
 
 class CopyGC extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
 
     this.state = {
       value: 0,
@@ -51,53 +51,53 @@ class CopyGC extends React.Component<Props, State> {
       rightDesc: '',
       leftDesc: '',
       running: false
-    };
+    }
   }
 
   componentDidMount() {
-    const { debuggerContext } = this.props;
+    const { debuggerContext } = this.props
     if (
       debuggerContext
       && debuggerContext.result
       && debuggerContext.result.value
     ) {
-      this.initialize_state();
+      this.initialize_state()
     }
   }
 
   private initialize_state = () => {
-    const { debuggerContext } = this.props;
-    const functions = debuggerContext.result.value;
-    const memorySize = functions.get_memory_size();
-    const column = functions.get_column_size();
-    const tags = functions.get_tags();
-    const commandHeap = functions.get_command();
-    let heap = [];
-    let toSpace = -1;
-    let command = '';
-    let firstChild = -1;
-    let lastChild = -1;
-    let description = '';
-    let leftDesc = '';
-    let rightDesc = '';
+    const { debuggerContext } = this.props
+    const functions = debuggerContext.result.value
+    const memorySize = functions.get_memory_size()
+    const column = functions.get_column_size()
+    const tags = functions.get_tags()
+    const commandHeap = functions.get_command()
+    let heap = []
+    let toSpace = -1
+    let command = ''
+    let firstChild = -1
+    let lastChild = -1
+    let description = ''
+    let leftDesc = ''
+    let rightDesc = ''
     if (commandHeap[0]) {
-      const currentHeap = commandHeap[0];
-      heap = currentHeap.heap;
-      toSpace = currentHeap.to;
-      command = currentHeap.type;
-      firstChild = currentHeap.left;
-      lastChild = currentHeap.right;
-      description = currentHeap.desc;
-      leftDesc = currentHeap.leftDesc;
-      rightDesc = currentHeap.rightDesc;
+      const currentHeap = commandHeap[0]
+      heap = currentHeap.heap
+      toSpace = currentHeap.to
+      command = currentHeap.type
+      firstChild = currentHeap.left
+      lastChild = currentHeap.right
+      description = currentHeap.desc
+      leftDesc = currentHeap.leftDesc
+      rightDesc = currentHeap.rightDesc
     }
 
-    const toMemoryMatrix = functions.get_to_memory_matrix();
-    const fromMemoryMatrix = functions.get_from_memory_matrix();
-    const flips = functions.get_flips();
+    const toMemoryMatrix = functions.get_to_memory_matrix()
+    const fromMemoryMatrix = functions.get_from_memory_matrix()
+    const flips = functions.get_flips()
 
     this.setState(() => {
-      const running = true;
+      const running = true
       return {
         memorySize,
         toSpace,
@@ -115,13 +115,13 @@ class CopyGC extends React.Component<Props, State> {
         leftDesc,
         rightDesc,
         running
-      };
-    });
-  };
+      }
+    })
+  }
 
   private sliderShift = (newValue: number) => {
     this.setState(() => {
-      const { commandHeap } = this.state;
+      const { commandHeap } = this.state
       return {
         value: newValue,
         heap: commandHeap[newValue].heap,
@@ -132,17 +132,17 @@ class CopyGC extends React.Component<Props, State> {
         description: commandHeap[newValue].desc,
         leftDesc: commandHeap[newValue].leftDesc,
         rightDesc: commandHeap[newValue].rightDesc
-      };
-    });
-  };
+      }
+    })
+  }
 
   private handlePlus = () => {
-    let { value } = this.state;
-    const lengthOfFunction = this.getlengthFunction();
+    let { value } = this.state
+    const lengthOfFunction = this.getlengthFunction()
     if (value < lengthOfFunction - 1) {
-      value += 1;
+      value += 1
       this.setState(() => {
-        const { commandHeap } = this.state;
+        const { commandHeap } = this.state
         return {
           value,
           heap: commandHeap[value].heap,
@@ -153,17 +153,17 @@ class CopyGC extends React.Component<Props, State> {
           description: commandHeap[value].desc,
           leftDesc: commandHeap[value].leftDesc,
           rightDesc: commandHeap[value].rightDesc
-        };
-      });
+        }
+      })
     }
-  };
+  }
 
   private handleMinus = () => {
-    let { value } = this.state;
+    let { value } = this.state
     if (value > 0) {
-      value -= 1;
+      value -= 1
       this.setState(() => {
-        const { commandHeap } = this.state;
+        const { commandHeap } = this.state
         return {
           value,
           heap: commandHeap[value].heap,
@@ -174,76 +174,76 @@ class CopyGC extends React.Component<Props, State> {
           description: commandHeap[value].desc,
           leftDesc: commandHeap[value].leftDesc,
           rightDesc: commandHeap[value].rightDesc
-        };
-      });
+        }
+      })
     }
-  };
+  }
 
   private getlengthFunction = () => {
-    const { debuggerContext } = this.props;
+    const { debuggerContext } = this.props
     const commandHeap = debuggerContext.result.value
       ? debuggerContext.result.value.get_command()
-      : [];
-    return commandHeap.length;
-  };
+      : []
+    return commandHeap.length
+  }
 
   private isTag = (tag) => {
-    const { tags } = this.state;
-    return tags ? tags.includes(tag) : false;
-  };
+    const { tags } = this.state
+    return tags ? tags.includes(tag) : false
+  }
 
   private getMemoryColor = (indexValue) => {
-    const { heap } = this.state;
-    const value = heap ? heap[indexValue] : 0;
+    const { heap } = this.state
+    const value = heap ? heap[indexValue] : 0
 
-    let color = '';
+    let color = ''
 
     if (!value) {
-      color = ThemeColor.GREY;
+      color = ThemeColor.GREY
     } else if (this.isTag(value)) {
-      color = ThemeColor.PINK;
+      color = ThemeColor.PINK
     } else {
-      color = ThemeColor.BLUE;
+      color = ThemeColor.BLUE
     }
 
-    return color;
-  };
+    return color
+  }
 
   private getBackgroundColor = (indexValue) => {
-    const { firstChild } = this.state;
-    const { lastChild } = this.state;
-    const { commandHeap, value } = this.state;
+    const { firstChild } = this.state
+    const { lastChild } = this.state
+    const { commandHeap, value } = this.state
 
-    const size1 = commandHeap[value].sizeLeft;
-    const size2 = commandHeap[value].sizeRight;
-    const { command } = this.state;
-    let color = '';
+    const size1 = commandHeap[value].sizeLeft
+    const size2 = commandHeap[value].sizeRight
+    const { command } = this.state
+    let color = ''
     if (command === COMMAND.FLIP) {
       if (indexValue === firstChild) {
-        color = ThemeColor.GREEN;
+        color = ThemeColor.GREEN
       }
       if (indexValue === lastChild) {
-        color = ThemeColor.YELLOW;
+        color = ThemeColor.YELLOW
       }
     } else if (indexValue >= firstChild && indexValue < firstChild + size1) {
-      color = ThemeColor.GREEN;
+      color = ThemeColor.GREEN
     } else if (indexValue >= lastChild && indexValue < lastChild + size2) {
-      color = ThemeColor.YELLOW;
+      color = ThemeColor.YELLOW
     }
 
-    return color;
-  };
+    return color
+  }
 
   private renderLabel = (val: number) => {
-    const { flips } = this.state;
-    return flips.includes(val) ? '^' : `${val}`;
-  };
+    const { flips } = this.state
+    return flips.includes(val) ? '^' : `${val}`
+  }
 
   public render() {
-    const { state } = this;
+    const { state } = this
     if (state.running) {
-      const { toMemoryMatrix, fromMemoryMatrix } = this.state;
-      const lengthOfFunction = this.getlengthFunction();
+      const { toMemoryMatrix, fromMemoryMatrix } = this.state
+      const lengthOfFunction = this.getlengthFunction()
       return (
         <div>
           <div>
@@ -334,8 +334,8 @@ class CopyGC extends React.Component<Props, State> {
                       {item
                         && item.length > 0
                         && item.map((content) => {
-                          const color = this.getMemoryColor(content);
-                          const bgColor = this.getBackgroundColor(content);
+                          const color = this.getMemoryColor(content)
+                          const bgColor = this.getBackgroundColor(content)
                           return (
                             <div
                               style={{
@@ -351,7 +351,7 @@ class CopyGC extends React.Component<Props, State> {
                                 }}
                               />
                             </div>
-                          );
+                          )
                         })}
                     </div>
                   ))}
@@ -372,8 +372,8 @@ class CopyGC extends React.Component<Props, State> {
                       </span>
                       {item && item.length > 0
                         ? item.map((content) => {
-                          const color = this.getMemoryColor(content);
-                          const bgColor = this.getBackgroundColor(content);
+                          const color = this.getMemoryColor(content)
+                          const bgColor = this.getBackgroundColor(content)
                           return (
                             <div
                               style={{
@@ -389,7 +389,7 @@ class CopyGC extends React.Component<Props, State> {
                                 }}
                               />
                             </div>
-                          );
+                          )
                         })
                         : false}
                     </div>
@@ -434,7 +434,7 @@ class CopyGC extends React.Component<Props, State> {
             </div>
           </div>
         </div>
-      );
+      )
     }
 
     return (
@@ -449,7 +449,7 @@ class CopyGC extends React.Component<Props, State> {
         </p>
         <p> Calls the function init() at the end of your code to start. </p>
       </div>
-    );
+    )
   }
 }
 
@@ -458,4 +458,4 @@ export default {
   body: (debuggerContext: any) => <CopyGC debuggerContext={debuggerContext} />,
   label: 'Copying Garbage Collector',
   iconName: 'duplicate'
-};
+}

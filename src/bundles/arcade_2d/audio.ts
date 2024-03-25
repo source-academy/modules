@@ -7,24 +7,24 @@
  * AudioClips are unique - there are no AudioClips with the same URL.
  */
 export class AudioClip {
-  private static audioClipCount: number = 0;
+  private static audioClipCount: number = 0
   // Stores AudioClip index with the URL as a unique key.
-  private static audioClipsIndexMap: Map<string, number> = new Map<string, number>();
+  private static audioClipsIndexMap: Map<string, number> = new Map<string, number>()
   // Stores all the created AudioClips
-  private static audioClipsArray: Array<AudioClip> = [];
-  public readonly id: number;
+  private static audioClipsArray: Array<AudioClip> = []
+  public readonly id: number
 
-  private isUpdated: boolean = false;
-  private shouldPlay: boolean = false;
-  private shouldLoop: boolean = false;
+  private isUpdated: boolean = false
+  private shouldPlay: boolean = false
+  private shouldLoop: boolean = false
 
   private constructor(
     private url: string,
     private volumeLevel: number
   ) {
-    this.id = AudioClip.audioClipCount++;
-    AudioClip.audioClipsIndexMap.set(url, this.id);
-    AudioClip.audioClipsArray.push(this);
+    this.id = AudioClip.audioClipCount++
+    AudioClip.audioClipsIndexMap.set(url, this.id)
+    AudioClip.audioClipsArray.push(this)
   }
 
   /**
@@ -33,29 +33,29 @@ export class AudioClip {
    */
   public static of(url: string, volumeLevel: number): AudioClip {
     if (url === '') {
-      throw new Error('AudioClip URL cannot be empty');
+      throw new Error('AudioClip URL cannot be empty')
     }
     if (AudioClip.audioClipsIndexMap.has(url)) {
-      return AudioClip.audioClipsArray[AudioClip.audioClipsIndexMap.get(url) as number];
+      return AudioClip.audioClipsArray[AudioClip.audioClipsIndexMap.get(url) as number]
     }
-    return new AudioClip(url, volumeLevel);
+    return new AudioClip(url, volumeLevel)
   }
   public getUrl() {
-    return this.url;
+    return this.url
   }
   public getVolumeLevel() {
-    return this.volumeLevel;
+    return this.volumeLevel
   }
   public shouldAudioClipLoop() {
-    return this.shouldLoop;
+    return this.shouldLoop
   }
   public shouldAudioClipPlay() {
-    return this.shouldPlay;
+    return this.shouldPlay
   }
   public setShouldAudioClipLoop(loop: boolean) {
     if (this.shouldLoop !== loop) {
-      this.shouldLoop = loop;
-      this.isUpdated = false;
+      this.shouldLoop = loop
+      this.isUpdated = false
     }
   }
   /**
@@ -63,26 +63,26 @@ export class AudioClip {
    * @param play When true, the Audio Clip has a playing state.
    */
   public setShouldAudioClipPlay(play: boolean) {
-    this.shouldPlay = play;
-    this.isUpdated = false;
+    this.shouldPlay = play
+    this.isUpdated = false
   }
   /**
    * Checks if the Audio Clip needs to update. Updates the flag if true.
    */
   public hasAudioClipUpdates() {
-    const prevValue = !this.isUpdated;
-    this.setAudioClipUpdated();
-    return prevValue;
+    const prevValue = !this.isUpdated
+    this.setAudioClipUpdated()
+    return prevValue
   }
   public setAudioClipUpdated() {
-    this.isUpdated = true;
+    this.isUpdated = true
   }
   public static getAudioClipsArray() {
-    return AudioClip.audioClipsArray;
+    return AudioClip.audioClipsArray
   }
 
-  public toReplString = () => '<AudioClip>';
+  public toReplString = () => '<AudioClip>'
 
   /** @override */
-  public toString = () => this.toReplString();
+  public toString = () => this.toReplString()
 }

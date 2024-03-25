@@ -1,9 +1,9 @@
 import { Command } from '@commander-js/extra-typings'
 import { bundlesOption, tabsOption } from '@src/commandUtils'
-import { buildModules, getBuildBundlesCommand, getBuildTabsCommand } from './modules'
 import { buildDocs, getBuildDocsCommand, getBuildHtmlCommand, getBuildJsonsCommand } from './docs'
-import { createBuildCommand, type BuildTask, createBuildCommandHandler } from './utils'
 import { initTypedoc } from './docs/docsUtils'
+import { buildModules, getBuildBundlesCommand, getBuildTabsCommand } from './modules'
+import { createBuildCommand, type BuildTask, createBuildCommandHandler } from './utils'
 
 const buildAll: BuildTask = async (inputs, opts) => {
   const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose)

@@ -1,1 +1,1 @@
-export type Rune = string;
+export type Rune = string

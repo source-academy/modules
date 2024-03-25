@@ -1,6 +1,6 @@
 /* [Imports] */
-import vec3 from '@jscad/modeling/src/maths/vec3';
-import { ZOOM_TICK_SCALE } from './constants';
+import vec3 from '@jscad/modeling/src/maths/vec3'
+import { ZOOM_TICK_SCALE } from './constants'
 import {
   cloneControlsState,
   pan,
@@ -8,13 +8,13 @@ import {
   updateProjection,
   updateStates,
   zoomToFit
-} from './jscad/renderer';
+} from './jscad/renderer'
 import type {
   ControlsState,
   GeometryEntity,
   PerspectiveCameraState
-} from './jscad/types';
-import ListenerTracker from './listener_tracker';
+} from './jscad/types'
+import ListenerTracker from './listener_tracker'
 
 /* [Main] */
 enum MousePointer {
@@ -31,41 +31,41 @@ enum MousePointer {
 
 /* [Exports] */
 export default class InputTracker {
-  private controlsState: ControlsState = cloneControlsState();
+  private controlsState: ControlsState = cloneControlsState()
 
   // Start off the first frame by initially zooming to fit
-  private zoomToFit: boolean = true;
+  private zoomToFit: boolean = true
 
-  private zoomTicks: number = 0;
+  private zoomTicks: number = 0
 
-  private heldPointer: MousePointer = MousePointer.NONE;
+  private heldPointer: MousePointer = MousePointer.NONE
 
-  private lastX: number | null = null;
-  private lastY: number | null = null;
+  private lastX: number | null = null
+  private lastY: number | null = null
 
-  private rotateX: number = 0;
-  private rotateY: number = 0;
-  private panX: number = 0;
-  private panY: number = 0;
+  private rotateX: number = 0
+  private rotateY: number = 0
+  private panX: number = 0
+  private panY: number = 0
 
-  private listenerTracker: ListenerTracker;
+  private listenerTracker: ListenerTracker
 
   // Set to true when a new frame must be requested, as states have changed and
   // the canvas should look different
-  public frameDirty: boolean = false;
+  public frameDirty: boolean = false
 
   constructor(
     private canvas: HTMLCanvasElement,
     private cameraState: PerspectiveCameraState,
     private geometryEntities: GeometryEntity[]
   ) {
-    this.listenerTracker = new ListenerTracker(canvas);
+    this.listenerTracker = new ListenerTracker(canvas)
   }
 
   private changeZoomTicks(wheelDelta: number) {
     // Regardless of scroll magnitude, which the OS can change, each event
     // firing should only tick once up or down
-    this.zoomTicks += Math.sign(wheelDelta);
+    this.zoomTicks += Math.sign(wheelDelta)
   }
 
   private setHeldPointer(mouseEventButton: number) {
@@ -73,210 +73,210 @@ export default class InputTracker {
       case MousePointer.LEFT:
       case MousePointer.RIGHT:
       case MousePointer.MIDDLE:
-        this.heldPointer = mouseEventButton;
-        break;
+        this.heldPointer = mouseEventButton
+        break
       default:
-        this.heldPointer = MousePointer.OTHER;
-        break;
+        this.heldPointer = MousePointer.OTHER
+        break
     }
   }
 
   private unsetHeldPointer() {
-    this.heldPointer = MousePointer.NONE;
+    this.heldPointer = MousePointer.NONE
   }
 
   private shouldIgnorePointerMove(): boolean {
-    return ![MousePointer.LEFT, MousePointer.MIDDLE].includes(this.heldPointer);
+    return ![MousePointer.LEFT, MousePointer.MIDDLE].includes(this.heldPointer)
   }
 
   private isPointerPan(isShiftKey: boolean): boolean {
     return (
       this.heldPointer === MousePointer.MIDDLE
       || (this.heldPointer === MousePointer.LEFT && isShiftKey)
-    );
+    )
   }
 
   private unsetLastCoordinates() {
-    this.lastX = null;
-    this.lastY = null;
+    this.lastX = null
+    this.lastY = null
   }
 
   private tryDynamicResize() {
-    const { width: oldWidth, height: oldHeight } = this.canvas;
+    const { width: oldWidth, height: oldHeight } = this.canvas
 
     // Account for display scaling
-    const canvasBounds: DOMRect = this.canvas.getBoundingClientRect();
-    const { devicePixelRatio } = window;
-    const newWidth: number = Math.floor(canvasBounds.width * devicePixelRatio);
-    const newHeight: number = Math.floor(canvasBounds.height * devicePixelRatio);
+    const canvasBounds: DOMRect = this.canvas.getBoundingClientRect()
+    const { devicePixelRatio } = window
+    const newWidth: number = Math.floor(canvasBounds.width * devicePixelRatio)
+    const newHeight: number = Math.floor(canvasBounds.height * devicePixelRatio)
 
-    if (oldWidth === newWidth && oldHeight === newHeight) return;
-    this.frameDirty = true;
+    if (oldWidth === newWidth && oldHeight === newHeight) return
+    this.frameDirty = true
 
-    this.canvas.width = newWidth;
-    this.canvas.height = newHeight;
+    this.canvas.width = newWidth
+    this.canvas.height = newHeight
 
-    updateProjection(this.cameraState, newWidth, newHeight);
+    updateProjection(this.cameraState, newWidth, newHeight)
   }
 
   private tryZoomToFit() {
-    if (!this.zoomToFit) return;
-    this.frameDirty = true;
+    if (!this.zoomToFit) return
+    this.frameDirty = true
 
-    zoomToFit(this.cameraState, this.controlsState, this.geometryEntities);
+    zoomToFit(this.cameraState, this.controlsState, this.geometryEntities)
 
-    this.zoomToFit = false;
+    this.zoomToFit = false
   }
 
   private tryZoom() {
-    if (this.zoomTicks === 0) return;
+    if (this.zoomTicks === 0) return
 
     while (this.zoomTicks !== 0) {
-      const currentTick: number = Math.sign(this.zoomTicks);
-      this.zoomTicks -= currentTick;
+      const currentTick: number = Math.sign(this.zoomTicks)
+      this.zoomTicks -= currentTick
 
-      const scaledChange: number = currentTick * ZOOM_TICK_SCALE;
-      const potentialNewScale: number = this.controlsState.scale + scaledChange;
+      const scaledChange: number = currentTick * ZOOM_TICK_SCALE
+      const potentialNewScale: number = this.controlsState.scale + scaledChange
       const potentialNewDistance: number
         = vec3.distance(this.cameraState.position, this.cameraState.target)
-        * potentialNewScale;
+        * potentialNewScale
 
       if (
         potentialNewDistance > this.controlsState.limits.minDistance
         && potentialNewDistance < this.controlsState.limits.maxDistance
       ) {
-        this.frameDirty = true;
-        this.controlsState.scale = potentialNewScale;
-      } else break;
+        this.frameDirty = true
+        this.controlsState.scale = potentialNewScale
+      } else break
     }
 
-    this.zoomTicks = 0;
+    this.zoomTicks = 0
   }
 
   private tryRotate() {
-    if (this.rotateX === 0 && this.rotateY === 0) return;
-    this.frameDirty = true;
+    if (this.rotateX === 0 && this.rotateY === 0) return
+    this.frameDirty = true
 
-    rotate(this.cameraState, this.controlsState, this.rotateX, this.rotateY);
+    rotate(this.cameraState, this.controlsState, this.rotateX, this.rotateY)
 
-    this.rotateX = 0;
-    this.rotateY = 0;
+    this.rotateX = 0
+    this.rotateY = 0
   }
 
   private tryPan() {
-    if (this.panX === 0 && this.panY === 0) return;
-    this.frameDirty = true;
+    if (this.panX === 0 && this.panY === 0) return
+    this.frameDirty = true
 
-    pan(this.cameraState, this.controlsState, this.panX, this.panY);
+    pan(this.cameraState, this.controlsState, this.panX, this.panY)
 
-    this.panX = 0;
-    this.panY = 0;
+    this.panX = 0
+    this.panY = 0
   }
 
   addListeners() {
     this.listenerTracker.addListener('dblclick', (_mouseEvent: MouseEvent) => {
-      this.zoomToFit = true;
-    });
+      this.zoomToFit = true
+    })
 
     this.listenerTracker.addListener(
       'wheel',
       (wheelEvent: WheelEvent) => {
         // Prevent scrolling the side panel when there is overflow
-        wheelEvent.preventDefault();
+        wheelEvent.preventDefault()
 
-        this.changeZoomTicks(wheelEvent.deltaY);
+        this.changeZoomTicks(wheelEvent.deltaY)
       },
       // Force wait for our potential preventDefault()
       { passive: false }
-    );
+    )
 
     this.listenerTracker.addListener(
       'pointerdown',
       (pointerEvent: PointerEvent) => {
         // Prevent middle-click from activating auto-scrolling
-        pointerEvent.preventDefault();
+        pointerEvent.preventDefault()
 
-        this.setHeldPointer(pointerEvent.button);
-        this.lastX = pointerEvent.pageX;
-        this.lastY = pointerEvent.pageY;
+        this.setHeldPointer(pointerEvent.button)
+        this.lastX = pointerEvent.pageX
+        this.lastY = pointerEvent.pageY
 
         // Detect drags even outside the canvas element's borders
-        this.canvas.setPointerCapture(pointerEvent.pointerId);
+        this.canvas.setPointerCapture(pointerEvent.pointerId)
       },
       // Force wait for our potential preventDefault()
       { passive: false }
-    );
+    )
 
     this.listenerTracker.addListener(
       'pointerup',
       (pointerEvent: PointerEvent) => {
-        this.unsetHeldPointer();
-        this.unsetLastCoordinates();
+        this.unsetHeldPointer()
+        this.unsetLastCoordinates()
 
-        this.canvas.releasePointerCapture(pointerEvent.pointerId);
+        this.canvas.releasePointerCapture(pointerEvent.pointerId)
       }
-    );
+    )
 
     this.listenerTracker.addListener(
       'pointermove',
       (pointerEvent: PointerEvent) => {
-        if (this.shouldIgnorePointerMove()) return;
+        if (this.shouldIgnorePointerMove()) return
 
-        const currentX = pointerEvent.pageX;
-        const currentY = pointerEvent.pageY;
+        const currentX = pointerEvent.pageX
+        const currentY = pointerEvent.pageY
 
         if (this.lastX !== null && this.lastY !== null) {
           // If tracked before, use differences to react to input
-          const differenceX = this.lastX - currentX;
-          const differenceY = this.lastY - currentY;
+          const differenceX = this.lastX - currentX
+          const differenceY = this.lastY - currentY
 
           if (this.isPointerPan(pointerEvent.shiftKey)) {
             // Drag right (X increases)
             // Camera right (still +)
             // Viewport left (invert to -)
-            this.panX += differenceX;
+            this.panX += differenceX
 
             // Drag down (Y increases)
             // Camera down (invert to -)
             // Viewport up (still -)
-            this.panY -= differenceY;
+            this.panY -= differenceY
           } else {
             // Else default to rotate
 
             // Drag right (X increases)
             // Camera angle from origin left (invert to -)
-            this.rotateX -= differenceX;
+            this.rotateX -= differenceX
 
             // Drag down (Y increases)
             // Camera angle from origin up (still +)
-            this.rotateY += differenceY;
+            this.rotateY += differenceY
           }
         }
 
-        this.lastX = currentX;
-        this.lastY = currentY;
+        this.lastX = currentX
+        this.lastY = currentY
       }
-    );
+    )
   }
 
   removeListeners() {
-    this.listenerTracker.removeListeners();
+    this.listenerTracker.removeListeners()
   }
 
   respondToInput() {
-    this.tryZoomToFit();
-    this.tryZoom();
-    this.tryRotate();
-    this.tryPan();
-    if (this.frameDirty) updateStates(this.cameraState, this.controlsState);
+    this.tryZoomToFit()
+    this.tryZoom()
+    this.tryRotate()
+    this.tryPan()
+    if (this.frameDirty) updateStates(this.cameraState, this.controlsState)
 
     // A successful resize dirties the frame, but does not require
     // updateStates(), only its own updateProjection()
-    this.tryDynamicResize();
+    this.tryDynamicResize()
   }
 
   flushMidInput() {
-    this.unsetHeldPointer();
-    this.unsetLastCoordinates();
+    this.unsetHeldPointer()
+    this.unsetLastCoordinates()
   }
 }

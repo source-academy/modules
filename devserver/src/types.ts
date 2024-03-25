@@ -1,4 +1,4 @@
-import type { SourceError } from 'js-slang/dist/types';
+import type { SourceError } from 'js-slang/dist/types'
 
 /**
  * An output while the program is still being run in the interpreter. As a
@@ -8,7 +8,7 @@ import type { SourceError } from 'js-slang/dist/types';
 export type RunningOutput = {
   type: 'running';
   consoleLogs: string[];
-};
+}
 
 /**
  * An output which reflects the program which the user had entered. Not a true
@@ -18,7 +18,7 @@ export type RunningOutput = {
 export type CodeOutput = {
   type: 'code';
   value: string;
-};
+}
 
 /**
  * An output which represents a program being run successfully, i.e. with a
@@ -31,7 +31,7 @@ export type ResultOutput = {
   consoleLogs: string[];
   runtime?: number;
   isProgram?: boolean;
-};
+}
 
 /**
  * An output which represents a program being run unsuccessfully, i.e. with
@@ -42,6 +42,6 @@ export type ErrorOutput = {
   type: 'errors';
   errors: SourceError[];
   consoleLogs: string[];
-};
+}
 
-export type InterpreterOutput = RunningOutput | CodeOutput | ResultOutput | ErrorOutput;
+export type InterpreterOutput = CodeOutput | ErrorOutput | ResultOutput | RunningOutput

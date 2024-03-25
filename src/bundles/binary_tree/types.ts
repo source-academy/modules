@@ -1,1 +1,1 @@
-export type BinaryTree = (BinaryTree | any)[] | null;
+export type BinaryTree = (BinaryTree | any)[] | null

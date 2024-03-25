@@ -1,7 +1,7 @@
-import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core'
+import { IconNames } from '@blueprintjs/icons'
 // eslint-disable-next-line @typescript-eslint/no-shadow
-import React, { type ChangeEvent, type DragEvent } from 'react';
+import React, { type ChangeEvent, type DragEvent } from 'react'
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
@@ -13,19 +13,19 @@ import {
   MIN_FPS,
   MIN_HEIGHT,
   MIN_WIDTH
-} from '../../bundles/pix_n_flix/constants';
+} from '../../bundles/pix_n_flix/constants'
 import {
   type BundlePacket,
   type ErrorLogger,
   InputFeed,
   type TabsPacket
-} from '../../bundles/pix_n_flix/types';
+} from '../../bundles/pix_n_flix/types'
 
 type Props = {
   children?: never;
   className?: string;
   debuggerContext: any;
-};
+}
 
 enum VideoMode {
   Video,
@@ -41,7 +41,7 @@ type State = {
   volume: number;
   hasAudio: boolean;
   mode: VideoMode;
-};
+}
 
 type Video = {
   toReplString: () => string;
@@ -58,19 +58,19 @@ type Video = {
   updateFPS: (fps: number) => void;
   updateDimensions: (width: number, height: number) => void;
   updateVolume: (v: number) => void;
-};
+}
 
 class PixNFlix extends React.Component<Props, State> {
-  private $video: HTMLVideoElement | null = null;
+  private $video: HTMLVideoElement | null = null
 
-  private $image: HTMLImageElement | null = null;
+  private $image: HTMLImageElement | null = null
 
-  private $canvas: HTMLCanvasElement | null = null;
+  private $canvas: HTMLCanvasElement | null = null
 
-  private pixNFlix: Video;
+  private pixNFlix: Video
 
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
@@ -78,29 +78,29 @@ class PixNFlix extends React.Component<Props, State> {
       volume: DEFAULT_VOLUME,
       hasAudio: false,
       mode: VideoMode.Video
-    };
-    const { debuggerContext } = this.props;
-    this.pixNFlix = debuggerContext.result.value;
+    }
+    const { debuggerContext } = this.props
+    this.pixNFlix = debuggerContext.result.value
   }
 
   public componentDidMount() {
     if (this.isPixNFlix()) {
-      this.setupVideoService();
-      window.addEventListener('beforeunload', this.pixNFlix.deinit);
+      this.setupVideoService()
+      window.addEventListener('beforeunload', this.pixNFlix.deinit)
     }
   }
 
   public componentWillUnmount() {
     if (this.isPixNFlix()) {
-      this.closeVideo();
-      window.removeEventListener('beforeunload', this.pixNFlix.deinit);
+      this.closeVideo()
+      window.removeEventListener('beforeunload', this.pixNFlix.deinit)
     }
   }
 
   public setupVideoService = () => {
     if (this.$video && this.$canvas && this.isPixNFlix()) {
-      const { debuggerContext } = this.props;
-      this.pixNFlix = debuggerContext.result.value;
+      const { debuggerContext } = this.props
+      this.pixNFlix = debuggerContext.result.value
       // get the properties of the video in an object
       const { HEIGHT, WIDTH, FPS, VOLUME, inputFeed } = this.pixNFlix.init(
         this.$image,
@@ -110,12 +110,12 @@ class PixNFlix extends React.Component<Props, State> {
         {
           onClickStill: this.onClickStill
         }
-      );
-      let mode: VideoMode = VideoMode.Video;
+      )
+      let mode: VideoMode = VideoMode.Video
       if (inputFeed === InputFeed.Local) {
-        mode = VideoMode.Accepting;
+        mode = VideoMode.Accepting
       } else if (inputFeed === InputFeed.ImageURL) {
-        mode = VideoMode.Image;
+        mode = VideoMode.Image
       }
       this.setState({
         height: HEIGHT,
@@ -124,74 +124,74 @@ class PixNFlix extends React.Component<Props, State> {
         volume: VOLUME,
         hasAudio: inputFeed === InputFeed.VideoURL,
         mode
-      });
+      })
     }
-  };
+  }
 
   public closeVideo = () => {
     if (this.isPixNFlix()) {
-      this.pixNFlix.deinit();
+      this.pixNFlix.deinit()
     }
-  };
+  }
 
   public handleStartVideo = () => {
     if (this.isPixNFlix()) {
-      this.pixNFlix.startVideo();
+      this.pixNFlix.startVideo()
     }
-  };
+  }
 
   public handleStopVideo = () => {
     if (this.isPixNFlix()) {
-      this.pixNFlix.stopVideo();
+      this.pixNFlix.stopVideo()
     }
-  };
+  }
 
   public onClickStill = () => {
-    const { mode } = this.state;
+    const { mode } = this.state
     if (mode === VideoMode.Still) {
-      this.handleStopVideo();
+      this.handleStopVideo()
     } else if (mode === VideoMode.Video) {
       this.setState(
         () => ({
           mode: VideoMode.Still
         }),
         this.handleStopVideo
-      );
+      )
     }
-  };
+  }
 
   public onClickVideo = () => {
-    const { mode } = this.state;
+    const { mode } = this.state
     if (mode === VideoMode.Still) {
       this.setState(
         () => ({
           mode: VideoMode.Video
         }),
         this.handleStartVideo
-      );
+      )
     }
-  };
+  }
 
   public handleWidthChange = (width: number) => {
-    const { height } = this.state;
-    this.handleUpdateDimensions(width, height);
-  };
+    const { height } = this.state
+    this.handleUpdateDimensions(width, height)
+  }
 
   public handleHeightChange = (height: number) => {
-    const { width } = this.state;
-    this.handleUpdateDimensions(width, height);
-  };
+    const { width } = this.state
+    this.handleUpdateDimensions(width, height)
+  }
 
   public handleFPSChange = (fps: number) => {
     if (fps >= MIN_FPS && fps <= MAX_FPS) {
       this.setState({
         FPS: fps
-      });
+      })
       if (this.isPixNFlix()) {
-        this.pixNFlix.updateFPS(fps);
+        this.pixNFlix.updateFPS(fps)
       }
     }
-  };
+  }
 
   public handleUpdateDimensions = (w: number, h: number) => {
     if (
@@ -203,60 +203,60 @@ class PixNFlix extends React.Component<Props, State> {
       this.setState({
         width: w,
         height: h
-      });
+      })
       if (this.isPixNFlix()) {
-        this.pixNFlix.updateDimensions(w, h);
+        this.pixNFlix.updateDimensions(w, h)
       }
     }
-  };
+  }
 
   public loadFileToVideo = (file: File) => {
-    const { mode } = this.state;
+    const { mode } = this.state
     if (file.type.match('video.*')) {
       if (this.$video && mode === VideoMode.Accepting) {
-        this.$video.src = URL.createObjectURL(file);
+        this.$video.src = URL.createObjectURL(file)
         this.setState({
           hasAudio: true,
           mode: VideoMode.Video
-        });
-        this.handleStartVideo();
+        })
+        this.handleStartVideo()
       }
     } else if (file.type.match('image.*')) {
       if (this.$image && mode === VideoMode.Accepting) {
-        this.$image.src = URL.createObjectURL(file);
+        this.$image.src = URL.createObjectURL(file)
         this.setState({
           mode: VideoMode.Image
-        });
+        })
       }
     }
-  };
+  }
 
   public handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    this.loadFileToVideo(e.dataTransfer.files[0]);
-  };
+    e.preventDefault()
+    this.loadFileToVideo(e.dataTransfer.files[0])
+  }
 
   public handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   public handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     if (e.target && e.target.files) {
-      this.loadFileToVideo(e.target.files[0]);
+      this.loadFileToVideo(e.target.files[0])
     }
-  };
+  }
 
   public handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const volume = parseFloat(e.target.value);
+    e.preventDefault()
+    const volume = parseFloat(e.target.value)
     this.setState({
       volume
-    });
-    this.pixNFlix.updateVolume(volume);
-  };
+    })
+    this.pixNFlix.updateVolume(volume)
+  }
 
-  public printError: ErrorLogger = () => {};
+  public printError: ErrorLogger = () => {}
 
   /**
    * Checks if pixNFlix is initialised as the last line (ie. REPL output is '[Pix N Flix]')
@@ -267,14 +267,14 @@ class PixNFlix extends React.Component<Props, State> {
       this.pixNFlix
       && this.pixNFlix.toReplString
       && this.pixNFlix.toReplString() === '[Pix N Flix]'
-    );
+    )
   }
 
   public render() {
-    const { mode, width, height, FPS, volume, hasAudio } = this.state;
-    const displayOptions = mode === VideoMode.Still || mode === VideoMode.Video;
-    const videoIsActive = mode === VideoMode.Video;
-    const isAccepting = mode === VideoMode.Accepting;
+    const { mode, width, height, FPS, volume, hasAudio } = this.state
+    const displayOptions = mode === VideoMode.Still || mode === VideoMode.Video
+    const videoIsActive = mode === VideoMode.Video
+    const isAccepting = mode === VideoMode.Accepting
     return (
       <div
         className="sa-video"
@@ -360,7 +360,7 @@ class PixNFlix extends React.Component<Props, State> {
         <div className="sa-video-element">
           <img
             ref={(r) => {
-              this.$image = r;
+              this.$image = r
             }}
             width={DEFAULT_WIDTH}
             height={DEFAULT_HEIGHT}
@@ -368,7 +368,7 @@ class PixNFlix extends React.Component<Props, State> {
           />
           <video
             ref={(r) => {
-              this.$video = r;
+              this.$video = r
             }}
             autoPlay
             width={DEFAULT_WIDTH}
@@ -377,7 +377,7 @@ class PixNFlix extends React.Component<Props, State> {
           />
           <canvas
             ref={(r) => {
-              this.$canvas = r;
+              this.$canvas = r
             }}
             width={DEFAULT_WIDTH}
             height={DEFAULT_HEIGHT}
@@ -414,7 +414,7 @@ class PixNFlix extends React.Component<Props, State> {
           </p>
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -425,4 +425,4 @@ export default {
   ),
   label: 'PixNFlix Live Feed',
   iconName: 'mobile-video'
-};
+}

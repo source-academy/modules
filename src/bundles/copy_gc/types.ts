@@ -1,6 +1,6 @@
-export type Memory = number[];
-export type MemoryHeaps = Memory[];
-export type Tag = number;
+export type Memory = number[]
+export type MemoryHeaps = Memory[]
+export type Tag = number
 
 // command type
 
@@ -29,4 +29,4 @@ export type CommandHeapObject = {
   leftDesc: String;
   rightDesc: String;
   free: number;
-};
+}

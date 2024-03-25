@@ -1,8 +1,8 @@
 import fs from 'fs/promises'
-import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
-import { promiseAll, tabsOption } from '@src/commandUtils';
-import { expandTabNames, createBuildCommandHandler, type BuildTask, createBuildCommand } from '../utils';
-import { commonEsbuildOptions, outputBundleOrTab } from './commons';
+import { promiseAll, tabsOption } from '@src/commandUtils'
+import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild'
+import { expandTabNames, createBuildCommandHandler, type BuildTask, createBuildCommand } from '../utils'
+import { commonEsbuildOptions, outputBundleOrTab } from './commons'
 
 export const tabContextPlugin: ESBuildPlugin = {
   name: 'Tab Context',
@@ -11,9 +11,9 @@ export const tabContextPlugin: ESBuildPlugin = {
       errors: [{
         text: 'If you see this message, it means that your tab code is importing js-slang/context directly or indirectly. Do not do this'
       }]
-    }));
+    }))
   }
-};
+}
 
 export const bundleTabs: BuildTask = async ({ tabs }, { srcDir, outDir }) => {
   const [{ outputFiles }] = await promiseAll(esbuild({
@@ -33,9 +33,9 @@ export const bundleTabs: BuildTask = async ({ tabs }, { srcDir, outDir }) => {
     outdir: outDir,
     tsconfig: `${srcDir}/tsconfig.json`,
     plugins: [tabContextPlugin]
-  }), fs.mkdir(`${outDir}/tabs`, { recursive: true }));
+  }), fs.mkdir(`${outDir}/tabs`, { recursive: true }))
 
-  const results = await Promise.all(outputFiles.map(file => outputBundleOrTab(file, outDir)));
+  const results = await Promise.all(outputFiles.map(file => outputBundleOrTab(file, outDir)))
   return { tabs: results }
 }
 

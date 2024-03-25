@@ -1,10 +1,10 @@
-import pathlib from 'path'
 import fs from 'fs/promises'
-import { generate } from 'astring'
+import pathlib from 'path'
 import { parse } from 'acorn'
-import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
-import type { ArrowFunctionExpression, CallExpression, ExportDefaultDeclaration, Program, VariableDeclaration } from 'estree';
-import type { OperationResult } from '../utils';
+import { generate } from 'astring'
+import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild'
+import type { ArrowFunctionExpression, CallExpression, ExportDefaultDeclaration, Program, VariableDeclaration } from 'estree'
+import type { OperationResult } from '../utils'
 
 export const commonEsbuildOptions: ESBuildOptions = {
   bundle: true,
@@ -31,15 +31,15 @@ export async function outputBundleOrTab({ path, text }: OutputFile, outDir: stri
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program
 
     // Account for 'use strict'; directives
-    let declStatement: VariableDeclaration;
+    let declStatement: VariableDeclaration
     if (parsed.body[0].type === 'VariableDeclaration') {
-      declStatement = parsed.body[0];
+      declStatement = parsed.body[0]
     } else {
-      declStatement = parsed.body[1] as unknown as VariableDeclaration;
+      declStatement = parsed.body[1] as unknown as VariableDeclaration
     }
-    const varDeclarator = declStatement.declarations[0];
-    const callExpression = varDeclarator.init as CallExpression;
-    const moduleCode = callExpression.callee as ArrowFunctionExpression;
+    const varDeclarator = declStatement.declarations[0]
+    const callExpression = varDeclarator.init as CallExpression
+    const moduleCode = callExpression.callee as ArrowFunctionExpression
 
     const output: ExportDefaultDeclaration = {
       type: 'ExportDefaultDeclaration',

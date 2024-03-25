@@ -14,4 +14,4 @@ export function isPascalCase(string: string) {
 export type Options = {
   srcDir: string;
   manifest: string;
-};
+}

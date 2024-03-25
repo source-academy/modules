@@ -61,4 +61,4 @@ export {
   triangle_sound,
   trombone,
   violin
-} from './functions';
+} from './functions'

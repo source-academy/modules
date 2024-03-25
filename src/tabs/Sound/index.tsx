@@ -1,6 +1,6 @@
-import type { SoundModuleState } from '../../bundles/sound/types';
-import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
-import MultiItemDisplay from '../common/MultItemDisplay';
+import type { SoundModuleState } from '../../bundles/sound/types'
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers'
+import MultiItemDisplay from '../common/MultItemDisplay'
 
 /**
  * Tab for Source Academy Sounds Module
@@ -8,7 +8,7 @@ import MultiItemDisplay from '../common/MultItemDisplay';
  * @author Samyukta Sounderraman
  */
 const SoundTab: ModuleTab = ({ context }) => {
-  const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound');
+  const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')
 
   const elements = audioPlayed.map((audio) => (
     <audio
@@ -17,21 +17,21 @@ const SoundTab: ModuleTab = ({ context }) => {
       id="sound-tab-player"
       style={{ width: '100%' }}
     />
-  ));
+  ))
 
   return (
     <div>
       <p id="sound-default-text">
-          The sound tab gives you control over your custom sounds. You can play,
-          pause, adjust the volume and download your sounds.
+        The sound tab gives you control over your custom sounds. You can play,
+        pause, adjust the volume and download your sounds.
       </p>
       <br />
       <br />
       <MultiItemDisplay elements={elements} />
       <br />
     </div>
-  );
-};
+  )
+}
 
 export default {
   /**
@@ -40,8 +40,8 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const audioPlayed = context.context?.moduleContexts?.sound?.state?.audioPlayed;
-    return audioPlayed.length > 0;
+    const audioPlayed = context.context?.moduleContexts?.sound?.state?.audioPlayed
+    return audioPlayed.length > 0
   },
   /**
    * This function will be called to render the module tab in the side contents
@@ -49,7 +49,7 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    return <SoundTab context={context} />;
+    return <SoundTab context={context} />
   },
 
   /**
@@ -63,4 +63,4 @@ export default {
    * @see https://blueprintjs.com/docs/#icons
    */
   iconName: 'music'
-};
+}

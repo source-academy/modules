@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import context from 'js-slang/context';
-import { type Curve, type CurveDrawn, generateCurve, Point } from './curves_webgl';
+import context from 'js-slang/context'
+import { type Curve, type CurveDrawn, generateCurve, Point } from './curves_webgl'
 import {
   AnimatedCurve,
   type CurveAnimation,
@@ -9,12 +9,12 @@ import {
   type DrawMode,
   type RenderFunction,
   type ScaleMode
-} from './types';
+} from './types'
 
-const drawnCurves: (AnimatedCurve | CurveDrawn)[] = [];
+const drawnCurves: (AnimatedCurve | CurveDrawn)[] = []
 context.moduleContexts.curve.state = {
   drawnCurves
-};
+}
 
 function createDrawFunction(
   scaleMode: ScaleMode,
@@ -31,19 +31,19 @@ function createDrawFunction(
         curve,
         space,
         isFullView
-      );
+      )
 
       if (!curve.shouldNotAppend) {
-        drawnCurves.push(curveDrawn);
+        drawnCurves.push(curveDrawn)
       }
 
-      return curveDrawn;
-    };
+      return curveDrawn
+    }
     // Because the draw functions are actually functions
     // we need hacky workarounds like these to pass information around
-    func.is3D = space === '3D';
-    return func;
-  };
+    func.is3D = space === '3D'
+    return func
+  }
 }
 
 // =============================================================================
@@ -67,7 +67,7 @@ function createDrawFunction(
  * draw_connected(100)(t => make_point(t, t));
  * ```
  */
-export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
+export const draw_connected = createDrawFunction('none', 'lines', '2D', false)
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -88,7 +88,7 @@ export const draw_connected_full_view = createDrawFunction(
   'lines',
   '2D',
   true
-);
+)
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -109,7 +109,7 @@ export const draw_connected_full_view_proportional = createDrawFunction(
   'lines',
   '2D',
   true
-);
+)
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -125,7 +125,7 @@ export const draw_connected_full_view_proportional = createDrawFunction(
  * draw_points(100)(t => make_point(t, t));
  * ```
  */
-export const draw_points = createDrawFunction('none', 'points', '2D', false);
+export const draw_points = createDrawFunction('none', 'points', '2D', false)
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -147,7 +147,7 @@ export const draw_points_full_view = createDrawFunction(
   'points',
   '2D',
   true
-);
+)
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -169,7 +169,7 @@ export const draw_points_full_view_proportional = createDrawFunction(
   'points',
   '2D',
   true
-);
+)
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -190,7 +190,7 @@ export const draw_3D_connected = createDrawFunction(
   'lines',
   '3D',
   false
-);
+)
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -211,7 +211,7 @@ export const draw_3D_connected_full_view = createDrawFunction(
   'lines',
   '3D',
   false
-);
+)
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -232,7 +232,7 @@ export const draw_3D_connected_full_view_proportional = createDrawFunction(
   'lines',
   '3D',
   false
-);
+)
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -248,7 +248,7 @@ export const draw_3D_connected_full_view_proportional = createDrawFunction(
  * draw_3D_points(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export const draw_3D_points = createDrawFunction('none', 'points', '3D', false);
+export const draw_3D_points = createDrawFunction('none', 'points', '3D', false)
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -269,7 +269,7 @@ export const draw_3D_points_full_view = createDrawFunction(
   'points',
   '3D',
   false
-);
+)
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -290,7 +290,7 @@ export const draw_3D_points_full_view_proportional = createDrawFunction(
   'points',
   '3D',
   false
-);
+)
 
 /**
  * Makes a Point with given x and y coordinates.
@@ -304,7 +304,7 @@ export const draw_3D_points_full_view_proportional = createDrawFunction(
  * ```
  */
 export function make_point(x: number, y: number): Point {
-  return new Point(x, y, 0, [0, 0, 0, 1]);
+  return new Point(x, y, 0, [0, 0, 0, 1])
 }
 
 /**
@@ -320,7 +320,7 @@ export function make_point(x: number, y: number): Point {
  * ```
  */
 export function make_3D_point(x: number, y: number, z: number): Point {
-  return new Point(x, y, z, [0, 0, 0, 1]);
+  return new Point(x, y, z, [0, 0, 0, 1])
 }
 
 /**
@@ -346,7 +346,7 @@ export function make_color_point(
   g: number,
   b: number
 ): Point {
-  return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
+  return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1])
 }
 
 /**
@@ -374,7 +374,7 @@ export function make_3D_color_point(
   g: number,
   b: number
 ): Point {
-  return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
+  return new Point(x, y, z, [r / 255, g / 255, b / 255, 1])
 }
 
 /**
@@ -389,7 +389,7 @@ export function make_3D_color_point(
  * ```
  */
 export function x_of(pt: Point): number {
-  return pt.x;
+  return pt.x
 }
 
 /**
@@ -404,7 +404,7 @@ export function x_of(pt: Point): number {
  * ```
  */
 export function y_of(pt: Point): number {
-  return pt.y;
+  return pt.y
 }
 
 /**
@@ -419,7 +419,7 @@ export function y_of(pt: Point): number {
  * ```
  */
 export function z_of(pt: Point): number {
-  return pt.z;
+  return pt.z
 }
 
 /**
@@ -434,7 +434,7 @@ export function z_of(pt: Point): number {
  * ```
  */
 export function r_of(pt: Point): number {
-  return pt.color[0] * 255;
+  return pt.color[0] * 255
 }
 
 /**
@@ -449,7 +449,7 @@ export function r_of(pt: Point): number {
  * ```
  */
 export function g_of(pt: Point): number {
-  return pt.color[1] * 255;
+  return pt.color[1] * 255
 }
 
 /**
@@ -464,7 +464,7 @@ export function g_of(pt: Point): number {
  * ```
  */
 export function b_of(pt: Point): number {
-  return pt.color[2] * 255;
+  return pt.color[2] * 255
 }
 
 /**
@@ -477,7 +477,7 @@ export function b_of(pt: Point): number {
  * @returns result Curve
  */
 export function invert(curve: Curve): Curve {
-  return (t: number) => curve(1 - t);
+  return (t: number) => curve(1 - t)
 }
 
 /**
@@ -499,10 +499,10 @@ export function translate(
 ): CurveTransformer {
   return (curve: Curve) => {
     const transformation = (cf: Curve) => (t: number) => {
-      const a = x0 === undefined ? 0 : x0;
-      const b = y0 === undefined ? 0 : y0;
-      const c = z0 === undefined ? 0 : z0;
-      const ct: Point = cf(t);
+      const a = x0 === undefined ? 0 : x0
+      const b = y0 === undefined ? 0 : y0
+      const c = z0 === undefined ? 0 : z0
+      const ct: Point = cf(t)
       return make_3D_color_point(
         a + x_of(ct),
         b + y_of(ct),
@@ -510,10 +510,10 @@ export function translate(
         r_of(ct),
         g_of(ct),
         b_of(ct)
-      );
-    };
-    return transformation(curve);
-  };
+      )
+    }
+    return transformation(curve)
+  }
 }
 
 /**
@@ -535,21 +535,21 @@ export function rotate_around_origin(
 ): CurveTransformer {
   if (theta3 === undefined && theta1 !== undefined && theta2 !== undefined) {
     // 2 args
-    throw new Error('Expected 1 or 3 arguments, but received 2');
+    throw new Error('Expected 1 or 3 arguments, but received 2')
   } else if (
     theta1 !== undefined
     && theta2 === undefined
     && theta3 === undefined
   ) {
     // 1 args
-    const cth = Math.cos(theta1);
-    const sth = Math.sin(theta1);
+    const cth = Math.cos(theta1)
+    const sth = Math.sin(theta1)
     return (curve: Curve) => {
       const transformation = (c: Curve) => (t: number) => {
-        const ct = c(t);
-        const x = x_of(ct);
-        const y = y_of(ct);
-        const z = z_of(ct);
+        const ct = c(t)
+        const x = x_of(ct)
+        const y = y_of(ct)
+        const z = z_of(ct)
         return make_3D_color_point(
           cth * x - sth * y,
           sth * x + cth * y,
@@ -557,21 +557,21 @@ export function rotate_around_origin(
           r_of(ct),
           g_of(ct),
           b_of(ct)
-        );
-      };
-      return transformation(curve);
-    };
+        )
+      }
+      return transformation(curve)
+    }
   } else {
-    const cthx = Math.cos(theta1);
-    const sthx = Math.sin(theta1);
-    const cthy = Math.cos(theta2);
-    const sthy = Math.sin(theta2);
-    const cthz = Math.cos(theta3);
-    const sthz = Math.sin(theta3);
+    const cthx = Math.cos(theta1)
+    const sthx = Math.sin(theta1)
+    const cthy = Math.cos(theta2)
+    const sthy = Math.sin(theta2)
+    const cthz = Math.cos(theta3)
+    const sthz = Math.sin(theta3)
     return (curve: Curve) => {
       const transformation = (c: Curve) => (t: number) => {
-        const ct = c(t);
-        const coord = [x_of(ct), y_of(ct), z_of(ct)];
+        const ct = c(t)
+        const coord = [x_of(ct), y_of(ct), z_of(ct)]
         const mat = [
           [
             cthz * cthy,
@@ -584,19 +584,19 @@ export function rotate_around_origin(
             sthz * sthy * cthx - cthz * sthx
           ],
           [-sthy, cthy * sthx, cthy * cthx]
-        ];
-        let xf = 0;
-        let yf = 0;
-        let zf = 0;
+        ]
+        let xf = 0
+        let yf = 0
+        let zf = 0
         for (let i = 0; i < 3; i += 1) {
-          xf += mat[0][i] * coord[i];
-          yf += mat[1][i] * coord[i];
-          zf += mat[2][i] * coord[i];
+          xf += mat[0][i] * coord[i]
+          yf += mat[1][i] * coord[i]
+          zf += mat[2][i] * coord[i]
         }
-        return make_3D_color_point(xf, yf, zf, r_of(ct), g_of(ct), b_of(ct));
-      };
-      return transformation(curve);
-    };
+        return make_3D_color_point(xf, yf, zf, r_of(ct), g_of(ct), b_of(ct))
+      }
+      return transformation(curve)
+    }
   }
 }
 
@@ -614,10 +614,10 @@ export function rotate_around_origin(
 export function scale(a: number, b: number, c: number): CurveTransformer {
   return (curve) => {
     const transformation = (cf: Curve) => (t: number) => {
-      const ct = cf(t);
-      const a1 = a === undefined ? 1 : a;
-      const b1 = b === undefined ? 1 : b;
-      const c1 = c === undefined ? 1 : c;
+      const ct = cf(t)
+      const a1 = a === undefined ? 1 : a
+      const b1 = b === undefined ? 1 : b
+      const c1 = c === undefined ? 1 : c
       return make_3D_color_point(
         a1 * x_of(ct),
         b1 * y_of(ct),
@@ -625,10 +625,10 @@ export function scale(a: number, b: number, c: number): CurveTransformer {
         r_of(ct),
         g_of(ct),
         b_of(ct)
-      );
-    };
-    return transformation(curve);
-  };
+      )
+    }
+    return transformation(curve)
+  }
 }
 
 /**
@@ -639,7 +639,7 @@ export function scale(a: number, b: number, c: number): CurveTransformer {
  * @returns function that takes a Curve and returns a Curve
  */
 export function scale_proportional(s: number): CurveTransformer {
-  return scale(s, s, s);
+  return scale(s, s, s)
 }
 
 /**
@@ -655,21 +655,21 @@ export function scale_proportional(s: number): CurveTransformer {
  * @returns result Curve
  */
 export function put_in_standard_position(curve: Curve): Curve {
-  const start_point = curve(0);
+  const start_point = curve(0)
   const curve_started_at_origin = translate(
     -x_of(start_point),
     -y_of(start_point),
     0
-  )(curve);
-  const new_end_point = curve_started_at_origin(1);
-  const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
+  )(curve)
+  const new_end_point = curve_started_at_origin(1)
+  const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point))
   const curve_ended_at_x_axis = rotate_around_origin(
     0,
     0,
     -theta
-  )(curve_started_at_origin);
-  const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
-  return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
+  )(curve_started_at_origin)
+  const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1))
+  return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis)
 }
 
 /**
@@ -684,7 +684,7 @@ export function put_in_standard_position(curve: Curve): Curve {
  * @returns result Curve
  */
 export function connect_rigidly(curve1: Curve, curve2: Curve): Curve {
-  return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
+  return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1))
 }
 
 /**
@@ -700,8 +700,8 @@ export function connect_rigidly(curve1: Curve, curve2: Curve): Curve {
  * @returns result Curve
  */
 export function connect_ends(curve1: Curve, curve2: Curve): Curve {
-  const startPointOfCurve2 = curve2(0);
-  const endPointOfCurve1 = curve1(1);
+  const startPointOfCurve2 = curve2(0)
+  const endPointOfCurve1 = curve1(1)
   return connect_rigidly(
     curve1,
     translate(
@@ -709,7 +709,7 @@ export function connect_ends(curve1: Curve, curve2: Curve): Curve {
       y_of(endPointOfCurve1) - y_of(startPointOfCurve2),
       z_of(endPointOfCurve1) - z_of(startPointOfCurve2)
     )(curve2)
-  );
+  )
 }
 
 /**
@@ -721,7 +721,7 @@ export function connect_ends(curve1: Curve, curve2: Curve): Curve {
  * @returns Point on the circle at t
  */
 export function unit_circle(t: number): Point {
-  return make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
+  return make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t))
 }
 
 /**
@@ -732,7 +732,7 @@ export function unit_circle(t: number): Point {
  * @returns Point on the line at t
  */
 export function unit_line(t: number): Point {
-  return make_point(t, 0);
+  return make_point(t, 0)
 }
 
 /**
@@ -744,7 +744,7 @@ export function unit_line(t: number): Point {
  * @returns horizontal Curve
  */
 export function unit_line_at(t: number): Curve {
-  return (a: number): Point => make_point(a, t);
+  return (a: number): Point => make_point(a, t)
 }
 
 /**
@@ -757,7 +757,7 @@ export function unit_line_at(t: number): Curve {
  * @returns Point in the arc at t
  */
 export function arc(t: number): Point {
-  return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
+  return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t))
 }
 
 /**
@@ -775,12 +775,12 @@ export function animate_curve(
   func: CurveAnimation
 ): AnimatedCurve {
   if (drawer.is3D) {
-    throw new Error('animate_curve cannot be used with 3D draw function!');
+    throw new Error('animate_curve cannot be used with 3D draw function!')
   }
 
-  const anim = new AnimatedCurve(duration, fps, func, drawer, false);
-  drawnCurves.push(anim);
-  return anim;
+  const anim = new AnimatedCurve(duration, fps, func, drawer, false)
+  drawnCurves.push(anim)
+  return anim
 }
 
 /**
@@ -798,10 +798,10 @@ export function animate_3D_curve(
   func: CurveAnimation
 ): AnimatedCurve {
   if (!drawer.is3D) {
-    throw new Error('animate_3D_curve cannot be used with 2D draw function!');
+    throw new Error('animate_3D_curve cannot be used with 2D draw function!')
   }
 
-  const anim = new AnimatedCurve(duration, fps, func, drawer, true);
-  drawnCurves.push(anim);
-  return anim;
+  const anim = new AnimatedCurve(duration, fps, func, drawer, true)
+  drawnCurves.push(anim)
+  return anim
 }

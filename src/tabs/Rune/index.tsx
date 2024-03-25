@@ -1,40 +1,40 @@
-import { type RuneModuleState, isHollusionRune } from '../../bundles/rune/functions';
-import { glAnimation } from '../../typings/anim_types';
-import MultiItemDisplay from '../common/MultItemDisplay';
-import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
-import AnimationCanvas from '../common/AnimationCanvas';
-import WebGLCanvas from '../common/WebglCanvas';
-import HollusionCanvas from './hollusion_canvas';
+import { type RuneModuleState, isHollusionRune } from '../../bundles/rune/functions'
+import { glAnimation } from '../../typings/anim_types'
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers'
+import AnimationCanvas from '../common/AnimationCanvas'
+import MultiItemDisplay from '../common/MultItemDisplay'
+import WebGLCanvas from '../common/WebglCanvas'
+import HollusionCanvas from './hollusion_canvas'
 
 export const RuneTab: ModuleTab = ({ context }) => {
-  const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
+  const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune')
   const runeCanvases = drawnRunes.map((rune, i) => {
-    const elemKey = i.toString();
+    const elemKey = i.toString()
 
     if (glAnimation.isAnimation(rune)) {
       return (
         <AnimationCanvas animation={rune} key={elemKey} />
-      );
+      )
     }
     if (isHollusionRune(rune)) {
       return (
         <HollusionCanvas rune={rune} key={elemKey} />
-      );
+      )
     }
     return (
       <WebGLCanvas
         ref={(r) => {
           if (r) {
-            rune.draw(r);
+            rune.draw(r)
           }
         }}
         key={elemKey}
       />
-    );
-  });
+    )
+  })
 
-  return <MultiItemDisplay elements={runeCanvases} />;
-};
+  return <MultiItemDisplay elements={runeCanvases} />
+}
 
 export default {
   /**
@@ -45,8 +45,8 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const drawnRunes = context.context?.moduleContexts?.rune?.state?.drawnRunes;
-    return drawnRunes.length > 0;
+    const drawnRunes = context.context?.moduleContexts?.rune?.state?.drawnRunes
+    return drawnRunes.length > 0
   },
 
   /**
@@ -55,7 +55,7 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    return <RuneTab context={context} />;
+    return <RuneTab context={context} />
   },
 
   /**
@@ -69,4 +69,4 @@ export default {
    * @see https://blueprintjs.com/docs/#icons
    */
   iconName: 'group-objects'
-};
+}

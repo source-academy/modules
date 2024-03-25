@@ -1,6 +1,6 @@
-export type Memory = number[];
-export type MemoryHeaps = Memory[];
-export type Tag = number;
+export type Memory = number[]
+export type MemoryHeaps = Memory[]
+export type Tag = number
 
 export enum COMMAND {
   FLIP = 'Flip',
@@ -29,4 +29,4 @@ export type CommandHeapObject = {
   leftDesc: String;
   rightDesc: String;
   queue: number[];
-};
+}

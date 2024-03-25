@@ -23,7 +23,7 @@ jest.mock('./src/manifest', () => ({
       tabs: ['tab1']
     }
   }))
-}));
+}))
 
 global.process.exit = jest.fn(code => {
   throw new Error(`process.exit called with ${code}`)

@@ -90,7 +90,6 @@
  * @author Wang Zihan
  */
 
-
 export {
   init_unity_academy_2d,
   init_unity_academy_3d,
@@ -175,4 +174,4 @@ export {
   debug_log,
   debug_logwarning,
   debug_logerror
-} from './functions';
+} from './functions'
