@@ -61,7 +61,7 @@ export function keepRunning() {
  * Removes interval that keeps the program running.
  */
 export function stopRunning() {
-  if (interval) {
+  if (interval !== undefined) {
     window.clearInterval(interval);
     interval = undefined;
   }
