@@ -1,7 +1,11 @@
 import * as td from 'typedoc';
 import { expandBundleNames } from '../utils';
 
-export async function initTypedoc(bundles: string[], srcDir: string, verbose: boolean) {
+export async function initTypedoc(
+  bundles: string[],
+  srcDir: string,
+  verbose: boolean
+) {
   const app = await td.Application.bootstrap({
     categorizeByGroup: true,
     entryPoints: expandBundleNames(srcDir, bundles),
@@ -17,7 +21,9 @@ export async function initTypedoc(bundles: string[], srcDir: string, verbose: bo
   app.options.addReader(new td.TSConfigReader());
   const project = await app.convert();
   if (!project) {
-    throw new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!');
+    throw new Error(
+      'Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!'
+    );
   }
   return [project, app] as [td.ProjectReflection, td.Application];
 }

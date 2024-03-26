@@ -12,7 +12,6 @@
   To access things like the context or module state you can just import the context
   using the import below
  */
-import context from 'js-slang/context';
 
 /**
  * Sample function. Increments a number by 1.

@@ -4,8 +4,10 @@ function testFunction(
   func: (value: string) => boolean,
   tcs: [string, boolean][]
 ) {
-  describe(`Testing ${func.name}`, () => test.each(tcs)('%#: %s', (value, valid) => expect(func(value))
-    .toEqual(valid)));
+  describe(`Testing ${func.name}`, () =>
+    test.each(tcs)('%#: %s', (value, valid) =>
+      expect(func(value)).toEqual(valid)
+    ));
 }
 
 testFunction(isPascalCase, [

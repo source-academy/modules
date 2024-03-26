@@ -17,13 +17,13 @@ export function testBuildCommand(
   mockedFunctions: MockedFunction<any>[]
 ) {
   function expectToBeCalled(times: number) {
-    mockedFunctions.forEach((func) => expect(func)
-      .toHaveBeenCalledTimes(times));
+    mockedFunctions.forEach((func) =>
+      expect(func).toHaveBeenCalledTimes(times)
+    );
   }
 
   function runCommand(...args: string[]) {
-    return commandGetter()
-      .parseAsync(args, { from: 'user' });
+    return commandGetter().parseAsync(args, { from: 'user' });
   }
 
   test(`${commandName} should run tsc when --tsc is specified`, async () => {
@@ -36,8 +36,7 @@ export function testBuildCommand(
     });
 
     await runCommand('--tsc');
-    expect(tsc.runTsc)
-      .toHaveBeenCalledTimes(1);
+    expect(tsc.runTsc).toHaveBeenCalledTimes(1);
     expectToBeCalled(1);
   });
 
@@ -50,12 +49,11 @@ export function testBuildCommand(
       }
     });
 
-    await expect(runCommand('--tsc'))
-      .rejects
-      .toMatchInlineSnapshot('[Error: process.exit called with 1]');
+    await expect(runCommand('--tsc')).rejects.toMatchInlineSnapshot(
+      '[Error: process.exit called with 1]'
+    );
 
-    expect(tsc.runTsc)
-      .toHaveBeenCalledTimes(1);
+    expect(tsc.runTsc).toHaveBeenCalledTimes(1);
     expectToBeCalled(0);
   });
 
@@ -68,8 +66,7 @@ export function testBuildCommand(
       }
     });
     await runCommand('--lint');
-    expect(lint.runEslint)
-      .toHaveBeenCalledTimes(1);
+    expect(lint.runEslint).toHaveBeenCalledTimes(1);
     expectToBeCalled(1);
   });
 
@@ -82,19 +79,17 @@ export function testBuildCommand(
       }
     });
 
-    await expect(runCommand('--lint'))
-      .rejects
-      .toMatchInlineSnapshot('[Error: process.exit called with 1]');
+    await expect(runCommand('--lint')).rejects.toMatchInlineSnapshot(
+      '[Error: process.exit called with 1]'
+    );
 
-    expect(lint.runEslint)
-      .toHaveBeenCalledTimes(1);
+    expect(lint.runEslint).toHaveBeenCalledTimes(1);
     expectToBeCalled(0);
   });
 
   test(`${commandName} should copy the manifest if there are no errors`, async () => {
     await runCommand();
     expectToBeCalled(1);
-    expect(fs.copyFile)
-      .toHaveBeenCalledTimes(1);
+    expect(fs.copyFile).toHaveBeenCalledTimes(1);
   });
 }

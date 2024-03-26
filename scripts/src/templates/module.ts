@@ -1,18 +1,21 @@
 import fs from 'fs/promises';
 
 import type { Interface } from 'readline/promises';
-import { type ModuleManifest, retrieveManifest } from '@src/manifest';
+import { retrieveManifest, type ModuleManifest } from '@src/manifest';
 
 import { askQuestion, success, warn } from './print';
-import { type Options, isSnakeCase } from './utilities';
+import { isSnakeCase, type Options } from './utilities';
 
-export const check = (manifest: ModuleManifest, name: string) => Object.keys(manifest)
-  .includes(name);
+export const check = (manifest: ModuleManifest, name: string) =>
+  Object.keys(manifest).includes(name);
 
 async function askModuleName(manifest: ModuleManifest, rl: Interface) {
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const name = await askQuestion('What is the name of your new module? (eg. binary_tree)', rl);
+    const name = await askQuestion(
+      'What is the name of your new module? (eg. binary_tree)',
+      rl
+    );
     if (isSnakeCase(name) === false) {
       warn('Module names must be in snake case. (eg. binary_tree)');
     } else if (check(manifest, name)) {
@@ -23,7 +26,10 @@ async function askModuleName(manifest: ModuleManifest, rl: Interface) {
   }
 }
 
-export async function addNew({ srcDir, manifest: manifestFile }: Options, rl: Interface) {
+export async function addNew(
+  { srcDir, manifest: manifestFile }: Options,
+  rl: Interface
+) {
   const manifest = await retrieveManifest(manifestFile);
   const moduleName = await askModuleName(manifest, rl);
 
@@ -35,10 +41,14 @@ export async function addNew({ srcDir, manifest: manifestFile }: Options, rl: In
   );
   await fs.writeFile(
     manifestFile,
-    JSON.stringify({
-      ...manifest,
-      [moduleName]: { tabs: [] }
-    }, null, 2)
+    JSON.stringify(
+      {
+        ...manifest,
+        [moduleName]: { tabs: [] }
+      },
+      null,
+      2
+    )
   );
   success(`Bundle for module ${moduleName} created at ${bundleDestination}.`);
 }

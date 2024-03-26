@@ -21,33 +21,31 @@ jest.mock('../print', () => ({
   }
 }));
 
-const asMock = <T extends (...args: any[]) => any>(func: T) => func as MockedFunction<T>;
+const asMock = <T extends (...args: any[]) => any>(func: T) =>
+  func as MockedFunction<T>;
 
 const mockedAskQuestion = asMock(askQuestion);
 
 function runCommand(...args: string[]) {
-  return getCreateCommand()
-    .parseAsync(args, { from: 'user' });
+  return getCreateCommand().parseAsync(args, { from: 'user' });
 }
 
-function expectCall<T extends(...args: any) => any>(
+function expectCall<T extends (...args: any) => any>(
   func: T,
-  ...expected: Parameters<T>[]) {
+  ...expected: Parameters<T>[]
+) {
   const mocked = asMock(func);
 
-  expect(func)
-    .toHaveBeenCalledTimes(expected.length);
+  expect(func).toHaveBeenCalledTimes(expected.length);
 
   mocked.mock.calls.forEach((actual, i) => {
-    expect(actual)
-      .toEqual(expected[i]);
+    expect(actual).toEqual(expected[i]);
   });
 }
 
 async function expectCommandFailure(snapshot: string) {
   await expect(runCommand())
-    .rejects
-    // eslint-disable-next-line jest/no-interpolation-in-snapshots
+    .rejects // eslint-disable-next-line jest/no-interpolation-in-snapshots
     .toMatchInlineSnapshot(`[Error: ERROR: ${snapshot}]`);
 
   expect(fs.writeFile).not.toHaveBeenCalled();
@@ -62,7 +60,9 @@ describe('Test adding new module', () => {
 
   it('should require camel case for module names', async () => {
     mockedAskQuestion.mockResolvedValueOnce('pascalCase');
-    await expectCommandFailure('Module names must be in snake case. (eg. binary_tree)');
+    await expectCommandFailure(
+      'Module names must be in snake case. (eg. binary_tree)'
+    );
   });
 
   it('should check for existing modules', async () => {
@@ -74,29 +74,21 @@ describe('Test adding new module', () => {
     mockedAskQuestion.mockResolvedValueOnce('new_module');
     await runCommand();
 
-    expectCall(
-      fs.mkdir,
-      ['src/bundles/new_module', { recursive: true }]
-    );
+    expectCall(fs.mkdir, ['src/bundles/new_module', { recursive: true }]);
 
-    expectCall(
-      fs.copyFile,
-      [
-        './scripts/src/templates/templates/__bundle__.ts',
-        'src/bundles/new_module/index.ts'
-      ]
-    );
+    expectCall(fs.copyFile, [
+      './scripts/src/templates/templates/__bundle__.ts',
+      'src/bundles/new_module/index.ts'
+    ]);
 
     const oldManifest = await retrieveManifest('modules.json');
     const [[manifestPath, newManifest]] = asMock(fs.writeFile).mock.calls;
-    expect(manifestPath)
-      .toEqual('modules.json');
+    expect(manifestPath).toEqual('modules.json');
 
-    expect(JSON.parse(newManifest as string))
-      .toMatchObject({
-        ...oldManifest,
-        new_module: { tabs: [] }
-      });
+    expect(JSON.parse(newManifest as string)).toMatchObject({
+      ...oldManifest,
+      new_module: { tabs: [] }
+    });
   });
 });
 
@@ -108,7 +100,9 @@ describe('Test adding new tab', () => {
   it('should require pascal case for tab names', async () => {
     mockedAskQuestion.mockResolvedValueOnce('test0');
     mockedAskQuestion.mockResolvedValueOnce('unknown_tab');
-    await expectCommandFailure('Tab names must be in pascal case. (eg. BinaryTree)');
+    await expectCommandFailure(
+      'Tab names must be in pascal case. (eg. BinaryTree)'
+    );
   });
 
   it('should check if the given tab already exists', async () => {
@@ -128,30 +122,22 @@ describe('Test adding new tab', () => {
 
     await runCommand();
 
-    expectCall(
-      fs.mkdir,
-      ['src/tabs/TabNew', { recursive: true }]
-    );
+    expectCall(fs.mkdir, ['src/tabs/TabNew', { recursive: true }]);
 
-    expectCall(
-      fs.copyFile,
-      [
-        './scripts/src/templates/templates/__tab__.tsx',
-        'src/tabs/TabNew/index.tsx'
-      ]
-    );
+    expectCall(fs.copyFile, [
+      './scripts/src/templates/templates/__tab__.tsx',
+      'src/tabs/TabNew/index.tsx'
+    ]);
 
     const oldManifest = await retrieveManifest('modules.json');
     const [[manifestPath, newManifest]] = asMock(fs.writeFile).mock.calls;
-    expect(manifestPath)
-      .toEqual('modules.json');
+    expect(manifestPath).toEqual('modules.json');
 
-    expect(JSON.parse(newManifest as string))
-      .toMatchObject({
-        ...oldManifest,
-        test0: {
-          tabs: ['tab0', 'TabNew']
-        }
-      });
+    expect(JSON.parse(newManifest as string)).toMatchObject({
+      ...oldManifest,
+      test0: {
+        tabs: ['tab0', 'TabNew']
+      }
+    });
   });
 });

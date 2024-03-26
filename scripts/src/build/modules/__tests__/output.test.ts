@@ -12,7 +12,9 @@ const testBundle = `
 `;
 
 test('building a bundle', async () => {
-  const { outputFiles: [file] } = await esbuild({
+  const {
+    outputFiles: [file]
+  } = await esbuild({
     ...commonEsbuildOptions,
     stdin: {
       contents: testBundle
@@ -25,10 +27,11 @@ test('building a bundle', async () => {
   const rawBundleTextPromise = mockStream();
 
   const result = await outputBundleOrTab(file, 'build');
-  expect(result.severity)
-    .toEqual('success');
+  expect(result.severity).toEqual('success');
 
-  const bundleText = (await rawBundleTextPromise).slice('export default'.length);
+  const bundleText = (await rawBundleTextPromise).slice(
+    'export default'.length
+  );
   const mockContext = {
     moduleContexts: {
       test0: {
@@ -36,17 +39,17 @@ test('building a bundle', async () => {
       }
     }
   };
-  const bundleFuncs = eval(bundleText)((x) => ({
-    'js-slang/context': mockContext
-  }[x]));
-  expect(bundleFuncs.foo())
-    .toEqual('foo');
-  expect(bundleFuncs.bar())
-    .toEqual(undefined);
-  expect(mockContext.moduleContexts)
-    .toMatchObject({
-      test0: {
-        state: 'bar'
-      }
-    });
+  const bundleFuncs = eval(bundleText)(
+    (x) =>
+      ({
+        'js-slang/context': mockContext
+      }[x])
+  );
+  expect(bundleFuncs.foo()).toEqual('foo');
+  expect(bundleFuncs.bar()).toEqual(undefined);
+  expect(mockContext.moduleContexts).toMatchObject({
+    test0: {
+      state: 'bar'
+    }
+  });
 });
