@@ -12,6 +12,7 @@ import { COLOR_RUN_CODE_RESULT, COLOR_ERROR_MESSAGE, DEFAULT_EDITOR_HEIGHT } fro
 
 export class ProgrammableRepl {
   public evalFunction: Function;
+  public resultCallback: ((result: any) => void) | undefined;
   public userCodeInEditor: string;
   public outputStrings: any[];
   private _editorInstance;
@@ -203,6 +204,7 @@ export class ProgrammableRepl {
         if (evalResult.status !== 'error') {
           this.pushOutputString('js-slang program finished with value:', COLOR_RUN_CODE_RESULT);
           // Here must use plain text output mode because evalResult.value contains strings from the users.
+          this.resultCallback?.(evalResult.value);
           this.pushOutputString(evalResult.value === undefined ? 'undefined' : evalResult.value.toString(), COLOR_RUN_CODE_RESULT);
         } else {
           const errors = context.errors;

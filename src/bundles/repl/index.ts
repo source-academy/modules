@@ -39,6 +39,7 @@
 
 export {
   set_evaluator,
+  set_js_slang_evaluator_with_callback,
   repl_display,
   set_background_image,
   set_font_size,
