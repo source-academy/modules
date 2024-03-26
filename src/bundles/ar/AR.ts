@@ -1,5 +1,4 @@
 import { ARObject } from 'saar/libraries/object_state_library/ARObject';
-import { fixSpring } from 'saar/libraries/misc/index';
 import { OverlayHelper, Toggle } from './OverlayHelper';
 import { Vector3 } from 'saar/libraries/misc';
 
@@ -14,10 +13,6 @@ export class ARState {
     callback?.();
   };
 }
-
-// Fix issue with React Spring, but spams console log.
-// https://github.com/pmndrs/react-spring/issues/1586#issuecomment-870778191
-fixSpring();
 
 /**
  * Initialize AR.
