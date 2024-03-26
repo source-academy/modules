@@ -41,7 +41,7 @@ export default [
       '@stylistic': stylePlugin,
     },
     rules: {
-      'import/no-duplicates': [1, { 'prefer-inline': true }],
+      'import/no-duplicates': [1, { 'prefer-inline': false }],
       'import/order': [
         1,
         {
