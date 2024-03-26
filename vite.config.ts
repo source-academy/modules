@@ -7,12 +7,14 @@ export default defineConfig({
   root: 'devserver',
   resolve: {
     preserveSymlinks: true,
-    alias: [{
-      find: /^js-slang\/context/,
-      replacement: pathlib.resolve('./devserver/src/mockModuleContext')
-    }]
+    alias: [
+      {
+        find: /^js-slang\/context/,
+        replacement: pathlib.resolve('./devserver/src/mockModuleContext')
+      }
+    ]
   },
   define: {
-    'process.env.NODE_ENV': 'development',
-  },
+    'process.env.NODE_ENV': 'development'
+  }
 });

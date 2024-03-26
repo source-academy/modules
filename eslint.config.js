@@ -7,7 +7,12 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
-const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
+const todoTreeKeywordsAll = [
+  ...todoTreeKeywordsWarning,
+  'NOTE',
+  'NOTES',
+  'LIST'
+];
 
 const OFF = 0;
 const WARN = 1;
@@ -42,18 +47,25 @@ export default [
     },
     plugins: {
       import: importPlugin,
-      '@stylistic': stylePlugin,
+      '@stylistic': stylePlugin
     },
     rules: {
       'import/no-duplicates': [WARN, { 'prefer-inline': false }],
       'import/order': [
         WARN,
         {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index'
+          ],
           alphabetize: {
             order: 'asc',
             orderImportKind: 'asc'
-          },
+          }
         }
       ],
 
@@ -70,7 +82,7 @@ export default [
         WARN,
         'always',
         { markers: todoTreeKeywordsAll }
-      ],
+      ]
     }
   },
   ...tseslint.configs.recommended,
@@ -81,7 +93,7 @@ export default [
       parser: tseslint.parser
     },
     plugins: {
-      '@typescript-eslint': tseslint.plugin,
+      '@typescript-eslint': tseslint.plugin
     },
     rules: {
       'no-unused-vars': OFF, // Use the typescript eslint rule instead
@@ -92,7 +104,7 @@ export default [
       '@typescript-eslint/no-redundant-type-constituents': OFF, // Was ERROR
       '@typescript-eslint/no-unused-vars': [WARN, { argsIgnorePattern: '^_' }], // Was ERROR
       '@typescript-eslint/prefer-ts-expect-error': WARN,
-      '@typescript-eslint/sort-type-constituents': WARN,
+      '@typescript-eslint/sort-type-constituents': WARN
     }
   },
   {
@@ -107,16 +119,13 @@ export default [
       '@stylistic/jsx-equals-spacing': [WARN, 'never'],
       '@stylistic/jsx-indent': [WARN, 2],
       '@stylistic/jsx-indent-props': [WARN, 2],
-      '@stylistic/jsx-props-no-multi-spaces': WARN,
+      '@stylistic/jsx-props-no-multi-spaces': WARN
     }
   },
   {
     // Rules for bundles and tabs
     files: ['src/**/*.ts*'],
-    ignores: [
-      '**/__tests__/**/*.ts*',
-      '**/__mocks__/**/*.ts',
-    ],
+    ignores: ['**/__tests__/**/*.ts*', '**/__mocks__/**/*.ts'],
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
@@ -128,8 +137,8 @@ export default [
 
       '@typescript-eslint/no-namespace': OFF, // Was ERROR
       '@typescript-eslint/no-var-requires': WARN, // Was ERROR
-      '@typescript-eslint/switch-exhaustiveness-check': ERROR,
-    },
+      '@typescript-eslint/switch-exhaustiveness-check': ERROR
+    }
   },
   {
     // Rules for scripts
@@ -155,8 +164,8 @@ export default [
       '@typescript-eslint/return-await': [ERROR, 'in-try-catch']
     },
     settings: {
-      'import/internal-regex': '^@src/',
-    },
+      'import/internal-regex': '^@src/'
+    }
   },
   {
     // Rules for devserver,
@@ -170,7 +179,7 @@ export default [
         ...globals.browser,
         ...globals.node2020
       }
-    },
+    }
   },
   {
     // Rules for tests
