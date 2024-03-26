@@ -1,4 +1,4 @@
-export default require => (() => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
@@ -12070,14 +12070,21 @@ export default require => (() => {
   init_define_process();
   var import_core5 = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
-  var import_react2 = __toESM(__require("react"), 1);
-  var import_debug_draw = __toESM(require_dist2(), 1);
   var import_core6 = __toESM(require_dist(), 1);
+  var import_debug_draw = __toESM(require_dist2(), 1);
+  var import_react2 = __toESM(__require("react"), 1);
+  init_define_process();
+  var import_core3 = __toESM(require_dist(), 1);
+  init_define_process();
+  var import_core2 = __toESM(require_dist(), 1);
+  init_define_process();
+  init_define_process();
+  var import_core = __toESM(require_dist(), 1);
   init_define_process();
   var import_react = __toESM(__require("react"), 1);
   init_define_process();
-  var import_core = __require("@blueprintjs/core");
-  var SA_TAB_ICON_SIZE = import_core.IconSize.LARGE;
+  var import_core4 = __require("@blueprintjs/core");
+  var SA_TAB_ICON_SIZE = import_core4.IconSize.LARGE;
   var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
   var import_jsx_runtime = __require("react/jsx-runtime");
   var defaultStyle = {
@@ -12095,13 +12102,6 @@ export default require => (() => {
     }));
   });
   var WebglCanvas_default = WebGLCanvas;
-  init_define_process();
-  var import_core4 = __toESM(require_dist(), 1);
-  init_define_process();
-  var import_core3 = __toESM(require_dist(), 1);
-  init_define_process();
-  init_define_process();
-  var import_core2 = __toESM(require_dist(), 1);
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var DebugDrawCanvas = class extends import_react2.default.Component {
     constructor(props) {
@@ -12315,4 +12315,4 @@ export default require => (() => {
     iconName: "wind"
   };
   return __toCommonJS(physics_2d_exports);
-})()["default"];
+};

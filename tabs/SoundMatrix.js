@@ -1,4 +1,4 @@
-export default require => (() => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -99,9 +99,9 @@ export default require => (() => {
     default: () => SoundMatrix_default
   });
   init_define_process();
+  var import_core = __require("@blueprintjs/core");
   var import_classnames = __toESM(require_classnames(), 1);
   var import_react = __toESM(__require("react"), 1);
-  var import_core = __require("@blueprintjs/core");
   var import_jsx_runtime = __require("react/jsx-runtime");
   var SoundMatrix = class extends import_react.default.Component {
     constructor(props) {
@@ -161,4 +161,4 @@ export default require => (() => {
     iconName: "music"
   };
   return __toCommonJS(SoundMatrix_exports);
-})()["default"];
+};

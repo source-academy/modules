@@ -1,22 +1,359 @@
 {
-  "allHeap": "<div><h4>allHeap(newHeap: undefined) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "doneShowRoot": "<div><h4>doneShowRoot(heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "endFlip": "<div><h4>endFlip(left: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "generateMemory": "<div><h4>generateMemory() → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "init": "<div><h4>init() → {undefined}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "initialize_memory": "<div><h4>initialize_memory(memorySize: number) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "initialize_tag": "<div><h4>initialize_tag(allTag: undefined, types: undefined) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newAssign": "<div><h4>newAssign(res: any, left: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newCommand": "<div><h4>newCommand(type: any, toSpace: any, fromSpace: any, left: any, right: any, sizeLeft: any, sizeRight: any, heap: any, description: any, firstDesc: any, lastDesc: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newCopy": "<div><h4>newCopy(left: any, right: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newNew": "<div><h4>newNew(left: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newPop": "<div><h4>newPop(res: any, left: any, right: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newPush": "<div><h4>newPush(left: any, right: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "resetFromSpace": "<div><h4>resetFromSpace(fromSpace: any, heap: any) → {undefined}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "resetRoots": "<div><h4>resetRoots() → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "scanFlip": "<div><h4>scanFlip(left: any, right: any, scan: any, free: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "showRoots": "<div><h4>showRoots(left: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "startFlip": "<div><h4>startFlip(toSpace: any, fromSpace: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "updateRoots": "<div><h4>updateRoots(array: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "updateSlotSegment": "<div><h4>updateSlotSegment(tag: number, size: number, first: number, last: number) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>"
+  "allHeap": {
+    "kind": "function",
+    "name": "allHeap",
+    "description": "No description available",
+    "params": [
+      [
+        "newHeap",
+        "number[][]"
+      ]
+    ],
+    "retType": "void"
+  },
+  "doneShowRoot": {
+    "kind": "function",
+    "name": "doneShowRoot",
+    "description": "No description available",
+    "params": [
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "endFlip": {
+    "kind": "function",
+    "name": "endFlip",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "generateMemory": {
+    "kind": "function",
+    "name": "generateMemory",
+    "description": "No description available",
+    "params": [],
+    "retType": "void"
+  },
+  "init": {
+    "kind": "function",
+    "name": "init",
+    "description": "No description available",
+    "params": [],
+    "retType": "Object"
+  },
+  "initialize_memory": {
+    "kind": "function",
+    "name": "initialize_memory",
+    "description": "No description available",
+    "params": [
+      [
+        "memorySize",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "initialize_tag": {
+    "kind": "function",
+    "name": "initialize_tag",
+    "description": "No description available",
+    "params": [
+      [
+        "allTag",
+        "number[]"
+      ],
+      [
+        "types",
+        "string[]"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newAssign": {
+    "kind": "function",
+    "name": "newAssign",
+    "description": "No description available",
+    "params": [
+      [
+        "res",
+        "any"
+      ],
+      [
+        "left",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newCommand": {
+    "kind": "function",
+    "name": "newCommand",
+    "description": "No description available",
+    "params": [
+      [
+        "type",
+        "any"
+      ],
+      [
+        "toSpace",
+        "any"
+      ],
+      [
+        "fromSpace",
+        "any"
+      ],
+      [
+        "left",
+        "any"
+      ],
+      [
+        "right",
+        "any"
+      ],
+      [
+        "sizeLeft",
+        "any"
+      ],
+      [
+        "sizeRight",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ],
+      [
+        "description",
+        "any"
+      ],
+      [
+        "firstDesc",
+        "any"
+      ],
+      [
+        "lastDesc",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newCopy": {
+    "kind": "function",
+    "name": "newCopy",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "right",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newNew": {
+    "kind": "function",
+    "name": "newNew",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newPop": {
+    "kind": "function",
+    "name": "newPop",
+    "description": "No description available",
+    "params": [
+      [
+        "res",
+        "any"
+      ],
+      [
+        "left",
+        "any"
+      ],
+      [
+        "right",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newPush": {
+    "kind": "function",
+    "name": "newPush",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "right",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "resetFromSpace": {
+    "kind": "function",
+    "name": "resetFromSpace",
+    "description": "No description available",
+    "params": [
+      [
+        "fromSpace",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "number[]"
+  },
+  "resetRoots": {
+    "kind": "function",
+    "name": "resetRoots",
+    "description": "No description available",
+    "params": [],
+    "retType": "void"
+  },
+  "scanFlip": {
+    "kind": "function",
+    "name": "scanFlip",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "right",
+        "any"
+      ],
+      [
+        "scan",
+        "any"
+      ],
+      [
+        "free",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "showRoots": {
+    "kind": "function",
+    "name": "showRoots",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "startFlip": {
+    "kind": "function",
+    "name": "startFlip",
+    "description": "No description available",
+    "params": [
+      [
+        "toSpace",
+        "any"
+      ],
+      [
+        "fromSpace",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "updateRoots": {
+    "kind": "function",
+    "name": "updateRoots",
+    "description": "No description available",
+    "params": [
+      [
+        "array",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "updateSlotSegment": {
+    "kind": "function",
+    "name": "updateSlotSegment",
+    "description": "No description available",
+    "params": [
+      [
+        "tag",
+        "number"
+      ],
+      [
+        "size",
+        "number"
+      ],
+      [
+        "first",
+        "number"
+      ],
+      [
+        "last",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  }
 }

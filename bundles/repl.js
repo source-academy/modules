@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -42,12 +42,12 @@ require => {
     set_font_size: () => set_font_size
   });
   var import_context2 = __toESM(__require("js-slang/context"), 1);
-  var import_context = __toESM(__require("js-slang/context"), 1);
-  var import_js_slang = __require("js-slang");
   var COLOR_REPL_DISPLAY_DEFAULT = "cyan";
   var COLOR_RUN_CODE_RESULT = "white";
   var COLOR_ERROR_MESSAGE = "red";
   var DEFAULT_EDITOR_HEIGHT = 375;
+  var import_js_slang = __require("js-slang");
+  var import_context = __toESM(__require("js-slang/context"), 1);
   var ProgrammableRepl = class {
     constructor() {
       this.customizedEditorProps = {
@@ -96,7 +96,7 @@ require => {
       this.userCodeInEditor = code;
     }
     pushOutputString(content, textColor, outputMethod = "plaintext") {
-      let tmp = {
+      const tmp = {
         content: content === void 0 ? "undefined" : content === null ? "null" : content,
         color: textColor,
         outputMethod
@@ -180,8 +180,8 @@ require => {
     userStringSafeCheck(str) {
       developmentLog(`Safe check on ${str}`);
       const tmp = str.toLowerCase();
-      let forbiddenWords = ["\\", "<", ">", "script", "javascript", "eval", "document", "window", "console", "location"];
-      for (let word of forbiddenWords) {
+      const forbiddenWords = ["\\", "<", ">", "script", "javascript", "eval", "document", "window", "console", "location"];
+      for (const word of forbiddenWords) {
         if (tmp.indexOf(word) !== -1) {
           return word;
         }
@@ -237,14 +237,11 @@ require => {
       this.reRenderTab();
     }
     getSavedEditorContent() {
-      let savedContent = localStorage.getItem("programmable_repl_saved_editor_code");
+      const savedContent = localStorage.getItem("programmable_repl_saved_editor_code");
       if (savedContent === null) return "";
       return savedContent;
     }
     easterEggFunction() {
-      this.pushOutputString("[Author (Wang Zihan)] \u2764<span style='font-weight:bold;'>I love Keqing and Ganyu.</span>\u2764", "pink", "richtext");
-      this.pushOutputString(`<span style='font-style:italic;'>Showing my love to my favorite girls through a SA module, is that the so-called "romance of a programmer"?</span>`, "gray", "richtext");
-      this.pushOutputString("\u2764\u2764\u2764\u2764\u2764", "pink");
       this.pushOutputString("<br>", "white", "richtext");
       this.pushOutputString("If you see this, please check whether you have called <span style='font-weight:bold;font-style:italic;'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.", "yellow", "richtext");
       return "Easter Egg!";
@@ -281,4 +278,4 @@ require => {
     throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
   }
   return __toCommonJS(repl_exports);
-}
+};

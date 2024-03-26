@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
@@ -11934,11 +11934,15 @@ require => {
   });
   init_define_process();
   init_define_process();
-  var import_context = __toESM(__require("js-slang/context"), 1);
   var import_core4 = __toESM(require_dist(), 1);
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  init_define_process();
+  var import_core3 = __toESM(require_dist(), 1);
+  init_define_process();
+  init_define_process();
+  var import_core2 = __toESM(require_dist(), 1);
   init_define_process();
   var import_core = __toESM(require_dist(), 1);
-  init_define_process();
   var ACCURACY = 2;
   var Vector2 = class extends import_core.b2Vec2 {
     constructor() {
@@ -11961,10 +11965,6 @@ require => {
       return `${this.time.toFixed(4)}`;
     }
   };
-  init_define_process();
-  var import_core3 = __toESM(require_dist(), 1);
-  init_define_process();
-  var import_core2 = __toESM(require_dist(), 1);
   var PhysicsWorld = class {
     constructor() {
       this.iterationsConfig = {
@@ -12181,7 +12181,7 @@ require => {
     return new Vector2(x, y);
   }
   function make_force(dir, mag, dur, start) {
-    let force = {
+    const force = {
       direction: dir,
       magnitude: mag,
       duration: dur,
@@ -12311,4 +12311,4 @@ require => {
     return new Vector2(vec1.x - vec2.x, vec1.y - vec2.y);
   }
   return __toCommonJS(physics_2d_exports);
-}
+};

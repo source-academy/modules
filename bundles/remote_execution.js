@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -40,4 +40,4 @@ require => {
   };
   var ev3_default = ev3DeviceType;
   return __toCommonJS(remote_execution_exports);
-}
+};

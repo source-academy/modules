@@ -1,4 +1,4 @@
-export default require => (() => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -65,4 +65,4 @@ export default require => (() => {
     iconName: "info-sign"
   };
   return __toCommonJS(Game_exports);
-})()["default"];
+};

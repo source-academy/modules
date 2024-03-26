@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -43,6 +43,58 @@ require => {
           NODE_ENV: "production"
         }
       };
+    }
+  });
+  var require_source_academy_utils = __commonJS({
+    "node_modules/source-academy-utils/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var __defProp2 = Object.defineProperty;
+      var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+      var __getOwnPropNames2 = Object.getOwnPropertyNames;
+      var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+      var __export2 = (target, all) => {
+        for (var name in all) __defProp2(target, name, {
+          get: all[name],
+          enumerable: true
+        });
+      };
+      var __copyProps2 = (to, from, except, desc) => {
+        if (from && typeof from === "object" || typeof from === "function") {
+          for (let key of __getOwnPropNames2(from)) if (!__hasOwnProp2.call(to, key) && key !== except) __defProp2(to, key, {
+            get: () => from[key],
+            enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable
+          });
+        }
+        return to;
+      };
+      var __toCommonJS2 = mod => __copyProps2(__defProp2({}, "__esModule", {
+        value: true
+      }), mod);
+      var src_exports = {};
+      __export2(src_exports, {
+        linkedListToObject: () => linkedListToObject,
+        objectToLinkedList: () => objectToLinkedList2
+      });
+      module.exports = __toCommonJS2(src_exports);
+      function objectToLinkedList2(object) {
+        let result = null;
+        for (const key in object) {
+          result = [key, [object[key], result]];
+        }
+        return result;
+      }
+      function linkedListToObject(list) {
+        let result = {};
+        while (list !== null) {
+          let key, value;
+          key = list[0];
+          value = list[1][0];
+          list = list[1][1];
+          result[key] = value;
+        }
+        return result;
+      }
     }
   });
   var require_source_academy_wabt = __commonJS({
@@ -8707,58 +8759,6 @@ require => {
       };
     }
   });
-  var require_source_academy_utils = __commonJS({
-    "node_modules/source-academy-utils/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var __defProp2 = Object.defineProperty;
-      var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-      var __getOwnPropNames2 = Object.getOwnPropertyNames;
-      var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-      var __export2 = (target, all) => {
-        for (var name in all) __defProp2(target, name, {
-          get: all[name],
-          enumerable: true
-        });
-      };
-      var __copyProps2 = (to, from, except, desc) => {
-        if (from && typeof from === "object" || typeof from === "function") {
-          for (let key of __getOwnPropNames2(from)) if (!__hasOwnProp2.call(to, key) && key !== except) __defProp2(to, key, {
-            get: () => from[key],
-            enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable
-          });
-        }
-        return to;
-      };
-      var __toCommonJS2 = mod => __copyProps2(__defProp2({}, "__esModule", {
-        value: true
-      }), mod);
-      var src_exports = {};
-      __export2(src_exports, {
-        linkedListToObject: () => linkedListToObject,
-        objectToLinkedList: () => objectToLinkedList2
-      });
-      module.exports = __toCommonJS2(src_exports);
-      function objectToLinkedList2(object) {
-        let result = null;
-        for (const key in object) {
-          result = [key, [object[key], result]];
-        }
-        return result;
-      }
-      function linkedListToObject(list) {
-        let result = {};
-        while (list !== null) {
-          let key, value;
-          key = list[0];
-          value = list[1][0];
-          list = list[1][1];
-          result[key] = value;
-        }
-        return result;
-      }
-    }
-  });
   var wasm_exports = {};
   __export(wasm_exports, {
     wcompile: () => wcompile,
@@ -8766,8 +8766,8 @@ require => {
   });
   init_define_process();
   init_define_process();
-  var import_source_academy_wabt = __toESM(require_source_academy_wabt(), 1);
   var import_source_academy_utils = __toESM(require_source_academy_utils(), 1);
+  var import_source_academy_wabt = __toESM(require_source_academy_wabt(), 1);
   var wcompile = program => Array.from((0, import_source_academy_wabt.compile)(program));
   var wrun = buffer => {
     if (buffer instanceof Array) {
@@ -8777,4 +8777,4 @@ require => {
     return (0, import_source_academy_utils.objectToLinkedList)(exps);
   };
   return __toCommonJS(wasm_exports);
-}
+};

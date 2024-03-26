@@ -1,4 +1,4 @@
-export default require => (() => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -3145,9 +3145,9 @@ export default require => (() => {
     default: () => Repl_default
   });
   init_define_process();
-  var import_react = __toESM(__require("react"), 1);
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
+  var import_react = __toESM(__require("react"), 1);
   init_define_process();
   var FONT_MESSAGE = {
     fontFamily: "Inconsolata, Consolas, monospace",
@@ -3310,4 +3310,4 @@ export default require => (() => {
     iconName: "code"
   };
   return __toCommonJS(Repl_exports);
-})()["default"];
+};

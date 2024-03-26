@@ -1,22 +1,344 @@
 {
-  "addRoots": "<div><h4>addRoots(arr: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "allHeap": "<div><h4>allHeap(newHeap: undefined) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "endGC": "<div><h4>endGC(heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "generateMemory": "<div><h4>generateMemory() → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "init": "<div><h4>init() → {undefined}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "initialize_memory": "<div><h4>initialize_memory(memorySize: number, nodeSize: any, marked: any, unmarked: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "initialize_tag": "<div><h4>initialize_tag(allTag: undefined, types: undefined) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newAssign": "<div><h4>newAssign(res: any, left: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newCommand": "<div><h4>newCommand(type: any, left: any, right: any, sizeLeft: any, sizeRight: any, heap: any, description: any, firstDesc: any, lastDesc: any, queue: undefined) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newGC": "<div><h4>newGC(heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newMark": "<div><h4>newMark(left: any, heap: any, queue: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newNew": "<div><h4>newNew(left: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newPop": "<div><h4>newPop(res: any, left: any, right: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newPush": "<div><h4>newPush(left: any, right: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newSweep": "<div><h4>newSweep(left: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "newUpdateSweep": "<div><h4>newUpdateSweep(right: any, heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "showRoot": "<div><h4>showRoot(heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "showRoots": "<div><h4>showRoots(heap: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "updateRoots": "<div><h4>updateRoots(array: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "updateSlotSegment": "<div><h4>updateSlotSegment(tag: number, size: number, first: number, last: number) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>"
+  "addRoots": {
+    "kind": "function",
+    "name": "addRoots",
+    "description": "No description available",
+    "params": [
+      [
+        "arr",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "allHeap": {
+    "kind": "function",
+    "name": "allHeap",
+    "description": "No description available",
+    "params": [
+      [
+        "newHeap",
+        "number[][]"
+      ]
+    ],
+    "retType": "void"
+  },
+  "endGC": {
+    "kind": "function",
+    "name": "endGC",
+    "description": "No description available",
+    "params": [
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "generateMemory": {
+    "kind": "function",
+    "name": "generateMemory",
+    "description": "No description available",
+    "params": [],
+    "retType": "void"
+  },
+  "init": {
+    "kind": "function",
+    "name": "init",
+    "description": "No description available",
+    "params": [],
+    "retType": "Object"
+  },
+  "initialize_memory": {
+    "kind": "function",
+    "name": "initialize_memory",
+    "description": "No description available",
+    "params": [
+      [
+        "memorySize",
+        "number"
+      ],
+      [
+        "nodeSize",
+        "any"
+      ],
+      [
+        "marked",
+        "any"
+      ],
+      [
+        "unmarked",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "initialize_tag": {
+    "kind": "function",
+    "name": "initialize_tag",
+    "description": "No description available",
+    "params": [
+      [
+        "allTag",
+        "number[]"
+      ],
+      [
+        "types",
+        "string[]"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newAssign": {
+    "kind": "function",
+    "name": "newAssign",
+    "description": "No description available",
+    "params": [
+      [
+        "res",
+        "any"
+      ],
+      [
+        "left",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newCommand": {
+    "kind": "function",
+    "name": "newCommand",
+    "description": "No description available",
+    "params": [
+      [
+        "type",
+        "any"
+      ],
+      [
+        "left",
+        "any"
+      ],
+      [
+        "right",
+        "any"
+      ],
+      [
+        "sizeLeft",
+        "any"
+      ],
+      [
+        "sizeRight",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ],
+      [
+        "description",
+        "any"
+      ],
+      [
+        "firstDesc",
+        "any"
+      ],
+      [
+        "lastDesc",
+        "any"
+      ],
+      [
+        "queue",
+        "never[]"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newGC": {
+    "kind": "function",
+    "name": "newGC",
+    "description": "No description available",
+    "params": [
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newMark": {
+    "kind": "function",
+    "name": "newMark",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ],
+      [
+        "queue",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newNew": {
+    "kind": "function",
+    "name": "newNew",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newPop": {
+    "kind": "function",
+    "name": "newPop",
+    "description": "No description available",
+    "params": [
+      [
+        "res",
+        "any"
+      ],
+      [
+        "left",
+        "any"
+      ],
+      [
+        "right",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newPush": {
+    "kind": "function",
+    "name": "newPush",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "right",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newSweep": {
+    "kind": "function",
+    "name": "newSweep",
+    "description": "No description available",
+    "params": [
+      [
+        "left",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "newUpdateSweep": {
+    "kind": "function",
+    "name": "newUpdateSweep",
+    "description": "No description available",
+    "params": [
+      [
+        "right",
+        "any"
+      ],
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "showRoot": {
+    "kind": "function",
+    "name": "showRoot",
+    "description": "No description available",
+    "params": [
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "showRoots": {
+    "kind": "function",
+    "name": "showRoots",
+    "description": "No description available",
+    "params": [
+      [
+        "heap",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "updateRoots": {
+    "kind": "function",
+    "name": "updateRoots",
+    "description": "No description available",
+    "params": [
+      [
+        "array",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "updateSlotSegment": {
+    "kind": "function",
+    "name": "updateSlotSegment",
+    "description": "No description available",
+    "params": [
+      [
+        "tag",
+        "number"
+      ],
+      [
+        "size",
+        "number"
+      ],
+      [
+        "first",
+        "number"
+      ],
+      [
+        "last",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  }
 }

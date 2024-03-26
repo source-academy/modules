@@ -1,4 +1,26 @@
 {
-  "wcompile": "<div><h4>wcompile(program: string) → {undefined}</h4><div class=\"description\"><p>Compile a (hopefully valid) WebAssembly Text module to binary.</p></div></div>",
-  "wrun": "<div><h4>wrun(buffer: undefined) → {AlternatingLinkedList}</h4><div class=\"description\"><p>Run a compiled WebAssembly Binary Buffer.</p></div></div>"
+  "wcompile": {
+    "kind": "function",
+    "name": "wcompile",
+    "description": "<p>Compile a (hopefully valid) WebAssembly Text module to binary.</p>",
+    "params": [
+      [
+        "program",
+        "string"
+      ]
+    ],
+    "retType": "number[]"
+  },
+  "wrun": {
+    "kind": "function",
+    "name": "wrun",
+    "description": "<p>Run a compiled WebAssembly Binary Buffer.</p>",
+    "params": [
+      [
+        "buffer",
+        "number[] | Uint8Array"
+      ]
+    ],
+    "retType": "AlternatingLinkedList<string, ExportValue>"
+  }
 }

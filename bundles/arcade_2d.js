@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
@@ -69681,7 +69681,7 @@ require => {
           (function (global) {
             var CONST = __webpack_require__(33);
             var Extend = __webpack_require__(17);
-            var Phaser4 = {
+            var Phaser3 = {
               Actions: __webpack_require__(275),
               Animations: __webpack_require__(723),
               BlendModes: __webpack_require__(35),
@@ -69716,13 +69716,13 @@ require => {
               Utils: __webpack_require__(1481)
             };
             if (true) {
-              Phaser4.Sound = __webpack_require__(1492);
+              Phaser3.Sound = __webpack_require__(1492);
             }
             if (false) {}
             if (false) {}
-            Phaser4 = Extend(false, Phaser4, CONST);
-            module2.exports = Phaser4;
-            global.Phaser = Phaser4;
+            Phaser3 = Extend(false, Phaser3, CONST);
+            module2.exports = Phaser3;
+            global.Phaser = Phaser3;
           }).call(this, __webpack_require__(600));
         }]);
       });
@@ -69771,10 +69771,67 @@ require => {
   });
   init_define_process();
   init_define_process();
-  var import_phaser2 = __toESM(require_phaser(), 1);
   init_define_process();
-  var import_phaser = __toESM(require_phaser(), 1);
-  init_define_process();
+  var _AudioClip = class _AudioClip {
+    constructor(url, volumeLevel) {
+      this.url = url;
+      this.volumeLevel = volumeLevel;
+      this.isUpdated = false;
+      this.shouldPlay = false;
+      this.shouldLoop = false;
+      this.toReplString = () => "<AudioClip>";
+      this.toString = () => this.toReplString();
+      this.id = _AudioClip.audioClipCount++;
+      _AudioClip.audioClipsIndexMap.set(url, this.id);
+      _AudioClip.audioClipsArray.push(this);
+    }
+    static of(url, volumeLevel) {
+      if (url === "") {
+        throw new Error("AudioClip URL cannot be empty");
+      }
+      if (_AudioClip.audioClipsIndexMap.has(url)) {
+        return _AudioClip.audioClipsArray[_AudioClip.audioClipsIndexMap.get(url)];
+      }
+      return new _AudioClip(url, volumeLevel);
+    }
+    getUrl() {
+      return this.url;
+    }
+    getVolumeLevel() {
+      return this.volumeLevel;
+    }
+    shouldAudioClipLoop() {
+      return this.shouldLoop;
+    }
+    shouldAudioClipPlay() {
+      return this.shouldPlay;
+    }
+    setShouldAudioClipLoop(loop) {
+      if (this.shouldLoop !== loop) {
+        this.shouldLoop = loop;
+        this.isUpdated = false;
+      }
+    }
+    setShouldAudioClipPlay(play) {
+      this.shouldPlay = play;
+      this.isUpdated = false;
+    }
+    hasAudioClipUpdates() {
+      const prevValue = !this.isUpdated;
+      this.setAudioClipUpdated();
+      return prevValue;
+    }
+    setAudioClipUpdated() {
+      this.isUpdated = true;
+    }
+    static getAudioClipsArray() {
+      return _AudioClip.audioClipsArray;
+    }
+  };
+  _AudioClip.audioClipCount = 0;
+  _AudioClip.audioClipsIndexMap = new Map();
+  _AudioClip.audioClipsArray = [];
+  var AudioClip = _AudioClip;
   init_define_process();
   init_define_process();
   var DEFAULT_WIDTH = 600;
@@ -69806,6 +69863,7 @@ require => {
     isHitboxActive: true
   };
   var DEFAULT_PATH_PREFIX = "https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/";
+  init_define_process();
   var _GameObject = class _GameObject {
     constructor(transformProps = DEFAULT_TRANSFORM_PROPS) {
       this.transformProps = transformProps;
@@ -69959,68 +70017,9 @@ require => {
     }
   };
   init_define_process();
-  var _AudioClip = class _AudioClip {
-    constructor(url, volumeLevel) {
-      this.url = url;
-      this.volumeLevel = volumeLevel;
-      this.isUpdated = false;
-      this.shouldPlay = false;
-      this.shouldLoop = false;
-      this.toReplString = () => "<AudioClip>";
-      this.toString = () => this.toReplString();
-      this.id = _AudioClip.audioClipCount++;
-      _AudioClip.audioClipsIndexMap.set(url, this.id);
-      _AudioClip.audioClipsArray.push(this);
-    }
-    static of(url, volumeLevel) {
-      if (url === "") {
-        throw new Error("AudioClip URL cannot be empty");
-      }
-      if (_AudioClip.audioClipsIndexMap.has(url)) {
-        return _AudioClip.audioClipsArray[_AudioClip.audioClipsIndexMap.get(url)];
-      }
-      return new _AudioClip(url, volumeLevel);
-    }
-    getUrl() {
-      return this.url;
-    }
-    getVolumeLevel() {
-      return this.volumeLevel;
-    }
-    shouldAudioClipLoop() {
-      return this.shouldLoop;
-    }
-    shouldAudioClipPlay() {
-      return this.shouldPlay;
-    }
-    setShouldAudioClipLoop(loop) {
-      if (this.shouldLoop !== loop) {
-        this.shouldLoop = loop;
-        this.isUpdated = false;
-      }
-    }
-    setShouldAudioClipPlay(play) {
-      this.shouldPlay = play;
-      this.isUpdated = false;
-    }
-    hasAudioClipUpdates() {
-      const prevValue = !this.isUpdated;
-      this.setAudioClipUpdated();
-      return prevValue;
-    }
-    setAudioClipUpdated() {
-      this.isUpdated = true;
-    }
-    static getAudioClipsArray() {
-      return _AudioClip.audioClipsArray;
-    }
-  };
-  _AudioClip.audioClipCount = 0;
-  _AudioClip.audioClipsIndexMap = new Map();
-  _AudioClip.audioClipsArray = [];
-  var AudioClip = _AudioClip;
+  var import_phaser = __toESM(require_phaser(), 1);
   var gameState = {
-    debugLogArray: new Array(),
+    debugLogArray: [],
     gameTime: 0,
     loopCount: 0,
     inputKeysDown: new Set(),
@@ -70475,7 +70474,7 @@ require => {
       width: config.width / config.scale,
       height: config.height / config.scale,
       zoom: config.scale,
-      type: import_phaser2.default.WEBGL,
+      type: Phaser.WEBGL,
       parent: "phaser-game",
       scene: PhaserScene,
       input: inputConfig,
@@ -70518,4 +70517,4 @@ require => {
     throw new TypeError("Cannot stop a non-AudioClip");
   };
   return __toCommonJS(arcade_2d_exports);
-}
+};

@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -355,4 +355,4 @@ require => {
     };
   }
   return __toCommonJS(copy_gc_exports);
-}
+};

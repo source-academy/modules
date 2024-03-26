@@ -1,16 +1,166 @@
 {
-  "STATE_CONNECTED": "<div><h4>STATE_CONNECTED: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "STATE_DISCONNECTED": "<div><h4>STATE_DISCONNECTED: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "STATE_OFFLINE": "<div><h4>STATE_OFFLINE: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "STATE_RECONNECTING": "<div><h4>STATE_RECONNECTING: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "callFunction": "<div><h4>callFunction(receiver: string, name: string, args: undefined, callback: undefined) → {void}</h4><div class=\"description\"><p>Calls a function exposed by another user.</p></div></div>",
-  "expose": "<div><h4>expose(name: string, func: undefined) → {void}</h4><div class=\"description\"><p>Exposes the specified function to other users.\nOther users can use \"callFunction\" to call this function.</p></div></div>",
-  "getGlobalState": "<div><h4>getGlobalState() → {any}</h4><div class=\"description\"><p>Obtains the current global state.</p></div></div>",
-  "getUserId": "<div><h4>getUserId() → {string}</h4><div class=\"description\"><p>Obtains the user's ID.</p></div></div>",
-  "initCommunications": "<div><h4>initCommunications(address: string, port: number, user: string, password: string) → {void}</h4><div class=\"description\"><p>Initializes connection with MQTT broker.\nCurrently only supports WebSocket.</p></div></div>",
-  "initGlobalState": "<div><h4>initGlobalState(topicHeader: string, callback: undefined) → {void}</h4><div class=\"description\"><p>Initializes global state.</p></div></div>",
-  "initRpc": "<div><h4>initRpc(topicHeader: string, userId: string) → {void}</h4><div class=\"description\"><p>Initializes RPC.</p></div></div>",
-  "keepRunning": "<div><h4>keepRunning() → {void}</h4><div class=\"description\"><p>Keeps the program running so that messages can come in.</p></div></div>",
-  "stopRunning": "<div><h4>stopRunning() → {void}</h4><div class=\"description\"><p>Removes interval that keeps the program running.</p></div></div>",
-  "updateGlobalState": "<div><h4>updateGlobalState(path: string, updatedState: any) → {void}</h4><div class=\"description\"><p>Broadcasts the new states to all devices.\nHas ability to modify only part of the JSON state.</p></div></div>"
+  "STATE_CONNECTED": {
+    "kind": "variable",
+    "name": "STATE_CONNECTED",
+    "description": "No description available",
+    "type": "\"Connected\""
+  },
+  "STATE_DISCONNECTED": {
+    "kind": "variable",
+    "name": "STATE_DISCONNECTED",
+    "description": "No description available",
+    "type": "\"Disconnected\""
+  },
+  "STATE_OFFLINE": {
+    "kind": "variable",
+    "name": "STATE_OFFLINE",
+    "description": "No description available",
+    "type": "\"Offline\""
+  },
+  "STATE_RECONNECTING": {
+    "kind": "variable",
+    "name": "STATE_RECONNECTING",
+    "description": "No description available",
+    "type": "\"Reconnecting\""
+  },
+  "callFunction": {
+    "kind": "function",
+    "name": "callFunction",
+    "description": "<p>Calls a function exposed by another user.</p>",
+    "params": [
+      [
+        "receiver",
+        "string"
+      ],
+      [
+        "name",
+        "string"
+      ],
+      [
+        "args",
+        "any[]"
+      ],
+      [
+        "callback",
+        "Function"
+      ]
+    ],
+    "retType": "void"
+  },
+  "expose": {
+    "kind": "function",
+    "name": "expose",
+    "description": "<p>Exposes the specified function to other users.\nOther users can use \"callFunction\" to call this function.</p>",
+    "params": [
+      [
+        "name",
+        "string"
+      ],
+      [
+        "func",
+        "Function"
+      ]
+    ],
+    "retType": "void"
+  },
+  "getGlobalState": {
+    "kind": "function",
+    "name": "getGlobalState",
+    "description": "<p>Obtains the current global state.</p>",
+    "params": [],
+    "retType": "any"
+  },
+  "getUserId": {
+    "kind": "function",
+    "name": "getUserId",
+    "description": "<p>Obtains the user's ID.</p>",
+    "params": [],
+    "retType": "string"
+  },
+  "initCommunications": {
+    "kind": "function",
+    "name": "initCommunications",
+    "description": "<p>Initializes connection with MQTT broker.\nCurrently only supports WebSocket.</p>",
+    "params": [
+      [
+        "address",
+        "string"
+      ],
+      [
+        "port",
+        "number"
+      ],
+      [
+        "user",
+        "string"
+      ],
+      [
+        "password",
+        "string"
+      ]
+    ],
+    "retType": "void"
+  },
+  "initGlobalState": {
+    "kind": "function",
+    "name": "initGlobalState",
+    "description": "<p>Initializes global state.</p>",
+    "params": [
+      [
+        "topicHeader",
+        "string"
+      ],
+      [
+        "callback",
+        "Function"
+      ]
+    ],
+    "retType": "void"
+  },
+  "initRpc": {
+    "kind": "function",
+    "name": "initRpc",
+    "description": "<p>Initializes RPC.</p>",
+    "params": [
+      [
+        "topicHeader",
+        "string"
+      ],
+      [
+        "userId",
+        "string"
+      ]
+    ],
+    "retType": "void"
+  },
+  "keepRunning": {
+    "kind": "function",
+    "name": "keepRunning",
+    "description": "<p>Keeps the program running so that messages can come in.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "stopRunning": {
+    "kind": "function",
+    "name": "stopRunning",
+    "description": "<p>Removes interval that keeps the program running.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "updateGlobalState": {
+    "kind": "function",
+    "name": "updateGlobalState",
+    "description": "<p>Broadcasts the new states to all devices.\nHas ability to modify only part of the JSON state.</p>",
+    "params": [
+      [
+        "path",
+        "string"
+      ],
+      [
+        "updatedState",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  }
 }

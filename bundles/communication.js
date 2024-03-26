@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
@@ -14935,7 +14935,7 @@ require => {
       return __async(this, null, function* () {
         if (this.client !== null) return;
         if (this.address.length === 0) return;
-        var link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
+        const link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
         this.client = (0, import_mqtt.connect)(link);
         this.client.on("connect", () => {
           this.connectionCallback(STATE_CONNECTED);
@@ -14985,6 +14985,7 @@ require => {
   init_define_process();
   var import_context = __toESM(__require("js-slang/context"), 1);
   init_define_process();
+  init_define_process();
   var MultiUserController = class {
     constructor() {
       this.controller = null;
@@ -15028,7 +15029,6 @@ require => {
       this.messageCallbacks.set(identifier, callback);
     }
   };
-  init_define_process();
   var GlobalStateController = class {
     constructor(topicHeader, multiUser, callback) {
       this.topicHeader = topicHeader;
@@ -15241,7 +15241,7 @@ require => {
     var _a;
     const moduleState = getModuleState();
     if (moduleState instanceof CommunicationModuleState) {
-      let userId = (_a = moduleState.rpc) == null ? void 0 : _a.getUserId();
+      const userId = (_a = moduleState.rpc) == null ? void 0 : _a.getUserId();
       if (userId) {
         return userId;
       }
@@ -15268,4 +15268,4 @@ require => {
     throw new Error("Error: Communication module not initialized.");
   }
   return __toCommonJS(communication_exports);
-}
+};

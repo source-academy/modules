@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -33,4 +33,4 @@ require => {
   var scrabble_words_tiny = scrabble_words.filter((_, i) => i % 100 === 0);
   var scrabble_letters_tiny = scrabble_words_tiny.map(w => w.split(""));
   return __toCommonJS(scrabble_exports);
-}
+};

@@ -1,4 +1,4 @@
-export default require => (() => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37,8 +37,8 @@ export default require => (() => {
   __export(MarkSweep_exports, {
     default: () => MarkSweep_default
   });
-  var import_react = __toESM(__require("react"), 1);
   var import_core = __require("@blueprintjs/core");
+  var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var MARK_SLOT = 1;
   var MarkSweep = class extends import_react.default.Component {
@@ -456,4 +456,4 @@ export default require => (() => {
     iconName: "heat-grid"
   };
   return __toCommonJS(MarkSweep_exports);
-})()["default"];
+};

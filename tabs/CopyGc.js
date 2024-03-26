@@ -1,4 +1,4 @@
-export default require => (() => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37,8 +37,8 @@ export default require => (() => {
   __export(CopyGc_exports, {
     default: () => CopyGc_default
   });
-  var import_react = __toESM(__require("react"), 1);
   var import_core = __require("@blueprintjs/core");
+  var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var CopyGC = class extends import_react.default.Component {
     constructor(props) {
@@ -434,4 +434,4 @@ export default require => (() => {
     iconName: "duplicate"
   };
   return __toCommonJS(CopyGc_exports);
-})()["default"];
+};

@@ -1,4 +1,4 @@
-export default require => (() => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37,15 +37,15 @@ export default require => (() => {
   __export(UnityAcademy_exports, {
     default: () => UnityAcademy_default
   });
-  var import_react2 = __toESM(__require("react"), 1);
   var import_core2 = __require("@blueprintjs/core");
   var import_icons2 = __require("@blueprintjs/icons");
-  var UNITY_ACADEMY_BACKEND_URL = "https://unity-academy.s3.ap-southeast-1.amazonaws.com/";
-  var BUILD_NAME = "ua-frontend-prod";
-  var import_react = __toESM(__require("react"), 1);
-  var import_react_dom = __toESM(__require("react-dom"), 1);
+  var import_react2 = __toESM(__require("react"), 1);
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
+  var import_react = __toESM(__require("react"), 1);
+  var import_react_dom = __toESM(__require("react-dom"), 1);
+  var UNITY_ACADEMY_BACKEND_URL = "https://unity-academy.s3.ap-southeast-1.amazonaws.com/";
+  var BUILD_NAME = "ua-frontend-prod";
   var import_jsx_runtime = __require("react/jsx-runtime");
   function getInstance() {
     return window.unityAcademyContext;
@@ -317,4 +317,4 @@ export default require => (() => {
     iconName: "cube"
   };
   return __toCommonJS(UnityAcademy_exports);
-})()["default"];
+};

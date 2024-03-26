@@ -1,4 +1,4 @@
-export default require => (() => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -5401,12 +5401,12 @@ export default require => (() => {
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
   var import_lodash = __toESM(require_lodash(), 1);
-  var import_react = __require("react");
+  var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var MultiItemDisplay = ({elements}) => {
-    const [currentStep, setCurrentStep] = (0, import_react.useState)(0);
-    const [stepEditorValue, setStepEditorValue] = (0, import_react.useState)("1");
-    const [stepEditorFocused, setStepEditorFocused] = (0, import_react.useState)(false);
+    const [currentStep, setCurrentStep] = import_react.default.useState(0);
+    const [stepEditorValue, setStepEditorValue] = import_react.default.useState("1");
+    const [stepEditorFocused, setStepEditorFocused] = import_react.default.useState(false);
     const resetStepEditor = () => setStepEditorValue((currentStep + 1).toString());
     const elementsDigitCount = Math.floor(Math.log10(Math.max(1, elements.length))) + 1;
     return (0, import_jsx_runtime.jsxs)("div", {
@@ -5548,4 +5548,4 @@ export default require => (() => {
     iconName: "music"
   };
   return __toCommonJS(Sound_exports);
-})()["default"];
+};

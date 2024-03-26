@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -73,6 +73,7 @@ require => {
     trombone: () => trombone,
     violin: () => violin
   });
+  var import_context = __toESM(__require("js-slang/context"), 1);
   var import_list = __require("js-slang/dist/stdlib/list");
   var FastBase64 = {
     chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -157,7 +158,6 @@ require => {
     };
     if (data instanceof Array) this.Make(data);
   }
-  var import_context = __toESM(__require("js-slang/context"), 1);
   var FS = 44100;
   var fourier_expansion_level = 5;
   var audioPlayed = [];
@@ -185,9 +185,9 @@ require => {
     } else if (permission === false) {
       throw new Error(`Permission has been denied.
 
-		    Re-start browser and call init_record();
+        Re-start browser and call init_record();
 
-		    to obtain permission to use microphone.`);
+        to obtain permission to use microphone.`);
     }
   }
   var globalStream;
@@ -641,4 +641,4 @@ require => {
     return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
   }
   return __toCommonJS(stereo_sound_exports);
-}
+};

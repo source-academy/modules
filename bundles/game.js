@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -69797,8 +69797,11 @@ require => {
   });
   init_define_process();
   init_define_process();
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  var import_list = __require("js-slang/dist/stdlib/list");
+  var import_phaser = __toESM(require_phaser(), 1);
   init_define_process();
-  var Phaser2 = __toESM(require_phaser(), 1);
+  var Phaser = __toESM(require_phaser(), 1);
   var sourceAcademyAssets = "https://source-academy-assets.s3-ap-southeast-1.amazonaws.com";
   var defaultGameParams = {
     scene: void 0,
@@ -69816,10 +69819,8 @@ require => {
       x: 1920,
       y: 1080
     },
-    createAward: (x, y, key) => new Phaser2.GameObjects.Sprite(defaultGameParams.scene, x, y, key)
+    createAward: (x, y, key) => new Phaser.GameObjects.Sprite(defaultGameParams.scene, x, y, key)
   };
-  var import_context = __toESM(__require("js-slang/context"), 1);
-  var import_list = __require("js-slang/dist/stdlib/list");
   if (!import_context.default.moduleContexts.game.state) {
     import_context.default.moduleContexts.game.state = defaultGameParams;
   }
@@ -70017,7 +70018,7 @@ require => {
   }
   function create_image(x, y, asset_key) {
     if (preloadImageMap.get(asset_key) || preloadSpritesheetMap.get(asset_key)) {
-      const image = new Phaser.GameObjects.Sprite(scene(), x, y, asset_key);
+      const image = new import_phaser.default.GameObjects.Sprite(scene(), x, y, asset_key);
       return set_type(image, "image");
     }
     throw_error(`${asset_key} is not associated with any image`);
@@ -70026,19 +70027,19 @@ require => {
     return set_type(createAward(x, y, award_key), "award");
   }
   function create_text(x, y, text, config = {}) {
-    const txt = new Phaser.GameObjects.Text(scene(), x, y, text, config);
+    const txt = new import_phaser.default.GameObjects.Text(scene(), x, y, text, config);
     return set_type(txt, "text");
   }
   function create_rect(x, y, width, height, fill = 0, alpha = 1) {
-    const rect = new Phaser.GameObjects.Rectangle(scene(), x, y, width, height, fill, alpha);
+    const rect = new import_phaser.default.GameObjects.Rectangle(scene(), x, y, width, height, fill, alpha);
     return set_type(rect, "rect");
   }
   function create_ellipse(x, y, width, height, fill = 0, alpha = 1) {
-    const ellipse = new Phaser.GameObjects.Ellipse(scene(), x, y, width, height, fill, alpha);
+    const ellipse = new import_phaser.default.GameObjects.Ellipse(scene(), x, y, width, height, fill, alpha);
     return set_type(ellipse, "ellipse");
   }
   function create_container(x, y) {
-    const cont = new Phaser.GameObjects.Container(scene(), x, y);
+    const cont = new import_phaser.default.GameObjects.Container(scene(), x, y);
     return set_type(cont, "container");
   }
   function add_to_container(container, obj) {
@@ -70148,4 +70149,4 @@ require => {
     dummy.minArgsNeeded = fn.length;
   });
   return __toCommonJS(game_exports);
-}
+};

@@ -1,51 +1,628 @@
 {
-  "blank": "<div><h4>blank: Rune</h4><div class=\"description\"><p>Rune with the shape of a blank square</p></div></div>",
-  "circle": "<div><h4>circle: Rune</h4><div class=\"description\"><p>Rune with the shape of a circle</p></div></div>",
-  "corner": "<div><h4>corner: Rune</h4><div class=\"description\"><p>Rune with black triangle,\nfilling upper right corner</p></div></div>",
-  "heart": "<div><h4>heart: Rune</h4><div class=\"description\"><p>Rune with the shape of a heart</p></div></div>",
-  "nova": "<div><h4>nova: Rune</h4><div class=\"description\"><p>Rune with the shape of two overlapping\ntriangles, residing in the upper half\nof the shape</p></div></div>",
-  "pentagram": "<div><h4>pentagram: Rune</h4><div class=\"description\"><p>Rune with the shape of a pentagram</p></div></div>",
-  "rcross": "<div><h4>rcross: Rune</h4><div class=\"description\"><p>Rune with the shape of a\nsmall square inside a large square,\neach diagonally split into a\nblack and white half</p></div></div>",
-  "ribbon": "<div><h4>ribbon: Rune</h4><div class=\"description\"><p>Rune with the shape of a ribbon\nwinding outwards in an anticlockwise spiral</p></div></div>",
-  "sail": "<div><h4>sail: Rune</h4><div class=\"description\"><p>Rune with the shape of a sail</p></div></div>",
-  "square": "<div><h4>square: Rune</h4><div class=\"description\"><p>Rune with the shape of a full square</p></div></div>",
-  "triangle": "<div><h4>triangle: Rune</h4><div class=\"description\"><p>Rune with the shape of a triangle</p></div></div>",
-  "anaglyph": "<div><h4>anaglyph(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Renders the specified Rune in a tab as an anaglyph. Use 3D glasses to view the\nanaglyph.</p></div></div>",
-  "animate_anaglyph": "<div><h4>animate_anaglyph(duration: number, fps: number, func: RuneAnimation) → {AnimatedRune}</h4><div class=\"description\"><p>Create an animation of anaglyph runes</p></div></div>",
-  "animate_rune": "<div><h4>animate_rune(duration: number, fps: number, func: RuneAnimation) → {AnimatedRune}</h4><div class=\"description\"><p>Create an animation of runes</p></div></div>",
-  "beside": "<div><h4>beside(rune1: Rune, rune2: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from two given Runes by\nplacing the first on the left of the second,\nboth occupying equal portions of the width\nof the result</p></div></div>",
-  "beside_frac": "<div><h4>beside_frac(frac: number, rune1: Rune, rune2: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from two given Runes by\nplacing the first on the left of the second\nsuch that the first one occupies frac\nportion of the width of the result and\nthe second the rest</p></div></div>",
-  "black": "<div><h4>black(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune black (#000000).</p></div></div>",
-  "blue": "<div><h4>blue(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune blue (#2196F3).</p></div></div>",
-  "brown": "<div><h4>brown(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune brown.</p></div></div>",
-  "color": "<div><h4>color(rune: Rune, r: number, g: number, b: number) → {Rune}</h4><div class=\"description\"><p>Adds color to rune by specifying\nthe red, green, blue (RGB) value, ranging from 0.0 to 1.0.\nRGB is additive: if all values are 1, the color is white,\nand if all values are 0, the color is black.</p></div></div>",
-  "flip_horiz": "<div><h4>flip_horiz(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from a given Rune by\nflipping it around a vertical axis,\ncreating a mirror image</p></div></div>",
-  "flip_vert": "<div><h4>flip_vert(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from a given Rune by\nflipping it around a horizontal axis,\nturning it upside down</p></div></div>",
-  "from_url": "<div><h4>from_url(imageUrl: string) → {Rune}</h4><div class=\"description\"><p>Create a rune using the image provided in the url</p></div></div>",
-  "green": "<div><h4>green(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune green (#4CAF50).</p></div></div>",
-  "hollusion": "<div><h4>hollusion(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Renders the specified Rune in a tab as a hollusion, with a default magnitude\nof 0.1.</p></div></div>",
-  "hollusion_magnitude": "<div><h4>hollusion_magnitude(rune: Rune, magnitude: number) → {Rune}</h4><div class=\"description\"><p>Renders the specified Rune in a tab as a hollusion, using the specified\nmagnitude.</p></div></div>",
-  "indigo": "<div><h4>indigo(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune indigo (#3F51B5).</p></div></div>",
-  "make_cross": "<div><h4>make_cross(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from a given Rune by\narranging into a square for copies of the\ngiven Rune in different orientations</p></div></div>",
-  "orange": "<div><h4>orange(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune orange (#FF9800).</p></div></div>",
-  "overlay": "<div><h4>overlay(rune1: Rune, rune2: Rune) → {Rune}</h4><div class=\"description\"><p>The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.</p></div></div>",
-  "overlay_frac": "<div><h4>overlay_frac(frac: number, rune1: Rune, rune2: Rune) → {Rune}</h4><div class=\"description\"><p>The depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.</p></div></div>",
-  "pink": "<div><h4>pink(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune pink (#E91E63s).</p></div></div>",
-  "purple": "<div><h4>purple(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune purple (#AA00FF).</p></div></div>",
-  "quarter_turn_left": "<div><h4>quarter_turn_left(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from a given Rune\nby turning it a quarter-turn in\nanti-clockwise direction.</p></div></div>",
-  "quarter_turn_right": "<div><h4>quarter_turn_right(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from a given Rune\nby turning it a quarter-turn around the centre in\nclockwise direction.</p></div></div>",
-  "random_color": "<div><h4>random_color(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Gives random color to the given rune.\nThe color is chosen randomly from the following nine\ncolors: red, pink, purple, indigo, blue, green, yellow, orange, brown</p></div></div>",
-  "red": "<div><h4>red(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune red (#F44336).</p></div></div>",
-  "repeat_pattern": "<div><h4>repeat_pattern(n: number, pattern: undefined, initial: Rune) → {Rune}</h4><div class=\"description\"><p>Applies a given function n times to an initial value</p></div></div>",
-  "rotate": "<div><h4>rotate(rad: number, rune: Rune) → {Rune}</h4><div class=\"description\"><p>Rotates a given Rune by a given angle,\ngiven in radians, in anti-clockwise direction.\nNote that parts of the Rune\nmay be cropped as a result.</p></div></div>",
-  "scale": "<div><h4>scale(ratio: number, rune: Rune) → {Rune}</h4><div class=\"description\"><p>Scales a given Rune by a given factor in both x and y direction</p></div></div>",
-  "scale_independent": "<div><h4>scale_independent(ratio_x: number, ratio_y: number, rune: Rune) → {Rune}</h4><div class=\"description\"><p>Scales a given Rune by separate factors in x and y direction</p></div></div>",
-  "show": "<div><h4>show(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Renders the specified Rune in a tab as a basic drawing.</p></div></div>",
-  "stack": "<div><h4>stack(rune1: Rune, rune2: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from two given Runes by\nplacing the first on top of the second, each\noccupying equal parts of the height of the\nresult</p></div></div>",
-  "stack_frac": "<div><h4>stack_frac(frac: number, rune1: Rune, rune2: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from two given Runes by\nplacing the first on top of the second\nsuch that the first one occupies frac\nportion of the height of the result and\nthe second the rest</p></div></div>",
-  "stackn": "<div><h4>stackn(n: number, rune: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from a given Rune\nby vertically stacking n copies of it</p></div></div>",
-  "translate": "<div><h4>translate(x: number, y: number, rune: Rune) → {Rune}</h4><div class=\"description\"><p>Translates a given Rune by given values in x and y direction</p></div></div>",
-  "turn_upside_down": "<div><h4>turn_upside_down(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Makes a new Rune from a given Rune\nby turning it upside-down</p></div></div>",
-  "white": "<div><h4>white(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune white (#FFFFFF).</p></div></div>",
-  "yellow": "<div><h4>yellow(rune: Rune) → {Rune}</h4><div class=\"description\"><p>Colors the given rune yellow (#FFEB3B).</p></div></div>"
+  "blank": {
+    "kind": "variable",
+    "name": "blank",
+    "description": "<p>Rune with the shape of a blank square</p>",
+    "type": "Rune"
+  },
+  "circle": {
+    "kind": "variable",
+    "name": "circle",
+    "description": "<p>Rune with the shape of a circle</p>",
+    "type": "Rune"
+  },
+  "corner": {
+    "kind": "variable",
+    "name": "corner",
+    "description": "<p>Rune with black triangle,\nfilling upper right corner</p>",
+    "type": "Rune"
+  },
+  "heart": {
+    "kind": "variable",
+    "name": "heart",
+    "description": "<p>Rune with the shape of a heart</p>",
+    "type": "Rune"
+  },
+  "nova": {
+    "kind": "variable",
+    "name": "nova",
+    "description": "<p>Rune with the shape of two overlapping\ntriangles, residing in the upper half\nof the shape</p>",
+    "type": "Rune"
+  },
+  "pentagram": {
+    "kind": "variable",
+    "name": "pentagram",
+    "description": "<p>Rune with the shape of a pentagram</p>",
+    "type": "Rune"
+  },
+  "rcross": {
+    "kind": "variable",
+    "name": "rcross",
+    "description": "<p>Rune with the shape of a\nsmall square inside a large square,\neach diagonally split into a\nblack and white half</p>",
+    "type": "Rune"
+  },
+  "ribbon": {
+    "kind": "variable",
+    "name": "ribbon",
+    "description": "<p>Rune with the shape of a ribbon\nwinding outwards in an anticlockwise spiral</p>",
+    "type": "Rune"
+  },
+  "sail": {
+    "kind": "variable",
+    "name": "sail",
+    "description": "<p>Rune with the shape of a sail</p>",
+    "type": "Rune"
+  },
+  "square": {
+    "kind": "variable",
+    "name": "square",
+    "description": "<p>Rune with the shape of a full square</p>",
+    "type": "Rune"
+  },
+  "triangle": {
+    "kind": "variable",
+    "name": "triangle",
+    "description": "<p>Rune with the shape of a triangle</p>",
+    "type": "Rune"
+  },
+  "anaglyph": {
+    "kind": "function",
+    "name": "anaglyph",
+    "description": "<p>Renders the specified Rune in a tab as an anaglyph. Use 3D glasses to view the\nanaglyph.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "animate_anaglyph": {
+    "kind": "function",
+    "name": "animate_anaglyph",
+    "description": "<p>Create an animation of anaglyph runes</p>",
+    "params": [
+      [
+        "duration",
+        "number"
+      ],
+      [
+        "fps",
+        "number"
+      ],
+      [
+        "func",
+        "RuneAnimation"
+      ]
+    ],
+    "retType": "AnimatedRune"
+  },
+  "animate_rune": {
+    "kind": "function",
+    "name": "animate_rune",
+    "description": "<p>Create an animation of runes</p>",
+    "params": [
+      [
+        "duration",
+        "number"
+      ],
+      [
+        "fps",
+        "number"
+      ],
+      [
+        "func",
+        "RuneAnimation"
+      ]
+    ],
+    "retType": "AnimatedRune"
+  },
+  "beside": {
+    "kind": "function",
+    "name": "beside",
+    "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on the left of the second,\nboth occupying equal portions of the width\nof the result</p>",
+    "params": [
+      [
+        "rune1",
+        "Rune"
+      ],
+      [
+        "rune2",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "beside_frac": {
+    "kind": "function",
+    "name": "beside_frac",
+    "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on the left of the second\nsuch that the first one occupies frac\nportion of the width of the result and\nthe second the rest</p>",
+    "params": [
+      [
+        "frac",
+        "number"
+      ],
+      [
+        "rune1",
+        "Rune"
+      ],
+      [
+        "rune2",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "black": {
+    "kind": "function",
+    "name": "black",
+    "description": "<p>Colors the given rune black (#000000).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "blue": {
+    "kind": "function",
+    "name": "blue",
+    "description": "<p>Colors the given rune blue (#2196F3).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "brown": {
+    "kind": "function",
+    "name": "brown",
+    "description": "<p>Colors the given rune brown.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "color": {
+    "kind": "function",
+    "name": "color",
+    "description": "<p>Adds color to rune by specifying\nthe red, green, blue (RGB) value, ranging from 0.0 to 1.0.\nRGB is additive: if all values are 1, the color is white,\nand if all values are 0, the color is black.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ],
+      [
+        "r",
+        "number"
+      ],
+      [
+        "g",
+        "number"
+      ],
+      [
+        "b",
+        "number"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "flip_horiz": {
+    "kind": "function",
+    "name": "flip_horiz",
+    "description": "<p>Makes a new Rune from a given Rune by\nflipping it around a vertical axis,\ncreating a mirror image</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "flip_vert": {
+    "kind": "function",
+    "name": "flip_vert",
+    "description": "<p>Makes a new Rune from a given Rune by\nflipping it around a horizontal axis,\nturning it upside down</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "from_url": {
+    "kind": "function",
+    "name": "from_url",
+    "description": "<p>Create a rune using the image provided in the url</p>",
+    "params": [
+      [
+        "imageUrl",
+        "string"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "green": {
+    "kind": "function",
+    "name": "green",
+    "description": "<p>Colors the given rune green (#4CAF50).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "hollusion": {
+    "kind": "function",
+    "name": "hollusion",
+    "description": "<p>Renders the specified Rune in a tab as a hollusion, with a default magnitude\nof 0.1.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "hollusion_magnitude": {
+    "kind": "function",
+    "name": "hollusion_magnitude",
+    "description": "<p>Renders the specified Rune in a tab as a hollusion, using the specified\nmagnitude.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ],
+      [
+        "magnitude",
+        "number"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "indigo": {
+    "kind": "function",
+    "name": "indigo",
+    "description": "<p>Colors the given rune indigo (#3F51B5).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "make_cross": {
+    "kind": "function",
+    "name": "make_cross",
+    "description": "<p>Makes a new Rune from a given Rune by\narranging into a square for copies of the\ngiven Rune in different orientations</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "orange": {
+    "kind": "function",
+    "name": "orange",
+    "description": "<p>Colors the given rune orange (#FF9800).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "overlay": {
+    "kind": "function",
+    "name": "overlay",
+    "description": "<p>The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.</p>",
+    "params": [
+      [
+        "rune1",
+        "Rune"
+      ],
+      [
+        "rune2",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "overlay_frac": {
+    "kind": "function",
+    "name": "overlay_frac",
+    "description": "<p>The depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.</p>",
+    "params": [
+      [
+        "frac",
+        "number"
+      ],
+      [
+        "rune1",
+        "Rune"
+      ],
+      [
+        "rune2",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "pink": {
+    "kind": "function",
+    "name": "pink",
+    "description": "<p>Colors the given rune pink (#E91E63s).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "purple": {
+    "kind": "function",
+    "name": "purple",
+    "description": "<p>Colors the given rune purple (#AA00FF).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "quarter_turn_left": {
+    "kind": "function",
+    "name": "quarter_turn_left",
+    "description": "<p>Makes a new Rune from a given Rune\nby turning it a quarter-turn in\nanti-clockwise direction.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "quarter_turn_right": {
+    "kind": "function",
+    "name": "quarter_turn_right",
+    "description": "<p>Makes a new Rune from a given Rune\nby turning it a quarter-turn around the centre in\nclockwise direction.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "random_color": {
+    "kind": "function",
+    "name": "random_color",
+    "description": "<p>Gives random color to the given rune.\nThe color is chosen randomly from the following nine\ncolors: red, pink, purple, indigo, blue, green, yellow, orange, brown</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "red": {
+    "kind": "function",
+    "name": "red",
+    "description": "<p>Colors the given rune red (#F44336).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "repeat_pattern": {
+    "kind": "function",
+    "name": "repeat_pattern",
+    "description": "<p>Applies a given function n times to an initial value</p>",
+    "params": [
+      [
+        "n",
+        "number"
+      ],
+      [
+        "pattern",
+        "Function"
+      ],
+      [
+        "initial",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "rotate": {
+    "kind": "function",
+    "name": "rotate",
+    "description": "<p>Rotates a given Rune by a given angle,\ngiven in radians, in anti-clockwise direction.\nNote that parts of the Rune\nmay be cropped as a result.</p>",
+    "params": [
+      [
+        "rad",
+        "number"
+      ],
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "scale": {
+    "kind": "function",
+    "name": "scale",
+    "description": "<p>Scales a given Rune by a given factor in both x and y direction</p>",
+    "params": [
+      [
+        "ratio",
+        "number"
+      ],
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "scale_independent": {
+    "kind": "function",
+    "name": "scale_independent",
+    "description": "<p>Scales a given Rune by separate factors in x and y direction</p>",
+    "params": [
+      [
+        "ratio_x",
+        "number"
+      ],
+      [
+        "ratio_y",
+        "number"
+      ],
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "show": {
+    "kind": "function",
+    "name": "show",
+    "description": "<p>Renders the specified Rune in a tab as a basic drawing.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "stack": {
+    "kind": "function",
+    "name": "stack",
+    "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second, each\noccupying equal parts of the height of the\nresult</p>",
+    "params": [
+      [
+        "rune1",
+        "Rune"
+      ],
+      [
+        "rune2",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "stack_frac": {
+    "kind": "function",
+    "name": "stack_frac",
+    "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second\nsuch that the first one occupies frac\nportion of the height of the result and\nthe second the rest</p>",
+    "params": [
+      [
+        "frac",
+        "number"
+      ],
+      [
+        "rune1",
+        "Rune"
+      ],
+      [
+        "rune2",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "stackn": {
+    "kind": "function",
+    "name": "stackn",
+    "description": "<p>Makes a new Rune from a given Rune\nby vertically stacking n copies of it</p>",
+    "params": [
+      [
+        "n",
+        "number"
+      ],
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "translate": {
+    "kind": "function",
+    "name": "translate",
+    "description": "<p>Translates a given Rune by given values in x and y direction</p>",
+    "params": [
+      [
+        "x",
+        "number"
+      ],
+      [
+        "y",
+        "number"
+      ],
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "turn_upside_down": {
+    "kind": "function",
+    "name": "turn_upside_down",
+    "description": "<p>Makes a new Rune from a given Rune\nby turning it upside-down</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "white": {
+    "kind": "function",
+    "name": "white",
+    "description": "<p>Colors the given rune white (#FFFFFF).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "yellow": {
+    "kind": "function",
+    "name": "yellow",
+    "description": "<p>Colors the given rune yellow (#FFEB3B).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  }
 }

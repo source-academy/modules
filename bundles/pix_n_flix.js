@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -442,4 +442,4 @@ require => {
     LOOP_COUNT = n;
   }
   return __toCommonJS(pix_n_flix_exports);
-}
+};

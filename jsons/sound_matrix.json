@@ -1,6 +1,41 @@
 {
-  "ToneMatrix": "<div><h4>ToneMatrix: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "clear_all_timeout": "<div><h4>clear_all_timeout() → {void}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "get_matrix": "<div><h4>get_matrix() → {List}</h4><div class=\"description\"><p>No description available</p></div></div>",
-  "set_timeout": "<div><h4>set_timeout(f: any, t: any) → {void}</h4><div class=\"description\"><p>No description available</p></div></div>"
+  "clear_matrix": {
+    "kind": "unknown"
+  },
+  "ToneMatrix": {
+    "kind": "variable",
+    "name": "ToneMatrix",
+    "description": "No description available",
+    "type": "Object"
+  },
+  "clear_all_timeout": {
+    "kind": "function",
+    "name": "clear_all_timeout",
+    "description": "No description available",
+    "params": [],
+    "retType": "void"
+  },
+  "get_matrix": {
+    "kind": "function",
+    "name": "get_matrix",
+    "description": "No description available",
+    "params": [],
+    "retType": "List"
+  },
+  "set_timeout": {
+    "kind": "function",
+    "name": "set_timeout",
+    "description": "No description available",
+    "params": [
+      [
+        "f",
+        "any"
+      ],
+      [
+        "t",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  }
 }

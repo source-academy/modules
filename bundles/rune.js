@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -2638,4 +2638,4 @@ void main(void) {
     return anim;
   }
   return __toCommonJS(rune_exports);
-}
+};

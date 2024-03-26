@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
@@ -13558,11 +13558,11 @@ endfacet`;
       _Core.moduleState = csgModuleState;
     }
     static getRenderGroupManager() {
-      let moduleState2 = _Core.moduleState;
+      const moduleState2 = _Core.moduleState;
       return moduleState2.renderGroupManager;
     }
     static nextComponent() {
-      let moduleState2 = _Core.moduleState;
+      const moduleState2 = _Core.moduleState;
       return moduleState2.nextComponent();
     }
   };
@@ -13578,11 +13578,11 @@ endfacet`;
       this.children = [..._children];
     }
     applyTransforms(newTransforms) {
-      let appliedTransforms = import_mat4.default.multiply(import_mat4.default.create(), newTransforms, this.transforms);
+      const appliedTransforms = import_mat4.default.multiply(import_mat4.default.create(), newTransforms, this.transforms);
       return new _Group(this.children, appliedTransforms);
     }
     store(newTransforms = import_mat4.default.create()) {
-      let appliedGroup = this.applyTransforms(newTransforms);
+      const appliedGroup = this.applyTransforms(newTransforms);
       this.children.forEach(child => {
         child.store(appliedGroup.transforms);
       });
@@ -13591,9 +13591,9 @@ endfacet`;
       return new _Group(this.children, import_mat4.default.multiply(import_mat4.default.create(), import_mat4.default.fromTranslation(import_mat4.default.create(), offsets), this.transforms));
     }
     rotate(angles) {
-      let yaw = angles[2];
-      let pitch = angles[1];
-      let roll = angles[0];
+      const yaw = angles[2];
+      const pitch = angles[1];
+      const roll = angles[0];
       return new _Group(this.children, import_mat4.default.multiply(import_mat4.default.create(), import_mat4.default.fromTaitBryanRotation(import_mat4.default.create(), yaw, pitch, roll), this.transforms));
     }
     scale(factors) {
@@ -13654,7 +13654,7 @@ endfacet`;
       return this.renderGroups.at(-1);
     }
     nextRenderGroup(oldHasGrid = false, oldHasAxis = false) {
-      let oldRenderGroup = this.getCurrentRenderGroup();
+      const oldRenderGroup = this.getCurrentRenderGroup();
       oldRenderGroup.render = true;
       oldRenderGroup.hasGrid = oldHasGrid;
       oldRenderGroup.hasAxis = oldHasAxis;
@@ -13681,25 +13681,25 @@ endfacet`;
     }
   };
   function centerPrimitive(shape) {
-    let solid = (0, import_transforms.center)({
+    const solid = (0, import_transforms.center)({
       relativeTo: [0.5, 0.5, 0.5]
     }, shape.solid);
     return new Shape(solid);
   }
   function hexToColor(hex) {
     var _a;
-    let regex = new RegExp("^#?(?<red>[\\da-f]{2})(?<green>[\\da-f]{2})(?<blue>[\\da-f]{2})$", "iu");
-    let potentialGroups = (_a = hex.match(regex)) == null ? void 0 : _a.groups;
+    const regex = new RegExp("^#?(?<red>[\\da-f]{2})(?<green>[\\da-f]{2})(?<blue>[\\da-f]{2})$", "iu");
+    const potentialGroups = (_a = hex.match(regex)) == null ? void 0 : _a.groups;
     if (potentialGroups === void 0) return [0, 0, 0];
-    let groups = potentialGroups;
+    const groups = potentialGroups;
     return [parseInt(groups.red, 16) / 255, parseInt(groups.green, 16) / 255, parseInt(groups.blue, 16) / 255];
   }
   init_define_process();
   var import_modeling = __toESM(require_src(), 1);
   var import_colors = __toESM(require_colors(), 1);
+  var import_geometries = __toESM(require_geometries(), 1);
   var import_measurements = __toESM(require_measurements(), 1);
   var import_booleans = __toESM(require_booleans(), 1);
-  var import_geometries = __toESM(require_geometries(), 1);
   var import_extrusions = __toESM(require_extrusions(), 1);
   var import_stl_serializer = __toESM(require_stl_serializer(), 1);
   var import_list = __require("js-slang/dist/stdlib/list");
@@ -13709,9 +13709,9 @@ endfacet`;
     return degrees / 360 * (2 * Math.PI);
   }
   function listToArray(l) {
-    let operables = [];
+    const operables = [];
     while (l !== null) {
-      let operable = (0, import_list.head)(l);
+      const operable = (0, import_list.head)(l);
       operables.push(operable);
       l = (0, import_list.tail)(l);
     }
@@ -13740,53 +13740,53 @@ endfacet`;
     return new Shape();
   }
   function cube(hex) {
-    let solid = import_modeling.primitives.cube({
+    const solid = import_modeling.primitives.cube({
       size: 1
     });
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function rounded_cube(hex) {
-    let solid = import_modeling.primitives.roundedCuboid({
+    const solid = import_modeling.primitives.roundedCuboid({
       size: [1, 1, 1]
     });
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function cylinder(hex) {
-    let solid = import_modeling.primitives.cylinder({
+    const solid = import_modeling.primitives.cylinder({
       height: 1,
       radius: 0.5
     });
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function rounded_cylinder(hex) {
-    let solid = import_modeling.primitives.roundedCylinder({
+    const solid = import_modeling.primitives.roundedCylinder({
       height: 1,
       radius: 0.5
     });
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function sphere(hex) {
-    let solid = import_modeling.primitives.sphere({
+    const solid = import_modeling.primitives.sphere({
       radius: 0.5
     });
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function geodesic_sphere(hex) {
-    let solid = import_modeling.primitives.geodesicSphere({
+    const solid = import_modeling.primitives.geodesicSphere({
       radius: 0.5
     });
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function pyramid(hex) {
-    let pythagorasSide = Math.sqrt(2);
-    let radius = pythagorasSide / 2;
-    let solid = import_modeling.primitives.cylinderElliptic({
+    const pythagorasSide = Math.sqrt(2);
+    const radius = pythagorasSide / 2;
+    const solid = import_modeling.primitives.cylinderElliptic({
       height: 1,
       startRadius: [radius, radius],
       endRadius: [0, 0],
@@ -13797,16 +13797,16 @@ endfacet`;
     return centerPrimitive(shape);
   }
   function cone(hex) {
-    let solid = import_modeling.primitives.cylinderElliptic({
+    const solid = import_modeling.primitives.cylinderElliptic({
       height: 1,
       startRadius: [0.5, 0.5],
       endRadius: [0, 0]
     });
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function prism(hex) {
-    let solid = (0, import_extrusions.extrudeLinear)({
+    const solid = (0, import_extrusions.extrudeLinear)({
       height: 1
     }, import_modeling.primitives.triangle());
     let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
@@ -13814,41 +13814,41 @@ endfacet`;
     return centerPrimitive(shape);
   }
   function star(hex) {
-    let solid = (0, import_extrusions.extrudeLinear)({
+    const solid = (0, import_extrusions.extrudeLinear)({
       height: 1
     }, import_modeling.primitives.star({
       outerRadius: 0.5
     }));
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function torus(hex) {
-    let solid = import_modeling.primitives.torus({
+    const solid = import_modeling.primitives.torus({
       innerRadius: 0.15,
       outerRadius: 0.35
     });
-    let shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
+    const shape = new Shape((0, import_colors.colorize)(hexToColor(hex), solid));
     return centerPrimitive(shape);
   }
   function union(first, second) {
     if (!is_shape(first) || !is_shape(second)) {
       throw new Error("Failed to union, only Shapes can be operated on");
     }
-    let solid = (0, import_booleans.union)(first.solid, second.solid);
+    const solid = (0, import_booleans.union)(first.solid, second.solid);
     return new Shape(solid);
   }
   function subtract(target, subtractedShape) {
     if (!is_shape(target) || !is_shape(subtractedShape)) {
       throw new Error("Failed to subtract, only Shapes can be operated on");
     }
-    let solid = (0, import_booleans.subtract)(target.solid, subtractedShape.solid);
+    const solid = (0, import_booleans.subtract)(target.solid, subtractedShape.solid);
     return new Shape(solid);
   }
   function intersect(first, second) {
     if (!is_shape(first) || !is_shape(second)) {
       throw new Error("Failed to intersect, only Shapes can be operated on");
     }
-    let solid = (0, import_booleans.intersect)(first.solid, second.solid);
+    const solid = (0, import_booleans.intersect)(first.solid, second.solid);
     return new Shape(solid);
   }
   function translate(operable, xOffset, yOffset, zOffset) {
@@ -13882,7 +13882,7 @@ endfacet`;
     return parameter instanceof Group;
   }
   function bounding_box(shape) {
-    let bounds = (0, import_measurements.measureBoundingBox)(shape.solid);
+    const bounds = (0, import_measurements.measureBoundingBox)(shape.solid);
     return (axis, minMax) => {
       let j;
       if (axis === "x") j = 0; else if (axis === "y") j = 1; else if (axis === "z") j = 2; else {
@@ -13944,4 +13944,4 @@ endfacet`;
   import_context.default.moduleContexts.csg.state = moduleState;
   Core.initialize(moduleState);
   return __toCommonJS(csg_exports);
-}
+};
