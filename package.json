@@ -117,7 +117,7 @@
     "react-ace": "^10.1.0",
     "react-dom": "^18.2.0",
     "regl": "^2.1.0",
-    "saar": "^1.0.0",
+    "saar": "^1.0.1",
     "save-file": "^2.3.1",
     "source-academy-utils": "^1.0.0",
     "source-academy-wabt": "^1.0.4",
