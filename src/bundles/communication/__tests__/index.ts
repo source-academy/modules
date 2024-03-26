@@ -2,7 +2,7 @@ import { GlobalStateController } from '../GlobalStateController';
 import { MultiUserController } from '../MultiUserController';
 
 const multiUser = new MultiUserController();
-multiUser.setupController('broker.hivemq.com', 8884);
+multiUser.setupController('broker.hivemq.com', 8884, '', '');
 const globalStateController = new GlobalStateController(
   'test',
   multiUser,
