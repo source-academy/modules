@@ -38,8 +38,11 @@ export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: Li
     const outputFormatter = await linter.loadFormatter('stylish');
     const formatted = await outputFormatter.format(linterResults);
     const severity = findSeverity(linterResults, ({ warningCount, errorCount, fatalErrorCount }) => {
+
       if (!fix && errorCount > 0) return 'error';
-      if (fix && fatalErrorCount > 0) return 'error';
+      if (fix && (errorCount > 0 || fatalErrorCount > 0)) {
+        return 'error';
+      }
       if (warningCount > 0) return 'warn';
       return 'success';
     });

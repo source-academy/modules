@@ -44,14 +44,14 @@ describe('test runEslint', () => {
   });
 
   test('Unfixable errors without fix should cause errors', () => {
-    mockedLinter.mockResolvedValueOnce([{ fatalErrorCount: 1, errorCount: 1}]);
+    mockedLinter.mockResolvedValueOnce([{ fatalErrorCount: 1, errorCount: 0 }]);
     return expect(runCommand())
       .rejects
       .toMatchInlineSnapshot('[Error: process.exit called with 1]');
   });
 
   test('Unfixable errors with fix should cause errors', () => {
-    mockedLinter.mockResolvedValueOnce([{ fatalErrorCount: 1, errorCount: 1 }]);
+    mockedLinter.mockResolvedValueOnce([{ fatalErrorCount: 1, errorCount: 0 }]);
     return expect(runCommand('--fix'))
       .rejects
       .toMatchInlineSnapshot('[Error: process.exit called with 1]');
