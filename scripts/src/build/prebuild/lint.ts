@@ -11,12 +11,6 @@ import { lintFixOption, retrieveBundlesAndTabs, wrapWithTimer } from '@src/comma
 import { findSeverity, divideAndRound, type Severity, type AwaitedReturn } from '../utils';
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils';
 
-const severityFinder = (results: ESLint.LintResult[]) => findSeverity(results, ({ warningCount, fatalErrorCount }) => {
-  if (fatalErrorCount > 0) return 'error';
-  if (warningCount > 0) return 'warn';
-  return 'success';
-});
-
 interface LintResults {
   formatted: string
   severity: Severity
@@ -36,14 +30,20 @@ export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: Li
   ];
 
   try {
-    const linterResults = await linter.lintFiles(fileNames);
+    const linterResults: ESLint.LintResult[] = await linter.lintFiles(fileNames);
     if (fix) {
       await ESlint.outputFixes(linterResults);
     }
 
     const outputFormatter = await linter.loadFormatter('stylish');
     const formatted = await outputFormatter.format(linterResults);
-    const severity = severityFinder(linterResults);
+    const severity = findSeverity(linterResults, ({ warningCount, errorCount, fatalErrorCount }) => {
+      if (!fix && errorCount > 0) return 'error';
+      if (fix && fatalErrorCount > 0) return 'error';
+      if (warningCount > 0) return 'warn';
+      return 'success';
+    });
+
     return {
       formatted,
       severity
