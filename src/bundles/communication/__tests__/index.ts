@@ -209,7 +209,7 @@ test('Branch Object Set Object', () => {
   );
 });
 
-test('Nested Branch Object Set Null', () => {
+test('Nested Branch Object Set Null 2', () => {
   globalStateController.globalState = {
     a: { b: { c: 'd' }, e: 'f' },
   };
