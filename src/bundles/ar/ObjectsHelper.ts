@@ -1,3 +1,4 @@
+import { type Vector3 } from 'saar/libraries/misc';
 import {
   type ARObject,
   CubeObject,
@@ -18,19 +19,18 @@ import {
   RotateToUser,
   SpringMovement,
 } from 'saar/libraries/object_state_library/Behaviour';
-import uniqid from 'uniqid';
+import UIBase64ImageComponent from 'saar/libraries/object_state_library/ui_component/UIBase64ImageItem';
+import UIColumnItem, {
+  type HorizontalAlignment,
+} from 'saar/libraries/object_state_library/ui_component/UIColumnItem';
+import UIImageItem from 'saar/libraries/object_state_library/ui_component/UIImageItem';
 import type { UIBasicItem } from 'saar/libraries/object_state_library/ui_component/UIItem';
 import UIRowItem, {
   type VerticalAlignment,
 } from 'saar/libraries/object_state_library/ui_component/UIRowItem';
-import UIColumnItem, {
-  type HorizontalAlignment,
-} from 'saar/libraries/object_state_library/ui_component/UIColumnItem';
 import UITextItem from 'saar/libraries/object_state_library/ui_component/UITextItem';
-import UIImageItem from 'saar/libraries/object_state_library/ui_component/UIImageItem';
+import uniqid from 'uniqid';
 import { callARCallback } from './AR';
-import UIBase64ImageComponent from 'saar/libraries/object_state_library/ui_component/UIBase64ImageItem';
-import { type Vector3 } from 'saar/libraries/misc';
 
 // Objects
 
