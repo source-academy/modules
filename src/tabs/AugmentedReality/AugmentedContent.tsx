@@ -1,14 +1,14 @@
 import { useState, type RefObject, useRef, useEffect } from 'react';
+import { usePlayArea } from 'saar/libraries/calibration_library/PlayAreaContext';
+import { useControls } from 'saar/libraries/controls_library/ControlsContext';
+import { ARObject } from 'saar/libraries/object_state_library/ARObject';
+import { useScreenState } from 'saar/libraries/screen_state_library/ScreenStateContext';
 import {
   getModuleState,
   type ARState,
   setFrontObject,
 } from '../../bundles/ar/AR';
 import type { OverlayHelper } from '../../bundles/ar/OverlayHelper';
-import { useScreenState } from 'saar/libraries/screen_state_library/ScreenStateContext';
-import { usePlayArea } from 'saar/libraries/calibration_library/PlayAreaContext';
-import { useControls } from 'saar/libraries/controls_library/ControlsContext';
-import { ARObject } from 'saar/libraries/object_state_library/ARObject';
 
 /**
  * Content to be shown on screen.
@@ -160,8 +160,8 @@ export function AugmentedContent(props: ARState) {
       fetch('https://worldtimeapi.org/api/timezone/Asia/Singapore')
         .then((response) => response.json())
         .then((data) => {
-          let time = new Date(data.datetime).getTime();
-          let offset = time - new Date().getTime();
+          const time = new Date(data.datetime).getTime();
+          const offset = time - new Date().getTime();
           setTimeOffset(offset);
           console.log('Time offset', offset);
         })

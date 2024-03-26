@@ -1,6 +1,6 @@
+import { Vector3 } from 'saar/libraries/misc';
 import { ARObject } from 'saar/libraries/object_state_library/ARObject';
 import { OverlayHelper, Toggle } from './OverlayHelper';
-import { Vector3 } from 'saar/libraries/misc';
 
 export class ARState {
   arObjects: ARObject[] = [];
