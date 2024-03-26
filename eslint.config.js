@@ -9,6 +9,10 @@ import tseslint from 'typescript-eslint'
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP']
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST']
 
+const OFF = 0
+const WARN = 1
+const ERROR = 2
+
 /**
  * @type {import('eslint').Linter.FlatConfig[]}
  */
@@ -41,9 +45,9 @@ export default [
       '@stylistic': stylePlugin,
     },
     rules: {
-      'import/no-duplicates': [1, { 'prefer-inline': false }],
+      'import/no-duplicates': [WARN, { 'prefer-inline': false }],
       'import/order': [
-        1,
+        WARN,
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           alphabetize: {
@@ -53,17 +57,17 @@ export default [
         }
       ],
 
-      '@stylistic/brace-style': [1, '1tbs', { allowSingleLine: true }],
-      '@stylistic/eol-last': 1,
-      '@stylistic/indent': [1, 2, { SwitchCase: 1 }],
-      '@stylistic/no-mixed-spaces-and-tabs': 1,
-      '@stylistic/no-multi-spaces': 1,
-      '@stylistic/no-multiple-empty-lines': [1, { max: 1, maxEOF: 0 }],
-      '@stylistic/no-trailing-spaces': 1,
-      '@stylistic/quotes': [1, 'single', { avoidEscape: true }],
-      '@stylistic/semi': [1, 'never'],
+      '@stylistic/brace-style': [WARN, '1tbs', { allowSingleLine: true }],
+      '@stylistic/eol-last': WARN,
+      '@stylistic/indent': [WARN, 2, { SwitchCase: 1 }],
+      '@stylistic/no-mixed-spaces-and-tabs': WARN,
+      '@stylistic/no-multi-spaces': WARN,
+      '@stylistic/no-multiple-empty-lines': [WARN, { max: 1, maxEOF: 0 }],
+      '@stylistic/no-trailing-spaces': WARN,
+      '@stylistic/quotes': [WARN, 'single', { avoidEscape: true }],
+      '@stylistic/semi': [WARN, 'never'],
       '@stylistic/spaced-comment': [
-        1,
+        WARN,
         'always',
         { markers: todoTreeKeywordsAll }
       ],
@@ -80,15 +84,15 @@ export default [
       '@typescript-eslint': tseslint.plugin,
     },
     rules: {
-      'no-unused-vars': 0, // Use the typescript eslint rule instead
+      'no-unused-vars': OFF, // Use the typescript eslint rule instead
 
-      '@typescript-eslint/ban-types': 0, // Was 2
-      '@typescript-eslint/no-duplicate-type-constituents': 0, // Was 2,
-      '@typescript-eslint/no-explicit-any': 0, // Was 2
-      '@typescript-eslint/no-redundant-type-constituents': 0, // Was 2,
-      '@typescript-eslint/no-unused-vars': [1, { argsIgnorePattern: '^_' }], // Was 2
-      '@typescript-eslint/prefer-ts-expect-error': 1,
-      '@typescript-eslint/sort-type-constituents': 1,
+      '@typescript-eslint/ban-types': OFF, // Was ERROR
+      '@typescript-eslint/no-duplicate-type-constituents': OFF, // Was ERROR
+      '@typescript-eslint/no-explicit-any': OFF, // Was ERROR
+      '@typescript-eslint/no-redundant-type-constituents': OFF, // Was ERROR
+      '@typescript-eslint/no-unused-vars': [WARN, { argsIgnorePattern: '^_' }], // Was ERROR
+      '@typescript-eslint/prefer-ts-expect-error': WARN,
+      '@typescript-eslint/sort-type-constituents': WARN,
     }
   },
   {
@@ -98,12 +102,12 @@ export default [
       'react-hooks': reactHooksPlugin
     },
     rules: {
-      'react-hooks/rules-of-hooks': 2,
+      'react-hooks/rules-of-hooks': ERROR,
 
-      '@stylistic/jsx-equals-spacing': [1, 'never'],
-      '@stylistic/jsx-indent': [1, 2],
-      '@stylistic/jsx-indent-props': [1, 2],
-      '@stylistic/jsx-props-no-multi-spaces': 1,
+      '@stylistic/jsx-equals-spacing': [WARN, 'never'],
+      '@stylistic/jsx-indent': [WARN, 2],
+      '@stylistic/jsx-indent-props': [WARN, 2],
+      '@stylistic/jsx-props-no-multi-spaces': WARN,
     }
   },
   {
@@ -120,11 +124,11 @@ export default [
       }
     },
     rules: {
-      'prefer-const': 1, // Was 2
+      'prefer-const': WARN, // Was ERROR
 
-      '@typescript-eslint/no-namespace': 0, // Was 2
-      '@typescript-eslint/no-var-requires': 1, // Was 2
-      '@typescript-eslint/switch-exhaustiveness-check': 2,
+      '@typescript-eslint/no-namespace': OFF, // Was ERROR
+      '@typescript-eslint/no-var-requires': WARN, // Was ERROR
+      '@typescript-eslint/switch-exhaustiveness-check': ERROR,
     },
   },
   {
@@ -142,13 +146,13 @@ export default [
       }
     },
     rules: {
-      'import/extensions': [2, 'never', { json: 'always' }],
-      'no-constant-condition': 0, // Was 2,
-      '@stylistic/arrow-parens': [1, 'as-needed'],
+      'import/extensions': [ERROR, 'never', { json: 'always' }],
+      'no-constant-condition': OFF, // Was ERROR,
+      '@stylistic/arrow-parens': [WARN, 'as-needed'],
 
-      '@typescript-eslint/prefer-readonly': 1,
-      '@typescript-eslint/require-await': 2,
-      '@typescript-eslint/return-await': [2, 'in-try-catch']
+      '@typescript-eslint/prefer-readonly': WARN,
+      '@typescript-eslint/require-await': ERROR,
+      '@typescript-eslint/return-await': [ERROR, 'in-try-catch']
     },
     settings: {
       'import/internal-regex': '^@src/',
@@ -184,12 +188,12 @@ export default [
     },
     rules: {
       ...jestPlugin.configs['flat/recommended'].rules,
-      'jest/expect-expect': [2, { assertFunctionNames: ['expect*'] }],
-      'jest/no-alias-methods': 0,
-      'jest/no-conditional-expect': 0,
-      'jest/no-export': 0,
-      'jest/require-top-level-describe': 0,
-      'jest/valid-describe-callback': 0
+      'jest/expect-expect': [ERROR, { assertFunctionNames: ['expect*'] }],
+      'jest/no-alias-methods': OFF,
+      'jest/no-conditional-expect': OFF,
+      'jest/no-export': OFF,
+      'jest/require-top-level-describe': OFF,
+      'jest/valid-describe-callback': OFF
     }
   }
 ]
