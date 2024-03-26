@@ -88,6 +88,7 @@ export function testBuildCommand(
 
     expect(lint.runEslint)
       .toHaveBeenCalledTimes(1);
+
     expectToBeCalled(0);
   });
 

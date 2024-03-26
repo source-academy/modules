@@ -2,9 +2,9 @@ import fs from 'fs/promises';
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
 import { promiseAll, tabsOption } from '@src/commandUtils';
 import { expandTabNames, createBuildCommandHandler, type BuildTask, createBuildCommand } from '../utils';
-import { commonEsbuildOptions, outputBundleOrTab } from './commons';
+import { commonEsbuildOptions, jsSlangExportCheckingPlugin, outputBundleOrTab } from './commons';
 
-export const tabContextPlugin: ESBuildPlugin = {
+const tabContextPlugin: ESBuildPlugin = {
   name: 'Tab Context',
   setup(build) {
     build.onResolve({ filter: /^js-slang\/context/u }, () => ({
@@ -32,7 +32,10 @@ export const bundleTabs: BuildTask = async ({ tabs }, { srcDir, outDir }) => {
     outbase: outDir,
     outdir: outDir,
     tsconfig: `${srcDir}/tsconfig.json`,
-    plugins: [tabContextPlugin]
+    plugins: [
+      tabContextPlugin,
+      jsSlangExportCheckingPlugin
+    ]
   }), fs.mkdir(`${outDir}/tabs`, { recursive: true }));
 
   const results = await Promise.all(outputFiles.map(file => outputBundleOrTab(file, outDir)));
