@@ -14616,7 +14616,7 @@ export default require => {
     }
   });
   var require_scheduler_production_min = __commonJS({
-    "node_modules/scheduler/cjs/scheduler.production.min.js"(exports) {
+    "node_modules/react-dom/node_modules/scheduler/cjs/scheduler.production.min.js"(exports) {
       "use strict";
       init_define_process();
       function f(a, b) {
@@ -14865,7 +14865,7 @@ export default require => {
     }
   });
   var require_scheduler_development = __commonJS({
-    "node_modules/scheduler/cjs/scheduler.development.js"(exports) {
+    "node_modules/react-dom/node_modules/scheduler/cjs/scheduler.development.js"(exports) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV !== "production") {
@@ -15311,7 +15311,7 @@ export default require => {
     }
   });
   var require_scheduler = __commonJS({
-    "node_modules/scheduler/index.js"(exports, module) {
+    "node_modules/react-dom/node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV === "production") {
