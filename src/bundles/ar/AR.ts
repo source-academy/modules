@@ -252,6 +252,25 @@ export function setHighlightFrontObject(isEnabled: boolean) {
   callARCallback();
 }
 
+/**
+ * Obtains the first object in the user's line of sight, if any.
+ *
+ * @returns ARObject in front of user if found, undefined if not.
+ */
+export function getFrontObject() {
+  const moduleState = getModuleState();
+  if (!moduleState) return undefined;
+  return moduleState.arObjects.find((arObject) => {
+    arObject.isInFront;
+  });
+}
+
+/**
+ * Sets the select state for the specified AR object.
+ *
+ * @param arObject AR object to select/unselect.
+ * @param isSelected Whether the object is selected.
+ */
 export function selectObject(arObject: ARObject, isSelected: boolean) {
   arObject.isSelected = isSelected;
   callARCallback();
