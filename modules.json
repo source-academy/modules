@@ -98,5 +98,8 @@
     "tabs": [
       "physics_2d"
     ]
+  },
+  "communication": {
+    "tabs": []
   }
 }
