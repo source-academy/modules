@@ -29599,56 +29599,6 @@ void main() {
       }
     }
   });
-  var require_os = __commonJS({
-    "node_modules/os/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = require_os();
-    }
-  });
-  var require_uniqid = __commonJS({
-    "node_modules/uniqid/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var pid = typeof define_process_default !== "undefined" && define_process_default.pid ? define_process_default.pid.toString(36) : "";
-      var address = "";
-      if (typeof __webpack_require__ !== "function" && typeof __require !== "undefined") {
-        (mac = "", os = require_os());
-        if (os.networkInterfaces) networkInterfaces = os.networkInterfaces();
-        if (networkInterfaces) {
-          loop: for (let interface_key in networkInterfaces) {
-            const networkInterface = networkInterfaces[interface_key];
-            const length = networkInterface.length;
-            for (i2 = 0; i2 < length; i2++) {
-              if (networkInterface[i2] !== void 0 && networkInterface[i2].mac && networkInterface[i2].mac != "00:00:00:00:00:00") {
-                mac = networkInterface[i2].mac;
-                break loop;
-              }
-            }
-          }
-          address = mac ? parseInt(mac.replace(/\:|\D+/gi, "")).toString(36) : "";
-        }
-      }
-      var mac;
-      var os;
-      var networkInterfaces;
-      var i2;
-      module.exports = module.exports.default = function (prefix2, suffix) {
-        return (prefix2 ? prefix2 : "") + address + pid + now3().toString(36) + (suffix ? suffix : "");
-      };
-      module.exports.process = function (prefix2, suffix) {
-        return (prefix2 ? prefix2 : "") + pid + now3().toString(36) + (suffix ? suffix : "");
-      };
-      module.exports.time = function (prefix2, suffix) {
-        return (prefix2 ? prefix2 : "") + now3().toString(36) + (suffix ? suffix : "");
-      };
-      function now3() {
-        var time = Date.now();
-        var last = now3.last || time;
-        return now3.last = time > last ? time : last + 1;
-      }
-    }
-  });
   var require_react_reconciler_constants_production_min = __commonJS({
     "node_modules/react-reconciler/cjs/react-reconciler-constants.production.min.js"(exports) {
       "use strict";
@@ -50000,6 +49950,56 @@ void main() {
       module.exports = debounce;
     }
   });
+  var require_os = __commonJS({
+    "node_modules/os/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = require_os();
+    }
+  });
+  var require_uniqid = __commonJS({
+    "node_modules/uniqid/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var pid = typeof define_process_default !== "undefined" && define_process_default.pid ? define_process_default.pid.toString(36) : "";
+      var address = "";
+      if (typeof __webpack_require__ !== "function" && typeof __require !== "undefined") {
+        (mac = "", os = require_os());
+        if (os.networkInterfaces) networkInterfaces = os.networkInterfaces();
+        if (networkInterfaces) {
+          loop: for (let interface_key in networkInterfaces) {
+            const networkInterface = networkInterfaces[interface_key];
+            const length = networkInterface.length;
+            for (i2 = 0; i2 < length; i2++) {
+              if (networkInterface[i2] !== void 0 && networkInterface[i2].mac && networkInterface[i2].mac != "00:00:00:00:00:00") {
+                mac = networkInterface[i2].mac;
+                break loop;
+              }
+            }
+          }
+          address = mac ? parseInt(mac.replace(/\:|\D+/gi, "")).toString(36) : "";
+        }
+      }
+      var mac;
+      var os;
+      var networkInterfaces;
+      var i2;
+      module.exports = module.exports.default = function (prefix2, suffix) {
+        return (prefix2 ? prefix2 : "") + address + pid + now3().toString(36) + (suffix ? suffix : "");
+      };
+      module.exports.process = function (prefix2, suffix) {
+        return (prefix2 ? prefix2 : "") + pid + now3().toString(36) + (suffix ? suffix : "");
+      };
+      module.exports.time = function (prefix2, suffix) {
+        return (prefix2 ? prefix2 : "") + now3().toString(36) + (suffix ? suffix : "");
+      };
+      function now3() {
+        var time = Date.now();
+        var last = now3.last || time;
+        return now3.last = time > last ? time : last + 1;
+      }
+    }
+  });
   function workerBootstrap() {
     var modules = Object.create(null);
     function registerModule(ref, callback) {
@@ -55609,353 +55609,15 @@ if (edgeAlpha == 0.0) {
   init_define_process();
   var import_react38 = __toESM(__require("react"), 1);
   init_define_process();
-  init_define_process();
-  init_three_module();
-  init_define_process();
-  init_three_module();
-  init_define_process();
-  var import_uniqid = __toESM(require_uniqid());
-  var import_react = __require("react");
-  var import_jsx_runtime = __require("react/jsx-runtime");
-  var UIBasicItem = class {
-    constructor(type, padding, id) {
-      this.paddingLeft = 0;
-      this.paddingRight = 0;
-      this.paddingTop = 0;
-      this.paddingBottom = 0;
-      this.id = "";
-      this.layer = 1;
-      this.parent = void 0;
-      this.toJSON = () => {
-        let object = __spreadValues({}, this);
-        delete object.layer;
-        delete object.parent;
-        return object;
-      };
-      this.getWidth = () => this.paddingLeft + this.paddingRight;
-      this.getHeight = () => this.paddingTop + this.paddingBottom;
-      this.calculateLayer = () => {};
-      this.getComponent = (position, _) => (0, import_jsx_runtime.jsx)("mesh", {
-        position
-      }, `component_${this.id}`);
-      this.type = type;
-      if (padding) {
-        if (typeof padding === "number") {
-          this.paddingLeft = padding;
-          this.paddingRight = padding;
-          this.paddingTop = padding;
-          this.paddingBottom = padding;
-        } else {
-          if (padding.paddingLeft) {
-            this.paddingLeft = padding.paddingLeft;
-          }
-          if (padding.paddingRight) {
-            this.paddingRight = padding.paddingRight;
-          }
-          if (padding.paddingTop) {
-            this.paddingTop = padding.paddingTop;
-          }
-          if (padding.paddingBottom) {
-            this.paddingBottom = padding.paddingBottom;
-          }
-        }
-      }
-      if (id) {
-        this.id = id;
-      } else {
-        this.id = (0, import_uniqid.default)();
-      }
-    }
-  };
-  var UILayoutItem = class _UILayoutItem extends UIBasicItem {
-    constructor() {
-      super(...arguments);
-      this.children = [];
-      this.calculateLayer = () => {
-        this.layer = 1;
-        this.children.forEach(child => {
-          if (child instanceof _UILayoutItem && this.layer <= child.layer) {
-            this.layer = child.layer + 1;
-          }
-        });
-        this.children.forEach(child => {
-          child.parent = this;
-        });
-      };
-    }
-  };
-  init_define_process();
-  init_three_module();
-  function parseVector3(object) {
-    if (!object) return void 0;
-    const x = object.x;
-    const y = object.y;
-    const z = object.z;
-    if (typeof x === "number" && typeof y === "number" && typeof z === "number") {
-      return new Vector3(x, y, z);
-    }
-    return void 0;
-  }
-  function vector3ToArray(vector) {
-    return [vector.x, vector.y, vector.z];
-  }
-  var GltfModel = class {
-    constructor(resource, scale) {
-      this.resource = resource;
-      this.scale = scale;
-    }
-  };
-  var ShapeModel = class {
-    constructor(geometry, material) {
-      this.geometry = geometry;
-      this.material = material;
-    }
-  };
-  var InterfaceModel = class {
-    constructor(rootComponent) {
-      this.rootComponent = rootComponent;
-    }
-  };
-  var LightModel = class {
-    constructor(intensity) {
-      this.intensity = intensity;
-    }
-  };
-  var RENDER_DISTANCE = "RenderWithinDistance";
-  var RENDER_ALWAYS = "AlwaysRender";
-  var RenderWithinDistance = class {
-    constructor(distance) {
-      this.type = RENDER_DISTANCE;
-      this.distance = distance;
-    }
-  };
-  var AlwaysRender = class {
-    constructor() {
-      this.type = RENDER_ALWAYS;
-    }
-  };
-  function parseRender(render2) {
-    if (!render2) return void 0;
-    switch (render2.type) {
-      case RENDER_ALWAYS:
-        {
-          return new AlwaysRender();
-        }
-      case RENDER_DISTANCE:
-        {
-          let distance = 5;
-          if (typeof render2.distance === "number") {
-            distance = render2.distance;
-          }
-          return new RenderWithinDistance(distance);
-        }
-    }
-    return void 0;
-  }
-  var ROTATION_USER = "RotateToUser";
-  var ROTATION_Y = "RotateAroundY";
-  var ROTATION_FIX = "FixRotation";
-  var RotateToUser = class {
-    constructor() {
-      this.type = ROTATION_USER;
-    }
-  };
-  var RotateAroundY = class {
-    constructor() {
-      this.type = ROTATION_Y;
-    }
-  };
-  var FixRotation = class {
-    constructor(radians) {
-      this.type = ROTATION_FIX;
-      this.rotation = radians;
-    }
-  };
-  function parseRotation(rotation) {
-    if (!rotation) return void 0;
-    switch (rotation == null ? void 0 : rotation.type) {
-      case ROTATION_USER:
-        {
-          return new RotateToUser();
-        }
-      case ROTATION_Y:
-        {
-          return new RotateAroundY();
-        }
-      case ROTATION_FIX:
-        {
-          let angle = 0;
-          if (typeof rotation.rotation === "number") {
-            angle = rotation.rotation;
-          }
-          return new FixRotation(angle);
-        }
-    }
-    return void 0;
-  }
-  var MOVEMENT_PATH = "PathMovement";
-  var MOVEMENT_ORBIT = "OrbitMovement";
-  var MOVEMENT_SPRING = "SpringMovement";
-  var MovementClass = class {
-    constructor() {
-      this.type = "";
-    }
-  };
-  function parsePathItems(path) {
-    const result = [];
-    for (let i2 = 0; i2 < path.length; i2++) {
-      const item = path[i2];
-      const start2 = parseVector3(item.start);
-      const end = parseVector3(item.end);
-      const duration = item.duration;
-      if (start2 instanceof Vector3 && end instanceof Vector3 && (duration === void 0 || typeof duration === "number")) {
-        let movementStyle = 0;
-        if (item.style === 1) {
-          movementStyle = 1;
-        } else if (item.style === 2) {
-          movementStyle = 2;
-        }
-        result.push({
-          start: start2,
-          end,
-          duration,
-          style: movementStyle
-        });
-      }
-    }
-    return result;
-  }
-  var PathMovement = class extends MovementClass {
-    constructor(path, startTime, getCurrentTime) {
-      super();
-      this.type = MOVEMENT_PATH;
-      this.path = path;
-      this.totalDuration = 0;
-      if (startTime) {
-        this.startTime = startTime;
-      } else {
-        const currentDate = new Date();
-        this.startTime = currentDate.getTime();
-      }
-      if (getCurrentTime) {
-        this.getCurrentTime = getCurrentTime;
-      } else {
-        this.getCurrentTime = () => {
-          const currentDate = new Date();
-          return currentDate.getTime();
-        };
-      }
-      path.forEach(item => {
-        this.totalDuration += item.duration;
-      });
-    }
-    getOffsetPosition(position) {
-      let currentFrame2 = (this.getCurrentTime() - this.startTime) % (this.totalDuration * 1e3);
-      let currentMovementIndex = 0;
-      while (currentFrame2 > 0 && currentMovementIndex < this.path.length) {
-        let currentItem = this.path[currentMovementIndex];
-        if (currentFrame2 >= currentItem.duration * 1e3) {
-          currentFrame2 -= currentItem.duration * 1e3;
-          currentMovementIndex++;
-          continue;
-        }
-        let ratio = Math.min(Math.max(0, currentFrame2 / (currentItem.duration * 1e3)), 1);
-        switch (currentItem.style) {
-          case 2:
-            {
-              ratio = __pow(ratio, 5);
-              break;
-            }
-          case 1:
-            {
-              let negative = 1 - ratio;
-              negative = __pow(negative, 5);
-              ratio = 1 - negative;
-              break;
-            }
-        }
-        const x = position.x + currentItem.start.x + ratio * (currentItem.end.x - currentItem.start.x);
-        const y = position.y + currentItem.start.y + ratio * (currentItem.end.y - currentItem.start.y);
-        const z = position.z + currentItem.start.z + ratio * (currentItem.end.z - currentItem.start.z);
-        return new Vector3(x, y, z);
-      }
-      return position;
-    }
-  };
-  var OrbitMovement = class extends MovementClass {
-    constructor(radius, duration, startTime, getCurrentTime) {
-      super();
-      this.type = MOVEMENT_ORBIT;
-      this.radius = radius;
-      this.duration = duration;
-      if (startTime) {
-        this.startTime = startTime;
-      } else {
-        let currentDate = new Date();
-        this.startTime = currentDate.getTime();
-      }
-      if (getCurrentTime) {
-        this.getCurrentTime = getCurrentTime;
-      } else {
-        this.getCurrentTime = () => {
-          let currentDate = new Date();
-          return currentDate.getTime();
-        };
-      }
-    }
-    getOffsetPosition(position) {
-      const currentFrame2 = (this.getCurrentTime() - this.startTime) % (this.duration * 1e3);
-      const ratio = Math.min(Math.max(0, currentFrame2 / (this.duration * 1e3)), 1);
-      const angle = ratio * Math.PI * 2;
-      const x = position.x + this.radius * Math.sin(angle);
-      const y = position.y;
-      const z = position.z + this.radius * Math.cos(angle);
-      return new Vector3(x, y, z);
-    }
-  };
-  var SpringMovement = class extends MovementClass {
-    constructor() {
-      super(...arguments);
-      this.type = MOVEMENT_SPRING;
-    }
-  };
-  function parseMovement(movement, getCurrentTime) {
-    if (!movement) return void 0;
-    switch (movement.type) {
-      case MOVEMENT_PATH:
-        {
-          const startTime = movement.startTime;
-          const pathItems = movement.path;
-          if ((startTime === void 0 || typeof startTime === "number") && Array.isArray(pathItems)) {
-            const parsedPathItems = parsePathItems(pathItems);
-            return new PathMovement(parsedPathItems, startTime, getCurrentTime);
-          }
-          break;
-        }
-      case MOVEMENT_ORBIT:
-        {
-          const radius = movement.radius;
-          const duration = movement.duration;
-          const startTime = movement.startTime;
-          if (typeof radius === "number" && typeof duration === "number" && (startTime === void 0 || typeof startTime === "number")) {
-            return new OrbitMovement(radius, duration, startTime, getCurrentTime);
-          }
-          break;
-        }
-      case MOVEMENT_SPRING:
-        return new SpringMovement();
-    }
-    return void 0;
-  }
-  init_define_process();
+  var import_react3 = __require("react");
   init_define_process();
   init_define_process();
   init_define_process();
   init_three_module();
-  var React2 = __toESM(__require("react"));
+  var React = __toESM(__require("react"));
   var import_constants = __toESM(require_constants());
   init_define_process();
-  var import_react2 = __require("react");
+  var import_react = __require("react");
   function createStore(createState) {
     let state;
     const listeners = new Set();
@@ -55999,17 +55661,17 @@ if (edgeAlpha == 0.0) {
     return api;
   }
   var isSSR = typeof window === "undefined" || !window.navigator || (/ServerSideRendering|^Deno\//).test(window.navigator.userAgent);
-  var useIsomorphicLayoutEffect = isSSR ? import_react2.useEffect : import_react2.useLayoutEffect;
+  var useIsomorphicLayoutEffect = isSSR ? import_react.useEffect : import_react.useLayoutEffect;
   function create(createState) {
     const api = typeof createState === "function" ? createStore(createState) : createState;
     const useStore2 = (selector = api.getState, equalityFn = Object.is) => {
-      const [, forceUpdate] = (0, import_react2.useReducer)(c => c + 1, 0);
+      const [, forceUpdate] = (0, import_react.useReducer)(c => c + 1, 0);
       const state = api.getState();
-      const stateRef = (0, import_react2.useRef)(state);
-      const selectorRef = (0, import_react2.useRef)(selector);
-      const equalityFnRef = (0, import_react2.useRef)(equalityFn);
-      const erroredRef = (0, import_react2.useRef)(false);
-      const currentSliceRef = (0, import_react2.useRef)();
+      const stateRef = (0, import_react.useRef)(state);
+      const selectorRef = (0, import_react.useRef)(selector);
+      const equalityFnRef = (0, import_react.useRef)(equalityFn);
+      const erroredRef = (0, import_react.useRef)(false);
+      const currentSliceRef = (0, import_react.useRef)();
       if (currentSliceRef.current === void 0) {
         currentSliceRef.current = selector(state);
       }
@@ -56028,7 +55690,7 @@ if (edgeAlpha == 0.0) {
         equalityFnRef.current = equalityFn;
         erroredRef.current = false;
       });
-      const stateBeforeSubscriptionRef = (0, import_react2.useRef)(state);
+      const stateBeforeSubscriptionRef = (0, import_react.useRef)(state);
       useIsomorphicLayoutEffect(() => {
         const listener = () => {
           try {
@@ -56051,7 +55713,7 @@ if (edgeAlpha == 0.0) {
         return unsubscribe;
       }, []);
       const sliceToReturn = hasNewStateSlice ? newStateSlice : currentSliceRef.current;
-      (0, import_react2.useDebugValue)(sliceToReturn);
+      (0, import_react.useDebugValue)(sliceToReturn);
       return sliceToReturn;
     };
     Object.assign(useStore2, api);
@@ -56381,9 +56043,9 @@ if (edgeAlpha == 0.0) {
   };
   var isOrthographicCamera = def => def && def.isOrthographicCamera;
   var isRef = obj => obj && obj.hasOwnProperty("current");
-  var useIsomorphicLayoutEffect2 = typeof window !== "undefined" && ((_window$document = window.document) != null && _window$document.createElement || ((_window$navigator = window.navigator) == null ? void 0 : _window$navigator.product) === "ReactNative") ? React2.useLayoutEffect : React2.useEffect;
+  var useIsomorphicLayoutEffect2 = typeof window !== "undefined" && ((_window$document = window.document) != null && _window$document.createElement || ((_window$navigator = window.navigator) == null ? void 0 : _window$navigator.product) === "ReactNative") ? React.useLayoutEffect : React.useEffect;
   function useMutableCallback(fn) {
-    const ref = React2.useRef(fn);
+    const ref = React.useRef(fn);
     useIsomorphicLayoutEffect2(() => void (ref.current = fn), [fn]);
     return ref;
   }
@@ -56394,7 +56056,7 @@ if (edgeAlpha == 0.0) {
     }, [set]);
     return null;
   }
-  var ErrorBoundary = class extends React2.Component {
+  var ErrorBoundary = class extends React.Component {
     constructor(...args) {
       super(...args);
       this.state = {
@@ -56956,7 +56618,7 @@ if (edgeAlpha == 0.0) {
     };
   }
   var isRenderer = def => !!(def != null && def.render);
-  var context = React2.createContext(null);
+  var context = React.createContext(null);
   var createStore2 = (invalidate2, advance3) => {
     const rootState = create((set, get) => {
       const position = new Vector3();
@@ -57097,7 +56759,7 @@ if (edgeAlpha == 0.0) {
           active: false,
           priority: 0,
           frames: 0,
-          lastEvent: React2.createRef(),
+          lastEvent: React.createRef(),
           interaction: [],
           hovered: new Map(),
           subscribers: [],
@@ -57242,7 +56904,7 @@ if (edgeAlpha == 0.0) {
     };
   }
   function useStore() {
-    const store = React2.useContext(context);
+    const store = React.useContext(context);
     if (!store) throw new Error("R3F: Hooks can only be used within the Canvas component!");
     return store;
   }
@@ -57487,7 +57149,7 @@ if (edgeAlpha == 0.0) {
       },
       render(children) {
         if (!configured) this.configure();
-        reconciler.updateContainer(React2.createElement(Provider, {
+        reconciler.updateContainer(React.createElement(Provider, {
           store,
           children,
           onCreated,
@@ -57511,7 +57173,7 @@ if (edgeAlpha == 0.0) {
       if (onCreated) onCreated(state);
       if (!store.getState().events.connected) state.events.connect == null ? void 0 : state.events.connect(rootElement);
     }, []);
-    return React2.createElement(context.Provider, {
+    return React.createElement(context.Provider, {
       value: store
     }, children);
   }
@@ -57542,7 +57204,7 @@ if (edgeAlpha == 0.0) {
   reconciler.injectIntoDevTools({
     bundleType: define_process_default.env.NODE_ENV === "production" ? 0 : 1,
     rendererPackageName: "@react-three/fiber",
-    version: React2.version
+    version: React.version
   });
   init_define_process();
   function _extends() {
@@ -57559,10 +57221,10 @@ if (edgeAlpha == 0.0) {
     };
     return _extends.apply(this, arguments);
   }
-  var React4 = __toESM(__require("react"));
+  var React3 = __toESM(__require("react"));
   init_three_module();
   init_define_process();
-  var import_react3 = __require("react");
+  var import_react2 = __require("react");
   var import_debounce = __toESM(require_debounce());
   function useMeasure(_temp) {
     let {debounce, scroll, polyfill, offsetSize} = _temp === void 0 ? {
@@ -57574,7 +57236,7 @@ if (edgeAlpha == 0.0) {
     if (!ResizeObserver2) {
       throw new Error("This browser does not support ResizeObserver out of the box. See: https://github.com/react-spring/react-use-measure/#resize-observer-polyfills");
     }
-    const [bounds, set] = (0, import_react3.useState)({
+    const [bounds, set] = (0, import_react2.useState)({
       left: 0,
       top: 0,
       width: 0,
@@ -57584,7 +57246,7 @@ if (edgeAlpha == 0.0) {
       x: 0,
       y: 0
     });
-    const state = (0, import_react3.useRef)({
+    const state = (0, import_react2.useRef)({
       element: null,
       scrollContainers: null,
       resizeObserver: null,
@@ -57592,12 +57254,12 @@ if (edgeAlpha == 0.0) {
     });
     const scrollDebounce = debounce ? typeof debounce === "number" ? debounce : debounce.scroll : null;
     const resizeDebounce = debounce ? typeof debounce === "number" ? debounce : debounce.resize : null;
-    const mounted = (0, import_react3.useRef)(false);
-    (0, import_react3.useEffect)(() => {
+    const mounted = (0, import_react2.useRef)(false);
+    (0, import_react2.useEffect)(() => {
       mounted.current = true;
       return () => void (mounted.current = false);
     });
-    const [forceRefresh, resizeChange, scrollChange] = (0, import_react3.useMemo)(() => {
+    const [forceRefresh, resizeChange, scrollChange] = (0, import_react2.useMemo)(() => {
       const callback = () => {
         if (!state.current.element) return;
         const {left, top, width, height, bottom, right, x, y} = state.current.element.getBoundingClientRect();
@@ -57650,22 +57312,22 @@ if (edgeAlpha == 0.0) {
     };
     useOnWindowScroll(scrollChange, Boolean(scroll));
     useOnWindowResize(resizeChange);
-    (0, import_react3.useEffect)(() => {
+    (0, import_react2.useEffect)(() => {
       removeListeners();
       addListeners();
     }, [scroll, scrollChange, resizeChange]);
-    (0, import_react3.useEffect)(() => removeListeners, []);
+    (0, import_react2.useEffect)(() => removeListeners, []);
     return [ref, bounds, forceRefresh];
   }
   function useOnWindowResize(onWindowResize) {
-    (0, import_react3.useEffect)(() => {
+    (0, import_react2.useEffect)(() => {
       const cb = onWindowResize;
       window.addEventListener("resize", cb);
       return () => void window.removeEventListener("resize", cb);
     }, [onWindowResize]);
   }
   function useOnWindowScroll(onScroll2, enabled) {
-    (0, import_react3.useEffect)(() => {
+    (0, import_react2.useEffect)(() => {
       if (enabled) {
         const cb = onScroll2;
         window.addEventListener("scroll", cb, {
@@ -57686,7 +57348,7 @@ if (edgeAlpha == 0.0) {
   var keys = ["x", "y", "top", "bottom", "left", "right", "width", "height"];
   var areBoundsEqual = (a, b) => keys.every(key => a[key] === b[key]);
   init_define_process();
-  var React3 = __toESM(__require("react"), 1);
+  var React2 = __toESM(__require("react"), 1);
   var __defProp2 = Object.defineProperty;
   var __defProps2 = Object.defineProperties;
   var __getOwnPropDescs2 = Object.getOwnPropertyDescriptors;
@@ -57737,20 +57399,20 @@ if (edgeAlpha == 0.0) {
       return context2;
     }
   }
-  var FiberContext = wrapContext(React3.createContext(null));
-  var FiberProvider = class extends React3.Component {
+  var FiberContext = wrapContext(React2.createContext(null));
+  var FiberProvider = class extends React2.Component {
     render() {
-      return React3.createElement(FiberContext.Provider, {
+      return React2.createElement(FiberContext.Provider, {
         value: this._reactInternals
       }, this.props.children);
     }
   };
-  var {ReactCurrentOwner, ReactCurrentDispatcher} = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  var {ReactCurrentOwner, ReactCurrentDispatcher} = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
   function useFiber() {
-    const root = React3.useContext(FiberContext);
+    const root = React2.useContext(FiberContext);
     if (root === null) throw new Error("its-fine: useFiber must be called within a <FiberProvider />!");
-    const id = React3.useId();
-    const fiber = React3.useMemo(() => {
+    const id = React2.useId();
+    const fiber = React2.useMemo(() => {
       for (const maybeFiber of [ReactCurrentOwner == null ? void 0 : ReactCurrentOwner.current, root, root == null ? void 0 : root.alternate]) {
         if (!maybeFiber) continue;
         const fiber2 = traverseFiber(maybeFiber, false, node => {
@@ -57768,7 +57430,7 @@ if (edgeAlpha == 0.0) {
   function useContextMap() {
     var _a2, _b2;
     const fiber = useFiber();
-    const [contextMap] = React3.useState(() => new Map());
+    const [contextMap] = React2.useState(() => new Map());
     contextMap.clear();
     let node = fiber;
     while (node) {
@@ -57782,9 +57444,9 @@ if (edgeAlpha == 0.0) {
   }
   function useContextBridge() {
     const contextMap = useContextMap();
-    return React3.useMemo(() => Array.from(contextMap.keys()).reduce((Prev, context2) => props => React3.createElement(Prev, null, React3.createElement(context2.Provider, __spreadProps2(__spreadValues2({}, props), {
+    return React2.useMemo(() => Array.from(contextMap.keys()).reduce((Prev, context2) => props => React2.createElement(Prev, null, React2.createElement(context2.Provider, __spreadProps2(__spreadValues2({}, props), {
       value: contextMap.get(context2)
-    }))), props => React3.createElement(FiberProvider, __spreadValues2({}, props))), [contextMap]);
+    }))), props => React2.createElement(FiberProvider, __spreadValues2({}, props))), [contextMap]);
   }
   var import_constants2 = __toESM(require_constants());
   var import_react_reconciler2 = __toESM(require_react_reconciler());
@@ -57854,9 +57516,9 @@ if (edgeAlpha == 0.0) {
       }
     };
   }
-  var CanvasImpl = React4.forwardRef(function Canvas(_a2, forwardedRef) {
+  var CanvasImpl = React3.forwardRef(function Canvas(_a2, forwardedRef) {
     var _b2 = _a2, {children, fallback, resize, style, gl, events = createPointerEvents, eventSource, eventPrefix, shadows, linear, flat, legacy, orthographic, frameloop, dpr, performance: performance2, raycaster: raycaster2, camera, scene, onPointerMissed, onCreated} = _b2, props = __objRest(_b2, ["children", "fallback", "resize", "style", "gl", "events", "eventSource", "eventPrefix", "shadows", "linear", "flat", "legacy", "orthographic", "frameloop", "dpr", "performance", "raycaster", "camera", "scene", "onPointerMissed", "onCreated"]);
-    React4.useMemo(() => extend(three_module_exports), []);
+    React3.useMemo(() => extend(three_module_exports), []);
     const Bridge = useContextBridge();
     const [containerRef, containerRect] = useMeasure(__spreadValues({
       scroll: true,
@@ -57865,15 +57527,15 @@ if (edgeAlpha == 0.0) {
         resize: 0
       }
     }, resize));
-    const canvasRef = React4.useRef(null);
-    const divRef = React4.useRef(null);
-    React4.useImperativeHandle(forwardedRef, () => canvasRef.current);
+    const canvasRef = React3.useRef(null);
+    const divRef = React3.useRef(null);
+    React3.useImperativeHandle(forwardedRef, () => canvasRef.current);
     const handlePointerMissed = useMutableCallback(onPointerMissed);
-    const [block, setBlock] = React4.useState(false);
-    const [error, setError] = React4.useState(false);
+    const [block, setBlock] = React3.useState(false);
+    const [error, setError] = React3.useState(false);
     if (block) throw block;
     if (error) throw error;
-    const root = React4.useRef(null);
+    const root = React3.useRef(null);
     useIsomorphicLayoutEffect2(() => {
       const canvas = canvasRef.current;
       if (containerRect.width > 0 && containerRect.height > 0 && canvas) {
@@ -57909,21 +57571,21 @@ if (edgeAlpha == 0.0) {
             onCreated == null ? void 0 : onCreated(state);
           }
         });
-        root.current.render(React4.createElement(Bridge, null, React4.createElement(ErrorBoundary, {
+        root.current.render(React3.createElement(Bridge, null, React3.createElement(ErrorBoundary, {
           set: setError
-        }, React4.createElement(React4.Suspense, {
-          fallback: React4.createElement(Block, {
+        }, React3.createElement(React3.Suspense, {
+          fallback: React3.createElement(Block, {
             set: setBlock
           })
         }, children))));
       }
     });
-    React4.useEffect(() => {
+    React3.useEffect(() => {
       const canvas = canvasRef.current;
       if (canvas) return () => unmountComponentAtNode(canvas);
     }, []);
     const pointerEvents = eventSource ? "none" : "auto";
-    return React4.createElement("div", _extends({
+    return React3.createElement("div", _extends({
       ref: divRef,
       style: __spreadValues({
         position: "relative",
@@ -57932,26 +57594,26 @@ if (edgeAlpha == 0.0) {
         overflow: "hidden",
         pointerEvents
       }, style)
-    }, props), React4.createElement("div", {
+    }, props), React3.createElement("div", {
       ref: containerRef,
       style: {
         width: "100%",
         height: "100%"
       }
-    }, React4.createElement("canvas", {
+    }, React3.createElement("canvas", {
       ref: canvasRef,
       style: {
         display: "block"
       }
     }, fallback)));
   });
-  var Canvas2 = React4.forwardRef(function CanvasWrapper(props, ref) {
-    return React4.createElement(FiberProvider, null, React4.createElement(CanvasImpl, _extends({}, props, {
+  var Canvas2 = React3.forwardRef(function CanvasWrapper(props, ref) {
+    return React3.createElement(FiberProvider, null, React3.createElement(CanvasImpl, _extends({}, props, {
       ref
     })));
   });
   init_define_process();
-  var React8 = __toESM(__require("react"), 1);
+  var React7 = __toESM(__require("react"), 1);
   init_three_module();
   init_define_process();
   init_three_module();
@@ -57993,17 +57655,17 @@ if (edgeAlpha == 0.0) {
     }
   };
   init_define_process();
-  var React6 = __toESM(__require("react"), 1);
+  var React5 = __toESM(__require("react"), 1);
   init_three_module();
   init_define_process();
   init_define_process();
-  var React5 = __toESM(__require("react"), 1);
+  var React4 = __toESM(__require("react"), 1);
   var _a;
   var _b;
   var uniq = arr => Array.from(new Set(arr));
-  var useIsomorphicLayoutEffect3 = typeof window !== "undefined" && (((_a = window.document) == null ? void 0 : _a.createElement) || ((_b = window.navigator) == null ? void 0 : _b.product) === "ReactNative") ? React5.useLayoutEffect : React5.useEffect;
+  var useIsomorphicLayoutEffect3 = typeof window !== "undefined" && (((_a = window.document) == null ? void 0 : _a.createElement) || ((_b = window.navigator) == null ? void 0 : _b.product) === "ReactNative") ? React4.useLayoutEffect : React4.useEffect;
   function useCallbackRef(fn) {
-    const ref = React5.useRef(fn);
+    const ref = React4.useRef(fn);
     useIsomorphicLayoutEffect3(() => void (ref.current = fn), [fn]);
     return ref;
   }
@@ -58033,7 +57695,7 @@ if (edgeAlpha == 0.0) {
     const hoverState = useXR(state => state.hoverState);
     const hasInteraction = useXR(state => state.hasInteraction);
     const getInteraction = useXR(state => state.getInteraction);
-    const intersect = React6.useCallback(controller => {
+    const intersect = React5.useCallback(controller => {
       const objects = Array.from(interactions.keys());
       tempMatrix.identity().extractRotation(controller.matrixWorld);
       raycaster2.ray.origin.setFromMatrixPosition(controller.matrixWorld);
@@ -58095,7 +57757,7 @@ if (edgeAlpha == 0.0) {
         }
       }
     });
-    const triggerEvent = React6.useCallback(interaction => e => {
+    const triggerEvent = React5.useCallback(interaction => e => {
       var _a2;
       if (!((_a2 = e.target.inputSource) == null ? void 0 : _a2.handedness)) {
         return;
@@ -58138,7 +57800,7 @@ if (edgeAlpha == 0.0) {
     useXREvent("squeeze", triggerEvent("onSqueeze"));
     useXREvent("squeezeend", triggerEvent("onSqueezeEnd"));
     useXREvent("squeezestart", triggerEvent("onSqueezeStart"));
-    return React6.createElement(React6.Fragment, null, children);
+    return React5.createElement(React5.Fragment, null, children);
   }
   function useInteraction(ref, type, handler) {
     const addInteraction = useXR(state => state.addInteraction);
@@ -58151,9 +57813,9 @@ if (edgeAlpha == 0.0) {
       return () => removeInteraction(target, type, handlerRef);
     }, [ref, type, addInteraction, removeInteraction]);
   }
-  var Interactive = React6.forwardRef(function Interactive2({onHover, onBlur, onSelectStart, onSelectEnd, onSelectMissed, onSelect, onSqueezeStart, onSqueezeEnd, onSqueezeMissed, onSqueeze, onMove, children}, passedRef) {
-    const ref = React6.useRef(null);
-    React6.useImperativeHandle(passedRef, () => ref.current);
+  var Interactive = React5.forwardRef(function Interactive2({onHover, onBlur, onSelectStart, onSelectEnd, onSelectMissed, onSelect, onSqueezeStart, onSqueezeEnd, onSqueezeMissed, onSqueeze, onMove, children}, passedRef) {
+    const ref = React5.useRef(null);
+    React5.useImperativeHandle(passedRef, () => ref.current);
     useInteraction(ref, "onHover", onHover);
     useInteraction(ref, "onBlur", onBlur);
     useInteraction(ref, "onSelectStart", onSelectStart);
@@ -58165,16 +57827,16 @@ if (edgeAlpha == 0.0) {
     useInteraction(ref, "onSqueezeMissed", onSqueezeMissed);
     useInteraction(ref, "onSqueeze", onSqueeze);
     useInteraction(ref, "onMove", onMove);
-    return React6.createElement("group", {
+    return React5.createElement("group", {
       ref
     }, children);
   });
-  var RayGrab = React6.forwardRef(function RayGrab2(_a2, forwardedRef) {
+  var RayGrab = React5.forwardRef(function RayGrab2(_a2, forwardedRef) {
     var _b2 = _a2, {onSelectStart, onSelectEnd, children} = _b2, rest = __objRest(_b2, ["onSelectStart", "onSelectEnd", "children"]);
-    const grabbingController = React6.useRef();
-    const groupRef = React6.useRef(null);
-    const previousTransform = React6.useMemo(() => new Matrix4(), []);
-    React6.useImperativeHandle(forwardedRef, () => groupRef.current);
+    const grabbingController = React5.useRef();
+    const groupRef = React5.useRef(null);
+    const previousTransform = React5.useMemo(() => new Matrix4(), []);
+    React5.useImperativeHandle(forwardedRef, () => groupRef.current);
     useFrame(() => {
       const controller = grabbingController.current;
       const group = groupRef.current;
@@ -58184,7 +57846,7 @@ if (edgeAlpha == 0.0) {
       group.updateMatrixWorld();
       previousTransform.copy(controller.matrixWorld).invert();
     });
-    return React6.createElement(Interactive, __spreadValues({
+    return React5.createElement(Interactive, __spreadValues({
       ref: groupRef,
       onSelectStart: e => {
         grabbingController.current = e.target.controller;
@@ -58201,8 +57863,8 @@ if (edgeAlpha == 0.0) {
   });
   function useHitTest(hitTestCallback) {
     const session = useXR(state => state.session);
-    const hitTestSource = React6.useRef();
-    const hitMatrix = React6.useMemo(() => new Matrix4(), []);
+    const hitTestSource = React5.useRef();
+    const hitMatrix = React5.useMemo(() => new Matrix4(), []);
     useIsomorphicLayoutEffect3(() => {
       if (!session) return void (hitTestSource.current = void 0);
       session.requestReferenceSpace("viewer").then(referenceSpace => __async(this, null, function* () {
@@ -58226,8 +57888,8 @@ if (edgeAlpha == 0.0) {
     });
   }
   init_define_process();
-  var React7 = __toESM(__require("react"), 1);
-  var XRContext = React7.createContext(null);
+  var React6 = __toESM(__require("react"), 1);
+  var XRContext = React6.createContext(null);
   var globalSessionStore = create((set, get) => ({
     set,
     get,
@@ -58354,17 +58016,17 @@ if (edgeAlpha == 0.0) {
         session.removeEventListener("inputsourceschange", handleInputSourcesChange);
       };
     }, [session, gl.xr, set, get]);
-    return React8.createElement(InteractionManager, null, React8.createElement("primitive", {
+    return React7.createElement(InteractionManager, null, React7.createElement("primitive", {
       object: player
-    }, React8.createElement("primitive", {
+    }, React7.createElement("primitive", {
       object: camera
-    }), controllers.map(controller => React8.createElement("primitive", {
+    }), controllers.map(controller => React7.createElement("primitive", {
       key: controller.index,
       object: controller
     }))), children);
   }
   function XR(props) {
-    const store = React8.useMemo(() => create((set, get) => ({
+    const store = React7.useMemo(() => create((set, get) => ({
       set,
       get,
       controllers: [],
@@ -58421,9 +58083,9 @@ if (edgeAlpha == 0.0) {
         }
       }
     })), []);
-    return React8.createElement(XRContext.Provider, {
+    return React7.createElement(XRContext.Provider, {
       value: store
-    }, React8.createElement(XRManager, __spreadValues({}, props)));
+    }, React7.createElement(XRManager, __spreadValues({}, props)));
   }
   var getSessionOptions = (globalStateReferenceSpaceType, sessionInit) => {
     var _a2;
@@ -58495,11 +58157,11 @@ if (edgeAlpha == 0.0) {
         }
     }
   };
-  var XRButton = React8.forwardRef(function XRButton2(_a2, ref) {
+  var XRButton = React7.forwardRef(function XRButton2(_a2, ref) {
     var _b2 = _a2, {mode, sessionInit, enterOnly = false, exitOnly = false, onClick, onError, children} = _b2, props = __objRest(_b2, ["mode", "sessionInit", "enterOnly", "exitOnly", "onClick", "onError", "children"]);
     var _a3;
-    const [status, setStatus] = React8.useState("exited");
-    const [reason, setReason] = React8.useState("unknown");
+    const [status, setStatus] = React7.useState("exited");
+    const [reason, setReason] = React7.useState("unknown");
     const label = getLabel(status, mode, reason);
     const sessionMode = mode === "inline" ? mode : `immersive-${mode.toLowerCase()}`;
     const onErrorRef = useCallbackRef(onError);
@@ -58529,7 +58191,7 @@ if (edgeAlpha == 0.0) {
         setStatus("exited");
       }
     }), [status]);
-    const handleButtonClick = React8.useCallback(event => __async(this, null, function* () {
+    const handleButtonClick = React7.useCallback(event => __async(this, null, function* () {
       onClick == null ? void 0 : onClick(event);
       try {
         toggleSession(sessionMode, {
@@ -58542,7 +58204,7 @@ if (edgeAlpha == 0.0) {
         if (onError2 && e instanceof Error) onError2(e); else throw e;
       }
     }), [onClick, sessionMode, sessionInit, enterOnly, exitOnly, onErrorRef]);
-    return React8.createElement("button", __spreadProps(__spreadValues({}, props), {
+    return React7.createElement("button", __spreadProps(__spreadValues({}, props), {
       ref,
       onClick: status === "unsupported" ? onClick : handleButtonClick
     }), (_a3 = typeof children === "function" ? children(status) : children) != null ? _a3 : label);
@@ -58562,25 +58224,25 @@ if (edgeAlpha == 0.0) {
     zIndex: 99999,
     cursor: "pointer"
   };
-  var ARButton = React8.forwardRef((_a2, ref) => {
+  var ARButton = React7.forwardRef((_a2, ref) => {
     var _b2 = _a2, {style = buttonStyles, sessionInit = {
       domOverlay: typeof document !== "undefined" ? {
         root: document.body
       } : void 0,
       optionalFeatures: ["hit-test", "dom-overlay", "dom-overlay-for-handheld-ar"]
     }, children} = _b2, rest = __objRest(_b2, ["style", "sessionInit", "children"]);
-    return React8.createElement(XRButton, __spreadProps(__spreadValues({}, rest), {
+    return React7.createElement(XRButton, __spreadProps(__spreadValues({}, rest), {
       ref,
       mode: "AR",
       style,
       sessionInit
     }), children);
   });
-  var VRButton = React8.forwardRef((_a2, ref) => {
+  var VRButton = React7.forwardRef((_a2, ref) => {
     var _b2 = _a2, {style = buttonStyles, sessionInit = {
       optionalFeatures: ["local-floor", "bounded-floor", "hand-tracking", "layers"]
     }, children} = _b2, rest = __objRest(_b2, ["style", "sessionInit", "children"]);
-    return React8.createElement(XRButton, __spreadProps(__spreadValues({}, rest), {
+    return React7.createElement(XRButton, __spreadProps(__spreadValues({}, rest), {
       ref,
       mode: "VR",
       style,
@@ -58588,7 +58250,7 @@ if (edgeAlpha == 0.0) {
     }), children);
   });
   function useXR(selector = state => state, equalityFn) {
-    const store = React8.useContext(XRContext);
+    const store = React7.useContext(XRContext);
     if (!store) throw new Error("useXR must be used within an <XR /> component!");
     return store(selector, equalityFn);
   }
@@ -61422,11 +61084,447 @@ if (edgeAlpha == 0.0) {
     };
     return generated;
   };
-  var import_react27 = __require("react");
+  var import_react4 = __require("react");
+  var import_jsx_runtime = __require("react/jsx-runtime");
+  var Context = (0, import_react3.createContext)({
+    overlayRef: null,
+    domOverlay: void 0,
+    setState() {},
+    component: (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {})
+  });
+  function ScreenStateContext(props) {
+    const [arState, setArState] = (0, import_react3.useState)((0, import_jsx_runtime.jsx)("group", {}));
+    const [overlayState, setOverlayState] = (0, import_react3.useState)((0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {}));
+    const isXRSession = (0, import_react3.useRef)(false);
+    const overlayRef = (0, import_react3.useRef)(null);
+    const [domOverlay, setDomOverlay] = (0, import_react3.useState)();
+    const defaultComponent = (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, {
+      children: [(0, import_jsx_runtime.jsx)(Canvas2, {
+        children: (0, import_jsx_runtime.jsx)(XR, {
+          children: (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {})
+        })
+      }), (0, import_jsx_runtime.jsx)("div", {
+        ref: overlayRef,
+        style: {
+          userSelect: "none"
+        }
+      })]
+    });
+    const [component, setComponent] = (0, import_react3.useState)(defaultComponent);
+    (0, import_react3.useEffect)(() => {
+      if (!overlayRef) return;
+      const overlay = overlayRef.current;
+      if (overlay) {
+        setDomOverlay(overlay);
+      } else {
+        setDomOverlay(void 0);
+      }
+    }, [overlayRef, component]);
+    (0, import_react3.useEffect)(() => {
+      updateComponent();
+    }, [arState, overlayState]);
+    function updateComponent() {
+      setComponent((0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, {
+        children: [(0, import_jsx_runtime.jsx)(Canvas2, {
+          children: (0, import_jsx_runtime.jsx)(XR, {
+            onSessionStart: () => {
+              isXRSession.current = true;
+              updateComponent();
+            },
+            onSessionEnd: () => {
+              isXRSession.current = false;
+              updateComponent();
+            },
+            children: isXRSession.current ? arState : (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {})
+          })
+        }), (0, import_jsx_runtime.jsx)("div", {
+          ref: overlayRef,
+          style: {
+            position: "relative",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            userSelect: "none"
+          },
+          children: isXRSession.current ? overlayState : (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {})
+        })]
+      }));
+    }
+    function setStates(newArState, newOverlayState) {
+      if (newArState) {
+        setArState(newArState);
+      } else {
+        setArState((0, import_jsx_runtime.jsx)("group", {}));
+      }
+      if (newOverlayState) {
+        setOverlayState(newOverlayState);
+      } else {
+        setOverlayState((0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {}));
+      }
+    }
+    return (0, import_jsx_runtime.jsx)(Context.Provider, {
+      value: {
+        overlayRef,
+        domOverlay: domOverlay ? {
+          root: domOverlay
+        } : void 0,
+        setState: setStates,
+        component
+      },
+      children: props.children
+    });
+  }
+  function useScreenState() {
+    return (0, import_react3.useContext)(Context);
+  }
+  init_define_process();
+  init_define_process();
+  init_define_process();
   init_three_module();
   init_define_process();
-  var import_react4 = __require("react");
-  var ErrorBoundary2 = class extends import_react4.Component {
+  init_three_module();
+  init_define_process();
+  var import_uniqid = __toESM(require_uniqid());
+  var import_react5 = __require("react");
+  var import_jsx_runtime2 = __require("react/jsx-runtime");
+  var UIBasicItem = class {
+    constructor(type, padding, id) {
+      this.paddingLeft = 0;
+      this.paddingRight = 0;
+      this.paddingTop = 0;
+      this.paddingBottom = 0;
+      this.id = "";
+      this.layer = 1;
+      this.parent = void 0;
+      this.toJSON = () => {
+        let object = __spreadValues({}, this);
+        delete object.layer;
+        delete object.parent;
+        return object;
+      };
+      this.getWidth = () => this.paddingLeft + this.paddingRight;
+      this.getHeight = () => this.paddingTop + this.paddingBottom;
+      this.calculateLayer = () => {};
+      this.getComponent = (position, _) => (0, import_jsx_runtime2.jsx)("mesh", {
+        position
+      }, `component_${this.id}`);
+      this.type = type;
+      if (padding) {
+        if (typeof padding === "number") {
+          this.paddingLeft = padding;
+          this.paddingRight = padding;
+          this.paddingTop = padding;
+          this.paddingBottom = padding;
+        } else {
+          if (padding.paddingLeft) {
+            this.paddingLeft = padding.paddingLeft;
+          }
+          if (padding.paddingRight) {
+            this.paddingRight = padding.paddingRight;
+          }
+          if (padding.paddingTop) {
+            this.paddingTop = padding.paddingTop;
+          }
+          if (padding.paddingBottom) {
+            this.paddingBottom = padding.paddingBottom;
+          }
+        }
+      }
+      if (id) {
+        this.id = id;
+      } else {
+        this.id = (0, import_uniqid.default)();
+      }
+    }
+  };
+  var UILayoutItem = class _UILayoutItem extends UIBasicItem {
+    constructor() {
+      super(...arguments);
+      this.children = [];
+      this.calculateLayer = () => {
+        this.layer = 1;
+        this.children.forEach(child => {
+          if (child instanceof _UILayoutItem && this.layer <= child.layer) {
+            this.layer = child.layer + 1;
+          }
+        });
+        this.children.forEach(child => {
+          child.parent = this;
+        });
+      };
+    }
+  };
+  init_define_process();
+  init_three_module();
+  function parseVector3(object) {
+    if (!object) return void 0;
+    const x = object.x;
+    const y = object.y;
+    const z = object.z;
+    if (typeof x === "number" && typeof y === "number" && typeof z === "number") {
+      return new Vector3(x, y, z);
+    }
+    return void 0;
+  }
+  function vector3ToArray(vector) {
+    return [vector.x, vector.y, vector.z];
+  }
+  var GltfModel = class {
+    constructor(resource, scale) {
+      this.resource = resource;
+      this.scale = scale;
+    }
+  };
+  var ShapeModel = class {
+    constructor(geometry, material) {
+      this.geometry = geometry;
+      this.material = material;
+    }
+  };
+  var InterfaceModel = class {
+    constructor(rootComponent) {
+      this.rootComponent = rootComponent;
+    }
+  };
+  var LightModel = class {
+    constructor(intensity) {
+      this.intensity = intensity;
+    }
+  };
+  var RENDER_DISTANCE = "RenderWithinDistance";
+  var RENDER_ALWAYS = "AlwaysRender";
+  var RenderWithinDistance = class {
+    constructor(distance) {
+      this.type = RENDER_DISTANCE;
+      this.distance = distance;
+    }
+  };
+  var AlwaysRender = class {
+    constructor() {
+      this.type = RENDER_ALWAYS;
+    }
+  };
+  function parseRender(render2) {
+    if (!render2) return void 0;
+    switch (render2.type) {
+      case RENDER_ALWAYS:
+        {
+          return new AlwaysRender();
+        }
+      case RENDER_DISTANCE:
+        {
+          let distance = 5;
+          if (typeof render2.distance === "number") {
+            distance = render2.distance;
+          }
+          return new RenderWithinDistance(distance);
+        }
+    }
+    return void 0;
+  }
+  var ROTATION_USER = "RotateToUser";
+  var ROTATION_Y = "RotateAroundY";
+  var ROTATION_FIX = "FixRotation";
+  var RotateToUser = class {
+    constructor() {
+      this.type = ROTATION_USER;
+    }
+  };
+  var RotateAroundY = class {
+    constructor() {
+      this.type = ROTATION_Y;
+    }
+  };
+  var FixRotation = class {
+    constructor(radians) {
+      this.type = ROTATION_FIX;
+      this.rotation = radians;
+    }
+  };
+  function parseRotation(rotation) {
+    if (!rotation) return void 0;
+    switch (rotation == null ? void 0 : rotation.type) {
+      case ROTATION_USER:
+        {
+          return new RotateToUser();
+        }
+      case ROTATION_Y:
+        {
+          return new RotateAroundY();
+        }
+      case ROTATION_FIX:
+        {
+          let angle = 0;
+          if (typeof rotation.rotation === "number") {
+            angle = rotation.rotation;
+          }
+          return new FixRotation(angle);
+        }
+    }
+    return void 0;
+  }
+  var MOVEMENT_PATH = "PathMovement";
+  var MOVEMENT_ORBIT = "OrbitMovement";
+  var MOVEMENT_SPRING = "SpringMovement";
+  var MovementClass = class {
+    constructor() {
+      this.type = "";
+    }
+  };
+  function parsePathItems(path) {
+    const result = [];
+    for (let i2 = 0; i2 < path.length; i2++) {
+      const item = path[i2];
+      const start2 = parseVector3(item.start);
+      const end = parseVector3(item.end);
+      const duration = item.duration;
+      if (start2 instanceof Vector3 && end instanceof Vector3 && (duration === void 0 || typeof duration === "number")) {
+        let movementStyle = 0;
+        if (item.style === 1) {
+          movementStyle = 1;
+        } else if (item.style === 2) {
+          movementStyle = 2;
+        }
+        result.push({
+          start: start2,
+          end,
+          duration,
+          style: movementStyle
+        });
+      }
+    }
+    return result;
+  }
+  var PathMovement = class extends MovementClass {
+    constructor(path, startTime, getCurrentTime) {
+      super();
+      this.type = MOVEMENT_PATH;
+      this.path = path;
+      this.totalDuration = 0;
+      if (startTime) {
+        this.startTime = startTime;
+      } else {
+        const currentDate = new Date();
+        this.startTime = currentDate.getTime();
+      }
+      if (getCurrentTime) {
+        this.getCurrentTime = getCurrentTime;
+      } else {
+        this.getCurrentTime = () => {
+          const currentDate = new Date();
+          return currentDate.getTime();
+        };
+      }
+      path.forEach(item => {
+        this.totalDuration += item.duration;
+      });
+    }
+    getOffsetPosition(position) {
+      let currentFrame2 = (this.getCurrentTime() - this.startTime) % (this.totalDuration * 1e3);
+      let currentMovementIndex = 0;
+      while (currentFrame2 > 0 && currentMovementIndex < this.path.length) {
+        let currentItem = this.path[currentMovementIndex];
+        if (currentFrame2 >= currentItem.duration * 1e3) {
+          currentFrame2 -= currentItem.duration * 1e3;
+          currentMovementIndex++;
+          continue;
+        }
+        let ratio = Math.min(Math.max(0, currentFrame2 / (currentItem.duration * 1e3)), 1);
+        switch (currentItem.style) {
+          case 2:
+            {
+              ratio = __pow(ratio, 5);
+              break;
+            }
+          case 1:
+            {
+              let negative = 1 - ratio;
+              negative = __pow(negative, 5);
+              ratio = 1 - negative;
+              break;
+            }
+        }
+        const x = position.x + currentItem.start.x + ratio * (currentItem.end.x - currentItem.start.x);
+        const y = position.y + currentItem.start.y + ratio * (currentItem.end.y - currentItem.start.y);
+        const z = position.z + currentItem.start.z + ratio * (currentItem.end.z - currentItem.start.z);
+        return new Vector3(x, y, z);
+      }
+      return position;
+    }
+  };
+  var OrbitMovement = class extends MovementClass {
+    constructor(radius, duration, startTime, getCurrentTime) {
+      super();
+      this.type = MOVEMENT_ORBIT;
+      this.radius = radius;
+      this.duration = duration;
+      if (startTime) {
+        this.startTime = startTime;
+      } else {
+        let currentDate = new Date();
+        this.startTime = currentDate.getTime();
+      }
+      if (getCurrentTime) {
+        this.getCurrentTime = getCurrentTime;
+      } else {
+        this.getCurrentTime = () => {
+          let currentDate = new Date();
+          return currentDate.getTime();
+        };
+      }
+    }
+    getOffsetPosition(position) {
+      const currentFrame2 = (this.getCurrentTime() - this.startTime) % (this.duration * 1e3);
+      const ratio = Math.min(Math.max(0, currentFrame2 / (this.duration * 1e3)), 1);
+      const angle = ratio * Math.PI * 2;
+      const x = position.x + this.radius * Math.sin(angle);
+      const y = position.y;
+      const z = position.z + this.radius * Math.cos(angle);
+      return new Vector3(x, y, z);
+    }
+  };
+  var SpringMovement = class extends MovementClass {
+    constructor() {
+      super(...arguments);
+      this.type = MOVEMENT_SPRING;
+    }
+  };
+  function parseMovement(movement, getCurrentTime) {
+    if (!movement) return void 0;
+    switch (movement.type) {
+      case MOVEMENT_PATH:
+        {
+          const startTime = movement.startTime;
+          const pathItems = movement.path;
+          if ((startTime === void 0 || typeof startTime === "number") && Array.isArray(pathItems)) {
+            const parsedPathItems = parsePathItems(pathItems);
+            return new PathMovement(parsedPathItems, startTime, getCurrentTime);
+          }
+          break;
+        }
+      case MOVEMENT_ORBIT:
+        {
+          const radius = movement.radius;
+          const duration = movement.duration;
+          const startTime = movement.startTime;
+          if (typeof radius === "number" && typeof duration === "number" && (startTime === void 0 || typeof startTime === "number")) {
+            return new OrbitMovement(radius, duration, startTime, getCurrentTime);
+          }
+          break;
+        }
+      case MOVEMENT_SPRING:
+        return new SpringMovement();
+    }
+    return void 0;
+  }
+  init_define_process();
+  var import_react29 = __require("react");
+  init_three_module();
+  init_define_process();
+  var import_react6 = __require("react");
+  var ErrorBoundary2 = class extends import_react6.Component {
     constructor() {
       super(...arguments);
       this.state = {
@@ -61446,7 +61544,7 @@ if (edgeAlpha == 0.0) {
     }
   };
   init_define_process();
-  var import_react9 = __require("react");
+  var import_react11 = __require("react");
   init_define_process();
   function clone(source) {
     const sourceLookup = new Map();
@@ -61634,7 +61732,7 @@ if (edgeAlpha == 0.0) {
       }
     });
   }
-  var import_react5 = __require("react");
+  var import_react7 = __require("react");
   function noop() {}
   var defineHidden = (obj, key, value) => Object.defineProperty(obj, key, {
     value,
@@ -62293,9 +62391,9 @@ if (edgeAlpha == 0.0) {
   function isAnimatedString(value) {
     return is2.str(value) && (value[0] == "#" || (/\d/).test(value) || !isSSR2() && cssVariableRegex.test(value) || (value in (colors$1 || ({}))));
   }
-  var useIsomorphicLayoutEffect4 = isSSR2() ? import_react5.useEffect : import_react5.useLayoutEffect;
+  var useIsomorphicLayoutEffect4 = isSSR2() ? import_react7.useEffect : import_react7.useLayoutEffect;
   var useIsMounted = () => {
-    const isMounted = (0, import_react5.useRef)(false);
+    const isMounted = (0, import_react7.useRef)(false);
     useIsomorphicLayoutEffect4(() => {
       isMounted.current = true;
       return () => {
@@ -62305,7 +62403,7 @@ if (edgeAlpha == 0.0) {
     return isMounted;
   };
   function useForceUpdate() {
-    const update3 = (0, import_react5.useState)()[1];
+    const update3 = (0, import_react7.useState)()[1];
     const isMounted = useIsMounted();
     return () => {
       if (isMounted.current) {
@@ -62314,11 +62412,11 @@ if (edgeAlpha == 0.0) {
     };
   }
   function useMemoOne(getResult, inputs) {
-    const [initial] = (0, import_react5.useState)(() => ({
+    const [initial] = (0, import_react7.useState)(() => ({
       inputs,
       result: getResult()
     }));
-    const committed = (0, import_react5.useRef)();
+    const committed = (0, import_react7.useRef)();
     const prevCache = committed.current;
     let cache = prevCache;
     if (cache) {
@@ -62332,7 +62430,7 @@ if (edgeAlpha == 0.0) {
     } else {
       cache = initial;
     }
-    (0, import_react5.useEffect)(() => {
+    (0, import_react7.useEffect)(() => {
       committed.current = cache;
       if (prevCache == initial) {
         initial.inputs = initial.result = void 0;
@@ -62351,20 +62449,20 @@ if (edgeAlpha == 0.0) {
     }
     return true;
   }
-  var useOnce = effect => (0, import_react5.useEffect)(effect, emptyDeps);
+  var useOnce = effect => (0, import_react7.useEffect)(effect, emptyDeps);
   var emptyDeps = [];
   function usePrev(value) {
-    const prevRef = (0, import_react5.useRef)();
-    (0, import_react5.useEffect)(() => {
+    const prevRef = (0, import_react7.useRef)();
+    (0, import_react7.useEffect)(() => {
       prevRef.current = value;
     });
     return prevRef.current;
   }
-  var React10 = __toESM(__require("react"));
-  var import_react7 = __require("react");
+  var React11 = __toESM(__require("react"));
+  var import_react9 = __require("react");
   init_define_process();
-  var React9 = __toESM(__require("react"));
-  var import_react6 = __require("react");
+  var React10 = __toESM(__require("react"));
+  var import_react8 = __require("react");
   var $node = Symbol.for("Animated:node");
   var isAnimated = value => !!value && value[$node] === value;
   var getAnimated = owner => owner && owner[$node];
@@ -62561,9 +62659,9 @@ if (edgeAlpha == 0.0) {
   }
   var withAnimated = (Component9, host2) => {
     const hasInstance = !is2.fun(Component9) || Component9.prototype && Component9.prototype.isReactComponent;
-    return (0, import_react6.forwardRef)((givenProps, givenRef) => {
-      const instanceRef = (0, import_react6.useRef)(null);
-      const ref = hasInstance && (0, import_react6.useCallback)(value => {
+    return (0, import_react8.forwardRef)((givenProps, givenRef) => {
+      const instanceRef = (0, import_react8.useRef)(null);
+      const ref = hasInstance && (0, import_react8.useCallback)(value => {
         instanceRef.current = updateRef(givenRef, value);
       }, [givenRef]);
       const [props, deps] = getAnimatedState(givenProps, host2);
@@ -62579,7 +62677,7 @@ if (edgeAlpha == 0.0) {
         }
       };
       const observer = new PropsObserver(callback, deps);
-      const observerRef = (0, import_react6.useRef)();
+      const observerRef = (0, import_react8.useRef)();
       useIsomorphicLayoutEffect4(() => {
         observerRef.current = observer;
         each(deps, dep => addFluidObserver(dep, observer));
@@ -62590,13 +62688,13 @@ if (edgeAlpha == 0.0) {
           }
         };
       });
-      (0, import_react6.useEffect)(callback, []);
+      (0, import_react8.useEffect)(callback, []);
       useOnce(() => () => {
         const observer2 = observerRef.current;
         each(observer2.deps, dep => removeFluidObserver(dep, observer2));
       });
       const usedProps = host2.getComponentProps(props.getValue());
-      return React9.createElement(Component9, _extends3({}, usedProps, {
+      return React10.createElement(Component9, _extends3({}, usedProps, {
         ref
       }));
     });
@@ -64027,14 +64125,14 @@ if (edgeAlpha == 0.0) {
   var _excluded$6 = ["children"];
   var SpringContext = _ref => {
     let {children} = _ref, props = _objectWithoutPropertiesLoose(_ref, _excluded$6);
-    const inherited = (0, import_react7.useContext)(ctx);
+    const inherited = (0, import_react9.useContext)(ctx);
     const pause = props.pause || !!inherited.pause, immediate = props.immediate || !!inherited.immediate;
     props = useMemoOne(() => ({
       pause,
       immediate
     }), [pause, immediate]);
     const {Provider: Provider2} = ctx;
-    return React10.createElement(Provider2, {
+    return React11.createElement(Provider2, {
       value: props
     }, children);
   };
@@ -64042,7 +64140,7 @@ if (edgeAlpha == 0.0) {
   SpringContext.Provider = ctx.Provider;
   SpringContext.Consumer = ctx.Consumer;
   function makeContext(target, init) {
-    Object.assign(target, React10.createContext(init));
+    Object.assign(target, React11.createContext(init));
     target.Provider._context = target;
     target.Consumer._context = target;
     return target;
@@ -64116,10 +64214,10 @@ if (edgeAlpha == 0.0) {
   function useSprings(length, props, deps) {
     const propsFn = is2.fun(props) && props;
     if (propsFn && !deps) deps = [];
-    const ref = (0, import_react7.useMemo)(() => propsFn || arguments.length == 3 ? SpringRef() : void 0, []);
-    const layoutId = (0, import_react7.useRef)(0);
+    const ref = (0, import_react9.useMemo)(() => propsFn || arguments.length == 3 ? SpringRef() : void 0, []);
+    const layoutId = (0, import_react9.useRef)(0);
     const forceUpdate = useForceUpdate();
-    const state = (0, import_react7.useMemo)(() => ({
+    const state = (0, import_react9.useMemo)(() => ({
       ctrls: [],
       queue: [],
       flush(ctrl, updates2) {
@@ -64134,10 +64232,10 @@ if (edgeAlpha == 0.0) {
         });
       }
     }), []);
-    const ctrls = (0, import_react7.useRef)([...state.ctrls]);
+    const ctrls = (0, import_react9.useRef)([...state.ctrls]);
     const updates = [];
     const prevLength = usePrev(length) || 0;
-    (0, import_react7.useMemo)(() => {
+    (0, import_react9.useMemo)(() => {
       each(ctrls.current.slice(length, prevLength), ctrl => {
         detachRefs(ctrl, ref);
         ctrl.stop(true);
@@ -64145,7 +64243,7 @@ if (edgeAlpha == 0.0) {
       ctrls.current.length = length;
       declareUpdates(prevLength, length);
     }, [length]);
-    (0, import_react7.useMemo)(() => {
+    (0, import_react9.useMemo)(() => {
       declareUpdates(0, Math.min(prevLength, length));
     }, deps);
     function declareUpdates(startIndex, endIndex) {
@@ -64158,7 +64256,7 @@ if (edgeAlpha == 0.0) {
       }
     }
     const springs = ctrls.current.map((ctrl, i2) => getSprings(ctrl, updates[i2]));
-    const context2 = (0, import_react7.useContext)(SpringContext);
+    const context2 = (0, import_react9.useContext)(SpringContext);
     const prevContext = usePrev(context2);
     const hasContext = context2 !== prevContext && hasProps(context2);
     useIsomorphicLayoutEffect4(() => {
@@ -64341,18 +64439,18 @@ if (edgeAlpha == 0.0) {
     return _extends5.apply(this, arguments);
   }
   init_define_process();
-  var React11 = __toESM(__require("react"));
-  var Text2 = React11.forwardRef((_a2, ref) => {
+  var React12 = __toESM(__require("react"));
+  var Text2 = React12.forwardRef((_a2, ref) => {
     var _b2 = _a2, {sdfGlyphSize = 64, anchorX = "center", anchorY = "middle", font, fontSize = 1, children, characters, onSync} = _b2, props = __objRest(_b2, ["sdfGlyphSize", "anchorX", "anchorY", "font", "fontSize", "children", "characters", "onSync"]);
     const {Text: TextMeshImpl, preloadFont: preloadFont2} = suspend(() => __async(void 0, null, function* () {
       return Promise.resolve().then(() => (init_troika_three_text_esm(), troika_three_text_esm_exports));
     }), []);
     const invalidate2 = useThree(({invalidate: invalidate3}) => invalidate3);
-    const [troikaMesh] = React11.useState(() => new TextMeshImpl());
-    const [nodes, text] = React11.useMemo(() => {
+    const [troikaMesh] = React12.useState(() => new TextMeshImpl());
+    const [nodes, text] = React12.useMemo(() => {
       const n = [];
       let t = "";
-      React11.Children.forEach(children, child => {
+      React12.Children.forEach(children, child => {
         if (typeof child === "string" || typeof child === "number") {
           t += child;
         } else {
@@ -64365,14 +64463,14 @@ if (edgeAlpha == 0.0) {
       font,
       characters
     }, res)), ["troika-text", font, characters]);
-    React11.useLayoutEffect(() => void troikaMesh.sync(() => {
+    React12.useLayoutEffect(() => void troikaMesh.sync(() => {
       invalidate2();
       if (onSync) onSync(troikaMesh);
     }));
-    React11.useEffect(() => {
+    React12.useEffect(() => {
       return () => troikaMesh.dispose();
     }, [troikaMesh]);
-    return React11.createElement("primitive", _extends5({
+    return React12.createElement("primitive", _extends5({
       object: troikaMesh,
       ref,
       font,
@@ -64384,7 +64482,7 @@ if (edgeAlpha == 0.0) {
     }, props), nodes);
   });
   init_define_process();
-  var React12 = __toESM(__require("react"));
+  var React13 = __toESM(__require("react"));
   init_three_module();
   init_define_process();
   init_three_module();
@@ -64418,15 +64516,15 @@ if (edgeAlpha == 0.0) {
   }
   init_define_process();
   init_three_module();
-  var import_react8 = __require("react");
+  var import_react10 = __require("react");
   var IsObject = url => url === Object(url) && !Array.isArray(url) && typeof url !== "function";
   function useTexture(input, onLoad) {
     const gl = useThree(state => state.gl);
     const textures = useLoader(TextureLoader, IsObject(input) ? Object.values(input) : input);
-    (0, import_react8.useLayoutEffect)(() => {
+    (0, import_react10.useLayoutEffect)(() => {
       onLoad == null || onLoad(textures);
     }, [onLoad]);
-    (0, import_react8.useEffect)(() => {
+    (0, import_react10.useEffect)(() => {
       if (("initTexture" in gl)) {
         const array = Array.isArray(textures) ? textures : [textures];
         array.forEach(gl.initTexture);
@@ -64513,28 +64611,28 @@ if (edgeAlpha == 0.0) {
     #include <${version3 >= 154 ? "colorspace_fragment" : "encodings_fragment"}>
   }
 `);
-  var ImageBase = React12.forwardRef((_a2, fref) => {
+  var ImageBase = React13.forwardRef((_a2, fref) => {
     var _b2 = _a2, {children, color, segments = 1, scale = 1, zoom = 1, grayscale = 0, opacity = 1, radius = 0, texture, toneMapped, transparent, side} = _b2, props = __objRest(_b2, ["children", "color", "segments", "scale", "zoom", "grayscale", "opacity", "radius", "texture", "toneMapped", "transparent", "side"]);
     extend({
       ImageMaterial: ImageMaterialImpl
     });
-    const ref = React12.useRef(null);
+    const ref = React13.useRef(null);
     const size = useThree(state => state.size);
     const planeBounds = Array.isArray(scale) ? [scale[0], scale[1]] : [scale, scale];
     const imageBounds = [texture.image.width, texture.image.height];
     const resolution = Math.max(size.width, size.height);
-    React12.useImperativeHandle(fref, () => ref.current, []);
-    React12.useLayoutEffect(() => {
+    React13.useImperativeHandle(fref, () => ref.current, []);
+    React13.useLayoutEffect(() => {
       if (ref.current.geometry.parameters) {
         ref.current.material.scale.set(planeBounds[0] * ref.current.geometry.parameters.width, planeBounds[1] * ref.current.geometry.parameters.height);
       }
     }, []);
-    return React12.createElement("mesh", _extends5({
+    return React13.createElement("mesh", _extends5({
       ref,
       scale: Array.isArray(scale) ? [...scale, 1] : scale
-    }, props), React12.createElement("planeGeometry", {
+    }, props), React13.createElement("planeGeometry", {
       args: [1, 1, segments, segments]
-    }), React12.createElement("imageMaterial", {
+    }), React13.createElement("imageMaterial", {
       color,
       map: texture,
       zoom,
@@ -64550,30 +64648,30 @@ if (edgeAlpha == 0.0) {
       key: ImageMaterialImpl.key
     }), children);
   });
-  var ImageWithUrl = React12.forwardRef((_a2, ref) => {
+  var ImageWithUrl = React13.forwardRef((_a2, ref) => {
     var _b2 = _a2, {url} = _b2, props = __objRest(_b2, ["url"]);
     const texture = useTexture(url);
-    return React12.createElement(ImageBase, _extends5({}, props, {
+    return React13.createElement(ImageBase, _extends5({}, props, {
       texture,
       ref
     }));
   });
-  var ImageWithTexture = React12.forwardRef((_a2, ref) => {
+  var ImageWithTexture = React13.forwardRef((_a2, ref) => {
     var _b2 = _a2, {url: _url} = _b2, props = __objRest(_b2, ["url"]);
-    return React12.createElement(ImageBase, _extends5({}, props, {
+    return React13.createElement(ImageBase, _extends5({}, props, {
       ref
     }));
   });
-  var Image2 = React12.forwardRef((props, ref) => {
-    if (props.url) return React12.createElement(ImageWithUrl, _extends5({}, props, {
+  var Image2 = React13.forwardRef((props, ref) => {
+    if (props.url) return React13.createElement(ImageWithUrl, _extends5({}, props, {
       ref
-    })); else if (props.texture) return React12.createElement(ImageWithTexture, _extends5({}, props, {
+    })); else if (props.texture) return React13.createElement(ImageWithTexture, _extends5({}, props, {
       ref
     })); else throw new Error("<Image /> requires a url or texture");
   });
   init_define_process();
   init_three_module();
-  var React13 = __toESM(__require("react"));
+  var React14 = __toESM(__require("react"));
   var OutlinesMaterial = shaderMaterial({
     screenspace: false,
     color: new Color("black"),
@@ -64623,18 +64721,18 @@ if (edgeAlpha == 0.0) {
    }`);
   function Outlines(_a2) {
     var _b2 = _a2, {color = "black", opacity = 1, transparent = false, screenspace = false, toneMapped = true, polygonOffset = false, polygonOffsetFactor = 0, renderOrder = 0, thickness = 0.05, angle = Math.PI} = _b2, props = __objRest(_b2, ["color", "opacity", "transparent", "screenspace", "toneMapped", "polygonOffset", "polygonOffsetFactor", "renderOrder", "thickness", "angle"]);
-    const ref = React13.useRef();
-    const [material] = React13.useState(() => new OutlinesMaterial({
+    const ref = React14.useRef();
+    const [material] = React14.useState(() => new OutlinesMaterial({
       side: BackSide
     }));
     const {gl} = useThree();
     const contextSize = gl.getDrawingBufferSize(new Vector2());
-    React13.useMemo(() => extend({
+    React14.useMemo(() => extend({
       OutlinesMaterial
     }), []);
-    const oldAngle = React13.useRef(0);
-    const oldGeometry = React13.useRef();
-    React13.useLayoutEffect(() => {
+    const oldAngle = React14.useRef(0);
+    const oldGeometry = React14.useRef();
+    React14.useLayoutEffect(() => {
       const group = ref.current;
       if (!group) return;
       const parent = group.parent;
@@ -64665,7 +64763,7 @@ if (edgeAlpha == 0.0) {
         }
       }
     });
-    React13.useLayoutEffect(() => {
+    React14.useLayoutEffect(() => {
       const group = ref.current;
       if (!group) return;
       const mesh = group.children[0];
@@ -64684,7 +64782,7 @@ if (edgeAlpha == 0.0) {
         });
       }
     });
-    React13.useEffect(() => {
+    React14.useEffect(() => {
       return () => {
         const group = ref.current;
         if (!group) return;
@@ -64695,7 +64793,7 @@ if (edgeAlpha == 0.0) {
         }
       };
     }, []);
-    return React13.createElement("group", _extends5({
+    return React14.createElement("group", _extends5({
       ref
     }, props));
   }
@@ -64727,18 +64825,18 @@ if (edgeAlpha == 0.0) {
   useGLTF.setDecoderPath = path => {
     decoderPath = path;
   };
-  var import_react10 = __require("react");
-  var import_jsx_runtime2 = __require("react/jsx-runtime");
+  var import_react12 = __require("react");
+  var import_jsx_runtime3 = __require("react/jsx-runtime");
   function GltfComponent(props) {
     const model = useGLTF(props.gltfModel.resource);
-    const [scene, setScene] = (0, import_react9.useState)();
-    const mixer = (0, import_react9.useRef)();
-    (0, import_react9.useEffect)(() => {
+    const [scene, setScene] = (0, import_react11.useState)();
+    const mixer = (0, import_react11.useRef)();
+    (0, import_react11.useEffect)(() => {
       const clonedScene = clone(model.scene);
       setScene(clonedScene);
       mixer.current = new AnimationMixer(clonedScene);
     }, [model.scene]);
-    (0, import_react9.useEffect)(() => {
+    (0, import_react11.useEffect)(() => {
       if (model.animations.length > 0) {
         props.gltfModel.callAnimation = actionName => {
           var _a2, _b2;
@@ -64754,24 +64852,24 @@ if (edgeAlpha == 0.0) {
       var _a2;
       (_a2 = mixer.current) == null ? void 0 : _a2.update(delta);
     });
-    return (0, import_jsx_runtime2.jsxs)(animated.mesh, {
+    return (0, import_jsx_runtime3.jsxs)(animated.mesh, {
       position: props.springPosition,
       scale: props.gltfModel.scale,
       ref: props.meshRef,
-      children: [(0, import_jsx_runtime2.jsx)(import_react9.Suspense, {
+      children: [(0, import_jsx_runtime3.jsx)(import_react11.Suspense, {
         fallback: null,
-        children: scene ? (0, import_jsx_runtime2.jsx)("primitive", {
+        children: scene ? (0, import_jsx_runtime3.jsx)("primitive", {
           object: scene
         }) : null
       }), props.children]
     });
   }
   init_define_process();
-  var import_react12 = __require("react");
+  var import_react14 = __require("react");
   init_define_process();
   init_three_module();
-  var import_react11 = __require("react");
-  var import_jsx_runtime3 = __require("react/jsx-runtime");
+  var import_react13 = __require("react");
+  var import_jsx_runtime4 = __require("react/jsx-runtime");
   function Outline(props) {
     function getColor() {
       if (props.isSelected && props.isInFront) {
@@ -64782,7 +64880,7 @@ if (edgeAlpha == 0.0) {
       }
       return new Color(16753920);
     }
-    return (0, import_jsx_runtime3.jsx)(Outlines, {
+    return (0, import_jsx_runtime4.jsx)(Outlines, {
       visible: props.isInFront || props.isSelected,
       thickness: 10,
       color: getColor(),
@@ -64792,16 +64890,16 @@ if (edgeAlpha == 0.0) {
       angle: 0
     });
   }
-  var import_react13 = __require("react");
-  var import_jsx_runtime4 = __require("react/jsx-runtime");
+  var import_react15 = __require("react");
+  var import_jsx_runtime5 = __require("react/jsx-runtime");
   function ShapeComponent(props) {
-    return (0, import_jsx_runtime4.jsx)(animated.mesh, {
+    return (0, import_jsx_runtime5.jsx)(animated.mesh, {
       ref: props.meshRef,
       position: props.springPosition,
-      children: (0, import_jsx_runtime4.jsx)("mesh", {
+      children: (0, import_jsx_runtime5.jsx)("mesh", {
         geometry: props.shapeModel.geometry,
         material: props.shapeModel.material,
-        children: (0, import_jsx_runtime4.jsx)(Outline, {
+        children: (0, import_jsx_runtime5.jsx)(Outline, {
           isSelected: props.isSelected,
           isInFront: props.isInFront
         })
@@ -64809,26 +64907,26 @@ if (edgeAlpha == 0.0) {
     });
   }
   init_define_process();
-  var import_react14 = __require("react");
-  var import_react15 = __require("react");
-  var import_jsx_runtime5 = __require("react/jsx-runtime");
+  var import_react16 = __require("react");
+  var import_react17 = __require("react");
+  var import_jsx_runtime6 = __require("react/jsx-runtime");
   function LightComponent(props) {
-    return (0, import_jsx_runtime5.jsx)(animated.mesh, {
+    return (0, import_jsx_runtime6.jsx)(animated.mesh, {
       ref: props.meshRef,
       position: props.springPosition,
-      children: (0, import_jsx_runtime5.jsx)("pointLight", {
+      children: (0, import_jsx_runtime6.jsx)("pointLight", {
         intensity: props.lightModel.intensity
       })
     });
   }
   init_define_process();
-  var import_react25 = __require("react");
+  var import_react27 = __require("react");
   init_three_module();
   init_define_process();
-  var import_react16 = __require("react");
+  var import_react18 = __require("react");
   init_three_module();
-  var import_react17 = __require("react");
-  var import_jsx_runtime6 = __require("react/jsx-runtime");
+  var import_react19 = __require("react");
+  var import_jsx_runtime7 = __require("react/jsx-runtime");
   var COLUMN_UI_TYPE = "UIColumnItem";
   var UIColumnItem = class _UIColumnItem extends UILayoutItem {
     constructor(props) {
@@ -64851,7 +64949,7 @@ if (edgeAlpha == 0.0) {
         });
         return height;
       };
-      this.getComponent = (position, updateParent) => (0, import_jsx_runtime6.jsx)(Component4, {
+      this.getComponent = (position, updateParent) => (0, import_jsx_runtime7.jsx)(Component4, {
         component: this,
         position,
         updateParent
@@ -64905,9 +65003,9 @@ if (edgeAlpha == 0.0) {
   };
   function Component4(props) {
     const {component, position, updateParent} = props;
-    const [width, setWidth] = (0, import_react16.useState)(component.getWidth());
-    const [height, setHeight] = (0, import_react16.useState)(component.getHeight());
-    const [componentPositions, setComponentPositions] = (0, import_react16.useState)([]);
+    const [width, setWidth] = (0, import_react18.useState)(component.getWidth());
+    const [height, setHeight] = (0, import_react18.useState)(component.getHeight());
+    const [componentPositions, setComponentPositions] = (0, import_react18.useState)([]);
     function updateSize() {
       const previousHeight = height;
       const previousWidth = width;
@@ -64951,33 +65049,33 @@ if (edgeAlpha == 0.0) {
       for (let i2 = 0; i2 < component.children.length; i2++) {
         const child = component.children[i2];
         const childPosition = childProps.componentPositions[i2];
-        children.push((0, import_jsx_runtime6.jsx)("group", {
+        children.push((0, import_jsx_runtime7.jsx)("group", {
           children: child.getComponent(childPosition, updateSize)
         }, `component_${component.id}child_${i2}`));
       }
-      return (0, import_jsx_runtime6.jsx)("group", {
+      return (0, import_jsx_runtime7.jsx)("group", {
         children
       }, `children_${component.id}`);
     }
-    return (0, import_jsx_runtime6.jsxs)("mesh", {
+    return (0, import_jsx_runtime7.jsxs)("mesh", {
       position,
-      children: [(0, import_jsx_runtime6.jsxs)("mesh", {
+      children: [(0, import_jsx_runtime7.jsxs)("mesh", {
         position: new Vector3(0, 0, -component.layer / 1e3),
-        children: [(0, import_jsx_runtime6.jsx)("boxGeometry", {
+        children: [(0, import_jsx_runtime7.jsx)("boxGeometry", {
           args: [width, height, 0]
-        }), (0, import_jsx_runtime6.jsx)("meshBasicMaterial", {
+        }), (0, import_jsx_runtime7.jsx)("meshBasicMaterial", {
           color: new Color(component.background)
         })]
-      }), (0, import_jsx_runtime6.jsx)(ChildrenComponents, {
+      }), (0, import_jsx_runtime7.jsx)(ChildrenComponents, {
         componentPositions
       })]
     }, `component_${component.id}`);
   }
   init_define_process();
-  var import_react18 = __require("react");
+  var import_react20 = __require("react");
   init_three_module();
-  var import_react19 = __require("react");
-  var import_jsx_runtime7 = __require("react/jsx-runtime");
+  var import_react21 = __require("react");
+  var import_jsx_runtime8 = __require("react/jsx-runtime");
   var ROW_UI_TYPE = "UIRowItem";
   var UIRowItem = class _UIRowItem extends UILayoutItem {
     constructor(props) {
@@ -65000,7 +65098,7 @@ if (edgeAlpha == 0.0) {
         });
         return height + maxChildHeight;
       };
-      this.getComponent = (position, updateParent) => (0, import_jsx_runtime7.jsx)(Component5, {
+      this.getComponent = (position, updateParent) => (0, import_jsx_runtime8.jsx)(Component5, {
         component: this,
         position,
         updateParent
@@ -65054,9 +65152,9 @@ if (edgeAlpha == 0.0) {
   };
   function Component5(props) {
     const {component, position, updateParent} = props;
-    const [width, setWidth] = (0, import_react18.useState)(component.getWidth());
-    const [height, setHeight] = (0, import_react18.useState)(component.getHeight());
-    const [componentPositions, setComponentPositions] = (0, import_react18.useState)([]);
+    const [width, setWidth] = (0, import_react20.useState)(component.getWidth());
+    const [height, setHeight] = (0, import_react20.useState)(component.getHeight());
+    const [componentPositions, setComponentPositions] = (0, import_react20.useState)([]);
     function updateSize() {
       const previousHeight = height;
       const previousWidth = width;
@@ -65100,33 +65198,33 @@ if (edgeAlpha == 0.0) {
       for (let i2 = 0; i2 < component.children.length; i2++) {
         const child = component.children[i2];
         const childPosition = childProps.componentPositions[i2];
-        children.push((0, import_jsx_runtime7.jsx)("group", {
+        children.push((0, import_jsx_runtime8.jsx)("group", {
           children: child.getComponent(childPosition, updateSize)
         }, `component_${component.id}child_${i2}`));
       }
-      return (0, import_jsx_runtime7.jsx)("group", {
+      return (0, import_jsx_runtime8.jsx)("group", {
         children
       }, `children_${component.id}`);
     }
-    return (0, import_jsx_runtime7.jsxs)("mesh", {
+    return (0, import_jsx_runtime8.jsxs)("mesh", {
       position,
-      children: [(0, import_jsx_runtime7.jsxs)("mesh", {
+      children: [(0, import_jsx_runtime8.jsxs)("mesh", {
         position: new Vector3(0, 0, -component.layer / 1e3),
-        children: [(0, import_jsx_runtime7.jsx)("boxGeometry", {
+        children: [(0, import_jsx_runtime8.jsx)("boxGeometry", {
           args: [width, height, 0]
-        }), (0, import_jsx_runtime7.jsx)("meshBasicMaterial", {
+        }), (0, import_jsx_runtime8.jsx)("meshBasicMaterial", {
           color: new Color(component.background)
         })]
-      }), (0, import_jsx_runtime7.jsx)(ChildrenComponents, {
+      }), (0, import_jsx_runtime8.jsx)(ChildrenComponents, {
         componentPositions
       })]
     }, `component_${component.id}`);
   }
   init_define_process();
   init_three_module();
-  var import_react20 = __require("react");
-  var import_react21 = __require("react");
-  var import_jsx_runtime8 = __require("react/jsx-runtime");
+  var import_react22 = __require("react");
+  var import_react23 = __require("react");
+  var import_jsx_runtime9 = __require("react/jsx-runtime");
   var TEXT_UI_TYPE = "UITextItem";
   var UITextItem = class _UITextItem extends UIBasicItem {
     constructor(props) {
@@ -65144,7 +65242,7 @@ if (edgeAlpha == 0.0) {
         }
         return false;
       };
-      this.getComponent = (position, updateParent) => (0, import_jsx_runtime8.jsx)(Component6, {
+      this.getComponent = (position, updateParent) => (0, import_jsx_runtime9.jsx)(Component6, {
         component: this,
         position,
         updateParent
@@ -65183,9 +65281,9 @@ if (edgeAlpha == 0.0) {
   };
   function Component6(props) {
     let {component, position, updateParent} = props;
-    const [offsetX, setOffsetX] = (0, import_react20.useState)(0);
-    const ref = (0, import_react20.useRef)();
-    (0, import_react20.useEffect)(() => {
+    const [offsetX, setOffsetX] = (0, import_react22.useState)(0);
+    const ref = (0, import_react22.useRef)();
+    (0, import_react22.useEffect)(() => {
       if (ref.current) {
         getSize();
       }
@@ -65235,9 +65333,9 @@ if (edgeAlpha == 0.0) {
       }
       return "center";
     }
-    return (0, import_jsx_runtime8.jsx)("mesh", {
+    return (0, import_jsx_runtime9.jsx)("mesh", {
       position,
-      children: (0, import_jsx_runtime8.jsx)(Text2, {
+      children: (0, import_jsx_runtime9.jsx)(Text2, {
         position: new Vector3(offsetX, 0, 0),
         ref,
         fontSize: component.textSize,
@@ -65250,15 +65348,15 @@ if (edgeAlpha == 0.0) {
     }, `component_${component.id}`);
   }
   init_define_process();
-  var import_react22 = __require("react");
-  var import_jsx_runtime9 = __require("react/jsx-runtime");
+  var import_react24 = __require("react");
+  var import_jsx_runtime10 = __require("react/jsx-runtime");
   var IMAGE_UI_TYPE = "UIImageItem";
   var UIImageItem = class _UIImageItem extends UIBasicItem {
     constructor(props) {
       super(IMAGE_UI_TYPE, props.padding, props.id);
       this.getWidth = () => this.imageWidth + this.paddingLeft + this.paddingRight;
       this.getHeight = () => this.imageHeight + this.paddingTop + this.paddingBottom;
-      this.getComponent = (position, _) => (0, import_jsx_runtime9.jsx)(Component7, {
+      this.getComponent = (position, _) => (0, import_jsx_runtime10.jsx)(Component7, {
         component: this,
         position
       }, this.id);
@@ -65290,9 +65388,9 @@ if (edgeAlpha == 0.0) {
   };
   function Component7(props) {
     const {component, position} = props;
-    return (0, import_jsx_runtime9.jsx)("mesh", {
+    return (0, import_jsx_runtime10.jsx)("mesh", {
       position,
-      children: (0, import_jsx_runtime9.jsx)(Image2, {
+      children: (0, import_jsx_runtime10.jsx)(Image2, {
         url: component.src,
         scale: [component.getWidth(), component.getHeight()]
       })
@@ -65300,16 +65398,16 @@ if (edgeAlpha == 0.0) {
   }
   init_define_process();
   init_three_module();
-  var import_react23 = __require("react");
-  var import_react24 = __require("react");
-  var import_jsx_runtime10 = __require("react/jsx-runtime");
+  var import_react25 = __require("react");
+  var import_react26 = __require("react");
+  var import_jsx_runtime11 = __require("react/jsx-runtime");
   var BASE64_IMAGE_UI_TYPE = "UIBase64ImageItem";
   var UIBase64ImageItem = class _UIBase64ImageItem extends UIBasicItem {
     constructor(props) {
       super(BASE64_IMAGE_UI_TYPE, props.padding, props.id);
       this.getWidth = () => this.imageWidth + this.paddingLeft + this.paddingRight;
       this.getHeight = () => this.imageHeight + this.paddingTop + this.paddingBottom;
-      this.getComponent = (position, _) => (0, import_jsx_runtime10.jsx)(Component8, {
+      this.getComponent = (position, _) => (0, import_jsx_runtime11.jsx)(Component8, {
         component: this,
         position
       }, this.id);
@@ -65340,8 +65438,8 @@ if (edgeAlpha == 0.0) {
     }
   };
   function Component8(props) {
-    const [material, setMaterial] = (0, import_react23.useState)();
-    (0, import_react23.useEffect)(() => {
+    const [material, setMaterial] = (0, import_react25.useState)();
+    (0, import_react25.useEffect)(() => {
       const image = new Image();
       image.src = props.component.base64;
       const texture = new Texture();
@@ -65354,21 +65452,21 @@ if (edgeAlpha == 0.0) {
       });
       setMaterial(newMaterial);
     }, [props.component.base64]);
-    return (0, import_jsx_runtime10.jsx)("mesh", {
+    return (0, import_jsx_runtime11.jsx)("mesh", {
       position: props.position,
       material,
-      children: (0, import_jsx_runtime10.jsx)("planeGeometry", {
+      children: (0, import_jsx_runtime11.jsx)("planeGeometry", {
         args: [props.component.imageWidth, props.component.imageHeight]
       })
     }, `component_${props.component.id}`);
   }
-  var import_react26 = __require("react");
-  var import_jsx_runtime11 = __require("react/jsx-runtime");
+  var import_react28 = __require("react");
+  var import_jsx_runtime12 = __require("react/jsx-runtime");
   function InterfaceComponent(props) {
-    const [components, setComponents] = (0, import_react25.useState)();
-    const [width, setWidth] = (0, import_react25.useState)(0);
-    const [height, setHeight] = (0, import_react25.useState)(0);
-    (0, import_react25.useEffect)(() => {
+    const [components, setComponents] = (0, import_react27.useState)();
+    const [width, setWidth] = (0, import_react27.useState)(0);
+    const [height, setHeight] = (0, import_react27.useState)(0);
+    (0, import_react27.useEffect)(() => {
       var _a2, _b2, _c, _d, _e;
       setWidth((_b2 = (_a2 = props.interfaceModel.rootComponent) == null ? void 0 : _a2.getWidth()) != null ? _b2 : 0);
       setHeight((_d = (_c = props.interfaceModel.rootComponent) == null ? void 0 : _c.getHeight()) != null ? _d : 0);
@@ -65378,17 +65476,17 @@ if (edgeAlpha == 0.0) {
         setHeight((_d2 = (_c2 = props.interfaceModel.rootComponent) == null ? void 0 : _c2.getHeight()) != null ? _d2 : 0);
       }));
     }, [props.interfaceModel.rootComponent]);
-    return (0, import_jsx_runtime11.jsxs)(animated.mesh, {
+    return (0, import_jsx_runtime12.jsxs)(animated.mesh, {
       ref: props.meshRef,
       position: props.springPosition,
-      children: [(0, import_jsx_runtime11.jsxs)("mesh", {
+      children: [(0, import_jsx_runtime12.jsxs)("mesh", {
         position: new Vector3(0, 0, -1 / 1e3),
-        children: [(0, import_jsx_runtime11.jsx)(Outline, {
+        children: [(0, import_jsx_runtime12.jsx)(Outline, {
           isSelected: props.isSelected,
           isInFront: props.isInFront
-        }), (0, import_jsx_runtime11.jsx)("boxGeometry", {
+        }), (0, import_jsx_runtime12.jsx)("boxGeometry", {
           args: [width + 0.01, height + 0.01, 0]
-        }), (0, import_jsx_runtime11.jsx)("meshStandardMaterial", {
+        }), (0, import_jsx_runtime12.jsx)("meshStandardMaterial", {
           transparent: true,
           opacity: 0
         })]
@@ -65429,16 +65527,16 @@ if (edgeAlpha == 0.0) {
     }
     return void 0;
   }
-  var import_react28 = __require("react");
-  var import_jsx_runtime12 = __require("react/jsx-runtime");
+  var import_react30 = __require("react");
+  var import_jsx_runtime13 = __require("react/jsx-runtime");
   function ARObjectComponent(props) {
-    const ref = (0, import_react27.useRef)(null);
-    const [showComponent, setShowComponent] = (0, import_react27.useState)(false);
-    const [targetPosition, setTargetPosition] = (0, import_react27.useState)(props.arObject.position);
+    const ref = (0, import_react29.useRef)(null);
+    const [showComponent, setShowComponent] = (0, import_react29.useState)(false);
+    const [targetPosition, setTargetPosition] = (0, import_react29.useState)(props.arObject.position);
     const spring = useSpring({
       position: vector3ToArray(targetPosition)
     });
-    const [isInFront, setInFront] = (0, import_react27.useState)(false);
+    const [isInFront, setInFront] = (0, import_react29.useState)(false);
     useFrame((_, delta) => {
       var _a2;
       let uuid = (_a2 = ref.current) == null ? void 0 : _a2.uuid;
@@ -65454,16 +65552,16 @@ if (edgeAlpha == 0.0) {
       handleRotation(props.arObject, currentPosition, userPosition, ref, delta);
     });
     if (!showComponent) return null;
-    return (0, import_jsx_runtime12.jsx)(ErrorBoundary2, {
-      fallback: (0, import_jsx_runtime12.jsx)(import_jsx_runtime12.Fragment, {}),
-      children: (0, import_jsx_runtime12.jsx)(Interactive, {
+    return (0, import_jsx_runtime13.jsx)(ErrorBoundary2, {
+      fallback: (0, import_jsx_runtime13.jsx)(import_jsx_runtime13.Fragment, {}),
+      children: (0, import_jsx_runtime13.jsx)(Interactive, {
         onSelect: () => {
           let onSelect = props.onSelect;
           if (onSelect) {
             onSelect(props.arObject);
           }
         },
-        children: (0, import_jsx_runtime12.jsx)(ModelComponent, {
+        children: (0, import_jsx_runtime13.jsx)(ModelComponent, {
           arObject: props.arObject,
           meshRef: ref,
           children: props.children,
@@ -65499,26 +65597,26 @@ if (edgeAlpha == 0.0) {
   function ModelComponent(props) {
     let modelClass = props.arObject.behaviours.model;
     if (modelClass instanceof GltfModel) {
-      return (0, import_jsx_runtime12.jsx)(GltfComponent, __spreadValues({
+      return (0, import_jsx_runtime13.jsx)(GltfComponent, __spreadValues({
         gltfModel: modelClass
       }, props));
     }
     if (modelClass instanceof ShapeModel) {
-      return (0, import_jsx_runtime12.jsx)(ShapeComponent, __spreadValues({
+      return (0, import_jsx_runtime13.jsx)(ShapeComponent, __spreadValues({
         shapeModel: modelClass
       }, props));
     }
     if (modelClass instanceof InterfaceModel) {
-      return (0, import_jsx_runtime12.jsx)(InterfaceComponent, __spreadValues({
+      return (0, import_jsx_runtime13.jsx)(InterfaceComponent, __spreadValues({
         interfaceModel: modelClass
       }, props));
     }
     if (modelClass instanceof LightModel) {
-      return (0, import_jsx_runtime12.jsx)(LightComponent, __spreadValues({
+      return (0, import_jsx_runtime13.jsx)(LightComponent, __spreadValues({
         lightModel: modelClass
       }, props));
     }
-    return (0, import_jsx_runtime12.jsx)(import_jsx_runtime12.Fragment, {});
+    return (0, import_jsx_runtime13.jsx)(import_jsx_runtime13.Fragment, {});
   }
   function handleVisibility(arObject, position, userPosition, setShowComponent) {
     var _a2;
@@ -65546,8 +65644,8 @@ if (edgeAlpha == 0.0) {
       mesh.rotation.y = 0;
     }
   }
-  var import_react29 = __require("react");
-  var import_jsx_runtime13 = __require("react/jsx-runtime");
+  var import_react31 = __require("react");
+  var import_jsx_runtime14 = __require("react/jsx-runtime");
   var ARObject = class {
     constructor(id, position, behaviours, onSelect) {
       this.type = "";
@@ -65568,7 +65666,7 @@ if (edgeAlpha == 0.0) {
       this.onSelect = onSelect;
     }
     getComponent(getUserPosition) {
-      return (0, import_jsx_runtime13.jsx)(ARObjectComponent, {
+      return (0, import_jsx_runtime14.jsx)(ARObjectComponent, {
         arObject: this,
         getUserPosition,
         setUUID: uuid => {
@@ -65736,7 +65834,6 @@ if (edgeAlpha == 0.0) {
     }
   };
   init_define_process();
-  init_define_process();
   function getModuleState() {
     return window.arController;
   }
@@ -65746,192 +65843,13 @@ if (edgeAlpha == 0.0) {
     moduleState.selectedObjectId = arObject == null ? void 0 : arObject.id;
   }
   init_define_process();
-  var import_react30 = __require("react");
-  var import_react31 = __require("react");
-  var import_jsx_runtime14 = __require("react/jsx-runtime");
-  var Context = (0, import_react30.createContext)({
-    overlayRef: null,
-    domOverlay: void 0,
-    setState() {},
-    component: (0, import_jsx_runtime14.jsx)(import_jsx_runtime14.Fragment, {})
-  });
-  function ScreenStateContext(props) {
-    const [arState, setArState] = (0, import_react30.useState)((0, import_jsx_runtime14.jsx)("group", {}));
-    const [overlayState, setOverlayState] = (0, import_react30.useState)((0, import_jsx_runtime14.jsx)(import_jsx_runtime14.Fragment, {}));
-    const isXRSession = (0, import_react30.useRef)(false);
-    const overlayRef = (0, import_react30.useRef)(null);
-    const [domOverlay, setDomOverlay] = (0, import_react30.useState)();
-    const defaultComponent = (0, import_jsx_runtime14.jsxs)(import_jsx_runtime14.Fragment, {
-      children: [(0, import_jsx_runtime14.jsx)(Canvas2, {
-        children: (0, import_jsx_runtime14.jsx)(XR, {
-          children: (0, import_jsx_runtime14.jsx)(import_jsx_runtime14.Fragment, {})
-        })
-      }), (0, import_jsx_runtime14.jsx)("div", {
-        ref: overlayRef,
-        style: {
-          userSelect: "none"
-        }
-      })]
-    });
-    const [component, setComponent] = (0, import_react30.useState)(defaultComponent);
-    (0, import_react30.useEffect)(() => {
-      if (!overlayRef) return;
-      const overlay = overlayRef.current;
-      if (overlay) {
-        setDomOverlay(overlay);
-      } else {
-        setDomOverlay(void 0);
-      }
-    }, [overlayRef, component]);
-    (0, import_react30.useEffect)(() => {
-      updateComponent();
-    }, [arState, overlayState]);
-    function updateComponent() {
-      setComponent((0, import_jsx_runtime14.jsxs)(import_jsx_runtime14.Fragment, {
-        children: [(0, import_jsx_runtime14.jsx)(Canvas2, {
-          children: (0, import_jsx_runtime14.jsx)(XR, {
-            onSessionStart: () => {
-              isXRSession.current = true;
-              updateComponent();
-            },
-            onSessionEnd: () => {
-              isXRSession.current = false;
-              updateComponent();
-            },
-            children: isXRSession.current ? arState : (0, import_jsx_runtime14.jsx)(import_jsx_runtime14.Fragment, {})
-          })
-        }), (0, import_jsx_runtime14.jsx)("div", {
-          ref: overlayRef,
-          style: {
-            position: "relative",
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            userSelect: "none"
-          },
-          children: isXRSession.current ? overlayState : (0, import_jsx_runtime14.jsx)(import_jsx_runtime14.Fragment, {})
-        })]
-      }));
-    }
-    function setStates(newArState, newOverlayState) {
-      if (newArState) {
-        setArState(newArState);
-      } else {
-        setArState((0, import_jsx_runtime14.jsx)("group", {}));
-      }
-      if (newOverlayState) {
-        setOverlayState(newOverlayState);
-      } else {
-        setOverlayState((0, import_jsx_runtime14.jsx)(import_jsx_runtime14.Fragment, {}));
-      }
-    }
-    return (0, import_jsx_runtime14.jsx)(Context.Provider, {
-      value: {
-        overlayRef,
-        domOverlay: domOverlay ? {
-          root: domOverlay
-        } : void 0,
-        setState: setStates,
-        component
-      },
-      children: props.children
-    });
-  }
-  function useScreenState() {
-    return (0, import_react30.useContext)(Context);
-  }
-  init_define_process();
   var import_react37 = __require("react");
-  init_define_process();
-  var import_jsx_runtime15 = __require("react/jsx-runtime");
-  function Overlay() {
-    return (0, import_jsx_runtime15.jsxs)("div", {
-      style: {
-        height: 150,
-        display: "flex",
-        flexDirection: "column",
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        padding: "0px 20px 20px 20px"
-      },
-      children: [(0, import_jsx_runtime15.jsxs)("div", {
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          padding: "0px 0px 20px 0px"
-        },
-        children: [(0, import_jsx_runtime15.jsx)("button", {
-          id: "recalibrate-toggle",
-          style: {
-            background: "#212121",
-            color: "#fafafa",
-            borderRadius: 30,
-            fontSize: 20,
-            fontWeight: 500
-          },
-          children: "\u21BB"
-        }), (0, import_jsx_runtime15.jsx)("button", {
-          id: "left-toggle",
-          style: {
-            display: "none",
-            width: 100,
-            background: "#fafafa",
-            color: "#212121",
-            borderRadius: 30,
-            padding: "15px"
-          }
-        }), (0, import_jsx_runtime15.jsx)("button", {
-          id: "center-toggle",
-          style: {
-            display: "none",
-            width: 100,
-            background: "#fafafa",
-            color: "#212121",
-            borderRadius: 30,
-            padding: "15px"
-          }
-        }), (0, import_jsx_runtime15.jsx)("button", {
-          id: "right-toggle",
-          style: {
-            display: "none",
-            width: 100,
-            background: "#fafafa",
-            color: "#212121",
-            borderRadius: 30,
-            padding: "15px"
-          }
-        })]
-      }), (0, import_jsx_runtime15.jsx)("div", {
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-evenly"
-        },
-        children: (0, import_jsx_runtime15.jsx)(ARButton, {
-          style: {
-            width: 100,
-            background: "#c5d5db",
-            color: "#212121",
-            borderRadius: 30,
-            padding: "10px 15px"
-          },
-          exitOnly: true,
-          children: "Exit"
-        })
-      })]
-    });
-  }
   init_define_process();
   init_define_process();
   var import_react32 = __require("react");
   init_three_module();
   var import_react33 = __require("react");
-  var import_jsx_runtime16 = __require("react/jsx-runtime");
+  var import_jsx_runtime15 = __require("react/jsx-runtime");
   var Context2 = (0, import_react32.createContext)({
     setCameraAsOrigin() {},
     setPositionAsOrigin() {},
@@ -65991,14 +65909,14 @@ if (edgeAlpha == 0.0) {
       euler.setFromVector3(vector3);
       return euler;
     }
-    return (0, import_jsx_runtime16.jsx)(Context2.Provider, {
+    return (0, import_jsx_runtime15.jsx)(Context2.Provider, {
       value: {
         setCameraAsOrigin,
         setPositionAsOrigin,
         getCameraPosition,
         getCameraRotation
       },
-      children: (0, import_jsx_runtime16.jsx)("group", {
+      children: (0, import_jsx_runtime15.jsx)("group", {
         position: origin2,
         rotation: new Euler(0, angle, 0),
         children: props.children
@@ -66055,7 +65973,7 @@ if (edgeAlpha == 0.0) {
     return void 0;
   }
   var import_react35 = __require("react");
-  var import_jsx_runtime17 = __require("react/jsx-runtime");
+  var import_jsx_runtime16 = __require("react/jsx-runtime");
   var Context3 = (0, import_react34.createContext)({
     hitPointPosition: new Vector3(),
     objectInSight: (0, import_react34.createRef)(),
@@ -66086,7 +66004,7 @@ if (edgeAlpha == 0.0) {
         (_c = objectInSightCallback.current) == null ? void 0 : _c.call(objectInSightCallback, prev, item);
       }
     });
-    return (0, import_jsx_runtime17.jsx)(Context3.Provider, {
+    return (0, import_jsx_runtime16.jsx)(Context3.Provider, {
       value: {
         hitPointPosition,
         objectInSight,
@@ -66102,7 +66020,7 @@ if (edgeAlpha == 0.0) {
   }
   init_define_process();
   var import_react36 = __require("react");
-  var import_jsx_runtime18 = __require("react/jsx-runtime");
+  var import_jsx_runtime17 = __require("react/jsx-runtime");
   function AugmentedContent(props) {
     const screenState = useScreenState();
     const playArea = usePlayArea();
@@ -66223,28 +66141,111 @@ if (edgeAlpha == 0.0) {
     (0, import_react36.useEffect)(() => {
       try {
         fetch("https://worldtimeapi.org/api/timezone/Asia/Singapore").then(response => response.json()).then(data => {
-          let time = new Date(data.datetime).getTime();
-          let offset = time - new Date().getTime();
+          const time = new Date(data.datetime).getTime();
+          const offset = time - new Date().getTime();
           setTimeOffset(offset);
-          console.log("Time offset", offset);
         }).catch(error => {
           console.log(error);
         });
-      } catch (e) {}
+      } catch (e) {
+        setTimeOffset(0);
+      }
     }, []);
     function getCurrentTime() {
       return new Date().getTime() + timeOffset;
     }
-    return (0, import_jsx_runtime18.jsx)("group", {
+    return (0, import_jsx_runtime17.jsx)("group", {
       children: objects.map(item => item.getComponent(playArea.getCameraPosition))
     });
   }
-  var import_jsx_runtime19 = __require("react/jsx-runtime");
+  var import_jsx_runtime18 = __require("react/jsx-runtime");
   function AugmentedLayer(props) {
-    return (0, import_jsx_runtime19.jsx)(PlayAreaContext, {
-      children: (0, import_jsx_runtime19.jsx)(ControlsContext, {
-        children: (0, import_jsx_runtime19.jsx)(AugmentedContent, __spreadValues({}, props))
+    return (0, import_jsx_runtime18.jsx)(PlayAreaContext, {
+      children: (0, import_jsx_runtime18.jsx)(ControlsContext, {
+        children: (0, import_jsx_runtime18.jsx)(AugmentedContent, __spreadValues({}, props))
       })
+    });
+  }
+  init_define_process();
+  var import_jsx_runtime19 = __require("react/jsx-runtime");
+  function Overlay() {
+    return (0, import_jsx_runtime19.jsxs)("div", {
+      style: {
+        height: 150,
+        display: "flex",
+        flexDirection: "column",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: "0px 20px 20px 20px"
+      },
+      children: [(0, import_jsx_runtime19.jsxs)("div", {
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          padding: "0px 0px 20px 0px"
+        },
+        children: [(0, import_jsx_runtime19.jsx)("button", {
+          id: "recalibrate-toggle",
+          style: {
+            background: "#212121",
+            color: "#fafafa",
+            borderRadius: 30,
+            fontSize: 20,
+            fontWeight: 500
+          },
+          children: "\u21BB"
+        }), (0, import_jsx_runtime19.jsx)("button", {
+          id: "left-toggle",
+          style: {
+            display: "none",
+            width: 100,
+            background: "#fafafa",
+            color: "#212121",
+            borderRadius: 30,
+            padding: "15px"
+          }
+        }), (0, import_jsx_runtime19.jsx)("button", {
+          id: "center-toggle",
+          style: {
+            display: "none",
+            width: 100,
+            background: "#fafafa",
+            color: "#212121",
+            borderRadius: 30,
+            padding: "15px"
+          }
+        }), (0, import_jsx_runtime19.jsx)("button", {
+          id: "right-toggle",
+          style: {
+            display: "none",
+            width: 100,
+            background: "#fafafa",
+            color: "#212121",
+            borderRadius: 30,
+            padding: "15px"
+          }
+        })]
+      }), (0, import_jsx_runtime19.jsx)("div", {
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly"
+        },
+        children: (0, import_jsx_runtime19.jsx)(ARButton, {
+          style: {
+            width: 100,
+            background: "#c5d5db",
+            color: "#212121",
+            borderRadius: 30,
+            padding: "10px 15px"
+          },
+          exitOnly: true,
+          children: "Exit"
+        })
+      })]
     });
   }
   var import_jsx_runtime20 = __require("react/jsx-runtime");

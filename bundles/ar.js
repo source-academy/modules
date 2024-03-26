@@ -59023,272 +59023,6 @@ if (edgeAlpha == 0.0) {
   init_define_process();
   init_three_module();
   init_define_process();
-  init_three_module();
-  init_define_process();
-  init_three_module();
-  function parseVector3(object) {
-    if (!object) return void 0;
-    const x = object.x;
-    const y = object.y;
-    const z = object.z;
-    if (typeof x === "number" && typeof y === "number" && typeof z === "number") {
-      return new Vector3(x, y, z);
-    }
-    return void 0;
-  }
-  function vector3ToArray(vector) {
-    return [vector.x, vector.y, vector.z];
-  }
-  var GltfModel = class {
-    constructor(resource, scale) {
-      this.resource = resource;
-      this.scale = scale;
-    }
-  };
-  var ShapeModel = class {
-    constructor(geometry, material) {
-      this.geometry = geometry;
-      this.material = material;
-    }
-  };
-  var InterfaceModel = class {
-    constructor(rootComponent) {
-      this.rootComponent = rootComponent;
-    }
-  };
-  var LightModel = class {
-    constructor(intensity) {
-      this.intensity = intensity;
-    }
-  };
-  var RENDER_DISTANCE = "RenderWithinDistance";
-  var RENDER_ALWAYS = "AlwaysRender";
-  var RenderWithinDistance = class {
-    constructor(distance) {
-      this.type = RENDER_DISTANCE;
-      this.distance = distance;
-    }
-  };
-  var AlwaysRender = class {
-    constructor() {
-      this.type = RENDER_ALWAYS;
-    }
-  };
-  function parseRender(render2) {
-    if (!render2) return void 0;
-    switch (render2.type) {
-      case RENDER_ALWAYS:
-        {
-          return new AlwaysRender();
-        }
-      case RENDER_DISTANCE:
-        {
-          let distance = 5;
-          if (typeof render2.distance === "number") {
-            distance = render2.distance;
-          }
-          return new RenderWithinDistance(distance);
-        }
-    }
-    return void 0;
-  }
-  var ROTATION_USER = "RotateToUser";
-  var ROTATION_Y = "RotateAroundY";
-  var ROTATION_FIX = "FixRotation";
-  var RotateToUser = class {
-    constructor() {
-      this.type = ROTATION_USER;
-    }
-  };
-  var RotateAroundY = class {
-    constructor() {
-      this.type = ROTATION_Y;
-    }
-  };
-  var FixRotation = class {
-    constructor(radians) {
-      this.type = ROTATION_FIX;
-      this.rotation = radians;
-    }
-  };
-  function parseRotation(rotation) {
-    if (!rotation) return void 0;
-    switch (rotation == null ? void 0 : rotation.type) {
-      case ROTATION_USER:
-        {
-          return new RotateToUser();
-        }
-      case ROTATION_Y:
-        {
-          return new RotateAroundY();
-        }
-      case ROTATION_FIX:
-        {
-          let angle = 0;
-          if (typeof rotation.rotation === "number") {
-            angle = rotation.rotation;
-          }
-          return new FixRotation(angle);
-        }
-    }
-    return void 0;
-  }
-  var MOVEMENT_PATH = "PathMovement";
-  var MOVEMENT_ORBIT = "OrbitMovement";
-  var MOVEMENT_SPRING = "SpringMovement";
-  var MovementClass = class {
-    constructor() {
-      this.type = "";
-    }
-  };
-  function parsePathItems(path) {
-    const result = [];
-    for (let i2 = 0; i2 < path.length; i2++) {
-      const item = path[i2];
-      const start2 = parseVector3(item.start);
-      const end = parseVector3(item.end);
-      const duration = item.duration;
-      if (start2 instanceof Vector3 && end instanceof Vector3 && (duration === void 0 || typeof duration === "number")) {
-        let movementStyle = 0;
-        if (item.style === 1) {
-          movementStyle = 1;
-        } else if (item.style === 2) {
-          movementStyle = 2;
-        }
-        result.push({
-          start: start2,
-          end,
-          duration,
-          style: movementStyle
-        });
-      }
-    }
-    return result;
-  }
-  var PathMovement = class extends MovementClass {
-    constructor(path, startTime, getCurrentTime) {
-      super();
-      this.type = MOVEMENT_PATH;
-      this.path = path;
-      this.totalDuration = 0;
-      if (startTime) {
-        this.startTime = startTime;
-      } else {
-        const currentDate = new Date();
-        this.startTime = currentDate.getTime();
-      }
-      if (getCurrentTime) {
-        this.getCurrentTime = getCurrentTime;
-      } else {
-        this.getCurrentTime = () => {
-          const currentDate = new Date();
-          return currentDate.getTime();
-        };
-      }
-      path.forEach(item => {
-        this.totalDuration += item.duration;
-      });
-    }
-    getOffsetPosition(position) {
-      let currentFrame2 = (this.getCurrentTime() - this.startTime) % (this.totalDuration * 1e3);
-      let currentMovementIndex = 0;
-      while (currentFrame2 > 0 && currentMovementIndex < this.path.length) {
-        let currentItem = this.path[currentMovementIndex];
-        if (currentFrame2 >= currentItem.duration * 1e3) {
-          currentFrame2 -= currentItem.duration * 1e3;
-          currentMovementIndex++;
-          continue;
-        }
-        let ratio = Math.min(Math.max(0, currentFrame2 / (currentItem.duration * 1e3)), 1);
-        switch (currentItem.style) {
-          case 2:
-            {
-              ratio = __pow(ratio, 5);
-              break;
-            }
-          case 1:
-            {
-              let negative = 1 - ratio;
-              negative = __pow(negative, 5);
-              ratio = 1 - negative;
-              break;
-            }
-        }
-        const x = position.x + currentItem.start.x + ratio * (currentItem.end.x - currentItem.start.x);
-        const y = position.y + currentItem.start.y + ratio * (currentItem.end.y - currentItem.start.y);
-        const z = position.z + currentItem.start.z + ratio * (currentItem.end.z - currentItem.start.z);
-        return new Vector3(x, y, z);
-      }
-      return position;
-    }
-  };
-  var OrbitMovement = class extends MovementClass {
-    constructor(radius, duration, startTime, getCurrentTime) {
-      super();
-      this.type = MOVEMENT_ORBIT;
-      this.radius = radius;
-      this.duration = duration;
-      if (startTime) {
-        this.startTime = startTime;
-      } else {
-        let currentDate = new Date();
-        this.startTime = currentDate.getTime();
-      }
-      if (getCurrentTime) {
-        this.getCurrentTime = getCurrentTime;
-      } else {
-        this.getCurrentTime = () => {
-          let currentDate = new Date();
-          return currentDate.getTime();
-        };
-      }
-    }
-    getOffsetPosition(position) {
-      const currentFrame2 = (this.getCurrentTime() - this.startTime) % (this.duration * 1e3);
-      const ratio = Math.min(Math.max(0, currentFrame2 / (this.duration * 1e3)), 1);
-      const angle = ratio * Math.PI * 2;
-      const x = position.x + this.radius * Math.sin(angle);
-      const y = position.y;
-      const z = position.z + this.radius * Math.cos(angle);
-      return new Vector3(x, y, z);
-    }
-  };
-  var SpringMovement = class extends MovementClass {
-    constructor() {
-      super(...arguments);
-      this.type = MOVEMENT_SPRING;
-    }
-  };
-  function parseMovement(movement, getCurrentTime) {
-    if (!movement) return void 0;
-    switch (movement.type) {
-      case MOVEMENT_PATH:
-        {
-          const startTime = movement.startTime;
-          const pathItems = movement.path;
-          if ((startTime === void 0 || typeof startTime === "number") && Array.isArray(pathItems)) {
-            const parsedPathItems = parsePathItems(pathItems);
-            return new PathMovement(parsedPathItems, startTime, getCurrentTime);
-          }
-          break;
-        }
-      case MOVEMENT_ORBIT:
-        {
-          const radius = movement.radius;
-          const duration = movement.duration;
-          const startTime = movement.startTime;
-          if (typeof radius === "number" && typeof duration === "number" && (startTime === void 0 || typeof startTime === "number")) {
-            return new OrbitMovement(radius, duration, startTime, getCurrentTime);
-          }
-          break;
-        }
-      case MOVEMENT_SPRING:
-        return new SpringMovement();
-    }
-    return void 0;
-  }
-  init_define_process();
-  init_define_process();
   init_define_process();
   init_define_process();
   init_three_module();
@@ -63246,6 +62980,274 @@ if (edgeAlpha == 0.0) {
     };
     return generated;
   };
+  init_define_process();
+  init_three_module();
+  init_define_process();
+  init_three_module();
+  init_define_process();
+  init_three_module();
+  function parseVector3(object) {
+    if (!object) return void 0;
+    const x = object.x;
+    const y = object.y;
+    const z = object.z;
+    if (typeof x === "number" && typeof y === "number" && typeof z === "number") {
+      return new Vector3(x, y, z);
+    }
+    return void 0;
+  }
+  function vector3ToArray(vector) {
+    return [vector.x, vector.y, vector.z];
+  }
+  var GltfModel = class {
+    constructor(resource, scale) {
+      this.resource = resource;
+      this.scale = scale;
+    }
+  };
+  var ShapeModel = class {
+    constructor(geometry, material) {
+      this.geometry = geometry;
+      this.material = material;
+    }
+  };
+  var InterfaceModel = class {
+    constructor(rootComponent) {
+      this.rootComponent = rootComponent;
+    }
+  };
+  var LightModel = class {
+    constructor(intensity) {
+      this.intensity = intensity;
+    }
+  };
+  var RENDER_DISTANCE = "RenderWithinDistance";
+  var RENDER_ALWAYS = "AlwaysRender";
+  var RenderWithinDistance = class {
+    constructor(distance) {
+      this.type = RENDER_DISTANCE;
+      this.distance = distance;
+    }
+  };
+  var AlwaysRender = class {
+    constructor() {
+      this.type = RENDER_ALWAYS;
+    }
+  };
+  function parseRender(render2) {
+    if (!render2) return void 0;
+    switch (render2.type) {
+      case RENDER_ALWAYS:
+        {
+          return new AlwaysRender();
+        }
+      case RENDER_DISTANCE:
+        {
+          let distance = 5;
+          if (typeof render2.distance === "number") {
+            distance = render2.distance;
+          }
+          return new RenderWithinDistance(distance);
+        }
+    }
+    return void 0;
+  }
+  var ROTATION_USER = "RotateToUser";
+  var ROTATION_Y = "RotateAroundY";
+  var ROTATION_FIX = "FixRotation";
+  var RotateToUser = class {
+    constructor() {
+      this.type = ROTATION_USER;
+    }
+  };
+  var RotateAroundY = class {
+    constructor() {
+      this.type = ROTATION_Y;
+    }
+  };
+  var FixRotation = class {
+    constructor(radians) {
+      this.type = ROTATION_FIX;
+      this.rotation = radians;
+    }
+  };
+  function parseRotation(rotation) {
+    if (!rotation) return void 0;
+    switch (rotation == null ? void 0 : rotation.type) {
+      case ROTATION_USER:
+        {
+          return new RotateToUser();
+        }
+      case ROTATION_Y:
+        {
+          return new RotateAroundY();
+        }
+      case ROTATION_FIX:
+        {
+          let angle = 0;
+          if (typeof rotation.rotation === "number") {
+            angle = rotation.rotation;
+          }
+          return new FixRotation(angle);
+        }
+    }
+    return void 0;
+  }
+  var MOVEMENT_PATH = "PathMovement";
+  var MOVEMENT_ORBIT = "OrbitMovement";
+  var MOVEMENT_SPRING = "SpringMovement";
+  var MovementClass = class {
+    constructor() {
+      this.type = "";
+    }
+  };
+  function parsePathItems(path) {
+    const result = [];
+    for (let i2 = 0; i2 < path.length; i2++) {
+      const item = path[i2];
+      const start2 = parseVector3(item.start);
+      const end = parseVector3(item.end);
+      const duration = item.duration;
+      if (start2 instanceof Vector3 && end instanceof Vector3 && (duration === void 0 || typeof duration === "number")) {
+        let movementStyle = 0;
+        if (item.style === 1) {
+          movementStyle = 1;
+        } else if (item.style === 2) {
+          movementStyle = 2;
+        }
+        result.push({
+          start: start2,
+          end,
+          duration,
+          style: movementStyle
+        });
+      }
+    }
+    return result;
+  }
+  var PathMovement = class extends MovementClass {
+    constructor(path, startTime, getCurrentTime) {
+      super();
+      this.type = MOVEMENT_PATH;
+      this.path = path;
+      this.totalDuration = 0;
+      if (startTime) {
+        this.startTime = startTime;
+      } else {
+        const currentDate = new Date();
+        this.startTime = currentDate.getTime();
+      }
+      if (getCurrentTime) {
+        this.getCurrentTime = getCurrentTime;
+      } else {
+        this.getCurrentTime = () => {
+          const currentDate = new Date();
+          return currentDate.getTime();
+        };
+      }
+      path.forEach(item => {
+        this.totalDuration += item.duration;
+      });
+    }
+    getOffsetPosition(position) {
+      let currentFrame2 = (this.getCurrentTime() - this.startTime) % (this.totalDuration * 1e3);
+      let currentMovementIndex = 0;
+      while (currentFrame2 > 0 && currentMovementIndex < this.path.length) {
+        let currentItem = this.path[currentMovementIndex];
+        if (currentFrame2 >= currentItem.duration * 1e3) {
+          currentFrame2 -= currentItem.duration * 1e3;
+          currentMovementIndex++;
+          continue;
+        }
+        let ratio = Math.min(Math.max(0, currentFrame2 / (currentItem.duration * 1e3)), 1);
+        switch (currentItem.style) {
+          case 2:
+            {
+              ratio = __pow(ratio, 5);
+              break;
+            }
+          case 1:
+            {
+              let negative = 1 - ratio;
+              negative = __pow(negative, 5);
+              ratio = 1 - negative;
+              break;
+            }
+        }
+        const x = position.x + currentItem.start.x + ratio * (currentItem.end.x - currentItem.start.x);
+        const y = position.y + currentItem.start.y + ratio * (currentItem.end.y - currentItem.start.y);
+        const z = position.z + currentItem.start.z + ratio * (currentItem.end.z - currentItem.start.z);
+        return new Vector3(x, y, z);
+      }
+      return position;
+    }
+  };
+  var OrbitMovement = class extends MovementClass {
+    constructor(radius, duration, startTime, getCurrentTime) {
+      super();
+      this.type = MOVEMENT_ORBIT;
+      this.radius = radius;
+      this.duration = duration;
+      if (startTime) {
+        this.startTime = startTime;
+      } else {
+        let currentDate = new Date();
+        this.startTime = currentDate.getTime();
+      }
+      if (getCurrentTime) {
+        this.getCurrentTime = getCurrentTime;
+      } else {
+        this.getCurrentTime = () => {
+          let currentDate = new Date();
+          return currentDate.getTime();
+        };
+      }
+    }
+    getOffsetPosition(position) {
+      const currentFrame2 = (this.getCurrentTime() - this.startTime) % (this.duration * 1e3);
+      const ratio = Math.min(Math.max(0, currentFrame2 / (this.duration * 1e3)), 1);
+      const angle = ratio * Math.PI * 2;
+      const x = position.x + this.radius * Math.sin(angle);
+      const y = position.y;
+      const z = position.z + this.radius * Math.cos(angle);
+      return new Vector3(x, y, z);
+    }
+  };
+  var SpringMovement = class extends MovementClass {
+    constructor() {
+      super(...arguments);
+      this.type = MOVEMENT_SPRING;
+    }
+  };
+  function parseMovement(movement, getCurrentTime) {
+    if (!movement) return void 0;
+    switch (movement.type) {
+      case MOVEMENT_PATH:
+        {
+          const startTime = movement.startTime;
+          const pathItems = movement.path;
+          if ((startTime === void 0 || typeof startTime === "number") && Array.isArray(pathItems)) {
+            const parsedPathItems = parsePathItems(pathItems);
+            return new PathMovement(parsedPathItems, startTime, getCurrentTime);
+          }
+          break;
+        }
+      case MOVEMENT_ORBIT:
+        {
+          const radius = movement.radius;
+          const duration = movement.duration;
+          const startTime = movement.startTime;
+          if (typeof radius === "number" && typeof duration === "number" && (startTime === void 0 || typeof startTime === "number")) {
+            return new OrbitMovement(radius, duration, startTime, getCurrentTime);
+          }
+          break;
+        }
+      case MOVEMENT_SPRING:
+        return new SpringMovement();
+    }
+    return void 0;
+  }
+  init_define_process();
   var import_react26 = __toESM(require_react());
   init_three_module();
   init_define_process();
@@ -67269,8 +67271,6 @@ if (edgeAlpha == 0.0) {
     }
   };
   var OverlayHelper = class {};
-  init_define_process();
-  init_three_module();
   var ARState = class {
     constructor() {
       this.arObjects = [];
