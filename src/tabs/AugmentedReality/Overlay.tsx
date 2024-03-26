@@ -1,4 +1,4 @@
-import { ARButton } from '@react-three/xr';
+import { ARButton } from 'saar/libraries/misc';
 
 /**
  * Default overlay for AR in Source Academy.

@@ -8,7 +8,6 @@ import type { OverlayHelper } from '../../bundles/ar/OverlayHelper';
 import { useScreenState } from 'saar/libraries/screen_state_library/ScreenStateContext';
 import { usePlayArea } from 'saar/libraries/calibration_library/PlayAreaContext';
 import { useControls } from 'saar/libraries/controls_library/ControlsContext';
-import { useThree } from '@react-three/fiber';
 import { ARObject } from 'saar/libraries/object_state_library/ARObject';
 
 /**
@@ -18,7 +17,6 @@ export function AugmentedContent(props: ARState) {
   const screenState = useScreenState();
   const playArea = usePlayArea();
   const controls = useControls();
-  const three = useThree();
   const [objects, setObjects] = useState<ARObject[]>([]);
   const highlightFrontObject = useRef(props.highlightFrontObject);
   const objectsRef = useRef<ARObject[]>();
@@ -61,10 +59,7 @@ export function AugmentedContent(props: ARState) {
 
   useEffect(() => {
     setupToggles(props.overlay, screenState.overlayRef, () => {
-      playArea.setPositionAsOrigin(
-        three.camera.position,
-        three.camera.rotation,
-      );
+      playArea.setCameraAsOrigin();
     });
   }, [
     props.overlay.toggleCenter,

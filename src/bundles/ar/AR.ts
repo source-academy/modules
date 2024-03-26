@@ -1,7 +1,7 @@
-import { Vector3 } from 'three';
 import { ARObject } from 'saar/libraries/object_state_library/ARObject';
+import { fixSpring } from 'saar/libraries/misc/index';
 import { OverlayHelper, Toggle } from './OverlayHelper';
-import { Globals } from '@react-spring/three';
+import { Vector3 } from 'saar/libraries/misc';
 
 export class ARState {
   arObjects: ARObject[] = [];
@@ -17,9 +17,7 @@ export class ARState {
 
 // Fix issue with React Spring, but spams console log.
 // https://github.com/pmndrs/react-spring/issues/1586#issuecomment-870778191
-Globals.assign({
-  frameLoop: 'always',
-});
+fixSpring();
 
 /**
  * Initialize AR.

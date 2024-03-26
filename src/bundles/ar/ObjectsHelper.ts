@@ -1,4 +1,3 @@
-import { type Vector3 } from 'three';
 import {
   type ARObject,
   CubeObject,
@@ -31,6 +30,7 @@ import UITextItem from 'saar/libraries/object_state_library/ui_component/UITextI
 import UIImageItem from 'saar/libraries/object_state_library/ui_component/UIImageItem';
 import { callARCallback } from './AR';
 import UIBase64ImageComponent from 'saar/libraries/object_state_library/ui_component/UIBase64ImageItem';
+import { type Vector3 } from 'saar/libraries/misc';
 
 // Objects
 
