@@ -163,12 +163,13 @@ export function AugmentedContent(props: ARState) {
           const time = new Date(data.datetime).getTime();
           const offset = time - new Date().getTime();
           setTimeOffset(offset);
-          console.log('Time offset', offset);
         })
         .catch((error) => {
           console.log(error);
         });
-    } catch {}
+    } catch {
+      setTimeOffset(0);
+    }
   }, []);
 
   /**
