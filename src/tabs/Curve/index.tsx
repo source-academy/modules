@@ -1,6 +1,10 @@
 import type { CurveModuleState } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
-import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
+import {
+  getModuleState,
+  type DebuggerContext,
+  type ModuleTab
+} from '../../typings/type_helpers';
 import AnimationCanvas from '../common/AnimationCanvas';
 import MultiItemDisplay from '../common/MultItemDisplay';
 import WebGLCanvas from '../common/WebglCanvas';
@@ -13,29 +17,25 @@ export const CurveTab: ModuleTab = ({ context }) => {
     const elemKey = i.toString();
 
     if (glAnimation.isAnimation(curve)) {
-      return curve.is3D
-        ? (
-          <Curve3DAnimationCanvas animation={curve} key={elemKey} />
-        )
-        : (
-          <AnimationCanvas animation={curve} key={elemKey} />
-        );
-    }
-    return curve.is3D()
-      ? (
-        <CurveCanvas3D curve={curve} key={elemKey} />
-      )
-      : (
-        <WebGLCanvas
-          ref={(r) => {
-            if (r) {
-              curve.init(r);
-              curve.redraw(0);
-            }
-          }}
-          key={elemKey}
-        />
+      return curve.is3D ? (
+        <Curve3DAnimationCanvas animation={curve} key={elemKey} />
+      ) : (
+        <AnimationCanvas animation={curve} key={elemKey} />
       );
+    }
+    return curve.is3D() ? (
+      <CurveCanvas3D curve={curve} key={elemKey} />
+    ) : (
+      <WebGLCanvas
+        ref={r => {
+          if (r) {
+            curve.init(r);
+            curve.redraw(0);
+          }
+        }}
+        key={elemKey}
+      />
+    );
   });
 
   return <MultiItemDisplay elements={canvases} />;
@@ -43,7 +43,8 @@ export const CurveTab: ModuleTab = ({ context }) => {
 
 export default {
   toSpawn(context: DebuggerContext) {
-    const drawnCurves = context.context?.moduleContexts?.curve?.state?.drawnCurves;
+    const drawnCurves =
+      context.context?.moduleContexts?.curve?.state?.drawnCurves;
     return drawnCurves.length > 0;
   },
   body(context: DebuggerContext) {

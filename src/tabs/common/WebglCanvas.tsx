@@ -13,8 +13,8 @@ const defaultStyle = {
  */
 const WebGLCanvas = React.forwardRef<HTMLCanvasElement, any>(
   (props: any, ref) => {
-    const style
-      = props.style !== undefined
+    const style =
+      props.style !== undefined
         ? {
           ...defaultStyle,
           ...props.style

@@ -1,4 +1,4 @@
-import { Slider, Icon } from '@blueprintjs/core';
+import { Icon, Slider } from '@blueprintjs/core';
 import React from 'react';
 import { COMMAND } from '../../bundles/copy_gc/types';
 import { ThemeColor } from './style';
@@ -57,9 +57,9 @@ class CopyGC extends React.Component<Props, State> {
   componentDidMount() {
     const { debuggerContext } = this.props;
     if (
-      debuggerContext
-      && debuggerContext.result
-      && debuggerContext.result.value
+      debuggerContext &&
+      debuggerContext.result &&
+      debuggerContext.result.value
     ) {
       this.initialize_state();
     }
@@ -187,12 +187,12 @@ class CopyGC extends React.Component<Props, State> {
     return commandHeap.length;
   };
 
-  private isTag = (tag) => {
+  private isTag = tag => {
     const { tags } = this.state;
     return tags ? tags.includes(tag) : false;
   };
 
-  private getMemoryColor = (indexValue) => {
+  private getMemoryColor = indexValue => {
     const { heap } = this.state;
     const value = heap ? heap[indexValue] : 0;
 
@@ -209,7 +209,7 @@ class CopyGC extends React.Component<Props, State> {
     return color;
   };
 
-  private getBackgroundColor = (indexValue) => {
+  private getBackgroundColor = indexValue => {
     const { firstChild } = this.state;
     const { lastChild } = this.state;
     const { commandHeap, value } = this.state;
@@ -264,38 +264,34 @@ class CopyGC extends React.Component<Props, State> {
                 marginTop: 10
               }}
             >
-              {state.leftDesc
-                ? (
-                  <div style={{ flex: 1 }}>
-                    <canvas
-                      width={10}
-                      height={10}
-                      style={{
-                        backgroundColor: ThemeColor.GREEN
-                      }}
-                    />
-                    <span> {state.leftDesc} </span>
-                  </div>
-                )
-                : (
-                  false
-                )}
-              {state.rightDesc
-                ? (
-                  <div style={{ flex: 1 }}>
-                    <canvas
-                      width={10}
-                      height={10}
-                      style={{
-                        backgroundColor: ThemeColor.YELLOW
-                      }}
-                    />
-                    <span> {state.rightDesc} </span>
-                  </div>
-                )
-                : (
-                  false
-                )}
+              {state.leftDesc ? (
+                <div style={{ flex: 1 }}>
+                  <canvas
+                    width={10}
+                    height={10}
+                    style={{
+                      backgroundColor: ThemeColor.GREEN
+                    }}
+                  />
+                  <span> {state.leftDesc} </span>
+                </div>
+              ) : (
+                false
+              )}
+              {state.rightDesc ? (
+                <div style={{ flex: 1 }}>
+                  <canvas
+                    width={10}
+                    height={10}
+                    style={{
+                      backgroundColor: ThemeColor.YELLOW
+                    }}
+                  />
+                  <span> {state.rightDesc} </span>
+                </div>
+              ) : (
+                false
+              )}
             </div>
             <br />
             <p>
@@ -323,17 +319,19 @@ class CopyGC extends React.Component<Props, State> {
             <div>
               <h3>{state.toSpace === 0 ? 'To Space' : 'From Space'}</h3>
               <div>
-                {toMemoryMatrix
-                  && toMemoryMatrix.length > 0
-                  && toMemoryMatrix.map((item, row) => (
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'row'
-                    }}>
+                {toMemoryMatrix &&
+                  toMemoryMatrix.length > 0 &&
+                  toMemoryMatrix.map((item, row) => (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                      }}
+                    >
                       <span style={{ width: 30 }}> {row * state.column} </span>
-                      {item
-                        && item.length > 0
-                        && item.map((content) => {
+                      {item &&
+                        item.length > 0 &&
+                        item.map(content => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (
@@ -360,18 +358,20 @@ class CopyGC extends React.Component<Props, State> {
             <div>
               <h3>{state.toSpace > 0 ? 'To Space' : 'From Space'}</h3>
               <div>
-                {fromMemoryMatrix
-                  && fromMemoryMatrix.length > 0
-                  && fromMemoryMatrix.map((item, row) => (
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'row'
-                    }}>
+                {fromMemoryMatrix &&
+                  fromMemoryMatrix.length > 0 &&
+                  fromMemoryMatrix.map((item, row) => (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                      }}
+                    >
                       <span style={{ width: 30 }}>
                         {row * state.column + state.memorySize / 2}
                       </span>
                       {item && item.length > 0
-                        ? item.map((content) => {
+                        ? item.map(content => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (
@@ -397,11 +397,13 @@ class CopyGC extends React.Component<Props, State> {
               </div>
             </div>
           </div>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            marginTop: 10
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              marginTop: 10
+            }}
+          >
             <div style={{ flex: 1 }}>
               <canvas
                 width={10}

@@ -1,5 +1,9 @@
 import type { SoundModuleState } from '../../bundles/sound/types';
-import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
+import {
+  getModuleState,
+  type DebuggerContext,
+  type ModuleTab
+} from '../../typings/type_helpers';
 import MultiItemDisplay from '../common/MultItemDisplay';
 
 /**
@@ -10,7 +14,7 @@ import MultiItemDisplay from '../common/MultItemDisplay';
 const SoundTab: ModuleTab = ({ context }) => {
   const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound');
 
-  const elements = audioPlayed.map((audio) => (
+  const elements = audioPlayed.map(audio => (
     <audio
       src={audio.dataUri}
       controls
@@ -40,7 +44,8 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const audioPlayed = context.context?.moduleContexts?.sound?.state?.audioPlayed;
+    const audioPlayed =
+      context.context?.moduleContexts?.sound?.state?.audioPlayed;
     return audioPlayed.length > 0;
   },
   /**

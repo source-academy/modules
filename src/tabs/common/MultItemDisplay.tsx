@@ -4,7 +4,7 @@ import { clamp } from 'lodash';
 import React from 'react';
 
 type MultiItemDisplayProps = {
-  elements: React.JSX.Element[]
+  elements: React.JSX.Element[];
 };
 
 const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
@@ -15,8 +15,10 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
   const [stepEditorValue, setStepEditorValue] = React.useState('1');
   const [stepEditorFocused, setStepEditorFocused] = React.useState(false);
 
-  const resetStepEditor = () => setStepEditorValue((currentStep + 1).toString());
-  const elementsDigitCount = Math.floor(Math.log10(Math.max(1, elements.length))) + 1;
+  const resetStepEditor = () =>
+    setStepEditorValue((currentStep + 1).toString());
+  const elementsDigitCount =
+    Math.floor(Math.log10(Math.max(1, elements.length))) + 1;
 
   return (
     <div
@@ -60,18 +62,27 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-around'
-            }}>
+            }}
+          >
             Call&nbsp;
             {/* When the text box is focused, it shows a little up and down bar, which needs a little bit
-              * more space to be shown
-              */}
-            <div style={{ width: `${stepEditorFocused ? elementsDigitCount + 2 : elementsDigitCount}ch` }}>
+             * more space to be shown
+             */}
+            <div
+              style={{
+                width: `${
+                  stepEditorFocused
+                    ? elementsDigitCount + 2
+                    : elementsDigitCount
+                }ch`
+              }}
+            >
               <EditableText
                 value={stepEditorValue}
                 disabled={elements.length === 1}
                 placeholder={undefined}
                 type="number"
-                onChange={(newValue) => {
+                onChange={newValue => {
                   // Disallow non numeric inputs
                   if (newValue && !/^[0-9]+$/u.test(newValue)) return;
 
@@ -79,7 +90,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
                   if (newValue.length > elementsDigitCount) return;
                   setStepEditorValue(newValue);
                 }}
-                onConfirm={(value) => {
+                onConfirm={value => {
                   if (value) {
                     const newStep = Number.parseFloat(value);
                     const clampedStep = clamp(newStep, 1, elements.length);

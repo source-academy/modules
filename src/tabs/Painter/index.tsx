@@ -4,14 +4,14 @@ import type { DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/ModalDiv';
 
 type Props = {
-  children?: never
-  className?: string
-  debuggerContext: any
+  children?: never;
+  className?: string;
+  debuggerContext: any;
 };
 
 type State = {
-  modalOpen: boolean
-  selectedPainter: any | null
+  modalOpen: boolean;
+  selectedPainter: any | null;
 };
 
 class Painter extends React.Component<Props, State> {
@@ -31,7 +31,15 @@ class Painter extends React.Component<Props, State> {
   };
 
   public render() {
-    const { context: { moduleContexts: { painter: { state: { drawnPainters } } } } } = this.props.debuggerContext;
+    const {
+      context: {
+        moduleContexts: {
+          painter: {
+            state: { drawnPainters }
+          }
+        }
+      }
+    } = this.props.debuggerContext;
 
     return (
       <div>
@@ -52,28 +60,25 @@ class Painter extends React.Component<Props, State> {
               height: '20rem',
               width: '20rem'
             }}
-          >
-          </div>
+          ></div>
         </Modal>
-        {
-          drawnPainters.map((drawnPainter: any, id:number) => {
-            const divId = `plotDiv${id}`;
-            return (
-              <>
-                <div onClick={() => this.handleOpen(drawnPainter)}>Click here to open Modal</div>
-                <div
-                  id={divId}
-                  ref={() => {
-                    console.log(drawnPainter);
-                    drawnPainter.draw(divId);
-                  }}
-                >
-                </div>
-              </>
-            );
-          })
-        }
-
+        {drawnPainters.map((drawnPainter: any, id: number) => {
+          const divId = `plotDiv${id}`;
+          return (
+            <>
+              <div onClick={() => this.handleOpen(drawnPainter)}>
+                Click here to open Modal
+              </div>
+              <div
+                id={divId}
+                ref={() => {
+                  console.log(drawnPainter);
+                  drawnPainter.draw(divId);
+                }}
+              ></div>
+            </>
+          );
+        })}
       </div>
     );
   }
@@ -81,7 +86,8 @@ class Painter extends React.Component<Props, State> {
 
 export default {
   toSpawn(context: DebuggerContext) {
-    const drawnPainters = context.context?.moduleContexts?.painter.state.drawnPainters;
+    const drawnPainters =
+      context.context?.moduleContexts?.painter.state.drawnPainters;
     console.log(drawnPainters);
     return drawnPainters.length > 0;
   },

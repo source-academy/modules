@@ -74,7 +74,7 @@ class SoundMatrix extends React.Component<Props, State> {
         <div className="row">
           <div
             className="col-xs-12"
-            ref={(r) => {
+            ref={r => {
               this.$container = r;
             }}
           />

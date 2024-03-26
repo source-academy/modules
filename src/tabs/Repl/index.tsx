@@ -15,23 +15,23 @@ import type { DebuggerContext } from '../../typings/type_helpers';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const AceEditor = require('react-ace').default;
 
+import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
-import 'ace-builds/src-noconflict/ext-language_tools';
 
 type Props = {
   programmableReplInstance: ProgrammableRepl;
 };
 
 type State = {
-  editorHeight: number,
-  isDraggingDragBar: boolean,
+  editorHeight: number;
+  isDraggingDragBar: boolean;
 };
 
 const BOX_PADDING_VALUE = 4;
 
 class ProgrammableReplGUI extends React.Component<Props, State> {
-  public replInstance : ProgrammableRepl;
+  public replInstance: ProgrammableRepl;
   private editorAreaRect;
   private editorInstance;
   constructor(data: Props) {
@@ -43,19 +43,22 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       isDraggingDragBar: false
     };
   }
-  private dragBarOnMouseDown = (e) => {
+  private dragBarOnMouseDown = e => {
     e.preventDefault();
     this.setState({ isDraggingDragBar: true });
   };
-  private onMouseMove = (e) => {
+  private onMouseMove = e => {
     if (this.state.isDraggingDragBar) {
-      const height = Math.max(e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
+      const height = Math.max(
+        e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2,
+        MINIMUM_EDITOR_HEIGHT
+      );
       this.replInstance.editorHeight = height;
       this.setState({ editorHeight: height });
       this.editorInstance.resize();
     }
   };
-  private onMouseUp = (_e) => {
+  private onMouseUp = _e => {
     this.setState({ isDraggingDragBar: false });
   };
   componentDidMount() {
@@ -68,27 +71,42 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   }
   public render() {
     const { editorHeight } = this.state;
-    const outputDivs : React.JSX.Element[] = [];
+    const outputDivs: React.JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
       const str = this.replInstance.outputStrings[i];
       if (str.outputMethod === 'richtext') {
         if (str.color === '') {
-          outputDivs.push(<div style={ FONT_MESSAGE } dangerouslySetInnerHTML={ { __html: str.content }} />);
+          outputDivs.push(
+            <div
+              style={FONT_MESSAGE}
+              dangerouslySetInnerHTML={{ __html: str.content }}
+            />
+          );
         } else {
-          outputDivs.push(<div style={{
-            ...FONT_MESSAGE,
-            ...{ color: str.color }
-          }} dangerouslySetInnerHTML={ { __html: str.content }} />);
+          outputDivs.push(
+            <div
+              style={{
+                ...FONT_MESSAGE,
+                ...{ color: str.color }
+              }}
+              dangerouslySetInnerHTML={{ __html: str.content }}
+            />
+          );
         }
       } else if (str.color === '') {
-        outputDivs.push(<div style={ FONT_MESSAGE }>{ str.content }</div>);
+        outputDivs.push(<div style={FONT_MESSAGE}>{str.content}</div>);
       } else {
-        outputDivs.push(<div style={{
-          ...FONT_MESSAGE,
-          ...{ color: str.color }
-        }}>{ str.content }
-        </div>);
+        outputDivs.push(
+          <div
+            style={{
+              ...FONT_MESSAGE,
+              ...{ color: str.color }
+            }}
+          >
+            {str.content}
+          </div>
+        );
       }
     }
     return (
@@ -97,50 +115,60 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           className="programmable-repl-button"
           icon={IconNames.PLAY}
           active={true}
-          onClick={() => this.replInstance.runCode()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
+          onClick={() => this.replInstance.runCode()} // Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Run"
         />
         <Button
           className="programmable-repl-button"
           icon={IconNames.FLOPPY_DISK}
           active={true}
-          onClick={() => this.replInstance.saveEditorContent()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
+          onClick={() => this.replInstance.saveEditorContent()} // Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Save"
         />
-        <div ref={ (e) => {
-          this.editorAreaRect = e?.getBoundingClientRect();
-        }} style={{
-          padding: `${BOX_PADDING_VALUE}px`,
-          border: '2px solid #6f8194'
-        }}>
+        <div
+          ref={e => {
+            this.editorAreaRect = e?.getBoundingClientRect();
+          }}
+          style={{
+            padding: `${BOX_PADDING_VALUE}px`,
+            border: '2px solid #6f8194'
+          }}
+        >
           <AceEditor
-            ref={ (e) => {
+            ref={e => {
               this.editorInstance = e?.editor;
               this.replInstance.setEditorInstance(e?.editor);
             }}
-            style={ {
+            style={{
               width: '100%',
               height: `${editorHeight}px`,
-              ...(this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
+              ...(this.replInstance.customizedEditorProps.backgroundImageUrl !==
+                'no-background-image' && {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
                 backgroundSize: '100%',
                 backgroundRepeat: 'no-repeat'
               })
-            } }
-            mode="javascript" theme="twilight"
-            onChange={ (newValue) => this.replInstance.updateUserCode(newValue) }
+            }}
+            mode="javascript"
+            theme="twilight"
+            onChange={newValue => this.replInstance.updateUserCode(newValue)}
             value={this.replInstance.userCodeInEditor.toString()}
           />
         </div>
-        <div onMouseDown={this.dragBarOnMouseDown} style={{
-          cursor: 'row-resize',
-          height: '8px'
-        }} />
-        <div style={{
-          padding: `${BOX_PADDING_VALUE}px`,
-          border: '2px solid #6f8194'
-        }}>
+        <div
+          onMouseDown={this.dragBarOnMouseDown}
+          style={{
+            cursor: 'row-resize',
+            height: '8px'
+          }}
+        />
+        <div
+          style={{
+            padding: `${BOX_PADDING_VALUE}px`,
+            border: '2px solid #6f8194'
+          }}
+        >
           <div id="output_strings">{outputDivs}</div>
         </div>
       </div>
@@ -165,7 +193,11 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    return <ProgrammableReplGUI programmableReplInstance={context.context.moduleContexts.repl.state} />;
+    return (
+      <ProgrammableReplGUI
+        programmableReplInstance={context.context.moduleContexts.repl.state}
+      />
+    );
   },
 
   /**

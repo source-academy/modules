@@ -6,7 +6,11 @@ import AutoLoopSwitch from '../common/AutoLoopSwitch';
 import ButtonComponent from '../common/ButtonComponent';
 import PlayButton from '../common/PlayButton';
 import WebGLCanvas from '../common/WebglCanvas';
-import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
+import {
+  BP_TAB_BUTTON_MARGIN,
+  BP_TEXT_MARGIN,
+  CANVAS_MAX_WIDTH
+} from '../common/css_constants';
 
 type Props = {
   animation: AnimatedCurve;
@@ -157,7 +161,7 @@ export default class AnimationCanvas3dCurve extends React.Component<
       // Animation hasn't ended, so just draw the next frame
       this.drawFrame();
       this.setState(
-        (prev) => ({
+        prev => ({
           animTimestamp: prev.animTimestamp + currentFrame
         }),
         this.reqFrame
@@ -192,17 +196,14 @@ export default class AnimationCanvas3dCurve extends React.Component<
    * Reset button click handler
    */
   private onResetButtonClick = () => {
-    this.setState(
-      { animTimestamp: 0 },
-      () => {
-        if (this.state.isPlaying) {
-          // Force stop
-          this.onPlayButtonClick();
-        }
-
-        this.drawFrame();
+    this.setState({ animTimestamp: 0 }, () => {
+      if (this.state.isPlaying) {
+        // Force stop
+        this.onPlayButtonClick();
       }
-    );
+
+      this.drawFrame();
+    });
   };
 
   /**
@@ -212,7 +213,7 @@ export default class AnimationCanvas3dCurve extends React.Component<
   private onTimeSliderChange = (newValue: number) => {
     this.callbackTimestamp = null;
     this.setState(
-      (prev) => ({
+      prev => ({
         wasPlaying: prev.isPlaying,
         isPlaying: false,
         animTimestamp: newValue
@@ -226,7 +227,7 @@ export default class AnimationCanvas3dCurve extends React.Component<
    */
   private onTimeSliderRelease = () => {
     this.setState(
-      (prev) => ({
+      prev => ({
         isPlaying: prev.wasPlaying
       }),
       () => {
@@ -256,139 +257,142 @@ export default class AnimationCanvas3dCurve extends React.Component<
    * Auto loop switch onChange callback
    */
   private onSwitchChange = () => {
-    this.setState((prev) => ({
+    this.setState(prev => ({
       isAutoLooping: !prev.isAutoLooping
     }));
   };
 
   public render() {
-    return <div
-      style={{
-        width: '100%'
-      }}
-    >
+    return (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center'
+          width: '100%'
         }}
       >
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            gap: BP_TAB_BUTTON_MARGIN,
-
-            width: '100%',
-            maxWidth: CANVAS_MAX_WIDTH,
-
-            paddingTop: BP_TEXT_MARGIN,
-            paddingBottom: BP_TEXT_MARGIN
+            justifyContent: 'center'
           }}
         >
-          <PlayButton
-            isPlaying={ this.state.isPlaying }
-            disabled={Boolean(this.state.errored)}
-            onClick={ this.onPlayButtonClick }
-          />
-          <Tooltip
-            content="Reset"
-            placement="top"
-          >
-            <ButtonComponent
-              disabled={Boolean(this.state.errored)}
-              onClick={ this.onResetButtonClick }
-            >
-              <Icon icon={ IconNames.RESET } />
-            </ButtonComponent>
-          </Tooltip>
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              gap: BP_TEXT_MARGIN,
+              alignItems: 'center',
+              gap: BP_TAB_BUTTON_MARGIN,
 
-              width: '100%'
+              width: '100%',
+              maxWidth: CANVAS_MAX_WIDTH,
+
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
             }}
           >
-            <Slider
-              value={ this.state.animTimestamp }
-              min={ 0 }
-              max={ this.animationDuration }
-              stepSize={ 1 }
-              labelRenderer={ false }
+            <PlayButton
+              isPlaying={this.state.isPlaying}
               disabled={Boolean(this.state.errored)}
-              onChange={ this.onTimeSliderChange }
-              onRelease={ this.onTimeSliderRelease }
+              onClick={this.onPlayButtonClick}
             />
-            <Tooltip
-              content="Display Angle"
-              placement="top"
+            <Tooltip content="Reset" placement="top">
+              <ButtonComponent
+                disabled={Boolean(this.state.errored)}
+                onClick={this.onResetButtonClick}
+              >
+                <Icon icon={IconNames.RESET} />
+              </ButtonComponent>
+            </Tooltip>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: BP_TEXT_MARGIN,
+
+                width: '100%'
+              }}
             >
               <Slider
-                value={ this.state.displayAngle }
-                min={ 0 }
-                max={ 2 * Math.PI }
-                stepSize={ 0.01 }
-                labelRenderer={ false }
+                value={this.state.animTimestamp}
+                min={0}
+                max={this.animationDuration}
+                stepSize={1}
+                labelRenderer={false}
                 disabled={Boolean(this.state.errored)}
-                onChange={ this.onAngleSliderChange }
+                onChange={this.onTimeSliderChange}
+                onRelease={this.onTimeSliderRelease}
               />
-            </Tooltip>
+              <Tooltip content="Display Angle" placement="top">
+                <Slider
+                  value={this.state.displayAngle}
+                  min={0}
+                  max={2 * Math.PI}
+                  stepSize={0.01}
+                  labelRenderer={false}
+                  disabled={Boolean(this.state.errored)}
+                  onChange={this.onAngleSliderChange}
+                />
+              </Tooltip>
+            </div>
+            <AutoLoopSwitch
+              isAutoLooping={this.state.isAutoLooping}
+              disabled={Boolean(this.state.errored)}
+              onChange={this.onSwitchChange}
+            />
           </div>
-          <AutoLoopSwitch
-            isAutoLooping={ this.state.isAutoLooping }
-            disabled={Boolean(this.state.errored)}
-            onChange={ this.onSwitchChange }
-          />
         </div>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        {this.state.errored
-          ? (
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}>
-              <div style={{
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          {this.state.errored ? (
+            <div
+              style={{
                 display: 'flex',
-                flexDirection: 'row',
+                flexDirection: 'column',
                 alignItems: 'center'
-              }}>
-                <Icon icon={IconNames.WARNING_SIGN} size={90} />
-                <div style={{
+              }}
+            >
+              <div
+                style={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginBottom: 20
-                }}>
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}
+              >
+                <Icon icon={IconNames.WARNING_SIGN} size={90} />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginBottom: 20
+                  }}
+                >
                   <h3>An error occurred while running your animation!</h3>
                   <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
                 </div>
               </div>
-              <code style={{
-                color: 'red'
-              }}>
+              <code
+                style={{
+                  color: 'red'
+                }}
+              >
                 {this.state.errored.toString()}
               </code>
-            </div>)
-          : (
+            </div>
+          ) : (
             <WebGLCanvas
               style={{
                 flexGrow: 1
               }}
-              ref={(r) => {
+              ref={r => {
                 this.canvas = r;
               }}
             />
           )}
+        </div>
       </div>
-    </div>;
+    );
   }
 }
