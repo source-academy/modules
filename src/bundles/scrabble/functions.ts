@@ -5,7 +5,6 @@
  * @module scrabble
  */
 
-
 /**
  * `scrabble_words` is an array of strings, each representing
  * an allowed word in Scrabble.
@@ -172831,7 +172830,7 @@ export const scrabble_words = [
   'zymurgies',
   'zymurgy',
   'zyzzyva',
-  'zyzzyvas',
+  'zyzzyvas'
 ];
 
 /**

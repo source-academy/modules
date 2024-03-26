@@ -55,5 +55,5 @@ export {
   cello,
   piano,
   trombone,
-  violin,
+  violin
 } from './functions';

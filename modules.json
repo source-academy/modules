@@ -103,5 +103,8 @@
     "tabs": [
       "AugmentedReality"
     ]
+  },
+  "communication": {
+    "tabs": []
   }
 }

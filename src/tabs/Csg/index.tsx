@@ -1,20 +1,16 @@
 /* [Imports] */
-import type { ReactElement } from 'react';
 import { IconNames } from '@blueprintjs/icons';
-import { Core } from '../../bundles/csg/core.js';
-import {
-  type CsgModuleState,
-} from '../../bundles/csg/utilities.js';
+import type { ReactElement } from 'react';
+import { Core } from '../../bundles/csg/core';
+import type { CsgModuleState } from '../../bundles/csg/utilities';
 import { type DebuggerContext } from '../../typings/type_helpers';
 import CanvasHolder from './canvas_holder';
-
-
 
 /* [Exports] */
 export default {
   // Called by the frontend to decide whether to spawn the CSG tab
   toSpawn(debuggerContext: DebuggerContext): boolean {
-    let moduleState: CsgModuleState = debuggerContext.context.moduleContexts.csg.state;
+    const moduleState: CsgModuleState = debuggerContext.context.moduleContexts.csg.state;
     // toSpawn() is checked before the frontend calls body() if needed, so we
     // initialise Core for the first time over on the tabs' end here
     Core.initialize(moduleState);
@@ -35,5 +31,5 @@ export default {
   iconName: IconNames.SHAPES,
 
   // Icon tooltip in sidebar
-  label: 'CSG Tab',
+  label: 'CSG Tab'
 };

@@ -1,90 +1,68 @@
-import { Command } from 'commander';
+import { type Severity, findSeverity, type BuildOptions } from '@src/build/utils';
+import { promiseAll } from '@src/commandUtils';
+import { eslintResultsLogger, runEslint } from './lint';
+import { runTsc, tscResultsLogger } from './tsc';
 
-import { exitOnError, retrieveBundlesAndTabs } from '../buildUtils.js';
-import type { AssetInfo } from '../types.js';
+interface PrebuildResult {
+  lint?: Awaited<ReturnType<typeof runEslint>>
+  tsc?: Awaited<ReturnType<typeof runTsc>>
+  severity: Severity
+}
 
-import { type LintCommandInputs, type LintOpts, logLintResult, runEslint } from './lint.js';
-import { type TscCommandInputs, type TscOpts, logTscResults, runTsc } from './tsc.js';
+export default async function prebuild(
+  bundles: string[],
+  tabs: string[],
+  { tsc, lint, ...opts }: BuildOptions
+): Promise<PrebuildResult | null> {
+  const combinedOpts = {
+    ...opts,
+    bundles,
+    tabs
+  };
 
-type PreBuildOpts = TscOpts & LintOpts & {
-  lint: boolean;
-  tsc: boolean;
-};
-
-type PreBuildResult = {
-  lintResult: Awaited<ReturnType<typeof runEslint>> | null;
-  tscResult: Awaited<ReturnType<typeof runTsc>> | null;
-};
-/**
- * Run both `tsc` and `eslint` in parallel if `--fix` was not specified. Otherwise, run eslint
- * to fix linting errors first, then run tsc for type checking
- *
- * @returns An object that contains the results from linting and typechecking
- */
-const prebuildInternal = async (opts: PreBuildOpts, assets: AssetInfo): Promise<PreBuildResult> => {
-  if (opts.fix) {
-    // Run tsc and then lint
-    const lintResult = await runEslint(opts, assets);
-
-    if (!opts.tsc || lintResult.result.severity === 'error') {
+  if (tsc) {
+    if (!lint) {
+      const tsc = await runTsc(combinedOpts);
       return {
-        lintResult,
-        tscResult: null,
+        tsc,
+        severity: tsc.result.severity
       };
     }
 
-    const tscResult = await runTsc(opts.srcDir, assets);
-    return {
-      lintResult,
-      tscResult,
-    };
-  // eslint-disable-next-line no-else-return
-  } else {
-    const [lintResult, tscResult] = await Promise.all([
-      opts.lint ? runEslint(opts, assets) : Promise.resolve(null),
-      opts.tsc ? runTsc(opts.srcDir, assets) : Promise.resolve(null),
-    ]);
+    const [tscResult, lintResult] = await promiseAll(
+      runTsc(combinedOpts),
+      runEslint(combinedOpts)
+    );
+
+    const overallSev = findSeverity([tscResult, lintResult], ({ result: { severity } }) => severity);
 
     return {
-      lintResult,
-      tscResult,
+      tsc: tscResult,
+      lint: lintResult,
+      severity: overallSev
     };
   }
-};
 
-/**
- * Run eslint and tsc based on the provided options, and exit with code 1
- * if either returns with an error status
- */
-export const prebuild = async (opts: PreBuildOpts, assets: AssetInfo) => {
-  const { lintResult, tscResult } = await prebuildInternal(opts, assets);
-  logLintResult(lintResult);
-  logTscResults(tscResult);
-
-  exitOnError([], lintResult?.result, tscResult?.result);
-  if (lintResult?.result.severity === 'error' || tscResult?.result.severity === 'error') {
-    throw new Error('Exiting for jest');
+  if (lint) {
+    const lintResult = await runEslint(combinedOpts);
+    return {
+      lint: lintResult,
+      severity: lintResult.result.severity
+    };
   }
-};
+  return null;
+}
 
-type PrebuildCommandInputs = LintCommandInputs & TscCommandInputs;
+export function formatPrebuildResults(results: PrebuildResult) {
+  const output: string[] = [];
+  if (results.tsc) {
+    output.push(tscResultsLogger(results.tsc));
+  }
 
-const getPrebuildCommand = () => new Command('prebuild')
-  .description('Run both tsc and eslint')
-  .option('--fix', 'Ask eslint to autofix linting errors', false)
-  .option('--srcDir <srcdir>', 'Source directory for files', 'src')
-  .option('--manifest <file>', 'Manifest file', 'modules.json')
-  .option('-m, --modules [modules...]', 'Manually specify which modules to check', null)
-  .option('-t, --tabs [tabs...]', 'Manually specify which tabs to check', null)
-  .action(async ({ modules, tabs, manifest, ...opts }: PrebuildCommandInputs) => {
-    const assets = await retrieveBundlesAndTabs(manifest, modules, tabs, false);
-    await prebuild({
-      ...opts,
-      tsc: true,
-      lint: true,
-    }, assets);
-  });
+  if (results.lint) {
+    const lintResult = eslintResultsLogger(results.lint);
+    output.push(lintResult);
+  }
 
-export default getPrebuildCommand;
-export { default as getLintCommand } from './lint.js';
-export { default as getTscCommand } from './tsc.js';
+  return output.length > 0 ? output.join('\n') : null;
+}

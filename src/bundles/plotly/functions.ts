@@ -5,21 +5,21 @@
 
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
+import { type Sound } from '../sound/types';
+import { generatePlot } from './curve_functions';
 import {
   type Curve,
   CurvePlot,
   type CurvePlotFunction,
   DrawnPlot,
-  type ListOfPairs,
+  type ListOfPairs
 } from './plotly';
-import { generatePlot } from './curve_functions';
 import { get_duration, get_wave, is_sound } from './sound_functions';
-import { type Sound } from '../sound/types';
 
-let drawnPlots: (DrawnPlot | CurvePlot)[] = [];
+const drawnPlots: (CurvePlot | DrawnPlot)[] = [];
 
 context.moduleContexts.plotly.state = {
-  drawnPlots,
+  drawnPlots
 };
 
 /**
@@ -261,7 +261,7 @@ function draw_new_plot_json(data: any, divId: string) {
  * @returns The converted data that can be used by the plotly.js function
  */
 function convert_to_plotly_data(data: ListOfPairs): Data {
-  let convertedData: Data = {};
+  const convertedData: Data = {};
   if (Array.isArray(data) && data.length === 2) {
     add_fields_to_data(convertedData, data);
   }
@@ -286,7 +286,7 @@ function createPlotFunction(
   type: string,
   config: Data,
   layout: Partial<Layout>,
-  is_colored: boolean = false,
+  is_colored: boolean = false
 ): (numPoints: number) => CurvePlotFunction {
   return (numPoints: number) => {
     const func = (curveFunction: Curve) => {
@@ -296,7 +296,7 @@ function createPlotFunction(
         config,
         layout,
         is_colored,
-        curveFunction,
+        curveFunction
       );
 
       drawnPlots.push(plotDrawn);
@@ -322,16 +322,16 @@ function createPlotFunction(
 export const draw_connected_2d = createPlotFunction(
   'scattergl',
   {
-    mode: 'lines',
+    mode: 'lines'
   },
   {
     xaxis: { visible: false },
     yaxis: {
       visible: false,
-      scaleanchor: 'x',
-    },
+      scaleanchor: 'x'
+    }
   },
-  true,
+  true
 );
 
 /**
@@ -350,7 +350,7 @@ export const draw_connected_3d = createPlotFunction(
   'scatter3d',
   { mode: 'lines' },
   {},
-  true,
+  true
 );
 
 /**
@@ -372,10 +372,10 @@ export const draw_points_2d = createPlotFunction(
     xaxis: { visible: false },
     yaxis: {
       visible: false,
-      scaleanchor: 'x',
-    },
+      scaleanchor: 'x'
+    }
   },
-  true,
+  true
 );
 
 /**
@@ -393,7 +393,7 @@ export const draw_points_2d = createPlotFunction(
 export const draw_points_3d = createPlotFunction(
   'scatter3d',
   { mode: 'markers' },
-  {},
+  {}
 );
 
 /**
@@ -404,7 +404,7 @@ export const draw_sound_2d = (sound: Sound) => {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
     throw new Error(
-      `draw_sound_2d is expecting sound, but encountered ${sound}`,
+      `draw_sound_2d is expecting sound, but encountered ${sound}`
     );
     // If a sound is already displayed, terminate execution.
   } else if (get_duration(sound) < 0) {
@@ -423,8 +423,8 @@ export const draw_sound_2d = (sound: Sound) => {
       channel[i] = wave(i / FS);
     }
 
-    let x_s: number[] = [];
-    let y_s: number[] = [];
+    const x_s: number[] = [];
+    const y_s: number[] = [];
 
     for (let i = 0; i < channel.length; i += 1) {
       x_s.push(time_stamps[i]);
@@ -433,7 +433,7 @@ export const draw_sound_2d = (sound: Sound) => {
 
     const plotlyData: Data = {
       x: x_s,
-      y: y_s,
+      y: y_s
     };
     const plot = new CurvePlot(
       draw_new_curve,
@@ -441,7 +441,7 @@ export const draw_sound_2d = (sound: Sound) => {
         ...plotlyData,
         type: 'scattergl',
         mode: 'lines',
-        line: { width: 0.5 },
+        line: { width: 0.5 }
       } as Data,
       {
         xaxis: {
@@ -449,15 +449,15 @@ export const draw_sound_2d = (sound: Sound) => {
           title: 'Time',
           anchor: 'y',
           position: 0,
-          rangeslider: { visible: true },
+          rangeslider: { visible: true }
         },
         yaxis: {
           type: 'linear',
-          visible: false,
+          visible: false
         },
         bargap: 0.2,
-        barmode: 'stack',
-      },
+        barmode: 'stack'
+      }
     );
     if (drawnPlots) drawnPlots.push(plot);
   }

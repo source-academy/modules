@@ -4,7 +4,7 @@ import { type Frame, LinePlot } from './painter';
 
 const drawnPainters: LinePlot[] = [];
 context.moduleContexts.painter.state = {
-  drawnPainters,
+  drawnPainters
 };
 
 let data: Data = {};
@@ -47,19 +47,19 @@ export function display_painter(painter: (frame: Frame) => void) {
     painter(frame);
     data = {
       x: x_s,
-      y: y_s,
+      y: y_s
     };
     drawnPainters.push(
       new LinePlot(draw_new_painter, {
         ...data,
-        mode: 'lines',
+        mode: 'lines'
       } as Data, {
         xaxis: { visible: true },
         yaxis: {
           visible: true,
-          scaleanchor: 'x',
-        },
-      }),
+          scaleanchor: 'x'
+        }
+      })
     );
   };
 }

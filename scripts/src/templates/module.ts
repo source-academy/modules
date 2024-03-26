@@ -1,19 +1,18 @@
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
 
-import { type ModuleManifest, retrieveManifest } from '../scriptUtils.js';
+import type { Interface } from 'readline/promises';
+import { type ModuleManifest, retrieveManifest } from '@src/manifest';
 
-import { askQuestion, success, warn } from './print.js';
-import { type Options, isSnakeCase } from './utilities.js';
+import { askQuestion, success, warn } from './print';
+import { type Options, isSnakeCase } from './utilities';
 
 export const check = (manifest: ModuleManifest, name: string) => Object.keys(manifest)
   .includes(name);
 
-async function askModuleName(manifest: ModuleManifest) {
+async function askModuleName(manifest: ModuleManifest, rl: Interface) {
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const name = await askQuestion(
-      'What is the name of your new module? (eg. binary_tree)',
-    );
+    const name = await askQuestion('What is the name of your new module? (eg. binary_tree)', rl);
     if (isSnakeCase(name) === false) {
       warn('Module names must be in snake case. (eg. binary_tree)');
     } else if (check(manifest, name)) {
@@ -24,22 +23,22 @@ async function askModuleName(manifest: ModuleManifest) {
   }
 }
 
-export async function addNew(buildOpts: Options) {
-  const manifest = await retrieveManifest(buildOpts.manifest);
-  const moduleName = await askModuleName(manifest);
+export async function addNew({ srcDir, manifest: manifestFile }: Options, rl: Interface) {
+  const manifest = await retrieveManifest(manifestFile);
+  const moduleName = await askModuleName(manifest, rl);
 
-  const bundleDestination = `${buildOpts.srcDir}/bundles/${moduleName}`;
+  const bundleDestination = `${srcDir}/bundles/${moduleName}`;
   await fs.mkdir(bundleDestination, { recursive: true });
   await fs.copyFile(
     './scripts/src/templates/templates/__bundle__.ts',
-    `${bundleDestination}/index.ts`,
+    `${bundleDestination}/index.ts`
   );
   await fs.writeFile(
-    'modules.json',
+    manifestFile,
     JSON.stringify({
       ...manifest,
-      [moduleName]: { tabs: [] },
-    }, null, 2),
+      [moduleName]: { tabs: [] }
+    }, null, 2)
   );
   success(`Bundle for module ${moduleName} created at ${bundleDestination}.`);
 }
