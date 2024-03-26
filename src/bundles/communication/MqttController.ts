@@ -39,7 +39,7 @@ export class MqttController {
   public async connectClient() {
     if (this.client !== null) return;
     if (this.address.length === 0) return;
-    var link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
+    const link = `wss://${this.user}:${this.password}@${this.address}:${this.port}/mqtt`;
     this.client = connect(link);
     this.client.on('connect', () => {
       this.connectionCallback(STATE_CONNECTED);
