@@ -1,7 +1,7 @@
 import pathlib from 'path'
 import { Command } from '@commander-js/extra-typings'
-import { srcDirOption } from '@src/commandUtils'
 import lodash from 'lodash'
+import { srcDirOption } from '@src/commandUtils'
 
 import { runJest } from './runner'
 

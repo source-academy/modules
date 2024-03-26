@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
-import { promiseAll, tabsOption } from '@src/commandUtils'
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild'
+import { promiseAll, tabsOption } from '@src/commandUtils'
 import { expandTabNames, createBuildCommandHandler, type BuildTask, createBuildCommand } from '../utils'
 import { commonEsbuildOptions, outputBundleOrTab } from './commons'
 

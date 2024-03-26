@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
-import { bundlesOption } from '@src/commandUtils'
 import * as td from 'typedoc'
+import { bundlesOption } from '@src/commandUtils'
 import { createBuildCommand, createBuildCommandHandler, type BuildInputs, type OperationResult } from '../utils'
 import { initTypedoc } from './docsUtils'
 import drawdown from './drawdown'

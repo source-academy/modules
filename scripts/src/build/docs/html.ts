@@ -1,6 +1,6 @@
 import { Command } from '@commander-js/extra-typings'
-import { manifestOption, outDirOption, retrieveBundlesAndTabs, srcDirOption, wrapWithTimer } from '@src/commandUtils'
 import chalk from 'chalk'
+import { manifestOption, outDirOption, retrieveBundlesAndTabs, srcDirOption, wrapWithTimer } from '@src/commandUtils'
 import type { BuildInputs, AwaitedReturn } from '../utils'
 import { initTypedoc, type TypedocResult } from './docsUtils'
 

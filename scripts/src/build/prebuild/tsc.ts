@@ -1,8 +1,8 @@
 import fs from 'fs/promises'
 import pathlib from 'path'
-import { retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
 import chalk from 'chalk'
 import ts from 'typescript'
+import { retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils'
 import { expandBundleNames, expandTabNames, divideAndRound, type AwaitedReturn } from '../utils'
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils'
 

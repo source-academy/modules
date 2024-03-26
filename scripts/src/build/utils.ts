@@ -1,8 +1,8 @@
 import { copyFile } from 'fs/promises'
 import { Command } from '@commander-js/extra-typings'
-import { lintFixOption, lintOption, manifestOption, objectEntries, outDirOption, retrieveBundlesAndTabs, srcDirOption } from '@src/commandUtils'
 import chalk from 'chalk'
 import { Table } from 'console-table-printer'
+import { lintFixOption, lintOption, manifestOption, objectEntries, outDirOption, retrieveBundlesAndTabs, srcDirOption } from '@src/commandUtils'
 import { htmlLogger, type buildHtml } from './docs/html'
 import prebuild, { formatPrebuildResults } from './prebuild'
 

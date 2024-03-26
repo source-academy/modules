@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
-import { bundlesOption, promiseAll } from '@src/commandUtils'
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild'
+import { bundlesOption, promiseAll } from '@src/commandUtils'
 import { expandBundleNames, type BuildTask, createBuildCommandHandler, createBuildCommand } from '../utils'
 import { commonEsbuildOptions, outputBundleOrTab } from './commons'
 

@@ -45,10 +45,11 @@ export default [
       'import/order': [
         1,
         {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           alphabetize: {
             order: 'asc',
             orderImportKind: 'asc'
-          }
+          },
         }
       ],
 
@@ -118,8 +119,6 @@ export default [
         project: './src/tsconfig.json'
       }
     },
-    plugins: {
-    },
     rules: {
       'prefer-const': 1, // Was 2
 
@@ -150,7 +149,10 @@ export default [
       '@typescript-eslint/prefer-readonly': 1,
       '@typescript-eslint/require-await': 2,
       '@typescript-eslint/return-await': [2, 'in-try-catch']
-    }
+    },
+    settings: {
+      'import/internal-regex': '^@src/',
+    },
   },
   {
     // Rules for devserver,
