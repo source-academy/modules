@@ -255,5 +255,5 @@ export {
   create_audio,
   loop_audio,
   stop_audio,
-  play_audio,
+  play_audio
 } from './functions';

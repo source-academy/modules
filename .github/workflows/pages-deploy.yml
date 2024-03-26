@@ -10,19 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       
       - name: Use Node.js 💻
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: '16.x'
+          node-version: 20
+          cache: yarn
+      
+      - name: Install dependencies (apt)
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install -y --no-install-recommends libxi-dev libgl1-mesa-dev
       
       - name: Install Dependencies 📦
-        run: |
-          yarn --frozen-lockfile
+        run: yarn install --frozen-lockfile
           
       - name: Build Modules 🔧
-        run: yarn run build --tsc --lint
+        run: yarn build --tsc --lint
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3

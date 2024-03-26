@@ -9,5 +9,5 @@ export enum ThemeColor {
 }
 
 export const FONT = {
-  SMALL: 10,
+  SMALL: 10
 };

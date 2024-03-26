@@ -1,16 +1,16 @@
 /* [Imports] */
 import { primitives } from '@jscad/modeling';
 import { colorize as colorSolid } from '@jscad/modeling/src/colors';
+import { geom3 } from '@jscad/modeling/src/geometries';
 import {
   measureBoundingBox,
-  type BoundingBox,
+  type BoundingBox
 } from '@jscad/modeling/src/measurements';
 import {
   intersect as _intersect,
   subtract as _subtract,
-  union as _union,
+  union as _union
 } from '@jscad/modeling/src/operations/booleans';
-import { geom3 } from '@jscad/modeling/src/geometries';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
 import {
@@ -18,20 +18,20 @@ import {
   list,
   tail,
   type List,
-  is_list,
+  is_list
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
-import { Core } from './core.js';
-import type { Solid } from './jscad/types.js';
+import { degreesToRadians } from '../../common/utilities';
+import { Core } from './core';
+import type { Solid } from './jscad/types';
 import {
   Group,
   Shape,
   hexToColor,
   type Operable,
   type RenderGroup,
-  centerPrimitive,
+  centerPrimitive
 } from './utilities';
-import { degreesToRadians } from '../../common/utilities.js';
 
 /* [Main] */
 /* NOTE
@@ -47,9 +47,9 @@ import { degreesToRadians } from '../../common/utilities.js';
   the underlying code is free to operate with arrays.
 */
 export function listToArray(l: List): Operable[] {
-  let operables: Operable[] = [];
+  const operables: Operable[] = [];
   while (l !== null) {
-    let operable: Operable = head(l);
+    const operable: Operable = head(l);
     operables.push(operable);
     l = tail(l);
   }
@@ -198,8 +198,8 @@ export function empty_shape(): Shape {
  * @category Primitives
  */
 export function cube(hex: string): Shape {
-  let solid: Solid = primitives.cube({ size: 1 });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid: Solid = primitives.cube({ size: 1 });
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -214,8 +214,8 @@ export function cube(hex: string): Shape {
  * @category Primitives
  */
 export function rounded_cube(hex: string): Shape {
-  let solid: Solid = primitives.roundedCuboid({ size: [1, 1, 1] });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid: Solid = primitives.roundedCuboid({ size: [1, 1, 1] });
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -231,11 +231,11 @@ export function rounded_cube(hex: string): Shape {
  * @category Primitives
  */
 export function cylinder(hex: string): Shape {
-  let solid: Solid = primitives.cylinder({
+  const solid: Solid = primitives.cylinder({
     height: 1,
-    radius: 0.5,
+    radius: 0.5
   });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -251,11 +251,11 @@ export function cylinder(hex: string): Shape {
  * @category Primitives
  */
 export function rounded_cylinder(hex: string): Shape {
-  let solid: Solid = primitives.roundedCylinder({
+  const solid: Solid = primitives.roundedCylinder({
     height: 1,
-    radius: 0.5,
+    radius: 0.5
   });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -270,8 +270,8 @@ export function rounded_cylinder(hex: string): Shape {
  * @category Primitives
  */
 export function sphere(hex: string): Shape {
-  let solid: Solid = primitives.sphere({ radius: 0.5 });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid: Solid = primitives.sphere({ radius: 0.5 });
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -286,8 +286,8 @@ export function sphere(hex: string): Shape {
  * @category Primitives
  */
 export function geodesic_sphere(hex: string): Shape {
-  let solid: Solid = primitives.geodesicSphere({ radius: 0.5 });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid: Solid = primitives.geodesicSphere({ radius: 0.5 });
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -303,15 +303,15 @@ export function geodesic_sphere(hex: string): Shape {
  * @category Primitives
  */
 export function pyramid(hex: string): Shape {
-  let pythagorasSide: number = Math.sqrt(2); // sqrt(1^2 + 1^2)
-  let radius = pythagorasSide / 2;
-  let solid: Solid = primitives.cylinderElliptic({
+  const pythagorasSide: number = Math.sqrt(2); // sqrt(1^2 + 1^2)
+  const radius = pythagorasSide / 2;
+  const solid: Solid = primitives.cylinderElliptic({
     height: 1,
     // Base starting radius
     startRadius: [radius, radius],
     // Radius by the time the top is reached
     endRadius: [0, 0],
-    segments: 4,
+    segments: 4
   });
   let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   shape = rotate(shape, 0, 0, degreesToRadians(45)) as Shape;
@@ -330,12 +330,12 @@ export function pyramid(hex: string): Shape {
  * @category Primitives
  */
 export function cone(hex: string): Shape {
-  let solid: Solid = primitives.cylinderElliptic({
+  const solid: Solid = primitives.cylinderElliptic({
     height: 1,
     startRadius: [0.5, 0.5],
-    endRadius: [0, 0],
+    endRadius: [0, 0]
   });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -351,7 +351,7 @@ export function cone(hex: string): Shape {
  * @category Primitives
  */
 export function prism(hex: string): Shape {
-  let solid: Solid = extrudeLinear({ height: 1 }, primitives.triangle());
+  const solid: Solid = extrudeLinear({ height: 1 }, primitives.triangle());
   let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   shape = rotate(shape, 0, 0, degreesToRadians(-90)) as Shape;
   return centerPrimitive(shape);
@@ -368,11 +368,11 @@ export function prism(hex: string): Shape {
  * @category Primitives
  */
 export function star(hex: string): Shape {
-  let solid: Solid = extrudeLinear(
+  const solid: Solid = extrudeLinear(
     { height: 1 },
-    primitives.star({ outerRadius: 0.5 }),
+    primitives.star({ outerRadius: 0.5 })
   );
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -388,11 +388,11 @@ export function star(hex: string): Shape {
  * @category Primitives
  */
 export function torus(hex: string): Shape {
-  let solid: Solid = primitives.torus({
+  const solid: Solid = primitives.torus({
     innerRadius: 0.15,
-    outerRadius: 0.35,
+    outerRadius: 0.35
   });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -412,7 +412,7 @@ export function union(first: Shape, second: Shape): Shape {
     throw new Error('Failed to union, only Shapes can be operated on');
   }
 
-  let solid: Solid = _union(first.solid, second.solid);
+  const solid: Solid = _union(first.solid, second.solid);
   return new Shape(solid);
 }
 
@@ -431,7 +431,7 @@ export function subtract(target: Shape, subtractedShape: Shape): Shape {
     throw new Error('Failed to subtract, only Shapes can be operated on');
   }
 
-  let solid: Solid = _subtract(target.solid, subtractedShape.solid);
+  const solid: Solid = _subtract(target.solid, subtractedShape.solid);
   return new Shape(solid);
 }
 
@@ -449,7 +449,7 @@ export function intersect(first: Shape, second: Shape): Shape {
     throw new Error('Failed to intersect, only Shapes can be operated on');
   }
 
-  let solid: Solid = _intersect(first.solid, second.solid);
+  const solid: Solid = _intersect(first.solid, second.solid);
   return new Shape(solid);
 }
 
@@ -471,7 +471,7 @@ export function translate(
   operable: Operable,
   xOffset: number,
   yOffset: number,
-  zOffset: number,
+  zOffset: number
 ): Operable {
   return operable.translate([xOffset, yOffset, zOffset]);
 }
@@ -496,7 +496,7 @@ export function rotate(
   operable: Operable,
   xAngle: number,
   yAngle: number,
-  zAngle: number,
+  zAngle: number
 ): Operable {
   return operable.rotate([xAngle, yAngle, zAngle]);
 }
@@ -521,7 +521,7 @@ export function scale(
   operable: Operable,
   xFactor: number,
   yFactor: number,
-  zFactor: number,
+  zFactor: number
 ): Operable {
   if (xFactor <= 0 || yFactor <= 0 || zFactor <= 0) {
     // JSCAD library does not allow factors <= 0
@@ -620,9 +620,9 @@ export function is_group(parameter: unknown): boolean {
  * @category Utilities
  */
 export function bounding_box(
-  shape: Shape,
+  shape: Shape
 ): (axis: string, minMax: string) => number {
-  let bounds: BoundingBox = measureBoundingBox(shape.solid);
+  const bounds: BoundingBox = measureBoundingBox(shape.solid);
 
   return (axis: string, minMax: string): number => {
     let j: number;
@@ -631,7 +631,7 @@ export function bounding_box(
     else if (axis === 'z') j = 2;
     else {
       throw new Error(
-        `Bounding box getter function expected "x", "y", or "z" as first parameter, but got ${axis}`,
+        `Bounding box getter function expected "x", "y", or "z" as first parameter, but got ${axis}`
       );
     }
 
@@ -640,7 +640,7 @@ export function bounding_box(
     else if (minMax === 'max') i = 1;
     else {
       throw new Error(
-        `Bounding box getter function expected "min" or "max" as second parameter, but got ${minMax}`,
+        `Bounding box getter function expected "min" or "max" as second parameter, but got ${minMax}`
       );
     }
 
@@ -661,7 +661,7 @@ export function bounding_box(
 export function rgb(
   redValue: number,
   greenValue: number,
-  blueValue: number,
+  blueValue: number
 ): string {
   if (
     redValue < 0
@@ -694,7 +694,7 @@ export async function download_shape_stl(shape: Shape): Promise<void> {
 
   await save(
     new Blob(serialize({ binary: true }, shape.solid)),
-    'Source Academy CSG Shape.stl',
+    'Source Academy CSG Shape.stl'
   );
 }
 

@@ -1,5 +1,5 @@
 /* [Imports] */
-import type { CsgModuleState, RenderGroupManager } from './utilities.js';
+import type { CsgModuleState, RenderGroupManager } from './utilities';
 
 /* [Exports] */
 // After bundle initialises, tab will need to re-init on its end, as they run
@@ -12,13 +12,13 @@ export class Core {
   }
 
   public static getRenderGroupManager(): RenderGroupManager {
-    let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
+    const moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
 
     return moduleState.renderGroupManager;
   }
 
   public static nextComponent(): number {
-    let moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
+    const moduleState: CsgModuleState = Core.moduleState as CsgModuleState;
 
     return moduleState.nextComponent();
   }

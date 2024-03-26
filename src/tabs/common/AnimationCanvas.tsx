@@ -3,10 +3,10 @@ import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import { type glAnimation } from '../../typings/anim_types';
 import AutoLoopSwitch from './AutoLoopSwitch';
-import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
+import ButtonComponent from './ButtonComponent';
 import PlayButton from './PlayButton';
 import WebGLCanvas from './WebglCanvas';
-import ButtonComponent from './ButtonComponent';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
 
 type AnimCanvasProps = {
   animation: glAnimation;
@@ -34,8 +34,8 @@ type AnimCanvasState = {
  * Uses WebGLCanvas internally.
  */
 export default class AnimationCanvas extends React.Component<
-AnimCanvasProps,
-AnimCanvasState
+  AnimCanvasProps,
+  AnimCanvasState
 > {
   private canvas: HTMLCanvasElement | null;
 
@@ -63,7 +63,7 @@ AnimCanvasState
       animTimestamp: 0,
       isPlaying: false,
       wasPlaying: false,
-      isAutoLooping: true,
+      isAutoLooping: true
     };
 
     this.canvas = null;
@@ -84,7 +84,7 @@ AnimCanvasState
     if (this.canvas) {
       try {
         const frame = this.props.animation.getFrame(
-          this.state.animTimestamp / 1000,
+          this.state.animTimestamp / 1000
         );
         frame.draw(this.canvas);
       } catch (error) {
@@ -94,7 +94,7 @@ AnimCanvasState
 
         this.setState({
           isPlaying: false,
-          errored: error,
+          errored: error
         });
       }
     }
@@ -106,18 +106,18 @@ AnimCanvasState
 
   private startAnimation = () => this.setState(
     {
-      isPlaying: true,
+      isPlaying: true
     },
-    this.reqFrame,
+    this.reqFrame
   );
 
   private stopAnimation = () => this.setState(
     {
-      isPlaying: false,
+      isPlaying: false
     },
     () => {
       this.callbackTimestamp = null;
-    },
+    }
   );
 
   /**
@@ -148,9 +148,9 @@ AnimCanvasState
         // If auto loop is active, restart the animation
         this.setState(
           {
-            animTimestamp: 0,
+            animTimestamp: 0
           },
-          this.reqFrame,
+          this.reqFrame
         );
       } else {
         // Otherwise, stop the animation
@@ -160,12 +160,12 @@ AnimCanvasState
       // Animation hasn't ended, so just draw the next frame
       this.setState(
         (prev) => ({
-          animTimestamp: prev.animTimestamp + currentFrame,
+          animTimestamp: prev.animTimestamp + currentFrame
         }),
         () => {
           this.drawFrame();
           this.reqFrame();
-        },
+        }
       );
     }
   };
@@ -191,7 +191,7 @@ AnimCanvasState
         }
 
         this.drawFrame();
-      },
+      }
     );
   };
 
@@ -205,9 +205,9 @@ AnimCanvasState
       (prev) => ({
         wasPlaying: prev.isPlaying,
         isPlaying: false,
-        animTimestamp: newValue,
+        animTimestamp: newValue
       }),
-      this.drawFrame,
+      this.drawFrame
     );
   };
 
@@ -217,7 +217,7 @@ AnimCanvasState
   private onSliderRelease = () => {
     this.setState(
       (prev) => ({
-        isPlaying: prev.wasPlaying,
+        isPlaying: prev.wasPlaying
       }),
       () => {
         if (!this.state.isPlaying) {
@@ -225,7 +225,7 @@ AnimCanvasState
         } else {
           this.reqFrame();
         }
-      },
+      }
     );
   };
 
@@ -234,20 +234,20 @@ AnimCanvasState
    */
   private onSwitchChange = () => {
     this.setState((prev) => ({
-      isAutoLooping: !prev.isAutoLooping,
+      isAutoLooping: !prev.isAutoLooping
     }));
   };
 
   public render() {
     return <div
       style={{
-        width: '100%',
+        width: '100%'
       }}
     >
       <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         <div
@@ -260,7 +260,7 @@ AnimCanvasState
             maxWidth: CANVAS_MAX_WIDTH,
 
             paddingTop: BP_TEXT_MARGIN,
-            paddingBottom: BP_TEXT_MARGIN,
+            paddingBottom: BP_TEXT_MARGIN
           }}
         >
           <PlayButton
@@ -284,11 +284,8 @@ AnimCanvasState
             min={ 0 }
             max={ this.animationDuration }
             stepSize={ 1 }
-
             labelRenderer={ false }
-
             disabled={Boolean(this.state.errored)}
-
             onChange={ this.onSliderChange }
             onRelease={ this.onSliderRelease }
           />
@@ -302,7 +299,7 @@ AnimCanvasState
       <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         {this.state.errored
@@ -310,26 +307,26 @@ AnimCanvasState
             <div style={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
+              alignItems: 'center'
             }}>
               <div style={{
                 display: 'flex',
                 flexDirection: 'row',
-                alignItems: 'center',
+                alignItems: 'center'
               }}>
                 <Icon icon={IconNames.WARNING_SIGN} size={90} />
                 <div style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  marginBottom: 20,
+                  marginBottom: 20
                 }}>
                   <h3>An error occurred while running your animation!</h3>
                   <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
                 </div>
               </div>
               <code style={{
-                color: 'red',
+                color: 'red'
               }}>
                 {this.state.errored.toString()}
               </code>
@@ -337,7 +334,7 @@ AnimCanvasState
           : (
             <WebGLCanvas
               style={{
-                flexGrow: 1,
+                flexGrow: 1
               }}
               ref={(r) => {
                 this.canvas = r;

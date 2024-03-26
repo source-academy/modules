@@ -5,8 +5,8 @@
  */
 
 import context from 'js-slang/context';
-import { ProgrammableRepl } from './programmable_repl';
 import { COLOR_REPL_DISPLAY_DEFAULT } from './config';
+import { ProgrammableRepl } from './programmable_repl';
 
 const INSTANCE = new ProgrammableRepl();
 context.moduleContexts.repl.state = INSTANCE;
@@ -30,10 +30,9 @@ export function set_evaluator(evalFunc: Function) {
   }
   INSTANCE.evalFunction = evalFunc;
   return {
-    toReplString: () => '<Programmable Repl Initialized>',
+    toReplString: () => '<Programmable Repl Initialized>'
   };
 }
-
 
 /**
  * Display message in Programmable Repl Tab
@@ -81,7 +80,6 @@ export function repl_display(content: any) : any {
   return undefined;
 }
 
-
 /**
  * Set Programmable Repl editor background image with a customized image URL
  * @param {img_url} the url to the new background image
@@ -93,7 +91,6 @@ export function set_background_image(img_url: string, background_color_alpha: nu
   INSTANCE.customizedEditorProps.backgroundImageUrl = img_url;
   INSTANCE.customizedEditorProps.backgroundColorAlpha = background_color_alpha;
 }
-
 
 /**
  * Set Programmable Repl editor font size

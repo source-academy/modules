@@ -48,7 +48,7 @@ export {
   triangle,
   turn_upside_down,
   white,
-  yellow,
+  yellow
 } from './functions';
 
 export {
@@ -57,5 +57,5 @@ export {
   animate_rune,
   hollusion,
   hollusion_magnitude,
-  show,
+  show
 } from './display';

@@ -20,7 +20,7 @@ export class AudioClip {
 
   private constructor(
     private url: string,
-    private volumeLevel: number,
+    private volumeLevel: number
   ) {
     this.id = AudioClip.audioClipCount++;
     AudioClip.audioClipsIndexMap.set(url, this.id);

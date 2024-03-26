@@ -4,12 +4,12 @@
  * @author Wang Zihan
  */
 
-import React from 'react';
-import { type DebuggerContext } from '../../typings/type_helpers';
 import { Button, NumericInput, Checkbox } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { UNITY_ACADEMY_BACKEND_URL } from '../../bundles/unity_academy/config';
+import React from 'react';
 import { getInstance } from '../../bundles/unity_academy/UnityAcademy';
+import { UNITY_ACADEMY_BACKEND_URL } from '../../bundles/unity_academy/config';
+import { type DebuggerContext } from '../../typings/type_helpers';
 
 type Props = {};
 
@@ -64,7 +64,7 @@ class Unity3DTab extends React.Component<Props> {
         <br/>
         <br/>
         <p>Target (Maximum) Frame Rate (Frames Per Second): </p>
-        <div style = {{ display: 'inline-flex' }}>
+        <div style={{ display: 'inline-flex' }}>
           <NumericInput
             style={{ width: 100 }}
             leftIcon={IconNames.REFRESH}
@@ -124,20 +124,20 @@ class Unity3DTab extends React.Component<Props> {
         <p>The actual frame rate depends on your device's performance.</p>
         {highFPSWarning}
         <br/>
-        <div>Code Examples: <a href = {`${UNITY_ACADEMY_BACKEND_URL}code_examples.html`} rel="noopener noreferrer" target="_blank" >Click Here</a></div>
-        <div>3D Prefab Information: <a href = {`${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html`} rel="noopener noreferrer" target="_blank" >Click Here</a>{dimensionMode === '2d' && ' (You need 3D mode to use prefabs.)'}</div>
+        <div>Code Examples: <a href={`${UNITY_ACADEMY_BACKEND_URL}code_examples.html`} rel="noopener noreferrer" target="_blank" >Click Here</a></div>
+        <div>3D Prefab Information: <a href={`${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html`} rel="noopener noreferrer" target="_blank" >Click Here</a>{dimensionMode === '2d' && ' (You need 3D mode to use prefabs.)'}</div>
         <br/>
-        <div>Please note that before using Unity Academy and this module, you must agree to our <a href = {`${UNITY_ACADEMY_BACKEND_URL}user_agreement.html`} rel="noopener noreferrer" target="_blank" >User Agreement</a></div>
+        <div>Please note that before using Unity Academy and this module, you must agree to our <a href={`${UNITY_ACADEMY_BACKEND_URL}user_agreement.html`} rel="noopener noreferrer" target="_blank" >User Agreement</a></div>
         <br/>
         {getInstance()
           .getUserAgreementStatus() === 'new_user_agreement' && <div><b>The User Agreement has updated.</b><br/></div>}
-        <Checkbox label = "I agree to the User Agreement" inputRef = {(e) => {
+        <Checkbox label="I agree to the User Agreement" inputRef={(e) => {
           if (e !== null) {
             e.checked = (getInstance()
               .getUserAgreementStatus() === 'agreed');
             this.userAgreementCheckboxChecked = e.checked;
           }
-        }} onChange = {(event : React.ChangeEvent<HTMLInputElement>) => {
+        }} onChange={(event : React.ChangeEvent<HTMLInputElement>) => {
           this.userAgreementCheckboxChecked = event.target.checked;
           getInstance()
             .setUserAgreementStatus(this.userAgreementCheckboxChecked);
@@ -159,7 +159,6 @@ class Unity3DTab extends React.Component<Props> {
     INSTANCE.setShowUnityComponent(resolution);
   }
 }
-
 
 export default {
   /**
@@ -191,5 +190,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'cube',
+  iconName: 'cube'
 };

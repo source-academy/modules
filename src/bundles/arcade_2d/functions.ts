@@ -9,35 +9,7 @@
  * @author Xenos Fiorenzo Anong
  */
 
-import Phaser from 'phaser';
-import {
-  PhaserScene,
-  gameState,
-} from './phaserScene';
-import {
-  GameObject,
-  RenderableGameObject,
-  type ShapeGameObject,
-  SpriteGameObject,
-  TextGameObject,
-  RectangleGameObject,
-  CircleGameObject,
-  TriangleGameObject, InteractableGameObject,
-} from './gameobject';
-import {
-  type DisplayText,
-  type BuildGame,
-  type Sprite,
-  type UpdateFunction,
-  type RectangleProps,
-  type CircleProps,
-  type TriangleProps,
-  type FlipXY,
-  type ScaleXY,
-  type PositionXY,
-  type DimensionsXY,
-  type ColorRGBA,
-} from './types';
+import { AudioClip } from './audio';
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
@@ -56,9 +28,36 @@ import {
   DEFAULT_DEBUG_STATE,
   DEFAULT_TRANSFORM_PROPS,
   DEFAULT_RENDER_PROPS,
-  DEFAULT_INTERACTABLE_PROPS,
+  DEFAULT_INTERACTABLE_PROPS
 } from './constants';
-import { AudioClip } from './audio';
+import {
+  GameObject,
+  RenderableGameObject,
+  type ShapeGameObject,
+  SpriteGameObject,
+  TextGameObject,
+  RectangleGameObject,
+  CircleGameObject,
+  TriangleGameObject, InteractableGameObject
+} from './gameobject';
+import {
+  PhaserScene,
+  gameState
+} from './phaserScene';
+import {
+  type DisplayText,
+  type BuildGame,
+  type Sprite,
+  type UpdateFunction,
+  type RectangleProps,
+  type CircleProps,
+  type TriangleProps,
+  type FlipXY,
+  type ScaleXY,
+  type PositionXY,
+  type DimensionsXY,
+  type ColorRGBA
+} from './types';
 
 // =============================================================================
 // Global Variables
@@ -72,7 +71,7 @@ export const config = {
   fps: DEFAULT_FPS,
   isDebugEnabled: DEFAULT_DEBUG_STATE,
   // User update function
-  userUpdateFunction: (() => {}) as UpdateFunction,
+  userUpdateFunction: (() => {}) as UpdateFunction
 };
 
 // =============================================================================
@@ -93,7 +92,7 @@ export const config = {
 export const create_rectangle: (width: number, height: number) => ShapeGameObject = (width: number, height: number) => {
   const rectangle = {
     width,
-    height,
+    height
   } as RectangleProps;
   return new RectangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, rectangle);
 };
@@ -110,7 +109,7 @@ export const create_rectangle: (width: number, height: number) => ShapeGameObjec
  */
 export const create_circle: (radius: number) => ShapeGameObject = (radius: number) => {
   const circle = {
-    radius,
+    radius
   } as CircleProps;
   return new CircleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, circle);
 };
@@ -132,7 +131,7 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
     x2: width,
     y2: 0,
     x3: width / 2,
-    y3: height,
+    y3: height
   } as TriangleProps;
   return new TriangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, triangle);
 };
@@ -149,7 +148,7 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
  */
 export const create_text: (text: string) => TextGameObject = (text: string) => {
   const displayText = {
-    text,
+    text
   } as DisplayText;
   return new TextGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, displayText);
 };
@@ -179,7 +178,7 @@ export const create_sprite: (image_url: string) => SpriteGameObject = (image_url
     throw new Error('image_url must be a string');
   }
   const sprite: Sprite = {
-    imageUrl: image_url,
+    imageUrl: image_url
   } as Sprite;
   return new SpriteGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, sprite);
 };
@@ -205,7 +204,7 @@ export const update_position: (gameObject: GameObject, [x, y]: PositionXY) => Ga
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
-      position: [x, y],
+      position: [x, y]
     });
     return gameObject;
   }
@@ -229,7 +228,7 @@ export const update_scale: (gameObject: GameObject, [x, y]: ScaleXY) => GameObje
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
-      scale: [x, y],
+      scale: [x, y]
     });
     return gameObject;
   }
@@ -253,7 +252,7 @@ export const update_rotation: (gameObject: GameObject, radians: number) => GameO
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
-      rotation: radians,
+      rotation: radians
     });
     return gameObject;
   }
@@ -281,7 +280,7 @@ export const update_color: (gameObject: GameObject, color: ColorRGBA) => GameObj
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
-      color,
+      color
     });
     return gameObject;
   }
@@ -308,7 +307,7 @@ export const update_flip: (gameObject: GameObject, flip: FlipXY) => GameObject
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
-      flip,
+      flip
     });
     return gameObject;
   }
@@ -332,7 +331,7 @@ export const update_text: (textGameObject: TextGameObject, text: string) => Game
 = (textGameObject: TextGameObject, text: string) => {
   if (textGameObject instanceof TextGameObject) {
     textGameObject.setText({
-      text,
+      text
     } as DisplayText);
     return textGameObject;
   }
@@ -613,7 +612,6 @@ export const enable_debug: () => void = () => {
   config.isDebugEnabled = true;
 };
 
-
 /**
  * Logs any information passed into it within the `update_loop`.
  * Displays the information in the top-left corner of the canvas only if debug mode is enabled.
@@ -811,13 +809,13 @@ export const build_game: () => BuildGame = () => {
   const inputConfig = {
     keyboard: true,
     mouse: true,
-    windowEvents: false,
+    windowEvents: false
   };
 
   const fpsConfig = {
     min: MIN_FPS,
     target: config.fps,
-    forceSetTimeOut: true,
+    forceSetTimeOut: true
   };
 
   const gameConfig = {
@@ -832,12 +830,12 @@ export const build_game: () => BuildGame = () => {
     scene: PhaserScene,
     input: inputConfig,
     fps: fpsConfig,
-    banner: false,
+    banner: false
   };
 
   return {
     toReplString: () => '[Arcade 2D]',
-    gameConfig,
+    gameConfig
   };
 };
 

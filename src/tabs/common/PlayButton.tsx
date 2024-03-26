@@ -1,14 +1,14 @@
 /* [Imports] */
 import { Icon, type ButtonProps, Tooltip } from '@blueprintjs/core';
-import React from 'react';
 import { IconNames } from '@blueprintjs/icons';
+import React from 'react';
 import ButtonComponent from './ButtonComponent';
 
 /* [Exports] */
-export type PlayButtonProps = {
+export type PlayButtonProps = ButtonProps & {
   isPlaying: boolean,
   // onClickCallback: () => void,
-} & ButtonProps;
+};
 
 /* [Main] */
 export default class PlayButton extends React.Component<PlayButtonProps> {

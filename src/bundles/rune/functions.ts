@@ -3,7 +3,7 @@ import {
   Rune,
   DrawnRune,
   drawRunesToFrameBuffer,
-  type AnimatedRune,
+  type AnimatedRune
 } from './rune';
 import {
   getSquare,
@@ -20,17 +20,17 @@ import {
   throwIfNotRune,
   addColorFromHex,
   colorPalette,
-  hexToColor,
+  hexToColor
 } from './runes_ops';
 import {
   type FrameBufferWithTexture,
   getWebGlFromCanvas,
   initFramebufferObject,
-  initShaderProgram,
+  initShaderProgram
 } from './runes_webgl';
 
 export type RuneModuleState = {
-  drawnRunes: (DrawnRune | AnimatedRune)[]
+  drawnRunes: (AnimatedRune | DrawnRune)[]
 };
 
 // =============================================================================
@@ -146,7 +146,7 @@ export function from_url(imageUrl: string): Rune {
 export function scale_independent(
   ratio_x: number,
   ratio_y: number,
-  rune: Rune,
+  rune: Rune
 ): Rune {
   throwIfNotRune(scale_independent.name, rune);
   const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
@@ -157,7 +157,7 @@ export function scale_independent(
   mat4.multiply(wrapperMat, scaleMat, wrapperMat);
   return Rune.of({
     subRunes: [rune],
-    transformMatrix: wrapperMat,
+    transformMatrix: wrapperMat
   });
 }
 
@@ -193,7 +193,7 @@ export function translate(x: number, y: number, rune: Rune): Rune {
   mat4.multiply(wrapperMat, translateMat, wrapperMat);
   return Rune.of({
     subRunes: [rune],
-    transformMatrix: wrapperMat,
+    transformMatrix: wrapperMat
   });
 }
 
@@ -217,7 +217,7 @@ export function rotate(rad: number, rune: Rune): Rune {
   mat4.multiply(wrapperMat, rotateMat, wrapperMat);
   return Rune.of({
     subRunes: [rune],
-    transformMatrix: wrapperMat,
+    transformMatrix: wrapperMat
   });
 }
 
@@ -245,7 +245,7 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   const upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1));
   const lower = translate(0, frac, scale_independent(1, 1 - frac, rune2));
   return Rune.of({
-    subRunes: [upper, lower],
+    subRunes: [upper, lower]
   });
 }
 
@@ -346,7 +346,7 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   const left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1));
   const right = translate(frac, 0, scale_independent(1 - frac, 1, rune2));
   return Rune.of({
-    subRunes: [left, right],
+    subRunes: [left, right]
   });
 }
 
@@ -407,7 +407,7 @@ export function make_cross(rune: Rune): Rune {
   throwIfNotRune(make_cross.name, rune);
   return stack(
     beside(quarter_turn_right(rune), rotate(Math.PI, rune)),
-    beside(rune, rotate(Math.PI / 2, rune)),
+    beside(rune, rotate(Math.PI / 2, rune))
   );
 }
 
@@ -424,7 +424,7 @@ export function make_cross(rune: Rune): Rune {
 export function repeat_pattern(
   n: number,
   pattern: (a: Rune) => Rune,
-  initial: Rune,
+  initial: Rune
 ): Rune {
   if (n === 0) {
     return initial;
@@ -472,7 +472,7 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, useFrac));
   const front = Rune.of({
     subRunes: [rune1],
-    transformMatrix: frontMat,
+    transformMatrix: frontMat
   });
 
   const backMat = mat4.create();
@@ -481,11 +481,11 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - useFrac));
   const back = Rune.of({
     subRunes: [rune2],
-    transformMatrix: backMat,
+    transformMatrix: backMat
   });
 
   return Rune.of({
-    subRunes: [front, back], // render front first to avoid redrawing
+    subRunes: [front, back] // render front first to avoid redrawing
   });
 }
 
@@ -526,7 +526,7 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
   const colorVector = [r, g, b, 1];
   return Rune.of({
     colors: new Float32Array(colorVector),
-    subRunes: [rune],
+    subRunes: [rune]
   });
 }
 
@@ -542,12 +542,12 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
 export function random_color(rune: Rune): Rune {
   throwIfNotRune(random_color.name, rune);
   const randomColor = hexToColor(
-    colorPalette[Math.floor(Math.random() * colorPalette.length)],
+    colorPalette[Math.floor(Math.random() * colorPalette.length)]
   );
 
   return Rune.of({
     colors: new Float32Array(randomColor),
-    subRunes: [rune],
+    subRunes: [rune]
   });
 }
 
@@ -728,14 +728,14 @@ export class AnaglyphRune extends DrawnRune {
       leftCameraMatrix,
       vec3.fromValues(-halfEyeDistance, 0, 0),
       vec3.fromValues(0, 0, -0.4),
-      vec3.fromValues(0, 1, 0),
+      vec3.fromValues(0, 1, 0)
     );
     const rightCameraMatrix = mat4.create();
     mat4.lookAt(
       rightCameraMatrix,
       vec3.fromValues(halfEyeDistance, 0, 0),
       vec3.fromValues(0, 0, -0.4),
-      vec3.fromValues(0, 1, 0),
+      vec3.fromValues(0, 1, 0)
     );
 
     // left/right eye images are drawn into respective framebuffers
@@ -747,7 +747,7 @@ export class AnaglyphRune extends DrawnRune {
       leftCameraMatrix,
       new Float32Array([1, 0, 0, 1]),
       leftBuffer.framebuffer,
-      true,
+      true
     );
     drawRunesToFrameBuffer(
       gl,
@@ -755,7 +755,7 @@ export class AnaglyphRune extends DrawnRune {
       rightCameraMatrix,
       new Float32Array([0, 1, 1, 1]),
       rightBuffer.framebuffer,
-      true,
+      true
     );
 
     // prepare to draw to screen by setting framebuffer to null
@@ -764,14 +764,14 @@ export class AnaglyphRune extends DrawnRune {
     const shaderProgram = initShaderProgram(
       gl,
       AnaglyphRune.anaglyphVertexShader,
-      AnaglyphRune.anaglyphFragmentShader,
+      AnaglyphRune.anaglyphFragmentShader
     );
     gl.useProgram(shaderProgram);
     const reduPt = gl.getUniformLocation(shaderProgram, 'u_sampler_red');
     const cyanuPt = gl.getUniformLocation(shaderProgram, 'u_sampler_cyan');
     const vertexPositionPointer = gl.getAttribLocation(
       shaderProgram,
-      'a_position',
+      'a_position'
     );
 
     gl.activeTexture(gl.TEXTURE0);
@@ -849,7 +849,7 @@ export class HollusionRune extends DrawnRune {
         cameraMatrix,
         vec3.fromValues(xshift, 0, 0),
         vec3.fromValues(0, 0, -0.4),
-        vec3.fromValues(0, 1, 0),
+        vec3.fromValues(0, 1, 0)
       );
 
       drawRunesToFrameBuffer(
@@ -858,7 +858,7 @@ export class HollusionRune extends DrawnRune {
         cameraMatrix,
         new Float32Array([1, 1, 1, 1]),
         fb.framebuffer,
-        true,
+        true
       );
       return fb;
     };
@@ -871,13 +871,13 @@ export class HollusionRune extends DrawnRune {
     const copyShaderProgram = initShaderProgram(
       gl,
       HollusionRune.copyVertexShader,
-      HollusionRune.copyFragmentShader,
+      HollusionRune.copyFragmentShader
     );
     gl.useProgram(copyShaderProgram);
     const texturePt = gl.getUniformLocation(copyShaderProgram, 'uTexture');
     const vertexPositionPointer = gl.getAttribLocation(
       copyShaderProgram,
-      'a_position',
+      'a_position'
     );
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     const positionBuffer = gl.createBuffer();

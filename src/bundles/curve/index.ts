@@ -70,5 +70,5 @@ export {
   unit_line_at,
   x_of,
   y_of,
-  z_of,
+  z_of
 } from './functions';

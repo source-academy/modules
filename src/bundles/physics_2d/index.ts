@@ -109,5 +109,5 @@ export {
   vector_to_array,
   array_to_vector,
   add_vector,
-  subtract_vector,
+  subtract_vector
 } from './functions';

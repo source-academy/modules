@@ -22,8 +22,8 @@ const SoundTab: ModuleTab = ({ context }) => {
   return (
     <div>
       <p id="sound-default-text">
-          The sound tab gives you control over your custom sounds. You can play,
-          pause, adjust the volume and download your sounds.
+        The sound tab gives you control over your custom sounds. You can play,
+        pause, adjust the volume and download your sounds.
       </p>
       <br />
       <br />
@@ -62,5 +62,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'music',
+  iconName: 'music'
 };

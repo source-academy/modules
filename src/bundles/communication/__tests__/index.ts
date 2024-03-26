@@ -1,9 +1,9 @@
-import { MultiUserController } from '../MultiUserController';
 import { GlobalStateController } from '../GlobalStateController';
+import { MultiUserController } from '../MultiUserController';
 
-let multiUser = new MultiUserController();
-multiUser.setupController('broker.hivemq.com', 8884);
-let globalStateController = new GlobalStateController(
+const multiUser = new MultiUserController();
+multiUser.setupController('broker.hivemq.com', 8884, '', '');
+const globalStateController = new GlobalStateController(
   'test',
   multiUser,
   (_) => {},
@@ -21,7 +21,7 @@ test('Empty Root Set Null', () => {
 
 test('Empty Root Set Object', () => {
   globalStateController.globalState = undefined;
-  let object = {
+  const object = {
     a: 'b',
   };
   globalStateController.parseGlobalStateMessage('', JSON.stringify(object));
@@ -33,7 +33,7 @@ test('Empty Root Set Object', () => {
 // Non-Empty Root - Replace root.
 
 test('Non-Empty Root Set Empty', () => {
-  let object = {
+  const object = {
     a: 'b',
   };
   globalStateController.globalState = object;
@@ -44,7 +44,7 @@ test('Non-Empty Root Set Empty', () => {
 });
 
 test('Non-Empty Root Set Null', () => {
-  let object = {
+  const object = {
     a: 'b',
   };
   globalStateController.globalState = object;
@@ -58,7 +58,7 @@ test('Non-Empty Root Set Object', () => {
   globalStateController.globalState = {
     a: 'b',
   };
-  let object = {
+  const object = {
     c: 'd',
   };
   globalStateController.parseGlobalStateMessage('', JSON.stringify(object));
@@ -123,7 +123,7 @@ test('Branch Value Set Object', () => {
     a: 'b',
     c: 'd',
   };
-  let object = {
+  const object = {
     b: 'e',
   };
   globalStateController.parseGlobalStateMessage('a', JSON.stringify(object));
@@ -138,7 +138,7 @@ test('Nested Branch Value Set Object', () => {
       b: 'c',
     },
   };
-  let object = {
+  const object = {
     c: 'd',
   };
   globalStateController.parseGlobalStateMessage('a/b', JSON.stringify(object));
@@ -199,7 +199,7 @@ test('Branch Object Set Object', () => {
     a: { b: 'c', d: 'e' },
     f: 'g',
   };
-  let object = {
+  const object = {
     d: 'f',
     g: 'h',
   };
@@ -209,11 +209,11 @@ test('Branch Object Set Object', () => {
   );
 });
 
-test('Nested Branch Object Set Null', () => {
+test('Nested Branch Object Set Null 2', () => {
   globalStateController.globalState = {
     a: { b: { c: 'd' }, e: 'f' },
   };
-  let object = {
+  const object = {
     c: 'g',
     h: 'i',
   };

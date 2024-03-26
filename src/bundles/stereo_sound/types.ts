@@ -5,7 +5,7 @@ export type Sound = Pair<Pair<Wave, Wave>, number>;
 export type SoundProducer = (...t: any) => Sound;
 export type SoundTransformer = (s: Sound) => Sound;
 export type ErrorLogger = (
-  error: string | string[],
+  error: string[] | string,
   isSlangError?: boolean
 ) => void;
 export type AudioPlayed = {

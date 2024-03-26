@@ -1,4 +1,5 @@
 import type { Context } from 'js-slang';
+import type { FC } from 'react';
 
 /**
  * DebuggerContext type used by frontend to assist typing information
@@ -21,6 +22,6 @@ export interface ReplResult {
   toReplString: () => string;
 }
 
-export type ModuleTab = React.FC<{ context: DebuggerContext }>;
+export type ModuleTab = FC<{ context: DebuggerContext }>;
 
 export const getModuleState = <T>({ context: { moduleContexts } }: DebuggerContext, moduleName: string) => moduleContexts[moduleName].state as T;

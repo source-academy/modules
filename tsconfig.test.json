@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,

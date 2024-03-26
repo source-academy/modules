@@ -41,5 +41,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'wind',
+  iconName: 'wind'
 };

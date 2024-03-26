@@ -4,11 +4,10 @@
  * @author Wang Zihan
  */
 
-
-import context from 'js-slang/context';
-import { default_js_slang } from './functions';
 import { runFilesInContext, type IOptions } from 'js-slang';
+import context from 'js-slang/context';
 import { COLOR_RUN_CODE_RESULT, COLOR_ERROR_MESSAGE, DEFAULT_EDITOR_HEIGHT } from './config';
+import { default_js_slang } from './functions';
 
 export class ProgrammableRepl {
   public evalFunction: Function;
@@ -23,7 +22,7 @@ export class ProgrammableRepl {
   public customizedEditorProps = {
     backgroundImageUrl: 'no-background-image',
     backgroundColorAlpha: 1,
-    fontSize: 17,
+    fontSize: 17
   };
 
   constructor() {
@@ -74,10 +73,10 @@ export class ProgrammableRepl {
 
   // Rich text output method allow output strings to have html tags and css styles.
   pushOutputString(content : string, textColor : string, outputMethod : string = 'plaintext') {
-    let tmp = {
+    const tmp = {
       content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
-      outputMethod,
+      outputMethod
     };
     this.outputStrings.push(tmp);
   }
@@ -131,7 +130,7 @@ export class ProgrammableRepl {
           medium: 'font-size: 20px;',
           large: 'font-size: 25px;',
           gigantic: 'font-size: 50px;',
-          underline: 'text-decoration: underline;',
+          underline: 'text-decoration: underline;'
         };
         if (typeof (tail(param)) !== 'string') {
           throw new Error(`The tail in style pair should always be a string, but got ${typeof (tail(param))}.`);
@@ -166,8 +165,8 @@ export class ProgrammableRepl {
   userStringSafeCheck(str) {
     developmentLog(`Safe check on ${str}`);
     const tmp = str.toLowerCase();
-    let forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
-    for (let word of forbiddenWords) {
+    const forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
+    for (const word of forbiddenWords) {
       if (tmp.indexOf(word) !== -1) {
         return word;
       }
@@ -187,12 +186,12 @@ export class ProgrammableRepl {
       scheduler: 'preemptive',
       stepLimit: 1000,
       throwInfiniteLoops: true,
-      useSubst: false,
+      useSubst: false
     };
     context.prelude = 'const display=(x)=>repl_display(x);';
     context.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
     const sourceFile : Record<string, string> = {
-      '/ReplModuleUserCode.js': code,
+      '/ReplModuleUserCode.js': code
     };
 
     runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options)
@@ -238,19 +237,18 @@ export class ProgrammableRepl {
   }
 
   private getSavedEditorContent() {
-    let savedContent = localStorage.getItem('programmable_repl_saved_editor_code');
+    const savedContent = localStorage.getItem('programmable_repl_saved_editor_code');
     if (savedContent === null) return '';
     return savedContent;
   }
 
-  // Small Easter Egg that doesn't affect module functionality and normal user experience :)
-  // Please don't modify these text! Thanks!  :)
   private easterEggFunction() {
-    this.pushOutputString('[Author (Wang Zihan)] ❤<span style=\'font-weight:bold;\'>I love Keqing and Ganyu.</span>❤', 'pink', 'richtext');
-    this.pushOutputString('<span style=\'font-style:italic;\'>Showing my love to my favorite girls through a SA module, is that the so-called "romance of a programmer"?</span>', 'gray', 'richtext');
-    this.pushOutputString('❤❤❤❤❤', 'pink');
     this.pushOutputString('<br>', 'white', 'richtext');
-    this.pushOutputString('If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.', 'yellow', 'richtext');
+    this.pushOutputString(
+      'If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.',
+      'yellow',
+      'richtext'
+    );
     return 'Easter Egg!';
   }
 }

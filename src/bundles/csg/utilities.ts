@@ -1,17 +1,17 @@
 /* [Imports] */
 import geom3, {
-  transform as _transform,
+  transform as _transform
 } from '@jscad/modeling/src/geometries/geom3';
 import mat4, { type Mat4 } from '@jscad/modeling/src/maths/mat4';
 import {
   center as _center,
   rotate as _rotate,
   scale as _scale,
-  translate as _translate,
+  translate as _translate
 } from '@jscad/modeling/src/operations/transforms';
-import type { ReplResult } from '../../typings/type_helpers.js';
-import { Core } from './core.js';
-import type { AlphaColor, Color, Solid } from './jscad/types.js';
+import type { ReplResult } from '../../typings/type_helpers';
+import { Core } from './core';
+import type { AlphaColor, Color, Solid } from './jscad/types';
 
 /* [Exports] */
 export interface Operable {
@@ -33,10 +33,10 @@ export class Group implements Operable, ReplResult {
   }
 
   applyTransforms(newTransforms: Mat4): Operable {
-    let appliedTransforms: Mat4 = mat4.multiply(
+    const appliedTransforms: Mat4 = mat4.multiply(
       mat4.create(),
       newTransforms,
-      this.transforms,
+      this.transforms
     );
 
     // Return a new object for statelessness
@@ -44,7 +44,7 @@ export class Group implements Operable, ReplResult {
   }
 
   store(newTransforms: Mat4 = mat4.create()): void {
-    let appliedGroup: Group = this.applyTransforms(newTransforms) as Group;
+    const appliedGroup: Group = this.applyTransforms(newTransforms) as Group;
 
     this.children.forEach((child: Operable) => {
       child.store(appliedGroup.transforms);
@@ -57,23 +57,23 @@ export class Group implements Operable, ReplResult {
       mat4.multiply(
         mat4.create(),
         mat4.fromTranslation(mat4.create(), offsets),
-        this.transforms,
-      ),
+        this.transforms
+      )
     );
   }
 
   rotate(angles: [number, number, number]): Group {
-    let yaw = angles[2];
-    let pitch = angles[1];
-    let roll = angles[0];
+    const yaw = angles[2];
+    const pitch = angles[1];
+    const roll = angles[0];
 
     return new Group(
       this.children,
       mat4.multiply(
         mat4.create(),
         mat4.fromTaitBryanRotation(mat4.create(), yaw, pitch, roll),
-        this.transforms,
-      ),
+        this.transforms
+      )
     );
   }
 
@@ -83,8 +83,8 @@ export class Group implements Operable, ReplResult {
       mat4.multiply(
         mat4.create(),
         mat4.fromScaling(mat4.create(), factors),
-        this.transforms,
-      ),
+        this.transforms
+      )
     );
   }
 
@@ -110,7 +110,7 @@ export class Shape implements Operable, ReplResult {
   store(newTransforms: Mat4 = mat4.create()): void {
     Core.getRenderGroupManager()
       .storeShape(
-        this.applyTransforms(newTransforms) as Shape,
+        this.applyTransforms(newTransforms) as Shape
       );
   }
 
@@ -165,9 +165,9 @@ export class RenderGroupManager {
   // Returns the old render group
   nextRenderGroup(
     oldHasGrid: boolean = false,
-    oldHasAxis: boolean = false,
+    oldHasAxis: boolean = false
   ): RenderGroup {
-    let oldRenderGroup: RenderGroup = this.getCurrentRenderGroup();
+    const oldRenderGroup: RenderGroup = this.getCurrentRenderGroup();
     oldRenderGroup.render = true;
     oldRenderGroup.hasGrid = oldHasGrid;
     oldRenderGroup.hasAxis = oldHasAxis;
@@ -187,7 +187,7 @@ export class RenderGroupManager {
 
   getGroupsToRender(): RenderGroup[] {
     return this.renderGroups.filter(
-      (renderGroup: RenderGroup) => renderGroup.render,
+      (renderGroup: RenderGroup) => renderGroup.render
     );
   }
 }
@@ -209,33 +209,33 @@ export class CsgModuleState {
 
 export function centerPrimitive(shape: Shape) {
   // Move centre of Shape to 0.5, 0.5, 0.5
-  let solid: Solid = _center(
+  const solid: Solid = _center(
     {
-      relativeTo: [0.5, 0.5, 0.5],
+      relativeTo: [0.5, 0.5, 0.5]
     },
-    shape.solid,
+    shape.solid
   );
   return new Shape(solid);
 }
 
 export function hexToColor(hex: string): Color {
-  let regex: RegExp
+  const regex: RegExp
     = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
-  let potentialGroups: { [key: string]: string } | undefined
+  const potentialGroups: { [key: string]: string } | undefined
     = hex.match(regex)?.groups;
   if (potentialGroups === undefined) return [0, 0, 0];
-  let groups: { [key: string]: string } = potentialGroups;
+  const groups: { [key: string]: string } = potentialGroups;
 
   return [
     parseInt(groups.red, 16) / 0xff,
     parseInt(groups.green, 16) / 0xff,
-    parseInt(groups.blue, 16) / 0xff,
+    parseInt(groups.blue, 16) / 0xff
   ];
 }
 
 export function colorToAlphaColor(
   color: Color,
-  opacity: number = 1,
+  opacity: number = 1
 ): AlphaColor {
   return [...color, opacity];
 }

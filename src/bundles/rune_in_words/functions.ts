@@ -11,7 +11,7 @@ import {
   getHeart,
   getPentagram,
   getRibbon,
-  throwIfNotRune,
+  throwIfNotRune
 } from './runes_ops';
 
 // =============================================================================
@@ -123,7 +123,7 @@ export function from_url(imageUrl: string): string {
 export function scale_independent(
   ratio_x: number,
   ratio_y: number,
-  rune: string,
+  rune: string
 ): string {
   throwIfNotRune(scale_independent.name, rune);
   return `scaled(${rune}, ${ratio_x}, ${ratio_y})`;
@@ -340,7 +340,7 @@ export function make_cross(rune: string): string {
   throwIfNotRune(make_cross.name, rune);
   return stack(
     beside(quarter_turn_right(rune), turn_upside_down(rune)),
-    beside(rune, quarter_turn_left(rune)),
+    beside(rune, quarter_turn_left(rune))
   );
 }
 
@@ -357,7 +357,7 @@ export function make_cross(rune: string): string {
 export function repeat_pattern(
   n: number,
   pattern: (a: string) => Rune,
-  initial: string,
+  initial: string
 ): string {
   if (n === 0) {
     return initial;

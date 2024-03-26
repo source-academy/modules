@@ -1,4 +1,4 @@
-import type { SourceError } from "js-slang/dist/types";
+import type { SourceError } from 'js-slang/dist/types';
 
 /**
  * An output while the program is still being run in the interpreter. As a
@@ -6,7 +6,7 @@ import type { SourceError } from "js-slang/dist/types";
  * have been calls to display (console.log) that need to be printed out.
  */
 export type RunningOutput = {
-  type: "running";
+  type: 'running';
   consoleLogs: string[];
 };
 
@@ -16,7 +16,7 @@ export type RunningOutput = {
  * been entered.
  */
 export type CodeOutput = {
-  type: "code";
+  type: 'code';
   value: string;
 };
 
@@ -26,7 +26,7 @@ export type CodeOutput = {
  * but not both.
  */
 export type ResultOutput = {
-  type: "result";
+  type: 'result';
   value: any;
   consoleLogs: string[];
   runtime?: number;
@@ -39,9 +39,9 @@ export type ResultOutput = {
  * not both.
  */
 export type ErrorOutput = {
-  type: "errors";
+  type: 'errors';
   errors: SourceError[];
   consoleLogs: string[];
 };
 
-export type InterpreterOutput = RunningOutput | CodeOutput | ResultOutput | ErrorOutput;
+export type InterpreterOutput = CodeOutput | ErrorOutput | ResultOutput | RunningOutput;

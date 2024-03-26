@@ -1,6 +1,6 @@
 import context from 'js-slang/context';
-import { MultiUserController } from './MultiUserController';
 import { GlobalStateController } from './GlobalStateController';
+import { MultiUserController } from './MultiUserController';
 import { RpcController } from './RpcController';
 
 class CommunicationModuleState {
@@ -152,7 +152,7 @@ export function initRpc(topicHeader: string, userId?: string) {
 export function getUserId(): string {
   const moduleState = getModuleState();
   if (moduleState instanceof CommunicationModuleState) {
-    let userId = moduleState.rpc?.getUserId();
+    const userId = moduleState.rpc?.getUserId();
     if (userId) {
       return userId;
     }

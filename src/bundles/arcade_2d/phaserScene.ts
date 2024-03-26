@@ -1,4 +1,9 @@
 import Phaser from 'phaser';
+import { AudioClip } from './audio';
+import { DEFAULT_PATH_PREFIX } from './constants';
+import {
+  config
+} from './functions';
 import {
   CircleGameObject,
   GameObject,
@@ -7,24 +12,19 @@ import {
   ShapeGameObject,
   SpriteGameObject,
   TextGameObject,
-  TriangleGameObject,
+  TriangleGameObject
 } from './gameobject';
-import {
-  config,
-} from './functions';
 import {
   type TransformProps,
   type PositionXY,
   type ExceptionError,
-  type PhaserGameObject,
+  type PhaserGameObject
 } from './types';
-import { AudioClip } from './audio';
-import { DEFAULT_PATH_PREFIX } from './constants';
 
 // Game state information, that changes every frame.
 export const gameState = {
   // Stores the debug information, which is reset every iteration of the update loop.
-  debugLogArray: new Array<string>(),
+  debugLogArray: [] as string[],
   // The current in-game time and frame count.
   gameTime: 0,
   loopCount: 0,
@@ -38,8 +38,8 @@ export const gameState = {
     isPointerPrimaryDown: false,
     isPointerSecondaryDown: false,
     // Stores the IDs of the GameObjects that the pointer is over
-    pointerOverGameObjectsId: new Set<number>(),
-  },
+    pointerOverGameObjectsId: new Set<number>()
+  }
 };
 
 // The game state which the user can modify, through their update function.
@@ -128,7 +128,7 @@ export class PhaserScene extends Phaser.Scene {
       ...gameState.pointerProps,
       pointerPosition: [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)],
       isPointerPrimaryDown: this.input.activePointer.primaryDown,
-      isPointerSecondaryDown: this.input.activePointer.rightButtonDown(),
+      isPointerSecondaryDown: this.input.activePointer.rightButtonDown()
     };
 
     this.handleUserDefinedUpdateFunction();
@@ -166,7 +166,7 @@ export class PhaserScene extends Phaser.Scene {
         this.phaserGameObjects.push(this.add.text(
           transformProps.position[0],
           transformProps.position[1],
-          text,
+          text
         ));
         this.phaserGameObjects[gameObject.id].setOrigin(0.5, 0.5);
         if (gameObject.getHitboxState().isHitboxActive) {
@@ -179,7 +179,7 @@ export class PhaserScene extends Phaser.Scene {
         this.phaserGameObjects.push(this.add.sprite(
           transformProps.position[0],
           transformProps.position[1],
-          url,
+          url
         ));
         if (gameObject.getHitboxState().isHitboxActive) {
           this.phaserGameObjects[gameObject.id].setInteractive();
@@ -193,7 +193,7 @@ export class PhaserScene extends Phaser.Scene {
             transformProps.position[0],
             transformProps.position[1],
             shape.width,
-            shape.height,
+            shape.height
           ));
           if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive();
@@ -204,15 +204,15 @@ export class PhaserScene extends Phaser.Scene {
           this.phaserGameObjects.push(this.add.circle(
             transformProps.position[0],
             transformProps.position[1],
-            shape.radius,
+            shape.radius
           ));
           if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive(
               new Phaser.Geom.Circle(
                 shape.radius,
                 shape.radius,
-                shape.radius,
-              ), Phaser.Geom.Circle.Contains,
+                shape.radius
+              ), Phaser.Geom.Circle.Contains
             );
           }
         }
@@ -226,7 +226,7 @@ export class PhaserScene extends Phaser.Scene {
             shape.x2,
             shape.y2,
             shape.x3,
-            shape.y3,
+            shape.y3
           ));
           if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive(
@@ -236,8 +236,8 @@ export class PhaserScene extends Phaser.Scene {
                 shape.x2,
                 shape.y2,
                 shape.x3,
-                shape.y3,
-              ), Phaser.Geom.Triangle.Contains,
+                shape.y3
+              ), Phaser.Geom.Triangle.Contains
             );
           }
         }
@@ -267,7 +267,7 @@ export class PhaserScene extends Phaser.Scene {
       this.sourceAudioClips.forEach((audioClip: AudioClip) => {
         this.phaserAudioClips.push(this.sound.add(audioClip.getUrl(), {
           loop: audioClip.shouldAudioClipLoop(),
-          volume: audioClip.getVolumeLevel(),
+          volume: audioClip.getVolumeLevel()
         }));
       });
     } catch (error) {
@@ -294,7 +294,7 @@ export class PhaserScene extends Phaser.Scene {
       } else {
         const exceptionError = error as ExceptionError;
         gameState.debugLogArray.push(
-          `Line ${exceptionError.location.start.line}: ${exceptionError.error.name}: ${exceptionError.error.message}`,
+          `Line ${exceptionError.location.start.line}: ${exceptionError.error.name}: ${exceptionError.error.message}`
         );
       }
     }

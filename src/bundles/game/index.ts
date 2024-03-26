@@ -55,5 +55,5 @@ export {
   set_origin,
   set_position,
   set_rotation,
-  set_scale,
+  set_scale
 } from './functions';

@@ -2,9 +2,9 @@
 import { Switch, type SwitchProps } from '@blueprintjs/core';
 import React from 'react';
 
-export type AutoLoopSwitchProps = {
+export type AutoLoopSwitchProps = Omit<SwitchProps, 'checked' | 'style'> & {
   isAutoLooping: boolean,
-} & Omit<SwitchProps, 'checked' | 'style'>;
+};
 
 /* [Main] */
 export default class AutoLoopSwitch extends React.Component<AutoLoopSwitchProps> {
@@ -15,9 +15,8 @@ export default class AutoLoopSwitch extends React.Component<AutoLoopSwitchProps>
         marginBottom: '0px',
 
         // Prevent label from wrapping at every letter when width is small
-        whiteSpace: 'nowrap',
+        whiteSpace: 'nowrap'
       }}
-
       label="Auto Loop"
       checked={ this.props.isAutoLooping }
       {...this.props}

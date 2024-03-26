@@ -1,68 +1,139 @@
-import { retrieveBundlesAndTabs } from '../buildUtils';
+import { retrieveBundlesAndTabs } from '@src/commandUtils';
+
+type TestCase = [desc: string, {
+  bundles?: string[] | null
+  tabs?: string[] | null
+}, boolean, Awaited<ReturnType<typeof retrieveBundlesAndTabs>>];
+
+const testCases: TestCase[] = [
+  [
+    'Should return all bundles and tabs when null is given for both and shouldAddModuleTabs is true',
+    {},
+    true,
+    {
+      modulesSpecified: false,
+      bundles: ['test0', 'test1', 'test2'],
+      tabs: ['tab0', 'tab1']
+    }
+  ],
+  [
+    'Should return all bundles and tabs when null is given for both and shouldAddModuleTabs is false',
+    {},
+    false,
+    {
+      modulesSpecified: false,
+      bundles: ['test0', 'test1', 'test2'],
+      tabs: ['tab0', 'tab1']
+    }
+  ],
+  [
+    'Should return all bundles and tabs when null is given for bundles, but empty array is given for tabs',
+    { tabs: [] },
+    false,
+    {
+      modulesSpecified: false,
+      bundles: ['test0', 'test1', 'test2'],
+      tabs: []
+    }
+  ],
+  [
+    'Should add the tabs of specified bundles if shouldAddModuleTabs is true',
+    { bundles: ['test0'], tabs: [] },
+    true,
+    {
+      modulesSpecified: true,
+      bundles: ['test0'],
+      tabs: ['tab0']
+    }
+  ],
+  [
+    'Should not add the tabs of specified bundles if shouldAddModuleTabs is false',
+    { bundles: ['test0'], tabs: [] },
+    false,
+    {
+      modulesSpecified: true,
+      bundles: ['test0'],
+      tabs: []
+    }
+  ],
+  [
+    'Should only return specified tabs if shouldAddModuleTabs is false',
+    { bundles: [], tabs: ['tab0', 'tab1'] },
+    false,
+    {
+      modulesSpecified: true,
+      bundles: [],
+      tabs: ['tab0', 'tab1']
+    }
+  ],
+  [
+    'Should only return specified tabs even if shouldAddModuleTabs is true',
+    { bundles: [], tabs: ['tab0', 'tab1'] },
+    true,
+    {
+      modulesSpecified: true,
+      bundles: [],
+      tabs: ['tab0', 'tab1']
+    }
+  ],
+  [
+    'Should return specified tabs and bundles (and the tabs of those bundles) if shouldAddModuleTabs is true',
+    {
+      bundles: ['test0'],
+      tabs: ['tab1']
+    },
+    true,
+    {
+      modulesSpecified: true,
+      bundles: ['test0'],
+      tabs: ['tab1', 'tab0']
+    }
+  ],
+  [
+    'Should only return specified tabs and bundles if shouldAddModuleTabs is false',
+    {
+      bundles: ['test0'],
+      tabs: ['tab1']
+    },
+    false,
+    {
+      modulesSpecified: true,
+      bundles: ['test0'],
+      tabs: ['tab1']
+    }
+  ]
+];
 
 describe('Test retrieveBundlesAndTabs', () => {
-  it('should return all bundles and tabs when null is passed for modules', async () => {
-    const result = await retrieveBundlesAndTabs('', null, null);
-
-    expect(result.bundles)
-      .toEqual(expect.arrayContaining(['test0', 'test1', 'test2']));
-    expect(result.modulesSpecified)
-      .toBe(false);
-    expect(result.tabs)
-      .toEqual(expect.arrayContaining(['tab0', 'tab1']));
-  });
-
-  it('should return only specific bundles and their tabs when an array is passed for modules', async () => {
-    const result = await retrieveBundlesAndTabs('', ['test0'], null);
-
-    expect(result.bundles)
-      .toEqual(expect.arrayContaining(['test0']));
-    expect(result.modulesSpecified)
-      .toBe(true);
-    expect(result.tabs)
-      .toEqual(expect.arrayContaining(['tab0']));
-  });
-
-  it('should return nothing when an empty array is passed for modules', async () => {
-    const result = await retrieveBundlesAndTabs('', [], null);
-
-    expect(result.bundles)
-      .toEqual([]);
-    expect(result.modulesSpecified)
-      .toBe(true);
-    expect(result.tabs)
-      .toEqual([]);
-  });
-
-  it('should return tabs from the specified modules, and concatenate specified tabs', async () => {
-    const result = await retrieveBundlesAndTabs('', ['test0'], ['tab1']);
-
-    expect(result.bundles)
-      .toEqual(['test0']);
-    expect(result.modulesSpecified)
-      .toBe(true);
-    expect(result.tabs)
-      .toEqual(expect.arrayContaining(['tab0', 'tab1']));
-  });
-
-  it('should return only specified tabs when addTabs is false', async () => {
-    const result = await retrieveBundlesAndTabs('', ['test0'], ['tab1'], false);
-
-    expect(result.bundles)
-      .toEqual(['test0']);
-    expect(result.modulesSpecified)
-      .toBe(true);
-    expect(result.tabs)
-      .toEqual(['tab1']);
+  test.each(testCases)('%#. %s:', async (_, inputs, shouldAddModuleTabs, expected) => {
+    const outputs = await retrieveBundlesAndTabs({
+      ...inputs,
+      manifest: 'modules.json'
+    }, shouldAddModuleTabs);
+    expect(outputs)
+      .toMatchObject(expected);
   });
 
   it('should throw an exception when encountering unknown modules or tabs', () => Promise.all([
-    expect(retrieveBundlesAndTabs('', ['random'], null)).rejects.toMatchObject(new Error('Unknown modules: random')),
-    expect(retrieveBundlesAndTabs('', [], ['random1', 'random2'])).rejects.toMatchObject(new Error('Unknown tabs: random1, random2'))
+    expect(retrieveBundlesAndTabs({
+      manifest: '',
+      bundles: ['random'],
+      tabs: null
+    }, true)).rejects.toMatchObject(new Error('Unknown bundles: random')),
+
+    expect(retrieveBundlesAndTabs({
+      manifest: '',
+      bundles: [],
+      tabs: ['random1', 'random2']
+    }, false)).rejects.toMatchObject(new Error('Unknown tabs: random1, random2'))
   ]));
 
   it('should always return unique modules and tabs', async () => {
-    const result = await retrieveBundlesAndTabs('', ['test0', 'test0'], ['tab0']);
+    const result = await retrieveBundlesAndTabs({
+      manifest: '',
+      bundles: ['test0', 'test0'],
+      tabs: ['tab0']
+    }, false);
 
     expect(result.bundles)
       .toEqual(['test0']);
@@ -70,5 +141,5 @@ describe('Test retrieveBundlesAndTabs', () => {
       .toBe(true);
     expect(result.tabs)
       .toEqual(['tab0']);
-  })
+  });
 });

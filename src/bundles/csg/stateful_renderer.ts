@@ -1,18 +1,18 @@
 /* [Imports] */
-import InputTracker from './input_tracker.js';
+import InputTracker from './input_tracker';
 import {
   cloneCameraState,
   makeWrappedRenderer,
-  makeWrappedRendererData,
-} from './jscad/renderer.js';
+  makeWrappedRendererData
+} from './jscad/renderer';
 import type {
   Entity,
   PerspectiveCameraState,
   WrappedRenderer,
-  WrappedRendererData,
-} from './jscad/types.js';
-import ListenerTracker from './listener_tracker.js';
-import type { RenderGroup } from './utilities.js';
+  WrappedRendererData
+} from './jscad/types';
+import ListenerTracker from './listener_tracker';
+import type { RenderGroup } from './utilities';
 
 /* [Exports] */
 export default class StatefulRenderer {
@@ -33,7 +33,7 @@ export default class StatefulRenderer {
     private componentNumber: number,
 
     private loseCallback: Function,
-    private restoreCallback: Function,
+    private restoreCallback: Function
   ) {
     this.cameraState.position = [1000, 1000, 1500];
 
@@ -41,13 +41,13 @@ export default class StatefulRenderer {
 
     this.wrappedRendererData = makeWrappedRendererData(
       renderGroup,
-      this.cameraState,
+      this.cameraState
     );
 
     this.inputTracker = new InputTracker(
       canvas,
       this.cameraState,
-      this.wrappedRendererData.geometryEntities,
+      this.wrappedRendererData.geometryEntities
     );
   }
 
@@ -63,7 +63,7 @@ export default class StatefulRenderer {
         this.loseCallback();
 
         this.stop();
-      },
+      }
     );
 
     this.webGlListenerTracker.addListener(
@@ -74,7 +74,7 @@ export default class StatefulRenderer {
         this.start();
 
         this.restoreCallback();
-      },
+      }
     );
   }
 
@@ -100,13 +100,13 @@ export default class StatefulRenderer {
 
     // Creating the WrappedRenderer already involves REGL. Losing WebGL context
     // requires repeating this step (ie, with each start())
-    let wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
+    const wrappedRenderer: WrappedRenderer = makeWrappedRenderer(this.canvas);
 
     if (firstStart) this.addWebGlListeners();
     this.inputTracker.addListeners();
 
-    let frameCallback: FrameRequestCallback = (
-      _timestamp: DOMHighResTimeStamp,
+    const frameCallback: FrameRequestCallback = (
+      _timestamp: DOMHighResTimeStamp
     ) => {
       this.inputTracker.respondToInput();
 

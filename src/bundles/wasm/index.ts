@@ -83,5 +83,5 @@
  */
 export {
   wcompile,
-  wrun,
+  wrun
 } from './wabt';
