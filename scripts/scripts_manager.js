@@ -8,7 +8,7 @@ import tsconfig from './tsconfig.json' with { type: 'json' }
 import { pathsToModuleNameMapper } from 'ts-jest'
 
 function cjsDirname(url) {
-	return pathlib.join(pathlib.dirname(fileURLToPath(url)))
+  return pathlib.join(pathlib.dirname(fileURLToPath(url)))
 }
 
 async function buildScripts({ dev }) {

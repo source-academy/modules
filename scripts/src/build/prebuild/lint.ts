@@ -1,9 +1,9 @@
 import chalk from 'chalk'
 /*
   Unfortunately, people like to leave parts of their API
-	undocumented, so using the FlatConfig linter with the
-	current version of eslint means we can't get any
-	typing for it
+  undocumented, so using the FlatConfig linter with the
+  current version of eslint means we can't get any
+  typing for it
 */
 // @ts-expect-error 2305
 import { loadESLint, type ESLint } from 'eslint'

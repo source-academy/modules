@@ -71,8 +71,8 @@ function check_permission() {
     )
   } else if (permission === false) {
     throw new Error(`Permission has been denied.\n
-		    Re-start browser and call init_record();\n
-		    to obtain permission to use microphone.`)
+        Re-start browser and call init_record();\n
+        to obtain permission to use microphone.`)
   } // (permission === true): do nothing
 }
 
