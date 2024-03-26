@@ -1,0 +1,16 @@
+{
+  "STATE_CONNECTED": "<div><h4>STATE_CONNECTED: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "STATE_DISCONNECTED": "<div><h4>STATE_DISCONNECTED: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "STATE_OFFLINE": "<div><h4>STATE_OFFLINE: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "STATE_RECONNECTING": "<div><h4>STATE_RECONNECTING: undefined</h4><div class=\"description\"><p>No description available</p></div></div>",
+  "callFunction": "<div><h4>callFunction(receiver: string, name: string, args: undefined, callback: undefined) → {void}</h4><div class=\"description\"><p>Calls a function exposed by another user.</p></div></div>",
+  "expose": "<div><h4>expose(name: string, func: undefined) → {void}</h4><div class=\"description\"><p>Exposes the specified function to other users.\nOther users can use \"callFunction\" to call this function.</p></div></div>",
+  "getGlobalState": "<div><h4>getGlobalState() → {any}</h4><div class=\"description\"><p>Obtains the current global state.</p></div></div>",
+  "getUserId": "<div><h4>getUserId() → {string}</h4><div class=\"description\"><p>Obtains the user's ID.</p></div></div>",
+  "initCommunications": "<div><h4>initCommunications(address: string, port: number, user: string, password: string) → {void}</h4><div class=\"description\"><p>Initializes connection with MQTT broker.\nCurrently only supports WebSocket.</p></div></div>",
+  "initGlobalState": "<div><h4>initGlobalState(topicHeader: string, callback: undefined) → {void}</h4><div class=\"description\"><p>Initializes global state.</p></div></div>",
+  "initRpc": "<div><h4>initRpc(topicHeader: string, userId: string) → {void}</h4><div class=\"description\"><p>Initializes RPC.</p></div></div>",
+  "keepRunning": "<div><h4>keepRunning() → {void}</h4><div class=\"description\"><p>Keeps the program running so that messages can come in.</p></div></div>",
+  "stopRunning": "<div><h4>stopRunning() → {void}</h4><div class=\"description\"><p>Removes interval that keeps the program running.</p></div></div>",
+  "updateGlobalState": "<div><h4>updateGlobalState(path: string, updatedState: any) → {void}</h4><div class=\"description\"><p>Broadcasts the new states to all devices.\nHas ability to modify only part of the JSON state.</p></div></div>"
+}
