@@ -5626,6 +5626,21 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
+saar@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/saar/-/saar-1.0.0.tgz#7e2d23548c1569140888596724a9cc45db1d32eb"
+  integrity sha512-aOlMTjgKUBDvmodhyWPwJc0gtAeRmBJdhQ82gbpPmFs/kbEnX+jqQoan2azVd6kLsRwGt/X4Bo2fIKIpq030Cg==
+  dependencies:
+    "@react-spring/three" "^9.7.3"
+    "@react-three/drei" "^9.97.0"
+    "@react-three/fiber" "^8.15.16"
+    "@react-three/xr" "^5.7.1"
+    "@types/three" "^0.161.2"
+    os "^0.1.2"
+    spring "^0.0.0"
+    three "^0.161.0"
+    uniqid "^5.4.0"
+
 safe-buffer@^5.0.1, safe-buffer@~5.2.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"

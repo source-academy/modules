@@ -5,11 +5,11 @@ import {
   setFrontObject,
 } from '../../bundles/ar/AR';
 import type { OverlayHelper } from '../../bundles/ar/OverlayHelper';
-import { useScreenState } from '../../bundles/ar/libraries/screen_state_library/ScreenStateContext';
-import { usePlayArea } from '../../bundles/ar/libraries/calibration_library/PlayAreaContext';
-import { useControls } from '../../bundles/ar/libraries/controls_library/ControlsContext';
+import { useScreenState } from 'saar/libraries/screen_state_library/ScreenStateContext';
+import { usePlayArea } from 'saar/libraries/calibration_library/PlayAreaContext';
+import { useControls } from 'saar/libraries/controls_library/ControlsContext';
 import { useThree } from '@react-three/fiber';
-import { ARObject } from '../../bundles/ar/libraries/object_state_library/ARObject';
+import { ARObject } from 'saar/libraries/object_state_library/ARObject';
 
 /**
  * Content to be shown on screen.

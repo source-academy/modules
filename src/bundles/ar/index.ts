@@ -8,8 +8,8 @@
  * @author Chong Wen Hao
  */
 
-import { HorizontalAlignment } from './libraries/object_state_library/ui_component/UIColumnItem';
-import { VerticalAlignment } from './libraries/object_state_library/ui_component/UIRowItem';
+import { HorizontalAlignment } from 'saar/libraries/object_state_library/ui_component/UIColumnItem';
+import { VerticalAlignment } from 'saar/libraries/object_state_library/ui_component/UIRowItem';
 
 /*
   To access things like the context or module state you can just import the context

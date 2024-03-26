@@ -1,5 +1,5 @@
 import { Vector3 } from 'three';
-import { ARObject } from './libraries/object_state_library/ARObject';
+import { ARObject } from 'saar/libraries/object_state_library/ARObject';
 import { OverlayHelper, Toggle } from './OverlayHelper';
 import { Globals } from '@react-spring/three';
 

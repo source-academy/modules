@@ -1,6 +1,6 @@
 import React from 'react';
 import { getModuleState } from '../../bundles/ar/AR';
-import { ScreenStateContext } from '../../bundles/ar/libraries/screen_state_library/ScreenStateContext';
+import { ScreenStateContext } from 'saar/libraries/screen_state_library/ScreenStateContext';
 import { StartButton } from './StartButton';
 
 /**
