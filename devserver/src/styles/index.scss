@@ -1,7 +1,7 @@
-@use 'sass:math';
+@use "sass:math";
 
-@import '@blueprintjs/core/lib/css/blueprint.css';
-@import '@blueprintjs/core/lib/scss/variables';
+@import "@blueprintjs/core/lib/css/blueprint.css";
+@import "@blueprintjs/core/lib/scss/variables";
 
 // CSS styles for react-mde Markdown editor
 // (currently this editor is only used for grading comments)
@@ -9,10 +9,10 @@
 // styles in the preview tab of the editor, providing a more accurate
 // depiction of what the actual comment will look like
 
-@import 'global';
+@import "global";
 
-@import 'application';
-@import 'commons';
-@import 'editorTabs';
-@import 'playground';
-@import 'workspace';
+@import "application";
+@import "commons";
+@import "editorTabs";
+@import "playground";
+@import "workspace";
