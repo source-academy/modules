@@ -175,7 +175,7 @@ export function setAsARObjects(json: any) {
   if (!moduleState) return;
   if (!(json instanceof Object)) return;
   const objects: ARObject[] = [];
-  for (const [_, item] of Object.entries(json)) {
+  for (const item of Object.values(json)) {
     const parsedObject = ARObject.fromObject(item);
     if (parsedObject) {
       objects.push(parsedObject);
