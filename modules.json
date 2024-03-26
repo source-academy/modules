@@ -99,6 +99,11 @@
       "physics_2d"
     ]
   },
+  "ar": {
+    "tabs": [
+      "AugmentedReality"
+    ]
+  },
   "communication": {
     "tabs": []
   }
