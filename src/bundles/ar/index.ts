@@ -36,7 +36,8 @@ export {
   moveARObject,
   setHighlightFrontObject,
   selectObject,
-  getObjectChild,
+  getFrontObject,
+  getJsonChild,
 } from './AR';
 
 export {

@@ -31,7 +31,7 @@ export class ARObject {
   id: string;
   position: Vector3;
   behaviours: Behaviours;
-  uuid: string | undefined = undefined;
+  uuid: string | undefined = undefined; // ID for mesh
   isInFront = false;
   isSelected = false;
   onSelect?: (arObject: ARObject) => void;

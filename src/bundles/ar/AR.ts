@@ -6,6 +6,7 @@ import { Globals } from '@react-spring/three';
 export class ARState {
   arObjects: ARObject[] = [];
   highlightFrontObject: boolean = false;
+  selectedObjectId: string | undefined = undefined;
   overlay = new OverlayHelper();
   clickCallbacks = new Map<string, () => void>();
   onClickCallback = (id: string) => {
@@ -253,6 +254,17 @@ export function setHighlightFrontObject(isEnabled: boolean) {
 }
 
 /**
+ * Updates the object in line of sight.
+ *
+ * @param arObject New object to set.
+ */
+export function setFrontObject(arObject: ARObject | undefined) {
+  const moduleState = getModuleState();
+  if (!moduleState) return;
+  moduleState.selectedObjectId = arObject?.id;
+}
+
+/**
  * Obtains the first object in the user's line of sight, if any.
  *
  * @returns ARObject in front of user if found, undefined if not.
@@ -260,9 +272,9 @@ export function setHighlightFrontObject(isEnabled: boolean) {
 export function getFrontObject() {
   const moduleState = getModuleState();
   if (!moduleState) return undefined;
-  return moduleState.arObjects.find((arObject) => {
-    arObject.isInFront;
-  });
+  return moduleState.arObjects.find(
+    (arObject) => arObject.id === moduleState.selectedObjectId,
+  );
 }
 
 /**
@@ -281,7 +293,7 @@ export function selectObject(arObject: ARObject, isSelected: boolean) {
 /**
  * Obtains the value of a json object at the key.
  */
-export function getObjectChild(object: any, key: string) {
+export function getJsonChild(object: any, key: string) {
   if (!(object instanceof Object)) return undefined;
   return object[key];
 }

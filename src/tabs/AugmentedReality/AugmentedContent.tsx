@@ -1,5 +1,9 @@
 import { useState, type RefObject, useRef, useEffect } from 'react';
-import { getModuleState, type ARState } from '../../bundles/ar/AR';
+import {
+  getModuleState,
+  type ARState,
+  setFrontObject,
+} from '../../bundles/ar/AR';
 import type { OverlayHelper } from '../../bundles/ar/OverlayHelper';
 import { useScreenState } from '../../bundles/ar/libraries/screen_state_library/ScreenStateContext';
 import { usePlayArea } from '../../bundles/ar/libraries/calibration_library/PlayAreaContext';
@@ -39,7 +43,12 @@ export function AugmentedContent(props: ARState) {
         );
         if (object) {
           object.isInFront = true;
+          setFrontObject(object);
+        } else {
+          setFrontObject(undefined);
         }
+      } else {
+        setFrontObject(undefined);
       }
     });
     (window as any).arControllerCallback = () => {
