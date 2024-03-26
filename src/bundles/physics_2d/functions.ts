@@ -8,18 +8,18 @@
  * @author Yu Jiali
  */
 
-import { b2CircleShape, b2PolygonShape } from '@box2d/core'
-import context from 'js-slang/context'
+import { b2CircleShape, b2PolygonShape } from '@box2d/core';
+import context from 'js-slang/context';
 
-import { PhysicsObject } from './PhysicsObject'
-import { PhysicsWorld } from './PhysicsWorld'
-import { type Force, Vector2 } from './types'
+import { PhysicsObject } from './PhysicsObject';
+import { PhysicsWorld } from './PhysicsWorld';
+import { type Force, Vector2 } from './types';
 
 // Global Variables
 
-let world: PhysicsWorld | null = null
-const NO_WORLD = new Error('Please call set_gravity first!')
-const MULTIPLE_WORLDS = new Error('You may only call set_gravity once!')
+let world: PhysicsWorld | null = null;
+const NO_WORLD = new Error('Please call set_gravity first!');
+const MULTIPLE_WORLDS = new Error('You may only call set_gravity once!');
 
 // Module's Exposed Functions
 
@@ -33,7 +33,7 @@ const MULTIPLE_WORLDS = new Error('You may only call set_gravity once!')
  * @category Main
  */
 export function make_vector(x: number, y: number): Vector2 {
-  return new Vector2(x, y)
+  return new Vector2(x, y);
 }
 
 /**
@@ -58,8 +58,8 @@ export function make_force(
     magnitude: mag,
     duration: dur,
     start_time: start
-  }
-  return force
+  };
+  return force;
 }
 
 /**
@@ -75,14 +75,14 @@ export function make_force(
  */
 export function set_gravity(v: Vector2) {
   if (world) {
-    throw MULTIPLE_WORLDS
+    throw MULTIPLE_WORLDS;
   }
 
-  world = new PhysicsWorld()
+  world = new PhysicsWorld();
   context.moduleContexts.physics_2d.state = {
     world
-  }
-  world.setGravity(v)
+  };
+  world.setGravity(v);
 }
 
 /**
@@ -95,10 +95,10 @@ export function set_gravity(v: Vector2) {
  */
 export function make_ground(height: number, friction: number) {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
 
-  world.makeGround(height, friction)
+  world.makeGround(height, friction);
 }
 
 /**
@@ -113,7 +113,7 @@ export function make_ground(height: number, friction: number) {
  */
 export function add_wall(pos: Vector2, rot: number, size: Vector2) {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
 
   return world.addObject(
@@ -125,7 +125,7 @@ export function add_wall(pos: Vector2, rot: number, size: Vector2) {
       true,
       world
     )
-  )
+  );
 }
 
 /**
@@ -147,7 +147,7 @@ export function add_box_object(
   isStatic: boolean
 ): PhysicsObject {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
   const newObj: PhysicsObject = new PhysicsObject(
     pos,
@@ -156,9 +156,9 @@ export function add_box_object(
       .SetAsBox(size.x / 2, size.y / 2),
     isStatic,
     world
-  )
-  newObj.setVelocity(velc)
-  return world.addObject(newObj)
+  );
+  newObj.setVelocity(velc);
+  return world.addObject(newObj);
 }
 
 /**
@@ -180,7 +180,7 @@ export function add_circle_object(
   isStatic: boolean
 ): PhysicsObject {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
   const newObj: PhysicsObject = new PhysicsObject(
     pos,
@@ -189,9 +189,9 @@ export function add_circle_object(
       .Set(new Vector2(), radius),
     isStatic,
     world
-  )
-  newObj.setVelocity(velc)
-  return world.addObject(newObj)
+  );
+  newObj.setVelocity(velc);
+  return world.addObject(newObj);
 }
 
 /**
@@ -215,7 +215,7 @@ export function add_triangle_object(
   isStatic: boolean
 ): PhysicsObject {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
   const newObj: PhysicsObject = new PhysicsObject(
     pos,
@@ -228,9 +228,9 @@ export function add_triangle_object(
       ]),
     isStatic,
     world
-  )
-  newObj.setVelocity(velc)
-  return world.addObject(newObj)
+  );
+  newObj.setVelocity(velc);
+  return world.addObject(newObj);
 }
 
 /**
@@ -242,10 +242,10 @@ export function add_triangle_object(
  */
 export function update_world(dt: number) {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
 
-  world.update(dt)
+  world.update(dt);
 }
 
 /**
@@ -257,10 +257,10 @@ export function update_world(dt: number) {
  */
 export function simulate_world(total_time: number) {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
 
-  world.simulate(total_time)
+  world.simulate(total_time);
 }
 
 /**
@@ -272,7 +272,7 @@ export function simulate_world(total_time: number) {
  * @category Body
  */
 export function get_position(obj: PhysicsObject): Vector2 {
-  return new Vector2(obj.getPosition().x, obj.getPosition().y)
+  return new Vector2(obj.getPosition().x, obj.getPosition().y);
 }
 
 /**
@@ -284,7 +284,7 @@ export function get_position(obj: PhysicsObject): Vector2 {
  * @category Body
  */
 export function get_rotation(obj: PhysicsObject): number {
-  return obj.getRotation()
+  return obj.getRotation();
 }
 
 /**
@@ -296,7 +296,7 @@ export function get_rotation(obj: PhysicsObject): number {
  * @category Body
  */
 export function get_velocity(obj: PhysicsObject): Vector2 {
-  return new Vector2(obj.getVelocity().x, obj.getVelocity().y)
+  return new Vector2(obj.getVelocity().x, obj.getVelocity().y);
 }
 
 /**
@@ -308,7 +308,7 @@ export function get_velocity(obj: PhysicsObject): Vector2 {
  * @category Body
  */
 export function get_angular_velocity(obj: PhysicsObject): Vector2 {
-  return new Vector2(obj.getAngularVelocity())
+  return new Vector2(obj.getAngularVelocity());
 }
 
 /**
@@ -320,7 +320,7 @@ export function get_angular_velocity(obj: PhysicsObject): Vector2 {
  * @category Body
  */
 export function set_position(obj: PhysicsObject, pos: Vector2): void {
-  obj.setPosition(pos)
+  obj.setPosition(pos);
 }
 
 /**
@@ -332,7 +332,7 @@ export function set_position(obj: PhysicsObject, pos: Vector2): void {
  * @category Body
  */
 export function set_rotation(obj: PhysicsObject, rot: number): void {
-  obj.setRotation(rot)
+  obj.setRotation(rot);
 }
 
 /**
@@ -344,7 +344,7 @@ export function set_rotation(obj: PhysicsObject, rot: number): void {
  * @category Body
  */
 export function set_velocity(obj: PhysicsObject, velc: Vector2): void {
-  obj.setVelocity(velc)
+  obj.setVelocity(velc);
 }
 
 /**
@@ -356,7 +356,7 @@ export function set_velocity(obj: PhysicsObject, velc: Vector2): void {
  * @category Body
  */
 export function set_angular_velocity(obj: PhysicsObject, velc: number): void {
-  return obj.setAngularVelocity(velc)
+  return obj.setAngularVelocity(velc);
 }
 
 /**
@@ -368,7 +368,7 @@ export function set_angular_velocity(obj: PhysicsObject, velc: number): void {
  * @category Body
  */
 export function set_density(obj: PhysicsObject, density: number) {
-  obj.setDensity(density)
+  obj.setDensity(density);
 }
 
 /**
@@ -381,9 +381,9 @@ export function set_density(obj: PhysicsObject, density: number) {
  */
 export function scale_size(obj: PhysicsObject, scale: number) {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
-  obj.scale_size(scale)
+  obj.scale_size(scale);
 }
 
 /**
@@ -395,7 +395,7 @@ export function scale_size(obj: PhysicsObject, scale: number) {
  * @category Body
  */
 export function set_friction(obj: PhysicsObject, friction: number) {
-  obj.setFriction(friction)
+  obj.setFriction(friction);
 }
 
 /**
@@ -408,7 +408,7 @@ export function set_friction(obj: PhysicsObject, friction: number) {
  * @category Dynamics
  */
 export function is_touching(obj1: PhysicsObject, obj2: PhysicsObject) {
-  return obj1.isTouching(obj2)
+  return obj1.isTouching(obj2);
 }
 
 /**
@@ -423,10 +423,10 @@ export function is_touching(obj1: PhysicsObject, obj2: PhysicsObject) {
  */
 export function impact_start_time(obj1: PhysicsObject, obj2: PhysicsObject) {
   if (!world) {
-    throw NO_WORLD
+    throw NO_WORLD;
   }
 
-  return world.findImpact(obj1, obj2)
+  return world.findImpact(obj1, obj2);
 }
 
 /**
@@ -438,7 +438,7 @@ export function impact_start_time(obj1: PhysicsObject, obj2: PhysicsObject) {
  * @category Dynamics
  */
 export function apply_force_to_center(force: Force, obj: PhysicsObject) {
-  obj.addForceCentered(force)
+  obj.addForceCentered(force);
 }
 
 /**
@@ -451,7 +451,7 @@ export function apply_force_to_center(force: Force, obj: PhysicsObject) {
  * @category Dynamics
  */
 export function apply_force(force: Force, pos: Vector2, obj: PhysicsObject) {
-  obj.addForceAtAPoint(force, pos)
+  obj.addForceAtAPoint(force, pos);
 }
 
 /**
@@ -463,7 +463,7 @@ export function apply_force(force: Force, pos: Vector2, obj: PhysicsObject) {
  * @category Main
  */
 export function vector_to_array(vec: Vector2) {
-  return [vec.x, vec.y]
+  return [vec.x, vec.y];
 }
 
 /**
@@ -475,7 +475,7 @@ export function vector_to_array(vec: Vector2) {
  * @category Main
  */
 export function array_to_vector([x, y]: [number, number]) {
-  return new Vector2(x, y)
+  return new Vector2(x, y);
 }
 
 /**
@@ -487,7 +487,7 @@ export function array_to_vector([x, y]: [number, number]) {
  * @category Main
  */
 export function add_vector(vec1: Vector2, vec2: Vector2) {
-  return new Vector2(vec1.x + vec2.x, vec1.y + vec2.y)
+  return new Vector2(vec1.x + vec2.x, vec1.y + vec2.y);
 }
 
 /**
@@ -499,5 +499,5 @@ export function add_vector(vec1: Vector2, vec2: Vector2) {
  * @category Main
  */
 export function subtract_vector(vec1: Vector2, vec2: Vector2) {
-  return new Vector2(vec1.x - vec2.x, vec1.y - vec2.y)
+  return new Vector2(vec1.x - vec2.x, vec1.y - vec2.y);
 }

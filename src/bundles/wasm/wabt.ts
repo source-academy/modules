@@ -1,12 +1,12 @@
-import { objectToLinkedList } from 'source-academy-utils'
-import { compile } from 'source-academy-wabt'
+import { objectToLinkedList } from 'source-academy-utils';
+import { compile } from 'source-academy-wabt';
 
 /**
  * Compile a (hopefully valid) WebAssembly Text module to binary.
  * @param program program to compile
  * @returns an array of 8-bit unsigned integers.
  */
-export const wcompile = (program: string) => Array.from(compile(program))
+export const wcompile = (program: string) => Array.from(compile(program));
 
 /**
  * Run a compiled WebAssembly Binary Buffer.
@@ -15,9 +15,9 @@ export const wcompile = (program: string) => Array.from(compile(program))
  */
 export const wrun = (buffer: number[] | Uint8Array) => {
   if (buffer instanceof Array) {
-    buffer = new Uint8Array(buffer)
+    buffer = new Uint8Array(buffer);
   }
 
-  const exps = new WebAssembly.Instance(new WebAssembly.Module(buffer)).exports
-  return objectToLinkedList(exps)
-}
+  const exps = new WebAssembly.Instance(new WebAssembly.Module(buffer)).exports;
+  return objectToLinkedList(exps);
+};

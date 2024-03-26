@@ -56,4 +56,4 @@ export {
   piano,
   trombone,
   violin
-} from './functions'
+} from './functions';

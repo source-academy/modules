@@ -1,36 +1,36 @@
 /* [Imports] */
-import type { RGB, RGBA } from '@jscad/modeling/src/colors'
-import type { Geom3 } from '@jscad/modeling/src/geometries/types'
+import type { RGB, RGBA } from '@jscad/modeling/src/colors';
+import type { Geom3 } from '@jscad/modeling/src/geometries/types';
 import {
   cameras,
   controls as _controls,
   type drawCommands
-} from '@jscad/regl-renderer'
-import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi'
-import type { InitializationOptions } from 'regl'
+} from '@jscad/regl-renderer';
+import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
+import type { InitializationOptions } from 'regl';
 
 /* [Main] */
-const orthographicCamera = cameras.orthographic
-const perspectiveCamera = cameras.perspective
+const orthographicCamera = cameras.orthographic;
+const perspectiveCamera = cameras.perspective;
 
-const controls = _controls.orbit
+const controls = _controls.orbit;
 
 /* [Exports] */
 
 // [Proper typing for JS in regl-renderer]
-type Numbers2 = [number, number]
+type Numbers2 = [number, number];
 
-type Numbers3 = [number, number, number]
-export type VectorXYZ = Numbers3
-export type CoordinatesXYZ = Numbers3
-export type Color = RGB
+type Numbers3 = [number, number, number];
+export type VectorXYZ = Numbers3;
+export type CoordinatesXYZ = Numbers3;
+export type Color = RGB;
 
-export type Mat4 = Float32Array
+export type Mat4 = Float32Array;
 
 //  @jscad\regl-renderer\src\cameras\perspectiveCamera.js
 //  @jscad\regl-renderer\src\cameras\orthographicCamera.js
-export type PerspectiveCamera = typeof perspectiveCamera
-export type OrthographicCamera = typeof orthographicCamera
+export type PerspectiveCamera = typeof perspectiveCamera;
+export type OrthographicCamera = typeof orthographicCamera;
 
 export type PerspectiveCameraState = Omit<
   typeof perspectiveCamera.cameraState,
@@ -40,9 +40,9 @@ export type PerspectiveCameraState = Omit<
 
   position: CoordinatesXYZ;
   view: Mat4;
-}
-export type OrthographicCameraState = typeof orthographicCamera.cameraState
-export type CameraState = OrthographicCameraState | PerspectiveCameraState
+};
+export type OrthographicCameraState = typeof orthographicCamera.cameraState;
+export type CameraState = OrthographicCameraState | PerspectiveCameraState;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type Controls = Omit<
@@ -53,15 +53,15 @@ export type Controls = Omit<
   zoomToFit: ControlsZoomToFit.Function;
   rotate: ControlsRotate;
   pan: ControlsPan;
-}
+};
 
 export namespace ControlsUpdate {
-  export type Function = (options: Options) => Output
+  export type Function = (options: Options) => Output;
 
   export type Options = {
     controls: ControlsState;
     camera: CameraState;
-  }
+  };
 
   export type Output = {
     controls: {
@@ -74,16 +74,16 @@ export namespace ControlsUpdate {
       position: CoordinatesXYZ;
       view: Mat4;
     };
-  }
+  };
 }
 export namespace ControlsZoomToFit {
-  export type Function = (options: Options) => Output
+  export type Function = (options: Options) => Output;
 
   export type Options = {
     controls: ControlsState;
     camera: CameraState;
     entities: GeometryEntity[];
-  }
+  };
 
   export type Output = {
     camera: {
@@ -92,7 +92,7 @@ export namespace ControlsZoomToFit {
     controls: {
       scale: number;
     };
-  }
+  };
 }
 export type ControlsRotate = (
   options: {
@@ -107,7 +107,7 @@ export type ControlsRotate = (
     phiDelta: number;
   };
   camera: CameraState;
-}
+};
 export type ControlsPan = (
   options: {
     controls: ControlsState;
@@ -121,7 +121,7 @@ export type ControlsPan = (
     position: CoordinatesXYZ;
     target: VectorXYZ;
   };
-}
+};
 
 export type ControlsState = Omit<
   typeof controls.controlsState,
@@ -132,9 +132,9 @@ export type ControlsState = Omit<
 
     thetaDelta: number;
     phiDelta: number;
-  }
+  };
 
-export type Solid = Geom3
+export type Solid = Geom3;
 
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.js
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.test.js
@@ -146,7 +146,7 @@ export type Geometry = {
   colors: RGBA[];
   transforms: Mat4;
   isTransparent: boolean;
-}
+};
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 // @jscad\regl-renderer\demo-web.js
@@ -163,7 +163,7 @@ export type Entity = {
     // Whether to actually draw the Entity via nested DrawCommand
     show: boolean;
   };
-}
+};
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 export type GeometryEntity = Entity & {
@@ -181,7 +181,7 @@ export type GeometryEntity = Entity & {
 
   // The original Geometry used to make the GeometryEntity
   geometry: Geometry;
-}
+};
 
 // @jscad\regl-renderer\src\rendering\commands\drawAxis\index.js
 // @jscad\regl-renderer\demo-web.js
@@ -198,7 +198,7 @@ export type AxisEntityType = Entity & {
 
   // Deprecated
   lineWidth?: number;
-}
+};
 
 // @jscad\regl-renderer\src\rendering\commands\drawGrid\index.js
 // @jscad\regl-renderer\demo-web.js
@@ -215,7 +215,7 @@ export type GridEntity = Entity & {
 
   // Deprecated
   lineWidth?: number;
-}
+};
 
 // @jscad\regl-renderer\src\rendering\commands\drawGrid\multi.js
 // @jscad\regl-renderer\demo-web.js
@@ -232,7 +232,7 @@ export type MultiGridEntityType = Omit<GridEntity, 'ticks'> & {
 
   // First number used on the main grid, second number on sub grid
   ticks?: [number, number];
-}
+};
 
 // @jscad\regl-renderer\src\rendering\commands\drawLines\index.js
 export type LinesEntity = Entity & {
@@ -241,7 +241,7 @@ export type LinesEntity = Entity & {
   };
 
   color?: RGBA;
-}
+};
 
 // @jscad\regl-renderer\src\rendering\commands\drawMesh\index.js
 export type MeshEntity = Entity & {
@@ -251,17 +251,17 @@ export type MeshEntity = Entity & {
 
   dynamicCulling?: boolean;
   color?: RGBA;
-}
+};
 
 export namespace PrepareRender {
   // @jscad\regl-renderer\src\rendering\render.js
-  export type Function = (options: AllOptions) => WrappedRenderer.Function
+  export type Function = (options: AllOptions) => WrappedRenderer.Function;
 
   // @jscad\regl-renderer\src\rendering\render.js
   export type AllOptions = {
     // Used to initialise Regl from the REGL package constructor
     glOptions: InitializationOptions;
-  }
+  };
 }
 
 // When called, the WrappedRenderer creates a main DrawCommand.
@@ -274,7 +274,7 @@ export namespace PrepareRender {
 // the Regl context, ie keeping track of all Regl global state
 export namespace WrappedRenderer {
   // @jscad\regl-renderer\src\rendering\render.js
-  export type Function = (data: AllData) => void
+  export type Function = (data: AllData) => void;
 
   // @jscad\regl-renderer\src\rendering\render.js
   // Gets used in the WrappedRenderer.
@@ -297,7 +297,7 @@ export namespace WrappedRenderer {
     // this gets stuffed into each nested DrawCommand as Props.
     // Messy & needs tidying in regl-renderer
     camera: CameraState;
-  }
+  };
 
   // @jscad\regl-renderer\src\rendering\renderDefaults.js
   export type RenderOptions = {
@@ -320,16 +320,16 @@ export namespace WrappedRenderer {
 
     // Unused
     lightPosition?: CoordinatesXYZ; // See also lightDirection
-  }
+  };
 
   // There are 4 rendering commands to use in regl-renderer:
   // drawAxis, drawGrid, drawLines & drawMesh.
   // drawExps appears abandoned.
   // Only once passed Regl & an Entity do they return an actual DrawCommand
-  export type PrepareDrawCommands = Record<string, PrepareDrawCommandFunction>
+  export type PrepareDrawCommands = Record<string, PrepareDrawCommandFunction>;
   export type PrepareDrawCommandFunction =
     | typeof drawCommands
-    | typeof makeDrawMultiGrid
+    | typeof makeDrawMultiGrid;
 }
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
@@ -338,7 +338,7 @@ export namespace EntitiesFromSolids {
   export type Function = (
     options?: Options,
     ...solids: Solid[]
-  ) => GeometryEntity[]
+  ) => GeometryEntity[];
 
   export type Options = {
     // Default colour for entity rendering if the solid does not have one
@@ -346,5 +346,5 @@ export namespace EntitiesFromSolids {
 
     // Whether to smooth the normals of 3D solids, rendering a smooth surface
     smoothNormals?: boolean;
-  }
+  };
 }

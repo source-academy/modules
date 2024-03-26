@@ -174,4 +174,4 @@ export {
   debug_log,
   debug_logwarning,
   debug_logerror
-} from './functions'
+} from './functions';

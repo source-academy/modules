@@ -1,4 +1,4 @@
-import type { CSSProperties, MouseEventHandler, ReactElement } from 'react'
+import type { CSSProperties, MouseEventHandler, ReactElement } from 'react';
 
 const containerStyle = {
   position: 'fixed',
@@ -14,7 +14,7 @@ const containerStyle = {
   alignContent: 'center',
   borderRadius: '5px',
   backgroundColor: 'rgb(199, 196, 196)'
-} as CSSProperties
+} as CSSProperties;
 
 const bodyStyle = {
   backgroundColor: '#fffafa',
@@ -24,7 +24,7 @@ const bodyStyle = {
   height: '100%',
   overflowY: 'auto',
   padding: '0.75rem'
-} as CSSProperties
+} as CSSProperties;
 
 const backdropStyle = {
   position: 'fixed',
@@ -37,7 +37,7 @@ const backdropStyle = {
   height: '100%',
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
   filter: 'blur(10px)'
-} as CSSProperties
+} as CSSProperties;
 
 interface ModalProp {
   open: boolean
@@ -61,6 +61,6 @@ const Modal = ({ open, height, width, children, handleClose }: ModalProp) => (
       </>
     )}
   </>
-)
+);
 
-export default Modal
+export default Modal;

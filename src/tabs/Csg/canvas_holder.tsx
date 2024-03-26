@@ -1,41 +1,41 @@
 /* [Imports] */
-import { Spinner, SpinnerSize } from '@blueprintjs/core'
-import { IconNames } from '@blueprintjs/icons'
-import React from 'react'
-import { Core } from '../../bundles/csg/core'
-import StatefulRenderer from '../../bundles/csg/stateful_renderer'
-import type { RenderGroup } from '../../bundles/csg/utilities'
-import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants'
-import HoverControlHint from './hover_control_hint'
-import type { CanvasHolderProps, CanvasHolderState } from './types'
+import { Spinner, SpinnerSize } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
+import React from 'react';
+import { Core } from '../../bundles/csg/core';
+import StatefulRenderer from '../../bundles/csg/stateful_renderer';
+import type { RenderGroup } from '../../bundles/csg/utilities';
+import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
+import HoverControlHint from './hover_control_hint';
+import type { CanvasHolderProps, CanvasHolderState } from './types';
 
 /* [Main] */
 export default class CanvasHolder extends React.Component<
   CanvasHolderProps,
   CanvasHolderState
 > {
-  private readonly canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef()
+  private readonly canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
 
-  private statefulRenderer: StatefulRenderer | null = null
+  private statefulRenderer: StatefulRenderer | null = null;
 
   constructor(props: CanvasHolderProps) {
-    super(props)
+    super(props);
 
     this.state = {
       isContextLost: false
-    }
+    };
   }
 
   componentDidMount() {
-    console.debug(`>>> MOUNT #${this.props.componentNumber}`)
+    console.debug(`>>> MOUNT #${this.props.componentNumber}`);
 
-    const { current: canvas } = this.canvasReference
-    if (canvas === null) return
+    const { current: canvas } = this.canvasReference;
+    if (canvas === null) return;
 
     const renderGroups: RenderGroup[] = Core
       .getRenderGroupManager()
-      .getGroupsToRender()
-    const lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup
+      .getGroupsToRender();
+    const lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
 
     this.statefulRenderer = new StatefulRenderer(
       canvas,
@@ -44,14 +44,14 @@ export default class CanvasHolder extends React.Component<
 
       () => this.setState({ isContextLost: true }),
       () => this.setState({ isContextLost: false })
-    )
-    this.statefulRenderer.start(true)
+    );
+    this.statefulRenderer.start(true);
   }
 
   componentWillUnmount() {
-    console.debug(`>>> UNMOUNT #${this.props.componentNumber}`)
+    console.debug(`>>> UNMOUNT #${this.props.componentNumber}`);
 
-    this.statefulRenderer?.stop(true)
+    this.statefulRenderer?.stop(true);
   }
 
   // Only required method of a React Component. Returns a React Element created
@@ -158,6 +158,6 @@ export default class CanvasHolder extends React.Component<
           Your GPU is probably busy. Waiting for browser to re-establish connection...
         </p>
       </div>
-    </>
+    </>;
   }
 }

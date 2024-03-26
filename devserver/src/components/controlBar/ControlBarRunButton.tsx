@@ -1,23 +1,23 @@
-import { Position, Tooltip } from '@blueprintjs/core'
-import { IconNames } from '@blueprintjs/icons'
-import React from 'react'
+import { Position, Tooltip } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
+import React from 'react';
 
-import ControlButton from '../ControlButton'
+import ControlButton from '../ControlButton';
 
 type DispatchProps = {
   handleEditorEval: () => void;
-}
+};
 
 type StateProps = {
   key: string;
   color?: string;
   className?: string;
-}
+};
 
-type ControlButtonRunButtonProps = DispatchProps & StateProps
+type ControlButtonRunButtonProps = DispatchProps & StateProps;
 
 export const ControlBarRunButton: React.FC<ControlButtonRunButtonProps> = (props) => {
-  const tooltipContent = 'Evaluate the program'
+  const tooltipContent = 'Evaluate the program';
   return (
     <Tooltip content={tooltipContent} placement={Position.TOP}>
       <ControlButton
@@ -30,5 +30,5 @@ export const ControlBarRunButton: React.FC<ControlButtonRunButtonProps> = (props
         }}
       />
     </Tooltip>
-  )
-}
+  );
+};

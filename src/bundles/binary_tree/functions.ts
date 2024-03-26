@@ -1,4 +1,4 @@
-import type { BinaryTree } from './types'
+import type { BinaryTree } from './types';
 
 /**
  * Returns an empty binary tree, represented by the empty list null
@@ -10,7 +10,7 @@ import type { BinaryTree } from './types'
  */
 
 export function make_empty_tree(): BinaryTree {
-  return null
+  return null;
 }
 
 /**
@@ -30,7 +30,7 @@ export function make_tree(
   left: BinaryTree,
   right: BinaryTree
 ): BinaryTree {
-  return [value, [left, [right, null]]]
+  return [value, [left, [right, null]]];
 }
 
 /**
@@ -55,7 +55,7 @@ export function is_tree(
     && is_tree(value[1][0])
     && value[1][1].length === 2
     && is_tree(value[1][1][0])
-    && value[1][1][1] === null)
+    && value[1][1][1] === null);
 }
 
 /**
@@ -72,7 +72,7 @@ export function is_tree(
 export function is_empty_tree(
   value: any
 ): boolean {
-  return value === null
+  return value === null;
 }
 
 /**
@@ -89,11 +89,11 @@ export function entry(
   t: BinaryTree
 ): boolean {
   if (Array.isArray(t) && t.length === 2) {
-    return t[0]
+    return t[0];
   }
   throw new Error(
     `function entry expects binary tree, received: ${t}`
-  )
+  );
 }
 
 /**
@@ -111,11 +111,11 @@ export function left_branch(
 ): BinaryTree {
   if (Array.isArray(t) && t.length === 2
       && Array.isArray(t[1]) && t[1].length === 2) {
-    return t[1][0]
+    return t[1][0];
   }
   throw new Error(
     `function left_branch expects binary tree, received: ${t}`
-  )
+  );
 }
 
 /**
@@ -134,9 +134,9 @@ export function right_branch(
   if (Array.isArray(t) && t.length === 2
       && Array.isArray(t[1]) && t[1].length === 2
       && Array.isArray(t[1][1]) && t[1][1].length === 2) {
-    return t[1][1][0]
+    return t[1][1][0];
   }
   throw new Error(
     `function right_branch expects binary tree, received: ${t}`
-  )
+  );
 }

@@ -1,10 +1,10 @@
 /* [Imports] */
-import { Switch, type SwitchProps } from '@blueprintjs/core'
-import React from 'react'
+import { Switch, type SwitchProps } from '@blueprintjs/core';
+import React from 'react';
 
 export type AutoLoopSwitchProps = Omit<SwitchProps, 'checked' | 'style'> & {
   isAutoLooping: boolean,
-}
+};
 
 /* [Main] */
 export default class AutoLoopSwitch extends React.Component<AutoLoopSwitchProps> {
@@ -20,6 +20,6 @@ export default class AutoLoopSwitch extends React.Component<AutoLoopSwitchProps>
       label="Auto Loop"
       checked={ this.props.isAutoLooping }
       {...this.props}
-    />
+    />;
   }
 }

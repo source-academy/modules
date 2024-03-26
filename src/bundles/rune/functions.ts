@@ -1,10 +1,10 @@
-import { mat4, vec3 } from 'gl-matrix'
+import { mat4, vec3 } from 'gl-matrix';
 import {
   Rune,
   DrawnRune,
   drawRunesToFrameBuffer,
   type AnimatedRune
-} from './rune'
+} from './rune';
 import {
   getSquare,
   getBlank,
@@ -21,17 +21,17 @@ import {
   addColorFromHex,
   colorPalette,
   hexToColor
-} from './runes_ops'
+} from './runes_ops';
 import {
   type FrameBufferWithTexture,
   getWebGlFromCanvas,
   initFramebufferObject,
   initShaderProgram
-} from './runes_webgl'
+} from './runes_webgl';
 
 export type RuneModuleState = {
   drawnRunes: (AnimatedRune | DrawnRune)[]
-}
+};
 
 // =============================================================================
 // Basic Runes
@@ -42,13 +42,13 @@ export type RuneModuleState = {
  *
  * @category Primitive
  */
-export const square: Rune = getSquare()
+export const square: Rune = getSquare();
 /**
  * Rune with the shape of a blank square
  *
  * @category Primitive
  */
-export const blank: Rune = getBlank()
+export const blank: Rune = getBlank();
 /**
  * Rune with the shape of a
  * small square inside a large square,
@@ -57,26 +57,26 @@ export const blank: Rune = getBlank()
  *
  * @category Primitive
  */
-export const rcross: Rune = getRcross()
+export const rcross: Rune = getRcross();
 /**
  * Rune with the shape of a sail
  *
  * @category Primitive
  */
-export const sail: Rune = getSail()
+export const sail: Rune = getSail();
 /**
  * Rune with the shape of a triangle
  *
  * @category Primitive
  */
-export const triangle: Rune = getTriangle()
+export const triangle: Rune = getTriangle();
 /**
  * Rune with black triangle,
  * filling upper right corner
  *
  * @category Primitive
  */
-export const corner: Rune = getCorner()
+export const corner: Rune = getCorner();
 /**
  * Rune with the shape of two overlapping
  * triangles, residing in the upper half
@@ -84,32 +84,32 @@ export const corner: Rune = getCorner()
  *
  * @category Primitive
  */
-export const nova: Rune = getNova()
+export const nova: Rune = getNova();
 /**
  * Rune with the shape of a circle
  *
  * @category Primitive
  */
-export const circle: Rune = getCircle()
+export const circle: Rune = getCircle();
 /**
  * Rune with the shape of a heart
  *
  * @category Primitive
  */
-export const heart: Rune = getHeart()
+export const heart: Rune = getHeart();
 /**
  * Rune with the shape of a pentagram
  *
  * @category Primitive
  */
-export const pentagram: Rune = getPentagram()
+export const pentagram: Rune = getPentagram();
 /**
  * Rune with the shape of a ribbon
  * winding outwards in an anticlockwise spiral
  *
  * @category Primitive
  */
-export const ribbon: Rune = getRibbon()
+export const ribbon: Rune = getRibbon();
 
 // =============================================================================
 // Textured Runes
@@ -123,11 +123,11 @@ export const ribbon: Rune = getRibbon()
  * @category Main
  */
 export function from_url(imageUrl: string): Rune {
-  const rune = getSquare()
-  rune.texture = new Image()
-  rune.texture.crossOrigin = 'anonymous'
-  rune.texture.src = imageUrl
-  return rune
+  const rune = getSquare();
+  rune.texture = new Image();
+  rune.texture.crossOrigin = 'anonymous';
+  rune.texture.src = imageUrl;
+  return rune;
 }
 
 // =============================================================================
@@ -148,17 +148,17 @@ export function scale_independent(
   ratio_y: number,
   rune: Rune
 ): Rune {
-  throwIfNotRune(scale_independent.name, rune)
-  const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1)
-  const scaleMat = mat4.create()
-  mat4.scale(scaleMat, scaleMat, scaleVec)
+  throwIfNotRune(scale_independent.name, rune);
+  const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
+  const scaleMat = mat4.create();
+  mat4.scale(scaleMat, scaleMat, scaleVec);
 
-  const wrapperMat = mat4.create()
-  mat4.multiply(wrapperMat, scaleMat, wrapperMat)
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, scaleMat, wrapperMat);
   return Rune.of({
     subRunes: [rune],
     transformMatrix: wrapperMat
-  })
+  });
 }
 
 /**
@@ -170,8 +170,8 @@ export function scale_independent(
  * @category Main
  */
 export function scale(ratio: number, rune: Rune): Rune {
-  throwIfNotRune(scale.name, rune)
-  return scale_independent(ratio, ratio, rune)
+  throwIfNotRune(scale.name, rune);
+  return scale_independent(ratio, ratio, rune);
 }
 
 /**
@@ -184,17 +184,17 @@ export function scale(ratio: number, rune: Rune): Rune {
  * @category Main
  */
 export function translate(x: number, y: number, rune: Rune): Rune {
-  throwIfNotRune(translate.name, rune)
-  const translateVec = vec3.fromValues(x, -y, 0)
-  const translateMat = mat4.create()
-  mat4.translate(translateMat, translateMat, translateVec)
+  throwIfNotRune(translate.name, rune);
+  const translateVec = vec3.fromValues(x, -y, 0);
+  const translateMat = mat4.create();
+  mat4.translate(translateMat, translateMat, translateVec);
 
-  const wrapperMat = mat4.create()
-  mat4.multiply(wrapperMat, translateMat, wrapperMat)
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, translateMat, wrapperMat);
   return Rune.of({
     subRunes: [rune],
     transformMatrix: wrapperMat
-  })
+  });
 }
 
 /**
@@ -209,16 +209,16 @@ export function translate(x: number, y: number, rune: Rune): Rune {
  * @category Main
  */
 export function rotate(rad: number, rune: Rune): Rune {
-  throwIfNotRune(rotate.name, rune)
-  const rotateMat = mat4.create()
-  mat4.rotateZ(rotateMat, rotateMat, rad)
+  throwIfNotRune(rotate.name, rune);
+  const rotateMat = mat4.create();
+  mat4.rotateZ(rotateMat, rotateMat, rad);
 
-  const wrapperMat = mat4.create()
-  mat4.multiply(wrapperMat, rotateMat, wrapperMat)
+  const wrapperMat = mat4.create();
+  mat4.multiply(wrapperMat, rotateMat, wrapperMat);
   return Rune.of({
     subRunes: [rune],
     transformMatrix: wrapperMat
-  })
+  });
 }
 
 /**
@@ -235,18 +235,18 @@ export function rotate(rad: number, rune: Rune): Rune {
  * @category Main
  */
 export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune(stack_frac.name, rune1)
-  throwIfNotRune(stack_frac.name, rune2)
+  throwIfNotRune(stack_frac.name, rune1);
+  throwIfNotRune(stack_frac.name, rune2);
 
   if (!(frac >= 0 && frac <= 1)) {
-    throw Error('stack_frac can only take fraction in [0,1].')
+    throw Error('stack_frac can only take fraction in [0,1].');
   }
 
-  const upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1))
-  const lower = translate(0, frac, scale_independent(1, 1 - frac, rune2))
+  const upper = translate(0, -(1 - frac), scale_independent(1, frac, rune1));
+  const lower = translate(0, frac, scale_independent(1, 1 - frac, rune2));
   return Rune.of({
     subRunes: [upper, lower]
-  })
+  });
 }
 
 /**
@@ -261,8 +261,8 @@ export function stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function stack(rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune(stack.name, rune1, rune2)
-  return stack_frac(1 / 2, rune1, rune2)
+  throwIfNotRune(stack.name, rune1, rune2);
+  return stack_frac(1 / 2, rune1, rune2);
 }
 
 /**
@@ -275,11 +275,11 @@ export function stack(rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function stackn(n: number, rune: Rune): Rune {
-  throwIfNotRune(stackn.name, rune)
+  throwIfNotRune(stackn.name, rune);
   if (n === 1) {
-    return rune
+    return rune;
   }
-  return stack_frac(1 / n, rune, stackn(n - 1, rune))
+  return stack_frac(1 / n, rune, stackn(n - 1, rune));
 }
 
 /**
@@ -292,8 +292,8 @@ export function stackn(n: number, rune: Rune): Rune {
  * @category Main
  */
 export function quarter_turn_right(rune: Rune): Rune {
-  throwIfNotRune(quarter_turn_right.name, rune)
-  return rotate(-Math.PI / 2, rune)
+  throwIfNotRune(quarter_turn_right.name, rune);
+  return rotate(-Math.PI / 2, rune);
 }
 
 /**
@@ -306,8 +306,8 @@ export function quarter_turn_right(rune: Rune): Rune {
  * @category Main
  */
 export function quarter_turn_left(rune: Rune): Rune {
-  throwIfNotRune(quarter_turn_left.name, rune)
-  return rotate(Math.PI / 2, rune)
+  throwIfNotRune(quarter_turn_left.name, rune);
+  return rotate(Math.PI / 2, rune);
 }
 
 /**
@@ -319,8 +319,8 @@ export function quarter_turn_left(rune: Rune): Rune {
  * @category Main
  */
 export function turn_upside_down(rune: Rune): Rune {
-  throwIfNotRune(turn_upside_down.name, rune)
-  return rotate(Math.PI, rune)
+  throwIfNotRune(turn_upside_down.name, rune);
+  return rotate(Math.PI, rune);
 }
 
 /**
@@ -337,17 +337,17 @@ export function turn_upside_down(rune: Rune): Rune {
  * @category Main
  */
 export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune(beside_frac.name, rune1, rune2)
+  throwIfNotRune(beside_frac.name, rune1, rune2);
 
   if (!(frac >= 0 && frac <= 1)) {
-    throw Error('beside_frac can only take fraction in [0,1].')
+    throw Error('beside_frac can only take fraction in [0,1].');
   }
 
-  const left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1))
-  const right = translate(frac, 0, scale_independent(1 - frac, 1, rune2))
+  const left = translate(-(1 - frac), 0, scale_independent(frac, 1, rune1));
+  const right = translate(frac, 0, scale_independent(1 - frac, 1, rune2));
   return Rune.of({
     subRunes: [left, right]
-  })
+  });
 }
 
 /**
@@ -362,8 +362,8 @@ export function beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function beside(rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune(beside.name, rune1, rune2)
-  return beside_frac(1 / 2, rune1, rune2)
+  throwIfNotRune(beside.name, rune1, rune2);
+  return beside_frac(1 / 2, rune1, rune2);
 }
 
 /**
@@ -376,8 +376,8 @@ export function beside(rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function flip_vert(rune: Rune): Rune {
-  throwIfNotRune(flip_vert.name, rune)
-  return scale_independent(1, -1, rune)
+  throwIfNotRune(flip_vert.name, rune);
+  return scale_independent(1, -1, rune);
 }
 
 /**
@@ -390,8 +390,8 @@ export function flip_vert(rune: Rune): Rune {
  * @category Main
  */
 export function flip_horiz(rune: Rune): Rune {
-  throwIfNotRune(flip_horiz.name, rune)
-  return scale_independent(-1, 1, rune)
+  throwIfNotRune(flip_horiz.name, rune);
+  return scale_independent(-1, 1, rune);
 }
 
 /**
@@ -404,11 +404,11 @@ export function flip_horiz(rune: Rune): Rune {
  * @category Main
  */
 export function make_cross(rune: Rune): Rune {
-  throwIfNotRune(make_cross.name, rune)
+  throwIfNotRune(make_cross.name, rune);
   return stack(
     beside(quarter_turn_right(rune), rotate(Math.PI, rune)),
     beside(rune, rotate(Math.PI / 2, rune))
-  )
+  );
 }
 
 /**
@@ -427,9 +427,9 @@ export function repeat_pattern(
   initial: Rune
 ): Rune {
   if (n === 0) {
-    return initial
+    return initial;
   }
-  return pattern(repeat_pattern(n - 1, pattern, initial))
+  return pattern(repeat_pattern(n - 1, pattern, initial));
 }
 
 // =============================================================================
@@ -448,45 +448,45 @@ export function repeat_pattern(
 export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
   // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation.
   // The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
-  throwIfNotRune(overlay_frac.name, rune1)
-  throwIfNotRune(overlay_frac.name, rune2)
+  throwIfNotRune(overlay_frac.name, rune1);
+  throwIfNotRune(overlay_frac.name, rune2);
   if (!(frac >= 0 && frac <= 1)) {
-    throw Error('overlay_frac can only take fraction in [0,1].')
+    throw Error('overlay_frac can only take fraction in [0,1].');
   }
   // by definition, when frac == 0 or 1, the back rune will overlap with the front rune.
   // however, this would cause graphical glitch because overlapping is physically impossible
   // we hack this problem by clipping the frac input from [0,1] to [1E-6, 1-1E-6]
   // this should not be graphically noticable
-  let useFrac = frac
-  const minFrac = 0.000001
-  const maxFrac = 1 - minFrac
+  let useFrac = frac;
+  const minFrac = 0.000001;
+  const maxFrac = 1 - minFrac;
   if (useFrac < minFrac) {
-    useFrac = minFrac
+    useFrac = minFrac;
   }
   if (useFrac > maxFrac) {
-    useFrac = maxFrac
+    useFrac = maxFrac;
   }
 
-  const frontMat = mat4.create()
+  const frontMat = mat4.create();
   // z: scale by frac
-  mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, useFrac))
+  mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, useFrac));
   const front = Rune.of({
     subRunes: [rune1],
     transformMatrix: frontMat
-  })
+  });
 
-  const backMat = mat4.create()
+  const backMat = mat4.create();
   // need to apply transformation in backwards order!
-  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -useFrac))
-  mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - useFrac))
+  mat4.translate(backMat, backMat, vec3.fromValues(0, 0, -useFrac));
+  mat4.scale(backMat, backMat, vec3.fromValues(1, 1, 1 - useFrac));
   const back = Rune.of({
     subRunes: [rune2],
     transformMatrix: backMat
-  })
+  });
 
   return Rune.of({
     subRunes: [front, back] // render front first to avoid redrawing
-  })
+  });
 }
 
 /**
@@ -498,9 +498,9 @@ export function overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
  * @category Main
  */
 export function overlay(rune1: Rune, rune2: Rune): Rune {
-  throwIfNotRune(overlay.name, rune1)
-  throwIfNotRune(overlay.name, rune2)
-  return overlay_frac(0.5, rune1, rune2)
+  throwIfNotRune(overlay.name, rune1);
+  throwIfNotRune(overlay.name, rune2);
+  return overlay_frac(0.5, rune1, rune2);
 }
 
 // =============================================================================
@@ -521,13 +521,13 @@ export function overlay(rune1: Rune, rune2: Rune): Rune {
  * @category Color
  */
 export function color(rune: Rune, r: number, g: number, b: number): Rune {
-  throwIfNotRune(color.name, rune)
+  throwIfNotRune(color.name, rune);
 
-  const colorVector = [r, g, b, 1]
+  const colorVector = [r, g, b, 1];
   return Rune.of({
     colors: new Float32Array(colorVector),
     subRunes: [rune]
-  })
+  });
 }
 
 /**
@@ -540,15 +540,15 @@ export function color(rune: Rune, r: number, g: number, b: number): Rune {
  * @category Color
  */
 export function random_color(rune: Rune): Rune {
-  throwIfNotRune(random_color.name, rune)
+  throwIfNotRune(random_color.name, rune);
   const randomColor = hexToColor(
     colorPalette[Math.floor(Math.random() * colorPalette.length)]
-  )
+  );
 
   return Rune.of({
     colors: new Float32Array(randomColor),
     subRunes: [rune]
-  })
+  });
 }
 
 /**
@@ -559,8 +559,8 @@ export function random_color(rune: Rune): Rune {
  * @category Color
  */
 export function red(rune: Rune): Rune {
-  throwIfNotRune(red.name, rune)
-  return addColorFromHex(rune, '#F44336')
+  throwIfNotRune(red.name, rune);
+  return addColorFromHex(rune, '#F44336');
 }
 
 /**
@@ -571,8 +571,8 @@ export function red(rune: Rune): Rune {
  * @category Color
  */
 export function pink(rune: Rune): Rune {
-  throwIfNotRune(pink.name, rune)
-  return addColorFromHex(rune, '#E91E63')
+  throwIfNotRune(pink.name, rune);
+  return addColorFromHex(rune, '#E91E63');
 }
 
 /**
@@ -583,8 +583,8 @@ export function pink(rune: Rune): Rune {
  * @category Color
  */
 export function purple(rune: Rune): Rune {
-  throwIfNotRune(purple.name, rune)
-  return addColorFromHex(rune, '#AA00FF')
+  throwIfNotRune(purple.name, rune);
+  return addColorFromHex(rune, '#AA00FF');
 }
 
 /**
@@ -595,8 +595,8 @@ export function purple(rune: Rune): Rune {
  * @category Color
  */
 export function indigo(rune: Rune): Rune {
-  throwIfNotRune(indigo.name, rune)
-  return addColorFromHex(rune, '#3F51B5')
+  throwIfNotRune(indigo.name, rune);
+  return addColorFromHex(rune, '#3F51B5');
 }
 
 /**
@@ -607,8 +607,8 @@ export function indigo(rune: Rune): Rune {
  * @category Color
  */
 export function blue(rune: Rune): Rune {
-  throwIfNotRune(blue.name, rune)
-  return addColorFromHex(rune, '#2196F3')
+  throwIfNotRune(blue.name, rune);
+  return addColorFromHex(rune, '#2196F3');
 }
 
 /**
@@ -619,8 +619,8 @@ export function blue(rune: Rune): Rune {
  * @category Color
  */
 export function green(rune: Rune): Rune {
-  throwIfNotRune(green.name, rune)
-  return addColorFromHex(rune, '#4CAF50')
+  throwIfNotRune(green.name, rune);
+  return addColorFromHex(rune, '#4CAF50');
 }
 
 /**
@@ -631,8 +631,8 @@ export function green(rune: Rune): Rune {
  * @category Color
  */
 export function yellow(rune: Rune): Rune {
-  throwIfNotRune(yellow.name, rune)
-  return addColorFromHex(rune, '#FFEB3B')
+  throwIfNotRune(yellow.name, rune);
+  return addColorFromHex(rune, '#FFEB3B');
 }
 
 /**
@@ -643,8 +643,8 @@ export function yellow(rune: Rune): Rune {
  * @category Color
  */
 export function orange(rune: Rune): Rune {
-  throwIfNotRune(orange.name, rune)
-  return addColorFromHex(rune, '#FF9800')
+  throwIfNotRune(orange.name, rune);
+  return addColorFromHex(rune, '#FF9800');
 }
 
 /**
@@ -655,8 +655,8 @@ export function orange(rune: Rune): Rune {
  * @category Color
  */
 export function brown(rune: Rune): Rune {
-  throwIfNotRune(brown.name, rune)
-  return addColorFromHex(rune, '#795548')
+  throwIfNotRune(brown.name, rune);
+  return addColorFromHex(rune, '#795548');
 }
 
 /**
@@ -667,8 +667,8 @@ export function brown(rune: Rune): Rune {
  * @category Color
  */
 export function black(rune: Rune): Rune {
-  throwIfNotRune(black.name, rune)
-  return addColorFromHex(rune, '#000000')
+  throwIfNotRune(black.name, rune);
+  return addColorFromHex(rune, '#000000');
 }
 
 /**
@@ -679,8 +679,8 @@ export function black(rune: Rune): Rune {
  * @category Color
  */
 export function white(rune: Rune): Rune {
-  throwIfNotRune(white.name, rune)
-  return addColorFromHex(rune, '#FFFFFF')
+  throwIfNotRune(white.name, rune);
+  return addColorFromHex(rune, '#FFFFFF');
 }
 
 /** @hidden */
@@ -695,7 +695,7 @@ export class AnaglyphRune extends DrawnRune {
         v_texturePosition.x = (a_position.x + 1.0) / 2.0;
         v_texturePosition.y = (a_position.y + 1.0) / 2.0;
     }
-    `
+    `;
 
   private static readonly anaglyphFragmentShader = `
     precision mediump float;
@@ -707,40 +707,40 @@ export class AnaglyphRune extends DrawnRune {
                 + texture2D(u_sampler_cyan, v_texturePosition) - 1.0;
         gl_FragColor.a = 1.0;
     }
-    `
+    `;
 
   constructor(rune: Rune) {
-    super(rune, false)
+    super(rune, false);
   }
 
   public draw = (canvas: HTMLCanvasElement) => {
-    const gl = getWebGlFromCanvas(canvas)
+    const gl = getWebGlFromCanvas(canvas);
 
     // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
     const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
       .flatten()
-      .concat(this.rune.flatten())
+      .concat(this.rune.flatten());
 
     // calculate the left and right camera matrices
-    const halfEyeDistance = 0.03
-    const leftCameraMatrix = mat4.create()
+    const halfEyeDistance = 0.03;
+    const leftCameraMatrix = mat4.create();
     mat4.lookAt(
       leftCameraMatrix,
       vec3.fromValues(-halfEyeDistance, 0, 0),
       vec3.fromValues(0, 0, -0.4),
       vec3.fromValues(0, 1, 0)
-    )
-    const rightCameraMatrix = mat4.create()
+    );
+    const rightCameraMatrix = mat4.create();
     mat4.lookAt(
       rightCameraMatrix,
       vec3.fromValues(halfEyeDistance, 0, 0),
       vec3.fromValues(0, 0, -0.4),
       vec3.fromValues(0, 1, 0)
-    )
+    );
 
     // left/right eye images are drawn into respective framebuffers
-    const leftBuffer = initFramebufferObject(gl)
-    const rightBuffer = initFramebufferObject(gl)
+    const leftBuffer = initFramebufferObject(gl);
+    const rightBuffer = initFramebufferObject(gl);
     drawRunesToFrameBuffer(
       gl,
       runes,
@@ -748,7 +748,7 @@ export class AnaglyphRune extends DrawnRune {
       new Float32Array([1, 0, 0, 1]),
       leftBuffer.framebuffer,
       true
-    )
+    );
     drawRunesToFrameBuffer(
       gl,
       runes,
@@ -756,48 +756,48 @@ export class AnaglyphRune extends DrawnRune {
       new Float32Array([0, 1, 1, 1]),
       rightBuffer.framebuffer,
       true
-    )
+    );
 
     // prepare to draw to screen by setting framebuffer to null
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     // prepare the shader program to combine the left/right eye images
     const shaderProgram = initShaderProgram(
       gl,
       AnaglyphRune.anaglyphVertexShader,
       AnaglyphRune.anaglyphFragmentShader
-    )
-    gl.useProgram(shaderProgram)
-    const reduPt = gl.getUniformLocation(shaderProgram, 'u_sampler_red')
-    const cyanuPt = gl.getUniformLocation(shaderProgram, 'u_sampler_cyan')
+    );
+    gl.useProgram(shaderProgram);
+    const reduPt = gl.getUniformLocation(shaderProgram, 'u_sampler_red');
+    const cyanuPt = gl.getUniformLocation(shaderProgram, 'u_sampler_cyan');
     const vertexPositionPointer = gl.getAttribLocation(
       shaderProgram,
       'a_position'
-    )
+    );
 
-    gl.activeTexture(gl.TEXTURE0)
-    gl.bindTexture(gl.TEXTURE_2D, leftBuffer.texture)
-    gl.uniform1i(cyanuPt, 0)
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, leftBuffer.texture);
+    gl.uniform1i(cyanuPt, 0);
 
-    gl.activeTexture(gl.TEXTURE1)
-    gl.bindTexture(gl.TEXTURE_2D, rightBuffer.texture)
-    gl.uniform1i(reduPt, 1)
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, rightBuffer.texture);
+    gl.uniform1i(reduPt, 1);
 
     // draw a square, which will allow the texture to be used
     // load position buffer
-    const positionBuffer = gl.createBuffer()
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW)
-    gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0)
-    gl.enableVertexAttribArray(vertexPositionPointer)
-    gl.drawArrays(gl.TRIANGLES, 0, 6)
-  }
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vertexPositionPointer);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  };
 }
 
 /** @hidden */
 export class HollusionRune extends DrawnRune {
   constructor(rune: Rune, magnitude: number) {
-    super(rune, true)
-    this.rune.hollusionDistance = magnitude
+    super(rune, true);
+    this.rune.hollusionDistance = magnitude;
   }
 
   private static readonly copyVertexShader = `
@@ -810,7 +810,7 @@ export class HollusionRune extends DrawnRune {
         v_texturePosition.x = (a_position.x + 1.0) / 2.0;
         v_texturePosition.y = (a_position.y + 1.0) / 2.0;
     }
-    `
+    `;
 
   private static readonly copyFragmentShader = `
     precision mediump float;
@@ -819,38 +819,38 @@ export class HollusionRune extends DrawnRune {
     void main() {
         gl_FragColor = texture2D(uTexture, v_texturePosition);
     }
-    `
+    `;
 
   public draw = (canvas: HTMLCanvasElement) => {
-    const gl = getWebGlFromCanvas(canvas)
+    const gl = getWebGlFromCanvas(canvas);
 
     const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))
       .flatten()
-      .concat(this.rune.flatten())
+      .concat(this.rune.flatten());
 
     // first render all the frames into a framebuffer
-    const xshiftMax = runes[0].hollusionDistance
-    const period = 2000 // animations loops every 2 seconds
-    const frameCount = 50 // in total 50 frames, gives rise to 25 fps
-    const frameBuffer: FrameBufferWithTexture[] = []
+    const xshiftMax = runes[0].hollusionDistance;
+    const period = 2000; // animations loops every 2 seconds
+    const frameCount = 50; // in total 50 frames, gives rise to 25 fps
+    const frameBuffer: FrameBufferWithTexture[] = [];
 
     const renderFrame = (framePos: number): FrameBufferWithTexture => {
-      const fb = initFramebufferObject(gl)
+      const fb = initFramebufferObject(gl);
       // prepare camera projection array
-      const cameraMatrix = mat4.create()
+      const cameraMatrix = mat4.create();
       // let the object shift in the x direction
       // the following calculation will let x oscillate in (-xshiftMax, xshiftMax) with time
-      let xshift = (framePos * (period / frameCount)) % period
+      let xshift = (framePos * (period / frameCount)) % period;
       if (xshift > period / 2) {
-        xshift = period - xshift
+        xshift = period - xshift;
       }
-      xshift = xshiftMax * (2 * ((2 * xshift) / period) - 1)
+      xshift = xshiftMax * (2 * ((2 * xshift) / period) - 1);
       mat4.lookAt(
         cameraMatrix,
         vec3.fromValues(xshift, 0, 0),
         vec3.fromValues(0, 0, -0.4),
         vec3.fromValues(0, 1, 0)
-      )
+      );
 
       drawRunesToFrameBuffer(
         gl,
@@ -859,12 +859,12 @@ export class HollusionRune extends DrawnRune {
         new Float32Array([1, 1, 1, 1]),
         fb.framebuffer,
         true
-      )
-      return fb
-    }
+      );
+      return fb;
+    };
 
     for (let i = 0; i < frameCount; i += 1) {
-      frameBuffer.push(renderFrame(i))
+      frameBuffer.push(renderFrame(i));
     }
 
     // Then, draw a frame from framebuffer for each update
@@ -872,43 +872,43 @@ export class HollusionRune extends DrawnRune {
       gl,
       HollusionRune.copyVertexShader,
       HollusionRune.copyFragmentShader
-    )
-    gl.useProgram(copyShaderProgram)
-    const texturePt = gl.getUniformLocation(copyShaderProgram, 'uTexture')
+    );
+    gl.useProgram(copyShaderProgram);
+    const texturePt = gl.getUniformLocation(copyShaderProgram, 'uTexture');
     const vertexPositionPointer = gl.getAttribLocation(
       copyShaderProgram,
       'a_position'
-    )
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-    const positionBuffer = gl.createBuffer()
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW)
-    gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0)
-    gl.enableVertexAttribArray(vertexPositionPointer)
+    );
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, square.vertices, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vertexPositionPointer);
 
-    let lastTime = 0
+    let lastTime = 0;
     function render(timeInMs: number) {
-      if (timeInMs - lastTime < period / frameCount) return
+      if (timeInMs - lastTime < period / frameCount) return;
 
-      lastTime = timeInMs
+      lastTime = timeInMs;
 
       const framePos
-        = Math.floor(timeInMs / (period / frameCount)) % frameCount
-      const fbObject = frameBuffer[framePos]
-      gl.clearColor(1.0, 1.0, 1.0, 1.0) // Set clear color to white, fully opaque
+        = Math.floor(timeInMs / (period / frameCount)) % frameCount;
+      const fbObject = frameBuffer[framePos];
+      gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
       // eslint-disable-next-line no-bitwise
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT) // Clear the viewport
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
 
-      gl.activeTexture(gl.TEXTURE0)
-      gl.bindTexture(gl.TEXTURE_2D, fbObject.texture)
-      gl.uniform1i(texturePt, 0)
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, fbObject.texture);
+      gl.uniform1i(texturePt, 0);
 
-      gl.drawArrays(gl.TRIANGLES, 0, 6)
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
-    return render
-  }
+    return render;
+  };
 }
 
 /** @hidden */
-export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune.isHollusion
+export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune.isHollusion;

@@ -71,4 +71,4 @@ export {
   x_of,
   y_of,
   z_of
-} from './functions'
+} from './functions';

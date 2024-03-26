@@ -4,9 +4,9 @@
 export function throwIfNotRune(name: string, ...runes: any) {
   runes.forEach((rune) => {
     if (!(typeof rune === 'string')) {
-      throw Error(`${name} expects a rune (string) as argument.`)
+      throw Error(`${name} expects a rune (string) as argument.`);
     }
-  })
+  });
 }
 
 // =============================================================================
@@ -16,27 +16,27 @@ export function throwIfNotRune(name: string, ...runes: any) {
 /**
  * primitive Rune in the rune of a full square
  * */
-export const getSquare: () => string = () => 'square'
+export const getSquare: () => string = () => 'square';
 
-export const getBlank: () => string = () => 'blank'
+export const getBlank: () => string = () => 'blank';
 
-export const getRcross: () => string = () => 'rcross'
+export const getRcross: () => string = () => 'rcross';
 
-export const getSail: () => string = () => 'sail'
+export const getSail: () => string = () => 'sail';
 
-export const getTriangle: () => string = () => 'triangle'
+export const getTriangle: () => string = () => 'triangle';
 
-export const getCorner: () => string = () => 'corner'
+export const getCorner: () => string = () => 'corner';
 
-export const getNova: () => string = () => 'nova'
+export const getNova: () => string = () => 'nova';
 
-export const getCircle: () => string = () => 'circle'
+export const getCircle: () => string = () => 'circle';
 
-export const getHeart: () => string = () => 'heart'
+export const getHeart: () => string = () => 'heart';
 
-export const getPentagram: () => string = () => 'pentagram'
+export const getPentagram: () => string = () => 'pentagram';
 
-export const getRibbon: () => string = () => 'ribbon'
+export const getRibbon: () => string = () => 'ribbon';
 
 // =============================================================================
 // Coloring Functions
@@ -53,9 +53,9 @@ export const colorPalette = [
   '#FFEB3B',
   '#FF9800',
   '#795548'
-]
+];
 
 export function addColorFromHex(rune, hex) {
-  throwIfNotRune('addColorFromHex', rune)
-  return `color(${rune}, ${hex})`
+  throwIfNotRune('addColorFromHex', rune);
+  return `color(${rune}, ${hex})`;
 }

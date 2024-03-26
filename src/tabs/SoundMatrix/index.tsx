@@ -1,6 +1,6 @@
-import { Button, Classes } from '@blueprintjs/core'
-import classNames from 'classnames'
-import React from 'react'
+import { Button, Classes } from '@blueprintjs/core';
+import classNames from 'classnames';
+import React from 'react';
 
 /**
  * Tab for Sound Matrix
@@ -15,41 +15,41 @@ type Props = {
   children?: never;
   className?: never;
   context?: any;
-}
+};
 
 /**
  * React Component state for the Tab.
  */
-type State = {}
+type State = {};
 
 /**
  * The main React Component of the Tab.
  */
 class SoundMatrix extends React.Component<Props, State> {
-  private $container: HTMLElement | null = null
+  private $container: HTMLElement | null = null;
 
   constructor(props) {
-    super(props)
-    this.state = {}
+    super(props);
+    this.state = {};
   }
 
   public componentDidMount() {
     if ((window as any).ToneMatrix) {
-      (window as any).ToneMatrix.initialise_matrix(this.$container!)
+      (window as any).ToneMatrix.initialise_matrix(this.$container!);
     }
   }
 
   public shouldComponentUpdate() {
-    return false
+    return false;
   }
 
   public handleClear = () => {
-    (window as any).ToneMatrix.clear_matrix()
-  }
+    (window as any).ToneMatrix.clear_matrix();
+  };
 
   public handleRandomise = () => {
-    (window as any).ToneMatrix.randomise_matrix()
-  }
+    (window as any).ToneMatrix.randomise_matrix();
+  };
 
   public render() {
     return (
@@ -75,12 +75,12 @@ class SoundMatrix extends React.Component<Props, State> {
           <div
             className="col-xs-12"
             ref={(r) => {
-              this.$container = r
+              this.$container = r;
             }}
           />
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -111,4 +111,4 @@ export default {
    * @see https://blueprintjs.com/docs/#icons
    */
   iconName: 'music'
-}
+};

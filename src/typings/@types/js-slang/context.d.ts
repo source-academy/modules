@@ -1,4 +1,4 @@
-import type { Context } from 'js-slang'
+import type { Context } from 'js-slang';
 
-const ctx: Context
-export default ctx
+const ctx: Context;
+export default ctx;

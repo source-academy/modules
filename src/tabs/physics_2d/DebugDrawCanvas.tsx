@@ -2,18 +2,18 @@
 // We have to disable linting rules since Box2D functions do not
 // follow the same guidelines as the rest of the codebase.
 
-import { Button, Icon, Slider, Tooltip } from '@blueprintjs/core'
-import { IconNames } from '@blueprintjs/icons'
-import { DrawShapes, type b2World } from '@box2d/core'
-import { DebugDraw } from '@box2d/debug-draw'
-import React from 'react'
+import { Button, Icon, Slider, Tooltip } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
+import { DrawShapes, type b2World } from '@box2d/core';
+import { DebugDraw } from '@box2d/debug-draw';
+import React from 'react';
 
-import { type PhysicsWorld } from '../../bundles/physics_2d/PhysicsWorld'
-import WebGLCanvas from '../common/WebglCanvas'
+import { type PhysicsWorld } from '../../bundles/physics_2d/PhysicsWorld';
+import WebGLCanvas from '../common/WebglCanvas';
 
 type DebugDrawCanvasProps = {
   world: PhysicsWorld;
-}
+};
 
 type DebugDrawCanvasState = {
   /** Timestamp of the animation */
@@ -30,31 +30,31 @@ type DebugDrawCanvasState = {
 
   /** Number value for the update step in the debug draw world */
   updateStep: number;
-}
+};
 
 export default class DebugDrawCanvas extends React.Component<
   DebugDrawCanvasProps,
   DebugDrawCanvasState
 > {
-  private canvas: HTMLCanvasElement | null
+  private canvas: HTMLCanvasElement | null;
 
   /**
    * The duration of one frame in milliseconds
    */
-  private readonly frameDuration: number
+  private readonly frameDuration: number;
 
   /**
    * Last timestamp since the previous `requestAnimationFrame` call
    */
-  private callbackTimestamp: number | null
+  private callbackTimestamp: number | null;
 
-  private debugDraw: DebugDraw | null
+  private debugDraw: DebugDraw | null;
 
-  private world: PhysicsWorld
-  private b2World: b2World
+  private world: PhysicsWorld;
+  private b2World: b2World;
 
   constructor(props: DebugDrawCanvasProps | Readonly<DebugDrawCanvasProps>) {
-    super(props)
+    super(props);
 
     this.state = {
       animTimestamp: 0,
@@ -62,18 +62,18 @@ export default class DebugDrawCanvas extends React.Component<
       zoomLevel: 1,
       camX: 0,
       updateStep: 1 / 60
-    }
+    };
 
-    this.canvas = null
-    this.frameDuration = 10
-    this.callbackTimestamp = null
-    this.debugDraw = null
-    this.world = props.world
-    this.b2World = this.world.getB2World()
+    this.canvas = null;
+    this.frameDuration = 10;
+    this.callbackTimestamp = null;
+    this.debugDraw = null;
+    this.world = props.world;
+    this.b2World = this.world.getB2World();
   }
 
   public componentDidMount() {
-    this.drawFrame()
+    this.drawFrame();
   }
 
   /**
@@ -83,84 +83,84 @@ export default class DebugDrawCanvas extends React.Component<
     if (this.canvas) {
       if (!this.debugDraw) {
         const ctx: CanvasRenderingContext2D | null
-          = this.canvas.getContext('2d')
+          = this.canvas.getContext('2d');
         if (ctx) {
-          this.debugDraw = new DebugDraw(ctx)
+          this.debugDraw = new DebugDraw(ctx);
         }
       }
 
       if (this.debugDraw && this.world) {
-        this.debugDraw.Prepare(this.state.camX, 0, this.state.zoomLevel, true)
-        DrawShapes(this.debugDraw, this.b2World)
-        this.debugDraw.Finish()
+        this.debugDraw.Prepare(this.state.camX, 0, this.state.zoomLevel, true);
+        DrawShapes(this.debugDraw, this.b2World);
+        this.debugDraw.Finish();
       }
     }
-  }
+  };
 
-  private reqFrame = () => requestAnimationFrame(this.animationCallback)
+  private reqFrame = () => requestAnimationFrame(this.animationCallback);
 
   private startAnimation = () => this.setState(
     {
       isPlaying: true
     },
     this.reqFrame
-  )
+  );
 
   private stopAnimation = () => this.setState(
     {
       isPlaying: false
     },
     () => {
-      this.callbackTimestamp = null
+      this.callbackTimestamp = null;
     }
-  )
+  );
 
   /**
    * Callback to use with `requestAnimationFrame`
    */
   private animationCallback = (timeInMs: number) => {
-    if (!this.canvas || !this.state.isPlaying) return
+    if (!this.canvas || !this.state.isPlaying) return;
 
     if (!this.callbackTimestamp) {
-      this.callbackTimestamp = timeInMs
-      this.drawFrame()
-      this.reqFrame()
-      return
+      this.callbackTimestamp = timeInMs;
+      this.drawFrame();
+      this.reqFrame();
+      return;
     }
 
-    const currentFrame = timeInMs - this.callbackTimestamp
+    const currentFrame = timeInMs - this.callbackTimestamp;
 
     if (currentFrame < this.frameDuration) {
       // Not time to draw a new frame yet
-      this.reqFrame()
-      return
+      this.reqFrame();
+      return;
     }
 
-    this.callbackTimestamp = timeInMs
+    this.callbackTimestamp = timeInMs;
 
     this.setState(
       (prev) => ({
         animTimestamp: prev.animTimestamp + currentFrame
       }),
       () => {
-        this.drawFrame()
-        this.reqFrame()
+        this.drawFrame();
+        this.reqFrame();
       }
-    )
+    );
 
-    this.world.update(this.state.updateStep)
-  }
+    this.world.update(this.state.updateStep);
+  };
 
   /**
    * Play button click handler
    */
   private onPlayButtonClick = () => {
     if (this.state.isPlaying) {
-      this.stopAnimation()
+      this.stopAnimation();
     } else {
-      this.startAnimation()
+      this.startAnimation();
     }
-  }
+  };
 
   /**
    * Event handler for slider component. Updates the canvas for any change in
@@ -169,8 +169,8 @@ export default class DebugDrawCanvas extends React.Component<
    * @param newValue new zoom level
    */
   private onZoomSliderChangeHandler = (newValue: number) => {
-    this.setState({ zoomLevel: newValue }, () => {})
-  }
+    this.setState({ zoomLevel: newValue }, () => {});
+  };
 
   /**
    * Event handler for slider component. Updates the canvas for any change in
@@ -179,8 +179,8 @@ export default class DebugDrawCanvas extends React.Component<
    * @param newValue new camera x coordinate
    */
   private onCameraSliderChangeHandler = (newValue: number) => {
-    this.setState({ camX: newValue }, () => {})
-  }
+    this.setState({ camX: newValue }, () => {});
+  };
 
   /**
    * Event handler for slider component. Updates the canvas for any change in
@@ -189,8 +189,8 @@ export default class DebugDrawCanvas extends React.Component<
    * @param newValue new camera x coordinate
    */
   private onUpdateStepSliderChangeHandler = (newValue: number) => {
-    this.setState({ updateStep: newValue }, () => {})
-  }
+    this.setState({ updateStep: newValue }, () => {});
+  };
 
   public render() {
     const buttons = (
@@ -263,7 +263,7 @@ export default class DebugDrawCanvas extends React.Component<
           </div>
         </div>
       </div>
-    )
+    );
 
     return (
       <>
@@ -279,7 +279,7 @@ export default class DebugDrawCanvas extends React.Component<
               flexGrow: 1
             }}
             ref={(r) => {
-              this.canvas = r
+              this.canvas = r;
             }}
           />
         </div>
@@ -303,6 +303,6 @@ export default class DebugDrawCanvas extends React.Component<
           {this.world.getWorldStatus()}
         </div>
       </>
-    )
+    );
   }
 }

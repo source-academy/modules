@@ -1,9 +1,9 @@
 /**
  * This file contains the bundle's representation of GameObjects.
  */
-import type { ReplResult } from '../../typings/type_helpers'
-import { DEFAULT_INTERACTABLE_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_TRANSFORM_PROPS } from './constants'
-import type * as types from './types'
+import type { ReplResult } from '../../typings/type_helpers';
+import { DEFAULT_INTERACTABLE_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_TRANSFORM_PROPS } from './constants';
+import type * as types from './types';
 
 // =============================================================================
 // Classes
@@ -13,28 +13,28 @@ import type * as types from './types'
  * Encapsulates the basic data-representation of a GameObject.
  */
 export abstract class GameObject implements Transformable, ReplResult {
-  private static gameObjectCount: number = 0
-  protected static gameObjectsArray: InteractableGameObject[] = [] // Stores all the created GameObjects
-  protected isTransformUpdated: boolean = false
-  public readonly id: number
+  private static gameObjectCount: number = 0;
+  protected static gameObjectsArray: InteractableGameObject[] = []; // Stores all the created GameObjects
+  protected isTransformUpdated: boolean = false;
+  public readonly id: number;
 
   constructor(
     private transformProps: types.TransformProps = DEFAULT_TRANSFORM_PROPS
   ) {
-    this.id = GameObject.gameObjectCount++
+    this.id = GameObject.gameObjectCount++;
   }
   setTransform(transformProps: types.TransformProps) {
-    this.transformProps = transformProps
-    this.isTransformUpdated = false
+    this.transformProps = transformProps;
+    this.isTransformUpdated = false;
   }
   getTransform(): types.TransformProps {
-    return this.transformProps
+    return this.transformProps;
   }
   hasTransformUpdates(): boolean {
-    return !this.isTransformUpdated
+    return !this.isTransformUpdated;
   }
   setTransformUpdated() {
-    this.isTransformUpdated = true
+    this.isTransformUpdated = true;
   }
 
   /**
@@ -42,24 +42,24 @@ export abstract class GameObject implements Transformable, ReplResult {
    * @returns The GameObjects as an array.
    */
   public static getGameObjectsArray() {
-    return GameObject.gameObjectsArray
+    return GameObject.gameObjectsArray;
   }
 
-  public toReplString = () => '<GameObject>'
+  public toReplString = () => '<GameObject>';
 }
 
 /**
  * Encapsulates the basic data-representation of a RenderableGameObject.
  */
 export abstract class RenderableGameObject extends GameObject implements Renderable {
-  protected isRenderUpdated: boolean = false
-  private shouldBringToTop: boolean = false
+  protected isRenderUpdated: boolean = false;
+  private shouldBringToTop: boolean = false;
 
   constructor(
     transformProps: types.TransformProps,
     private renderProps: types.RenderProps = DEFAULT_RENDER_PROPS
   ) {
-    super(transformProps)
+    super(transformProps);
   }
 
   setRenderState(renderProps: types.RenderProps) {
@@ -69,34 +69,34 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
     // if (this.phaserType in renderProps.renderedImage) {
     //   throw new Error('Unable to update GameObject with image type that does not match');
     // }
-    this.renderProps = renderProps
-    this.isRenderUpdated = false
+    this.renderProps = renderProps;
+    this.isRenderUpdated = false;
   }
   getRenderState(): types.RenderProps {
-    return this.renderProps
+    return this.renderProps;
   }
   /**
    * Sets a flag to render the GameObject infront of other GameObjects.
    */
   setBringToTopFlag() {
-    this.shouldBringToTop = true
-    this.isRenderUpdated = false
+    this.shouldBringToTop = true;
+    this.isRenderUpdated = false;
   }
   hasRenderUpdates(): boolean {
-    return !this.isRenderUpdated
+    return !this.isRenderUpdated;
   }
   setRenderUpdated() {
-    this.isRenderUpdated = true
-    this.shouldBringToTop = false
+    this.isRenderUpdated = true;
+    this.shouldBringToTop = false;
   }
   getColor(): types.ColorRGBA {
-    return this.renderProps.color
+    return this.renderProps.color;
   }
   getFlipState(): types.FlipXY {
-    return this.renderProps.flip
+    return this.renderProps.flip;
   }
   getShouldBringToTop(): boolean {
-    return this.shouldBringToTop
+    return this.shouldBringToTop;
   }
 }
 
@@ -104,36 +104,36 @@ export abstract class RenderableGameObject extends GameObject implements Rendera
  * Encapsulates the basic data-representation of a InteractableGameObject.
  */
 export abstract class InteractableGameObject extends RenderableGameObject implements Interactable {
-  protected isHitboxUpdated: boolean = false
-  protected phaserGameObject: types.PhaserGameObject | undefined
+  protected isHitboxUpdated: boolean = false;
+  protected phaserGameObject: types.PhaserGameObject | undefined;
 
   constructor(
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
     private interactableProps: types.InteractableProps = DEFAULT_INTERACTABLE_PROPS
   ) {
-    super(transformProps, renderProps)
-    GameObject.gameObjectsArray.push(this)
+    super(transformProps, renderProps);
+    GameObject.gameObjectsArray.push(this);
   }
   setHitboxState(hitboxProps: types.InteractableProps) {
-    this.interactableProps = hitboxProps
-    this.isHitboxUpdated = false
+    this.interactableProps = hitboxProps;
+    this.isHitboxUpdated = false;
   }
   getHitboxState(): types.InteractableProps {
-    return this.interactableProps
+    return this.interactableProps;
   }
   hasHitboxUpdates(): boolean {
-    return !this.isHitboxUpdated
+    return !this.isHitboxUpdated;
   }
   setHitboxUpdated() {
-    this.isHitboxUpdated = true
+    this.isHitboxUpdated = true;
   }
   /**
    * This stores the GameObject within the phaser game, which can only be set after the game has started.
    * @param phaserGameObject The phaser GameObject reference.
    */
   setPhaserGameObject(phaserGameObject: Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text) {
-    this.phaserGameObject = phaserGameObject
+    this.phaserGameObject = phaserGameObject;
   }
   /**
    * Checks if two Source GameObjects are overlapping, using their Phaser GameObjects to check.
@@ -143,12 +143,12 @@ export abstract class InteractableGameObject extends RenderableGameObject implem
    */
   isOverlapping(other: InteractableGameObject): boolean {
     if (this.phaserGameObject === undefined || other.phaserGameObject === undefined) {
-      return false
+      return false;
     }
     // Use getBounds to check if two objects overlap, checking the shape of the area before checking overlap.
     // Since getBounds() returns a Rectangle, it will be unable to check the actual intersection of non-rectangular shapes.
     // eslint-disable-next-line new-cap
-    return Phaser.Geom.Intersects.RectangleToRectangle(this.phaserGameObject.getBounds(), other.phaserGameObject.getBounds())
+    return Phaser.Geom.Intersects.RectangleToRectangle(this.phaserGameObject.getBounds(), other.phaserGameObject.getBounds());
   }
 }
 
@@ -160,13 +160,13 @@ export abstract class ShapeGameObject extends InteractableGameObject {
    * Gets the shape properties of the ShapeGameObject.
    * @returns The shape properties.
    */
-  public abstract getShape()
+  public abstract getShape();
 
   /** @override */
-  public toReplString = () => '<ShapeGameObject>'
+  public toReplString = () => '<ShapeGameObject>';
 
   /** @override */
-  public toString = () => this.toReplString()
+  public toString = () => this.toReplString();
 }
 
 /**
@@ -179,11 +179,11 @@ export class RectangleGameObject extends ShapeGameObject {
     interactableProps: types.InteractableProps,
     private rectangle: types.RectangleProps
   ) {
-    super(transformProps, renderProps, interactableProps)
+    super(transformProps, renderProps, interactableProps);
   }
   /** @override */
   getShape(): types.RectangleProps {
-    return this.rectangle
+    return this.rectangle;
   }
 }
 
@@ -197,11 +197,11 @@ export class CircleGameObject extends ShapeGameObject {
     interactableProps: types.InteractableProps,
     private circle: types.CircleProps
   ) {
-    super(transformProps, renderProps, interactableProps)
+    super(transformProps, renderProps, interactableProps);
   }
   /** @override */
   getShape(): types.CircleProps {
-    return this.circle
+    return this.circle;
   }
 }
 
@@ -215,11 +215,11 @@ export class TriangleGameObject extends ShapeGameObject {
     interactableProps: types.InteractableProps,
     private triangle: types.TriangleProps
   ) {
-    super(transformProps, renderProps, interactableProps)
+    super(transformProps, renderProps, interactableProps);
   }
   /** @override */
   getShape(): types.TriangleProps {
-    return this.triangle
+    return this.triangle;
   }
 }
 
@@ -233,21 +233,21 @@ export class SpriteGameObject extends InteractableGameObject {
     interactableProps: types.InteractableProps,
     private sprite: types.Sprite
   ) {
-    super(transformProps, renderProps, interactableProps)
+    super(transformProps, renderProps, interactableProps);
   }
   /**
    * Gets the sprite displayed by the SpriteGameObject.
    * @returns The sprite as a Sprite.
    */
   getSprite(): types.Sprite {
-    return this.sprite
+    return this.sprite;
   }
 
   /** @override */
-  public toReplString = () => '<SpriteGameObject>'
+  public toReplString = () => '<SpriteGameObject>';
 
   /** @override */
-  public toString = () => this.toReplString()
+  public toString = () => this.toReplString();
 }
 
 /**
@@ -260,29 +260,29 @@ export class TextGameObject extends InteractableGameObject {
     interactableProps: types.InteractableProps,
     private displayText: types.DisplayText
   ) {
-    super(transformProps, renderProps, interactableProps)
+    super(transformProps, renderProps, interactableProps);
   }
   /**
    * Sets the text displayed by the GameObject in the canvas.
    * @param text The text displayed.
    */
   setText(text: types.DisplayText) {
-    this.setRenderState(this.getRenderState())
-    this.displayText = text
+    this.setRenderState(this.getRenderState());
+    this.displayText = text;
   }
   /**
    * Gets the text displayed by the GameObject in the canvas.
    * @returns The text displayed.
    */
   getText(): types.DisplayText {
-    return this.displayText
+    return this.displayText;
   }
 
   /** @override */
-  public toReplString = () => '<TextGameObject>'
+  public toReplString = () => '<TextGameObject>';
 
   /** @override */
-  public toString = () => this.toReplString()
+  public toString = () => this.toReplString();
 }
 
 // =============================================================================

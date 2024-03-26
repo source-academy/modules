@@ -11,7 +11,7 @@ export interface AnimFrame {
 export abstract class glAnimation {
   constructor(public readonly duration: number, public readonly fps: number) {}
 
-  public abstract getFrame(timestamp: number): AnimFrame
+  public abstract getFrame(timestamp: number): AnimFrame;
 
-  public static isAnimation = (obj: any): obj is glAnimation => obj.fps !== undefined
+  public static isAnimation = (obj: any): obj is glAnimation => obj.fps !== undefined;
 }

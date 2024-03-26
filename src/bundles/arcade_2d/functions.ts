@@ -9,7 +9,7 @@
  * @author Xenos Fiorenzo Anong
  */
 
-import { AudioClip } from './audio'
+import { AudioClip } from './audio';
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
@@ -29,7 +29,7 @@ import {
   DEFAULT_TRANSFORM_PROPS,
   DEFAULT_RENDER_PROPS,
   DEFAULT_INTERACTABLE_PROPS
-} from './constants'
+} from './constants';
 import {
   GameObject,
   RenderableGameObject,
@@ -39,11 +39,11 @@ import {
   RectangleGameObject,
   CircleGameObject,
   TriangleGameObject, InteractableGameObject
-} from './gameobject'
+} from './gameobject';
 import {
   PhaserScene,
   gameState
-} from './phaserScene'
+} from './phaserScene';
 import {
   type DisplayText,
   type BuildGame,
@@ -57,7 +57,7 @@ import {
   type PositionXY,
   type DimensionsXY,
   type ColorRGBA
-} from './types'
+} from './types';
 
 // =============================================================================
 // Global Variables
@@ -72,7 +72,7 @@ export const config = {
   isDebugEnabled: DEFAULT_DEBUG_STATE,
   // User update function
   userUpdateFunction: (() => {}) as UpdateFunction
-}
+};
 
 // =============================================================================
 // Creation of GameObjects
@@ -93,9 +93,9 @@ export const create_rectangle: (width: number, height: number) => ShapeGameObjec
   const rectangle = {
     width,
     height
-  } as RectangleProps
-  return new RectangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, rectangle)
-}
+  } as RectangleProps;
+  return new RectangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, rectangle);
+};
 
 /**
  * Creates a CircleGameObject that takes in circle shape properties.
@@ -110,9 +110,9 @@ export const create_rectangle: (width: number, height: number) => ShapeGameObjec
 export const create_circle: (radius: number) => ShapeGameObject = (radius: number) => {
   const circle = {
     radius
-  } as CircleProps
-  return new CircleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, circle)
-}
+  } as CircleProps;
+  return new CircleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, circle);
+};
 
 /**
  * Creates a TriangleGameObject that takes in an downright isosceles triangle shape properties.
@@ -132,9 +132,9 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
     y2: 0,
     x3: width / 2,
     y3: height
-  } as TriangleProps
-  return new TriangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, triangle)
-}
+  } as TriangleProps;
+  return new TriangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, triangle);
+};
 
 /**
  * Creates a GameObject that contains a text reference.
@@ -149,9 +149,9 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
 export const create_text: (text: string) => TextGameObject = (text: string) => {
   const displayText = {
     text
-  } as DisplayText
-  return new TextGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, displayText)
-}
+  } as DisplayText;
+  return new TextGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, displayText);
+};
 
 /**
  * Creates a GameObject that contains a Sprite image reference.
@@ -172,16 +172,16 @@ export const create_text: (text: string) => TextGameObject = (text: string) => {
  */
 export const create_sprite: (image_url: string) => SpriteGameObject = (image_url: string) => {
   if (image_url === '') {
-    throw new Error('image_url cannot be empty')
+    throw new Error('image_url cannot be empty');
   }
   if (typeof image_url !== 'string') {
-    throw new Error('image_url must be a string')
+    throw new Error('image_url must be a string');
   }
   const sprite: Sprite = {
     imageUrl: image_url
-  } as Sprite
-  return new SpriteGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, sprite)
-}
+  } as Sprite;
+  return new SpriteGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, sprite);
+};
 
 // =============================================================================
 // Manipulation of GameObjects
@@ -205,11 +205,11 @@ export const update_position: (gameObject: GameObject, [x, y]: PositionXY) => Ga
     gameObject.setTransform({
       ...gameObject.getTransform(),
       position: [x, y]
-    })
-    return gameObject
+    });
+    return gameObject;
   }
-  throw new TypeError('Cannot update position of a non-GameObject')
-}
+  throw new TypeError('Cannot update position of a non-GameObject');
+};
 
 /**
  * Updates the scale transform of the GameObject.
@@ -229,11 +229,11 @@ export const update_scale: (gameObject: GameObject, [x, y]: ScaleXY) => GameObje
     gameObject.setTransform({
       ...gameObject.getTransform(),
       scale: [x, y]
-    })
-    return gameObject
+    });
+    return gameObject;
   }
-  throw new TypeError('Cannot update scale of a non-GameObject')
-}
+  throw new TypeError('Cannot update scale of a non-GameObject');
+};
 
 /**
  * Updates the rotation transform of the GameObject.
@@ -253,11 +253,11 @@ export const update_rotation: (gameObject: GameObject, radians: number) => GameO
     gameObject.setTransform({
       ...gameObject.getTransform(),
       rotation: radians
-    })
-    return gameObject
+    });
+    return gameObject;
   }
-  throw new TypeError('Cannot update rotation of a non-GameObject')
-}
+  throw new TypeError('Cannot update rotation of a non-GameObject');
+};
 
 /**
  * Updates the color of the GameObject.
@@ -275,17 +275,17 @@ export const update_rotation: (gameObject: GameObject, radians: number) => GameO
 export const update_color: (gameObject: GameObject, color: ColorRGBA) => GameObject
 = (gameObject: GameObject, color: ColorRGBA) => {
   if (color.length !== 4) {
-    throw new Error('color must be a 4-element array')
+    throw new Error('color must be a 4-element array');
   }
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
       color
-    })
-    return gameObject
+    });
+    return gameObject;
   }
-  throw new TypeError('Cannot update color of a non-GameObject')
-}
+  throw new TypeError('Cannot update color of a non-GameObject');
+};
 
 /**
  * Updates the flip state of the GameObject.
@@ -302,17 +302,17 @@ export const update_color: (gameObject: GameObject, color: ColorRGBA) => GameObj
 export const update_flip: (gameObject: GameObject, flip: FlipXY) => GameObject
 = (gameObject: GameObject, flip: FlipXY) => {
   if (flip.length !== 2) {
-    throw new Error('flip must be a 2-element array')
+    throw new Error('flip must be a 2-element array');
   }
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setRenderState({
       ...gameObject.getRenderState(),
       flip
-    })
-    return gameObject
+    });
+    return gameObject;
   }
-  throw new TypeError('Cannot update flip of a non-GameObject')
-}
+  throw new TypeError('Cannot update flip of a non-GameObject');
+};
 
 /**
  * Updates the text of the TextGameObject.
@@ -332,11 +332,11 @@ export const update_text: (textGameObject: TextGameObject, text: string) => Game
   if (textGameObject instanceof TextGameObject) {
     textGameObject.setText({
       text
-    } as DisplayText)
-    return textGameObject
+    } as DisplayText);
+    return textGameObject;
   }
-  throw new TypeError('Cannot update text onto a non-TextGameObject')
-}
+  throw new TypeError('Cannot update text onto a non-TextGameObject');
+};
 
 /**
  * Renders this GameObject in front of all other GameObjects.
@@ -351,11 +351,11 @@ export const update_text: (textGameObject: TextGameObject, text: string) => Game
 export const update_to_top: (gameObject: GameObject) => GameObject
 = (gameObject: GameObject) => {
   if (gameObject instanceof RenderableGameObject) {
-    gameObject.setBringToTopFlag()
-    return gameObject
+    gameObject.setBringToTopFlag();
+    return gameObject;
   }
-  throw new TypeError('Cannot update to top a non-GameObject')
-}
+  throw new TypeError('Cannot update to top a non-GameObject');
+};
 
 // =============================================================================
 // Querying of GameObjects
@@ -378,10 +378,10 @@ export const update_to_top: (gameObject: GameObject) => GameObject
  */
 export const query_id: (gameObject: GameObject) => number = (gameObject: GameObject) => {
   if (gameObject instanceof GameObject) {
-    return gameObject.id
+    return gameObject.id;
   }
-  throw new TypeError('Cannot query id of non-GameObject')
-}
+  throw new TypeError('Cannot query id of non-GameObject');
+};
 
 /**
  * Queries the [x, y] position transform of the GameObject.
@@ -398,10 +398,10 @@ export const query_id: (gameObject: GameObject) => number = (gameObject: GameObj
 export const query_position: (gameObject: GameObject) => PositionXY
 = (gameObject: GameObject) => {
   if (gameObject instanceof GameObject) {
-    return [...gameObject.getTransform().position]
+    return [...gameObject.getTransform().position];
   }
-  throw new TypeError('Cannot query position of non-GameObject')
-}
+  throw new TypeError('Cannot query position of non-GameObject');
+};
 
 /**
  * Queries the z-rotation transform of the GameObject.
@@ -418,10 +418,10 @@ export const query_position: (gameObject: GameObject) => PositionXY
 export const query_rotation: (gameObject: GameObject) => number
 = (gameObject: GameObject) => {
   if (gameObject instanceof GameObject) {
-    return gameObject.getTransform().rotation
+    return gameObject.getTransform().rotation;
   }
-  throw new TypeError('Cannot query rotation of non-GameObject')
-}
+  throw new TypeError('Cannot query rotation of non-GameObject');
+};
 
 /**
  * Queries the [x, y] scale transform of the GameObject.
@@ -438,10 +438,10 @@ export const query_rotation: (gameObject: GameObject) => number
 export const query_scale: (gameObject: GameObject) => ScaleXY
 = (gameObject: GameObject) => {
   if (gameObject instanceof GameObject) {
-    return [...gameObject.getTransform().scale]
+    return [...gameObject.getTransform().scale];
   }
-  throw new TypeError('Cannot query scale of non-GameObject')
-}
+  throw new TypeError('Cannot query scale of non-GameObject');
+};
 
 /**
  * Queries the [r, g, b, a] color property of the GameObject.
@@ -458,10 +458,10 @@ export const query_scale: (gameObject: GameObject) => ScaleXY
 export const query_color: (gameObject: RenderableGameObject) => ColorRGBA
 = (gameObject: RenderableGameObject) => {
   if (gameObject instanceof RenderableGameObject) {
-    return [...gameObject.getColor()]
+    return [...gameObject.getColor()];
   }
-  throw new TypeError('Cannot query color of non-GameObject')
-}
+  throw new TypeError('Cannot query color of non-GameObject');
+};
 
 /**
  * Queries the [x, y] flip property of the GameObject.
@@ -478,10 +478,10 @@ export const query_color: (gameObject: RenderableGameObject) => ColorRGBA
 export const query_flip: (gameObject: RenderableGameObject) => FlipXY
 = (gameObject: RenderableGameObject) => {
   if (gameObject instanceof RenderableGameObject) {
-    return [...gameObject.getFlipState()]
+    return [...gameObject.getFlipState()];
   }
-  throw new TypeError('Cannot query flip of non-GameObject')
-}
+  throw new TypeError('Cannot query flip of non-GameObject');
+};
 
 /**
  * Queries the text of a Text GameObject.
@@ -499,10 +499,10 @@ export const query_flip: (gameObject: RenderableGameObject) => FlipXY
 export const query_text: (textGameObject: TextGameObject) => string
 = (textGameObject: TextGameObject) => {
   if (textGameObject instanceof TextGameObject) {
-    return textGameObject.getText().text
+    return textGameObject.getText().text;
   }
-  throw new TypeError('Cannot query text of non-TextGameObject')
-}
+  throw new TypeError('Cannot query text of non-TextGameObject');
+};
 
 /**
  * Queries the (mouse) pointer position.
@@ -516,7 +516,7 @@ export const query_text: (textGameObject: TextGameObject) => string
  * ```
  */
 export const query_pointer_position: () => PositionXY
-= () => gameState.pointerProps.pointerPosition
+= () => gameState.pointerProps.pointerPosition;
 
 // =============================================================================
 // Game configuration
@@ -534,13 +534,13 @@ export const query_pointer_position: () => PositionXY
 const withinRange: (num: number, min: number, max: number) => number
 = (num: number, min: number, max: number) => {
   if (num > max) {
-    return max
+    return max;
   }
   if (num < min) {
-    return min
+    return min;
   }
-  return num
-}
+  return num;
+};
 
 /**
  * Sets the frames per second of the canvas, which should be between the MIN_FPS and MAX_FPS.
@@ -555,8 +555,8 @@ const withinRange: (num: number, min: number, max: number) => number
  * ```
  */
 export const set_fps: (fps: number) => void = (fps: number) => {
-  config.fps = withinRange(fps, MIN_FPS, MAX_FPS)
-}
+  config.fps = withinRange(fps, MIN_FPS, MAX_FPS);
+};
 
 /**
  * Sets the dimensions of the canvas, which should be between the
@@ -571,11 +571,11 @@ export const set_fps: (fps: number) => void = (fps: number) => {
  */
 export const set_dimensions: (dimensions: DimensionsXY) => void = (dimensions: DimensionsXY) => {
   if (dimensions.length !== 2) {
-    throw new Error('dimensions must be a 2-element array')
+    throw new Error('dimensions must be a 2-element array');
   }
-  config.width = withinRange(dimensions[0], MIN_WIDTH, MAX_WIDTH)
-  config.height = withinRange(dimensions[1], MIN_HEIGHT, MAX_HEIGHT)
-}
+  config.width = withinRange(dimensions[0], MIN_WIDTH, MAX_WIDTH);
+  config.height = withinRange(dimensions[1], MIN_HEIGHT, MAX_HEIGHT);
+};
 
 /**
  * Sets the scale (zoom) of the pixels in the canvas.
@@ -591,8 +591,8 @@ export const set_dimensions: (dimensions: DimensionsXY) => void = (dimensions: D
  * ```
  */
 export const set_scale: (scale: number) => void = (scale: number) => {
-  config.scale = withinRange(scale, MIN_SCALE, MAX_SCALE)
-}
+  config.scale = withinRange(scale, MIN_SCALE, MAX_SCALE);
+};
 
 /**
  * Enables debug mode.
@@ -609,8 +609,8 @@ export const set_scale: (scale: number) => void = (scale: number) => {
  * ```
  */
 export const enable_debug: () => void = () => {
-  config.isDebugEnabled = true
-}
+  config.isDebugEnabled = true;
+};
 
 /**
  * Logs any information passed into it within the `update_loop`.
@@ -628,9 +628,9 @@ export const enable_debug: () => void = () => {
  */
 export const debug_log: (info: string) => void = (info: string) => {
   if (config.isDebugEnabled) {
-    gameState.debugLogArray.push(info)
+    gameState.debugLogArray.push(info);
   }
-}
+};
 
 // =============================================================================
 // Game loop
@@ -651,7 +651,7 @@ export const debug_log: (info: string) => void = (info: string) => {
  * ```
  * @category Logic
  */
-export const input_key_down: (key_name: string) => boolean = (key_name: string) => gameState.inputKeysDown.has(key_name)
+export const input_key_down: (key_name: string) => boolean = (key_name: string) => gameState.inputKeysDown.has(key_name);
 
 /**
  * Detects if the left mouse button is pressed down.
@@ -666,7 +666,7 @@ export const input_key_down: (key_name: string) => boolean = (key_name: string) 
  * ```
  * @category Logic
  */
-export const input_left_mouse_down: () => boolean = () => gameState.pointerProps.isPointerPrimaryDown
+export const input_left_mouse_down: () => boolean = () => gameState.pointerProps.isPointerPrimaryDown;
 
 /**
  * Detects if the right mouse button is pressed down.
@@ -681,7 +681,7 @@ export const input_left_mouse_down: () => boolean = () => gameState.pointerProps
  * ```
  * @category Logic
  */
-export const input_right_mouse_down: () => boolean = () => gameState.pointerProps.isPointerSecondaryDown
+export const input_right_mouse_down: () => boolean = () => gameState.pointerProps.isPointerSecondaryDown;
 
 /**
  * Detects if the (mouse) pointer is over the gameobject.
@@ -702,10 +702,10 @@ export const input_right_mouse_down: () => boolean = () => gameState.pointerProp
  */
 export const pointer_over_gameobject = (gameObject: GameObject) => {
   if (gameObject instanceof GameObject) {
-    return gameState.pointerProps.pointerOverGameObjectsId.has(gameObject.id)
+    return gameState.pointerProps.pointerOverGameObjectsId.has(gameObject.id);
   }
-  throw new TypeError('Cannot check pointer over non-GameObject')
-}
+  throw new TypeError('Cannot check pointer over non-GameObject');
+};
 /**
  * Checks if two gameobjects overlap with each other, using a rectangular bounding box.
  * This bounding box is rectangular, for all GameObjects.
@@ -727,10 +727,10 @@ export const pointer_over_gameobject = (gameObject: GameObject) => {
 export const gameobjects_overlap: (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => boolean
 = (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => {
   if (gameObject1 instanceof InteractableGameObject && gameObject2 instanceof InteractableGameObject) {
-    return gameObject1.isOverlapping(gameObject2)
+    return gameObject1.isOverlapping(gameObject2);
   }
-  throw new TypeError('Cannot check overlap of non-GameObject')
-}
+  throw new TypeError('Cannot check overlap of non-GameObject');
+};
 /**
  * Gets the current in-game time, which is based off the start time.
  * This function should be called in your update function.
@@ -743,7 +743,7 @@ export const gameobjects_overlap: (gameObject1: InteractableGameObject, gameObje
  * }
  * ```
  */
-export const get_game_time: () => number = () => gameState.gameTime
+export const get_game_time: () => number = () => gameState.gameTime;
 
 /**
  * Gets the current loop count, which is the number of frames that have run.
@@ -758,7 +758,7 @@ export const get_game_time: () => number = () => gameState.gameTime
  * }
  * ```
  */
-export const get_loop_count: () => number = () => gameState.loopCount
+export const get_loop_count: () => number = () => gameState.loopCount;
 
 /**
  * This sets the update loop in the canvas.
@@ -786,9 +786,9 @@ export const get_loop_count: () => number = () => gameState.loopCount
 export const update_loop: (update_function: UpdateFunction) => void = (update_function: UpdateFunction) => {
   // Test for error in user update function
   // This cannot not check for errors inside a block that is not run.
-  update_function([])
-  config.userUpdateFunction = update_function
-}
+  update_function([]);
+  config.userUpdateFunction = update_function;
+};
 
 /**
  * Builds the game.
@@ -803,20 +803,20 @@ export const update_loop: (update_function: UpdateFunction) => void = (update_fu
  */
 export const build_game: () => BuildGame = () => {
   // Reset frame and time counters.
-  gameState.loopCount = 0
-  gameState.gameTime = 0
+  gameState.loopCount = 0;
+  gameState.gameTime = 0;
 
   const inputConfig = {
     keyboard: true,
     mouse: true,
     windowEvents: false
-  }
+  };
 
   const fpsConfig = {
     min: MIN_FPS,
     target: config.fps,
     forceSetTimeOut: true
-  }
+  };
 
   const gameConfig = {
     width: config.width / config.scale,
@@ -831,13 +831,13 @@ export const build_game: () => BuildGame = () => {
     input: inputConfig,
     fps: fpsConfig,
     banner: false
-  }
+  };
 
   return {
     toReplString: () => '[Arcade 2D]',
     gameConfig
-  }
-}
+  };
+};
 
 // =============================================================================
 // Audio functions
@@ -864,13 +864,13 @@ export const build_game: () => BuildGame = () => {
 export const create_audio: (audio_url: string, volume_level: number) => AudioClip
 = (audio_url: string, volume_level: number) => {
   if (typeof audio_url !== 'string') {
-    throw new Error('audio_url must be a string')
+    throw new Error('audio_url must be a string');
   }
   if (typeof volume_level !== 'number') {
-    throw new Error('volume_level must be a number')
+    throw new Error('volume_level must be a number');
   }
-  return AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME))
-}
+  return AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME));
+};
 
 /**
  * Loops the audio clip provided, which will play the audio clip indefinitely.
@@ -886,11 +886,11 @@ export const create_audio: (audio_url: string, volume_level: number) => AudioCli
  */
 export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   if (audio_clip instanceof AudioClip) {
-    audio_clip.setShouldAudioClipLoop(true)
-    return audio_clip
+    audio_clip.setShouldAudioClipLoop(true);
+    return audio_clip;
   }
-  throw new TypeError('Cannot loop a non-AudioClip')
-}
+  throw new TypeError('Cannot loop a non-AudioClip');
+};
 
 /**
  * Plays the audio clip, and stops when the audio clip is over.
@@ -905,11 +905,11 @@ export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  */
 export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   if (audio_clip instanceof AudioClip) {
-    audio_clip.setShouldAudioClipPlay(true)
-    return audio_clip
+    audio_clip.setShouldAudioClipPlay(true);
+    return audio_clip;
   }
-  throw new TypeError('Cannot play a non-AudioClip')
-}
+  throw new TypeError('Cannot play a non-AudioClip');
+};
 
 /**
  * Stops the audio clip immediately.
@@ -924,8 +924,8 @@ export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  */
 export const stop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
   if (audio_clip instanceof AudioClip) {
-    audio_clip.setShouldAudioClipPlay(false)
-    return audio_clip
+    audio_clip.setShouldAudioClipPlay(false);
+    return audio_clip;
   }
-  throw new TypeError('Cannot stop a non-AudioClip')
-}
+  throw new TypeError('Cannot stop a non-AudioClip');
+};

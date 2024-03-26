@@ -84,4 +84,4 @@
 export {
   wcompile,
   wrun
-} from './wabt'
+} from './wabt';

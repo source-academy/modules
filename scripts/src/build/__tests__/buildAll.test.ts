@@ -1,29 +1,29 @@
-import type { MockedFunction } from 'jest-mock'
-import getBuildAllCommand from '..'
-import * as htmlModule from '../docs/html'
-import * as jsonModule from '../docs/json'
-import * as bundleModule from '../modules/bundles'
-import * as tabsModule from '../modules/tabs'
+import type { MockedFunction } from 'jest-mock';
+import getBuildAllCommand from '..';
+import * as htmlModule from '../docs/html';
+import * as jsonModule from '../docs/json';
+import * as bundleModule from '../modules/bundles';
+import * as tabsModule from '../modules/tabs';
 
-import { testBuildCommand } from './testingUtils'
+import { testBuildCommand } from './testingUtils';
 
-jest.mock('../prebuild/tsc')
-jest.mock('../prebuild/lint')
-jest.mock('../docs/docsUtils')
+jest.mock('../prebuild/tsc');
+jest.mock('../prebuild/lint');
+jest.mock('../docs/docsUtils');
 
 jest.mock('esbuild', () => ({
   build: jest.fn()
     .mockResolvedValue({ outputFiles: [] })
-}))
+}));
 
-jest.spyOn(jsonModule, 'buildJsons')
-jest.spyOn(htmlModule, 'buildHtml')
-jest.spyOn(tabsModule, 'bundleTabs')
-jest.spyOn(bundleModule, 'bundleBundles')
+jest.spyOn(jsonModule, 'buildJsons');
+jest.spyOn(htmlModule, 'buildHtml');
+jest.spyOn(tabsModule, 'bundleTabs');
+jest.spyOn(bundleModule, 'bundleBundles');
 
-const asMock = <T extends (...any: any[]) => any>(func: T) => func as MockedFunction<typeof func>
+const asMock = <T extends (...any: any[]) => any>(func: T) => func as MockedFunction<typeof func>;
 const runCommand = (...args: string[]) => getBuildAllCommand()
-  .parseAsync(args, { from: 'user' })
+  .parseAsync(args, { from: 'user' });
 
 describe('test build all command', () => {
   testBuildCommand(
@@ -35,7 +35,7 @@ describe('test build all command', () => {
       tabsModule.bundleTabs,
       bundleModule.bundleBundles
     ]
-  )
+  );
 
   it('should exit with code 1 if buildJsons returns with an error', async () => {
     asMock(jsonModule.buildJsons)
@@ -45,17 +45,17 @@ describe('test build all command', () => {
           name: 'test0',
           error: {}
         }]
-      })
+      });
     try {
-      await runCommand()
+      await runCommand();
     } catch (error) {
       expect(error)
-        .toEqual(new Error('process.exit called with 1'))
+        .toEqual(new Error('process.exit called with 1'));
     }
 
     expect(process.exit)
-      .toHaveBeenCalledWith(1)
-  })
+      .toHaveBeenCalledWith(1);
+  });
 
   it('should exit with code 1 if buildHtml returns with an error', async () => {
     asMock(htmlModule.buildHtml)
@@ -65,19 +65,19 @@ describe('test build all command', () => {
           severity: 'error',
           error: {}
         }
-      })
+      });
 
     try {
-      await runCommand()
+      await runCommand();
     } catch (error) {
       expect(error)
-        .toEqual(new Error('process.exit called with 1'))
+        .toEqual(new Error('process.exit called with 1'));
     }
 
     expect(process.exit)
-      .toHaveBeenCalledWith(1)
+      .toHaveBeenCalledWith(1);
 
     expect(htmlModule.buildHtml)
-      .toHaveBeenCalledTimes(1)
-  })
-})
+      .toHaveBeenCalledTimes(1);
+  });
+});

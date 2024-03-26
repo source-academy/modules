@@ -1,16 +1,16 @@
-import context from 'js-slang/context'
-import { AnaglyphRune, HollusionRune } from './functions'
-import { type DrawnRune, AnimatedRune, type Rune, NormalRune, type RuneAnimation } from './rune'
-import { throwIfNotRune } from './runes_ops'
+import context from 'js-slang/context';
+import { AnaglyphRune, HollusionRune } from './functions';
+import { type DrawnRune, AnimatedRune, type Rune, NormalRune, type RuneAnimation } from './rune';
+import { throwIfNotRune } from './runes_ops';
 
 // =============================================================================
 // Drawing functions
 // =============================================================================
 
-const drawnRunes: (AnimatedRune | DrawnRune)[] = []
+const drawnRunes: (AnimatedRune | DrawnRune)[] = [];
 context.moduleContexts.rune.state = {
   drawnRunes
-}
+};
 
 /**
  * Renders the specified Rune in a tab as a basic drawing.
@@ -20,9 +20,9 @@ context.moduleContexts.rune.state = {
  * @category Main
  */
 export function show(rune: Rune): Rune {
-  throwIfNotRune(show.name, rune)
-  drawnRunes.push(new NormalRune(rune))
-  return rune
+  throwIfNotRune(show.name, rune);
+  drawnRunes.push(new NormalRune(rune));
+  return rune;
 }
 
 /**
@@ -34,9 +34,9 @@ export function show(rune: Rune): Rune {
  * @category Main
  */
 export function anaglyph(rune: Rune): Rune {
-  throwIfNotRune(anaglyph.name, rune)
-  drawnRunes.push(new AnaglyphRune(rune))
-  return rune
+  throwIfNotRune(anaglyph.name, rune);
+  drawnRunes.push(new AnaglyphRune(rune));
+  return rune;
 }
 
 /**
@@ -49,9 +49,9 @@ export function anaglyph(rune: Rune): Rune {
  * @category Main
  */
 export function hollusion_magnitude(rune: Rune, magnitude: number): Rune {
-  throwIfNotRune(hollusion_magnitude.name, rune)
-  drawnRunes.push(new HollusionRune(rune, magnitude))
-  return rune
+  throwIfNotRune(hollusion_magnitude.name, rune);
+  drawnRunes.push(new HollusionRune(rune, magnitude));
+  return rune;
 }
 
 /**
@@ -63,8 +63,8 @@ export function hollusion_magnitude(rune: Rune, magnitude: number): Rune {
  * @category Main
  */
 export function hollusion(rune: Rune): Rune {
-  throwIfNotRune(hollusion.name, rune)
-  return hollusion_magnitude(rune, 0.1)
+  throwIfNotRune(hollusion.name, rune);
+  return hollusion_magnitude(rune, 0.1);
 }
 
 /**
@@ -82,12 +82,12 @@ export function animate_rune(
   func: RuneAnimation
 ) {
   const anim = new AnimatedRune(duration, fps, (n) => {
-    const rune = func(n)
-    throwIfNotRune(animate_rune.name, rune)
-    return new NormalRune(rune)
-  })
-  drawnRunes.push(anim)
-  return anim
+    const rune = func(n);
+    throwIfNotRune(animate_rune.name, rune);
+    return new NormalRune(rune);
+  });
+  drawnRunes.push(anim);
+  return anim;
 }
 
 /**
@@ -105,10 +105,10 @@ export function animate_anaglyph(
   func: RuneAnimation
 ) {
   const anim = new AnimatedRune(duration, fps, (n) => {
-    const rune = func(n)
-    throwIfNotRune(animate_anaglyph.name, rune)
-    return new AnaglyphRune(rune)
-  })
-  drawnRunes.push(anim)
-  return anim
+    const rune = func(n);
+    throwIfNotRune(animate_anaglyph.name, rune);
+    return new AnaglyphRune(rune);
+  });
+  drawnRunes.push(anim);
+  return anim;
 }

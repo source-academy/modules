@@ -1,6 +1,6 @@
-import { Card, Icon, Tab, type TabProps, Tabs, Tooltip } from '@blueprintjs/core'
-import React from 'react'
-import type { SideContentTab } from './types'
+import { Card, Icon, Tab, type TabProps, Tabs, Tooltip } from '@blueprintjs/core';
+import React from 'react';
+import type { SideContentTab } from './types';
 
 /**
  * @property onChange A function that is called whenever the
@@ -26,7 +26,7 @@ export type SideContentProps = {
   selectedTabId: string
   alerts: string[]
   onChange?: (newId: string, oldId: string) => void
-}
+};
 
 const renderTab = (
   tab: SideContentTab,
@@ -34,23 +34,23 @@ const renderTab = (
   _editorWidth?: string,
   _sideContentHeight?: number
 ) => {
-  const iconSize = 20
+  const iconSize = 20;
   const tabTitle = (
     <Tooltip content={tab.label}>
       <div className={!shouldAlert ? 'side-content-tooltip' : 'side-content-tooltip side-content-tab-alert'}>
         <Icon icon={tab.iconName} iconSize={iconSize} />
       </div>
     </Tooltip>
-  )
+  );
   const tabProps: TabProps = {
     id: tab.id,
     title: tabTitle,
     // disabled: tab.disabled,
     className: 'side-content-tab'
-  }
+  };
 
   if (!tab.body) {
-    return <Tab key={tab.id} {...tabProps} />
+    return <Tab key={tab.id} {...tabProps} />;
   }
 
   // const tabBody: JSX.Element = workspaceLocation
@@ -64,10 +64,10 @@ const renderTab = (
   //       }
   //     }
   //   : tab.body;
-  const tabPanel: React.JSX.Element = <div className="side-content-text">{tab.body}</div>
+  const tabPanel: React.JSX.Element = <div className="side-content-text">{tab.body}</div>;
 
-  return <Tab key={tab.id} {...tabProps} panel={tabPanel} />
-}
+  return <Tab key={tab.id} {...tabProps} panel={tabPanel} />;
+};
 
 const SideContent: React.FC<SideContentProps> = ({
   renderActiveTabPanelOnly,
@@ -86,7 +86,7 @@ const SideContent: React.FC<SideContentProps> = ({
           renderActiveTabPanelOnly={renderActiveTabPanelOnly}
           selectedTabId={selectedTabId}
           onChange={(newId: string, oldId: string) => {
-            if (onChange) onChange(newId, oldId)
+            if (onChange) onChange(newId, oldId);
           }}
         >
           {dynamicTabs.map((tab) => renderTab(tab, alerts.includes(tab.id), editorWidth, sideContentHeight))}
@@ -94,6 +94,6 @@ const SideContent: React.FC<SideContentProps> = ({
       </div>
     </Card>
   </div>
-)
+);
 
-export default SideContent
+export default SideContent;

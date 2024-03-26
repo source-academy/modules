@@ -56,4 +56,4 @@ export {
   set_position,
   set_rotation,
   set_scale
-} from './functions'
+} from './functions';

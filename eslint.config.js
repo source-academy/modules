@@ -1,17 +1,17 @@
-import js from '@eslint/js'
-import stylePlugin from '@stylistic/eslint-plugin'
-import importPlugin from 'eslint-plugin-import'
-import jestPlugin from 'eslint-plugin-jest'
-import reactHooksPlugin from 'eslint-plugin-react-hooks'
-import globals from 'globals'
-import tseslint from 'typescript-eslint'
+import js from '@eslint/js';
+import stylePlugin from '@stylistic/eslint-plugin';
+import importPlugin from 'eslint-plugin-import';
+import jestPlugin from 'eslint-plugin-jest';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
-const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP']
-const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST']
+const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
+const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
-const OFF = 0
-const WARN = 1
-const ERROR = 2
+const OFF = 0;
+const WARN = 1;
+const ERROR = 2;
 
 /**
  * @type {import('eslint').Linter.FlatConfig[]}
@@ -65,7 +65,7 @@ export default [
       '@stylistic/no-multiple-empty-lines': [WARN, { max: 1, maxEOF: 0 }],
       '@stylistic/no-trailing-spaces': WARN,
       '@stylistic/quotes': [WARN, 'single', { avoidEscape: true }],
-      '@stylistic/semi': [WARN, 'never'],
+      '@stylistic/semi': [WARN, 'always'],
       '@stylistic/spaced-comment': [
         WARN,
         'always',
@@ -196,4 +196,4 @@ export default [
       'jest/valid-describe-callback': OFF
     }
   }
-]
+];

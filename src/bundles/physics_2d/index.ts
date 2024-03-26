@@ -110,4 +110,4 @@ export {
   array_to_vector,
   add_vector,
   subtract_vector
-} from './functions'
+} from './functions';

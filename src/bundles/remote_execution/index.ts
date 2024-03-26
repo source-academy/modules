@@ -5,4 +5,4 @@
  * @author Richard Dominick
  */
 
-export { default as EV3 } from './ev3'
+export { default as EV3 } from './ev3';

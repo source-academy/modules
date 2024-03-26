@@ -1,8 +1,8 @@
-import fs from 'fs/promises'
-import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild'
-import { bundlesOption, promiseAll } from '@src/commandUtils'
-import { expandBundleNames, type BuildTask, createBuildCommandHandler, createBuildCommand } from '../utils'
-import { commonEsbuildOptions, outputBundleOrTab } from './commons'
+import fs from 'fs/promises';
+import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
+import { bundlesOption, promiseAll } from '@src/commandUtils';
+import { expandBundleNames, type BuildTask, createBuildCommandHandler, createBuildCommand } from '../utils';
+import { commonEsbuildOptions, outputBundleOrTab } from './commons';
 
 export const assertPolyfillPlugin: ESBuildPlugin = {
   name: 'Assert Polyfill',
@@ -11,7 +11,7 @@ export const assertPolyfillPlugin: ESBuildPlugin = {
     build.onResolve({ filter: /^assert/u }, () => ({
       path: 'assert',
       namespace: 'bundleAssert'
-    }))
+    }));
 
     build.onLoad({
       filter: /^assert/u,
@@ -28,9 +28,9 @@ export const assertPolyfillPlugin: ESBuildPlugin = {
         throw message;
       }
       `
-    }))
+    }));
   }
-}
+};
 
 // const jsslangExports = [
 //   'js-slang',
@@ -70,17 +70,17 @@ export const bundleBundles: BuildTask = async ({ bundles }, { srcDir, outDir }) 
       // jsSlangExportCheckingPlugin,
     ],
     tsconfig: `${srcDir}/tsconfig.json`
-  }), fs.mkdir(`${outDir}/bundles`, { recursive: true }))
+  }), fs.mkdir(`${outDir}/bundles`, { recursive: true }));
 
-  const results = await Promise.all(outputFiles.map(file => outputBundleOrTab(file, outDir)))
-  return { bundles: results }
-}
+  const results = await Promise.all(outputFiles.map(file => outputBundleOrTab(file, outDir)));
+  return { bundles: results };
+};
 
-const bundlesCommandHandler = createBuildCommandHandler((...args) => bundleBundles(...args), true)
+const bundlesCommandHandler = createBuildCommandHandler((...args) => bundleBundles(...args), true);
 
 export const getBuildBundlesCommand = () => createBuildCommand(
   'bundles',
   'Build bundles'
 )
   .addOption(bundlesOption)
-  .action(opts => bundlesCommandHandler({ ...opts, tabs: [] }))
+  .action(opts => bundlesCommandHandler({ ...opts, tabs: [] }));

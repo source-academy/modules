@@ -1,5 +1,5 @@
-import { AnchorButton, Button, Intent } from '@blueprintjs/core'
-import type { MouseEventHandler, ReactNode } from 'react'
+import { AnchorButton, Button, Intent } from '@blueprintjs/core';
+import type { MouseEventHandler, ReactNode } from 'react';
 
 const defaultOptions = {
   className: '',
@@ -7,25 +7,25 @@ const defaultOptions = {
   iconOnRight: false,
   intent: Intent.NONE,
   minimal: true
-}
+};
 
 type Props = {
   onClick?: MouseEventHandler<HTMLElement>,
   disabled?: boolean,
   children?: ReactNode,
-}
+};
 
 const ButtonComponent = (props: Props) => {
   const buttonProps = {
     ...defaultOptions,
     ...props
-  }
+  };
   return props.disabled
     ? (
       <AnchorButton {...buttonProps} />
     )
     : (
       <Button {...buttonProps} />
-    )
-}
-export default ButtonComponent
+    );
+};
+export default ButtonComponent;

@@ -172831,7 +172831,7 @@ export const scrabble_words = [
   'zymurgy',
   'zyzzyva',
   'zyzzyvas'
-]
+];
 
 /**
  * `scrabble_letters` is an array of arrays of strings. Each array
@@ -172840,9 +172840,9 @@ export const scrabble_words = [
  * order in which the letters appear in the word.
  */
 
-export const scrabble_letters = scrabble_words.map((w) => w.split(''))
+export const scrabble_letters = scrabble_words.map((w) => w.split(''));
 
 // Sample every 100 words to generate "tiny" dataset
-export const scrabble_words_tiny = scrabble_words.filter((_, i) => i % 100 === 0)
+export const scrabble_words_tiny = scrabble_words.filter((_, i) => i % 100 === 0);
 
-export const scrabble_letters_tiny = scrabble_words_tiny.map((w) => w.split(''))
+export const scrabble_letters_tiny = scrabble_words_tiny.map((w) => w.split(''));

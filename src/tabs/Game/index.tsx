@@ -1,11 +1,11 @@
-import React from 'react'
-import { Links } from './constants'
+import React from 'react';
+import { Links } from './constants';
 
 type Props = {
   children?: never;
   className?: string;
   debuggerContext?: any;
-}
+};
 
 class Game extends React.PureComponent<Props> {
   public render() {
@@ -29,7 +29,7 @@ class Game extends React.PureComponent<Props> {
         </a>
         useful.
       </div>
-    )
+    );
   }
 }
 
@@ -38,4 +38,4 @@ export default {
   body: (debuggerContext: any) => <Game debuggerContext={debuggerContext} />,
   label: 'Game Info Tab',
   iconName: 'info-sign'
-}
+};

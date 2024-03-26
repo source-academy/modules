@@ -49,7 +49,7 @@ export {
   turn_upside_down,
   white,
   yellow
-} from './functions'
+} from './functions';
 
 export {
   anaglyph,
@@ -58,4 +58,4 @@ export {
   hollusion,
   hollusion_magnitude,
   show
-} from './display'
+} from './display';

@@ -1,6 +1,6 @@
-import { build as esbuild } from 'esbuild'
-import { commonEsbuildOptions, outputBundleOrTab } from '../commons'
-import { mockStream } from './streamMocker'
+import { build as esbuild } from 'esbuild';
+import { commonEsbuildOptions, outputBundleOrTab } from '../commons';
+import { mockStream } from './streamMocker';
 
 const testBundle = `
   import context from 'js-slang/context';
@@ -9,7 +9,7 @@ const testBundle = `
   export const bar = () => {
     context.moduleContexts.test0.state = 'bar';
   };
-`
+`;
 
 test('building a bundle', async () => {
   const { outputFiles: [file] } = await esbuild({
@@ -20,33 +20,33 @@ test('building a bundle', async () => {
     outdir: '.',
     outbase: '.',
     external: ['js-slang*']
-  })
+  });
 
-  const rawBundleTextPromise = mockStream()
+  const rawBundleTextPromise = mockStream();
 
-  const result = await outputBundleOrTab(file, 'build')
+  const result = await outputBundleOrTab(file, 'build');
   expect(result.severity)
-    .toEqual('success')
+    .toEqual('success');
 
-  const bundleText = (await rawBundleTextPromise).slice('export default'.length)
+  const bundleText = (await rawBundleTextPromise).slice('export default'.length);
   const mockContext = {
     moduleContexts: {
       test0: {
         state: null
       }
     }
-  }
+  };
   const bundleFuncs = eval(bundleText)((x) => ({
     'js-slang/context': mockContext
-  }[x]))
+  }[x]));
   expect(bundleFuncs.foo())
-    .toEqual('foo')
+    .toEqual('foo');
   expect(bundleFuncs.bar())
-    .toEqual(undefined)
+    .toEqual(undefined);
   expect(mockContext.moduleContexts)
     .toMatchObject({
       test0: {
         state: 'bar'
       }
-    })
-})
+    });
+});

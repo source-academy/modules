@@ -1,16 +1,16 @@
-import { Icon, Slider, Tooltip } from '@blueprintjs/core'
-import { IconNames } from '@blueprintjs/icons'
-import React from 'react'
-import { type AnimatedCurve } from '../../bundles/curve/types'
-import AutoLoopSwitch from '../common/AutoLoopSwitch'
-import ButtonComponent from '../common/ButtonComponent'
-import PlayButton from '../common/PlayButton'
-import WebGLCanvas from '../common/WebglCanvas'
-import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants'
+import { Icon, Slider, Tooltip } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
+import React from 'react';
+import { type AnimatedCurve } from '../../bundles/curve/types';
+import AutoLoopSwitch from '../common/AutoLoopSwitch';
+import ButtonComponent from '../common/ButtonComponent';
+import PlayButton from '../common/PlayButton';
+import WebGLCanvas from '../common/WebglCanvas';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
 
 type Props = {
   animation: AnimatedCurve;
-}
+};
 
 type State = {
   /** Timestamp of the animation */
@@ -29,7 +29,7 @@ type State = {
 
   /** Curve angle in radians */
   displayAngle: number;
-}
+};
 
 /**
  * Canvas to animate 3D Curves. A combination of Canvas3dCurve and
@@ -41,27 +41,27 @@ export default class AnimationCanvas3dCurve extends React.Component<
   Props,
   State
 > {
-  private canvas: HTMLCanvasElement | null
+  private canvas: HTMLCanvasElement | null;
 
   /**
    * The duration of one frame in milliseconds
    */
-  private readonly frameDuration: number
+  private readonly frameDuration: number;
 
   /**
    * The duration of the entire animation
    */
-  private readonly animationDuration: number
+  private readonly animationDuration: number;
 
-  private animationFrameId: number | null
+  private animationFrameId: number | null;
 
   /**
    * Last timestamp since the previous `requestAnimationFrame` call
    */
-  private callbackTimestamp: number | null
+  private callbackTimestamp: number | null;
 
   constructor(props: Props | Readonly<Props>) {
-    super(props)
+    super(props);
 
     this.state = {
       animTimestamp: 0,
@@ -69,17 +69,17 @@ export default class AnimationCanvas3dCurve extends React.Component<
       wasPlaying: false,
       isAutoLooping: true,
       displayAngle: 0
-    }
+    };
 
-    this.canvas = null
-    this.frameDuration = 1000 / props.animation.fps
-    this.animationDuration = Math.round(props.animation.duration * 1000)
-    this.callbackTimestamp = null
-    this.animationFrameId = null
+    this.canvas = null;
+    this.frameDuration = 1000 / props.animation.fps;
+    this.animationDuration = Math.round(props.animation.duration * 1000);
+    this.callbackTimestamp = null;
+    this.animationFrameId = null;
   }
 
   public componentDidMount() {
-    this.drawFrame()
+    this.drawFrame();
   }
 
   /**
@@ -90,48 +90,48 @@ export default class AnimationCanvas3dCurve extends React.Component<
       if (this.canvas) {
         const frame = this.props.animation.getFrame(
           this.state.animTimestamp / 1000
-        )
-        frame.draw(this.canvas)
+        );
+        frame.draw(this.canvas);
       }
     } catch (error) {
       if (this.animationFrameId !== null) {
-        cancelAnimationFrame(this.animationFrameId)
+        cancelAnimationFrame(this.animationFrameId);
       }
       this.setState({
         isPlaying: false,
         errored: error
-      })
+      });
     }
-  }
+  };
 
   private reqFrame = () => {
     if (!this.state.errored) {
-      this.animationFrameId = requestAnimationFrame(this.animationCallback)
+      this.animationFrameId = requestAnimationFrame(this.animationCallback);
     }
-  }
+  };
 
   /**
    * Callback to use with `requestAnimationFrame`
    */
   private animationCallback = (timeInMs: number) => {
-    if (!this.canvas || !this.state.isPlaying) return
+    if (!this.canvas || !this.state.isPlaying) return;
 
     if (!this.callbackTimestamp) {
-      this.callbackTimestamp = timeInMs
-      this.drawFrame()
-      this.reqFrame()
-      return
+      this.callbackTimestamp = timeInMs;
+      this.drawFrame();
+      this.reqFrame();
+      return;
     }
 
-    const currentFrame = timeInMs - this.callbackTimestamp
+    const currentFrame = timeInMs - this.callbackTimestamp;
 
     if (currentFrame < this.frameDuration) {
       // Not time to draw a new frame yet
-      this.reqFrame()
-      return
+      this.reqFrame();
+      return;
     }
 
-    this.callbackTimestamp = timeInMs
+    this.callbackTimestamp = timeInMs;
     if (this.state.animTimestamp >= this.animationDuration) {
       // Animation has ended
       if (this.state.isAutoLooping) {
@@ -141,7 +141,7 @@ export default class AnimationCanvas3dCurve extends React.Component<
             animTimestamp: 0
           },
           this.reqFrame
-        )
+        );
       } else {
         // Otherwise, stop the animation
         this.setState(
@@ -149,21 +149,21 @@ export default class AnimationCanvas3dCurve extends React.Component<
             isPlaying: false
           },
           () => {
-            this.callbackTimestamp = null
+            this.callbackTimestamp = null;
           }
-        )
+        );
       }
     } else {
       // Animation hasn't ended, so just draw the next frame
-      this.drawFrame()
+      this.drawFrame();
       this.setState(
         (prev) => ({
           animTimestamp: prev.animTimestamp + currentFrame
         }),
         this.reqFrame
-      )
+      );
     }
-  }
+  };
 
   /**
    * Play button click handler
@@ -175,18 +175,18 @@ export default class AnimationCanvas3dCurve extends React.Component<
           isPlaying: false
         },
         () => {
-          this.callbackTimestamp = null
+          this.callbackTimestamp = null;
         }
-      )
+      );
     } else {
       this.setState(
         {
           isPlaying: true
         },
         this.reqFrame
-      )
+      );
     }
-  }
+  };
 
   /**
    * Reset button click handler
@@ -197,20 +197,20 @@ export default class AnimationCanvas3dCurve extends React.Component<
       () => {
         if (this.state.isPlaying) {
           // Force stop
-          this.onPlayButtonClick()
+          this.onPlayButtonClick();
         }
 
-        this.drawFrame()
+        this.drawFrame();
       }
-    )
-  }
+    );
+  };
 
   /**
    * Slider value change handler
    * @param newValue New value of the slider
    */
   private onTimeSliderChange = (newValue: number) => {
-    this.callbackTimestamp = null
+    this.callbackTimestamp = null;
     this.setState(
       (prev) => ({
         wasPlaying: prev.isPlaying,
@@ -218,8 +218,8 @@ export default class AnimationCanvas3dCurve extends React.Component<
         animTimestamp: newValue
       }),
       this.drawFrame
-    )
-  }
+    );
+  };
 
   /**
    * Handler triggered when the slider is clicked off
@@ -231,13 +231,13 @@ export default class AnimationCanvas3dCurve extends React.Component<
       }),
       () => {
         if (!this.state.isPlaying) {
-          this.callbackTimestamp = null
+          this.callbackTimestamp = null;
         } else {
-          this.reqFrame()
+          this.reqFrame();
         }
       }
-    )
-  }
+    );
+  };
 
   private onAngleSliderChange = (newAngle: number) => {
     this.setState(
@@ -245,12 +245,12 @@ export default class AnimationCanvas3dCurve extends React.Component<
         displayAngle: newAngle
       },
       () => {
-        this.props.animation.angle = newAngle
-        if (this.state.isPlaying) this.reqFrame()
-        else this.drawFrame()
+        this.props.animation.angle = newAngle;
+        if (this.state.isPlaying) this.reqFrame();
+        else this.drawFrame();
       }
-    )
-  }
+    );
+  };
 
   /**
    * Auto loop switch onChange callback
@@ -258,8 +258,8 @@ export default class AnimationCanvas3dCurve extends React.Component<
   private onSwitchChange = () => {
     this.setState((prev) => ({
       isAutoLooping: !prev.isAutoLooping
-    }))
-  }
+    }));
+  };
 
   public render() {
     return <div
@@ -384,11 +384,11 @@ export default class AnimationCanvas3dCurve extends React.Component<
                 flexGrow: 1
               }}
               ref={(r) => {
-                this.canvas = r
+                this.canvas = r;
               }}
             />
           )}
       </div>
-    </div>
+    </div>;
   }
 }

@@ -16,9 +16,9 @@
 
 /* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
 
-import context from 'js-slang/context'
-import { type List, head, tail, is_pair, accumulate } from 'js-slang/dist/stdlib/list'
-import Phaser from 'phaser'
+import context from 'js-slang/context';
+import { type List, head, tail, is_pair, accumulate } from 'js-slang/dist/stdlib/list';
+import Phaser from 'phaser';
 import {
   type GameObject,
   type ObjectConfig,
@@ -27,10 +27,10 @@ import {
   type RawGameObject,
   type RawInputObject,
   defaultGameParams
-} from './types'
+} from './types';
 
 if (!context.moduleContexts.game.state) {
-  context.moduleContexts.game.state = defaultGameParams
+  context.moduleContexts.game.state = defaultGameParams;
 }
 
 const {
@@ -40,7 +40,7 @@ const {
   remotePath,
   screenSize,
   createAward
-} = context.moduleContexts.game.state
+} = context.moduleContexts.game.state;
 
 // Listener ObjectTypes
 enum ListenerTypes {
@@ -48,7 +48,7 @@ enum ListenerTypes {
   KeyboardKeyType = 'keyboard_key',
 }
 
-const ListnerTypes = Object.values(ListenerTypes)
+const ListnerTypes = Object.values(ListenerTypes);
 
 // Object ObjectTypes
 enum ObjectTypes {
@@ -60,18 +60,18 @@ enum ObjectTypes {
   AwardType = 'award',
 }
 
-const ObjTypes = Object.values(ObjectTypes)
+const ObjTypes = Object.values(ObjectTypes);
 
-const nullFn = () => {}
+const nullFn = () => {};
 
 const mandatory = (obj, errMsg: string) => {
   if (!obj) {
-    throw_error(errMsg)
+    throw_error(errMsg);
   }
-  return obj
-}
+  return obj;
+};
 
-const scene = () => mandatory(context.moduleContexts.game.state.scene, 'No scene found!')
+const scene = () => mandatory(context.moduleContexts.game.state.scene, 'No scene found!');
 
 // =============================================================================
 // Module's Private Functions
@@ -81,22 +81,22 @@ const scene = () => mandatory(context.moduleContexts.game.state.scene, 'No scene
 function get_obj(
   obj: GameObject
 ): RawContainer | RawGameObject | RawInputObject {
-  return obj.object!
+  return obj.object!;
 }
 
 /** @hidden */
 function get_game_obj(obj: GameObject): RawContainer | RawGameObject {
-  return obj.object as RawContainer | RawGameObject
+  return obj.object as RawContainer | RawGameObject;
 }
 
 /** @hidden */
 function get_input_obj(obj: GameObject): RawInputObject {
-  return obj.object as RawInputObject
+  return obj.object as RawInputObject;
 }
 
 /** @hidden */
 function get_container(obj: GameObject): RawContainer {
-  return obj.object as RawContainer
+  return obj.object as RawContainer;
 }
 
 /**
@@ -109,7 +109,7 @@ function get_container(obj: GameObject): RawContainer {
  * @hidden
  */
 function is_type(obj: GameObject, type: string): boolean {
-  return obj !== undefined && obj.type === type && obj.object !== undefined
+  return obj !== undefined && obj.type === type && obj.object !== undefined;
 }
 
 /**
@@ -122,9 +122,9 @@ function is_type(obj: GameObject, type: string): boolean {
  */
 function is_any_type(obj: GameObject, types: string[]): boolean {
   for (let i = 0; i < types.length; ++i) {
-    if (is_type(obj, types[i])) return true
+    if (is_type(obj, types[i])) return true;
   }
-  return false
+  return false;
 }
 
 /**
@@ -143,7 +143,7 @@ function set_type(
   return {
     type,
     object
-  }
+  };
 }
 
 /**
@@ -154,7 +154,7 @@ function set_type(
  */
 function throw_error(message: string): never {
   // eslint-disable-next-line no-caller
-  throw new Error(`${arguments.callee.caller.name}: ${message}`)
+  throw new Error(`${arguments.callee.caller.name}: ${message}`);
 }
 
 // =============================================================================
@@ -170,7 +170,7 @@ function throw_error(message: string): never {
  * @returns prepended path
  */
 export function prepend_remote_url(asset_key: string): string {
-  return remotePath(asset_key)
+  return remotePath(asset_key);
 }
 
 /**
@@ -183,15 +183,15 @@ export function prepend_remote_url(asset_key: string): string {
  * @returns object config
  */
 export function create_config(lst: List): ObjectConfig {
-  const config = {}
+  const config = {};
   accumulate((xs: [any, any], _) => {
     if (!is_pair(xs)) {
-      throw_error('config element is not a pair!')
+      throw_error('config element is not a pair!');
     }
-    config[head(xs)] = tail(xs)
-    return null
-  }, null, lst)
-  return config
+    config[head(xs)] = tail(xs);
+    return null;
+  }, null, lst);
+  return config;
 }
 
 /**
@@ -228,7 +228,7 @@ export function create_text_config(
     stroke,
     strokeThickness: stroke_thickness,
     align
-  }
+  };
 }
 
 /**
@@ -254,7 +254,7 @@ export function create_interactive_config(
     useHandCursor: use_hand_cursor,
     pixelPerfect: pixel_perfect,
     alphaTolerance: alpha_tolerance
-  }
+  };
 }
 
 /**
@@ -289,7 +289,7 @@ export function create_sound_config(
     seek,
     loop,
     delay
-  }
+  };
 }
 
 /**
@@ -332,7 +332,7 @@ export function create_tween_config(
     loop,
     loopDelay: loop_delay,
     onLoop: on_loop
-  }
+  };
 }
 
 /**
@@ -371,7 +371,7 @@ export function create_anim_config(
     yoyo,
     showOnStart: show_on_start,
     hideOnComplete: hide_on_complete
-  }
+  };
 }
 
 /**
@@ -396,7 +396,7 @@ export function create_anim_frame_config(
     key,
     duration,
     visible
-  }
+  };
 }
 
 /**
@@ -419,10 +419,10 @@ export function create_anim_spritesheet_frame_configs(
   key: string
 ): ObjectConfig[] | undefined {
   if (preloadSpritesheetMap.get(key)) {
-    const configArr = scene().anims.generateFrameNumbers(key, {})
-    return configArr
+    const configArr = scene().anims.generateFrameNumbers(key, {});
+    return configArr;
   }
-  throw_error(`${key} is not associated with any spritesheet`)
+  throw_error(`${key} is not associated with any spritesheet`);
 }
 
 /**
@@ -449,7 +449,7 @@ export function create_spritesheet_config(
     startFrame: start_frame,
     margin,
     spacing
-  }
+  };
 }
 
 // SCREEN
@@ -460,7 +460,7 @@ export function create_spritesheet_config(
  * @return screen width
  */
 export function get_screen_width(): number {
-  return screenSize.x
+  return screenSize.x;
 }
 
 /**
@@ -469,7 +469,7 @@ export function get_screen_width(): number {
  * @return screen height
  */
 export function get_screen_height(): number {
-  return screenSize.y
+  return screenSize.y;
 }
 
 /**
@@ -478,7 +478,7 @@ export function get_screen_height(): number {
  * @return screen display width
  */
 export function get_screen_display_width(): number {
-  return scene().scale.displaySize.width
+  return scene().scale.displaySize.width;
 }
 
 /**
@@ -487,7 +487,7 @@ export function get_screen_display_width(): number {
  * @return screen display height
  */
 export function get_screen_display_height(): number {
-  return scene().scale.displaySize.height
+  return scene().scale.displaySize.height;
 }
 
 // LOAD
@@ -500,7 +500,7 @@ export function get_screen_display_height(): number {
  * @param url path to the image
  */
 export function load_image(key: string, url: string) {
-  preloadImageMap.set(key, url)
+  preloadImageMap.set(key, url);
 }
 
 /**
@@ -511,7 +511,7 @@ export function load_image(key: string, url: string) {
  * @param url path to the sound
  */
 export function load_sound(key: string, url: string) {
-  preloadSoundMap.set(key, url)
+  preloadSoundMap.set(key, url);
 }
 
 /**
@@ -527,7 +527,7 @@ export function load_spritesheet(
   url: string,
   spritesheet_config: ObjectConfig
 ) {
-  preloadSpritesheetMap.set(key, [url, spritesheet_config])
+  preloadSpritesheetMap.set(key, [url, spritesheet_config]);
 }
 
 // ADD
@@ -540,10 +540,10 @@ export function load_spritesheet(
  */
 export function add(obj: GameObject): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
-    scene().add.existing(get_game_obj(obj))
-    return obj
+    scene().add.existing(get_game_obj(obj));
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 // SOUND
@@ -557,9 +557,9 @@ export function add(obj: GameObject): GameObject | undefined {
  */
 export function play_sound(key: string, config: ObjectConfig = {}): void {
   if (preloadSoundMap.get(key)) {
-    scene().sound.play(key, config)
+    scene().sound.play(key, config);
   } else {
-    throw_error(`${key} is not associated with any sound`)
+    throw_error(`${key} is not associated with any sound`);
   }
 }
 
@@ -580,8 +580,8 @@ export function play_sound(key: string, config: ObjectConfig = {}): void {
  * @returns true if animation is successfully created, false otherwise
  */
 export function create_anim(anim_config: ObjectConfig): boolean {
-  const anims = scene().anims.create(anim_config)
-  return typeof anims !== 'boolean'
+  const anims = scene().anims.create(anim_config);
+  return typeof anims !== 'boolean';
 }
 
 /**
@@ -595,10 +595,10 @@ export function play_anim_on_image(
   anims_key: string
 ): GameObject | undefined {
   if (is_type(image, ObjectTypes.ImageType)) {
-    (get_obj(image) as Phaser.GameObjects.Sprite).play(anims_key)
-    return image
+    (get_obj(image) as Phaser.GameObjects.Sprite).play(anims_key);
+    return image;
   }
-  throw_error(`${image} is not of type ${ObjectTypes.ImageType}`)
+  throw_error(`${image} is not of type ${ObjectTypes.ImageType}`);
 }
 
 // IMAGE
@@ -623,10 +623,10 @@ export function create_image(
     preloadImageMap.get(asset_key)
     || preloadSpritesheetMap.get(asset_key)
   ) {
-    const image = new Phaser.GameObjects.Sprite(scene(), x, y, asset_key)
-    return set_type(image, ObjectTypes.ImageType)
+    const image = new Phaser.GameObjects.Sprite(scene(), x, y, asset_key);
+    return set_type(image, ObjectTypes.ImageType);
   }
-  throw_error(`${asset_key} is not associated with any image`)
+  throw_error(`${asset_key} is not associated with any image`);
 }
 
 // AWARD
@@ -648,7 +648,7 @@ export function create_image(
  * @returns award game object
  */
 export function create_award(x: number, y: number, award_key: string): GameObject {
-  return set_type(createAward(x, y, award_key), ObjectTypes.AwardType)
+  return set_type(createAward(x, y, award_key), ObjectTypes.AwardType);
 }
 
 // TEXT
@@ -670,8 +670,8 @@ export function create_text(
   text: string,
   config: ObjectConfig = {}
 ): GameObject {
-  const txt = new Phaser.GameObjects.Text(scene(), x, y, text, config)
-  return set_type(txt, ObjectTypes.TextType)
+  const txt = new Phaser.GameObjects.Text(scene(), x, y, text, config);
+  return set_type(txt, ObjectTypes.TextType);
 }
 
 // RECTANGLE
@@ -705,8 +705,8 @@ export function create_rect(
     height,
     fill,
     alpha
-  )
-  return set_type(rect, ObjectTypes.RectType)
+  );
+  return set_type(rect, ObjectTypes.RectType);
 }
 
 // ELLIPSE
@@ -738,8 +738,8 @@ export function create_ellipse(
     height,
     fill,
     alpha
-  )
-  return set_type(ellipse, ObjectTypes.EllipseType)
+  );
+  return set_type(ellipse, ObjectTypes.EllipseType);
 }
 
 // CONTAINER
@@ -763,8 +763,8 @@ export function create_ellipse(
  * @returns container object
  */
 export function create_container(x: number, y: number): GameObject {
-  const cont = new Phaser.GameObjects.Container(scene(), x, y)
-  return set_type(cont, ObjectTypes.ContainerType)
+  const cont = new Phaser.GameObjects.Container(scene(), x, y);
+  return set_type(cont, ObjectTypes.ContainerType);
 }
 
 /**
@@ -784,12 +784,12 @@ export function add_to_container(
     && is_any_type(obj, ObjTypes)
   ) {
     get_container(container)
-      .add(get_game_obj(obj))
-    return container
+      .add(get_game_obj(obj));
+    return container;
   }
   throw_error(
     `${obj} is not of type ${ObjTypes} or ${container} is not of type ${ObjectTypes.ContainerType}`
-  )
+  );
 }
 
 // OBJECT
@@ -804,9 +804,9 @@ export function add_to_container(
 export function destroy_obj(obj: GameObject) {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
-      .destroy()
+      .destroy();
   } else {
-    throw_error(`${obj} is not of type ${ObjTypes}`)
+    throw_error(`${obj} is not of type ${ObjTypes}`);
   }
 }
 
@@ -826,10 +826,10 @@ export function set_display_size(
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
-      .setDisplaySize(x, y)
-    return obj
+      .setDisplaySize(x, y);
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 /**
@@ -843,10 +843,10 @@ export function set_display_size(
 export function set_alpha(obj: GameObject, alpha: number): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
-      .setAlpha(alpha)
-    return obj
+      .setAlpha(alpha);
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 /**
@@ -866,10 +866,10 @@ export function set_interactive(
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
-      .setInteractive(config)
-    return obj
+      .setInteractive(config);
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 /**
@@ -888,10 +888,10 @@ export function set_origin(
   y: number
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
-    (get_game_obj(obj) as RawGameObject).setOrigin(x, y)
-    return obj
+    (get_game_obj(obj) as RawGameObject).setOrigin(x, y);
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 /**
@@ -910,10 +910,10 @@ export function set_position(
 ): GameObject | undefined {
   if (obj && is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
-      .setPosition(x, y)
-    return obj
+      .setPosition(x, y);
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 /**
@@ -932,10 +932,10 @@ export function set_scale(
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
-      .setScale(x, y)
-    return obj
+      .setScale(x, y);
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 /**
@@ -949,10 +949,10 @@ export function set_scale(
 export function set_rotation(obj: GameObject, rad: number): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     get_game_obj(obj)
-      .setRotation(rad)
-    return obj
+      .setRotation(rad);
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 /**
@@ -969,12 +969,12 @@ export function set_flip(
   x: boolean,
   y: boolean
 ): GameObject | undefined {
-  const GameElementType = [ObjectTypes.ImageType, ObjectTypes.TextType]
+  const GameElementType = [ObjectTypes.ImageType, ObjectTypes.TextType];
   if (is_any_type(obj, GameElementType)) {
-    (get_obj(obj) as RawGameElement).setFlip(x, y)
-    return obj
+    (get_obj(obj) as RawGameElement).setFlip(x, y);
+    return obj;
   }
-  throw_error(`${obj} is not of type ${GameElementType}`)
+  throw_error(`${obj} is not of type ${GameElementType}`);
 }
 
 /**
@@ -993,10 +993,10 @@ export async function add_tween(
     scene().tweens.add({
       targets: get_game_obj(obj),
       ...config
-    })
-    return obj
+    });
+    return obj;
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 // LISTENER
@@ -1021,10 +1021,10 @@ export function add_listener(
 ): GameObject | undefined {
   if (is_any_type(obj, ObjTypes)) {
     const listener = get_game_obj(obj)
-      .addListener(event, callback)
-    return set_type(listener, ListenerTypes.InputPlugin)
+      .addListener(event, callback);
+    return set_type(listener, ListenerTypes.InputPlugin);
   }
-  throw_error(`${obj} is not of type ${ObjTypes}`)
+  throw_error(`${obj} is not of type ${ObjTypes}`);
 }
 
 /**
@@ -1048,9 +1048,9 @@ export function add_keyboard_listener(
   event: string,
   callback: Function
 ): GameObject {
-  const keyObj = scene().input.keyboard.addKey(key)
-  const keyboardListener = keyObj.addListener(event, callback)
-  return set_type(keyboardListener, ListenerTypes.KeyboardKeyType)
+  const keyObj = scene().input.keyboard.addKey(key);
+  const keyboardListener = keyObj.addListener(event, callback);
+  return set_type(keyboardListener, ListenerTypes.KeyboardKeyType);
 }
 
 /**
@@ -1062,10 +1062,10 @@ export function add_keyboard_listener(
 export function remove_listener(listener: GameObject): boolean {
   if (is_any_type(listener, ListnerTypes)) {
     get_input_obj(listener)
-      .removeAllListeners()
-    return true
+      .removeAllListeners();
+    return true;
   }
-  return false
+  return false;
 }
 
 const gameFunctions = [
@@ -1110,11 +1110,11 @@ const gameFunctions = [
   set_position,
   set_rotation,
   set_scale
-]
+];
 
 // Inject minArgsNeeded to allow module varargs
 // Remove if module varargs is fixed on js-slang side
 gameFunctions.forEach((fn) => {
-  const dummy = fn as any
-  dummy.minArgsNeeded = fn.length
-})
+  const dummy = fn as any;
+  dummy.minArgsNeeded = fn.length;
+});

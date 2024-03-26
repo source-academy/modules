@@ -52,4 +52,4 @@ export {
   turn_upside_down,
   white,
   yellow
-} from './functions'
+} from './functions';

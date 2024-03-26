@@ -11,4 +11,4 @@
 export {
   entry, is_empty_tree, is_tree, left_branch,
   make_empty_tree, make_tree, right_branch
-} from './functions'
+} from './functions';

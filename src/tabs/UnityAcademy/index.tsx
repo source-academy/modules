@@ -4,33 +4,33 @@
  * @author Wang Zihan
  */
 
-import { Button, NumericInput, Checkbox } from '@blueprintjs/core'
-import { IconNames } from '@blueprintjs/icons'
-import React from 'react'
-import { getInstance } from '../../bundles/unity_academy/UnityAcademy'
-import { UNITY_ACADEMY_BACKEND_URL } from '../../bundles/unity_academy/config'
-import { type DebuggerContext } from '../../typings/type_helpers'
+import { Button, NumericInput, Checkbox } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
+import React from 'react';
+import { getInstance } from '../../bundles/unity_academy/UnityAcademy';
+import { UNITY_ACADEMY_BACKEND_URL } from '../../bundles/unity_academy/config';
+import { type DebuggerContext } from '../../typings/type_helpers';
 
-type Props = {}
+type Props = {};
 
 class Unity3DTab extends React.Component<Props> {
-  private userAgreementCheckboxChecked : boolean
+  private userAgreementCheckboxChecked : boolean;
   constructor(props : Props) {
-    super(props)
-    this.userAgreementCheckboxChecked = false
+    super(props);
+    this.userAgreementCheckboxChecked = false;
   }
   render() {
-    let highFPSWarning
+    let highFPSWarning;
     const currentTargetFrameRate = getInstance()
-      .getTargetFrameRate()
+      .getTargetFrameRate();
     if (currentTargetFrameRate > 30 && currentTargetFrameRate <= 60) {
-      highFPSWarning = <div style={{ color: 'yellow' }}>[Warning] You are using a target FPS higher than default value (30). Higher FPS will lead to more cost in your device's resources such as GPU, increace device temperature and battery usage and may even lead to browser not responding, crash the browser or even crash your operation system if your device really can not endure the high resource cost.</div>
+      highFPSWarning = <div style={{ color: 'yellow' }}>[Warning] You are using a target FPS higher than default value (30). Higher FPS will lead to more cost in your device's resources such as GPU, increace device temperature and battery usage and may even lead to browser not responding, crash the browser or even crash your operation system if your device really can not endure the high resource cost.</div>;
     } else if (currentTargetFrameRate > 60 && currentTargetFrameRate <= 120) {
-      highFPSWarning = <div style={{ color: 'red' }}>[!!WARNING!!] You are using a target FPS that is extremely high. This FPS may lead to large cost in your device's resources such as GPU, significantly increace device temperature and battery usage and have a large chance of making browser not responding, crash the browser or even crash your operation system if your device's performance is not enough.<br/><br/> ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***</div>
+      highFPSWarning = <div style={{ color: 'red' }}>[!!WARNING!!] You are using a target FPS that is extremely high. This FPS may lead to large cost in your device's resources such as GPU, significantly increace device temperature and battery usage and have a large chance of making browser not responding, crash the browser or even crash your operation system if your device's performance is not enough.<br/><br/> ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***</div>;
     } else {
-      highFPSWarning = <div/>
+      highFPSWarning = <div/>;
     }
-    const dimensionMode = getInstance().dimensionMode
+    const dimensionMode = getInstance().dimensionMode;
     return (
       <div>
         <p>Click the button below to open the Unity Academy Window filling the page.</p>
@@ -45,7 +45,7 @@ class Unity3DTab extends React.Component<Props> {
           icon={IconNames.SEND_TO}
           active={true}
           onClick={() => {
-            this.openUnityWindow(100)
+            this.openUnityWindow(100);
           }}
           text="Open Unity Academy Embedded Frontend"
         />
@@ -57,7 +57,7 @@ class Unity3DTab extends React.Component<Props> {
           icon={IconNames.SEND_TO}
           active={true}
           onClick={() => {
-            this.openUnityWindow(50)
+            this.openUnityWindow(50);
           }}
           text="Open with 50% resolution"
         />
@@ -73,8 +73,8 @@ class Unity3DTab extends React.Component<Props> {
             min={15}
             onValueChange={(x) => {
               getInstance()
-                .setTargetFrameRate(x)
-              this.setState({})
+                .setTargetFrameRate(x);
+              this.setState({});
             }}
             stepSize={1}
           />
@@ -82,8 +82,8 @@ class Unity3DTab extends React.Component<Props> {
             active={true}
             onClick={() => {
               getInstance()
-                .setTargetFrameRate(30)
-              this.setState({})
+                .setTargetFrameRate(30);
+              this.setState({});
             }}
             text="30"
           />
@@ -92,8 +92,8 @@ class Unity3DTab extends React.Component<Props> {
             onClick={() => {
               if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
                 getInstance()
-                  .setTargetFrameRate(60)
-                this.setState({})
+                  .setTargetFrameRate(60);
+                this.setState({});
               }
             }}
             text="60"
@@ -103,8 +103,8 @@ class Unity3DTab extends React.Component<Props> {
             onClick={() => {
               if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
                 getInstance()
-                  .setTargetFrameRate(90)
-                this.setState({})
+                  .setTargetFrameRate(90);
+                this.setState({});
               }
             }}
             text="90"
@@ -114,8 +114,8 @@ class Unity3DTab extends React.Component<Props> {
             onClick={() => {
               if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
                 getInstance()
-                  .setTargetFrameRate(120)
-                this.setState({})
+                  .setTargetFrameRate(120);
+                this.setState({});
               }
             }}
             text="120"
@@ -134,29 +134,29 @@ class Unity3DTab extends React.Component<Props> {
         <Checkbox label="I agree to the User Agreement" inputRef={(e) => {
           if (e !== null) {
             e.checked = (getInstance()
-              .getUserAgreementStatus() === 'agreed')
-            this.userAgreementCheckboxChecked = e.checked
+              .getUserAgreementStatus() === 'agreed');
+            this.userAgreementCheckboxChecked = e.checked;
           }
         }} onChange={(event : React.ChangeEvent<HTMLInputElement>) => {
-          this.userAgreementCheckboxChecked = event.target.checked
+          this.userAgreementCheckboxChecked = event.target.checked;
           getInstance()
-            .setUserAgreementStatus(this.userAgreementCheckboxChecked)
+            .setUserAgreementStatus(this.userAgreementCheckboxChecked);
         }} />
       </div>
-    )
+    );
   }
 
   openUnityWindow(resolution : number) : void {
     if (!this.userAgreementCheckboxChecked) {
-      alert('You must agree to the our User Agreement before using Unity Academy and this module!')
-      return
+      alert('You must agree to the our User Agreement before using Unity Academy and this module!');
+      return;
     }
-    const INSTANCE = getInstance()
+    const INSTANCE = getInstance();
     if (INSTANCE === undefined) {
-      alert('No running Unity application found. Please rerun your code and try again.')
-      return
+      alert('No running Unity application found. Please rerun your code and try again.');
+      return;
     }
-    INSTANCE.setShowUnityComponent(resolution)
+    INSTANCE.setShowUnityComponent(resolution);
   }
 }
 
@@ -168,7 +168,7 @@ export default {
    * @returns {boolean}
    */
   toSpawn(_context: DebuggerContext) {
-    return getInstance() !== undefined
+    return getInstance() !== undefined;
   },
 
   /**
@@ -177,7 +177,7 @@ export default {
    * @param {DebuggerContext} context
    */
   body(_context: DebuggerContext) {
-    return <Unity3DTab />
+    return <Unity3DTab />;
   },
 
   /**
@@ -191,4 +191,4 @@ export default {
    * @see https://blueprintjs.com/docs/#icons
    */
   iconName: 'cube'
-}
+};

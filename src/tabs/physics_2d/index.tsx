@@ -1,5 +1,5 @@
-import type { DebuggerContext } from '../../typings/type_helpers'
-import DebugDrawCanvas from './DebugDrawCanvas'
+import type { DebuggerContext } from '../../typings/type_helpers';
+import DebugDrawCanvas from './DebugDrawCanvas';
 
 /**
  * Debug draw visualization for the physics world.
@@ -22,13 +22,13 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    const { context: { moduleContexts: { physics_2d: { state: { world } } } } } = context
+    const { context: { moduleContexts: { physics_2d: { state: { world } } } } } = context;
 
     return (
       <div>
         <DebugDrawCanvas world={world}/>
       </div>
-    )
+    );
   },
 
   /**
@@ -42,4 +42,4 @@ export default {
    * @see https://blueprintjs.com/docs/#icons
    */
   iconName: 'wind'
-}
+};

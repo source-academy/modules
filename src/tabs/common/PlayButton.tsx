@@ -1,14 +1,14 @@
 /* [Imports] */
-import { Icon, type ButtonProps, Tooltip } from '@blueprintjs/core'
-import { IconNames } from '@blueprintjs/icons'
-import React from 'react'
-import ButtonComponent from './ButtonComponent'
+import { Icon, type ButtonProps, Tooltip } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
+import React from 'react';
+import ButtonComponent from './ButtonComponent';
 
 /* [Exports] */
 export type PlayButtonProps = ButtonProps & {
   isPlaying: boolean,
   // onClickCallback: () => void,
-}
+};
 
 /* [Main] */
 export default class PlayButton extends React.Component<PlayButtonProps> {
@@ -22,6 +22,6 @@ export default class PlayButton extends React.Component<PlayButtonProps> {
           icon={ this.props.isPlaying ? IconNames.PAUSE : IconNames.PLAY }
         />
       </ButtonComponent>
-    </Tooltip>
+    </Tooltip>;
   }
 }

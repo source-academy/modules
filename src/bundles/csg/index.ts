@@ -56,16 +56,16 @@
  */
 
 /* [Imports] */
-import context from 'js-slang/context'
-import { Core } from './core'
-import { CsgModuleState } from './utilities'
+import context from 'js-slang/context';
+import { Core } from './core';
+import { CsgModuleState } from './utilities';
 
 /* [Main] */
-const moduleState = new CsgModuleState()
+const moduleState = new CsgModuleState();
 
-context.moduleContexts.csg.state = moduleState
+context.moduleContexts.csg.state = moduleState;
 // We initialise Core for the first time over on the bundles' end here
-Core.initialize(moduleState)
+Core.initialize(moduleState);
 
 /* [Exports] */
 export {
@@ -125,4 +125,4 @@ export {
   render_grid,
   render_axes,
   render_grid_axes
-} from './functions'
+} from './functions';

@@ -10,18 +10,18 @@ import {
   b2CircleShape,
   b2PolygonShape,
   b2Vec2
-} from '@box2d/core'
-import { type ReplResult } from '../../typings/type_helpers'
+} from '@box2d/core';
+import { type ReplResult } from '../../typings/type_helpers';
 
-import { type PhysicsWorld } from './PhysicsWorld'
-import { ACCURACY, type Force, type ForceWithPos } from './types'
+import { type PhysicsWorld } from './PhysicsWorld';
+import { ACCURACY, type Force, type ForceWithPos } from './types';
 
 export class PhysicsObject implements ReplResult {
-  private body: b2Body
-  private shape: b2Shape
-  private fixture: b2Fixture
-  private forcesCentered: Force[] = []
-  private forcesAtAPoint: ForceWithPos[] = []
+  private body: b2Body;
+  private shape: b2Shape;
+  private fixture: b2Fixture;
+  private forcesCentered: Force[] = [];
+  private forcesAtAPoint: ForceWithPos[] = [];
 
   constructor(
     position: b2Vec2,
@@ -34,119 +34,119 @@ export class PhysicsObject implements ReplResult {
       type: isStatic ? b2BodyType.b2_staticBody : b2BodyType.b2_dynamicBody,
       position,
       angle: rotation
-    })
-    this.shape = shape
+    });
+    this.shape = shape;
 
     this.fixture = this.body.CreateFixture({
       shape: this.shape,
       density: 1,
       friction: 1
-    })
+    });
   }
 
   public getFixture() {
-    return this.fixture
+    return this.fixture;
   }
 
   public getMass() {
-    return this.body.GetMass()
+    return this.body.GetMass();
   }
 
   public setDensity(density: number) {
-    this.fixture.SetDensity(density)
-    this.body.ResetMassData()
+    this.fixture.SetDensity(density);
+    this.body.ResetMassData();
   }
 
   public setFriction(friction: number) {
-    this.fixture.SetFriction(friction)
+    this.fixture.SetFriction(friction);
   }
 
   public getPosition() {
-    return this.body.GetPosition()
+    return this.body.GetPosition();
   }
 
   public setPosition(pos: b2Vec2) {
-    this.body.SetTransformVec(pos, this.getRotation())
+    this.body.SetTransformVec(pos, this.getRotation());
   }
 
   public getRotation() {
-    return this.body.GetAngle()
+    return this.body.GetAngle();
   }
 
   public setRotation(rot: number) {
-    this.body.SetAngle(rot)
+    this.body.SetAngle(rot);
   }
 
   public getVelocity() {
-    return this.body.GetLinearVelocity()
+    return this.body.GetLinearVelocity();
   }
 
   public setVelocity(velc: b2Vec2) {
-    this.body.SetLinearVelocity(velc)
+    this.body.SetLinearVelocity(velc);
   }
 
   public getAngularVelocity() {
-    return this.body.GetAngularVelocity()
+    return this.body.GetAngularVelocity();
   }
 
   public setAngularVelocity(velc: number) {
-    this.body.SetAngularVelocity(velc)
+    this.body.SetAngularVelocity(velc);
   }
 
   public addForceCentered(force: Force) {
-    this.forcesCentered.push(force)
+    this.forcesCentered.push(force);
   }
 
   public addForceAtAPoint(force: Force, pos: b2Vec2) {
     this.forcesAtAPoint.push({
       force,
       pos
-    })
+    });
   }
 
   private applyForcesToCenter(world_time: number) {
     this.forcesCentered = this.forcesCentered.filter(
       (force: Force) => force.start_time + force.duration > world_time
-    )
+    );
 
     const resForce = this.forcesCentered
       .filter((force: Force) => force.start_time < world_time)
       .reduce(
         (res: b2Vec2, force: Force) => res.Add(force.direction.Scale(force.magnitude)),
         new b2Vec2()
-      )
+      );
 
-    this.body.ApplyForceToCenter(resForce)
+    this.body.ApplyForceToCenter(resForce);
   }
 
   private applyForcesAtAPoint(world_time: number) {
     this.forcesAtAPoint = this.forcesAtAPoint.filter(
       (forceWithPos: ForceWithPos) => forceWithPos.force.start_time + forceWithPos.force.duration > world_time
-    )
+    );
 
     this.forcesAtAPoint.forEach((forceWithPos) => {
-      const force = forceWithPos.force
+      const force = forceWithPos.force;
       this.body.ApplyForce(
         force.direction.Scale(force.magnitude),
         forceWithPos.pos
-      )
-    })
+      );
+    });
   }
 
   public applyForces(world_time: number) {
-    this.applyForcesToCenter(world_time)
-    this.applyForcesAtAPoint(world_time)
+    this.applyForcesToCenter(world_time);
+    this.applyForcesAtAPoint(world_time);
   }
 
   public isTouching(obj2: PhysicsObject) {
-    let ce = this.body.GetContactList()
+    let ce = this.body.GetContactList();
     while (ce !== null) {
       if (ce.other === obj2.body && ce.contact.IsTouching()) {
-        return true
+        return true;
       }
-      ce = ce.next
+      ce = ce.next;
     }
-    return false
+    return false;
   }
 
   public toReplString = () => `
@@ -162,31 +162,31 @@ export class PhysicsObject implements ReplResult {
   Rotation: ${this.getRotation()
     .toFixed(ACCURACY)}
   AngularVelocity: [${this.getAngularVelocity()
-    .toFixed(ACCURACY)}]`
+    .toFixed(ACCURACY)}]`;
 
   public scale_size(scale: number) {
     if (this.shape instanceof b2CircleShape) {
-      this.shape.m_radius *= scale
+      this.shape.m_radius *= scale;
     } else if (this.shape instanceof b2PolygonShape) {
-      const centroid: b2Vec2 = this.shape.m_centroid
-      const arr: b2Vec2[] = []
+      const centroid: b2Vec2 = this.shape.m_centroid;
+      const arr: b2Vec2[] = [];
       this.shape.m_vertices.forEach((vec) => {
         arr.push(
           new b2Vec2(
             centroid.x + scale * (vec.x - centroid.x),
             centroid.y + scale * (vec.y - centroid.y)
           )
-        )
-      })
+        );
+      });
       this.shape = new b2PolygonShape()
-        .Set(arr)
+        .Set(arr);
     }
-    const f: b2Fixture = this.fixture
-    this.body.DestroyFixture(this.fixture)
+    const f: b2Fixture = this.fixture;
+    this.body.DestroyFixture(this.fixture);
     this.fixture = this.body.CreateFixture({
       shape: this.shape,
       density: f.GetDensity(),
       friction: f.GetFriction()
-    })
+    });
   }
 }

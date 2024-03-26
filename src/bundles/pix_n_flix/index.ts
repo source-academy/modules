@@ -45,4 +45,4 @@ export {
   get_video_time,
   keep_aspect_ratio,
   set_loop_count
-} from './functions'
+} from './functions';

@@ -1,22 +1,22 @@
-import type Phaser from 'phaser'
+import type Phaser from 'phaser';
 /**
  * This file contains the types used to represent GameObjects.
  */
 
 /** Represents (x,y) worldspace position of a GameObject. */
-export type PositionXY = [number, number]
+export type PositionXY = [number, number];
 
 /** Represents (x,y) worldspace  scale of a GameObject. */
-export type ScaleXY = [number, number]
+export type ScaleXY = [number, number];
 
 /** Represents the (width, height) dimensions of the game canvas. */
-export type DimensionsXY = [number, number]
+export type DimensionsXY = [number, number];
 
 /** Represents the (red, green, blue, alpha) of a color of a GameObject. */
-export type ColorRGBA = [number, number, number, number]
+export type ColorRGBA = [number, number, number, number];
 
 /** Represents (x,y) flip state of GameObject. */
-export type FlipXY = [boolean, boolean]
+export type FlipXY = [boolean, boolean];
 
 /**
  * Represents transform properties of a GameObject in worldspace.
@@ -28,7 +28,7 @@ export type TransformProps = {
   position: PositionXY;
   scale: ScaleXY;
   rotation: number;
-}
+};
 
 /**
  * Represents the render properties of a GameObject.
@@ -40,7 +40,7 @@ export type RenderProps = {
   color: ColorRGBA;
   flip: FlipXY;
   isVisible: boolean;
-}
+};
 
 /**
  * Represents the interactable properties of a GameObject.
@@ -48,7 +48,7 @@ export type RenderProps = {
  */
 export type InteractableProps = {
   isHitboxActive: boolean;
-}
+};
 
 /**
  * Represents a rectangle of a GameObject's shape.
@@ -56,7 +56,7 @@ export type InteractableProps = {
 export type RectangleProps = {
   width: number;
   height: number;
-}
+};
 
 /**
  * Represents a isosceles triangular shape of a GameObject's shape.
@@ -68,28 +68,28 @@ export type TriangleProps = {
   y2: number;
   x3: number;
   y3: number;
-}
+};
 
 /**
  * Represents a circular shape of a GameObject's shape.
  */
 export type CircleProps = {
   radius: number;
-}
+};
 
 /**
  * Represents the rendered text of a GameObject.
  */
 export type DisplayText = {
   text: string;
-}
+};
 
 /**
  * Represents the rendered sprite of a GameObject.
  */
 export type Sprite = {
   imageUrl: string;
-}
+};
 
 // =============================================================================
 // Other types
@@ -101,14 +101,14 @@ export type Sprite = {
 export type BuildGame = {
   toReplString: () => string;
   gameConfig;
-}
+};
 
 /**
  * Represents an update function that is user-defined.
  * userSuppliedState is an array that stores whatever the user sets it to be,
  * which can be assessed and modified on the next frame.
  */
-export type UpdateFunction = (userSuppliedState: Array<any>) => void
+export type UpdateFunction = (userSuppliedState: Array<any>) => void;
 
 /**
  * Represents a runtime error, that is not an instance of Error.
@@ -120,9 +120,9 @@ export type ExceptionError = {
       line: number;
     };
   };
-}
+};
 
 /**
  * Represents the Phaser Game Object types that are used.
  */
-export type PhaserGameObject = Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text
+export type PhaserGameObject = Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;

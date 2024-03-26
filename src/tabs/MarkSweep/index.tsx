@@ -1,12 +1,12 @@
-import { Slider, Icon } from '@blueprintjs/core'
-import React from 'react'
-import { ThemeColor } from './style'
+import { Slider, Icon } from '@blueprintjs/core';
+import React from 'react';
+import { ThemeColor } from './style';
 
 type Props = {
   children?: never;
   className?: string;
   debuggerContext: any;
-}
+};
 
 type State = {
   value: number;
@@ -26,12 +26,12 @@ type State = {
   marked: number;
   queue: number[];
   running: boolean;
-}
+};
 
-const MARK_SLOT = 1
+const MARK_SLOT = 1;
 class MarkSweep extends React.Component<Props, State> {
   constructor(props: any) {
-    super(props)
+    super(props);
 
     this.state = {
       value: 0,
@@ -51,50 +51,50 @@ class MarkSweep extends React.Component<Props, State> {
       marked: 1,
       queue: [],
       running: false
-    }
+    };
   }
 
   componentDidMount() {
-    const { debuggerContext } = this.props
+    const { debuggerContext } = this.props;
     if (
       debuggerContext
       && debuggerContext.result
       && debuggerContext.result.value
     ) {
-      this.initialize_state()
+      this.initialize_state();
     }
   }
 
   private initialize_state = () => {
-    const { debuggerContext } = this.props
-    const functions = debuggerContext.result.value
-    const column = functions.get_column_size()
-    const tags = functions.get_tags()
-    const commandHeap = functions.get_command()
-    const unmarked = functions.get_unmarked()
-    const marked = functions.get_marked()
-    let heap = []
-    let command = ''
-    let firstChild = -1
-    let lastChild = -1
-    let description = ''
-    let leftDesc = ''
-    let rightDesc = ''
-    let queue = []
+    const { debuggerContext } = this.props;
+    const functions = debuggerContext.result.value;
+    const column = functions.get_column_size();
+    const tags = functions.get_tags();
+    const commandHeap = functions.get_command();
+    const unmarked = functions.get_unmarked();
+    const marked = functions.get_marked();
+    let heap = [];
+    let command = '';
+    let firstChild = -1;
+    let lastChild = -1;
+    let description = '';
+    let leftDesc = '';
+    let rightDesc = '';
+    let queue = [];
     if (commandHeap[0]) {
-      const currentHeap = commandHeap[0]
-      heap = currentHeap.heap
-      command = currentHeap.type
-      firstChild = currentHeap.left
-      lastChild = currentHeap.right
-      description = currentHeap.desc
-      leftDesc = currentHeap.leftDesc
-      rightDesc = currentHeap.rightDesc
-      queue = currentHeap.queue
+      const currentHeap = commandHeap[0];
+      heap = currentHeap.heap;
+      command = currentHeap.type;
+      firstChild = currentHeap.left;
+      lastChild = currentHeap.right;
+      description = currentHeap.desc;
+      leftDesc = currentHeap.leftDesc;
+      rightDesc = currentHeap.rightDesc;
+      queue = currentHeap.queue;
     }
 
-    const memoryMatrix = functions.get_memory_matrix()
-    const flips = functions.get_flips()
+    const memoryMatrix = functions.get_memory_matrix();
+    const flips = functions.get_flips();
 
     this.setState(() => ({
       column,
@@ -113,16 +113,16 @@ class MarkSweep extends React.Component<Props, State> {
       marked,
       queue,
       running: true
-    }))
-  }
+    }));
+  };
 
   private handlePlus = () => {
-    let { value } = this.state
-    const lengthOfFunction = this.getlengthFunction()
+    let { value } = this.state;
+    const lengthOfFunction = this.getlengthFunction();
     if (value < lengthOfFunction - 1) {
-      value += 1
+      value += 1;
       this.setState(() => {
-        const { commandHeap } = this.state
+        const { commandHeap } = this.state;
         return {
           value,
           heap: commandHeap[value].heap,
@@ -133,17 +133,17 @@ class MarkSweep extends React.Component<Props, State> {
           leftDesc: commandHeap[value].leftDesc,
           rightDesc: commandHeap[value].rightDesc,
           queue: commandHeap[value].queue
-        }
-      })
+        };
+      });
     }
-  }
+  };
 
   private handleMinus = () => {
-    let { value } = this.state
+    let { value } = this.state;
     if (value > 0) {
-      value -= 1
+      value -= 1;
       this.setState(() => {
-        const { commandHeap } = this.state
+        const { commandHeap } = this.state;
         return {
           value,
           heap: commandHeap[value].heap,
@@ -154,14 +154,14 @@ class MarkSweep extends React.Component<Props, State> {
           leftDesc: commandHeap[value].leftDesc,
           rightDesc: commandHeap[value].rightDesc,
           queue: commandHeap[value].queue
-        }
-      })
+        };
+      });
     }
-  }
+  };
 
   private sliderShift = (newValue: number) => {
     this.setState(() => {
-      const { commandHeap } = this.state
+      const { commandHeap } = this.state;
       return {
         value: newValue,
         heap: commandHeap[newValue].heap,
@@ -172,87 +172,87 @@ class MarkSweep extends React.Component<Props, State> {
         leftDesc: commandHeap[newValue].leftDesc,
         rightDesc: commandHeap[newValue].rightDesc,
         queue: commandHeap[newValue].queue
-      }
-    })
-  }
+      };
+    });
+  };
 
   private getlengthFunction = () => {
-    const { debuggerContext } = this.props
+    const { debuggerContext } = this.props;
     const commandHeap
       = debuggerContext && debuggerContext.result.value
         ? debuggerContext.result.value.get_command()
-        : []
-    return commandHeap.length
-  }
+        : [];
+    return commandHeap.length;
+  };
 
   private isTag = (tag) => {
-    const { tags } = this.state
-    return tags ? tags.includes(tag) : false
-  }
+    const { tags } = this.state;
+    return tags ? tags.includes(tag) : false;
+  };
 
   private getMemoryColor = (indexValue) => {
-    const { heap, marked, unmarked, command } = this.state
-    const { debuggerContext } = this.props
+    const { heap, marked, unmarked, command } = this.state;
+    const { debuggerContext } = this.props;
     const roots = debuggerContext.result.value
       ? debuggerContext.result.value.get_roots()
-      : []
-    const value = heap ? heap[indexValue] : 0
-    let color = ''
+      : [];
+    const value = heap ? heap[indexValue] : 0;
+    let color = '';
 
     if (command === 'Showing Roots' && roots.includes(indexValue)) {
-      color = 'magenta'
+      color = 'magenta';
     } else if (this.isTag(heap[indexValue - MARK_SLOT])) {
       if (value === marked) {
-        color = ThemeColor.RED
+        color = ThemeColor.RED;
       } else if (value === unmarked) {
-        color = ThemeColor.BLACK
+        color = ThemeColor.BLACK;
       }
     } else if (!value) {
-      color = ThemeColor.GREY
+      color = ThemeColor.GREY;
     } else if (this.isTag(value)) {
       // is a tag
-      color = ThemeColor.PINK
+      color = ThemeColor.PINK;
     } else {
-      color = ThemeColor.BLUE
+      color = ThemeColor.BLUE;
     }
 
-    return color
-  }
+    return color;
+  };
 
   private getBackgroundColor = (indexValue) => {
-    const { firstChild } = this.state
-    const { lastChild } = this.state
-    const { commandHeap, value, command } = this.state
-    const { debuggerContext } = this.props
+    const { firstChild } = this.state;
+    const { lastChild } = this.state;
+    const { commandHeap, value, command } = this.state;
+    const { debuggerContext } = this.props;
     const roots = debuggerContext.result.value
       ? debuggerContext.result.value.get_roots()
-      : []
-    const size1 = commandHeap[value].sizeLeft
-    const size2 = commandHeap[value].sizeRight
-    let color = ''
+      : [];
+    const size1 = commandHeap[value].sizeLeft;
+    const size2 = commandHeap[value].sizeRight;
+    let color = '';
 
     if (command === 'Showing Roots' && roots.includes(indexValue)) {
-      color = ThemeColor.GREEN
+      color = ThemeColor.GREEN;
     } else if (indexValue >= firstChild && indexValue < firstChild + size1) {
-      color = ThemeColor.GREEN
+      color = ThemeColor.GREEN;
     } else if (indexValue >= lastChild && indexValue < lastChild + size2) {
-      color = ThemeColor.YELLOW
+      color = ThemeColor.YELLOW;
     }
 
-    return color
-  }
+    return color;
+  };
 
   private renderLabel = (val: number) => {
-    const { flips } = this.state
-    return flips.includes(val) ? '^' : `${val}`
-  }
+    const { flips } = this.state;
+    return flips.includes(val) ? '^' : `${val}`;
+  };
 
   public render() {
-    const { state } = this
+    const { state } = this;
 
     if (state.running) {
-      const { memoryMatrix } = this.state
-      const lengthOfFunction = this.getlengthFunction()
+      const { memoryMatrix } = this.state;
+      const lengthOfFunction = this.getlengthFunction();
       return (
         <div>
           <div>
@@ -338,8 +338,8 @@ class MarkSweep extends React.Component<Props, State> {
                       {item
                         && item.length > 0
                         && item.map((content) => {
-                          const color = this.getMemoryColor(content)
-                          const bgColor = this.getBackgroundColor(content)
+                          const color = this.getMemoryColor(content);
+                          const bgColor = this.getBackgroundColor(content);
                           return (
                             <div
                               style={{
@@ -355,7 +355,7 @@ class MarkSweep extends React.Component<Props, State> {
                                 }}
                               />
                             </div>
-                          )
+                          );
                         })}
                     </div>
                   ))}
@@ -444,7 +444,7 @@ class MarkSweep extends React.Component<Props, State> {
             </div>
           </div>
         </div>
-      )
+      );
     }
 
     return (
@@ -459,7 +459,7 @@ class MarkSweep extends React.Component<Props, State> {
         </p>
         <p> Calls the function init() at the end of your code to start. </p>
       </div>
-    )
+    );
   }
 }
 
@@ -470,4 +470,4 @@ export default {
   ),
   label: 'Mark Sweep Garbage Collector',
   iconName: 'heat-grid'
-}
+};

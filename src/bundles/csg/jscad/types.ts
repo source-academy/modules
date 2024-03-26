@@ -1,22 +1,22 @@
 /* [Import] */
-import type { RGB, RGBA } from '@jscad/modeling/src/colors/types'
-import type { Geom3 } from '@jscad/modeling/src/geometries/types'
-import { type cameras, type drawCommands, controls } from '@jscad/regl-renderer'
-import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi'
+import type { RGB, RGBA } from '@jscad/modeling/src/colors/types';
+import type { Geom3 } from '@jscad/modeling/src/geometries/types';
+import { type cameras, type drawCommands, controls } from '@jscad/regl-renderer';
+import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 
 /* [Main] */
-const { orbit } = controls
+const { orbit } = controls;
 
 /* [Exports] */
-export type Color = RGB
-export type AlphaColor = RGBA
+export type Color = RGB;
+export type AlphaColor = RGBA;
 
-export type Numbers2 = [number, number]
-export type Numbers3 = [number, number, number]
+export type Numbers2 = [number, number];
+export type Numbers3 = [number, number, number];
 
-export type Vector = Numbers3
-export type Coordinates = Numbers3
-export type BoundingBox = [Coordinates, Coordinates]
+export type Vector = Numbers3;
+export type Coordinates = Numbers3;
+export type BoundingBox = [Coordinates, Coordinates];
 
 // @jscad\regl-renderer\src\rendering\renderDefaults.js
 export type RenderOptions = {
@@ -40,7 +40,7 @@ export type RenderOptions = {
 
   // Unused
   lightPosition?: Coordinates; // See also lightDirection
-}
+};
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 // @jscad\regl-renderer\demo-web.js
@@ -64,7 +64,7 @@ export type Entity = {
     // Used to retrieve created DrawCommands from cache
     cacheId?: number | null;
   };
-}
+};
 
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.js
 // @jscad\regl-renderer\src\geometry-utils-V2\geom3ToGeometries.test.js
@@ -76,7 +76,7 @@ export type Geometry = {
   colors: AlphaColor[];
   transforms: Mat4;
   isTransparent: boolean;
-}
+};
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 export type GeometryEntity = Entity & {
@@ -94,7 +94,7 @@ export type GeometryEntity = Entity & {
 
   // The original Geometry used to make the GeometryEntity
   geometry: Geometry;
-}
+};
 
 // @jscad\regl-renderer\src\rendering\commands\drawGrid\multi.js
 // @jscad\regl-renderer\src\rendering\commands\drawGrid\index.js
@@ -123,7 +123,7 @@ export type MultiGridEntityType = Entity & {
 
   // Deprecated
   lineWidth?: number;
-}
+};
 
 // @jscad\regl-renderer\src\rendering\commands\drawAxis\index.js
 // @jscad\regl-renderer\demo-web.js
@@ -141,13 +141,13 @@ export type AxisEntityType = Entity & {
 
   // Deprecated
   lineWidth?: number;
-}
+};
 
 // There are 4 rendering commands to use in regl-renderer: drawAxis, drawGrid,
 // drawLines & drawMesh. drawExps appears abandoned. Only once passed Regl & an
 // Entity do they return an actual DrawCommand
-export type DrawCommandMaker = typeof drawCommands | typeof makeDrawMultiGrid
-export type DrawCommandMakers = Record<string, DrawCommandMaker>
+export type DrawCommandMaker = typeof drawCommands | typeof makeDrawMultiGrid;
+export type DrawCommandMakers = Record<string, DrawCommandMaker>;
 
 // @jscad\regl-renderer\src\cameras\perspectiveCamera.js
 // @jscad\regl-renderer\src\cameras\orthographicCamera.js
@@ -155,7 +155,7 @@ export type DrawCommandMakers = Record<string, DrawCommandMaker>
   (Not exhaustive, only defines well the important properties we need.)
   (Orthgraphic camera is ignored, this file assumes PerspectiveCameraState)
 */
-export type Mat4 = Float32Array
+export type Mat4 = Float32Array;
 export type PerspectiveCameraState = Omit<
   typeof cameras.perspective.cameraState,
 'position' | 'target' | 'view'
@@ -164,7 +164,7 @@ export type PerspectiveCameraState = Omit<
 
   position: Coordinates;
   view: Mat4;
-}
+};
 
 // @jscad\regl-renderer\src\rendering\render.js
 /*
@@ -190,7 +190,7 @@ export type WrappedRendererData = {
   rendering?: RenderOptions;
 
   drawCommands: DrawCommandMakers;
-}
+};
 
 // @jscad\regl-renderer\src\rendering\render.js
 /*
@@ -201,7 +201,7 @@ export type WrappedRendererData = {
   may take precedence. The main DrawCommand is said to be in charge of injecting
   most uniforms into the Regl context, ie keeping track of all Regl global state
 */
-export type WrappedRenderer = (data: WrappedRendererData) => void
+export type WrappedRenderer = (data: WrappedRendererData) => void;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 /*
@@ -216,9 +216,9 @@ export type ControlsState = Omit<
 
     thetaDelta: number;
     phiDelta: number;
-  }
+  };
 
-export type Solid = Geom3
+export type Solid = Geom3;
 
 // @jscad\regl-renderer\src\geometry-utils-V2\entitiesFromSolids.js
 /*
@@ -231,7 +231,7 @@ export type EntitiesFromSolidsOptions = {
 
   // Whether to smooth the normals of 3D solids, rendering a smooth surface
   smoothNormals?: boolean;
-}
+};
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type UpdatedStates = {
@@ -245,7 +245,7 @@ export type UpdatedStates = {
     scale: number;
     changed: boolean;
   };
-}
+};
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type ZoomToFitStates = {
@@ -255,7 +255,7 @@ export type ZoomToFitStates = {
   controls: {
     scale: number;
   };
-}
+};
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type RotateStates = {
@@ -264,7 +264,7 @@ export type RotateStates = {
     thetaDelta: number;
     phiDelta: number;
   };
-}
+};
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type PanStates = {
@@ -273,4 +273,4 @@ export type PanStates = {
     target: Vector;
   };
   controls: ControlsState;
-}
+};

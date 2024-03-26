@@ -1,33 +1,33 @@
-import { type MemoryHeaps, type Memory, type Tag, COMMAND, type CommandHeapObject } from './types'
+import { type MemoryHeaps, type Memory, type Tag, COMMAND, type CommandHeapObject } from './types';
 
 // Global Variables
-let ROW: number = 10
-const COLUMN: number = 32
-let NODE_SIZE: number = 0
-let MEMORY_SIZE: number = -99
-let memory: Memory
-let memoryHeaps: Memory[] = []
-const commandHeap: CommandHeapObject[] = []
-let memoryMatrix: number[][]
-let tags: Tag[]
-let typeTag: string[]
-const flips: number[] = []
-let TAG_SLOT: number = 0
-let SIZE_SLOT: number = 1
-let FIRST_CHILD_SLOT: number = 2
-let LAST_CHILD_SLOT: number = 3
-let MARKED: number = 1
-let UNMARKED: number = 0
-let ROOTS: number[] = []
+let ROW: number = 10;
+const COLUMN: number = 32;
+let NODE_SIZE: number = 0;
+let MEMORY_SIZE: number = -99;
+let memory: Memory;
+let memoryHeaps: Memory[] = [];
+const commandHeap: CommandHeapObject[] = [];
+let memoryMatrix: number[][];
+let tags: Tag[];
+let typeTag: string[];
+const flips: number[] = [];
+let TAG_SLOT: number = 0;
+let SIZE_SLOT: number = 1;
+let FIRST_CHILD_SLOT: number = 2;
+let LAST_CHILD_SLOT: number = 3;
+let MARKED: number = 1;
+let UNMARKED: number = 0;
+let ROOTS: number[] = [];
 
 function generateMemory(): void {
-  memoryMatrix = []
+  memoryMatrix = [];
   for (let i = 0; i < ROW; i += 1) {
-    memory = []
+    memory = [];
     for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
-      memory.push(i * COLUMN + j)
+      memory.push(i * COLUMN + j);
     }
-    memoryMatrix.push(memory)
+    memoryMatrix.push(memory);
   }
 
   const obj: CommandHeapObject = {
@@ -41,14 +41,14 @@ function generateMemory(): void {
     leftDesc: '',
     rightDesc: '',
     queue: []
-  }
+  };
 
-  commandHeap.push(obj)
+  commandHeap.push(obj);
 }
 
 function updateRoots(array): void {
   for (let i = 0; i < array.length; i += 1) {
-    ROOTS.push(array[i])
+    ROOTS.push(array[i]);
   }
 }
 
@@ -58,27 +58,27 @@ function initialize_memory(
   marked,
   unmarked
 ): void {
-  MEMORY_SIZE = memorySize
-  NODE_SIZE = nodeSize
-  const excess = MEMORY_SIZE % NODE_SIZE
-  MEMORY_SIZE -= excess
-  ROW = MEMORY_SIZE / COLUMN
-  MARKED = marked
-  UNMARKED = unmarked
-  generateMemory()
+  MEMORY_SIZE = memorySize;
+  NODE_SIZE = nodeSize;
+  const excess = MEMORY_SIZE % NODE_SIZE;
+  MEMORY_SIZE -= excess;
+  ROW = MEMORY_SIZE / COLUMN;
+  MARKED = marked;
+  UNMARKED = unmarked;
+  generateMemory();
 }
 
 function initialize_tag(allTag: number[], types: string[]): void {
-  tags = allTag
-  typeTag = types
+  tags = allTag;
+  typeTag = types;
 }
 
 function allHeap(newHeap: number[][]): void {
-  memoryHeaps = newHeap
+  memoryHeaps = newHeap;
 }
 
 function updateFlip(): void {
-  flips.push(commandHeap.length - 1)
+  flips.push(commandHeap.length - 1);
 }
 
 function newCommand(
@@ -93,22 +93,22 @@ function newCommand(
   lastDesc,
   queue = []
 ): void {
-  const newType = type
-  const newLeft = left
-  const newRight = right
-  const newSizeLeft = sizeLeft
-  const newSizeRight = sizeRight
-  const newDesc = description
-  const newFirstDesc = firstDesc
-  const newLastDesc = lastDesc
+  const newType = type;
+  const newLeft = left;
+  const newRight = right;
+  const newSizeLeft = sizeLeft;
+  const newSizeRight = sizeRight;
+  const newDesc = description;
+  const newFirstDesc = firstDesc;
+  const newLastDesc = lastDesc;
 
-  memory = []
+  memory = [];
   for (let j = 0; j < heap.length; j += 1) {
-    memory.push(heap[j])
+    memory.push(heap[j]);
   }
-  const newQueue: number[] = []
+  const newQueue: number[] = [];
   for (let j = 0; j < queue.length; j += 1) {
-    newQueue.push(queue[j])
+    newQueue.push(queue[j]);
   }
 
   const obj: CommandHeapObject = {
@@ -122,14 +122,14 @@ function newCommand(
     leftDesc: newFirstDesc,
     rightDesc: newLastDesc,
     queue: newQueue
-  }
+  };
 
-  commandHeap.push(obj)
+  commandHeap.push(obj);
 }
 
 function newSweep(left, heap): void {
-  const newSizeLeft = NODE_SIZE
-  const desc = `Freeing node ${left}`
+  const newSizeLeft = NODE_SIZE;
+  const desc = `Freeing node ${left}`;
   newCommand(
     COMMAND.SWEEP,
     left,
@@ -140,12 +140,12 @@ function newSweep(left, heap): void {
     desc,
     'freed node',
     ''
-  )
+  );
 }
 
 function newMark(left, heap, queue): void {
-  const newSizeLeft = NODE_SIZE
-  const desc = `Marking node ${left} to be live memory`
+  const newSizeLeft = NODE_SIZE;
+  const desc = `Marking node ${left} to be live memory`;
   newCommand(
     COMMAND.MARK,
     left,
@@ -157,29 +157,29 @@ function newMark(left, heap, queue): void {
     'marked node',
     '',
     queue
-  )
+  );
 }
 
 function addRoots(arr): void {
   for (let i = 0; i < arr.length; i += 1) {
-    ROOTS.push(arr[i])
+    ROOTS.push(arr[i]);
   }
 }
 
 function showRoot(heap): void {
-  const desc = 'All root nodes are marked'
-  newCommand(COMMAND.SHOW_MARKED, -1, -1, 0, 0, heap, desc, '', '')
+  const desc = 'All root nodes are marked';
+  newCommand(COMMAND.SHOW_MARKED, -1, -1, 0, 0, heap, desc, '', '');
 }
 
 function showRoots(heap): void {
   for (let i = 0; i < ROOTS.length; i += 1) {
-    showRoot(heap)
+    showRoot(heap);
   }
-  ROOTS = []
+  ROOTS = [];
 }
 
 function newUpdateSweep(right, heap): void {
-  const desc = `Set node ${right} to freelist`
+  const desc = `Set node ${right} to freelist`;
   newCommand(
     COMMAND.RESET,
     -1,
@@ -190,11 +190,11 @@ function newUpdateSweep(right, heap): void {
     desc,
     'free node',
     ''
-  )
+  );
 }
 
 function newPush(left, right, heap): void {
-  const desc = `Push OS update memory ${left} and ${right}.`
+  const desc = `Push OS update memory ${left} and ${right}.`;
   newCommand(
     COMMAND.PUSH,
     left,
@@ -205,12 +205,12 @@ function newPush(left, right, heap): void {
     desc,
     'last child address slot',
     'new child pushed'
-  )
+  );
 }
 
 function newPop(res, left, right, heap): void {
-  const newRes = res
-  const desc = `Pop OS from memory ${left}, with value ${newRes}.`
+  const newRes = res;
+  const desc = `Pop OS from memory ${left}, with value ${newRes}.`;
   newCommand(
     COMMAND.POP,
     left,
@@ -221,18 +221,18 @@ function newPop(res, left, right, heap): void {
     desc,
     'popped memory',
     'last child address slot'
-  )
+  );
 }
 
 function newAssign(res, left, heap): void {
-  const newRes = res
-  const desc = `Assign memory [${left}] with ${newRes}.`
-  newCommand(COMMAND.ASSIGN, left, -1, 1, 1, heap, desc, 'assigned memory', '')
+  const newRes = res;
+  const desc = `Assign memory [${left}] with ${newRes}.`;
+  newCommand(COMMAND.ASSIGN, left, -1, 1, 1, heap, desc, 'assigned memory', '');
 }
 
 function newNew(left, heap): void {
-  const newSizeLeft = NODE_SIZE
-  const desc = `New node starts in [${left}].`
+  const newSizeLeft = NODE_SIZE;
+  const desc = `New node starts in [${left}].`;
   newCommand(
     COMMAND.NEW,
     left,
@@ -243,19 +243,19 @@ function newNew(left, heap): void {
     desc,
     'new memory allocated',
     ''
-  )
+  );
 }
 
 function newGC(heap): void {
-  const desc = 'Memory exhausted, start Mark and Sweep Algorithm'
-  newCommand(COMMAND.START, -1, -1, 0, 0, heap, desc, '', '')
-  updateFlip()
+  const desc = 'Memory exhausted, start Mark and Sweep Algorithm';
+  newCommand(COMMAND.START, -1, -1, 0, 0, heap, desc, '', '');
+  updateFlip();
 }
 
 function endGC(heap): void {
-  const desc = 'Result of free memory'
-  newCommand(COMMAND.END, -1, -1, 0, 0, heap, desc, '', '')
-  updateFlip()
+  const desc = 'Result of free memory';
+  newCommand(COMMAND.END, -1, -1, 0, 0, heap, desc, '', '');
+  updateFlip();
 }
 
 function updateSlotSegment(
@@ -265,69 +265,69 @@ function updateSlotSegment(
   last: number
 ): void {
   if (tag >= 0) {
-    TAG_SLOT = tag
+    TAG_SLOT = tag;
   }
   if (size >= 0) {
-    SIZE_SLOT = size
+    SIZE_SLOT = size;
   }
   if (first >= 0) {
-    FIRST_CHILD_SLOT = first
+    FIRST_CHILD_SLOT = first;
   }
   if (last >= 0) {
-    LAST_CHILD_SLOT = last
+    LAST_CHILD_SLOT = last;
   }
 }
 
 function get_memory_size(): number {
-  return MEMORY_SIZE
+  return MEMORY_SIZE;
 }
 
 function get_tags(): Tag[] {
-  return tags
+  return tags;
 }
 
 function get_command(): CommandHeapObject[] {
-  return commandHeap
+  return commandHeap;
 }
 
 function get_flips(): number[] {
-  return flips
+  return flips;
 }
 
 function get_types(): String[] {
-  return typeTag
+  return typeTag;
 }
 
 function get_memory_heap(): MemoryHeaps {
-  return memoryHeaps
+  return memoryHeaps;
 }
 
 function get_memory_matrix(): MemoryHeaps {
-  return memoryMatrix
+  return memoryMatrix;
 }
 
 function get_roots(): number[] {
-  return ROOTS
+  return ROOTS;
 }
 
 function get_slots(): number[] {
-  return [TAG_SLOT, SIZE_SLOT, FIRST_CHILD_SLOT, LAST_CHILD_SLOT]
+  return [TAG_SLOT, SIZE_SLOT, FIRST_CHILD_SLOT, LAST_CHILD_SLOT];
 }
 
 function get_column_size(): number {
-  return COLUMN
+  return COLUMN;
 }
 
 function get_row_size(): number {
-  return ROW
+  return ROW;
 }
 
 function get_unmarked(): number {
-  return UNMARKED
+  return UNMARKED;
 }
 
 function get_marked(): number {
-  return MARKED
+  return MARKED;
 }
 
 function init() {
@@ -346,7 +346,7 @@ function init() {
     get_unmarked,
     get_marked,
     get_roots
-  }
+  };
 }
 
 export {
@@ -371,4 +371,4 @@ export {
   endGC,
   addRoots,
   showRoot
-}
+};
