@@ -5626,10 +5626,10 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
-saar@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/saar/-/saar-1.0.0.tgz#7e2d23548c1569140888596724a9cc45db1d32eb"
-  integrity sha512-aOlMTjgKUBDvmodhyWPwJc0gtAeRmBJdhQ82gbpPmFs/kbEnX+jqQoan2azVd6kLsRwGt/X4Bo2fIKIpq030Cg==
+saar@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/saar/-/saar-1.0.1.tgz#825de219ded8fd78a831d9735e57458f475c8c7e"
+  integrity sha512-cAsIWcmEC3IAvfnlLaQRh7VHTiMm067YafiavrUt23UN1KToKC6Q8kms8eBYxxFD9dS/r3vZgrE5qeO+j82R0Q==
   dependencies:
     "@react-spring/three" "^9.7.3"
     "@react-three/drei" "^9.97.0"
@@ -6144,6 +6144,11 @@ three@^0.161.0:
   version "0.161.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.161.0.tgz#38aafaa82fe5467fde2e33933515d1b6beb17d91"
   integrity sha512-LC28VFtjbOyEu5b93K0bNRLw1rQlMJ85lilKsYj6dgTu+7i17W+JCCEbvrpmNHF1F3NAUqDSWq50UD7w9H2xQw==
+
+three@^0.162.0:
+  version "0.162.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.162.0.tgz#b15a511f1498e0c42d4d00bbb411c7527b06097e"
+  integrity sha512-xfCYj4RnlozReCmUd+XQzj6/5OjDNHBy5nT6rVwrOKGENAvpXe2z1jL+DZYaMu4/9pNsjH/4Os/VvS9IrH7IOQ==
 
 through2@^0.6.3:
   version "0.6.5"
