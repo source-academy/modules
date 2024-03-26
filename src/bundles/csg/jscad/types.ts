@@ -1,7 +1,11 @@
 /* [Import] */
 import type { RGB, RGBA } from '@jscad/modeling/src/colors/types';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
-import { type cameras, type drawCommands, controls } from '@jscad/regl-renderer';
+import {
+  controls,
+  type cameras,
+  type drawCommands
+} from '@jscad/regl-renderer';
 import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 
 /* [Main] */
@@ -158,7 +162,7 @@ export type DrawCommandMakers = Record<string, DrawCommandMaker>;
 export type Mat4 = Float32Array;
 export type PerspectiveCameraState = Omit<
   typeof cameras.perspective.cameraState,
-'position' | 'target' | 'view'
+  'position' | 'target' | 'view'
 > & {
   target: Coordinates;
 
@@ -209,7 +213,7 @@ export type WrappedRenderer = (data: WrappedRendererData) => void;
 */
 export type ControlsState = Omit<
   typeof orbit.controlsState,
-'phiDelta' | 'scale' | 'thetaDelta'
+  'phiDelta' | 'scale' | 'thetaDelta'
 > &
   typeof orbit.controlsProps & {
     scale: number;

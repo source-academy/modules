@@ -24,7 +24,7 @@ export class RpcController {
   constructor(
     topicHeader: string,
     multiUser: MultiUserController,
-    userId?: string,
+    userId?: string
   ) {
     this.topicHeader = topicHeader;
     this.multiUser = multiUser;
@@ -51,7 +51,7 @@ export class RpcController {
   private returnResponse(sender: string, callId: string, result: any) {
     const message = {
       callId,
-      result,
+      result
     };
     const topic = `${this.topicHeader}_return/${sender}`;
     this.multiUser.controller?.publish(topic, JSON.stringify(message), false);
@@ -75,7 +75,7 @@ export class RpcController {
   public expose(name: string, func: (...args: any[]) => any) {
     const item = {
       name,
-      func,
+      func
     };
     this.functions.set(name, item);
     const functionTopic = `${this.topicHeader}/${this.userId}/${name}`;
@@ -115,7 +115,7 @@ export class RpcController {
     receiver: string,
     name: string,
     args: any[],
-    callback: (args: any[]) => void,
+    callback: (args: any[]) => void
   ) {
     const topic = `${this.topicHeader}/${receiver}/${name}`;
     const callId = uniqid();
@@ -123,7 +123,7 @@ export class RpcController {
     const messageJson = {
       sender: this.userId,
       callId,
-      args,
+      args
     };
     const messageString = JSON.stringify(messageJson);
     this.multiUser.controller?.publish(topic, messageString, false);

@@ -1,14 +1,10 @@
-import {
-  head,
-  tail,
-  is_pair
-} from 'js-slang/dist/stdlib/list';
+import { head, is_pair, tail } from 'js-slang/dist/stdlib/list';
 import { type Sound, type Wave } from '../sound/types';
 export function is_sound(x: any): x is Sound {
   return (
-    is_pair(x)
-        && typeof get_wave(x) === 'function'
-        && typeof get_duration(x) === 'number'
+    is_pair(x) &&
+    typeof get_wave(x) === 'function' &&
+    typeof get_duration(x) === 'number'
   );
 }
 /**

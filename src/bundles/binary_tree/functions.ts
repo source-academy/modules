@@ -44,18 +44,18 @@ export function make_tree(
  * @param v Value to be tested
  * @returns bool
  */
-export function is_tree(
-  value: any
-): boolean {
-  return value === null
-         || (Array.isArray(value)
-    && value.length === 2
-    && Array.isArray(value[1])
-      && value[1].length === 2
-    && is_tree(value[1][0])
-    && value[1][1].length === 2
-    && is_tree(value[1][1][0])
-    && value[1][1][1] === null);
+export function is_tree(value: any): boolean {
+  return (
+    value === null ||
+    (Array.isArray(value) &&
+      value.length === 2 &&
+      Array.isArray(value[1]) &&
+      value[1].length === 2 &&
+      is_tree(value[1][0]) &&
+      value[1][1].length === 2 &&
+      is_tree(value[1][1][0]) &&
+      value[1][1][1] === null)
+  );
 }
 
 /**
@@ -69,9 +69,7 @@ export function is_tree(
  * @param v Value to be tested
  * @returns bool
  */
-export function is_empty_tree(
-  value: any
-): boolean {
+export function is_empty_tree(value: any): boolean {
   return value === null;
 }
 
@@ -85,15 +83,11 @@ export function is_empty_tree(
  * @param t BinaryTree to be accessed
  * @returns Value
  */
-export function entry(
-  t: BinaryTree
-): boolean {
+export function entry(t: BinaryTree): boolean {
   if (Array.isArray(t) && t.length === 2) {
     return t[0];
   }
-  throw new Error(
-    `function entry expects binary tree, received: ${t}`
-  );
+  throw new Error(`function entry expects binary tree, received: ${t}`);
 }
 
 /**
@@ -106,16 +100,16 @@ export function entry(
  * @param t BinaryTree to be accessed
  * @returns BinaryTree
  */
-export function left_branch(
-  t: BinaryTree
-): BinaryTree {
-  if (Array.isArray(t) && t.length === 2
-      && Array.isArray(t[1]) && t[1].length === 2) {
+export function left_branch(t: BinaryTree): BinaryTree {
+  if (
+    Array.isArray(t) &&
+    t.length === 2 &&
+    Array.isArray(t[1]) &&
+    t[1].length === 2
+  ) {
     return t[1][0];
   }
-  throw new Error(
-    `function left_branch expects binary tree, received: ${t}`
-  );
+  throw new Error(`function left_branch expects binary tree, received: ${t}`);
 }
 
 /**
@@ -128,15 +122,16 @@ export function left_branch(
  * @param t BinaryTree to be accessed
  * @returns BinaryTree
  */
-export function right_branch(
-  t: BinaryTree
-): BinaryTree {
-  if (Array.isArray(t) && t.length === 2
-      && Array.isArray(t[1]) && t[1].length === 2
-      && Array.isArray(t[1][1]) && t[1][1].length === 2) {
+export function right_branch(t: BinaryTree): BinaryTree {
+  if (
+    Array.isArray(t) &&
+    t.length === 2 &&
+    Array.isArray(t[1]) &&
+    t[1].length === 2 &&
+    Array.isArray(t[1][1]) &&
+    t[1][1].length === 2
+  ) {
     return t[1][1][0];
   }
-  throw new Error(
-    `function right_branch expects binary tree, received: ${t}`
-  );
+  throw new Error(`function right_branch expects binary tree, received: ${t}`);
 }

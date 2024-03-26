@@ -3,13 +3,13 @@
 // follow the same guidelines as the rest of the codebase.
 
 import {
-  type b2Body,
-  type b2Shape,
-  type b2Fixture,
   b2BodyType,
   b2CircleShape,
   b2PolygonShape,
-  b2Vec2
+  b2Vec2,
+  type b2Body,
+  type b2Fixture,
+  type b2Shape
 } from '@box2d/core';
 import { type ReplResult } from '../../typings/type_helpers';
 
@@ -112,7 +112,8 @@ export class PhysicsObject implements ReplResult {
     const resForce = this.forcesCentered
       .filter((force: Force) => force.start_time < world_time)
       .reduce(
-        (res: b2Vec2, force: Force) => res.Add(force.direction.Scale(force.magnitude)),
+        (res: b2Vec2, force: Force) =>
+          res.Add(force.direction.Scale(force.magnitude)),
         new b2Vec2()
       );
 
@@ -121,10 +122,11 @@ export class PhysicsObject implements ReplResult {
 
   private applyForcesAtAPoint(world_time: number) {
     this.forcesAtAPoint = this.forcesAtAPoint.filter(
-      (forceWithPos: ForceWithPos) => forceWithPos.force.start_time + forceWithPos.force.duration > world_time
+      (forceWithPos: ForceWithPos) =>
+        forceWithPos.force.start_time + forceWithPos.force.duration > world_time
     );
 
-    this.forcesAtAPoint.forEach((forceWithPos) => {
+    this.forcesAtAPoint.forEach(forceWithPos => {
       const force = forceWithPos.force;
       this.body.ApplyForce(
         force.direction.Scale(force.magnitude),
@@ -150,8 +152,7 @@ export class PhysicsObject implements ReplResult {
   }
 
   public toReplString = () => `
-  Mass: ${this.getMass()
-    .toFixed(ACCURACY)}
+  Mass: ${this.getMass().toFixed(ACCURACY)}
   Position: [${this.getPosition().x.toFixed(
     ACCURACY
   )},${this.getPosition().y.toFixed(ACCURACY)}]
@@ -159,10 +160,8 @@ export class PhysicsObject implements ReplResult {
     ACCURACY
   )},${this.getVelocity().y.toFixed(ACCURACY)}] 
   
-  Rotation: ${this.getRotation()
-    .toFixed(ACCURACY)}
-  AngularVelocity: [${this.getAngularVelocity()
-    .toFixed(ACCURACY)}]`;
+  Rotation: ${this.getRotation().toFixed(ACCURACY)}
+  AngularVelocity: [${this.getAngularVelocity().toFixed(ACCURACY)}]`;
 
   public scale_size(scale: number) {
     if (this.shape instanceof b2CircleShape) {
@@ -170,7 +169,7 @@ export class PhysicsObject implements ReplResult {
     } else if (this.shape instanceof b2PolygonShape) {
       const centroid: b2Vec2 = this.shape.m_centroid;
       const arr: b2Vec2[] = [];
-      this.shape.m_vertices.forEach((vec) => {
+      this.shape.m_vertices.forEach(vec => {
         arr.push(
           new b2Vec2(
             centroid.x + scale * (vec.x - centroid.x),
@@ -178,8 +177,7 @@ export class PhysicsObject implements ReplResult {
           )
         );
       });
-      this.shape = new b2PolygonShape()
-        .Set(arr);
+      this.shape = new b2PolygonShape().Set(arr);
     }
     const f: b2Fixture = this.fixture;
     this.body.DestroyFixture(this.fixture);

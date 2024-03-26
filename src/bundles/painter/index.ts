@@ -4,4 +4,4 @@
  * @author Sourabh Raj Jaiswal
  */
 
-export { draw_line, display_painter } from './functions';
+export { display_painter, draw_line } from './functions';

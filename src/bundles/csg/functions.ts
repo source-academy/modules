@@ -1,7 +1,6 @@
 /* [Imports] */
 import { primitives } from '@jscad/modeling';
 import { colorize as colorSolid } from '@jscad/modeling/src/colors';
-import { geom3 } from '@jscad/modeling/src/geometries';
 import {
   measureBoundingBox,
   type BoundingBox
@@ -15,10 +14,10 @@ import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
 import {
   head,
+  is_list,
   list,
   tail,
-  type List,
-  is_list
+  type List
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
 import { degreesToRadians } from '../../common/utilities';
@@ -27,10 +26,10 @@ import type { Solid } from './jscad/types';
 import {
   Group,
   Shape,
+  centerPrimitive,
   hexToColor,
   type Operable,
-  type RenderGroup,
-  centerPrimitive
+  type RenderGroup
 } from './utilities';
 
 /* [Main] */
@@ -664,12 +663,12 @@ export function rgb(
   blueValue: number
 ): string {
   if (
-    redValue < 0
-    || redValue > 255
-    || greenValue < 0
-    || greenValue > 255
-    || blueValue < 0
-    || blueValue > 255
+    redValue < 0 ||
+    redValue > 255 ||
+    greenValue < 0 ||
+    greenValue > 255 ||
+    blueValue < 0 ||
+    blueValue > 255
   ) {
     throw new Error('RGB values must be between 0 and 255 (inclusive)');
   }
@@ -716,8 +715,7 @@ export function render(operable: Operable): RenderGroup {
 
   // Trigger a new render group for use with subsequent renders.
   // Render group is returned for REPL text only; do not document
-  return Core.getRenderGroupManager()
-    .nextRenderGroup();
+  return Core.getRenderGroupManager().nextRenderGroup();
 }
 
 /**
@@ -734,8 +732,7 @@ export function render_grid(operable: Operable): RenderGroup {
 
   operable.store();
 
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(true);
+  return Core.getRenderGroupManager().nextRenderGroup(true);
 }
 
 /**
@@ -752,8 +749,7 @@ export function render_axes(operable: Operable): RenderGroup {
 
   operable.store();
 
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(undefined, true);
+  return Core.getRenderGroupManager().nextRenderGroup(undefined, true);
 }
 
 /**
@@ -770,6 +766,5 @@ export function render_grid_axes(operable: Operable): RenderGroup {
 
   operable.store();
 
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(true, true);
+  return Core.getRenderGroupManager().nextRenderGroup(true, true);
 }

@@ -3,7 +3,7 @@ import type { ReplResult } from '../../typings/type_helpers';
 import type { Curve, CurveDrawn } from './curves_webgl';
 
 export type CurveModuleState = {
-  drawnCurves: (AnimatedCurve | CurveDrawn)[]
+  drawnCurves: (AnimatedCurve | CurveDrawn)[];
 };
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
@@ -23,7 +23,7 @@ export type CurveAnimation = (t: number) => Curve;
  * a CurveFunction and returns a ShapeDrawn based on its specifications.
  */
 export type RenderFunction = ((func: Curve) => CurveDrawn) & {
-  is3D: boolean
+  is3D: boolean;
 };
 
 export class AnimatedCurve extends glAnimation implements ReplResult {

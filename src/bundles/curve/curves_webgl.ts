@@ -123,7 +123,8 @@ export class Point implements ReplResult {
     public readonly color: Color
   ) {}
 
-  public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
+  public toReplString = () =>
+    `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
 }
 
 /**
@@ -338,7 +339,11 @@ export function generateCurve(
     const point = func(i / numPoints);
 
     if (!(point instanceof Point)) {
-      throw new Error(`Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`);
+      throw new Error(
+        `Expected curve to return a point, got '${stringify(point)}' at t=${
+          i / numPoints
+        }`
+      );
     }
 
     const x = point.x * 2 - 1;

@@ -11,52 +11,50 @@
 
 import { AudioClip } from './audio';
 import {
-  DEFAULT_WIDTH,
-  DEFAULT_HEIGHT,
-  DEFAULT_SCALE,
-  DEFAULT_FPS,
-  MAX_HEIGHT,
-  MIN_HEIGHT,
-  MAX_WIDTH,
-  MIN_WIDTH,
-  MAX_SCALE,
-  MIN_SCALE,
-  MAX_FPS,
-  MIN_FPS,
-  MAX_VOLUME,
-  MIN_VOLUME,
   DEFAULT_DEBUG_STATE,
-  DEFAULT_TRANSFORM_PROPS,
+  DEFAULT_FPS,
+  DEFAULT_HEIGHT,
+  DEFAULT_INTERACTABLE_PROPS,
   DEFAULT_RENDER_PROPS,
-  DEFAULT_INTERACTABLE_PROPS
+  DEFAULT_SCALE,
+  DEFAULT_TRANSFORM_PROPS,
+  DEFAULT_WIDTH,
+  MAX_FPS,
+  MAX_HEIGHT,
+  MAX_SCALE,
+  MAX_VOLUME,
+  MAX_WIDTH,
+  MIN_FPS,
+  MIN_HEIGHT,
+  MIN_SCALE,
+  MIN_VOLUME,
+  MIN_WIDTH
 } from './constants';
 import {
+  CircleGameObject,
   GameObject,
+  InteractableGameObject,
+  RectangleGameObject,
   RenderableGameObject,
-  type ShapeGameObject,
   SpriteGameObject,
   TextGameObject,
-  RectangleGameObject,
-  CircleGameObject,
-  TriangleGameObject, InteractableGameObject
+  TriangleGameObject,
+  type ShapeGameObject
 } from './gameobject';
+import { PhaserScene, gameState } from './phaserScene';
 import {
-  PhaserScene,
-  gameState
-} from './phaserScene';
-import {
-  type DisplayText,
   type BuildGame,
-  type Sprite,
-  type UpdateFunction,
-  type RectangleProps,
   type CircleProps,
-  type TriangleProps,
-  type FlipXY,
-  type ScaleXY,
-  type PositionXY,
+  type ColorRGBA,
   type DimensionsXY,
-  type ColorRGBA
+  type DisplayText,
+  type FlipXY,
+  type PositionXY,
+  type RectangleProps,
+  type ScaleXY,
+  type Sprite,
+  type TriangleProps,
+  type UpdateFunction
 } from './types';
 
 // =============================================================================
@@ -89,12 +87,20 @@ export const config = {
  * ```
  * @category GameObject
  */
-export const create_rectangle: (width: number, height: number) => ShapeGameObject = (width: number, height: number) => {
+export const create_rectangle: (
+  width: number,
+  height: number
+) => ShapeGameObject = (width: number, height: number) => {
   const rectangle = {
     width,
     height
   } as RectangleProps;
-  return new RectangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, rectangle);
+  return new RectangleGameObject(
+    DEFAULT_TRANSFORM_PROPS,
+    DEFAULT_RENDER_PROPS,
+    DEFAULT_INTERACTABLE_PROPS,
+    rectangle
+  );
 };
 
 /**
@@ -107,11 +113,18 @@ export const create_rectangle: (width: number, height: number) => ShapeGameObjec
  * ```
  * @category GameObject
  */
-export const create_circle: (radius: number) => ShapeGameObject = (radius: number) => {
+export const create_circle: (radius: number) => ShapeGameObject = (
+  radius: number
+) => {
   const circle = {
     radius
   } as CircleProps;
-  return new CircleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, circle);
+  return new CircleGameObject(
+    DEFAULT_TRANSFORM_PROPS,
+    DEFAULT_RENDER_PROPS,
+    DEFAULT_INTERACTABLE_PROPS,
+    circle
+  );
 };
 
 /**
@@ -124,7 +137,10 @@ export const create_circle: (radius: number) => ShapeGameObject = (radius: numbe
  * ```
  * @category GameObject
  */
-export const create_triangle: (width: number, height: number) => ShapeGameObject = (width: number, height: number) => {
+export const create_triangle: (
+  width: number,
+  height: number
+) => ShapeGameObject = (width: number, height: number) => {
   const triangle = {
     x1: 0,
     y1: 0,
@@ -133,7 +149,12 @@ export const create_triangle: (width: number, height: number) => ShapeGameObject
     x3: width / 2,
     y3: height
   } as TriangleProps;
-  return new TriangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, triangle);
+  return new TriangleGameObject(
+    DEFAULT_TRANSFORM_PROPS,
+    DEFAULT_RENDER_PROPS,
+    DEFAULT_INTERACTABLE_PROPS,
+    triangle
+  );
 };
 
 /**
@@ -150,7 +171,12 @@ export const create_text: (text: string) => TextGameObject = (text: string) => {
   const displayText = {
     text
   } as DisplayText;
-  return new TextGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, displayText);
+  return new TextGameObject(
+    DEFAULT_TRANSFORM_PROPS,
+    DEFAULT_RENDER_PROPS,
+    DEFAULT_INTERACTABLE_PROPS,
+    displayText
+  );
 };
 
 /**
@@ -170,7 +196,9 @@ export const create_text: (text: string) => TextGameObject = (text: string) => {
  * ```
  * @category GameObject
  */
-export const create_sprite: (image_url: string) => SpriteGameObject = (image_url: string) => {
+export const create_sprite: (image_url: string) => SpriteGameObject = (
+  image_url: string
+) => {
   if (image_url === '') {
     throw new Error('image_url cannot be empty');
   }
@@ -180,7 +208,12 @@ export const create_sprite: (image_url: string) => SpriteGameObject = (image_url
   const sprite: Sprite = {
     imageUrl: image_url
   } as Sprite;
-  return new SpriteGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, sprite);
+  return new SpriteGameObject(
+    DEFAULT_TRANSFORM_PROPS,
+    DEFAULT_RENDER_PROPS,
+    DEFAULT_INTERACTABLE_PROPS,
+    sprite
+  );
 };
 
 // =============================================================================
@@ -199,8 +232,10 @@ export const create_sprite: (image_url: string) => SpriteGameObject = (image_url
  * ```
  * @category GameObject
  */
-export const update_position: (gameObject: GameObject, [x, y]: PositionXY) => GameObject
-= (gameObject: GameObject, [x, y]: PositionXY) => {
+export const update_position: (
+  gameObject: GameObject,
+  [x, y]: PositionXY
+) => GameObject = (gameObject: GameObject, [x, y]: PositionXY) => {
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
@@ -223,8 +258,10 @@ export const update_position: (gameObject: GameObject, [x, y]: PositionXY) => Ga
  * ```
  * @category GameObject
  */
-export const update_scale: (gameObject: GameObject, [x, y]: ScaleXY) => GameObject
-= (gameObject: GameObject, [x, y]: ScaleXY) => {
+export const update_scale: (
+  gameObject: GameObject,
+  [x, y]: ScaleXY
+) => GameObject = (gameObject: GameObject, [x, y]: ScaleXY) => {
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
@@ -247,8 +284,10 @@ export const update_scale: (gameObject: GameObject, [x, y]: ScaleXY) => GameObje
  * ```
  * @category GameObject
  */
-export const update_rotation: (gameObject: GameObject, radians: number) => GameObject
-= (gameObject: GameObject, radians: number) => {
+export const update_rotation: (
+  gameObject: GameObject,
+  radians: number
+) => GameObject = (gameObject: GameObject, radians: number) => {
   if (gameObject instanceof GameObject) {
     gameObject.setTransform({
       ...gameObject.getTransform(),
@@ -272,8 +311,10 @@ export const update_rotation: (gameObject: GameObject, radians: number) => GameO
  * ```
  * @category GameObject
  */
-export const update_color: (gameObject: GameObject, color: ColorRGBA) => GameObject
-= (gameObject: GameObject, color: ColorRGBA) => {
+export const update_color: (
+  gameObject: GameObject,
+  color: ColorRGBA
+) => GameObject = (gameObject: GameObject, color: ColorRGBA) => {
   if (color.length !== 4) {
     throw new Error('color must be a 4-element array');
   }
@@ -299,8 +340,10 @@ export const update_color: (gameObject: GameObject, color: ColorRGBA) => GameObj
  * ```
  * @category GameObject
  */
-export const update_flip: (gameObject: GameObject, flip: FlipXY) => GameObject
-= (gameObject: GameObject, flip: FlipXY) => {
+export const update_flip: (
+  gameObject: GameObject,
+  flip: FlipXY
+) => GameObject = (gameObject: GameObject, flip: FlipXY) => {
   if (flip.length !== 2) {
     throw new Error('flip must be a 2-element array');
   }
@@ -327,8 +370,10 @@ export const update_flip: (gameObject: GameObject, flip: FlipXY) => GameObject
  * ```
  * @category GameObject
  */
-export const update_text: (textGameObject: TextGameObject, text: string) => GameObject
-= (textGameObject: TextGameObject, text: string) => {
+export const update_text: (
+  textGameObject: TextGameObject,
+  text: string
+) => GameObject = (textGameObject: TextGameObject, text: string) => {
   if (textGameObject instanceof TextGameObject) {
     textGameObject.setText({
       text
@@ -348,8 +393,9 @@ export const update_text: (textGameObject: TextGameObject, text: string) => Game
  * ```
  * @category GameObject
  */
-export const update_to_top: (gameObject: GameObject) => GameObject
-= (gameObject: GameObject) => {
+export const update_to_top: (gameObject: GameObject) => GameObject = (
+  gameObject: GameObject
+) => {
   if (gameObject instanceof RenderableGameObject) {
     gameObject.setBringToTopFlag();
     return gameObject;
@@ -376,7 +422,9 @@ export const update_to_top: (gameObject: GameObject) => GameObject
  * ```
  * @category GameObject
  */
-export const query_id: (gameObject: GameObject) => number = (gameObject: GameObject) => {
+export const query_id: (gameObject: GameObject) => number = (
+  gameObject: GameObject
+) => {
   if (gameObject instanceof GameObject) {
     return gameObject.id;
   }
@@ -395,8 +443,9 @@ export const query_id: (gameObject: GameObject) => number = (gameObject: GameObj
  * ```
  * @category GameObject
  */
-export const query_position: (gameObject: GameObject) => PositionXY
-= (gameObject: GameObject) => {
+export const query_position: (gameObject: GameObject) => PositionXY = (
+  gameObject: GameObject
+) => {
   if (gameObject instanceof GameObject) {
     return [...gameObject.getTransform().position];
   }
@@ -415,8 +464,9 @@ export const query_position: (gameObject: GameObject) => PositionXY
  * ```
  * @category GameObject
  */
-export const query_rotation: (gameObject: GameObject) => number
-= (gameObject: GameObject) => {
+export const query_rotation: (gameObject: GameObject) => number = (
+  gameObject: GameObject
+) => {
   if (gameObject instanceof GameObject) {
     return gameObject.getTransform().rotation;
   }
@@ -435,8 +485,9 @@ export const query_rotation: (gameObject: GameObject) => number
  * ```
  * @category GameObject
  */
-export const query_scale: (gameObject: GameObject) => ScaleXY
-= (gameObject: GameObject) => {
+export const query_scale: (gameObject: GameObject) => ScaleXY = (
+  gameObject: GameObject
+) => {
   if (gameObject instanceof GameObject) {
     return [...gameObject.getTransform().scale];
   }
@@ -455,8 +506,9 @@ export const query_scale: (gameObject: GameObject) => ScaleXY
  * ```
  * @category GameObject
  */
-export const query_color: (gameObject: RenderableGameObject) => ColorRGBA
-= (gameObject: RenderableGameObject) => {
+export const query_color: (gameObject: RenderableGameObject) => ColorRGBA = (
+  gameObject: RenderableGameObject
+) => {
   if (gameObject instanceof RenderableGameObject) {
     return [...gameObject.getColor()];
   }
@@ -475,8 +527,9 @@ export const query_color: (gameObject: RenderableGameObject) => ColorRGBA
  * ```
  * @category GameObject
  */
-export const query_flip: (gameObject: RenderableGameObject) => FlipXY
-= (gameObject: RenderableGameObject) => {
+export const query_flip: (gameObject: RenderableGameObject) => FlipXY = (
+  gameObject: RenderableGameObject
+) => {
   if (gameObject instanceof RenderableGameObject) {
     return [...gameObject.getFlipState()];
   }
@@ -496,8 +549,9 @@ export const query_flip: (gameObject: RenderableGameObject) => FlipXY
  * ```
  * @category GameObject
  */
-export const query_text: (textGameObject: TextGameObject) => string
-= (textGameObject: TextGameObject) => {
+export const query_text: (textGameObject: TextGameObject) => string = (
+  textGameObject: TextGameObject
+) => {
   if (textGameObject instanceof TextGameObject) {
     return textGameObject.getText().text;
   }
@@ -515,8 +569,8 @@ export const query_text: (textGameObject: TextGameObject) => string
  * position[1]; // y
  * ```
  */
-export const query_pointer_position: () => PositionXY
-= () => gameState.pointerProps.pointerPosition;
+export const query_pointer_position: () => PositionXY = () =>
+  gameState.pointerProps.pointerPosition;
 
 // =============================================================================
 // Game configuration
@@ -531,8 +585,11 @@ export const query_pointer_position: () => PositionXY
  * @returns a number within the interval
  * @hidden
  */
-const withinRange: (num: number, min: number, max: number) => number
-= (num: number, min: number, max: number) => {
+const withinRange: (num: number, min: number, max: number) => number = (
+  num: number,
+  min: number,
+  max: number
+) => {
   if (num > max) {
     return max;
   }
@@ -569,7 +626,9 @@ export const set_fps: (fps: number) => void = (fps: number) => {
  * set_dimensions([500, 400]);
  * ```
  */
-export const set_dimensions: (dimensions: DimensionsXY) => void = (dimensions: DimensionsXY) => {
+export const set_dimensions: (dimensions: DimensionsXY) => void = (
+  dimensions: DimensionsXY
+) => {
   if (dimensions.length !== 2) {
     throw new Error('dimensions must be a 2-element array');
   }
@@ -651,7 +710,9 @@ export const debug_log: (info: string) => void = (info: string) => {
  * ```
  * @category Logic
  */
-export const input_key_down: (key_name: string) => boolean = (key_name: string) => gameState.inputKeysDown.has(key_name);
+export const input_key_down: (key_name: string) => boolean = (
+  key_name: string
+) => gameState.inputKeysDown.has(key_name);
 
 /**
  * Detects if the left mouse button is pressed down.
@@ -666,7 +727,8 @@ export const input_key_down: (key_name: string) => boolean = (key_name: string) 
  * ```
  * @category Logic
  */
-export const input_left_mouse_down: () => boolean = () => gameState.pointerProps.isPointerPrimaryDown;
+export const input_left_mouse_down: () => boolean = () =>
+  gameState.pointerProps.isPointerPrimaryDown;
 
 /**
  * Detects if the right mouse button is pressed down.
@@ -681,7 +743,8 @@ export const input_left_mouse_down: () => boolean = () => gameState.pointerProps
  * ```
  * @category Logic
  */
-export const input_right_mouse_down: () => boolean = () => gameState.pointerProps.isPointerSecondaryDown;
+export const input_right_mouse_down: () => boolean = () =>
+  gameState.pointerProps.isPointerSecondaryDown;
 
 /**
  * Detects if the (mouse) pointer is over the gameobject.
@@ -724,9 +787,17 @@ export const pointer_over_gameobject = (gameObject: GameObject) => {
  * ```
  * @category Logic
  */
-export const gameobjects_overlap: (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => boolean
-= (gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) => {
-  if (gameObject1 instanceof InteractableGameObject && gameObject2 instanceof InteractableGameObject) {
+export const gameobjects_overlap: (
+  gameObject1: InteractableGameObject,
+  gameObject2: InteractableGameObject
+) => boolean = (
+  gameObject1: InteractableGameObject,
+  gameObject2: InteractableGameObject
+) => {
+  if (
+    gameObject1 instanceof InteractableGameObject &&
+    gameObject2 instanceof InteractableGameObject
+  ) {
     return gameObject1.isOverlapping(gameObject2);
   }
   throw new TypeError('Cannot check overlap of non-GameObject');
@@ -783,7 +854,9 @@ export const get_loop_count: () => number = () => gameState.loopCount;
  * })
  * ```
  */
-export const update_loop: (update_function: UpdateFunction) => void = (update_function: UpdateFunction) => {
+export const update_loop: (update_function: UpdateFunction) => void = (
+  update_function: UpdateFunction
+) => {
   // Test for error in user update function
   // This cannot not check for errors inside a block that is not run.
   update_function([]);
@@ -861,15 +934,20 @@ export const build_game: () => BuildGame = () => {
  * ```
  * @category Audio
  */
-export const create_audio: (audio_url: string, volume_level: number) => AudioClip
-= (audio_url: string, volume_level: number) => {
+export const create_audio: (
+  audio_url: string,
+  volume_level: number
+) => AudioClip = (audio_url: string, volume_level: number) => {
   if (typeof audio_url !== 'string') {
     throw new Error('audio_url must be a string');
   }
   if (typeof volume_level !== 'number') {
     throw new Error('volume_level must be a number');
   }
-  return AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME));
+  return AudioClip.of(
+    audio_url,
+    withinRange(volume_level, MIN_VOLUME, MAX_VOLUME)
+  );
 };
 
 /**
@@ -884,7 +962,9 @@ export const create_audio: (audio_url: string, volume_level: number) => AudioCli
  * ```
  * @category Audio
  */
-export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
+export const loop_audio: (audio_clip: AudioClip) => AudioClip = (
+  audio_clip: AudioClip
+) => {
   if (audio_clip instanceof AudioClip) {
     audio_clip.setShouldAudioClipLoop(true);
     return audio_clip;
@@ -903,7 +983,9 @@ export const loop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  * ```
  * @category Audio
  */
-export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
+export const play_audio: (audio_clip: AudioClip) => AudioClip = (
+  audio_clip: AudioClip
+) => {
   if (audio_clip instanceof AudioClip) {
     audio_clip.setShouldAudioClipPlay(true);
     return audio_clip;
@@ -922,7 +1004,9 @@ export const play_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: Aud
  * ```
  * @category Audio
  */
-export const stop_audio: (audio_clip: AudioClip) => AudioClip = (audio_clip: AudioClip) => {
+export const stop_audio: (audio_clip: AudioClip) => AudioClip = (
+  audio_clip: AudioClip
+) => {
   if (audio_clip instanceof AudioClip) {
     audio_clip.setShouldAudioClipPlay(false);
     return audio_clip;

@@ -1,23 +1,23 @@
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import context from 'js-slang/context';
 import {
-  pair,
+  accumulate,
   head,
-  tail,
-  list,
-  length,
   is_null,
   is_pair,
-  accumulate,
+  length,
+  list,
+  pair,
+  tail,
   type List
 } from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
 import type {
-  Wave,
+  AudioPlayed,
   Sound,
   SoundProducer,
   SoundTransformer,
-  AudioPlayed
+  Wave
 } from './types';
 
 // Global Constants and Variables
@@ -43,7 +43,7 @@ function init_audioCtx(): void {
 
 // linear decay from 1 to 0 over decay_period
 function linear_decay(decay_period: number): (t: number) => number {
-  return (t) => {
+  return t => {
     if (t > decay_period || t < 0) {
       return 0;
     }
@@ -89,7 +89,7 @@ function setPermissionToFalse() {
 
 function start_recording(mediaRecorder: MediaRecorder) {
   const data: any[] = [];
-  mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
+  mediaRecorder.ondataavailable = e => e.data.size && data.push(e.data);
   mediaRecorder.start();
   mediaRecorder.onstop = () => process(data);
 }
@@ -110,21 +110,20 @@ function process(data) {
   const blob = new Blob(data);
 
   convertToArrayBuffer(blob)
-    .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
     .then(save);
 }
 
 // Converts input microphone sound (blob) into array format.
 function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   const url = URL.createObjectURL(blob);
-  return fetch(url)
-    .then((response) => response.arrayBuffer());
+  return fetch(url).then(response => response.arrayBuffer());
 }
 
 function save(audioBuffer: AudioBuffer) {
   const array = audioBuffer.getChannelData(0);
   const duration = array.length / FS;
-  recorded_sound = make_sound((t) => {
+  recorded_sound = make_sound(t => {
     const index = t * FS;
     const lowerIndex = Math.floor(index);
     const upperIndex = lowerIndex + 1;
@@ -289,9 +288,9 @@ export function get_duration(sound: Sound): number {
  */
 export function is_sound(x: any): x is Sound {
   return (
-    is_pair(x)
-    && typeof get_wave(x) === 'function'
-    && typeof get_duration(x) === 'number'
+    is_pair(x) &&
+    typeof get_wave(x) === 'function' &&
+    typeof get_duration(x) === 'number'
   );
 }
 
@@ -319,10 +318,14 @@ export function play_wave(wave: Wave, duration: number): Sound {
 export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+    throw new Error(
+      `${play_in_tab.name} is expecting sound, but encountered ${sound}`
+    );
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
-    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
+    throw new Error(
+      `${play_in_tab.name}: audio system still playing previous sound`
+    );
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play_in_tab.name}: duration of sound is negative`);
   } else if (get_duration(sound) === 0) {
@@ -468,7 +471,7 @@ export function stop(): void {
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
-  return make_sound((_t) => Math.random() * 2 - 1, duration);
+  return make_sound(_t => Math.random() * 2 - 1, duration);
 }
 
 /**
@@ -479,7 +482,7 @@ export function noise_sound(duration: number): Sound {
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
-  return make_sound((_t) => 0, duration);
+  return make_sound(_t => 0, duration);
 }
 
 /**
@@ -491,7 +494,7 @@ export function silence_sound(duration: number): Sound {
  * @example sine_sound(440, 5);
  */
 export function sine_sound(freq: number, duration: number): Sound {
-  return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
+  return make_sound(t => Math.sin(2 * Math.PI * t * freq), duration);
 }
 
 /**
@@ -510,10 +513,7 @@ export function square_sound(f: number, duration: number): Sound {
     }
     return answer;
   }
-  return make_sound(
-    (t) => (4 / Math.PI) * fourier_expansion_square(t),
-    duration
-  );
+  return make_sound(t => (4 / Math.PI) * fourier_expansion_square(t), duration);
 }
 
 /**
@@ -528,14 +528,14 @@ export function triangle_sound(freq: number, duration: number): Sound {
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
-      answer
-        += ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2))
-        / (2 * i + 1) ** 2;
+      answer +=
+        ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2)) /
+        (2 * i + 1) ** 2;
     }
     return answer;
   }
   return make_sound(
-    (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
+    t => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
     duration
   );
 }
@@ -557,7 +557,7 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
     return answer;
   }
   return make_sound(
-    (t) => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
+    t => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
     duration
   );
 }
@@ -638,30 +638,30 @@ export function adsr(
   sustain_level: number,
   release_ratio: number
 ): SoundTransformer {
-  return (sound) => {
+  return sound => {
     const wave = get_wave(sound);
     const duration = get_duration(sound);
     const attack_time = duration * attack_ratio;
     const decay_time = duration * decay_ratio;
     const release_time = duration * release_ratio;
-    return make_sound((x) => {
+    return make_sound(x => {
       if (x < attack_time) {
         return wave(x) * (x / attack_time);
       }
       if (x < attack_time + decay_time) {
         return (
-          ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
-            + sustain_level)
-          * wave(x)
+          ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) +
+            sustain_level) *
+          wave(x)
         );
       }
       if (x < duration - release_time) {
         return wave(x) * sustain_level;
       }
       return (
-        wave(x)
-        * sustain_level
-        * linear_decay(release_time)(x - (duration - release_time))
+        wave(x) *
+        sustain_level *
+        linear_decay(release_time)(x - (duration - release_time))
       );
     }, duration);
   };
@@ -698,7 +698,8 @@ export function stacking_adsr(
 
   return simultaneously(
     accumulate(
-      (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+      (x: any, y: any) =>
+        pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
       null,
       zip(envelopes, 1)
     )
@@ -724,10 +725,11 @@ export function phase_mod(
   duration: number,
   amount: number
 ): SoundTransformer {
-  return (modulator: Sound) => make_sound(
-    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
-    duration
-  );
+  return (modulator: Sound) =>
+    make_sound(
+      t => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
+      duration
+    );
 }
 
 // MIDI conversion functions

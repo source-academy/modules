@@ -219,7 +219,7 @@ ToneMatrix.initialise_matrix = initialise_matrix;
 function bind_events_to_rect(c) {
   c.addEventListener(
     'click',
-    (event) => {
+    event => {
       // calculate the x, y coordinates of the click event
       const rect = c.getBoundingClientRect();
       const offset_top = rect.top + document.documentElement.scrollTop;

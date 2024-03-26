@@ -1,30 +1,30 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
-  DEFAULT_WIDTH,
-  DEFAULT_HEIGHT,
   DEFAULT_FPS,
+  DEFAULT_HEIGHT,
+  DEFAULT_LOOP,
   DEFAULT_VOLUME,
-  MAX_HEIGHT,
-  MIN_HEIGHT,
-  MAX_WIDTH,
-  MIN_WIDTH,
+  DEFAULT_WIDTH,
   MAX_FPS,
+  MAX_HEIGHT,
+  MAX_WIDTH,
   MIN_FPS,
-  DEFAULT_LOOP
+  MIN_HEIGHT,
+  MIN_WIDTH
 } from './constants';
 import {
+  InputFeed,
+  type BundlePacket,
   type CanvasElement,
-  type VideoElement,
   type ErrorLogger,
-  type StartPacket,
+  type Filter,
+  type ImageElement,
   type Pixel,
   type Pixels,
-  type Filter,
   type Queue,
+  type StartPacket,
   type TabsPacket,
-  type BundlePacket,
-  InputFeed,
-  type ImageElement
+  type VideoElement
 } from './types';
 
 // Global Variables
@@ -110,8 +110,8 @@ function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   }
 
   if (!ok) {
-    const warningMessage
-      = 'You have invalid values for some pixels! Reseting them to default (0)';
+    const warningMessage =
+      'You have invalid values for some pixels! Reseting them to default (0)';
     console.warn(warningMessage);
     errorLogger(warningMessage, false);
   }
@@ -206,7 +206,7 @@ function playVideoElement() {
       .then(() => {
         videoIsPlaying = true;
       })
-      .catch((err) => {
+      .catch(err => {
         console.warn(err);
       });
   }
@@ -263,15 +263,16 @@ function loadMedia(): void {
 
   navigator.mediaDevices
     .getUserMedia({ video: true })
-    .then((stream) => {
+    .then(stream => {
       videoElement.srcObject = stream;
-      videoElement.onloadedmetadata = () => setAspectRatioDimensions(
-        videoElement.videoWidth,
-        videoElement.videoHeight
-      );
+      videoElement.onloadedmetadata = () =>
+        setAspectRatioDimensions(
+          videoElement.videoWidth,
+          videoElement.videoHeight
+        );
       toRunLateQueue = true;
     })
-    .catch((error) => {
+    .catch(error => {
       const errorMessage = `${error.name}: ${error.message}`;
       console.error(errorMessage);
       errorLogger(errorMessage, false);
@@ -344,11 +345,11 @@ function updateFPS(fps: number): void {
 function updateDimensions(w: number, h: number): void {
   // ignore if no change or bad inputs
   if (
-    (w === WIDTH && h === HEIGHT)
-    || w > MAX_WIDTH
-    || w < MIN_WIDTH
-    || h > MAX_HEIGHT
-    || h < MIN_HEIGHT
+    (w === WIDTH && h === HEIGHT) ||
+    w > MAX_WIDTH ||
+    w < MIN_WIDTH ||
+    h > MAX_HEIGHT ||
+    h < MIN_HEIGHT
   ) {
     return;
   }
@@ -467,10 +468,9 @@ function deinit(): void {
   if (!stream) {
     return;
   }
-  stream.getTracks()
-    .forEach((track) => {
-      track.stop();
-    });
+  stream.getTracks().forEach(track => {
+    track.stop();
+  });
 }
 
 // =============================================================================

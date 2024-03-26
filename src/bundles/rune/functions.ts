@@ -1,36 +1,36 @@
 import { mat4, vec3 } from 'gl-matrix';
 import {
-  Rune,
   DrawnRune,
+  Rune,
   drawRunesToFrameBuffer,
   type AnimatedRune
 } from './rune';
 import {
-  getSquare,
-  getBlank,
-  getRcross,
-  getSail,
-  getTriangle,
-  getCorner,
-  getNova,
-  getCircle,
-  getHeart,
-  getPentagram,
-  getRibbon,
-  throwIfNotRune,
   addColorFromHex,
   colorPalette,
-  hexToColor
+  getBlank,
+  getCircle,
+  getCorner,
+  getHeart,
+  getNova,
+  getPentagram,
+  getRcross,
+  getRibbon,
+  getSail,
+  getSquare,
+  getTriangle,
+  hexToColor,
+  throwIfNotRune
 } from './runes_ops';
 import {
-  type FrameBufferWithTexture,
   getWebGlFromCanvas,
   initFramebufferObject,
-  initShaderProgram
+  initShaderProgram,
+  type FrameBufferWithTexture
 } from './runes_webgl';
 
 export type RuneModuleState = {
-  drawnRunes: (AnimatedRune | DrawnRune)[]
+  drawnRunes: (AnimatedRune | DrawnRune)[];
 };
 
 // =============================================================================
@@ -892,8 +892,8 @@ export class HollusionRune extends DrawnRune {
 
       lastTime = timeInMs;
 
-      const framePos
-        = Math.floor(timeInMs / (period / frameCount)) % frameCount;
+      const framePos =
+        Math.floor(timeInMs / (period / frameCount)) % frameCount;
       const fbObject = frameBuffer[framePos];
       gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
       // eslint-disable-next-line no-bitwise
@@ -911,4 +911,5 @@ export class HollusionRune extends DrawnRune {
 }
 
 /** @hidden */
-export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune.isHollusion;
+export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune =>
+  rune.isHollusion;

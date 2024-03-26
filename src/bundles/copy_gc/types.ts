@@ -12,7 +12,7 @@ export enum COMMAND {
   ASSIGN = 'Assign',
   NEW = 'New',
   SCAN = 'Scan',
-  INIT = 'Initialize Memory',
+  INIT = 'Initialize Memory'
 }
 
 export type CommandHeapObject = {

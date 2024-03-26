@@ -7,7 +7,11 @@ import {
   entitiesFromSolids,
   prepareRender
 } from '@jscad/regl-renderer';
-import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '../../../tabs/common/css_constants';
+import {
+  ACE_GUTTER_BACKGROUND_COLOR,
+  ACE_GUTTER_TEXT_COLOR,
+  BP_TEXT_COLOR
+} from '../../../tabs/common/css_constants';
 import {
   DEFAULT_COLOR,
   GRID_PADDING,
@@ -45,16 +49,13 @@ function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
   const options: EntitiesFromSolidsOptions = {
     color: hexToAlphaColor(DEFAULT_COLOR)
   };
-  return (entitiesFromSolids(
-    options,
-    ...solids
-  ) as unknown) as GeometryEntity[];
+  return entitiesFromSolids(options, ...solids) as unknown as GeometryEntity[];
 }
 
 function neatGridDistance(rawDistance: number) {
   const paddedDistance: number = rawDistance + GRID_PADDING;
-  const roundedDistance: number
-    = Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
+  const roundedDistance: number =
+    Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
   return roundedDistance;
 }
 
@@ -186,10 +187,10 @@ export function updateStates(
   cameraState: PerspectiveCameraState,
   controlsState: ControlsState
 ) {
-  const states: UpdatedStates = (orbit.update({
+  const states: UpdatedStates = orbit.update({
     camera: cameraState,
     controls: controlsState
-  }) as unknown) as UpdatedStates;
+  }) as unknown as UpdatedStates;
 
   cameraState.position = states.camera.position;
   cameraState.view = states.camera.view;
@@ -204,11 +205,11 @@ export function zoomToFit(
   controlsState: ControlsState,
   geometryEntities: GeometryEntity[]
 ) {
-  const states: ZoomToFitStates = (orbit.zoomToFit({
+  const states: ZoomToFitStates = orbit.zoomToFit({
     camera: cameraState,
     controls: controlsState,
     entities: geometryEntities as any
-  }) as unknown) as ZoomToFitStates;
+  }) as unknown as ZoomToFitStates;
 
   cameraState.target = states.camera.target;
 
@@ -221,14 +222,14 @@ export function rotate(
   rotateX: number,
   rotateY: number
 ) {
-  const states: RotateStates = (orbit.rotate(
+  const states: RotateStates = orbit.rotate(
     {
       camera: cameraState,
       controls: controlsState,
       speed: ROTATION_SPEED
     },
     [rotateX, rotateY]
-  ) as unknown) as RotateStates;
+  ) as unknown as RotateStates;
 
   controlsState.thetaDelta = states.controls.thetaDelta;
   controlsState.phiDelta = states.controls.phiDelta;
@@ -240,13 +241,13 @@ export function pan(
   panX: number,
   panY: number
 ) {
-  const states: PanStates = (orbit.pan(
+  const states: PanStates = orbit.pan(
     {
       camera: cameraState,
       controls: controlsState
     },
     [panX * X_FACTOR, panY * Y_FACTOR]
-  ) as unknown) as PanStates;
+  ) as unknown as PanStates;
 
   cameraState.position = states.camera.position;
   cameraState.target = states.camera.target;
