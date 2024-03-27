@@ -191,23 +191,9 @@ export function logInputs(
 
 type CommandHandler = (opts: BuildOptions & { bundles?: string[] | null, tabs?: string[] | null }) => Promise<void>;
 
-export function createBuildCommandHandler(
-  func: (inputs: Required<Pick<BuildInputs, 'tabs'>>, opts: BuildOptions) => Promise<LogType>,
-  ignore: 'bundles'
-): CommandHandler;
-export function createBuildCommandHandler(
-  func: (inputs: Required<Omit<BuildInputs, 'tabs'>>, opts: BuildOptions) => Promise<LogType>,
-  ignore: 'tabs'
-): CommandHandler;
-export function createBuildCommandHandler(
-  func: (inputs: Required<BuildInputs>, opts: BuildOptions) => Promise<LogType>,
-): CommandHandler;
-export function createBuildCommandHandler(
-  func: (inputs: BuildInputs, opts: BuildOptions) => Promise<LogType>,
-  ignore?: 'bundles' | 'tabs'
-): CommandHandler {
+export function createBuildCommandHandler(func: BuildTask, ignore?: 'bundles' | 'tabs'): CommandHandler {
   return async opts => {
-    let inputs: Required<BuildInputs>
+    let inputs: BuildInputs;
 
     switch (ignore) {
       case 'bundles': {
