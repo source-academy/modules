@@ -59,4 +59,4 @@ export const Modal: React.FC<ModalProps> = ({ children, isOpen, onClose }) => {
       <div style={childWrapperStyle}>{children}</div>
     </div>
   );
-}
+};

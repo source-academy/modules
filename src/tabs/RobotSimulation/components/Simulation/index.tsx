@@ -33,10 +33,12 @@ type SimulationCanvasProps = {
   isOpen: boolean;
 };
 
-export const SimulationCanvas :React.FC<SimulationCanvasProps> =({context,isOpen})=> {
+export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
+  context,
+  isOpen,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [currentState, setCurrentState]
-    = useState<WorldState>('unintialized');
+  const [currentState, setCurrentState] = useState<WorldState>('unintialized');
   const world = context.context.moduleContexts.robot_simulation.state
     .world as World;
 
@@ -79,9 +81,7 @@ export const SimulationCanvas :React.FC<SimulationCanvasProps> =({context,isOpen
         <div ref={ref}>{currentState}</div>
       </div>
       <div style={bottomPanelStyle}>
-        <Tabs id="TabsExample">
-          {/* This will be added in part 2 */}
-        </Tabs>
+        <Tabs id="TabsExample">{/* This will be added in part 2 */}</Tabs>
       </div>
     </div>
   );

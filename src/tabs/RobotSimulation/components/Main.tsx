@@ -24,7 +24,7 @@ export const Main: React.FC<MainProps> = ({ context }) => {
           setIsCanvasShowing(false);
         }}
       >
-        <SimulationCanvas context={context} isOpen={isCanvasShowing}/>
+        <SimulationCanvas context={context} isOpen={isCanvasShowing} />
       </Modal>
     </div>
   );

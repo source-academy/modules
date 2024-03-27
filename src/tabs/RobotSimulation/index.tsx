@@ -1,6 +1,5 @@
-import React from 'react';
 import { type DebuggerContext } from '../../typings/type_helpers';
-import Main from './components/Main';
+import { Main } from './components/Main';
 
 /**
  * Robot Simulation
@@ -15,10 +14,9 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const worldState = context.context.moduleContexts.robot_simulation.state?.world?.state;
-    return (
-      worldState !== undefined
-    );
+    const worldState =
+      context.context.moduleContexts.robot_simulation.state?.world?.state;
+    return worldState !== undefined;
   },
 
   /**
