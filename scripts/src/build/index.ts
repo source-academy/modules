@@ -19,7 +19,7 @@ const buildAll: BuildTask = async (inputs, opts) => {
   };
 };
 
-const buildAllCommandHandler = createBuildCommandHandler(buildAll, true);
+const buildAllCommandHandler = createBuildCommandHandler(buildAll);
 const getBuildAllCommand = () => createBuildCommand('all', 'Build bundles and tabs and documentation')
   .addOption(bundlesOption)
   .addOption(tabsOption)

@@ -163,7 +163,11 @@ function processResults(
   }
 }
 
-export function logInputs({ bundles, tabs }: BuildInputs, { tsc, lint }: Partial<Record<'lint' | 'tsc', boolean>>) {
+export function logInputs(
+  { bundles, tabs }: BuildInputs,
+  { tsc, lint }: Partial<Record<'lint' | 'tsc', boolean>>,
+  ignore?: 'bundles' | 'tabs'
+) {
   const output: string[] = [];
   if (tsc) {
     output.push(chalk.yellowBright('--tsc specified, will run typescript checker'));
@@ -173,29 +177,30 @@ export function logInputs({ bundles, tabs }: BuildInputs, { tsc, lint }: Partial
     output.push(chalk.yellowBright('Linting specified, will run ESlint'));
   }
 
-  if (bundles.length > 0) {
+  if (bundles.length > 0 && ignore !== 'bundles') {
     output.push(chalk.magentaBright('Processing the following bundles:'));
-    bundles.forEach((bundle, i) => output.push(`${i + 1}: ${bundle}`));
+    bundles.forEach((bundle, i) => output.push(`${i + 1}. ${bundle}`));
   }
 
-  if (tabs.length > 0) {
+  if (tabs.length > 0 && ignore !== 'tabs') {
     output.push(chalk.magentaBright('Processing the following tabs:'));
-    tabs.forEach((tab, i) => output.push(`${i + 1}: ${tab}`));
+    tabs.forEach((tab, i) => output.push(`${i + 1}. ${tab}`));
   }
 
   return output.join('\n');
 }
 
-export function createBuildCommandHandler(
-  func: BuildTask,
-  shouldAddModuleTabs: boolean
-) {
+export function createBuildCommandHandler(func: BuildTask, ignore?: 'bundles' | 'tabs') {
   return async (
     opts: BuildOptions & { bundles: string[] | null, tabs: string[] | null }
   ) => {
-    const inputs = await retrieveBundlesAndTabs(opts, shouldAddModuleTabs);
+    const inputs = await retrieveBundlesAndTabs(opts, ignore === undefined);
 
-    console.log(logInputs(inputs, opts));
+    if (ignore) {
+      inputs[ignore] = [];
+    }
+
+    console.log(logInputs(inputs, opts, ignore));
     const prebuildResult = await prebuild(inputs.bundles, inputs.tabs, opts);
 
     if (prebuildResult !== null) {

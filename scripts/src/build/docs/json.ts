@@ -111,7 +111,7 @@ export const buildJsons = async (
 const jsonCommandHandler = createBuildCommandHandler(async (inputs, { srcDir, outDir, verbose }) => {
   const [project] = await initTypedoc(inputs.bundles, srcDir, verbose);
   return buildJsons(inputs, outDir, project);
-}, false);
+}, 'tabs');
 
 export const getBuildJsonsCommand = () => createBuildCommand('jsons', 'Build json documentation')
   .addOption(bundlesOption)

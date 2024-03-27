@@ -12,9 +12,8 @@ export async function initTypedoc(bundles: string[], srcDir: string, verbose: bo
     readme: './scripts/src/build/docs/docsreadme.md',
     tsconfig: `${srcDir}/tsconfig.json`,
     skipErrorChecking: true
-  });
+  }, [ new td.TSConfigReader() ]);
 
-  app.options.addReader(new td.TSConfigReader());
   const project = await app.convert();
   if (!project) {
     throw new Error('Failed to initialize typedoc - Make sure to check that the source files have no compilation errors!');

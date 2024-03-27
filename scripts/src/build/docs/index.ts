@@ -21,7 +21,7 @@ export async function buildDocs(inputs: BuildInputs, outDir: string, tdResult: T
 const docsCommandHandler = createBuildCommandHandler(async (inputs, { srcDir, outDir, verbose }) => {
   const tdResult = await initTypedoc(inputs.bundles, srcDir, verbose);
   return buildDocs(inputs, outDir, tdResult);
-}, false);
+}, 'tabs');
 
 export const getBuildDocsCommand = () => createBuildCommand(
   'docs',

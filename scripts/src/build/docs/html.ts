@@ -58,4 +58,6 @@ export const getBuildHtmlCommand = () => new Command('html')
     const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose);
     const result = await buildHtml(inputs, opts.outDir, tdResult);
     console.log(htmlLogger(result));
+
+    if (result.result.severity === 'error') process.exit(1);
   });

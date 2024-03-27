@@ -49,7 +49,7 @@ export const bundleBundles: BuildTask = async ({ bundles }, { srcDir, outDir }) 
   return { bundles: results };
 };
 
-const bundlesCommandHandler = createBuildCommandHandler((...args) => bundleBundles(...args), true);
+const bundlesCommandHandler = createBuildCommandHandler((...args) => bundleBundles(...args));
 
 export const getBuildBundlesCommand = () => createBuildCommand(
   'bundles',
