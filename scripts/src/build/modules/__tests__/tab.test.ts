@@ -25,8 +25,6 @@ test('Normal command', async () => {
   const [args] = (tabs.bundleTabs as MockedFunction<typeof tabs.bundleTabs>).mock.calls[0];
   expect(args)
     .toMatchObject({
-      bundles: [],
       tabs: ['tab0'],
-      modulesSpecified: true
     });
 });
