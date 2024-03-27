@@ -75,11 +75,13 @@ async function buildJson(name: string, reflection: td.DeclarationReflection, out
   }
 }
 
-export async function buildJsons(
+// For some reason if you want to properly test these functions in Jest
+// They've gotta be declared as constants
+export const buildJsons = async (
   { bundles }: BuildInputs,
   outDir: string,
   project: td.ProjectReflection
-): Promise<Record<'jsons', OperationResult[]>> {
+): Promise<Record<'jsons', OperationResult[]>> => {
   await fs.mkdir(`${outDir}/jsons`, { recursive: true });
 
   if (bundles.length === 1) {
@@ -104,7 +106,7 @@ export async function buildJsons(
   return {
     jsons: results
   };
-}
+};
 
 const jsonCommandHandler = createBuildCommandHandler(async (inputs, { srcDir, outDir, verbose }) => {
   const [project] = await initTypedoc(inputs.bundles, srcDir, verbose);
