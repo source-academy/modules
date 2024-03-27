@@ -14,5 +14,5 @@ export type AudioPlayed = {
 };
 
 export type SoundModuleState = {
-  audioPlayed: AudioPlayed[]
+  audioPlayed: AudioPlayed[];
 };

@@ -2,7 +2,7 @@
 // Utility Functions
 // =============================================================================
 export function throwIfNotRune(name: string, ...runes: any) {
-  runes.forEach((rune) => {
+  runes.forEach(rune => {
     if (!(typeof rune === 'string')) {
       throw Error(`${name} expects a rune (string) as argument.`);
     }

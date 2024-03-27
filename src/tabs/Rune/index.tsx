@@ -1,6 +1,13 @@
-import { type RuneModuleState, isHollusionRune } from '../../bundles/rune/functions';
+import {
+  isHollusionRune,
+  type RuneModuleState
+} from '../../bundles/rune/functions';
 import { glAnimation } from '../../typings/anim_types';
-import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
+import {
+  getModuleState,
+  type DebuggerContext,
+  type ModuleTab
+} from '../../typings/type_helpers';
 import AnimationCanvas from '../common/AnimationCanvas';
 import MultiItemDisplay from '../common/MultItemDisplay';
 import WebGLCanvas from '../common/WebglCanvas';
@@ -12,18 +19,14 @@ export const RuneTab: ModuleTab = ({ context }) => {
     const elemKey = i.toString();
 
     if (glAnimation.isAnimation(rune)) {
-      return (
-        <AnimationCanvas animation={rune} key={elemKey} />
-      );
+      return <AnimationCanvas animation={rune} key={elemKey} />;
     }
     if (isHollusionRune(rune)) {
-      return (
-        <HollusionCanvas rune={rune} key={elemKey} />
-      );
+      return <HollusionCanvas rune={rune} key={elemKey} />;
     }
     return (
       <WebGLCanvas
-        ref={(r) => {
+        ref={r => {
           if (r) {
             rune.draw(r);
           }

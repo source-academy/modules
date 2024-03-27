@@ -16,11 +16,18 @@ const ControlBar: React.FC<ControlBarProps> = (props) => {
   );
 
   const flowControl = props.flowButtons && (
-    <div className={classNames('ControlBar_flow', Classes.BUTTON_GROUP)}>{props.flowButtons}</div>
+    <div className={classNames('ControlBar_flow', Classes.BUTTON_GROUP)}>
+      {props.flowButtons}
+    </div>
   );
 
   const editingWorkspaceControl = (
-    <div className={classNames('ControlBar_editingWorkspace', Classes.BUTTON_GROUP)}>
+    <div
+      className={classNames(
+        'ControlBar_editingWorkspace',
+        Classes.BUTTON_GROUP
+      )}
+    >
       {props.editingWorkspaceButtons}
     </div>
   );

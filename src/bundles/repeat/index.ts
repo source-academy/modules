@@ -4,4 +4,4 @@
  * @author Tang Xin Kye, Marcus
  */
 
-export { repeat, twice, thrice } from './functions';
+export { repeat, thrice, twice } from './functions';

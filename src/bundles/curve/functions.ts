@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import context from 'js-slang/context';
-import { type Curve, type CurveDrawn, generateCurve, Point } from './curves_webgl';
+import {
+  Point,
+  generateCurve,
+  type Curve,
+  type CurveDrawn
+} from './curves_webgl';
 import {
   AnimatedCurve,
   type CurveAnimation,
@@ -537,9 +542,9 @@ export function rotate_around_origin(
     // 2 args
     throw new Error('Expected 1 or 3 arguments, but received 2');
   } else if (
-    theta1 !== undefined
-    && theta2 === undefined
-    && theta3 === undefined
+    theta1 !== undefined &&
+    theta2 === undefined &&
+    theta3 === undefined
   ) {
     // 1 args
     const cth = Math.cos(theta1);
@@ -612,7 +617,7 @@ export function rotate_around_origin(
  * @returns function that takes a Curve and returns a Curve
  */
 export function scale(a: number, b: number, c: number): CurveTransformer {
-  return (curve) => {
+  return curve => {
     const transformation = (cf: Curve) => (t: number) => {
       const ct = cf(t);
       const a1 = a === undefined ? 1 : a;
@@ -684,7 +689,7 @@ export function put_in_standard_position(curve: Curve): Curve {
  * @returns result Curve
  */
 export function connect_rigidly(curve1: Curve, curve2: Curve): Curve {
-  return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
+  return t => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
 }
 
 /**

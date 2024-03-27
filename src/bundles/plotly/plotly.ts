@@ -55,7 +55,8 @@ export class Point implements ReplResult {
     public readonly color: Color
   ) {}
 
-  public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
+  public toReplString = () =>
+    `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
 }
 
 export type Wave = (...t: any) => number;

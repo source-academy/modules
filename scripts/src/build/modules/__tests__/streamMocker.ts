@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import { PassThrough } from 'stream';
 import type { MockedFunction } from 'jest-mock';
 
-const mockedFsOpen = (fs.open as MockedFunction<typeof fs.open>);
+const mockedFsOpen = fs.open as MockedFunction<typeof fs.open>;
 
 export function mockStream() {
   const stream = new PassThrough();

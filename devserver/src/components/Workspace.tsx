@@ -1,5 +1,5 @@
 import { FocusStyleManager } from '@blueprintjs/core';
-import { type Enable, Resizable, type ResizeCallback } from 're-resizable';
+import { Resizable, type Enable, type ResizeCallback } from 're-resizable';
 import React from 'react';
 
 import ControlBar, { type ControlBarProps } from './controlBar/ControlBar';
@@ -10,8 +10,8 @@ import { useDimensions } from './utils/Hooks';
 
 type DispatchProps = {
   handleEditorEval: () => void;
-  handleEditorValueChange: (newValue: string) => void
-  handlePromptAutocomplete: (row: number, col: number, callback: any) => void
+  handleEditorValueChange: (newValue: string) => void;
+  handlePromptAutocomplete: (row: number, col: number, callback: any) => void;
 };
 
 type StateProps = {
@@ -21,9 +21,9 @@ type StateProps = {
   replProps: ReplProps;
   sideContentHeight?: number;
   sideContentIsResizeable?: boolean;
-  editorValue: string
+  editorValue: string;
 
-  sideContentProps: SideContentProps
+  sideContentProps: SideContentProps;
 };
 
 const rightResizeOnly: Enable = { right: true };
@@ -40,7 +40,9 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
 
   const [contentContainerWidth] = useDimensions(contentContainerDiv);
 
-  const [sideContentHeight, setSideContentHeight] = React.useState<number | undefined>(undefined);
+  const [sideContentHeight, setSideContentHeight] = React.useState<
+    number | undefined
+  >(undefined);
 
   FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -58,8 +60,8 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
   const toggleEditorDividerDisplay: ResizeCallback = (_a, _b, ref) => {
     const leftThreshold = 5;
     const rightThreshold = 95;
-    const editorWidthPercentage
-      = ((ref as HTMLDivElement).clientWidth / contentContainerWidth) * 100;
+    const editorWidthPercentage =
+      ((ref as HTMLDivElement).clientWidth / contentContainerWidth) * 100;
     // update resizable size
     if (editorWidthPercentage > rightThreshold) {
       leftParentResizable.current!.updateSize({
@@ -79,8 +81,8 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
    * so that it's bottom border snaps flush with editor's bottom border
    */
   const toggleDividerDisplay: ResizeCallback = (_a, _b, ref) => {
-    maxDividerHeight.current
-      = sideDividerDiv.current!.clientHeight > maxDividerHeight.current!
+    maxDividerHeight.current =
+      sideDividerDiv.current!.clientHeight > maxDividerHeight.current!
         ? sideDividerDiv.current!.clientHeight
         : maxDividerHeight.current;
     const resizableHeight = (ref as HTMLDivElement).clientHeight;
@@ -125,7 +127,9 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
               className="resize-side-content"
               enable={bottomResizeOnly}
               onResize={toggleDividerDisplay}
-              onResizeStop={(_a, _b, ref) => setSideContentHeight(ref.clientHeight)}
+              onResizeStop={(_a, _b, ref) =>
+                setSideContentHeight(ref.clientHeight)
+              }
             >
               <SideContent
                 sideContentHeight={sideContentHeight}

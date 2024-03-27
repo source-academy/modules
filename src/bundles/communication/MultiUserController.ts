@@ -24,7 +24,7 @@ export class MultiUserController {
     address: string,
     port: number,
     user: string,
-    password: string,
+    password: string
   ) {
     let currentController = this.controller;
     if (currentController) {
@@ -38,7 +38,7 @@ export class MultiUserController {
         },
         (topic: string, message: string) => {
           this.handleIncomingMessage(topic, message);
-        },
+        }
       );
       this.controller = currentController;
     }
@@ -75,7 +75,7 @@ export class MultiUserController {
    */
   public addMessageCallback(
     identifier: string,
-    callback: (topic: string, message: string) => void,
+    callback: (topic: string, message: string) => void
   ) {
     this.controller?.subscribe(`${identifier}/#`);
     this.messageCallbacks.set(identifier, callback);

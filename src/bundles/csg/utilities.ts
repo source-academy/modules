@@ -95,7 +95,9 @@ export class Group implements Operable, ReplResult {
   ungroup(): Operable[] {
     // Return all children, but we need to account for this Group's unresolved
     // transforms by applying them to each child
-    return this.children.map((child: Operable) => child.applyTransforms(this.transforms));
+    return this.children.map((child: Operable) =>
+      child.applyTransforms(this.transforms)
+    );
   }
 }
 
@@ -108,10 +110,9 @@ export class Shape implements Operable, ReplResult {
   }
 
   store(newTransforms: Mat4 = mat4.create()): void {
-    Core.getRenderGroupManager()
-      .storeShape(
-        this.applyTransforms(newTransforms) as Shape
-      );
+    Core.getRenderGroupManager().storeShape(
+      this.applyTransforms(newTransforms) as Shape
+    );
   }
 
   translate(offsets: [number, number, number]): Shape {
@@ -219,10 +220,10 @@ export function centerPrimitive(shape: Shape) {
 }
 
 export function hexToColor(hex: string): Color {
-  const regex: RegExp
-    = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
-  const potentialGroups: { [key: string]: string } | undefined
-    = hex.match(regex)?.groups;
+  const regex: RegExp =
+    /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
+  const potentialGroups: { [key: string]: string } | undefined =
+    hex.match(regex)?.groups;
   if (potentialGroups === undefined) return [0, 0, 0];
   const groups: { [key: string]: string } = potentialGroups;
 

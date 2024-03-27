@@ -125,4 +125,7 @@ export type ExceptionError = {
 /**
  * Represents the Phaser Game Object types that are used.
  */
-export type PhaserGameObject = Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;
+export type PhaserGameObject =
+  | Phaser.GameObjects.Shape
+  | Phaser.GameObjects.Sprite
+  | Phaser.GameObjects.Text;

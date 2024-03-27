@@ -3,16 +3,16 @@
 // follow the same guidelines as the rest of the codebase.
 
 import {
-  type b2Body,
-  type b2Fixture,
-  type b2BodyDef,
   b2BodyType,
+  b2ContactListener,
   b2PolygonShape,
-  type b2StepConfig,
   b2Vec2,
   b2World,
-  b2ContactListener,
-  type b2Contact
+  type b2Body,
+  type b2BodyDef,
+  type b2Contact,
+  type b2Fixture,
+  type b2StepConfig
 } from '@box2d/core';
 import { type PhysicsObject } from './PhysicsObject';
 import { Timer } from './types';
@@ -73,11 +73,10 @@ export class PhysicsWorld {
       type: b2BodyType.b2_staticBody,
       position: new b2Vec2(0, height - 10)
     });
-    const groundShape: b2PolygonShape = new b2PolygonShape()
-      .SetAsBox(
-        10000,
-        10
-      );
+    const groundShape: b2PolygonShape = new b2PolygonShape().SetAsBox(
+      10000,
+      10
+    );
 
     groundBody.CreateFixture({
       shape: groundShape,
@@ -111,7 +110,7 @@ export class PhysicsWorld {
   
   Objects:
       `;
-    this.physicsObjects.forEach((obj) => {
+    this.physicsObjects.forEach(obj => {
       world_status += `
   ------------------------
   ${obj.toReplString()}

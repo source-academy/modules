@@ -1,5 +1,5 @@
 import { mat4 } from 'gl-matrix';
-import { type AnimFrame, glAnimation } from '../../typings/anim_types';
+import { glAnimation, type AnimFrame } from '../../typings/anim_types';
 import type { ReplResult } from '../../typings/type_helpers';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 
@@ -67,14 +67,15 @@ export class Rune {
     public hollusionDistance: number
   ) {}
 
-  public copy = () => new Rune(
-    this.vertices,
-    this.colors,
-    mat4.clone(this.transformMatrix),
-    this.subRunes,
-    this.texture,
-    this.hollusionDistance
-  );
+  public copy = () =>
+    new Rune(
+      this.vertices,
+      this.colors,
+      mat4.clone(this.transformMatrix),
+      this.subRunes,
+      this.texture,
+      this.hollusionDistance
+    );
 
   /**
    * Flatten the subrunes to return a list of runes
@@ -118,7 +119,8 @@ export class Rune {
       hollusionDistance?: number;
     } = {}
   ) => {
-    const paramGetter = (name: string, defaultValue: () => any) => (params[name] === undefined ? defaultValue() : params[name]);
+    const paramGetter = (name: string, defaultValue: () => any) =>
+      params[name] === undefined ? defaultValue() : params[name];
 
     return new Rune(
       paramGetter('vertices', () => new Float32Array()),

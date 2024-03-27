@@ -1,7 +1,7 @@
-import { type Ace, require as acequire } from 'ace-builds';
+import { require as acequire, type Ace } from 'ace-builds';
+import 'ace-builds/esm-resolver';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-searchbox';
-import 'ace-builds/esm-resolver';
 
 import 'js-slang/dist/editors/ace/theme/source';
 
@@ -28,13 +28,15 @@ type DispatchProps = {
 
 export type EditorStateProps = {
   newCursorPosition?: Position;
-  editorValue: string
-  handleEditorValueChange: (newCode: string) => void
+  editorValue: string;
+  handleEditorValueChange: (newCode: string) => void;
 };
 
 export type EditorProps = DispatchProps & EditorStateProps;
 
-const makeCompleter = (handlePromptAutocomplete: DispatchProps['handlePromptAutocomplete']) => ({
+const makeCompleter = (
+  handlePromptAutocomplete: DispatchProps['handlePromptAutocomplete']
+) => ({
   getCompletions(
     _editor: Ace.Editor,
     _session: Ace.EditSession,
@@ -66,10 +68,13 @@ const handlers = {
 };
 
 const Editor: React.FC<EditorProps> = (props: EditorProps) => {
-  const reactAceRef: React.MutableRefObject<AceEditor | null> = React.useRef(null);
+  const reactAceRef: React.MutableRefObject<AceEditor | null> =
+    React.useRef(null);
 
   // Refs for things that technically shouldn't change... but just in case.
-  const handlePromptAutocompleteRef = React.useRef(props.handlePromptAutocomplete);
+  const handlePromptAutocompleteRef = React.useRef(
+    props.handlePromptAutocomplete
+  );
 
   const editor = reactAceRef.current?.editor;
 
@@ -91,10 +96,9 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
     // The () => ref.current() are designed to use the latest instance only.
 
     // Start autocompletion
-    acequire('ace/ext/language_tools')
-      .setCompleters([
-        makeCompleter((...args) => handlePromptAutocompleteRef.current(...args))
-      ]);
+    acequire('ace/ext/language_tools').setCompleters([
+      makeCompleter((...args) => handlePromptAutocompleteRef.current(...args))
+    ]);
   }, [editor]);
 
   React.useLayoutEffect(() => {

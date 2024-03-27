@@ -19,7 +19,9 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
     case 'running':
       return (
         <Card>
-          <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
+          <Pre className="log-output">
+            {props.output.consoleLogs.join('\n')}
+          </Pre>
         </Card>
       );
     case 'result':
@@ -32,7 +34,9 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
       }
       return (
         <Card>
-          <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
+          <Pre className="log-output">
+            {props.output.consoleLogs.join('\n')}
+          </Pre>
           <Pre className="result-output">{props.output.value}</Pre>
         </Card>
       );
@@ -41,13 +45,17 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
       if (props.output.consoleLogs.length === 0) {
         return (
           <Card>
-            <Pre className="error-output">{parseError(props.output.errors)}</Pre>
+            <Pre className="error-output">
+              {parseError(props.output.errors)}
+            </Pre>
           </Card>
         );
       }
       return (
         <Card>
-          <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
+          <Pre className="log-output">
+            {props.output.consoleLogs.join('\n')}
+          </Pre>
           <br />
           <Pre className="error-output">{parseError(props.output.errors)}</Pre>
         </Card>
@@ -69,9 +77,7 @@ export type ReplProps = {
 const Repl: React.FC<ReplProps> = (props: ReplProps) => (
   <div className="Repl" style={{ display: props.hidden ? 'none' : undefined }}>
     <div className="repl-output-parent">
-      {props.output === null
-        ? <Card />
-        : <Output output={props.output}/>}
+      {props.output === null ? <Card /> : <Output output={props.output} />}
       {/* {cards.length > 0 ? cards : (<Card />)} */}
     </div>
   </div>

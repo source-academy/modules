@@ -1,7 +1,12 @@
 import fs from 'fs/promises';
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
 import { bundlesOption, promiseAll } from '@src/commandUtils';
-import { expandBundleNames, type BuildTask, createBuildCommandHandler, createBuildCommand } from '../utils';
+import {
+  createBuildCommand,
+  createBuildCommandHandler,
+  expandBundleNames,
+  type BuildTask
+} from '../utils';
 import { commonEsbuildOptions, outputBundleOrTab } from './commons';
 
 export const assertPolyfillPlugin: ESBuildPlugin = {
@@ -13,11 +18,13 @@ export const assertPolyfillPlugin: ESBuildPlugin = {
       namespace: 'bundleAssert'
     }));
 
-    build.onLoad({
-      filter: /^assert/u,
-      namespace: 'bundleAssert'
-    }, () => ({
-      contents: `
+    build.onLoad(
+      {
+        filter: /^assert/u,
+        namespace: 'bundleAssert'
+      },
+      () => ({
+        contents: `
       export default function assert(condition, message) {
         if (condition) return;
 
@@ -28,7 +35,8 @@ export const assertPolyfillPlugin: ESBuildPlugin = {
         throw message;
       }
       `
-    }));
+      })
+    );
   }
 };
 
@@ -59,28 +67,37 @@ export const assertPolyfillPlugin: ESBuildPlugin = {
 //   }
 // }
 
-export const bundleBundles: BuildTask = async ({ bundles }, { srcDir, outDir }) => {
-  const [{ outputFiles }] = await promiseAll(esbuild({
-    ...commonEsbuildOptions,
-    entryPoints: expandBundleNames(srcDir, bundles),
-    outbase: outDir,
-    outdir: outDir,
-    plugins: [
-      assertPolyfillPlugin
-      // jsSlangExportCheckingPlugin,
-    ],
-    tsconfig: `${srcDir}/tsconfig.json`
-  }), fs.mkdir(`${outDir}/bundles`, { recursive: true }));
+export const bundleBundles: BuildTask = async (
+  { bundles },
+  { srcDir, outDir }
+) => {
+  const [{ outputFiles }] = await promiseAll(
+    esbuild({
+      ...commonEsbuildOptions,
+      entryPoints: expandBundleNames(srcDir, bundles),
+      outbase: outDir,
+      outdir: outDir,
+      plugins: [
+        assertPolyfillPlugin
+        // jsSlangExportCheckingPlugin,
+      ],
+      tsconfig: `${srcDir}/tsconfig.json`
+    }),
+    fs.mkdir(`${outDir}/bundles`, { recursive: true })
+  );
 
-  const results = await Promise.all(outputFiles.map(file => outputBundleOrTab(file, outDir)));
+  const results = await Promise.all(
+    outputFiles.map(file => outputBundleOrTab(file, outDir))
+  );
   return { bundles: results };
 };
 
-const bundlesCommandHandler = createBuildCommandHandler((...args) => bundleBundles(...args), true);
+const bundlesCommandHandler = createBuildCommandHandler(
+  (...args) => bundleBundles(...args),
+  true
+);
 
-export const getBuildBundlesCommand = () => createBuildCommand(
-  'bundles',
-  'Build bundles'
-)
-  .addOption(bundlesOption)
-  .action(opts => bundlesCommandHandler({ ...opts, tabs: [] }));
+export const getBuildBundlesCommand = () =>
+  createBuildCommand('bundles', 'Build bundles')
+    .addOption(bundlesOption)
+    .action(opts => bundlesCommandHandler({ ...opts, tabs: [] }));

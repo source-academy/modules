@@ -2,11 +2,11 @@
 import fs from 'fs/promises';
 
 import type { Interface } from 'readline/promises';
-import { type ModuleManifest, retrieveManifest } from '@src/manifest';
+import { retrieveManifest, type ModuleManifest } from '@src/manifest';
 
 import { check as _check } from './module';
 import { askQuestion, success, warn } from './print';
-import { type Options, isPascalCase } from './utilities';
+import { isPascalCase, type Options } from './utilities';
 
 export function check(manifest: ModuleManifest, tabName: string) {
   return Object.values(manifest)
@@ -28,7 +28,8 @@ async function askModuleName(manifest: ModuleManifest, rl: Interface) {
 async function askTabName(manifest: ModuleManifest, rl: Interface) {
   while (true) {
     const name = await askQuestion(
-      'What is the name of your new tab? (eg. BinaryTree)', rl
+      'What is the name of your new tab? (eg. BinaryTree)',
+      rl
     );
     if (check(manifest, name)) {
       warn('A tab with the same name already exists.');
@@ -40,7 +41,10 @@ async function askTabName(manifest: ModuleManifest, rl: Interface) {
   }
 }
 
-export async function addNew({ manifest: manifestFile, srcDir }: Options, rl: Interface) {
+export async function addNew(
+  { manifest: manifestFile, srcDir }: Options,
+  rl: Interface
+) {
   const manifest = await retrieveManifest(manifestFile);
 
   const moduleName = await askModuleName(manifest, rl);

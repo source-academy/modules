@@ -1,9 +1,14 @@
 import { retrieveBundlesAndTabs } from '@src/commandUtils';
 
-type TestCase = [desc: string, {
-  bundles?: string[] | null
-  tabs?: string[] | null
-}, boolean, Awaited<ReturnType<typeof retrieveBundlesAndTabs>>];
+type TestCase = [
+  desc: string,
+  {
+    bundles?: string[] | null;
+    tabs?: string[] | null;
+  },
+  boolean,
+  Awaited<ReturnType<typeof retrieveBundlesAndTabs>>
+];
 
 const testCases: TestCase[] = [
   [
@@ -105,41 +110,57 @@ const testCases: TestCase[] = [
 ];
 
 describe('Test retrieveBundlesAndTabs', () => {
-  test.each(testCases)('%#. %s:', async (_, inputs, shouldAddModuleTabs, expected) => {
-    const outputs = await retrieveBundlesAndTabs({
-      ...inputs,
-      manifest: 'modules.json'
-    }, shouldAddModuleTabs);
-    expect(outputs)
-      .toMatchObject(expected);
-  });
+  test.each(testCases)(
+    '%#. %s:',
+    async (_, inputs, shouldAddModuleTabs, expected) => {
+      const outputs = await retrieveBundlesAndTabs(
+        {
+          ...inputs,
+          manifest: 'modules.json'
+        },
+        shouldAddModuleTabs
+      );
+      expect(outputs).toMatchObject(expected);
+    }
+  );
 
-  it('should throw an exception when encountering unknown modules or tabs', () => Promise.all([
-    expect(retrieveBundlesAndTabs({
-      manifest: '',
-      bundles: ['random'],
-      tabs: null
-    }, true)).rejects.toMatchObject(new Error('Unknown bundles: random')),
+  it('should throw an exception when encountering unknown modules or tabs', () =>
+    Promise.all([
+      expect(
+        retrieveBundlesAndTabs(
+          {
+            manifest: '',
+            bundles: ['random'],
+            tabs: null
+          },
+          true
+        )
+      ).rejects.toMatchObject(new Error('Unknown bundles: random')),
 
-    expect(retrieveBundlesAndTabs({
-      manifest: '',
-      bundles: [],
-      tabs: ['random1', 'random2']
-    }, false)).rejects.toMatchObject(new Error('Unknown tabs: random1, random2'))
-  ]));
+      expect(
+        retrieveBundlesAndTabs(
+          {
+            manifest: '',
+            bundles: [],
+            tabs: ['random1', 'random2']
+          },
+          false
+        )
+      ).rejects.toMatchObject(new Error('Unknown tabs: random1, random2'))
+    ]));
 
   it('should always return unique modules and tabs', async () => {
-    const result = await retrieveBundlesAndTabs({
-      manifest: '',
-      bundles: ['test0', 'test0'],
-      tabs: ['tab0']
-    }, false);
+    const result = await retrieveBundlesAndTabs(
+      {
+        manifest: '',
+        bundles: ['test0', 'test0'],
+        tabs: ['tab0']
+      },
+      false
+    );
 
-    expect(result.bundles)
-      .toEqual(['test0']);
-    expect(result.modulesSpecified)
-      .toBe(true);
-    expect(result.tabs)
-      .toEqual(['tab0']);
+    expect(result.bundles).toEqual(['test0']);
+    expect(result.modulesSpecified).toBe(true);
+    expect(result.tabs).toEqual(['tab0']);
   });
 });

@@ -5,7 +5,7 @@ export enum ThemeColor {
   GREEN = '#42a870',
   YELLOW = '#f0d60e',
   RED = 'red',
-  BLACK = 'black',
+  BLACK = 'black'
 }
 
 export const FONT = {

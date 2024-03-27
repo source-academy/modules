@@ -7,8 +7,7 @@ export const initTypedoc = jest.fn(() => {
   } as any;
 
   const app = {
-    convert: jest.fn()
-      .mockReturnValue(proj),
+    convert: jest.fn().mockReturnValue(proj),
     generateDocs: jest.fn(() => Promise.resolve())
   };
 

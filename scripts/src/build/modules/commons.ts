@@ -3,7 +3,13 @@ import pathlib from 'path';
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
-import type { ArrowFunctionExpression, CallExpression, ExportDefaultDeclaration, Program, VariableDeclaration } from 'estree';
+import type {
+  ArrowFunctionExpression,
+  CallExpression,
+  ExportDefaultDeclaration,
+  Program,
+  VariableDeclaration
+} from 'estree';
 import type { OperationResult } from '../utils';
 
 export const commonEsbuildOptions: ESBuildOptions = {
@@ -23,9 +29,11 @@ export const commonEsbuildOptions: ESBuildOptions = {
   write: false
 };
 
-export async function outputBundleOrTab({ path, text }: OutputFile, outDir: string): Promise<OperationResult> {
-  const [type, name] = path.split(pathlib.sep)
-    .slice(-3, -1);
+export async function outputBundleOrTab(
+  { path, text }: OutputFile,
+  outDir: string
+): Promise<OperationResult> {
+  const [type, name] = path.split(pathlib.sep).slice(-3, -1);
   let file: fs.FileHandle | null = null;
   try {
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
@@ -45,10 +53,12 @@ export async function outputBundleOrTab({ path, text }: OutputFile, outDir: stri
       type: 'ExportDefaultDeclaration',
       declaration: {
         ...moduleCode,
-        params: [{
-          type: 'Identifier',
-          name: 'require'
-        }]
+        params: [
+          {
+            type: 'Identifier',
+            name: 'require'
+          }
+        ]
       }
     };
 

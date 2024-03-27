@@ -9,7 +9,10 @@ import { addNew as addNewTab } from './tab';
 async function askMode(rl: Interface) {
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const mode = await askQuestion('What would you like to create? (module/tab)', rl);
+    const mode = await askQuestion(
+      'What would you like to create? (module/tab)',
+      rl
+    );
     if (mode !== 'module' && mode !== 'tab') {
       warn("Please answer with only 'module' or 'tab'.");
     } else {
