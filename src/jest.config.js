@@ -29,6 +29,6 @@ export default {
     '.+\\.js'
   ],
   setupFiles: [
-    "./jest.polyfills.js"
+    './jest.polyfills.js'
   ]
 };
