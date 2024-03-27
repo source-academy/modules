@@ -69,25 +69,25 @@ describe('Timer', () => {
     });
 
     it('should correctly handle time after pause and resume', () => {
-        const startTimestamp = 1000;
-        const pauseTimestamp = 2000;
-        const resumeTimestamp = 3000;
-        const finalTimestamp = 4000;
-  
-        timer.step(startTimestamp); // Start the timer
-        timer.pause();
+      const startTimestamp = 1000;
+      const pauseTimestamp = 2000;
+      const resumeTimestamp = 3000;
+      const finalTimestamp = 4000;
 
-        timer.step(pauseTimestamp); // Paused at 2000ms
-        timer.step(resumeTimestamp); // Resumed at 3000ms
-        const frameTimingInfo = timer.step(finalTimestamp); // Stepped at 4000ms
-  
-        // Total elapsed time should be 3000ms (4000 - 1000)
-        // Time spent paused is 1000ms (3000 - 2000)
-        // Therefore, elapsed simulated time should be 2000ms (3000 - 1000)
-        expect(frameTimingInfo.elapsedTimeSimulated).toBe(2000);
-        expect(frameTimingInfo.elapsedTimeReal).toBe(3000);
-        expect(frameTimingInfo.frameDuration).toBe(1000); // Time since last step
-        expect(frameTimingInfo.framesPerSecond).toBeCloseTo(1); // 1000ms frame duration
-      });
+      timer.step(startTimestamp); // Start the timer
+      timer.pause();
+
+      timer.step(pauseTimestamp); // Paused at 2000ms
+      timer.step(resumeTimestamp); // Resumed at 3000ms
+      const frameTimingInfo = timer.step(finalTimestamp); // Stepped at 4000ms
+
+      // Total elapsed time should be 3000ms (4000 - 1000)
+      // Time spent paused is 1000ms (3000 - 2000)
+      // Therefore, elapsed simulated time should be 2000ms (3000 - 1000)
+      expect(frameTimingInfo.elapsedTimeSimulated).toBe(2000);
+      expect(frameTimingInfo.elapsedTimeReal).toBe(3000);
+      expect(frameTimingInfo.frameDuration).toBe(1000); // Time since last step
+      expect(frameTimingInfo.framesPerSecond).toBeCloseTo(1); // 1000ms frame duration
+    });
   });
 });

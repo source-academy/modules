@@ -1,9 +1,9 @@
-import * as THREE from "three";
-import { addCuboid } from "../../Render/helpers/MeshFactory";
+import * as THREE from 'three';
+import { addCuboid } from '../../Render/helpers/MeshFactory';
 
 // Mock the necessary Three.js methods and classes
-jest.mock("three", () => {
-  const originalModule = jest.requireActual("three");
+jest.mock('three', () => {
+  const originalModule = jest.requireActual('three');
 
   class Vector3 {
     x: number;
@@ -63,8 +63,8 @@ jest.mock("three", () => {
   };
 });
 
-describe("addCuboid", () => {
-  it("creates a cuboid with the correct dimensions and color", () => {
+describe('addCuboid', () => {
+  it('creates a cuboid with the correct dimensions and color', () => {
     const orientation = {
       position: new THREE.Vector3(1, 2, 3),
       rotation: new THREE.Quaternion(0, 0, 0, 1),
@@ -72,7 +72,7 @@ describe("addCuboid", () => {
     const width = 4;
     const height = 5;
     const length = 6;
-    const color = new THREE.Color("red");
+    const color = new THREE.Color('red');
     const debug = false;
 
     const mesh = addCuboid({
@@ -87,13 +87,13 @@ describe("addCuboid", () => {
       color,
       side: THREE.DoubleSide,
     });
-    expect(mesh).toHaveProperty("geometry");
-    expect(mesh).toHaveProperty("material");
+    expect(mesh).toHaveProperty('geometry');
+    expect(mesh).toHaveProperty('material');
     expect(mesh.position).toEqual({ x: 1, y: 2, z: 3 });
     expect(mesh.quaternion).toEqual({ x: 0, y: 0, z: 0, w: 1 });
   });
 
-  it("creates a cuboid with wireframe material when debug is true", () => {
+  it('creates a cuboid with wireframe material when debug is true', () => {
     const orientation = {
       position: new THREE.Vector3(1, 2, 3),
       rotation: new THREE.Quaternion(0, 0, 0, 1),
@@ -101,7 +101,7 @@ describe("addCuboid", () => {
     const width = 4;
     const height = 5;
     const length = 6;
-    const color = new THREE.Color("red");
+    const color = new THREE.Color('red');
     const debug = true; // Enable debug mode
 
     const mesh = addCuboid({
@@ -121,8 +121,8 @@ describe("addCuboid", () => {
     });
 
     // Verify the mesh properties
-    expect(mesh).toHaveProperty("geometry");
-    expect(mesh).toHaveProperty("material");
+    expect(mesh).toHaveProperty('geometry');
+    expect(mesh).toHaveProperty('material');
     expect(mesh.position).toEqual({ x: 1, y: 2, z: 3 });
     expect(mesh.quaternion).toEqual({ x: 0, y: 0, z: 0, w: 1 });
   });

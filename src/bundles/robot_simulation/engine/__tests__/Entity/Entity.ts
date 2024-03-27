@@ -1,7 +1,7 @@
-import { Entity } from "../../Entity/Entity";
-import type Rapier from "@dimforge/rapier3d-compat";
-import { SimpleQuaternion, SimpleVector } from "../../Math/Vector";
-import { vec3 } from "../../Math/Convert";
+import type Rapier from '@dimforge/rapier3d-compat';
+import { Entity } from '../../Entity/Entity';
+import { vec3 } from '../../Math/Convert';
+import { SimpleQuaternion, SimpleVector } from '../../Math/Vector';
 
 const createRigidBodyMock = (
   translation: SimpleVector,
@@ -27,10 +27,10 @@ const createCollider = (mass: number) => {
   return colliderMock as unknown as Rapier.Collider;
 };
 
-describe("Entity", () => {
+describe('Entity', () => {
   let entity: Entity;
 
-  describe("unit tests", () => {
+  describe('unit tests', () => {
     let rigidBody: Rapier.RigidBody;
     let collider: Rapier.Collider;
     let position: SimpleVector;
@@ -46,25 +46,25 @@ describe("Entity", () => {
       });
     });
 
-    test("getCollider", () => {
+    test('getCollider', () => {
       expect(entity.getCollider()).toBeDefined();
       expect(entity.getCollider()).toBe(collider);
     });
 
-    test("getRigidBody", () => {
+    test('getRigidBody', () => {
       expect(entity.getRigidBody()).toBeDefined();
       expect(entity.getRigidBody()).toBe(rigidBody);
     });
 
-    test("getTranslation", () => {
+    test('getTranslation', () => {
       expect(entity.getTranslation()).toEqual(position);
     });
 
-    test("getRotation", () => {
+    test('getRotation', () => {
       expect(entity.getRotation()).toEqual(rotation);
     });
 
-    test("setOrientation", () => {
+    test('setOrientation', () => {
       const orientation = {
         position: { x: 1, y: 2, z: 3 },
         rotation: { x: 0, y: 0, z: 0, w: 1 },
@@ -80,27 +80,27 @@ describe("Entity", () => {
       );
     });
 
-    test("setMass", () => {
+    test('setMass', () => {
       const mass = 2;
       entity.setMass(mass);
       expect(collider.setMass).toHaveBeenCalledWith(mass);
     });
 
-    test("getMass", () => {
+    test('getMass', () => {
       expect(entity.getMass()).toBe(1);
     });
 
-    test("getVelocity", () => {
+    test('getVelocity', () => {
       entity.getVelocity();
       expect(rigidBody.linvel).toHaveBeenCalled();
     });
 
-    test("getAngularVelocity", () => {
+    test('getAngularVelocity', () => {
       entity.getAngularVelocity();
       expect(rigidBody.angvel).toHaveBeenCalled();
     });
 
-    test("applyImpulse", () => {
+    test('applyImpulse', () => {
       const impulse = { x: 1, y: 2, z: 3 };
       const point = { x: 0, y: 0, z: 0 };
       entity.applyImpulse(impulse, point);
@@ -111,32 +111,32 @@ describe("Entity", () => {
       );
     });
 
-    test("worldTranslation", () => {
+    test('worldTranslation', () => {
       const localTranslation = vec3({ x: 1, y: 2, z: 3 });
       entity.worldTranslation(localTranslation);
       expect(rigidBody.rotation).toHaveBeenCalled();
       expect(rigidBody.translation).toHaveBeenCalled();
     });
 
-    test("transformDirection", () => {
+    test('transformDirection', () => {
       const localDirection = vec3({ x: 1, y: 2, z: 3 });
       entity.transformDirection(localDirection);
       expect(rigidBody.rotation).toHaveBeenCalled();
     });
 
-    test("distanceVectorOfPointToRotationalAxis", () => {
+    test('distanceVectorOfPointToRotationalAxis', () => {
       const localPoint = vec3({ x: 1, y: 2, z: 3 });
       entity.distanceVectorOfPointToRotationalAxis(localPoint);
       expect(rigidBody.angvel).toHaveBeenCalled();
     });
 
-    test("tangentialVelocityOfPoint", () => {
+    test('tangentialVelocityOfPoint', () => {
       const localPoint = vec3({ x: 1, y: 2, z: 3 });
       entity.tangentialVelocityOfPoint(localPoint);
       expect(rigidBody.angvel).toHaveBeenCalled();
     });
 
-    test("worldVelocity", () => {
+    test('worldVelocity', () => {
       const localPoint = vec3({ x: 1, y: 2, z: 3 });
       entity.worldVelocity(localPoint);
       expect(rigidBody.linvel).toHaveBeenCalled();
@@ -144,10 +144,10 @@ describe("Entity", () => {
     });
   });
 
-  describe("end-to-end tests", () => {
-    describe("worldTranslation", () => {
-      test("no rotation", () => {
-        const rigidBodyTranslation = { x: 1, y: 1, z: 1 }
+  describe('end-to-end tests', () => {
+    describe('worldTranslation', () => {
+      test('no rotation', () => {
+        const rigidBodyTranslation = { x: 1, y: 1, z: 1 };
 
         const rigidBody = createRigidBodyMock(rigidBodyTranslation, {x:0, y:0, z:0, w:1});
         const collider = createCollider(1);
@@ -165,8 +165,8 @@ describe("Entity", () => {
         });
       });
 
-      test("no local translation", () => {
-        const rigidBodyTranslation = { x: 1, y: 1, z: 1 }
+      test('no local translation', () => {
+        const rigidBodyTranslation = { x: 1, y: 1, z: 1 };
 
         const rigidBody = createRigidBodyMock(rigidBodyTranslation, {x:1, y:0, z:0, w:1});
         const collider = createCollider(1);
@@ -175,13 +175,13 @@ describe("Entity", () => {
           rapierCollider: collider,
         });
 
-        const localTranslation = vec3({ x: 0, y: 0, z: 0  });
+        const localTranslation = vec3({ x: 0, y: 0, z: 0 });
         const worldTranslation = entity.worldTranslation(localTranslation.clone());
         expect(worldTranslation).toEqual(rigidBodyTranslation);
       });
 
-      test("with rotation and local translation", () => {
-        const rigidBodyTranslation = { x: 12, y: 0, z: 0 }
+      test('with rotation and local translation', () => {
+        const rigidBodyTranslation = { x: 12, y: 0, z: 0 };
 
         // 180 degree rotation around the x axis
         const rigidBody = createRigidBodyMock(rigidBodyTranslation, {x:0, y:1, z:0, w:0});
@@ -191,9 +191,7 @@ describe("Entity", () => {
           rapierCollider: collider,
         });
 
-        
-
-        const localTranslation = vec3({ x: 1, y: 0, z: 0  });
+        const localTranslation = vec3({ x: 1, y: 0, z: 0 });
         const worldTranslation = entity.worldTranslation(localTranslation.clone());
         expect(worldTranslation).toEqual({
           x: 11,
@@ -203,8 +201,8 @@ describe("Entity", () => {
       });
     });
 
-    describe("transformDirection", () => {
-      test("no rotation", () => {
+    describe('transformDirection', () => {
+      test('no rotation', () => {
         const rigidBody = createRigidBodyMock({ x: 1, y: 1, z: 1 }, {x:0, y:0, z:0, w:1});
         const collider = createCollider(1);
         const entity = new Entity({
@@ -217,7 +215,7 @@ describe("Entity", () => {
         expect(worldDirection).toEqual(localDirection);
       });
 
-      test("with rotation and local translation", () => {
+      test('with rotation and local translation', () => {
         const rigidBody = createRigidBodyMock({ x: 1, y: 1, z: 1 }, {x:0, y:1, z:0, w:0});
         const collider = createCollider(1);
         const entity = new Entity({

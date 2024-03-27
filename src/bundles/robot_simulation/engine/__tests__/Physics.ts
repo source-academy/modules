@@ -1,6 +1,6 @@
 // physics.test.js
-import { Physics } from '../Physics';
 import rapier from '@dimforge/rapier3d-compat';
+import { Physics } from '../Physics';
 
 // Mock rapier
 jest.mock('@dimforge/rapier3d-compat', () => {
@@ -40,7 +40,6 @@ describe('Physics', () => {
     expect(physics.internals).toHaveProperty('accumulator', 0);
   });
 
-
   test('createRigidBody throws if not initialized', () => {
     expect(() => physics.createRigidBody({})).toThrow("Physics engine hasn't been initialized yet");
   });
@@ -65,11 +64,11 @@ describe('Physics', () => {
     const globalPosition = {}; // Mocked global position
     const globalDirection = {}; // Mocked global direction
     const maxDistance = 100;
-  
+
     // Mock the return value of castRayAndGetNormal
     const expectedResult = { toi: 10, normal: { x: 0, y: 1, z: 0 } };
     physics.internals.world.castRayAndGetNormal.mockReturnValue(expectedResult);
-  
+
     const result = physics.castRay(globalPosition, globalDirection, maxDistance);
     expect(result).toEqual({
       distance: expectedResult.toi,
@@ -83,11 +82,11 @@ describe('Physics', () => {
     const globalPosition = {}; // Mocked global position
     const globalDirection = {}; // Mocked global direction
     const maxDistance = 100;
-  
+
     // Mock the return value of castRayAndGetNormal
     const expectedResult = null;
     physics.internals.world.castRayAndGetNormal.mockReturnValue(expectedResult);
-  
+
     const result = physics.castRay(globalPosition, globalDirection, maxDistance);
     expect(result).toEqual(null);
   });
@@ -110,11 +109,10 @@ describe('Physics', () => {
       physics.createCollider({}, {}, 100);
     }).toThrow("Physics engine hasn't been initialized yet");
   });
-  
+
   test('step throws if not initialized', () => {
     expect(() => {
       physics.step({ frameDuration: 1000 / 60 });
     }).toThrow("Physics engine hasn't been initialized yet");
   });
 });
-

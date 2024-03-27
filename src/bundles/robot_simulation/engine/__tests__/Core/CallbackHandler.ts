@@ -1,5 +1,5 @@
-import { CallbackHandler } from "../../Core/CallbackHandler";
-import { PhysicsTimingInfo } from "../../Physics";
+import { CallbackHandler } from '../../Core/CallbackHandler';
+import { PhysicsTimingInfo } from '../../Physics';
 
 // Helper function to create a PhysicsTimingInfo object
 // CallbackHandler only uses the stepCount and timestep properties
@@ -14,8 +14,8 @@ const createTimingInfo = ({
   return { stepCount, timestep } as PhysicsTimingInfo;
 };
 
-describe("CallbackHandler", () => {
-  test("adds callbacks correctly", () => {
+describe('CallbackHandler', () => {
+  test('adds callbacks correctly', () => {
     const handler = new CallbackHandler();
     const mockCallback = jest.fn();
 
@@ -26,7 +26,7 @@ describe("CallbackHandler", () => {
     expect(handler.callbackStore[0].callback).toBe(mockCallback);
   });
 
-  test("executes callback after correct delay", () => {
+  test('executes callback after correct delay', () => {
     jest.useFakeTimers();
     const handler = new CallbackHandler();
     const mockCallback = jest.fn();
@@ -37,7 +37,7 @@ describe("CallbackHandler", () => {
     expect(mockCallback).toHaveBeenCalled();
   });
 
-  test("removes callback after execution", () => {
+  test('removes callback after execution', () => {
     const handler = new CallbackHandler();
     const mockCallback = jest.fn();
 
@@ -47,7 +47,7 @@ describe("CallbackHandler", () => {
     expect(handler.callbackStore.length).toBe(0);
   });
 
-  test("handles multiple callbacks correctly", () => {
+  test('handles multiple callbacks correctly', () => {
     const handler = new CallbackHandler();
     const mockCallback1 = jest.fn();
     const mockCallback2 = jest.fn();
@@ -63,7 +63,7 @@ describe("CallbackHandler", () => {
     expect(mockCallback2).toHaveBeenCalled();
   });
 
-  test("does not execute callback before its time", () => {
+  test('does not execute callback before its time', () => {
     const handler = new CallbackHandler();
     const mockCallback = jest.fn();
 
@@ -73,7 +73,7 @@ describe("CallbackHandler", () => {
     expect(mockCallback).not.toHaveBeenCalled();
   });
 
-  test("correctly handles step count changes", () => {
+  test('correctly handles step count changes', () => {
     const handler = new CallbackHandler();
     const mockCallback = jest.fn();
 
