@@ -7,7 +7,6 @@ import Main from './components/Main';
  * @author Joel Chan
  */
 
-
 export default {
   /**
    * This function will be called to determine if the component will be
