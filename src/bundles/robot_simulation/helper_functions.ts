@@ -1,22 +1,15 @@
-import { Program } from './controllers/program/Program';
-import {
-  createDefaultEv3,
-  type DefaultEv3,
-} from './controllers/ev3/ev3/default/ev3';
+import context from 'js-slang/context';
+import { interrupt } from '../../common/specialErrors';
+import { sceneConfig } from './config';
+import { Cuboid, type CuboidConfig } from './controllers/environment/Cuboid';
 import { type Controller, Physics, Renderer, Timer, World } from './engine';
 
-import context from 'js-slang/context';
-import { interrupt } from './interrupt';
 import { RobotConsole } from './engine/Core/RobotConsole';
+import { isRigidBodyType, type RigidBodyType } from './engine/Entity/EntityFactory';
+import type { PhysicsConfig } from './engine/Physics';
+import type { RenderConfig } from './engine/Render/Renderer';
 import { getCamera, type CameraOptions } from './engine/Render/helpers/Camera';
 import { createScene } from './engine/Render/helpers/Scene';
-import { Paper, type PaperConfig } from './controllers/environment/Paper';
-import type { PhysicsConfig } from './engine/Physics';
-import { isRigidBodyType, type RigidBodyType } from './engine/Entity/EntityFactory';
-import { Cuboid, type CuboidConfig } from './controllers/environment/Cuboid';
-import { ev3Config } from './controllers/ev3/ev3/default/config';
-import { sceneConfig } from './config';
-import type { RenderConfig } from './engine/Render/Renderer';
 
 const storedWorld = context.moduleContexts.robot_simulation.state?.world;
 
@@ -27,14 +20,6 @@ export function getWorldFromContext(): World {
     throw new Error('World not initialized');
   }
   return world as World;
-}
-
-export function getEv3FromContext(): DefaultEv3 {
-  const ev3 = context.moduleContexts.robot_simulation.state?.ev3;
-  if (ev3 === undefined) {
-    throw new Error('ev3 not initialized');
-  }
-  return ev3 as DefaultEv3;
 }
 
 // Physics
@@ -114,7 +99,7 @@ export function createCuboid(
   length: number,
   height: number,
   mass: number,
-  color: string | number,
+  color: number | string,
   bodyType: string,
 ) {
   if (isRigidBodyType(bodyType) === false) {
@@ -177,30 +162,6 @@ export function createWall(physics: Physics, renderer: Renderer) {
   return wall;
 }
 
-export function createPaper(
-  render: Renderer,
-  url: string,
-  width: number,
-  height: number,
-) {
-  const paperConfig: PaperConfig = {
-    url,
-    dimension: {
-      width,
-      height,
-    },
-  };
-  const paper = new Paper(render, paperConfig);
-  return paper;
-}
-
-export function createCSE() {
-  const code = context.unTypecheckedCode[0];
-  const program = new Program(code);
-  return program;
-}
-
-
 export function addControllerToWorld(controller: Controller, world: World) {
   world.addController(controller);
 }
@@ -210,11 +171,6 @@ export function saveToContext(key: string, value: any) {
     context.moduleContexts.robot_simulation.state = {};
   }
   context.moduleContexts.robot_simulation.state[key] = value;
-}
-
-export function createEv3(physics: Physics, renderer: Renderer): DefaultEv3 {
-  const ev3 = createDefaultEv3(physics, renderer, ev3Config);
-  return ev3;
 }
 
 // Initialization

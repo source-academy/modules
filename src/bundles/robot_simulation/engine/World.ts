@@ -1,12 +1,10 @@
+import { ProgramError } from '../controllers/program/error';
 import { type Controller, ControllerGroup } from './Core/Controller';
 import { TypedEventTarget } from './Core/Events';
+import { type RobotConsole } from './Core/RobotConsole';
+import { type Timer } from './Core/Timer';
 import { TimeStampedEvent, type Physics } from './Physics';
 import { type Renderer } from './Render/Renderer';
-import { type Timer } from './Core/Timer';
-
-import { type RobotConsole } from './Core/RobotConsole';
-import { ProgramError } from '../controllers/program/error';
-
 
 export const worldStates = [
   'unintialized',
@@ -108,7 +106,6 @@ export class World extends TypedEventTarget<WorldEventMap> {
         'afterRender',
         new TimeStampedEvent('afterRender', physicsTimingInfo),
       );
-
 
       if (this.state === 'running') {
         window.requestAnimationFrame(this.step.bind(this));

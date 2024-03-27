@@ -11,7 +11,6 @@ export class Timer {
   private _timeSpentPaused = 0;
   private _frameDuration = 0;
 
-
   private _startTime: number | null = null;
   private _pausedAt: number | null = null;
   private _currentTime: number | null = null;

@@ -1,8 +1,8 @@
-import TabUi from './TabUi';
-import { Modal } from './Modal';
 import { useState } from 'react';
-import SimulationCanvas from './Simulation';
 import { type DebuggerContext } from '../../../typings/type_helpers';
+import { Modal } from './Modal';
+import SimulationCanvas from './Simulation';
+import TabUi from './TabUi';
 
 export default function Main({ context }: { context:DebuggerContext }): JSX.Element {
   const [isCanvasShowing, setIsCanvasShowing] = useState<boolean>(false);
