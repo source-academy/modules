@@ -6,18 +6,18 @@ import {
   type Physics,
   type Renderer,
 } from '../../engine';
-import type { Dimension, SimpleVector } from '../../engine/Math/Vector';
-import type { RenderCuboidOptions } from '../../engine/Render/helpers/MeshFactory';
 import type {
   EntityCuboidOptions,
   RigidBodyType,
 } from '../../engine/Entity/EntityFactory';
+import type { Dimension, SimpleVector } from '../../engine/Math/Vector';
+import type { RenderCuboidOptions } from '../../engine/Render/helpers/MeshFactory';
 
 export type CuboidConfig = {
   position: SimpleVector;
   dimension: Dimension;
   mass: number;
-  color: string | number;
+  color: number | string;
   type: RigidBodyType;
 };
 

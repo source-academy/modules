@@ -1,12 +1,12 @@
-import type * as THREE from 'three';
 import type Rapier from '@dimforge/rapier3d-compat';
+import type * as THREE from 'three';
+import { vec3 } from '../Math/Convert';
 import {
   simpleVectorLength,
   type Orientation,
   type SimpleQuaternion,
   type SimpleVector,
 } from '../Math/Vector';
-import { vec3 } from '../Math/Convert';
 
 type EntityConfig = {
   rapierRigidBody: Rapier.RigidBody;

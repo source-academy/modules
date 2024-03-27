@@ -1,6 +1,6 @@
 export type Listener<EventMap, EventName extends keyof EventMap> = (
   event: EventMap[EventName]
-) => void | Promise<void>;
+) => Promise<void> | void;
 
 type ValueIsEvent<EventMap> = {
   [EventName in keyof EventMap]: Event;
@@ -15,7 +15,7 @@ export class TypedEventTarget<EventMap extends ValueIsEvent<EventMap>> {
     this.listeners = {};
   }
 
-  addEventListener<EventName extends keyof EventMap & string>(
+  addEventListener<EventName extends string & keyof EventMap>(
     type: EventName,
     listener: Listener<EventMap, EventName>,
   ): void {

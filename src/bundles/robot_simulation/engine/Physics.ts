@@ -2,9 +2,9 @@ import rapier from '@dimforge/rapier3d-compat';
 
 import type * as THREE from 'three';
 
-import { type SimpleVector } from './Math/Vector';
-import { type FrameTimingInfo } from './Core/Timer';
 import { TypedEventTarget } from './Core/Events';
+import { type FrameTimingInfo } from './Core/Timer';
+import { type SimpleVector } from './Math/Vector';
 
 export type PhysicsTimingInfo = FrameTimingInfo & {
   stepCount: number;
@@ -41,7 +41,7 @@ type InitializedInternals = {
   stepCount: number;
 };
 
-type PhysicsInternals = NotInitializedInternals | InitializedInternals;
+type PhysicsInternals = InitializedInternals | NotInitializedInternals;
 
 export class Physics extends TypedEventTarget<PhysicsEventMap> {
   RAPIER: typeof rapier;
@@ -96,9 +96,9 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     maxDistance: number,
     excludeCollider?: rapier.Collider,
   ): {
-      distance: number;
-      normal: SimpleVector;
-    } | null {
+    distance: number;
+    normal: SimpleVector;
+  } | null {
     if (this.internals.initialized === false) {
       throw Error("Physics engine hasn't been initialized yet");
     }

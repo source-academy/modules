@@ -2,7 +2,6 @@ import * as THREE from 'three';
 
 import { CameraOptions, getCamera } from '../../../Render/helpers/Camera';
 
-
 describe('getCamera', () => {
   test('returns a PerspectiveCamera when type is "perspective"', () => {
     const cameraOptions: CameraOptions = {
@@ -12,7 +11,6 @@ describe('getCamera', () => {
       near: 0.1,
       far: 1000,
     };
-
 
     const camera = getCamera(cameraOptions);
     expect(camera).toBeInstanceOf(THREE.PerspectiveCamera);
@@ -33,7 +31,7 @@ describe('getCamera', () => {
 
   test('throws an error when type is unknown', () => {
     const cameraOptions: CameraOptions = {
-      // @ts-expect-error
+      // @ts-expect-error This is testing for an unknown type
       type: 'unknown',
     };
     expect(() => getCamera(cameraOptions)).toThrowError('Unknown camera type');
