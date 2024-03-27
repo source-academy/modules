@@ -1,5 +1,5 @@
-import { compile } from 'source-academy-wabt';
 import { objectToLinkedList } from 'source-academy-utils';
+import { compile } from 'source-academy-wabt';
 
 /**
  * Compile a (hopefully valid) WebAssembly Text module to binary.

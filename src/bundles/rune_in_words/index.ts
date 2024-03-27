@@ -51,5 +51,5 @@ export {
   triangle,
   turn_upside_down,
   white,
-  yellow,
+  yellow
 } from './functions';

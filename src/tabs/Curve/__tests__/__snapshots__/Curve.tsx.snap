@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Curve 3D animations error gracefully 1`] = `
+exports['Curve 3D animations error gracefully 1'] = `
 <CurveTab
   context={
     {
@@ -28,7 +28,7 @@ exports[`Curve 3D animations error gracefully 1`] = `
 />
 `;
 
-exports[`Curve animations error gracefully 1`] = `
+exports['Curve animations error gracefully 1'] = `
 <CurveTab
   context={
     {

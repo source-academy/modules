@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "paths": {
+      "@src/*": ["./src/*"]
+    },
+    "target": "ESNext"
+  },
+  "include": ["./src", "jest.setup.ts"],
+  "exclude": ["./src/templates/templates/**"]
+}

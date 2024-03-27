@@ -4,17 +4,17 @@ export default {
   // preset: 'ts-jest',
   testEnvironment: 'jsdom',
   modulePaths: [
-    '<rootDir>',
+    '<rootDir>'
   ],
   transform: {
-    ".ts": ['ts-jest', {
+    '.ts': ['ts-jest', {
       useESM: true,
-      /** 
+      /**
        * ts-jest preset currently has an issue with the 'verbatimModuleSyntax' typescript option:
        * This whole transform bit should be removed once this is resolved:
        * https://github.com/kulshekhar/ts-jest/issues/4081
        */
-      isolatedModules: true,
+      isolatedModules: true
     }]
   },
   moduleNameMapper: {

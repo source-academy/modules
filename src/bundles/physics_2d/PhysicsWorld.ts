@@ -12,7 +12,7 @@ import {
   b2Vec2,
   b2World,
   b2ContactListener,
-  type b2Contact,
+  type b2Contact
 } from '@box2d/core';
 import { type PhysicsObject } from './PhysicsObject';
 import { Timer } from './types';
@@ -25,7 +25,7 @@ export class PhysicsWorld {
 
   private iterationsConfig: b2StepConfig = {
     velocityIterations: 8,
-    positionIterations: 3,
+    positionIterations: 3
   };
 
   constructor() {
@@ -71,18 +71,18 @@ export class PhysicsWorld {
   public makeGround(height: number, friction: number) {
     const groundBody: b2Body = this.createBody({
       type: b2BodyType.b2_staticBody,
-      position: new b2Vec2(0, height - 10),
+      position: new b2Vec2(0, height - 10)
     });
     const groundShape: b2PolygonShape = new b2PolygonShape()
       .SetAsBox(
         10000,
-        10,
+        10
       );
 
     groundBody.CreateFixture({
       shape: groundShape,
       density: 1,
-      friction,
+      friction
     });
   }
 

@@ -1,34 +1,32 @@
-import getBuildTabsCommand, * as tabModule from '../tab';
-import fs from 'fs/promises';
-import pathlib from 'path';
-
-jest.spyOn(tabModule, 'buildTabs');
+import { testBuildCommand } from '@src/build/__tests__/testingUtils';
+import type { MockedFunction } from 'jest-mock';
+import * as tabs from '../tabs';
 
 jest.mock('esbuild', () => ({
-  build: jest.fn().mockResolvedValue({ outputFiles: [] }),
+  build: jest.fn()
+    .mockResolvedValue({ outputFiles: [] })
 }));
 
-const runCommand = (...args: string[]) => getBuildTabsCommand().parseAsync(args, { from: 'user' });
+jest.spyOn(tabs, 'bundleTabs');
 
-describe('test tab command', () => {
-  it('should create the output directories, and copy the manifest', async () => {
-    await runCommand();
+testBuildCommand(
+  'buildTabs',
+  tabs.getBuildTabsCommand,
+  [tabs.bundleTabs]
+);
 
-    expect(fs.mkdir)
-      .toBeCalledWith('build', { recursive: true })
+test('Normal command', async () => {
+  await tabs.getBuildTabsCommand()
+    .parseAsync(['-t', 'tab0'], { from: 'user' });
 
-    expect(fs.copyFile)
-      .toBeCalledWith('modules.json', pathlib.join('build', 'modules.json'));
-  })
+  expect(tabs.bundleTabs)
+    .toHaveBeenCalledTimes(1);
 
-  it('should only build specific tabs when manually specified', async () => {
-    await runCommand('tab0');
-
-    expect(tabModule.buildTabs)
-      .toHaveBeenCalledTimes(1);
-
-    const buildModulesCall = (tabModule.buildTabs as jest.MockedFunction<typeof tabModule.buildTabs>).mock.calls[0];
-    expect(buildModulesCall[0])
-      .toEqual(['tab0']);
-  });
+  const [args] = (tabs.bundleTabs as MockedFunction<typeof tabs.bundleTabs>).mock.calls[0];
+  expect(args)
+    .toMatchObject({
+      bundles: [],
+      tabs: ['tab0'],
+      modulesSpecified: true
+    });
 });

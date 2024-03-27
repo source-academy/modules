@@ -5,12 +5,12 @@
  * @author Wang Zihan
  */
 
-import { UNITY_ACADEMY_BACKEND_URL, BUILD_NAME } from './config';
-import React from 'react';
-import ReactDOM from 'react-dom';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Vector3, normalizeVector, zeroVector, pointDistance } from './UnityAcademyMaths';
+import { UNITY_ACADEMY_BACKEND_URL, BUILD_NAME } from './config';
 
 type Transform = {
   position : Vector3;
@@ -53,7 +53,6 @@ type AudioSourceData = {
   isPlaying : boolean;
 };
 
-
 declare const createUnityInstance : Function; // This function comes from {BUILD_NAME}.loader.js in Unity Academy Application (For Example: ua-frontend-prod.loader.js)
 
 export function getInstance() : UnityAcademyJsInteropContext {
@@ -68,7 +67,6 @@ export class AudioClipIdentifier { // A wrapper class to store identifier string
     this.audioClipInternalName = audioClipInternalName;
   }
 }
-
 
 export class GameObjectIdentifier { // A wrapper class to store identifier string and prevent users from using arbitrary string for idenfitier
   gameObjectIdentifier : string;
@@ -97,51 +95,57 @@ class UnityComponent extends React.Component<any> {
         position: 'absolute',
         left: '0%',
         top: '0%',
-        zIndex: '9999',
+        zIndex: '9999'
       }}>
         <div style={{
           backgroundColor: 'rgba(100,100,100,0.75)',
           width: '100%',
           height: '100%',
           position: 'absolute',
-          zIndex: '-1',
+          zIndex: '-1'
         }}>
-          <p id = "unity_load_info" style={{
+          <p id="unity_load_info" style={{
             textAlign: 'center',
             lineHeight: '30',
             fontSize: '23px',
-            color: 'cyan',
-          }}>Preparing to load Unity Academy...</p>
+            color: 'cyan'
+          }}>Preparing to load Unity Academy...
+          </p>
         </div>
         <div id="unity-container">
           <canvas id="unity-canvas" style={{
             width: '100%',
             height: '100%',
-            position: 'absolute',
-          }}></canvas>
+            position: 'absolute'
+          }}>
+          </canvas>
         </div>
         <Button
           icon={IconNames.CROSS}
           active={true}
-          onClick={() => { moduleInstance.setShowUnityComponent(0); }}// Note: Here if I directly use "this.moduleInstance......" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
+          onClick={() => {
+            moduleInstance.setShowUnityComponent(0);
+          }}// Note: Here if I directly use "this.moduleInstance......" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Hide Unity Academy Window"
           style={{
             position: 'absolute',
             left: '0%',
             top: '0%',
-            width: '15%',
+            width: '15%'
           }}
         />
         <Button
           icon={IconNames.DISABLE}
           active={true}
-          onClick={() => { moduleInstance.terminate(); }}
+          onClick={() => {
+            moduleInstance.terminate();
+          }}
           text="Terminate Unity Academy Instance"
           style={{
             position: 'absolute',
             left: '17%',
             top: '0%',
-            width: '20%',
+            width: '20%'
           }}
         />
       </div>
@@ -154,8 +158,6 @@ class UnityComponent extends React.Component<any> {
   }
 }
 
-
-
 const UNITY_CONFIG = {
   loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.loader.js`,
   dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.data.gz`,
@@ -164,9 +166,8 @@ const UNITY_CONFIG = {
   streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
   companyName: 'Wang Zihan @ NUS SoC 2026',
   productName: 'Unity Academy (Source Academy Embedding Version)',
-  productVersion: 'See \'About\' in the embedded frontend.',
+  productVersion: 'See \'About\' in the embedded frontend.'
 };
-
 
 class UnityAcademyJsInteropContext {
   // private unityConfig : any;
@@ -202,7 +203,7 @@ class UnityAcademyJsInteropContext {
     this.audioClipStorage = [];
     this.guiData = [];
     this.input = {
-      keyboardInputInfo: {},
+      keyboardInputInfo: {}
     };
     this.targetFrameRate = 30;
 
@@ -268,7 +269,6 @@ class UnityAcademyJsInteropContext {
   reloadUnityAcademyInstanceAfterTermination() {
     this.createUnityAcademyInstance();
   }
-
 
   setShowUnityComponent(resolution: number) {
     const toShow = resolution > 0;
@@ -416,7 +416,7 @@ class UnityAcademyJsInteropContext {
       playProgress: 0,
       volume: 1,
       isLooping: false,
-      isPlaying: false,
+      isPlaying: false
     };
     this.dispatchStudentAction(`instantiateAudioSourceGameObject|${gameObjectIdentifier}|${audioClipIdentifier.audioClipInternalName}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
@@ -436,12 +436,12 @@ class UnityAcademyJsInteropContext {
       transform: {
         position: zeroVector(),
         rotation: zeroVector(),
-        scale: new Vector3(1, 1, 1),
+        scale: new Vector3(1, 1, 1)
       },
       rigidbody: null,
       audioSource: null,
       customProperties: {},
-      isDestroyed: false,
+      isDestroyed: false
     };
   }
 
@@ -495,7 +495,6 @@ class UnityAcademyJsInteropContext {
     gameObject.transform.position.z += deltaPosition.z;
   }
 
-
   translateLocalInternal(gameObjectIdentifier : GameObjectIdentifier, deltaPosition : Vector3) : void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rotation = gameObject.transform.rotation;
@@ -513,7 +512,7 @@ class UnityAcademyJsInteropContext {
     const finalWorldTranslateVector = [
       rotationMatrix[0][0] * deltaPosition.x + rotationMatrix[0][1] * deltaPosition.y + rotationMatrix[0][2] * deltaPosition.z,
       rotationMatrix[1][0] * deltaPosition.x + rotationMatrix[1][1] * deltaPosition.y + rotationMatrix[1][2] * deltaPosition.z,
-      rotationMatrix[2][0] * deltaPosition.x + rotationMatrix[2][1] * deltaPosition.y + rotationMatrix[2][2] * deltaPosition.z,
+      rotationMatrix[2][0] * deltaPosition.x + rotationMatrix[2][1] * deltaPosition.y + rotationMatrix[2][2] * deltaPosition.z
     ];
     gameObject.transform.position.x += finalWorldTranslateVector[0];
     gameObject.transform.position.y += finalWorldTranslateVector[1];
@@ -575,7 +574,7 @@ class UnityAcademyJsInteropContext {
       mass: 1,
       useGravity: true,
       drag: 0,
-      angularDrag: 0.05,
+      angularDrag: 0.05
     };
     this.dispatchStudentAction(`applyRigidbody|${gameObjectIdentifier.gameObjectIdentifier}`);
   }
@@ -658,7 +657,7 @@ class UnityAcademyJsInteropContext {
       type: 'label',
       content,
       x,
-      y,
+      y
     };
     this.guiData.push(newLabel);
   }
@@ -674,7 +673,7 @@ class UnityAcademyJsInteropContext {
       y,
       width,
       height,
-      onClick,
+      onClick
     };
     this.guiData.push(newButton);
   }

@@ -1,5 +1,18 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
+  DEFAULT_WIDTH,
+  DEFAULT_HEIGHT,
+  DEFAULT_FPS,
+  DEFAULT_VOLUME,
+  MAX_HEIGHT,
+  MIN_HEIGHT,
+  MAX_WIDTH,
+  MIN_WIDTH,
+  MAX_FPS,
+  MIN_FPS,
+  DEFAULT_LOOP
+} from './constants';
+import {
   type CanvasElement,
   type VideoElement,
   type ErrorLogger,
@@ -11,22 +24,8 @@ import {
   type TabsPacket,
   type BundlePacket,
   InputFeed,
-  type ImageElement,
+  type ImageElement
 } from './types';
-
-import {
-  DEFAULT_WIDTH,
-  DEFAULT_HEIGHT,
-  DEFAULT_FPS,
-  DEFAULT_VOLUME,
-  MAX_HEIGHT,
-  MIN_HEIGHT,
-  MAX_WIDTH,
-  MIN_WIDTH,
-  MAX_FPS,
-  MIN_FPS,
-  DEFAULT_LOOP,
-} from './constants';
 
 // Global Variables
 let WIDTH: number = DEFAULT_WIDTH;
@@ -127,14 +126,14 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
         pixelData[p],
         pixelData[p + 1],
         pixelData[p + 2],
-        pixelData[p + 3],
+        pixelData[p + 3]
       ];
     }
   }
 }
 
 /** @hidden */
-function drawImage(source: VideoElement | ImageElement): void {
+function drawImage(source: ImageElement | VideoElement): void {
   if (keepAspectRatio) {
     canvasRenderingContext.rect(0, 0, WIDTH, HEIGHT);
     canvasRenderingContext.fill();
@@ -147,7 +146,7 @@ function drawImage(source: VideoElement | ImageElement): void {
       (WIDTH - displayWidth) / 2,
       (HEIGHT - displayHeight) / 2,
       displayWidth,
-      displayHeight,
+      displayHeight
     );
   } else canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
 
@@ -165,7 +164,7 @@ function drawImage(source: VideoElement | ImageElement): void {
 
     if (!e.name) {
       errorLogger(
-        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.',
+        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.'
       );
 
       errorLogger([e], true);
@@ -268,7 +267,7 @@ function loadMedia(): void {
       videoElement.srcObject = stream;
       videoElement.onloadedmetadata = () => setAspectRatioDimensions(
         videoElement.videoWidth,
-        videoElement.videoHeight,
+        videoElement.videoHeight
       );
       toRunLateQueue = true;
     })
@@ -321,7 +320,7 @@ function loadAlternative(): void {
   imageElement.onload = () => {
     setAspectRatioDimensions(
       imageElement.naturalWidth,
-      imageElement.naturalHeight,
+      imageElement.naturalHeight
     );
     drawImage(imageElement);
   };
@@ -431,7 +430,7 @@ function init(
   video: VideoElement,
   canvas: CanvasElement,
   _errorLogger: ErrorLogger,
-  _tabsPackage: TabsPacket,
+  _tabsPackage: TabsPacket
 ): BundlePacket {
   imageElement = image;
   videoElement = video;
@@ -453,7 +452,7 @@ function init(
     WIDTH,
     FPS,
     VOLUME,
-    inputFeed,
+    inputFeed
   };
 }
 
@@ -490,7 +489,7 @@ export function start(): StartPacket {
     stopVideo,
     updateFPS,
     updateVolume,
-    updateDimensions,
+    updateDimensions
   };
 }
 
@@ -553,7 +552,7 @@ export function set_rgba(
   r: number,
   g: number,
   b: number,
-  a: number,
+  a: number
 ): void {
   // assigns the r,g,b values to this pixel
   pixel[0] = r;
@@ -661,7 +660,7 @@ export function pause_at(pause_time: number): void {
   lateEnqueue(() => {
     setTimeout(
       tabsPackage.onClickStill,
-      pause_time >= 0 ? pause_time : -pause_time,
+      pause_time >= 0 ? pause_time : -pause_time
     );
   });
 }

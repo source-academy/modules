@@ -103,5 +103,13 @@
     "tabs": [
       "RobotSimulation"
     ]
+  },
+  "ar": {
+    "tabs": [
+      "AugmentedReality"
+    ]
+  },
+  "communication": {
+    "tabs": []
   }
 }

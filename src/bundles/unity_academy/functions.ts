@@ -7,9 +7,8 @@
 import { initializeModule, getInstance, type GameObjectIdentifier, type AudioClipIdentifier } from './UnityAcademy';
 import {
   type Vector3, checkVector3Parameter, makeVector3D, scaleVector, addVectors, vectorDifference, dotProduct,
-  crossProduct, normalizeVector, vectorMagnitude, zeroVector, pointDistance,
+  crossProduct, normalizeVector, vectorMagnitude, zeroVector, pointDistance
 } from './UnityAcademyMaths';
-
 
 /**
  * Load and initialize Unity Academy WebGL player and set it to 2D mode. All other functions (except Maths functions) in this module requires calling this function or `init_unity_academy_3d` first.
@@ -123,7 +122,6 @@ export function set_update(gameObjectIdentifier : GameObjectIdentifier, updateFu
   getInstance()
     .setUpdateInternal(gameObjectIdentifier, updateFunction);
 }
-
 
 /**
  * Creates a new GameObject from an existing Prefab
@@ -519,7 +517,6 @@ export function get_key(keyCode : string) : boolean {
   return keyState === 1 || keyState === 2 || keyState === 3;
 }
 
-
 /**
  * When user releases a pressed key on the keyboard or mouse button, this function will return true only at the frame when the key is just released up and return false otherwise.
  *
@@ -733,7 +730,6 @@ export function set_use_gravity(gameObjectIdentifier : GameObjectIdentifier, use
     .setUseGravityInternal(gameObjectIdentifier, useGravity);
 }
 
-
 /**
  * Add an impulse force on the Rigidbody attached on the GameObject, **using its mass**.
  *
@@ -852,7 +848,6 @@ export function on_collision_exit(gameObjectIdentifier : GameObjectIdentifier, e
     .setOnCollisionExitInternal(gameObjectIdentifier, eventFunction);
 }
 
-
 /**
  * Draw a text (string) on the screen with given **screen space position** in the current frame.
  *
@@ -875,7 +870,6 @@ export function gui_label(text : string, x : number, y : number) : void {
   getInstance()
     .onGUI_Label(text, x, y);
 }
-
 
 /**
  * Make a button on the screen with given **screen space position** in the current frame. When user clicks the button, the `onClick` function will be called.
@@ -946,7 +940,6 @@ export function get_main_camera_following_target() : GameObjectIdentifier {
   return getInstance()
     .getGameObjectIdentifierForPrimitiveGameObject('MainCameraFollowingTarget');
 }
-
 
 /**
  * Request for main camera control and get a GameObject identifier that can directly be used to control the main camera's position and rotation.
@@ -1175,8 +1168,6 @@ export function point_distance(pointA : Vector3, pointB : Vector3) : number {
   checkVector3Parameter(pointB);
   return pointDistance(pointA, pointB);
 }
-
-
 
 /**
  *

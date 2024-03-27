@@ -4,14 +4,15 @@
  * @author Wang Zihan
  */
 
-import React from 'react';
-import type { DebuggerContext } from '../../typings/type_helpers';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
+import React from 'react';
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '../../bundles/repl/config';
+import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
+import type { DebuggerContext } from '../../typings/type_helpers';
 // If I use import for AceEditor it will cause runtime error and crash Source Academy when spawning tab in the new module building system.
 // import AceEditor from 'react-ace';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const AceEditor = require('react-ace').default;
 
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -39,7 +40,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
     this.replInstance.setTabReactComponentInstance(this);
     this.state = {
       editorHeight: this.replInstance.editorHeight,
-      isDraggingDragBar: false,
+      isDraggingDragBar: false
     };
   }
   private dragBarOnMouseDown = (e) => {
@@ -67,7 +68,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   }
   public render() {
     const { editorHeight } = this.state;
-    const outputDivs : JSX.Element[] = [];
+    const outputDivs : React.JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
       const str = this.replInstance.outputStrings[i];
@@ -77,7 +78,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
         } else {
           outputDivs.push(<div style={{
             ...FONT_MESSAGE,
-            ...{ color: str.color },
+            ...{ color: str.color }
           }} dangerouslySetInnerHTML={ { __html: str.content }} />);
         }
       } else if (str.color === '') {
@@ -85,8 +86,9 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       } else {
         outputDivs.push(<div style={{
           ...FONT_MESSAGE,
-          ...{ color: str.color },
-        }}>{ str.content }</div>);
+          ...{ color: str.color }
+        }}>{ str.content }
+        </div>);
       }
     }
     return (
@@ -105,37 +107,39 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           onClick={() => this.replInstance.saveEditorContent()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Save"
         />
-        <div ref = { (e) => { this.editorAreaRect = e?.getBoundingClientRect(); }} style = {{
+        <div ref={ (e) => {
+          this.editorAreaRect = e?.getBoundingClientRect();
+        }} style={{
           padding: `${BOX_PADDING_VALUE}px`,
-          border: '2px solid #6f8194',
+          border: '2px solid #6f8194'
         }}>
           <AceEditor
             ref={ (e) => {
               this.editorInstance = e?.editor;
               this.replInstance.setEditorInstance(e?.editor);
             }}
-            style= { {
+            style={ {
               width: '100%',
               height: `${editorHeight}px`,
               ...(this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
                 backgroundSize: '100%',
-                backgroundRepeat: 'no-repeat',
-              }),
+                backgroundRepeat: 'no-repeat'
+              })
             } }
             mode="javascript" theme="twilight"
             onChange={ (newValue) => this.replInstance.updateUserCode(newValue) }
             value={this.replInstance.userCodeInEditor.toString()}
           />
         </div>
-        <div onMouseDown = {this.dragBarOnMouseDown} style = {{
+        <div onMouseDown={this.dragBarOnMouseDown} style={{
           cursor: 'row-resize',
-          height: '8px',
+          height: '8px'
         }} />
-        <div style = {{
+        <div style={{
           padding: `${BOX_PADDING_VALUE}px`,
-          border: '2px solid #6f8194',
+          border: '2px solid #6f8194'
         }}>
           <div id="output_strings">{outputDivs}</div>
         </div>
@@ -143,7 +147,6 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
     );
   }
 }
-
 
 export default {
   /**
@@ -175,5 +178,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'code',
+  iconName: 'code'
 };

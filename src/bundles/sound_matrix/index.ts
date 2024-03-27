@@ -11,5 +11,5 @@ export {
   get_matrix,
   clear_matrix,
   set_timeout,
-  clear_all_timeout,
+  clear_all_timeout
 } from './functions';

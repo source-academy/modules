@@ -3,14 +3,14 @@ import type { ReplResult } from '../../typings/type_helpers';
 import type { Curve, CurveDrawn } from './curves_webgl';
 
 export type CurveModuleState = {
-  drawnCurves: (CurveDrawn | AnimatedCurve)[]
+  drawnCurves: (AnimatedCurve | CurveDrawn)[]
 };
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
 export type CurveTransformer = (c: Curve) => Curve;
 
 export type DrawMode = 'lines' | 'points';
-export type ScaleMode = 'none' | 'stretch' | 'fit';
+export type ScaleMode = 'fit' | 'none' | 'stretch';
 export type CurveSpace = '2D' | '3D';
 
 /**
@@ -22,9 +22,9 @@ export type CurveAnimation = (t: number) => Curve;
  * A function that specifies additional rendering information when taking in
  * a CurveFunction and returns a ShapeDrawn based on its specifications.
  */
-export type RenderFunction = {
+export type RenderFunction = ((func: Curve) => CurveDrawn) & {
   is3D: boolean
-} & ((func: Curve) => CurveDrawn);
+};
 
 export class AnimatedCurve extends glAnimation implements ReplResult {
   constructor(
@@ -32,7 +32,7 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
     fps: number,
     private readonly func: (timestamp: number) => Curve,
     private readonly drawer: RenderFunction,
-    public readonly is3D: boolean,
+    public readonly is3D: boolean
   ) {
     super(duration, fps);
     this.angle = 0;
@@ -47,7 +47,7 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
       draw: (canvas: HTMLCanvasElement) => {
         curveDrawn.init(canvas);
         curveDrawn.redraw(this.angle);
-      },
+      }
     };
   }
 

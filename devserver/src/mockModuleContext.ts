@@ -3,5 +3,5 @@
  */
 
 export default {
-	moduleContexts: {}
+  moduleContexts: {}
 };

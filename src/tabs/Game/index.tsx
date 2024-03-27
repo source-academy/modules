@@ -37,5 +37,5 @@ export default {
   toSpawn: () => true,
   body: (debuggerContext: any) => <Game debuggerContext={debuggerContext} />,
   label: 'Game Info Tab',
-  iconName: 'info-sign',
+  iconName: 'info-sign'
 };

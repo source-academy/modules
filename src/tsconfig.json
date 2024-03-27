@@ -38,7 +38,7 @@
     // ],
     "paths": {
       "js-slang/context": ["./typings/@types/js-slang/context.d.ts"]
-    },
+    }
   },
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
   "include": ["."],

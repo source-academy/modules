@@ -1,8 +1,6 @@
 /* [Imports] */
 import { type IconName } from '@blueprintjs/icons';
 
-
-
 /* [Exports] */
 
 // React Component Props for the CSG canvas holder

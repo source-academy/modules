@@ -19,14 +19,14 @@ class Painter extends React.Component<Props, State> {
     super(props);
     this.state = {
       modalOpen: false,
-      selectedPainter: null,
+      selectedPainter: null
     };
   }
 
   handleOpen = (selectedPainter: LinePlot) => {
     this.setState({
       modalOpen: true,
-      selectedPainter,
+      selectedPainter
     });
   };
 
@@ -50,9 +50,10 @@ class Painter extends React.Component<Props, State> {
             }}
             style={{
               height: '20rem',
-              width: '20rem',
+              width: '20rem'
             }}
-          ></div>
+          >
+          </div>
         </Modal>
         {
           drawnPainters.map((drawnPainter: any, id:number) => {
@@ -66,7 +67,8 @@ class Painter extends React.Component<Props, State> {
                     console.log(drawnPainter);
                     drawnPainter.draw(divId);
                   }}
-                ></div>
+                >
+                </div>
               </>
             );
           })
@@ -85,5 +87,5 @@ export default {
   },
   body: (debuggerContext: any) => <Painter debuggerContext={debuggerContext} />,
   label: 'Painter Test Tab',
-  iconName: 'scatter-plot',
+  iconName: 'scatter-plot'
 };

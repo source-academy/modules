@@ -1,20 +1,20 @@
 /* [Imports] */
 import vec3 from '@jscad/modeling/src/maths/vec3';
-import { ZOOM_TICK_SCALE } from './constants.js';
+import { ZOOM_TICK_SCALE } from './constants';
 import {
   cloneControlsState,
   pan,
   rotate,
   updateProjection,
   updateStates,
-  zoomToFit,
-} from './jscad/renderer.js';
+  zoomToFit
+} from './jscad/renderer';
 import type {
   ControlsState,
   GeometryEntity,
-  PerspectiveCameraState,
-} from './jscad/types.js';
-import ListenerTracker from './listener_tracker.js';
+  PerspectiveCameraState
+} from './jscad/types';
+import ListenerTracker from './listener_tracker';
 
 /* [Main] */
 enum MousePointer {
@@ -57,7 +57,7 @@ export default class InputTracker {
   constructor(
     private canvas: HTMLCanvasElement,
     private cameraState: PerspectiveCameraState,
-    private geometryEntities: GeometryEntity[],
+    private geometryEntities: GeometryEntity[]
   ) {
     this.listenerTracker = new ListenerTracker(canvas);
   }
@@ -102,13 +102,13 @@ export default class InputTracker {
   }
 
   private tryDynamicResize() {
-    let { width: oldWidth, height: oldHeight } = this.canvas;
+    const { width: oldWidth, height: oldHeight } = this.canvas;
 
     // Account for display scaling
-    let canvasBounds: DOMRect = this.canvas.getBoundingClientRect();
-    let { devicePixelRatio } = window;
-    let newWidth: number = Math.floor(canvasBounds.width * devicePixelRatio);
-    let newHeight: number = Math.floor(canvasBounds.height * devicePixelRatio);
+    const canvasBounds: DOMRect = this.canvas.getBoundingClientRect();
+    const { devicePixelRatio } = window;
+    const newWidth: number = Math.floor(canvasBounds.width * devicePixelRatio);
+    const newHeight: number = Math.floor(canvasBounds.height * devicePixelRatio);
 
     if (oldWidth === newWidth && oldHeight === newHeight) return;
     this.frameDirty = true;
@@ -132,12 +132,12 @@ export default class InputTracker {
     if (this.zoomTicks === 0) return;
 
     while (this.zoomTicks !== 0) {
-      let currentTick: number = Math.sign(this.zoomTicks);
+      const currentTick: number = Math.sign(this.zoomTicks);
       this.zoomTicks -= currentTick;
 
-      let scaledChange: number = currentTick * ZOOM_TICK_SCALE;
-      let potentialNewScale: number = this.controlsState.scale + scaledChange;
-      let potentialNewDistance: number
+      const scaledChange: number = currentTick * ZOOM_TICK_SCALE;
+      const potentialNewScale: number = this.controlsState.scale + scaledChange;
+      const potentialNewDistance: number
         = vec3.distance(this.cameraState.position, this.cameraState.target)
         * potentialNewScale;
 
@@ -187,7 +187,7 @@ export default class InputTracker {
         this.changeZoomTicks(wheelEvent.deltaY);
       },
       // Force wait for our potential preventDefault()
-      { passive: false },
+      { passive: false }
     );
 
     this.listenerTracker.addListener(
@@ -204,7 +204,7 @@ export default class InputTracker {
         this.canvas.setPointerCapture(pointerEvent.pointerId);
       },
       // Force wait for our potential preventDefault()
-      { passive: false },
+      { passive: false }
     );
 
     this.listenerTracker.addListener(
@@ -214,7 +214,7 @@ export default class InputTracker {
         this.unsetLastCoordinates();
 
         this.canvas.releasePointerCapture(pointerEvent.pointerId);
-      },
+      }
     );
 
     this.listenerTracker.addListener(
@@ -222,13 +222,13 @@ export default class InputTracker {
       (pointerEvent: PointerEvent) => {
         if (this.shouldIgnorePointerMove()) return;
 
-        let currentX = pointerEvent.pageX;
-        let currentY = pointerEvent.pageY;
+        const currentX = pointerEvent.pageX;
+        const currentY = pointerEvent.pageY;
 
         if (this.lastX !== null && this.lastY !== null) {
           // If tracked before, use differences to react to input
-          let differenceX = this.lastX - currentX;
-          let differenceY = this.lastY - currentY;
+          const differenceX = this.lastX - currentX;
+          const differenceY = this.lastY - currentY;
 
           if (this.isPointerPan(pointerEvent.shiftKey)) {
             // Drag right (X increases)
@@ -255,7 +255,7 @@ export default class InputTracker {
 
         this.lastX = currentX;
         this.lastY = currentY;
-      },
+      }
     );
   }
 

@@ -1,29 +1,27 @@
+import { type Interface, createInterface } from 'readline/promises';
 import chalk from 'chalk';
-import { createInterface } from 'readline';
 
-export const rl = createInterface({
+export const getRl = () => createInterface({
   input: process.stdin,
-  output: process.stdout,
+  output: process.stdout
 });
 
-export function info(...args) {
-  return console.log(...args.map((string) => chalk.grey(string)));
+export function info(...args: any[]) {
+  return console.log(...args.map(string => chalk.grey(string)));
 }
 
 export function error(...args) {
-  return console.log(...args.map((string) => chalk.red(string)));
+  return console.log(...args.map(string => chalk.red(string)));
 }
 
 export function warn(...args) {
-  return console.log(...args.map((string) => chalk.yellow(string)));
+  return console.log(...args.map(string => chalk.yellow(string)));
 }
 
 export function success(...args) {
-  return console.log(...args.map((string) => chalk.green(string)));
+  return console.log(...args.map(string => chalk.green(string)));
 }
 
-export function askQuestion(question: string) {
-  return new Promise<string>((resolve) => {
-    rl.question(chalk.blueBright(`${question}\n`), resolve);
-  });
+export function askQuestion(question: string, rl: Interface) {
+  return rl.question(chalk.blueBright(`${question}\n`));
 }

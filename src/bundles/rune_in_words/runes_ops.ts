@@ -52,7 +52,7 @@ export const colorPalette = [
   '#4CAF50',
   '#FFEB3B',
   '#FF9800',
-  '#795548',
+  '#795548'
 ];
 
 export function addColorFromHex(rune, hex) {

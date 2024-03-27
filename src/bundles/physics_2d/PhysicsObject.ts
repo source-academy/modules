@@ -9,12 +9,12 @@ import {
   b2BodyType,
   b2CircleShape,
   b2PolygonShape,
-  b2Vec2,
+  b2Vec2
 } from '@box2d/core';
 import { type ReplResult } from '../../typings/type_helpers';
 
-import { ACCURACY, type Force, type ForceWithPos } from './types';
 import { type PhysicsWorld } from './PhysicsWorld';
+import { ACCURACY, type Force, type ForceWithPos } from './types';
 
 export class PhysicsObject implements ReplResult {
   private body: b2Body;
@@ -28,19 +28,19 @@ export class PhysicsObject implements ReplResult {
     rotation: number,
     shape: b2Shape,
     isStatic: boolean,
-    world: PhysicsWorld,
+    world: PhysicsWorld
   ) {
     this.body = world.createBody({
       type: isStatic ? b2BodyType.b2_staticBody : b2BodyType.b2_dynamicBody,
       position,
-      angle: rotation,
+      angle: rotation
     });
     this.shape = shape;
 
     this.fixture = this.body.CreateFixture({
       shape: this.shape,
       density: 1,
-      friction: 1,
+      friction: 1
     });
   }
 
@@ -100,20 +100,20 @@ export class PhysicsObject implements ReplResult {
   public addForceAtAPoint(force: Force, pos: b2Vec2) {
     this.forcesAtAPoint.push({
       force,
-      pos,
+      pos
     });
   }
 
   private applyForcesToCenter(world_time: number) {
     this.forcesCentered = this.forcesCentered.filter(
-      (force: Force) => force.start_time + force.duration > world_time,
+      (force: Force) => force.start_time + force.duration > world_time
     );
 
     const resForce = this.forcesCentered
       .filter((force: Force) => force.start_time < world_time)
       .reduce(
         (res: b2Vec2, force: Force) => res.Add(force.direction.Scale(force.magnitude)),
-        new b2Vec2(),
+        new b2Vec2()
       );
 
     this.body.ApplyForceToCenter(resForce);
@@ -121,14 +121,14 @@ export class PhysicsObject implements ReplResult {
 
   private applyForcesAtAPoint(world_time: number) {
     this.forcesAtAPoint = this.forcesAtAPoint.filter(
-      (forceWithPos: ForceWithPos) => forceWithPos.force.start_time + forceWithPos.force.duration > world_time,
+      (forceWithPos: ForceWithPos) => forceWithPos.force.start_time + forceWithPos.force.duration > world_time
     );
 
     this.forcesAtAPoint.forEach((forceWithPos) => {
       const force = forceWithPos.force;
       this.body.ApplyForce(
         force.direction.Scale(force.magnitude),
-        forceWithPos.pos,
+        forceWithPos.pos
       );
     });
   }
@@ -153,10 +153,10 @@ export class PhysicsObject implements ReplResult {
   Mass: ${this.getMass()
     .toFixed(ACCURACY)}
   Position: [${this.getPosition().x.toFixed(
-    ACCURACY,
+    ACCURACY
   )},${this.getPosition().y.toFixed(ACCURACY)}]
   Velocity: [${this.getVelocity().x.toFixed(
-    ACCURACY,
+    ACCURACY
   )},${this.getVelocity().y.toFixed(ACCURACY)}] 
   
   Rotation: ${this.getRotation()
@@ -174,8 +174,8 @@ export class PhysicsObject implements ReplResult {
         arr.push(
           new b2Vec2(
             centroid.x + scale * (vec.x - centroid.x),
-            centroid.y + scale * (vec.y - centroid.y),
-          ),
+            centroid.y + scale * (vec.y - centroid.y)
+          )
         );
       });
       this.shape = new b2PolygonShape()
@@ -186,7 +186,7 @@ export class PhysicsObject implements ReplResult {
     this.fixture = this.body.CreateFixture({
       shape: this.shape,
       density: f.GetDensity(),
-      friction: f.GetFriction(),
+      friction: f.GetFriction()
     });
   }
 }
