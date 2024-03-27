@@ -7,14 +7,6 @@ import Main from './components/Main';
  * @author Joel Chan
  */
 
-/**
- * React Component props for the Tab.
- */
-type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
-};
 
 export default {
   /**
