@@ -28,13 +28,12 @@ const bottomPanelStyle: CSSProperties = {
   boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
 };
 
-export default function SimulationCanvas({
-  context,
-  isOpen,
-}: {
+type SimulationCanvasProps = {
   context: DebuggerContext;
   isOpen: boolean;
-}) {
+};
+
+export const SimulationCanvas :React.FC<SimulationCanvasProps> =({context,isOpen})=> {
   const ref = useRef<HTMLDivElement>(null);
   const [currentState, setCurrentState]
     = useState<WorldState>('unintialized');
@@ -86,4 +85,4 @@ export default function SimulationCanvas({
       </div>
     </div>
   );
-}
+};

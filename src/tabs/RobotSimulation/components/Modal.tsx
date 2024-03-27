@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode } from 'react';
+import React, { type CSSProperties, type ReactNode } from 'react';
 
 type ModalProps = {
   isOpen: boolean;
@@ -44,7 +44,7 @@ export const childWrapperStyle: CSSProperties = {
   alignItems: 'center',
 };
 
-export function Modal({ children, isOpen, onClose }: ModalProps) {
+export const Modal: React.FC<ModalProps> = ({ children, isOpen, onClose }) => {
   return (
     <div
       style={{

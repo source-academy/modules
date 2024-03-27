@@ -1,8 +1,10 @@
+import type React from 'react';
+
 type TabUiProps = {
   onOpenCanvas: () => void;
 };
 
-export default function TabUi({ onOpenCanvas }: TabUiProps) {
+export const TabUi :React.FC<TabUiProps> = ({ onOpenCanvas })=> {
   return (
     <div>
       <p>Welcome to robot simulator.</p>
@@ -15,4 +17,4 @@ export default function TabUi({ onOpenCanvas }: TabUiProps) {
       </button>
     </div>
   );
-}
+};
