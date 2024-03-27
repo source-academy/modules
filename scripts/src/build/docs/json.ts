@@ -85,6 +85,8 @@ export const buildJsons = async (
   await fs.mkdir(`${outDir}/jsons`, { recursive: true });
 
   if (bundles.length === 1) {
+    // Typedoc returns a different format if only one bundle is specified
+    // Hence we need slightly different code
     const [bundle] = bundles;
     const result = await buildJson(
       bundle,

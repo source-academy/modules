@@ -2,15 +2,10 @@ import { copyFile } from 'fs/promises';
 import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
-import { lintFixOption, lintOption, manifestOption, objectEntries, outDirOption, retrieveBundlesAndTabs, srcDirOption } from '@src/commandUtils';
+import type { BuildInputs } from '@src/commandUtils';
+import { lintFixOption, lintOption, manifestOption, objectEntries, outDirOption, retrieveBundles, retrieveBundlesAndTabs, retrieveTabs, srcDirOption } from '@src/commandUtils';
 import { htmlLogger, type buildHtml } from './docs/html';
 import prebuild, { formatPrebuildResults } from './prebuild';
-
-export interface BuildInputs {
-  bundles?: string[] | null
-  tabs?: string[] | null
-  modulesSpecified?: boolean
-}
 
 export interface BuildOptions {
   srcDir: string
@@ -78,6 +73,10 @@ type LogType = Partial<Record<AssetType, OperationResult[]> & { html: Awaited<Re
 
 export type BuildTask = (inputs: BuildInputs, opts: BuildOptions) => Promise<LogType>;
 
+/**
+ * Take the results from all the operations and format them neatly in a readable way
+ * Also calls `process.exit(1)` if any operation returned with an error
+ */
 function processResults(
   results: LogType,
   verbose: boolean
@@ -177,12 +176,12 @@ export function logInputs(
     output.push(chalk.yellowBright('Linting specified, will run ESlint'));
   }
 
-  if (bundles.length > 0 && ignore !== 'bundles') {
+  if (ignore !== 'bundles' && bundles.length > 0) {
     output.push(chalk.magentaBright('Processing the following bundles:'));
     bundles.forEach((bundle, i) => output.push(`${i + 1}. ${bundle}`));
   }
 
-  if (tabs.length > 0 && ignore !== 'tabs') {
+  if (ignore !== 'tabs' && tabs.length > 0 ) {
     output.push(chalk.magentaBright('Processing the following tabs:'));
     tabs.forEach((tab, i) => output.push(`${i + 1}. ${tab}`));
   }
@@ -190,23 +189,56 @@ export function logInputs(
   return output.join('\n');
 }
 
-export function createBuildCommandHandler(func: BuildTask, ignore?: 'bundles' | 'tabs') {
-  return async (
-    opts: BuildOptions & { bundles: string[] | null, tabs: string[] | null }
-  ) => {
-    const inputs = await retrieveBundlesAndTabs(opts, ignore === undefined);
+type CommandHandler = (opts: BuildOptions & { bundles?: string[] | null, tabs?: string[] | null }) => Promise<void>;
 
-    if (ignore) {
-      inputs[ignore] = [];
+export function createBuildCommandHandler(
+  func: (inputs: Required<Pick<BuildInputs, 'tabs'>>, opts: BuildOptions) => Promise<LogType>,
+  ignore: 'bundles'
+): CommandHandler;
+export function createBuildCommandHandler(
+  func: (inputs: Required<Omit<BuildInputs, 'tabs'>>, opts: BuildOptions) => Promise<LogType>,
+  ignore: 'tabs'
+): CommandHandler;
+export function createBuildCommandHandler(
+  func: (inputs: Required<BuildInputs>, opts: BuildOptions) => Promise<LogType>,
+): CommandHandler;
+export function createBuildCommandHandler(
+  func: (inputs: BuildInputs, opts: BuildOptions) => Promise<LogType>,
+  ignore?: 'bundles' | 'tabs'
+): CommandHandler {
+  return async opts => {
+    let inputs: Required<BuildInputs>
+
+    switch (ignore) {
+      case 'bundles': {
+        inputs = await retrieveTabs(opts.manifest, opts.tabs);
+        break;
+      }
+      case 'tabs': {
+        inputs = await retrieveBundles(opts.manifest, opts.bundles);
+        break;
+      }
+      case undefined: {
+        inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs);
+        break;
+      }
     }
 
+    // Log all inputs`
     console.log(logInputs(inputs, opts, ignore));
-    const prebuildResult = await prebuild(inputs.bundles, inputs.tabs, opts);
+    // Then run prebuilds. This will return null if no prebuild was specified
+    const prebuildResult = await prebuild(inputs.bundles, inputs.tabs, {
+      lint: opts.lint,
+      fix: opts.fix,
+      tsc: opts.tsc,
+      srcDir: opts.srcDir
+    });
 
     if (prebuildResult !== null) {
       const prebuildResultFormatted = formatPrebuildResults(prebuildResult);
       console.log(prebuildResultFormatted);
 
+      // If there was some error, then exit without running the main command
       if (prebuildResult.severity === 'error') process.exit(1);
     }
 

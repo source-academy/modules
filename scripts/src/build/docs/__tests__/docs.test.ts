@@ -32,7 +32,6 @@ describe('test the docs command', () => {
     expect(buildJsonCall[0])
       .toEqual({
         bundles: ['test0', 'test1'],
-        tabs: [],
         modulesSpecified: true
       });
 

@@ -16,7 +16,7 @@ interface LintResults {
   severity: Severity
 }
 
-interface LintOptions extends PrebuildOptions {
+interface LintOptions extends Omit<PrebuildOptions, 'manifest'> {
   fix?: boolean
 }
 
@@ -75,7 +75,7 @@ export function getLintCommand() {
   return createPrebuildCommand('lint', 'Run eslint')
     .addOption(lintFixOption)
     .action(async opts => {
-      const inputs = await retrieveBundlesAndTabs(opts, false);
+      const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs, false);
       await lintCommandHandler({ ...opts, ...inputs });
     });
 }
