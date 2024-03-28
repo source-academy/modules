@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
+import type { DeepPartial } from '../../../../../common/deepPartial';
 import {
   mergeConfig,
-  type RecursivePartial,
 } from '../../../controllers/utils/mergeConfig';
 
 type DebugArrowConfig = {
@@ -19,7 +19,7 @@ export class DebugArrow {
   config: DebugArrowConfig;
   arrow: THREE.ArrowHelper;
 
-  constructor(config?: RecursivePartial<DebugArrowConfig>) {
+  constructor(config?: DeepPartial<DebugArrowConfig>) {
     this.config = mergeConfig(defaultDebugArrowConfig, config);
     this.arrow = new THREE.ArrowHelper();
     this.arrow.setColor(this.config.color);

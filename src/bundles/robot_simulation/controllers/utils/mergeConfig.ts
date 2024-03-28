@@ -1,10 +1,7 @@
 import * as _ from 'lodash';
+import type { DeepPartial } from '../../../../common/deepPartial';
 
-export type RecursivePartial<T> = T extends object ? {
-  [P in keyof T]?: RecursivePartial<T[P]>;
-} : T;
-
-export const mergeConfig = <T> (defaultConfig:T, userConfig?: RecursivePartial<T>) :T => {
+export const mergeConfig = <T> (defaultConfig:T, userConfig?: DeepPartial<T>) :T => {
   if (userConfig === undefined) {
     return defaultConfig;
   }
