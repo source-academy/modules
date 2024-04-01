@@ -102,3 +102,31 @@ export const jsSlangExportCheckingPlugin: ESBuildPlugin = {
     });
   }
 };
+
+export const assertPolyfillPlugin: ESBuildPlugin = {
+  name: 'Assert Polyfill',
+  setup(build) {
+    // Polyfill the NodeJS assert module
+    build.onResolve({ filter: /^assert/u }, () => ({
+      path: 'assert',
+      namespace: 'bundleAssert'
+    }));
+
+    build.onLoad({
+      filter: /^assert/u,
+      namespace: 'bundleAssert'
+    }, () => ({
+      contents: `
+      export default function assert(condition, message) {
+        if (condition) return;
+
+        if (typeof message === 'string' || message === undefined) {
+          throw new Error(message);
+        }
+
+        throw message;
+      }
+      `
+    }));
+  }
+};

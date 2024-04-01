@@ -1,36 +1,8 @@
 import fs from 'fs/promises';
-import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
+import { build as esbuild } from 'esbuild';
 import { bundlesOption, promiseAll } from '@src/commandUtils';
 import { expandBundleNames, type BuildTask, createBuildCommandHandler, createBuildCommand } from '../utils';
-import { commonEsbuildOptions, outputBundleOrTab, jsSlangExportCheckingPlugin } from './commons';
-
-const assertPolyfillPlugin: ESBuildPlugin = {
-  name: 'Assert Polyfill',
-  setup(build) {
-    // Polyfill the NodeJS assert module
-    build.onResolve({ filter: /^assert/u }, () => ({
-      path: 'assert',
-      namespace: 'bundleAssert'
-    }));
-
-    build.onLoad({
-      filter: /^assert/u,
-      namespace: 'bundleAssert'
-    }, () => ({
-      contents: `
-      export default function assert(condition, message) {
-        if (condition) return;
-
-        if (typeof message === 'string' || message === undefined) {
-          throw new Error(message);
-        }
-
-        throw message;
-      }
-      `
-    }));
-  }
-};
+import { commonEsbuildOptions, outputBundleOrTab, jsSlangExportCheckingPlugin, assertPolyfillPlugin } from './commons';
 
 export const bundleBundles: BuildTask = async ({ bundles }, { srcDir, outDir }) => {
   const [{ outputFiles }] = await promiseAll(esbuild({

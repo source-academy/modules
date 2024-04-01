@@ -4,7 +4,7 @@ import { promiseAll, tabsOption } from '@src/commandUtils';
 import { expandTabNames, createBuildCommandHandler, type BuildTask, createBuildCommand } from '../utils';
 import { commonEsbuildOptions, jsSlangExportCheckingPlugin, outputBundleOrTab } from './commons';
 
-const tabContextPlugin: ESBuildPlugin = {
+export const tabContextPlugin: ESBuildPlugin = {
   name: 'Tab Context',
   setup(build) {
     build.onResolve({ filter: /^js-slang\/context/u }, () => ({

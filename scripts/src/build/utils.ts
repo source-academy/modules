@@ -75,11 +75,15 @@ export type BuildTask = (inputs: BuildInputs, opts: BuildOptions) => Promise<Log
 
 /**
  * Take the results from all the operations and format them neatly in a readable way
- * Also calls `process.exit(1)` if any operation returned with an error
+ * Also calls `process.exit(1)` if any operation returned with an error if `exitOnError`
+ * is true
  */
-function processResults(
+export function processResults(results: LogType, verbose: boolean, exitOnError: true): Exclude<Severity, 'error'>;
+export function processResults(results: LogType, verbose: boolean, exitOnError: false): Severity;
+export function processResults(
   results: LogType,
-  verbose: boolean
+  verbose: boolean,
+  exitOnError: boolean
 ) {
   const notSuccessFilter = (result: OperationResult): result is Exclude<OperationResult, SuccessResult> => result.severity !== 'success';
 
@@ -157,9 +161,10 @@ function processResults(
     .join('\n'));
 
   const overallOverallSev = findSeverity(logs, ([sev]) => sev);
-  if (overallOverallSev === 'error') {
+  if (overallOverallSev === 'error' && exitOnError) {
     process.exit(1);
   }
+  return overallOverallSev;
 }
 
 export function logInputs(
@@ -210,7 +215,7 @@ export function createBuildCommandHandler(func: BuildTask, ignore?: 'bundles' | 
       }
     }
 
-    // Log all inputs`
+    // Log all inputs
     console.log(logInputs(inputs, opts, ignore));
     // Then run prebuilds. This will return null if no prebuild was specified
     const prebuildResult = await prebuild(inputs.bundles, inputs.tabs, {
@@ -229,7 +234,7 @@ export function createBuildCommandHandler(func: BuildTask, ignore?: 'bundles' | 
     }
 
     const result = await func(inputs, opts);
-    processResults(result, opts.verbose);
+    processResults(result, opts.verbose, true);
     await copyFile(opts.manifest, `${opts.outDir}/modules.json`);
   };
 }

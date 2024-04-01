@@ -19,7 +19,7 @@ export async function buildDocs(inputs: BuildInputs, outDir: string, tdResult: T
 }
 
 const docsCommandHandler = createBuildCommandHandler(async (inputs, { srcDir, outDir, verbose }) => {
-  const tdResult = await initTypedoc(inputs.bundles, srcDir, verbose);
+  const tdResult = await initTypedoc(inputs.bundles, srcDir, verbose, false);
   return buildDocs(inputs, outDir, tdResult);
 }, 'tabs');
 

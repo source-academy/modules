@@ -40,7 +40,7 @@
     "test": "yarn scripts test",
     "test:all": "yarn test && yarn scripts:test",
     "test:watch": "yarn scripts test --watch",
-    "watch": "yarn scripts watch",
+    "watch": "yarn scripts build watch",
     "devserver": "vite",
     "devserver:lint": "eslint devserver",
     "devserver:tsc": "tsc --project devserver/tsconfig.json",

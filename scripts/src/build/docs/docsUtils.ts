@@ -1,7 +1,14 @@
 import * as td from 'typedoc';
 import { expandBundleNames } from '../utils';
 
-export async function initTypedoc(bundles: string[], srcDir: string, verbose: boolean) {
+export function initTypedoc(bundles: string[], srcDir: string, verbose: boolean, watch: true): Promise<[null, td.Application]>;
+export function initTypedoc(bundles: string[], srcDir: string, verbose: boolean, watch: false): Promise<[td.ProjectReflection, td.Application]>;
+export async function initTypedoc(
+  bundles: string[],
+  srcDir: string,
+  verbose: boolean,
+  watch: boolean
+) {
   const app = await td.Application.bootstrap({
     categorizeByGroup: true,
     entryPoints: expandBundleNames(srcDir, bundles),
@@ -11,8 +18,11 @@ export async function initTypedoc(bundles: string[], srcDir: string, verbose: bo
     name: 'Source Academy Modules',
     readme: './scripts/src/build/docs/docsreadme.md',
     tsconfig: `${srcDir}/tsconfig.json`,
-    skipErrorChecking: true
+    skipErrorChecking: true,
+    preserveWatchOutput: watch,
   }, [ new td.TSConfigReader() ]);
+
+  if (watch) return [null, app];
 
   const project = await app.convert();
   if (!project) {

@@ -4,9 +4,10 @@ import { buildDocs, getBuildDocsCommand, getBuildHtmlCommand, getBuildJsonsComma
 import { initTypedoc } from './docs/docsUtils';
 import { buildModules, getBuildBundlesCommand, getBuildTabsCommand } from './modules';
 import { createBuildCommand, type BuildTask, createBuildCommandHandler } from './utils';
+import getWatchCommand from './watch';
 
 const buildAll: BuildTask = async (inputs, opts) => {
-  const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose);
+  const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose, false);
 
   const [modulesResult, docsResult] = await Promise.all([
     buildModules(inputs, opts),
@@ -31,6 +32,7 @@ const getBuildCommand = () => new Command('build')
   .addCommand(getBuildDocsCommand())
   .addCommand(getBuildHtmlCommand())
   .addCommand(getBuildJsonsCommand())
-  .addCommand(getBuildTabsCommand());
+  .addCommand(getBuildTabsCommand())
+  .addCommand(getWatchCommand());
 
 export default getBuildCommand;

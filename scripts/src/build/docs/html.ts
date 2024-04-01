@@ -55,7 +55,7 @@ export const getBuildHtmlCommand = () => new Command('html')
   .option('-v, --verbose')
   .action(async opts => {
     const inputs = await retrieveBundlesAndTabs(opts.manifest, null, [], false);
-    const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose);
+    const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose, false);
     const result = await buildHtml(inputs, opts.outDir, tdResult);
     console.log(htmlLogger(result));
 
