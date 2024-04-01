@@ -16,10 +16,11 @@ export default [
   {
     // global ignores
     ignores: [
-      'src/**/samples/**',
+      '**/*.snap',
+      'build/**',
       'scripts/**/templates/templates/**',
       'scripts/bin.js',
-      'build/**',
+      'src/**/samples/**'
     ]
   },
   js.configs.recommended,
@@ -104,10 +105,6 @@ export default [
   {
     // Rules for bundles and tabs
     files: ['src/**/*.ts*'],
-    ignores: [
-      '**/__tests__/**/*.ts*',
-      '**/__mocks__/**/*.ts',
-    ],
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
@@ -125,11 +122,7 @@ export default [
   {
     // Rules for scripts
     files: ['scripts/**/*.ts'],
-    ignores: [
-      '**/__tests__/**/*.ts',
-      '**/__mocks__/**/*.ts',
-      'scripts/src/templates/templates/**/*.ts*'
-    ],
+    ignores: ['scripts/src/templates/templates/**/*.ts*'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -139,6 +132,7 @@ export default [
     rules: {
       'import/extensions': ['error', 'never', { json: 'always' }],
       'no-constant-condition': 'off', // Was 'error',
+
       '@stylistic/arrow-parens': ['warn', 'as-needed'],
 
       '@typescript-eslint/prefer-readonly': 'warn',
@@ -171,12 +165,6 @@ export default [
       '**/__mocks__/**/*.ts*',
       '**/jest.setup.ts'
     ],
-    ignores: ['**/*.snap'],
-    languageOptions: {
-      parserOptions: {
-        project: './tsconfig.test.json'
-      }
-    },
     rules: {
       ...jestPlugin.configs['flat/recommended'].rules,
       'jest/expect-expect': ['error', { assertFunctionNames: ['expect*'] }],
