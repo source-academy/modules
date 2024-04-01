@@ -22,7 +22,7 @@ interface LintOptions extends Omit<PrebuildOptions, 'manifest'> {
 
 export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: LintOptions): Promise<LintResults> => {
   const ESlint = await loadESLint({ useFlatConfig: true });
-  const linter = new ESlint({ fix });
+  const linter: ESLint = new ESlint({ fix });
 
   const fileNames = [
     ...bundles.map(bundleName => `${srcDir}/bundles/${bundleName}/**/*.ts`),
@@ -30,7 +30,7 @@ export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: Li
   ];
 
   try {
-    const linterResults: ESLint.LintResult[] = await linter.lintFiles(fileNames);
+    const linterResults = await linter.lintFiles(fileNames);
     if (fix) {
       await ESlint.outputFixes(linterResults);
     }
