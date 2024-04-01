@@ -1,0 +1,198 @@
+{
+  "addControllerToWorld": {
+    "kind": "function",
+    "name": "addControllerToWorld",
+    "description": "No description available",
+    "params": [
+      [
+        "controller",
+        "Controller"
+      ],
+      [
+        "world",
+        "World"
+      ]
+    ],
+    "retType": "void"
+  },
+  "createCuboid": {
+    "kind": "function",
+    "name": "createCuboid",
+    "description": "No description available",
+    "params": [
+      [
+        "physics",
+        "Physics"
+      ],
+      [
+        "renderer",
+        "Renderer"
+      ],
+      [
+        "position_x",
+        "number"
+      ],
+      [
+        "position_y",
+        "number"
+      ],
+      [
+        "position_z",
+        "number"
+      ],
+      [
+        "width",
+        "number"
+      ],
+      [
+        "length",
+        "number"
+      ],
+      [
+        "height",
+        "number"
+      ],
+      [
+        "mass",
+        "number"
+      ],
+      [
+        "color",
+        "string | number"
+      ],
+      [
+        "bodyType",
+        "string"
+      ]
+    ],
+    "retType": "Cuboid"
+  },
+  "createCustomPhysics": {
+    "kind": "function",
+    "name": "createCustomPhysics",
+    "description": "No description available",
+    "params": [
+      [
+        "gravity",
+        "number"
+      ],
+      [
+        "timestep",
+        "number"
+      ]
+    ],
+    "retType": "Physics"
+  },
+  "createFloor": {
+    "kind": "function",
+    "name": "createFloor",
+    "description": "No description available",
+    "params": [
+      [
+        "physics",
+        "Physics"
+      ],
+      [
+        "renderer",
+        "Renderer"
+      ]
+    ],
+    "retType": "Cuboid"
+  },
+  "createPhysics": {
+    "kind": "function",
+    "name": "createPhysics",
+    "description": "No description available",
+    "params": [],
+    "retType": "Physics"
+  },
+  "createRenderer": {
+    "kind": "function",
+    "name": "createRenderer",
+    "description": "No description available",
+    "params": [],
+    "retType": "Renderer"
+  },
+  "createRobotConsole": {
+    "kind": "function",
+    "name": "createRobotConsole",
+    "description": "No description available",
+    "params": [],
+    "retType": "RobotConsole"
+  },
+  "createTimer": {
+    "kind": "function",
+    "name": "createTimer",
+    "description": "No description available",
+    "params": [],
+    "retType": "Timer"
+  },
+  "createWall": {
+    "kind": "function",
+    "name": "createWall",
+    "description": "No description available",
+    "params": [
+      [
+        "physics",
+        "Physics"
+      ],
+      [
+        "renderer",
+        "Renderer"
+      ]
+    ],
+    "retType": "Cuboid"
+  },
+  "createWorld": {
+    "kind": "function",
+    "name": "createWorld",
+    "description": "No description available",
+    "params": [
+      [
+        "physics",
+        "Physics"
+      ],
+      [
+        "renderer",
+        "Renderer"
+      ],
+      [
+        "timer",
+        "Timer"
+      ],
+      [
+        "robotConsole",
+        "RobotConsole"
+      ]
+    ],
+    "retType": "World"
+  },
+  "init_simulation": {
+    "kind": "function",
+    "name": "init_simulation",
+    "description": "No description available",
+    "params": [
+      [
+        "worldFactory",
+        "Function"
+      ]
+    ],
+    "retType": "void"
+  },
+  "saveToContext": {
+    "kind": "function",
+    "name": "saveToContext",
+    "description": "No description available",
+    "params": [
+      [
+        "key",
+        "string"
+      ],
+      [
+        "value",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  }
+}

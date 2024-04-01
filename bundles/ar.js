@@ -10138,7 +10138,7 @@ export default require => {
   }
   var REVISION, MOUSE, TOUCH, CullFaceNone, CullFaceBack, CullFaceFront, CullFaceFrontBack, BasicShadowMap, PCFShadowMap, PCFSoftShadowMap, VSMShadowMap, FrontSide, BackSide, DoubleSide, NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending, CustomBlending, AddEquation, SubtractEquation, ReverseSubtractEquation, MinEquation, MaxEquation, ZeroFactor, OneFactor, SrcColorFactor, OneMinusSrcColorFactor, SrcAlphaFactor, OneMinusSrcAlphaFactor, DstAlphaFactor, OneMinusDstAlphaFactor, DstColorFactor, OneMinusDstColorFactor, SrcAlphaSaturateFactor, ConstantColorFactor, OneMinusConstantColorFactor, ConstantAlphaFactor, OneMinusConstantAlphaFactor, NeverDepth, AlwaysDepth, LessDepth, LessEqualDepth, EqualDepth, GreaterEqualDepth, GreaterDepth, NotEqualDepth, MultiplyOperation, MixOperation, AddOperation, NoToneMapping, LinearToneMapping, ReinhardToneMapping, CineonToneMapping, ACESFilmicToneMapping, CustomToneMapping, AgXToneMapping, AttachedBindMode, DetachedBindMode, UVMapping, CubeReflectionMapping, CubeRefractionMapping, EquirectangularReflectionMapping, EquirectangularRefractionMapping, CubeUVReflectionMapping, RepeatWrapping, ClampToEdgeWrapping, MirroredRepeatWrapping, NearestFilter, NearestMipmapNearestFilter, NearestMipMapNearestFilter, NearestMipmapLinearFilter, NearestMipMapLinearFilter, LinearFilter, LinearMipmapNearestFilter, LinearMipMapNearestFilter, LinearMipmapLinearFilter, LinearMipMapLinearFilter, UnsignedByteType, ByteType, ShortType, UnsignedShortType, IntType, UnsignedIntType, FloatType, HalfFloatType, UnsignedShort4444Type, UnsignedShort5551Type, UnsignedInt248Type, AlphaFormat, RGBAFormat, LuminanceFormat, LuminanceAlphaFormat, DepthFormat, DepthStencilFormat, RedFormat, RedIntegerFormat, RGFormat, RGIntegerFormat, RGBAIntegerFormat, RGB_S3TC_DXT1_Format, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT3_Format, RGBA_S3TC_DXT5_Format, RGB_PVRTC_4BPPV1_Format, RGB_PVRTC_2BPPV1_Format, RGBA_PVRTC_4BPPV1_Format, RGBA_PVRTC_2BPPV1_Format, RGB_ETC1_Format, RGB_ETC2_Format, RGBA_ETC2_EAC_Format, RGBA_ASTC_4x4_Format, RGBA_ASTC_5x4_Format, RGBA_ASTC_5x5_Format, RGBA_ASTC_6x5_Format, RGBA_ASTC_6x6_Format, RGBA_ASTC_8x5_Format, RGBA_ASTC_8x6_Format, RGBA_ASTC_8x8_Format, RGBA_ASTC_10x5_Format, RGBA_ASTC_10x6_Format, RGBA_ASTC_10x8_Format, RGBA_ASTC_10x10_Format, RGBA_ASTC_12x10_Format, RGBA_ASTC_12x12_Format, RGBA_BPTC_Format, RGB_BPTC_SIGNED_Format, RGB_BPTC_UNSIGNED_Format, RED_RGTC1_Format, SIGNED_RED_RGTC1_Format, RED_GREEN_RGTC2_Format, SIGNED_RED_GREEN_RGTC2_Format, LoopOnce, LoopRepeat, LoopPingPong, InterpolateDiscrete, InterpolateLinear, InterpolateSmooth, ZeroCurvatureEnding, ZeroSlopeEnding, WrapAroundEnding, NormalAnimationBlendMode, AdditiveAnimationBlendMode, TrianglesDrawMode, TriangleStripDrawMode, TriangleFanDrawMode, LinearEncoding, sRGBEncoding, BasicDepthPacking, RGBADepthPacking, TangentSpaceNormalMap, ObjectSpaceNormalMap, NoColorSpace, SRGBColorSpace, LinearSRGBColorSpace, DisplayP3ColorSpace, LinearDisplayP3ColorSpace, LinearTransfer, SRGBTransfer, Rec709Primaries, P3Primaries, ZeroStencilOp, KeepStencilOp, ReplaceStencilOp, IncrementStencilOp, DecrementStencilOp, IncrementWrapStencilOp, DecrementWrapStencilOp, InvertStencilOp, NeverStencilFunc, LessStencilFunc, EqualStencilFunc, LessEqualStencilFunc, GreaterStencilFunc, NotEqualStencilFunc, GreaterEqualStencilFunc, AlwaysStencilFunc, NeverCompare, LessCompare, EqualCompare, LessEqualCompare, GreaterCompare, NotEqualCompare, GreaterEqualCompare, AlwaysCompare, StaticDrawUsage, DynamicDrawUsage, StreamDrawUsage, StaticReadUsage, DynamicReadUsage, StreamReadUsage, StaticCopyUsage, DynamicCopyUsage, StreamCopyUsage, GLSL1, GLSL3, _SRGBAFormat, WebGLCoordinateSystem, WebGPUCoordinateSystem, EventDispatcher, _lut, _seed, DEG2RAD, RAD2DEG, MathUtils, Vector2, Matrix3, _m3, TYPED_ARRAYS, _cache, LINEAR_SRGB_TO_LINEAR_DISPLAY_P3, LINEAR_DISPLAY_P3_TO_LINEAR_SRGB, COLOR_SPACES, SUPPORTED_WORKING_COLOR_SPACES, ColorManagement, _canvas, ImageUtils, _sourceId, Source, _textureId, Texture, Vector4, RenderTarget, WebGLRenderTarget, DataArrayTexture, WebGLArrayRenderTarget, Data3DTexture, WebGL3DRenderTarget, WebGLMultipleRenderTargets, Quaternion, Vector3, _vector$c, _quaternion$4, Box3, _points, _vector$b, _box$4, _v0$2, _v1$7, _v2$4, _f0, _f1, _f2, _center, _extents, _triangleNormal, _testAxis, _box$3, _v1$6, _v2$3, Sphere, _vector$a, _segCenter, _segDir, _diff, _edge1, _edge2, _normal$1, Ray, Matrix4, _v1$5, _m1$2, _zero, _one, _x, _y, _z, _matrix$1, _quaternion$3, Euler, Layers, _object3DId, _v1$4, _q1, _m1$1, _target, _position$3, _scale$2, _quaternion$2, _xAxis, _yAxis, _zAxis, _addedEvent, _removedEvent, Object3D, _v0$1, _v1$3, _v2$2, _v3$2, _vab, _vac, _vbc, _vap, _vbp, _vcp, Triangle, _colorKeywords, _hslA, _hslB, Color, _color, _materialId, Material, MeshBasicMaterial, _tables, DataUtils, _vector$9, _vector2$1, BufferAttribute, Int8BufferAttribute, Uint8BufferAttribute, Uint8ClampedBufferAttribute, Int16BufferAttribute, Uint16BufferAttribute, Int32BufferAttribute, Uint32BufferAttribute, Float16BufferAttribute, Float32BufferAttribute, Float64BufferAttribute, _id$2, _m1, _obj, _offset, _box$2, _boxMorphTargets, _vector$8, BufferGeometry, _inverseMatrix$3, _ray$3, _sphere$6, _sphereHitAt, _vA$1, _vB$1, _vC$1, _tempA, _morphA, _uvA$1, _uvB$1, _uvC$1, _normalA, _normalB, _normalC, _intersectionPoint, _intersectionPointWorld, Mesh, BoxGeometry, UniformsUtils, default_vertex, default_fragment, ShaderMaterial, Camera, _v3$1, _minTarget, _maxTarget, PerspectiveCamera, fov, aspect, CubeCamera, CubeTexture, WebGLCubeRenderTarget, _vector1, _vector2, _normalMatrix, Plane, _sphere$5, _vector$7, Frustum, PlaneGeometry, alphahash_fragment, alphahash_pars_fragment, alphamap_fragment, alphamap_pars_fragment, alphatest_fragment, alphatest_pars_fragment, aomap_fragment, aomap_pars_fragment, batching_pars_vertex, batching_vertex, begin_vertex, beginnormal_vertex, bsdfs, iridescence_fragment, bumpmap_pars_fragment, clipping_planes_fragment, clipping_planes_pars_fragment, clipping_planes_pars_vertex, clipping_planes_vertex, color_fragment, color_pars_fragment, color_pars_vertex, color_vertex, common, cube_uv_reflection_fragment, defaultnormal_vertex, displacementmap_pars_vertex, displacementmap_vertex, emissivemap_fragment, emissivemap_pars_fragment, colorspace_fragment, colorspace_pars_fragment, envmap_fragment, envmap_common_pars_fragment, envmap_pars_fragment, envmap_pars_vertex, envmap_vertex, fog_vertex, fog_pars_vertex, fog_fragment, fog_pars_fragment, gradientmap_pars_fragment, lightmap_fragment, lightmap_pars_fragment, lights_lambert_fragment, lights_lambert_pars_fragment, lights_pars_begin, envmap_physical_pars_fragment, lights_toon_fragment, lights_toon_pars_fragment, lights_phong_fragment, lights_phong_pars_fragment, lights_physical_fragment, lights_physical_pars_fragment, lights_fragment_begin, lights_fragment_maps, lights_fragment_end, logdepthbuf_fragment, logdepthbuf_pars_fragment, logdepthbuf_pars_vertex, logdepthbuf_vertex, map_fragment, map_pars_fragment, map_particle_fragment, map_particle_pars_fragment, metalnessmap_fragment, metalnessmap_pars_fragment, morphcolor_vertex, morphnormal_vertex, morphtarget_pars_vertex, morphtarget_vertex, normal_fragment_begin, normal_fragment_maps, normal_pars_fragment, normal_pars_vertex, normal_vertex, normalmap_pars_fragment, clearcoat_normal_fragment_begin, clearcoat_normal_fragment_maps, clearcoat_pars_fragment, iridescence_pars_fragment, opaque_fragment, packing, premultiplied_alpha_fragment, project_vertex, dithering_fragment, dithering_pars_fragment, roughnessmap_fragment, roughnessmap_pars_fragment, shadowmap_pars_fragment, shadowmap_pars_vertex, shadowmap_vertex, shadowmask_pars_fragment, skinbase_vertex, skinning_pars_vertex, skinning_vertex, skinnormal_vertex, specularmap_fragment, specularmap_pars_fragment, tonemapping_fragment, tonemapping_pars_fragment, transmission_fragment, transmission_pars_fragment, uv_pars_fragment, uv_pars_vertex, uv_vertex, worldpos_vertex, vertex$h, fragment$h, vertex$g, fragment$g, vertex$f, fragment$f, vertex$e, fragment$e, vertex$d, fragment$d, vertex$c, fragment$c, vertex$b, fragment$b, vertex$a, fragment$a, vertex$9, fragment$9, vertex$8, fragment$8, vertex$7, fragment$7, vertex$6, fragment$6, vertex$5, fragment$5, vertex$4, fragment$4, vertex$3, fragment$3, vertex$2, fragment$2, vertex$1, fragment$1, ShaderChunk, UniformsLib, ShaderLib, _rgb, OrthographicCamera, LOD_MIN, EXTRA_LOD_SIGMA, MAX_SAMPLES, _flatCamera, _clearColor, _oldTarget, _oldActiveCubeFace, _oldActiveMipmapLevel, PHI, INV_PHI, _axisDirections, PMREMGenerator, DepthTexture, emptyTexture, emptyShadowTexture, emptyArrayTexture, empty3dTexture, emptyCubeTexture, arrayCacheF32, arrayCacheI32, mat4array, mat3array, mat2array, SingleUniform, PureArrayUniform, StructuredUniform, RePathPart, WebGLUniforms, COMPLETION_STATUS_KHR, programIdCount, includePattern, shaderChunkMap, unrollLoopPattern, _id$1, WebGLShaderCache, WebGLShaderStage, nextVersion, MeshDepthMaterial, MeshDistanceMaterial, vertex, fragment, ArrayCamera, Group, _moveEvent, WebXRController, _occlusion_vertex, _occlusion_fragment, WebXRDepthSensing, WebXRManager, WebGLRenderer, WebGL1Renderer, FogExp2, Fog, Scene, InterleavedBuffer, _vector$6, InterleavedBufferAttribute, SpriteMaterial, _geometry, _intersectPoint, _worldScale, _mvPosition, _alignedPosition, _rotatedPosition, _viewWorldMatrix, _vA, _vB, _vC, _uvA, _uvB, _uvC, Sprite, _v1$2, _v2$1, LOD, _basePosition, _skinIndex, _skinWeight, _vector3, _matrix4, _vertex, _sphere$4, _inverseMatrix$2, _ray$2, SkinnedMesh, Bone, DataTexture, _offsetMatrix, _identityMatrix$1, Skeleton, InstancedBufferAttribute, _instanceLocalMatrix, _instanceWorldMatrix, _instanceIntersects, _box3, _identity, _mesh$1, _sphere$3, InstancedMesh, MultiDrawRenderList, ID_ATTR_NAME, _matrix, _invMatrixWorld, _identityMatrix, _projScreenMatrix$2, _frustum, _box$1, _sphere$2, _vector$5, _renderList, _mesh, _batchIntersects, BatchedMesh, LineBasicMaterial, _start$1, _end$1, _inverseMatrix$1, _ray$1, _sphere$1, Line, _start, _end, LineSegments, LineLoop, PointsMaterial, _inverseMatrix, _ray, _sphere, _position$2, Points, VideoTexture, FramebufferTexture, CompressedTexture, CompressedArrayTexture, CompressedCubeTexture, CanvasTexture, Curve, EllipseCurve, ArcCurve, tmp, px, py, pz, CatmullRomCurve3, CubicBezierCurve, CubicBezierCurve3, LineCurve, LineCurve3, QuadraticBezierCurve, QuadraticBezierCurve3, SplineCurve, Curves, CurvePath, Path, LatheGeometry, CapsuleGeometry, CircleGeometry, CylinderGeometry, ConeGeometry, PolyhedronGeometry, DodecahedronGeometry, _v0, _v1$1, _normal, _triangle, EdgesGeometry, Shape, Earcut, ShapeUtils, ExtrudeGeometry, WorldUVGenerator, IcosahedronGeometry, OctahedronGeometry, RingGeometry, ShapeGeometry, SphereGeometry, TetrahedronGeometry, TorusGeometry, TorusKnotGeometry, TubeGeometry, WireframeGeometry, Geometries, ShadowMaterial, RawShaderMaterial, MeshStandardMaterial, MeshPhysicalMaterial, MeshPhongMaterial, MeshToonMaterial, MeshNormalMaterial, MeshLambertMaterial, MeshMatcapMaterial, LineDashedMaterial, AnimationUtils, Interpolant, CubicInterpolant, LinearInterpolant, DiscreteInterpolant, KeyframeTrack, BooleanKeyframeTrack, ColorKeyframeTrack, NumberKeyframeTrack, QuaternionLinearInterpolant, QuaternionKeyframeTrack, StringKeyframeTrack, VectorKeyframeTrack, AnimationClip, Cache, LoadingManager, DefaultLoadingManager, Loader, loading, HttpError, FileLoader, AnimationLoader, CompressedTextureLoader, ImageLoader, CubeTextureLoader, DataTextureLoader, TextureLoader, Light, HemisphereLight, _projScreenMatrix$1, _lightPositionWorld$1, _lookTarget$1, LightShadow, SpotLightShadow, SpotLight, _projScreenMatrix, _lightPositionWorld, _lookTarget, PointLightShadow, PointLight, DirectionalLightShadow, DirectionalLight, AmbientLight, RectAreaLight, SphericalHarmonics3, LightProbe, MaterialLoader, LoaderUtils, InstancedBufferGeometry, BufferGeometryLoader, ObjectLoader, TEXTURE_MAPPING, TEXTURE_WRAPPING, TEXTURE_FILTER, ImageBitmapLoader, _context, AudioContext, AudioLoader, _eyeRight, _eyeLeft, _projectionMatrix, StereoCamera, Clock, _position$1, _quaternion$1, _scale$1, _orientation$1, AudioListener, Audio, _position, _quaternion, _scale, _orientation, PositionalAudio, AudioAnalyser, PropertyMixer, _RESERVED_CHARS_RE, _reservedRe, _wordChar, _wordCharOrDot, _directoryRe, _nodeRe, _objectRe, _propertyRe, _trackRe, _supportedObjectNames, Composite, PropertyBinding, AnimationObjectGroup, AnimationAction, _controlInterpolantsResultBuffer, AnimationMixer, Uniform, _id, UniformsGroup, InstancedInterleavedBuffer, GLBufferAttribute, Raycaster, Spherical, Cylindrical, _vector$4, Box2, _startP, _startEnd, Line3, _vector$3, SpotLightHelper, _vector$2, _boneMatrix, _matrixWorldInv, SkeletonHelper, PointLightHelper, _vector$1, _color1, _color2, HemisphereLightHelper, GridHelper, PolarGridHelper, _v1, _v2, _v3, DirectionalLightHelper, _vector, _camera, CameraHelper, _box, BoxHelper, Box3Helper, PlaneHelper, _axis, _lineGeometry, _coneGeometry, ArrowHelper, AxesHelper, ShapePath;
   var init_three_module = __esm({
-    "node_modules/three/build/three.module.js"() {
+    "node_modules/saar/node_modules/three/build/three.module.js"() {
       "use strict";
       init_define_process();
       REVISION = "161";
@@ -54915,7 +54915,7 @@ void main() {
   }
   var voidMainRegExp, _lut2, assign2, epoch, CONSTRUCTOR_CACHE, SHADER_UPGRADE_CACHE, materialInstanceId, _idCtr, optionsHashesToIds;
   var init_troika_three_utils_esm = __esm({
-    "node_modules/troika-three-utils/dist/troika-three-utils.esm.js"() {
+    "node_modules/saar/node_modules/troika-three-utils/dist/troika-three-utils.esm.js"() {
       "use strict";
       init_define_process();
       init_three_module();
@@ -57884,7 +57884,7 @@ void main() {
   }
   var workerModule, fontResolverWorkerModule, now2, mainThreadGenerator, warned, queue, chunkTimeBudget, timer, generateSDF_GL, threadCount, idleTimeout, threads, callNum, resizeWebGLCanvasWithoutClearing, CONFIG, tempColor, hasRequested, atlases, linkEl, typesetterWorkerModule, typesetInWorker, templateGeometries, glyphBoundsAttrName, glyphIndexAttrName, glyphColorAttrName, GlyphsGeometry, VERTEX_DEFS, VERTEX_TRANSFORM, FRAGMENT_DEFS, FRAGMENT_TRANSFORM, defaultMaterial, defaultStrokeColor, tempMat4, tempVec3a, tempVec3b, tempArray, origin, defaultOrient, getFlatRaycastMesh, getCurvedRaycastMesh, syncStartEvent, syncCompleteEvent, SYNCABLE_PROPS, COPYABLE_PROPS, Text, _rectsCache, _caretsByRowCache;
   var init_troika_three_text_esm = __esm({
-    "node_modules/troika-three-text/dist/troika-three-text.esm.js"() {
+    "node_modules/saar/node_modules/troika-three-text/dist/troika-three-text.esm.js"() {
       "use strict";
       init_define_process();
       init_three_module();
@@ -59894,6 +59894,20 @@ if (edgeAlpha == 0.0) {
     version: React4.version
   });
   init_define_process();
+  function _extends() {
+    _extends = Object.assign ? Object.assign.bind() : function (target) {
+      for (var i2 = 1; i2 < arguments.length; i2++) {
+        var source = arguments[i2];
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key];
+          }
+        }
+      }
+      return target;
+    };
+    return _extends.apply(this, arguments);
+  }
   var React5 = __toESM(require_react());
   var import_constants2 = __toESM(require_constants());
   var import_react_reconciler2 = __toESM(require_react_reconciler());
@@ -66152,21 +66166,6 @@ if (edgeAlpha == 0.0) {
   var animated = host.animated;
   init_define_process();
   init_define_process();
-  function _extends5() {
-    _extends5 = Object.assign ? Object.assign.bind() : function (target) {
-      for (var i2 = 1; i2 < arguments.length; i2++) {
-        var source = arguments[i2];
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        }
-      }
-      return target;
-    };
-    return _extends5.apply(this, arguments);
-  }
-  init_define_process();
   var React12 = __toESM(require_react());
   var Text2 = React12.forwardRef((_a2, ref) => {
     var _b2 = _a2, {sdfGlyphSize = 64, anchorX = "center", anchorY = "middle", font, fontSize = 1, children, characters, onSync} = _b2, props = __objRest(_b2, ["sdfGlyphSize", "anchorX", "anchorY", "font", "fontSize", "children", "characters", "onSync"]);
@@ -66198,7 +66197,7 @@ if (edgeAlpha == 0.0) {
     React12.useEffect(() => {
       return () => troikaMesh.dispose();
     }, [troikaMesh]);
-    return React12.createElement("primitive", _extends5({
+    return React12.createElement("primitive", _extends({
       object: troikaMesh,
       ref,
       font,
@@ -66355,7 +66354,7 @@ if (edgeAlpha == 0.0) {
         ref.current.material.scale.set(planeBounds[0] * ref.current.geometry.parameters.width, planeBounds[1] * ref.current.geometry.parameters.height);
       }
     }, []);
-    return React13.createElement("mesh", _extends5({
+    return React13.createElement("mesh", _extends({
       ref,
       scale: Array.isArray(scale) ? [...scale, 1] : scale
     }, props), React13.createElement("planeGeometry", {
@@ -66379,21 +66378,21 @@ if (edgeAlpha == 0.0) {
   var ImageWithUrl = React13.forwardRef((_a2, ref) => {
     var _b2 = _a2, {url} = _b2, props = __objRest(_b2, ["url"]);
     const texture = useTexture(url);
-    return React13.createElement(ImageBase, _extends5({}, props, {
+    return React13.createElement(ImageBase, _extends({}, props, {
       texture,
       ref
     }));
   });
   var ImageWithTexture = React13.forwardRef((_a2, ref) => {
     var _b2 = _a2, {url: _url} = _b2, props = __objRest(_b2, ["url"]);
-    return React13.createElement(ImageBase, _extends5({}, props, {
+    return React13.createElement(ImageBase, _extends({}, props, {
       ref
     }));
   });
   var Image2 = React13.forwardRef((props, ref) => {
-    if (props.url) return React13.createElement(ImageWithUrl, _extends5({}, props, {
+    if (props.url) return React13.createElement(ImageWithUrl, _extends({}, props, {
       ref
-    })); else if (props.texture) return React13.createElement(ImageWithTexture, _extends5({}, props, {
+    })); else if (props.texture) return React13.createElement(ImageWithTexture, _extends({}, props, {
       ref
     })); else throw new Error("<Image /> requires a url or texture");
   });
@@ -66521,7 +66520,7 @@ if (edgeAlpha == 0.0) {
         }
       };
     }, []);
-    return React14.createElement("group", _extends5({
+    return React14.createElement("group", _extends({
       ref
     }, props));
   }
