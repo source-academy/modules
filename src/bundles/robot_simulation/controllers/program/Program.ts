@@ -1,13 +1,19 @@
 import { type IOptions } from 'js-slang';
 import context from 'js-slang/context';
+import type { DeepPartial } from '../../../../common/deepPartial';
 import { type Controller } from '../../engine';
 import { CallbackHandler } from '../../engine/Core/CallbackHandler';
 import type { PhysicsTimingInfo } from '../../engine/Physics';
+import { mergeConfig } from '../utils/mergeConfig';
 import { ProgramError } from './error';
 import { runECEvaluator } from './evaluate';
 
 type ProgramConfig = {
   stepsPerTick: number;
+};
+
+const defaultProgramConfig: ProgramConfig = {
+  stepsPerTick: 11,
 };
 
 export const program_controller_identifier = 'program_controller';
@@ -18,8 +24,10 @@ export class Program implements Controller {
   isPaused: boolean;
   callbackHandler = new CallbackHandler();
   name: string;
+  config: ProgramConfig;
 
-  constructor(code: string) {
+  constructor(code: string, config?: DeepPartial<ProgramConfig>) {
+    this.config = mergeConfig(defaultProgramConfig, config);
     this.name = program_controller_identifier;
     this.code = code;
     this.iterator = null;
@@ -58,7 +66,7 @@ export class Program implements Controller {
       }
 
       // steps per tick
-      for (let i = 0; i < 11; i++) {
+      for (let i = 0; i < this.config.stepsPerTick; i++) {
         const result = this.iterator.next();
       }
     } catch (e) {
