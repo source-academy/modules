@@ -17,7 +17,7 @@ export function testBuildCommand(
   mockedFunctions: MockedFunction<any>[]
 ) {
   function expectToBeCalled(times: number) {
-    mockedFunctions.forEach((func) => expect(func)
+    mockedFunctions.forEach(func => expect(func)
       .toHaveBeenCalledTimes(times));
   }
 

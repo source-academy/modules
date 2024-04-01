@@ -1,5 +1,5 @@
-import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 import type { MockedFunction } from 'jest-mock';
+import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 import { getBuildDocsCommand } from '..';
 import * as html from '../html';
 import * as json from '../json';

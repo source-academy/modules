@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
-import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 import type { MockedFunction } from 'jest-mock';
+import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 import * as json from '../json';
 
 jest.spyOn(json, 'buildJsons');

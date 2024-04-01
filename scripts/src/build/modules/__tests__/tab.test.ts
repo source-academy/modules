@@ -1,5 +1,5 @@
-import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 import type { MockedFunction } from 'jest-mock';
+import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 import * as tabs from '../tabs';
 
 jest.mock('esbuild', () => ({
