@@ -70,7 +70,8 @@ export default function getWatchCommand() {
                   });
                 }
               }
-            ]
+            ],
+            tsconfig: `${opts.srcDir}/tsconfig.json`
           }),
           esbuild({
             ...commonEsbuildOptions,
@@ -92,7 +93,8 @@ export default function getWatchCommand() {
                     processResults({ tabs: rawResults }, opts.verbose, false);
                   });
                 },
-              }]
+              }],
+            tsconfig: `${opts.srcDir}/tsconfig.json`
           }),
           initTypedoc(inputs.bundles, opts.srcDir, opts.verbose, true).then(([, app]) => {
             app.convertAndWatch(async proj => {
