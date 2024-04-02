@@ -3148,6 +3148,7 @@ export default require => {
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
   var import_react = __toESM(__require("react"), 1);
+  var import_react_ace = __toESM(__require("react-ace"), 1);
   init_define_process();
   var FONT_MESSAGE = {
     fontFamily: "Inconsolata, Consolas, monospace",
@@ -3159,7 +3160,6 @@ export default require => {
   var import_theme_twilight = __toESM(require_theme_twilight(), 1);
   var import_ext_language_tools = __toESM(require_ext_language_tools(), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
-  var AceEditor = __require("react-ace").default;
   var BOX_PADDING_VALUE = 4;
   var ProgrammableReplGUI = class extends import_react.default.Component {
     constructor(data) {
@@ -3259,7 +3259,7 @@ export default require => {
             padding: `${BOX_PADDING_VALUE}px`,
             border: "2px solid #6f8194"
           },
-          children: (0, import_jsx_runtime.jsx)(AceEditor, {
+          children: (0, import_jsx_runtime.jsx)(import_react_ace.default, {
             ref: e => {
               this.editorInstance = e == null ? void 0 : e.editor;
               this.replInstance.setEditorInstance(e == null ? void 0 : e.editor);
