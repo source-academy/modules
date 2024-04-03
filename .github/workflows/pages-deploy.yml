@@ -30,6 +30,10 @@ jobs:
           
       - name: Build Modules 🔧
         run: yarn build --tsc --lint
+      
+      
+      - name: include java json
+        run: cp -r src/java-packages build/java-packages
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
