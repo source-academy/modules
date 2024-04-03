@@ -111,5 +111,8 @@
   },
   "communication": {
     "tabs": []
+  },
+  "java-packages": {
+    "tabs": []
   }
 }
