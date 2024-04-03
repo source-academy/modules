@@ -12,6 +12,11 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
       
+      - name: Git Submodule Update
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
+      
       - name: Use Node.js 💻
         uses: actions/setup-node@v4
         with:
