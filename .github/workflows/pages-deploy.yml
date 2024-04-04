@@ -33,7 +33,7 @@ jobs:
       
       
       - name: include java json
-        run: cp -r src/java-packages build
+        run: cp -r src/java build
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
