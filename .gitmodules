@@ -1,0 +1,6 @@
+[submodule "src/java/java-packages"]
+	path = src/java/java-packages
+	url = https://github.com/source-academy/java-packages
+[submodule "src/java-packages"]
+	path = src/java-packages
+	url = https://github.com/source-academy/java-packages
