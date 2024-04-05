@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
       
       - name: Use Node.js 💻
         uses: actions/setup-node@v4
@@ -28,6 +30,10 @@ jobs:
           
       - name: Build Modules 🔧
         run: yarn build --tsc --lint
+      
+      
+      - name: include java json
+        run: cp -r src/java build
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
