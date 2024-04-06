@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import * as td from 'typedoc';
-import { bundlesOption } from '@src/commandUtils';
-import { createBuildCommand, createBuildCommandHandler, type BuildInputs, type OperationResult } from '../utils';
+import { bundlesOption, type BuildInputs } from '@src/commandUtils';
+import { createBuildCommand, createBuildCommandHandler, type OperationResult } from '../utils';
 import { initTypedoc } from './docsUtils';
 import drawdown from './drawdown';
 
@@ -75,14 +75,18 @@ async function buildJson(name: string, reflection: td.DeclarationReflection, out
   }
 }
 
-export async function buildJsons(
+// For some reason if you want to properly test these functions in Jest
+// They've gotta be declared as constants
+export const buildJsons = async (
   { bundles }: BuildInputs,
   outDir: string,
   project: td.ProjectReflection
-): Promise<Record<'jsons', OperationResult[]>> {
+): Promise<Record<'jsons', OperationResult[]>> => {
   await fs.mkdir(`${outDir}/jsons`, { recursive: true });
 
   if (bundles.length === 1) {
+    // Typedoc returns a different format if only one bundle is specified
+    // Hence we need slightly different code
     const [bundle] = bundles;
     const result = await buildJson(
       bundle,
@@ -104,12 +108,12 @@ export async function buildJsons(
   return {
     jsons: results
   };
-}
+};
 
 const jsonCommandHandler = createBuildCommandHandler(async (inputs, { srcDir, outDir, verbose }) => {
-  const [project] = await initTypedoc(inputs.bundles, srcDir, verbose);
+  const [project] = await initTypedoc(inputs.bundles, srcDir, verbose, false);
   return buildJsons(inputs, outDir, project);
-}, false);
+}, 'tabs');
 
 export const getBuildJsonsCommand = () => createBuildCommand('jsons', 'Build json documentation')
   .addOption(bundlesOption)

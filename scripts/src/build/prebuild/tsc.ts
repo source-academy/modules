@@ -60,7 +60,7 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
   }
 }
 
-export const runTsc = wrapWithTimer(async ({ bundles, tabs, srcDir }: PrebuildOptions): Promise<TscResult> => {
+export const runTsc = wrapWithTimer(async ({ bundles, tabs, srcDir }: Omit<PrebuildOptions, 'manifest'>): Promise<TscResult> => {
   const tsconfigRes = await getTsconfig(srcDir);
   if (tsconfigRes.severity === 'error') {
     return tsconfigRes;
@@ -120,6 +120,6 @@ const tscCommandHandler = createPrebuildCommandHandler(
 
 export const getTscCommand = () => createPrebuildCommand('tsc', 'Run the typescript compiler to perform type checking')
   .action(async opts => {
-    const inputs = await retrieveBundlesAndTabs(opts, false);
+    const inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs, true);
     await tscCommandHandler({ ...opts, ...inputs });
   });

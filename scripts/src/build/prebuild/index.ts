@@ -12,7 +12,7 @@ interface PrebuildResult {
 export default async function prebuild(
   bundles: string[],
   tabs: string[],
-  { tsc, lint, ...opts }: BuildOptions
+  { tsc, lint, ...opts }: Pick<BuildOptions, 'fix' | 'lint' | 'srcDir' | 'tsc'>
 ): Promise<PrebuildResult | null> {
   const combinedOpts = {
     ...opts,

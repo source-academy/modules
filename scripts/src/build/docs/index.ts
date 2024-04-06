@@ -1,5 +1,5 @@
-import { bundlesOption } from '@src/commandUtils';
-import { createBuildCommand, type BuildInputs, createBuildCommandHandler, type AwaitedReturn } from '../utils';
+import { bundlesOption, type BuildInputs } from '@src/commandUtils';
+import { createBuildCommand, createBuildCommandHandler, type AwaitedReturn } from '../utils';
 import { initTypedoc, type TypedocResult } from './docsUtils';
 import { buildHtml } from './html';
 import { buildJsons } from './json';
@@ -19,9 +19,9 @@ export async function buildDocs(inputs: BuildInputs, outDir: string, tdResult: T
 }
 
 const docsCommandHandler = createBuildCommandHandler(async (inputs, { srcDir, outDir, verbose }) => {
-  const tdResult = await initTypedoc(inputs.bundles, srcDir, verbose);
+  const tdResult = await initTypedoc(inputs.bundles, srcDir, verbose, false);
   return buildDocs(inputs, outDir, tdResult);
-}, false);
+}, 'tabs');
 
 export const getBuildDocsCommand = () => createBuildCommand(
   'docs',

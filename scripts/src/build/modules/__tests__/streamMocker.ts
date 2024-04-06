@@ -17,7 +17,7 @@ export function mockStream() {
   return new Promise<string>((resolve, reject) => {
     const data: string[] = [];
 
-    stream.on('data', (chunk) => {
+    stream.on('data', chunk => {
       data.push(chunk.toString());
     });
 

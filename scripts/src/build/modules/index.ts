@@ -15,7 +15,7 @@ export const buildModules: BuildTask = async (inputs, opts) => {
   };
 };
 
-const modulesCommandHandler = createBuildCommandHandler(buildModules, true);
+const modulesCommandHandler = createBuildCommandHandler(buildModules);
 
 export const getBuildModulesCommand = () => createBuildCommand('modules', 'Build bundles and tabs')
   .addOption(bundlesOption)

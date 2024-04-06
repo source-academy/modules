@@ -1,7 +1,7 @@
 import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
-import { manifestOption, outDirOption, retrieveBundlesAndTabs, srcDirOption, wrapWithTimer } from '@src/commandUtils';
-import type { BuildInputs, AwaitedReturn } from '../utils';
+import { manifestOption, outDirOption, retrieveBundlesAndTabs, srcDirOption, wrapWithTimer, type BuildInputs } from '@src/commandUtils';
+import type { AwaitedReturn } from '../utils';
 import { initTypedoc, type TypedocResult } from './docsUtils';
 
 export type HtmlResult = {
@@ -12,7 +12,7 @@ export type HtmlResult = {
 };
 
 export const buildHtml = wrapWithTimer(async (
-  inputs: BuildInputs,
+  inputs: Omit<BuildInputs, 'tabs'>,
   outDir: string,
   [project, app]: TypedocResult
 ): Promise<HtmlResult> => {
@@ -54,8 +54,10 @@ export const getBuildHtmlCommand = () => new Command('html')
   .addOption(manifestOption)
   .option('-v, --verbose')
   .action(async opts => {
-    const inputs = await retrieveBundlesAndTabs({ ...opts, tabs: [] }, false);
-    const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose);
+    const inputs = await retrieveBundlesAndTabs(opts.manifest, null, [], false);
+    const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose, false);
     const result = await buildHtml(inputs, opts.outDir, tdResult);
     console.log(htmlLogger(result));
+
+    if (result.result.severity === 'error') process.exit(1);
   });

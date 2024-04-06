@@ -17,7 +17,7 @@ export function testBuildCommand(
   mockedFunctions: MockedFunction<any>[]
 ) {
   function expectToBeCalled(times: number) {
-    mockedFunctions.forEach((func) => expect(func)
+    mockedFunctions.forEach(func => expect(func)
       .toHaveBeenCalledTimes(times));
   }
 
@@ -88,6 +88,7 @@ export function testBuildCommand(
 
     expect(lint.runEslint)
       .toHaveBeenCalledTimes(1);
+
     expectToBeCalled(0);
   });
 

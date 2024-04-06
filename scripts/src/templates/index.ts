@@ -18,8 +18,8 @@ async function askMode(rl: Interface) {
   }
 }
 
-export default function getCreateCommand() {
-  return new Command('create')
+export default function getTemplateCommand() {
+  return new Command('template')
     .addOption(srcDirOption)
     .addOption(manifestOption)
     .description('Interactively create a new module or tab')
