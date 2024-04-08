@@ -1,5 +1,5 @@
 import React from 'react';
-import { Results, SuiteResult } from '../../bundles/testing/types';
+import type { Results, SuiteResult } from '../../bundles/testing/types';
 
 /**
  * Tab for unit tests.
