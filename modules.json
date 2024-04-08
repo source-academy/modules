@@ -111,5 +111,10 @@
   },
   "communication": {
     "tabs": []
+  },
+  "testing": {
+    "tabs": [
+      "Testing"
+    ]
   }
 }
