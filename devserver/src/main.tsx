@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Playground from './components/Playground';
 import './styles/index.scss';
+import Playground from './components/Playground';
 
 ReactDOM.render(
   <React.StrictMode>

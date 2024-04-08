@@ -1,11 +1,4 @@
-import {
-  Card,
-  Icon,
-  Tab,
-  Tabs,
-  Tooltip,
-  type TabProps
-} from '@blueprintjs/core';
+import { Card, Icon, Tab, type TabProps, Tabs, Tooltip } from '@blueprintjs/core';
 import React from 'react';
 import type { SideContentTab } from './types';
 
@@ -44,13 +37,7 @@ const renderTab = (
   const iconSize = 20;
   const tabTitle = (
     <Tooltip content={tab.label}>
-      <div
-        className={
-          !shouldAlert
-            ? 'side-content-tooltip'
-            : 'side-content-tooltip side-content-tab-alert'
-        }
-      >
+      <div className={!shouldAlert ? 'side-content-tooltip' : 'side-content-tooltip side-content-tab-alert'}>
         <Icon icon={tab.iconName} iconSize={iconSize} />
       </div>
     </Tooltip>
@@ -77,9 +64,7 @@ const renderTab = (
   //       }
   //     }
   //   : tab.body;
-  const tabPanel: React.JSX.Element = (
-    <div className="side-content-text">{tab.body}</div>
-  );
+  const tabPanel: React.JSX.Element = <div className="side-content-text">{tab.body}</div>;
 
   return <Tab key={tab.id} {...tabProps} panel={tabPanel} />;
 };
@@ -104,14 +89,7 @@ const SideContent: React.FC<SideContentProps> = ({
             if (onChange) onChange(newId, oldId);
           }}
         >
-          {dynamicTabs.map((tab) =>
-            renderTab(
-              tab,
-              alerts.includes(tab.id),
-              editorWidth,
-              sideContentHeight
-            )
-          )}
+          {dynamicTabs.map((tab) => renderTab(tab, alerts.includes(tab.id), editorWidth, sideContentHeight))}
         </Tabs>
       </div>
     </Card>
