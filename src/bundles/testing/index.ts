@@ -1,4 +1,3 @@
-import { it, describe } from './functions';
 import {
   assert_equals,
   assert_not_equals,
@@ -8,6 +7,7 @@ import {
   assert_greater_equals,
   assert_length,
 } from './asserts';
+import { it, describe } from './functions';
 import { mock_fn } from './mocks';
 
 /**

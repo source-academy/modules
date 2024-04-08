@@ -13,9 +13,9 @@
 // the Firefox environment (especially Web Console)
 export function array_test(x) : boolean {
   if (Array.isArray === undefined) {
-    return x instanceof Array
+    return x instanceof Array;
   } else {
-    return Array.isArray(x)
+    return Array.isArray(x);
   }
 }
 

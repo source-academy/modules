@@ -1,5 +1,5 @@
 export type ErrorLogger = (
-  error: string | string[],
+  error: string[] | string,
   isSlangError?: boolean
 ) => void;
 export type Test = () => void;

@@ -1,5 +1,5 @@
-import * as testing from '../functions';
 import * as asserts from '../asserts';
+import * as testing from '../functions';
 import { list } from '../list';
 
 beforeAll(() => {
@@ -13,7 +13,7 @@ beforeAll(() => {
   testing.context.runtime = 0;
 });
 
-test('Test context is created correctly', () => {
+test('context is created correctly', () => {
   const mockTestFn = jest.fn();
   testing.describe('Testing 321', () => {
     testing.it('Testing 123', mockTestFn);
@@ -22,7 +22,7 @@ test('Test context is created correctly', () => {
   expect(mockTestFn).toHaveBeenCalled();
 });
 
-test('Test context fails correctly', () => {
+test('context fails correctly', () => {
   testing.describe('Testing 123', () => {
     testing.it('This test fails!', () => asserts.assert_equals(0, 1));
   });

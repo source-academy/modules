@@ -7,7 +7,7 @@ import { is_pair, head, tail, is_list, is_null, member, length } from './list';
  */
 export function assert(pred: () => boolean) {
   if (!pred()) {
-    throw new Error(`Assert failed!`);
+    throw new Error('Assert failed!');
   }
 }
 
