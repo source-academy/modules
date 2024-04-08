@@ -99,6 +99,16 @@
       "physics_2d"
     ]
   },
+  "robot_simulation": {
+    "tabs": [
+      "RobotSimulation"
+    ]
+  },
+  "ar": {
+    "tabs": [
+      "AugmentedReality"
+    ]
+  },
   "communication": {
     "tabs": []
   }

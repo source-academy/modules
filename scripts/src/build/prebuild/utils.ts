@@ -32,12 +32,12 @@ export function createPrebuildCommand(
 
 export function createPrebuildCommandHandler<T extends { severity: Severity }>(
   func: (opts: PrebuildOptions) => Promise<PrebuildResult<T>>,
-  resultsProceesor: (results: PrebuildResult<T>) => string
+  resultsProcessor: (results: PrebuildResult<T>) => string
 ) {
   return async (opts: PrebuildOptions) => {
     console.log(logInputs(opts, {}));
     const results = await func(opts);
-    const toLog = resultsProceesor(results);
+    const toLog = resultsProcessor(results);
 
     console.log(toLog);
     if (results.result.severity === 'error') process.exit(1);

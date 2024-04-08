@@ -1,25 +1,13 @@
 import { Command } from '@commander-js/extra-typings';
 import { bundlesOption, tabsOption } from '@src/commandUtils';
-import {
-  buildDocs,
-  getBuildDocsCommand,
-  getBuildHtmlCommand,
-  getBuildJsonsCommand
-} from './docs';
+import { buildDocs, getBuildDocsCommand, getBuildHtmlCommand, getBuildJsonsCommand } from './docs';
 import { initTypedoc } from './docs/docsUtils';
-import {
-  buildModules,
-  getBuildBundlesCommand,
-  getBuildTabsCommand
-} from './modules';
-import {
-  createBuildCommand,
-  createBuildCommandHandler,
-  type BuildTask
-} from './utils';
+import { buildModules, getBuildBundlesCommand, getBuildTabsCommand } from './modules';
+import { createBuildCommand, type BuildTask, createBuildCommandHandler } from './utils';
+import getWatchCommand from './watch';
 
 const buildAll: BuildTask = async (inputs, opts) => {
-  const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose);
+  const tdResult = await initTypedoc(inputs.bundles, opts.srcDir, opts.verbose, false);
 
   const [modulesResult, docsResult] = await Promise.all([
     buildModules(inputs, opts),
@@ -32,20 +20,19 @@ const buildAll: BuildTask = async (inputs, opts) => {
   };
 };
 
-const buildAllCommandHandler = createBuildCommandHandler(buildAll, true);
-const getBuildAllCommand = () =>
-  createBuildCommand('all', 'Build bundles and tabs and documentation')
-    .addOption(bundlesOption)
-    .addOption(tabsOption)
-    .action(buildAllCommandHandler);
+const buildAllCommandHandler = createBuildCommandHandler(buildAll);
+const getBuildAllCommand = () => createBuildCommand('all', 'Build bundles and tabs and documentation')
+  .addOption(bundlesOption)
+  .addOption(tabsOption)
+  .action(buildAllCommandHandler);
 
-const getBuildCommand = () =>
-  new Command('build')
-    .addCommand(getBuildAllCommand(), { isDefault: true })
-    .addCommand(getBuildBundlesCommand())
-    .addCommand(getBuildDocsCommand())
-    .addCommand(getBuildHtmlCommand())
-    .addCommand(getBuildJsonsCommand())
-    .addCommand(getBuildTabsCommand());
+const getBuildCommand = () => new Command('build')
+  .addCommand(getBuildAllCommand(), { isDefault: true })
+  .addCommand(getBuildBundlesCommand())
+  .addCommand(getBuildDocsCommand())
+  .addCommand(getBuildHtmlCommand())
+  .addCommand(getBuildJsonsCommand())
+  .addCommand(getBuildTabsCommand())
+  .addCommand(getWatchCommand());
 
 export default getBuildCommand;

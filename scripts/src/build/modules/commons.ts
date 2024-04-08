@@ -2,14 +2,8 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import { parse } from 'acorn';
 import { generate } from 'astring';
-import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
-import type {
-  ArrowFunctionExpression,
-  CallExpression,
-  ExportDefaultDeclaration,
-  Program,
-  VariableDeclaration
-} from 'estree';
+import type { BuildOptions as ESBuildOptions, OutputFile, Plugin as ESBuildPlugin } from 'esbuild';
+import type { ArrowFunctionExpression, CallExpression, ExportDefaultDeclaration, Program, VariableDeclaration } from 'estree';
 import type { OperationResult } from '../utils';
 
 export const commonEsbuildOptions: ESBuildOptions = {
@@ -29,11 +23,9 @@ export const commonEsbuildOptions: ESBuildOptions = {
   write: false
 };
 
-export async function outputBundleOrTab(
-  { path, text }: OutputFile,
-  outDir: string
-): Promise<OperationResult> {
-  const [type, name] = path.split(pathlib.sep).slice(-3, -1);
+export async function outputBundleOrTab({ path, text }: OutputFile, outDir: string): Promise<OperationResult> {
+  const [type, name] = path.split(pathlib.sep)
+    .slice(-3, -1);
   let file: fs.FileHandle | null = null;
   try {
     const parsed = parse(text, { ecmaVersion: 6 }) as unknown as Program;
@@ -53,12 +45,10 @@ export async function outputBundleOrTab(
       type: 'ExportDefaultDeclaration',
       declaration: {
         ...moduleCode,
-        params: [
-          {
-            type: 'Identifier',
-            name: 'require'
-          }
-        ]
+        params: [{
+          type: 'Identifier',
+          name: 'require'
+        }]
       }
     };
 
@@ -79,3 +69,64 @@ export async function outputBundleOrTab(
     await file?.close();
   }
 }
+
+const jsslangExports = [
+  'js-slang',
+  'js-slang/context',
+  'js-slang/dist/cse-machine/interpreter',
+  'js-slang/dist/stdlib',
+  'js-slang/dist/stdlib/list',
+  'js-slang/dist/stdlib/misc',
+  'js-slang/dist/stdlib/stream',
+  'js-slang/dist/types',
+  'js-slang/dist/utils/assert',
+  'js-slang/dist/utils/stringify',
+  'js-slang/dist/parser/parser',
+];
+
+// Only the exports listed above are supported. Trying to use anything else
+// in your modules or tabs will cause errors during runtime
+// If you really need that functionality contact the SA leadership
+export const jsSlangExportCheckingPlugin: ESBuildPlugin = {
+  name: 'js-slang import checker',
+  setup(pluginBuild) {
+    pluginBuild.onResolve({ filter: /^js-slang/u }, args => {
+      if (!jsslangExports.includes(args.path)) {
+        return {
+          errors: [{
+            text: 'This export from js-slang is not supported!'
+          }]
+        };
+      }
+      return undefined;
+    });
+  }
+};
+
+export const assertPolyfillPlugin: ESBuildPlugin = {
+  name: 'Assert Polyfill',
+  setup(build) {
+    // Polyfill the NodeJS assert module
+    build.onResolve({ filter: /^assert/u }, () => ({
+      path: 'assert',
+      namespace: 'bundleAssert'
+    }));
+
+    build.onLoad({
+      filter: /^assert/u,
+      namespace: 'bundleAssert'
+    }, () => ({
+      contents: `
+      export default function assert(condition, message) {
+        if (condition) return;
+
+        if (typeof message === 'string' || message === undefined) {
+          throw new Error(message);
+        }
+
+        throw message;
+      }
+      `
+    }));
+  }
+};

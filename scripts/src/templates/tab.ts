@@ -2,11 +2,12 @@
 import fs from 'fs/promises';
 
 import type { Interface } from 'readline/promises';
-import { retrieveManifest, type ModuleManifest } from '@src/manifest';
+import { promiseAll } from '@src/commandUtils';
+import { type ModuleManifest, retrieveManifest } from '@src/manifest';
 
 import { check as _check } from './module';
 import { askQuestion, success, warn } from './print';
-import { isPascalCase, type Options } from './utilities';
+import { type Options, isPascalCase } from './utilities';
 
 export function check(manifest: ModuleManifest, tabName: string) {
   return Object.values(manifest)
@@ -27,10 +28,7 @@ async function askModuleName(manifest: ModuleManifest, rl: Interface) {
 
 async function askTabName(manifest: ModuleManifest, rl: Interface) {
   while (true) {
-    const name = await askQuestion(
-      'What is the name of your new tab? (eg. BinaryTree)',
-      rl
-    );
+    const name = await askQuestion('What is the name of your new tab? (eg. BinaryTree)', rl);
     if (check(manifest, name)) {
       warn('A tab with the same name already exists.');
     } else if (!isPascalCase(name)) {
@@ -41,10 +39,7 @@ async function askTabName(manifest: ModuleManifest, rl: Interface) {
   }
 }
 
-export async function addNew(
-  { manifest: manifestFile, srcDir }: Options,
-  rl: Interface
-) {
+export async function addNew({ manifest: manifestFile, srcDir }: Options, rl: Interface) {
   const manifest = await retrieveManifest(manifestFile);
 
   const moduleName = await askModuleName(manifest, rl);
@@ -53,19 +48,21 @@ export async function addNew(
   // Copy module tab template into correct destination and show success message
   const tabDestination = `${srcDir}/tabs/${tabName}`;
   await fs.mkdir(tabDestination, { recursive: true });
-  await fs.copyFile(
-    './scripts/src/templates/templates/__tab__.tsx',
-    `${tabDestination}/index.tsx`
-  );
-  await fs.writeFile(
-    manifestFile,
-    JSON.stringify(
-      {
-        ...manifest,
-        [moduleName]: { tabs: [...manifest[moduleName].tabs, tabName] }
-      },
-      null,
-      2
+  await promiseAll(
+    fs.copyFile(
+      './scripts/src/templates/templates/__tab__.tsx',
+      `${tabDestination}/index.tsx`
+    ),
+    fs.writeFile(
+      manifestFile,
+      JSON.stringify(
+        {
+          ...manifest,
+          [moduleName]: { tabs: [...manifest[moduleName].tabs, tabName] }
+        },
+        null,
+        2
+      )
     )
   );
   success(

@@ -27,5 +27,8 @@ export default {
   transformIgnorePatterns: [
     'node_modules/(?!=chalk)/',
     '.+\\.js'
+  ],
+  setupFiles: [
+    './jest.polyfills.js'
   ]
 };

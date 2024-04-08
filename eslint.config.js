@@ -7,16 +7,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
-const todoTreeKeywordsAll = [
-  ...todoTreeKeywordsWarning,
-  'NOTE',
-  'NOTES',
-  'LIST'
-];
-
-const OFF = 0;
-const WARN = 1;
-const ERROR = 2;
+const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
 /**
  * @type {import('eslint').Linter.FlatConfig[]}
@@ -25,15 +16,11 @@ export default [
   {
     // global ignores
     ignores: [
-      'src/**/samples/**',
+      '**/*.snap',
+      'build/**',
       'scripts/**/templates/templates/**',
       'scripts/bin.js',
-      'build/**',
-
-      // TODO: Remove these when eslint supports import assertions
-      // or if we decide to use the babel parser that's fine too
-      'scripts/scripts_manager.js',
-      'scripts/jest.config.js'
+      'src/**/samples/**'
     ]
   },
   js.configs.recommended,
@@ -47,42 +34,35 @@ export default [
     },
     plugins: {
       import: importPlugin,
-      '@stylistic': stylePlugin
+      '@stylistic': stylePlugin,
     },
     rules: {
-      'import/no-duplicates': [WARN, { 'prefer-inline': false }],
+      'import/no-duplicates': ['warn', { 'prefer-inline': false }],
       'import/order': [
-        WARN,
+        'warn',
         {
-          groups: [
-            'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index'
-          ],
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           alphabetize: {
             order: 'asc',
             orderImportKind: 'asc'
-          }
+          },
         }
       ],
 
-      '@stylistic/brace-style': [WARN, '1tbs', { allowSingleLine: true }],
-      '@stylistic/eol-last': WARN,
-      '@stylistic/indent': [WARN, 2, { SwitchCase: 1 }],
-      '@stylistic/no-mixed-spaces-and-tabs': WARN,
-      '@stylistic/no-multi-spaces': WARN,
-      '@stylistic/no-multiple-empty-lines': [WARN, { max: 1, maxEOF: 0 }],
-      '@stylistic/no-trailing-spaces': WARN,
-      '@stylistic/quotes': [WARN, 'single', { avoidEscape: true }],
-      '@stylistic/semi': [WARN, 'always'],
+      '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
+      '@stylistic/eol-last': 'warn',
+      '@stylistic/indent': ['warn', 2, { SwitchCase: 1 }],
+      '@stylistic/no-mixed-spaces-and-tabs': 'warn',
+      '@stylistic/no-multi-spaces': 'warn',
+      '@stylistic/no-multiple-empty-lines': ['warn', { max: 1, maxEOF: 0 }],
+      '@stylistic/no-trailing-spaces': 'warn',
+      '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
+      '@stylistic/semi': ['warn', 'always'],
       '@stylistic/spaced-comment': [
-        WARN,
+        'warn',
         'always',
         { markers: todoTreeKeywordsAll }
-      ]
+      ],
     }
   },
   ...tseslint.configs.recommended,
@@ -93,18 +73,18 @@ export default [
       parser: tseslint.parser
     },
     plugins: {
-      '@typescript-eslint': tseslint.plugin
+      '@typescript-eslint': tseslint.plugin,
     },
     rules: {
-      'no-unused-vars': OFF, // Use the typescript eslint rule instead
+      'no-unused-vars': 'off', // Use the typescript eslint rule instead
 
-      '@typescript-eslint/ban-types': OFF, // Was ERROR
-      '@typescript-eslint/no-duplicate-type-constituents': OFF, // Was ERROR
-      '@typescript-eslint/no-explicit-any': OFF, // Was ERROR
-      '@typescript-eslint/no-redundant-type-constituents': OFF, // Was ERROR
-      '@typescript-eslint/no-unused-vars': [WARN, { argsIgnorePattern: '^_' }], // Was ERROR
-      '@typescript-eslint/prefer-ts-expect-error': WARN,
-      '@typescript-eslint/sort-type-constituents': WARN
+      '@typescript-eslint/ban-types': 'off', // Was 'error'
+      '@typescript-eslint/no-duplicate-type-constituents': 'off', // Was 'error'
+      '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
+      '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
+      '@typescript-eslint/prefer-ts-expect-error': 'warn',
+      '@typescript-eslint/sort-type-constituents': 'warn',
     }
   },
   {
@@ -114,18 +94,17 @@ export default [
       'react-hooks': reactHooksPlugin
     },
     rules: {
-      'react-hooks/rules-of-hooks': ERROR,
+      'react-hooks/rules-of-hooks': 'error',
 
-      '@stylistic/jsx-equals-spacing': [WARN, 'never'],
-      '@stylistic/jsx-indent': [WARN, 2],
-      '@stylistic/jsx-indent-props': [WARN, 2],
-      '@stylistic/jsx-props-no-multi-spaces': WARN
+      '@stylistic/jsx-equals-spacing': ['warn', 'never'],
+      '@stylistic/jsx-indent': ['warn', 2],
+      '@stylistic/jsx-indent-props': ['warn', 2],
+      '@stylistic/jsx-props-no-multi-spaces': 'warn',
     }
   },
   {
     // Rules for bundles and tabs
     files: ['src/**/*.ts*'],
-    ignores: ['**/__tests__/**/*.ts*', '**/__mocks__/**/*.ts'],
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
@@ -133,21 +112,17 @@ export default [
       }
     },
     rules: {
-      'prefer-const': WARN, // Was ERROR
+      'prefer-const': 'warn', // Was 'error'
 
-      '@typescript-eslint/no-namespace': OFF, // Was ERROR
-      '@typescript-eslint/no-var-requires': WARN, // Was ERROR
-      '@typescript-eslint/switch-exhaustiveness-check': ERROR
-    }
+      '@typescript-eslint/no-namespace': 'off', // Was 'error'
+      '@typescript-eslint/no-var-requires': 'warn', // Was 'error'
+      '@typescript-eslint/switch-exhaustiveness-check': 'error',
+    },
   },
   {
     // Rules for scripts
     files: ['scripts/**/*.ts'],
-    ignores: [
-      '**/__tests__/**/*.ts',
-      '**/__mocks__/**/*.ts',
-      'scripts/src/templates/templates/**/*.ts*'
-    ],
+    ignores: ['scripts/src/templates/templates/**/*.ts*'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -155,17 +130,18 @@ export default [
       }
     },
     rules: {
-      'import/extensions': [ERROR, 'never', { json: 'always' }],
-      'no-constant-condition': OFF, // Was ERROR,
-      '@stylistic/arrow-parens': [WARN, 'as-needed'],
+      'import/extensions': ['error', 'never', { json: 'always' }],
+      'no-constant-condition': 'off', // Was 'error',
 
-      '@typescript-eslint/prefer-readonly': WARN,
-      '@typescript-eslint/require-await': ERROR,
-      '@typescript-eslint/return-await': [ERROR, 'in-try-catch']
+      '@stylistic/arrow-parens': ['warn', 'as-needed'],
+
+      '@typescript-eslint/prefer-readonly': 'warn',
+      '@typescript-eslint/require-await': 'error',
+      '@typescript-eslint/return-await': ['error', 'in-try-catch']
     },
     settings: {
-      'import/internal-regex': '^@src/'
-    }
+      'import/internal-regex': '^@src/',
+    },
   },
   {
     // Rules for devserver,
@@ -179,7 +155,7 @@ export default [
         ...globals.browser,
         ...globals.node2020
       }
-    }
+    },
   },
   {
     // Rules for tests
@@ -189,20 +165,14 @@ export default [
       '**/__mocks__/**/*.ts*',
       '**/jest.setup.ts'
     ],
-    ignores: ['**/*.snap'],
-    languageOptions: {
-      parserOptions: {
-        project: './tsconfig.test.json'
-      }
-    },
     rules: {
       ...jestPlugin.configs['flat/recommended'].rules,
-      'jest/expect-expect': [ERROR, { assertFunctionNames: ['expect*'] }],
-      'jest/no-alias-methods': OFF,
-      'jest/no-conditional-expect': OFF,
-      'jest/no-export': OFF,
-      'jest/require-top-level-describe': OFF,
-      'jest/valid-describe-callback': OFF
+      'jest/expect-expect': ['error', { assertFunctionNames: ['expect*'] }],
+      'jest/no-alias-methods': 'off',
+      'jest/no-conditional-expect': 'off',
+      'jest/no-export': 'off',
+      'jest/require-top-level-describe': 'off',
+      'jest/valid-describe-callback': 'off'
     }
   }
 ];
