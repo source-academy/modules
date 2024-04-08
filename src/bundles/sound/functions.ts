@@ -1,38 +1,5 @@
-/**
- * The sounds library provides functions for constructing and playing sounds.
- *
- * A wave is a function that takes in a number `t` and returns
- * a number representing the amplitude at time `t`.
- * The amplitude should fall within the range of [-1, 1].
- *
- * A Sound is a pair(wave, duration) where duration is the length of the sound in seconds.
- * The constructor make_sound and accessors get_wave and get_duration are provided.
- *
- * Sound Discipline:
- * For all sounds, the wave function applied to and time `t` beyond its duration returns 0, that is:
- * `(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.
- *
- * Two functions which combine Sounds, `consecutively` and `simultaneously` are given.
- * Additionally, we provide sound transformation functions `adsr` and `phase_mod`
- * which take in a Sound and return a Sound.
- *
- * Finally, the provided `play` function takes in a Sound and plays it using your
- * computer's sound system.
- *
- * @module sound
- * @author Koh Shang Hui
- * @author Samyukta Sounderraman
- */
-
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-use-before-define, @typescript-eslint/no-unused-vars */
-import {
-  Wave,
-  Sound,
-  SoundProducer,
-  SoundTransformer,
-  List,
-  AudioPlayed,
-} from './types';
+/* eslint-disable new-cap, @typescript-eslint/naming-convention */
+import context from 'js-slang/context';
 import {
   pair,
   head,
@@ -42,13 +9,25 @@ import {
   is_null,
   is_pair,
   accumulate,
-} from './list';
+  type List
+} from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
+import type {
+  Wave,
+  Sound,
+  SoundProducer,
+  SoundTransformer,
+  AudioPlayed
+} from './types';
 
 // Global Constants and Variables
-let audioElement: HTMLAudioElement;
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
+
+const audioPlayed: AudioPlayed[] = [];
+context.moduleContexts.sound.state = {
+  audioPlayed
+};
 
 // Singular audio context for all playback functions
 let audioplayer: AudioContext;
@@ -88,12 +67,12 @@ let recorded_sound: Sound | undefined;
 function check_permission() {
   if (permission === undefined) {
     throw new Error(
-      `Call init_record(); to obtain permission to use microphone`
+      'Call init_record(); to obtain permission to use microphone'
     );
   } else if (permission === false) {
     throw new Error(`Permission has been denied.\n
-		    Re-start browser and call init_record();\n
-		    to obtain permission to use microphone.`);
+        Re-start browser and call init_record();\n
+        to obtain permission to use microphone.`);
   } // (permission === true): do nothing
 }
 
@@ -110,21 +89,22 @@ function setPermissionToFalse() {
 
 function start_recording(mediaRecorder: MediaRecorder) {
   const data: any[] = [];
-  // eslint-disable-next-line no-param-reassign
   mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
   mediaRecorder.start();
-  // eslint-disable-next-line no-param-reassign
   mediaRecorder.onstop = () => process(data);
 }
 
-// there is a beep signal at the beginning and end
-// of each recording
-const recording_signal_duration_ms = 100;
+// duration of recording signal in milliseconds
+const recording_signal_ms = 100;
+
+// duration of pause after "run" before recording signal is played
+const pre_recording_signal_pause_ms = 200;
 
 function play_recording_signal() {
-  play(sine_sound(1200, recording_signal_duration_ms / 1000));
+  play(sine_sound(1200, recording_signal_ms / 1000));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-shadow
 function process(data) {
   const audioContext = new AudioContext();
   const blob = new Blob(data);
@@ -137,7 +117,8 @@ function process(data) {
 // Converts input microphone sound (blob) into array format.
 function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   const url = URL.createObjectURL(blob);
-  return fetch(url).then((response) => response.arrayBuffer());
+  return fetch(url)
+    .then((response) => response.arrayBuffer());
 }
 
 function save(audioBuffer: AudioBuffer) {
@@ -168,10 +149,11 @@ export function init_record(): string {
 }
 
 /**
- * takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
+ * Records a sound until the returned stop function is called.
+ * Takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
  * returns a nullary stop function <CODE>stop</CODE>. A call
- * <CODE>stop()</CODE> returns a sound promise: a nullary function
- * that returns a sound. Example: <PRE><CODE>init_record();
+ * <CODE>stop()</CODE> returns a Sound promise: a nullary function
+ * that returns a Sound. Example: <PRE><CODE>init_record();
  * const stop = record(0.5);
  * // record after 0.5 seconds. Then in next query:
  * const promise = stop();
@@ -181,7 +163,7 @@ export function init_record(): string {
  * @param buffer - pause before recording, in seconds
  * @returns nullary <CODE>stop</CODE> function;
  * <CODE>stop()</CODE> stops the recording and
- * returns a sound promise: a nullary function that returns the recorded sound
+ * returns a Sound promise: a nullary function that returns the recorded Sound
  */
 export function record(buffer: number): () => () => Sound {
   check_permission();
@@ -189,7 +171,7 @@ export function record(buffer: number): () => () => Sound {
   setTimeout(() => {
     play_recording_signal();
     start_recording(mediaRecorder);
-  }, recording_signal_duration_ms + buffer * 1000);
+  }, recording_signal_ms + buffer * 1000);
   return () => {
     mediaRecorder.stop();
     play_recording_signal();
@@ -206,29 +188,38 @@ export function record(buffer: number): () => () => Sound {
 /**
  * Records a sound of given <CODE>duration</CODE> in seconds, after
  * a <CODE>buffer</CODE> also in seconds, and
- * returns a sound promise: a nullary function
- * that returns a sound. Example: <PRE><CODE>init_record();
+ * returns a Sound promise: a nullary function
+ * that returns a Sound. Example: <PRE><CODE>init_record();
  * const promise = record_for(2, 0.5);
- * // In next query, you can play the promised sound, by
+ * // In next query, you can play the promised Sound, by
  * // applying the promise:
  * play(promise());</CODE></PRE>
  * @param duration duration in seconds
  * @param buffer pause before recording, in seconds
- * @return <CODE>promise</CODE>: nullary function which returns the recorded sound
+ * @return <CODE>promise</CODE>: nullary function which returns recorded Sound
  */
 export function record_for(duration: number, buffer: number): () => Sound {
   recorded_sound = undefined;
-  const duration_ms = duration * 1000;
+  const recording_ms = duration * 1000;
+  const pre_recording_pause_ms = buffer * 1000;
   check_permission();
   const mediaRecorder = new MediaRecorder(globalStream);
+
+  // order of events for record_for:
+  // pre-recording-signal pause | recording signal |
+  // pre-recording pause | recording | recording signal
+
   setTimeout(() => {
     play_recording_signal();
-    start_recording(mediaRecorder);
     setTimeout(() => {
-      mediaRecorder.stop();
-      play_recording_signal();
-    }, duration_ms);
-  }, recording_signal_duration_ms + buffer * 1000);
+      start_recording(mediaRecorder);
+      setTimeout(() => {
+        mediaRecorder.stop();
+        play_recording_signal();
+      }, recording_ms);
+    }, recording_signal_ms + pre_recording_pause_ms);
+  }, pre_recording_signal_pause_ms);
+
   return () => {
     if (recorded_sound === undefined) {
       throw new Error('recording still being processed');
@@ -254,12 +245,16 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * that takes in a non-negative input time and returns an amplitude
  * between -1 and 1.
  *
- * @param wave wave function of the sound
- * @param duration duration of the sound
+ * @param wave wave function of the Sound
+ * @param duration duration of the Sound
  * @return with wave as wave function and duration as duration
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
+  if (duration < 0) {
+    throw new Error('Sound duration must be greater than or equal to 0');
+  }
+
   return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
 }
 
@@ -292,31 +287,46 @@ export function get_duration(sound: Sound): number {
  * @return true if x is a Sound, false otherwise
  * @example is_sound(make_sound(t => 0, 2)); // Returns true
  */
-export function is_sound(x: any): boolean {
+export function is_sound(x: any): x is Sound {
   return (
-    is_pair(x) &&
-    typeof get_wave(x) === 'function' &&
-    typeof get_duration(x) === 'number'
+    is_pair(x)
+    && typeof get_wave(x) === 'function'
+    && typeof get_duration(x) === 'number'
   );
 }
 
 /**
- * Plays the given Sound using the computer’s sound device.
- * The sound is only played if no other sounds are currently being played.
+ * Plays the given Wave using the computer’s sound device, for the duration
+ * given in seconds.
  *
- * @param sound the sound to play
- * @return the given sound
- * @example play(sine_sound(440, 5));
+ * @param wave the wave function to play, starting at 0
+ * @return the resulting Sound
+ * @example play_wave(t => math_sin(t * 3000), 5);
  */
-export function play(sound: Sound): AudioPlayed {
+export function play_wave(wave: Wave, duration: number): Sound {
+  return play(make_sound(wave, duration));
+}
+
+/**
+ * Plays the given Sound using the computer’s sound device.
+ * The sound is added to a list of sounds to be played one-at-a-time
+ * in a Source Academy tab.
+ *
+ * @param sound the Sound to play
+ * @return the given Sound
+ * @example play_in_tab(sine_sound(440, 5));
+ */
+export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`play is expecting sound, but encountered ${sound}`);
+    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
-    throw new Error('play: audio system still playing previous sound');
+    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
-    throw new Error('play: duration of sound is negative');
+    throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
@@ -361,47 +371,34 @@ export function play(sound: Sound): AudioPlayed {
     riffwave.header.numChannels = 1;
     riffwave.header.bitsPerSample = 16;
     riffwave.Make(channel);
-    const audio = new Audio(riffwave.dataURI);
-    const source2 = audioplayer.createMediaElementSource(audio);
-    source2.connect(audioplayer.destination);
 
-    // Connect data to output destination
-    isPlaying = true;
-    audio.play();
-    audio.onended = () => {
-      source2.disconnect(audioplayer.destination);
-      isPlaying = false;
+    const soundToPlay = {
+      toReplString: () => '<AudioPlayed>',
+      dataUri: riffwave.dataURI
     };
-
-    return {
-      toReplString: () => `<AudioPlayed>`,
-      init: (audio_elem) => {
-        audioElement = audio_elem;
-        if (!audioElement) {
-          throw new Error('Audio element cannot be null.');
-        }
-        audioElement.src = riffwave.dataURI;
-        return true;
-      },
-    };
+    audioPlayed.push(soundToPlay);
+    return sound;
   }
 }
 
 /**
  * Plays the given Sound using the computer’s sound device
- * on top of any sounds that are currently playing.
+ * on top of any Sounds that are currently playing.
  *
- * @param sound the sound to play
- * @example play_concurrently(sine_sound(440, 5));
+ * @param sound the Sound to play
+ * @return the given Sound
+ * @example play(sine_sound(440, 5));
  */
-export function play_concurrently(sound: Sound): void {
+export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
-      `play_concurrently is expecting sound, but encountered ${sound}`
+      `${play.name} is expecting sound, but encountered ${sound}`
     );
-  } else if (get_duration(sound) <= 0) {
-    // Do nothing
+  } else if (get_duration(sound) < 0) {
+    throw new Error(`${play.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
   } else {
     // Instantiate audio context if it has not been instantiated.
     if (!audioplayer) {
@@ -449,6 +446,7 @@ export function play_concurrently(sound: Sound): void {
       source.disconnect(audioplayer.destination);
       isPlaying = false;
     };
+    return sound;
   }
 }
 
@@ -463,33 +461,33 @@ export function stop(): void {
 // Primitive sounds
 
 /**
- * Makes a noise sound with given duration
+ * Makes a noise Sound with given duration
  *
  * @param duration the duration of the noise sound
- * @return resulting noise sound
+ * @return resulting noise Sound
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
-  return make_sound((t) => Math.random() * 2 - 1, duration);
+  return make_sound((_t) => Math.random() * 2 - 1, duration);
 }
 
 /**
- * Makes a silence sound with given duration
+ * Makes a silence Sound with given duration
  *
- * @param duration the duration of the silence sound
- * @return resulting silence sound
+ * @param duration the duration of the silence Sound
+ * @return resulting silence Sound
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
-  return make_sound((t) => 0, duration);
+  return make_sound((_t) => 0, duration);
 }
 
 /**
- * Makes a sine wave sound with given frequency and duration
+ * Makes a sine wave Sound with given frequency and duration
  *
- * @param freq the frequency of the sine wave sound
- * @param duration the duration of the sine wave sound
- * @return resulting sine wave sound
+ * @param freq the frequency of the sine wave Sound
+ * @param duration the duration of the sine wave Sound
+ * @return resulting sine wave Sound
  * @example sine_sound(440, 5);
  */
 export function sine_sound(freq: number, duration: number): Sound {
@@ -497,11 +495,11 @@ export function sine_sound(freq: number, duration: number): Sound {
 }
 
 /**
- * Makes a square wave sound with given frequency and duration
+ * Makes a square wave Sound with given frequency and duration
  *
- * @param freq the frequency of the square wave sound
- * @param duration the duration of the square wave sound
- * @return resulting square wave sound
+ * @param freq the frequency of the square wave Sound
+ * @param duration the duration of the square wave Sound
+ * @return resulting square wave Sound
  * @example square_sound(440, 5);
  */
 export function square_sound(f: number, duration: number): Sound {
@@ -519,20 +517,20 @@ export function square_sound(f: number, duration: number): Sound {
 }
 
 /**
- * Makes a triangle wave sound with given frequency and duration
+ * Makes a triangle wave Sound with given frequency and duration
  *
- * @param freq the frequency of the triangle wave sound
- * @param duration the duration of the triangle wave sound
- * @return resulting triangle wave sound
+ * @param freq the frequency of the triangle wave Sound
+ * @param duration the duration of the triangle wave Sound
+ * @return resulting triangle wave Sound
  * @example triangle_sound(440, 5);
  */
 export function triangle_sound(freq: number, duration: number): Sound {
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
-      answer +=
-        ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2)) /
-        (2 * i + 1) ** 2;
+      answer
+        += ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2))
+        / (2 * i + 1) ** 2;
     }
     return answer;
   }
@@ -543,11 +541,11 @@ export function triangle_sound(freq: number, duration: number): Sound {
 }
 
 /**
- * Makes a sawtooth wave sound with given frequency and duration
+ * Makes a sawtooth wave Sound with given frequency and duration
  *
- * @param freq the frequency of the sawtooth wave sound
- * @param duration the duration of the sawtooth wave sound
- * @return resulting sawtooth wave sound
+ * @param freq the frequency of the sawtooth wave Sound
+ * @param duration the duration of the sawtooth wave Sound
+ * @return resulting sawtooth wave Sound
  * @example sawtooth_sound(440, 5);
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
@@ -568,11 +566,11 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
 
 /**
  * Makes a new Sound by combining the sounds in a given list
- * where the second sound is appended to the end of the first sound,
- * the third sound is appended to the end of the second sound, and
- * so on. The effect is that the sounds in the list are joined end-to-end
+ * where the second Sound is appended to the end of the first Sound,
+ * the third Sound is appended to the end of the second Sound, and
+ * so on. The effect is that the Sounds in the list are joined end-to-end
  *
- * @param list_of_sounds given list of sounds
+ * @param list_of_sounds given list of Sounds
  * @return the combined Sound
  * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
  */
@@ -589,10 +587,13 @@ export function consecutively(list_of_sounds: List): Sound {
 }
 
 /**
- * Makes a new Sound by combining the sounds in a given list
- * where all the sounds are overlapped on top of each other.
+ * Makes a new Sound by combining the Sounds in a given list.
+ * In the result sound, the component sounds overlap such that
+ * they start at the beginning of the result sound. To achieve
+ * this, the amplitudes of the component sounds are added together
+ * and then divided by the length of the list.
  *
- * @param list_of_sounds given list of sounds
+ * @param list_of_sounds given list of Sounds
  * @return the combined Sound
  * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))
  */
@@ -610,8 +611,8 @@ export function simultaneously(list_of_sounds: List): Sound {
   }
 
   const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
-  const normalised_wave = (t: number) =>
-    head(mushed_sounds)(t) / length(list_of_sounds);
+  const len = length(list_of_sounds);
+  const normalised_wave = (t: number) => head(mushed_sounds)(t) / len;
   const highest_duration = tail(mushed_sounds);
   return make_sound(normalised_wave, highest_duration);
 }
@@ -649,18 +650,18 @@ export function adsr(
       }
       if (x < attack_time + decay_time) {
         return (
-          ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) +
-            sustain_level) *
-          wave(x)
+          ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
+            + sustain_level)
+          * wave(x)
         );
       }
       if (x < duration - release_time) {
         return wave(x) * sustain_level;
       }
       return (
-        wave(x) *
-        sustain_level *
-        linear_decay(release_time)(x - (duration - release_time))
+        wave(x)
+        * sustain_level
+        * linear_decay(release_time)(x - (duration - release_time))
       );
     }, duration);
   };
@@ -697,8 +698,7 @@ export function stacking_adsr(
 
   return simultaneously(
     accumulate(
-      (x: any, y: any) =>
-        pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+      (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
       null,
       zip(envelopes, 1)
     )
@@ -706,7 +706,7 @@ export function stacking_adsr(
 }
 
 /**
- * Returns a SoundTransformer which uses its argument
+ * Returns a Sound transformer which uses its argument
  * to modulate the phase of a (carrier) sine wave
  * of given frequency and duration with a given Sound.
  * Modulating with a low frequency Sound results in a vibrato effect.
@@ -714,7 +714,7 @@ export function stacking_adsr(
  * the sine wave frequency results in more complex wave forms.
  *
  * @param freq the frequency of the sine wave to be modulated
- * @param duration the duration of the output soud
+ * @param duration the duration of the output Sound
  * @param amount the amount of modulation to apply to the carrier sine wave
  * @return function which takes in a Sound and returns a Sound
  * @example phase_mod(440, 5, 1)(sine_sound(220, 5));
@@ -724,11 +724,10 @@ export function phase_mod(
   duration: number,
   amount: number
 ): SoundTransformer {
-  return (modulator: Sound) =>
-    make_sound(
-      (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
-      duration
-    );
+  return (modulator: Sound) => make_sound(
+    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
+    duration
+  );
 }
 
 // MIDI conversion functions
@@ -777,7 +776,7 @@ export function letter_name_to_midi_note(note: string): number {
   }
 
   if (note.length === 2) {
-    res += parseInt(note[1], 10) * 12;
+    res += parseInt(note[1]) * 12;
   } else if (note.length === 3) {
     switch (note[1]) {
       case '#':
@@ -791,7 +790,7 @@ export function letter_name_to_midi_note(note: string): number {
       default:
         break;
     }
-    res += parseInt(note[2], 10) * 12;
+    res += parseInt(note[2]) * 12;
   }
   return res;
 }

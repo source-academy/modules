@@ -1,5 +1,5 @@
-import React from 'react';
 import { Slider, Icon } from '@blueprintjs/core';
+import React from 'react';
 import { ThemeColor } from './style';
 
 type Props = {
@@ -50,16 +50,16 @@ class MarkSweep extends React.Component<Props, State> {
       unmarked: 0,
       marked: 1,
       queue: [],
-      running: false,
+      running: false
     };
   }
 
   componentDidMount() {
     const { debuggerContext } = this.props;
     if (
-      debuggerContext &&
-      debuggerContext.result &&
-      debuggerContext.result.value
+      debuggerContext
+      && debuggerContext.result
+      && debuggerContext.result.value
     ) {
       this.initialize_state();
     }
@@ -112,7 +112,7 @@ class MarkSweep extends React.Component<Props, State> {
       unmarked,
       marked,
       queue,
-      running: true,
+      running: true
     }));
   };
 
@@ -132,7 +132,7 @@ class MarkSweep extends React.Component<Props, State> {
           description: commandHeap[value].desc,
           leftDesc: commandHeap[value].leftDesc,
           rightDesc: commandHeap[value].rightDesc,
-          queue: commandHeap[value].queue,
+          queue: commandHeap[value].queue
         };
       });
     }
@@ -153,7 +153,7 @@ class MarkSweep extends React.Component<Props, State> {
           description: commandHeap[value].desc,
           leftDesc: commandHeap[value].leftDesc,
           rightDesc: commandHeap[value].rightDesc,
-          queue: commandHeap[value].queue,
+          queue: commandHeap[value].queue
         };
       });
     }
@@ -171,15 +171,15 @@ class MarkSweep extends React.Component<Props, State> {
         description: commandHeap[newValue].desc,
         leftDesc: commandHeap[newValue].leftDesc,
         rightDesc: commandHeap[newValue].rightDesc,
-        queue: commandHeap[newValue].queue,
+        queue: commandHeap[newValue].queue
       };
     });
   };
 
   private getlengthFunction = () => {
     const { debuggerContext } = this.props;
-    const commandHeap =
-      debuggerContext && debuggerContext.result.value
+    const commandHeap
+      = debuggerContext && debuggerContext.result.value
         ? debuggerContext.result.value.get_command()
         : [];
     return commandHeap.length;
@@ -244,7 +244,7 @@ class MarkSweep extends React.Component<Props, State> {
 
   private renderLabel = (val: number) => {
     const { flips } = this.state;
-    return flips.includes(val) ? `^` : `${val}`;
+    return flips.includes(val) ? '^' : `${val}`;
   };
 
   public render() {
@@ -259,7 +259,7 @@ class MarkSweep extends React.Component<Props, State> {
             <p>
               This is a visualiser for mark and sweep garbage collector. Check
               the guide{' '}
-              <a href='https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide'>
+              <a href="https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide">
                 here
               </a>
               .
@@ -267,7 +267,11 @@ class MarkSweep extends React.Component<Props, State> {
             <h3>{state.command}</h3>
             <p> {state.description} </p>
             <div
-              style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginTop: 10
+              }}
             >
               {state.leftDesc && (
                 <div style={{ flex: 1 }}>
@@ -275,36 +279,38 @@ class MarkSweep extends React.Component<Props, State> {
                     width={10}
                     height={10}
                     style={{
-                      backgroundColor: ThemeColor.GREEN,
+                      backgroundColor: ThemeColor.GREEN
                     }}
                   />
                   <span> {state.leftDesc} </span>
                 </div>
               )}
-              {state.rightDesc ? (
-                <div style={{ flex: 1 }}>
-                  <canvas
-                    width={10}
-                    height={10}
-                    style={{
-                      backgroundColor: ThemeColor.YELLOW,
-                    }}
-                  />
-                  <span> {state.rightDesc} </span>
-                </div>
-              ) : (
-                false
-              )}
+              {state.rightDesc
+                ? (
+                  <div style={{ flex: 1 }}>
+                    <canvas
+                      width={10}
+                      height={10}
+                      style={{
+                        backgroundColor: ThemeColor.YELLOW
+                      }}
+                    />
+                    <span> {state.rightDesc} </span>
+                  </div>
+                )
+                : (
+                  false
+                )}
             </div>
             <br />
             <p>
               Current step:
               {'   '}
-              <Icon icon='remove' onClick={this.handleMinus} />
+              <Icon icon="remove" onClick={this.handleMinus} />
               {'   '}
               {state.value}
               {'   '}
-              <Icon icon='add' onClick={this.handlePlus} />
+              <Icon icon="add" onClick={this.handlePlus} />
             </p>
             <div style={{ padding: 5 }}>
               <Slider
@@ -321,28 +327,31 @@ class MarkSweep extends React.Component<Props, State> {
           <div>
             <div>
               <div>
-                {memoryMatrix &&
-                  memoryMatrix.length > 0 &&
-                  memoryMatrix.map((item, row) => (
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                {memoryMatrix
+                  && memoryMatrix.length > 0
+                  && memoryMatrix.map((item, row) => (
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'row'
+                    }}>
                       <span style={{ width: 30 }}> {row * state.column} </span>
-                      {item &&
-                        item.length > 0 &&
-                        item.map((content) => {
+                      {item
+                        && item.length > 0
+                        && item.map((content) => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (
                             <div
                               style={{
                                 width: 14,
-                                backgroundColor: bgColor,
+                                backgroundColor: bgColor
                               }}
                             >
                               <canvas
                                 width={10}
                                 height={10}
                                 style={{
-                                  backgroundColor: color,
+                                  backgroundColor: color
                                 }}
                               />
                             </div>
@@ -365,14 +374,18 @@ class MarkSweep extends React.Component<Props, State> {
               </div>
             </div>
             <div
-              style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginTop: 10
+              }}
             >
               <div style={{ flex: 1 }}>
                 <canvas
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: ThemeColor.BLUE,
+                    backgroundColor: ThemeColor.BLUE
                   }}
                 />
                 <span> defined</span>
@@ -382,7 +395,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: ThemeColor.PINK,
+                    backgroundColor: ThemeColor.PINK
                   }}
                 />
                 <span> tag</span>
@@ -392,14 +405,18 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: ThemeColor.GREY,
+                    backgroundColor: ThemeColor.GREY
                   }}
                 />
                 <span> empty or undefined</span>
               </div>
             </div>
             <div
-              style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginTop: 10
+              }}
             >
               <div style={{ flex: 1 }}>
                 <span> MARK_SLOT: </span>
@@ -409,7 +426,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: 'red',
+                    backgroundColor: 'red'
                   }}
                 />
                 <span> marked</span>
@@ -419,7 +436,7 @@ class MarkSweep extends React.Component<Props, State> {
                   width={10}
                   height={10}
                   style={{
-                    backgroundColor: 'black',
+                    backgroundColor: 'black'
                   }}
                 />
                 <span> unmarked</span>
@@ -435,7 +452,7 @@ class MarkSweep extends React.Component<Props, State> {
         <p>
           This is a visualiser for mark and sweep garbage collector. Check the
           guide{' '}
-          <a href='https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide'>
+          <a href="https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide">
             here
           </a>
           .
@@ -452,5 +469,5 @@ export default {
     <MarkSweep debuggerContext={debuggerContext} />
   ),
   label: 'Mark Sweep Garbage Collector',
-  iconName: 'heat-grid',
+  iconName: 'heat-grid'
 };

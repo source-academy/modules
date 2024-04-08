@@ -1,7 +1,5 @@
 import * as Phaser from 'phaser';
 
-export type List = [any, List] | null;
-
 export type ObjectConfig = { [attr: string]: any };
 
 export type RawGameElement =
@@ -9,8 +7,7 @@ export type RawGameElement =
   | Phaser.GameObjects.Text;
 
 export type RawGameShape =
-  | Phaser.GameObjects.Rectangle
-  | Phaser.GameObjects.Ellipse;
+  Phaser.GameObjects.Ellipse | Phaser.GameObjects.Rectangle;
 
 export type RawGameObject = RawGameElement | RawGameShape;
 
@@ -22,20 +19,43 @@ export type RawInputObject =
 
 export type GameObject = {
   type: string;
-  object: RawGameObject | RawInputObject | RawContainer | undefined;
-};
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export type __Params = {
-  game: GameParams;
+  object: RawContainer | RawGameObject | RawInputObject | undefined;
 };
 
 export type GameParams = {
-  scene: Phaser.Scene;
+  scene: Phaser.Scene | undefined;
   preloadImageMap: Map<string, string>;
   preloadSoundMap: Map<string, string>;
   preloadSpritesheetMap: Map<string, [string, object]>;
+  lifecycleFuncs: {
+    preload: () => void;
+    create: () => void;
+    update: () => void;
+  };
+  renderPreview: boolean;
   remotePath: (path: string) => string;
   screenSize: { x: number; y: number };
   createAward: (x: number, y: number, key: string) => Phaser.GameObjects.Sprite;
+};
+
+export const sourceAcademyAssets = 'https://source-academy-assets.s3-ap-southeast-1.amazonaws.com';
+
+// Scene needs to be set when available!
+export const defaultGameParams: GameParams = {
+  scene: undefined,
+  preloadImageMap: new Map<string, string>(),
+  preloadSoundMap: new Map<string, string>(),
+  preloadSpritesheetMap: new Map<string, [string, object]>(),
+  lifecycleFuncs: {
+    preload() {},
+    create() {},
+    update() {}
+  },
+  renderPreview: false,
+  remotePath: (path: string) => sourceAcademyAssets + (path[0] === '/' ? '' : '/') + path,
+  screenSize: {
+    x: 1920,
+    y: 1080
+  },
+  createAward: (x: number, y: number, key: string) => new Phaser.GameObjects.Sprite(defaultGameParams.scene!, x, y, key)
 };

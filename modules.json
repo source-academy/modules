@@ -1,4 +1,19 @@
 {
+  "painter": {
+    "tabs": [
+      "Painter"
+    ]
+  },
+  "unity_academy": {
+    "tabs": [
+      "UnityAcademy"
+    ]
+  },
+  "plotly": {
+    "tabs": [
+      "Plotly"
+    ]
+  },
   "repeat": {
     "tabs": [
       "Repeat"
@@ -50,10 +65,52 @@
       "Rune"
     ]
   },
+  "rune_in_words": {
+    "tabs": []
+  },
   "sound_matrix": {
     "tabs": [
       "SoundMatrix"
     ]
+  },
+  "csg": {
+    "tabs": [
+      "Csg"
+    ]
+  },
+  "repl": {
+    "tabs": [
+      "Repl"
+    ]
+  },
+  "remote_execution": {
+    "tabs": []
+  },
+  "wasm": {
+    "tabs": []
+  },
+  "arcade_2d": {
+    "tabs": [
+      "ArcadeTwod"
+    ]
+  },
+  "physics_2d": {
+    "tabs": [
+      "physics_2d"
+    ]
+  },
+  "robot_simulation": {
+    "tabs": [
+      "RobotSimulation"
+    ]
+  },
+  "ar": {
+    "tabs": [
+      "AugmentedReality"
+    ]
+  },
+  "communication": {
+    "tabs": []
   },
   "testing": {
     "tabs": [

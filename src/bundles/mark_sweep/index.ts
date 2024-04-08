@@ -1,4 +1,4 @@
-import { MemoryHeaps, Memory, Tag, COMMAND, CommandHeapObject } from './types';
+import { type MemoryHeaps, type Memory, type Tag, COMMAND, type CommandHeapObject } from './types';
 
 // Global Variables
 let ROW: number = 10;
@@ -40,7 +40,7 @@ function generateMemory(): void {
     desc: 'Memory initially empty.',
     leftDesc: '',
     rightDesc: '',
-    queue: [],
+    queue: []
   };
 
   commandHeap.push(obj);
@@ -121,7 +121,7 @@ function newCommand(
     desc: newDesc,
     leftDesc: newFirstDesc,
     rightDesc: newLastDesc,
-    queue: newQueue,
+    queue: newQueue
   };
 
   commandHeap.push(obj);
@@ -167,7 +167,7 @@ function addRoots(arr): void {
 }
 
 function showRoot(heap): void {
-  const desc = `All root nodes are marked`;
+  const desc = 'All root nodes are marked';
   newCommand(COMMAND.SHOW_MARKED, -1, -1, 0, 0, heap, desc, '', '');
 }
 
@@ -247,13 +247,13 @@ function newNew(left, heap): void {
 }
 
 function newGC(heap): void {
-  const desc = `Memory exhausted, start Mark and Sweep Algorithm`;
+  const desc = 'Memory exhausted, start Mark and Sweep Algorithm';
   newCommand(COMMAND.START, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
 }
 
 function endGC(heap): void {
-  const desc = `Result of free memory`;
+  const desc = 'Result of free memory';
   newCommand(COMMAND.END, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
 }
@@ -345,32 +345,30 @@ function init() {
     get_command,
     get_unmarked,
     get_marked,
-    get_roots,
+    get_roots
   };
 }
 
-export default function mark_sweep() {
-  return {
-    init,
-    // initialisation
-    initialize_memory,
-    initialize_tag,
-    generateMemory,
-    allHeap,
-    updateSlotSegment,
-    newCommand,
-    newMark,
-    newPush,
-    newPop,
-    newAssign,
-    newNew,
-    newGC,
-    newSweep,
-    updateRoots,
-    newUpdateSweep,
-    showRoots,
-    endGC,
-    addRoots,
-    showRoot,
-  };
-}
+export {
+  init,
+  // initialisation
+  initialize_memory,
+  initialize_tag,
+  generateMemory,
+  allHeap,
+  updateSlotSegment,
+  newCommand,
+  newMark,
+  newPush,
+  newPop,
+  newAssign,
+  newNew,
+  newGC,
+  newSweep,
+  updateRoots,
+  newUpdateSweep,
+  showRoots,
+  endGC,
+  addRoots,
+  showRoot
+};

@@ -1,0 +1,42 @@
+name: on-pull-request
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Verify all tests pass and build success
+    runs-on: ubuntu-latest
+    steps:
+        - name: Check out source code
+          uses: actions/checkout@v4
+          with:
+            submodules: recursive
+            
+        - name: Use Node.js 💻
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20
+            cache: yarn
+
+        - name: Install dependencies (apt)
+          run: |
+            sudo apt-get update && \
+            sudo apt-get install -y --no-install-recommends libxi-dev libgl1-mesa-dev
+
+        - name: Install dependencies
+          run: yarn install --frozen-lockfile
+
+        - name: Build bundles and tabs
+          run: yarn build --tsc --lint
+
+        - name: Test bundles and tabs
+          run: yarn test --color
+
+        - name: Test and lint scripts
+          run: yarn scripts:tsc && yarn scripts:lint && yarn scripts:test --color
+
+        - name: Check and Lint Devserver
+          run: yarn devserver:tsc && yarn devserver:lint
+        

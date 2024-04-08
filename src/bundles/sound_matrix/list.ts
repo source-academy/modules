@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention, no-else-return, prefer-template, no-param-reassign, no-plusplus, operator-assignment, no-lonely-if */
-/* prettier-ignore */
+/* eslint-disable no-else-return, no-lonely-if, operator-assignment, prefer-template */
+
 // list.js: Supporting lists in the Scheme style, using pairs made
 //          up of two-element JavaScript array (vector)
 
@@ -11,11 +11,11 @@
 
 // array test works differently for Rhino and
 // the Firefox environment (especially Web Console)
-export function array_test(x) : boolean {
+export function array_test(x): boolean {
   if (Array.isArray === undefined) {
-    return x instanceof Array
+    return x instanceof Array;
   } else {
-    return Array.isArray(x)
+    return Array.isArray(x);
   }
 }
 
@@ -142,9 +142,9 @@ export function map(f, xs) {
 export function build_list(n, fun) {
   if (typeof n !== 'number' || n < 0 || Math.floor(n) !== n) {
     throw new Error(
-      'build_list(n, fun) expects a positive integer as ' +
-        'argument n, but encountered ' +
-        n
+      'build_list(n, fun) expects a positive integer as '
+        + 'argument n, but encountered '
+        + n
     );
   }
 
@@ -296,14 +296,14 @@ export function filter(pred, xs) {
 export function enum_list(start, end) {
   if (typeof start !== 'number') {
     throw new Error(
-      'enum_list(start, end) expects a number as argument start, but encountered ' +
-        start
+      'enum_list(start, end) expects a number as argument start, but encountered '
+        + start
     );
   }
   if (typeof end !== 'number') {
     throw new Error(
-      'enum_list(start, end) expects a number as argument start, but encountered ' +
-        end
+      'enum_list(start, end) expects a number as argument start, but encountered '
+        + end
     );
   }
   if (start > end) {
@@ -317,8 +317,8 @@ export function enum_list(start, end) {
 export function list_ref(xs, n) {
   if (typeof n !== 'number' || n < 0 || Math.floor(n) !== n) {
     throw new Error(
-      'list_ref(xs, n) expects a positive integer as argument n, but encountered ' +
-        n
+      'list_ref(xs, n) expects a positive integer as argument n, but encountered '
+        + n
     );
   }
   for (; n > 0; --n) {

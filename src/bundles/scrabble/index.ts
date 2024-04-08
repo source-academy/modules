@@ -1,19 +1,10 @@
-/* eslint-disable max-classes-per-file */
-import {
-  scrabble_array,
-  scrabble_list,
-  charAt,
-  arrayLength,
-} from './functions';
-
 /**
  * Scrabble words for Source Academy
  * @author Martin Henz
  */
-
-export default () => ({
-  scrabble_array,
-  scrabble_list,
-  charAt,
-  arrayLength,
-});
+export {
+  scrabble_words,
+  scrabble_letters,
+  scrabble_words_tiny,
+  scrabble_letters_tiny
+} from './functions';

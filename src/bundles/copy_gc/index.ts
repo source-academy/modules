@@ -1,4 +1,4 @@
-import { MemoryHeaps, Memory, Tag, COMMAND, CommandHeapObject } from './types';
+import { COMMAND, type CommandHeapObject, type Memory, type MemoryHeaps, type Tag } from './types';
 
 // Global Variables
 let ROW: number = 10;
@@ -65,7 +65,7 @@ function generateMemory(): void {
     leftDesc: '',
     rightDesc: '',
     scan: -1,
-    free: -1,
+    free: -1
   };
 
   commandHeap.push(obj);
@@ -142,7 +142,7 @@ function newCommand(
     leftDesc: newFirstDesc,
     rightDesc: newLastDesc,
     scan: -1,
-    free: -1,
+    free: -1
   };
 
   commandHeap.push(obj);
@@ -264,7 +264,7 @@ function newPop(res, left, right, heap): void {
 function doneShowRoot(heap): void {
   const toSpace = 0;
   const fromSpace = 0;
-  const desc = `All root nodes are copied`;
+  const desc = 'All root nodes are copied';
   newCommand(
     'Copied Roots',
     toSpace,
@@ -380,7 +380,7 @@ function scanFlip(left, right, scan, free, heap): void {
     free: newFree,
     desc: newDesc,
     leftDesc: 'scan',
-    rightDesc: 'free',
+    rightDesc: 'free'
   };
 
   commandHeap.push(obj);
@@ -478,32 +478,30 @@ function init() {
     get_flips,
     get_slots,
     get_command,
-    get_roots,
+    get_roots
   };
 }
 
-export default function copy_gc() {
-  return {
-    init,
-    // initialisation
-    initialize_memory,
-    initialize_tag,
-    generateMemory,
-    allHeap,
-    updateSlotSegment,
-    resetFromSpace,
-    newCommand,
-    newCopy,
-    endFlip,
-    newPush,
-    newPop,
-    newAssign,
-    newNew,
-    scanFlip,
-    startFlip,
-    updateRoots,
-    resetRoots,
-    showRoots,
-    doneShowRoot,
-  };
-}
+export {
+  init,
+  // initialisation
+  initialize_memory,
+  initialize_tag,
+  generateMemory,
+  allHeap,
+  updateSlotSegment,
+  resetFromSpace,
+  newCommand,
+  newCopy,
+  endFlip,
+  newPush,
+  newPop,
+  newAssign,
+  newNew,
+  scanFlip,
+  startFlip,
+  updateRoots,
+  resetRoots,
+  showRoots,
+  doneShowRoot
+};

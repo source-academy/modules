@@ -1,113 +1,52 @@
-import React from 'react';
-import {
-  drawAnaglyph,
-  drawHollusion,
-  drawRune,
-} from '../../bundles/rune/runes_webgl';
-import { Rune } from '../../bundles/rune/types';
+import { type RuneModuleState, isHollusionRune } from '../../bundles/rune/functions';
+import { glAnimation } from '../../typings/anim_types';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
+import AnimationCanvas from '../common/AnimationCanvas';
+import MultiItemDisplay from '../common/MultItemDisplay';
+import WebGLCanvas from '../common/WebglCanvas';
+import HollusionCanvas from './hollusion_canvas';
 
-/**
- * tab for displaying runes
- * @author Hou Ruomu
- */
+export const RuneTab: ModuleTab = ({ context }) => {
+  const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
+  const runeCanvases = drawnRunes.map((rune, i) => {
+    const elemKey = i.toString();
 
-/**
- * React Component props for the Tab.
- * Provided by the template, nothing was changed.
- */
-type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
-};
-
-/**
- * React Component state for the Tab.
- */
-type State = {};
-
-/**
- * The main React Component of the Tab.
- */
-class WebGLCanvas extends React.Component<Props, State> {
-  private $canvas: HTMLCanvasElement | null = null;
-
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  /**
-   * This function is called when the tab is created.
-   * This is the entrypoint for the tab.
-   */
-  public componentDidMount() {
-    if (this.$canvas) {
-      const {
-        context: {
-          result: { value },
-        },
-      } = this.props;
-      if (value.drawMethod === 'anaglyph') {
-        drawAnaglyph(this.$canvas, value);
-      } else if (value.drawMethod === 'hollusion') {
-        drawHollusion(this.$canvas, value);
-      } else if (value.drawMethod === 'normal') {
-        drawRune(this.$canvas, value);
-      } else {
-        throw Error(`Unexpected Drawing Method ${value.drawMethod}`);
-      }
+    if (glAnimation.isAnimation(rune)) {
+      return (
+        <AnimationCanvas animation={rune} key={elemKey} />
+      );
     }
-  }
-
-  /**
-   * This function sets the layout of the React Component in HTML
-   * Notice the the Canvas hook in "ref" property.
-   * @returns HTMLComponent
-   */
-  public render() {
+    if (isHollusionRune(rune)) {
+      return (
+        <HollusionCanvas rune={rune} key={elemKey} />
+      );
+    }
     return (
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          paddingLeft: '20px',
-          paddingRight: '20px',
-          flexDirection: 'column',
-          justifyContent: 'center',
+      <WebGLCanvas
+        ref={(r) => {
+          if (r) {
+            rune.draw(r);
+          }
         }}
-      >
-        <canvas
-          id='runesCanvas'
-          ref={(r) => {
-            this.$canvas = r;
-          }}
-          width={512}
-          height={512}
-        />
-      </div>
+        key={elemKey}
+      />
     );
-  }
-}
+  });
+
+  return <MultiItemDisplay elements={runeCanvases} />;
+};
 
 export default {
   /**
    * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "<RUNE>".
+   * rendered. Currently spawns when there is at least one rune to be
+   * displayed
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: any) => {
-    function isValidFunction(value: any): value is Rune {
-      try {
-        return (
-          value.toReplString() === '<RENDERING>' && value.drawMethod !== ''
-        );
-      } catch (e) {
-        return false;
-      }
-    }
-    return isValidFunction(context.result.value);
+  toSpawn(context: DebuggerContext) {
+    const drawnRunes = context.context?.moduleContexts?.rune?.state?.drawnRunes;
+    return drawnRunes.length > 0;
   },
 
   /**
@@ -115,7 +54,9 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <WebGLCanvas context={context} />,
+  body(context: DebuggerContext) {
+    return <RuneTab context={context} />;
+  },
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
@@ -127,5 +68,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'group-objects',
+  iconName: 'group-objects'
 };

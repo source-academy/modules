@@ -7,23 +7,33 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
       
       - name: Use Node.js 💻
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: '14.x'
+          node-version: 20
+          cache: yarn
+      
+      - name: Install dependencies (apt)
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install -y --no-install-recommends libxi-dev libgl1-mesa-dev
       
       - name: Install Dependencies 📦
-        run: |
-          yarn --frozen-lockfile
+        run: yarn install --frozen-lockfile
           
       - name: Build Modules 🔧
-        run: |
-          yarn run build
+        run: yarn build --tsc --lint
+      
+      
+      - name: include java json
+        run: cp -r src/java build
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
