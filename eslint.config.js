@@ -63,6 +63,9 @@ export default [
         'always',
         { markers: todoTreeKeywordsAll }
       ],
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error'
     }
   },
   ...tseslint.configs.recommended,
