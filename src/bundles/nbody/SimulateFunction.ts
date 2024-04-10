@@ -1,4 +1,4 @@
-import { ExplicitEulerSim, RungeKutta4Sim, SemiImplicitEulerSim, VelocityVerletSim, LambdaSim, type Force, type State, Gravity } from 'nbody';
+import { ExplicitEulerSim, LambdaSim, RungeKutta4Sim, SemiImplicitEulerSim, VelocityVerletSim, type Force, type State } from 'nbody';
 
 /**
  * Create an explicit euler integrator to be used as the simulation function.

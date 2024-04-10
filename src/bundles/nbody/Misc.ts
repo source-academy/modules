@@ -1,4 +1,4 @@
-import type { CelestialBody, State, Universe, Vector3 } from "nbody";
+import type { CelestialBody, State, Universe, Vector3 } from 'nbody';
 
 /**
  * Deep clone an object.

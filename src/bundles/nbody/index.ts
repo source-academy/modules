@@ -63,15 +63,12 @@
  */
 
 export { createCelestialBody } from './CelestialBody';
-export { createForce, createCentripetalForce, createCombinedForce, createGravity } from './Force';
-export { createExplicitEulerSim, createRungeKutta4Sim, createSemiImplicitEulerSim, createVelocityVerletSim, createLambdaSim } from './SimulateFunction';
+export { createCentripetalForce, createCombinedForce, createForce, createGravity } from './Force';
+export { clone } from './Misc';
+export { createExplicitEulerSim, createLambdaSim, createRungeKutta4Sim, createSemiImplicitEulerSim, createVelocityVerletSim } from './SimulateFunction';
 export { createSimulation, playSim, recordSim } from './Simulation';
 export { createState, getBodies } from './State';
-export { createBodyCenterTransformation, createCoMTransformation, createLambdaTransformation, createRotateTransformation, createPinTransformation, createTimedRotateTransformation } from './Transformation';
+export { createBodyCenterTransformation, createCoMTransformation, createLambdaTransformation, createPinTransformation, createRotateTransformation, createTimedRotateTransformation } from './Transformation';
 export { createUniverse } from './Universe';
-export {
-  createVector, getX, getY, getZ, setX, setY, setZ, addVectors, subVectors, multiplyScalar
-} from './Vector';
-export { clone } from './Misc';
+export { addVectors, createVector, getX, getY, getZ, multiplyScalar, setX, setY, setZ, subVectors } from './Vector';
 
-// import { createCelestialBody, createForce, createCentripetalForce, createCombinedForce, createGravity, createExplicitEulerSim, createRungeKutta4Sim, createSemiImplicitEulerSim, createVelocityVerletSim, createLambdaSim, createSimulation, playSim, createState, getBodies, createBodyCenterTransformation, createCoMTransformation, createLambdaTransformation, createRotateTransformation, createUniverse, createVector, getX, getY, getZ, setX, setY, setZ, clone, addVectors, subVectors, multiplyScalar, createPinTransformation, createTimedRotateTransformation } from 'nbody';
