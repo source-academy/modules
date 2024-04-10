@@ -1,0 +1,509 @@
+{
+  "addVectors": {
+    "kind": "function",
+    "name": "addVectors",
+    "description": "<p>Add two vectors.</p>",
+    "params": [
+      [
+        "v1",
+        "Vector3"
+      ],
+      [
+        "v2",
+        "Vector3"
+      ]
+    ],
+    "retType": "Vector3"
+  },
+  "clone": {
+    "kind": "function",
+    "name": "clone",
+    "description": "<p>Deep clone an object.</p>",
+    "params": [
+      [
+        "obj",
+        "Vector3 | CelestialBody | State | Universe"
+      ]
+    ],
+    "retType": "CelestialBody | State | Universe | Vector3"
+  },
+  "createBodyCenterTransformation": {
+    "kind": "function",
+    "name": "createBodyCenterTransformation",
+    "description": "<p>Create a frame of reference transformation that moves the origin to the center of ith both.</p>",
+    "params": [
+      [
+        "i",
+        "number"
+      ]
+    ],
+    "retType": "BodyCenterTransformation"
+  },
+  "createCelestialBody": {
+    "kind": "function",
+    "name": "createCelestialBody",
+    "description": "<p>Create a new celestial body.</p>",
+    "params": [
+      [
+        "label",
+        "string"
+      ],
+      [
+        "mass",
+        "number"
+      ],
+      [
+        "radius",
+        "number"
+      ],
+      [
+        "position",
+        "Vector3"
+      ],
+      [
+        "velocity",
+        "Vector3"
+      ],
+      [
+        "acceleration",
+        "Vector3"
+      ]
+    ],
+    "retType": "CelestialBody"
+  },
+  "createCentripetalForce": {
+    "kind": "function",
+    "name": "createCentripetalForce",
+    "description": "<p>Create a centripetal force that pulls bodies towards a center.</p>",
+    "params": [
+      [
+        "center",
+        "Vector3"
+      ]
+    ],
+    "retType": "CentripetalForce"
+  },
+  "createCoMTransformation": {
+    "kind": "function",
+    "name": "createCoMTransformation",
+    "description": "<p>Create a frame of reference transformation that moves the origin to the center of mass of the system.</p>",
+    "params": [],
+    "retType": "CoMTransformation"
+  },
+  "createCombinedForce": {
+    "kind": "function",
+    "name": "createCombinedForce",
+    "description": "<p>Create a combined force that is an additive combination of all the given forces.</p>",
+    "params": [
+      [
+        "forces",
+        "Force[]"
+      ]
+    ],
+    "retType": "CombinedForce"
+  },
+  "createExplicitEulerSim": {
+    "kind": "function",
+    "name": "createExplicitEulerSim",
+    "description": "<p>Create an explicit euler integrator to be used as the simulation function.</p>",
+    "params": [
+      [
+        "force",
+        "Force"
+      ]
+    ],
+    "retType": "ExplicitEulerSim"
+  },
+  "createForce": {
+    "kind": "function",
+    "name": "createForce",
+    "description": "<p>Create a force that applies to all bodies using the provided higher order/lambda/arrow/anonymous function.</p>",
+    "params": [
+      [
+        "fn",
+        "Function"
+      ]
+    ],
+    "retType": "Force"
+  },
+  "createGravity": {
+    "kind": "function",
+    "name": "createGravity",
+    "description": "<p>Create a force that applies to all bodies.</p>",
+    "params": [
+      [
+        "G",
+        "number"
+      ]
+    ],
+    "retType": "Gravity"
+  },
+  "createLambdaSim": {
+    "kind": "function",
+    "name": "createLambdaSim",
+    "description": "<p>Create a simulate function (usually a numerical integrator) that is used to simulate the nbody system using the provided higher order/lambda/arrow/anonymous function.</p>",
+    "params": [
+      [
+        "fn",
+        "Function"
+      ]
+    ],
+    "retType": "LambdaSim"
+  },
+  "createLambdaTransformation": {
+    "kind": "function",
+    "name": "createLambdaTransformation",
+    "description": "<p>Create a frame of reference transformation using a higher order/lambda/arrow/anonymous function.</p>",
+    "params": [
+      [
+        "fn",
+        "Function"
+      ]
+    ],
+    "retType": "LambdaTransformation"
+  },
+  "createPinTransformation": {
+    "kind": "function",
+    "name": "createPinTransformation",
+    "description": "<p>Create a frame of reference transformation that pins the ith body to a specific axis.</p>",
+    "params": [
+      [
+        "axis",
+        "Vector3"
+      ],
+      [
+        "i",
+        "number"
+      ]
+    ],
+    "retType": "PinTransformation"
+  },
+  "createRotateTransformation": {
+    "kind": "function",
+    "name": "createRotateTransformation",
+    "description": "<p>Create a frame of reference transformation that rotates the system around an axis by an angle.</p>",
+    "params": [
+      [
+        "axis",
+        "Vector3"
+      ],
+      [
+        "angle",
+        "number"
+      ]
+    ],
+    "retType": "RotateTransformation"
+  },
+  "createRungeKutta4Sim": {
+    "kind": "function",
+    "name": "createRungeKutta4Sim",
+    "description": "<p>Create a numerical integrator that uses the Runge-Kutta 4 method to simulate the nbody system.</p>",
+    "params": [
+      [
+        "force",
+        "Force"
+      ],
+      [
+        "weights",
+        "number[]"
+      ]
+    ],
+    "retType": "RungeKutta4Sim"
+  },
+  "createSemiImplicitEulerSim": {
+    "kind": "function",
+    "name": "createSemiImplicitEulerSim",
+    "description": "<p>Create a numerical integrator that uses the semi-implicit Euler method to simulate the nbody system.</p>",
+    "params": [
+      [
+        "force",
+        "Force"
+      ]
+    ],
+    "retType": "SemiImplicitEulerSim"
+  },
+  "createSimulation": {
+    "kind": "function",
+    "name": "createSimulation",
+    "description": "<p>Create a new simulation.</p>",
+    "params": [
+      [
+        "universes",
+        "Universe[]"
+      ],
+      [
+        "visType",
+        "VisType"
+      ],
+      [
+        "record",
+        "boolean"
+      ],
+      [
+        "looped",
+        "boolean"
+      ],
+      [
+        "showTrails",
+        "boolean"
+      ],
+      [
+        "maxTrailLength",
+        "number"
+      ]
+    ],
+    "retType": "Simulation"
+  },
+  "createState": {
+    "kind": "function",
+    "name": "createState",
+    "description": "<p>Create a new state snapshot of the universe.</p>",
+    "params": [
+      [
+        "bodies",
+        "CelestialBody[]"
+      ]
+    ],
+    "retType": "State"
+  },
+  "createTimedRotateTransformation": {
+    "kind": "function",
+    "name": "createTimedRotateTransformation",
+    "description": "<p>Create a frame of reference transformation that rotates the system by 360 deg around an axis over a period of time.</p>",
+    "params": [
+      [
+        "axis",
+        "Vector3"
+      ],
+      [
+        "revolutionTime",
+        "number"
+      ]
+    ],
+    "retType": "TimedRotateTransformation"
+  },
+  "createUniverse": {
+    "kind": "function",
+    "name": "createUniverse",
+    "description": "<p>Create a new universe.</p>",
+    "params": [
+      [
+        "label",
+        "string"
+      ],
+      [
+        "color",
+        "string | string[]"
+      ],
+      [
+        "prevState",
+        "undefined | State"
+      ],
+      [
+        "currState",
+        "State"
+      ],
+      [
+        "simFunc",
+        "SimulateFunction"
+      ],
+      [
+        "transformations",
+        "Transformation[]"
+      ]
+    ],
+    "retType": "Universe"
+  },
+  "createVector": {
+    "kind": "function",
+    "name": "createVector",
+    "description": "<p>Create a new 3D vector.</p>",
+    "params": [
+      [
+        "x",
+        "number"
+      ],
+      [
+        "y",
+        "number"
+      ],
+      [
+        "z",
+        "number"
+      ]
+    ],
+    "retType": "Vector3"
+  },
+  "createVelocityVerletSim": {
+    "kind": "function",
+    "name": "createVelocityVerletSim",
+    "description": "<p>Create a numerical integrator that uses the velocity Verlet method to simulate the nbody system.</p>",
+    "params": [
+      [
+        "force",
+        "Force"
+      ]
+    ],
+    "retType": "VelocityVerletSim"
+  },
+  "getBodies": {
+    "kind": "function",
+    "name": "getBodies",
+    "description": "<p>Get the bodies in a state.</p>",
+    "params": [
+      [
+        "state",
+        "State"
+      ]
+    ],
+    "retType": "CelestialBody[]"
+  },
+  "getX": {
+    "kind": "function",
+    "name": "getX",
+    "description": "<p>Get the x component of a vector.</p>",
+    "params": [
+      [
+        "v",
+        "Vector3"
+      ]
+    ],
+    "retType": "number"
+  },
+  "getY": {
+    "kind": "function",
+    "name": "getY",
+    "description": "<p>Get the y component of a vector.</p>",
+    "params": [
+      [
+        "v",
+        "Vector3"
+      ]
+    ],
+    "retType": "number"
+  },
+  "getZ": {
+    "kind": "function",
+    "name": "getZ",
+    "description": "<p>Get the z component of a vector.</p>",
+    "params": [
+      [
+        "v",
+        "Vector3"
+      ]
+    ],
+    "retType": "number"
+  },
+  "multiplyScalar": {
+    "kind": "function",
+    "name": "multiplyScalar",
+    "description": "<p>Multiply a vector by a scalar.</p>",
+    "params": [
+      [
+        "v",
+        "Vector3"
+      ],
+      [
+        "s",
+        "number"
+      ]
+    ],
+    "retType": "Vector3"
+  },
+  "playSim": {
+    "kind": "function",
+    "name": "playSim",
+    "description": "<p>Play a simulation.</p>",
+    "params": [
+      [
+        "sim",
+        "Simulation"
+      ]
+    ],
+    "retType": "void"
+  },
+  "recordSim": {
+    "kind": "function",
+    "name": "recordSim",
+    "description": "<p>Record and play a simulation.</p>",
+    "params": [
+      [
+        "sim",
+        "Simulation"
+      ],
+      [
+        "recordFor",
+        "number"
+      ],
+      [
+        "recordSpeed",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setX": {
+    "kind": "function",
+    "name": "setX",
+    "description": "<p>Set the x component of a vector.</p>",
+    "params": [
+      [
+        "v",
+        "Vector3"
+      ],
+      [
+        "x",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setY": {
+    "kind": "function",
+    "name": "setY",
+    "description": "<p>Set the y component of a vector.</p>",
+    "params": [
+      [
+        "v",
+        "Vector3"
+      ],
+      [
+        "y",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setZ": {
+    "kind": "function",
+    "name": "setZ",
+    "description": "<p>Set the z component of a vector.</p>",
+    "params": [
+      [
+        "v",
+        "Vector3"
+      ],
+      [
+        "z",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "subVectors": {
+    "kind": "function",
+    "name": "subVectors",
+    "description": "<p>Subtract two vectors.</p>",
+    "params": [
+      [
+        "v1",
+        "Vector3"
+      ],
+      [
+        "v2",
+        "Vector3"
+      ]
+    ],
+    "retType": "Vector3"
+  }
+}
