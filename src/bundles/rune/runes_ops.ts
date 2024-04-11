@@ -338,8 +338,7 @@ export const colorPalette = [
 ];
 
 export function hexToColor(hex: string): number[] {
-  const result =
-    /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(hex);
+  const result = /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(hex);
   if (result === null || result.length < 4) {
     return [0, 0, 0];
   }

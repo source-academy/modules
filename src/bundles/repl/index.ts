@@ -38,9 +38,9 @@
  */
 
 export {
-  default_js_slang,
+  set_evaluator,
   repl_display,
   set_background_image,
-  set_evaluator,
-  set_font_size
+  set_font_size,
+  default_js_slang
 } from './functions';

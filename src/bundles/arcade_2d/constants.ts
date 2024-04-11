@@ -1,10 +1,6 @@
 // This file contains the default values of the game canvas and GameObjects.
 
-import {
-  type InteractableProps,
-  type RenderProps,
-  type TransformProps
-} from './types';
+import { type InteractableProps, type RenderProps, type TransformProps } from './types';
 
 // Default values of game
 export const DEFAULT_WIDTH: number = 600;
@@ -47,5 +43,4 @@ export const DEFAULT_INTERACTABLE_PROPS: InteractableProps = {
 };
 
 // Default values of Phaser scene
-export const DEFAULT_PATH_PREFIX: string =
-  'https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/';
+export const DEFAULT_PATH_PREFIX: string = 'https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/';

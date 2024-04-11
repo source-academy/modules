@@ -9,10 +9,7 @@
 export class AudioClip {
   private static audioClipCount: number = 0;
   // Stores AudioClip index with the URL as a unique key.
-  private static audioClipsIndexMap: Map<string, number> = new Map<
-    string,
-    number
-  >();
+  private static audioClipsIndexMap: Map<string, number> = new Map<string, number>();
   // Stores all the created AudioClips
   private static audioClipsArray: Array<AudioClip> = [];
   public readonly id: number;
@@ -36,9 +33,7 @@ export class AudioClip {
       throw new Error('AudioClip URL cannot be empty');
     }
     if (AudioClip.audioClipsIndexMap.has(url)) {
-      return AudioClip.audioClipsArray[
-        AudioClip.audioClipsIndexMap.get(url) as number
-      ];
+      return AudioClip.audioClipsArray[AudioClip.audioClipsIndexMap.get(url) as number];
     }
     return new AudioClip(url, volumeLevel);
   }

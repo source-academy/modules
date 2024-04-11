@@ -8,8 +8,8 @@
 export {
   // Constructor/Accessors/Typecheck
   ToneMatrix,
-  clear_all_timeout,
-  clear_matrix,
   get_matrix,
-  set_timeout
+  clear_matrix,
+  set_timeout,
+  clear_all_timeout
 } from './functions';

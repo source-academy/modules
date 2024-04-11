@@ -26,7 +26,7 @@ enum MousePointer {
   FORWARD = 4,
 
   NONE = -1,
-  OTHER = 7050
+  OTHER = 7050,
 }
 
 /* [Exports] */
@@ -91,8 +91,8 @@ export default class InputTracker {
 
   private isPointerPan(isShiftKey: boolean): boolean {
     return (
-      this.heldPointer === MousePointer.MIDDLE ||
-      (this.heldPointer === MousePointer.LEFT && isShiftKey)
+      this.heldPointer === MousePointer.MIDDLE
+      || (this.heldPointer === MousePointer.LEFT && isShiftKey)
     );
   }
 
@@ -108,9 +108,7 @@ export default class InputTracker {
     const canvasBounds: DOMRect = this.canvas.getBoundingClientRect();
     const { devicePixelRatio } = window;
     const newWidth: number = Math.floor(canvasBounds.width * devicePixelRatio);
-    const newHeight: number = Math.floor(
-      canvasBounds.height * devicePixelRatio
-    );
+    const newHeight: number = Math.floor(canvasBounds.height * devicePixelRatio);
 
     if (oldWidth === newWidth && oldHeight === newHeight) return;
     this.frameDirty = true;
@@ -139,13 +137,13 @@ export default class InputTracker {
 
       const scaledChange: number = currentTick * ZOOM_TICK_SCALE;
       const potentialNewScale: number = this.controlsState.scale + scaledChange;
-      const potentialNewDistance: number =
-        vec3.distance(this.cameraState.position, this.cameraState.target) *
-        potentialNewScale;
+      const potentialNewDistance: number
+        = vec3.distance(this.cameraState.position, this.cameraState.target)
+        * potentialNewScale;
 
       if (
-        potentialNewDistance > this.controlsState.limits.minDistance &&
-        potentialNewDistance < this.controlsState.limits.maxDistance
+        potentialNewDistance > this.controlsState.limits.minDistance
+        && potentialNewDistance < this.controlsState.limits.maxDistance
       ) {
         this.frameDirty = true;
         this.controlsState.scale = potentialNewScale;

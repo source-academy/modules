@@ -71,53 +71,58 @@ Core.initialize(moduleState);
 export {
   // Colors
   black,
-  blue,
-  bounding_box,
-  cone,
+  navy,
+  green,
+  teal,
   crimson,
-  cube,
+  purple,
+  orange,
+  silver,
+  gray,
+  blue,
+  lime,
   cyan,
-  cylinder,
-  download_shape_stl,
+  rose,
+  pink,
+  yellow,
+  white,
+
   // Primitives
   empty_shape,
-  geodesic_sphere,
-  gray,
-  green,
-  // Utilities
-  group,
-  intersect,
-  is_group,
-  is_shape,
-  lime,
-  navy,
-  orange,
-  pink,
-  prism,
-  purple,
-  pyramid,
-  // Rendering
-  render,
-  render_axes,
-  render_grid,
-  render_grid_axes,
-  rgb,
-  rose,
-  rotate,
+  cube,
   rounded_cube,
+  cylinder,
   rounded_cylinder,
-  scale,
-  silver,
   sphere,
+  geodesic_sphere,
+  pyramid,
+  cone,
+  prism,
   star,
-  subtract,
-  teal,
   torus,
-  // Transformations
-  translate,
-  ungroup,
+
   // Operations
   union,
-  white,
-  yellow
+  subtract,
+  intersect,
+
+  // Transformations
+  translate,
+  rotate,
+  scale,
+
+  // Utilities
+  group,
+  ungroup,
+  is_shape,
+  is_group,
+  bounding_box,
+  rgb,
+  download_shape_stl,
+
+  // Rendering
+  render,
+  render_grid,
+  render_axes,
+  render_grid_axes
 } from './functions';

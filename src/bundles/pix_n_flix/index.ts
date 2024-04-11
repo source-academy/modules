@@ -23,26 +23,26 @@
  */
 
 export {
-  alpha_of,
+  start,
+  red_of,
   blue_of,
-  compose_filter,
-  copy_image,
-  get_video_time,
   green_of,
+  alpha_of,
+  set_rgba,
   image_height,
   image_width,
+  copy_image,
   install_filter,
-  keep_aspect_ratio,
-  pause_at,
-  red_of,
   reset_filter,
+  compose_filter,
+  pause_at,
   set_dimensions,
   set_fps,
-  set_loop_count,
-  set_rgba,
   set_volume,
-  start,
-  use_image_url,
   use_local_file,
-  use_video_url
+  use_image_url,
+  use_video_url,
+  get_video_time,
+  keep_aspect_ratio,
+  set_loop_count
 } from './functions';

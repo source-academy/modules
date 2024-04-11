@@ -1,4 +1,4 @@
-import { repeat, thrice, twice } from '../functions';
+import { repeat, twice, thrice } from '../functions';
 
 // Test functions
 test('repeat works correctly and repeats function n times', () => {

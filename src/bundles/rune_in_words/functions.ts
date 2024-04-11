@@ -1,16 +1,16 @@
 import type { Rune } from './rune';
 import {
-  getBlank,
-  getCircle,
-  getCorner,
-  getHeart,
-  getNova,
-  getPentagram,
-  getRcross,
-  getRibbon,
-  getSail,
   getSquare,
+  getBlank,
+  getRcross,
+  getSail,
   getTriangle,
+  getCorner,
+  getNova,
+  getCircle,
+  getHeart,
+  getPentagram,
+  getRibbon,
   throwIfNotRune
 } from './runes_ops';
 
@@ -277,11 +277,7 @@ export function turn_upside_down(rune: string): string {
  *
  * @category Main
  */
-export function beside_frac(
-  frac: number,
-  rune1: string,
-  rune2: string
-): string {
+export function beside_frac(frac: number, rune1: string, rune2: string): string {
   throwIfNotRune(beside_frac.name, rune1, rune2);
 
   return `beside_frac(${frac}, ${rune1}, ${rune2})`;
@@ -382,11 +378,7 @@ export function repeat_pattern(
  *
  * @category Main
  */
-export function overlay_frac(
-  frac: number,
-  rune1: string,
-  rune2: string
-): string {
+export function overlay_frac(frac: number, rune1: string, rune2: string): string {
   throwIfNotRune(overlay_frac.name, rune1);
   throwIfNotRune(overlay_frac.name, rune2);
   return `overlay_frac(${frac}, ${rune1}, ${rune2})`;

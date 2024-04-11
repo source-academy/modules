@@ -1,11 +1,7 @@
 /* [Import] */
 import type { RGB, RGBA } from '@jscad/modeling/src/colors/types';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
-import {
-  controls,
-  type cameras,
-  type drawCommands
-} from '@jscad/regl-renderer';
+import { type cameras, type drawCommands, controls } from '@jscad/regl-renderer';
 import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 
 /* [Main] */

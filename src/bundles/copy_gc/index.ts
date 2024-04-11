@@ -1,10 +1,4 @@
-import {
-  COMMAND,
-  type CommandHeapObject,
-  type Memory,
-  type MemoryHeaps,
-  type Tag
-} from './types';
+import { COMMAND, type CommandHeapObject, type Memory, type MemoryHeaps, type Tag } from './types';
 
 // Global Variables
 let ROW: number = 10;
@@ -489,25 +483,25 @@ function init() {
 }
 
 export {
-  allHeap,
-  doneShowRoot,
-  endFlip,
-  generateMemory,
   init,
   // initialisation
   initialize_memory,
   initialize_tag,
-  newAssign,
+  generateMemory,
+  allHeap,
+  updateSlotSegment,
+  resetFromSpace,
   newCommand,
   newCopy,
-  newNew,
-  newPop,
+  endFlip,
   newPush,
-  resetFromSpace,
-  resetRoots,
+  newPop,
+  newAssign,
+  newNew,
   scanFlip,
-  showRoots,
   startFlip,
   updateRoots,
-  updateSlotSegment
+  resetRoots,
+  showRoots,
+  doneShowRoot
 };

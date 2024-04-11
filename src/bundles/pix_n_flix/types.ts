@@ -12,7 +12,7 @@ export enum InputFeed {
   Camera,
   ImageURL,
   VideoURL,
-  Local
+  Local,
 }
 
 export type BundlePacket = {

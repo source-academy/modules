@@ -13,47 +13,47 @@
  * @author Samyukta Sounderraman
  */
 export {
-  adsr,
-  // Instruments
-  bell,
-  cello,
-  // Composition and Envelopes
-  consecutively,
-  get_duration,
-  get_left_wave,
-  get_right_wave,
-  // Recording
-  init_record,
-  is_sound,
-  letter_name_to_frequency,
-  // MIDI
-  letter_name_to_midi_note,
-  make_sound,
   // Constructor/Accessors/Typecheck
   make_stereo_sound,
-  midi_note_to_frequency,
-  // Basic waveforms
-  noise_sound,
+  make_sound,
+  get_left_wave,
+  get_right_wave,
+  get_duration,
+  is_sound,
+  squash,
   pan,
   pan_mod,
-  phase_mod,
-  piano,
-  play,
   // Play-related
   play_in_tab,
   play_wave,
   play_waves,
+  play,
+  stop,
+  // Recording
+  init_record,
   record,
   record_for,
-  sawtooth_sound,
-  silence_sound,
+  // Composition and Envelopes
+  consecutively,
   simultaneously,
-  sine_sound,
-  square_sound,
-  squash,
+  phase_mod,
+  adsr,
   stacking_adsr,
-  stop,
+  // Basic waveforms
+  noise_sound,
+  silence_sound,
+  sine_sound,
+  sawtooth_sound,
   triangle_sound,
+  square_sound,
+  // MIDI
+  letter_name_to_midi_note,
+  midi_note_to_frequency,
+  letter_name_to_frequency,
+  // Instruments
+  bell,
+  cello,
+  piano,
   trombone,
   violin
 } from './functions';

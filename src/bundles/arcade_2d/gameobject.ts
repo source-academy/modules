@@ -2,11 +2,7 @@
  * This file contains the bundle's representation of GameObjects.
  */
 import type { ReplResult } from '../../typings/type_helpers';
-import {
-  DEFAULT_INTERACTABLE_PROPS,
-  DEFAULT_RENDER_PROPS,
-  DEFAULT_TRANSFORM_PROPS
-} from './constants';
+import { DEFAULT_INTERACTABLE_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_TRANSFORM_PROPS } from './constants';
 import type * as types from './types';
 
 // =============================================================================
@@ -55,9 +51,7 @@ export abstract class GameObject implements Transformable, ReplResult {
 /**
  * Encapsulates the basic data-representation of a RenderableGameObject.
  */
-export abstract class RenderableGameObject
-  extends GameObject
-  implements Renderable {
+export abstract class RenderableGameObject extends GameObject implements Renderable {
   protected isRenderUpdated: boolean = false;
   private shouldBringToTop: boolean = false;
 
@@ -109,9 +103,7 @@ export abstract class RenderableGameObject
 /**
  * Encapsulates the basic data-representation of a InteractableGameObject.
  */
-export abstract class InteractableGameObject
-  extends RenderableGameObject
-  implements Interactable {
+export abstract class InteractableGameObject extends RenderableGameObject implements Interactable {
   protected isHitboxUpdated: boolean = false;
   protected phaserGameObject: types.PhaserGameObject | undefined;
 
@@ -140,12 +132,7 @@ export abstract class InteractableGameObject
    * This stores the GameObject within the phaser game, which can only be set after the game has started.
    * @param phaserGameObject The phaser GameObject reference.
    */
-  setPhaserGameObject(
-    phaserGameObject:
-      | Phaser.GameObjects.Shape
-      | Phaser.GameObjects.Sprite
-      | Phaser.GameObjects.Text
-  ) {
+  setPhaserGameObject(phaserGameObject: Phaser.GameObjects.Shape | Phaser.GameObjects.Sprite | Phaser.GameObjects.Text) {
     this.phaserGameObject = phaserGameObject;
   }
   /**
@@ -155,19 +142,13 @@ export abstract class InteractableGameObject
    * @returns True, if both GameObjects overlap in the phaser game.
    */
   isOverlapping(other: InteractableGameObject): boolean {
-    if (
-      this.phaserGameObject === undefined ||
-      other.phaserGameObject === undefined
-    ) {
+    if (this.phaserGameObject === undefined || other.phaserGameObject === undefined) {
       return false;
     }
     // Use getBounds to check if two objects overlap, checking the shape of the area before checking overlap.
     // Since getBounds() returns a Rectangle, it will be unable to check the actual intersection of non-rectangular shapes.
     // eslint-disable-next-line new-cap
-    return Phaser.Geom.Intersects.RectangleToRectangle(
-      this.phaserGameObject.getBounds(),
-      other.phaserGameObject.getBounds()
-    );
+    return Phaser.Geom.Intersects.RectangleToRectangle(this.phaserGameObject.getBounds(), other.phaserGameObject.getBounds());
   }
 }
 

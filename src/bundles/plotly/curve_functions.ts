@@ -1,5 +1,5 @@
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import { CurvePlot, type Curve, type Point } from './plotly';
+import { type Curve, CurvePlot, type Point } from './plotly';
 
 export function x_of(pt: Point): number {
   return pt.x;

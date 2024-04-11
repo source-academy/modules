@@ -45,9 +45,9 @@ export {
   noise_sound,
   phase_mod,
   piano,
-  play,
   // Play-related
   play_in_tab,
+  play,
   play_wave,
   record,
   record_for,

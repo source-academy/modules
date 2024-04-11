@@ -13,18 +13,18 @@ export {
   STATE_CONNECTED,
   STATE_DISCONNECTED,
   STATE_OFFLINE,
-  STATE_RECONNECTING
+  STATE_RECONNECTING,
 } from './MqttController';
 
 export {
-  callFunction,
-  expose,
-  getGlobalState,
-  getUserId,
   initCommunications,
   initGlobalState,
+  getGlobalState,
+  updateGlobalState,
   initRpc,
+  getUserId,
+  expose,
+  callFunction,
   keepRunning,
   stopRunning,
-  updateGlobalState
 } from './Communications';
