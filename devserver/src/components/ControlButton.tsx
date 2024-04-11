@@ -1,10 +1,4 @@
-import {
-  AnchorButton,
-  Button,
-  Icon,
-  Intent,
-  type IconName
-} from '@blueprintjs/core';
+import { AnchorButton, Button, Icon, type IconName, Intent } from '@blueprintjs/core';
 import React from 'react';
 
 type ButtonOptions = {
@@ -44,9 +38,7 @@ const ControlButton: React.FC<ControlButtonProps> = ({
     ...defaultOptions,
     ...options
   };
-  const iconElement = icon && (
-    <Icon icon={icon} color={buttonOptions.iconColor} />
-  );
+  const iconElement = icon && <Icon icon={icon} color={buttonOptions.iconColor} />;
   // Refer to #2417 and #2422 for why we conditionally
   // set the button component. See also:
   // https://blueprintjs.com/docs/#core/components/button

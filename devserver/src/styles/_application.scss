@@ -6,7 +6,7 @@
  */
 html {
   background-size: cover;
-  background-image: url("#{$images-path}/academy_background.jpg");
+  background-image: url('#{$images-path}/academy_background.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   ::-webkit-scrollbar {
