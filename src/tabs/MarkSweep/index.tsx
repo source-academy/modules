@@ -1,4 +1,4 @@
-import { Icon, Slider } from '@blueprintjs/core';
+import { Slider, Icon } from '@blueprintjs/core';
 import React from 'react';
 import { ThemeColor } from './style';
 
@@ -57,9 +57,9 @@ class MarkSweep extends React.Component<Props, State> {
   componentDidMount() {
     const { debuggerContext } = this.props;
     if (
-      debuggerContext &&
-      debuggerContext.result &&
-      debuggerContext.result.value
+      debuggerContext
+      && debuggerContext.result
+      && debuggerContext.result.value
     ) {
       this.initialize_state();
     }
@@ -178,8 +178,8 @@ class MarkSweep extends React.Component<Props, State> {
 
   private getlengthFunction = () => {
     const { debuggerContext } = this.props;
-    const commandHeap =
-      debuggerContext && debuggerContext.result.value
+    const commandHeap
+      = debuggerContext && debuggerContext.result.value
         ? debuggerContext.result.value.get_command()
         : [];
     return commandHeap.length;
@@ -335,9 +335,9 @@ class MarkSweep extends React.Component<Props, State> {
                       }}
                     >
                       <span style={{ width: 30 }}> {row * state.column} </span>
-                      {item &&
-                        item.length > 0 &&
-                        item.map(content => {
+                      {item
+                        && item.length > 0
+                        && item.map(content => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (

@@ -1,4 +1,4 @@
-import { Icon, Slider } from '@blueprintjs/core';
+import { Slider, Icon } from '@blueprintjs/core';
 import React from 'react';
 import { COMMAND } from '../../bundles/copy_gc/types';
 import { ThemeColor } from './style';
@@ -57,9 +57,9 @@ class CopyGC extends React.Component<Props, State> {
   componentDidMount() {
     const { debuggerContext } = this.props;
     if (
-      debuggerContext &&
-      debuggerContext.result &&
-      debuggerContext.result.value
+      debuggerContext
+      && debuggerContext.result
+      && debuggerContext.result.value
     ) {
       this.initialize_state();
     }
@@ -329,9 +329,9 @@ class CopyGC extends React.Component<Props, State> {
                       }}
                     >
                       <span style={{ width: 30 }}> {row * state.column} </span>
-                      {item &&
-                        item.length > 0 &&
-                        item.map(content => {
+                      {item
+                        && item.length > 0
+                        && item.map(content => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (
@@ -358,9 +358,9 @@ class CopyGC extends React.Component<Props, State> {
             <div>
               <h3>{state.toSpace > 0 ? 'To Space' : 'From Space'}</h3>
               <div>
-                {fromMemoryMatrix &&
-                  fromMemoryMatrix.length > 0 &&
-                  fromMemoryMatrix.map((item, row) => (
+                {fromMemoryMatrix
+                  && fromMemoryMatrix.length > 0
+                  && fromMemoryMatrix.map((item, row) => (
                     <div
                       style={{
                         display: 'flex',

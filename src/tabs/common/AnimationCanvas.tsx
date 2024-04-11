@@ -6,11 +6,7 @@ import AutoLoopSwitch from './AutoLoopSwitch';
 import ButtonComponent from './ButtonComponent';
 import PlayButton from './PlayButton';
 import WebGLCanvas from './WebglCanvas';
-import {
-  BP_TAB_BUTTON_MARGIN,
-  BP_TEXT_MARGIN,
-  CANVAS_MAX_WIDTH
-} from './css_constants';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
 
 type AnimCanvasProps = {
   animation: glAnimation;
@@ -108,23 +104,21 @@ export default class AnimationCanvas extends React.Component<
     this.reqframeId = requestAnimationFrame(this.animationCallback);
   };
 
-  private startAnimation = () =>
-    this.setState(
-      {
-        isPlaying: true
-      },
-      this.reqFrame
-    );
+  private startAnimation = () => this.setState(
+    {
+      isPlaying: true
+    },
+    this.reqFrame
+  );
 
-  private stopAnimation = () =>
-    this.setState(
-      {
-        isPlaying: false
-      },
-      () => {
-        this.callbackTimestamp = null;
-      }
-    );
+  private stopAnimation = () => this.setState(
+    {
+      isPlaying: false
+    },
+    () => {
+      this.callbackTimestamp = null;
+    }
+  );
 
   /**
    * Callback to use with `requestAnimationFrame`

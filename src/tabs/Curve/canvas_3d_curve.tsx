@@ -4,11 +4,7 @@ import type { CurveDrawn } from '../../bundles/curve/curves_webgl';
 import { degreesToRadians } from '../../common/utilities';
 import PlayButton from '../common/PlayButton';
 import WebGLCanvas from '../common/WebglCanvas';
-import {
-  BP_TAB_BUTTON_MARGIN,
-  BP_TEXT_MARGIN,
-  CANVAS_MAX_WIDTH
-} from '../common/css_constants';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
 
 type State = {
   /**

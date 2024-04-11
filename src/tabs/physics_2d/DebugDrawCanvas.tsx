@@ -82,8 +82,8 @@ export default class DebugDrawCanvas extends React.Component<
   private drawFrame = () => {
     if (this.canvas) {
       if (!this.debugDraw) {
-        const ctx: CanvasRenderingContext2D | null =
-          this.canvas.getContext('2d');
+        const ctx: CanvasRenderingContext2D | null
+          = this.canvas.getContext('2d');
         if (ctx) {
           this.debugDraw = new DebugDraw(ctx);
         }
@@ -99,23 +99,21 @@ export default class DebugDrawCanvas extends React.Component<
 
   private reqFrame = () => requestAnimationFrame(this.animationCallback);
 
-  private startAnimation = () =>
-    this.setState(
-      {
-        isPlaying: true
-      },
-      this.reqFrame
-    );
+  private startAnimation = () => this.setState(
+    {
+      isPlaying: true
+    },
+    this.reqFrame
+  );
 
-  private stopAnimation = () =>
-    this.setState(
-      {
-        isPlaying: false
-      },
-      () => {
-        this.callbackTimestamp = null;
-      }
-    );
+  private stopAnimation = () => this.setState(
+    {
+      isPlaying: false
+    },
+    () => {
+      this.callbackTimestamp = null;
+    }
+  );
 
   /**
    * Callback to use with `requestAnimationFrame`
