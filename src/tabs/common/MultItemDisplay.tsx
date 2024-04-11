@@ -15,10 +15,8 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
   const [stepEditorValue, setStepEditorValue] = React.useState('1');
   const [stepEditorFocused, setStepEditorFocused] = React.useState(false);
 
-  const resetStepEditor = () =>
-    setStepEditorValue((currentStep + 1).toString());
-  const elementsDigitCount =
-    Math.floor(Math.log10(Math.max(1, elements.length))) + 1;
+  const resetStepEditor = () => setStepEditorValue((currentStep + 1).toString());
+  const elementsDigitCount = Math.floor(Math.log10(Math.max(1, elements.length))) + 1;
 
   return (
     <div
@@ -66,17 +64,9 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
           >
             Call&nbsp;
             {/* When the text box is focused, it shows a little up and down bar, which needs a little bit
-             * more space to be shown
-             */}
-            <div
-              style={{
-                width: `${
-                  stepEditorFocused
-                    ? elementsDigitCount + 2
-                    : elementsDigitCount
-                }ch`
-              }}
-            >
+              * more space to be shown
+              */}
+            <div style={{ width: `${stepEditorFocused ? elementsDigitCount + 2 : elementsDigitCount}ch` }}>
               <EditableText
                 value={stepEditorValue}
                 disabled={elements.length === 1}

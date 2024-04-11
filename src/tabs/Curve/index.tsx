@@ -1,10 +1,6 @@
 import type { CurveModuleState } from '../../bundles/curve/types';
 import { glAnimation } from '../../typings/anim_types';
-import {
-  getModuleState,
-  type DebuggerContext,
-  type ModuleTab
-} from '../../typings/type_helpers';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
 import AnimationCanvas from '../common/AnimationCanvas';
 import MultiItemDisplay from '../common/MultItemDisplay';
 import WebGLCanvas from '../common/WebglCanvas';
@@ -43,8 +39,7 @@ export const CurveTab: ModuleTab = ({ context }) => {
 
 export default {
   toSpawn(context: DebuggerContext) {
-    const drawnCurves =
-      context.context?.moduleContexts?.curve?.state?.drawnCurves;
+    const drawnCurves = context.context?.moduleContexts?.curve?.state?.drawnCurves;
     return drawnCurves.length > 0;
   },
   body(context: DebuggerContext) {

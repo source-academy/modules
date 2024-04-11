@@ -31,15 +31,7 @@ class Plotly extends React.Component<Props, State> {
   };
 
   public render() {
-    const {
-      context: {
-        moduleContexts: {
-          plotly: {
-            state: { drawnPlots }
-          }
-        }
-      }
-    } = this.props.debuggerContext;
+    const { context: { moduleContexts: { plotly: { state: { drawnPlots } } } } } = this.props.debuggerContext;
 
     return (
       <div>

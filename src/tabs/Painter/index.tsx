@@ -31,15 +31,7 @@ class Painter extends React.Component<Props, State> {
   };
 
   public render() {
-    const {
-      context: {
-        moduleContexts: {
-          painter: {
-            state: { drawnPainters }
-          }
-        }
-      }
-    } = this.props.debuggerContext;
+    const { context: { moduleContexts: { painter: { state: { drawnPainters } } } } } = this.props.debuggerContext;
 
     return (
       <div>
@@ -86,8 +78,7 @@ class Painter extends React.Component<Props, State> {
 
 export default {
   toSpawn(context: DebuggerContext) {
-    const drawnPainters =
-      context.context?.moduleContexts?.painter.state.drawnPainters;
+    const drawnPainters = context.context?.moduleContexts?.painter.state.drawnPainters;
     console.log(drawnPainters);
     return drawnPainters.length > 0;
   },

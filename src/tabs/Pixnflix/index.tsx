@@ -15,9 +15,9 @@ import {
   MIN_WIDTH
 } from '../../bundles/pix_n_flix/constants';
 import {
-  InputFeed,
   type BundlePacket,
   type ErrorLogger,
+  InputFeed,
   type TabsPacket
 } from '../../bundles/pix_n_flix/types';
 
@@ -31,7 +31,7 @@ enum VideoMode {
   Video,
   Still,
   Accepting,
-  Image
+  Image,
 }
 
 type State = {
@@ -195,10 +195,10 @@ class PixNFlix extends React.Component<Props, State> {
 
   public handleUpdateDimensions = (w: number, h: number) => {
     if (
-      w >= MIN_WIDTH &&
-      w <= MAX_WIDTH &&
-      h >= MIN_HEIGHT &&
-      h <= MAX_HEIGHT
+      w >= MIN_WIDTH
+      && w <= MAX_WIDTH
+      && h >= MIN_HEIGHT
+      && h <= MAX_HEIGHT
     ) {
       this.setState({
         width: w,
@@ -264,9 +264,9 @@ class PixNFlix extends React.Component<Props, State> {
    */
   private isPixNFlix() {
     return (
-      this.pixNFlix &&
-      this.pixNFlix.toReplString &&
-      this.pixNFlix.toReplString() === '[Pix N Flix]'
+      this.pixNFlix
+      && this.pixNFlix.toReplString
+      && this.pixNFlix.toReplString() === '[Pix N Flix]'
     );
   }
 

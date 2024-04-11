@@ -1,9 +1,5 @@
 import type { StereoSoundModuleState } from '../../bundles/stereo_sound/types';
-import {
-  getModuleState,
-  type DebuggerContext,
-  type ModuleTab
-} from '../../typings/type_helpers';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
 import MultiItemDisplay from '../common/MultItemDisplay';
 
 /**
@@ -13,10 +9,7 @@ import MultiItemDisplay from '../common/MultItemDisplay';
  */
 
 const SoundTab: ModuleTab = ({ context }) => {
-  const { audioPlayed } = getModuleState<StereoSoundModuleState>(
-    context,
-    'sound'
-  );
+  const { audioPlayed } = getModuleState<StereoSoundModuleState>(context, 'sound');
 
   const elements = audioPlayed.map(audio => (
     <audio
@@ -48,8 +41,7 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: any) {
-    const audioPlayed =
-      context.context?.moduleContexts?.stereo_sound?.state?.audioPlayed;
+    const audioPlayed = context.context?.moduleContexts?.stereo_sound?.state?.audioPlayed;
     return audioPlayed.length > 0;
   },
   /**

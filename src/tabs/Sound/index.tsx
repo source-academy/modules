@@ -1,9 +1,5 @@
 import type { SoundModuleState } from '../../bundles/sound/types';
-import {
-  getModuleState,
-  type DebuggerContext,
-  type ModuleTab
-} from '../../typings/type_helpers';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
 import MultiItemDisplay from '../common/MultItemDisplay';
 
 /**
@@ -44,8 +40,7 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const audioPlayed =
-      context.context?.moduleContexts?.sound?.state?.audioPlayed;
+    const audioPlayed = context.context?.moduleContexts?.sound?.state?.audioPlayed;
     return audioPlayed.length > 0;
   },
   /**

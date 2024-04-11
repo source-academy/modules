@@ -1,5 +1,5 @@
 /* [Imports] */
-import { Icon, Tooltip, type ButtonProps } from '@blueprintjs/core';
+import { Icon, type ButtonProps, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import ButtonComponent from './ButtonComponent';

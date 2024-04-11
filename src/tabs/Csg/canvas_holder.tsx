@@ -5,13 +5,7 @@ import React from 'react';
 import { Core } from '../../bundles/csg/core';
 import StatefulRenderer from '../../bundles/csg/stateful_renderer';
 import type { RenderGroup } from '../../bundles/csg/utilities';
-import {
-  BP_CARD_BORDER_RADIUS,
-  BP_TAB_BUTTON_MARGIN,
-  BP_TAB_PANEL_MARGIN,
-  BP_TEXT_MARGIN,
-  CANVAS_MAX_WIDTH
-} from '../common/css_constants';
+import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '../common/css_constants';
 import HoverControlHint from './hover_control_hint';
 import type { CanvasHolderProps, CanvasHolderState } from './types';
 
@@ -20,8 +14,7 @@ export default class CanvasHolder extends React.Component<
   CanvasHolderProps,
   CanvasHolderState
 > {
-  private readonly canvasReference: React.RefObject<HTMLCanvasElement> =
-    React.createRef();
+  private readonly canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
 
   private statefulRenderer: StatefulRenderer | null = null;
 

@@ -4,7 +4,7 @@
  * @author Wang Zihan
  */
 
-import { Button, Checkbox, NumericInput } from '@blueprintjs/core';
+import { Button, NumericInput, Checkbox } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import { getInstance } from '../../bundles/unity_academy/UnityAcademy';

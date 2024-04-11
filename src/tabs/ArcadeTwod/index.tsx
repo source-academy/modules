@@ -90,11 +90,7 @@ class GameTab extends React.Component<Props, GameState> {
 
   componentDidMount() {
     // Only mount the component when the Arcade2D tab is active
-    if (
-      document.querySelector(
-        '[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]'
-      )?.ariaHidden === 'true'
-    ) {
+    if (document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')?.ariaHidden === 'true') {
       return;
     }
 

@@ -13,9 +13,9 @@ import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '../../bundles/repl/config';
 import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
 import type { DebuggerContext } from '../../typings/type_helpers';
 
-import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
+import 'ace-builds/src-noconflict/ext-language_tools';
 
 type Props = {
   programmableReplInstance: ProgrammableRepl;
@@ -140,8 +140,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
             style={{
               width: '100%',
               height: `${editorHeight}px`,
-              ...(this.replInstance.customizedEditorProps.backgroundImageUrl !==
-                'no-background-image' && {
+              ...(this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
                 backgroundSize: '100%',
@@ -191,11 +190,7 @@ export default {
    * @param {DebuggerContext} context
    */
   body(context: DebuggerContext) {
-    return (
-      <ProgrammableReplGUI
-        programmableReplInstance={context.context.moduleContexts.repl.state}
-      />
-    );
+    return <ProgrammableReplGUI programmableReplInstance={context.context.moduleContexts.repl.state} />;
   },
 
   /**

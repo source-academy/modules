@@ -1,13 +1,6 @@
-import {
-  isHollusionRune,
-  type RuneModuleState
-} from '../../bundles/rune/functions';
+import { type RuneModuleState, isHollusionRune } from '../../bundles/rune/functions';
 import { glAnimation } from '../../typings/anim_types';
-import {
-  getModuleState,
-  type DebuggerContext,
-  type ModuleTab
-} from '../../typings/type_helpers';
+import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
 import AnimationCanvas from '../common/AnimationCanvas';
 import MultiItemDisplay from '../common/MultItemDisplay';
 import WebGLCanvas from '../common/WebglCanvas';
