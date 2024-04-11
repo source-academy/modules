@@ -6,8 +6,7 @@ import * as tscModule from '../tsc';
 jest.spyOn(lintModule, 'runEslint');
 jest.spyOn(tscModule, 'runTsc');
 
-const asMock = <T extends (...any: any[]) => any>(func: T) =>
-  func as MockedFunction<typeof func>;
+const asMock = <T extends (...any: any[]) => any>(func: T) => func as MockedFunction<typeof func>;
 const mockedTsc = asMock(tscModule.runTsc);
 const mockedEslint = asMock(lintModule.runEslint);
 

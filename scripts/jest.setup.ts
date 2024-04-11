@@ -2,16 +2,9 @@ const chalkFunction = new Proxy((x: string) => x, {
   get: () => chalkFunction
 });
 
-jest.mock(
-  'chalk',
-  () =>
-    new Proxy(
-      {},
-      {
-        get: () => chalkFunction
-      }
-    )
-);
+jest.mock('chalk', () => new Proxy({}, {
+  get: () => chalkFunction
+}));
 
 jest.mock('fs/promises', () => ({
   copyFile: jest.fn(() => Promise.resolve()),
@@ -21,17 +14,15 @@ jest.mock('fs/promises', () => ({
 }));
 
 jest.mock('./src/manifest', () => ({
-  retrieveManifest: jest.fn(() =>
-    Promise.resolve({
-      test0: {
-        tabs: ['tab0']
-      },
-      test1: { tabs: [] },
-      test2: {
-        tabs: ['tab1']
-      }
-    })
-  )
+  retrieveManifest: jest.fn(() => Promise.resolve({
+    test0: {
+      tabs: ['tab0']
+    },
+    test1: { tabs: [] },
+    test2: {
+      tabs: ['tab1']
+    }
+  }))
 }));
 
 global.process.exit = jest.fn(code => {

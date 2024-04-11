@@ -4,8 +4,8 @@ import * as runner from '../runner';
 
 jest.spyOn(runner, 'runJest').mockImplementation(jest.fn());
 
-const runCommand = (...args: string[]) =>
-  getTestCommand().parseAsync(args, { from: 'user' });
+const runCommand = (...args: string[]) => getTestCommand()
+  .parseAsync(args, { from: 'user' });
 const mockRunJest = runner.runJest as MockedFunction<typeof runner.runJest>;
 
 test('Check that the test command properly passes options to jest', async () => {

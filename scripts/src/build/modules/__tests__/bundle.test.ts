@@ -19,9 +19,7 @@ test('Normal command', async () => {
 
   expect(bundles.bundleBundles).toHaveBeenCalledTimes(1);
 
-  const [args] = (
-    bundles.bundleBundles as MockedFunction<typeof bundles.bundleBundles>
-  ).mock.calls[0];
+  const [args] = (bundles.bundleBundles as MockedFunction<typeof bundles.bundleBundles>).mock.calls[0];
   expect(args).toMatchObject({
     bundles: ['test0'],
     tabs: ['tab0'],

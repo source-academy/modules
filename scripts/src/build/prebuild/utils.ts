@@ -1,11 +1,5 @@
 import { Command } from '@commander-js/extra-typings';
-import {
-  bundlesOption,
-  manifestOption,
-  srcDirOption,
-  tabsOption,
-  type TimedResult
-} from '@src/commandUtils';
+import { bundlesOption, manifestOption, srcDirOption, tabsOption, type TimedResult } from '@src/commandUtils';
 import { logInputs, type Severity } from '../utils';
 
 export interface PrebuildOptions {
@@ -15,8 +9,7 @@ export interface PrebuildOptions {
   tabs: string[];
 }
 
-export interface PrebuildResult<T extends { severity: Severity }>
-  extends TimedResult<T> {}
+export interface PrebuildResult<T extends { severity: Severity }> extends TimedResult<T> {}
 
 export function createPrebuildCommand(
   commandName: string,

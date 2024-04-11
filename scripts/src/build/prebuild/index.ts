@@ -1,8 +1,4 @@
-import {
-  findSeverity,
-  type BuildOptions,
-  type Severity
-} from '@src/build/utils';
+import { type Severity, findSeverity, type BuildOptions } from '@src/build/utils';
 import { promiseAll } from '@src/commandUtils';
 import { eslintResultsLogger, runEslint } from './lint';
 import { runTsc, tscResultsLogger } from './tsc';
@@ -38,10 +34,7 @@ export default async function prebuild(
       runEslint(combinedOpts)
     );
 
-    const overallSev = findSeverity(
-      [tscResult, lintResult],
-      ({ result: { severity } }) => severity
-    );
+    const overallSev = findSeverity([tscResult, lintResult], ({ result: { severity } }) => severity);
 
     return {
       tsc: tscResult,
