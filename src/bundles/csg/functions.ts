@@ -1,6 +1,7 @@
 /* [Imports] */
 import { primitives } from '@jscad/modeling';
 import { colorize as colorSolid } from '@jscad/modeling/src/colors';
+import { geom3 } from '@jscad/modeling/src/geometries';
 import {
   measureBoundingBox,
   type BoundingBox
@@ -14,10 +15,10 @@ import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
 import {
   head,
-  is_list,
   list,
   tail,
-  type List
+  type List,
+  is_list
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
 import { degreesToRadians } from '../../common/utilities';
@@ -26,10 +27,10 @@ import type { Solid } from './jscad/types';
 import {
   Group,
   Shape,
-  centerPrimitive,
   hexToColor,
   type Operable,
-  type RenderGroup
+  type RenderGroup,
+  centerPrimitive
 } from './utilities';
 
 /* [Main] */
@@ -663,12 +664,12 @@ export function rgb(
   blueValue: number
 ): string {
   if (
-    redValue < 0 ||
-    redValue > 255 ||
-    greenValue < 0 ||
-    greenValue > 255 ||
-    blueValue < 0 ||
-    blueValue > 255
+    redValue < 0
+    || redValue > 255
+    || greenValue < 0
+    || greenValue > 255
+    || blueValue < 0
+    || blueValue > 255
   ) {
     throw new Error('RGB values must be between 0 and 255 (inclusive)');
   }

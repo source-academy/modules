@@ -7,11 +7,7 @@ import {
   entitiesFromSolids,
   prepareRender
 } from '@jscad/regl-renderer';
-import {
-  ACE_GUTTER_BACKGROUND_COLOR,
-  ACE_GUTTER_TEXT_COLOR,
-  BP_TEXT_COLOR
-} from '../../../tabs/common/css_constants';
+import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '../../../tabs/common/css_constants';
 import {
   DEFAULT_COLOR,
   GRID_PADDING,
@@ -54,8 +50,8 @@ function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
 
 function neatGridDistance(rawDistance: number) {
   const paddedDistance: number = rawDistance + GRID_PADDING;
-  const roundedDistance: number =
-    Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
+  const roundedDistance: number
+    = Math.ceil(paddedDistance / ROUND_UP_INTERVAL) * ROUND_UP_INTERVAL;
   return roundedDistance;
 }
 

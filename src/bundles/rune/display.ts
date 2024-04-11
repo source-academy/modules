@@ -1,12 +1,6 @@
 import context from 'js-slang/context';
 import { AnaglyphRune, HollusionRune } from './functions';
-import {
-  AnimatedRune,
-  NormalRune,
-  type DrawnRune,
-  type Rune,
-  type RuneAnimation
-} from './rune';
+import { type DrawnRune, AnimatedRune, type Rune, NormalRune, type RuneAnimation } from './rune';
 import { throwIfNotRune } from './runes_ops';
 
 // =============================================================================

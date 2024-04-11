@@ -15,7 +15,7 @@ export enum COMMAND {
   SHOW_MARKED = 'Marked Roots',
   MARK = 'Mark',
   SWEEP = 'Sweep',
-  INIT = 'Initialize Memory'
+  INIT = 'Initialize Memory',
 }
 
 export type CommandHeapObject = {

@@ -39,8 +39,7 @@ export type GameParams = {
   createAward: (x: number, y: number, key: string) => Phaser.GameObjects.Sprite;
 };
 
-export const sourceAcademyAssets =
-  'https://source-academy-assets.s3-ap-southeast-1.amazonaws.com';
+export const sourceAcademyAssets = 'https://source-academy-assets.s3-ap-southeast-1.amazonaws.com';
 
 // Scene needs to be set when available!
 export const defaultGameParams: GameParams = {
@@ -54,12 +53,10 @@ export const defaultGameParams: GameParams = {
     update() {}
   },
   renderPreview: false,
-  remotePath: (path: string) =>
-    sourceAcademyAssets + (path[0] === '/' ? '' : '/') + path,
+  remotePath: (path: string) => sourceAcademyAssets + (path[0] === '/' ? '' : '/') + path,
   screenSize: {
     x: 1920,
     y: 1080
   },
-  createAward: (x: number, y: number, key: string) =>
-    new Phaser.GameObjects.Sprite(defaultGameParams.scene!, x, y, key)
+  createAward: (x: number, y: number, key: string) => new Phaser.GameObjects.Sprite(defaultGameParams.scene!, x, y, key)
 };

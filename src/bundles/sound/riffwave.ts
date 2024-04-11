@@ -54,7 +54,7 @@ var FastBase64 = {
       dst += '=';
     }
     return dst;
-  } // end Encode
+  }, // end Encode
 };
 
 FastBase64.Init();
@@ -78,7 +78,7 @@ export function RIFFWAVE(this: any, data) {
     blockAlign: 0, // 32   2    NumChannels*BitsPerSample/8
     bitsPerSample: 8, // 34   2    8 bits = 8, 16 bits = 16
     subChunk2Id: [0x64, 0x61, 0x74, 0x61], // 36   4    "data" = 0x64617461
-    subChunk2Size: 0 // 40   4    data size = NumSamples*NumChannels*BitsPerSample/8
+    subChunk2Size: 0, // 40   4    data size = NumSamples*NumChannels*BitsPerSample/8
   };
 
   function u32ToArray(i) {

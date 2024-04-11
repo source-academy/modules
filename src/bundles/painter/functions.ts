@@ -1,6 +1,6 @@
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import { LinePlot, type Frame } from './painter';
+import { type Frame, LinePlot } from './painter';
 
 const drawnPainters: LinePlot[] = [];
 context.moduleContexts.painter.state = {

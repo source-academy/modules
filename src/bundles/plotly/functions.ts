@@ -8,10 +8,10 @@ import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { type Sound } from '../sound/types';
 import { generatePlot } from './curve_functions';
 import {
-  CurvePlot,
-  DrawnPlot,
   type Curve,
+  CurvePlot,
   type CurvePlotFunction,
+  DrawnPlot,
   type ListOfPairs
 } from './plotly';
 import { get_duration, get_wave, is_sound } from './sound_functions';

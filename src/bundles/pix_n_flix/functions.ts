@@ -1,30 +1,30 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
-  DEFAULT_FPS,
-  DEFAULT_HEIGHT,
-  DEFAULT_LOOP,
-  DEFAULT_VOLUME,
   DEFAULT_WIDTH,
-  MAX_FPS,
+  DEFAULT_HEIGHT,
+  DEFAULT_FPS,
+  DEFAULT_VOLUME,
   MAX_HEIGHT,
-  MAX_WIDTH,
-  MIN_FPS,
   MIN_HEIGHT,
-  MIN_WIDTH
+  MAX_WIDTH,
+  MIN_WIDTH,
+  MAX_FPS,
+  MIN_FPS,
+  DEFAULT_LOOP
 } from './constants';
 import {
-  InputFeed,
-  type BundlePacket,
   type CanvasElement,
+  type VideoElement,
   type ErrorLogger,
-  type Filter,
-  type ImageElement,
+  type StartPacket,
   type Pixel,
   type Pixels,
+  type Filter,
   type Queue,
-  type StartPacket,
   type TabsPacket,
-  type VideoElement
+  type BundlePacket,
+  InputFeed,
+  type ImageElement
 } from './types';
 
 // Global Variables
@@ -110,8 +110,8 @@ function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   }
 
   if (!ok) {
-    const warningMessage =
-      'You have invalid values for some pixels! Reseting them to default (0)';
+    const warningMessage
+      = 'You have invalid values for some pixels! Reseting them to default (0)';
     console.warn(warningMessage);
     errorLogger(warningMessage, false);
   }
@@ -265,11 +265,10 @@ function loadMedia(): void {
     .getUserMedia({ video: true })
     .then(stream => {
       videoElement.srcObject = stream;
-      videoElement.onloadedmetadata = () =>
-        setAspectRatioDimensions(
-          videoElement.videoWidth,
-          videoElement.videoHeight
-        );
+      videoElement.onloadedmetadata = () => setAspectRatioDimensions(
+        videoElement.videoWidth,
+        videoElement.videoHeight
+      );
       toRunLateQueue = true;
     })
     .catch(error => {

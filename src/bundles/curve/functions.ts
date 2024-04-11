@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import context from 'js-slang/context';
-import {
-  Point,
-  generateCurve,
-  type Curve,
-  type CurveDrawn
-} from './curves_webgl';
+import { type Curve, type CurveDrawn, generateCurve, Point } from './curves_webgl';
 import {
   AnimatedCurve,
   type CurveAnimation,
@@ -542,9 +537,9 @@ export function rotate_around_origin(
     // 2 args
     throw new Error('Expected 1 or 3 arguments, but received 2');
   } else if (
-    theta1 !== undefined &&
-    theta2 === undefined &&
-    theta3 === undefined
+    theta1 !== undefined
+    && theta2 === undefined
+    && theta3 === undefined
   ) {
     // 1 args
     const cth = Math.cos(theta1);
