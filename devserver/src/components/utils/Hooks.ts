@@ -7,26 +7,21 @@
 
 import React, { type RefObject } from 'react';
 
-export const useDimensions = (
-  ref: RefObject<HTMLElement>
-): [width: number, height: number] => {
+export const useDimensions = (ref: RefObject<HTMLElement>): [width: number, height: number] => {
   const [width, setWidth] = React.useState<number>(0);
   const [height, setHeight] = React.useState<number>(0);
 
   const resizeObserver = React.useMemo(
-    () =>
-      new ResizeObserver(
-        (entries: ResizeObserverEntry[], _observer: ResizeObserver) => {
-          if (entries.length !== 1) {
-            throw new Error(
-              'Expected only a single HTML element to be observed by the ResizeObserver.'
-            );
-          }
-          const contentRect = entries[0].contentRect;
-          setWidth(contentRect.width);
-          setHeight(contentRect.height);
-        }
-      ),
+    () => new ResizeObserver((entries: ResizeObserverEntry[], _observer: ResizeObserver) => {
+      if (entries.length !== 1) {
+        throw new Error(
+          'Expected only a single HTML element to be observed by the ResizeObserver.'
+        );
+      }
+      const contentRect = entries[0].contentRect;
+      setWidth(contentRect.width);
+      setHeight(contentRect.height);
+    }),
     []
   );
 

@@ -1,16 +1,6 @@
-import {
-  Classes,
-  Intent,
-  OverlayToaster,
-  type ToastProps
-} from '@blueprintjs/core';
+import { Classes, Intent, OverlayToaster, type ToastProps } from '@blueprintjs/core';
 import classNames from 'classnames';
-import {
-  SourceDocumentation,
-  getNames,
-  runInContext,
-  type Context
-} from 'js-slang';
+import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
 
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
@@ -52,15 +42,9 @@ const createContextHelper = () => {
 const Playground: React.FC<{}> = () => {
   const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
   const [selectedTabId, setSelectedTab] = React.useState(testTabContent.id);
-  const [codeContext, setCodeContext] = React.useState<Context>(
-    createContextHelper()
-  );
-  const [editorValue, setEditorValue] = React.useState(
-    localStorage.getItem('editorValue') ?? ''
-  );
-  const [replOutput, setReplOutput] = React.useState<InterpreterOutput | null>(
-    null
-  );
+  const [codeContext, setCodeContext] = React.useState<Context>(createContextHelper());
+  const [editorValue, setEditorValue] = React.useState(localStorage.getItem('editorValue') ?? '');
+  const [replOutput, setReplOutput] = React.useState<InterpreterOutput | null>(null);
   const [alerts, setAlerts] = React.useState<string[]>([]);
 
   const toaster = React.useRef<OverlayToaster>(null);
@@ -105,58 +89,56 @@ const Playground: React.FC<{}> = () => {
           );
 
           callback(null, [...builtinSuggestions, ...editorSuggestions]);
-        }
-      );
-    },
-    [editorValue, codeContext]
-  );
+        });
+    }, [editorValue, codeContext]);
 
-  const loadTabs = () =>
-    getDynamicTabs(codeContext)
-      .then((tabs) => {
-        setDynamicTabs(tabs);
+  const loadTabs = () => getDynamicTabs(codeContext)
+    .then((tabs) => {
+      setDynamicTabs(tabs);
 
-        const newIds = tabs.map(({ id }) => id);
-        // If the currently selected tab no longer exists,
-        // switch to the default test tab
-        if (!newIds.includes(selectedTabId)) {
-          setSelectedTab(testTabContent.id);
-        }
-        setAlerts(newIds);
-      })
-      .catch((error) => {
-        showToast(errorToast);
-        console.log(error);
-      });
+      const newIds = tabs.map(({ id }) => id);
+      // If the currently selected tab no longer exists,
+      // switch to the default test tab
+      if (!newIds.includes(selectedTabId)) {
+        setSelectedTab(testTabContent.id);
+      }
+      setAlerts(newIds);
+    })
+    .catch((error) => {
+      showToast(errorToast);
+      console.log(error);
+    });
 
   const evalCode = () => {
     codeContext.errors = [];
     // eslint-disable-next-line no-multi-assign
     codeContext.moduleContexts = mockModuleContext.moduleContexts = {};
 
-    runInContext(editorValue, codeContext).then((result) => {
-      if (codeContext.errors.length > 0) {
-        showToast(errorToast);
-      } else {
-        loadTabs().then(() => showToast(evalSuccessToast));
-      }
+    runInContext(editorValue, codeContext)
+      .then((result) => {
+        if (codeContext.errors.length > 0) {
+          showToast(errorToast);
+        } else {
+          loadTabs()
+            .then(() => showToast(evalSuccessToast));
+        }
 
-      // TODO: Add support for console.log?
-      if (result.status === 'finished') {
-        setReplOutput({
-          type: 'result',
-          // code: editorValue,
-          consoleLogs: [],
-          value: stringify(result.value)
-        });
-      } else if (result.status === 'error') {
-        setReplOutput({
-          type: 'errors',
-          errors: codeContext.errors,
-          consoleLogs: []
-        });
-      }
-    });
+        // TODO: Add support for console.log?
+        if (result.status === 'finished') {
+          setReplOutput({
+            type: 'result',
+            // code: editorValue,
+            consoleLogs: [],
+            value: stringify(result.value)
+          });
+        } else if (result.status === 'error') {
+          setReplOutput({
+            type: 'errors',
+            errors: codeContext.errors,
+            consoleLogs: []
+          });
+        }
+      });
   };
 
   const resetEditor = () => {
@@ -195,13 +177,10 @@ const Playground: React.FC<{}> = () => {
     sideContentProps: {
       dynamicTabs: [testTabContent, ...dynamicTabs],
       selectedTabId,
-      onChange: useCallback(
-        (newId: string) => {
-          setSelectedTab(newId);
-          setAlerts(alerts.filter((id) => id !== newId));
-        },
-        [alerts]
-      ),
+      onChange: useCallback((newId: string) => {
+        setSelectedTab(newId);
+        setAlerts(alerts.filter((id) => id !== newId));
+      }, [alerts]),
       alerts
     }
   };

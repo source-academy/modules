@@ -22,12 +22,7 @@ const ControlBar: React.FC<ControlBarProps> = (props) => {
   );
 
   const editingWorkspaceControl = (
-    <div
-      className={classNames(
-        'ControlBar_editingWorkspace',
-        Classes.BUTTON_GROUP
-      )}
-    >
+    <div className={classNames('ControlBar_editingWorkspace', Classes.BUTTON_GROUP)}>
       {props.editingWorkspaceButtons}
     </div>
   );

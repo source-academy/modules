@@ -18,12 +18,10 @@ export const getDynamicTabs = async (context: Context) => {
 
   return moduleSideContents
     .filter(({ toSpawn }) => !toSpawn || toSpawn({ context }))
-    .map(
-      (tab): SideContentTab => ({
-        ...tab,
-        // In the frontend, module tabs use their labels as IDs
-        id: tab.label,
-        body: tab.body({ context })
-      })
-    );
+    .map((tab): SideContentTab => ({
+      ...tab,
+      // In the frontend, module tabs use their labels as IDs
+      id: tab.label,
+      body: tab.body({ context })
+    }));
 };

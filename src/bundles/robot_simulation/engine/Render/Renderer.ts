@@ -13,7 +13,7 @@ type ControlType = 'none' | 'orbit';
 export type RenderConfig = {
   width: number;
   height: number;
-  control: ControlType
+  control: ControlType;
 };
 
 export class Renderer {

@@ -44,8 +44,4 @@ export type ErrorOutput = {
   consoleLogs: string[];
 };
 
-export type InterpreterOutput =
-  | CodeOutput
-  | ErrorOutput
-  | ResultOutput
-  | RunningOutput;
+export type InterpreterOutput = CodeOutput | ErrorOutput | ResultOutput | RunningOutput;
