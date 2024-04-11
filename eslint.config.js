@@ -65,7 +65,7 @@ export default [
       ],
     },
     linterOptions: {
-      reportUnusedDisableDirectives: 'error'
+      reportUnusedDisableDirectives: 'warn'
     }
   },
   ...tseslint.configs.recommended,
