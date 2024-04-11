@@ -267,20 +267,14 @@ class MarkSweep extends React.Component<Props, State> {
             <h3>{state.command}</h3>
             <p> {state.description} </p>
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                marginTop: 10
-              }}
+              style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
             >
               {state.leftDesc && (
                 <div style={{ flex: 1 }}>
                   <canvas
                     width={10}
                     height={10}
-                    style={{
-                      backgroundColor: ThemeColor.GREEN
-                    }}
+                    style={{ backgroundColor: ThemeColor.GREEN }}
                   />
                   <span> {state.leftDesc} </span>
                 </div>
@@ -290,9 +284,7 @@ class MarkSweep extends React.Component<Props, State> {
                   <canvas
                     width={10}
                     height={10}
-                    style={{
-                      backgroundColor: ThemeColor.YELLOW
-                    }}
+                    style={{ backgroundColor: ThemeColor.YELLOW }}
                   />
                   <span> {state.rightDesc} </span>
                 </div>
@@ -328,12 +320,7 @@ class MarkSweep extends React.Component<Props, State> {
                 {memoryMatrix &&
                   memoryMatrix.length > 0 &&
                   memoryMatrix.map((item, row) => (
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                      }}
-                    >
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <span style={{ width: 30 }}> {row * state.column} </span>
                       {item
                         && item.length > 0
@@ -342,17 +329,12 @@ class MarkSweep extends React.Component<Props, State> {
                           const bgColor = this.getBackgroundColor(content);
                           return (
                             <div
-                              style={{
-                                width: 14,
-                                backgroundColor: bgColor
-                              }}
+                              style={{ width: 14, backgroundColor: bgColor }}
                             >
                               <canvas
                                 width={10}
                                 height={10}
-                                style={{
-                                  backgroundColor: color
-                                }}
+                                style={{ backgroundColor: color }}
                               />
                             </div>
                           );
@@ -374,19 +356,13 @@ class MarkSweep extends React.Component<Props, State> {
               </div>
             </div>
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                marginTop: 10
-              }}
+              style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
             >
               <div style={{ flex: 1 }}>
                 <canvas
                   width={10}
                   height={10}
-                  style={{
-                    backgroundColor: ThemeColor.BLUE
-                  }}
+                  style={{ backgroundColor: ThemeColor.BLUE }}
                 />
                 <span> defined</span>
               </div>
@@ -394,9 +370,7 @@ class MarkSweep extends React.Component<Props, State> {
                 <canvas
                   width={10}
                   height={10}
-                  style={{
-                    backgroundColor: ThemeColor.PINK
-                  }}
+                  style={{ backgroundColor: ThemeColor.PINK }}
                 />
                 <span> tag</span>
               </div>
@@ -404,19 +378,13 @@ class MarkSweep extends React.Component<Props, State> {
                 <canvas
                   width={10}
                   height={10}
-                  style={{
-                    backgroundColor: ThemeColor.GREY
-                  }}
+                  style={{ backgroundColor: ThemeColor.GREY }}
                 />
                 <span> empty or undefined</span>
               </div>
             </div>
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                marginTop: 10
-              }}
+              style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
             >
               <div style={{ flex: 1 }}>
                 <span> MARK_SLOT: </span>
@@ -425,9 +393,7 @@ class MarkSweep extends React.Component<Props, State> {
                 <canvas
                   width={10}
                   height={10}
-                  style={{
-                    backgroundColor: 'red'
-                  }}
+                  style={{ backgroundColor: 'red' }}
                 />
                 <span> marked</span>
               </div>
@@ -435,9 +401,7 @@ class MarkSweep extends React.Component<Props, State> {
                 <canvas
                   width={10}
                   height={10}
-                  style={{
-                    backgroundColor: 'black'
-                  }}
+                  style={{ backgroundColor: 'black' }}
                 />
                 <span> unmarked</span>
               </div>

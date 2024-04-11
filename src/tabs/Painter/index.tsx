@@ -52,7 +52,7 @@ class Painter extends React.Component<Props, State> {
               height: '20rem',
               width: '20rem'
             }}
-          ></div>
+          />
         </Modal>
         {drawnPainters.map((drawnPainter: any, id: number) => {
           const divId = `plotDiv${id}`;
@@ -67,7 +67,7 @@ class Painter extends React.Component<Props, State> {
                   console.log(drawnPainter);
                   drawnPainter.draw(divId);
                 }}
-              ></div>
+              />
             </>
           );
         })}

@@ -130,12 +130,8 @@ class UnityComponent extends React.Component<any> {
         <div id="unity-container">
           <canvas
             id="unity-canvas"
-            style={{
-              width: '100%',
-              height: '100%',
-              position: 'absolute'
-            }}
-          ></canvas>
+            style={{ width: '100%', height: '100%', position: 'absolute' }}
+          />
         </div>
         <Button
           icon={IconNames.CROSS}

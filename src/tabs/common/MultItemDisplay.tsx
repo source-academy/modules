@@ -39,10 +39,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
         }}
       >
         <Button
-          style={{
-            position: 'absolute',
-            left: 0
-          }}
+          style={{ position: 'absolute', left: 0 }}
           large
           outlined
           icon={IconNames.ARROW_LEFT}
@@ -108,10 +105,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
           </div>
         </h3>
         <Button
-          style={{
-            position: 'absolute',
-            right: 0
-          }}
+          style={{ position: 'absolute', right: 0 }}
           large
           outlined
           icon={IconNames.ARROW_RIGHT}

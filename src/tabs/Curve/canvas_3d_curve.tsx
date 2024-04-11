@@ -123,17 +123,8 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
 
   public render() {
     return (
-      <div
-        style={{
-          width: '100%'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center'
-          }}
-        >
+      <div style={{ width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div
             style={{
               display: 'flex',
@@ -159,9 +150,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
               onChange={this.onSliderChangeHandler}
             />
             <input
-              style={{
-                height: '100%'
-              }}
+              style={{ height: '100%' }}
               type="number"
               value={this.state.displayAngle}
               min={0}
@@ -172,12 +161,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
             />
           </div>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center'
-          }}
-        >
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <WebGLCanvas
             ref={r => {
               this.canvas = r;

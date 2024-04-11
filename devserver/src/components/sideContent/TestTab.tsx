@@ -11,7 +11,7 @@ const TestTab = () => (
     }}
   >
     <h2>Source Academy Tab Development Server</h2>
-    <p style={{}}>
+    <p>
       Run some code that imports modules in the editor on the left. You should
       see the corresponding module tab spawn.
       <br />

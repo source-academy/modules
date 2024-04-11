@@ -84,10 +84,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
         } else {
           outputDivs.push(
             <div
-              style={{
-                ...FONT_MESSAGE,
-                ...{ color: str.color }
-              }}
+              style={{ ...FONT_MESSAGE, ...{ color: str.color } }}
               dangerouslySetInnerHTML={{ __html: str.content }}
             />
           );
@@ -96,12 +93,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
         outputDivs.push(<div style={FONT_MESSAGE}>{str.content}</div>);
       } else {
         outputDivs.push(
-          <div
-            style={{
-              ...FONT_MESSAGE,
-              ...{ color: str.color }
-            }}
-          >
+          <div style={{ ...FONT_MESSAGE, ...{ color: str.color } }}>
             {str.content}
           </div>
         );
@@ -155,10 +147,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
         </div>
         <div
           onMouseDown={this.dragBarOnMouseDown}
-          style={{
-            cursor: 'row-resize',
-            height: '8px'
-          }}
+          style={{ cursor: 'row-resize', height: '8px' }}
         />
         <div
           style={{

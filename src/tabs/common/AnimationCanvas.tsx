@@ -237,17 +237,8 @@ export default class AnimationCanvas extends React.Component<
 
   public render() {
     return (
-      <div
-        style={{
-          width: '100%'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center'
-          }}
-        >
+      <div style={{ width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div
             style={{
               display: 'flex',
@@ -291,12 +282,7 @@ export default class AnimationCanvas extends React.Component<
             />
           </div>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center'
-          }}
-        >
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           {this.state.errored ? (
             <div
               style={{
@@ -325,19 +311,13 @@ export default class AnimationCanvas extends React.Component<
                   <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
                 </div>
               </div>
-              <code
-                style={{
-                  color: 'red'
-                }}
-              >
+              <code style={{ color: 'red' }}>
                 {this.state.errored.toString()}
               </code>
             </div>
           ) : (
             <WebGLCanvas
-              style={{
-                flexGrow: 1
-              }}
+              style={{ flexGrow: 1 }}
               ref={r => {
                 this.canvas = r;
               }}

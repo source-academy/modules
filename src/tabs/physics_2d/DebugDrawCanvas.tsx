@@ -203,11 +203,7 @@ export default class DebugDrawCanvas extends React.Component<
           justifyContent: 'space-between'
         }}
       >
-        <div
-          style={{
-            marginRight: '20px'
-          }}
-        >
+        <div style={{ marginRight: '20px' }}>
           <Tooltip content={this.state.isPlaying ? 'Pause' : 'Play'}>
             <Button onClick={this.onPlayButtonClick}>
               <Icon

@@ -138,23 +138,14 @@ export default class CanvasHolder extends React.Component<
           className="bp3-dark"
           style={{
             display: this.state.isContextLost ? 'block' : 'none',
-
             textAlign: 'center'
           }}
         >
-          <h2
-            style={{
-              margin: `0px 0px ${BP_TEXT_MARGIN} 0px`
-            }}
-          >
+          <h2 style={{ margin: `0px 0px ${BP_TEXT_MARGIN} 0px` }}>
             WebGL Context Lost
           </h2>
           <Spinner intent="warning" size={SpinnerSize.LARGE} />
-          <p
-            style={{
-              margin: `${BP_TEXT_MARGIN} 0px 0px 0px`
-            }}
-          >
+          <p style={{ margin: `${BP_TEXT_MARGIN} 0px 0px 0px` }}>
             Your GPU is probably busy. Waiting for browser to re-establish
             connection...
           </p>
