@@ -28,7 +28,7 @@ export function initCommunications(
   address: string,
   port: number,
   user: string,
-  password: string
+  password: string,
 ) {
   if (getModuleState() instanceof CommunicationModuleState) {
     return;
@@ -37,7 +37,7 @@ export function initCommunications(
     address,
     port,
     user,
-    password
+    password,
   );
   context.moduleContexts.communication.state = newModuleState;
 }
@@ -77,7 +77,7 @@ export function stopRunning() {
  */
 export function initGlobalState(
   topicHeader: string,
-  callback: (state: any) => void
+  callback: (state: any) => void,
 ) {
   const moduleState = getModuleState();
   if (moduleState instanceof CommunicationModuleState) {
@@ -87,7 +87,7 @@ export function initGlobalState(
     moduleState.globalState = new GlobalStateController(
       topicHeader,
       moduleState.multiUser,
-      callback
+      callback,
     );
     return;
   }
@@ -137,7 +137,7 @@ export function initRpc(topicHeader: string, userId?: string) {
     moduleState.rpc = new RpcController(
       topicHeader,
       moduleState.multiUser,
-      userId
+      userId,
     );
     return;
   }
@@ -189,7 +189,7 @@ export function callFunction(
   receiver: string,
   name: string,
   args: any[],
-  callback: (args: any[]) => void
+  callback: (args: any[]) => void,
 ) {
   const moduleState = getModuleState();
   if (moduleState instanceof CommunicationModuleState) {

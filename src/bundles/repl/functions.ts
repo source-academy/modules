@@ -26,9 +26,7 @@ context.moduleContexts.repl.state = INSTANCE;
 export function set_evaluator(evalFunc: Function) {
   if (!(evalFunc instanceof Function)) {
     const typeName = typeof evalFunc;
-    throw new Error(
-      `Wrong parameter type "${typeName}' in function "set_evaluator". It supposed to be a function and it's the entrance function of your metacircular evaulator.`
-    );
+    throw new Error(`Wrong parameter type "${typeName}' in function "set_evaluator". It supposed to be a function and it's the entrance function of your metacircular evaulator.`);
   }
   INSTANCE.evalFunction = evalFunc;
   return {
@@ -93,10 +91,7 @@ export function repl_display(content: any): any {
  *
  * @category Main
  */
-export function set_background_image(
-  img_url: string,
-  background_color_alpha: number
-): void {
+export function set_background_image(img_url: string, background_color_alpha: number): void {
   INSTANCE.customizedEditorProps.backgroundImageUrl = img_url;
   INSTANCE.customizedEditorProps.backgroundColorAlpha = background_color_alpha;
 }
@@ -108,7 +103,7 @@ export function set_background_image(
  * @category Main
  */
 export function set_font_size(font_size_px: number) {
-  INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString()); // The TypeScript type checker will throw an error as "parseInt" in TypeScript only accepts one string as parameter.
+  INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());// The TypeScript type checker will throw an error as "parseInt" in TypeScript only accepts one string as parameter.
 }
 
 /**
@@ -119,9 +114,7 @@ export function set_font_size(font_size_px: number) {
  * @category Main
  */
 export function default_js_slang(_program: string): any {
-  throw new Error(
-    'Invaild Call: Function "default_js_slang" can not be directly called by user\'s code in editor. You should use it as the parameter of the function "set_evaluator"'
-  );
+  throw new Error('Invaild Call: Function "default_js_slang" can not be directly called by user\'s code in editor. You should use it as the parameter of the function "set_evaluator"');
   // When the function is normally called by set_evaluator function, safeKey is set to "document.body", which has a type "Element".
   // Students can not create objects and use HTML Elements in Source due to limitations and rules in Source, so they can't set the safeKey to a HTML Element, thus they can't use this function in Source.
 }

@@ -3,13 +3,13 @@
 // follow the same guidelines as the rest of the codebase.
 
 import {
+  type b2Body,
+  type b2Shape,
+  type b2Fixture,
   b2BodyType,
   b2CircleShape,
   b2PolygonShape,
-  b2Vec2,
-  type b2Body,
-  type b2Fixture,
-  type b2Shape
+  b2Vec2
 } from '@box2d/core';
 import { type ReplResult } from '../../typings/type_helpers';
 
@@ -112,8 +112,7 @@ export class PhysicsObject implements ReplResult {
     const resForce = this.forcesCentered
       .filter((force: Force) => force.start_time < world_time)
       .reduce(
-        (res: b2Vec2, force: Force) =>
-          res.Add(force.direction.Scale(force.magnitude)),
+        (res: b2Vec2, force: Force) => res.Add(force.direction.Scale(force.magnitude)),
         new b2Vec2()
       );
 
@@ -122,11 +121,10 @@ export class PhysicsObject implements ReplResult {
 
   private applyForcesAtAPoint(world_time: number) {
     this.forcesAtAPoint = this.forcesAtAPoint.filter(
-      (forceWithPos: ForceWithPos) =>
-        forceWithPos.force.start_time + forceWithPos.force.duration > world_time
+      (forceWithPos: ForceWithPos) => forceWithPos.force.start_time + forceWithPos.force.duration > world_time
     );
 
-    this.forcesAtAPoint.forEach(forceWithPos => {
+    this.forcesAtAPoint.forEach((forceWithPos) => {
       const force = forceWithPos.force;
       this.body.ApplyForce(
         force.direction.Scale(force.magnitude),

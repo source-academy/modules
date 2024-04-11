@@ -17,7 +17,7 @@ export class GlobalStateController {
   constructor(
     topicHeader: string,
     multiUser: MultiUserController,
-    callback: (state: any) => void
+    callback: (state: any) => void,
   ) {
     this.topicHeader = topicHeader;
     this.multiUser = multiUser;
@@ -34,7 +34,7 @@ export class GlobalStateController {
     this.multiUser.addMessageCallback(this.topicHeader, (topic, message) => {
       const shortenedTopic = topic.substring(
         this.topicHeader.length,
-        topic.length
+        topic.length,
       );
       this.parseGlobalStateMessage(shortenedTopic, message);
     });
@@ -119,7 +119,7 @@ export class GlobalStateController {
     this.multiUser.controller?.publish(
       topic,
       JSON.stringify(updatedState),
-      false
+      false,
     );
   }
 }

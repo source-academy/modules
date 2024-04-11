@@ -1,23 +1,23 @@
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import context from 'js-slang/context';
 import {
-  accumulate,
+  pair,
   head,
+  tail,
+  list,
+  length,
   is_null,
   is_pair,
-  length,
-  list,
-  pair,
-  tail,
+  accumulate,
   type List
 } from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
 import type {
-  AudioPlayed,
+  Wave,
   Sound,
   SoundProducer,
   SoundTransformer,
-  Wave
+  AudioPlayed
 } from './types';
 
 // Global Constants and Variables
@@ -288,9 +288,9 @@ export function get_duration(sound: Sound): number {
  */
 export function is_sound(x: any): x is Sound {
   return (
-    is_pair(x) &&
-    typeof get_wave(x) === 'function' &&
-    typeof get_duration(x) === 'number'
+    is_pair(x)
+    && typeof get_wave(x) === 'function'
+    && typeof get_duration(x) === 'number'
   );
 }
 
@@ -318,14 +318,10 @@ export function play_wave(wave: Wave, duration: number): Sound {
 export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(
-      `${play_in_tab.name} is expecting sound, but encountered ${sound}`
-    );
+    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
-    throw new Error(
-      `${play_in_tab.name}: audio system still playing previous sound`
-    );
+    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play_in_tab.name}: duration of sound is negative`);
   } else if (get_duration(sound) === 0) {
@@ -528,14 +524,14 @@ export function triangle_sound(freq: number, duration: number): Sound {
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
-      answer +=
-        ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2)) /
-        (2 * i + 1) ** 2;
+      answer
+        += ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2))
+        / (2 * i + 1) ** 2;
     }
     return answer;
   }
   return make_sound(
-    t => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
+    (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
     duration
   );
 }
@@ -650,18 +646,18 @@ export function adsr(
       }
       if (x < attack_time + decay_time) {
         return (
-          ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) +
-            sustain_level) *
-          wave(x)
+          ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
+            + sustain_level)
+          * wave(x)
         );
       }
       if (x < duration - release_time) {
         return wave(x) * sustain_level;
       }
       return (
-        wave(x) *
-        sustain_level *
-        linear_decay(release_time)(x - (duration - release_time))
+        wave(x)
+        * sustain_level
+        * linear_decay(release_time)(x - (duration - release_time))
       );
     }, duration);
   };
@@ -698,8 +694,7 @@ export function stacking_adsr(
 
   return simultaneously(
     accumulate(
-      (x: any, y: any) =>
-        pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+      (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
       null,
       zip(envelopes, 1)
     )
@@ -725,11 +720,10 @@ export function phase_mod(
   duration: number,
   amount: number
 ): SoundTransformer {
-  return (modulator: Sound) =>
-    make_sound(
-      t => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
-      duration
-    );
+  return (modulator: Sound) => make_sound(
+    t => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
+    duration
+  );
 }
 
 // MIDI conversion functions

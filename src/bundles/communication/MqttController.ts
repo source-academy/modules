@@ -26,7 +26,7 @@ export class MqttController {
 
   constructor(
     connectionCallback: (status: string) => void,
-    messageCallback: (topic: string, message: string) => void
+    messageCallback: (topic: string, message: string) => void,
   ) {
     this.connectionCallback = connectionCallback;
     this.messageCallback = messageCallback;
@@ -85,11 +85,11 @@ export class MqttController {
     topic: string,
     message: string,
     isRetain: boolean,
-    qos: number = 1
+    qos: number = 1,
   ) {
     this.client?.publish(topic, message, {
       qos: qos,
-      retain: isRetain
+      retain: isRetain,
     });
   }
 

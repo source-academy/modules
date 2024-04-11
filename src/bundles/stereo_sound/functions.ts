@@ -311,10 +311,10 @@ export function get_duration(sound: Sound): number {
  */
 export function is_sound(x: any): boolean {
   return (
-    is_pair(x) &&
-    typeof get_left_wave(x) === 'function' &&
-    typeof get_right_wave(x) === 'function' &&
-    typeof get_duration(x) === 'number'
+    is_pair(x)
+    && typeof get_left_wave(x) === 'function'
+    && typeof get_right_wave(x) === 'function'
+    && typeof get_duration(x) === 'number'
   );
 }
 
@@ -340,7 +340,11 @@ export function play_wave(wave: Wave, duration: number): Sound {
  * @return the given Sound
  * @example play_waves(t => math_sin(t * 3000), t => math_sin(t * 6000), 5);
  */
-export function play_waves(wave1: Wave, wave2: Wave, duration: number): Sound {
+export function play_waves(
+  wave1: Wave,
+  wave2: Wave,
+  duration: number
+): Sound {
   return play(make_stereo_sound(wave1, wave2, duration));
 }
 
@@ -356,14 +360,10 @@ export function play_waves(wave1: Wave, wave2: Wave, duration: number): Sound {
 export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(
-      `${play_in_tab.name} is expecting sound, but encountered ${sound}`
-    );
+    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
-    throw new Error(
-      `${play_in_tab.name}: audio system still playing previous sound`
-    );
+    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play_in_tab.name}: duration of sound is negative`);
   } else if (get_duration(sound) === 0) {
@@ -397,8 +397,8 @@ export function play_in_tab(sound: Sound): Sound {
 
       // smoothen out sudden cut-outs
       if (
-        channel[2 * i] === 0 &&
-        Math.abs(channel[2 * i] - Lprev_value) > 0.01
+        channel[2 * i] === 0
+        && Math.abs(channel[2 * i] - Lprev_value) > 0.01
       ) {
         channel[2 * i] = Lprev_value * 0.999;
       }
@@ -417,8 +417,8 @@ export function play_in_tab(sound: Sound): Sound {
 
       // smoothen out sudden cut-outs
       if (
-        channel[2 * i + 1] === 0 &&
-        Math.abs(channel[2 * i] - Rprev_value) > 0.01
+        channel[2 * i + 1] === 0
+        && Math.abs(channel[2 * i] - Rprev_value) > 0.01
       ) {
         channel[2 * i + 1] = Rprev_value * 0.999;
       }
@@ -458,9 +458,7 @@ export function play_in_tab(sound: Sound): Sound {
 export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(
-      `${play.name} is expecting sound, but encountered ${sound}`
-    );
+    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
     throw new Error(`${play.name}: audio system still playing previous sound`);
@@ -497,8 +495,8 @@ export function play(sound: Sound): Sound {
 
       // smoothen out sudden cut-outs
       if (
-        channel[2 * i] === 0 &&
-        Math.abs(channel[2 * i] - Lprev_value) > 0.01
+        channel[2 * i] === 0
+        && Math.abs(channel[2 * i] - Lprev_value) > 0.01
       ) {
         channel[2 * i] = Lprev_value * 0.999;
       }
@@ -517,8 +515,8 @@ export function play(sound: Sound): Sound {
 
       // smoothen out sudden cut-outs
       if (
-        channel[2 * i + 1] === 0 &&
-        Math.abs(channel[2 * i] - Rprev_value) > 0.01
+        channel[2 * i + 1] === 0
+        && Math.abs(channel[2 * i] - Rprev_value) > 0.01
       ) {
         channel[2 * i + 1] = Rprev_value * 0.999;
       }
@@ -696,14 +694,14 @@ export function triangle_sound(freq: number, duration: number): Sound {
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
-      answer +=
-        ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2)) /
-        (2 * i + 1) ** 2;
+      answer
+        += ((-1) ** i * Math.sin((2 * i + 1) * t * freq * Math.PI * 2))
+        / (2 * i + 1) ** 2;
     }
     return answer;
   }
   return make_sound(
-    t => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
+    (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
     duration
   );
 }
@@ -754,11 +752,7 @@ export function consecutively(list_of_sounds: List): Sound {
     const new_right = (t: number) => (t < dur1 ? Rwave1(t) : Rwave2(t - dur1));
     return make_stereo_sound(new_left, new_right, dur1 + dur2);
   }
-  return accumulate<Sound, Sound>(
-    stereo_cons_two,
-    silence_sound(0),
-    list_of_sounds
-  );
+  return accumulate<Sound, Sound>(stereo_cons_two, silence_sound(0), list_of_sounds);
 }
 
 /**
@@ -792,10 +786,8 @@ export function simultaneously(list_of_sounds: List): Sound {
     list_of_sounds
   );
   const sounds_length = length(list_of_sounds);
-  const normalised_left = (t: number) =>
-    head(head(unnormed))(t) / sounds_length;
-  const normalised_right = (t: number) =>
-    tail(head(unnormed))(t) / sounds_length;
+  const normalised_left = (t: number) => head(head(unnormed))(t) / sounds_length;
+  const normalised_right = (t: number) => tail(head(unnormed))(t) / sounds_length;
   const highest_duration = tail(unnormed);
   return make_stereo_sound(normalised_left, normalised_right, highest_duration);
 }
@@ -836,18 +828,18 @@ export function adsr(
         }
         if (x < attack_time + decay_time) {
           return (
-            ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) +
-              sustain_level) *
-            wave(x)
+            ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
+              + sustain_level)
+            * wave(x)
           );
         }
         if (x < duration - release_time) {
           return wave(x) * sustain_level;
         }
         return (
-          wave(x) *
-          sustain_level *
-          linear_decay(release_time)(x - (duration - release_time))
+          wave(x)
+          * sustain_level
+          * linear_decay(release_time)(x - (duration - release_time))
         );
       };
     }
@@ -886,8 +878,7 @@ export function stacking_adsr(
 
   return simultaneously(
     accumulate(
-      (x: any, y: any) =>
-        pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+      (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
       null,
       zip(envelopes, 1)
     )
@@ -913,16 +904,13 @@ export function phase_mod(
   duration: number,
   amount: number
 ): SoundTransformer {
-  return (modulator: Sound) =>
-    make_stereo_sound(
-      t =>
-        Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
-      t =>
-        Math.sin(
-          2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)
-        ),
-      duration
-    );
+  return (modulator: Sound) => make_stereo_sound(
+    t => Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
+    t => Math.sin(
+      2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)
+    ),
+    duration
+  );
 }
 
 // MIDI conversion functions
