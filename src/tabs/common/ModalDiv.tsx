@@ -50,13 +50,7 @@ const Modal = ({ open, height, width, children, handleClose }: ModalProp) => (
   <>
     {open && (
       <>
-        <div
-          style={{
-            height,
-            width,
-            ...containerStyle
-          }}
-        >
+        <div style={{ height, width, ...containerStyle }}>
           <div style={bodyStyle}>{children}</div>
         </div>
         <div style={backdropStyle} onClick={handleClose} />
