@@ -17,7 +17,7 @@ type MotorFunctionReturnType = Motor | null;
  * @categoryDescription EV3
  * These functions are mocking the the normal EV3 functions found
  * at https://docs.sourceacademy.org/EV3/global.html
- * @module
+ * @module robot_simulation
  */
 
 /**
