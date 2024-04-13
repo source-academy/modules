@@ -31,7 +31,7 @@ const bottomResizeOnly: Enable = { bottom: true };
 
 export type WorkspaceProps = DispatchProps & StateProps;
 
-const Workspace: React.FC<WorkspaceProps> = (props) => {
+const Workspace: React.FC<WorkspaceProps> = props => {
   const contentContainerDiv = React.useRef<HTMLDivElement | null>(null);
   const editorDividerDiv = React.useRef<HTMLDivElement | null>(null);
   const leftParentResizable = React.useRef<Resizable | null>(null);

@@ -16,7 +16,7 @@ type StateProps = {
 
 type ControlButtonRunButtonProps = DispatchProps & StateProps;
 
-export const ControlBarRunButton: React.FC<ControlButtonRunButtonProps> = (props) => {
+export const ControlBarRunButton: React.FC<ControlButtonRunButtonProps> = props => {
   const tooltipContent = 'Evaluate the program';
   return (
     <Tooltip content={tooltipContent} placement={Position.TOP}>

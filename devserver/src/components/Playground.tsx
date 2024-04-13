@@ -75,8 +75,7 @@ const Playground: React.FC<{}> = () => {
             name: undefined
           }));
 
-          const builtins: Record<string, any> =
-            SourceDocumentation.builtins[Chapter.SOURCE_4];
+          const builtins: Record<string, any> = SourceDocumentation.builtins[Chapter.SOURCE_4];
           const builtinSuggestions = Object.entries(builtins).map(
             ([builtin, thing]) => ({
               ...thing,
@@ -93,7 +92,7 @@ const Playground: React.FC<{}> = () => {
     }, [editorValue, codeContext]);
 
   const loadTabs = () => getDynamicTabs(codeContext)
-    .then((tabs) => {
+    .then(tabs => {
       setDynamicTabs(tabs);
 
       const newIds = tabs.map(({ id }) => id);
@@ -104,7 +103,7 @@ const Playground: React.FC<{}> = () => {
       }
       setAlerts(newIds);
     })
-    .catch((error) => {
+    .catch(error => {
       showToast(errorToast);
       console.log(error);
     });
@@ -115,7 +114,7 @@ const Playground: React.FC<{}> = () => {
     codeContext.moduleContexts = mockModuleContext.moduleContexts = {};
 
     runInContext(editorValue, codeContext)
-      .then((result) => {
+      .then(result => {
         if (codeContext.errors.length > 0) {
           showToast(errorToast);
         } else {
@@ -179,7 +178,7 @@ const Playground: React.FC<{}> = () => {
       selectedTabId,
       onChange: useCallback((newId: string) => {
         setSelectedTab(newId);
-        setAlerts(alerts.filter((id) => id !== newId));
+        setAlerts(alerts.filter(id => id !== newId));
       }, [alerts]),
       alerts
     }
