@@ -344,11 +344,11 @@ function updateFPS(fps: number): void {
 function updateDimensions(w: number, h: number): void {
   // ignore if no change or bad inputs
   if (
-    (w === WIDTH && h === HEIGHT) ||
-    w > MAX_WIDTH ||
-    w < MIN_WIDTH ||
-    h > MAX_HEIGHT ||
-    h < MIN_HEIGHT
+    (w === WIDTH && h === HEIGHT)
+    || w > MAX_WIDTH
+    || w < MIN_WIDTH
+    || h > MAX_HEIGHT
+    || h < MIN_HEIGHT
   ) {
     return;
   }

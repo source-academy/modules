@@ -51,8 +51,8 @@ export class ProgrammableRepl {
       developmentLog(exception);
       // If the exception has a start line of -1 and an undefined error property, then this exception is most likely to be "incorrect number of arguments" caused by incorrect number of parameters in the evaluator entry function provided by students with set_evaluator.
       if (
-        exception.location.start.line === -1 &&
-        exception.error === undefined
+        exception.location.start.line === -1
+        && exception.error === undefined
       ) {
         this.pushOutputString(
           'Error: Unable to use your evaluator to run the code. Does your evaluator entry function contain and only contain exactly one parameter?',

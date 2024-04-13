@@ -65,6 +65,7 @@ export default [
         { markers: todoTreeKeywordsAll }
       ],
       '@stylistic/arrow-parens': ['warn', 'as-needed'],
+      '@stylistic/operator-linebreak': ['warn', 'before'],
     },
     linterOptions: {
       reportUnusedDisableDirectives: 'warn'

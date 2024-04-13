@@ -311,9 +311,9 @@ class CopyGC extends React.Component<Props, State> {
             <div>
               <h3>{state.toSpace === 0 ? 'To Space' : 'From Space'}</h3>
               <div>
-                {toMemoryMatrix &&
-                  toMemoryMatrix.length > 0 &&
-                  toMemoryMatrix.map((item, row) => (
+                {toMemoryMatrix
+                  && toMemoryMatrix.length > 0
+                  && toMemoryMatrix.map((item, row) => (
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <span style={{ width: 30 }}> {row * state.column} </span>
                       {item
@@ -340,15 +340,15 @@ class CopyGC extends React.Component<Props, State> {
             <div>
               <h3>{state.toSpace > 0 ? 'To Space' : 'From Space'}</h3>
               <div>
-                {fromMemoryMatrix &&
-                  fromMemoryMatrix.length > 0 &&
-                  fromMemoryMatrix.map((item, row) => (
+                {fromMemoryMatrix
+                  && fromMemoryMatrix.length > 0
+                  && fromMemoryMatrix.map((item, row) => (
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <span style={{ width: 30 }}>
                         {row * state.column + state.memorySize / 2}
                       </span>
-                      {item && item.length > 0 ?
-                        item.map(content => {
+                      {item && item.length > 0
+                        ? item.map(content => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (
@@ -362,8 +362,8 @@ class CopyGC extends React.Component<Props, State> {
                               />
                             </div>
                           );
-                        }) :
-                        false}
+                        })
+                        : false}
                     </div>
                   ))}
               </div>

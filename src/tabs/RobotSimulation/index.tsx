@@ -14,8 +14,7 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
-    const worldState =
-      context.context.moduleContexts.robot_simulation.state?.world?.state;
+    const worldState = context.context.moduleContexts.robot_simulation.state?.world?.state;
     return worldState !== undefined;
   },
 

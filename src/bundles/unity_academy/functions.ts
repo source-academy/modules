@@ -85,8 +85,8 @@ export function same_gameobject(first: GameObjectIdentifier, second: GameObjectI
   checkUnityAcademyExistence();
   const instance = getInstance();
   if (
-    !(first instanceof instance.gameObjectIdentifierWrapperClass) ||
-    !(second instanceof instance.gameObjectIdentifierWrapperClass)
+    !(first instanceof instance.gameObjectIdentifierWrapperClass)
+    || !(second instanceof instance.gameObjectIdentifierWrapperClass)
   ) {
     return false;
   }
