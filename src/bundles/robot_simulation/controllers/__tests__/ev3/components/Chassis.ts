@@ -44,6 +44,7 @@ describe('ChassisWrapper', () => {
 
     mockedMeshFactory.addCuboid.mockReturnValue(new THREE.Mesh());
     chassisWrapper = new ChassisWrapper(physicsMock, rendererMock, config);
+
   });
 
   it('should initialize with a debug mesh if debug is true', () => {
