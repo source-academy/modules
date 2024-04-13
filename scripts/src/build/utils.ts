@@ -8,30 +8,30 @@ import { htmlLogger, type buildHtml } from './docs/html';
 import prebuild, { formatPrebuildResults } from './prebuild';
 
 export interface BuildOptions {
-  srcDir: string
-  outDir: string
-  manifest: string
-  lint?: boolean
-  fix?: boolean
-  tsc?: boolean
-  verbose?: boolean
+  srcDir: string;
+  outDir: string;
+  manifest: string;
+  lint?: boolean;
+  fix?: boolean;
+  tsc?: boolean;
+  verbose?: boolean;
 }
 
 export interface SuccessResult {
-  name: string
-  severity: 'success',
+  name: string;
+  severity: 'success';
 }
 
 export interface WarnResult {
-  name: string,
-  severity: 'warn',
-  error: any
+  name: string;
+  severity: 'warn';
+  error: any;
 }
 
 export interface ErrorResult {
-  name: string,
-  severity: 'error',
-  error: any
+  name: string;
+  severity: 'error';
+  error: any;
 }
 
 export type OperationResult = ErrorResult | SuccessResult | WarnResult;
@@ -194,7 +194,7 @@ export function logInputs(
   return output.join('\n');
 }
 
-type CommandHandler = (opts: BuildOptions & { bundles?: string[] | null, tabs?: string[] | null }) => Promise<void>;
+type CommandHandler = (opts: BuildOptions & { bundles?: string[] | null; tabs?: string[] | null }) => Promise<void>;
 
 export function createBuildCommandHandler(func: BuildTask, ignore?: 'bundles' | 'tabs'): CommandHandler {
   return async opts => {

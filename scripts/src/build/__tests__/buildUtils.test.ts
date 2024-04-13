@@ -4,8 +4,8 @@ describe('Test retrieveBundlesAndTabs', () => {
   type TestCase = [
     desc: string,
     {
-      bundles?: string[] | null
-      tabs?: string[] | null
+      bundles?: string[] | null;
+      tabs?: string[] | null;
     },
     boolean,
     Awaited<ReturnType<typeof retrieveBundlesAndTabs>>
