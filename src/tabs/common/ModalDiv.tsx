@@ -39,14 +39,15 @@ const backdropStyle = {
   filter: 'blur(10px)'
 } as CSSProperties;
 
-interface ModalProp {
+type Props = {
   open: boolean;
   height: string;
   width: string;
   handleClose: MouseEventHandler;
   children: ReactElement;
-}
-const Modal = ({ open, height, width, children, handleClose }: ModalProp) => (
+};
+
+const Modal: React.FC<Props> = ({ open, height, width, children, handleClose }) => (
   <>
     {open && (
       <>

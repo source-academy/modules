@@ -15,7 +15,7 @@ type Props = {
   children?: ReactNode;
 };
 
-const ButtonComponent = (props: Props) => {
+const ButtonComponent: React.FC<Props> = props => {
   const buttonProps = {
     ...defaultOptions,
     ...props
