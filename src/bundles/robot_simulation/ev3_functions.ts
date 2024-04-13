@@ -120,6 +120,8 @@ export function ev3_runToRelativePosition(
  * @param time
  * @param speed
  * @returns void
+ *
+ * @category EV3
  */
 export function ev3_runForTime(
   motor: MotorFunctionReturnType,
