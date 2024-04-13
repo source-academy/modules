@@ -8,7 +8,6 @@ import type { DebuggerContext } from '../../../../typings/type_helpers';
 
 import { ColorSensorPanel } from '../TabPanels/ColorSensorPanel';
 import { ConsolePanel } from '../TabPanels/ConsolePanel';
-import { MonitoringPanel } from '../TabPanels/MonitoringPanel';
 import { MotorPidPanel } from '../TabPanels/MotorPidPanel';
 import { UltrasonicSensorPanel } from '../TabPanels/UltrasonicSensorPanel';
 import { WheelPidPanel } from '../TabPanels/WheelPidPanel';
@@ -101,7 +100,6 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
       </div>
       <div style={bottomPanelStyle}>
         <Tabs id="TabsExample">
-          <Tab id="monitoring" title="Monitoring" panel={<MonitoringPanel ev3={ev3}/> } />
           <Tab id="suspensionPid" title="Suspension PID" panel={<WheelPidPanel ev3={ev3}/>} />
           <Tab id="motorPid" title="Motor PID" panel={<MotorPidPanel ev3={ev3}/>} />
           <Tab id="colorSensor" title="Color Sensor" panel={<ColorSensorPanel ev3={ev3}/>}/>

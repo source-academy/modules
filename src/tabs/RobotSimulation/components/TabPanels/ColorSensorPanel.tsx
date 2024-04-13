@@ -1,33 +1,43 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers/ev3/ev3/default/ev3';
+import { useFetchFromSimulation } from '../../hooks/fetchFromSimulation';
+import { LastUpdated } from './tabComponents/LastUpdated';
+import { TabWrapper } from './tabComponents/Wrapper';
 
-const panelWrapperStyle: CSSProperties = {
-  'padding': '10px'
-};
-
-export const ColorSensorPanel = ({ ev3 }: { ev3: DefaultEv3 }) => {
+export const ColorSensorPanel: React.FC<{ ev3: DefaultEv3 }> = ({ ev3 }) => {
   const colorSensor = ev3.get('colorSensor');
   const sensorVisionRef = useRef<HTMLDivElement>(null);
-  const [_, update] = useState(0);
-  const colorSensed = colorSensor.sense();
+
+  const [timing, color] = useFetchFromSimulation(() => {
+    if (ev3.get('colorSensor') === undefined) {
+      return null;
+    }
+    return colorSensor.sense();
+  }, 1000);
 
   useEffect(() => {
     if (sensorVisionRef.current) {
-      sensorVisionRef.current.replaceChildren(colorSensor.renderer.getElement());
+      sensorVisionRef.current.replaceChildren(
+        colorSensor.renderer.getElement()
+      );
     }
+  }, [timing]);
 
-    // Hacky
-    setInterval(() => {
-      update((i) => i + 1);
-    }, 1000);
-  }, []);
+  if (timing === null) {
+    return <TabWrapper>Loading color sensor</TabWrapper>;
+  }
 
-  return <>
-    <div style={panelWrapperStyle}>
+  if (color === null) {
+    return <TabWrapper>Color sensor not found</TabWrapper>;
+  }
+
+  return (
+    <TabWrapper>
+      <LastUpdated time={timing} />
       <div ref={sensorVisionRef}></div>
-      <p>Red: {colorSensed.r}</p>
-      <p>Green: {colorSensed.g}</p>
-      <p>Blue: {colorSensed.b}</p>
-    </div>
-  </>;
+      <p>Red: {color.r}</p>
+      <p>Green: {color.g}</p>
+      <p>Blue: {color.b}</p>
+    </TabWrapper>
+  );
 };

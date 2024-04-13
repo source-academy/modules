@@ -1,6 +1,7 @@
 import { NumericInput } from '@blueprintjs/core';
 import { type CSSProperties } from 'react';
 import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers';
+import { TabWrapper } from './tabComponents/Wrapper';
 
 const RowStyle: CSSProperties = {
   display: 'flex',
@@ -8,7 +9,7 @@ const RowStyle: CSSProperties = {
   gap: '0.6rem',
 };
 
-export const WheelPidPanel = ({ ev3 }: { ev3: DefaultEv3 }) => {
+export const WheelPidPanel: React.FC<{ ev3: DefaultEv3 }> = ({ ev3 }) => {
   const onChangeProportional = (value: number) => {
     ev3.get('backLeftWheel').pid.proportionalGain = value;
     ev3.get('backRightWheel').pid.proportionalGain = value;
@@ -29,7 +30,7 @@ export const WheelPidPanel = ({ ev3 }: { ev3: DefaultEv3 }) => {
   };
 
   return (
-    <div>
+    <TabWrapper>
       <div style={RowStyle}>
         <span>Proportional Gain: </span>
         <NumericInput
@@ -57,6 +58,6 @@ export const WheelPidPanel = ({ ev3 }: { ev3: DefaultEv3 }) => {
           minorStepSize={null}
         />
       </div>
-    </div>
+    </TabWrapper>
   );
 };

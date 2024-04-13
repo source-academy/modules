@@ -1,9 +1,13 @@
-import { type LogEntry, type RobotConsole } from '../../../../bundles/robot_simulation/engine/Core/RobotConsole';
+import {
+  type LogEntry,
+  type RobotConsole,
+} from '../../../../bundles/robot_simulation/engine/Core/RobotConsole';
 import { useFetchFromSimulation } from '../../hooks/fetchFromSimulation';
 import { LastUpdated, getTimeString } from './tabComponents/LastUpdated';
+import { TabWrapper } from './tabComponents/Wrapper';
 
 const getLogString = (log: LogEntry) => {
-  const logLevelText :Record<LogEntry['level'], string> = {
+  const logLevelText: Record<LogEntry['level'], string> = {
     source: 'Runtime Source Error',
     error: 'Error',
   };
@@ -12,11 +16,9 @@ const getLogString = (log: LogEntry) => {
   return `[${timeString}] ${logLevelText[log.level]}: ${log.message}`;
 };
 
-export const ConsolePanel = ({
-  robot_console,
-}: {
+export const ConsolePanel: React.FC<{
   robot_console?: RobotConsole;
-}) => {
+}> = ({ robot_console }) => {
   const [timing, logs] = useFetchFromSimulation(() => {
     if (robot_console === undefined) {
       return null;
@@ -25,32 +27,34 @@ export const ConsolePanel = ({
   }, 1000);
 
   if (timing === null) {
-    return <div>Not fetched yet</div>;
+    return <TabWrapper>Not fetched yet</TabWrapper>;
   }
 
   if (logs === null) {
     return (
-      <div>
+      <TabWrapper>
         Console not found. Ensure that the world is initialized properly.
-      </div>
+      </TabWrapper>
     );
   }
 
   if (logs.length === 0) {
     return (
-      <div>
+      <TabWrapper>
         <LastUpdated time={timing} />
         <p>There is currently no logs</p>
-      </div>
+      </TabWrapper>
     );
   }
 
   return (
-    <div>
+    <TabWrapper>
       <LastUpdated time={timing} />
       <ul>
-        {logs.map((log, i) => <li key={i}>{getLogString(log)}</li>)}
+        {logs.map((log, i) => (
+          <li key={i}>{getLogString(log)}</li>
+        ))}
       </ul>
-    </div>
+    </TabWrapper>
   );
 };
