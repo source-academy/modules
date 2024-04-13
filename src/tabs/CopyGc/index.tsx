@@ -257,10 +257,8 @@ class CopyGC extends React.Component<Props, State> {
             </p>
             <h3>{state.command}</h3>
             <p> {state.description} </p>
-            <div
-              style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}
-            >
-              {state.leftDesc ? (
+            <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+              {state.leftDesc && (
                 <div style={{ flex: 1 }}>
                   <canvas
                     width={10}
@@ -269,10 +267,8 @@ class CopyGC extends React.Component<Props, State> {
                   />
                   <span> {state.leftDesc} </span>
                 </div>
-              ) : (
-                false
               )}
-              {state.rightDesc ? (
+              {state.rightDesc && (
                 <div style={{ flex: 1 }}>
                   <canvas
                     width={10}
@@ -281,8 +277,6 @@ class CopyGC extends React.Component<Props, State> {
                   />
                   <span> {state.rightDesc} </span>
                 </div>
-              ) : (
-                false
               )}
             </div>
             <br />
