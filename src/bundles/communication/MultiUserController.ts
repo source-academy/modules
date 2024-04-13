@@ -7,8 +7,7 @@ import { MqttController, STATE_DISCONNECTED } from './MqttController';
 export class MultiUserController {
   controller: MqttController | null = null;
   connectionState: string = STATE_DISCONNECTED;
-  messageCallbacks: Map<string, (topic: string, message: string) => void>
-    = new Map();
+  messageCallbacks: Map<string, (topic: string, message: string) => void> = new Map();
 
   /**
    * Sets up and connect to the MQTT link.
