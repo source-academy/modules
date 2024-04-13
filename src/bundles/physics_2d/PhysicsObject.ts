@@ -124,7 +124,7 @@ export class PhysicsObject implements ReplResult {
       (forceWithPos: ForceWithPos) => forceWithPos.force.start_time + forceWithPos.force.duration > world_time
     );
 
-    this.forcesAtAPoint.forEach((forceWithPos) => {
+    this.forcesAtAPoint.forEach(forceWithPos => {
       const force = forceWithPos.force;
       this.body.ApplyForce(
         force.direction.Scale(force.magnitude),

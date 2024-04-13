@@ -127,7 +127,7 @@ export function createVector3(x: number, y: number, z: number): Vector3 {
 export function addARObject(arObject: ARObject) {
   const moduleState = getModuleState();
   if (!moduleState) return;
-  if (moduleState.arObjects.find((item) => item.id === arObject.id)) {
+  if (moduleState.arObjects.find(item => item.id === arObject.id)) {
     return; // Already in array
   }
   if (arObject.onSelect) {
@@ -148,7 +148,7 @@ export function removeARObject(arObject: ARObject) {
   const moduleState = getModuleState();
   if (!moduleState) return;
   moduleState.arObjects = moduleState.arObjects.filter(
-    (item) => item.id !== arObject.id,
+    item => item.id !== arObject.id,
   );
   callARCallback();
 }
@@ -266,7 +266,7 @@ export function getFrontObject() {
   const moduleState = getModuleState();
   if (!moduleState) return undefined;
   return moduleState.arObjects.find(
-    (arObject) => arObject.id === moduleState.selectedObjectId,
+    arObject => arObject.id === moduleState.selectedObjectId,
   );
 }
 

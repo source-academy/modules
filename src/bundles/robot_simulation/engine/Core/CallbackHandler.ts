@@ -26,7 +26,7 @@ export class CallbackHandler {
 
     this.currentStepCount = frameTimingInfo.stepCount;
 
-    this.callbackStore = this.callbackStore.filter((callbackEntry) => {
+    this.callbackStore = this.callbackStore.filter(callbackEntry => {
       callbackEntry.delay -= frameTimingInfo.timestep;
 
       if (callbackEntry.delay <= 0) {

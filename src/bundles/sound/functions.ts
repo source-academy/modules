@@ -531,7 +531,7 @@ export function triangle_sound(freq: number, duration: number): Sound {
     return answer;
   }
   return make_sound(
-    (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
+    t => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
     duration
   );
 }

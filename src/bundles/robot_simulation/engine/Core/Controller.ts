@@ -26,7 +26,7 @@ implements Controller {
     await this.callbacks?.start?.();
     await Promise.all(
       Object.values(this.map)
-        .map(async (controller) => {
+        .map(async controller => {
           await controller.start?.();
         }),
     );
@@ -35,7 +35,7 @@ implements Controller {
   update(timingInfo: PhysicsTimingInfo): void {
     this.callbacks?.update?.(timingInfo);
     Object.values(this.map)
-      .forEach((controller) => {
+      .forEach(controller => {
         controller.update?.(timingInfo);
       });
   }
@@ -43,7 +43,7 @@ implements Controller {
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
     this.callbacks?.fixedUpdate?.(timingInfo);
     Object.values(this.map)
-      .forEach((controller) => {
+      .forEach(controller => {
         controller.fixedUpdate?.(timingInfo);
       });
   }
@@ -51,7 +51,7 @@ implements Controller {
   onDestroy(): void {
     this.callbacks?.onDestroy?.();
     Object.values(this.map)
-      .forEach((controller) => {
+      .forEach(controller => {
         controller.onDestroy?.();
       });
   }
@@ -66,26 +66,26 @@ export class ControllerGroup implements Controller {
 
   async start?(): Promise<void> {
     await Promise.all(
-      this.controllers.map(async (controller) => {
+      this.controllers.map(async controller => {
         await controller.start?.();
       }),
     );
   }
 
   update(timingInfo: PhysicsTimingInfo): void {
-    this.controllers.forEach((controller) => {
+    this.controllers.forEach(controller => {
       controller.update?.(timingInfo);
     });
   }
 
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
-    this.controllers.forEach((controller) => {
+    this.controllers.forEach(controller => {
       controller.fixedUpdate?.(timingInfo);
     });
   }
 
   onDestroy(): void {
-    this.controllers.forEach((controller) => {
+    this.controllers.forEach(controller => {
       controller.onDestroy?.();
     });
     this.controllers = [];

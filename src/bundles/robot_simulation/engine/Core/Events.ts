@@ -32,7 +32,7 @@ export class TypedEventTarget<EventMap extends ValueIsEvent<EventMap>> {
   ): boolean {
     const listeners = this.listeners[_type];
     if (listeners) {
-      listeners.forEach((listener) => {
+      listeners.forEach(listener => {
         listener(event);
       });
     }

@@ -10,7 +10,7 @@ export function loadGLTF(url: string, dimension: GLTFLoaderOptions): Promise<GLT
   return new Promise((resolve, reject) => {
     loader.load(
       url,
-      (data) => {
+      data => {
         const box = new THREE.Box3()
           .setFromObject(data.scene);
         const meshSize = new THREE.Vector3();
@@ -25,7 +25,7 @@ export function loadGLTF(url: string, dimension: GLTFLoaderOptions): Promise<GLT
         resolve(data);
       },
       undefined,
-      (error) => reject(error),
+      error => reject(error),
     );
   });
 }

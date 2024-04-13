@@ -29,7 +29,7 @@ export function AugmentedContent(props: ARState) {
       }
       if (prev) {
         const object = objectsRef.current?.find(
-          (item) => item.uuid === prev.uuid,
+          item => item.uuid === prev.uuid,
         );
         if (object) {
           object.isInFront = false;
@@ -37,7 +37,7 @@ export function AugmentedContent(props: ARState) {
       }
       if (current) {
         const object = objectsRef.current?.find(
-          (item) => item.uuid === current.uuid,
+          item => item.uuid === current.uuid,
         );
         if (object) {
           object.isInFront = true;
@@ -69,13 +69,13 @@ export function AugmentedContent(props: ARState) {
 
   function updateObjects(state: ARState) {
     const newObjects: ARObject[] = [];
-    state.arObjects.forEach((object) => {
+    state.arObjects.forEach(object => {
       const newObject = ARObject.fromObject(object, getCurrentTime);
       if (newObject) {
         newObjects.push(newObject);
       }
     });
-    newObjects.forEach((object) => {
+    newObjects.forEach(object => {
       object.onSelect = () => {
         const moduleState = getModuleState();
         if (moduleState) {
@@ -158,13 +158,13 @@ export function AugmentedContent(props: ARState) {
   useEffect(() => {
     try {
       fetch('https://worldtimeapi.org/api/timezone/Asia/Singapore')
-        .then((response) => response.json())
-        .then((data) => {
+        .then(response => response.json())
+        .then(data => {
           const time = new Date(data.datetime).getTime();
           const offset = time - new Date().getTime();
           setTimeOffset(offset);
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
     } catch {
@@ -184,7 +184,7 @@ export function AugmentedContent(props: ARState) {
 
   return (
     <group>
-      {objects.map((item) => item.getComponent(playArea.getCameraPosition))}
+      {objects.map(item => item.getComponent(playArea.getCameraPosition))}
     </group>
   );
 }

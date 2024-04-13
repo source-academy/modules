@@ -44,19 +44,19 @@ export class World extends TypedEventTarget<WorldEventMap> {
     this.controllers.addController(...controllers);
 
     this.addEventListener('worldStart', () => {
-      controllers.forEach((controller) => {
+      controllers.forEach(controller => {
         controller.start?.();
       });
     });
 
-    this.addEventListener('beforeRender', (e) => {
-      controllers.forEach((controller) => {
+    this.addEventListener('beforeRender', e => {
+      controllers.forEach(controller => {
         controller.update?.(e.frameTimingInfo);
       });
     });
 
-    this.physics.addEventListener('beforePhysicsUpdate', (e) => {
-      controllers.forEach((controller) => {
+    this.physics.addEventListener('beforePhysicsUpdate', e => {
+      controllers.forEach(controller => {
         controller.fixedUpdate?.(e.frameTimingInfo);
       });
     });
