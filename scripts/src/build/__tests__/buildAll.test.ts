@@ -20,10 +20,8 @@ jest.spyOn(htmlModule, 'buildHtml');
 jest.spyOn(tabsModule, 'bundleTabs');
 jest.spyOn(bundleModule, 'bundleBundles');
 
-const asMock = <T extends (...any: any[]) => any>(func: T) =>
-  func as MockedFunction<typeof func>;
-const runCommand = (...args: string[]) =>
-  getBuildAllCommand().parseAsync(args, { from: 'user' });
+const asMock = <T extends (...any: any[]) => any>(func: T) => func as MockedFunction<typeof func>;
+const runCommand = (...args: string[]) => getBuildAllCommand().parseAsync(args, { from: 'user' });
 
 describe('test build all command', () => {
   testBuildCommand('buildAll', getBuildAllCommand, [
