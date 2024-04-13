@@ -317,9 +317,9 @@ class MarkSweep extends React.Component<Props, State> {
           <div>
             <div>
               <div>
-                {memoryMatrix &&
-                  memoryMatrix.length > 0 &&
-                  memoryMatrix.map((item, row) => (
+                {memoryMatrix
+                  && memoryMatrix.length > 0
+                  && memoryMatrix.map((item, row) => (
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <span style={{ width: 30 }}> {row * state.column} </span>
                       {item
