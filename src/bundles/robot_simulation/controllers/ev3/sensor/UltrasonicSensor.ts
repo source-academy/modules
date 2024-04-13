@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-import { type Renderer, type Physics } from '../../../engine';
 import { vec3 } from '../../../engine/Math/Convert';
 import { type SimpleVector } from '../../../engine/Math/Vector';
+import {type Physics } from '../../../engine/Physics';
+import { type Renderer } from '../../../engine/Render/Renderer';
 import { type ChassisWrapper } from '../components/Chassis';
 import { type Sensor } from './types';
 
@@ -73,4 +74,5 @@ export class UltrasonicSensor implements Sensor<number> {
 
     this.distanceSensed = wheelDistance;
   }
+
 }

@@ -1,12 +1,12 @@
-import * as _ from 'lodash';
 
 import { type IOptions } from 'js-slang/dist';
 
-import { Variant, type Context, type RecursivePartial } from 'js-slang/dist/types';
 import { Control, Stash, generateCSEMachineStateStream } from 'js-slang/dist/cse-machine/interpreter';
 import { parse } from 'js-slang/dist/parser/parser';
+import { Variant, type Context, type RecursivePartial } from 'js-slang/dist/types';
+import * as _ from 'lodash';
 
-const DEFAULT_SOURCE_OPTIONS = {
+export const DEFAULT_SOURCE_OPTIONS = {
   scheduler: 'async',
   steps: 1000,
   stepLimit: -1,
@@ -24,7 +24,6 @@ const DEFAULT_SOURCE_OPTIONS = {
   },
 };
 
-
 export function* runECEvaluator(
   code: string,
   context: Context,
@@ -32,6 +31,7 @@ export function* runECEvaluator(
 ): Generator<{ steps: number }, void, undefined> {
   const theOptions = _.merge({ ...DEFAULT_SOURCE_OPTIONS }, options);
   const program = parse(code, context);
+  console.log(program);
 
   if (!program) {
     return;

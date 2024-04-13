@@ -76,7 +76,8 @@ export class Wheel implements Controller {
       return;
     }
 
-    let { distance: wheelDistance, normal } = result;
+    const wheelDistance = result.distance;
+    let normal = result.normal;
 
     // If distance is zero, the ray originate from inside the floor/wall.
     // If that is true, we assume the normal is pointing up.
