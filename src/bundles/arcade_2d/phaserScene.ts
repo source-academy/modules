@@ -279,10 +279,12 @@ export class PhaserScene extends Phaser.Scene {
   private createAudioClips() {
     try {
       this.sourceAudioClips.forEach((audioClip: AudioClip) => {
-        this.phaserAudioClips.push(this.sound.add(audioClip.getUrl(), {
-          loop: audioClip.shouldAudioClipLoop(),
-          volume: audioClip.getVolumeLevel()
-        }));
+        this.phaserAudioClips.push(
+          this.sound.add(audioClip.getUrl(), {
+            loop: audioClip.shouldAudioClipLoop(),
+            volume: audioClip.getVolumeLevel()
+          })
+        );
       });
     } catch (error) {
       this.hasRuntimeError = true;

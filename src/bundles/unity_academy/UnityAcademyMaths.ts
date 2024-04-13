@@ -21,15 +21,9 @@ export class Vector3 {
 
 export function checkVector3Parameter(parameter: any): void {
   if (typeof parameter !== 'object') {
-    throw new Error(
-      `The given parameter is not a valid 3D vector! Wrong parameter type: ${typeof parameter}`
-    );
+    throw new Error(`The given parameter is not a valid 3D vector! Wrong parameter type: ${typeof parameter}`);
   }
-  if (
-    typeof parameter.x !== 'number' ||
-    typeof parameter.y !== 'number' ||
-    typeof parameter.z !== 'number'
-  ) {
+  if (typeof parameter.x !== 'number' || typeof parameter.y !== 'number' || typeof parameter.z !== 'number') {
     throw new Error('The given parameter is not a valid 3D vector!');
   }
 }
@@ -91,9 +85,5 @@ export function zeroVector(): Vector3 {
 }
 
 export function pointDistance(pointA: Vector3, pointB: Vector3): number {
-  return Math.sqrt(
-    (pointB.x - pointA.x) ** 2 +
-      (pointB.y - pointA.y) ** 2 +
-      (pointB.z - pointA.z) ** 2
-  );
+  return Math.sqrt((pointB.x - pointA.x) ** 2 + (pointB.y - pointA.y) ** 2 + (pointB.z - pointA.z) ** 2);
 }

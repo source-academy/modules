@@ -9,13 +9,8 @@ import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  Vector3,
-  normalizeVector,
-  pointDistance,
-  zeroVector
-} from './UnityAcademyMaths';
-import { BUILD_NAME, UNITY_ACADEMY_BACKEND_URL } from './config';
+import { Vector3, normalizeVector, zeroVector, pointDistance } from './UnityAcademyMaths';
+import { UNITY_ACADEMY_BACKEND_URL, BUILD_NAME } from './config';
 
 type Transform = {
   position: Vector3;
@@ -185,9 +180,7 @@ class UnityAcademyJsInteropContext {
   // private unityConfig : any;
   public unityInstance: any;
   private unityContainerElement: HTMLElement | null;
-  private studentGameObjectStorage: {
-    [gameObjectIdentifier: string]: StudentGameObject;
-  }; // [get by interop]
+  private studentGameObjectStorage: { [gameObjectIdentifier: string]: StudentGameObject }; // [get by interop]
   private prefabInfo: any;
   private gameObjectIdentifierSerialCounter = 0;
   private studentActionQueue: any; // [get / clear by interop]
@@ -206,10 +199,7 @@ class UnityAcademyJsInteropContext {
   constructor() {
     this.unityInstance = null;
     this.unityContainerElement = document.getElementById('unity_container');
-    if (
-      this.unityContainerElement === undefined ||
-      this.unityContainerElement === null
-    ) {
+    if (this.unityContainerElement === undefined || this.unityContainerElement === null) {
       this.unityContainerElement = document.createElement('div');
       this.unityContainerElement.id = 'unity_container';
     }
@@ -263,9 +253,7 @@ class UnityAcademyJsInteropContext {
     const canvas = document.querySelector('#unity-canvas');
     const unity_load_info = document.querySelector('#unity_load_info');
     createUnityInstance(canvas, UNITY_CONFIG, progress => {
-      unity_load_info!.innerHTML = `Loading Unity Academy ( ${Math.floor(
-        progress * 100
-      )}% )`;
+      unity_load_info!.innerHTML = `Loading Unity Academy ( ${Math.floor(progress * 100)}% )`;
     })
       .then(unityInstance => {
         this.unityInstance = unityInstance;
@@ -296,19 +284,13 @@ class UnityAcademyJsInteropContext {
     if (toShow) {
       (this.unityContainerElement as any).style.visibility = 'visible';
       if (this.unityInstance !== null) {
-        this.unityInstance[sendMessageFunctionName](
-          'GameManager',
-          'WakeUpApplication'
-        );
+        this.unityInstance[sendMessageFunctionName]('GameManager', 'WakeUpApplication');
       }
     } else {
       (this.unityContainerElement as any).style.visibility = 'hidden';
       // Make Unity Academy Application sleep to conserve resources (pause rendering, etc)
       if (this.unityInstance !== null) {
-        this.unityInstance[sendMessageFunctionName](
-          'GameManager',
-          'DoApplicationSleep'
-        );
+        this.unityInstance[sendMessageFunctionName]('GameManager', 'DoApplicationSleep');
       }
     }
     const unityCanvas = document.getElementById('unity-canvas') as any;
@@ -322,11 +304,7 @@ class UnityAcademyJsInteropContext {
 
   terminate() {
     if (this.unityInstance === null) return;
-    if (
-      !confirm(
-        'Do you really hope to terminate the current Unity Academy instance? If so, everything need to reload when you use Unity Academy again.'
-      )
-    ) {
+    if (!confirm('Do you really hope to terminate the current Unity Academy instance? If so, everything need to reload when you use Unity Academy again.')) {
       return;
     }
     const quitFunctionName = 'Quit';
@@ -334,13 +312,10 @@ class UnityAcademyJsInteropContext {
     this.unityInstance = null;
     this.resetModuleData();
     this.setShowUnityComponent(0);
-    const canvasContext = (document.querySelector(
-      '#unity-canvas'
-    ) as HTMLCanvasElement)!.getContext('webgl2');
+    const canvasContext = (document.querySelector('#unity-canvas') as HTMLCanvasElement)!.getContext('webgl2');
     canvasContext!.clearColor(0, 0, 0, 0);
     canvasContext!.clear(canvasContext!.COLOR_BUFFER_BIT);
-    document.querySelector('#unity_load_info')!.innerHTML =
-      'Unity Academy app has been terminated. Please rerun your program with init_unity_academy_3d or init_unity_academy_2d for re-initialization.';
+    document.querySelector('#unity_load_info')!.innerHTML = 'Unity Academy app has been terminated. Please rerun your program with init_unity_academy_3d or init_unity_academy_2d for re-initialization.';
   }
 
   reset() {
@@ -348,10 +323,7 @@ class UnityAcademyJsInteropContext {
     if (this.unityInstance !== null) {
       const sendMessageFunctionName = 'SendMessage';
       // Reset Unity Academy app
-      this.unityInstance[sendMessageFunctionName](
-        'GameManager',
-        'ResetSession'
-      );
+      this.unityInstance[sendMessageFunctionName]('GameManager', 'ResetSession');
     }
   }
 
@@ -383,14 +355,8 @@ class UnityAcademyJsInteropContext {
   }
 
   getUserAgreementStatus(): string {
-    const agreedUserAgreementVersion = localStorage.getItem(
-      'unity_academy_agreed_user_agreement_version'
-    );
-    if (
-      agreedUserAgreementVersion === null ||
-      agreedUserAgreementVersion === 'unagreed' ||
-      agreedUserAgreementVersion === 'unknown'
-    ) {
+    const agreedUserAgreementVersion = localStorage.getItem('unity_academy_agreed_user_agreement_version');
+    if (agreedUserAgreementVersion === null || agreedUserAgreementVersion === 'unagreed' || agreedUserAgreementVersion === 'unknown') {
       return 'unagreed';
     }
     if (this.latestUserAgreementVersion === 'unknown') {
@@ -404,15 +370,9 @@ class UnityAcademyJsInteropContext {
 
   setUserAgreementStatus(agree: boolean): void {
     if (agree) {
-      localStorage.setItem(
-        'unity_academy_agreed_user_agreement_version',
-        this.latestUserAgreementVersion
-      );
+      localStorage.setItem('unity_academy_agreed_user_agreement_version', this.latestUserAgreementVersion);
     } else {
-      localStorage.setItem(
-        'unity_academy_agreed_user_agreement_version',
-        'unagreed'
-      );
+      localStorage.setItem('unity_academy_agreed_user_agreement_version', 'unagreed');
     }
   }
 
@@ -426,16 +386,12 @@ class UnityAcademyJsInteropContext {
       }
     }
     if (!prefabExists) {
-      throw new Error(
-        `Unknown prefab name: '${prefabName}'. Please refer to this prefab list at [ ${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html ] for all available prefab names.`
-      );
+      throw new Error(`Unknown prefab name: '${prefabName}'. Please refer to this prefab list at [ ${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html ] for all available prefab names.`);
     }
     const gameObjectIdentifier = `${prefabName}_${this.gameObjectIdentifierSerialCounter}`;
     this.gameObjectIdentifierSerialCounter++;
     this.makeGameObjectDataStorage(gameObjectIdentifier);
-    this.dispatchStudentAction(
-      `instantiate|${prefabName}|${gameObjectIdentifier}`
-    );
+    this.dispatchStudentAction(`instantiate|${prefabName}|${gameObjectIdentifier}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
@@ -445,9 +401,7 @@ class UnityAcademyJsInteropContext {
     const gameObjectIdentifier = `2DSprite_${this.gameObjectIdentifierSerialCounter}`;
     this.gameObjectIdentifierSerialCounter++;
     this.makeGameObjectDataStorage(gameObjectIdentifier);
-    this.dispatchStudentAction(
-      `instantiate2DSpriteUrl|${sourceImageUrl}|${gameObjectIdentifier}`
-    );
+    this.dispatchStudentAction(`instantiate2DSpriteUrl|${sourceImageUrl}|${gameObjectIdentifier}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
@@ -455,9 +409,7 @@ class UnityAcademyJsInteropContext {
     const gameObjectIdentifier = `EmptyGameObject_${this.gameObjectIdentifierSerialCounter}`;
     this.gameObjectIdentifierSerialCounter++;
     this.makeGameObjectDataStorage(gameObjectIdentifier);
-    this.dispatchStudentAction(
-      `instantiateEmptyGameObject|${gameObjectIdentifier}`
-    );
+    this.dispatchStudentAction(`instantiateEmptyGameObject|${gameObjectIdentifier}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
@@ -473,16 +425,12 @@ class UnityAcademyJsInteropContext {
       isLooping: false,
       isPlaying: false
     };
-    this.dispatchStudentAction(
-      `instantiateAudioSourceGameObject|${gameObjectIdentifier}|${audioClipIdentifier.audioClipInternalName}`
-    );
+    this.dispatchStudentAction(`instantiateAudioSourceGameObject|${gameObjectIdentifier}|${audioClipIdentifier.audioClipInternalName}`);
     return new GameObjectIdentifier(gameObjectIdentifier);
   }
 
   destroyGameObjectInternal(gameObjectIdentifier: GameObjectIdentifier): void {
-    this.dispatchStudentAction(
-      `destroyGameObject|${gameObjectIdentifier.gameObjectIdentifier}`
-    );
+    this.dispatchStudentAction(`destroyGameObject|${gameObjectIdentifier.gameObjectIdentifier}`);
   }
 
   private makeGameObjectDataStorage(gameObjectIdentifier: string) {
@@ -504,31 +452,20 @@ class UnityAcademyJsInteropContext {
     };
   }
 
-  getStudentGameObject(
-    gameObjectIdentifier: GameObjectIdentifier
-  ): StudentGameObject {
-    const retVal =
-      this.studentGameObjectStorage[gameObjectIdentifier.gameObjectIdentifier];
+  getStudentGameObject(gameObjectIdentifier: GameObjectIdentifier): StudentGameObject {
+    const retVal = this.studentGameObjectStorage[gameObjectIdentifier.gameObjectIdentifier];
     if (retVal === undefined) {
-      throw new Error(
-        `Could not find GameObject with identifier ${gameObjectIdentifier}`
-      );
+      throw new Error(`Could not find GameObject with identifier ${gameObjectIdentifier}`);
     }
     return retVal;
   }
 
-  setStartInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    startFunction: Function
-  ): void {
+  setStartInternal(gameObjectIdentifier: GameObjectIdentifier, startFunction: Function): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.startMethod = startFunction;
   }
 
-  setUpdateInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    updateFunction: Function
-  ): void {
+  setUpdateInternal(gameObjectIdentifier: GameObjectIdentifier, updateFunction: Function): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.updateMethod = updateFunction;
   }
@@ -537,30 +474,17 @@ class UnityAcademyJsInteropContext {
     this.studentActionQueue[this.studentActionQueue.length] = action;
   }
 
-  getGameObjectIdentifierForPrimitiveGameObject(
-    name: string
-  ): GameObjectIdentifier {
+  getGameObjectIdentifierForPrimitiveGameObject(name: string): GameObjectIdentifier {
     const propName = 'gameObjectIdentifierWrapperClass';
     return new this[propName](name);
   }
 
-  getGameObjectTransformProp(
-    propName: string,
-    gameObjectIdentifier: GameObjectIdentifier
-  ): Vector3 {
+  getGameObjectTransformProp(propName: string, gameObjectIdentifier: GameObjectIdentifier): Vector3 {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
-    return new Vector3(
-      gameObject.transform[propName].x,
-      gameObject.transform[propName].y,
-      gameObject.transform[propName].z
-    );
+    return new Vector3(gameObject.transform[propName].x, gameObject.transform[propName].y, gameObject.transform[propName].z);
   }
 
-  setGameObjectTransformProp(
-    propName: string,
-    gameObjectIdentifier: GameObjectIdentifier,
-    newValue: Vector3
-  ): void {
+  setGameObjectTransformProp(propName: string, gameObjectIdentifier: GameObjectIdentifier, newValue: Vector3): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.transform[propName].x = newValue.x;
     gameObject.transform[propName].y = newValue.y;
@@ -571,20 +495,14 @@ class UnityAcademyJsInteropContext {
     return this.deltaTime;
   }
 
-  translateWorldInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    deltaPosition: Vector3
-  ): void {
+  translateWorldInternal(gameObjectIdentifier: GameObjectIdentifier, deltaPosition: Vector3): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.transform.position.x += deltaPosition.x;
     gameObject.transform.position.y += deltaPosition.y;
     gameObject.transform.position.z += deltaPosition.z;
   }
 
-  translateLocalInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    deltaPosition: Vector3
-  ): void {
+  translateLocalInternal(gameObjectIdentifier: GameObjectIdentifier, deltaPosition: Vector3): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rotation = gameObject.transform.rotation;
 
@@ -594,19 +512,10 @@ class UnityAcademyJsInteropContext {
     const rz = (rotation.z * Math.PI) / 180;
     const cos = Math.cos;
     const sin = Math.sin;
-    const rotationMatrix = [
-      [cos(ry) * cos(rz), -cos(ry) * sin(rz), sin(ry)],
-      [
-        cos(rx) * sin(rz) + sin(rx) * sin(ry) * cos(rz),
-        cos(rx) * cos(rz) - sin(rx) * sin(ry) * sin(rz),
-        -sin(rx) * cos(ry)
-      ],
-      [
-        sin(rx) * sin(rz) - cos(rx) * sin(ry) * cos(rz),
-        cos(rx) * sin(ry) * sin(rz) + sin(rx) * cos(rz),
-        cos(rx) * cos(ry)
-      ]
-    ];
+    const rotationMatrix
+      = [[cos(ry) * cos(rz), -cos(ry) * sin(rz), sin(ry)],
+        [cos(rx) * sin(rz) + sin(rx) * sin(ry) * cos(rz), cos(rx) * cos(rz) - sin(rx) * sin(ry) * sin(rz), -sin(rx) * cos(ry)],
+        [sin(rx) * sin(rz) - cos(rx) * sin(ry) * cos(rz), cos(rx) * sin(ry) * sin(rz) + sin(rx) * cos(rz), cos(rx) * cos(ry)]];
     const finalWorldTranslateVector = [
       rotationMatrix[0][0] * deltaPosition.x +
         rotationMatrix[0][1] * deltaPosition.y +
@@ -623,10 +532,7 @@ class UnityAcademyJsInteropContext {
     gameObject.transform.position.z += finalWorldTranslateVector[2];
   }
 
-  lookAtPositionInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    position: Vector3
-  ): void {
+  lookAtPositionInternal(gameObjectIdentifier: GameObjectIdentifier, position: Vector3): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const deltaVector = normalizeVector(
       new Vector3(
@@ -642,73 +548,44 @@ class UnityAcademyJsInteropContext {
     gameObject.transform.rotation.z = 0;
   }
 
-  gameObjectDistanceInternal(
-    gameObjectIdentifier_A: GameObjectIdentifier,
-    gameObjectIdentifier_B: GameObjectIdentifier
-  ): number {
+  gameObjectDistanceInternal(gameObjectIdentifier_A: GameObjectIdentifier, gameObjectIdentifier_B: GameObjectIdentifier): number {
     const gameObjectA = this.getStudentGameObject(gameObjectIdentifier_A);
     const gameObjectB = this.getStudentGameObject(gameObjectIdentifier_B);
-    return pointDistance(
-      gameObjectA.transform.position,
-      gameObjectB.transform.position
-    );
+    return pointDistance(gameObjectA.transform.position, gameObjectB.transform.position);
   }
 
-  rotateWorldInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    angles: Vector3
-  ): void {
+  rotateWorldInternal(gameObjectIdentifier: GameObjectIdentifier, angles: Vector3): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.transform.rotation.x += angles.x;
     gameObject.transform.rotation.y += angles.y;
     gameObject.transform.rotation.z += angles.z;
   }
 
-  copyTransformPropertiesInternal(
-    propName: string,
-    from: GameObjectIdentifier,
-    to: GameObjectIdentifier,
-    deltaValues: Vector3
-  ): void {
+  copyTransformPropertiesInternal(propName: string, from: GameObjectIdentifier, to: GameObjectIdentifier, deltaValues: Vector3): void {
     const fromGameObject = this.getStudentGameObject(from);
     const toGameObject = this.getStudentGameObject(to);
     const deltaX = deltaValues.x;
     const deltaY = deltaValues.y;
     const deltaZ = deltaValues.z;
-    if (Math.abs(deltaX) !== 999999)
-      toGameObject.transform[propName].x =
-        fromGameObject.transform[propName].x + deltaX;
-    if (Math.abs(deltaY) !== 999999)
-      toGameObject.transform[propName].y =
-        fromGameObject.transform[propName].y + deltaY;
-    if (Math.abs(deltaZ) !== 999999)
-      toGameObject.transform[propName].z =
-        fromGameObject.transform[propName].z + deltaZ;
+    if (Math.abs(deltaX) !== 999999) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + deltaX;
+    if (Math.abs(deltaY) !== 999999) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + deltaY;
+    if (Math.abs(deltaZ) !== 999999) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + deltaZ;
   }
 
   getKeyState(keyCode: string): number {
     return this.input.keyboardInputInfo[keyCode];
   }
 
-  playAnimatorStateInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    animatorStateName: string
-  ) {
+  playAnimatorStateInternal(gameObjectIdentifier: GameObjectIdentifier, animatorStateName: string) {
     this.getStudentGameObject(gameObjectIdentifier); // Just to check whether the game object identifier is valid or not.
-    this.dispatchStudentAction(
-      `playAnimatorState|${gameObjectIdentifier.gameObjectIdentifier}|${animatorStateName}`
-    );
+    this.dispatchStudentAction(`playAnimatorState|${gameObjectIdentifier.gameObjectIdentifier}|${animatorStateName}`);
   }
 
   applyRigidbodyInternal(gameObjectIdentifier: GameObjectIdentifier) {
-    console.log(
-      `Applying rigidbody to GameObject ${gameObjectIdentifier.gameObjectIdentifier}`
-    );
+    console.log(`Applying rigidbody to GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     if (gameObject.rigidbody !== null) {
-      throw new Error(
-        `Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`
-      );
+      throw new Error(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
     }
     gameObject.rigidbody = {
       velocity: zeroVector(),
@@ -718,37 +595,21 @@ class UnityAcademyJsInteropContext {
       drag: 0,
       angularDrag: 0.05
     };
-    this.dispatchStudentAction(
-      `applyRigidbody|${gameObjectIdentifier.gameObjectIdentifier}`
-    );
+    this.dispatchStudentAction(`applyRigidbody|${gameObjectIdentifier.gameObjectIdentifier}`);
   }
 
   private getRigidbody(gameObject: StudentGameObject): RigidbodyData {
-    if (gameObject.rigidbody === null)
-      throw new Error(
-        'You must call apply_rigidbody on the game object before using this physics function!'
-      );
+    if (gameObject.rigidbody === null) throw new Error('You must call apply_rigidbody on the game object before using this physics function!');
     return gameObject.rigidbody;
   }
 
-  getRigidbodyVelocityVector3Prop(
-    propName: string,
-    gameObjectIdentifier: GameObjectIdentifier
-  ): Vector3 {
+  getRigidbodyVelocityVector3Prop(propName: string, gameObjectIdentifier: GameObjectIdentifier): Vector3 {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rigidbody = this.getRigidbody(gameObject);
-    return new Vector3(
-      rigidbody[propName].x,
-      rigidbody[propName].y,
-      rigidbody[propName].z
-    );
+    return new Vector3(rigidbody[propName].x, rigidbody[propName].y, rigidbody[propName].z);
   }
 
-  setRigidbodyVelocityVector3Prop(
-    propName: string,
-    gameObjectIdentifier: GameObjectIdentifier,
-    newValue: Vector3
-  ): void {
+  setRigidbodyVelocityVector3Prop(propName: string, gameObjectIdentifier: GameObjectIdentifier, newValue: Vector3): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rigidbody = this.getRigidbody(gameObject);
     rigidbody[propName].x = newValue.x;
@@ -756,73 +617,43 @@ class UnityAcademyJsInteropContext {
     rigidbody[propName].z = newValue.z;
   }
 
-  getRigidbodyNumericalProp(
-    propName: string,
-    gameObjectIdentifier: GameObjectIdentifier
-  ): number {
+  getRigidbodyNumericalProp(propName: string, gameObjectIdentifier: GameObjectIdentifier): number {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rigidbody = this.getRigidbody(gameObject);
     return rigidbody[propName];
   }
 
-  setRigidbodyNumericalProp(
-    propName: string,
-    gameObjectIdentifier: GameObjectIdentifier,
-    value: number
-  ): void {
+  setRigidbodyNumericalProp(propName: string, gameObjectIdentifier: GameObjectIdentifier, value: number): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rigidbody = this.getRigidbody(gameObject);
     rigidbody[propName] = value;
   }
 
-  setUseGravityInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    useGravity: boolean
-  ): void {
+  setUseGravityInternal(gameObjectIdentifier: GameObjectIdentifier, useGravity: boolean): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const rigidbody = this.getRigidbody(gameObject);
     rigidbody.useGravity = useGravity;
   }
 
-  addImpulseForceInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    force: Vector3
-  ): void {
-    this.dispatchStudentAction(
-      `addImpulseForce|${
-        gameObjectIdentifier.gameObjectIdentifier
-      }|${force.x.toString()}|${force.y.toString()}|${force.z.toString()}`
-    );
+  addImpulseForceInternal(gameObjectIdentifier: GameObjectIdentifier, force: Vector3): void {
+    this.dispatchStudentAction(`addImpulseForce|${gameObjectIdentifier.gameObjectIdentifier}|${force.x.toString()}|${force.y.toString()}|${force.z.toString()}`);
   }
 
-  removeColliderComponentsInternal(
-    gameObjectIdentifier: GameObjectIdentifier
-  ): void {
-    this.dispatchStudentAction(
-      `removeColliderComponents|${gameObjectIdentifier.gameObjectIdentifier}`
-    );
+  removeColliderComponentsInternal(gameObjectIdentifier: GameObjectIdentifier): void {
+    this.dispatchStudentAction(`removeColliderComponents|${gameObjectIdentifier.gameObjectIdentifier}`);
   }
 
-  setOnCollisionEnterInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    eventFunction: Function
-  ) {
+  setOnCollisionEnterInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionEnterMethod = eventFunction;
   }
 
-  setOnCollisionStayInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    eventFunction: Function
-  ) {
+  setOnCollisionStayInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionStayMethod = eventFunction;
   }
 
-  setOnCollisionExitInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    eventFunction: Function
-  ) {
+  setOnCollisionExitInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionExitMethod = eventFunction;
   }
@@ -850,14 +681,7 @@ class UnityAcademyJsInteropContext {
     this.guiData.push(newLabel);
   }
 
-  onGUI_Button(
-    text: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    onClick: Function
-  ): void {
+  onGUI_Button(text: string, x: number, y: number, width: number, height: number, onClick: Function): void {
     // Temporarily use "<%7C>" to replace all '|' characters as '|' is used as the data separator in GUI data in Unity Academy Embedded Frontend.
     // In Unity Academy Embedded Frontend, "<%7C>" will be replaced back to '|' when displaying the text in GUI
     text = text.replaceAll('|', '<%7C>');
@@ -873,22 +697,15 @@ class UnityAcademyJsInteropContext {
     this.guiData.push(newButton);
   }
 
-  loadAudioClipInternal(
-    audioClipUrl: string,
-    audioType: string
-  ): AudioClipIdentifier {
+  loadAudioClipInternal(audioClipUrl: string, audioType: string): AudioClipIdentifier {
     const audioClipInternalName = `AudioClip_${this.audioClipIdentifierSerialCounter}`;
     this.audioClipIdentifierSerialCounter++;
     this.audioClipStorage[this.audioClipStorage.length] = audioClipInternalName;
-    this.dispatchStudentAction(
-      `loadAudioClip|${audioClipUrl}|${audioType}|${audioClipInternalName}`
-    );
+    this.dispatchStudentAction(`loadAudioClip|${audioClipUrl}|${audioType}|${audioClipInternalName}`);
     return new AudioClipIdentifier(audioClipInternalName);
   }
 
-  private getAudioSourceData(
-    gameObjectIdentifier: GameObjectIdentifier
-  ): AudioSourceData {
+  private getAudioSourceData(gameObjectIdentifier: GameObjectIdentifier): AudioSourceData {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const retVal = gameObject.audioSource;
     if (retVal === null) {
@@ -897,11 +714,7 @@ class UnityAcademyJsInteropContext {
     return retVal;
   }
 
-  setAudioSourceProp(
-    propName: string,
-    audioSrc: GameObjectIdentifier,
-    value: any
-  ): void {
+  setAudioSourceProp(propName: string, audioSrc: GameObjectIdentifier, value: any): void {
     const audioSourceData = this.getAudioSourceData(audioSrc);
     audioSourceData[propName] = value;
   }
@@ -925,19 +738,12 @@ class UnityAcademyJsInteropContext {
     this.targetFrameRate = newTargetFrameRate;
   }
 
-  setCustomPropertyInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    propName: string,
-    value: any
-  ): void {
+  setCustomPropertyInternal(gameObjectIdentifier: GameObjectIdentifier, propName: string, value: any): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.customProperties[propName] = value;
   }
 
-  getCustomPropertyInternal(
-    gameObjectIdentifier: GameObjectIdentifier,
-    propName: string
-  ): any {
+  getCustomPropertyInternal(gameObjectIdentifier: GameObjectIdentifier, propName: string): any {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     return gameObject.customProperties[propName];
   }
@@ -951,9 +757,7 @@ export function initializeModule(dimensionMode: string) {
   let instance = getInstance();
   if (instance !== undefined) {
     if (!instance.isUnityInstanceReady()) {
-      throw new Error(
-        "Unity Academy Embedded Frontend is not ready to accept a new Source program now, please try again later. If you just successfully ran your code before but haven't open Unity Academy Embedded Frontend before running your code again, please try open the frontend first. If this error persists or you can not open Unity Academy Embedded Frontend, please try to refresh your browser's page."
-      );
+      throw new Error('Unity Academy Embedded Frontend is not ready to accept a new Source program now, please try again later. If you just successfully ran your code before but haven\'t open Unity Academy Embedded Frontend before running your code again, please try open the frontend first. If this error persists or you can not open Unity Academy Embedded Frontend, please try to refresh your browser\'s page.');
     }
     if (instance.unityInstance === null) {
       instance.reloadUnityAcademyInstanceAfterTermination();

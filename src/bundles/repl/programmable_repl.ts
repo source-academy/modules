@@ -6,11 +6,7 @@
 
 import { runFilesInContext, type IOptions } from 'js-slang';
 import context from 'js-slang/context';
-import {
-  COLOR_ERROR_MESSAGE,
-  COLOR_RUN_CODE_RESULT,
-  DEFAULT_EDITOR_HEIGHT
-} from './config';
+import { COLOR_RUN_CODE_RESULT, COLOR_ERROR_MESSAGE, DEFAULT_EDITOR_HEIGHT } from './config';
 import { default_js_slang } from './functions';
 
 export class ProgrammableRepl {
@@ -63,12 +59,7 @@ export class ProgrammableRepl {
           COLOR_ERROR_MESSAGE
         );
       } else {
-        this.pushOutputString(
-          `Line ${exception.location.start.line.toString()}: ${
-            exception.error?.message
-          }`,
-          COLOR_ERROR_MESSAGE
-        );
+        this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error?.message}`, COLOR_ERROR_MESSAGE);
       }
       this.reRenderTab();
       return;
@@ -87,11 +78,7 @@ export class ProgrammableRepl {
   }
 
   // Rich text output method allow output strings to have html tags and css styles.
-  pushOutputString(
-    content: string,
-    textColor: string,
-    outputMethod: string = 'plaintext'
-  ) {
+  pushOutputString(content: string, textColor: string, outputMethod: string = 'plaintext') {
     const tmp = {
       content:
         content === undefined
@@ -113,9 +100,7 @@ export class ProgrammableRepl {
       developmentLog(breakpointLine);
     });
 
-    this._editorInstance.setOptions({
-      fontSize: `${this.customizedEditorProps.fontSize.toString()}pt`
-    });
+    this._editorInstance.setOptions({ fontSize: `${this.customizedEditorProps.fontSize.toString()}pt` });
   }
 
   richDisplayInternal(pair_rich_text) {
@@ -130,13 +115,7 @@ export class ProgrammableRepl {
       for (let i = 1; i < 7; i++) {
         const char = htmlColor[i];
         developmentLog(`   ${char}`);
-        if (
-          !(
-            (char >= '0' && char <= '9') ||
-            (char >= 'A' && char <= 'F') ||
-            (char >= 'a' && char <= 'f')
-          )
-        ) {
+        if (!((char >= '0' && char <= '9') || (char >= 'A' && char <= 'F') || (char >= 'a' && char <= 'f'))) {
           return false;
         }
       }
@@ -147,17 +126,13 @@ export class ProgrammableRepl {
         // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
         const safeCheckResult = thisInstance.userStringSafeCheck(param);
         if (safeCheckResult !== 'safe') {
-          throw new Error(
-            `For safety matters, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`
-          );
+          throw new Error(`For safety matters, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
         }
         developmentLog(head(param));
         return `">${param}</span>`;
       }
       if (!is_pair(param)) {
-        throw new Error(
-          `Unexpected data type ${typeof param} when processing rich text. It should be a pair.`
-        );
+        throw new Error(`Unexpected data type ${typeof (param)} when processing rich text. It should be a pair.`);
       } else {
         const pairStyleToCssStyle: { [pairStyle: string]: string } = {
           bold: 'font-weight:bold;',
@@ -168,12 +143,8 @@ export class ProgrammableRepl {
           gigantic: 'font-size: 50px;',
           underline: 'text-decoration: underline;'
         };
-        if (typeof tail(param) !== 'string') {
-          throw new Error(
-            `The tail in style pair should always be a string, but got ${typeof tail(
-              param
-            )}.`
-          );
+        if (typeof (tail(param)) !== 'string') {
+          throw new Error(`The tail in style pair should always be a string, but got ${typeof (tail(param))}.`);
         }
         let style = '';
         if (tail(param).substring(0, 3) === 'clr') {
@@ -183,29 +154,19 @@ export class ProgrammableRepl {
           else throw new Error('Error when decoding rich text color data');
           const colorHex = tail(param).substring(4);
           if (!checkColorStringValidity(colorHex)) {
-            throw new Error(
-              `Invalid html color string ${colorHex}. It should start with # and followed by 6 characters representing a hex number.`
-            );
+            throw new Error(`Invalid html color string ${colorHex}. It should start with # and followed by 6 characters representing a hex number.`);
           }
           style = `${prefix + colorHex};`;
         } else {
           style = pairStyleToCssStyle[tail(param)];
           if (style === undefined) {
-            throw new Error(
-              `Found undefined style ${tail(
-                param
-              )} during processing rich text.`
-            );
+            throw new Error(`Found undefined style ${tail(param)} during processing rich text.`);
           }
         }
         return style + recursiveHelper(thisInstance, head(param));
       }
     }
-    this.pushOutputString(
-      `<span style="${recursiveHelper(this, pair_rich_text)}`,
-      '',
-      'richtext'
-    );
+    this.pushOutputString(`<span style="${recursiveHelper(this, pair_rich_text)}`, '', 'richtext');
     return undefined; // Add this line to pass lint check "consistent-return"
   }
 
@@ -213,18 +174,7 @@ export class ProgrammableRepl {
   userStringSafeCheck(str) {
     developmentLog(`Safe check on ${str}`);
     const tmp = str.toLowerCase();
-    const forbiddenWords = [
-      '\\',
-      '<',
-      '>',
-      'script',
-      'javascript',
-      'eval',
-      'document',
-      'window',
-      'console',
-      'location'
-    ];
+    const forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
     for (const word of forbiddenWords) {
       if (tmp.indexOf(word) !== -1) {
         return word;
@@ -253,54 +203,28 @@ export class ProgrammableRepl {
       '/ReplModuleUserCode.js': code
     };
 
-    runFilesInContext(
-      sourceFile,
-      '/ReplModuleUserCode.js',
-      context,
-      options
-    ).then(evalResult => {
-      if (
-        evalResult.status === 'suspended' ||
-        evalResult.status === 'suspended-cse-eval'
-      ) {
-        throw new Error('This should not happen');
-      }
-      if (evalResult.status !== 'error') {
-        this.pushOutputString(
-          'js-slang program finished with value:',
-          COLOR_RUN_CODE_RESULT
-        );
-        // Here must use plain text output mode because evalResult.value contains strings from the users.
-        this.pushOutputString(
-          evalResult.value === undefined
-            ? 'undefined'
-            : evalResult.value.toString(),
-          COLOR_RUN_CODE_RESULT
-        );
-      } else {
-        const errors = context.errors;
-        console.log(errors);
-        const errorCount = errors.length;
-        for (let i = 0; i < errorCount; i++) {
-          const error = errors[i];
-          if (
-            error.explain().indexOf('Name repl_display not declared.') !== -1
-          ) {
-            this.pushOutputString(
-              '[Error] It seems that you haven\'t import the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.',
-              COLOR_ERROR_MESSAGE
-            );
-          } else
-            this.pushOutputString(
-              `Line ${error.location.start.line}: ${
-                error.type
-              } Error: ${error.explain()}  (${error.elaborate()})`,
-              COLOR_ERROR_MESSAGE
-            );
+    runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options)
+      .then((evalResult) => {
+        if (evalResult.status === 'suspended' || evalResult.status === 'suspended-cse-eval') {
+          throw new Error('This should not happen');
         }
-      }
-      this.reRenderTab();
-    });
+        if (evalResult.status !== 'error') {
+          this.pushOutputString('js-slang program finished with value:', COLOR_RUN_CODE_RESULT);
+          // Here must use plain text output mode because evalResult.value contains strings from the users.
+          this.pushOutputString(evalResult.value === undefined ? 'undefined' : evalResult.value.toString(), COLOR_RUN_CODE_RESULT);
+        } else {
+          const errors = context.errors;
+          console.log(errors);
+          const errorCount = errors.length;
+          for (let i = 0; i < errorCount; i++) {
+            const error = errors[i];
+            if (error.explain().indexOf('Name repl_display not declared.') !== -1) {
+              this.pushOutputString('[Error] It seems that you haven\'t import the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', COLOR_ERROR_MESSAGE);
+            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
+          }
+        }
+        this.reRenderTab();
+      });
 
     return 'Async run in js-slang';
   }
@@ -314,23 +238,14 @@ export class ProgrammableRepl {
   }
 
   saveEditorContent() {
-    localStorage.setItem(
-      'programmable_repl_saved_editor_code',
-      this.userCodeInEditor.toString()
-    );
+    localStorage.setItem('programmable_repl_saved_editor_code', this.userCodeInEditor.toString());
     this.pushOutputString('Saved', 'lightgreen');
-    this.pushOutputString(
-      "<span style='font-style:italic;'>The saved code is stored locally in your browser. You may lose the saved code if you clear browser data or use another device.</span>",
-      'gray',
-      'richtext'
-    );
+    this.pushOutputString('<span style=\'font-style:italic;\'>The saved code is stored locally in your browser. You may lose the saved code if you clear browser data or use another device.</span>', 'gray', 'richtext');
     this.reRenderTab();
   }
 
   private getSavedEditorContent() {
-    const savedContent = localStorage.getItem(
-      'programmable_repl_saved_editor_code'
-    );
+    const savedContent = localStorage.getItem('programmable_repl_saved_editor_code');
     if (savedContent === null) return '';
     return savedContent;
   }

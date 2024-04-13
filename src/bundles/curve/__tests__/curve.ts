@@ -1,11 +1,5 @@
 import { generateCurve, type Curve } from '../curves_webgl';
-import {
-  animate_3D_curve,
-  animate_curve,
-  draw_3D_connected,
-  draw_connected,
-  make_point
-} from '../functions';
+import { animate_3D_curve, animate_curve, draw_3D_connected, draw_connected, make_point } from '../functions';
 
 function evalCurve(curve: Curve, numPoints: number) {
   generateCurve('none', 'points', numPoints, curve, '2D', false);
