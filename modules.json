@@ -111,5 +111,10 @@
   },
   "communication": {
     "tabs": []
+  },
+  "nbody": {
+    "tabs": [
+      "Nbody"
+    ]
   }
 }
