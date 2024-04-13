@@ -43,8 +43,8 @@ class Unity3DTab extends React.Component<Props> {
           even crash your operation system if your device's performance is not
           enough.
           <br />
-          <br /> ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN
-          DEVICE?***
+          <br />
+          ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***
         </div>
       );
     } else {
@@ -54,8 +54,7 @@ class Unity3DTab extends React.Component<Props> {
     return (
       <div>
         <p>
-          Click the button below to open the Unity Academy Window filling the
-          page.
+          Click the button below to open the Unity Academy Window filling the page.
         </p>
         <p>
           <b>Current Mode: {dimensionMode === '3d' ? '3D' : '2D'}</b>
@@ -136,11 +135,7 @@ class Unity3DTab extends React.Component<Props> {
           <Button
             active={true}
             onClick={() => {
-              if (
-                confirm(
-                  'Set the target frame rate higher than the default recommended value (30) ?'
-                )
-              ) {
+              if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
                 getInstance().setTargetFrameRate(60);
                 this.setState({});
               }
@@ -150,11 +145,7 @@ class Unity3DTab extends React.Component<Props> {
           <Button
             active={true}
             onClick={() => {
-              if (
-                confirm(
-                  'Set the target frame rate higher than the default recommended value (30) ?'
-                )
-              ) {
+              if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
                 getInstance().setTargetFrameRate(90);
                 this.setState({});
               }
@@ -164,11 +155,7 @@ class Unity3DTab extends React.Component<Props> {
           <Button
             active={true}
             onClick={() => {
-              if (
-                confirm(
-                  'Set the target frame rate higher than the default recommended value (30) ?'
-                )
-              ) {
+              if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
                 getInstance().setTargetFrameRate(120);
                 this.setState({});
               }
@@ -229,9 +216,7 @@ class Unity3DTab extends React.Component<Props> {
           }}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             this.userAgreementCheckboxChecked = event.target.checked;
-            getInstance().setUserAgreementStatus(
-              this.userAgreementCheckboxChecked
-            );
+            getInstance().setUserAgreementStatus(this.userAgreementCheckboxChecked);
           }}
         />
       </div>
@@ -240,16 +225,12 @@ class Unity3DTab extends React.Component<Props> {
 
   openUnityWindow(resolution: number): void {
     if (!this.userAgreementCheckboxChecked) {
-      alert(
-        'You must agree to the our User Agreement before using Unity Academy and this module!'
-      );
+      alert('You must agree to the our User Agreement before using Unity Academy and this module!');
       return;
     }
     const INSTANCE = getInstance();
     if (INSTANCE === undefined) {
-      alert(
-        'No running Unity application found. Please rerun your code and try again.'
-      );
+      alert('No running Unity application found. Please rerun your code and try again.');
       return;
     }
     INSTANCE.setShowUnityComponent(resolution);
