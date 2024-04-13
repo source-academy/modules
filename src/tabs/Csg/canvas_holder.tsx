@@ -32,8 +32,7 @@ export default class CanvasHolder extends React.Component<
     const { current: canvas } = this.canvasReference;
     if (canvas === null) return;
 
-    const renderGroups: RenderGroup[]
-      = Core.getRenderGroupManager().getGroupsToRender();
+    const renderGroups: RenderGroup[] = Core.getRenderGroupManager().getGroupsToRender();
     const lastRenderGroup: RenderGroup = renderGroups.at(-1) as RenderGroup;
 
     this.statefulRenderer = new StatefulRenderer(
