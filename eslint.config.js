@@ -64,6 +64,7 @@ export default [
         'always',
         { markers: todoTreeKeywordsAll }
       ],
+      '@stylistic/arrow-parens': ['warn', 'as-needed'],
     },
     linterOptions: {
       reportUnusedDisableDirectives: 'warn'
@@ -136,8 +137,6 @@ export default [
     rules: {
       'import/extensions': ['error', 'never', { json: 'always' }],
       'no-constant-condition': 'off', // Was 'error',
-
-      '@stylistic/arrow-parens': ['warn', 'as-needed'],
 
       '@typescript-eslint/prefer-readonly': 'warn',
       '@typescript-eslint/require-await': 'error',
