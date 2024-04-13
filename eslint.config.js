@@ -58,6 +58,7 @@ export default [
       '@stylistic/no-trailing-spaces': 'warn',
       '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
       '@stylistic/semi': ['warn', 'always'],
+      '@stylistic/member-delimiter-style': 'error',
       '@stylistic/spaced-comment': [
         'warn',
         'always',
