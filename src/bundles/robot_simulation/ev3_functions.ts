@@ -30,7 +30,7 @@ type MotorFunctionReturnType = Motor | null;
 export function ev3_pause(duration: number): void {
   const world = getWorldFromContext();
   const program = world.controllers.controllers.find(
-    (controller) => controller.name === program_controller_identifier,
+    (controller) => controller.name === program_controller_identifier
   ) as Program;
   program.pause(duration);
 }
@@ -96,7 +96,7 @@ export function ev3_motorD(): MotorFunctionReturnType {
 export function ev3_runToRelativePosition(
   motor: MotorFunctionReturnType,
   position: number,
-  speed: number,
+  speed: number
 ): void {
   if (motor === null) {
     return;
@@ -107,6 +107,51 @@ export function ev3_runToRelativePosition(
   const distanceInMetersPerSecond = (position / 360) * Math.PI * wheelDiameter;
 
   motor.setSpeedDistance(speedInMetersPerSecond, distanceInMetersPerSecond);
+}
+
+/**
+ * Causes the motor to rotate for a specified duration at the specified speed.
+ *
+ * Note: this works by sending instructions to the motors. This will return almost immediately,
+ * without waiting for the motor to actually run for the specified duration.
+ * If you wish to wait, use ev3_pause.
+ *
+ * @param motor
+ * @param time
+ * @param speed
+ * @returns void
+ */
+export function ev3_runForTime(
+  motor: MotorFunctionReturnType,
+  time: number,
+  speed: number
+) {
+  if (motor === null) {
+    return;
+  }
+  const wheelDiameter = motorConfig.config.mesh.dimension.height;
+  const speedInMetersPerSecond = (speed / 360) * Math.PI * wheelDiameter;
+  const distanceInMetersPerSecond = speedInMetersPerSecond * time;
+
+  motor.setSpeedDistance(speedInMetersPerSecond, distanceInMetersPerSecond);
+}
+
+/**
+ * Gets the motor's current speed, in tacho counts per second.
+ *
+ * Returns 0 if the motor is not connected.
+ *
+ * @param motor
+ * @returns number
+ *
+ * @category EV3
+ */
+export function ev3_motorGetSpeed(motor: MotorFunctionReturnType): number {
+  if (motor === null) {
+    return 0;
+  }
+
+  return motor.motorVelocity;
 }
 
 /**
@@ -177,7 +222,19 @@ export function ev3_ultrasonicSensor() {
  * @category EV3
  */
 export function ev3_ultrasonicSensorDistance(
-  ultraSonicSensor: UltrasonicSensor,
+  ultraSonicSensor: UltrasonicSensor
 ): number {
   return ultraSonicSensor.sense() * 100;
+}
+
+/**
+ * Checks if the peripheral is connected.
+ *
+ * @param obj The peripheral to check.
+ * @returns boolean
+ *
+ * @category EV3
+ */
+export function ev3_connected(obj: any) {
+  return obj !== null;
 }
