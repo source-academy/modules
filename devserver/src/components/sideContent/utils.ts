@@ -8,9 +8,7 @@ export const getDynamicTabs = async (context: Context) => {
   const moduleSideContents = await Promise.all(
     Object.keys(context.moduleContexts)
       .flatMap(moduleName => moduleManifest[moduleName].tabs.map(async tabName => {
-        const { default: rawTab } = await import(
-          `../../../../src/tabs/${tabName}/index.tsx`
-        );
+        const { default: rawTab } = await import(`../../../../src/tabs/${tabName}/index.tsx`);
         return rawTab as ModuleSideContent;
       }))
   );
