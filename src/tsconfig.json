@@ -32,16 +32,12 @@
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
     "verbatimModuleSyntax": true,
-    // "typeRoots": [
-    //   "typings/@types",
-    //   "node_modules/@types"
-    // ],
     "paths": {
-      "js-slang/context": ["./typings/@types/js-slang/context.d.ts"]
+      "js-slang/context": ["./typings/js-slang/context.d.ts"]
     }
   },
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
   "include": ["."],
   /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
-  "exclude": [".eslintrc.cjs", "jest.config.js", "**/__tests__"]
+  "exclude": ["jest.config.js"]
 }

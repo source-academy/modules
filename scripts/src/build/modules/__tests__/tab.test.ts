@@ -1,5 +1,5 @@
-import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 import type { MockedFunction } from 'jest-mock';
+import { testBuildCommand } from '@src/build/__tests__/testingUtils';
 import * as tabs from '../tabs';
 
 jest.mock('esbuild', () => ({
@@ -25,8 +25,6 @@ test('Normal command', async () => {
   const [args] = (tabs.bundleTabs as MockedFunction<typeof tabs.bundleTabs>).mock.calls[0];
   expect(args)
     .toMatchObject({
-      bundles: [],
       tabs: ['tab0'],
-      modulesSpecified: true
     });
 });

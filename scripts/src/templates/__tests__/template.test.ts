@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
-import { retrieveManifest } from '@src/manifest';
 import type { MockedFunction } from 'jest-mock';
+import { retrieveManifest } from '@src/manifest';
 
-import getCreateCommand from '..';
+import getTemplateCommand from '..';
 import { askQuestion } from '../print';
 
 jest.mock('../print', () => ({
@@ -26,7 +26,7 @@ const asMock = <T extends (...args: any[]) => any>(func: T) => func as MockedFun
 const mockedAskQuestion = asMock(askQuestion);
 
 function runCommand(...args: string[]) {
-  return getCreateCommand()
+  return getTemplateCommand()
     .parseAsync(args, { from: 'user' });
 }
 

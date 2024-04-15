@@ -36,7 +36,7 @@ test('building a bundle', async () => {
       }
     }
   };
-  const bundleFuncs = eval(bundleText)((x) => ({
+  const bundleFuncs = eval(bundleText)(x => ({
     'js-slang/context': mockContext
   }[x]));
   expect(bundleFuncs.foo())

@@ -2,15 +2,10 @@ import { copyFile } from 'fs/promises';
 import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
-import { lintFixOption, lintOption, manifestOption, objectEntries, outDirOption, retrieveBundlesAndTabs, srcDirOption } from '@src/commandUtils';
+import type { BuildInputs } from '@src/commandUtils';
+import { lintFixOption, lintOption, manifestOption, objectEntries, outDirOption, retrieveBundles, retrieveBundlesAndTabs, retrieveTabs, srcDirOption } from '@src/commandUtils';
 import { htmlLogger, type buildHtml } from './docs/html';
 import prebuild, { formatPrebuildResults } from './prebuild';
-
-export interface BuildInputs {
-  bundles?: string[] | null
-  tabs?: string[] | null
-  modulesSpecified?: boolean
-}
 
 export interface BuildOptions {
   srcDir: string
@@ -78,9 +73,17 @@ type LogType = Partial<Record<AssetType, OperationResult[]> & { html: Awaited<Re
 
 export type BuildTask = (inputs: BuildInputs, opts: BuildOptions) => Promise<LogType>;
 
-function processResults(
+/**
+ * Take the results from all the operations and format them neatly in a readable way
+ * Also calls `process.exit(1)` if any operation returned with an error if `exitOnError`
+ * is true
+ */
+export function processResults(results: LogType, verbose: boolean, exitOnError: true): Exclude<Severity, 'error'>;
+export function processResults(results: LogType, verbose: boolean, exitOnError: false): Severity;
+export function processResults(
   results: LogType,
-  verbose: boolean
+  verbose: boolean,
+  exitOnError: boolean
 ) {
   const notSuccessFilter = (result: OperationResult): result is Exclude<OperationResult, SuccessResult> => result.severity !== 'success';
 
@@ -158,12 +161,17 @@ function processResults(
     .join('\n'));
 
   const overallOverallSev = findSeverity(logs, ([sev]) => sev);
-  if (overallOverallSev === 'error') {
+  if (overallOverallSev === 'error' && exitOnError) {
     process.exit(1);
   }
+  return overallOverallSev;
 }
 
-export function logInputs({ bundles, tabs }: BuildInputs, { tsc, lint }: Partial<Record<'lint' | 'tsc', boolean>>) {
+export function logInputs(
+  { bundles, tabs }: BuildInputs,
+  { tsc, lint }: Partial<Record<'lint' | 'tsc', boolean>>,
+  ignore?: 'bundles' | 'tabs'
+) {
   const output: string[] = [];
   if (tsc) {
     output.push(chalk.yellowBright('--tsc specified, will run typescript checker'));
@@ -173,40 +181,60 @@ export function logInputs({ bundles, tabs }: BuildInputs, { tsc, lint }: Partial
     output.push(chalk.yellowBright('Linting specified, will run ESlint'));
   }
 
-  if (bundles.length > 0) {
+  if (ignore !== 'bundles' && bundles.length > 0) {
     output.push(chalk.magentaBright('Processing the following bundles:'));
-    bundles.forEach((bundle, i) => output.push(`${i + 1}: ${bundle}`));
+    bundles.forEach((bundle, i) => output.push(`${i + 1}. ${bundle}`));
   }
 
-  if (tabs.length > 0) {
+  if (ignore !== 'tabs' && tabs.length > 0 ) {
     output.push(chalk.magentaBright('Processing the following tabs:'));
-    tabs.forEach((tab, i) => output.push(`${i + 1}: ${tab}`));
+    tabs.forEach((tab, i) => output.push(`${i + 1}. ${tab}`));
   }
 
   return output.join('\n');
 }
 
-export function createBuildCommandHandler(
-  func: BuildTask,
-  shouldAddModuleTabs: boolean
-) {
-  return async (
-    opts: BuildOptions & { bundles: string[] | null, tabs: string[] | null }
-  ) => {
-    const inputs = await retrieveBundlesAndTabs(opts, shouldAddModuleTabs);
+type CommandHandler = (opts: BuildOptions & { bundles?: string[] | null, tabs?: string[] | null }) => Promise<void>;
 
-    console.log(logInputs(inputs, opts));
-    const prebuildResult = await prebuild(inputs.bundles, inputs.tabs, opts);
+export function createBuildCommandHandler(func: BuildTask, ignore?: 'bundles' | 'tabs'): CommandHandler {
+  return async opts => {
+    let inputs: BuildInputs;
+
+    switch (ignore) {
+      case 'bundles': {
+        inputs = await retrieveTabs(opts.manifest, opts.tabs);
+        break;
+      }
+      case 'tabs': {
+        inputs = await retrieveBundles(opts.manifest, opts.bundles);
+        break;
+      }
+      case undefined: {
+        inputs = await retrieveBundlesAndTabs(opts.manifest, opts.bundles, opts.tabs);
+        break;
+      }
+    }
+
+    // Log all inputs
+    console.log(logInputs(inputs, opts, ignore));
+    // Then run prebuilds. This will return null if no prebuild was specified
+    const prebuildResult = await prebuild(inputs.bundles, inputs.tabs, {
+      lint: opts.lint,
+      fix: opts.fix,
+      tsc: opts.tsc,
+      srcDir: opts.srcDir
+    });
 
     if (prebuildResult !== null) {
       const prebuildResultFormatted = formatPrebuildResults(prebuildResult);
       console.log(prebuildResultFormatted);
 
+      // If there was some error, then exit without running the main command
       if (prebuildResult.severity === 'error') process.exit(1);
     }
 
     const result = await func(inputs, opts);
-    processResults(result, opts.verbose);
+    processResults(result, opts.verbose, true);
     await copyFile(opts.manifest, `${opts.outDir}/modules.json`);
   };
 }

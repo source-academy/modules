@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 
 import type { Interface } from 'readline/promises';
+import { promiseAll } from '@src/commandUtils';
 import { type ModuleManifest, retrieveManifest } from '@src/manifest';
 
 import { askQuestion, success, warn } from './print';
@@ -29,16 +30,18 @@ export async function addNew({ srcDir, manifest: manifestFile }: Options, rl: In
 
   const bundleDestination = `${srcDir}/bundles/${moduleName}`;
   await fs.mkdir(bundleDestination, { recursive: true });
-  await fs.copyFile(
-    './scripts/src/templates/templates/__bundle__.ts',
-    `${bundleDestination}/index.ts`
-  );
-  await fs.writeFile(
-    manifestFile,
-    JSON.stringify({
-      ...manifest,
-      [moduleName]: { tabs: [] }
-    }, null, 2)
+  await promiseAll(
+    fs.copyFile(
+      './scripts/src/templates/templates/__bundle__.ts',
+      `${bundleDestination}/index.ts`
+    ),
+    fs.writeFile(
+      manifestFile,
+      JSON.stringify({
+        ...manifest,
+        [moduleName]: { tabs: [] }
+      }, null, 2)
+    )
   );
   success(`Bundle for module ${moduleName} created at ${bundleDestination}.`);
 }
