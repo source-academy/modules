@@ -71,11 +71,11 @@ describe('Program', () => {
     expect(() => program.fixedUpdate()).toThrow('Error in program execution. Please check your code and try again.');
   });
 
-  // it('should check callbacks on update', () => {
-  //   program.start();
-  //   const mockTimingInfo = { deltaTime: 1 / 60 } as any;
-  //   program.update(mockTimingInfo);
+  it('should check callbacks on update', () => {
+    program.start();
+    const mockTimingInfo = { deltaTime: 1 / 60 } as any;
+    program.update(mockTimingInfo);
 
-  //   expect(mockedCallbackHandler.prototype.checkCallbacks).toHaveBeenCalledWith(mockTimingInfo);
-  // });
+    expect(mockedCallbackHandler.prototype.checkCallbacks).toHaveBeenCalledWith(mockTimingInfo);
+  });
 });
