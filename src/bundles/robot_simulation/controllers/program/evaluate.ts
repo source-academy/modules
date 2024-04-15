@@ -1,9 +1,7 @@
 
-import { type IOptions } from 'js-slang/dist';
-
 import { Control, Stash, generateCSEMachineStateStream } from 'js-slang/dist/cse-machine/interpreter';
 import { parse } from 'js-slang/dist/parser/parser';
-import { Variant, type Context, type RecursivePartial } from 'js-slang/dist/types';
+import { Variant, type Context } from 'js-slang/dist/types';
 import * as _ from 'lodash';
 
 export const DEFAULT_SOURCE_OPTIONS = {
@@ -27,7 +25,7 @@ export const DEFAULT_SOURCE_OPTIONS = {
 export function* runECEvaluator(
   code: string,
   context: Context,
-  options: RecursivePartial<IOptions>,
+  options: any,
 ): Generator<{ steps: number }, void, undefined> {
   const theOptions = _.merge({ ...DEFAULT_SOURCE_OPTIONS }, options);
   const program = parse(code, context);

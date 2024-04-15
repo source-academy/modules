@@ -226,7 +226,7 @@ export function ev3_ultrasonicSensor() {
 export function ev3_ultrasonicSensorDistance(
   ultraSonicSensor: UltrasonicSensor
 ): number {
-  return ultraSonicSensor.sense() * 100;
+  return ultraSonicSensor.sense();
 }
 
 /**

@@ -42,7 +42,7 @@ export class UltrasonicSensor implements Sensor<number> {
   }
 
   sense(): number {
-    return this.distanceSensed;
+    return this.distanceSensed * 100;
   }
 
   fixedUpdate(): void {
