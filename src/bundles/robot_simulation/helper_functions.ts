@@ -372,7 +372,10 @@ export function createPaper(
   render: Renderer,
   url: string,
   width: number,
-  height: number
+  height: number,
+  x: number,
+  y: number,
+  rotation: number
 ) {
   const paperConfig: PaperConfig = {
     url,
@@ -380,6 +383,8 @@ export function createPaper(
       width,
       height,
     },
+    position: {x, y},
+    rotation: rotation * Math.PI / 180,
   };
   const paper = new Paper(render, paperConfig);
   return paper;
