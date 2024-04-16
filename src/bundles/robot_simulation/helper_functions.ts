@@ -363,6 +363,9 @@ export function createWall(physics: Physics, renderer: Renderer) {
  * @param url The url of the image to be displayed on the paper.
  * @param width The width of the paper in meters.
  * @param height The height of the paper in meters.
+ * @param x The x position of the paper.
+ * @param y The y position of the paper.
+ * @param rotation The rotation of the paper in degrees.
  *
  * @returns Paper
  *
