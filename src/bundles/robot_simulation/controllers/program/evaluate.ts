@@ -29,7 +29,6 @@ export function* runECEvaluator(
 ): Generator<{ steps: number }, void, undefined> {
   const theOptions = _.merge({ ...DEFAULT_SOURCE_OPTIONS }, options);
   const program = parse(code, context);
-  console.log(program);
 
   if (!program) {
     return;

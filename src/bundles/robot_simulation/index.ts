@@ -14,6 +14,7 @@ export {
   ev3_colorSensorRed,
   ev3_colorSensorGreen,
   ev3_pause,
+  ev3_colorSensor,
   ev3_colorSensorBlue,
   ev3_ultrasonicSensor,
   ev3_ultrasonicSensorDistance,

@@ -8,6 +8,8 @@ export type PaperConfig = {
     width: number;
     height: number;
   };
+  position: {x: number, y: number};
+  rotation: number,
 };
 
 export class Paper {
@@ -27,8 +29,9 @@ export class Paper {
     const texture = new THREE.TextureLoader()
       .load(this.config.url);
     const material = new THREE.MeshStandardMaterial({ map: texture });
-    this.paper.position.set(0, 0.001, 0); // Position the plane at the floor
+    this.paper.position.set(this.config.position.x, 0.001, this.config.position.y);
     this.paper.rotation.x = -Math.PI / 2;
+    this.paper.rotation.z = this.config.rotation;
     this.paper.material = material;
     this.render.add(this.paper);
   }

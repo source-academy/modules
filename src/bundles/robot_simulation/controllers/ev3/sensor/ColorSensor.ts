@@ -29,6 +29,7 @@ export class ColorSensor implements Sensor<Color> {
   config: ColorSensorConfig;
 
   camera: THREE.Camera;
+  spotLight: THREE.SpotLight;
   renderer: Renderer;
   accumulator = 0;
   colorSensed: Color;
@@ -44,6 +45,8 @@ export class ColorSensor implements Sensor<Color> {
     this.config = config;
 
     this.camera = getCamera(config.camera);
+    this.spotLight = new THREE.SpotLight(0xffffff, 0.2, 1, 15/180 * Math.PI);
+    render.add(this.spotLight);
     // We create a new renderer with the same scene. But we use a different camera.
     this.renderer = new Renderer(render.scene(), this.camera, {
       width: this.config.size.width,
@@ -95,12 +98,18 @@ export class ColorSensor implements Sensor<Color> {
 
     // We move the camera to the right position
     this.camera.position.copy(this.getColorSensorPosition());
-    // Point it downwards
     this.camera.lookAt(
       this.camera.position.x,
       this.camera.position.y - 1, // 1 unit below its current position
       this.camera.position.z,
     );
+    this.spotLight.position.copy(this.camera.position);
+    this.spotLight.target.position.set(
+      this.camera.position.x,
+      this.camera.position.y - 1,
+      this.camera.position.z,
+    );
+    this.spotLight.target.updateMatrixWorld();
 
     // We render to load the color sensor data into the renderer.
     this.renderer.render();

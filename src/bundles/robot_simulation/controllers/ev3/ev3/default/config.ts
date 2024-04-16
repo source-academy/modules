@@ -110,12 +110,12 @@ export const motorConfig: Ev3MotorsConfig = {
   },
 };
 
-export const colorSensorConfig: Ev3ColorSensorConfig = {
+export const colorSensorConfig = {
   tickRateInSeconds: 0.1,
   displacement: {
-    x: 0.04,
+    x: -0.05,
     y: -(chassisConfig.dimension.height / 2),
-    z: 0.01,
+    z: 0.09,
   },
   size: {
     height: 16,
@@ -129,7 +129,7 @@ export const colorSensorConfig: Ev3ColorSensorConfig = {
     far: 1,
   },
   debug: true,
-};
+} satisfies Ev3ColorSensorConfig;
 
 const ultrasonicSensorConfig: Ev3UltrasonicSenorConfig = {
   displacement: {
