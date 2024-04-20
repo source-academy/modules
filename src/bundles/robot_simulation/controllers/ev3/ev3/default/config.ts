@@ -113,9 +113,9 @@ export const motorConfig: Ev3MotorsConfig = {
 export const colorSensorConfig = {
   tickRateInSeconds: 0.1,
   displacement: {
-    x: -0.05,
+    x: -0.06,
     y: -(chassisConfig.dimension.height / 2),
-    z: 0.09,
+    z: 0.11,
   },
   size: {
     height: 16,

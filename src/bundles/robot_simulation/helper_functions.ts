@@ -331,20 +331,33 @@ export function createFloor(physics: Physics, renderer: Renderer) {
  *
  * @param physics The physics engine of the world. See {@link createPhysics}
  * @param renderer  The renderer engine of the world. See {@link createRenderer}
+ * @param x The x position of the wall
+ * @param y The y position of the wall
+ * @param width The width of the wall in meters
+ * @param length The length of the wall in meters
+ * @param height The height of the wall in meters
  * @returns Cuboid
  *
  * @category Controller
  */
-export function createWall(physics: Physics, renderer: Renderer) {
+export function createWall(
+  physics: Physics,
+  renderer: Renderer,
+  x: number,
+  y: number,
+  width: number,
+  length: number,
+  height: number
+) {
   const wall = createCuboid(
     physics,
     renderer,
-    0, // position_x
-    1, // position_y
-    1, // position_z
-    1, // width
-    0.1, // length
-    2, // height
+    x, // position_x
+    height / 2,
+    y, // position_y
+    width, // width
+    length, // length
+    height, // height
     1, // mass
     'yellow', // color
     'fixed' // bodyType
@@ -386,8 +399,8 @@ export function createPaper(
       width,
       height,
     },
-    position: {x, y},
-    rotation: rotation * Math.PI / 180,
+    position: { x, y },
+    rotation: (rotation * Math.PI) / 180,
   };
   const paper = new Paper(render, paperConfig);
   return paper;
