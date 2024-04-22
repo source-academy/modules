@@ -41,8 +41,8 @@ export type ColorSensorControllers = Record<ColorSensorNames, ColorSensor>;
 export const ultrasonicSensorNames = ['ultrasonicSensor'] as const;
 export type UltrasonicSensorNames = (typeof ultrasonicSensorNames)[number];
 export type UltrasonicSensorControllers = Record<
-UltrasonicSensorNames,
-UltrasonicSensor
+  UltrasonicSensorNames,
+  UltrasonicSensor
 >;
 
 // Aggregate
@@ -55,13 +55,7 @@ export const controllerNames = [
   ...ultrasonicSensorNames,
 ] as const;
 export type DefaultEv3ControllerNames = (typeof controllerNames)[number];
-export type DefaultEv3Controller = WheelControllers &
-MotorControllers &
-ColorSensorControllers &
-UltrasonicSensorControllers &
-ChassisControllers &
-MeshControllers;
-
+export type DefaultEv3Controller = ChassisControllers & ColorSensorControllers & MeshControllers & MotorControllers & UltrasonicSensorControllers & WheelControllers;
 
 // ######################### Config Types #########################
 export type Ev3ChassisConfig = ChassisWrapperConfig;
