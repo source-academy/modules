@@ -55,6 +55,21 @@ describe('Mesh', () => {
         getTranslation: jest.fn().mockReturnValue(new THREE.Vector3()),
         getRotation: jest.fn().mockReturnValue(new THREE.Quaternion()),
       }),
+      config: {
+        orientation: {
+          position: {
+            x: 0,
+            y: 0.0775,
+            z: 0,
+          },
+          rotation: {
+            x: 0,
+            y: 0,
+            z: 0,
+            w: 1,
+          },
+        },
+      }
     } as unknown as ChassisWrapper;
     mockConfig = {
       url: 'path/to/mesh',
@@ -82,11 +97,8 @@ describe('Mesh', () => {
 
   it('should update mesh position and orientation according to chassis', async () => {
     await mesh.start();
-    mesh.update();
+    mesh.update({residualFactor: 0.5});
 
-    const chassisEntity = mockChassisWrapper.getEntity();
-    expect(chassisEntity.getTranslation).toHaveBeenCalled();
-    expect(chassisEntity.getRotation).toHaveBeenCalled();
     expect(mesh.mesh.scene.position.copy).toHaveBeenCalled();
     expect(mesh.mesh.scene.quaternion.copy).toHaveBeenCalled();
   });

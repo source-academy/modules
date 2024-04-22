@@ -1,7 +1,10 @@
+import * as THREE from 'three';
+
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { type Controller, type Renderer } from '../../../engine';
 // eslint-disable-next-line import/extensions
-import type { Dimension, SimpleVector } from '../../../engine/Math/Vector';
+import type { Dimension, SimpleQuaternion, SimpleVector } from '../../../engine/Math/Vector';
+import type { PhysicsTimingInfo } from '../../../engine/Physics';
 import { loadGLTF } from '../../../engine/Render/helpers/GLTF';
 import { type ChassisWrapper } from './Chassis';
 
@@ -23,6 +26,11 @@ export class Mesh implements Controller {
 
   mesh: GLTF | null = null;
 
+  previousTranslation: SimpleVector | null= null;
+  previousRotation: SimpleQuaternion | null = null;
+  currentTranslation: SimpleVector;
+  currentRotation: SimpleQuaternion;
+
   constructor(
     chassisWrapper: ChassisWrapper,
     render: Renderer,
@@ -36,6 +44,8 @@ export class Mesh implements Controller {
       y: this.config?.offset?.y || 0,
       z: this.config?.offset?.z || 0,
     };
+    this.currentTranslation = this.chassisWrapper.config.orientation.position;
+    this.currentRotation = new THREE.Quaternion(0,0,0,1);
   }
 
   async start(): Promise<void> {
@@ -44,15 +54,27 @@ export class Mesh implements Controller {
     this.render.add(this.mesh.scene);
   }
 
-  update() {
-    const chassisEntity = this.chassisWrapper.getEntity();
-    const chassisPosition = chassisEntity.getTranslation();
+  fixedUpdate(): void {
+    this.previousTranslation = this.currentTranslation;
+    this.previousRotation = this.currentRotation;
+    this.currentRotation = this.chassisWrapper.getEntity().getRotation();
+    this.currentTranslation = this.chassisWrapper.getEntity().getTranslation();
+  }
 
-    chassisPosition.x -= this.offset.x / 2;
-    chassisPosition.y -= this.offset.y / 2;
-    chassisPosition.z -= this.offset.z / 2;
+  update(timingInfo: PhysicsTimingInfo) {
+    const vecCurrentTranslation = new THREE.Vector3().copy(this.currentTranslation);
+    const vecPreviousTranslation = new THREE.Vector3().copy(this.previousTranslation || this.currentTranslation);
+    const quatCurrentRotation = new THREE.Quaternion().copy(this.currentRotation);
+    const quatPreviousRotation = new THREE.Quaternion().copy(this.previousRotation || this.currentRotation);
 
-    this.mesh?.scene.position.copy(chassisPosition);
-    this.mesh?.scene.quaternion.copy(chassisEntity.getRotation());
+    const estimatedTranslation = vecPreviousTranslation.lerp(vecCurrentTranslation, timingInfo.residualFactor);
+    const estimatedRotation = quatPreviousRotation.slerp(quatCurrentRotation, timingInfo.residualFactor);
+
+    estimatedTranslation.x -= this.offset.x / 2;
+    estimatedTranslation.y -= this.offset.y / 2;
+    estimatedTranslation.z -= this.offset.z / 2;
+
+    this.mesh?.scene.position.copy(estimatedTranslation);
+    this.mesh?.scene.quaternion.copy(estimatedRotation);
   }
 }
