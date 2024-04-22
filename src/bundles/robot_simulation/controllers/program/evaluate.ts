@@ -1,5 +1,8 @@
-
-import { Control, Stash, generateCSEMachineStateStream } from 'js-slang/dist/cse-machine/interpreter';
+import {
+  Control,
+  Stash,
+  generateCSEMachineStateStream,
+} from 'js-slang/dist/cse-machine/interpreter';
 import { parse } from 'js-slang/dist/parser/parser';
 import { Variant, type Context } from 'js-slang/dist/types';
 import * as _ from 'lodash';
@@ -25,7 +28,7 @@ export const DEFAULT_SOURCE_OPTIONS = {
 export function* runECEvaluator(
   code: string,
   context: Context,
-  options: any,
+  options: any
 ): Generator<{ steps: number }, void, undefined> {
   const theOptions = _.merge({ ...DEFAULT_SOURCE_OPTIONS }, options);
   const program = parse(code, context);
@@ -44,9 +47,9 @@ export function* runECEvaluator(
       context.runtime.stash,
       theOptions.envSteps,
       theOptions.stepLimit,
-      theOptions.isPrelude,
+      theOptions.isPrelude
     );
-  // eslint-disable-next-line no-useless-catch
+    // eslint-disable-next-line no-useless-catch
   } catch (error) {
     throw error;
   } finally {
