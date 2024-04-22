@@ -1,3 +1,5 @@
+import type React from 'react';
+
 export const getTimeString = (date: Date) => {
   const options: Intl.DateTimeFormatOptions = {
     hour: '2-digit',
@@ -8,7 +10,11 @@ export const getTimeString = (date: Date) => {
   return date.toLocaleTimeString([], options);
 };
 
-export const LastUpdated = ({ time }: { time: Date }) => {
+export const LastUpdated: React.FC<{ time: Date }> = ({
+  time,
+}: {
+  time: Date;
+}) => {
   const timeString = getTimeString(time);
 
   return <span>Last updated: {timeString}</span>;

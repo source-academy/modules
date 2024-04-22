@@ -17,11 +17,11 @@ export const UltrasonicSensorPanel: React.FC<{ ev3: DefaultEv3 }> = ({
   }, 1000);
 
   if (timing === null) {
-    return <TabWrapper>Loading color sensor</TabWrapper>;
+    return <TabWrapper>Loading ultrasonic sensor</TabWrapper>;
   }
 
   if (distanceSensed === null) {
-    return <TabWrapper>Color sensor not found</TabWrapper>;
+    return <TabWrapper>Ultrasonic sensor not found</TabWrapper>;
   }
 
   return (
