@@ -9,6 +9,10 @@ export default require => {
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __knownSymbol = (name, symbol) => {
+    if (symbol = Symbol[name]) return symbol;
+    throw Error("Symbol." + name + " is not defined");
+  };
   var __pow = Math.pow;
   var __defNormalProp = (obj, key, value) => (key in obj) ? __defProp(obj, key, {
     enumerable: true,
@@ -30,6 +34,14 @@ export default require => {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x2 + '" is not supported');
   });
+  var __esm = (fn, res) => function __init() {
+    return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
+  };
+  var __commonJS = (cb, mod) => function __require2() {
+    return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
+      exports: {}
+    }).exports, mod), mod.exports);
+  };
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -88,29 +100,5425 @@ export default require => {
       step((generator = generator.apply(__this, __arguments)).next());
     });
   };
+  var __await = function (promise, isYieldStar) {
+    this[0] = promise;
+    this[1] = isYieldStar;
+  };
+  var __yieldStar = value => {
+    var obj = value[__knownSymbol("asyncIterator")];
+    var isAwait = false;
+    var method;
+    var it = {};
+    if (obj == null) {
+      obj = value[__knownSymbol("iterator")]();
+      method = k2 => it[k2] = x2 => obj[k2](x2);
+    } else {
+      obj = obj.call(value);
+      method = k2 => it[k2] = v2 => {
+        if (isAwait) {
+          isAwait = false;
+          if (k2 === "throw") throw v2;
+          return v2;
+        }
+        isAwait = true;
+        return {
+          done: false,
+          value: new __await(new Promise(resolve => {
+            var x2 = obj[k2](v2);
+            if (!(x2 instanceof Object)) throw TypeError("Object expected");
+            resolve(x2);
+          }), 1)
+        };
+      };
+    }
+    return (it[__knownSymbol("iterator")] = () => it, method("next"), ("throw" in obj) ? method("throw") : it.throw = x2 => {
+      throw x2;
+    }, ("return" in obj) && method("return"), it);
+  };
+  var init_define_process = __esm({
+    "<define:process>"() {}
+  });
+  var require_lodash = __commonJS({
+    "node_modules/lodash/lodash.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      (function () {
+        var undefined2;
+        var VERSION = "4.17.21";
+        var LARGE_ARRAY_SIZE = 200;
+        var CORE_ERROR_TEXT = "Unsupported core-js use. Try https://npms.io/search?q=ponyfill.", FUNC_ERROR_TEXT = "Expected a function", INVALID_TEMPL_VAR_ERROR_TEXT = "Invalid `variable` option passed into `_.template`";
+        var HASH_UNDEFINED = "__lodash_hash_undefined__";
+        var MAX_MEMOIZE_SIZE = 500;
+        var PLACEHOLDER = "__lodash_placeholder__";
+        var CLONE_DEEP_FLAG = 1, CLONE_FLAT_FLAG = 2, CLONE_SYMBOLS_FLAG = 4;
+        var COMPARE_PARTIAL_FLAG = 1, COMPARE_UNORDERED_FLAG = 2;
+        var WRAP_BIND_FLAG = 1, WRAP_BIND_KEY_FLAG = 2, WRAP_CURRY_BOUND_FLAG = 4, WRAP_CURRY_FLAG = 8, WRAP_CURRY_RIGHT_FLAG = 16, WRAP_PARTIAL_FLAG = 32, WRAP_PARTIAL_RIGHT_FLAG = 64, WRAP_ARY_FLAG = 128, WRAP_REARG_FLAG = 256, WRAP_FLIP_FLAG = 512;
+        var DEFAULT_TRUNC_LENGTH = 30, DEFAULT_TRUNC_OMISSION = "...";
+        var HOT_COUNT = 800, HOT_SPAN = 16;
+        var LAZY_FILTER_FLAG = 1, LAZY_MAP_FLAG = 2, LAZY_WHILE_FLAG = 3;
+        var INFINITY = 1 / 0, MAX_SAFE_INTEGER = 9007199254740991, MAX_INTEGER = 17976931348623157e292, NAN = 0 / 0;
+        var MAX_ARRAY_LENGTH = 4294967295, MAX_ARRAY_INDEX = MAX_ARRAY_LENGTH - 1, HALF_MAX_ARRAY_LENGTH = MAX_ARRAY_LENGTH >>> 1;
+        var wrapFlags = [["ary", WRAP_ARY_FLAG], ["bind", WRAP_BIND_FLAG], ["bindKey", WRAP_BIND_KEY_FLAG], ["curry", WRAP_CURRY_FLAG], ["curryRight", WRAP_CURRY_RIGHT_FLAG], ["flip", WRAP_FLIP_FLAG], ["partial", WRAP_PARTIAL_FLAG], ["partialRight", WRAP_PARTIAL_RIGHT_FLAG], ["rearg", WRAP_REARG_FLAG]];
+        var argsTag = "[object Arguments]", arrayTag = "[object Array]", asyncTag = "[object AsyncFunction]", boolTag = "[object Boolean]", dateTag = "[object Date]", domExcTag = "[object DOMException]", errorTag = "[object Error]", funcTag = "[object Function]", genTag = "[object GeneratorFunction]", mapTag = "[object Map]", numberTag = "[object Number]", nullTag = "[object Null]", objectTag = "[object Object]", promiseTag = "[object Promise]", proxyTag = "[object Proxy]", regexpTag = "[object RegExp]", setTag = "[object Set]", stringTag = "[object String]", symbolTag = "[object Symbol]", undefinedTag = "[object Undefined]", weakMapTag = "[object WeakMap]", weakSetTag = "[object WeakSet]";
+        var arrayBufferTag = "[object ArrayBuffer]", dataViewTag = "[object DataView]", float32Tag = "[object Float32Array]", float64Tag = "[object Float64Array]", int8Tag = "[object Int8Array]", int16Tag = "[object Int16Array]", int32Tag = "[object Int32Array]", uint8Tag = "[object Uint8Array]", uint8ClampedTag = "[object Uint8ClampedArray]", uint16Tag = "[object Uint16Array]", uint32Tag = "[object Uint32Array]";
+        var reEmptyStringLeading = /\b__p \+= '';/g, reEmptyStringMiddle = /\b(__p \+=) '' \+/g, reEmptyStringTrailing = /(__e\(.*?\)|\b__t\)) \+\n'';/g;
+        var reEscapedHtml = /&(?:amp|lt|gt|quot|#39);/g, reUnescapedHtml = /[&<>"']/g, reHasEscapedHtml = RegExp(reEscapedHtml.source), reHasUnescapedHtml = RegExp(reUnescapedHtml.source);
+        var reEscape = /<%-([\s\S]+?)%>/g, reEvaluate = /<%([\s\S]+?)%>/g, reInterpolate = /<%=([\s\S]+?)%>/g;
+        var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/, reIsPlainProp = /^\w*$/, rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+        var reRegExpChar = /[\\^$.*+?()[\]{}|]/g, reHasRegExpChar = RegExp(reRegExpChar.source);
+        var reTrimStart = /^\s+/;
+        var reWhitespace = /\s/;
+        var reWrapComment = /\{(?:\n\/\* \[wrapped with .+\] \*\/)?\n?/, reWrapDetails = /\{\n\/\* \[wrapped with (.+)\] \*/, reSplitDetails = /,? & /;
+        var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+        var reForbiddenIdentifierChars = /[()=,{}\[\]\/\s]/;
+        var reEscapeChar = /\\(\\)?/g;
+        var reEsTemplate = /\$\{([^\\}]*(?:\\.[^\\}]*)*)\}/g;
+        var reFlags = /\w*$/;
+        var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+        var reIsBinary = /^0b[01]+$/i;
+        var reIsHostCtor = /^\[object .+?Constructor\]$/;
+        var reIsOctal = /^0o[0-7]+$/i;
+        var reIsUint = /^(?:0|[1-9]\d*)$/;
+        var reLatin = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g;
+        var reNoMatch = /($^)/;
+        var reUnescapedString = /['\n\r\u2028\u2029\\]/g;
+        var rsAstralRange = "\\ud800-\\udfff", rsComboMarksRange = "\\u0300-\\u036f", reComboHalfMarksRange = "\\ufe20-\\ufe2f", rsComboSymbolsRange = "\\u20d0-\\u20ff", rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange, rsDingbatRange = "\\u2700-\\u27bf", rsLowerRange = "a-z\\xdf-\\xf6\\xf8-\\xff", rsMathOpRange = "\\xac\\xb1\\xd7\\xf7", rsNonCharRange = "\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf", rsPunctuationRange = "\\u2000-\\u206f", rsSpaceRange = " \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000", rsUpperRange = "A-Z\\xc0-\\xd6\\xd8-\\xde", rsVarRange = "\\ufe0e\\ufe0f", rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
+        var rsApos = "['\u2019]", rsAstral = "[" + rsAstralRange + "]", rsBreak = "[" + rsBreakRange + "]", rsCombo = "[" + rsComboRange + "]", rsDigits = "\\d+", rsDingbat = "[" + rsDingbatRange + "]", rsLower = "[" + rsLowerRange + "]", rsMisc = "[^" + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + "]", rsFitz = "\\ud83c[\\udffb-\\udfff]", rsModifier = "(?:" + rsCombo + "|" + rsFitz + ")", rsNonAstral = "[^" + rsAstralRange + "]", rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}", rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]", rsUpper = "[" + rsUpperRange + "]", rsZWJ = "\\u200d";
+        var rsMiscLower = "(?:" + rsLower + "|" + rsMisc + ")", rsMiscUpper = "(?:" + rsUpper + "|" + rsMisc + ")", rsOptContrLower = "(?:" + rsApos + "(?:d|ll|m|re|s|t|ve))?", rsOptContrUpper = "(?:" + rsApos + "(?:D|LL|M|RE|S|T|VE))?", reOptMod = rsModifier + "?", rsOptVar = "[" + rsVarRange + "]?", rsOptJoin = "(?:" + rsZWJ + "(?:" + [rsNonAstral, rsRegional, rsSurrPair].join("|") + ")" + rsOptVar + reOptMod + ")*", rsOrdLower = "\\d*(?:1st|2nd|3rd|(?![123])\\dth)(?=\\b|[A-Z_])", rsOrdUpper = "\\d*(?:1ST|2ND|3RD|(?![123])\\dTH)(?=\\b|[a-z_])", rsSeq = rsOptVar + reOptMod + rsOptJoin, rsEmoji = "(?:" + [rsDingbat, rsRegional, rsSurrPair].join("|") + ")" + rsSeq, rsSymbol = "(?:" + [rsNonAstral + rsCombo + "?", rsCombo, rsRegional, rsSurrPair, rsAstral].join("|") + ")";
+        var reApos = RegExp(rsApos, "g");
+        var reComboMark = RegExp(rsCombo, "g");
+        var reUnicode = RegExp(rsFitz + "(?=" + rsFitz + ")|" + rsSymbol + rsSeq, "g");
+        var reUnicodeWord = RegExp([rsUpper + "?" + rsLower + "+" + rsOptContrLower + "(?=" + [rsBreak, rsUpper, "$"].join("|") + ")", rsMiscUpper + "+" + rsOptContrUpper + "(?=" + [rsBreak, rsUpper + rsMiscLower, "$"].join("|") + ")", rsUpper + "?" + rsMiscLower + "+" + rsOptContrLower, rsUpper + "+" + rsOptContrUpper, rsOrdUpper, rsOrdLower, rsDigits, rsEmoji].join("|"), "g");
+        var reHasUnicode = RegExp("[" + rsZWJ + rsAstralRange + rsComboRange + rsVarRange + "]");
+        var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
+        var contextProps = ["Array", "Buffer", "DataView", "Date", "Error", "Float32Array", "Float64Array", "Function", "Int8Array", "Int16Array", "Int32Array", "Map", "Math", "Object", "Promise", "RegExp", "Set", "String", "Symbol", "TypeError", "Uint8Array", "Uint8ClampedArray", "Uint16Array", "Uint32Array", "WeakMap", "_", "clearTimeout", "isFinite", "parseInt", "setTimeout"];
+        var templateCounter = -1;
+        var typedArrayTags = {};
+        typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
+        typedArrayTags[argsTag] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+        var cloneableTags = {};
+        cloneableTags[argsTag] = cloneableTags[arrayTag] = cloneableTags[arrayBufferTag] = cloneableTags[dataViewTag] = cloneableTags[boolTag] = cloneableTags[dateTag] = cloneableTags[float32Tag] = cloneableTags[float64Tag] = cloneableTags[int8Tag] = cloneableTags[int16Tag] = cloneableTags[int32Tag] = cloneableTags[mapTag] = cloneableTags[numberTag] = cloneableTags[objectTag] = cloneableTags[regexpTag] = cloneableTags[setTag] = cloneableTags[stringTag] = cloneableTags[symbolTag] = cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] = cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+        cloneableTags[errorTag] = cloneableTags[funcTag] = cloneableTags[weakMapTag] = false;
+        var deburredLetters = {
+          "\xC0": "A",
+          "\xC1": "A",
+          "\xC2": "A",
+          "\xC3": "A",
+          "\xC4": "A",
+          "\xC5": "A",
+          "\xE0": "a",
+          "\xE1": "a",
+          "\xE2": "a",
+          "\xE3": "a",
+          "\xE4": "a",
+          "\xE5": "a",
+          "\xC7": "C",
+          "\xE7": "c",
+          "\xD0": "D",
+          "\xF0": "d",
+          "\xC8": "E",
+          "\xC9": "E",
+          "\xCA": "E",
+          "\xCB": "E",
+          "\xE8": "e",
+          "\xE9": "e",
+          "\xEA": "e",
+          "\xEB": "e",
+          "\xCC": "I",
+          "\xCD": "I",
+          "\xCE": "I",
+          "\xCF": "I",
+          "\xEC": "i",
+          "\xED": "i",
+          "\xEE": "i",
+          "\xEF": "i",
+          "\xD1": "N",
+          "\xF1": "n",
+          "\xD2": "O",
+          "\xD3": "O",
+          "\xD4": "O",
+          "\xD5": "O",
+          "\xD6": "O",
+          "\xD8": "O",
+          "\xF2": "o",
+          "\xF3": "o",
+          "\xF4": "o",
+          "\xF5": "o",
+          "\xF6": "o",
+          "\xF8": "o",
+          "\xD9": "U",
+          "\xDA": "U",
+          "\xDB": "U",
+          "\xDC": "U",
+          "\xF9": "u",
+          "\xFA": "u",
+          "\xFB": "u",
+          "\xFC": "u",
+          "\xDD": "Y",
+          "\xFD": "y",
+          "\xFF": "y",
+          "\xC6": "Ae",
+          "\xE6": "ae",
+          "\xDE": "Th",
+          "\xFE": "th",
+          "\xDF": "ss",
+          "\u0100": "A",
+          "\u0102": "A",
+          "\u0104": "A",
+          "\u0101": "a",
+          "\u0103": "a",
+          "\u0105": "a",
+          "\u0106": "C",
+          "\u0108": "C",
+          "\u010A": "C",
+          "\u010C": "C",
+          "\u0107": "c",
+          "\u0109": "c",
+          "\u010B": "c",
+          "\u010D": "c",
+          "\u010E": "D",
+          "\u0110": "D",
+          "\u010F": "d",
+          "\u0111": "d",
+          "\u0112": "E",
+          "\u0114": "E",
+          "\u0116": "E",
+          "\u0118": "E",
+          "\u011A": "E",
+          "\u0113": "e",
+          "\u0115": "e",
+          "\u0117": "e",
+          "\u0119": "e",
+          "\u011B": "e",
+          "\u011C": "G",
+          "\u011E": "G",
+          "\u0120": "G",
+          "\u0122": "G",
+          "\u011D": "g",
+          "\u011F": "g",
+          "\u0121": "g",
+          "\u0123": "g",
+          "\u0124": "H",
+          "\u0126": "H",
+          "\u0125": "h",
+          "\u0127": "h",
+          "\u0128": "I",
+          "\u012A": "I",
+          "\u012C": "I",
+          "\u012E": "I",
+          "\u0130": "I",
+          "\u0129": "i",
+          "\u012B": "i",
+          "\u012D": "i",
+          "\u012F": "i",
+          "\u0131": "i",
+          "\u0134": "J",
+          "\u0135": "j",
+          "\u0136": "K",
+          "\u0137": "k",
+          "\u0138": "k",
+          "\u0139": "L",
+          "\u013B": "L",
+          "\u013D": "L",
+          "\u013F": "L",
+          "\u0141": "L",
+          "\u013A": "l",
+          "\u013C": "l",
+          "\u013E": "l",
+          "\u0140": "l",
+          "\u0142": "l",
+          "\u0143": "N",
+          "\u0145": "N",
+          "\u0147": "N",
+          "\u014A": "N",
+          "\u0144": "n",
+          "\u0146": "n",
+          "\u0148": "n",
+          "\u014B": "n",
+          "\u014C": "O",
+          "\u014E": "O",
+          "\u0150": "O",
+          "\u014D": "o",
+          "\u014F": "o",
+          "\u0151": "o",
+          "\u0154": "R",
+          "\u0156": "R",
+          "\u0158": "R",
+          "\u0155": "r",
+          "\u0157": "r",
+          "\u0159": "r",
+          "\u015A": "S",
+          "\u015C": "S",
+          "\u015E": "S",
+          "\u0160": "S",
+          "\u015B": "s",
+          "\u015D": "s",
+          "\u015F": "s",
+          "\u0161": "s",
+          "\u0162": "T",
+          "\u0164": "T",
+          "\u0166": "T",
+          "\u0163": "t",
+          "\u0165": "t",
+          "\u0167": "t",
+          "\u0168": "U",
+          "\u016A": "U",
+          "\u016C": "U",
+          "\u016E": "U",
+          "\u0170": "U",
+          "\u0172": "U",
+          "\u0169": "u",
+          "\u016B": "u",
+          "\u016D": "u",
+          "\u016F": "u",
+          "\u0171": "u",
+          "\u0173": "u",
+          "\u0174": "W",
+          "\u0175": "w",
+          "\u0176": "Y",
+          "\u0177": "y",
+          "\u0178": "Y",
+          "\u0179": "Z",
+          "\u017B": "Z",
+          "\u017D": "Z",
+          "\u017A": "z",
+          "\u017C": "z",
+          "\u017E": "z",
+          "\u0132": "IJ",
+          "\u0133": "ij",
+          "\u0152": "Oe",
+          "\u0153": "oe",
+          "\u0149": "'n",
+          "\u017F": "s"
+        };
+        var htmlEscapes = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        };
+        var htmlUnescapes = {
+          "&amp;": "&",
+          "&lt;": "<",
+          "&gt;": ">",
+          "&quot;": '"',
+          "&#39;": "'"
+        };
+        var stringEscapes = {
+          "\\": "\\",
+          "'": "'",
+          "\n": "n",
+          "\r": "r",
+          "\u2028": "u2028",
+          "\u2029": "u2029"
+        };
+        var freeParseFloat = parseFloat, freeParseInt = parseInt;
+        var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+        var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+        var root = freeGlobal || freeSelf || Function("return this")();
+        var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
+        var freeModule = freeExports && typeof module == "object" && module && !module.nodeType && module;
+        var moduleExports = freeModule && freeModule.exports === freeExports;
+        var freeProcess = moduleExports && freeGlobal.process;
+        var nodeUtil = (function () {
+          try {
+            var types = freeModule && freeModule.require && freeModule.require("util").types;
+            if (types) {
+              return types;
+            }
+            return freeProcess && freeProcess.binding && freeProcess.binding("util");
+          } catch (e2) {}
+        })();
+        var nodeIsArrayBuffer = nodeUtil && nodeUtil.isArrayBuffer, nodeIsDate = nodeUtil && nodeUtil.isDate, nodeIsMap = nodeUtil && nodeUtil.isMap, nodeIsRegExp = nodeUtil && nodeUtil.isRegExp, nodeIsSet = nodeUtil && nodeUtil.isSet, nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+        function apply(func, thisArg, args) {
+          switch (args.length) {
+            case 0:
+              return func.call(thisArg);
+            case 1:
+              return func.call(thisArg, args[0]);
+            case 2:
+              return func.call(thisArg, args[0], args[1]);
+            case 3:
+              return func.call(thisArg, args[0], args[1], args[2]);
+          }
+          return func.apply(thisArg, args);
+        }
+        function arrayAggregator(array, setter, iteratee, accumulator) {
+          var index = -1, length = array == null ? 0 : array.length;
+          while (++index < length) {
+            var value = array[index];
+            setter(accumulator, value, iteratee(value), array);
+          }
+          return accumulator;
+        }
+        function arrayEach(array, iteratee) {
+          var index = -1, length = array == null ? 0 : array.length;
+          while (++index < length) {
+            if (iteratee(array[index], index, array) === false) {
+              break;
+            }
+          }
+          return array;
+        }
+        function arrayEachRight(array, iteratee) {
+          var length = array == null ? 0 : array.length;
+          while (length--) {
+            if (iteratee(array[length], length, array) === false) {
+              break;
+            }
+          }
+          return array;
+        }
+        function arrayEvery(array, predicate) {
+          var index = -1, length = array == null ? 0 : array.length;
+          while (++index < length) {
+            if (!predicate(array[index], index, array)) {
+              return false;
+            }
+          }
+          return true;
+        }
+        function arrayFilter(array, predicate) {
+          var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
+          while (++index < length) {
+            var value = array[index];
+            if (predicate(value, index, array)) {
+              result[resIndex++] = value;
+            }
+          }
+          return result;
+        }
+        function arrayIncludes(array, value) {
+          var length = array == null ? 0 : array.length;
+          return !!length && baseIndexOf(array, value, 0) > -1;
+        }
+        function arrayIncludesWith(array, value, comparator) {
+          var index = -1, length = array == null ? 0 : array.length;
+          while (++index < length) {
+            if (comparator(value, array[index])) {
+              return true;
+            }
+          }
+          return false;
+        }
+        function arrayMap(array, iteratee) {
+          var index = -1, length = array == null ? 0 : array.length, result = Array(length);
+          while (++index < length) {
+            result[index] = iteratee(array[index], index, array);
+          }
+          return result;
+        }
+        function arrayPush(array, values) {
+          var index = -1, length = values.length, offset = array.length;
+          while (++index < length) {
+            array[offset + index] = values[index];
+          }
+          return array;
+        }
+        function arrayReduce(array, iteratee, accumulator, initAccum) {
+          var index = -1, length = array == null ? 0 : array.length;
+          if (initAccum && length) {
+            accumulator = array[++index];
+          }
+          while (++index < length) {
+            accumulator = iteratee(accumulator, array[index], index, array);
+          }
+          return accumulator;
+        }
+        function arrayReduceRight(array, iteratee, accumulator, initAccum) {
+          var length = array == null ? 0 : array.length;
+          if (initAccum && length) {
+            accumulator = array[--length];
+          }
+          while (length--) {
+            accumulator = iteratee(accumulator, array[length], length, array);
+          }
+          return accumulator;
+        }
+        function arraySome(array, predicate) {
+          var index = -1, length = array == null ? 0 : array.length;
+          while (++index < length) {
+            if (predicate(array[index], index, array)) {
+              return true;
+            }
+          }
+          return false;
+        }
+        var asciiSize = baseProperty("length");
+        function asciiToArray(string) {
+          return string.split("");
+        }
+        function asciiWords(string) {
+          return string.match(reAsciiWord) || [];
+        }
+        function baseFindKey(collection, predicate, eachFunc) {
+          var result;
+          eachFunc(collection, function (value, key, collection2) {
+            if (predicate(value, key, collection2)) {
+              result = key;
+              return false;
+            }
+          });
+          return result;
+        }
+        function baseFindIndex(array, predicate, fromIndex, fromRight) {
+          var length = array.length, index = fromIndex + (fromRight ? 1 : -1);
+          while (fromRight ? index-- : ++index < length) {
+            if (predicate(array[index], index, array)) {
+              return index;
+            }
+          }
+          return -1;
+        }
+        function baseIndexOf(array, value, fromIndex) {
+          return value === value ? strictIndexOf(array, value, fromIndex) : baseFindIndex(array, baseIsNaN, fromIndex);
+        }
+        function baseIndexOfWith(array, value, fromIndex, comparator) {
+          var index = fromIndex - 1, length = array.length;
+          while (++index < length) {
+            if (comparator(array[index], value)) {
+              return index;
+            }
+          }
+          return -1;
+        }
+        function baseIsNaN(value) {
+          return value !== value;
+        }
+        function baseMean(array, iteratee) {
+          var length = array == null ? 0 : array.length;
+          return length ? baseSum(array, iteratee) / length : NAN;
+        }
+        function baseProperty(key) {
+          return function (object) {
+            return object == null ? undefined2 : object[key];
+          };
+        }
+        function basePropertyOf(object) {
+          return function (key) {
+            return object == null ? undefined2 : object[key];
+          };
+        }
+        function baseReduce(collection, iteratee, accumulator, initAccum, eachFunc) {
+          eachFunc(collection, function (value, index, collection2) {
+            accumulator = initAccum ? (initAccum = false, value) : iteratee(accumulator, value, index, collection2);
+          });
+          return accumulator;
+        }
+        function baseSortBy(array, comparer) {
+          var length = array.length;
+          array.sort(comparer);
+          while (length--) {
+            array[length] = array[length].value;
+          }
+          return array;
+        }
+        function baseSum(array, iteratee) {
+          var result, index = -1, length = array.length;
+          while (++index < length) {
+            var current = iteratee(array[index]);
+            if (current !== undefined2) {
+              result = result === undefined2 ? current : result + current;
+            }
+          }
+          return result;
+        }
+        function baseTimes(n2, iteratee) {
+          var index = -1, result = Array(n2);
+          while (++index < n2) {
+            result[index] = iteratee(index);
+          }
+          return result;
+        }
+        function baseToPairs(object, props) {
+          return arrayMap(props, function (key) {
+            return [key, object[key]];
+          });
+        }
+        function baseTrim(string) {
+          return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
+        }
+        function baseUnary(func) {
+          return function (value) {
+            return func(value);
+          };
+        }
+        function baseValues(object, props) {
+          return arrayMap(props, function (key) {
+            return object[key];
+          });
+        }
+        function cacheHas(cache, key) {
+          return cache.has(key);
+        }
+        function charsStartIndex(strSymbols, chrSymbols) {
+          var index = -1, length = strSymbols.length;
+          while (++index < length && baseIndexOf(chrSymbols, strSymbols[index], 0) > -1) {}
+          return index;
+        }
+        function charsEndIndex(strSymbols, chrSymbols) {
+          var index = strSymbols.length;
+          while (index-- && baseIndexOf(chrSymbols, strSymbols[index], 0) > -1) {}
+          return index;
+        }
+        function countHolders(array, placeholder) {
+          var length = array.length, result = 0;
+          while (length--) {
+            if (array[length] === placeholder) {
+              ++result;
+            }
+          }
+          return result;
+        }
+        var deburrLetter = basePropertyOf(deburredLetters);
+        var escapeHtmlChar = basePropertyOf(htmlEscapes);
+        function escapeStringChar(chr) {
+          return "\\" + stringEscapes[chr];
+        }
+        function getValue(object, key) {
+          return object == null ? undefined2 : object[key];
+        }
+        function hasUnicode(string) {
+          return reHasUnicode.test(string);
+        }
+        function hasUnicodeWord(string) {
+          return reHasUnicodeWord.test(string);
+        }
+        function iteratorToArray(iterator) {
+          var data, result = [];
+          while (!(data = iterator.next()).done) {
+            result.push(data.value);
+          }
+          return result;
+        }
+        function mapToArray(map) {
+          var index = -1, result = Array(map.size);
+          map.forEach(function (value, key) {
+            result[++index] = [key, value];
+          });
+          return result;
+        }
+        function overArg(func, transform) {
+          return function (arg) {
+            return func(transform(arg));
+          };
+        }
+        function replaceHolders(array, placeholder) {
+          var index = -1, length = array.length, resIndex = 0, result = [];
+          while (++index < length) {
+            var value = array[index];
+            if (value === placeholder || value === PLACEHOLDER) {
+              array[index] = PLACEHOLDER;
+              result[resIndex++] = index;
+            }
+          }
+          return result;
+        }
+        function setToArray(set) {
+          var index = -1, result = Array(set.size);
+          set.forEach(function (value) {
+            result[++index] = value;
+          });
+          return result;
+        }
+        function setToPairs(set) {
+          var index = -1, result = Array(set.size);
+          set.forEach(function (value) {
+            result[++index] = [value, value];
+          });
+          return result;
+        }
+        function strictIndexOf(array, value, fromIndex) {
+          var index = fromIndex - 1, length = array.length;
+          while (++index < length) {
+            if (array[index] === value) {
+              return index;
+            }
+          }
+          return -1;
+        }
+        function strictLastIndexOf(array, value, fromIndex) {
+          var index = fromIndex + 1;
+          while (index--) {
+            if (array[index] === value) {
+              return index;
+            }
+          }
+          return index;
+        }
+        function stringSize(string) {
+          return hasUnicode(string) ? unicodeSize(string) : asciiSize(string);
+        }
+        function stringToArray(string) {
+          return hasUnicode(string) ? unicodeToArray(string) : asciiToArray(string);
+        }
+        function trimmedEndIndex(string) {
+          var index = string.length;
+          while (index-- && reWhitespace.test(string.charAt(index))) {}
+          return index;
+        }
+        var unescapeHtmlChar = basePropertyOf(htmlUnescapes);
+        function unicodeSize(string) {
+          var result = reUnicode.lastIndex = 0;
+          while (reUnicode.test(string)) {
+            ++result;
+          }
+          return result;
+        }
+        function unicodeToArray(string) {
+          return string.match(reUnicode) || [];
+        }
+        function unicodeWords(string) {
+          return string.match(reUnicodeWord) || [];
+        }
+        var runInContext = function runInContext2(context3) {
+          context3 = context3 == null ? root : _4.defaults(root.Object(), context3, _4.pick(root, contextProps));
+          var Array2 = context3.Array, Date2 = context3.Date, Error2 = context3.Error, Function2 = context3.Function, Math2 = context3.Math, Object2 = context3.Object, RegExp2 = context3.RegExp, String2 = context3.String, TypeError2 = context3.TypeError;
+          var arrayProto = Array2.prototype, funcProto = Function2.prototype, objectProto = Object2.prototype;
+          var coreJsData = context3["__core-js_shared__"];
+          var funcToString = funcProto.toString;
+          var hasOwnProperty = objectProto.hasOwnProperty;
+          var idCounter = 0;
+          var maskSrcKey = (function () {
+            var uid = (/[^.]+$/).exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+            return uid ? "Symbol(src)_1." + uid : "";
+          })();
+          var nativeObjectToString = objectProto.toString;
+          var objectCtorString = funcToString.call(Object2);
+          var oldDash = root._;
+          var reIsNative = RegExp2("^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$");
+          var Buffer2 = moduleExports ? context3.Buffer : undefined2, Symbol2 = context3.Symbol, Uint8Array2 = context3.Uint8Array, allocUnsafe = Buffer2 ? Buffer2.allocUnsafe : undefined2, getPrototype = overArg(Object2.getPrototypeOf, Object2), objectCreate = Object2.create, propertyIsEnumerable = objectProto.propertyIsEnumerable, splice = arrayProto.splice, spreadableSymbol = Symbol2 ? Symbol2.isConcatSpreadable : undefined2, symIterator = Symbol2 ? Symbol2.iterator : undefined2, symToStringTag = Symbol2 ? Symbol2.toStringTag : undefined2;
+          var defineProperty = (function () {
+            try {
+              var func = getNative(Object2, "defineProperty");
+              func({}, "", {});
+              return func;
+            } catch (e2) {}
+          })();
+          var ctxClearTimeout = context3.clearTimeout !== root.clearTimeout && context3.clearTimeout, ctxNow = Date2 && Date2.now !== root.Date.now && Date2.now, ctxSetTimeout = context3.setTimeout !== root.setTimeout && context3.setTimeout;
+          var nativeCeil = Math2.ceil, nativeFloor = Math2.floor, nativeGetSymbols = Object2.getOwnPropertySymbols, nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : undefined2, nativeIsFinite = context3.isFinite, nativeJoin = arrayProto.join, nativeKeys = overArg(Object2.keys, Object2), nativeMax = Math2.max, nativeMin = Math2.min, nativeNow = Date2.now, nativeParseInt = context3.parseInt, nativeRandom = Math2.random, nativeReverse = arrayProto.reverse;
+          var DataView2 = getNative(context3, "DataView"), Map2 = getNative(context3, "Map"), Promise2 = getNative(context3, "Promise"), Set2 = getNative(context3, "Set"), WeakMap2 = getNative(context3, "WeakMap"), nativeCreate = getNative(Object2, "create");
+          var metaMap = WeakMap2 && new WeakMap2();
+          var realNames = {};
+          var dataViewCtorString = toSource(DataView2), mapCtorString = toSource(Map2), promiseCtorString = toSource(Promise2), setCtorString = toSource(Set2), weakMapCtorString = toSource(WeakMap2);
+          var symbolProto = Symbol2 ? Symbol2.prototype : undefined2, symbolValueOf = symbolProto ? symbolProto.valueOf : undefined2, symbolToString = symbolProto ? symbolProto.toString : undefined2;
+          function lodash(value) {
+            if (isObjectLike(value) && !isArray(value) && !(value instanceof LazyWrapper)) {
+              if (value instanceof LodashWrapper) {
+                return value;
+              }
+              if (hasOwnProperty.call(value, "__wrapped__")) {
+                return wrapperClone(value);
+              }
+            }
+            return new LodashWrapper(value);
+          }
+          var baseCreate = (function () {
+            function object() {}
+            return function (proto) {
+              if (!isObject(proto)) {
+                return {};
+              }
+              if (objectCreate) {
+                return objectCreate(proto);
+              }
+              object.prototype = proto;
+              var result2 = new object();
+              object.prototype = undefined2;
+              return result2;
+            };
+          })();
+          function baseLodash() {}
+          function LodashWrapper(value, chainAll) {
+            this.__wrapped__ = value;
+            this.__actions__ = [];
+            this.__chain__ = !!chainAll;
+            this.__index__ = 0;
+            this.__values__ = undefined2;
+          }
+          lodash.templateSettings = {
+            "escape": reEscape,
+            "evaluate": reEvaluate,
+            "interpolate": reInterpolate,
+            "variable": "",
+            "imports": {
+              "_": lodash
+            }
+          };
+          lodash.prototype = baseLodash.prototype;
+          lodash.prototype.constructor = lodash;
+          LodashWrapper.prototype = baseCreate(baseLodash.prototype);
+          LodashWrapper.prototype.constructor = LodashWrapper;
+          function LazyWrapper(value) {
+            this.__wrapped__ = value;
+            this.__actions__ = [];
+            this.__dir__ = 1;
+            this.__filtered__ = false;
+            this.__iteratees__ = [];
+            this.__takeCount__ = MAX_ARRAY_LENGTH;
+            this.__views__ = [];
+          }
+          function lazyClone() {
+            var result2 = new LazyWrapper(this.__wrapped__);
+            result2.__actions__ = copyArray2(this.__actions__);
+            result2.__dir__ = this.__dir__;
+            result2.__filtered__ = this.__filtered__;
+            result2.__iteratees__ = copyArray2(this.__iteratees__);
+            result2.__takeCount__ = this.__takeCount__;
+            result2.__views__ = copyArray2(this.__views__);
+            return result2;
+          }
+          function lazyReverse() {
+            if (this.__filtered__) {
+              var result2 = new LazyWrapper(this);
+              result2.__dir__ = -1;
+              result2.__filtered__ = true;
+            } else {
+              result2 = this.clone();
+              result2.__dir__ *= -1;
+            }
+            return result2;
+          }
+          function lazyValue() {
+            var array = this.__wrapped__.value(), dir = this.__dir__, isArr = isArray(array), isRight = dir < 0, arrLength = isArr ? array.length : 0, view = getView(0, arrLength, this.__views__), start = view.start, end = view.end, length = end - start, index = isRight ? end : start - 1, iteratees = this.__iteratees__, iterLength = iteratees.length, resIndex = 0, takeCount = nativeMin(length, this.__takeCount__);
+            if (!isArr || !isRight && arrLength == length && takeCount == length) {
+              return baseWrapperValue(array, this.__actions__);
+            }
+            var result2 = [];
+            outer: while (length-- && resIndex < takeCount) {
+              index += dir;
+              var iterIndex = -1, value = array[index];
+              while (++iterIndex < iterLength) {
+                var data = iteratees[iterIndex], iteratee2 = data.iteratee, type = data.type, computed = iteratee2(value);
+                if (type == LAZY_MAP_FLAG) {
+                  value = computed;
+                } else if (!computed) {
+                  if (type == LAZY_FILTER_FLAG) {
+                    continue outer;
+                  } else {
+                    break outer;
+                  }
+                }
+              }
+              result2[resIndex++] = value;
+            }
+            return result2;
+          }
+          LazyWrapper.prototype = baseCreate(baseLodash.prototype);
+          LazyWrapper.prototype.constructor = LazyWrapper;
+          function Hash(entries) {
+            var index = -1, length = entries == null ? 0 : entries.length;
+            this.clear();
+            while (++index < length) {
+              var entry = entries[index];
+              this.set(entry[0], entry[1]);
+            }
+          }
+          function hashClear() {
+            this.__data__ = nativeCreate ? nativeCreate(null) : {};
+            this.size = 0;
+          }
+          function hashDelete(key) {
+            var result2 = this.has(key) && delete this.__data__[key];
+            this.size -= result2 ? 1 : 0;
+            return result2;
+          }
+          function hashGet(key) {
+            var data = this.__data__;
+            if (nativeCreate) {
+              var result2 = data[key];
+              return result2 === HASH_UNDEFINED ? undefined2 : result2;
+            }
+            return hasOwnProperty.call(data, key) ? data[key] : undefined2;
+          }
+          function hashHas(key) {
+            var data = this.__data__;
+            return nativeCreate ? data[key] !== undefined2 : hasOwnProperty.call(data, key);
+          }
+          function hashSet(key, value) {
+            var data = this.__data__;
+            this.size += this.has(key) ? 0 : 1;
+            data[key] = nativeCreate && value === undefined2 ? HASH_UNDEFINED : value;
+            return this;
+          }
+          Hash.prototype.clear = hashClear;
+          Hash.prototype["delete"] = hashDelete;
+          Hash.prototype.get = hashGet;
+          Hash.prototype.has = hashHas;
+          Hash.prototype.set = hashSet;
+          function ListCache(entries) {
+            var index = -1, length = entries == null ? 0 : entries.length;
+            this.clear();
+            while (++index < length) {
+              var entry = entries[index];
+              this.set(entry[0], entry[1]);
+            }
+          }
+          function listCacheClear() {
+            this.__data__ = [];
+            this.size = 0;
+          }
+          function listCacheDelete(key) {
+            var data = this.__data__, index = assocIndexOf(data, key);
+            if (index < 0) {
+              return false;
+            }
+            var lastIndex = data.length - 1;
+            if (index == lastIndex) {
+              data.pop();
+            } else {
+              splice.call(data, index, 1);
+            }
+            --this.size;
+            return true;
+          }
+          function listCacheGet(key) {
+            var data = this.__data__, index = assocIndexOf(data, key);
+            return index < 0 ? undefined2 : data[index][1];
+          }
+          function listCacheHas(key) {
+            return assocIndexOf(this.__data__, key) > -1;
+          }
+          function listCacheSet(key, value) {
+            var data = this.__data__, index = assocIndexOf(data, key);
+            if (index < 0) {
+              ++this.size;
+              data.push([key, value]);
+            } else {
+              data[index][1] = value;
+            }
+            return this;
+          }
+          ListCache.prototype.clear = listCacheClear;
+          ListCache.prototype["delete"] = listCacheDelete;
+          ListCache.prototype.get = listCacheGet;
+          ListCache.prototype.has = listCacheHas;
+          ListCache.prototype.set = listCacheSet;
+          function MapCache(entries) {
+            var index = -1, length = entries == null ? 0 : entries.length;
+            this.clear();
+            while (++index < length) {
+              var entry = entries[index];
+              this.set(entry[0], entry[1]);
+            }
+          }
+          function mapCacheClear() {
+            this.size = 0;
+            this.__data__ = {
+              "hash": new Hash(),
+              "map": new (Map2 || ListCache)(),
+              "string": new Hash()
+            };
+          }
+          function mapCacheDelete(key) {
+            var result2 = getMapData(this, key)["delete"](key);
+            this.size -= result2 ? 1 : 0;
+            return result2;
+          }
+          function mapCacheGet(key) {
+            return getMapData(this, key).get(key);
+          }
+          function mapCacheHas(key) {
+            return getMapData(this, key).has(key);
+          }
+          function mapCacheSet(key, value) {
+            var data = getMapData(this, key), size2 = data.size;
+            data.set(key, value);
+            this.size += data.size == size2 ? 0 : 1;
+            return this;
+          }
+          MapCache.prototype.clear = mapCacheClear;
+          MapCache.prototype["delete"] = mapCacheDelete;
+          MapCache.prototype.get = mapCacheGet;
+          MapCache.prototype.has = mapCacheHas;
+          MapCache.prototype.set = mapCacheSet;
+          function SetCache(values2) {
+            var index = -1, length = values2 == null ? 0 : values2.length;
+            this.__data__ = new MapCache();
+            while (++index < length) {
+              this.add(values2[index]);
+            }
+          }
+          function setCacheAdd(value) {
+            this.__data__.set(value, HASH_UNDEFINED);
+            return this;
+          }
+          function setCacheHas(value) {
+            return this.__data__.has(value);
+          }
+          SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+          SetCache.prototype.has = setCacheHas;
+          function Stack(entries) {
+            var data = this.__data__ = new ListCache(entries);
+            this.size = data.size;
+          }
+          function stackClear() {
+            this.__data__ = new ListCache();
+            this.size = 0;
+          }
+          function stackDelete(key) {
+            var data = this.__data__, result2 = data["delete"](key);
+            this.size = data.size;
+            return result2;
+          }
+          function stackGet(key) {
+            return this.__data__.get(key);
+          }
+          function stackHas(key) {
+            return this.__data__.has(key);
+          }
+          function stackSet(key, value) {
+            var data = this.__data__;
+            if (data instanceof ListCache) {
+              var pairs = data.__data__;
+              if (!Map2 || pairs.length < LARGE_ARRAY_SIZE - 1) {
+                pairs.push([key, value]);
+                this.size = ++data.size;
+                return this;
+              }
+              data = this.__data__ = new MapCache(pairs);
+            }
+            data.set(key, value);
+            this.size = data.size;
+            return this;
+          }
+          Stack.prototype.clear = stackClear;
+          Stack.prototype["delete"] = stackDelete;
+          Stack.prototype.get = stackGet;
+          Stack.prototype.has = stackHas;
+          Stack.prototype.set = stackSet;
+          function arrayLikeKeys(value, inherited) {
+            var isArr = isArray(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray2(value), skipIndexes = isArr || isArg || isBuff || isType, result2 = skipIndexes ? baseTimes(value.length, String2) : [], length = result2.length;
+            for (var key in value) {
+              if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || isIndex(key, length)))) {
+                result2.push(key);
+              }
+            }
+            return result2;
+          }
+          function arraySample(array) {
+            var length = array.length;
+            return length ? array[baseRandom(0, length - 1)] : undefined2;
+          }
+          function arraySampleSize(array, n2) {
+            return shuffleSelf(copyArray2(array), baseClamp(n2, 0, array.length));
+          }
+          function arrayShuffle(array) {
+            return shuffleSelf(copyArray2(array));
+          }
+          function assignMergeValue(object, key, value) {
+            if (value !== undefined2 && !eq(object[key], value) || value === undefined2 && !((key in object))) {
+              baseAssignValue(object, key, value);
+            }
+          }
+          function assignValue(object, key, value) {
+            var objValue = object[key];
+            if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === undefined2 && !((key in object))) {
+              baseAssignValue(object, key, value);
+            }
+          }
+          function assocIndexOf(array, key) {
+            var length = array.length;
+            while (length--) {
+              if (eq(array[length][0], key)) {
+                return length;
+              }
+            }
+            return -1;
+          }
+          function baseAggregator(collection, setter, iteratee2, accumulator) {
+            baseEach(collection, function (value, key, collection2) {
+              setter(accumulator, value, iteratee2(value), collection2);
+            });
+            return accumulator;
+          }
+          function baseAssign(object, source) {
+            return object && copyObject(source, keys(source), object);
+          }
+          function baseAssignIn(object, source) {
+            return object && copyObject(source, keysIn(source), object);
+          }
+          function baseAssignValue(object, key, value) {
+            if (key == "__proto__" && defineProperty) {
+              defineProperty(object, key, {
+                "configurable": true,
+                "enumerable": true,
+                "value": value,
+                "writable": true
+              });
+            } else {
+              object[key] = value;
+            }
+          }
+          function baseAt(object, paths) {
+            var index = -1, length = paths.length, result2 = Array2(length), skip = object == null;
+            while (++index < length) {
+              result2[index] = skip ? undefined2 : get(object, paths[index]);
+            }
+            return result2;
+          }
+          function baseClamp(number, lower, upper) {
+            if (number === number) {
+              if (upper !== undefined2) {
+                number = number <= upper ? number : upper;
+              }
+              if (lower !== undefined2) {
+                number = number >= lower ? number : lower;
+              }
+            }
+            return number;
+          }
+          function baseClone(value, bitmask, customizer, key, object, stack) {
+            var result2, isDeep = bitmask & CLONE_DEEP_FLAG, isFlat = bitmask & CLONE_FLAT_FLAG, isFull = bitmask & CLONE_SYMBOLS_FLAG;
+            if (customizer) {
+              result2 = object ? customizer(value, key, object, stack) : customizer(value);
+            }
+            if (result2 !== undefined2) {
+              return result2;
+            }
+            if (!isObject(value)) {
+              return value;
+            }
+            var isArr = isArray(value);
+            if (isArr) {
+              result2 = initCloneArray(value);
+              if (!isDeep) {
+                return copyArray2(value, result2);
+              }
+            } else {
+              var tag = getTag(value), isFunc = tag == funcTag || tag == genTag;
+              if (isBuffer(value)) {
+                return cloneBuffer(value, isDeep);
+              }
+              if (tag == objectTag || tag == argsTag || isFunc && !object) {
+                result2 = isFlat || isFunc ? {} : initCloneObject(value);
+                if (!isDeep) {
+                  return isFlat ? copySymbolsIn(value, baseAssignIn(result2, value)) : copySymbols(value, baseAssign(result2, value));
+                }
+              } else {
+                if (!cloneableTags[tag]) {
+                  return object ? value : {};
+                }
+                result2 = initCloneByTag(value, tag, isDeep);
+              }
+            }
+            stack || (stack = new Stack());
+            var stacked = stack.get(value);
+            if (stacked) {
+              return stacked;
+            }
+            stack.set(value, result2);
+            if (isSet(value)) {
+              value.forEach(function (subValue) {
+                result2.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
+              });
+            } else if (isMap(value)) {
+              value.forEach(function (subValue, key2) {
+                result2.set(key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
+              });
+            }
+            var keysFunc = isFull ? isFlat ? getAllKeysIn : getAllKeys : isFlat ? keysIn : keys;
+            var props = isArr ? undefined2 : keysFunc(value);
+            arrayEach(props || value, function (subValue, key2) {
+              if (props) {
+                key2 = subValue;
+                subValue = value[key2];
+              }
+              assignValue(result2, key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
+            });
+            return result2;
+          }
+          function baseConforms(source) {
+            var props = keys(source);
+            return function (object) {
+              return baseConformsTo(object, source, props);
+            };
+          }
+          function baseConformsTo(object, source, props) {
+            var length = props.length;
+            if (object == null) {
+              return !length;
+            }
+            object = Object2(object);
+            while (length--) {
+              var key = props[length], predicate = source[key], value = object[key];
+              if (value === undefined2 && !((key in object)) || !predicate(value)) {
+                return false;
+              }
+            }
+            return true;
+          }
+          function baseDelay(func, wait, args) {
+            if (typeof func != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            return setTimeout2(function () {
+              func.apply(undefined2, args);
+            }, wait);
+          }
+          function baseDifference(array, values2, iteratee2, comparator) {
+            var index = -1, includes2 = arrayIncludes, isCommon = true, length = array.length, result2 = [], valuesLength = values2.length;
+            if (!length) {
+              return result2;
+            }
+            if (iteratee2) {
+              values2 = arrayMap(values2, baseUnary(iteratee2));
+            }
+            if (comparator) {
+              includes2 = arrayIncludesWith;
+              isCommon = false;
+            } else if (values2.length >= LARGE_ARRAY_SIZE) {
+              includes2 = cacheHas;
+              isCommon = false;
+              values2 = new SetCache(values2);
+            }
+            outer: while (++index < length) {
+              var value = array[index], computed = iteratee2 == null ? value : iteratee2(value);
+              value = comparator || value !== 0 ? value : 0;
+              if (isCommon && computed === computed) {
+                var valuesIndex = valuesLength;
+                while (valuesIndex--) {
+                  if (values2[valuesIndex] === computed) {
+                    continue outer;
+                  }
+                }
+                result2.push(value);
+              } else if (!includes2(values2, computed, comparator)) {
+                result2.push(value);
+              }
+            }
+            return result2;
+          }
+          var baseEach = createBaseEach(baseForOwn);
+          var baseEachRight = createBaseEach(baseForOwnRight, true);
+          function baseEvery(collection, predicate) {
+            var result2 = true;
+            baseEach(collection, function (value, index, collection2) {
+              result2 = !!predicate(value, index, collection2);
+              return result2;
+            });
+            return result2;
+          }
+          function baseExtremum(array, iteratee2, comparator) {
+            var index = -1, length = array.length;
+            while (++index < length) {
+              var value = array[index], current = iteratee2(value);
+              if (current != null && (computed === undefined2 ? current === current && !isSymbol(current) : comparator(current, computed))) {
+                var computed = current, result2 = value;
+              }
+            }
+            return result2;
+          }
+          function baseFill(array, value, start, end) {
+            var length = array.length;
+            start = toInteger(start);
+            if (start < 0) {
+              start = -start > length ? 0 : length + start;
+            }
+            end = end === undefined2 || end > length ? length : toInteger(end);
+            if (end < 0) {
+              end += length;
+            }
+            end = start > end ? 0 : toLength(end);
+            while (start < end) {
+              array[start++] = value;
+            }
+            return array;
+          }
+          function baseFilter(collection, predicate) {
+            var result2 = [];
+            baseEach(collection, function (value, index, collection2) {
+              if (predicate(value, index, collection2)) {
+                result2.push(value);
+              }
+            });
+            return result2;
+          }
+          function baseFlatten(array, depth, predicate, isStrict, result2) {
+            var index = -1, length = array.length;
+            predicate || (predicate = isFlattenable);
+            result2 || (result2 = []);
+            while (++index < length) {
+              var value = array[index];
+              if (depth > 0 && predicate(value)) {
+                if (depth > 1) {
+                  baseFlatten(value, depth - 1, predicate, isStrict, result2);
+                } else {
+                  arrayPush(result2, value);
+                }
+              } else if (!isStrict) {
+                result2[result2.length] = value;
+              }
+            }
+            return result2;
+          }
+          var baseFor = createBaseFor();
+          var baseForRight = createBaseFor(true);
+          function baseForOwn(object, iteratee2) {
+            return object && baseFor(object, iteratee2, keys);
+          }
+          function baseForOwnRight(object, iteratee2) {
+            return object && baseForRight(object, iteratee2, keys);
+          }
+          function baseFunctions(object, props) {
+            return arrayFilter(props, function (key) {
+              return isFunction(object[key]);
+            });
+          }
+          function baseGet(object, path) {
+            path = castPath(path, object);
+            var index = 0, length = path.length;
+            while (object != null && index < length) {
+              object = object[toKey(path[index++])];
+            }
+            return index && index == length ? object : undefined2;
+          }
+          function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+            var result2 = keysFunc(object);
+            return isArray(object) ? result2 : arrayPush(result2, symbolsFunc(object));
+          }
+          function baseGetTag(value) {
+            if (value == null) {
+              return value === undefined2 ? undefinedTag : nullTag;
+            }
+            return symToStringTag && (symToStringTag in Object2(value)) ? getRawTag(value) : objectToString(value);
+          }
+          function baseGt(value, other) {
+            return value > other;
+          }
+          function baseHas(object, key) {
+            return object != null && hasOwnProperty.call(object, key);
+          }
+          function baseHasIn(object, key) {
+            return object != null && (key in Object2(object));
+          }
+          function baseInRange(number, start, end) {
+            return number >= nativeMin(start, end) && number < nativeMax(start, end);
+          }
+          function baseIntersection(arrays, iteratee2, comparator) {
+            var includes2 = comparator ? arrayIncludesWith : arrayIncludes, length = arrays[0].length, othLength = arrays.length, othIndex = othLength, caches = Array2(othLength), maxLength = Infinity, result2 = [];
+            while (othIndex--) {
+              var array = arrays[othIndex];
+              if (othIndex && iteratee2) {
+                array = arrayMap(array, baseUnary(iteratee2));
+              }
+              maxLength = nativeMin(array.length, maxLength);
+              caches[othIndex] = !comparator && (iteratee2 || length >= 120 && array.length >= 120) ? new SetCache(othIndex && array) : undefined2;
+            }
+            array = arrays[0];
+            var index = -1, seen = caches[0];
+            outer: while (++index < length && result2.length < maxLength) {
+              var value = array[index], computed = iteratee2 ? iteratee2(value) : value;
+              value = comparator || value !== 0 ? value : 0;
+              if (!(seen ? cacheHas(seen, computed) : includes2(result2, computed, comparator))) {
+                othIndex = othLength;
+                while (--othIndex) {
+                  var cache = caches[othIndex];
+                  if (!(cache ? cacheHas(cache, computed) : includes2(arrays[othIndex], computed, comparator))) {
+                    continue outer;
+                  }
+                }
+                if (seen) {
+                  seen.push(computed);
+                }
+                result2.push(value);
+              }
+            }
+            return result2;
+          }
+          function baseInverter(object, setter, iteratee2, accumulator) {
+            baseForOwn(object, function (value, key, object2) {
+              setter(accumulator, iteratee2(value), key, object2);
+            });
+            return accumulator;
+          }
+          function baseInvoke(object, path, args) {
+            path = castPath(path, object);
+            object = parent(object, path);
+            var func = object == null ? object : object[toKey(last(path))];
+            return func == null ? undefined2 : apply(func, object, args);
+          }
+          function baseIsArguments(value) {
+            return isObjectLike(value) && baseGetTag(value) == argsTag;
+          }
+          function baseIsArrayBuffer(value) {
+            return isObjectLike(value) && baseGetTag(value) == arrayBufferTag;
+          }
+          function baseIsDate(value) {
+            return isObjectLike(value) && baseGetTag(value) == dateTag;
+          }
+          function baseIsEqual(value, other, bitmask, customizer, stack) {
+            if (value === other) {
+              return true;
+            }
+            if (value == null || other == null || !isObjectLike(value) && !isObjectLike(other)) {
+              return value !== value && other !== other;
+            }
+            return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
+          }
+          function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
+            var objIsArr = isArray(object), othIsArr = isArray(other), objTag = objIsArr ? arrayTag : getTag(object), othTag = othIsArr ? arrayTag : getTag(other);
+            objTag = objTag == argsTag ? objectTag : objTag;
+            othTag = othTag == argsTag ? objectTag : othTag;
+            var objIsObj = objTag == objectTag, othIsObj = othTag == objectTag, isSameTag = objTag == othTag;
+            if (isSameTag && isBuffer(object)) {
+              if (!isBuffer(other)) {
+                return false;
+              }
+              objIsArr = true;
+              objIsObj = false;
+            }
+            if (isSameTag && !objIsObj) {
+              stack || (stack = new Stack());
+              return objIsArr || isTypedArray2(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
+            }
+            if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
+              var objIsWrapped = objIsObj && hasOwnProperty.call(object, "__wrapped__"), othIsWrapped = othIsObj && hasOwnProperty.call(other, "__wrapped__");
+              if (objIsWrapped || othIsWrapped) {
+                var objUnwrapped = objIsWrapped ? object.value() : object, othUnwrapped = othIsWrapped ? other.value() : other;
+                stack || (stack = new Stack());
+                return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
+              }
+            }
+            if (!isSameTag) {
+              return false;
+            }
+            stack || (stack = new Stack());
+            return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
+          }
+          function baseIsMap(value) {
+            return isObjectLike(value) && getTag(value) == mapTag;
+          }
+          function baseIsMatch(object, source, matchData, customizer) {
+            var index = matchData.length, length = index, noCustomizer = !customizer;
+            if (object == null) {
+              return !length;
+            }
+            object = Object2(object);
+            while (index--) {
+              var data = matchData[index];
+              if (noCustomizer && data[2] ? data[1] !== object[data[0]] : !((data[0] in object))) {
+                return false;
+              }
+            }
+            while (++index < length) {
+              data = matchData[index];
+              var key = data[0], objValue = object[key], srcValue = data[1];
+              if (noCustomizer && data[2]) {
+                if (objValue === undefined2 && !((key in object))) {
+                  return false;
+                }
+              } else {
+                var stack = new Stack();
+                if (customizer) {
+                  var result2 = customizer(objValue, srcValue, key, object, source, stack);
+                }
+                if (!(result2 === undefined2 ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack) : result2)) {
+                  return false;
+                }
+              }
+            }
+            return true;
+          }
+          function baseIsNative(value) {
+            if (!isObject(value) || isMasked(value)) {
+              return false;
+            }
+            var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+            return pattern.test(toSource(value));
+          }
+          function baseIsRegExp(value) {
+            return isObjectLike(value) && baseGetTag(value) == regexpTag;
+          }
+          function baseIsSet(value) {
+            return isObjectLike(value) && getTag(value) == setTag;
+          }
+          function baseIsTypedArray(value) {
+            return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+          }
+          function baseIteratee(value) {
+            if (typeof value == "function") {
+              return value;
+            }
+            if (value == null) {
+              return identity;
+            }
+            if (typeof value == "object") {
+              return isArray(value) ? baseMatchesProperty(value[0], value[1]) : baseMatches(value);
+            }
+            return property(value);
+          }
+          function baseKeys(object) {
+            if (!isPrototype(object)) {
+              return nativeKeys(object);
+            }
+            var result2 = [];
+            for (var key in Object2(object)) {
+              if (hasOwnProperty.call(object, key) && key != "constructor") {
+                result2.push(key);
+              }
+            }
+            return result2;
+          }
+          function baseKeysIn(object) {
+            if (!isObject(object)) {
+              return nativeKeysIn(object);
+            }
+            var isProto = isPrototype(object), result2 = [];
+            for (var key in object) {
+              if (!(key == "constructor" && (isProto || !hasOwnProperty.call(object, key)))) {
+                result2.push(key);
+              }
+            }
+            return result2;
+          }
+          function baseLt(value, other) {
+            return value < other;
+          }
+          function baseMap(collection, iteratee2) {
+            var index = -1, result2 = isArrayLike(collection) ? Array2(collection.length) : [];
+            baseEach(collection, function (value, key, collection2) {
+              result2[++index] = iteratee2(value, key, collection2);
+            });
+            return result2;
+          }
+          function baseMatches(source) {
+            var matchData = getMatchData(source);
+            if (matchData.length == 1 && matchData[0][2]) {
+              return matchesStrictComparable(matchData[0][0], matchData[0][1]);
+            }
+            return function (object) {
+              return object === source || baseIsMatch(object, source, matchData);
+            };
+          }
+          function baseMatchesProperty(path, srcValue) {
+            if (isKey(path) && isStrictComparable(srcValue)) {
+              return matchesStrictComparable(toKey(path), srcValue);
+            }
+            return function (object) {
+              var objValue = get(object, path);
+              return objValue === undefined2 && objValue === srcValue ? hasIn(object, path) : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
+            };
+          }
+          function baseMerge(object, source, srcIndex, customizer, stack) {
+            if (object === source) {
+              return;
+            }
+            baseFor(source, function (srcValue, key) {
+              stack || (stack = new Stack());
+              if (isObject(srcValue)) {
+                baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
+              } else {
+                var newValue = customizer ? customizer(safeGet(object, key), srcValue, key + "", object, source, stack) : undefined2;
+                if (newValue === undefined2) {
+                  newValue = srcValue;
+                }
+                assignMergeValue(object, key, newValue);
+              }
+            }, keysIn);
+          }
+          function baseMergeDeep(object, source, key, srcIndex, mergeFunc, customizer, stack) {
+            var objValue = safeGet(object, key), srcValue = safeGet(source, key), stacked = stack.get(srcValue);
+            if (stacked) {
+              assignMergeValue(object, key, stacked);
+              return;
+            }
+            var newValue = customizer ? customizer(objValue, srcValue, key + "", object, source, stack) : undefined2;
+            var isCommon = newValue === undefined2;
+            if (isCommon) {
+              var isArr = isArray(srcValue), isBuff = !isArr && isBuffer(srcValue), isTyped = !isArr && !isBuff && isTypedArray2(srcValue);
+              newValue = srcValue;
+              if (isArr || isBuff || isTyped) {
+                if (isArray(objValue)) {
+                  newValue = objValue;
+                } else if (isArrayLikeObject(objValue)) {
+                  newValue = copyArray2(objValue);
+                } else if (isBuff) {
+                  isCommon = false;
+                  newValue = cloneBuffer(srcValue, true);
+                } else if (isTyped) {
+                  isCommon = false;
+                  newValue = cloneTypedArray(srcValue, true);
+                } else {
+                  newValue = [];
+                }
+              } else if (isPlainObject(srcValue) || isArguments(srcValue)) {
+                newValue = objValue;
+                if (isArguments(objValue)) {
+                  newValue = toPlainObject(objValue);
+                } else if (!isObject(objValue) || isFunction(objValue)) {
+                  newValue = initCloneObject(srcValue);
+                }
+              } else {
+                isCommon = false;
+              }
+            }
+            if (isCommon) {
+              stack.set(srcValue, newValue);
+              mergeFunc(newValue, srcValue, srcIndex, customizer, stack);
+              stack["delete"](srcValue);
+            }
+            assignMergeValue(object, key, newValue);
+          }
+          function baseNth(array, n2) {
+            var length = array.length;
+            if (!length) {
+              return;
+            }
+            n2 += n2 < 0 ? length : 0;
+            return isIndex(n2, length) ? array[n2] : undefined2;
+          }
+          function baseOrderBy(collection, iteratees, orders) {
+            if (iteratees.length) {
+              iteratees = arrayMap(iteratees, function (iteratee2) {
+                if (isArray(iteratee2)) {
+                  return function (value) {
+                    return baseGet(value, iteratee2.length === 1 ? iteratee2[0] : iteratee2);
+                  };
+                }
+                return iteratee2;
+              });
+            } else {
+              iteratees = [identity];
+            }
+            var index = -1;
+            iteratees = arrayMap(iteratees, baseUnary(getIteratee()));
+            var result2 = baseMap(collection, function (value, key, collection2) {
+              var criteria = arrayMap(iteratees, function (iteratee2) {
+                return iteratee2(value);
+              });
+              return {
+                "criteria": criteria,
+                "index": ++index,
+                "value": value
+              };
+            });
+            return baseSortBy(result2, function (object, other) {
+              return compareMultiple(object, other, orders);
+            });
+          }
+          function basePick(object, paths) {
+            return basePickBy(object, paths, function (value, path) {
+              return hasIn(object, path);
+            });
+          }
+          function basePickBy(object, paths, predicate) {
+            var index = -1, length = paths.length, result2 = {};
+            while (++index < length) {
+              var path = paths[index], value = baseGet(object, path);
+              if (predicate(value, path)) {
+                baseSet(result2, castPath(path, object), value);
+              }
+            }
+            return result2;
+          }
+          function basePropertyDeep(path) {
+            return function (object) {
+              return baseGet(object, path);
+            };
+          }
+          function basePullAll(array, values2, iteratee2, comparator) {
+            var indexOf2 = comparator ? baseIndexOfWith : baseIndexOf, index = -1, length = values2.length, seen = array;
+            if (array === values2) {
+              values2 = copyArray2(values2);
+            }
+            if (iteratee2) {
+              seen = arrayMap(array, baseUnary(iteratee2));
+            }
+            while (++index < length) {
+              var fromIndex = 0, value = values2[index], computed = iteratee2 ? iteratee2(value) : value;
+              while ((fromIndex = indexOf2(seen, computed, fromIndex, comparator)) > -1) {
+                if (seen !== array) {
+                  splice.call(seen, fromIndex, 1);
+                }
+                splice.call(array, fromIndex, 1);
+              }
+            }
+            return array;
+          }
+          function basePullAt(array, indexes) {
+            var length = array ? indexes.length : 0, lastIndex = length - 1;
+            while (length--) {
+              var index = indexes[length];
+              if (length == lastIndex || index !== previous) {
+                var previous = index;
+                if (isIndex(index)) {
+                  splice.call(array, index, 1);
+                } else {
+                  baseUnset(array, index);
+                }
+              }
+            }
+            return array;
+          }
+          function baseRandom(lower, upper) {
+            return lower + nativeFloor(nativeRandom() * (upper - lower + 1));
+          }
+          function baseRange(start, end, step, fromRight) {
+            var index = -1, length = nativeMax(nativeCeil((end - start) / (step || 1)), 0), result2 = Array2(length);
+            while (length--) {
+              result2[fromRight ? length : ++index] = start;
+              start += step;
+            }
+            return result2;
+          }
+          function baseRepeat(string, n2) {
+            var result2 = "";
+            if (!string || n2 < 1 || n2 > MAX_SAFE_INTEGER) {
+              return result2;
+            }
+            do {
+              if (n2 % 2) {
+                result2 += string;
+              }
+              n2 = nativeFloor(n2 / 2);
+              if (n2) {
+                string += string;
+              }
+            } while (n2);
+            return result2;
+          }
+          function baseRest(func, start) {
+            return setToString(overRest(func, start, identity), func + "");
+          }
+          function baseSample(collection) {
+            return arraySample(values(collection));
+          }
+          function baseSampleSize(collection, n2) {
+            var array = values(collection);
+            return shuffleSelf(array, baseClamp(n2, 0, array.length));
+          }
+          function baseSet(object, path, value, customizer) {
+            if (!isObject(object)) {
+              return object;
+            }
+            path = castPath(path, object);
+            var index = -1, length = path.length, lastIndex = length - 1, nested = object;
+            while (nested != null && ++index < length) {
+              var key = toKey(path[index]), newValue = value;
+              if (key === "__proto__" || key === "constructor" || key === "prototype") {
+                return object;
+              }
+              if (index != lastIndex) {
+                var objValue = nested[key];
+                newValue = customizer ? customizer(objValue, key, nested) : undefined2;
+                if (newValue === undefined2) {
+                  newValue = isObject(objValue) ? objValue : isIndex(path[index + 1]) ? [] : {};
+                }
+              }
+              assignValue(nested, key, newValue);
+              nested = nested[key];
+            }
+            return object;
+          }
+          var baseSetData = !metaMap ? identity : function (func, data) {
+            metaMap.set(func, data);
+            return func;
+          };
+          var baseSetToString = !defineProperty ? identity : function (func, string) {
+            return defineProperty(func, "toString", {
+              "configurable": true,
+              "enumerable": false,
+              "value": constant(string),
+              "writable": true
+            });
+          };
+          function baseShuffle(collection) {
+            return shuffleSelf(values(collection));
+          }
+          function baseSlice(array, start, end) {
+            var index = -1, length = array.length;
+            if (start < 0) {
+              start = -start > length ? 0 : length + start;
+            }
+            end = end > length ? length : end;
+            if (end < 0) {
+              end += length;
+            }
+            length = start > end ? 0 : end - start >>> 0;
+            start >>>= 0;
+            var result2 = Array2(length);
+            while (++index < length) {
+              result2[index] = array[index + start];
+            }
+            return result2;
+          }
+          function baseSome(collection, predicate) {
+            var result2;
+            baseEach(collection, function (value, index, collection2) {
+              result2 = predicate(value, index, collection2);
+              return !result2;
+            });
+            return !!result2;
+          }
+          function baseSortedIndex(array, value, retHighest) {
+            var low = 0, high = array == null ? low : array.length;
+            if (typeof value == "number" && value === value && high <= HALF_MAX_ARRAY_LENGTH) {
+              while (low < high) {
+                var mid = low + high >>> 1, computed = array[mid];
+                if (computed !== null && !isSymbol(computed) && (retHighest ? computed <= value : computed < value)) {
+                  low = mid + 1;
+                } else {
+                  high = mid;
+                }
+              }
+              return high;
+            }
+            return baseSortedIndexBy(array, value, identity, retHighest);
+          }
+          function baseSortedIndexBy(array, value, iteratee2, retHighest) {
+            var low = 0, high = array == null ? 0 : array.length;
+            if (high === 0) {
+              return 0;
+            }
+            value = iteratee2(value);
+            var valIsNaN = value !== value, valIsNull = value === null, valIsSymbol = isSymbol(value), valIsUndefined = value === undefined2;
+            while (low < high) {
+              var mid = nativeFloor((low + high) / 2), computed = iteratee2(array[mid]), othIsDefined = computed !== undefined2, othIsNull = computed === null, othIsReflexive = computed === computed, othIsSymbol = isSymbol(computed);
+              if (valIsNaN) {
+                var setLow = retHighest || othIsReflexive;
+              } else if (valIsUndefined) {
+                setLow = othIsReflexive && (retHighest || othIsDefined);
+              } else if (valIsNull) {
+                setLow = othIsReflexive && othIsDefined && (retHighest || !othIsNull);
+              } else if (valIsSymbol) {
+                setLow = othIsReflexive && othIsDefined && !othIsNull && (retHighest || !othIsSymbol);
+              } else if (othIsNull || othIsSymbol) {
+                setLow = false;
+              } else {
+                setLow = retHighest ? computed <= value : computed < value;
+              }
+              if (setLow) {
+                low = mid + 1;
+              } else {
+                high = mid;
+              }
+            }
+            return nativeMin(high, MAX_ARRAY_INDEX);
+          }
+          function baseSortedUniq(array, iteratee2) {
+            var index = -1, length = array.length, resIndex = 0, result2 = [];
+            while (++index < length) {
+              var value = array[index], computed = iteratee2 ? iteratee2(value) : value;
+              if (!index || !eq(computed, seen)) {
+                var seen = computed;
+                result2[resIndex++] = value === 0 ? 0 : value;
+              }
+            }
+            return result2;
+          }
+          function baseToNumber(value) {
+            if (typeof value == "number") {
+              return value;
+            }
+            if (isSymbol(value)) {
+              return NAN;
+            }
+            return +value;
+          }
+          function baseToString(value) {
+            if (typeof value == "string") {
+              return value;
+            }
+            if (isArray(value)) {
+              return arrayMap(value, baseToString) + "";
+            }
+            if (isSymbol(value)) {
+              return symbolToString ? symbolToString.call(value) : "";
+            }
+            var result2 = value + "";
+            return result2 == "0" && 1 / value == -INFINITY ? "-0" : result2;
+          }
+          function baseUniq(array, iteratee2, comparator) {
+            var index = -1, includes2 = arrayIncludes, length = array.length, isCommon = true, result2 = [], seen = result2;
+            if (comparator) {
+              isCommon = false;
+              includes2 = arrayIncludesWith;
+            } else if (length >= LARGE_ARRAY_SIZE) {
+              var set2 = iteratee2 ? null : createSet(array);
+              if (set2) {
+                return setToArray(set2);
+              }
+              isCommon = false;
+              includes2 = cacheHas;
+              seen = new SetCache();
+            } else {
+              seen = iteratee2 ? [] : result2;
+            }
+            outer: while (++index < length) {
+              var value = array[index], computed = iteratee2 ? iteratee2(value) : value;
+              value = comparator || value !== 0 ? value : 0;
+              if (isCommon && computed === computed) {
+                var seenIndex = seen.length;
+                while (seenIndex--) {
+                  if (seen[seenIndex] === computed) {
+                    continue outer;
+                  }
+                }
+                if (iteratee2) {
+                  seen.push(computed);
+                }
+                result2.push(value);
+              } else if (!includes2(seen, computed, comparator)) {
+                if (seen !== result2) {
+                  seen.push(computed);
+                }
+                result2.push(value);
+              }
+            }
+            return result2;
+          }
+          function baseUnset(object, path) {
+            path = castPath(path, object);
+            object = parent(object, path);
+            return object == null || delete object[toKey(last(path))];
+          }
+          function baseUpdate(object, path, updater, customizer) {
+            return baseSet(object, path, updater(baseGet(object, path)), customizer);
+          }
+          function baseWhile(array, predicate, isDrop, fromRight) {
+            var length = array.length, index = fromRight ? length : -1;
+            while ((fromRight ? index-- : ++index < length) && predicate(array[index], index, array)) {}
+            return isDrop ? baseSlice(array, fromRight ? 0 : index, fromRight ? index + 1 : length) : baseSlice(array, fromRight ? index + 1 : 0, fromRight ? length : index);
+          }
+          function baseWrapperValue(value, actions) {
+            var result2 = value;
+            if (result2 instanceof LazyWrapper) {
+              result2 = result2.value();
+            }
+            return arrayReduce(actions, function (result3, action) {
+              return action.func.apply(action.thisArg, arrayPush([result3], action.args));
+            }, result2);
+          }
+          function baseXor(arrays, iteratee2, comparator) {
+            var length = arrays.length;
+            if (length < 2) {
+              return length ? baseUniq(arrays[0]) : [];
+            }
+            var index = -1, result2 = Array2(length);
+            while (++index < length) {
+              var array = arrays[index], othIndex = -1;
+              while (++othIndex < length) {
+                if (othIndex != index) {
+                  result2[index] = baseDifference(result2[index] || array, arrays[othIndex], iteratee2, comparator);
+                }
+              }
+            }
+            return baseUniq(baseFlatten(result2, 1), iteratee2, comparator);
+          }
+          function baseZipObject(props, values2, assignFunc) {
+            var index = -1, length = props.length, valsLength = values2.length, result2 = {};
+            while (++index < length) {
+              var value = index < valsLength ? values2[index] : undefined2;
+              assignFunc(result2, props[index], value);
+            }
+            return result2;
+          }
+          function castArrayLikeObject(value) {
+            return isArrayLikeObject(value) ? value : [];
+          }
+          function castFunction(value) {
+            return typeof value == "function" ? value : identity;
+          }
+          function castPath(value, object) {
+            if (isArray(value)) {
+              return value;
+            }
+            return isKey(value, object) ? [value] : stringToPath(toString(value));
+          }
+          var castRest = baseRest;
+          function castSlice(array, start, end) {
+            var length = array.length;
+            end = end === undefined2 ? length : end;
+            return !start && end >= length ? array : baseSlice(array, start, end);
+          }
+          var clearTimeout = ctxClearTimeout || (function (id) {
+            return root.clearTimeout(id);
+          });
+          function cloneBuffer(buffer, isDeep) {
+            if (isDeep) {
+              return buffer.slice();
+            }
+            var length = buffer.length, result2 = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+            buffer.copy(result2);
+            return result2;
+          }
+          function cloneArrayBuffer(arrayBuffer) {
+            var result2 = new arrayBuffer.constructor(arrayBuffer.byteLength);
+            new Uint8Array2(result2).set(new Uint8Array2(arrayBuffer));
+            return result2;
+          }
+          function cloneDataView(dataView, isDeep) {
+            var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
+            return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
+          }
+          function cloneRegExp(regexp) {
+            var result2 = new regexp.constructor(regexp.source, reFlags.exec(regexp));
+            result2.lastIndex = regexp.lastIndex;
+            return result2;
+          }
+          function cloneSymbol(symbol) {
+            return symbolValueOf ? Object2(symbolValueOf.call(symbol)) : {};
+          }
+          function cloneTypedArray(typedArray, isDeep) {
+            var buffer = isDeep ? cloneArrayBuffer(typedArray.buffer) : typedArray.buffer;
+            return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
+          }
+          function compareAscending(value, other) {
+            if (value !== other) {
+              var valIsDefined = value !== undefined2, valIsNull = value === null, valIsReflexive = value === value, valIsSymbol = isSymbol(value);
+              var othIsDefined = other !== undefined2, othIsNull = other === null, othIsReflexive = other === other, othIsSymbol = isSymbol(other);
+              if (!othIsNull && !othIsSymbol && !valIsSymbol && value > other || valIsSymbol && othIsDefined && othIsReflexive && !othIsNull && !othIsSymbol || valIsNull && othIsDefined && othIsReflexive || !valIsDefined && othIsReflexive || !valIsReflexive) {
+                return 1;
+              }
+              if (!valIsNull && !valIsSymbol && !othIsSymbol && value < other || othIsSymbol && valIsDefined && valIsReflexive && !valIsNull && !valIsSymbol || othIsNull && valIsDefined && valIsReflexive || !othIsDefined && valIsReflexive || !othIsReflexive) {
+                return -1;
+              }
+            }
+            return 0;
+          }
+          function compareMultiple(object, other, orders) {
+            var index = -1, objCriteria = object.criteria, othCriteria = other.criteria, length = objCriteria.length, ordersLength = orders.length;
+            while (++index < length) {
+              var result2 = compareAscending(objCriteria[index], othCriteria[index]);
+              if (result2) {
+                if (index >= ordersLength) {
+                  return result2;
+                }
+                var order = orders[index];
+                return result2 * (order == "desc" ? -1 : 1);
+              }
+            }
+            return object.index - other.index;
+          }
+          function composeArgs(args, partials, holders, isCurried) {
+            var argsIndex = -1, argsLength = args.length, holdersLength = holders.length, leftIndex = -1, leftLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result2 = Array2(leftLength + rangeLength), isUncurried = !isCurried;
+            while (++leftIndex < leftLength) {
+              result2[leftIndex] = partials[leftIndex];
+            }
+            while (++argsIndex < holdersLength) {
+              if (isUncurried || argsIndex < argsLength) {
+                result2[holders[argsIndex]] = args[argsIndex];
+              }
+            }
+            while (rangeLength--) {
+              result2[leftIndex++] = args[argsIndex++];
+            }
+            return result2;
+          }
+          function composeArgsRight(args, partials, holders, isCurried) {
+            var argsIndex = -1, argsLength = args.length, holdersIndex = -1, holdersLength = holders.length, rightIndex = -1, rightLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result2 = Array2(rangeLength + rightLength), isUncurried = !isCurried;
+            while (++argsIndex < rangeLength) {
+              result2[argsIndex] = args[argsIndex];
+            }
+            var offset = argsIndex;
+            while (++rightIndex < rightLength) {
+              result2[offset + rightIndex] = partials[rightIndex];
+            }
+            while (++holdersIndex < holdersLength) {
+              if (isUncurried || argsIndex < argsLength) {
+                result2[offset + holders[holdersIndex]] = args[argsIndex++];
+              }
+            }
+            return result2;
+          }
+          function copyArray2(source, array) {
+            var index = -1, length = source.length;
+            array || (array = Array2(length));
+            while (++index < length) {
+              array[index] = source[index];
+            }
+            return array;
+          }
+          function copyObject(source, props, object, customizer) {
+            var isNew = !object;
+            object || (object = {});
+            var index = -1, length = props.length;
+            while (++index < length) {
+              var key = props[index];
+              var newValue = customizer ? customizer(object[key], source[key], key, object, source) : undefined2;
+              if (newValue === undefined2) {
+                newValue = source[key];
+              }
+              if (isNew) {
+                baseAssignValue(object, key, newValue);
+              } else {
+                assignValue(object, key, newValue);
+              }
+            }
+            return object;
+          }
+          function copySymbols(source, object) {
+            return copyObject(source, getSymbols(source), object);
+          }
+          function copySymbolsIn(source, object) {
+            return copyObject(source, getSymbolsIn(source), object);
+          }
+          function createAggregator(setter, initializer) {
+            return function (collection, iteratee2) {
+              var func = isArray(collection) ? arrayAggregator : baseAggregator, accumulator = initializer ? initializer() : {};
+              return func(collection, setter, getIteratee(iteratee2, 2), accumulator);
+            };
+          }
+          function createAssigner(assigner) {
+            return baseRest(function (object, sources) {
+              var index = -1, length = sources.length, customizer = length > 1 ? sources[length - 1] : undefined2, guard = length > 2 ? sources[2] : undefined2;
+              customizer = assigner.length > 3 && typeof customizer == "function" ? (length--, customizer) : undefined2;
+              if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+                customizer = length < 3 ? undefined2 : customizer;
+                length = 1;
+              }
+              object = Object2(object);
+              while (++index < length) {
+                var source = sources[index];
+                if (source) {
+                  assigner(object, source, index, customizer);
+                }
+              }
+              return object;
+            });
+          }
+          function createBaseEach(eachFunc, fromRight) {
+            return function (collection, iteratee2) {
+              if (collection == null) {
+                return collection;
+              }
+              if (!isArrayLike(collection)) {
+                return eachFunc(collection, iteratee2);
+              }
+              var length = collection.length, index = fromRight ? length : -1, iterable = Object2(collection);
+              while (fromRight ? index-- : ++index < length) {
+                if (iteratee2(iterable[index], index, iterable) === false) {
+                  break;
+                }
+              }
+              return collection;
+            };
+          }
+          function createBaseFor(fromRight) {
+            return function (object, iteratee2, keysFunc) {
+              var index = -1, iterable = Object2(object), props = keysFunc(object), length = props.length;
+              while (length--) {
+                var key = props[fromRight ? length : ++index];
+                if (iteratee2(iterable[key], key, iterable) === false) {
+                  break;
+                }
+              }
+              return object;
+            };
+          }
+          function createBind(func, bitmask, thisArg) {
+            var isBind = bitmask & WRAP_BIND_FLAG, Ctor = createCtor(func);
+            function wrapper() {
+              var fn = this && this !== root && this instanceof wrapper ? Ctor : func;
+              return fn.apply(isBind ? thisArg : this, arguments);
+            }
+            return wrapper;
+          }
+          function createCaseFirst(methodName) {
+            return function (string) {
+              string = toString(string);
+              var strSymbols = hasUnicode(string) ? stringToArray(string) : undefined2;
+              var chr = strSymbols ? strSymbols[0] : string.charAt(0);
+              var trailing = strSymbols ? castSlice(strSymbols, 1).join("") : string.slice(1);
+              return chr[methodName]() + trailing;
+            };
+          }
+          function createCompounder(callback) {
+            return function (string) {
+              return arrayReduce(words(deburr(string).replace(reApos, "")), callback, "");
+            };
+          }
+          function createCtor(Ctor) {
+            return function () {
+              var args = arguments;
+              switch (args.length) {
+                case 0:
+                  return new Ctor();
+                case 1:
+                  return new Ctor(args[0]);
+                case 2:
+                  return new Ctor(args[0], args[1]);
+                case 3:
+                  return new Ctor(args[0], args[1], args[2]);
+                case 4:
+                  return new Ctor(args[0], args[1], args[2], args[3]);
+                case 5:
+                  return new Ctor(args[0], args[1], args[2], args[3], args[4]);
+                case 6:
+                  return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+                case 7:
+                  return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+              }
+              var thisBinding = baseCreate(Ctor.prototype), result2 = Ctor.apply(thisBinding, args);
+              return isObject(result2) ? result2 : thisBinding;
+            };
+          }
+          function createCurry(func, bitmask, arity) {
+            var Ctor = createCtor(func);
+            function wrapper() {
+              var length = arguments.length, args = Array2(length), index = length, placeholder = getHolder(wrapper);
+              while (index--) {
+                args[index] = arguments[index];
+              }
+              var holders = length < 3 && args[0] !== placeholder && args[length - 1] !== placeholder ? [] : replaceHolders(args, placeholder);
+              length -= holders.length;
+              if (length < arity) {
+                return createRecurry(func, bitmask, createHybrid, wrapper.placeholder, undefined2, args, holders, undefined2, undefined2, arity - length);
+              }
+              var fn = this && this !== root && this instanceof wrapper ? Ctor : func;
+              return apply(fn, this, args);
+            }
+            return wrapper;
+          }
+          function createFind(findIndexFunc) {
+            return function (collection, predicate, fromIndex) {
+              var iterable = Object2(collection);
+              if (!isArrayLike(collection)) {
+                var iteratee2 = getIteratee(predicate, 3);
+                collection = keys(collection);
+                predicate = function (key) {
+                  return iteratee2(iterable[key], key, iterable);
+                };
+              }
+              var index = findIndexFunc(collection, predicate, fromIndex);
+              return index > -1 ? iterable[iteratee2 ? collection[index] : index] : undefined2;
+            };
+          }
+          function createFlow(fromRight) {
+            return flatRest(function (funcs) {
+              var length = funcs.length, index = length, prereq = LodashWrapper.prototype.thru;
+              if (fromRight) {
+                funcs.reverse();
+              }
+              while (index--) {
+                var func = funcs[index];
+                if (typeof func != "function") {
+                  throw new TypeError2(FUNC_ERROR_TEXT);
+                }
+                if (prereq && !wrapper && getFuncName(func) == "wrapper") {
+                  var wrapper = new LodashWrapper([], true);
+                }
+              }
+              index = wrapper ? index : length;
+              while (++index < length) {
+                func = funcs[index];
+                var funcName = getFuncName(func), data = funcName == "wrapper" ? getData(func) : undefined2;
+                if (data && isLaziable(data[0]) && data[1] == (WRAP_ARY_FLAG | WRAP_CURRY_FLAG | WRAP_PARTIAL_FLAG | WRAP_REARG_FLAG) && !data[4].length && data[9] == 1) {
+                  wrapper = wrapper[getFuncName(data[0])].apply(wrapper, data[3]);
+                } else {
+                  wrapper = func.length == 1 && isLaziable(func) ? wrapper[funcName]() : wrapper.thru(func);
+                }
+              }
+              return function () {
+                var args = arguments, value = args[0];
+                if (wrapper && args.length == 1 && isArray(value)) {
+                  return wrapper.plant(value).value();
+                }
+                var index2 = 0, result2 = length ? funcs[index2].apply(this, args) : value;
+                while (++index2 < length) {
+                  result2 = funcs[index2].call(this, result2);
+                }
+                return result2;
+              };
+            });
+          }
+          function createHybrid(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary2, arity) {
+            var isAry = bitmask & WRAP_ARY_FLAG, isBind = bitmask & WRAP_BIND_FLAG, isBindKey = bitmask & WRAP_BIND_KEY_FLAG, isCurried = bitmask & (WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG), isFlip = bitmask & WRAP_FLIP_FLAG, Ctor = isBindKey ? undefined2 : createCtor(func);
+            function wrapper() {
+              var length = arguments.length, args = Array2(length), index = length;
+              while (index--) {
+                args[index] = arguments[index];
+              }
+              if (isCurried) {
+                var placeholder = getHolder(wrapper), holdersCount = countHolders(args, placeholder);
+              }
+              if (partials) {
+                args = composeArgs(args, partials, holders, isCurried);
+              }
+              if (partialsRight) {
+                args = composeArgsRight(args, partialsRight, holdersRight, isCurried);
+              }
+              length -= holdersCount;
+              if (isCurried && length < arity) {
+                var newHolders = replaceHolders(args, placeholder);
+                return createRecurry(func, bitmask, createHybrid, wrapper.placeholder, thisArg, args, newHolders, argPos, ary2, arity - length);
+              }
+              var thisBinding = isBind ? thisArg : this, fn = isBindKey ? thisBinding[func] : func;
+              length = args.length;
+              if (argPos) {
+                args = reorder(args, argPos);
+              } else if (isFlip && length > 1) {
+                args.reverse();
+              }
+              if (isAry && ary2 < length) {
+                args.length = ary2;
+              }
+              if (this && this !== root && this instanceof wrapper) {
+                fn = Ctor || createCtor(fn);
+              }
+              return fn.apply(thisBinding, args);
+            }
+            return wrapper;
+          }
+          function createInverter(setter, toIteratee) {
+            return function (object, iteratee2) {
+              return baseInverter(object, setter, toIteratee(iteratee2), {});
+            };
+          }
+          function createMathOperation(operator, defaultValue) {
+            return function (value, other) {
+              var result2;
+              if (value === undefined2 && other === undefined2) {
+                return defaultValue;
+              }
+              if (value !== undefined2) {
+                result2 = value;
+              }
+              if (other !== undefined2) {
+                if (result2 === undefined2) {
+                  return other;
+                }
+                if (typeof value == "string" || typeof other == "string") {
+                  value = baseToString(value);
+                  other = baseToString(other);
+                } else {
+                  value = baseToNumber(value);
+                  other = baseToNumber(other);
+                }
+                result2 = operator(value, other);
+              }
+              return result2;
+            };
+          }
+          function createOver(arrayFunc) {
+            return flatRest(function (iteratees) {
+              iteratees = arrayMap(iteratees, baseUnary(getIteratee()));
+              return baseRest(function (args) {
+                var thisArg = this;
+                return arrayFunc(iteratees, function (iteratee2) {
+                  return apply(iteratee2, thisArg, args);
+                });
+              });
+            });
+          }
+          function createPadding(length, chars) {
+            chars = chars === undefined2 ? " " : baseToString(chars);
+            var charsLength = chars.length;
+            if (charsLength < 2) {
+              return charsLength ? baseRepeat(chars, length) : chars;
+            }
+            var result2 = baseRepeat(chars, nativeCeil(length / stringSize(chars)));
+            return hasUnicode(chars) ? castSlice(stringToArray(result2), 0, length).join("") : result2.slice(0, length);
+          }
+          function createPartial(func, bitmask, thisArg, partials) {
+            var isBind = bitmask & WRAP_BIND_FLAG, Ctor = createCtor(func);
+            function wrapper() {
+              var argsIndex = -1, argsLength = arguments.length, leftIndex = -1, leftLength = partials.length, args = Array2(leftLength + argsLength), fn = this && this !== root && this instanceof wrapper ? Ctor : func;
+              while (++leftIndex < leftLength) {
+                args[leftIndex] = partials[leftIndex];
+              }
+              while (argsLength--) {
+                args[leftIndex++] = arguments[++argsIndex];
+              }
+              return apply(fn, isBind ? thisArg : this, args);
+            }
+            return wrapper;
+          }
+          function createRange(fromRight) {
+            return function (start, end, step) {
+              if (step && typeof step != "number" && isIterateeCall(start, end, step)) {
+                end = step = undefined2;
+              }
+              start = toFinite(start);
+              if (end === undefined2) {
+                end = start;
+                start = 0;
+              } else {
+                end = toFinite(end);
+              }
+              step = step === undefined2 ? start < end ? 1 : -1 : toFinite(step);
+              return baseRange(start, end, step, fromRight);
+            };
+          }
+          function createRelationalOperation(operator) {
+            return function (value, other) {
+              if (!(typeof value == "string" && typeof other == "string")) {
+                value = toNumber(value);
+                other = toNumber(other);
+              }
+              return operator(value, other);
+            };
+          }
+          function createRecurry(func, bitmask, wrapFunc, placeholder, thisArg, partials, holders, argPos, ary2, arity) {
+            var isCurry = bitmask & WRAP_CURRY_FLAG, newHolders = isCurry ? holders : undefined2, newHoldersRight = isCurry ? undefined2 : holders, newPartials = isCurry ? partials : undefined2, newPartialsRight = isCurry ? undefined2 : partials;
+            bitmask |= isCurry ? WRAP_PARTIAL_FLAG : WRAP_PARTIAL_RIGHT_FLAG;
+            bitmask &= ~(isCurry ? WRAP_PARTIAL_RIGHT_FLAG : WRAP_PARTIAL_FLAG);
+            if (!(bitmask & WRAP_CURRY_BOUND_FLAG)) {
+              bitmask &= ~(WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG);
+            }
+            var newData = [func, bitmask, thisArg, newPartials, newHolders, newPartialsRight, newHoldersRight, argPos, ary2, arity];
+            var result2 = wrapFunc.apply(undefined2, newData);
+            if (isLaziable(func)) {
+              setData(result2, newData);
+            }
+            result2.placeholder = placeholder;
+            return setWrapToString(result2, func, bitmask);
+          }
+          function createRound(methodName) {
+            var func = Math2[methodName];
+            return function (number, precision) {
+              number = toNumber(number);
+              precision = precision == null ? 0 : nativeMin(toInteger(precision), 292);
+              if (precision && nativeIsFinite(number)) {
+                var pair = (toString(number) + "e").split("e"), value = func(pair[0] + "e" + (+pair[1] + precision));
+                pair = (toString(value) + "e").split("e");
+                return +(pair[0] + "e" + (+pair[1] - precision));
+              }
+              return func(number);
+            };
+          }
+          var createSet = !(Set2 && 1 / setToArray(new Set2([, -0]))[1] == INFINITY) ? noop : function (values2) {
+            return new Set2(values2);
+          };
+          function createToPairs(keysFunc) {
+            return function (object) {
+              var tag = getTag(object);
+              if (tag == mapTag) {
+                return mapToArray(object);
+              }
+              if (tag == setTag) {
+                return setToPairs(object);
+              }
+              return baseToPairs(object, keysFunc(object));
+            };
+          }
+          function createWrap(func, bitmask, thisArg, partials, holders, argPos, ary2, arity) {
+            var isBindKey = bitmask & WRAP_BIND_KEY_FLAG;
+            if (!isBindKey && typeof func != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            var length = partials ? partials.length : 0;
+            if (!length) {
+              bitmask &= ~(WRAP_PARTIAL_FLAG | WRAP_PARTIAL_RIGHT_FLAG);
+              partials = holders = undefined2;
+            }
+            ary2 = ary2 === undefined2 ? ary2 : nativeMax(toInteger(ary2), 0);
+            arity = arity === undefined2 ? arity : toInteger(arity);
+            length -= holders ? holders.length : 0;
+            if (bitmask & WRAP_PARTIAL_RIGHT_FLAG) {
+              var partialsRight = partials, holdersRight = holders;
+              partials = holders = undefined2;
+            }
+            var data = isBindKey ? undefined2 : getData(func);
+            var newData = [func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary2, arity];
+            if (data) {
+              mergeData(newData, data);
+            }
+            func = newData[0];
+            bitmask = newData[1];
+            thisArg = newData[2];
+            partials = newData[3];
+            holders = newData[4];
+            arity = newData[9] = newData[9] === undefined2 ? isBindKey ? 0 : func.length : nativeMax(newData[9] - length, 0);
+            if (!arity && bitmask & (WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG)) {
+              bitmask &= ~(WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG);
+            }
+            if (!bitmask || bitmask == WRAP_BIND_FLAG) {
+              var result2 = createBind(func, bitmask, thisArg);
+            } else if (bitmask == WRAP_CURRY_FLAG || bitmask == WRAP_CURRY_RIGHT_FLAG) {
+              result2 = createCurry(func, bitmask, arity);
+            } else if ((bitmask == WRAP_PARTIAL_FLAG || bitmask == (WRAP_BIND_FLAG | WRAP_PARTIAL_FLAG)) && !holders.length) {
+              result2 = createPartial(func, bitmask, thisArg, partials);
+            } else {
+              result2 = createHybrid.apply(undefined2, newData);
+            }
+            var setter = data ? baseSetData : setData;
+            return setWrapToString(setter(result2, newData), func, bitmask);
+          }
+          function customDefaultsAssignIn(objValue, srcValue, key, object) {
+            if (objValue === undefined2 || eq(objValue, objectProto[key]) && !hasOwnProperty.call(object, key)) {
+              return srcValue;
+            }
+            return objValue;
+          }
+          function customDefaultsMerge(objValue, srcValue, key, object, source, stack) {
+            if (isObject(objValue) && isObject(srcValue)) {
+              stack.set(srcValue, objValue);
+              baseMerge(objValue, srcValue, undefined2, customDefaultsMerge, stack);
+              stack["delete"](srcValue);
+            }
+            return objValue;
+          }
+          function customOmitClone(value) {
+            return isPlainObject(value) ? undefined2 : value;
+          }
+          function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+            var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array.length, othLength = other.length;
+            if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
+              return false;
+            }
+            var arrStacked = stack.get(array);
+            var othStacked = stack.get(other);
+            if (arrStacked && othStacked) {
+              return arrStacked == other && othStacked == array;
+            }
+            var index = -1, result2 = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : undefined2;
+            stack.set(array, other);
+            stack.set(other, array);
+            while (++index < arrLength) {
+              var arrValue = array[index], othValue = other[index];
+              if (customizer) {
+                var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack) : customizer(arrValue, othValue, index, array, other, stack);
+              }
+              if (compared !== undefined2) {
+                if (compared) {
+                  continue;
+                }
+                result2 = false;
+                break;
+              }
+              if (seen) {
+                if (!arraySome(other, function (othValue2, othIndex) {
+                  if (!cacheHas(seen, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
+                    return seen.push(othIndex);
+                  }
+                })) {
+                  result2 = false;
+                  break;
+                }
+              } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+                result2 = false;
+                break;
+              }
+            }
+            stack["delete"](array);
+            stack["delete"](other);
+            return result2;
+          }
+          function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
+            switch (tag) {
+              case dataViewTag:
+                if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
+                  return false;
+                }
+                object = object.buffer;
+                other = other.buffer;
+              case arrayBufferTag:
+                if (object.byteLength != other.byteLength || !equalFunc(new Uint8Array2(object), new Uint8Array2(other))) {
+                  return false;
+                }
+                return true;
+              case boolTag:
+              case dateTag:
+              case numberTag:
+                return eq(+object, +other);
+              case errorTag:
+                return object.name == other.name && object.message == other.message;
+              case regexpTag:
+              case stringTag:
+                return object == other + "";
+              case mapTag:
+                var convert = mapToArray;
+              case setTag:
+                var isPartial = bitmask & COMPARE_PARTIAL_FLAG;
+                convert || (convert = setToArray);
+                if (object.size != other.size && !isPartial) {
+                  return false;
+                }
+                var stacked = stack.get(object);
+                if (stacked) {
+                  return stacked == other;
+                }
+                bitmask |= COMPARE_UNORDERED_FLAG;
+                stack.set(object, other);
+                var result2 = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+                stack["delete"](object);
+                return result2;
+              case symbolTag:
+                if (symbolValueOf) {
+                  return symbolValueOf.call(object) == symbolValueOf.call(other);
+                }
+            }
+            return false;
+          }
+          function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+            var isPartial = bitmask & COMPARE_PARTIAL_FLAG, objProps = getAllKeys(object), objLength = objProps.length, othProps = getAllKeys(other), othLength = othProps.length;
+            if (objLength != othLength && !isPartial) {
+              return false;
+            }
+            var index = objLength;
+            while (index--) {
+              var key = objProps[index];
+              if (!(isPartial ? (key in other) : hasOwnProperty.call(other, key))) {
+                return false;
+              }
+            }
+            var objStacked = stack.get(object);
+            var othStacked = stack.get(other);
+            if (objStacked && othStacked) {
+              return objStacked == other && othStacked == object;
+            }
+            var result2 = true;
+            stack.set(object, other);
+            stack.set(other, object);
+            var skipCtor = isPartial;
+            while (++index < objLength) {
+              key = objProps[index];
+              var objValue = object[key], othValue = other[key];
+              if (customizer) {
+                var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
+              }
+              if (!(compared === undefined2 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
+                result2 = false;
+                break;
+              }
+              skipCtor || (skipCtor = key == "constructor");
+            }
+            if (result2 && !skipCtor) {
+              var objCtor = object.constructor, othCtor = other.constructor;
+              if (objCtor != othCtor && (("constructor" in object) && ("constructor" in other)) && !(typeof objCtor == "function" && objCtor instanceof objCtor && typeof othCtor == "function" && othCtor instanceof othCtor)) {
+                result2 = false;
+              }
+            }
+            stack["delete"](object);
+            stack["delete"](other);
+            return result2;
+          }
+          function flatRest(func) {
+            return setToString(overRest(func, undefined2, flatten2), func + "");
+          }
+          function getAllKeys(object) {
+            return baseGetAllKeys(object, keys, getSymbols);
+          }
+          function getAllKeysIn(object) {
+            return baseGetAllKeys(object, keysIn, getSymbolsIn);
+          }
+          var getData = !metaMap ? noop : function (func) {
+            return metaMap.get(func);
+          };
+          function getFuncName(func) {
+            var result2 = func.name + "", array = realNames[result2], length = hasOwnProperty.call(realNames, result2) ? array.length : 0;
+            while (length--) {
+              var data = array[length], otherFunc = data.func;
+              if (otherFunc == null || otherFunc == func) {
+                return data.name;
+              }
+            }
+            return result2;
+          }
+          function getHolder(func) {
+            var object = hasOwnProperty.call(lodash, "placeholder") ? lodash : func;
+            return object.placeholder;
+          }
+          function getIteratee() {
+            var result2 = lodash.iteratee || iteratee;
+            result2 = result2 === iteratee ? baseIteratee : result2;
+            return arguments.length ? result2(arguments[0], arguments[1]) : result2;
+          }
+          function getMapData(map2, key) {
+            var data = map2.__data__;
+            return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
+          }
+          function getMatchData(object) {
+            var result2 = keys(object), length = result2.length;
+            while (length--) {
+              var key = result2[length], value = object[key];
+              result2[length] = [key, value, isStrictComparable(value)];
+            }
+            return result2;
+          }
+          function getNative(object, key) {
+            var value = getValue(object, key);
+            return baseIsNative(value) ? value : undefined2;
+          }
+          function getRawTag(value) {
+            var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+            try {
+              value[symToStringTag] = undefined2;
+              var unmasked = true;
+            } catch (e2) {}
+            var result2 = nativeObjectToString.call(value);
+            if (unmasked) {
+              if (isOwn) {
+                value[symToStringTag] = tag;
+              } else {
+                delete value[symToStringTag];
+              }
+            }
+            return result2;
+          }
+          var getSymbols = !nativeGetSymbols ? stubArray : function (object) {
+            if (object == null) {
+              return [];
+            }
+            object = Object2(object);
+            return arrayFilter(nativeGetSymbols(object), function (symbol) {
+              return propertyIsEnumerable.call(object, symbol);
+            });
+          };
+          var getSymbolsIn = !nativeGetSymbols ? stubArray : function (object) {
+            var result2 = [];
+            while (object) {
+              arrayPush(result2, getSymbols(object));
+              object = getPrototype(object);
+            }
+            return result2;
+          };
+          var getTag = baseGetTag;
+          if (DataView2 && getTag(new DataView2(new ArrayBuffer(1))) != dataViewTag || Map2 && getTag(new Map2()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap2 && getTag(new WeakMap2()) != weakMapTag) {
+            getTag = function (value) {
+              var result2 = baseGetTag(value), Ctor = result2 == objectTag ? value.constructor : undefined2, ctorString = Ctor ? toSource(Ctor) : "";
+              if (ctorString) {
+                switch (ctorString) {
+                  case dataViewCtorString:
+                    return dataViewTag;
+                  case mapCtorString:
+                    return mapTag;
+                  case promiseCtorString:
+                    return promiseTag;
+                  case setCtorString:
+                    return setTag;
+                  case weakMapCtorString:
+                    return weakMapTag;
+                }
+              }
+              return result2;
+            };
+          }
+          function getView(start, end, transforms) {
+            var index = -1, length = transforms.length;
+            while (++index < length) {
+              var data = transforms[index], size2 = data.size;
+              switch (data.type) {
+                case "drop":
+                  start += size2;
+                  break;
+                case "dropRight":
+                  end -= size2;
+                  break;
+                case "take":
+                  end = nativeMin(end, start + size2);
+                  break;
+                case "takeRight":
+                  start = nativeMax(start, end - size2);
+                  break;
+              }
+            }
+            return {
+              "start": start,
+              "end": end
+            };
+          }
+          function getWrapDetails(source) {
+            var match = source.match(reWrapDetails);
+            return match ? match[1].split(reSplitDetails) : [];
+          }
+          function hasPath(object, path, hasFunc) {
+            path = castPath(path, object);
+            var index = -1, length = path.length, result2 = false;
+            while (++index < length) {
+              var key = toKey(path[index]);
+              if (!(result2 = object != null && hasFunc(object, key))) {
+                break;
+              }
+              object = object[key];
+            }
+            if (result2 || ++index != length) {
+              return result2;
+            }
+            length = object == null ? 0 : object.length;
+            return !!length && isLength(length) && isIndex(key, length) && (isArray(object) || isArguments(object));
+          }
+          function initCloneArray(array) {
+            var length = array.length, result2 = new array.constructor(length);
+            if (length && typeof array[0] == "string" && hasOwnProperty.call(array, "index")) {
+              result2.index = array.index;
+              result2.input = array.input;
+            }
+            return result2;
+          }
+          function initCloneObject(object) {
+            return typeof object.constructor == "function" && !isPrototype(object) ? baseCreate(getPrototype(object)) : {};
+          }
+          function initCloneByTag(object, tag, isDeep) {
+            var Ctor = object.constructor;
+            switch (tag) {
+              case arrayBufferTag:
+                return cloneArrayBuffer(object);
+              case boolTag:
+              case dateTag:
+                return new Ctor(+object);
+              case dataViewTag:
+                return cloneDataView(object, isDeep);
+              case float32Tag:
+              case float64Tag:
+              case int8Tag:
+              case int16Tag:
+              case int32Tag:
+              case uint8Tag:
+              case uint8ClampedTag:
+              case uint16Tag:
+              case uint32Tag:
+                return cloneTypedArray(object, isDeep);
+              case mapTag:
+                return new Ctor();
+              case numberTag:
+              case stringTag:
+                return new Ctor(object);
+              case regexpTag:
+                return cloneRegExp(object);
+              case setTag:
+                return new Ctor();
+              case symbolTag:
+                return cloneSymbol(object);
+            }
+          }
+          function insertWrapDetails(source, details) {
+            var length = details.length;
+            if (!length) {
+              return source;
+            }
+            var lastIndex = length - 1;
+            details[lastIndex] = (length > 1 ? "& " : "") + details[lastIndex];
+            details = details.join(length > 2 ? ", " : " ");
+            return source.replace(reWrapComment, "{\n/* [wrapped with " + details + "] */\n");
+          }
+          function isFlattenable(value) {
+            return isArray(value) || isArguments(value) || !!(spreadableSymbol && value && value[spreadableSymbol]);
+          }
+          function isIndex(value, length) {
+            var type = typeof value;
+            length = length == null ? MAX_SAFE_INTEGER : length;
+            return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+          }
+          function isIterateeCall(value, index, object) {
+            if (!isObject(object)) {
+              return false;
+            }
+            var type = typeof index;
+            if (type == "number" ? isArrayLike(object) && isIndex(index, object.length) : type == "string" && (index in object)) {
+              return eq(object[index], value);
+            }
+            return false;
+          }
+          function isKey(value, object) {
+            if (isArray(value)) {
+              return false;
+            }
+            var type = typeof value;
+            if (type == "number" || type == "symbol" || type == "boolean" || value == null || isSymbol(value)) {
+              return true;
+            }
+            return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && (value in Object2(object));
+          }
+          function isKeyable(value) {
+            var type = typeof value;
+            return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
+          }
+          function isLaziable(func) {
+            var funcName = getFuncName(func), other = lodash[funcName];
+            if (typeof other != "function" || !((funcName in LazyWrapper.prototype))) {
+              return false;
+            }
+            if (func === other) {
+              return true;
+            }
+            var data = getData(other);
+            return !!data && func === data[0];
+          }
+          function isMasked(func) {
+            return !!maskSrcKey && (maskSrcKey in func);
+          }
+          var isMaskable = coreJsData ? isFunction : stubFalse;
+          function isPrototype(value) {
+            var Ctor = value && value.constructor, proto = typeof Ctor == "function" && Ctor.prototype || objectProto;
+            return value === proto;
+          }
+          function isStrictComparable(value) {
+            return value === value && !isObject(value);
+          }
+          function matchesStrictComparable(key, srcValue) {
+            return function (object) {
+              if (object == null) {
+                return false;
+              }
+              return object[key] === srcValue && (srcValue !== undefined2 || (key in Object2(object)));
+            };
+          }
+          function memoizeCapped(func) {
+            var result2 = memoize(func, function (key) {
+              if (cache.size === MAX_MEMOIZE_SIZE) {
+                cache.clear();
+              }
+              return key;
+            });
+            var cache = result2.cache;
+            return result2;
+          }
+          function mergeData(data, source) {
+            var bitmask = data[1], srcBitmask = source[1], newBitmask = bitmask | srcBitmask, isCommon = newBitmask < (WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG | WRAP_ARY_FLAG);
+            var isCombo = srcBitmask == WRAP_ARY_FLAG && bitmask == WRAP_CURRY_FLAG || srcBitmask == WRAP_ARY_FLAG && bitmask == WRAP_REARG_FLAG && data[7].length <= source[8] || srcBitmask == (WRAP_ARY_FLAG | WRAP_REARG_FLAG) && source[7].length <= source[8] && bitmask == WRAP_CURRY_FLAG;
+            if (!(isCommon || isCombo)) {
+              return data;
+            }
+            if (srcBitmask & WRAP_BIND_FLAG) {
+              data[2] = source[2];
+              newBitmask |= bitmask & WRAP_BIND_FLAG ? 0 : WRAP_CURRY_BOUND_FLAG;
+            }
+            var value = source[3];
+            if (value) {
+              var partials = data[3];
+              data[3] = partials ? composeArgs(partials, value, source[4]) : value;
+              data[4] = partials ? replaceHolders(data[3], PLACEHOLDER) : source[4];
+            }
+            value = source[5];
+            if (value) {
+              partials = data[5];
+              data[5] = partials ? composeArgsRight(partials, value, source[6]) : value;
+              data[6] = partials ? replaceHolders(data[5], PLACEHOLDER) : source[6];
+            }
+            value = source[7];
+            if (value) {
+              data[7] = value;
+            }
+            if (srcBitmask & WRAP_ARY_FLAG) {
+              data[8] = data[8] == null ? source[8] : nativeMin(data[8], source[8]);
+            }
+            if (data[9] == null) {
+              data[9] = source[9];
+            }
+            data[0] = source[0];
+            data[1] = newBitmask;
+            return data;
+          }
+          function nativeKeysIn(object) {
+            var result2 = [];
+            if (object != null) {
+              for (var key in Object2(object)) {
+                result2.push(key);
+              }
+            }
+            return result2;
+          }
+          function objectToString(value) {
+            return nativeObjectToString.call(value);
+          }
+          function overRest(func, start, transform2) {
+            start = nativeMax(start === undefined2 ? func.length - 1 : start, 0);
+            return function () {
+              var args = arguments, index = -1, length = nativeMax(args.length - start, 0), array = Array2(length);
+              while (++index < length) {
+                array[index] = args[start + index];
+              }
+              index = -1;
+              var otherArgs = Array2(start + 1);
+              while (++index < start) {
+                otherArgs[index] = args[index];
+              }
+              otherArgs[start] = transform2(array);
+              return apply(func, this, otherArgs);
+            };
+          }
+          function parent(object, path) {
+            return path.length < 2 ? object : baseGet(object, baseSlice(path, 0, -1));
+          }
+          function reorder(array, indexes) {
+            var arrLength = array.length, length = nativeMin(indexes.length, arrLength), oldArray = copyArray2(array);
+            while (length--) {
+              var index = indexes[length];
+              array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined2;
+            }
+            return array;
+          }
+          function safeGet(object, key) {
+            if (key === "constructor" && typeof object[key] === "function") {
+              return;
+            }
+            if (key == "__proto__") {
+              return;
+            }
+            return object[key];
+          }
+          var setData = shortOut(baseSetData);
+          var setTimeout2 = ctxSetTimeout || (function (func, wait) {
+            return root.setTimeout(func, wait);
+          });
+          var setToString = shortOut(baseSetToString);
+          function setWrapToString(wrapper, reference, bitmask) {
+            var source = reference + "";
+            return setToString(wrapper, insertWrapDetails(source, updateWrapDetails(getWrapDetails(source), bitmask)));
+          }
+          function shortOut(func) {
+            var count = 0, lastCalled = 0;
+            return function () {
+              var stamp = nativeNow(), remaining = HOT_SPAN - (stamp - lastCalled);
+              lastCalled = stamp;
+              if (remaining > 0) {
+                if (++count >= HOT_COUNT) {
+                  return arguments[0];
+                }
+              } else {
+                count = 0;
+              }
+              return func.apply(undefined2, arguments);
+            };
+          }
+          function shuffleSelf(array, size2) {
+            var index = -1, length = array.length, lastIndex = length - 1;
+            size2 = size2 === undefined2 ? length : size2;
+            while (++index < size2) {
+              var rand = baseRandom(index, lastIndex), value = array[rand];
+              array[rand] = array[index];
+              array[index] = value;
+            }
+            array.length = size2;
+            return array;
+          }
+          var stringToPath = memoizeCapped(function (string) {
+            var result2 = [];
+            if (string.charCodeAt(0) === 46) {
+              result2.push("");
+            }
+            string.replace(rePropName, function (match, number, quote, subString) {
+              result2.push(quote ? subString.replace(reEscapeChar, "$1") : number || match);
+            });
+            return result2;
+          });
+          function toKey(value) {
+            if (typeof value == "string" || isSymbol(value)) {
+              return value;
+            }
+            var result2 = value + "";
+            return result2 == "0" && 1 / value == -INFINITY ? "-0" : result2;
+          }
+          function toSource(func) {
+            if (func != null) {
+              try {
+                return funcToString.call(func);
+              } catch (e2) {}
+              try {
+                return func + "";
+              } catch (e2) {}
+            }
+            return "";
+          }
+          function updateWrapDetails(details, bitmask) {
+            arrayEach(wrapFlags, function (pair) {
+              var value = "_." + pair[0];
+              if (bitmask & pair[1] && !arrayIncludes(details, value)) {
+                details.push(value);
+              }
+            });
+            return details.sort();
+          }
+          function wrapperClone(wrapper) {
+            if (wrapper instanceof LazyWrapper) {
+              return wrapper.clone();
+            }
+            var result2 = new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__);
+            result2.__actions__ = copyArray2(wrapper.__actions__);
+            result2.__index__ = wrapper.__index__;
+            result2.__values__ = wrapper.__values__;
+            return result2;
+          }
+          function chunk(array, size2, guard) {
+            if (guard ? isIterateeCall(array, size2, guard) : size2 === undefined2) {
+              size2 = 1;
+            } else {
+              size2 = nativeMax(toInteger(size2), 0);
+            }
+            var length = array == null ? 0 : array.length;
+            if (!length || size2 < 1) {
+              return [];
+            }
+            var index = 0, resIndex = 0, result2 = Array2(nativeCeil(length / size2));
+            while (index < length) {
+              result2[resIndex++] = baseSlice(array, index, index += size2);
+            }
+            return result2;
+          }
+          function compact(array) {
+            var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result2 = [];
+            while (++index < length) {
+              var value = array[index];
+              if (value) {
+                result2[resIndex++] = value;
+              }
+            }
+            return result2;
+          }
+          function concat() {
+            var length = arguments.length;
+            if (!length) {
+              return [];
+            }
+            var args = Array2(length - 1), array = arguments[0], index = length;
+            while (index--) {
+              args[index - 1] = arguments[index];
+            }
+            return arrayPush(isArray(array) ? copyArray2(array) : [array], baseFlatten(args, 1));
+          }
+          var difference = baseRest(function (array, values2) {
+            return isArrayLikeObject(array) ? baseDifference(array, baseFlatten(values2, 1, isArrayLikeObject, true)) : [];
+          });
+          var differenceBy = baseRest(function (array, values2) {
+            var iteratee2 = last(values2);
+            if (isArrayLikeObject(iteratee2)) {
+              iteratee2 = undefined2;
+            }
+            return isArrayLikeObject(array) ? baseDifference(array, baseFlatten(values2, 1, isArrayLikeObject, true), getIteratee(iteratee2, 2)) : [];
+          });
+          var differenceWith = baseRest(function (array, values2) {
+            var comparator = last(values2);
+            if (isArrayLikeObject(comparator)) {
+              comparator = undefined2;
+            }
+            return isArrayLikeObject(array) ? baseDifference(array, baseFlatten(values2, 1, isArrayLikeObject, true), undefined2, comparator) : [];
+          });
+          function drop(array, n2, guard) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return [];
+            }
+            n2 = guard || n2 === undefined2 ? 1 : toInteger(n2);
+            return baseSlice(array, n2 < 0 ? 0 : n2, length);
+          }
+          function dropRight(array, n2, guard) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return [];
+            }
+            n2 = guard || n2 === undefined2 ? 1 : toInteger(n2);
+            n2 = length - n2;
+            return baseSlice(array, 0, n2 < 0 ? 0 : n2);
+          }
+          function dropRightWhile(array, predicate) {
+            return array && array.length ? baseWhile(array, getIteratee(predicate, 3), true, true) : [];
+          }
+          function dropWhile(array, predicate) {
+            return array && array.length ? baseWhile(array, getIteratee(predicate, 3), true) : [];
+          }
+          function fill(array, value, start, end) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return [];
+            }
+            if (start && typeof start != "number" && isIterateeCall(array, value, start)) {
+              start = 0;
+              end = length;
+            }
+            return baseFill(array, value, start, end);
+          }
+          function findIndex(array, predicate, fromIndex) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return -1;
+            }
+            var index = fromIndex == null ? 0 : toInteger(fromIndex);
+            if (index < 0) {
+              index = nativeMax(length + index, 0);
+            }
+            return baseFindIndex(array, getIteratee(predicate, 3), index);
+          }
+          function findLastIndex(array, predicate, fromIndex) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return -1;
+            }
+            var index = length - 1;
+            if (fromIndex !== undefined2) {
+              index = toInteger(fromIndex);
+              index = fromIndex < 0 ? nativeMax(length + index, 0) : nativeMin(index, length - 1);
+            }
+            return baseFindIndex(array, getIteratee(predicate, 3), index, true);
+          }
+          function flatten2(array) {
+            var length = array == null ? 0 : array.length;
+            return length ? baseFlatten(array, 1) : [];
+          }
+          function flattenDeep(array) {
+            var length = array == null ? 0 : array.length;
+            return length ? baseFlatten(array, INFINITY) : [];
+          }
+          function flattenDepth(array, depth) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return [];
+            }
+            depth = depth === undefined2 ? 1 : toInteger(depth);
+            return baseFlatten(array, depth);
+          }
+          function fromPairs(pairs) {
+            var index = -1, length = pairs == null ? 0 : pairs.length, result2 = {};
+            while (++index < length) {
+              var pair = pairs[index];
+              result2[pair[0]] = pair[1];
+            }
+            return result2;
+          }
+          function head(array) {
+            return array && array.length ? array[0] : undefined2;
+          }
+          function indexOf(array, value, fromIndex) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return -1;
+            }
+            var index = fromIndex == null ? 0 : toInteger(fromIndex);
+            if (index < 0) {
+              index = nativeMax(length + index, 0);
+            }
+            return baseIndexOf(array, value, index);
+          }
+          function initial(array) {
+            var length = array == null ? 0 : array.length;
+            return length ? baseSlice(array, 0, -1) : [];
+          }
+          var intersection = baseRest(function (arrays) {
+            var mapped = arrayMap(arrays, castArrayLikeObject);
+            return mapped.length && mapped[0] === arrays[0] ? baseIntersection(mapped) : [];
+          });
+          var intersectionBy = baseRest(function (arrays) {
+            var iteratee2 = last(arrays), mapped = arrayMap(arrays, castArrayLikeObject);
+            if (iteratee2 === last(mapped)) {
+              iteratee2 = undefined2;
+            } else {
+              mapped.pop();
+            }
+            return mapped.length && mapped[0] === arrays[0] ? baseIntersection(mapped, getIteratee(iteratee2, 2)) : [];
+          });
+          var intersectionWith = baseRest(function (arrays) {
+            var comparator = last(arrays), mapped = arrayMap(arrays, castArrayLikeObject);
+            comparator = typeof comparator == "function" ? comparator : undefined2;
+            if (comparator) {
+              mapped.pop();
+            }
+            return mapped.length && mapped[0] === arrays[0] ? baseIntersection(mapped, undefined2, comparator) : [];
+          });
+          function join(array, separator) {
+            return array == null ? "" : nativeJoin.call(array, separator);
+          }
+          function last(array) {
+            var length = array == null ? 0 : array.length;
+            return length ? array[length - 1] : undefined2;
+          }
+          function lastIndexOf(array, value, fromIndex) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return -1;
+            }
+            var index = length;
+            if (fromIndex !== undefined2) {
+              index = toInteger(fromIndex);
+              index = index < 0 ? nativeMax(length + index, 0) : nativeMin(index, length - 1);
+            }
+            return value === value ? strictLastIndexOf(array, value, index) : baseFindIndex(array, baseIsNaN, index, true);
+          }
+          function nth(array, n2) {
+            return array && array.length ? baseNth(array, toInteger(n2)) : undefined2;
+          }
+          var pull = baseRest(pullAll);
+          function pullAll(array, values2) {
+            return array && array.length && values2 && values2.length ? basePullAll(array, values2) : array;
+          }
+          function pullAllBy(array, values2, iteratee2) {
+            return array && array.length && values2 && values2.length ? basePullAll(array, values2, getIteratee(iteratee2, 2)) : array;
+          }
+          function pullAllWith(array, values2, comparator) {
+            return array && array.length && values2 && values2.length ? basePullAll(array, values2, undefined2, comparator) : array;
+          }
+          var pullAt = flatRest(function (array, indexes) {
+            var length = array == null ? 0 : array.length, result2 = baseAt(array, indexes);
+            basePullAt(array, arrayMap(indexes, function (index) {
+              return isIndex(index, length) ? +index : index;
+            }).sort(compareAscending));
+            return result2;
+          });
+          function remove(array, predicate) {
+            var result2 = [];
+            if (!(array && array.length)) {
+              return result2;
+            }
+            var index = -1, indexes = [], length = array.length;
+            predicate = getIteratee(predicate, 3);
+            while (++index < length) {
+              var value = array[index];
+              if (predicate(value, index, array)) {
+                result2.push(value);
+                indexes.push(index);
+              }
+            }
+            basePullAt(array, indexes);
+            return result2;
+          }
+          function reverse(array) {
+            return array == null ? array : nativeReverse.call(array);
+          }
+          function slice(array, start, end) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return [];
+            }
+            if (end && typeof end != "number" && isIterateeCall(array, start, end)) {
+              start = 0;
+              end = length;
+            } else {
+              start = start == null ? 0 : toInteger(start);
+              end = end === undefined2 ? length : toInteger(end);
+            }
+            return baseSlice(array, start, end);
+          }
+          function sortedIndex(array, value) {
+            return baseSortedIndex(array, value);
+          }
+          function sortedIndexBy(array, value, iteratee2) {
+            return baseSortedIndexBy(array, value, getIteratee(iteratee2, 2));
+          }
+          function sortedIndexOf(array, value) {
+            var length = array == null ? 0 : array.length;
+            if (length) {
+              var index = baseSortedIndex(array, value);
+              if (index < length && eq(array[index], value)) {
+                return index;
+              }
+            }
+            return -1;
+          }
+          function sortedLastIndex(array, value) {
+            return baseSortedIndex(array, value, true);
+          }
+          function sortedLastIndexBy(array, value, iteratee2) {
+            return baseSortedIndexBy(array, value, getIteratee(iteratee2, 2), true);
+          }
+          function sortedLastIndexOf(array, value) {
+            var length = array == null ? 0 : array.length;
+            if (length) {
+              var index = baseSortedIndex(array, value, true) - 1;
+              if (eq(array[index], value)) {
+                return index;
+              }
+            }
+            return -1;
+          }
+          function sortedUniq(array) {
+            return array && array.length ? baseSortedUniq(array) : [];
+          }
+          function sortedUniqBy(array, iteratee2) {
+            return array && array.length ? baseSortedUniq(array, getIteratee(iteratee2, 2)) : [];
+          }
+          function tail(array) {
+            var length = array == null ? 0 : array.length;
+            return length ? baseSlice(array, 1, length) : [];
+          }
+          function take(array, n2, guard) {
+            if (!(array && array.length)) {
+              return [];
+            }
+            n2 = guard || n2 === undefined2 ? 1 : toInteger(n2);
+            return baseSlice(array, 0, n2 < 0 ? 0 : n2);
+          }
+          function takeRight(array, n2, guard) {
+            var length = array == null ? 0 : array.length;
+            if (!length) {
+              return [];
+            }
+            n2 = guard || n2 === undefined2 ? 1 : toInteger(n2);
+            n2 = length - n2;
+            return baseSlice(array, n2 < 0 ? 0 : n2, length);
+          }
+          function takeRightWhile(array, predicate) {
+            return array && array.length ? baseWhile(array, getIteratee(predicate, 3), false, true) : [];
+          }
+          function takeWhile(array, predicate) {
+            return array && array.length ? baseWhile(array, getIteratee(predicate, 3)) : [];
+          }
+          var union = baseRest(function (arrays) {
+            return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true));
+          });
+          var unionBy = baseRest(function (arrays) {
+            var iteratee2 = last(arrays);
+            if (isArrayLikeObject(iteratee2)) {
+              iteratee2 = undefined2;
+            }
+            return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true), getIteratee(iteratee2, 2));
+          });
+          var unionWith = baseRest(function (arrays) {
+            var comparator = last(arrays);
+            comparator = typeof comparator == "function" ? comparator : undefined2;
+            return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true), undefined2, comparator);
+          });
+          function uniq(array) {
+            return array && array.length ? baseUniq(array) : [];
+          }
+          function uniqBy(array, iteratee2) {
+            return array && array.length ? baseUniq(array, getIteratee(iteratee2, 2)) : [];
+          }
+          function uniqWith(array, comparator) {
+            comparator = typeof comparator == "function" ? comparator : undefined2;
+            return array && array.length ? baseUniq(array, undefined2, comparator) : [];
+          }
+          function unzip(array) {
+            if (!(array && array.length)) {
+              return [];
+            }
+            var length = 0;
+            array = arrayFilter(array, function (group) {
+              if (isArrayLikeObject(group)) {
+                length = nativeMax(group.length, length);
+                return true;
+              }
+            });
+            return baseTimes(length, function (index) {
+              return arrayMap(array, baseProperty(index));
+            });
+          }
+          function unzipWith(array, iteratee2) {
+            if (!(array && array.length)) {
+              return [];
+            }
+            var result2 = unzip(array);
+            if (iteratee2 == null) {
+              return result2;
+            }
+            return arrayMap(result2, function (group) {
+              return apply(iteratee2, undefined2, group);
+            });
+          }
+          var without = baseRest(function (array, values2) {
+            return isArrayLikeObject(array) ? baseDifference(array, values2) : [];
+          });
+          var xor = baseRest(function (arrays) {
+            return baseXor(arrayFilter(arrays, isArrayLikeObject));
+          });
+          var xorBy = baseRest(function (arrays) {
+            var iteratee2 = last(arrays);
+            if (isArrayLikeObject(iteratee2)) {
+              iteratee2 = undefined2;
+            }
+            return baseXor(arrayFilter(arrays, isArrayLikeObject), getIteratee(iteratee2, 2));
+          });
+          var xorWith = baseRest(function (arrays) {
+            var comparator = last(arrays);
+            comparator = typeof comparator == "function" ? comparator : undefined2;
+            return baseXor(arrayFilter(arrays, isArrayLikeObject), undefined2, comparator);
+          });
+          var zip = baseRest(unzip);
+          function zipObject(props, values2) {
+            return baseZipObject(props || [], values2 || [], assignValue);
+          }
+          function zipObjectDeep(props, values2) {
+            return baseZipObject(props || [], values2 || [], baseSet);
+          }
+          var zipWith = baseRest(function (arrays) {
+            var length = arrays.length, iteratee2 = length > 1 ? arrays[length - 1] : undefined2;
+            iteratee2 = typeof iteratee2 == "function" ? (arrays.pop(), iteratee2) : undefined2;
+            return unzipWith(arrays, iteratee2);
+          });
+          function chain(value) {
+            var result2 = lodash(value);
+            result2.__chain__ = true;
+            return result2;
+          }
+          function tap(value, interceptor) {
+            interceptor(value);
+            return value;
+          }
+          function thru(value, interceptor) {
+            return interceptor(value);
+          }
+          var wrapperAt = flatRest(function (paths) {
+            var length = paths.length, start = length ? paths[0] : 0, value = this.__wrapped__, interceptor = function (object) {
+              return baseAt(object, paths);
+            };
+            if (length > 1 || this.__actions__.length || !(value instanceof LazyWrapper) || !isIndex(start)) {
+              return this.thru(interceptor);
+            }
+            value = value.slice(start, +start + (length ? 1 : 0));
+            value.__actions__.push({
+              "func": thru,
+              "args": [interceptor],
+              "thisArg": undefined2
+            });
+            return new LodashWrapper(value, this.__chain__).thru(function (array) {
+              if (length && !array.length) {
+                array.push(undefined2);
+              }
+              return array;
+            });
+          });
+          function wrapperChain() {
+            return chain(this);
+          }
+          function wrapperCommit() {
+            return new LodashWrapper(this.value(), this.__chain__);
+          }
+          function wrapperNext() {
+            if (this.__values__ === undefined2) {
+              this.__values__ = toArray(this.value());
+            }
+            var done = this.__index__ >= this.__values__.length, value = done ? undefined2 : this.__values__[this.__index__++];
+            return {
+              "done": done,
+              "value": value
+            };
+          }
+          function wrapperToIterator() {
+            return this;
+          }
+          function wrapperPlant(value) {
+            var result2, parent2 = this;
+            while (parent2 instanceof baseLodash) {
+              var clone2 = wrapperClone(parent2);
+              clone2.__index__ = 0;
+              clone2.__values__ = undefined2;
+              if (result2) {
+                previous.__wrapped__ = clone2;
+              } else {
+                result2 = clone2;
+              }
+              var previous = clone2;
+              parent2 = parent2.__wrapped__;
+            }
+            previous.__wrapped__ = value;
+            return result2;
+          }
+          function wrapperReverse() {
+            var value = this.__wrapped__;
+            if (value instanceof LazyWrapper) {
+              var wrapped = value;
+              if (this.__actions__.length) {
+                wrapped = new LazyWrapper(this);
+              }
+              wrapped = wrapped.reverse();
+              wrapped.__actions__.push({
+                "func": thru,
+                "args": [reverse],
+                "thisArg": undefined2
+              });
+              return new LodashWrapper(wrapped, this.__chain__);
+            }
+            return this.thru(reverse);
+          }
+          function wrapperValue() {
+            return baseWrapperValue(this.__wrapped__, this.__actions__);
+          }
+          var countBy = createAggregator(function (result2, value, key) {
+            if (hasOwnProperty.call(result2, key)) {
+              ++result2[key];
+            } else {
+              baseAssignValue(result2, key, 1);
+            }
+          });
+          function every(collection, predicate, guard) {
+            var func = isArray(collection) ? arrayEvery : baseEvery;
+            if (guard && isIterateeCall(collection, predicate, guard)) {
+              predicate = undefined2;
+            }
+            return func(collection, getIteratee(predicate, 3));
+          }
+          function filter(collection, predicate) {
+            var func = isArray(collection) ? arrayFilter : baseFilter;
+            return func(collection, getIteratee(predicate, 3));
+          }
+          var find = createFind(findIndex);
+          var findLast = createFind(findLastIndex);
+          function flatMap(collection, iteratee2) {
+            return baseFlatten(map(collection, iteratee2), 1);
+          }
+          function flatMapDeep(collection, iteratee2) {
+            return baseFlatten(map(collection, iteratee2), INFINITY);
+          }
+          function flatMapDepth(collection, iteratee2, depth) {
+            depth = depth === undefined2 ? 1 : toInteger(depth);
+            return baseFlatten(map(collection, iteratee2), depth);
+          }
+          function forEach(collection, iteratee2) {
+            var func = isArray(collection) ? arrayEach : baseEach;
+            return func(collection, getIteratee(iteratee2, 3));
+          }
+          function forEachRight(collection, iteratee2) {
+            var func = isArray(collection) ? arrayEachRight : baseEachRight;
+            return func(collection, getIteratee(iteratee2, 3));
+          }
+          var groupBy = createAggregator(function (result2, value, key) {
+            if (hasOwnProperty.call(result2, key)) {
+              result2[key].push(value);
+            } else {
+              baseAssignValue(result2, key, [value]);
+            }
+          });
+          function includes(collection, value, fromIndex, guard) {
+            collection = isArrayLike(collection) ? collection : values(collection);
+            fromIndex = fromIndex && !guard ? toInteger(fromIndex) : 0;
+            var length = collection.length;
+            if (fromIndex < 0) {
+              fromIndex = nativeMax(length + fromIndex, 0);
+            }
+            return isString(collection) ? fromIndex <= length && collection.indexOf(value, fromIndex) > -1 : !!length && baseIndexOf(collection, value, fromIndex) > -1;
+          }
+          var invokeMap = baseRest(function (collection, path, args) {
+            var index = -1, isFunc = typeof path == "function", result2 = isArrayLike(collection) ? Array2(collection.length) : [];
+            baseEach(collection, function (value) {
+              result2[++index] = isFunc ? apply(path, value, args) : baseInvoke(value, path, args);
+            });
+            return result2;
+          });
+          var keyBy = createAggregator(function (result2, value, key) {
+            baseAssignValue(result2, key, value);
+          });
+          function map(collection, iteratee2) {
+            var func = isArray(collection) ? arrayMap : baseMap;
+            return func(collection, getIteratee(iteratee2, 3));
+          }
+          function orderBy(collection, iteratees, orders, guard) {
+            if (collection == null) {
+              return [];
+            }
+            if (!isArray(iteratees)) {
+              iteratees = iteratees == null ? [] : [iteratees];
+            }
+            orders = guard ? undefined2 : orders;
+            if (!isArray(orders)) {
+              orders = orders == null ? [] : [orders];
+            }
+            return baseOrderBy(collection, iteratees, orders);
+          }
+          var partition = createAggregator(function (result2, value, key) {
+            result2[key ? 0 : 1].push(value);
+          }, function () {
+            return [[], []];
+          });
+          function reduce(collection, iteratee2, accumulator) {
+            var func = isArray(collection) ? arrayReduce : baseReduce, initAccum = arguments.length < 3;
+            return func(collection, getIteratee(iteratee2, 4), accumulator, initAccum, baseEach);
+          }
+          function reduceRight(collection, iteratee2, accumulator) {
+            var func = isArray(collection) ? arrayReduceRight : baseReduce, initAccum = arguments.length < 3;
+            return func(collection, getIteratee(iteratee2, 4), accumulator, initAccum, baseEachRight);
+          }
+          function reject(collection, predicate) {
+            var func = isArray(collection) ? arrayFilter : baseFilter;
+            return func(collection, negate(getIteratee(predicate, 3)));
+          }
+          function sample(collection) {
+            var func = isArray(collection) ? arraySample : baseSample;
+            return func(collection);
+          }
+          function sampleSize(collection, n2, guard) {
+            if (guard ? isIterateeCall(collection, n2, guard) : n2 === undefined2) {
+              n2 = 1;
+            } else {
+              n2 = toInteger(n2);
+            }
+            var func = isArray(collection) ? arraySampleSize : baseSampleSize;
+            return func(collection, n2);
+          }
+          function shuffle(collection) {
+            var func = isArray(collection) ? arrayShuffle : baseShuffle;
+            return func(collection);
+          }
+          function size(collection) {
+            if (collection == null) {
+              return 0;
+            }
+            if (isArrayLike(collection)) {
+              return isString(collection) ? stringSize(collection) : collection.length;
+            }
+            var tag = getTag(collection);
+            if (tag == mapTag || tag == setTag) {
+              return collection.size;
+            }
+            return baseKeys(collection).length;
+          }
+          function some(collection, predicate, guard) {
+            var func = isArray(collection) ? arraySome : baseSome;
+            if (guard && isIterateeCall(collection, predicate, guard)) {
+              predicate = undefined2;
+            }
+            return func(collection, getIteratee(predicate, 3));
+          }
+          var sortBy = baseRest(function (collection, iteratees) {
+            if (collection == null) {
+              return [];
+            }
+            var length = iteratees.length;
+            if (length > 1 && isIterateeCall(collection, iteratees[0], iteratees[1])) {
+              iteratees = [];
+            } else if (length > 2 && isIterateeCall(iteratees[0], iteratees[1], iteratees[2])) {
+              iteratees = [iteratees[0]];
+            }
+            return baseOrderBy(collection, baseFlatten(iteratees, 1), []);
+          });
+          var now = ctxNow || (function () {
+            return root.Date.now();
+          });
+          function after(n2, func) {
+            if (typeof func != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            n2 = toInteger(n2);
+            return function () {
+              if (--n2 < 1) {
+                return func.apply(this, arguments);
+              }
+            };
+          }
+          function ary(func, n2, guard) {
+            n2 = guard ? undefined2 : n2;
+            n2 = func && n2 == null ? func.length : n2;
+            return createWrap(func, WRAP_ARY_FLAG, undefined2, undefined2, undefined2, undefined2, n2);
+          }
+          function before(n2, func) {
+            var result2;
+            if (typeof func != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            n2 = toInteger(n2);
+            return function () {
+              if (--n2 > 0) {
+                result2 = func.apply(this, arguments);
+              }
+              if (n2 <= 1) {
+                func = undefined2;
+              }
+              return result2;
+            };
+          }
+          var bind = baseRest(function (func, thisArg, partials) {
+            var bitmask = WRAP_BIND_FLAG;
+            if (partials.length) {
+              var holders = replaceHolders(partials, getHolder(bind));
+              bitmask |= WRAP_PARTIAL_FLAG;
+            }
+            return createWrap(func, bitmask, thisArg, partials, holders);
+          });
+          var bindKey = baseRest(function (object, key, partials) {
+            var bitmask = WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG;
+            if (partials.length) {
+              var holders = replaceHolders(partials, getHolder(bindKey));
+              bitmask |= WRAP_PARTIAL_FLAG;
+            }
+            return createWrap(key, bitmask, object, partials, holders);
+          });
+          function curry(func, arity, guard) {
+            arity = guard ? undefined2 : arity;
+            var result2 = createWrap(func, WRAP_CURRY_FLAG, undefined2, undefined2, undefined2, undefined2, undefined2, arity);
+            result2.placeholder = curry.placeholder;
+            return result2;
+          }
+          function curryRight(func, arity, guard) {
+            arity = guard ? undefined2 : arity;
+            var result2 = createWrap(func, WRAP_CURRY_RIGHT_FLAG, undefined2, undefined2, undefined2, undefined2, undefined2, arity);
+            result2.placeholder = curryRight.placeholder;
+            return result2;
+          }
+          function debounce(func, wait, options) {
+            var lastArgs, lastThis, maxWait, result2, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+            if (typeof func != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            wait = toNumber(wait) || 0;
+            if (isObject(options)) {
+              leading = !!options.leading;
+              maxing = ("maxWait" in options);
+              maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+              trailing = ("trailing" in options) ? !!options.trailing : trailing;
+            }
+            function invokeFunc(time) {
+              var args = lastArgs, thisArg = lastThis;
+              lastArgs = lastThis = undefined2;
+              lastInvokeTime = time;
+              result2 = func.apply(thisArg, args);
+              return result2;
+            }
+            function leadingEdge(time) {
+              lastInvokeTime = time;
+              timerId = setTimeout2(timerExpired, wait);
+              return leading ? invokeFunc(time) : result2;
+            }
+            function remainingWait(time) {
+              var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
+              return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
+            }
+            function shouldInvoke(time) {
+              var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+              return lastCallTime === undefined2 || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+            }
+            function timerExpired() {
+              var time = now();
+              if (shouldInvoke(time)) {
+                return trailingEdge(time);
+              }
+              timerId = setTimeout2(timerExpired, remainingWait(time));
+            }
+            function trailingEdge(time) {
+              timerId = undefined2;
+              if (trailing && lastArgs) {
+                return invokeFunc(time);
+              }
+              lastArgs = lastThis = undefined2;
+              return result2;
+            }
+            function cancel() {
+              if (timerId !== undefined2) {
+                clearTimeout(timerId);
+              }
+              lastInvokeTime = 0;
+              lastArgs = lastCallTime = lastThis = timerId = undefined2;
+            }
+            function flush() {
+              return timerId === undefined2 ? result2 : trailingEdge(now());
+            }
+            function debounced() {
+              var time = now(), isInvoking = shouldInvoke(time);
+              lastArgs = arguments;
+              lastThis = this;
+              lastCallTime = time;
+              if (isInvoking) {
+                if (timerId === undefined2) {
+                  return leadingEdge(lastCallTime);
+                }
+                if (maxing) {
+                  clearTimeout(timerId);
+                  timerId = setTimeout2(timerExpired, wait);
+                  return invokeFunc(lastCallTime);
+                }
+              }
+              if (timerId === undefined2) {
+                timerId = setTimeout2(timerExpired, wait);
+              }
+              return result2;
+            }
+            debounced.cancel = cancel;
+            debounced.flush = flush;
+            return debounced;
+          }
+          var defer = baseRest(function (func, args) {
+            return baseDelay(func, 1, args);
+          });
+          var delay = baseRest(function (func, wait, args) {
+            return baseDelay(func, toNumber(wait) || 0, args);
+          });
+          function flip(func) {
+            return createWrap(func, WRAP_FLIP_FLAG);
+          }
+          function memoize(func, resolver) {
+            if (typeof func != "function" || resolver != null && typeof resolver != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            var memoized = function () {
+              var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache = memoized.cache;
+              if (cache.has(key)) {
+                return cache.get(key);
+              }
+              var result2 = func.apply(this, args);
+              memoized.cache = cache.set(key, result2) || cache;
+              return result2;
+            };
+            memoized.cache = new (memoize.Cache || MapCache)();
+            return memoized;
+          }
+          memoize.Cache = MapCache;
+          function negate(predicate) {
+            if (typeof predicate != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            return function () {
+              var args = arguments;
+              switch (args.length) {
+                case 0:
+                  return !predicate.call(this);
+                case 1:
+                  return !predicate.call(this, args[0]);
+                case 2:
+                  return !predicate.call(this, args[0], args[1]);
+                case 3:
+                  return !predicate.call(this, args[0], args[1], args[2]);
+              }
+              return !predicate.apply(this, args);
+            };
+          }
+          function once(func) {
+            return before(2, func);
+          }
+          var overArgs = castRest(function (func, transforms) {
+            transforms = transforms.length == 1 && isArray(transforms[0]) ? arrayMap(transforms[0], baseUnary(getIteratee())) : arrayMap(baseFlatten(transforms, 1), baseUnary(getIteratee()));
+            var funcsLength = transforms.length;
+            return baseRest(function (args) {
+              var index = -1, length = nativeMin(args.length, funcsLength);
+              while (++index < length) {
+                args[index] = transforms[index].call(this, args[index]);
+              }
+              return apply(func, this, args);
+            });
+          });
+          var partial = baseRest(function (func, partials) {
+            var holders = replaceHolders(partials, getHolder(partial));
+            return createWrap(func, WRAP_PARTIAL_FLAG, undefined2, partials, holders);
+          });
+          var partialRight = baseRest(function (func, partials) {
+            var holders = replaceHolders(partials, getHolder(partialRight));
+            return createWrap(func, WRAP_PARTIAL_RIGHT_FLAG, undefined2, partials, holders);
+          });
+          var rearg = flatRest(function (func, indexes) {
+            return createWrap(func, WRAP_REARG_FLAG, undefined2, undefined2, undefined2, indexes);
+          });
+          function rest(func, start) {
+            if (typeof func != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            start = start === undefined2 ? start : toInteger(start);
+            return baseRest(func, start);
+          }
+          function spread(func, start) {
+            if (typeof func != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            start = start == null ? 0 : nativeMax(toInteger(start), 0);
+            return baseRest(function (args) {
+              var array = args[start], otherArgs = castSlice(args, 0, start);
+              if (array) {
+                arrayPush(otherArgs, array);
+              }
+              return apply(func, this, otherArgs);
+            });
+          }
+          function throttle(func, wait, options) {
+            var leading = true, trailing = true;
+            if (typeof func != "function") {
+              throw new TypeError2(FUNC_ERROR_TEXT);
+            }
+            if (isObject(options)) {
+              leading = ("leading" in options) ? !!options.leading : leading;
+              trailing = ("trailing" in options) ? !!options.trailing : trailing;
+            }
+            return debounce(func, wait, {
+              "leading": leading,
+              "maxWait": wait,
+              "trailing": trailing
+            });
+          }
+          function unary(func) {
+            return ary(func, 1);
+          }
+          function wrap(value, wrapper) {
+            return partial(castFunction(wrapper), value);
+          }
+          function castArray() {
+            if (!arguments.length) {
+              return [];
+            }
+            var value = arguments[0];
+            return isArray(value) ? value : [value];
+          }
+          function clone(value) {
+            return baseClone(value, CLONE_SYMBOLS_FLAG);
+          }
+          function cloneWith(value, customizer) {
+            customizer = typeof customizer == "function" ? customizer : undefined2;
+            return baseClone(value, CLONE_SYMBOLS_FLAG, customizer);
+          }
+          function cloneDeep(value) {
+            return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
+          }
+          function cloneDeepWith(value, customizer) {
+            customizer = typeof customizer == "function" ? customizer : undefined2;
+            return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG, customizer);
+          }
+          function conformsTo(object, source) {
+            return source == null || baseConformsTo(object, source, keys(source));
+          }
+          function eq(value, other) {
+            return value === other || value !== value && other !== other;
+          }
+          var gt = createRelationalOperation(baseGt);
+          var gte = createRelationalOperation(function (value, other) {
+            return value >= other;
+          });
+          var isArguments = baseIsArguments((function () {
+            return arguments;
+          })()) ? baseIsArguments : function (value) {
+            return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
+          };
+          var isArray = Array2.isArray;
+          var isArrayBuffer = nodeIsArrayBuffer ? baseUnary(nodeIsArrayBuffer) : baseIsArrayBuffer;
+          function isArrayLike(value) {
+            return value != null && isLength(value.length) && !isFunction(value);
+          }
+          function isArrayLikeObject(value) {
+            return isObjectLike(value) && isArrayLike(value);
+          }
+          function isBoolean(value) {
+            return value === true || value === false || isObjectLike(value) && baseGetTag(value) == boolTag;
+          }
+          var isBuffer = nativeIsBuffer || stubFalse;
+          var isDate = nodeIsDate ? baseUnary(nodeIsDate) : baseIsDate;
+          function isElement(value) {
+            return isObjectLike(value) && value.nodeType === 1 && !isPlainObject(value);
+          }
+          function isEmpty(value) {
+            if (value == null) {
+              return true;
+            }
+            if (isArrayLike(value) && (isArray(value) || typeof value == "string" || typeof value.splice == "function" || isBuffer(value) || isTypedArray2(value) || isArguments(value))) {
+              return !value.length;
+            }
+            var tag = getTag(value);
+            if (tag == mapTag || tag == setTag) {
+              return !value.size;
+            }
+            if (isPrototype(value)) {
+              return !baseKeys(value).length;
+            }
+            for (var key in value) {
+              if (hasOwnProperty.call(value, key)) {
+                return false;
+              }
+            }
+            return true;
+          }
+          function isEqual(value, other) {
+            return baseIsEqual(value, other);
+          }
+          function isEqualWith(value, other, customizer) {
+            customizer = typeof customizer == "function" ? customizer : undefined2;
+            var result2 = customizer ? customizer(value, other) : undefined2;
+            return result2 === undefined2 ? baseIsEqual(value, other, undefined2, customizer) : !!result2;
+          }
+          function isError(value) {
+            if (!isObjectLike(value)) {
+              return false;
+            }
+            var tag = baseGetTag(value);
+            return tag == errorTag || tag == domExcTag || typeof value.message == "string" && typeof value.name == "string" && !isPlainObject(value);
+          }
+          function isFinite2(value) {
+            return typeof value == "number" && nativeIsFinite(value);
+          }
+          function isFunction(value) {
+            if (!isObject(value)) {
+              return false;
+            }
+            var tag = baseGetTag(value);
+            return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+          }
+          function isInteger(value) {
+            return typeof value == "number" && value == toInteger(value);
+          }
+          function isLength(value) {
+            return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+          }
+          function isObject(value) {
+            var type = typeof value;
+            return value != null && (type == "object" || type == "function");
+          }
+          function isObjectLike(value) {
+            return value != null && typeof value == "object";
+          }
+          var isMap = nodeIsMap ? baseUnary(nodeIsMap) : baseIsMap;
+          function isMatch(object, source) {
+            return object === source || baseIsMatch(object, source, getMatchData(source));
+          }
+          function isMatchWith(object, source, customizer) {
+            customizer = typeof customizer == "function" ? customizer : undefined2;
+            return baseIsMatch(object, source, getMatchData(source), customizer);
+          }
+          function isNaN2(value) {
+            return isNumber(value) && value != +value;
+          }
+          function isNative(value) {
+            if (isMaskable(value)) {
+              throw new Error2(CORE_ERROR_TEXT);
+            }
+            return baseIsNative(value);
+          }
+          function isNull(value) {
+            return value === null;
+          }
+          function isNil(value) {
+            return value == null;
+          }
+          function isNumber(value) {
+            return typeof value == "number" || isObjectLike(value) && baseGetTag(value) == numberTag;
+          }
+          function isPlainObject(value) {
+            if (!isObjectLike(value) || baseGetTag(value) != objectTag) {
+              return false;
+            }
+            var proto = getPrototype(value);
+            if (proto === null) {
+              return true;
+            }
+            var Ctor = hasOwnProperty.call(proto, "constructor") && proto.constructor;
+            return typeof Ctor == "function" && Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString;
+          }
+          var isRegExp = nodeIsRegExp ? baseUnary(nodeIsRegExp) : baseIsRegExp;
+          function isSafeInteger(value) {
+            return isInteger(value) && value >= -MAX_SAFE_INTEGER && value <= MAX_SAFE_INTEGER;
+          }
+          var isSet = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
+          function isString(value) {
+            return typeof value == "string" || !isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag;
+          }
+          function isSymbol(value) {
+            return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+          }
+          var isTypedArray2 = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+          function isUndefined(value) {
+            return value === undefined2;
+          }
+          function isWeakMap(value) {
+            return isObjectLike(value) && getTag(value) == weakMapTag;
+          }
+          function isWeakSet(value) {
+            return isObjectLike(value) && baseGetTag(value) == weakSetTag;
+          }
+          var lt = createRelationalOperation(baseLt);
+          var lte = createRelationalOperation(function (value, other) {
+            return value <= other;
+          });
+          function toArray(value) {
+            if (!value) {
+              return [];
+            }
+            if (isArrayLike(value)) {
+              return isString(value) ? stringToArray(value) : copyArray2(value);
+            }
+            if (symIterator && value[symIterator]) {
+              return iteratorToArray(value[symIterator]());
+            }
+            var tag = getTag(value), func = tag == mapTag ? mapToArray : tag == setTag ? setToArray : values;
+            return func(value);
+          }
+          function toFinite(value) {
+            if (!value) {
+              return value === 0 ? value : 0;
+            }
+            value = toNumber(value);
+            if (value === INFINITY || value === -INFINITY) {
+              var sign = value < 0 ? -1 : 1;
+              return sign * MAX_INTEGER;
+            }
+            return value === value ? value : 0;
+          }
+          function toInteger(value) {
+            var result2 = toFinite(value), remainder = result2 % 1;
+            return result2 === result2 ? remainder ? result2 - remainder : result2 : 0;
+          }
+          function toLength(value) {
+            return value ? baseClamp(toInteger(value), 0, MAX_ARRAY_LENGTH) : 0;
+          }
+          function toNumber(value) {
+            if (typeof value == "number") {
+              return value;
+            }
+            if (isSymbol(value)) {
+              return NAN;
+            }
+            if (isObject(value)) {
+              var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+              value = isObject(other) ? other + "" : other;
+            }
+            if (typeof value != "string") {
+              return value === 0 ? value : +value;
+            }
+            value = baseTrim(value);
+            var isBinary = reIsBinary.test(value);
+            return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+          }
+          function toPlainObject(value) {
+            return copyObject(value, keysIn(value));
+          }
+          function toSafeInteger(value) {
+            return value ? baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER) : value === 0 ? value : 0;
+          }
+          function toString(value) {
+            return value == null ? "" : baseToString(value);
+          }
+          var assign = createAssigner(function (object, source) {
+            if (isPrototype(source) || isArrayLike(source)) {
+              copyObject(source, keys(source), object);
+              return;
+            }
+            for (var key in source) {
+              if (hasOwnProperty.call(source, key)) {
+                assignValue(object, key, source[key]);
+              }
+            }
+          });
+          var assignIn = createAssigner(function (object, source) {
+            copyObject(source, keysIn(source), object);
+          });
+          var assignInWith = createAssigner(function (object, source, srcIndex, customizer) {
+            copyObject(source, keysIn(source), object, customizer);
+          });
+          var assignWith = createAssigner(function (object, source, srcIndex, customizer) {
+            copyObject(source, keys(source), object, customizer);
+          });
+          var at = flatRest(baseAt);
+          function create(prototype, properties) {
+            var result2 = baseCreate(prototype);
+            return properties == null ? result2 : baseAssign(result2, properties);
+          }
+          var defaults = baseRest(function (object, sources) {
+            object = Object2(object);
+            var index = -1;
+            var length = sources.length;
+            var guard = length > 2 ? sources[2] : undefined2;
+            if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+              length = 1;
+            }
+            while (++index < length) {
+              var source = sources[index];
+              var props = keysIn(source);
+              var propsIndex = -1;
+              var propsLength = props.length;
+              while (++propsIndex < propsLength) {
+                var key = props[propsIndex];
+                var value = object[key];
+                if (value === undefined2 || eq(value, objectProto[key]) && !hasOwnProperty.call(object, key)) {
+                  object[key] = source[key];
+                }
+              }
+            }
+            return object;
+          });
+          var defaultsDeep = baseRest(function (args) {
+            args.push(undefined2, customDefaultsMerge);
+            return apply(mergeWith, undefined2, args);
+          });
+          function findKey(object, predicate) {
+            return baseFindKey(object, getIteratee(predicate, 3), baseForOwn);
+          }
+          function findLastKey(object, predicate) {
+            return baseFindKey(object, getIteratee(predicate, 3), baseForOwnRight);
+          }
+          function forIn(object, iteratee2) {
+            return object == null ? object : baseFor(object, getIteratee(iteratee2, 3), keysIn);
+          }
+          function forInRight(object, iteratee2) {
+            return object == null ? object : baseForRight(object, getIteratee(iteratee2, 3), keysIn);
+          }
+          function forOwn(object, iteratee2) {
+            return object && baseForOwn(object, getIteratee(iteratee2, 3));
+          }
+          function forOwnRight(object, iteratee2) {
+            return object && baseForOwnRight(object, getIteratee(iteratee2, 3));
+          }
+          function functions(object) {
+            return object == null ? [] : baseFunctions(object, keys(object));
+          }
+          function functionsIn(object) {
+            return object == null ? [] : baseFunctions(object, keysIn(object));
+          }
+          function get(object, path, defaultValue) {
+            var result2 = object == null ? undefined2 : baseGet(object, path);
+            return result2 === undefined2 ? defaultValue : result2;
+          }
+          function has(object, path) {
+            return object != null && hasPath(object, path, baseHas);
+          }
+          function hasIn(object, path) {
+            return object != null && hasPath(object, path, baseHasIn);
+          }
+          var invert = createInverter(function (result2, value, key) {
+            if (value != null && typeof value.toString != "function") {
+              value = nativeObjectToString.call(value);
+            }
+            result2[value] = key;
+          }, constant(identity));
+          var invertBy = createInverter(function (result2, value, key) {
+            if (value != null && typeof value.toString != "function") {
+              value = nativeObjectToString.call(value);
+            }
+            if (hasOwnProperty.call(result2, value)) {
+              result2[value].push(key);
+            } else {
+              result2[value] = [key];
+            }
+          }, getIteratee);
+          var invoke = baseRest(baseInvoke);
+          function keys(object) {
+            return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
+          }
+          function keysIn(object) {
+            return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
+          }
+          function mapKeys(object, iteratee2) {
+            var result2 = {};
+            iteratee2 = getIteratee(iteratee2, 3);
+            baseForOwn(object, function (value, key, object2) {
+              baseAssignValue(result2, iteratee2(value, key, object2), value);
+            });
+            return result2;
+          }
+          function mapValues(object, iteratee2) {
+            var result2 = {};
+            iteratee2 = getIteratee(iteratee2, 3);
+            baseForOwn(object, function (value, key, object2) {
+              baseAssignValue(result2, key, iteratee2(value, key, object2));
+            });
+            return result2;
+          }
+          var merge3 = createAssigner(function (object, source, srcIndex) {
+            baseMerge(object, source, srcIndex);
+          });
+          var mergeWith = createAssigner(function (object, source, srcIndex, customizer) {
+            baseMerge(object, source, srcIndex, customizer);
+          });
+          var omit = flatRest(function (object, paths) {
+            var result2 = {};
+            if (object == null) {
+              return result2;
+            }
+            var isDeep = false;
+            paths = arrayMap(paths, function (path) {
+              path = castPath(path, object);
+              isDeep || (isDeep = path.length > 1);
+              return path;
+            });
+            copyObject(object, getAllKeysIn(object), result2);
+            if (isDeep) {
+              result2 = baseClone(result2, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG, customOmitClone);
+            }
+            var length = paths.length;
+            while (length--) {
+              baseUnset(result2, paths[length]);
+            }
+            return result2;
+          });
+          function omitBy(object, predicate) {
+            return pickBy(object, negate(getIteratee(predicate)));
+          }
+          var pick = flatRest(function (object, paths) {
+            return object == null ? {} : basePick(object, paths);
+          });
+          function pickBy(object, predicate) {
+            if (object == null) {
+              return {};
+            }
+            var props = arrayMap(getAllKeysIn(object), function (prop) {
+              return [prop];
+            });
+            predicate = getIteratee(predicate);
+            return basePickBy(object, props, function (value, path) {
+              return predicate(value, path[0]);
+            });
+          }
+          function result(object, path, defaultValue) {
+            path = castPath(path, object);
+            var index = -1, length = path.length;
+            if (!length) {
+              length = 1;
+              object = undefined2;
+            }
+            while (++index < length) {
+              var value = object == null ? undefined2 : object[toKey(path[index])];
+              if (value === undefined2) {
+                index = length;
+                value = defaultValue;
+              }
+              object = isFunction(value) ? value.call(object) : value;
+            }
+            return object;
+          }
+          function set(object, path, value) {
+            return object == null ? object : baseSet(object, path, value);
+          }
+          function setWith(object, path, value, customizer) {
+            customizer = typeof customizer == "function" ? customizer : undefined2;
+            return object == null ? object : baseSet(object, path, value, customizer);
+          }
+          var toPairs = createToPairs(keys);
+          var toPairsIn = createToPairs(keysIn);
+          function transform(object, iteratee2, accumulator) {
+            var isArr = isArray(object), isArrLike = isArr || isBuffer(object) || isTypedArray2(object);
+            iteratee2 = getIteratee(iteratee2, 4);
+            if (accumulator == null) {
+              var Ctor = object && object.constructor;
+              if (isArrLike) {
+                accumulator = isArr ? new Ctor() : [];
+              } else if (isObject(object)) {
+                accumulator = isFunction(Ctor) ? baseCreate(getPrototype(object)) : {};
+              } else {
+                accumulator = {};
+              }
+            }
+            (isArrLike ? arrayEach : baseForOwn)(object, function (value, index, object2) {
+              return iteratee2(accumulator, value, index, object2);
+            });
+            return accumulator;
+          }
+          function unset(object, path) {
+            return object == null ? true : baseUnset(object, path);
+          }
+          function update(object, path, updater) {
+            return object == null ? object : baseUpdate(object, path, castFunction(updater));
+          }
+          function updateWith(object, path, updater, customizer) {
+            customizer = typeof customizer == "function" ? customizer : undefined2;
+            return object == null ? object : baseUpdate(object, path, castFunction(updater), customizer);
+          }
+          function values(object) {
+            return object == null ? [] : baseValues(object, keys(object));
+          }
+          function valuesIn(object) {
+            return object == null ? [] : baseValues(object, keysIn(object));
+          }
+          function clamp2(number, lower, upper) {
+            if (upper === undefined2) {
+              upper = lower;
+              lower = undefined2;
+            }
+            if (upper !== undefined2) {
+              upper = toNumber(upper);
+              upper = upper === upper ? upper : 0;
+            }
+            if (lower !== undefined2) {
+              lower = toNumber(lower);
+              lower = lower === lower ? lower : 0;
+            }
+            return baseClamp(toNumber(number), lower, upper);
+          }
+          function inRange(number, start, end) {
+            start = toFinite(start);
+            if (end === undefined2) {
+              end = start;
+              start = 0;
+            } else {
+              end = toFinite(end);
+            }
+            number = toNumber(number);
+            return baseInRange(number, start, end);
+          }
+          function random(lower, upper, floating) {
+            if (floating && typeof floating != "boolean" && isIterateeCall(lower, upper, floating)) {
+              upper = floating = undefined2;
+            }
+            if (floating === undefined2) {
+              if (typeof upper == "boolean") {
+                floating = upper;
+                upper = undefined2;
+              } else if (typeof lower == "boolean") {
+                floating = lower;
+                lower = undefined2;
+              }
+            }
+            if (lower === undefined2 && upper === undefined2) {
+              lower = 0;
+              upper = 1;
+            } else {
+              lower = toFinite(lower);
+              if (upper === undefined2) {
+                upper = lower;
+                lower = 0;
+              } else {
+                upper = toFinite(upper);
+              }
+            }
+            if (lower > upper) {
+              var temp = lower;
+              lower = upper;
+              upper = temp;
+            }
+            if (floating || lower % 1 || upper % 1) {
+              var rand = nativeRandom();
+              return nativeMin(lower + rand * (upper - lower + freeParseFloat("1e-" + ((rand + "").length - 1))), upper);
+            }
+            return baseRandom(lower, upper);
+          }
+          var camelCase = createCompounder(function (result2, word, index) {
+            word = word.toLowerCase();
+            return result2 + (index ? capitalize(word) : word);
+          });
+          function capitalize(string) {
+            return upperFirst(toString(string).toLowerCase());
+          }
+          function deburr(string) {
+            string = toString(string);
+            return string && string.replace(reLatin, deburrLetter).replace(reComboMark, "");
+          }
+          function endsWith(string, target, position) {
+            string = toString(string);
+            target = baseToString(target);
+            var length = string.length;
+            position = position === undefined2 ? length : baseClamp(toInteger(position), 0, length);
+            var end = position;
+            position -= target.length;
+            return position >= 0 && string.slice(position, end) == target;
+          }
+          function escape2(string) {
+            string = toString(string);
+            return string && reHasUnescapedHtml.test(string) ? string.replace(reUnescapedHtml, escapeHtmlChar) : string;
+          }
+          function escapeRegExp(string) {
+            string = toString(string);
+            return string && reHasRegExpChar.test(string) ? string.replace(reRegExpChar, "\\$&") : string;
+          }
+          var kebabCase = createCompounder(function (result2, word, index) {
+            return result2 + (index ? "-" : "") + word.toLowerCase();
+          });
+          var lowerCase = createCompounder(function (result2, word, index) {
+            return result2 + (index ? " " : "") + word.toLowerCase();
+          });
+          var lowerFirst = createCaseFirst("toLowerCase");
+          function pad(string, length, chars) {
+            string = toString(string);
+            length = toInteger(length);
+            var strLength = length ? stringSize(string) : 0;
+            if (!length || strLength >= length) {
+              return string;
+            }
+            var mid = (length - strLength) / 2;
+            return createPadding(nativeFloor(mid), chars) + string + createPadding(nativeCeil(mid), chars);
+          }
+          function padEnd(string, length, chars) {
+            string = toString(string);
+            length = toInteger(length);
+            var strLength = length ? stringSize(string) : 0;
+            return length && strLength < length ? string + createPadding(length - strLength, chars) : string;
+          }
+          function padStart(string, length, chars) {
+            string = toString(string);
+            length = toInteger(length);
+            var strLength = length ? stringSize(string) : 0;
+            return length && strLength < length ? createPadding(length - strLength, chars) + string : string;
+          }
+          function parseInt2(string, radix, guard) {
+            if (guard || radix == null) {
+              radix = 0;
+            } else if (radix) {
+              radix = +radix;
+            }
+            return nativeParseInt(toString(string).replace(reTrimStart, ""), radix || 0);
+          }
+          function repeat(string, n2, guard) {
+            if (guard ? isIterateeCall(string, n2, guard) : n2 === undefined2) {
+              n2 = 1;
+            } else {
+              n2 = toInteger(n2);
+            }
+            return baseRepeat(toString(string), n2);
+          }
+          function replace() {
+            var args = arguments, string = toString(args[0]);
+            return args.length < 3 ? string : string.replace(args[1], args[2]);
+          }
+          var snakeCase = createCompounder(function (result2, word, index) {
+            return result2 + (index ? "_" : "") + word.toLowerCase();
+          });
+          function split(string, separator, limit) {
+            if (limit && typeof limit != "number" && isIterateeCall(string, separator, limit)) {
+              separator = limit = undefined2;
+            }
+            limit = limit === undefined2 ? MAX_ARRAY_LENGTH : limit >>> 0;
+            if (!limit) {
+              return [];
+            }
+            string = toString(string);
+            if (string && (typeof separator == "string" || separator != null && !isRegExp(separator))) {
+              separator = baseToString(separator);
+              if (!separator && hasUnicode(string)) {
+                return castSlice(stringToArray(string), 0, limit);
+              }
+            }
+            return string.split(separator, limit);
+          }
+          var startCase = createCompounder(function (result2, word, index) {
+            return result2 + (index ? " " : "") + upperFirst(word);
+          });
+          function startsWith(string, target, position) {
+            string = toString(string);
+            position = position == null ? 0 : baseClamp(toInteger(position), 0, string.length);
+            target = baseToString(target);
+            return string.slice(position, position + target.length) == target;
+          }
+          function template(string, options, guard) {
+            var settings = lodash.templateSettings;
+            if (guard && isIterateeCall(string, options, guard)) {
+              options = undefined2;
+            }
+            string = toString(string);
+            options = assignInWith({}, options, settings, customDefaultsAssignIn);
+            var imports = assignInWith({}, options.imports, settings.imports, customDefaultsAssignIn), importsKeys = keys(imports), importsValues = baseValues(imports, importsKeys);
+            var isEscaping, isEvaluating, index = 0, interpolate = options.interpolate || reNoMatch, source = "__p += '";
+            var reDelimiters = RegExp2((options.escape || reNoMatch).source + "|" + interpolate.source + "|" + (interpolate === reInterpolate ? reEsTemplate : reNoMatch).source + "|" + (options.evaluate || reNoMatch).source + "|$", "g");
+            var sourceURL = "//# sourceURL=" + (hasOwnProperty.call(options, "sourceURL") ? (options.sourceURL + "").replace(/\s/g, " ") : "lodash.templateSources[" + ++templateCounter + "]") + "\n";
+            string.replace(reDelimiters, function (match, escapeValue, interpolateValue, esTemplateValue, evaluateValue, offset) {
+              interpolateValue || (interpolateValue = esTemplateValue);
+              source += string.slice(index, offset).replace(reUnescapedString, escapeStringChar);
+              if (escapeValue) {
+                isEscaping = true;
+                source += "' +\n__e(" + escapeValue + ") +\n'";
+              }
+              if (evaluateValue) {
+                isEvaluating = true;
+                source += "';\n" + evaluateValue + ";\n__p += '";
+              }
+              if (interpolateValue) {
+                source += "' +\n((__t = (" + interpolateValue + ")) == null ? '' : __t) +\n'";
+              }
+              index = offset + match.length;
+              return match;
+            });
+            source += "';\n";
+            var variable = hasOwnProperty.call(options, "variable") && options.variable;
+            if (!variable) {
+              source = "with (obj) {\n" + source + "\n}\n";
+            } else if (reForbiddenIdentifierChars.test(variable)) {
+              throw new Error2(INVALID_TEMPL_VAR_ERROR_TEXT);
+            }
+            source = (isEvaluating ? source.replace(reEmptyStringLeading, "") : source).replace(reEmptyStringMiddle, "$1").replace(reEmptyStringTrailing, "$1;");
+            source = "function(" + (variable || "obj") + ") {\n" + (variable ? "" : "obj || (obj = {});\n") + "var __t, __p = ''" + (isEscaping ? ", __e = _.escape" : "") + (isEvaluating ? ", __j = Array.prototype.join;\nfunction print() { __p += __j.call(arguments, '') }\n" : ";\n") + source + "return __p\n}";
+            var result2 = attempt(function () {
+              return Function2(importsKeys, sourceURL + "return " + source).apply(undefined2, importsValues);
+            });
+            result2.source = source;
+            if (isError(result2)) {
+              throw result2;
+            }
+            return result2;
+          }
+          function toLower(value) {
+            return toString(value).toLowerCase();
+          }
+          function toUpper(value) {
+            return toString(value).toUpperCase();
+          }
+          function trim(string, chars, guard) {
+            string = toString(string);
+            if (string && (guard || chars === undefined2)) {
+              return baseTrim(string);
+            }
+            if (!string || !(chars = baseToString(chars))) {
+              return string;
+            }
+            var strSymbols = stringToArray(string), chrSymbols = stringToArray(chars), start = charsStartIndex(strSymbols, chrSymbols), end = charsEndIndex(strSymbols, chrSymbols) + 1;
+            return castSlice(strSymbols, start, end).join("");
+          }
+          function trimEnd(string, chars, guard) {
+            string = toString(string);
+            if (string && (guard || chars === undefined2)) {
+              return string.slice(0, trimmedEndIndex(string) + 1);
+            }
+            if (!string || !(chars = baseToString(chars))) {
+              return string;
+            }
+            var strSymbols = stringToArray(string), end = charsEndIndex(strSymbols, stringToArray(chars)) + 1;
+            return castSlice(strSymbols, 0, end).join("");
+          }
+          function trimStart(string, chars, guard) {
+            string = toString(string);
+            if (string && (guard || chars === undefined2)) {
+              return string.replace(reTrimStart, "");
+            }
+            if (!string || !(chars = baseToString(chars))) {
+              return string;
+            }
+            var strSymbols = stringToArray(string), start = charsStartIndex(strSymbols, stringToArray(chars));
+            return castSlice(strSymbols, start).join("");
+          }
+          function truncate(string, options) {
+            var length = DEFAULT_TRUNC_LENGTH, omission = DEFAULT_TRUNC_OMISSION;
+            if (isObject(options)) {
+              var separator = ("separator" in options) ? options.separator : separator;
+              length = ("length" in options) ? toInteger(options.length) : length;
+              omission = ("omission" in options) ? baseToString(options.omission) : omission;
+            }
+            string = toString(string);
+            var strLength = string.length;
+            if (hasUnicode(string)) {
+              var strSymbols = stringToArray(string);
+              strLength = strSymbols.length;
+            }
+            if (length >= strLength) {
+              return string;
+            }
+            var end = length - stringSize(omission);
+            if (end < 1) {
+              return omission;
+            }
+            var result2 = strSymbols ? castSlice(strSymbols, 0, end).join("") : string.slice(0, end);
+            if (separator === undefined2) {
+              return result2 + omission;
+            }
+            if (strSymbols) {
+              end += result2.length - end;
+            }
+            if (isRegExp(separator)) {
+              if (string.slice(end).search(separator)) {
+                var match, substring = result2;
+                if (!separator.global) {
+                  separator = RegExp2(separator.source, toString(reFlags.exec(separator)) + "g");
+                }
+                separator.lastIndex = 0;
+                while (match = separator.exec(substring)) {
+                  var newEnd = match.index;
+                }
+                result2 = result2.slice(0, newEnd === undefined2 ? end : newEnd);
+              }
+            } else if (string.indexOf(baseToString(separator), end) != end) {
+              var index = result2.lastIndexOf(separator);
+              if (index > -1) {
+                result2 = result2.slice(0, index);
+              }
+            }
+            return result2 + omission;
+          }
+          function unescape(string) {
+            string = toString(string);
+            return string && reHasEscapedHtml.test(string) ? string.replace(reEscapedHtml, unescapeHtmlChar) : string;
+          }
+          var upperCase = createCompounder(function (result2, word, index) {
+            return result2 + (index ? " " : "") + word.toUpperCase();
+          });
+          var upperFirst = createCaseFirst("toUpperCase");
+          function words(string, pattern, guard) {
+            string = toString(string);
+            pattern = guard ? undefined2 : pattern;
+            if (pattern === undefined2) {
+              return hasUnicodeWord(string) ? unicodeWords(string) : asciiWords(string);
+            }
+            return string.match(pattern) || [];
+          }
+          var attempt = baseRest(function (func, args) {
+            try {
+              return apply(func, undefined2, args);
+            } catch (e2) {
+              return isError(e2) ? e2 : new Error2(e2);
+            }
+          });
+          var bindAll = flatRest(function (object, methodNames) {
+            arrayEach(methodNames, function (key) {
+              key = toKey(key);
+              baseAssignValue(object, key, bind(object[key], object));
+            });
+            return object;
+          });
+          function cond(pairs) {
+            var length = pairs == null ? 0 : pairs.length, toIteratee = getIteratee();
+            pairs = !length ? [] : arrayMap(pairs, function (pair) {
+              if (typeof pair[1] != "function") {
+                throw new TypeError2(FUNC_ERROR_TEXT);
+              }
+              return [toIteratee(pair[0]), pair[1]];
+            });
+            return baseRest(function (args) {
+              var index = -1;
+              while (++index < length) {
+                var pair = pairs[index];
+                if (apply(pair[0], this, args)) {
+                  return apply(pair[1], this, args);
+                }
+              }
+            });
+          }
+          function conforms(source) {
+            return baseConforms(baseClone(source, CLONE_DEEP_FLAG));
+          }
+          function constant(value) {
+            return function () {
+              return value;
+            };
+          }
+          function defaultTo(value, defaultValue) {
+            return value == null || value !== value ? defaultValue : value;
+          }
+          var flow = createFlow();
+          var flowRight = createFlow(true);
+          function identity(value) {
+            return value;
+          }
+          function iteratee(func) {
+            return baseIteratee(typeof func == "function" ? func : baseClone(func, CLONE_DEEP_FLAG));
+          }
+          function matches(source) {
+            return baseMatches(baseClone(source, CLONE_DEEP_FLAG));
+          }
+          function matchesProperty(path, srcValue) {
+            return baseMatchesProperty(path, baseClone(srcValue, CLONE_DEEP_FLAG));
+          }
+          var method = baseRest(function (path, args) {
+            return function (object) {
+              return baseInvoke(object, path, args);
+            };
+          });
+          var methodOf = baseRest(function (object, args) {
+            return function (path) {
+              return baseInvoke(object, path, args);
+            };
+          });
+          function mixin(object, source, options) {
+            var props = keys(source), methodNames = baseFunctions(source, props);
+            if (options == null && !(isObject(source) && (methodNames.length || !props.length))) {
+              options = source;
+              source = object;
+              object = this;
+              methodNames = baseFunctions(source, keys(source));
+            }
+            var chain2 = !(isObject(options) && ("chain" in options)) || !!options.chain, isFunc = isFunction(object);
+            arrayEach(methodNames, function (methodName) {
+              var func = source[methodName];
+              object[methodName] = func;
+              if (isFunc) {
+                object.prototype[methodName] = function () {
+                  var chainAll = this.__chain__;
+                  if (chain2 || chainAll) {
+                    var result2 = object(this.__wrapped__), actions = result2.__actions__ = copyArray2(this.__actions__);
+                    actions.push({
+                      "func": func,
+                      "args": arguments,
+                      "thisArg": object
+                    });
+                    result2.__chain__ = chainAll;
+                    return result2;
+                  }
+                  return func.apply(object, arrayPush([this.value()], arguments));
+                };
+              }
+            });
+            return object;
+          }
+          function noConflict() {
+            if (root._ === this) {
+              root._ = oldDash;
+            }
+            return this;
+          }
+          function noop() {}
+          function nthArg(n2) {
+            n2 = toInteger(n2);
+            return baseRest(function (args) {
+              return baseNth(args, n2);
+            });
+          }
+          var over = createOver(arrayMap);
+          var overEvery = createOver(arrayEvery);
+          var overSome = createOver(arraySome);
+          function property(path) {
+            return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
+          }
+          function propertyOf(object) {
+            return function (path) {
+              return object == null ? undefined2 : baseGet(object, path);
+            };
+          }
+          var range = createRange();
+          var rangeRight = createRange(true);
+          function stubArray() {
+            return [];
+          }
+          function stubFalse() {
+            return false;
+          }
+          function stubObject() {
+            return {};
+          }
+          function stubString() {
+            return "";
+          }
+          function stubTrue() {
+            return true;
+          }
+          function times(n2, iteratee2) {
+            n2 = toInteger(n2);
+            if (n2 < 1 || n2 > MAX_SAFE_INTEGER) {
+              return [];
+            }
+            var index = MAX_ARRAY_LENGTH, length = nativeMin(n2, MAX_ARRAY_LENGTH);
+            iteratee2 = getIteratee(iteratee2);
+            n2 -= MAX_ARRAY_LENGTH;
+            var result2 = baseTimes(length, iteratee2);
+            while (++index < n2) {
+              iteratee2(index);
+            }
+            return result2;
+          }
+          function toPath(value) {
+            if (isArray(value)) {
+              return arrayMap(value, toKey);
+            }
+            return isSymbol(value) ? [value] : copyArray2(stringToPath(toString(value)));
+          }
+          function uniqueId(prefix) {
+            var id = ++idCounter;
+            return toString(prefix) + id;
+          }
+          var add = createMathOperation(function (augend, addend) {
+            return augend + addend;
+          }, 0);
+          var ceil = createRound("ceil");
+          var divide = createMathOperation(function (dividend, divisor) {
+            return dividend / divisor;
+          }, 1);
+          var floor = createRound("floor");
+          function max(array) {
+            return array && array.length ? baseExtremum(array, identity, baseGt) : undefined2;
+          }
+          function maxBy(array, iteratee2) {
+            return array && array.length ? baseExtremum(array, getIteratee(iteratee2, 2), baseGt) : undefined2;
+          }
+          function mean(array) {
+            return baseMean(array, identity);
+          }
+          function meanBy(array, iteratee2) {
+            return baseMean(array, getIteratee(iteratee2, 2));
+          }
+          function min(array) {
+            return array && array.length ? baseExtremum(array, identity, baseLt) : undefined2;
+          }
+          function minBy(array, iteratee2) {
+            return array && array.length ? baseExtremum(array, getIteratee(iteratee2, 2), baseLt) : undefined2;
+          }
+          var multiply = createMathOperation(function (multiplier, multiplicand) {
+            return multiplier * multiplicand;
+          }, 1);
+          var round = createRound("round");
+          var subtract = createMathOperation(function (minuend, subtrahend) {
+            return minuend - subtrahend;
+          }, 0);
+          function sum(array) {
+            return array && array.length ? baseSum(array, identity) : 0;
+          }
+          function sumBy(array, iteratee2) {
+            return array && array.length ? baseSum(array, getIteratee(iteratee2, 2)) : 0;
+          }
+          lodash.after = after;
+          lodash.ary = ary;
+          lodash.assign = assign;
+          lodash.assignIn = assignIn;
+          lodash.assignInWith = assignInWith;
+          lodash.assignWith = assignWith;
+          lodash.at = at;
+          lodash.before = before;
+          lodash.bind = bind;
+          lodash.bindAll = bindAll;
+          lodash.bindKey = bindKey;
+          lodash.castArray = castArray;
+          lodash.chain = chain;
+          lodash.chunk = chunk;
+          lodash.compact = compact;
+          lodash.concat = concat;
+          lodash.cond = cond;
+          lodash.conforms = conforms;
+          lodash.constant = constant;
+          lodash.countBy = countBy;
+          lodash.create = create;
+          lodash.curry = curry;
+          lodash.curryRight = curryRight;
+          lodash.debounce = debounce;
+          lodash.defaults = defaults;
+          lodash.defaultsDeep = defaultsDeep;
+          lodash.defer = defer;
+          lodash.delay = delay;
+          lodash.difference = difference;
+          lodash.differenceBy = differenceBy;
+          lodash.differenceWith = differenceWith;
+          lodash.drop = drop;
+          lodash.dropRight = dropRight;
+          lodash.dropRightWhile = dropRightWhile;
+          lodash.dropWhile = dropWhile;
+          lodash.fill = fill;
+          lodash.filter = filter;
+          lodash.flatMap = flatMap;
+          lodash.flatMapDeep = flatMapDeep;
+          lodash.flatMapDepth = flatMapDepth;
+          lodash.flatten = flatten2;
+          lodash.flattenDeep = flattenDeep;
+          lodash.flattenDepth = flattenDepth;
+          lodash.flip = flip;
+          lodash.flow = flow;
+          lodash.flowRight = flowRight;
+          lodash.fromPairs = fromPairs;
+          lodash.functions = functions;
+          lodash.functionsIn = functionsIn;
+          lodash.groupBy = groupBy;
+          lodash.initial = initial;
+          lodash.intersection = intersection;
+          lodash.intersectionBy = intersectionBy;
+          lodash.intersectionWith = intersectionWith;
+          lodash.invert = invert;
+          lodash.invertBy = invertBy;
+          lodash.invokeMap = invokeMap;
+          lodash.iteratee = iteratee;
+          lodash.keyBy = keyBy;
+          lodash.keys = keys;
+          lodash.keysIn = keysIn;
+          lodash.map = map;
+          lodash.mapKeys = mapKeys;
+          lodash.mapValues = mapValues;
+          lodash.matches = matches;
+          lodash.matchesProperty = matchesProperty;
+          lodash.memoize = memoize;
+          lodash.merge = merge3;
+          lodash.mergeWith = mergeWith;
+          lodash.method = method;
+          lodash.methodOf = methodOf;
+          lodash.mixin = mixin;
+          lodash.negate = negate;
+          lodash.nthArg = nthArg;
+          lodash.omit = omit;
+          lodash.omitBy = omitBy;
+          lodash.once = once;
+          lodash.orderBy = orderBy;
+          lodash.over = over;
+          lodash.overArgs = overArgs;
+          lodash.overEvery = overEvery;
+          lodash.overSome = overSome;
+          lodash.partial = partial;
+          lodash.partialRight = partialRight;
+          lodash.partition = partition;
+          lodash.pick = pick;
+          lodash.pickBy = pickBy;
+          lodash.property = property;
+          lodash.propertyOf = propertyOf;
+          lodash.pull = pull;
+          lodash.pullAll = pullAll;
+          lodash.pullAllBy = pullAllBy;
+          lodash.pullAllWith = pullAllWith;
+          lodash.pullAt = pullAt;
+          lodash.range = range;
+          lodash.rangeRight = rangeRight;
+          lodash.rearg = rearg;
+          lodash.reject = reject;
+          lodash.remove = remove;
+          lodash.rest = rest;
+          lodash.reverse = reverse;
+          lodash.sampleSize = sampleSize;
+          lodash.set = set;
+          lodash.setWith = setWith;
+          lodash.shuffle = shuffle;
+          lodash.slice = slice;
+          lodash.sortBy = sortBy;
+          lodash.sortedUniq = sortedUniq;
+          lodash.sortedUniqBy = sortedUniqBy;
+          lodash.split = split;
+          lodash.spread = spread;
+          lodash.tail = tail;
+          lodash.take = take;
+          lodash.takeRight = takeRight;
+          lodash.takeRightWhile = takeRightWhile;
+          lodash.takeWhile = takeWhile;
+          lodash.tap = tap;
+          lodash.throttle = throttle;
+          lodash.thru = thru;
+          lodash.toArray = toArray;
+          lodash.toPairs = toPairs;
+          lodash.toPairsIn = toPairsIn;
+          lodash.toPath = toPath;
+          lodash.toPlainObject = toPlainObject;
+          lodash.transform = transform;
+          lodash.unary = unary;
+          lodash.union = union;
+          lodash.unionBy = unionBy;
+          lodash.unionWith = unionWith;
+          lodash.uniq = uniq;
+          lodash.uniqBy = uniqBy;
+          lodash.uniqWith = uniqWith;
+          lodash.unset = unset;
+          lodash.unzip = unzip;
+          lodash.unzipWith = unzipWith;
+          lodash.update = update;
+          lodash.updateWith = updateWith;
+          lodash.values = values;
+          lodash.valuesIn = valuesIn;
+          lodash.without = without;
+          lodash.words = words;
+          lodash.wrap = wrap;
+          lodash.xor = xor;
+          lodash.xorBy = xorBy;
+          lodash.xorWith = xorWith;
+          lodash.zip = zip;
+          lodash.zipObject = zipObject;
+          lodash.zipObjectDeep = zipObjectDeep;
+          lodash.zipWith = zipWith;
+          lodash.entries = toPairs;
+          lodash.entriesIn = toPairsIn;
+          lodash.extend = assignIn;
+          lodash.extendWith = assignInWith;
+          mixin(lodash, lodash);
+          lodash.add = add;
+          lodash.attempt = attempt;
+          lodash.camelCase = camelCase;
+          lodash.capitalize = capitalize;
+          lodash.ceil = ceil;
+          lodash.clamp = clamp2;
+          lodash.clone = clone;
+          lodash.cloneDeep = cloneDeep;
+          lodash.cloneDeepWith = cloneDeepWith;
+          lodash.cloneWith = cloneWith;
+          lodash.conformsTo = conformsTo;
+          lodash.deburr = deburr;
+          lodash.defaultTo = defaultTo;
+          lodash.divide = divide;
+          lodash.endsWith = endsWith;
+          lodash.eq = eq;
+          lodash.escape = escape2;
+          lodash.escapeRegExp = escapeRegExp;
+          lodash.every = every;
+          lodash.find = find;
+          lodash.findIndex = findIndex;
+          lodash.findKey = findKey;
+          lodash.findLast = findLast;
+          lodash.findLastIndex = findLastIndex;
+          lodash.findLastKey = findLastKey;
+          lodash.floor = floor;
+          lodash.forEach = forEach;
+          lodash.forEachRight = forEachRight;
+          lodash.forIn = forIn;
+          lodash.forInRight = forInRight;
+          lodash.forOwn = forOwn;
+          lodash.forOwnRight = forOwnRight;
+          lodash.get = get;
+          lodash.gt = gt;
+          lodash.gte = gte;
+          lodash.has = has;
+          lodash.hasIn = hasIn;
+          lodash.head = head;
+          lodash.identity = identity;
+          lodash.includes = includes;
+          lodash.indexOf = indexOf;
+          lodash.inRange = inRange;
+          lodash.invoke = invoke;
+          lodash.isArguments = isArguments;
+          lodash.isArray = isArray;
+          lodash.isArrayBuffer = isArrayBuffer;
+          lodash.isArrayLike = isArrayLike;
+          lodash.isArrayLikeObject = isArrayLikeObject;
+          lodash.isBoolean = isBoolean;
+          lodash.isBuffer = isBuffer;
+          lodash.isDate = isDate;
+          lodash.isElement = isElement;
+          lodash.isEmpty = isEmpty;
+          lodash.isEqual = isEqual;
+          lodash.isEqualWith = isEqualWith;
+          lodash.isError = isError;
+          lodash.isFinite = isFinite2;
+          lodash.isFunction = isFunction;
+          lodash.isInteger = isInteger;
+          lodash.isLength = isLength;
+          lodash.isMap = isMap;
+          lodash.isMatch = isMatch;
+          lodash.isMatchWith = isMatchWith;
+          lodash.isNaN = isNaN2;
+          lodash.isNative = isNative;
+          lodash.isNil = isNil;
+          lodash.isNull = isNull;
+          lodash.isNumber = isNumber;
+          lodash.isObject = isObject;
+          lodash.isObjectLike = isObjectLike;
+          lodash.isPlainObject = isPlainObject;
+          lodash.isRegExp = isRegExp;
+          lodash.isSafeInteger = isSafeInteger;
+          lodash.isSet = isSet;
+          lodash.isString = isString;
+          lodash.isSymbol = isSymbol;
+          lodash.isTypedArray = isTypedArray2;
+          lodash.isUndefined = isUndefined;
+          lodash.isWeakMap = isWeakMap;
+          lodash.isWeakSet = isWeakSet;
+          lodash.join = join;
+          lodash.kebabCase = kebabCase;
+          lodash.last = last;
+          lodash.lastIndexOf = lastIndexOf;
+          lodash.lowerCase = lowerCase;
+          lodash.lowerFirst = lowerFirst;
+          lodash.lt = lt;
+          lodash.lte = lte;
+          lodash.max = max;
+          lodash.maxBy = maxBy;
+          lodash.mean = mean;
+          lodash.meanBy = meanBy;
+          lodash.min = min;
+          lodash.minBy = minBy;
+          lodash.stubArray = stubArray;
+          lodash.stubFalse = stubFalse;
+          lodash.stubObject = stubObject;
+          lodash.stubString = stubString;
+          lodash.stubTrue = stubTrue;
+          lodash.multiply = multiply;
+          lodash.nth = nth;
+          lodash.noConflict = noConflict;
+          lodash.noop = noop;
+          lodash.now = now;
+          lodash.pad = pad;
+          lodash.padEnd = padEnd;
+          lodash.padStart = padStart;
+          lodash.parseInt = parseInt2;
+          lodash.random = random;
+          lodash.reduce = reduce;
+          lodash.reduceRight = reduceRight;
+          lodash.repeat = repeat;
+          lodash.replace = replace;
+          lodash.result = result;
+          lodash.round = round;
+          lodash.runInContext = runInContext2;
+          lodash.sample = sample;
+          lodash.size = size;
+          lodash.snakeCase = snakeCase;
+          lodash.some = some;
+          lodash.sortedIndex = sortedIndex;
+          lodash.sortedIndexBy = sortedIndexBy;
+          lodash.sortedIndexOf = sortedIndexOf;
+          lodash.sortedLastIndex = sortedLastIndex;
+          lodash.sortedLastIndexBy = sortedLastIndexBy;
+          lodash.sortedLastIndexOf = sortedLastIndexOf;
+          lodash.startCase = startCase;
+          lodash.startsWith = startsWith;
+          lodash.subtract = subtract;
+          lodash.sum = sum;
+          lodash.sumBy = sumBy;
+          lodash.template = template;
+          lodash.times = times;
+          lodash.toFinite = toFinite;
+          lodash.toInteger = toInteger;
+          lodash.toLength = toLength;
+          lodash.toLower = toLower;
+          lodash.toNumber = toNumber;
+          lodash.toSafeInteger = toSafeInteger;
+          lodash.toString = toString;
+          lodash.toUpper = toUpper;
+          lodash.trim = trim;
+          lodash.trimEnd = trimEnd;
+          lodash.trimStart = trimStart;
+          lodash.truncate = truncate;
+          lodash.unescape = unescape;
+          lodash.uniqueId = uniqueId;
+          lodash.upperCase = upperCase;
+          lodash.upperFirst = upperFirst;
+          lodash.each = forEach;
+          lodash.eachRight = forEachRight;
+          lodash.first = head;
+          mixin(lodash, (function () {
+            var source = {};
+            baseForOwn(lodash, function (func, methodName) {
+              if (!hasOwnProperty.call(lodash.prototype, methodName)) {
+                source[methodName] = func;
+              }
+            });
+            return source;
+          })(), {
+            "chain": false
+          });
+          lodash.VERSION = VERSION;
+          arrayEach(["bind", "bindKey", "curry", "curryRight", "partial", "partialRight"], function (methodName) {
+            lodash[methodName].placeholder = lodash;
+          });
+          arrayEach(["drop", "take"], function (methodName, index) {
+            LazyWrapper.prototype[methodName] = function (n2) {
+              n2 = n2 === undefined2 ? 1 : nativeMax(toInteger(n2), 0);
+              var result2 = this.__filtered__ && !index ? new LazyWrapper(this) : this.clone();
+              if (result2.__filtered__) {
+                result2.__takeCount__ = nativeMin(n2, result2.__takeCount__);
+              } else {
+                result2.__views__.push({
+                  "size": nativeMin(n2, MAX_ARRAY_LENGTH),
+                  "type": methodName + (result2.__dir__ < 0 ? "Right" : "")
+                });
+              }
+              return result2;
+            };
+            LazyWrapper.prototype[methodName + "Right"] = function (n2) {
+              return this.reverse()[methodName](n2).reverse();
+            };
+          });
+          arrayEach(["filter", "map", "takeWhile"], function (methodName, index) {
+            var type = index + 1, isFilter = type == LAZY_FILTER_FLAG || type == LAZY_WHILE_FLAG;
+            LazyWrapper.prototype[methodName] = function (iteratee2) {
+              var result2 = this.clone();
+              result2.__iteratees__.push({
+                "iteratee": getIteratee(iteratee2, 3),
+                "type": type
+              });
+              result2.__filtered__ = result2.__filtered__ || isFilter;
+              return result2;
+            };
+          });
+          arrayEach(["head", "last"], function (methodName, index) {
+            var takeName = "take" + (index ? "Right" : "");
+            LazyWrapper.prototype[methodName] = function () {
+              return this[takeName](1).value()[0];
+            };
+          });
+          arrayEach(["initial", "tail"], function (methodName, index) {
+            var dropName = "drop" + (index ? "" : "Right");
+            LazyWrapper.prototype[methodName] = function () {
+              return this.__filtered__ ? new LazyWrapper(this) : this[dropName](1);
+            };
+          });
+          LazyWrapper.prototype.compact = function () {
+            return this.filter(identity);
+          };
+          LazyWrapper.prototype.find = function (predicate) {
+            return this.filter(predicate).head();
+          };
+          LazyWrapper.prototype.findLast = function (predicate) {
+            return this.reverse().find(predicate);
+          };
+          LazyWrapper.prototype.invokeMap = baseRest(function (path, args) {
+            if (typeof path == "function") {
+              return new LazyWrapper(this);
+            }
+            return this.map(function (value) {
+              return baseInvoke(value, path, args);
+            });
+          });
+          LazyWrapper.prototype.reject = function (predicate) {
+            return this.filter(negate(getIteratee(predicate)));
+          };
+          LazyWrapper.prototype.slice = function (start, end) {
+            start = toInteger(start);
+            var result2 = this;
+            if (result2.__filtered__ && (start > 0 || end < 0)) {
+              return new LazyWrapper(result2);
+            }
+            if (start < 0) {
+              result2 = result2.takeRight(-start);
+            } else if (start) {
+              result2 = result2.drop(start);
+            }
+            if (end !== undefined2) {
+              end = toInteger(end);
+              result2 = end < 0 ? result2.dropRight(-end) : result2.take(end - start);
+            }
+            return result2;
+          };
+          LazyWrapper.prototype.takeRightWhile = function (predicate) {
+            return this.reverse().takeWhile(predicate).reverse();
+          };
+          LazyWrapper.prototype.toArray = function () {
+            return this.take(MAX_ARRAY_LENGTH);
+          };
+          baseForOwn(LazyWrapper.prototype, function (func, methodName) {
+            var checkIteratee = (/^(?:filter|find|map|reject)|While$/).test(methodName), isTaker = (/^(?:head|last)$/).test(methodName), lodashFunc = lodash[isTaker ? "take" + (methodName == "last" ? "Right" : "") : methodName], retUnwrapped = isTaker || (/^find/).test(methodName);
+            if (!lodashFunc) {
+              return;
+            }
+            lodash.prototype[methodName] = function () {
+              var value = this.__wrapped__, args = isTaker ? [1] : arguments, isLazy = value instanceof LazyWrapper, iteratee2 = args[0], useLazy = isLazy || isArray(value);
+              var interceptor = function (value2) {
+                var result3 = lodashFunc.apply(lodash, arrayPush([value2], args));
+                return isTaker && chainAll ? result3[0] : result3;
+              };
+              if (useLazy && checkIteratee && typeof iteratee2 == "function" && iteratee2.length != 1) {
+                isLazy = useLazy = false;
+              }
+              var chainAll = this.__chain__, isHybrid = !!this.__actions__.length, isUnwrapped = retUnwrapped && !chainAll, onlyLazy = isLazy && !isHybrid;
+              if (!retUnwrapped && useLazy) {
+                value = onlyLazy ? value : new LazyWrapper(this);
+                var result2 = func.apply(value, args);
+                result2.__actions__.push({
+                  "func": thru,
+                  "args": [interceptor],
+                  "thisArg": undefined2
+                });
+                return new LodashWrapper(result2, chainAll);
+              }
+              if (isUnwrapped && onlyLazy) {
+                return func.apply(this, args);
+              }
+              result2 = this.thru(interceptor);
+              return isUnwrapped ? isTaker ? result2.value()[0] : result2.value() : result2;
+            };
+          });
+          arrayEach(["pop", "push", "shift", "sort", "splice", "unshift"], function (methodName) {
+            var func = arrayProto[methodName], chainName = (/^(?:push|sort|unshift)$/).test(methodName) ? "tap" : "thru", retUnwrapped = (/^(?:pop|shift)$/).test(methodName);
+            lodash.prototype[methodName] = function () {
+              var args = arguments;
+              if (retUnwrapped && !this.__chain__) {
+                var value = this.value();
+                return func.apply(isArray(value) ? value : [], args);
+              }
+              return this[chainName](function (value2) {
+                return func.apply(isArray(value2) ? value2 : [], args);
+              });
+            };
+          });
+          baseForOwn(LazyWrapper.prototype, function (func, methodName) {
+            var lodashFunc = lodash[methodName];
+            if (lodashFunc) {
+              var key = lodashFunc.name + "";
+              if (!hasOwnProperty.call(realNames, key)) {
+                realNames[key] = [];
+              }
+              realNames[key].push({
+                "name": methodName,
+                "func": lodashFunc
+              });
+            }
+          });
+          realNames[createHybrid(undefined2, WRAP_BIND_KEY_FLAG).name] = [{
+            "name": "wrapper",
+            "func": undefined2
+          }];
+          LazyWrapper.prototype.clone = lazyClone;
+          LazyWrapper.prototype.reverse = lazyReverse;
+          LazyWrapper.prototype.value = lazyValue;
+          lodash.prototype.at = wrapperAt;
+          lodash.prototype.chain = wrapperChain;
+          lodash.prototype.commit = wrapperCommit;
+          lodash.prototype.next = wrapperNext;
+          lodash.prototype.plant = wrapperPlant;
+          lodash.prototype.reverse = wrapperReverse;
+          lodash.prototype.toJSON = lodash.prototype.valueOf = lodash.prototype.value = wrapperValue;
+          lodash.prototype.first = lodash.prototype.head;
+          if (symIterator) {
+            lodash.prototype[symIterator] = wrapperToIterator;
+          }
+          return lodash;
+        };
+        var _4 = runInContext();
+        if (typeof define == "function" && typeof define.amd == "object" && define.amd) {
+          root._ = _4;
+          define(function () {
+            return _4;
+          });
+        } else if (freeModule) {
+          (freeModule.exports = _4)._ = _4;
+          freeExports._ = _4;
+        } else {
+          root._ = _4;
+        }
+      }).call(exports);
+    }
+  });
   var robot_simulation_exports = {};
   __export(robot_simulation_exports, {
     addControllerToWorld: () => addControllerToWorld,
+    createCSE: () => createCSE,
     createCuboid: () => createCuboid,
     createCustomPhysics: () => createCustomPhysics,
+    createEv3: () => createEv3,
     createFloor: () => createFloor,
+    createPaper: () => createPaper,
     createPhysics: () => createPhysics,
     createRenderer: () => createRenderer,
     createRobotConsole: () => createRobotConsole,
     createTimer: () => createTimer,
     createWall: () => createWall,
     createWorld: () => createWorld,
+    ev3_colorSensor: () => ev3_colorSensor,
+    ev3_colorSensorBlue: () => ev3_colorSensorBlue,
+    ev3_colorSensorGreen: () => ev3_colorSensorGreen,
+    ev3_colorSensorRed: () => ev3_colorSensorRed,
+    ev3_motorA: () => ev3_motorA,
+    ev3_motorB: () => ev3_motorB,
+    ev3_motorC: () => ev3_motorC,
+    ev3_motorD: () => ev3_motorD,
+    ev3_pause: () => ev3_pause,
+    ev3_runToRelativePosition: () => ev3_runToRelativePosition,
+    ev3_ultrasonicSensor: () => ev3_ultrasonicSensor,
+    ev3_ultrasonicSensorDistance: () => ev3_ultrasonicSensorDistance,
     init_simulation: () => init_simulation,
     saveToContext: () => saveToContext
   });
-  var import_context = __toESM(__require("js-slang/context"), 1);
-  function interrupt() {
-    throw "source_academy_interrupt";
-  }
-  var sceneConfig = {
-    width: 900,
-    height: 500
-  };
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  init_define_process();
   var REVISION = "163";
   var MOUSE = {
     LEFT: 0,
@@ -1087,11 +6495,11 @@ export default require => {
         if (_canvas === void 0) _canvas = createElementNS("canvas");
         _canvas.width = image.width;
         _canvas.height = image.height;
-        const context2 = _canvas.getContext("2d");
+        const context3 = _canvas.getContext("2d");
         if (image instanceof ImageData) {
-          context2.putImageData(image, 0, 0);
+          context3.putImageData(image, 0, 0);
         } else {
-          context2.drawImage(image, 0, 0, image.width, image.height);
+          context3.drawImage(image, 0, 0, image.width, image.height);
         }
         canvas = _canvas;
       }
@@ -1107,14 +6515,14 @@ export default require => {
         const canvas = createElementNS("canvas");
         canvas.width = image.width;
         canvas.height = image.height;
-        const context2 = canvas.getContext("2d");
-        context2.drawImage(image, 0, 0, image.width, image.height);
-        const imageData = context2.getImageData(0, 0, image.width, image.height);
+        const context3 = canvas.getContext("2d");
+        context3.drawImage(image, 0, 0, image.width, image.height);
+        const imageData = context3.getImageData(0, 0, image.width, image.height);
         const data = imageData.data;
         for (let i2 = 0; i2 < data.length; i2++) {
           data[i2] = SRGBToLinear(data[i2] / 255) * 255;
         }
-        context2.putImageData(imageData, 0, 0);
+        context3.putImageData(imageData, 0, 0);
         return canvas;
       } else if (image.data) {
         const data = image.data.slice(0);
@@ -7497,30 +12905,30 @@ export default require => {
     }
   };
   function WebGLAnimation() {
-    let context2 = null;
+    let context3 = null;
     let isAnimating = false;
     let animationLoop = null;
     let requestId = null;
     function onAnimationFrame(time, frame) {
       animationLoop(time, frame);
-      requestId = context2.requestAnimationFrame(onAnimationFrame);
+      requestId = context3.requestAnimationFrame(onAnimationFrame);
     }
     return {
       start: function () {
         if (isAnimating === true) return;
         if (animationLoop === null) return;
-        requestId = context2.requestAnimationFrame(onAnimationFrame);
+        requestId = context3.requestAnimationFrame(onAnimationFrame);
         isAnimating = true;
       },
       stop: function () {
-        context2.cancelAnimationFrame(requestId);
+        context3.cancelAnimationFrame(requestId);
         isAnimating = false;
       },
       setAnimationLoop: function (callback) {
         animationLoop = callback;
       },
       setContext: function (value) {
-        context2 = value;
+        context3 = value;
       }
     };
   }
@@ -13502,8 +18910,8 @@ export default require => {
           const canvas = needsNewCanvas ? createCanvas(width, height) : _canvas2;
           canvas.width = width;
           canvas.height = height;
-          const context2 = canvas.getContext("2d");
-          context2.drawImage(image, 0, 0, width, height);
+          const context3 = canvas.getContext("2d");
+          context3.drawImage(image, 0, 0, width, height);
           console.warn("THREE.WebGLRenderer: Texture has been resized from (" + dimensions.width + "x" + dimensions.height + ") to (" + width + "x" + height + ").");
           return canvas;
         } else {
@@ -15896,14 +21304,14 @@ void main() {
   }
   var WebGLRenderer = class {
     constructor(parameters = {}) {
-      const {canvas = createCanvasElement(), context: context2 = null, depth = true, stencil = false, alpha = false, antialias = false, premultipliedAlpha = true, preserveDrawingBuffer = false, powerPreference = "default", failIfMajorPerformanceCaveat = false} = parameters;
+      const {canvas = createCanvasElement(), context: context3 = null, depth = true, stencil = false, alpha = false, antialias = false, premultipliedAlpha = true, preserveDrawingBuffer = false, powerPreference = "default", failIfMajorPerformanceCaveat = false} = parameters;
       this.isWebGLRenderer = true;
       let _alpha;
-      if (context2 !== null) {
-        if (typeof WebGLRenderingContext !== "undefined" && context2 instanceof WebGLRenderingContext) {
+      if (context3 !== null) {
+        if (typeof WebGLRenderingContext !== "undefined" && context3 instanceof WebGLRenderingContext) {
           throw new Error("THREE.WebGLRenderer: WebGL 1 is not supported since r163.");
         }
-        _alpha = context2.getContextAttributes().alpha;
+        _alpha = context3.getContextAttributes().alpha;
       } else {
         _alpha = alpha;
       }
@@ -15965,10 +21373,10 @@ void main() {
       function getTargetPixelRatio() {
         return _currentRenderTarget === null ? _pixelRatio : 1;
       }
-      let _gl = context2;
+      let _gl = context3;
       function getContext(contextName, contextAttributes) {
-        const context3 = canvas.getContext(contextName, contextAttributes);
-        if (context3 !== null) return context3;
+        const context4 = canvas.getContext(contextName, contextAttributes);
+        if (context4 !== null) return context4;
         return null;
       }
       try {
@@ -18236,6 +23644,131 @@ void main() {
       });
     }
   }
+  var CylinderGeometry = class _CylinderGeometry extends BufferGeometry {
+    constructor(radiusTop = 1, radiusBottom = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2) {
+      super();
+      this.type = "CylinderGeometry";
+      this.parameters = {
+        radiusTop,
+        radiusBottom,
+        height,
+        radialSegments,
+        heightSegments,
+        openEnded,
+        thetaStart,
+        thetaLength
+      };
+      const scope = this;
+      radialSegments = Math.floor(radialSegments);
+      heightSegments = Math.floor(heightSegments);
+      const indices = [];
+      const vertices = [];
+      const normals = [];
+      const uvs = [];
+      let index = 0;
+      const indexArray = [];
+      const halfHeight = height / 2;
+      let groupStart = 0;
+      generateTorso();
+      if (openEnded === false) {
+        if (radiusTop > 0) generateCap(true);
+        if (radiusBottom > 0) generateCap(false);
+      }
+      this.setIndex(indices);
+      this.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+      this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+      this.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+      function generateTorso() {
+        const normal = new Vector3();
+        const vertex2 = new Vector3();
+        let groupCount = 0;
+        const slope = (radiusBottom - radiusTop) / height;
+        for (let y2 = 0; y2 <= heightSegments; y2++) {
+          const indexRow = [];
+          const v2 = y2 / heightSegments;
+          const radius = v2 * (radiusBottom - radiusTop) + radiusTop;
+          for (let x2 = 0; x2 <= radialSegments; x2++) {
+            const u2 = x2 / radialSegments;
+            const theta = u2 * thetaLength + thetaStart;
+            const sinTheta = Math.sin(theta);
+            const cosTheta = Math.cos(theta);
+            vertex2.x = radius * sinTheta;
+            vertex2.y = -v2 * height + halfHeight;
+            vertex2.z = radius * cosTheta;
+            vertices.push(vertex2.x, vertex2.y, vertex2.z);
+            normal.set(sinTheta, slope, cosTheta).normalize();
+            normals.push(normal.x, normal.y, normal.z);
+            uvs.push(u2, 1 - v2);
+            indexRow.push(index++);
+          }
+          indexArray.push(indexRow);
+        }
+        for (let x2 = 0; x2 < radialSegments; x2++) {
+          for (let y2 = 0; y2 < heightSegments; y2++) {
+            const a2 = indexArray[y2][x2];
+            const b2 = indexArray[y2 + 1][x2];
+            const c2 = indexArray[y2 + 1][x2 + 1];
+            const d2 = indexArray[y2][x2 + 1];
+            indices.push(a2, b2, d2);
+            indices.push(b2, c2, d2);
+            groupCount += 6;
+          }
+        }
+        scope.addGroup(groupStart, groupCount, 0);
+        groupStart += groupCount;
+      }
+      function generateCap(top) {
+        const centerIndexStart = index;
+        const uv = new Vector2();
+        const vertex2 = new Vector3();
+        let groupCount = 0;
+        const radius = top === true ? radiusTop : radiusBottom;
+        const sign = top === true ? 1 : -1;
+        for (let x2 = 1; x2 <= radialSegments; x2++) {
+          vertices.push(0, halfHeight * sign, 0);
+          normals.push(0, sign, 0);
+          uvs.push(0.5, 0.5);
+          index++;
+        }
+        const centerIndexEnd = index;
+        for (let x2 = 0; x2 <= radialSegments; x2++) {
+          const u2 = x2 / radialSegments;
+          const theta = u2 * thetaLength + thetaStart;
+          const cosTheta = Math.cos(theta);
+          const sinTheta = Math.sin(theta);
+          vertex2.x = radius * sinTheta;
+          vertex2.y = halfHeight * sign;
+          vertex2.z = radius * cosTheta;
+          vertices.push(vertex2.x, vertex2.y, vertex2.z);
+          normals.push(0, sign, 0);
+          uv.x = cosTheta * 0.5 + 0.5;
+          uv.y = sinTheta * 0.5 * sign + 0.5;
+          uvs.push(uv.x, uv.y);
+          index++;
+        }
+        for (let x2 = 0; x2 < radialSegments; x2++) {
+          const c2 = centerIndexStart + x2;
+          const i2 = centerIndexEnd + x2;
+          if (top === true) {
+            indices.push(i2, i2 + 1, c2);
+          } else {
+            indices.push(i2 + 1, i2, c2);
+          }
+          groupCount += 3;
+        }
+        scope.addGroup(groupStart, groupCount, top === true ? 1 : 2);
+        groupStart += groupCount;
+      }
+    }
+    copy(source) {
+      super.copy(source);
+      this.parameters = Object.assign({}, source.parameters);
+      return this;
+    }
+    static fromJSON(data) {
+      return new _CylinderGeometry(data.radiusTop, data.radiusBottom, data.height, data.radialSegments, data.heightSegments, data.openEnded, data.thetaStart, data.thetaLength);
+    }
+  };
   var MeshStandardMaterial = class extends Material {
     constructor(parameters) {
       super();
@@ -20242,6 +25775,235 @@ void main() {
       return new this.constructor().copy(this);
     }
   };
+  var _vector = new Vector3();
+  var _camera = new Camera();
+  var CameraHelper = class extends LineSegments {
+    constructor(camera) {
+      const geometry = new BufferGeometry();
+      const material = new LineBasicMaterial({
+        color: 16777215,
+        vertexColors: true,
+        toneMapped: false
+      });
+      const vertices = [];
+      const colors = [];
+      const pointMap = {};
+      addLine("n1", "n2");
+      addLine("n2", "n4");
+      addLine("n4", "n3");
+      addLine("n3", "n1");
+      addLine("f1", "f2");
+      addLine("f2", "f4");
+      addLine("f4", "f3");
+      addLine("f3", "f1");
+      addLine("n1", "f1");
+      addLine("n2", "f2");
+      addLine("n3", "f3");
+      addLine("n4", "f4");
+      addLine("p", "n1");
+      addLine("p", "n2");
+      addLine("p", "n3");
+      addLine("p", "n4");
+      addLine("u1", "u2");
+      addLine("u2", "u3");
+      addLine("u3", "u1");
+      addLine("c", "t");
+      addLine("p", "c");
+      addLine("cn1", "cn2");
+      addLine("cn3", "cn4");
+      addLine("cf1", "cf2");
+      addLine("cf3", "cf4");
+      function addLine(a2, b2) {
+        addPoint(a2);
+        addPoint(b2);
+      }
+      function addPoint(id) {
+        vertices.push(0, 0, 0);
+        colors.push(0, 0, 0);
+        if (pointMap[id] === void 0) {
+          pointMap[id] = [];
+        }
+        pointMap[id].push(vertices.length / 3 - 1);
+      }
+      geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+      geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+      super(geometry, material);
+      this.type = "CameraHelper";
+      this.camera = camera;
+      if (this.camera.updateProjectionMatrix) this.camera.updateProjectionMatrix();
+      this.matrix = camera.matrixWorld;
+      this.matrixAutoUpdate = false;
+      this.pointMap = pointMap;
+      this.update();
+      const colorFrustum = new Color(16755200);
+      const colorCone = new Color(16711680);
+      const colorUp = new Color(43775);
+      const colorTarget = new Color(16777215);
+      const colorCross = new Color(3355443);
+      this.setColors(colorFrustum, colorCone, colorUp, colorTarget, colorCross);
+    }
+    setColors(frustum, cone, up, target, cross) {
+      const geometry = this.geometry;
+      const colorAttribute = geometry.getAttribute("color");
+      colorAttribute.setXYZ(0, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(1, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(2, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(3, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(4, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(5, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(6, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(7, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(8, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(9, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(10, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(11, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(12, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(13, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(14, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(15, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(16, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(17, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(18, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(19, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(20, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(21, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(22, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(23, frustum.r, frustum.g, frustum.b);
+      colorAttribute.setXYZ(24, cone.r, cone.g, cone.b);
+      colorAttribute.setXYZ(25, cone.r, cone.g, cone.b);
+      colorAttribute.setXYZ(26, cone.r, cone.g, cone.b);
+      colorAttribute.setXYZ(27, cone.r, cone.g, cone.b);
+      colorAttribute.setXYZ(28, cone.r, cone.g, cone.b);
+      colorAttribute.setXYZ(29, cone.r, cone.g, cone.b);
+      colorAttribute.setXYZ(30, cone.r, cone.g, cone.b);
+      colorAttribute.setXYZ(31, cone.r, cone.g, cone.b);
+      colorAttribute.setXYZ(32, up.r, up.g, up.b);
+      colorAttribute.setXYZ(33, up.r, up.g, up.b);
+      colorAttribute.setXYZ(34, up.r, up.g, up.b);
+      colorAttribute.setXYZ(35, up.r, up.g, up.b);
+      colorAttribute.setXYZ(36, up.r, up.g, up.b);
+      colorAttribute.setXYZ(37, up.r, up.g, up.b);
+      colorAttribute.setXYZ(38, target.r, target.g, target.b);
+      colorAttribute.setXYZ(39, target.r, target.g, target.b);
+      colorAttribute.setXYZ(40, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(41, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(42, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(43, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(44, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(45, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(46, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(47, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(48, cross.r, cross.g, cross.b);
+      colorAttribute.setXYZ(49, cross.r, cross.g, cross.b);
+      colorAttribute.needsUpdate = true;
+    }
+    update() {
+      const geometry = this.geometry;
+      const pointMap = this.pointMap;
+      const w2 = 1, h2 = 1;
+      _camera.projectionMatrixInverse.copy(this.camera.projectionMatrixInverse);
+      setPoint("c", pointMap, geometry, _camera, 0, 0, -1);
+      setPoint("t", pointMap, geometry, _camera, 0, 0, 1);
+      setPoint("n1", pointMap, geometry, _camera, -w2, -h2, -1);
+      setPoint("n2", pointMap, geometry, _camera, w2, -h2, -1);
+      setPoint("n3", pointMap, geometry, _camera, -w2, h2, -1);
+      setPoint("n4", pointMap, geometry, _camera, w2, h2, -1);
+      setPoint("f1", pointMap, geometry, _camera, -w2, -h2, 1);
+      setPoint("f2", pointMap, geometry, _camera, w2, -h2, 1);
+      setPoint("f3", pointMap, geometry, _camera, -w2, h2, 1);
+      setPoint("f4", pointMap, geometry, _camera, w2, h2, 1);
+      setPoint("u1", pointMap, geometry, _camera, w2 * 0.7, h2 * 1.1, -1);
+      setPoint("u2", pointMap, geometry, _camera, -w2 * 0.7, h2 * 1.1, -1);
+      setPoint("u3", pointMap, geometry, _camera, 0, h2 * 2, -1);
+      setPoint("cf1", pointMap, geometry, _camera, -w2, 0, 1);
+      setPoint("cf2", pointMap, geometry, _camera, w2, 0, 1);
+      setPoint("cf3", pointMap, geometry, _camera, 0, -h2, 1);
+      setPoint("cf4", pointMap, geometry, _camera, 0, h2, 1);
+      setPoint("cn1", pointMap, geometry, _camera, -w2, 0, -1);
+      setPoint("cn2", pointMap, geometry, _camera, w2, 0, -1);
+      setPoint("cn3", pointMap, geometry, _camera, 0, -h2, -1);
+      setPoint("cn4", pointMap, geometry, _camera, 0, h2, -1);
+      geometry.getAttribute("position").needsUpdate = true;
+    }
+    dispose() {
+      this.geometry.dispose();
+      this.material.dispose();
+    }
+  };
+  function setPoint(point, pointMap, geometry, camera, x2, y2, z2) {
+    _vector.set(x2, y2, z2).unproject(camera);
+    const points = pointMap[point];
+    if (points !== void 0) {
+      const position = geometry.getAttribute("position");
+      for (let i2 = 0, l2 = points.length; i2 < l2; i2++) {
+        position.setXYZ(points[i2], _vector.x, _vector.y, _vector.z);
+      }
+    }
+  }
+  var _axis = new Vector3();
+  var _lineGeometry;
+  var _coneGeometry;
+  var ArrowHelper = class extends Object3D {
+    constructor(dir = new Vector3(0, 0, 1), origin = new Vector3(0, 0, 0), length = 1, color = 16776960, headLength = length * 0.2, headWidth = headLength * 0.2) {
+      super();
+      this.type = "ArrowHelper";
+      if (_lineGeometry === void 0) {
+        _lineGeometry = new BufferGeometry();
+        _lineGeometry.setAttribute("position", new Float32BufferAttribute([0, 0, 0, 0, 1, 0], 3));
+        _coneGeometry = new CylinderGeometry(0, 0.5, 1, 5, 1);
+        _coneGeometry.translate(0, -0.5, 0);
+      }
+      this.position.copy(origin);
+      this.line = new Line(_lineGeometry, new LineBasicMaterial({
+        color,
+        toneMapped: false
+      }));
+      this.line.matrixAutoUpdate = false;
+      this.add(this.line);
+      this.cone = new Mesh(_coneGeometry, new MeshBasicMaterial({
+        color,
+        toneMapped: false
+      }));
+      this.cone.matrixAutoUpdate = false;
+      this.add(this.cone);
+      this.setDirection(dir);
+      this.setLength(length, headLength, headWidth);
+    }
+    setDirection(dir) {
+      if (dir.y > 0.99999) {
+        this.quaternion.set(0, 0, 0, 1);
+      } else if (dir.y < -0.99999) {
+        this.quaternion.set(1, 0, 0, 0);
+      } else {
+        _axis.set(dir.z, 0, -dir.x).normalize();
+        const radians = Math.acos(dir.y);
+        this.quaternion.setFromAxisAngle(_axis, radians);
+      }
+    }
+    setLength(length, headLength = length * 0.2, headWidth = headLength * 0.2) {
+      this.line.scale.set(1, Math.max(1e-4, length - headLength), 1);
+      this.line.updateMatrix();
+      this.cone.scale.set(headWidth, headLength, headWidth);
+      this.cone.position.y = length;
+      this.cone.updateMatrix();
+    }
+    setColor(color) {
+      this.line.material.color.set(color);
+      this.cone.material.color.set(color);
+    }
+    copy(source) {
+      super.copy(source, false);
+      this.line.copy(source.line);
+      this.cone.copy(source.cone);
+      return this;
+    }
+    dispose() {
+      this.line.geometry.dispose();
+      this.line.material.dispose();
+      this.cone.geometry.dispose();
+      this.cone.material.dispose();
+    }
+  };
   if (typeof __THREE_DEVTOOLS__ !== "undefined") {
     __THREE_DEVTOOLS__.dispatchEvent(new CustomEvent("register", {
       detail: {
@@ -20256,12 +26018,2415 @@ void main() {
       window.__THREE__ = REVISION;
     }
   }
+  init_define_process();
+  function toTrianglesDrawMode(geometry, drawMode) {
+    if (drawMode === TrianglesDrawMode) {
+      console.warn("THREE.BufferGeometryUtils.toTrianglesDrawMode(): Geometry already defined as triangles.");
+      return geometry;
+    }
+    if (drawMode === TriangleFanDrawMode || drawMode === TriangleStripDrawMode) {
+      let index = geometry.getIndex();
+      if (index === null) {
+        const indices = [];
+        const position = geometry.getAttribute("position");
+        if (position !== void 0) {
+          for (let i2 = 0; i2 < position.count; i2++) {
+            indices.push(i2);
+          }
+          geometry.setIndex(indices);
+          index = geometry.getIndex();
+        } else {
+          console.error("THREE.BufferGeometryUtils.toTrianglesDrawMode(): Undefined position attribute. Processing not possible.");
+          return geometry;
+        }
+      }
+      const numberOfTriangles = index.count - 2;
+      const newIndices = [];
+      if (drawMode === TriangleFanDrawMode) {
+        for (let i2 = 1; i2 <= numberOfTriangles; i2++) {
+          newIndices.push(index.getX(0));
+          newIndices.push(index.getX(i2));
+          newIndices.push(index.getX(i2 + 1));
+        }
+      } else {
+        for (let i2 = 0; i2 < numberOfTriangles; i2++) {
+          if (i2 % 2 === 0) {
+            newIndices.push(index.getX(i2));
+            newIndices.push(index.getX(i2 + 1));
+            newIndices.push(index.getX(i2 + 2));
+          } else {
+            newIndices.push(index.getX(i2 + 2));
+            newIndices.push(index.getX(i2 + 1));
+            newIndices.push(index.getX(i2));
+          }
+        }
+      }
+      if (newIndices.length / 3 !== numberOfTriangles) {
+        console.error("THREE.BufferGeometryUtils.toTrianglesDrawMode(): Unable to generate correct amount of triangles.");
+      }
+      const newGeometry = geometry.clone();
+      newGeometry.setIndex(newIndices);
+      newGeometry.clearGroups();
+      return newGeometry;
+    } else {
+      console.error("THREE.BufferGeometryUtils.toTrianglesDrawMode(): Unknown draw mode:", drawMode);
+      return geometry;
+    }
+  }
+  var GLTFLoader = class extends Loader {
+    constructor(manager) {
+      super(manager);
+      this.dracoLoader = null;
+      this.ktx2Loader = null;
+      this.meshoptDecoder = null;
+      this.pluginCallbacks = [];
+      this.register(function (parser) {
+        return new GLTFMaterialsClearcoatExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFTextureBasisUExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFTextureWebPExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFTextureAVIFExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsSheenExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsTransmissionExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsVolumeExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsIorExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsEmissiveStrengthExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsSpecularExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsIridescenceExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsAnisotropyExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMaterialsBumpExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFLightsExtension(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMeshoptCompression(parser);
+      });
+      this.register(function (parser) {
+        return new GLTFMeshGpuInstancing(parser);
+      });
+    }
+    load(url, onLoad, onProgress, onError) {
+      const scope = this;
+      let resourcePath;
+      if (this.resourcePath !== "") {
+        resourcePath = this.resourcePath;
+      } else if (this.path !== "") {
+        const relativeUrl = LoaderUtils.extractUrlBase(url);
+        resourcePath = LoaderUtils.resolveURL(relativeUrl, this.path);
+      } else {
+        resourcePath = LoaderUtils.extractUrlBase(url);
+      }
+      this.manager.itemStart(url);
+      const _onError = function (e2) {
+        if (onError) {
+          onError(e2);
+        } else {
+          console.error(e2);
+        }
+        scope.manager.itemError(url);
+        scope.manager.itemEnd(url);
+      };
+      const loader = new FileLoader(this.manager);
+      loader.setPath(this.path);
+      loader.setResponseType("arraybuffer");
+      loader.setRequestHeader(this.requestHeader);
+      loader.setWithCredentials(this.withCredentials);
+      loader.load(url, function (data) {
+        try {
+          scope.parse(data, resourcePath, function (gltf) {
+            onLoad(gltf);
+            scope.manager.itemEnd(url);
+          }, _onError);
+        } catch (e2) {
+          _onError(e2);
+        }
+      }, onProgress, _onError);
+    }
+    setDRACOLoader(dracoLoader) {
+      this.dracoLoader = dracoLoader;
+      return this;
+    }
+    setDDSLoader() {
+      throw new Error('THREE.GLTFLoader: "MSFT_texture_dds" no longer supported. Please update to "KHR_texture_basisu".');
+    }
+    setKTX2Loader(ktx2Loader) {
+      this.ktx2Loader = ktx2Loader;
+      return this;
+    }
+    setMeshoptDecoder(meshoptDecoder) {
+      this.meshoptDecoder = meshoptDecoder;
+      return this;
+    }
+    register(callback) {
+      if (this.pluginCallbacks.indexOf(callback) === -1) {
+        this.pluginCallbacks.push(callback);
+      }
+      return this;
+    }
+    unregister(callback) {
+      if (this.pluginCallbacks.indexOf(callback) !== -1) {
+        this.pluginCallbacks.splice(this.pluginCallbacks.indexOf(callback), 1);
+      }
+      return this;
+    }
+    parse(data, path, onLoad, onError) {
+      let json;
+      const extensions = {};
+      const plugins = {};
+      const textDecoder = new TextDecoder();
+      if (typeof data === "string") {
+        json = JSON.parse(data);
+      } else if (data instanceof ArrayBuffer) {
+        const magic = textDecoder.decode(new Uint8Array(data, 0, 4));
+        if (magic === BINARY_EXTENSION_HEADER_MAGIC) {
+          try {
+            extensions[EXTENSIONS.KHR_BINARY_GLTF] = new GLTFBinaryExtension(data);
+          } catch (error) {
+            if (onError) onError(error);
+            return;
+          }
+          json = JSON.parse(extensions[EXTENSIONS.KHR_BINARY_GLTF].content);
+        } else {
+          json = JSON.parse(textDecoder.decode(data));
+        }
+      } else {
+        json = data;
+      }
+      if (json.asset === void 0 || json.asset.version[0] < 2) {
+        if (onError) onError(new Error("THREE.GLTFLoader: Unsupported asset. glTF versions >=2.0 are supported."));
+        return;
+      }
+      const parser = new GLTFParser(json, {
+        path: path || this.resourcePath || "",
+        crossOrigin: this.crossOrigin,
+        requestHeader: this.requestHeader,
+        manager: this.manager,
+        ktx2Loader: this.ktx2Loader,
+        meshoptDecoder: this.meshoptDecoder
+      });
+      parser.fileLoader.setRequestHeader(this.requestHeader);
+      for (let i2 = 0; i2 < this.pluginCallbacks.length; i2++) {
+        const plugin = this.pluginCallbacks[i2](parser);
+        if (!plugin.name) console.error("THREE.GLTFLoader: Invalid plugin found: missing name");
+        plugins[plugin.name] = plugin;
+        extensions[plugin.name] = true;
+      }
+      if (json.extensionsUsed) {
+        for (let i2 = 0; i2 < json.extensionsUsed.length; ++i2) {
+          const extensionName = json.extensionsUsed[i2];
+          const extensionsRequired = json.extensionsRequired || [];
+          switch (extensionName) {
+            case EXTENSIONS.KHR_MATERIALS_UNLIT:
+              extensions[extensionName] = new GLTFMaterialsUnlitExtension();
+              break;
+            case EXTENSIONS.KHR_DRACO_MESH_COMPRESSION:
+              extensions[extensionName] = new GLTFDracoMeshCompressionExtension(json, this.dracoLoader);
+              break;
+            case EXTENSIONS.KHR_TEXTURE_TRANSFORM:
+              extensions[extensionName] = new GLTFTextureTransformExtension();
+              break;
+            case EXTENSIONS.KHR_MESH_QUANTIZATION:
+              extensions[extensionName] = new GLTFMeshQuantizationExtension();
+              break;
+            default:
+              if (extensionsRequired.indexOf(extensionName) >= 0 && plugins[extensionName] === void 0) {
+                console.warn('THREE.GLTFLoader: Unknown extension "' + extensionName + '".');
+              }
+          }
+        }
+      }
+      parser.setExtensions(extensions);
+      parser.setPlugins(plugins);
+      parser.parse(onLoad, onError);
+    }
+    parseAsync(data, path) {
+      const scope = this;
+      return new Promise(function (resolve, reject) {
+        scope.parse(data, path, resolve, reject);
+      });
+    }
+  };
+  function GLTFRegistry() {
+    let objects = {};
+    return {
+      get: function (key) {
+        return objects[key];
+      },
+      add: function (key, object) {
+        objects[key] = object;
+      },
+      remove: function (key) {
+        delete objects[key];
+      },
+      removeAll: function () {
+        objects = {};
+      }
+    };
+  }
+  var EXTENSIONS = {
+    KHR_BINARY_GLTF: "KHR_binary_glTF",
+    KHR_DRACO_MESH_COMPRESSION: "KHR_draco_mesh_compression",
+    KHR_LIGHTS_PUNCTUAL: "KHR_lights_punctual",
+    KHR_MATERIALS_CLEARCOAT: "KHR_materials_clearcoat",
+    KHR_MATERIALS_IOR: "KHR_materials_ior",
+    KHR_MATERIALS_SHEEN: "KHR_materials_sheen",
+    KHR_MATERIALS_SPECULAR: "KHR_materials_specular",
+    KHR_MATERIALS_TRANSMISSION: "KHR_materials_transmission",
+    KHR_MATERIALS_IRIDESCENCE: "KHR_materials_iridescence",
+    KHR_MATERIALS_ANISOTROPY: "KHR_materials_anisotropy",
+    KHR_MATERIALS_UNLIT: "KHR_materials_unlit",
+    KHR_MATERIALS_VOLUME: "KHR_materials_volume",
+    KHR_TEXTURE_BASISU: "KHR_texture_basisu",
+    KHR_TEXTURE_TRANSFORM: "KHR_texture_transform",
+    KHR_MESH_QUANTIZATION: "KHR_mesh_quantization",
+    KHR_MATERIALS_EMISSIVE_STRENGTH: "KHR_materials_emissive_strength",
+    EXT_MATERIALS_BUMP: "EXT_materials_bump",
+    EXT_TEXTURE_WEBP: "EXT_texture_webp",
+    EXT_TEXTURE_AVIF: "EXT_texture_avif",
+    EXT_MESHOPT_COMPRESSION: "EXT_meshopt_compression",
+    EXT_MESH_GPU_INSTANCING: "EXT_mesh_gpu_instancing"
+  };
+  var GLTFLightsExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_LIGHTS_PUNCTUAL;
+      this.cache = {
+        refs: {},
+        uses: {}
+      };
+    }
+    _markDefs() {
+      const parser = this.parser;
+      const nodeDefs = this.parser.json.nodes || [];
+      for (let nodeIndex = 0, nodeLength = nodeDefs.length; nodeIndex < nodeLength; nodeIndex++) {
+        const nodeDef = nodeDefs[nodeIndex];
+        if (nodeDef.extensions && nodeDef.extensions[this.name] && nodeDef.extensions[this.name].light !== void 0) {
+          parser._addNodeRef(this.cache, nodeDef.extensions[this.name].light);
+        }
+      }
+    }
+    _loadLight(lightIndex) {
+      const parser = this.parser;
+      const cacheKey = "light:" + lightIndex;
+      let dependency = parser.cache.get(cacheKey);
+      if (dependency) return dependency;
+      const json = parser.json;
+      const extensions = json.extensions && json.extensions[this.name] || ({});
+      const lightDefs = extensions.lights || [];
+      const lightDef = lightDefs[lightIndex];
+      let lightNode;
+      const color = new Color(16777215);
+      if (lightDef.color !== void 0) color.setRGB(lightDef.color[0], lightDef.color[1], lightDef.color[2], LinearSRGBColorSpace);
+      const range = lightDef.range !== void 0 ? lightDef.range : 0;
+      switch (lightDef.type) {
+        case "directional":
+          lightNode = new DirectionalLight(color);
+          lightNode.target.position.set(0, 0, -1);
+          lightNode.add(lightNode.target);
+          break;
+        case "point":
+          lightNode = new PointLight(color);
+          lightNode.distance = range;
+          break;
+        case "spot":
+          lightNode = new SpotLight(color);
+          lightNode.distance = range;
+          lightDef.spot = lightDef.spot || ({});
+          lightDef.spot.innerConeAngle = lightDef.spot.innerConeAngle !== void 0 ? lightDef.spot.innerConeAngle : 0;
+          lightDef.spot.outerConeAngle = lightDef.spot.outerConeAngle !== void 0 ? lightDef.spot.outerConeAngle : Math.PI / 4;
+          lightNode.angle = lightDef.spot.outerConeAngle;
+          lightNode.penumbra = 1 - lightDef.spot.innerConeAngle / lightDef.spot.outerConeAngle;
+          lightNode.target.position.set(0, 0, -1);
+          lightNode.add(lightNode.target);
+          break;
+        default:
+          throw new Error("THREE.GLTFLoader: Unexpected light type: " + lightDef.type);
+      }
+      lightNode.position.set(0, 0, 0);
+      lightNode.decay = 2;
+      assignExtrasToUserData(lightNode, lightDef);
+      if (lightDef.intensity !== void 0) lightNode.intensity = lightDef.intensity;
+      lightNode.name = parser.createUniqueName(lightDef.name || "light_" + lightIndex);
+      dependency = Promise.resolve(lightNode);
+      parser.cache.add(cacheKey, dependency);
+      return dependency;
+    }
+    getDependency(type, index) {
+      if (type !== "light") return;
+      return this._loadLight(index);
+    }
+    createNodeAttachment(nodeIndex) {
+      const self2 = this;
+      const parser = this.parser;
+      const json = parser.json;
+      const nodeDef = json.nodes[nodeIndex];
+      const lightDef = nodeDef.extensions && nodeDef.extensions[this.name] || ({});
+      const lightIndex = lightDef.light;
+      if (lightIndex === void 0) return null;
+      return this._loadLight(lightIndex).then(function (light) {
+        return parser._getNodeRef(self2.cache, lightIndex, light);
+      });
+    }
+  };
+  var GLTFMaterialsUnlitExtension = class {
+    constructor() {
+      this.name = EXTENSIONS.KHR_MATERIALS_UNLIT;
+    }
+    getMaterialType() {
+      return MeshBasicMaterial;
+    }
+    extendParams(materialParams, materialDef, parser) {
+      const pending = [];
+      materialParams.color = new Color(1, 1, 1);
+      materialParams.opacity = 1;
+      const metallicRoughness = materialDef.pbrMetallicRoughness;
+      if (metallicRoughness) {
+        if (Array.isArray(metallicRoughness.baseColorFactor)) {
+          const array = metallicRoughness.baseColorFactor;
+          materialParams.color.setRGB(array[0], array[1], array[2], LinearSRGBColorSpace);
+          materialParams.opacity = array[3];
+        }
+        if (metallicRoughness.baseColorTexture !== void 0) {
+          pending.push(parser.assignTexture(materialParams, "map", metallicRoughness.baseColorTexture, SRGBColorSpace));
+        }
+      }
+      return Promise.all(pending);
+    }
+  };
+  var GLTFMaterialsEmissiveStrengthExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_EMISSIVE_STRENGTH;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const emissiveStrength = materialDef.extensions[this.name].emissiveStrength;
+      if (emissiveStrength !== void 0) {
+        materialParams.emissiveIntensity = emissiveStrength;
+      }
+      return Promise.resolve();
+    }
+  };
+  var GLTFMaterialsClearcoatExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_CLEARCOAT;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const pending = [];
+      const extension = materialDef.extensions[this.name];
+      if (extension.clearcoatFactor !== void 0) {
+        materialParams.clearcoat = extension.clearcoatFactor;
+      }
+      if (extension.clearcoatTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "clearcoatMap", extension.clearcoatTexture));
+      }
+      if (extension.clearcoatRoughnessFactor !== void 0) {
+        materialParams.clearcoatRoughness = extension.clearcoatRoughnessFactor;
+      }
+      if (extension.clearcoatRoughnessTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "clearcoatRoughnessMap", extension.clearcoatRoughnessTexture));
+      }
+      if (extension.clearcoatNormalTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "clearcoatNormalMap", extension.clearcoatNormalTexture));
+        if (extension.clearcoatNormalTexture.scale !== void 0) {
+          const scale = extension.clearcoatNormalTexture.scale;
+          materialParams.clearcoatNormalScale = new Vector2(scale, scale);
+        }
+      }
+      return Promise.all(pending);
+    }
+  };
+  var GLTFMaterialsIridescenceExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_IRIDESCENCE;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const pending = [];
+      const extension = materialDef.extensions[this.name];
+      if (extension.iridescenceFactor !== void 0) {
+        materialParams.iridescence = extension.iridescenceFactor;
+      }
+      if (extension.iridescenceTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "iridescenceMap", extension.iridescenceTexture));
+      }
+      if (extension.iridescenceIor !== void 0) {
+        materialParams.iridescenceIOR = extension.iridescenceIor;
+      }
+      if (materialParams.iridescenceThicknessRange === void 0) {
+        materialParams.iridescenceThicknessRange = [100, 400];
+      }
+      if (extension.iridescenceThicknessMinimum !== void 0) {
+        materialParams.iridescenceThicknessRange[0] = extension.iridescenceThicknessMinimum;
+      }
+      if (extension.iridescenceThicknessMaximum !== void 0) {
+        materialParams.iridescenceThicknessRange[1] = extension.iridescenceThicknessMaximum;
+      }
+      if (extension.iridescenceThicknessTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "iridescenceThicknessMap", extension.iridescenceThicknessTexture));
+      }
+      return Promise.all(pending);
+    }
+  };
+  var GLTFMaterialsSheenExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_SHEEN;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const pending = [];
+      materialParams.sheenColor = new Color(0, 0, 0);
+      materialParams.sheenRoughness = 0;
+      materialParams.sheen = 1;
+      const extension = materialDef.extensions[this.name];
+      if (extension.sheenColorFactor !== void 0) {
+        const colorFactor = extension.sheenColorFactor;
+        materialParams.sheenColor.setRGB(colorFactor[0], colorFactor[1], colorFactor[2], LinearSRGBColorSpace);
+      }
+      if (extension.sheenRoughnessFactor !== void 0) {
+        materialParams.sheenRoughness = extension.sheenRoughnessFactor;
+      }
+      if (extension.sheenColorTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "sheenColorMap", extension.sheenColorTexture, SRGBColorSpace));
+      }
+      if (extension.sheenRoughnessTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "sheenRoughnessMap", extension.sheenRoughnessTexture));
+      }
+      return Promise.all(pending);
+    }
+  };
+  var GLTFMaterialsTransmissionExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_TRANSMISSION;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const pending = [];
+      const extension = materialDef.extensions[this.name];
+      if (extension.transmissionFactor !== void 0) {
+        materialParams.transmission = extension.transmissionFactor;
+      }
+      if (extension.transmissionTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "transmissionMap", extension.transmissionTexture));
+      }
+      return Promise.all(pending);
+    }
+  };
+  var GLTFMaterialsVolumeExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_VOLUME;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const pending = [];
+      const extension = materialDef.extensions[this.name];
+      materialParams.thickness = extension.thicknessFactor !== void 0 ? extension.thicknessFactor : 0;
+      if (extension.thicknessTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "thicknessMap", extension.thicknessTexture));
+      }
+      materialParams.attenuationDistance = extension.attenuationDistance || Infinity;
+      const colorArray = extension.attenuationColor || [1, 1, 1];
+      materialParams.attenuationColor = new Color().setRGB(colorArray[0], colorArray[1], colorArray[2], LinearSRGBColorSpace);
+      return Promise.all(pending);
+    }
+  };
+  var GLTFMaterialsIorExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_IOR;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const extension = materialDef.extensions[this.name];
+      materialParams.ior = extension.ior !== void 0 ? extension.ior : 1.5;
+      return Promise.resolve();
+    }
+  };
+  var GLTFMaterialsSpecularExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_SPECULAR;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const pending = [];
+      const extension = materialDef.extensions[this.name];
+      materialParams.specularIntensity = extension.specularFactor !== void 0 ? extension.specularFactor : 1;
+      if (extension.specularTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "specularIntensityMap", extension.specularTexture));
+      }
+      const colorArray = extension.specularColorFactor || [1, 1, 1];
+      materialParams.specularColor = new Color().setRGB(colorArray[0], colorArray[1], colorArray[2], LinearSRGBColorSpace);
+      if (extension.specularColorTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "specularColorMap", extension.specularColorTexture, SRGBColorSpace));
+      }
+      return Promise.all(pending);
+    }
+  };
+  var GLTFMaterialsBumpExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.EXT_MATERIALS_BUMP;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const pending = [];
+      const extension = materialDef.extensions[this.name];
+      materialParams.bumpScale = extension.bumpFactor !== void 0 ? extension.bumpFactor : 1;
+      if (extension.bumpTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "bumpMap", extension.bumpTexture));
+      }
+      return Promise.all(pending);
+    }
+  };
+  var GLTFMaterialsAnisotropyExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_MATERIALS_ANISOTROPY;
+    }
+    getMaterialType(materialIndex) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
+      return MeshPhysicalMaterial;
+    }
+    extendMaterialParams(materialIndex, materialParams) {
+      const parser = this.parser;
+      const materialDef = parser.json.materials[materialIndex];
+      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
+        return Promise.resolve();
+      }
+      const pending = [];
+      const extension = materialDef.extensions[this.name];
+      if (extension.anisotropyStrength !== void 0) {
+        materialParams.anisotropy = extension.anisotropyStrength;
+      }
+      if (extension.anisotropyRotation !== void 0) {
+        materialParams.anisotropyRotation = extension.anisotropyRotation;
+      }
+      if (extension.anisotropyTexture !== void 0) {
+        pending.push(parser.assignTexture(materialParams, "anisotropyMap", extension.anisotropyTexture));
+      }
+      return Promise.all(pending);
+    }
+  };
+  var GLTFTextureBasisUExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.KHR_TEXTURE_BASISU;
+    }
+    loadTexture(textureIndex) {
+      const parser = this.parser;
+      const json = parser.json;
+      const textureDef = json.textures[textureIndex];
+      if (!textureDef.extensions || !textureDef.extensions[this.name]) {
+        return null;
+      }
+      const extension = textureDef.extensions[this.name];
+      const loader = parser.options.ktx2Loader;
+      if (!loader) {
+        if (json.extensionsRequired && json.extensionsRequired.indexOf(this.name) >= 0) {
+          throw new Error("THREE.GLTFLoader: setKTX2Loader must be called before loading KTX2 textures");
+        } else {
+          return null;
+        }
+      }
+      return parser.loadTextureImage(textureIndex, extension.source, loader);
+    }
+  };
+  var GLTFTextureWebPExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.EXT_TEXTURE_WEBP;
+      this.isSupported = null;
+    }
+    loadTexture(textureIndex) {
+      const name = this.name;
+      const parser = this.parser;
+      const json = parser.json;
+      const textureDef = json.textures[textureIndex];
+      if (!textureDef.extensions || !textureDef.extensions[name]) {
+        return null;
+      }
+      const extension = textureDef.extensions[name];
+      const source = json.images[extension.source];
+      let loader = parser.textureLoader;
+      if (source.uri) {
+        const handler = parser.options.manager.getHandler(source.uri);
+        if (handler !== null) loader = handler;
+      }
+      return this.detectSupport().then(function (isSupported) {
+        if (isSupported) return parser.loadTextureImage(textureIndex, extension.source, loader);
+        if (json.extensionsRequired && json.extensionsRequired.indexOf(name) >= 0) {
+          throw new Error("THREE.GLTFLoader: WebP required by asset but unsupported.");
+        }
+        return parser.loadTexture(textureIndex);
+      });
+    }
+    detectSupport() {
+      if (!this.isSupported) {
+        this.isSupported = new Promise(function (resolve) {
+          const image = new Image();
+          image.src = "data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA";
+          image.onload = image.onerror = function () {
+            resolve(image.height === 1);
+          };
+        });
+      }
+      return this.isSupported;
+    }
+  };
+  var GLTFTextureAVIFExtension = class {
+    constructor(parser) {
+      this.parser = parser;
+      this.name = EXTENSIONS.EXT_TEXTURE_AVIF;
+      this.isSupported = null;
+    }
+    loadTexture(textureIndex) {
+      const name = this.name;
+      const parser = this.parser;
+      const json = parser.json;
+      const textureDef = json.textures[textureIndex];
+      if (!textureDef.extensions || !textureDef.extensions[name]) {
+        return null;
+      }
+      const extension = textureDef.extensions[name];
+      const source = json.images[extension.source];
+      let loader = parser.textureLoader;
+      if (source.uri) {
+        const handler = parser.options.manager.getHandler(source.uri);
+        if (handler !== null) loader = handler;
+      }
+      return this.detectSupport().then(function (isSupported) {
+        if (isSupported) return parser.loadTextureImage(textureIndex, extension.source, loader);
+        if (json.extensionsRequired && json.extensionsRequired.indexOf(name) >= 0) {
+          throw new Error("THREE.GLTFLoader: AVIF required by asset but unsupported.");
+        }
+        return parser.loadTexture(textureIndex);
+      });
+    }
+    detectSupport() {
+      if (!this.isSupported) {
+        this.isSupported = new Promise(function (resolve) {
+          const image = new Image();
+          image.src = "data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAABcAAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAEAAAABAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQAMAAAAABNjb2xybmNseAACAAIABoAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAAB9tZGF0EgAKCBgABogQEDQgMgkQAAAAB8dSLfI=";
+          image.onload = image.onerror = function () {
+            resolve(image.height === 1);
+          };
+        });
+      }
+      return this.isSupported;
+    }
+  };
+  var GLTFMeshoptCompression = class {
+    constructor(parser) {
+      this.name = EXTENSIONS.EXT_MESHOPT_COMPRESSION;
+      this.parser = parser;
+    }
+    loadBufferView(index) {
+      const json = this.parser.json;
+      const bufferView = json.bufferViews[index];
+      if (bufferView.extensions && bufferView.extensions[this.name]) {
+        const extensionDef = bufferView.extensions[this.name];
+        const buffer = this.parser.getDependency("buffer", extensionDef.buffer);
+        const decoder = this.parser.options.meshoptDecoder;
+        if (!decoder || !decoder.supported) {
+          if (json.extensionsRequired && json.extensionsRequired.indexOf(this.name) >= 0) {
+            throw new Error("THREE.GLTFLoader: setMeshoptDecoder must be called before loading compressed files");
+          } else {
+            return null;
+          }
+        }
+        return buffer.then(function (res) {
+          const byteOffset = extensionDef.byteOffset || 0;
+          const byteLength = extensionDef.byteLength || 0;
+          const count = extensionDef.count;
+          const stride = extensionDef.byteStride;
+          const source = new Uint8Array(res, byteOffset, byteLength);
+          if (decoder.decodeGltfBufferAsync) {
+            return decoder.decodeGltfBufferAsync(count, stride, source, extensionDef.mode, extensionDef.filter).then(function (res2) {
+              return res2.buffer;
+            });
+          } else {
+            return decoder.ready.then(function () {
+              const result = new ArrayBuffer(count * stride);
+              decoder.decodeGltfBuffer(new Uint8Array(result), count, stride, source, extensionDef.mode, extensionDef.filter);
+              return result;
+            });
+          }
+        });
+      } else {
+        return null;
+      }
+    }
+  };
+  var GLTFMeshGpuInstancing = class {
+    constructor(parser) {
+      this.name = EXTENSIONS.EXT_MESH_GPU_INSTANCING;
+      this.parser = parser;
+    }
+    createNodeMesh(nodeIndex) {
+      const json = this.parser.json;
+      const nodeDef = json.nodes[nodeIndex];
+      if (!nodeDef.extensions || !nodeDef.extensions[this.name] || nodeDef.mesh === void 0) {
+        return null;
+      }
+      const meshDef = json.meshes[nodeDef.mesh];
+      for (const primitive of meshDef.primitives) {
+        if (primitive.mode !== WEBGL_CONSTANTS.TRIANGLES && primitive.mode !== WEBGL_CONSTANTS.TRIANGLE_STRIP && primitive.mode !== WEBGL_CONSTANTS.TRIANGLE_FAN && primitive.mode !== void 0) {
+          return null;
+        }
+      }
+      const extensionDef = nodeDef.extensions[this.name];
+      const attributesDef = extensionDef.attributes;
+      const pending = [];
+      const attributes = {};
+      for (const key in attributesDef) {
+        pending.push(this.parser.getDependency("accessor", attributesDef[key]).then(accessor => {
+          attributes[key] = accessor;
+          return attributes[key];
+        }));
+      }
+      if (pending.length < 1) {
+        return null;
+      }
+      pending.push(this.parser.createNodeMesh(nodeIndex));
+      return Promise.all(pending).then(results => {
+        const nodeObject = results.pop();
+        const meshes = nodeObject.isGroup ? nodeObject.children : [nodeObject];
+        const count = results[0].count;
+        const instancedMeshes = [];
+        for (const mesh of meshes) {
+          const m2 = new Matrix4();
+          const p2 = new Vector3();
+          const q2 = new Quaternion();
+          const s2 = new Vector3(1, 1, 1);
+          const instancedMesh = new InstancedMesh(mesh.geometry, mesh.material, count);
+          for (let i2 = 0; i2 < count; i2++) {
+            if (attributes.TRANSLATION) {
+              p2.fromBufferAttribute(attributes.TRANSLATION, i2);
+            }
+            if (attributes.ROTATION) {
+              q2.fromBufferAttribute(attributes.ROTATION, i2);
+            }
+            if (attributes.SCALE) {
+              s2.fromBufferAttribute(attributes.SCALE, i2);
+            }
+            instancedMesh.setMatrixAt(i2, m2.compose(p2, q2, s2));
+          }
+          for (const attributeName in attributes) {
+            if (attributeName === "_COLOR_0") {
+              const attr = attributes[attributeName];
+              instancedMesh.instanceColor = new InstancedBufferAttribute(attr.array, attr.itemSize, attr.normalized);
+            } else if (attributeName !== "TRANSLATION" && attributeName !== "ROTATION" && attributeName !== "SCALE") {
+              mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
+            }
+          }
+          Object3D.prototype.copy.call(instancedMesh, mesh);
+          this.parser.assignFinalMaterial(instancedMesh);
+          instancedMeshes.push(instancedMesh);
+        }
+        if (nodeObject.isGroup) {
+          nodeObject.clear();
+          nodeObject.add(...instancedMeshes);
+          return nodeObject;
+        }
+        return instancedMeshes[0];
+      });
+    }
+  };
+  var BINARY_EXTENSION_HEADER_MAGIC = "glTF";
+  var BINARY_EXTENSION_HEADER_LENGTH = 12;
+  var BINARY_EXTENSION_CHUNK_TYPES = {
+    JSON: 1313821514,
+    BIN: 5130562
+  };
+  var GLTFBinaryExtension = class {
+    constructor(data) {
+      this.name = EXTENSIONS.KHR_BINARY_GLTF;
+      this.content = null;
+      this.body = null;
+      const headerView = new DataView(data, 0, BINARY_EXTENSION_HEADER_LENGTH);
+      const textDecoder = new TextDecoder();
+      this.header = {
+        magic: textDecoder.decode(new Uint8Array(data.slice(0, 4))),
+        version: headerView.getUint32(4, true),
+        length: headerView.getUint32(8, true)
+      };
+      if (this.header.magic !== BINARY_EXTENSION_HEADER_MAGIC) {
+        throw new Error("THREE.GLTFLoader: Unsupported glTF-Binary header.");
+      } else if (this.header.version < 2) {
+        throw new Error("THREE.GLTFLoader: Legacy binary file detected.");
+      }
+      const chunkContentsLength = this.header.length - BINARY_EXTENSION_HEADER_LENGTH;
+      const chunkView = new DataView(data, BINARY_EXTENSION_HEADER_LENGTH);
+      let chunkIndex = 0;
+      while (chunkIndex < chunkContentsLength) {
+        const chunkLength = chunkView.getUint32(chunkIndex, true);
+        chunkIndex += 4;
+        const chunkType = chunkView.getUint32(chunkIndex, true);
+        chunkIndex += 4;
+        if (chunkType === BINARY_EXTENSION_CHUNK_TYPES.JSON) {
+          const contentArray = new Uint8Array(data, BINARY_EXTENSION_HEADER_LENGTH + chunkIndex, chunkLength);
+          this.content = textDecoder.decode(contentArray);
+        } else if (chunkType === BINARY_EXTENSION_CHUNK_TYPES.BIN) {
+          const byteOffset = BINARY_EXTENSION_HEADER_LENGTH + chunkIndex;
+          this.body = data.slice(byteOffset, byteOffset + chunkLength);
+        }
+        chunkIndex += chunkLength;
+      }
+      if (this.content === null) {
+        throw new Error("THREE.GLTFLoader: JSON content not found.");
+      }
+    }
+  };
+  var GLTFDracoMeshCompressionExtension = class {
+    constructor(json, dracoLoader) {
+      if (!dracoLoader) {
+        throw new Error("THREE.GLTFLoader: No DRACOLoader instance provided.");
+      }
+      this.name = EXTENSIONS.KHR_DRACO_MESH_COMPRESSION;
+      this.json = json;
+      this.dracoLoader = dracoLoader;
+      this.dracoLoader.preload();
+    }
+    decodePrimitive(primitive, parser) {
+      const json = this.json;
+      const dracoLoader = this.dracoLoader;
+      const bufferViewIndex = primitive.extensions[this.name].bufferView;
+      const gltfAttributeMap = primitive.extensions[this.name].attributes;
+      const threeAttributeMap = {};
+      const attributeNormalizedMap = {};
+      const attributeTypeMap = {};
+      for (const attributeName in gltfAttributeMap) {
+        const threeAttributeName = ATTRIBUTES[attributeName] || attributeName.toLowerCase();
+        threeAttributeMap[threeAttributeName] = gltfAttributeMap[attributeName];
+      }
+      for (const attributeName in primitive.attributes) {
+        const threeAttributeName = ATTRIBUTES[attributeName] || attributeName.toLowerCase();
+        if (gltfAttributeMap[attributeName] !== void 0) {
+          const accessorDef = json.accessors[primitive.attributes[attributeName]];
+          const componentType = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
+          attributeTypeMap[threeAttributeName] = componentType.name;
+          attributeNormalizedMap[threeAttributeName] = accessorDef.normalized === true;
+        }
+      }
+      return parser.getDependency("bufferView", bufferViewIndex).then(function (bufferView) {
+        return new Promise(function (resolve, reject) {
+          dracoLoader.decodeDracoFile(bufferView, function (geometry) {
+            for (const attributeName in geometry.attributes) {
+              const attribute = geometry.attributes[attributeName];
+              const normalized = attributeNormalizedMap[attributeName];
+              if (normalized !== void 0) attribute.normalized = normalized;
+            }
+            resolve(geometry);
+          }, threeAttributeMap, attributeTypeMap, LinearSRGBColorSpace, reject);
+        });
+      });
+    }
+  };
+  var GLTFTextureTransformExtension = class {
+    constructor() {
+      this.name = EXTENSIONS.KHR_TEXTURE_TRANSFORM;
+    }
+    extendTexture(texture, transform) {
+      if ((transform.texCoord === void 0 || transform.texCoord === texture.channel) && transform.offset === void 0 && transform.rotation === void 0 && transform.scale === void 0) {
+        return texture;
+      }
+      texture = texture.clone();
+      if (transform.texCoord !== void 0) {
+        texture.channel = transform.texCoord;
+      }
+      if (transform.offset !== void 0) {
+        texture.offset.fromArray(transform.offset);
+      }
+      if (transform.rotation !== void 0) {
+        texture.rotation = transform.rotation;
+      }
+      if (transform.scale !== void 0) {
+        texture.repeat.fromArray(transform.scale);
+      }
+      texture.needsUpdate = true;
+      return texture;
+    }
+  };
+  var GLTFMeshQuantizationExtension = class {
+    constructor() {
+      this.name = EXTENSIONS.KHR_MESH_QUANTIZATION;
+    }
+  };
+  var GLTFCubicSplineInterpolant = class extends Interpolant {
+    constructor(parameterPositions, sampleValues, sampleSize, resultBuffer) {
+      super(parameterPositions, sampleValues, sampleSize, resultBuffer);
+    }
+    copySampleValue_(index) {
+      const result = this.resultBuffer, values = this.sampleValues, valueSize = this.valueSize, offset = index * valueSize * 3 + valueSize;
+      for (let i2 = 0; i2 !== valueSize; i2++) {
+        result[i2] = values[offset + i2];
+      }
+      return result;
+    }
+    interpolate_(i1, t0, t2, t1) {
+      const result = this.resultBuffer;
+      const values = this.sampleValues;
+      const stride = this.valueSize;
+      const stride2 = stride * 2;
+      const stride3 = stride * 3;
+      const td = t1 - t0;
+      const p2 = (t2 - t0) / td;
+      const pp = p2 * p2;
+      const ppp = pp * p2;
+      const offset1 = i1 * stride3;
+      const offset0 = offset1 - stride3;
+      const s2 = -2 * ppp + 3 * pp;
+      const s3 = ppp - pp;
+      const s0 = 1 - s2;
+      const s1 = s3 - pp + p2;
+      for (let i2 = 0; i2 !== stride; i2++) {
+        const p0 = values[offset0 + i2 + stride];
+        const m0 = values[offset0 + i2 + stride2] * td;
+        const p1 = values[offset1 + i2 + stride];
+        const m1 = values[offset1 + i2] * td;
+        result[i2] = s0 * p0 + s1 * m0 + s2 * p1 + s3 * m1;
+      }
+      return result;
+    }
+  };
+  var _q = new Quaternion();
+  var GLTFCubicSplineQuaternionInterpolant = class extends GLTFCubicSplineInterpolant {
+    interpolate_(i1, t0, t2, t1) {
+      const result = super.interpolate_(i1, t0, t2, t1);
+      _q.fromArray(result).normalize().toArray(result);
+      return result;
+    }
+  };
+  var WEBGL_CONSTANTS = {
+    FLOAT: 5126,
+    FLOAT_MAT3: 35675,
+    FLOAT_MAT4: 35676,
+    FLOAT_VEC2: 35664,
+    FLOAT_VEC3: 35665,
+    FLOAT_VEC4: 35666,
+    LINEAR: 9729,
+    REPEAT: 10497,
+    SAMPLER_2D: 35678,
+    POINTS: 0,
+    LINES: 1,
+    LINE_LOOP: 2,
+    LINE_STRIP: 3,
+    TRIANGLES: 4,
+    TRIANGLE_STRIP: 5,
+    TRIANGLE_FAN: 6,
+    UNSIGNED_BYTE: 5121,
+    UNSIGNED_SHORT: 5123
+  };
+  var WEBGL_COMPONENT_TYPES = {
+    5120: Int8Array,
+    5121: Uint8Array,
+    5122: Int16Array,
+    5123: Uint16Array,
+    5125: Uint32Array,
+    5126: Float32Array
+  };
+  var WEBGL_FILTERS = {
+    9728: NearestFilter,
+    9729: LinearFilter,
+    9984: NearestMipmapNearestFilter,
+    9985: LinearMipmapNearestFilter,
+    9986: NearestMipmapLinearFilter,
+    9987: LinearMipmapLinearFilter
+  };
+  var WEBGL_WRAPPINGS = {
+    33071: ClampToEdgeWrapping,
+    33648: MirroredRepeatWrapping,
+    10497: RepeatWrapping
+  };
+  var WEBGL_TYPE_SIZES = {
+    "SCALAR": 1,
+    "VEC2": 2,
+    "VEC3": 3,
+    "VEC4": 4,
+    "MAT2": 4,
+    "MAT3": 9,
+    "MAT4": 16
+  };
+  var ATTRIBUTES = {
+    POSITION: "position",
+    NORMAL: "normal",
+    TANGENT: "tangent",
+    TEXCOORD_0: "uv",
+    TEXCOORD_1: "uv1",
+    TEXCOORD_2: "uv2",
+    TEXCOORD_3: "uv3",
+    COLOR_0: "color",
+    WEIGHTS_0: "skinWeight",
+    JOINTS_0: "skinIndex"
+  };
+  var PATH_PROPERTIES = {
+    scale: "scale",
+    translation: "position",
+    rotation: "quaternion",
+    weights: "morphTargetInfluences"
+  };
+  var INTERPOLATION = {
+    CUBICSPLINE: void 0,
+    LINEAR: InterpolateLinear,
+    STEP: InterpolateDiscrete
+  };
+  var ALPHA_MODES = {
+    OPAQUE: "OPAQUE",
+    MASK: "MASK",
+    BLEND: "BLEND"
+  };
+  function createDefaultMaterial(cache) {
+    if (cache["DefaultMaterial"] === void 0) {
+      cache["DefaultMaterial"] = new MeshStandardMaterial({
+        color: 16777215,
+        emissive: 0,
+        metalness: 1,
+        roughness: 1,
+        transparent: false,
+        depthTest: true,
+        side: FrontSide
+      });
+    }
+    return cache["DefaultMaterial"];
+  }
+  function addUnknownExtensionsToUserData(knownExtensions, object, objectDef) {
+    for (const name in objectDef.extensions) {
+      if (knownExtensions[name] === void 0) {
+        object.userData.gltfExtensions = object.userData.gltfExtensions || ({});
+        object.userData.gltfExtensions[name] = objectDef.extensions[name];
+      }
+    }
+  }
+  function assignExtrasToUserData(object, gltfDef) {
+    if (gltfDef.extras !== void 0) {
+      if (typeof gltfDef.extras === "object") {
+        Object.assign(object.userData, gltfDef.extras);
+      } else {
+        console.warn("THREE.GLTFLoader: Ignoring primitive type .extras, " + gltfDef.extras);
+      }
+    }
+  }
+  function addMorphTargets(geometry, targets, parser) {
+    let hasMorphPosition = false;
+    let hasMorphNormal = false;
+    let hasMorphColor = false;
+    for (let i2 = 0, il = targets.length; i2 < il; i2++) {
+      const target = targets[i2];
+      if (target.POSITION !== void 0) hasMorphPosition = true;
+      if (target.NORMAL !== void 0) hasMorphNormal = true;
+      if (target.COLOR_0 !== void 0) hasMorphColor = true;
+      if (hasMorphPosition && hasMorphNormal && hasMorphColor) break;
+    }
+    if (!hasMorphPosition && !hasMorphNormal && !hasMorphColor) return Promise.resolve(geometry);
+    const pendingPositionAccessors = [];
+    const pendingNormalAccessors = [];
+    const pendingColorAccessors = [];
+    for (let i2 = 0, il = targets.length; i2 < il; i2++) {
+      const target = targets[i2];
+      if (hasMorphPosition) {
+        const pendingAccessor = target.POSITION !== void 0 ? parser.getDependency("accessor", target.POSITION) : geometry.attributes.position;
+        pendingPositionAccessors.push(pendingAccessor);
+      }
+      if (hasMorphNormal) {
+        const pendingAccessor = target.NORMAL !== void 0 ? parser.getDependency("accessor", target.NORMAL) : geometry.attributes.normal;
+        pendingNormalAccessors.push(pendingAccessor);
+      }
+      if (hasMorphColor) {
+        const pendingAccessor = target.COLOR_0 !== void 0 ? parser.getDependency("accessor", target.COLOR_0) : geometry.attributes.color;
+        pendingColorAccessors.push(pendingAccessor);
+      }
+    }
+    return Promise.all([Promise.all(pendingPositionAccessors), Promise.all(pendingNormalAccessors), Promise.all(pendingColorAccessors)]).then(function (accessors) {
+      const morphPositions = accessors[0];
+      const morphNormals = accessors[1];
+      const morphColors = accessors[2];
+      if (hasMorphPosition) geometry.morphAttributes.position = morphPositions;
+      if (hasMorphNormal) geometry.morphAttributes.normal = morphNormals;
+      if (hasMorphColor) geometry.morphAttributes.color = morphColors;
+      geometry.morphTargetsRelative = true;
+      return geometry;
+    });
+  }
+  function updateMorphTargets(mesh, meshDef) {
+    mesh.updateMorphTargets();
+    if (meshDef.weights !== void 0) {
+      for (let i2 = 0, il = meshDef.weights.length; i2 < il; i2++) {
+        mesh.morphTargetInfluences[i2] = meshDef.weights[i2];
+      }
+    }
+    if (meshDef.extras && Array.isArray(meshDef.extras.targetNames)) {
+      const targetNames = meshDef.extras.targetNames;
+      if (mesh.morphTargetInfluences.length === targetNames.length) {
+        mesh.morphTargetDictionary = {};
+        for (let i2 = 0, il = targetNames.length; i2 < il; i2++) {
+          mesh.morphTargetDictionary[targetNames[i2]] = i2;
+        }
+      } else {
+        console.warn("THREE.GLTFLoader: Invalid extras.targetNames length. Ignoring names.");
+      }
+    }
+  }
+  function createPrimitiveKey(primitiveDef) {
+    let geometryKey;
+    const dracoExtension = primitiveDef.extensions && primitiveDef.extensions[EXTENSIONS.KHR_DRACO_MESH_COMPRESSION];
+    if (dracoExtension) {
+      geometryKey = "draco:" + dracoExtension.bufferView + ":" + dracoExtension.indices + ":" + createAttributesKey(dracoExtension.attributes);
+    } else {
+      geometryKey = primitiveDef.indices + ":" + createAttributesKey(primitiveDef.attributes) + ":" + primitiveDef.mode;
+    }
+    if (primitiveDef.targets !== void 0) {
+      for (let i2 = 0, il = primitiveDef.targets.length; i2 < il; i2++) {
+        geometryKey += ":" + createAttributesKey(primitiveDef.targets[i2]);
+      }
+    }
+    return geometryKey;
+  }
+  function createAttributesKey(attributes) {
+    let attributesKey = "";
+    const keys = Object.keys(attributes).sort();
+    for (let i2 = 0, il = keys.length; i2 < il; i2++) {
+      attributesKey += keys[i2] + ":" + attributes[keys[i2]] + ";";
+    }
+    return attributesKey;
+  }
+  function getNormalizedComponentScale(constructor) {
+    switch (constructor) {
+      case Int8Array:
+        return 1 / 127;
+      case Uint8Array:
+        return 1 / 255;
+      case Int16Array:
+        return 1 / 32767;
+      case Uint16Array:
+        return 1 / 65535;
+      default:
+        throw new Error("THREE.GLTFLoader: Unsupported normalized accessor component type.");
+    }
+  }
+  function getImageURIMimeType(uri) {
+    if (uri.search(/\.jpe?g($|\?)/i) > 0 || uri.search(/^data\:image\/jpeg/) === 0) return "image/jpeg";
+    if (uri.search(/\.webp($|\?)/i) > 0 || uri.search(/^data\:image\/webp/) === 0) return "image/webp";
+    return "image/png";
+  }
+  var _identityMatrix = new Matrix4();
+  var GLTFParser = class {
+    constructor(json = {}, options = {}) {
+      this.json = json;
+      this.extensions = {};
+      this.plugins = {};
+      this.options = options;
+      this.cache = new GLTFRegistry();
+      this.associations = new Map();
+      this.primitiveCache = {};
+      this.nodeCache = {};
+      this.meshCache = {
+        refs: {},
+        uses: {}
+      };
+      this.cameraCache = {
+        refs: {},
+        uses: {}
+      };
+      this.lightCache = {
+        refs: {},
+        uses: {}
+      };
+      this.sourceCache = {};
+      this.textureCache = {};
+      this.nodeNamesUsed = {};
+      let isSafari = false;
+      let isFirefox = false;
+      let firefoxVersion = -1;
+      if (typeof navigator !== "undefined") {
+        isSafari = (/^((?!chrome|android).)*safari/i).test(navigator.userAgent) === true;
+        isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
+        firefoxVersion = isFirefox ? navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1] : -1;
+      }
+      if (typeof createImageBitmap === "undefined" || isSafari || isFirefox && firefoxVersion < 98) {
+        this.textureLoader = new TextureLoader(this.options.manager);
+      } else {
+        this.textureLoader = new ImageBitmapLoader(this.options.manager);
+      }
+      this.textureLoader.setCrossOrigin(this.options.crossOrigin);
+      this.textureLoader.setRequestHeader(this.options.requestHeader);
+      this.fileLoader = new FileLoader(this.options.manager);
+      this.fileLoader.setResponseType("arraybuffer");
+      if (this.options.crossOrigin === "use-credentials") {
+        this.fileLoader.setWithCredentials(true);
+      }
+    }
+    setExtensions(extensions) {
+      this.extensions = extensions;
+    }
+    setPlugins(plugins) {
+      this.plugins = plugins;
+    }
+    parse(onLoad, onError) {
+      const parser = this;
+      const json = this.json;
+      const extensions = this.extensions;
+      this.cache.removeAll();
+      this.nodeCache = {};
+      this._invokeAll(function (ext) {
+        return ext._markDefs && ext._markDefs();
+      });
+      Promise.all(this._invokeAll(function (ext) {
+        return ext.beforeRoot && ext.beforeRoot();
+      })).then(function () {
+        return Promise.all([parser.getDependencies("scene"), parser.getDependencies("animation"), parser.getDependencies("camera")]);
+      }).then(function (dependencies) {
+        const result = {
+          scene: dependencies[0][json.scene || 0],
+          scenes: dependencies[0],
+          animations: dependencies[1],
+          cameras: dependencies[2],
+          asset: json.asset,
+          parser,
+          userData: {}
+        };
+        addUnknownExtensionsToUserData(extensions, result, json);
+        assignExtrasToUserData(result, json);
+        return Promise.all(parser._invokeAll(function (ext) {
+          return ext.afterRoot && ext.afterRoot(result);
+        })).then(function () {
+          for (const scene of result.scenes) {
+            scene.updateMatrixWorld();
+          }
+          onLoad(result);
+        });
+      }).catch(onError);
+    }
+    _markDefs() {
+      const nodeDefs = this.json.nodes || [];
+      const skinDefs = this.json.skins || [];
+      const meshDefs = this.json.meshes || [];
+      for (let skinIndex = 0, skinLength = skinDefs.length; skinIndex < skinLength; skinIndex++) {
+        const joints = skinDefs[skinIndex].joints;
+        for (let i2 = 0, il = joints.length; i2 < il; i2++) {
+          nodeDefs[joints[i2]].isBone = true;
+        }
+      }
+      for (let nodeIndex = 0, nodeLength = nodeDefs.length; nodeIndex < nodeLength; nodeIndex++) {
+        const nodeDef = nodeDefs[nodeIndex];
+        if (nodeDef.mesh !== void 0) {
+          this._addNodeRef(this.meshCache, nodeDef.mesh);
+          if (nodeDef.skin !== void 0) {
+            meshDefs[nodeDef.mesh].isSkinnedMesh = true;
+          }
+        }
+        if (nodeDef.camera !== void 0) {
+          this._addNodeRef(this.cameraCache, nodeDef.camera);
+        }
+      }
+    }
+    _addNodeRef(cache, index) {
+      if (index === void 0) return;
+      if (cache.refs[index] === void 0) {
+        cache.refs[index] = cache.uses[index] = 0;
+      }
+      cache.refs[index]++;
+    }
+    _getNodeRef(cache, index, object) {
+      if (cache.refs[index] <= 1) return object;
+      const ref = object.clone();
+      const updateMappings = (original, clone) => {
+        const mappings = this.associations.get(original);
+        if (mappings != null) {
+          this.associations.set(clone, mappings);
+        }
+        for (const [i2, child] of original.children.entries()) {
+          updateMappings(child, clone.children[i2]);
+        }
+      };
+      updateMappings(object, ref);
+      ref.name += "_instance_" + cache.uses[index]++;
+      return ref;
+    }
+    _invokeOne(func) {
+      const extensions = Object.values(this.plugins);
+      extensions.push(this);
+      for (let i2 = 0; i2 < extensions.length; i2++) {
+        const result = func(extensions[i2]);
+        if (result) return result;
+      }
+      return null;
+    }
+    _invokeAll(func) {
+      const extensions = Object.values(this.plugins);
+      extensions.unshift(this);
+      const pending = [];
+      for (let i2 = 0; i2 < extensions.length; i2++) {
+        const result = func(extensions[i2]);
+        if (result) pending.push(result);
+      }
+      return pending;
+    }
+    getDependency(type, index) {
+      const cacheKey = type + ":" + index;
+      let dependency = this.cache.get(cacheKey);
+      if (!dependency) {
+        switch (type) {
+          case "scene":
+            dependency = this.loadScene(index);
+            break;
+          case "node":
+            dependency = this._invokeOne(function (ext) {
+              return ext.loadNode && ext.loadNode(index);
+            });
+            break;
+          case "mesh":
+            dependency = this._invokeOne(function (ext) {
+              return ext.loadMesh && ext.loadMesh(index);
+            });
+            break;
+          case "accessor":
+            dependency = this.loadAccessor(index);
+            break;
+          case "bufferView":
+            dependency = this._invokeOne(function (ext) {
+              return ext.loadBufferView && ext.loadBufferView(index);
+            });
+            break;
+          case "buffer":
+            dependency = this.loadBuffer(index);
+            break;
+          case "material":
+            dependency = this._invokeOne(function (ext) {
+              return ext.loadMaterial && ext.loadMaterial(index);
+            });
+            break;
+          case "texture":
+            dependency = this._invokeOne(function (ext) {
+              return ext.loadTexture && ext.loadTexture(index);
+            });
+            break;
+          case "skin":
+            dependency = this.loadSkin(index);
+            break;
+          case "animation":
+            dependency = this._invokeOne(function (ext) {
+              return ext.loadAnimation && ext.loadAnimation(index);
+            });
+            break;
+          case "camera":
+            dependency = this.loadCamera(index);
+            break;
+          default:
+            dependency = this._invokeOne(function (ext) {
+              return ext != this && ext.getDependency && ext.getDependency(type, index);
+            });
+            if (!dependency) {
+              throw new Error("Unknown type: " + type);
+            }
+            break;
+        }
+        this.cache.add(cacheKey, dependency);
+      }
+      return dependency;
+    }
+    getDependencies(type) {
+      let dependencies = this.cache.get(type);
+      if (!dependencies) {
+        const parser = this;
+        const defs = this.json[type + (type === "mesh" ? "es" : "s")] || [];
+        dependencies = Promise.all(defs.map(function (def, index) {
+          return parser.getDependency(type, index);
+        }));
+        this.cache.add(type, dependencies);
+      }
+      return dependencies;
+    }
+    loadBuffer(bufferIndex) {
+      const bufferDef = this.json.buffers[bufferIndex];
+      const loader = this.fileLoader;
+      if (bufferDef.type && bufferDef.type !== "arraybuffer") {
+        throw new Error("THREE.GLTFLoader: " + bufferDef.type + " buffer type is not supported.");
+      }
+      if (bufferDef.uri === void 0 && bufferIndex === 0) {
+        return Promise.resolve(this.extensions[EXTENSIONS.KHR_BINARY_GLTF].body);
+      }
+      const options = this.options;
+      return new Promise(function (resolve, reject) {
+        loader.load(LoaderUtils.resolveURL(bufferDef.uri, options.path), resolve, void 0, function () {
+          reject(new Error('THREE.GLTFLoader: Failed to load buffer "' + bufferDef.uri + '".'));
+        });
+      });
+    }
+    loadBufferView(bufferViewIndex) {
+      const bufferViewDef = this.json.bufferViews[bufferViewIndex];
+      return this.getDependency("buffer", bufferViewDef.buffer).then(function (buffer) {
+        const byteLength = bufferViewDef.byteLength || 0;
+        const byteOffset = bufferViewDef.byteOffset || 0;
+        return buffer.slice(byteOffset, byteOffset + byteLength);
+      });
+    }
+    loadAccessor(accessorIndex) {
+      const parser = this;
+      const json = this.json;
+      const accessorDef = this.json.accessors[accessorIndex];
+      if (accessorDef.bufferView === void 0 && accessorDef.sparse === void 0) {
+        const itemSize = WEBGL_TYPE_SIZES[accessorDef.type];
+        const TypedArray = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
+        const normalized = accessorDef.normalized === true;
+        const array = new TypedArray(accessorDef.count * itemSize);
+        return Promise.resolve(new BufferAttribute(array, itemSize, normalized));
+      }
+      const pendingBufferViews = [];
+      if (accessorDef.bufferView !== void 0) {
+        pendingBufferViews.push(this.getDependency("bufferView", accessorDef.bufferView));
+      } else {
+        pendingBufferViews.push(null);
+      }
+      if (accessorDef.sparse !== void 0) {
+        pendingBufferViews.push(this.getDependency("bufferView", accessorDef.sparse.indices.bufferView));
+        pendingBufferViews.push(this.getDependency("bufferView", accessorDef.sparse.values.bufferView));
+      }
+      return Promise.all(pendingBufferViews).then(function (bufferViews) {
+        const bufferView = bufferViews[0];
+        const itemSize = WEBGL_TYPE_SIZES[accessorDef.type];
+        const TypedArray = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
+        const elementBytes = TypedArray.BYTES_PER_ELEMENT;
+        const itemBytes = elementBytes * itemSize;
+        const byteOffset = accessorDef.byteOffset || 0;
+        const byteStride = accessorDef.bufferView !== void 0 ? json.bufferViews[accessorDef.bufferView].byteStride : void 0;
+        const normalized = accessorDef.normalized === true;
+        let array, bufferAttribute;
+        if (byteStride && byteStride !== itemBytes) {
+          const ibSlice = Math.floor(byteOffset / byteStride);
+          const ibCacheKey = "InterleavedBuffer:" + accessorDef.bufferView + ":" + accessorDef.componentType + ":" + ibSlice + ":" + accessorDef.count;
+          let ib = parser.cache.get(ibCacheKey);
+          if (!ib) {
+            array = new TypedArray(bufferView, ibSlice * byteStride, accessorDef.count * byteStride / elementBytes);
+            ib = new InterleavedBuffer(array, byteStride / elementBytes);
+            parser.cache.add(ibCacheKey, ib);
+          }
+          bufferAttribute = new InterleavedBufferAttribute(ib, itemSize, byteOffset % byteStride / elementBytes, normalized);
+        } else {
+          if (bufferView === null) {
+            array = new TypedArray(accessorDef.count * itemSize);
+          } else {
+            array = new TypedArray(bufferView, byteOffset, accessorDef.count * itemSize);
+          }
+          bufferAttribute = new BufferAttribute(array, itemSize, normalized);
+        }
+        if (accessorDef.sparse !== void 0) {
+          const itemSizeIndices = WEBGL_TYPE_SIZES.SCALAR;
+          const TypedArrayIndices = WEBGL_COMPONENT_TYPES[accessorDef.sparse.indices.componentType];
+          const byteOffsetIndices = accessorDef.sparse.indices.byteOffset || 0;
+          const byteOffsetValues = accessorDef.sparse.values.byteOffset || 0;
+          const sparseIndices = new TypedArrayIndices(bufferViews[1], byteOffsetIndices, accessorDef.sparse.count * itemSizeIndices);
+          const sparseValues = new TypedArray(bufferViews[2], byteOffsetValues, accessorDef.sparse.count * itemSize);
+          if (bufferView !== null) {
+            bufferAttribute = new BufferAttribute(bufferAttribute.array.slice(), bufferAttribute.itemSize, bufferAttribute.normalized);
+          }
+          for (let i2 = 0, il = sparseIndices.length; i2 < il; i2++) {
+            const index = sparseIndices[i2];
+            bufferAttribute.setX(index, sparseValues[i2 * itemSize]);
+            if (itemSize >= 2) bufferAttribute.setY(index, sparseValues[i2 * itemSize + 1]);
+            if (itemSize >= 3) bufferAttribute.setZ(index, sparseValues[i2 * itemSize + 2]);
+            if (itemSize >= 4) bufferAttribute.setW(index, sparseValues[i2 * itemSize + 3]);
+            if (itemSize >= 5) throw new Error("THREE.GLTFLoader: Unsupported itemSize in sparse BufferAttribute.");
+          }
+        }
+        return bufferAttribute;
+      });
+    }
+    loadTexture(textureIndex) {
+      const json = this.json;
+      const options = this.options;
+      const textureDef = json.textures[textureIndex];
+      const sourceIndex = textureDef.source;
+      const sourceDef = json.images[sourceIndex];
+      let loader = this.textureLoader;
+      if (sourceDef.uri) {
+        const handler = options.manager.getHandler(sourceDef.uri);
+        if (handler !== null) loader = handler;
+      }
+      return this.loadTextureImage(textureIndex, sourceIndex, loader);
+    }
+    loadTextureImage(textureIndex, sourceIndex, loader) {
+      const parser = this;
+      const json = this.json;
+      const textureDef = json.textures[textureIndex];
+      const sourceDef = json.images[sourceIndex];
+      const cacheKey = (sourceDef.uri || sourceDef.bufferView) + ":" + textureDef.sampler;
+      if (this.textureCache[cacheKey]) {
+        return this.textureCache[cacheKey];
+      }
+      const promise = this.loadImageSource(sourceIndex, loader).then(function (texture) {
+        texture.flipY = false;
+        texture.name = textureDef.name || sourceDef.name || "";
+        if (texture.name === "" && typeof sourceDef.uri === "string" && sourceDef.uri.startsWith("data:image/") === false) {
+          texture.name = sourceDef.uri;
+        }
+        const samplers = json.samplers || ({});
+        const sampler = samplers[textureDef.sampler] || ({});
+        texture.magFilter = WEBGL_FILTERS[sampler.magFilter] || LinearFilter;
+        texture.minFilter = WEBGL_FILTERS[sampler.minFilter] || LinearMipmapLinearFilter;
+        texture.wrapS = WEBGL_WRAPPINGS[sampler.wrapS] || RepeatWrapping;
+        texture.wrapT = WEBGL_WRAPPINGS[sampler.wrapT] || RepeatWrapping;
+        parser.associations.set(texture, {
+          textures: textureIndex
+        });
+        return texture;
+      }).catch(function () {
+        return null;
+      });
+      this.textureCache[cacheKey] = promise;
+      return promise;
+    }
+    loadImageSource(sourceIndex, loader) {
+      const parser = this;
+      const json = this.json;
+      const options = this.options;
+      if (this.sourceCache[sourceIndex] !== void 0) {
+        return this.sourceCache[sourceIndex].then(texture => texture.clone());
+      }
+      const sourceDef = json.images[sourceIndex];
+      const URL2 = self.URL || self.webkitURL;
+      let sourceURI = sourceDef.uri || "";
+      let isObjectURL = false;
+      if (sourceDef.bufferView !== void 0) {
+        sourceURI = parser.getDependency("bufferView", sourceDef.bufferView).then(function (bufferView) {
+          isObjectURL = true;
+          const blob = new Blob([bufferView], {
+            type: sourceDef.mimeType
+          });
+          sourceURI = URL2.createObjectURL(blob);
+          return sourceURI;
+        });
+      } else if (sourceDef.uri === void 0) {
+        throw new Error("THREE.GLTFLoader: Image " + sourceIndex + " is missing URI and bufferView");
+      }
+      const promise = Promise.resolve(sourceURI).then(function (sourceURI2) {
+        return new Promise(function (resolve, reject) {
+          let onLoad = resolve;
+          if (loader.isImageBitmapLoader === true) {
+            onLoad = function (imageBitmap) {
+              const texture = new Texture(imageBitmap);
+              texture.needsUpdate = true;
+              resolve(texture);
+            };
+          }
+          loader.load(LoaderUtils.resolveURL(sourceURI2, options.path), onLoad, void 0, reject);
+        });
+      }).then(function (texture) {
+        if (isObjectURL === true) {
+          URL2.revokeObjectURL(sourceURI);
+        }
+        texture.userData.mimeType = sourceDef.mimeType || getImageURIMimeType(sourceDef.uri);
+        return texture;
+      }).catch(function (error) {
+        console.error("THREE.GLTFLoader: Couldn't load texture", sourceURI);
+        throw error;
+      });
+      this.sourceCache[sourceIndex] = promise;
+      return promise;
+    }
+    assignTexture(materialParams, mapName, mapDef, colorSpace) {
+      const parser = this;
+      return this.getDependency("texture", mapDef.index).then(function (texture) {
+        if (!texture) return null;
+        if (mapDef.texCoord !== void 0 && mapDef.texCoord > 0) {
+          texture = texture.clone();
+          texture.channel = mapDef.texCoord;
+        }
+        if (parser.extensions[EXTENSIONS.KHR_TEXTURE_TRANSFORM]) {
+          const transform = mapDef.extensions !== void 0 ? mapDef.extensions[EXTENSIONS.KHR_TEXTURE_TRANSFORM] : void 0;
+          if (transform) {
+            const gltfReference = parser.associations.get(texture);
+            texture = parser.extensions[EXTENSIONS.KHR_TEXTURE_TRANSFORM].extendTexture(texture, transform);
+            parser.associations.set(texture, gltfReference);
+          }
+        }
+        if (colorSpace !== void 0) {
+          texture.colorSpace = colorSpace;
+        }
+        materialParams[mapName] = texture;
+        return texture;
+      });
+    }
+    assignFinalMaterial(mesh) {
+      const geometry = mesh.geometry;
+      let material = mesh.material;
+      const useDerivativeTangents = geometry.attributes.tangent === void 0;
+      const useVertexColors = geometry.attributes.color !== void 0;
+      const useFlatShading = geometry.attributes.normal === void 0;
+      if (mesh.isPoints) {
+        const cacheKey = "PointsMaterial:" + material.uuid;
+        let pointsMaterial = this.cache.get(cacheKey);
+        if (!pointsMaterial) {
+          pointsMaterial = new PointsMaterial();
+          Material.prototype.copy.call(pointsMaterial, material);
+          pointsMaterial.color.copy(material.color);
+          pointsMaterial.map = material.map;
+          pointsMaterial.sizeAttenuation = false;
+          this.cache.add(cacheKey, pointsMaterial);
+        }
+        material = pointsMaterial;
+      } else if (mesh.isLine) {
+        const cacheKey = "LineBasicMaterial:" + material.uuid;
+        let lineMaterial = this.cache.get(cacheKey);
+        if (!lineMaterial) {
+          lineMaterial = new LineBasicMaterial();
+          Material.prototype.copy.call(lineMaterial, material);
+          lineMaterial.color.copy(material.color);
+          lineMaterial.map = material.map;
+          this.cache.add(cacheKey, lineMaterial);
+        }
+        material = lineMaterial;
+      }
+      if (useDerivativeTangents || useVertexColors || useFlatShading) {
+        let cacheKey = "ClonedMaterial:" + material.uuid + ":";
+        if (useDerivativeTangents) cacheKey += "derivative-tangents:";
+        if (useVertexColors) cacheKey += "vertex-colors:";
+        if (useFlatShading) cacheKey += "flat-shading:";
+        let cachedMaterial = this.cache.get(cacheKey);
+        if (!cachedMaterial) {
+          cachedMaterial = material.clone();
+          if (useVertexColors) cachedMaterial.vertexColors = true;
+          if (useFlatShading) cachedMaterial.flatShading = true;
+          if (useDerivativeTangents) {
+            if (cachedMaterial.normalScale) cachedMaterial.normalScale.y *= -1;
+            if (cachedMaterial.clearcoatNormalScale) cachedMaterial.clearcoatNormalScale.y *= -1;
+          }
+          this.cache.add(cacheKey, cachedMaterial);
+          this.associations.set(cachedMaterial, this.associations.get(material));
+        }
+        material = cachedMaterial;
+      }
+      mesh.material = material;
+    }
+    getMaterialType() {
+      return MeshStandardMaterial;
+    }
+    loadMaterial(materialIndex) {
+      const parser = this;
+      const json = this.json;
+      const extensions = this.extensions;
+      const materialDef = json.materials[materialIndex];
+      let materialType;
+      const materialParams = {};
+      const materialExtensions = materialDef.extensions || ({});
+      const pending = [];
+      if (materialExtensions[EXTENSIONS.KHR_MATERIALS_UNLIT]) {
+        const kmuExtension = extensions[EXTENSIONS.KHR_MATERIALS_UNLIT];
+        materialType = kmuExtension.getMaterialType();
+        pending.push(kmuExtension.extendParams(materialParams, materialDef, parser));
+      } else {
+        const metallicRoughness = materialDef.pbrMetallicRoughness || ({});
+        materialParams.color = new Color(1, 1, 1);
+        materialParams.opacity = 1;
+        if (Array.isArray(metallicRoughness.baseColorFactor)) {
+          const array = metallicRoughness.baseColorFactor;
+          materialParams.color.setRGB(array[0], array[1], array[2], LinearSRGBColorSpace);
+          materialParams.opacity = array[3];
+        }
+        if (metallicRoughness.baseColorTexture !== void 0) {
+          pending.push(parser.assignTexture(materialParams, "map", metallicRoughness.baseColorTexture, SRGBColorSpace));
+        }
+        materialParams.metalness = metallicRoughness.metallicFactor !== void 0 ? metallicRoughness.metallicFactor : 1;
+        materialParams.roughness = metallicRoughness.roughnessFactor !== void 0 ? metallicRoughness.roughnessFactor : 1;
+        if (metallicRoughness.metallicRoughnessTexture !== void 0) {
+          pending.push(parser.assignTexture(materialParams, "metalnessMap", metallicRoughness.metallicRoughnessTexture));
+          pending.push(parser.assignTexture(materialParams, "roughnessMap", metallicRoughness.metallicRoughnessTexture));
+        }
+        materialType = this._invokeOne(function (ext) {
+          return ext.getMaterialType && ext.getMaterialType(materialIndex);
+        });
+        pending.push(Promise.all(this._invokeAll(function (ext) {
+          return ext.extendMaterialParams && ext.extendMaterialParams(materialIndex, materialParams);
+        })));
+      }
+      if (materialDef.doubleSided === true) {
+        materialParams.side = DoubleSide;
+      }
+      const alphaMode = materialDef.alphaMode || ALPHA_MODES.OPAQUE;
+      if (alphaMode === ALPHA_MODES.BLEND) {
+        materialParams.transparent = true;
+        materialParams.depthWrite = false;
+      } else {
+        materialParams.transparent = false;
+        if (alphaMode === ALPHA_MODES.MASK) {
+          materialParams.alphaTest = materialDef.alphaCutoff !== void 0 ? materialDef.alphaCutoff : 0.5;
+        }
+      }
+      if (materialDef.normalTexture !== void 0 && materialType !== MeshBasicMaterial) {
+        pending.push(parser.assignTexture(materialParams, "normalMap", materialDef.normalTexture));
+        materialParams.normalScale = new Vector2(1, 1);
+        if (materialDef.normalTexture.scale !== void 0) {
+          const scale = materialDef.normalTexture.scale;
+          materialParams.normalScale.set(scale, scale);
+        }
+      }
+      if (materialDef.occlusionTexture !== void 0 && materialType !== MeshBasicMaterial) {
+        pending.push(parser.assignTexture(materialParams, "aoMap", materialDef.occlusionTexture));
+        if (materialDef.occlusionTexture.strength !== void 0) {
+          materialParams.aoMapIntensity = materialDef.occlusionTexture.strength;
+        }
+      }
+      if (materialDef.emissiveFactor !== void 0 && materialType !== MeshBasicMaterial) {
+        const emissiveFactor = materialDef.emissiveFactor;
+        materialParams.emissive = new Color().setRGB(emissiveFactor[0], emissiveFactor[1], emissiveFactor[2], LinearSRGBColorSpace);
+      }
+      if (materialDef.emissiveTexture !== void 0 && materialType !== MeshBasicMaterial) {
+        pending.push(parser.assignTexture(materialParams, "emissiveMap", materialDef.emissiveTexture, SRGBColorSpace));
+      }
+      return Promise.all(pending).then(function () {
+        const material = new materialType(materialParams);
+        if (materialDef.name) material.name = materialDef.name;
+        assignExtrasToUserData(material, materialDef);
+        parser.associations.set(material, {
+          materials: materialIndex
+        });
+        if (materialDef.extensions) addUnknownExtensionsToUserData(extensions, material, materialDef);
+        return material;
+      });
+    }
+    createUniqueName(originalName) {
+      const sanitizedName = PropertyBinding.sanitizeNodeName(originalName || "");
+      if ((sanitizedName in this.nodeNamesUsed)) {
+        return sanitizedName + "_" + ++this.nodeNamesUsed[sanitizedName];
+      } else {
+        this.nodeNamesUsed[sanitizedName] = 0;
+        return sanitizedName;
+      }
+    }
+    loadGeometries(primitives) {
+      const parser = this;
+      const extensions = this.extensions;
+      const cache = this.primitiveCache;
+      function createDracoPrimitive(primitive) {
+        return extensions[EXTENSIONS.KHR_DRACO_MESH_COMPRESSION].decodePrimitive(primitive, parser).then(function (geometry) {
+          return addPrimitiveAttributes(geometry, primitive, parser);
+        });
+      }
+      const pending = [];
+      for (let i2 = 0, il = primitives.length; i2 < il; i2++) {
+        const primitive = primitives[i2];
+        const cacheKey = createPrimitiveKey(primitive);
+        const cached = cache[cacheKey];
+        if (cached) {
+          pending.push(cached.promise);
+        } else {
+          let geometryPromise;
+          if (primitive.extensions && primitive.extensions[EXTENSIONS.KHR_DRACO_MESH_COMPRESSION]) {
+            geometryPromise = createDracoPrimitive(primitive);
+          } else {
+            geometryPromise = addPrimitiveAttributes(new BufferGeometry(), primitive, parser);
+          }
+          cache[cacheKey] = {
+            primitive,
+            promise: geometryPromise
+          };
+          pending.push(geometryPromise);
+        }
+      }
+      return Promise.all(pending);
+    }
+    loadMesh(meshIndex) {
+      const parser = this;
+      const json = this.json;
+      const extensions = this.extensions;
+      const meshDef = json.meshes[meshIndex];
+      const primitives = meshDef.primitives;
+      const pending = [];
+      for (let i2 = 0, il = primitives.length; i2 < il; i2++) {
+        const material = primitives[i2].material === void 0 ? createDefaultMaterial(this.cache) : this.getDependency("material", primitives[i2].material);
+        pending.push(material);
+      }
+      pending.push(parser.loadGeometries(primitives));
+      return Promise.all(pending).then(function (results) {
+        const materials = results.slice(0, results.length - 1);
+        const geometries = results[results.length - 1];
+        const meshes = [];
+        for (let i2 = 0, il = geometries.length; i2 < il; i2++) {
+          const geometry = geometries[i2];
+          const primitive = primitives[i2];
+          let mesh;
+          const material = materials[i2];
+          if (primitive.mode === WEBGL_CONSTANTS.TRIANGLES || primitive.mode === WEBGL_CONSTANTS.TRIANGLE_STRIP || primitive.mode === WEBGL_CONSTANTS.TRIANGLE_FAN || primitive.mode === void 0) {
+            mesh = meshDef.isSkinnedMesh === true ? new SkinnedMesh(geometry, material) : new Mesh(geometry, material);
+            if (mesh.isSkinnedMesh === true) {
+              mesh.normalizeSkinWeights();
+            }
+            if (primitive.mode === WEBGL_CONSTANTS.TRIANGLE_STRIP) {
+              mesh.geometry = toTrianglesDrawMode(mesh.geometry, TriangleStripDrawMode);
+            } else if (primitive.mode === WEBGL_CONSTANTS.TRIANGLE_FAN) {
+              mesh.geometry = toTrianglesDrawMode(mesh.geometry, TriangleFanDrawMode);
+            }
+          } else if (primitive.mode === WEBGL_CONSTANTS.LINES) {
+            mesh = new LineSegments(geometry, material);
+          } else if (primitive.mode === WEBGL_CONSTANTS.LINE_STRIP) {
+            mesh = new Line(geometry, material);
+          } else if (primitive.mode === WEBGL_CONSTANTS.LINE_LOOP) {
+            mesh = new LineLoop(geometry, material);
+          } else if (primitive.mode === WEBGL_CONSTANTS.POINTS) {
+            mesh = new Points(geometry, material);
+          } else {
+            throw new Error("THREE.GLTFLoader: Primitive mode unsupported: " + primitive.mode);
+          }
+          if (Object.keys(mesh.geometry.morphAttributes).length > 0) {
+            updateMorphTargets(mesh, meshDef);
+          }
+          mesh.name = parser.createUniqueName(meshDef.name || "mesh_" + meshIndex);
+          assignExtrasToUserData(mesh, meshDef);
+          if (primitive.extensions) addUnknownExtensionsToUserData(extensions, mesh, primitive);
+          parser.assignFinalMaterial(mesh);
+          meshes.push(mesh);
+        }
+        for (let i2 = 0, il = meshes.length; i2 < il; i2++) {
+          parser.associations.set(meshes[i2], {
+            meshes: meshIndex,
+            primitives: i2
+          });
+        }
+        if (meshes.length === 1) {
+          if (meshDef.extensions) addUnknownExtensionsToUserData(extensions, meshes[0], meshDef);
+          return meshes[0];
+        }
+        const group = new Group();
+        if (meshDef.extensions) addUnknownExtensionsToUserData(extensions, group, meshDef);
+        parser.associations.set(group, {
+          meshes: meshIndex
+        });
+        for (let i2 = 0, il = meshes.length; i2 < il; i2++) {
+          group.add(meshes[i2]);
+        }
+        return group;
+      });
+    }
+    loadCamera(cameraIndex) {
+      let camera;
+      const cameraDef = this.json.cameras[cameraIndex];
+      const params = cameraDef[cameraDef.type];
+      if (!params) {
+        console.warn("THREE.GLTFLoader: Missing camera parameters.");
+        return;
+      }
+      if (cameraDef.type === "perspective") {
+        camera = new PerspectiveCamera(MathUtils.radToDeg(params.yfov), params.aspectRatio || 1, params.znear || 1, params.zfar || 2e6);
+      } else if (cameraDef.type === "orthographic") {
+        camera = new OrthographicCamera(-params.xmag, params.xmag, params.ymag, -params.ymag, params.znear, params.zfar);
+      }
+      if (cameraDef.name) camera.name = this.createUniqueName(cameraDef.name);
+      assignExtrasToUserData(camera, cameraDef);
+      return Promise.resolve(camera);
+    }
+    loadSkin(skinIndex) {
+      const skinDef = this.json.skins[skinIndex];
+      const pending = [];
+      for (let i2 = 0, il = skinDef.joints.length; i2 < il; i2++) {
+        pending.push(this._loadNodeShallow(skinDef.joints[i2]));
+      }
+      if (skinDef.inverseBindMatrices !== void 0) {
+        pending.push(this.getDependency("accessor", skinDef.inverseBindMatrices));
+      } else {
+        pending.push(null);
+      }
+      return Promise.all(pending).then(function (results) {
+        const inverseBindMatrices = results.pop();
+        const jointNodes = results;
+        const bones = [];
+        const boneInverses = [];
+        for (let i2 = 0, il = jointNodes.length; i2 < il; i2++) {
+          const jointNode = jointNodes[i2];
+          if (jointNode) {
+            bones.push(jointNode);
+            const mat = new Matrix4();
+            if (inverseBindMatrices !== null) {
+              mat.fromArray(inverseBindMatrices.array, i2 * 16);
+            }
+            boneInverses.push(mat);
+          } else {
+            console.warn('THREE.GLTFLoader: Joint "%s" could not be found.', skinDef.joints[i2]);
+          }
+        }
+        return new Skeleton(bones, boneInverses);
+      });
+    }
+    loadAnimation(animationIndex) {
+      const json = this.json;
+      const parser = this;
+      const animationDef = json.animations[animationIndex];
+      const animationName = animationDef.name ? animationDef.name : "animation_" + animationIndex;
+      const pendingNodes = [];
+      const pendingInputAccessors = [];
+      const pendingOutputAccessors = [];
+      const pendingSamplers = [];
+      const pendingTargets = [];
+      for (let i2 = 0, il = animationDef.channels.length; i2 < il; i2++) {
+        const channel = animationDef.channels[i2];
+        const sampler = animationDef.samplers[channel.sampler];
+        const target = channel.target;
+        const name = target.node;
+        const input = animationDef.parameters !== void 0 ? animationDef.parameters[sampler.input] : sampler.input;
+        const output = animationDef.parameters !== void 0 ? animationDef.parameters[sampler.output] : sampler.output;
+        if (target.node === void 0) continue;
+        pendingNodes.push(this.getDependency("node", name));
+        pendingInputAccessors.push(this.getDependency("accessor", input));
+        pendingOutputAccessors.push(this.getDependency("accessor", output));
+        pendingSamplers.push(sampler);
+        pendingTargets.push(target);
+      }
+      return Promise.all([Promise.all(pendingNodes), Promise.all(pendingInputAccessors), Promise.all(pendingOutputAccessors), Promise.all(pendingSamplers), Promise.all(pendingTargets)]).then(function (dependencies) {
+        const nodes = dependencies[0];
+        const inputAccessors = dependencies[1];
+        const outputAccessors = dependencies[2];
+        const samplers = dependencies[3];
+        const targets = dependencies[4];
+        const tracks = [];
+        for (let i2 = 0, il = nodes.length; i2 < il; i2++) {
+          const node = nodes[i2];
+          const inputAccessor = inputAccessors[i2];
+          const outputAccessor = outputAccessors[i2];
+          const sampler = samplers[i2];
+          const target = targets[i2];
+          if (node === void 0) continue;
+          if (node.updateMatrix) {
+            node.updateMatrix();
+          }
+          const createdTracks = parser._createAnimationTracks(node, inputAccessor, outputAccessor, sampler, target);
+          if (createdTracks) {
+            for (let k2 = 0; k2 < createdTracks.length; k2++) {
+              tracks.push(createdTracks[k2]);
+            }
+          }
+        }
+        return new AnimationClip(animationName, void 0, tracks);
+      });
+    }
+    createNodeMesh(nodeIndex) {
+      const json = this.json;
+      const parser = this;
+      const nodeDef = json.nodes[nodeIndex];
+      if (nodeDef.mesh === void 0) return null;
+      return parser.getDependency("mesh", nodeDef.mesh).then(function (mesh) {
+        const node = parser._getNodeRef(parser.meshCache, nodeDef.mesh, mesh);
+        if (nodeDef.weights !== void 0) {
+          node.traverse(function (o2) {
+            if (!o2.isMesh) return;
+            for (let i2 = 0, il = nodeDef.weights.length; i2 < il; i2++) {
+              o2.morphTargetInfluences[i2] = nodeDef.weights[i2];
+            }
+          });
+        }
+        return node;
+      });
+    }
+    loadNode(nodeIndex) {
+      const json = this.json;
+      const parser = this;
+      const nodeDef = json.nodes[nodeIndex];
+      const nodePending = parser._loadNodeShallow(nodeIndex);
+      const childPending = [];
+      const childrenDef = nodeDef.children || [];
+      for (let i2 = 0, il = childrenDef.length; i2 < il; i2++) {
+        childPending.push(parser.getDependency("node", childrenDef[i2]));
+      }
+      const skeletonPending = nodeDef.skin === void 0 ? Promise.resolve(null) : parser.getDependency("skin", nodeDef.skin);
+      return Promise.all([nodePending, Promise.all(childPending), skeletonPending]).then(function (results) {
+        const node = results[0];
+        const children = results[1];
+        const skeleton = results[2];
+        if (skeleton !== null) {
+          node.traverse(function (mesh) {
+            if (!mesh.isSkinnedMesh) return;
+            mesh.bind(skeleton, _identityMatrix);
+          });
+        }
+        for (let i2 = 0, il = children.length; i2 < il; i2++) {
+          node.add(children[i2]);
+        }
+        return node;
+      });
+    }
+    _loadNodeShallow(nodeIndex) {
+      const json = this.json;
+      const extensions = this.extensions;
+      const parser = this;
+      if (this.nodeCache[nodeIndex] !== void 0) {
+        return this.nodeCache[nodeIndex];
+      }
+      const nodeDef = json.nodes[nodeIndex];
+      const nodeName = nodeDef.name ? parser.createUniqueName(nodeDef.name) : "";
+      const pending = [];
+      const meshPromise = parser._invokeOne(function (ext) {
+        return ext.createNodeMesh && ext.createNodeMesh(nodeIndex);
+      });
+      if (meshPromise) {
+        pending.push(meshPromise);
+      }
+      if (nodeDef.camera !== void 0) {
+        pending.push(parser.getDependency("camera", nodeDef.camera).then(function (camera) {
+          return parser._getNodeRef(parser.cameraCache, nodeDef.camera, camera);
+        }));
+      }
+      parser._invokeAll(function (ext) {
+        return ext.createNodeAttachment && ext.createNodeAttachment(nodeIndex);
+      }).forEach(function (promise) {
+        pending.push(promise);
+      });
+      this.nodeCache[nodeIndex] = Promise.all(pending).then(function (objects) {
+        let node;
+        if (nodeDef.isBone === true) {
+          node = new Bone();
+        } else if (objects.length > 1) {
+          node = new Group();
+        } else if (objects.length === 1) {
+          node = objects[0];
+        } else {
+          node = new Object3D();
+        }
+        if (node !== objects[0]) {
+          for (let i2 = 0, il = objects.length; i2 < il; i2++) {
+            node.add(objects[i2]);
+          }
+        }
+        if (nodeDef.name) {
+          node.userData.name = nodeDef.name;
+          node.name = nodeName;
+        }
+        assignExtrasToUserData(node, nodeDef);
+        if (nodeDef.extensions) addUnknownExtensionsToUserData(extensions, node, nodeDef);
+        if (nodeDef.matrix !== void 0) {
+          const matrix = new Matrix4();
+          matrix.fromArray(nodeDef.matrix);
+          node.applyMatrix4(matrix);
+        } else {
+          if (nodeDef.translation !== void 0) {
+            node.position.fromArray(nodeDef.translation);
+          }
+          if (nodeDef.rotation !== void 0) {
+            node.quaternion.fromArray(nodeDef.rotation);
+          }
+          if (nodeDef.scale !== void 0) {
+            node.scale.fromArray(nodeDef.scale);
+          }
+        }
+        if (!parser.associations.has(node)) {
+          parser.associations.set(node, {});
+        }
+        parser.associations.get(node).nodes = nodeIndex;
+        return node;
+      });
+      return this.nodeCache[nodeIndex];
+    }
+    loadScene(sceneIndex) {
+      const extensions = this.extensions;
+      const sceneDef = this.json.scenes[sceneIndex];
+      const parser = this;
+      const scene = new Group();
+      if (sceneDef.name) scene.name = parser.createUniqueName(sceneDef.name);
+      assignExtrasToUserData(scene, sceneDef);
+      if (sceneDef.extensions) addUnknownExtensionsToUserData(extensions, scene, sceneDef);
+      const nodeIds = sceneDef.nodes || [];
+      const pending = [];
+      for (let i2 = 0, il = nodeIds.length; i2 < il; i2++) {
+        pending.push(parser.getDependency("node", nodeIds[i2]));
+      }
+      return Promise.all(pending).then(function (nodes) {
+        for (let i2 = 0, il = nodes.length; i2 < il; i2++) {
+          scene.add(nodes[i2]);
+        }
+        const reduceAssociations = node => {
+          const reducedAssociations = new Map();
+          for (const [key, value] of parser.associations) {
+            if (key instanceof Material || key instanceof Texture) {
+              reducedAssociations.set(key, value);
+            }
+          }
+          node.traverse(node2 => {
+            const mappings = parser.associations.get(node2);
+            if (mappings != null) {
+              reducedAssociations.set(node2, mappings);
+            }
+          });
+          return reducedAssociations;
+        };
+        parser.associations = reduceAssociations(scene);
+        return scene;
+      });
+    }
+    _createAnimationTracks(node, inputAccessor, outputAccessor, sampler, target) {
+      const tracks = [];
+      const targetName = node.name ? node.name : node.uuid;
+      const targetNames = [];
+      if (PATH_PROPERTIES[target.path] === PATH_PROPERTIES.weights) {
+        node.traverse(function (object) {
+          if (object.morphTargetInfluences) {
+            targetNames.push(object.name ? object.name : object.uuid);
+          }
+        });
+      } else {
+        targetNames.push(targetName);
+      }
+      let TypedKeyframeTrack;
+      switch (PATH_PROPERTIES[target.path]) {
+        case PATH_PROPERTIES.weights:
+          TypedKeyframeTrack = NumberKeyframeTrack;
+          break;
+        case PATH_PROPERTIES.rotation:
+          TypedKeyframeTrack = QuaternionKeyframeTrack;
+          break;
+        case PATH_PROPERTIES.position:
+        case PATH_PROPERTIES.scale:
+          TypedKeyframeTrack = VectorKeyframeTrack;
+          break;
+        default:
+          switch (outputAccessor.itemSize) {
+            case 1:
+              TypedKeyframeTrack = NumberKeyframeTrack;
+              break;
+            case 2:
+            case 3:
+            default:
+              TypedKeyframeTrack = VectorKeyframeTrack;
+              break;
+          }
+          break;
+      }
+      const interpolation = sampler.interpolation !== void 0 ? INTERPOLATION[sampler.interpolation] : InterpolateLinear;
+      const outputArray = this._getArrayFromAccessor(outputAccessor);
+      for (let j2 = 0, jl = targetNames.length; j2 < jl; j2++) {
+        const track = new TypedKeyframeTrack(targetNames[j2] + "." + PATH_PROPERTIES[target.path], inputAccessor.array, outputArray, interpolation);
+        if (sampler.interpolation === "CUBICSPLINE") {
+          this._createCubicSplineTrackInterpolant(track);
+        }
+        tracks.push(track);
+      }
+      return tracks;
+    }
+    _getArrayFromAccessor(accessor) {
+      let outputArray = accessor.array;
+      if (accessor.normalized) {
+        const scale = getNormalizedComponentScale(outputArray.constructor);
+        const scaled = new Float32Array(outputArray.length);
+        for (let j2 = 0, jl = outputArray.length; j2 < jl; j2++) {
+          scaled[j2] = outputArray[j2] * scale;
+        }
+        outputArray = scaled;
+      }
+      return outputArray;
+    }
+    _createCubicSplineTrackInterpolant(track) {
+      track.createInterpolant = function InterpolantFactoryMethodGLTFCubicSpline(result) {
+        const interpolantType = this instanceof QuaternionKeyframeTrack ? GLTFCubicSplineQuaternionInterpolant : GLTFCubicSplineInterpolant;
+        return new interpolantType(this.times, this.values, this.getValueSize() / 3, result);
+      };
+      track.createInterpolant.isInterpolantFactoryMethodGLTFCubicSpline = true;
+    }
+  };
+  function computeBounds(geometry, primitiveDef, parser) {
+    const attributes = primitiveDef.attributes;
+    const box = new Box3();
+    if (attributes.POSITION !== void 0) {
+      const accessor = parser.json.accessors[attributes.POSITION];
+      const min = accessor.min;
+      const max = accessor.max;
+      if (min !== void 0 && max !== void 0) {
+        box.set(new Vector3(min[0], min[1], min[2]), new Vector3(max[0], max[1], max[2]));
+        if (accessor.normalized) {
+          const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
+          box.min.multiplyScalar(boxScale);
+          box.max.multiplyScalar(boxScale);
+        }
+      } else {
+        console.warn("THREE.GLTFLoader: Missing min/max properties for accessor POSITION.");
+        return;
+      }
+    } else {
+      return;
+    }
+    const targets = primitiveDef.targets;
+    if (targets !== void 0) {
+      const maxDisplacement = new Vector3();
+      const vector = new Vector3();
+      for (let i2 = 0, il = targets.length; i2 < il; i2++) {
+        const target = targets[i2];
+        if (target.POSITION !== void 0) {
+          const accessor = parser.json.accessors[target.POSITION];
+          const min = accessor.min;
+          const max = accessor.max;
+          if (min !== void 0 && max !== void 0) {
+            vector.setX(Math.max(Math.abs(min[0]), Math.abs(max[0])));
+            vector.setY(Math.max(Math.abs(min[1]), Math.abs(max[1])));
+            vector.setZ(Math.max(Math.abs(min[2]), Math.abs(max[2])));
+            if (accessor.normalized) {
+              const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
+              vector.multiplyScalar(boxScale);
+            }
+            maxDisplacement.max(vector);
+          } else {
+            console.warn("THREE.GLTFLoader: Missing min/max properties for accessor POSITION.");
+          }
+        }
+      }
+      box.expandByVector(maxDisplacement);
+    }
+    geometry.boundingBox = box;
+    const sphere = new Sphere();
+    box.getCenter(sphere.center);
+    sphere.radius = box.min.distanceTo(box.max) / 2;
+    geometry.boundingSphere = sphere;
+  }
+  function addPrimitiveAttributes(geometry, primitiveDef, parser) {
+    const attributes = primitiveDef.attributes;
+    const pending = [];
+    function assignAttributeAccessor(accessorIndex, attributeName) {
+      return parser.getDependency("accessor", accessorIndex).then(function (accessor) {
+        geometry.setAttribute(attributeName, accessor);
+      });
+    }
+    for (const gltfAttributeName in attributes) {
+      const threeAttributeName = ATTRIBUTES[gltfAttributeName] || gltfAttributeName.toLowerCase();
+      if ((threeAttributeName in geometry.attributes)) continue;
+      pending.push(assignAttributeAccessor(attributes[gltfAttributeName], threeAttributeName));
+    }
+    if (primitiveDef.indices !== void 0 && !geometry.index) {
+      const accessor = parser.getDependency("accessor", primitiveDef.indices).then(function (accessor2) {
+        geometry.setIndex(accessor2);
+      });
+      pending.push(accessor);
+    }
+    if (ColorManagement.workingColorSpace !== LinearSRGBColorSpace && ("COLOR_0" in attributes)) {
+      console.warn(`THREE.GLTFLoader: Converting vertex colors from "srgb-linear" to "${ColorManagement.workingColorSpace}" not supported.`);
+    }
+    assignExtrasToUserData(geometry, primitiveDef);
+    computeBounds(geometry, primitiveDef, parser);
+    return Promise.all(pending).then(function () {
+      return primitiveDef.targets !== void 0 ? addMorphTargets(geometry, primitiveDef.targets, parser) : geometry;
+    });
+  }
+  init_define_process();
+  init_define_process();
+  init_define_process();
   var ProgramError = class extends Error {
     constructor(message) {
       super(message);
       this.name = "ProgramError";
     }
   };
+  init_define_process();
+  init_define_process();
+  init_define_process();
   var A;
   var I = new Array(32).fill(void 0);
   function g(A2) {
@@ -24781,6 +32946,7 @@ void main() {
     CharacterCollision: tI,
     KinematicCharacterController: pI
   });
+  init_define_process();
   var TypedEventTarget = class {
     constructor() {
       this.listeners = {};
@@ -24801,6 +32967,7 @@ void main() {
       return true;
     }
   };
+  init_define_process();
   var Timer = class {
     constructor() {
       this._isRunning = false;
@@ -24842,6 +33009,7 @@ void main() {
       };
     }
   };
+  init_define_process();
   var simpleVectorLength = vector => Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
   var TimeStampedEvent = class extends Event {
     constructor(type, frameTimingInfo) {
@@ -24867,7 +33035,7 @@ void main() {
         this.internals = {
           initialized: true,
           world,
-          accumulator: 0,
+          accumulator: world.timestep,
           stepCount: 0
         };
       });
@@ -24905,20 +33073,65 @@ void main() {
       }
       const maxFrameTime = 0.05;
       const frameDuration = timing.frameDuration / 1e3;
-      this.internals.accumulator -= Math.min(frameDuration, maxFrameTime);
+      this.internals.accumulator += Math.min(frameDuration, maxFrameTime);
       const currentPhysicsTimingInfo = __spreadProps(__spreadValues({}, timing), {
         stepCount: this.internals.stepCount,
-        timestep: this.configuration.timestep * 1e3
+        timestep: this.configuration.timestep * 1e3,
+        residualFactor: this.internals.accumulator / this.configuration.timestep
       });
-      while (this.internals.accumulator <= 0) {
+      while (this.internals.accumulator >= this.configuration.timestep) {
         this.dispatchEvent("beforePhysicsUpdate", new TimeStampedEvent("beforePhysicsUpdate", currentPhysicsTimingInfo));
         this.internals.world.step();
         this.internals.stepCount += 1;
         currentPhysicsTimingInfo.stepCount = this.internals.stepCount;
         this.dispatchEvent("afterPhysicsUpdate", new TimeStampedEvent("afterPhysicsUpdate", currentPhysicsTimingInfo));
-        this.internals.accumulator += this.configuration.timestep;
+        this.internals.accumulator -= this.configuration.timestep;
+        currentPhysicsTimingInfo.residualFactor = this.internals.accumulator / this.configuration.timestep;
       }
       return currentPhysicsTimingInfo;
+    }
+  };
+  var ControllerMap = class {
+    constructor(map, callbacks) {
+      this.map = map;
+      this.callbacks = callbacks;
+    }
+    get(name) {
+      return this.map[name];
+    }
+    start() {
+      return __async(this, null, function* () {
+        var _a, _b;
+        yield (_b = (_a = this.callbacks) == null ? void 0 : _a.start) == null ? void 0 : _b.call(_a);
+        yield Promise.all(Object.values(this.map).map(controller => __async(this, null, function* () {
+          var _a2;
+          yield (_a2 = controller.start) == null ? void 0 : _a2.call(controller);
+        })));
+      });
+    }
+    update(timingInfo) {
+      var _a, _b;
+      (_b = (_a = this.callbacks) == null ? void 0 : _a.update) == null ? void 0 : _b.call(_a, timingInfo);
+      Object.values(this.map).forEach(controller => {
+        var _a2;
+        (_a2 = controller.update) == null ? void 0 : _a2.call(controller, timingInfo);
+      });
+    }
+    fixedUpdate(timingInfo) {
+      var _a, _b;
+      (_b = (_a = this.callbacks) == null ? void 0 : _a.fixedUpdate) == null ? void 0 : _b.call(_a, timingInfo);
+      Object.values(this.map).forEach(controller => {
+        var _a2;
+        (_a2 = controller.fixedUpdate) == null ? void 0 : _a2.call(controller, timingInfo);
+      });
+    }
+    onDestroy() {
+      var _a, _b;
+      (_b = (_a = this.callbacks) == null ? void 0 : _a.onDestroy) == null ? void 0 : _b.call(_a);
+      Object.values(this.map).forEach(controller => {
+        var _a2;
+        (_a2 = controller.onDestroy) == null ? void 0 : _a2.call(controller);
+      });
     }
   };
   var ControllerGroup = class {
@@ -24931,31 +33144,32 @@ void main() {
     start() {
       return __async(this, null, function* () {
         yield Promise.all(this.controllers.map(controller => __async(this, null, function* () {
-          var _a2;
-          yield (_a2 = controller.start) == null ? void 0 : _a2.call(controller);
+          var _a;
+          yield (_a = controller.start) == null ? void 0 : _a.call(controller);
         })));
       });
     }
     update(timingInfo) {
       this.controllers.forEach(controller => {
-        var _a2;
-        (_a2 = controller.update) == null ? void 0 : _a2.call(controller, timingInfo);
+        var _a;
+        (_a = controller.update) == null ? void 0 : _a.call(controller, timingInfo);
       });
     }
     fixedUpdate(timingInfo) {
       this.controllers.forEach(controller => {
-        var _a2;
-        (_a2 = controller.fixedUpdate) == null ? void 0 : _a2.call(controller, timingInfo);
+        var _a;
+        (_a = controller.fixedUpdate) == null ? void 0 : _a.call(controller, timingInfo);
       });
     }
     onDestroy() {
       this.controllers.forEach(controller => {
-        var _a2;
-        (_a2 = controller.onDestroy) == null ? void 0 : _a2.call(controller);
+        var _a;
+        (_a = controller.onDestroy) == null ? void 0 : _a.call(controller);
       });
       this.controllers = [];
     }
   };
+  init_define_process();
   var RobotConsole = class {
     constructor() {
       this.logs = [];
@@ -24971,6 +33185,8 @@ void main() {
       return this.logs;
     }
   };
+  init_define_process();
+  init_define_process();
   var _changeEvent = {
     type: "change"
   };
@@ -25776,2416 +33992,20 @@ void main() {
       this.update();
     }
   };
-  function toTrianglesDrawMode(geometry, drawMode) {
-    if (drawMode === TrianglesDrawMode) {
-      console.warn("THREE.BufferGeometryUtils.toTrianglesDrawMode(): Geometry already defined as triangles.");
-      return geometry;
-    }
-    if (drawMode === TriangleFanDrawMode || drawMode === TriangleStripDrawMode) {
-      let index = geometry.getIndex();
-      if (index === null) {
-        const indices = [];
-        const position = geometry.getAttribute("position");
-        if (position !== void 0) {
-          for (let i2 = 0; i2 < position.count; i2++) {
-            indices.push(i2);
-          }
-          geometry.setIndex(indices);
-          index = geometry.getIndex();
-        } else {
-          console.error("THREE.BufferGeometryUtils.toTrianglesDrawMode(): Undefined position attribute. Processing not possible.");
-          return geometry;
-        }
-      }
-      const numberOfTriangles = index.count - 2;
-      const newIndices = [];
-      if (drawMode === TriangleFanDrawMode) {
-        for (let i2 = 1; i2 <= numberOfTriangles; i2++) {
-          newIndices.push(index.getX(0));
-          newIndices.push(index.getX(i2));
-          newIndices.push(index.getX(i2 + 1));
-        }
-      } else {
-        for (let i2 = 0; i2 < numberOfTriangles; i2++) {
-          if (i2 % 2 === 0) {
-            newIndices.push(index.getX(i2));
-            newIndices.push(index.getX(i2 + 1));
-            newIndices.push(index.getX(i2 + 2));
-          } else {
-            newIndices.push(index.getX(i2 + 2));
-            newIndices.push(index.getX(i2 + 1));
-            newIndices.push(index.getX(i2));
-          }
-        }
-      }
-      if (newIndices.length / 3 !== numberOfTriangles) {
-        console.error("THREE.BufferGeometryUtils.toTrianglesDrawMode(): Unable to generate correct amount of triangles.");
-      }
-      const newGeometry = geometry.clone();
-      newGeometry.setIndex(newIndices);
-      newGeometry.clearGroups();
-      return newGeometry;
-    } else {
-      console.error("THREE.BufferGeometryUtils.toTrianglesDrawMode(): Unknown draw mode:", drawMode);
-      return geometry;
-    }
-  }
-  var GLTFLoader = class extends Loader {
-    constructor(manager) {
-      super(manager);
-      this.dracoLoader = null;
-      this.ktx2Loader = null;
-      this.meshoptDecoder = null;
-      this.pluginCallbacks = [];
-      this.register(function (parser) {
-        return new GLTFMaterialsClearcoatExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFTextureBasisUExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFTextureWebPExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFTextureAVIFExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsSheenExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsTransmissionExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsVolumeExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsIorExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsEmissiveStrengthExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsSpecularExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsIridescenceExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsAnisotropyExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMaterialsBumpExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFLightsExtension(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMeshoptCompression(parser);
-      });
-      this.register(function (parser) {
-        return new GLTFMeshGpuInstancing(parser);
-      });
-    }
-    load(url, onLoad, onProgress, onError) {
-      const scope = this;
-      let resourcePath;
-      if (this.resourcePath !== "") {
-        resourcePath = this.resourcePath;
-      } else if (this.path !== "") {
-        const relativeUrl = LoaderUtils.extractUrlBase(url);
-        resourcePath = LoaderUtils.resolveURL(relativeUrl, this.path);
-      } else {
-        resourcePath = LoaderUtils.extractUrlBase(url);
-      }
-      this.manager.itemStart(url);
-      const _onError = function (e2) {
-        if (onError) {
-          onError(e2);
-        } else {
-          console.error(e2);
-        }
-        scope.manager.itemError(url);
-        scope.manager.itemEnd(url);
-      };
-      const loader = new FileLoader(this.manager);
-      loader.setPath(this.path);
-      loader.setResponseType("arraybuffer");
-      loader.setRequestHeader(this.requestHeader);
-      loader.setWithCredentials(this.withCredentials);
-      loader.load(url, function (data) {
-        try {
-          scope.parse(data, resourcePath, function (gltf) {
-            onLoad(gltf);
-            scope.manager.itemEnd(url);
-          }, _onError);
-        } catch (e2) {
-          _onError(e2);
-        }
-      }, onProgress, _onError);
-    }
-    setDRACOLoader(dracoLoader) {
-      this.dracoLoader = dracoLoader;
-      return this;
-    }
-    setDDSLoader() {
-      throw new Error('THREE.GLTFLoader: "MSFT_texture_dds" no longer supported. Please update to "KHR_texture_basisu".');
-    }
-    setKTX2Loader(ktx2Loader) {
-      this.ktx2Loader = ktx2Loader;
-      return this;
-    }
-    setMeshoptDecoder(meshoptDecoder) {
-      this.meshoptDecoder = meshoptDecoder;
-      return this;
-    }
-    register(callback) {
-      if (this.pluginCallbacks.indexOf(callback) === -1) {
-        this.pluginCallbacks.push(callback);
-      }
-      return this;
-    }
-    unregister(callback) {
-      if (this.pluginCallbacks.indexOf(callback) !== -1) {
-        this.pluginCallbacks.splice(this.pluginCallbacks.indexOf(callback), 1);
-      }
-      return this;
-    }
-    parse(data, path, onLoad, onError) {
-      let json;
-      const extensions = {};
-      const plugins = {};
-      const textDecoder = new TextDecoder();
-      if (typeof data === "string") {
-        json = JSON.parse(data);
-      } else if (data instanceof ArrayBuffer) {
-        const magic = textDecoder.decode(new Uint8Array(data, 0, 4));
-        if (magic === BINARY_EXTENSION_HEADER_MAGIC) {
-          try {
-            extensions[EXTENSIONS.KHR_BINARY_GLTF] = new GLTFBinaryExtension(data);
-          } catch (error) {
-            if (onError) onError(error);
-            return;
-          }
-          json = JSON.parse(extensions[EXTENSIONS.KHR_BINARY_GLTF].content);
-        } else {
-          json = JSON.parse(textDecoder.decode(data));
-        }
-      } else {
-        json = data;
-      }
-      if (json.asset === void 0 || json.asset.version[0] < 2) {
-        if (onError) onError(new Error("THREE.GLTFLoader: Unsupported asset. glTF versions >=2.0 are supported."));
-        return;
-      }
-      const parser = new GLTFParser(json, {
-        path: path || this.resourcePath || "",
-        crossOrigin: this.crossOrigin,
-        requestHeader: this.requestHeader,
-        manager: this.manager,
-        ktx2Loader: this.ktx2Loader,
-        meshoptDecoder: this.meshoptDecoder
-      });
-      parser.fileLoader.setRequestHeader(this.requestHeader);
-      for (let i2 = 0; i2 < this.pluginCallbacks.length; i2++) {
-        const plugin = this.pluginCallbacks[i2](parser);
-        if (!plugin.name) console.error("THREE.GLTFLoader: Invalid plugin found: missing name");
-        plugins[plugin.name] = plugin;
-        extensions[plugin.name] = true;
-      }
-      if (json.extensionsUsed) {
-        for (let i2 = 0; i2 < json.extensionsUsed.length; ++i2) {
-          const extensionName = json.extensionsUsed[i2];
-          const extensionsRequired = json.extensionsRequired || [];
-          switch (extensionName) {
-            case EXTENSIONS.KHR_MATERIALS_UNLIT:
-              extensions[extensionName] = new GLTFMaterialsUnlitExtension();
-              break;
-            case EXTENSIONS.KHR_DRACO_MESH_COMPRESSION:
-              extensions[extensionName] = new GLTFDracoMeshCompressionExtension(json, this.dracoLoader);
-              break;
-            case EXTENSIONS.KHR_TEXTURE_TRANSFORM:
-              extensions[extensionName] = new GLTFTextureTransformExtension();
-              break;
-            case EXTENSIONS.KHR_MESH_QUANTIZATION:
-              extensions[extensionName] = new GLTFMeshQuantizationExtension();
-              break;
-            default:
-              if (extensionsRequired.indexOf(extensionName) >= 0 && plugins[extensionName] === void 0) {
-                console.warn('THREE.GLTFLoader: Unknown extension "' + extensionName + '".');
-              }
-          }
-        }
-      }
-      parser.setExtensions(extensions);
-      parser.setPlugins(plugins);
-      parser.parse(onLoad, onError);
-    }
-    parseAsync(data, path) {
-      const scope = this;
-      return new Promise(function (resolve, reject) {
-        scope.parse(data, path, resolve, reject);
-      });
-    }
-  };
-  function GLTFRegistry() {
-    let objects = {};
-    return {
-      get: function (key) {
-        return objects[key];
-      },
-      add: function (key, object) {
-        objects[key] = object;
-      },
-      remove: function (key) {
-        delete objects[key];
-      },
-      removeAll: function () {
-        objects = {};
-      }
-    };
-  }
-  var EXTENSIONS = {
-    KHR_BINARY_GLTF: "KHR_binary_glTF",
-    KHR_DRACO_MESH_COMPRESSION: "KHR_draco_mesh_compression",
-    KHR_LIGHTS_PUNCTUAL: "KHR_lights_punctual",
-    KHR_MATERIALS_CLEARCOAT: "KHR_materials_clearcoat",
-    KHR_MATERIALS_IOR: "KHR_materials_ior",
-    KHR_MATERIALS_SHEEN: "KHR_materials_sheen",
-    KHR_MATERIALS_SPECULAR: "KHR_materials_specular",
-    KHR_MATERIALS_TRANSMISSION: "KHR_materials_transmission",
-    KHR_MATERIALS_IRIDESCENCE: "KHR_materials_iridescence",
-    KHR_MATERIALS_ANISOTROPY: "KHR_materials_anisotropy",
-    KHR_MATERIALS_UNLIT: "KHR_materials_unlit",
-    KHR_MATERIALS_VOLUME: "KHR_materials_volume",
-    KHR_TEXTURE_BASISU: "KHR_texture_basisu",
-    KHR_TEXTURE_TRANSFORM: "KHR_texture_transform",
-    KHR_MESH_QUANTIZATION: "KHR_mesh_quantization",
-    KHR_MATERIALS_EMISSIVE_STRENGTH: "KHR_materials_emissive_strength",
-    EXT_MATERIALS_BUMP: "EXT_materials_bump",
-    EXT_TEXTURE_WEBP: "EXT_texture_webp",
-    EXT_TEXTURE_AVIF: "EXT_texture_avif",
-    EXT_MESHOPT_COMPRESSION: "EXT_meshopt_compression",
-    EXT_MESH_GPU_INSTANCING: "EXT_mesh_gpu_instancing"
-  };
-  var GLTFLightsExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_LIGHTS_PUNCTUAL;
-      this.cache = {
-        refs: {},
-        uses: {}
-      };
-    }
-    _markDefs() {
-      const parser = this.parser;
-      const nodeDefs = this.parser.json.nodes || [];
-      for (let nodeIndex = 0, nodeLength = nodeDefs.length; nodeIndex < nodeLength; nodeIndex++) {
-        const nodeDef = nodeDefs[nodeIndex];
-        if (nodeDef.extensions && nodeDef.extensions[this.name] && nodeDef.extensions[this.name].light !== void 0) {
-          parser._addNodeRef(this.cache, nodeDef.extensions[this.name].light);
-        }
-      }
-    }
-    _loadLight(lightIndex) {
-      const parser = this.parser;
-      const cacheKey = "light:" + lightIndex;
-      let dependency = parser.cache.get(cacheKey);
-      if (dependency) return dependency;
-      const json = parser.json;
-      const extensions = json.extensions && json.extensions[this.name] || ({});
-      const lightDefs = extensions.lights || [];
-      const lightDef = lightDefs[lightIndex];
-      let lightNode;
-      const color = new Color(16777215);
-      if (lightDef.color !== void 0) color.setRGB(lightDef.color[0], lightDef.color[1], lightDef.color[2], LinearSRGBColorSpace);
-      const range = lightDef.range !== void 0 ? lightDef.range : 0;
-      switch (lightDef.type) {
-        case "directional":
-          lightNode = new DirectionalLight(color);
-          lightNode.target.position.set(0, 0, -1);
-          lightNode.add(lightNode.target);
-          break;
-        case "point":
-          lightNode = new PointLight(color);
-          lightNode.distance = range;
-          break;
-        case "spot":
-          lightNode = new SpotLight(color);
-          lightNode.distance = range;
-          lightDef.spot = lightDef.spot || ({});
-          lightDef.spot.innerConeAngle = lightDef.spot.innerConeAngle !== void 0 ? lightDef.spot.innerConeAngle : 0;
-          lightDef.spot.outerConeAngle = lightDef.spot.outerConeAngle !== void 0 ? lightDef.spot.outerConeAngle : Math.PI / 4;
-          lightNode.angle = lightDef.spot.outerConeAngle;
-          lightNode.penumbra = 1 - lightDef.spot.innerConeAngle / lightDef.spot.outerConeAngle;
-          lightNode.target.position.set(0, 0, -1);
-          lightNode.add(lightNode.target);
-          break;
-        default:
-          throw new Error("THREE.GLTFLoader: Unexpected light type: " + lightDef.type);
-      }
-      lightNode.position.set(0, 0, 0);
-      lightNode.decay = 2;
-      assignExtrasToUserData(lightNode, lightDef);
-      if (lightDef.intensity !== void 0) lightNode.intensity = lightDef.intensity;
-      lightNode.name = parser.createUniqueName(lightDef.name || "light_" + lightIndex);
-      dependency = Promise.resolve(lightNode);
-      parser.cache.add(cacheKey, dependency);
-      return dependency;
-    }
-    getDependency(type, index) {
-      if (type !== "light") return;
-      return this._loadLight(index);
-    }
-    createNodeAttachment(nodeIndex) {
-      const self2 = this;
-      const parser = this.parser;
-      const json = parser.json;
-      const nodeDef = json.nodes[nodeIndex];
-      const lightDef = nodeDef.extensions && nodeDef.extensions[this.name] || ({});
-      const lightIndex = lightDef.light;
-      if (lightIndex === void 0) return null;
-      return this._loadLight(lightIndex).then(function (light) {
-        return parser._getNodeRef(self2.cache, lightIndex, light);
-      });
-    }
-  };
-  var GLTFMaterialsUnlitExtension = class {
-    constructor() {
-      this.name = EXTENSIONS.KHR_MATERIALS_UNLIT;
-    }
-    getMaterialType() {
-      return MeshBasicMaterial;
-    }
-    extendParams(materialParams, materialDef, parser) {
-      const pending = [];
-      materialParams.color = new Color(1, 1, 1);
-      materialParams.opacity = 1;
-      const metallicRoughness = materialDef.pbrMetallicRoughness;
-      if (metallicRoughness) {
-        if (Array.isArray(metallicRoughness.baseColorFactor)) {
-          const array = metallicRoughness.baseColorFactor;
-          materialParams.color.setRGB(array[0], array[1], array[2], LinearSRGBColorSpace);
-          materialParams.opacity = array[3];
-        }
-        if (metallicRoughness.baseColorTexture !== void 0) {
-          pending.push(parser.assignTexture(materialParams, "map", metallicRoughness.baseColorTexture, SRGBColorSpace));
-        }
-      }
-      return Promise.all(pending);
-    }
-  };
-  var GLTFMaterialsEmissiveStrengthExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_EMISSIVE_STRENGTH;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const emissiveStrength = materialDef.extensions[this.name].emissiveStrength;
-      if (emissiveStrength !== void 0) {
-        materialParams.emissiveIntensity = emissiveStrength;
-      }
-      return Promise.resolve();
-    }
-  };
-  var GLTFMaterialsClearcoatExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_CLEARCOAT;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const pending = [];
-      const extension = materialDef.extensions[this.name];
-      if (extension.clearcoatFactor !== void 0) {
-        materialParams.clearcoat = extension.clearcoatFactor;
-      }
-      if (extension.clearcoatTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "clearcoatMap", extension.clearcoatTexture));
-      }
-      if (extension.clearcoatRoughnessFactor !== void 0) {
-        materialParams.clearcoatRoughness = extension.clearcoatRoughnessFactor;
-      }
-      if (extension.clearcoatRoughnessTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "clearcoatRoughnessMap", extension.clearcoatRoughnessTexture));
-      }
-      if (extension.clearcoatNormalTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "clearcoatNormalMap", extension.clearcoatNormalTexture));
-        if (extension.clearcoatNormalTexture.scale !== void 0) {
-          const scale = extension.clearcoatNormalTexture.scale;
-          materialParams.clearcoatNormalScale = new Vector2(scale, scale);
-        }
-      }
-      return Promise.all(pending);
-    }
-  };
-  var GLTFMaterialsIridescenceExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_IRIDESCENCE;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const pending = [];
-      const extension = materialDef.extensions[this.name];
-      if (extension.iridescenceFactor !== void 0) {
-        materialParams.iridescence = extension.iridescenceFactor;
-      }
-      if (extension.iridescenceTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "iridescenceMap", extension.iridescenceTexture));
-      }
-      if (extension.iridescenceIor !== void 0) {
-        materialParams.iridescenceIOR = extension.iridescenceIor;
-      }
-      if (materialParams.iridescenceThicknessRange === void 0) {
-        materialParams.iridescenceThicknessRange = [100, 400];
-      }
-      if (extension.iridescenceThicknessMinimum !== void 0) {
-        materialParams.iridescenceThicknessRange[0] = extension.iridescenceThicknessMinimum;
-      }
-      if (extension.iridescenceThicknessMaximum !== void 0) {
-        materialParams.iridescenceThicknessRange[1] = extension.iridescenceThicknessMaximum;
-      }
-      if (extension.iridescenceThicknessTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "iridescenceThicknessMap", extension.iridescenceThicknessTexture));
-      }
-      return Promise.all(pending);
-    }
-  };
-  var GLTFMaterialsSheenExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_SHEEN;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const pending = [];
-      materialParams.sheenColor = new Color(0, 0, 0);
-      materialParams.sheenRoughness = 0;
-      materialParams.sheen = 1;
-      const extension = materialDef.extensions[this.name];
-      if (extension.sheenColorFactor !== void 0) {
-        const colorFactor = extension.sheenColorFactor;
-        materialParams.sheenColor.setRGB(colorFactor[0], colorFactor[1], colorFactor[2], LinearSRGBColorSpace);
-      }
-      if (extension.sheenRoughnessFactor !== void 0) {
-        materialParams.sheenRoughness = extension.sheenRoughnessFactor;
-      }
-      if (extension.sheenColorTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "sheenColorMap", extension.sheenColorTexture, SRGBColorSpace));
-      }
-      if (extension.sheenRoughnessTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "sheenRoughnessMap", extension.sheenRoughnessTexture));
-      }
-      return Promise.all(pending);
-    }
-  };
-  var GLTFMaterialsTransmissionExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_TRANSMISSION;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const pending = [];
-      const extension = materialDef.extensions[this.name];
-      if (extension.transmissionFactor !== void 0) {
-        materialParams.transmission = extension.transmissionFactor;
-      }
-      if (extension.transmissionTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "transmissionMap", extension.transmissionTexture));
-      }
-      return Promise.all(pending);
-    }
-  };
-  var GLTFMaterialsVolumeExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_VOLUME;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const pending = [];
-      const extension = materialDef.extensions[this.name];
-      materialParams.thickness = extension.thicknessFactor !== void 0 ? extension.thicknessFactor : 0;
-      if (extension.thicknessTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "thicknessMap", extension.thicknessTexture));
-      }
-      materialParams.attenuationDistance = extension.attenuationDistance || Infinity;
-      const colorArray = extension.attenuationColor || [1, 1, 1];
-      materialParams.attenuationColor = new Color().setRGB(colorArray[0], colorArray[1], colorArray[2], LinearSRGBColorSpace);
-      return Promise.all(pending);
-    }
-  };
-  var GLTFMaterialsIorExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_IOR;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const extension = materialDef.extensions[this.name];
-      materialParams.ior = extension.ior !== void 0 ? extension.ior : 1.5;
-      return Promise.resolve();
-    }
-  };
-  var GLTFMaterialsSpecularExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_SPECULAR;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const pending = [];
-      const extension = materialDef.extensions[this.name];
-      materialParams.specularIntensity = extension.specularFactor !== void 0 ? extension.specularFactor : 1;
-      if (extension.specularTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "specularIntensityMap", extension.specularTexture));
-      }
-      const colorArray = extension.specularColorFactor || [1, 1, 1];
-      materialParams.specularColor = new Color().setRGB(colorArray[0], colorArray[1], colorArray[2], LinearSRGBColorSpace);
-      if (extension.specularColorTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "specularColorMap", extension.specularColorTexture, SRGBColorSpace));
-      }
-      return Promise.all(pending);
-    }
-  };
-  var GLTFMaterialsBumpExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.EXT_MATERIALS_BUMP;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const pending = [];
-      const extension = materialDef.extensions[this.name];
-      materialParams.bumpScale = extension.bumpFactor !== void 0 ? extension.bumpFactor : 1;
-      if (extension.bumpTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "bumpMap", extension.bumpTexture));
-      }
-      return Promise.all(pending);
-    }
-  };
-  var GLTFMaterialsAnisotropyExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_MATERIALS_ANISOTROPY;
-    }
-    getMaterialType(materialIndex) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) return null;
-      return MeshPhysicalMaterial;
-    }
-    extendMaterialParams(materialIndex, materialParams) {
-      const parser = this.parser;
-      const materialDef = parser.json.materials[materialIndex];
-      if (!materialDef.extensions || !materialDef.extensions[this.name]) {
-        return Promise.resolve();
-      }
-      const pending = [];
-      const extension = materialDef.extensions[this.name];
-      if (extension.anisotropyStrength !== void 0) {
-        materialParams.anisotropy = extension.anisotropyStrength;
-      }
-      if (extension.anisotropyRotation !== void 0) {
-        materialParams.anisotropyRotation = extension.anisotropyRotation;
-      }
-      if (extension.anisotropyTexture !== void 0) {
-        pending.push(parser.assignTexture(materialParams, "anisotropyMap", extension.anisotropyTexture));
-      }
-      return Promise.all(pending);
-    }
-  };
-  var GLTFTextureBasisUExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.KHR_TEXTURE_BASISU;
-    }
-    loadTexture(textureIndex) {
-      const parser = this.parser;
-      const json = parser.json;
-      const textureDef = json.textures[textureIndex];
-      if (!textureDef.extensions || !textureDef.extensions[this.name]) {
-        return null;
-      }
-      const extension = textureDef.extensions[this.name];
-      const loader = parser.options.ktx2Loader;
-      if (!loader) {
-        if (json.extensionsRequired && json.extensionsRequired.indexOf(this.name) >= 0) {
-          throw new Error("THREE.GLTFLoader: setKTX2Loader must be called before loading KTX2 textures");
-        } else {
-          return null;
-        }
-      }
-      return parser.loadTextureImage(textureIndex, extension.source, loader);
-    }
-  };
-  var GLTFTextureWebPExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.EXT_TEXTURE_WEBP;
-      this.isSupported = null;
-    }
-    loadTexture(textureIndex) {
-      const name = this.name;
-      const parser = this.parser;
-      const json = parser.json;
-      const textureDef = json.textures[textureIndex];
-      if (!textureDef.extensions || !textureDef.extensions[name]) {
-        return null;
-      }
-      const extension = textureDef.extensions[name];
-      const source = json.images[extension.source];
-      let loader = parser.textureLoader;
-      if (source.uri) {
-        const handler = parser.options.manager.getHandler(source.uri);
-        if (handler !== null) loader = handler;
-      }
-      return this.detectSupport().then(function (isSupported) {
-        if (isSupported) return parser.loadTextureImage(textureIndex, extension.source, loader);
-        if (json.extensionsRequired && json.extensionsRequired.indexOf(name) >= 0) {
-          throw new Error("THREE.GLTFLoader: WebP required by asset but unsupported.");
-        }
-        return parser.loadTexture(textureIndex);
-      });
-    }
-    detectSupport() {
-      if (!this.isSupported) {
-        this.isSupported = new Promise(function (resolve) {
-          const image = new Image();
-          image.src = "data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA";
-          image.onload = image.onerror = function () {
-            resolve(image.height === 1);
-          };
-        });
-      }
-      return this.isSupported;
-    }
-  };
-  var GLTFTextureAVIFExtension = class {
-    constructor(parser) {
-      this.parser = parser;
-      this.name = EXTENSIONS.EXT_TEXTURE_AVIF;
-      this.isSupported = null;
-    }
-    loadTexture(textureIndex) {
-      const name = this.name;
-      const parser = this.parser;
-      const json = parser.json;
-      const textureDef = json.textures[textureIndex];
-      if (!textureDef.extensions || !textureDef.extensions[name]) {
-        return null;
-      }
-      const extension = textureDef.extensions[name];
-      const source = json.images[extension.source];
-      let loader = parser.textureLoader;
-      if (source.uri) {
-        const handler = parser.options.manager.getHandler(source.uri);
-        if (handler !== null) loader = handler;
-      }
-      return this.detectSupport().then(function (isSupported) {
-        if (isSupported) return parser.loadTextureImage(textureIndex, extension.source, loader);
-        if (json.extensionsRequired && json.extensionsRequired.indexOf(name) >= 0) {
-          throw new Error("THREE.GLTFLoader: AVIF required by asset but unsupported.");
-        }
-        return parser.loadTexture(textureIndex);
-      });
-    }
-    detectSupport() {
-      if (!this.isSupported) {
-        this.isSupported = new Promise(function (resolve) {
-          const image = new Image();
-          image.src = "data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAABcAAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAEAAAABAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQAMAAAAABNjb2xybmNseAACAAIABoAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAAB9tZGF0EgAKCBgABogQEDQgMgkQAAAAB8dSLfI=";
-          image.onload = image.onerror = function () {
-            resolve(image.height === 1);
-          };
-        });
-      }
-      return this.isSupported;
-    }
-  };
-  var GLTFMeshoptCompression = class {
-    constructor(parser) {
-      this.name = EXTENSIONS.EXT_MESHOPT_COMPRESSION;
-      this.parser = parser;
-    }
-    loadBufferView(index) {
-      const json = this.parser.json;
-      const bufferView = json.bufferViews[index];
-      if (bufferView.extensions && bufferView.extensions[this.name]) {
-        const extensionDef = bufferView.extensions[this.name];
-        const buffer = this.parser.getDependency("buffer", extensionDef.buffer);
-        const decoder = this.parser.options.meshoptDecoder;
-        if (!decoder || !decoder.supported) {
-          if (json.extensionsRequired && json.extensionsRequired.indexOf(this.name) >= 0) {
-            throw new Error("THREE.GLTFLoader: setMeshoptDecoder must be called before loading compressed files");
-          } else {
-            return null;
-          }
-        }
-        return buffer.then(function (res) {
-          const byteOffset = extensionDef.byteOffset || 0;
-          const byteLength = extensionDef.byteLength || 0;
-          const count = extensionDef.count;
-          const stride = extensionDef.byteStride;
-          const source = new Uint8Array(res, byteOffset, byteLength);
-          if (decoder.decodeGltfBufferAsync) {
-            return decoder.decodeGltfBufferAsync(count, stride, source, extensionDef.mode, extensionDef.filter).then(function (res2) {
-              return res2.buffer;
-            });
-          } else {
-            return decoder.ready.then(function () {
-              const result = new ArrayBuffer(count * stride);
-              decoder.decodeGltfBuffer(new Uint8Array(result), count, stride, source, extensionDef.mode, extensionDef.filter);
-              return result;
-            });
-          }
-        });
-      } else {
-        return null;
-      }
-    }
-  };
-  var GLTFMeshGpuInstancing = class {
-    constructor(parser) {
-      this.name = EXTENSIONS.EXT_MESH_GPU_INSTANCING;
-      this.parser = parser;
-    }
-    createNodeMesh(nodeIndex) {
-      const json = this.parser.json;
-      const nodeDef = json.nodes[nodeIndex];
-      if (!nodeDef.extensions || !nodeDef.extensions[this.name] || nodeDef.mesh === void 0) {
-        return null;
-      }
-      const meshDef = json.meshes[nodeDef.mesh];
-      for (const primitive of meshDef.primitives) {
-        if (primitive.mode !== WEBGL_CONSTANTS.TRIANGLES && primitive.mode !== WEBGL_CONSTANTS.TRIANGLE_STRIP && primitive.mode !== WEBGL_CONSTANTS.TRIANGLE_FAN && primitive.mode !== void 0) {
-          return null;
-        }
-      }
-      const extensionDef = nodeDef.extensions[this.name];
-      const attributesDef = extensionDef.attributes;
-      const pending = [];
-      const attributes = {};
-      for (const key in attributesDef) {
-        pending.push(this.parser.getDependency("accessor", attributesDef[key]).then(accessor => {
-          attributes[key] = accessor;
-          return attributes[key];
-        }));
-      }
-      if (pending.length < 1) {
-        return null;
-      }
-      pending.push(this.parser.createNodeMesh(nodeIndex));
-      return Promise.all(pending).then(results => {
-        const nodeObject = results.pop();
-        const meshes = nodeObject.isGroup ? nodeObject.children : [nodeObject];
-        const count = results[0].count;
-        const instancedMeshes = [];
-        for (const mesh of meshes) {
-          const m2 = new Matrix4();
-          const p2 = new Vector3();
-          const q2 = new Quaternion();
-          const s2 = new Vector3(1, 1, 1);
-          const instancedMesh = new InstancedMesh(mesh.geometry, mesh.material, count);
-          for (let i2 = 0; i2 < count; i2++) {
-            if (attributes.TRANSLATION) {
-              p2.fromBufferAttribute(attributes.TRANSLATION, i2);
-            }
-            if (attributes.ROTATION) {
-              q2.fromBufferAttribute(attributes.ROTATION, i2);
-            }
-            if (attributes.SCALE) {
-              s2.fromBufferAttribute(attributes.SCALE, i2);
-            }
-            instancedMesh.setMatrixAt(i2, m2.compose(p2, q2, s2));
-          }
-          for (const attributeName in attributes) {
-            if (attributeName === "_COLOR_0") {
-              const attr = attributes[attributeName];
-              instancedMesh.instanceColor = new InstancedBufferAttribute(attr.array, attr.itemSize, attr.normalized);
-            } else if (attributeName !== "TRANSLATION" && attributeName !== "ROTATION" && attributeName !== "SCALE") {
-              mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
-            }
-          }
-          Object3D.prototype.copy.call(instancedMesh, mesh);
-          this.parser.assignFinalMaterial(instancedMesh);
-          instancedMeshes.push(instancedMesh);
-        }
-        if (nodeObject.isGroup) {
-          nodeObject.clear();
-          nodeObject.add(...instancedMeshes);
-          return nodeObject;
-        }
-        return instancedMeshes[0];
-      });
-    }
-  };
-  var BINARY_EXTENSION_HEADER_MAGIC = "glTF";
-  var BINARY_EXTENSION_HEADER_LENGTH = 12;
-  var BINARY_EXTENSION_CHUNK_TYPES = {
-    JSON: 1313821514,
-    BIN: 5130562
-  };
-  var GLTFBinaryExtension = class {
-    constructor(data) {
-      this.name = EXTENSIONS.KHR_BINARY_GLTF;
-      this.content = null;
-      this.body = null;
-      const headerView = new DataView(data, 0, BINARY_EXTENSION_HEADER_LENGTH);
-      const textDecoder = new TextDecoder();
-      this.header = {
-        magic: textDecoder.decode(new Uint8Array(data.slice(0, 4))),
-        version: headerView.getUint32(4, true),
-        length: headerView.getUint32(8, true)
-      };
-      if (this.header.magic !== BINARY_EXTENSION_HEADER_MAGIC) {
-        throw new Error("THREE.GLTFLoader: Unsupported glTF-Binary header.");
-      } else if (this.header.version < 2) {
-        throw new Error("THREE.GLTFLoader: Legacy binary file detected.");
-      }
-      const chunkContentsLength = this.header.length - BINARY_EXTENSION_HEADER_LENGTH;
-      const chunkView = new DataView(data, BINARY_EXTENSION_HEADER_LENGTH);
-      let chunkIndex = 0;
-      while (chunkIndex < chunkContentsLength) {
-        const chunkLength = chunkView.getUint32(chunkIndex, true);
-        chunkIndex += 4;
-        const chunkType = chunkView.getUint32(chunkIndex, true);
-        chunkIndex += 4;
-        if (chunkType === BINARY_EXTENSION_CHUNK_TYPES.JSON) {
-          const contentArray = new Uint8Array(data, BINARY_EXTENSION_HEADER_LENGTH + chunkIndex, chunkLength);
-          this.content = textDecoder.decode(contentArray);
-        } else if (chunkType === BINARY_EXTENSION_CHUNK_TYPES.BIN) {
-          const byteOffset = BINARY_EXTENSION_HEADER_LENGTH + chunkIndex;
-          this.body = data.slice(byteOffset, byteOffset + chunkLength);
-        }
-        chunkIndex += chunkLength;
-      }
-      if (this.content === null) {
-        throw new Error("THREE.GLTFLoader: JSON content not found.");
-      }
-    }
-  };
-  var GLTFDracoMeshCompressionExtension = class {
-    constructor(json, dracoLoader) {
-      if (!dracoLoader) {
-        throw new Error("THREE.GLTFLoader: No DRACOLoader instance provided.");
-      }
-      this.name = EXTENSIONS.KHR_DRACO_MESH_COMPRESSION;
-      this.json = json;
-      this.dracoLoader = dracoLoader;
-      this.dracoLoader.preload();
-    }
-    decodePrimitive(primitive, parser) {
-      const json = this.json;
-      const dracoLoader = this.dracoLoader;
-      const bufferViewIndex = primitive.extensions[this.name].bufferView;
-      const gltfAttributeMap = primitive.extensions[this.name].attributes;
-      const threeAttributeMap = {};
-      const attributeNormalizedMap = {};
-      const attributeTypeMap = {};
-      for (const attributeName in gltfAttributeMap) {
-        const threeAttributeName = ATTRIBUTES[attributeName] || attributeName.toLowerCase();
-        threeAttributeMap[threeAttributeName] = gltfAttributeMap[attributeName];
-      }
-      for (const attributeName in primitive.attributes) {
-        const threeAttributeName = ATTRIBUTES[attributeName] || attributeName.toLowerCase();
-        if (gltfAttributeMap[attributeName] !== void 0) {
-          const accessorDef = json.accessors[primitive.attributes[attributeName]];
-          const componentType = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
-          attributeTypeMap[threeAttributeName] = componentType.name;
-          attributeNormalizedMap[threeAttributeName] = accessorDef.normalized === true;
-        }
-      }
-      return parser.getDependency("bufferView", bufferViewIndex).then(function (bufferView) {
-        return new Promise(function (resolve, reject) {
-          dracoLoader.decodeDracoFile(bufferView, function (geometry) {
-            for (const attributeName in geometry.attributes) {
-              const attribute = geometry.attributes[attributeName];
-              const normalized = attributeNormalizedMap[attributeName];
-              if (normalized !== void 0) attribute.normalized = normalized;
-            }
-            resolve(geometry);
-          }, threeAttributeMap, attributeTypeMap, LinearSRGBColorSpace, reject);
-        });
-      });
-    }
-  };
-  var GLTFTextureTransformExtension = class {
-    constructor() {
-      this.name = EXTENSIONS.KHR_TEXTURE_TRANSFORM;
-    }
-    extendTexture(texture, transform) {
-      if ((transform.texCoord === void 0 || transform.texCoord === texture.channel) && transform.offset === void 0 && transform.rotation === void 0 && transform.scale === void 0) {
-        return texture;
-      }
-      texture = texture.clone();
-      if (transform.texCoord !== void 0) {
-        texture.channel = transform.texCoord;
-      }
-      if (transform.offset !== void 0) {
-        texture.offset.fromArray(transform.offset);
-      }
-      if (transform.rotation !== void 0) {
-        texture.rotation = transform.rotation;
-      }
-      if (transform.scale !== void 0) {
-        texture.repeat.fromArray(transform.scale);
-      }
-      texture.needsUpdate = true;
-      return texture;
-    }
-  };
-  var GLTFMeshQuantizationExtension = class {
-    constructor() {
-      this.name = EXTENSIONS.KHR_MESH_QUANTIZATION;
-    }
-  };
-  var GLTFCubicSplineInterpolant = class extends Interpolant {
-    constructor(parameterPositions, sampleValues, sampleSize, resultBuffer) {
-      super(parameterPositions, sampleValues, sampleSize, resultBuffer);
-    }
-    copySampleValue_(index) {
-      const result = this.resultBuffer, values = this.sampleValues, valueSize = this.valueSize, offset = index * valueSize * 3 + valueSize;
-      for (let i2 = 0; i2 !== valueSize; i2++) {
-        result[i2] = values[offset + i2];
-      }
-      return result;
-    }
-    interpolate_(i1, t0, t2, t1) {
-      const result = this.resultBuffer;
-      const values = this.sampleValues;
-      const stride = this.valueSize;
-      const stride2 = stride * 2;
-      const stride3 = stride * 3;
-      const td = t1 - t0;
-      const p2 = (t2 - t0) / td;
-      const pp = p2 * p2;
-      const ppp = pp * p2;
-      const offset1 = i1 * stride3;
-      const offset0 = offset1 - stride3;
-      const s2 = -2 * ppp + 3 * pp;
-      const s3 = ppp - pp;
-      const s0 = 1 - s2;
-      const s1 = s3 - pp + p2;
-      for (let i2 = 0; i2 !== stride; i2++) {
-        const p0 = values[offset0 + i2 + stride];
-        const m0 = values[offset0 + i2 + stride2] * td;
-        const p1 = values[offset1 + i2 + stride];
-        const m1 = values[offset1 + i2] * td;
-        result[i2] = s0 * p0 + s1 * m0 + s2 * p1 + s3 * m1;
-      }
-      return result;
-    }
-  };
-  var _q = new Quaternion();
-  var GLTFCubicSplineQuaternionInterpolant = class extends GLTFCubicSplineInterpolant {
-    interpolate_(i1, t0, t2, t1) {
-      const result = super.interpolate_(i1, t0, t2, t1);
-      _q.fromArray(result).normalize().toArray(result);
-      return result;
-    }
-  };
-  var WEBGL_CONSTANTS = {
-    FLOAT: 5126,
-    FLOAT_MAT3: 35675,
-    FLOAT_MAT4: 35676,
-    FLOAT_VEC2: 35664,
-    FLOAT_VEC3: 35665,
-    FLOAT_VEC4: 35666,
-    LINEAR: 9729,
-    REPEAT: 10497,
-    SAMPLER_2D: 35678,
-    POINTS: 0,
-    LINES: 1,
-    LINE_LOOP: 2,
-    LINE_STRIP: 3,
-    TRIANGLES: 4,
-    TRIANGLE_STRIP: 5,
-    TRIANGLE_FAN: 6,
-    UNSIGNED_BYTE: 5121,
-    UNSIGNED_SHORT: 5123
-  };
-  var WEBGL_COMPONENT_TYPES = {
-    5120: Int8Array,
-    5121: Uint8Array,
-    5122: Int16Array,
-    5123: Uint16Array,
-    5125: Uint32Array,
-    5126: Float32Array
-  };
-  var WEBGL_FILTERS = {
-    9728: NearestFilter,
-    9729: LinearFilter,
-    9984: NearestMipmapNearestFilter,
-    9985: LinearMipmapNearestFilter,
-    9986: NearestMipmapLinearFilter,
-    9987: LinearMipmapLinearFilter
-  };
-  var WEBGL_WRAPPINGS = {
-    33071: ClampToEdgeWrapping,
-    33648: MirroredRepeatWrapping,
-    10497: RepeatWrapping
-  };
-  var WEBGL_TYPE_SIZES = {
-    "SCALAR": 1,
-    "VEC2": 2,
-    "VEC3": 3,
-    "VEC4": 4,
-    "MAT2": 4,
-    "MAT3": 9,
-    "MAT4": 16
-  };
-  var ATTRIBUTES = {
-    POSITION: "position",
-    NORMAL: "normal",
-    TANGENT: "tangent",
-    TEXCOORD_0: "uv",
-    TEXCOORD_1: "uv1",
-    TEXCOORD_2: "uv2",
-    TEXCOORD_3: "uv3",
-    COLOR_0: "color",
-    WEIGHTS_0: "skinWeight",
-    JOINTS_0: "skinIndex"
-  };
-  var PATH_PROPERTIES = {
-    scale: "scale",
-    translation: "position",
-    rotation: "quaternion",
-    weights: "morphTargetInfluences"
-  };
-  var INTERPOLATION = {
-    CUBICSPLINE: void 0,
-    LINEAR: InterpolateLinear,
-    STEP: InterpolateDiscrete
-  };
-  var ALPHA_MODES = {
-    OPAQUE: "OPAQUE",
-    MASK: "MASK",
-    BLEND: "BLEND"
-  };
-  function createDefaultMaterial(cache) {
-    if (cache["DefaultMaterial"] === void 0) {
-      cache["DefaultMaterial"] = new MeshStandardMaterial({
-        color: 16777215,
-        emissive: 0,
-        metalness: 1,
-        roughness: 1,
-        transparent: false,
-        depthTest: true,
-        side: FrontSide
-      });
-    }
-    return cache["DefaultMaterial"];
-  }
-  function addUnknownExtensionsToUserData(knownExtensions, object, objectDef) {
-    for (const name in objectDef.extensions) {
-      if (knownExtensions[name] === void 0) {
-        object.userData.gltfExtensions = object.userData.gltfExtensions || ({});
-        object.userData.gltfExtensions[name] = objectDef.extensions[name];
-      }
-    }
-  }
-  function assignExtrasToUserData(object, gltfDef) {
-    if (gltfDef.extras !== void 0) {
-      if (typeof gltfDef.extras === "object") {
-        Object.assign(object.userData, gltfDef.extras);
-      } else {
-        console.warn("THREE.GLTFLoader: Ignoring primitive type .extras, " + gltfDef.extras);
-      }
-    }
-  }
-  function addMorphTargets(geometry, targets, parser) {
-    let hasMorphPosition = false;
-    let hasMorphNormal = false;
-    let hasMorphColor = false;
-    for (let i2 = 0, il = targets.length; i2 < il; i2++) {
-      const target = targets[i2];
-      if (target.POSITION !== void 0) hasMorphPosition = true;
-      if (target.NORMAL !== void 0) hasMorphNormal = true;
-      if (target.COLOR_0 !== void 0) hasMorphColor = true;
-      if (hasMorphPosition && hasMorphNormal && hasMorphColor) break;
-    }
-    if (!hasMorphPosition && !hasMorphNormal && !hasMorphColor) return Promise.resolve(geometry);
-    const pendingPositionAccessors = [];
-    const pendingNormalAccessors = [];
-    const pendingColorAccessors = [];
-    for (let i2 = 0, il = targets.length; i2 < il; i2++) {
-      const target = targets[i2];
-      if (hasMorphPosition) {
-        const pendingAccessor = target.POSITION !== void 0 ? parser.getDependency("accessor", target.POSITION) : geometry.attributes.position;
-        pendingPositionAccessors.push(pendingAccessor);
-      }
-      if (hasMorphNormal) {
-        const pendingAccessor = target.NORMAL !== void 0 ? parser.getDependency("accessor", target.NORMAL) : geometry.attributes.normal;
-        pendingNormalAccessors.push(pendingAccessor);
-      }
-      if (hasMorphColor) {
-        const pendingAccessor = target.COLOR_0 !== void 0 ? parser.getDependency("accessor", target.COLOR_0) : geometry.attributes.color;
-        pendingColorAccessors.push(pendingAccessor);
-      }
-    }
-    return Promise.all([Promise.all(pendingPositionAccessors), Promise.all(pendingNormalAccessors), Promise.all(pendingColorAccessors)]).then(function (accessors) {
-      const morphPositions = accessors[0];
-      const morphNormals = accessors[1];
-      const morphColors = accessors[2];
-      if (hasMorphPosition) geometry.morphAttributes.position = morphPositions;
-      if (hasMorphNormal) geometry.morphAttributes.normal = morphNormals;
-      if (hasMorphColor) geometry.morphAttributes.color = morphColors;
-      geometry.morphTargetsRelative = true;
-      return geometry;
-    });
-  }
-  function updateMorphTargets(mesh, meshDef) {
-    mesh.updateMorphTargets();
-    if (meshDef.weights !== void 0) {
-      for (let i2 = 0, il = meshDef.weights.length; i2 < il; i2++) {
-        mesh.morphTargetInfluences[i2] = meshDef.weights[i2];
-      }
-    }
-    if (meshDef.extras && Array.isArray(meshDef.extras.targetNames)) {
-      const targetNames = meshDef.extras.targetNames;
-      if (mesh.morphTargetInfluences.length === targetNames.length) {
-        mesh.morphTargetDictionary = {};
-        for (let i2 = 0, il = targetNames.length; i2 < il; i2++) {
-          mesh.morphTargetDictionary[targetNames[i2]] = i2;
-        }
-      } else {
-        console.warn("THREE.GLTFLoader: Invalid extras.targetNames length. Ignoring names.");
-      }
-    }
-  }
-  function createPrimitiveKey(primitiveDef) {
-    let geometryKey;
-    const dracoExtension = primitiveDef.extensions && primitiveDef.extensions[EXTENSIONS.KHR_DRACO_MESH_COMPRESSION];
-    if (dracoExtension) {
-      geometryKey = "draco:" + dracoExtension.bufferView + ":" + dracoExtension.indices + ":" + createAttributesKey(dracoExtension.attributes);
-    } else {
-      geometryKey = primitiveDef.indices + ":" + createAttributesKey(primitiveDef.attributes) + ":" + primitiveDef.mode;
-    }
-    if (primitiveDef.targets !== void 0) {
-      for (let i2 = 0, il = primitiveDef.targets.length; i2 < il; i2++) {
-        geometryKey += ":" + createAttributesKey(primitiveDef.targets[i2]);
-      }
-    }
-    return geometryKey;
-  }
-  function createAttributesKey(attributes) {
-    let attributesKey = "";
-    const keys = Object.keys(attributes).sort();
-    for (let i2 = 0, il = keys.length; i2 < il; i2++) {
-      attributesKey += keys[i2] + ":" + attributes[keys[i2]] + ";";
-    }
-    return attributesKey;
-  }
-  function getNormalizedComponentScale(constructor) {
-    switch (constructor) {
-      case Int8Array:
-        return 1 / 127;
-      case Uint8Array:
-        return 1 / 255;
-      case Int16Array:
-        return 1 / 32767;
-      case Uint16Array:
-        return 1 / 65535;
-      default:
-        throw new Error("THREE.GLTFLoader: Unsupported normalized accessor component type.");
-    }
-  }
-  function getImageURIMimeType(uri) {
-    if (uri.search(/\.jpe?g($|\?)/i) > 0 || uri.search(/^data\:image\/jpeg/) === 0) return "image/jpeg";
-    if (uri.search(/\.webp($|\?)/i) > 0 || uri.search(/^data\:image\/webp/) === 0) return "image/webp";
-    return "image/png";
-  }
-  var _identityMatrix = new Matrix4();
-  var GLTFParser = class {
-    constructor(json = {}, options = {}) {
-      this.json = json;
-      this.extensions = {};
-      this.plugins = {};
-      this.options = options;
-      this.cache = new GLTFRegistry();
-      this.associations = new Map();
-      this.primitiveCache = {};
-      this.nodeCache = {};
-      this.meshCache = {
-        refs: {},
-        uses: {}
-      };
-      this.cameraCache = {
-        refs: {},
-        uses: {}
-      };
-      this.lightCache = {
-        refs: {},
-        uses: {}
-      };
-      this.sourceCache = {};
-      this.textureCache = {};
-      this.nodeNamesUsed = {};
-      let isSafari = false;
-      let isFirefox = false;
-      let firefoxVersion = -1;
-      if (typeof navigator !== "undefined") {
-        isSafari = (/^((?!chrome|android).)*safari/i).test(navigator.userAgent) === true;
-        isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
-        firefoxVersion = isFirefox ? navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1] : -1;
-      }
-      if (typeof createImageBitmap === "undefined" || isSafari || isFirefox && firefoxVersion < 98) {
-        this.textureLoader = new TextureLoader(this.options.manager);
-      } else {
-        this.textureLoader = new ImageBitmapLoader(this.options.manager);
-      }
-      this.textureLoader.setCrossOrigin(this.options.crossOrigin);
-      this.textureLoader.setRequestHeader(this.options.requestHeader);
-      this.fileLoader = new FileLoader(this.options.manager);
-      this.fileLoader.setResponseType("arraybuffer");
-      if (this.options.crossOrigin === "use-credentials") {
-        this.fileLoader.setWithCredentials(true);
-      }
-    }
-    setExtensions(extensions) {
-      this.extensions = extensions;
-    }
-    setPlugins(plugins) {
-      this.plugins = plugins;
-    }
-    parse(onLoad, onError) {
-      const parser = this;
-      const json = this.json;
-      const extensions = this.extensions;
-      this.cache.removeAll();
-      this.nodeCache = {};
-      this._invokeAll(function (ext) {
-        return ext._markDefs && ext._markDefs();
-      });
-      Promise.all(this._invokeAll(function (ext) {
-        return ext.beforeRoot && ext.beforeRoot();
-      })).then(function () {
-        return Promise.all([parser.getDependencies("scene"), parser.getDependencies("animation"), parser.getDependencies("camera")]);
-      }).then(function (dependencies) {
-        const result = {
-          scene: dependencies[0][json.scene || 0],
-          scenes: dependencies[0],
-          animations: dependencies[1],
-          cameras: dependencies[2],
-          asset: json.asset,
-          parser,
-          userData: {}
-        };
-        addUnknownExtensionsToUserData(extensions, result, json);
-        assignExtrasToUserData(result, json);
-        return Promise.all(parser._invokeAll(function (ext) {
-          return ext.afterRoot && ext.afterRoot(result);
-        })).then(function () {
-          for (const scene of result.scenes) {
-            scene.updateMatrixWorld();
-          }
-          onLoad(result);
-        });
-      }).catch(onError);
-    }
-    _markDefs() {
-      const nodeDefs = this.json.nodes || [];
-      const skinDefs = this.json.skins || [];
-      const meshDefs = this.json.meshes || [];
-      for (let skinIndex = 0, skinLength = skinDefs.length; skinIndex < skinLength; skinIndex++) {
-        const joints = skinDefs[skinIndex].joints;
-        for (let i2 = 0, il = joints.length; i2 < il; i2++) {
-          nodeDefs[joints[i2]].isBone = true;
-        }
-      }
-      for (let nodeIndex = 0, nodeLength = nodeDefs.length; nodeIndex < nodeLength; nodeIndex++) {
-        const nodeDef = nodeDefs[nodeIndex];
-        if (nodeDef.mesh !== void 0) {
-          this._addNodeRef(this.meshCache, nodeDef.mesh);
-          if (nodeDef.skin !== void 0) {
-            meshDefs[nodeDef.mesh].isSkinnedMesh = true;
-          }
-        }
-        if (nodeDef.camera !== void 0) {
-          this._addNodeRef(this.cameraCache, nodeDef.camera);
-        }
-      }
-    }
-    _addNodeRef(cache, index) {
-      if (index === void 0) return;
-      if (cache.refs[index] === void 0) {
-        cache.refs[index] = cache.uses[index] = 0;
-      }
-      cache.refs[index]++;
-    }
-    _getNodeRef(cache, index, object) {
-      if (cache.refs[index] <= 1) return object;
-      const ref = object.clone();
-      const updateMappings = (original, clone) => {
-        const mappings = this.associations.get(original);
-        if (mappings != null) {
-          this.associations.set(clone, mappings);
-        }
-        for (const [i2, child] of original.children.entries()) {
-          updateMappings(child, clone.children[i2]);
-        }
-      };
-      updateMappings(object, ref);
-      ref.name += "_instance_" + cache.uses[index]++;
-      return ref;
-    }
-    _invokeOne(func) {
-      const extensions = Object.values(this.plugins);
-      extensions.push(this);
-      for (let i2 = 0; i2 < extensions.length; i2++) {
-        const result = func(extensions[i2]);
-        if (result) return result;
-      }
-      return null;
-    }
-    _invokeAll(func) {
-      const extensions = Object.values(this.plugins);
-      extensions.unshift(this);
-      const pending = [];
-      for (let i2 = 0; i2 < extensions.length; i2++) {
-        const result = func(extensions[i2]);
-        if (result) pending.push(result);
-      }
-      return pending;
-    }
-    getDependency(type, index) {
-      const cacheKey = type + ":" + index;
-      let dependency = this.cache.get(cacheKey);
-      if (!dependency) {
-        switch (type) {
-          case "scene":
-            dependency = this.loadScene(index);
-            break;
-          case "node":
-            dependency = this._invokeOne(function (ext) {
-              return ext.loadNode && ext.loadNode(index);
-            });
-            break;
-          case "mesh":
-            dependency = this._invokeOne(function (ext) {
-              return ext.loadMesh && ext.loadMesh(index);
-            });
-            break;
-          case "accessor":
-            dependency = this.loadAccessor(index);
-            break;
-          case "bufferView":
-            dependency = this._invokeOne(function (ext) {
-              return ext.loadBufferView && ext.loadBufferView(index);
-            });
-            break;
-          case "buffer":
-            dependency = this.loadBuffer(index);
-            break;
-          case "material":
-            dependency = this._invokeOne(function (ext) {
-              return ext.loadMaterial && ext.loadMaterial(index);
-            });
-            break;
-          case "texture":
-            dependency = this._invokeOne(function (ext) {
-              return ext.loadTexture && ext.loadTexture(index);
-            });
-            break;
-          case "skin":
-            dependency = this.loadSkin(index);
-            break;
-          case "animation":
-            dependency = this._invokeOne(function (ext) {
-              return ext.loadAnimation && ext.loadAnimation(index);
-            });
-            break;
-          case "camera":
-            dependency = this.loadCamera(index);
-            break;
-          default:
-            dependency = this._invokeOne(function (ext) {
-              return ext != this && ext.getDependency && ext.getDependency(type, index);
-            });
-            if (!dependency) {
-              throw new Error("Unknown type: " + type);
-            }
-            break;
-        }
-        this.cache.add(cacheKey, dependency);
-      }
-      return dependency;
-    }
-    getDependencies(type) {
-      let dependencies = this.cache.get(type);
-      if (!dependencies) {
-        const parser = this;
-        const defs = this.json[type + (type === "mesh" ? "es" : "s")] || [];
-        dependencies = Promise.all(defs.map(function (def, index) {
-          return parser.getDependency(type, index);
-        }));
-        this.cache.add(type, dependencies);
-      }
-      return dependencies;
-    }
-    loadBuffer(bufferIndex) {
-      const bufferDef = this.json.buffers[bufferIndex];
-      const loader = this.fileLoader;
-      if (bufferDef.type && bufferDef.type !== "arraybuffer") {
-        throw new Error("THREE.GLTFLoader: " + bufferDef.type + " buffer type is not supported.");
-      }
-      if (bufferDef.uri === void 0 && bufferIndex === 0) {
-        return Promise.resolve(this.extensions[EXTENSIONS.KHR_BINARY_GLTF].body);
-      }
-      const options = this.options;
-      return new Promise(function (resolve, reject) {
-        loader.load(LoaderUtils.resolveURL(bufferDef.uri, options.path), resolve, void 0, function () {
-          reject(new Error('THREE.GLTFLoader: Failed to load buffer "' + bufferDef.uri + '".'));
-        });
-      });
-    }
-    loadBufferView(bufferViewIndex) {
-      const bufferViewDef = this.json.bufferViews[bufferViewIndex];
-      return this.getDependency("buffer", bufferViewDef.buffer).then(function (buffer) {
-        const byteLength = bufferViewDef.byteLength || 0;
-        const byteOffset = bufferViewDef.byteOffset || 0;
-        return buffer.slice(byteOffset, byteOffset + byteLength);
-      });
-    }
-    loadAccessor(accessorIndex) {
-      const parser = this;
-      const json = this.json;
-      const accessorDef = this.json.accessors[accessorIndex];
-      if (accessorDef.bufferView === void 0 && accessorDef.sparse === void 0) {
-        const itemSize = WEBGL_TYPE_SIZES[accessorDef.type];
-        const TypedArray = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
-        const normalized = accessorDef.normalized === true;
-        const array = new TypedArray(accessorDef.count * itemSize);
-        return Promise.resolve(new BufferAttribute(array, itemSize, normalized));
-      }
-      const pendingBufferViews = [];
-      if (accessorDef.bufferView !== void 0) {
-        pendingBufferViews.push(this.getDependency("bufferView", accessorDef.bufferView));
-      } else {
-        pendingBufferViews.push(null);
-      }
-      if (accessorDef.sparse !== void 0) {
-        pendingBufferViews.push(this.getDependency("bufferView", accessorDef.sparse.indices.bufferView));
-        pendingBufferViews.push(this.getDependency("bufferView", accessorDef.sparse.values.bufferView));
-      }
-      return Promise.all(pendingBufferViews).then(function (bufferViews) {
-        const bufferView = bufferViews[0];
-        const itemSize = WEBGL_TYPE_SIZES[accessorDef.type];
-        const TypedArray = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
-        const elementBytes = TypedArray.BYTES_PER_ELEMENT;
-        const itemBytes = elementBytes * itemSize;
-        const byteOffset = accessorDef.byteOffset || 0;
-        const byteStride = accessorDef.bufferView !== void 0 ? json.bufferViews[accessorDef.bufferView].byteStride : void 0;
-        const normalized = accessorDef.normalized === true;
-        let array, bufferAttribute;
-        if (byteStride && byteStride !== itemBytes) {
-          const ibSlice = Math.floor(byteOffset / byteStride);
-          const ibCacheKey = "InterleavedBuffer:" + accessorDef.bufferView + ":" + accessorDef.componentType + ":" + ibSlice + ":" + accessorDef.count;
-          let ib = parser.cache.get(ibCacheKey);
-          if (!ib) {
-            array = new TypedArray(bufferView, ibSlice * byteStride, accessorDef.count * byteStride / elementBytes);
-            ib = new InterleavedBuffer(array, byteStride / elementBytes);
-            parser.cache.add(ibCacheKey, ib);
-          }
-          bufferAttribute = new InterleavedBufferAttribute(ib, itemSize, byteOffset % byteStride / elementBytes, normalized);
-        } else {
-          if (bufferView === null) {
-            array = new TypedArray(accessorDef.count * itemSize);
-          } else {
-            array = new TypedArray(bufferView, byteOffset, accessorDef.count * itemSize);
-          }
-          bufferAttribute = new BufferAttribute(array, itemSize, normalized);
-        }
-        if (accessorDef.sparse !== void 0) {
-          const itemSizeIndices = WEBGL_TYPE_SIZES.SCALAR;
-          const TypedArrayIndices = WEBGL_COMPONENT_TYPES[accessorDef.sparse.indices.componentType];
-          const byteOffsetIndices = accessorDef.sparse.indices.byteOffset || 0;
-          const byteOffsetValues = accessorDef.sparse.values.byteOffset || 0;
-          const sparseIndices = new TypedArrayIndices(bufferViews[1], byteOffsetIndices, accessorDef.sparse.count * itemSizeIndices);
-          const sparseValues = new TypedArray(bufferViews[2], byteOffsetValues, accessorDef.sparse.count * itemSize);
-          if (bufferView !== null) {
-            bufferAttribute = new BufferAttribute(bufferAttribute.array.slice(), bufferAttribute.itemSize, bufferAttribute.normalized);
-          }
-          for (let i2 = 0, il = sparseIndices.length; i2 < il; i2++) {
-            const index = sparseIndices[i2];
-            bufferAttribute.setX(index, sparseValues[i2 * itemSize]);
-            if (itemSize >= 2) bufferAttribute.setY(index, sparseValues[i2 * itemSize + 1]);
-            if (itemSize >= 3) bufferAttribute.setZ(index, sparseValues[i2 * itemSize + 2]);
-            if (itemSize >= 4) bufferAttribute.setW(index, sparseValues[i2 * itemSize + 3]);
-            if (itemSize >= 5) throw new Error("THREE.GLTFLoader: Unsupported itemSize in sparse BufferAttribute.");
-          }
-        }
-        return bufferAttribute;
-      });
-    }
-    loadTexture(textureIndex) {
-      const json = this.json;
-      const options = this.options;
-      const textureDef = json.textures[textureIndex];
-      const sourceIndex = textureDef.source;
-      const sourceDef = json.images[sourceIndex];
-      let loader = this.textureLoader;
-      if (sourceDef.uri) {
-        const handler = options.manager.getHandler(sourceDef.uri);
-        if (handler !== null) loader = handler;
-      }
-      return this.loadTextureImage(textureIndex, sourceIndex, loader);
-    }
-    loadTextureImage(textureIndex, sourceIndex, loader) {
-      const parser = this;
-      const json = this.json;
-      const textureDef = json.textures[textureIndex];
-      const sourceDef = json.images[sourceIndex];
-      const cacheKey = (sourceDef.uri || sourceDef.bufferView) + ":" + textureDef.sampler;
-      if (this.textureCache[cacheKey]) {
-        return this.textureCache[cacheKey];
-      }
-      const promise = this.loadImageSource(sourceIndex, loader).then(function (texture) {
-        texture.flipY = false;
-        texture.name = textureDef.name || sourceDef.name || "";
-        if (texture.name === "" && typeof sourceDef.uri === "string" && sourceDef.uri.startsWith("data:image/") === false) {
-          texture.name = sourceDef.uri;
-        }
-        const samplers = json.samplers || ({});
-        const sampler = samplers[textureDef.sampler] || ({});
-        texture.magFilter = WEBGL_FILTERS[sampler.magFilter] || LinearFilter;
-        texture.minFilter = WEBGL_FILTERS[sampler.minFilter] || LinearMipmapLinearFilter;
-        texture.wrapS = WEBGL_WRAPPINGS[sampler.wrapS] || RepeatWrapping;
-        texture.wrapT = WEBGL_WRAPPINGS[sampler.wrapT] || RepeatWrapping;
-        parser.associations.set(texture, {
-          textures: textureIndex
-        });
-        return texture;
-      }).catch(function () {
-        return null;
-      });
-      this.textureCache[cacheKey] = promise;
-      return promise;
-    }
-    loadImageSource(sourceIndex, loader) {
-      const parser = this;
-      const json = this.json;
-      const options = this.options;
-      if (this.sourceCache[sourceIndex] !== void 0) {
-        return this.sourceCache[sourceIndex].then(texture => texture.clone());
-      }
-      const sourceDef = json.images[sourceIndex];
-      const URL2 = self.URL || self.webkitURL;
-      let sourceURI = sourceDef.uri || "";
-      let isObjectURL = false;
-      if (sourceDef.bufferView !== void 0) {
-        sourceURI = parser.getDependency("bufferView", sourceDef.bufferView).then(function (bufferView) {
-          isObjectURL = true;
-          const blob = new Blob([bufferView], {
-            type: sourceDef.mimeType
-          });
-          sourceURI = URL2.createObjectURL(blob);
-          return sourceURI;
-        });
-      } else if (sourceDef.uri === void 0) {
-        throw new Error("THREE.GLTFLoader: Image " + sourceIndex + " is missing URI and bufferView");
-      }
-      const promise = Promise.resolve(sourceURI).then(function (sourceURI2) {
-        return new Promise(function (resolve, reject) {
-          let onLoad = resolve;
-          if (loader.isImageBitmapLoader === true) {
-            onLoad = function (imageBitmap) {
-              const texture = new Texture(imageBitmap);
-              texture.needsUpdate = true;
-              resolve(texture);
-            };
-          }
-          loader.load(LoaderUtils.resolveURL(sourceURI2, options.path), onLoad, void 0, reject);
-        });
-      }).then(function (texture) {
-        if (isObjectURL === true) {
-          URL2.revokeObjectURL(sourceURI);
-        }
-        texture.userData.mimeType = sourceDef.mimeType || getImageURIMimeType(sourceDef.uri);
-        return texture;
-      }).catch(function (error) {
-        console.error("THREE.GLTFLoader: Couldn't load texture", sourceURI);
-        throw error;
-      });
-      this.sourceCache[sourceIndex] = promise;
-      return promise;
-    }
-    assignTexture(materialParams, mapName, mapDef, colorSpace) {
-      const parser = this;
-      return this.getDependency("texture", mapDef.index).then(function (texture) {
-        if (!texture) return null;
-        if (mapDef.texCoord !== void 0 && mapDef.texCoord > 0) {
-          texture = texture.clone();
-          texture.channel = mapDef.texCoord;
-        }
-        if (parser.extensions[EXTENSIONS.KHR_TEXTURE_TRANSFORM]) {
-          const transform = mapDef.extensions !== void 0 ? mapDef.extensions[EXTENSIONS.KHR_TEXTURE_TRANSFORM] : void 0;
-          if (transform) {
-            const gltfReference = parser.associations.get(texture);
-            texture = parser.extensions[EXTENSIONS.KHR_TEXTURE_TRANSFORM].extendTexture(texture, transform);
-            parser.associations.set(texture, gltfReference);
-          }
-        }
-        if (colorSpace !== void 0) {
-          texture.colorSpace = colorSpace;
-        }
-        materialParams[mapName] = texture;
-        return texture;
-      });
-    }
-    assignFinalMaterial(mesh) {
-      const geometry = mesh.geometry;
-      let material = mesh.material;
-      const useDerivativeTangents = geometry.attributes.tangent === void 0;
-      const useVertexColors = geometry.attributes.color !== void 0;
-      const useFlatShading = geometry.attributes.normal === void 0;
-      if (mesh.isPoints) {
-        const cacheKey = "PointsMaterial:" + material.uuid;
-        let pointsMaterial = this.cache.get(cacheKey);
-        if (!pointsMaterial) {
-          pointsMaterial = new PointsMaterial();
-          Material.prototype.copy.call(pointsMaterial, material);
-          pointsMaterial.color.copy(material.color);
-          pointsMaterial.map = material.map;
-          pointsMaterial.sizeAttenuation = false;
-          this.cache.add(cacheKey, pointsMaterial);
-        }
-        material = pointsMaterial;
-      } else if (mesh.isLine) {
-        const cacheKey = "LineBasicMaterial:" + material.uuid;
-        let lineMaterial = this.cache.get(cacheKey);
-        if (!lineMaterial) {
-          lineMaterial = new LineBasicMaterial();
-          Material.prototype.copy.call(lineMaterial, material);
-          lineMaterial.color.copy(material.color);
-          lineMaterial.map = material.map;
-          this.cache.add(cacheKey, lineMaterial);
-        }
-        material = lineMaterial;
-      }
-      if (useDerivativeTangents || useVertexColors || useFlatShading) {
-        let cacheKey = "ClonedMaterial:" + material.uuid + ":";
-        if (useDerivativeTangents) cacheKey += "derivative-tangents:";
-        if (useVertexColors) cacheKey += "vertex-colors:";
-        if (useFlatShading) cacheKey += "flat-shading:";
-        let cachedMaterial = this.cache.get(cacheKey);
-        if (!cachedMaterial) {
-          cachedMaterial = material.clone();
-          if (useVertexColors) cachedMaterial.vertexColors = true;
-          if (useFlatShading) cachedMaterial.flatShading = true;
-          if (useDerivativeTangents) {
-            if (cachedMaterial.normalScale) cachedMaterial.normalScale.y *= -1;
-            if (cachedMaterial.clearcoatNormalScale) cachedMaterial.clearcoatNormalScale.y *= -1;
-          }
-          this.cache.add(cacheKey, cachedMaterial);
-          this.associations.set(cachedMaterial, this.associations.get(material));
-        }
-        material = cachedMaterial;
-      }
-      mesh.material = material;
-    }
-    getMaterialType() {
-      return MeshStandardMaterial;
-    }
-    loadMaterial(materialIndex) {
-      const parser = this;
-      const json = this.json;
-      const extensions = this.extensions;
-      const materialDef = json.materials[materialIndex];
-      let materialType;
-      const materialParams = {};
-      const materialExtensions = materialDef.extensions || ({});
-      const pending = [];
-      if (materialExtensions[EXTENSIONS.KHR_MATERIALS_UNLIT]) {
-        const kmuExtension = extensions[EXTENSIONS.KHR_MATERIALS_UNLIT];
-        materialType = kmuExtension.getMaterialType();
-        pending.push(kmuExtension.extendParams(materialParams, materialDef, parser));
-      } else {
-        const metallicRoughness = materialDef.pbrMetallicRoughness || ({});
-        materialParams.color = new Color(1, 1, 1);
-        materialParams.opacity = 1;
-        if (Array.isArray(metallicRoughness.baseColorFactor)) {
-          const array = metallicRoughness.baseColorFactor;
-          materialParams.color.setRGB(array[0], array[1], array[2], LinearSRGBColorSpace);
-          materialParams.opacity = array[3];
-        }
-        if (metallicRoughness.baseColorTexture !== void 0) {
-          pending.push(parser.assignTexture(materialParams, "map", metallicRoughness.baseColorTexture, SRGBColorSpace));
-        }
-        materialParams.metalness = metallicRoughness.metallicFactor !== void 0 ? metallicRoughness.metallicFactor : 1;
-        materialParams.roughness = metallicRoughness.roughnessFactor !== void 0 ? metallicRoughness.roughnessFactor : 1;
-        if (metallicRoughness.metallicRoughnessTexture !== void 0) {
-          pending.push(parser.assignTexture(materialParams, "metalnessMap", metallicRoughness.metallicRoughnessTexture));
-          pending.push(parser.assignTexture(materialParams, "roughnessMap", metallicRoughness.metallicRoughnessTexture));
-        }
-        materialType = this._invokeOne(function (ext) {
-          return ext.getMaterialType && ext.getMaterialType(materialIndex);
-        });
-        pending.push(Promise.all(this._invokeAll(function (ext) {
-          return ext.extendMaterialParams && ext.extendMaterialParams(materialIndex, materialParams);
-        })));
-      }
-      if (materialDef.doubleSided === true) {
-        materialParams.side = DoubleSide;
-      }
-      const alphaMode = materialDef.alphaMode || ALPHA_MODES.OPAQUE;
-      if (alphaMode === ALPHA_MODES.BLEND) {
-        materialParams.transparent = true;
-        materialParams.depthWrite = false;
-      } else {
-        materialParams.transparent = false;
-        if (alphaMode === ALPHA_MODES.MASK) {
-          materialParams.alphaTest = materialDef.alphaCutoff !== void 0 ? materialDef.alphaCutoff : 0.5;
-        }
-      }
-      if (materialDef.normalTexture !== void 0 && materialType !== MeshBasicMaterial) {
-        pending.push(parser.assignTexture(materialParams, "normalMap", materialDef.normalTexture));
-        materialParams.normalScale = new Vector2(1, 1);
-        if (materialDef.normalTexture.scale !== void 0) {
-          const scale = materialDef.normalTexture.scale;
-          materialParams.normalScale.set(scale, scale);
-        }
-      }
-      if (materialDef.occlusionTexture !== void 0 && materialType !== MeshBasicMaterial) {
-        pending.push(parser.assignTexture(materialParams, "aoMap", materialDef.occlusionTexture));
-        if (materialDef.occlusionTexture.strength !== void 0) {
-          materialParams.aoMapIntensity = materialDef.occlusionTexture.strength;
-        }
-      }
-      if (materialDef.emissiveFactor !== void 0 && materialType !== MeshBasicMaterial) {
-        const emissiveFactor = materialDef.emissiveFactor;
-        materialParams.emissive = new Color().setRGB(emissiveFactor[0], emissiveFactor[1], emissiveFactor[2], LinearSRGBColorSpace);
-      }
-      if (materialDef.emissiveTexture !== void 0 && materialType !== MeshBasicMaterial) {
-        pending.push(parser.assignTexture(materialParams, "emissiveMap", materialDef.emissiveTexture, SRGBColorSpace));
-      }
-      return Promise.all(pending).then(function () {
-        const material = new materialType(materialParams);
-        if (materialDef.name) material.name = materialDef.name;
-        assignExtrasToUserData(material, materialDef);
-        parser.associations.set(material, {
-          materials: materialIndex
-        });
-        if (materialDef.extensions) addUnknownExtensionsToUserData(extensions, material, materialDef);
-        return material;
-      });
-    }
-    createUniqueName(originalName) {
-      const sanitizedName = PropertyBinding.sanitizeNodeName(originalName || "");
-      if ((sanitizedName in this.nodeNamesUsed)) {
-        return sanitizedName + "_" + ++this.nodeNamesUsed[sanitizedName];
-      } else {
-        this.nodeNamesUsed[sanitizedName] = 0;
-        return sanitizedName;
-      }
-    }
-    loadGeometries(primitives) {
-      const parser = this;
-      const extensions = this.extensions;
-      const cache = this.primitiveCache;
-      function createDracoPrimitive(primitive) {
-        return extensions[EXTENSIONS.KHR_DRACO_MESH_COMPRESSION].decodePrimitive(primitive, parser).then(function (geometry) {
-          return addPrimitiveAttributes(geometry, primitive, parser);
-        });
-      }
-      const pending = [];
-      for (let i2 = 0, il = primitives.length; i2 < il; i2++) {
-        const primitive = primitives[i2];
-        const cacheKey = createPrimitiveKey(primitive);
-        const cached = cache[cacheKey];
-        if (cached) {
-          pending.push(cached.promise);
-        } else {
-          let geometryPromise;
-          if (primitive.extensions && primitive.extensions[EXTENSIONS.KHR_DRACO_MESH_COMPRESSION]) {
-            geometryPromise = createDracoPrimitive(primitive);
-          } else {
-            geometryPromise = addPrimitiveAttributes(new BufferGeometry(), primitive, parser);
-          }
-          cache[cacheKey] = {
-            primitive,
-            promise: geometryPromise
-          };
-          pending.push(geometryPromise);
-        }
-      }
-      return Promise.all(pending);
-    }
-    loadMesh(meshIndex) {
-      const parser = this;
-      const json = this.json;
-      const extensions = this.extensions;
-      const meshDef = json.meshes[meshIndex];
-      const primitives = meshDef.primitives;
-      const pending = [];
-      for (let i2 = 0, il = primitives.length; i2 < il; i2++) {
-        const material = primitives[i2].material === void 0 ? createDefaultMaterial(this.cache) : this.getDependency("material", primitives[i2].material);
-        pending.push(material);
-      }
-      pending.push(parser.loadGeometries(primitives));
-      return Promise.all(pending).then(function (results) {
-        const materials = results.slice(0, results.length - 1);
-        const geometries = results[results.length - 1];
-        const meshes = [];
-        for (let i2 = 0, il = geometries.length; i2 < il; i2++) {
-          const geometry = geometries[i2];
-          const primitive = primitives[i2];
-          let mesh;
-          const material = materials[i2];
-          if (primitive.mode === WEBGL_CONSTANTS.TRIANGLES || primitive.mode === WEBGL_CONSTANTS.TRIANGLE_STRIP || primitive.mode === WEBGL_CONSTANTS.TRIANGLE_FAN || primitive.mode === void 0) {
-            mesh = meshDef.isSkinnedMesh === true ? new SkinnedMesh(geometry, material) : new Mesh(geometry, material);
-            if (mesh.isSkinnedMesh === true) {
-              mesh.normalizeSkinWeights();
-            }
-            if (primitive.mode === WEBGL_CONSTANTS.TRIANGLE_STRIP) {
-              mesh.geometry = toTrianglesDrawMode(mesh.geometry, TriangleStripDrawMode);
-            } else if (primitive.mode === WEBGL_CONSTANTS.TRIANGLE_FAN) {
-              mesh.geometry = toTrianglesDrawMode(mesh.geometry, TriangleFanDrawMode);
-            }
-          } else if (primitive.mode === WEBGL_CONSTANTS.LINES) {
-            mesh = new LineSegments(geometry, material);
-          } else if (primitive.mode === WEBGL_CONSTANTS.LINE_STRIP) {
-            mesh = new Line(geometry, material);
-          } else if (primitive.mode === WEBGL_CONSTANTS.LINE_LOOP) {
-            mesh = new LineLoop(geometry, material);
-          } else if (primitive.mode === WEBGL_CONSTANTS.POINTS) {
-            mesh = new Points(geometry, material);
-          } else {
-            throw new Error("THREE.GLTFLoader: Primitive mode unsupported: " + primitive.mode);
-          }
-          if (Object.keys(mesh.geometry.morphAttributes).length > 0) {
-            updateMorphTargets(mesh, meshDef);
-          }
-          mesh.name = parser.createUniqueName(meshDef.name || "mesh_" + meshIndex);
-          assignExtrasToUserData(mesh, meshDef);
-          if (primitive.extensions) addUnknownExtensionsToUserData(extensions, mesh, primitive);
-          parser.assignFinalMaterial(mesh);
-          meshes.push(mesh);
-        }
-        for (let i2 = 0, il = meshes.length; i2 < il; i2++) {
-          parser.associations.set(meshes[i2], {
-            meshes: meshIndex,
-            primitives: i2
-          });
-        }
-        if (meshes.length === 1) {
-          if (meshDef.extensions) addUnknownExtensionsToUserData(extensions, meshes[0], meshDef);
-          return meshes[0];
-        }
-        const group = new Group();
-        if (meshDef.extensions) addUnknownExtensionsToUserData(extensions, group, meshDef);
-        parser.associations.set(group, {
-          meshes: meshIndex
-        });
-        for (let i2 = 0, il = meshes.length; i2 < il; i2++) {
-          group.add(meshes[i2]);
-        }
-        return group;
-      });
-    }
-    loadCamera(cameraIndex) {
-      let camera;
-      const cameraDef = this.json.cameras[cameraIndex];
-      const params = cameraDef[cameraDef.type];
-      if (!params) {
-        console.warn("THREE.GLTFLoader: Missing camera parameters.");
-        return;
-      }
-      if (cameraDef.type === "perspective") {
-        camera = new PerspectiveCamera(MathUtils.radToDeg(params.yfov), params.aspectRatio || 1, params.znear || 1, params.zfar || 2e6);
-      } else if (cameraDef.type === "orthographic") {
-        camera = new OrthographicCamera(-params.xmag, params.xmag, params.ymag, -params.ymag, params.znear, params.zfar);
-      }
-      if (cameraDef.name) camera.name = this.createUniqueName(cameraDef.name);
-      assignExtrasToUserData(camera, cameraDef);
-      return Promise.resolve(camera);
-    }
-    loadSkin(skinIndex) {
-      const skinDef = this.json.skins[skinIndex];
-      const pending = [];
-      for (let i2 = 0, il = skinDef.joints.length; i2 < il; i2++) {
-        pending.push(this._loadNodeShallow(skinDef.joints[i2]));
-      }
-      if (skinDef.inverseBindMatrices !== void 0) {
-        pending.push(this.getDependency("accessor", skinDef.inverseBindMatrices));
-      } else {
-        pending.push(null);
-      }
-      return Promise.all(pending).then(function (results) {
-        const inverseBindMatrices = results.pop();
-        const jointNodes = results;
-        const bones = [];
-        const boneInverses = [];
-        for (let i2 = 0, il = jointNodes.length; i2 < il; i2++) {
-          const jointNode = jointNodes[i2];
-          if (jointNode) {
-            bones.push(jointNode);
-            const mat = new Matrix4();
-            if (inverseBindMatrices !== null) {
-              mat.fromArray(inverseBindMatrices.array, i2 * 16);
-            }
-            boneInverses.push(mat);
-          } else {
-            console.warn('THREE.GLTFLoader: Joint "%s" could not be found.', skinDef.joints[i2]);
-          }
-        }
-        return new Skeleton(bones, boneInverses);
-      });
-    }
-    loadAnimation(animationIndex) {
-      const json = this.json;
-      const parser = this;
-      const animationDef = json.animations[animationIndex];
-      const animationName = animationDef.name ? animationDef.name : "animation_" + animationIndex;
-      const pendingNodes = [];
-      const pendingInputAccessors = [];
-      const pendingOutputAccessors = [];
-      const pendingSamplers = [];
-      const pendingTargets = [];
-      for (let i2 = 0, il = animationDef.channels.length; i2 < il; i2++) {
-        const channel = animationDef.channels[i2];
-        const sampler = animationDef.samplers[channel.sampler];
-        const target = channel.target;
-        const name = target.node;
-        const input = animationDef.parameters !== void 0 ? animationDef.parameters[sampler.input] : sampler.input;
-        const output = animationDef.parameters !== void 0 ? animationDef.parameters[sampler.output] : sampler.output;
-        if (target.node === void 0) continue;
-        pendingNodes.push(this.getDependency("node", name));
-        pendingInputAccessors.push(this.getDependency("accessor", input));
-        pendingOutputAccessors.push(this.getDependency("accessor", output));
-        pendingSamplers.push(sampler);
-        pendingTargets.push(target);
-      }
-      return Promise.all([Promise.all(pendingNodes), Promise.all(pendingInputAccessors), Promise.all(pendingOutputAccessors), Promise.all(pendingSamplers), Promise.all(pendingTargets)]).then(function (dependencies) {
-        const nodes = dependencies[0];
-        const inputAccessors = dependencies[1];
-        const outputAccessors = dependencies[2];
-        const samplers = dependencies[3];
-        const targets = dependencies[4];
-        const tracks = [];
-        for (let i2 = 0, il = nodes.length; i2 < il; i2++) {
-          const node = nodes[i2];
-          const inputAccessor = inputAccessors[i2];
-          const outputAccessor = outputAccessors[i2];
-          const sampler = samplers[i2];
-          const target = targets[i2];
-          if (node === void 0) continue;
-          if (node.updateMatrix) {
-            node.updateMatrix();
-          }
-          const createdTracks = parser._createAnimationTracks(node, inputAccessor, outputAccessor, sampler, target);
-          if (createdTracks) {
-            for (let k2 = 0; k2 < createdTracks.length; k2++) {
-              tracks.push(createdTracks[k2]);
-            }
-          }
-        }
-        return new AnimationClip(animationName, void 0, tracks);
-      });
-    }
-    createNodeMesh(nodeIndex) {
-      const json = this.json;
-      const parser = this;
-      const nodeDef = json.nodes[nodeIndex];
-      if (nodeDef.mesh === void 0) return null;
-      return parser.getDependency("mesh", nodeDef.mesh).then(function (mesh) {
-        const node = parser._getNodeRef(parser.meshCache, nodeDef.mesh, mesh);
-        if (nodeDef.weights !== void 0) {
-          node.traverse(function (o2) {
-            if (!o2.isMesh) return;
-            for (let i2 = 0, il = nodeDef.weights.length; i2 < il; i2++) {
-              o2.morphTargetInfluences[i2] = nodeDef.weights[i2];
-            }
-          });
-        }
-        return node;
-      });
-    }
-    loadNode(nodeIndex) {
-      const json = this.json;
-      const parser = this;
-      const nodeDef = json.nodes[nodeIndex];
-      const nodePending = parser._loadNodeShallow(nodeIndex);
-      const childPending = [];
-      const childrenDef = nodeDef.children || [];
-      for (let i2 = 0, il = childrenDef.length; i2 < il; i2++) {
-        childPending.push(parser.getDependency("node", childrenDef[i2]));
-      }
-      const skeletonPending = nodeDef.skin === void 0 ? Promise.resolve(null) : parser.getDependency("skin", nodeDef.skin);
-      return Promise.all([nodePending, Promise.all(childPending), skeletonPending]).then(function (results) {
-        const node = results[0];
-        const children = results[1];
-        const skeleton = results[2];
-        if (skeleton !== null) {
-          node.traverse(function (mesh) {
-            if (!mesh.isSkinnedMesh) return;
-            mesh.bind(skeleton, _identityMatrix);
-          });
-        }
-        for (let i2 = 0, il = children.length; i2 < il; i2++) {
-          node.add(children[i2]);
-        }
-        return node;
-      });
-    }
-    _loadNodeShallow(nodeIndex) {
-      const json = this.json;
-      const extensions = this.extensions;
-      const parser = this;
-      if (this.nodeCache[nodeIndex] !== void 0) {
-        return this.nodeCache[nodeIndex];
-      }
-      const nodeDef = json.nodes[nodeIndex];
-      const nodeName = nodeDef.name ? parser.createUniqueName(nodeDef.name) : "";
-      const pending = [];
-      const meshPromise = parser._invokeOne(function (ext) {
-        return ext.createNodeMesh && ext.createNodeMesh(nodeIndex);
-      });
-      if (meshPromise) {
-        pending.push(meshPromise);
-      }
-      if (nodeDef.camera !== void 0) {
-        pending.push(parser.getDependency("camera", nodeDef.camera).then(function (camera) {
-          return parser._getNodeRef(parser.cameraCache, nodeDef.camera, camera);
-        }));
-      }
-      parser._invokeAll(function (ext) {
-        return ext.createNodeAttachment && ext.createNodeAttachment(nodeIndex);
-      }).forEach(function (promise) {
-        pending.push(promise);
-      });
-      this.nodeCache[nodeIndex] = Promise.all(pending).then(function (objects) {
-        let node;
-        if (nodeDef.isBone === true) {
-          node = new Bone();
-        } else if (objects.length > 1) {
-          node = new Group();
-        } else if (objects.length === 1) {
-          node = objects[0];
-        } else {
-          node = new Object3D();
-        }
-        if (node !== objects[0]) {
-          for (let i2 = 0, il = objects.length; i2 < il; i2++) {
-            node.add(objects[i2]);
-          }
-        }
-        if (nodeDef.name) {
-          node.userData.name = nodeDef.name;
-          node.name = nodeName;
-        }
-        assignExtrasToUserData(node, nodeDef);
-        if (nodeDef.extensions) addUnknownExtensionsToUserData(extensions, node, nodeDef);
-        if (nodeDef.matrix !== void 0) {
-          const matrix = new Matrix4();
-          matrix.fromArray(nodeDef.matrix);
-          node.applyMatrix4(matrix);
-        } else {
-          if (nodeDef.translation !== void 0) {
-            node.position.fromArray(nodeDef.translation);
-          }
-          if (nodeDef.rotation !== void 0) {
-            node.quaternion.fromArray(nodeDef.rotation);
-          }
-          if (nodeDef.scale !== void 0) {
-            node.scale.fromArray(nodeDef.scale);
-          }
-        }
-        if (!parser.associations.has(node)) {
-          parser.associations.set(node, {});
-        }
-        parser.associations.get(node).nodes = nodeIndex;
-        return node;
-      });
-      return this.nodeCache[nodeIndex];
-    }
-    loadScene(sceneIndex) {
-      const extensions = this.extensions;
-      const sceneDef = this.json.scenes[sceneIndex];
-      const parser = this;
-      const scene = new Group();
-      if (sceneDef.name) scene.name = parser.createUniqueName(sceneDef.name);
-      assignExtrasToUserData(scene, sceneDef);
-      if (sceneDef.extensions) addUnknownExtensionsToUserData(extensions, scene, sceneDef);
-      const nodeIds = sceneDef.nodes || [];
-      const pending = [];
-      for (let i2 = 0, il = nodeIds.length; i2 < il; i2++) {
-        pending.push(parser.getDependency("node", nodeIds[i2]));
-      }
-      return Promise.all(pending).then(function (nodes) {
-        for (let i2 = 0, il = nodes.length; i2 < il; i2++) {
-          scene.add(nodes[i2]);
-        }
-        const reduceAssociations = node => {
-          const reducedAssociations = new Map();
-          for (const [key, value] of parser.associations) {
-            if (key instanceof Material || key instanceof Texture) {
-              reducedAssociations.set(key, value);
-            }
-          }
-          node.traverse(node2 => {
-            const mappings = parser.associations.get(node2);
-            if (mappings != null) {
-              reducedAssociations.set(node2, mappings);
-            }
-          });
-          return reducedAssociations;
-        };
-        parser.associations = reduceAssociations(scene);
-        return scene;
-      });
-    }
-    _createAnimationTracks(node, inputAccessor, outputAccessor, sampler, target) {
-      const tracks = [];
-      const targetName = node.name ? node.name : node.uuid;
-      const targetNames = [];
-      if (PATH_PROPERTIES[target.path] === PATH_PROPERTIES.weights) {
-        node.traverse(function (object) {
-          if (object.morphTargetInfluences) {
-            targetNames.push(object.name ? object.name : object.uuid);
-          }
-        });
-      } else {
-        targetNames.push(targetName);
-      }
-      let TypedKeyframeTrack;
-      switch (PATH_PROPERTIES[target.path]) {
-        case PATH_PROPERTIES.weights:
-          TypedKeyframeTrack = NumberKeyframeTrack;
-          break;
-        case PATH_PROPERTIES.rotation:
-          TypedKeyframeTrack = QuaternionKeyframeTrack;
-          break;
-        case PATH_PROPERTIES.position:
-        case PATH_PROPERTIES.scale:
-          TypedKeyframeTrack = VectorKeyframeTrack;
-          break;
-        default:
-          switch (outputAccessor.itemSize) {
-            case 1:
-              TypedKeyframeTrack = NumberKeyframeTrack;
-              break;
-            case 2:
-            case 3:
-            default:
-              TypedKeyframeTrack = VectorKeyframeTrack;
-              break;
-          }
-          break;
-      }
-      const interpolation = sampler.interpolation !== void 0 ? INTERPOLATION[sampler.interpolation] : InterpolateLinear;
-      const outputArray = this._getArrayFromAccessor(outputAccessor);
-      for (let j2 = 0, jl = targetNames.length; j2 < jl; j2++) {
-        const track = new TypedKeyframeTrack(targetNames[j2] + "." + PATH_PROPERTIES[target.path], inputAccessor.array, outputArray, interpolation);
-        if (sampler.interpolation === "CUBICSPLINE") {
-          this._createCubicSplineTrackInterpolant(track);
-        }
-        tracks.push(track);
-      }
-      return tracks;
-    }
-    _getArrayFromAccessor(accessor) {
-      let outputArray = accessor.array;
-      if (accessor.normalized) {
-        const scale = getNormalizedComponentScale(outputArray.constructor);
-        const scaled = new Float32Array(outputArray.length);
-        for (let j2 = 0, jl = outputArray.length; j2 < jl; j2++) {
-          scaled[j2] = outputArray[j2] * scale;
-        }
-        outputArray = scaled;
-      }
-      return outputArray;
-    }
-    _createCubicSplineTrackInterpolant(track) {
-      track.createInterpolant = function InterpolantFactoryMethodGLTFCubicSpline(result) {
-        const interpolantType = this instanceof QuaternionKeyframeTrack ? GLTFCubicSplineQuaternionInterpolant : GLTFCubicSplineInterpolant;
-        return new interpolantType(this.times, this.values, this.getValueSize() / 3, result);
-      };
-      track.createInterpolant.isInterpolantFactoryMethodGLTFCubicSpline = true;
-    }
-  };
-  function computeBounds(geometry, primitiveDef, parser) {
-    const attributes = primitiveDef.attributes;
-    const box = new Box3();
-    if (attributes.POSITION !== void 0) {
-      const accessor = parser.json.accessors[attributes.POSITION];
-      const min = accessor.min;
-      const max = accessor.max;
-      if (min !== void 0 && max !== void 0) {
-        box.set(new Vector3(min[0], min[1], min[2]), new Vector3(max[0], max[1], max[2]));
-        if (accessor.normalized) {
-          const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
-          box.min.multiplyScalar(boxScale);
-          box.max.multiplyScalar(boxScale);
-        }
-      } else {
-        console.warn("THREE.GLTFLoader: Missing min/max properties for accessor POSITION.");
-        return;
-      }
-    } else {
-      return;
-    }
-    const targets = primitiveDef.targets;
-    if (targets !== void 0) {
-      const maxDisplacement = new Vector3();
-      const vector = new Vector3();
-      for (let i2 = 0, il = targets.length; i2 < il; i2++) {
-        const target = targets[i2];
-        if (target.POSITION !== void 0) {
-          const accessor = parser.json.accessors[target.POSITION];
-          const min = accessor.min;
-          const max = accessor.max;
-          if (min !== void 0 && max !== void 0) {
-            vector.setX(Math.max(Math.abs(min[0]), Math.abs(max[0])));
-            vector.setY(Math.max(Math.abs(min[1]), Math.abs(max[1])));
-            vector.setZ(Math.max(Math.abs(min[2]), Math.abs(max[2])));
-            if (accessor.normalized) {
-              const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
-              vector.multiplyScalar(boxScale);
-            }
-            maxDisplacement.max(vector);
-          } else {
-            console.warn("THREE.GLTFLoader: Missing min/max properties for accessor POSITION.");
-          }
-        }
-      }
-      box.expandByVector(maxDisplacement);
-    }
-    geometry.boundingBox = box;
-    const sphere = new Sphere();
-    box.getCenter(sphere.center);
-    sphere.radius = box.min.distanceTo(box.max) / 2;
-    geometry.boundingSphere = sphere;
-  }
-  function addPrimitiveAttributes(geometry, primitiveDef, parser) {
-    const attributes = primitiveDef.attributes;
-    const pending = [];
-    function assignAttributeAccessor(accessorIndex, attributeName) {
-      return parser.getDependency("accessor", accessorIndex).then(function (accessor) {
-        geometry.setAttribute(attributeName, accessor);
-      });
-    }
-    for (const gltfAttributeName in attributes) {
-      const threeAttributeName = ATTRIBUTES[gltfAttributeName] || gltfAttributeName.toLowerCase();
-      if ((threeAttributeName in geometry.attributes)) continue;
-      pending.push(assignAttributeAccessor(attributes[gltfAttributeName], threeAttributeName));
-    }
-    if (primitiveDef.indices !== void 0 && !geometry.index) {
-      const accessor = parser.getDependency("accessor", primitiveDef.indices).then(function (accessor2) {
-        geometry.setIndex(accessor2);
-      });
-      pending.push(accessor);
-    }
-    if (ColorManagement.workingColorSpace !== LinearSRGBColorSpace && ("COLOR_0" in attributes)) {
-      console.warn(`THREE.GLTFLoader: Converting vertex colors from "srgb-linear" to "${ColorManagement.workingColorSpace}" not supported.`);
-    }
-    assignExtrasToUserData(geometry, primitiveDef);
-    computeBounds(geometry, primitiveDef, parser);
-    return Promise.all(pending).then(function () {
-      return primitiveDef.targets !== void 0 ? addMorphTargets(geometry, primitiveDef.targets, parser) : geometry;
-    });
-  }
-  var _scene, _camera, _renderer, _controls;
+  var _scene, _camera2, _renderer, _controls;
   var Renderer = class {
     constructor(scene, camera, configuration) {
       __privateAdd(this, _scene, void 0);
-      __privateAdd(this, _camera, void 0);
+      __privateAdd(this, _camera2, void 0);
       __privateAdd(this, _renderer, void 0);
       __privateAdd(this, _controls, void 0);
-      __privateSet(this, _camera, camera);
+      __privateSet(this, _camera2, camera);
       __privateSet(this, _scene, scene);
       __privateSet(this, _renderer, new WebGLRenderer({
         antialias: true
       }));
       __privateGet(this, _renderer).shadowMap.enabled = true;
-      __privateSet(this, _controls, new OrbitControls(__privateGet(this, _camera), __privateGet(this, _renderer).domElement));
+      __privateSet(this, _controls, new OrbitControls(__privateGet(this, _camera2), __privateGet(this, _renderer).domElement));
       __privateGet(this, _renderer).setSize(configuration.width, configuration.height);
       __privateGet(this, _renderer).setPixelRatio(window.devicePixelRatio * 1.5);
       const light = new PointLight(16777215, 1);
@@ -28205,7 +34025,7 @@ void main() {
       return __privateGet(this, _scene);
     }
     render() {
-      return __privateGet(this, _renderer).render(__privateGet(this, _scene), __privateGet(this, _camera));
+      return __privateGet(this, _renderer).render(__privateGet(this, _scene), __privateGet(this, _camera2));
     }
     getElement() {
       return __privateGet(this, _renderer).domElement;
@@ -28213,13 +34033,13 @@ void main() {
     add(...input) {
       return __privateGet(this, _scene).add(...input);
     }
-    step(_2) {
+    step(_4) {
       this.render();
       __privateGet(this, _controls).update();
     }
   };
   _scene = new WeakMap();
-  _camera = new WeakMap();
+  _camera2 = new WeakMap();
   _renderer = new WeakMap();
   _controls = new WeakMap();
   var World = class extends TypedEventTarget {
@@ -28236,20 +34056,20 @@ void main() {
       this.controllers.addController(...controllers);
       this.addEventListener("worldStart", () => {
         controllers.forEach(controller => {
-          var _a2;
-          (_a2 = controller.start) == null ? void 0 : _a2.call(controller);
+          var _a;
+          (_a = controller.start) == null ? void 0 : _a.call(controller);
         });
       });
       this.addEventListener("beforeRender", e2 => {
         controllers.forEach(controller => {
-          var _a2;
-          (_a2 = controller.update) == null ? void 0 : _a2.call(controller, e2.frameTimingInfo);
+          var _a;
+          (_a = controller.update) == null ? void 0 : _a.call(controller, e2.frameTimingInfo);
         });
       });
       this.physics.addEventListener("beforePhysicsUpdate", e2 => {
         controllers.forEach(controller => {
-          var _a2;
-          (_a2 = controller.fixedUpdate) == null ? void 0 : _a2.call(controller, e2.frameTimingInfo);
+          var _a;
+          (_a = controller.fixedUpdate) == null ? void 0 : _a.call(controller, e2.frameTimingInfo);
         });
       });
     }
@@ -28300,6 +34120,8 @@ void main() {
       }
     }
   };
+  init_define_process();
+  init_define_process();
   var vec3 = ({x: x2, y: y2, z: z2}) => new Vector3(x2, y2, z2);
   var _rapierRigidBody, _rapierCollider;
   var Entity = class {
@@ -28371,6 +34193,7 @@ void main() {
     isRigidBodyType: () => isRigidBodyType,
     rigidBodyTypes: () => rigidBodyTypes
   });
+  init_define_process();
   var rigidBodyTypes = ["fixed", "dynamic"];
   function isRigidBodyType(bodyType) {
     return rigidBodyTypes.includes(bodyType);
@@ -28393,6 +34216,7 @@ void main() {
   __export(MeshFactory_exports, {
     addCuboid: () => addCuboid2
   });
+  init_define_process();
   function addCuboid2(options) {
     const {orientation, dimension, color} = options;
     const geometry = new BoxGeometry(dimension.width, dimension.height, dimension.length);
@@ -28408,42 +34232,331 @@ void main() {
     mesh.quaternion.copy(orientation.rotation);
     return mesh;
   }
+  init_define_process();
+  var CallbackHandler = class {
+    constructor() {
+      this.callbackStore = [];
+      this.currentStepCount = 0;
+    }
+    addCallback(callback, delay) {
+      this.callbackStore.push({
+        callback,
+        delay
+      });
+    }
+    checkCallbacks(frameTimingInfo) {
+      if (frameTimingInfo.stepCount === this.currentStepCount) {
+        return;
+      }
+      this.currentStepCount = frameTimingInfo.stepCount;
+      this.callbackStore = this.callbackStore.filter(callbackEntry => {
+        callbackEntry.delay -= frameTimingInfo.timestep;
+        if (callbackEntry.delay <= 0) {
+          callbackEntry.callback();
+          return false;
+        }
+        return true;
+      });
+    }
+  };
+  init_define_process();
+  function loadGLTF(url, dimension) {
+    const loader = new GLTFLoader();
+    return new Promise((resolve, reject) => {
+      loader.load(url, data => {
+        const box = new Box3().setFromObject(data.scene);
+        const meshSize = new Vector3();
+        box.getSize(meshSize);
+        const scaleX = dimension.width / meshSize.x;
+        const scaleY = dimension.height / meshSize.y;
+        const scaleZ = dimension.length / meshSize.z;
+        data.scene.scale.set(scaleX, scaleY, scaleZ);
+        resolve(data);
+      }, void 0, error => reject(error));
+    });
+  }
+  init_define_process();
+  var PIDController = class {
+    constructor({zero, add, subtract, scale, proportionalGain, integralGain, derivativeGain}) {
+      this.zero = zero;
+      this.add = add;
+      this.subtract = subtract;
+      this.scale = scale;
+      this.proportionalGain = proportionalGain;
+      this.integralGain = integralGain;
+      this.derivativeGain = derivativeGain;
+      this.errorsSum = this.zero();
+      this.previousError = this.zero();
+    }
+    calculate(currentValue, setpoint) {
+      const error = this.subtract(setpoint, currentValue);
+      this.errorsSum = this.add(this.errorsSum, error);
+      const proportional = this.scale(error, this.proportionalGain);
+      const integral = this.scale(this.errorsSum, this.integralGain);
+      const derivative = this.scale(this.subtract(error, this.previousError), this.derivativeGain);
+      this.previousError = error;
+      return this.add(this.add(proportional, integral), derivative);
+    }
+  };
+  var NumberPidController = class extends PIDController {
+    constructor({proportionalGain, integralGain, derivativeGain}) {
+      super({
+        zero: () => 0,
+        add: (a2, b2) => a2 + b2,
+        subtract: (a2, b2) => a2 - b2,
+        scale: (value, scale) => value * scale,
+        proportionalGain,
+        integralGain,
+        derivativeGain
+      });
+    }
+  };
+  var VectorPidController = class extends PIDController {
+    constructor({proportionalGain, integralGain, derivativeGain}) {
+      super({
+        zero: () => new Vector3(0, 0, 0),
+        add: (a2, b2) => a2.clone().add(b2),
+        subtract: (a2, b2) => a2.clone().sub(b2),
+        scale: (value, scale) => value.clone().multiplyScalar(scale),
+        proportionalGain,
+        integralGain,
+        derivativeGain
+      });
+    }
+  };
+  init_define_process();
+  var ChassisWrapper = class {
+    constructor(physics, render, config) {
+      this.chassis = null;
+      this.physics = physics;
+      this.render = render;
+      this.config = config;
+      this.debugMesh = MeshFactory_exports.addCuboid({
+        orientation: config.orientation,
+        dimension: config.dimension,
+        color: new Color(65280),
+        debug: true
+      });
+      this.debugMesh.visible = config.debug;
+      render.add(this.debugMesh);
+    }
+    getEntity() {
+      if (this.chassis === null) {
+        throw new Error("Chassis not initialized");
+      }
+      return this.chassis;
+    }
+    start() {
+      return __async(this, null, function* () {
+        this.chassis = EntityFactory_exports.addCuboid(this.physics, this.config);
+      });
+    }
+    update() {
+      const chassisEntity = this.getEntity();
+      this.debugMesh.position.copy(chassisEntity.getTranslation());
+      this.debugMesh.quaternion.copy(chassisEntity.getRotation());
+    }
+  };
+  var Motor = class {
+    constructor(chassisWrapper, physics, render, config) {
+      this.callbackHandler = new CallbackHandler();
+      this.mesh = null;
+      this.chassisWrapper = chassisWrapper;
+      this.physics = physics;
+      this.render = render;
+      this.displacementVector = vec3(config.displacement);
+      this.config = config;
+      this.pid = new VectorPidController(config.pid);
+      this.motorVelocity = 0;
+      this.meshRotation = 0;
+      this.wheelSide = config.displacement.x > 0 ? "right" : "left";
+    }
+    setSpeedDistance(speed, distance) {
+      this.motorVelocity = speed;
+      this.callbackHandler.addCallback(() => {
+        this.motorVelocity = 0;
+      }, distance / speed * 1e3);
+    }
+    start() {
+      return __async(this, null, function* () {
+        this.mesh = yield loadGLTF(this.config.mesh.url, this.config.mesh.dimension);
+        this.render.add(this.mesh.scene);
+      });
+    }
+    fixedUpdate(timingInfo) {
+      this.callbackHandler.checkCallbacks(timingInfo);
+      const chassis = this.chassisWrapper.getEntity();
+      const targetMotorVelocity = vec3({
+        x: 0,
+        y: 0,
+        z: this.motorVelocity
+      });
+      const targetMotorGlobalVelocity = chassis.transformDirection(targetMotorVelocity);
+      const actualMotorGlobalVelocity = chassis.worldVelocity(this.displacementVector.clone());
+      const pidOutput = this.pid.calculate(actualMotorGlobalVelocity, targetMotorGlobalVelocity);
+      const motorGlobalPosition = chassis.worldTranslation(this.displacementVector.clone());
+      const impulse = pidOutput.projectOnPlane(vec3({
+        x: 0,
+        y: 1,
+        z: 0
+      })).multiplyScalar(chassis.getMass());
+      chassis.applyImpulse(impulse, motorGlobalPosition);
+    }
+    update(timingInfo) {
+      const chassisEntity = this.chassisWrapper.getEntity();
+      const wheelPosition = chassisEntity.worldTranslation(this.displacementVector.clone());
+      wheelPosition.y = this.config.mesh.dimension.height / 2;
+      if (this.mesh) {
+        this.mesh.scene.position.copy(wheelPosition);
+        this.mesh.scene.quaternion.copy(chassisEntity.getRotation());
+        const radiansPerFrame = 2 * (this.motorVelocity / this.config.mesh.dimension.height) * timingInfo.frameDuration / 1e3;
+        this.meshRotation += radiansPerFrame;
+        this.mesh.scene.rotateX(this.meshRotation);
+        if (this.wheelSide === "left") {
+          this.mesh.scene.rotateZ(Math.PI);
+        }
+      }
+    }
+  };
+  init_define_process();
   var noRotation = {
     x: 0,
     y: 0,
     z: 0,
     w: 1
   };
-  var Cuboid = class {
-    constructor(physics, renderer, config) {
-      this.physics = physics;
-      this.render = renderer;
-      this.config = config;
-      const renderCuboidOption = {
-        orientation: {
-          position: config.position,
-          rotation: noRotation
-        },
-        dimension: config.dimension,
-        color: new Color(config.color),
-        debug: false
-      };
-      const mesh = MeshFactory_exports.addCuboid(renderCuboidOption);
-      this.render.add(mesh);
-    }
-    start() {
-      const entityCuboidOption = {
-        orientation: {
-          position: this.config.position,
-          rotation: noRotation
-        },
-        dimension: this.config.dimension,
-        mass: this.config.mass,
-        type: this.config.type
-      };
-      EntityFactory_exports.addCuboid(this.physics, entityCuboidOption);
+  var tinyConstant = 0.012;
+  var chassisConfig = {
+    orientation: {
+      position: {
+        x: 0,
+        y: 0.0775,
+        z: 0
+      },
+      rotation: noRotation
+    },
+    dimension: {
+      height: 0.095,
+      width: 0.145,
+      length: 0.18
+    },
+    mass: 0.6,
+    type: "dynamic",
+    debug: true
+  };
+  var meshConfig = {
+    url: "https://keen-longma-3c1be1.netlify.app/6_remove_wheels.gltf",
+    dimension: chassisConfig.dimension,
+    offset: {
+      y: 0.02
     }
   };
+  var wheelConfig = {
+    displacements: {
+      frontLeftWheel: {
+        x: -(chassisConfig.dimension.width / 2),
+        y: -(chassisConfig.dimension.height / 2),
+        z: chassisConfig.dimension.length / 2 - tinyConstant
+      },
+      frontRightWheel: {
+        x: chassisConfig.dimension.width / 2,
+        y: -(chassisConfig.dimension.height / 2),
+        z: chassisConfig.dimension.length / 2 - tinyConstant
+      },
+      backLeftWheel: {
+        x: -(chassisConfig.dimension.width / 2),
+        y: -(chassisConfig.dimension.height / 2),
+        z: -(chassisConfig.dimension.length / 2 - tinyConstant)
+      },
+      backRightWheel: {
+        x: chassisConfig.dimension.width / 2,
+        y: -(chassisConfig.dimension.height / 2),
+        z: -(chassisConfig.dimension.length / 2 - tinyConstant)
+      }
+    },
+    config: {
+      pid: {
+        proportionalGain: 27,
+        integralGain: 8,
+        derivativeGain: 40
+      },
+      gapToFloor: 0.03,
+      maxRayDistance: 0.05,
+      debug: true
+    }
+  };
+  var motorConfig = {
+    config: {
+      pid: {
+        proportionalGain: 0.25,
+        derivativeGain: 0,
+        integralGain: 0
+      },
+      mesh: {
+        dimension: {
+          width: 0.028,
+          height: 0.0575,
+          length: 0.0575
+        },
+        url: "https://keen-longma-3c1be1.netlify.app/6_wheel.gltf"
+      }
+    },
+    displacements: {
+      leftMotor: {
+        x: 0.058,
+        y: 0,
+        z: 0.03
+      },
+      rightMotor: {
+        x: -0.058,
+        y: 0,
+        z: 0.03
+      }
+    }
+  };
+  var colorSensorConfig = {
+    tickRateInSeconds: 0.1,
+    displacement: {
+      x: -0.06,
+      y: -(chassisConfig.dimension.height / 2),
+      z: 0.11
+    },
+    size: {
+      height: 16,
+      width: 16
+    },
+    camera: {
+      type: "perspective",
+      aspect: 1,
+      fov: 10,
+      near: 0.01,
+      far: 1
+    },
+    debug: true
+  };
+  var ultrasonicSensorConfig = {
+    displacement: {
+      x: 0.04,
+      y: 0,
+      z: 0.01
+    },
+    direction: {
+      x: 0,
+      y: 0,
+      z: 1
+    },
+    debug: true
+  };
+  var ev3Config = {
+    chassis: chassisConfig,
+    motors: motorConfig,
+    wheels: wheelConfig,
+    colorSensor: colorSensorConfig,
+    ultrasonicSensor: ultrasonicSensorConfig,
+    mesh: meshConfig
+  };
+  init_define_process();
+  init_define_process();
   var setCameraPosition = (camera, position) => {
     camera.position.copy(position);
     camera.lookAt(0, 0, 0);
@@ -28465,14 +34578,459 @@ void main() {
         }
       default:
         {
-          const _2 = cameraOptions;
+          const _4 = cameraOptions;
           throw new Error("Unknown camera type");
         }
     }
   }
+  init_define_process();
+  var ColorSensor = class {
+    constructor(chassisWrapper, render, config) {
+      this.accumulator = 0;
+      this.chassisWrapper = chassisWrapper;
+      this.displacement = vec3(config.displacement);
+      this.config = config;
+      this.camera = getCamera(config.camera);
+      this.spotLight = new SpotLight(16777215, 0.2, 1, 15 / 180 * Math.PI);
+      render.add(this.spotLight);
+      this.renderer = new Renderer(render.scene(), this.camera, {
+        width: this.config.size.width,
+        height: this.config.size.height,
+        control: "none"
+      });
+      this.colorSensed = {
+        r: 0,
+        g: 0,
+        b: 0
+      };
+      this.tempCanvas = document.createElement("canvas");
+      this.tempCanvas.width = this.config.size.width;
+      this.tempCanvas.height = this.config.size.height;
+      if (config.debug) {
+        const helper = new CameraHelper(this.camera);
+        render.add(helper);
+      }
+    }
+    getColorSensorPosition() {
+      const chassis = this.chassisWrapper.getEntity();
+      const colorSensorPosition = chassis.worldTranslation(this.displacement.clone());
+      return colorSensorPosition;
+    }
+    sense() {
+      return this.colorSensed;
+    }
+    fixedUpdate(timingInfo) {
+      this.accumulator += timingInfo.timestep;
+      const tickRateInMilliseconds = this.config.tickRateInSeconds * 1e3;
+      if (this.accumulator < tickRateInMilliseconds) {
+        return;
+      }
+      this.accumulator -= tickRateInMilliseconds;
+      this.camera.position.copy(this.getColorSensorPosition());
+      this.camera.lookAt(this.camera.position.x, this.camera.position.y - 1, this.camera.position.z);
+      this.spotLight.position.copy(this.camera.position);
+      this.spotLight.target.position.set(this.camera.position.x, this.camera.position.y - 1, this.camera.position.z);
+      this.spotLight.target.updateMatrixWorld();
+      this.renderer.render();
+      const rendererCanvas = this.renderer.getElement();
+      const tempCtx = this.tempCanvas.getContext("2d", {
+        willReadFrequently: true
+      });
+      tempCtx.drawImage(rendererCanvas, 0, 0);
+      const imageData = tempCtx.getImageData(0, 0, this.config.size.width, this.config.size.height, {});
+      const averageColor = {
+        r: 0,
+        g: 0,
+        b: 0
+      };
+      for (let i2 = 0; i2 < imageData.data.length; i2 += 4) {
+        const r2 = imageData.data[i2];
+        const g2 = imageData.data[i2 + 1];
+        const b2 = imageData.data[i2 + 2];
+        averageColor.r += r2;
+        averageColor.g += g2;
+        averageColor.b += b2;
+      }
+      averageColor.r /= imageData.data.length;
+      averageColor.g /= imageData.data.length;
+      averageColor.b /= imageData.data.length;
+      this.colorSensed = averageColor;
+    }
+  };
+  init_define_process();
+  var UltrasonicSensor = class {
+    constructor(chassis, physics, render, config) {
+      this.distanceSensed = 0;
+      this.chassisWrapper = chassis;
+      this.physics = physics;
+      this.render = render;
+      this.displacement = vec3(config.displacement);
+      this.direction = vec3(config.direction);
+      this.config = config;
+      this.debugArrow = new ArrowHelper();
+      this.debugArrow.visible = false;
+      this.render.add(this.debugArrow);
+    }
+    sense() {
+      return this.distanceSensed * 100;
+    }
+    fixedUpdate() {
+      const chassis = this.chassisWrapper.getEntity();
+      const globalDisplacement = chassis.worldTranslation(this.displacement.clone());
+      const globalDirection = chassis.transformDirection(this.direction.clone());
+      const result = this.physics.castRay(globalDisplacement, globalDirection, 1, this.chassisWrapper.getEntity().getCollider());
+      if (this.config.debug) {
+        this.debugArrow.visible = true;
+        this.debugArrow.position.copy(globalDisplacement);
+        this.debugArrow.setDirection(globalDirection.normalize());
+      }
+      if (result === null) {
+        return;
+      }
+      const {distance: wheelDistance} = result;
+      this.distanceSensed = wheelDistance;
+    }
+  };
+  init_define_process();
+  var import_js_slang = __require("js-slang");
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  init_define_process();
+  var _2 = __toESM(require_lodash(), 1);
+  var mergeConfig = (defaultConfig, userConfig) => {
+    if (userConfig === void 0) {
+      return defaultConfig;
+    }
+    return _2.merge(__spreadValues({}, defaultConfig), userConfig);
+  };
+  init_define_process();
+  var import_interpreter = __require("js-slang/dist/cse-machine/interpreter");
+  var import_parser = __require("js-slang/dist/parser/parser");
+  var import_types3 = __require("js-slang/dist/types");
+  var _3 = __toESM(require_lodash(), 1);
+  var DEFAULT_SOURCE_OPTIONS = {
+    scheduler: "async",
+    steps: 1e3,
+    stepLimit: -1,
+    executionMethod: "auto",
+    variant: import_types3.Variant.DEFAULT,
+    originalMaxExecTime: 1e3,
+    useSubst: false,
+    isPrelude: false,
+    throwInfiniteLoops: true,
+    envSteps: -1,
+    importOptions: {
+      wrapSourceModules: true,
+      checkImports: true,
+      loadTabs: true
+    }
+  };
+  function* runECEvaluator(code, context3, options) {
+    const theOptions = _3.merge(__spreadValues({}, DEFAULT_SOURCE_OPTIONS), options);
+    const program = (0, import_parser.parse)(code, context3);
+    if (!program) {
+      return;
+    }
+    try {
+      context3.runtime.isRunning = true;
+      context3.runtime.control = new import_interpreter.Control(program);
+      context3.runtime.stash = new import_interpreter.Stash();
+      yield* __yieldStar((0, import_interpreter.generateCSEMachineStateStream)(context3, context3.runtime.control, context3.runtime.stash, theOptions.envSteps, theOptions.stepLimit, theOptions.isPrelude));
+    } catch (error) {
+      throw error;
+    } finally {
+      context3.runtime.isRunning = false;
+    }
+  }
+  var defaultProgramConfig = {
+    stepsPerTick: 11
+  };
+  var program_controller_identifier = "program_controller";
+  var Program = class {
+    constructor(code, config) {
+      this.callbackHandler = new CallbackHandler();
+      this.config = mergeConfig(defaultProgramConfig, config);
+      this.name = program_controller_identifier;
+      this.code = code;
+      this.iterator = null;
+      this.isPaused = false;
+    }
+    pause(pauseDuration) {
+      this.isPaused = true;
+      this.callbackHandler.addCallback(() => {
+        this.isPaused = false;
+      }, pauseDuration);
+    }
+    start() {
+      const options = {
+        originalMaxExecTime: Infinity,
+        scheduler: "preemptive",
+        stepLimit: Infinity,
+        throwInfiniteLoops: false,
+        useSubst: false
+      };
+      import_context.default.errors = [];
+      this.iterator = runECEvaluator(this.code, import_context.default, options);
+    }
+    fixedUpdate() {
+      try {
+        if (!this.iterator) {
+          throw Error("Program not started");
+        }
+        if (this.isPaused) {
+          return;
+        }
+        for (let i2 = 0; i2 < this.config.stepsPerTick; i2++) {
+          const result = this.iterator.next();
+        }
+      } catch (e2) {
+        console.error(e2);
+        throw new ProgramError("Error in program execution. Please check your code and try again.");
+      }
+    }
+    update(frameTiming) {
+      this.callbackHandler.checkCallbacks(frameTiming);
+    }
+  };
+  init_define_process();
+  var import_context2 = __toESM(__require("js-slang/context"), 1);
+  init_define_process();
+  function interrupt() {
+    throw "source_academy_interrupt";
+  }
+  init_define_process();
+  var sceneConfig = {
+    width: 900,
+    height: 500
+  };
+  init_define_process();
+  var noRotation2 = {
+    x: 0,
+    y: 0,
+    z: 0,
+    w: 1
+  };
+  var Cuboid = class {
+    constructor(physics, renderer, config) {
+      this.physics = physics;
+      this.render = renderer;
+      this.config = config;
+      const renderCuboidOption = {
+        orientation: {
+          position: config.position,
+          rotation: noRotation2
+        },
+        dimension: config.dimension,
+        color: new Color(config.color),
+        debug: false
+      };
+      const mesh = MeshFactory_exports.addCuboid(renderCuboidOption);
+      this.render.add(mesh);
+    }
+    start() {
+      const entityCuboidOption = {
+        orientation: {
+          position: this.config.position,
+          rotation: noRotation2
+        },
+        dimension: this.config.dimension,
+        mass: this.config.mass,
+        type: this.config.type
+      };
+      EntityFactory_exports.addCuboid(this.physics, entityCuboidOption);
+    }
+  };
+  init_define_process();
+  var Paper = class {
+    constructor(render, config) {
+      this.render = render;
+      this.config = config;
+      const plane = new PlaneGeometry(this.config.dimension.width, this.config.dimension.height);
+      this.paper = new Mesh(plane);
+    }
+    start() {
+      return __async(this, null, function* () {
+        const texture = new TextureLoader().load(this.config.url);
+        const material = new MeshStandardMaterial({
+          map: texture
+        });
+        this.paper.position.set(this.config.position.x, 1e-3, this.config.position.y);
+        this.paper.rotation.x = -Math.PI / 2;
+        this.paper.rotation.z = this.config.rotation;
+        this.paper.material = material;
+        this.render.add(this.paper);
+      });
+    }
+  };
+  init_define_process();
+  init_define_process();
+  var Mesh2 = class {
+    constructor(chassisWrapper, render, config) {
+      this.mesh = null;
+      this.previousTranslation = null;
+      this.previousRotation = null;
+      var _a, _b, _c, _d, _e, _f;
+      this.chassisWrapper = chassisWrapper;
+      this.render = render;
+      this.config = config;
+      this.offset = {
+        x: ((_b = (_a = this.config) == null ? void 0 : _a.offset) == null ? void 0 : _b.x) || 0,
+        y: ((_d = (_c = this.config) == null ? void 0 : _c.offset) == null ? void 0 : _d.y) || 0,
+        z: ((_f = (_e = this.config) == null ? void 0 : _e.offset) == null ? void 0 : _f.z) || 0
+      };
+      this.currentTranslation = this.chassisWrapper.config.orientation.position;
+      this.currentRotation = new Quaternion(0, 0, 0, 1);
+    }
+    start() {
+      return __async(this, null, function* () {
+        this.mesh = yield loadGLTF(this.config.url, this.config.dimension);
+        this.render.add(this.mesh.scene);
+      });
+    }
+    fixedUpdate() {
+      this.previousTranslation = this.currentTranslation;
+      this.previousRotation = this.currentRotation;
+      this.currentRotation = this.chassisWrapper.getEntity().getRotation();
+      this.currentTranslation = this.chassisWrapper.getEntity().getTranslation();
+    }
+    update(timingInfo) {
+      var _a, _b;
+      const vecCurrentTranslation = new Vector3().copy(this.currentTranslation);
+      const vecPreviousTranslation = new Vector3().copy(this.previousTranslation || this.currentTranslation);
+      const quatCurrentRotation = new Quaternion().copy(this.currentRotation);
+      const quatPreviousRotation = new Quaternion().copy(this.previousRotation || this.currentRotation);
+      const estimatedTranslation = vecPreviousTranslation.lerp(vecCurrentTranslation, timingInfo.residualFactor);
+      const estimatedRotation = quatPreviousRotation.slerp(quatCurrentRotation, timingInfo.residualFactor);
+      estimatedTranslation.x -= this.offset.x / 2;
+      estimatedTranslation.y -= this.offset.y / 2;
+      estimatedTranslation.z -= this.offset.z / 2;
+      (_a = this.mesh) == null ? void 0 : _a.scene.position.copy(estimatedTranslation);
+      (_b = this.mesh) == null ? void 0 : _b.scene.quaternion.copy(estimatedRotation);
+    }
+  };
+  init_define_process();
+  init_define_process();
+  var defaultDebugArrowConfig = {
+    color: new Color(16711680),
+    debug: false
+  };
+  var DebugArrow = class {
+    constructor(config) {
+      this.config = mergeConfig(defaultDebugArrowConfig, config);
+      this.arrow = new ArrowHelper();
+      this.arrow.setColor(this.config.color);
+    }
+    getMesh() {
+      return this.arrow;
+    }
+    update(position, direction, length, debug) {
+      this.arrow.position.copy(position);
+      this.arrow.setDirection(direction.normalize());
+      this.arrow.setLength(length);
+      if (debug) {
+        this.arrow.visible = debug;
+      }
+    }
+  };
+  var Wheel = class {
+    constructor(chassisWrapper, physics, render, config) {
+      this.chassisWrapper = chassisWrapper;
+      this.physics = physics;
+      this.render = render;
+      this.displacementVector = vec3(config.displacement);
+      this.config = config;
+      this.pid = new NumberPidController(config.pid);
+      this.downVector = vec3({
+        x: 0,
+        y: -1,
+        z: 0
+      });
+      this.arrowHelper = new DebugArrow({
+        debug: config.debug
+      });
+      render.add(this.arrowHelper.getMesh());
+    }
+    fixedUpdate(timingInfo) {
+      const chassis = this.chassisWrapper.getEntity();
+      const globalDisplacement = chassis.worldTranslation(this.displacementVector.clone());
+      const globalDownDirection = chassis.transformDirection(this.downVector.clone());
+      const result = this.physics.castRay(globalDisplacement, globalDownDirection, this.config.maxRayDistance, chassis.getCollider());
+      if (result === null) {
+        return;
+      }
+      const wheelDistance = result.distance;
+      let normal = result.normal;
+      if (wheelDistance === 0) {
+        normal = {
+          x: 0,
+          y: 1,
+          z: 0
+        };
+      }
+      const error = this.pid.calculate(wheelDistance, this.config.gapToFloor);
+      const force = vec3(normal).normalize().multiplyScalar(error * chassis.getMass() * timingInfo.timestep / 1e3);
+      chassis.applyImpulse(force, globalDisplacement);
+      this.arrowHelper.update(globalDisplacement, force.clone(), force.length() * 1e3);
+    }
+  };
+  init_define_process();
+  var wheelNames = ["frontLeftWheel", "frontRightWheel", "backLeftWheel", "backRightWheel"];
+  var motorNames = ["leftMotor", "rightMotor"];
+  var chassisNames = ["chassis"];
+  var meshNames = ["mesh"];
+  var colorSensorNames = ["colorSensor"];
+  var ultrasonicSensorNames = ["ultrasonicSensor"];
+  var controllerNames = [...wheelNames, ...motorNames, ...chassisNames, ...meshNames, ...colorSensorNames, ...ultrasonicSensorNames];
+  var createDefaultEv3 = (physics, render, config) => {
+    const chassis = new ChassisWrapper(physics, render, config.chassis);
+    const mesh = new Mesh2(chassis, render, config.mesh);
+    const wheelControllers = wheelNames.reduce((acc, name) => {
+      const displacement = config.wheels.displacements[name];
+      const wheelConfig2 = __spreadProps(__spreadValues({}, config.wheels.config), {
+        displacement
+      });
+      const wheel = new Wheel(chassis, physics, render, wheelConfig2);
+      return __spreadProps(__spreadValues({}, acc), {
+        [name]: wheel
+      });
+    }, {});
+    const motorControllers = motorNames.reduce((acc, name) => {
+      const displacement = config.motors.displacements[name];
+      const motorConfig2 = __spreadProps(__spreadValues({}, config.motors.config), {
+        displacement
+      });
+      const motor = new Motor(chassis, physics, render, motorConfig2);
+      return __spreadProps(__spreadValues({}, acc), {
+        [name]: motor
+      });
+    }, {});
+    const colorSensor = new ColorSensor(chassis, render, config.colorSensor);
+    const ultrasonicSensor = new UltrasonicSensor(chassis, physics, render, config.ultrasonicSensor);
+    const ev3 = new ControllerMap(__spreadProps(__spreadValues(__spreadValues({}, wheelControllers), motorControllers), {
+      colorSensor,
+      ultrasonicSensor,
+      mesh,
+      chassis
+    }));
+    return ev3;
+  };
+  init_define_process();
   var createScene = () => new Scene();
-  var _a;
-  var storedWorld = (_a = import_context.default.moduleContexts.robot_simulation.state) == null ? void 0 : _a.world;
+  function getWorldFromContext() {
+    var _a;
+    const world = (_a = import_context2.default.moduleContexts.robot_simulation.state) == null ? void 0 : _a.world;
+    if (world === void 0) {
+      throw new Error("World not initialized");
+    }
+    return world;
+  }
+  function getEv3FromContext() {
+    var _a;
+    const ev3 = (_a = import_context2.default.moduleContexts.robot_simulation.state) == null ? void 0 : _a.ev3;
+    if (ev3 === void 0) {
+      throw new Error("ev3 not initialized");
+    }
+    return ev3;
+  }
   function createCustomPhysics(gravity, timestep) {
     const physicsConfig = {
       gravity: {
@@ -28545,26 +35103,101 @@ void main() {
     const floor = createCuboid(physics, renderer, 0, -0.5, 0, 20, 20, 1, 1, "white", "fixed");
     return floor;
   }
-  function createWall(physics, renderer) {
-    const wall = createCuboid(physics, renderer, 0, 1, 1, 1, 0.1, 2, 1, "yellow", "fixed");
+  function createWall(physics, renderer, x2, y2, width, length, height) {
+    const wall = createCuboid(physics, renderer, x2, height / 2, y2, width, length, height, 1, "yellow", "fixed");
     return wall;
+  }
+  function createPaper(render, url, width, height, x2, y2, rotation) {
+    const paperConfig = {
+      url,
+      dimension: {
+        width,
+        height
+      },
+      position: {
+        x: x2,
+        y: y2
+      },
+      rotation: rotation * Math.PI / 180
+    };
+    const paper = new Paper(render, paperConfig);
+    return paper;
+  }
+  function createCSE() {
+    const code = import_context2.default.unTypecheckedCode[0];
+    const program = new Program(code);
+    return program;
   }
   function addControllerToWorld(controller, world) {
     world.addController(controller);
   }
   function saveToContext(key, value) {
-    if (!import_context.default.moduleContexts.robot_simulation.state) {
-      import_context.default.moduleContexts.robot_simulation.state = {};
+    if (!import_context2.default.moduleContexts.robot_simulation.state) {
+      import_context2.default.moduleContexts.robot_simulation.state = {};
     }
-    import_context.default.moduleContexts.robot_simulation.state[key] = value;
+    import_context2.default.moduleContexts.robot_simulation.state[key] = value;
+  }
+  function createEv3(physics, renderer) {
+    const ev3 = createDefaultEv3(physics, renderer, ev3Config);
+    return ev3;
   }
   function init_simulation(worldFactory) {
+    var _a;
+    const storedWorld = (_a = import_context2.default.moduleContexts.robot_simulation.state) == null ? void 0 : _a.world;
     if (storedWorld !== void 0) {
       return;
     }
     const world = worldFactory();
     world.init();
     interrupt();
+  }
+  function ev3_pause(duration) {
+    const world = getWorldFromContext();
+    const program = world.controllers.controllers.find(controller => controller.name === program_controller_identifier);
+    program.pause(duration);
+  }
+  function ev3_motorA() {
+    const ev3 = getEv3FromContext();
+    return ev3.get("leftMotor");
+  }
+  function ev3_motorB() {
+    const ev3 = getEv3FromContext();
+    return ev3.get("rightMotor");
+  }
+  function ev3_motorC() {
+    return null;
+  }
+  function ev3_motorD() {
+    return null;
+  }
+  function ev3_runToRelativePosition(motor, position, speed) {
+    if (motor === null) {
+      return;
+    }
+    const wheelDiameter = motorConfig.config.mesh.dimension.height;
+    const speedInMetersPerSecond = speed / 360 * Math.PI * wheelDiameter;
+    const distanceInMetersPerSecond = position / 360 * Math.PI * wheelDiameter;
+    motor.setSpeedDistance(speedInMetersPerSecond, distanceInMetersPerSecond);
+  }
+  function ev3_colorSensor() {
+    const ev3 = getEv3FromContext();
+    return ev3.get("colorSensor");
+  }
+  function ev3_colorSensorRed(colorSensor) {
+    return colorSensor.sense().r;
+  }
+  function ev3_colorSensorGreen(colorSensor) {
+    return colorSensor.sense().g;
+  }
+  function ev3_colorSensorBlue(colorSensor) {
+    return colorSensor.sense().b;
+  }
+  function ev3_ultrasonicSensor() {
+    const ev3 = getEv3FromContext();
+    return ev3.get("ultrasonicSensor");
+  }
+  function ev3_ultrasonicSensorDistance(ultraSonicSensor) {
+    return ultraSonicSensor.sense();
   }
   return __toCommonJS(robot_simulation_exports);
 };
