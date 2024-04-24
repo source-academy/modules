@@ -2,7 +2,6 @@ import * as THREE from 'three';
 
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { type Controller, type Renderer } from '../../../engine';
-// eslint-disable-next-line import/extensions
 import type { Dimension, SimpleQuaternion, SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
 import { loadGLTF } from '../../../engine/Render/helpers/GLTF';
