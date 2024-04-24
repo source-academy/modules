@@ -24,13 +24,15 @@ See the modules [wiki](https://github.com/source-academy/modules/wiki) for more 
 
 The following set of instructions explain how to clone and set up a copy of the `modules` code repository on your local development machine. Following the steps below will create a  `modules` directory in your local development machine and install the necessary dependencies of the project.
 
-You will need to have a stable version of [NodeJS](https://nodejs.org/en/) on your local development machine. We recommend using the latest LTS version. You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)_ or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
+You will need to have [NodeJS 20](https://nodejs.org/en/) on your local development machine. You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)_ or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
 
-You will also need to have a package manager for your project. We recommend using a stable version of [Yarn](https://yarnpkg.com/) as the repository pipelines are using the Yarn package manager as well. To install the Yarn package manager through [NPM](https://www.npmjs.com/), you can run the following command.
+This project uses [Yarn](https://yarnpkg.com/) as a package manager. To install the Yarn package manager through [NPM](https://www.npmjs.com/), you can run the following command.
 
 ```bash
 npm install -g yarn
 ```
+
+You may also require [Python](https://www.python.org/downloads/) to run build scripts. We recommend either using Python 2.7 or Python 3.8-3.11.
 
 Clone the repository on your local development machine and navigate to it using your favourite command line or shell tool.
 
