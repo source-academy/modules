@@ -47,6 +47,14 @@ Install all the dependencies of the project into `node_modules` in the root fold
 yarn install
 ```
 
+If you encounter errors with esbuild dependencies like the following while building:
+
+```plaintext
+Error: The package "@esbuild/darwin-arm64" could not be found, and is needed by esbuild.
+```
+
+You will need to delete the `node_modules` folder and rerun `yarn install` to fix the issue.
+
 ### Serve Modules
 
 The following set of instructions explain how to transpile and serve the modules from your local development machine's code repository. Following the steps below will transpile all the modules in your project directory into JavaScript files located in the `build` folder. Thereafter, you will serve all the contents of the build folder in a server on your local development machine.
