@@ -1,7 +1,5 @@
-/* eslint-disable import/extensions */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
 import {
   type GLTF,
   GLTFLoader,

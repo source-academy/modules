@@ -20,7 +20,8 @@ export default {
   moduleNameMapper: {
     // Module Name settings required to make chalk work with jest
     '#(.*)': '<rootDir>/node_modules/$1',
-    '^js-slang/context': '<rootDir>/__mocks__/context.ts'
+    '^js-slang/context': '<rootDir>/__mocks__/context.ts',
+    '^three.+.js': '<rootDir>/__mocks__/emptyModule.js',
     // 'lowdb': '<rootDir>/node_modules/lowdb/lib',
     // 'steno': '<rootDir>/node_modules/steno/lib',
   },
