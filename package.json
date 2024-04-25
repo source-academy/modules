@@ -59,7 +59,7 @@
     "@types/lodash": "^4.14.198",
     "@types/node": "^20.8.9",
     "@types/plotly.js-dist": "npm:@types/plotly.js",
-    "@types/react": "^18.2.0",
+    "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.0",
     "@types/three": "^0.163.0",
     "@vitejs/plugin-react": "^4.0.4",
@@ -93,8 +93,8 @@
     "yarnhook": "^0.5.1"
   },
   "dependencies": {
-    "@blueprintjs/core": "^5.9.1",
-    "@blueprintjs/icons": "^5.7.1",
+    "@blueprintjs/core": "^5.10.2",
+    "@blueprintjs/icons": "^5.9.0",
     "@box2d/core": "^0.10.0",
     "@box2d/debug-draw": "^0.10.0",
     "@dimforge/rapier3d-compat": "^0.11.2",
@@ -106,7 +106,7 @@
     "dayjs": "^1.10.4",
     "events": "^3.3.0",
     "gl-matrix": "^3.3.0",
-    "js-slang": "^1.0.55",
+    "js-slang": "^1.0.73",
     "lodash": "^4.17.21",
     "mqtt": "^4.3.7",
     "nbody": "^0.1.1",
@@ -135,7 +135,6 @@
     ]
   },
   "resolutions": {
-    "@types/react": "^18.2.0",
     "esbuild": "^0.18.20",
     "**/gl": "^6.0.2"
   }
