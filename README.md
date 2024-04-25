@@ -24,15 +24,20 @@ See the modules [wiki](https://github.com/source-academy/modules/wiki) for more 
 
 The following set of instructions explain how to clone and set up a copy of the `modules` code repository on your local development machine. Following the steps below will create a  `modules` directory in your local development machine and install the necessary dependencies of the project.
 
-You will need to have [NodeJS 20](https://nodejs.org/en/) on your local development machine. You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)_ or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
+The recommended version of [Node.js](https://nodejs.org/en/) for local development is Node.js 20. You may use a Node.js version manager such as [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)_ or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node.js versions between different projects.
 
-This project uses [Yarn](https://yarnpkg.com/) as a package manager. To install the Yarn package manager through [NPM](https://www.npmjs.com/), you can run the following command.
+This project also uses [Yarn](https://yarnpkg.com/) as a package manager. You may install and enable Yarn by running the following command.
+```bash
+corepack enable
+```
+
+If the above does not work, you can manually install the Yarn package manager through [NPM](https://www.npmjs.com/) using the following command.
 
 ```bash
 npm install -g yarn
 ```
 
-You may also require [Python](https://www.python.org/downloads/) to run build scripts. We recommend either using Python 2.7 or Python 3.8-3.11.
+You may also require [Python](https://www.python.org/downloads/) to run build scripts and install project dependencies. We recommend either using Python 2.7 or Python 3.8-3.11.
 
 Clone the repository on your local development machine and navigate to it using your favourite command line or shell tool.
 
