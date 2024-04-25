@@ -2953,6 +2953,14 @@ export default require => {
       backlink_default = ["M14 10a1 1 0 110 2h-.585l2.292 2.293a1 1 0 01-1.32 1.497l-.094-.083L12 13.415V14a1 1 0 11-2 0l.003-3.075.012-.1.012-.059.033-.108.034-.081.052-.098.067-.096.08-.09a1.01 1.01 0 01.112-.097l.11-.071.143-.065.076-.024.091-.02.116-.014L14 10zM6.036 6.136l-3.45 3.45-.117.127a2 2 0 002.818 2.818l.127-.117 3.45-3.449a4 4 0 01-.885 3.704l-.15.16-1 1A4 4 0 011.02 8.33l.15-.16 1-1a3.998 3.998 0 013.865-1.035zm4.671-1.843a1 1 0 01.083 1.32l-.083.094-5 5a1 1 0 01-1.497-1.32l.083-.094 5-5a1 1 0 011.414 0zm3.121-3.121a4 4 0 01.151 5.497l-.15.16-1 1a3.998 3.998 0 01-3.864 1.036l3.45-3.45.116-.128a2 2 0 00-2.818-2.818l-.127.117-3.45 3.45A4 4 0 017.02 2.33l.15-.16 1-1a4 4 0 015.657 0z"];
     }
   });
+  var backward_ten_default;
+  var init_backward_ten = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/backward-ten.js"() {
+      "use strict";
+      init_define_process();
+      backward_ten_default = ["M8.002 16a6.763 6.763 0 01-2.732-.556 7.08 7.08 0 01-2.221-1.509 7.143 7.143 0 01-1.498-2.239A6.88 6.88 0 011 8.955c0-.274.095-.506.285-.698a.938.938 0 01.692-.287c.271 0 .502.096.692.287.19.192.285.424.285.698 0 1.414.49 2.613 1.469 3.598.979.985 2.171 1.478 3.577 1.478 1.406 0 2.598-.494 3.577-1.48.98-.988 1.47-2.19 1.47-3.607 0-1.414-.493-2.613-1.477-3.598-.984-.985-2.177-1.478-3.58-1.478h-.121l.49.496c.162.162.241.355.239.577a.822.822 0 01-.238.578.811.811 0 01-.588.248.783.783 0 01-.588-.24l-1.93-1.945a.97.97 0 01-.294-.7c0-.267.098-.5.294-.697L7.184.24A.783.783 0 017.772 0c.23.003.426.089.588.259a.809.809 0 01.233.583c-.001.226-.082.42-.244.583l-.47.474h.11c.973 0 1.883.185 2.732.556.85.37 1.59.873 2.225 1.51a7.11 7.11 0 011.503 2.233A6.87 6.87 0 0115 8.945c0 .977-.184 1.894-.551 2.751a7.14 7.14 0 01-1.498 2.239 7.086 7.086 0 01-2.219 1.51 6.748 6.748 0 01-2.73.555z", "M10 8H9v3h1V8zM9 7a1 1 0 00-1 1v3a1 1 0 001 1h1a1 1 0 001-1V8a1 1 0 00-1-1H9z", "M5.5 7a.5.5 0 000 1H6v3.5a.5.5 0 001 0V8a1 1 0 00-1-1h-.5z"];
+    }
+  });
   var badge_default;
   var init_badge = __esm({
     "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/badge.js"() {
@@ -2983,6 +2991,14 @@ export default require => {
       "use strict";
       init_define_process();
       barcode_default = ["M0 14h2V2H0v12zm6 0h1V2H6v12zm2 0h1V2H8v12zm-5 0h2V2H3v12zM15 2v12h1V2h-1zm-5 12h1V2h-1v12zm2 0h2V2h-2v12z"];
+    }
+  });
+  var binary_number_default;
+  var init_binary_number = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/binary-number.js"() {
+      "use strict";
+      init_define_process();
+      binary_number_default = ["M7.004 4.385C6.659 4.128 6.212 4 5.662 4s-1.001.128-1.353.385c-.345.249-.616.571-.814.967-.19.388-.323.816-.396 1.285A9.776 9.776 0 003 8c0 .44.033.894.099 1.363.073.469.205.9.396 1.296.198.389.47.711.814.967.352.25.803.374 1.353.374.55 0 .997-.124 1.342-.374.352-.256.623-.578.814-.967.198-.395.33-.828.396-1.296.073-.47.11-.923.11-1.363 0-.44-.037-.894-.11-1.363a4.052 4.052 0 00-.396-1.285 2.486 2.486 0 00-.814-.967zm-.66 6.34c-.183.154-.41.231-.682.231-.279 0-.51-.077-.693-.23a1.774 1.774 0 01-.429-.638 4.074 4.074 0 01-.22-.945A9.404 9.404 0 014.254 8c0-.403.022-.78.066-1.132.044-.359.117-.674.22-.945.11-.271.253-.483.429-.637.183-.161.414-.242.693-.242.271 0 .499.08.682.242.183.154.326.366.429.637.11.271.187.586.231.945.044.352.066.73.066 1.132 0 .403-.022.784-.066 1.143a3.717 3.717 0 01-.231.945 1.606 1.606 0 01-.429.637zm4.457-5.468c-.26.046-.526.069-.801.069v1.028h1.968V12h1.43V4h-1.064c-.046.244-.145.45-.298.617a1.711 1.711 0 01-.537.412 2.422 2.422 0 01-.698.228z"];
     }
   });
   var p, blank_default;
@@ -3080,6 +3096,14 @@ export default require => {
       "use strict";
       init_define_process();
       build_default = ["M15.39 12.41L7.7 6l1.07-1.1c.34-.34-.12-.63.12-1.26.88-2.17 3.41-2.35 3.41-2.35s.36-.37.71-.72C9.74-.81 7.53.53 6.54 1.4L3.12 4.9l-.71.72c-.39.4-.39 1.05 0 1.45l-.7.72c-.39-.4-1.02-.4-1.41 0s-.39 1.05 0 1.45l1.41 1.45c.39.4 1.02.4 1.41 0s.39-1.05 0-1.45l.71-.72c.39.4 1.02.4 1.41 0l.8-.82 6.39 7.67c.82.82 2.14.82 2.96 0 .81-.82.81-2.15 0-2.96z"];
+    }
+  });
+  var bullseye_default;
+  var init_bullseye = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/bullseye.js"() {
+      "use strict";
+      init_define_process();
+      bullseye_default = ["M15.76 1.35a1 1 0 01-.11 1.41l-7 6a1 1 0 11-1.3-1.52l7-6a1 1 0 011.41.11z", "M8 14a6 6 0 005.598-8.164l1.586-1.36A8 8 0 1112.58 1.44L10.994 2.8A6 6 0 108 14z", "M9.33 4.226a4 4 0 102.603 3.037l-2.624 2.25a1.993 1.993 0 01-2.114.319 1.992 1.992 0 01-.803-.643 1.993 1.993 0 01-.212-2.02c.123-.27.305-.508.53-.697l2.62-2.246z"];
     }
   });
   var calculator_default;
@@ -3298,6 +3322,14 @@ export default require => {
       clipboard_default = ["M11 2c0-.55-.45-1-1-1h.22C9.88.4 9.24 0 8.5 0S7.12.4 6.78 1H7c-.55 0-1 .45-1 1v1h5V2zm2 0h-1v2H5V2H4c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h9c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1z"];
     }
   });
+  var clipboard_file_default;
+  var init_clipboard_file = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/clipboard-file.js"() {
+      "use strict";
+      init_define_process();
+      clipboard_file_default = ["M11.586 6a1 1 0 01.707.293l1.414 1.414a1 1 0 01.293.707V15a1 1 0 01-1 1H7a1 1 0 01-1-1V7a1 1 0 011-1h4.586zM8 9a.5.5 0 000 1h4a.5.5 0 000-1H8zm0 2a.5.5 0 000 1h4a.5.5 0 000-1H8zm0 2a.5.5 0 000 1h4a.5.5 0 000-1H8z", "M8.09.91c.5 0 .91.408.91.908V2.5H5v-.682c0-.5.41-.909.91-.909h-.2C6.017.364 6.326 0 7 0s.982.364 1.29.91h-.2z", "M10 2h1.09c.5 0 .91.41.91.91V5H6a1 1 0 00-1 1v8H2.91c-.5 0-.91-.409-.91-.909V2.91c0-.5.41-.909.91-.909H4v1.5h6V2z"];
+    }
+  });
   var cloud_default;
   var init_cloud = __esm({
     "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/cloud.js"() {
@@ -3312,6 +3344,14 @@ export default require => {
       "use strict";
       init_define_process();
       cloud_download_default = ["M11 11c-.28 0-.53.11-.71.29L9 12.59V8c0-.55-.45-1-1-1s-1 .45-1 1v4.59L5.71 11.3A.965.965 0 005 11a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 11zm1-7c-.03 0-.07 0-.1.01A5 5 0 002 5c0 .11.01.22.02.33A3.51 3.51 0 000 8.5c0 1.41.84 2.61 2.03 3.17C2.2 10.17 3.46 9 5 9c.06 0 .13.02.19.02C5.07 8.7 5 8.36 5 8c0-1.66 1.34-3 3-3s3 1.34 3 3c0 .36-.07.7-.19 1.02.06 0 .13-.02.19-.02 1.48 0 2.7 1.07 2.95 2.47A3.964 3.964 0 0016 8c0-2.21-1.79-4-4-4z"];
+    }
+  });
+  var cloud_server_default;
+  var init_cloud_server = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/cloud-server.js"() {
+      "use strict";
+      init_define_process();
+      cloud_server_default = ["M12 4c-.03 0-.07 0-.1.01A5 5 0 002 5c0 .11.01.22.02.33A3.51 3.51 0 000 8.5C0 10.43 1.57 12 3.5 12H6V9a1 1 0 011-1h8a1 1 0 01.944.67A3.999 3.999 0 0012 4z", "M7 9h8v3H7V9zm3 1.5a.5.5 0 01.5-.5h3a.5.5 0 010 1h-3a.5.5 0 01-.5-.5zm-1 0a.5.5 0 11-1 0 .5.5 0 011 0zM7 16v-3h8v3H7zm3-1.5a.5.5 0 01.5-.5h3a.5.5 0 010 1h-3a.5.5 0 01-.5-.5zm-1.5.5a.5.5 0 100-1 .5.5 0 000 1z"];
     }
   });
   var cloud_tick_default;
@@ -3504,6 +3544,14 @@ export default require => {
       "use strict";
       init_define_process();
       cube_remove_default = ["M10.365 5.933L8 7.41 1.806 3.54 7.504.283a1 1 0 01.992 0l.64.365a3.001 3.001 0 001.228 5.283zM15 6v5.42a1 1 0 01-.504.868L8.5 15.714V8.277L12.143 6H15zM1.056 4.25L7.5 8.277v7.437l-5.996-3.426A1 1 0 011 11.42V4.58a1 1 0 01.056-.33zM11 2h4a1 1 0 010 2h-4a1 1 0 010-2z"];
+    }
+  });
+  var curly_braces_default;
+  var init_curly_braces = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/curly-braces.js"() {
+      "use strict";
+      init_define_process();
+      curly_braces_default = ["M3.62 3.056C4.102 2.25 5 2 6 2a1 1 0 010 2c-.44 0-.615.065-.67.097a.717.717 0 00-.03.17c-.012.153-.005.342.01.612l.008.118c.03.48.074 1.18-.112 1.854-.113.412-.305.801-.596 1.149.29.348.483.737.596 1.149.186.674.142 1.375.112 1.854l-.007.118a4.68 4.68 0 00-.01.613.716.716 0 00.028.169c.056.032.23.097.671.097a1 1 0 110 2c-1 0-1.897-.25-2.38-1.056a2.389 2.389 0 01-.313-1.05 6.495 6.495 0 01.007-.89l.002-.023c.033-.573.056-.96-.038-1.301-.072-.26-.224-.535-.725-.786a1 1 0 010-1.788c.501-.251.653-.526.725-.786.094-.34.071-.728.038-1.301l-.002-.023a6.495 6.495 0 01-.007-.89c.025-.313.097-.692.312-1.05zm1.687 8.828s.007.004.016.015c-.013-.008-.016-.015-.016-.015zm0-7.768s.003-.006.016-.015c-.009.011-.016.015-.016.015zM12.38 3.056C11.898 2.25 11 2 10 2a1 1 0 000 2c.44 0 .615.065.67.097a.72.72 0 01.03.17c.012.153.005.342-.01.612l-.008.118c-.03.48-.074 1.18.112 1.854.113.412.305.801.595 1.149-.29.348-.482.737-.595 1.149-.186.674-.142 1.375-.112 1.854l.007.118c.016.27.023.46.01.613a.719.719 0 01-.028.169c-.056.032-.23.097-.671.097a1 1 0 100 2c1 0 1.897-.25 2.38-1.056.216-.358.288-.737.313-1.05.025-.31.008-.629-.007-.89l-.002-.023c-.033-.573-.056-.96.038-1.301.072-.26.224-.535.725-.786a1 1 0 000-1.788c-.501-.251-.653-.526-.725-.786-.094-.34-.071-.728-.038-1.301l.002-.023c.015-.261.032-.58.007-.89a2.389 2.389 0 00-.312-1.05zm-1.687 8.828s-.007.004-.016.015c.013-.008.016-.015.016-.015zm0-7.768s-.003-.006-.016-.015c.009.011.016.015.016.015z"];
     }
   });
   var curved_range_chart_default;
@@ -4216,6 +4264,14 @@ export default require => {
       "use strict";
       init_define_process();
       form_default = ["M2 11v2h2v-2H2zM1 9h4c.55 0 1 .45 1 1v4c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1zm9-6h5c.55 0 1 .45 1 1s-.45 1-1 1h-5c-.55 0-1-.45-1-1s.45-1 1-1zM6 1a1.003 1.003 0 01.71 1.71l-3 4C3.53 6.89 3.28 7 3 7s-.53-.11-.71-.29l-2-2a1.003 1.003 0 011.42-1.42L3 4.59l2.29-3.3C5.47 1.11 5.72 1 6 1zm4 10h5c.55 0 1 .45 1 1s-.45 1-1 1h-5c-.55 0-1-.45-1-1s.45-1 1-1z"];
+    }
+  });
+  var forward_ten_default;
+  var init_forward_ten = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/forward-ten.js"() {
+      "use strict";
+      init_define_process();
+      forward_ten_default = ["M8.002 16a6.763 6.763 0 01-2.732-.556 7.08 7.08 0 01-2.221-1.509 7.149 7.149 0 01-1.498-2.237A6.896 6.896 0 011 8.947c0-.979.184-1.895.551-2.748a7.114 7.114 0 011.503-2.234 7.147 7.147 0 012.225-1.51A6.755 6.755 0 018.01 1.9h.111l-.47-.474a.803.803 0 01-.244-.583c0-.226.077-.42.233-.583A.795.795 0 018.228 0a.783.783 0 01.588.24l1.93 1.945a.97.97 0 01.294.7c0 .268-.098.5-.294.697l-1.93 1.946a.783.783 0 01-.588.24.811.811 0 01-.588-.249.822.822 0 01-.238-.578.779.779 0 01.238-.577l.491-.496h-.12c-1.404 0-2.597.493-3.581 1.478S2.954 7.53 2.954 8.944c0 1.414.49 2.616 1.469 3.604.979.989 2.171 1.483 3.577 1.483 1.406 0 2.598-.493 3.577-1.478.98-.985 1.47-2.184 1.47-3.598 0-.274.094-.506.284-.698a.938.938 0 01.692-.287c.271 0 .502.096.692.287.19.192.285.424.285.698 0 .97-.184 1.884-.551 2.741a7.14 7.14 0 01-1.498 2.239 7.086 7.086 0 01-2.219 1.51 6.748 6.748 0 01-2.73.555z", "M10 8H9v3h1V8zM9 7a1 1 0 00-1 1v3a1 1 0 001 1h1a1 1 0 001-1V8a1 1 0 00-1-1H9z", "M5.5 7a.5.5 0 000 1H6v3.5a.5.5 0 001 0V8a1 1 0 00-1-1h-.5z"];
     }
   });
   var fuel_default;
@@ -7376,10 +7432,12 @@ export default require => {
     AutomaticUpdates: () => automatic_updates_default,
     Axle: () => axle_default,
     Backlink: () => backlink_default,
+    BackwardTen: () => backward_ten_default,
     Badge: () => badge_default,
     BanCircle: () => ban_circle_default,
     BankAccount: () => bank_account_default,
     Barcode: () => barcode_default,
+    BinaryNumber: () => binary_number_default,
     Blank: () => blank_default,
     BlockedPerson: () => blocked_person_default,
     Bold: () => bold_default,
@@ -7392,6 +7450,7 @@ export default require => {
     Bug: () => bug_default,
     Buggy: () => buggy_default,
     Build: () => build_default,
+    Bullseye: () => bullseye_default,
     Calculator: () => calculator_default,
     Calendar: () => calendar_default,
     Camera: () => camera_default,
@@ -7419,8 +7478,10 @@ export default require => {
     Clean: () => clean_default,
     Clip: () => clip_default,
     Clipboard: () => clipboard_default,
+    ClipboardFile: () => clipboard_file_default,
     Cloud: () => cloud_default,
     CloudDownload: () => cloud_download_default,
+    CloudServer: () => cloud_server_default,
     CloudTick: () => cloud_tick_default,
     CloudUpload: () => cloud_upload_default,
     Code: () => code_default,
@@ -7445,6 +7506,7 @@ export default require => {
     Cube: () => cube_default,
     CubeAdd: () => cube_add_default,
     CubeRemove: () => cube_remove_default,
+    CurlyBraces: () => curly_braces_default,
     CurvedRangeChart: () => curved_range_chart_default,
     Cut: () => cut_default,
     Cycle: () => cycle_default,
@@ -7534,6 +7596,7 @@ export default require => {
     Font: () => font_default,
     Fork: () => fork_default,
     Form: () => form_default,
+    ForwardTen: () => forward_ten_default,
     Fuel: () => fuel_default,
     FullCircle: () => full_circle_default,
     FullStackedChart: () => full_stacked_chart_default,
@@ -7979,10 +8042,12 @@ export default require => {
       init_automatic_updates();
       init_axle();
       init_backlink();
+      init_backward_ten();
       init_badge();
       init_ban_circle();
       init_bank_account();
       init_barcode();
+      init_binary_number();
       init_blank();
       init_blocked_person();
       init_bold();
@@ -7995,6 +8060,7 @@ export default require => {
       init_bug();
       init_buggy();
       init_build();
+      init_bullseye();
       init_calculator();
       init_calendar();
       init_camera();
@@ -8022,8 +8088,10 @@ export default require => {
       init_clean();
       init_clip();
       init_clipboard();
+      init_clipboard_file();
       init_cloud();
       init_cloud_download();
+      init_cloud_server();
       init_cloud_tick();
       init_cloud_upload();
       init_code();
@@ -8048,6 +8116,7 @@ export default require => {
       init_cube();
       init_cube_add();
       init_cube_remove();
+      init_curly_braces();
       init_curved_range_chart();
       init_cut();
       init_cycle();
@@ -8137,6 +8206,7 @@ export default require => {
       init_font();
       init_fork();
       init_form();
+      init_forward_ten();
       init_fuel();
       init_full_circle();
       init_full_stacked_chart();
@@ -8943,6 +9013,14 @@ export default require => {
       backlink_default2 = ["M18.387 19.79l-.094-.083L14 15.415V18a1 1 0 01-2 0l.003-5.075.017-.126.03-.111.044-.111.052-.098.067-.096.08-.09a1.01 1.01 0 01.112-.097l.11-.071.114-.054.105-.035.15-.03L13 12h5a1 1 0 110 2h-2.585l4.292 4.293a1 1 0 01-1.32 1.497zM7.036 9.136l-4.45 4.45-.117.127a2 2 0 002.818 2.818l.127-.117 4.45-4.449a4 4 0 01-.885 3.704l-.15.16-2 2A4 4 0 011.02 12.33l.15-.16 2-2a3.998 3.998 0 013.865-1.035zm6.671-3.843a1 1 0 01.083 1.32l-.083.094-7 7a1 1 0 01-1.497-1.32l.083-.094 7-7a1 1 0 011.414 0zm4.121-4.121a4 4 0 01.151 5.497l-.15.16-2 2a3.998 3.998 0 01-3.864 1.036l4.45-4.45.116-.128a2 2 0 00-2.818-2.818l-.127.117-4.45 4.45a4 4 0 01.885-3.705l.15-.16 2-2a4 4 0 015.657 0z"];
     }
   });
+  var backward_ten_default2;
+  var init_backward_ten2 = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/backward-ten.js"() {
+      "use strict";
+      init_define_process();
+      backward_ten_default2 = ["M9.754 20a8.469 8.469 0 01-3.417-.693 8.898 8.898 0 01-2.772-1.872 8.898 8.898 0 01-1.872-2.772A8.468 8.468 0 011 11.246c0-.275.093-.506.28-.693a.941.941 0 01.693-.28c.275 0 .506.094.693.28.186.187.28.418.28.693 0 1.897.66 3.506 1.981 4.827 1.321 1.321 2.93 1.982 4.827 1.982 1.896 0 3.505-.66 4.826-1.982 1.321-1.321 1.982-2.93 1.982-4.827 0-1.896-.66-3.505-1.982-4.826-1.32-1.321-2.93-1.982-4.826-1.982h-.146l.826.827a.89.89 0 01.28.68c-.008.26-.101.487-.28.681a.992.992 0 01-.693.304.905.905 0 01-.693-.28L6.544 4.147a.933.933 0 01-.292-.68c0-.26.097-.487.292-.681L9.048.28A.905.905 0 019.741 0c.268.009.499.11.693.304.179.195.272.422.28.681a.89.89 0 01-.28.681l-.826.827h.146c1.215 0 2.354.23 3.416.693a8.897 8.897 0 012.772 1.872 8.898 8.898 0 011.872 2.772c.462 1.062.693 2.2.693 3.416a8.468 8.468 0 01-.693 3.417 8.898 8.898 0 01-1.872 2.772 8.898 8.898 0 01-2.772 1.872A8.469 8.469 0 019.754 20z", "M11.5 9.5v3h1v-3h-1zM11 8a1 1 0 00-1 1v4a1 1 0 001 1h2a1 1 0 001-1V9a1 1 0 00-1-1h-2z", "M9 9a1 1 0 00-1-1H6.75a.75.75 0 000 1.5h.75v3.75a.75.75 0 001.5 0V9z"];
+    }
+  });
   var badge_default2;
   var init_badge2 = __esm({
     "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/badge.js"() {
@@ -8973,6 +9051,14 @@ export default require => {
       "use strict";
       init_define_process();
       barcode_default2 = ["M6 16.98h2v-14H6v14zm3 0h1v-14H9v14zm-6 0h2v-14H3v14zm-3 0h2v-14H0v14zm16 0h2v-14h-2v14zm-4 0h1v-14h-1v14zm7-14v14h1v-14h-1zm-5 14h1v-14h-1v14z"];
+    }
+  });
+  var binary_number_default2;
+  var init_binary_number2 = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/binary-number.js"() {
+      "use strict";
+      init_define_process();
+      binary_number_default2 = ["M8.011 5.48C7.58 5.16 7.021 5 6.331 5c-.688 0-1.252.16-1.693.48A3.272 3.272 0 003.62 6.69a5.574 5.574 0 00-.496 1.607A12.204 12.204 0 003 10c0 .55.041 1.117.124 1.703.092.586.257 1.127.496 1.621.247.486.587.889 1.018 1.209.44.311 1.005.467 1.694.467.688 0 1.248-.156 1.68-.467.44-.32.78-.723 1.018-1.209a5.216 5.216 0 00.496-1.62c.091-.587.137-1.155.137-1.704 0-.55-.046-1.117-.137-1.703A5.06 5.06 0 009.03 6.69a3.109 3.109 0 00-1.019-1.21zm-.826 7.927c-.23.192-.514.288-.853.288-.35 0-.638-.096-.868-.288-.22-.202-.399-.467-.537-.797a5.087 5.087 0 01-.275-1.181A11.74 11.74 0 014.57 10c0-.504.028-.975.083-1.415.055-.449.147-.842.275-1.181.138-.339.317-.605.537-.797.23-.201.519-.302.868-.302.34 0 .624.1.853.302.23.192.409.458.537.797.138.339.234.732.29 1.181.054.44.082.911.082 1.415s-.028.98-.083 1.429a4.642 4.642 0 01-.289 1.18c-.128.33-.307.596-.537.798zm5.817-6.836A5.771 5.771 0 0112 6.657v1.286h2.463V15h1.79V5H14.92a1.542 1.542 0 01-.372.771c-.182.21-.406.381-.673.515a3.036 3.036 0 01-.874.285z"];
     }
   });
   var p2, blank_default2;
@@ -9070,6 +9156,14 @@ export default require => {
       "use strict";
       init_define_process();
       build_default2 = ["M19.43 16.67L9.31 7.81l1.47-1.56c.41-.44-.15-.8.15-1.6 1.08-2.76 4.19-2.99 4.19-2.99s.45-.47.87-.92C11.98-1 9.26.7 8.04 1.8L3.83 6.25l-.86.92c-.48.51-.48 1.33 0 1.84l-.87.92c-.48-.51-1.26-.51-1.74 0s-.48 1.33 0 1.84l1.74 1.84c.48.51 1.26.51 1.74 0s.48-1.33 0-1.84l.87-.92c.48.51 1.26.51 1.74 0l1.41-1.49 8.81 10.07c.76.76 2 .76 2.76 0 .76-.76.76-2 0-2.76z"];
+    }
+  });
+  var bullseye_default2;
+  var init_bullseye2 = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/bullseye.js"() {
+      "use strict";
+      init_define_process();
+      bullseye_default2 = ["M19.707.293a1 1 0 010 1.414l-9 9a1 1 0 01-1.414-1.414l9-9a1 1 0 011.414 0z", "M14.626 1.132A9.957 9.957 0 0010 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10a9.956 9.956 0 00-1.132-4.626l-1.501 1.502a8 8 0 11-4.243-4.243l1.502-1.501z", "M11.554 4.203a6 6 0 104.243 4.243l-1.805 1.804A4 4 0 119.75 6.008l1.804-1.805z"];
     }
   });
   var calculator_default2;
@@ -9288,6 +9382,14 @@ export default require => {
       clipboard_default2 = ["M13 2c0-.55-.45-1-1-1h-.78a1.98 1.98 0 00-3.44 0H7c-.55 0-1 .45-1 1v2h7V2z", "M16 2h-2v3H5V2H3c-.55 0-1 .45-1 1v16c0 .55.45 1 1 1h13c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1z"];
     }
   });
+  var clipboard_file_default2;
+  var init_clipboard_file2 = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/clipboard-file.js"() {
+      "use strict";
+      init_define_process();
+      clipboard_file_default2 = ["M7 9a1 1 0 011-1h6.586a1 1 0 01.707.293l1.414 1.414a1 1 0 01.293.707V19a1 1 0 01-1 1H8a1 1 0 01-1-1V9zm2.5 2a.5.5 0 000 1h5a.5.5 0 000-1h-5zm0 3a.5.5 0 000 1h5a.5.5 0 000-1h-5zm0 3a.5.5 0 000 1h5a.5.5 0 000-1h-5z", "M12 1.943c0-.534-.45-.972-1-.972h-.78A1.99 1.99 0 008.5 0c-.74 0-1.38.389-1.72.971H6c-.55 0-1 .438-1 .972V3h7V1.943z", "M13 4H4.04V2H3a1 1 0 00-1 1v14a1 1 0 001 1h3V8a1 1 0 011-1h8V3a1 1 0 00-1-1h-1v2z"];
+    }
+  });
   var cloud_default2;
   var init_cloud2 = __esm({
     "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/cloud.js"() {
@@ -9302,6 +9404,14 @@ export default require => {
       "use strict";
       init_define_process();
       cloud_download_default2 = ["M15 4c-.12 0-.24.03-.36.04C13.83 1.69 11.62 0 9 0 5.69 0 3 2.69 3 6c0 .05.01.09.01.14A3.98 3.98 0 000 10c0 2.21 1.79 4 4 4h.78c.55-.61 1.34-1 2.22-1v-2c0-1.66 1.34-3 3-3s3 1.34 3 3v2c.88 0 1.66.38 2.2.98C17.87 13.87 20 11.69 20 9c0-2.76-2.24-5-5-5zm-2 11c-.28 0-.53.11-.71.29L11 16.59V11c0-.55-.45-1-1-1s-1 .45-1 1v5.59L7.71 15.3A.965.965 0 007 15a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0013 15z"];
+    }
+  });
+  var cloud_server_default2;
+  var init_cloud_server2 = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/cloud-server.js"() {
+      "use strict";
+      init_define_process();
+      cloud_server_default2 = ["M9 15h11v4H9v-4zm3 2a1 1 0 11-2 0 1 1 0 012 0zm2-1a1 1 0 100 2h4a1 1 0 100-2h-4z", "M14.784 5.022C14.856 5.01 14.928 5 15 5a5.004 5.004 0 014.9 4H9a1 1 0 00-1 1v5H4c-2.21 0-4-1.79-4-4a3.98 3.98 0 013.01-3.86c0-.025-.002-.047-.005-.07A.615.615 0 013 7c0-3.31 2.69-6 6-6 2.62 0 4.83 1.69 5.64 4.04.048-.004.096-.011.144-.018z", "M9 10h11v4H9v-4zm3 2a1 1 0 11-2 0 1 1 0 012 0zm2-1a1 1 0 100 2h4a1 1 0 100-2h-4z"];
     }
   });
   var cloud_tick_default2;
@@ -9494,6 +9604,14 @@ export default require => {
       "use strict";
       init_define_process();
       cube_remove_default2 = ["M11.968 1.182A3.001 3.001 0 0013 7h.77L10 9.22 1.953 4.48l7.41-4.02c.394-.215.88-.215 1.275 0l1.33.721zM19 7v7.057c0 .438-.247.842-.648 1.06l-7.714 4.186c-.045.024-.091.046-.138.064v-9.281L15.74 7H19zM1.136 5.16L9.5 10.086v9.281a1.316 1.316 0 01-.138-.064l-7.714-4.186A1.211 1.211 0 011 14.057v-8.35c0-.193.048-.38.136-.547zM13 3h6a1 1 0 010 2h-6a1 1 0 010-2z"];
+    }
+  });
+  var curly_braces_default2;
+  var init_curly_braces2 = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/curly-braces.js"() {
+      "use strict";
+      init_define_process();
+      curly_braces_default2 = ["M8 3c-1.292 0-2.303.369-2.832 1.305-.234.415-.32.859-.353 1.245-.032.384-.017.781-.001 1.12.034.758.055 1.255-.08 1.644a.853.853 0 01-.253.385c-.124.108-.34.235-.724.33a1 1 0 000 1.941c.384.096.6.223.724.331.12.103.198.225.254.386.134.388.113.885.079 1.643-.016.339-.031.736.001 1.12.033.386.119.83.353 1.245C5.697 16.63 6.708 17 8 17a1 1 0 100-2c-.933 0-1.066-.244-1.089-.286l-.001-.003c-.04-.069-.082-.196-.102-.43a6.887 6.887 0 01.003-.86l.007-.145c.03-.613.073-1.475-.193-2.244A2.874 2.874 0 006.01 10c.293-.314.489-.668.615-1.032.266-.769.223-1.63.193-2.244l-.007-.144a6.887 6.887 0 01-.003-.86c.02-.235.063-.362.102-.432l.001-.002C6.934 5.244 7.067 5 8 5a1 1 0 000-2zM12 3c1.293 0 2.303.369 2.832 1.305.234.415.32.859.353 1.245.032.384.017.781.002 1.12-.035.758-.056 1.255.078 1.644.056.16.134.282.254.385.124.108.34.235.723.33a1 1 0 010 1.941c-.383.096-.599.223-.723.331a.852.852 0 00-.254.386c-.134.388-.113.885-.079 1.643.016.339.031.736-.001 1.12-.033.386-.119.83-.353 1.245C14.302 16.63 13.292 17 12 17a1 1 0 110-2c.933 0 1.066-.244 1.088-.286l.002-.003c.04-.069.082-.196.102-.43.02-.238.012-.513-.004-.86a29.272 29.272 0 00-.006-.145c-.03-.613-.073-1.475.193-2.244.127-.364.322-.718.615-1.032a2.875 2.875 0 01-.615-1.032c-.266-.769-.223-1.63-.193-2.244l.006-.144c.016-.349.024-.623.004-.86-.02-.235-.063-.362-.102-.432l-.002-.002C13.066 5.244 12.934 5 12 5a1 1 0 110-2z"];
     }
   });
   var curved_range_chart_default2;
@@ -10206,6 +10324,14 @@ export default require => {
       "use strict";
       init_define_process();
       form_default2 = ["M2 13v4h4v-4H2zm-1-2h6c.55 0 1 .45 1 1v6c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1v-6c0-.55.45-1 1-1zm11-7h7c.55 0 1 .45 1 1s-.45 1-1 1h-7c-.55 0-1-.45-1-1s.45-1 1-1zM8 1a1.003 1.003 0 01.71 1.71l-5 6C3.53 8.89 3.28 9 3 9s-.53-.11-.71-.29l-2-2a1.003 1.003 0 011.42-1.42L3 6.59l4.29-5.3C7.47 1.11 7.72 1 8 1zm4 13h7c.55 0 1 .45 1 1s-.45 1-1 1h-7c-.55 0-1-.45-1-1s.45-1 1-1z"];
+    }
+  });
+  var forward_ten_default2;
+  var init_forward_ten2 = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/forward-ten.js"() {
+      "use strict";
+      init_define_process();
+      forward_ten_default2 = ["M9.754 20a8.469 8.469 0 01-3.417-.693 8.898 8.898 0 01-2.772-1.872 8.898 8.898 0 01-1.872-2.772A8.468 8.468 0 011 11.246c0-1.215.231-2.354.693-3.416a8.898 8.898 0 011.872-2.772 8.898 8.898 0 012.772-1.872 8.469 8.469 0 013.417-.693h.145l-.826-.827a.891.891 0 01-.28-.68c.008-.26.101-.487.28-.682A.992.992 0 019.766 0a.905.905 0 01.693.28l2.504 2.505a.933.933 0 01.292.68c0 .26-.097.487-.292.681L10.46 6.651a.905.905 0 01-.693.28.992.992 0 01-.693-.305 1.026 1.026 0 01-.28-.68.891.891 0 01.28-.681l.826-.827h-.145c-1.897 0-3.506.66-4.827 1.982-1.321 1.32-1.982 2.93-1.982 4.826 0 1.897.66 3.506 1.982 4.827 1.321 1.321 2.93 1.982 4.827 1.982 1.896 0 3.505-.66 4.826-1.982 1.321-1.321 1.982-2.93 1.982-4.827a.94.94 0 01.28-.693.941.941 0 01.693-.28c.275 0 .506.094.692.28a.94.94 0 01.28.693 8.468 8.468 0 01-.693 3.417 8.898 8.898 0 01-1.872 2.772 8.898 8.898 0 01-2.772 1.872A8.469 8.469 0 019.754 20z", "M11.5 9.5v3h1v-3h-1zM11 8a1 1 0 00-1 1v4a1 1 0 001 1h2a1 1 0 001-1V9a1 1 0 00-1-1h-2z", "M9 9a1 1 0 00-1-1H6.75a.75.75 0 000 1.5h.75v3.75a.75.75 0 001.5 0V9z"];
     }
   });
   var fuel_default2;
@@ -13366,10 +13492,12 @@ export default require => {
     AutomaticUpdates: () => automatic_updates_default2,
     Axle: () => axle_default2,
     Backlink: () => backlink_default2,
+    BackwardTen: () => backward_ten_default2,
     Badge: () => badge_default2,
     BanCircle: () => ban_circle_default2,
     BankAccount: () => bank_account_default2,
     Barcode: () => barcode_default2,
+    BinaryNumber: () => binary_number_default2,
     Blank: () => blank_default2,
     BlockedPerson: () => blocked_person_default2,
     Bold: () => bold_default2,
@@ -13382,6 +13510,7 @@ export default require => {
     Bug: () => bug_default2,
     Buggy: () => buggy_default2,
     Build: () => build_default2,
+    Bullseye: () => bullseye_default2,
     Calculator: () => calculator_default2,
     Calendar: () => calendar_default2,
     Camera: () => camera_default2,
@@ -13409,8 +13538,10 @@ export default require => {
     Clean: () => clean_default2,
     Clip: () => clip_default2,
     Clipboard: () => clipboard_default2,
+    ClipboardFile: () => clipboard_file_default2,
     Cloud: () => cloud_default2,
     CloudDownload: () => cloud_download_default2,
+    CloudServer: () => cloud_server_default2,
     CloudTick: () => cloud_tick_default2,
     CloudUpload: () => cloud_upload_default2,
     Code: () => code_default2,
@@ -13435,6 +13566,7 @@ export default require => {
     Cube: () => cube_default2,
     CubeAdd: () => cube_add_default2,
     CubeRemove: () => cube_remove_default2,
+    CurlyBraces: () => curly_braces_default2,
     CurvedRangeChart: () => curved_range_chart_default2,
     Cut: () => cut_default2,
     Cycle: () => cycle_default2,
@@ -13524,6 +13656,7 @@ export default require => {
     Font: () => font_default2,
     Fork: () => fork_default2,
     Form: () => form_default2,
+    ForwardTen: () => forward_ten_default2,
     Fuel: () => fuel_default2,
     FullCircle: () => full_circle_default2,
     FullStackedChart: () => full_stacked_chart_default2,
@@ -13969,10 +14102,12 @@ export default require => {
       init_automatic_updates2();
       init_axle2();
       init_backlink2();
+      init_backward_ten2();
       init_badge2();
       init_ban_circle2();
       init_bank_account2();
       init_barcode2();
+      init_binary_number2();
       init_blank2();
       init_blocked_person2();
       init_bold2();
@@ -13985,6 +14120,7 @@ export default require => {
       init_bug2();
       init_buggy2();
       init_build2();
+      init_bullseye2();
       init_calculator2();
       init_calendar2();
       init_camera2();
@@ -14012,8 +14148,10 @@ export default require => {
       init_clean2();
       init_clip2();
       init_clipboard2();
+      init_clipboard_file2();
       init_cloud2();
       init_cloud_download2();
+      init_cloud_server2();
       init_cloud_tick2();
       init_cloud_upload2();
       init_code2();
@@ -14038,6 +14176,7 @@ export default require => {
       init_cube2();
       init_cube_add2();
       init_cube_remove2();
+      init_curly_braces2();
       init_curved_range_chart2();
       init_cut2();
       init_cycle2();
@@ -14127,6 +14266,7 @@ export default require => {
       init_font2();
       init_fork2();
       init_form2();
+      init_forward_ten2();
       init_fuel2();
       init_full_circle2();
       init_full_stacked_chart2();
@@ -44564,11 +44704,16 @@ export default require => {
   }
   function clickElementOnKeyPress(keys) {
     return function (e) {
-      return keys.some(function (key) {
+      if (keys.some(function (key) {
         return e.key === key;
-      }) && e.target.dispatchEvent(new MouseEvent("click", __assign(__assign({}, e), {
-        view: void 0
-      })));
+      })) {
+        if (!elementIsTextInput(e.target)) {
+          e.preventDefault();
+        }
+        e.target.dispatchEvent(new MouseEvent("click", __assign(__assign({}, e), {
+          view: void 0
+        })));
+      }
     };
   }
   init_define_process();
@@ -44923,10 +45068,12 @@ export default require => {
     BlueprintIcons_162["AutomaticUpdates"] = "automatic-updates";
     BlueprintIcons_162["Axle"] = "axle";
     BlueprintIcons_162["Backlink"] = "backlink";
+    BlueprintIcons_162["BackwardTen"] = "backward-ten";
     BlueprintIcons_162["Badge"] = "badge";
     BlueprintIcons_162["BanCircle"] = "ban-circle";
     BlueprintIcons_162["BankAccount"] = "bank-account";
     BlueprintIcons_162["Barcode"] = "barcode";
+    BlueprintIcons_162["BinaryNumber"] = "binary-number";
     BlueprintIcons_162["Blank"] = "blank";
     BlueprintIcons_162["BlockedPerson"] = "blocked-person";
     BlueprintIcons_162["Bold"] = "bold";
@@ -44939,6 +45086,7 @@ export default require => {
     BlueprintIcons_162["Bug"] = "bug";
     BlueprintIcons_162["Buggy"] = "buggy";
     BlueprintIcons_162["Build"] = "build";
+    BlueprintIcons_162["Bullseye"] = "bullseye";
     BlueprintIcons_162["Calculator"] = "calculator";
     BlueprintIcons_162["Calendar"] = "calendar";
     BlueprintIcons_162["Camera"] = "camera";
@@ -44965,8 +45113,10 @@ export default require => {
     BlueprintIcons_162["Citation"] = "citation";
     BlueprintIcons_162["Clean"] = "clean";
     BlueprintIcons_162["Clip"] = "clip";
+    BlueprintIcons_162["ClipboardFile"] = "clipboard-file";
     BlueprintIcons_162["Clipboard"] = "clipboard";
     BlueprintIcons_162["CloudDownload"] = "cloud-download";
+    BlueprintIcons_162["CloudServer"] = "cloud-server";
     BlueprintIcons_162["CloudTick"] = "cloud-tick";
     BlueprintIcons_162["CloudUpload"] = "cloud-upload";
     BlueprintIcons_162["Cloud"] = "cloud";
@@ -44992,6 +45142,7 @@ export default require => {
     BlueprintIcons_162["CubeAdd"] = "cube-add";
     BlueprintIcons_162["CubeRemove"] = "cube-remove";
     BlueprintIcons_162["Cube"] = "cube";
+    BlueprintIcons_162["CurlyBraces"] = "curly-braces";
     BlueprintIcons_162["CurvedRangeChart"] = "curved-range-chart";
     BlueprintIcons_162["Cut"] = "cut";
     BlueprintIcons_162["Cycle"] = "cycle";
@@ -45081,6 +45232,7 @@ export default require => {
     BlueprintIcons_162["Font"] = "font";
     BlueprintIcons_162["Fork"] = "fork";
     BlueprintIcons_162["Form"] = "form";
+    BlueprintIcons_162["ForwardTen"] = "forward-ten";
     BlueprintIcons_162["Fuel"] = "fuel";
     BlueprintIcons_162["FullCircle"] = "full-circle";
     BlueprintIcons_162["FullStackedChart"] = "full-stacked-chart";
@@ -45470,7 +45622,7 @@ export default require => {
     BlueprintIcons_162["ZoomOut"] = "zoom-out";
     BlueprintIcons_162["ZoomToFit"] = "zoom-to-fit";
   })(BlueprintIcons_16 || (BlueprintIcons_16 = {}));
-  var BLUEPRINT_ICONS_16_CODEPOINTS = (_a = {}, _a[BlueprintIcons_16.AddClip] = "61697", _a[BlueprintIcons_16.AddColumnLeft] = "61698", _a[BlueprintIcons_16.AddColumnRight] = "61699", _a[BlueprintIcons_16.AddLocation] = "61700", _a[BlueprintIcons_16.AddRowBottom] = "61701", _a[BlueprintIcons_16.AddRowTop] = "61702", _a[BlueprintIcons_16.AddToArtifact] = "61703", _a[BlueprintIcons_16.AddToFolder] = "61704", _a[BlueprintIcons_16.Add] = "61705", _a[BlueprintIcons_16.AimpointsTarget] = "62261", _a[BlueprintIcons_16.Airplane] = "61706", _a[BlueprintIcons_16.AlignCenter] = "61707", _a[BlueprintIcons_16.AlignJustify] = "61708", _a[BlueprintIcons_16.AlignLeft] = "61709", _a[BlueprintIcons_16.AlignRight] = "61710", _a[BlueprintIcons_16.AlignmentBottom] = "61711", _a[BlueprintIcons_16.AlignmentHorizontalCenter] = "61712", _a[BlueprintIcons_16.AlignmentLeft] = "61713", _a[BlueprintIcons_16.AlignmentRight] = "61714", _a[BlueprintIcons_16.AlignmentTop] = "61715", _a[BlueprintIcons_16.AlignmentVerticalCenter] = "61716", _a[BlueprintIcons_16.Ammunition] = "62274", _a[BlueprintIcons_16.Anchor] = "62256", _a[BlueprintIcons_16.Annotation] = "61717", _a[BlueprintIcons_16.Antenna] = "61718", _a[BlueprintIcons_16.AppHeader] = "61719", _a[BlueprintIcons_16.Application] = "61720", _a[BlueprintIcons_16.Applications] = "61721", _a[BlueprintIcons_16.Archive] = "61722", _a[BlueprintIcons_16.AreaOfInterest] = "61723", _a[BlueprintIcons_16.ArrayBoolean] = "61724", _a[BlueprintIcons_16.ArrayDate] = "61725", _a[BlueprintIcons_16.ArrayFloatingPoint] = "62253", _a[BlueprintIcons_16.ArrayNumeric] = "61726", _a[BlueprintIcons_16.ArrayString] = "61727", _a[BlueprintIcons_16.ArrayTimestamp] = "61728", _a[BlueprintIcons_16.Array] = "61729", _a[BlueprintIcons_16.ArrowBottomLeft] = "61730", _a[BlueprintIcons_16.ArrowBottomRight] = "61731", _a[BlueprintIcons_16.ArrowDown] = "61732", _a[BlueprintIcons_16.ArrowLeft] = "61733", _a[BlueprintIcons_16.ArrowRight] = "61734", _a[BlueprintIcons_16.ArrowTopLeft] = "61735", _a[BlueprintIcons_16.ArrowTopRight] = "61736", _a[BlueprintIcons_16.ArrowUp] = "61737", _a[BlueprintIcons_16.ArrowsHorizontal] = "61738", _a[BlueprintIcons_16.ArrowsVertical] = "61739", _a[BlueprintIcons_16.Asterisk] = "61740", _a[BlueprintIcons_16.At] = "62257", _a[BlueprintIcons_16.AutomaticUpdates] = "61741", _a[BlueprintIcons_16.Axle] = "62264", _a[BlueprintIcons_16.Backlink] = "61742", _a[BlueprintIcons_16.Badge] = "61743", _a[BlueprintIcons_16.BanCircle] = "61744", _a[BlueprintIcons_16.BankAccount] = "61745", _a[BlueprintIcons_16.Barcode] = "61746", _a[BlueprintIcons_16.Blank] = "61747", _a[BlueprintIcons_16.BlockedPerson] = "61748", _a[BlueprintIcons_16.Bold] = "61749", _a[BlueprintIcons_16.Book] = "61750", _a[BlueprintIcons_16.Bookmark] = "61751", _a[BlueprintIcons_16.Box] = "61752", _a[BlueprintIcons_16.Briefcase] = "61753", _a[BlueprintIcons_16.BringData] = "61754", _a[BlueprintIcons_16.BringForward] = "62292", _a[BlueprintIcons_16.Bug] = "62254", _a[BlueprintIcons_16.Buggy] = "61755", _a[BlueprintIcons_16.Build] = "61756", _a[BlueprintIcons_16.Calculator] = "61757", _a[BlueprintIcons_16.Calendar] = "61758", _a[BlueprintIcons_16.Camera] = "61759", _a[BlueprintIcons_16.CaretDown] = "61760", _a[BlueprintIcons_16.CaretLeft] = "61761", _a[BlueprintIcons_16.CaretRight] = "61762", _a[BlueprintIcons_16.CaretUp] = "61763", _a[BlueprintIcons_16.CargoShip] = "61764", _a[BlueprintIcons_16.CellTower] = "61765", _a[BlueprintIcons_16.Changes] = "61766", _a[BlueprintIcons_16.Chart] = "61767", _a[BlueprintIcons_16.Chat] = "61768", _a[BlueprintIcons_16.ChevronBackward] = "61769", _a[BlueprintIcons_16.ChevronDown] = "61770", _a[BlueprintIcons_16.ChevronForward] = "61771", _a[BlueprintIcons_16.ChevronLeft] = "61772", _a[BlueprintIcons_16.ChevronRight] = "61773", _a[BlueprintIcons_16.ChevronUp] = "61774", _a[BlueprintIcons_16.CircleArrowDown] = "61775", _a[BlueprintIcons_16.CircleArrowLeft] = "61776", _a[BlueprintIcons_16.CircleArrowRight] = "61777", _a[BlueprintIcons_16.CircleArrowUp] = "61778", _a[BlueprintIcons_16.Circle] = "61779", _a[BlueprintIcons_16.Citation] = "61780", _a[BlueprintIcons_16.Clean] = "61781", _a[BlueprintIcons_16.Clip] = "61782", _a[BlueprintIcons_16.Clipboard] = "61783", _a[BlueprintIcons_16.CloudDownload] = "61784", _a[BlueprintIcons_16.CloudTick] = "62286", _a[BlueprintIcons_16.CloudUpload] = "61785", _a[BlueprintIcons_16.Cloud] = "61786", _a[BlueprintIcons_16.CodeBlock] = "61787", _a[BlueprintIcons_16.Code] = "61788", _a[BlueprintIcons_16.Cog] = "61789", _a[BlueprintIcons_16.CollapseAll] = "61790", _a[BlueprintIcons_16.ColorFill] = "62248", _a[BlueprintIcons_16.ColumnLayout] = "61791", _a[BlueprintIcons_16.Comment] = "61792", _a[BlueprintIcons_16.Comparison] = "61793", _a[BlueprintIcons_16.Compass] = "61794", _a[BlueprintIcons_16.Compressed] = "61795", _a[BlueprintIcons_16.Confirm] = "61796", _a[BlueprintIcons_16.Console] = "61797", _a[BlueprintIcons_16.Contrast] = "61798", _a[BlueprintIcons_16.Control] = "61799", _a[BlueprintIcons_16.CreditCard] = "61800", _a[BlueprintIcons_16.Crop] = "62291", _a[BlueprintIcons_16.CrossCircle] = "62262", _a[BlueprintIcons_16.Cross] = "61801", _a[BlueprintIcons_16.Crown] = "61802", _a[BlueprintIcons_16.CubeAdd] = "61803", _a[BlueprintIcons_16.CubeRemove] = "61804", _a[BlueprintIcons_16.Cube] = "61805", _a[BlueprintIcons_16.CurvedRangeChart] = "61806", _a[BlueprintIcons_16.Cut] = "61807", _a[BlueprintIcons_16.Cycle] = "61808", _a[BlueprintIcons_16.Dashboard] = "61809", _a[BlueprintIcons_16.DataConnection] = "61810", _a[BlueprintIcons_16.DataLineage] = "61811", _a[BlueprintIcons_16.Database] = "61812", _a[BlueprintIcons_16.Delete] = "61813", _a[BlueprintIcons_16.Delta] = "61814", _a[BlueprintIcons_16.DeriveColumn] = "61815", _a[BlueprintIcons_16.Desktop] = "61816", _a[BlueprintIcons_16.Detection] = "62273", _a[BlueprintIcons_16.Diagnosis] = "61817", _a[BlueprintIcons_16.DiagramTree] = "61818", _a[BlueprintIcons_16.DirectionLeft] = "61819", _a[BlueprintIcons_16.DirectionRight] = "61820", _a[BlueprintIcons_16.Disable] = "61821", _a[BlueprintIcons_16.Divide] = "62247", _a[BlueprintIcons_16.DocumentOpen] = "61822", _a[BlueprintIcons_16.DocumentShare] = "61823", _a[BlueprintIcons_16.Document] = "61824", _a[BlueprintIcons_16.Dollar] = "61825", _a[BlueprintIcons_16.Dot] = "61826", _a[BlueprintIcons_16.DoubleCaretHorizontal] = "61827", _a[BlueprintIcons_16.DoubleCaretVertical] = "61828", _a[BlueprintIcons_16.DoubleChevronDown] = "61829", _a[BlueprintIcons_16.DoubleChevronLeft] = "61830", _a[BlueprintIcons_16.DoubleChevronRight] = "61831", _a[BlueprintIcons_16.DoubleChevronUp] = "61832", _a[BlueprintIcons_16.DoughnutChart] = "61833", _a[BlueprintIcons_16.Download] = "61834", _a[BlueprintIcons_16.DragHandleHorizontal] = "61835", _a[BlueprintIcons_16.DragHandleVertical] = "61836", _a[BlueprintIcons_16.Draw] = "61837", _a[BlueprintIcons_16.DrawerLeftFilled] = "61838", _a[BlueprintIcons_16.DrawerLeft] = "61839", _a[BlueprintIcons_16.DrawerRightFilled] = "61840", _a[BlueprintIcons_16.DrawerRight] = "61841", _a[BlueprintIcons_16.DriveTime] = "61842", _a[BlueprintIcons_16.Duplicate] = "61843", _a[BlueprintIcons_16.Edit] = "61844", _a[BlueprintIcons_16.Eject] = "61845", _a[BlueprintIcons_16.Emoji] = "61846", _a[BlueprintIcons_16.Endnote] = "62294", _a[BlueprintIcons_16.Endorsed] = "61847", _a[BlueprintIcons_16.Envelope] = "61848", _a[BlueprintIcons_16.Equals] = "61849", _a[BlueprintIcons_16.Eraser] = "61850", _a[BlueprintIcons_16.Error] = "61851", _a[BlueprintIcons_16.Euro] = "61852", _a[BlueprintIcons_16.Exchange] = "61853", _a[BlueprintIcons_16.ExcludeRow] = "61854", _a[BlueprintIcons_16.ExpandAll] = "61855", _a[BlueprintIcons_16.Explain] = "62285", _a[BlueprintIcons_16.Export] = "61856", _a[BlueprintIcons_16.EyeOff] = "61857", _a[BlueprintIcons_16.EyeOn] = "61858", _a[BlueprintIcons_16.EyeOpen] = "61859", _a[BlueprintIcons_16.FastBackward] = "61860", _a[BlueprintIcons_16.FastForward] = "61861", _a[BlueprintIcons_16.FeedSubscribed] = "61862", _a[BlueprintIcons_16.Feed] = "61863", _a[BlueprintIcons_16.Film] = "61864", _a[BlueprintIcons_16.FilterKeep] = "61865", _a[BlueprintIcons_16.FilterList] = "61866", _a[BlueprintIcons_16.FilterOpen] = "61867", _a[BlueprintIcons_16.FilterRemove] = "61868", _a[BlueprintIcons_16.Filter] = "61869", _a[BlueprintIcons_16.Flag] = "61870", _a[BlueprintIcons_16.Flame] = "61871", _a[BlueprintIcons_16.Flash] = "61872", _a[BlueprintIcons_16.FloatingPoint] = "62252", _a[BlueprintIcons_16.FloppyDisk] = "61873", _a[BlueprintIcons_16.FlowBranch] = "61874", _a[BlueprintIcons_16.FlowEnd] = "61875", _a[BlueprintIcons_16.FlowLinear] = "61876", _a[BlueprintIcons_16.FlowReviewBranch] = "61877", _a[BlueprintIcons_16.FlowReview] = "61878", _a[BlueprintIcons_16.Flows] = "61879", _a[BlueprintIcons_16.FolderClose] = "61880", _a[BlueprintIcons_16.FolderNew] = "61881", _a[BlueprintIcons_16.FolderOpen] = "61882", _a[BlueprintIcons_16.FolderSharedOpen] = "61883", _a[BlueprintIcons_16.FolderShared] = "61884", _a[BlueprintIcons_16.Follower] = "61885", _a[BlueprintIcons_16.Following] = "61886", _a[BlueprintIcons_16.Font] = "61887", _a[BlueprintIcons_16.Fork] = "61888", _a[BlueprintIcons_16.Form] = "61889", _a[BlueprintIcons_16.Fuel] = "62243", _a[BlueprintIcons_16.FullCircle] = "61890", _a[BlueprintIcons_16.FullStackedChart] = "61891", _a[BlueprintIcons_16.Fullscreen] = "61892", _a[BlueprintIcons_16.Function] = "61893", _a[BlueprintIcons_16.GanttChart] = "61894", _a[BlueprintIcons_16.Generate] = "62284", _a[BlueprintIcons_16.Geofence] = "61895", _a[BlueprintIcons_16.Geolocation] = "61896", _a[BlueprintIcons_16.Geosearch] = "61897", _a[BlueprintIcons_16.Geotime] = "62276", _a[BlueprintIcons_16.GitBranch] = "61898", _a[BlueprintIcons_16.GitCommit] = "61899", _a[BlueprintIcons_16.GitMerge] = "61900", _a[BlueprintIcons_16.GitNewBranch] = "61901", _a[BlueprintIcons_16.GitPull] = "61902", _a[BlueprintIcons_16.GitPush] = "61903", _a[BlueprintIcons_16.GitRepo] = "61904", _a[BlueprintIcons_16.Glass] = "61905", _a[BlueprintIcons_16.GlobeNetwork] = "61906", _a[BlueprintIcons_16.Globe] = "61907", _a[BlueprintIcons_16.GraphRemove] = "61908", _a[BlueprintIcons_16.Graph] = "61909", _a[BlueprintIcons_16.GreaterThanOrEqualTo] = "61910", _a[BlueprintIcons_16.GreaterThan] = "61911", _a[BlueprintIcons_16.GridView] = "61912", _a[BlueprintIcons_16.Grid] = "61913", _a[BlueprintIcons_16.GroupItem] = "62282", _a[BlueprintIcons_16.GroupObjects] = "61914", _a[BlueprintIcons_16.GroupedBarChart] = "61915", _a[BlueprintIcons_16.HandDown] = "61916", _a[BlueprintIcons_16.HandLeft] = "61917", _a[BlueprintIcons_16.HandRight] = "61918", _a[BlueprintIcons_16.HandUp] = "61919", _a[BlueprintIcons_16.Hand] = "61920", _a[BlueprintIcons_16.Hat] = "61921", _a[BlueprintIcons_16.HeaderOne] = "61922", _a[BlueprintIcons_16.HeaderThree] = "61923", _a[BlueprintIcons_16.HeaderTwo] = "61924", _a[BlueprintIcons_16.Header] = "61925", _a[BlueprintIcons_16.Headset] = "61926", _a[BlueprintIcons_16.HeartBroken] = "61927", _a[BlueprintIcons_16.Heart] = "61928", _a[BlueprintIcons_16.HeatGrid] = "61929", _a[BlueprintIcons_16.Heatmap] = "61930", _a[BlueprintIcons_16.Helicopter] = "61931", _a[BlueprintIcons_16.Help] = "61932", _a[BlueprintIcons_16.HelperManagement] = "61933", _a[BlueprintIcons_16.HighPriority] = "61934", _a[BlueprintIcons_16.HighVoltagePole] = "62259", _a[BlueprintIcons_16.Highlight] = "61935", _a[BlueprintIcons_16.History] = "61936", _a[BlueprintIcons_16.Home] = "61937", _a[BlueprintIcons_16.HorizontalBarChartAsc] = "61938", _a[BlueprintIcons_16.HorizontalBarChartDesc] = "61939", _a[BlueprintIcons_16.HorizontalBarChart] = "61940", _a[BlueprintIcons_16.HorizontalDistribution] = "61941", _a[BlueprintIcons_16.HorizontalInbetween] = "62249", _a[BlueprintIcons_16.Hurricane] = "61942", _a[BlueprintIcons_16.IdNumber] = "61943", _a[BlueprintIcons_16.ImageRotateLeft] = "61944", _a[BlueprintIcons_16.ImageRotateRight] = "61945", _a[BlueprintIcons_16.Import] = "61946", _a[BlueprintIcons_16.InboxFiltered] = "61947", _a[BlueprintIcons_16.InboxGeo] = "61948", _a[BlueprintIcons_16.InboxSearch] = "61949", _a[BlueprintIcons_16.InboxUpdate] = "61950", _a[BlueprintIcons_16.Inbox] = "61951", _a[BlueprintIcons_16.InfoSign] = "61952", _a[BlueprintIcons_16.Inheritance] = "61953", _a[BlueprintIcons_16.InheritedGroup] = "61954", _a[BlueprintIcons_16.InnerJoin] = "61955", _a[BlueprintIcons_16.Input] = "62283", _a[BlueprintIcons_16.Insert] = "61956", _a[BlueprintIcons_16.Intelligence] = "62263", _a[BlueprintIcons_16.Intersection] = "61957", _a[BlueprintIcons_16.IpAddress] = "61958", _a[BlueprintIcons_16.IssueClosed] = "61959", _a[BlueprintIcons_16.IssueNew] = "61960", _a[BlueprintIcons_16.Issue] = "61961", _a[BlueprintIcons_16.Italic] = "61962", _a[BlueprintIcons_16.JoinTable] = "61963", _a[BlueprintIcons_16.KeyBackspace] = "61964", _a[BlueprintIcons_16.KeyCommand] = "61965", _a[BlueprintIcons_16.KeyControl] = "61966", _a[BlueprintIcons_16.KeyDelete] = "61967", _a[BlueprintIcons_16.KeyEnter] = "61968", _a[BlueprintIcons_16.KeyEscape] = "61969", _a[BlueprintIcons_16.KeyOption] = "61970", _a[BlueprintIcons_16.KeyShift] = "61971", _a[BlueprintIcons_16.KeyTab] = "61972", _a[BlueprintIcons_16.Key] = "61973", _a[BlueprintIcons_16.KnownVehicle] = "61974", _a[BlueprintIcons_16.LabTest] = "61975", _a[BlueprintIcons_16.Label] = "61976", _a[BlueprintIcons_16.LayerOutline] = "61977", _a[BlueprintIcons_16.Layer] = "61978", _a[BlueprintIcons_16.Layers] = "61979", _a[BlueprintIcons_16.LayoutAuto] = "61980", _a[BlueprintIcons_16.LayoutBalloon] = "61981", _a[BlueprintIcons_16.LayoutCircle] = "61982", _a[BlueprintIcons_16.LayoutGrid] = "61983", _a[BlueprintIcons_16.LayoutGroupBy] = "61984", _a[BlueprintIcons_16.LayoutHierarchy] = "61985", _a[BlueprintIcons_16.LayoutLinear] = "61986", _a[BlueprintIcons_16.LayoutSkewGrid] = "61987", _a[BlueprintIcons_16.LayoutSortedClusters] = "61988", _a[BlueprintIcons_16.Layout] = "61989", _a[BlueprintIcons_16.Learning] = "61990", _a[BlueprintIcons_16.LeftJoin] = "61991", _a[BlueprintIcons_16.LengthenText] = "62270", _a[BlueprintIcons_16.LessThanOrEqualTo] = "61992", _a[BlueprintIcons_16.LessThan] = "61993", _a[BlueprintIcons_16.Lifesaver] = "61994", _a[BlueprintIcons_16.Lightbulb] = "61995", _a[BlueprintIcons_16.Lightning] = "61996", _a[BlueprintIcons_16.Link] = "61997", _a[BlueprintIcons_16.ListColumns] = "61998", _a[BlueprintIcons_16.ListDetailView] = "61999", _a[BlueprintIcons_16.List] = "62000", _a[BlueprintIcons_16.Locate] = "62001", _a[BlueprintIcons_16.Lock] = "62002", _a[BlueprintIcons_16.Locomotive] = "62267", _a[BlueprintIcons_16.LogIn] = "62003", _a[BlueprintIcons_16.LogOut] = "62004", _a[BlueprintIcons_16.LowVoltagePole] = "62258", _a[BlueprintIcons_16.Manual] = "62005", _a[BlueprintIcons_16.ManuallyEnteredData] = "62006", _a[BlueprintIcons_16.ManyToMany] = "62007", _a[BlueprintIcons_16.ManyToOne] = "62008", _a[BlueprintIcons_16.MapCreate] = "62009", _a[BlueprintIcons_16.MapMarker] = "62010", _a[BlueprintIcons_16.Map] = "62011", _a[BlueprintIcons_16.Maximize] = "62012", _a[BlueprintIcons_16.Media] = "62013", _a[BlueprintIcons_16.MenuClosed] = "62014", _a[BlueprintIcons_16.MenuOpen] = "62015", _a[BlueprintIcons_16.Menu] = "62016", _a[BlueprintIcons_16.MergeColumns] = "62017", _a[BlueprintIcons_16.MergeLinks] = "62018", _a[BlueprintIcons_16.Microphone] = "62275", _a[BlueprintIcons_16.Minimize] = "62019", _a[BlueprintIcons_16.Minus] = "62020", _a[BlueprintIcons_16.MobilePhone] = "62021", _a[BlueprintIcons_16.MobileVideo] = "62022", _a[BlueprintIcons_16.ModalFilled] = "62023", _a[BlueprintIcons_16.Modal] = "62024", _a[BlueprintIcons_16.Model] = "62269", _a[BlueprintIcons_16.Moon] = "62025", _a[BlueprintIcons_16.More] = "62026", _a[BlueprintIcons_16.Mountain] = "62027", _a[BlueprintIcons_16.Move] = "62028", _a[BlueprintIcons_16.Mugshot] = "62029", _a[BlueprintIcons_16.MultiSelect] = "62030", _a[BlueprintIcons_16.Music] = "62031", _a[BlueprintIcons_16.Nest] = "62032", _a[BlueprintIcons_16.NewDrawing] = "62033", _a[BlueprintIcons_16.NewGridItem] = "62034", _a[BlueprintIcons_16.NewLayer] = "62035", _a[BlueprintIcons_16.NewLayers] = "62036", _a[BlueprintIcons_16.NewLink] = "62037", _a[BlueprintIcons_16.NewObject] = "62038", _a[BlueprintIcons_16.NewPerson] = "62039", _a[BlueprintIcons_16.NewPrescription] = "62040", _a[BlueprintIcons_16.NewShield] = "62281", _a[BlueprintIcons_16.NewTextBox] = "62041", _a[BlueprintIcons_16.Ninja] = "62042", _a[BlueprintIcons_16.NotEqualTo] = "62043", _a[BlueprintIcons_16.NotificationsSnooze] = "62044", _a[BlueprintIcons_16.NotificationsUpdated] = "62045", _a[BlueprintIcons_16.Notifications] = "62046", _a[BlueprintIcons_16.NumberedList] = "62047", _a[BlueprintIcons_16.Numerical] = "62048", _a[BlueprintIcons_16.Office] = "62049", _a[BlueprintIcons_16.Offline] = "62050", _a[BlueprintIcons_16.OilField] = "62051", _a[BlueprintIcons_16.OneColumn] = "62052", _a[BlueprintIcons_16.OneToMany] = "62053", _a[BlueprintIcons_16.OneToOne] = "62054", _a[BlueprintIcons_16.OpenApplication] = "62251", _a[BlueprintIcons_16.Outdated] = "62055", _a[BlueprintIcons_16.PageLayout] = "62056", _a[BlueprintIcons_16.PanelStats] = "62057", _a[BlueprintIcons_16.PanelTable] = "62058", _a[BlueprintIcons_16.Paperclip] = "62059", _a[BlueprintIcons_16.Paragraph] = "62060", _a[BlueprintIcons_16.PasteVariable] = "62278", _a[BlueprintIcons_16.PathSearch] = "62061", _a[BlueprintIcons_16.Path] = "62062", _a[BlueprintIcons_16.Pause] = "62063", _a[BlueprintIcons_16.People] = "62064", _a[BlueprintIcons_16.Percentage] = "62065", _a[BlueprintIcons_16.Person] = "62066", _a[BlueprintIcons_16.PhoneCall] = "62279", _a[BlueprintIcons_16.PhoneForward] = "62280", _a[BlueprintIcons_16.Phone] = "62067", _a[BlueprintIcons_16.PieChart] = "62068", _a[BlueprintIcons_16.Pin] = "62069", _a[BlueprintIcons_16.PivotTable] = "62070", _a[BlueprintIcons_16.Pivot] = "62071", _a[BlueprintIcons_16.Play] = "62072", _a[BlueprintIcons_16.Playbook] = "62244", _a[BlueprintIcons_16.Plus] = "62073", _a[BlueprintIcons_16.PolygonFilter] = "62074", _a[BlueprintIcons_16.Power] = "62075", _a[BlueprintIcons_16.PredictiveAnalysis] = "62076", _a[BlueprintIcons_16.Prescription] = "62077", _a[BlueprintIcons_16.Presentation] = "62078", _a[BlueprintIcons_16.Print] = "62079", _a[BlueprintIcons_16.Projects] = "62080", _a[BlueprintIcons_16.Properties] = "62081", _a[BlueprintIcons_16.Property] = "62082", _a[BlueprintIcons_16.PublishFunction] = "62083", _a[BlueprintIcons_16.Pulse] = "62084", _a[BlueprintIcons_16.Rain] = "62085", _a[BlueprintIcons_16.Random] = "62086", _a[BlueprintIcons_16.Record] = "62087", _a[BlueprintIcons_16.RectHeight] = "62245", _a[BlueprintIcons_16.RectWidth] = "62246", _a[BlueprintIcons_16.Rectangle] = "62241", _a[BlueprintIcons_16.Redo] = "62088", _a[BlueprintIcons_16.Refresh] = "62089", _a[BlueprintIcons_16.Regex] = "62255", _a[BlueprintIcons_16.RegressionChart] = "62090", _a[BlueprintIcons_16.RemoveColumnLeft] = "62091", _a[BlueprintIcons_16.RemoveColumnRight] = "62092", _a[BlueprintIcons_16.RemoveColumn] = "62093", _a[BlueprintIcons_16.RemoveRowBottom] = "62094", _a[BlueprintIcons_16.RemoveRowTop] = "62095", _a[BlueprintIcons_16.Remove] = "62096", _a[BlueprintIcons_16.Repeat] = "62097", _a[BlueprintIcons_16.Reset] = "62098", _a[BlueprintIcons_16.Resolve] = "62099", _a[BlueprintIcons_16.Rig] = "62100", _a[BlueprintIcons_16.RightJoin] = "62101", _a[BlueprintIcons_16.Ring] = "62102", _a[BlueprintIcons_16.RocketSlant] = "62103", _a[BlueprintIcons_16.Rocket] = "62104", _a[BlueprintIcons_16.RotateDocument] = "62105", _a[BlueprintIcons_16.RotatePage] = "62106", _a[BlueprintIcons_16.Route] = "62107", _a[BlueprintIcons_16.Satellite] = "62108", _a[BlueprintIcons_16.Saved] = "62109", _a[BlueprintIcons_16.ScatterPlot] = "62110", _a[BlueprintIcons_16.SearchAround] = "62111", _a[BlueprintIcons_16.SearchTemplate] = "62112", _a[BlueprintIcons_16.SearchText] = "62113", _a[BlueprintIcons_16.Search] = "62114", _a[BlueprintIcons_16.SegmentedControl] = "62115", _a[BlueprintIcons_16.Select] = "62116", _a[BlueprintIcons_16.Selection] = "62117", _a[BlueprintIcons_16.SendBackward] = "62293", _a[BlueprintIcons_16.SendMessage] = "62118", _a[BlueprintIcons_16.SendToGraph] = "62119", _a[BlueprintIcons_16.SendToMap] = "62120", _a[BlueprintIcons_16.SendTo] = "62121", _a[BlueprintIcons_16.Sensor] = "62268", _a[BlueprintIcons_16.SeriesAdd] = "62122", _a[BlueprintIcons_16.SeriesConfiguration] = "62123", _a[BlueprintIcons_16.SeriesDerived] = "62124", _a[BlueprintIcons_16.SeriesFiltered] = "62125", _a[BlueprintIcons_16.SeriesSearch] = "62126", _a[BlueprintIcons_16.Settings] = "62127", _a[BlueprintIcons_16.Shapes] = "62128", _a[BlueprintIcons_16.Share] = "62129", _a[BlueprintIcons_16.SharedFilter] = "62130", _a[BlueprintIcons_16.Shield] = "62131", _a[BlueprintIcons_16.Ship] = "62132", _a[BlueprintIcons_16.Shop] = "62133", _a[BlueprintIcons_16.ShoppingCart] = "62134", _a[BlueprintIcons_16.ShortenText] = "62271", _a[BlueprintIcons_16.SignalSearch] = "62135", _a[BlueprintIcons_16.SimCard] = "62136", _a[BlueprintIcons_16.Slash] = "62137", _a[BlueprintIcons_16.SmallCross] = "62138", _a[BlueprintIcons_16.SmallInfoSign] = "62260", _a[BlueprintIcons_16.SmallMinus] = "62139", _a[BlueprintIcons_16.SmallPlus] = "62140", _a[BlueprintIcons_16.SmallSquare] = "62141", _a[BlueprintIcons_16.SmallTick] = "62142", _a[BlueprintIcons_16.Snowflake] = "62143", _a[BlueprintIcons_16.SoccerBall] = "62288", _a[BlueprintIcons_16.SocialMedia] = "62144", _a[BlueprintIcons_16.SortAlphabeticalDesc] = "62145", _a[BlueprintIcons_16.SortAlphabetical] = "62146", _a[BlueprintIcons_16.SortAsc] = "62147", _a[BlueprintIcons_16.SortDesc] = "62148", _a[BlueprintIcons_16.SortNumericalDesc] = "62149", _a[BlueprintIcons_16.SortNumerical] = "62150", _a[BlueprintIcons_16.Sort] = "62151", _a[BlueprintIcons_16.SpellCheck] = "62272", _a[BlueprintIcons_16.SplitColumns] = "62152", _a[BlueprintIcons_16.SportsStadium] = "62289", _a[BlueprintIcons_16.Square] = "62153", _a[BlueprintIcons_16.StackedChart] = "62154", _a[BlueprintIcons_16.StadiumGeometry] = "62155", _a[BlueprintIcons_16.StarEmpty] = "62156", _a[BlueprintIcons_16.Star] = "62157", _a[BlueprintIcons_16.StepBackward] = "62158", _a[BlueprintIcons_16.StepChart] = "62159", _a[BlueprintIcons_16.StepForward] = "62160", _a[BlueprintIcons_16.Stop] = "62161", _a[BlueprintIcons_16.Stopwatch] = "62162", _a[BlueprintIcons_16.Strikethrough] = "62163", _a[BlueprintIcons_16.Style] = "62164", _a[BlueprintIcons_16.Subscript] = "62265", _a[BlueprintIcons_16.Superscript] = "62266", _a[BlueprintIcons_16.SwapHorizontal] = "62165", _a[BlueprintIcons_16.SwapVertical] = "62166", _a[BlueprintIcons_16.Switch] = "62167", _a[BlueprintIcons_16.SymbolCircle] = "62168", _a[BlueprintIcons_16.SymbolCross] = "62169", _a[BlueprintIcons_16.SymbolDiamond] = "62170", _a[BlueprintIcons_16.SymbolRectangle] = "62242", _a[BlueprintIcons_16.SymbolSquare] = "62171", _a[BlueprintIcons_16.SymbolTriangleDown] = "62172", _a[BlueprintIcons_16.SymbolTriangleUp] = "62173", _a[BlueprintIcons_16.Syringe] = "62174", _a[BlueprintIcons_16.Tag] = "62175", _a[BlueprintIcons_16.TakeAction] = "62176", _a[BlueprintIcons_16.Tank] = "62177", _a[BlueprintIcons_16.Target] = "62178", _a[BlueprintIcons_16.Taxi] = "62179", _a[BlueprintIcons_16.Team] = "62290", _a[BlueprintIcons_16.Temperature] = "62180", _a[BlueprintIcons_16.TextHighlight] = "62181", _a[BlueprintIcons_16.ThDerived] = "62182", _a[BlueprintIcons_16.ThDisconnect] = "62183", _a[BlueprintIcons_16.ThFiltered] = "62184", _a[BlueprintIcons_16.ThList] = "62185", _a[BlueprintIcons_16.Th] = "62186", _a[BlueprintIcons_16.ThirdParty] = "62187", _a[BlueprintIcons_16.ThumbsDown] = "62188", _a[BlueprintIcons_16.ThumbsUp] = "62189", _a[BlueprintIcons_16.TickCircle] = "62190", _a[BlueprintIcons_16.Tick] = "62191", _a[BlueprintIcons_16.Time] = "62192", _a[BlueprintIcons_16.TimelineAreaChart] = "62193", _a[BlueprintIcons_16.TimelineBarChart] = "62194", _a[BlueprintIcons_16.TimelineEvents] = "62195", _a[BlueprintIcons_16.TimelineLineChart] = "62196", _a[BlueprintIcons_16.Tint] = "62197", _a[BlueprintIcons_16.Torch] = "62198", _a[BlueprintIcons_16.Tractor] = "62199", _a[BlueprintIcons_16.Train] = "62200", _a[BlueprintIcons_16.Translate] = "62201", _a[BlueprintIcons_16.Trash] = "62202", _a[BlueprintIcons_16.Tree] = "62203", _a[BlueprintIcons_16.TrendingDown] = "62204", _a[BlueprintIcons_16.TrendingUp] = "62205", _a[BlueprintIcons_16.Trophy] = "62287", _a[BlueprintIcons_16.Truck] = "62206", _a[BlueprintIcons_16.TwoColumns] = "62207", _a[BlueprintIcons_16.Unarchive] = "62208", _a[BlueprintIcons_16.Underline] = "62209", _a[BlueprintIcons_16.Undo] = "62210", _a[BlueprintIcons_16.UngroupObjects] = "62211", _a[BlueprintIcons_16.UnknownVehicle] = "62212", _a[BlueprintIcons_16.Unlink] = "62277", _a[BlueprintIcons_16.Unlock] = "62213", _a[BlueprintIcons_16.Unpin] = "62214", _a[BlueprintIcons_16.Unresolve] = "62215", _a[BlueprintIcons_16.Updated] = "62216", _a[BlueprintIcons_16.Upload] = "62217", _a[BlueprintIcons_16.User] = "62218", _a[BlueprintIcons_16.Variable] = "62219", _a[BlueprintIcons_16.VerticalBarChartAsc] = "62220", _a[BlueprintIcons_16.VerticalBarChartDesc] = "62221", _a[BlueprintIcons_16.VerticalDistribution] = "62222", _a[BlueprintIcons_16.VerticalInbetween] = "62250", _a[BlueprintIcons_16.Video] = "62223", _a[BlueprintIcons_16.Virus] = "62224", _a[BlueprintIcons_16.VolumeDown] = "62225", _a[BlueprintIcons_16.VolumeOff] = "62226", _a[BlueprintIcons_16.VolumeUp] = "62227", _a[BlueprintIcons_16.Walk] = "62228", _a[BlueprintIcons_16.WarningSign] = "62229", _a[BlueprintIcons_16.WaterfallChart] = "62230", _a[BlueprintIcons_16.Waves] = "62231", _a[BlueprintIcons_16.WidgetButton] = "62232", _a[BlueprintIcons_16.WidgetFooter] = "62233", _a[BlueprintIcons_16.WidgetHeader] = "62234", _a[BlueprintIcons_16.Widget] = "62235", _a[BlueprintIcons_16.Wind] = "62236", _a[BlueprintIcons_16.Wrench] = "62237", _a[BlueprintIcons_16.ZoomIn] = "62238", _a[BlueprintIcons_16.ZoomOut] = "62239", _a[BlueprintIcons_16.ZoomToFit] = "62240", _a);
+  var BLUEPRINT_ICONS_16_CODEPOINTS = (_a = {}, _a[BlueprintIcons_16.AddClip] = "61697", _a[BlueprintIcons_16.AddColumnLeft] = "61698", _a[BlueprintIcons_16.AddColumnRight] = "61699", _a[BlueprintIcons_16.AddLocation] = "61700", _a[BlueprintIcons_16.AddRowBottom] = "61701", _a[BlueprintIcons_16.AddRowTop] = "61702", _a[BlueprintIcons_16.AddToArtifact] = "61703", _a[BlueprintIcons_16.AddToFolder] = "61704", _a[BlueprintIcons_16.Add] = "61705", _a[BlueprintIcons_16.AimpointsTarget] = "62261", _a[BlueprintIcons_16.Airplane] = "61706", _a[BlueprintIcons_16.AlignCenter] = "61707", _a[BlueprintIcons_16.AlignJustify] = "61708", _a[BlueprintIcons_16.AlignLeft] = "61709", _a[BlueprintIcons_16.AlignRight] = "61710", _a[BlueprintIcons_16.AlignmentBottom] = "61711", _a[BlueprintIcons_16.AlignmentHorizontalCenter] = "61712", _a[BlueprintIcons_16.AlignmentLeft] = "61713", _a[BlueprintIcons_16.AlignmentRight] = "61714", _a[BlueprintIcons_16.AlignmentTop] = "61715", _a[BlueprintIcons_16.AlignmentVerticalCenter] = "61716", _a[BlueprintIcons_16.Ammunition] = "62274", _a[BlueprintIcons_16.Anchor] = "62256", _a[BlueprintIcons_16.Annotation] = "61717", _a[BlueprintIcons_16.Antenna] = "61718", _a[BlueprintIcons_16.AppHeader] = "61719", _a[BlueprintIcons_16.Application] = "61720", _a[BlueprintIcons_16.Applications] = "61721", _a[BlueprintIcons_16.Archive] = "61722", _a[BlueprintIcons_16.AreaOfInterest] = "61723", _a[BlueprintIcons_16.ArrayBoolean] = "61724", _a[BlueprintIcons_16.ArrayDate] = "61725", _a[BlueprintIcons_16.ArrayFloatingPoint] = "62253", _a[BlueprintIcons_16.ArrayNumeric] = "61726", _a[BlueprintIcons_16.ArrayString] = "61727", _a[BlueprintIcons_16.ArrayTimestamp] = "61728", _a[BlueprintIcons_16.Array] = "61729", _a[BlueprintIcons_16.ArrowBottomLeft] = "61730", _a[BlueprintIcons_16.ArrowBottomRight] = "61731", _a[BlueprintIcons_16.ArrowDown] = "61732", _a[BlueprintIcons_16.ArrowLeft] = "61733", _a[BlueprintIcons_16.ArrowRight] = "61734", _a[BlueprintIcons_16.ArrowTopLeft] = "61735", _a[BlueprintIcons_16.ArrowTopRight] = "61736", _a[BlueprintIcons_16.ArrowUp] = "61737", _a[BlueprintIcons_16.ArrowsHorizontal] = "61738", _a[BlueprintIcons_16.ArrowsVertical] = "61739", _a[BlueprintIcons_16.Asterisk] = "61740", _a[BlueprintIcons_16.At] = "62257", _a[BlueprintIcons_16.AutomaticUpdates] = "61741", _a[BlueprintIcons_16.Axle] = "62264", _a[BlueprintIcons_16.Backlink] = "61742", _a[BlueprintIcons_16.BackwardTen] = "62300", _a[BlueprintIcons_16.Badge] = "61743", _a[BlueprintIcons_16.BanCircle] = "61744", _a[BlueprintIcons_16.BankAccount] = "61745", _a[BlueprintIcons_16.Barcode] = "61746", _a[BlueprintIcons_16.BinaryNumber] = "62295", _a[BlueprintIcons_16.Blank] = "61747", _a[BlueprintIcons_16.BlockedPerson] = "61748", _a[BlueprintIcons_16.Bold] = "61749", _a[BlueprintIcons_16.Book] = "61750", _a[BlueprintIcons_16.Bookmark] = "61751", _a[BlueprintIcons_16.Box] = "61752", _a[BlueprintIcons_16.Briefcase] = "61753", _a[BlueprintIcons_16.BringData] = "61754", _a[BlueprintIcons_16.BringForward] = "62292", _a[BlueprintIcons_16.Bug] = "62254", _a[BlueprintIcons_16.Buggy] = "61755", _a[BlueprintIcons_16.Build] = "61756", _a[BlueprintIcons_16.Bullseye] = "62297", _a[BlueprintIcons_16.Calculator] = "61757", _a[BlueprintIcons_16.Calendar] = "61758", _a[BlueprintIcons_16.Camera] = "61759", _a[BlueprintIcons_16.CaretDown] = "61760", _a[BlueprintIcons_16.CaretLeft] = "61761", _a[BlueprintIcons_16.CaretRight] = "61762", _a[BlueprintIcons_16.CaretUp] = "61763", _a[BlueprintIcons_16.CargoShip] = "61764", _a[BlueprintIcons_16.CellTower] = "61765", _a[BlueprintIcons_16.Changes] = "61766", _a[BlueprintIcons_16.Chart] = "61767", _a[BlueprintIcons_16.Chat] = "61768", _a[BlueprintIcons_16.ChevronBackward] = "61769", _a[BlueprintIcons_16.ChevronDown] = "61770", _a[BlueprintIcons_16.ChevronForward] = "61771", _a[BlueprintIcons_16.ChevronLeft] = "61772", _a[BlueprintIcons_16.ChevronRight] = "61773", _a[BlueprintIcons_16.ChevronUp] = "61774", _a[BlueprintIcons_16.CircleArrowDown] = "61775", _a[BlueprintIcons_16.CircleArrowLeft] = "61776", _a[BlueprintIcons_16.CircleArrowRight] = "61777", _a[BlueprintIcons_16.CircleArrowUp] = "61778", _a[BlueprintIcons_16.Circle] = "61779", _a[BlueprintIcons_16.Citation] = "61780", _a[BlueprintIcons_16.Clean] = "61781", _a[BlueprintIcons_16.Clip] = "61782", _a[BlueprintIcons_16.ClipboardFile] = "62299", _a[BlueprintIcons_16.Clipboard] = "61783", _a[BlueprintIcons_16.CloudDownload] = "61784", _a[BlueprintIcons_16.CloudServer] = "62298", _a[BlueprintIcons_16.CloudTick] = "62286", _a[BlueprintIcons_16.CloudUpload] = "61785", _a[BlueprintIcons_16.Cloud] = "61786", _a[BlueprintIcons_16.CodeBlock] = "61787", _a[BlueprintIcons_16.Code] = "61788", _a[BlueprintIcons_16.Cog] = "61789", _a[BlueprintIcons_16.CollapseAll] = "61790", _a[BlueprintIcons_16.ColorFill] = "62248", _a[BlueprintIcons_16.ColumnLayout] = "61791", _a[BlueprintIcons_16.Comment] = "61792", _a[BlueprintIcons_16.Comparison] = "61793", _a[BlueprintIcons_16.Compass] = "61794", _a[BlueprintIcons_16.Compressed] = "61795", _a[BlueprintIcons_16.Confirm] = "61796", _a[BlueprintIcons_16.Console] = "61797", _a[BlueprintIcons_16.Contrast] = "61798", _a[BlueprintIcons_16.Control] = "61799", _a[BlueprintIcons_16.CreditCard] = "61800", _a[BlueprintIcons_16.Crop] = "62291", _a[BlueprintIcons_16.CrossCircle] = "62262", _a[BlueprintIcons_16.Cross] = "61801", _a[BlueprintIcons_16.Crown] = "61802", _a[BlueprintIcons_16.CubeAdd] = "61803", _a[BlueprintIcons_16.CubeRemove] = "61804", _a[BlueprintIcons_16.Cube] = "61805", _a[BlueprintIcons_16.CurlyBraces] = "62296", _a[BlueprintIcons_16.CurvedRangeChart] = "61806", _a[BlueprintIcons_16.Cut] = "61807", _a[BlueprintIcons_16.Cycle] = "61808", _a[BlueprintIcons_16.Dashboard] = "61809", _a[BlueprintIcons_16.DataConnection] = "61810", _a[BlueprintIcons_16.DataLineage] = "61811", _a[BlueprintIcons_16.Database] = "61812", _a[BlueprintIcons_16.Delete] = "61813", _a[BlueprintIcons_16.Delta] = "61814", _a[BlueprintIcons_16.DeriveColumn] = "61815", _a[BlueprintIcons_16.Desktop] = "61816", _a[BlueprintIcons_16.Detection] = "62273", _a[BlueprintIcons_16.Diagnosis] = "61817", _a[BlueprintIcons_16.DiagramTree] = "61818", _a[BlueprintIcons_16.DirectionLeft] = "61819", _a[BlueprintIcons_16.DirectionRight] = "61820", _a[BlueprintIcons_16.Disable] = "61821", _a[BlueprintIcons_16.Divide] = "62247", _a[BlueprintIcons_16.DocumentOpen] = "61822", _a[BlueprintIcons_16.DocumentShare] = "61823", _a[BlueprintIcons_16.Document] = "61824", _a[BlueprintIcons_16.Dollar] = "61825", _a[BlueprintIcons_16.Dot] = "61826", _a[BlueprintIcons_16.DoubleCaretHorizontal] = "61827", _a[BlueprintIcons_16.DoubleCaretVertical] = "61828", _a[BlueprintIcons_16.DoubleChevronDown] = "61829", _a[BlueprintIcons_16.DoubleChevronLeft] = "61830", _a[BlueprintIcons_16.DoubleChevronRight] = "61831", _a[BlueprintIcons_16.DoubleChevronUp] = "61832", _a[BlueprintIcons_16.DoughnutChart] = "61833", _a[BlueprintIcons_16.Download] = "61834", _a[BlueprintIcons_16.DragHandleHorizontal] = "61835", _a[BlueprintIcons_16.DragHandleVertical] = "61836", _a[BlueprintIcons_16.Draw] = "61837", _a[BlueprintIcons_16.DrawerLeftFilled] = "61838", _a[BlueprintIcons_16.DrawerLeft] = "61839", _a[BlueprintIcons_16.DrawerRightFilled] = "61840", _a[BlueprintIcons_16.DrawerRight] = "61841", _a[BlueprintIcons_16.DriveTime] = "61842", _a[BlueprintIcons_16.Duplicate] = "61843", _a[BlueprintIcons_16.Edit] = "61844", _a[BlueprintIcons_16.Eject] = "61845", _a[BlueprintIcons_16.Emoji] = "61846", _a[BlueprintIcons_16.Endnote] = "62294", _a[BlueprintIcons_16.Endorsed] = "61847", _a[BlueprintIcons_16.Envelope] = "61848", _a[BlueprintIcons_16.Equals] = "61849", _a[BlueprintIcons_16.Eraser] = "61850", _a[BlueprintIcons_16.Error] = "61851", _a[BlueprintIcons_16.Euro] = "61852", _a[BlueprintIcons_16.Exchange] = "61853", _a[BlueprintIcons_16.ExcludeRow] = "61854", _a[BlueprintIcons_16.ExpandAll] = "61855", _a[BlueprintIcons_16.Explain] = "62285", _a[BlueprintIcons_16.Export] = "61856", _a[BlueprintIcons_16.EyeOff] = "61857", _a[BlueprintIcons_16.EyeOn] = "61858", _a[BlueprintIcons_16.EyeOpen] = "61859", _a[BlueprintIcons_16.FastBackward] = "61860", _a[BlueprintIcons_16.FastForward] = "61861", _a[BlueprintIcons_16.FeedSubscribed] = "61862", _a[BlueprintIcons_16.Feed] = "61863", _a[BlueprintIcons_16.Film] = "61864", _a[BlueprintIcons_16.FilterKeep] = "61865", _a[BlueprintIcons_16.FilterList] = "61866", _a[BlueprintIcons_16.FilterOpen] = "61867", _a[BlueprintIcons_16.FilterRemove] = "61868", _a[BlueprintIcons_16.Filter] = "61869", _a[BlueprintIcons_16.Flag] = "61870", _a[BlueprintIcons_16.Flame] = "61871", _a[BlueprintIcons_16.Flash] = "61872", _a[BlueprintIcons_16.FloatingPoint] = "62252", _a[BlueprintIcons_16.FloppyDisk] = "61873", _a[BlueprintIcons_16.FlowBranch] = "61874", _a[BlueprintIcons_16.FlowEnd] = "61875", _a[BlueprintIcons_16.FlowLinear] = "61876", _a[BlueprintIcons_16.FlowReviewBranch] = "61877", _a[BlueprintIcons_16.FlowReview] = "61878", _a[BlueprintIcons_16.Flows] = "61879", _a[BlueprintIcons_16.FolderClose] = "61880", _a[BlueprintIcons_16.FolderNew] = "61881", _a[BlueprintIcons_16.FolderOpen] = "61882", _a[BlueprintIcons_16.FolderSharedOpen] = "61883", _a[BlueprintIcons_16.FolderShared] = "61884", _a[BlueprintIcons_16.Follower] = "61885", _a[BlueprintIcons_16.Following] = "61886", _a[BlueprintIcons_16.Font] = "61887", _a[BlueprintIcons_16.Fork] = "61888", _a[BlueprintIcons_16.Form] = "61889", _a[BlueprintIcons_16.ForwardTen] = "62301", _a[BlueprintIcons_16.Fuel] = "62243", _a[BlueprintIcons_16.FullCircle] = "61890", _a[BlueprintIcons_16.FullStackedChart] = "61891", _a[BlueprintIcons_16.Fullscreen] = "61892", _a[BlueprintIcons_16.Function] = "61893", _a[BlueprintIcons_16.GanttChart] = "61894", _a[BlueprintIcons_16.Generate] = "62284", _a[BlueprintIcons_16.Geofence] = "61895", _a[BlueprintIcons_16.Geolocation] = "61896", _a[BlueprintIcons_16.Geosearch] = "61897", _a[BlueprintIcons_16.Geotime] = "62276", _a[BlueprintIcons_16.GitBranch] = "61898", _a[BlueprintIcons_16.GitCommit] = "61899", _a[BlueprintIcons_16.GitMerge] = "61900", _a[BlueprintIcons_16.GitNewBranch] = "61901", _a[BlueprintIcons_16.GitPull] = "61902", _a[BlueprintIcons_16.GitPush] = "61903", _a[BlueprintIcons_16.GitRepo] = "61904", _a[BlueprintIcons_16.Glass] = "61905", _a[BlueprintIcons_16.GlobeNetwork] = "61906", _a[BlueprintIcons_16.Globe] = "61907", _a[BlueprintIcons_16.GraphRemove] = "61908", _a[BlueprintIcons_16.Graph] = "61909", _a[BlueprintIcons_16.GreaterThanOrEqualTo] = "61910", _a[BlueprintIcons_16.GreaterThan] = "61911", _a[BlueprintIcons_16.GridView] = "61912", _a[BlueprintIcons_16.Grid] = "61913", _a[BlueprintIcons_16.GroupItem] = "62282", _a[BlueprintIcons_16.GroupObjects] = "61914", _a[BlueprintIcons_16.GroupedBarChart] = "61915", _a[BlueprintIcons_16.HandDown] = "61916", _a[BlueprintIcons_16.HandLeft] = "61917", _a[BlueprintIcons_16.HandRight] = "61918", _a[BlueprintIcons_16.HandUp] = "61919", _a[BlueprintIcons_16.Hand] = "61920", _a[BlueprintIcons_16.Hat] = "61921", _a[BlueprintIcons_16.HeaderOne] = "61922", _a[BlueprintIcons_16.HeaderThree] = "61923", _a[BlueprintIcons_16.HeaderTwo] = "61924", _a[BlueprintIcons_16.Header] = "61925", _a[BlueprintIcons_16.Headset] = "61926", _a[BlueprintIcons_16.HeartBroken] = "61927", _a[BlueprintIcons_16.Heart] = "61928", _a[BlueprintIcons_16.HeatGrid] = "61929", _a[BlueprintIcons_16.Heatmap] = "61930", _a[BlueprintIcons_16.Helicopter] = "61931", _a[BlueprintIcons_16.Help] = "61932", _a[BlueprintIcons_16.HelperManagement] = "61933", _a[BlueprintIcons_16.HighPriority] = "61934", _a[BlueprintIcons_16.HighVoltagePole] = "62259", _a[BlueprintIcons_16.Highlight] = "61935", _a[BlueprintIcons_16.History] = "61936", _a[BlueprintIcons_16.Home] = "61937", _a[BlueprintIcons_16.HorizontalBarChartAsc] = "61938", _a[BlueprintIcons_16.HorizontalBarChartDesc] = "61939", _a[BlueprintIcons_16.HorizontalBarChart] = "61940", _a[BlueprintIcons_16.HorizontalDistribution] = "61941", _a[BlueprintIcons_16.HorizontalInbetween] = "62249", _a[BlueprintIcons_16.Hurricane] = "61942", _a[BlueprintIcons_16.IdNumber] = "61943", _a[BlueprintIcons_16.ImageRotateLeft] = "61944", _a[BlueprintIcons_16.ImageRotateRight] = "61945", _a[BlueprintIcons_16.Import] = "61946", _a[BlueprintIcons_16.InboxFiltered] = "61947", _a[BlueprintIcons_16.InboxGeo] = "61948", _a[BlueprintIcons_16.InboxSearch] = "61949", _a[BlueprintIcons_16.InboxUpdate] = "61950", _a[BlueprintIcons_16.Inbox] = "61951", _a[BlueprintIcons_16.InfoSign] = "61952", _a[BlueprintIcons_16.Inheritance] = "61953", _a[BlueprintIcons_16.InheritedGroup] = "61954", _a[BlueprintIcons_16.InnerJoin] = "61955", _a[BlueprintIcons_16.Input] = "62283", _a[BlueprintIcons_16.Insert] = "61956", _a[BlueprintIcons_16.Intelligence] = "62263", _a[BlueprintIcons_16.Intersection] = "61957", _a[BlueprintIcons_16.IpAddress] = "61958", _a[BlueprintIcons_16.IssueClosed] = "61959", _a[BlueprintIcons_16.IssueNew] = "61960", _a[BlueprintIcons_16.Issue] = "61961", _a[BlueprintIcons_16.Italic] = "61962", _a[BlueprintIcons_16.JoinTable] = "61963", _a[BlueprintIcons_16.KeyBackspace] = "61964", _a[BlueprintIcons_16.KeyCommand] = "61965", _a[BlueprintIcons_16.KeyControl] = "61966", _a[BlueprintIcons_16.KeyDelete] = "61967", _a[BlueprintIcons_16.KeyEnter] = "61968", _a[BlueprintIcons_16.KeyEscape] = "61969", _a[BlueprintIcons_16.KeyOption] = "61970", _a[BlueprintIcons_16.KeyShift] = "61971", _a[BlueprintIcons_16.KeyTab] = "61972", _a[BlueprintIcons_16.Key] = "61973", _a[BlueprintIcons_16.KnownVehicle] = "61974", _a[BlueprintIcons_16.LabTest] = "61975", _a[BlueprintIcons_16.Label] = "61976", _a[BlueprintIcons_16.LayerOutline] = "61977", _a[BlueprintIcons_16.Layer] = "61978", _a[BlueprintIcons_16.Layers] = "61979", _a[BlueprintIcons_16.LayoutAuto] = "61980", _a[BlueprintIcons_16.LayoutBalloon] = "61981", _a[BlueprintIcons_16.LayoutCircle] = "61982", _a[BlueprintIcons_16.LayoutGrid] = "61983", _a[BlueprintIcons_16.LayoutGroupBy] = "61984", _a[BlueprintIcons_16.LayoutHierarchy] = "61985", _a[BlueprintIcons_16.LayoutLinear] = "61986", _a[BlueprintIcons_16.LayoutSkewGrid] = "61987", _a[BlueprintIcons_16.LayoutSortedClusters] = "61988", _a[BlueprintIcons_16.Layout] = "61989", _a[BlueprintIcons_16.Learning] = "61990", _a[BlueprintIcons_16.LeftJoin] = "61991", _a[BlueprintIcons_16.LengthenText] = "62270", _a[BlueprintIcons_16.LessThanOrEqualTo] = "61992", _a[BlueprintIcons_16.LessThan] = "61993", _a[BlueprintIcons_16.Lifesaver] = "61994", _a[BlueprintIcons_16.Lightbulb] = "61995", _a[BlueprintIcons_16.Lightning] = "61996", _a[BlueprintIcons_16.Link] = "61997", _a[BlueprintIcons_16.ListColumns] = "61998", _a[BlueprintIcons_16.ListDetailView] = "61999", _a[BlueprintIcons_16.List] = "62000", _a[BlueprintIcons_16.Locate] = "62001", _a[BlueprintIcons_16.Lock] = "62002", _a[BlueprintIcons_16.Locomotive] = "62267", _a[BlueprintIcons_16.LogIn] = "62003", _a[BlueprintIcons_16.LogOut] = "62004", _a[BlueprintIcons_16.LowVoltagePole] = "62258", _a[BlueprintIcons_16.Manual] = "62005", _a[BlueprintIcons_16.ManuallyEnteredData] = "62006", _a[BlueprintIcons_16.ManyToMany] = "62007", _a[BlueprintIcons_16.ManyToOne] = "62008", _a[BlueprintIcons_16.MapCreate] = "62009", _a[BlueprintIcons_16.MapMarker] = "62010", _a[BlueprintIcons_16.Map] = "62011", _a[BlueprintIcons_16.Maximize] = "62012", _a[BlueprintIcons_16.Media] = "62013", _a[BlueprintIcons_16.MenuClosed] = "62014", _a[BlueprintIcons_16.MenuOpen] = "62015", _a[BlueprintIcons_16.Menu] = "62016", _a[BlueprintIcons_16.MergeColumns] = "62017", _a[BlueprintIcons_16.MergeLinks] = "62018", _a[BlueprintIcons_16.Microphone] = "62275", _a[BlueprintIcons_16.Minimize] = "62019", _a[BlueprintIcons_16.Minus] = "62020", _a[BlueprintIcons_16.MobilePhone] = "62021", _a[BlueprintIcons_16.MobileVideo] = "62022", _a[BlueprintIcons_16.ModalFilled] = "62023", _a[BlueprintIcons_16.Modal] = "62024", _a[BlueprintIcons_16.Model] = "62269", _a[BlueprintIcons_16.Moon] = "62025", _a[BlueprintIcons_16.More] = "62026", _a[BlueprintIcons_16.Mountain] = "62027", _a[BlueprintIcons_16.Move] = "62028", _a[BlueprintIcons_16.Mugshot] = "62029", _a[BlueprintIcons_16.MultiSelect] = "62030", _a[BlueprintIcons_16.Music] = "62031", _a[BlueprintIcons_16.Nest] = "62032", _a[BlueprintIcons_16.NewDrawing] = "62033", _a[BlueprintIcons_16.NewGridItem] = "62034", _a[BlueprintIcons_16.NewLayer] = "62035", _a[BlueprintIcons_16.NewLayers] = "62036", _a[BlueprintIcons_16.NewLink] = "62037", _a[BlueprintIcons_16.NewObject] = "62038", _a[BlueprintIcons_16.NewPerson] = "62039", _a[BlueprintIcons_16.NewPrescription] = "62040", _a[BlueprintIcons_16.NewShield] = "62281", _a[BlueprintIcons_16.NewTextBox] = "62041", _a[BlueprintIcons_16.Ninja] = "62042", _a[BlueprintIcons_16.NotEqualTo] = "62043", _a[BlueprintIcons_16.NotificationsSnooze] = "62044", _a[BlueprintIcons_16.NotificationsUpdated] = "62045", _a[BlueprintIcons_16.Notifications] = "62046", _a[BlueprintIcons_16.NumberedList] = "62047", _a[BlueprintIcons_16.Numerical] = "62048", _a[BlueprintIcons_16.Office] = "62049", _a[BlueprintIcons_16.Offline] = "62050", _a[BlueprintIcons_16.OilField] = "62051", _a[BlueprintIcons_16.OneColumn] = "62052", _a[BlueprintIcons_16.OneToMany] = "62053", _a[BlueprintIcons_16.OneToOne] = "62054", _a[BlueprintIcons_16.OpenApplication] = "62251", _a[BlueprintIcons_16.Outdated] = "62055", _a[BlueprintIcons_16.PageLayout] = "62056", _a[BlueprintIcons_16.PanelStats] = "62057", _a[BlueprintIcons_16.PanelTable] = "62058", _a[BlueprintIcons_16.Paperclip] = "62059", _a[BlueprintIcons_16.Paragraph] = "62060", _a[BlueprintIcons_16.PasteVariable] = "62278", _a[BlueprintIcons_16.PathSearch] = "62061", _a[BlueprintIcons_16.Path] = "62062", _a[BlueprintIcons_16.Pause] = "62063", _a[BlueprintIcons_16.People] = "62064", _a[BlueprintIcons_16.Percentage] = "62065", _a[BlueprintIcons_16.Person] = "62066", _a[BlueprintIcons_16.PhoneCall] = "62279", _a[BlueprintIcons_16.PhoneForward] = "62280", _a[BlueprintIcons_16.Phone] = "62067", _a[BlueprintIcons_16.PieChart] = "62068", _a[BlueprintIcons_16.Pin] = "62069", _a[BlueprintIcons_16.PivotTable] = "62070", _a[BlueprintIcons_16.Pivot] = "62071", _a[BlueprintIcons_16.Play] = "62072", _a[BlueprintIcons_16.Playbook] = "62244", _a[BlueprintIcons_16.Plus] = "62073", _a[BlueprintIcons_16.PolygonFilter] = "62074", _a[BlueprintIcons_16.Power] = "62075", _a[BlueprintIcons_16.PredictiveAnalysis] = "62076", _a[BlueprintIcons_16.Prescription] = "62077", _a[BlueprintIcons_16.Presentation] = "62078", _a[BlueprintIcons_16.Print] = "62079", _a[BlueprintIcons_16.Projects] = "62080", _a[BlueprintIcons_16.Properties] = "62081", _a[BlueprintIcons_16.Property] = "62082", _a[BlueprintIcons_16.PublishFunction] = "62083", _a[BlueprintIcons_16.Pulse] = "62084", _a[BlueprintIcons_16.Rain] = "62085", _a[BlueprintIcons_16.Random] = "62086", _a[BlueprintIcons_16.Record] = "62087", _a[BlueprintIcons_16.RectHeight] = "62245", _a[BlueprintIcons_16.RectWidth] = "62246", _a[BlueprintIcons_16.Rectangle] = "62241", _a[BlueprintIcons_16.Redo] = "62088", _a[BlueprintIcons_16.Refresh] = "62089", _a[BlueprintIcons_16.Regex] = "62255", _a[BlueprintIcons_16.RegressionChart] = "62090", _a[BlueprintIcons_16.RemoveColumnLeft] = "62091", _a[BlueprintIcons_16.RemoveColumnRight] = "62092", _a[BlueprintIcons_16.RemoveColumn] = "62093", _a[BlueprintIcons_16.RemoveRowBottom] = "62094", _a[BlueprintIcons_16.RemoveRowTop] = "62095", _a[BlueprintIcons_16.Remove] = "62096", _a[BlueprintIcons_16.Repeat] = "62097", _a[BlueprintIcons_16.Reset] = "62098", _a[BlueprintIcons_16.Resolve] = "62099", _a[BlueprintIcons_16.Rig] = "62100", _a[BlueprintIcons_16.RightJoin] = "62101", _a[BlueprintIcons_16.Ring] = "62102", _a[BlueprintIcons_16.RocketSlant] = "62103", _a[BlueprintIcons_16.Rocket] = "62104", _a[BlueprintIcons_16.RotateDocument] = "62105", _a[BlueprintIcons_16.RotatePage] = "62106", _a[BlueprintIcons_16.Route] = "62107", _a[BlueprintIcons_16.Satellite] = "62108", _a[BlueprintIcons_16.Saved] = "62109", _a[BlueprintIcons_16.ScatterPlot] = "62110", _a[BlueprintIcons_16.SearchAround] = "62111", _a[BlueprintIcons_16.SearchTemplate] = "62112", _a[BlueprintIcons_16.SearchText] = "62113", _a[BlueprintIcons_16.Search] = "62114", _a[BlueprintIcons_16.SegmentedControl] = "62115", _a[BlueprintIcons_16.Select] = "62116", _a[BlueprintIcons_16.Selection] = "62117", _a[BlueprintIcons_16.SendBackward] = "62293", _a[BlueprintIcons_16.SendMessage] = "62118", _a[BlueprintIcons_16.SendToGraph] = "62119", _a[BlueprintIcons_16.SendToMap] = "62120", _a[BlueprintIcons_16.SendTo] = "62121", _a[BlueprintIcons_16.Sensor] = "62268", _a[BlueprintIcons_16.SeriesAdd] = "62122", _a[BlueprintIcons_16.SeriesConfiguration] = "62123", _a[BlueprintIcons_16.SeriesDerived] = "62124", _a[BlueprintIcons_16.SeriesFiltered] = "62125", _a[BlueprintIcons_16.SeriesSearch] = "62126", _a[BlueprintIcons_16.Settings] = "62127", _a[BlueprintIcons_16.Shapes] = "62128", _a[BlueprintIcons_16.Share] = "62129", _a[BlueprintIcons_16.SharedFilter] = "62130", _a[BlueprintIcons_16.Shield] = "62131", _a[BlueprintIcons_16.Ship] = "62132", _a[BlueprintIcons_16.Shop] = "62133", _a[BlueprintIcons_16.ShoppingCart] = "62134", _a[BlueprintIcons_16.ShortenText] = "62271", _a[BlueprintIcons_16.SignalSearch] = "62135", _a[BlueprintIcons_16.SimCard] = "62136", _a[BlueprintIcons_16.Slash] = "62137", _a[BlueprintIcons_16.SmallCross] = "62138", _a[BlueprintIcons_16.SmallInfoSign] = "62260", _a[BlueprintIcons_16.SmallMinus] = "62139", _a[BlueprintIcons_16.SmallPlus] = "62140", _a[BlueprintIcons_16.SmallSquare] = "62141", _a[BlueprintIcons_16.SmallTick] = "62142", _a[BlueprintIcons_16.Snowflake] = "62143", _a[BlueprintIcons_16.SoccerBall] = "62288", _a[BlueprintIcons_16.SocialMedia] = "62144", _a[BlueprintIcons_16.SortAlphabeticalDesc] = "62145", _a[BlueprintIcons_16.SortAlphabetical] = "62146", _a[BlueprintIcons_16.SortAsc] = "62147", _a[BlueprintIcons_16.SortDesc] = "62148", _a[BlueprintIcons_16.SortNumericalDesc] = "62149", _a[BlueprintIcons_16.SortNumerical] = "62150", _a[BlueprintIcons_16.Sort] = "62151", _a[BlueprintIcons_16.SpellCheck] = "62272", _a[BlueprintIcons_16.SplitColumns] = "62152", _a[BlueprintIcons_16.SportsStadium] = "62289", _a[BlueprintIcons_16.Square] = "62153", _a[BlueprintIcons_16.StackedChart] = "62154", _a[BlueprintIcons_16.StadiumGeometry] = "62155", _a[BlueprintIcons_16.StarEmpty] = "62156", _a[BlueprintIcons_16.Star] = "62157", _a[BlueprintIcons_16.StepBackward] = "62158", _a[BlueprintIcons_16.StepChart] = "62159", _a[BlueprintIcons_16.StepForward] = "62160", _a[BlueprintIcons_16.Stop] = "62161", _a[BlueprintIcons_16.Stopwatch] = "62162", _a[BlueprintIcons_16.Strikethrough] = "62163", _a[BlueprintIcons_16.Style] = "62164", _a[BlueprintIcons_16.Subscript] = "62265", _a[BlueprintIcons_16.Superscript] = "62266", _a[BlueprintIcons_16.SwapHorizontal] = "62165", _a[BlueprintIcons_16.SwapVertical] = "62166", _a[BlueprintIcons_16.Switch] = "62167", _a[BlueprintIcons_16.SymbolCircle] = "62168", _a[BlueprintIcons_16.SymbolCross] = "62169", _a[BlueprintIcons_16.SymbolDiamond] = "62170", _a[BlueprintIcons_16.SymbolRectangle] = "62242", _a[BlueprintIcons_16.SymbolSquare] = "62171", _a[BlueprintIcons_16.SymbolTriangleDown] = "62172", _a[BlueprintIcons_16.SymbolTriangleUp] = "62173", _a[BlueprintIcons_16.Syringe] = "62174", _a[BlueprintIcons_16.Tag] = "62175", _a[BlueprintIcons_16.TakeAction] = "62176", _a[BlueprintIcons_16.Tank] = "62177", _a[BlueprintIcons_16.Target] = "62178", _a[BlueprintIcons_16.Taxi] = "62179", _a[BlueprintIcons_16.Team] = "62290", _a[BlueprintIcons_16.Temperature] = "62180", _a[BlueprintIcons_16.TextHighlight] = "62181", _a[BlueprintIcons_16.ThDerived] = "62182", _a[BlueprintIcons_16.ThDisconnect] = "62183", _a[BlueprintIcons_16.ThFiltered] = "62184", _a[BlueprintIcons_16.ThList] = "62185", _a[BlueprintIcons_16.Th] = "62186", _a[BlueprintIcons_16.ThirdParty] = "62187", _a[BlueprintIcons_16.ThumbsDown] = "62188", _a[BlueprintIcons_16.ThumbsUp] = "62189", _a[BlueprintIcons_16.TickCircle] = "62190", _a[BlueprintIcons_16.Tick] = "62191", _a[BlueprintIcons_16.Time] = "62192", _a[BlueprintIcons_16.TimelineAreaChart] = "62193", _a[BlueprintIcons_16.TimelineBarChart] = "62194", _a[BlueprintIcons_16.TimelineEvents] = "62195", _a[BlueprintIcons_16.TimelineLineChart] = "62196", _a[BlueprintIcons_16.Tint] = "62197", _a[BlueprintIcons_16.Torch] = "62198", _a[BlueprintIcons_16.Tractor] = "62199", _a[BlueprintIcons_16.Train] = "62200", _a[BlueprintIcons_16.Translate] = "62201", _a[BlueprintIcons_16.Trash] = "62202", _a[BlueprintIcons_16.Tree] = "62203", _a[BlueprintIcons_16.TrendingDown] = "62204", _a[BlueprintIcons_16.TrendingUp] = "62205", _a[BlueprintIcons_16.Trophy] = "62287", _a[BlueprintIcons_16.Truck] = "62206", _a[BlueprintIcons_16.TwoColumns] = "62207", _a[BlueprintIcons_16.Unarchive] = "62208", _a[BlueprintIcons_16.Underline] = "62209", _a[BlueprintIcons_16.Undo] = "62210", _a[BlueprintIcons_16.UngroupObjects] = "62211", _a[BlueprintIcons_16.UnknownVehicle] = "62212", _a[BlueprintIcons_16.Unlink] = "62277", _a[BlueprintIcons_16.Unlock] = "62213", _a[BlueprintIcons_16.Unpin] = "62214", _a[BlueprintIcons_16.Unresolve] = "62215", _a[BlueprintIcons_16.Updated] = "62216", _a[BlueprintIcons_16.Upload] = "62217", _a[BlueprintIcons_16.User] = "62218", _a[BlueprintIcons_16.Variable] = "62219", _a[BlueprintIcons_16.VerticalBarChartAsc] = "62220", _a[BlueprintIcons_16.VerticalBarChartDesc] = "62221", _a[BlueprintIcons_16.VerticalDistribution] = "62222", _a[BlueprintIcons_16.VerticalInbetween] = "62250", _a[BlueprintIcons_16.Video] = "62223", _a[BlueprintIcons_16.Virus] = "62224", _a[BlueprintIcons_16.VolumeDown] = "62225", _a[BlueprintIcons_16.VolumeOff] = "62226", _a[BlueprintIcons_16.VolumeUp] = "62227", _a[BlueprintIcons_16.Walk] = "62228", _a[BlueprintIcons_16.WarningSign] = "62229", _a[BlueprintIcons_16.WaterfallChart] = "62230", _a[BlueprintIcons_16.Waves] = "62231", _a[BlueprintIcons_16.WidgetButton] = "62232", _a[BlueprintIcons_16.WidgetFooter] = "62233", _a[BlueprintIcons_16.WidgetHeader] = "62234", _a[BlueprintIcons_16.Widget] = "62235", _a[BlueprintIcons_16.Wind] = "62236", _a[BlueprintIcons_16.Wrench] = "62237", _a[BlueprintIcons_16.ZoomIn] = "62238", _a[BlueprintIcons_16.ZoomOut] = "62239", _a[BlueprintIcons_16.ZoomToFit] = "62240", _a);
   var IconNamesNew = {};
   var IconNamesLegacy = {};
   for ((_i = 0, _a2 = Object.values(BlueprintIcons_16)); _i < _a2.length; _i++) {
