@@ -17,7 +17,7 @@ const getLogString = (log: LogEntry) => {
 };
 
 export const ConsolePanel: React.FC<{
-  robot_console?: RobotConsole;
+  robot_console: RobotConsole;
 }> = ({ robot_console }) => {
   const [timing, logs] = useFetchFromSimulation(() => {
     if (robot_console === undefined) {

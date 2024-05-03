@@ -46,13 +46,16 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const sensorRef = useRef<HTMLDivElement>(null);
-  const [currentState, setCurrentState]
-    = useState<WorldState>('unintialized');
+  const [currentState, setCurrentState] = useState<WorldState>('unintialized');
+
+  // We know this is true because it is checked in RobotSimulation/index.tsx (toSpawn)
   const world = context.context.moduleContexts.robot_simulation.state
     .world as World;
 
-  const ev3 = context.context.moduleContexts.robot_simulation.state
-    .ev3 as DefaultEv3;
+  // This is not guaranteed to be true.
+  const ev3 = context.context.moduleContexts.robot_simulation.state.ev3 as
+    | DefaultEv3
+    | undefined;
 
   const robotConsole = world.robotConsole;
 
@@ -65,9 +68,14 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
       if (ref.current) {
         ref.current.replaceChildren(world.render.getElement());
       }
+      if (!ev3) {
+        return;
+      }
 
       if (sensorRef.current) {
-        sensorRef.current.replaceChildren(ev3.get('colorSensor').renderer.getElement());
+        sensorRef.current.replaceChildren(
+          ev3.get('colorSensor').renderer.getElement()
+        );
       }
     };
 
