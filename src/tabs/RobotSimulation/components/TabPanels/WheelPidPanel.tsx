@@ -9,7 +9,23 @@ const RowStyle: CSSProperties = {
   gap: '0.6rem',
 };
 
-export const WheelPidPanel: React.FC<{ ev3: DefaultEv3 }> = ({ ev3 }) => {
+export const WheelPidPanel: React.FC<{ ev3?: DefaultEv3 }> = ({ ev3 }) => {
+  if (!ev3) {
+    return (
+      <TabWrapper>
+        EV3 not found in context. Did you call saveToContext('ev3', ev3);
+      </TabWrapper>
+    );
+  }
+  if (
+    !ev3.get('backLeftWheel') ||
+    !ev3.get('backRightWheel') ||
+    !ev3.get('frontLeftWheel') ||
+    !ev3.get('frontRightWheel')
+  ) {
+    return <TabWrapper>Wheel not found</TabWrapper>;
+  }
+
   const onChangeProportional = (value: number) => {
     ev3.get('backLeftWheel').pid.proportionalGain = value;
     ev3.get('backRightWheel').pid.proportionalGain = value;

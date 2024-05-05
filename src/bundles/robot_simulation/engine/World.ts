@@ -30,7 +30,12 @@ export class World extends TypedEventTarget<WorldEventMap> {
   robotConsole: RobotConsole;
   controllers: ControllerGroup;
 
-  constructor(physics: Physics, render: Renderer, timer: Timer, robotConsole: RobotConsole) {
+  constructor(
+    physics: Physics,
+    render: Renderer,
+    timer: Timer,
+    robotConsole: RobotConsole
+  ) {
     super();
     this.state = 'unintialized';
     this.physics = physics;
@@ -71,10 +76,7 @@ export class World extends TypedEventTarget<WorldEventMap> {
 
   private setState(newState: WorldState) {
     if (this.state !== newState) {
-      this.dispatchEvent(
-        'worldStateChange',
-        new Event('worldStateChange'),
-      );
+      this.dispatchEvent('worldStateChange', new Event('worldStateChange'));
       this.state = newState;
     }
   }
@@ -90,6 +92,7 @@ export class World extends TypedEventTarget<WorldEventMap> {
       window.requestAnimationFrame(this.step.bind(this));
     }
   }
+
   step(timestamp: number) {
     try {
       const frameTimingInfo = this.timer.step(timestamp);
@@ -99,12 +102,12 @@ export class World extends TypedEventTarget<WorldEventMap> {
       // Update render
       this.dispatchEvent(
         'beforeRender',
-        new TimeStampedEvent('beforeRender', physicsTimingInfo),
+        new TimeStampedEvent('beforeRender', physicsTimingInfo)
       );
       this.render.step(frameTimingInfo);
       this.dispatchEvent(
         'afterRender',
-        new TimeStampedEvent('afterRender', physicsTimingInfo),
+        new TimeStampedEvent('afterRender', physicsTimingInfo)
       );
 
       if (this.state === 'running') {

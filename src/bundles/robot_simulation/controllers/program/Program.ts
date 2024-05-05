@@ -67,7 +67,7 @@ export class Program implements Controller {
 
       // steps per tick
       for (let i = 0; i < this.config.stepsPerTick; i++) {
-        const result = this.iterator.next();
+        this.iterator.next();
       }
     } catch (e) {
       console.error(e);
