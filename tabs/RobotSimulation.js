@@ -14098,19 +14098,24 @@ export default require => {
   };
   var import_jsx_runtime4 = __require("react/jsx-runtime");
   var ColorSensorPanel = ({ev3}) => {
-    const colorSensor = ev3.get("colorSensor");
+    const colorSensor = ev3 == null ? void 0 : ev3.get("colorSensor");
     const sensorVisionRef = (0, import_react3.useRef)(null);
     const [timing, color] = useFetchFromSimulation(() => {
-      if (ev3.get("colorSensor") === void 0) {
+      if (colorSensor === void 0) {
         return null;
       }
       return colorSensor.sense();
     }, 1e3);
     (0, import_react3.useEffect)(() => {
-      if (sensorVisionRef.current) {
+      if (colorSensor && sensorVisionRef.current) {
         sensorVisionRef.current.replaceChildren(colorSensor.renderer.getElement());
       }
     }, [timing]);
+    if (!ev3) {
+      return (0, import_jsx_runtime4.jsx)(TabWrapper, {
+        children: "EV3 not found in context. Did you call saveToContext('ev3', ev3);"
+      });
+    }
     if (timing === null) {
       return (0, import_jsx_runtime4.jsx)(TabWrapper, {
         children: "Loading color sensor"
@@ -14191,6 +14196,18 @@ export default require => {
     gap: "0.6rem"
   };
   var MotorPidPanel = ({ev3}) => {
+    if (!ev3) {
+      return (0, import_jsx_runtime6.jsx)(TabWrapper, {
+        children: "EV3 not found in context. Did you call saveToContext('ev3', ev3);"
+      });
+    }
+    const leftMotor = ev3.get("leftMotor");
+    const rightMotor = ev3.get("rightMotor");
+    if (!leftMotor || !rightMotor) {
+      return (0, import_jsx_runtime6.jsx)(TabWrapper, {
+        children: "Motor not found"
+      });
+    }
     const onChangeProportional = value => {
       ev3.get("leftMotor").pid.proportionalGain = value;
       ev3.get("rightMotor").pid.proportionalGain = value;
@@ -14241,13 +14258,18 @@ export default require => {
   var import_react5 = __require("react");
   var import_jsx_runtime7 = __require("react/jsx-runtime");
   var UltrasonicSensorPanel = ({ev3}) => {
-    const ultrasonicSensor = ev3.get("ultrasonicSensor");
+    const ultrasonicSensor = ev3 == null ? void 0 : ev3.get("ultrasonicSensor");
     const [timing, distanceSensed] = useFetchFromSimulation(() => {
       if (ultrasonicSensor === void 0) {
         return null;
       }
       return ultrasonicSensor.sense();
     }, 1e3);
+    if (!ev3) {
+      return (0, import_jsx_runtime7.jsx)(TabWrapper, {
+        children: "EV3 not found in context. Did you call saveToContext('ev3', ev3);"
+      });
+    }
     if (timing === null) {
       return (0, import_jsx_runtime7.jsx)(TabWrapper, {
         children: "Loading ultrasonic sensor"
@@ -14278,6 +14300,16 @@ export default require => {
     gap: "0.6rem"
   };
   var WheelPidPanel = ({ev3}) => {
+    if (!ev3) {
+      return (0, import_jsx_runtime8.jsx)(TabWrapper, {
+        children: "EV3 not found in context. Did you call saveToContext('ev3', ev3);"
+      });
+    }
+    if (!ev3.get("backLeftWheel") || !ev3.get("backRightWheel") || !ev3.get("frontLeftWheel") || !ev3.get("frontRightWheel")) {
+      return (0, import_jsx_runtime8.jsx)(TabWrapper, {
+        children: "Wheel not found"
+      });
+    }
     const onChangeProportional = value => {
       ev3.get("backLeftWheel").pid.proportionalGain = value;
       ev3.get("backRightWheel").pid.proportionalGain = value;
@@ -14365,6 +14397,9 @@ export default require => {
       const attachRenderDom = () => {
         if (ref.current) {
           ref.current.replaceChildren(world.render.getElement());
+        }
+        if (!ev3) {
+          return;
         }
         if (sensorRef.current) {
           sensorRef.current.replaceChildren(ev3.get("colorSensor").renderer.getElement());

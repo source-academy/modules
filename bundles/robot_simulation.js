@@ -34780,7 +34780,7 @@ void main() {
           return;
         }
         for (let i2 = 0; i2 < this.config.stepsPerTick; i2++) {
-          const result = this.iterator.next();
+          this.iterator.next();
         }
       } catch (e2) {
         console.error(e2);
