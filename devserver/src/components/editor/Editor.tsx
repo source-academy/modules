@@ -1,7 +1,7 @@
-import { type Ace, require as acequire } from 'ace-builds';
+import { require as acequire, type Ace } from 'ace-builds';
+import 'ace-builds/src-noconflict/ace';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-searchbox';
-import 'ace-builds/esm-resolver';
 
 import 'js-slang/dist/editors/ace/theme/source';
 
