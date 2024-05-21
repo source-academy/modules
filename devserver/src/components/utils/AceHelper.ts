@@ -1,4 +1,3 @@
-/* eslint-disable new-cap */
 import * as ace from 'ace-builds/src-noconflict/ace';
 import { HighlightRulesSelector, ModeSelector } from 'js-slang/dist/editors/ace/modes/source';
 import { Chapter, Variant } from 'js-slang/dist/types';
@@ -15,11 +14,7 @@ export const selectMode = () => {
   const variant = Variant.DEFAULT;
   const library = '';
 
-  if (
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    typeof ace.define.modules[`ace/mode/${modeString}`]?.Mode
-    === 'function'
-  ) {
+  if (typeof ace.define.modules[`ace/mode/${modeString}`]?.Mode === 'function') {
     return;
   }
 

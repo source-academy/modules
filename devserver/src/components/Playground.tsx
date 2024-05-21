@@ -110,7 +110,6 @@ const Playground: React.FC<{}> = () => {
 
   const evalCode = () => {
     codeContext.errors = [];
-    // eslint-disable-next-line no-multi-assign
     codeContext.moduleContexts = mockModuleContext.moduleContexts = {};
 
     runInContext(editorValue, codeContext)
