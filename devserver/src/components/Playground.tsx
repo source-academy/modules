@@ -8,7 +8,6 @@ import createContext from 'js-slang/dist/createContext';
 import { Chapter, Variant } from 'js-slang/dist/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import React, { useCallback } from 'react';
-import { HotKeys } from 'react-hotkeys';
 import mockModuleContext from '../mockModuleContext';
 import type { InterpreterOutput } from '../types';
 import Workspace, { type WorkspaceProps } from './Workspace';
@@ -191,12 +190,10 @@ const Playground: React.FC<{}> = () => {
   };
 
   return (
-    <HotKeys
-      className={classNames('Playground', Classes.DARK)}
-    >
+    <div className={classNames('Playground', Classes.DARK)}>
       <OverlayToaster ref={toaster} />
       <Workspace {...workspaceProps} />
-    </HotKeys>
+    </div>
   );
 };
 
