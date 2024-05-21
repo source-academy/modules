@@ -69,7 +69,7 @@
     "chalk": "^5.0.1",
     "commander": "^12.0.0",
     "console-table-printer": "^2.11.1",
-    "esbuild": "^0.18.20",
+    "esbuild": "^0.20.1",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^27.9.0",
@@ -132,7 +132,6 @@
     ]
   },
   "resolutions": {
-    "esbuild": "^0.18.20",
     "**/gl": "^6.0.2"
   }
 }
