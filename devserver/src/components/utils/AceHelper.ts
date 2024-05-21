@@ -3,7 +3,7 @@ import { HighlightRulesSelector, ModeSelector } from 'js-slang/dist/editors/ace/
 import { Chapter, Variant } from 'js-slang/dist/types';
 import ace from 'react-ace';
 
-export const getModeString = () => `source${Chapter.SOURCE_4}${Variant.DEFAULT}${''}`;
+export const modeString = `source${Chapter.SOURCE_4}${Variant.DEFAULT}`;
 
 /**
  * This _modifies global state_ and defines a new Ace mode globally, if it does not already exist.
@@ -18,7 +18,7 @@ export const selectMode = () => {
   if (
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
-    typeof ace.define.modules[`ace/mode/${getModeString(chapter, variant, library)}`]?.Mode
+    typeof ace.define.modules[`ace/mode/${modeString}`]?.Mode
     === 'function'
   ) {
     return;

@@ -9,7 +9,7 @@ import React from 'react';
 import AceEditor, { type IAceEditorProps } from 'react-ace';
 import { HotKeys } from 'react-hotkeys';
 
-import { getModeString, selectMode } from '../utils/AceHelper';
+import { modeString, selectMode } from '../utils/AceHelper';
 import type { KeyFunction } from './EditorHotkeys';
 
 export type EditorKeyBindingHandlers = { [key in KeyFunction]?: () => void };
@@ -115,7 +115,7 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
     fontSize: 17,
     height: '100%',
     highlightActiveLine: false,
-    mode: getModeString(),
+    mode: modeString,
     theme: 'source',
     value: props.editorValue,
     width: '100%',
