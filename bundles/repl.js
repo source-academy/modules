@@ -39,7 +39,8 @@ export default require => {
     repl_display: () => repl_display,
     set_background_image: () => set_background_image,
     set_evaluator: () => set_evaluator,
-    set_font_size: () => set_font_size
+    set_font_size: () => set_font_size,
+    set_program_text: () => set_program_text
   });
   var import_context2 = __toESM(__require("js-slang/context"), 1);
   var COLOR_REPL_DISPLAY_DEFAULT = "cyan";
@@ -273,6 +274,9 @@ export default require => {
   }
   function set_font_size(font_size_px) {
     INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());
+  }
+  function set_program_text(text) {
+    INSTANCE.updateUserCode(text);
   }
   function default_js_slang(_program) {
     throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);

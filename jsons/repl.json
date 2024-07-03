@@ -62,5 +62,17 @@
       ]
     ],
     "retType": "void"
+  },
+  "set_program_text": {
+    "kind": "function",
+    "name": "set_program_text",
+    "description": "<p>Set program text in the Repl editor to the given string</p>",
+    "params": [
+      [
+        "text",
+        "string"
+      ]
+    ],
+    "retType": "void"
   }
 }
