@@ -103,7 +103,7 @@ export function set_font_size(font_size_px: number) {
 }
 
 /**
- * Set program text
+ * Set program text in the Repl editor to the given string
  * @param {text} string
  *
  * @category Main
