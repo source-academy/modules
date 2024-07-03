@@ -103,6 +103,16 @@ export function set_font_size(font_size_px: number) {
 }
 
 /**
+ * Set program text in the Repl editor to the given string
+ * @param {text} string
+ *
+ * @category Main
+ */
+export function set_program_text(text: string) {
+  INSTANCE.updateUserCode(text);
+}
+
+/**
  * When use this function as the entrance function in the parameter of "set_evaluator", the Programmable Repl will directly use the default js-slang interpreter to run your program in Programmable Repl editor. Do not directly call this function in your own code.
  * @param {program} Do not directly set this parameter in your code.
  * @param {safeKey} A parameter that is designed to prevent student from directly calling this function in Source language.
