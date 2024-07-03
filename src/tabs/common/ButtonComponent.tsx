@@ -10,22 +10,20 @@ const defaultOptions = {
 };
 
 type Props = {
-  onClick?: MouseEventHandler<HTMLElement>,
-  disabled?: boolean,
-  children?: ReactNode,
+  onClick?: MouseEventHandler<HTMLElement>;
+  disabled?: boolean;
+  children?: ReactNode;
 };
 
-const ButtonComponent = (props: Props) => {
+const ButtonComponent: React.FC<Props> = props => {
   const buttonProps = {
     ...defaultOptions,
     ...props
   };
-  return props.disabled
-    ? (
-      <AnchorButton {...buttonProps} />
-    )
-    : (
-      <Button {...buttonProps} />
-    );
+  return props.disabled ? (
+    <AnchorButton {...buttonProps} />
+  ) : (
+    <Button {...buttonProps} />
+  );
 };
 export default ButtonComponent;

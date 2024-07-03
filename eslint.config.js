@@ -58,11 +58,17 @@ export default [
       '@stylistic/no-trailing-spaces': 'warn',
       '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
       '@stylistic/semi': ['warn', 'always'],
+      '@stylistic/member-delimiter-style': 'error',
       '@stylistic/spaced-comment': [
         'warn',
         'always',
         { markers: todoTreeKeywordsAll }
       ],
+      '@stylistic/arrow-parens': ['warn', 'as-needed'],
+      '@stylistic/operator-linebreak': ['warn', 'before'],
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: 'warn'
     }
   },
   ...tseslint.configs.recommended,
@@ -132,8 +138,6 @@ export default [
     rules: {
       'import/extensions': ['error', 'never', { json: 'always' }],
       'no-constant-condition': 'off', // Was 'error',
-
-      '@stylistic/arrow-parens': ['warn', 'as-needed'],
 
       '@typescript-eslint/prefer-readonly': 'warn',
       '@typescript-eslint/require-await': 'error',

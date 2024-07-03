@@ -4,7 +4,7 @@ import { clamp } from 'lodash';
 import React from 'react';
 
 type MultiItemDisplayProps = {
-  elements: React.JSX.Element[]
+  elements: React.JSX.Element[];
 };
 
 const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
@@ -39,10 +39,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
         }}
       >
         <Button
-          style={{
-            position: 'absolute',
-            left: 0
-          }}
+          style={{ position: 'absolute', left: 0 }}
           large
           outlined
           icon={IconNames.ARROW_LEFT}
@@ -60,7 +57,8 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-around'
-            }}>
+            }}
+          >
             Call&nbsp;
             {/* When the text box is focused, it shows a little up and down bar, which needs a little bit
               * more space to be shown
@@ -71,7 +69,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
                 disabled={elements.length === 1}
                 placeholder={undefined}
                 type="number"
-                onChange={(newValue) => {
+                onChange={newValue => {
                   // Disallow non numeric inputs
                   if (newValue && !/^[0-9]+$/u.test(newValue)) return;
 
@@ -79,7 +77,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
                   if (newValue.length > elementsDigitCount) return;
                   setStepEditorValue(newValue);
                 }}
-                onConfirm={(value) => {
+                onConfirm={value => {
                   if (value) {
                     const newStep = Number.parseFloat(value);
                     const clampedStep = clamp(newStep, 1, elements.length);
@@ -107,10 +105,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
           </div>
         </h3>
         <Button
-          style={{
-            position: 'absolute',
-            right: 0
-          }}
+          style={{ position: 'absolute', right: 0 }}
           large
           outlined
           icon={IconNames.ARROW_RIGHT}

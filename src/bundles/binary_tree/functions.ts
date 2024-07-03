@@ -69,9 +69,7 @@ export function is_tree(
  * @param v Value to be tested
  * @returns bool
  */
-export function is_empty_tree(
-  value: any
-): boolean {
+export function is_empty_tree(value: any): boolean {
   return value === null;
 }
 
@@ -85,9 +83,7 @@ export function is_empty_tree(
  * @param t BinaryTree to be accessed
  * @returns Value
  */
-export function entry(
-  t: BinaryTree
-): boolean {
+export function entry(t: BinaryTree): boolean {
   if (Array.isArray(t) && t.length === 2) {
     return t[0];
   }
@@ -106,9 +102,7 @@ export function entry(
  * @param t BinaryTree to be accessed
  * @returns BinaryTree
  */
-export function left_branch(
-  t: BinaryTree
-): BinaryTree {
+export function left_branch(t: BinaryTree): BinaryTree {
   if (Array.isArray(t) && t.length === 2
       && Array.isArray(t[1]) && t[1].length === 2) {
     return t[1][0];
@@ -128,9 +122,7 @@ export function left_branch(
  * @param t BinaryTree to be accessed
  * @returns BinaryTree
  */
-export function right_branch(
-  t: BinaryTree
-): BinaryTree {
+export function right_branch(t: BinaryTree): BinaryTree {
   if (Array.isArray(t) && t.length === 2
       && Array.isArray(t[1]) && t[1].length === 2
       && Array.isArray(t[1][1]) && t[1][1].length === 2) {

@@ -19,7 +19,6 @@ export function StartButton(props: ARState) {
     <div style={{ height: '50vh' }}>
       <ARButton
         enterOnly
-        style={{}}
         sessionInit={{
           requiredFeatures: ['hit-test'],
           optionalFeatures: ['dom-overlay'],

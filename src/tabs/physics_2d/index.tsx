@@ -26,7 +26,7 @@ export default {
 
     return (
       <div>
-        <DebugDrawCanvas world={world}/>
+        <DebugDrawCanvas world={world} />
       </div>
     );
   },

@@ -187,12 +187,12 @@ class CopyGC extends React.Component<Props, State> {
     return commandHeap.length;
   };
 
-  private isTag = (tag) => {
+  private isTag = tag => {
     const { tags } = this.state;
     return tags ? tags.includes(tag) : false;
   };
 
-  private getMemoryColor = (indexValue) => {
+  private getMemoryColor = indexValue => {
     const { heap } = this.state;
     const value = heap ? heap[indexValue] : 0;
 
@@ -209,7 +209,7 @@ class CopyGC extends React.Component<Props, State> {
     return color;
   };
 
-  private getBackgroundColor = (indexValue) => {
+  private getBackgroundColor = indexValue => {
     const { firstChild } = this.state;
     const { lastChild } = this.state;
     const { commandHeap, value } = this.state;
@@ -257,45 +257,27 @@ class CopyGC extends React.Component<Props, State> {
             </p>
             <h3>{state.command}</h3>
             <p> {state.description} </p>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                marginTop: 10
-              }}
-            >
-              {state.leftDesc
-                ? (
-                  <div style={{ flex: 1 }}>
-                    <canvas
-                      width={10}
-                      height={10}
-                      style={{
-                        backgroundColor: ThemeColor.GREEN
-                      }}
-                    />
-                    <span> {state.leftDesc} </span>
-                  </div>
-                )
-                : (
-                  false
-                )}
-              {state.rightDesc
-                ? (
-                  <div style={{ flex: 1 }}>
-                    <canvas
-                      width={10}
-                      height={10}
-                      style={{
-                        backgroundColor: ThemeColor.YELLOW
-                      }}
-                    />
-                    <span> {state.rightDesc} </span>
-                  </div>
-                )
-                : (
-                  false
-                )}
+            <div style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+              {state.leftDesc && (
+                <div style={{ flex: 1 }}>
+                  <canvas
+                    width={10}
+                    height={10}
+                    style={{ backgroundColor: ThemeColor.GREEN }}
+                  />
+                  <span> {state.leftDesc} </span>
+                </div>
+              )}
+              {state.rightDesc && (
+                <div style={{ flex: 1 }}>
+                  <canvas
+                    width={10}
+                    height={10}
+                    style={{ backgroundColor: ThemeColor.YELLOW }}
+                  />
+                  <span> {state.rightDesc} </span>
+                </div>
+              )}
             </div>
             <br />
             <p>
@@ -326,29 +308,21 @@ class CopyGC extends React.Component<Props, State> {
                 {toMemoryMatrix
                   && toMemoryMatrix.length > 0
                   && toMemoryMatrix.map((item, row) => (
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'row'
-                    }}>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <span style={{ width: 30 }}> {row * state.column} </span>
                       {item
                         && item.length > 0
-                        && item.map((content) => {
+                        && item.map(content => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (
                             <div
-                              style={{
-                                width: 14,
-                                backgroundColor: bgColor
-                              }}
+                              style={{ width: 14, backgroundColor: bgColor }}
                             >
                               <canvas
                                 width={10}
                                 height={10}
-                                style={{
-                                  backgroundColor: color
-                                }}
+                                style={{ backgroundColor: color }}
                               />
                             </div>
                           );
@@ -363,30 +337,22 @@ class CopyGC extends React.Component<Props, State> {
                 {fromMemoryMatrix
                   && fromMemoryMatrix.length > 0
                   && fromMemoryMatrix.map((item, row) => (
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'row'
-                    }}>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <span style={{ width: 30 }}>
                         {row * state.column + state.memorySize / 2}
                       </span>
                       {item && item.length > 0
-                        ? item.map((content) => {
+                        ? item.map(content => {
                           const color = this.getMemoryColor(content);
                           const bgColor = this.getBackgroundColor(content);
                           return (
                             <div
-                              style={{
-                                width: 14,
-                                backgroundColor: bgColor
-                              }}
+                              style={{ width: 14, backgroundColor: bgColor }}
                             >
                               <canvas
                                 width={10}
                                 height={10}
-                                style={{
-                                  backgroundColor: color
-                                }}
+                                style={{ backgroundColor: color }}
                               />
                             </div>
                           );
@@ -397,18 +363,18 @@ class CopyGC extends React.Component<Props, State> {
               </div>
             </div>
           </div>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            marginTop: 10
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              marginTop: 10
+            }}
+          >
             <div style={{ flex: 1 }}>
               <canvas
                 width={10}
                 height={10}
-                style={{
-                  backgroundColor: ThemeColor.BLUE
-                }}
+                style={{ backgroundColor: ThemeColor.BLUE }}
               />
               <span> defined</span>
             </div>
@@ -416,9 +382,7 @@ class CopyGC extends React.Component<Props, State> {
               <canvas
                 width={10}
                 height={10}
-                style={{
-                  backgroundColor: ThemeColor.PINK
-                }}
+                style={{ backgroundColor: ThemeColor.PINK }}
               />
               <span> tag</span>
             </div>
@@ -426,9 +390,7 @@ class CopyGC extends React.Component<Props, State> {
               <canvas
                 width={10}
                 height={10}
-                style={{
-                  backgroundColor: ThemeColor.GREY
-                }}
+                style={{ backgroundColor: ThemeColor.GREY }}
               />
               <span> empty or undefined</span>
             </div>

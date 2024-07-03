@@ -50,16 +50,20 @@ export function display_painter(painter: (frame: Frame) => void) {
       y: y_s
     };
     drawnPainters.push(
-      new LinePlot(draw_new_painter, {
-        ...data,
-        mode: 'lines'
-      } as Data, {
-        xaxis: { visible: true },
-        yaxis: {
-          visible: true,
-          scaleanchor: 'x'
+      new LinePlot(
+        draw_new_painter,
+        {
+          ...data,
+          mode: 'lines'
+        } as Data,
+        {
+          xaxis: { visible: true },
+          yaxis: {
+            visible: true,
+            scaleanchor: 'x'
+          }
         }
-      })
+      )
     );
   };
 }

@@ -41,8 +41,8 @@ export function promiseAll<T extends Promise<any>[]>(...args: T): Promise<{ [K i
 }
 
 export interface TimedResult<T> {
-  result: T
-  elapsed: number
+  result: T;
+  elapsed: number;
 }
 
 export function wrapWithTimer<T extends(...args: any[]) => Promise<any>>(func: T) {

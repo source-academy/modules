@@ -8,7 +8,7 @@ export type ControlBarProps = {
   editingWorkspaceButtons?: Array<JSX.Element | null>;
 };
 
-const ControlBar: React.FC<ControlBarProps> = (props) => {
+const ControlBar: React.FC<ControlBarProps> = props => {
   const editorControl = (
     <div className={classNames('ControlBar_editor', Classes.BUTTON_GROUP)}>
       {props.editorButtons}
@@ -16,7 +16,9 @@ const ControlBar: React.FC<ControlBarProps> = (props) => {
   );
 
   const flowControl = props.flowButtons && (
-    <div className={classNames('ControlBar_flow', Classes.BUTTON_GROUP)}>{props.flowButtons}</div>
+    <div className={classNames('ControlBar_flow', Classes.BUTTON_GROUP)}>
+      {props.flowButtons}
+    </div>
   );
 
   const editingWorkspaceControl = (

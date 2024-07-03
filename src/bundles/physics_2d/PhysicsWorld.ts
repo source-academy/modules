@@ -111,7 +111,7 @@ export class PhysicsWorld {
   
   Objects:
       `;
-    this.physicsObjects.forEach((obj) => {
+    this.physicsObjects.forEach(obj => {
       world_status += `
   ------------------------
   ${obj.toReplString()}

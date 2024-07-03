@@ -12,12 +12,12 @@ import { findSeverity, divideAndRound, type Severity, type AwaitedReturn } from 
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils';
 
 interface LintResults {
-  formatted: string
-  severity: Severity
+  formatted: string;
+  severity: Severity;
 }
 
 interface LintOptions extends Omit<PrebuildOptions, 'manifest'> {
-  fix?: boolean
+  fix?: boolean;
 }
 
 export const runEslint = wrapWithTimer(async ({ bundles, tabs, srcDir, fix }: LintOptions): Promise<LintResults> => {

@@ -136,7 +136,7 @@ class GameTab extends React.Component<Props, GameState> {
         }}
       >
         <div id="phaser-game" />
-        <A2dUiButtons onClick={(p) => this.toggleGamePause(p)} />
+        <A2dUiButtons onClick={p => this.toggleGamePause(p)} />
       </div>
     );
   }

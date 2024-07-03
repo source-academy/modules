@@ -139,7 +139,7 @@ export default class DebugDrawCanvas extends React.Component<
     this.callbackTimestamp = timeInMs;
 
     this.setState(
-      (prev) => ({
+      prev => ({
         animTimestamp: prev.animTimestamp + currentFrame
       }),
       () => {
@@ -203,11 +203,7 @@ export default class DebugDrawCanvas extends React.Component<
           justifyContent: 'space-between'
         }}
       >
-        <div
-          style={{
-            marginRight: '20px'
-          }}
-        >
+        <div style={{ marginRight: '20px' }}>
           <Tooltip content={this.state.isPlaying ? 'Pause' : 'Play'}>
             <Button onClick={this.onPlayButtonClick}>
               <Icon
@@ -278,7 +274,7 @@ export default class DebugDrawCanvas extends React.Component<
             style={{
               flexGrow: 1
             }}
-            ref={(r) => {
+            ref={r => {
               this.canvas = r;
             }}
           />

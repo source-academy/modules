@@ -45,10 +45,7 @@ function solidsToGeometryEntities(solids: Solid[]): GeometryEntity[] {
   const options: EntitiesFromSolidsOptions = {
     color: hexToAlphaColor(DEFAULT_COLOR)
   };
-  return (entitiesFromSolids(
-    options,
-    ...solids
-  ) as unknown) as GeometryEntity[];
+  return entitiesFromSolids(options, ...solids) as unknown as GeometryEntity[];
 }
 
 function neatGridDistance(rawDistance: number) {
@@ -186,10 +183,10 @@ export function updateStates(
   cameraState: PerspectiveCameraState,
   controlsState: ControlsState
 ) {
-  const states: UpdatedStates = (orbit.update({
+  const states: UpdatedStates = orbit.update({
     camera: cameraState,
     controls: controlsState
-  }) as unknown) as UpdatedStates;
+  }) as unknown as UpdatedStates;
 
   cameraState.position = states.camera.position;
   cameraState.view = states.camera.view;
@@ -204,11 +201,11 @@ export function zoomToFit(
   controlsState: ControlsState,
   geometryEntities: GeometryEntity[]
 ) {
-  const states: ZoomToFitStates = (orbit.zoomToFit({
+  const states: ZoomToFitStates = orbit.zoomToFit({
     camera: cameraState,
     controls: controlsState,
     entities: geometryEntities as any
-  }) as unknown) as ZoomToFitStates;
+  }) as unknown as ZoomToFitStates;
 
   cameraState.target = states.camera.target;
 
@@ -221,14 +218,14 @@ export function rotate(
   rotateX: number,
   rotateY: number
 ) {
-  const states: RotateStates = (orbit.rotate(
+  const states: RotateStates = orbit.rotate(
     {
       camera: cameraState,
       controls: controlsState,
       speed: ROTATION_SPEED
     },
     [rotateX, rotateY]
-  ) as unknown) as RotateStates;
+  ) as unknown as RotateStates;
 
   controlsState.thetaDelta = states.controls.thetaDelta;
   controlsState.phiDelta = states.controls.phiDelta;
@@ -240,13 +237,13 @@ export function pan(
   panX: number,
   panY: number
 ) {
-  const states: PanStates = (orbit.pan(
+  const states: PanStates = orbit.pan(
     {
       camera: cameraState,
       controls: controlsState
     },
     [panX * X_FACTOR, panY * Y_FACTOR]
-  ) as unknown) as PanStates;
+  ) as unknown as PanStates;
 
   cameraState.position = states.camera.position;
   cameraState.target = states.camera.target;

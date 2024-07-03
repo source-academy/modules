@@ -12,18 +12,14 @@ export const RuneTab: ModuleTab = ({ context }) => {
     const elemKey = i.toString();
 
     if (glAnimation.isAnimation(rune)) {
-      return (
-        <AnimationCanvas animation={rune} key={elemKey} />
-      );
+      return <AnimationCanvas animation={rune} key={elemKey} />;
     }
     if (isHollusionRune(rune)) {
-      return (
-        <HollusionCanvas rune={rune} key={elemKey} />
-      );
+      return <HollusionCanvas rune={rune} key={elemKey} />;
     }
     return (
       <WebGLCanvas
-        ref={(r) => {
+        ref={r => {
           if (r) {
             rune.draw(r);
           }

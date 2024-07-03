@@ -7,21 +7,21 @@ import { expandBundleNames, expandTabNames, divideAndRound, type AwaitedReturn }
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils';
 
 type TsconfigResult = {
-  severity: 'error',
-  results?: ts.Diagnostic[]
-  error?: any
+  severity: 'error';
+  results?: ts.Diagnostic[];
+  error?: any;
 } | {
-  severity: 'success',
-  results: ts.CompilerOptions
+  severity: 'success';
+  results: ts.CompilerOptions;
 };
 
 type TscResult = {
-  severity: 'error'
-  results?: ts.Diagnostic[]
-  error?: any
+  severity: 'error';
+  results?: ts.Diagnostic[];
+  error?: any;
 } | {
-  severity: 'success',
-  results: ts.Diagnostic[]
+  severity: 'success';
+  results: ts.Diagnostic[];
 };
 
 async function getTsconfig(srcDir: string): Promise<TsconfigResult> {

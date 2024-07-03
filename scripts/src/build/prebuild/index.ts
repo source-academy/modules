@@ -4,9 +4,9 @@ import { eslintResultsLogger, runEslint } from './lint';
 import { runTsc, tscResultsLogger } from './tsc';
 
 interface PrebuildResult {
-  lint?: Awaited<ReturnType<typeof runEslint>>
-  tsc?: Awaited<ReturnType<typeof runTsc>>
-  severity: Severity
+  lint?: Awaited<ReturnType<typeof runEslint>>;
+  tsc?: Awaited<ReturnType<typeof runTsc>>;
+  severity: Severity;
 }
 
 export default async function prebuild(

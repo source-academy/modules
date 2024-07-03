@@ -5,10 +5,10 @@ import type { AwaitedReturn } from '../utils';
 import { initTypedoc, type TypedocResult } from './docsUtils';
 
 export type HtmlResult = {
-  severity: 'error' | 'warn'
-  error: any
+  severity: 'error' | 'warn';
+  error: any;
 } | {
-  severity: 'success'
+  severity: 'success';
 };
 
 export const buildHtml = wrapWithTimer(async (

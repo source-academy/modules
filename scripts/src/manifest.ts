@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 
-export type ModuleManifest = Record<string, { tabs: string[]; }>;
+export type ModuleManifest = Record<string, { tabs: string[] }>;
 
 export async function retrieveManifest(manifest: string) {
   try {

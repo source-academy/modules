@@ -63,8 +63,8 @@ export class GlobalStateController {
     try {
       let newGlobalState = { ...this.globalState };
       if (
-        this.globalState instanceof Array ||
-        typeof this.globalState === 'string'
+        this.globalState instanceof Array
+        || typeof this.globalState === 'string'
       ) {
         newGlobalState = {};
       }
@@ -72,9 +72,9 @@ export class GlobalStateController {
       for (let i = 1; i < splitTopic.length - 1; i++) {
         const subTopic = splitTopic[i];
         if (
-          !(currentJson[subTopic] instanceof Object) ||
-          currentJson[subTopic] instanceof Array ||
-          typeof currentJson[subTopic] === 'string'
+          !(currentJson[subTopic] instanceof Object)
+          || currentJson[subTopic] instanceof Array
+          || typeof currentJson[subTopic] === 'string'
         ) {
           currentJson[subTopic] = {};
         }

@@ -19,7 +19,9 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
     case 'running':
       return (
         <Card>
-          <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
+          <Pre className="log-output">
+            {props.output.consoleLogs.join('\n')}
+          </Pre>
         </Card>
       );
     case 'result':
@@ -32,7 +34,9 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
       }
       return (
         <Card>
-          <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
+          <Pre className="log-output">
+            {props.output.consoleLogs.join('\n')}
+          </Pre>
           <Pre className="result-output">{props.output.value}</Pre>
         </Card>
       );

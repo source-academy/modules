@@ -3,10 +3,10 @@ import { bundlesOption, manifestOption, srcDirOption, tabsOption, type TimedResu
 import { logInputs, type Severity } from '../utils';
 
 export interface PrebuildOptions {
-  srcDir: string
-  manifest: string
-  bundles: string[]
-  tabs: string[]
+  srcDir: string;
+  manifest: string;
+  bundles: string[];
+  tabs: string[];
 }
 
 export interface PrebuildResult<T extends { severity: Severity }> extends TimedResult<T> {}

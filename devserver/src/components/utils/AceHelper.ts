@@ -16,8 +16,8 @@ export const selectMode = () => {
   const library = '';
 
   if (
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     typeof ace.define.modules[`ace/mode/${getModeString(chapter, variant, library)}`]?.Mode
     === 'function'
   ) {

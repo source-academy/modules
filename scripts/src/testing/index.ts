@@ -6,7 +6,7 @@ import { srcDirOption } from '@src/commandUtils';
 import { runJest } from './runner';
 
 export type TestCommandOptions = {
-  srcDir: string
+  srcDir: string;
 };
 
 const getTestCommand = () => new Command('test')

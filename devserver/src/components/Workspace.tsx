@@ -10,8 +10,8 @@ import { useDimensions } from './utils/Hooks';
 
 type DispatchProps = {
   handleEditorEval: () => void;
-  handleEditorValueChange: (newValue: string) => void
-  handlePromptAutocomplete: (row: number, col: number, callback: any) => void
+  handleEditorValueChange: (newValue: string) => void;
+  handlePromptAutocomplete: (row: number, col: number, callback: any) => void;
 };
 
 type StateProps = {
@@ -21,9 +21,9 @@ type StateProps = {
   replProps: ReplProps;
   sideContentHeight?: number;
   sideContentIsResizeable?: boolean;
-  editorValue: string
+  editorValue: string;
 
-  sideContentProps: SideContentProps
+  sideContentProps: SideContentProps;
 };
 
 const rightResizeOnly: Enable = { right: true };
@@ -31,7 +31,7 @@ const bottomResizeOnly: Enable = { bottom: true };
 
 export type WorkspaceProps = DispatchProps & StateProps;
 
-const Workspace: React.FC<WorkspaceProps> = (props) => {
+const Workspace: React.FC<WorkspaceProps> = props => {
   const contentContainerDiv = React.useRef<HTMLDivElement | null>(null);
   const editorDividerDiv = React.useRef<HTMLDivElement | null>(null);
   const leftParentResizable = React.useRef<Resizable | null>(null);

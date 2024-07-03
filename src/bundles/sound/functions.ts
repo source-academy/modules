@@ -43,7 +43,7 @@ function init_audioCtx(): void {
 
 // linear decay from 1 to 0 over decay_period
 function linear_decay(decay_period: number): (t: number) => number {
-  return (t) => {
+  return t => {
     if (t > decay_period || t < 0) {
       return 0;
     }
@@ -89,7 +89,7 @@ function setPermissionToFalse() {
 
 function start_recording(mediaRecorder: MediaRecorder) {
   const data: any[] = [];
-  mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
+  mediaRecorder.ondataavailable = e => e.data.size && data.push(e.data);
   mediaRecorder.start();
   mediaRecorder.onstop = () => process(data);
 }
@@ -110,21 +110,20 @@ function process(data) {
   const blob = new Blob(data);
 
   convertToArrayBuffer(blob)
-    .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
     .then(save);
 }
 
 // Converts input microphone sound (blob) into array format.
 function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   const url = URL.createObjectURL(blob);
-  return fetch(url)
-    .then((response) => response.arrayBuffer());
+  return fetch(url).then(response => response.arrayBuffer());
 }
 
 function save(audioBuffer: AudioBuffer) {
   const array = audioBuffer.getChannelData(0);
   const duration = array.length / FS;
-  recorded_sound = make_sound((t) => {
+  recorded_sound = make_sound(t => {
     const index = t * FS;
     const lowerIndex = Math.floor(index);
     const upperIndex = lowerIndex + 1;
@@ -468,7 +467,7 @@ export function stop(): void {
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
-  return make_sound((_t) => Math.random() * 2 - 1, duration);
+  return make_sound(_t => Math.random() * 2 - 1, duration);
 }
 
 /**
@@ -479,7 +478,7 @@ export function noise_sound(duration: number): Sound {
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
-  return make_sound((_t) => 0, duration);
+  return make_sound(_t => 0, duration);
 }
 
 /**
@@ -491,7 +490,7 @@ export function silence_sound(duration: number): Sound {
  * @example sine_sound(440, 5);
  */
 export function sine_sound(freq: number, duration: number): Sound {
-  return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
+  return make_sound(t => Math.sin(2 * Math.PI * t * freq), duration);
 }
 
 /**
@@ -510,10 +509,7 @@ export function square_sound(f: number, duration: number): Sound {
     }
     return answer;
   }
-  return make_sound(
-    (t) => (4 / Math.PI) * fourier_expansion_square(t),
-    duration
-  );
+  return make_sound(t => (4 / Math.PI) * fourier_expansion_square(t), duration);
 }
 
 /**
@@ -535,7 +531,7 @@ export function triangle_sound(freq: number, duration: number): Sound {
     return answer;
   }
   return make_sound(
-    (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
+    t => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
     duration
   );
 }
@@ -557,7 +553,7 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
     return answer;
   }
   return make_sound(
-    (t) => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
+    t => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
     duration
   );
 }
@@ -638,13 +634,13 @@ export function adsr(
   sustain_level: number,
   release_ratio: number
 ): SoundTransformer {
-  return (sound) => {
+  return sound => {
     const wave = get_wave(sound);
     const duration = get_duration(sound);
     const attack_time = duration * attack_ratio;
     const decay_time = duration * decay_ratio;
     const release_time = duration * release_ratio;
-    return make_sound((x) => {
+    return make_sound(x => {
       if (x < attack_time) {
         return wave(x) * (x / attack_time);
       }
@@ -725,7 +721,7 @@ export function phase_mod(
   amount: number
 ): SoundTransformer {
   return (modulator: Sound) => make_sound(
-    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
+    t => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
     duration
   );
 }

@@ -21,11 +21,11 @@ export type SideContentProps = {
   renderActiveTabPanelOnly?: boolean;
   editorWidth?: string;
   sideContentHeight?: number;
-  dynamicTabs: SideContentTab[]
+  dynamicTabs: SideContentTab[];
 
-  selectedTabId: string
-  alerts: string[]
-  onChange?: (newId: string, oldId: string) => void
+  selectedTabId: string;
+  alerts: string[];
+  onChange?: (newId: string, oldId: string) => void;
 };
 
 const renderTab = (
@@ -89,7 +89,7 @@ const SideContent: React.FC<SideContentProps> = ({
             if (onChange) onChange(newId, oldId);
           }}
         >
-          {dynamicTabs.map((tab) => renderTab(tab, alerts.includes(tab.id), editorWidth, sideContentHeight))}
+          {dynamicTabs.map(tab => renderTab(tab, alerts.includes(tab.id), editorWidth, sideContentHeight))}
         </Tabs>
       </div>
     </Card>

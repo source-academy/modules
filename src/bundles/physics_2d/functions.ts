@@ -120,8 +120,7 @@ export function add_wall(pos: Vector2, rot: number, size: Vector2) {
     new PhysicsObject(
       pos,
       rot,
-      new b2PolygonShape()
-        .SetAsBox(size.x / 2, size.y / 2),
+      new b2PolygonShape().SetAsBox(size.x / 2, size.y / 2),
       true,
       world
     )
@@ -152,8 +151,7 @@ export function add_box_object(
   const newObj: PhysicsObject = new PhysicsObject(
     pos,
     rot,
-    new b2PolygonShape()
-      .SetAsBox(size.x / 2, size.y / 2),
+    new b2PolygonShape().SetAsBox(size.x / 2, size.y / 2),
     isStatic,
     world
   );
@@ -185,8 +183,7 @@ export function add_circle_object(
   const newObj: PhysicsObject = new PhysicsObject(
     pos,
     rot,
-    new b2CircleShape()
-      .Set(new Vector2(), radius),
+    new b2CircleShape().Set(new Vector2(), radius),
     isStatic,
     world
   );
@@ -220,12 +217,11 @@ export function add_triangle_object(
   const newObj: PhysicsObject = new PhysicsObject(
     pos,
     rot,
-    new b2PolygonShape()
-      .Set([
-        new Vector2(-base / 2, -height / 2),
-        new Vector2(base / 2, -height / 2),
-        new Vector2(0, height / 2)
-      ]),
+    new b2PolygonShape().Set([
+      new Vector2(-base / 2, -height / 2),
+      new Vector2(base / 2, -height / 2),
+      new Vector2(0, height / 2)
+    ]),
     isStatic,
     world
   );

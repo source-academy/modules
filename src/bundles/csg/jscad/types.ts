@@ -158,7 +158,7 @@ export type DrawCommandMakers = Record<string, DrawCommandMaker>;
 export type Mat4 = Float32Array;
 export type PerspectiveCameraState = Omit<
   typeof cameras.perspective.cameraState,
-'position' | 'target' | 'view'
+  'position' | 'target' | 'view'
 > & {
   target: Coordinates;
 
@@ -209,7 +209,7 @@ export type WrappedRenderer = (data: WrappedRendererData) => void;
 */
 export type ControlsState = Omit<
   typeof orbit.controlsState,
-'phiDelta' | 'scale' | 'thetaDelta'
+  'phiDelta' | 'scale' | 'thetaDelta'
 > &
   typeof orbit.controlsProps & {
     scale: number;

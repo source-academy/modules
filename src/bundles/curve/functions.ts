@@ -612,7 +612,7 @@ export function rotate_around_origin(
  * @returns function that takes a Curve and returns a Curve
  */
 export function scale(a: number, b: number, c: number): CurveTransformer {
-  return (curve) => {
+  return curve => {
     const transformation = (cf: Curve) => (t: number) => {
       const ct = cf(t);
       const a1 = a === undefined ? 1 : a;
@@ -684,7 +684,7 @@ export function put_in_standard_position(curve: Curve): Curve {
  * @returns result Curve
  */
 export function connect_rigidly(curve1: Curve, curve2: Curve): Curve {
-  return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
+  return t => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
 }
 
 /**

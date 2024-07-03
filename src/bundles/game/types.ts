@@ -7,7 +7,8 @@ export type RawGameElement =
   | Phaser.GameObjects.Text;
 
 export type RawGameShape =
-  Phaser.GameObjects.Ellipse | Phaser.GameObjects.Rectangle;
+  | Phaser.GameObjects.Ellipse
+  | Phaser.GameObjects.Rectangle;
 
 export type RawGameObject = RawGameElement | RawGameShape;
 

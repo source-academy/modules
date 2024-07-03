@@ -44,7 +44,7 @@ function init_audioCtx(): void {
 
 // linear decay from 1 to 0 over decay_period
 function linear_decay(decay_period: number): (t: number) => number {
-  return (t) => {
+  return t => {
     if (t > decay_period || t < 0) {
       return 0;
     }
@@ -90,7 +90,7 @@ function setPermissionToFalse() {
 
 function start_recording(mediaRecorder: MediaRecorder) {
   const data: any[] = [];
-  mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
+  mediaRecorder.ondataavailable = e => e.data.size && data.push(e.data);
   mediaRecorder.start();
   mediaRecorder.onstop = () => process(data);
 }
@@ -109,21 +109,20 @@ function process(data: any[] | undefined) {
   const blob = new Blob(data);
 
   convertToArrayBuffer(blob)
-    .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
     .then(save);
 }
 
 // Converts input microphone sound (blob) into array format.
 function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   const url = URL.createObjectURL(blob);
-  return fetch(url)
-    .then((response) => response.arrayBuffer());
+  return fetch(url).then(response => response.arrayBuffer());
 }
 
 function save(audioBuffer: AudioBuffer) {
   const array = audioBuffer.getChannelData(0);
   const duration = array.length / FS;
-  recorded_sound = make_sound((t) => {
+  recorded_sound = make_sound(t => {
     const index = t * FS;
     const lowerIndex = Math.floor(index);
     const upperIndex = lowerIndex + 1;
@@ -570,7 +569,7 @@ export function stop(): void {
 export function squash(sound: Sound): Sound {
   const left = get_left_wave(sound);
   const right = get_right_wave(sound);
-  return make_sound((t) => 0.5 * (left(t) + right(t)), get_duration(sound));
+  return make_sound(t => 0.5 * (left(t) + right(t)), get_duration(sound));
 }
 
 /**
@@ -582,7 +581,7 @@ export function squash(sound: Sound): Sound {
  * @return a Sound Transformer that pans a Sound
  */
 export function pan(amount: number): SoundTransformer {
-  return (sound) => {
+  return sound => {
     if (amount > 1) {
       amount = 1;
     }
@@ -591,8 +590,8 @@ export function pan(amount: number): SoundTransformer {
     }
     sound = squash(sound);
     return make_stereo_sound(
-      (t) => ((1 - amount) / 2) * get_left_wave(sound)(t),
-      (t) => ((1 + amount) / 2) * get_right_wave(sound)(t),
+      t => ((1 - amount) / 2) * get_left_wave(sound)(t),
+      t => ((1 + amount) / 2) * get_right_wave(sound)(t),
       get_duration(sound)
     );
   };
@@ -618,11 +617,11 @@ export function pan_mod(modulator: Sound): SoundTransformer {
     }
     return output;
   };
-  return (sound) => {
+  return sound => {
     sound = squash(sound);
     return make_stereo_sound(
-      (t) => ((1 - amount(t)) / 2) * get_left_wave(sound)(t),
-      (t) => ((1 + amount(t)) / 2) * get_right_wave(sound)(t),
+      t => ((1 - amount(t)) / 2) * get_left_wave(sound)(t),
+      t => ((1 + amount(t)) / 2) * get_right_wave(sound)(t),
       get_duration(sound)
     );
   };
@@ -638,7 +637,7 @@ export function pan_mod(modulator: Sound): SoundTransformer {
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
-  return make_sound((_t) => Math.random() * 2 - 1, duration);
+  return make_sound(_t => Math.random() * 2 - 1, duration);
 }
 
 /**
@@ -649,7 +648,7 @@ export function noise_sound(duration: number): Sound {
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
-  return make_sound((_t) => 0, duration);
+  return make_sound(_t => 0, duration);
 }
 
 /**
@@ -661,7 +660,7 @@ export function silence_sound(duration: number): Sound {
  * @example sine_sound(440, 5);
  */
 export function sine_sound(freq: number, duration: number): Sound {
-  return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
+  return make_sound(t => Math.sin(2 * Math.PI * t * freq), duration);
 }
 
 /**
@@ -680,10 +679,7 @@ export function square_sound(f: number, duration: number): Sound {
     }
     return answer;
   }
-  return make_sound(
-    (t) => (4 / Math.PI) * fourier_expansion_square(t),
-    duration
-  );
+  return make_sound(t => (4 / Math.PI) * fourier_expansion_square(t), duration);
 }
 
 /**
@@ -705,7 +701,7 @@ export function triangle_sound(freq: number, duration: number): Sound {
     return answer;
   }
   return make_sound(
-    (t) => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
+    t => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t),
     duration
   );
 }
@@ -727,7 +723,7 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
     return answer;
   }
   return make_sound(
-    (t) => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
+    t => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t),
     duration
   );
 }
@@ -817,7 +813,7 @@ export function adsr(
   sustain_level: number,
   release_ratio: number
 ): SoundTransformer {
-  return (sound) => {
+  return sound => {
     const Lwave = get_left_wave(sound);
     const Rwave = get_right_wave(sound);
     const duration = get_duration(sound);
@@ -909,8 +905,8 @@ export function phase_mod(
   amount: number
 ): SoundTransformer {
   return (modulator: Sound) => make_stereo_sound(
-    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
-    (t) => Math.sin(
+    t => Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
+    t => Math.sin(
       2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)
     ),
     duration

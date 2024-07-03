@@ -72,7 +72,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
     if (!this.canvas) return;
 
     this.setState(
-      (prevState) => ({
+      prevState => ({
         isRotating: !prevState.isRotating
       }),
       () => {
@@ -89,7 +89,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
   private autoRotate = () => {
     if (this.canvas && this.state.isRotating) {
       this.setState(
-        (prevState) => ({
+        prevState => ({
           ...prevState,
           displayAngle:
             prevState.displayAngle >= 360 ? 0 : prevState.displayAngle + 2
@@ -102,7 +102,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
     }
   };
 
-  private onTextBoxChange = (event) => {
+  private onTextBoxChange = event => {
     const angle = parseFloat(event.target.value);
     this.setState(
       () => ({ displayAngle: angle }),
@@ -122,68 +122,53 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
   }
 
   public render() {
-    return <div
-      style={{
-        width: '100%'
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: BP_TAB_BUTTON_MARGIN,
-
-            width: '100%',
-            maxWidth: CANVAS_MAX_WIDTH,
-
-            paddingTop: BP_TEXT_MARGIN,
-            paddingBottom: BP_TEXT_MARGIN
-          }}
-        >
-          <PlayButton
-            isPlaying={ this.state.isRotating }
-            onClick={ this.onClickHandler }
-          >
-          </PlayButton>
-          <Slider
-            value={ this.state.displayAngle }
-            min={ 0 }
-            max={ 360 }
-            labelRenderer={ false }
-            onChange={ this.onSliderChangeHandler }
-          />
-          <input
+    return (
+      <div style={{ width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div
             style={{
-              height: '100%'
+              display: 'flex',
+              alignItems: 'center',
+              gap: BP_TAB_BUTTON_MARGIN,
+
+              width: '100%',
+              maxWidth: CANVAS_MAX_WIDTH,
+
+              paddingTop: BP_TEXT_MARGIN,
+              paddingBottom: BP_TEXT_MARGIN
             }}
-            type="number"
-            value={ this.state.displayAngle }
-            min={ 0 }
-            max={ 360 }
-            step={ 1 }
-            disabled={ this.state.isRotating }
-            onChange={ this.onTextBoxChange }
+          >
+            <PlayButton
+              isPlaying={this.state.isRotating}
+              onClick={this.onClickHandler}
+            ></PlayButton>
+            <Slider
+              value={this.state.displayAngle}
+              min={0}
+              max={360}
+              labelRenderer={false}
+              onChange={this.onSliderChangeHandler}
+            />
+            <input
+              style={{ height: '100%' }}
+              type="number"
+              value={this.state.displayAngle}
+              min={0}
+              max={360}
+              step={1}
+              disabled={this.state.isRotating}
+              onChange={this.onTextBoxChange}
+            />
+          </div>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <WebGLCanvas
+            ref={r => {
+              this.canvas = r;
+            }}
           />
         </div>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <WebGLCanvas
-          ref={(r) => {
-            this.canvas = r;
-          }}
-        />
-      </div>
-    </div>;
+    );
   }
 }

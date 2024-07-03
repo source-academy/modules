@@ -28,8 +28,8 @@ type DispatchProps = {
 
 export type EditorStateProps = {
   newCursorPosition?: Position;
-  editorValue: string
-  handleEditorValueChange: (newCode: string) => void
+  editorValue: string;
+  handleEditorValueChange: (newCode: string) => void;
 };
 
 export type EditorProps = DispatchProps & EditorStateProps;
@@ -91,10 +91,9 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
     // The () => ref.current() are designed to use the latest instance only.
 
     // Start autocompletion
-    acequire('ace/ext/language_tools')
-      .setCompleters([
-        makeCompleter((...args) => handlePromptAutocompleteRef.current(...args))
-      ]);
+    acequire('ace/ext/language_tools').setCompleters([
+      makeCompleter((...args) => handlePromptAutocompleteRef.current(...args))
+    ]);
   }, [editor]);
 
   React.useLayoutEffect(() => {

@@ -81,7 +81,7 @@ export function animate_rune(
   fps: number,
   func: RuneAnimation
 ) {
-  const anim = new AnimatedRune(duration, fps, (n) => {
+  const anim = new AnimatedRune(duration, fps, n => {
     const rune = func(n);
     throwIfNotRune(animate_rune.name, rune);
     return new NormalRune(rune);
@@ -104,7 +104,7 @@ export function animate_anaglyph(
   fps: number,
   func: RuneAnimation
 ) {
-  const anim = new AnimatedRune(duration, fps, (n) => {
+  const anim = new AnimatedRune(duration, fps, n => {
     const rune = func(n);
     throwIfNotRune(animate_anaglyph.name, rune);
     return new AnaglyphRune(rune);

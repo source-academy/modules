@@ -30,7 +30,7 @@ import {
 } from './runes_webgl';
 
 export type RuneModuleState = {
-  drawnRunes: (AnimatedRune | DrawnRune)[]
+  drawnRunes: (AnimatedRune | DrawnRune)[];
 };
 
 // =============================================================================

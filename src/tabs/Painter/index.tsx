@@ -4,14 +4,14 @@ import type { DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/ModalDiv';
 
 type Props = {
-  children?: never
-  className?: string
-  debuggerContext: any
+  children?: never;
+  className?: string;
+  debuggerContext: any;
 };
 
 type State = {
-  modalOpen: boolean
-  selectedPainter: any | null
+  modalOpen: boolean;
+  selectedPainter: any | null;
 };
 
 class Painter extends React.Component<Props, State> {
@@ -52,28 +52,25 @@ class Painter extends React.Component<Props, State> {
               height: '20rem',
               width: '20rem'
             }}
-          >
-          </div>
+          />
         </Modal>
-        {
-          drawnPainters.map((drawnPainter: any, id:number) => {
-            const divId = `plotDiv${id}`;
-            return (
-              <>
-                <div onClick={() => this.handleOpen(drawnPainter)}>Click here to open Modal</div>
-                <div
-                  id={divId}
-                  ref={() => {
-                    console.log(drawnPainter);
-                    drawnPainter.draw(divId);
-                  }}
-                >
-                </div>
-              </>
-            );
-          })
-        }
-
+        {drawnPainters.map((drawnPainter: any, id: number) => {
+          const divId = `plotDiv${id}`;
+          return (
+            <>
+              <div onClick={() => this.handleOpen(drawnPainter)}>
+                Click here to open Modal
+              </div>
+              <div
+                id={divId}
+                ref={() => {
+                  console.log(drawnPainter);
+                  drawnPainter.draw(divId);
+                }}
+              />
+            </>
+          );
+        })}
       </div>
     );
   }

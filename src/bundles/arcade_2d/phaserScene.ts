@@ -1,9 +1,7 @@
 import Phaser from 'phaser';
 import { AudioClip } from './audio';
 import { DEFAULT_PATH_PREFIX } from './constants';
-import {
-  config
-} from './functions';
+import { config } from './functions';
 import {
   CircleGameObject,
   GameObject,
@@ -68,19 +66,19 @@ export class PhaserScene extends Phaser.Scene {
   init() {
     gameState.debugLogArray.length = 0;
     // Disable context menu within the canvas
-    this.game.canvas.oncontextmenu = (e) => e.preventDefault();
+    this.game.canvas.oncontextmenu = e => e.preventDefault();
   }
 
   preload() {
     // Set the default path prefix
     this.load.setPath(DEFAULT_PATH_PREFIX);
-    this.sourceGameObjects.forEach((gameObject) => {
+    this.sourceGameObjects.forEach(gameObject => {
       if (gameObject instanceof SpriteGameObject) {
         this.corsAssetsUrl.add(gameObject.getSprite().imageUrl);
       }
     });
     // Preload sprites (through Cross-Origin resource sharing (CORS))
-    this.corsAssetsUrl.forEach((url) => {
+    this.corsAssetsUrl.forEach(url => {
       this.load.image(url, url);
     });
     // Preload audio
@@ -111,8 +109,13 @@ export class PhaserScene extends Phaser.Scene {
     if (!config.isDebugEnabled && !this.hasRuntimeError) {
       gameState.debugLogArray.length = 0;
     }
-    this.debugLogText = this.add.text(0, 0, gameState.debugLogArray)
-      .setWordWrapWidth(config.scale < 1 ? this.renderer.width * config.scale : this.renderer.width)
+    this.debugLogText = this.add
+      .text(0, 0, gameState.debugLogArray)
+      .setWordWrapWidth(
+        config.scale < 1
+          ? this.renderer.width * config.scale
+          : this.renderer.width
+      )
       .setBackgroundColor('black')
       .setAlpha(0.8)
       .setScale(config.scale < 1 ? 1 / config.scale : 1);
@@ -126,7 +129,10 @@ export class PhaserScene extends Phaser.Scene {
     // Set the pointer properties
     gameState.pointerProps = {
       ...gameState.pointerProps,
-      pointerPosition: [Math.trunc(this.input.activePointer.x), Math.trunc(this.input.activePointer.y)],
+      pointerPosition: [
+        Math.trunc(this.input.activePointer.x),
+        Math.trunc(this.input.activePointer.y)
+      ],
       isPointerPrimaryDown: this.input.activePointer.primaryDown,
       isPointerSecondaryDown: this.input.activePointer.rightButtonDown()
     };
@@ -158,16 +164,18 @@ export class PhaserScene extends Phaser.Scene {
   }
 
   private createPhaserGameObjects() {
-    this.sourceGameObjects.forEach((gameObject) => {
+    this.sourceGameObjects.forEach(gameObject => {
       const transformProps = gameObject.getTransform();
       // Create TextGameObject
       if (gameObject instanceof TextGameObject) {
         const text = gameObject.getText().text;
-        this.phaserGameObjects.push(this.add.text(
-          transformProps.position[0],
-          transformProps.position[1],
-          text
-        ));
+        this.phaserGameObjects.push(
+          this.add.text(
+            transformProps.position[0],
+            transformProps.position[1],
+            text
+          )
+        );
         this.phaserGameObjects[gameObject.id].setOrigin(0.5, 0.5);
         if (gameObject.getHitboxState().isHitboxActive) {
           this.phaserGameObjects[gameObject.id].setInteractive();
@@ -176,11 +184,13 @@ export class PhaserScene extends Phaser.Scene {
       // Create SpriteGameObject
       if (gameObject instanceof SpriteGameObject) {
         const url = gameObject.getSprite().imageUrl;
-        this.phaserGameObjects.push(this.add.sprite(
-          transformProps.position[0],
-          transformProps.position[1],
-          url
-        ));
+        this.phaserGameObjects.push(
+          this.add.sprite(
+            transformProps.position[0],
+            transformProps.position[1],
+            url
+          )
+        );
         if (gameObject.getHitboxState().isHitboxActive) {
           this.phaserGameObjects[gameObject.id].setInteractive();
         }
@@ -189,45 +199,48 @@ export class PhaserScene extends Phaser.Scene {
       if (gameObject instanceof ShapeGameObject) {
         if (gameObject instanceof RectangleGameObject) {
           const shape = gameObject.getShape();
-          this.phaserGameObjects.push(this.add.rectangle(
-            transformProps.position[0],
-            transformProps.position[1],
-            shape.width,
-            shape.height
-          ));
+          this.phaserGameObjects.push(
+            this.add.rectangle(
+              transformProps.position[0],
+              transformProps.position[1],
+              shape.width,
+              shape.height
+            )
+          );
           if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive();
           }
         }
         if (gameObject instanceof CircleGameObject) {
           const shape = gameObject.getShape();
-          this.phaserGameObjects.push(this.add.circle(
-            transformProps.position[0],
-            transformProps.position[1],
-            shape.radius
-          ));
+          this.phaserGameObjects.push(
+            this.add.circle(
+              transformProps.position[0],
+              transformProps.position[1],
+              shape.radius
+            )
+          );
           if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive(
-              new Phaser.Geom.Circle(
-                shape.radius,
-                shape.radius,
-                shape.radius
-              ), Phaser.Geom.Circle.Contains
+              new Phaser.Geom.Circle(shape.radius, shape.radius, shape.radius),
+              Phaser.Geom.Circle.Contains
             );
           }
         }
         if (gameObject instanceof TriangleGameObject) {
           const shape = gameObject.getShape();
-          this.phaserGameObjects.push(this.add.triangle(
-            transformProps.position[0],
-            transformProps.position[1],
-            shape.x1,
-            shape.y1,
-            shape.x2,
-            shape.y2,
-            shape.x3,
-            shape.y3
-          ));
+          this.phaserGameObjects.push(
+            this.add.triangle(
+              transformProps.position[0],
+              transformProps.position[1],
+              shape.x1,
+              shape.y1,
+              shape.x2,
+              shape.y2,
+              shape.x3,
+              shape.y3
+            )
+          );
           if (gameObject.getHitboxState().isHitboxActive) {
             this.phaserGameObjects[gameObject.id].setInteractive(
               new Phaser.Geom.Triangle(
@@ -237,7 +250,8 @@ export class PhaserScene extends Phaser.Scene {
                 shape.y2,
                 shape.x3,
                 shape.y3
-              ), Phaser.Geom.Triangle.Contains
+              ),
+              Phaser.Geom.Triangle.Contains
             );
           }
         }
@@ -265,10 +279,12 @@ export class PhaserScene extends Phaser.Scene {
   private createAudioClips() {
     try {
       this.sourceAudioClips.forEach((audioClip: AudioClip) => {
-        this.phaserAudioClips.push(this.sound.add(audioClip.getUrl(), {
-          loop: audioClip.shouldAudioClipLoop(),
-          volume: audioClip.getVolumeLevel()
-        }));
+        this.phaserAudioClips.push(
+          this.sound.add(audioClip.getUrl(), {
+            loop: audioClip.shouldAudioClipLoop(),
+            volume: audioClip.getVolumeLevel()
+          })
+        );
       });
     } catch (error) {
       this.hasRuntimeError = true;

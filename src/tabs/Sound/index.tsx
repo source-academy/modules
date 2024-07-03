@@ -10,7 +10,7 @@ import MultiItemDisplay from '../common/MultItemDisplay';
 const SoundTab: ModuleTab = ({ context }) => {
   const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound');
 
-  const elements = audioPlayed.map((audio) => (
+  const elements = audioPlayed.map(audio => (
     <audio
       src={audio.dataUri}
       controls

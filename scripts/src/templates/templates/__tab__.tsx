@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconNames } from '@blueprintjs/icons';
 
 /**
  * <Brief description of the tab>
@@ -29,7 +30,7 @@ class Repeat extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      counter: 0,
+      counter: 0
     };
   }
 
@@ -67,5 +68,5 @@ export default {
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'build',
+  iconName: IconNames.BUILD
 };

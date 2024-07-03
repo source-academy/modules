@@ -46,13 +46,8 @@ export const childWrapperStyle: CSSProperties = {
 
 export const Modal: React.FC<ModalProps> = ({ children, isOpen, onClose }) => {
   return (
-    <div
-      style={{
-        ...containerStyle,
-        display: isOpen ? 'block' : 'none',
-      }}
-    >
-      <div style={greyedOutBackground}></div>
+    <div style={{ ...containerStyle, display: isOpen ? 'block' : 'none' }}>
+      <div style={greyedOutBackground} />
       <span style={closeButtonStyle} onClick={onClose}>
         x
       </span>

@@ -359,7 +359,7 @@ class PixNFlix extends React.Component<Props, State> {
         </div>
         <div className="sa-video-element">
           <img
-            ref={(r) => {
+            ref={r => {
               this.$image = r;
             }}
             width={DEFAULT_WIDTH}
@@ -367,7 +367,7 @@ class PixNFlix extends React.Component<Props, State> {
             style={{ display: 'none' }}
           />
           <video
-            ref={(r) => {
+            ref={r => {
               this.$video = r;
             }}
             autoPlay
@@ -376,7 +376,7 @@ class PixNFlix extends React.Component<Props, State> {
             style={{ display: 'none' }}
           />
           <canvas
-            ref={(r) => {
+            ref={r => {
               this.$canvas = r;
             }}
             width={DEFAULT_WIDTH}

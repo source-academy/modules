@@ -206,7 +206,7 @@ function playVideoElement() {
       .then(() => {
         videoIsPlaying = true;
       })
-      .catch((err) => {
+      .catch(err => {
         console.warn(err);
       });
   }
@@ -263,7 +263,7 @@ function loadMedia(): void {
 
   navigator.mediaDevices
     .getUserMedia({ video: true })
-    .then((stream) => {
+    .then(stream => {
       videoElement.srcObject = stream;
       videoElement.onloadedmetadata = () => setAspectRatioDimensions(
         videoElement.videoWidth,
@@ -271,7 +271,7 @@ function loadMedia(): void {
       );
       toRunLateQueue = true;
     })
-    .catch((error) => {
+    .catch(error => {
       const errorMessage = `${error.name}: ${error.message}`;
       console.error(errorMessage);
       errorLogger(errorMessage, false);
@@ -467,10 +467,9 @@ function deinit(): void {
   if (!stream) {
     return;
   }
-  stream.getTracks()
-    .forEach((track) => {
-      track.stop();
-    });
+  stream.getTracks().forEach(track => {
+    track.stop();
+  });
 }
 
 // =============================================================================

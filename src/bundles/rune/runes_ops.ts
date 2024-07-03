@@ -7,7 +7,7 @@ import { Rune } from './rune';
 // Utility Functions
 // =============================================================================
 export function throwIfNotRune(name: string, ...runes: any) {
-  runes.forEach((rune) => {
+  runes.forEach(rune => {
     if (!(rune instanceof Rune)) {
       throw Error(`${name} expects a rune as argument.`);
     }
@@ -338,9 +338,7 @@ export const colorPalette = [
 ];
 
 export function hexToColor(hex: string): number[] {
-  const result = /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(
-    hex
-  );
+  const result = /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(hex);
   if (result === null || result.length < 4) {
     return [0, 0, 0];
   }

@@ -58,42 +58,41 @@ const Playground: React.FC<{}> = () => {
     }
   };
 
-  const getAutoComplete = useCallback((row: number, col: number, callback: any) => {
-    getNames(editorValue, row, col, codeContext)
-      .then(([editorNames, displaySuggestions]) => {
-        if (!displaySuggestions) {
-          callback();
-          return;
-        }
+  const getAutoComplete = useCallback(
+    (row: number, col: number, callback: any) => {
+      getNames(editorValue, row, col, codeContext).then(
+        ([editorNames, displaySuggestions]) => {
+          if (!displaySuggestions) {
+            callback();
+            return;
+          }
 
-        const editorSuggestions = editorNames.map((editorName: any) => ({
-          ...editorName,
-          caption: editorName.name,
-          value: editorName.name,
-          score: editorName.score ? editorName.score + 1000 : 1000,
-          name: undefined
-        }));
-
-        const builtins: Record<string, any> = SourceDocumentation.builtins[Chapter.SOURCE_4];
-        const builtinSuggestions = Object.entries(builtins)
-          .map(([builtin, thing]) => ({
-            ...thing,
-            caption: builtin,
-            value: builtin,
-            score: 100,
-            name: builtin,
-            docHTML: thing.description
+          const editorSuggestions = editorNames.map((editorName: any) => ({
+            ...editorName,
+            caption: editorName.name,
+            value: editorName.name,
+            score: editorName.score ? editorName.score + 1000 : 1000,
+            name: undefined
           }));
 
-        callback(null, [
-          ...builtinSuggestions,
-          ...editorSuggestions
-        ]);
-      });
-  }, [editorValue, codeContext]);
+          const builtins: Record<string, any> = SourceDocumentation.builtins[Chapter.SOURCE_4];
+          const builtinSuggestions = Object.entries(builtins).map(
+            ([builtin, thing]) => ({
+              ...thing,
+              caption: builtin,
+              value: builtin,
+              score: 100,
+              name: builtin,
+              docHTML: thing.description
+            })
+          );
+
+          callback(null, [...builtinSuggestions, ...editorSuggestions]);
+        });
+    }, [editorValue, codeContext]);
 
   const loadTabs = () => getDynamicTabs(codeContext)
-    .then((tabs) => {
+    .then(tabs => {
       setDynamicTabs(tabs);
 
       const newIds = tabs.map(({ id }) => id);
@@ -104,7 +103,7 @@ const Playground: React.FC<{}> = () => {
       }
       setAlerts(newIds);
     })
-    .catch((error) => {
+    .catch(error => {
       showToast(errorToast);
       console.log(error);
     });
@@ -115,7 +114,7 @@ const Playground: React.FC<{}> = () => {
     codeContext.moduleContexts = mockModuleContext.moduleContexts = {};
 
     runInContext(editorValue, codeContext)
-      .then((result) => {
+      .then(result => {
         if (codeContext.errors.length > 0) {
           showToast(errorToast);
         } else {
@@ -160,13 +159,8 @@ const Playground: React.FC<{}> = () => {
     controlBarProps: {
       editorButtons: [
         <ControlBarRunButton handleEditorEval={evalCode} key="eval" />,
-        <ControlBarClearButton onClick={resetEditor}
-          key="clear"
-        />,
-        <ControlBarRefreshButton
-          onClick={onRefresh}
-          key="refresh"
-        />
+        <ControlBarClearButton onClick={resetEditor} key="clear" />,
+        <ControlBarRefreshButton onClick={onRefresh} key="refresh" />
       ]
     },
     replProps: {
@@ -184,16 +178,14 @@ const Playground: React.FC<{}> = () => {
       selectedTabId,
       onChange: useCallback((newId: string) => {
         setSelectedTab(newId);
-        setAlerts(alerts.filter((id) => id !== newId));
+        setAlerts(alerts.filter(id => id !== newId));
       }, [alerts]),
       alerts
     }
   };
 
   return (
-    <HotKeys
-      className={classNames('Playground', Classes.DARK)}
-    >
+    <HotKeys className={classNames('Playground', Classes.DARK)}>
       <OverlayToaster ref={toaster} />
       <Workspace {...workspaceProps} />
     </HotKeys>

@@ -108,10 +108,9 @@ export class Shape implements Operable, ReplResult {
   }
 
   store(newTransforms: Mat4 = mat4.create()): void {
-    Core.getRenderGroupManager()
-      .storeShape(
-        this.applyTransforms(newTransforms) as Shape
-      );
+    Core.getRenderGroupManager().storeShape(
+      this.applyTransforms(newTransforms) as Shape
+    );
   }
 
   translate(offsets: [number, number, number]): Shape {

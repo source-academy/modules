@@ -716,8 +716,7 @@ export function render(operable: Operable): RenderGroup {
 
   // Trigger a new render group for use with subsequent renders.
   // Render group is returned for REPL text only; do not document
-  return Core.getRenderGroupManager()
-    .nextRenderGroup();
+  return Core.getRenderGroupManager().nextRenderGroup();
 }
 
 /**
@@ -734,8 +733,7 @@ export function render_grid(operable: Operable): RenderGroup {
 
   operable.store();
 
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(true);
+  return Core.getRenderGroupManager().nextRenderGroup(true);
 }
 
 /**
@@ -752,8 +750,7 @@ export function render_axes(operable: Operable): RenderGroup {
 
   operable.store();
 
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(undefined, true);
+  return Core.getRenderGroupManager().nextRenderGroup(undefined, true);
 }
 
 /**
@@ -770,6 +767,5 @@ export function render_grid_axes(operable: Operable): RenderGroup {
 
   operable.store();
 
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(true, true);
+  return Core.getRenderGroupManager().nextRenderGroup(true, true);
 }
