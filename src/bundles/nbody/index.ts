@@ -71,4 +71,3 @@ export { createState, getBodies } from './State';
 export { createBodyCenterTransformation, createCoMTransformation, createLambdaTransformation, createPinTransformation, createRotateTransformation, createTimedRotateTransformation } from './Transformation';
 export { createUniverse } from './Universe';
 export { addVectors, createVector, getX, getY, getZ, multiplyScalar, setX, setY, setZ, subVectors } from './Vector';
-
