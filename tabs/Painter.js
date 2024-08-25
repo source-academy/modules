@@ -150,7 +150,15 @@ export default require => {
           return (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, {
             children: [(0, import_jsx_runtime2.jsx)("div", {
               onClick: () => this.handleOpen(drawnPainter),
-              children: "Click here to open Modal"
+              style: {
+                cursor: "pointer",
+                padding: "5px 10px",
+                backgroundColor: "#474F5E",
+                border: "1px solid #aaa",
+                borderRadius: "4px",
+                display: "inline-block"
+              },
+              children: "Popout plot"
             }), (0, import_jsx_runtime2.jsx)("div", {
               id: divId,
               ref: () => {
