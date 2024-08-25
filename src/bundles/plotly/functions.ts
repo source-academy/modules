@@ -325,9 +325,9 @@ export const draw_connected_2d = createPlotFunction(
     mode: 'lines'
   },
   {
-    xaxis: { visible: false },
+    xaxis: { visible: true },
     yaxis: {
-      visible: false,
+      visible: true,
       scaleanchor: 'x'
     }
   },

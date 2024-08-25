@@ -60,7 +60,16 @@ class Painter extends React.Component<Props, State> {
             const divId = `plotDiv${id}`;
             return (
               <>
-                <div onClick={() => this.handleOpen(drawnPainter)}>Click here to open Modal</div>
+                <div onClick={() => this.handleOpen(drawnPainter)}
+                  style={{
+                    cursor: 'pointer',
+                    padding: '5px 10px',
+                    backgroundColor: '#474F5E',
+                    border: '1px solid #aaa',
+                    borderRadius: '4px',
+                    display: 'inline-block'
+                  }}
+                >Popout plot</div>
                 <div
                   id={divId}
                   ref={() => {
