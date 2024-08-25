@@ -94,6 +94,6 @@ export default {
     return drawnPlots.length > 0;
   },
   body: (debuggerContext: any) => <Plotly debuggerContext={debuggerContext} />,
-  label: 'Plotly Test Tab',
+  label: 'Plotly',
   iconName: 'scatter-plot'
 };
