@@ -42,5 +42,6 @@ export {
   repl_display,
   set_background_image,
   set_font_size,
+  set_program_text,
   default_js_slang
 } from './functions';
