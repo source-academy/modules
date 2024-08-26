@@ -369,9 +369,9 @@ export const draw_points_2d = createPlotFunction(
   'scatter',
   { mode: 'markers' },
   {
-    xaxis: { visible: false },
+    xaxis: { visible: true },
     yaxis: {
-      visible: false,
+      visible: true,
       scaleanchor: 'x'
     }
   },
