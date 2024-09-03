@@ -674,8 +674,7 @@ export function rgb(
     throw new Error('RGB values must be between 0 and 255 (inclusive)');
   }
 
-  return `#${redValue.toString(16)}${greenValue.toString(16)}
-    ${blueValue.toString(16)}`;
+  return `#${redValue.toString(16)}${greenValue.toString(16)}${blueValue.toString(16)}`;
 }
 
 /**
