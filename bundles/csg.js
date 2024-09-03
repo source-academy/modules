@@ -13899,8 +13899,7 @@ endfacet`;
     if (redValue < 0 || redValue > 255 || greenValue < 0 || greenValue > 255 || blueValue < 0 || blueValue > 255) {
       throw new Error("RGB values must be between 0 and 255 (inclusive)");
     }
-    return `#${redValue.toString(16)}${greenValue.toString(16)}
-    ${blueValue.toString(16)}`;
+    return `#${redValue.toString(16)}${greenValue.toString(16)}${blueValue.toString(16)}`;
   }
   function download_shape_stl(shape) {
     return __async(this, null, function* () {
