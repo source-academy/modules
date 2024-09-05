@@ -19,6 +19,7 @@ export default [
       '**/*.snap',
       'build/**',
       'scripts/**/templates/templates/**',
+      'scripts/src/build/docs/__tests__/test_mocks/**',
       'scripts/bin.js',
       'src/**/samples/**'
     ]
