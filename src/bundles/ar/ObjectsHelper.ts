@@ -51,7 +51,7 @@ export function createCubeObject(
   height: number,
   depth: number,
   color: number,
-  onSelect?: () => {},
+  onSelect?: () => any
 ): CubeObject {
   return new CubeObject(
     uniqid(),
@@ -82,7 +82,7 @@ export function createSphereObject(
   position: Vector3,
   radius: number,
   color: number,
-  onSelect?: () => {},
+  onSelect?: () => any
 ): SphereObject {
   return new SphereObject(
     uniqid(),
@@ -112,7 +112,7 @@ export function createGltfObject(
   position: Vector3,
   src: string,
   scale: number,
-  onSelect?: () => {},
+  onSelect?: () => any,
 ): GltfObject {
   return new GltfObject(
     uniqid(),
@@ -140,7 +140,7 @@ export function createGltfObject(
 export function createInterfaceObject(
   position: Vector3,
   rootComponent: UIBasicItem,
-  onSelect?: () => {},
+  onSelect?: () => any
 ): UIObject {
   return new UIObject(
     uniqid(),

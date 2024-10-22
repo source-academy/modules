@@ -105,8 +105,8 @@ export class PhysicsWorld {
     return this.b2World;
   }
 
-  public getWorldStatus(): String {
-    let world_status: String = `
+  public getWorldStatus(): string {
+    let world_status: string = `
   World time: ${this.timer.toString()}
   
   Objects:

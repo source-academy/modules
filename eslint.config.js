@@ -1,6 +1,8 @@
+// @ts-check
+
 import js from '@eslint/js';
 import stylePlugin from '@stylistic/eslint-plugin';
-import importPlugin from 'eslint-plugin-import';
+import * as importPlugin from 'eslint-plugin-import';
 import jestPlugin from 'eslint-plugin-jest';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import globals from 'globals';
@@ -9,10 +11,7 @@ import tseslint from 'typescript-eslint';
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
-/**
- * @type {import('eslint').Linter.FlatConfig[]}
- */
-export default [
+export default tseslint.config(
   {
     // global ignores
     ignores: [
@@ -115,8 +114,13 @@ export default [
     rules: {
       'prefer-const': 'warn', // Was 'error'
 
+      '@typescript-eslint/no-empty-object-type': ['error', {
+        allowInterfaces: 'with-single-extends',
+        allowWithName: '(?:Props)|(?:State)$'
+      }],
       '@typescript-eslint/no-namespace': 'off', // Was 'error'
       '@typescript-eslint/no-var-requires': 'warn', // Was 'error'
+      '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
     },
   },
@@ -154,7 +158,7 @@ export default [
       },
       globals: {
         ...globals.browser,
-        ...globals.node2020
+        ...globals.node
       }
     },
   },
@@ -176,4 +180,4 @@ export default [
       'jest/valid-describe-callback': 'off'
     }
   }
-];
+);
