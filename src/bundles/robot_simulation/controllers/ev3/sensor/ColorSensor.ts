@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 import { Renderer } from '../../../engine';
 import { vec3 } from '../../../engine/Math/Convert';
-import { type SimpleVector } from '../../../engine/Math/Vector';
+import type { SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
 import {
   getCamera,
   type CameraOptions,
 } from '../../../engine/Render/helpers/Camera';
-import { type ChassisWrapper } from '../components/Chassis';
-import { type Sensor } from './types';
+import type { ChassisWrapper } from '../components/Chassis';
+import type { Sensor } from './types';
 
 type Color = { r: number; g: number; b: number };
 

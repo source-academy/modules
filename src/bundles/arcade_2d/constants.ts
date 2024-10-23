@@ -1,6 +1,6 @@
 // This file contains the default values of the game canvas and GameObjects.
 
-import { type InteractableProps, type RenderProps, type TransformProps } from './types';
+import type { InteractableProps, RenderProps, TransformProps } from './types';
 
 // Default values of game
 export const DEFAULT_WIDTH: number = 600;

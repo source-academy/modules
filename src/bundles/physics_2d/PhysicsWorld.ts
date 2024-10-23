@@ -14,7 +14,7 @@ import {
   b2ContactListener,
   type b2Contact
 } from '@box2d/core';
-import { type PhysicsObject } from './PhysicsObject';
+import type { PhysicsObject } from './PhysicsObject';
 import { Timer } from './types';
 
 export class PhysicsWorld {

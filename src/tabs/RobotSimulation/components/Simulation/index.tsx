@@ -1,9 +1,9 @@
 import { Tab, Tabs } from '@blueprintjs/core';
 import { useRef, type CSSProperties, useEffect, useState } from 'react';
 
-import { type DefaultEv3 } from '../../../../bundles/robot_simulation/controllers';
-import { type World } from '../../../../bundles/robot_simulation/engine';
-import { type WorldState } from '../../../../bundles/robot_simulation/engine/World';
+import type { DefaultEv3 } from '../../../../bundles/robot_simulation/controllers';
+import type { World } from '../../../../bundles/robot_simulation/engine';
+import type { WorldState } from '../../../../bundles/robot_simulation/engine/World';
 import type { DebuggerContext } from '../../../../typings/type_helpers';
 
 import { ColorSensorPanel } from '../TabPanels/ColorSensorPanel';

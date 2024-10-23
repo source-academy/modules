@@ -1,4 +1,4 @@
-import { type Vector3 } from 'saar/libraries/misc';
+import type { Vector3 } from 'saar/libraries/misc';
 import {
   type ARObject,
   CubeObject,
