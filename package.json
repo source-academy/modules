@@ -45,7 +45,7 @@
     "devserver:lint": "eslint devserver",
     "devserver:tsc": "tsc --project devserver/tsconfig.json",
     "scripts:all": "node scripts/scripts_manager.js",
-    "scripts:build": "node scripts/scripts_manager.js build",
+    "scripts:build": "node scripts/scripts_manager.js build && yarn lint:build",
     "scripts:lint": "eslint scripts",
     "scripts:tsc": "tsc --project scripts/tsconfig.json",
     "scripts:test": "node scripts/scripts_manager.js test",
