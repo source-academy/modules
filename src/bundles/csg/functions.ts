@@ -21,13 +21,12 @@ import {
   is_list
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
-import { degreesToRadians } from '../../common/utilities';
+import { degreesToRadians, hexToColor } from '../../common/utilities';
 import { Core } from './core';
 import type { Solid } from './jscad/types';
 import {
   Group,
   Shape,
-  hexToColor,
   type Operable,
   type RenderGroup,
   centerPrimitive
