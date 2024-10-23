@@ -8,6 +8,8 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+import typeImportsPlugin from './scripts/dist/typeimports.js';
+
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
@@ -19,7 +21,7 @@ export default tseslint.config(
       'build/**',
       'scripts/**/templates/templates/**',
       'scripts/src/build/docs/__tests__/test_mocks/**',
-      'scripts/bin.js',
+      'scripts/dist',
       'src/**/samples/**'
     ]
   },
@@ -74,6 +76,7 @@ export default tseslint.config(
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
+      'typeImports': typeImportsPlugin
     },
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
@@ -85,6 +88,8 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/prefer-ts-expect-error': 'warn',
       '@typescript-eslint/sort-type-constituents': 'warn',
+
+      'typeImports/collate-type-imports': 'warn'
     }
   },
   {
