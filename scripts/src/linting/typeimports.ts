@@ -6,13 +6,13 @@ function isImportSpecifier(spec: es.ImportDeclaration['specifiers'][number]): sp
 }
 
 function specToString(spec: es.ImportSpecifier) {
-  if (spec.imported.type === 'Identifier')  {
+  if (spec.imported.type === 'Identifier') {
     if (spec.imported.name === spec.local.name) {
       return spec.imported.name;
     }
     return `${spec.imported.name} as ${spec.local.name}`;
   }
-  return ''
+  return '';
 }
 
 const typeImportsPlugin = {
