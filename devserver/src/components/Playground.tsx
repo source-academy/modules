@@ -38,7 +38,7 @@ const createContextHelper = () => {
   return tempContext;
 };
 
-const Playground: React.FC<{}> = () => {
+const Playground: React.FC = () => {
   const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
   const [selectedTabId, setSelectedTab] = React.useState(testTabContent.id);
   const [codeContext, setCodeContext] = React.useState<Context>(createContextHelper());
