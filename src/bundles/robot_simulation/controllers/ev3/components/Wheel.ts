@@ -1,11 +1,11 @@
 import type * as THREE from 'three';
-import { type Renderer, type Controller, type Physics } from '../../../engine';
+import type { Renderer, Controller, Physics } from '../../../engine';
 import { vec3 } from '../../../engine/Math/Convert';
-import { type SimpleVector } from '../../../engine/Math/Vector';
+import type { SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
 import { DebugArrow } from '../../../engine/Render/debug/DebugArrow';
 import { NumberPidController } from '../feedback_control/PidController';
-import { type ChassisWrapper } from './Chassis';
+import type { ChassisWrapper } from './Chassis';
 
 export type WheelConfig = {
   pid: {

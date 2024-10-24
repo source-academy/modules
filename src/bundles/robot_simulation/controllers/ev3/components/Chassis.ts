@@ -8,7 +8,7 @@ import {
   MeshFactory,
   type Renderer,
 } from '../../../engine';
-import { type EntityCuboidOptions } from '../../../engine/Entity/EntityFactory';
+import type { EntityCuboidOptions } from '../../../engine/Entity/EntityFactory';
 
 export type ChassisWrapperConfig = EntityCuboidOptions & {
   debug: boolean;

@@ -1,15 +1,12 @@
-import { type Ace, require as acequire } from 'ace-builds';
+import { Card } from '@blueprintjs/core';
+import { require as acequire, type Ace } from 'ace-builds';
+import 'ace-builds/src-noconflict/ace';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-searchbox';
-import 'ace-builds/esm-resolver';
-
 import 'js-slang/dist/editors/ace/theme/source';
-
 import React from 'react';
 import AceEditor, { type IAceEditorProps } from 'react-ace';
-import { HotKeys } from 'react-hotkeys';
-
-import { getModeString, selectMode } from '../utils/AceHelper';
+import { modeString, selectMode } from '../utils/AceHelper';
 import type { KeyFunction } from './EditorHotkeys';
 
 export type EditorKeyBindingHandlers = { [key in KeyFunction]?: () => void };
@@ -58,11 +55,6 @@ const moveCursor = (editor: AceEditor['editor'], position: Position) => {
   editor.moveCursorToPosition(position);
   editor.renderer.showCursor();
   editor.renderer.scrollCursorIntoView(position, 0.5);
-};
-
-/* Override handler, so does not trigger when focus is in editor */
-const handlers = {
-  goGreen() {}
 };
 
 const Editor: React.FC<EditorProps> = (props: EditorProps) => {
@@ -115,7 +107,7 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
     fontSize: 17,
     height: '100%',
     highlightActiveLine: false,
-    mode: getModeString(),
+    mode: modeString,
     theme: 'source',
     value: props.editorValue,
     width: '100%',
@@ -137,47 +129,16 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
         },
         exec: props.handleEditorEval
       }
-      // {
-      //   name: 'navigate',
-      //   bindKey: {
-      //     win: 'Ctrl-B',
-      //     mac: 'Command-B'
-      //   }
-      // },
-      // {
-      //   name: 'refactor',
-      //   bindKey: {
-      //     win: 'Ctrl-M',
-      //     mac: 'Command-M'
-      //   }
-      // },
-      // {
-      //   name: 'highlightScope',
-      //   bindKey: {
-      //     win: 'Ctrl-Shift-H',
-      //     mac: 'Command-Shift-H'
-      //   },
-      // },
-      // {
-      //   name: ' typeInferenceDisplay',
-      //     bindKey: {
-      //     win: 'Ctrl-Shift-M',
-      //     mac: 'Command-Shift-M'
-      //   }
-      // }
     ]
-    // commands: Object.entries(keyHandlers)
-    // .filter(([_, exec]) => exec)
-    // .map(([name, exec]) => ({ name, bindKey: keyBindings[name], exec: exec! }))
   };
 
   return (
     <div className="editor-container">
-      <HotKeys className="Editor bp4-card bp4-elevation-0" handlers={handlers}>
+      <Card className="Editor">
         <div className="row editor-react-ace" data-testid="Editor">
           <AceEditor {...aceEditorProps} ref={reactAceRef} />
         </div>
-      </HotKeys>
+      </Card>
     </div>
   );
 };

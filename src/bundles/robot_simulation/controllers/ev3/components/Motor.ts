@@ -1,13 +1,13 @@
 import type * as THREE from 'three';
-import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { type Controller, type Physics, type Renderer } from '../../../engine';
+import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import type { Controller, Physics, Renderer } from '../../../engine';
 import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
 import { vec3 } from '../../../engine/Math/Convert';
-import { type Dimension, type SimpleVector } from '../../../engine/Math/Vector';
+import type { Dimension, SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
 import { loadGLTF } from '../../../engine/Render/helpers/GLTF';
 import { VectorPidController } from '../feedback_control/PidController';
-import { type ChassisWrapper } from './Chassis';
+import type { ChassisWrapper } from './Chassis';
 
 type WheelSide = 'left' | 'right';
 

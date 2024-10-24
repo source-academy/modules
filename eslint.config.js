@@ -1,25 +1,27 @@
+// @ts-check
+
 import js from '@eslint/js';
 import stylePlugin from '@stylistic/eslint-plugin';
-import importPlugin from 'eslint-plugin-import';
+import * as importPlugin from 'eslint-plugin-import';
 import jestPlugin from 'eslint-plugin-jest';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+import typeImportsPlugin from './scripts/dist/typeimports.js';
+
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
-/**
- * @type {import('eslint').Linter.FlatConfig[]}
- */
-export default [
+export default tseslint.config(
   {
     // global ignores
     ignores: [
       '**/*.snap',
       'build/**',
       'scripts/**/templates/templates/**',
-      'scripts/bin.js',
+      'scripts/src/build/docs/__tests__/test_mocks/**',
+      'scripts/dist',
       'src/**/samples/**'
     ]
   },
@@ -74,6 +76,7 @@ export default [
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
+      'typeImports': typeImportsPlugin
     },
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
@@ -85,6 +88,8 @@ export default [
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/prefer-ts-expect-error': 'warn',
       '@typescript-eslint/sort-type-constituents': 'warn',
+
+      'typeImports/collate-type-imports': 'warn'
     }
   },
   {
@@ -114,8 +119,13 @@ export default [
     rules: {
       'prefer-const': 'warn', // Was 'error'
 
+      '@typescript-eslint/no-empty-object-type': ['error', {
+        allowInterfaces: 'with-single-extends',
+        allowWithName: '(?:Props)|(?:State)$'
+      }],
       '@typescript-eslint/no-namespace': 'off', // Was 'error'
       '@typescript-eslint/no-var-requires': 'warn', // Was 'error'
+      '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
     },
   },
@@ -153,7 +163,7 @@ export default [
       },
       globals: {
         ...globals.browser,
-        ...globals.node2020
+        ...globals.node
       }
     },
   },
@@ -175,4 +185,4 @@ export default [
       'jest/valid-describe-callback': 'off'
     }
   }
-];
+);

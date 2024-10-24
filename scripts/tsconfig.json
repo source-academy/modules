@@ -7,8 +7,12 @@
     "paths": {
       "@src/*": ["./src/*"]
     },
-    "target": "ESNext"
+    "target": "ESNext",
+    "skipLibCheck": true
   },
   "include": ["./src", "jest.setup.ts"],
-  "exclude": ["./src/templates/templates/**"]
+  "exclude": [
+    "./src/templates/templates/**",
+    "./src/build/docs/__tests__/test_mocks"
+  ]
 }

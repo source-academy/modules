@@ -20,24 +20,3 @@ $achievement-assets: 'https://source-academy-assets.s3-ap-southeast-1.amazonaws.
 .WorkspaceParent {
   min-height: 0;
 }
-
-.#{$ns}-tag {
-  text-align: center;
-}
-
-.badge {
-  left: -15px;
-  position: absolute;
-  top: -15px;
-  z-index: 3;
-}
-
-.#{$ns}-overlay {
-  .#{$ns}-popover2-content {
-    .badge-tag {
-      background-color: transparent;
-      margin-left: 0.4rem;
-      margin-right: 0.4rem;
-    }
-  }
-}

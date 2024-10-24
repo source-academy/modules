@@ -48,7 +48,7 @@ const parsers = {
   }
 } satisfies Partial<Record<td.ReflectionKind, (element: td.DeclarationReflection) => any>>;
 
-async function buildJson(name: string, reflection: td.DeclarationReflection, outDir: string): Promise<OperationResult> {
+export const buildJson = async (name: string, reflection: td.DeclarationReflection, outDir: string): Promise<OperationResult> => {
   try {
     const jsonData = reflection.children.reduce((res, element) => {
       const parser = parsers[element.kind];
@@ -73,7 +73,7 @@ async function buildJson(name: string, reflection: td.DeclarationReflection, out
       error
     };
   }
-}
+};
 
 // For some reason if you want to properly test these functions in Jest
 // They've gotta be declared as constants

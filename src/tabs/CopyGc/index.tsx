@@ -17,15 +17,15 @@ type State = {
   tags: number[];
   heap: number[];
   commandHeap: any[];
-  command: String;
+  command: string;
   flips: number[];
   toMemoryMatrix: number[][];
   fromMemoryMatrix: number[][];
   firstChild: number;
   lastChild: number;
-  description: String;
-  leftDesc: String;
-  rightDesc: String;
+  description: string;
+  leftDesc: string;
+  rightDesc: string;
   running: boolean;
 };
 

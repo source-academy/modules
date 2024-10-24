@@ -9,7 +9,7 @@ export interface PrebuildOptions {
   tabs: string[]
 }
 
-export interface PrebuildResult<T extends { severity: Severity }> extends TimedResult<T> {}
+export type PrebuildResult<T extends { severity: Severity }> = TimedResult<T>;
 
 export function createPrebuildCommand(
   commandName: string,

@@ -9,6 +9,7 @@ import {
   scale as _scale,
   translate as _translate
 } from '@jscad/modeling/src/operations/transforms';
+import { hexToColor } from '../../common/utilities';
 import type { ReplResult } from '../../typings/type_helpers';
 import { Core } from './core';
 import type { AlphaColor, Color, Solid } from './jscad/types';
@@ -216,21 +217,6 @@ export function centerPrimitive(shape: Shape) {
     shape.solid
   );
   return new Shape(solid);
-}
-
-export function hexToColor(hex: string): Color {
-  const regex: RegExp
-    = /^#?(?<red>[\da-f]{2})(?<green>[\da-f]{2})(?<blue>[\da-f]{2})$/iu;
-  const potentialGroups: { [key: string]: string } | undefined
-    = hex.match(regex)?.groups;
-  if (potentialGroups === undefined) return [0, 0, 0];
-  const groups: { [key: string]: string } = potentialGroups;
-
-  return [
-    parseInt(groups.red, 16) / 0xff,
-    parseInt(groups.green, 16) / 0xff,
-    parseInt(groups.blue, 16) / 0xff
-  ];
 }
 
 export function colorToAlphaColor(

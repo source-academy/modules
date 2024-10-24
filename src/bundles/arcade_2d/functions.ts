@@ -44,20 +44,7 @@ import {
   PhaserScene,
   gameState
 } from './phaserScene';
-import {
-  type DisplayText,
-  type BuildGame,
-  type Sprite,
-  type UpdateFunction,
-  type RectangleProps,
-  type CircleProps,
-  type TriangleProps,
-  type FlipXY,
-  type ScaleXY,
-  type PositionXY,
-  type DimensionsXY,
-  type ColorRGBA
-} from './types';
+import type { DisplayText, BuildGame, Sprite, UpdateFunction, RectangleProps, CircleProps, TriangleProps, FlipXY, ScaleXY, PositionXY, DimensionsXY, ColorRGBA } from './types';
 
 // =============================================================================
 // Global Variables
