@@ -56,6 +56,9 @@ export {
   animate_anaglyph,
   animate_rune,
   hollusion,
-  hollusion_magnitude,
   show
 } from './display';
+
+export {
+  type_map
+} from '../../typings/type_map';
