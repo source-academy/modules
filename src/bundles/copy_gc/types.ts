@@ -16,7 +16,7 @@ export enum COMMAND {
 }
 
 export type CommandHeapObject = {
-  type: String;
+  type: string;
   to: number;
   from: number;
   heap: number[];
@@ -24,9 +24,9 @@ export type CommandHeapObject = {
   right: number;
   sizeLeft: number;
   sizeRight: number;
-  desc: String;
+  desc: string;
   scan: number;
-  leftDesc: String;
-  rightDesc: String;
+  leftDesc: string;
+  rightDesc: string;
   free: number;
 };

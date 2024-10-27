@@ -3,8 +3,8 @@ import rapier from '@dimforge/rapier3d-compat';
 import type * as THREE from 'three';
 
 import { TypedEventTarget } from './Core/Events';
-import { type FrameTimingInfo } from './Core/Timer';
-import { type SimpleVector } from './Math/Vector';
+import type { FrameTimingInfo } from './Core/Timer';
+import type { SimpleVector } from './Math/Vector';
 
 export type PhysicsTimingInfo = FrameTimingInfo & {
   stepCount: number;

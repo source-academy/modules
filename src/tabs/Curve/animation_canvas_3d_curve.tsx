@@ -1,7 +1,7 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-import { type AnimatedCurve } from '../../bundles/curve/types';
+import type { AnimatedCurve } from '../../bundles/curve/types';
 import AutoLoopSwitch from '../common/AutoLoopSwitch';
 import ButtonComponent from '../common/ButtonComponent';
 import PlayButton from '../common/PlayButton';

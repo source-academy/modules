@@ -14,12 +14,7 @@ import {
   TextGameObject,
   TriangleGameObject
 } from './gameobject';
-import {
-  type TransformProps,
-  type PositionXY,
-  type ExceptionError,
-  type PhaserGameObject
-} from './types';
+import type { TransformProps, PositionXY, ExceptionError, PhaserGameObject } from './types';
 
 // Game state information, that changes every frame.
 export const gameState = {
@@ -100,10 +95,10 @@ export class PhaserScene extends Phaser.Scene {
 
     // Handle keyboard inputs
     // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
-    this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
+    this.input.keyboard?.on('keydown', (event: KeyboardEvent) => {
       gameState.inputKeysDown.add(event.key);
     });
-    this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
+    this.input.keyboard?.on('keyup', (event: KeyboardEvent) => {
       this.delayedKeyUpEvents.add(() => gameState.inputKeysDown.delete(event.key));
     });
 

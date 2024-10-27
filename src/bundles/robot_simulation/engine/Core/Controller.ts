@@ -1,4 +1,4 @@
-import { type PhysicsTimingInfo } from '../Physics';
+import type { PhysicsTimingInfo } from '../Physics';
 
 export interface Controller {
   name?: string;

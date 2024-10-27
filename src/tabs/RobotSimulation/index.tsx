@@ -1,4 +1,4 @@
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import { Main } from './components/Main';
 
 /**

@@ -1,7 +1,4 @@
-import {
-  type LogEntry,
-  type RobotConsole,
-} from '../../../../bundles/robot_simulation/engine/Core/RobotConsole';
+import type { LogEntry, RobotConsole } from '../../../../bundles/robot_simulation/engine/Core/RobotConsole';
 import { useFetchFromSimulation } from '../../hooks/fetchFromSimulation';
 import { LastUpdated, getTimeString } from './tabComponents/LastUpdated';
 import { TabWrapper } from './tabComponents/Wrapper';

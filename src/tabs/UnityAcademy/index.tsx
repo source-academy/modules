@@ -9,7 +9,7 @@ import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import { getInstance } from '../../bundles/unity_academy/UnityAcademy';
 import { UNITY_ACADEMY_BACKEND_URL } from '../../bundles/unity_academy/config';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 
 type Props = {};
 

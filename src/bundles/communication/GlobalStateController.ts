@@ -1,4 +1,4 @@
-import { type MultiUserController } from './MultiUserController';
+import type { MultiUserController } from './MultiUserController';
 
 /**
  * Controller for maintaining a global state across all devices.

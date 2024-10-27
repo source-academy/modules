@@ -14,14 +14,14 @@ type State = {
   tags: number[];
   heap: number[];
   commandHeap: any[];
-  command: String;
+  command: string;
   flips: number[];
   memoryMatrix: number[][];
   firstChild: number;
   lastChild: number;
-  description: String;
-  leftDesc: String;
-  rightDesc: String;
+  description: string;
+  leftDesc: string;
+  rightDesc: string;
   unmarked: number;
   marked: number;
   queue: number[];
