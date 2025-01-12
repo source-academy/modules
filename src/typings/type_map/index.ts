@@ -10,7 +10,6 @@ export const registerType = (name: string, declaration: string) => {
 
 export const wrapClass = (type: string) => {
   return (_target: any) => {
-    // registerType('prelude', `type ${_target.name} = '${type}'`);
     registerType('prelude', `class ${_target.name} {}`);
   };
 };
