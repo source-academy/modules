@@ -1,6 +1,6 @@
 export const type_map : Record<string, string> = {};
 
-export const registerType = (name: string, declaration: string) => {
+const registerType = (name: string, declaration: string) => {
   if (name == 'prelude') {
     type_map['prelude'] = type_map['prelude'] != undefined ? type_map['prelude'] + '\n' + declaration : declaration;
   } else {
@@ -8,13 +8,13 @@ export const registerType = (name: string, declaration: string) => {
   }
 };
 
-export const wrapClass = (name: string) => {
+export const classDeclaration = (name: string) => {
   return (_target: any) => {
     registerType('prelude', `class ${name} {}`);
   };
 };
 
-export const wrapClassAsType = (type: string, declaration = null) => {
+export const typeDeclaration = (type: string, declaration = null) => {
   return (_target: any) => {
     const typeAlias = `type ${_target.name} = ${type}`;
     let variableDeclaration = `const ${_target.name} = ${declaration === null ? type : declaration}`;
@@ -38,7 +38,7 @@ export const wrapClassAsType = (type: string, declaration = null) => {
   };
 };
 
-export const wrapMethod = (paramTypes: string, returnType: string) => {
+export const functionDeclaration = (paramTypes: string, returnType: string) => {
   return (_target: any, propertyKey: string, _descriptor: PropertyDescriptor) => {
     let returnValue = '';
     switch (returnType) {
@@ -62,7 +62,7 @@ export const wrapMethod = (paramTypes: string, returnType: string) => {
   };
 };
 
-export const wrapProperty = (type: string) => {
+export const variableDeclaration = (type: string) => {
   return (_target: any, propertyKey: string) => {
     registerType(propertyKey, `const ${propertyKey}: ${type} = ${type}`);
   };

@@ -1,7 +1,7 @@
 import { mat4 } from 'gl-matrix';
 import { type AnimFrame, glAnimation } from '../../typings/anim_types';
 import type { ReplResult } from '../../typings/type_helpers';
-import { wrapClass } from '../../typings/type_map';
+import { classDeclaration } from '../../typings/type_map';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 
 const normalVertexShader = `
@@ -58,7 +58,7 @@ void main(void) {
  * @field transformMatrix - A mat4 that is applied to all the vertices and the sub runes
  * @field subRune - A (potentially empty) list of Runes
  */
-@wrapClass('Rune')
+@classDeclaration('Rune')
 export class Rune {
   constructor(
     public vertices: Float32Array,

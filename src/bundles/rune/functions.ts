@@ -1,7 +1,7 @@
 import { mat4, vec3 } from 'gl-matrix';
 import {
-  wrapMethod,
-  wrapProperty,
+  functionDeclaration,
+  variableDeclaration,
 } from '../../typings/type_map';
 import {
   Rune,
@@ -47,14 +47,14 @@ class RuneFunctions {
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static square: Rune = getSquare();
   /**
    * Rune with the shape of a blank square
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static blank: Rune = getBlank();
   /**
    * Rune with the shape of a
@@ -64,21 +64,21 @@ class RuneFunctions {
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static rcross: Rune = getRcross();
   /**
    * Rune with the shape of a sail
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static sail: Rune = getSail();
   /**
    * Rune with the shape of a triangle
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static triangle: Rune = getTriangle();
   /**
    * Rune with black triangle,
@@ -86,7 +86,7 @@ class RuneFunctions {
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static corner: Rune = getCorner();
   /**
    * Rune with the shape of two overlapping
@@ -95,28 +95,28 @@ class RuneFunctions {
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static nova: Rune = getNova();
   /**
    * Rune with the shape of a circle
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static circle: Rune = getCircle();
   /**
    * Rune with the shape of a heart
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static heart: Rune = getHeart();
   /**
    * Rune with the shape of a pentagram
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static pentagram: Rune = getPentagram();
   /**
    * Rune with the shape of a ribbon
@@ -124,7 +124,7 @@ class RuneFunctions {
    *
    * @category Primitive
    */
-  @wrapProperty('Rune')
+  @variableDeclaration('Rune')
   static ribbon: Rune = getRibbon();
 
   // =============================================================================
@@ -138,7 +138,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('imageUrl: string', 'Rune')
+  @functionDeclaration('imageUrl: string', 'Rune')
   static from_url(imageUrl: string): Rune {
     const rune = getSquare();
     rune.texture = new Image();
@@ -160,7 +160,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('ratio_x: number, ratio_y: number, rune: Rune', 'Rune')
+  @functionDeclaration('ratio_x: number, ratio_y: number, rune: Rune', 'Rune')
   static scale_independent(
     ratio_x: number,
     ratio_y: number,
@@ -187,7 +187,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('ratio: number, rune: Rune', 'Rune')
+  @functionDeclaration('ratio: number, rune: Rune', 'Rune')
   static scale(ratio: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.scale.name, rune);
     return RuneFunctions.scale_independent(ratio, ratio, rune);
@@ -202,7 +202,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('x: number, y: number, rune: Rune', 'Rune')
+  @functionDeclaration('x: number, y: number, rune: Rune', 'Rune')
   static translate(x: number, y: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.translate.name, rune);
     const translateVec = vec3.fromValues(x, -y, 0);
@@ -228,7 +228,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rad: number, rune: Rune', 'Rune')
+  @functionDeclaration('rad: number, rune: Rune', 'Rune')
   static rotate(rad: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.rotate.name, rune);
     const rotateMat = mat4.create();
@@ -255,7 +255,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('frac: number, rune1: Rune, rune2: Rune', 'Rune')
+  @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.stack_frac.name, rune1);
     throwIfNotRune(RuneFunctions.stack_frac.name, rune2);
@@ -282,7 +282,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune1: Rune, rune2: Rune', 'Rune')
+  @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static stack(rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.stack.name, rune1, rune2);
     return RuneFunctions.stack_frac(1 / 2, rune1, rune2);
@@ -297,7 +297,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('n: number, rune: Rune', 'Rune')
+  @functionDeclaration('n: number, rune: Rune', 'Rune')
   static stackn(n: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.stackn.name, rune);
     if (n === 1) {
@@ -315,7 +315,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static quarter_turn_right(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.quarter_turn_right.name, rune);
     return RuneFunctions.rotate(-Math.PI / 2, rune);
@@ -330,7 +330,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static quarter_turn_left(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.quarter_turn_left.name, rune);
     return RuneFunctions.rotate(Math.PI / 2, rune);
@@ -344,7 +344,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static turn_upside_down(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.turn_upside_down.name, rune);
     return RuneFunctions.rotate(Math.PI, rune);
@@ -363,7 +363,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('frac: number, rune1: Rune, rune2: Rune', 'Rune')
+  @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.beside_frac.name, rune1, rune2);
 
@@ -389,7 +389,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune1: Rune, rune2: Rune', 'Rune')
+  @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static beside(rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.beside.name, rune1, rune2);
     return RuneFunctions.beside_frac(1 / 2, rune1, rune2);
@@ -404,7 +404,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static flip_vert(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.flip_vert.name, rune);
     return RuneFunctions.scale_independent(1, -1, rune);
@@ -419,7 +419,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static flip_horiz(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.flip_horiz.name, rune);
     return RuneFunctions.scale_independent(-1, 1, rune);
@@ -434,7 +434,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static make_cross(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.make_cross.name, rune);
     return RuneFunctions.stack(
@@ -453,7 +453,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('n: number, pattern: (a: Rune) => Rune, initial: Rune', 'Rune')
+  @functionDeclaration('n: number, pattern: (a: Rune) => Rune, initial: Rune', 'Rune')
   static repeat_pattern(
     n: number,
     pattern: (a: Rune) => Rune,
@@ -478,7 +478,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('frac: number, rune1: Rune, rune2: Rune', 'Rune')
+  @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation.
     // The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
@@ -531,7 +531,7 @@ class RuneFunctions {
    *
    * @category Main
    */
-  @wrapMethod('rune1: Rune, rune2: Rune', 'Rune')
+  @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static overlay(rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.overlay.name, rune1);
     throwIfNotRune(RuneFunctions.overlay.name, rune2);
@@ -555,7 +555,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune, r: number, g: number, b: number', 'Rune')
+  @functionDeclaration('rune: Rune, r: number, g: number, b: number', 'Rune')
   static color(rune: Rune, r: number, g: number, b: number): Rune {
     throwIfNotRune(RuneFunctions.color.name, rune);
 
@@ -575,7 +575,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static random_color(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.random_color.name, rune);
     const randomColor = hexToColor(
@@ -595,7 +595,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static red(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.red.name, rune);
     return addColorFromHex(rune, '#F44336');
@@ -608,7 +608,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static pink(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.pink.name, rune);
     return addColorFromHex(rune, '#E91E63');
@@ -621,7 +621,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static purple(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.purple.name, rune);
     return addColorFromHex(rune, '#AA00FF');
@@ -634,7 +634,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static indigo(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.indigo.name, rune);
     return addColorFromHex(rune, '#3F51B5');
@@ -647,7 +647,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static blue(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.blue.name, rune);
     return addColorFromHex(rune, '#2196F3');
@@ -660,7 +660,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static green(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.green.name, rune);
     return addColorFromHex(rune, '#4CAF50');
@@ -673,7 +673,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static yellow(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.yellow.name, rune);
     return addColorFromHex(rune, '#FFEB3B');
@@ -686,7 +686,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static orange(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.orange.name, rune);
     return addColorFromHex(rune, '#FF9800');
@@ -699,7 +699,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static brown(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.brown.name, rune);
     return addColorFromHex(rune, '#795548');
@@ -712,7 +712,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static black(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.black.name, rune);
     return addColorFromHex(rune, '#000000');
@@ -725,7 +725,7 @@ class RuneFunctions {
    *
    * @category Color
    */
-  @wrapMethod('rune: Rune', 'Rune')
+  @functionDeclaration('rune: Rune', 'Rune')
   static white(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.white.name, rune);
     return addColorFromHex(rune, '#FFFFFF');
