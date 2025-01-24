@@ -72,3 +72,9 @@ export {
   y_of,
   z_of
 } from './functions';
+
+export {} from './type_interface';
+
+export {
+  type_map
+} from '../../typings/type_map';
