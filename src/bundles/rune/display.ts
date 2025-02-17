@@ -2,6 +2,10 @@ import context from 'js-slang/context';
 import { AnaglyphRune, HollusionRune } from './functions';
 import { type DrawnRune, AnimatedRune, type Rune, NormalRune, type RuneAnimation } from './rune';
 import { throwIfNotRune } from './runes_ops';
+import {
+  functionDeclaration,
+  variableDeclaration,
+} from '../../typings/type_map';
 
 // =============================================================================
 // Drawing functions
@@ -20,6 +24,7 @@ class RuneDisplay {
    *
    * @category Main
    */
+  @functionDeclaration('rune: Rune', 'Rune')
   static show(rune: Rune): Rune {
     throwIfNotRune(RuneDisplay.show.name, rune);
     drawnRunes.push(new NormalRune(rune));
@@ -34,6 +39,7 @@ class RuneDisplay {
    *
    * @category Main
    */
+  @functionDeclaration('rune: Rune', 'Rune')
   static anaglyph(rune: Rune): Rune {
     throwIfNotRune(RuneDisplay.anaglyph.name, rune);
     drawnRunes.push(new AnaglyphRune(rune));
@@ -49,6 +55,7 @@ class RuneDisplay {
    *
    * @category Main
    */
+  @functionDeclaration('rune: Rune, magnitude: number', 'Rune')
   static hollusion_magnitude(rune: Rune, magnitude: number): Rune {
     throwIfNotRune(RuneDisplay.hollusion_magnitude.name, rune);
     drawnRunes.push(new HollusionRune(rune, magnitude));
@@ -63,6 +70,7 @@ class RuneDisplay {
    *
    * @category Main
    */
+  @functionDeclaration('rune: Rune', 'Rune')
   static hollusion(rune: Rune): Rune {
     throwIfNotRune(RuneDisplay.hollusion.name, rune);
     return RuneDisplay.hollusion_magnitude(rune, 0.1);
@@ -77,6 +85,7 @@ class RuneDisplay {
    *
    * @category Main
    */
+  @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
   static animate_rune(duration: number, fps: number, func: RuneAnimation) {
     const anim = new AnimatedRune(duration, fps, (n) => {
       const rune = func(n);
@@ -96,6 +105,7 @@ class RuneDisplay {
    *
    * @category Main
    */
+  @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
   static animate_anaglyph(duration: number, fps: number, func: RuneAnimation) {
     const anim = new AnimatedRune(duration, fps, (n) => {
       const rune = func(n);
