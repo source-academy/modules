@@ -105,6 +105,7 @@
     "classnames": "^2.3.1",
     "dayjs": "^1.10.4",
     "events": "^3.3.0",
+    "fft.js": "^4.0.4",
     "gl-matrix": "^3.3.0",
     "js-slang": "^1.0.73",
     "lodash": "^4.17.21",

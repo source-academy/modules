@@ -1,4 +1,5 @@
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
+import FFT from 'fft.js';
 import context from 'js-slang/context';
 import {
   pair,
@@ -19,6 +20,8 @@ import type {
   SoundTransformer,
   AudioPlayed
 } from './types';
+
+// Importing the FFT library
 
 // Global Constants and Variables
 const FS: number = 44100; // Output sample rate
@@ -382,6 +385,50 @@ export function play_in_tab(sound: Sound): Sound {
 }
 
 /**
+ * Returns the smallest power of 2,
+ * that is greater than or equal to a given number.
+ *
+ * @param x the lower bound
+ * @return the smallest power of 2 greater than or equal to x
+ */
+function nextPowerOf2(x: number): number {
+  const lowerPowerOf2: number = 1 << 31 - Math.clz32(x);
+  if (lowerPowerOf2 == x) {
+    return lowerPowerOf2;
+  } else {
+    return lowerPowerOf2 * 2;
+  }
+}
+
+/**
+ * Modify the given sound samples using FFT
+ *
+ * @param samples the sound samples of size 2^n
+ * @return a Array(2^(n+1)) containing the modified samples
+ */
+function modifyFFT(samples: Array<number>): Array<number> {
+  console.log(`[DEBUG] samples.length = ${samples.length}`);
+
+  const fft = new FFT(samples.length);
+  const frequencyDomain = fft.createComplexArray();
+  const finalSamples = fft.createComplexArray();
+
+  fft.realTransform(frequencyDomain, samples);
+  console.log(`[DEBUG] frequencyDomain = ${frequencyDomain}`);
+
+  for (let i = 0; i < frequencyDomain.length; i += 1) {
+    frequencyDomain[i] /= 2;
+  }
+
+  console.log(`[DEBUG] *modified* frequencyDomain = ${frequencyDomain}`);
+
+  fft.inverseTransform(finalSamples, frequencyDomain);
+
+  console.log(`[DEBUG] finalSamples = ${finalSamples}`);
+  return finalSamples;
+}
+
+/**
  * Plays the given Sound using the computer’s sound device
  * on top of any Sounds that are currently playing.
  *
@@ -405,6 +452,10 @@ export function play(sound: Sound): Sound {
       init_audioCtx();
     }
 
+    // Hijacking this function to implement some FFT stuff
+    let sampleSize = Math.ceil(FS * get_duration(sound));
+    sampleSize = nextPowerOf2(sampleSize);
+
     // Create mono buffer
     const theBuffer = audioplayer.createBuffer(
       1,
@@ -412,13 +463,20 @@ export function play(sound: Sound): Sound {
       FS
     );
     const channel = theBuffer.getChannelData(0);
+    const wave = get_wave(sound);
+
+    const originalSample = new Array(sampleSize);
+    for (let i = 0; i < sampleSize; i += 1) {
+      originalSample[i] = wave(i / FS); // Assuming wave(t) for t > duration returns 0
+    }
+
+    const newSample = modifyFFT(originalSample);
 
     let temp: number;
     let prev_value = 0;
 
-    const wave = get_wave(sound);
     for (let i = 0; i < channel.length; i += 1) {
-      temp = wave(i / FS);
+      temp = newSample[i];
       // clip amplitude
       if (temp > 1) {
         channel[i] = 1;
