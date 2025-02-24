@@ -1,4 +1,3 @@
-/* eslint-disable new-cap, @typescript-eslint/naming-convention */
 import context from 'js-slang/context';
 import {
   pair,
@@ -104,7 +103,6 @@ function play_recording_signal() {
   play(sine_sound(1200, recording_signal_ms / 1000));
 }
 
-// eslint-disable-next-line @typescript-eslint/no-shadow
 function process(data) {
   const audioContext = new AudioContext();
   const blob = new Blob(data);

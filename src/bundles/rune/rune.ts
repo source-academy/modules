@@ -217,7 +217,6 @@ export function drawRunesToFrameBuffer(
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     function isPowerOf2(value) {
-      // eslint-disable-next-line no-bitwise
       return (value & (value - 1)) === 0;
     }
     // Because images have to be downloaded over the internet
