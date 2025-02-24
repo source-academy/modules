@@ -20,17 +20,11 @@ jobs:
           node-version: 20
           cache: yarn
       
-      - name: Install dependencies (apt)
-        run: |
-          sudo apt-get update && \
-          sudo apt-get install -y --no-install-recommends libxi-dev libgl1-mesa-dev
-      
       - name: Install Dependencies 📦
         run: yarn install --frozen-lockfile
           
       - name: Build Modules 🔧
         run: yarn build --tsc --lint
-      
       
       - name: include java json
         run: cp -r src/java build
