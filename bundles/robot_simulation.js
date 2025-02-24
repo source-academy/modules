@@ -9,8 +9,9 @@ export default require => {
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __propIsEnum = Object.prototype.propertyIsEnumerable;
-  var __knownSymbol = (name, symbol) => {
-    return (symbol = Symbol[name]) ? symbol : Symbol.for("Symbol." + name);
+  var __knownSymbol = (name, symbol) => (symbol = Symbol[name]) ? symbol : Symbol.for("Symbol." + name);
+  var __typeError = msg => {
+    throw TypeError(msg);
   };
   var __pow = Math.pow;
   var __defNormalProp = (obj, key, value) => (key in obj) ? __defProp(obj, key, {
@@ -63,22 +64,10 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var __accessCheck = (obj, member, msg) => {
-    if (!member.has(obj)) throw TypeError("Cannot " + msg);
-  };
-  var __privateGet = (obj, member, getter) => {
-    __accessCheck(obj, member, "read from private field");
-    return getter ? getter.call(obj) : member.get(obj);
-  };
-  var __privateAdd = (obj, member, value) => {
-    if (member.has(obj)) throw TypeError("Cannot add the same private member more than once");
-    member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
-  };
-  var __privateSet = (obj, member, value, setter) => {
-    __accessCheck(obj, member, "write to private field");
-    setter ? setter.call(obj, value) : member.set(obj, value);
-    return value;
-  };
+  var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot " + msg);
+  var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read from private field"), getter ? getter.call(obj) : member.get(obj));
+  var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+  var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
   var __async = (__this, __arguments, generator) => {
     return new Promise((resolve, reject) => {
       var fulfilled = value => {
@@ -104,10 +93,7 @@ export default require => {
     this[1] = isYieldStar;
   };
   var __yieldStar = value => {
-    var obj = value[__knownSymbol("asyncIterator")];
-    var isAwait = false;
-    var method;
-    var it = {};
+    var obj = value[__knownSymbol("asyncIterator")], isAwait = false, method, it = {};
     if (obj == null) {
       obj = value[__knownSymbol("iterator")]();
       method = k2 => it[k2] = x2 => obj[k2](x2);
@@ -124,7 +110,7 @@ export default require => {
           done: false,
           value: new __await(new Promise(resolve => {
             var x2 = obj[k2](v2);
-            if (!(x2 instanceof Object)) throw TypeError("Object expected");
+            if (!(x2 instanceof Object)) __typeError("Object expected");
             resolve(x2);
           }), 1)
         };
@@ -34286,10 +34272,10 @@ void main() {
   var _scene, _camera2, _renderer, _controls;
   var Renderer = class {
     constructor(scene, camera, configuration) {
-      __privateAdd(this, _scene, void 0);
-      __privateAdd(this, _camera2, void 0);
-      __privateAdd(this, _renderer, void 0);
-      __privateAdd(this, _controls, void 0);
+      __privateAdd(this, _scene);
+      __privateAdd(this, _camera2);
+      __privateAdd(this, _renderer);
+      __privateAdd(this, _controls);
       __privateSet(this, _camera2, camera);
       __privateSet(this, _scene, scene);
       __privateSet(this, _renderer, new WebGLRenderer({
@@ -34383,8 +34369,8 @@ void main() {
   var _rapierRigidBody, _rapierCollider;
   var Entity = class {
     constructor(configuration) {
-      __privateAdd(this, _rapierRigidBody, void 0);
-      __privateAdd(this, _rapierCollider, void 0);
+      __privateAdd(this, _rapierRigidBody);
+      __privateAdd(this, _rapierCollider);
       __privateSet(this, _rapierRigidBody, configuration.rapierRigidBody);
       __privateSet(this, _rapierCollider, configuration.rapierCollider);
     }
